@@ -3,6 +3,7 @@ package test;
 import java.io.IOException;
 
 import org.antlr.runtime.RecognitionException;
+import org.apache.bcel.generic.ConstantPoolGen;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
@@ -39,7 +40,7 @@ public final class Testuj {
 	 * Show old and new class' bytecode if it has changed
 	 * during saving / loading.
 	 */
-	private static boolean goShowFileChangesIfAny = false;
+	private static boolean goShowFileChangesIfAny = true;
 
 	/**
 	 * Number of tests ran so far.
@@ -185,6 +186,9 @@ public final class Testuj {
 	private static boolean checkSaveAndLoad() throws IOException,
 			ClassNotFoundException {
 		String code1 = bcc.printCode();
+		ConstantPoolGen cpg = new ConstantPoolGen(bcc.getJc().getConstantPool());
+		cpg.addDouble(1.23);
+		bcc.getJc().setConstantPool(cpg.getFinalConstantPool());
 		bcc.saveToFile(Paths.tmp_path + "test\\tmp03.class");
 		try {
 			bcc = new BCClass(Paths.tmp_path, "test.tmp03");
@@ -208,6 +212,11 @@ public final class Testuj {
 				System.out.println("******** new file ********");
 				System.out.println(code2);
 			}
+			return false;
+		}
+		cpg = new ConstantPoolGen(bcc.getJc().getConstantPool());
+		if (cpg.lookupDouble(1.23) < 0) {
+			System.out.println("ERROR: constant pool changed!");
 			return false;
 		}
 		return true;
@@ -238,10 +247,12 @@ public final class Testuj {
 	private static void parserTest() throws ClassNotFoundException,
 			ReadAttributeException, IOException {
 		start();
+		// basic tests
 		test(true, 0, "false");
 		test(false, 0, "false true");
 		test(true, 2, "true");
 		test(true, 2, "false");
+		// formula tests
 		test(true, 3, "false && true");
 		test(true, 3, "false && true && false");
 		test(true, 3, "false && true || false ==> true <==> false <=!=> true");
@@ -250,6 +261,13 @@ public final class Testuj {
 		test(true, 3, "(true || false) && (true || false)");
 		test(true, 2, "(((((true || false))) && true))",
 				"(true || false) && true");
+		test(false, 3, "true || 3");
+		test(true, 3, "true && false");
+		test(true, 3, "true && false || true");
+		test(true, 3, "(true && false) || (false && true)",
+				"true && false || false && true");
+		test(true, 3, "(true || false) && (false || true)");
+		// predicate tests
 		test(true, 3, "1 < 2");
 		test(false, 3, "(1)() < 2");
 
@@ -261,20 +279,6 @@ public final class Testuj {
 		test(true, 3, "1 < 2 ==> 3 < 4");
 		test(true, 3, "true || false");
 		test(true, 3, "true || 1 < 2 || true");
-		test(false, 3, "true || 3");
-		test(true, 3, "true && false");
-		test(true, 3, "true && false || true");
-		test(true, 3, "(true && false) || (false && true)",
-				"true && false || false && true");
-		test(true, 3, "(true || false) && (false || true)");
-		test(true, 3, "~false");
-		test(true, 3, "~(true || false)");
-		test(true, 3, "~(~true)");
-		test(true, 3, "~~false", "~(~false)");
-		test(true, 3, "((false || false) && (false || false)" +
-				" || ~(~false)) && ((false || false)" +
-				" && (true || false) || ~(~false))" +
-				" || ~(~(~(~false)))");
 		test(true, 3, "1 > 2");
 		test(true, 3, "1 < 2 && 3 <= 4 && 4 >= 5 && 6 > 7");
 		test(false, 3, "1 > 2 > 3");
@@ -283,6 +287,16 @@ public final class Testuj {
 		test(false, 3, "1 == 2 == 3 && 4 != 5 != 6");
 		test(false, 3, "1 == 2 != 3 && 4 != 5 == 6");
 		test(false, 3, "1 == 2 == 3 < 4");
+		// logical negation tests
+		test(true, 3, "~false");
+		test(true, 3, "~(true || false)");
+		test(true, 3, "~(~true)");
+		test(true, 3, "~~false", "~(~false)");
+		test(true, 3, "((false || false) && (false || false)" +
+				" || ~(~false)) && ((false || false)" +
+				" && (true || false) || ~(~false))" +
+				" || ~(~(~(~false)))");
+		// quantified formula tests
 		test(false, 2, "1 > err");
 		test(false, 2, "aaa && bbb < ccc");
 		test(false, 2, "forall true");
@@ -311,6 +325,17 @@ public final class Testuj {
 		test(true, 2, "forall int a boolean b; (exists int c; a < c && b) && (exists int c; a >= c)");
 		test(true, 3, "forall int a; (exists int b; (forall int c; a <= b ==> b >= c))");
 		test(false, 1, "");
+		// method specification tests
+		test(false, 2, "true {| |}");
+		test(true, 2, "true {| \\precondition true \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\ensures false |}" +
+				" {| \\precondition false && true \\ensures true ==> false |}");
+		test(false, 1, "true {| \\precondition true \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception: true && false |}");
+		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
+		test(true, 2, "true {| \\precondition true \\modifies nothing \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
+		test(true, 2, "true {| \\precondition true \\modifies everything \\exsures LJava/Lang/Exception: true && false |}",
+				"true {| \\precondition true \\ensures true \\exsures LJava/Lang/Exception: true && false |}");
 
 		// test(true, 3, "(true ? 1 : 2) < 1");
 		// test(true, 3, "(12 < 34 ? 1 : 2) < 45");

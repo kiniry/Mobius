@@ -1,5 +1,7 @@
 package annot.attributes;
 
+import java.util.Vector;
+
 import org.antlr.runtime.RecognitionException;
 import annot.bcclass.BCMethod;
 import annot.formula.AbstractFormula;
@@ -16,7 +18,7 @@ import annot.textio.Parsing;
  * 
  * @author tomekb
  */
-public class MethodSpecification extends BCPrintableAttribute implements
+public class MethodSpecification extends MethodAttribute implements
 		IBCAttribute {
 
 	/**
@@ -33,7 +35,7 @@ public class MethodSpecification extends BCPrintableAttribute implements
 	 * Each of this cases specifies method's behaviour
 	 * in some conditions (if their's precondition's are true).
 	 */
-	private SpecificationCase[] specCases;
+	private Vector<SpecificationCase> specCases;
 
 	/**
 	 * Creates an empty method specification,
@@ -56,7 +58,9 @@ public class MethodSpecification extends BCPrintableAttribute implements
 			SpecificationCase[] sc) {
 		this.method = m;
 		this.precondition = precondition;
-		this.specCases = sc;
+		this.specCases = new Vector<SpecificationCase>();
+		for (int i=0; i<sc.length; i++)
+			this.specCases.add(sc[i]);
 	}
 
 	/**
@@ -72,13 +76,28 @@ public class MethodSpecification extends BCPrintableAttribute implements
 	public MethodSpecification(BCMethod m, AttributeReader ar)
 			throws ReadAttributeException {
 		this.method = m;
-		this.precondition = (AbstractFormula) ar.readExpression();
+		this.precondition = ar.readFormula();
 		int length = ar.readAttributesCount();
-		specCases = new SpecificationCase[length];
-		for (int i = 0; i < length; i++)
-			specCases[i] = new SpecificationCase(m, ar);
+		specCases = new Vector<SpecificationCase>();
+		for (int i=0; i<length; i++) {
+			SpecificationCase sc = new SpecificationCase(m, ar);
+			specCases.add(sc);
+		}
 	}
 
+	/**
+	 * Adds a specificationCase to this specification.
+	 * Doesn't check semantical correctness
+	 * of methodSpecification.
+	 * 
+	 * @param sc - specificationCase to be appended
+	 * 		to <code>specCase</code> list of this
+	 * 		method specification.
+	 */
+	public void addCase(SpecificationCase sc) {
+		specCases.add(sc);
+	}
+	
 	/**
 	 * Prints annotation to a string.
 	 * 
@@ -88,9 +107,9 @@ public class MethodSpecification extends BCPrintableAttribute implements
 	@Override
 	protected String printCode1(BMLConfig conf) {
 		String code = precondition.printLine(conf, IDisplayStyle._requires);
-		if (specCases.length > 0)
-			for (int i = 0; i < specCases.length; i++)
-				code += specCases[i].printCode(conf);
+		if (specCases.size() > 0)
+			for (int i = 0; i < specCases.size(); i++)
+				code += specCases.get(i).printCode(conf);
 		return Parsing.addComment(code);
 	}
 
@@ -105,9 +124,11 @@ public class MethodSpecification extends BCPrintableAttribute implements
 		method.setMspec((MethodSpecification) pa);
 	}
 
-	/**
-	 * Removes this annotation.
-	 */
+	@Override
+	public void replace(BCMethod m) {
+		m.setMspec(this);
+	}
+
 	@Override
 	public void remove() {
 		method.setMspec(null);
@@ -143,9 +164,9 @@ public class MethodSpecification extends BCPrintableAttribute implements
 	 */
 	public void save(AttributeWriter aw) {
 		precondition.write(aw);
-		aw.writeAttributeCount(specCases.length);
-		for (int i = 0; i < specCases.length; i++)
-			specCases[i].write(aw);
+		aw.writeAttributeCount(specCases.size());
+		for (int i = 0; i < specCases.size(); i++)
+			specCases.get(i).write(aw);
 	}
 
 	/**

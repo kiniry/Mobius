@@ -1,14 +1,18 @@
 TODO: (- : to do, + : done, * : optional, > : in progress)
 
 + ...
-+ create CodeFragment class
-	+ complete quickChange method,
-	+ complete where method,
-	+ complete performChanges method:
-	+ lower method's visibility,
-	+ write JavaDocs for BCClassAttribute,
-		CodeFragment and CodePosition.
-> integrate with Umbra
-- complete specificationCase attribute
-- add attributes
-- add expressions
++ remove leading and trailing spaces from comments,
++ add superclass to MethodSpecification,
++ remove warnings,
++ integrate with Umbra
+	+ fix correct indicator,
+	+ (?) fix bug related with many editors open at the same time,
+	+ fix position synchronization,
+	+ add comment to BMLParsing and all changes in Umbra.
++ complete specificationCase attribute
+	+ add JavaReferenceType,
+	+ add Exsures,
+	+ add Modifies,
+	+ add JavaDocs.
+- add attributes,
+- add expressions.

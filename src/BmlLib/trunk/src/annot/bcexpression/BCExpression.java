@@ -6,6 +6,7 @@ import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
+import annot.textio.Priorities;
 
 /**
  * This class represents an BML expression. It's a superclass
@@ -17,11 +18,6 @@ import annot.textio.IDisplayStyle;
  * @author tomekb
  */
 public abstract class BCExpression {
-
-	/**
-	 * Maximum possible expression priority.
-	 */
-	public static final int MAX_PRI = 18;
 
 	/**
 	 * Type of expression, from annot.io.Code interface,
@@ -189,7 +185,7 @@ public abstract class BCExpression {
 	 * 		or null if it's invalid (if one of it's
 	 * 		subexpression have wrong type or is invalid).
 	 */
-	protected abstract JavaType getType1();
+	protected abstract JavaBasicType getType1();
 
 	/**
 	 * Checks if all subexpressions have correct types
@@ -199,7 +195,7 @@ public abstract class BCExpression {
 	 * 		or null if it's invalid (if one of it's
 	 * 		subexpression have wrong type or is invalid).
 	 */
-	public JavaType getType() {
+	public JavaBasicType getType() {
 		for (int i = 0; i < subExpr.length; i++)
 			if (subExpr[i] == null)
 				return null;
@@ -218,10 +214,11 @@ public abstract class BCExpression {
 	 * 		of this expression.
 	 */
 	public String printLine(BMLConfig conf, String prefix) {
-		conf.setRoot_pri(MAX_PRI);
+		conf.setRoot_pri(Priorities.MAX_PRI);
 		conf.incInd();
 		conf.setGoControlPrint(false);
 		String str = printCode(conf);
+		prefix = conf.getPrettyPrinter().cleanup(prefix);
 		str = conf.getPrettyPrinter().breakLines(str, prefix.length() + 1);
 		if (IDisplayStyle.goControlPrint) {
 			str += "\n------------------------------------------\n"

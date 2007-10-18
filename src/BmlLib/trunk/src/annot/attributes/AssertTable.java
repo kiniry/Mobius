@@ -8,6 +8,7 @@ import annot.textio.IDisplayStyle;
 
 /**
  * This class represents "assert table" method attribute.
+ * It is used only in saving to / loading from JavaClass.
  * 
  * @author tomekb
  */
@@ -18,7 +19,9 @@ public class AssertTable extends BCAttributeTable {
 	 * 
 	 * @param m - method containing this attribute,
 	 * @param parent - BCAttributeMap containing
-	 * 		its attributes. TODO czyje atrybuty?
+	 * 		its attributes. This attribute can only
+	 * 		save to / load atrtbutes from BCEL's Unknown
+	 * 		attribute, it doesn't store them itself.
 	 * @see BCAttributeTable#BCAttributeTable(BCMethod, BCAttributeMap)
 	 */
 	public AssertTable(BCMethod m, BCAttributeMap parent) {
@@ -37,7 +40,7 @@ public class AssertTable extends BCAttributeTable {
 	@Override
 	protected SingleAssert loadSingle(BCMethod m, AttributeReader ar)
 			throws ReadAttributeException {
-		AbstractFormula f = (AbstractFormula) ar.readExpression();
+		AbstractFormula f = ar.readFormula();
 		SingleAssert sa = new SingleAssert(m, null, -1, f);
 		return sa;
 	}

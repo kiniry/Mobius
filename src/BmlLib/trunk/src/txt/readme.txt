@@ -14,7 +14,7 @@
 	test.Testuj (it should not crash and it should display that
 	all tests passes).
 
-3. Using this library [may change soon].
+3. Using this library.
 	Create a annot.bcclass.BCClass (from JavaClass or from
 	filename), it represents a bytecode class. Use it's
 	getMethod(int) method to get bytecode methods, or
@@ -30,12 +30,11 @@
 	you can usually simply create a new one. Use methods from
 	annot.textio.CodeFragment to find position in bytecode
 	(method, instruction and annotation) at given line
-	of bytecode (unless it's format changes). Use CodeFragment
-	for parsing large fragments of bytecode into BCClass.
-	Do not use BCEL's class nor method diffrent than in this
-	library (you should access BCEL structures via BCClass,
-	do not create new JavaClass nor MethodGen, unrelated with
-	used BCClass).
+	of bytecode. Use CodeFragment for parsing large fragments
+	of bytecode into BCClass. Do not use BCEL's class
+	nor method diffrent than in this library (you should access
+	BCEL structures via BCClass, do not create new JavaClass,
+	ClassGen nor MethodGen, unrelated with used BCClass).
 
 4. Extending supported language.
 	To add a constant, BML attribute, new BML expression,

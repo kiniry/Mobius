@@ -1,9 +1,7 @@
 package annot.bcexpression;
 
 import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.BMLConfig;
 
 /**
  * This class represents expressions that returns an integer

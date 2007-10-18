@@ -81,7 +81,8 @@ public interface IDisplayStyle {
 
 	/**
 	 * BML annotations keywords (at the beginning
-	 * of annotations only).
+	 * of annotations only). If you want to change them,
+	 * remember to update lexer (in BML.g3).
 	 * Must not end with whitespace (it causes errors
 	 * in tests)!
 	 */
@@ -91,6 +92,8 @@ public interface IDisplayStyle {
 	public static final String _sc_start = "{|";
 	public static final String _sc_end = "|}";
 	public static final String _precondition = "\\precondition";
+	public static final String _modifies = "\\modifies";
 	public static final String _postcondition = "\\ensures";
+	public static final String _exsures = "\\exsures";
 
 }

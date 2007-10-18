@@ -22,6 +22,11 @@ public abstract class Priorities implements Code {
 	public static final int LEAF = 0;
 
 	/**
+	 * Maximum possible expression priority.
+	 */
+	public static final int MAX_PRI = 18;
+
+	/**
 	 * Initializes <code>priorities</code> array.
 	 */
 	private static void setPriorities() {

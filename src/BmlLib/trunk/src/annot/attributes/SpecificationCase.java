@@ -1,6 +1,10 @@
 package annot.attributes;
 
+import java.util.Iterator;
+import java.util.Vector;
+
 import annot.bcclass.BCMethod;
+import annot.bcexpression.modifies.ModifyExpression;
 import annot.formula.AbstractFormula;
 import annot.formula.Predicate0Ar;
 import annot.io.AttributeReader;
@@ -29,10 +33,22 @@ public class SpecificationCase {
 	private AbstractFormula precondition;
 
 	/**
+	 * This expression describes what variables can change
+	 * in this case.
+	 */
+	private ModifyExpression modifies;
+
+	/**
 	 * A condition that should be true if precondition is so.
 	 */
 	private AbstractFormula postcondition;
 
+	/**
+	 * exception conditions vector. Each element describes
+	 * on of exception throws by described method.
+	 */
+	private Vector<Exsure> excondition;
+	
 	/**
 	 * Creates an empty specification case, with both
 	 * precondition and postcondition set to true.
@@ -42,7 +58,9 @@ public class SpecificationCase {
 	public SpecificationCase(BCMethod m) {
 		this.method = m;
 		this.precondition = Predicate0Ar.TRUE;
+		this.modifies = ModifyExpression.Everything;
 		this.postcondition = Predicate0Ar.TRUE;
+		this.excondition = new Vector<Exsure>();
 	}
 
 	/**
@@ -54,10 +72,21 @@ public class SpecificationCase {
 	 * 		postcondition.
 	 */
 	public SpecificationCase(BCMethod m, AbstractFormula precondition,
-			AbstractFormula postcondition) {
+			ModifyExpression modifies, AbstractFormula postcondition,
+			Vector<Exsure> exsures) {
 		this.method = m;
+		if (precondition == null)
+			throw new RuntimeException("SpecificationCase's precondition == null !");
 		this.precondition = precondition;
+		if (modifies == null)
+			modifies = ModifyExpression.Everything;
+		this.modifies = modifies;
+		if (postcondition == null)
+			postcondition = Predicate0Ar.TRUE;
 		this.postcondition = postcondition;
+		if (exsures == null)
+			exsures = new Vector<Exsure>();
+		this.excondition = exsures;
 	}
 
 	/**
@@ -73,8 +102,15 @@ public class SpecificationCase {
 	public SpecificationCase(BCMethod m, AttributeReader ar)
 			throws ReadAttributeException {
 		this(m);
-		this.precondition = (AbstractFormula) ar.readExpression();
-		this.postcondition = (AbstractFormula) ar.readExpression();
+		this.precondition = ar.readFormula();
+		this.modifies = ModifyExpression.getModifyExpression(ar);
+		this.postcondition = ar.readFormula();
+		this.excondition = new Vector<Exsure>();
+		int count = ar.readAttributesCount();
+		for (int i=0; i<count; i++) {
+			Exsure ex = new Exsure(ar);
+			excondition.add(ex);
+		}
 	}
 
 	/**
@@ -84,7 +120,12 @@ public class SpecificationCase {
 	 */
 	public void write(AttributeWriter aw) {
 		precondition.write(aw);
+		modifies.write(aw);
 		postcondition.write(aw);
+		aw.writeAttributeCount(excondition.size());
+		Iterator<Exsure> iter = excondition.iterator();
+		while (iter.hasNext())
+			iter.next().writeSingle(aw);
 	}
 
 	/**
@@ -94,13 +135,28 @@ public class SpecificationCase {
 	 * @return string representation of specificatoin case.
 	 */
 	public String printCode(BMLConfig conf) {
-		String code = "";
+		String code = " ";
 		code += IDisplayStyle._sc_start + conf.newLine();
 		conf.incInd();
 		code += precondition.printLine(conf, IDisplayStyle._precondition);
+		if (modifies != ModifyExpression.Everything)
+			code += modifies.printLine(conf, IDisplayStyle._modifies);
 		code += postcondition.printLine(conf, IDisplayStyle._postcondition);
+		if (excondition.size() == 1) {
+			code += conf.getIndent() + IDisplayStyle._exsures + excondition.get(0).printCode(conf);
+		} else if (excondition.size() > 1) {
+			code += conf.getIndent() + IDisplayStyle._exsures;
+			Iterator<Exsure> iter = excondition.iterator();
+			while (iter.hasNext()) {
+				code += conf.newLine();
+				code += iter.next().printCode(conf);
+			}
+			conf.decInd();
+			code += conf.newLine();
+			conf.incInd();
+		}
 		conf.decInd();
-		code += IDisplayStyle._sc_end + conf.newLine();
+		code += " " + IDisplayStyle._sc_end + conf.newLine();
 		return code;
 	}
 

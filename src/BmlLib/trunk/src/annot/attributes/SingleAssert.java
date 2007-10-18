@@ -101,7 +101,7 @@ public class SingleAssert extends InCodeAttribute {
 	 */
 	@Override
 	protected void load(AttributeReader ar) throws ReadAttributeException {
-		formula = (AbstractFormula) ar.readExpression();
+		formula = ar.readFormula();
 	}
 
 	/**

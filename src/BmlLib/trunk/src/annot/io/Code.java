@@ -28,6 +28,8 @@ public interface Code {
 	public static final int NOTEQ = 0x17;
 	public static final int INT_LITERAL = 0x40;
 	public static final int JAVA_TYPE = 0xC0;
+	public static final int MODIFIES_EVERYTHING = 0xD0;
+	public static final int MODIFIES_NOTHING = 0xD1;
 	public static final int BOUND_VAR = 0xE0;
 
 	// new opcodes:

@@ -6,7 +6,7 @@ This document describes changes in code required to extend
 
 2. To add an attribute:
 	a). Class attribute:
-		- create a subclass of BCPrintableAttribute
+		- create a subclass of ClassAttribute
 			that implements IBCAttribute,
 		- add new attribute type to AType interface,
 		- update BCPrintableAttribute.parse(...) method,
@@ -17,8 +17,21 @@ This document describes changes in code required to extend
 		- update BCConstantPool.addStandardConstants(),
 		- update AttributeReader.readAttribute(ua),
 		- update CodeFragment.getAllAttributeNames(),
-		- add parser rule to BML.g3 grammar.
-	b). Method atribute (except method specification):
+		- add parser rule to BML.g3 grammar,
+		- add test cases to OldTests.
+	b). Method attribute:
+		- create a subclass of MethodAttribute,
+		- add new attribute type to AType interface,
+		- update BCClass.getAllAttributes(types),
+		- update BCClass.removeBMLAttributes(arr),
+		- update BCConstantPool.addStandardConstants(),
+		- update AttributeReader.readAttribute(ua),
+		- update CodeFragment.getAllAttributeNames(),
+		- update CodeFragment.performChanges#annotations,
+		- add parser rule,
+		- update BML.g3#method,
+		- add test cases to OldTests.
+	c). inCode atribute:
 		- create a subclass of BCAttributeTable,
 		- create a subclass of InCodeAttribute,
 		- add new attribute type to AType interface,
@@ -30,7 +43,8 @@ This document describes changes in code required to extend
 		- update BCMethod.save(),
 		- update AttributeReader.readAttribute(ua),
 		- update CodeFragment.getAllAttributeNames(),
-		- add parser rule to BML.g3 grammar.
+		- add parser rule to BML.g3 grammar,
+		- add test cases to OldTests.
 
 3. To add an Expression:
 	- create subclass of BCExpression or ane of it's subclasses,

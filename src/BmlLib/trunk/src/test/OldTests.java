@@ -9,7 +9,6 @@ import org.apache.bcel.generic.InstructionHandle;
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
-import annot.attributes.InCodeAttribute;
 import annot.attributes.MethodSpecification;
 import annot.attributes.SingleAssert;
 import annot.attributes.SpecificationCase;
@@ -17,7 +16,7 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcexpression.BoundVar;
-import annot.bcexpression.JavaType;
+import annot.bcexpression.JavaBasicType;
 import annot.bcexpression.NumberLiteral;
 import annot.formula.AbstractFormula;
 import annot.formula.Formula;
@@ -26,12 +25,9 @@ import annot.formula.Predicate2Ar;
 import annot.formula.QuantifiedFormula;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
-import annot.textio.BMLConfig;
-import annot.textio.BMLParser;
 import annot.textio.CodeFragment;
 import annot.textio.CodePosition;
 import annot.textio.CodeSearch;
-import annot.textio.Parsing;
 
 /**
  * Manual tests for BmlLib library. After running some
@@ -167,7 +163,7 @@ public final class OldTests {
 			QuantifiedFormula qf = new QuantifiedFormula(code);
 			int bvc = rand() % 3 + 1;
 			for (int i = 0; i < bvc; i++) {
-				qf.addVariable(new BoundVar(JavaType.JavaInt, ind, qf,
+				qf.addVariable(new BoundVar(JavaBasicType.JavaInt, ind, qf,
 						names[ind % names.length]));
 				ind++;
 			}
@@ -275,6 +271,7 @@ public final class OldTests {
 	 * @return BCClass loaded from "Empty2.class" example
 	 * 		file, with some BML annotations.
 	 */
+	@SuppressWarnings("deprecation")
 	public static BCClass createSampleClass() throws ClassNotFoundException,
 			ReadAttributeException {
 		MLog.putMsg(MLog.PInfo, xxx);
@@ -334,7 +331,7 @@ public final class OldTests {
 	 */
 	private static AbstractFormula sampleQuantifiedFormula() {
 		QuantifiedFormula f = new QuantifiedFormula(Code.FORALL_WITH_NAME);
-		BoundVar bv = new BoundVar(JavaType.JavaInt, 0, f, "a");
+		BoundVar bv = new BoundVar(JavaBasicType.JavaInt, 0, f, "a");
 		f.addVariable(bv);
 		f.setFormula(new Predicate2Ar(Code.LESS, bv, new NumberLiteral(10)));
 		return f;
@@ -343,6 +340,7 @@ public final class OldTests {
 	/**
 	 * A simple test scenario.
 	 */
+	@SuppressWarnings("deprecation")
 	private static void addRemoveTest() throws IOException,
 			ClassNotFoundException, ReadAttributeException,
 			RecognitionException {
@@ -351,7 +349,7 @@ public final class OldTests {
 		bcc.setInvariant(new ClassInvariant(bcc));
 		BCMethod m = bcc.getMethod(1);
 		SpecificationCase[] sc = { new SpecificationCase(m, Predicate0Ar.TRUE,
-				Predicate0Ar.FALSE) };
+				null, Predicate0Ar.FALSE, null) };
 		m.setMspec(new MethodSpecification(m, Predicate0Ar.TRUE, sc));
 		SingleAssert olda = (SingleAssert) m.getAmap().addAttribute(1, 8, 3);
 		m.getAmap().addAttribute(1, 5, 0);
@@ -367,8 +365,26 @@ public final class OldTests {
 			throw new RuntimeException("error (minor != 4)");
 		refresh();
 		CodeSearch.ComputeAttributeLines(bcc);
+		code = bcc.printCode();
+		int clength = code.split("\n").length;
+		int hash = 0;
+		for (int i=0; i<23; i++) {
+			int up = CodeFragment.goUp(code, i);
+			int down = CodeFragment.goDown(code, i);
+			hash += 3 * i * up + 7 * i * down;
+		}
+		if (hash % 1000 != 947) {
+			for (int i=0; i<clength; i++) {
+				int up = CodeFragment.goUp(code, i);
+				int down = CodeFragment.goDown(code, i);
+				System.out.println("line "+i+" ~~> ("+up+", "+down+")");
+				if ((up > i) || (down < i))
+					error("goUp / goDown error");
+			}
+			System.out.println("hash="+hash % 1000);
+		}
 		BCPrintableAttribute[] all = bcc.getAllAttributes(AType.C_ALL);
-		for (int i = 0; i < all.length; i++)
+		for (int i=0; i<all.length; i++)
 			all[i].remove();
 		refresh();
 	}
@@ -377,6 +393,7 @@ public final class OldTests {
 	 * A prettyPrinter test. Loads "Empty.class" file and
 	 * adds an large assert to it, then displays it.
 	 */
+	@SuppressWarnings("deprecation")
 	private static void pp_test() throws ClassNotFoundException,
 			ReadAttributeException, IOException {
 		// wether assert formula should be generated and saved
@@ -543,27 +560,27 @@ public final class OldTests {
 		int cto = code.indexOf(to, cfrom);
 		cf.addChange(cfrom, cto - cfrom, newCode);
 		cf.performChanges();
+		if (correct != 0) {
+			boolean ok = cf.isCorrect();
+			if ((correct == 1) && !ok) {
+				ret = false;
+				cf = new CodeFragment(bcc, code);
+				MLog.mask = oldMask;
+				cf.modify(cfrom, cto - cfrom, newCode);
+				System.out.println("Test " + test_nr + ": code replace failed!");
+			}
+			if ((correct == -1) && ok) {
+				ret = false;
+				MLog.mask = oldMask;
+				cf = new CodeFragment(bcc, code);
+				cf.modify(cfrom, cto - cfrom, newCode);
+				System.out.println("Test " + test_nr + ": syntax error not detected!");
+			}
+		}
 		int h = cf.hash();
 		System.out.print("hash = " + h);
 		if (h == hash) {
 			System.out.println(" (ok)");
-			if (correct != 0) {
-				boolean ok = cf.isCorrect();
-				if ((correct == 1) && !ok) {
-					ret = false;
-					cf = new CodeFragment(bcc, code);
-					MLog.mask = oldMask;
-					cf.modify(cfrom, cto - cfrom, newCode);
-					System.out.println("Test " + test_nr + ": code replace failed!");
-				}
-				if ((correct == -1) && ok) {
-					ret = false;
-					MLog.mask = oldMask;
-					cf = new CodeFragment(bcc, code);
-					cf.modify(cfrom, cto - cfrom, newCode);
-					System.out.println("Test " + test_nr + ": syntax error not detected!");
-				}
-			}
 		} else {
 			if (hash == -1) {
 				System.out.println(" (not set yet)");
@@ -615,13 +632,16 @@ public final class OldTests {
 		replaceTest("res (", "e))", 909, 25, true);
 		replaceTest("~(~false", "\\req", 834, 517, true);
 		replaceTest("invariant", "requires", 570, 765, true);
-		replaceTest("rt false", " && (", 738, 830, true, "");
+		replaceTest("rt false", " && (", 771, 830, true, "");
 		replaceTest("~(~(~(~", "\\a", 464, 431, true, "false)))\n\\assert true\n * ");
 		replaceTest("(20)", "\n3:", 638, noChange, false, "\n/* \\assert false");
 		replaceTest("(20)", "\n3:", 254, 993, true, "\n/* \\assert false */");
+		replaceTest("(20)", "\n3:", 410, 993, true, "\n  /* \\assert false */  ");
 		replaceTest("()\n", "\n0:", 758, 535, true, "");
-		replaceTest("/*", "*/", 163, noChange, false, "");
+		replaceTest("/*", "*/", 995, noChange, false, "");
 		replaceTest("/*", "*/", 328, 280, true, "  ");
+		replaceTest("Empty\n\n", "\npublic", 758, 169, true, "");
+		replaceTest("V (28)\n", "8:", 483, 138, true, "/* \\assert forall int a; a > 0 */\n");
 		System.out.println("code replace tests completed.");
 		if (errc > 0) {
 			System.out.println("FAILURES: " + errc + " tests failed!");

@@ -22,8 +22,11 @@ public abstract class BCPrintableAttribute {
 	 */
 	private String last_code = "";
 	
-	// for use from outside only.
+	// for use from outside only (2 fields):
+	@Deprecated
 	public int line_start = -1;
+	
+	@Deprecated
 	public int line_end = -1;
 
 	/**

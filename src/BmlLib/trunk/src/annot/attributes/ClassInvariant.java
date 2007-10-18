@@ -3,7 +3,6 @@ package annot.attributes;
 import org.antlr.runtime.RecognitionException;
 
 import annot.bcclass.BCClass;
-import annot.bcclass.MLog;
 import annot.formula.AbstractFormula;
 import annot.formula.Predicate0Ar;
 import annot.io.AttributeReader;
@@ -65,7 +64,7 @@ public class ClassInvariant extends ClassAttribute implements
 	public ClassInvariant(BCClass bcc, AttributeReader ar)
 			throws ReadAttributeException {
 		this.bcc = bcc;
-		this.invariant = (AbstractFormula) ar.readExpression();
+		this.invariant = ar.readFormula();
 	}
 
 	/**

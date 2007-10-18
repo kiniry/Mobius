@@ -41,6 +41,12 @@ public class BCConstantPool {
 	private int initialSize;
 
 	/**
+	 * JavaClass related with it's primary constantPool,
+	 * used for {@link #reset()} method.
+	 */
+	private JavaClass jc;
+	
+	/**
 	 * A standard constructor, from JavaClass. It inserts
 	 * constants from ordinary constant pool first, and
 	 * then from secons constant pool attribute.
@@ -50,6 +56,7 @@ public class BCConstantPool {
 	 * 		pool attribute format is invalid.
 	 */
 	public BCConstantPool(JavaClass jc) throws ReadAttributeException {
+		this.jc = jc;
 		constants = new Vector<Constant>();
 		ConstantPoolGen cpg = new ConstantPoolGen(jc.getConstantPool());
 		addStandardConstants(cpg);
@@ -100,15 +107,20 @@ public class BCConstantPool {
 	}
 
 	/**
-	 * Appends a constant to primary constant pool.
-	 * Cannot be used in saving to \ loading from file.
-	 * 
-	 * @param c
+	 * Reinitializes constant pool from it's JavaClass'es
+	 * primary constant pool, removing all variables from
+	 * secondary constant pool.
 	 */
-	public void addPrimary(Constant c) {
-		//XXX untested!
-		constants.add(initialSize, c);
-		initialSize++;
+	public void reset() {
+		MLog.putMsg(MLog.PProgress, "clearing second constant pool");
+		constants = new Vector<Constant>();
+		ConstantPoolGen cpg = new ConstantPoolGen(jc.getConstantPool());
+		addStandardConstants(cpg);
+		jc.setConstantPool(cpg.getFinalConstantPool());
+		ConstantPool cp = jc.getConstantPool();
+		initialSize = cp.getLength();
+		for (int i = 0; i < initialSize; i++)
+			constants.add(cp.getConstant(i));
 	}
 	
 	/**

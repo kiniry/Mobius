@@ -20,6 +20,8 @@ import annot.bcclass.BCMethod;
  */
 public class Parsing {
 
+	private static final boolean goShowTokens = false;
+	
 	/**
 	 * BCClass of all BML annotations parsing here.
 	 */
@@ -169,6 +171,12 @@ public class Parsing {
 		CharStream chstr = new ANTLRStringStream(str);
 		BMLLexer lex = new BMLLexer(chstr);
 		CommonTokenStream tokens = new CommonTokenStream(lex);
+		if (goShowTokens) {
+			System.out.print("tokens:");
+			for (int i=0; i<100; i++)
+				System.out.print(" " + tokens.toString(i, i));
+			System.out.println();
+		}
 		BMLParser parser = new BMLParser(tokens);
 		parser.init(bcc, m, bcc.getCp(), ih, minor);
 		BCPrintableAttribute result = parser.printableAttribute().ast;

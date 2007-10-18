@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
-import annot.bcexpression.JavaType;
+import annot.bcexpression.JavaBasicType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -130,10 +130,10 @@ public class QuantifiedFormula extends AbstractFormula {
 		int bvc = ar.getBvarCount();
 		for (int i = 0; i < n; i++) {
 			BCExpression expr = ar.readExpression();
-			if (!(expr instanceof JavaType))
+			if (!(expr instanceof JavaBasicType))
 				throw new ReadAttributeException("JavaType expected, read "
 						+ expr.getClass().toString());
-			JavaType jt = (JavaType) expr;
+			JavaBasicType jt = (JavaBasicType) expr;
 			BoundVar bv = new BoundVar(jt, bvc + i, this, null);
 			if ((root == Code.FORALL_WITH_NAME)
 					|| (root == Code.EXISTS_WITH_NAME)) {
@@ -227,10 +227,10 @@ public class QuantifiedFormula extends AbstractFormula {
 	 * 		or is invalid).
 	 */
 	@Override
-	protected JavaType getType1() {
-		if (getSubExpr(0).getType() != JavaType.JavaBool)
+	protected JavaBasicType getType1() {
+		if (getSubExpr(0).getType() != JavaBasicType.JavaBool)
 			return null;
-		return JavaType.JavaBool;
+		return JavaBasicType.JavaBool;
 	}
 
 	/**

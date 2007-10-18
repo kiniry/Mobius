@@ -1,4 +1,16 @@
-[pl] pytania do Chrzaszcza na najblizsze spotkanie.
+[pl] pytania do Chrzaszcza na najblizsze spotkanie:
+
+- czy moge zalozyc, ze zmiany w bajtkodzie beda wykonywane
+	tylko w jednym oknie na raz (tzn. pozostale okna beda
+	po refresh-u)?
+- w jakim formacie sa wyjatki z exsures?
+- czy typy wezlow AST powinny odpowiadac typom ich elementow
+	(np. czy formula powinna miec podwyrazenia typu
+	AbstractFormula, czy BCExpression)? Co z typami zmiennych
+	zwiazanych (czy powinny byc osobne klasy dla zmiennych
+	roznych typow)?
+
+poprzednie pytania do Chrzaszcza na spotkanie:
 
 - czy moge zalozyc, ze poczatek komentarza bedzie zawsze
 	na poczatku linii, a koniec komentarza na koncu linii? (NIE)

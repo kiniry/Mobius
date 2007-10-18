@@ -3,7 +3,6 @@ package annot.textio;
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.bcclass.BCClass;
-import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 
 /**

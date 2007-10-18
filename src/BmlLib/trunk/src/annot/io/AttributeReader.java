@@ -13,8 +13,9 @@ import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
-import annot.bcexpression.JavaType;
+import annot.bcexpression.JavaType1;
 import annot.bcexpression.NumberLiteral;
+import annot.formula.AbstractFormula;
 import annot.formula.Formula;
 import annot.formula.Predicate0Ar;
 import annot.formula.Predicate2Ar;
@@ -271,13 +272,30 @@ public class AttributeReader {
 				throw new ReadAttributeException(
 						"Utf8 expected as javaType name");
 			String name = ((ConstantUtf8) c).getBytes();
-			return JavaType.getJavaType(name);
+			return JavaType1.getJavaType(name);
 		// TODO: deprecated
 		case 0xE1: return new QuantifiedFormula(this, 0x0A);
 		case 0xE2: return new QuantifiedFormula(this, 0x0B);
 		default:
 			throw new ReadAttributeException("Unknown expression code: " + b);
 		}
+	}
+	
+
+	/**
+	 * Reads an Expression and checks that it is a formula.
+	 * 
+	 * @return Read expression.
+	 * @throws ReadAttributeException - if data in the stream
+	 * 		doesn't represent correct formula.
+	 */
+	public AbstractFormula readFormula() throws ReadAttributeException {
+		BCExpression expr = readExpression();
+		if (expr instanceof AbstractFormula) {
+			AbstractFormula af = (AbstractFormula) expr;
+			return af;
+		}
+		throw new ReadAttributeException("Formula expected");
 	}
 
 	/**

@@ -9,8 +9,6 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
-
 import annot.attributes.AType;
 import annot.attributes.BCAttributeMap;
 import annot.attributes.InCodeAttribute;
@@ -99,10 +97,9 @@ public class BCMethod {
 		if (displayStyle) {
 			InstructionList il = bcelMethod.getInstructionList();
 			il.setPositions();
-			Iterator iterator = bcelMethod.getInstructionList().iterator();
-			Iterator<InstructionHandle> iter = iterator;
+			Iterator iter = bcelMethod.getInstructionList().iterator();
 			while (iter.hasNext()) {
-				InstructionHandle ih = iter.next();
+				InstructionHandle ih = (InstructionHandle) iter.next();
 				bcode += amap.getAllAt(ih).printCode(conf);
 				bcode += ih.getPosition()
 						+ ": "

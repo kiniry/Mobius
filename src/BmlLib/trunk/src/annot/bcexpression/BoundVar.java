@@ -26,7 +26,7 @@ public class BoundVar extends BCExpression {
 	/**
 	 * Declared type of variable.
 	 */
-	private JavaType type;
+	private JavaBasicType type;
 
 	/**
 	 * Variable id. In each place in expression, all visible
@@ -54,7 +54,7 @@ public class BoundVar extends BCExpression {
 	 * @param qf - quantifier, where it is declared,
 	 * @param vname - variable name (can be null).
 	 */
-	public BoundVar(JavaType jt, int index, QuantifiedFormula qf, String vname) {
+	public BoundVar(JavaBasicType jt, int index, QuantifiedFormula qf, String vname) {
 		super(Code.BOUND_VAR);
 		this.type = jt;
 		this.index = index;
@@ -155,7 +155,7 @@ public class BoundVar extends BCExpression {
 	 * 		subexpression have wrong type or is invalid).
 	 */
 	@Override
-	protected JavaType getType1() {
+	protected JavaBasicType getType1() {
 		return type;
 	}
 

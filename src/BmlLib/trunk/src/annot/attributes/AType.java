@@ -1,12 +1,14 @@
 package annot.attributes;
 
+import annot.bcclass.BCClass;
+
 /**
  * Contains codes for each printable attribute type
  * and commonly used bit masks to represent sets of attributes
  * that we want retrieve (through getAllAttribute(int mask) methods).
- * TODO może @link do getAllAttribute?
  * TODO w czym te kody sa wykorzystywane? 
- * 
+ *
+ * @see BCClass#getAllAttributes(int)
  * @author tomekb
  */
 public interface AType {

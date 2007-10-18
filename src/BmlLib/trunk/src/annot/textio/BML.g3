@@ -8,13 +8,17 @@ options {
 
 @header {
 	package annot.textio;
-	import org.apache.bcel.generic.InstructionHandle;
+
 	import annot.bcclass.*;
 	import annot.attributes.*;
 	import annot.bcexpression.*;
+	import annot.bcexpression.modifies.*;
 	import annot.formula.*;
 	import annot.io.Code;
 	import annot.io.ReadAttributeException;
+
+	import org.apache.bcel.generic.InstructionHandle;
+	import java.util.Vector;
 }
 
 @members {
@@ -34,6 +38,13 @@ options {
 	private int bvc;  						// number of currently visible bound variables
 	private int lqfs; 						// last (current) quantified formula size
 	private HashMap<String, BoundVar> env;	// bound variable map
+	
+	//local variables
+	private boolean clr = false;
+	private AbstractFormula prec;
+	private ModifyExpression modif;
+	private AbstractFormula postc;
+	private Vector<Exsure> exc;
 
 	// set wether to affect parsed BCClass, or only check syntax
 	public void initClass(BCClass bcc, boolean affectBcc) {
@@ -130,30 +141,58 @@ parseClass :
 classComment :
 	EOA {
 		syso("begin of class decl");
-		bcc.setInvariant(null);
+		if (affectBcc)
+			bcc.setInvariant(null);
 	}
 	(c=classAttribute {
-		syso("next class attribute");
-		if (affectBcc)
-			$c.ast.replace(bcc);
+		if ($c.ast != null) {
+			syso("next class attribute");
+			if (affectBcc)
+				$c.ast.replace(bcc);
+		}
 	}
 		EOA)*
 	;
 
 method :
 	NO_METHOD {syso("skipping method");}
-	|	((NO_MSPEC {syso("skipping method specification");}
-		| met=methodSpecification {
-				syso("method specification");
-				if (affectBcc)
-					m.setMspec($met.ast);
-			} EOA)?
+	|	{clr = true;}
+		((NO_MSPEC {syso("skipping method specification");}
 		MHEAD {
 			syso("method header");
 			inr = 0;
 		}
+		| (met=methodAttribute {
+			if ($met.ast != null) {
+				syso("method attribute");
+				if (clr) {
+					syso("clearing method attributes");
+					if (affectBcc)
+						m.setMspec(null);
+					clr = false;
+				}
+				if (affectBcc)
+					$met.ast.replace(m);
+			}
+			} EOA)*
+			MHEAD {
+				if (clr) {
+					syso("clearing method attributes");
+					if (affectBcc)
+						m.setMspec(null);
+					clr = false;
+				}
+				syso("method header");
+				inr = 0;
+			})
 		(instruction {inr++;})+
-		EOM {syso("end of method");})
+		EOM {
+			syso("end of method");
+			if (inr != m.getInstructions().getInstructionHandles().length) {
+				syso("instruction count changed!");
+				reportError(null);
+			}
+		})
 	;
 
 instruction :
@@ -194,13 +233,15 @@ comment :
 		minor++;
 	}
 		| ica=inCodeAttribute {
-			syso("annotation");
-			SingleList sl = m.getAmap().getAllAt(ih);
-			if (affectBcc) {
-				sl.setNth(minor, $ica.ast);
-				m.getAmap().setAtributesForInstruction(ih, sl);
+			if ($ica.ast != null) {
+				syso("annotation");
+				SingleList sl = m.getAmap().getAllAt(ih);
+				if (affectBcc) {
+					sl.setNth(minor, $ica.ast);
+					m.getAmap().setAtributesForInstruction(ih, sl);
+				}
+				minor++;
 			}
-			minor++;
 		} EOA)*
 	;
 
@@ -208,7 +249,7 @@ comment :
 
 printableAttribute returns [BCPrintableAttribute ast] :
 	(c=classAttribute {$ast = $c.ast;}
-	| met=methodSpecification {$ast = $met.ast;}
+	| met=methodAttribute {$ast = $met.ast;}
 	| i=inCodeAttribute {$ast = $i.ast;})
 	EOF
 	;
@@ -217,12 +258,47 @@ classAttribute returns [ClassAttribute ast] :
 	| CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast);}
 	;
 
+methodAttribute returns [MethodAttribute ast] :
+	m=methodSpecification {$ast = $m.ast;};
+
 methodSpecification returns [MethodSpecification ast] :
 	| REQUIRES f3=formula {$ast = new MethodSpecification(m, $f3.ast, new SpecificationCase[0]);}
+		(SC_START s=specCase {$ast.addCase($s.ast);} SC_END)*
 	;
+
+exname returns [String name] :
+	{$name = "";}
+	(i=IDENT {$name += $i.getText();}
+	e=EXC_IDENT {$name += $e.getText();})*
+	(i=IDENT {$name += $i.getText();});
+
+specCase returns [SpecificationCase ast] :
+	(PRECONDITION f1=formula {
+		prec = $f1.ast;
+		modif = null;
+		postc = null;
+		exc = new Vector<Exsure>();
+	}
+	(MODIFIES me=modifyExpression {modif = $me.ast;})?
+	(POSTCONDITION f2=formula {postc = $f2.ast;})?
+	(EXSURES (i=exname EXCNAMEEND f3=formula {
+		if (($i.name != null) && ($f3.ast != null)) {
+			JavaReferenceType jrt = new JavaReferenceType($i.name);
+			Exsure ex = new Exsure(jrt, $f3.ast);
+			exc.add(ex);
+		}
+	})*)?)
+		{if (prec != null)
+			$ast = new SpecificationCase(m, prec, modif, postc, exc);
+		};
 
 inCodeAttribute returns [InCodeAttribute ast] :
 	ASSERT f1=formula {$ast = new SingleAssert(m, ih, -1, $f1.ast);}
+	;
+
+modifyExpression returns [ModifyExpression ast] :
+	NOTHING {$ast = ModifyExpression.Nothing;}
+	| EVERYTHING {$ast = ModifyExpression.Everything;}
 	;
 
 expression returns [BCExpression ast] :
@@ -234,7 +310,7 @@ formula returns [AbstractFormula ast] :
 		if ($e.ast == null) {
 			reportError(null);
 		} else {
-			if ($e.ast.getType() != JavaType.JavaBool)
+			if ($e.ast.getType() != JavaBasicType.JavaBool)
 				reportError(null);
 			$ast = (AbstractFormula)$e.ast;
 		}
@@ -251,7 +327,7 @@ equivalenceExpr returns [BCExpression ast] :
 
 impliesExpr returns [BCExpression ast] :
 	e=logicalOrExpr {$ast = $e.ast;}
-	(IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})?;
+	(IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*;
 
 logicalOrExpr returns [BCExpression ast] :
 	e=logicalAndExpr {$ast = $e.ast;}
@@ -284,8 +360,8 @@ relationalExpr returns [BCExpression ast] :
 quantifiedFormula returns [BCExpression ast] :
 	(FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
 	| EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
-	 (t=IDENT v=IDENT {try {
-			JavaType jt = JavaType.getJavaType($t.text);
+	 (t=ident v=ident {try {
+			JavaBasicType jt = JavaType1.getJavaBasicType($t.text);
 			lqfs++;
 			BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
 			if (env.containsKey($v.text))
@@ -307,7 +383,7 @@ quantifiedFormula returns [BCExpression ast] :
 primaryFormula returns [BCExpression ast] :
 	FALSE {$ast = Predicate0Ar.FALSE;}
 	| TRUE {$ast = Predicate0Ar.TRUE;}
-	| i=IDENT {$ast = whatIsIt($i.text);}
+	| i=ident {$ast = whatIsIt($i.text);}
 	| LOG_NOT p=primaryFormula {$ast = new Formula(Code.NOT, $p.ast);}
 	| PAR_LEFT f=uncheckedFormula PAR_RIGHT {$ast = $f.ast;}
 	;
@@ -317,9 +393,12 @@ shiftExpr returns [BCExpression ast] :
 
 primaryExpr returns [BCExpression ast] :
 	n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
-	| i=IDENT {$ast = whatIsIt($i.text);}
+	| i=ident {$ast = whatIsIt($i.text);}
 	| PAR_LEFT e=expression PAR_RIGHT {$ast = $e.ast;}
 	;
+
+ident returns [String name]:
+	i=IDENT {$name = $i.getText();};
 
 // ***** LEXER RULES *****
 
@@ -343,6 +422,15 @@ EOA: 'EOA';
 ASSERT: '\\assert';
 CLASSINVARIANT: '\\class invariant';
 REQUIRES: '\\requires';
+SC_START: '{|';
+SC_END: '|}';
+PRECONDITION: '\\precondition';
+MODIFIES: '\\modifies';
+POSTCONDITION: '\\ensures';
+EXSURES: '\\exsures';
+EXCNAMEEND: ':';
+NOTHING: 'nothing';
+EVERYTHING: 'everything';
 LOG_AND: '&&';
 LOG_OR: '||';
 IMPLIES: '==>';
@@ -364,7 +452,8 @@ PAR_LEFT: '(';
 PAR_RIGHT: ')';
 
 NAT: ('0'..'9')+;
-IDENT: ('a'..'z')+;
+IDENT: ('a'..'z'|'A'..'Z')+;
+EXC_IDENT: ('/'|'.')+;
 
 WS: (' '|'\t'|'\n')+ {skip();};
 EOF: '\f';

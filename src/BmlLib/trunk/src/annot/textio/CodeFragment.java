@@ -1,10 +1,7 @@
 package annot.textio;
 
-import org.antlr.runtime.RecognitionException;
-
 import test.OldTests;
 
-import annot.attributes.BCPrintableAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.MLog;
 
@@ -28,13 +25,6 @@ import annot.bcclass.MLog;
  */
 public class CodeFragment {
 
-	/**
-	 * Enables faster parsing of single annotations, but
-	 * this functionality may contain errors.
-	 * It is recommended not to use it.
-	 */
-	private static final boolean goQuickParse = false;
-	
 	/**
 	 * Shows code after preprocessing it
 	 * by {@link #decorate(String)} method.
@@ -227,10 +217,10 @@ public class CodeFragment {
 				end = cto;
 			}
 		}
-		oldEnd = end;// cp_hash = toRemove.length() - toAdd.length();//rm
 		prefix = code.substring(0, begin);
 		suffix = code.substring(end);
-		end += toAdd.length() - (end - begin);
+		oldEnd = prefix.length() + toRemove.length();
+		end = prefix.length() + toAdd.length();
 		code = prefix + toAdd + suffix;
 	}
 
@@ -271,11 +261,19 @@ public class CodeFragment {
 	 */
 	private static String[] getAllAttributeNames() {
 		String[] ret = { IDisplayStyle._classInvariant,
-				IDisplayStyle._requires, IDisplayStyle._precondition,
-				IDisplayStyle._postcondition, IDisplayStyle._assert };
+				IDisplayStyle._requires, IDisplayStyle._assert };
 		return ret;
 	}
 
+	/**
+	 * @return all keywords that can stand at the beginning
+	 * 		of an method annotation.
+	 */
+	private static String[] getMethodAttributeNames() {
+		String[] ret = {IDisplayStyle._requires};
+		return ret;
+	}
+	
 	/**
 	 * Searches for given keyword
 	 * in {@link #getAllAttributeNames()}.
@@ -283,10 +281,27 @@ public class CodeFragment {
 	 * @param str - a keyword, returned by
 	 * 		{@link #getKeyword(String)} method.
 	 * @return <b>true</b>, if it is an annotation's keyword,
-	 * 		or <b>false</b> otherwise.
+	 * 		<b>false</b> otherwise.
 	 */
 	private static boolean isAttributeStr(String str) {
 		String[] all = getAllAttributeNames();
+		for (int i = 0; i < all.length; i++)
+			if (all[i].equals(str))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Searches for given keyword
+	 * in {@link #getMethodAttributeNames()}
+	 * 
+	 * @param str - a keyword, returned by
+	 * 		{@link #getKeyword(String)} method.
+	 * @return <b>true</b>, if it is an method annotation's
+	 * 		keyword, <b>false</b> otherwise.
+	 */
+	private static boolean isMethodAttributeStr(String str) {
+		String[] all = getMethodAttributeNames();
 		for (int i = 0; i < all.length; i++)
 			if (all[i].equals(str))
 				return true;
@@ -348,14 +363,15 @@ public class CodeFragment {
 		for (int i=0; i<anames.length; i++)
 			if (line.indexOf(anames[i]) >= 0)
 				return anames[i];
-		if (line.startsWith(IDisplayStyle.comment_start)) {
-			if (line.endsWith(IDisplayStyle.comment_end))
-				return "single_line_comment"; //unused?
-			return "comment_start";
-		}
-		if (line.endsWith(IDisplayStyle.comment_end))
-			return "comment_end";
 		return "";
+	}
+
+	private static boolean isCommentStart(String line) {
+		return line.matches(" *"+Parsing.escape(IDisplayStyle.comment_start)+"(.|\n)*");
+	}
+
+	private static boolean isCommentEnd(String line) {
+		return line.matches("(.|\n)*"+Parsing.escape(IDisplayStyle.comment_end)+" *");
 	}
 
 	/**
@@ -383,106 +399,9 @@ public class CodeFragment {
 	private boolean isNewAnnotLine(String line) {
 		if (isKeyword(line))
 			return true;
-		if (line.matches(Parsing.escape(IDisplayStyle.comment_start)))
-			return true;
-		if (line.matches(Parsing.escape(IDisplayStyle.comment_end)))
+		if (isCommentStart(line) || isCommentEnd(line))
 			return true;
 		return false;
-	}
-	
-	/**
-	 * Parses current changes in bytecode if they concerns
-	 * only a single annotation.
-	 * 
-	 * @return <b>true</b> if changes was parsed by this
-	 * 		method, <b>false</b> otherwise.
-	 */
-	@Deprecated
-	private boolean quickParse() {
-		//XXX low quality (may contain errors)
-		if (!goQuickParse)
-			return false;
-		//DONE check if changes affected only single annotation
-		int lstart = getLineOfOffset(code, begin);
-		int loldEnd = getLineOfOffset(oldCode, oldEnd);
-		int lnewEnd = getLineOfOffset(code, end);
-		if (isKeyword(code.split("\n")[lstart]))
-			if (!isKeyword((prefix+"\n").split("\n")[lstart])) {
-				showMsg("annotation's keyword affected");
-				return false;
-			}
-		if (isKeyword(oldCode.split("\n")[lstart]))
-			if (!isKeyword((prefix+"\n").split("\n")[lstart])) {
-				showMsg("annotation's keyword affected");
-				return false;
-			}
-		if (oldCode.split("\n")[loldEnd].endsWith(IDisplayStyle.comment_end))
-			if (!(oldCode+"\n").split("\n")[0].endsWith(IDisplayStyle.comment_end)) {
-				showMsg("end of coment affected");
-				return false;
-			}
-		if (isKeyword(oldCode.split("\n")[loldEnd]))
-			if (!isKeyword((oldCode+"\n").split("\n")[loldEnd])) {
-				showMsg("other annotation's keyword affected");
-				return false;
-			}
-		if (code.split("\n")[lnewEnd].endsWith(IDisplayStyle.comment_end))
-			if (!(code+"\n").split("\n")[0].endsWith(IDisplayStyle.comment_end)) {
-				showMsg("end of coment affected");
-				return false;
-			}
-		if (isKeyword(code.split("\n")[lnewEnd]))
-			if (!isKeyword((code+"\n").split("\n")[lnewEnd])) {
-				showMsg("other annotation's keyword affected");
-				return false;
-			}
-		String[] rlines = toRemove.split("\n");
-		for (int i=0; i<rlines.length; i++)
-			if (isNewAnnotLine(rlines[i])) {
-				showMsg("added or removed fragment contains annotation borders");
-				return false;
-			}
-		//DONE parse modified annotations
-		String[] lines = code.split("\n");
-		int pos = lnewEnd + 1;
-		for (;; pos++) {
-			if (isNewAnnotLine(lines[pos]))
-				break;
-			if (pos >= lines.length) {
-				showMsg("cannot find end of comment");
-				return false;
-			}
-		}
-		String toParse = "";
-		if (!isKeyword(lines[pos]))
-			toParse = lines[pos];
-		pos--;
-		for (;; pos--) {
-			toParse = lines[pos] + "\n" + toParse;
-			if (isNewAnnotLine(lines[pos]))
-				break;
-			if (pos <= 0) {
-				showMsg("cannot find beginning of comment");
-				return false;
-			}
-		}
-		int anr = -1;
-		for (; pos >= 0; pos--)
-			if (isKeyword(lines[pos]))
-				anr++;
-		toParse = Parsing.purge(toParse);
-		MLog.putMsg(MLog.PInfo, "code to be parsed:\n" + toParse);
-		MLog.putMsg(MLog.PInfo, "parsing annotation's number: " + anr);
-		BCPrintableAttribute pa = bcc.getAllAttributes()[anr];
-		try {
-			pa.parse(toParse);
-		} catch (RecognitionException e) {
-			showMsg("syntax error");
-			correct = false;
-			return true;
-		}
-		MLog.putMsg(MLog.PNotice, "quickChange parsed annotation successfully.");
-		return true;
 	}
 	
 	/**
@@ -505,21 +424,26 @@ public class CodeFragment {
 		boolean decl = false;
 		int last_eoc = -1;
 		int last_boc = -1;
+		int last_eoa = -1;
 		for (int l=lines.length - 1; l >= 0; l--) {
 			String line = lines[l];
 			String kw = getKeyword(line);
-			if (isAttributeStr(kw))
+			if (isAttributeStr(kw)) {
 				lines[l] = "EOA\n" + lines[l];
-			if (lines[l].endsWith(IDisplayStyle.comment_end))
+				last_eoa = l;
+			}
+			if (isCommentEnd(lines[l])) {
 				lines[l] = lines[l] + "\nEOA";
+				last_eoa = l;
+			}
 			if (met) {
 				if (isNumber(kw)) {
 					lines[l] += "\nEOM";
 					met = false;
 				} else if (!decl) {
-					if (line.endsWith(IDisplayStyle.comment_end))
+					if (isCommentEnd(line))
 						last_eoc = l;
-					if (IDisplayStyle._requires.equals(kw)) {
+					if (isMethodAttributeStr(kw)) {
 						last_eoc = last_boc = -1;
 					} else if (isAttributeStr(kw)) {
 						if (last_eoc == -1) {
@@ -529,20 +453,26 @@ public class CodeFragment {
 						lines[last_eoc] += "\nEOD";
 						decl = true;
 					}
-					if (line.startsWith(IDisplayStyle.comment_start)) {
+					if (isCommentStart(line)) {
 						last_boc = l - 1;
 					}
 				}
 			}
 			if ("method".equals(kw)) {
-				last_boc = l;
+				last_boc = l - 1;
 				met = true;
 			}
 		}
 		if (last_eoc < 0)
 			last_eoc = last_boc;
 		if (!decl && (last_eoc >= 0))
-			lines[last_eoc] += "\nEOD";
+			if (last_eoc < 0) {
+				lines[0] = "\nEOD" + lines[0];
+			} else {
+				if ((last_eoa < 0) || (last_eoa > last_eoc))
+					lines[last_eoc] += "\nEOA";
+				lines[last_eoc] += "\nEOD";
+			}
 		String newCode = "";
 		for (int l=0; l<lines.length; l++)
 			newCode += lines[l] + "\n";
@@ -568,12 +498,17 @@ public class CodeFragment {
 		int diff = 0;
 		int j=0;
 		int lnr = getLineOfOffset(oldCode, oldPos);
+		if (lnr >= oldLines.length)
+			lnr = oldLines.length - 1;
 		for (int i=0; i<=lnr; i++) {
-			for (int x=0; x<2; x++)
+			for (int x=0; x<3; x++) {
+				if (j >= newLines.length - 1)
+					break;
 				if (!oldLines[i].equals(newLines[j])) {
 					diff += newLines[j].length() + 1;
 					j++;
 				}
+			}
 			if (!oldLines[i].equals(newLines[j]))
 				throw new RuntimeException("error in newPos()!");
 			j++;
@@ -594,18 +529,27 @@ public class CodeFragment {
 	private static boolean checkParenthness(String code) {
 		if (code == null)
 			return false;
+		if (code.indexOf("\nEOD\n") < 0) {
+			MLog.putMsg(MLog.PInfo, "no EOD found");
+			return false;
+		}
 		String[] lines = code.split("\n");
 		boolean inComment = false;
+		boolean inMethodSpec = false;
 		for (int l=0; l<lines.length; l++) {
 			String line = lines[l];
-			if (line.startsWith(IDisplayStyle.comment_start)) {
+			String kw = getKeyword(line);
+			if (("EOD".equals(line)) || ("EOM".equals(line)))
+				inMethodSpec = true;
+			if ("method".equals(kw))
+				inMethodSpec = false;
+			if (isCommentStart(line)) {
 				if (inComment) {
 					MLog.putMsg(MLog.PInfo, "invalid comment parenthness: /*/*");
 					return false;
 				}
 				inComment = true;
 			}
-			String kw = getKeyword(line);
 			if (inComment) {
 				if (("mthod".equals(kw))
 					|| ("class".equals(kw))
@@ -614,13 +558,17 @@ public class CodeFragment {
 						MLog.putMsg(MLog.PInfo, "invalid keyword in comment: " + kw);
 						return false;
 					}
+				if (isAttributeStr(kw)) {
+					if (isMethodAttributeStr(kw) != inMethodSpec)
+						return false;
+				}
 			} else {
 				if (isAttributeStr(kw)) {
 					MLog.putMsg(MLog.PInfo, "invalid keyword outside comment");
 					return false;
 				}
 			}
-			if (line.endsWith(IDisplayStyle.comment_end)) {
+			if (isCommentEnd(line)) {
 				if (!inComment) {
 					MLog.putMsg(MLog.PInfo, "invalid comment parenthness: */*/");
 					return false;
@@ -671,10 +619,6 @@ public class CodeFragment {
 		int pos1 = newPos(code, newCode, pos);
 		lnr = getLineOfOffset(newCode, pos1);
 		lpos = pos1 - getLineOffset(newCode, lnr);
-		if (newCode.indexOf("\nEOD\n") < 0) {
-			MLog.putMsg(MLog.PInfo, "no EOD found");
-			return null;
-		}
 		//DONE check comments parenthness (/* */) and keywords
 		if (!checkParenthness(newCode))
 			return null;
@@ -770,8 +714,6 @@ public class CodeFragment {
 	public void performChanges() {
 		correct = true;
 		errMsg = "";
-		if (quickParse())
-			return;
 		if (goShowDecoratedCode)
 			MLog.putMsg(MLog.PInfo, decorate(code));
 		//DONE compute positions of affected code
@@ -811,6 +753,7 @@ public class CodeFragment {
 		boolean affi = true;
 		int anr = -1;
 		boolean affa = true;
+		String akw = null;
 		boolean mma = (cp_start.getMet_nr() != cp_old.getMet_nr())
 			|| (cp_start.getMet_nr() != cp_new.getMet_nr())
 			|| (cp_start.getMet_cnt() != cp_old.getMet_cnt())
@@ -838,6 +781,7 @@ public class CodeFragment {
 				if (!affd)
 					lines[l] = "\\class attributes unaffected";
 				decl = false;
+				akw = null;
 				continue;
 			}
 			if (decl) {
@@ -863,6 +807,7 @@ public class CodeFragment {
 				inr = 0;
 				anr = -1;
 				mspec = true;
+				akw = null;
 				continue;
 			}
 			if (!affm) {
@@ -873,6 +818,7 @@ public class CodeFragment {
 				lines[l] = "[method header]";
 				mspec = false;
 				anr = -1;
+				akw = null;
 				continue;
 			}
 			// instructions
@@ -883,8 +829,13 @@ public class CodeFragment {
 						!= cp_new.getInstr_cnt()));
 			if (isNumber(kw)) {
 				lines[l] = "[instruction]";
-				if (!affi)
-					lines[l] = "\\instruction unaffected";
+				if (!affi) {
+//					if (mspec) {
+//						lines[l] = "\\method specification unaffected";
+//					} else {
+						lines[l] = "\\instruction unaffected";
+//					}
+				}
 				inr++;
 				anr = -1;
 				affi = (cp_start.getInstr_nr() <= inr)
@@ -892,6 +843,7 @@ public class CodeFragment {
 					|| (cp_new.getInstr_nr() >= inr)
 					|| (cp_old.getInstr_cnt()
 						!= cp_new.getInstr_cnt()));
+				akw = null;
 				continue;
 			}
 			if (!affi && (!mspec)) {
@@ -901,19 +853,28 @@ public class CodeFragment {
 			// annotations
 			affa = mia || (cp_start.getAnnot_nr() <= anr)
 				&& ((cp_old.getAnnot_nr() >= anr)
-					|| (cp_new.getAnnot_nr() >= anr)
+					|| (cp_new.getAnnot_nr() >= anr))
 					|| (cp_old.getAnnot_cnt()
-						!= cp_new.getAnnot_cnt()));
+						!= cp_new.getAnnot_cnt())
+					|| (cp_start.getAnnot_cnt()
+						!= cp_old.getAnnot_cnt());
 			if (mspec)
 				affa = (cp_start.isInMethodSpec())
 					|| (cp_old.isInMethodSpec())
 					|| (cp_new.isInMethodSpec());
+			if (isAttributeStr(kw))
+				akw = kw;
 			if ("EOA".equals(kw)) {
 				if ((anr == -1) && (mspec))
 					lines[l] = null;
 				if ((anr >= 0) && (!affa)) {
 					if (mspec) {
-						lines[l] = "\\method specification unaffected";
+						//XXX this should be updated while adding new nethod attribute.
+						if (IDisplayStyle._requires.equals(akw)) {
+							lines[l] = "\\method specification unaffected";
+						} else {
+							throw new RuntimeException("invalid method attribute not detected: " + kw);
+						}
 					} else {
 						lines[l] = "\\annotation unaffected";
 					}
@@ -935,14 +896,14 @@ public class CodeFragment {
 		for (int l=0; l<lines.length; l++)
 			if (lines[l] != null)
 				shortCode += lines[l] + "\n";
-		shortCode = shortCode.replaceAll("\n"
+		shortCode = shortCode.replaceAll("\n *"
 				+ Parsing.escape(IDisplayStyle.comment_start), "\n");
-		shortCode = shortCode.replaceAll("\n"
+		shortCode = shortCode.replaceAll("\n *"
 				+ Parsing.escape(IDisplayStyle.comment_next), "\n");
 		shortCode = shortCode.replaceAll(
 				Parsing.escape(IDisplayStyle.comment_end)
-				+ "\n", "\n");
-		if (shortCode.startsWith(IDisplayStyle.comment_start))
+				+ " *\n", "\n");
+		if (isCommentStart(shortCode))
 			shortCode = shortCode.substring(IDisplayStyle.comment_length);
 		while (shortCode.indexOf("\n\n") >= 0)
 			shortCode = shortCode.replaceAll("\n\n", "\n");
@@ -955,7 +916,7 @@ public class CodeFragment {
 		if (!correct)
 			throw new RuntimeException("error in performChanges()");
 		correct = bcc.getParser().parseClass(shortCode, false);
-		//TODO and parse it into bcc.
+		//DONE and parse it into bcc.
 		if (correct)
 			bcc.getParser().parseClass(shortCode, true);
 	}
@@ -997,7 +958,8 @@ public class CodeFragment {
 		addChange(cfrom, length, nc);
 		performChanges();
 		MLog.putMsg(MLog.PInfo, toString());
-		resetChanges();
+		if (correct)
+			resetChanges();
 	}
 	
 	/**
@@ -1067,5 +1029,74 @@ public class CodeFragment {
 	 */
 	public String getErrMsg() {
 		return errMsg;
+	}
+	
+	/**
+	 * Searches nearest bytecode (not BML) line above
+	 * given one in given bytecode.
+	 * For use in code position's synchronization in editors.
+	 * 
+	 * @param code - a bytecode with BML annotations,
+	 * @param lnr - number of line in <code>code</code>.
+	 * @return number of nearest line in <code>code</code>
+	 * 		above <code>lnr</code>'s that is not a BML
+	 * 		annotation's line.
+	 */
+	public static int goUp(String code, int lnr) {
+		String[] lines = code.split("\n");
+		if (lnr <= 0)
+			return 0;
+		if (lnr >= lines.length)
+			return lines.length - 1;
+		String kw = getKeyword(lines[lnr]);
+		for (int l=lnr; l>=0; l--) {
+			if (isCommentStart(lines[l]))
+				return l;
+			if (l == lnr)
+				continue;
+			kw = getKeyword(lines[l]);
+			if ("method".equals(kw) || "EOM".equals(kw)
+				|| "EOD".equals(kw) || isNumber(kw))
+					return l + 1;
+		}
+		return 0;
+	}
+	
+	/**
+	 * Searches nearest bytecode (not BML) line below
+	 * given one in given bytecode.
+	 * For use in code position's synchronization in editors.
+	 * 
+	 * @param code - a bytecode with BML annotations,
+	 * @param lnr - number of line in <code>code</code>.
+	 * @return number of nearest line in <code>code</code>
+	 * 		below <code>lnr</code>'s that is not a BML
+	 * 		annotation's line.
+	 */
+	public static int goDown(String code, int lnr) {
+		String[] lines = code.split("\n");
+		if (lnr <= 0)
+			return 0;
+		if (lnr >= lines.length)
+			return lines.length - 1;
+		String kw = getKeyword(lines[lnr]);
+		if ("method".equals(kw) || isNumber(kw))
+			return lnr;
+		int cnt = lines.length;
+		int ret = cnt - 1;
+		for (int l=lnr + 1; l<cnt; l++) {
+			kw = getKeyword(lines[l]);
+			if ("EOM".equals(kw) || "EOD".equals(kw)) {
+						ret = l - 1;
+						break;
+			}
+			if (isNumber(kw) || "method".equals(kw)) {
+				ret = l;
+				break;
+			}
+		}
+		while ((ret > lnr) && ("".equals(lines[ret])))
+			ret--;
+		return ret;
 	}
 }

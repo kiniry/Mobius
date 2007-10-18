@@ -277,7 +277,7 @@ public class CodePosition {
 			return 0;
 		int h = 1;
 		for (int i=0; i<str.length(); i++)
-			h = (h + i * (int)(str.charAt(i))) % 1000000;
+			h = (h + i * (str.charAt(i))) % 1000000;
 		return h;
 	}
 	
@@ -307,6 +307,7 @@ public class CodePosition {
 	 * @return a String representation of this bytecode
 	 * 		position.
 	 */
+	@Override
 	public String toString() {
 		String str = "";
 		if (met_nr >= 0) {
