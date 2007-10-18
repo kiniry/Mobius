@@ -81,6 +81,13 @@ public class BytecodeEditor extends TextEditor {
    * to the {@link #my_javaclass}.
    */
   private ClassGen my_classgen;
+  
+  /**
+   * BML-annotated bytecode (text + AST) displayed in this
+   * editor. All bytecode modifications should be made
+   * on this object.
+   */
+  private BMLParsing bmlp;
 
   /**
    * This field contains the number of history items. This
@@ -141,12 +148,17 @@ public class BytecodeEditor extends TextEditor {
    *           (used in particular during synchronization)
    * @param a_javaclass    BCEL structures that Bytecode has been
    *           generated from and may be modificated with
+   * @param bmlp  structures that represents current bytecode
+   *            (text and ast)
    */
   public final void setRelation(final CompilationUnitEditor an_editor,
-                                final JavaClass a_javaclass) {
+                                final JavaClass a_javaclass,
+                                final BMLParsing bmlp) {
     my_related_editor = an_editor;
     my_javaclass = a_javaclass;
     my_classgen = new ClassGen(a_javaclass);
+    //XXX changed: here bmlp is updated after editor recreation.
+    this.bmlp = bmlp;
     ((BytecodeDocumentProvider)getDocumentProvider()).
             setRelation(an_editor, this, getEditorInput());
   }
@@ -190,8 +202,9 @@ public class BytecodeEditor extends TextEditor {
     }
     try {
       JavaClass jc = my_classgen.getJavaClass();
-      if (BMLParsing.enabled && !BMLParsing.umbraEnabled) {
-        BCClass bcc = Global.bmlp.getBcc();
+      if (BMLParsing.enabled) {
+        //XXX changed: obtaining JavaClass from bmlp field
+        BCClass bcc = bmlp.getBcc();
         bcc.saveJC();
         jc = bcc.getJc();
       }
@@ -290,7 +303,8 @@ public class BytecodeEditor extends TextEditor {
     BCClass bcc;
     try {
       bcc = new BCClass(jc);
-      Global.bmlp = new BMLParsing(bcc);
+      //XXX changed: here bmlp object is initialized from JavaClass
+      bmlp = new BMLParsing(bcc);
       //this is where the textual representation is generated
       //FIXME we have to make sure it makes sense!!!
       final char[] bccode = bcc.printCode().toCharArray();
@@ -555,5 +569,14 @@ public class BytecodeEditor extends TextEditor {
   protected void finalize() throws Throwable {
     my_bconf.disposeColor();
     super.finalize();
+  }
+
+  /**
+   * @return BML-annotated bytecode (text + AST) displayed
+   * in this editor. All bytecode modifications should
+   * be made on this object.
+   */
+  public BMLParsing getBmlp() {
+    return bmlp;
   }
 }

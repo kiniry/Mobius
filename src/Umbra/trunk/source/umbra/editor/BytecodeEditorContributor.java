@@ -306,7 +306,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     page.closeEditor(an_editor, true);
     final IEditorPart newEditor = page.openEditor(an_input,
                         "umbra.BytecodeEditor", true);
-    ((BytecodeEditor) newEditor).setRelation(related, jc);
+    //XXX changed: copying bmlp from old to the new copy of bytecode editor.
+    final BMLParsing bmlp = ((BytecodeEditor)an_editor).getBmlp();
+    ((BytecodeEditor) newEditor).setRelation(related, jc, bmlp);
     final ISelection ns = new TextSelection(off, len);
     final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
                           getSelectionProvider();
