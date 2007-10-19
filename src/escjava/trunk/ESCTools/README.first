@@ -123,9 +123,8 @@ Please see the SRG Mailman web pages at
   <http://topos.ucd.ie/mailman/listinfo>
 for more information.
 
-To make a new bugs report: 
-  <mailto:mobius-ticket@mobius.ucd.ie> 
-  with "component=ESCJava2,version=2.0b2" as part of the subject line.
+To make a new bug report: 
+  <mailto:mobius-ticket@mobius.ucd.ie?subject=component=ESCJava2> 
 
 ----------------------------------------------------------------------------
 

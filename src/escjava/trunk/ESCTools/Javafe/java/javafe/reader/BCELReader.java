@@ -46,6 +46,7 @@ import javafe.genericfile.NormalGenericFile;
 import javafe.parser.Lex;
 import javafe.parser.ParseType;
 import javafe.util.ErrorSet;
+import javafe.util.Info;
 import javafe.util.Location;
 
 import org.apache.bcel.Constants;
@@ -92,21 +93,20 @@ class BCELReader extends Reader {
 		~Constants.ACC_TRANSIENT & 
 		~Constants.ACC_VOLATILE & 
 		~Constants.ACC_ANNOTATION & 
-		~Constants.ACC_SYNCHRONIZED &
-		~Constants.ACC_ENUM; // TODO will be needed when using Java 1.5 source code
+		~Constants.ACC_SYNCHRONIZED;
 
 	/** The package name of the class being parsed. */
-	public Name classPackage;
+	public Name classPackageName;
 
 	/**
 	 * A dummy location representing the class being parsed. Initialized by
 	 * constructor.
 	 */
-	//@ invariant classLocation != Location.NULL;
-	public int classLocation;
+	//@ invariant binaryClassLocation != Location.NULL;
+	public int binaryClassLocation;
 
 	/**
-	 * The BCEL representation of the binary classfile.
+	 * The BCEL representation of the bytecode
 	 */
 	protected JavaClass javaClass;
 
@@ -183,7 +183,7 @@ class BCELReader extends Reader {
 	 * (non-static) class. Each nested class does this for its own direct inner
 	 * classes. - DRCok
 	 * 
-	 * @param typeDecl
+	 * @param typeDecl Type declaration of the bytecode
 	 */
 	protected void removeExtraArg(TypeDecl typeDecl) {
 		TypeDeclElemVec typeDeclElemVec = typeDecl.elems;
@@ -220,15 +220,12 @@ class BCELReader extends Reader {
 		// Make the type declaration
 		TypeDecl typeDecl = makeTypeDecl();
 		
-		// Remove extra constructor used for inner classes
-		removeExtraArg(typeDecl);
-
 		// Make the compilation unit
 		TypeDeclVec types = TypeDeclVec.make(new TypeDecl[] { typeDecl });
 		TypeDeclElemVec emptyTypeDeclElemVec = TypeDeclElemVec.make();
 		ImportDeclVec emptyImportDeclVec = ImportDeclVec.make();
-		CompilationUnit result = CompilationUnit.make(classPackage, null,
-				emptyImportDeclVec, types, classLocation, emptyTypeDeclElemVec);
+		CompilationUnit result = CompilationUnit.make(classPackageName, null,
+				emptyImportDeclVec, types, binaryClassLocation, emptyTypeDeclElemVec);
 
 		return result;
 	}
@@ -248,12 +245,12 @@ class BCELReader extends Reader {
 		constantPool = javaClass.getConstantPool();
 		// N.B. This gets the class index not the class name index
 		classIndex = javaClass.getClassNameIndex(); 
-		setClassLocation(classLocation);
+		setClassNameAndLocation(binaryClassLocation);
 		readClassAttributes();
 		setSuperClassName();
 		String packageName = javaClass.getPackageName();
 		if (packageName.length() > 0) {
-			classPackage = Name.make(packageName, classLocation);
+			classPackageName = Name.make(packageName, binaryClassLocation);
 		}
 
 		// Read interface names
@@ -275,7 +272,7 @@ class BCELReader extends Reader {
 			
 		} catch (ClassNotFoundException e) {
 			// Missing classpath entry
-			ErrorSet.fatal(classLocation, "Incomplete classpath: " + e.getLocalizedMessage() + 
+			ErrorSet.fatal(binaryClassLocation, "Incomplete classpath: " + e.getLocalizedMessage() + 
 					" CLASSPATH is " + System.getenv("CLASSPATH")+ ":"+ System.getenv("ESC_CLASSPATH"));
 		}
 		 
@@ -297,20 +294,23 @@ class BCELReader extends Reader {
 
 		// The synchronized bit for classes is used for other purposes
 		int accessModifiers = javaClass.getAccessFlags()
-				& HIDDEN_ACCESS_FLAGS;
+				& ~Constants.ACC_SYNCHRONIZED;
 
 		TypeDecl typeDecl;
 		if (javaClass.isInterface()) {
 			typeDecl = (TypeDecl) InterfaceDecl.make(accessModifiers, null,
-					classIdentifier, interfaceVector, null, elementVec,
-					classLocation, classLocation, classLocation, classLocation);
+					canonicalClassIdentifier, interfaceVector, null, elementVec,
+					binaryClassLocation, binaryClassLocation, binaryClassLocation, binaryClassLocation);
 		} else {
 			typeDecl = (TypeDecl) ClassDecl.make(accessModifiers, null,
-					classIdentifier, interfaceVector, null, elementVec,
-					classLocation, classLocation, classLocation, classLocation,
+					canonicalClassIdentifier, interfaceVector, null, elementVec,
+					binaryClassLocation, binaryClassLocation, binaryClassLocation, binaryClassLocation,
 					super_class);
 		}
 		typeDecl.specOnly = true;
+		
+		// Remove extra constructor used for inner classes
+		removeExtraArg(typeDecl);
 
 		return typeDecl;
 	}
@@ -337,7 +337,7 @@ class BCELReader extends Reader {
 
 			fieldDecl[loopIndex] = // @ nowarn IndexTooBig;
 			FieldDecl.make(fieldModifiers, null, Identifier.intern(fieldName),
-					fieldType, classLocation, null, classLocation);
+					fieldType, binaryClassLocation, null, binaryClassLocation);
 
 			// Look for attributes which indicate a constant value
 			int fieldTypeTag = fieldDecl[loopIndex].type.getTag();
@@ -432,7 +432,7 @@ class BCELReader extends Reader {
 		}
 
 		LiteralExpr fieldInitializer = LiteralExpr.make(tag, literal,
-				classLocation);
+				binaryClassLocation);
 		return fieldInitializer;
 	}
 
@@ -458,8 +458,8 @@ class BCELReader extends Reader {
 			// put in a dummy body
 			if (includeBodies) {
 				routineDeclElement.body = //@ nowarn Null, IndexTooBig;
-				BlockStmt.make(StmtVec.make(), classLocation, classLocation);
-				routineDeclElement.locOpenBrace = classLocation;
+				BlockStmt.make(StmtVec.make(), binaryClassLocation, binaryClassLocation);
+				routineDeclElement.locOpenBrace = binaryClassLocation;
 			}
 
 			// Read method attributes and check for exceptions
@@ -574,13 +574,12 @@ class BCELReader extends Reader {
 
 				String outerClassName = outerClassFullName
 						.substring(subStringIndex);
-				String innerClassNamePath = makeInnerClassFileName(
+				String innerClassNamePath = makeInnerClassFullName(
 						innerClassName, outerClassName);
 
 				GenericFile sibling = genericFile
 						.getSibling(innerClassNamePath);
-				BCELReader innerClassReader = readInnerClass(sibling, true,
-						innerClassIndex);
+				BCELReader innerClassReader = readInnerClass(sibling, true);
 				
 				TypeDecl innerClassTypeDecl = innerClassReader.makeTypeDecl();
 				
@@ -588,9 +587,8 @@ class BCELReader extends Reader {
 				int innerAccessFlags = innerClass.getInnerAccessFlags();
 				innerClassTypeDecl.modifiers = filterAccessFlags(innerAccessFlags);
 				
-				// Only add inner classes that are not synthetic and not anonymous
-				if (!innerClassReader.isSyntheticClass() 
-						&& !isAnonymous(innerClassName)) {
+				// Only add inner classes that are not synthetic
+				if (!innerClassReader.isSyntheticClass()) {
 					classMembers.addElement(innerClassTypeDecl);
 				}
 			}
@@ -609,26 +607,16 @@ class BCELReader extends Reader {
 	}
 
 	/**
-	 * Indicates if this class name begins with a digit
-	 * 
-	 * @param innerClassName
-	 * @return True if anonymous
-	 */
-	protected /*@ pure @*/ boolean isAnonymous(/*@ non_null @*/ String innerClassName) {
-		return Character.isDigit(innerClassName.charAt(0));
-	}
-
-	/**
-	 * Construct the filename for the inner class
+	 * Construct the full name for the inner class e.g. AbstractList$Itr
 	 * 
 	 * @param innerClassName The name of the inner class
-	 * @param outerClassPathName The path name of the outer class
+	 * @param enclosingClassName The name of the enclosing class
 	 * 
 	 * @return The filename of the inner class
 	 */
-	protected String makeInnerClassFileName(String innerClassName,
-			String outerClassPathName) {
-		StringBuffer classNameBuffer = new StringBuffer(outerClassPathName);
+	protected String makeInnerClassFullName(String innerClassName,
+			String enclosingClassName) {
+		StringBuffer classNameBuffer = new StringBuffer(enclosingClassName);
 		classNameBuffer.append("$");
 		classNameBuffer.append(innerClassName);
 		classNameBuffer.append(".class");
@@ -641,42 +629,37 @@ class BCELReader extends Reader {
 	 * 
 	 * @param sibling
 	 * @param avoidSpec
-	 * @param innerClassIndex
 	 * 
 	 * @return A reader for the inner class
 	 */
-	protected BCELReader readInnerClass(GenericFile sibling, boolean avoidSpec,
-			int innerClassIndex) {
+	protected BCELReader readInnerClass(GenericFile sibling, boolean avoidSpec) {
 		BCELReader parser = new BCELReader();
 		parser.read(sibling, avoidSpec);
 		return parser;
 	}
 
 	/**
-	 * Set class location
+	 * Parse canonical class name, package name and location of binary classfile
 	 * 
 	 * @param locationIndex
-	 *            Location index for the class
+	 *            Location index for the binary class file
 	 * 
-	 * @requires cindex >= 0;
 	 */
-	protected void setClassLocation(int locationIndex) {
-		// record the class type and synthesize a location for the class binary
-
-		// remove the name of the enclosing class
-		String classNameString = javaClass.getClassName();
-		int subStringIndex = 1 + classNameString.lastIndexOf('$');
-
-		String typeName = classNameString.substring(subStringIndex);
-
-		Name className = Name.make(typeName, locationIndex);
-
-		Name qualifier = getNameQualifier(className);
-		Identifier terminal = getNameTerminal(className);
-		classPackage = qualifier;
-		classIdentifier = terminal;
-
-		DescriptorParser.classLocation = classLocation;
+	protected void setClassNameAndLocation(int locationIndex) {
+		 
+		// Get the binary class name e.g. java.lang.Character$Subset
+		String binaryClassName = javaClass.getClassName();
+		Info.out("Binary class name:    " + binaryClassName);
+		
+		// Get the canonical class name e.g. java.util.Map.Entry
+		String canonicalClassName = binaryClassName.replace('$', '.');
+		Info.out("Canonical class name: " + canonicalClassName);
+		
+		// Set class package name and location
+		Name className = Name.make(canonicalClassName, locationIndex);
+		classPackageName = getNameQualifier(className);
+		canonicalClassIdentifier = getNameTerminal(className);
+		DescriptorParser.classLocation = binaryClassLocation;
 	}
 
 	/**
@@ -685,9 +668,10 @@ class BCELReader extends Reader {
 	 */
 	protected void setSuperClassName() {
 
-		String superClassName = javaClass.getSuperclassName();
+		// Get the canonical super class name e.g. java.util.Map.Entry
+		String superClassName = javaClass.getSuperclassName().replace('$', '.');
 
-		Name name = Name.make(superClassName, classLocation);
+		Name name = Name.make(superClassName, binaryClassLocation);
 		super_class = TypeName.make(name);
 	}
 
@@ -707,32 +691,32 @@ class BCELReader extends Reader {
 		switch (bcelFieldType.getType()) {
 		case Constants.T_BOOLEAN:
 			typeTag = TagConstants.BOOLEANTYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_BYTE:
 			typeTag = TagConstants.BYTETYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_INT:
 			typeTag = TagConstants.INTTYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_LONG:
 			typeTag = TagConstants.LONGTYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_VOID:
 			typeTag = TagConstants.VOIDTYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_DOUBLE:
 			typeTag = TagConstants.DOUBLETYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_ARRAY:
@@ -742,17 +726,17 @@ class BCELReader extends Reader {
 
 		case Constants.T_FLOAT:
 			typeTag = TagConstants.FLOATTYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_SHORT:
 			typeTag = TagConstants.SHORTTYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 			
 		case Constants.T_CHAR:
 			typeTag = TagConstants.CHARTYPE;
-			astType = JavafePrimitiveType.make(typeTag, classLocation);
+			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 			
 		// Non primitive types
@@ -763,19 +747,6 @@ class BCELReader extends Reader {
 
 		return astType;
 
-	}
-
-	/**
-	 * Parse the type name of a field which is an object
-	 * 
-	 * @param field
-	 * @return
-	 */
-	protected javafe.ast.Type readObjectType(Field field) {
-
-		String fieldClassName = field.getClass().getName();
-		TypeName typeName = getCompoundTypeName(fieldClassName);
-		return typeName;
 	}
 
 	/**
@@ -803,16 +774,17 @@ class BCELReader extends Reader {
 		if (methodName.equals("<init>")) {
 			RoutineDecl constructor = (RoutineDecl) ConstructorDecl.make(
 					accessModifiers, null, null, formalVec, emptyTypeNameVec,
-					body, Location.NULL, classLocation, classLocation,
-					classLocation);
+					body, Location.NULL, binaryClassLocation, binaryClassLocation,
+					binaryClassLocation);
 			return constructor;
 		} else {
 
+			javafe.ast.Type returnType = signature
+					.getReturn();
 			RoutineDecl otherMethod = (RoutineDecl) MethodDecl.make(
 					accessModifiers, null, null, formalVec, emptyTypeNameVec,
-					body, Location.NULL, classLocation, classLocation,
-					classLocation, Identifier.intern(methodName), signature
-							.getReturn(), classLocation);
+					body, Location.NULL, binaryClassLocation, binaryClassLocation,
+					binaryClassLocation, Identifier.intern(methodName), returnType, binaryClassLocation);
 			return otherMethod;
 		}
 	}
@@ -839,7 +811,7 @@ class BCELReader extends Reader {
 	 * The identifier of the class being parsed. Initialized by set_this_class.
 	 */
 	//@ spec_public
-	protected Identifier classIdentifier;
+	protected Identifier canonicalClassIdentifier;
 
 	/**
 	 * Parse the table of throwable exceptions
@@ -872,16 +844,15 @@ class BCELReader extends Reader {
 	/**
 	 * Get the type name as a compound name without dots
 	 * 
-	 * @param exceptionClassName
+	 * @param className
 	 * 
 	 * @return The type name in compound form
 	 * @throws ClassFormatError
 	 */
-	protected TypeName getCompoundTypeName(String exceptionClassName)
+	protected TypeName getCompoundTypeName(/*@ non_null @*/ String className)
 			throws ClassFormatError {
 
-		StringTokenizer tokenizer = new StringTokenizer(exceptionClassName,
-				".$");
+		StringTokenizer tokenizer = new StringTokenizer(className,".$");
 
 		int count = tokenizer.countTokens();
 		javafe.util.Assert.notFalse(count > 0); //@ nowarn Pre;
@@ -892,10 +863,10 @@ class BCELReader extends Reader {
 
 		for (int loopVar = 0; tokenizer.hasMoreTokens(); loopVar++) {
 			identifiers[loopVar] = Identifier.intern(tokenizer.nextToken());
-			locations1[loopVar] = classLocation;
+			locations1[loopVar] = binaryClassLocation;
 
 			if (loopVar < count - 1)
-				locations2[loopVar] = classLocation;
+				locations2[loopVar] = binaryClassLocation;
 		}
 		//@ assume \nonnullelements(identifiers);
 		/*
@@ -930,7 +901,7 @@ class BCELReader extends Reader {
 			Identifier id = Identifier
 					.intern(identifierStringBuffer.toString());
 			formals[loopIndex] = FormalParaDecl.make(0, null, id, signature
-					.parameterAt(loopIndex), classLocation);
+					.parameterAt(loopIndex), binaryClassLocation);
 		}
 
 		return formals;
@@ -1013,7 +984,7 @@ class BCELReader extends Reader {
 	  @*/
 	public CompilationUnit read(/*@non_null*/ GenericFile target, boolean avoidSpec) {
 
-		this.classLocation = Location.createWholeFileLoc(target);
+		this.binaryClassLocation = Location.createWholeFileLoc(target);
 		this.genericFile = target;
 
 		// Parse the binary class file using the BCEL parser
@@ -1022,11 +993,6 @@ class BCELReader extends Reader {
 			readJavaClass(target);
 
 			CompilationUnit compilationUnit = getCompilationUnit();
-			
-			// If compilation unit is empty then issue a diagnostic warning
-			if (0 == compilationUnit.elems.size()) {
-				ErrorSet.warning(classLocation, "Empty class file");
-			}
 
 			return compilationUnit;
 
@@ -1062,5 +1028,4 @@ class BCELReader extends Reader {
 	public boolean isSyntheticClass() {
 		return syntheticClass;
 	}
-
 }
