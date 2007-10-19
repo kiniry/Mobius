@@ -1,7 +1,7 @@
 o Synchronize all workspaces (svn update)
 o Update ChangeLog
-o Full build and alltests. 'make build alltests'
-o Update the version number: the current version is 2.0b2
+o Full build and alltests. 'make clean build alltests'
+o Update the version number: the current version is 2.0b3
 o Update release-files/RELEASE_NOTES.txt
 o Resynchronize with Subversion
 o Release builds (binary and source) 

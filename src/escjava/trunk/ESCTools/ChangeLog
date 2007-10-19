@@ -1,3 +1,300 @@
+------------------------------------------------------------------------
+r3043 | dcochran | 2007-10-19 13:44:05 +0100 (Fri, 19 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/TestList.java-expected
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+   A /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test2002
+   A /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test2002/TestTopLevelType.java
+   A /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test2002/TestTopLevelTypeFive.java
+   A /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test2002/ans
+   A /src/escjava/trunk/ESCTools/Javafe/test/javafe/test/fe/test2002/run
+   M /src/escjava/trunk/ESCTools/README.first
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+
+Fixes ticket #40.  All existing test now pass in JDK 1.5.  Inner class parsing has been resolved by converting the binary class into the canonical class name.
+------------------------------------------------------------------------
+r3040 | jcharles | 2007-10-17 18:19:52 +0100 (Wed, 17 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+added the function symbols constructor
+------------------------------------------------------------------------
+r3039 | dcochran | 2007-10-16 17:47:28 +0100 (Tue, 16 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+
+Ticket #40: reset ESCJ
+------------------------------------------------------------------------
+r3038 | dcochran | 2007-10-16 16:54:08 +0100 (Tue, 16 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools
+   M /src/escjava/trunk/ESCTools/Escjava/java
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/Makefile
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/skip
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/ast/Modifiers.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/tc/PrepTypeDeclaration.java
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+   M /src/escjava/trunk/ESCTools/release-files/escj
+   M /src/escjava/trunk/ESCTools/release-files/quicktest
+   M /src/escjava/trunk/ESCTools/specs/java/io/FilterInputStream.refines-spec
+
+Ticket #40: Tests now complete under JDK 1.5, except for those which have been skipped
+------------------------------------------------------------------------
+r3037 | leavens | 2007-10-16 15:31:58 +0100 (Tue, 16 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/JMLTutorial.tex
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/README.txt
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples/BagOfInt.jml
+   M /src/escjava/trunk/ESCTools/slides/CAV2007Tutorial/examples_toedit/BagOfInt.jml
+
+Various fixes and corrections
+------------------------------------------------------------------------
+r3035 | dcochran | 2007-10-16 11:25:24 +0100 (Tue, 16 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+
+Ticket #40: Resolve classpath errors in automated tests
+------------------------------------------------------------------------
+r3034 | dcochran | 2007-10-16 10:33:40 +0100 (Tue, 16 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests/skip
+
+Ticket #40: Skip tests which currently fail in JDK 1.5
+------------------------------------------------------------------------
+r3033 | dcochran | 2007-10-16 10:19:52 +0100 (Tue, 16 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+   M /src/escjava/trunk/ESCTools/specs/java/io/BufferedInputStream.refines-spec
+
+Ticket #40: Added extra diagnostic message to help resolve classpath
+------------------------------------------------------------------------
+r3031 | dcochran | 2007-10-15 17:25:34 +0100 (Mon, 15 Oct 2007) | 1 line
+Changed paths:
+   A /src/escjava/trunk/ESCTools/Escjava/test/junittests/InnerClassGenerics.java
+   A /src/escjava/trunk/ESCTools/Escjava/test/junittests/InnerClassGenerics.java-expected
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests/skip
+
+Skip tests which involve generic inner classes.
+------------------------------------------------------------------------
+r3030 | dcochran | 2007-10-15 17:11:32 +0100 (Mon, 15 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile.defs
+
+Fixes #47 - replaced @echo with $(error ...)
+------------------------------------------------------------------------
+r3028 | dcochran | 2007-10-15 11:28:12 +0100 (Mon, 15 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+   M /src/escjava/trunk/ESCTools/release-files/escj
+   M /src/escjava/trunk/ESCTools/release-files/escjava2
+   M /src/escjava/trunk/ESCTools/release-files/quicktest
+
+Fixes tickets #39 and #41, with thanks to Radu.
+------------------------------------------------------------------------
+r3027 | rgrig | 2007-10-15 10:31:51 +0100 (Mon, 15 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/escj
+
+escj for mac
+------------------------------------------------------------------------
+r3026 | rgrig | 2007-10-15 10:14:26 +0100 (Mon, 15 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/escj
+
+tweaks to the escj script
+------------------------------------------------------------------------
+r3025 | dcochran | 2007-10-12 17:47:32 +0100 (Fri, 12 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/escj
+
+Fixed bash syntax errors
+------------------------------------------------------------------------
+r3024 | dcochran | 2007-10-12 17:09:29 +0100 (Fri, 12 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/tc/OutsideEnv.java
+
+Ticket #40: Undo last modification
+------------------------------------------------------------------------
+r3021 | hermann | 2007-10-11 14:57:23 +0100 (Thu, 11 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+
+------------------------------------------------------------------------
+r3012 | dcochran | 2007-10-10 16:51:33 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests/skip
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+   M /src/escjava/trunk/ESCTools/release-files/escj
+   M /src/escjava/trunk/ESCTools/specs/java/io/InputStream.refines-java
+   M /src/escjava/trunk/ESCTools/specs/java/io/OutputStream.refines-java
+
+Ticket #40: Fix or skip tests which fail in JDK 1.5
+------------------------------------------------------------------------
+r3010 | dcochran | 2007-10-10 15:47:03 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/reader/BCELReader.java
+
+Ticket #40: Added missing break in switch statement for resolving BCEL field tags.
+------------------------------------------------------------------------
+r3007 | dcochran | 2007-10-10 15:31:31 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests/skip
+   M /src/escjava/trunk/ESCTools/specs/java/util/Collection.spec
+
+Ticket #40: skipping or fixing tests which fail using BCEL or JDK 1.5
+------------------------------------------------------------------------
+r3006 | dcochran | 2007-10-10 15:28:29 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/escjava2
+   M /src/escjava/trunk/ESCTools/release-files/quicktest
+
+Fixes ticket #41
+------------------------------------------------------------------------
+r3004 | dcochran | 2007-10-10 15:25:27 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/Makefile
+
+Part of fix for ticket #40 : incomplete class path
+------------------------------------------------------------------------
+r2999 | hermann | 2007-10-10 13:54:38 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/EscNodeBuilder.java
+
+
+------------------------------------------------------------------------
+r2994 | hermann | 2007-10-10 13:08:16 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/EscNodeBuilder.java
+
+usin sortfield properly
+------------------------------------------------------------------------
+r2991 | dcochran | 2007-10-10 12:40:11 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.externalToolBuilders/make-clean.launch
+   M /src/escjava/trunk/ESCTools/.externalToolBuilders/make-source.launch
+
+Update Eclipse project build settings
+------------------------------------------------------------------------
+r2990 | dcochran | 2007-10-10 12:39:19 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/.project
+
+Update Eclipse project build settings
+------------------------------------------------------------------------
+r2989 | dcochran | 2007-10-10 12:37:58 +0100 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Javafe/java/javafe/tc/OutsideEnv.java
+
+Part-fix for Ticket #40
+------------------------------------------------------------------------
+r2979 | hermann | 2007-10-10 10:40:04 +0100 (Wed, 10 Oct 2007) | 2 lines
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/NodeBuilder.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/auflia/AufliaNodeBuilder.java
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/simplify/SimplifyNodeBuilder.java
+
+Changed dynLoc Stuff
+
+------------------------------------------------------------------------
+r2977 | dcochran | 2007-10-09 16:00:29 +0100 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/README.release
+
+Fixes ticket #38
+------------------------------------------------------------------------
+r2976 | hermann | 2007-10-09 14:08:58 +0100 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+
+------------------------------------------------------------------------
+r2975 | hermann | 2007-10-09 13:40:56 +0100 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/java/escjava/sortedProver/Lifter.java
+
+
+------------------------------------------------------------------------
+r2974 | dcochran | 2007-10-09 12:35:44 +0100 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/escj
+
+Fixes ticket #39
+------------------------------------------------------------------------
+r2971 | dcochran | 2007-10-09 11:32:23 +0100 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/docs/BUILDING_NEW_RELEASES.txt
+
+Ticket #27: Updated instructions for building new releases
+------------------------------------------------------------------------
+r2970 | dcochran | 2007-10-09 11:28:15 +0100 (Tue, 09 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Makefile
+
+Ticket #27: include release notes with binary releases
+------------------------------------------------------------------------
+r2962 | dcochran | 2007-10-08 16:50:45 +0100 (Mon, 08 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.1.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.2.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/Simplify-1.5.4.tru64
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/escjava.bat.win
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/escjava.linux
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/escjava.nt.win
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/escjava.solaris
+   M /src/escjava/trunk/ESCTools/Escjava/release/master/bin/escjava.tru64
+
+Remove svn:keywords property from Simplify binaries
+------------------------------------------------------------------------
+r2959 | dcochran | 2007-10-08 13:12:04 +0100 (Mon, 08 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+
+Fixed up XHTML errors in the release notes i.e. character sequences which cause XHTML errors when these notes are included into their HTML wrapper page.
+------------------------------------------------------------------------
+r2957 | dcochran | 2007-10-08 12:48:32 +0100 (Mon, 08 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+
+Reformat 2.0b2 release notes for HTML layout
+------------------------------------------------------------------------
+r2955 | dcochran | 2007-10-08 12:34:54 +0100 (Mon, 08 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools/docs/BUILDING_NEW_RELEASES.txt
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+
+Reformat 2.0b2 release notes for HTML layout
+------------------------------------------------------------------------
+r2954 | dcochran | 2007-10-08 12:05:34 +0100 (Mon, 08 Oct 2007) | 1 line
+Changed paths:
+   M /src/escjava/trunk/ESCTools
+   M /src/escjava/trunk/ESCTools/ChangeLog
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/TestComparable.java-expected
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/TestList.java-expected
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/TestObject.java-expected
+   M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/TestSystem1.java-expected
+   M /src/escjava/trunk/ESCTools/Escjava/test/junittests/Bug1.java-expected
+   M /src/escjava/trunk/ESCTools/Makefile
+   M /src/escjava/trunk/ESCTools/README.first
+   M /src/escjava/trunk/ESCTools/Simplify/Makefile
+   M /src/escjava/trunk/ESCTools/docs/BUILDING_NEW_RELEASES.txt
+   M /src/escjava/trunk/ESCTools/install.sh
+   M /src/escjava/trunk/ESCTools/release-files/RELEASE_NOTES.txt
+   M /src/escjava/trunk/ESCTools/release-files/escj
+   A /src/escjava/trunk/ESCTools/release-files/escj.bat
+   M /src/escjava/trunk/ESCTools/release-files/escjava2
+
+Fixes Ticket #27: Automatic testing of release builds
+
  ------------------------------------------------------------------------
 r2933 | dcochran | 2007-10-03 12:17:14 +0100 (Wed, 03 Oct 2007) | 1 line
 Changed paths:

@@ -3,9 +3,10 @@ version 2.0b3 "Mobius PVE Internal Release" (19 October 2007)
 New major features include:
 
 o Joe Kiniry and Radu Grigore have moved ESC/Java2 from a CVS/GForge 
-  repository to a Subversion/Trac repository and also updated the makefiles and
-  shell scripts to reflect this
-o Java 1.5 bytecode parsing, for inner class files, has been improved with help from Joe Kiniry
+  repository to a Subversion/Trac repository and also updated the 
+  makefiles and shell scripts to reflect this
+o Java 1.5 bytecode parsing, for inner class files, has been improved 
+  with help from Joe Kiniry
 
 The following tickets are FIXED or CLOSED in this release:
 
