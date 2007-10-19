@@ -173,29 +173,44 @@ BEGIN
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
-    EXISTS(s_new : MPState) : 
-      on_method_exit_normal(mp, md, a, s1, s_new, n, derive_rec) AND
-      IF up?(ex(pstate(s_new)))
-      THEN s2 = s_new
-      ELSE s2 = (# astate := on_method_MVA(ExitNormal)(mp, md)(s_new),
-                   pstate := pstate(s_new),
-                   gvs := gvs(s_new) #)
-      ENDIF
+    IF up?(ex(pstate(s1))) 
+    THEN s1 = s2 AND n = 0
+    ELSE 
+    EXISTS (m1, m2, m3 : nat, tau1, tau2, tau3 : MPState, 
+            inv : (wf_BoolExpr(program(mp)))) :
+      n = m1 + m2 + m3 + 1 AND
+      derive_rec(n)(mp)(post_set(md), s1, Unit, tau1)(m1) AND
+      tau2 = tau1 WITH 
+             [ astate := on_method_MVA(ExitNormal)(mp, md)(tau1) ] AND
+      inv = lookup_inv(program(mp), a) AND
+      check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
+      check_assertion(mp)(post(md), tau3, s2)(m3)(derive_rec(m3)) AND
+      st(pstate(s1)) = st(pstate(s2))
+    ENDIF
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val, 
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
-    EXISTS(s_new : MPState) : 
-      on_method_exit_exceptional(mp, md, a, s1, s_new, n, derive_rec) AND
-      IF up?(ex(pstate(s1))) AND up?(ex(pstate(s_new))) AND 
-         down(ex(pstate(s1))) = down(ex(pstate(s_new)))
-      THEN s2 = (# astate := on_method_MVA(ExitExceptional)(mp, md)(s_new),
-                   pstate := pstate(s_new),
-                   gvs := gvs(s_new) #)
-      ELSE s2 = s_new
-      ENDIF
+    IF up?(ex(pstate(s1))) 
+    THEN 
+    EXISTS (m1, m2 : nat, tau1, tau2, tau3 : MPState, 
+            inv : (wf_BoolExpr(program(mp)))) :
+      n = m1 + m2 + 1 AND
+      derive_rec(n)(mp)(exc_set(md), update_PState(s1, catch), 
+                       Unit, tau1)(m1) AND
+      tau2 = tau1 WITH 
+             [ astate := on_method_MVA(ExitExceptional)(mp, md)(tau1) ] AND
+      inv = lookup_inv(program(mp), a) AND
+      check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
+      s2 = (IF up?(ex(pstate(tau3)))
+            THEN tau3 
+            ELSE update_PState(tau3, raise(down(ex(pstate(s1)))))
+            ENDIF) AND
+      st(pstate(s1)) = st(pstate(s2))
+    ELSE s1 = s2 AND n = 0
+    ENDIF
 
   IMPORTING Semantics[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),
