@@ -20,7 +20,7 @@ import annot.bcclass.BCMethod;
  */
 public class Parsing {
 
-	private static final boolean goShowTokens = false;
+	private static final boolean goShowTokens = true;
 	
 	/**
 	 * BCClass of all BML annotations parsing here.

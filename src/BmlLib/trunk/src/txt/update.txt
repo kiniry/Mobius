@@ -47,8 +47,8 @@ This document describes changes in code required to extend
 		- add test cases to OldTests.
 
 3. To add an Expression:
-	- create subclass of BCExpression or ane of it's subclasses,
 	- add opcedes to Code interface,
+	- create subclass of BCExpression or ane of it's subclasses,
 	- update Priorities.setPriorities(),
 	- update AttributeReader.readExpression(),
 	- add parser rules to grammatic (annot.textio.BML.g3),

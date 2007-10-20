@@ -11,10 +11,12 @@ import annot.attributes.MethodSpecification;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
+import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.JavaType1;
 import annot.bcexpression.NumberLiteral;
+import annot.bcexpression.UnaryArithmeticExpression;
 import annot.formula.AbstractFormula;
 import annot.formula.Formula;
 import annot.formula.Predicate0Ar;
@@ -256,6 +258,20 @@ public class AttributeReader {
 		case Code.GRT:
 		case Code.GRTEQ:
 			return new Predicate2Ar(this, b);
+		case Code.PLUS:
+		case Code.MINUS:
+		case Code.MULT:
+		case Code.DIV:
+		case Code.REM:
+		case Code.BITWISEAND:
+		case Code.BITWISEOR:
+		case Code.BITWISEXOR:
+		case Code.SHL:
+		case Code.SHR:
+		case Code.USHR:
+			return new ArithmeticExpression(this, b);
+		case Code.NEG:
+			return new UnaryArithmeticExpression(this, b);
 		case Code.INT_LITERAL:
 			return new NumberLiteral(this, b);
 		case Code.FORALL:

@@ -267,10 +267,9 @@ methodSpecification returns [MethodSpecification ast] :
 	;
 
 exname returns [String name] :
-	{$name = "";}
-	(i=IDENT {$name += $i.getText();}
-	e=EXC_IDENT {$name += $e.getText();})*
-	(i=IDENT {$name += $i.getText();});
+	i=EXC_IDENT {$name = $i.getText();}
+	| i2=IDENT {$name = $i2.getText();}
+	;
 
 specCase returns [SpecificationCase ast] :
 	(PRECONDITION f1=formula {
@@ -302,7 +301,7 @@ modifyExpression returns [ModifyExpression ast] :
 	;
 
 expression returns [BCExpression ast] :
-	e=shiftExpr {$ast = $e.ast;};
+	e=bitwiseOrExpr {$ast = $e.ast;};
 
 formula returns [AbstractFormula ast] :
 	{initExpression();}
@@ -310,9 +309,11 @@ formula returns [AbstractFormula ast] :
 		if ($e.ast == null) {
 			reportError(null);
 		} else {
-			if ($e.ast.getType() != JavaBasicType.JavaBool)
+			if ($e.ast.getType() != JavaBasicType.JavaBool) {
 				reportError(null);
-			$ast = (AbstractFormula)$e.ast;
+			} else {
+				$ast = (AbstractFormula)$e.ast;
+			}
 		}
 	};
 
@@ -337,6 +338,18 @@ logicalAndExpr returns [BCExpression ast] :
 	e=equalityExpr {$ast = $e.ast;}
 	(LOG_AND r=equalityExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*;
 
+bitwiseOrExpr returns [BCExpression ast] :
+	e=bitwiseXorExpr {$ast = $e.ast;}
+	(BITWISEOR r=bitwiseXorExpr {$ast = new ArithmeticExpression(Code.BITWISEOR, $ast, $r.ast);})*;
+
+bitwiseXorExpr returns [BCExpression ast] :
+	e=bitwiseAndExpr {$ast = $e.ast;}
+	(BITWISEXOR r=bitwiseAndExpr {$ast = new ArithmeticExpression(Code.BITWISEXOR, $ast, $r.ast);})*;
+
+bitwiseAndExpr returns [BCExpression ast] :
+	e=shiftExpr {$ast = $e.ast;}
+	(BITWISEAND r=shiftExpr {$ast = new ArithmeticExpression(Code.BITWISEAND, $ast, $r.ast);})*;
+
 equalityExpr returns [BCExpression ast] :
 	l=shiftExpr EQ r=shiftExpr
 		{$ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);}
@@ -358,7 +371,7 @@ relationalExpr returns [BCExpression ast] :
 	;
 
 quantifiedFormula returns [BCExpression ast] :
-	(FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
+	((FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
 	| EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
 	 (t=ident v=ident {try {
 			JavaBasicType jt = JavaType1.getJavaBasicType($t.text);
@@ -376,7 +389,7 @@ quantifiedFormula returns [BCExpression ast] :
 	 	f=uncheckedFormula {((QuantifiedFormula)$ast).setFormula($f.ast);
 	 		env.remove($v.text);
 	 		bvc -= lqfs;
-	 	}
+	 	})
 	| p=primaryFormula {$ast = $p.ast;}
 	;
 
@@ -389,11 +402,33 @@ primaryFormula returns [BCExpression ast] :
 	;
 
 shiftExpr returns [BCExpression ast] :
-	p=primaryExpr {$ast = $p.ast;};
+	p=additiveExpr {$ast = $p.ast;}
+	(SHL r1=additiveExpr {$ast = new ArithmeticExpression(Code.SHL, $ast, $r1.ast);}
+	| SHR r2=additiveExpr {$ast = new ArithmeticExpression(Code.SHR, $ast, $r2.ast);}
+	| USHR r3=additiveExpr {$ast = new ArithmeticExpression(Code.USHR, $ast, $r3.ast);}
+	)*;
+
+additiveExpr returns [BCExpression ast] :
+	e=multExpr {$ast = $e.ast;}
+	(PLUS r1=multExpr {$ast = new ArithmeticExpression(Code.PLUS, $ast, $r1.ast);}
+	| MINUS r2=multExpr {$ast = new ArithmeticExpression(Code.MINUS, $ast, $r2.ast);}
+	)*;
+
+multExpr returns [BCExpression ast] :
+	e=unaryExpr {$ast = $e.ast;}
+	(MULT r1=unaryExpr {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
+	| DIV r2=unaryExpr {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
+	| REM r3=unaryExpr {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
+	)*;
+
+unaryExpr returns [BCExpression ast] :
+	e=primaryExpr {$ast = $e.ast;};
 
 primaryExpr returns [BCExpression ast] :
 	n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
 	| i=ident {$ast = whatIsIt($i.text);}
+	| MINUS m=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $m.ast);}
+//	| PLUS px=primaryExpr {$ast = $px.ast;}
 	| PAR_LEFT e=expression PAR_RIGHT {$ast = $e.ast;}
 	;
 
@@ -450,10 +485,21 @@ GRTEQ: '>=';
 GRT: '>';
 PAR_LEFT: '(';
 PAR_RIGHT: ')';
+PLUS: '+';
+MINUS: '-';
+MULT: '*';
+DIV: '/';
+REM: '%';
+SHL: '<<';
+SHR: '>>';
+USHR: '>>>';
+BITWISEAND: '&';
+BITWISEOR: '|';
+BITWISEXOR: '^';
 
 NAT: ('0'..'9')+;
 IDENT: ('a'..'z'|'A'..'Z')+;
-EXC_IDENT: ('/'|'.')+;
+EXC_IDENT: (('a'..'z'|'A'..'Z')+('/'|'.')+)+('a'..'z'|'A'..'Z')+;
 
 WS: (' '|'\t'|'\n')+ {skip();};
 EOF: '\f';
