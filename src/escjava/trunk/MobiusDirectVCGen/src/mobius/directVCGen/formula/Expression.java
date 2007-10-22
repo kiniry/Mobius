@@ -1,6 +1,8 @@
 package mobius.directVCGen.formula;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javafe.ast.FieldDecl;
@@ -208,14 +210,14 @@ public final class Expression {
   
   public static Term realvar(final GenericVarDecl arg) {
     final QuantVariableRef v = rvar(var(arg));
-    Term res = fVariables.get(v);
-    if (res == null) {
-      res = v;
-    }
-    return res;
+//    Term res = fVariables.get(v);
+//    if (res == null) {
+//      res = v;
+//    }
+    return v;
   }
   
-  public static Map<QuantVariableRef, Term> fVariables = new HashMap<QuantVariableRef, Term>();
+  public static List<QuantVariableRef> fVariables = new ArrayList<QuantVariableRef>();
 
   /**
    * Returns a reference over a variable which has the given

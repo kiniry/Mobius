@@ -13,7 +13,7 @@ public final class Ref {
   public static Sort sort = Formula.lf.sortRef;
 
   /** the variable made to represent this. */
-  public static QuantVariableRef varThis = Expression.rvar(Expression.var("this", Ref.sort));
+  public static QuantVariableRef varThis = Expression.rvar(Expression.var("this", Heap.sortValue));
 
   /**
    * @deprecated

@@ -113,14 +113,14 @@ public class Util {
   
   public static Term getAssertion(RoutineDecl meth, 
                                   AAnnotation annot, 
-                                  Map<QuantVariableRef, Term> variables) {
+                                  List<QuantVariableRef> variables) {
     final Term res;
     if (DirectVCGen.fByteCodeTrick) {
       final String methname = Util.getMethodName(meth);
       final Term[] tab = new Term[annot.fArgs.size()];
       int i = 0;
       for (QuantVariableRef qvr: annot.fArgs) {
-        tab[i] = variables.get(qvr);
+        tab[i] = qvr;//variables.get(qvr);
         i++;
       }
       
@@ -179,7 +179,6 @@ public class Util {
     final QuantVariableRef e = Expression.rvar(Ref.sort);
     final QuantVariableRef heap = Heap.newVar();
     
-    //return Logic.forall(heap,
     return Logic.forall(heap,
              Logic.forall(e,
                           Logic.implies(Heap.newObject(Heap.var, type, heap, e),
@@ -198,5 +197,12 @@ public class Util {
   }
   public static Term mkNewEnv(Post post) {
     return mkNewEnv(post.getPost());
+  }
+  
+  public static Term substVarWithVal(final Post fPost, final Term var, final Term val) {
+    return fPost.subst(var, val);
+    //fPost.subst(Heap.getLvVar(), 
+//                       Expression.lvUpd(Heap.getLvVar(), 
+//                                        var, val));
   }
 }

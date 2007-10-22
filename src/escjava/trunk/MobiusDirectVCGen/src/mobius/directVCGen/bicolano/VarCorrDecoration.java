@@ -1,6 +1,9 @@
 package mobius.directVCGen.bicolano;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -8,7 +11,6 @@ import javafe.ast.ASTDecoration;
 import javafe.ast.RoutineDecl;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
-import mobius.directVCGen.formula.Num;
 
 import org.apache.bcel.generic.LocalVariableGen;
 
@@ -30,28 +32,30 @@ public class VarCorrDecoration extends ASTDecoration {
   }
 
   @SuppressWarnings("unchecked")
-  public Map<QuantVariableRef, Term> get(final RoutineDecl n) {
-    final Map<QuantVariableRef, Term> v = 
-      (Map<QuantVariableRef, Term>) super.get(n);
+  public List<QuantVariableRef> get(final RoutineDecl n) {
+    final List<QuantVariableRef> v = 
+      (List<QuantVariableRef>) super.get(n);
     return v;
   }
   
   
   public void set(final RoutineDecl n,
                   final Map<QuantVariableRef, LocalVariableGen> vars,
-                  final Map<QuantVariableRef, Term> old) {
-    final Map<QuantVariableRef, Term> bcvars = 
-      new HashMap<QuantVariableRef, Term>();
-    bcvars.putAll(old);
+                  final List<QuantVariableRef> old) {
+    final List<QuantVariableRef> bcvars = 
+      new ArrayList<QuantVariableRef>();
+    bcvars.addAll(old);
     
     for (Entry<QuantVariableRef, LocalVariableGen> entry: vars.entrySet()) {
-      final Term value = 
-        Expression.doLvGet(entry.getKey().getSort(),
-                           Heap.getLvVar(), entry.getValue().getIndex());
-      bcvars.put(entry.getKey(), value);
-      //System.out.println(">>>>    " + entry.getKey() + " " +  value);
+      bcvars.add(entry.getKey());
+      
     }
-    super.set(n, bcvars);
+    
+    final LinkedList<QuantVariableRef> rev = new LinkedList<QuantVariableRef>();
+    for (QuantVariableRef q: bcvars) {
+      rev.addFirst(q);
+    }
+    super.set(n, rev);
   }
 
 }

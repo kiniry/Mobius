@@ -14,10 +14,11 @@ import escjava.sortedProver.NodeBuilder.Sort;
 public final class Heap {
   /** the sort that represents the type of a heap. */
   public  static final Sort sort = Formula.lf.sortMap;
-
+  public  static final Sort sortValue = Formula.lf.sortValue;
   /** the variable representing the heap. */
   public static final QuantVariableRef var = Expression.rvar("heap", sort);
 
+  /** the variable used for the local variables. */
   private static final QuantVariableRef lvvar = Expression.rvar("lv", Ref.sort);
 
   public static final QuantVariableRef lvvarPre = Expression.old(lvvar);

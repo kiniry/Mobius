@@ -93,7 +93,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     }
     else {
       res = new CType("value");
-      throw new IllegalArgumentException();
+      //throw new IllegalArgumentException();
     }
     return res;
   }
@@ -182,6 +182,9 @@ public class CoqNodeBuilder extends EscNodeBuilder {
     }
     else if (s.equals(sortField)) {
       res = new CRef(name);
+    }
+    else if (s.equals(sortValue)) {
+      res = new CValue(name);
     }
     else if (s.equals(sortAny)) {
       res = new CRef(name);
@@ -537,7 +540,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildDynSelect(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SAny)
    */
   @Override
-  public SRef buildDynLoc(final SMap heap, final SRef obj, final SAny field) {
+  public SRef buildDynLoc(final SMap heap, final SValue obj, final SAny field) {
     return new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
   }
   
@@ -547,7 +550,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildDynSelect(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SAny)
    */
   @Override
-  public SValue buildDynSelect(final SMap heap, final SRef obj, final SAny field) {
+  public SValue buildDynSelect(final SMap heap, final SValue obj, final SAny field) {
     final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
     return new CValue("do_hget", new STerm[] {heap, addr});
   }
@@ -557,7 +560,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildDynStore(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SRef, escjava.sortedProver.NodeBuilder.SAny, escjava.sortedProver.NodeBuilder.SValue)
    */
   @Override
-  public SMap buildDynStore(final SMap map, final SRef obj, 
+  public SMap buildDynStore(final SMap map, final SValue obj, 
                             final SAny field, final SValue val) {
     final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
     return new CMap("Heap.update", new STerm[] {map, addr, val});

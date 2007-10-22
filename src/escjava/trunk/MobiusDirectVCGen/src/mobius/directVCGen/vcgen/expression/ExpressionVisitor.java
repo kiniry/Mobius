@@ -226,7 +226,7 @@ public class ExpressionVisitor extends ABasicVisitor {
   @Override
   public /*@non_null*/ Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
     final VCEntry vce = (VCEntry) o;
-    return new Post(vce.fPost.substWith(Expression.fVariables.get(Ref.varThis))); // variable particuliere
+    return new Post(vce.fPost.substWith(Ref.varThis)); // variable particuliere
   }
 
   /**

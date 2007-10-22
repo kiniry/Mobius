@@ -258,7 +258,8 @@ public final class Num {
    * @return true if sort equals {@link #sortInt} or {@link #sortReal}
    */
   public static boolean isNum(final Sort sort) {
-    return sort.equals(sortInt) || sort.equals(sortReal);
+    return sort.equals(sortInt) || sort.equals(Heap.sortValue)
+              || sort.equals(sortReal);
   }
 
   /**

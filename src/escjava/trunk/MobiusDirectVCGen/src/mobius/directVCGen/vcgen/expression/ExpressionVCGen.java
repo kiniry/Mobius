@@ -70,7 +70,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     
     
     
-    final QuantVariableRef newThis = Expression.rvar(Ref.sort);
+    final QuantVariableRef newThis = Expression.rvar(Heap.sortValue);
     final QuantVariableRef newHeap = Heap.newVar();
     
     //mking the args
@@ -304,7 +304,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
       return new Post(entry.fPost.substWith(Heap.select(Heap.var, f)));
     }
     else { // not static :)
-      final QuantVariableRef obj = Expression.rvar(Ref.sort);
+      final QuantVariableRef obj = Expression.rvar(Heap.sortValue);
       Term normal = entry.fPost.substWith(Heap.select(Heap.var, obj, f,
                                                             Type.getSort(field)));
       

@@ -50,7 +50,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
   /** the output file. */
   private final Stream fOut;
-  private Map<QuantVariableRef, Term> fVariables;
+  private List<QuantVariableRef> fVariables;
   
 
 

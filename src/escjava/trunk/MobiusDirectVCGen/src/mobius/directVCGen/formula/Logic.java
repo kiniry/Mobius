@@ -235,6 +235,8 @@ public final class Logic {
     }
     
     if (l.getSort() != r.getSort() && 
+        !(!r.getSort().equals(Heap.sortValue) ||
+         !l.getSort().equals(Heap.sortValue)) &&
         (!Num.isNum(r.getSort()) || !Num.isNum(l.getSort()))) {
       throw new IllegalArgumentException("Different types when creating equals, " +
                                          "found: " + l.getSort() + " and " + r.getSort());
@@ -462,7 +464,7 @@ public final class Logic {
    */
   public static Term equalsNull(final Term t) {
     Term res = null;
-    if (t.getSort() == Ref.sort) {
+    if (t.getSort().equals(Heap.sortValue)) {
       res = equals(t, Ref.Null());
     }
     else {
