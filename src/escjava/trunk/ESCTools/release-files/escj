@@ -83,13 +83,14 @@ SCRIPTPATH=`dirname $0`
 if [ "${SCRIPTPATH:0:1}" != "/" ]; then 
   SCRIPTPATH=`pwd`/$SCRIPTPATH
 fi
+
 if [[ -e $SCRIPTPATH/.svn ]]; then
   VCSVER=1
 else
   VCSVER=0
 fi
 if [ -z "$ESCTOOLS_ROOT" ]; then
-  if [ $VCSVER ]; then
+  if (( $VCSVER > 0)) ; then
     ESCTOOLS_ROOT=$SCRIPTPATH/..
   else
     ESCTOOLS_ROOT=$SCRIPTPATH
@@ -100,7 +101,11 @@ fi
 ############ Setting ESCJ_SIMPLIFY_DIR, if necessary
 
 if [ -z "$ESCJ_SIMPLIFY_DIR" ]; then
+ if (( $VCSVER > 0)) ; then
     ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT/Escjava/release/master/bin
+ else
+    ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT
+ fi
   warn "Guessing ESCJ_SIMPLIFY_DIR=$ESCJ_SIMPLIFY_DIR"
 fi
 
@@ -196,7 +201,7 @@ fi
 export CLASSPATH
 
 if [ -z "$ESC_SPECS" ]; then
-    if [ $VCSVER ]; then
+    if (( $VCSVER > 0 )) ; then
 	ESC_SPECS=$ESCTOOLS_ROOT/specs
     else
 	ESC_SPECS=$ESCTOOLS_ROOT/escspecs.jar
@@ -225,12 +230,12 @@ fi
 ## If it is not set, use the path suitable for working in VCS or in the
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
-    if [ $VCSVER ]; then
+    if (( $VCSVER > 0 )) ; then
 	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
     else
-	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
     fi
-    wwarn "Setting ESC_CLASSPATH=$ESC_CLASSPATH"
+    warn "Setting ESC_CLASSPATH=$ESC_CLASSPATH"
 fi
 
 if [ -n "$COMSPEC" ]; then
@@ -246,7 +251,7 @@ export PROVER_KILL_TIME PROVER_CC_LIMIT PROVER_MAX_FNUR
 # ESC/Java's class and spec path.
 if [ -n "$COMSPEC" ]; then 
     ## Need to convert to forward slashes.  However, -m presumes the input
-    ## is a unix-style path, which is incorrect.  So we first convert from
+    ## is a unix-style path, which is incorrect.  So we first convert fromdir
     ## windows to unix and then from unix to windows-with-forward-slashes.
     ## It is necessary to have Windows style drive letters and ; for separators
     ## but the script below balks at backslashes
@@ -285,4 +290,4 @@ ${JAVA} ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" -Dsimplify="${ESCJ_S
     -classpath "${ESC_CLASSPATH}" ${MAIN} \
     ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $ARGS
 
-# End of File
+# End of $RCSflie$
