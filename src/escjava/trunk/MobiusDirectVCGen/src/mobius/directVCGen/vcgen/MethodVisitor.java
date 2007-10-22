@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.bcel.generic.LocalVariableGen;
-
 import javafe.ast.BlockStmt;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
@@ -24,7 +22,6 @@ import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.formula.coq.CoqFile;
@@ -159,7 +156,7 @@ public final class MethodVisitor extends DirectVCGen {
   public void visitBlockStmt(final /*@non_null*/ BlockStmt x) {
     Post normPost;
     Post excpPost;
-    Map<QuantVariableRef, Term> variables = VarCorrDecoration.inst.get(fMeth);
+    final Map<QuantVariableRef, Term> variables = VarCorrDecoration.inst.get(fMeth);
     Expression.fVariables = variables;
     if (DirectVCGen.fByteCodeTrick) {
       final String name = Util.getMethodName(fMeth);
@@ -221,6 +218,7 @@ public final class MethodVisitor extends DirectVCGen {
     
     
     final List<QuantVariableRef> args = Lookup.getInst().getPreconditionArgs(fMeth);
+    Term vc = null;
     for (Term t: vcs) {
       
       for (Term vars: args) {
@@ -228,34 +226,50 @@ public final class MethodVisitor extends DirectVCGen {
         t = t.subst(Expression.old(qvr), variables.get(qvr));
         //t = t.subst(qvr, variables.get(qvr));
       }
-      fVcs.add(t);
+      if (vc == null) {
+        vc = t;
+      }
+      else {
+        vc = Logic.and(t, vc);
+      }
     }
-    addVarDecl(args, variables);
+    fVcs.clear();
+    fVcs.add(vc);
+    addVarDecl();
     
 
   }
 
   /**
    * Add the given variables to all the current vcs.
-   * @param qvs the variables to quantify over the vcs
-   * @param variables 
    */
-  public void addVarDecl(final List<QuantVariableRef> qvs, Map<QuantVariableRef, Term> variables) {
+  public void addVarDecl() {
     final List<Term> oldvcs = fVcs;
     fVcs = new Vector<Term>();
     
     for (Term t: oldvcs) {
-      for (QuantVariableRef qvr: qvs) {
-        t = t.subst(qvr, variables.get(qvr));
-      }
-      t = t.subst(Heap.varPre, Heap.var);
-      t = t.subst(Heap.lvvarPre, Heap.lvvar);
-      t = Logic.forall(Heap.var, t);
-      t = Logic.forall(Heap.lvvar, t);
-      fVcs.add(t);
+      t = addVarDecl(fMeth, t);
       //fVcs.add(Logic.forall(qvs, t));
+      fVcs.add(t);
     }
 
+  }
+
+  public static Term addVarDecl(final RoutineDecl meth, Term t) {
+    final List<QuantVariableRef> qvs = Lookup.getInst().getPreconditionArgs(meth);
+    final Map<QuantVariableRef, Term> variables = VarCorrDecoration.inst.get(meth);
+    t = Logic.implies(Lookup.getPrecondition(meth), t);
+    for (QuantVariableRef qvr: qvs) {
+      t = t.subst(qvr, variables.get(qvr));
+    }
+    t = t.subst(Heap.varPre, Heap.var);
+    t = t.subst(Heap.lvvarPre, Heap.lvvar);
+    
+
+    t = Logic.forall(Heap.var, t);
+    t = Logic.forall(Heap.lvvar, t);
+    
+    return t;
   }
 
   /**

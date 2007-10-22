@@ -47,8 +47,8 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    * @param r the value to convert
    * @return a location term
    */
-  public static SRef getLoc(final SValue r) {
-    return new CRef("loc", new STerm[] {r});
+  public static SValue getLoc(final SValue r) {
+    return r;//new CRef("loc", new STerm[] {r});
   }
   
   
@@ -456,7 +456,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
         return new CBool("vBool", new STerm[] {val});
       }
       else if (to == sortInt) {
-        return new CInt("vInt", new STerm[] {val});
+        return val; //new CInt("vInt", new STerm[] {val});
       }
       else if (to == sortReal) {
         throw new UnsupportedOperationException("We do not support reals right now...");
@@ -505,7 +505,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
                                                                     new STerm[] {type})});
     final CPred right = new CPred("Some", 
                                   new STerm[] {new CPred(false, ",", 
-                                                         new STerm[] {getLoc(r), heap})});
+                                                         new STerm[] {new CRef("loc", new STerm[] {r}), heap})});
         
     final SPred res = new CPred(false, "=", new STerm[] {left, right});
     return res;
@@ -518,7 +518,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   @Override
   public SValue buildSelect(final SMap map, final SValue idx) {    
     final CRef addr = new CRef("Heap.StaticField", new STerm [] {idx});
-    return new CValue("get", new STerm[] {map, addr});
+    return new CValue("do_hget", new STerm[] {map, addr});
   }
   
   /*
@@ -549,7 +549,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   @Override
   public SValue buildDynSelect(final SMap heap, final SRef obj, final SAny field) {
     final CRef addr = new CRef("Heap.DynamicField", new STerm [] {getLoc(obj), field});
-    return new CValue("get", new STerm[] {heap, addr});
+    return new CValue("do_hget", new STerm[] {heap, addr});
   }
 
   /*
@@ -571,7 +571,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
   @Override
   public SValue buildArrSelect(final SMap heap, final SRef obj, final SInt idx) {
     final CRef addr = new CRef("Heap.ArrayElement", new STerm [] {getLoc(obj), idx});
-    return new CValue("get", new STerm[] {heap, addr});
+    return new CValue("do_hget", new STerm[] {heap, addr});
   }
 
   /*
@@ -596,7 +596,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
                                                                     new STerm[] {len, type})});
     final CPred right = new CPred("Some", new STerm[] {new CPred(false, 
                                                                  ",", 
-                                                          new STerm[] {getLoc(r), heap})});
+                                                          new STerm[] {new CRef("loc", new STerm[] {r}), heap})});
         
     final SPred res = new CPred(false, "=", new STerm[] {left, right});
     return res;

@@ -431,7 +431,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   }
 
   public Post postfixInc(final UnaryExpr expr, final VCEntry entry) {
-    final Term between = Expression.sym("Byte.range", new Term[] {Num.value(1)});
+    final Term between = Expression.sym("(Byte.range 1)", new Term [] {});
     
       
     final Post oldp = entry.fPost;
@@ -457,7 +457,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post inc(final UnaryExpr expr, final VCEntry entry) {
     final Post oldp = entry.fPost;
-    final Term between = Expression.sym("Byte.range", new Term[] {Num.value(1)});
+    final Term between = Expression.sym("(Byte.range 1)", new Term[] {});
     
                                   
     entry.fPost = new Post (oldp.getRVar(), 

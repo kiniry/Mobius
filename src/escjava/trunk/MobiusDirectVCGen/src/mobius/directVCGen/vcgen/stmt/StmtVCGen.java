@@ -42,6 +42,7 @@ import javafe.ast.TryFinallyStmt;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VarInit;
 import javafe.ast.WhileStmt;
+import mobius.directVCGen.bicolano.VarCorrDecoration;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
@@ -52,6 +53,7 @@ import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.vcgen.MethodVisitor;
 import mobius.directVCGen.vcgen.expression.ExpressionVisitor;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
@@ -638,7 +640,7 @@ public class StmtVCGen extends ExpressionVisitor {
                                   Logic.implies(Logic.not(v), post)));
 
     final Term aux = ((Post) x.test.accept(fExprVisitor, vce)).getPost();
-    Term vc = Logic.implies(inv, aux);
+    final Term vc = Logic.implies(inv, aux);
     // we add the for declared variables
 //    for (int i = x.forInit.size() - 1; i >= 0; i--) {
 //      final Stmt s = (Stmt) x.forInit.elementAt(i);
@@ -646,13 +648,17 @@ public class StmtVCGen extends ExpressionVisitor {
 //      newEntry.fPost = new Post(vc);
 //      vc = //((Post)s.accept(this, newEntry)).getPost();
 //    }
-    fVcs.add(Util.mkNewEnv(vc));
+    Term sideCondition = Util.mkNewEnv(vc);
 
+    sideCondition = MethodVisitor.addVarDecl(fMeth, sideCondition);
+    
+    //fVcs.add(sideCondition);
     vce.fPost = pinv;
     for (int i = x.forInit.size() - 1; i >= 0; i--) {
       final Stmt s =  (Stmt) x.forInit.elementAt(i);
       vce.fPost = (Post)s.accept(this, vce);
     }
+    vce.fPost = Post.and(new Post(vce.fPost.getRVar(), sideCondition), vce.fPost);
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 

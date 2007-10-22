@@ -115,7 +115,7 @@ public class ExpressionVisitor extends ABasicVisitor {
     final VCEntry vce = (VCEntry) o;
     final Post result = vce.fPost;
     Term term = null;
-    Term val;
+    int val;
 
     final Term intMin = Num.value(Integer.MIN_VALUE);
     final Term intMax = Num.value(Integer.MAX_VALUE);
@@ -124,16 +124,16 @@ public class ExpressionVisitor extends ABasicVisitor {
       case TagConstants.BOOLEANLIT:
         // -2^31 <= z < 2^31 
         if ((Boolean)expr.value) {
-          val = Num.value(1); 
+          val = 1;// Num.value(1); 
         }
         else {
-          val = Num.value(0); 
+          val = 0; //Num.value(0); 
         }
         final QuantVariableRef ival = Expression.rvar("Ival", Type.sort);
-        Term vval = Heap.sortToValue(val);
+        Term vval = Heap.sortToValue(Num.value(val));
         final Term compat = Expression.sym("compat_ValKind_value", new Term[] {ival, vval});
         
-        term =  Logic.implies (Expression.sym("Int.range", new Term[] {val}),
+        term =  Logic.implies (Expression.sym("(Int.range " + val + ")", new Term [] {}),
                      Logic.implies(Logic.assignCompat(Heap.var, vval, 
                                                       Expression.rvar("(PrimitiveType BOOLEAN)", 
                                                                      Type.sort)),
@@ -142,29 +142,29 @@ public class ExpressionVisitor extends ABasicVisitor {
         break;
       case TagConstants.INTLIT:
         //-2^31 <= z < 2^31 
-        val = Num.value((Integer)expr.value);
+        val = (Integer)expr.value;
 //        term = result.substWith(val);
-        term = Logic.implies (Expression.sym("Int.range", new Term[] {val}),
-                              result.substWith(val));
+        term = Logic.implies (Expression.sym("(Int.range " + val + ")", new Term[]{}),
+                              result.substWith(Num.value(val)));
         break;
       case TagConstants.LONGLIT:
         term = result.substWith(Num.value((Long)expr.value));
         break;
       case TagConstants.BYTELIT:
         //-2^7  <= z < 2^7
-        val = Num.value((Byte)expr.value);
-        final Term byteMin = Num.value(Byte.MIN_VALUE);
-        final Term byteMax = Num.value(Byte.MAX_VALUE);
-        term = Logic.implies (Expression.sym("Byte.range", new Term[] {val}),
-                              result.substWith(val));
+//        val = Num.value((Byte)expr.value);
+//        final Term byteMin = Num.value(Byte.MIN_VALUE);
+//        final Term byteMax = Num.value(Byte.MAX_VALUE);
+//        term = Logic.implies (Expression.sym("Byte.range", new Term[] {val}),
+//                              result.substWith(val));
         break;
       case TagConstants.SHORTLIT:
         //-2^15 <= z < 2^15 
-        val = Num.value((Short)expr.value);
-        final Term shortMin = Num.value(Short.MIN_VALUE);
-        final Term shortMax = Num.value(Short.MAX_VALUE);
-        term = Logic.implies (Expression.sym("Short.range", new Term[] {val}),
-                              result.substWith(val));
+//        val = Num.value((Short)expr.value);
+//        final Term shortMin = Num.value(Short.MIN_VALUE);
+//        final Term shortMax = Num.value(Short.MAX_VALUE);
+//        term = Logic.implies (Expression.sym("Short.range", new Term[] {val}),
+//                              result.substWith(val));
         break;
       case TagConstants.FLOATLIT:
         term = result.substWith(Num.value((Float)expr.value));
