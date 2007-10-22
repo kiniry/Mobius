@@ -109,12 +109,6 @@ NIII-R0413.pdf:	NIII-R0413.tex koa_state_diagram.pdf
 	pdflatex NIII-R0413; bibtex NIII-R0413; pdflatex NIII-R0413; pdflatex NIII-R0413;)
 	make cleanup
 
-koa_state_diagram.eps: koa_state_diagram.fig
-	fig2dev -L eps koa_state_diagram.fig koa_state_diagram.eps
-
-koa_state_diagram.pdf: koa_state_diagram.fig
-	fig2dev -L pdf koa_state_diagram.fig koa_state_diagram.pdf
-
 cleanup:
 	rm -f _region_* *.aux *.log \
 		*.cp *.cps *.fn *.ky *.pg *.tp *.vr \
