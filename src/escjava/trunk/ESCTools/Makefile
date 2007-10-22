@@ -437,9 +437,9 @@ releases: releases-notests
 
 test-releases:
 	@echo "Testing the releases..."
-	${MAKE} test-binary-release
-	${MAKE} test-source-release
 	${MAKE} test-patch-release
+	${MAKE} test-source-release
+	${MAKE} test-binary-release
 
 releases-notests:
 	@echo "Making release versions ${ESC_PROJECT}-${ESC_VERSION} ........"
@@ -505,24 +505,24 @@ jar:	build
 	mkdir -p ${RELTEMP}/sub
 	cp ${ESCTOOLS_ROOT}/Escjava/java/escjava/vcGeneration/xml/*.xslt ${ESCJAVA_CLASSFILES}/escjava/vcGeneration/xml
 	cp ${ESCTOOLS_ROOT}/Escjava/java/escjava/vcGeneration/xml/xmlprover.dtd ${ESCJAVA_CLASSFILES}/escjava/vcGeneration/xml
-	cp -rf ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
-	cp -rf ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
+	cp -Rf ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
+	cp -Rf ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	mkdir -p ${RELTEMP}/sub/junitutils
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAR) )
+	-find /sub -name "*.svn*" -print | xargs rm -
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
 	  ${RELJAR} *; jar i ${RELJAR}; )
-#	 ${JARMUPDATE} manifest.txt ${RELJAR}
-	rm -rf ${RELTEMP}/sub
 	cp ${RELJAR} ${ESCTOOLS_ROOT}
+	rm -rf ${RELTEMP}/sub
 
 srcjar:
 	mkdir -p ${RELTEMP}/sub
-	cp -rf ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
-	cp -rf ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
-	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}/sub/specs
-	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}/sub/original-specs
+	cp -Rf ${ESCTOOLS_ROOT}/Javafe/java/* ${RELTEMP}/sub
+	cp -Rf ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
+	cp -Rf ${ESCJAVA2_SPECS} ${RELTEMP}/sub/specs
+	cp -Rf ${ORIG_SRC_SPECS} ${RELTEMP}/sub/original-specs
 	mkdir -p ${RELTEMP}/sub/junitutils
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
@@ -561,7 +561,7 @@ binary-release: build jars alldocs cleanup
 	cp -rf Escjava/release/master/examples ${RELTEMP}
 #       Copy actual jar files with all ESC/Java2's classfiles and the two jar files
 #       with specs in them.
-	cp esctools2.jar ${RELTEMP}
+	cp ${RELJAR} ${RELTEMP}
 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
 #       cp $(JML2_SPECS_JAR) ${RELTEMP}
 #       Copy other miscellaneous files
@@ -575,7 +575,7 @@ binary-release: build jars alldocs cleanup
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2 ${RELTEMP}
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2.exe ${RELTEMP}
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2.sample ${RELTEMP}
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4.* ${RELTEMP}
 #   The two readme files below are irrelevant for binary release
 #   cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
@@ -594,7 +594,6 @@ test-binary-release:
 	cd ${RELTEST} ;\
 	    unset ESC_CLASSPATH ; \
 	    unset ESCTOOLS_RELEASE ; \
-	    export ESCJ_ROOT = ${RELTEST} ; \
 	    tar xjf ${RELTAR}.tbz ;\
 	    ${RELTEST}/quicktest
 	    
