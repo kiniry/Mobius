@@ -1,0 +1,27 @@
+C.java:5: Warning:  field 'F.e' must be guarded because it is a non-final static field (StaticField)
+    public static  Object e;
+                   ^
+C.java:6: Warning:  field 'F.ej' must be guarded because it is a non-final static field (StaticField)
+   public static  Object ej[];
+                  ^
+C.java:4: Caution: Variable d might not have been initialized
+    public static final Object d;
+                               ^
+C.java:17: Warning: lock expression may not be constant.   (ConstantLocks)
+    D/*#{F.e}*/ ee;
+         ^
+C.java:21: Error: Value of type D<(e)> cannot be assigned to location of type D<(d)>
+            dd = ee;
+               ^
+C.java:17: Warning: lock expression may not be constant.   (ConstantLocks)
+    D/*#{F.e}*/ ee;
+          ^
+C.java:22: Warning: possible race condition.  Lock 'e' may not be held. We only have '(d)'. (Race)
+            dd.a=ee.a;
+                 ^
+Associated declaration is "C.java", line 11, col 11:
+    public int a /*# guarded_by o */;
+           ^
+1 caution
+5 warnings
+1 error

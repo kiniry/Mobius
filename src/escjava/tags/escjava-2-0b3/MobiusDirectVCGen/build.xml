@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="everything">
+	<property name="escjava_classes" value="../ESCTools/classfiles"/>
+	<property name="jml_dir" value="/home/jcharles/src/JML"/>
+	
+	<property name="jmlc_dest" value="jmlc_classes"/>
+	<property name="mobius_sources" value="src"/>
+	<property name="samples_sources" value="samples"/>
+	<property name="mobius_classes" value="classes"/>
+	<property name="libs_dir" value="libs"/>
+	
+	
+	<path id="class_files">
+	    <fileset dir="${mobius_classes}">
+	      <include name="**/*.class"/>
+	    </fileset>
+	</path>
+	<!-- Pre-built jars necessary for compiling, testing, etc. -->
+	<path id="libraries">
+	    <fileset dir="${libs_dir}">
+	      <include name="*.jar"/>
+	    </fileset>
+	</path>
+	<path id="base_classpath">
+	   <pathelement path="${java.class.path}"/>
+	   <pathelement path="classes"/>
+	</path>
+
+	<path id="mobius_classpath">
+	  <path refid="base_classpath"/>
+	  <pathelement path="${escjava_classes}"/>
+	</path>
+	<!-- The jar files on which JML depends (e.g., for run-time checking). -->
+	<path id="jml_jars">
+	  <fileset dir="${jml_dir}">
+       <include name="bin/*.jar"/>
+	  </fileset>
+	</path>
+	
+	<path id="jml_classpath">
+	  <path refid="mobius_classpath"/>
+	  <path refid="jml_jars"/>
+	  <pathelement path="${jmlc_dir}"/>
+	  <pathelement path="${samples_sources}"/>
+	</path>
+	
+	<target name="everything" depends="compile_mobius,
+									   jml, jmlc">
+		
+	</target>
+	<target name="javadoc">
+	<javadoc access="private" 
+		author="true" 
+		classpath="../ESCTools/Utils/ant.jar:../ESCTools/classfiles:../ESCTools/Utils/junit.jar:../ESCTools/Escjava/xmlrpc-1.2-b1-modified.jar:samples" 
+		destdir="javadoc" 
+		nodeprecated="false" 
+		nodeprecatedlist="false" 
+		noindex="false" nonavbar="false" notree="false" 
+		packagenames="mobius.directVCGen.formula.coq,mobius.directVCGen.formula,mobius.directVCGen.vcgen.expression,mobius.directVCGen,mobius.directVCGen.vcgen.stmt,mobius.directVCGen.formula.annotation,mobius.directVCGen.formula.coq.representation,mobius.directVCGen.vcgen,mobius.directVCGen.bicolano,mobius.directVCGen.formula.jmlTranslator,mobius.directVCGen.vcgen.struct" source="1.5" sourcefiles="samples/LightweightAnnotation.java,samples/BlockSample.java,samples/Bill.java,samples/Test2.java,samples/ToyExample.java,samples/HeavyweightAnnotation.java,samples/A.java,samples/Super.java" 
+		sourcepath="src:samples" 
+		splitindex="true" use="false" version="true">
+		<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+	</javadoc>
+	</target>
+	
+	<target name="run" depends="jml_mobius">
+		 <java classname="mobius.directVCGen.Main"
+			          fork="true"  dir="samples"
+			          classpathref="jml_classpath">
+		 	<arg value="../"/>  
+		 	<arg value="../logic/bicolano.jar"/>  
+		 	<arg value="Bill"/>  
+		 </java>
+	</target>
+	
+	
+	
+	  <!-- JML targets. -->
+	<pathconvert pathsep=" " property="source_files">
+	      <path>
+	      	<fileset dir="${mobius_sources}">
+	      		    		      <include name="**/*.java"/>
+	        </fileset>
+	      </path>
+	  </pathconvert>
+	  <!-- JML typechecking -->
+	  <target name="jml" depends="jml_mobius">
+	    <description>
+	      Typecheck all Java code.
+	    </description>
+	  </target>
+
+	  <target name="jml_mobius">
+	    <description>
+	      Runs the JML specification checker on the direct vcgen codebase.
+	    </description>
+	    <java classname="org.jmlspecs.checker.Main"
+	          fork="true"
+	          classpathref="jml_classpath">
+	      
+	      <arg value="--recursive"/>
+	      <arg value="--keepGoing"/>
+	      <arg value="--purity"/>
+	      <arg value="--multijava"/>
+	      <arg line="--source '1.5'"/>
+	      <arg value="-G"/>
+	      <arg line="--sourcepath '${mobius_source}'"/>
+	      <arg line="${source_files}"/>
+	    </java>
+	  </target>
+
+	  <!-- JML specification compilation. -->
+	  <target name="jmlc" depends="jmlc_mobius">
+	    <description>
+	      Compile all JML specifications to test code.
+	    </description>
+	  </target>
+
+	  <target name="jmlc_mobius" depends="compile_mobius">
+	    <description>
+	      Compiles JML annotated DirectVCGen files with runtime assertion checks.
+	    </description>
+	    <java classname="org.jmlspecs.jmlrac.Main"
+	          fork="true"
+	          classpathref="jml_classpath">
+	      <jvmarg value="-Xmx128m"/>
+	      <arg line="--destination ${jmlc_dest}"/>
+	      <arg value="--recursive"/>
+	      <arg value="--verbose"/>
+	      <arg value="-G"/>
+	      <arg line="--sourcepath ${mobius_source}"/>
+	      <arg line="${source_files}"/>
+	    </java>
+	  </target>
+	
+	  <target name="initialize">
+	    <description>
+	      Prepare directory tree for build.
+	    </description>
+	    <tstamp/>
+	    <mkdir dir="${mobius_classes}"/>
+	  	<mkdir dir="${mobius_sources}"/>
+	    <mkdir dir="${escjava_classes}"/>
+	  	<mkdir dir="${jmlc_dest}"/>
+	  </target>
+
+	<target name="compile_mobius" depends="clean_mobius,
+	                                         initialize">
+	    <description>
+	      Compile all mobius source code.
+	    </description>
+	    <javac srcdir="${mobius_sources}"
+	           destdir="${mobius_classes}"
+	           debug="on"
+	           deprecation="off"
+	           optimize="off"
+	           failonerror="false"
+	           source="1.5"
+	           target="1.5"
+	           classpathref="mobius_classpath">
+	      <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
+	                   compiler="jikes"/>
+	    </javac>
+	  </target>
+	<target name="compile_sample" depends="compile_mobius">
+	    <description>
+	      Compile the samples directory; eclipse should compile it by itself
+	    	like a big girl.
+	    </description>
+	    <javac srcdir="${samples_sources}"
+	           destdir="${samples_sources}"
+	           debug="on"
+	           deprecation="off"
+	           optimize="off"
+	           failonerror="false"
+	           source="1.5"
+	           target="1.5"
+	           classpathref="mobius_classpath">
+	      <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
+	                   compiler="jikes"/>
+	    </javac>
+	  </target>
+	<target name="clean_mobius" if="clean_build_every_time">
+	    <description>
+	      Deletes all classfiles in the mobius envelope.
+	    </description>
+	    <delete dir="${mobius_classes_dir}"/>
+	  </target>
+</project>

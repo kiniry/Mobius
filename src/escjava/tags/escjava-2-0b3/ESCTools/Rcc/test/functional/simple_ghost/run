@@ -1,0 +1,2 @@
+rcc -dts -nowarn Override -nowarn_package java *.java
+

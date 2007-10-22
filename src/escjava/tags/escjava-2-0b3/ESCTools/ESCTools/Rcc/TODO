@@ -1,0 +1,21 @@
+
+
+
+Changes to the original RCC:
+* allow volatile as synchronization
+* ghost variables handled differently: typecheck guaranteed to
+   terminate
+* we can use a ghost in a require
+
+TODO
+
+
+o [rg] test arrays
+
+o [rg] test subtyping
+
+o [rg] test static stuff
+
+
+
+

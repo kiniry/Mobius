@@ -1,0 +1,33 @@
+SIMPLIFY in ESCJAVA2
+
+The Simplify tool is used by other ESC tools.  It is a stand-alone,
+automatic theorem prover developed by DEC/SRC.  The original README
+is contained in this same directory.  Simplify needs to be recompiled 
+for each platform on which it is to be run.
+
+As part of ESC/Java2, Simplify has been successfully rebuilt for new
+platforms (MacOSX).  This requires installing a Modula3 compiler.
+(For MacOSX, this was obtained from fink.sourceforge.net).
+
+In order to accomplish the rebuild, Joe Kiniry (who worked out the details)
+needed to add some additional Modula3 libraries (now in the libs
+subdirectory).  Note that those directories are derived from software from
+DEC; they have an accompanying COPYRIGHT file which is required to be
+maintained with the software.
+
+The build process is described in README.
+
+Eventually we will put in a Makefile and document the process more thoroughly.
+Currently, Simplify is not part of the build process for ESC/Java2; 
+the compiled executables must be present for the target platform and are 
+used directly.
+(FIXME).
+
+(FIXME) Issues which need resolution:
+	- control of where the compiled packages are placed
+	- removing the user-specific path in simplify/src/m3overrides (DONE)
+	- verify that it works on a different Mac (to be sure it is not using my environment)
+	- there are packages in libs that are not built
+
+				- David Cok, 3 July 2003; 15 nov 2003
+

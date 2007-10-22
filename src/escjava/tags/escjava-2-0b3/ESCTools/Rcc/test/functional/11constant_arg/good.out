@@ -1,0 +1,4 @@
+C.java:8: Error: Value of type int[/*# elems_guarded_by a  */] cannot be assigned to location of type int[/*# elems_guarded_by b  */]
+    y = x;
+      ^
+1 error
