@@ -134,11 +134,12 @@ public class Util {
   // TODO: add comments
   public static Post getExcpPost(final Term typ, final VCEntry vce) {
     Post res = null;
+    Post nottypeof = null;
     for (ExcpPost p: vce.lexcpost) {
       final QuantVariableRef var = vce.fExcPost.getRVar();
       final Post typeof = new Post(var, Logic.assignCompat(Heap.var, var, p.type));
-      final Post nottypeof = new Post(var, Logic.not(Logic.assignCompat(Heap.var, var, p.type)));
-
+      nottypeof = new Post(var, Logic.not(Logic.assignCompat(Heap.var, var, p.type)));
+      
       if (Type.isSubClassOrEq(typ, p.type)) {
         
         if (res == null) {
@@ -163,7 +164,7 @@ public class Util {
       }
     }
     final Post ex = vce.fExcPost;
-    res = Post.and(res, ex);
+    res = Post.and(res, Post.implies(nottypeof, ex));
     return res;
   }
   /**
@@ -188,7 +189,7 @@ public class Util {
   public static Term mkNewEnv(QuantVariableRef newHeap, final Term post) {
     final QuantVariableRef newLv = Heap.newLvVar();
     final Term h = Logic.forall(newHeap, post);
-    final Term lvt = Logic.forall(newLv, h.subst(Heap.lvvar, newLv));
+    final Term lvt = Logic.forall(newLv, h.subst(Heap.getLvVar(), newLv));
     return lvt;
   }
   public static Term mkNewEnv(Term post) {

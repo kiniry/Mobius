@@ -1,6 +1,7 @@
 
 package mobius.directVCGen.formula.coq.representation;
 
+import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.coq.CoqNodeBuilder;
 import escjava.sortedProver.NodeBuilder.QuantVar;
 import escjava.sortedProver.NodeBuilder.STerm;
@@ -42,6 +43,10 @@ public class CForall extends CPred {
     for (QuantVar v: fVars) {
       if (v.name.startsWith("lv") && v.name.length() <= 3) {
         res += " (" + CoqNodeBuilder.normalize(v.name) + ": LocalVar.t)";
+      }
+      else if (v.type.equals(Ref.sort)) {
+        // Location$
+        res += " (" + CoqNodeBuilder.normalize(v.name) + ": Location)";
       }
       else {
         res += " (" + CoqNodeBuilder.normalize(v.name) + ":" + 

@@ -375,7 +375,7 @@ public final class Expression {
   public static Term lvUpd(QuantVariableRef lv,
                            Term var, Term val) {
     final Term idx = ((FnTerm)var).args[1];
-    final Term upd = Expression.sym("LocalVar.update", Heap.lvvar.getSort(), 
+    final Term upd = Expression.sym("LocalVar.update", Heap.getLvVar().getSort(), 
                    new Term[] {lv, idx, Heap.sortToValue(val)});
     //(LocalVar.update lv1 2%N (Num (I (MDom.Int.const 1))))
     return upd;

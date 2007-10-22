@@ -53,7 +53,7 @@ Definition lt_bool (v1: Int.t) (v2: Int.t): bool :=
 Definition isAlive (heap: Heap.t) (val: value) : Prop :=
   Heap.typeof heap val <> None.
 
-
+Coercion Ref: Location >-> value.
 (*  
  *  Here, we should put all information about invariants in it
  *  Let's assume for the moment that all invariants are always
@@ -65,3 +65,10 @@ Definition inv (heap:Heap.t) (val: value) (typ: type) : Prop :=
 Definition assignPred (h: Heap.t) (h0: Heap.t) (t: value) (f: FieldSignature) : Prop :=
     Heap.get h (Heap.DynamicField (loc t) f) = Heap.get h0 (Heap.DynamicField (loc t) f)
     \/ not (isAlive h0 t).
+    
+Definition fieldPred : Heap.t -> value -> FieldSignature -> Prop :=
+  fun heap v f =>
+   forall (cn: ClassName),
+    Heap.typeof heap v = Some (Heap.LocationObject cn) ->
+     defined_field program cn f.
+     

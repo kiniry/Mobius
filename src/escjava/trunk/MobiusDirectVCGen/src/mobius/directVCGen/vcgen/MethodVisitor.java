@@ -190,7 +190,7 @@ public final class MethodVisitor extends DirectVCGen {
     }
     
     final Term varThis = variables.get(Ref.varThis);
-    final Term oldThis = varThis.subst(Heap.lvvar, Heap.lvvarPre);
+    final Term oldThis = varThis.subst(Heap.getLvVar(), Heap.lvvarPre);
     normPost = new Post(normPost.getRVar(), 
                         normPost.subst(varThis, oldThis));
     excpPost = new Post(excpPost.getRVar(), 
@@ -218,23 +218,15 @@ public final class MethodVisitor extends DirectVCGen {
     
     
     final List<QuantVariableRef> args = Lookup.getInst().getPreconditionArgs(fMeth);
-    Term vc = null;
     for (Term t: vcs) {
       
       for (Term vars: args) {
         final QuantVariableRef qvr = (QuantVariableRef) vars;
         t = t.subst(Expression.old(qvr), variables.get(qvr));
-        //t = t.subst(qvr, variables.get(qvr));
       }
-      if (vc == null) {
-        vc = t;
-      }
-      else {
-        vc = Logic.and(t, vc);
-      }
+      fVcs.add(t);
     }
-    fVcs.clear();
-    fVcs.add(vc);
+
     addVarDecl();
     
 
@@ -249,7 +241,6 @@ public final class MethodVisitor extends DirectVCGen {
     
     for (Term t: oldvcs) {
       t = addVarDecl(fMeth, t);
-      //fVcs.add(Logic.forall(qvs, t));
       fVcs.add(t);
     }
 
@@ -258,18 +249,18 @@ public final class MethodVisitor extends DirectVCGen {
   public static Term addVarDecl(final RoutineDecl meth, Term t) {
     final List<QuantVariableRef> qvs = Lookup.getInst().getPreconditionArgs(meth);
     final Map<QuantVariableRef, Term> variables = VarCorrDecoration.inst.get(meth);
-    t = Logic.implies(Lookup.getPrecondition(meth), t);
+    Term res = t;
     for (QuantVariableRef qvr: qvs) {
-      t = t.subst(qvr, variables.get(qvr));
+      res = res.subst(qvr, variables.get(qvr));
     }
-    t = t.subst(Heap.varPre, Heap.var);
-    t = t.subst(Heap.lvvarPre, Heap.lvvar);
+    res = res.subst(Heap.varPre, Heap.var);
+    res = res.subst(Heap.lvvarPre, Heap.getLvVar());
     
 
-    t = Logic.forall(Heap.var, t);
-    t = Logic.forall(Heap.lvvar, t);
+    res = Logic.forall(Heap.var, res);
+    res = Logic.forall(Heap.getLvVar(), res);
     
-    return t;
+    return res;
   }
 
   /**

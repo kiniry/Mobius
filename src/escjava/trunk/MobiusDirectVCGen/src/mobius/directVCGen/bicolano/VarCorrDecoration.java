@@ -47,7 +47,7 @@ public class VarCorrDecoration extends ASTDecoration {
     for (Entry<QuantVariableRef, LocalVariableGen> entry: vars.entrySet()) {
       final Term value = 
         Expression.doLvGet(entry.getKey().getSort(),
-                           Heap.lvvar, entry.getValue().getIndex());
+                           Heap.getLvVar(), entry.getValue().getIndex());
       bcvars.put(entry.getKey(), value);
       //System.out.println(">>>>    " + entry.getKey() + " " +  value);
     }

@@ -242,7 +242,7 @@ Ltac solve := myred;simpl_hyps;simpl_eq;subst;auto.
    
 Ltac prettyfy :=
 match goal with 
-[ |- interp_swp _ _ (certifiedMethod ?anno ?sig ?meth ?meth_annot) ] =>
+| [ |- interp_swp _ _ (certifiedMethod ?anno ?sig ?meth ?meth_annot) ] =>
    let x := fresh "x" in (
    let Heq := fresh "Heq" in (
    pose (x:=  (certifiedMethod anno sig meth meth_annot)); vm_compute in x;
@@ -251,7 +251,17 @@ match goal with
    [ vm_cast_no_check (refl_equal x) | idtac];
    rewrite Heq;
    clear Heq x))
+| [ H: interp_swp _ _ (certifiedMethod ?anno ?sig ?meth ?meth_annot) |- _] =>
+   let x := fresh "x" in (
+   let Heq := fresh "Heq" in (
+   pose (x:=  (certifiedMethod anno sig meth meth_annot)); vm_compute in x;
+   let res := (eval vm_compute in x) in
+   assert (Heq: (certifiedMethod anno sig meth meth_annot)  = res);
+   [ vm_cast_no_check (refl_equal x) | idtac];
+   rewrite Heq in H;
+   clear Heq x))
 end; my_simpl. 
+
 Ltac cleanstart :=
 repeat match goal with
 [ H: OperandStack.t |- _ ] => clear H
@@ -289,11 +299,6 @@ Ltac magickal :=
    | [ H : _ /\ _ |- _ /\ _] =>let A := fresh "H" in 
                                          let B := fresh "H" in 
                                          (destruct H as (A, B); split; [clear B | clear A])
-   | [ H : (?x1 <=  ?x2  <= ?x4) -> _ |- _ ] =>
-    let H0 := fresh "H" in (
-     let O := fresh "H" in (
-    (intro; assert (O: (x1 <=  x2 /\x2 <= x4))); [omega| idtac];   
-     let H1 := fresh "H" in (assert (H1 := H O); clear H; clear H0 O)))
-   end.
+    end.
 
 Axiom user : forall p: Prop, p.

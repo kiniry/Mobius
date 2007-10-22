@@ -211,8 +211,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
       final Term var = Expression.realvar(va.decl);
       
       pre = new Post(val, 
-                     entry.fPost.subst(Heap.lvvar, 
-                                       Expression.lvUpd(Heap.lvvar, var, val)));
+                     entry.fPost.subst(Heap.getLvVar(), 
+                                       Expression.lvUpd(Heap.getLvVar(), var, val)));
                                             
     }
     else if (left instanceof FieldAccess) { 
@@ -220,6 +220,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
       final ObjectDesignator od = field.od;
       final QuantVariableRef f = Expression.rvar(field.decl);
       //Lookup.fieldsToDeclare.add(f.qvar);
+     
       switch(od.getTag()) {
         case TagConstants.EXPROBJECTDESIGNATOR: {
           // can be null
@@ -232,6 +233,8 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                           entry.fPost.subst(Heap.var, 
                                             Heap.store(Heap.var, 
                                                        obj, f.qvar, val)));
+          p = Logic.implies(Expression.sym("fieldPred", new Term [] {Heap.var, obj, f}), 
+                                 p);
           entry.fPost = new Post(obj, p);
           pre = getPre(od, entry);
           pre = new Post(val, pre);

@@ -516,8 +516,8 @@ public class StmtVCGen extends ExpressionVisitor {
       // the init value replaces the quantification
       final QuantVariableRef val = Expression.rvar(x.decl);
       final Term var = Expression.rvar(x.decl);
-      vce.fPost = new Post(val, vce.fPost.subst(Heap.lvvar, 
-                                                Expression.lvUpd(Heap.lvvar, var, val)));
+      vce.fPost = new Post(val, vce.fPost.subst(Heap.getLvVar(), 
+                                                Expression.lvUpd(Heap.getLvVar(), var, val)));
       vce.fPost = (Post)init.accept(this, vce);
       if (init instanceof ArrayInit) {
         // FIXME should add the array new too
@@ -650,15 +650,15 @@ public class StmtVCGen extends ExpressionVisitor {
 //    }
     Term sideCondition = Util.mkNewEnv(vc);
 
-    sideCondition = MethodVisitor.addVarDecl(fMeth, sideCondition);
+    //sideCondition = MethodVisitor.addVarDecl(fMeth, sideCondition);
     
-    //fVcs.add(sideCondition);
+    fVcs.add(sideCondition);
     vce.fPost = pinv;
     for (int i = x.forInit.size() - 1; i >= 0; i--) {
       final Stmt s =  (Stmt) x.forInit.elementAt(i);
       vce.fPost = (Post)s.accept(this, vce);
     }
-    vce.fPost = Post.and(new Post(vce.fPost.getRVar(), sideCondition), vce.fPost);
+    //vce.fPost = Post.and(new Post(vce.fPost.getRVar(), sideCondition), vce.fPost);
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 

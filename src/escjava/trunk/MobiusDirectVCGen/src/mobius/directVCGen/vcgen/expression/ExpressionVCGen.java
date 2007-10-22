@@ -305,8 +305,9 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     }
     else { // not static :)
       final QuantVariableRef obj = Expression.rvar(Ref.sort);
-      final Term normal = entry.fPost.substWith(Heap.select(Heap.var, obj, f,
+      Term normal = entry.fPost.substWith(Heap.select(Heap.var, obj, f,
                                                             Type.getSort(field)));
+      
       entry.fPost = new Post(obj, normal);
       final Post p = objectDesignator(field.od, entry);
 

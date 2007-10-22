@@ -32,7 +32,7 @@ public class VarCorrVisitor extends ABasicVisitor {
     fMet = met;
     if (tab.length == 0)
       return;
-    old.put(Ref.varThis, Expression.doLvGet(Ref.sort, Heap.lvvar, 
+    old.put(Ref.varThis, Expression.doLvGet(Ref.sort, Heap.getLvVar(), 
                                             tab[0].getIndex()));
     int i = 1;
     old.put(Heap.varPre, Heap.varPre);
@@ -42,7 +42,7 @@ public class VarCorrVisitor extends ABasicVisitor {
       final QuantVariableRef oldqvr = Expression.old(qvr);
       //fVariables.put(Expression.rvar(para), tab[i]);
       final Term value = 
-        Expression.doLvGet(qvr.getSort(), Heap.lvvar, tab[i].getIndex());
+        Expression.doLvGet(qvr.getSort(), Heap.getLvVar(), tab[i].getIndex());
       final Term oldvalue = 
         Expression.doLvGet(qvr.getSort(), Heap.lvvarPre, 
                            tab[i].getIndex());

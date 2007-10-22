@@ -25,10 +25,11 @@ public class EquivCoqFile extends CoqFile {
     final PrintStream out = getOut();
     writeHeader();
 
-    out.println("Lemma l :\n" + 
-                term + " -> \n" +
-      "  interp_swp BicoMapAnnotations.anno_prog BicoMapProgram.program\n" + 
-      "    (certifiedMethod BicoMapAnnotations.anno_prog " +
+    out.println("Lemma l :\nforall os: OperandStack.t, \n" +
+        "   " + term + "\n" +
+        "<-> \n" +
+        "   interp_swp BicoMapAnnotations.anno_prog BicoMapProgram.program\n" + 
+        "      (certifiedMethod BicoMapAnnotations.anno_prog " +
                                     classname + "Signature." + meth + " " +
                                     classname + "." + meth + "Method " + 
                                     classname + "Annotations." + meth + ".spec).");
