@@ -2,8 +2,8 @@
 
 rem To install ESC/Java2 on a new machine, change the following two
 rem lines appropriately:
-set ESCJAVA_ROOT=F:\ESCJava-2.0b1
-set JAVA=F:\jsdk\1.4.2\bin\Java.exe
+set ESCJAVA_ROOT=C:\Program Files\ESCJava2\ESCJava-2.0b3
+set JAVA=C:\Program Files\Java\j2re1.4.2_16\bin\Java.exe
 
 
 rem Some arguments to Simplify, passed via environment variables
@@ -12,6 +12,7 @@ set ESCJ_SIMPLIFY=%ESCJAVA_ROOT%\Simplify-1.5.4.exe
 set ESCJ_SIMPLIFY_ARGS=-noprune -noplunge
 set PROVER_KILL_TIME=300
 set PROVER_CC_LIMIT=10
+set PROVER_MAX_FNUR=700
 
 if "%ESCJ_STDARGS%"=="" set ESCJ_STDARGS=-nowarn Deadlock -specs %ESCJAVA_ROOT%\specs
 
