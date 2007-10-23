@@ -2,7 +2,7 @@
 <feature
       id="mobius.ESCJava2"
       label="ESCJava2"
-      version="2.0.2"
+      version="2.0.3"
       provider-name="David R. Cok and EU MOBIUS IST-15905 Project">
    <install-handler/>
 
@@ -759,14 +759,14 @@ limitations under the License.
    </requires>
 
    <plugin
-         id="escjava.esctools"
-         download-size="1735"
+         id="mobius.escjava.plugin"
+         download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="escjava.plugin"
-         download-size="10"
+         id="mobius.escjava2.esctools"
+         download-size="0"
          install-size="0"
          version="0.0.0"/>
 
