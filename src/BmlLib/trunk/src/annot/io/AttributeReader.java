@@ -14,6 +14,7 @@ import annot.bcclass.MLog;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
+import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.JavaType1;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.UnaryArithmeticExpression;
@@ -274,6 +275,8 @@ public class AttributeReader {
 			return new UnaryArithmeticExpression(this, b);
 		case Code.INT_LITERAL:
 			return new NumberLiteral(this, b);
+		case Code.COND_EXPR:
+			return new ConditionalExpression(this, b);
 		case Code.FORALL:
 		case Code.EXISTS:
 		case Code.FORALL_WITH_NAME:

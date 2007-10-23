@@ -109,7 +109,7 @@ public class NumberLiteral extends AbstractIntExpression {
 	 * @return JavaType of this expression, that is, JavaInt.
 	 */
 	@Override
-	protected JavaBasicType getType1() {
+	protected JavaType1 checkType1() {
 		return JavaBasicType.JavaInt;
 	}
 

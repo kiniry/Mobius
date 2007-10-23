@@ -155,7 +155,7 @@ public class BoundVar extends BCExpression {
 	 * 		subexpression have wrong type or is invalid).
 	 */
 	@Override
-	protected JavaBasicType getType1() {
+	protected JavaType1 checkType1() {
 		return type;
 	}
 
@@ -175,6 +175,11 @@ public class BoundVar extends BCExpression {
 	 */
 	public void setVname(String vname) {
 		this.vname = vname;
+	}
+
+	@Override
+	public JavaType1 getType() {
+		return type;
 	}
 
 }

@@ -3,37 +3,16 @@
 - czy moge zalozyc, ze zmiany w bajtkodzie beda wykonywane
 	tylko w jednym oknie na raz (tzn. pozostale okna beda
 	po refresh-u)?
+- czy powinienem rozrozniac typy referencyjne (tablice,
+	podtypy, ...)?
 - w jakim formacie sa wyjatki z exsures?
 - czy typy wezlow AST powinny odpowiadac typom ich elementow
 	(np. czy formula powinna miec podwyrazenia typu
 	AbstractFormula, czy BCExpression)? Co z typami zmiennych
 	zwiazanych (czy powinny byc osobne klasy dla zmiennych
 	roznych typow)?
-
-poprzednie pytania do Chrzaszcza na spotkanie:
-
-- czy moge zalozyc, ze poczatek komentarza bedzie zawsze
-	na poczatku linii, a koniec komentarza na koncu linii? (NIE)
-- czy mam korzystac z JavaClass, Method, czy z ClassGen,
-	MethodGen? ...
-- czy bedzie potrzebna funkcjonalnosc dodawania
-	i usuwania metod (w bibliotece / edytorze)? NIE
-- czy w jednej klasie moe by kilka atrybutw klasowych
-	(np. classInvariant) tego samego typu? NIE
-- czy przejmowac sie wydajnoscia i kiedy? srednio
-- czy BCConstantPool powinien byc kolekcja stalych, czy
-	dwoma zwyklymi (BCEL-owymi) constantPool-ami? ok
-- czy stale z second constant poola powinny miec indeksy
-	od rozmiaru pierwszego constant poola w gore, czy od
-	65535 w dol? (sprawdzic zapis gdy cp1 sie powiekszy)
-- czy moge zalozyc, ze kazda adnotacja bedzie w innej linii? TAK
-- czy moze wogole uzyc antlr-a do parsowania calej klasy? ok
-- co oznaczaja bledy typu "argument not valid" w Umbrze? ...
-- czy status "correct" powinien dotyczyc poprawnosci calego
-	bajtkodu, czy tylko edytowanego fragmentu? do calosci
-- jak pozbyc sie warningow o operatorach? uzywac rzutowania zamiast tempateow
-- co oznacza 'final' przy definicji klasy? ze nie wolno podklasowac
-- czy annotacje powinny byc do wszystkich klas, pol i metod
-	czy tylko tych, ktore sa nieoczywiste? Czy do
-	przedefiniowanych metod w podklasach te (@Override)? ok
-
+- jak bedzie mozna dodawac funkcjonalnosc (specyficzna dla
+	konkretnego typu obliczen, np. rozne "desugar"-y)?
+	Czy zeby wykonac swoje obliczenia na AST trzeba bedzie
+	dodawac metody DO tej biblioteki, czy powinienem udostepnic
+	jakis iterator do chodzenia po drzewach?

@@ -67,4 +67,9 @@ public abstract class AbstractIntExpression extends BCExpression {
 		super(ar, root);
 	}
 
+	@Override
+	public JavaType1 getType() {
+		return JavaBasicType.JavaInt;
+	}
+
 }

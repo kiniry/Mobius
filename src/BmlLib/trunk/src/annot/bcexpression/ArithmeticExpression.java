@@ -7,17 +7,50 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
+/**
+ * Represents artihmetic expressions (int x int --> int),
+ * including shifts and bit operations.
+ * Unary arithmetic operation (unary minus) has been moved
+ * to the {@link UnaryArithmeticExpression}.
+ * 
+ * @author tomekb
+ */
 public class ArithmeticExpression extends AbstractIntExpression {
+//XXX should bitwise and shifts expressions be separated from arithmetic expressions?
+//what is the important differecne between those expression types?
 
-	public ArithmeticExpression(int connector, BCExpression subExpr) {
+	/**
+	 * A constructor for unary minus only.
+	 */
+	protected ArithmeticExpression(int connector, BCExpression subExpr) {
 		super(connector, subExpr);
 	}
 
+	/**
+	 * A standard constructor. 
+	 * 
+	 * @param connector - type of expression, from
+	 * 		<code>Code</code> interface,
+	 * @param left - left subexpression,
+	 * @param right - right subexpression.
+	 */
 	public ArithmeticExpression(int connector, BCExpression left,
 			BCExpression right) {
 		super(connector, left, right);
 	}
 
+	/**
+	 * A constructor from AttributeReader, used for loading
+	 * from file (from BCEL's unknown Attribute).
+	 * 
+	 * @param ar - input stream to load from,
+	 * @param root - type o expression (last read byte from
+	 * 		<code>ar</code>.
+	 * @throws ReadAttributeException - if stream
+	 * 		in <code>ar</code> doesn't represent a correct
+	 * 		artimethic expression.
+	 * @see BCExpression#BCExpression(AttributeReader, int)
+	 */
 	public ArithmeticExpression(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		super(ar, root);
@@ -29,9 +62,9 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	}
 
 	@Override
-	protected JavaBasicType getType1() {
-		if ((getSubExpr(0).getType() != JavaBasicType.JavaInt)
-			|| (getSubExpr(1).getType() != JavaBasicType.JavaInt))
+	protected JavaType1 checkType1() {
+		if ((getSubExpr(0).checkType() != JavaBasicType.JavaInt)
+			|| (getSubExpr(1).checkType() != JavaBasicType.JavaInt))
 				return null;
 		return JavaBasicType.JavaInt;
 	}
@@ -40,6 +73,9 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	protected void init() {
 	}
 
+	/**
+	 * @return string representation of expression's connector.
+	 */
 	protected String printRoot() {
 		switch (getConnector()) {
 		case Code.BITWISEAND: return " & ";

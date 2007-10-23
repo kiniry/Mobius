@@ -57,6 +57,7 @@ public abstract class Priorities implements Code {
 		priorities[IMPLIES] = 14;
 		priorities[EQUIV] = 15;
 		priorities[NOTEQUIV] = 15;
+		priorities[COND_EXPR] = 16;
 		// ?
 		priorities[FORALL] = 17;
 		priorities[EXISTS] = 17;

@@ -2,6 +2,7 @@ package annot.bcexpression.modifies;
 
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.JavaBasicType;
+import annot.bcexpression.JavaType1;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -99,7 +100,19 @@ public abstract class ModifyExpression extends BCExpression {
 	 * @throws RuntimeException - always.
 	 */
 	@Override
-	protected JavaBasicType getType1() {
+	protected JavaType1 checkType1() {
+		throw new RuntimeException("What type should it return?");
+	}
+
+	/**
+	 * Noone should need JavaType of Modify Expression.
+	 * I will return here sth if I will need JavaType
+	 * of modify expression.
+	 * 
+	 * @throws RuntimeException - always.
+	 */
+	@Override
+	public JavaType1 getType() {
 		throw new RuntimeException("What type should it return?");
 	}
 

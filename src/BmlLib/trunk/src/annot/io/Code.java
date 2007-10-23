@@ -39,6 +39,7 @@ public interface Code {
 	public static final int USHR = 0x34;
 	public static final int SHR = 0x35;
 	public static final int INT_LITERAL = 0x40;
+	public static final int COND_EXPR = 0x64; // ?:
 	public static final int JAVA_TYPE = 0xC0;
 	public static final int MODIFIES_EVERYTHING = 0xD0;
 	public static final int MODIFIES_NOTHING = 0xD1;

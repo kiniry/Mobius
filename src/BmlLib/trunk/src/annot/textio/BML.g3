@@ -280,7 +280,7 @@ specCase returns [SpecificationCase ast] :
 	}
 	(MODIFIES me=modifyExpression {modif = $me.ast;})?
 	(POSTCONDITION f2=formula {postc = $f2.ast;})?
-	(EXSURES (i=exname EXCNAMEEND f3=formula {
+	(EXSURES (i=exname COLON f3=formula {
 		if (($i.name != null) && ($f3.ast != null)) {
 			JavaReferenceType jrt = new JavaReferenceType($i.name);
 			Exsure ex = new Exsure(jrt, $f3.ast);
@@ -300,9 +300,6 @@ modifyExpression returns [ModifyExpression ast] :
 	| EVERYTHING {$ast = ModifyExpression.Everything;}
 	;
 
-expression returns [BCExpression ast] :
-	e=bitwiseOrExpr {$ast = $e.ast;};
-
 formula returns [AbstractFormula ast] :
 	{initExpression();}
 	e=uncheckedFormula {
@@ -317,8 +314,31 @@ formula returns [AbstractFormula ast] :
 		}
 	};
 
+expression returns [AbstractIntExpression ast] :
+	{initExpression();}
+	e=uncheckedExpression {
+		if ($e.ast == null) {
+			reportError(null);
+		} else {
+			if ($e.ast.getType() != JavaBasicType.JavaInt) {
+				reportError(null);
+			} else {
+				$ast = (AbstractIntExpression)$e.ast;
+			}
+		}
+	};
+
+uncheckedExpression returns [BCExpression ast] :
+	e=conditionalExpression {$ast = $e.ast;};
+
 uncheckedFormula returns [BCExpression ast] :
 	e=equivalenceExpr {$ast = $e.ast;};
+
+conditionalExpression returns [BCExpression ast] :
+	c=uncheckedFormula COND t=uncheckedExpression COLON f=uncheckedExpression {
+		$ast = new ConditionalExpression($c.ast, $t.ast, $f.ast);
+	}
+	| e=bitwiseOrExpr {$ast = $e.ast;};
 
 equivalenceExpr returns [BCExpression ast] :
 	e=impliesExpr {$ast = $e.ast;}
@@ -359,7 +379,7 @@ equalityExpr returns [BCExpression ast] :
 	;
 
 relationalExpr returns [BCExpression ast] :
-	| l=shiftExpr LESS r=shiftExpr
+	l=shiftExpr LESS r=shiftExpr
 		{$ast = new Predicate2Ar(Code.LESS, $l.ast, $r.ast);}
 	| l=shiftExpr GRT r=shiftExpr
 		{$ast = new Predicate2Ar(Code.GRT, $l.ast, $r.ast);}
@@ -428,8 +448,8 @@ primaryExpr returns [BCExpression ast] :
 	n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
 	| i=ident {$ast = whatIsIt($i.text);}
 	| MINUS m=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $m.ast);}
-//	| PLUS px=primaryExpr {$ast = $px.ast;}
-	| PAR_LEFT e=expression PAR_RIGHT {$ast = $e.ast;}
+	| PLUS px=primaryExpr {$ast = $px.ast;}
+	| PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
 	;
 
 ident returns [String name]:
@@ -463,7 +483,7 @@ PRECONDITION: '\\precondition';
 MODIFIES: '\\modifies';
 POSTCONDITION: '\\ensures';
 EXSURES: '\\exsures';
-EXCNAMEEND: ':';
+COLON: ':';
 NOTHING: 'nothing';
 EVERYTHING: 'everything';
 LOG_AND: '&&';
@@ -496,6 +516,7 @@ USHR: '>>>';
 BITWISEAND: '&';
 BITWISEOR: '|';
 BITWISEXOR: '^';
+COND: '\?';
 
 NAT: ('0'..'9')+;
 IDENT: ('a'..'z'|'A'..'Z')+;

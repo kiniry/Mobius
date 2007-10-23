@@ -139,7 +139,7 @@ public abstract class BCExpression {
 
 	/**
 	 * Reads the exression from an AttributeReader (except
-	 * connector, thar has been already read and set).
+	 * connector, that has been already read and set).
 	 * 
 	 * @param ar - stream to load from,
 	 * @param root - connentor.
@@ -152,8 +152,8 @@ public abstract class BCExpression {
 
 	/**
 	 * Writes this expression to AttributeWirter.
-	 * Don't forget to write connector first, then
-	 * other data and finally call writeSubExpressions(aw)
+	 * While overriding, don't forget to write connector first,
+	 * then other data and finally call writeSubExpressions(aw)
 	 * to write all subexpressions recursivly while
 	 * implementing this method in subclasses.
 	 * 
@@ -163,10 +163,11 @@ public abstract class BCExpression {
 
 	/**
 	 * Initialize private data of subclass.
-	 * Use this method instead of initialize private fields
-	 * in constructor, becouse read() method is called in
-	 * spuerclass constructor (from AttributeReader, that is,
-	 * before calling subclass constructor).
+	 * While overriding, use this method instead of initialize
+	 * private fields in constructor, becouse read() method
+	 * is called in spuerclass constructor
+	 * (from AttributeReader, that is, before calling subclass
+	 * constructor).
 	 */
 	protected abstract void init();
 
@@ -185,22 +186,31 @@ public abstract class BCExpression {
 	 * 		or null if it's invalid (if one of it's
 	 * 		subexpression have wrong type or is invalid).
 	 */
-	protected abstract JavaBasicType getType1();
+	//XXX shouldn't it return boolean value?
+	protected abstract JavaType1 checkType1();
 
 	/**
 	 * Checks if all subexpressions have correct types
-	 * and return type of this expression.
+	 * (recursivly) and return type of this expression.
 	 * 
-	 * @return JavaType of result of this exrpession,
-	 * 		or null if it's invalid (if one of it's
-	 * 		subexpression have wrong type or is invalid).
+	 * @return (bmllib's) JavaType of result of this
+	 * 		exrpession, or null if it's invalid (if one or more
+	 * 		of it's subexpression have wrong type
+	 * 		or are invalid).
 	 */
-	public JavaBasicType getType() {
+	public final JavaType1 checkType() {
+		//XXX shouldn't this type be memorized?
 		for (int i = 0; i < subExpr.length; i++)
 			if (subExpr[i] == null)
 				return null;
-		return getType1();
+		return checkType1();
 	}
+
+	/**
+	 * @return (bmllib's) JavaType of result of this
+	 * 		expression (without checkign subexpressions).
+	 */
+	public abstract JavaType1 getType();
 
 	/**
 	 * Prints expression as a whole attribute.

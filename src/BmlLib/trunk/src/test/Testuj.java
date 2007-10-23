@@ -27,11 +27,11 @@ public final class Testuj {
 	 * wether show stac trace of exception in test failures
 	 * or not.
 	 */
-	private static boolean goShowTraceOnFailures = true;
+	private static boolean goShowTraceOnFailures = false;
 
 	/**
 	 * Perform "save and load" test after each example.
-	 * This slows tests down a little, but also checks test
+	 * This slows tests down significally, but also checks test
 	 * annotations if they are saved and loaded correctly.
 	 */
 	private static boolean goFullSaveAndLoadTests = true;
@@ -301,6 +301,7 @@ public final class Testuj {
 				" || ~(~(~(~false)))");
 
 		// quantified formula tests:
+		test(true, 3, "forall boolean ok; ok");
 		test(false, 2, "1 > err");
 		test(false, 2, "aaa && bbb < ccc");
 		test(false, 2, "forall true");
@@ -316,7 +317,6 @@ public final class Testuj {
 		test(true, 2, "(forall int a; (exists int b; a < b)) && 1 > 0");
 		test(false, 2, "(forall int a; (exists int b; a < b)) && a > 0");
 		test(true, 3, "false || (forall int a; a > 0) && 1 < 2");
-		test(true, 3, "forall boolean ok; ok");
 		test(true, 3, "forall int i; (exists boolean b; i > 0 ==> b)");
 		test(true, 3, "1 > 0 || (forall int i; (exists boolean b; i > 0 ==> b))");
 		test(true, 3, "1 > 0 || (forall int i; (exists boolean b; i > 0 ==> b) ==> i < 0)");
@@ -371,20 +371,27 @@ public final class Testuj {
 		test(true, 3, "-1 < 2");
 		test(true, 3, "1 + -2 < 3");
 		test(true, 3, "--1 < 2 - -3", "- (-1) < 2 - -3");
-		test(true, 3, "- (-1) < 2 - (-3)", "- (-1) < 2 - -3");
+		test(true, 3, "- (+1) < 2 - (-3)", "-1 < 2 - -3");
 		test(true, 3, "-1 < -(2 & 3)");
 		test(false, 3, "-1 < -()");
 		test(false, 3, "-1 < -false");
 
-		// test(true, 3, "(true ? 1 : 2) < 1");
-		// test(true, 3, "(12 < 34 ? 1 : 2) < 45");
-		// test(false, 3, "1 < 2 ? 3 : 4 < 5");
-		// test(false, 3, "(1 < 2 ? 3 : 4 ? 5 : 6) < 7");
-		// test(true, 3, "1 < 2 <==> (3 < 4 ? 7 : 8) < 9");
-		// test(true, 3, "1 < 2 <==> (3 < 4 ? 5 : 6) < 7 <=!=> 8 < 9");
-		// test(false, 3, "true <==> 3 ? 4 : 5 < 6");
-		// test(true, 3, "(false ==> true ? 1 : 2) < 3");
-		// test(false, 3, "false ==> true ==> false");
+		//conditional expression tests:
+		test(true, 3, "(true ? 1 : 2) < 1");
+		test(true, 3, "(12 < 34 ? 1 : 2) < 45");
+		test(false, 3, "1 < 2 ? 3 : 4 < 5");
+		test(false, 3, "(1 < 2 ? 3 : 4 ? 5 : 6) < 7");
+		test(true, 3, "1 < 2 <==> (3 < 4 ? 7 : 8) < 9");
+		test(true, 3, "1 < 2 <==> (3 < 4 ? 5 : 6) < 7 <=!=> 8 < 9");
+		test(false, 3, "true <==> 3 ? 4 : 5 < 6");
+		test(true, 3, "(false ==> true ? 1 : 2) < 3");
+		test(true, 3, "false ==> true ==> false");
+		test(true, 3, "(1 > 2 ? 3 : 4) < 5");
+		test(true, 3, "(true ? 2 : 5) > 0");
+		test(true, 3, "(true ? (2) : (5)) > 0", "(true ? 2 : 5) > 0");
+		test(true, 3, "(true ? 1 > 2 ? 3 : 4 : 5) > 0");
+		test(true, 3, "(true ? 1 > 2 ? 3 : 4 : 5 <= 6 ? 7 : 8) > 0");
+		test(false, 3, "(true ? 1 > 2 ? 3 : 4 ? 5 <= 6 : 8) > 0");
 
 		// test(true, 3, "NULL < 0");
 		// test(true, 3, "NULL + 1 < 0");

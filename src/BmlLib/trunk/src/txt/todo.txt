@@ -1,18 +1,19 @@
 TODO: (- : to do, + : done, * : optional, > : in progress)
 
 + ...
-+ remove leading and trailing spaces from comments,
-+ add superclass to MethodSpecification,
-+ remove warnings,
-+ integrate with Umbra
-	+ fix correct indicator,
-	+ (?) fix bug related with many editors open at the same time,
-	+ fix position synchronization,
-	+ add comment to BMLParsing and all changes in Umbra.
-+ complete specificationCase attribute
-	+ add JavaReferenceType,
-	+ add Exsures,
-	+ add Modifies,
-	+ add JavaDocs.
-- add attributes,
-- add expressions.
+- add expression iterators:
+	- expression level,
+	- attribute level,
+	- method level,
+	- class level.
+> add expressions,
+	+ add Aritmethic expression,
+	+ add conditional expression,
+	- add null,
+	- add local variable,
+	- add field access,
+	- add modifies expressions.
+- add attributes:
+	- add LoopSpecification,
+	* add HistoryConstraints,
+	* add ParamTable.

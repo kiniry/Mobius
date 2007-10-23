@@ -6,6 +6,7 @@ import java.util.Vector;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.JavaBasicType;
+import annot.bcexpression.JavaType1;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -87,7 +88,8 @@ public class QuantifiedFormula extends AbstractFormula {
 		Iterator<BoundVar> iter = vars.iterator();
 		while (iter.hasNext()) {
 			BoundVar bv = iter.next();
-			code += " " + bv.getType().printCode1(conf);// !
+			JavaBasicType jbt = (JavaBasicType)bv.getType();
+			code += " " + jbt.printCode1(conf);// !
 			code += " " + bv.printCode1(conf);// !
 		}
 		code += "; ";
@@ -186,7 +188,7 @@ public class QuantifiedFormula extends AbstractFormula {
 		Iterator<BoundVar> iter = vars.iterator();
 		while (iter.hasNext()) {
 			BoundVar bv = iter.next();
-			bv.getType().write(aw);
+			bv.checkType().write(aw);
 			if (BoundVar.goWriteVarNames) {
 				String vname = bv.getVname();
 				if (vname == null) {
@@ -227,8 +229,8 @@ public class QuantifiedFormula extends AbstractFormula {
 	 * 		or is invalid).
 	 */
 	@Override
-	protected JavaBasicType getType1() {
-		if (getSubExpr(0).getType() != JavaBasicType.JavaBool)
+	protected JavaType1 checkType1() {
+		if (getSubExpr(0).checkType() != JavaBasicType.JavaBool)
 			return null;
 		return JavaBasicType.JavaBool;
 	}

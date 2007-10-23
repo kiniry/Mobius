@@ -20,7 +20,11 @@ import annot.bcclass.BCMethod;
  */
 public class Parsing {
 
-	private static final boolean goShowTokens = true;
+	/**
+	 * Shows token list (from lexer) befor parsing each
+	 * BCPrintableAttribute. Useful when parser crashes.
+	 */
+	private static final boolean goShowTokens = false;
 	
 	/**
 	 * BCClass of all BML annotations parsing here.

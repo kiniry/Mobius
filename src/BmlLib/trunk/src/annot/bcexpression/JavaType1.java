@@ -68,7 +68,16 @@ public abstract class JavaType1 extends BCExpression {
 	 * 		{@link JavaBasicType#JavaType}.
 	 */
 	@Override
-	protected JavaBasicType getType1() {
+	protected JavaType1 checkType1() {
+		return JavaBasicType.JavaType;
+	}
+
+	/**
+	 * @return type of JavaType, that is,
+	 * 		{@link JavaBasicType#JavaType}.
+	 */
+	@Override
+	public JavaType1 getType() {
 		return JavaBasicType.JavaType;
 	}
 
