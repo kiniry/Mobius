@@ -26,7 +26,7 @@ typecheckOldJDK:
 	    echo "===== type checking $${d}" ;\
 	    if [ -e $${d} ]; then \
 	    (cd $${d} && \
-		echo `find . -name '*.java'` | xargs -n 300 \
+		echo `find . -name '*.java'` | xargs \
 		${JAVA} \
 		-classpath ${CAN_CLASSDIRECTORY} \
 		javafe.test.Print \
@@ -60,7 +60,7 @@ typecheckJavafe:
 	@cd ${ESCTOOLS_ROOT}/Javafe/java && \
 		for d in ast parser tc util filespace reader genericfile ; do \
 		echo -n "$${d}	" ;\
-		echo `find javafe/$${d} -name '*.java'` | xargs -n 300 \
+		echo `find javafe/$${d} -name '*.java'` | xargs \
 			${JAVA} -classpath $(call canonicalize,../classfiles${EXTRA_CP}:${BCEL_LIB}) javafe.test.Print \
 			-classpath "${call canonicalize,.:../../Utils${EXTRA_CP}:${BCEL_LIB}}" \
 			-typecheck -noprint  ;\

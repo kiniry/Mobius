@@ -172,7 +172,7 @@ really-compile: ${STAMPFILE}  build_jniw
 ${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
 	@#./dl-xml-rpc-lib.sh # for future use
 	./generate-functions-vcGenerator.sh #fixme, this is lame
-	echo $? | xargs -s 1500 ${JAVAC} ${JAVAC_FLAGS} \
+	echo $? | xargs ${JAVAC} ${JAVAC_FLAGS} \
 		-classpath $(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}) \
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \
 		-d $(call canonicalize,${CLASSDIRECTORY}) 

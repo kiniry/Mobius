@@ -619,7 +619,7 @@ test-source-release:
 		unset ESC_CLASSPATH ;\
 		unset JAR_FILES ; \
 		tar xjf ${RELSRCTAR}.tbz ;\
-		ESCTOOLS_ROOT=${RELTEST} $(MAKE) -s clean-norel-noreltemp build test docs jars                               
+		ESCTOOLS_ROOT=${RELTEST} $(MAKE) -s clean build test                         
 
 ## Note - we need to unset lots of environmental variables here because we
 ## want them to be reset based on the value of ESC_RELEASE in install.sh.

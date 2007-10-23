@@ -76,7 +76,7 @@ testparsejdkidempotence:
 	   echo "Executing TestParse on " $$d  ; \
 	    CLASSPATH=$(call canonicalize,${CLASSPATH}:.) ; \
 	   ( cd $$d; find . -follow -name "*.java" -print | \
-		xargs -n 1000 -s 1024 \
+		xargs \
 			${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse assert progress silent idempotence );\
 	done
 
