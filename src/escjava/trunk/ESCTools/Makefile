@@ -458,7 +458,9 @@ source-release: cleanup alldocs
 	cp -rf ${ESCJAVA_ROOT} ${RELTEMP}
 	cp -rf ${MOCHA_SOURCE_DIR} ${RELTEMP}/Escjava/mochalib
 	cp ${XMLRPC_LIB} ${RELTEMP}/Escjava/xmlrpc.jar 
-	cp Makefile* ${RELTEMP} 
+	cp Makefile ${RELTEMP}
+	cp Makefile.defs ${RELTEMP}
+	cp Makefile.local.* ${RELTEMP} 
 	cp build.xml ${RELTEMP} 
 	cp prj.el ${RELTEMP} 
 	cp ChangeLog ${RELTEMP} 
@@ -469,6 +471,8 @@ source-release: cleanup alldocs
 	cp -rf Simplify ${RELTEMP}
 	cp -rf specs* ${RELTEMP}
 	cp license.txt ${RELTEMP}
+	mkdir ${RELTEMP}/jars
+	cp -r jars/mochalib.jar ${RELTEMP}/jars
 #   Copy Javadoc API docs 
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}/docs 
 #   Copy other miscellaneous files 
@@ -511,7 +515,6 @@ jar:	build
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAR) )
-	-find /sub -name "*.svn*" -print | xargs rm -
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
 	  ${RELJAR} *; jar i ${RELJAR}; )
 	cp ${RELJAR} ${ESCTOOLS_ROOT}
@@ -580,7 +583,7 @@ binary-release: build jars alldocs cleanup
 #   cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
-	-find ${RELTEMP} -name "*.svn*" -print | xargs rm -rf
+	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELTAR}.zip *
@@ -616,7 +619,7 @@ test-source-release:
 		unset ESC_CLASSPATH ;\
 		unset JAR_FILES ; \
 		tar xjf ${RELSRCTAR}.tbz ;\
-		$(MAKE) -s clean-norel-noreltemp build test docs jars                               
+		ESCTOOLS_ROOT=${RELTEST} $(MAKE) -s clean-norel-noreltemp build test docs jars                               
 
 ## Note - we need to unset lots of environmental variables here because we
 ## want them to be reset based on the value of ESC_RELEASE in install.sh.
