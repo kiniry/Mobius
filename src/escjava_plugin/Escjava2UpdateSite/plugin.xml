@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="Mobius Program Verification Environment">
+         <property
+               name="windowImages"
+               value="eclipse.gif,eclipse32.gif,eclipse48.gif,eclipse.png,eclipse32.png">
+         </property>
+         <property
+               name="aboutText"
+               value="Mobius Program Verification Environment">
+         </property>
+         <property
+               name="aboutImage"
+               value="eclipse_lg.gif">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="C8D5EA">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="0,280,455,15">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="7,220,441,20">
+         </property>
+         <property
+               name="appName"
+               value="Mobius Program Verification Environment">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="Escjava2UpdateSite.intro">
+      </intro>
+      <introProductBinding
+            introId="Escjava2UpdateSite.intro"
+            productId="Escjava2UpdateSite.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            content="introContent.xml"
+            id="Escjava2UpdateSite.introConfigId"
+            introId="Escjava2UpdateSite.intro">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx"
+                  style="content/shared.css">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+
+</plugin>

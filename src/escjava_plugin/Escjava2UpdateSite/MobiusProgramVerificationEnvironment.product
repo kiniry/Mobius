@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.1"?>
+
+<product name="Mobius Program Verification Environment" id="Escjava2UpdateSite.product" application="org.eclipse.ui.ide.workbench" useFeatures="true">
+
+   <aboutInfo>
+      <image path="eclipse_lg.gif"/>
+      <text>
+         Mobius Program Verification Environment
+      </text>
+   </aboutInfo>
+
+   <configIni use="default"/>
+
+   <launcherArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="eclipse.gif" i32="eclipse32.gif" i48="eclipse48.gif" i64="eclipse.png" i128="eclipse32.png"/>
+
+   <splash
+      location="escjava.plugin"
+      startupProgressRect="0,280,455,15"
+      startupMessageRect="7,220,441,20"
+      startupForegroundColor="C8D5EA" />
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <intro introId="Escjava2UpdateSite.intro"/>
+
+   <vm>
+      <macos type="jre">JVM 1.5.0 (MacOS X Default)</macos>
+   </vm>
+
+   <plugins>
+      <plugin id="ESCTools"/>
+      <plugin id="Escjava2UpdateSite"/>
+      <plugin id="ch.ethz.inf.sct.jml.plugin"/>
+      <plugin id="ch.ethz.inf.sct.jml.plugin.resources"/>
+      <plugin id="com.bull.eclipse.CallTrace"/>
+      <plugin id="com.ibm.icu"/>
+      <plugin id="com.ibm.icu.source"/>
+      <plugin id="com.jcraft.jsch"/>
+      <plugin id="de.loskutov.BytecodeOutline"/>
+      <plugin id="escjava.esctools"/>
+      <plugin id="escjava.plugin"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="javax.servlet.jsp"/>
+      <plugin id="javax.servlet.jsp.source"/>
+      <plugin id="javax.servlet.source"/>
+      <plugin id="mobius.escjava.plugin"/>
+      <plugin id="mobius.simplify"/>
+      <plugin id="mobius.simplify.plugin"/>
+      <plugin id="org.apache.ant"/>
+      <plugin id="org.apache.ant.source"/>
+      <plugin id="org.apache.commons.el"/>
+      <plugin id="org.apache.commons.el.source"/>
+      <plugin id="org.apache.commons.logging"/>
+      <plugin id="org.apache.commons.logging.source"/>
+      <plugin id="org.apache.jasper"/>
+      <plugin id="org.apache.jasper.source"/>
+      <plugin id="org.apache.lucene"/>
+      <plugin id="org.apache.lucene.analysis"/>
+      <plugin id="org.apache.lucene.analysis.source"/>
+      <plugin id="org.apache.lucene.source"/>
+      <plugin id="org.eclipse.ant.core"/>
+      <plugin id="org.eclipse.ant.ui"/>
+      <plugin id="org.eclipse.compare"/>
+      <plugin id="org.eclipse.core.boot"/>
+      <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.beans"/>
+      <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.filebuffers"/>
+      <plugin id="org.eclipse.core.filesystem"/>
+      <plugin id="org.eclipse.core.filesystem.macosx" fragment="true"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.net"/>
+      <plugin id="org.eclipse.core.resources"/>
+      <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.core.runtime.compatibility"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.core.variables"/>
+      <plugin id="org.eclipse.cvs"/>
+      <plugin id="org.eclipse.cvs.source"/>
+      <plugin id="org.eclipse.debug.core"/>
+      <plugin id="org.eclipse.debug.ui"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.http.jetty"/>
+      <plugin id="org.eclipse.equinox.http.registry"/>
+      <plugin id="org.eclipse.equinox.http.servlet"/>
+      <plugin id="org.eclipse.equinox.jsp.jasper"/>
+      <plugin id="org.eclipse.equinox.jsp.jasper.registry"/>
+      <plugin id="org.eclipse.equinox.launcher"/>
+      <plugin id="org.eclipse.equinox.launcher.carbon.macosx" fragment="true"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.help"/>
+      <plugin id="org.eclipse.help.appserver"/>
+      <plugin id="org.eclipse.help.base"/>
+      <plugin id="org.eclipse.help.ui"/>
+      <plugin id="org.eclipse.help.webapp"/>
+      <plugin id="org.eclipse.jdt"/>
+      <plugin id="org.eclipse.jdt.apt.core"/>
+      <plugin id="org.eclipse.jdt.apt.pluggable.core"/>
+      <plugin id="org.eclipse.jdt.apt.ui"/>
+      <plugin id="org.eclipse.jdt.compiler.apt" fragment="true"/>
+      <plugin id="org.eclipse.jdt.compiler.tool" fragment="true"/>
+      <plugin id="org.eclipse.jdt.core"/>
+      <plugin id="org.eclipse.jdt.core.manipulation"/>
+      <plugin id="org.eclipse.jdt.debug"/>
+      <plugin id="org.eclipse.jdt.debug.ui"/>
+      <plugin id="org.eclipse.jdt.doc.isv"/>
+      <plugin id="org.eclipse.jdt.doc.user"/>
+      <plugin id="org.eclipse.jdt.junit"/>
+      <plugin id="org.eclipse.jdt.junit.runtime"/>
+      <plugin id="org.eclipse.jdt.junit4.runtime"/>
+      <plugin id="org.eclipse.jdt.launching"/>
+      <plugin id="org.eclipse.jdt.launching.macosx"/>
+      <plugin id="org.eclipse.jdt.source"/>
+      <plugin id="org.eclipse.jdt.source.macosx.carbon.ppc" fragment="true"/>
+      <plugin id="org.eclipse.jdt.ui"/>
+      <plugin id="org.eclipse.jface"/>
+      <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.jface.text"/>
+      <plugin id="org.eclipse.jsch.core"/>
+      <plugin id="org.eclipse.jsch.ui"/>
+      <plugin id="org.eclipse.ltk.core.refactoring"/>
+      <plugin id="org.eclipse.ltk.ui.refactoring"/>
+      <plugin id="org.eclipse.mylyn"/>
+      <plugin id="org.eclipse.mylyn.bugzilla.core"/>
+      <plugin id="org.eclipse.mylyn.bugzilla.ide"/>
+      <plugin id="org.eclipse.mylyn.bugzilla.ui"/>
+      <plugin id="org.eclipse.mylyn.compatibility"/>
+      <plugin id="org.eclipse.mylyn.context.core"/>
+      <plugin id="org.eclipse.mylyn.context.ui"/>
+      <plugin id="org.eclipse.mylyn.help.ui"/>
+      <plugin id="org.eclipse.mylyn.ide.ant"/>
+      <plugin id="org.eclipse.mylyn.ide.ui"/>
+      <plugin id="org.eclipse.mylyn.java.ui"/>
+      <plugin id="org.eclipse.mylyn.monitor.core"/>
+      <plugin id="org.eclipse.mylyn.monitor.ui"/>
+      <plugin id="org.eclipse.mylyn.pde.ui"/>
+      <plugin id="org.eclipse.mylyn.resources.ui"/>
+      <plugin id="org.eclipse.mylyn.tasks.core"/>
+      <plugin id="org.eclipse.mylyn.tasks.ui"/>
+      <plugin id="org.eclipse.mylyn.team.cvs"/>
+      <plugin id="org.eclipse.mylyn.team.ui"/>
+      <plugin id="org.eclipse.mylyn.trac.core"/>
+      <plugin id="org.eclipse.mylyn.trac.ui"/>
+      <plugin id="org.eclipse.mylyn.web.core"/>
+      <plugin id="org.eclipse.mylyn.web.ui"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.osgi.util"/>
+      <plugin id="org.eclipse.pde"/>
+      <plugin id="org.eclipse.pde.build"/>
+      <plugin id="org.eclipse.pde.core"/>
+      <plugin id="org.eclipse.pde.doc.user"/>
+      <plugin id="org.eclipse.pde.junit.runtime"/>
+      <plugin id="org.eclipse.pde.runtime"/>
+      <plugin id="org.eclipse.pde.source"/>
+      <plugin id="org.eclipse.pde.ui"/>
+      <plugin id="org.eclipse.pde.ui.templates"/>
+      <plugin id="org.eclipse.platform"/>
+      <plugin id="org.eclipse.platform.doc.isv"/>
+      <plugin id="org.eclipse.platform.doc.user"/>
+      <plugin id="org.eclipse.platform.source"/>
+      <plugin id="org.eclipse.platform.source.macosx.carbon.ppc" fragment="true"/>
+      <plugin id="org.eclipse.rcp"/>
+      <plugin id="org.eclipse.rcp.source"/>
+      <plugin id="org.eclipse.rcp.source.macosx.carbon.ppc" fragment="true"/>
+      <plugin id="org.eclipse.sdk"/>
+      <plugin id="org.eclipse.search"/>
+      <plugin id="org.eclipse.swt"/>
+      <plugin id="org.eclipse.swt.carbon.macosx" fragment="true"/>
+      <plugin id="org.eclipse.team.core"/>
+      <plugin id="org.eclipse.team.cvs.core"/>
+      <plugin id="org.eclipse.team.cvs.ssh"/>
+      <plugin id="org.eclipse.team.cvs.ssh2"/>
+      <plugin id="org.eclipse.team.cvs.ui"/>
+      <plugin id="org.eclipse.team.ui"/>
+      <plugin id="org.eclipse.text"/>
+      <plugin id="org.eclipse.tomcat"/>
+      <plugin id="org.eclipse.ui"/>
+      <plugin id="org.eclipse.ui.browser"/>
+      <plugin id="org.eclipse.ui.carbon" fragment="true"/>
+      <plugin id="org.eclipse.ui.cheatsheets"/>
+      <plugin id="org.eclipse.ui.console"/>
+      <plugin id="org.eclipse.ui.editors"/>
+      <plugin id="org.eclipse.ui.externaltools"/>
+      <plugin id="org.eclipse.ui.forms"/>
+      <plugin id="org.eclipse.ui.ide"/>
+      <plugin id="org.eclipse.ui.ide.application"/>
+      <plugin id="org.eclipse.ui.intro"/>
+      <plugin id="org.eclipse.ui.intro.universal"/>
+      <plugin id="org.eclipse.ui.navigator"/>
+      <plugin id="org.eclipse.ui.navigator.resources"/>
+      <plugin id="org.eclipse.ui.net"/>
+      <plugin id="org.eclipse.ui.presentations.r21"/>
+      <plugin id="org.eclipse.ui.views"/>
+      <plugin id="org.eclipse.ui.views.properties.tabbed"/>
+      <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.eclipse.ui.workbench.compatibility" fragment="true"/>
+      <plugin id="org.eclipse.ui.workbench.texteditor"/>
+      <plugin id="org.eclipse.update.configurator"/>
+      <plugin id="org.eclipse.update.core"/>
+      <plugin id="org.eclipse.update.scheduler"/>
+      <plugin id="org.eclipse.update.ui"/>
+      <plugin id="org.junit"/>
+      <plugin id="org.junit.source"/>
+      <plugin id="org.junit4"/>
+      <plugin id="org.mortbay.jetty"/>
+      <plugin id="org.mortbay.jetty.source"/>
+      <plugin id="org.objectweb.asm"/>
+      <plugin id="org.objectweb.jonas.wtp.adapter"/>
+      <plugin id="org.objectweb.jonas.wtp.adapter.ui"/>
+      <plugin id="org.objectweb.jope4j.plugin"/>
+      <plugin id="org.tigris.subversion.subclipse.core"/>
+      <plugin id="org.tigris.subversion.subclipse.doc"/>
+      <plugin id="org.tigris.subversion.subclipse.ui"/>
+   </plugins>
+
+   <features>
+      <feature id="SimplifyFeature" version="1.5.4"/>
+      <feature id="mobius.escjava2" version="2.0.3"/>
+   </features>
+
+</product>

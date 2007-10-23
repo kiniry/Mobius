@@ -3,10 +3,10 @@
    <description url="http://kind.ucd.ie/products/opensource/ESCjava2/escjava-eclipse/updates">
       The ESC/Java2 plugin update site.
    </description>
-   <feature url="features/SimplifyFeature_1.5.5.jar" id="SimplifyFeature" version="1.5.5">
+   <feature url="features/mobius.escjava2_2.0.3.jar" id="mobius.escjava2" version="2.0.3">
       <category name="Mobius"/>
    </feature>
-   <feature url="features/mobius.escjava2_2.0.3.jar" id="mobius.escjava2" version="2.0.3">
+   <feature url="features/SimplifyFeature_1.5.4.jar" id="SimplifyFeature" version="1.5.4">
       <category name="Mobius"/>
    </feature>
    <category-def name="Mobius" label="mobius"/>
