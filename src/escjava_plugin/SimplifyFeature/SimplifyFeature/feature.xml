@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="SimplifyFeature"
-      label="mobius.simplify"
-      version="1.5.5">
+      label="mobius.simplify.feature"
+      version="1.5.4">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
