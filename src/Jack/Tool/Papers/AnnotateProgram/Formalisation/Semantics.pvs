@@ -355,11 +355,6 @@ BEGIN
       derive(p)(b, sigma1, v, sigma2)(n)
 
 
-%%  deriv_stmt_preserves_wf_Stmt : JUDGEMENT 
-%%    deriv_stmt HAS_TYPE [p : FullProgram ->
-%%                        [(wf_Stmt(p)), FullState, FullState ->
-%%                        [nat -> bool]]]
-
   spec_expr_has_no_side_effects(p : FullProgram)(e : (wf_Body(program(p)))) : boolean =
     FORALL (s1, s2 : FullState, v : Val, n : nat) :
       derive(p)(e, s1, v, s2)(n) IMPLIES s1 = s2

@@ -482,7 +482,10 @@ BEGIN
 
   wf_Body(p : PreProgram)(b : Body) : boolean = 
     (FORALL(v : Name) : var_names(b)(v) IMPLIES ext_declared_var_names(p)(v))
-
+    AND
+    (FORALL(b1 : Body) : Set?(b1) IMPLIES 
+                         b1 << b IMPLIES 
+                         var_names(getGhostDecls(p))(target(b1)))
 
   wf_Body_preserved_by_proper_subterm : LEMMA % :-)
     FORALL(p : PreProgram)(b1, b2 : Body) :

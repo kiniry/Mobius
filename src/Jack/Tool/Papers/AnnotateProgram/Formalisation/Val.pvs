@@ -34,15 +34,5 @@ BEGIN
       RefType : Null
     ENDCASES
 
-  welltyped?(v : Val, t : JType) : boolean =
-    CASES v OF
-      Bool(b) : t = BoolType,
-      Bottom : TRUE,
-      Int(i) : t = IntType,
-      Null : t = RefType,
-      Reference(a, c) : t = RefType,
-      Unit : t = Void
-    ENDCASES
-
 END ValProp
 

@@ -19,11 +19,6 @@ BEGIN
   PState : TYPE = [# ex : lift[Excpt],
                      st : PSt #]
 
-%  lift_PSt(p : PSt) : PState =
-%    (# ex := bottom, st := p #)
-
-%  CONVERSION lift_PSt
-
   is_local(vn : Name, sigma : PState) : boolean =
     defined?(lvs(st(sigma))(vn)) 
 
@@ -115,11 +110,6 @@ BEGIN
       (is_field(vn, s) IFF var_names(getFieldDecls(p))(vn)) AND
       (is_local(vn, s) IFF (var_names(getLocalDecls(p))(vn) OR vn = This)) 
 
-%AND
-%      (up?(get_FieldDecl(vn, p)) IMPLIES 
-%        welltyped?(lookup_field(vn, s), jtype(down(get_FieldDecl(vn, p))))) AND
-%      (up?(get_LocalDecl(vn, p)) IMPLIES 
-%        welltyped?(lookup_local(vn, s), jtype(down(get_LocalDecl(vn, p)))))
 
   % Well formed state properties
 
