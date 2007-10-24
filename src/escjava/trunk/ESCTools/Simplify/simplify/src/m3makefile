@@ -25,7 +25,9 @@ resource("html-output1")
 resource("html-output2")
 bundle("Html")
 
-Mtex("Simplify", 1)
+if defined("AT_SRC") and equal (OS_TYPE, "POSIX")
+  Mtex("Simplify", 1)
+end
 
 implementation("Simplify")
 
