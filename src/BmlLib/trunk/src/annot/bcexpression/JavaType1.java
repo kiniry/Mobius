@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import org.apache.bcel.generic.Type;
+
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -18,6 +20,29 @@ import annot.textio.Priorities;
  */
 public abstract class JavaType1 extends BCExpression {
 
+	// type comparation results:
+	
+	/**
+	 * Type are totally diffrent (no type is a subtype
+	 * of the other).
+	 */
+	public static final int TYPES_UNRELATED = 0;
+	
+	/**
+	 * Given type is a subtype of this type.
+	 */
+	public static final int IS_SUBTYPE = 1;
+	
+	/**
+	 * This type is a subtype of given type.
+	 */
+	public static final int IS_SUPERTYPE = 2;
+	
+	/**
+	 * types are equal.
+	 */
+	public static final int TYPES_EQUAL = 3;
+
 	/**
 	 * A standard constructor for subclasses.
 	 */
@@ -33,10 +58,12 @@ public abstract class JavaType1 extends BCExpression {
 	 * 		of given <code>name</code>.
 	 */
 	public static JavaType1 getJavaType(String name) {
-		if (IDisplayStyle.jt_int.equals(name))
-			return JavaBasicType.JavaInt;
-		if (IDisplayStyle.jt_boolean.equals(name))
-			return JavaBasicType.JavaBool;
+		if (IDisplayStyle.jt_int.equals(name)
+			|| ("I".equals(name)))
+				return JavaBasicType.JavaInt;
+		if (IDisplayStyle.jt_boolean.equals(name)
+			|| ("B".equals(name)))
+				return JavaBasicType.JavaBool;
 		return new JavaReferenceType(name);
 	}
 
@@ -56,6 +83,15 @@ public abstract class JavaType1 extends BCExpression {
 		if (IDisplayStyle.jt_boolean.equals(name))
 			return JavaBasicType.JavaBool;
 		throw new ReadAttributeException("Unknown java type");
+	}
+
+	public static JavaType1 convert(Type t) {
+		if (t == Type.BOOLEAN)
+			return JavaBasicType.JavaBool;
+		if ((t == Type.BYTE) || (t == Type.SHORT)
+			|| (t == Type.INT) || (t == Type.LONG))
+				return JavaBasicType.JavaInt;
+		return JavaReferenceType.ANY; //XXX
 	}
 
 	@Override
@@ -107,5 +143,22 @@ public abstract class JavaType1 extends BCExpression {
 
 	@Override
 	public abstract void write(AttributeWriter aw);
+
+	/**
+	 * Compares this type with given type.<br>
+	 * //TODO checking for subtypes currently unsupported!
+	 * 
+	 * @param type - type to compare to.
+	 * @return <b>{@link #TYPES_UNRELATED}</b> - if neither
+	 * 		this type is a subtype of given one, nor given
+	 * 		type is a subtype of this type,<br>
+	 * 		<b>{@link #IS_SUBTYPE}</b> - if given type
+	 * 		is a subtype of this type,<br>
+	 * 		<b>{@link #IS_SUPERTYPE}</b> - if this type
+	 * 		is a subtype of given type,<br>
+	 * 		<b>{@link #TYPES_EQUAL}</b> - if this type
+	 * 		is equal to given type.
+	 */
+	public abstract int compareTypes(JavaType1 type);
 
 }

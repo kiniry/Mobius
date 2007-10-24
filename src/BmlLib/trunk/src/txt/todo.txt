@@ -9,9 +9,12 @@ TODO: (- : to do, + : done, * : optional, > : in progress)
 > add expressions,
 	+ add Aritmethic expression,
 	+ add conditional expression,
-	- add null,
-	- add local variable,
-	- add field access,
+	+ add null, this, result,
+	+ add local variable,
+	+ add field access:
+		+ add field ref,
+		+ add full qualified name.
+	- add olds,
 	- add modifies expressions.
 - add attributes:
 	- add LoopSpecification,

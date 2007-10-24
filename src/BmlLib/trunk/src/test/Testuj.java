@@ -37,10 +37,16 @@ public final class Testuj {
 	private static boolean goFullSaveAndLoadTests = true;
 
 	/**
-	 * Show old and new class' bytecode if it has changed
+	 * Shows old and new class' bytecode if it has changed
 	 * during saving / loading.
 	 */
 	private static boolean goShowFileChangesIfAny = true;
+
+	/**
+	 * Shows bytecode whose annotations will be modified
+	 * during tests before launching first test.
+	 */
+	private static boolean goShowBytecode = true;
 
 	/**
 	 * Number of tests ran so far.
@@ -169,9 +175,11 @@ public final class Testuj {
 			ReadAttributeException {
 		bcc = OldTests.createSampleClass();
 		at = bcc.getAllAttributes(AType.C_ALL);
-		bcc.printCode();
+		String code = bcc.printCode();
 		oldMask = MLog.mask;
 		MLog.mask = IMessageLog.PERRORS;
+		if (goShowBytecode)
+			System.out.println(code);
 		System.out.println(OldTests.xxx);
 	}
 
@@ -393,13 +401,36 @@ public final class Testuj {
 		test(true, 3, "(true ? 1 > 2 ? 3 : 4 : 5 <= 6 ? 7 : 8) > 0");
 		test(false, 3, "(true ? 1 > 2 ? 3 : 4 ? 5 <= 6 : 8) > 0");
 
-		// test(true, 3, "NULL < 0");
-		// test(true, 3, "NULL + 1 < 0");
-		// test(false, 3, "NULL");
-		// test(true, 3, "this < 0");
-		// test(false, 3, "this.this < 0");
-		// test(true, 3, "this.lv[1] < 1", "lo < 1");
-		// test(true, 3, "this.lv[2].lv[1] < 2", "hi.lo < 2");
+		// reference expressions tests:
+		test(false, 3, "null < 0");
+		test(false, 3, "null");
+		test(true, 3, "null == NULL", "null == null");
+		test(false, 3, "this == 0");
+		test(true, 2, "this != null || THIS == NULL", "this != null || this == null");
+		test(false, 3, "this > 0");
+		test(true, 2, "\\result != null");
+		test(true, 1, "\\result + 1 <= 2");
+		test(false, 3, "\\result == 1");
+		test(true, 3, "\\result != \\result");
+		test(false, 0, "\\result != null");
+
+		// local variables tests:
+		test(false, 0, "n > 0");
+		test(true, 1, "n > 0");
+		test(false, 2, "n > 0");
+		test(true, 2, "args != null");
+		test(true, 3, "lv[0] == null", "args == null");
+		test(true, 1, "lv[0] == 3", "n == 3");
+		test(false, 3, "lv[1] == null");
+		
+		// fields tests:
+		test(true, 0, "l > 0");
+		test(true, 1, "n + l > 1");
+		test(false, 2, "c < 0");
+//		test(false, 3, "this.this < 0");
+//		test(true, 2, "this.args != NULL");
+//		test(true, 2, "this.l < 10");
+//		test(true, 3, "this.lv[2].lv[1] < 2", "hi.lo < 2");
 		end();
 	}
 

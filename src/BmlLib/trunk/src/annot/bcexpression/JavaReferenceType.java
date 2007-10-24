@@ -29,6 +29,11 @@ public class JavaReferenceType extends JavaType1 {
 	}
 
 	/**
+	 * Type of null, for example.
+	 */
+	public static final JavaReferenceType ANY = new JavaReferenceType("Object");
+
+	/**
 	 * Returns this type's signature as a String
 	 * (the same String as given in constructor).
 	 */
@@ -47,6 +52,23 @@ public class JavaReferenceType extends JavaType1 {
 		aw.writeByte(Code.JAVA_TYPE);
 		int cpIndex = aw.findConstant(signature);
 		aw.writeShort(cpIndex);
+	}
+
+	@Override
+	public int compareTypes(JavaType1 type) {
+		if (signature == null)
+			throw new RuntimeException("signatyre == null, what does it mean?");
+		if (type instanceof JavaReferenceType) {
+			JavaReferenceType rt = (JavaReferenceType) type;
+			if (signature.equals(rt.getSignature()))
+				return TYPES_EQUAL;
+			//TODO check for subtypes
+		}
+		return TYPES_UNRELATED;
+	}
+
+	public String getSignature() {
+		return signature;
 	}
 
 }

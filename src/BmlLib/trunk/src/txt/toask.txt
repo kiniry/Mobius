@@ -3,9 +3,16 @@
 - czy moge zalozyc, ze zmiany w bajtkodzie beda wykonywane
 	tylko w jednym oknie na raz (tzn. pozostale okna beda
 	po refresh-u)?
+- czy powinienem uzywac BCEL-owych typow, czy definiowac swoje?
 - czy powinienem rozrozniac typy referencyjne (tablice,
 	podtypy, ...)?
 - w jakim formacie sa wyjatki z exsures?
+- czy rozne wystapienia wyrazen tj. true, false, null, this,
+	result,	powinny byc osobmyni obiektami, czy tym samym
+	obiektem? Czy zrobic klase occurence: np. TRUE == TRUE,
+	ale occurence(TRUE) != occurence(TRUE)
+	i occurence(TRUE).equals(occurence(TRUE)) ?
+- jak powinienem reprezentowac OLD-y (jako old(xx) czy old_xx)?
 - czy typy wezlow AST powinny odpowiadac typom ich elementow
 	(np. czy formula powinna miec podwyrazenia typu
 	AbstractFormula, czy BCExpression)? Co z typami zmiennych

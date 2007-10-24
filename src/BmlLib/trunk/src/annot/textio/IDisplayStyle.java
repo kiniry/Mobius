@@ -95,5 +95,6 @@ public interface IDisplayStyle {
 	public static final String _modifies = "\\modifies";
 	public static final String _postcondition = "\\ensures";
 	public static final String _exsures = "\\exsures";
+	public static final String _result = "\\result";
 
 }

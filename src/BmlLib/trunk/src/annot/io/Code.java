@@ -39,7 +39,13 @@ public interface Code {
 	public static final int USHR = 0x34;
 	public static final int SHR = 0x35;
 	public static final int INT_LITERAL = 0x40;
+	public static final int RESULT = 0x52; 
+	public static final int FIELD_ACCESS = 0x63; // .
 	public static final int COND_EXPR = 0x64; // ?:
+	public static final int THIS = 0x70;
+	public static final int NULL = 0x72;
+	public static final int FIELD_REF = 0x80;
+	public static final int LOCAL_VARIABLE = 0x90;
 	public static final int JAVA_TYPE = 0xC0;
 	public static final int MODIFIES_EVERYTHING = 0xD0;
 	public static final int MODIFIES_NOTHING = 0xD1;

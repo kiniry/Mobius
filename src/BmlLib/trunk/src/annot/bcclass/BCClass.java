@@ -16,6 +16,7 @@ import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
+import annot.bcexpression.THIS;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
@@ -66,6 +67,16 @@ public class BCClass {
 	 * A set of functions for parsing annotations.
 	 */
 	private Parsing parser;
+
+	/**
+	 * <code>this</code> expression.
+	 */
+	private THIS THIS;
+
+	/**
+	 * <code>old_this</code> expression.
+	 */
+	private THIS OLD_THIS;
 
 	/**
 	 * A constructor from already existing JavaClass. That
@@ -184,6 +195,8 @@ public class BCClass {
 		this.jc = jc;
 		this.cp = new BCConstantPool(jc);
 		this.parser = new Parsing(this);
+		this.THIS = new THIS(false, this);
+		this.OLD_THIS = new THIS(true, this);
 		MLog.putMsg(MLog.PInfo, "  loading class attributes");
 		Attribute[] attrs = jc.getAttributes();
 		AttributeReader ar = new AttributeReader(this);
@@ -408,6 +421,13 @@ public class BCClass {
 	 */
 	public Parsing getParser() {
 		return parser;
+	}
+
+	/**
+	 * @return <code>'this'</code> expression.
+	 */
+	public THIS getTHIS(boolean old) {
+		return old ? OLD_THIS : THIS;
 	}
 
 }

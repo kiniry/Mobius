@@ -88,6 +88,14 @@ options {
 	private BCExpression whatIsIt(String ident) {
 		if (env.containsKey(ident))
 			return env.get(ident);
+		if (m != null) {
+			BCLocalVariable lv = m.findLocalVariable(ident);
+			if (lv != null)
+				return lv;
+		}
+		BCFieldRef bfr = BCFieldRef.getFieldOfName(false, bcc.getCp(), ident);
+		if (bfr != null)
+			return bfr;
 		MLog.putMsg(MLog.PInfo, "undefined identifier: "+ident);
 		RecognitionException rex = new RecognitionException();
 		reportError(rex);
@@ -302,11 +310,11 @@ modifyExpression returns [ModifyExpression ast] :
 
 formula returns [AbstractFormula ast] :
 	{initExpression();}
-	e=uncheckedFormula {
+	e=uncheckedExpression {
 		if ($e.ast == null) {
 			reportError(null);
 		} else {
-			if ($e.ast.getType() != JavaBasicType.JavaBool) {
+			if ($e.ast.checkType() != JavaBasicType.JavaBool) {
 				reportError(null);
 			} else {
 				$ast = (AbstractFormula)$e.ast;
@@ -331,52 +339,57 @@ expression returns [AbstractIntExpression ast] :
 uncheckedExpression returns [BCExpression ast] :
 	e=conditionalExpression {$ast = $e.ast;};
 
-uncheckedFormula returns [BCExpression ast] :
-	e=equivalenceExpr {$ast = $e.ast;};
-
 conditionalExpression returns [BCExpression ast] :
-	c=uncheckedFormula COND t=uncheckedExpression COLON f=uncheckedExpression {
+	c=equivalenceExpr {$ast = $c.ast;}
+	(COND t=uncheckedExpression COLON f=uncheckedExpression {
 		$ast = new ConditionalExpression($c.ast, $t.ast, $f.ast);
-	}
-	| e=bitwiseOrExpr {$ast = $e.ast;};
+	})?
+	;
 
 equivalenceExpr returns [BCExpression ast] :
 	e=impliesExpr {$ast = $e.ast;}
 	( EQUIV r=impliesExpr {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
 		| NOTEQUIV r=impliesExpr {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
-	)*;
+	)*
+	;
 
 impliesExpr returns [BCExpression ast] :
 	e=logicalOrExpr {$ast = $e.ast;}
-	(IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*;
+	(IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*
+	;
 
 logicalOrExpr returns [BCExpression ast] :
 	e=logicalAndExpr {$ast = $e.ast;}
-	(LOG_OR r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*;
+	(LOG_OR r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*
+	;
 
 logicalAndExpr returns [BCExpression ast] :
-	e=equalityExpr {$ast = $e.ast;}
-	(LOG_AND r=equalityExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*;
+	e=bitwiseOrExpr {$ast = $e.ast;}
+	(LOG_AND r=bitwiseOrExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*
+	;
 
 bitwiseOrExpr returns [BCExpression ast] :
 	e=bitwiseXorExpr {$ast = $e.ast;}
-	(BITWISEOR r=bitwiseXorExpr {$ast = new ArithmeticExpression(Code.BITWISEOR, $ast, $r.ast);})*;
+	(BITWISEOR r=bitwiseXorExpr {$ast = new ArithmeticExpression(Code.BITWISEOR, $ast, $r.ast);})*
+	;
 
 bitwiseXorExpr returns [BCExpression ast] :
 	e=bitwiseAndExpr {$ast = $e.ast;}
-	(BITWISEXOR r=bitwiseAndExpr {$ast = new ArithmeticExpression(Code.BITWISEXOR, $ast, $r.ast);})*;
+	(BITWISEXOR r=bitwiseAndExpr {$ast = new ArithmeticExpression(Code.BITWISEXOR, $ast, $r.ast);})*
+	;
 
 bitwiseAndExpr returns [BCExpression ast] :
-	e=shiftExpr {$ast = $e.ast;}
-	(BITWISEAND r=shiftExpr {$ast = new ArithmeticExpression(Code.BITWISEAND, $ast, $r.ast);})*;
+	e=equalityExpr {$ast = $e.ast;}
+	(BITWISEAND r=equalityExpr {$ast = new ArithmeticExpression(Code.BITWISEAND, $ast, $r.ast);})*
+	;
 
 equalityExpr returns [BCExpression ast] :
 	l=shiftExpr EQ r=shiftExpr
 		{$ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);}
 	| l=shiftExpr NOTEQ r=shiftExpr
 		{$ast = new Predicate2Ar(Code.NOTEQ, $l.ast, $r.ast);}
-	| e=relationalExpr {$ast = $e.ast;}
-	;
+	|
+	e=relationalExpr {$ast = $e.ast;};
 
 relationalExpr returns [BCExpression ast] :
 	l=shiftExpr LESS r=shiftExpr
@@ -387,7 +400,30 @@ relationalExpr returns [BCExpression ast] :
 		{$ast = new Predicate2Ar(Code.LESSEQ, $l.ast, $r.ast);}
 	| l=shiftExpr GRTEQ r=shiftExpr
 		{$ast = new Predicate2Ar(Code.GRTEQ, $l.ast, $r.ast);}
-	| q=quantifiedFormula {$ast = $q.ast;}
+	|
+	e=shiftExpr {$ast = $e.ast;};
+
+shiftExpr returns [BCExpression ast] :
+	p=additiveExpr {$ast = $p.ast;}
+	(SHL r1=additiveExpr {$ast = new ArithmeticExpression(Code.SHL, $ast, $r1.ast);}
+	| SHR r2=additiveExpr {$ast = new ArithmeticExpression(Code.SHR, $ast, $r2.ast);}
+	| USHR r3=additiveExpr {$ast = new ArithmeticExpression(Code.USHR, $ast, $r3.ast);}
+	)*
+	;
+
+additiveExpr returns [BCExpression ast] :
+	e=multExpr {$ast = $e.ast;}
+	(PLUS r1=multExpr {$ast = new ArithmeticExpression(Code.PLUS, $ast, $r1.ast);}
+	| MINUS r2=multExpr {$ast = new ArithmeticExpression(Code.MINUS, $ast, $r2.ast);}
+	)*
+	;
+
+multExpr returns [BCExpression ast] :
+	e=quantifiedFormula {$ast = $e.ast;}
+	(MULT r1=quantifiedFormula {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
+	| DIV r2=quantifiedFormula {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
+	| REM r3=quantifiedFormula {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
+	)*
 	;
 
 quantifiedFormula returns [BCExpression ast] :
@@ -406,51 +442,49 @@ quantifiedFormula returns [BCExpression ast] :
 	 		//throw new RuntimeException("Error in BML.g3.quantifiedFormula");
 	 	}})+
 	 	SEMICOLON
-	 	f=uncheckedFormula {((QuantifiedFormula)$ast).setFormula($f.ast);
+	 	f=uncheckedExpression {((QuantifiedFormula)$ast).setFormula($f.ast);
 	 		env.remove($v.text);
 	 		bvc -= lqfs;
-	 	})
-	| p=primaryFormula {$ast = $p.ast;}
+	 	}) |
+	p=dotExpr {$ast = $p.ast;};
+
+dotExpr returns [BCExpression ast] :
+	l=primaryExpr {$ast = $l.ast;}
+	(DOT r=primaryExpr {$ast = new FieldAccess(Code.FIELD_ACCESS, $ast, $r.ast);})*
 	;
-
-primaryFormula returns [BCExpression ast] :
-	FALSE {$ast = Predicate0Ar.FALSE;}
-	| TRUE {$ast = Predicate0Ar.TRUE;}
-	| i=ident {$ast = whatIsIt($i.text);}
-	| LOG_NOT p=primaryFormula {$ast = new Formula(Code.NOT, $p.ast);}
-	| PAR_LEFT f=uncheckedFormula PAR_RIGHT {$ast = $f.ast;}
-	;
-
-shiftExpr returns [BCExpression ast] :
-	p=additiveExpr {$ast = $p.ast;}
-	(SHL r1=additiveExpr {$ast = new ArithmeticExpression(Code.SHL, $ast, $r1.ast);}
-	| SHR r2=additiveExpr {$ast = new ArithmeticExpression(Code.SHR, $ast, $r2.ast);}
-	| USHR r3=additiveExpr {$ast = new ArithmeticExpression(Code.USHR, $ast, $r3.ast);}
-	)*;
-
-additiveExpr returns [BCExpression ast] :
-	e=multExpr {$ast = $e.ast;}
-	(PLUS r1=multExpr {$ast = new ArithmeticExpression(Code.PLUS, $ast, $r1.ast);}
-	| MINUS r2=multExpr {$ast = new ArithmeticExpression(Code.MINUS, $ast, $r2.ast);}
-	)*;
-
-multExpr returns [BCExpression ast] :
-	e=unaryExpr {$ast = $e.ast;}
-	(MULT r1=unaryExpr {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
-	| DIV r2=unaryExpr {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
-	| REM r3=unaryExpr {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
-	)*;
-
-unaryExpr returns [BCExpression ast] :
-	e=primaryExpr {$ast = $e.ast;};
 
 primaryExpr returns [BCExpression ast] :
-	n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
+	l=localVar {$ast = $l.lv;}
+	| n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
 	| i=ident {$ast = whatIsIt($i.text);}
-	| MINUS m=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $m.ast);}
+	| MINUS min=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $min.ast);}
 	| PLUS px=primaryExpr {$ast = $px.ast;}
+	| LOG_NOT p=primaryExpr {$ast = new Formula(Code.NOT, $p.ast);}
 	| PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
+	| FALSE {$ast = Predicate0Ar.FALSE;}
+	| TRUE {$ast = Predicate0Ar.TRUE;}
+	| NULL {$ast = NULL_CLASS.NULL;}
+	| THIS {$ast = bcc.getTHIS(false);}
+	| RESULT {if (m == null) {
+			reportError(null);
+		} else {
+			$ast = m.getResult();
+		}}
 	;
+
+localVar returns [BCLocalVariable lv] :
+	LV BR_LEFT n=NAT BR_RIGHT {
+		int i=Integer.parseInt($n.text);
+		if (m == null) {
+			reportError(null);
+		} else {
+			if (i >= m.getLocalVariableCount()) {
+				reportError(null);
+			} else {
+				$lv = m.getLocalVariable(false, i);
+			}
+		}
+	};
 
 ident returns [String name]:
 	i=IDENT {$name = $i.getText();};
@@ -505,6 +539,8 @@ GRTEQ: '>=';
 GRT: '>';
 PAR_LEFT: '(';
 PAR_RIGHT: ')';
+BR_LEFT: '[';
+BR_RIGHT: ']';
 PLUS: '+';
 MINUS: '-';
 MULT: '*';
@@ -516,7 +552,12 @@ USHR: '>>>';
 BITWISEAND: '&';
 BITWISEOR: '|';
 BITWISEXOR: '^';
-COND: '\?';
+COND: '?';
+NULL: 'null'|'NULL';
+THIS: 'this'|'THIS';
+RESULT: '\\result';
+LV: 'lv';
+DOT: '.';
 
 NAT: ('0'..'9')+;
 IDENT: ('a'..'z'|'A'..'Z')+;

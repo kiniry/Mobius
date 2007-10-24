@@ -77,4 +77,11 @@ public class JavaBasicType extends JavaType1 {
 		aw.writeShort(cpIndex);
 	}
 
+	@Override
+	public int compareTypes(JavaType1 type) {
+		if (type == this)
+			return TYPES_EQUAL;
+		return TYPES_UNRELATED;
+	}
+
 }

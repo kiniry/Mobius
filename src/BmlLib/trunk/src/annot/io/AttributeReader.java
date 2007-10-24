@@ -9,13 +9,18 @@ import org.apache.bcel.classfile.Unknown;
 import annot.attributes.ClassInvariant;
 import annot.attributes.MethodSpecification;
 import annot.bcclass.BCClass;
+import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.BCFieldRef;
+import annot.bcexpression.BCLocalVariable;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
+import annot.bcexpression.FieldAccess;
 import annot.bcexpression.JavaType1;
+import annot.bcexpression.NULL_CLASS;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.UnaryArithmeticExpression;
 import annot.formula.AbstractFormula;
@@ -277,6 +282,18 @@ public class AttributeReader {
 			return new NumberLiteral(this, b);
 		case Code.COND_EXPR:
 			return new ConditionalExpression(this, b);
+		case Code.NULL:
+			return NULL_CLASS.NULL;
+		case Code.THIS:
+			return bcc.getTHIS(false);
+		case Code.RESULT:
+			return method.getResult();
+		case Code.LOCAL_VARIABLE:
+			return BCLocalVariable.getLocalVariable(false, method, this);
+		case Code.FIELD_REF:
+			return new BCFieldRef(this, b);
+		case Code.FIELD_ACCESS:
+			return new FieldAccess(this, b);
 		case Code.FORALL:
 		case Code.EXISTS:
 		case Code.FORALL_WITH_NAME:
@@ -338,6 +355,10 @@ public class AttributeReader {
 	 */
 	public Vector<BoundVar> getBvars() {
 		return bvars;
+	}
+
+	public BCConstantPool getConstantPool() {
+		return bcc.getCp();
 	}
 
 }

@@ -149,8 +149,15 @@ public class Predicate2Ar extends AbstractFormula {
 	 */
 	@Override
 	protected JavaType1 checkType1() {
-		for (int i = 0; i < getSubExprCount(); i++)
-			if (getSubExpr(i).checkType() != JavaBasicType.JavaInt)
+		if ((getSubExpr(0).checkType() == null)
+			|| (getSubExpr(1).checkType() == null))
+				return null;
+		if (getSubExpr(0).getType().compareTypes(
+			getSubExpr(1).getType())
+			== JavaType1.TYPES_UNRELATED)
+				return null;
+		if ((getConnector() != Code.EQ) && (getConnector() != Code.NOTEQ))
+			if (getSubExpr(0).getType() != JavaBasicType.JavaInt)
 				return null;
 		return JavaBasicType.JavaBool;
 	}

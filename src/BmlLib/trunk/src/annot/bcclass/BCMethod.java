@@ -7,12 +7,15 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 
 import annot.attributes.AType;
 import annot.attributes.BCAttributeMap;
 import annot.attributes.InCodeAttribute;
 import annot.attributes.MethodSpecification;
+import annot.bcexpression.BCLocalVariable;
+import annot.bcexpression.RESULT;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
@@ -53,6 +56,21 @@ public class BCMethod {
 	private BCAttributeMap amap;
 
 	/**
+	 * Local variable array.
+	 */
+	private BCLocalVariable[] lvars;
+	
+	/**
+	 * Old local variable array.
+	 */
+	private BCLocalVariable[] oldvars;
+
+	/**
+	 * A <code>'\result'</code> expression for this method.
+	 */
+	private RESULT result;
+	
+	/**
 	 * A standard constructor from BCClass and MethodGen.
 	 * 
 	 * @param bcc - BCClass containig this method,
@@ -66,6 +84,16 @@ public class BCMethod {
 		this.bcc = bcc;
 		this.bcelMethod = m;
 		this.amap = new BCAttributeMap(this);
+		this.result = new RESULT(this);
+		LocalVariableGen[] lvgens = m.getLocalVariables();
+		int cnt = lvgens.length;
+		lvars = new BCLocalVariable[cnt];
+		oldvars = new BCLocalVariable[cnt];
+		for (int i=0; i<cnt; i++) {
+			String name = lvgens[i].getName();
+			lvars[i] = new BCLocalVariable(false, this, i, name, lvgens[i]);
+			oldvars[i] = new BCLocalVariable(true, this, i, name, lvgens[i]);
+		}
 		Attribute[] attrs = m.getAttributes();
 		AttributeReader ar = new AttributeReader(this);
 		for (int i = 0; i < attrs.length; i++) {
@@ -204,6 +232,20 @@ public class BCMethod {
 	}
 
 	/**
+	 * Seraches for local variable of given name.
+	 * 
+	 * @param name - name of local variable to look for.
+	 * @return local variable of given name,
+	 * 		or <code>null</code> if no variable could be found.
+	 */
+	public BCLocalVariable findLocalVariable(String name) {
+		for (int i=0; i<lvars.length; i++)
+			if (lvars[i].getName().equals(name))
+				return lvars[i];
+		return null;
+	}
+	
+	/**
 	 * @return attribute map.
 	 */
 	public BCAttributeMap getAmap() {
@@ -241,4 +283,32 @@ public class BCMethod {
 		return bcelMethod;
 	}
 
+	/**
+	 * @return number of local variables.
+	 */
+	public int getLocalVariableCount() {
+		return lvars.length;
+	}
+	
+	/**
+	 * Returns local variable of given index.
+	 * 
+	 * @param index - number of local variable
+	 * 		(in this method),
+	 * @return <code>index</code>-th local variable of this
+	 * 		method.
+	 */
+	public BCLocalVariable getLocalVariable(boolean isOld, int index) {
+		if (isOld)
+			return oldvars[index];
+		return lvars[index];
+	}
+
+	/**
+	 * @return <code>'\result'</code> expression for this method.
+	 */
+	public RESULT getResult() {
+		return result;
+	}
+	
 }
