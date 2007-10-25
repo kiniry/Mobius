@@ -280,7 +280,7 @@ unfold do_lvget.
 rewrite LocalVar.get_update_old...
 Qed.
 
-Hint Rewrite <- lvget_old lvget_new : vcg.
+
 
 Ltac stoop :=
 repeat (
@@ -289,7 +289,31 @@ repeat (
                     intro H; inversion H]);
 try  rewrite <- lvget_new in *.
 
+Lemma interp_get_new:
+forall lv (num: N) val,  val = (interp_value (SLvGet (SLvVar (LocalVar.update lv num val)) num)).
+Proof with auto.
+   intros.
+   unfold interp_value.
+   simpl.
+   stoop...
+Qed.
 
+Lemma interp_get_old:
+forall lv (num1 num2: N) val,  num1 <> num2 -> (interp_value (SLvGet (SLvVar lv) num2))  = (interp_value (SLvGet (SLvVar (LocalVar.update lv num1 val)) num2)).
+Proof with auto.
+   intros.
+   unfold interp_value.
+   simpl.
+   stoop...
+Qed.
+
+Ltac stoop_too := repeat (
+(repeat rewrite <- interp_get_new in *); rewrite <- interp_get_old in *;
+[ idtac | let H := fresh "H" in
+                    intro H; inversion H]);
+try  rewrite <- interp_get_new in *.
+
+Ltac megastoop := stoop_too; stoop.
 Ltac cleanstart :=
 (*
 repeat match goal with
@@ -322,9 +346,38 @@ match goal with
 | [ |- forall x, _] => intro; nintros
 | [ |- _] => intros
 end.
+Ltac mklvget lv n :=
+match goal with
+| [H: forall v, _ |- _] => 
+     let H1 := fresh "H" in (assert (H1 := H (do_lvget lv n)); clear H); 
+     mklvget lv (Nsucc n)%N
+| [ |- _ ] => idtac
+end.
+
+Ltac mklvupd lv n :=
+match goal with
+| [H: forall lv: LocalVar.t, _ |- forall v:value, _] => 
+    (let v := fresh "v" in intro v;
+     let upd := constr:(LocalVar.update lv n v) in
+      mklvupd upd (Nsucc n))
+| [H: forall lv: LocalVar.t, _ |- forall v:Int.t, _] => 
+    (let v := fresh "v" in intro v;
+     let upd := constr:(LocalVar.update lv n (Num (I v))) in
+      mklvupd upd (Nsucc n))
+| [H: forall lv: LocalVar.t, _ |- _ ] =>
+ let H' := fresh "H" in
+     assert (H' := H lv); clear H
+end.
+
 Ltac magickal :=
    repeat match goal with
-   | [ H : forall y, _ |- forall x, _] => let x := fresh "x" in (intro x; let H1 := fresh "H" in (assert (H1 := H x); clear H; try (clear x)))
+   | [ |- forall lv: LocalVar.t, _ ] =>let lv := fresh "lv" in
+                                            intro lv; mklvget lv 0%N
+   | [ H: forall lv: LocalVar.t, _ |- _ ] => mklvupd MDom.LocalVar.empty 0%N
+   | [ |- forall os: OperandStack.t, _ ] => intro
+   | [ H: forall os: OperandStack.t, _ |- _ ] => let H' := fresh "H" in (assert (H' := H OperandStack.empty); clear H)
+   | [ H : forall y: Heap.t, _ |- forall x: Heap.t, _] => let x := fresh "h" in (intro x; let H1 := fresh "H" in (assert (H1 := H x); clear H; try (clear x)))
+   | [ H : forall y: Int.t, _ |- forall x: Int.t, _] => let x := fresh "i" in (intro x; let H1 := fresh "H" in (assert (H1 := H x); clear H; try (clear x)))
    | [ H : _ -> _ |- _ -> _] =>let A := fresh "H" in  (intros A; let H1 := fresh "H" in (assert (H1 := H A); clear H; clear A))
    | [ H : _ /\ _ |- _ /\ _] =>let A := fresh "H" in 
                                          let B := fresh "H" in 
@@ -333,4 +386,4 @@ Ltac magickal :=
 
 
 
-Axiom user : forall p: Prop, p.
+(* Axiom user : forall p: Prop, p. *)
