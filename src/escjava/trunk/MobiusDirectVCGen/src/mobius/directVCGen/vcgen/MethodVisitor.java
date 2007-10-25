@@ -8,7 +8,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import javafe.ast.BlockStmt;
@@ -43,7 +42,7 @@ public final class MethodVisitor extends DirectVCGen {
   /** the name of the method associated with this object. */
   private RoutineDecl fMeth;
   /** the vcs that have been calculated. */
-  private List<Term> fVcs = new Vector<Term>();
+  private LinkedList<Term> fVcs = new LinkedList<Term>();
   
 
   
@@ -158,40 +157,20 @@ public final class MethodVisitor extends DirectVCGen {
     Post excpPost;
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(fMeth);
     Expression.fVariables = variables;
-    if (DirectVCGen.fByteCodeTrick) {
-      final String name = Util.getMethodName(fMeth);
-      LinkedList<Term> args = new LinkedList<Term> ();
-      args.add(Heap.varPre);
-      args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
-      QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
-      if (qvr != null) {
-        args.addFirst(Expression.sym("Normal", new Term [] {qvr}));
-      }
-      else {
-        args.addFirst(Expression.sym("Normal None", new Term [] {}));
-      }
-      Term[] tab = args.toArray(new Term [args.size()]);
-      normPost = new Post(qvr, 
-                          Expression.sym(name + ".mk_post", tab));
-      
-      args = new LinkedList<Term> ();
-      args.add(Heap.varPre);
-      args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
-      qvr = Lookup.getExceptionalPostcondition(fMeth).getRVar();
-      args.addFirst(Expression.sym("Exception", new Term [] {qvr}));
-      tab = args.toArray(new Term [args.size()]);
-      excpPost = new Post(Lookup.getExceptionalPostcondition(fMeth).getRVar(), 
-                          Expression.sym(name + ".mk_post", tab));
+    
+    final String name = Util.getMethodName(fMeth);
+    Term[] tab = Util.getNormalPostconditionArgs(fMeth);
+    normPost = new Post(Lookup.getNormalPostcondition(fMeth).getRVar(), 
+                        Expression.sym(name + ".mk_post", tab));
+  
 
-    }
-    else {
-      normPost = Lookup.getNormalPostcondition(fMeth);
-      excpPost = Lookup.getExceptionalPostcondition(fMeth);
-    }
+    tab = Util.getExcPostconditionArgs(fMeth);
+    excpPost = new Post(Lookup.getExceptionalPostcondition(fMeth).getRVar(), 
+                        Expression.sym(name + ".mk_post", tab));
+
     
     final Term varThis = Ref.varThis;
     final Term oldThis = Expression.old(Ref.varThis); 
-      //varThis.subst(Heap.getLvVar(), Heap.lvvarPre);
     normPost = new Post(normPost.getRVar(), 
                         normPost.subst(varThis, oldThis));
     excpPost = new Post(excpPost.getRVar(), 
@@ -202,72 +181,72 @@ public final class MethodVisitor extends DirectVCGen {
     final Post wp = (Post)x.accept(dvcg, post);
     final List<Term> vcs = new ArrayList<Term>(); 
     Term pre;
-    if (DirectVCGen.fByteCodeTrick) {
-      final String name = Util.getMethodName(fMeth);
-      final List<QuantVariableRef> l = Lookup.getInst().getPreconditionArgs(fMeth);
-      final Term[] tab = l.toArray(new Term [l.size()]);
-      pre = Expression.sym(name + ".mk_pre", tab);
-    }
-    else {
-      pre = Lookup.getPrecondition(fMeth);
-    }
+
+    final List<QuantVariableRef> largs = Lookup.getInst().getPreconditionArgs(fMeth);
+    final Term[] args = largs.toArray(new Term [largs.size()]);
+    pre = Expression.sym(name + ".mk_pre", args);
+
 
     pre = Logic.implies(pre, wp.getPost());
     
-    vcs.add(pre);
+    pre = addVarDecl(fMeth, pre);
     vcs.addAll (dvcg.getVcs());
     
     
-    final List<QuantVariableRef> args = Lookup.getInst().getPreconditionArgs(fMeth);
+    for (Term vars: largs) {
+      final QuantVariableRef qvr = (QuantVariableRef) vars;
+      pre = pre.subst(Expression.old(qvr), qvr);
+    }
     for (Term t: vcs) {
       
-      for (Term vars: args) {
-        final QuantVariableRef qvr = (QuantVariableRef) vars;
-        t = t.subst(Expression.old(qvr), qvr);
-      }
       fVcs.add(t);
     }
 
     addVarDecl();
     
+    fVcs.addFirst(pre);    
 
   }
+
+  
+
 
   /**
    * Add the given variables to all the current vcs.
    */
   public void addVarDecl() {
     final List<Term> oldvcs = fVcs;
-    fVcs = new Vector<Term>();
+    fVcs = new LinkedList<Term>();
     
     for (Term t: oldvcs) {
       t = addVarDecl(fMeth, t);
+      t = addOldVarDecl(fMeth, t);
       fVcs.add(t);
     }
 
   }
 
   public static Term addVarDecl(final RoutineDecl meth, Term t) {
-    final List<QuantVariableRef> qvs = Lookup.getInst().getPreconditionArgs(meth);
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(meth);
     Term res = t;
-//    for (QuantVariableRef qvr: qvs) {
-//      res = res.subst(qvr, variables.get(qvr));
-//    }
-    res = res.subst(Heap.varPre, Heap.var);
-    
-    //res = res.subst(Heap.lvvarPre, Heap.getLvVar());
-    
-
     res = Logic.forall(Heap.var, res);
     for (QuantVariableRef qvr: variables) {
       res = Logic.forall(qvr, res);
     }
-//    res = Logic.forall(Heap.getLvVar(), res);
-    
     return res;
   }
 
+  public static Term addOldVarDecl(final RoutineDecl meth, Term t) {
+    final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(meth);
+    Term res = t;
+    res = Logic.forall(Heap.varPre, res);
+    for (QuantVariableRef qvr: variables) {
+      res = Logic.forall(Expression.old(qvr), res);
+    }
+    return res;
+  }
+  
+  
   /**
    * The method name and the proof obligations.
    * @return it is of the form: 

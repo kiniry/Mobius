@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -183,13 +184,10 @@ public class Util {
              Logic.forall(e,
                           Logic.implies(Heap.newObject(Heap.var, type, heap, e),
                                         p.substWith(e).subst(Heap.var, heap))));
-                                        //.subst(Heap.var, heap))));
   }
   public static Term mkNewEnv(QuantVariableRef newHeap, final Term post) {
-    final QuantVariableRef newLv = Heap.newLvVar();
     final Term h = Logic.forall(newHeap, post);
-    final Term lvt = Logic.forall(newLv, h.subst(Heap.getLvVar(), newLv));
-    return lvt;
+    return h;
   }
   public static Term mkNewEnv(Term post) {
     final QuantVariableRef heap = Heap.newVar();
@@ -201,8 +199,36 @@ public class Util {
   
   public static Term substVarWithVal(final Post fPost, final Term var, final Term val) {
     return fPost.subst(var, val);
-    //fPost.subst(Heap.getLvVar(), 
-//                       Expression.lvUpd(Heap.getLvVar(), 
-//                                        var, val));
+  }
+  
+  public static Term[] getNormalPostconditionArgs(RoutineDecl fMeth) {
+    Term[] tab;
+    final LinkedList<Term> args = new LinkedList<Term> ();
+    args.add(Heap.varPre); 
+    for (QuantVariableRef qvr:Lookup.getInst().getPreconditionArgs(fMeth)) {
+      if (!qvr.equals(Heap.var)) {
+        args.add(Expression.old(qvr));
+      }
+      else {
+        args.add(qvr);
+      }
+    }
+    
+    QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
+    if (qvr != null) {
+      args.addFirst(Expression.sym("Normal ", new Term [] {
+                        Expression.sym("Some", new Term[] {qvr})}));
+    }
+    else {
+      args.addFirst(Expression.sym("Normal None", new Term [] {}));
+    }
+    tab = args.toArray(new Term [args.size()]);
+    return tab;
+  }
+  public static Term[] getExcPostconditionArgs(RoutineDecl fMeth) {
+    final Term[] tab = getNormalPostconditionArgs(fMeth);
+    tab[0] = Expression.sym("Exception", 
+                           new Term [] {Lookup.getExceptionalPostcondition(fMeth).getRVar()});
+    return tab;
   }
 }

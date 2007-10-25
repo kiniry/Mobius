@@ -262,7 +262,36 @@ match goal with
    clear Heq x))
 end; my_simpl. 
 
+Lemma lvget_new: (forall lv (num: N) val, val =
+                    (do_lvget  (LocalVar.update lv num  val) num)).
+Proof with auto.
+intros.
+unfold do_lvget.
+rewrite LocalVar.get_update_new...
+Qed.
+
+Lemma lvget_old: (forall lv (num1: N) (num2: N) val, 
+     num1 <> num2 ->
+         (do_lvget  lv num2) = 
+                    (do_lvget  (LocalVar.update lv num1  val) num2)).
+Proof with auto.
+intros.
+unfold do_lvget.
+rewrite LocalVar.get_update_old...
+Qed.
+
+Hint Rewrite <- lvget_old lvget_new : vcg.
+
+Ltac stoop :=
+repeat (
+(repeat rewrite <- lvget_new in *); rewrite <- lvget_old in *;
+[ idtac | let H := fresh "H" in
+                    intro H; inversion H]);
+try  rewrite <- lvget_new in *.
+
+
 Ltac cleanstart :=
+(*
 repeat match goal with
 [ H: OperandStack.t |- _ ] => clear H
 end;
@@ -274,13 +303,14 @@ repeat match goal with
 end;
 repeat match goal with
 [ H: Int.t |- _ ] => (clear H)
-end;
+end; 
 repeat match goal with 
 | [ H: context [do_lvget (stack2localvar _ _) _] |- _ ] =>
      progress (unfold do_lvget in H; 
 simpl in H)
-end;
-unfold interp_value, interp_v in *; simpl in *.
+end; *)
+unfold interp_value, interp_v in *; simpl in *;
+stoop.
 
 
 Ltac nintros :=
@@ -300,5 +330,7 @@ Ltac magickal :=
                                          let B := fresh "H" in 
                                          (destruct H as (A, B); split; [clear B | clear A])
     end.
+
+
 
 Axiom user : forall p: Prop, p.

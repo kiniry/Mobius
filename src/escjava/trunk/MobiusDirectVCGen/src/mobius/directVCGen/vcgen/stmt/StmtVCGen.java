@@ -277,14 +277,12 @@ public class StmtVCGen extends ExpressionVisitor {
     // also be the variable \result
     
     final VCEntry vce = (VCEntry) o;
-    if (fMeth instanceof MethodDecl) {
-      vce.fPost = new Post(Expression.getResultRVar((MethodDecl)fMeth), 
-                          Lookup.getNormalPostcondition(fMeth));
-    }
-    else {
-      vce.fPost = Lookup.getNormalPostcondition(fMeth);
+    final String name = Util.getMethodName(fMeth);
+    final Term[] tab = Util.getNormalPostconditionArgs(fMeth);
+    final Post normPost = new Post(Lookup.getNormalPostcondition(fMeth).getRVar(), 
+                        Expression.sym(name + ".mk_post", tab));
 
-    }
+    vce.fPost = normPost;
     vce.fPost = (Post) x.expr.accept(fExprVisitor, vce);
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
@@ -646,7 +644,7 @@ public class StmtVCGen extends ExpressionVisitor {
 //      newEntry.fPost = new Post(vc);
 //      vc = //((Post)s.accept(this, newEntry)).getPost();
 //    }
-    Term sideCondition = Util.mkNewEnv(vc);
+    Term sideCondition = vc; //Util.mkNewEnv(vc);
 
     //sideCondition = MethodVisitor.addVarDecl(fMeth, sideCondition);
     

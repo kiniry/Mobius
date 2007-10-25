@@ -25,7 +25,7 @@ public class EquivCoqFile extends CoqFile {
     final PrintStream out = getOut();
     writeHeader();
 
-    out.println("Lemma l :\nforall os: OperandStack.t, \n" +
+    out.println("Lemma l :\nforall empty_os: OperandStack.t, forall empty_lv: LocalVar.t, \n" +
         "   " + term + "\n" +
         "<-> \n" +
         "   interp_swp BicoMapAnnotations.anno_prog BicoMapProgram.program\n" + 

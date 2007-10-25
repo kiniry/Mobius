@@ -1,7 +1,6 @@
 package mobius.directVCGen.bicolano;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +8,10 @@ import java.util.Map.Entry;
 
 import javafe.ast.ASTDecoration;
 import javafe.ast.RoutineDecl;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Heap;
 
 import org.apache.bcel.generic.LocalVariableGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
-import escjava.sortedProver.Lifter.Term;
 
 /**
  * Give the correspondence between the variables of a method

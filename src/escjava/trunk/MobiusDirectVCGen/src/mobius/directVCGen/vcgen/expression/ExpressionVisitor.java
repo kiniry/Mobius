@@ -137,7 +137,7 @@ public class ExpressionVisitor extends ABasicVisitor {
                      Logic.implies(Logic.assignCompat(Heap.var, vval, 
                                                       Expression.rvar("(PrimitiveType BOOLEAN)", 
                                                                      Type.sort)),
-                         Logic.implies(compat, result.substWith(Bool.value((Boolean)expr.value)))));
+                         Logic.implies(compat, result.nonSafeSubst(result.getRVar(), vval))));
         
         break;
       case TagConstants.INTLIT:
