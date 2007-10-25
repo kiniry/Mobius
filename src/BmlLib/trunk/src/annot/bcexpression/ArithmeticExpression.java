@@ -8,16 +8,16 @@ import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
- * Represents artihmetic expressions (int x int --> int), including shifts and
- * bit operations. Unary arithmetic operation (unary minus) has been moved to
- * the {@link UnaryArithmeticExpression}.
+ * Represents artihmetic expressions (int x int --> int),
+ * including shifts and bit operations.
+ * Unary arithmetic operation (unary minus) has been moved
+ * to the {@link UnaryArithmeticExpression}.
  * 
  * @author tomekb
  */
 public class ArithmeticExpression extends AbstractIntExpression {
-	// XXX should bitwise and shifts expressions be separated from arithmetic
-	// expressions?
-	// what is the important differecne between those expression types?
+//XXX should bitwise and shifts expressions be separated from arithmetic expressions?
+//what is the important differecne between those expression types?
 
 	/**
 	 * A constructor for unary minus only.
@@ -27,14 +27,12 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	}
 
 	/**
-	 * A standard constructor.
+	 * A standard constructor. 
 	 * 
-	 * @param connector -
-	 *            type of expression, from <code>Code</code> interface,
-	 * @param left -
-	 *            left subexpression,
-	 * @param right -
-	 *            right subexpression.
+	 * @param connector - type of expression, from
+	 * 		<code>Code</code> interface,
+	 * @param left - left subexpression,
+	 * @param right - right subexpression.
 	 */
 	public ArithmeticExpression(int connector, BCExpression left,
 			BCExpression right) {
@@ -42,16 +40,15 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	}
 
 	/**
-	 * A constructor from AttributeReader, used for loading from file (from
-	 * BCEL's unknown Attribute).
+	 * A constructor from AttributeReader, used for loading
+	 * from file (from BCEL's unknown Attribute).
 	 * 
-	 * @param ar -
-	 *            input stream to load from,
-	 * @param root -
-	 *            type o expression (last read byte from <code>ar</code>.
-	 * @throws ReadAttributeException -
-	 *             if stream in <code>ar</code> doesn't represent a correct
-	 *             artimethic expression.
+	 * @param ar - input stream to load from,
+	 * @param root - type o expression (last read byte from
+	 * 		<code>ar</code>.
+	 * @throws ReadAttributeException - if stream
+	 * 		in <code>ar</code> doesn't represent a correct
+	 * 		artimethic expression.
 	 * @see BCExpression#BCExpression(AttributeReader, int)
 	 */
 	public ArithmeticExpression(AttributeReader ar, int root)
@@ -67,8 +64,8 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	@Override
 	protected JavaType1 checkType1() {
 		if ((getSubExpr(0).checkType() != JavaBasicType.JavaInt)
-				|| (getSubExpr(1).checkType() != JavaBasicType.JavaInt))
-			return null;
+			|| (getSubExpr(1).checkType() != JavaBasicType.JavaInt))
+				return null;
 		return JavaBasicType.JavaInt;
 	}
 
@@ -81,40 +78,26 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	 */
 	protected String printRoot() {
 		switch (getConnector()) {
-		case Code.BITWISEAND:
-			return " & ";
-		case Code.BITWISEOR:
-			return " | ";
-		case Code.BITWISEXOR:
-			return " ^ ";
-		case Code.DIV:
-			return " / ";
-		case Code.MINUS:
-			return " - ";
-		case Code.MULT:
-			return " * ";
-		case Code.NEG:
-			return " -";
-		case Code.PLUS:
-			return " + ";
-		case Code.REM:
-			return " % ";
-		case Code.SHL:
-			return " << ";
-		case Code.SHR:
-			return " >> ";
-		case Code.USHR:
-			return " >>> "; // XXX
-		default:
-			throw new RuntimeException("unknown arithmetic opcode: "
-					+ getConnector());
+		case Code.BITWISEAND: return " & ";
+		case Code.BITWISEOR: return " | ";
+		case Code.BITWISEXOR: return " ^ ";
+		case Code.DIV: return " / ";
+		case Code.MINUS: return " - ";
+		case Code.MULT: return " * ";
+		case Code.NEG: return " -";
+		case Code.PLUS: return " + ";
+		case Code.REM: return " % ";
+		case Code.SHL: return " << ";
+		case Code.SHR: return " >> ";
+		case Code.USHR: return " >>> "; //XXX
+		default: throw new RuntimeException("unknown arithmetic opcode: " + getConnector());
 		}
 	}
-
+	
 	@Override
 	protected String printCode1(BMLConfig conf) {
 		return getSubExpr(0).printCode(conf) + printRoot()
-				+ getSubExpr(1).printCode(conf);
+			+ getSubExpr(1).printCode(conf);
 	}
 
 	@Override
@@ -130,7 +113,7 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	@Override
 	public String toString() {
 		return getSubExpr(0).toString() + printRoot()
-				+ getSubExpr(1).toString();
+			+ getSubExpr(1).toString();
 	}
 
 	@Override

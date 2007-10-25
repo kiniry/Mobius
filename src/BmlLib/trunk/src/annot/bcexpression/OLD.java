@@ -17,10 +17,9 @@ public class OLD extends OldExpression {
 	/**
 	 * A standard constructor.
 	 * 
-	 * @param connector -
-	 *            type of this expression, should be {@link Code#OLD},
-	 * @param subExpr -
-	 *            it's subexpression.
+	 * @param connector - type of this expression, should
+	 * 		be {@link Code#OLD},
+	 * @param subExpr - it's subexpression.
 	 */
 	public OLD(int connector, BCExpression subExpr) {
 		super(makeOld(connector), subExpr);
@@ -29,13 +28,12 @@ public class OLD extends OldExpression {
 	/**
 	 * A constructor from AttributeReader.
 	 * 
-	 * @param ar -
-	 *            input stream to load from.
-	 * @param root -
-	 *            type of expression (last byte read from <code>ar</code>).
-	 * @throws ReadAttributeException -
-	 *             if root + remaining stream in <code>ar</code> doesn't
-	 *             represent correct <code>OLD</code> expression.
+	 * @param ar - input stream to load from.
+	 * @param root - type of expression (last byte read from
+	 * 		<code>ar</code>).
+	 * @throws ReadAttributeException - if root + remaining
+	 * 		stream in <code>ar</code> doesn't represent
+	 * 		correct <code>OLD</code> expression.
 	 */
 	public OLD(AttributeReader ar, int root) throws ReadAttributeException {
 		super(ar, root);
@@ -57,8 +55,7 @@ public class OLD extends OldExpression {
 	}
 
 	@Override
-	protected void init() {
-	}
+	protected void init() {}
 
 	@Override
 	protected String printCode1(BMLConfig conf) {

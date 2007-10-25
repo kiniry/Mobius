@@ -1,8 +1,8 @@
 package annot.textio;
 
 /**
- * This is the basic prettyPrinter, for use in case of problems with main
- * prettyPrinter ({@link AdvancedPrettyPrinter}).
+ * This is the basic prettyPrinter, for use in case of problems
+ * with main prettyPrinter ({@link AdvancedPrettyPrinter}).
  * 
  * @author tomekb
  */
@@ -11,24 +11,23 @@ public class SimplePrettyPrinter extends AbstractPrettyPrinter {
 	/**
 	 * A standard constructor.
 	 * 
-	 * @param conf -
-	 *            current {@link BMLConfig}, should be avaliable as calling
-	 *            method argument.
+	 * @param conf - current {@link BMLConfig}, should be
+	 * 		avaliable as calling method argument.
 	 */
 	public SimplePrettyPrinter(BMLConfig conf) {
 		super(conf);
 	}
 
 	/**
-	 * Adds a smartless line-breaking and constant indentation to given String
-	 * to make it little more readable.
+	 * Adds a smartless line-breaking and constant indentation
+	 * to given String to make it little more readable.
 	 * 
-	 * @param str -
-	 *            String representation of an expression to be formatted, wit
-	 *            hbocl marks.
-	 * @param spos -
-	 *            number of reserved characters for the first line.
-	 * @return <code>str</code> with simple line-breaking and indentation.
+	 * @param str - String representation of an expression
+	 * 		to be formatted, wit hbocl marks.
+	 * @param spos - number of reserved characters for the
+	 * 		first line.
+	 * @return <code>str</code> with simple line-breaking
+	 * 		and indentation.
 	 * @see AbstractPrettyPrinter
 	 */
 	@Override

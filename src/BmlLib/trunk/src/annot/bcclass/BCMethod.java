@@ -40,8 +40,8 @@ public class BCMethod {
 	private BCClass bcc;
 
 	/**
-	 * Original (BCEL) method. Do not use any other methodGen's to manipulate
-	 * bytecode.
+	 * Original (BCEL) method. Do not use any other methodGen's
+	 * 		to manipulate bytecode.
 	 */
 	private MethodGen bcelMethod;
 
@@ -59,7 +59,7 @@ public class BCMethod {
 	 * Local variable array.
 	 */
 	private BCLocalVariable[] lvars;
-
+	
 	/**
 	 * Old local variable array.
 	 */
@@ -69,17 +69,15 @@ public class BCMethod {
 	 * A <code>'\result'</code> expression for this method.
 	 */
 	private RESULT result;
-
+	
 	/**
 	 * A standard constructor from BCClass and MethodGen.
 	 * 
-	 * @param bcc -
-	 *            BCClass containig this method,
-	 * @param m -
-	 *            BCEL's methodGen for this method.
-	 * @throws ReadAttributeException -
-	 *             if any of BML attributes wasn't correctly parsed by this
-	 *             library.
+	 * @param bcc - BCClass containig this method,
+	 * @param m - BCEL's methodGen for this method.
+	 * @throws ReadAttributeException - if any of BML
+	 * 		attributes wasn't correctly parsed
+	 * 		by this library.
 	 */
 	public BCMethod(BCClass bcc, MethodGen m) throws ReadAttributeException {
 		MLog.putMsg(MLog.PInfo, "  initializing method: " + m.getName());
@@ -91,7 +89,7 @@ public class BCMethod {
 		int cnt = lvgens.length;
 		lvars = new BCLocalVariable[cnt];
 		oldvars = new BCLocalVariable[cnt];
-		for (int i = 0; i < cnt; i++) {
+		for (int i=0; i<cnt; i++) {
 			String name = lvgens[i].getName();
 			lvars[i] = new BCLocalVariable(false, this, i, name, lvgens[i]);
 			oldvars[i] = new BCLocalVariable(true, this, i, name, lvgens[i]);
@@ -115,8 +113,7 @@ public class BCMethod {
 	/**
 	 * Displays method's bytecode with BML annotations.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}.
+	 * @param conf - see {@link BMLConfig}.
 	 * @return String representation of method's bytecode.
 	 */
 	public String printCode(BMLConfig conf) {
@@ -160,8 +157,7 @@ public class BCMethod {
 	/**
 	 * Adds an annotation to the BCMethod.
 	 * 
-	 * @param ica -
-	 *            annotation to be added.
+	 * @param ica - annotation to be added.
 	 */
 	public void addAttribute(InCodeAttribute ica) {
 		MLog.putMsg(MLog.PProgress, "adding attribute: " + ica.toString());
@@ -169,7 +165,8 @@ public class BCMethod {
 	}
 
 	/**
-	 * Updates BCEL MethodGen's attributes and generates BCEL's method.
+	 * Updates BCEL MethodGen's attributes and generates
+	 * BCEL's method.
 	 * 
 	 * @return generated BCEL Method.
 	 */
@@ -201,25 +198,26 @@ public class BCMethod {
 	}
 
 	/**
-	 * Computes pc numbers for each bytecode instruction of a method containing
-	 * this annotation and returns, and returns pc number of instruction this
-	 * annotation is attached to.
+	 * Computes pc numbers for each bytecode instruction of
+	 * a method containing this annotation and returns,
+	 * and returns pc number of instruction this annotation
+	 * is attached to.
 	 * 
-	 * @return pc number of this annotation's bytecode instruction.
+	 * @return pc number of this annotation's
+	 * 		bytecode instruction.
 	 */
 	public int getPC(InstructionHandle ih) {
 		bcelMethod.getInstructionList().setPositions();
 		return ih.getPosition();
 	}
-
+	
 	/**
-	 * Computes instructions pc numbers (for all instructions) and searches for
-	 * instruction of given PC number.
+	 * Computes instructions pc numbers (for all instructions)
+	 * and searches for instruction of given PC number.
 	 * 
-	 * @param pc -
-	 *            offset (program counter) of an instruction.
-	 * @return instruction of given offset (from this method) or null if there
-	 *         is no such instruction.
+	 * @param pc - offset (program counter) of an instruction.
+	 * @return instruction of given offset (from this method)
+	 * 		or null if there is no such instruction.
 	 */
 	public InstructionHandle findAtPC(int pc) {
 		InstructionList il = getInstructions();
@@ -236,18 +234,17 @@ public class BCMethod {
 	/**
 	 * Seraches for local variable of given name.
 	 * 
-	 * @param name -
-	 *            name of local variable to look for.
-	 * @return local variable of given name, or <code>null</code> if no
-	 *         variable could be found.
+	 * @param name - name of local variable to look for.
+	 * @return local variable of given name,
+	 * 		or <code>null</code> if no variable could be found.
 	 */
 	public BCLocalVariable findLocalVariable(String name) {
-		for (int i = 0; i < lvars.length; i++)
+		for (int i=0; i<lvars.length; i++)
 			if (lvars[i].getName().equals(name))
 				return lvars[i];
 		return null;
 	}
-
+	
 	/**
 	 * @return attribute map.
 	 */
@@ -272,16 +269,15 @@ public class BCMethod {
 	/**
 	 * Sets method specification attribute for this method.
 	 * 
-	 * @param mspec -
-	 *            new method specification.
+	 * @param mspec - new method specification.
 	 */
 	public void setMspec(MethodSpecification mspec) {
 		this.mspec = mspec;
 	}
 
 	/**
-	 * @return BCEL method generator. Use this instead of creating new on from
-	 *         BCEL Method.
+	 * @return BCEL method generator. Use this instead of
+	 * 		creating new on from BCEL Method.
 	 */
 	public MethodGen getBcelMethod() {
 		return bcelMethod;
@@ -293,13 +289,14 @@ public class BCMethod {
 	public int getLocalVariableCount() {
 		return lvars.length;
 	}
-
+	
 	/**
 	 * Returns local variable of given index.
 	 * 
-	 * @param index -
-	 *            number of local variable (in this method),
-	 * @return <code>index</code>-th local variable of this method.
+	 * @param index - number of local variable
+	 * 		(in this method),
+	 * @return <code>index</code>-th local variable of this
+	 * 		method.
 	 */
 	public BCLocalVariable getLocalVariable(boolean isOld, int index) {
 		if (isOld)
@@ -313,5 +310,5 @@ public class BCMethod {
 	public RESULT getResult() {
 		return result;
 	}
-
+	
 }

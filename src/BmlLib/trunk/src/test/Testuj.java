@@ -24,26 +24,27 @@ import annot.textio.Parsing;
 public final class Testuj {
 
 	/**
-	 * wether show stac trace of exception in test failures or not.
+	 * wether show stac trace of exception in test failures
+	 * or not.
 	 */
 	private static boolean goShowTraceOnFailures = false;
 
 	/**
-	 * Perform "save and load" test after each example. This slows tests down
-	 * significally, but also checks test annotations if they are saved and
-	 * loaded correctly.
+	 * Perform "save and load" test after each example.
+	 * This slows tests down significally, but also checks test
+	 * annotations if they are saved and loaded correctly.
 	 */
 	private static boolean goFullSaveAndLoadTests = true;
 
 	/**
-	 * Shows old and new class' bytecode if it has changed during saving /
-	 * loading.
+	 * Shows old and new class' bytecode if it has changed
+	 * during saving / loading.
 	 */
 	private static boolean goShowFileChangesIfAny = true;
 
 	/**
-	 * Shows bytecode whose annotations will be modified during tests before
-	 * launching first test.
+	 * Shows bytecode whose annotations will be modified
+	 * during tests before launching first test.
 	 */
 	private static boolean goShowBytecode = true;
 
@@ -63,8 +64,9 @@ public final class Testuj {
 	private static BCClass bcc;
 
 	/**
-	 * MLog original display mask. Number of syso messages will be reduced
-	 * during tests, then restored to it's previous value.
+	 * MLog original display mask.
+	 * Number of syso messages will be reduced during tests,
+	 * then restored to it's previous value.
 	 */
 	private static int oldMask = 0;
 
@@ -87,23 +89,22 @@ public final class Testuj {
 	}
 
 	/**
-	 * Runs single test. Tries to parse an attribute, and perform "save and
-	 * load" test, if {@link #goFullSaveAndLoadTests} flag is on. Updates test
-	 * statistics and displays current tests result.
+	 * Runs single test. Tries to parse an attribute, and
+	 * perform "save and load" test,
+	 * if {@link #goFullSaveAndLoadTests} flag is on.
+	 * Updates test statistics and displays current tests
+	 * result.
 	 * 
-	 * @param ok -
-	 *            wether this test should fail or not (wether
-	 *            <code>newval</code> is correct or not),
-	 * @param attr_id -
-	 *            index of attribute to be altered,
-	 * @param newval -
-	 *            new String representation of <code>at[attr_id]</code>
-	 *            attribute, to be parsed,
-	 * @param exprected -
-	 *            expected String representation of new annotation (result of
-	 *            printCode(conf), called after parsing that annotation). It can
-	 *            slightly differ from <code>newval</code>, becouse eg. stray
-	 *            parenthness are removed this way.
+	 * @param ok - wether this test should fail or not
+	 * 		(wether <code>newval</code> is correct or not),
+	 * @param attr_id - index of attribute to be altered,
+	 * @param newval - new String representation of
+	 * 		<code>at[attr_id]</code> attribute, to be parsed,
+	 * @param exprected - expected String representation of
+	 * 		new annotation (result of printCode(conf), called
+	 * 		after parsing that annotation). It can slightly
+	 * 		differ from <code>newval</code>, becouse eg. stray
+	 * 		parenthness are removed this way.
 	 */
 	private static void test(boolean ok, int attr_id, String newval,
 			String exprected) throws IOException, ClassNotFoundException {
@@ -183,9 +184,10 @@ public final class Testuj {
 	}
 
 	/**
-	 * A "save and load" test (Displays BCClass, saves it to a file and then
-	 * loads from it, displays again and compares to previously displayd String.
-	 * Both Strings should be equal).
+	 * A "save and load" test (Displays BCClass, saves it to
+	 * a file and then loads from it, displays again and
+	 * compares to previously displayd String. Both Strings
+	 * should be equal).
 	 * 
 	 * @return wether test was successful or not.
 	 */
@@ -247,7 +249,8 @@ public final class Testuj {
 	}
 
 	/**
-	 * This method contains all test cases. New cases should be added here.
+	 * This method contains all test cases. New cases should
+	 * be added here.
 	 */
 	private static void parserTest() throws ClassNotFoundException,
 			ReadAttributeException, IOException {
@@ -300,9 +303,10 @@ public final class Testuj {
 		test(true, 3, "~(true || false)");
 		test(true, 3, "~(~true)");
 		test(true, 3, "~~false", "~(~false)");
-		test(true, 3, "((false || false) && (false || false)"
-				+ " || ~(~false)) && ((false || false)"
-				+ " && (true || false) || ~(~false))" + " || ~(~(~(~false)))");
+		test(true, 3, "((false || false) && (false || false)" +
+				" || ~(~false)) && ((false || false)" +
+				" && (true || false) || ~(~false))" +
+				" || ~(~(~(~false)))");
 
 		// quantified formula tests:
 		test(true, 3, "forall boolean ok; ok");
@@ -322,47 +326,28 @@ public final class Testuj {
 		test(false, 2, "(forall int a; (exists int b; a < b)) && a > 0");
 		test(true, 3, "false || (forall int a; a > 0) && 1 < 2");
 		test(true, 3, "forall int i; (exists boolean b; i > 0 ==> b)");
-		test(true, 3,
-				"1 > 0 || (forall int i; (exists boolean b; i > 0 ==> b))");
-		test(true, 3,
-				"1 > 0 || (forall int i; (exists boolean b; i > 0 ==> b) ==> i < 0)");
+		test(true, 3, "1 > 0 || (forall int i; (exists boolean b; i > 0 ==> b))");
+		test(true, 3, "1 > 0 || (forall int i; (exists boolean b; i > 0 ==> b) ==> i < 0)");
 		test(false, 3, "forall int i; i");
 		test(false, 3, "forall int i; i ==> false");
 		test(false, 3, "forall int a itn b; a < b");
 		test(false, 3, "forall int a int a; a < 0");
 		test(false, 3, "forall int a int b; (exists int b; true)");
 		test(true, 3, "forall int a int c; (exists int b; true)");
-		test(true, 2,
-				"forall int a boolean b; (exists int c; a < c && b) && (exists int c; a >= c)");
-		test(true, 3,
-				"forall int a; (exists int b; (forall int c; a <= b ==> b >= c))");
+		test(true, 2, "forall int a boolean b; (exists int c; a < c && b) && (exists int c; a >= c)");
+		test(true, 3, "forall int a; (exists int b; (forall int c; a <= b ==> b >= c))");
 		test(false, 1, "");
 
 		// method specification tests:
 		test(false, 2, "true {| |}");
 		test(true, 2, "true {| \\precondition true \\ensures false |}");
-		test(
-				true,
-				2,
-				"true {| \\precondition true \\ensures false |}"
-						+ " {| \\precondition false && true \\ensures true ==> false |}");
+		test(true, 2, "true {| \\precondition true \\ensures false |}" +
+				" {| \\precondition false && true \\ensures true ==> false |}");
 		test(false, 1, "true {| \\precondition true \\ensures false |}");
-		test(
-				true,
-				2,
-				"true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception: true && false |}");
-		test(
-				true,
-				2,
-				"true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
-		test(
-				true,
-				2,
-				"true {| \\precondition true \\modifies nothing \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
-		test(
-				true,
-				2,
-				"true {| \\precondition true \\modifies everything \\exsures LJava/Lang/Exception: true && false |}",
+		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception: true && false |}");
+		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
+		test(true, 2, "true {| \\precondition true \\modifies nothing \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
+		test(true, 2, "true {| \\precondition true \\modifies everything \\exsures LJava/Lang/Exception: true && false |}",
 				"true {| \\precondition true \\ensures true \\exsures LJava/Lang/Exception: true && false |}");
 
 		// bitwise operators tests:
@@ -399,7 +384,7 @@ public final class Testuj {
 		test(false, 3, "-1 < -()");
 		test(false, 3, "-1 < -false");
 
-		// conditional expression tests:
+		//conditional expression tests:
 		test(true, 3, "(true ? 1 : 2) < 1");
 		test(true, 3, "(12 < 34 ? 1 : 2) < 45");
 		test(false, 3, "1 < 2 ? 3 : 4 < 5");
@@ -421,8 +406,7 @@ public final class Testuj {
 		test(false, 3, "null");
 		test(true, 3, "null == NULL", "null == null");
 		test(false, 3, "this == 0");
-		test(true, 2, "this != null || THIS == NULL",
-				"this != null || this == null");
+		test(true, 2, "this != null || THIS == NULL", "this != null || this == null");
 		test(false, 3, "this > 0");
 		test(true, 2, "\\result != null");
 		test(true, 1, "\\result + 1 <= 2");
@@ -438,12 +422,12 @@ public final class Testuj {
 		test(true, 3, "lv[0] == null", "args == null");
 		test(true, 1, "lv[0] == 3", "n == 3");
 		test(false, 3, "lv[1] == null");
-
+		
 		// fields tests:
 		test(true, 0, "l > 0");
 		test(true, 1, "n + l > 1");
 		test(false, 2, "c < 0");
-
+		
 		// OLD tests:
 		test(false, 2, "old(old)");
 		test(true, 1, "old(n) > n");
@@ -460,8 +444,7 @@ public final class Testuj {
 	/**
 	 * Main method for running these tests.
 	 * 
-	 * @param args -
-	 *            unused.
+	 * @param args - unused.
 	 */
 	public static void main(String[] args) {
 		try {

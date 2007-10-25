@@ -9,16 +9,17 @@ import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
- * This class represents bound variable. It represents a variable, not it's
- * ocurence, eg. in 'forall a ; a > 0' both occurences of 'a' are the same
- * object.
+ * This class represents bound variable. It represents
+ * a variable, not it's ocurence, eg. in 'forall a ; a > 0'
+ * both occurences of 'a' are the same object.
  * 
  * @author tomekb
  */
 public class BoundVar extends BCExpression {
 
 	/**
-	 * Display style (true for variable name, false for 'var['+index+']'.
+	 * Display style (true for variable name, false
+	 * for 'var['+index+']'.
 	 */
 	public static final boolean goWriteVarNames = true;
 
@@ -28,8 +29,8 @@ public class BoundVar extends BCExpression {
 	private JavaBasicType type;
 
 	/**
-	 * Variable id. In each place in expression, all visible bound variables
-	 * have distinct ids.
+	 * Variable id. In each place in expression, all visible
+	 * bound variables have distinct ids.
 	 */
 	private int index;
 
@@ -44,20 +45,16 @@ public class BoundVar extends BCExpression {
 	private String vname;
 
 	/**
-	 * A constructor for use in quantifier only. Inside quantified expression
-	 * use {@link #getBoundVar(AttributeReader)} instead.
+	 * A constructor for use in quantifier only.
+	 * Inside quantified expression use
+	 * {@link #getBoundVar(AttributeReader)} instead.
 	 * 
-	 * @param jt -
-	 *            declared type of variable,
-	 * @param index -
-	 *            variable id,
-	 * @param qf -
-	 *            quantifier, where it is declared,
-	 * @param vname -
-	 *            variable name (can be null).
+	 * @param jt - declared type of variable,
+	 * @param index - variable id,
+	 * @param qf - quantifier, where it is declared,
+	 * @param vname - variable name (can be null).
 	 */
-	public BoundVar(JavaBasicType jt, int index, QuantifiedFormula qf,
-			String vname) {
+	public BoundVar(JavaBasicType jt, int index, QuantifiedFormula qf, String vname) {
 		super(Code.BOUND_VAR);
 		this.type = jt;
 		this.index = index;
@@ -66,14 +63,14 @@ public class BoundVar extends BCExpression {
 	}
 
 	/**
-	 * Use this to get proper instance while reading occurence (not declaration)
-	 * of bound variable in an expression.
+	 * Use this to get proper instance while reading occurence
+	 * (not declaration) of bound variable in an expression.
 	 * 
-	 * @param ar -
-	 *            stram to read variable id from.
-	 * @return proper bound variable (declared before, at quantifier)
-	 * @throws ReadAttributeException -
-	 *             if <code>ar</code> contains invalid variable index.
+	 * @param ar - stram to read variable id from.
+	 * @return proper bound variable (declared before,
+	 * 		at quantifier)
+	 * @throws ReadAttributeException - if <code>ar</code>
+	 * 		contains invalid variable index.
 	 */
 	public static BoundVar getBoundVar(AttributeReader ar)
 			throws ReadAttributeException {
@@ -84,10 +81,10 @@ public class BoundVar extends BCExpression {
 	/**
 	 * Displays expression to a String.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}.
-	 * @return String representation of expression, without (block marks (used
-	 *         for line-breaking by prettyPrinter) and parenthness) at root.
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of expression,
+	 * 		without (block marks (used for line-breaking
+	 * 		by prettyPrinter) and parenthness) at root.
 	 * @see BCExpression#printCode1(BMLConfig)
 	 */
 	@Override
@@ -99,8 +96,8 @@ public class BoundVar extends BCExpression {
 	}
 
 	/**
-	 * @return Simple String representation of this expression, for debugging
-	 *         only.
+	 * @return Simple String representation of this
+	 * 		expression, for debugging only.
 	 */
 	@Override
 	public String toString() {
@@ -110,8 +107,7 @@ public class BoundVar extends BCExpression {
 	/**
 	 * This method should not be called.
 	 * 
-	 * @throws RuntimeException -
-	 *             always.
+	 * @throws RuntimeException - always.
 	 */
 	@Override
 	protected void read(AttributeReader ar, int root)
@@ -123,8 +119,7 @@ public class BoundVar extends BCExpression {
 	/**
 	 * Writes this expression to AttributeWirter.
 	 * 
-	 * @param aw -
-	 *            stream to save to.
+	 * @param aw - stream to save to.
 	 */
 	@Override
 	public void write(AttributeWriter aw) {
@@ -140,9 +135,11 @@ public class BoundVar extends BCExpression {
 	}
 
 	/**
-	 * Bound variable has no subexpressions, so it has the highest priority.
+	 * Bound variable has no subexpressions, so it has
+	 * the highest priority.
 	 * 
-	 * @return priority of this expression (from annot.textio.Priorities).
+	 * @return priority of this expression
+	 * 		(from annot.textio.Priorities).
 	 */
 	@Override
 	protected int getPriority() {
@@ -150,11 +147,12 @@ public class BoundVar extends BCExpression {
 	}
 
 	/**
-	 * Checks if all subexpression have correct types and return type of this
-	 * expression.
+	 * Checks if all subexpression have
+	 * correct types and return type of this expression.
 	 * 
-	 * @return JavaType of result of this exrpession, or null if it's invalid
-	 *         (if one of it's subexpression have wrong type or is invalid).
+	 * @return JavaType of result of this exrpession,
+	 * 		or null if it's invalid (if one of it's
+	 * 		subexpression have wrong type or is invalid).
 	 */
 	@Override
 	protected JavaType1 checkType1() {
@@ -162,8 +160,9 @@ public class BoundVar extends BCExpression {
 	}
 
 	/**
-	 * @return variable name, or null if it is unknown (eg. some old .class file
-	 *         formats don't support bound variable names).
+	 * @return variable name, or null if it is unknown
+	 * 		(eg. some old .class file formats don't support
+	 * 		bound variable names).
 	 */
 	public String getVname() {
 		return vname;
@@ -172,8 +171,7 @@ public class BoundVar extends BCExpression {
 	/**
 	 * Sets a variable name.
 	 * 
-	 * @param vname -
-	 *            variable name to be set.
+	 * @param vname - variable name to be set.
 	 */
 	public void setVname(String vname) {
 		this.vname = vname;

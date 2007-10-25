@@ -17,12 +17,11 @@ public class FieldAccess extends BCExpression {
 	/**
 	 * A standard constructor.
 	 * 
-	 * @param connector -
-	 *            type of expression, should be {@link Code#FIELD_ACCESS},
-	 * @param left -
-	 *            left subexpression (an object),
-	 * @param right -
-	 *            right subexpression (<code>left</code>'s field).
+	 * @param connector - type of expression, should be
+	 * 		{@link Code#FIELD_ACCESS},
+	 * @param left - left subexpression (an object),
+	 * @param right - right subexpression (<code>left</code>'s
+	 * 		field).
 	 */
 	public FieldAccess(int connector, BCExpression left, BCExpression right) {
 		super(connector, left, right);
@@ -31,13 +30,12 @@ public class FieldAccess extends BCExpression {
 	/**
 	 * A constructor from AtributeReader.
 	 * 
-	 * @param ar -
-	 *            input stream to load from,
-	 * @param root -
-	 *            connector (last byte read from <code>ar</code>).
-	 * @throws ReadAttributeException -
-	 *             if root + remaining stream in <code>ar</code> doesn't
-	 *             represent corrent field access expression.
+	 * @param ar - input stream to load from,
+	 * @param root - connector (last byte read from
+	 * 		<code>ar</code>).
+	 * @throws ReadAttributeException - if root + remaining
+	 * 		stream in <code>ar</code> doesn't represent
+	 * 		corrent field access expression.
 	 */
 	public FieldAccess(AttributeReader ar, int root)
 			throws ReadAttributeException {
@@ -62,13 +60,12 @@ public class FieldAccess extends BCExpression {
 	}
 
 	@Override
-	protected void init() {
-	}
+	protected void init() {}
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
-		return getSubExpr(0).printCode(conf) + "."
-				+ getSubExpr(1).printCode(conf);
+		return getSubExpr(0).printCode(conf)
+			+ "." + getSubExpr(1).printCode(conf);
 	}
 
 	@Override
@@ -81,7 +78,8 @@ public class FieldAccess extends BCExpression {
 
 	@Override
 	public String toString() {
-		return getSubExpr(0).toString() + "." + getSubExpr(1).toString();
+		return getSubExpr(0).toString()
+			+ "." + getSubExpr(1).toString();
 	}
 
 	@Override

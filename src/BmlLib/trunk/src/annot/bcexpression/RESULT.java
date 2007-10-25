@@ -10,8 +10,9 @@ import annot.textio.IDisplayStyle;
 import annot.textio.Priorities;
 
 /**
- * This class represents <code>\result</code> expression (return value of a
- * method). One <code>RESULT</code> per method.
+ * This class represents <code>\result</code> expression
+ * (return value of a method).
+ * One <code>RESULT</code> per method.
  * 
  * @author tomekb
  */
@@ -21,24 +22,24 @@ public class RESULT extends BCExpression {
 	 * Method whose return value it represents.
 	 */
 	private BCMethod m;
-
+	
 	/**
 	 * Return type of method <code>m</code>.
 	 */
 	private JavaType1 type;
-
+	
 	/**
-	 * A constructor for method initialization only. Later, use
-	 * {@link BCMethod#getResult()} instead.
+	 * A constructor for method initialization only.
+	 * Later, use {@link BCMethod#getResult()} instead.
 	 * 
-	 * @param m -
-	 *            initializing method.
+	 * @param m - initializing method.
 	 */
 	public RESULT(BCMethod m) {
 		this.m = m;
-		this.type = JavaType1.convert(m.getBcelMethod().getReturnType());
+		this.type = JavaType1.convert(
+			m.getBcelMethod().getReturnType());
 	}
-
+	
 	@Override
 	protected JavaType1 checkType1() {
 		return type;
@@ -55,8 +56,7 @@ public class RESULT extends BCExpression {
 	}
 
 	@Override
-	protected void init() {
-	}
+	protected void init() {}
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
@@ -66,8 +66,8 @@ public class RESULT extends BCExpression {
 	@Override
 	protected void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
-		throw new ReadAttributeException("'read' method"
-				+ " unavaliable, use BCMethod#getResult() instead.");
+		throw new ReadAttributeException("'read' method" +
+				" unavaliable, use BCMethod#getResult() instead.");
 	}
 
 	@Override

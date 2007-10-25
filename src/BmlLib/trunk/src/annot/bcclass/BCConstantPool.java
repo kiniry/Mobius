@@ -20,9 +20,10 @@ import annot.io.ReadAttributeException;
 import annot.textio.IDisplayStyle;
 
 /**
- * This class represents extended constant pool, that contains all constants
- * from original (BCEL) constant pool and constants from second constant pool.
- * Second constant pool is stored as an class attribute in .class file.
+ * This class represents extended constant pool, that contains
+ * all constants from original (BCEL) constant pool and
+ * constants from second constant pool. Second constant pool
+ * is stored as an class attribute in .class file.
  * Constants stored here are ordinary, BCEL's Constants.
  * 
  * @author tomekb
@@ -40,20 +41,19 @@ public class BCConstantPool {
 	private int initialSize;
 
 	/**
-	 * JavaClass related with it's primary constantPool, used for
-	 * {@link #reset()} method.
+	 * JavaClass related with it's primary constantPool,
+	 * used for {@link #reset()} method.
 	 */
 	private JavaClass jc;
-
+	
 	/**
-	 * A standard constructor, from JavaClass. It inserts constants from
-	 * ordinary constant pool first, and then from secons constant pool
-	 * attribute.
+	 * A standard constructor, from JavaClass. It inserts
+	 * constants from ordinary constant pool first, and
+	 * then from secons constant pool attribute.
 	 * 
-	 * @param jc -
-	 *            JavaClass to initialize from.
-	 * @throws ReadAttributeException -
-	 *             if second constant pool attribute format is invalid.
+	 * @param jc - JavaClass to initialize from.
+	 * @throws ReadAttributeException - if second constant
+	 * 		pool attribute format is invalid.
 	 */
 	public BCConstantPool(JavaClass jc) throws ReadAttributeException {
 		this.jc = jc;
@@ -91,12 +91,12 @@ public class BCConstantPool {
 	}
 
 	/**
-	 * Adds standard constants (eg. attribute names) to the primary (BCEL)
-	 * constant pool. This should be called only between loading primary and
-	 * secondary constant pool.
+	 * Adds standard constants (eg. attribute names) to the
+	 * primary (BCEL) constant pool. This should be called only
+	 * between loading primary and secondary constant pool.
 	 * 
-	 * @param cpg -
-	 *            BCEL's constant pool generator, from JavaClass.
+	 * @param cpg - BCEL's constant pool generator,
+	 * 		from JavaClass.
 	 */
 	private void addStandardConstants(ConstantPoolGen cpg) {
 		cpg.addUtf8(IDisplayStyle.jt_int);
@@ -107,8 +107,9 @@ public class BCConstantPool {
 	}
 
 	/**
-	 * Reinitializes constant pool from it's JavaClass'es primary constant pool,
-	 * removing all variables from secondary constant pool.
+	 * Reinitializes constant pool from it's JavaClass'es
+	 * primary constant pool, removing all variables from
+	 * secondary constant pool.
 	 */
 	public void reset() {
 		MLog.putMsg(MLog.PProgress, "clearing second constant pool");
@@ -121,25 +122,24 @@ public class BCConstantPool {
 		for (int i = 0; i < initialSize; i++)
 			constants.add(cp.getConstant(i));
 	}
-
+	
 	/**
 	 * Appends a constant to the second constant pool.
 	 * 
-	 * @param c -
-	 *            Constant to be added.
+	 * @param c - Constant to be added.
 	 */
 	public void addConstant(Constant c) {
 		constants.add(c);
 	}
 
 	/**
-	 * Gives a constant from constant pool. Constants from second constant pool
-	 * have indexes starting from <code>initialSize</code>, while constants
-	 * from primary constant pool have indexes from 0 to initialSize - 1. Can be
-	 * used in loading from file only.
+	 * Gives a constant from constant pool. Constants from
+	 * second constant pool have indexes starting from
+	 * <code>initialSize</code>, while constants from primary
+	 * constant pool have indexes from 0 to initialSize - 1.
+	 * Can be used in loading from file only.
 	 * 
-	 * @param i -
-	 *            constant index
+	 * @param i - constant index
 	 * @return i-th constant.
 	 */
 	public Constant getConstant(int i) {
@@ -147,12 +147,13 @@ public class BCConstantPool {
 	}
 
 	/**
-	 * Searches for an Utf8Constant with data equal to <code>str</code> in
-	 * both primary and secondary constant pools.
+	 * Searches for an Utf8Constant with data equal to
+	 * <code>str</code> in both primary and secondary constant
+	 * pools.
 	 * 
-	 * @param str -
-	 *            string to search for.
-	 * @return matching Constant or null if no Constant could be found.
+	 * @param str - string to search for.
+	 * @return matching Constant or null if no Constant
+	 * 		could be found.
 	 */
 	public Constant searchForString(String str) {
 		int pos = findConstant(str);
@@ -162,12 +163,13 @@ public class BCConstantPool {
 	}
 
 	/**
-	 * Searches for an Utf8Constant with data equal to <code>str</code> in
-	 * both primary and secondary constant pools.
+	 * Searches for an Utf8Constant with data equal to
+	 * <code>str</code> in both primary and secondary constant
+	 * pools.
 	 * 
-	 * @param str -
-	 *            string to search for.
-	 * @return index of matching Constant or -1 if no Constant could be found.
+	 * @param str - string to search for.
+	 * @return index of matching Constant or -1 if no
+	 * 		Constant could be found.
 	 */
 	public int findConstant(String cdata) {
 		int n = constants.size();
@@ -183,10 +185,10 @@ public class BCConstantPool {
 	}
 
 	/**
-	 * Displays i-th constant like: i : CONSTANT_Utf8[1]("Code")
+	 * Displays i-th constant like:
+	 * 	i :  CONSTANT_Utf8[1]("Code")
 	 * 
-	 * @param i -
-	 *            constant's index.
+	 * @param i - constant's index.
 	 * @return a String like described above.
 	 */
 	private String printElement(int i) {
@@ -216,12 +218,11 @@ public class BCConstantPool {
 	}
 
 	/**
-	 * Saves both constant pools to given JavaClass (primary as an ordinary
-	 * constant pool and secondary as an "second constant pool" class
-	 * attribute).
+	 * Saves both constant pools to given JavaClass
+	 * (primary as an ordinary constant pool and secondary
+	 * as an "second constant pool" class attribute).
 	 * 
-	 * @param jc -
-	 *            JavaClass to save to.
+	 * @param jc - JavaClass to save to.
 	 */
 	public void save(JavaClass jc) {
 		int n = constants.size();
@@ -249,7 +250,8 @@ public class BCConstantPool {
 	}
 
 	/**
-	 * @return number of constants stored in both constant pools.
+	 * @return number of constants stored in both
+	 * 		constant pools.
 	 */
 	public int size() {
 		return constants.size();

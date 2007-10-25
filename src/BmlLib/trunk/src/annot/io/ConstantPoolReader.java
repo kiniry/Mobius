@@ -8,11 +8,13 @@ import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 
 /**
- * This class is used to read BCEL's Constants from DataInputStream (in BCEL's
- * format). I couldn't use BCEL to do this, becouse proper constructors and
- * factories are not visible from the outside, so I have to copy nessesery code
- * from BCEL (as the second constant pool format is exactly the same as original
- * constant pool format) in hope that they won't change it.
+ * This class is used to read BCEL's Constants from
+ * DataInputStream (in BCEL's format). I couldn't use BCEL
+ * to do this, becouse proper constructors and factories
+ * are not visible from the outside, so I have to copy
+ * nessesery code from BCEL (as the second constant pool
+ * format is exactly the same as original constant pool
+ * format) in hope that they won't change it.
  * 
  * @author tomekb
  */
@@ -21,11 +23,11 @@ public class ConstantPoolReader {
 	/**
 	 * Reads a constant from given stream.
 	 * 
-	 * @param file -
-	 *            input stream containing constant pool in BCEL format.
+	 * @param file - input stream containing constant pool in
+	 * 		BCEL format.
 	 * @return - read constant.
-	 * @throws ReadAttributeException -
-	 *             if <code>file</code> input stream data is invalid.
+	 * @throws ReadAttributeException - if <code>file</code>
+	 * 		input stream data is invalid.
 	 */
 	public static Constant readConstant(DataInputStream file)
 			throws ReadAttributeException {

@@ -29,8 +29,7 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 	}
 
 	@Override
-	protected void init() {
-	}
+	protected void init() {}
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
@@ -55,7 +54,7 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 
 	@SuppressWarnings("unchecked")
 	public T getExpression() {
-		return (T) getSubExpr(0);
+		return (T)getSubExpr(0);
 	}
 
 }

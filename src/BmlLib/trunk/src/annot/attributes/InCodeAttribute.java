@@ -10,9 +10,9 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
 /**
- * This class represents single annotations attached to instructionHandle of an
- * bytecode instruction. (on or more InCodeAttribute per one bytecode
- * instruction)
+ * This class represents single annotations attached to
+ * instructionHandle of an bytecode instruction.
+ * (on or more InCodeAttribute per one bytecode instruction) 
  * 
  * @author tomekb
  */
@@ -25,30 +25,31 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	private BCMethod method;
 
 	/**
-	 * InstructionHandle of bytecode instruction that this annotation is
-	 * attached to. Changed from pc number of instruction to avoid
-	 * desynchronization after inserting / deleting bytecode instructions above.
+	 * InstructionHandle of bytecode instruction that this
+	 * annotation is attached to.
+	 * Changed from pc number of instruction to avoid
+	 * desynchronization after inserting / deleting bytecode
+	 * instructions above.   
 	 */
 	private InstructionHandle ih;
 
 	/**
-	 * This number is responsible for annotation ordering within single bytecode
-	 * instruction. Multiple annotations can be attached to one instruction.
-	 * They are sorted by thier minor number and displayed in this order.
+	 * This number is responsible for annotation ordering
+	 * within single bytecode instruction.
+	 * Multiple annotations can be attached to one instruction.
+	 * They are sorted by thier minor number and displayed
+	 * in this order.
 	 */
 	private int minor;
 
 	/**
 	 * A standard constructor.
 	 * 
-	 * @param m -
-	 *            BCMethod containing this annotation,
-	 * @param ih -
-	 *            instructionHandle of bytecode instruction that this annotation
-	 *            should be attached to,
-	 * @param minor -
-	 *            minor number of annotation, responsible for annotation
-	 *            ordering within single instruction.
+	 * @param m - BCMethod containing this annotation,
+	 * @param ih - instructionHandle of bytecode instruction
+	 * 		that this annotation should be attached to,
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
 	 */
 	public InCodeAttribute(BCMethod m, InstructionHandle ih, int minor) {
 		this.method = m;
@@ -57,18 +58,16 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	}
 
 	/**
-	 * A constructor for tests only. It can be used only when we are sure that
-	 * bytecode itself won't change.
+	 * A constructor for tests only. It can be used only
+	 * when we are sure that bytecode itself won't change.
 	 * 
-	 * @param m -
-	 *            BCMethod containing this annotation,
-	 * @param pc -
-	 *            pc number of bytecode instruction that this annotation should
-	 *            be attached to. You should be sure that instruction of that pc
-	 *            really exists in given method.
-	 * @param minor -
-	 *            minor number of annotation, responsible for annotation
-	 *            ordering within single instruction.
+	 * @param m - BCMethod containing this annotation,
+	 * @param pc - pc number of bytecode instruction that
+	 * 		this annotation should be attached to. You should
+	 * 		be sure that instruction of that pc really
+	 * 		exists in given method.
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
 	 */
 	@Deprecated
 	public InCodeAttribute(BCMethod m, int pc, int minor) {
@@ -78,28 +77,24 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	/**
 	 * Loads annotation's content from AttributeReader.
 	 * 
-	 * @param ar -
-	 *            stream to load from.
-	 * @throws ReadAttributeException -
-	 *             if data left in <code>ar</code> doesn't represent correct
-	 *             annotation.
+	 * @param ar - stream to load from.
+	 * @throws ReadAttributeException - if data left
+	 * 		in <code>ar</code> doesn't represent correct
+	 * 		annotation.
 	 */
-	protected abstract void load(AttributeReader ar)
-			throws ReadAttributeException;
+	protected abstract void load(AttributeReader ar) throws ReadAttributeException;
 
 	/**
 	 * Saves annotation content using AttributeWriter.
 	 * 
-	 * @param aw -
-	 *            stream to save to.
+	 * @param aw - stream to save to.
 	 */
 	protected abstract void saveSingle(AttributeWriter aw);
 
 	/**
 	 * This method should simply print annotation to a string.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}.
+	 * @param conf - see {@link BMLConfig}.
 	 * @return string representation of annotation.
 	 */
 	@Override
@@ -111,11 +106,10 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	protected abstract int aType();
 
 	/**
-	 * Replaces this annotation with a given one, updating nessesery references
-	 * in BCAttributeMap in BCMethod.
+	 * Replaces this annotation with a given one, updating
+	 * nessesery references in BCAttributeMap in BCMethod.
 	 * 
-	 * @param pa -
-	 *            annotation to replace with.
+	 * @param pa - annotation to replace with.
 	 */
 	@Override
 	public void replaceWith(BCPrintableAttribute pa) {
@@ -136,12 +130,13 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	}
 
 	/**
-	 * Replaces this annotation with the one parsed from given String.
+	 * Replaces this annotation with the one parsed from
+	 * given String.
 	 * 
-	 * @param code -
-	 *            correct code of annotation to replace with.
-	 * @throws RecognitionException -
-	 *             if <code>code</code> is not correct annotation's code.
+	 * @param code - correct code of annotation
+	 * 		to replace with.
+	 * @throws RecognitionException - if <code>code</code>
+	 * 		is not correct annotation's code.
 	 */
 	@Override
 	public void parse(String code) throws RecognitionException {
@@ -149,27 +144,27 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	}
 
 	/**
-	 * Computes pc numbers for each bytecode instruction of a method containing
-	 * this annotation and returns, and returns pc number of instruction this
-	 * annotation is attached to.
+	 * Computes pc numbers for each bytecode instruction of
+	 * a method containing this annotation and returns,
+	 * and returns pc number of instruction this annotation
+	 * is attached to.
 	 * 
-	 * @return pc number of this annotation's bytecode instruction.
+	 * @return pc number of this annotation's
+	 * 		bytecode instruction.
 	 */
 	public int getPC() {
 		return method.getPC(ih);
 	}
 
 	/**
-	 * compares this annotation to given one in order they should appead in
-	 * String representation of a method. Both annotations should be from the
-	 * same method.
-	 * 
-	 * @param o -
-	 *            annotation to compare to.
-	 * @return a positive integer if <code>o</code> is above this annotation
-	 *         in String representation of method, a negative integer if
-	 *         <code>o</code> is below, and zero if <code>o</code> is the
-	 *         same annotation.
+	 * compares this annotation to given one in order they
+	 * should appead in String representation of a method.
+	 * Both annotations should be from the same method.
+	 * @param o - annotation to compare to.
+	 * @return a positive integer if <code>o</code> is above
+	 * 		this annotation in String representation of method,
+	 * 		a negative integer if <code>o</code> is below,
+	 * 		and zero if <code>o</code> is the same annotation.
 	 */
 	public int compareTo(InCodeAttribute o) {
 		int pc = getPC();
@@ -186,7 +181,8 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	}
 
 	/**
-	 * @return instructionHandle of instruction this annotation is attached to.
+	 * @return instructionHandle of instruction this annotation
+	 * 		is attached to.
 	 */
 	public InstructionHandle getIh() {
 		return ih;
@@ -195,8 +191,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	/**
 	 * Sets instructionHandle parameter.
 	 * 
-	 * @param ih -
-	 *            new instruction handle.
+	 * @param ih - new instruction handle.
 	 */
 	protected void setIh(InstructionHandle ih) {
 		this.ih = ih;
@@ -210,8 +205,9 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	}
 
 	/**
-	 * @return minor number of this annotation, used for ordering annotations
-	 *         within the same bytecode instruction.
+	 * @return minor number of this annotation, used for
+	 * 		ordering annotations within the same bytecode
+	 * 		instruction.
 	 */
 	public int getMinor() {
 		return minor;
@@ -220,8 +216,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 	/**
 	 * Sets minor number.
 	 * 
-	 * @param minor -
-	 *            new minor number value to set.
+	 * @param minor - new minor number value to set.
 	 */
 	protected void setMinor(int minor) {
 		this.minor = minor;

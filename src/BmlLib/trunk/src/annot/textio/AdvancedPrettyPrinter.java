@@ -3,44 +3,45 @@ package annot.textio;
 import java.util.Vector;
 
 /**
- * This class is used for expression formatting (with line-breaking and
- * indentatoin).
+ * This class is used for expression formatting
+ * (with line-breaking and indentatoin).
  * 
  * @author tomekb
  */
 public class AdvancedPrettyPrinter extends AbstractPrettyPrinter {
 
 	/**
-	 * Wether operators should be at the beginning (true) or end (false) of the
-	 * line.
+	 * Wether operators should be at the beginning (true)
+	 * or end (false) of the line.
 	 */
 	private static final boolean startFromOp = false;
 
 	/**
 	 * A standard constructor.
 	 * 
-	 * @param conf -
-	 *            current {@link BMLConfig}, should be avaliable as calling
-	 *            method argument.
+	 * @param conf - current {@link BMLConfig}, should be
+	 * 		avaliable as calling method argument.
 	 */
 	public AdvancedPrettyPrinter(BMLConfig conf) {
 		super(conf);
 	}
 
 	/**
-	 * Divades current expression into subexpressions. Given expression is
-	 * assumed to be an infix expression, with possible diffrent (even empty)
-	 * operators between subexpressions.
+	 * Divades current expression into subexpressions.
+	 * Given expression is assumed to be an infix expression,
+	 * with possible diffrent (even empty) operators
+	 * between subexpressions.
 	 * 
-	 * @param str -
-	 *            String representation of an expression, without line breaking,
-	 *            but with block marks. Let <code>n</code> be the
-	 *            subexpression count of <code>str</code>.
-	 * @return String array of <code>2*n+1</code> elements, starting from
-	 *         operator, containing operators at odd positions and
-	 *         subexpressions (with block marks) at even, and ending with
-	 *         operator. Order of these elements in returned array is the same
-	 *         as in given String.
+	 * @param str - String representation of an expression,
+	 * 		without line breaking, but with block marks.
+	 * 		Let <code>n</code> be the subexpression count
+	 * 		of <code>str</code>.
+	 * @return String array of <code>2*n+1</code> elements,
+	 * 		starting from operator, containing operators at
+	 * 		odd positions and subexpressions (with block marks)
+	 * 		at even, and ending with operator. Order of these
+	 * 		elements in returned array is the same as in given
+	 * 		String.
 	 */
 	protected String[] splitRoot(String str) {
 		Vector<String> v = new Vector<String>();
@@ -91,17 +92,17 @@ public class AdvancedPrettyPrinter extends AbstractPrettyPrinter {
 	/**
 	 * Formats given String.
 	 * 
-	 * @param prefix -
-	 *            single line prefix to be inserted before formatted expression,
-	 * @param str -
-	 *            String representation of expression to be formatted (with
-	 *            block marks, but without line-breaks),
-	 * @param suffix -
-	 *            single line suffix to be appended after formatted expression,
-	 * @param indent -
-	 *            current indentation (used in the folowing lines by default).
-	 * @return <code>prefix + str2 + suffix</code>, where <code>str2</code>
-	 *         is formatted <code>str</code>.
+	 * @param prefix - single line prefix to be inserted
+	 * 		before formatted expression,
+	 * @param str - String representation of expression to be
+	 * 		formatted (with block marks, but without
+	 * 		line-breaks),
+	 * @param suffix - single line suffix to be appended after
+	 * 		formatted expression,
+	 * @param indent - current indentation (used in the
+	 * 		folowing lines by default).
+	 * @return <code>prefix + str2 + suffix</code>, where
+	 * 		<code>str2</code> is formatted <code>str</code>.
 	 */
 	private String bl(String prefix, String str, String suffix, String indent) {
 		int width = IDisplayStyle.max_total_line_width
@@ -140,8 +141,7 @@ public class AdvancedPrettyPrinter extends AbstractPrettyPrinter {
 						// new line
 						ret += lp + "\n" + indent;
 						if (cleanup(sub[i] + sub[i + 1]).charAt(0) != ' ')
-							ret += ' '; // for operators not starting with
-										// spaces
+							ret += ' '; // for operators not starting with spaces
 						lp = "";
 					}
 				}

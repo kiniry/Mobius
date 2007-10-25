@@ -1,8 +1,8 @@
 package test;
 
 /**
- * A simple class, used as an example (of bytecode). Should not be changed
- * (OldTests may stop working).
+ * A simple class, used as an example (of bytecode).
+ * Should not be changed (OldTests may stop working).
  * 
  * @author tomekb
  */

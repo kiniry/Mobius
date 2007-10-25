@@ -5,24 +5,24 @@ import annot.io.Code;
 import annot.textio.BMLConfig;
 
 /**
- * This class describes any non-basic Java type. It only stores type's
- * signature.
+ * This class describes any non-basic Java type.
+ * It only stores type's signature.
  * 
  * @author tomekb
  */
 public class JavaReferenceType extends JavaType1 {
 
 	/**
-	 * A type's signature. It can be any String, currently it's value is never
-	 * parsed into other structures in this library.
+	 * A type's signature. It can be any String, currently
+	 * it's value is never parsed into other structures
+	 * in this library.
 	 */
 	private String signature;
-
+	
 	/**
 	 * A standard constructor.
 	 * 
-	 * @param signature -
-	 *            type's signature.
+	 * @param signature - type's signature.
 	 */
 	public JavaReferenceType(String signature) {
 		this.signature = signature;
@@ -34,8 +34,8 @@ public class JavaReferenceType extends JavaType1 {
 	public static final JavaReferenceType ANY = new JavaReferenceType("Object");
 
 	/**
-	 * Returns this type's signature as a String (the same String as given in
-	 * constructor).
+	 * Returns this type's signature as a String
+	 * (the same String as given in constructor).
 	 */
 	@Override
 	protected String printCode1(BMLConfig conf) {
@@ -62,7 +62,7 @@ public class JavaReferenceType extends JavaType1 {
 			JavaReferenceType rt = (JavaReferenceType) type;
 			if (signature.equals(rt.getSignature()))
 				return TYPES_EQUAL;
-			// TODO check for subtypes
+			//TODO check for subtypes
 		}
 		return TYPES_UNRELATED;
 	}

@@ -19,7 +19,8 @@ import annot.textio.Parsing;
  * 
  * @author tomekb
  */
-public class ClassInvariant extends ClassAttribute implements IBCAttribute {
+public class ClassInvariant extends ClassAttribute implements
+		IBCAttribute {
 
 	/**
 	 * BCClass contaning this attribute.
@@ -34,8 +35,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	/**
 	 * Creates empty class invariant (with formula 'true').
 	 * 
-	 * @param bcc -
-	 *            BCClass containign this invariant.
+	 * @param bcc - BCClass containign this invariant.
 	 */
 	public ClassInvariant(BCClass bcc) {
 		this.bcc = bcc;
@@ -45,10 +45,8 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	/**
 	 * A Constructor from BCClass and AbstractFormula.
 	 * 
-	 * @param bcc -
-	 *            BCClass containing this invariant,
-	 * @param invariant -
-	 *            a invariant formula.
+	 * @param bcc - BCClass containing this invariant,
+	 * @param invariant - a invariant formula.
 	 */
 	public ClassInvariant(BCClass bcc, AbstractFormula invariant) {
 		this.bcc = bcc;
@@ -56,15 +54,14 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	}
 
 	/**
-	 * A constructor from attributeReader, for use in class loading only.
+	 * A constructor from attributeReader, for use in class
+	 * loading only.
 	 * 
-	 * @param bcc -
-	 *            BCClass containing this invariant,
-	 * @param ar -
-	 *            stream to load invariant from.
-	 * @throws ReadAttributeException -
-	 *             if data left in <code>ar</code> doesn't represent correct
-	 *             class invariant.
+	 * @param bcc - BCClass containing this invariant,
+	 * @param ar - stream to load invariant from.
+	 * @throws ReadAttributeException - if data left
+	 * 		in <code>ar</code> doesn't represent correct
+	 * 		class invariant.
 	 */
 	public ClassInvariant(BCClass bcc, AttributeReader ar)
 			throws ReadAttributeException {
@@ -75,8 +72,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	/**
 	 * Prints annotation's code to a String.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}.
+	 * @param conf - see {@link BMLConfig}.
 	 * @return String representation of this invariant.
 	 */
 	@Override
@@ -86,11 +82,10 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	}
 
 	/**
-	 * Replaces this annotation with a given one, updating nessesery references
-	 * in BCClass.
+	 * Replaces this annotation with a given one, updating
+	 * nessesery references in BCClass.
 	 * 
-	 * @param pa -
-	 *            annotation to replace with.
+	 * @param pa - annotation to replace with.
 	 */
 	@Override
 	public void replaceWith(BCPrintableAttribute pa) {
@@ -98,10 +93,11 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	}
 
 	/**
-	 * Replaces existing class invariant in given BCClass with this attribute.
+	 * Replaces existing class invariant in given
+	 * BCClass with this attribute.
 	 * 
-	 * @param bcc -
-	 *            BCClass to place this attribute as it's class invariant.
+	 * @param bcc - BCClass to place this attribute as it's
+	 * 		class invariant.
 	 */
 	@Override
 	public void replace(BCClass bcc) {
@@ -117,12 +113,13 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	}
 
 	/**
-	 * Replaces this annotation with the one parsed from given String.
+	 * Replaces this annotation with the one parsed from
+	 * given String.
 	 * 
-	 * @param code -
-	 *            correct code of class invariant to replace with.
-	 * @throws RecognitionException -
-	 *             if <code>code</code> is not correct class invariant's code.
+	 * @param code - correct code of class invariant
+	 * 		to replace with.
+	 * @throws RecognitionException - if <code>code</code>
+	 * 		is not correct class invariant's code.
 	 */
 	@Override
 	public void parse(String code) throws RecognitionException {
@@ -130,8 +127,8 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	}
 
 	/**
-	 * @return Simple string represenatations of attribute, for use in debugger
-	 *         only.
+	 * @return Simple string represenatations of attribute,
+	 * 		for use in debugger only.
 	 */
 	@Override
 	public String toString() {
@@ -139,7 +136,8 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	}
 
 	/**
-	 * @return nameIndex of BCEL's Unknown attribute it represents.
+	 * @return nameIndex of BCEL's Unknown
+	 * 		attribute it represents.
 	 */
 	public int getIndex() {
 		return bcc.getCp().findConstant(IDisplayStyle.__classInvariant);
@@ -153,10 +151,9 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 	}
 
 	/**
-	 * Saves this annotation to BCEL's Unknown attribute, using attributeWriter.
-	 * 
-	 * @param aw -
-	 *            stream to save to.
+	 * Saves this annotation to BCEL's Unknown attribute,
+	 * using attributeWriter.
+	 * @param aw - stream to save to.
 	 */
 	public void save(AttributeWriter aw) {
 		invariant.write(aw);

@@ -1,74 +1,74 @@
 package annot.textio;
 
 /**
- * This class represents a position in bytecode (in it's logical representation
- * only). It only stores a couple of values, it doesn't compute anything itself.
- * Contains mainly accessors for this values.
+ * This class represents a position in bytecode
+ * (in it's logical representation only).
+ * It only stores a couple of values, it doesn't compute
+ * anything itself. Contains mainly accessors for this values.
  * 
  * @author tomekb
  */
 public class CodePosition {
-	// XXX shouldn't I change fields visibility to public instead of creating
-	// accessors here?
-	// XXX shouldn't I at least remove comments from accessors?
+	//XXX shouldn't I change fields visibility to public instead of creating accessors here?
+	//XXX shouldn't I at least remove comments from accessors?
 
 	/**
 	 * number of methods in class
 	 */
 	private int met_cnt = -1;
-
+	
 	/**
 	 * number of annotations in current comment
 	 */
 	private int annot_cnt = -1;
-
+	
 	/**
 	 * number of instructions in current method
 	 */
 	private int instr_cnt = -1;
-
+	
 	/**
 	 * method number
 	 */
 	private int met_nr = -1;
-
+	
 	/**
 	 * instruction number
 	 */
 	private int instr_nr = -1;
-
+	
 	/**
-	 * pc number of current instruction (for debug purpose (display) only)
+	 * pc number of current instruction (for debug purpose
+	 * (display) only)
 	 */
 	private int pc = -1;
-
+	
 	/**
 	 * annotation number
 	 */
 	private int annot_nr = -1;
-
+	
 	/**
-	 * nearest (upside) annotation keyword. Can be anything if this position is
-	 * outside comment
+	 * nearest (upside) annotation keyword. Can be anything
+	 * if this position is outside comment
 	 */
 	private String keyword;
-
+	
 	/**
-	 * wether this position is in class attributes section (before first
-	 * method), or not
+	 * wether this position is in class attributes section
+	 * (before first method), or not
 	 */
 	private boolean inClassAttribute = false;
-
+	
 	/**
 	 * wether this position is in method specification or not
 	 */
 	private boolean inMethodSpec = false;
-
+	
 	/**
 	 * A standard contructor.
 	 */
-	public CodePosition() {
-	}
+	public CodePosition() {}
 
 	/**
 	 * @return instruction number.
@@ -80,8 +80,7 @@ public class CodePosition {
 	/**
 	 * Sets instruction number.
 	 * 
-	 * @param instr_nr -
-	 *            new instruction number to be set.
+	 * @param instr_nr - new instruction number to be set.
 	 */
 	public void setInstr_nr(int instr_nr) {
 		this.instr_nr = instr_nr;
@@ -95,8 +94,8 @@ public class CodePosition {
 	}
 
 	/**
-	 * @return current annotation's keyword. Can return anything if current
-	 *         position is outside comment.
+	 * @return current annotation's keyword. Can return
+	 * 		anything if current position is outside comment.
 	 */
 	public String getKeyword() {
 		return keyword;
@@ -105,8 +104,7 @@ public class CodePosition {
 	/**
 	 * Sets current annotation's keyword.
 	 * 
-	 * @param keyword -
-	 *            new keyword value to set.
+	 * @param keyword - new keyword value to set.
 	 */
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
@@ -129,8 +127,7 @@ public class CodePosition {
 	/**
 	 * Sets current method number.
 	 * 
-	 * @param met_nr -
-	 *            new method number to be set.
+	 * @param met_nr - new method number to be set.
 	 */
 	public void setMet_nr(int met_nr) {
 		this.met_nr = met_nr;
@@ -153,8 +150,7 @@ public class CodePosition {
 	/**
 	 * Sets current annotation number.
 	 * 
-	 * @param min_nr -
-	 *            new annotation number to be set.
+	 * @param min_nr - new annotation number to be set.
 	 */
 	public void setAnnot_nr(int min_nr) {
 		this.annot_nr = min_nr;
@@ -162,27 +158,26 @@ public class CodePosition {
 
 	/**
 	 * Increases current annotation number by 1.
-	 * 
+	 *
 	 */
 	public void incMin_nr() {
 		this.annot_nr++;
 	}
 
 	/**
-	 * @return wether this position is in class attribute section of bytecode
-	 *         (before first method).
+	 * @return wether this position is in class attribute
+	 * 		section of bytecode (before first method).
 	 */
 	public boolean isInClassAttribute() {
 		return inClassAttribute;
 	}
 
 	/**
-	 * Sets wether this position is in class attribute section of bytecode
-	 * (before first method).
+	 * Sets wether this position is in class attribute
+	 * 		section of bytecode (before first method).
 	 * 
-	 * @param inClassAttribute -
-	 *            wether this position is in class attribute section of
-	 *            bytecode.
+	 * @param inClassAttribute - wether this position
+	 * 		is in class attribute section of bytecode.
 	 */
 	public void setInClassAttribute(boolean inClassAttribute) {
 		this.inClassAttribute = inClassAttribute;
@@ -198,8 +193,7 @@ public class CodePosition {
 	/**
 	 * Sets method count.
 	 * 
-	 * @param met_cnt -
-	 *            method count value to be set.
+	 * @param met_cnt - method count value to be set.
 	 */
 	public void setMet_cnt(int met_cnt) {
 		this.met_cnt = met_cnt;
@@ -215,8 +209,7 @@ public class CodePosition {
 	/**
 	 * Sets annotation count.
 	 * 
-	 * @param annot_cnt -
-	 *            annotation count value.
+	 * @param annot_cnt - annotation count value.
 	 */
 	public void setAnnot_cnt(int annot_cnt) {
 		this.annot_cnt = annot_cnt;
@@ -232,8 +225,7 @@ public class CodePosition {
 	/**
 	 * Sets pc numner of current annotation.
 	 * 
-	 * @param pc -
-	 *            new pc number value.
+	 * @param pc - new pc number value.
 	 */
 	public void setPc(int pc) {
 		this.pc = pc;
@@ -249,15 +241,15 @@ public class CodePosition {
 	/**
 	 * Sets instruction count.
 	 * 
-	 * @param instr_cnt -
-	 *            instruction count value.
+	 * @param instr_cnt - instruction count value.
 	 */
 	public void setInstr_cnt(int instr_cnt) {
 		this.instr_cnt = instr_cnt;
 	}
 
 	/**
-	 * @return wether this position is in a method specification.
+	 * @return wether this position is in a method
+	 * specification.
 	 */
 	public boolean isInMethodSpec() {
 		return inMethodSpec;
@@ -266,8 +258,8 @@ public class CodePosition {
 	/**
 	 * Sets wether this position is in method specification.
 	 * 
-	 * @param inMethodSpec -
-	 *            wether this position is in method specification.
+	 * @param inMethodSpec - wether this position
+	 * 		is in method specification.
 	 */
 	public void setInMethodSpec(boolean inMethodSpec) {
 		this.inMethodSpec = inMethodSpec;
@@ -276,22 +268,23 @@ public class CodePosition {
 	/**
 	 * Computes sum of character in str (+ 1) modulo 1000000.
 	 * 
-	 * @param str -
-	 *            any String
-	 * @return Hash code of this String (the same value for .equal() Strings).
+	 * @param str - any String
+	 * @return Hash code of this String (the same value for
+	 * 		.equal() Strings).
 	 */
 	public static int StrHash(String str) {
 		if (str == null)
 			return 0;
 		int h = 1;
-		for (int i = 0; i < str.length(); i++)
+		for (int i=0; i<str.length(); i++)
 			h = (h + i * (str.charAt(i))) % 1000000;
 		return h;
 	}
-
+	
 	/**
-	 * @return a hash code for this position in code (the same result if (but
-	 *         not only if) all fields are the same).
+	 * @return a hash code for this position in code
+	 * 		(the same result if (but not only if) all
+	 * 		fields are the same).
 	 */
 	public int hash() {
 		int h = 0;
@@ -311,7 +304,8 @@ public class CodePosition {
 	}
 
 	/**
-	 * @return a String representation of this bytecode position.
+	 * @return a String representation of this bytecode
+	 * 		position.
 	 */
 	@Override
 	public String toString() {

@@ -14,8 +14,8 @@ import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 
 /**
- * This class represents single assert annotation (on or more InCodeAttribute
- * per one bytecode instruction)
+ * This class represents single assert annotation
+ * (on or more InCodeAttribute per one bytecode instruction) 
  * 
  * @author tomekb
  */
@@ -29,14 +29,11 @@ public class SingleAssert extends InCodeAttribute {
 	/**
 	 * Creates an empty annotation: '/assert true'.
 	 * 
-	 * @param m -
-	 *            BCMethod containing this annotation,
-	 * @param ih -
-	 *            instructionHandle of bytecode instruction that this annotation
-	 *            should be attached to,
-	 * @param minor -
-	 *            minor number of annotation, responsible for annotation
-	 *            ordering within single instruction.
+	 * @param m - BCMethod containing this annotation,
+	 * @param ih - instructionHandle of bytecode instruction
+	 * 		that this annotation should be attached to,
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
 	 */
 	public SingleAssert(BCMethod m, InstructionHandle ih, int minor) {
 		super(m, ih, minor);
@@ -46,14 +43,11 @@ public class SingleAssert extends InCodeAttribute {
 	/**
 	 * A standard constructor.
 	 * 
-	 * @param m -
-	 *            BCMethod containing this annotation,
-	 * @param ih -
-	 *            instructionHandle of bytecode instruction that this annotation
-	 *            should be attached to,
-	 * @param minor -
-	 *            minor number of annotation, responsible for annotation
-	 *            ordering within single instruction.
+	 * @param m - BCMethod containing this annotation,
+	 * @param ih - instructionHandle of bytecode instruction
+	 * 		that this annotation should be attached to,
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
 	 */
 	public SingleAssert(BCMethod m, InstructionHandle ih, int minor,
 			AbstractFormula formula) {
@@ -62,20 +56,17 @@ public class SingleAssert extends InCodeAttribute {
 	}
 
 	/**
-	 * A constructor for tests only. It can be used only when we are sure that
-	 * bytecode itself won't change.
+	 * A constructor for tests only. It can be used only
+	 * when we are sure that bytecode itself won't change.
 	 * 
-	 * @param m -
-	 *            BCMethod containing this annotation,
-	 * @param pc -
-	 *            pc number of bytecode instruction that this annotation should
-	 *            be attached to. You should be sure that instruction of that pc
-	 *            really exists in given method.
-	 * @param minor -
-	 *            minor number of annotation, responsible for annotation
-	 *            ordering within single instruction.
-	 * @param f -
-	 *            assertion formula.
+	 * @param m - BCMethod containing this annotation,
+	 * @param pc - pc number of bytecode instruction that
+	 * 		this annotation should be attached to. You should
+	 * 		be sure that instruction of that pc really
+	 * 		exists in given method.
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
+	 * @param f - assertion formula.
 	 */
 	@Deprecated
 	public SingleAssert(BCMethod m, int pc, int minor, AbstractFormula f) {
@@ -84,18 +75,17 @@ public class SingleAssert extends InCodeAttribute {
 	}
 
 	/**
-	 * A constructor for tests only. It can be used only when we are sure that
-	 * bytecode itself won't change. Creates an empty assert (/assert true).
+	 * A constructor for tests only. It can be used only
+	 * when we are sure that bytecode itself won't change.
+	 * Creates an empty assert (/assert true).
 	 * 
-	 * @param m -
-	 *            BCMethod containing this annotation,
-	 * @param pc -
-	 *            pc number of bytecode instruction that this annotation should
-	 *            be attached to. You should be sure that instruction of that pc
-	 *            really exists in given method.
-	 * @param minor -
-	 *            minor number of annotation, responsible for annotation
-	 *            ordering within single instruction.
+	 * @param m - BCMethod containing this annotation,
+	 * @param pc - pc number of bytecode instruction that
+	 * 		this annotation should be attached to. You should
+	 * 		be sure that instruction of that pc really
+	 * 		exists in given method.
+	 * @param minor - minor number of annotation, responsible
+	 * 		for annotation ordering within single instruction.
 	 */
 	@Deprecated
 	public SingleAssert(BCMethod m, int pc, int minor) {
@@ -106,11 +96,10 @@ public class SingleAssert extends InCodeAttribute {
 	/**
 	 * Loads assertion content from AttributeReader.
 	 * 
-	 * @param ar -
-	 *            stream to load from.
-	 * @throws ReadAttributeException -
-	 *             if data left in <code>ar</code> doesn't represent correct
-	 *             assertion.
+	 * @param ar - stream to load from.
+	 * @throws ReadAttributeException - if data left
+	 * 		in <code>ar</code> doesn't represent correct
+	 * 		assertion.
 	 */
 	@Override
 	protected void load(AttributeReader ar) throws ReadAttributeException {
@@ -120,8 +109,7 @@ public class SingleAssert extends InCodeAttribute {
 	/**
 	 * Saves assertion content using AttributeWriter.
 	 * 
-	 * @param aw -
-	 *            stream to save to.
+	 * @param aw - stream to save to.
 	 */
 	@Override
 	protected void saveSingle(AttributeWriter aw) {
@@ -131,8 +119,7 @@ public class SingleAssert extends InCodeAttribute {
 	/**
 	 * This method should simply print annotation to a string.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}.
+	 * @param conf - see {@link BMLConfig}.
 	 * @return string representation of assertion.
 	 */
 	@Override
@@ -149,8 +136,8 @@ public class SingleAssert extends InCodeAttribute {
 	}
 
 	/**
-	 * @return Simple string represenatations of attribute, for use in debugger
-	 *         only.
+	 * @return Simple string represenatations of attribute,
+	 * 		for use in debugger only.
 	 */
 	@Override
 	public String toString() {

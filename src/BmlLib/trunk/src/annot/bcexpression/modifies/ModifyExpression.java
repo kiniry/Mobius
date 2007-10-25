@@ -11,67 +11,66 @@ import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
- * This class represents expressions that says what can be affected by some
- * code, eg. method, loop or block.
+ * This class represents expressions that says what can
+ * be affected by some code, eg. method, loop or block.
  * 
  * @author tomekb
  */
 public abstract class ModifyExpression extends BCExpression {
 
 	/**
-	 * This says that described code won't affect any variables.
+	 * This says that described code won't affect
+	 * any variables.
 	 */
 	public static final ModifiesNothing Nothing = new ModifiesNothing();
-
+	
 	/**
-	 * This says that described code can affect any variable. (or that we have
-	 * no information about what can be affected by described code).
+	 * This says that described code can affect any variable.
+	 * (or that we have no information about what can
+	 * be affected by described code).
 	 */
 	public static final ModifiesEverything Everything = new ModifiesEverything();
-
+	
 	/**
 	 * A standard constructor, for subclasses.
 	 * 
-	 * @param connector -
-	 *            type of this expression, as in <code>Code</code> interface.
+	 * @param connector - type of this expression,
+	 * 		as in <code>Code</code> interface.
 	 */
 	protected ModifyExpression(int connector) {
 		super(connector);
 	}
 
 	/**
-	 * A constructor from AttributeReader. It assumes that expression type
-	 * (connector, from <code>Code</code> interface) has been just loaded from
-	 * <code>ar</code>.
+	 * A constructor from AttributeReader. It assumes that
+	 * expression type (connector, from <code>Code</code>
+	 * interface) has been just loaded from <code>ar</code>.
 	 * 
-	 * @param ar -
-	 *            AttributeReader to load from.
-	 * @param root -
-	 *            type of this expression, eg. last byte read by <code>ar</code>.
-	 * @throws ReadAttributeException -
-	 *             if remainig data in input stream (<code>ar</code>)
-	 *             doesn't represent correct modify expression.
+	 * @param ar - AttributeReader to load from.
+	 * @param root - type of this expression, eg. last byte
+	 * 		read by <code>ar</code>.
+	 * @throws ReadAttributeException - if remainig data
+	 * 		in input stream (<code>ar</code>) doesn't
+	 * 		represent correct modify expression.
 	 */
-	protected ModifyExpression(AttributeReader ar, int root)
-			throws ReadAttributeException {
+	protected ModifyExpression(AttributeReader ar, int root) throws ReadAttributeException {
 		super(ar, root);
 	}
 
 	/**
-	 * Returns proper instance of ModifyExpression. Use this instead of creating
-	 * new instances yourself.
+	 * Returns proper instance of ModifyExpression. Use this
+	 * instead of creating new instances yourself.
 	 * 
-	 * @param ar -
-	 *            AttributeReader to load modifyExpression from. Next byte in
-	 *            it's input stream should be expression type, from
-	 *            <code>Code</code> interface.
+	 * @param ar - AttributeReader to load modifyExpression
+	 * 		from. Next byte in it's input stream should be
+	 * 		expression type, from <code>Code</code> interface.
 	 * @return rpoper instance of ModifyExpression.
-	 * @throws ReadAttributeException -
-	 *             if remaining data in <code>ar</code> doesn't represent
-	 *             correct modify expression.
+	 * @throws ReadAttributeException - if remaining data in
+	 * 		<code>ar</code> doesn't represent correct modify
+	 * 		expression.
 	 */
 	public static ModifyExpression getModifyExpression(AttributeReader ar)
-			throws ReadAttributeException {
+		throws ReadAttributeException {
 		int b = ar.readByte();
 		switch (b) {
 		case Code.MODIFIES_NOTHING:
@@ -84,8 +83,9 @@ public abstract class ModifyExpression extends BCExpression {
 	}
 
 	/**
-	 * Modify expression is assumed to be displayed at the root of the
-	 * BCExpression only, so it has the lowest priority.
+	 * Modify expression is assumed to be displayed at the
+	 * root of the BCExpression only, so it has the lowest
+	 * priority.
 	 */
 	@Override
 	protected int getPriority() {
@@ -93,11 +93,11 @@ public abstract class ModifyExpression extends BCExpression {
 	}
 
 	/**
-	 * Noone should need JavaType of Modify Expression. I will return here sth
-	 * if I will need JavaType of modify expression.
+	 * Noone should need JavaType of Modify Expression.
+	 * I will return here sth if I will need JavaType
+	 * of modify expression.
 	 * 
-	 * @throws RuntimeException -
-	 *             always.
+	 * @throws RuntimeException - always.
 	 */
 	@Override
 	protected JavaType1 checkType1() {
@@ -105,11 +105,11 @@ public abstract class ModifyExpression extends BCExpression {
 	}
 
 	/**
-	 * Noone should need JavaType of Modify Expression. I will return here sth
-	 * if I will need JavaType of modify expression.
+	 * Noone should need JavaType of Modify Expression.
+	 * I will return here sth if I will need JavaType
+	 * of modify expression.
 	 * 
-	 * @throws RuntimeException -
-	 *             always.
+	 * @throws RuntimeException - always.
 	 */
 	@Override
 	public JavaType1 getType() {

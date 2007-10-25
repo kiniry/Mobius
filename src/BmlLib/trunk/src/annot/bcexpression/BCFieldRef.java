@@ -13,39 +13,40 @@ import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
- * This class represents field reference occurence. One <code>BCFieldRef</code>
- * per one field reference occurence.
+ * This class represents field reference occurence.
+ * One <code>BCFieldRef</code> per one field reference
+ * occurence.
  * 
  * @author tomekb
  */
 public class BCFieldRef extends OldExpression {
 
 	/**
-	 * Index of FieldRef constant in constant pool. It's assumed that it won't
-	 * change.
+	 * Index of FieldRef constant in constant pool.
+	 * It's assumed that it won't change.
 	 */
 	private int cpIndex;
-
+	
 	/**
 	 * type of the field.
 	 */
 	private JavaType1 type;
-
+	
 	/**
 	 * name of the field.
 	 */
 	private String name;
-
+	
 	/**
 	 * A standard constructor.
 	 * 
-	 * @param cp -
-	 *            Constant pool containing BCEL's <code>ConstantFieldRef</code>
-	 *            constant. BCFieldRef must be related with index in primary
-	 *            constant pool.
-	 * @param cpIndex -
-	 *            index in <code>cp</code> where BCEL's
-	 *            <code>ConstantFieldRef</code> constant is beeing held.
+	 * @param cp - Constant pool containing BCEL's
+	 * 		<code>ConstantFieldRef</code> constant.
+	 * 		BCFieldRef must be related with index
+	 * 		in primary constant pool.
+	 * @param cpIndex - index in <code>cp</code> where
+	 * 		BCEL's <code>ConstantFieldRef</code> constant
+	 * 		is beeing held.
 	 */
 	public BCFieldRef(boolean isOld, BCConstantPool cp, int cpIndex) {
 		super(isOld);
@@ -55,13 +56,12 @@ public class BCFieldRef extends OldExpression {
 	/**
 	 * A constructor from AttributeReader.
 	 * 
-	 * @param ar -
-	 *            input stream to load from,
-	 * @param root -
-	 *            type of expression (last byte read from <code>ar</code>).
-	 * @throws ReadAttributeException -
-	 *             if remaining stream in <code>ar</code> doesn't represent
-	 *             proper position in constant pool.
+	 * @param ar - input stream to load from,
+	 * @param root - type of expression (last byte read
+	 * 		from <code>ar</code>).
+	 * @throws ReadAttributeException - if remaining stream
+	 * 		in <code>ar</code> doesn't represent proper
+	 * 		position in constant pool.
 	 */
 	public BCFieldRef(AttributeReader ar, int root)
 			throws ReadAttributeException {
@@ -70,28 +70,25 @@ public class BCFieldRef extends OldExpression {
 
 	/**
 	 * A 'getInstance' method; searches for proper BCEL's
-	 * <code>ConstantFieldRef</code> constant in given constant pool.
+	 * <code>ConstantFieldRef</code> constant in given
+	 * constant pool.
 	 * 
-	 * @param cp -
-	 *            constant pool to search in,
-	 * @param name -
-	 *            name of the constant to be searched for.
-	 * @return A new <code>BCFieldRef</code> insatnce, with name equal to the
-	 *         given one, or <b>null</b> in no proper constant could be found
-	 *         in <code>cp</code>.
+	 * @param cp - constant pool to search in,
+	 * @param name - name of the constant to be searched for.
+	 * @return A new <code>BCFieldRef</code> insatnce,
+	 * 		with name equal to the given one, or <b>null</b>
+	 * 		in no proper constant could be found
+	 * 		in <code>cp</code>.
 	 */
-	public static BCFieldRef getFieldOfName(boolean old, BCConstantPool cp,
-			String name) {
-		for (int i = 0; i < cp.size(); i++) {
+	public static BCFieldRef getFieldOfName(boolean old, BCConstantPool cp, String name) {
+		for (int i=0; i<cp.size(); i++) {
 			if (cp.getConstant(i) == null)
 				continue;
 			if (!(cp.getConstant(i) instanceof ConstantFieldref))
 				continue;
-			ConstantFieldref cfr = (ConstantFieldref) cp.getConstant(i);
-			ConstantNameAndType cnt = (ConstantNameAndType) cp.getConstant(cfr
-					.getNameAndTypeIndex());
-			ConstantUtf8 cu8 = (ConstantUtf8) cp
-					.getConstant(cnt.getNameIndex());
+			ConstantFieldref cfr = (ConstantFieldref)cp.getConstant(i);
+			ConstantNameAndType cnt = (ConstantNameAndType)cp.getConstant(cfr.getNameAndTypeIndex());
+			ConstantUtf8 cu8 = (ConstantUtf8)cp.getConstant(cnt.getNameIndex());
 			String cname = cu8.getBytes();
 			if (cname.equals(name))
 				return new BCFieldRef(old, cp, i);
@@ -102,24 +99,21 @@ public class BCFieldRef extends OldExpression {
 	/**
 	 * Loads name and type from constant pool.
 	 * 
-	 * @param cp -
-	 *            constant pool to load from,
-	 * @param cpIndex -
-	 *            index of BCEL's <code>ConstantFieldRef</code> constant,
-	 *            representing this field.
+	 * @param cp - constant pool to load from,
+	 * @param cpIndex - index of BCEL's
+	 * 		<code>ConstantFieldRef</code> constant,
+	 * 		representing this field.
 	 */
 	private void loadName(BCConstantPool cp, int cpIndex) {
 		this.cpIndex = cpIndex;
-		ConstantFieldref cfr = (ConstantFieldref) cp.getConstant(cpIndex);
-		ConstantNameAndType cnt = (ConstantNameAndType) cp.getConstant(cfr
-				.getNameAndTypeIndex());
-		ConstantUtf8 cu8 = (ConstantUtf8) cp.getConstant(cnt.getNameIndex());
+		ConstantFieldref cfr = (ConstantFieldref)cp.getConstant(cpIndex);
+		ConstantNameAndType cnt = (ConstantNameAndType)cp.getConstant(cfr.getNameAndTypeIndex());
+		ConstantUtf8 cu8 = (ConstantUtf8)cp.getConstant(cnt.getNameIndex());
 		name = cu8.getBytes();
-		ConstantUtf8 signature = (ConstantUtf8) cp.getConstant(cnt
-				.getSignatureIndex());
+		ConstantUtf8 signature = (ConstantUtf8)cp.getConstant(cnt.getSignatureIndex());
 		type = JavaType1.getJavaType(signature.getBytes());
 	}
-
+	
 	@Override
 	protected JavaType1 checkType2() {
 		return type;
@@ -136,8 +130,7 @@ public class BCFieldRef extends OldExpression {
 	}
 
 	@Override
-	protected void init() {
-	}
+	protected void init() {}
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
@@ -151,11 +144,9 @@ public class BCFieldRef extends OldExpression {
 		try {
 			loadName(ar.getConstantPool(), cpIndex);
 		} catch (ClassCastException e) {
-			throw new ReadAttributeException(
-					"invalid position in constant pool: " + cpIndex);
+			throw new ReadAttributeException("invalid position in constant pool: " + cpIndex);
 		} catch (NullPointerException n) {
-			throw new ReadAttributeException(
-					"invalid position in constant pool: " + cpIndex);
+			throw new ReadAttributeException("invalid position in constant pool: " + cpIndex);
 		}
 	}
 

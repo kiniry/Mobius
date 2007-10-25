@@ -11,8 +11,8 @@ import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
- * This class represents binary predicate of boolean return type and integer
- * subexpressions return types.
+ * This class represents binary predicate of boolean return
+ * type and integer subexpressions return types.
  * 
  * @author tomekb
  */
@@ -21,12 +21,9 @@ public class Predicate2Ar extends AbstractFormula {
 	/**
 	 * A standard constructor, used eg. in parser.
 	 * 
-	 * @param connector -
-	 *            type of predicate (connector),
-	 * @param left -
-	 *            left subexpression,
-	 * @param right -
-	 *            right subexpression.
+	 * @param connector - type of predicate (connector),
+	 * @param left - left subexpression,
+	 * @param right - right subexpression.
 	 */
 	public Predicate2Ar(int connector, BCExpression left, BCExpression right) {
 		super(connector, left, right);
@@ -35,13 +32,11 @@ public class Predicate2Ar extends AbstractFormula {
 	/**
 	 * A constructor from AttributeReader.
 	 * 
-	 * @param ar -
-	 *            stream to load from,
-	 * @param root -
-	 *            type of predicate (connector),
-	 * @throws ReadAttributeException -
-	 *             if connector + stream in AttributeReader don't represents
-	 *             correct binary predicate.
+	 * @param ar - stream to load from,
+	 * @param root - type of predicate (connector),
+	 * @throws ReadAttributeException - if connector + stream
+	 * 		in AttributeReader don't represents correct
+	 * 		binary predicate.
 	 * @see AbstractFormula#AbstractFormula(AttributeReader, int)
 	 */
 	public Predicate2Ar(AttributeReader ar, int root)
@@ -74,11 +69,10 @@ public class Predicate2Ar extends AbstractFormula {
 	/**
 	 * Prints this predicate to a String.
 	 * 
-	 * @param conf -
-	 *            see {@link BMLConfig}.
-	 * @return String representation of this predicate, without (block marks
-	 *         (used for line-breaking by prettyPrinter) and parenthness) at
-	 *         root.
+	 * @param conf - see {@link BMLConfig}.
+	 * @return String representation of this predicate,
+	 * 		without (block marks (used for line-breaking
+	 * 		by prettyPrinter) and parenthness) at root.
 	 */
 	@Override
 	protected String printCode1(BMLConfig conf) {
@@ -87,8 +81,8 @@ public class Predicate2Ar extends AbstractFormula {
 	}
 
 	/**
-	 * @return Simple String representation of this predicate, for debugging
-	 *         only.
+	 * @return Simple String representation of this
+	 * 		predicate, for debugging only.
 	 */
 	@Override
 	public String toString() {
@@ -101,16 +95,14 @@ public class Predicate2Ar extends AbstractFormula {
 	}
 
 	/**
-	 * Reads the predicate from an AttributeReader (except connector, thar has
-	 * been already read and set).
+	 * Reads the predicate from an AttributeReader (except
+	 * connector, thar has been already read and set).
 	 * 
-	 * @param ar -
-	 *            stream to load from,
-	 * @param root -
-	 *            connentor.
-	 * @throws ReadAttributeException -
-	 *             if connector + stream in <code>ar</code> doesn't represent
-	 *             correct binary predicate.
+	 * @param ar - stream to load from,
+	 * @param root - connentor.
+	 * @throws ReadAttributeException - if connector + stream
+	 * 		in <code>ar</code> doesn't represent correct
+	 * 		binary predicate.
 	 */
 	@Override
 	protected void read(AttributeReader ar, int root)
@@ -123,8 +115,7 @@ public class Predicate2Ar extends AbstractFormula {
 	/**
 	 * Writes this predicate to AttributeWirter.
 	 * 
-	 * @param aw -
-	 *            stream to save to.
+	 * @param aw - stream to save to.
 	 */
 	@Override
 	public void write(AttributeWriter aw) {
@@ -140,7 +131,8 @@ public class Predicate2Ar extends AbstractFormula {
 	}
 
 	/**
-	 * @return priority of this expression (from annot.textio.Priorities).
+	 * @return priority of this expression
+	 * 		(from annot.textio.Priorities).
 	 */
 	@Override
 	protected int getPriority() {
@@ -148,19 +140,22 @@ public class Predicate2Ar extends AbstractFormula {
 	}
 
 	/**
-	 * Checks if all subexpressions have correct types and return type of this
-	 * predicate.
+	 * Checks if all subexpressions have correct types
+	 * and return type of this predicate.
 	 * 
-	 * @return JavaBool, or null if it's invalid (if one of it's subexpression
-	 *         have wrong type or is invalid).
+	 * @return JavaBool, or null if it's invalid
+	 * 		(if one of it's subexpression have wrong type
+	 * 		or is invalid).
 	 */
 	@Override
 	protected JavaType1 checkType1() {
 		if ((getSubExpr(0).checkType() == null)
-				|| (getSubExpr(1).checkType() == null))
-			return null;
-		if (getSubExpr(0).getType().compareTypes(getSubExpr(1).getType()) == JavaType1.TYPES_UNRELATED)
-			return null;
+			|| (getSubExpr(1).checkType() == null))
+				return null;
+		if (getSubExpr(0).getType().compareTypes(
+			getSubExpr(1).getType())
+			== JavaType1.TYPES_UNRELATED)
+				return null;
 		if ((getConnector() != Code.EQ) && (getConnector() != Code.NOTEQ))
 			if (getSubExpr(0).getType() != JavaBasicType.JavaInt)
 				return null;

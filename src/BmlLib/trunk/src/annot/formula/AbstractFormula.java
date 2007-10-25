@@ -7,7 +7,8 @@ import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
 
 /**
- * This class represents all expressions that returns boolean value.
+ * This class represents all expressions that returns boolean
+ * value.
  * 
  * @author tomekb
  */
@@ -23,8 +24,8 @@ public abstract class AbstractFormula extends BCExpression {
 	/**
 	 * Another constructor for 0Arg formula.
 	 * 
-	 * @param connector -
-	 *            type of expression (from annot.io.Code interface).
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface).
 	 */
 	protected AbstractFormula(int connector) {
 		super(connector);
@@ -33,10 +34,9 @@ public abstract class AbstractFormula extends BCExpression {
 	/**
 	 * A Constructor for unary formula.
 	 * 
-	 * @param connector -
-	 *            type of expression (from annot.io.Code interface),
-	 * @param subExpr -
-	 *            subexpression.
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface),
+	 * @param subExpr - subexpression.
 	 */
 	protected AbstractFormula(int connector, BCExpression subExpr) {
 		super(connector, subExpr);
@@ -45,28 +45,23 @@ public abstract class AbstractFormula extends BCExpression {
 	/**
 	 * A constructor for binary formula.
 	 * 
-	 * @param connector -
-	 *            type of expression (from annot.io.Code interface),
-	 * @param left -
-	 *            left subexpression,
-	 * @param right -
-	 *            right subexrpession.
+	 * @param connector - type of expression
+	 * 		(from annot.io.Code interface),
+	 * @param left - left subexpression,
+	 * @param right - right subexrpession.
 	 */
-	protected AbstractFormula(int connector, BCExpression left,
-			BCExpression right) {
+	protected AbstractFormula(int connector, BCExpression left, BCExpression right) {
 		super(connector, left, right);
 	}
 
 	/**
 	 * A constructor from AttributeReader.
 	 * 
-	 * @param ar -
-	 *            stream to load from,
-	 * @param root -
-	 *            expression type (connector).
-	 * @throws ReadAttributeException -
-	 *             if connector + stream in <code>ar</code> doesn't represent
-	 *             any expression from constructing subclass.
+	 * @param ar - stream to load from,
+	 * @param root - expression type (connector).
+	 * @throws ReadAttributeException - if connector + stream
+	 * 		in <code>ar</code> doesn't represent any
+	 * 		expression from constructing subclass.
 	 * @see BCExpression#BCExpression(AttributeReader, int)
 	 */
 	protected AbstractFormula(AttributeReader ar, int root)

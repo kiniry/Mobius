@@ -7,8 +7,8 @@ import annot.io.ReadAttributeException;
 import annot.textio.IDisplayStyle;
 
 /**
- * This class represents "assert table" method attribute. It is used only in
- * saving to / loading from JavaClass.
+ * This class represents "assert table" method attribute.
+ * It is used only in saving to / loading from JavaClass.
  * 
  * @author tomekb
  */
@@ -17,12 +17,11 @@ public class AssertTable extends BCAttributeTable {
 	/**
 	 * A constructor.
 	 * 
-	 * @param m -
-	 *            method containing this attribute,
-	 * @param parent -
-	 *            BCAttributeMap containing its attributes. This attribute can
-	 *            only save to / load atrtbutes from BCEL's Unknown attribute,
-	 *            it doesn't store them itself.
+	 * @param m - method containing this attribute,
+	 * @param parent - BCAttributeMap containing
+	 * 		its attributes. This attribute can only
+	 * 		save to / load atrtbutes from BCEL's Unknown
+	 * 		attribute, it doesn't store them itself.
 	 * @see BCAttributeTable#BCAttributeTable(BCMethod, BCAttributeMap)
 	 */
 	public AssertTable(BCMethod m, BCAttributeMap parent) {
@@ -32,13 +31,11 @@ public class AssertTable extends BCAttributeTable {
 	/**
 	 * Loads single assert from a file.
 	 * 
-	 * @param m -
-	 *            a method containing this attribute,
-	 * @param ar -
-	 *            a stream to load the assert from.
-	 * @throws ReadAttributeException -
-	 *             if data left in <code>ar</code> doesn't represent a correct
-	 *             assert.
+	 * @param m - a method containing this attribute,
+	 * @param ar - a stream to load the assert from.
+	 * @throws ReadAttributeException - if data left
+	 * 		in <code>ar</code> doesn't represent a correct
+	 * 		assert.
 	 */
 	@Override
 	protected SingleAssert loadSingle(BCMethod m, AttributeReader ar)
@@ -57,7 +54,7 @@ public class AssertTable extends BCAttributeTable {
 	}
 
 	/**
-	 * @return attribute type of a single annotation.
+	 * @return attribute type of a single annotation. 
 	 */
 	@Override
 	protected int singleType() {

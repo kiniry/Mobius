@@ -1,10 +1,11 @@
 package test;
 
 /**
- * This class contains absolute paths used for tests. <code>path</code>
- * constant should be set to <code>bin</code> directory of this library, and
- * <code>tmp_path</code> should be set to an temporal directory with read and
- * write permissions (for storing temporal .class files).
+ * This class contains absolute paths used for tests.
+ * <code>path</code> constant should be set to <code>bin</code>
+ * directory of this library, and <code>tmp_path</code>
+ * should be set to an temporal directory with read and write
+ * permissions (for storing temporal .class files).
  * 
  * @author tomekb
  */

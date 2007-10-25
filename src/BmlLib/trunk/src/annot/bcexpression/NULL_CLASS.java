@@ -8,7 +8,8 @@ import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
- * This class represents <code>null</code> value. Singleton.
+ * This class represents <code>null</code> value.
+ * Singleton.
  * 
  * @author tomekb
  */
@@ -17,9 +18,8 @@ public class NULL_CLASS extends BCExpression {
 	/**
 	 * A private constructor (this is a singleton).
 	 */
-	private NULL_CLASS() {
-	}
-
+	private NULL_CLASS() {}
+	
 	/**
 	 * The only null instance.
 	 */
@@ -41,8 +41,7 @@ public class NULL_CLASS extends BCExpression {
 	}
 
 	@Override
-	protected void init() {
-	}
+	protected void init() {}
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
@@ -52,8 +51,8 @@ public class NULL_CLASS extends BCExpression {
 	@Override
 	protected void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
-		throw new ReadAttributeException("There is nothing"
-				+ " to read for null expression.");
+		throw new ReadAttributeException("There is nothing" +
+			" to read for null expression.");
 	}
 
 	@Override
