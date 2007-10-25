@@ -599,16 +599,16 @@ public class Lifter extends EscNodeBuilder
 			}
 			if (fn == symNewObj) {
 				return dumpBuilder.buildNewObject((SMap)args[0].dump(), args[1].dumpAny(), (SMap)args[2].dump(),
-						args[3].dumpRef());
+						args[3].dumpValue());
 			}
 			if (fn == symDynSelect){
-				return dumpBuilder.buildDynSelect((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue());
+				return dumpBuilder.buildDynSelect((SMap)args[0].dump(), args[1].dumpValue(), args[2].dumpValue());
 			}
       if (fn == symDynLoc){
-        return dumpBuilder.buildDynLoc((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue());
+        return dumpBuilder.buildDynLoc((SMap)args[0].dump(), args[1].dumpValue(), args[2].dumpValue());
       }
 			if (fn == symDynStore){
-				return dumpBuilder.buildDynStore((SMap)args[0].dump(), args[1].dumpRef(), args[2].dumpValue(), args[3].dumpValue());
+				return dumpBuilder.buildDynStore((SMap)args[0].dump(), args[1].dumpValue(), args[2].dumpValue(), args[3].dumpValue());
 			}
 			
 			if (fn == symArrSelect){
@@ -1022,13 +1022,13 @@ public class Lifter extends EscNodeBuilder
     
     // mobius direct vcgen specific constructs
     /** symbol to mean a new object has been created  oldHeap -> type -> obj -> heap -> newloc -> pred  */
-    public FnSymbol symNewObj = registerFnSymbol("%newObj", new Sort[] { sortMap, sortType, sortMap, sortRef }, sortPred);
+    public FnSymbol symNewObj = registerFnSymbol("%newObj", new Sort[] { sortMap, sortType, sortMap, sortValue }, sortPred);
     /** symbol for dynamic fields select Map -> Ref -> Name -> Value */
-    public FnSymbol symDynSelect = registerFnSymbol("%dynSelect", new Sort[] { sortMap, sortRef, sortRef }, sortValue);
+    public FnSymbol symDynSelect = registerFnSymbol("%dynSelect", new Sort[] { sortMap, sortValue, sortRef }, sortValue);
     /** symbol for dynamic fields select Map -> Ref -> Name -> Value */
-    public FnSymbol symDynLoc = registerFnSymbol("%dynLoc", new Sort[] { sortMap, sortRef, sortRef }, sortRef);
+    public FnSymbol symDynLoc = registerFnSymbol("%dynLoc", new Sort[] { sortMap, sortValue, sortRef }, sortRef);
     /** symbol for dynamic fields store Map -> Ref -> Name -> Value -> Map */
-    public FnSymbol symDynStore = registerFnSymbol("%dynStore", new Sort[] { sortMap, sortRef, sortRef, sortValue }, sortMap);
+    public FnSymbol symDynStore = registerFnSymbol("%dynStore", new Sort[] { sortMap, sortValue, sortRef, sortValue }, sortMap);
     /** symbol to mean a new array has been created */
     public FnSymbol symNewArray = registerFnSymbol("%newArray", new Sort[] { sortMap, sortType, sortMap, sortRef, sortInt}, sortPred);
     /** symbol for array select (heap -> ref -> int -> value) */
@@ -1085,11 +1085,11 @@ public class Lifter extends EscNodeBuilder
 	public SPred buildIsTrue(SBool val) { throw new Die(); }
 
 	// Mobius specific stuff...
-	public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) { throw new Die(); }
+	public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SValue r) { throw new Die(); }
 	public SAny buildSort(Sort s) { throw new Die(); }
-	public SValue buildDynSelect(SMap map, SRef obj, SAny field) {throw new Die(); }
-	public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {throw new Die(); }
-  public SRef buildDynLoc(SMap map, SRef obj, SAny field) {throw new Die(); }
+	public SValue buildDynSelect(SMap map, SValue obj, SAny field) {throw new Die(); }
+	public SMap buildDynStore(SMap map, SValue obj, SAny field, SValue val) {throw new Die(); }
+  public SRef buildDynLoc(SMap map, SValue obj, SAny field) {throw new Die(); }
   public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) { throw new Die(); }
 	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {throw new Die(); }
 	public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val) {throw new Die(); }

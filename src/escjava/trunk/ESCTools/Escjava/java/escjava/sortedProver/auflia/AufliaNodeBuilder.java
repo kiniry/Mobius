@@ -540,19 +540,19 @@ public class AufliaNodeBuilder extends EscNodeBuilder
 	}
 	
 	// Mobius stuff
-	public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) {
+	public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SValue r) {
 		throw new UnsupportedOperationException();
 	}
 	public SAny buildSort(Sort s) {
 		throw new UnsupportedOperationException();
 	}
-	public SValue buildDynSelect(SMap map, SRef obj, SAny field) {
+	public SValue buildDynSelect(SMap map, SValue obj, SAny field) {
 		throw new UnsupportedOperationException();
 	}
-  public SRef buildDynLoc(SMap map, SRef obj, SAny field) {
+  public SRef buildDynLoc(SMap map, SValue obj, SAny field) {
     throw new UnsupportedOperationException();
   }
-	public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val) {
+	public SMap buildDynStore(SMap map, SValue obj, SAny field, SValue val) {
 		throw new UnsupportedOperationException();
   }
 	public SValue buildArrSelect(SMap map, SRef obj, SInt idx) {

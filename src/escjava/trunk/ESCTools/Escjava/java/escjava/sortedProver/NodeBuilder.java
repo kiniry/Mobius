@@ -437,11 +437,11 @@ public abstract class NodeBuilder
 	abstract public SPred buildIsTrue(SBool val);
 	
 	// Mobius specific stuff
-	abstract public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SRef r) ;
+	abstract public SPred buildNewObject(SMap oldh, SAny type, SMap heap, SValue r) ;
 	abstract public SAny buildSort(Sort s);
-	abstract public SValue buildDynSelect(SMap map, SRef obj, SAny field);
-  abstract public SRef buildDynLoc(SMap map, SRef obj, SAny field);
-	abstract public SMap buildDynStore(SMap map, SRef obj, SAny field, SValue val);
+	abstract public SValue buildDynSelect(SMap map, SValue obj, SAny field);
+  abstract public SRef buildDynLoc(SMap map, SValue obj, SAny field);
+	abstract public SMap buildDynStore(SMap map, SValue obj, SAny field, SValue val);
 	abstract public SPred buildNewArray(SMap oldh, SAny type, SMap heap, SRef r, SInt len) ;
 	abstract public SValue buildArrSelect(SMap map, SRef obj, SInt idx);
 	abstract public SMap buildArrStore(SMap map, SRef obj, SInt idx, SValue val);
