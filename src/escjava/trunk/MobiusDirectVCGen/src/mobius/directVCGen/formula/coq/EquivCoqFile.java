@@ -25,7 +25,7 @@ public class EquivCoqFile extends CoqFile {
     final PrintStream out = getOut();
     writeHeader();
 
-    out.println("Lemma l :\nforall empty_os: OperandStack.t, forall empty_lv: LocalVar.t, \n" +
+    out.println("Lemma l :\n" +
         "   " + term + "\n" +
         "<-> \n" +
         "   interp_swp BicoMapAnnotations.anno_prog BicoMapProgram.program\n" + 
@@ -33,7 +33,7 @@ public class EquivCoqFile extends CoqFile {
                                     classname + "Signature." + meth + " " +
                                     classname + "." + meth + "Method " + 
                                     classname + "Annotations." + meth + ".spec).");
-    out.println("Proof with auto.");
+    out.println("Proof with assumption.");
     out.print(getProof());
     out.println("Qed.");
   }
