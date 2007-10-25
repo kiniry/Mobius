@@ -8,8 +8,8 @@ import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
- * This class represents an integer literal. Each occurence
- * of the same literal are new NumberLiteral object.
+ * This class represents an integer literal. Each occurence of the same literal
+ * are new NumberLiteral object.
  * 
  * @author tomekb
  */
@@ -33,10 +33,12 @@ public class NumberLiteral extends AbstractIntExpression {
 	/**
 	 * A constructor from AttributeReader.
 	 * 
-	 * @param ar - stream to load from,
-	 * @param root - expression type (connector).
-	 * @throws ReadAttributeException - if stream is empty
-	 * 		(less than 4 bytes left).
+	 * @param ar -
+	 *            stream to load from,
+	 * @param root -
+	 *            expression type (connector).
+	 * @throws ReadAttributeException -
+	 *             if stream is empty (less than 4 bytes left).
 	 * @see BCExpression#BCExpression(AttributeReader, int)
 	 */
 	public NumberLiteral(AttributeReader ar, int root)
@@ -53,8 +55,8 @@ public class NumberLiteral extends AbstractIntExpression {
 	}
 
 	/**
-	 * @return Simple String representation of this
-	 * 		expression, for debugging only.
+	 * @return Simple String representation of this expression, for debugging
+	 *         only.
 	 */
 	@Override
 	public String toString() {
@@ -64,10 +66,12 @@ public class NumberLiteral extends AbstractIntExpression {
 	/**
 	 * Reads the exression from an AttributeReader.
 	 * 
-	 * @param ar - stream to load from,
-	 * @param root - connentor (unused).
-	 * @throws ReadAttributeException - if stream is empty
-	 * 		(less than 4 bytes left).
+	 * @param ar -
+	 *            stream to load from,
+	 * @param root -
+	 *            connentor (unused).
+	 * @throws ReadAttributeException -
+	 *             if stream is empty (less than 4 bytes left).
 	 */
 	@Override
 	protected void read(AttributeReader ar, int root)
@@ -78,7 +82,8 @@ public class NumberLiteral extends AbstractIntExpression {
 	/**
 	 * Writes this expression to AttributeWirter.
 	 * 
-	 * @param aw - stream to save to.
+	 * @param aw -
+	 *            stream to save to.
 	 */
 	@Override
 	public void write(AttributeWriter aw) {
@@ -94,11 +99,9 @@ public class NumberLiteral extends AbstractIntExpression {
 	}
 
 	/**
-	 * NumberLiteral has no subexpressions, so it has
-	 * the highest priority.
+	 * NumberLiteral has no subexpressions, so it has the highest priority.
 	 * 
-	 * @return priority of this expression
-	 * 		(from annot.textio.Priorities).
+	 * @return priority of this expression (from annot.textio.Priorities).
 	 */
 	@Override
 	protected int getPriority() {

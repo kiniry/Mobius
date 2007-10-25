@@ -10,9 +10,8 @@ import annot.io.Code;
 public abstract class Priorities implements Code {
 
 	/**
-	 * Expression's priority array, from expression's type
-	 * (connector, from {@link Code} interface) to it's
-	 * priority.
+	 * Expression's priority array, from expression's type (connector, from
+	 * {@link Code} interface) to it's priority.
 	 */
 	private static int[] priorities;
 
@@ -67,11 +66,11 @@ public abstract class Priorities implements Code {
 	}
 
 	/**
-	 * Returns priority of expression with given type
-	 * (connector). Sets all priorities at first call.
+	 * Returns priority of expression with given type (connector). Sets all
+	 * priorities at first call.
 	 * 
-	 * @param opcode - expression type (connector), from
-	 * 		{@link Code} interface.
+	 * @param opcode -
+	 *            expression type (connector), from {@link Code} interface.
 	 * @return Priority of expressions of given type.
 	 */
 	public static int getPriority(int opcode) {

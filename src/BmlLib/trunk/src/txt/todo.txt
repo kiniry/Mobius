@@ -1,11 +1,12 @@
 TODO: (- : to do, + : done, * : optional, > : in progress)
 
 + ...
-- add expression iterators:
-	- expression level,
-	- attribute level,
-	- method level,
-	- class level.
++ add expression iterators:
+	+ expression level,
+	+ attribute level,
+	+ class level,
+	+ write JavaDocs,
+	+ add test cases.
 > add expressions,
 	+ add Aritmethic expression,
 	+ add conditional expression,
@@ -14,7 +15,7 @@ TODO: (- : to do, + : done, * : optional, > : in progress)
 	+ add field access:
 		+ add field ref,
 		+ add full qualified name.
-	- add olds,
+	+ add olds,
 	- add modifies expressions.
 - add attributes:
 	- add LoopSpecification,

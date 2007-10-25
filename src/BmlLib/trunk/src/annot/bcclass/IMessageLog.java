@@ -1,16 +1,16 @@
 package annot.bcclass;
 
 /**
- * This interface contains message priorities and bitmask
- * to control witch type of messages should be displayed.
+ * This interface contains message priorities and bitmask to control witch type
+ * of messages should be displayed.
  * 
  * @see MLog
  * @author tomekb
  */
 public interface IMessageLog {
-	
+
 	// message type bit masks:
-	
+
 	/**
 	 * Displays all messages.
 	 */
@@ -21,17 +21,14 @@ public interface IMessageLog {
 	 */
 	public static final int PDEBUG = 254;
 
-	
 	/**
-	 * Normal verbosity level for developing
-	 * <code>bmllib</code> + displays parser
-	 * failures and parsing progress.
+	 * Normal verbosity level for developing <code>bmllib</code> + displays
+	 * parser failures and parsing progress.
 	 */
 	public static final int PPARSER = 252;
 
 	/**
-	 * Normal verbosity level for developing
-	 * <code>bmllib</code>.
+	 * Normal verbosity level for developing <code>bmllib</code>.
 	 */
 	public static final int PNORMAL = 236;
 
@@ -49,27 +46,25 @@ public interface IMessageLog {
 	// higher it's priority:
 
 	/**
-	 * For debug message that appear very frequently
-	 * (or that are very long), slowing down the library.
+	 * For debug message that appear very frequently (or that are very long),
+	 * slowing down the library.
 	 */
 	public static final int PDebug2 = 1;
 
 	/**
-	 * For debug message that appear frequently,
-	 * trashing the console.
+	 * For debug message that appear frequently, trashing the console.
 	 */
 	public static final int PDebug = 2;
 
 	/**
-	 * For debug message that occures about once per
-	 * attribute operation (adding / modifying / removing
-	 *  / saving / loading / etc).
+	 * For debug message that occures about once per attribute operation (adding /
+	 * modifying / removing / saving / loading / etc).
 	 */
 	public static final int PInfo = 4;
 
 	/**
-	 * For debug message that appears rarely, about once per
-	 * class operation (saving / loading / etc).
+	 * For debug message that appears rarely, about once per class operation
+	 * (saving / loading / etc).
 	 */
 	public static final int PNotice = 8;
 
@@ -77,15 +72,15 @@ public interface IMessageLog {
 	 * For displaying messages while parsing with ANTLR
 	 */
 	public static final int PParser = 16;
-	
+
 	/**
 	 * For displaing progress while saving / loading
 	 */
 	public static final int PProgress = 32;
 
 	/**
-	 * Indicates that it's time to implement missing
-	 * code branch to make this test case run correctly.
+	 * Indicates that it's time to implement missing code branch to make this
+	 * test case run correctly.
 	 */
 	public static final int PTodo = 64;
 

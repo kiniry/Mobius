@@ -6,9 +6,8 @@ import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 
 /**
- * This class represents basic return type of an expression.
- * The constructor is private, so use
- * {@link JavaType1#getJavaType(String)} instead.
+ * This class represents basic return type of an expression. The constructor is
+ * private, so use {@link JavaType1#getJavaType(String)} instead.
  * 
  * @author tomekb
  */
@@ -22,7 +21,8 @@ public class JavaBasicType extends JavaType1 {
 	/**
 	 * A private constructor.
 	 * 
-	 * @param name - string representation of JavaType.
+	 * @param name -
+	 *            string representation of JavaType.
 	 */
 	private JavaBasicType(String name) {
 		this.name = name;
@@ -36,7 +36,8 @@ public class JavaBasicType extends JavaType1 {
 	/**
 	 * int type.
 	 */
-	public static final JavaBasicType JavaInt = new JavaBasicType(IDisplayStyle.jt_int);
+	public static final JavaBasicType JavaInt = new JavaBasicType(
+			IDisplayStyle.jt_int);
 
 	/**
 	 * boolean type.
@@ -47,7 +48,8 @@ public class JavaBasicType extends JavaType1 {
 	/**
 	 * Displays JavaType to a String.
 	 * 
-	 * @param conf - see {@link BMLConfig}.
+	 * @param conf -
+	 *            see {@link BMLConfig}.
 	 * @return String representation of JavaType.
 	 * @see BCExpression#printCode1(BMLConfig)
 	 */
@@ -57,8 +59,8 @@ public class JavaBasicType extends JavaType1 {
 	}
 
 	/**
-	 * @return Simple String representation of this
-	 * 		JavaType, for debugging only.
+	 * @return Simple String representation of this JavaType, for debugging
+	 *         only.
 	 */
 	@Override
 	public String toString() {
@@ -68,7 +70,8 @@ public class JavaBasicType extends JavaType1 {
 	/**
 	 * Writes this expression to AttributeWirter.
 	 * 
-	 * @param aw - stream to save to.
+	 * @param aw -
+	 *            stream to save to.
 	 */
 	@Override
 	public void write(AttributeWriter aw) {

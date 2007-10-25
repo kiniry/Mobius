@@ -16,8 +16,8 @@ import annot.textio.IDisplayStyle;
 import annot.textio.Priorities;
 
 /**
- * This class represents a quantifier with bound variable
- * declarations and formula. 
+ * This class represents a quantifier with bound variable declarations and
+ * formula.
  * 
  * @author tomekb
  */
@@ -29,13 +29,12 @@ public class QuantifiedFormula extends AbstractFormula {
 	private Vector<BoundVar> vars;
 
 	/**
-	 * A standard constructor, used by parser. After creating
-	 * QuantifiedFormula this way, you must add all it's
-	 * bound variables and set it's formula, before using
-	 * this expression.
+	 * A standard constructor, used by parser. After creating QuantifiedFormula
+	 * this way, you must add all it's bound variables and set it's formula,
+	 * before using this expression.
 	 * 
-	 * @param connector - type of quantifier
-	 * 		(eg. Code.EXISTS, Code.FORALL).
+	 * @param connector -
+	 *            type of quantifier (eg. Code.EXISTS, Code.FORALL).
 	 */
 	public QuantifiedFormula(int connector) {
 		super(connector);
@@ -44,11 +43,13 @@ public class QuantifiedFormula extends AbstractFormula {
 	/**
 	 * A constructor from AttributeReader.
 	 * 
-	 * @param ar - stream to load from,
-	 * @param root - quantifier type (connector).
-	 * @throws ReadAttributeException - if connector + stream
-	 * 		in <code>ar</code> doesn't represent correct
-	 * 		quantified expression.
+	 * @param ar -
+	 *            stream to load from,
+	 * @param root -
+	 *            quantifier type (connector).
+	 * @throws ReadAttributeException -
+	 *             if connector + stream in <code>ar</code> doesn't represent
+	 *             correct quantified expression.
 	 * @see AbstractFormula#AbstractFormula(AttributeReader, int)
 	 */
 	public QuantifiedFormula(AttributeReader ar, int root)
@@ -57,8 +58,7 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * @return String representation of quantifier
-	 * 		(connector)
+	 * @return String representation of quantifier (connector)
 	 */
 	private String printRoot() {
 		switch (getConnector()) {
@@ -76,10 +76,10 @@ public class QuantifiedFormula extends AbstractFormula {
 	/**
 	 * Prints quantifier with its formula to a String.
 	 * 
-	 * @param conf - see {@link BMLConfig}.
-	 * @return String representation of expression,
-	 * 		without (block marks (used for line-breaking
-	 * 		by prettyPrinter) and parenthness) at root.
+	 * @param conf -
+	 *            see {@link BMLConfig}.
+	 * @return String representation of expression, without (block marks (used
+	 *         for line-breaking by prettyPrinter) and parenthness) at root.
 	 */
 	@Override
 	protected String printCode1(BMLConfig conf) {
@@ -88,7 +88,7 @@ public class QuantifiedFormula extends AbstractFormula {
 		Iterator<BoundVar> iter = vars.iterator();
 		while (iter.hasNext()) {
 			BoundVar bv = iter.next();
-			JavaBasicType jbt = (JavaBasicType)bv.getType();
+			JavaBasicType jbt = (JavaBasicType) bv.getType();
 			code += " " + jbt.printCode1(conf);// !
 			code += " " + bv.printCode1(conf);// !
 		}
@@ -102,8 +102,8 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * @return Simple String representation of this
-	 * 		expression, for debugging only.
+	 * @return Simple String representation of this expression, for debugging
+	 *         only.
 	 */
 	@Override
 	public String toString() {
@@ -116,14 +116,16 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * Reads the bound variable declarations and quantified
-	 * formula from an AttributeReader.
+	 * Reads the bound variable declarations and quantified formula from an
+	 * AttributeReader.
 	 * 
-	 * @param ar - stream to load from,
-	 * @param root - connentor (quantifier).
-	 * @throws ReadAttributeException - if connector + stream
-	 * 		in <code>ar</code> doesn't represent correct
-	 * 		quantified expression.
+	 * @param ar -
+	 *            stream to load from,
+	 * @param root -
+	 *            connentor (quantifier).
+	 * @throws ReadAttributeException -
+	 *             if connector + stream in <code>ar</code> doesn't represent
+	 *             correct quantified expression.
 	 */
 	@Override
 	protected void read(AttributeReader ar, int root)
@@ -154,9 +156,9 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * Changes connector between new ones (for new .class file
-	 * format, with bound variable names) and old one,
-	 * depending on {@link BoundVar#goWriteVarNames} flag.
+	 * Changes connector between new ones (for new .class file format, with
+	 * bound variable names) and old one, depending on
+	 * {@link BoundVar#goWriteVarNames} flag.
 	 * 
 	 * @return corrected connector.
 	 */
@@ -178,7 +180,8 @@ public class QuantifiedFormula extends AbstractFormula {
 	/**
 	 * Writes this expression to AttributeWirter.
 	 * 
-	 * @param aw - stream to save to.
+	 * @param aw -
+	 *            stream to save to.
 	 */
 	@Override
 	public void write(AttributeWriter aw) {
@@ -212,8 +215,7 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * @return priority of this expression
-	 * 		(from annot.textio.Priorities).
+	 * @return priority of this expression (from annot.textio.Priorities).
 	 */
 	@Override
 	protected int getPriority() {
@@ -221,12 +223,11 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * Checks if subexpression has correct type
-	 * and return type of this expression.
+	 * Checks if subexpression has correct type and return type of this
+	 * expression.
 	 * 
-	 * @return JavaBool or null if it's invalid
-	 * 		(if it's subexpression have wrong type
-	 * 		or is invalid).
+	 * @return JavaBool or null if it's invalid (if it's subexpression have
+	 *         wrong type or is invalid).
 	 */
 	@Override
 	protected JavaType1 checkType1() {
@@ -236,14 +237,14 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * Adds given bound variable to this formula.
-	 * This should be called after creating QuantifiedFormula
-	 * using {@link #QuantifiedFormula(int)} constructor,
-	 * but before setting its formula.
+	 * Adds given bound variable to this formula. This should be called after
+	 * creating QuantifiedFormula using {@link #QuantifiedFormula(int)}
+	 * constructor, but before setting its formula.
 	 * 
-	 * @param bv - bound variable to be added. It should
-	 * 		be a newly created variable, not recived using
-	 * 		{@link BoundVar#getBoundVar(AttributeReader)}.
+	 * @param bv -
+	 *            bound variable to be added. It should be a newly created
+	 *            variable, not recived using
+	 *            {@link BoundVar#getBoundVar(AttributeReader)}.
 	 */
 	public void addVariable(BoundVar bv) {
 		if (getSubExpr(0) != null)
@@ -252,11 +253,11 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * Sets a quantified formula. This should be called after
-	 * all bound variables have been added, but before using
-	 * this expression.
+	 * Sets a quantified formula. This should be called after all bound
+	 * variables have been added, but before using this expression.
 	 * 
-	 * @param expression - formula to be set.
+	 * @param expression -
+	 *            formula to be set.
 	 */
 	public void setFormula(BCExpression expression) {
 		if (getSubExpr(0) != null)
@@ -265,9 +266,10 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * @param index - index of bound variable bound by this
-	 * 		quantifier, from left to right, with 0 for
-	 * 		the left-most bound variable of this formula.
+	 * @param index -
+	 *            index of bound variable bound by this quantifier, from left to
+	 *            right, with 0 for the left-most bound variable of this
+	 *            formula.
 	 * @return Bound variable at given index.
 	 */
 	public BoundVar getVar(int index) {

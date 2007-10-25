@@ -2,42 +2,30 @@ package annot.bcexpression;
 
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
-import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
-/**
- * This class represents <code>null</code> value. Singleton.
- * 
- * @author tomekb
- */
-public class NULL_CLASS extends BCExpression {
+public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 
-	/**
-	 * A private constructor (this is a singleton).
-	 */
-	private NULL_CLASS() {
+	public ExpressionRoot(T subExpression) {
+		this.setSubExprCount(1);
+		this.setSubExpr(0, subExpression);
 	}
-
-	/**
-	 * The only null instance.
-	 */
-	public static final NULL_CLASS NULL = new NULL_CLASS();
 
 	@Override
 	protected JavaType1 checkType1() {
-		return JavaReferenceType.ANY;
+		return getSubExpr(0).checkType();
 	}
 
 	@Override
 	protected int getPriority() {
-		return Priorities.LEAF;
+		return Priorities.MAX_PRI;
 	}
 
 	@Override
 	public JavaType1 getType() {
-		return JavaReferenceType.ANY;
+		return getSubExpr(0).getType();
 	}
 
 	@Override
@@ -46,24 +34,28 @@ public class NULL_CLASS extends BCExpression {
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
-		return "null";
+		return getSubExpr(0).printCode(conf);
 	}
 
 	@Override
 	protected void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
-		throw new ReadAttributeException("There is nothing"
-				+ " to read for null expression.");
+		getSubExpr(0).read(ar, root);
 	}
 
 	@Override
 	public String toString() {
-		return "null";
+		return getSubExpr(0).toString();
 	}
 
 	@Override
 	public void write(AttributeWriter aw) {
-		aw.writeByte(Code.NULL);
+		getSubExpr(0).write(aw);
+	}
+
+	@SuppressWarnings("unchecked")
+	public T getExpression() {
+		return (T) getSubExpr(0);
 	}
 
 }

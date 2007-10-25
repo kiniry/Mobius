@@ -1,8 +1,7 @@
 package test;
 
 /**
- * Another example for tests.
- * Should not be changed (tests may stop working).
+ * Another example for tests. Should not be changed (tests may stop working).
  * 
  * @author tomekb
  */

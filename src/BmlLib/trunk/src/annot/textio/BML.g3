@@ -460,16 +460,14 @@ primaryExpr returns [BCExpression ast] :
 	| MINUS min=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $min.ast);}
 	| PLUS px=primaryExpr {$ast = $px.ast;}
 	| LOG_NOT p=primaryExpr {$ast = new Formula(Code.NOT, $p.ast);}
-	| PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
 	| FALSE {$ast = Predicate0Ar.FALSE;}
 	| TRUE {$ast = Predicate0Ar.TRUE;}
+	| RESULT {if (m == null) {reportError(null);} else {$ast = m.getResult();}}
 	| NULL {$ast = NULL_CLASS.NULL;}
 	| THIS {$ast = bcc.getTHIS(false);}
-	| RESULT {if (m == null) {
-			reportError(null);
-		} else {
-			$ast = m.getResult();
-		}}
+	| OLD_THIS {$ast = bcc.getTHIS(true);}
+	| OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD(Code.OLD, $e1.ast);}
+	| PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
 	;
 
 localVar returns [BCLocalVariable lv] :
@@ -555,9 +553,11 @@ BITWISEXOR: '^';
 COND: '?';
 NULL: 'null'|'NULL';
 THIS: 'this'|'THIS';
+OLD_THIS: 'old_this'|'OLD_THIS';
 RESULT: '\\result';
 LV: 'lv';
 DOT: '.';
+OLD: 'old'|'OLD';
 
 NAT: ('0'..'9')+;
 IDENT: ('a'..'z'|'A'..'Z')+;

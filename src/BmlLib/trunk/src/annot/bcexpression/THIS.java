@@ -9,8 +9,8 @@ import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
- * This class represents <code>'this'</code> expression.
- * One <code>THIS</code> per class.
+ * This class represents <code>'this'</code> expression. One <code>THIS</code>
+ * per class.
  * 
  * @author tomekb
  */
@@ -20,12 +20,13 @@ public class THIS extends OldExpression {
 	 * BCClass this expression represents.
 	 */
 	private BCClass bcc;
-	
+
 	/**
-	 * A construcotr for BCClass initialization only. Later,
-	 * use {@link BCClass#getTHIS()} instead.
+	 * A construcotr for BCClass initialization only. Later, use
+	 * {@link BCClass#getTHIS()} instead.
 	 * 
-	 * @param bcc - initializing class.
+	 * @param bcc -
+	 *            initializing class.
 	 */
 	public THIS(boolean isOld, BCClass bcc) {
 		super(isOld);
@@ -33,7 +34,7 @@ public class THIS extends OldExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType1 checkType2() {
 		return getType();
 	}
 
@@ -48,28 +49,29 @@ public class THIS extends OldExpression {
 	}
 
 	@Override
-	protected void init() {}
+	protected void init() {
+	}
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
-		return "this";
+		return isOld() ? "old_this" : "this";
 	}
 
 	@Override
 	protected void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
-		throw new ReadAttributeException("'read' method" +
-			" unavaliable, use BCClass#getTHIS() instead.");
+		throw new ReadAttributeException("'read' method"
+				+ " unavaliable, use BCClass#getTHIS() instead.");
 	}
 
 	@Override
 	public String toString() {
-		return "this";
+		return isOld() ? "old_this" : "this";
 	}
 
 	@Override
 	public void write(AttributeWriter aw) {
-		aw.writeByte(Code.THIS); //TODO update
+		aw.writeByte(isOld() ? Code.OLD_THIS : Code.THIS);
 	}
 
 }

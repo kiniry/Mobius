@@ -22,6 +22,7 @@ import annot.bcexpression.FieldAccess;
 import annot.bcexpression.JavaType1;
 import annot.bcexpression.NULL_CLASS;
 import annot.bcexpression.NumberLiteral;
+import annot.bcexpression.OLD;
 import annot.bcexpression.UnaryArithmeticExpression;
 import annot.formula.AbstractFormula;
 import annot.formula.Formula;
@@ -31,13 +32,11 @@ import annot.formula.QuantifiedFormula;
 import annot.textio.IDisplayStyle;
 
 /**
- * This class is responsible for loading BML attributes from
- * BCEL's Unknown atribute. It should be created for a BCClass
- * or BCMethod, BML attribute can be loaded using
- * {@link #readAttribute(Unknown)} method.
- * This class contains data 'stream' (as a byte array) and
- * environment needed to read an expression (eg. bound
- * variables table).
+ * This class is responsible for loading BML attributes from BCEL's Unknown
+ * atribute. It should be created for a BCClass or BCMethod, BML attribute can
+ * be loaded using {@link #readAttribute(Unknown)} method. This class contains
+ * data 'stream' (as a byte array) and environment needed to read an expression
+ * (eg. bound variables table).
  * 
  * @author tomekb
  */
@@ -64,32 +63,29 @@ public class AttributeReader {
 	private int pos;
 
 	/**
-	 * Initial length of input stream (after finished reading
-	 * of attribute, <code>pos</code> should be equal to
-	 * <code>length</code>.
+	 * Initial length of input stream (after finished reading of attribute,
+	 * <code>pos</code> should be equal to <code>length</code>.
 	 */
 	private int length;
 
 	/**
-	 * Current attribute's name, used for displaying error
-	 * message only.
+	 * Current attribute's name, used for displaying error message only.
 	 */
 	private String attrName = "?"; // debug
 
 	// environment:
-	
+
 	/**
-	 * Bound variables table. Contains declared (currently
-	 * visible) bound variables, with right-most, most
-	 * recently declared at the end.
+	 * Bound variables table. Contains declared (currently visible) bound
+	 * variables, with right-most, most recently declared at the end.
 	 */
 	private Vector<BoundVar> bvars;
 
 	/**
 	 * A Constructor used for reading class attributes.
 	 * 
-	 * @param bcc - class that read attributes should be
-	 * attached to.
+	 * @param bcc -
+	 *            class that read attributes should be attached to.
 	 */
 	public AttributeReader(BCClass bcc) {
 		this.bcc = bcc;
@@ -99,8 +95,8 @@ public class AttributeReader {
 	/**
 	 * A Constructor used for reading method attributes.
 	 * 
-	 * @param bcm - method that read attributes should be
-	 * attached to.
+	 * @param bcm -
+	 *            method that read attributes should be attached to.
 	 */
 	public AttributeReader(BCMethod bcm) {
 		this.bcc = bcm.getBcc();
@@ -110,15 +106,15 @@ public class AttributeReader {
 
 	/**
 	 * Creates proper BML attribute (IBCAttribute, not exactly
-	 * BCPrintableAttribute) depending on given Unknown
-	 * attribute's name, loads it from given Unknown attribute
-	 * and attach to BCClass or BCMethod given in the
-	 * constructor.
+	 * BCPrintableAttribute) depending on given Unknown attribute's name, loads
+	 * it from given Unknown attribute and attach to BCClass or BCMethod given
+	 * in the constructor.
 	 * 
-	 * @param ua - (BCEL) Unknown attribute to load from.
-	 * @throws ReadAttributeException - if given attribute's
-	 * 		data doesn't represent correct attribute of
-	 * 		given attribute's name.
+	 * @param ua -
+	 *            (BCEL) Unknown attribute to load from.
+	 * @throws ReadAttributeException -
+	 *             if given attribute's data doesn't represent correct attribute
+	 *             of given attribute's name.
 	 */
 	public void readAttribute(Unknown ua) throws ReadAttributeException {
 		String aname = attrName = ua.getName();
@@ -147,12 +143,13 @@ public class AttributeReader {
 	}
 
 	/**
-	 * Checks that there is enough data left in the
-	 * <code>input</code> stream.
+	 * Checks that there is enough data left in the <code>input</code> stream.
 	 * 
-	 * @param n - number of bytes needed to be avaliable.
-	 * @throws ReadAttributeException - if there is less than
-	 * 		<code>n</code> bytes left in the stream.
+	 * @param n -
+	 *            number of bytes needed to be avaliable.
+	 * @throws ReadAttributeException -
+	 *             if there is less than <code>n</code> bytes left in the
+	 *             stream.
 	 */
 	private void chkRange(int n) throws ReadAttributeException {
 		if (pos + n > length)
@@ -164,8 +161,8 @@ public class AttributeReader {
 	 * Reads a byte from <code>input</code> stream.
 	 * 
 	 * @return read byte.
-	 * @throws ReadAttributeException - if there is not enough
-	 * 		bytes in the stream to read a byte.
+	 * @throws ReadAttributeException -
+	 *             if there is not enough bytes in the stream to read a byte.
 	 */
 	public int readByte() throws ReadAttributeException {
 		chkRange(1);
@@ -175,12 +172,12 @@ public class AttributeReader {
 	}
 
 	/**
-	 * Reads an short integer (2 bytes) from
-	 * <code>input</code> stream.
+	 * Reads an short integer (2 bytes) from <code>input</code> stream.
 	 * 
 	 * @return read int.
-	 * @throws ReadAttributeException - if there is not enough
-	 * 		bytes in the stream to read a short integer.
+	 * @throws ReadAttributeException -
+	 *             if there is not enough bytes in the stream to read a short
+	 *             integer.
 	 */
 	public int readShort() throws ReadAttributeException {
 		chkRange(2);
@@ -190,12 +187,11 @@ public class AttributeReader {
 	}
 
 	/**
-	 * Reads an integer (4 bytes) from <code>input</code>
-	 * stream.
+	 * Reads an integer (4 bytes) from <code>input</code> stream.
 	 * 
 	 * @return read int.
-	 * @throws ReadAttributeException - if there is not enough
-	 * 		bytes in the stream to read an int.
+	 * @throws ReadAttributeException -
+	 *             if there is not enough bytes in the stream to read an int.
 	 */
 	public int readInt() throws ReadAttributeException {
 		chkRange(4);
@@ -208,26 +204,28 @@ public class AttributeReader {
 	}
 
 	/**
-	 * Reads an attribute count (2 bytes integer) from
-	 * <code>input</code> stream.
+	 * Reads an attribute count (2 bytes integer) from <code>input</code>
+	 * stream.
 	 * 
 	 * @return read attribute count.
-	 * @throws ReadAttributeException - if there is not enough
-	 * 		bytes in the stream to read a attribute count.
+	 * @throws ReadAttributeException -
+	 *             if there is not enough bytes in the stream to read a
+	 *             attribute count.
 	 */
 	public int readAttributesCount() throws ReadAttributeException {
 		return readShort();
 	}
 
 	/**
-	 * Gives String value of constant with given index, from
-	 * constant pool.
+	 * Gives String value of constant with given index, from constant pool.
 	 * 
-	 * @param index - index of searched constant.
-	 * @return String value of Utf8 constant (from constant
-	 * 		pool) of given index.
-	 * @throws ReadAttributeException - if there are no Utf8
-	 * 		constant at given index in constant pool.
+	 * @param index -
+	 *            index of searched constant.
+	 * @return String value of Utf8 constant (from constant pool) of given
+	 *         index.
+	 * @throws ReadAttributeException -
+	 *             if there are no Utf8 constant at given index in constant
+	 *             pool.
 	 */
 	public String findString(int index) throws ReadAttributeException {
 		Constant c = bcc.getCp().getConstant(index);
@@ -240,8 +238,8 @@ public class AttributeReader {
 	 * Reads an expression from <code>input</code> stream.
 	 * 
 	 * @return Read expression.
-	 * @throws ReadAttributeException - if data in the stream
-	 * 		doesn't represent correct expression.
+	 * @throws ReadAttributeException -
+	 *             if data in the stream doesn't represent correct expression.
 	 */
 	public BCExpression readExpression() throws ReadAttributeException {
 		int b = readByte();
@@ -286,14 +284,21 @@ public class AttributeReader {
 			return NULL_CLASS.NULL;
 		case Code.THIS:
 			return bcc.getTHIS(false);
+		case Code.OLD_THIS:
+			return bcc.getTHIS(true);
 		case Code.RESULT:
 			return method.getResult();
 		case Code.LOCAL_VARIABLE:
 			return BCLocalVariable.getLocalVariable(false, method, this);
+		case Code.OLD_LOCAL_VARIABLE:
+			return BCLocalVariable.getLocalVariable(true, method, this);
 		case Code.FIELD_REF:
+		case Code.OLD_FIELD_REF:
 			return new BCFieldRef(this, b);
 		case Code.FIELD_ACCESS:
 			return new FieldAccess(this, b);
+		case Code.OLD:
+			return new OLD(this, b);
 		case Code.FORALL:
 		case Code.EXISTS:
 		case Code.FORALL_WITH_NAME:
@@ -309,21 +314,22 @@ public class AttributeReader {
 						"Utf8 expected as javaType name");
 			String name = ((ConstantUtf8) c).getBytes();
 			return JavaType1.getJavaType(name);
-		// TODO: deprecated
-		case 0xE1: return new QuantifiedFormula(this, 0x0A);
-		case 0xE2: return new QuantifiedFormula(this, 0x0B);
+			// TODO: deprecated
+		case 0xE1:
+			return new QuantifiedFormula(this, 0x0A);
+		case 0xE2:
+			return new QuantifiedFormula(this, 0x0B);
 		default:
 			throw new ReadAttributeException("Unknown expression code: " + b);
 		}
 	}
-	
 
 	/**
 	 * Reads an Expression and checks that it is a formula.
 	 * 
 	 * @return Read expression.
-	 * @throws ReadAttributeException - if data in the stream
-	 * 		doesn't represent correct formula.
+	 * @throws ReadAttributeException -
+	 *             if data in the stream doesn't represent correct formula.
 	 */
 	public AbstractFormula readFormula() throws ReadAttributeException {
 		BCExpression expr = readExpression();
@@ -335,7 +341,8 @@ public class AttributeReader {
 	}
 
 	/**
-	 * @param index - variable index.
+	 * @param index -
+	 *            variable index.
 	 * @return Visible bound variable of given index.
 	 * @see #bvars
 	 */

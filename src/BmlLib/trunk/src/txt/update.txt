@@ -53,6 +53,7 @@ This document describes changes in code required to extend
 	- add opcedes to Code interface,
 	- update Priorities.setPriorities(),
 	- create subclass of BCExpression or ane of it's subclasses,
+	- update makeOld, removeOld methods for OLD expressions.
 	- update AttributeReader.readExpression(),
 	- add parser rules to grammatic (annot.textio.BML.g3),
 	- create test cases in test.Testuj.ParserTest(),

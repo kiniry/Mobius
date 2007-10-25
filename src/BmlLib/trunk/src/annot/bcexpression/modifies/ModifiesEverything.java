@@ -7,10 +7,8 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
 /**
- * This class represents any side effect of described code,
- * or that side effects are unknown.
- * This is a singleton, it has only one instance
- * ({@link ModifyExpression#Everything}).
+ * This class represents any side effect of described code, or that side effects
+ * are unknown. This is a singleton, it has only one instance ({@link ModifyExpression#Everything}).
  */
 public class ModifiesEverything extends ModifyExpression {
 
@@ -28,14 +26,13 @@ public class ModifiesEverything extends ModifyExpression {
 	}
 
 	/**
-	 * This class is a singleton, it has no constructor from
-	 * AttributeReader.
+	 * This class is a singleton, it has no constructor from AttributeReader.
 	 */
 	@Override
 	protected void read(AttributeReader ar, int root)
 			throws ReadAttributeException {
-		throw new RuntimeException("There is nothing" +
-		" to read by ModifiesEverything expression.");
+		throw new RuntimeException("There is nothing"
+				+ " to read by ModifiesEverything expression.");
 	}
 
 	@Override
@@ -49,6 +46,7 @@ public class ModifiesEverything extends ModifyExpression {
 	}
 
 	@Override
-	protected void init() {}
+	protected void init() {
+	}
 
 }

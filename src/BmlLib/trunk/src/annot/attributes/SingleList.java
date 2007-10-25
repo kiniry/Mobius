@@ -12,8 +12,8 @@ import annot.textio.BMLConfig;
 import annot.textio.Parsing;
 
 /**
- * This class represents list of annotations attached
- * to single bytecode instruction handle.
+ * This class represents list of annotations attached to single bytecode
+ * instruction handle.
  * 
  * @author tomekb
  */
@@ -25,25 +25,23 @@ public class SingleList implements Comparable<SingleList> {
 	private LinkedList<InCodeAttribute> attributes;
 
 	/**
-	 * Bytecode instruction that all annotations from this
-	 * list are attached to.
+	 * Bytecode instruction that all annotations from this list are attached to.
 	 */
 	private InstructionHandle ih;
-	
+
 	/**
-	 * Method containing instruction whose comment this
-	 * list represents.
+	 * Method containing instruction whose comment this list represents.
 	 */
 	private BCMethod method;
-	
+
 	/**
-	 * A standard constructor. Creates an empty list.
-	 * This list will contain all annotations attached
-	 * to given <code>instruction</code>.
+	 * A standard constructor. Creates an empty list. This list will contain all
+	 * annotations attached to given <code>instruction</code>.
 	 * 
-	 * @param method - method of an bytecode instruction
-	 * 		for this list.
-	 * @param ih - bytecode instruction for this list.
+	 * @param method -
+	 *            method of an bytecode instruction for this list.
+	 * @param ih -
+	 *            bytecode instruction for this list.
 	 */
 	public SingleList(BCMethod method, InstructionHandle ih) {
 		this.method = method;
@@ -52,14 +50,13 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	/**
-	 * Sorts and returns all annotations from this list
-	 * of given types.
+	 * Sorts and returns all annotations from this list of given types.
 	 * 
-	 * @param types - bitmask representing a set of annotation
-	 * 		types from AType interface;
-	 * @return Array of all annotations from this list matching
-	 * 		given type (it's type & types > 0), sorted by
-	 * 		their's minor numbers.
+	 * @param types -
+	 *            bitmask representing a set of annotation types from AType
+	 *            interface;
+	 * @return Array of all annotations from this list matching given type (it's
+	 *         type & types > 0), sorted by their's minor numbers.
 	 */
 	public InCodeAttribute[] getAll(int types) {
 		Collections.sort(attributes);
@@ -83,9 +80,9 @@ public class SingleList implements Comparable<SingleList> {
 	/**
 	 * Prints all its annotations to a String.
 	 * 
-	 * @param conf - see {@link BMLConfig}.
-	 * @return String representation of all annotations
-	 * 		in one comment.
+	 * @param conf -
+	 *            see {@link BMLConfig}.
+	 * @return String representation of all annotations in one comment.
 	 */
 	public String printCode(BMLConfig conf) {
 		String code = "";
@@ -96,12 +93,12 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	/**
-	 * Adds an annotaton to the list, updating minor numbers
-	 * to ensure no two annotations from it has the same minor
-	 * number and saving list's ordering (no annotations are
-	 * swapped on the list and list is still sorted).
+	 * Adds an annotaton to the list, updating minor numbers to ensure no two
+	 * annotations from it has the same minor number and saving list's ordering
+	 * (no annotations are swapped on the list and list is still sorted).
 	 * 
-	 * @param ica - annotation to be added.
+	 * @param ica -
+	 *            annotation to be added.
 	 */
 	public void addAttribute(InCodeAttribute ica) {
 		if (ica.getMinor() == -1) {
@@ -143,7 +140,8 @@ public class SingleList implements Comparable<SingleList> {
 	/**
 	 * Removes annotation from the list.
 	 * 
-	 * @param ica - annotation to be removed.
+	 * @param ica -
+	 *            annotation to be removed.
 	 */
 	public void removeAttribute(InCodeAttribute ica) {
 		attributes.remove(ica);
@@ -157,12 +155,13 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	/**
-	 * Replaces an annotation from the list with another one.
-	 * They should have both the same minor numbers.
+	 * Replaces an annotation from the list with another one. They should have
+	 * both the same minor numbers.
 	 * 
-	 * @param olda - annotation to be removed,
-	 * @param newa - annotation to be added
-	 * 		at <code>olda</code>'s place.
+	 * @param olda -
+	 *            annotation to be removed,
+	 * @param newa -
+	 *            annotation to be added at <code>olda</code>'s place.
 	 */
 	public void replace(InCodeAttribute olda, InCodeAttribute newa) {
 		if (!attributes.contains(olda))
@@ -172,13 +171,12 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	/**
-	 * Returns an annotation from the list with given
-	 * minor number.
+	 * Returns an annotation from the list with given minor number.
 	 * 
-	 * @param minor - minor number of returned annotation.
-	 * @return An annotation with minor number equal to the
-	 * 		given one, or null if no annotations with such
-	 * 		minor number could be found.
+	 * @param minor -
+	 *            minor number of returned annotation.
+	 * @return An annotation with minor number equal to the given one, or null
+	 *         if no annotations with such minor number could be found.
 	 */
 	public InCodeAttribute get(int minor) {
 		Iterator<InCodeAttribute> iter = attributes.iterator();
@@ -193,8 +191,9 @@ public class SingleList implements Comparable<SingleList> {
 	/**
 	 * Returns <code>n</code>-th annotation from the list.
 	 * 
-	 * @param n - position of annotation (number of annotations
-	 * 		displayed before it for the same instruction).
+	 * @param n -
+	 *            position of annotation (number of annotations displayed before
+	 *            it for the same instruction).
 	 * @return <code>n</code>-th annotation from this list.
 	 */
 	public InCodeAttribute nth(int n) {
@@ -202,12 +201,14 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	/**
-	 * Replaces n-th annotation from this list with given one
-	 * (or appends it to the list, if <code>n > size</code>).
+	 * Replaces n-th annotation from this list with given one (or appends it to
+	 * the list, if <code>n > size</code>).
 	 * 
-	 * @param n - position of annotation to be replaced
-	 * @param ica - annotation to replace <code>n</code>-th
-	 * 		annotation from list.
+	 * @param n -
+	 *            position of annotation to be replaced
+	 * @param ica -
+	 *            annotation to replace <code>n</code>-th annotation from
+	 *            list.
 	 */
 	public void setNth(int n, InCodeAttribute ica) {
 		if (n < attributes.size()) {
@@ -217,13 +218,12 @@ public class SingleList implements Comparable<SingleList> {
 			addAttribute(ica);
 		}
 	}
-	
+
 	/**
-	 * Removes all except first <code>n</code> annotations
-	 * from list.
+	 * Removes all except first <code>n</code> annotations from list.
 	 * 
-	 * @param n - number of annotations that should left
-	 * 		on the list.
+	 * @param n -
+	 *            number of annotations that should left on the list.
 	 */
 	public void trunce(int n) {
 		if (n < 0)
@@ -231,10 +231,10 @@ public class SingleList implements Comparable<SingleList> {
 		while (attributes.size() > n)
 			attributes.removeLast();
 	}
-	
+
 	/**
-	 * @return pc numner of annotation's bytecode instruction,
-	 * 		or -1 if list is empty.
+	 * @return pc numner of annotation's bytecode instruction, or -1 if list is
+	 *         empty.
 	 */
 	@Deprecated
 	public int getPC() {
@@ -242,20 +242,21 @@ public class SingleList implements Comparable<SingleList> {
 	}
 
 	/**
-	 * @return position in method's instruction list. This
-	 * 		should be more reliable than {@link #getPC()}.
+	 * @return position in method's instruction list. This should be more
+	 *         reliable than {@link #getPC()}.
 	 */
 	public int getPosition() {
-		InstructionHandle[] handles = method.getInstructions().getInstructionHandles();
-		for (int i=0; i<handles.length; i++)
+		InstructionHandle[] handles = method.getInstructions()
+				.getInstructionHandles();
+		for (int i = 0; i < handles.length; i++)
 			if (ih == handles[i])
 				return i;
 		return -1;
 	}
-	
+
 	/**
-	 * @return bytecode instruction that all annotations from this
-	 * list are attached to.
+	 * @return bytecode instruction that all annotations from this list are
+	 *         attached to.
 	 */
 	public InstructionHandle getIh() {
 		return ih;
@@ -267,17 +268,18 @@ public class SingleList implements Comparable<SingleList> {
 	public int size() {
 		return attributes.size();
 	}
-	
+
 	/**
-	 * compares this annotation list to given one in order they
-	 * should appead in String representation of a method.
-	 * Both annotation lists should be from the same method.
-	 * @param o - annotation list to compare to.
-	 * @return a positive integer if <code>o</code> is above
-	 * 		this annotation list in String representation
-	 * 		of method, a negative integer if <code>o</code>
-	 * 		is below, and zero if <code>o</code> is the same
-	 * 		annotation list.
+	 * compares this annotation list to given one in order they should appead in
+	 * String representation of a method. Both annotation lists should be from
+	 * the same method.
+	 * 
+	 * @param o -
+	 *            annotation list to compare to.
+	 * @return a positive integer if <code>o</code> is above this annotation
+	 *         list in String representation of method, a negative integer if
+	 *         <code>o</code> is below, and zero if <code>o</code> is the
+	 *         same annotation list.
 	 */
 	public int compareTo(SingleList o) {
 		return getPosition() - o.getPosition();

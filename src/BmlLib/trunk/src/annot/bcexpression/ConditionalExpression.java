@@ -19,15 +19,17 @@ public class ConditionalExpression extends AbstractIntExpression {
 	 * <code>condition</code> ? <code>iftrue</code> : <br>
 	 * <code>iffalse</code>
 	 * 
-	 * @param condition - a boolean expression,
-	 * @param ifTrue - integer expression; value of this
-	 * 		expression if <code>condition</code> evaluates
-	 * 		to true,
-	 * @param ifFalse - integer expression; value of this
-	 * 		expression if <code>condition</code> evaluates
-	 * 		to false.
+	 * @param condition -
+	 *            a boolean expression,
+	 * @param ifTrue -
+	 *            integer expression; value of this expression if
+	 *            <code>condition</code> evaluates to true,
+	 * @param ifFalse -
+	 *            integer expression; value of this expression if
+	 *            <code>condition</code> evaluates to false.
 	 */
-	public ConditionalExpression(BCExpression condition, BCExpression ifTrue, BCExpression ifFalse) {
+	public ConditionalExpression(BCExpression condition, BCExpression ifTrue,
+			BCExpression ifFalse) {
 		super();
 		setSubExprCount(3);
 		setSubExpr(0, condition);
@@ -36,20 +38,21 @@ public class ConditionalExpression extends AbstractIntExpression {
 	}
 
 	/**
-	 * A constructor from AttributeReader, used for loading
-	 * from file (from BCEL's unknown Attribute).
+	 * A constructor from AttributeReader, used for loading from file (from
+	 * BCEL's unknown Attribute).
 	 * 
-	 * @param ar - input stream to load from,
-	 * @param root - type o expression (last read byte from
-	 * 		<code>ar</code>.
-	 * @throws ReadAttributeException - if stream
-	 * 		in <code>ar</code> doesn't represent a correct
-	 * 		conditional expression.
+	 * @param ar -
+	 *            input stream to load from,
+	 * @param root -
+	 *            type o expression (last read byte from <code>ar</code>.
+	 * @throws ReadAttributeException -
+	 *             if stream in <code>ar</code> doesn't represent a correct
+	 *             conditional expression.
 	 * @see BCExpression#BCExpression(AttributeReader, int)
 	 */
 	public ConditionalExpression(AttributeReader ar, int root)
-		throws ReadAttributeException {
-			super(ar, root);
+			throws ReadAttributeException {
+		super(ar, root);
 	}
 
 	@Override
@@ -60,20 +63,21 @@ public class ConditionalExpression extends AbstractIntExpression {
 	@Override
 	protected JavaType1 checkType1() {
 		if ((getSubExpr(0).checkType() != JavaBasicType.JavaBool)
-			|| (getSubExpr(1).checkType() != JavaBasicType.JavaInt)
-			|| (getSubExpr(2).checkType() != JavaBasicType.JavaInt))
-				return null;
+				|| (getSubExpr(1).checkType() != JavaBasicType.JavaInt)
+				|| (getSubExpr(2).checkType() != JavaBasicType.JavaInt))
+			return null;
 		return JavaBasicType.JavaInt;
 	}
 
 	@Override
-	protected void init() {}
+	protected void init() {
+	}
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
-		return getSubExpr(0).printCode(conf)
-			+ " ? " + getSubExpr(1).printCode(conf)
-			+ " : " + getSubExpr(2).printCode(conf);
+		return getSubExpr(0).printCode(conf) + " ? "
+				+ getSubExpr(1).printCode(conf) + " : "
+				+ getSubExpr(2).printCode(conf);
 	}
 
 	@Override
@@ -90,9 +94,8 @@ public class ConditionalExpression extends AbstractIntExpression {
 
 	@Override
 	public String toString() {
-		return getSubExpr(0).toString()
-			+ " ? " + getSubExpr(1).toString()
-			+ " : " + getSubExpr(2).toString();
+		return getSubExpr(0).toString() + " ? " + getSubExpr(1).toString()
+				+ " : " + getSubExpr(2).toString();
 	}
 
 	@Override
