@@ -121,18 +121,18 @@ BEGIN
   % The following are adapted versions for AP to avoid having to give all the 
   % theory parameters to uniquely identify them.
 
- on_method_entry_AP : (on_method_event_type) =
-   LAMBDA (p : Program, md : (wf_Method(p)), a : Val, 
-           s1, s2 : APState, n : nat,
-           derive_rec : derive_rec_type(n)) :
-   on_method_entry(p, md, a, s1, s2, n, derive_rec)
+  on_method_entry_AP : (on_method_event_type) =
+    LAMBDA (p : Program, md : (wf_Method(p)), a : Val, 
+            s1, s2 : APState, n : nat,
+            derive_rec : derive_rec_type(n)) :
+      on_method_entry(p, md, a, s1, s2, n, derive_rec)
 
   determ_step_AP : LEMMA % :-)
     FORALL (p : Program)(n1, n2 : nat)(b : (wf_Body(p)))
            (v1, v2 : Val, sigma, sigma1, sigma2 : APState) :
-        derive(p)(b, sigma, v1, sigma1)(n1) IMPLIES
-        derive(p)(b, sigma, v2, sigma2)(n2) IMPLIES
-           v1 = v2 AND sigma1 = sigma2 AND n1 = n2
+      derive(p)(b, sigma, v1, sigma1)(n1) IMPLIES
+      derive(p)(b, sigma, v2, sigma2)(n2) IMPLIES
+        v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
   derive_bottom_iff_exception_step_AP : LEMMA % :-)
     FORALL (p : Program)(b : (wf_Body(p)))

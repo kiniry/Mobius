@@ -525,14 +525,12 @@ ENDASSUMING
         Bottom?(v) = up?(ex(pstate(sigma2)))
 
 
-  % Note that the converse is not true because an assigment returns a 
-  % boolean if the source is a boolean expression
   derive_boolean_expr_type : LEMMA % :-)
     FORALL (p : FullProgram)(b : (wf_BoolExpr(program(p))))
            (sigma1, sigma2 : FullState, v : Val, n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       NOT up?(ex(pstate(sigma2))) IMPLIES
-      Bool?(v)
+        Bool?(v)
 
 
 END SemanticsProofs

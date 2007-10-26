@@ -214,6 +214,7 @@ BEGIN
   ENDASSUMING
 
   IMPORTING RelatedStateProperties[CP, Name]
+  IMPORTING AnnGenerationLemmas[CP, Name]
 
   mp : VAR (wf_MP)
 
@@ -471,5 +472,6 @@ BEGIN
       run_annotated_program(ann_program(mp))(main, arg)(root_object)(sAP)
       IMPLIES
         related_states(mp)(sMP, sAP)
+
 
 END CorrectnessAnnProgram

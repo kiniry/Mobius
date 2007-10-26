@@ -506,11 +506,11 @@ BEGIN
      wf_Body(p)(e)
 
   wf_Stmt(p : PreProgram)(s : Stmt) : boolean =
-     wf_Body(p)(s)
+    wf_Body(p)(s)
 
   wf_Branches(p : PreProgram)(l : list[[BoolExpr, Stmt]]) : boolean =
-     every(LAMBDA(x : [[BoolExpr, Stmt]]) : 
-           wf_Body(p)(proj_1(x)) AND wf_Body(p)(proj_2(x)))(l)
+    every(LAMBDA(x : [[BoolExpr, Stmt]]) : 
+      wf_Body(p)(proj_1(x)) AND wf_Body(p)(proj_2(x)))(l)
 
   wf_Body_CaseJML : LEMMA % :-)
     FORALL(p : PreProgram, l : list[[BoolExpr, Stmt]]) :

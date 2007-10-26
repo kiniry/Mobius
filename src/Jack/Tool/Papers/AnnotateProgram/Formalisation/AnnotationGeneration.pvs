@@ -151,8 +151,6 @@ BEGIN
   a : VAR (wf_MVA)
 
 
-  % Event annotation
-
   ann_action(l : Action) : RECURSIVE Stmt =
     CASES l OF
       null : Skip,
@@ -504,7 +502,7 @@ BEGIN
   ann_program_class_correspondence : LEMMA % :-)
     FORALL(c : Class) : classes(ann_program(mp))(c) IMPLIES
       EXISTS (c1 : Class) : classes(program(mp))(c1) AND c = ann_class(mp)(c1)
- 
+
   ann_program_method_correspondence : LEMMA % :-)
     FORALL(c : Class, m : Method) :
       classes(ann_program(mp))(c) IMPLIES
@@ -514,8 +512,8 @@ BEGIN
           methods(c1)(m1) AND 
           (IF name(c1) = class_name(mva(mp))
            THEN m = ann_method(mp)(m1)
-            ELSE m = m1
-            ENDIF)
+           ELSE m = m1
+           ENDIF)
 
   ann_program_preserves_var_decls : LEMMA % :-)
     getFieldDecls(program(mp)) = getFieldDecls(ann_program(mp)) AND
@@ -559,7 +557,7 @@ BEGIN
       wf_state(mp)(sMP) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
         (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
-  
+
   var_names_ann_program : LEMMA % :-)
     subset?(var_names(ann_program(mp)), 
             union(var_names(program(mp)), var_names(new_gvds(mp))))
@@ -633,7 +631,7 @@ BEGIN
   up_get_class_equivalence : LEMMA % :-)
     FORALL(a : Val) : 
       up?(get_class(program(mp))(a)) IMPLIES
-       up?(get_class(ann_program(mp))(a))
+        up?(get_class(ann_program(mp))(a))
 
   get_class_equivalence : LEMMA % :-)
     FORALL(a : Val) :
@@ -643,5 +641,6 @@ BEGIN
              up(ann_class(mp)(down(get_class(program(mp))(a))))
       ELSE get_class(ann_program(mp))(a) = get_class(program(mp))(a)
       ENDIF
-             
+
+
 END AnnotateProgramProperties

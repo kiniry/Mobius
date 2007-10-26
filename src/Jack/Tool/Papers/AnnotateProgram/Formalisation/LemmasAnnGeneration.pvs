@@ -20,22 +20,22 @@ BEGIN
   % Eexecuting an action on a MVA modifies its variables in the same way that
   % the execution of the annotations representing that action modifies the 
   % corresponding ghost variables in the annotated program.
-  execute_action_correctness : LEMMA % :-)
+  execute_action_correctness : LEMMA
     FORALL (mp)(c : Class, m : Method, a : Action, n : nat)
            (sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
       wf_state(mp)(sMP) IMPLIES
-      wf_state(ann_program(mp)(sAP1)) IMPLIES
-      MP_modeled?(sMP, sAP1) IMPLIES
-      classes(ap)(c) IMPLIES
+      wf_state(ann_program(mp))(sAP1) IMPLIES
+      MP_modeled?(mp)(sMP, sAP1) IMPLIES
+      classes(ann_program(mp))(c) IMPLIES
       methods(c)(m) IMPLIES
       proper_subterm_set_clause(ann_action(a), m) IMPLIES
       wf_Action(mva(mp))(a) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
+      derive(ann_program(mp))(ann_action(a), sAP1, Unit, sAP2)(n) IMPLIES
       stA(sMVA2) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
         MVA_vars_modeled?(sMVA2, sAP2)
 
-%   execute_action_correctness : LEMMA % :-)
+%   execute_action_correctness : LEMMA
 %     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
 %             a : Action, n : nat,
 %             sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
@@ -61,30 +61,30 @@ BEGIN
 
   % If a statement c is part of the translation of an action a then c is a
   % (proper) substament of ann_action(a).
-  set_stmt_of_ann_action_proper_subterm : LEMMA % :-)
+  set_stmt_of_ann_action_proper_subterm : LEMMA
     FORALL (c : Stmt, a : Action) :
       set_stmt_of_ann_action(c, a) IMPLIES c << ann_action(a)
 
   % Only set statements are satisfy the predicate set_stmt_of_ann_action.
-  set_stmt_of_ann_action_only_for_Set : LEMMA % :-)
+  set_stmt_of_ann_action_only_for_Set : LEMMA
     FORALL (c : Stmt, a : Action) :
       set_stmt_of_ann_action(c, a) IMPLIES Set?(c)
 
   % If none of the set statements in ann_action(a) has vn as target and their
   % source expressions have no side effect then the value of vn is not changed
   % by the evaluation of ann_action(a).
-  non_interference_of_sets_in_ann_actions : LEMMA % :-)
+  non_interference_of_sets_in_ann_actions : LEMMA
     FORALL (p : Program, a : Action, s1, s2 : APState,
             n : nat, vn : Name) :
       (FORALL (c : Stmt) : set_stmt_of_ann_action(c, a) IMPLIES
-        NOT target(c) = vn AND expr_has_no_side_effects(p)(source(c)))
+        NOT target(c) = vn AND spec_expr_has_no_side_effects(p)(source(c)))
       IMPLIES
-      deriv_stmt(p)(ann_action(a), s1, s2)(n) IMPLIES
+      derive(p)(ann_action(a), s1, Unit, s2)(n) IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
   % The target of a set statement that is part of ann_action(l) is a name of a
   % variable declared by the MVA a. 
-  ann_action_sets_mva_vars : LEMMA % :-)
+  ann_action_sets_mva_vars : LEMMA
     FORALL (c : Stmt, a : MVA, l : Action) :
       wf_Action(a)(l) IMPLIES
       set_stmt_of_ann_action(c, l) IMPLIES
@@ -92,68 +92,81 @@ BEGIN
 
   % In a well behaved program, a substatement of update_vars(t) is either Skip
   % a Set statement that has no side effects.
-  sequence_of_sets_have_no_side_effects : LEMMA % :-)
+  sequence_of_sets_have_no_side_effects : LEMMA
     FORALL (p : Program, a : Class, m : Method, c  : Stmt, t : Transition) :
-      well_behaved_Program(p) IMPLIES
+%      well_behaved_Program(p) IMPLIES
       classes(p)(a) IMPLIES
       methods(a)(m) IMPLIES
-      proper_subterm_set_clause(update_vars(t), m) IMPLIES
-      c << update_vars(t) IMPLIES
+      proper_subterm_set_clause(update_vars(mp)(t), m) IMPLIES
+      c << update_vars(mp)(t) IMPLIES
         Skip?(c) OR
-        (Set?(c) IMPLIES expr_has_no_side_effects(p)(source(c)))
+        (Set?(c) IMPLIES spec_expr_has_no_side_effects(p)(source(c)))
 
  % If sMP1 and sAP1 are related states and for a given transition t, sMVA is the
  % state of the automaton after performing t and sAP2 is the state of the 
  % annotated program after executing the annotations that model the effect of t, 
  % then sMVA is still well modeled by sAP2.
- update_vars_preserves_MVA_modeled : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, ap : Program,
-            a : Class, m : Method, t : Transition,  n : nat,
-            sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
-      related_states(mp, ap)(sMP, sAP1) IMPLIES
-      classes(ap)(a) IMPLIES
+ update_vars_preserves_MVA_modeled : LEMMA
+    FORALL (mp)(a : Class, m : Method, t : Transition,
+            sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState,  n : nat) :
+      related_states(mp)(sMP, sAP1) IMPLIES
+      classes(ann_program(mp))(a) IMPLIES
       methods(a)(m) IMPLIES
-      proper_subterm_set_clause(update_vars(t), m) IMPLIES
+      proper_subterm_set_clause(update_vars(mp)(t), m) IMPLIES
       ts(mva(mp))(t) IMPLIES
       sMVA2 = (# cp := tcp(t),
                  stA := execute_action(action(t))(stA(astate(sMP)),
                                                   st(pstate(sMP)))
              #) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      deriv_stmt(ap)(update_vars(t), sAP1, sAP2)(n) IMPLIES
-        MVA_modeled?(mva(mp))(sMVA2, sAP2)
+      derive(ann_program(mp))(update_vars(mp)(t), sAP1, Unit, sAP2)(n) IMPLIES
+        MVA_modeled?(mp)(sMVA2, sAP2)
+
+  update_vars_preserves_MP_modeled : LEMMA
+    FORALL (mp)(m : Method, t : Transition,
+            sMP1, sMP2 : MPState, sAP1, sAP2 : APState,  n : nat) :
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      methods(ann_class(mp)(get_monitored_class(mp)))(m) IMPLIES
+      proper_subterm_set_clause(update_vars(mp)(t), m) IMPLIES
+      ts(mva(mp))(t) IMPLIES
+      sMP2 = (# astate := (# cp := tcp(t),
+                             stA := execute_action(action(t))(stA(astate(sMP1)),
+                                                              st(pstate(sMP1)))
+                           #),
+                pstate := pstate(sMP1),
+                gvs := gvs(sMP1) #) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      derive(ann_program(mp))(update_vars(mp)(t), sAP1, Unit, sAP2)(n) IMPLIES
+        MP_modeled?(mp)(sMP2, sAP2)
 
 
   % If m is a method that has been annotated then update_vars(t) is a subterm of
   % each of its set clauses (pre_set, post_set or exc_set).
-  update_vars_proper_subterm_set_clause : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, c : Class, m : Method, t : Transition) :
-      wf_MP(mp) IMPLIES
-      name(c) = class_name(mva(mp)) IMPLIES
-      classes(ann_program(mp))(c) IMPLIES
-      methods(c)(m) IMPLIES
+  update_vars_proper_subterm_set_clause : LEMMA
+    FORALL (mp)(m : Method, t : Transition) :
+      methods(ann_class(mp)(get_monitored_class(mp)))(m) IMPLIES
       ts(mva(mp))(t) IMPLIES
       mname(event(t)) = name(m) IMPLIES
-        proper_subterm_set_clause(update_vars(t), m)
+        proper_subterm_set_clause(update_vars(mp)(t), m)
 
-  % If sMP1 and sAP1 are related stated, sMVA2 is the state of the automaton
-  % after evaluating on_method_MVA with some event type et and some annotated
-  % method m, ts is the set of transitions that has as event (et, name(m)) and
+  % If sMP1 and sAP1 are related stated, sMP2 is the state of the monitored
+  % progran after evaluating on_method_MVA with some event type et and some
+  % method m, ts is the set of transitions that has (et, name(m)) as event and
   % sAP2 is the state of the annotated program after the execution of ann_event
-  % with ts as argument, then sMVA2 is well modeled by sAP2.
-  ann_event_preserves_MVA_modeled : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
-            sMP1 : MPState, sMVA2 : AState, sAP1, sAP2 : APState,
+  % with ts as argument, then sMP2 and sAP2 comply with MP_modeled?.
+  ann_event_preserves_MP_modeled : LEMMA
+    FORALL (mp)(m : Method, sMP1, sMP2 : MPState, sAP1, sAP2 : APState,
             n : nat, ts : finite_set[Transition], et : EventType) :
-      related_states(mp, ap)(sMP1, sAP1) IMPLIES
-      name(c) = class_name(mva(mp)) IMPLIES
-      classes(ap)(c) IMPLIES
-      methods(c)(m) IMPLIES
-      sMVA2 = on_method_MVA(et)(mp, m)(sMP1) IMPLIES
+      well_behaved_MVA(mp) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      methods(get_monitored_class(mp))(m) IMPLIES
+      sMP2 = (# astate := on_method_MVA(et)(mp, m)(sMP1),
+                pstate := pstate(sMP1),
+                gvs := gvs(sMP1) #) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       ts = filter_event(mva(mp))(et)(name(m)) IMPLIES
-      deriv_stmt(ap)(ann_event(mp)(ts), sAP1, sAP2)(n) IMPLIES
-        MVA_modeled?(mva(mp))(sMVA2, sAP2)
+      derive(ann_program(mp))(ann_event(mp)(ts), sAP1, Unit, sAP2)(n) IMPLIES
+        MP_modeled?(mp)(sMP2, sAP2)
 
 
 END AnnGenerationLemmas
