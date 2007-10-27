@@ -11,7 +11,7 @@ import java.util.Vector;
 public class AdvancedPrettyPrinter extends AbstractPrettyPrinter {
 
 	/**
-	 * Wether operators should be at the beginning (true)
+	 * whether operators should be at the beginning (true)
 	 * or end (false) of the line.
 	 */
 	private static final boolean startFromOp = false;

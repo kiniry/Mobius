@@ -55,13 +55,13 @@ public class CodePosition {
 	private String keyword;
 	
 	/**
-	 * wether this position is in class attributes section
+	 * whether this position is in class attributes section
 	 * (before first method), or not
 	 */
 	private boolean inClassAttribute = false;
 	
 	/**
-	 * wether this position is in method specification or not
+	 * whether this position is in method specification or not
 	 */
 	private boolean inMethodSpec = false;
 	
@@ -165,7 +165,7 @@ public class CodePosition {
 	}
 
 	/**
-	 * @return wether this position is in class attribute
+	 * @return whether this position is in class attribute
 	 * 		section of bytecode (before first method).
 	 */
 	public boolean isInClassAttribute() {
@@ -173,10 +173,10 @@ public class CodePosition {
 	}
 
 	/**
-	 * Sets wether this position is in class attribute
+	 * Sets whether this position is in class attribute
 	 * 		section of bytecode (before first method).
 	 * 
-	 * @param inClassAttribute - wether this position
+	 * @param inClassAttribute - whether this position
 	 * 		is in class attribute section of bytecode.
 	 */
 	public void setInClassAttribute(boolean inClassAttribute) {
@@ -248,7 +248,7 @@ public class CodePosition {
 	}
 
 	/**
-	 * @return wether this position is in a method
+	 * @return whether this position is in a method
 	 * specification.
 	 */
 	public boolean isInMethodSpec() {
@@ -256,9 +256,9 @@ public class CodePosition {
 	}
 
 	/**
-	 * Sets wether this position is in method specification.
+	 * Sets whether this position is in method specification.
 	 * 
-	 * @param inMethodSpec - wether this position
+	 * @param inMethodSpec - whether this position
 	 * 		is in method specification.
 	 */
 	public void setInMethodSpec(boolean inMethodSpec) {

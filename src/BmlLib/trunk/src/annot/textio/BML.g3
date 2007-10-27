@@ -46,7 +46,7 @@ options {
 	private AbstractFormula postc;
 	private Vector<Exsure> exc;
 
-	// set wether to affect parsed BCClass, or only check syntax
+	// set whether to affect parsed BCClass, or only check syntax
 	public void initClass(BCClass bcc, boolean affectBcc) {
 		this.bcc = bcc;
 		this.affectBcc = affectBcc;

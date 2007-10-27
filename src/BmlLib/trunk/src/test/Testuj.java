@@ -24,7 +24,7 @@ import annot.textio.Parsing;
 public final class Testuj {
 
 	/**
-	 * wether show stac trace of exception in test failures
+	 * whether show stac trace of exception in test failures
 	 * or not.
 	 */
 	private static boolean goShowTraceOnFailures = false;
@@ -95,8 +95,8 @@ public final class Testuj {
 	 * Updates test statistics and displays current tests
 	 * result.
 	 * 
-	 * @param ok - wether this test should fail or not
-	 * 		(wether <code>newval</code> is correct or not),
+	 * @param ok - whether this test should fail or not
+	 * 		(whether <code>newval</code> is correct or not),
 	 * @param attr_id - index of attribute to be altered,
 	 * @param newval - new String representation of
 	 * 		<code>at[attr_id]</code> attribute, to be parsed,
@@ -189,7 +189,7 @@ public final class Testuj {
 	 * compares to previously displayd String. Both Strings
 	 * should be equal).
 	 * 
-	 * @return wether test was successful or not.
+	 * @return whether test was successful or not.
 	 */
 	private static boolean checkSaveAndLoad() throws IOException,
 			ClassNotFoundException {

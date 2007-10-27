@@ -227,10 +227,10 @@ public class Parsing {
 	 * @param code - preprocessed class's code to be parsed.
 	 * 		Should have all bytecode lines and unaffected
 	 * 		fragments collapsed to proper stubs,
-	 * @param affectBcc - wether to affect bcclass or not.
+	 * @param affectBcc - whether to affect bcclass or not.
 	 * 		if it is set to false, parser will perform
 	 * 		error-check only, without affecting BCClass.
-	 * @return wether <code>code</code> is correct String
+	 * @return whether <code>code</code> is correct String
 	 * 		representation for current BCClass.
 	 * 		Crashes if <code>affectBcc</code> is true
 	 * 		and given code is incorrect.

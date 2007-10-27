@@ -6,7 +6,7 @@ import annot.io.ReadAttributeException;
 
 /**
  * This is a superclass for all expression that can be OLD.
- * use {@link #isOld()} to check wether this instance
+ * use {@link #isOld()} to check whether this instance
  * is OLD (represents state before this annotation)
  * or not (represents state after this annotation).
  * <br>//XXX what exactly OLD means?
@@ -17,14 +17,14 @@ public abstract class OldExpression extends BCExpression {
 //XXX check JavaDocs.
 
 	/**
-	 * Wether this instance is OLD or not
+	 * whether this instance is OLD or not
 	 */
 	private boolean old;
 	
 	/**
 	 * A constructor for leaf (0-args) expressions.
 	 * 
-	 * @param isOld - wether this expression is OLD or not.
+	 * @param isOld - whether this expression is OLD or not.
 	 */
 	public OldExpression(boolean isOld) {
 		this.old = isOld;

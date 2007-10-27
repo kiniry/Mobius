@@ -19,13 +19,13 @@ public interface IDisplayStyle {
 	public static int max_total_line_width = 60;
 
 	/**
-	 * Wether display each implication branch of quantified
+	 * whether display each implication branch of quantified
 	 * formula at the same level as quantifier itself or not.
 	 */
 	public static final boolean go3argQuantifiers = true;
 
 	/**
-	 * Wether use simplified (raw) prettyPrinter or not.
+	 * whether use simplified (raw) prettyPrinter or not.
 	 * Set in to true only if main (advanced) prettyPrinter
 	 * makes several errors and resulting code became
 	 * unreadable.

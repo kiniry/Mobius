@@ -38,7 +38,7 @@ public class Predicate0Ar extends AbstractFormula {
 	/**
 	 * A private constructor
 	 * 
-	 * @param value - wether constructed object should be
+	 * @param value - whether constructed object should be
 	 * 		a 'true' predicate.
 	 */
 	private Predicate0Ar(boolean value) {

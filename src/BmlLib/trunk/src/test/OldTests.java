@@ -54,7 +54,7 @@ class myInt {
 public final class OldTests {
 
 	/**
-	 * Wether random formula generator should also generate
+	 * whether random formula generator should also generate
 	 * ugly, unproportial quantified formula to make it's
 	 * formatting more difficult, or not.
 	 */
@@ -68,7 +68,7 @@ public final class OldTests {
 	public static final boolean goDisplayAllMessages = false;
 	
 	/**
-	 * If a flag above is on, this flag controls wether
+	 * If a flag above is on, this flag controls whether
 	 * random formula generator should generate only
 	 * 3args quantified formulas (with exactly one
 	 * implication at the root) or not.
@@ -408,7 +408,7 @@ public final class OldTests {
 	@SuppressWarnings("deprecation")
 	private static void pp_test() throws ClassNotFoundException,
 			ReadAttributeException, IOException {
-		// wether assert formula should be generated and saved
+		// whether assert formula should be generated and saved
 		// to file, or loaded from it.
 		final boolean generate = true;
 		// file name to save assert formula to / load it from.
@@ -554,7 +554,7 @@ public final class OldTests {
 	 * 		after parsing given sample.
 	 * @param newCode - code fragment to replace given
 	 *  	fragment.
-	 * @param correct - wether this sample is correct or not.
+	 * @param correct - whether this sample is correct or not.
 	 * @return true if {@link CodeFragment}'s reaction for
 	 * 		this sample was as expected (in <code>hash</code>
 	 * 		and <code>correct</code> parameters).

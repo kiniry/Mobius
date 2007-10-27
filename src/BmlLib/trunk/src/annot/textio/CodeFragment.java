@@ -102,13 +102,13 @@ public class CodeFragment {
 	private int oldEnd;
 	
 	/**
-	 * Wether any changes has been added since last
+	 * whether any changes has been added since last
 	 * {@link #resetChanges()} call.
 	 */
 	private boolean modified = false;
 
 	/**
-	 * Wether current bytecode is correct or not.
+	 * whether current bytecode is correct or not.
 	 */
 	private boolean correct = true;
 	
@@ -309,10 +309,10 @@ public class CodeFragment {
 	}
 
 	/**
-	 * Checks wether given String represents an integer.
+	 * Checks whether given String represents an integer.
 	 * 
 	 * @param str - a String.
-	 * @return wether <code>str</code> is correct String
+	 * @return whether <code>str</code> is correct String
 	 * 		representation of an integer or not.
 	 */
 	private static boolean isNumber(String str) {
@@ -375,11 +375,11 @@ public class CodeFragment {
 	}
 
 	/**
-	 * Returns wether given line contains an annotation's
+	 * Returns whether given line contains an annotation's
 	 * keyword.
 	 * 
 	 * @param line - a line of bytecode.
-	 * @return wether given line contains an annotation's
+	 * @return whether given line contains an annotation's
 	 * 		keyword.
 	 */
 	private boolean isKeyword(String line) {
@@ -519,7 +519,7 @@ public class CodeFragment {
 	/**
 	 * Perform basic syntax checking for given bytecode.
 	 * Check comment parenthness and apperance of some
-	 * keyword (wether they are inside or outside comment).
+	 * keyword (whether they are inside or outside comment).
 	 * 
 	 * @param code - a String representation of bytecode,
 	 * @return <b>true</b> if <code>code</code> is correct
@@ -1011,7 +1011,7 @@ public class CodeFragment {
 	}
 
 	/**
-	 * @return wether current bytecode is correct.
+	 * @return whether current bytecode is correct.
 	 * 		It can ignore errors that are far enought from
 	 * 		edited fragment (eg. if they were there at the
 	 * 		beginnin, or before last {@link #resetChanges()}
