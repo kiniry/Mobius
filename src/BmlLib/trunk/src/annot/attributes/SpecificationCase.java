@@ -59,9 +59,9 @@ public class SpecificationCase {
 	 */
 	public SpecificationCase(BCMethod m) {
 		this.method = m;
-		this.precondition = new ExpressionRoot<AbstractFormula>(Predicate0Ar.TRUE);
-		this.modifies = new ExpressionRoot<ModifyExpression>(ModifyExpression.Everything);
-		this.postcondition = new ExpressionRoot<AbstractFormula>(Predicate0Ar.TRUE);
+		this.precondition = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
+		this.modifies = new ExpressionRoot<ModifyExpression>(this, ModifyExpression.Everything);
+		this.postcondition = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
 		this.excondition = new Vector<Exsure>();
 	}
 
@@ -79,13 +79,13 @@ public class SpecificationCase {
 		this.method = m;
 		if (precondition == null)
 			throw new RuntimeException("SpecificationCase's precondition == null !");
-		this.precondition = new ExpressionRoot<AbstractFormula>(precondition);
+		this.precondition = new ExpressionRoot<AbstractFormula>(this, precondition);
 		if (modifies == null)
 			modifies = ModifyExpression.Everything;
-		this.modifies = new ExpressionRoot<ModifyExpression>(modifies);
+		this.modifies = new ExpressionRoot<ModifyExpression>(this, modifies);
 		if (postcondition == null)
 			postcondition = Predicate0Ar.TRUE;
-		this.postcondition = new ExpressionRoot<AbstractFormula>(postcondition);
+		this.postcondition = new ExpressionRoot<AbstractFormula>(this, postcondition);
 		if (exsures == null)
 			exsures = new Vector<Exsure>();
 		this.excondition = exsures;
@@ -104,9 +104,9 @@ public class SpecificationCase {
 	public SpecificationCase(BCMethod m, AttributeReader ar)
 			throws ReadAttributeException {
 		this(m);
-		this.precondition = new ExpressionRoot<AbstractFormula>(ar.readFormula());
-		this.modifies = new ExpressionRoot<ModifyExpression>(ModifyExpression.getModifyExpression(ar));
-		this.postcondition = new ExpressionRoot<AbstractFormula>(ar.readFormula());
+		this.precondition = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
+		this.modifies = new ExpressionRoot<ModifyExpression>(this, ModifyExpression.getModifyExpression(ar));
+		this.postcondition = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
 		this.excondition = new Vector<Exsure>();
 		int count = ar.readAttributesCount();
 		for (int i=0; i<count; i++) {

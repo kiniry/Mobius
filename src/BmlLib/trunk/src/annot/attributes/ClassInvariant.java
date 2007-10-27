@@ -39,7 +39,7 @@ public class ClassInvariant extends ClassAttribute implements
 	 */
 	public ClassInvariant(BCClass bcc) {
 		this.bcc = bcc;
-		this.invariant = new ExpressionRoot<AbstractFormula>(Predicate0Ar.TRUE);
+		this.invariant = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class ClassInvariant extends ClassAttribute implements
 	 */
 	public ClassInvariant(BCClass bcc, AbstractFormula invariant) {
 		this.bcc = bcc;
-		this.invariant = new ExpressionRoot<AbstractFormula>(invariant);
+		this.invariant = new ExpressionRoot<AbstractFormula>(this, invariant);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class ClassInvariant extends ClassAttribute implements
 	public ClassInvariant(BCClass bcc, AttributeReader ar)
 			throws ReadAttributeException {
 		this.bcc = bcc;
-		this.invariant = new ExpressionRoot<AbstractFormula>(ar.readFormula());
+		this.invariant = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
 	}
 
 	/**

@@ -1,14 +1,43 @@
 package annot.bcexpression;
 
+import annot.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
+/**
+ * This class represents a root of an expression.
+ * Each attribute should have direct references ONLY to
+ * expressions of this type, eg:<br>
+ * <b>wrong:</b><br>
+ * 		Assert.formula = Predicate2Ar(Code.LESS, expr1, expr2);
+ * <br><b>correct:</b><br>
+ * 		Assert.formula = ExpressinoRoot(Predicate2Ar(
+ * 			Code.LESS, expr1, expr2));
+ * 
+ * @author tomekb
+ * @param <T> - expected type of it's (only) subexpression;
+ * 		eg. in Assert, use {@link AbstractFormula} as the
+ * 		assert expression is always a formula.
+ */
 public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 
-	public ExpressionRoot(T subExpression) {
+	/**
+	 * Parent attribute of this expression.
+	 */
+	private Object attribute;
+
+	/**
+	 * A standard constructor.
+	 * 
+	 * @param parent - use <b>this</b> as this parameter value,
+	 * @param subExpression - the expression this class
+	 * 		should represent.
+	 */
+	public ExpressionRoot(Object parent, T subExpression) {
+		this.attribute = parent;
 		this.setSubExprCount(1);
 		this.setSubExpr(0, subExpression);
 	}
@@ -55,6 +84,14 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 	@SuppressWarnings("unchecked")
 	public T getExpression() {
 		return (T)getSubExpr(0);
+	}
+
+	/**
+	 * @return a parent Object (it's creator, usually
+	 * 		an attribute).
+	 */
+	public Object getAttribute() {
+		return attribute;
 	}
 
 }

@@ -281,14 +281,16 @@ public class BCClass {
 	 * 		order, false ==> prefix order),
 	 * @param ew - visitor (function that will be applied
 	 * 		to each node of the expression's tree).
+	 * @return given ExrpessionWalker (<code>ew</code>).
 	 */
-	public void iterate(boolean suffix, ExpressionWalker ew) {
+	public ExpressionWalker iterate(boolean suffix, ExpressionWalker ew) {
 		BCPrintableAttribute[] all = getAllAttributes();
 		for (int i=0; i<all.length; i++) {
 			BCExpression[] e = all[i].getAllExpressions();
 			for (int j=0; j<e.length; j++)
 				e[j].iterate(suffix, ew);
 		}
+		return ew;
 	}
 
 	/**

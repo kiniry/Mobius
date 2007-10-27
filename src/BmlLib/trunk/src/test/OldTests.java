@@ -19,6 +19,7 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.JavaBasicType;
 import annot.bcexpression.NumberLiteral;
+import annot.bcexpression.util.DesugarWalker;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.formula.AbstractFormula;
 import annot.formula.Formula;
@@ -45,9 +46,9 @@ class myInt {
  * Manual tests for BmlLib library. After running some
  * of this scenarios, tester should take a look to the console
  * and check if all displayed values are as expected.
- * Some parts of this tests are undeterministic, so it'n not
- * possible to memorize all results and check if one displayed
- * is equal to the correct one, stored eg. in a file.
+ * Some of this tests are undeterministic, so sometimes
+ * it's not possible to memorize all results and check if one
+ * displayed is equal to the correct one, stored eg. in a file.
  * 
  * @author tomekb
  */
@@ -725,6 +726,23 @@ public final class OldTests {
 	}
 
 	/**
+	 * Test for expression's desugaring. Creates sample class,
+	 * shows it's bytecode, launches desugar and shows modified
+	 * bytecode.
+	 */
+	public static void desugarTest() throws ClassNotFoundException, ReadAttributeException {
+		bcc = createSampleClass2();
+		String code = bcc.printCode();
+		System.out.println("Old code:\n" + code);
+		System.out.println(xxx);
+		int changes = bcc.iterate(true, new DesugarWalker()).getChanges();
+		code = bcc.printCode();
+		System.out.println(xxx);
+		System.out.println("New code:\n" + code);
+		System.out.println("performed " + changes + " changes.");
+	}
+
+	/**
 	 * Main method for running these tests.
 	 * 
 	 * @param args - unused.
@@ -735,6 +753,7 @@ public final class OldTests {
 			codeReplaceTest();
 //			pp_test();
 //			iterTest();
+//			desugarTest();
 			System.out.println("done.");
 		} catch (Exception e) {
 			System.out.println("error!");

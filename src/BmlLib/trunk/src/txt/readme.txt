@@ -40,3 +40,12 @@
 	To add a constant, BML attribute, new BML expression,
 	or change display style	see update.txt file how to do it
 	and which methods should be updated.
+
+5. Performing operations on AST.
+	You can walk on expression's AST. For example, to add
+	desugar functionality, create a subclass of ExpressionWalker
+	and pass it as a parameter of Expression.iterate
+	or BCClass.iterate (it's iter(...) method will be called
+	for each expression node in given order).
+	annot.bcexpression.util.DesugarWalker class was created
+	as a simple desugar example.

@@ -59,7 +59,7 @@ public class MethodSpecification extends MethodAttribute implements
 	public MethodSpecification(BCMethod m, AbstractFormula precondition,
 			SpecificationCase[] sc) {
 		this.method = m;
-		this.precondition = new ExpressionRoot(precondition);
+		this.precondition = new ExpressionRoot(this, precondition);
 		this.specCases = new Vector<SpecificationCase>();
 		for (int i=0; i<sc.length; i++)
 			this.specCases.add(sc[i]);
@@ -78,7 +78,7 @@ public class MethodSpecification extends MethodAttribute implements
 	public MethodSpecification(BCMethod m, AttributeReader ar)
 			throws ReadAttributeException {
 		this.method = m;
-		this.precondition = new ExpressionRoot(ar.readFormula());
+		this.precondition = new ExpressionRoot(this, ar.readFormula());
 		int length = ar.readAttributesCount();
 		specCases = new Vector<SpecificationCase>();
 		for (int i=0; i<length; i++) {

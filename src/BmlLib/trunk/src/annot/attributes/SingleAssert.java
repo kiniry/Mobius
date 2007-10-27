@@ -37,7 +37,7 @@ public class SingleAssert extends InCodeAttribute {
 	 */
 	public SingleAssert(BCMethod m, InstructionHandle ih, int minor) {
 		super(m, ih, minor);
-		this.formula = new ExpressionRoot<AbstractFormula>(Predicate0Ar.TRUE);
+		this.formula = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class SingleAssert extends InCodeAttribute {
 	public SingleAssert(BCMethod m, InstructionHandle ih, int minor,
 			AbstractFormula formula) {
 		super(m, ih, minor);
-		this.formula = new ExpressionRoot<AbstractFormula>(formula);
+		this.formula = new ExpressionRoot<AbstractFormula>(this, formula);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class SingleAssert extends InCodeAttribute {
 	@Deprecated
 	public SingleAssert(BCMethod m, int pc, int minor, AbstractFormula f) {
 		super(m, pc, minor);
-		this.formula = new ExpressionRoot<AbstractFormula>(f);
+		this.formula = new ExpressionRoot<AbstractFormula>(this, f);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class SingleAssert extends InCodeAttribute {
 	@Deprecated
 	public SingleAssert(BCMethod m, int pc, int minor) {
 		super(m, pc, minor);
-		this.formula = new ExpressionRoot<AbstractFormula>(Predicate0Ar.TRUE);
+		this.formula = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class SingleAssert extends InCodeAttribute {
 	 */
 	@Override
 	protected void load(AttributeReader ar) throws ReadAttributeException {
-		formula = new ExpressionRoot<AbstractFormula>(ar.readFormula());
+		formula = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
 	}
 
 	/**

@@ -445,10 +445,12 @@ public abstract class BCExpression {
 	 * 		order, false ==> prefix order),
 	 * @param ew - visitor (function that will be applied
 	 * 		to each node of the expression's tree).
+	 * @return given ExrpessionWalker (<code>ew</code>).
 	 */
-	public void iterate(boolean suffix, ExpressionWalker ew) {
+	public ExpressionWalker iterate(boolean suffix, ExpressionWalker ew) {
 		computeSize();
 		iterate1(null, -1, suffix, ew);
+		return ew;
 	}
 
 	/**

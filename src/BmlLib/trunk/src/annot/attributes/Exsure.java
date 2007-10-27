@@ -40,7 +40,7 @@ public class Exsure {
 	 */
 	public Exsure(JavaReferenceType excType, AbstractFormula postcondition) {
 		this.excType = excType;
-		this.postcondition = new ExpressionRoot<AbstractFormula>(postcondition);
+		this.postcondition = new ExpressionRoot<AbstractFormula>(this, postcondition);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class Exsure {
 		if (!(expr instanceof JavaReferenceType))
 			throw new ReadAttributeException("JavaType expected");
 		this.excType = (JavaReferenceType)expr;
-		this.postcondition = new ExpressionRoot<AbstractFormula>(ar.readFormula());
+		this.postcondition = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
 	}
 	
 	/**
