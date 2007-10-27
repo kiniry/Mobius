@@ -567,7 +567,7 @@ public class BytecodeEditor extends TextEditor {
    *    finalization
    */
   protected void finalize() throws Throwable {
-    my_bconf.disposeColor();
+    //my_bconf.disposeColor();  //FIXME!! this instruction caused problems!
     super.finalize();
   }
 
