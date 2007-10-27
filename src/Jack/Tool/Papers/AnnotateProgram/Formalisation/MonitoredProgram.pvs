@@ -137,9 +137,6 @@ BEGIN
 
   % Instantiation of its semantics
 
-  % TODO: We must add constrain saying that the method belongs to the monitored
-  % class. To get the monitored class we could use get_monitored_class(mp), the
-  % problem is how to get the class of the method.
   on_method_MVA(etype : EventType)
                (mp : MonitoredProgram, md : (wf_Method(program(mp))))
                (s : MPState) : AState =
@@ -284,7 +281,7 @@ BEGIN
        (wf_ghoststate(p)(s1) IMPLIES wf_ghoststate(p)(s2)) IMPLIES
        wf_state(p)(s2)
 
-  wf_state_update_stack : LEMMA %:-)
+  wf_state_update_stack : LEMMA % :-)
     FORALL(p : MonitoredProgram, this_val : Val, 
            arg : (getLocalDecls(program(p))), 
            param_val : Val, lvds : finite_set[LocalVarDecl], s : MPState) : 
@@ -293,7 +290,13 @@ BEGIN
          lvds(l) IMPLIES getLocalDecls(program(p))(l)) IMPLIES
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
-  derive_yields_wf_state_MP : LEMMA % :-)
+  on_method_MVA_yields_wf_AState : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, s : MPState, m : Method, et : EventType) :
+      wf_state(mp)(s) IMPLIES
+        wf_AState(mva(mp))(on_method_MVA(et)(mp, m)(s))
+
+  % PROVE
+  derive_yields_wf_state_MP : LEMMA %
     FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
            (sigma1, sigma2 : MPState, n : nat) :
       wf_MP(mp) IMPLIES

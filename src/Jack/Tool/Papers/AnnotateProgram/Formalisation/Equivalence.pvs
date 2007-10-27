@@ -56,6 +56,13 @@ BEGIN
     pstate(sMP) = pstate(sAP) AND
     Program_gvs_modeled?(sMP, sAP)
 
+  % AT: Consider this definition
+%   Program_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
+%     (ex(pstate(sMP)) = ex(pstate(sAP)) OR 
+%      halted_implies_JMLExc(mp)(sMP, sAP)) AND
+%     st(pstate(sMP)) = st(pstate(sAP)) AND
+%     Program_gvs_modeled?(sMP, sAP)
+
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
     MVA_modeled?(mp)(astate(sMP), sAP) AND

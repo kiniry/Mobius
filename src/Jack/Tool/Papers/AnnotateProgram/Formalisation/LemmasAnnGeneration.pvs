@@ -154,9 +154,11 @@ BEGIN
   % method m, ts is the set of transitions that has (et, name(m)) as event and
   % sAP2 is the state of the annotated program after the execution of ann_event
   % with ts as argument, then sMP2 and sAP2 comply with MP_modeled?.
+  % TODO: Borrar los mp y quiza el ts
   ann_event_preserves_MP_modeled : LEMMA
-    FORALL (mp)(m : Method, sMP1, sMP2 : MPState, sAP1, sAP2 : APState,
-            n : nat, ts : finite_set[Transition], et : EventType) :
+    FORALL (mp)(m : (wf_Method(program(mp))), sMP1, sMP2 : MPState,
+            sAP1, sAP2 : APState, n : nat, ts : finite_set[Transition], 
+            et : EventType) :
       well_behaved_MVA(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       methods(get_monitored_class(mp))(m) IMPLIES

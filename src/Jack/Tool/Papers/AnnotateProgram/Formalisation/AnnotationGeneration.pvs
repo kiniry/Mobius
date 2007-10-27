@@ -59,25 +59,24 @@ BEGIN
   % Variables that will be added in the annotation process
 
   new_cp_gvd(mp) : FieldDecl =
-     (# name := cp(mp), 
-        jtype := IntType, 
-        init_val := Int(unique(init_cp(mva(mp)))) #)
+    (# name := cp(mp),
+       jtype := IntType,
+       init_val := Int(unique(init_cp(mva(mp)))) #)
 
   new_cps_gvds(mp) : finite_set[FieldDecl] =
-      {gd : FieldDecl | EXISTS (q : (cps(mva(mp)))) : 
-                        name(gd) = name_of(mp)(q) AND 
-                        jtype(gd) = IntType AND
-                        init_val(gd) = Int(unique(q))}
+    {gd : FieldDecl | EXISTS (q : (cps(mva(mp)))) :
+                      name(gd) = name_of(mp)(q) AND
+                      jtype(gd) = IntType AND
+                      init_val(gd) = Int(unique(q))}
 
   new_mva_vars_gvds(mp) : finite_set[FieldDecl] =
-      {gd : FieldDecl | EXISTS (v : (vdsA(mva(mp)))) : 
-                        name(gd) = name(v) AND
-                        jtype(gd) = jtype(v) AND
-                        init_val(gd) = init_val(v)}
+    {gd : FieldDecl | EXISTS (v : (vdsA(mva(mp)))) :
+                      name(gd) = name(v) AND
+                      jtype(gd) = jtype(v) AND
+                      init_val(gd) = init_val(v)}
 
   new_gvds(mp) : finite_set[FieldDecl] =
-   add(new_cp_gvd(mp), union(new_cps_gvds(mp), new_mva_vars_gvds(mp)))
-
+    add(new_cp_gvd(mp), union(new_cps_gvds(mp), new_mva_vars_gvds(mp)))
 
 
   new_vars_derived_from_mp : LEMMA % :-)
@@ -107,6 +106,14 @@ BEGIN
 
   halted_new_ghostvar : LEMMA % :-)
     var_names(new_gvds(mp))(halted(mp))
+
+  new_halted_gvd(mp) : FieldDecl =
+    (# name := halted(mp),
+       jtype := IntType,
+       init_val := Int(unique(halted)) #)
+
+  halted_gvd_new_ghostvar : LEMMA % :-)
+    new_gvds(mp)(new_halted_gvd(mp))
 
   cp_not_cps_ghostvar : LEMMA % :-)
     NOT new_cps_gvds(mp)(new_cp_gvd(mp))
@@ -200,13 +207,13 @@ BEGIN
     CaseJML(set2list(ann_event_set(mp)(ts)))
 
   var_names_ann_event : LEMMA % :-)
-    FORALL(ts : finite_set[Transition]) :
+    FORALL (ts : finite_set[Transition]) :
       subset?(ts, ts(mva(mp))) IMPLIES
         subset?(var_names(ann_event(mp)(ts)), 
                 union(var_names(program(mp)), var_names(new_gvds(mp))))
 
   ann_event_var_names : LEMMA % :-)
-    FORALl(ts : finite_set[Transition], v : Name) :
+    FORALL (ts : finite_set[Transition], v : Name) :
       subset?(ts, ts(mva(mp))) IMPLIES
       var_names(ann_event(mp)(ts))(v) IMPLIES 
         ext_declared_var_names(program(mp))(v) OR
@@ -569,6 +576,13 @@ BEGIN
   ann_program_preserves_wf_method : LEMMA  % :-)
     FORALL(m : (wf_Method(program(mp)))) :
       wf_Method(ann_program(mp))(ann_method(mp)(m))
+
+  % PROVE
+  ann_event_wf_Body : LEMMA
+    FORALL (m : Method, ts : finite_set[Transition]) :
+      methods(get_monitored_class(mp))(m) IMPLIES
+      subset?(ts, ts(mva(mp))) IMPLIES
+        wf_Body(ann_program(mp))(ann_event(mp)(ts))
 
   get_class_ann_program : LEMMA % :-)
     FORALL (c1, c2 : Class, tgt : Val) :
