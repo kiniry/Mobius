@@ -500,6 +500,13 @@ public abstract class BCExpression {
 	}
 
 	/**
+	 * @return subexpression array.
+	 */
+	public BCExpression[] getSubExpr() {
+		return subExpr;
+	}
+
+	/**
 	 * Sets given subexpression.
 	 * 
 	 * @param index - index of the subexpression to be set.

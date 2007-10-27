@@ -42,7 +42,7 @@ options {
 	//local variables
 	private boolean clr = false;
 	private AbstractFormula prec;
-	private ModifyExpression modif;
+	private ModifyList modif;
 	private AbstractFormula postc;
 	private Vector<Exsure> exc;
 
@@ -274,6 +274,15 @@ methodSpecification returns [MethodSpecification ast] :
 		(SC_START s=specCase {$ast.addCase($s.ast);} SC_END)*
 	;
 
+modifyList returns [ModifyList ast] :
+	l=modifyExpression {
+		$ast = new ModifyList();
+		$ast.addModify($l.ast);
+	}
+	(COMMA r=modifyExpression {
+		$ast.addModify($r.ast);
+	})*;
+
 exname returns [String name] :
 	i=EXC_IDENT {$name = $i.getText();}
 	| i2=IDENT {$name = $i2.getText();}
@@ -286,7 +295,7 @@ specCase returns [SpecificationCase ast] :
 		postc = null;
 		exc = new Vector<Exsure>();
 	}
-	(MODIFIES me=modifyExpression {modif = $me.ast;})?
+	(MODIFIES me=modifyList {modif = $me.ast;})?
 	(POSTCONDITION f2=formula {postc = $f2.ast;})?
 	(EXSURES (i=exname COLON f3=formula {
 		if (($i.name != null) && ($f3.ast != null)) {
@@ -514,6 +523,7 @@ SC_END: '|}';
 PRECONDITION: '\\precondition';
 MODIFIES: '\\modifies';
 POSTCONDITION: '\\ensures';
+COMMA: ',';
 EXSURES: '\\exsures';
 COLON: ':';
 NOTHING: 'nothing';

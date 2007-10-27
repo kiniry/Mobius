@@ -7,6 +7,7 @@ import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.modifies.ModifyExpression;
+import annot.bcexpression.modifies.ModifyList;
 import annot.formula.AbstractFormula;
 import annot.formula.Predicate0Ar;
 import annot.io.AttributeReader;
@@ -38,7 +39,7 @@ public class SpecificationCase {
 	 * This expression describes what variables can change
 	 * in this case.
 	 */
-	private ExpressionRoot<ModifyExpression> modifies;
+	private ExpressionRoot<ModifyList> modifies;
 
 	/**
 	 * A condition that should be true if precondition is so.
@@ -60,7 +61,7 @@ public class SpecificationCase {
 	public SpecificationCase(BCMethod m) {
 		this.method = m;
 		this.precondition = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
-		this.modifies = new ExpressionRoot<ModifyExpression>(this, ModifyExpression.Everything);
+		this.modifies = new ExpressionRoot<ModifyList>(this, new ModifyList());
 		this.postcondition = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
 		this.excondition = new Vector<Exsure>();
 	}
@@ -74,15 +75,15 @@ public class SpecificationCase {
 	 * 		postcondition.
 	 */
 	public SpecificationCase(BCMethod m, AbstractFormula precondition,
-			ModifyExpression modifies, AbstractFormula postcondition,
+			ModifyList modifies, AbstractFormula postcondition,
 			Vector<Exsure> exsures) {
 		this.method = m;
 		if (precondition == null)
 			throw new RuntimeException("SpecificationCase's precondition == null !");
 		this.precondition = new ExpressionRoot<AbstractFormula>(this, precondition);
 		if (modifies == null)
-			modifies = ModifyExpression.Everything;
-		this.modifies = new ExpressionRoot<ModifyExpression>(this, modifies);
+			modifies = new ModifyList();
+		this.modifies = new ExpressionRoot<ModifyList>(this, modifies);
 		if (postcondition == null)
 			postcondition = Predicate0Ar.TRUE;
 		this.postcondition = new ExpressionRoot<AbstractFormula>(this, postcondition);
@@ -105,7 +106,7 @@ public class SpecificationCase {
 			throws ReadAttributeException {
 		this(m);
 		this.precondition = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
-		this.modifies = new ExpressionRoot<ModifyExpression>(this, ModifyExpression.getModifyExpression(ar));
+		this.modifies = new ExpressionRoot<ModifyList>(this, new ModifyList(ar));
 		this.postcondition = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
 		this.excondition = new Vector<Exsure>();
 		int count = ar.readAttributesCount();
@@ -141,7 +142,7 @@ public class SpecificationCase {
 		code += IDisplayStyle._sc_start + conf.newLine();
 		conf.incInd();
 		code += precondition.printLine(conf, IDisplayStyle._precondition);
-		if (modifies.getExpression() != ModifyExpression.Everything)
+		if (!modifies.getExpression().isEmpty())
 			code += modifies.printLine(conf, IDisplayStyle._modifies);
 		code += postcondition.printLine(conf, IDisplayStyle._postcondition);
 		if (excondition.size() == 1) {

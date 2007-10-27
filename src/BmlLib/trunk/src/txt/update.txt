@@ -34,8 +34,8 @@ This document describes changes in code required to extend
 		- add test cases to OldTests,
 		- write JavaDocs.
 	c). inCode atribute:
-		- create a subclass of BCAttributeTable,
 		- create a subclass of InCodeAttribute,
+		- create a subclass of BCAttributeTable,
 		- add new attribute type to AType interface,
 		- update switch in BCAttributeMap.addAttribute(
 			atype, pc, minor),

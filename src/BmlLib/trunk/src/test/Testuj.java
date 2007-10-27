@@ -349,6 +349,8 @@ public final class Testuj {
 		test(true, 2, "true {| \\precondition true \\modifies nothing \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
 		test(true, 2, "true {| \\precondition true \\modifies everything \\exsures LJava/Lang/Exception: true && false |}",
 				"true {| \\precondition true \\ensures true \\exsures LJava/Lang/Exception: true && false |}");
+		test(true, 2, "true {| \\precondition true \\modifies nothing, everything |}",
+				"true {| \\precondition true \\modifies nothing, everything \\ensures true |}");
 
 		// bitwise operators tests:
 		test(true, 3, "(1 | 2) > 0");

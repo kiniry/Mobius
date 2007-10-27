@@ -13,6 +13,7 @@
 	ale occurence(TRUE) != occurence(TRUE)
 	i occurence(TRUE).equals(occurence(TRUE)) ?
 - jak powinienem reprezentowac OLD-y (jako old(xx) czy old_xx)?
+- czy powinienem obslugiwac przyslanianie zmiennych zwiazanych?
 - czy typy wezlow AST powinny odpowiadac typom ich elementow
 	(np. czy formula powinna miec podwyrazenia typu
 	AbstractFormula, czy BCExpression)? Co z typami zmiennych

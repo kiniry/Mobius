@@ -44,6 +44,9 @@ public class JavaBasicType extends JavaType1 {
 	public static final JavaBasicType JavaBool = new JavaBasicType(
 			IDisplayStyle.jt_boolean);
 
+	public static final JavaBasicType ModifyExpressionType
+		= new JavaBasicType(null);
+
 	/**
 	 * Displays JavaType to a String.
 	 * 

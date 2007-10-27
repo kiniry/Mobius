@@ -17,7 +17,8 @@ import annot.textio.Priorities;
 
 /**
  * This class represents a quantifier with bound variable
- * declarations and formula. 
+ * declarations and formula.<br>
+ * XXX Bound variable names cannot shadow each other (parser).
  * 
  * @author tomekb
  */

@@ -11,8 +11,9 @@ import annot.textio.Priorities;
 /**
  * This class represents bound variable. It represents
  * a variable, not it's ocurence, eg. in 'forall a ; a > 0'
- * both occurences of 'a' are the same object.
- * 
+ * both occurences of 'a' are the same object.<br>
+ * XXX Bound variable names cannot shadow each other (parser).
+ *  
  * @author tomekb
  */
 public class BoundVar extends BCExpression {
