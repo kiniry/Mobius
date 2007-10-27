@@ -47,34 +47,25 @@ BEGIN
     MVA_cps_modeled?(mp)(sAP) AND
     MVA_vars_modeled?(sA, sAP)
 
+  halted_implies_JMLExc(mp)(sMP : MPState, sAP : APState) : boolean =
+    cp(astate(sMP)) = halted IMPLIES
+      (up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
+
   Program_gvs_modeled?(sMP : MPState, sAP : APState) : boolean =
     FORALL (n : Name) : defined?(gvs(sMP)(n)) IMPLIES
       gvs(sMP)(n) = gvs(sAP)(n)
 
   % Says if sAP is a super state of sMP
-  Program_modeled?(sMP : MPState, sAP : APState) : boolean =
-    pstate(sMP) = pstate(sAP) AND
+  Program_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
+    (ex(pstate(sMP)) = ex(pstate(sAP)) OR 
+     halted_implies_JMLExc(mp)(sMP, sAP)) AND
+    st(pstate(sMP)) = st(pstate(sAP)) AND
     Program_gvs_modeled?(sMP, sAP)
-
-  % AT: Consider this definition
-%   Program_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
-%     (ex(pstate(sMP)) = ex(pstate(sAP)) OR 
-%      halted_implies_JMLExc(mp)(sMP, sAP)) AND
-%     st(pstate(sMP)) = st(pstate(sAP)) AND
-%     Program_gvs_modeled?(sMP, sAP)
 
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
     MVA_modeled?(mp)(astate(sMP), sAP) AND
-    Program_modeled?(sMP, sAP)
-
-  % NOTE: It looks natural to include this requirement in MVA_modeled?. The
-  % problem is that it does not hold in the intermediate state of the method
-  % call case (before the invariant is checked), in particular for some
-  % lemmas in LemmasAnnGeneration.
-  halted_implies_JMLExc(mp)(sMP : MPState, sAP : APState) : boolean =
-    cp(astate(sMP)) = halted IMPLIES
-      (up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
+    Program_modeled?(mp)(sMP, sAP)
 
 
   % It is possible to translate every guard of the MVA into an expression that
@@ -118,8 +109,7 @@ BEGIN
   related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
     wf_state(mp)(sMP) AND
     wf_state(ann_program(mp))(sAP) AND
-    MP_modeled?(mp)(sMP, sAP) AND
-    halted_implies_JMLExc(mp)(sMP, sAP)
+    MP_modeled?(mp)(sMP, sAP)
     
 
 END Equivalence
