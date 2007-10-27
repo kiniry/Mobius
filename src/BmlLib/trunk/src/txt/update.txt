@@ -34,14 +34,15 @@ This document describes changes in code required to extend
 		- add test cases to OldTests,
 		- write JavaDocs.
 	c). inCode atribute:
+		- add new attribute type to AType interface,
 		- create a subclass of InCodeAttribute,
 		- create a subclass of BCAttributeTable,
-		- add new attribute type to AType interface,
 		- update switch in BCAttributeMap.addAttribute(
 			atype, pc, minor),
-		- update BCPrintableAttribute.parse(...) method,
+		- update (?) BCPrintableAttribute.parse(...) method,
 		- update BCClass.removeBMLAttributes(arr),
 		- update BCConstantPool.addStandardConstants(),
+		- add attributeTable's subclass field to BCAttributeMap,
 		- update BCMethod.save(),
 		- update AttributeReader.readAttribute(ua),
 		- update CodeFragment.getAllAttributeNames(),

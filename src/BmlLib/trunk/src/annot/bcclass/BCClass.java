@@ -355,6 +355,8 @@ public class BCClass {
 					continue;
 				if (IDisplayStyle.__assertTable.equals(aname))
 					continue;
+				if (IDisplayStyle.__loopSpecTable.equals(aname))
+					continue;
 			}
 			v.add(arr[i]);
 		}

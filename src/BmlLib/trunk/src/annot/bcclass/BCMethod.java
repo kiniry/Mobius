@@ -178,8 +178,8 @@ public class BCMethod {
 		if (mspec != null)
 			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(mspec));
 		if (amap.getLength() > 0) {
-			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap
-					.getAtab()));
+			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap.getAtab()));
+			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap.getLstab()));
 		}
 		bcelMethod.removeAttributes();
 		for (int i = 0; i < attrs.length; i++)

@@ -71,7 +71,6 @@ public abstract class BCAttributeTable implements IBCAttribute {
 	 * 		annotation.
 	 */
 	public void load(AttributeReader ar) throws ReadAttributeException {
-		parent.removeAll();
 		int n = ar.readAttributesCount();
 		for (int i = 0; i < n; i++) {
 			int pc = ar.readShort();
@@ -94,7 +93,8 @@ public abstract class BCAttributeTable implements IBCAttribute {
 	 * @param aw - stream to save annotations to.
 	 */
 	public void save(AttributeWriter aw) {
-		aw.writeAttributeCount(parent.getLength());
+		aw.writeAttributeCount(parent.getAttributeCount(singleType()));
+//		aw.writeAttributeCount(parent.getLength());
 		InCodeAttribute[] all = parent.getAllAttributes(singleType());
 		for (int i = 0; i < all.length; i++) {
 			aw.writeShort(all[i].getPC());

@@ -78,6 +78,7 @@ public interface IDisplayStyle {
 	public static final String __classInvariant = "class invariant";
 	public static final String __assertTable = "assert table";
 	public static final String __second_cp = "second constant pool";
+	public static final String __loopSpecTable = "loop specification table";
 
 	/**
 	 * BML annotations keywords (at the beginning
@@ -96,5 +97,9 @@ public interface IDisplayStyle {
 	public static final String _postcondition = "\\ensures";
 	public static final String _exsures = "\\exsures";
 	public static final String _result = "\\result";
+	public static final String _loopspec = "\\loop specification";
+	public static final String _loop_modifies = "\\modifies";
+	public static final String _loop_invariant = "\\invariant";
+	public static final String _loop_decreases = "\\decreases";
 
 }

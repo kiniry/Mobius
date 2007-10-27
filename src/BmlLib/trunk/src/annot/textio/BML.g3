@@ -45,6 +45,8 @@ options {
 	private ModifyList modif;
 	private AbstractFormula postc;
 	private Vector<Exsure> exc;
+	private AbstractFormula inv;
+	private AbstractIntExpression dec;
 
 	// set whether to affect parsed BCClass, or only check syntax
 	public void initClass(BCClass bcc, boolean affectBcc) {
@@ -295,7 +297,7 @@ specCase returns [SpecificationCase ast] :
 		postc = null;
 		exc = new Vector<Exsure>();
 	}
-	(MODIFIES me=modifyList {modif = $me.ast;})?
+	(MODIFIES ml=modifyList {modif = $ml.ast;})?
 	(POSTCONDITION f2=formula {postc = $f2.ast;})?
 	(EXSURES (i=exname COLON f3=formula {
 		if (($i.name != null) && ($f3.ast != null)) {
@@ -310,6 +312,15 @@ specCase returns [SpecificationCase ast] :
 
 inCodeAttribute returns [InCodeAttribute ast] :
 	ASSERT f1=formula {$ast = new SingleAssert(m, ih, -1, $f1.ast);}
+	| LOOPSPEC {
+		modif = null;
+		inv = null;
+		dec = null;
+	}
+	(MODIFIES ml=modifyList {modif = $ml.ast;})?
+	(LINVARIANT iv=formula {inv = $iv.ast;})?
+	(LDECREASES de=expression {dec = $de.ast;})?
+	{$ast = new SingleLoopSpecification(m, ih, -1, modif, inv, dec);}
 	;
 
 modifyExpression returns [ModifyExpression ast] :
@@ -516,6 +527,9 @@ EOA: 'EOA';
 // bml level
 
 ASSERT: '\\assert';
+LOOPSPEC: '\\loop specification';
+LINVARIANT: '\\invariant';
+LDECREASES: '\\decreases';
 CLASSINVARIANT: '\\class invariant';
 REQUIRES: '\\requires';
 SC_START: '{|';

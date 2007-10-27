@@ -104,6 +104,7 @@ public class BCConstantPool {
 		cpg.addUtf8(IDisplayStyle.__classInvariant);
 		cpg.addUtf8(IDisplayStyle.__mspec);
 		cpg.addUtf8(IDisplayStyle.__second_cp);
+		cpg.addUtf8(IDisplayStyle.__loopSpecTable);
 	}
 
 	/**

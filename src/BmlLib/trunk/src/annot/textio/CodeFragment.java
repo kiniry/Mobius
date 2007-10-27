@@ -261,7 +261,8 @@ public class CodeFragment {
 	 */
 	private static String[] getAllAttributeNames() {
 		String[] ret = { IDisplayStyle._classInvariant,
-				IDisplayStyle._requires, IDisplayStyle._assert };
+				IDisplayStyle._requires, IDisplayStyle._assert,
+				IDisplayStyle._loopspec};
 		return ret;
 	}
 

@@ -38,10 +38,16 @@ public class BCAttributeMap {
 	private HashMap<InstructionHandle, SingleList> map;
 
 	/**
-	 * Method's attribute used for loading attributes from
+	 * Method's attribute used for loading asserts from
 	 * and saving them to .class file (to BCEL method).
 	 */
 	private AssertTable atab;
+
+	/**
+	 * Method's attribute used for loading loop specifications
+	 * from and saving them to .class file (to BCEL method).
+	 */
+	private LoopSpecificationTable lstab;
 
 	/**
 	 * Constructor from a method that creates
@@ -52,6 +58,7 @@ public class BCAttributeMap {
 	public BCAttributeMap(BCMethod m) {
 		this.method = m;
 		this.atab = new AssertTable(m, this);
+		this.lstab = new LoopSpecificationTable(m, this);
 		this.length = 0;
 		this.map = new HashMap<InstructionHandle, SingleList>();
 	}
@@ -85,6 +92,11 @@ public class BCAttributeMap {
 					minor);
 			addAttribute(sa, minor);
 			return sa;
+		case AType.C_LOOPSPEC:
+			SingleLoopSpecification sls = new SingleLoopSpecification(
+					method, method.findAtPC(pc), minor, null, null, null);
+			addAttribute(sls, minor);
+			return sls;
 		default:
 			throw new RuntimeException("invalid attribute type");
 		}
@@ -182,7 +194,7 @@ public class BCAttributeMap {
 	 * @return array of annotations matching given type mask.
 	 */
 	public InCodeAttribute[] getAllAttributes(int types) {
-		InCodeAttribute[] all = new InCodeAttribute[getLength()];
+		InCodeAttribute[] all = new InCodeAttribute[getAttributeCount(types)];
 		LinkedList<SingleList> ll = new LinkedList<SingleList>();
 		Iterator<SingleList> iter1 = map.values().iterator();
 		while (iter1.hasNext())
@@ -225,11 +237,23 @@ public class BCAttributeMap {
 		return l;
 	}
 
+	public int getAttributeCount(int types) {
+		int cnt = 0;
+		Iterator<SingleList> iter1 = map.values().iterator();
+		while (iter1.hasNext())
+			cnt += iter1.next().getAttributeCount(types);
+		return cnt;
+	}
+
 	/**
 	 * @return assert table for file I/O.
 	 */
 	public AssertTable getAtab() {
 		return atab;
+	}
+
+	public LoopSpecificationTable getLstab() {
+		return lstab;
 	}
 
 }

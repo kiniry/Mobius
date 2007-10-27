@@ -80,6 +80,16 @@ public class SingleList implements Comparable<SingleList> {
 		return filtered;
 	}
 
+	public int getAttributeCount(int types) {
+		int cnt = 0;
+		Iterator<InCodeAttribute> i = attributes.iterator();
+		while (i.hasNext()) {
+			if ((i.next().aType() & types) > 0)
+				cnt++;
+		}
+		return cnt;
+	}
+
 	/**
 	 * Prints all its annotations to a String.
 	 * 

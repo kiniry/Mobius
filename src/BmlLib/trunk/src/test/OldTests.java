@@ -655,8 +655,8 @@ public final class OldTests {
 		replaceTest("/*", "*/", 328, 280, true, "  ");
 		replaceTest("Empty\n\n", "\npublic", 758, 169, true, "");
 		replaceTest("V (28)\n", "8:", 483, 138, true, "/* \\assert forall int a; a > 0 */\n");
-//		replaceTest("(26)\n/* \n * ", " * \\assert ((", 904, -1, true, "\\loop specification:\n *   \\modifies nothing\n");
-//		replaceTest("(26)\n/* \n * ", " * \\assert ((", 871, -1, true, "\\loop specification:\n *   \\modifies nothing\n *   \\loop invariant true\n *   \\decreases 2 + 2\n");
+		replaceTest("(26)\n/* \n * ", " * \\assert ((", 893, 65, true, "\\loop specification\n *   \\modifies nothing\n");
+		replaceTest("(26)\n/* \n * ", " * \\assert ((", 572, 879, true, "\\loop specification\n *   \\modifies nothing\n *   \\invariant true\n *   \\decreases 2 + 2\n");
 //		replaceTest("/* \n", " * ", 249, -1, true, " * \\history constraints true\n");
 //		replaceTest("))\n", " */", 189, -1, true, " * \\history constraints false\n");
 		System.out.println("code replace tests completed.");

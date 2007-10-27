@@ -48,10 +48,25 @@ public class BMLConfig implements IDisplayStyle {
 	 * methods.
 	 * 
 	 * @return new line, with continue comment mark
-	 * and indentation.
+	 * 		and indentation.
 	 */
 	public String newLine() {
 		return "\n" + comment_next + indent;
+	}
+
+	/**
+	 * The same as {@link #newLine()}, bu with lesser
+	 * indentation.
+	 *
+	 * @see #newLine()
+	 * @return new line, with continue comment mark
+	 * 		and lesser indentation.
+	 */
+	public String nl() {
+		decInd();
+		String str = newLine();
+		incInd();
+		return str;
 	}
 
 	/**

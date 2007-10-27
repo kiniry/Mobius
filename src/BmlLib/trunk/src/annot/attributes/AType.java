@@ -37,4 +37,9 @@ public interface AType {
 	 */
 	public static final int C_CLASSINVARIANT = 4;
 
+	/**
+	 * Loop specification code
+	 */
+	public static final int C_LOOPSPEC = 8;
+
 }

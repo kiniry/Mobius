@@ -138,6 +138,10 @@ public class AttributeReader {
 			MLog.putMsg(MLog.PInfo, "    reading attribute: "
 					+ IDisplayStyle.__assertTable);
 			method.getAmap().getAtab().load(this);
+		} else if (aname.equals(IDisplayStyle.__loopSpecTable)) {
+			MLog.putMsg(MLog.PInfo, "    reading attribute: "
+					+ IDisplayStyle.__loopSpecTable);
+			method.getAmap().getLstab().load(this);
 		} else {
 			MLog.putMsg(MLog.PTodo, "    unrecognized attribute: " + aname);
 			return;

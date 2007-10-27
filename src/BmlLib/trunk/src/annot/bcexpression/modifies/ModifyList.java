@@ -7,7 +7,6 @@ import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
-import annot.textio.IDisplayStyle;
 import annot.textio.Priorities;
 
 public class ModifyList extends BCExpression {
@@ -85,6 +84,8 @@ public class ModifyList extends BCExpression {
 
 	@Override
 	public void write(AttributeWriter aw) {
+		if (getSubExprCount() == 0)
+			addModify(ModifyExpression.Everything);
 		aw.writeAttributeCount(getSubExprCount());
 		writeSubExpressions(aw);
 	}

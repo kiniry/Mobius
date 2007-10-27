@@ -87,6 +87,15 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 	}
 
 	/**
+	 * Set it's (only) subexpression.
+	 * 
+	 * @param expr - new subexpression value.
+	 */
+	public void setExpression(T expr) {
+		setSubExpr(0, expr);
+	}
+
+	/**
 	 * @return a parent Object (it's creator, usually
 	 * 		an attribute).
 	 */
