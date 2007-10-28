@@ -429,6 +429,10 @@ public final class Testuj {
 		test(true, 0, "l > 0");
 		test(true, 1, "n + l > 1");
 		test(false, 2, "c < 0");
+		test(true, 1, "this.l > 0");
+		test(true, 1, "this.this.l > 0");
+		test(false, 1, "this. > 0");
+		test(false, 1, "this..l > 0");
 		
 		// OLD tests:
 		test(false, 2, "old(old)");
@@ -440,6 +444,18 @@ public final class Testuj {
 		test(false, 3, "old(args) < old_this");
 		test(false, 3, "old(old_this) != NULL", "old(old_this) != null");
 		test(true, 3, "OLD_THIS == null", "old_this == null");
+		
+		// modify Expressions tests:
+		test(true, 2, "true {| \\precondition true \\modifies nothing \\ensures false |}");
+		test(false, 2, "true {| \\precondition true \\modifies xxx \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies args \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies args, l, args \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies this \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies this.args \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies this.args.l \\ensures false |}");
+		test(false, 2, "true {| \\precondition true \\modifies .l \\ensures false |}");
+		test(false, 2, "true {| \\precondition true \\modifies . \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies this.args.l, l, this.l \\ensures false |}");
 		end();
 	}
 

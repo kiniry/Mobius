@@ -24,6 +24,9 @@ import annot.bcexpression.NULL_CLASS;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.OLD;
 import annot.bcexpression.UnaryArithmeticExpression;
+import annot.bcexpression.modifies.ModifiesDot;
+import annot.bcexpression.modifies.ModifiesIdent;
+import annot.bcexpression.modifies.ModifyExpression;
 import annot.formula.AbstractFormula;
 import annot.formula.Formula;
 import annot.formula.Predicate0Ar;
@@ -239,6 +242,31 @@ public class AttributeReader {
 		if (c instanceof ConstantUtf8)
 			return ((ConstantUtf8) c).getBytes();
 		throw new ReadAttributeException("invalid constant index: " + index);
+	}
+
+	/**
+	 * Returns proper instance of ModifyExpression. Use this
+	 * instead of creating new instances yourself.
+	 * 
+	 * @return proper instance of ModifyExpression.
+	 * @throws ReadAttributeException - if remaining data
+	 * 		doesn't represent correct modify expression.
+	 */
+	public ModifyExpression readModifyExpression()
+		throws ReadAttributeException {
+		int b = readByte();
+		switch (b) {
+		case Code.MODIFIES_NOTHING:
+			return ModifyExpression.Nothing;
+		case Code.MODIFIES_EVERYTHING:
+			return ModifyExpression.Everything;
+		case Code.MODIFIES_IDENT:
+			return new ModifiesIdent(this, Code.MODIFIES_IDENT);
+		case Code.MODIFIES_DOT:
+			return new ModifiesDot(this, Code.MODIFIES_DOT);
+		default:
+			throw new ReadAttributeException("invalid modify opcode: " + b);
+		}
 	}
 
 	/**

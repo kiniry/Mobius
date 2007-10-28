@@ -42,6 +42,29 @@ public abstract class ModifyExpression extends BCExpression {
 	}
 
 	/**
+	 * Another constructor, for unary subclasses.
+	 * 
+	 * @param connector - type of this expression,
+	 * 		as in <code>Code</code> interface,
+	 * @param expr - subExpression.
+	 */
+	protected ModifyExpression(int connector, BCExpression expr) {
+		super(connector, expr);
+	}
+
+	/**
+	 * Another constructor, for binary subclasses.
+	 * 
+	 * @param connector - type of this expression,
+	 * 		as in <code>Code</code> interface,
+	 * @param left - left subexpression,
+	 * @param right - right subexpression.
+	 */
+	protected ModifyExpression(int connector, ModifyExpression left, BCExpression right) {
+		super(connector, left, right);
+	}
+
+	/**
 	 * A constructor from AttributeReader. It assumes that
 	 * expression type (connector, from <code>Code</code>
 	 * interface) has been just loaded from <code>ar</code>.
@@ -55,31 +78,6 @@ public abstract class ModifyExpression extends BCExpression {
 	 */
 	protected ModifyExpression(AttributeReader ar, int root) throws ReadAttributeException {
 		super(ar, root);
-	}
-
-	/**
-	 * Returns proper instance of ModifyExpression. Use this
-	 * instead of creating new instances yourself.
-	 * 
-	 * @param ar - AttributeReader to load modifyExpression
-	 * 		from. Next byte in it's input stream should be
-	 * 		expression type, from <code>Code</code> interface.
-	 * @return rpoper instance of ModifyExpression.
-	 * @throws ReadAttributeException - if remaining data in
-	 * 		<code>ar</code> doesn't represent correct modify
-	 * 		expression.
-	 */
-	public static ModifyExpression getModifyExpression(AttributeReader ar)
-		throws ReadAttributeException {
-		int b = ar.readByte();
-		switch (b) {
-		case Code.MODIFIES_NOTHING:
-			return Nothing;
-		case Code.MODIFIES_EVERYTHING:
-			return Everything;
-		default:
-			throw new ReadAttributeException("invalid modify opcode: " + b);
-		}
 	}
 
 	/**

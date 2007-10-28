@@ -64,7 +64,7 @@ public class ModifyList extends BCExpression {
 		int size = ar.readAttributesCount();
 		setSubExprCount(size);
 		for (int i=0; i<size; i++) {
-			ModifyExpression me = ModifyExpression.getModifyExpression(ar);
+			ModifyExpression me = ar.readModifyExpression();
 			setSubExpr(i, me);
 		}
 	}
@@ -92,7 +92,7 @@ public class ModifyList extends BCExpression {
 
 	public void addModify(ModifyExpression expr) {
 		//XXX slow
-		BCExpression[] sub = getSubExpr();
+		BCExpression[] sub = getAllSubExpr();
 		setSubExprCount(sub.length + 1);
 		for (int i=0; i<sub.length; i++)
 			setSubExpr(i, sub[i]);

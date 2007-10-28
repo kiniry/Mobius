@@ -10,15 +10,14 @@ TODO: (- : to do, + : done, * : optional, > : in progress)
 		+ add field ref,
 		+ add full qualified name.
 	+ add olds,
-	- add modifies expressions:
-		- ident,
-		- local variable,
+	> add modifies expressions:
+		+ ident, local variable,
+		+ dot,
 		- array:
 			- all array elements,
-			- array elements from to,
 			- single index.
-		- dot,
-- add attributes:
+			- array elements from to,
+> add attributes:
 	+ add LoopSpecification,
 	* add HistoryConstraints,
 	* add ParamTable.

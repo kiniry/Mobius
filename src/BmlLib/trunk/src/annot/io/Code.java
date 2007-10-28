@@ -52,6 +52,8 @@ public interface Code {
 	public static final int JAVA_TYPE = 0xC0;
 	public static final int MODIFIES_EVERYTHING = 0xD0;
 	public static final int MODIFIES_NOTHING = 0xD1;
+	public static final int MODIFIES_IDENT = 0xD2;
+	public static final int MODIFIES_DOT = 0xD3;
 	public static final int BOUND_VAR = 0xE0;
 
 	// new opcodes:

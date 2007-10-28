@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import java.util.HashMap;
+
 import annot.bcclass.MLog;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.formula.Predicate0Ar;
@@ -37,12 +39,34 @@ public abstract class BCExpression {
 	 */
 	private int priority = 0;
 
+	/**
+	 * Size of expression tree (accurate only after calling
+	 * {@link #computeSize()}.
+	 */
 	private int treeSize = -1;
 
+	/**
+	 * Parent node, accurate only in iterator.
+	 */
 	private BCExpression parent;
 
-	private int ChildNo = -1;
+	/**
+	 * Position in parent's subexpression list
+	 * (parent.subExpr[childNo] == this).
+	 * Accurate only in iterator.
+	 */
+	private int childNo = -1;
 
+	/**
+	 * This field should be used from outsite this library,
+	 * to enable storeing data specific for one computation
+	 * type. If you'r application need storeing it's data
+	 * in AST used by other application, it should obtain
+	 * it's global identifier using {@link #getNewHandle()}
+	 * and read / write data to this hashMap at this key.
+	 */
+	private HashMap<Object, Object> privateData;
+	
 	/**
 	 * A constructor for 0Arg expressions.
 	 */
@@ -364,9 +388,9 @@ public abstract class BCExpression {
 	 * @param expr - expression to replace this expression.
 	 */
 	public void replaceWith(BCExpression expr) {
-		expr.ChildNo = ChildNo;
+		expr.childNo = childNo;
 		expr.parent = parent;
-		parent.setSubExpr(ChildNo, expr);
+		parent.setSubExpr(childNo, expr);
 	}
 	
 	/**
@@ -390,7 +414,7 @@ public abstract class BCExpression {
 	 */
 	private int computeSize(BCExpression parent, int chn) {
 		this.parent = parent; //XXX doesn't work!
-		this.ChildNo = chn; //XXX doesn;t work!
+		this.childNo = chn; //XXX doesn;t work!
 		treeSize = 0;
 		for (int i=0; i<subExpr.length; i++)
 			if (subExpr[i] != null)
@@ -466,7 +490,7 @@ public abstract class BCExpression {
 	 */
 	private void iterate1(BCExpression parent, int chn, boolean suffix, ExpressionWalker ew) {
 		this.parent = parent;
-		this.ChildNo = chn;
+		this.childNo = chn;
 		if (!suffix)
 			ew.iter(parent, this);
 		for (int i=0; i<subExpr.length; i++)
@@ -502,7 +526,7 @@ public abstract class BCExpression {
 	/**
 	 * @return subexpression array.
 	 */
-	public BCExpression[] getSubExpr() {
+	public BCExpression[] getAllSubExpr() {
 		return subExpr;
 	}
 
@@ -527,12 +551,53 @@ public abstract class BCExpression {
 		this.subExpr = new BCExpression[n];
 	}
 
+	/**
+	 * @return parent node. Accurate only in iterator.
+	 */
 	public BCExpression getParent() {
 		return parent;
 	}
 
+	/**
+	 * @return size of expression tree (accurate only after
+	 * 		calling {@link #computeSize()}.
+	 */
 	public int getTreeSize() {
 		return treeSize;
+	}
+
+	/**
+	 * @return new key to store application-specific data
+	 * 		in AST nodes.
+	 */
+	public Object getNewHandle() {
+		return new Object();
+	}
+
+	/**
+	 * Gives application-specific data stored in this node.
+	 * 
+	 * @param handle application identifier, recived using
+	 * 		{@link #getNewHandle()} method.
+	 * @return application-specific data stored in this node.
+	 */
+	public Object getPrivateData(Object handle) {
+		if (!privateData.containsKey(handle))
+			return null;
+		return privateData.get(handle);
+	}
+
+	/**
+	 * Sets application-specific data that should be stored
+	 * in this node.
+	 * 
+	 * @param handle application identifier, recived using
+	 * 		{@link #getNewHandle()} method.
+	 * @param data - application-specific data that should
+	 * 		be stored in this node.
+	 */
+	public void setPrivateData(Object handle, Object data) {
+		privateData.put(handle, data);
 	}
 
 }
