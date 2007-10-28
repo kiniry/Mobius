@@ -35,7 +35,7 @@ public class ColorValues {
   /**
    * TODO.
    */
-  public static final int STYLE_COMPONENT = 0;
+  public static final int STYLE_COMPONENT = 3;
 
   /**
    * The number of style parameters per slot. Currently, we have paramters
