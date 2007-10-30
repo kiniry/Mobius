@@ -2,10 +2,7 @@ package annot.formula;
 
 import annot.bcexpression.JavaBasicType;
 import annot.bcexpression.JavaType1;
-import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
@@ -68,27 +65,6 @@ public class Predicate0Ar extends AbstractFormula {
 	}
 
 	/**
-	 * Writes this predicate to AttributeWirter.
-	 * 
-	 * @param aw - stream to save to.
-	 */
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(value ? Code.TRUE : Code.FALSE);
-	}
-
-	/**
-	 * Do not use this method.
-	 * 
-	 * @throws RuntimeException - always.
-	 */
-	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		throw new RuntimeException("read() method unavaliable.");
-	}
-
-	/**
 	 * Predicate 0Arg. has no subexpressions, so it has
 	 * the highest priority.
 	 * 
@@ -98,13 +74,6 @@ public class Predicate0Ar extends AbstractFormula {
 	@Override
 	protected int getPriority() {
 		return Priorities.LEAF;
-	}
-
-	/**
-	 * Does nothing.
-	 */
-	@Override
-	protected void init() {
 	}
 
 	/**

@@ -87,8 +87,4 @@ public abstract class SpecArray extends BCExpression {
 		throw new RuntimeException("What type should it return?");
 	}
 
-	@Override
-	protected void init() {
-	}
-
 }

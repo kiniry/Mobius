@@ -1,9 +1,7 @@
 package annot.bcexpression;
 
-import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
@@ -53,17 +51,8 @@ public class SingleOccurence extends BCExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return sharedExpr.printCode1(conf);
-	}
-
-	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		throw new RuntimeException("'read' method unavaliable.");
 	}
 
 	@Override

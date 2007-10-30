@@ -1,7 +1,6 @@
 package annot.bcexpression;
 
 import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
@@ -55,9 +54,6 @@ public class OLD extends OldExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return "old(" + getSubExpr(0).printCode(conf) + ")";
 	}
@@ -72,12 +68,6 @@ public class OLD extends OldExpression {
 	@Override
 	public String toString() {
 		return "old(" + getSubExpr(0).toString() + ")";
-	}
-
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(Code.OLD);
-		writeSubExpressions(aw);
 	}
 
 }

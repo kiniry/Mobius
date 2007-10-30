@@ -180,8 +180,10 @@ public abstract class BCExpression {
 	 * 		in <code>ar</code> doesn't represent any
 	 * 		expression from calling subclass.
 	 */
-	protected abstract void read(AttributeReader ar, int root)
-			throws ReadAttributeException;
+	protected void read(AttributeReader ar, int root)
+			throws ReadAttributeException {
+		throw new RuntimeException("'read' method unavaliable for this class.");
+	}
 
 	/**
 	 * Writes this expression to AttributeWirter.
@@ -192,7 +194,10 @@ public abstract class BCExpression {
 	 * 
 	 * @param aw - stream to save to.
 	 */
-	public abstract void write(AttributeWriter aw);
+	public void write(AttributeWriter aw) {
+		aw.writeByte(connector);
+		writeSubExpressions(aw);
+	}
 
 	/**
 	 * Initialize private data of subclass.
@@ -202,7 +207,7 @@ public abstract class BCExpression {
 	 * (from AttributeReader, that is, before calling subclass
 	 * constructor).
 	 */
-	protected abstract void init();
+	protected void init() {};
 
 	/**
 	 * @return priority of this expression

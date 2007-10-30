@@ -60,9 +60,6 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return getSubExpr(0).printCode(conf);
 	}

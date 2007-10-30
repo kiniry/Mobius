@@ -1,7 +1,6 @@
 package annot.bcexpression;
 
 import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
@@ -67,9 +66,6 @@ public class ConditionalExpression extends AbstractIntExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return getSubExpr(0).printCode(conf)
 			+ " ? " + getSubExpr(1).printCode(conf)
@@ -93,14 +89,6 @@ public class ConditionalExpression extends AbstractIntExpression {
 		return getSubExpr(0).toString()
 			+ " ? " + getSubExpr(1).toString()
 			+ " : " + getSubExpr(2).toString();
-	}
-
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(Code.COND_EXPR);
-		getSubExpr(0).write(aw);
-		getSubExpr(1).write(aw);
-		getSubExpr(2).write(aw);
 	}
 
 }

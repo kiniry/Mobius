@@ -21,8 +21,8 @@ TODO: (- : to do, + : done, * : optional, > : in progress)
 	+ add LoopSpecification,
 	* add HistoryConstraints,
 	* add ParamTable.
-- remove static type control from attribute's expression:
+* remove static type control from attribute's expression (?):
 	- change all AbstractIntExpressions to BCExpression,
 	- change all AbstractFormula to BCExpression,
 	- update AttributeReader.readFormula().
-- remove abstract from write and init methods.
++ remove abstract from write and init methods.

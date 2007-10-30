@@ -130,9 +130,6 @@ public class BCFieldRef extends OldExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return isOld() ? ("old_" + name) : name;
 	}
@@ -157,7 +154,7 @@ public class BCFieldRef extends OldExpression {
 
 	@Override
 	public void write(AttributeWriter aw) {
-		aw.writeByte(isOld() ? Code.OLD_FIELD_REF : Code.FIELD_REF);
+		aw.writeByte(getConnector());
 		aw.writeShort(cpIndex);
 	}
 

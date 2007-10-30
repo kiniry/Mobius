@@ -2,11 +2,8 @@ package annot.bcexpression;
 
 import org.apache.bcel.generic.Type;
 
-import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
-import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 import annot.textio.Priorities;
 
@@ -116,33 +113,6 @@ public abstract class JavaType1 extends BCExpression {
 	public JavaType1 getType() {
 		return JavaBasicType.JavaType;
 	}
-
-	/**
-	 * JavaType has no constructor from AttributeReader,
-	 * so it doesn't need pre-superconstructor initializetion.
-	 */
-	@Override
-	protected void init() {};
-
-	@Override
-	protected abstract String printCode1(BMLConfig conf);
-
-	/**
-	 * This method should not be called.
-	 * 
-	 * @throws RuntimeException - always.
-	 */
-	@Override
-	protected void read(AttributeReader ar, int root) {
-		throw new RuntimeException(
-				"read() method unavaliable, use getJavaType() instead.");
-	}
-
-	@Override
-	public abstract String toString();
-
-	@Override
-	public abstract void write(AttributeWriter aw);
 
 	/**
 	 * Compares this type with given type.<br>

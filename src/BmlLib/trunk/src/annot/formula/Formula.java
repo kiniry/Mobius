@@ -4,7 +4,6 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.JavaBasicType;
 import annot.bcexpression.JavaType1;
 import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
@@ -141,24 +140,6 @@ public class Formula extends AbstractFormula {
 			setSubExpr(0, ar.readExpression());
 			setSubExpr(1, ar.readExpression());
 		}
-	}
-
-	/**
-	 * Writes this formula to AttributeWirter.
-	 * 
-	 * @param aw - stream to save to.
-	 */
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(getConnector());
-		writeSubExpressions(aw);
-	}
-
-	/**
-	 * Does nothing.
-	 */
-	@Override
-	protected void init() {
 	}
 
 	/**

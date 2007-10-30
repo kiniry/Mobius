@@ -4,7 +4,6 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.JavaBasicType;
 import annot.bcexpression.JavaType1;
 import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
@@ -110,24 +109,6 @@ public class Predicate2Ar extends AbstractFormula {
 		setSubExprCount(2);
 		setSubExpr(0, ar.readExpression());
 		setSubExpr(1, ar.readExpression());
-	}
-
-	/**
-	 * Writes this predicate to AttributeWirter.
-	 * 
-	 * @param aw - stream to save to.
-	 */
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(getConnector());
-		writeSubExpressions(aw);
-	}
-
-	/**
-	 * Does nothing.
-	 */
-	@Override
-	protected void init() {
 	}
 
 	/**

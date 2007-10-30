@@ -106,18 +106,6 @@ public class BoundVar extends BCExpression {
 	}
 
 	/**
-	 * This method should not be called.
-	 * 
-	 * @throws RuntimeException - always.
-	 */
-	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		throw new RuntimeException(
-				"read() method unavaliable, use getBoundVar() instead");
-	}
-
-	/**
 	 * Writes this expression to AttributeWirter.
 	 * 
 	 * @param aw - stream to save to.
@@ -126,13 +114,6 @@ public class BoundVar extends BCExpression {
 	public void write(AttributeWriter aw) {
 		aw.writeByte(Code.BOUND_VAR);
 		aw.writeShort(index);
-	}
-
-	/**
-	 * Does nothing.
-	 */
-	@Override
-	protected void init() {
 	}
 
 	/**

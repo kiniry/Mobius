@@ -1,10 +1,7 @@
 package annot.bcexpression;
 
 import annot.bcclass.BCClass;
-import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
@@ -27,7 +24,7 @@ public class THIS extends OldExpression {
 	 * @param bcc - initializing class.
 	 */
 	public THIS(boolean isOld, BCClass bcc) {
-		super(Code.THIS, isOld);
+		super(isOld ? Code.OLD_THIS : Code.THIS, isOld);
 		this.bcc = bcc;
 	}
 
@@ -47,28 +44,13 @@ public class THIS extends OldExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return isOld() ? "old_this" : "this";
 	}
 
 	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		throw new ReadAttributeException("'read' method" +
-			" unavaliable, use BCClass#getTHIS() instead.");
-	}
-
-	@Override
 	public String toString() {
 		return isOld() ? "old_this" : "this";
-	}
-
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(isOld() ? Code.OLD_THIS : Code.THIS);
 	}
 
 	/**

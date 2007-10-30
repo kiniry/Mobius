@@ -45,9 +45,6 @@ public class ModifyList extends BCExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		if (getSubExprCount() == 0)
 			return "everything";

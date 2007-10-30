@@ -3,9 +3,7 @@ package annot.bcexpression.modifies;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.JavaType1;
 import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
 /**
@@ -111,18 +109,5 @@ public abstract class ModifyExpression extends BCExpression {
 	public JavaType1 getType() {
 		throw new RuntimeException("What type should it return?");
 	}
-
-	@Override
-	protected abstract String printCode1(BMLConfig conf);
-
-	@Override
-	protected abstract void read(AttributeReader ar, int root)
-			throws ReadAttributeException;
-
-	@Override
-	public abstract String toString();
-
-	@Override
-	public abstract void write(AttributeWriter aw);
 
 }

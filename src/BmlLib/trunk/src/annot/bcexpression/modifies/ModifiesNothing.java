@@ -1,9 +1,6 @@
 package annot.bcexpression.modifies;
 
-import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
 /**
@@ -26,28 +23,9 @@ public class ModifiesNothing extends ModifyExpression {
 		return "nothing";
 	}
 
-	/**
-	 * This class is a singleton, it has no constructor from
-	 * AttributeReader.
-	 */
-	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		throw new RuntimeException("There is nothing" +
-			" to read by ModifiesNothing expression.");
-	}
-
 	@Override
 	public String toString() {
 		return "nothing";
 	}
-
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(Code.MODIFIES_NOTHING);
-	}
-
-	@Override
-	protected void init() {}
 
 }

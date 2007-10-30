@@ -1,10 +1,7 @@
 package annot.bcexpression;
 
 import annot.bcclass.BCMethod;
-import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 import annot.textio.Priorities;
@@ -55,28 +52,13 @@ public class RESULT extends BCExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return IDisplayStyle._result;
 	}
 
 	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		throw new ReadAttributeException("'read' method" +
-				" unavaliable, use BCMethod#getResult() instead.");
-	}
-
-	@Override
 	public String toString() {
 		return IDisplayStyle._result;
-	}
-
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(Code.RESULT);
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package annot.bcexpression;
 
 import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
@@ -69,10 +68,6 @@ public class ArithmeticExpression extends AbstractIntExpression {
 		return JavaBasicType.JavaInt;
 	}
 
-	@Override
-	protected void init() {
-	}
-
 	/**
 	 * @return string representation of expression's connector.
 	 */
@@ -114,12 +109,6 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	public String toString() {
 		return getSubExpr(0).toString() + printRoot()
 			+ getSubExpr(1).toString();
-	}
-
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(getConnector());
-		writeSubExpressions(aw);
 	}
 
 }

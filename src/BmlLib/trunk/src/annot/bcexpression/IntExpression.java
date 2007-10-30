@@ -1,8 +1,6 @@
 package annot.bcexpression;
 
-import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
 public class IntExpression extends AbstractIntExpression {
@@ -29,18 +27,8 @@ public class IntExpression extends AbstractIntExpression {
 	}
 
 	@Override
-	protected void init() {
-	}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return getSubExpr(0).printRawCode(conf);
-	}
-
-	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		throw new RuntimeException("'read' method unavaliable.");
 	}
 
 	@Override

@@ -87,13 +87,6 @@ public class NumberLiteral extends AbstractIntExpression {
 	}
 
 	/**
-	 * Does nothing.
-	 */
-	@Override
-	protected void init() {
-	}
-
-	/**
 	 * NumberLiteral has no subexpressions, so it has
 	 * the highest priority.
 	 * 

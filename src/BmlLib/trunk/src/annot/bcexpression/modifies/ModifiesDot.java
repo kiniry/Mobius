@@ -3,7 +3,6 @@ package annot.bcexpression.modifies;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.FieldAccess;
 import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
@@ -65,14 +64,5 @@ public class ModifiesDot extends ModifyExpression {
 		return getSubExpr(0).toString()
 			+ "." + getSubExpr(1).toString();
 	}
-
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(Code.MODIFIES_DOT);
-		writeSubExpressions(aw);
-	}
-
-	@Override
-	protected void init() {}
 
 }

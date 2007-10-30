@@ -102,18 +102,8 @@ public class BCLocalVariable extends OldExpression {
 	}
 
 	@Override
-	protected void init() {}
-
-	@Override
 	protected String printCode1(BMLConfig conf) {
 		return isOld() ? ("old_" + name) : name;
-	}
-
-	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		throw new ReadAttributeException("'read' method" +
-			" unavaliable, use getLocalVar() instead.");
 	}
 
 	@Override
