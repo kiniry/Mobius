@@ -29,7 +29,7 @@ public class CodeFragment {
 	 * Shows code after preprocessing it
 	 * by {@link #decorate(String)} method.
 	 */
-	private static final boolean goShowDecoratedCode = false;
+	private static final boolean goShowDecoratedCode = true;
 	
 	/**
 	 * Disable parsing single attributes; for debugging only.

@@ -39,7 +39,7 @@ public class ClassInvariant extends ClassAttribute implements
 	 */
 	public ClassInvariant(BCClass bcc) {
 		this.bcc = bcc;
-		this.invariant = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
+		this.invariant = new ExpressionRoot<AbstractFormula>(this, new Predicate0Ar(true));
 	}
 
 	/**

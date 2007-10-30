@@ -460,8 +460,9 @@ quantifiedFormula returns [BCExpression ast] :
 			JavaBasicType jt = JavaType1.getJavaBasicType($t.text);
 			lqfs++;
 			BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
-			if (env.containsKey($v.text))
-				reportError(null);
+			// uncomment this to forbid bound variable shadowing
+//			if (env.containsKey($v.text))
+//				reportError(null);
 			env.put($v.text, bv);
 	 		((QuantifiedFormula)$ast).addVariable(bv);
 	 	} catch(ReadAttributeException e) {
@@ -487,8 +488,8 @@ primaryExpr returns [BCExpression ast] :
 	| MINUS min=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $min.ast);}
 	| PLUS px=primaryExpr {$ast = $px.ast;}
 	| LOG_NOT p=primaryExpr {$ast = new Formula(Code.NOT, $p.ast);}
-	| FALSE {$ast = Predicate0Ar.FALSE;}
-	| TRUE {$ast = Predicate0Ar.TRUE;}
+	| FALSE {$ast = new Predicate0Ar(false);}
+	| TRUE {$ast = new Predicate0Ar(true);}
 	| RESULT {if (m == null) {reportError(null);} else {$ast = m.getResult();}}
 	| NULL {$ast = NULL_CLASS.NULL;}
 	| THIS {$ast = bcc.getTHIS(false);}

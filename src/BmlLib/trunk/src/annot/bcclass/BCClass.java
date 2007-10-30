@@ -411,7 +411,7 @@ public class BCClass {
 	 */
 	private static String toOsSpecificName(String fileName) {
 		String filesep = System.getProperty("file.separator");
-		return fileName.replaceAll("/", filesep);
+		return fileName.replaceAll("/", Parsing.escape(filesep));
 	}
 
 	/**

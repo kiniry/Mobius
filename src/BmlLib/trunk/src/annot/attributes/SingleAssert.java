@@ -37,7 +37,7 @@ public class SingleAssert extends InCodeAttribute {
 	 */
 	public SingleAssert(BCMethod m, InstructionHandle ih, int minor) {
 		super(m, ih, minor);
-		this.formula = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
+		this.formula = new ExpressionRoot<AbstractFormula>(this, new Predicate0Ar(true));
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class SingleAssert extends InCodeAttribute {
 	@Deprecated
 	public SingleAssert(BCMethod m, int pc, int minor) {
 		super(m, pc, minor);
-		this.formula = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
+		this.formula = new ExpressionRoot<AbstractFormula>(this, new Predicate0Ar(true));
 	}
 
 	/**

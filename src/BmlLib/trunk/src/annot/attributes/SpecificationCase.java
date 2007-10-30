@@ -60,9 +60,9 @@ public class SpecificationCase {
 	 */
 	public SpecificationCase(BCMethod m) {
 		this.method = m;
-		this.precondition = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
+		this.precondition = new ExpressionRoot<AbstractFormula>(this, new Predicate0Ar(true));
 		this.modifies = new ExpressionRoot<ModifyList>(this, new ModifyList());
-		this.postcondition = new ExpressionRoot<AbstractFormula>(this, Predicate0Ar.TRUE);
+		this.postcondition = new ExpressionRoot<AbstractFormula>(this, new Predicate0Ar(true));
 		this.excondition = new Vector<Exsure>();
 	}
 
@@ -85,7 +85,7 @@ public class SpecificationCase {
 			modifies = new ModifyList();
 		this.modifies = new ExpressionRoot<ModifyList>(this, modifies);
 		if (postcondition == null)
-			postcondition = Predicate0Ar.TRUE;
+			postcondition = new Predicate0Ar(true);
 		this.postcondition = new ExpressionRoot<AbstractFormula>(this, postcondition);
 		if (exsures == null)
 			exsures = new Vector<Exsure>();

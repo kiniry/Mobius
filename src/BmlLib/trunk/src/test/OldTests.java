@@ -168,9 +168,9 @@ public final class OldTests {
 		case Code.NOT:
 			return new Formula(code, grf(s, w + 0.1, ind));
 		case Code.TRUE:
-			return Predicate0Ar.TRUE;
+			return new Predicate0Ar(true);
 		case Code.FALSE:
-			return Predicate0Ar.FALSE;
+			return new Predicate0Ar(false);
 		case Code.FORALL_WITH_NAME:
 		case Code.EXISTS_WITH_NAME:
 			QuantifiedFormula qf = new QuantifiedFormula(code);
@@ -210,8 +210,8 @@ public final class OldTests {
 		seed++;
 		if (size <= 0) {
 			switch (seed % 2) {
-			case 0: return Predicate0Ar.FALSE;
-			case 1: return Predicate0Ar.TRUE;
+			case 0: return new Predicate0Ar(false);
+			case 1: return new Predicate0Ar(true);
 			default: throw new RuntimeException("internal tests error");
 			}
 		}else {
@@ -246,7 +246,7 @@ public final class OldTests {
 	 */
 	private static void refresh() throws IOException, ClassNotFoundException,
 			ReadAttributeException {
-		bcc.saveToFile(Paths.tmp_path + "test\\Empty.class");
+		bcc.saveToFile(Paths.tmp_path + "test/Empty.class");
 		bcc = new BCClass(Paths.tmp_path, "test.Empty");
 		String cpCode = bcc.printCp();
 		System.out.println(xxx);
@@ -361,9 +361,9 @@ public final class OldTests {
 		bcc = new BCClass(Paths.path, "test.Empty");
 		bcc.setInvariant(new ClassInvariant(bcc));
 		BCMethod m = bcc.getMethod(1);
-		SpecificationCase[] sc = { new SpecificationCase(m, Predicate0Ar.TRUE,
-				null, Predicate0Ar.FALSE, null) };
-		m.setMspec(new MethodSpecification(m, Predicate0Ar.TRUE, sc));
+		SpecificationCase[] sc = { new SpecificationCase(m, new Predicate0Ar(true),
+				null, new Predicate0Ar(false), null) };
+		m.setMspec(new MethodSpecification(m, new Predicate0Ar(true), sc));
 		SingleAssert olda = (SingleAssert) m.getAmap().addAttribute(1, 8, 3);
 		m.getAmap().addAttribute(1, 5, 0);
 		SingleAssert sa = (SingleAssert) m.getAmap().addAttribute(1, 8, 2);
@@ -371,7 +371,7 @@ public final class OldTests {
 		AbstractFormula af = generateRandomFormula(5);
 		SingleAssert newa = new SingleAssert(m, null, -1, af);
 		olda.replaceWith(newa);
-		SingleAssert a2 = new SingleAssert(m, 8, -1, Predicate0Ar.TRUE);
+		SingleAssert a2 = new SingleAssert(m, 8, -1, new Predicate0Ar(true));
 		m.getAmap().addAttribute(a2, 2);
 		System.out.println("minor = " + newa.getMinor());
 		if (newa.getMinor() != 4)
@@ -422,7 +422,7 @@ public final class OldTests {
 			// AbstractFormula f = sampleQuantifiedFormula();
 			SingleAssert sa = new SingleAssert(m, 8, 3, f);
 			m.addAttribute(sa);
-			bcc.saveToFile(Paths.tmp_path + "test\\" + fname + ".class");
+			bcc.saveToFile(Paths.tmp_path + "test/" + fname + ".class");
 		} else {
 			bcc = new BCClass(Paths.tmp_path, "test." + fname);
 		}
@@ -715,10 +715,10 @@ public final class OldTests {
 			 */
 			@Override
 			public void iter(BCExpression parent, BCExpression expr) {
-				if (expr == Predicate0Ar.TRUE) {
-					expr.replaceWith(Predicate0Ar.FALSE);
-				} else if (expr == Predicate0Ar.FALSE) {
-					expr.replaceWith(Predicate0Ar.TRUE);
+				if (expr.getConnector() == Code.TRUE) {
+					expr.replaceWith(new Predicate0Ar(false));
+				} else if (expr.getConnector() == Code.FALSE) {
+					expr.replaceWith(new Predicate0Ar(true));
 				}
 			}
 		});

@@ -7,6 +7,7 @@ import annot.bcexpression.util.ExpressionWalker;
 import annot.formula.Predicate0Ar;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
+import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
@@ -336,9 +337,9 @@ public abstract class BCExpression {
 			length = subExpr.length;
 		conf.incInd();
 		str += "(";
-		if (this == Predicate0Ar.TRUE) {
+		if (this.getConnector() == Code.TRUE) {
 			str += "true";
-		} else if (this == Predicate0Ar.FALSE) {
+		} else if (this.getConnector() == Code.FALSE) {
 			str += "false";
 		} else {
 			str += connector;

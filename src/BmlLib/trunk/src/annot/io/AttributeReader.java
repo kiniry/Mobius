@@ -280,9 +280,8 @@ public class AttributeReader {
 		int b = readByte();
 		switch (b) {
 		case Code.TRUE:
-			return Predicate0Ar.TRUE;
 		case Code.FALSE:
-			return Predicate0Ar.FALSE;
+			return new Predicate0Ar(b);
 		case Code.AND:
 		case Code.OR:
 		case Code.IMPLIES:

@@ -46,7 +46,7 @@ public class MethodSpecification extends MethodAttribute implements
 	 * @param m - method this annotation specifies.
 	 */
 	public MethodSpecification(BCMethod m) {
-		this(m, Predicate0Ar.TRUE, new SpecificationCase[0]);
+		this(m, new Predicate0Ar(true), new SpecificationCase[0]);
 	}
 
 	/**

@@ -197,7 +197,7 @@ public final class Testuj {
 		ConstantPoolGen cpg = new ConstantPoolGen(bcc.getJc().getConstantPool());
 		cpg.addDouble(1.23);
 		bcc.getJc().setConstantPool(cpg.getFinalConstantPool());
-		bcc.saveToFile(Paths.tmp_path + "test\\tmp03.class");
+		bcc.saveToFile(Paths.tmp_path + "test/tmp03.class");
 		try {
 			bcc = new BCClass(Paths.tmp_path, "test.tmp03");
 		} catch (ReadAttributeException e) {
@@ -331,8 +331,8 @@ public final class Testuj {
 		test(false, 3, "forall int i; i");
 		test(false, 3, "forall int i; i ==> false");
 		test(false, 3, "forall int a itn b; a < b");
-		test(false, 3, "forall int a int a; a < 0");
-		test(false, 3, "forall int a int b; (exists int b; true)");
+		test(true, 3, "forall int a int a; a < 0");
+		test(true, 3, "forall int a int b; (exists int b; true)");
 		test(true, 3, "forall int a int c; (exists int b; true)");
 		test(true, 2, "forall int a boolean b; (exists int c; a < c && b) && (exists int c; a >= c)");
 		test(true, 3, "forall int a; (exists int b; (forall int c; a <= b ==> b >= c))");

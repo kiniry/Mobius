@@ -19,15 +19,6 @@ import annot.textio.Priorities;
  */
 public class Predicate0Ar extends AbstractFormula {
 
-	/**
-	 * A 'true' predicate.
-	 */
-	public static final Predicate0Ar TRUE = new Predicate0Ar(true);
-
-	/**
-	 * A 'false' predicate.
-	 */
-	public static final Predicate0Ar FALSE = new Predicate0Ar(false);
 
 	/**
 	 * Predicate value (true for 'true' predicate, and
@@ -41,10 +32,22 @@ public class Predicate0Ar extends AbstractFormula {
 	 * @param value - whether constructed object should be
 	 * 		a 'true' predicate.
 	 */
-	private Predicate0Ar(boolean value) {
+	public Predicate0Ar(boolean value) {
+		super(value ? Code.TRUE : Code.FALSE);
 		this.value = value;
 	}
 
+	
+	/**
+	 * A constructor from AttributeReader.
+	 * 
+	 * @param root - expression's connector (opcode).
+	 */
+	public Predicate0Ar(int root) {
+		super(root);
+		this.value = (root == Code.TRUE);
+	}
+	
 	/**
 	 * Prints expression to a String.
 	 * 

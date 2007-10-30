@@ -59,7 +59,7 @@ public class SingleLoopSpecification extends InCodeAttribute {
 		if (modifies == null)
 			modifies = new ModifyList();
 		if (invariant == null)
-			invariant = Predicate0Ar.TRUE;
+			invariant = new Predicate0Ar(true);
 		if (decreases == null)
 			decreases = new NumberLiteral(1);
 		this.modifies = new ExpressionRoot<ModifyList>(this, modifies);
