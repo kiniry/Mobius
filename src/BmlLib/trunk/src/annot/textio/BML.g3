@@ -89,11 +89,11 @@ options {
 	// of this name could be found.
 	private BCExpression whatIsIt(String ident) {
 		if (env.containsKey(ident))
-			return env.get(ident);
+			return new SingleOccurence(env.get(ident));
 		if (m != null) {
 			BCLocalVariable lv = m.findLocalVariable(ident);
 			if (lv != null)
-				return lv;
+				return new SingleOccurence(lv);
 		}
 		BCFieldRef bfr = BCFieldRef.getFieldOfName(false, bcc.getCp(), ident);
 		if (bfr != null)

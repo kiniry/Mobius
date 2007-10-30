@@ -67,6 +67,8 @@ public class BCLocalVariable extends OldExpression {
 	/**
 	 * A 'constructor' from AttributeReader.
 	 * 
+	 * @param isOld - whether it should be OLD_LocalVariable
+	 * 		or LocalVariable,
 	 * @param m - method in with variable has been declared,
 	 * @param ar - input stream to load from,
 	 * @return local variable of index read from

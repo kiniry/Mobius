@@ -24,6 +24,7 @@ import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.OLD;
 import annot.bcexpression.RESULT;
+import annot.bcexpression.SingleOccurence;
 import annot.bcexpression.THIS;
 import annot.bcexpression.UnaryArithmeticExpression;
 import annot.bcexpression.modifies.ModifiesDot;
@@ -272,6 +273,49 @@ public class AttributeReader {
 	}
 
 	/**
+	 * @param index - variable index.
+	 * @return Visible bound variable of given index.
+	 * @see #bvars
+	 */
+	public BoundVar getBvar(int index) {
+		return bvars.elementAt(index);
+	}
+
+	/**
+	 * @return Number of currently visible bound variables.
+	 */
+	public int getBvarCount() {
+		return bvars.size();
+	}
+
+	/**
+	 * @return Currently visible bound variable Vector.
+	 */
+	public Vector<BoundVar> getBvars() {
+		return bvars;
+	}
+
+	public BCConstantPool getConstantPool() {
+		return bcc.getCp();
+	}
+
+	/**
+	 * Reads an Expression and checks that it is a formula.
+	 * 
+	 * @return Read expression.
+	 * @throws ReadAttributeException - if data in the stream
+	 * 		doesn't represent correct formula.
+	 */
+	public AbstractFormula readFormula() throws ReadAttributeException {
+		BCExpression expr = readExpression();
+		if (expr instanceof AbstractFormula) {
+			AbstractFormula af = (AbstractFormula) expr;
+			return af;
+		}
+		throw new ReadAttributeException("Formula expected");
+	}
+
+	/**
 	 * Reads an expression from <code>input</code> stream.
 	 * 
 	 * @return Read expression.
@@ -325,9 +369,13 @@ public class AttributeReader {
 		case Code.RESULT:
 			return new RESULT(method);
 		case Code.LOCAL_VARIABLE:
-			return BCLocalVariable.getLocalVariable(false, method, this);
+			return new SingleOccurence(
+				BCLocalVariable.getLocalVariable(
+					false, method, this));
 		case Code.OLD_LOCAL_VARIABLE:
-			return BCLocalVariable.getLocalVariable(true, method, this);
+			return new SingleOccurence(
+				BCLocalVariable.getLocalVariable(
+					true, method, this));
 		case Code.FIELD_REF:
 		case Code.OLD_FIELD_REF:
 			return new BCFieldRef(this, b);
@@ -341,7 +389,8 @@ public class AttributeReader {
 		case Code.EXISTS_WITH_NAME:
 			return new QuantifiedFormula(this, b);
 		case Code.BOUND_VAR:
-			return BoundVar.getBoundVar(this);
+			return new SingleOccurence(
+				BoundVar.getBoundVar(this));
 		case Code.JAVA_TYPE:
 			int i = readShort();
 			Constant c = bcc.getCp().getConstant(i);
@@ -356,50 +405,6 @@ public class AttributeReader {
 		default:
 			throw new ReadAttributeException("Unknown expression code: " + b);
 		}
-	}
-	
-
-	/**
-	 * Reads an Expression and checks that it is a formula.
-	 * 
-	 * @return Read expression.
-	 * @throws ReadAttributeException - if data in the stream
-	 * 		doesn't represent correct formula.
-	 */
-	public AbstractFormula readFormula() throws ReadAttributeException {
-		BCExpression expr = readExpression();
-		if (expr instanceof AbstractFormula) {
-			AbstractFormula af = (AbstractFormula) expr;
-			return af;
-		}
-		throw new ReadAttributeException("Formula expected");
-	}
-
-	/**
-	 * @param index - variable index.
-	 * @return Visible bound variable of given index.
-	 * @see #bvars
-	 */
-	public BoundVar getBvar(int index) {
-		return bvars.elementAt(index);
-	}
-
-	/**
-	 * @return Number of currently visible bound variables.
-	 */
-	public int getBvarCount() {
-		return bvars.size();
-	}
-
-	/**
-	 * @return Currently visible bound variable Vector.
-	 */
-	public Vector<BoundVar> getBvars() {
-		return bvars;
-	}
-
-	public BCConstantPool getConstantPool() {
-		return bcc.getCp();
 	}
 
 }

@@ -9,7 +9,6 @@ import annot.textio.Priorities;
 
 /**
  * This class represents <code>null</code> value.
- * Singleton.
  * 
  * @author tomekb
  */

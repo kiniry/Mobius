@@ -10,7 +10,6 @@ import annot.textio.Priorities;
 
 /**
  * This class represents <code>'this'</code> expression.
- * One <code>THIS</code> per class.
  * 
  * @author tomekb
  */
@@ -22,9 +21,9 @@ public class THIS extends OldExpression {
 	private BCClass bcc;
 	
 	/**
-	 * A construcotr for BCClass initialization only. Later,
-	 * use {@link BCClass#getTHIS()} instead.
-	 * 
+	 * A standard constructor.
+	 *
+	 * @param isOld - whether it should be OLD_THIS or THIS,
 	 * @param bcc - initializing class.
 	 */
 	public THIS(boolean isOld, BCClass bcc) {

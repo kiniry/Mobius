@@ -11,9 +11,7 @@ import annot.textio.Priorities;
 
 /**
  * This class represents 0Arg predicate, that is, TRUE
- * and FALSE predicates only. Each occurence of TRUE predicate
- * is represented by the same object (the same stands for
- * FALSE predicate).
+ * and FALSE predicates only.
  * 
  * @author tomekb
  */
@@ -27,7 +25,7 @@ public class Predicate0Ar extends AbstractFormula {
 	private boolean value;
 
 	/**
-	 * A private constructor
+	 * A standard constructor.
 	 * 
 	 * @param value - whether constructed object should be
 	 * 		a 'true' predicate.

@@ -12,7 +12,6 @@ import annot.textio.Priorities;
 /**
  * This class represents <code>\result</code> expression
  * (return value of a method).
- * One <code>RESULT</code> per method.
  * 
  * @author tomekb
  */
@@ -29,8 +28,7 @@ public class RESULT extends BCExpression {
 	private JavaType1 type;
 	
 	/**
-	 * A constructor for method initialization only.
-	 * Later, use {@link BCMethod#getResult()} instead.
+	 * A standard constructor.
 	 * 
 	 * @param m - initializing method.
 	 */
