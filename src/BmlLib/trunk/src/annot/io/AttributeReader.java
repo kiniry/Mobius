@@ -16,9 +16,11 @@ import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BCFieldRef;
 import annot.bcexpression.BCLocalVariable;
+import annot.bcexpression.BooleanExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
+import annot.bcexpression.JavaBasicType;
 import annot.bcexpression.JavaType1;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
@@ -27,9 +29,14 @@ import annot.bcexpression.RESULT;
 import annot.bcexpression.SingleOccurence;
 import annot.bcexpression.THIS;
 import annot.bcexpression.UnaryArithmeticExpression;
+import annot.bcexpression.modifies.ModifiesArray;
 import annot.bcexpression.modifies.ModifiesDot;
 import annot.bcexpression.modifies.ModifiesIdent;
+import annot.bcexpression.modifies.ModifiesInterval;
+import annot.bcexpression.modifies.ModifiesSingleIndex;
+import annot.bcexpression.modifies.ModifiesStar;
 import annot.bcexpression.modifies.ModifyExpression;
+import annot.bcexpression.modifies.SpecArray;
 import annot.formula.AbstractFormula;
 import annot.formula.Formula;
 import annot.formula.Predicate0Ar;
@@ -248,31 +255,6 @@ public class AttributeReader {
 	}
 
 	/**
-	 * Returns proper instance of ModifyExpression. Use this
-	 * instead of creating new instances yourself.
-	 * 
-	 * @return proper instance of ModifyExpression.
-	 * @throws ReadAttributeException - if remaining data
-	 * 		doesn't represent correct modify expression.
-	 */
-	public ModifyExpression readModifyExpression()
-		throws ReadAttributeException {
-		int b = readByte();
-		switch (b) {
-		case Code.MODIFIES_NOTHING:
-			return ModifyExpression.Nothing;
-		case Code.MODIFIES_EVERYTHING:
-			return ModifyExpression.Everything;
-		case Code.MODIFIES_IDENT:
-			return new ModifiesIdent(this, Code.MODIFIES_IDENT);
-		case Code.MODIFIES_DOT:
-			return new ModifiesDot(this, Code.MODIFIES_DOT);
-		default:
-			throw new ReadAttributeException("invalid modify opcode: " + b);
-		}
-	}
-
-	/**
 	 * @param index - variable index.
 	 * @return Visible bound variable of given index.
 	 * @see #bvars
@@ -312,7 +294,60 @@ public class AttributeReader {
 			AbstractFormula af = (AbstractFormula) expr;
 			return af;
 		}
+		if (expr.checkType() == JavaBasicType.JavaBool)
+			return new BooleanExpression(expr);
 		throw new ReadAttributeException("Formula expected");
+	}
+
+	/**
+	 * Returns proper instance of ModifyExpression. Use this
+	 * instead of creating new instances yourself.
+	 * 
+	 * @return proper instance of ModifyExpression.
+	 * @throws ReadAttributeException - if remaining data
+	 * 		doesn't represent correct modify expression.
+	 */
+	public ModifyExpression readModifyExpression()
+		throws ReadAttributeException {
+		int b = readByte();
+		switch (b) {
+		case Code.MODIFIES_NOTHING:
+			return ModifyExpression.Nothing;
+		case Code.MODIFIES_EVERYTHING:
+			return ModifyExpression.Everything;
+		case Code.MODIFIES_IDENT:
+			return new ModifiesIdent(this, b);
+		case Code.MODIFIES_DOT:
+			return new ModifiesDot(this, b);
+		case Code.MODIFIES_ARRAY:
+			return new ModifiesArray(this, b);
+		default:
+			throw new ReadAttributeException("invalid modify opcode: " + b);
+		}
+	}
+
+	/**
+	 * Returns proper instance of SpecArray (specification of
+	 * which elements of an array can be modified). Use this
+	 * instead of creating new instances yourself.
+	 * 
+	 * @return proper instance of SpecArray.
+	 * @throws ReadAttributeException - if remaining data
+	 * 		doesn't represent correct specArray.
+	 */
+	public SpecArray readSpecArray()
+		throws ReadAttributeException {
+		int b = readByte();
+		switch (b) {
+		case Code.MODIFIES_STAR:
+			return new ModifiesStar();
+		case Code.MODIFIES_SINGLE_INDEX:
+			return new ModifiesSingleIndex(this, b);
+		case Code.MODIFIES_INTERVAL:
+			return new ModifiesInterval(this, b);
+		default:
+			throw new ReadAttributeException("invalid specArray opcode: " + b);
+		}
 	}
 
 	/**

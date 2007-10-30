@@ -6,7 +6,6 @@ import org.apache.bcel.generic.InstructionHandle;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
-import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;

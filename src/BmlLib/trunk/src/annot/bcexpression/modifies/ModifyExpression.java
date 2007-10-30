@@ -1,11 +1,9 @@
 package annot.bcexpression.modifies;
 
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.JavaBasicType;
 import annot.bcexpression.JavaType1;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
-import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;

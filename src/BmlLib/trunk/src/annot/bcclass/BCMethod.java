@@ -15,7 +15,6 @@ import annot.attributes.BCAttributeMap;
 import annot.attributes.InCodeAttribute;
 import annot.attributes.MethodSpecification;
 import annot.bcexpression.BCLocalVariable;
-import annot.bcexpression.RESULT;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;

@@ -27,7 +27,7 @@ public final class Testuj {
 	 * whether show stac trace of exception in test failures
 	 * or not.
 	 */
-	private static boolean goShowTraceOnFailures = true;
+	private static boolean goShowTraceOnFailures = false;
 
 	/**
 	 * Perform "save and load" test after each example.
@@ -40,7 +40,7 @@ public final class Testuj {
 	 * Shows old and new class' bytecode if it has changed
 	 * during saving / loading.
 	 */
-	private static boolean goShowFileChangesIfAny = true;
+	private static boolean goShowFileChangesIfAny = false;
 
 	/**
 	 * Shows bytecode whose annotations will be modified
@@ -456,6 +456,16 @@ public final class Testuj {
 		test(false, 2, "true {| \\precondition true \\modifies .l \\ensures false |}");
 		test(false, 2, "true {| \\precondition true \\modifies . \\ensures false |}");
 		test(true, 2, "true {| \\precondition true \\modifies this.args.l, l, this.l \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies this[*] \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies this.args[*] \\ensures false |}");
+		test(false, 2, "true {| \\precondition true \\modifies [*] \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies this.args[*][*] \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies args[1] \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies args[2 + 2] \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies args[this.l] \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies args[2 .. 3] \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies args[2 + 2 .. 3 / 4] \\ensures false |}");
+		test(true, 2, "true {| \\precondition true \\modifies args[this.l .. this.l + 1] \\ensures false |}");
 		end();
 	}
 

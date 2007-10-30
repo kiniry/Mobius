@@ -328,6 +328,13 @@ modifyExpression returns [ModifyExpression ast] :
 	| EVERYTHING {$ast = ModifyExpression.Everything;}
 	| i=modifySubExpr {$ast = new ModifiesIdent($i.ast);}
 		(DOT j=modifySubExpr {$ast = new ModifiesDot($ast, $j.ast);})*
+		(BR_LEFT a=specArray BR_RIGHT {$ast = new ModifiesArray($ast, $a.ast);})*
+	;
+
+specArray returns [SpecArray ast] :
+	MULT {$ast = new ModifiesStar();}
+	| e=expression {$ast = new ModifiesSingleIndex($e.ast);}
+	(DOT2 t=expression {$ast = new ModifiesInterval($ast.getSubExpr(0), $t.ast);})?
 	;
 
 modifySubExpr returns [BCExpression ast] :
@@ -344,7 +351,11 @@ formula returns [AbstractFormula ast] :
 			if ($e.ast.checkType() != JavaBasicType.JavaBool) {
 				reportError(null);
 			} else {
-				$ast = (AbstractFormula)$e.ast;
+				if ($e.ast instanceof AbstractFormula) {
+					$ast = (AbstractFormula)$e.ast;
+				} else {
+					$ast = new BooleanExpression($e.ast);
+				}
 			}
 		}
 	};
@@ -358,7 +369,11 @@ expression returns [AbstractIntExpression ast] :
 			if ($e.ast.getType() != JavaBasicType.JavaInt) {
 				reportError(null);
 			} else {
-				$ast = (AbstractIntExpression)$e.ast;
+				if ($e.ast instanceof AbstractIntExpression) {
+					$ast = (AbstractIntExpression)$e.ast;
+				} else {
+					$ast = new IntExpression($e.ast);
+				}
 			}
 		}
 	};
@@ -588,6 +603,7 @@ THIS: 'this'|'THIS';
 OLD_THIS: 'old_this'|'OLD_THIS';
 RESULT: '\\result';
 LV: 'lv';
+DOT2: '..';
 DOT: '.';
 OLD: 'old'|'OLD';
 

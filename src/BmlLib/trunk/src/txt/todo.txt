@@ -1,7 +1,7 @@
 TODO: (- : to do, + : done, * : optional, > : in progress)
 
 + ...
-> add expressions,
++ add expressions,
 	+ add Aritmethic expression,
 	+ add conditional expression,
 	+ add null, this, result,
@@ -10,14 +10,19 @@ TODO: (- : to do, + : done, * : optional, > : in progress)
 		+ add field ref,
 		+ add full qualified name.
 	+ add olds,
-	> add modifies expressions:
+	+ add modifies expressions:
 		+ ident, local variable,
 		+ dot,
-		- array:
-			- all array elements,
-			- single index.
-			- array elements from to,
+		+ array:
+			+ all array elements,
+			+ single index.
+			+ array elements from to.
 > add attributes:
 	+ add LoopSpecification,
 	* add HistoryConstraints,
 	* add ParamTable.
+- remove static type control from attribute's expression:
+	- change all AbstractIntExpressions to BCExpression,
+	- change all AbstractFormula to BCExpression,
+	- update AttributeReader.readFormula().
+- remove abstract from write and init methods.

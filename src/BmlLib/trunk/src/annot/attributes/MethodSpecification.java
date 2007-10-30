@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import org.antlr.runtime.RecognitionException;
 import annot.bcclass.BCMethod;
-import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.formula.AbstractFormula;
 import annot.formula.Predicate0Ar;

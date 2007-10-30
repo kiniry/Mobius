@@ -4,9 +4,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import annot.bcclass.BCMethod;
-import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
-import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.ModifyList;
 import annot.formula.AbstractFormula;
 import annot.formula.Predicate0Ar;

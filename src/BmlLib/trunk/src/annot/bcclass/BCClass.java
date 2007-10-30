@@ -17,7 +17,6 @@ import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.THIS;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;

@@ -3,7 +3,6 @@ package annot.attributes;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.bcclass.BCMethod;
-import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.formula.AbstractFormula;
 import annot.formula.Predicate0Ar;

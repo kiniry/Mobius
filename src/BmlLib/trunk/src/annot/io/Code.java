@@ -54,6 +54,10 @@ public interface Code {
 	public static final int MODIFIES_NOTHING = 0xD1;
 	public static final int MODIFIES_IDENT = 0xD2;
 	public static final int MODIFIES_DOT = 0xD3;
+	public static final int MODIFIES_ARRAY = 0xD4;
+	public static final int MODIFIES_INTERVAL = 0xD5;
+	public static final int MODIFIES_SINGLE_INDEX = 0xD6;
+	public static final int MODIFIES_STAR = 0xD7;
 	public static final int BOUND_VAR = 0xE0;
 
 	// new opcodes:

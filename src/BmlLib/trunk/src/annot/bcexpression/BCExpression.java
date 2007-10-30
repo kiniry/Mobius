@@ -2,9 +2,7 @@ package annot.bcexpression;
 
 import java.util.HashMap;
 
-import annot.bcclass.MLog;
 import annot.bcexpression.util.ExpressionWalker;
-import annot.formula.Predicate0Ar;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -371,6 +369,19 @@ public abstract class BCExpression {
 		}
 	}
 
+	/**
+	 * Displays code of a subexpression without adding
+	 * parenthness at the root nor formatting (at the root).
+	 * 
+	 * @param conf - see {@link BMLConfig}.
+	 * @return string representation of expression,
+	 * 		without line-breaking.
+	 */
+	public String printRawCode(BMLConfig conf) {
+		//XXX protected.
+		return printCode1(conf);
+	}
+	
 	/**
 	 * Writes subexpressions to given AttributeWriter.
 	 * 

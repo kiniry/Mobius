@@ -167,6 +167,7 @@ public abstract class OldExpression extends BCExpression {
 	 * 		or null if it's invalid (if one of it's
 	 * 		subexpression have wrong type or is invalid).
 	 */
+	@Override
 	public JavaType1 checkType1() {
 		for (int i=0; i<getSubExprCount(); i++)
 			if (getSubExpr(i) instanceof OldExpression)
