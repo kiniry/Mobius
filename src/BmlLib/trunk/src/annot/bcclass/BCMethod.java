@@ -66,11 +66,6 @@ public class BCMethod {
 	private BCLocalVariable[] oldvars;
 
 	/**
-	 * A <code>'\result'</code> expression for this method.
-	 */
-	private RESULT result;
-	
-	/**
 	 * A standard constructor from BCClass and MethodGen.
 	 * 
 	 * @param bcc - BCClass containig this method,
@@ -84,7 +79,6 @@ public class BCMethod {
 		this.bcc = bcc;
 		this.bcelMethod = m;
 		this.amap = new BCAttributeMap(this);
-		this.result = new RESULT(this);
 		LocalVariableGen[] lvgens = m.getLocalVariables();
 		int cnt = lvgens.length;
 		lvars = new BCLocalVariable[cnt];
@@ -304,11 +298,4 @@ public class BCMethod {
 		return lvars[index];
 	}
 
-	/**
-	 * @return <code>'\result'</code> expression for this method.
-	 */
-	public RESULT getResult() {
-		return result;
-	}
-	
 }

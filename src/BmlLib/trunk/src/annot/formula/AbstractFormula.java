@@ -15,13 +15,6 @@ import annot.io.ReadAttributeException;
 public abstract class AbstractFormula extends BCExpression {
 
 	/**
-	 * A constructor for 0Arg formula.
-	 */
-	protected AbstractFormula() {
-		super();
-	}
-
-	/**
 	 * Another constructor for 0Arg formula.
 	 * 
 	 * @param connector - type of expression

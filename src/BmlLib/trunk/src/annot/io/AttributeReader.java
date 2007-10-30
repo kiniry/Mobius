@@ -20,9 +20,11 @@ import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
 import annot.bcexpression.JavaType1;
-import annot.bcexpression.NULL_CLASS;
+import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.OLD;
+import annot.bcexpression.RESULT;
+import annot.bcexpression.THIS;
 import annot.bcexpression.UnaryArithmeticExpression;
 import annot.bcexpression.modifies.ModifiesDot;
 import annot.bcexpression.modifies.ModifiesIdent;
@@ -315,13 +317,13 @@ public class AttributeReader {
 		case Code.COND_EXPR:
 			return new ConditionalExpression(this, b);
 		case Code.NULL:
-			return NULL_CLASS.NULL;
+			return new NULL();
 		case Code.THIS:
-			return bcc.getTHIS(false);
+			return new THIS(false, bcc);
 		case Code.OLD_THIS:
-			return bcc.getTHIS(true);
+			return new THIS(true, bcc);
 		case Code.RESULT:
-			return method.getResult();
+			return new RESULT(method);
 		case Code.LOCAL_VARIABLE:
 			return BCLocalVariable.getLocalVariable(false, method, this);
 		case Code.OLD_LOCAL_VARIABLE:

@@ -56,7 +56,7 @@ public class BCLocalVariable extends OldExpression {
 	 */
 	public BCLocalVariable(boolean isOld, BCMethod m, int id, String name,
 			LocalVariableGen lvg) {
-		super(isOld);
+		super(Code.LOCAL_VARIABLE, isOld);
 		this.m = m;
 		this.lvar_id = id;
 		this.name = name;

@@ -26,7 +26,8 @@ public abstract class OldExpression extends BCExpression {
 	 * 
 	 * @param isOld - whether this expression is OLD or not.
 	 */
-	public OldExpression(boolean isOld) {
+	public OldExpression(int connector, boolean isOld) {
+		super(connector);
 		this.old = isOld;
 	}
 

@@ -49,7 +49,7 @@ public class BCFieldRef extends OldExpression {
 	 * 		is beeing held.
 	 */
 	public BCFieldRef(boolean isOld, BCConstantPool cp, int cpIndex) {
-		super(isOld);
+		super(Code.FIELD_REF, isOld);
 		loadName(cp, cpIndex);
 	}
 

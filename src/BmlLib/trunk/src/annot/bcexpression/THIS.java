@@ -28,7 +28,7 @@ public class THIS extends OldExpression {
 	 * @param bcc - initializing class.
 	 */
 	public THIS(boolean isOld, BCClass bcc) {
-		super(isOld);
+		super(Code.THIS, isOld);
 		this.bcc = bcc;
 	}
 
@@ -70,6 +70,13 @@ public class THIS extends OldExpression {
 	@Override
 	public void write(AttributeWriter aw) {
 		aw.writeByte(isOld() ? Code.OLD_THIS : Code.THIS);
+	}
+
+	/**
+	 * @return BCClass this expression represents.
+	 */
+	public BCClass getBcc() {
+		return bcc;
 	}
 
 }

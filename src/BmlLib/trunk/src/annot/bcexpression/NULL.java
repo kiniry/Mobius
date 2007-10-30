@@ -13,18 +13,15 @@ import annot.textio.Priorities;
  * 
  * @author tomekb
  */
-public class NULL_CLASS extends BCExpression {
+public class NULL extends BCExpression {
 
 	/**
-	 * A private constructor (this is a singleton).
+	 * A standard constructor.
 	 */
-	private NULL_CLASS() {}
+	public NULL() {
+		super(Code.NULL);
+	}
 	
-	/**
-	 * The only null instance.
-	 */
-	public static final NULL_CLASS NULL = new NULL_CLASS();
-
 	@Override
 	protected JavaType1 checkType1() {
 		return JavaReferenceType.ANY;

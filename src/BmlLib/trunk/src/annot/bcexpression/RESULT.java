@@ -21,7 +21,7 @@ public class RESULT extends BCExpression {
 	/**
 	 * Method whose return value it represents.
 	 */
-	private BCMethod m;
+	private BCMethod method;
 	
 	/**
 	 * Return type of method <code>m</code>.
@@ -35,7 +35,8 @@ public class RESULT extends BCExpression {
 	 * @param m - initializing method.
 	 */
 	public RESULT(BCMethod m) {
-		this.m = m;
+		super(Code.RESULT);
+		this.method = m;
 		this.type = JavaType1.convert(
 			m.getBcelMethod().getReturnType());
 	}
@@ -78,6 +79,13 @@ public class RESULT extends BCExpression {
 	@Override
 	public void write(AttributeWriter aw) {
 		aw.writeByte(Code.RESULT);
+	}
+
+	/**
+	 * @return method whose return value it represents.
+	 */
+	public BCMethod getMethod() {
+		return method;
 	}
 
 }

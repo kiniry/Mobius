@@ -19,13 +19,6 @@ import annot.textio.Priorities;
 public class Formula extends AbstractFormula {
 
 	/**
-	 * A constructor for 0Arg formula.
-	 */
-	protected Formula() {
-		super();
-	}
-
-	/**
 	 * Another constructor for 0Arg formula.
 	 * 
 	 * @param connector - type of expression

@@ -61,6 +61,9 @@ public interface Code {
 	public static final int NOTEQUIV = 0x09;
 	public static final int FORALL_WITH_NAME = 0x0A;
 	public static final int EXISTS_WITH_NAME = 0x0B;
+	public static final int SINGLE_OCCURENCE = 0xBF;
+	public static final int EXPRESSION_ROOT = 0xBE;
+	public static final int MODIFIES_LIST = 0xDF;
 	public static final int OLD = 0x99;
 
 }

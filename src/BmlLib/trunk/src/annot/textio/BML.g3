@@ -331,7 +331,7 @@ modifyExpression returns [ModifyExpression ast] :
 	;
 
 modifySubExpr returns [BCExpression ast] :
-	THIS {$ast = bcc.getTHIS(false);}
+	THIS {$ast = new THIS(false, bcc);}
 	| i=IDENT {$ast = whatIsIt($i.getText());}
 	;
 
@@ -490,10 +490,10 @@ primaryExpr returns [BCExpression ast] :
 	| LOG_NOT p=primaryExpr {$ast = new Formula(Code.NOT, $p.ast);}
 	| FALSE {$ast = new Predicate0Ar(false);}
 	| TRUE {$ast = new Predicate0Ar(true);}
-	| RESULT {if (m == null) {reportError(null);} else {$ast = m.getResult();}}
-	| NULL {$ast = NULL_CLASS.NULL;}
-	| THIS {$ast = bcc.getTHIS(false);}
-	| OLD_THIS {$ast = bcc.getTHIS(true);}
+	| RESULT {if (m == null) {reportError(null);} else {$ast = new RESULT(m);}}
+	| NULL {$ast = new NULL();}
+	| THIS {$ast = new THIS(false, bcc);}
+	| OLD_THIS {$ast = new THIS(true, bcc);}
 	| OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD(Code.OLD, $e1.ast);}
 	| PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
 	;

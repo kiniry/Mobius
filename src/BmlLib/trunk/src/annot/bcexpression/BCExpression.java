@@ -70,7 +70,9 @@ public abstract class BCExpression {
 	
 	/**
 	 * A constructor for 0Arg expressions.
+	 * Do NOT use it, use {@link #BCExpression(int)} instead.
 	 */
+	@Deprecated
 	protected BCExpression() {
 		this.subExpr = new BCExpression[0];
 		this.priority = getPriority();

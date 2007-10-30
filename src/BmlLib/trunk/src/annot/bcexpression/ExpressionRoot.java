@@ -3,6 +3,7 @@ package annot.bcexpression;
 import annot.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
+import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
@@ -37,6 +38,7 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 	 * 		should represent.
 	 */
 	public ExpressionRoot(Object parent, T subExpression) {
+		super(Code.EXPRESSION_ROOT);
 		this.attribute = parent;
 		this.setSubExprCount(1);
 		this.setSubExpr(0, subExpression);

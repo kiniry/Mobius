@@ -28,7 +28,7 @@ public class ConditionalExpression extends AbstractIntExpression {
 	 * 		to false.
 	 */
 	public ConditionalExpression(BCExpression condition, BCExpression ifTrue, BCExpression ifFalse) {
-		super();
+		super(Code.COND_EXPR);
 		setSubExprCount(3);
 		setSubExpr(0, condition);
 		setSubExpr(1, ifTrue);

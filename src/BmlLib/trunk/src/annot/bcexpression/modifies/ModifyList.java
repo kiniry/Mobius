@@ -5,6 +5,7 @@ import annot.bcexpression.JavaBasicType;
 import annot.bcexpression.JavaType1;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
+import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
@@ -12,10 +13,12 @@ import annot.textio.Priorities;
 public class ModifyList extends BCExpression {
 
 	public ModifyList() {
+		super(Code.MODIFIES_LIST);
 		setSubExprCount(0);
 	}
 
 	public ModifyList(ModifyExpression[] subExpr) {
+		super(Code.MODIFIES_LIST);
 		setSubExprCount(subExpr.length);
 		for (int i=0; i<subExpr.length; i++)
 			setSubExpr(i, subExpr[i]);

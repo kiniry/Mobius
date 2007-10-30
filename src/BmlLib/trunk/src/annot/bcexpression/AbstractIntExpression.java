@@ -12,13 +12,6 @@ import annot.io.ReadAttributeException;
 public abstract class AbstractIntExpression extends BCExpression {
 
 	/**
-	 * A constructor for 0Arg expressions.
-	 */
-	protected AbstractIntExpression() {
-		super();
-	}
-
-	/**
 	 * Another constructor for 0Arg expressions.
 	 * 
 	 * @param connector - type of expression
