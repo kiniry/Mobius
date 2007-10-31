@@ -47,25 +47,24 @@ BEGIN
     MVA_cps_modeled?(mp)(sAP) AND
     MVA_vars_modeled?(sA, sAP)
 
-  halted_implies_JMLExc(mp)(sMP : MPState, sAP : APState) : boolean =
-    cp(astate(sMP)) = halted IMPLIES
-      (up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
-
   Program_gvs_modeled?(sMP : MPState, sAP : APState) : boolean =
     FORALL (n : Name) : defined?(gvs(sMP)(n)) IMPLIES
       gvs(sMP)(n) = gvs(sAP)(n)
 
-  % Says if sAP is a super state of sMP
-  Program_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
-    (ex(pstate(sMP)) = ex(pstate(sAP)) OR 
-     halted_implies_JMLExc(mp)(sMP, sAP)) AND
+  % Says if sAP is a "super state" of sMP
+  Program_modeled?(sMP : MPState, sAP : APState) : boolean =
+    % any exception in the monitored prog also happens in the annotated prog
+    (up?(ex(pstate(sMP))) IMPLIES up?(ex(pstate(sAP)))) AND
+    % the only new exceptions are JMLExc
+    (up?(ex(pstate(sAP))) AND NOT up?(ex(pstate(sMP))) IMPLIES
+       down(ex(pstate(sAP))) = JMLExc) AND
     st(pstate(sMP)) = st(pstate(sAP)) AND
     Program_gvs_modeled?(sMP, sAP)
 
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
     MVA_modeled?(mp)(astate(sMP), sAP) AND
-    Program_modeled?(mp)(sMP, sAP)
+    Program_modeled?(sMP, sAP)
 
 
   % It is possible to translate every guard of the MVA into an expression that
@@ -73,30 +72,33 @@ BEGIN
   % of the expression can not result in an exception (v would be Bottom).
   % Furthermore, the evaluation must have no side-effects.
   guard_to_expression_behavior(mp) : boolean =
-    FORALL (g : Guard, sAP : APState, sMVA : AState) :
+    FORALL (t : Transition, sAP : APState, sMVA : AState) :
       wf_state(ann_program(mp))(sAP) IMPLIES
+      wf_AState(mva(mp))(sMVA) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-      MVA_vars_modeled?(sMVA, sAP) IMPLIES
-      (EXISTS (t : Transition) :
-        ts(mva(mp))(t) AND guard(t) = g) IMPLIES
-        EXISTS (e : Expr, v : Val, n : nat) : 
-          guard_to_expression(mva(mp))(g) = e AND
-          wf_Body(ann_program(mp))(e) AND
+      MVA_modeled?(mp)(sMVA, sAP) IMPLIES
+      ts(mva(mp))(t) IMPLIES scp(t) = cp(sMVA) IMPLIES
+        EXISTS (e : BoolExpr, v : Val, n : nat) : 
+          guard_to_expression(mva(mp))(guard(t)) = e AND
+          wf_BoolExpr(ann_program(mp))(e) AND
           derive(ann_program(mp))(e, sAP, v, sAP)(n) AND
-          (g(stA(sMVA), st(pstate(sAP))) IFF v = Bool(TRUE))
+          (guard(t)(stA(sMVA), st(pstate(sAP))) = (v = Bool(TRUE)))
 
   % It is possible to evaluate expressions appearing in actions (they 
   % terminate) and they are side-effect-free. Note that the evaluation 
   % of the expresion can not throw an exception (provided it starts in 
   % a non-exceptional state).
+  % NOTE: This is not accurate, instead of saying wf_Body(ann_program(mp))(e),
+  % we should say that e is well formed with respect to mva(mp).
   eval_action_behavior(mp) : boolean =
     FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState) :
+      wf_Expr(mva(mp))(e) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
+      wf_AState(mva(mp))(sMVA) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-      MVA_vars_modeled?(sMVA, sAP) IMPLIES
-      wf_Body(ann_program(mp))(e) IMPLIES
-        (eval(e)(stA(sMVA), st(pstate(sAP))) = v IFF
-         EXISTS (n : nat) : derive(ann_program(mp))(e, sAP, v, sAP)(n))
+      MVA_modeled?(mp)(sMVA, sAP) IMPLIES
+        (eval(e)(stA(sMVA), st(pstate(sAP))) = v) =
+        EXISTS (n : nat) : derive(ann_program(mp))(e, sAP, v, sAP)(n)
 
   well_behaved_MVA(mp) : boolean =
     guard_to_expression_behavior(mp) AND
@@ -106,10 +108,15 @@ BEGIN
 %    well_behaved_Program(mp) AND
 %    well_behaved_MVA(mp)
 
+  halted_implies_JMLExc(mp)(sMP : MPState, sAP : APState) : boolean =
+    cp(astate(sMP)) = halted IMPLIES
+      (up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
+
   related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
     wf_state(mp)(sMP) AND
     wf_state(ann_program(mp))(sAP) AND
-    MP_modeled?(mp)(sMP, sAP)
+    MP_modeled?(mp)(sMP, sAP) AND
+    halted_implies_JMLExc(mp)(sMP, sAP)
     
 
 END Equivalence

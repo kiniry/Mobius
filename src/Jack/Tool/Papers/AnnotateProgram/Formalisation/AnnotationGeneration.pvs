@@ -203,21 +203,31 @@ BEGIN
 
   % Generates annotations to update the control point and the variables when an
   % event occurs
-  ann_event(mp)(ts : finite_set[Transition]): Stmt =
+  ann_event(mp)(ts : finite_set[Transition]) : Stmt =
     CaseJML(set2list(ann_event_set(mp)(ts)))
 
-  var_names_ann_event : LEMMA % :-)
+  % PROVE: fix the proof
+  var_names_ann_event : LEMMA
     FORALL (ts : finite_set[Transition]) :
       subset?(ts, ts(mva(mp))) IMPLIES
         subset?(var_names(ann_event(mp)(ts)), 
                 union(var_names(program(mp)), var_names(new_gvds(mp))))
 
-  ann_event_var_names : LEMMA % :-)
+  % PROVE: fix the proof
+  ann_event_var_names : LEMMA
     FORALL (ts : finite_set[Transition], v : Name) :
       subset?(ts, ts(mva(mp))) IMPLIES
       var_names(ann_event(mp)(ts))(v) IMPLIES 
         ext_declared_var_names(program(mp))(v) OR
         var_names(new_gvds(mp))(v)
+
+  % PROVE
+  ann_event_set_ghostvar : LEMMA
+    FORALL (ts : finite_set[Transition], b: Body):
+      subset?(ts, ts(mva(mp))) IMPLIES
+      Set?(b) IMPLIES
+      b << ann_event(mp)(ts) IMPLIES
+        var_names(new_gvds(mp))(target(b))
 
 
 END AnnotateEvent
@@ -274,7 +284,7 @@ BEGIN
 
 
   % NOTE: The following lemmas are simple but are useful as autorewrite rules
-  
+
   ann_method_body : LEMMA % :-)
     FORALL(m : Method) :
       body(ann_method(mp)(m)) = body(m)
@@ -318,8 +328,8 @@ BEGIN
       Sequence?(exc_set(ann_method(mp)(m))) AND
         s1(exc_set(ann_method(mp)(m))) = exc_set(m)
 
-
-  ann_method_wf_Body : LEMMA % :-)
+  % PROVE: fix the proof
+  ann_method_wf_Body : LEMMA
     FORALL(m : Method) :
       wf_Method(program(mp))(m) IMPLIES
       LET am = ann_method(mp)(m) IN
@@ -378,7 +388,6 @@ BEGIN
   a : VAR (wf_MVA)
 
 
-
   ann_class(mp)(c : Class) : Class =
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
     THEN c WITH [inv := Conj(Neg(Eq(NExpr(NumVarEval(cp(mp))), 
@@ -435,7 +444,8 @@ BEGIN
   ann_program_preserves_class_name : LEMMA % :-)
     FORALL(c : Class) :
       name(ann_class(mp)(c)) = name(c)
-        
+
+
 END AnnotateClass
 
 
@@ -465,10 +475,9 @@ BEGIN
 
   a : VAR (wf_MVA)
 
-
-
   % Program annotation
 
+  % PROVE: fix ann_program_TCC2
   ann_program(mp) : Program = 
     (# classes := {c : Class | EXISTS (c1 : Class) : 
                                  classes(program(mp))(c1) AND 
@@ -569,20 +578,60 @@ BEGIN
     subset?(var_names(ann_program(mp)), 
             union(var_names(program(mp)), var_names(new_gvds(mp))))
 
-  ann_program_preserves_wf_body : LEMMA % :-)
-    FORALL(b : (wf_Body(program(mp)))) :
-      wf_Body(ann_program(mp))(b)
-
-  ann_program_preserves_wf_method : LEMMA  % :-)
-    FORALL(m : (wf_Method(program(mp)))) :
-      wf_Method(ann_program(mp))(ann_method(mp)(m))
+  % PROVE
+  update_vars_wf_Stmt : LEMMA
+    FORALL (t : Transition) :
+      ts(mva(mp))(t) IMPLIES
+        wf_Stmt(ann_program(mp))(update_vars(mp)(t))
 
   % PROVE
-  ann_event_wf_Body : LEMMA
-    FORALL (m : Method, ts : finite_set[Transition]) :
-      methods(get_monitored_class(mp))(m) IMPLIES
+  guard_to_expression_wf_BoolExpr : LEMMA
+    FORALL (t : Transition) :
+      ts(mva(mp))(t) IMPLIES
+        wf_BoolExpr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t)))
+
+  % PROVE
+  ann_guard_actions_wf_Branches : LEMMA
+    FORALL (ts : finite_set[Transition]) :
+      subset?(ts, ts(mva(mp))) IMPLIES
+        wf_Branches(ann_program(mp))(ann_guard_actions(mp)(ts))
+
+  % PROVE
+  ann_trans_cp_wf : LEMMA
+    FORALL (q : CP, ts : finite_set[Transition]) :
+      LET p = ann_trans_cp(mp)(q, ts) IN
+      cps(mva(mp))(q) IMPLIES
+      subset?(ts, ts(mva(mp))) IMPLIES
+        (wf_BoolExpr(ann_program(mp))(p`1) AND
+         wf_Stmt(ann_program(mp))(p`2))
+
+  % PROVE
+  wf_Branches_subset : LEMMA
+    FORALL (s1, s2: finite_set[[BoolExpr, Stmt]]) :
+      subset?(s1, s2) IMPLIES
+      wf_Branches(ann_program(mp))(set2list(s2)) IMPLIES
+        wf_Branches(ann_program(mp))(set2list(s1))
+
+  % PROVE
+  ann_event_wf_Branches : LEMMA
+    FORALL (ts : finite_set[Transition]) :
+      subset?(ts, ts(mva(mp))) IMPLIES
+        wf_Branches(ann_program(mp))(set2list(ann_event_set(mp)(ts)))
+
+  ann_event_wf_Body : LEMMA % :-)
+    FORALL (ts : finite_set[Transition]) :
       subset?(ts, ts(mva(mp))) IMPLIES
         wf_Body(ann_program(mp))(ann_event(mp)(ts))
+
+  % PROVE: fix the proof
+  ann_program_preserves_wf_method : LEMMA
+    FORALL (m : (wf_Method(program(mp)))) :
+      wf_Method(ann_program(mp))(ann_method(mp)(m))
+
+  % PROVE: fix the proof
+  ann_program_preserves_wf_body : LEMMA
+    FORALL (b : (wf_Body(program(mp)))) :
+      wf_Body(ann_program(mp))(b)
 
   get_class_ann_program : LEMMA % :-)
     FORALL (c1, c2 : Class, tgt : Val) :
@@ -636,7 +685,6 @@ BEGIN
       wf_state(ann_program(mp))(s) IMPLIES
       var_names(new_gvds(mp))(n) IMPLIES
         is_ghost(n, s)
-
 
 
   ann_program_preserves_class_names : LEMMA % :-)

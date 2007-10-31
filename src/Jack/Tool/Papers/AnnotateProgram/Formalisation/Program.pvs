@@ -109,10 +109,10 @@ END Body
 % Syntax of programs
 Program[Name : TYPE+] : THEORY
 BEGIN
-  
+
   IMPORTING ValProp[Name],
             Body[Name]
-            
+
   This : Name
 
   % Other reserved words given as examples
@@ -285,7 +285,7 @@ BEGIN
     Union({ns : set[Name] | EXISTS (c : Class) :
       classes(p)(c) AND ns = var_names(c)})
 
-  
+
   var_names_union : LEMMA % :-)
     FORALL(fs1, fs2 : finite_set[FieldDecl]) :
       var_names(union(fs1, fs2)) = union(var_names(fs1), var_names(fs2))
@@ -315,7 +315,7 @@ BEGIN
                         classes(p)(c) AND getLocalDecls(c)(l)}
 
   arg_in_getLocalDecls : LEMMA % :-)
-    FORALL(p : PreProgram, c : Class, m : Method) : 
+    FORALL(p : PreProgram, c : Class, m : Method) :
       classes(p)(c) IMPLIES
       methods(c)(m) IMPLIES
       getLocalDecls(p)(arg(m))
@@ -539,7 +539,7 @@ BEGIN
   wf_Classes(p : PreProgram) : boolean =
     FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(p)(c)
 
-    
+
   wf_program_variables_disjoint_def(p : PreProgram) : boolean =
     LET fname = var_names(getFieldDecls(p)),
         lname = var_names(getLocalDecls(p)),
@@ -562,13 +562,13 @@ BEGIN
 %    FORALL(v : Name) : var_names(p)(v) IMPLIES declared_var_names(p)(v)
 
   wf_program_methods_only_in_one_class(p : PreProgram) : boolean =
-    FORALL (c1, c2 : Class, m : Method) :    
+    FORALL (c1, c2 : Class, m : Method) :
       classes(p)(c1) IMPLIES
       classes(p)(c2) IMPLIES
       methods(c1)(m) IMPLIES
       methods(c2)(m) IMPLIES
         c1 = c2
-      
+
 
 %  % Basic type information
 %  invariants_are_bool_expr(p : PreProgram) : boolean =

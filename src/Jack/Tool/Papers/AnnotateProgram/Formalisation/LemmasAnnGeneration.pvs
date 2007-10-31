@@ -21,33 +21,18 @@ BEGIN
   % the execution of the annotations representing that action modifies the 
   % corresponding ghost variables in the annotated program.
   execute_action_correctness : LEMMA
-    FORALL (mp)(c : Class, m : Method, a : Action, n : nat)
+    FORALL (m : Method, a : Action, n : nat)
            (sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
       wf_state(mp)(sMP) IMPLIES
       wf_state(ann_program(mp))(sAP1) IMPLIES
       MP_modeled?(mp)(sMP, sAP1) IMPLIES
-      classes(ann_program(mp))(c) IMPLIES
-      methods(c)(m) IMPLIES
+      methods(ann_class(mp)(get_monitored_class(mp)))(m) IMPLIES
       proper_subterm_set_clause(ann_action(a), m) IMPLIES
       wf_Action(mva(mp))(a) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       derive(ann_program(mp))(ann_action(a), sAP1, Unit, sAP2)(n) IMPLIES
       stA(sMVA2) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
         MVA_vars_modeled?(sMVA2, sAP2)
-
-%   execute_action_correctness : LEMMA
-%     FORALL (mp : MonitoredProgram, ap : Program, c : Class, m : Method,
-%             a : Action, n : nat,
-%             sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
-%       related_states(mp, ap)(sMP, sAP1) IMPLIES
-%       classes(ap)(c) IMPLIES
-%       methods(c)(m) IMPLIES
-%       proper_subterm_set_clause(ann_action(a), m) IMPLIES
-%       wf_Action(mva(mp))(a) IMPLIES
-%       NOT up?(ex(pstate(sAP1))) IMPLIES
-%       deriv_stmt(ap)(ann_action(a), sAP1, sAP2)(n) IMPLIES
-%       stA(sMVA2) = execute_action(a)(stA(astate(sMP)), st(pstate(sMP))) IMPLIES
-%         MVA_vars_modeled?(sMVA2, sAP2)
 
 
   % Tells if a statement c is part of the translation of an action a.
@@ -107,8 +92,8 @@ BEGIN
  % annotated program after executing the annotations that model the effect of t, 
  % then sMVA is still well modeled by sAP2.
  update_vars_preserves_MVA_modeled : LEMMA
-    FORALL (mp)(a : Class, m : Method, t : Transition,
-            sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState,  n : nat) :
+    FORALL (a : Class, m : Method, t : Transition,  n : nat)
+           (sMP : MPState, sMVA2 : AState, sAP1, sAP2 : APState) :
       related_states(mp)(sMP, sAP1) IMPLIES
       classes(ann_program(mp))(a) IMPLIES
       methods(a)(m) IMPLIES
@@ -123,8 +108,8 @@ BEGIN
         MVA_modeled?(mp)(sMVA2, sAP2)
 
   update_vars_preserves_MP_modeled : LEMMA
-    FORALL (mp)(m : Method, t : Transition,
-            sMP1, sMP2 : MPState, sAP1, sAP2 : APState,  n : nat) :
+    FORALL (m : Method, t : Transition, n : nat)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       related_states(mp)(sMP1, sAP1) IMPLIES
       methods(ann_class(mp)(get_monitored_class(mp)))(m) IMPLIES
       proper_subterm_set_clause(update_vars(mp)(t), m) IMPLIES
@@ -143,22 +128,32 @@ BEGIN
   % If m is a method that has been annotated then update_vars(t) is a subterm of
   % each of its set clauses (pre_set, post_set or exc_set).
   update_vars_proper_subterm_set_clause : LEMMA
-    FORALL (mp)(m : Method, t : Transition) :
+    FORALL (m : Method, t : Transition) :
       methods(ann_class(mp)(get_monitored_class(mp)))(m) IMPLIES
       ts(mva(mp))(t) IMPLIES
       mname(event(t)) = name(m) IMPLIES
         proper_subterm_set_clause(update_vars(mp)(t), m)
+
+  % TODO: move to RelatedStateProperties and delete the similar lemmas
+  MP_modeled_lookup_correspondence : LEMMA
+    FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
+      wf_state(ann_program(mp))(sAP) IMPLIES
+      MP_modeled?(mp)(sMP, sAP) IMPLIES
+      cps(mva(mp))(q1) IMPLIES
+      cps(mva(mp))(q2) IMPLIES
+      cp(astate(sMP)) = q1 IMPLIES
+        (q1 = q2) =
+        (val2int(lookup(cp(mp), sAP)) = val2int(lookup(name_of(mp)(q2), sAP)))
+
 
   % If sMP1 and sAP1 are related stated, sMP2 is the state of the monitored
   % progran after evaluating on_method_MVA with some event type et and some
   % method m, ts is the set of transitions that has (et, name(m)) as event and
   % sAP2 is the state of the annotated program after the execution of ann_event
   % with ts as argument, then sMP2 and sAP2 comply with MP_modeled?.
-  % TODO: Borrar los mp y quiza el ts
   ann_event_preserves_MP_modeled : LEMMA
-    FORALL (mp)(m : (wf_Method(program(mp))), sMP1, sMP2 : MPState,
-            sAP1, sAP2 : APState, n : nat, ts : finite_set[Transition], 
-            et : EventType) :
+    FORALL (m : (wf_Method(program(mp))), et : EventType,  n : nat)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       methods(get_monitored_class(mp))(m) IMPLIES
@@ -166,8 +161,8 @@ BEGIN
                 pstate := pstate(sMP1),
                 gvs := gvs(sMP1) #) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      ts = filter_event(mva(mp))(et)(name(m)) IMPLIES
-      derive(ann_program(mp))(ann_event(mp)(ts), sAP1, Unit, sAP2)(n) IMPLIES
+      derive(ann_program(mp))(ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
+                              sAP1, Unit, sAP2)(n) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
 

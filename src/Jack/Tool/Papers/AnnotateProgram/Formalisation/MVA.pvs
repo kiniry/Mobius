@@ -16,7 +16,7 @@ BEGIN
   IMPORTING Program[Name]
 
   MVAVarDecl : TYPE = FieldDecl
-  
+
   ProgVarDecl : TYPE = LocalVarDecl
 
   IMPORTING State[Name]
@@ -46,11 +46,11 @@ BEGIN
        action : Action,
        tcp : CP          % target control point
     #]
-   
+
   % halted is our characterization of a state where the automaton is blocked
   halted : CP
 
-  % An NVA consists of:
+  % An MVA consists of:
   % a name of the class that the automaton monitors,
   % a finite set of control points other than halted,
   % an initial control point,
@@ -74,6 +74,7 @@ BEGIN
 
   IMPORTING ProgramFunctions[Name] % imports var_names
 
+  % TODO: rename to declared_var_names
   var_names(a : MVA) : finite_set[Name] =
     union(var_names(vdsA(a)), var_names(vdsP(a)))
 
@@ -87,6 +88,14 @@ BEGIN
   IMPORTING MVA[CP, Name],
             ProgramFunctions[Name] % imports var_names
 
+  wf_Body(a : MVA)(b : Body) : boolean =
+    subset?(var_names(b), var_names(a))
+
+  wf_BoolExpr(a : MVA)(b : BoolExpr) : boolean =
+    wf_Body(a)(b)
+
+  wf_Expr(a : MVA)(e : Expr) : boolean =
+    wf_Body(a)(e)
 
   wf_vdsA(vds : finite_set[MVAVarDecl]) : boolean =
     (FORALL (vd1, vd2 : MVAVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
@@ -96,9 +105,6 @@ BEGIN
   wf_vdsP(vds : finite_set[ProgVarDecl]) : boolean =
     FORALL (vd1, vd2 : ProgVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
       name(vd1) = name(vd2) IMPLIES vd1 = vd2
-
-%   wf_Guard(a : MVA)(g : Guard) : boolean =
-%     subset?(var_names(guard_to_expression(a)(g)), var_names(a))
 
   wf_Guard(a : MVA)(g : Guard) : boolean =
     FORALL (sA : Store, sP : PSt, n : Name, v : Val) :
@@ -110,8 +116,7 @@ BEGIN
     FORALL (c : OneAction) :
       member(c, l) IMPLIES 
         (var_names(vdsA(a))(target(c)) AND
-         subset?(var_names(source(c)), 
-                 union(var_names(vdsA(a)), var_names(vdsP(a)))))
+         wf_Expr(a)(source(c)))
 
   wf_Trans(a : MVA)(t : Transition) : boolean = 
     ts(a)(t) IMPLIES
@@ -228,20 +233,22 @@ BEGIN
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.
+  % TODO: To be more precise we should ask g to be well formed wrt a
+%  guard_to_expression(a : MVA)(g : (wf_Guard(a))) : BoolExpr
   guard_to_expression(a : MVA)(g : Guard) : BoolExpr
 
-  var_names_guard_to_expresion : AXIOM
+  guard_to_expression_yields_wf_BoolExpr : AXIOM
     FORALL(a : MVA, t : Transition) :
       wf_MVA(a) IMPLIES
       ts(a)(t) IMPLIES
-        subset?(var_names(guard_to_expression(a)(guard(t))), 
-                var_names(a))
+        wf_BoolExpr(a)(guard_to_expression(a)(guard(t)))
+
 
   % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
   % Since we only consider the PSt of the state of the program, actions can not
   % talk about existing ghost variables in the monitored program, but that is 
   % fine since we assumed that they are fields (although it could be extended to
-  %  handle ghosts as well).
+  % handle ghosts as well).
   eval(e : Expr)(stA : Store, stP : PSt) : Val
 
   execute_action(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
