@@ -1,5 +1,6 @@
- 8 subclass NodeBuilder and SortedProver
-24 VC generation
+24 design a prover backend
+64 VC generation design
+24 VC generation implementation
  1 remove extra files (from build.xml)
  3 sometimes not everything is rebuilt by "ant", why?
  6 simple interface to parse from strings
