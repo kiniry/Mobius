@@ -15,6 +15,8 @@ import freeboogie.ast.*;
 // NOTE Sort constructors (such as * -> *) should be necessary only if
 //      the prover is higher-order. That is not supported.
 // NOTE I don't want to distinguish axioms from assumptions.
+// NOTE The prover does not know about the `background predicate';
+//      that is the responsability of the VCgen
 
 class TermType {
   private Class cls;
@@ -157,7 +159,7 @@ public abstract class Builder {
 
   public TermType getTermType(String name) {
     TermType r = termTypes.get(name);
-    assert r != null; // attemted to use an unregistered name
+    assert r != null; // attempted to use an unregistered name
     return r;
   }
 
@@ -213,6 +215,8 @@ class ProverException extends Exception {
   }
 }
 
+// NOTE Prover handles things like introducing definitions,
+//      exploiting stuff like bg_push and bg_pop, and so on.
 interface Prover {
   public Builder getBuilder();
   // TODO Check that t is a predicate here?
@@ -221,7 +225,7 @@ interface Prover {
   public boolean isSat(Term t) throws ProverException;
   public ProverAnswer getDetailedAnswer();
 
-  // tries to resend all the previous assumptions
+  // also, resend all the previous assumptions
   public void restartProver() throws ProverException;
 }
 
@@ -276,10 +280,9 @@ class ConcreteProver implements Prover {
   }
 }
 
-// TODO: how to specialize different high-level things for different provers?
-// Example: prover A support '+' while prover B does not.
-// for prover B we need to send an axiomatization of +, for B we do not
-// who is responsible for these things? what is the mechanism to do it?
+// NOTE The VCgen is responsible for high-level decisions such as
+//      whether an axiomatization of integerAdd is necessary or the
+//      built in `+' is used.
 class VcGen {
   private Prover p;
   private Builder b;
