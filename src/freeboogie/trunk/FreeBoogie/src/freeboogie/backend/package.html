@@ -26,20 +26,17 @@ a value. It's sort is <tt>t1 x ... x tn -> t/tt>. A constant
 is just the case <tt>n=0</tt>. Before using a term it has
 to be registered, that is, you have to tell the builder that
 <tt>term_id: t1 x ... x tn -> t</tt> is going to be used. Surely,
-havint to register the constants "1", "2", "41" individually
-would be not very pleasent. That's why the second type of term
-is just a facility that makes it easy to use such constants.
+having to register the constants "1", "2", "41" individually
+would be unpleasant. That's why the second type of term
+is a facility that makes it easy to use such constants.
 Informally, you register <tt>const_int : JavaInteger -> ProverInt</tt>.
-Finally, for associative and commutative operators it is convenient
+Finally, for associative-commutative operators it is convenient
 to allow a variable number of arguments. That is the third type
 of term.</p>
 
 <p>The Prover interface is also small. One can push/pop assumptions,
 make queries, and optionally inquire about details of the query
 answer. (The simple answer is a boolean, or an exception.)
-</p>
-
-<p>Once 
 </p>
 
 

@@ -1,11 +1,11 @@
 package freeboogie.backend;
 
 /**
- * A prover can be sued to check if a formula is satisfiable,
+ * A prover can be used to check if a formula is satisfiable,
  * given a set of assumptions. The prover may need to be restarted
  * before being used.
  * 
- * TODO add properties, liek timelimit
+ * TODO add properties, like timelimit
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -25,7 +25,8 @@ public interface Prover {
   public void assume(Term t) throws ProverException;
   
   /**
-   * Retract the last assumption.
+   * Retract the last assumption. This discards all the empty 
+   * assumption frames created after the last assumption.
    * @throws ProverException if something goes wrong
    */
   public void retract() throws ProverException;
