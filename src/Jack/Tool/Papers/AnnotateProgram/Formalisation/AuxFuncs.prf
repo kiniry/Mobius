@@ -3,7 +3,7 @@
   (set2list_TCC1-1 nil 3387877128 3390299916 ("" (subtype-tcc) nil nil)
    unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (set type-eq-decl nil sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (finite_set type-eq-decl nil finite_sets nil)
@@ -21,7 +21,7 @@
       nil))
     nil)
    unchecked
-   ((card_remove formula-decl nil finite_sets nil) nil
+   ((card_remove formula-decl nil finite_sets nil)
     (remove const-decl "set" sets nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
@@ -100,18 +100,18 @@
       nil)
      ("2" (use "wf_card") nil nil))
     nil)
-   unfinished
-   (nil (set2list def-decl "list[T]" set2list nil)
+   untried
+   ((set2list def-decl "list[T]" set2list nil)
     (member def-decl "bool" list_props nil)
     (list type-decl nil list_adt nil)
-    (member const-decl "bool" sets nil) nil
+    (member const-decl "bool" sets nil)
     (choose const-decl "(p)" sets nil)
     (nonempty? const-decl "bool" sets nil)
     (remove const-decl "set" sets nil)
     (/= const-decl "boolean" notequal nil)
     (card_remove formula-decl nil finite_sets nil)
     (empty? const-decl "bool" sets nil)
-    (injective? const-decl "bool" functions nil) nil
+    (injective? const-decl "bool" functions nil)
     (card const-decl "{n: nat | n = Card(S)}" finite_sets nil)
     (card const-decl "{n: nat | n = Card(S)}" finite_sets nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
@@ -132,7 +132,7 @@
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil) nil
+    (boolean nonempty-type-decl nil booleans nil)
     (wf_induction formula-decl nil wf_induction nil)
     (well_founded? const-decl "bool" orders nil)
     (pred type-eq-decl nil defined_types nil))
@@ -196,8 +196,8 @@
       nil)
      ("2" (use "wf_card") nil nil))
     nil)
-   unfinished
-   (nil (card_remove formula-decl nil finite_sets nil)
+   untried
+   ((card_remove formula-decl nil finite_sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (choose const-decl "(p)" sets nil)
     (nonempty? const-decl "bool" sets nil)
@@ -228,7 +228,7 @@
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil) nil
+    (boolean nonempty-type-decl nil booleans nil)
     (wf_induction formula-decl nil wf_induction nil)
     (well_founded? const-decl "bool" orders nil)
     (pred type-eq-decl nil defined_types nil))
@@ -251,9 +251,9 @@
       nil))
     nil)
    unfinished
-   ((list_induction formula-decl nil list_adt nil) nil
-    (= const-decl "[T, T -> boolean]" equalities nil) nil
-    (before def-decl "boolean" listfuncs nil) nil
+   ((list_induction formula-decl nil list_adt nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (before def-decl "boolean" listfuncs nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil)
     (list type-decl nil list_adt nil))
@@ -271,7 +271,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((list type-decl nil list_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -281,6 +281,55 @@
     (T formal-type-decl nil listfuncs nil)
     (list_induction formula-decl nil list_adt nil))
    3054 110 nil nil))
+ (suffix_reflexive 0
+  (suffix_reflexive-1 nil 3402926734 3402928072
+   ("" (induct "l")
+    (("1" (expand "suffix")
+      (("1" (inst 1 "null")
+        (("1" (expand "append") (("1" (propax) nil nil)) nil)) nil))
+      nil)
+     ("2" (skosimp)
+      (("2" (expand "suffix" 1)
+        (("2" (inst 1 "null")
+          (("2" (expand "append") (("2" (propax) nil nil)) nil)) nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((append def-decl "list[T]" list_props nil)
+    (null adt-constructor-decl "(null?)" list_adt nil)
+    (null? adt-recognizer-decl "[list -> boolean]" list_adt nil)
+    (list_induction formula-decl nil list_adt nil)
+    (T formal-type-decl nil listfuncs nil)
+    (suffix const-decl "boolean" listfuncs nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (list type-decl nil list_adt nil))
+   182318 260 t shostak))
+ (append_member 0
+  (append_member-1 nil 3402931546 3402936889
+   ("" (induct "l2")
+    (("1" (skosimp)
+      (("1" (expand "append") (("1" (propax) nil nil)) nil)) nil)
+     ("2" (skosimp*)
+      (("2" (expand "append" 1)
+        (("2" (inst?)
+          (("2" (assert)
+            (("2" (expand "member" 1) (("2" (propax) nil nil)) nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((list_induction formula-decl nil list_adt nil)
+    (T formal-type-decl nil listfuncs nil)
+    (append def-decl "list[T]" list_props nil)
+    (member def-decl "bool" list_props nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (list type-decl nil list_adt nil))
+   383387 120 t shostak))
  (every_is_forall 0
   (every_is_forall-1 nil 3389528321 3391340512
    ("" (induct "l")
@@ -362,8 +411,8 @@
       nil))
     nil)
    unfinished
-   ((list_induction formula-decl nil list_adt nil) nil
-    (member def-decl "bool" list_props nil) nil
+   ((list_induction formula-decl nil list_adt nil)
+    (member def-decl "bool" list_props nil)
     (pred type-eq-decl nil defined_types nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (pred type-eq-decl nil defined_types nil)
@@ -419,8 +468,8 @@
       nil))
     nil)
    unfinished
-   ((list_induction formula-decl nil list_adt nil) nil
-    (member def-decl "bool" list_props nil) nil
+   ((list_induction formula-decl nil list_adt nil)
+    (member def-decl "bool" list_props nil)
     (pred type-eq-decl nil defined_types nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (pred type-eq-decl nil defined_types nil)
@@ -439,7 +488,7 @@
       nil))
     nil)
    unfinished
-   ((list_inclusive formula-decl nil list_adt nil) nil
+   ((list_inclusive formula-decl nil list_adt nil)
     (list type-decl nil list_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
@@ -478,17 +527,17 @@
     (number nonempty-type-decl nil numbers nil)
     (list_induction formula-decl nil list_adt nil)
     (sum def-decl "nat" listsum nil)
-    (member def-decl "bool" list_props nil) nil nil nil
+    (member def-decl "bool" list_props nil)
     (pred type-eq-decl nil defined_types nil)
     (list type-decl nil list_adt nil))
    848 109 t shostak)))
 (list_map_funcs
  (list_map_member 0
   (list_map_member-1 nil 3397382384 3397382391
-   ("" (induct-and-simplify "xs") nil nil) unfinished
-   (nil (list_induction formula-decl nil list_adt nil)
-    (member def-decl "bool" list_props nil) nil
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+   ("" (induct-and-simplify "xs") nil nil) untried
+   ((list_induction formula-decl nil list_adt nil)
+    (member def-decl "bool" list_props nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil)
     (list type-decl nil list_adt nil))
    645 46 t shostak)))
@@ -501,17 +550,17 @@
    ("" (termination-tcc) nil nil) unchecked nil nil nil nil nil))
  (list_to_union_subset 0
   (list_to_union_subset-1 nil 3397382261 3397382267
-   ("" (induct-and-simplify "l") nil nil) unfinished
+   ("" (induct-and-simplify "l") nil nil) untried
    ((subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
     (member const-decl "bool" sets nil)
     (union const-decl "set" sets nil) (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil) nil
+    (boolean nonempty-type-decl nil booleans nil)
     (list_induction formula-decl nil list_adt nil)
     (list_to_union def-decl "set[T]" list_of_set_funcs nil)
     (subset? const-decl "bool" sets nil)
-    (member def-decl "bool" list_props nil) nil
+    (member def-decl "bool" list_props nil)
     (list type-decl nil list_adt nil))
    646 179 t shostak)))
 (FunProp
@@ -519,7 +568,7 @@
   (nat2string_TCC1-1 nil 3390113818 3390292588
    ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
@@ -566,7 +615,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   untried
    ((number nonempty-type-decl nil numbers nil)
     (boolean nonempty-type-decl nil booleans nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -581,13 +630,13 @@
     (bool nonempty-type-eq-decl nil booleans nil)
     (>= const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (pred type-eq-decl nil defined_types nil) nil
+    (pred type-eq-decl nil defined_types nil)
     (character type-decl nil character_adt nil)
     (char? adt-recognizer-decl "[character -> boolean]" character_adt
      nil)
     (char type-eq-decl nil strings nil)
     (list type-decl nil list_adt nil)
-    (= const-decl "[T, T -> boolean]" equalities nil) nil
+    (= const-decl "[T, T -> boolean]" equalities nil)
     (nat_induction formula-decl nil naturalnumbers nil)
     (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
     (cdr adt-accessor-decl "[(cons?) -> list]" list_adt nil)
@@ -703,13 +752,12 @@
         nil))
       nil))
     nil)
-   unfinished
+   untried
    ((list2finseq const-decl "finseq[T]" list2finseq nil)
     (cdr adt-accessor-decl "[(cons?) -> list]" list_adt nil)
     (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
     (list_cons_eta formula-decl nil list_adt nil)
     (cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil)
-    nil
     (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (list_induction formula-decl nil list_adt nil)
@@ -719,9 +767,9 @@
      nil)
     (char type-eq-decl nil strings nil)
     (nth def-decl "T" list_props nil)
-    (below type-eq-decl nil nat_types nil) nil
+    (below type-eq-decl nil nat_types nil)
     (list type-decl nil list_adt nil)
-    (bool nonempty-type-eq-decl nil booleans nil) nil
+    (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -735,7 +783,7 @@
     (int nonempty-type-eq-decl nil integers nil)
     (>= const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (length def-decl "nat" list_props nil) nil
+    (length def-decl "nat" list_props nil)
     (< const-decl "bool" reals nil)
     (injective? const-decl "bool" functions nil))
    1140 1060 t shostak))
@@ -747,10 +795,10 @@
        ("2" (use "nat2string_injective") nil nil))
       nil))
     nil)
-   unfinished
+   untried
    ((composition_injective judgement-tcc nil function_props nil)
-    (injective? const-decl "bool" functions nil) nil nil nil
-    (list2finseq const-decl "finseq[T]" list2finseq nil) nil
+    (injective? const-decl "bool" functions nil)
+    (list2finseq const-decl "finseq[T]" list2finseq nil)
     (finseq type-eq-decl nil finite_sequences nil)
     (list type-decl nil list_adt nil)
     (string type-eq-decl nil strings nil)

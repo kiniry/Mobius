@@ -14,7 +14,7 @@ SemanticsTypes[Name : TYPE+,
                (IMPORTING WellFormedProgram[Name]) program : [FullProgram -> Program],
                (IMPORTING State[Name]) pstate : [FullState -> PState]] : THEORY
 BEGIN
- 
+
   IMPORTING WellFormedProgram[Name]
 
   derive_type(n : nat) : TYPE =
@@ -348,17 +348,14 @@ BEGIN
   MEASURE n
 
 
-
   derives(p : FullProgram)
          (b : (wf_Body(program(p))), sigma1 : FullState)(v : Val, sigma2 : FullState) : bool =
     EXISTS (n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n)
 
-
-  spec_expr_has_no_side_effects(p : FullProgram)(e : (wf_Body(program(p)))) : boolean =
-    FORALL (s1, s2 : FullState, v : Val, n : nat) :
-      derive(p)(e, s1, v, s2)(n) IMPLIES s1 = s2
-
+%   spec_expr_has_no_side_effects(p : FullProgram)(e : (wf_Body(program(p)))) : boolean =
+%     FORALL (s1, s2 : FullState, v : Val, n : nat) :
+%       derive(p)(e, s1, v, s2)(n) IMPLIES s1 = s2
 
   run_FullProgram(p : FullProgram)(main : (wf_Method(program(p))), arg : int)
                  (initial, final : FullState) : boolean =
@@ -509,7 +506,7 @@ ENDASSUMING
         derive(p)(b, sigma, v2, sigma2)(n2) IMPLIES
            v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
-  
+
   derive_determ : LEMMA % :-)
     FORALL (p : FullProgram)(sigma : FullState)(b : (wf_Body(program(p)))) :
       FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :

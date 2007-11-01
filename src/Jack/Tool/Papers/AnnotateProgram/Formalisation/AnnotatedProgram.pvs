@@ -47,6 +47,12 @@ BEGIN
          ENDIF
     #)
 
+  body_has_no_side_effects(p : Program)(b : (wf_Body(p))) : boolean =
+    FORALL (s1, s2 : APState, v : Val, n : nat) :
+      wf_state(p)(s1) IMPLIES
+      derive(p)(b, s1, v, s2)(n) IMPLIES
+        s1 = s2
+
   run_annotated_program(p : Program)(main : (wf_Method(p)), arg : int)
                        (this_val : Val)(final : APState) : boolean =
     run_FullProgram(p)(main, arg)(initial_AP_state(p)(this_val), final)
@@ -164,7 +170,7 @@ BEGIN
            (s1, s2 : APState, v : Val, n : nat)
            (vn : Name) :
       wf_Body(p)(c) IMPLIES
-      spec_expr_has_no_side_effects(p)(source(c)) IMPLIES
+      body_has_no_side_effects(p)(source(c)) IMPLIES
       derive(p)(c, s1, v, s2)(n) IMPLIES
       NOT target(c) = vn IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)

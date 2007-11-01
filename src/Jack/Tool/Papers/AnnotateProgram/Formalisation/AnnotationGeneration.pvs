@@ -165,7 +165,6 @@ BEGIN
     ENDCASES
   MEASURE length(l)
 
-
   var_names_ann_action : LEMMA % :-)
     FORALL(a : Action, n : Name) :
       var_names(ann_action(a))(n) = 
@@ -266,6 +265,10 @@ BEGIN
   filter_event_subset : LEMMA % :-)
     FORALL(et : EventType, m : Name) :
       subset?(filter_event(a)(et)(m), ts(a))
+
+  filter_event_cp_is_finite : LEMMA % :-)
+    FORALL (et : EventType, n : Name, q : CP) :
+      is_finite({t: Transition | filter_event(mva(mp))(et)(n)(t) AND scp(t) = q})
 
   ann_method(mp)(m : Method) : Method =
     LET ann_event_type = LAMBDA (et : EventType) : 
@@ -578,6 +581,20 @@ BEGIN
     subset?(var_names(ann_program(mp)), 
             union(var_names(program(mp)), var_names(new_gvds(mp))))
 
+
+  % PROVE
+  one_action_translation_wf_Body : LEMMA
+    FORALL (a : Action, oa : OneAction) :
+      wf_Action(mva(mp))(a) IMPLIES
+      member(oa, a) IMPLIES
+        wf_Body(ann_program(mp))(Set(target(oa), source(oa)))
+
+  % PROVE
+  ann_action_yields_wf_Body : LEMMA
+    FORALL (a : Action) :
+      wf_Action(mva(mp))(a) IMPLIES
+        wf_Body(ann_program(mp))(ann_action(a))
+
   % PROVE
   update_vars_wf_Stmt : LEMMA
     FORALL (t : Transition) :
@@ -604,13 +621,6 @@ BEGIN
       subset?(ts, ts(mva(mp))) IMPLIES
         (wf_BoolExpr(ann_program(mp))(p`1) AND
          wf_Stmt(ann_program(mp))(p`2))
-
-  % PROVE
-  wf_Branches_subset : LEMMA
-    FORALL (s1, s2: finite_set[[BoolExpr, Stmt]]) :
-      subset?(s1, s2) IMPLIES
-      wf_Branches(ann_program(mp))(set2list(s2)) IMPLIES
-        wf_Branches(ann_program(mp))(set2list(s1))
 
   % PROVE
   ann_event_wf_Branches : LEMMA

@@ -88,8 +88,6 @@ BEGIN
   % terminate) and they are side-effect-free. Note that the evaluation 
   % of the expresion can not throw an exception (provided it starts in 
   % a non-exceptional state).
-  % NOTE: This is not accurate, instead of saying wf_Body(ann_program(mp))(e),
-  % we should say that e is well formed with respect to mva(mp).
   eval_action_behavior(mp) : boolean =
     FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState) :
       wf_Expr(mva(mp))(e) IMPLIES
@@ -100,9 +98,19 @@ BEGIN
         (eval(e)(stA(sMVA), st(pstate(sAP))) = v) =
         EXISTS (n : nat) : derive(ann_program(mp))(e, sAP, v, sAP)(n)
 
+  actions_have_no_side_effects(mp) : boolean =
+    FORALL (t : Transition, oa : OneAction) :
+      ts(mva(mp))(t) IMPLIES
+      member(oa, action(t)) IMPLIES
+        FORALL (s1, s2 : APState, v : Val, n : nat) :
+          wf_state(ann_program(mp))(s1) IMPLIES
+          derive(ann_program(mp))(source(oa), s1, v, s2)(n) IMPLIES
+            s1 = s2
+
   well_behaved_MVA(mp) : boolean =
     guard_to_expression_behavior(mp) AND
-    eval_action_behavior(mp)
+    eval_action_behavior(mp) AND
+    actions_have_no_side_effects(mp)
 
 %  well_behaved_MP(mp) : boolean =
 %    well_behaved_Program(mp) AND

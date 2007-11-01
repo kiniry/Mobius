@@ -18,7 +18,7 @@ BEGIN
     FORALL (s : finite_set[T], x : T) :
       member(x, s) IFF member(x, set2list(s))
 
-  % NOT USED
+  % NOTE: This is not used now, but it is useful
   set_list_set: LEMMA % :-)
     FORALL (s : finite_set[T]) : list2set(set2list(s)) = s
 
@@ -51,6 +51,18 @@ BEGIN
     FORALL (a, b : T, l : list[T]) :
       before(a, b, l) IMPLIES member(a, l)
 
+
+  suffix(l1, l2 : list[T]) : boolean =
+    EXISTS (l3 : list[T]) : append(l3, l1) = l2
+
+  suffix_reflexive : LEMMA % :-)
+    FORALL (l : list[T]) : suffix(l, l)
+
+  append_member : LEMMA % :-)
+    FORALL (x : T, l1, l2 : list[T]) :
+      member(x, l1) IMPLIES
+        member(x, append(l2, l1))
+
   every_is_forall : LEMMA % :-)
     FORALL (p : pred[T], l : list[T]) : 
       every(p)(l) = FORALL (x : T) : member(x, l) IMPLIES p(x)
@@ -81,6 +93,7 @@ BEGIN
       member(x, l) IMPLIES
         sum(l) >= x
 
+
 END listsum
 
 
@@ -109,7 +122,9 @@ BEGIN
     FORALL(l : list[set[T]], x : set[T]) :
       member(x, l) IMPLIES subset?(x, list_to_union(l))
 
+
 END list_of_set_funcs
+
 
 % NOT USED
 FunProp : THEORY
