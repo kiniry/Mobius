@@ -7,13 +7,12 @@
    <install-handler/>
 
    <description>
-      This plugin encapsulates the ESC/Java2 tool.
+      This feature encapsulates the ESC/Java2 tool.
    </description>
 
    <copyright>
       Copyright (c) 2004-2005 David R. Cok
-Copyright (c) 2006-2007 EU FP-7 Mobius IST-15905
-project and others
+Copyright (c) 2006-2007 EU Mobius IST-15905 project and others
    </copyright>
 
    <license>
@@ -749,13 +748,13 @@ limitations under the License.
    </requires>
 
    <plugin
-         id="mobius.escjava.plugin"
+         id="mobius.escjava2.esctools"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="mobius.escjava2.esctools"
+         id="mobius.escjava.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
