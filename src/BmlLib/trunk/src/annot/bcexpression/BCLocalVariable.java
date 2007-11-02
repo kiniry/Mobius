@@ -80,7 +80,7 @@ public class BCLocalVariable extends OldExpression {
 	public static BCLocalVariable getLocalVariable(
 			boolean isOld, BCMethod m, AttributeReader ar)
 			throws ReadAttributeException {
-		int index = ar.readShort() - 1;
+		int index = ar.readShort();
 		if ((index < 0) || (index >= m.getLocalVariableCount()))
 			throw new ReadAttributeException("invalid local variable index: " + index);
 		return m.getLocalVariable(isOld, index);
@@ -97,7 +97,7 @@ public class BCLocalVariable extends OldExpression {
 	}
 
 	@Override
-	public JavaType1 getType() {
+	public JavaType1 getType1() {
 		return type;
 	}
 
@@ -114,7 +114,7 @@ public class BCLocalVariable extends OldExpression {
 	@Override
 	public void write(AttributeWriter aw) {
 		aw.writeByte(isOld() ? Code.OLD_LOCAL_VARIABLE : Code.LOCAL_VARIABLE);
-		aw.writeShort(lvar_id + 1);
+		aw.writeShort(lvar_id);
 	}
 
 	/**

@@ -110,7 +110,7 @@ public abstract class JavaType1 extends BCExpression {
 	 * 		{@link JavaBasicType#JavaType}.
 	 */
 	@Override
-	public JavaType1 getType() {
+	public JavaType1 getType1() {
 		return JavaBasicType.JavaType;
 	}
 

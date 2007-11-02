@@ -106,7 +106,7 @@ public abstract class ModifyExpression extends BCExpression {
 	 * @throws RuntimeException - always.
 	 */
 	@Override
-	public JavaType1 getType() {
+	public JavaType1 getType1() {
 		throw new RuntimeException("What type should it return?");
 	}
 

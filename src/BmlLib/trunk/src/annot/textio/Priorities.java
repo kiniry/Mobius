@@ -27,6 +27,12 @@ public abstract class Priorities implements Code {
 	public static final int MAX_PRI = 18;
 
 	/**
+	 * The same priority as in it's parent, so it will never
+	 * be surrounded by ( ).
+	 */
+	public static final int PRI_TRANSPARENT = -2;
+
+	/**
 	 * Initializes <code>priorities</code> array.
 	 */
 	private static void setPriorities() {

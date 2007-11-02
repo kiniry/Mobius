@@ -3,6 +3,7 @@ package annot.bcexpression;
 import annot.formula.AbstractFormula;
 import annot.io.AttributeWriter;
 import annot.textio.BMLConfig;
+import annot.textio.Priorities;
 
 public class BooleanExpression extends AbstractFormula {
 
@@ -20,11 +21,12 @@ public class BooleanExpression extends AbstractFormula {
 
 	@Override
 	protected int getPriority() {
-		if (getAllSubExpr() == null)
-			return -1;
-		if (getSubExpr(0) == null)
-			return -1;
-		return getSubExpr(0).getPriority();
+//		if (getAllSubExpr() == null)
+//			return -1;
+//		if (getSubExpr(0) == null)
+//			return -1;
+//		return getSubExpr(0).getPriority();
+		return Priorities.PRI_TRANSPARENT;
 	}
 
 	@Override

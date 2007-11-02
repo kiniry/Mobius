@@ -149,6 +149,10 @@ public abstract class OldExpression extends BCExpression {
 		return old;
 	}
 
+	public void setOld(boolean old) {
+		this.old = old;
+	}
+
 	/**
 	 * This should simply check Expression's type.
 	 * You can assume, that it's subexpression is non-OLD.

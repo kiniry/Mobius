@@ -121,7 +121,10 @@ public class BCClass {
 	 */
 	@Override
 	public String toString() {
-		String ret = "package " + jc.getPackageName() + "\n\n";
+		String pname = jc.getPackageName();
+		if ("".equals(pname))
+			pname = "[default]";
+		String ret = "package " + pname + "\n\n";
 		if (jc.isPublic())
 			ret += "public ";
 		if (jc.isPrivate())

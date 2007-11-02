@@ -88,14 +88,21 @@ options {
 	// and returns proper one, or null if no identifier
 	// of this name could be found.
 	private BCExpression whatIsIt(String ident) {
+		boolean isOld = false;
+		if (ident.startsWith("old_")) { //??!
+			ident = ident.substring(4);
+			isOld = true;
+		}
 		if (env.containsKey(ident))
 			return new SingleOccurence(env.get(ident));
 		if (m != null) {
 			BCLocalVariable lv = m.findLocalVariable(ident);
-			if (lv != null)
+			if (lv != null) {
+				lv.setOld(isOld);
 				return new SingleOccurence(lv);
+			}
 		}
-		BCFieldRef bfr = BCFieldRef.getFieldOfName(false, bcc.getCp(), ident);
+		BCFieldRef bfr = BCFieldRef.getFieldOfName(isOld, bcc.getCp(), ident);
 		if (bfr != null)
 			return bfr;
 		MLog.putMsg(MLog.PInfo, "undefined identifier: "+ident);
@@ -276,18 +283,11 @@ methodSpecification returns [MethodSpecification ast] :
 		(SC_START s=specCase {$ast.addCase($s.ast);} SC_END)*
 	;
 
-modifyList returns [ModifyList ast] :
-	l=modifyExpression {
-		$ast = new ModifyList();
-		$ast.addModify($l.ast);
-	}
-	(COMMA r=modifyExpression {
-		$ast.addModify($r.ast);
-	})*;
-
 exname returns [String name] :
 	i=EXC_IDENT {$name = $i.getText();}
+		(SEMICOLON {$name = $name + ';';})?
 	| i2=IDENT {$name = $i2.getText();}
+		(SEMICOLON {$name = $name + ';';})?
 	;
 
 specCase returns [SpecificationCase ast] :
@@ -323,23 +323,34 @@ inCodeAttribute returns [InCodeAttribute ast] :
 	{$ast = new SingleLoopSpecification(m, ih, -1, modif, inv, dec);}
 	;
 
+modifyList returns [ModifyList ast] :
+	l=modifyExpression {
+		$ast = new ModifyList();
+		$ast.addModify($l.ast);
+	}
+	(COMMA r=modifyExpression {
+		$ast.addModify($r.ast);
+	})*;
+
 modifyExpression returns [ModifyExpression ast] :
-	NOTHING {$ast = ModifyExpression.Nothing;}
-	| EVERYTHING {$ast = ModifyExpression.Everything;}
-	| i=modifySubExpr {$ast = new ModifiesIdent($i.ast);}
-		(DOT j=modifySubExpr {$ast = new ModifiesDot($ast, $j.ast);})*
-		(BR_LEFT a=specArray BR_RIGHT {$ast = new ModifiesArray($ast, $a.ast);})*
+	{initExpression();}
+	(NOTHING {$ast = ModifyExpression.Nothing;}
+		| EVERYTHING {$ast = ModifyExpression.Everything;}
+		| i=modifySubExpr {$ast = new ModifiesIdent($i.ast);}
+			(DOT j=modifySubExpr {$ast = new ModifiesDot($ast, $j.ast);})*
+			(BR_LEFT a=specArray BR_RIGHT {$ast = new ModifiesArray($ast, $a.ast);})*
+	);
+
+modifySubExpr returns [BCExpression ast] :
+	THIS {$ast = new THIS(false, bcc);}
+	| OLD_THIS {$ast = new THIS(true, bcc);}
+	| i=IDENT {$ast = whatIsIt($i.getText());}
 	;
 
 specArray returns [SpecArray ast] :
 	MULT {$ast = new ModifiesStar();}
 	| e=expression {$ast = new ModifiesSingleIndex($e.ast);}
 	(DOT2 t=expression {$ast = new ModifiesInterval($ast.getSubExpr(0), $t.ast);})?
-	;
-
-modifySubExpr returns [BCExpression ast] :
-	THIS {$ast = new THIS(false, bcc);}
-	| i=IDENT {$ast = whatIsIt($i.getText());}
 	;
 
 formula returns [AbstractFormula ast] :
@@ -606,9 +617,10 @@ LV: 'lv';
 DOT2: '..';
 DOT: '.';
 OLD: 'old'|'OLD';
+UNDERLINE: '_';
 
 NAT: ('0'..'9')+;
-IDENT: ('a'..'z'|'A'..'Z')+;
+IDENT: ('a'..'z'|'A'..'Z'|'_')+;
 EXC_IDENT: (('a'..'z'|'A'..'Z')+('/')+)+('a'..'z'|'A'..'Z')+;
 
 WS: (' '|'\t'|'\n')+ {skip();};

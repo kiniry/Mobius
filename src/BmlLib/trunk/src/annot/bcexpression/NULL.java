@@ -29,7 +29,7 @@ public class NULL extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType() {
+	public JavaType1 getType1() {
 		return JavaReferenceType.ANY;
 	}
 

@@ -74,11 +74,11 @@ public interface IDisplayStyle {
 	/**
 	 * BML attribute names (stored in primary constantPool):
 	 */
-	public static final String __mspec = "method specification";
-	public static final String __classInvariant = "class invariant";
-	public static final String __assertTable = "assert table";
-	public static final String __second_cp = "second constant pool";
-	public static final String __loopSpecTable = "loop specification table";
+	public static final String __mspec = "MethodSpecification";
+	public static final String __classInvariant = "ClassInvariant";
+	public static final String __assertTable = "Assert";
+	public static final String __second_cp = "SecondConstantPool";
+	public static final String __loopSpecTable = "LoopSpecification";
 
 	/**
 	 * BML annotations keywords (at the beginning

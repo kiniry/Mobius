@@ -27,7 +27,7 @@ public final class Testuj {
 	 * whether show stac trace of exception in test failures
 	 * or not.
 	 */
-	private static boolean goShowTraceOnFailures = false;
+	private static boolean goShowTraceOnFailures = true;
 
 	/**
 	 * Perform "save and load" test after each example.
@@ -40,7 +40,7 @@ public final class Testuj {
 	 * Shows old and new class' bytecode if it has changed
 	 * during saving / loading.
 	 */
-	private static boolean goShowFileChangesIfAny = false;
+	private static boolean goShowFileChangesIfAny = true;
 
 	/**
 	 * Shows bytecode whose annotations will be modified
@@ -344,9 +344,9 @@ public final class Testuj {
 		test(true, 2, "true {| \\precondition true \\ensures false |}" +
 				" {| \\precondition false && true \\ensures true ==> false |}");
 		test(false, 1, "true {| \\precondition true \\ensures false |}");
-		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception: true && false |}");
-		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
-		test(true, 2, "true {| \\precondition true \\modifies nothing \\ensures false \\exsures LJava/Lang/Exception: true\n  LReadAttributeException: false\n |}");
+		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception;: true && false |}");
+		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception;: true\n  LReadAttributeException;: false\n |}");
+		test(true, 2, "true {| \\precondition true \\modifies nothing \\ensures false \\exsures LJava/Lang/Exception;: true\n  LReadAttributeException;: false\n |}");
 		test(true, 2, "true {| \\precondition true \\modifies everything \\exsures LJava/Lang/Exception: true && false |}",
 				"true {| \\precondition true \\ensures true \\exsures LJava/Lang/Exception: true && false |}");
 		test(true, 2, "true {| \\precondition true \\modifies nothing, everything |}",
@@ -466,6 +466,18 @@ public final class Testuj {
 		test(true, 2, "true {| \\precondition true \\modifies args[2 .. 3] \\ensures false |}");
 		test(true, 2, "true {| \\precondition true \\modifies args[2 + 2 .. 3 / 4] \\ensures false |}");
 		test(true, 2, "true {| \\precondition true \\modifies args[this.l .. this.l + 1] \\ensures false |}");
+
+		//loop specification tests:
+		test(true, 4, "", "\\modifies everything \\invariant true \\decreases 1");
+		test(true, 4, "\\modifies nothing, everything \\invariant args != null \\decreases 2 + 2");
+		test(false, 4, "\\modifies this.xxx \\invariant true \\decreases 1");
+		test(true, 4, "\\modifies nothing \\invariant true \\decreases this.l");
+		test(true, 4, "\\modifies old_args \\invariant true \\decreases l");
+		test(true, 4, "\\modifies old_this \\invariant true \\decreases l + 2 * 2");
+		test(true, 4, "\\modifies old_this.old_args \\invariant true \\decreases l + l");
+		test(true, 4, "\\modifies nothing \\invariant true \\decreases (l + l) * 3 + this.l");
+		test(true, 4, "\\modifies this.args[*] \\invariant args != null \\decreases 2 + 2");
+		test(true, 4, "\\modifies this.args[*], this.l, l \\invariant args != null \\decreases 2 + 2");
 		end();
 	}
 

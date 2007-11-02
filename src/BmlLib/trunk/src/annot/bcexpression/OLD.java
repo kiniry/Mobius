@@ -49,7 +49,7 @@ public class OLD extends OldExpression {
 	}
 
 	@Override
-	public JavaType1 getType() {
+	public JavaType1 getType1() {
 		return getSubExpr(0).getType();
 	}
 

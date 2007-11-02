@@ -237,7 +237,8 @@ public abstract class BCExpression {
 	 * 		or are invalid).
 	 */
 	public final JavaType1 checkType() {
-		//XXX shouldn't this type be memorized?
+		if (subExpr == null)
+			return null;
 		for (int i = 0; i < subExpr.length; i++)
 			if (subExpr[i] == null)
 				return null;
@@ -245,10 +246,31 @@ public abstract class BCExpression {
 	}
 
 	/**
+	 * This method should return (bmllib's) type of this
+	 * expression without checking whether all subexpressions
+	 * have correct types (recursivly).
+	 * 
 	 * @return (bmllib's) JavaType of result of this
-	 * 		expression (without checkign subexpressions).
+	 * 		exrpession, or null if it's invalid.
 	 */
-	public abstract JavaType1 getType();
+	public abstract JavaType1 getType1();
+
+	/**
+	 * Returns type of this expression without checking
+	 * whether all subexpressions have correct types
+	 * (recursivly).
+	 * 
+	 * @return (bmllib's) JavaType of result of this
+	 * 		exrpession, or null if it's invalid.
+	 */
+	public final JavaType1 getType() {
+		if (subExpr == null)
+			return null;
+		for (int i = 0; i < subExpr.length; i++)
+			if (subExpr[i] == null)
+				return null;
+		return getType1();
+	}
 
 	/**
 	 * Prints expression as a whole attribute.
@@ -289,7 +311,8 @@ public abstract class BCExpression {
 	 */
 	private String printCode2(BMLConfig conf) {
 		int rp = conf.getRoot_pri();
-		conf.setRoot_pri(priority);
+		if (priority != Priorities.PRI_TRANSPARENT)
+			conf.setRoot_pri(priority);
 		String str = "";
 		boolean lvlinc = (rp != priority);
 		if (subExpr.length == 0) {
@@ -299,12 +322,13 @@ public abstract class BCExpression {
 		if (lvlinc)
 			str += IDisplayStyle.expr_block_start;
 		String sub = printCode1(conf);
-		if (subExpr.length == 1) // ~~
-			if (subExpr[0].subExpr.length == 1) {
-				conf.setRoot_pri(conf.getRoot_pri() - 1);
-				sub = printCode1(conf); // 2^n
-				conf.setRoot_pri(priority);
-			}
+		if ((subExpr.length == 1)
+			&& (priority != Priorities.PRI_TRANSPARENT)) // ~~
+				if (subExpr[0].subExpr.length == 1) {
+					conf.setRoot_pri(conf.getRoot_pri() - 1);
+					sub = printCode1(conf); // 2^n
+					conf.setRoot_pri(priority);
+				}
 		str += sub;
 		if (lvlinc)
 			str += IDisplayStyle.expr_block_end;

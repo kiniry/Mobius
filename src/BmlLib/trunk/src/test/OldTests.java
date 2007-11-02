@@ -11,6 +11,7 @@ import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
 import annot.attributes.MethodSpecification;
 import annot.attributes.SingleAssert;
+import annot.attributes.SingleLoopSpecification;
 import annot.attributes.SpecificationCase;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
@@ -303,6 +304,9 @@ public final class OldTests {
 		AbstractFormula f3 = getSampleFormula(5, 2);
 		SingleAssert a3 = new SingleAssert(m2, 46, -1, f3);
 		m2.addAttribute(a3);
+		SingleLoopSpecification sls1 = new SingleLoopSpecification(
+			m2, m2.findAtPC(52), -1, null, null, null);
+		m2.addAttribute(sls1);
 		AbstractFormula f4 = getSampleFormula(5, 3);
 		SingleAssert a4 = new SingleAssert(m2, 58, -1, f4);
 		m2.addAttribute(a4);
@@ -470,7 +474,10 @@ public final class OldTests {
 			throws ClassNotFoundException,
 			ReadAttributeException {
 		int cfrom = code.indexOf(from) + from.length();
-		int cto = code.indexOf(to, cfrom);
+		int cto = code.length() - 1;
+		if (to != null) {
+			cto = code.indexOf(to, cfrom);
+		}
 		String newCode = code.substring(cfrom, cto);
 		// changes sth.
 		newCode = newCode.replaceAll("true", "TRUE");
@@ -506,7 +513,10 @@ public final class OldTests {
 		code = bcc.printCode();
 		MLog.mask = oldMask;
 		int cfrom = code.indexOf(from) + from.length();
-		int cto = code.indexOf(to, cfrom);
+		int cto = code.length() - 1;
+		if (to != null) {
+			cto = code.indexOf(to, cfrom);
+		}
 		boolean ok = singleTest(from, to, hash, newCode, correct ? 1 : -1);
 		if (!ok)
 			return;
@@ -570,7 +580,10 @@ public final class OldTests {
 			MLog.mask = MLog.PERRORS;
 		CodeFragment cf = new CodeFragment(bcc, code);
 		int cfrom = code.indexOf(from) + from.length();
-		int cto = code.indexOf(to, cfrom);
+		int cto = code.length() - 1;
+		if (to != null) {
+			cto = code.indexOf(to, cfrom);
+		}
 		cf.addChange(cfrom, cto - cfrom, newCode);
 		cf.performChanges();
 		if (correct != 0) {
@@ -657,6 +670,8 @@ public final class OldTests {
 		replaceTest("V (28)\n", "8:", 483, 138, true, "/* \\assert forall int a; a > 0 */\n");
 		replaceTest("(26)\n/* \n * ", " * \\assert ((", 893, 65, true, "\\loop specification\n *   \\modifies nothing\n");
 		replaceTest("(26)\n/* \n * ", " * \\assert ((", 572, 879, true, "\\loop specification\n *   \\modifies nothing\n *   \\invariant true\n *   \\decreases 2 + 2\n");
+		replaceTest("p", null, 899, noChange, false, "");
+		replaceTest("p", null, 89, 298, true);
 //		replaceTest("/* \n", " * ", 249, -1, true, " * \\history constraints true\n");
 //		replaceTest("))\n", " */", 189, -1, true, " * \\history constraints false\n");
 		System.out.println("code replace tests completed.");
