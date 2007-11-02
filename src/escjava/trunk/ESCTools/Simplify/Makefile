@@ -5,7 +5,7 @@
 export TOP = ..
 include ${TOP}/Makefile.defs
 
-export OUTPUTDIR = PPC_DARWIN
+export OUTPUTDIR = I386_DARWIN 
 
 build:
 	cd cgi-utils; cm3; sudo cm3 -ship
@@ -17,7 +17,7 @@ test:
 	$(MAKE) -C simplify/test test
 
 perf:
-	cd simplify/test/perf; runtests
+	cd simplify/test/perf; ./runtests
 	
 clean:
 	rm -rf cgi-utils/$(OUTPUTDIR)
