@@ -101,6 +101,8 @@ public abstract class JavaType extends BCExpression {
 		if ((t == Type.BYTE) || (t == Type.SHORT)
 			|| (t == Type.INT) || (t == Type.LONG))
 				return JavaBasicType.JavaInt;
+		if (t instanceof ArrayType)
+			return new JavaArrayType(t.getSignature());
 		return JavaReferenceType.ANY; //XXX
 	}
 
