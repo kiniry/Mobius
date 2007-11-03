@@ -12,6 +12,7 @@ options {
 	import annot.bcclass.*;
 	import annot.attributes.*;
 	import annot.bcexpression.*;
+	import annot.bcexpression.javatype.*;
 	import annot.bcexpression.modifies.*;
 	import annot.formula.*;
 	import annot.io.Code;
@@ -486,7 +487,7 @@ quantifiedFormula returns [BCExpression ast] :
 	((FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
 	| EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
 	 (t=ident v=ident {try {
-			JavaBasicType jt = JavaType1.getJavaBasicType($t.text);
+			JavaBasicType jt = JavaType.getJavaBasicType($t.text);
 			lqfs++;
 			BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
 			// uncomment this to forbid bound variable shadowing

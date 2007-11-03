@@ -2,6 +2,7 @@ package annot.bcexpression;
 
 import org.apache.bcel.generic.LocalVariableGen;
 import annot.bcclass.BCMethod;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -41,7 +42,7 @@ public class LocalVariable extends OldExpression {
 	/**
 	 * Type of this variable.
 	 */
-	private JavaType1 type;
+	private JavaType type;
 	
 	/**
 	 * A constructor for method initialization only. Later,
@@ -61,7 +62,7 @@ public class LocalVariable extends OldExpression {
 		this.lvar_id = id;
 		this.name = name;
 		this.bcelLvGen = lvg;
-		this.type = JavaType1.getJavaType(lvg.getType().getSignature());
+		this.type = JavaType.getJavaType(lvg.getType().getSignature());
 //		this.type = JavaType1.convert(lvg.getType());
 	}
 	
@@ -88,7 +89,7 @@ public class LocalVariable extends OldExpression {
 	}
 	
 	@Override
-	protected JavaType1 checkType2() {
+	protected JavaType checkType2() {
 		return type;
 	}
 
@@ -98,7 +99,7 @@ public class LocalVariable extends OldExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return type;
 	}
 
@@ -123,6 +124,20 @@ public class LocalVariable extends OldExpression {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @return BCEL's representation of this variable.
+	 */
+	public LocalVariableGen getBcelLvGen() {
+		return bcelLvGen;
+	}
+
+	/**
+	 * @return method in with this variable has been declared.
+	 */
+	public BCMethod getMethod() {
+		return m;
 	}
 
 }

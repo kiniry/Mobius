@@ -1,8 +1,8 @@
 package annot.formula;
 
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.JavaBasicType;
-import annot.bcexpression.JavaType1;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -160,7 +160,7 @@ public class Formula extends AbstractFormula {
 	 * 		or is invalid).
 	 */
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		for (int i = 0; i < getSubExprCount(); i++)
 			if (getSubExpr(i).getType() != JavaBasicType.JavaBool)
 				return null;

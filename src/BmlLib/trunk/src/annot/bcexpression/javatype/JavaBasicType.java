@@ -1,5 +1,6 @@
-package annot.bcexpression;
+package annot.bcexpression.javatype;
 
+import annot.bcexpression.BCExpression;
 import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.textio.BMLConfig;
@@ -8,11 +9,11 @@ import annot.textio.IDisplayStyle;
 /**
  * This class represents basic return type of an expression.
  * The constructor is private, so use
- * {@link JavaType1#getJavaType(String)} instead.
+ * {@link JavaType#getJavaType(String)} instead.
  * 
  * @author tomekb
  */
-public class JavaBasicType extends JavaType1 {
+public class JavaBasicType extends JavaType {
 
 	/**
 	 * String representation of JavaType.
@@ -81,7 +82,7 @@ public class JavaBasicType extends JavaType1 {
 	}
 
 	@Override
-	public int compareTypes(JavaType1 type) {
+	public int compareTypes(JavaType type) {
 		if (type == this)
 			return TYPES_EQUAL;
 		return TYPES_UNRELATED;

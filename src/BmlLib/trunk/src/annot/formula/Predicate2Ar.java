@@ -1,8 +1,8 @@
 package annot.formula;
 
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.JavaBasicType;
-import annot.bcexpression.JavaType1;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -129,10 +129,10 @@ public class Predicate2Ar extends AbstractFormula {
 	 * 		or is invalid).
 	 */
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		if (getSubExpr(0).getType().compareTypes(
 			getSubExpr(1).getType())
-			== JavaType1.TYPES_UNRELATED)
+			== JavaType.TYPES_UNRELATED)
 				return null;
 		if ((getConnector() != Code.EQ) && (getConnector() != Code.NOTEQ))
 			if (getSubExpr(0).getType() != JavaBasicType.JavaInt)

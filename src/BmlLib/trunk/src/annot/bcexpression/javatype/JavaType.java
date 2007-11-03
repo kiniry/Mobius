@@ -1,10 +1,11 @@
-package annot.bcexpression;
+package annot.bcexpression.javatype;
 
 import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.Type;
 
 import annot.bcclass.MLog;
+import annot.bcexpression.BCExpression;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.IDisplayStyle;
@@ -18,7 +19,7 @@ import annot.textio.Priorities;
  * 
  * @author tomekb
  */
-public abstract class JavaType1 extends BCExpression {
+public abstract class JavaType extends BCExpression {
 
 	// type comparation results:
 	
@@ -46,7 +47,7 @@ public abstract class JavaType1 extends BCExpression {
 	/**
 	 * A standard constructor for subclasses.
 	 */
-	protected JavaType1() {
+	protected JavaType() {
 		super(Code.JAVA_TYPE);
 	}
 
@@ -57,7 +58,7 @@ public abstract class JavaType1 extends BCExpression {
 	 * @return - instance of JavaType representing type
 	 * 		of given <code>name</code>.
 	 */
-	public static JavaType1 getJavaType(String name) {
+	public static JavaType getJavaType(String name) {
 		if (IDisplayStyle.jt_int.equals(name)
 			|| ("I".equals(name)))
 				return JavaBasicType.JavaInt;
@@ -94,7 +95,7 @@ public abstract class JavaType1 extends BCExpression {
 	}
 
 	@Deprecated
-	public static JavaType1 convert(Type t) {
+	public static JavaType convert(Type t) {
 		if (t == Type.BOOLEAN)
 			return JavaBasicType.JavaBool;
 		if ((t == Type.BYTE) || (t == Type.SHORT)
@@ -113,7 +114,7 @@ public abstract class JavaType1 extends BCExpression {
 	 * 		{@link JavaBasicType#JavaType}.
 	 */
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		return JavaBasicType.JavaType;
 	}
 
@@ -122,7 +123,7 @@ public abstract class JavaType1 extends BCExpression {
 	 * 		{@link JavaBasicType#JavaType}.
 	 */
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return JavaBasicType.JavaType;
 	}
 
@@ -141,6 +142,6 @@ public abstract class JavaType1 extends BCExpression {
 	 * 		<b>{@link #TYPES_EQUAL}</b> - if this type
 	 * 		is equal to given type.
 	 */
-	public abstract int compareTypes(JavaType1 type);
+	public abstract int compareTypes(JavaType type);
 
 }

@@ -1,7 +1,7 @@
 package annot.bcexpression.modifies;
 
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.JavaType1;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
 import annot.textio.Priorities;
@@ -66,7 +66,7 @@ public abstract class SpecArray extends BCExpression {
 	 * @throws RuntimeException - always.
 	 */
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		throw new RuntimeException("What type should it return?");
 	}
 
@@ -83,7 +83,7 @@ public abstract class SpecArray extends BCExpression {
 	 * @throws RuntimeException - always.
 	 */
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		throw new RuntimeException("What type should it return?");
 	}
 

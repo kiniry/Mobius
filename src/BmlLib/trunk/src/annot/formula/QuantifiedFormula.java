@@ -5,8 +5,8 @@ import java.util.Vector;
 
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
-import annot.bcexpression.JavaBasicType;
-import annot.bcexpression.JavaType1;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -230,7 +230,7 @@ public class QuantifiedFormula extends AbstractFormula {
 	 * 		or is invalid).
 	 */
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		if (getSubExpr(0).getType() != JavaBasicType.JavaBool)
 			return null;
 		return JavaBasicType.JavaBool;

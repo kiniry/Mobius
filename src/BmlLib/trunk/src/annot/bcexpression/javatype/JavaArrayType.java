@@ -1,4 +1,4 @@
-package annot.bcexpression;
+package annot.bcexpression.javatype;
 
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.Type;
@@ -11,7 +11,7 @@ import annot.textio.BMLConfig;
  * 
  * @author tomekb
  */
-public class JavaArrayType extends JavaType1 {
+public class JavaArrayType extends JavaType {
 
 	/**
 	 * Type's (BCEL) signature, eg. "[I".
@@ -26,7 +26,7 @@ public class JavaArrayType extends JavaType1 {
 	/**
 	 * Single element's (bmllib's) type.
 	 */
-	private JavaType1 type;
+	private JavaType type;
 
 	/**
 	 * A standard constructor.
@@ -41,12 +41,12 @@ public class JavaArrayType extends JavaType1 {
 			ArrayType at = (ArrayType) bcelType;
 			Type et = at.getElementType();
 			String subsig = et.getSignature();
-			this.type = JavaType1.getJavaType(subsig);
+			this.type = JavaType.getJavaType(subsig);
 		}
 	}
 
 	@Override
-	public int compareTypes(JavaType1 type) {
+	public int compareTypes(JavaType type) {
 		if (type == JavaReferenceType.ANY)
 			return TYPES_EQUAL;
 		if (type instanceof JavaArrayType) {
@@ -84,7 +84,7 @@ public class JavaArrayType extends JavaType1 {
 	/**
 	 * @return Single element's (bmllib's) type.
 	 */
-	public JavaType1 getSingleType() {
+	public JavaType getSingleType() {
 		return type;
 	}
 

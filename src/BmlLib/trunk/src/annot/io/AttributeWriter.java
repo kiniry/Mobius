@@ -156,4 +156,11 @@ public class AttributeWriter {
 		return pos;
 	}
 
+	/**
+	 * @return current method.
+	 */
+	public BCMethod getBcm() {
+		return bcm;
+	}
+
 }

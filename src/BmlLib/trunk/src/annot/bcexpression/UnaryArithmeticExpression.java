@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -41,7 +43,7 @@ public class UnaryArithmeticExpression extends ArithmeticExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		if (getSubExpr(0).getType() != JavaBasicType.JavaInt)
 			return null;
 		return JavaBasicType.JavaInt;

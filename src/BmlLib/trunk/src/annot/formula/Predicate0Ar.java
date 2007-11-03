@@ -1,7 +1,7 @@
 package annot.formula;
 
-import annot.bcexpression.JavaBasicType;
-import annot.bcexpression.JavaType1;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.Code;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
@@ -80,7 +80,7 @@ public class Predicate0Ar extends AbstractFormula {
 	 * @return JavaType of this predicate, that is, JavaBool.
 	 */
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		return JavaBasicType.JavaBool;
 	}
 

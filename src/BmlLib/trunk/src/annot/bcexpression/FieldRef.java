@@ -5,6 +5,7 @@ import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantUtf8;
 
 import annot.bcclass.BCConstantPool;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -30,7 +31,7 @@ public class FieldRef extends OldExpression {
 	/**
 	 * type of the field.
 	 */
-	private JavaType1 type;
+	private JavaType type;
 	
 	/**
 	 * name of the field.
@@ -111,11 +112,11 @@ public class FieldRef extends OldExpression {
 		ConstantUtf8 cu8 = (ConstantUtf8)cp.getConstant(cnt.getNameIndex());
 		name = cu8.getBytes();
 		ConstantUtf8 signature = (ConstantUtf8)cp.getConstant(cnt.getSignatureIndex());
-		type = JavaType1.getJavaType(signature.getBytes());
+		type = JavaType.getJavaType(signature.getBytes());
 	}
 	
 	@Override
-	protected JavaType1 checkType2() {
+	protected JavaType checkType2() {
 		return type;
 	}
 
@@ -125,7 +126,7 @@ public class FieldRef extends OldExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return type;
 	}
 

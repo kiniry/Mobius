@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.formula.QuantifiedFormula;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -137,7 +139,7 @@ public class BoundVar extends BCExpression {
 	 * 		subexpression have wrong type or is invalid).
 	 */
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		return type;
 	}
 
@@ -160,8 +162,16 @@ public class BoundVar extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return type;
+	}
+
+	/**
+	 * @return quantified formula where this variable
+	 * 		was declared.
+	 */
+	public QuantifiedFormula getQf() {
+		return qf;
 	}
 
 }

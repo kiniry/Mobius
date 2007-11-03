@@ -1,5 +1,6 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaType;
 import annot.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -45,7 +46,7 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		return getSubExpr(0).getType();
 	}
 
@@ -55,7 +56,7 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return getSubExpr(0).getType();
 	}
 

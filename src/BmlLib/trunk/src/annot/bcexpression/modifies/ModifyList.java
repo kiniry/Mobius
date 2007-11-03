@@ -1,8 +1,8 @@
 package annot.bcexpression.modifies;
 
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.JavaBasicType;
-import annot.bcexpression.JavaType1;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -30,7 +30,7 @@ public class ModifyList extends BCExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		return JavaBasicType.ModifyExpressionType;
 	}
 
@@ -40,7 +40,7 @@ public class ModifyList extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return JavaBasicType.ModifyExpressionType;
 	}
 

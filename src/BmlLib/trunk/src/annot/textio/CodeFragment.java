@@ -376,36 +376,6 @@ public class CodeFragment {
 	}
 
 	/**
-	 * Returns whether given line contains an annotation's
-	 * keyword.
-	 * 
-	 * @param line - a line of bytecode.
-	 * @return whether given line contains an annotation's
-	 * 		keyword.
-	 */
-	private boolean isKeyword(String line) {
-		return isAttributeStr(getKeyword(line));
-	}
-	
-	/**
-	 * Checks if given line is an annotation's start,
-	 * or comment border.
-	 * 
-	 * @param line - a line of bytecode.
-	 * @return <b>true</b> for first annotation lines
-	 * 		and first or last lines of comment, <b>false</b>
-	 * 		otherwise.
-	 */
-	@Deprecated
-	private boolean isNewAnnotLine(String line) {
-		if (isKeyword(line))
-			return true;
-		if (isCommentStart(line) || isCommentEnd(line))
-			return true;
-		return false;
-	}
-	
-	/**
 	 * Adds EOD, EOM and EOA marks to given bytecode.
 	 * "EOD" line is inserted after class attributes, but
 	 * before first method, "EOM" line is inserted after each

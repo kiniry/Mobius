@@ -2,7 +2,7 @@ package annot.attributes;
 
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
-import annot.bcexpression.JavaReferenceType;
+import annot.bcexpression.javatype.JavaReferenceType;
 import annot.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;

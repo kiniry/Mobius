@@ -1,8 +1,8 @@
 package annot.formula;
 
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.JavaBasicType;
-import annot.bcexpression.JavaType1;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
 
@@ -63,7 +63,7 @@ public abstract class AbstractFormula extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return JavaBasicType.JavaBool;
 	}
 

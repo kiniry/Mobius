@@ -1,5 +1,6 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -161,7 +162,7 @@ public abstract class OldExpression extends BCExpression {
 	 * 		or null if it's invalid (if one of it's
 	 * 		subexpression have wrong type or is invalid).
 	 */
-	protected abstract JavaType1 checkType2();
+	protected abstract JavaType checkType2();
 	
 	/**
 	 * Check Expression's type and that it's subexpression
@@ -172,7 +173,7 @@ public abstract class OldExpression extends BCExpression {
 	 * 		subexpression have wrong type or is invalid).
 	 */
 	@Override
-	public JavaType1 checkType1() {
+	public JavaType checkType1() {
 		for (int i=0; i<getSubExprCount(); i++)
 			if (getSubExpr(i) instanceof OldExpression)
 				if (((OldExpression)getSubExpr(i)).isOld())

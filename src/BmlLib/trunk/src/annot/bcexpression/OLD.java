@@ -1,5 +1,6 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -39,7 +40,7 @@ public class OLD extends OldExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType2() {
+	protected JavaType checkType2() {
 		return getSubExpr(0).getType();
 	}
 
@@ -49,7 +50,7 @@ public class OLD extends OldExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return getSubExpr(0).getType();
 	}
 

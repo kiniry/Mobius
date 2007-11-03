@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -57,7 +59,7 @@ public class ConditionalExpression extends AbstractIntExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		if ((getSubExpr(0).getType() != JavaBasicType.JavaBool)
 			|| (getSubExpr(1).getType() != JavaBasicType.JavaInt)
 			|| (getSubExpr(2).getType() != JavaBasicType.JavaInt))

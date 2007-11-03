@@ -1,5 +1,6 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.textio.BMLConfig;
@@ -36,7 +37,7 @@ public class SingleOccurence extends BCExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		return sharedExpr.checkType1();
 	}
 
@@ -46,7 +47,7 @@ public class SingleOccurence extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return sharedExpr.getType();
 	}
 

@@ -22,8 +22,6 @@ import annot.bcexpression.BooleanExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
-import annot.bcexpression.JavaBasicType;
-import annot.bcexpression.JavaType1;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.OLD;
@@ -31,6 +29,8 @@ import annot.bcexpression.RESULT;
 import annot.bcexpression.SingleOccurence;
 import annot.bcexpression.THIS;
 import annot.bcexpression.UnaryArithmeticExpression;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.bcexpression.modifies.ModifiesArray;
 import annot.bcexpression.modifies.ModifiesDot;
 import annot.bcexpression.modifies.ModifiesIdent;
@@ -439,7 +439,7 @@ public class AttributeReader {
 				throw new ReadAttributeException(
 						"Utf8 expected as javaType name");
 			String name = ((ConstantUtf8) c).getBytes();
-			return JavaType1.getJavaType(name);
+			return JavaType.getJavaType(name);
 		// TODO: deprecated
 		case 0xE1: return new QuantifiedFormula(this, 0x0A);
 		case 0xE2: return new QuantifiedFormula(this, 0x0B);

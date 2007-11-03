@@ -27,7 +27,7 @@ public final class Testuj {
 	 * whether show stac trace of exception in test failures
 	 * or not.
 	 */
-	private static boolean goShowTraceOnFailures = true;
+	private static boolean goShowTraceOnFailures = false;
 
 	/**
 	 * Perform "save and load" test after each example.

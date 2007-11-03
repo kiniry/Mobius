@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaReferenceType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.Code;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
@@ -19,7 +21,7 @@ public class NULL extends BCExpression {
 	}
 	
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		return JavaReferenceType.ANY;
 	}
 
@@ -29,7 +31,7 @@ public class NULL extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return JavaReferenceType.ANY;
 	}
 

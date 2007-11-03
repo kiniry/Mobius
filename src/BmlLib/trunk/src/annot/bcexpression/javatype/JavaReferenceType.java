@@ -1,4 +1,4 @@
-package annot.bcexpression;
+package annot.bcexpression.javatype;
 
 import annot.io.AttributeWriter;
 import annot.io.Code;
@@ -10,7 +10,7 @@ import annot.textio.BMLConfig;
  * 
  * @author tomekb
  */
-public class JavaReferenceType extends JavaType1 {
+public class JavaReferenceType extends JavaType {
 
 	/**
 	 * A type's signature. It can be any String, currently
@@ -55,7 +55,7 @@ public class JavaReferenceType extends JavaType1 {
 	}
 
 	@Override
-	public int compareTypes(JavaType1 type) {
+	public int compareTypes(JavaType type) {
 		if (signature == null)
 			throw new RuntimeException("signature == null, what does it mean?");
 		if (type == ANY)

@@ -1,6 +1,7 @@
 package annot.bcexpression;
 
 import annot.bcclass.BCMethod;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.Code;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
@@ -22,7 +23,7 @@ public class RESULT extends BCExpression {
 	/**
 	 * Return type of method <code>m</code>.
 	 */
-	private JavaType1 type;
+	private JavaType type;
 	
 	/**
 	 * A standard constructor.
@@ -32,12 +33,12 @@ public class RESULT extends BCExpression {
 	public RESULT(BCMethod m) {
 		super(Code.RESULT);
 		this.method = m;
-		this.type = JavaType1.convert(
-			m.getBcelMethod().getReturnType());
+		this.type = JavaType.getJavaType(
+			m.getBcelMethod().getReturnType().getSignature());
 	}
 	
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		return type;
 	}
 
@@ -47,7 +48,7 @@ public class RESULT extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return type;
 	}
 

@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
 
@@ -61,7 +63,7 @@ public abstract class AbstractIntExpression extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return JavaBasicType.JavaInt;
 	}
 

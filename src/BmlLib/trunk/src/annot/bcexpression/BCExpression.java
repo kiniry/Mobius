@@ -2,6 +2,7 @@ package annot.bcexpression;
 
 import java.util.HashMap;
 
+import annot.bcexpression.javatype.JavaType;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -225,7 +226,7 @@ public abstract class BCExpression {
 	 * 		subexpression have wrong type or is invalid).
 	 */
 	//XXX shouldn't it return boolean value?
-	protected abstract JavaType1 checkType1();
+	protected abstract JavaType checkType1();
 
 	/**
 	 * Checks if all subexpressions have correct types
@@ -236,13 +237,13 @@ public abstract class BCExpression {
 	 * 		of it's subexpression have wrong type
 	 * 		or are invalid).
 	 */
-	public final JavaType1 checkType() {
+	public final JavaType checkType() {
 		if (subExpr == null)
 			return null;
 		for (int i = 0; i < subExpr.length; i++) {
 			if (subExpr[i] == null)
 				return null;
-			JavaType1 st = subExpr[i].checkType();
+			JavaType st = subExpr[i].checkType();
 			if ((st == null) || (st != subExpr[i].getType()))
 				return null;
 		}
@@ -257,7 +258,7 @@ public abstract class BCExpression {
 	 * @return (bmllib's) JavaType of result of this
 	 * 		exrpession, or null if it's invalid.
 	 */
-	public abstract JavaType1 getType1();
+	public abstract JavaType getType1();
 
 	/**
 	 * Returns type of this expression without checking
@@ -267,7 +268,7 @@ public abstract class BCExpression {
 	 * @return (bmllib's) JavaType of result of this
 	 * 		exrpession, or null if it's invalid.
 	 */
-	public final JavaType1 getType() {
+	public final JavaType getType() {
 		if (subExpr == null)
 			return null;
 		for (int i = 0; i < subExpr.length; i++)

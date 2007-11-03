@@ -1,5 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.formula.AbstractFormula;
 import annot.io.AttributeWriter;
 import annot.textio.BMLConfig;
@@ -36,8 +38,8 @@ public class BooleanExpression extends AbstractFormula {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
-		JavaType1 type = getSubExpr(0).getType();
+	protected JavaType checkType1() {
+		JavaType type = getSubExpr(0).getType();
 		if (type != JavaBasicType.JavaBool)
 			return null;
 		return JavaBasicType.JavaBool;

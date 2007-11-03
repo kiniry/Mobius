@@ -1,5 +1,8 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaArrayType;
+import annot.bcexpression.javatype.JavaReferenceType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -42,7 +45,7 @@ public class FieldAccess extends BCExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		if (getSubExpr(1) instanceof ArrayLength) {
 			if (!(getSubExpr(0).getType() instanceof JavaArrayType))
 				return null;
@@ -57,7 +60,7 @@ public class FieldAccess extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return getSubExpr(1).getType();
 	}
 

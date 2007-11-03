@@ -197,4 +197,11 @@ public class SpecificationCase {
 		return all;
 	}
 
+	/**
+	 * @return method this specificationCase specifies.
+	 */
+	public BCMethod getMethod() {
+		return method;
+	}
+
 }

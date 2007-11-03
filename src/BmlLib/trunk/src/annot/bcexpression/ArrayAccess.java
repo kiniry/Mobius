@@ -1,5 +1,8 @@
 package annot.bcexpression;
 
+import annot.bcexpression.javatype.JavaArrayType;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -32,10 +35,10 @@ public class ArrayAccess extends BCExpression {
 	}
 
 	@Override
-	protected JavaType1 checkType1() {
+	protected JavaType checkType1() {
 		if (getSubExpr(1).getType() != JavaBasicType.JavaInt)
 			return null;
-		JavaType1 t = getSubExpr(0).getType();
+		JavaType t = getSubExpr(0).getType();
 		if (!(t instanceof JavaArrayType))
 			return null;
 		return ((JavaArrayType)t).getSingleType(); 
@@ -47,7 +50,7 @@ public class ArrayAccess extends BCExpression {
 	}
 
 	@Override
-	public JavaType1 getType1() {
+	public JavaType getType1() {
 		return ((JavaArrayType)getSubExpr(0).getType()).getSingleType();
 	}
 
