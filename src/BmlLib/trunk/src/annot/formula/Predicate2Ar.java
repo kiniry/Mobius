@@ -130,9 +130,6 @@ public class Predicate2Ar extends AbstractFormula {
 	 */
 	@Override
 	protected JavaType1 checkType1() {
-		if ((getSubExpr(0).checkType() == null)
-			|| (getSubExpr(1).checkType() == null))
-				return null;
 		if (getSubExpr(0).getType().compareTypes(
 			getSubExpr(1).getType())
 			== JavaType1.TYPES_UNRELATED)

@@ -40,7 +40,7 @@ public class OLD extends OldExpression {
 
 	@Override
 	protected JavaType1 checkType2() {
-		return getSubExpr(0).checkType();
+		return getSubExpr(0).getType();
 	}
 
 	@Override

@@ -39,6 +39,7 @@ public abstract class Priorities implements Code {
 		priorities = new int[255];
 		for (int i = 0; i < 255; i++)
 			priorities[i] = -1;
+		priorities[ARRAY_ACCESS] = 1;
 		priorities[FIELD_ACCESS] = 1;
 		priorities[NOT] = 3;
 		priorities[NEG] = 3;

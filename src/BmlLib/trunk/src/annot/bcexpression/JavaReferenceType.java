@@ -44,7 +44,7 @@ public class JavaReferenceType extends JavaType1 {
 
 	@Override
 	public String toString() {
-		return "JavaReferenceType: " + signature;
+		return signature;
 	}
 
 	@Override
@@ -57,7 +57,9 @@ public class JavaReferenceType extends JavaType1 {
 	@Override
 	public int compareTypes(JavaType1 type) {
 		if (signature == null)
-			throw new RuntimeException("signatyre == null, what does it mean?");
+			throw new RuntimeException("signature == null, what does it mean?");
+		if (type == ANY)
+			return TYPES_EQUAL;
 		if (type instanceof JavaReferenceType) {
 			JavaReferenceType rt = (JavaReferenceType) type;
 			if (signature.equals(rt.getSignature()))

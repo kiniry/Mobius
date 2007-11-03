@@ -61,7 +61,8 @@ public class BCLocalVariable extends OldExpression {
 		this.lvar_id = id;
 		this.name = name;
 		this.bcelLvGen = lvg;
-		this.type = JavaType1.convert(lvg.getType());
+		this.type = JavaType1.getJavaType(lvg.getType().getSignature());
+//		this.type = JavaType1.convert(lvg.getType());
 	}
 	
 	/**

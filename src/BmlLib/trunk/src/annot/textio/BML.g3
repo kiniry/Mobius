@@ -88,6 +88,10 @@ options {
 	// and returns proper one, or null if no identifier
 	// of this name could be found.
 	private BCExpression whatIsIt(String ident) {
+		if (ident == null) {
+			reportError(null);
+			return null;
+		}
 		boolean isOld = false;
 		if (ident.startsWith("old_")) { //??!
 			ident = ident.substring(4);
@@ -106,8 +110,7 @@ options {
 		if (bfr != null)
 			return bfr;
 		MLog.putMsg(MLog.PInfo, "undefined identifier: "+ident);
-		RecognitionException rex = new RecognitionException();
-		reportError(rex);
+		reportError(null);
 		return null;
 	}
 }
@@ -504,7 +507,9 @@ quantifiedFormula returns [BCExpression ast] :
 
 dotExpr returns [BCExpression ast] :
 	l=primaryExpr {$ast = $l.ast;}
-	(DOT r=primaryExpr {$ast = new FieldAccess(Code.FIELD_ACCESS, $ast, $r.ast);})*
+	(DOT r=primaryExpr {$ast = new FieldAccess(Code.FIELD_ACCESS, $ast, $r.ast);}
+		| BR_LEFT p=uncheckedExpression BR_RIGHT {$ast = new ArrayAccess($ast, $p.ast);}
+	)*
 	;
 
 primaryExpr returns [BCExpression ast] :
@@ -522,6 +527,7 @@ primaryExpr returns [BCExpression ast] :
 	| OLD_THIS {$ast = new THIS(true, bcc);}
 	| OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD(Code.OLD, $e1.ast);}
 	| PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
+	| LENGTH {$ast = new ArrayLength();}
 	;
 
 localVar returns [BCLocalVariable lv] :
@@ -545,13 +551,13 @@ ident returns [String name]:
 
 // bytecode level
 
-PACKAGE: '[package]';
-CLASS: '[class]';
+PACKAGE: '[[package]]';
+CLASS: '[[class]]';
 NO_CLA: '\\class attributes unaffected';
 NO_METHOD: '\\method unaffected';
-MHEAD: '[method header]';
+MHEAD: '[[method header]]';
 NO_INSTRUCTION: '\\instruction unaffected';
-INSTRUCTION: '[instruction]';
+INSTRUCTION: '[[instruction]]';
 NO_MSPEC: '\\method specification unaffected';
 NO_ANNOTATION: '\\annotation unaffected';
 EOD: 'EOD';
@@ -617,10 +623,10 @@ LV: 'lv';
 DOT2: '..';
 DOT: '.';
 OLD: 'old'|'OLD';
-UNDERLINE: '_';
+LENGTH: 'length';
 
 NAT: ('0'..'9')+;
-IDENT: ('a'..'z'|'A'..'Z'|'_')+;
+IDENT: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 EXC_IDENT: (('a'..'z'|'A'..'Z')+('/')+)+('a'..'z'|'A'..'Z')+;
 
 WS: (' '|'\t'|'\n')+ {skip();};

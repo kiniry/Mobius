@@ -239,9 +239,13 @@ public abstract class BCExpression {
 	public final JavaType1 checkType() {
 		if (subExpr == null)
 			return null;
-		for (int i = 0; i < subExpr.length; i++)
+		for (int i = 0; i < subExpr.length; i++) {
 			if (subExpr[i] == null)
 				return null;
+			JavaType1 st = subExpr[i].checkType();
+			if ((st == null) || (st != subExpr[i].getType()))
+				return null;
+		}
 		return checkType1();
 	}
 

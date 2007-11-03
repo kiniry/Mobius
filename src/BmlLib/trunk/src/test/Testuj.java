@@ -40,7 +40,7 @@ public final class Testuj {
 	 * Shows old and new class' bytecode if it has changed
 	 * during saving / loading.
 	 */
-	private static boolean goShowFileChangesIfAny = true;
+	private static boolean goShowFileChangesIfAny = false;
 
 	/**
 	 * Shows bytecode whose annotations will be modified
@@ -337,6 +337,9 @@ public final class Testuj {
 		test(true, 2, "forall int a boolean b; (exists int c; a < c && b) && (exists int c; a >= c)");
 		test(true, 3, "forall int a; (exists int b; (forall int c; a <= b ==> b >= c))");
 		test(false, 1, "");
+		test(true, 2, "forall boolean b; b");
+		test(false, 2, "var[0] > 0");
+		test(true, 2, "forall int var_0; var_0 < 0");
 
 		// method specification tests:
 		test(false, 2, "true {| |}");
@@ -347,8 +350,8 @@ public final class Testuj {
 		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception;: true && false |}");
 		test(true, 2, "true {| \\precondition true \\ensures false \\exsures LJava/Lang/Exception;: true\n  LReadAttributeException;: false\n |}");
 		test(true, 2, "true {| \\precondition true \\modifies nothing \\ensures false \\exsures LJava/Lang/Exception;: true\n  LReadAttributeException;: false\n |}");
-		test(true, 2, "true {| \\precondition true \\modifies everything \\exsures LJava/Lang/Exception: true && false |}",
-				"true {| \\precondition true \\ensures true \\exsures LJava/Lang/Exception: true && false |}");
+		test(true, 2, "true {| \\precondition true \\modifies everything \\exsures LJava/Lang/Exception;: true && false |}",
+				"true {| \\precondition true \\ensures true \\exsures LJava/Lang/Exception;: true && false |}");
 		test(true, 2, "true {| \\precondition true \\modifies nothing, everything |}",
 				"true {| \\precondition true \\modifies nothing, everything \\ensures true |}");
 
@@ -429,11 +432,40 @@ public final class Testuj {
 		test(true, 0, "l > 0");
 		test(true, 1, "n + l > 1");
 		test(false, 2, "c < 0");
+		test(false, 1, "this. > 0");
+		test(false, 2, "args.l < 0");
+		test(false, 1, "this..l > 0");
+		test(false, 2, "this.l.l < 0");
 		test(true, 1, "this.l > 0");
 		test(true, 1, "this.this.l > 0");
-		test(false, 1, "this. > 0");
-		test(false, 1, "this..l > 0");
-		
+
+		// array tests:
+		test(true, 2, "args[0] != null");
+		test(true, 2, "args[0] == args[1]");
+		test(false, 2, "args[0] == 2");
+		test(false, 2, "args[0] < args[3]");
+		test(false, 2, "args[0][1] == null");
+		test(false, 2, "args[0] == this.l");
+		test(true, 2, "this.args[1] == args[2]");
+		test(true, 2, "args.length >= 0");
+		test(false, 2, "this.length >= 0");
+		test(true, 2, "args[this.args.length + args.length] != this");
+		test(true, 2, "args.length >= 0");
+		test(false, 2, "this.length >= 0");
+		test(false, 2, "args.length.length >= 0");
+		test(true, 2, "args[2 + 2] != null");
+		test(false, 2, "args[this] != null");
+		test(true, 2, "args[args.length] != null");
+		test(true, 2, "args[this.args.length + args.length] != null");
+		test(true, 2, "args[(args[1] == this) ? 1 : 2] != null");
+		test(true, 2, "args[1] == null");
+		test(true, 2, "this.args[l] == null");
+		test(true, 2, "this.args[l] != text");
+		test(true, 2, "forall int i; this.args[l - i] == null");
+		test(true, 2, "forall int i; this.args[l - i] == text");
+		test(true, 2, "forall int a; this.args[a] == null");
+		test(true, 2, "forall int i; this.args[i] == null");
+
 		// OLD tests:
 		test(false, 2, "old(old)");
 		test(true, 1, "old(n) > n");

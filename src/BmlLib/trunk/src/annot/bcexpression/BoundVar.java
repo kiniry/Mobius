@@ -93,7 +93,7 @@ public class BoundVar extends BCExpression {
 		String n = getVname();
 		if (n != null)
 			return "" + n;
-		return "var[" + index + "]";
+		return "var_" + index;
 	}
 
 	/**

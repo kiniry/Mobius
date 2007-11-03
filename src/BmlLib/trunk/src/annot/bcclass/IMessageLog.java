@@ -14,12 +14,12 @@ public interface IMessageLog {
 	/**
 	 * Displays all messages.
 	 */
-	public static final int PALL = 255;
+	public static final int PALL = 511;
 
 	/**
 	 * Displays almost all messages.
 	 */
-	public static final int PDEBUG = 254;
+	public static final int PDEBUG = 510;
 
 	
 	/**
@@ -27,18 +27,18 @@ public interface IMessageLog {
 	 * <code>bmllib</code> + displays parser
 	 * failures and parsing progress.
 	 */
-	public static final int PPARSER = 252;
+	public static final int PPARSER = 508;
 
 	/**
 	 * Normal verbosity level for developing
 	 * <code>bmllib</code>.
 	 */
-	public static final int PNORMAL = 236;
+	public static final int PNORMAL = 492;
 
 	/**
-	 * Displays only error messages.
+	 * Displays only error and warning messages.
 	 */
-	public static final int PERRORS = 128;
+	public static final int PERRORS = 384;
 
 	/**
 	 * Displays no messages.
@@ -90,8 +90,15 @@ public interface IMessageLog {
 	public static final int PTodo = 64;
 
 	/**
+	 * For displaying warning messages, eg. in situations in
+	 * which we are not certain what to do or that shouldn't
+	 * happen, but we're prepared for them.
+	 */
+	public static final int PWarning = 128;
+
+	/**
 	 * For displaying error messages.
 	 */
-	public static final int PError = 128;
+	public static final int PError = 256;
 
 }

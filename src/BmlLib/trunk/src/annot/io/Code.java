@@ -39,7 +39,9 @@ public interface Code {
 	public static final int USHR = 0x34;
 	public static final int SHR = 0x35;
 	public static final int INT_LITERAL = 0x40;
-	public static final int RESULT = 0x52; 
+	public static final int RESULT = 0x52;
+	public static final int ARRAYLENGTH = 0x56;
+	public static final int ARRAY_ACCESS = 0x61;
 	public static final int FIELD_ACCESS = 0x63; // .
 	public static final int COND_EXPR = 0x64; // ?:
 	public static final int THIS = 0x70;

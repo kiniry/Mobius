@@ -13,6 +13,8 @@ import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcexpression.ArithmeticExpression;
+import annot.bcexpression.ArrayAccess;
+import annot.bcexpression.ArrayLength;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BCFieldRef;
 import annot.bcexpression.BCLocalVariable;
@@ -403,6 +405,8 @@ public class AttributeReader {
 			return new THIS(true, bcc);
 		case Code.RESULT:
 			return new RESULT(method);
+		case Code.ARRAYLENGTH:
+			return new ArrayLength();
 		case Code.LOCAL_VARIABLE:
 			return new SingleOccurence(
 				BCLocalVariable.getLocalVariable(
@@ -414,6 +418,8 @@ public class AttributeReader {
 		case Code.FIELD_REF:
 		case Code.OLD_FIELD_REF:
 			return new BCFieldRef(this, b);
+		case Code.ARRAY_ACCESS:
+			return new ArrayAccess(this, b);
 		case Code.FIELD_ACCESS:
 			return new FieldAccess(this, b);
 		case Code.OLD:

@@ -9,6 +9,8 @@ package test;
 public class Empty2 {
 
 	private static int l = 0;
+	@SuppressWarnings("unused")
+	private String text = "aaa";
 
 	private static int fib(int n) {
 		l++;

@@ -4,15 +4,29 @@ import annot.io.AttributeWriter;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
+/**
+ * This ugly class converts an expression
+ * to {@link AbstractIntExpression}.
+ * 
+ * @author tomekb
+ * @see BooleanExpression
+ */
 public class IntExpression extends AbstractIntExpression {
 
+	/**
+	 * A standard constructor.
+	 * 
+	 * @param subExpr - expression it should represent.
+	 * 		It should have a int return type, but
+	 * 		it shouldn't be an AbstractIntExpression.
+	 */
 	public IntExpression(BCExpression subExpr) {
 		super(-1, subExpr);
 	}
 
 	@Override
 	protected JavaType1 checkType1() {
-		JavaType1 type = getSubExpr(0).checkType();
+		JavaType1 type = getSubExpr(0).getType();
 		if (type != JavaBasicType.JavaInt)
 			return null;
 		return JavaBasicType.JavaInt;
@@ -20,11 +34,6 @@ public class IntExpression extends AbstractIntExpression {
 
 	@Override
 	protected int getPriority() {
-//		if (getAllSubExpr() == null)
-//			return -1;
-//		if (getSubExpr(0) == null)
-//			return -1;
-//		return getSubExpr(0).getPriority();
 		return Priorities.PRI_TRANSPARENT;
 	}
 

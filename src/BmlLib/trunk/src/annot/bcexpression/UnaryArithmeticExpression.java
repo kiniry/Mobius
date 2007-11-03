@@ -42,7 +42,7 @@ public class UnaryArithmeticExpression extends ArithmeticExpression {
 
 	@Override
 	protected JavaType1 checkType1() {
-		if (getSubExpr(0).checkType() != JavaBasicType.JavaInt)
+		if (getSubExpr(0).getType() != JavaBasicType.JavaInt)
 			return null;
 		return JavaBasicType.JavaInt;
 	}

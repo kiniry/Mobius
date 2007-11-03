@@ -1,23 +1,13 @@
 TODO: (- : to do, + : done, * : optional, > : in progress)
 
 + ...
-+ add expressions,
-	+ add Aritmethic expression,
-	+ add conditional expression,
-	+ add null, this, result,
-	+ add local variable,
-	+ add field access:
-		+ add field ref,
-		+ add full qualified name.
-	+ add olds,
-	+ add modifies expressions:
-		+ ident, local variable,
-		+ dot,
-		+ array:
-			+ all array elements,
-			+ single index.
-			+ array elements from to.
+> add expressions,
+	+ ...
+	+ add arrayaccess
+	+ add arraylength
+	* ...
 > add attributes:
 	+ add LoopSpecification,
 	* add HistoryConstraints,
 	* add ParamTable.
+	* ...

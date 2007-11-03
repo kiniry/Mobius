@@ -1,7 +1,10 @@
 package annot.bcexpression;
 
+import org.apache.bcel.classfile.ClassFormatException;
+import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.Type;
 
+import annot.bcclass.MLog;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.IDisplayStyle;
@@ -61,7 +64,15 @@ public abstract class JavaType1 extends BCExpression {
 		if (IDisplayStyle.jt_boolean.equals(name)
 			|| ("B".equals(name)))
 				return JavaBasicType.JavaBool;
-		return new JavaReferenceType(name);
+		try {
+			if (Type.getType(name) instanceof ArrayType)
+				return new JavaArrayType(name);
+			return new JavaReferenceType(name);
+		} catch (ClassFormatException cfe) {
+			MLog.putMsg(MLog.PWarning, "invalid type name");
+			//XXX shouldn't it return null?
+			return new JavaReferenceType(name);
+		}
 	}
 
 	/**
@@ -82,6 +93,7 @@ public abstract class JavaType1 extends BCExpression {
 		throw new ReadAttributeException("Unknown java type");
 	}
 
+	@Deprecated
 	public static JavaType1 convert(Type t) {
 		if (t == Type.BOOLEAN)
 			return JavaBasicType.JavaBool;

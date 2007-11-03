@@ -774,7 +774,7 @@ public class CodeFragment {
 			}
 			String kw = getKeyword(line);
 			if (("class".equals(kw)) || ("package".equals(kw))) {
-				lines[l] = "[" + kw + "]";
+				lines[l] = "[[" + kw + "]]";
 				continue;
 			}
 			// class attributes
@@ -816,7 +816,7 @@ public class CodeFragment {
 				continue;
 			}
 			if ("method".equals(kw)) {
-				lines[l] = "[method header]";
+				lines[l] = "[[method header]]";
 				mspec = false;
 				anr = -1;
 				akw = null;
@@ -829,7 +829,7 @@ public class CodeFragment {
 					|| (cp_old.getInstr_cnt()
 						!= cp_new.getInstr_cnt()));
 			if (isNumber(kw)) {
-				lines[l] = "[instruction]";
+				lines[l] = "[[instruction]]";
 				if (!affi) {
 //					if (mspec) {
 //						lines[l] = "\\method specification unaffected";

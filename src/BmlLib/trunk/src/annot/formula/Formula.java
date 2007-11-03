@@ -162,7 +162,7 @@ public class Formula extends AbstractFormula {
 	@Override
 	protected JavaType1 checkType1() {
 		for (int i = 0; i < getSubExprCount(); i++)
-			if (getSubExpr(i).checkType() != JavaBasicType.JavaBool)
+			if (getSubExpr(i).getType() != JavaBasicType.JavaBool)
 				return null;
 		return JavaBasicType.JavaBool;
 	}

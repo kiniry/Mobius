@@ -231,7 +231,7 @@ public class QuantifiedFormula extends AbstractFormula {
 	 */
 	@Override
 	protected JavaType1 checkType1() {
-		if (getSubExpr(0).checkType() != JavaBasicType.JavaBool)
+		if (getSubExpr(0).getType() != JavaBasicType.JavaBool)
 			return null;
 		return JavaBasicType.JavaBool;
 	}

@@ -43,9 +43,12 @@ public class FieldAccess extends BCExpression {
 
 	@Override
 	protected JavaType1 checkType1() {
-		if (getSubExpr(0).checkType() == null)
+		if (getSubExpr(1) instanceof ArrayLength) {
+			if (!(getSubExpr(0).getType() instanceof JavaArrayType))
+				return null;
+		} else if (!(getSubExpr(0).getType() instanceof JavaReferenceType))
 			return null;
-		return getSubExpr(1).checkType();
+		return getSubExpr(1).getType();
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 1. Status.
 	Incomplete. This library supports only a few BML annotation
-	types, and only a few BML expression types yet. It can
+	types, and some BML expression types yet. It can
 	load a .class file with annotations, save it,
 	parse supported BML annotations or fragment of bytecode
 	and display single BML annotation, single method
@@ -36,12 +36,23 @@
 	BCEL structures via BCClass, do not create new JavaClass,
 	ClassGen nor MethodGen, unrelated with used BCClass).
 
-4. Extending supported language.
+4. Supported language:
+	Attributes:
+		class invariant, method specification, assert
+		and loop specification.
+	Expressions:
+		+ - * / % - << >> | & ^ < <= > >= == != <==> <=!=> ==>
+		&& || forall exists ?: . [] old
+		true, false, this, null, result, arraylength,
+		NumberLiteral; local, field and bound variables;
+		modifyExpressions.
+
+5. Extending supported language.
 	To add a constant, BML attribute, new BML expression,
 	or change display style	see update.txt file how to do it
 	and which methods should be updated.
 
-5. Performing operations on AST.
+6. Performing operations on AST.
 	You can walk on expression's AST. For example, to add
 	desugar functionality, create a subclass of ExpressionWalker
 	and pass it as a parameter of Expression.iterate

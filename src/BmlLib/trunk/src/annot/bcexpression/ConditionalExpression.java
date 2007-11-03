@@ -58,9 +58,9 @@ public class ConditionalExpression extends AbstractIntExpression {
 
 	@Override
 	protected JavaType1 checkType1() {
-		if ((getSubExpr(0).checkType() != JavaBasicType.JavaBool)
-			|| (getSubExpr(1).checkType() != JavaBasicType.JavaInt)
-			|| (getSubExpr(2).checkType() != JavaBasicType.JavaInt))
+		if ((getSubExpr(0).getType() != JavaBasicType.JavaBool)
+			|| (getSubExpr(1).getType() != JavaBasicType.JavaInt)
+			|| (getSubExpr(2).getType() != JavaBasicType.JavaInt))
 				return null;
 		return JavaBasicType.JavaInt;
 	}

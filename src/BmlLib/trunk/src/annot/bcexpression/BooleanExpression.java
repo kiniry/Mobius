@@ -5,15 +5,39 @@ import annot.io.AttributeWriter;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
 
+/**
+ * This ugly class converts an expression
+ * to {@link AbstractFormula}. It should be used when
+ * we have an boolean expression (that is, it's checkType()
+ * method evaluates to {@link JavaBasicType#JavaBool}),
+ * but it is'n an {@link AbstractFormula}'s subclass.
+ * It can happen, for example, in attribute: "\assert b",
+ * where b is a boolean local variable. Assert's formula
+ * should have boolean return type, but LocalVariable is
+ * a direct {@link BCExpression} subclass (we would need
+ * as many classes as there is many types for local variable
+ * to ensure it's static type control). In this case, AST
+ * should look like:
+ * assert(BooleanExpression(LocalVariable("b")))
+ * 
+ * @author tomekb
+ */
 public class BooleanExpression extends AbstractFormula {
 
+	/**
+	 * A standard constructor.
+	 * 
+	 * @param subExpr - expression it should represent.
+	 * 		It should have a boolean return type, but
+	 * 		it shouldn't be an AbstractFormula.
+	 */
 	public BooleanExpression(BCExpression subExpr) {
 		super(-1, subExpr);
 	}
 
 	@Override
 	protected JavaType1 checkType1() {
-		JavaType1 type = getSubExpr(0).checkType();
+		JavaType1 type = getSubExpr(0).getType();
 		if (type != JavaBasicType.JavaBool)
 			return null;
 		return JavaBasicType.JavaBool;
@@ -21,11 +45,6 @@ public class BooleanExpression extends AbstractFormula {
 
 	@Override
 	protected int getPriority() {
-//		if (getAllSubExpr() == null)
-//			return -1;
-//		if (getSubExpr(0) == null)
-//			return -1;
-//		return getSubExpr(0).getPriority();
 		return Priorities.PRI_TRANSPARENT;
 	}
 
