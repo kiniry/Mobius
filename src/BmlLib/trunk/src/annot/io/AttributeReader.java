@@ -16,8 +16,8 @@ import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccess;
 import annot.bcexpression.ArrayLength;
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.BCFieldRef;
-import annot.bcexpression.BCLocalVariable;
+import annot.bcexpression.FieldRef;
+import annot.bcexpression.LocalVariable;
 import annot.bcexpression.BooleanExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
@@ -409,15 +409,15 @@ public class AttributeReader {
 			return new ArrayLength();
 		case Code.LOCAL_VARIABLE:
 			return new SingleOccurence(
-				BCLocalVariable.getLocalVariable(
+				LocalVariable.getLocalVariable(
 					false, method, this));
 		case Code.OLD_LOCAL_VARIABLE:
 			return new SingleOccurence(
-				BCLocalVariable.getLocalVariable(
+				LocalVariable.getLocalVariable(
 					true, method, this));
 		case Code.FIELD_REF:
 		case Code.OLD_FIELD_REF:
-			return new BCFieldRef(this, b);
+			return new FieldRef(this, b);
 		case Code.ARRAY_ACCESS:
 			return new ArrayAccess(this, b);
 		case Code.FIELD_ACCESS:

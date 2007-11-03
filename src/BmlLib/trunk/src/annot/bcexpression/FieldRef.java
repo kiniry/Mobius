@@ -14,12 +14,12 @@ import annot.textio.Priorities;
 
 /**
  * This class represents field reference occurence.
- * One <code>BCFieldRef</code> per one field reference
+ * One <code>FieldRef</code> per one field reference
  * occurence.
  * 
  * @author tomekb
  */
-public class BCFieldRef extends OldExpression {
+public class FieldRef extends OldExpression {
 
 	/**
 	 * Index of FieldRef constant in constant pool.
@@ -42,13 +42,13 @@ public class BCFieldRef extends OldExpression {
 	 * 
 	 * @param cp - Constant pool containing BCEL's
 	 * 		<code>ConstantFieldRef</code> constant.
-	 * 		BCFieldRef must be related with index
+	 * 		FieldRef must be related with index
 	 * 		in primary constant pool.
 	 * @param cpIndex - index in <code>cp</code> where
 	 * 		BCEL's <code>ConstantFieldRef</code> constant
 	 * 		is beeing held.
 	 */
-	public BCFieldRef(boolean isOld, BCConstantPool cp, int cpIndex) {
+	public FieldRef(boolean isOld, BCConstantPool cp, int cpIndex) {
 		super(Code.FIELD_REF, isOld);
 		loadName(cp, cpIndex);
 	}
@@ -63,7 +63,7 @@ public class BCFieldRef extends OldExpression {
 	 * 		in <code>ar</code> doesn't represent proper
 	 * 		position in constant pool.
 	 */
-	public BCFieldRef(AttributeReader ar, int root)
+	public FieldRef(AttributeReader ar, int root)
 			throws ReadAttributeException {
 		super(ar, root);
 	}
@@ -75,12 +75,12 @@ public class BCFieldRef extends OldExpression {
 	 * 
 	 * @param cp - constant pool to search in,
 	 * @param name - name of the constant to be searched for.
-	 * @return A new <code>BCFieldRef</code> insatnce,
+	 * @return A new <code>FieldRef</code> insatnce,
 	 * 		with name equal to the given one, or <b>null</b>
 	 * 		in no proper constant could be found
 	 * 		in <code>cp</code>.
 	 */
-	public static BCFieldRef getFieldOfName(boolean old, BCConstantPool cp, String name) {
+	public static FieldRef getFieldOfName(boolean old, BCConstantPool cp, String name) {
 		for (int i=0; i<cp.size(); i++) {
 			if (cp.getConstant(i) == null)
 				continue;
@@ -91,7 +91,7 @@ public class BCFieldRef extends OldExpression {
 			ConstantUtf8 cu8 = (ConstantUtf8)cp.getConstant(cnt.getNameIndex());
 			String cname = cu8.getBytes();
 			if (cname.equals(name))
-				return new BCFieldRef(old, cp, i);
+				return new FieldRef(old, cp, i);
 		}
 		return null;
 	}

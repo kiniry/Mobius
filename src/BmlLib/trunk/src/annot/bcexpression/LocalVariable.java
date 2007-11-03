@@ -11,11 +11,11 @@ import annot.textio.Priorities;
 
 /**
  * This class represents method's local variable.
- * One <code>BCLocalVariable</code> per one local variable.
+ * One <code>LocalVariable</code> per one local variable.
  * 
  * @author tomekb
  */
-public class BCLocalVariable extends OldExpression {
+public class LocalVariable extends OldExpression {
 
 	/**
 	 * Method in with this variable has been declared.
@@ -54,7 +54,7 @@ public class BCLocalVariable extends OldExpression {
 	 * @param name - name of this variable,
 	 * @param lvg - BCEL's representation of this variable.
 	 */
-	public BCLocalVariable(boolean isOld, BCMethod m, int id, String name,
+	public LocalVariable(boolean isOld, BCMethod m, int id, String name,
 			LocalVariableGen lvg) {
 		super(Code.LOCAL_VARIABLE, isOld);
 		this.m = m;
@@ -78,7 +78,7 @@ public class BCLocalVariable extends OldExpression {
 	 * 		is greater or equal local variable count
 	 * 		of method <code>m</code>.
 	 */
-	public static BCLocalVariable getLocalVariable(
+	public static LocalVariable getLocalVariable(
 			boolean isOld, BCMethod m, AttributeReader ar)
 			throws ReadAttributeException {
 		int index = ar.readShort();

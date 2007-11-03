@@ -14,7 +14,7 @@ import annot.attributes.AType;
 import annot.attributes.BCAttributeMap;
 import annot.attributes.InCodeAttribute;
 import annot.attributes.MethodSpecification;
-import annot.bcexpression.BCLocalVariable;
+import annot.bcexpression.LocalVariable;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
@@ -57,12 +57,12 @@ public class BCMethod {
 	/**
 	 * Local variable array.
 	 */
-	private BCLocalVariable[] lvars;
+	private LocalVariable[] lvars;
 	
 	/**
 	 * Old local variable array.
 	 */
-	private BCLocalVariable[] oldvars;
+	private LocalVariable[] oldvars;
 
 	/**
 	 * A standard constructor from BCClass and MethodGen.
@@ -80,12 +80,12 @@ public class BCMethod {
 		this.amap = new BCAttributeMap(this);
 		LocalVariableGen[] lvgens = m.getLocalVariables();
 		int cnt = lvgens.length;
-		lvars = new BCLocalVariable[cnt];
-		oldvars = new BCLocalVariable[cnt];
+		lvars = new LocalVariable[cnt];
+		oldvars = new LocalVariable[cnt];
 		for (int i=0; i<cnt; i++) {
 			String name = lvgens[i].getName();
-			lvars[i] = new BCLocalVariable(false, this, i, name, lvgens[i]);
-			oldvars[i] = new BCLocalVariable(true, this, i, name, lvgens[i]);
+			lvars[i] = new LocalVariable(false, this, i, name, lvgens[i]);
+			oldvars[i] = new LocalVariable(true, this, i, name, lvgens[i]);
 		}
 		Attribute[] attrs = m.getAttributes();
 		AttributeReader ar = new AttributeReader(this);
@@ -231,7 +231,7 @@ public class BCMethod {
 	 * @return local variable of given name,
 	 * 		or <code>null</code> if no variable could be found.
 	 */
-	public BCLocalVariable findLocalVariable(String name) {
+	public LocalVariable findLocalVariable(String name) {
 		for (int i=0; i<lvars.length; i++)
 			if (lvars[i].getName().equals(name))
 				return lvars[i];
@@ -291,7 +291,7 @@ public class BCMethod {
 	 * @return <code>index</code>-th local variable of this
 	 * 		method.
 	 */
-	public BCLocalVariable getLocalVariable(boolean isOld, int index) {
+	public LocalVariable getLocalVariable(boolean isOld, int index) {
 		if (isOld)
 			return oldvars[index];
 		return lvars[index];

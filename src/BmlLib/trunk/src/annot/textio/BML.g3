@@ -100,13 +100,13 @@ options {
 		if (env.containsKey(ident))
 			return new SingleOccurence(env.get(ident));
 		if (m != null) {
-			BCLocalVariable lv = m.findLocalVariable(ident);
+			LocalVariable lv = m.findLocalVariable(ident);
 			if (lv != null) {
 				lv.setOld(isOld);
 				return new SingleOccurence(lv);
 			}
 		}
-		BCFieldRef bfr = BCFieldRef.getFieldOfName(isOld, bcc.getCp(), ident);
+		FieldRef bfr = FieldRef.getFieldOfName(isOld, bcc.getCp(), ident);
 		if (bfr != null)
 			return bfr;
 		MLog.putMsg(MLog.PInfo, "undefined identifier: "+ident);
@@ -530,7 +530,7 @@ primaryExpr returns [BCExpression ast] :
 	| LENGTH {$ast = new ArrayLength();}
 	;
 
-localVar returns [BCLocalVariable lv] :
+localVar returns [LocalVariable lv] :
 	LV BR_LEFT n=NAT BR_RIGHT {
 		int i=Integer.parseInt($n.text);
 		if (m == null) {
