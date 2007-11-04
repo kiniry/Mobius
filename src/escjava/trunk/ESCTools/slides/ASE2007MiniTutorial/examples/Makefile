@@ -13,7 +13,8 @@ JAVAC = javac
 # Flags below are for ESC/Java2 release 2.0b1
 ESCJAVA = escjava2 -nonNullByDefault
 
-TYPES = ArrayOps BagOfInt BagOfIntMain \
+TYPES = ArrayOps Interval IntervalRemove \
+	BagOfInt BagOfIntMain \
         Actor ActorUnderspecified Aging \
 	BoundedStack Counter Counter2 \
 	Gendered GenderedEqualsBad GenderedEqualsGood \

@@ -502,7 +502,7 @@ Links to papers, etc.
 \subsection[Lightweight]{Lightweight Specification of Functional Behavior}
 
 \begin{frame}[fragile]
-\frametitle{JML Annotations Comments $\neq$ Java Annotations}
+\frametitle{JML Annotation Comments $\neq$ Java Annotations}
 
 JML annotation comments:
 \begin{itemize}
@@ -584,26 +584,23 @@ haven't introduced that concept yet.
 
 \begin{frame}[fragile]
 \frametitle{BoundedStack's push Method}
-\lstinputlisting[linerange={22-33}]{examples/BoundedStack.java}
+\lstinputlisting[linerange={22-30}]{examples/BoundedStack.java}
 \note{Talk about the assignable clause and the postcondition
 and how they relate to the code.
 
 Subexpressions of assignable clause store-ref expressions are
 evaluated in the pre-state.
-
-The \lstinline!ensures_redundantly! is there becuase that
-postcondition follows from the assignable clause.
 }
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{BoundedStack's pop Method}
-\lstinputlisting[linerange={35-46}]{examples/BoundedStack.java}
+\lstinputlisting[linerange={32-39}]{examples/BoundedStack.java}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{BoundedStack's top Method}
-\lstinputlisting[linerange={48-55}]{examples/BoundedStack.java}
+\lstinputlisting[linerange={41-48}]{examples/BoundedStack.java}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -736,40 +733,6 @@ means
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile,label=redundantly]
-\frametitle{Redundant Clauses}
-
-E.g., \lstinline!ensures_redundantly!
-\begin{itemize}
-\item
-Alerts reader.
-
-\item
-States something to prove.
-
-\item
-Must be implied by:
-\begin{itemize}
-\item
-\lstinline!ensures! clauses,
-
-\item
-\lstinline!assignable! clause,
-
-\item
-\lstinline!invariant!, and
-
-\item
-JML semantics.
-\end{itemize}
-\end{itemize}
-
-Also \lstinline!requires_redundantly!, etc.
-
-\note{There is a flag on jmlc to avoid checking redundant
-specifications, but they are checked by default.
-}
-\end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Multiple Clauses}
@@ -895,62 +858,39 @@ Specify each public method using:
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Exercise: Specify BagOfInt (7 minutes)}
+\frametitle{Exercise: Specify Interval (5 minutes)}
 
 \begin{exercise}
 Specify the following:
 
 \rm
-\lstinputlisting[language=Java,commentstyle=\itshape]{examples/BagOfInt.jml-refined}
+\lstinputlisting[language=Java,commentstyle=\itshape]{examples/Interval.jml-refined}
 \end{exercise}
 \note{We have somewhat artificially decided on data structures here,
   since we haven't introduced JML's model features.
 
-The intent is that \texttt{a} holds the elements that are not yet deleted,
-and \texttt{n} tells the number of elements that haven't yet been
-deleted.
+The intent is that \texttt{low} holds lower bound of the interval
+and \texttt{high} the upper bound.
 }
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
-\frametitle{My Solution: BagOfInt's Data}
+\frametitle{My Solution: Interval's Data, Constructor}
 
-\lstinputlisting[linerange={2-2,4-9}]{examples/BagOfInt.jml}
-\note{Note that we're using the default \lstinline!non_null! for
-\lstinline!a! instead of making it \lstinline!nullable!.
-This is because there are no elements of reference types.
-}
+\lstinputlisting[linerange={2-2,4-6,8-12}]{examples/Interval.java}
 \end{frame}
+
+%\begin{frame}<beamer>[fragile]
+%\frametitle{My Solution: Interval's Constructor}
+
+%\lstinputlisting[linerange={9-15}]{examples/Interval.jml}
+%\end{frame}
 
 \begin{frame}<beamer>[fragile]
-\frametitle{My Solution: BagOfInt's Constructor}
+\frametitle{My Solution: Method contains}
 
-\lstinputlisting[linerange={11-11,13-17}]{examples/BagOfInt.jml}
-\note{It would be a bad specification to make \texttt{a} and
-  \texttt{input} be aliases.
-}
+\lstinputlisting[linerange={15-18}]{examples/Interval.jml}
 \end{frame}
-
-\begin{frame}<beamer>[fragile]
-\frametitle{My Solution: Method occurrences}
-
-\lstinputlisting[linerange={19-19,21-24}]{examples/BagOfInt.jml}
-\end{frame}
-
-\begin{frame}<beamer>[fragile]
-\frametitle{My Solution: Method extractMin}
-
-\lstinputlisting[linerange={26-26,28-40}]{examples/BagOfInt.jml}
-\note{The frame is written to allow one to either replace/copy
- the entire array or to assign to some elements.
-
-Note that one could use \texttt{\textbackslash}\lstinline!num_of!
-directly instead of calling \texttt{occurrences} in the specification,
-however, this illustrates how to do that, and makes the specification
-much shorter.
-}
-\end{frame}
-
 
 \subsection[Tools]{Basic Tool Use}  % demo + exercise
 

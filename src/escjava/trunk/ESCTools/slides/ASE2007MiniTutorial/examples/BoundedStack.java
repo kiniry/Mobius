@@ -23,9 +23,6 @@ public class BoundedStack {
     @ assignable elems[size], size;
     @ ensures size == \old(size+1);
     @ ensures elems[size-1] == x;
-    @ ensures_redundantly
-    @     (\forall int i; 0 <= i && i < size-1;
-    @               elems[i] == \old(elems[i]));
     @*/
   public void push(Object x) {
     elems[size] = x;
@@ -35,10 +32,6 @@ public class BoundedStack {
   /*@ requires 0 < size;
     @ assignable size, elems[size-1];
     @ ensures size == \old(size-1);
-    @ ensures_redundantly
-    @      elems[size] == null
-    @   && (\forall int i; 0 <= i && i < size-1;
-    @               elems[i] == \old(elems[i]));
     @*/
   public void pop() {
     size--;
