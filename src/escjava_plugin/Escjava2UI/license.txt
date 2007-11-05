@@ -1,8 +1,7 @@
 This is an experimental Eclipse plugin.  It is licensed AS IS,
 without any warranty, and distributed subject to the Eclipse
-Common Public 
-License.  The source code is available through
-the GForge project at http://sort.ucd.ie/projects/escjava-eclipse
+Common Public License.  The source code is available through
+the Mobius Trac at http://mobius.ucd.ie/.
 ________________________________________________________________________________
 Common Public License - v 1.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS
