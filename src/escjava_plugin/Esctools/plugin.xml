@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="escjava.esctools"
+   id="mobius.escjava2.esctools"
    name="Esctools Library Plug-in"
    version="2.0.3"
    provider-name="David R. Cok and the MOBIUS Project">
