@@ -107,10 +107,13 @@ The plug-in is installed from a standard Eclipse update site as follows.
      <li> Open the dialog at Help &gt;&gt; Software Updates &gt;&gt; Find and Install.
      <li> Choose "Search for new features to install" and "Next&gt;".
      <li> Select "New Remote Site".  Fill in the dialog with the name "ESC/Java2"
-          and the URL "???", and press "OK". <!-- FIXME -->
+          and the URL <br />
+          <a href="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/">
+          http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/</a> <br /> 
+          and press "OK".
      <li> Select "ESC/Java2" in the list of sites to search and press "Next&gt;".
      <li> If all is well, the available versions of the plug-in will be displayed;
-          select the most recent ESC/java2 version and press "Next&gt;".  
+          select the most recent ESC/Java2 version and press "Next&gt;".  
      <li> Read and accept the license terms, and press "Next&gt;".
      <LI> Choose the local installation site into which you want to install the plug-in
           (or add a new one for experimentation); then press 'Finish'.  You will likely
@@ -528,7 +531,7 @@ them to JML assertions.<!-- FIXME - what option -->
 ESC/Java2 checks for various potential violations of JML specifications. Where
 it suspects problems (or cannot prove that a problem will not happen), it
 issues a <em>warning</em>.  There are various kinds of warnings.  These are 
-listed on the right side of the preferences page.  By default, ESC/java2 checks
+listed on the right side of the preferences page.  By default, ESC/Java2 checks
 for all warning types except Deadlock.  The user can select which warnings
 ESC/Java2 should check for and which to ignore.  Explanations of each of these
 warnings are given in the documentation about ESC/Java2.  A brief explanation
@@ -541,7 +544,7 @@ is given in the tooltip on the option.
 <P>
 The plug-in defines a new type of Problem marker that is used to indicate
 syntax errors or warnings about potential specification violations
-that the ESC/java2 tool finds.  The marker icon is a 
+that the ESC/Java2 tool finds.  The marker icon is a 
 black 'E' superimposed on a red dot.  The icon is shown in the ruler along the
 left edge of Java editors at the line where a problem is identified.  Tooltip
 information, shown when the mouse pointer remains steady over the icon for a short
@@ -556,28 +559,28 @@ the Filters icon or the down-arrow Menu icon in the upper right corner of the
 Problems View).
 </P>
 <A NAME="#Console"/A>
-<H3>ESC/java2 Console</H3>
+<H3>ESC/Java2 Console</H3>
 The Eclipse Console View is available to plug-ins to show textual output from
 plug-in tools.  The Console has a number of panes.  The ESC/java2 plug-in adds
-a new pane, called 'ESC/java2', to which output from the ESC/java2 plug-in or
+a new pane, called 'ESC/Java2', to which output from the ESC/Java2 plug-in or
 tool is sent.  The Console view generally automatically switches to the pane
 with recent output, but on some occasions the user may have to choose the
-pane manually to see the ESC/java2 output.
+pane manually to see the ESC/Java2 output.
 
 <A NAME="#Context"/>
 <H3>Context Menus</H3>
 The context menu in the Package Navigator (obtained with a right mouse press over
 an item in the Package Navigator tree hierarchy) has menu options pertinent
-to the context in which the menu is invoked.  A 'Run ESC/java2' action is added
+to the context in which the menu is invoked.  A 'Run ESC/Java2' action is added
 to the Package Navigator context menus; this action is the equivalent of the
-'ESC/java2' checking action under 'JML' in the menubar.  The additional menu
+'ESC/Java2' checking action under 'JML' in the menubar.  The additional menu
 item is also available in the Outline View.
 
 <A NAME="#Builder"/>
 <H3>ESC/Java2 Automatic Builder</H3>
 <P>
 When ESC/Java2 is enabled for a project
-(e.g. by the JML &gt;&gt; Setup &gt;&gt; Enable ESC/java2 menu item), then 
+(e.g. by the JML &gt;&gt; Setup &gt;&gt; Enable ESC/Java2 menu item), then 
 a new Incremental Builder becomes available on the Project's
 Builders Properties page.  Once present, the builders can be 
 enabled and disabled on the Builders page.
@@ -661,7 +664,7 @@ information that gives a bit more explanation of the purpose of the item.
 do not have executable permission on Unix-like systems.
 </UL>
 <LI><B>Version 1.1.0</B> (18 February 2005) is the first publically released version.
-It includes ESC/java2 as of 18 February 2005, which is an
+It includes ESC/Java2 as of 18 February 2005, which is an
 interim version of the tool.
 </UL>
 
@@ -706,12 +709,12 @@ method, rather than strung out in the Console.
 <LI>Check documentation of updating a feature
 <LI>The warning types need tooltips
 <LI>Use the build problem reporting facilities
-<LI>Make the use of ESC/java2 and ESC/java2 consistent.
-<LI>The icon in the Problems View ought to be the ESC/java2 problem icon.
+<LI>Make the use of ESC/Java2 and ESC/java2 consistent.
+<LI>The icon in the Problems View ought to be the ESC/Java2 problem icon.
 <LI>The JDK specs include the esctools files themselves.
 <LI>Should we have the option of using the JDK specs as a library in the project
 rather than a separate project.
-<LI>Allow a choice of which pane of the Console to use? (JML or ESC/java2)
+<LI>Allow a choice of which pane of the Console to use? (JML or ESC/Java2)
 <LI>Need an option for the name of the specs project
 <LI>Some markers have more than one associated declaration - be able to 
 highlight them all
