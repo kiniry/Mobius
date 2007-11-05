@@ -744,17 +744,17 @@ limitations under the License.
    </license>
 
    <requires>
-      <import feature="SimplifyFeature" version="1.5.4"/>
+      <import feature="SimplifyFeature" version="1.5.5" match="greaterOrEqual"/>
    </requires>
 
    <plugin
-         id="mobius.escjava2.esctools"
+         id="mobius.escjava.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="mobius.escjava.plugin"
+         id="mobius.escjava2.esctools"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
