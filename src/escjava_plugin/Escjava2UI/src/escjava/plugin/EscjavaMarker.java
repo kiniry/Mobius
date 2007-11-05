@@ -39,7 +39,7 @@ public class EscjavaMarker implements IEscjavaListener {
 	 * The id that is also used in plugin.xml.
 	 */
 	final static public String ESCJAVA_MARKER_ID =
-		EscjavaPlugin.PLUGINID + ".escjavaWarningMarker";
+		EscjavaPlugin.PLUGIN_ID + ".escjavaWarningMarker";
 	
 	/** The id of the marker property that holds the 'associated declaration' information. */
 	final static public String EXTRA_INFO = "declarationInfo";

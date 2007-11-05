@@ -70,7 +70,7 @@ public class EscjavaDecorator implements org.eclipse.jface.viewers.ILightweightL
 				// Note: could possible have some threading problems here
 				// but this is always called within the UI thread, so I
 				// think we are ok.
-				Bundle bundle = Platform.getBundle(EscjavaPlugin.PLUGINID);
+				Bundle bundle = Platform.getBundle(EscjavaPlugin.PLUGIN_ID);
 				IPath path = new Path("icons/JMLSmall.png");
 				URL iconURL = FileLocator.find(bundle,path,null);
 				img = ImageDescriptor.createFromURL(iconURL);

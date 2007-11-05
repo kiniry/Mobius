@@ -569,7 +569,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 				Display.getDefault().syncExec(new java.lang.Runnable() {
 				  public void run() {
 				    PlatformUI.getWorkbench().getDecoratorManager().update(
-				        EscjavaPlugin.PLUGINID + ".ESCDecoratorA");
+				        EscjavaPlugin.PLUGIN_ID + ".ESCDecoratorA");
 				  }
 				});
 			} catch (Exception e) {
@@ -633,7 +633,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 				Display.getDefault().syncExec(new java.lang.Runnable() {
 				  public void run() {
 				    PlatformUI.getWorkbench().getDecoratorManager().update(
-				        EscjavaPlugin.PLUGINID + ".ESCDecoratorA");
+				        EscjavaPlugin.PLUGIN_ID + ".ESCDecoratorA");
 				  }
 				});
 			} catch (Exception e) {
@@ -721,7 +721,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 			Display.getDefault().syncExec(new java.lang.Runnable() {
         public void run() {
           PlatformUI.getWorkbench().getDecoratorManager().update(
-              EscjavaPlugin.PLUGINID + ".ESCDecorator");
+              EscjavaPlugin.PLUGIN_ID + ".ESCDecorator");
         }
       });
 			touch = null;

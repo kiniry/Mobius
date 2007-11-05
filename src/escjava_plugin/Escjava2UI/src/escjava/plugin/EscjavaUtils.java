@@ -73,7 +73,8 @@ public class EscjavaUtils {
 	 * @throws Exception
 	 */
 	static public String findSpecs() throws Exception {
-		return Utils.findPluginResource("escjava.esctools","esctools2.jar");
+		return Utils.findPluginResource(EscjavaPlugin.PLUGIN_ID, 
+		                                EscjavaPlugin.ESCJAVA_JAR_FILENAME);
 	}
 	
 	/**TODO
@@ -182,7 +183,7 @@ public class EscjavaUtils {
 			IJavaProject javaProject = JavaCore.create(project);
 			if (location.endsWith(".jar")) {
 				// The location is a library 
-				folderName = "jmlspecs.jar"; // Really a file, not a folder
+				folderName = EscjavaPlugin.JML_JAR_FILENAME; // Really a file, not a folder
 				IFile f = project.getFile(folderName);
 				f.createLink(new Path(location),IResource.NONE,null);
 				// Add the library entry as the only entry to the new classpath
@@ -237,7 +238,7 @@ public class EscjavaUtils {
 			if (r instanceof IFolder) {
 				if (((IContainer)r).findMember(pp) != null) return true;
 			} else if (cpe.endsWith("jmlspecs.jar") ||
-					   cpe.endsWith("esctools2.jar")) return true;
+					   cpe.endsWith(EscjavaPlugin.ESCJAVA_JAR_FILENAME)) return true;
 			// FIXME - should really check if this has 'pp' in it
 			//   the above is really a hack
 		}
@@ -261,9 +262,9 @@ public class EscjavaUtils {
 			// If not, find the specs in the plugin
 			location = findSpecs();
 			// Create (if it does not exist) a project and link the specs into it
-			installSpecsAsProject("jmlspecs","jmlspecs",location);
+			installSpecsAsProject(EscjavaPlugin.JMLSPECS_PROJECT_NAME,EscjavaPlugin.JMLSPECS_PROJECT_NAME,location);
 			// Put the new project on the argument project's classpath
-			installSpecsUsingProject(javaProject,"jmlspecs");
+			installSpecsUsingProject(javaProject,EscjavaPlugin.JMLSPECS_PROJECT_NAME);
 			return;
 		} catch (Exception e) {
 			Log.errorlog("Failed to install default specs",e);
@@ -271,7 +272,7 @@ public class EscjavaUtils {
 		// Try installing as a source folder
 		if (location == null) return;
 		try {
-			installSpecsAsSrcFolder(javaProject,"jmlspecs",location);
+			installSpecsAsSrcFolder(javaProject,EscjavaPlugin.JMLSPECS_PROJECT_NAME,location);
 		} catch (Exception e) {
 			Log.errorlog("Failed to install default specs as a source folder",e);
 		}
