@@ -43,7 +43,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	/**
 	 * The id of the plugin.
 	 */
-	public static final String PLUGIN_ID = "mobius.escjava.plugin";
+	public static final String PLUGIN_ID = "mobius.escjava2.plugin";
 	
 	/**
 	 * Name of jarfile of ESC/Java2 build (has been "esctools2.jar" for a *long* time).
