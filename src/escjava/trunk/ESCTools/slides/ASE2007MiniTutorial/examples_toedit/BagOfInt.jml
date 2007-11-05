@@ -31,9 +31,9 @@ public class BagOfInt {
       @ ensures \result ==
       @   \old((\min int j; 0 <= j && j < n; a[j]));
       @ ensures (\forall int j; 0 <= j && j < \old(n);
-      @     \old(a[j]) != \result
+      @     (\old(a[j]) != \result
       @       && occurrences(\old(a[j]))
-      @           == \old(occurrences(a[j]))
+      @           == \old(occurrences(a[j])))
       @  || (\old(a[j]) == \result
       @       && occurrences(\old(a[j]))
       @           == \old(occurrences(a[j])-1))); @*/

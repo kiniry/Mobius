@@ -1,5 +1,5 @@
 class SortedInts2 {
-  private /*@ spec_public rep @*/ int[] a;
+  private /*@ spec_public @*/ int[] a;
 
   /*@ public invariant (\forall int i, j; 
     @      0 <= i && i < j && j < a.length;
@@ -23,7 +23,7 @@ class SortedInts2 {
     @      0 <= i && i < inp.length;
     @      a[i] == inp[i]);         @*/
   public SortedInts2(int[] inp) {
-    a = new /*@ rep @*/ int[inp.length];
+    a = new int[inp.length];
     for (int i = 0; i < a.length; i++) {
         a[i] = inp[i];
   } }

@@ -809,10 +809,10 @@ Note: runtime checker gives better errors with multiple clauses.
 \item
 \lstinline[mathescape=true]!(\sum T x; $P$; $E$)!
 ~~ = ~~ $\sum \{E \mid x \in T \wedge P \}$
-
-\item
-\lstinline[mathescape=true]!(\num_of T x; $P$; $Q$)!
-~~ = ~~ $\sum \{1 \mid x \in T \wedge P \wedge Q\}$
+%
+%\item
+%\lstinline[mathescape=true]!(\num_of T x; $P$; $Q$)!
+%~~ = ~~ $\sum \{1 \mid x \in T \wedge P \wedge Q\}$
 
 \item
 $\ldots$
@@ -822,9 +822,9 @@ $\ldots$
 This is more than we need now, but stress the regular pattern of
 the quantifiers, with a domain and range predicate.
 
-The listeners of this tutorial will be able to use \texttt{\textbackslash}\lstinline!num_of! later.
+%The listeners of this tutorial will be able to use \texttt{\textbackslash}\lstinline!num_of! later.
 
-The \texttt{\textbackslash}\lstinline!num_of! quantifier actually produces a long, not int, result.
+%The \texttt{\textbackslash}\lstinline!num_of! quantifier actually produces a long, not int, result.
 }
 \end{frame}
 
@@ -877,19 +877,7 @@ and \texttt{high} the upper bound.
 \begin{frame}<beamer>[fragile]
 \frametitle{My Solution: Interval's Data, Constructor}
 
-\lstinputlisting[linerange={2-2,4-6,8-12}]{examples/Interval.java}
-\end{frame}
-
-%\begin{frame}<beamer>[fragile]
-%\frametitle{My Solution: Interval's Constructor}
-
-%\lstinputlisting[linerange={9-15}]{examples/Interval.jml}
-%\end{frame}
-
-\begin{frame}<beamer>[fragile]
-\frametitle{My Solution: Method contains}
-
-\lstinputlisting[linerange={15-18}]{examples/Interval.jml}
+\lstinputlisting[linerange={2-7,9-14,16-18}]{examples/Interval.jml}
 \end{frame}
 
 \subsection[Tools]{Basic Tool Use}  % demo + exercise
@@ -899,9 +887,6 @@ and \texttt{high} the upper bound.
 \begin{description}[ESC/Java2:]
 \item[jmlc:]
 Find violations at runtime.
-
-\item[jmlunit:]
-Aid/automate unit testing.
 
 \item[ESC/Java2:]
 Warn about likely runtime exceptions and violations.
@@ -935,8 +920,8 @@ ESC/Java2 Eclipse plugin update site \\
 
 \begin{example}
 \begin{verbatim}
-$ jmlc -Q -e BagOfInt.java BagOfIntMain.java
-$ jmlrac BagOfIntMain
+$ jmlc -Q Interval.java IntervalMain.java
+$ jmlrac IntervalMain
 \end{verbatim}
 \end{example}
 \note{This should be a demo, with Emacs or Eclipse.
@@ -949,7 +934,7 @@ running with java (the VM) first, to see what difference using jmlc makes.)
 
 The -Q flag shuts jmlc up somewhat.  The -e flag turns on universes.
 
-These flags are valid for JML Common Tools release 5.4.
+These flags are valid for JML Common Tools release 5.5 rc3.
 
 There are manual pages for each of the tools.
 }
@@ -958,11 +943,12 @@ There are manual pages for each of the tools.
 \begin{frame}[fragile]
 \frametitle{Writing Tests Using Assert}
 
-\lstinputlisting[linerange={4-17}]{examples/BagOfIntMain.java}
+\lstinputlisting[linerange={4-14}]{examples/IntervalMain.java}
 \note{It's much better to use assert than to try to look at output!
 
-You can use Java's assert too, but there are advantages to using
-JML's assert, as is done here.
+You can use Java's assert too, the advantage of using
+JML's assert, as is done here, is that you can use all the JML
+features, and you're guaranteed no side effects in assertions.
 }
 \end{frame}
 
@@ -971,82 +957,17 @@ JML's assert, as is done here.
 
 {\small
 \begin{verbatim}
-org...JMLInternalExceptionalPostconditionError:
- by method BagOfInt.occurrences regarding spec...s at
-   File "BagOfInt.jml", line 21, character 14, when
-    'jml$e' is ...ArrayIndexOutOfBoundsException: 6
-   at BagOfInt.main(BagOfInt.java:2120)
+org.jmlspecs.jmlrac.runtime.
+  JMLInternalPreconditionError:
+    by method Interval.Interval
+      at IntervalMain.main(IntervalMain.java:445)
 Exception in thread "main" 
 \end{verbatim}
 % $
 }
-\lstinputlisting[linerange={21-24},numbers=left,numberstyle=\small]{examples/BagOfInt.jml}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Using jmlc with jmlunit}
-
-\begin{example}
-CLASSPATH includes:
-\begin{itemize}
-\item
-\texttt{.}
-
-\item
-\texttt{junit.jar} (version 3.8.1)
-
-\item
-\texttt{JML/bin/jml-release.jar}
-\end{itemize}
-
-\begin{verbatim}
-$ jmlunit -i BagOfInt.java
-\end{verbatim}
-% $
-
-Edit \lstinline!BagOfInt_JML_TestData.java!
-
-\begin{verbatim}
-$ javac BagOfInt_JML_Test*.java
-$ jmlc -Q -e BagOfInt.java
-$ jmlrac BagOfInt_JML_Test
-\end{verbatim}
-% $
-\end{example}
-\note{This should be a demo.
-
-Note you have to compile with jmlc \emph{after} compiling with javac,
-since javac will compile the executable without RAC.  
-
-Put in data for
-ints: 3, 4, 5, 10, \\
-
-arrays: new int[] \{3, 4, 2, 3, 3\}, \{0, 10, 20, 30, 10\}, \{\}, and \\
-
-bags with those arrays as initial values:
-\lstinline!case N: return new BagOfInt(...);!.
-}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Using jmlc with jmlunit}
-
-{\small
-\begin{verbatim}
-.....F.F.F.F.F.F.F.F.F.F.F.F.F.F........F.F.....
-Time: 0.01
-There were 16 failures:
-1) occurrences:0(BagOfInt_JML_Test$TestOccurrences)
-  junit.framework.AssertionFailedError:
-    Method 'occurrences' applied to
-    Receiver: {3, 4, 2, 3, 3}
-    Argument i: 0
-Caused by: ...JMLExitExceptionalPostconditionError:
-by: method BagOfInt.occurrences regarding spec...s at
-   File "BagOfInt.jml", line 21, character 14, when
-    'jml$e' is ...ArrayIndexOutOfBoundsException: 5
-\end{verbatim}
-% $
+\lstinputlisting[linerange={9-12},numbers=left,numberstyle=\small]{examples/Interval.jml}
+\note{The output line number is wrong, this is a bug in the tools.  It
+refers to a line in the generated file.
 }
 \end{frame}
 
@@ -1057,11 +978,13 @@ by: method BagOfInt.occurrences regarding spec...s at
 \begin{verbatim}
 $ CLASSPATH=.
 $ export CLASSPATH
-$ escjava2 -nonNullByDefault BagOfInt.java
+$ escjava2 IntervalMain.java
 \end{verbatim}
 % $
 \end{example}
 \note{This should be a demo, with Emacs or Eclipse.
+
+It seems the current plugin only works under Eclipse 3.2.
 
 To get the Eclipse demo to run on Windows, I had to tell Eclipse about the
 Simplify executable location explicitly in the preferences.
@@ -1070,24 +993,24 @@ See Window/Preferences/Java/EscJava2 in the Eclipse menus.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Using ESC/Java2}
+\frametitle{Using ESC/Java2: Output}
 
 {\small
 \begin{verbatim}
-BagOfInt ...
-  Prover started:0.03 s 15673776 bytes
-    [2.013 s 15188656 bytes]
-
-BagOfInt: BagOfInt(int[]) ...
----------------------------------------------------
-BagOfInt.java:11: Warning: 
-      Postcondition possibly not established (Post)
-  }
-  ^
+IntervalMain: main(java.lang.String[]) ...
+---------------------------------------------
+IntervalMain.java:13: Warning:
+  Precondition possibly not established (Pre)
+    Interval i2_1 = new Interval(2,1);
+                                ^
 Associated declaration is 
-".\BagOfInt.jml", line 14, col 6:
-    @ ensures (\forall int i; 0 <= i && i < n;
-      ^
+ ".\Interval.jml", line 9, col 8:
+    //@ requires l < h;
+        ^
+--------------------------------------------
+    [34.141 s 16268152 bytes]  failed
+
+1 warning
 \end{verbatim}
 }
 \end{frame}
@@ -1275,36 +1198,15 @@ due to representation exposure.
 \end{frame}
 
 \begin{frame}<beamer>[fragile]
-\frametitle{Revised SortedInts Using Universes (jmlc)}
-
-\lstinputlisting[linerange={1-3}]{examples/SortedInts2.java}
-\note{This solution is based on the Universe type/ownership system 
-from Peter M\"{u}ller's group (Werner Dietl) at ETH.}
-\end{frame}
-
-\begin{frame}<beamer>[fragile]
-\frametitle{Revised Using Universes (jmlc)}
+\frametitle{Corrected by Making a Copy}
 
 \lstinputlisting[linerange={16-29}]{examples/SortedInts2.java}
-\end{frame}
+\note{One could also use System.arrayCopy.
 
-\begin{frame}<beamer>[fragile]
-\frametitle{Revised Using Owner (ESC/Java2)}
-
-\lstinputlisting[linerange={1-4}]{examples/SortedInts3.java}
-\end{frame}
-
-\begin{frame}<beamer>[fragile]
-\frametitle{Revised Using Owner (ESC/Java2)}
-
-\lstinputlisting[linerange={17-27}]{examples/SortedInts3.java}
-\end{frame}
-
-\begin{frame}<beamer>[fragile]
-\frametitle{Revised Using Owner (ESC/Java2)}
-
-\lstinputlisting[linerange={27-33}]{examples/SortedInts3.java}
-\note{Owner is a ghost field, so assigned to by a \lstinline!set! statement.}
+You can also use the Universe ownership type system
+to check for such properties.  That system was implemented in JML (jmlc) 
+by Peter M\"{u}ller's group (Werner Dietl) at ETH.
+}
 \end{frame}
 
 \begin{frame}
@@ -1525,226 +1427,10 @@ conjunction of implications.
 }
 \end{frame}
 
-
 \begin{frame}
-\frametitle{Background for Specifying Exceptions}
+\frametitle{Example Using Multiple Cases}
 
-Java Exceptions:
-\begin{itemize}
-\item
-Unchecked (RuntimeException):
-\begin{itemize}
-\item
-Client avoidable (use preconditions).
-
-\item
-Implementation faults (fix them).
-\end{itemize}
-
-\item
-Checked:
-\begin{itemize}
-\item
-Clients can't avoid (efficiently).
-
-\item
-Condition simultaneous with use (permissions).
-
-\item
-Alternative returns (not found, EOF, $\ldots$).
-\end{itemize}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{When to Specify Exceptions}
-
-Unchecked exceptions:
-\begin{itemize}
-\item
-Don't specify them.
-
-\item
-Just specify the normal cases.
-\end{itemize}
-
-Checked exceptions
-\begin{itemize}
-\item
-Specify them.
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{JML Features for Exception Specification}
-
-\begin{itemize}
-\item
-\lstinline!exceptional_behavior! spec cases.
-
-\item
-\lstinline!signals_only! clause.
-
-\item
-\lstinline!signals! clause.
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Exceptional Specification Example}
-\lstinputlisting[linerange={1-6}]{examples/Actor.java}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Exceptional Specification Example}
-\lstinputlisting[linerange={8-21}]{examples/Actor.java}
-\end{frame}
-
-\begin{frame}
-\frametitle{Underspecification of Exceptions}
-\begin{question}
-How would you specify this, \\
-ignoring the exceptional behavior? 
-\end{question}
-\note{That is, how to write the specification and ignore the
-  exceptional case?
-}
-\end{frame}
-
-\begin{frame}<beamer>
-\frametitle{Underspecification of Exceptions}
-\lstinputlisting[linerange={8-14}]{examples/ActorUnderspecified.java}
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{Heavyweight Behavior Spec Cases}
-\framesubtitle{Presumed Complete}
-
-\lstinline!normal_behavior!, \lstinline!exceptional_behavior!
-\begin{itemize}
-\item
-Say how method can terminate.
-
-\item
-Maximally permissive/useless defaults.
-\end{itemize}
-
-\lstinline!behavior!
-\begin{itemize}
-\item
-Doesn't specify normal/exceptional.
-
-\item
-Can use to underspecify normal/exceptional.
-\end{itemize}
-\note{Generally, the defaults for boolean clauses are ``true''.
-
-But for frames (assignable) the default is
-\texttt{\textbackslash}\lstinline!everything!, 
-as that is most permissive.
-
-However, \lstinline!signals_only! has a default that is based on the
-declared exceptions in a method (see below).
-}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Lightweight Specification Cases}
-\framesubtitle{Presumed Incomplete}
-
-\begin{itemize}
-\item
-Don't use a behavior keyword.
-
-\item
-Most defaults technically \lstinline!\not_specified!.
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Semantics of signals\_only}
-
-\begin{itemize}
-\item
-\lstinline!signals_only! $T_1, \ldots, T_n$\texttt{;}
-\begin{itemize}
-\item
-Exception thrown to caller must subtype
-one $T_1, \ldots, T_n$.
-\end{itemize}
-
-\item
-Can't use in \lstinline!normal_behavior!
-
-\item
-At most one \lstinline!signals_only! clause per spec case.
-
-\item
-Default for omitted clause
-\begin{itemize}
-\item
-if method declares \lstinline!throws! $T_1, \ldots, T_n$,
-\newline
-then \lstinline!signals_only! $T_1, \ldots, T_n$\texttt{;}.
-
-\item
-else \lstinline!signals_only \nothing;!.
-\end{itemize}
-\end{itemize}
-\note{Assuming $n > 0$.
-  The default only applies to lightweight spec cases and
-  heavyweight \lstinline!exceptional_behavior! spec cases.
-}
-\end{frame}
-
-\begin{frame}
-\frametitle{Signals Clause}
-
-\begin{itemize}
-\item
-Specifies, when exception thrown,
-\begin{itemize}
-\item
-State of exception object.
-
-\item
-Other state.
-\end{itemize}
-
-\item
-Not very useful.
-
-\item
-Tip: normally omit.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Pitfalls in Exceptional Specification}
-\begin{itemize}
-\item
-Can't return normally \emph{and\/} throw exception.
-
-\item
-So preconditions shouldn't overlap.
-\end{itemize}
-
-\begin{question}
-What happens if they overlap?
-\end{question}
-\note{The specification will be unsatisfiable (for the overlap).
-
-  In many such cases you want to use a single Behavior.
-  See \texttt{examples/Factor.java} for how to do this.
-}
-\end{frame}
-
-\begin{frame}
-\frametitle{Exercise Using Multiple Cases}
-
-\begin{exercise}
+\begin{example}
 Specify the $3x+1$ or ``hailstone'' function, $h$,
 such that:
 
@@ -1759,7 +1445,7 @@ n / 2,              & \mbox{if $n>0$ is even}
 \end{displaymath}
 
 and $h$ is undefined on negative numbers.
-\end{exercise}
+\end{example}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -2014,7 +1700,7 @@ method only assigns to (concrete) members of
 $\DG(x) \cup \DG(y)$.
 
 \begin{question}
-What does \lstinline!assignable gender;! mean?
+What does ~~\lstinline!assignable gender;!~~  mean?
 \end{question}
 \note{We use $\DG(x)$ in this talk as the data group of $x$.
 The method only assigns to gen or other members of gender's data group.
@@ -2109,68 +1795,6 @@ Justifies inductive step in datatype induction.
 \lstinputlisting[linerange={1-2}]{examples/Patient.java}
 \lstinputlisting[linerange={5-5}]{examples/Patient.java}
 \lstinputlisting[linerange={10-15}]{examples/Patient.java}
-\end{frame}
-
-\subsection[Other]{Other Topics}
-
-\begin{frame}[fragile]
-\frametitle{Helper Methods and Constructors}
-
-A \lstinline!helper! method or constructor is:
-\begin{itemize}
-\item
-\lstinline!private!
-
-\item
-Exempt from invariants and history constraints.
-\begin{itemize}
-\item
-Cannot assume them.
-
-\item
-Need not establish them.
-\end{itemize}
-\end{itemize}
-
-\note{By default \lstinline!private! methods must preserve invariants
-and history constraints.  Have to label them \lstinline!helper! if
-don't want that.
-}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Ghost fields and Local Variables}
-\begin{itemize}
-\item
-Specification-only data.
-
-\item
-No \lstinline!represents! clause.
-
-\item
-Value from initialization and \lstinline!set! statements.
-
-\item
-Locals useful for loop invariants, termination, etc.
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Owner is a Ghost Field}
-
-Declaration:
-
-\begin{lstlisting}
-public class Object {
-  //@ public ghost Object owner = null;
-  /* ... */
-}
-\end{lstlisting}
-
-Assignment:
-\begin{lstlisting}
-  //@ set a.owner = this;
-\end{lstlisting}
 \end{frame}
 
 \section[Subtypes]{Subtyping and Specification Inheritance}
@@ -2982,15 +2606,6 @@ Tools that give more benefits.
 \end{frame}
 
 \begin{frame}
-\frametitle{What Are You Interested In?}
-
-\begin{question}
-What kinds of research or collaborations interest you?
-\end{question}
-\end{frame}
-
-
-\begin{frame}
 \frametitle{Acknowledgments}
 Thanks to Joseph Kiniry, Erik Poll, David Cok, David Naumann, 
 Yoonsik Cheon, Curtis Clifton, Clyde Ruby, Patrice Chalin,
@@ -3009,40 +2624,6 @@ Join us at$\ldots$
 \end{frame}
 
 
-\appendix
-
-
-
-\begin{frame}
-\frametitle{Modular Reasoning}
-\begin{itemize}
-\item
-Prove code using specifications of other modules.
-
-\item
-Sound, if each module satisfies specification.
-\end{itemize}
-
-~ 
-
-Scales better than whole-program reasoning.
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Supertype Abstraction for Initially}
-Given:
-\lstinputlisting[linerange={2-2,5-6}]{examples/Patient.java}
-
-Verify:
-\begin{lstlisting}
-  Patient p;
-  if (b) { p = new Patient("male"); }
-  else { p = new FemalePatient(); }
-  //@ assert p.log.size() == 0;
-\end{lstlisting}
-\note{This works because the initially clause of Patient also applies
-  to FemalePatient.
-}
-\end{frame}
+%\appendix
 
 \end{document}

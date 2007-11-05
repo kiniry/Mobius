@@ -2,15 +2,15 @@
 
 # A simple makefile for working with jmlunit
 
-CLASSPATH='.;c:\cygwin\usr\local\junit\junit.jar'
-# Flags below are for JML common tools release 5.4, looking to the future
-JML = jml -Q -e
-# JMLC = jmlc -Q -e -o
-JMLC = jmlc -Q --universes --neutralContext
+CLASSPATH='.;c:\cygwin\usr\local\junit\junit.jar;c:\cygwin\usr\local\JML\bin\jml-release.jar'
+# Flags below are for JML common tools release 5.5_rc3, looking to the future
+JML = jml -Q
+# JMLC = jmlc -Q -o
+JMLC = jmlc -Q
 JMLRAC = jmlrac
 JMLUNIT = jmlunit -i
 JAVAC = javac
-# Flags below are for ESC/Java2 release 2.0b1
+# Flags below are for ESC/Java2 release 2.0b3
 ESCJAVA = escjava2 -nonNullByDefault
 
 TYPES = ArrayOps Interval IntervalRemove \
