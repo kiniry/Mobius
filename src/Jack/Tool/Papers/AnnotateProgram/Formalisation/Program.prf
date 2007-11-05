@@ -3,7 +3,7 @@
 (|Body|)
 (|Program|
  (|reserved_words_TCC1| 0
-  (|reserved_words_TCC1-2| NIL 3394869706 3401690170
+  (|reserved_words_TCC1-2| NIL 3394869706 3403262553
    ("" (EXPAND "is_finite")
     ((""
       (INST 1 "6"
@@ -54,12 +54,12 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL))
-   130 130 NIL NIL)
+   145 137 NIL NIL)
   (|reserved_words_TCC1-1| NIL 3394869664 NIL ("" (SUBTYPE-TCC) NIL NIL) NIL
    NIL NIL NIL NIL NIL)))
 (|ProgramFunctions|
  (|var_names_TCC1| 0
-  (|var_names_TCC1-1| NIL 3390821142 3401690212 ("" (GRIND) NIL NIL) PROVED
+  (|var_names_TCC1-1| NIL 3390821142 3403262554 ("" (GRIND) NIL NIL) UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -76,9 +76,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   135 133 T NIL))
+   85 85 T NIL))
  (|var_names_TCC2| 0
-  (|var_names_TCC2-1| NIL 3390821142 3401690213 ("" (GRIND) NIL NIL) PROVED
+  (|var_names_TCC2-1| NIL 3390821142 3403262556 ("" (GRIND) NIL NIL) UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -95,10 +95,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   112 111 T NIL))
+   146 143 T NIL))
  (|var_names_TCC3| 0
-  (|var_names_TCC3-1| NIL 3397378010 3401690215 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC3-1| NIL 3397378010 3403262556 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -118,10 +118,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   129 128 NIL NIL))
+   76 76 NIL NIL))
  (|var_names_TCC4| 0
-  (|var_names_TCC4-1| NIL 3397378010 3401690216 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC4-1| NIL 3397378010 3403262558 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -141,10 +141,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   112 112 T NIL))
+   115 114 T NIL))
  (|var_names_TCC5| 0
-  (|var_names_TCC5-1| NIL 3397378010 3401690217 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC5-1| NIL 3397378010 3403262559 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -164,10 +164,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   92 93 NIL NIL))
+   97 96 NIL NIL))
  (|var_names_TCC6| 0
-  (|var_names_TCC6-1| NIL 3397378010 3401690218 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC6-1| NIL 3397378010 3403262560 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -187,10 +187,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   131 131 NIL NIL))
+   103 98 NIL NIL))
  (|var_names_TCC7| 0
-  (|var_names_TCC7-1| NIL 3397378010 3401690219 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC7-1| NIL 3397378010 3403262561 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -210,10 +210,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   111 111 NIL NIL))
+   98 98 NIL NIL))
  (|var_names_TCC8| 0
-  (|var_names_TCC8-1| NIL 3397378010 3401690220 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC8-1| NIL 3397378010 3403262561 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -233,10 +233,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   126 127 NIL NIL))
+   79 77 NIL NIL))
  (|var_names_TCC9| 0
-  (|var_names_TCC9-1| NIL 3397378010 3401690221 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC9-1| NIL 3397378010 3403262562 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -256,10 +256,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   107 108 NIL NIL))
+   113 111 NIL NIL))
  (|var_names_TCC10| 0
-  (|var_names_TCC10-1| NIL 3397378010 3401690223 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC10-1| NIL 3397378010 3403262563 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -286,10 +286,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   136 136 NIL NIL))
+   103 103 NIL NIL))
  (|var_names_TCC11| 0
-  (|var_names_TCC11-1| NIL 3397378010 3401690224 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC11-1| NIL 3397378010 3403262565 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -316,10 +316,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   158 158 NIL NIL))
+   103 103 NIL NIL))
  (|var_names_TCC12| 0
-  (|var_names_TCC12-1| NIL 3397378010 3401690226 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC12-1| NIL 3397378010 3403262566 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -346,10 +346,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   136 135 NIL NIL))
+   89 86 NIL NIL))
  (|var_names_TCC13| 0
-  (|var_names_TCC13-1| NIL 3397378010 3401690227 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC13-1| NIL 3397378010 3403262567 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -369,10 +369,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   132 133 NIL NIL))
+   98 97 NIL NIL))
  (|var_names_TCC14| 0
-  (|var_names_TCC14-1| NIL 3397378010 3401690228 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC14-1| NIL 3397378010 3403262568 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -392,10 +392,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   113 112 NIL NIL))
+   116 115 NIL NIL))
  (|var_names_TCC15| 0
-  (|var_names_TCC15-1| NIL 3397378010 3401690229 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC15-1| NIL 3397378010 3403262568 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -412,10 +412,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   108 108 NIL NIL))
+   77 76 NIL NIL))
  (|var_names_TCC16| 0
-  (|var_names_TCC16-1| NIL 3397378010 3401690230 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC16-1| NIL 3397378010 3403262570 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -431,9 +431,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   108 108 NIL NIL))
+   126 125 NIL NIL))
  (|var_names_TCC17| 0
-  (|var_names_TCC17-2| "" 3397383573 3401690231
+  (|var_names_TCC17-2| "" 3397383573 3403262570
    ("" (SKOSIMP*)
     (("" (EXPAND "size")
       (("" (EXPAND "reduce_nat" 1 2)
@@ -492,11 +492,11 @@
         NIL))
       NIL))
     NIL)
-   PROVED NIL 29 28 T SHOSTAK)
+   UNCHECKED NIL 3 3 T SHOSTAK)
   (|var_names_TCC17-1| NIL 3397378010 3397383381 ("" (TERMINATION-TCC) NIL NIL)
    UNFINISHED NIL 79 79 T NIL))
  (|var_names_TCC18| 0
-  (|var_names_TCC18-1| NIL 3397378010 3401690236
+  (|var_names_TCC18-1| NIL 3397378010 3403262573
    ("" (SKOSIMP*)
     (("" (EXPAND "size")
       (("" (REPLACE -1)
@@ -567,7 +567,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|size| CONST-DECL "nat" |ProgramFunctions| NIL)
@@ -601,11 +601,9 @@
     (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
-    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|map| ADT-DEF-DECL "list[T1]" |list_adt_map| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (|sum| DEF-DECL "nat" |listsum| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |list_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (+ CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
     (|numfield| NONEMPTY-TYPE-EQ-DECL NIL |number_fields| NIL)
@@ -626,24 +624,23 @@
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL))
-   491 490 T NIL))
+   353 350 T NIL))
  (|var_names_TCC19| 0
-  (|var_names_TCC19-1| NIL 3397378010 3401690240 ("" (TCC) NIL NIL) PROVED
+  (|var_names_TCC19-1| NIL 3397378010 3403262577 ("" (TCC) NIL NIL) UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|reduce_nat| ADT-DEF-DECL "[Body -> nat]" |Body_adt| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
-    (|sum| DEF-DECL "nat" |listsum| NIL)
-    (|map| ADT-DEF-DECL "list[T1]" |list_adt_map| NIL)
+    (|sum| DEF-DECL "nat" |listsum| NIL) NIL
     (|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
      NIL))
-   426 423 T NIL))
+   332 330 T NIL))
  (|var_names_TCC20| 0
-  (|var_names_TCC20-1| NIL 3397378010 3401690244 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC20-1| NIL 3397378010 3403262580 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|reduce_nat| ADT-DEF-DECL "[Body -> nat]" |Body_adt| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
@@ -653,12 +650,11 @@
      "(strict_total_order?[real])" |real_props| NIL)
     (|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
      NIL)
-    (|sum| DEF-DECL "nat" |listsum| NIL)
-    (|map| ADT-DEF-DECL "list[T1]" |list_adt_map| NIL))
-   389 386 NIL NIL))
+    (|sum| DEF-DECL "nat" |listsum| NIL) NIL)
+   348 346 NIL NIL))
  (|var_names_TCC21| 0
-  (|var_names_TCC21-1| NIL 3397378010 3401690245 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC21-1| NIL 3397378010 3403262581 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -689,10 +685,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   158 157 NIL NIL))
+   103 104 NIL NIL))
  (|var_names_TCC22| 0
-  (|var_names_TCC22-1| NIL 3397378010 3401690247 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC22-1| NIL 3397378010 3403262582 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -723,10 +719,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   139 138 NIL NIL))
+   106 104 NIL NIL))
  (|var_names_TCC23| 0
-  (|var_names_TCC23-1| NIL 3397378010 3401690248 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC23-1| NIL 3397378010 3403262583 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -757,9 +753,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   118 118 NIL NIL))
+   103 102 NIL NIL))
  (|var_names_TCC24| 0
-  (|var_names_TCC24-1| NIL 3397378010 3401690249 ("" (GRIND) NIL NIL) PROVED
+  (|var_names_TCC24-1| NIL 3397378010 3403262585 ("" (GRIND) NIL NIL) UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -783,9 +779,9 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   132 132 T NIL))
+   158 159 T NIL))
  (|var_names_TCC25| 0
-  (|var_names_TCC25-1| NIL 3397378010 3401690250 ("" (GRIND) NIL NIL) PROVED
+  (|var_names_TCC25-1| NIL 3397378010 3403262586 ("" (GRIND) NIL NIL) UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -809,10 +805,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   113 113 T NIL))
+   98 98 T NIL))
  (|var_names_TCC26| 0
-  (|var_names_TCC26-1| NIL 3397380658 3401690252 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC26-1| NIL 3397380658 3403262587 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -832,10 +828,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   128 129 NIL NIL))
+   94 95 NIL NIL))
  (|var_names_TCC27| 0
-  (|var_names_TCC27-1| NIL 3397380658 3401690253 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC27-1| NIL 3397380658 3403262588 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -855,10 +851,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   113 113 NIL NIL))
+   77 76 NIL NIL))
  (|var_names_TCC28| 0
-  (|var_names_TCC28-1| NIL 3397380658 3401690254 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC28-1| NIL 3397380658 3403262589 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -882,10 +878,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   161 160 NIL NIL))
+   121 121 NIL NIL))
  (|var_names_TCC29| 0
-  (|var_names_TCC29-1| NIL 3397380658 3401690256 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC29-1| NIL 3397380658 3403262590 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -909,10 +905,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   118 119 NIL NIL))
+   104 102 NIL NIL))
  (|var_names_TCC30| 0
-  (|var_names_TCC30-1| NIL 3397380658 3401690257 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC30-1| NIL 3397380658 3403262591 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -936,10 +932,10 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   140 138 NIL NIL))
+   121 119 NIL NIL))
  (|var_names_TCC31| 0
-  (|var_names_TCC31-1| NIL 3397380658 3401690258 ("" (TERMINATION-TCC) NIL NIL)
-   PROVED
+  (|var_names_TCC31-1| NIL 3397380658 3403262592 ("" (TERMINATION-TCC) NIL NIL)
+   UNCHECKED
    ((|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -970,37 +966,37 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   113 113 NIL NIL))
+   98 98 NIL NIL))
  (|var_names_TCC32| 0
-  (|var_names_TCC32-1| NIL 3397380658 3401690260
+  (|var_names_TCC32-1| NIL 3397380658 3403262594
    ("" (SKOSIMP*)
     (("" (EXPAND "size")
       (("" (EXPAND "reduce_nat" 1 2)
         (("" (ASSERT) (("" (ASSERT) (("" (GRIND) NIL NIL)) NIL)) NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|reduce_nat| ADT-DEF-DECL "[Body -> nat]" |Body_adt| NIL))
-   200 200 T NIL))
+   163 162 T NIL))
  (|var_names_TCC33| 0
-  (|var_names_TCC33-2| NIL 3397556068 3401690261
+  (|var_names_TCC33-2| NIL 3397556068 3403262594
    ("" (SKOSIMP*)
     (("" (EXPAND "size")
       (("" (EXPAND "reduce_nat" 1 2) (("" (GRIND) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
     (|size| CONST-DECL "nat" |ProgramFunctions| NIL)
     (|real_lt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|reduce_nat| ADT-DEF-DECL "[Body -> nat]" |Body_adt| NIL))
-   94 94 T NIL)
+   82 82 T NIL)
   (|var_names_TCC33-1| NIL 3397380658 3397555915
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND "is_finite")
@@ -1065,7 +1061,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    169 170 T NIL))
  (|var_names_TCC34| 0
-  (|var_names_TCC34-2| NIL 3398059737 3401690263
+  (|var_names_TCC34-2| NIL 3398059737 3403262597
    (";;; Proof var_names_TCC32-1 for formula ProgramFunctions.var_names_TCC32"
     (SKOSIMP*)
     ((";;; Proof var_names_TCC32-1 for formula ProgramFunctions.var_names_TCC32"
@@ -1093,7 +1089,7 @@
                 (("2" (REWRITE "nonempty_exists")
                   (("2" (SKOLEM!) (("2" (INST?) NIL))))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1104,24 +1100,10 @@
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|f!2| SKOLEM-CONST-DECL "FieldDecl[Name]" |ProgramFunctions| NIL)
-    (|n!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (f: FieldDecl[Name]): fs!1(f) AND name(f) = n})"
-     |ProgramFunctions| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|x2!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (f: FieldDecl[Name]): fs!1(f) AND name(f) = n})"
-     |ProgramFunctions| NIL)
-    (|x1!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (f: FieldDecl[Name]): fs!1(f) AND name(f) = n})"
-     |ProgramFunctions| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|f!2| SKOLEM-CONST-DECL "FieldDecl[Name]" |ProgramFunctions| NIL)
-    (|f!2| SKOLEM-CONST-DECL "FieldDecl[Name]" |ProgramFunctions| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|fs!1| SKOLEM-CONST-DECL "finite_set[FieldDecl[Name]]" |ProgramFunctions|
-     NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -1138,11 +1120,11 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   242 241 NIL NIL)
+   209 208 NIL NIL)
   (|var_names_TCC34-1| NIL 3398058896 3398058943 ("" (SUBTYPE-TCC) NIL NIL)
    UNFINISHED NIL 610 608 NIL NIL))
  (|var_names_TCC35| 0
-  (|var_names_TCC35-2| NIL 3398059757 3401690266
+  (|var_names_TCC35-2| NIL 3398059757 3403262598
    (";;; Proof var_names_TCC33-2 for formula ProgramFunctions.var_names_TCC33"
     (SKOSIMP*)
     ((";;; Proof var_names_TCC33-2 for formula ProgramFunctions.var_names_TCC33"
@@ -1170,7 +1152,7 @@
                 (("2" (REWRITE "nonempty_exists")
                   (("2" (SKOLEM!) (("2" (INST?) NIL))))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -1179,24 +1161,10 @@
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |ProgramFunctions| NIL)
-    (|n!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (l: LocalVarDecl[Name]): ls!1(l) AND name(l) = n})"
-     |ProgramFunctions| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|x2!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (l: LocalVarDecl[Name]): ls!1(l) AND name(l) = n})"
-     |ProgramFunctions| NIL)
-    (|x1!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (l: LocalVarDecl[Name]): ls!1(l) AND name(l) = n})"
-     |ProgramFunctions| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |ProgramFunctions| NIL)
-    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |ProgramFunctions| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|ls!1| SKOLEM-CONST-DECL "finite_set[LocalVarDecl[Name]]"
-     |ProgramFunctions| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -1213,21 +1181,20 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   223 223 NIL NIL)
+   187 187 NIL NIL)
   (|var_names_TCC35-1| NIL 3398058896 3398058950 ("" (SUBTYPE-TCC) NIL NIL)
    UNFINISHED NIL 629 627 NIL NIL))
  (|var_names_union| 0
-  (|var_names_union-1| NIL 3396846432 3401690269
+  (|var_names_union-1| NIL 3396846432 3403262601
    ("" (SKOSIMP*)
     (("" (APPLY-EXTENSIONALITY :HIDE? T) (("" (GRIND) NIL NIL)) NIL)) NIL)
-   PROVED
+   UNCHECKED
    ((|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL) NIL
     (|union| CONST-DECL "set" |sets| NIL)
     (|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
@@ -1235,9 +1202,9 @@
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL))
-   313 312 T SHOSTAK))
+   272 271 T SHOSTAK))
  (|var_names_CaseJML_set2list| 0
-  (|var_names_CaseJML_set2list-1| NIL 3401699638 NIL
+  (|var_names_CaseJML_set2list-1| NIL 3401699638 3403262603
    (";;; Proof for formula AnnotateProgramProperties.var_names_CaseJML_set2list"
     (SKOLEM 1 (_ "n!1"))
     ((";;; Proof for formula AnnotateProgramProperties.var_names_CaseJML_set2list"
@@ -1302,9 +1269,78 @@
                                                     NIL)))))))))))))))))))))))))))))))))))))))))))))
        ("2" (USE "wf_card[[BoolExpr, Stmt]]") NIL))))
     "")
-   UNCHECKED NIL NIL NIL NIL NIL))
+   UNCHECKED
+   ((|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
+    (|list| TYPE-DECL NIL |list_adt| NIL)
+    (|CaseJML| ADT-CONSTRUCTOR-DECL "[list[[BoolExpr, Stmt]] -> (CaseJML?)]"
+     |Body_adt| NIL)
+    (|set2list| DEF-DECL "list[T]" |set2list| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
+    (|wf_induction| FORMULA-DECL NIL |wf_induction| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|CaseJML?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|IfThenElse?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Sequence?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Set?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Skip?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|StmtExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Throw?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|set| TYPE-EQ-DECL NIL |sets| NIL)
+    (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (< CONST-DECL "bool" |reals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (>= CONST-DECL "bool" |reals| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|Card| CONST-DECL "nat" |finite_sets| NIL)
+    (|card| CONST-DECL "{n: nat | n = Card(S)}" |finite_sets| NIL)
+    (|well_founded?| CONST-DECL "bool" |orders| NIL)
+    (|pred| TYPE-EQ-DECL NIL |defined_types| NIL)
+    (|finite_emptyset| NAME-JUDGEMENT "finite_set" |finite_sets| NIL)
+    (|null?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (|null| ADT-CONSTRUCTOR-DECL "(null?)" |list_adt| NIL)
+    (|emptyset| CONST-DECL "set" |sets| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
+    (|empty?| CONST-DECL "bool" |sets| NIL)
+    (|finite_remove| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
+    (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (|cons| ADT-CONSTRUCTOR-DECL "[[T, list] -> (cons?)]" |list_adt| NIL)
+    (|nonempty?| CONST-DECL "bool" |sets| NIL)
+    (|choose| CONST-DECL "(p)" |sets| NIL)
+    (|remove| CONST-DECL "set" |sets| NIL)
+    (|real_lt_is_strict_total_order| NAME-JUDGEMENT
+     "(strict_total_order?[real])" |real_props| NIL)
+    (|card_remove| FORMULA-DECL NIL |finite_sets| NIL)
+    (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|wf_card| FORMULA-DECL NIL |WF_Card| NIL))
+   169 169 NIL NIL))
  (|getFieldDecls_TCC1| 0
-  (|getFieldDecls_TCC1-3| NIL 3391148557 3401690271
+  (|getFieldDecls_TCC1-3| NIL 3391148557 3403262605
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
@@ -1373,7 +1409,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|nonempty_add_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
      |finite_sets| NIL)
     (|finite_set_induction| FORMULA-DECL NIL |FiniteSetInduction| NIL)
@@ -1394,9 +1430,7 @@
     (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
-    (|x!1| SKOLEM-CONST-DECL "finite_set[Class]" |ProgramFunctions| NIL)
-    (|t!1| SKOLEM-CONST-DECL "Class[Name]" |ProgramFunctions| NIL)
+    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL) NIL NIL
     (|union| CONST-DECL "set" |sets| NIL)
     (|add| CONST-DECL "(nonempty?)" |sets| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
@@ -1409,7 +1443,7 @@
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   210 209 T NIL)
+   198 194 T NIL)
   (|getFieldDecls_TCC1-2| NIL 3390902649 3391148163
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
@@ -1511,7 +1545,7 @@
     NIL)
    UNCHECKED NIL 5557840 390 T NIL))
  (|getLocalDecls_TCC1| 0
-  (|getLocalDecls_TCC1-2| NIL 3390903916 3401690273
+  (|getLocalDecls_TCC1-2| NIL 3390903916 3403262607
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Method]")
       ((""
@@ -1575,7 +1609,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|nonempty_add_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
      |finite_sets| NIL)
     (|finite_set_induction| FORMULA-DECL NIL |FiniteSetInduction| NIL)
@@ -1592,9 +1626,7 @@
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|x!1| SKOLEM-CONST-DECL "finite_set[Method]" |ProgramFunctions| NIL)
-    (|t!1| SKOLEM-CONST-DECL "Method[Name]" |ProgramFunctions| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL) NIL NIL
     (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
     (|singleton| CONST-DECL "(singleton?)" |sets| NIL)
     (|singleton?| CONST-DECL "bool" |sets| NIL)
@@ -1616,11 +1648,11 @@
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   253 251 T NIL)
+   183 180 T NIL)
   (|getLocalDecls_TCC1-1| NIL 3390821142 3390821234 ("" (SUBTYPE-TCC) NIL NIL)
    UNCHECKED NIL 605 450 NIL NIL))
  (|getLocalDecls_TCC2| 0
-  (|getLocalDecls_TCC2-2| NIL 3401620970 3401690276
+  (|getLocalDecls_TCC2-2| NIL 3401620970 3403262608
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
@@ -1687,7 +1719,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|nonempty_add_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
      |finite_sets| NIL)
     (|finite_set_induction| FORMULA-DECL NIL |FiniteSetInduction| NIL)
@@ -1706,9 +1738,7 @@
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
-    (|member| CONST-DECL "bool" |sets| NIL)
-    (|t!1| SKOLEM-CONST-DECL "Class[Name]" |ProgramFunctions| NIL)
-    (|x!1| SKOLEM-CONST-DECL "finite_set[Class]" |ProgramFunctions| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL) NIL NIL
     (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
@@ -1718,18 +1748,16 @@
     (|emptyset| CONST-DECL "set" |sets| NIL)
     (|finite_emptyset| JUDGEMENT-TCC NIL |finite_sets| NIL)
     (FALSE CONST-DECL "bool" |booleans| NIL)
-    (|finite_emptyset| NAME-JUDGEMENT "finite_set" |finite_sets| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
+    (|finite_emptyset| NAME-JUDGEMENT "finite_set" |finite_sets| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   233 231 T NIL)
+   179 177 T NIL)
   (|getLocalDecls_TCC2-1| NIL 3401620807 3401620866 ("" (SUBTYPE-TCC) NIL NIL)
    UNFINISHED NIL 249 249 NIL NIL))
  (|arg_in_getLocalDecls| 0
-  (|arg_in_getLocalDecls-1| NIL 3398660837 3401690276
+  (|arg_in_getLocalDecls-1| NIL 3398660837 3403262609
    ("" (SKOSIMP*)
     (("" (EXPAND "getLocalDecls")
       (("" (EXPAND "getLocalDecls")
@@ -1738,10 +1766,8 @@
         NIL))
       NIL))
     NIL)
-   PROVED
-   ((|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
+   UNCHECKED
+   (NIL (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
@@ -1754,12 +1780,10 @@
     (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
-    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL))
-   5 5 T SHOSTAK))
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL) NIL)
+   21 20 T SHOSTAK))
  (|getGhostDecls_TCC1| 0
-  (|getGhostDecls_TCC1-3| NIL 3391148598 3401690278
+  (|getGhostDecls_TCC1-3| NIL 3391148598 3403262610
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
@@ -1827,7 +1851,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|nonempty_add_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
      |finite_sets| NIL)
     (|finite_set_induction| FORMULA-DECL NIL |FiniteSetInduction| NIL)
@@ -1848,9 +1872,7 @@
     (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
-    (|x!1| SKOLEM-CONST-DECL "finite_set[Class]" |ProgramFunctions| NIL)
-    (|t!1| SKOLEM-CONST-DECL "Class[Name]" |ProgramFunctions| NIL)
+    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL) NIL NIL
     (|union| CONST-DECL "set" |sets| NIL)
     (|add| CONST-DECL "(nonempty?)" |sets| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
@@ -1863,7 +1885,7 @@
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   210 208 T NIL)
+   165 163 T NIL)
   (|getGhostDecls_TCC1-2| NIL 3390903999 3391148164
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
@@ -1964,7 +1986,7 @@
   (|getGhostDecls_TCC1-1| NIL 3390821142 3390821234 ("" (SUBTYPE-TCC) NIL NIL)
    UNCHECKED NIL 474 450 NIL NIL))
  (|declared_var_names_TCC1| 0
-  (|declared_var_names_TCC1-1| NIL 3394869665 3401690278
+  (|declared_var_names_TCC1-1| NIL 3394869665 3403262610
    ("" (SKOSIMP)
     ((""
       (CASE-REPLACE "{n: Name |
@@ -1976,7 +1998,7 @@
        ("2" (HIDE 2) (("2" (EXPAND* "union" "member") NIL NIL)) NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|finite_union| APPLICATION-JUDGEMENT "finite_set" |finite_sets| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
@@ -1989,8 +2011,7 @@
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL) NIL
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
@@ -2000,16 +2021,14 @@
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
+    NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
     (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL))
-   31 32 T NIL))
+   5 4 T NIL))
  (|ext_declared_var_names_TCC1| 0
-  (|ext_declared_var_names_TCC1-1| NIL 3397554464 3401690279
+  (|ext_declared_var_names_TCC1-1| NIL 3397554464 3403262611
    ("" (SKOSIMP*)
     (("" (REWRITE "finite_union")
       (("1" (EXPAND "is_finite")
@@ -2019,7 +2038,7 @@
        ("2" (USE "declared_var_names_TCC1") NIL NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
@@ -2030,8 +2049,7 @@
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
-    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL) NIL
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
@@ -2041,9 +2059,7 @@
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
-    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
-     NIL)
+    NIL NIL
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|This| CONST-DECL "Name" |Program| NIL)
@@ -2063,9 +2079,9 @@
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
     (|declared_var_names_TCC1| SUBTYPE-TCC NIL |ProgramFunctions| NIL))
-   84 84 T NIL))
+   93 91 T NIL))
  (|class_names_TCC1| 0
-  (|class_names_TCC1-1| NIL 3390821142 3401690282
+  (|class_names_TCC1-1| NIL 3390821142 3403262613
    ("" (SKOLEM!)
     (("" (TYPEPRED "classes(p!1)")
       (("" (EXPAND "is_finite")
@@ -2100,7 +2116,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2119,23 +2135,10 @@
     (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
-    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
-    (|c!1| SKOLEM-CONST-DECL "Class[Name]" |ProgramFunctions| NIL)
-    (|n!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (c: Class[Name]): classes(p!1)(c) AND name(c) = n})"
-     |ProgramFunctions| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|x2!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (c: Class[Name]): classes(p!1)(c) AND name(c) = n})"
-     |ProgramFunctions| NIL)
-    (|x1!1| SKOLEM-CONST-DECL
-     "({n: Name | EXISTS (c: Class[Name]): classes(p!1)(c) AND name(c) = n})"
-     |ProgramFunctions| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|c!1| SKOLEM-CONST-DECL "Class[Name]" |ProgramFunctions| NIL)
-    (|c!1| SKOLEM-CONST-DECL "Class[Name]" |ProgramFunctions| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|p!1| SKOLEM-CONST-DECL "PreProgram[Name]" |ProgramFunctions| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -2152,9 +2155,9 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   253 253 T NIL))
+   195 188 T NIL))
  (|method_names_TCC1| 0
-  (|method_names_TCC1-1| NIL 3390821142 3401690284
+  (|method_names_TCC1-1| NIL 3390821142 3403262615
    ("" (SKOSIMP*)
     (("" (TYPEPRED "methods(c!1)")
       (("" (EXPAND "is_finite")
@@ -2195,7 +2198,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
@@ -2213,28 +2216,11 @@
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
-    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
-    (|n!1| SKOLEM-CONST-DECL "{n: Name |
-         EXISTS (m: Method):
-           classes(p!1)(c!1) AND methods(c!1)(m) AND name(m) = n}"
-     |ProgramFunctions| NIL)
-    (|m!1| SKOLEM-CONST-DECL "Method[Name]" |ProgramFunctions| NIL)
-    (|injective?| CONST-DECL "bool" |functions| NIL)
-    (|x2!1| SKOLEM-CONST-DECL "({n: Name |
-    EXISTS (m: Method[Name]):
-      classes(p!1)(c!1) AND methods(c!1)(m) AND name(m) = n})"
-     |ProgramFunctions| NIL)
-    (|x1!1| SKOLEM-CONST-DECL "({n: Name |
-    EXISTS (m: Method[Name]):
-      classes(p!1)(c!1) AND methods(c!1)(m) AND name(m) = n})"
-     |ProgramFunctions| NIL)
-    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|m!1| SKOLEM-CONST-DECL "Method[Name]" |ProgramFunctions| NIL)
-    (|m!1| SKOLEM-CONST-DECL "Method[Name]" |ProgramFunctions| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL) NIL NIL
+    (|injective?| CONST-DECL "bool" |functions| NIL) NIL NIL
+    (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL) NIL NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
-    (|p!1| SKOLEM-CONST-DECL "PreProgram[Name]" |ProgramFunctions| NIL)
-    (|c!1| SKOLEM-CONST-DECL "Class[Name]" |ProgramFunctions| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL) NIL NIL
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
@@ -2251,9 +2237,9 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   270 270 T NIL))
+   216 209 T NIL))
  (|methods_TCC1| 0
-  (|methods_TCC1-1| NIL 3392356310 3401690291
+  (|methods_TCC1-1| NIL 3392356310 3403262622
    ("" (SKOSIMP*)
     (("" (USE "finite_set_induction[Class]")
       ((""
@@ -2316,7 +2302,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|nonempty_add_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
      |finite_sets| NIL)
     (|finite_set_induction| FORMULA-DECL NIL |FiniteSetInduction| NIL)
@@ -2359,19 +2345,17 @@
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL)
-    (|x!1| SKOLEM-CONST-DECL "finite_set[Class]" |ProgramFunctions| NIL)
-    (|t!1| SKOLEM-CONST-DECL "Class[Name]" |ProgramFunctions| NIL)
+    (|finite_union| JUDGEMENT-TCC NIL |finite_sets| NIL) NIL NIL
     (|member| CONST-DECL "bool" |sets| NIL)
     (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   675 674 T NIL))
+   624 621 T NIL))
  (|get_class_TCC1| 0
-  (|get_class_TCC1-1| NIL 3390821142 3401690291 ("" (SUBTYPE-TCC) NIL NIL)
-   PROVED
+  (|get_class_TCC1-1| NIL 3390821142 3403262622 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
    ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -2390,9 +2374,9 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL))
-   30 30 NIL NIL))
+   25 26 NIL NIL))
  (|get_class_in_classes| 0
-  (|get_class_in_classes-1| NIL 3400562445 3401690291
+  (|get_class_in_classes-1| NIL 3400562445 3403262622
    ("" (SKOSIMP*)
     (("" (EXPAND "get_class")
       (("" (LIFT-IF)
@@ -2405,11 +2389,11 @@
         NIL))
       NIL))
     NIL)
-   PROVED ((|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)) 7 7 T
-   SHOSTAK))
+   UNCHECKED ((|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)) 23
+   23 T SHOSTAK))
  (|lookup_mthd_TCC1| 0
-  (|lookup_mthd_TCC1-1| NIL 3396591590 3401690292 ("" (SUBTYPE-TCC) NIL NIL)
-   PROVED
+  (|lookup_mthd_TCC1-1| NIL 3396591590 3403262622 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
    ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -2423,9 +2407,9 @@
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Method| TYPE-EQ-DECL NIL |Program| NIL))
-   33 32 NIL NIL))
+   9 10 NIL NIL))
  (|lookup_mthd_TCC2| 0
-  (|lookup_mthd_TCC2-1| NIL 3396591590 3401690293
+  (|lookup_mthd_TCC2-1| NIL 3396591590 3403262622
    ("" (SKOSIMP*)
     (("" (EXPAND "every")
       (("" (EXPAND "methods")
@@ -2434,9 +2418,8 @@
         NIL))
       NIL))
     NIL)
-   PROVED
-   ((|every| ADT-DEF-DECL "boolean" |lift_adt| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
+   UNCHECKED
+   (NIL (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
@@ -2458,9 +2441,9 @@
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|method_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|methods| CONST-DECL "finite_set[Method]" |ProgramFunctions| NIL))
-   113 112 T NIL))
+   28 28 T NIL))
  (|lookup_mthd_in_methods_class| 0
-  (|lookup_mthd_in_methods_class-1| NIL 3400562626 3401690293
+  (|lookup_mthd_in_methods_class-1| NIL 3400562626 3403262623
    ("" (SKOSIMP*)
     (("" (EXPAND "lookup_mthd")
       (("" (LIFT-IF)
@@ -2470,11 +2453,11 @@
         NIL))
       NIL))
     NIL)
-   PROVED
-   ((|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL)) 7 6
-   T SHOSTAK))
+   UNCHECKED
+   ((|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL)) 83
+   83 T SHOSTAK))
  (|proper_subterm_sequence| 0
-  (|proper_subterm_sequence-2| NIL 3397378089 3401690311
+  (|proper_subterm_sequence-2| NIL 3397378089 3403262638
    ("" (INDUCT "c3")
     (("1" (GRIND) NIL NIL)
      ("2" (SKOSIMP*)
@@ -2943,7 +2926,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|some_is_exists| FORMULA-DECL NIL |listfuncs| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
@@ -2979,7 +2962,7 @@
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL))
-   1802 1720 T NIL)
+   1434 1426 T NIL)
   (|proper_subterm_sequence-1| NIL 3396269350 3396593333
    ("" (INDUCT "c3")
     (("1" (GRIND) NIL NIL)
@@ -3470,7 +3453,7 @@
     (|Body| TYPE-DECL NIL |Body_adt| NIL))
    1422 1422 T NIL))
  (|proper_subterm_set_clause_sequence| 0
-  (|proper_subterm_set_clause_sequence-1| NIL 3396269362 3401690311
+  (|proper_subterm_set_clause_sequence-1| NIL 3396269362 3403262638
    ("" (SKOSIMP*)
     (("" (EXPAND "proper_subterm_set_clause")
       (("" (LEMMA "proper_subterm_sequence")
@@ -3483,7 +3466,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|proper_subterm_set_clause| CONST-DECL "boolean" |ProgramFunctions| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
@@ -3508,9 +3491,9 @@
     (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|proper_subterm_sequence| FORMULA-DECL NIL |ProgramFunctions| NIL))
-   14 14 T NIL))
+   22 22 T NIL))
  (|proper_subterm_is_transitive| 0
-  (|proper_subterm_is_transitive-1| NIL 3396272071 3401690318
+  (|proper_subterm_is_transitive-1| NIL 3396272071 3403262645
    ("" (INDUCT "c3")
     (("1" (GRIND) NIL NIL)
      ("2" (SKOSIMP*)
@@ -3675,7 +3658,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|some_is_exists| FORMULA-DECL NIL |listfuncs| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
@@ -3724,9 +3707,9 @@
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL))
-   726 723 T SHOSTAK))
+   728 724 T SHOSTAK))
  (|subterm_subset_varnames| 0
-  (|subterm_subset_varnames-1| NIL 3396779500 3401690335
+  (|subterm_subset_varnames-1| NIL 3396779500 3403262661
    ("" (AUTO-REWRITE "union" "member" "subset?" "emptyset" "add")
     (("" (INDUCT "b2")
       (("1" (GRIND) NIL NIL)
@@ -3951,7 +3934,7 @@
         NIL NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Body| TYPE-DECL NIL |Body_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
@@ -4002,14 +3985,14 @@
     (|list| TYPE-DECL NIL |list_adt| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|some_is_exists| FORMULA-DECL NIL |listfuncs| NIL))
-   1616 1609 T SHOSTAK))
+   1589 1586 T SHOSTAK))
  (|subterm_subset_of_var| 0
-  (|subterm_subset_of_var-1| NIL 3396779041 3401690336
+  (|subterm_subset_of_var-1| NIL 3396779041 3403262663
    ("" (SKOSIMP*)
     (("" (USE "subterm_subset_varnames")
       (("" (ASSERT) (("" (GRIND) NIL NIL)) NIL)) NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
     (|subterm_subset_varnames| FORMULA-DECL NIL |ProgramFunctions| NIL)
@@ -4017,21 +4000,669 @@
     (|subset?| CONST-DECL "bool" |sets| NIL)
     (|subset_is_partial_order| NAME-JUDGEMENT "(partial_order?[set[T]])"
      |sets_lemmas| NIL))
-   191 191 T SHOSTAK)))
+   170 169 T SHOSTAK))
+ (|proper_subterm_implies_subterm| 0
+  (|proper_subterm_implies_subterm-1| NIL 3403263109 3403264258
+   ("" (INDUCT "b2")
+    (("1" (APPLY (THEN (EXPAND* "<<" "subterm") (ASSERT))) NIL NIL)
+     ("2"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -3) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)))
+      (("2" (ASSERT) NIL NIL)) NIL)
+     ("3" (SKOSIMP*) (("3" (EXPAND "<<") (("3" (PROPAX) NIL NIL)) NIL)) NIL)
+     ("4" (APPLY (THEN (SKOSIMP*) (EXPAND* "<<" "subterm") (ASSERT))) NIL NIL)
+     ("5" (APPLY (THEN (SKOSIMP*) (EXPAND* "<<" "subterm") (ASSERT))) NIL NIL)
+     ("6"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("7"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -3) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("8"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -3) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("9"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      (("9" (EXPAND "<<") (("9" (PROPAX) NIL NIL)) NIL)) NIL)
+     ("10" (APPLY (THEN (SKOSIMP*) (EXPAND* "<<" "subterm") (ASSERT))) NIL NIL)
+     ("11" (APPLY (THEN (SKOSIMP*) (EXPAND* "<<" "subterm") (ASSERT))) NIL NIL)
+     ("12"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("13"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("14"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -4) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("15"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -3) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("16"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("17"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("18" (INDUCT "CaseJML1_var")
+      (("1" (SKOSIMP*)
+        (("1" (EXPAND "<<" -2)
+          (("1" (REWRITE "some_is_exists")
+            (("1" (EXPAND "member") (("1" (PROPAX) NIL NIL)) NIL)) NIL))
+          NIL))
+        NIL)
+       ("2" (SKOSIMP*)
+        (("2" (EXPAND "every" -2)
+          (("2" (FLATTEN)
+            (("2" (EXPAND "<<" -5)
+              (("2" (EXPAND "subterm" 1)
+                (("2" (REWRITE "some_is_exists")
+                  (("2" (REWRITE "some_is_exists")
+                    (("2" (FLATTEN)
+                      (("2" (SKOSIMP*)
+                        (("2" (INST 2 "x!1")
+                          (("2" (ASSERT)
+                            (("2" (REWRITE "every_is_forall")
+                              (("2" (EXPAND "member" -5)
+                                (("2" (INST -2 "b1!1")
+                                  (("2" (INST -3 "b1!1")
+                                    (("2" (INST -4 "x!1")
+                                      (("2" (SPLIT -6)
+                                        (("1" (EXPAND "subterm")
+                                          (("1" (ASSERT) NIL NIL)) NIL)
+                                         ("2" (SPLIT -6)
+                                          (("1" (ASSERT) NIL NIL)
+                                           ("2" (ASSERT)
+                                            (("2" (FLATTEN)
+                                              (("2" (INST? -6)
+                                                (("2" (ASSERT) NIL NIL)) NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL)
+                                         ("3" (EXPAND "subterm")
+                                          (("3" (ASSERT) NIL NIL)) NIL)
+                                         ("4" (SPLIT -6)
+                                          (("1" (ASSERT) NIL NIL)
+                                           ("2" (ASSERT)
+                                            (("2" (FLATTEN)
+                                              (("2" (INST? -7)
+                                                (("2" (ASSERT) NIL NIL)) NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL)
+     ("19"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -4) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("20"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -3) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("21"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("22" (APPLY (THEN (SKOSIMP*) (EXPAND* "<<" "subterm") (ASSERT))) NIL NIL)
+     ("23"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("24" (APPLY (THEN (SKOSIMP*) (EXPAND* "<<" "subterm") (ASSERT))) NIL NIL)
+     ("25"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -4) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("26"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -3) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL)
+     ("27"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "<<" -2) (EXPAND "subterm" 1) (ASSERT)
+        (FLATTEN) (REPEAT (INST?)) (ASSERT) (EXPAND "subterm") (FLATTEN)
+        (ASSERT)))
+      NIL NIL))
+    NIL)
+   UNCHECKED
+   ((|list| TYPE-DECL NIL |list_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|CaseJML| ADT-CONSTRUCTOR-DECL "[list[[BoolExpr, Stmt]] -> (CaseJML?)]"
+     |Body_adt| NIL)
+    (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|CaseJML?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|IfThenElse?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Sequence?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Set?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Skip?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|StmtExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Throw?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|member| DEF-DECL "bool" |list_props| NIL)
+    (|null| ADT-CONSTRUCTOR-DECL "(null?)" |list_adt| NIL)
+    (|null?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|some_is_exists| FORMULA-DECL NIL |listfuncs| NIL)
+    (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (|cons| ADT-CONSTRUCTOR-DECL "[[T, list] -> (cons?)]" |list_adt| NIL)
+    (|every_is_forall| FORMULA-DECL NIL |listfuncs| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
+    (|Body_induction| FORMULA-DECL NIL |Body_adt| NIL)
+    (|subterm| ADT-DEF-DECL "boolean" |Body_adt| NIL)
+    (<< ADT-DEF-DECL "(well_founded?[Body])" |Body_adt| NIL)
+    (|well_founded?| CONST-DECL "bool" |orders| NIL)
+    (|pred| TYPE-EQ-DECL NIL |defined_types| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL))
+   114855 2249 T SHOSTAK))
+ (|subterm_transitive| 0
+  (|subterm_transitive-2| NIL 3403264428 3403268036
+   ("" (INDUCT "b3")
+    (("1" (GRIND) NIL NIL)
+     ("2"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -4) (FLATTEN)
+        (BRANCH (SPLIT -4)
+         ((THEN (EXPAND "subterm" -4) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("3" (APPLY (THEN (SKOSIMP*) (EXPAND "subterm") (ASSERT))) NIL NIL)
+     ("4" (APPLY (THEN (SKOSIMP*) (EXPAND "subterm") (ASSERT))) NIL NIL)
+     ("5" (APPLY (THEN (SKOSIMP*) (EXPAND "subterm") (ASSERT))) NIL NIL)
+     ("6"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -3) (FLATTEN)
+        (BRANCH (SPLIT -3)
+         ((THEN (EXPAND "subterm" -3) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("7"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -4) (FLATTEN)
+        (BRANCH (SPLIT -4)
+         ((THEN (EXPAND "subterm" -4) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("8"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -4) (FLATTEN)
+        (BRANCH (SPLIT -4)
+         ((THEN (EXPAND "subterm" -4) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("9" (APPLY (THEN (SKOSIMP*) (EXPAND "subterm") (ASSERT))) NIL NIL)
+     ("10" (APPLY (THEN (SKOSIMP*) (EXPAND "subterm") (ASSERT))) NIL NIL)
+     ("11" (APPLY (THEN (SKOSIMP*) (EXPAND "subterm") (ASSERT))) NIL NIL)
+     ("12"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -3) (FLATTEN)
+        (BRANCH (SPLIT -3)
+         ((THEN (EXPAND "subterm" -3) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("13"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -3) (FLATTEN)
+        (BRANCH (SPLIT -3)
+         ((THEN (EXPAND "subterm" -3) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("14"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -5) (FLATTEN)
+        (BRANCH (SPLIT -5)
+         ((THEN (EXPAND "subterm" -5) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -4 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("15"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -4) (FLATTEN)
+        (BRANCH (SPLIT -4)
+         ((THEN (EXPAND "subterm" -4) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("16"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -3) (FLATTEN)
+        (BRANCH (SPLIT -3)
+         ((THEN (EXPAND "subterm" -3) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("17"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -3) (FLATTEN)
+        (BRANCH (SPLIT -3)
+         ((THEN (EXPAND "subterm" -3) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("18" (INDUCT "CaseJML1_var")
+      (("1" (SKOSIMP*)
+        (("1" (EXPAND "subterm" -3)
+          (("1" (REWRITE "some_is_exists")
+            (("1" (EXPAND "member")
+              (("1" (REPLACE -3) (("1" (PROPAX) NIL NIL)) NIL)) NIL))
+            NIL))
+          NIL))
+        NIL)
+       ("2" (SKOSIMP*)
+        (("2" (EXPAND "subterm" -4)
+          (("2" (EXPAND "subterm" 1)
+            (("2" (EXPAND "every" -2)
+              (("2" (FLATTEN)
+                (("2" (ASSERT)
+                  (("2" (REWRITE "some_is_exists")
+                    (("2" (REWRITE "some_is_exists")
+                      (("2" (SPLIT -6)
+                        (("1" (REPLACE -1)
+                          (("1" (EXPAND "subterm" -6) (("1" (PROPAX) NIL NIL))
+                            NIL))
+                          NIL)
+                         ("2" (SKOSIMP*)
+                          (("2" (INST 2 "x!1")
+                            (("2" (ASSERT)
+                              (("2" (EXPAND "member" -1)
+                                (("2" (INST -3 "b1!1" "b2!1")
+                                  (("2" (INST -4 "b1!1" "b2!1")
+                                    (("2" (INST -5 "b1!1" "b2!1")
+                                      (("2" (ASSERT)
+                                        (("2" (SPLIT -1)
+                                          (("1" (ASSERT)
+                                            (("1" (REPLACE -1)
+                                              (("1" (SPLIT -2)
+                                                (("1" (ASSERT) NIL NIL)
+                                                 ("2" (ASSERT) NIL NIL))
+                                                NIL))
+                                              NIL))
+                                            NIL)
+                                           ("2" (ASSERT)
+                                            (("2" (REWRITE "every_is_forall")
+                                              (("2" (INST -6 "x!1")
+                                                (("2" (ASSERT)
+                                                  (("2" (FLATTEN)
+                                                    (("2"
+                                                      (INST -6 "b1!1" "b2!1")
+                                                      (("2"
+                                                        (INST -7 "b1!1" "b2!1")
+                                                        (("2" (ASSERT)
+                                                          (("2" (ASSERT) NIL
+                                                            NIL))
+                                                          NIL))
+                                                        NIL))
+                                                      NIL))
+                                                    NIL))
+                                                  NIL))
+                                                NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
+                              NIL))
+                            NIL))
+                          NIL))
+                        NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL))
+          NIL))
+        NIL))
+      NIL)
+     ("19"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -5) (FLATTEN)
+        (BRANCH (SPLIT -5)
+         ((THEN (EXPAND "subterm" -5) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -4 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("20"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -4) (FLATTEN)
+        (BRANCH (SPLIT -4)
+         ((THEN (EXPAND "subterm" -4) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("21"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -3) (FLATTEN)
+        (BRANCH (SPLIT -3)
+         ((THEN (EXPAND "subterm" -3) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("22" (APPLY (THEN (SKOSIMP*) (EXPAND "subterm")))
+      (("22" (ASSERT) NIL NIL)) NIL)
+     ("23"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -3) (FLATTEN)
+        (BRANCH (SPLIT -3)
+         ((THEN (EXPAND "subterm" -3) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("24" (APPLY (THEN (SKOSIMP*) (EXPAND "subterm")))
+      (("24" (ASSERT) NIL NIL)) NIL)
+     ("25"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -5) (FLATTEN)
+        (BRANCH (SPLIT -5)
+         ((THEN (EXPAND "subterm" -5) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -4 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("26"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -4) (FLATTEN)
+        (BRANCH (SPLIT -4)
+         ((THEN (EXPAND "subterm" -4) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))
+          (THEN (INST -3 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL)
+     ("27"
+      (APPLY
+       (THEN (SKOSIMP*) (EXPAND "subterm" 1) (EXPAND "subterm" -3) (FLATTEN)
+        (BRANCH (SPLIT -3)
+         ((THEN (EXPAND "subterm" -3) (ASSERT) (REPLACE -1) (ASSERT))
+          (THEN (INST -2 "b1!1" "b2!1") (ASSERT))))))
+      NIL NIL))
+    NIL)
+   PROVED
+   ((|list| TYPE-DECL NIL |list_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
+    (|every| ADT-DEF-DECL "boolean" |list_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|CaseJML| ADT-CONSTRUCTOR-DECL "[list[[BoolExpr, Stmt]] -> (CaseJML?)]"
+     |Body_adt| NIL)
+    (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|CaseJML?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|IfThenElse?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Sequence?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Set?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Skip?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|StmtExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Throw?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|member| DEF-DECL "bool" |list_props| NIL)
+    (|null| ADT-CONSTRUCTOR-DECL "(null?)" |list_adt| NIL)
+    (|null?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (|pred| TYPE-EQ-DECL NIL |defined_types| NIL)
+    (|some_is_exists| FORMULA-DECL NIL |listfuncs| NIL)
+    (|every_is_forall| FORMULA-DECL NIL |listfuncs| NIL)
+    (|cons| ADT-CONSTRUCTOR-DECL "[[T, list] -> (cons?)]" |list_adt| NIL)
+    (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |ProgramFunctions| NIL)
+    (|Body_induction| FORMULA-DECL NIL |Body_adt| NIL)
+    (|subterm| ADT-DEF-DECL "boolean" |Body_adt| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL))
+   360318 1636 T NIL)
+  (|subterm_transitive-1| NIL 3403264410 NIL
+   (";;; Proof proper_subterm_is_transitive-1 for formula ProgramFunctions.proper_subterm_is_transitive"
+    (INDUCT "c3")
+    (("1" (GRIND) NIL)
+     ("2" (SKOSIMP*)
+      (("2" (EXPAND "<<" 1)
+        (("2" (EXPAND "<<" -4)
+          (("2" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))))))))))
+     ("3" (GRIND) NIL) ("4" (GRIND) NIL) ("5" (GRIND) NIL) ("6" (GRIND) NIL)
+     ("7" (SKOSIMP*)
+      (("7" (EXPAND "<<" 1)
+        (("7" (EXPAND "<<" -4)
+          (("7" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))))))))))
+     ("8" (SKOSIMP*)
+      (("8" (EXPAND "<<" 1)
+        (("8" (EXPAND "<<" -4)
+          (("8" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))))))))))
+     ("9" (GRIND) NIL) ("10" (GRIND) NIL) ("11" (GRIND) NIL) ("12" (GRIND) NIL)
+     ("13" (GRIND) NIL)
+     ("14" (SKOSIMP*)
+      (("14" (EXPAND "<<" 1)
+        (("14" (EXPAND "<<" -5)
+          (("14" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))
+             ("5" (INST -4 "c1!1" "c2!1") (("5" (ASSERT) NIL)))
+             ("6" (INST -4 "c1!1" "c2!1") (("6" (ASSERT) NIL)))))))))))
+     ("15" (SKOSIMP*)
+      (("15" (EXPAND "<<" 1)
+        (("15" (EXPAND "<<" -4)
+          (("15" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))))))))))
+     ("16" (GRIND) NIL) ("17" (GRIND) NIL)
+     ("18" (SKOSIMP*)
+      (("18" (REWRITE "every_is_forall[[BoolExpr, Stmt]]")
+        (("18" (EXPAND "<<" (-3 1))
+          (("18" (REWRITE "some_is_exists[[BoolExpr, Stmt]]")
+            (("18" (REWRITE "some_is_exists[[BoolExpr, Stmt]]")
+              (("18" (SKOSIMP*)
+                (("18" (INST?)
+                  (("18" (ASSERT)
+                    (("18" (FLATTEN)
+                      (("18" (INST 1 "x!1")
+                        (("18" (ASSERT)
+                          (("18" (SPLIT -5)
+                            (("1" (ASSERT) NIL)
+                             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+                             ("3" (ASSERT) NIL)
+                             ("4" (INST -3 "c1!1" "c2!1")
+                              (("4" (ASSERT) NIL)))))))))))))))))))))))))))
+     ("19" (SKOSIMP*)
+      (("19" (EXPAND "<<" 1)
+        (("19" (EXPAND "<<" -5)
+          (("19" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))
+             ("5" (ASSERT) NIL)
+             ("6" (INST -4 "c1!1" "c2!1") (("6" (ASSERT) NIL)))))))))))
+     ("20" (SKOSIMP*)
+      (("20" (EXPAND "<<" 1)
+        (("20" (EXPAND "<<" -4)
+          (("20" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))))))))))
+     ("21" (GRIND) NIL) ("22" (GRIND) NIL) ("23" (GRIND) NIL)
+     ("24" (GRIND) NIL)
+     ("25" (SKOSIMP*)
+      (("25" (EXPAND "<<" 1)
+        (("25" (EXPAND "<<" -5)
+          (("25" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))
+             ("5" (ASSERT) NIL)
+             ("6" (INST -4 "c1!1" "c2!1") (("6" (ASSERT) NIL)))))))))))
+     ("26" (SKOSIMP*)
+      (("26" (EXPAND "<<" 1)
+        (("26" (EXPAND "<<" -4)
+          (("26" (SPLIT -)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL)))
+             ("3" (ASSERT) NIL)
+             ("4" (INST -3 "c1!1" "c2!1") (("4" (ASSERT) NIL)))))))))))
+     ("27" (SKOSIMP*)
+      (("27" (EXPAND "<<" 1)
+        (("27" (EXPAND "<<" -3)
+          (("27" (SPLIT -3)
+            (("1" (ASSERT) NIL)
+             ("2" (INST -2 "c1!1" "c2!1") (("2" (ASSERT) NIL))))))))))))
+    ";;; developed with SHOSTAK decision procedures")
+   UNCHECKED NIL NIL NIL NIL NIL)))
 (|WellFormedProgram|
+ (|wf_Body_TCC1| 0
+  (|wf_Body_TCC1-1| NIL 3403260982 3403262663 ("" (SUBTYPE-TCC) NIL NIL)
+   UNCHECKED
+   ((|union| CONST-DECL "set" |sets| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
+    (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
+     NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    NIL NIL NIL NIL
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |WellFormedProgram| NIL))
+   60 59 NIL NIL))
  (|wf_Body_preserved_by_proper_subterm| 0
-  (|wf_Body_preserved_by_proper_subterm-1| NIL 3401450425 3401620922
+  (|wf_Body_preserved_by_proper_subterm-1| NIL 3401450425 3403268123
    ("" (SKOLEM 1 "p!1" _ _)
     (("" (SKOSIMP*)
       (("" (EXPAND "wf_Body")
-        (("" (SKOSIMP*)
-          (("" (INST?)
-            (("" (ASSERT)
-              (("" (USE "subterm_subset_varnames")
-                (("" (ASSERT)
-                  (("" (EXPAND "subset?")
-                    (("" (EXPAND "member")
-                      (("" (INST?) (("" (ASSERT) NIL NIL)) NIL)) NIL))
+        (("" (PROP)
+          (("1" (SKOSIMP*)
+            (("1" (INST?)
+              (("1" (ASSERT)
+                (("1" (USE "subterm_subset_varnames")
+                  (("1" (ASSERT)
+                    (("1" (EXPAND "subset?")
+                      (("1" (EXPAND "member")
+                        (("1" (INST?) (("1" (ASSERT) NIL NIL)) NIL)) NIL))
+                      NIL))
+                    NIL))
+                  NIL))
+                NIL))
+              NIL))
+            NIL)
+           ("2" (SKOSIMP*)
+            (("2" (INST? -4)
+              (("2" (ASSERT)
+                (("2" (LEMMA "proper_subterm_implies_subterm")
+                  (("2" (INST? -1 :WHERE -5)
+                    (("2" (ASSERT)
+                      (("2" (LEMMA "subterm_transitive")
+                        (("2" (INST -1 "b1!2" "b2!1" "b1!1")
+                          (("2" (ASSERT) NIL NIL)) NIL))
+                        NIL))
+                      NIL))
                     NIL))
                   NIL))
                 NIL))
@@ -4041,16 +4672,18 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|member| CONST-DECL "bool" |sets| NIL)
+   PROVED
+   ((|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|subterm_transitive| FORMULA-DECL NIL |ProgramFunctions| NIL)
+    (|proper_subterm_implies_subterm| FORMULA-DECL NIL |ProgramFunctions| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
     (|subset?| CONST-DECL "bool" |sets| NIL)
     (|subterm_subset_varnames| FORMULA-DECL NIL |ProgramFunctions| NIL)
     (|Body| TYPE-DECL NIL |Body_adt| NIL)
-    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |WellFormedProgram| NIL)
-    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL))
-   6 6 T SHOSTAK))
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |WellFormedProgram| NIL))
+   7047 138 T SHOSTAK))
  (|wf_Body_CaseJML| 0
-  (|wf_Body_CaseJML-1| NIL 3401607410 3401620923
+  (|wf_Body_CaseJML-1| NIL 3401607410 3403268743
    ("" (INDUCT "l")
     (("1" (GRIND) NIL NIL)
      ("2" (SKOSIMP*)
@@ -4058,36 +4691,118 @@
         (("2" (EXPAND "wf_Branches")
           (("2" (EXPAND "wf_Body")
             (("2" (EXPAND "var_names" 1 1)
-              (("2" (EXPAND "every" 1)
-                (("2" (AUTO-REWRITE "union" "member")
-                  (("2" (ASSERT)
-                    (("2" (IFF)
-                      (("2" (SPLIT 1)
-                        (("1" (SKOSIMP*)
-                          (("1" (SPLIT -2)
-                            (("1" (ASSERT)
-                              (("1" (SPLIT 1)
-                                (("1" (SKOSIMP*)
-                                  (("1" (INST? -3) (("1" (ASSERT) NIL NIL))
+              (("2" (EXPAND "subterm" 1 1)
+                (("2" (EXPAND "every" 1)
+                  (("2" (AUTO-REWRITE "union" "member")
+                    (("2" (ASSERT)
+                      (("2" (IFF)
+                        (("2" (SPLIT 1)
+                          (("1" (SKOSIMP*)
+                            (("1" (SPLIT -3)
+                              (("1" (ASSERT)
+                                (("1" (SPLIT 1)
+                                  (("1" (SKOSIMP*)
+                                    (("1" (INST? -3) (("1" (ASSERT) NIL NIL))
+                                      NIL))
+                                    NIL)
+                                   ("2" (SKOSIMP*)
+                                    (("2" (INST? -5)
+                                      (("2" (ASSERT)
+                                        (("2" (REWRITE "some_is_exists")
+                                          (("2" (INST? 2)
+                                            (("2" (ASSERT) NIL NIL)) NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL)
+                                   ("3" (SKOSIMP*)
+                                    (("3" (INST? -3) (("3" (ASSERT) NIL NIL))
+                                      NIL))
+                                    NIL)
+                                   ("4" (SKOSIMP*)
+                                    (("4" (INST? -5)
+                                      (("4" (ASSERT)
+                                        (("4" (REWRITE "some_is_exists")
+                                          (("4" (INST? 2)
+                                            (("4" (ASSERT) NIL NIL)) NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
                                     NIL))
-                                  NIL)
-                                 ("2" (SKOSIMP*)
-                                  (("2" (INST? -3) (("2" (ASSERT) NIL NIL))
+                                  NIL))
+                                NIL)
+                               ("2" (SKOSIMP*)
+                                (("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL))
+                                NIL)
+                               ("3" (SKOSIMP*)
+                                (("3" (INST? -4)
+                                  (("3" (ASSERT)
+                                    (("3" (REWRITE "some_is_exists")
+                                      (("3" (ASSERT)
+                                        (("3" (EXPAND "subterm" -2)
+                                          (("3" (REWRITE "some_is_exists")
+                                            (("3" (SKOSIMP*)
+                                              (("3" (INST 2 "x!1")
+                                                (("3" (ASSERT) NIL NIL)) NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
                                     NIL))
                                   NIL))
                                 NIL))
-                              NIL)
-                             ("2" (SKOSIMP*)
-                              (("2" (INST?) (("2" (ASSERT) NIL NIL)) NIL))
                               NIL))
-                            NIL))
-                          NIL)
-                         ("2" (SKOSIMP*)
-                          (("2" (ASSERT)
-                            (("2" (SPLIT -4)
-                              (("1" (INST? -2) (("1" (ASSERT) NIL NIL)) NIL)
-                               ("2" (INST? -3) (("2" (ASSERT) NIL NIL)) NIL)
-                               ("3" (INST? -6) (("3" (ASSERT) NIL NIL)) NIL))
+                            NIL)
+                           ("2" (SKOSIMP*)
+                            (("2" (ASSERT)
+                              (("2" (FLATTEN)
+                                (("2" (ASSERT)
+                                  (("2" (SPLIT 1)
+                                    (("1" (SKOSIMP*)
+                                      (("1" (SPLIT -1)
+                                        (("1" (INST? -2)
+                                          (("1" (ASSERT) NIL NIL)) NIL)
+                                         ("2" (INST? -4)
+                                          (("2" (ASSERT) NIL NIL)) NIL)
+                                         ("3" (INST? -8)
+                                          (("3" (ASSERT) NIL NIL)) NIL))
+                                        NIL))
+                                      NIL)
+                                     ("2" (SKOSIMP*)
+                                      (("2" (ASSERT)
+                                        (("2" (REWRITE "some_is_exists")
+                                          (("2" (SKOSIMP*)
+                                            (("2" (SPLIT -2)
+                                              (("1" (SPLIT -3)
+                                                (("1" (INST? -5)
+                                                  (("1" (ASSERT) NIL NIL)) NIL)
+                                                 ("2" (INST? -7)
+                                                  (("2" (ASSERT) NIL NIL))
+                                                  NIL))
+                                                NIL)
+                                               ("2" (INST? -10)
+                                                (("2" (ASSERT)
+                                                  (("2" (EXPAND "subterm" 2)
+                                                    (("2"
+                                                      (REWRITE
+                                                       "some_is_exists")
+                                                      (("2" (INST? 2)
+                                                        (("2" (ASSERT) NIL
+                                                          NIL))
+                                                        NIL))
+                                                      NIL))
+                                                    NIL))
+                                                  NIL))
+                                                NIL))
+                                              NIL))
+                                            NIL))
+                                          NIL))
+                                        NIL))
+                                      NIL))
+                                    NIL))
+                                  NIL))
+                                NIL))
                               NIL))
                             NIL))
                           NIL))
@@ -4102,16 +4817,29 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
+   PROVED
+   ((|member| DEF-DECL "bool" |list_props| NIL)
+    (|some_is_exists| FORMULA-DECL NIL |listfuncs| NIL)
+    (|pred| TYPE-EQ-DECL NIL |defined_types| NIL)
+    (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (|cons| ADT-CONSTRUCTOR-DECL "[[T, list] -> (cons?)]" |list_adt| NIL)
+    (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL)
     (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
-    NIL NIL NIL NIL
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
     (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
-    (|union| CONST-DECL "set" |sets| NIL) NIL
+    (|union| CONST-DECL "set" |sets| NIL)
+    (|subterm| ADT-DEF-DECL "boolean" |Body_adt| NIL)
+    (|some| ADT-DEF-DECL "boolean" |list_adt| NIL)
+    (|every| ADT-DEF-DECL "boolean" |list_adt| NIL)
     (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
@@ -4152,9 +4880,9 @@
     (|JType| TYPE-DECL NIL |JType_adt| NIL)
     (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|Val| TYPE-DECL NIL |Val_adt| NIL) (|list| TYPE-DECL NIL |list_adt| NIL))
-   148 148 T SHOSTAK))
+   61206 1007 T SHOSTAK))
  (|wf_program_variables_disjoint| 0
-  (|wf_program_variables_disjoint-1| NIL 3393587608 3401620923
+  (|wf_program_variables_disjoint-1| NIL 3393587608 3403262669
    ("" (SKOSIMP)
     (("" (TYPEPRED "p!1")
       (("" (EXPAND* "wf_Program" "wf_program_variables_disjoint_def")
@@ -4183,9 +4911,9 @@
     (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
     (|wf_program_variables_disjoint_def| CONST-DECL "boolean"
      |WellFormedProgram| NIL))
-   2 2 T SHOSTAK))
+   37 37 T SHOSTAK))
  (|wf_program_variables_not_reserved_words| 0
-  (|wf_program_variables_not_reserved_words-1| NIL 3394987767 3401620923
+  (|wf_program_variables_not_reserved_words-1| NIL 3394987767 3403262669
    ("" (SKOSIMP*)
     (("" (TYPEPRED "p!1")
       (("" (EXPAND "wf_Program")
@@ -4218,9 +4946,9 @@
     (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
     (|wf_program_variables_not_reserved_words_def| CONST-DECL "boolean"
      |WellFormedProgram| NIL))
-   2 1 T SHOSTAK))
+   2 2 T SHOSTAK))
  (|wf_program_has_unique_class_names| 0
-  (|wf_program_has_unique_class_names-1| NIL 3390201065 3401620923
+  (|wf_program_has_unique_class_names-1| NIL 3390201065 3403262669
    ("" (SKOSIMP)
     (("" (TYPEPRED "p!1")
       (("" (EXPAND* "wf_Program" "wf_program_has_unique_class_names_def")
@@ -4249,9 +4977,9 @@
     (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
     (|wf_program_has_unique_class_names_def| CONST-DECL "boolean"
      |WellFormedProgram| NIL))
-   22 22 T SHOSTAK))
+   3 3 T SHOSTAK))
  (|wf_program_has_wf_classes| 0
-  (|wf_program_has_wf_classes-1| NIL 3393587755 3401620923
+  (|wf_program_has_wf_classes-1| NIL 3393587755 3403262669
    ("" (SKOSIMP)
     (("" (TYPEPRED "p!1")
       (("" (EXPAND "wf_Program")
@@ -4283,9 +5011,9 @@
     (|wf_Program| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
     (|wf_Classes| CONST-DECL "boolean" |WellFormedProgram| NIL))
-   2 3 T SHOSTAK))
+   2 2 T SHOSTAK))
  (|wf_class_has_unique_method_names| 0
-  (|wf_class_has_unique_method_names-1| NIL 3393587790 3401620923
+  (|wf_class_has_unique_method_names-1| NIL 3393587790 3403262670
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_Class")
       (("" (FLATTEN) (("" (INST?) (("" (ASSERT) NIL NIL)) NIL)) NIL)) NIL))
@@ -4300,9 +5028,9 @@
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Method| TYPE-EQ-DECL NIL |Program| NIL))
-   3 3 T SHOSTAK))
+   20 20 T SHOSTAK))
  (|wf_program_methods_only_in_one_class| 0
-  (|wf_program_methods_only_in_one_class-1| NIL 3401699461 3401699538
+  (|wf_program_methods_only_in_one_class-1| NIL 3401699461 3403262670
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_program_methods_only_in_one_class")
       (("" (TYPEPRED "p!1")
@@ -4337,7 +5065,7 @@
         NIL))
       NIL))
     NIL)
-   PROVED
+   UNCHECKED
    ((|wf_program_methods_only_in_one_class| CONST-DECL "boolean"
      |WellFormedProgram| NIL)
     (|wf_Classes| CONST-DECL "boolean" |WellFormedProgram| NIL)
@@ -4363,5 +5091,5 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   7720 91 T SHOSTAK)))
+   7 7 T SHOSTAK)))
 

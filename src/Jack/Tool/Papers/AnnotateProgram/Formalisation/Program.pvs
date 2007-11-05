@@ -442,6 +442,17 @@ BEGIN
         b2 << b1 IMPLIES subset?(var_names(b2), v)
 
 
+  proper_subterm_implies_subterm : LEMMA % :-)
+    FORALL(b1, b2 : Body) : 
+      b1 << b2 IMPLIES subterm(b1, b2) 
+
+
+  subterm_transitive : LEMMA % :-)
+    FORALL(b1, b2, b3 : Body) :
+      subterm(b1, b2) IMPLIES
+        subterm(b2, b3) IMPLIES
+          subterm(b1, b3)
+
 %  program_code(p : PreProgram)(s : Stmt) : boolean =
 %    EXISTS(c : Class, m : Method) :
 %      classes(p)(c) AND
@@ -484,7 +495,7 @@ BEGIN
     (FORALL(v : Name) : var_names(b)(v) IMPLIES ext_declared_var_names(p)(v))
     AND
     (FORALL(b1 : Body) : Set?(b1) IMPLIES 
-                         b1 << b IMPLIES 
+                         subterm(b1, b) IMPLIES 
                          var_names(getGhostDecls(p))(target(b1)))
 
   wf_Body_preserved_by_proper_subterm : LEMMA % :-)
