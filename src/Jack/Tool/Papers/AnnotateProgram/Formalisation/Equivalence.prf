@@ -1,24 +1,32 @@
-(|Equivalence|
- (|IMP_VariableNames_TCC1| 0
-  (|IMP_VariableNames_TCC1-1| NIL 3396603944 3396604128
-   ("" (USE "infinite_namespace") NIL NIL) UNCHECKED
-   ((|infinite_namespace| FORMULA-DECL NIL |Equivalence| NIL)) 647 4 T NIL))
- (|IMP_AnnotateProgram_TCC1| 0
-  (|IMP_AnnotateProgram_TCC1-1| NIL 3396603944 3396604138
-   ("" (USE "CP_is_enumerable") NIL NIL) UNCHECKED
-   ((|CP_is_enumerable| FORMULA-DECL NIL |Equivalence| NIL)) 668 0 T NIL))
- (|IMP_AnnotateProgram_TCC2| 0
-  (|yes| "" 3396604154 3396604154 ("" (USE "name_of_exists") NIL NIL) UNCHECKED
-   NIL 1208 19 T SHOSTAK)
-  (|IMP_AnnotateProgram_TCC2-1| NIL 3396603944 3396603953
-   ("" (ASSUMING-TCC) NIL NIL) PROVED
-   ((|name_of_exists| FORMULA-DECL NIL |Equivalence| NIL)) 151 151 NIL NIL))
- (|guard_to_expression_behavior_TCC1| 0
-  (|guard_to_expression_behavior_TCC1-1| NIL 3401705163 3401705185
-   ("" (SKOSIMP*) (("" (EXPAND "id") (("" (PROPAX) NIL NIL)) NIL)) NIL) PROVED
-   ((|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)) 743 3 T NIL))
- (|eval_action_behavior_TCC1| 0
-  (|eval_action_behavior_TCC1-1| NIL 3401705163 3401705194
-   ("" (SKOSIMP*) (("" (EXPAND "id") (("" (PROPAX) NIL NIL)) NIL)) NIL) PROVED
-   ((|id| CONST-DECL "(bijective?[T, T])" |identity| NIL)) 566 2 T NIL)))
+(Equivalence
+ (IMP_VariableNames_TCC1 0
+  (IMP_VariableNames_TCC1-1 nil 3396603944 3396604128
+   ("" (use "infinite_namespace") nil nil) unchecked (nil) 647 4 t
+   nil))
+ (IMP_AnnotateProgram_TCC1 0
+  (IMP_AnnotateProgram_TCC1-1 nil 3396603944 3396604138
+   ("" (use "CP_is_enumerable") nil nil) unchecked (nil) 668 0 t nil))
+ (IMP_AnnotateProgram_TCC2 0
+  (yes "" 3396604154 3396604154 ("" (use "name_of_exists") nil nil)
+   unchecked nil 1208 19 t shostak)
+  (IMP_AnnotateProgram_TCC2-1 nil 3396603944 3396603953
+   ("" (assuming-tcc) nil nil) proved (nil) 151 151 nil nil))
+ (guard_to_expression_behavior_TCC1 0
+  (guard_to_expression_behavior_TCC1-1 nil 3401705163 3403367438
+   ("" (skosimp*) (("" (expand* "id" "wf_BoolExpr") nil nil)) nil)
+   proved
+   ((wf_BoolExpr const-decl "boolean" WellFormedProgram nil)
+    (id const-decl "(bijective?[T, T])" identity nil))
+   393321 380 t nil))
+ (eval_action_behavior_TCC1 0
+  (eval_action_behavior_TCC1-1 nil 3401705163 3403367829
+   ("" (skosimp) (("" (expand "id") (("" (postpone) nil nil)) nil))
+    nil)
+   unfinished ((id const-decl "(bijective?[T, T])" identity nil))
+   332787 290 t nil))
+ (actions_have_no_side_effects_TCC1 0
+  (actions_have_no_side_effects_TCC1-1 nil 3403366900 3403368158
+   ("" (skosimp*) (("" (expand "id") (("" (postpone) nil nil)) nil))
+    nil)
+   unfinished nil 317339 670 t nil)))
 

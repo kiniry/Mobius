@@ -582,6 +582,28 @@ BEGIN
             union(var_names(program(mp)), var_names(new_gvds(mp))))
 
 
+  % AT: I haven't used this but if we can prove it it will simplify things,
+  % in particular the proofs next lemmas.
+  % If proved I could use it on execute_action_preserves_MVA_vars_modeled
+  proper_subterm_wf_Body : LEMMA
+    FORALL (b, b1 : Body) :
+      b1 << b IMPLIES
+      wf_Body(ann_program(mp))(b) IMPLIES
+        wf_Body(ann_program(mp))(b1)
+
+  wf_Expr_MVA_implies_wf_Body : LEMMA
+    FORALL (e : Expr) :
+      wf_Expr(mva(mp))(e) IMPLIES
+        wf_Body(ann_program(mp))(e)
+
+
+  % PROVE
+  one_action_source_wf_Body : LEMMA
+    FORALL (a : Action, oa : OneAction) :
+      wf_Action(mva(mp))(a) IMPLIES
+      member(oa, a) IMPLIES
+        wf_Body(ann_program(mp))(source(oa))
+
   % PROVE
   one_action_translation_wf_Body : LEMMA
     FORALL (a : Action, oa : OneAction) :
@@ -642,6 +664,7 @@ BEGIN
   ann_program_preserves_wf_body : LEMMA
     FORALL (b : (wf_Body(program(mp)))) :
       wf_Body(ann_program(mp))(b)
+
 
   get_class_ann_program : LEMMA % :-)
     FORALL (c1, c2 : Class, tgt : Val) :

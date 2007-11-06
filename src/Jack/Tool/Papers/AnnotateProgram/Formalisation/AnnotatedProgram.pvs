@@ -170,13 +170,14 @@ BEGIN
            (s1, s2 : APState, v : Val, n : nat)
            (vn : Name) :
       wf_Body(p)(c) IMPLIES
+      wf_state(p)(s1) IMPLIES
       body_has_no_side_effects(p)(source(c)) IMPLIES
       derive(p)(c, s1, v, s2)(n) IMPLIES
       NOT target(c) = vn IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
   % Consider the evaluation of a CaseJML on a non-exceptional state for which
-  % there is a branch b1 whose condition has no side-effects and holds and all
+  % there is a branch b1 whose condition has no side-effects and holds, and all
   % the branches before b1 have no side-effect (and hence do not throw exceptions),
   % and do not hold.
   % Then the statement associated with b1 will be eventually evaluated and the
