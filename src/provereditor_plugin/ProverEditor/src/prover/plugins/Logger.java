@@ -10,7 +10,7 @@ import java.io.PrintStream;
  */
 public class Logger {
 	/** the error stream */
-	public final static NormalLogger err = new ErrorLogger();
+	public final static /*@ non_null @*/ NormalLogger err = new ErrorLogger();
 	/** the warning stream */
 	public final static NormalLogger warn = new WarningLogger();
 	/** the output stream */
