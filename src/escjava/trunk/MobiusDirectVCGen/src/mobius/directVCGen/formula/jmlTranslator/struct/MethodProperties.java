@@ -61,6 +61,9 @@ public final class MethodProperties extends ContextProperties {
   
   /** the arguments of the method. */
   public LinkedList<QuantVariableRef> fArgs;
+
+
+  private int fAssert;
   
   /**
    * initialize the properties with default values.
@@ -104,5 +107,11 @@ public final class MethodProperties extends ContextProperties {
       res.addAll(list);
     }
     return res;
+  }
+
+
+
+  public int getAssertNumber() {
+    return fAssert++;
   }
 }

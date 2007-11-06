@@ -2,10 +2,12 @@ package mobius.directVCGen.formula;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
+import javafe.ast.MethodDecl;
+import javafe.ast.RoutineDecl;
 import mobius.directVCGen.formula.annotation.AAnnotation;
+import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
@@ -20,8 +22,6 @@ import org.apache.bcel.generic.MethodGen;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
-import javafe.ast.RoutineDecl;
-
 
 
 public class Util {
@@ -32,7 +32,12 @@ public class Util {
    * @return The name of the Annotations version of the method
    */
   public static String getMethodName(RoutineDecl decl) {
-    return decl.parent.id + "Annotations." + decl.id();
+    if (decl instanceof MethodDecl) {
+      return decl.parent.id + "Annotations." + decl.id();
+    }
+    else {
+      return decl.parent.id + "Annotations._init_";
+    }
   }
   
   public static InstructionHandle findLastInstruction(List<LineNumberGen> list) {
@@ -215,20 +220,48 @@ public class Util {
     }
     
     QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
-    if (qvr != null) {
-      args.addFirst(Expression.sym("Normal ", new Term [] {
-                        Expression.sym("Some", new Term[] {qvr})}));
+    
+    if (!isVoid(fMeth)) {
+      args.addFirst(Expression.normal(Expression.some(qvr)));
     }
     else {
-      args.addFirst(Expression.sym("Normal None", new Term [] {}));
+      args.addFirst(Expression.normal(Expression.none()));
     }
     tab = args.toArray(new Term [args.size()]);
     return tab;
+  }
+
+  public static boolean isVoid(RoutineDecl fMeth) {
+    if (fMeth instanceof MethodDecl) {
+      final MethodDecl md = (MethodDecl) fMeth;
+      return javafe.tc.Types.isVoidType(md.returnType);
+      
+    }
+    else {
+      return true;
+    }
   }
   public static Term[] getExcPostconditionArgs(RoutineDecl fMeth) {
     final Term[] tab = getNormalPostconditionArgs(fMeth);
     tab[0] = Expression.sym("Exception", 
                            new Term [] {Lookup.getExceptionalPostcondition(fMeth).getRVar()});
     return tab;
+  }
+  
+  public static List<QuantVariableRef> buildArgs(final MethodProperties prop) {
+    final List<QuantVariableRef> args = new LinkedList<QuantVariableRef>();
+    // olds
+    
+    for (QuantVariableRef qvr: prop.fArgs) {
+      if (qvr.qvar.name.equals("this")) {
+        continue;
+      }
+      args.add(Expression.old(qvr));  
+    }
+    
+    // new :)
+    args.addAll(prop.fArgs);
+    args.addAll(prop.getLocalVars());
+    return args;
   }
 }

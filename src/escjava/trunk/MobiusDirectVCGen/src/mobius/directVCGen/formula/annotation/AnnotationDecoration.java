@@ -7,6 +7,7 @@ import java.util.Vector;
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -146,7 +147,7 @@ public class AnnotationDecoration extends ASTDecoration {
       super.set(n, res);
     }
     res.fInv = new Assert("invariant" + fInvCount,
-                          buildArgs(prop),
+                          Util.buildArgs(prop),
                           inv);
 
     fInvCount++;
@@ -154,22 +155,7 @@ public class AnnotationDecoration extends ASTDecoration {
     
   }
   
-  private List<QuantVariableRef> buildArgs(final MethodProperties prop) {
-    final List<QuantVariableRef> args = new LinkedList<QuantVariableRef>();
-    // olds
-    
-    for (QuantVariableRef qvr: prop.fArgs) {
-      if (qvr.qvar.name.equals("this")) {
-        continue;
-      }
-      args.add(Expression.old(qvr));  
-    }
-    
-    // new :)
-    args.addAll(prop.fArgs);
-    args.addAll(prop.getLocalVars());
-    return args;
-  }
+
   /**
    * Retrieve the invariant associated with the node.
    * @param n the node decorated

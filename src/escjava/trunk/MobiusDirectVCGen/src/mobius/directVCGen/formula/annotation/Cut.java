@@ -1,5 +1,8 @@
 package mobius.directVCGen.formula.annotation;
 
+import java.util.List;
+
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 /**
@@ -13,9 +16,15 @@ public class Cut extends AAnnotation {
    * @param t the term which is the formula contained in 
    * the cut
    */
-  public Cut(final Term t) {
-    super(t);
+  public Cut(final String name, 
+                final List<QuantVariableRef> args, 
+                final Term t) {
+    super(name, args, t);
+    if (t == null) {
+      throw new NullPointerException();
+    }
   }
+
   
   /*
    * (non-Javadoc)

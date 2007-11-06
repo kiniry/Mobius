@@ -67,8 +67,6 @@ public final class AnnotationVisitor extends ABasicVisitor {
     fMet = met;
     
 
-
-
   }
 
 
@@ -82,11 +80,20 @@ public final class AnnotationVisitor extends ABasicVisitor {
     
     if (fAnnot.getAnnotPost(x) != null) {
       // let's do something
+      
 //      System.out.println("post " + Location.toLineNumber(x.getStartLoc()) + ": " + 
 //                         fAnnot.getAnnotPost(x));
     }
     if (fAnnot.getAnnotPre(x) != null) {
       // let's do something else
+      final int lineNum = Location.toLineNumber(x.getStartLoc());
+      final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
+      final List<AAnnotation> list = fAnnot.getAnnotPre(x);
+      for (AAnnotation annot: list) {
+        buildMker(annot);
+        buildDefiner(annot);      
+      }
+      
 //      System.out.println("pre " + Location.toLineNumber(x.getStartLoc()) + ": " + 
 //                         fAnnot.getAnnotPre(x));
 

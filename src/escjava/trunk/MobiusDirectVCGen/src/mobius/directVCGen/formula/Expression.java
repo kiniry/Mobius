@@ -151,7 +151,12 @@ public final class Expression {
              field.id.toString() + "FieldSignature";
       return var(name, Type.sortField);
     }
-    return Formula.lf.mkQuantVariable(decl, name);
+    
+    QuantVariable res = Formula.lf.mkQuantVariable(decl, name);
+    if (res.type.equals(Ref.sort)) {
+      res = Formula.lf.mkQuantVariable(name, Heap.sortValue);
+    }
+    return res;
   }
 
   /**
@@ -208,14 +213,6 @@ public final class Expression {
     return v;
   }
   
-  public static Term realvar(final GenericVarDecl arg) {
-    final QuantVariableRef v = rvar(var(arg));
-//    Term res = fVariables.get(v);
-//    if (res == null) {
-//      res = v;
-//    }
-    return v;
-  }
   
   public static List<QuantVariableRef> fVariables = new ArrayList<QuantVariableRef>();
 
@@ -381,5 +378,18 @@ public final class Expression {
                    new Term[] {lv, idx, Heap.sortToValue(val)});
     //(LocalVar.update lv1 2%N (Num (I (MDom.Int.const 1))))
     return upd;
+  }
+  
+  
+  public static Term some(final Term s) {
+    return Expression.sym("Some", new Term [] {s});
+  }
+  
+  public static Term none() {
+    return Expression.sym("None", new Term [] {});
+  }
+  
+  public static Term normal(final Term optionres) {
+    return Expression.sym("Normal", new Term [] {optionres});
   }
 }

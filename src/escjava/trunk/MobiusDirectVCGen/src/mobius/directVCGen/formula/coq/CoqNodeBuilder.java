@@ -502,7 +502,7 @@ public class CoqNodeBuilder extends EscNodeBuilder {
    */
   @Override
   public SPred buildNewObject(final SMap oldh, final SAny type, 
-                              final SMap heap, final SRef r) {
+                              final SMap heap, final SValue r) {
     final CPred left = new CPred("Heap.new", new STerm[] {oldh, new CMap("p"), 
                                                           new CType("Heap.LocationObject", 
                                                                     new STerm[] {type})});

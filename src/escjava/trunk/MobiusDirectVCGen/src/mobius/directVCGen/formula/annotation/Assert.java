@@ -16,13 +16,9 @@ public class Assert extends AAnnotation {
    * assert.
    * @param t the term of the assert, should not be <code>null</code>
    */
-  public Assert(final Term t) {
-    super(t);
-    if (t == null) {
-      throw new NullPointerException();
-    }
-  }
-  public Assert(String name, List<QuantVariableRef> args, final Term t) {
+  public Assert(final String name, 
+                final List<QuantVariableRef> args, 
+                final Term t) {
     super(name, args, t);
     if (t == null) {
       throw new NullPointerException();

@@ -37,6 +37,7 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Assume;
@@ -491,21 +492,26 @@ public class JmlVisitor extends BasicJMLTranslator {
     return null;
   }
 
-  // Save values of all arguments as ghost variables. Now we also have the argument's value of the pre-state, not only of post-state
   /**
+   * Save values of all arguments as ghost variables. 
+   * Now we also have the argument's value of the pre-state, 
+   * not only of post-state.
    * @param annos Vector of AAnotations, here Annotations = Assignments
    * @param o Properties Object holding routines declaration
+   * @deprecated
    */
+  // FIXME: I think this function is totally wrong
+  // since old are computed by the wp.
   public void argsToGhost(final List<AAnnotation> annos, 
                           final Object o) {  
     final RoutineDecl m = ((MethodProperties) o).getDecl();
     
-    for (final FormalParaDecl p: m.args.toArray()) {
-      final Term t1 = Expression.rvar(p);
-      final Term t2 = Expression.old(p);
-      final Set.Assignment assignment = new Set.Assignment((QuantVariableRef) t2, t1);
-      annos.add(new Set((QuantVariableRef) t2, assignment)); 
-    }
+//    for (final FormalParaDecl p: m.args.toArray()) {
+//      final Term t1 = Expression.rvar(p);
+//      final Term t2 = Expression.old(p);
+//      final Set.Assignment assignment = new Set.Assignment((QuantVariableRef) t2, t1);
+//      annos.add(new Set((QuantVariableRef) t2, assignment)); 
+//    }
   }
   
   /**
@@ -528,7 +534,7 @@ public class JmlVisitor extends BasicJMLTranslator {
         t = (Term)s.accept(this, prop);
         switch (s.getTag()) {
           case javafe.parser.TagConstants.ASSERT:
-            annos.add(new Cut(t));
+            annos.add(new Cut("assert" + prop.getAssertNumber(), Util.buildArgs(prop), t));
             break;
           case TagConstants.ASSUME:
             annos.add(new Assume(t));

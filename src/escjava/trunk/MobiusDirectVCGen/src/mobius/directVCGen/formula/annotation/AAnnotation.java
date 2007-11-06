@@ -46,6 +46,9 @@ public abstract class AAnnotation {
   public AAnnotation(String name, List<QuantVariableRef> args,
                      final Term term) {
     formula = term;
+    if (args == null) {
+      throw new NullPointerException();
+    }
     fArgs = args;
     fName = name;
   }

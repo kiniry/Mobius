@@ -268,7 +268,7 @@ public class ExpressionVisitor extends ABasicVisitor {
   @Override
   public Object visitVariableAccess(final VariableAccess m, final Object o) {
     final VCEntry res = (VCEntry) o;
-    final Term v = Expression.realvar(m.decl);
+    final Term v = Expression.rvar(m.decl);
     return  new Post(res.fPost.substWith(v));
   }
 

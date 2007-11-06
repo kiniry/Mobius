@@ -208,7 +208,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
     Post pre;
     if (left instanceof VariableAccess) {
       final VariableAccess va = (VariableAccess) left;
-      final Term var = Expression.realvar(va.decl);
+      final Term var = Expression.rvar(va.decl);
       
       pre = new Post(val, Util.substVarWithVal(entry.fPost, var, val));
                                             

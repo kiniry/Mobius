@@ -19,6 +19,7 @@ import javafe.ast.MethodInvocation;
 import javafe.ast.NewArrayExpr;
 import javafe.ast.NewInstanceExpr;
 import javafe.ast.ObjectDesignator;
+import javafe.ast.RoutineDecl;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VarInitVec;
@@ -46,9 +47,9 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     super(vis);
   }
 
-  public static List<QuantVariableRef> mkArguments(final MethodInvocation mi) {
+  public static List<QuantVariableRef> mkArguments(final RoutineDecl decl) {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
-    final FormalParaDeclVec fpdvec = mi.decl.args;
+    final FormalParaDeclVec fpdvec = decl.args;
     final FormalParaDecl[] args = fpdvec.toArray();
     for (FormalParaDecl fpd: args) {
       v.add(Expression.rvar(fpd));
@@ -66,27 +67,35 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   }
   
   public Post methodInvocation(final MethodInvocation mi, final VCEntry entry) {
-    final MethodDecl fMeth = mi.decl;
-    
-    
+    getInvocation(mi.decl, mi.args, entry);
+    entry.fPost = getPre(mi.od, entry);
+    final List<QuantVariableRef> v = mkArguments(mi.decl);
+    final ExprVec ev = mi.args;
+    for (int i = ev.size() - 1; i >= 0; i--) {
+      entry.fPost = new Post(v.get(i), entry.fPost);
+      entry.fPost = getPre(ev.elementAt(i), entry);
+    }
+    return entry.fPost;
+  }
+
+  private void getInvocation(final RoutineDecl meth, ExprVec methArgs, final VCEntry entry) {
     
     final QuantVariableRef newThis = Expression.rvar(Heap.sortValue);
     final QuantVariableRef newHeap = Heap.newVar();
     
     //mking the args
-    final String name = Util.getMethodName(fMeth);
+    final String name = Util.getMethodName(meth);
     final LinkedList<Term> args = new LinkedList<Term> ();
     args.add(Heap.varPre);
-    args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
+    args.addAll(Lookup.getInst().getPreconditionArgs(meth));
     
     // mking the meth norm post
-    final QuantVariableRef resVar = Lookup.getNormalPostcondition(fMeth).getRVar();
-    if (resVar != null) {
-      args.addFirst(Expression.sym("Normal", new Term [] {
-                          Expression.sym("Some", new Term [] {Heap.sortToValue(resVar)})}));
+    final QuantVariableRef resVar = Lookup.getNormalPostcondition(meth).getRVar();
+    if (!Util.isVoid(meth)) {
+      args.addFirst(Expression.normal(Expression.some(Heap.sortToValue(resVar))));
     }
     else {
-      args.addFirst(Expression.sym("Normal None", new Term [] {}));
+      args.addFirst(Expression.normal(Expression.none()));
     }
     Term[] tab = args.toArray(new Term [args.size()]);
     for (int i = 0; i < tab.length; i++) {
@@ -103,7 +112,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final Post methNormPost = new Post(resVar, Expression.sym(name + ".mk_post", tab));
     
     // mking the meth excp post
-    final QuantVariableRef excVar = Lookup.getExceptionalPostcondition(fMeth).getRVar();
+    final QuantVariableRef excVar = Lookup.getExceptionalPostcondition(meth).getRVar();
     tab = args.toArray(new Term [args.size()]);
     tab [0] = Expression.sym("Exception", new Term [] {excVar});
     for (int i = 0; i < tab.length; i++) {
@@ -122,7 +131,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
    
    
     // mking the meth pre
-    final List<QuantVariableRef> preArgs = Lookup.getInst().getPreconditionArgs(fMeth);
+    final List<QuantVariableRef> preArgs = Lookup.getInst().getPreconditionArgs(meth);
     
     tab = preArgs.toArray(new Term [preArgs.size()]);
     for (int i = 0; i < tab.length; i++) {
@@ -155,15 +164,8 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
     entry.fPost = new Post(Logic.forall(newHeap, Logic.and(tNormal, tExcp)));
     //entry.fPost = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
-    final List<QuantVariableRef> v = mkArguments(mi);
-    final ExprVec ev = mi.args;
-    for (int i = ev.size() - 1; i >= 0; i--) {
-      entry.fPost = new Post(v.get(i), entry.fPost);
-      entry.fPost = getPre(ev.elementAt(i), entry);
-    }
+  
     entry.fPost = new Post(newThis, entry.fPost);
-    entry.fPost = getPre(mi.od, entry);
-    return entry.fPost;
   }
 
 
@@ -255,45 +257,26 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   }
 
   public Post newInstance(final NewInstanceExpr ni, final VCEntry entry) {
-    final QuantVariableRef newheap = Heap.newVar();
+    getInvocation(ni.decl, ni.args, entry);
 
 
-    final Post normalPost = Lookup.getNormalPostcondition(ni.decl);
-    final Post excpPost = Lookup.getExceptionalPostcondition(ni.decl);
-    final Term pre = Lookup.getPrecondition(ni.decl);
-    final QuantVariableRef newThis = entry.fPost.getRVar();
-
-    // first: the exceptional post
-    final QuantVariableRef exc = Expression.rvar(Ref.sort);
-    final Term tExcp = Logic.forall(exc.qvar, Logic.implies(excpPost.substWith(
-                                                                 exc).subst(Ref.varThis, 
-                                                                            newThis), 
-                                           Util.getExcpPost(Type.javaLangThrowable(), 
-                                                                entry).substWith(exc)));
-    // the normal post
-    final QuantVariableRef res = entry.fPost.getRVar();
-    Term tNormal = normalPost.substWith(res);
-    tNormal = Logic.forall(res, Logic.implies(tNormal, 
-                                              entry.fPost.substWith(res)).subst(Ref.varThis, 
-                                                                                newThis));
-
-    entry.fPost = new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp))));
-
+   final QuantVariableRef newThis = entry.fPost.getRVar();
+   final QuantVariableRef newHeap = Heap.newVar();
+   
     entry.fPost = new Post(Logic.forall(newThis, 
-                                       Logic.forall(newheap, 
+                                       Logic.forall(newHeap, 
                                                     Logic.implies(Heap.newObject(Heap.var, 
                                                                        Type.translateToName(ni.type),
-                                                                       newheap, newThis), 
+                                                                       newHeap, newThis), 
                                                           entry.fPost.subst(Heap.var, 
-                                                                            newheap)))));
-
-    final List<QuantVariableRef> v = mkArguments(ni);
+                            
+                                                                           newHeap)))));
+    final List<QuantVariableRef> v = mkArguments(ni.decl);
     final ExprVec ev = ni.args;
     for (int i = ev.size() - 1; i >= 0; i--) {
       entry.fPost = new Post(v.get(i), entry.fPost);
       entry.fPost = getPre(ev.elementAt(i), entry);
     }
-    entry.fPost = new Post(newThis, entry.fPost);
     return entry.fPost;
   }
 

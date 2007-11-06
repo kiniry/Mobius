@@ -8,9 +8,9 @@ public class Test2 {
 		Test2 t = new Test2(4);
 	}
 	
-	//@ requires g == 4;
-	//@ requires  7 != 13;
+	//@ requires g == 4 &&  7 != 13;
 	public Test2(int g){
+    super();
 		//@ assert g < 11;
 		int k = 55 + 55;
 		hallo(10, 1);
