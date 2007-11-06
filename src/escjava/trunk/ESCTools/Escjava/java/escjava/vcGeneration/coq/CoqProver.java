@@ -107,10 +107,13 @@ public class CoqProver extends ProverType {
     			File f = new File(iter.next().toString());
     			if(f.exists()) {
     				File res = f.getParentFile();
-    				if(res.getName().equals("src"))
-    					res = res.getParentFile();
-    				src = res.getAbsolutePath();
-    				break;
+            if (res != null) {
+              if(res.getName().equals("src")) {
+                res = res.getParentFile();
+              }
+              src = res.getAbsolutePath();
+              break;
+            }
     			}
     		}
     	}
