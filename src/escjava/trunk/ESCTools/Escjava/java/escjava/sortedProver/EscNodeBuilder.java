@@ -15,14 +15,14 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	// values of sort type...
 	final public Sort sortType = registerSort("type", sortRef);//= sortRef; // registerSort("type", sortAny);
 	final public Sort sortLock = sortRef; //registerSort("lock", sortRef);
-	final public Sort sortField = registerSort("field", sortMap);
-	
+  final public Sort sortField = registerSort("field", sortMap);
   
 	final public Sort sortIntField = registerMapSort(sortRef, sortInt, sortField);
 	final public Sort sortRealField = registerMapSort(sortRef, sortReal, sortField);
 	final public Sort sortBoolField = registerMapSort(sortRef, sortBool, sortField);
 	final public Sort sortRefField = registerMapSort(sortRef, sortRef, sortField);
-	
+
+  
 	final public Sort sortOwner = registerMapSort(sortRef, sortRef, sortField); // RefField
 	
 	final public Sort sortArray = sortRef;

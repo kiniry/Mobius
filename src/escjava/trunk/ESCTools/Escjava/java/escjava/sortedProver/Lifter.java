@@ -343,7 +343,14 @@ public class Lifter extends EscNodeBuilder
     public FnTerm(FnSymbol fn, Term[] args, Sort s) {
       this.fn = fn;
       this.args = args;
-      retType = s;
+      
+      if (s == null) {
+        retType = fn.retType;
+        //System.out.println(fn);
+      }
+      else {
+        retType = s;
+      }
       
     }
 
@@ -362,6 +369,10 @@ public class Lifter extends EscNodeBuilder
 		void enforceArgType(int i, Sort r)
 		{
 			r = follow(r);
+      if (args[i].getSort() == null) {
+        System.out.println(args[i] + " " +  args[i].getClass());
+          
+      }
 			Sort p = follow(args[i].getSort());
 			
 			if (isEarlySort (r, p))
@@ -1163,6 +1174,9 @@ public class Lifter extends EscNodeBuilder
 	
 	Sort follow(Sort s)
 	{
+    if (s == null) {
+      System.out.println("hell");
+    }
 		return s.theRealThing();
 	}
 	
@@ -1496,7 +1510,7 @@ public class Lifter extends EscNodeBuilder
 					Assert.notFalse(arity <= 2);
 					Sort ft = typeToSort(((FieldDecl)sym).type);
 					if (arity == 0) {
-						Sort s = registerMapSort(sortRef, ft);
+						Sort s = registerMapSort(sortRef, ft, sortField);
 						unify(fn.retType, s, "mc");
 					} else {
 						unify(fn.retType, ft, "mc1");
@@ -1682,7 +1696,7 @@ public class Lifter extends EscNodeBuilder
 				if (Modifiers.isStatic(d.getModifiers()))
 					s = typeToSort(d.type);
 				else
-					s = registerMapSort(sortRef, typeToSort(d.type));
+					s = registerMapSort(sortRef, typeToSort(d.type), sortField);
 				//ErrorSet.caution("VariableAccess " + name + " -> " + s);
 			} else if (decl instanceof LocalVarDecl || decl instanceof FormalParaDecl) {
 				GenericVarDecl g = (GenericVarDecl)decl;
