@@ -22,7 +22,7 @@ public class AssertAttribute extends AttributeInfo {
 	/** Name of the attribute as in the corresponding constant pool entry. */
 	public static final String ATTRIBUTE_NAME = "Assert";
 
-	Assert[] assert;
+	Assert[] asser;
 
 	public AssertAttribute(int attributeLength) {
 		super(attributeLength);
@@ -30,9 +30,9 @@ public class AssertAttribute extends AttributeInfo {
 
 	public void read(DataInput in)
 		throws InvalidByteCodeException, IOException {
-		assert = new Assert[in.readUnsignedShort()];
-		for (int i = 0; i < assert.length; i++) {
-			assert[i] = new Assert(in);
+		asser = new Assert[in.readUnsignedShort()];
+		for (int i = 0; i < asser.length; i++) {
+			asser[i] = new Assert(in);
 		}
 	}
 
@@ -50,10 +50,10 @@ public class AssertAttribute extends AttributeInfo {
 
 	public String getAssertText() {
 		String res = "\n";
-		for (int i = 0; i < assert.length; i++) {
+		for (int i = 0; i < asser.length; i++) {
 			if (i != 0)
 				res += "   ;\n";
-			res += assert[i].toString();
+			res += asser[i].toString();
 		}
 		return res += "\n";
 	}
@@ -63,15 +63,15 @@ public class AssertAttribute extends AttributeInfo {
 class Assert {
 
 	short index;
-	Formula assert;
+	Formula asser;
 
 	Assert(DataInput in) throws IOException {
 		index = (short) in.readUnsignedShort();
-		assert = new Formula(in);
+		asser = new Formula(in);
 	}
 
 	public String toString() {
-		return "@" + index + " " + assert;
+		return "@" + index + " " + asser;
 	}
 
 }

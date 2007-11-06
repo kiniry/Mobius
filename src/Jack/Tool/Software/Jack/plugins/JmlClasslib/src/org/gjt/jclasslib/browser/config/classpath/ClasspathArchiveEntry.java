@@ -51,9 +51,9 @@ public class ClasspathArchiveEntry extends ClasspathEntry {
 
         try {
             JarFile jarFile = new JarFile(archive);
-            Enumeration enum = jarFile.entries();
-            while (enum.hasMoreElements()) {
-                JarEntry entry = (JarEntry)enum.nextElement();
+            Enumeration en = jarFile.entries();
+            while (en.hasMoreElements()) {
+                JarEntry entry = (JarEntry)en.nextElement();
                 if (!entry.isDirectory() && entry.getName().toLowerCase().endsWith(CLASSFILE_SUFFIX)) {
                     addEntry((stripClassSuffix(entry.getName())), model, reset);
                 }
