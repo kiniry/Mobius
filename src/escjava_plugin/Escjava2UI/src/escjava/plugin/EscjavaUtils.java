@@ -290,21 +290,21 @@ public class EscjavaUtils {
 		}
 	  String suffix = getSimplifySuffix(os);
 	  if (suffix == null) return null;
-	  String name = "Simplify-1.5.4." + suffix;
+	  String name = "Simplify-1.5." + suffix;
 	  name = Utils.findPluginResource(EscjavaUtils.SIMPLIFY_PLUGIN_ID,name);
 		return name;
 	}
 		
   public static String getSimplifySuffix(String osname) {
 		String suffix = null;
-		if (osname.startsWith("Windows")) suffix = "exe";
+		if (osname.startsWith("Windows")) suffix = "4.exe";
 		else if (osname.equals("linux")||
-		         osname.equals("Linux")) suffix = "linux";
+		         osname.equals("Linux")) suffix = "4.linux";
 		else if (osname.equals("darwin")||
 		         osname.equals("MacOSX")||
-		         osname.equals("Mac OS X")) suffix = "macosx";
+		         osname.equals("Mac OS X")) suffix = "5.macosx";
 		else if (osname.equals("solaris")||
-		         osname.equals("Solaris")) suffix = "solaris";
+		         osname.equals("Solaris")) suffix = "4.solaris";
 		else Log.log("Unexpected OS: " + osname);
 		return suffix;
   }
