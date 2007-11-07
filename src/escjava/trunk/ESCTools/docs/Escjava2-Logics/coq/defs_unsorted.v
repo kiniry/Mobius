@@ -13,7 +13,6 @@ Variable S: Set.
 
 
 
-
 (* Some arithmetic things *)
 Variable S_to_Z : S -> Z.
 Variable Z_to_S : Z -> S.
@@ -439,5 +438,13 @@ end; autorewrite with escj; auto.
 Ltac startsc := unfold not; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
 (* unfoldArrAx. *)
 
+Definition int := Z.
+Definition Field := S.
+
+Definition Path := S.
+Definition RefType := Types.
+Definition time := S.
+Coercion S_to_Z : S >-> Z.
+Coercion Z_to_S : Z >-> S.
 
 
