@@ -1,19 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ESC/Java2 plug-in
-Bundle-SymbolicName: mobius.escjava.plugin;singleton:=true
+Bundle-SymbolicName: mobius.escjava2.plugin;singleton:=true
 Bundle-Version: 2.0.3
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.console,
  org.eclipse.core.runtime,
- org.eclipse.core.resources,
  org.eclipse.jdt.core,
  org.eclipse.jface.text,
  org.eclipse.debug.core,
- mobius.escjava2.esctools
+ mobius.escjava2.esctools;bundle-version="2.0.3";visibility:=reexport
 Import-Package: org.eclipse.ui.texteditor
 Eclipse-LazyStart: true
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 Project
 Bundle-Activator: escjava.plugin.EscjavaPlugin
-Bundle-ClassPath: EscjavaPlugin.jar
+Bundle-ClassPath: EscjavaPlugin.jar,
+ src/

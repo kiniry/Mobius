@@ -115,7 +115,7 @@
 <!-- This extension defines a new marker type for Esc/Java problems -->
 <!-- The attribute is used to associate additional information with the marker -->  
    <extension
-         id="escjavaWarningMarker"
+         id="mobius.escjava2.escjavaWarningMarker"
          name="ESC/Java2 Warning"
          point="org.eclipse.core.resources.markers">
       <super
