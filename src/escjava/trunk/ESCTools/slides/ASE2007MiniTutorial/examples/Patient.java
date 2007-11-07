@@ -2,11 +2,11 @@ import java.util.*;
 public class Patient extends Person {
   //@ public invariant 0 <= age && age <= 150;
 
-  protected /*@ spec_public rep @*/ List log;
+  protected /*@ spec_public @*/ List log;
   //@ public initially log.size() == 0;
   /*@ public invariant (\forall int i;
     @      0 <= i && i < log.size();
-    @      log.get(i) instanceof rep String); @*/
+    @      log.get(i) instanceof String); @*/
   /*@ public constraint
     @      \old(log.size()) <= log.size();
     @ public constraint (\forall int i; 
@@ -20,13 +20,13 @@ public class Patient extends Person {
     @      && log.get(\old(log.size()+1)).equals(obs); 
     @*/
   public void recordVisit(String obs) {
-    log.add(new /*@ rep @*/ String(obs));
+    log.add(new String(obs));
   }
 
   //@ requires g.equals("female") || g.equals("male");
   //@ assignable gender, log;
   //@ ensures gender.equals(g);
-  public Patient(String g) { super(g); log = new /*@ rep @*/ ArrayList(); }
+  public Patient(String g) { super(g); log = new ArrayList(); }
 
   protected /*@ spec_public @*/
      boolean ageDiscount = false;  //@ in age;

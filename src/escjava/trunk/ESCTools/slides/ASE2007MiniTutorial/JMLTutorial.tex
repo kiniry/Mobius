@@ -1449,12 +1449,12 @@ and $h$ is undefined on negative numbers.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{My Answer}
+\frametitle{An Answer}
 \lstinputlisting[linerange={3-11}]{examples/Hailstone2.java}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{My Answer, Using Nesting}
+\frametitle{An Answer, Using Nesting}
 \lstinputlisting[linerange={3-11}]{examples/Hailstone.java}
 \note{Explain the nesting of spec cases by conjoining the outer
   requires onto each inner requires.  That is, it's sugar for the
@@ -2046,7 +2046,7 @@ Extended Invariant:
   && 0 <= age && age <= 150
       && (\forall int i;
             0 <= i && i < log.size();
-            log.get(i) instanceof rep String)
+            log.get(i) instanceof String)
   && gender.equals("female")
 \end{lstlisting}
 \end{frame}
@@ -2565,7 +2565,7 @@ Tool Work
 Mobius effort (Joe Kiniry and others)
 
 \item
-Annotation Support (Jass group, Kristina Boysen)
+Java 5 Annotation Support (Jass group, Kristina Boysen)
 
 \item
 Testing (Mark Utting, Yoonsik Cheon, $\ldots$).
@@ -2578,12 +2578,14 @@ Testing (Mark Utting, Yoonsik Cheon, $\ldots$).
 \begin{itemize}
 \item
 Tools.
-
+\begin{itemize}
 \item
 Java 1.5 support.
 
 \item
 Eclipse support.
+
+\end{itemize}
 
 \item
 Documentation.
