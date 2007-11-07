@@ -752,16 +752,25 @@ limitations under the License.
 
    <requires>
       <import feature="SimplifyFeature" version="1.5.5" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.ui.editors"/>
    </requires>
 
    <plugin
-         id="mobius.escjava.plugin"
+         id="mobius.escjava2.esctools"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="mobius.escjava2.esctools"
+         id="mobius.escjava2.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

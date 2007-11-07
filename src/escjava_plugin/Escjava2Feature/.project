@@ -3,6 +3,8 @@
 	<name>Escjava2Feature</name>
 	<comment></comment>
 	<projects>
+		<project>Escjava2UI</project>
+		<project>Esctools</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
