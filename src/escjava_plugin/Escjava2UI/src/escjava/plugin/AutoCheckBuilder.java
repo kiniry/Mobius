@@ -75,7 +75,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 		} catch (Exception e) {
 			throw new CoreException(
 					new Status(IStatus.ERROR, 
-							       EscjavaPlugin.PLUGIN_ID,
+							       EscjavaPlugin.UI_PLUGIN_ID,
 							       IStatus.OK, // plug-in specific value
 							       "Exception caught during ESC/Java2 Checking",
 							       e));

@@ -41,9 +41,10 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	//@ constraint \not_modified(plugin);
 	
 	/**
-	 * The id of the plugin.
+	 * The IDs of the plugins.
 	 */
-	public static final String PLUGIN_ID = "mobius.escjava2.plugin";
+	public static final String UI_PLUGIN_ID = "mobius.escjava2.plugin";
+	public static final String TOOLS_PLUGIN_ID = "mobius.escjava2.esctools";
 	
 	/**
 	 * Name of jarfile of ESC/Java2 build (has been "esctools2.jar" for a *long* time).
@@ -58,17 +59,18 @@ public class EscjavaPlugin extends AbstractUIPlugin {
   /**
    * The name of the automatically-generated project that contains our specfications.
    */
-  public static final String JMLSPECS_PROJECT_NAME = EscjavaPlugin.JMLSPECS_PROJECT_NAME;
+  public static final String JMLSPECS_PROJECT_NAME = "jmlspecs";
   
 	/**
 	 * This is the id of the auto-check nature extension made for Escjava checking
 	 */
-	public static final String ESCJAVA_AUTOCHECK_NATURE = PLUGIN_ID + ".autocheckEscjavaNature";
+	public static final String ESCJAVA_AUTOCHECK_NATURE = UI_PLUGIN_ID + ".autocheckEscjavaNature";
 	
 	/**
 	 * This is the id of the auto-check builder extension made for Escjava checking
 	 */
-	public static final String ESCJAVA_AUTOCHECK_BUILDER = PLUGIN_ID + ".autocheckEscjavaBuilder";
+	public static final String ESCJAVA_AUTOCHECK_BUILDER = UI_PLUGIN_ID + ".autocheckEscjavaBuilder";
+	
 
 	/**
 	 * The constructor.

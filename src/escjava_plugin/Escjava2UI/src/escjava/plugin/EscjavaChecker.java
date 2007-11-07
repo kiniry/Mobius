@@ -162,14 +162,14 @@ public class EscjavaChecker extends escjava.Main
 		Utils.showMessageInUI(null, "Esc/Java",
         "Could not locate specifications");
         Log.errorlog(
-            "Could not locate specifications", null);
+            "Could not locate specifications", e1);
         return false;
 	}
 	  
 	  inputs.add("-classpath");
 	  inputs.add(Utils.getProjectClassPath(project));
 	  
-	  // FIXME - can avboid getting simplify if we are not doing any static checking
+	  // FIXME - can avoid getting simplify if we are not doing any static checking
 	  
 	  String loc;
 	  try {

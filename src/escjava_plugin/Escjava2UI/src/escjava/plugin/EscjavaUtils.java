@@ -73,7 +73,7 @@ public class EscjavaUtils {
 	 * @throws Exception
 	 */
 	static public String findSpecs() throws Exception {
-		return Utils.findPluginResource(EscjavaPlugin.PLUGIN_ID, 
+		return Utils.findPluginResource(EscjavaPlugin.TOOLS_PLUGIN_ID, 
 		                                EscjavaPlugin.ESCJAVA_JAR_FILENAME);
 	}
 	
@@ -237,7 +237,7 @@ public class EscjavaUtils {
 			IResource r = Utils.getRoot().findMember(p);
 			if (r instanceof IFolder) {
 				if (((IContainer)r).findMember(pp) != null) return true;
-			} else if (cpe.endsWith("jmlspecs.jar") ||
+			} else if (cpe.endsWith("jmlspecs.jar") ||  cpe.endsWith("escspecs.jar") ||
 					   cpe.endsWith(EscjavaPlugin.ESCJAVA_JAR_FILENAME)) return true;
 			// FIXME - should really check if this has 'pp' in it
 			//   the above is really a hack

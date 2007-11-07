@@ -19,7 +19,7 @@ import pluginlib.Utils;
  */
 public class Options {
 	/** A copy of the plugin's id */
-	final private static String PLUGINID = EscjavaPlugin.PLUGIN_ID + ".";
+	final private static String PLUGINID = EscjavaPlugin.UI_PLUGIN_ID + ".";
 	
 	/** The option button corresponding to Eclipse logging. */
 	static public AbstractPreference.BooleanOption logging = new AbstractPreference.BooleanOption(
@@ -216,7 +216,7 @@ public class Options {
 		for (int i=0; i<n; ++i) {
 			boolean def = !(wnames[i].equals("Deadlock"));
 			warningOptions[i] = new AbstractPreference.BooleanOption(
-					(EscjavaPlugin.PLUGIN_ID + ".EscjavaWarning-" + wnames[i]),
+					(EscjavaPlugin.UI_PLUGIN_ID + ".EscjavaWarning-" + wnames[i]),
 					def,
 					wnames[i],
 					""); // FIXME - tooltip

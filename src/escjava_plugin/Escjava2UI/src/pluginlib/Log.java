@@ -124,7 +124,7 @@ public class Log {
 	 */
 	//@ requires msg != null;	
 	//@ modifies log.content;
-	public static void errorlog(String msg, Throwable e) {
+	public static void errorlog(String msg, /*@ non_null @*/ Throwable e) {
 		log.ierrorlog(msg,e);
 	}
 	
