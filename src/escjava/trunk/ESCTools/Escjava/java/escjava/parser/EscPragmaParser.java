@@ -1618,6 +1618,7 @@ public class EscPragmaParser extends Parse
         }
 
         case TagConstants.REFINE:
+        case TagConstants.REFINES:
         {
           checkNoModifiers(tag, loc);
           int sloc = scanner.startingLoc;

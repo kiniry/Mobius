@@ -451,7 +451,7 @@ Don't complain, but don't do it twice either. ???
 			"Could not find file referenced in refine annotation: " + filename);
 		    return gf;
      
-    // FIXME - hsould be able to have refined files that are not in regular files as well
+    // FIXME - should be able to have refined files that are not in regular files as well
 		}
 	    }
 	    return null;
