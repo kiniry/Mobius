@@ -196,9 +196,10 @@ class MethodExecutor extends ASignatureExecutor {
     fOut.incTab();
     
     final InstructionList il = mg.getInstructionList();
-    il.setPositions();
+
 
     if (il != null) {
+      il.setPositions();
       InstructionHandle ih = il.getInstructionHandles()[0];
       
       int pos = 0;
