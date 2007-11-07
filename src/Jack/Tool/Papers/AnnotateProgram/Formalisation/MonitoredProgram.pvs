@@ -233,8 +233,7 @@ BEGIN
          ENDIF
     #)
 
-  run_monitored_program(mp : MonitoredProgram)
-                       (main : (wf_Method(program(mp))), arg : int)
+  run_monitored_program(mp : MonitoredProgram)(main : Name, arg : int)
                        (this_val : Val)(final : MPState) : boolean =
     run_FullProgram(mp)(main, arg)(initial_MP_state(mp)(this_val), final)
 

@@ -349,19 +349,15 @@ BEGIN
 
 
   derives(p : FullProgram)
-         (b : (wf_Body(program(p))), sigma1 : FullState)(v : Val, sigma2 : FullState) : bool =
+         (b : (wf_Body(program(p))), sigma1 : FullState)
+         (v : Val, sigma2 : FullState) : bool =
     EXISTS (n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n)
 
-%   spec_expr_has_no_side_effects(p : FullProgram)(e : (wf_Body(program(p)))) : boolean =
-%     FORALL (s1, s2 : FullState, v : Val, n : nat) :
-%       derive(p)(e, s1, v, s2)(n) IMPLIES s1 = s2
-
-  run_FullProgram(p : FullProgram)(main : (wf_Method(program(p))), arg : int)
+  run_FullProgram(p : FullProgram)(main : Name, arg : int)
                  (initial, final : FullState) : boolean =
     LET c  = StmtExpr(MethodCall(RExpr(RefVarEval(This)),
-                                 name(main),
-                                 NExpr(Int(arg))))
+                                 main, NExpr(Int(arg))))
     IN
       derives(p)(c, initial)(Unit, final)
 

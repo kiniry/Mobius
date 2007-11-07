@@ -53,7 +53,7 @@ BEGIN
       derive(p)(b, s1, v, s2)(n) IMPLIES
         s1 = s2
 
-  run_annotated_program(p : Program)(main : (wf_Method(p)), arg : int)
+  run_annotated_program(p : Program)(main : Name, arg : int)
                        (this_val : Val)(final : APState) : boolean =
     run_FullProgram(p)(main, arg)(initial_AP_state(p)(this_val), final)
 
