@@ -79,7 +79,7 @@ ifndef SIMPLIFY
     $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
   endif
   ifeq ("${os}","Darwin")
-    export SIMPLIFY =  Simplify-1.5.4.macosx
+    export SIMPLIFY =  Simplify-1.5.5.macosx
     $(warning Guessing a value for SIMPLIFY: ${SIMPLIFY})
   endif
   ifeq ("${os}","CYGWIN_NT-5.1")
