@@ -1,5 +1,5 @@
 #!/bin/bash
-# $Id$
+# $Id: escj 3049 2007-10-22 14:24:06Z dcochran $
 # Copyright 2001, Compaq Computer Corporation
 # Copyright 2003 University of Nijmegen
 # Copyright 2003-2005 David R. Cok, P.Chalin
@@ -113,21 +113,21 @@ fi
 
 if [ -z "$BCEL_LIB" ]; then
   BCEL_LIB=$ESCTOOLS_ROOT/Utils/BCEL/bcel-5.2/bcel-5.2.jar
-  wwarn "Guessing BCEL_LIB=$BCEL_LIB"
+  warn "Guessing BCEL_LIB=$BCEL_LIB"
 fi
 
 ############ Setting XMLRPC_LIB, if necessary
 
 if [ -z "$XMLRPC_LIB" ]; then
   XMLRPC_LIB=$ESCTOOLS_ROOT/Escjava/xmlrpc-1.2-b1-modified.jar
-  wwarn "Guessing XMLRPC_LIB=$XMLRPC_LIB"
+  warn "Guessing XMLRPC_LIB=$XMLRPC_LIB"
 fi
 
 ############ Setting JUNIT_LIB, if necessary
 
 if [ -z "$JUNIT_LIB" ]; then
   export JUNIT_LIB=${ESCTOOLS_ROOT}/Utils/junit.jar
-  wwarn "Guessing JUNIT_LIB=$JUNIT_LIB"
+  warn "Guessing JUNIT_LIB=$JUNIT_LIB"
 fi
 
 
@@ -135,7 +135,7 @@ fi
 
 if [ -z "$ANT_LIB" ]; then
   export ANT_LIB=${ESCTOOLS_ROOT}/Utils/ant.jar
-  wwarn "Guessing ANT_LIB=$ANT_LIB"
+  warn "Guessing ANT_LIB=$ANT_LIB"
 fi
 
 
@@ -144,7 +144,7 @@ fi
 if [ -z "$SIMPLIFY" ]; then
     case "$OSTYPE" in
 	linux*)   SIMPLIFY=Simplify-1.5.4.linux	;;
-	darwin*)  SIMPLIFY=Simplify-1.5.4.macosx	;;
+	darwin*)  SIMPLIFY=Simplify-1.5.5.macosx	;;
 	cygwin)  SIMPLIFY=Simplify-1.5.4.exe	;;
 	solaris) SIMPLIFY=Simplify-1.5.4.solaris	;;
 	*)	;;
@@ -290,4 +290,4 @@ ${JAVA} ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" -Dsimplify="${ESCJ_S
     -classpath "${ESC_CLASSPATH}" ${MAIN} \
     ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $ARGS
 
-# End of $RCSflie$
+# End of file.
