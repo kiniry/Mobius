@@ -291,7 +291,8 @@ BEGIN
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
   on_method_MVA_yields_wf_AState : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, s : MPState, m : Method, et : EventType) :
+    FORALL (mp : MonitoredProgram, s : MPState, m : (wf_Method(program(mp))), 
+            et : EventType) :
       wf_state(mp)(s) IMPLIES
         wf_AState(mva(mp))(on_method_MVA(et)(mp, m)(s))
 

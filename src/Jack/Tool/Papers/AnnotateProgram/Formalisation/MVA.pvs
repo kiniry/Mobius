@@ -90,6 +90,8 @@ BEGIN
 
   wf_Body(a : MVA)(b : Body) : boolean =
     subset?(var_names(b), var_names(a))
+%    subset?(var_names(b), var_names(a)) AND
+%    (FORALL (b1 : Body) : subterm(b1, b) IMPLIES NOT Set?(b1))
 
   wf_BoolExpr(a : MVA)(b : BoolExpr) : boolean =
     wf_Body(a)(b)

@@ -3368,7 +3368,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((subset? const-decl "bool" sets nil)
     (filter_event const-decl "finite_set[Transition]" AnnotateMethod
      nil)
@@ -3395,7 +3395,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((filter_event const-decl "finite_set[Transition]" AnnotateMethod
      nil)
     (finite_subset formula-decl nil finite_sets nil)
@@ -3521,61 +3521,67 @@
   (ann_method_body-1 nil 3401620545 3402745827
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 150
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 150
    140 t shostak))
+ (ann_method_name 0
+  (ann_method_name-1 nil 3403429160 3403429179
+   ("" (skosimp)
+    (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 18423
+   100 t shostak))
  (ann_method_pre 0
   (ann_method_pre-1 nil 3401620551 3402745827
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 202
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 202
    130 t shostak))
  (ann_method_post 0
   (ann_method_post-1 nil 3401620559 3402745828
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 150
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 150
    140 t shostak))
  (ann_method_arg 0
   (ann_method_arg-1 nil 3401620571 3402745828
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 156
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 156
    140 t shostak))
  (ann_method_res 0
   (ann_method_res-1 nil 3401620574 3402745828
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 149
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 149
    140 t shostak))
  (ann_method_res_type 0
   (ann_method_res_type-1 nil 3401620593 3402745828
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 150
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 150
    130 t shostak))
  (ann_method_lvars 0
   (ann_method_lvars-1 nil 3401620597 3402745828
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 151
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 151
    140 t shostak))
  (ann_method_pre_set 0
   (ann_method_pre_set-1 nil 3401620600 3402745829
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 209
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 209
    150 t shostak))
  (ann_method_post_set 0
   (ann_method_post_set-1 nil 3401620605 3402745829
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 189
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 189
    140 t shostak))
  (ann_method_exc_set 0
   (ann_method_exc_set-1 nil 3401620608 3402745829
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_method const-decl "Method" AnnotateMethod nil)) 164
+   unfinished ((ann_method const-decl "Method" AnnotateMethod nil)) 164
    150 t shostak))
  (ann_method_wf_Body 0
   (ann_method_wf_Body-1 nil 3401699901 3402745833
@@ -3646,7 +3652,7 @@
                                     (assert)
                                     nil))))))))))))))))))))))))))))))))
     ";;; developed with SHOSTAK decision procedures")
-   untried
+   unfinished
    ((union const-decl "set" sets nil)
     (member const-decl "bool" sets nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
@@ -3682,8 +3688,8 @@
     (("" (expand "ann_class")
       (("" (lift-if) (("" (propax) nil nil)) nil)) nil))
     nil)
-   untried ((ann_class const-decl "Class" AnnotateClass nil)) 148 150 t
-   shostak))
+   unfinished ((ann_class const-decl "Class" AnnotateClass nil)) 148
+   150 t shostak))
  (LocalDecls_ann_class 0
   (LocalDecls_ann_class-1 nil 3401684165 3402745834
    ("" (skosimp*)
@@ -3742,7 +3748,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ann_class const-decl "Class" AnnotateClass nil)
     (JType type-decl nil JType_adt nil)
     (Name formal-nonempty-type-decl nil AnnotateClass nil)
@@ -3789,13 +3795,13 @@
     (("" (expand "ann_class")
       (("" (lift-if) (("" (assert) nil nil)) nil)) nil))
     nil)
-   untried ((ann_class const-decl "Class" AnnotateClass nil)) 250 160 t
-   shostak))
+   unfinished ((ann_class const-decl "Class" AnnotateClass nil)) 250
+   160 t shostak))
  (GhostDecls_ann_class_not_annotated 0
   (GhostDecls_ann_class_not_annotated-1 nil 3401684344 3402745835
    ("" (skosimp*)
     (("" (expand "ann_class") (("" (assert) nil nil)) nil)) nil)
-   untried
+   unfinished
    ((ann_class const-decl "Class" AnnotateClass nil)
     (finite_union application-judgement "finite_set" finite_sets nil))
    162 150 t shostak))
@@ -3897,7 +3903,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Body const-decl "boolean" WellFormedProgram nil)
     (singleton const-decl "(singleton?)" sets nil)
     (halted_new_ghostvar formula-decl nil NewVariableDeclarations nil)
@@ -4005,8 +4011,8 @@
       (("" (assert) (("" (lift-if) (("" (propax) nil nil)) nil)) nil))
       nil))
     nil)
-   untried ((ann_class const-decl "Class" AnnotateClass nil)) 472 380 t
-   shostak))
+   unfinished ((ann_class const-decl "Class" AnnotateClass nil)) 472
+   380 t shostak))
  (ann_program_preserves_class_name 0
   (ann_program_preserves_class_name-1 nil 3401682902 3402745840
    (";;; Proof for formula AnnotateProgramProperties.ann_program_preserves_class_name"
@@ -4018,8 +4024,8 @@
         ((";;; Proof for formula AnnotateProgramProperties.ann_program_preserves_class_name"
           (propax) nil))))))
     "")
-   untried ((ann_class const-decl "Class" AnnotateClass nil)) 196 140
-   nil nil)))
+   unfinished ((ann_class const-decl "Class" AnnotateClass nil)) 196
+   140 nil nil)))
 (AnnotateProgram
  (IMP_VariableNames_TCC1 0
   (IMP_VariableNames_TCC1-1 nil 3396601203 3402745840
@@ -8369,20 +8375,24 @@
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil))
    5661 5180 t shostak))
- (wf_Expr_MVA_implies_wf_Body 0
-  (wf_Expr_MVA_implies_wf_Body-1 nil 3403368556 3403369262
+ (wf_Body_MVA_implies_wf_Body 0
+  (wf_Body_MVA_implies_wf_Body-1 nil 3403370425 3403372067
    ("" (skosimp)
-    (("" (expand* "wf_Expr" "wf_Body")
+    (("" (expand "wf_Body")
       (("" (split)
         (("1" (skosimp)
-          (("1" (expand* "ext_declared_var_names" "union" "member")
-            (("1" (flatten)
-              (("1" (expand* "subset?" "member")
-                (("1" (inst?)
-                  (("1" (assert)
-                    (("1" (hide -1 1 2)
-                      (("1" (expand* "var_names" "union" "member")
-                        (("1" (postpone) nil nil)) nil))
+          (("1" (expand* "subset?" "member")
+            (("1" (inst?)
+              (("1" (assert)
+                (("1"
+                  (expand* "ext_declared_var_names" "union" "member")
+                  (("1" (flatten)
+                    (("1" (hide -1 -3 1 2 4)
+                      (("1" (use "var_names_MVA_subset_ghostvars")
+                        (("1" (expand* "subset?" "member")
+                          (("1" (inst?) (("1" (assert) nil nil)) nil))
+                          nil))
+                        nil))
                       nil))
                     nil))
                   nil))
@@ -8390,14 +8400,45 @@
               nil))
             nil))
           nil)
-         ("2" (skosimp)
-          (("2" (expand* "subset?" "member") (("2" (postpone) nil nil))
-            nil))
+         ("2" (skosimp) (("2" (inst?) (("2" (assert) nil nil)) nil))
           nil))
         nil))
       nil))
     nil)
-   unfinished nil 706002 580 t shostak))
+   unfinished
+   ((member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (var_names_MVA_subset_ghostvars formula-decl nil
+     AnnotateProgramProperties nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgramProperties nil)
+    (ext_declared_var_names const-decl "finite_set[Name]"
+     ProgramFunctions nil)
+    (union const-decl "set" sets nil)
+    (Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
+    (Body type-decl nil Body_adt nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (wf_Body const-decl "boolean" WellFormedMVA nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil))
+   39036 460 t shostak))
  (ann_event_wf_Body 0
   (ann_event_wf_Body-1 nil 3402484935 3402770849
    ("" (skosimp)
