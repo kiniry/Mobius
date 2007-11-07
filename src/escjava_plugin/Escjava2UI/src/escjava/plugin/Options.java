@@ -66,12 +66,17 @@ public class Options {
 			"Internal Simplify Version",
 			"The choice of internal version of Simplify (pick the host platform)");
 
+	/**
+	 * ID for plugin that has Simplify executables
+	 */
+	public static final String SIMPLIFY_PLUGINID = "mobius.simplify.plugin";
+
 
 	/**
 	 * The Simplify executable to use (a value is required).
 	 */
 	static final public AbstractPreference.StringOption simplify = new AbstractPreference.StringOption(
-			(PLUGINID + "simplify"), 
+			(SIMPLIFY_PLUGINID + "simplify"), 
 			"", 
 			"External Simplify executable to use",
 			"The static checker needs a version of the Simplify executable for" + Utils.eol +
@@ -165,7 +170,7 @@ public class Options {
 	 */
 	static final protected AbstractPreference.ChoiceOption source = new AbstractPreference.ChoiceOption(
 			(PLUGINID + "source"),
-			new String[]{"1.3","1.4","1.5"},
+			new String[]{"1.3","1.4"},
 			1,
 			"Java source version",
 			"The version of Java that is supported [JML --source option]");

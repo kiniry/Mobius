@@ -226,7 +226,9 @@ public class EscjavaChecker extends escjava.Main
 	  PrintStream newout = Log.logPrintStream();
 	  System.setOut(newout);
 	  System.setErr(newout);
-	  int i = compile((String[])inputs.toArray(new String[0]));
+	  String[] strings = new String[0];
+	String[] inputArray = (String[])inputs.toArray(strings);
+	int i = compile(inputArray);
 	  System.setOut(out);
 	  System.setErr(err);
 	  if (Log.on) Log.log("Escjava checker ended, status code " + i);

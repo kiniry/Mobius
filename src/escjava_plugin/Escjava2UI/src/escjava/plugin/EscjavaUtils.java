@@ -32,7 +32,7 @@ import pluginlib.Utils;
  */
 public class EscjavaUtils {
 	
-	public static final String SIMPLIFY_PLUGIN_ID = "mobius.simplify";
+	public static final String SIMPLIFY_PLUGIN_ID = "mobius.simplify.plugin";
 
 	/** The ordered list of standard JML suffixes to search for the
 	 *  most refined specification file, omitting prefixed '.'s.
