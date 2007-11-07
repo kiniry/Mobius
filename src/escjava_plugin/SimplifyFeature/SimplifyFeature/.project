@@ -3,6 +3,7 @@
 	<name>SimplifyFeature</name>
 	<comment></comment>
 	<projects>
+		<project>Simplify</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
