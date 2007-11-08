@@ -2,14 +2,14 @@
      "http://www.w3.org/TR/REC-html40/loose.dtd">
 <HTML>
 <HEAD>
-<TITLE>ESC/Java2 Eclipse plug-in</TITLE>
+<TITLE>Mobius ESC/Java2 Eclipse plug-in</TITLE>
 </HEAD>
 <BODY>
 
-<CENTER><H1>ESC/Java2 Eclipse Plugin 1.1.1</H1></CENTER>
-<CENTER>Author: David Cok</CENTER>
-<CENTER> Version alpha, 20 February 2005</CENTER>
-<CENTER><A href="mailto:xcok@frontiernet.net">Feedback</A> (temporarily)</CENTER>
+<CENTER><H1>Mobius ESC/Java2 Eclipse Plugin 2.0.3</H1></CENTER>
+<CENTER>Author: David Cok and EU Mobius IST-15905 project</CENTER>
+<CENTER> Version beta 2.0.3, 7 November 2007</CENTER>
+<CENTER><A href="mailto:mobius-ticket@mobius.ucd.ie?subject=component=MobiusPVE">Feedback</A> </CENTER>
 <P>
 Contents:
 <!-- start toc.  do not edit; run html-update-toc instead -->
@@ -19,28 +19,28 @@ Contents:
       <li><a href="#General_comments">General comments</a>
       <li><a href="#Menus">Menu and toolbar functionality</a>
         <ul>
-          <li><a href="#Checks">ESC/Java2 Checking</a>
-          <li><a href="#Clear">Clear ESC/Java2 Markers</a>
+          <li><a href="#Checks">Esc/Java2 Checking</a>
+          <li><a href="#Clear">Clear Esc/Java2 Markers</a>
           <li><a href="#GoTo">Go to associated declaration</a>
           <li><a href="#Setup">Setup</a>
           <li><a href="#Enable">Enable ESC/Java2 auto checking</a>
           <li><a href="#Disable">Disable ESC/Java2 auto checking</a>
         </ul>
-      <li><a href="#Preferences">ESC/Java2 Preferences</a>
+      <li><a href="#Preferences">Esc/Java2 Preferences</a>
         <ul>
-          <li><A href="#EclipseOptions">Options for ESC/Java2-Eclipse</A>
+          <li><A href="#EclipseOptions">Options for Esc/Java2-Eclipse</A>
           <li><A href="#EscjavaOptions">Options related to ESC/Java2</A>
-          <li><A href="#EscjavaWarnings">ESC/Java2 Warnings</A>
+          <li><A href="#EscjavaWarnings">Esc/Java2 Warnings</A>
         </ul>
       <li><a href="#Features">Other Features</a>
         <ul>
-          <li><A href="#Markers">ESC/Java2 Problem Markers</A>
-          <li><A href="#Console">ESC/Java2 console</A>
+          <li><A href="#Markers">Esc/Java2 Problem Markers</A>
+          <li><A href="#Console">Esc/Java2 console</A>
           <li><A href="#Context">Context Menus</A>
-          <li><A href="#Builder">ESC/Java2 automatic builder</A>
-          <li><A href="#Decorators">ESC/Java2 Label Decoration</A>
-          <li><A href="#Commands">ESC/Java2 Key bindings</A>
-          <li><A href="#Help">ESC/Java2 Help</A>
+          <li><A href="#Builder">Esc/Java2 automatic builder</A>
+          <li><A href="#Decorators">Esc/Java2 Label Decoration</A>
+          <li><A href="#Commands">Esc/Java2 Key bindings</A>
+          <li><A href="#Help">Esc/Java2 Help</A>
         </ul>
       <li><a href="#Versions">Version History</a>
       <li><a href="#Tutorial">Getting Started Tutorial</a>
@@ -53,8 +53,7 @@ Contents:
 <H2><A NAME="Overview">Overview</A></H2>
 <P>
 This plug-in provides
-<A HREF="http://secure.ucd.ie/products/opensource/ESCJava2/">ESC/Java2</A>
-<!-- <A HREF="http://www.sos.cs.ru.nl/research/escjava/main.html">ESC/Java2</A> -->
+<A HREF="http://kind.ucd.ie/products/opensource/ESCJava2/">ESC/Java2</A>
 functionality as an Eclipse plug-in into the Java development environment of Eclipse.
 ESC/Java2 checks that Java programs obey specifications written as
 Java Modeling Language (<A HREF="http://www.jmlspecs.org">JML</A>) annotations.
@@ -69,7 +68,7 @@ The plug-in adds the following functionality to Eclipse's Java Perspective:
 <UL>
 <LI>A menubar item labeled 'JML' with a number of submenu items that
 invoke various tools and manage the environment.
-<LI>A toolbar item labeled 'ESC' that invokes the ESC/Java2 checker.
+<LI>A toolbar item labeled 'Run ESC/Java2' that invokes the ESC/Java2 checker.
 <LI>A problem marker (a red disk with an 'E' on it) for ESC/Java2 problems;
 these must be enabled in the Filters menu of the Problems view (they are
 disabled by default).
@@ -78,7 +77,7 @@ and on Java editors that replicate some
 of the above menu items for Java Projects, source
 folders, packages, and compilation
 units.
-<LI>A console page to which output from ESC/Java2 is sent.
+<LI>A console page to which output from Esc/Java2 is sent.
 <LI>An ESC/Java2 preferences page in the Java group of preference pages
 (under Window &gt;&gt; Preferences).
 <LI>An ESC/Java2 builder that is visible (when the ESC/Java2 Builder is enabled) 
@@ -87,7 +86,7 @@ in the Project Properties Builders page.
 on Java Projects with autochecking enabled.  There is a toggle
 named 'ESC/Java2' to enable these decorations in the Label Decorations page of
 the workbench preferences.
-<LI>A new category of commands in the Workbench &gt;&gt; Keys page of the workbench
+<LI>A new category of (unbound) commands in the Workbench &gt;&gt; Keys page of the workbench
 preferences.  The category is named 'ESC/Java2' and allows key bindings to be 
 defined for the various new menu actions. 
 <LI>A Help document describing the ESC/Java2 plug-in functionality available
@@ -106,14 +105,11 @@ The plug-in is installed from a standard Eclipse update site as follows.
      <li> Start Eclipse.
      <li> Open the dialog at Help &gt;&gt; Software Updates &gt;&gt; Find and Install.
      <li> Choose "Search for new features to install" and "Next&gt;".
-     <li> Select "New Remote Site".  Fill in the dialog with the name "ESC/Java2"
-          and the URL <br />
-          <a href="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/">
-          http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/</a> <br /> 
-          and press "OK".
-     <li> Select "ESC/Java2" in the list of sites to search and press "Next&gt;".
-     <li> If all is well, the available versions of the plug-in will be displayed;
-          select the most recent ESC/Java2 version and press "Next&gt;".  
+     <li> Select "New Remote Site".  Fill in the dialog with the name "Mobius PVE"
+          and the URL "http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/", and press "OK". <!-- FIXME -->
+     <li> Select "Mobius PVE" in the list of sites to search and press "Next&gt;".
+     <li> If all is well, the available versions of the plug-in will be displayed under Mobius,
+          select the most recent Esc/Java2 version and press "Next&gt;".  
      <li> Read and accept the license terms, and press "Next&gt;".
      <LI> Choose the local installation site into which you want to install the plug-in
           (or add a new one for experimentation); then press 'Finish'.  You will likely
@@ -132,7 +128,7 @@ The plug-in is installed from a standard Eclipse update site as follows.
     </p>
 
     <p> The <A
-      HREF="FIXME">source
+      HREF="https://mobius.ucd.ie/browser/src/escjava_plugin">source
       code</A> for the plug-in is available, in accord with the <A
       HREF=http://www.eclipse.org/legal/cpl-v10.html>Eclipse Common Public
       License</A>.
@@ -157,7 +153,7 @@ then do the following:
 <UL>
 <LI> Choose Help &gt;&gt; Software Updates &gt;&gt; Manage Configuration
 <LI> Click the + symbol by the install location from which you wish to uninstall the plugin
-<LI> Choose the ESC/Java2 feature from the list of installed features
+<LI> Choose the Esc/Java2 feature from the list of installed features
 <LI> Select Uninstall in the right hand panel
 <LI> Confirm the Uninstall and restart the workbench
 </UL>
@@ -187,8 +183,8 @@ Label Decorations page of the Workbench preferences.
 <LI>Optionally define any desired <B>key bindings</B> for the various menu actions.
 Use the ESC/Java2 category in the Keys page of the Workbench preferences to do this.
 Add the key bindings to be effective in Windows or in Dialogs & Windows.
-<LI>Other preferences relevant to the ESC/Java2 plug-in may be set on the
-<B>ESC/Java2 preferences page</B> under the Java category.  (The preferences page is
+<LI>Other preferences relevant to the Esc/Java2 plug-in may be set on the
+<B>Esc/Java2 preferences page</B> under the Java category.  (The preferences page is
 obtained from the Window &gt;&gt; Preferences menu item.)
 </UL>
 </P>
@@ -293,17 +289,17 @@ container.
 <A NAME="#Checks"/>
 <H3>ESC/Java2 Checking</H3>
 <P>
-This operation runs an ESC/Java2 check on each selected item or its contents.
+This operation runs an Esc/Java2 check on each selected item or its contents.
 The operation can be initiated from the menu item or by the 'ESC' item on the
 toolbar or from various context menus.
-Any syntax errors or ESC/Java2 warnings are presented as problem markers.  
+Any syntax errors or Esc/Java2 warnings are presented as problem markers.  
 The problem markers are shown along the left edge of each editor at the line
 corresponding to the problem.  If
 problem markers are enabled in the Problems View, then details of the problem
 are shown in the Problems View.  Additional information, such as the
 specification that is being violated by the line in question, can be obtained
 using the 'Go to associated declaration' menu operation.  This menu item performs
-a check whether or not the ESC/Java2 nature is enabled for automatic checking.
+a check whether or not the Esc/Java2 nature is enabled for automatic checking.
 </P><P>  
 <B>Be sure to save any edited files before invoking an ESC/Java2 check!</B>
 ESC/Java2 operates only on the files as they exist in the file system and not
@@ -323,13 +319,13 @@ not selected when the JML Checker is run again, the marker will not be
 cleared even though the problem is no longer present.
 </P>
 <A NAME="#Clear"/>
-<H3>Clear ESC/Java2 Markers</H3>
+<H3>Clear Esc/Java2 Markers</H3>
 The Clear operation removes all problem markers from any selected files or
 files within selected containers.
 
 <A NAME="#GoTo"/>
 <H3>Go to associated declaration</H3>
-Most ESC/Java2 warnings have an associated declaration.  For example, an 
+Most Esc/Java2 warnings have an associated declaration.  For example, an 
 assignment of a value to a field may violate a specification that the field
 always be non-null.  That specification is located at the declaration of the
 field, and not at the line with the invalid assignment.  The problem marker
@@ -344,20 +340,20 @@ line; you must select a range of text.
 <A NAME="#Setup"/>
 <H3>Setup</H3>
 The submenu items in this menu allow the installing and deinstalling of 
-the ESC/Java2 automatic checker within projects.  
+the Esc/Java2 automatic checker within projects.  
 
 <A NAME="#Enable"/>
-<H3>Enable ESC/Java2 checking</H3>
-Enabling the ESC/Java2
-checker will install the ESC/Java2 nature on the project and enable the
+<H3>Enable Esc/Java2 checking</H3>
+Enabling the Esc/Java2
+checker will install the Esc/Java2 nature on the project and enable the
 automatic builder.  Then after any compilation (even an incremental compilation),
-the ESC/Java2 checker will be run on all the compilation units of the project.
+the Esc/Java2 checker will be run on all the compilation units of the project.
 The checker will be run on the entire project immediately upon enabling the
 automatic builder.
 
 <A NAME="#Disable"/>
-<H3>Disable ESC/Java2 checking</H3>
-This menu action disables the ESC/Java2 automatic checking.
+<H3>Disable Esc/Java2 checking</H3>
+This menu action disables the Esc/Java2 automatic checking.
 Note that you can also disable automatic checking on the Builders page of the
 Project &gt;&gt; Properties menu item.
 
@@ -426,8 +422,8 @@ All the items in the ESC/Java2 preferences page are global to all
 Java projects.  
 
 <A NAME="#EclipseOptions"/>
-<H3>Options for ESCjava-Eclipse</H3>
-This group of options does not affect ESC/Java2 per se.  Rather they control 
+<H3>Options for Escjava-Eclipse</H3>
+This group of options does not affect Esc/Java2 per se.  Rather they control 
 aspects of the plug-in.
 
 <P>
@@ -460,7 +456,7 @@ in some situations to capture all of the output in one place.
 
 <P>
 <B>Simplify executable to use.</B>
-ESC/Java uses Simplify as its decision procedure and must have available a
+Esc/Java uses Simplify as its decision procedure and must have available a
 version of Simplify appropriate for the host platform.  Various versions of
 Simplify are included with the plug-in; by default an internal version is 
 chosen that matches the host operating system.  The user can also explicitly
@@ -480,7 +476,7 @@ do both typechecking and static checking. (<code>-typecheck</code> option)
 </P><P>
 <B>No semicolon warnings.</B>
 JML requires that annotations be terminated with semicolons.  The original
-ESC/Java did not require this.  ESC/Java2 will warn about missing semicolons,
+Esc/Java did not require this.  Esc/Java2 will warn about missing semicolons,
 but can successfully process some annotations that are missing these terminating
 semicolons.  Enabling this toggle will turn off warnings about semicolons.
 The default is to warn about semicolon errors. (<code>-nosemicolonwarnings</code> option)
@@ -488,7 +484,7 @@ The default is to warn about semicolon errors. (<code>-nosemicolonwarnings</code
 <P><B>Enable caution messages.</B> 
 This option (equivalent to the inverse of the command-line option <code>-nocautions</code>)
 turns on Caution messages.  Cautions include syntactical errors that have an
-obvious correction, non-implemented features and internal errors that ESC/Java2
+obvious correction, non-implemented features and internal errors that Esc/Java2
 recovers from. (default is to issue cautions)
 </P>
 <P><B>Enables checking that annotations are pure.</B>
@@ -515,8 +511,8 @@ ESC/Java2 can issue informational messages about its progress.  These are
 Use this option to specify the version of Java source code that is being used.
 Using version "1.4" enables the <code>assert</code> identifier to be treated as
 a keyword and for the assert statement to be interpreted as specified by Java.
-Using "1.5" enables all of the Java 5.0 (1.5) language enhancements [which are
-not yet implemented in ESC/Java2.]
+<!-- Using "1.5" enables all of the Java 5.0 (1.5) language enhancements [which are
+not yet implemented in Esc/Java2.] -->
 The default is version 1.4.  (<code>-source</code> option)
 </P>
 <P><B>Behavior of assert statement.</B>
@@ -527,14 +523,14 @@ them to JML assertions.<!-- FIXME - what option -->
 </P>
 
 <A NAME="#EscjavaWarnings"/>
-<H3>ESC/Java2 Warnings</H3>
-ESC/Java2 checks for various potential violations of JML specifications. Where
+<H3>Esc/Java2 Warnings</H3>
+Esc/Java2 checks for various potential violations of JML specifications. Where
 it suspects problems (or cannot prove that a problem will not happen), it
 issues a <em>warning</em>.  There are various kinds of warnings.  These are 
-listed on the right side of the preferences page.  By default, ESC/Java2 checks
+listed on the right side of the preferences page.  By default, Esc/Java2 checks
 for all warning types except Deadlock.  The user can select which warnings
-ESC/Java2 should check for and which to ignore.  Explanations of each of these
-warnings are given in the documentation about ESC/Java2.  A brief explanation
+Esc/Java2 should check for and which to ignore.  Explanations of each of these
+warnings are given in the documentation about Esc/Java2.  A brief explanation
 is given in the tooltip on the option.
 
 <A NAME="#Features"/>
@@ -544,7 +540,7 @@ is given in the tooltip on the option.
 <P>
 The plug-in defines a new type of Problem marker that is used to indicate
 syntax errors or warnings about potential specification violations
-that the ESC/Java2 tool finds.  The marker icon is a 
+that the Esc/Java2 tool finds.  The marker icon is a 
 black 'E' superimposed on a red dot.  The icon is shown in the ruler along the
 left edge of Java editors at the line where a problem is identified.  Tooltip
 information, shown when the mouse pointer remains steady over the icon for a short
@@ -559,28 +555,28 @@ the Filters icon or the down-arrow Menu icon in the upper right corner of the
 Problems View).
 </P>
 <A NAME="#Console"/A>
-<H3>ESC/Java2 Console</H3>
+<H3>Esc/Java2 Console</H3>
 The Eclipse Console View is available to plug-ins to show textual output from
-plug-in tools.  The Console has a number of panes.  The ESC/java2 plug-in adds
-a new pane, called 'ESC/Java2', to which output from the ESC/Java2 plug-in or
+plug-in tools.  The Console has a number of panes.  The Esc/Java2 plug-in adds
+a new pane, called 'Esc/Java2', to which output from the Esc/Java2 plug-in or
 tool is sent.  The Console view generally automatically switches to the pane
 with recent output, but on some occasions the user may have to choose the
-pane manually to see the ESC/Java2 output.
+pane manually to see the Esc/Java2 output.
 
 <A NAME="#Context"/>
 <H3>Context Menus</H3>
 The context menu in the Package Navigator (obtained with a right mouse press over
 an item in the Package Navigator tree hierarchy) has menu options pertinent
-to the context in which the menu is invoked.  A 'Run ESC/Java2' action is added
+to the context in which the menu is invoked.  A 'Run Esc/Java2' action is added
 to the Package Navigator context menus; this action is the equivalent of the
-'ESC/Java2' checking action under 'JML' in the menubar.  The additional menu
+'Esc/Java2' checking action under 'JML' in the menubar.  The additional menu
 item is also available in the Outline View.
 
 <A NAME="#Builder"/>
 <H3>ESC/Java2 Automatic Builder</H3>
 <P>
 When ESC/Java2 is enabled for a project
-(e.g. by the JML &gt;&gt; Setup &gt;&gt; Enable ESC/Java2 menu item), then 
+(e.g. by the JML &gt;&gt; Setup &gt;&gt; Enable Esc/Java2 menu item), then 
 a new Incremental Builder becomes available on the Project's
 Builders Properties page.  Once present, the builders can be 
 enabled and disabled on the Builders page.
@@ -658,17 +654,21 @@ information that gives a bit more explanation of the purpose of the item.
 <A NAME="#Versions"/A>
 <H2>Version history</H2>
 <UL>
+<LI><B>Version 2.0.3</B> (7 November 2007):
+<UL>
+<LI>Includes ESC/Java2 beta version 2.0b3 which has support for Java 1.5 bytecode
+</UL>
 <LI><B>Version 1.1.1</B> (20 February 2005):
 <UL>
 <LI>Fixes a problem in which newly installed Simplify executables
 do not have executable permission on Unix-like systems.
 </UL>
 <LI><B>Version 1.1.0</B> (18 February 2005) is the first publically released version.
-It includes ESC/Java2 as of 18 February 2005, which is an
+It includes Esc/Java2 as of 18 February 2005, which is an
 interim version of the tool.
 </UL>
 
-
+<!--
 <A NAME="#Tutorial"/A>
 <H2>Getting Started Tutorial</H2>
 --- not written yet -- (FIXME)
@@ -677,6 +677,7 @@ interim version of the tool.
 <A NAME="#DevNotes"/A>
 <H2>Notes for Developers</H2>
 --- not written yet -- (FIXME)
+-->
 
 <A NAME="#TODO"/>
 <H2>Problems to fix and features to add</H2>
@@ -699,7 +700,7 @@ dependencies on specification files (adding, removing, editing them)
 <LI>Implement cancelation and progress dialogs
 <LI>Capture the output for a given method in a way that can be shown for each 
 method, rather than strung out in the Console.
-<LI>Need the rest of ESC/Java2 command-line options as GUI options
+<LI>Need the rest of Esc/java2 command-line options as GUI options
 <LI>Be able to show the VCs in FRIENDLY way
 <LI>Be able to show counterexamples in a user-friendly way
 <LI>Better handling of editors for spec files
@@ -709,16 +710,18 @@ method, rather than strung out in the Console.
 <LI>Check documentation of updating a feature
 <LI>The warning types need tooltips
 <LI>Use the build problem reporting facilities
-<LI>Make the use of ESC/Java2 and ESC/java2 consistent.
-<LI>The icon in the Problems View ought to be the ESC/Java2 problem icon.
+<LI>Make the use of Esc/Java2 and ESC/java2 consistent.
+<LI>The icon in the Problems View ought to be the Esc/Java2 problem icon.
 <LI>The JDK specs include the esctools files themselves.
 <LI>Should we have the option of using the JDK specs as a library in the project
 rather than a separate project.
-<LI>Allow a choice of which pane of the Console to use? (JML or ESC/Java2)
+<LI>Allow a choice of which pane of the Console to use? (JML or Esc/Java2)
 <LI>Need an option for the name of the specs project
 <LI>Some markers have more than one associated declaration - be able to 
 highlight them all
 <LI>All squiggly underlining for problems is two characters long.
+<LI>False error when JML specs are already loaded
+<LI>Misleading error when applied to a non-Java project
 </UL>
 <H3>Would be nice</H3>
 <UL>
