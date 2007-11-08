@@ -15,7 +15,7 @@ import java.util.Set;
  * that existed before the push but were overriden after
  * will return to their previous state. The {@code Map}
  * intefrace is not exactly followed. The methods {@code keySet},
- * {@code values}, and {@entrySet} are just copies and changes
+ * {@code values}, and {@code entrySet} are just copies and changes
  * in them do not reflect in the map, or viceversa.
  * 
  * See the {@code main} method for some examples.

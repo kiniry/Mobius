@@ -85,9 +85,7 @@ public abstract class TermBuilder {
     TermDef def = getTermDef(termId);
     assert def.cls != null;
     assert def.cls.isInstance(a);
-    Term r = reallyMk(termId, a);
-    assert r.sort().isSubsortOf(def.retSort);
-    return r;
+    return reallyMk(def.retSort, termId, a);
   }
   
   /**
@@ -125,16 +123,12 @@ public abstract class TermBuilder {
     if (def.naryArgSort != null) {
       for (int i = 0; i < a.length; ++i)
         assert a[i].sort().isSubsortOf(def.naryArgSort);
-      Term r = reallyMkNary(termId, a);
-      assert r.sort().isSubsortOf(def.retSort);
-      return r;
+      return reallyMkNary(def.retSort, termId, a);
     } else {
       assert def.argSorts.length == a.length;
       for (int i = 0; i < a.length; ++i) 
         assert a[i].sort().isSubsortOf(def.argSorts[i]);
-      Term r = reallyMk(termId, a);
-      assert r.sort().isSubsortOf(def.retSort);
-      return r;
+      return reallyMk(def.retSort, termId, a);
     }
   }
   
@@ -148,7 +142,7 @@ public abstract class TermBuilder {
    * @param a the argument
    * @return the constructed term
    */
-  protected abstract Term reallyMk(String termId, Object a);
+  protected abstract Term reallyMk(Sort sort, String termId, Object a);
   
   /**
    * Subclasses should either construct a tree ar communicate with
@@ -158,7 +152,7 @@ public abstract class TermBuilder {
    * @param a the arguments
    * @return the constructed term
    */
-  protected abstract Term reallyMk(String termId, Term[] a);
+  protected abstract Term reallyMk(Sort sort, String termId, Term[] a);
   
   /**
    * Subclasses should either construct a tree ar communicate with
@@ -168,5 +162,5 @@ public abstract class TermBuilder {
    * @param a the arguments
    * @return the constructed term
    */
-  protected abstract Term reallyMkNary(String termId, Term[] a);
+  protected abstract Term reallyMkNary(Sort sort, String termId, Term[] a);
 }

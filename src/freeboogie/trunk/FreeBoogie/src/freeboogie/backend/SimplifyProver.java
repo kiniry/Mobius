@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,8 @@ public class SimplifyProver implements Prover {
   // a |null| is used to mark the beginning of an assumption frame
   private Deque<Term> assumptions;
   
+  private SmtTermBuilder builder;
+  
   /**
    * Creates a new {@code SimplifyProver}. It also tries to start the prover. 
    * @param cmd the command to use to start the prover
@@ -40,6 +43,28 @@ public class SimplifyProver implements Prover {
     assumptions = new ArrayDeque<Term>();
     assumptions.add(null);
     restartProver();
+    
+    // TODO some of this stuff is probably common to multiple provers
+    //      so move it into the builder
+    builder = new SmtTermBuilder();
+    builder.def("not", new Sort[]{Sort.PRED}, Sort.PRED);
+    builder.def("and", Sort.PRED, Sort.PRED);
+    builder.def("or", Sort.PRED, Sort.PRED);
+    builder.def("implies", new Sort[]{Sort.PRED, Sort.PRED}, Sort.PRED);
+    builder.def("iff", new Sort[]{Sort.PRED, Sort.PRED}, Sort.PRED);
+    builder.def("var_int", String.class, Sort.VARINT);
+    builder.def("var_bool", String.class, Sort.VARBOOL);
+    builder.def("const_int", BigInteger.class, Sort.INT);
+    builder.def("const_bool", Boolean.class, Sort.BOOL);
+    builder.def("forall_int", new Sort[]{Sort.VARINT, Sort.PRED}, Sort.PRED);
+    builder.def("<", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    builder.def("<=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    builder.def(">", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    builder.def(">=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    builder.def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    builder.def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.PRED);
+    // TODO register all stuff with the builder
+    builder.pushDef(); // mark the end of the prover builtin definitions
   }
   
   private void sendTerm(Term t) {
@@ -71,8 +96,7 @@ public class SimplifyProver implements Prover {
 
   /* @see freeboogie.backend.Prover#getBuilder() */
   public TermBuilder getBuilder() {
-    // TODO Auto-generated method stub
-    return null;
+    return builder;
   }
 
   /* @see freeboogie.backend.Prover#getDetailedAnswer() */
