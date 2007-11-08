@@ -1,6 +1,7 @@
 package mobius.bico.dico;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import mobius.bico.Util;
@@ -10,6 +11,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.FieldOrMethod;
 
 /**
  * 
@@ -18,6 +20,7 @@ import org.apache.bcel.generic.Type;
  * from J. Charles (julien.charles@inria.fr)
  */
 public class MethodHandler {
+
 
   /**
    * 
@@ -36,15 +39,19 @@ public class MethodHandler {
     private final Type fReturnType;
 
     /** the argument types. */
-    private final Type[] fArgsType;
+    private final List<Type> fArgsType;
 
     /** the coq name of the method. */
     private String fCoqName;
 
-    private MethodType(final String name, final Type[] targs, final Type tret) {
-      fArgsType = targs;
+    private MethodType(final String name, final Type [] targs, final Type tret) {
+      
+      fArgsType = new ArrayList<Type>();
+      for (Type t: targs) {
+        fArgsType.add(t);
+      }
       fReturnType = tret;
-      fName = name;
+      fName = name;// + "_" + targs.length;
     }
     
     /**
@@ -52,7 +59,8 @@ public class MethodHandler {
      * @param mg the object to abstract
      */
     public MethodType(final MethodGen mg) {
-      this(mg.getName(),  mg.getArgumentTypes(), mg.getReturnType());
+      this(mg.getName(),  
+           mg.getArgumentTypes(), mg.getReturnType());
     }
     
     /**
@@ -70,12 +78,13 @@ public class MethodHandler {
       if (o instanceof MethodType) {
         final MethodType mt = (MethodType) o;
         if (!(getName().equals(mt.getName()) && 
-            (fArgsType.length == mt.fArgsType.length) && 
-            fReturnType.equals(mt.fReturnType))) {
+             (fArgsType.size() == mt.fArgsType.size()) && 
+             fReturnType.equals(mt.fReturnType))) {
           return false;
         }
-        for (int i = 0; i < fArgsType.length; i++) {
-          if (!fArgsType[i].equals(mt.fArgsType[i])) {
+        final Iterator iter = mt.fArgsType.iterator();
+        for (Type t: fArgsType) {
+          if (!t.equals(iter.next())) {
             return false;
           }
         }
@@ -141,12 +150,12 @@ public class MethodHandler {
     if (!fMethodList.contains(mt)) {
       final List l = findByName(mt);
       final int postfix = l.size();
-      if (postfix > 0) {
-        mt.setCoqName(Util.coqify(mt.getName()) + postfix);
-      }
-      else {
+//      if (postfix > 0) {
+//        mt.setCoqName(Util.coqify(mt.getName()) + postfix);
+//      }
+//      else {
         mt.setCoqName(Util.coqify(mt.getName()));
-      }
+//      }
       fMethodList.add(mt);
     }
   }
@@ -158,7 +167,10 @@ public class MethodHandler {
     }
     else {
       System.err.println("Method " + mt + " is unknown... let's add it!");
+      
       addMethod(mt);
+      
+      //throw new IllegalArgumentException("" + fMethodList);
       return getName(mt);
     }
   }
@@ -173,9 +185,12 @@ public class MethodHandler {
     return getName(mt);
   }
 
+  public String getName(final FieldOrMethod  ins, final ConstantPoolGen cpg) {
+    return getName((InvokeInstruction) ins, cpg);
+  }
   public String getName(final InvokeInstruction ii, final ConstantPoolGen cpg) {
-    final String name = ii.getMethodName(cpg);
     final Type[] targs = ii.getArgumentTypes(cpg);
+    final String name = ii.getMethodName(cpg);
     final Type tret = ii.getReturnType(cpg);
     final MethodType mt = new MethodType(name, targs, tret);
     return getName(mt);
