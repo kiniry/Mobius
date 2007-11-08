@@ -63,14 +63,15 @@ BEGIN
     Program_gvs_modeled?(sMP, sAP)
 
   Program_modeled2?(sMP : MPState, sAP : APState) : boolean =
-    IF up?(ex(pstate(sMP)))
     % any exception in the monitored prog also happens in the annotated prog
-    THEN up?(ex(pstate(sAP))) AND ex(pstate(sMP)) = ex(pstate(sAP))
+    (up?(ex(pstate(sMP))) IMPLIES
+       up?(ex(pstate(sAP))) AND ex(pstate(sMP)) = ex(pstate(sAP))) AND
     % the only new exceptions are JMLExc
-    ELSE up?(ex(pstate(sAP))) IMPLIES down(ex(pstate(sAP))) = JMLExc
-    ENDIF AND
+    (up?(ex(pstate(sAP))) AND NOT up?(ex(pstate(sMP))) =
+       (down(ex(pstate(sAP))) = JMLExc AND cp(astate(sMP)) = halted)) AND
     st(pstate(sMP)) = st(pstate(sAP)) AND
     Program_gvs_modeled?(sMP, sAP)
+
 
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
