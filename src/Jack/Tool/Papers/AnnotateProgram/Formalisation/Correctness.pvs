@@ -144,6 +144,7 @@ BEGIN
         related_states(mp)(update_PState(sMP, raise(e)), 
                            update_PState(sAP, raise(e)))
 
+  % NOTE: The use of equalities[Val] is needed for disambiaguation
   MP_modeled_lookup_correspondence : LEMMA % :-)
     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
       wf_state(ann_program(mp))(sAP) IMPLIES
@@ -152,7 +153,8 @@ BEGIN
       cps(mva(mp))(q2) IMPLIES
       cp(astate(sMP)) = q1 IMPLIES
         (q1 = q2) =
-        (val2int(lookup(cp(mp), sAP)) = val2int(lookup(name_of(mp)(q2), sAP)))
+        equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
+                           Int(val2int(lookup(name_of(mp)(q2), sAP)))))
 
   related_states_lookup_correspondence : LEMMA % :-)
     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
