@@ -24,8 +24,6 @@ import org.apache.bcel.generic.ClassGen;
 public class AnnotationExecutor extends Executor {
   /** the current working directory. */
   private final File fWorkingDir;
-  /** the type sygnature of the currently handled class. */
-  private final TypeSig fSig;
 
   
   /**
@@ -36,11 +34,10 @@ public class AnnotationExecutor extends Executor {
    * @param args the 'normal' arguments that should be given
    * to bico
    */
-  public AnnotationExecutor(final File workingDir, final TypeSig sig, 
+  public AnnotationExecutor(final File workingDir,
                             final String [] args) {
     super(args);
     fWorkingDir = workingDir; 
-    fSig = sig;
   }
 
   /**
@@ -115,7 +112,7 @@ public class AnnotationExecutor extends Executor {
    * @throws FileNotFoundException if a file is missing
    */
   public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
-    return new AnnotationClassExecutor(this, cg, fWorkingDir, fSig, this.getModuleName());
+    return new AnnotationClassExecutor(this, cg, fWorkingDir, this.getModuleName());
   }
 
   /**

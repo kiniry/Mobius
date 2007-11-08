@@ -1,10 +1,13 @@
 package mobius.directVCGen.formula;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import org.apache.bcel.generic.ClassGen;
 
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
@@ -287,18 +290,21 @@ public class Lookup {
   }
 
   
-  public void computePreconditionArgs() {
-    if (fPreArgs.isEmpty()) {
-      for (RoutineDecl rd: preconditions.keySet()) {
-        final List<QuantVariableRef> args = mkArguments(rd);
-        final LinkedList<QuantVariableRef> argsWithoutHeap = 
-          new LinkedList<QuantVariableRef>();
-        argsWithoutHeap.addAll(args);
-        argsWithoutHeap.removeFirst();
-        fPreArgs.put(rd, args);
-        fPreArgsWithoutHeap.put(rd, argsWithoutHeap);
-      }
+  public void computePreconditionArgs(final RoutineDecl rout) {
+    final List<RoutineDecl> lrout = new ArrayList<RoutineDecl>();
+    lrout.addAll(preconditions.keySet());
+    lrout.add(rout);
+    
+    for (RoutineDecl rd: lrout) {
+      final List<QuantVariableRef> args = mkArguments(rd);
+      final LinkedList<QuantVariableRef> argsWithoutHeap = 
+        new LinkedList<QuantVariableRef>();
+      argsWithoutHeap.addAll(args);
+      argsWithoutHeap.removeFirst();
+      fPreArgs.put(rd, args);
+      fPreArgsWithoutHeap.put(rd, argsWithoutHeap);
     }
+    
   }
   
   public List<QuantVariableRef> getPreconditionArgs(final RoutineDecl m) {

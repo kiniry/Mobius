@@ -50,7 +50,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
 
   @Override
   public void start() {
-    Lookup.getInst().computePreconditionArgs();
+    Lookup.getInst().computePreconditionArgs(fRout);
     doMethodPreAndPostDefinition();
   }
   
@@ -109,7 +109,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final Stream out = getAnnotationOut();
     out.println("Definition mk_" + namePre + " := ");
     final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgs(fRout);
-    
+
     String varsAndType = "";
 
     for (Term qvr: list) {

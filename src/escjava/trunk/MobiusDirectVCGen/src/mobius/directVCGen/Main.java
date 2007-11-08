@@ -220,11 +220,6 @@ public class Main extends escjava.Main {
     }
     fOut.println("[" + timeUsed(startTime) + "]\n");
 
-    final long midTime = currentTime();
-    
-    sig.getCompilationUnit().accept(new JmlVisitor(options.doSubsetChecking), null);
-    fOut.println("[" + timeUsed(midTime) + "]\n");
-
     doBcVCGen(sig); 
     doSrcVCGen(sig);
 
@@ -240,7 +235,7 @@ public class Main extends escjava.Main {
    */
   private void doBcVCGen(final TypeSig sig) {
     // Compile the bytecode version of the file
-    final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName(), sig);
+    final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName());
     try {
       ac.start();
     } 

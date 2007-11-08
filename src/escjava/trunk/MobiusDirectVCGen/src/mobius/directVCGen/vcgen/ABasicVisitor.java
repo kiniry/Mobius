@@ -1,6 +1,8 @@
 package mobius.directVCGen.vcgen;
 
+import mobius.directVCGen.formula.Util;
 import javafe.ast.ASTNode;
+import javafe.ast.RoutineDecl;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.CondExprModifierPragma;
@@ -88,12 +90,18 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    */
   @Override
   public Object visitASTNode(final ASTNode x, final Object o) {
-    //System.out.println(x);
     final int max = x.childCount();
+    if (x instanceof RoutineDecl) {
+      String s;
+      System.out.println(Util.getMethodName((RoutineDecl) x));
+      if ((Util.getMethodName((RoutineDecl) x)).equals("StringAnnotations.length"))
+        return o;
+    }
     Object res = o;
     for (int i = 0; i < max; i++) {
       final Object child = x.childAt(i);
-      if (child instanceof ASTNode) {
+      if ((child instanceof ASTNode) &&
+          (child != x)) {
         res = ((ASTNode) child).accept(this, o);
       }
     }

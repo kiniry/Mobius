@@ -41,10 +41,21 @@ public class Util {
   }
   
   public static InstructionHandle findLastInstruction(List<LineNumberGen> list) {
-    final InstructionHandle baseih = list.get(0).getInstruction();
-    InstructionHandle ih = baseih.getNext();
+    InstructionHandle baseih = list.get(0).getInstruction();
+    for (LineNumberGen lng: list) {
+      if (lng.getInstruction().getPosition() <
+          baseih.getPosition()) {
+        baseih = lng.getInstruction();
+      }
+    }
+    
+    InstructionHandle ih = baseih;
+    if(ih.getPrev() != null) {
+      ih = ih.getPrev();
+    }
     // first we find the first goto
     while (!(ih.getInstruction() instanceof GotoInstruction)) {
+      System.out.println(ih);
       ih = ih.getNext();
     }
     final GotoInstruction bi =  (GotoInstruction) ih.getInstruction();

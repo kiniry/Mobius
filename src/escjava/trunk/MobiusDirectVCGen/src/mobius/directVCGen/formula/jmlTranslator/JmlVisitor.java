@@ -137,21 +137,24 @@ public class JmlVisitor extends BasicJMLTranslator {
     boolean hasPost = false;
     int tag;
     // Check, if method has at least one postcondition/exceptional postcondition or is a helper method
-    for (int i = 0; i < x.pmodifiers.size(); i++) {
-      tag = x.pmodifiers.elementAt(i).getTag();
-      if ((tag == TagConstants.ENSURES) | (tag == TagConstants.POSTCONDITION) | (tag == TagConstants.POSTCONDITION_REDUNDANTLY)) {
-        hasPost = true;
-      }
-      else if (x.pmodifiers.elementAt(i).getTag() == TagConstants.HELPER) {
-        prop.fIsHelper = true;
+    if (x.pmodifiers != null) {
+      for (int i = 0; i < x.pmodifiers.size(); i++) {
+        tag = x.pmodifiers.elementAt(i).getTag();
+        if ((tag == TagConstants.ENSURES) | (tag == TagConstants.POSTCONDITION) | (tag == TagConstants.POSTCONDITION_REDUNDANTLY)) {
+          hasPost = true;
+        }
+        else if (x.pmodifiers.elementAt(i).getTag() == TagConstants.HELPER) {
+          prop.fIsHelper = true;
+        }
       }
     }
-    
     // If method is not decorated with any postcondition, we add a dummy postcondition node "//@ ensures true;"
     if (!hasPost) {
       final LiteralExpr litEx = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.TRUE, 0);
       final ExprModifierPragma postc = ExprModifierPragma.make(TagConstants.ENSURES, litEx, 0);  //FIXME: cbr: which loc? (here set to 0)
-      x.pmodifiers.addElement(postc);
+      if (x.pmodifiers != null) {
+        x.pmodifiers.addElement(postc);
+      }
     }
     
     // Add dummy exceptional postcondition to Lookup hash map   
@@ -379,26 +382,34 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     ((ContextProperties) o).interesting = true;
     Term t;
-    
+
     if (x.tag == TagConstants.INITIALLY) {
       fGlobal.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in initially to do the subset check
       final Term initiallyFOL = (Term) x.expr.accept(this, o);
+      
+      
+      
       fGlobal.put("doSubsetChecking", Boolean.FALSE);
-      t = (Term) ((MethodProperties) o).get("initiallyFOL");
-      boolean initIsValid = doSubsetChecking(o);
-      if (initIsValid) {
-        if (initiallyFOL != null) { 
-          if (t != null) {
-            t = Logic.and(t, initiallyFOL);
+      if (o instanceof MethodProperties) {
+        t = (Term) ((MethodProperties) o).get("initiallyFOL");
+        final boolean initIsValid = doSubsetChecking(o);
+        if (initIsValid) {
+          if (initiallyFOL != null) { 
+            if (t != null) {
+              t = Logic.and(t, initiallyFOL);
+            }
+            else {
+              t = initiallyFOL;
+            }
           }
-          else {
-            t = initiallyFOL;
-          }
+          ((MethodProperties) o).put("initiallyFOL", t);
         }
-        ((MethodProperties) o).put("initiallyFOL", t);
+        else {
+          System.out.println("Initially error (subset check)! The following term was not conjoined to the overall type initially term: " + initiallyFOL.toString() + "\n");
+        }
       }
-      else if (!initIsValid) {
-        System.out.println("Initially error (subset check)! The following term was not conjoined to the overall type initially term: " + initiallyFOL.toString() + "\n");
+      else {
+        t = initiallyFOL;
       }
     }
     else if (x.tag == TagConstants.INVARIANT) { 

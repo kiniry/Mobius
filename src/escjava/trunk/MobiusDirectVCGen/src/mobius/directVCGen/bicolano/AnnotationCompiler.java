@@ -21,12 +21,12 @@ public class AnnotationCompiler {
    * Initialized the annotation compiler with the given arguments.
    * @param pkgsdir the directory where to generate the file(s) 
    * @param clzz the class to treat
-   * @param sig the tree containing the annotations
    */
-  public AnnotationCompiler(final File pkgsdir, final String clzz, final TypeSig sig) {
+  public AnnotationCompiler(final File pkgsdir, final String clzz) {
     final String [] args = {pkgsdir.toString() + File.separator + 
-                            "Bico", clzz};
-    fExecutor = new AnnotationExecutor(pkgsdir, sig, args);
+                            "Bico", clzz, "java.lang.String"};
+    
+    fExecutor = new AnnotationExecutor(pkgsdir, args);
   }
 
   /**
