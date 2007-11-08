@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import javafe.tc.TypeSig;
 import mobius.bico.Util;
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.Dictionary;

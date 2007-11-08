@@ -1,17 +1,12 @@
 package mobius.directVCGen.bicolano;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javafe.ast.ASTNode;
-import javafe.ast.FormalParaDecl;
 import javafe.ast.RoutineDecl;
-import javafe.ast.VarDeclStmt;
 import javafe.util.Location;
 import mobius.bico.Util.Stream;
-import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Ref;
@@ -22,11 +17,9 @@ import mobius.directVCGen.vcgen.ABasicVisitor;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
-import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
-import escjava.sortedProver.Lifter.Term;
 
 
 /**
@@ -70,7 +63,12 @@ public final class AnnotationVisitor extends ABasicVisitor {
   }
 
 
-
+  public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
+    if (x.body != null) {
+      return x.body.accept(this, o);
+    }
+    return o;
+  }
   
 
 

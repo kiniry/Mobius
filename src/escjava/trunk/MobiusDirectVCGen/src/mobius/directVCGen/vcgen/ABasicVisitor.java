@@ -91,12 +91,12 @@ public abstract class ABasicVisitor extends VisitorArgResult {
   @Override
   public Object visitASTNode(final ASTNode x, final Object o) {
     final int max = x.childCount();
-    if (x instanceof RoutineDecl) {
-      String s;
-      System.out.println(Util.getMethodName((RoutineDecl) x));
-      if ((Util.getMethodName((RoutineDecl) x)).equals("StringAnnotations.length"))
-        return o;
-    }
+//    if (x instanceof RoutineDecl) {
+//      String s;
+//      System.out.println(Util.getMethodName((RoutineDecl) x));
+//      if ((Util.getMethodName((RoutineDecl) x)).equals("StringAnnotations.length"))
+//        return o;
+//    }
     Object res = o;
     for (int i = 0; i < max; i++) {
       final Object child = x.childAt(i);
@@ -431,7 +431,9 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    */
   @Override
   public Object visitParsedSpecs(final ParsedSpecs x, final Object o) {
-    return visitASTNode(x, o);
+    
+    return o;
+    
   }
 
   /*

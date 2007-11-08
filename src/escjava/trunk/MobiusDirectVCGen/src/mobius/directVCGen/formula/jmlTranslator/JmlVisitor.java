@@ -160,8 +160,9 @@ public class JmlVisitor extends BasicJMLTranslator {
     // Add dummy exceptional postcondition to Lookup hash map   
     //Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); 
     //prop.put("firstExPost", Boolean.TRUE);
-    
-    visitASTNode(x, o);
+    if (x.body != null) {
+      x.body.accept(this, prop);
+    }
     doAssignable(o);
     
     if (!prop.fIsHelper) {
