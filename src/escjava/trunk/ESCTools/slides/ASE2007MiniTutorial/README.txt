@@ -1,7 +1,9 @@
 This directory contains materials for the mini-tutorial by Gary T. Leavens
 (with help from Joseph R. Kiniry and Erik Poll) given at ASE 2007.
 
-The time available for this was 1.5 hours.  
+The time available for this was 1.5 hours.  This turned out to be too
+long, and I shortened the material in the specification inheritance
+and behavioral subtyping part dynamically.
 
 To make the tutorial PDF files (for presentation, etc.), use the Makefile.
 
