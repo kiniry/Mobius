@@ -56,22 +56,11 @@ BEGIN
     % any exception in the monitored prog also happens in the annotated prog
     (up?(ex(pstate(sMP))) IMPLIES
        up?(ex(pstate(sAP))) AND ex(pstate(sMP)) = ex(pstate(sAP))) AND
-    % the only new exceptions are JMLExc
-    (up?(ex(pstate(sAP))) AND NOT up?(ex(pstate(sMP))) =
-       (down(ex(pstate(sAP))) = JMLExc AND cp(astate(sMP)) = halted)) AND
+    % the only new exceptions are JMLExc and it happens when cp reached halted
+    (up?(ex(pstate(sAP))) IMPLIES (NOT up?(ex(pstate(sMP))) =
+       (JMLExc?(down(ex(pstate(sAP)))) AND cp(astate(sMP)) = halted))) AND
     st(pstate(sMP)) = st(pstate(sAP)) AND
     Program_gvs_modeled?(sMP, sAP)
-
-%   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
-%     % any exception in the monitored prog also happens in the annotated prog
-%     (up?(ex(pstate(sMP))) IMPLIES
-%        up?(ex(pstate(sAP))) AND ex(pstate(sMP)) = ex(pstate(sAP))) AND
-%     % the only new exceptions are JMLExc
-%     (up?(ex(pstate(sAP))) AND NOT up?(ex(pstate(sMP))) IMPLIES
-%        down(ex(pstate(sAP))) = JMLExc) AND
-%     st(pstate(sMP)) = st(pstate(sAP)) AND
-%     Program_gvs_modeled?(sMP, sAP)
-
 
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
@@ -124,19 +113,10 @@ BEGIN
     eval_action_behavior(mp) AND
     actions_have_no_side_effects(mp)
 
-%  well_behaved_MP(mp) : boolean =
-%    well_behaved_Program(mp) AND
-%    well_behaved_MVA(mp)
-
-  halted_implies_JMLExc(mp)(sMP : MPState, sAP : APState) : boolean =
-    cp(astate(sMP)) = halted IMPLIES
-      (up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc)
-
   related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
     wf_state(mp)(sMP) AND
     wf_state(ann_program(mp))(sAP) AND
     MP_modeled?(mp)(sMP, sAP)
-%    halted_implies_JMLExc(mp)(sMP, sAP)
     
 
 END Equivalence

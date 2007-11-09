@@ -23,11 +23,13 @@ BEGIN
 
   mp : VAR (wf_MP)
 
-  get_address_same_in_related_states : LEMMA  % :-)
+  % TODO: fix, needs change in get_address
+  get_address_same_in_related_states : LEMMA
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
         get_address(vn, sMP) = get_address(vn, sAP)
 
+  % TODO: fix, needs change in get_dynamic_type
   get_dynamic_type_name_same_in_related_states : LEMMA % :-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
@@ -50,22 +52,13 @@ BEGIN
       related_states(mp)(sMP, sAP) IMPLIES 
       ext_declared_var_names(program(mp))(n) IMPLIES
         lookup(n, sMP) = lookup(n, sAP)
-       
-  % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
+  
+  % TODO: fix     
   MP_modeled_preserved_by_update : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp)(sMP, sAP) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         MP_modeled?(mp)(update_PState(sMP, upd), update_PState(sAP, upd))
-
-  % If cp(astate(sMP)) = halted, upd must leave the JML exception in sAP
-  halted_implies_JMLExc_preserved_by_update : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
-      NOT up?(ex(upd(pstate(sAP)))) IMPLIES
-        halted_implies_JMLExc(mp)(update_PState(sMP, upd), 
-                                  update_PState(sAP, upd))
 
   related_states_preserved_by_update_local : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState)(vn : Name, v : (defined?)) :
@@ -75,74 +68,32 @@ BEGIN
         related_states(mp)(update_PState(sMP, update_local(vn, v)), 
                            update_PState(sAP, update_local(vn, v)))
 
-  MP_modeled_preserved_by_catch : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-        MP_modeled?(mp)(update_PState(sMP, catch), update_PState(sAP, catch))
-
-  MP_modeled_preserved_by_raise : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState, e : Excpt) :
-      related_states(mp)(sMP, sAP) IMPLIES
-        MP_modeled?(mp)(update_PState(sMP, raise(e)), 
-                        update_PState(sAP, raise(e)))
-
-  halted_implies_JMLExc_preserved_by_catch : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      (up?(ex(pstate(sAP))) IMPLIES NOT down(ex(pstate(sAP))) = JMLExc) IMPLIES
-        halted_implies_JMLExc(mp)(update_PState(sMP, catch), 
-                                  update_PState(sAP, catch))
-
-  halted_implies_JMLExc_preserved_by_catch2 : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT cp(astate(sMP)) = halted IMPLIES
-        halted_implies_JMLExc(mp)(update_PState(sMP, catch), 
-                                  update_PState(sAP, catch))
-
-  halted_implies_JMLExc_preserved_by_raise : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState, e : Excpt) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
-        halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
-                                  update_PState(sAP, raise(e)))
-
-  halted_implies_JMLExc_preserved_by_raise2 : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState, e : Excpt) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT cp(astate(sMP)) = halted IMPLIES
-      NOT e = JMLExc IMPLIES
-        halted_implies_JMLExc(mp)(update_PState(sMP, raise(e)), 
-                                  update_PState(sAP, raise(e)))
-
   related_states_preserved_by_catch : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
-      (up?(ex(pstate(sAP))) IMPLIES NOT down(ex(pstate(sAP))) = JMLExc) IMPLIES
-        related_states(mp)(update_PState(sMP, catch), 
-                           update_PState(sAP, catch))
-
-  related_states_preserved_by_catch2 : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT cp(astate(sMP)) = halted IMPLIES
         related_states(mp)(update_PState(sMP, catch), 
                            update_PState(sAP, catch))
 
   related_states_preserved_by_raise : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState, e : Excpt) :
       related_states(mp)(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
+      NOT (JMLExc?(e) AND cp(astate(sMP)) = halted) IMPLIES
         related_states(mp)(update_PState(sMP, raise(e)), 
                            update_PState(sAP, raise(e)))
 
-  related_states_preserved_by_raise2 : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState, e : Excpt) :
+  related_states_preserved_by_update_stack : LEMMA % :-)
+    FORALL (sMP : MPState, sAP : APState,
+            this_val : Val, arg :  (getLocalDecls(program(mp))), 
+            param_val : Val, lvds : finite_set[LocalVarDecl]) :
       related_states(mp)(sMP, sAP) IMPLIES
-      NOT cp(astate(sMP)) = halted IMPLIES
-      NOT e = JMLExc IMPLIES
-        related_states(mp)(update_PState(sMP, raise(e)), 
-                           update_PState(sAP, raise(e)))
+      NOT up?(ex(pstate(sAP))) IMPLIES
+      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
+                                   getLocalDecls(program(mp))(l)) IMPLIES
+        related_states(mp)(update_stack(this_val, arg, param_val,
+                                        lvds, sMP),
+                           update_stack(this_val, arg, param_val,
+                                        lvds, sAP))
+
 
   % NOTE: The use of equalities[Val] is needed for disambiaguation
   MP_modeled_lookup_correspondence : LEMMA % :-)
@@ -163,56 +114,8 @@ BEGIN
       cps(mva(mp))(q2) IMPLIES
       cp(astate(sMP)) = q1 IMPLIES
         (q1 = q2) =
-        (val2int(lookup(cp(mp), sAP)) = val2int(lookup(name_of(mp)(q2), sAP)))
-
-  % TODO: use MP_modeled_lookup_correspondence instead of these lemmas
-%   MP_modeled_implies_cp_halted_correspondence : LEMMA % :-)
-%     FORALL (sMP : MPState, sAP : APState) :
-%       wf_state(ann_program(mp))(sAP) IMPLIES
-%       MP_modeled?(mp)(sMP, sAP) IMPLIES
-%       (cp(astate(sMP)) = halted) = 
-%       (lookup(cp(mp), sAP) = lookup(halted(mp), sAP))
-
-%   related_states_implies_cp_halted_correspondence : LEMMA % :-)
-%     FORALL (sMP : MPState, sAP : APState) :
-%       related_states(mp)(sMP, sAP) IMPLIES
-%       (cp(astate(sMP)) = halted) =
-%       (lookup(cp(mp), sAP) = lookup(halted(mp), sAP))
-
-  MP_modeled_implies_cp_Int : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      MP_modeled?(mp)(sMP, sAP) IMPLIES
-      wf_state(ann_program(mp))(sAP) IMPLIES
-      Int?(lookup(cp(mp), sAP))
-
-  MP_modeled_implies_halted_Int : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      MP_modeled?(mp)(sMP, sAP) IMPLIES
-      wf_state(ann_program(mp))(sAP) IMPLIES
-      Int?(lookup(halted(mp), sAP))
-
-  related_states_implies_cp_Int : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      Int?(lookup(cp(mp), sAP))
-
-  related_states_implies_halted_Int : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      Int?(lookup(halted(mp), sAP))
-
-  related_states_preserved_by_update_stack : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState,
-            this_val : Val, arg :  (getLocalDecls(program(mp))), 
-            param_val : Val, lvds : finite_set[LocalVarDecl]) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
-      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
-                                   getLocalDecls(program(mp))(l)) IMPLIES
-        related_states(mp)(update_stack(this_val, arg, param_val,
-                                        lvds, sMP),
-                           update_stack(this_val, arg, param_val,
-                                        lvds, sAP))
+        equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
+                           Int(val2int(lookup(name_of(mp)(q2), sAP)))))
 
 
 END RelatedStateProperties
