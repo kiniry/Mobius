@@ -205,14 +205,14 @@ BEGIN
   ann_event(mp)(ts : finite_set[Transition]) : Stmt =
     CaseJML(set2list(ann_event_set(mp)(ts)))
 
-  % PROVE: fix the proof
+  % :-)
   var_names_ann_event : LEMMA
     FORALL (ts : finite_set[Transition]) :
       subset?(ts, ts(mva(mp))) IMPLIES
         subset?(var_names(ann_event(mp)(ts)),
                 union(var_names(program(mp)), var_names(new_gvds(mp))))
 
-  % PROVE: fix the proof
+  % :-)
   ann_event_var_names : LEMMA
     FORALL (ts : finite_set[Transition], v : Name) :
       subset?(ts, ts(mva(mp))) IMPLIES
@@ -225,7 +225,7 @@ BEGIN
     FORALL (ts : finite_set[Transition], b: Body):
       subset?(ts, ts(mva(mp))) IMPLIES
       Set?(b) IMPLIES
-      b << ann_event(mp)(ts) IMPLIES
+      subterm(b, ann_event(mp)(ts)) IMPLIES
         var_names(new_gvds(mp))(target(b))
 
 

@@ -299,6 +299,7 @@ BEGIN
           EXISTS(x : [BoolExpr, Stmt]) :
             s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
+
   % Declared variable names
 
   getFieldDecls(p : PreProgram) : finite_set[FieldDecl] =
@@ -452,6 +453,14 @@ BEGIN
       subterm(b1, b2) IMPLIES
         subterm(b2, b3) IMPLIES
           subterm(b1, b3)
+
+  subterm_CaseJML_set2list : LEMMA % :-)
+    FORALL(s : finite_set[[BoolExpr, Stmt]], b : Body) :
+      Set?(b) IMPLIES
+      subterm(b, CaseJML(set2list(s))) =
+        (EXISTS(x : [BoolExpr, Stmt]) : 
+           s(x) AND (subterm(b, proj_1(x)) OR subterm(b, proj_2(x))))
+
 
 %  program_code(p : PreProgram)(s : Stmt) : boolean =
 %    EXISTS(c : Class, m : Method) :
