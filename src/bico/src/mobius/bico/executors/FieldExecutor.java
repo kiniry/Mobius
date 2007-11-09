@@ -1,9 +1,13 @@
 package mobius.bico.executors;
 
+import java.util.ArrayList;
+
 import mobius.bico.Util;
 
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.Type;
 
 
 /**
@@ -20,6 +24,9 @@ class FieldExecutor extends ASignatureExecutor {
   
   /** the currently treated JavaClass from which the fields are taken. */
   private JavaClass fJavaClass;
+  
+  
+  
   
   
   /**
@@ -40,14 +47,28 @@ class FieldExecutor extends ASignatureExecutor {
    * cannot be resolved
    */
   public void start() throws ClassNotFoundException {
+	//doImport();
     for (Field field : fJavaClass.getFields()) {
       doField(field);
       fOut.println();
     }
     
   }
-  
   /**
+   * probably should be @deprecated
+   */
+  private void doImport() {
+	  ArrayList<String> modulesToImports = startModulesToBeImported();
+	  for (String moduleToImport : modulesToImports) {
+		  String signature = Util.classFormatName2Standard(moduleToImport); 
+		  signature = Util.coqify(signature) + "_signature";
+		  fOut.println(Constants.REQ_IMPORT + Constants.SPACE + signature   + ".v.");
+		  fOut.println(Constants.IMPORT + Constants.SPACE + signature+ ".");
+	  }
+	
+  }
+
+/**
    * Enumerates in a Coq friendly form all the fields of the class.
    */
   public void doEnumeration() {
@@ -69,6 +90,37 @@ class FieldExecutor extends ASignatureExecutor {
   }
 
   /**
+   * Collects the modules  which contain the description of the field type
+   * to be imported in the current module
+   * 
+   * @throws ClassNotFoundException if a class typing a field
+   * cannot be resolved
+   */
+  public ArrayList<String> startModulesToBeImported() {
+	  /*the list of modules to be imported in the current module. 
+	   *  For instance, the module which describes the type of the field 
+	   *  must be imported in the current module:
+	   *  
+	   *  Require Import D_type.v
+	   *  
+	   *  Field c := (Name, D)
+	   *  
+	   */
+	ArrayList<String> modulesToBeImported = new ArrayList<String>();
+    for (Field field : fJavaClass.getFields()) {
+      Type type = field.getType();
+   	  if (type  instanceof ObjectType) {
+   		  String  signature = ((ObjectType)type).getSignature();
+   		  modulesToBeImported.add(signature);  
+   	  }
+    }
+    return modulesToBeImported;
+  }
+  
+  
+	
+  
+  /**
    * Definition of the field signature.
    * @param field the current field
    * @param fieldIdx the index which represents the name of the field
@@ -86,6 +138,7 @@ class FieldExecutor extends ASignatureExecutor {
     
     strf = "(" + fieldIdx + "%positive)";
     fOutSig.println(strf);
+    
     // !!! here will be conversion
     strf = Util.convertType(field.getType(), fRepos);
     fOutSig.println(strf);
