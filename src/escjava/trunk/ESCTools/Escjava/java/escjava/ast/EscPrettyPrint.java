@@ -306,6 +306,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
     case TagConstants.WORKING_SPACE:
     case TagConstants.ALSO_MODIFIES:
     case TagConstants.ASSIGNABLE:
+    case TagConstants.ONLY_ASSIGNED:
     case TagConstants.MEASURED_BY:
     case TagConstants.MODIFIABLE:
     case TagConstants.MODIFIES: {

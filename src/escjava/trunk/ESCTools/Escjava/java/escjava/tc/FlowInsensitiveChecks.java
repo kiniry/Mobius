@@ -2383,6 +2383,7 @@ System.out.println("FOUND " + t);
 
         case TagConstants.MODIFIES:
         case TagConstants.ASSIGNABLE:
+        case TagConstants.ONLY_ASSIGNED:
         case TagConstants.MODIFIABLE:
         case TagConstants.STILL_DEFERRED: {
           CondExprModifierPragma emp = (CondExprModifierPragma)p;

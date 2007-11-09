@@ -297,7 +297,8 @@ public class TagConstants extends GeneratedTags
     public static final int ASSERT_REDUNDANTLY = ALSO_REFINE + 1;
     public static final int ASSIGNABLE_REDUNDANTLY = ASSERT_REDUNDANTLY + 1;
     public static final int ASSIGNABLE = ASSIGNABLE_REDUNDANTLY + 1;
-    public static final int ASSUME_REDUNDANTLY = ASSIGNABLE + 1;
+    public static final int ONLY_ASSIGNED = ASSIGNABLE + 1;
+    public static final int ASSUME_REDUNDANTLY = ONLY_ASSIGNED + 1;
     // assume -- an ESC keyword
     // axiom -- an ESC keyword
     public static final int BEHAVIOR = ASSUME_REDUNDANTLY + 1;
@@ -944,6 +945,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("assert_redundantly"),
         Identifier.intern("assignable_redundantly"),
         Identifier.intern("assignable"),
+        Identifier.intern("\\only_assigned"),
         Identifier.intern("assume_redundantly"),
         Identifier.intern("behavior"),
         Identifier.intern("breaks_redundantly"),

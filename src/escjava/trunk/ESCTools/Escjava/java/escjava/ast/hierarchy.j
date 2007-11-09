@@ -1249,6 +1249,7 @@ public class CondExprModifierPragma extends ModifierPragma
 
     private boolean isJMLExprModifier() {
         return (tag == TagConstants.ASSIGNABLE ||
+                tag == TagConstants.ONLY_ASSIGNED ||
                 tag == TagConstants.MODIFIABLE);
     }
 

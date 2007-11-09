@@ -64,19 +64,19 @@ public abstract class IntSet {
     // that subclasses may override for efficiency.
 
     /** post(this) = pre(peer). */
-    public void copy_from(IntSet peer) {
-	if (this != peer) {
+    public void copy_from(IntSet intSetPeer) {
+	if (this != intSetPeer) {
 	    clear();
 	    int iter = -1;
-	    while ((iter = peer.next(iter)) >= 0) {
-		insert(peer.get(iter));
+	    while ((iter = intSetPeer.next(iter)) >= 0) {
+		insert(intSetPeer.get(iter));
 	    }
 	}
     }
 
     /** post(this) = intersect(pre(this), pre(peer)).
 	Returns true iff post(this) != pre(this). */
-    public abstract boolean intersect(IntSet peer);
+    public abstract boolean intersect(IntSet intSetPeer);
 
     /** post(this) = union(pre(this), pre(peer)).
 	Returns true iff post(this) != pre(this). */
@@ -93,14 +93,14 @@ public abstract class IntSet {
 
     /** post(this) = pre(this) - pre(peer).
 	Returns true iff post(this) != pre(this). */
-    public abstract boolean subtract(IntSet peer);
+    public abstract boolean subtract(IntSet intSetPeer);
 
     /** Returns true iff "this" is a subset of "peer". */
-    public boolean is_subset_of(IntSet peer) {
-	if (this != peer) {
+    public boolean is_subset_of(IntSet intSetPeer) {
+	if (this != intSetPeer) {
 	    int iter = -1;
 	    while ((iter = next(iter)) >= 0) {
-		if (!peer.contains(get(iter))) {
+		if (!intSetPeer.contains(get(iter))) {
 		    return false;
 		}
 	    }

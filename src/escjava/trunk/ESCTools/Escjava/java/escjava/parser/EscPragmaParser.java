@@ -907,6 +907,7 @@ public class EscPragmaParser extends Parse
         case TagConstants.MODIFIABLE_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
         case TagConstants.MODIFIES_REDUNDANTLY: // SUPPORT COMPLETE (kiniry)
         case TagConstants.MODIFIES:
+        case TagConstants.ONLY_ASSIGNED:
         {
           checkNoModifiers(tag, loc);
           ModifiesGroupPragma group = ModifiesGroupPragma.make(tag, loc);
