@@ -344,9 +344,8 @@ BEGIN
     FORALL (m : Method) :
       res_type(ann_method(mp)(m)) = res_type(m)
 
-
-  % PROVE: fix the proof
-  ann_method_wf_Body : LEMMA
+  % :-)
+  ann_method_wf_Body1 : LEMMA
     FORALL(m : Method) :
       wf_Method(program(mp))(m) IMPLIES
       LET am = ann_method(mp)(m) IN
@@ -373,6 +372,29 @@ BEGIN
       (FORALL(v : Name) : var_names(exc_set(am))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v) OR
                           var_names(new_gvds(mp))(v))
+
+  ann_method_wf_Body2 : LEMMA % :-)
+    FORALL(m : Method, b : Body) :
+      wf_Method(program(mp))(m) IMPLIES
+      Set?(b) IMPLIES
+      LET am = ann_method(mp)(m) IN
+      (subterm(b, body(am)) IMPLIES 
+         var_names(getGhostDecls(program(mp)))(target(b))) AND
+      (subterm(b, pre(am)) IMPLIES 
+         var_names(getGhostDecls(program(mp)))(target(b))) AND
+      (subterm(b, post(am)) IMPLIES 
+         var_names(getGhostDecls(program(mp)))(target(b))) AND
+      (subterm(b, res(am)) IMPLIES 
+         var_names(getGhostDecls(program(mp)))(target(b))) AND
+      (subterm(b, pre_set(am)) IMPLIES 
+         var_names(getGhostDecls(program(mp)))(target(b)) OR
+         var_names(new_gvds(mp))(target(b))) AND
+      (subterm(b, post_set(am)) IMPLIES 
+         var_names(getGhostDecls(program(mp)))(target(b)) OR
+         var_names(new_gvds(mp))(target(b))) AND
+      (subterm(b, exc_set(am)) IMPLIES 
+         var_names(getGhostDecls(program(mp)))(target(b)) OR
+         var_names(new_gvds(mp))(target(b))) 
 
 
 END AnnotateMethod
@@ -596,15 +618,15 @@ BEGIN
             union(var_names(program(mp)), var_names(new_gvds(mp))))
 
   % PROVE
-  var_names_MVA_subset_ghostvars : LEMMA
-    subset?(var_names(mva(mp)), var_names(getGhostDecls(ann_program(mp))))
+  var_names_declared_in_MVA_subset_ghostvars : LEMMA
+    subset?(var_names(vdsA(mva(mp))), var_names(getGhostDecls(ann_program(mp))))
 
 
   % AT: I haven't used this but if we can prove it it will simplify things,
   % in particular the proofs next lemmas.
   % If proved I could use it on execute_action_preserves_MVA_vars_modeled
   % SEE wf_Body_preserved_by_proper_subterm in Program
-  proper_subterm_wf_Body : LEMMA
+  proper_subterm_wf_Body : LEMMA % :-)
     FORALL (b, b1 : Body) :
       b1 << b IMPLIES
       wf_Body(ann_program(mp))(b) IMPLIES
