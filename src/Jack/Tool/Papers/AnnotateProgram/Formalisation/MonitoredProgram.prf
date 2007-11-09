@@ -1,31 +1,56 @@
 (|MonitoredProgram|
  (|get_monitored_class_TCC1| 0
-  (|get_monitored_class_TCC1-1| NIL 3399182363 3401610559
+  (|get_monitored_class_TCC1-1| NIL 3399182363 3403505899
    ("" (SKOLEM-TYPEPRED)
     (("" (EXPAND* "compatible" "nonempty?" "empty?" "member")
       (("" (SKOSIMP*) (("" (INST?) (("" (ASSERT) NIL NIL)) NIL)) NIL)) NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|member| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgram| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgram| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   4 4 T NIL))
+   23 23 T NIL))
  (|name_get_monitored_class| 0
-  (|name_get_monitored_class-1| NIL 3400563327 3401613998
+  (|name_get_monitored_class-1| NIL 3400563327 3403505899
    ("" (SKOSIMP*)
     (("" (EXPAND "get_monitored_class") (("" (ASSERT) NIL NIL)) NIL)) NIL)
-   UNCHECKED NIL 2 2 T SHOSTAK))
+   PROVED ((|get_monitored_class| CONST-DECL "Class" |MonitoredProgram| NIL)) 3
+   3 T SHOSTAK))
  (|get_monitored_class_in_classes| 0
-  (|get_monitored_class_in_classes-1| NIL 3400563719 3401613999
+  (|get_monitored_class_in_classes-1| NIL 3400563719 3403505899
    ("" (SKOSIMP*)
     (("" (EXPAND "get_monitored_class") (("" (PROPAX) NIL NIL)) NIL)) NIL)
-   UNCHECKED NIL 20 20 T SHOSTAK))
+   PROVED ((|get_monitored_class| CONST-DECL "Class" |MonitoredProgram| NIL)) 3
+   3 T SHOSTAK))
  (|get_monitored_class_unique_for_wf_MP_TCC1| 0
-  (|get_monitored_class_unique_for_wf_MP_TCC1-1| NIL 3399183164 3401611212
+  (|get_monitored_class_unique_for_wf_MP_TCC1-1| NIL 3399183164 3403505900
    ("" (SKOLEM-TYPEPRED)
     (("" (TYPEPRED "program(mp!1)")
       (("" (EXPAND* "wf_MP" "compatible" "singleton?")
@@ -46,21 +71,53 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|lift| TYPE-DECL NIL |lift_adt| NIL)
+   PROVED
+   ((|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Program| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|c!1| SKOLEM-CONST-DECL "Class[Name]" |MonitoredProgram| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "MonitoredProgram" |MonitoredProgram| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|wf_program_has_unique_class_names_def| CONST-DECL "boolean"
+     |WellFormedProgram| NIL)
+    (|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
     (|singleton?| CONST-DECL "bool" |sets| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgram| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgram| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   14857 175 T NIL))
+   86 85 T NIL))
  (|get_monitored_class_unique_for_wf_MP| 0
-  (|get_monitored_class_unique_for_wf_MP-2| NIL 3399183561 3401613999
+  (|get_monitored_class_unique_for_wf_MP-2| NIL 3399183561 3403505900
    ("" (SKOSIMP) (("" (EXPAND* "get_monitored_class" "choose" "the") NIL NIL))
     NIL)
-   UNCHECKED
-   ((|the| CONST-DECL "(p)" |sets| NIL) (|choose| CONST-DECL "(p)" |sets| NIL))
-   3 2 NIL NIL)
+   PROVED
+   ((|get_monitored_class| CONST-DECL "Class" |MonitoredProgram| NIL)
+    (|the| CONST-DECL "(p)" |sets| NIL) (|choose| CONST-DECL "(p)" |sets| NIL))
+   3 3 NIL NIL)
   (|get_monitored_class_unique_for_wf_MP-1| NIL 3399183469 3399183536
    ("" (SKOSIMP)
     (("" (EXPAND* "wf_MP" "get_monitored_class" "choose" "the") NIL NIL)) NIL)
@@ -69,16 +126,44 @@
    67208 100 T SHOSTAK)))
 (|MonitoredProgramSemantics|
  (|update_PState_TCC1| 0
-  (|update_PState_TCC1-1| NIL 3391514279 3401613999 ("" (SUBTYPE-TCC) NIL NIL)
-   UNCHECKED
-   ((|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   39 38 NIL NIL))
+  (|update_PState_TCC1-1| NIL 3391514279 3403589880 ("" (SUBTYPE-TCC) NIL NIL)
+   PROVED
+   ((|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL))
+   40 40 NIL NIL))
  (|update_GhostVars_TCC1| 0
-  (|update_GhostVars_TCC1-1| NIL 3391514279 3401613999
-   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED NIL 23 24 NIL NIL))
+  (|update_GhostVars_TCC1-1| NIL 3391514279 3403589880
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ((|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL))
+   46 46 NIL NIL))
  (|wf_state_implies_wf_PSt| 0
-  (|wf_state_implies_wf_PSt-1| NIL 3388136206 3401614028
+  (|wf_state_implies_wf_PSt-1| NIL 3388136206 3403589915
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_PSt")
       (("" (SKOSIMP*)
@@ -105,14 +190,55 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+   PROVED
+   ((|wf_PSt| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL))
-   2853 2840 T SHOSTAK))
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|MVA_events_correspond_to_methods| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
+    (|MVA_prog_vars_are_fields| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MVA_aut_vars_are_not_prog_vars| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
+    (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL))
+   3523 3521 T SHOSTAK))
  (|wf_state_vars_tricotomy| 0
-  (|wf_state_vars_tricotomy-1| NIL 3396777599 3401614028
+  (|wf_state_vars_tricotomy-1| NIL 3396777599 3403589916
    ("" (SKOSIMP*)
     (("" (EXPAND "ext_declared_var_names")
       (("" (EXPAND "wf_state")
@@ -135,12 +261,18 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|union| CONST-DECL "set" |sets| NIL)
-    (|member| CONST-DECL "bool" |sets| NIL))
-   7 7 T SHOSTAK))
+   PROVED
+   ((|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
+     NIL)
+    (|union| CONST-DECL "set" |sets| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|member| CONST-DECL "bool" |sets| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL))
+   48 48 T SHOSTAK))
  (|wf_state_ghost_not_local_or_field| 0
-  (|wf_state_ghost_not_local_or_field-1| NIL 3396777649 3401614028
+  (|wf_state_ghost_not_local_or_field-1| NIL 3396777649 3403589916
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_Program")
       (("" (EXPAND "wf_program_variables_disjoint_def")
@@ -199,25 +331,79 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|finite_intersection1| APPLICATION-JUDGEMENT "finite_set" |finite_sets|
+   PROVED
+   ((|wf_Program| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|wf_program_variables_not_reserved_words_def| CONST-DECL "boolean"
+     |WellFormedProgram| NIL)
+    (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|reserved_words| CONST-DECL "finite_set[Name]" |Program| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|finite_intersection1| APPLICATION-JUDGEMENT "finite_set" |finite_sets|
      NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|intersection| CONST-DECL "set" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
-    (|disjoint?| CONST-DECL "bool" |sets| NIL))
-   32 32 T SHOSTAK))
+    (|disjoint?| CONST-DECL "bool" |sets| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_program_variables_disjoint_def| CONST-DECL "boolean"
+     |WellFormedProgram| NIL))
+   34 34 T SHOSTAK))
  (|on_method_MVA_TCC1| 0
-  (|on_method_MVA_TCC1-1| NIL 3387174104 3401614030
+  (|on_method_MVA_TCC1-1| NIL 3387174104 3403589917
    ("" (SKOSIMP*) (("" (TYPEPRED "s!1") (("" (GRIND) NIL NIL)) NIL)) NIL)
-   UNCHECKED
-   ((|lift| TYPE-DECL NIL |lift_adt| NIL)
+   PROVED
+   ((|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|wf_Store| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|PSt| TYPE-EQ-DECL NIL |State| NIL) (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|choose| CONST-DECL "(p)" |sets| NIL))
-   137 137 T NIL))
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|choose| CONST-DECL "(p)" |sets| NIL)
+    (|get_monitored_class| CONST-DECL "Class" |MonitoredProgram| NIL))
+   87 87 T NIL))
  (|on_method_MVA_TCC2| 0
-  (|on_method_MVA_TCC2-1| NIL 3387174104 3401614030
+  (|on_method_MVA_TCC2-1| NIL 3387174104 3403589917
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_PEvent")
       (("" (ASSERT)
@@ -228,23 +414,63 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   6 6 T NIL))
+   PROVED
+   ((|wf_PEvent| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|wf_state_implies_wf_PSt| FORMULA-DECL NIL |MonitoredProgramSemantics|
+     NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL))
+   47 48 T NIL))
  (|on_method_MVA_TCC3| 0
-  (|on_method_MVA_TCC3-1| NIL 3392369297 3401614030
+  (|on_method_MVA_TCC3-1| NIL 3392369297 3403589918
    ("" (SKOSIMP*)
     (("" (TYPEPRED "mva(mp!1)")
       (("" (EXPAND "complete") (("" (FLATTEN) NIL NIL)) NIL)) NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL))
-   3 3 T NIL))
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL))
+   2 3 T NIL))
  (|on_method_entry_MP_TCC1| 0
-  (|on_method_entry_MP_TCC1-1| NIL 3387174104 3401614030
+  (|on_method_entry_MP_TCC1-1| NIL 3387174104 3403589918
    ("" (EXPAND "on_method_event_type")
     (("" (SKOSIMP*)
       (("" (EXPAND "on_method_entry")
@@ -266,12 +492,14 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
-     NIL))
-   56 56 T NIL))
+   PROVED
+   ((|on_method_entry| CONST-DECL "(on_method_event_type)" |SemanticsJML| NIL)
+    (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+     NIL)
+    (|on_method_event_type| CONST-DECL "boolean" |SemanticsTypes| NIL))
+   39 40 T NIL))
  (|on_method_exit_normal_MP_TCC1| 0
-  (|on_method_exit_normal_MP_TCC1-1| NIL 3387174104 3401614031
+  (|on_method_exit_normal_MP_TCC1-1| NIL 3387174104 3403589918
    ("" (EXPAND "on_method_event_type")
     (("" (SKOSIMP*)
       (("" (EXPAND "on_method_exit_normal")
@@ -291,39 +519,132 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
-     NIL))
-   37 38 T NIL))
+   PROVED
+   ((|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+     NIL)
+    (|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
+     NIL)
+    (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+     NIL)
+    (|real_lt_is_strict_total_order| NAME-JUDGEMENT
+     "(strict_total_order?[real])" |real_props| NIL))
+   30 31 T NIL))
  (|on_method_exit_normal_MP_TCC2| 0
-  (|on_method_exit_normal_MP_TCC2-1| NIL 3401773402 3401773450
+  (|on_method_exit_normal_MP_TCC2-1| NIL 3401773402 3403589918
    ("" (SKOSIMP*)
     (("" (TYPEPRED "md!1")
       (("" (EXPAND "wf_Method") (("" (FLATTEN) NIL NIL)) NIL)) NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL))
-   1473 60 T NIL))
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL))
+   4 4 T NIL))
  (|on_method_exit_normal_MP_TCC3| 0
-  (|on_method_exit_normal_MP_TCC3-1| NIL 3401773402 3401774019
-   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
+  (|on_method_exit_normal_MP_TCC3-1| NIL 3401773402 3403589919
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL))
-   45 45 NIL NIL))
+   65 65 NIL NIL))
  (|on_method_exit_normal_MP_TCC4| 0
-  (|on_method_exit_normal_MP_TCC4-1| NIL 3401773402 3401774021
-   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
-   ((|choose| CONST-DECL "(p)" |sets| NIL)
+  (|on_method_exit_normal_MP_TCC4-1| NIL 3401773402 3403589921
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ((|get_monitored_class| CONST-DECL "Class" |MonitoredProgram| NIL)
+    (|choose| CONST-DECL "(p)" |sets| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL) (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|wf_Store| CONST-DECL "boolean" |MVASemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|class_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+     NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|MVA_aut_vars_are_not_prog_vars| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
+    (|MVA_prog_vars_are_fields| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MVA_events_correspond_to_methods| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
     (|real_le_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
@@ -339,20 +660,94 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   203 203 NIL NIL))
+   199 200 NIL NIL))
  (|on_method_exit_normal_MP_TCC5| 0
-  (|on_method_exit_normal_MP_TCC5-1| NIL 3401773402 3401774023
-   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
-   ((|choose| CONST-DECL "(p)" |sets| NIL)
+  (|on_method_exit_normal_MP_TCC5-1| NIL 3401773402 3403589924
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ((|get_monitored_class| CONST-DECL "Class" |MonitoredProgram| NIL)
+    (|choose| CONST-DECL "(p)" |sets| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|wf_Store| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|class_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|check_assertion| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL) (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|raise| CONST-DECL "PState" |State| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
+     NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|MVA_aut_vars_are_not_prog_vars| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
+    (|MVA_prog_vars_are_fields| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MVA_events_correspond_to_methods| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
     (|real_le_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
@@ -370,24 +765,60 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   213 213 NIL NIL))
+   272 273 NIL NIL))
  (|on_method_exit_normal_MP_TCC6| 0
-  (|on_method_exit_normal_MP_TCC6-1| NIL 3401773402 3401773475
+  (|on_method_exit_normal_MP_TCC6-1| NIL 3401773402 3403589924
    ("" (SKOSIMP*)
     (("" (TYPEPRED "md!1")
       (("" (EXPAND "wf_BoolExpr")
         (("" (EXPAND "wf_Method") (("" (FLATTEN) NIL NIL)) NIL)) NIL))
       NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL))
-   1770 26 T NIL))
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL))
+   6 6 T NIL))
  (|on_method_exit_normal_MP_TCC7| 0
-  (|on_method_exit_normal_MP_TCC7-1| NIL 3401773402 3401773607
+  (|on_method_exit_normal_MP_TCC7-1| NIL 3401773402 3403589924
    ("" (EXPAND "on_method_event_type")
     (("" (SKOSIMP*)
       (("" (SPLIT -1)
@@ -396,12 +827,13 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+   PROVED
+   ((|on_method_event_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL))
-   1380 36 T NIL))
+   35 35 T NIL))
  (|on_method_exit_exceptional_MP_TCC1| 0
-  (|on_method_exit_exceptional_MP_TCC1-1| NIL 3387174104 3401614031
+  (|on_method_exit_exceptional_MP_TCC1-1| NIL 3387174104 3403589924
    ("" (EXPAND "on_method_event_type")
     (("" (SKOSIMP*)
       (("" (EXPAND "on_method_exit_exceptional")
@@ -447,45 +879,133 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|down| ADT-ACCESSOR-DECL "[(up?) -> T]" |lift_adt| NIL)
-    (|up?| ADT-RECOGNIZER-DECL "[lift -> boolean]" |lift_adt| NIL)
-    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL)
-    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+   PROVED
+   ((|nnint_plus_posint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+     NIL)
+    (|nnint_plus_nnint_is_nnint| APPLICATION-JUDGEMENT "nonneg_int" |integers|
+     NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
-     NIL))
-   41 41 T NIL))
+     NIL)
+    (|real_lt_is_strict_total_order| NAME-JUDGEMENT
+     "(strict_total_order?[real])" |real_props| NIL))
+   30 29 T NIL))
  (|on_method_exit_exceptional_MP_TCC2| 0
-  (|on_method_exit_exceptional_MP_TCC2-1| NIL 3401773402 3401773504
+  (|on_method_exit_exceptional_MP_TCC2-1| NIL 3401773402 3403589924
    ("" (SKOSIMP*)
     (("" (TYPEPRED "md!1")
       (("" (EXPAND "wf_Method") (("" (FLATTEN) NIL NIL)) NIL)) NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL))
-   951 5 T NIL))
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL))
+   3 4 T NIL))
  (|on_method_exit_exceptional_MP_TCC3| 0
-  (|on_method_exit_exceptional_MP_TCC3-1| NIL 3401773402 3401774024
-   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
+  (|on_method_exit_exceptional_MP_TCC3-1| NIL 3401773402 3403589925
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL))
-   62 63 NIL NIL))
+   44 44 NIL NIL))
  (|on_method_exit_exceptional_MP_TCC4| 0
-  (|on_method_exit_exceptional_MP_TCC4-1| NIL 3401773402 3401774026
-   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
-   ((|choose| CONST-DECL "(p)" |sets| NIL)
+  (|on_method_exit_exceptional_MP_TCC4-1| NIL 3401773402 3403589927
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED
+   ((|catch| CONST-DECL "PState" |State| NIL)
+    (|get_monitored_class| CONST-DECL "Class" |MonitoredProgram| NIL)
+    (|choose| CONST-DECL "(p)" |sets| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL) (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|wf_Store| CONST-DECL "boolean" |MVASemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|class_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+     NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|ext_declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions|
      NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
     (|union| CONST-DECL "set" |sets| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|MVA_aut_vars_are_not_prog_vars| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
+    (|MVA_prog_vars_are_fields| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MVA_events_correspond_to_methods| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
     (|real_le_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
@@ -501,10 +1021,20 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   185 186 NIL NIL))
+   219 218 NIL NIL))
  (|on_method_exit_exceptional_MP_TCC5| 0
-  (|on_method_exit_exceptional_MP_TCC5-1| NIL 3401773402 3401773587
+  (|on_method_exit_exceptional_MP_TCC5-1| NIL 3401773402 3403589927
    ("" (EXPAND "on_method_event_type")
     (("" (SKOSIMP*)
       (("" (SPLIT -1)
@@ -528,22 +1058,56 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
+   PROVED
+   ((|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|raise| CONST-DECL "PState" |State| NIL)
+    (|on_method_event_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL))
-   6453 64 T NIL))
+   36 36 T NIL))
  (|initial_MP_state_TCC1| 0
-  (|initial_MP_state_TCC1-1| NIL 3387174104 3401774026
-   ("" (SUBTYPE-TCC) NIL NIL) UNCHECKED
+  (|initial_MP_state_TCC1-1| NIL 3387174104 3403589928
+   ("" (SUBTYPE-TCC) NIL NIL) PROVED
    ((|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|empty?| CONST-DECL "bool" |sets| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|MVA_events_correspond_to_methods| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
+    (|MVA_prog_vars_are_fields| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MVA_aut_vars_are_not_prog_vars| CONST-DECL "boolean" |MonitoredProgram|
+     NIL)
+    (|declared_var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   65 65 NIL NIL))
+   66 66 NIL NIL))
  (|IMP_SemanticsProofs_TCC1| 0
-  (|IMP_SemanticsProofs_TCC1-1| NIL 3392371550 3401774030
+  (|IMP_SemanticsProofs_TCC1-1| NIL 3392371550 3403589931
    ("" (SKOSIMP*)
     (("" (EXPAND "on_method_entry_MP")
       (("" (FLATTEN)
@@ -670,15 +1234,35 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+   PROVED
+   ((|on_method_entry_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|check_assertion| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|m1!1| SKOLEM-CONST-DECL "nat" |MonitoredProgramSemantics| NIL)
+    (|m1!2| SKOLEM-CONST-DECL "nat" |MonitoredProgramSemantics| NIL)
     (- CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
     (|numfield| NONEMPTY-TYPE-EQ-DECL NIL |number_fields| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|Unit| ADT-CONSTRUCTOR-DECL "(Unit?)" |Val_adt| NIL)
+    (|Unit?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|derive_rec_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|derive_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (< CONST-DECL "bool" |reals| NIL)
     (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
@@ -695,14 +1279,43 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
+    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Body| TYPE-DECL NIL |Body_adt| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|on_method_entry| CONST-DECL "(on_method_event_type)" |SemanticsJML| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL))
-   340 341 T NIL))
+   335 335 T NIL))
  (|IMP_SemanticsProofs_TCC2| 0
-  (|IMP_SemanticsProofs_TCC2-2| NIL 3392373362 3401774726
+  (|IMP_SemanticsProofs_TCC2-2| NIL 3392373362 3403589934
    ("" (SKOSIMP*)
     (("" (EXPAND "on_method_exit_normal_MP")
       (("" (FLATTEN)
@@ -808,17 +1421,35 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
+    (|on_method_exit_normal_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
     (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|check_assertion| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|Unit?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
+    (|Unit| ADT-CONSTRUCTOR-DECL "(Unit?)" |Val_adt| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|numfield| NONEMPTY-TYPE-EQ-DECL NIL |number_fields| NIL)
     (- CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|derive_rec_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|derive_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (< CONST-DECL "bool" |reals| NIL)
     (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
@@ -835,14 +1466,42 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
+    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   42874 547 T NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Body| TYPE-DECL NIL |Body_adt| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL))
+   239 239 T NIL)
   (|IMP_SemanticsProofs_TCC2-1| NIL 3392371550 3392371598
    ("" (ASSUMING-TCC) NIL NIL) UNFINISHED NIL 2662 2380 NIL NIL))
  (|IMP_SemanticsProofs_TCC3| 0
-  (|IMP_SemanticsProofs_TCC3-2| NIL 3392373370 3401774866
+  (|IMP_SemanticsProofs_TCC3-2| NIL 3392373370 3403589935
    ("" (SKOSIMP*)
     (("" (EXPAND "on_method_exit_exceptional_MP")
       (("" (FLATTEN)
@@ -911,10 +1570,30 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
+    (|on_method_exit_exceptional_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
     (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|check_assertion| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|catch| CONST-DECL "PState" |State| NIL)
+    (|Unit?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
+    (|Unit| ADT-CONSTRUCTOR-DECL "(Unit?)" |Val_adt| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (- CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
@@ -922,6 +1601,10 @@
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|derive_rec_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|derive_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (< CONST-DECL "bool" |reals| NIL)
     (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
@@ -938,14 +1621,42 @@
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
+    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   13475 209 T NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL) (|Body| TYPE-DECL NIL |Body_adt| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL))
+   114 113 T NIL)
   (|IMP_SemanticsProofs_TCC3-1| NIL 3392371550 3392371601
    ("" (ASSUMING-TCC) NIL NIL) UNFINISHED NIL 2668 2370 NIL NIL))
  (|IMP_SemanticsProofs_TCC4| 0
-  (|IMP_SemanticsProofs_TCC4-1| NIL 3392371550 3401774034
+  (|IMP_SemanticsProofs_TCC4-1| NIL 3392371550 3403589936
    ("" (SKOSIMP*)
     (("" (EXPAND "execute_CaseJML")
       (("" (LIFT-IF)
@@ -977,18 +1688,71 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|real_gt_is_strict_total_order| NAME-JUDGEMENT
+   PROVED
+   ((|execute_CaseJML| CONST-DECL "(execute_CaseJML_type)" |SemanticsJML| NIL)
+    (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL) (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|CaseJML?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|IfThenElse?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Sequence?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Set?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Skip?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|StmtExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Throw?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|IfThenElse| ADT-CONSTRUCTOR-DECL
+     "[[BoolExpr, Stmt, Stmt] -> (IfThenElse?)]" |Body_adt| NIL)
     (|list| TYPE-DECL NIL |list_adt| NIL)
     (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
     (|car| ADT-ACCESSOR-DECL "[(cons?) -> T]" |list_adt| NIL)
+    (|wf_Branches| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|CaseJML| ADT-CONSTRUCTOR-DECL "[list[[BoolExpr, Stmt]] -> (CaseJML?)]"
+     |Body_adt| NIL)
     (|cdr| ADT-ACCESSOR-DECL "[(cons?) -> list]" |list_adt| NIL)
+    (|Unit?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
+    (|Unit| ADT-CONSTRUCTOR-DECL "(Unit?)" |Val_adt| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
@@ -1004,13 +1768,14 @@
     (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (< CONST-DECL "bool" |reals| NIL)
     (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|n2!1| SKOLEM-CONST-DECL "nat" |MonitoredProgramSemantics| NIL)
     (- CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
     (|numfield| NONEMPTY-TYPE-EQ-DECL NIL |number_fields| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL))
-   79 78 T NIL))
+   100 99 T NIL))
  (|IMP_SemanticsProofs_TCC5| 0
-  (|IMP_SemanticsProofs_TCC5-1| NIL 3392371550 3401774035
+  (|IMP_SemanticsProofs_TCC5-1| NIL 3392371550 3403589936
    ("" (SKOSIMP*)
     (("" (EXPAND "execute_set")
       (("" (SKOSIMP*)
@@ -1033,12 +1798,49 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
+   PROVED
    ((|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|execute_set| CONST-DECL "(execute_set_type)" |SemanticsJML| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL) (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|Assign?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|CondExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|MethodCall?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|NExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|RExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|wf_Expr| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
@@ -1054,15 +1856,17 @@
     (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (< CONST-DECL "bool" |reals| NIL)
     (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|n2!1| SKOLEM-CONST-DECL "nat" |MonitoredProgramSemantics| NIL)
+    (|n1!1| SKOLEM-CONST-DECL "nat" |MonitoredProgramSemantics| NIL)
     (- CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
     (|numfield| NONEMPTY-TYPE-EQ-DECL NIL |number_fields| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL))
-   55 55 T NIL))
+   36 36 T NIL))
  (|IMP_SemanticsProofs_TCC6| 0
-  (|IMP_SemanticsProofs_TCC6-1| NIL 3397385945 3401774036
+  (|IMP_SemanticsProofs_TCC6-1| NIL 3397385945 3403589937
    ("" (SKOSIMP*)
     (("" (EXPAND "execute_assert")
       (("" (SPLIT -2)
@@ -1106,10 +1910,14 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+   PROVED
+   ((|execute_assert| CONST-DECL "(execute_assert_type)" |SemanticsJML| NIL)
+    (|int_minus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
+    (|check_assertion| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|n1!1| SKOLEM-CONST-DECL "nat" |MonitoredProgramSemantics| NIL)
     (< CONST-DECL "bool" |reals| NIL)
     (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|n2!1| SKOLEM-CONST-DECL "nat" |MonitoredProgramSemantics| NIL)
     (- CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
     (|numfield| NONEMPTY-TYPE-EQ-DECL NIL |number_fields| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
@@ -1125,17 +1933,53 @@
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (<= CONST-DECL "bool" |reals| NIL)
     (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL) (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL))
-   86 86 T NIL))
+   69 68 T NIL))
  (|determ_step_MP| 0
-  (|determ_step_MP-1| NIL 3396350156 3401774036
+  (|determ_step_MP-1| NIL 3396350156 3403589937
    ("" (SKOSIMP*)
     (("" (LEMMA "derive_determ_step")
       ((""
@@ -1144,11 +1988,56 @@
         (("" (ASSERT) (("" (FLATTEN) (("" (ASSERT) NIL NIL)) NIL)) NIL)) NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+   PROVED
+   ((|derive_determ_step| FORMULA-DECL NIL |SemanticsProofs| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL) (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|lookup| CONST-DECL "Val" |SemanticsJML| NIL)
+    (|Body| TYPE-DECL NIL |Body_adt| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|Assign?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|CondExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|MethodCall?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|NExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|RExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Expr| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
@@ -1160,13 +2049,48 @@
     (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
     (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
     (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
-    (>= CONST-DECL "bool" |reals| NIL) (< CONST-DECL "bool" |reals| NIL)
-    (<= CONST-DECL "bool" |reals| NIL)
+    (>= CONST-DECL "bool" |reals| NIL)
+    (|wf_Body| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (< CONST-DECL "bool" |reals| NIL) (<= CONST-DECL "bool" |reals| NIL)
     (|below| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
-    (|list| TYPE-DECL NIL |list_adt| NIL))
-   8 8 T SHOSTAK))
+    (|derive_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|derive_rec_type| TYPE-EQ-DECL NIL |SemanticsTypes| NIL)
+    (|execute_set_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|execute_set| CONST-DECL "(execute_set_type)" |SemanticsJML| NIL)
+    (TT? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (FF? ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Neg?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Conj?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Eq?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|BoolVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|wf_BoolExpr| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|execute_assert_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|execute_assert| CONST-DECL "(execute_assert_type)" |SemanticsJML| NIL)
+    (|CaseJML?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|IfThenElse?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Sequence?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Set?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Skip?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|StmtExpr?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Throw?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|TryCatch?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|While?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|Assert?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
+    (|list| TYPE-DECL NIL |list_adt| NIL)
+    (|wf_Branches| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|execute_CaseJML_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|execute_CaseJML| CONST-DECL "(execute_CaseJML_type)" |SemanticsJML| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|on_method_event_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|on_method_entry_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|on_method_exit_normal_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|on_method_exit_exceptional_MP| CONST-DECL "(on_method_event_type)"
+     |MonitoredProgramSemantics| NIL))
+   25 25 T SHOSTAK))
  (|wf_initial_MP_state| 0
-  (|wf_initial_MP_state-1| NIL 3390055553 3401774037
+  (|wf_initial_MP_state-1| NIL 3390055553 3403589939
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_MP")
       (("" (FLATTEN)
@@ -1186,32 +2110,130 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|down| ADT-ACCESSOR-DECL "[(up?) -> T]" |lift_adt| NIL)
+   PROVED
+   ((|wf_MP| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|initial_MVA_state| CONST-DECL "AState" |MVASemantics| NIL)
+    (|initial_Program_state| CONST-DECL "PState" |State| NIL)
+    (IF CONST-DECL "[boolean, T, T -> T]" |if_def| NIL)
+    (|Bottom?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
+    (|Bottom| ADT-CONSTRUCTOR-DECL "(Bottom?)" |Val_adt| NIL)
+    (|down| ADT-ACCESSOR-DECL "[(up?) -> T]" |lift_adt| NIL)
     (|up?| ADT-RECOGNIZER-DECL "[lift -> boolean]" |lift_adt| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "MonitoredProgram[CP, Name]"
+     |MonitoredProgramSemantics| NIL)
+    (|get_GhostDecl| CONST-DECL "lift[FieldDecl]" |ProgramFunctions| NIL)
     (|bottom?| ADT-RECOGNIZER-DECL "[lift -> boolean]" |lift_adt| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|wf_initial_ghost_state| FORMULA-DECL NIL |SemanticsJML| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|wf_initial_Program_state| FORMULA-DECL NIL |State| NIL)
+    (|wf_Program| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
     (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
-    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
-   118 118 T SHOSTAK))
- (|wf_update_PState| 0
-  (|wf_update_PState-1| NIL 3392375856 3401774038 ("" (GRIND) NIL NIL)
-   UNCHECKED
-   ((|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|wf_initial_MVA_state| FORMULA-DECL NIL |MVASemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|initial_MP_state| CONST-DECL "MPState" |MonitoredProgramSemantics| NIL))
+   120 119 T SHOSTAK))
+ (|wf_update_PState| 0
+  (|wf_update_PState-1| NIL 3392375856 3403589939 ("" (GRIND) NIL NIL) PROVED
+   ((|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|wf_ghoststate| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|getGhostDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_ghost| CONST-DECL "boolean" |SemanticsJML| NIL)
+    (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|Event| TYPE-EQ-DECL NIL MVA NIL) (|Action| TYPE-EQ-DECL NIL MVA NIL)
+    (|Guard| TYPE-EQ-DECL NIL MVA NIL) (|Transition| TYPE-EQ-DECL NIL MVA NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL) (MVA TYPE-EQ-DECL NIL MVA NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL) (|PSt| TYPE-EQ-DECL NIL |State| NIL)
+    (|update_PState_type| CONST-DECL "boolean" |SemanticsTypes| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars_type| CONST-DECL "boolean" |SemanticsJMLTypes| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|is_local| CONST-DECL "boolean" |State| NIL)
+    (|getFieldDecls| CONST-DECL "finite_set[FieldDecl]" |ProgramFunctions| NIL)
+    (|is_field| CONST-DECL "boolean" |State| NIL)
+    (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|wf_Store| CONST-DECL "boolean" |MVASemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL))
-   97 96 NIL NIL))
+   79 80 NIL NIL))
  (|wf_update_GhostVars| 0
-  (|wf_update_GhostVars-1| NIL 3392375867 3401774038
+  (|wf_update_GhostVars-1| NIL 3392375867 3403589939
    ("" (SKOSIMP*)
     (("" (EXPAND "wf_state")
       (("" (EXPAND "update_GhostVars") (("" (FLATTEN) (("" (ASSERT) NIL))))))))
     NIL)
-   UNCHECKED NIL 6 6 NIL NIL))
+   PROVED
+   ((|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|update_GhostVars| CONST-DECL "(update_GhostVars_type)"
+     |MonitoredProgramSemantics| NIL))
+   3 2 NIL NIL))
  (|wf_state_update_stack| 0
-  (|wf_state_update_stack-1| NIL 3392375879 3401774042
+  (|wf_state_update_stack-1| NIL 3392375879 3403589944
    ("" (SKOSIMP*)
     (("" (EXPAND "update_stack")
       (("" (SPLIT 1)
@@ -1404,16 +2426,85 @@
         NIL))
       NIL))
     NIL)
-   UNCHECKED
-   ((|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+   PROVED
+   ((|update_stack| CONST-DECL "FullState" |Semantics| NIL)
+    (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|Val| TYPE-DECL NIL |Val_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (|is_finite| CONST-DECL "bool" |finite_sets| NIL)
+    (|JType| TYPE-DECL NIL |JType_adt| NIL)
+    (|LocalVarDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|finite_set| TYPE-EQ-DECL NIL |finite_sets| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|defined?| CONST-DECL "boolean" |ValProp| NIL)
+    (|default_value| CONST-DECL "(defined?)" |ValProp| NIL)
+    (|wf_state| CONST-DECL "boolean" |State| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
+    (|wf_state_update_locals| FORMULA-DECL NIL |State| NIL)
+    (|wf_state_update_local| FORMULA-DECL NIL |State| NIL)
+    (|wf_Program| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|update_PState| CONST-DECL "(update_PState_type)"
+     |MonitoredProgramSemantics| NIL)
+    (|lvds!1| SKOLEM-CONST-DECL "finite_set[LocalVarDecl[Name]]"
+     |MonitoredProgramSemantics| NIL)
+    (|update_locals| DEF-DECL "PState" |State| NIL)
+    (|MonitoredProgram| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|compatible| CONST-DECL "boolean" |MonitoredProgram| NIL)
+    (|MonitoredProgramPre| TYPE-EQ-DECL NIL |MonitoredProgram| NIL)
+    (|Program| TYPE-EQ-DECL NIL |WellFormedProgram| NIL)
+    (|complete| CONST-DECL "boolean" |MVASemantics| NIL)
+    (MVA TYPE-EQ-DECL NIL MVA NIL) (|ProgVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|MVAVarDecl| TYPE-EQ-DECL NIL MVA NIL)
+    (|Transition| TYPE-EQ-DECL NIL MVA NIL) (|Guard| TYPE-EQ-DECL NIL MVA NIL)
+    (|Action| TYPE-EQ-DECL NIL MVA NIL) (|Event| TYPE-EQ-DECL NIL MVA NIL)
+    (|EventType| TYPE-DECL NIL |EventType_adt| NIL)
+    (|getLocalDecls| CONST-DECL "finite_set[LocalVarDecl]" |ProgramFunctions|
+     NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|Stmt| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|This| CONST-DECL "Name" |Program| NIL)
+    (|update_local| CONST-DECL "PState" |State| NIL)
+    (O CONST-DECL "T3" |function_props| NIL)
+    (|PSt| TYPE-EQ-DECL NIL |State| NIL) (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Excpt| TYPE-DECL NIL |Excpt_adt| NIL)
+    (|MPState| TYPE-EQ-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|PState| TYPE-EQ-DECL NIL |State| NIL)
+    (|Store| TYPE-EQ-DECL NIL |State| NIL)
+    (|AState| TYPE-EQ-DECL NIL |MVASemantics| NIL)
+    (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
+    (|x!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |MonitoredProgramSemantics| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |MonitoredProgramSemantics|
+     NIL)
     (|injective?| CONST-DECL "bool" |functions| NIL)
+    (|x2!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |MonitoredProgramSemantics| NIL)
+    (|x1!1| SKOLEM-CONST-DECL "({x: [Name, Val[Name]] |
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     |MonitoredProgramSemantics| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |MonitoredProgramSemantics|
+     NIL)
     (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
+    (|l!1| SKOLEM-CONST-DECL "LocalVarDecl[Name]" |MonitoredProgramSemantics|
+     NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
@@ -1428,10 +2519,11 @@
     (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
     (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
     (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
-    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL))
-   445 445 T NIL))
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|wf_update_PState| FORMULA-DECL NIL |MonitoredProgramSemantics| NIL))
+   504 503 T NIL))
  (|on_method_MVA_yields_wf_AState| 0
-  (|on_method_MVA_yields_wf_AState-1| NIL 3402486501 3402502930
+  (|on_method_MVA_yields_wf_AState-1| NIL 3402486501 3403589946
    ("" (SKOSIMP)
     (("" (EXPAND "on_method_MVA")
       (("" (SPLIT)
@@ -1491,7 +2583,7 @@
         NIL))
       NIL))
     NIL)
-   UNFINISHED
+   PROVED
    ((|on_method_MVA| CONST-DECL "AState" |MonitoredProgramSemantics| NIL)
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
@@ -1525,22 +2617,35 @@
     (|BoolExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Expr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|Method| TYPE-EQ-DECL NIL |Program| NIL)
+    (|FieldDecl| TYPE-EQ-DECL NIL |Program| NIL)
+    (|lift| TYPE-DECL NIL |lift_adt| NIL)
+    (|Class| TYPE-EQ-DECL NIL |Program| NIL)
+    (|PreProgram| TYPE-EQ-DECL NIL |Program| NIL)
+    (|wf_Method| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|wf_state_implies_wf_PSt| FORMULA-DECL NIL |MonitoredProgramSemantics|
      NIL)
     (|wf_state| CONST-DECL "boolean" |MonitoredProgramSemantics| NIL)
+    (|execute_action_yields_wf_state| FORMULA-DECL NIL |MVASemantics| NIL)
     (|PSt| TYPE-EQ-DECL NIL |State| NIL) (|list| TYPE-DECL NIL |list_adt| NIL)
     (|OneAction| TYPE-EQ-DECL NIL MVA NIL)
-    (|execute_action_yields_wf_state| FORMULA-DECL NIL |MVASemantics| NIL)
-    (|wf_Trans| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (|wf_MVA| CONST-DECL "boolean" |WellFormedMVA| NIL)
+    (|wf_Trans| CONST-DECL "boolean" |WellFormedMVA| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
-    (|total| CONST-DECL "boolean" |MVASemantics| NIL) NIL NIL NIL NIL NIL
+    (|total| CONST-DECL "boolean" |MVASemantics| NIL)
+    (|m!1| SKOLEM-CONST-DECL "(wf_Method(program(mp!1)))"
+     |MonitoredProgramSemantics| NIL)
+    (|et!1| SKOLEM-CONST-DECL "EventType" |MonitoredProgramSemantics| NIL)
+    (|s!1| SKOLEM-CONST-DECL "MPState" |MonitoredProgramSemantics| NIL)
+    (|t!1| SKOLEM-CONST-DECL "Transition[CP, Name]" |MonitoredProgramSemantics|
+     NIL)
+    (|mp!1| SKOLEM-CONST-DECL "MonitoredProgram[CP, Name]"
+     |MonitoredProgramSemantics| NIL)
     (|wf_AState| CONST-DECL "boolean" |MVASemantics| NIL)
     (|step| CONST-DECL "AState" |MVASemantics| NIL))
-   341027 840 T SHOSTAK))
+   139 139 T SHOSTAK))
  (|derive_yields_wf_state_MP| 0
-  (|derive_yields_wf_state_MP-1| NIL 3402832608 3403505893
+  (|derive_yields_wf_state_MP-1| NIL 3402832608 3403590728
    ("" (LEMMA "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
     (("1"
       (INST -1
@@ -1760,91 +2865,61 @@
                                                           (ASSERT)))))
                                                       (("1" (SKOSIMP*)
                                                         (("1"
-                                                          (INST-CP -6 "m2!1")
+                                                          (INST-CP -7 "m2!1")
                                                           (("1"
-                                                            (INST -6 "m1!1")
+                                                            (INST -7 "m1!1")
                                                             (("1" (ASSERT)
                                                               (("1"
-                                                                (EXPAND
-                                                                 "check_for_exception")
-                                                                (("1"
-                                                                  (APPLY
-                                                                   (REPEAT
-                                                                    (INST? -6
-                                                                     :WHERE
-                                                                     -3)))
+                                                                (APPLY
+                                                                 (REPEAT
+                                                                  (INST? -7
+                                                                   :WHERE -3)))
+                                                                (("1" (ASSERT)
                                                                   (("1"
-                                                                    (APPLY
-                                                                     (REPEAT
-                                                                      (INST? -7
-                                                                       :WHERE
-                                                                       -4)))
+                                                                    (EXPAND
+                                                                     "check_for_exception")
                                                                     (("1"
-                                                                      (ASSERT)
-                                                                      (("1"
+                                                                      (APPLY
+                                                                       (BRANCH
                                                                         (SPLIT
                                                                          -4)
-                                                                        (("1"
+                                                                        ((THEN
                                                                           (FLATTEN)
-                                                                          (("1"
-                                                                            (ASSERT)
-                                                                            NIL
-                                                                            NIL))
-                                                                          NIL)
-                                                                         ("2"
-                                                                          (FLATTEN)
-                                                                          NIL
-                                                                          NIL))
-                                                                        NIL))
-                                                                      NIL)
-                                                                     ("2"
-                                                                      (SKOSIMP*)
-                                                                      (("2"
-                                                                        (APPLY
-                                                                         (THEN
-                                                                          (INST?)
-                                                                          (ASSERT)
-                                                                          (EXPAND
-                                                                           "<<")))
-                                                                        NIL
-                                                                        NIL))
-                                                                      NIL)
-                                                                     ("3"
-                                                                      (SKOSIMP*)
-                                                                      (("3"
-                                                                        (APPLY
-                                                                         (THEN
-                                                                          (INST?)
-                                                                          (ASSERT)
-                                                                          (EXPAND
-                                                                           "<<")))
-                                                                        NIL
-                                                                        NIL))
-                                                                      NIL)
-                                                                     ("4"
-                                                                      (USE
-                                                                       "derive_boolean_expr_type")
+                                                                          (ASSERT)))))
                                                                       (("1"
-                                                                        (ASSERT)
+                                                                        (LIFT-IF)
                                                                         (("1"
-                                                                          (FLATTEN)
-                                                                          (("1"
-                                                                            (ASSERT)
-                                                                            NIL
-                                                                            NIL))
-                                                                          NIL))
-                                                                        NIL)
-                                                                       ("2"
-                                                                        (EXPAND
-                                                                         "wf_BoolExpr")
-                                                                        (("2"
                                                                           (APPLY
-                                                                           (THEN
-                                                                            (INST?)
-                                                                            (ASSERT)
-                                                                            (EXPAND
-                                                                             "<<")))
-                                                                          NIL
+                                                                           (BRANCH
+                                                                            (SPLIT
+                                                                             -2)
+                                                                            ((THEN
+                                                                              (FLATTEN)
+                                                                              (ASSERT)))))
+                                                                          (("1"
+                                                                            (APPLY
+                                                                             (REPEAT
+                                                                              (INST?
+                                                                               -10
+                                                                               :WHERE
+                                                                               -2)))
+                                                                            (("1"
+                                                                              (ASSERT)
+                                                                              NIL
+                                                                              NIL))
+                                                                            NIL)
+                                                                           ("2"
+                                                                            (APPLY
+                                                                             (REPEAT
+                                                                              (INST?
+                                                                               -9
+                                                                               :WHERE
+                                                                               -1)))
+                                                                            (("2"
+                                                                              (ASSERT)
+                                                                              NIL
+                                                                              NIL))
+                                                                            NIL))
                                                                           NIL))
                                                                         NIL))
                                                                       NIL))
@@ -3061,7 +4136,7 @@ wf_state(mp!1)(s2)")
                                                                                                         (FLATTEN)
                                                                                                         (("1"
                                                                                                           (INST
-                                                                                                           -15
+                                                                                                           -16
                                                                                                            "m2!1")
                                                                                                           (("1"
                                                                                                             (ASSERT)
@@ -3069,7 +4144,7 @@ wf_state(mp!1)(s2)")
                                                                                                               (APPLY
                                                                                                                (REPEAT
                                                                                                                 (INST?
-                                                                                                                 -15
+                                                                                                                 -16
                                                                                                                  :WHERE
                                                                                                                  -2)))
                                                                                                               (("1"
@@ -3084,7 +4159,7 @@ wf_state(mp!1)(s2)")
                                                                                                         (FLATTEN)
                                                                                                         (("2"
                                                                                                           (INST
-                                                                                                           -7
+                                                                                                           -8
                                                                                                            "tau!1"
                                                                                                            "s2!1"
                                                                                                            "m2!1")
@@ -3092,12 +4167,12 @@ wf_state(mp!1)(s2)")
                                                                                                             (ASSERT)
                                                                                                             (("2"
                                                                                                               (SPLIT
-                                                                                                               -7)
+                                                                                                               -8)
                                                                                                               (("1"
                                                                                                                 (SKOSIMP*)
                                                                                                                 (("1"
                                                                                                                   (INST
-                                                                                                                   -17
+                                                                                                                   -18
                                                                                                                    "y!1")
                                                                                                                   (("1"
                                                                                                                     (ASSERT)
@@ -3105,7 +4180,7 @@ wf_state(mp!1)(s2)")
                                                                                                                       (APPLY
                                                                                                                        (REPEAT
                                                                                                                         (INST?
-                                                                                                                         -17
+                                                                                                                         -18
                                                                                                                          :WHERE
                                                                                                                          -4)))
                                                                                                                       (("1"
@@ -3132,7 +4207,7 @@ wf_state(mp!1)(s2)")
                                                                                                       NIL)
                                                                                                      ("2"
                                                                                                       (INST
-                                                                                                       -13
+                                                                                                       -14
                                                                                                        "m1!1")
                                                                                                       (("2"
                                                                                                         (ASSERT)
@@ -3140,7 +4215,7 @@ wf_state(mp!1)(s2)")
                                                                                                           (APPLY
                                                                                                            (REPEAT
                                                                                                             (INST?
-                                                                                                             -13
+                                                                                                             -14
                                                                                                              :WHERE
                                                                                                              -5)))
                                                                                                           (("2"
@@ -3183,11 +4258,11 @@ wf_state(mp!1)(s2)")
                                                                      "check_for_exception")
                                                                     (("1"
                                                                       (INST-CP
-                                                                       -7
+                                                                       -8
                                                                        "m2!1")
                                                                       (("1"
                                                                         (INST
-                                                                         -7
+                                                                         -8
                                                                          "m1!1")
                                                                         (("1"
                                                                           (ASSERT)
@@ -3195,82 +4270,53 @@ wf_state(mp!1)(s2)")
                                                                             (APPLY
                                                                              (REPEAT
                                                                               (INST?
-                                                                               -7
+                                                                               -8
                                                                                :WHERE
                                                                                -4)))
                                                                             (("1"
-                                                                              (APPLY
-                                                                               (REPEAT
-                                                                                (INST?
-                                                                                 -8
-                                                                                 :WHERE
-                                                                                 -5)))
+                                                                              (ASSERT)
                                                                               (("1"
-                                                                                (ASSERT)
-                                                                                (("1"
+                                                                                (APPLY
+                                                                                 (BRANCH
                                                                                   (SPLIT
                                                                                    -5)
-                                                                                  (("1"
+                                                                                  ((THEN
                                                                                     (FLATTEN)
-                                                                                    (("1"
-                                                                                      (ASSERT)
-                                                                                      NIL
-                                                                                      NIL))
-                                                                                    NIL)
-                                                                                   ("2"
-                                                                                    (FLATTEN)
-                                                                                    NIL
-                                                                                    NIL))
-                                                                                  NIL))
-                                                                                NIL)
-                                                                               ("2"
-                                                                                (SKOSIMP*)
-                                                                                (("2"
-                                                                                  (APPLY
-                                                                                   (THEN
-                                                                                    (INST?)
-                                                                                    (ASSERT)
-                                                                                    (EXPAND
-                                                                                     "<<")))
-                                                                                  NIL
-                                                                                  NIL))
-                                                                                NIL)
-                                                                               ("3"
-                                                                                (SKOSIMP*)
-                                                                                (("3"
-                                                                                  (APPLY
-                                                                                   (THEN
-                                                                                    (INST?)
-                                                                                    (ASSERT)
-                                                                                    (EXPAND
-                                                                                     "<<")))
-                                                                                  NIL
-                                                                                  NIL))
-                                                                                NIL)
-                                                                               ("4"
-                                                                                (USE
-                                                                                 "derive_boolean_expr_type")
+                                                                                    (ASSERT)))))
                                                                                 (("1"
-                                                                                  (ASSERT)
+                                                                                  (LIFT-IF)
                                                                                   (("1"
-                                                                                    (FLATTEN)
-                                                                                    (("1"
-                                                                                      (ASSERT)
-                                                                                      NIL
-                                                                                      NIL))
-                                                                                    NIL))
-                                                                                  NIL)
-                                                                                 ("2"
-                                                                                  (EXPAND
-                                                                                   "wf_BoolExpr")
-                                                                                  (("2"
                                                                                     (APPLY
-                                                                                     (THEN
-                                                                                      (INST?)
-                                                                                      (ASSERT)
-                                                                                      (EXPAND
-                                                                                       "<<")))
-                                                                                    NIL
+                                                                                     (BRANCH
+                                                                                      (SPLIT
+                                                                                       -2)
+                                                                                      ((THEN
+                                                                                        (FLATTEN)
+                                                                                        (ASSERT)))))
+                                                                                    (("1"
+                                                                                      (APPLY
+                                                                                       (REPEAT
+                                                                                        (INST?
+                                                                                         -11
+                                                                                         :WHERE
+                                                                                         -2)))
+                                                                                      (("1"
+                                                                                        (ASSERT)
+                                                                                        NIL
+                                                                                        NIL))
+                                                                                      NIL)
+                                                                                     ("2"
+                                                                                      (APPLY
+                                                                                       (REPEAT
+                                                                                        (INST?
+                                                                                         -10
+                                                                                         :WHERE
+                                                                                         -1)))
+                                                                                      (("2"
+                                                                                        (ASSERT)
+                                                                                        NIL
+                                                                                        NIL))
+                                                                                      NIL))
                                                                                     NIL))
                                                                                   NIL))
                                                                                 NIL))
@@ -3927,6 +4973,8 @@ wf_state(mp!1)(s2)")
     (|arg| ADT-ACCESSOR-DECL "[(MethodCall?) -> Expr]" |Body_adt| NIL)
     (|md!1| SKOLEM-CONST-DECL "(wf_Method(program(mp!1)))"
      |MonitoredProgramSemantics| NIL)
+    (|mp!1| SKOLEM-CONST-DECL "MonitoredProgram[CP, Name]"
+     |MonitoredProgramSemantics| NIL)
     (|lookup_mthd| CONST-DECL "lift[(methods(p))]" |ProgramFunctions| NIL)
     (|m1!2| SKOLEM-CONST-DECL "nat" |MonitoredProgramSemantics| NIL)
     (|Entry| ADT-CONSTRUCTOR-DECL "(Entry?)" |EventType_adt| NIL)
@@ -3937,12 +4985,15 @@ wf_state(mp!1)(s2)")
     (|down| ADT-ACCESSOR-DECL "[(up?) -> T]" |lift_adt| NIL)
     (|get_class| CONST-DECL "lift[Class]" |ProgramFunctions| NIL)
     (|wf_state_arg_is_local| FORMULA-DECL NIL |State| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|nonempty?| CONST-DECL "bool" |sets| NIL)
     (|choose| CONST-DECL "(p)" |sets| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|name| ADT-ACCESSOR-DECL "[(MethodCall?) -> Name]" |Body_adt| NIL)
     (|wf_Class| CONST-DECL "boolean" |WellFormedProgram| NIL)
     (|wf_Classes| CONST-DECL "boolean" |WellFormedProgram| NIL)
+    (|b!1| SKOLEM-CONST-DECL "(wf_Body(program(mp!1)))"
+     |MonitoredProgramSemantics| NIL)
     (|m!1| SKOLEM-CONST-DECL "Method[Name]" |MonitoredProgramSemantics| NIL)
     (|a!1| SKOLEM-CONST-DECL "Val[Name]" |MonitoredProgramSemantics| NIL)
     (|nonempty_exists| FORMULA-DECL NIL |sets_lemmas| NIL)
@@ -3992,7 +5043,6 @@ wf_state(mp!1)(s2)")
     (|RefExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|RefVarEval?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
     (|Null?| ADT-RECOGNIZER-DECL "[Body -> boolean]" |Body_adt| NIL)
-    (|v1!1| SKOLEM-CONST-DECL "Val[Name]" |MonitoredProgramSemantics| NIL)
     (|then_stmt| ADT-ACCESSOR-DECL "[(IfThenElse?) -> Stmt]" |Body_adt| NIL)
     (|else_stmt| ADT-ACCESSOR-DECL "[(IfThenElse?) -> Stmt]" |Body_adt| NIL)
     (|update_store| CONST-DECL "Store" |State| NIL)
@@ -4008,6 +5058,7 @@ wf_state(mp!1)(s2)")
             ENDIF}]"
      |Body_adt| NIL)
     (|try| ADT-ACCESSOR-DECL "[(TryCatch?) -> Stmt]" |Body_adt| NIL)
+    (<< ADT-DEF-DECL "(well_founded?[Body])" |Body_adt| NIL)
     (|var_names| DEF-DECL "[Name -> boolean]" |ProgramFunctions| NIL)
     (|var_names| CONST-DECL "finite_set[Name]" |ProgramFunctions| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL)
@@ -4032,22 +5083,12 @@ wf_state(mp!1)(s2)")
     (|every| ADT-DEF-DECL "boolean" |list_adt| NIL)
     (|NumExpr| TYPE-EQ-DECL NIL |Body_adt| NIL)
     (|n| ADT-ACCESSOR-DECL "[(NExpr?) -> NumExpr]" |Body_adt| NIL)
-    (|check_for_exception| CONST-DECL "bool" |Semantics| NIL)
-    (|else_expr| ADT-ACCESSOR-DECL "[(CondExpr?) -> Expr]" |Body_adt| NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|b!1| SKOLEM-CONST-DECL "(wf_Body(program(mp!1)))"
-     |MonitoredProgramSemantics| NIL)
-    (|then_expr| ADT-ACCESSOR-DECL "[(CondExpr?) -> Expr]" |Body_adt| NIL)
-    (|mp!1| SKOLEM-CONST-DECL "MonitoredProgram[CP, Name]"
-     |MonitoredProgramSemantics| NIL)
-    (|b| ADT-ACCESSOR-DECL "[(Bool?) -> bool]" |Val_adt| NIL)
-    (|v1!1| SKOLEM-CONST-DECL "Val[Name]" |MonitoredProgramSemantics| NIL)
-    (|Bool?| ADT-RECOGNIZER-DECL "[Val -> boolean]" |Val_adt| NIL)
-    (<< ADT-DEF-DECL "(well_founded?[Body])" |Body_adt| NIL)
-    (|derive_boolean_expr_type| FORMULA-DECL NIL |SemanticsProofs| NIL)
     (|test| SHARED-ADT-ACCESSOR-DECL
      "[{X: Body | While?(X) OR IfThenElse?(X) OR CondExpr?(X)} -> BoolExpr]"
      |Body_adt| NIL)
+    (|check_for_exception| CONST-DECL "bool" |Semantics| NIL)
+    (|else_expr| ADT-ACCESSOR-DECL "[(CondExpr?) -> Expr]" |Body_adt| NIL)
+    (|then_expr| ADT-ACCESSOR-DECL "[(CondExpr?) -> Expr]" |Body_adt| NIL)
     (|update| CONST-DECL "PState" |State| NIL)
     (|target| SHARED-ADT-ACCESSOR-DECL
      "[{X: Body | Set?(X) OR Assign?(X)} -> Name]" |Body_adt| NIL)
@@ -4186,5 +5227,5 @@ wf_state(mp!1)(s2)")
     (CP FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|Name| FORMAL-NONEMPTY-TYPE-DECL NIL |MonitoredProgramSemantics| NIL)
     (|wf_nat| FORMULA-DECL NIL |naturalnumbers| NIL))
-   36396 9604 T SHOSTAK)))
+   59300 10705 T SHOSTAK)))
 

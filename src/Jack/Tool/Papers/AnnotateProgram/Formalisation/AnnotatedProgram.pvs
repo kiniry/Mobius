@@ -188,7 +188,6 @@ BEGIN
             v : Val, n : nat, b1 : [(wf_BoolExpr(p)), (wf_Stmt(p))]) :
       wf_Branches(p)(bs) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
-      n > 0 IMPLIES
       member(b1, bs) IMPLIES
       (FORALL (tau : APState, v : Val, m1 : below(n)) :
         (derive(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES

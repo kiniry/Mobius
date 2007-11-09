@@ -33,7 +33,7 @@ BEGIN
                       execute_set, execute_assert, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
-  run_program(p : Program)(main : (wf_Method(p)), arg : int)
+  run_program(p : Program)(main : Name, arg : int)
              (this_val : (defined?))
              (s2 : PState) : boolean =
     run_FullProgram(p)(main, arg)(initial_Program_state(p)(this_val), s2)

@@ -232,7 +232,9 @@ BEGIN
           derive(p)(c, sigma1, v1, tau)(m1) AND
           check_for_exception(tau, sigma2, v,
                 Bool?(v1) AND
-                derive(p)(IF b(v1) THEN t ELSE e ENDIF, tau, v, sigma2)(m2)),
+                derive(p)(IF b(v1) THEN t ELSE e ENDIF, tau, v, sigma2)(m2)) 
+          AND
+          (up?(ex(pstate(tau))) IMPLIES m2 = 0),
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8 : FullState)
@@ -301,7 +303,8 @@ BEGIN
           check_for_exception(tau, sigma2, v,
                 Bool?(v1) AND
                 derive(p)(IF b(v1) THEN c1 ELSE c2 ENDIF, tau, Unit,
-                          sigma2)(m2)),
+                          sigma2)(m2)) AND
+          (up?(ex(pstate(tau))) IMPLIES m2 = 0),
       Sequence(c1, c2) :
         v = return_of_stmt(sigma2) AND
          EXISTS(m1, m2 : nat)(tau : FullState) :
@@ -495,7 +498,7 @@ ENDASSUMING
 
   IMPORTING WF[nat, nat] % used in the proofs
 
-  derive_determ_step : LEMMA %
+  derive_determ_step : LEMMA % :-)
     FORALL (p : FullProgram)(n1, n2 : nat)(b : (wf_Body(program(p))))
            (v1, v2 : Val, sigma, sigma1, sigma2 : FullState) :
         derive(p)(b, sigma, v1, sigma1)(n1) IMPLIES
