@@ -20,7 +20,7 @@ BEGIN
   MVA_aut_vars_are_not_prog_vars(mp : MonitoredProgramPre) : boolean =
     FORALL (v : MVAVarDecl) :
       vdsA(mva(mp))(v) IMPLIES
-        NOT declared_var_names(program(mp))(name(v))
+        NOT ext_declared_var_names(program(mp))(name(v))
 
   MVA_events_correspond_to_methods(mp : MonitoredProgramPre, 
                                    c : Class) : boolean =

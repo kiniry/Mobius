@@ -655,4 +655,9 @@ BEGIN
     FORALL(p : Program) :
       wf_program_methods_only_in_one_class(p)
 
+  wf_program_var_names_declared : LEMMA % :-)
+    FORALL(p : Program, n : Name) :
+      var_names(p)(n) IMPLIES ext_declared_var_names(p)(n)
+
+
 END WellFormedProgram

@@ -173,6 +173,15 @@ BEGIN
           (n = target(oa) OR var_names(source(oa))(n))
 
 
+  subterm_ann_action : LEMMA % :-)
+    FORALL(a : Action, b : Body) : 
+      Set?(b) IMPLIES
+        subterm(b, ann_action(a)) =
+          (EXISTS(oa : OneAction) : 
+             member(oa, a) AND
+             subterm(b, Set(target(oa), source(oa))))
+
+
   update_vars(mp)(t : Transition) : Stmt =
     Sequence(Set(cp(mp), NExpr(NumVarEval(name_of(mp)(tcp(t))))),
              ann_action(action(t)))
@@ -220,8 +229,8 @@ BEGIN
         ext_declared_var_names(program(mp))(v) OR
         var_names(new_gvds(mp))(v)
 
-  % PROVE
-  ann_event_set_ghostvar : LEMMA
+  % :-)
+  ann_event_set_ghostvar : LEMMA 
     FORALL (ts : finite_set[Transition], b: Body):
       subset?(ts, ts(mva(mp))) IMPLIES
       Set?(b) IMPLIES
