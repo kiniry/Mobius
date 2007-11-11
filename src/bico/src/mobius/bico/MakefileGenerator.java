@@ -16,12 +16,14 @@ import mobius.bico.executors.ClassExecutor;
  */
 public class MakefileGenerator {
 
-  /** the directory where to generate the makefile. */
+  /** the base directory in which is the application compiled currently */
   private final File fBaseDir;
   /** the main files prefix. */
   private final String fBaseName;
   /** all the classes that were generated in the process. */
   private final List<ClassExecutor> fTreated;
+  /**where to generate the makefile.*/
+  private final String pck;
 
   /**
    * Initialize the generator.
@@ -35,14 +37,30 @@ public class MakefileGenerator {
     fBaseDir = baseDir;
     fBaseName = baseName;
     fTreated = treated;
+    pck = null;
   }
+  
+  
+  /**
+   * Initialize the generator.
+   * @param baseDir the base directory
+   * @param baseName the name of the file 
+   * @param treated all the classes to treat
+   */
+  public MakefileGenerator(final File _baseDir, String _pckg) {
+    fBaseDir = _baseDir;
+    pck = _pckg;
+    fBaseName = null;
+    fTreated = null;
+  }
+  
 
   
   /**
    * Generates the makefile in the given directory.
    */
   public void generate() {
-    final File mkfile = new File (fBaseDir, "Makefile");
+    final File mkfile = new File (new File(fBaseDir, pck), "Makefile");
     final List<String> generatedFiles = new ArrayList<String>();
     
     try {
@@ -54,8 +72,9 @@ public class MakefileGenerator {
       generatedFiles.addAll(getExtraGeneratedFiles(out));
       
       
-      out.println("all:  $(Extra)");
-      out.println("$(Extra): $(Main)");
+/*      out.println("all:  $(Extra)");
+      out.println("$(Extra): $(Main)");*/
+      out.println("all:  $(Main)");
       out.println("$(Main): $(Signature)"); 
       out.println("$(Signature): $(Type)"); 
 
@@ -100,7 +119,30 @@ public class MakefileGenerator {
   public List<String> printCompileInstr(final PrintStream out,
                                          final String word,
                                          final String postfix) {
-    final List<String> generatedFiles = new ArrayList<String>();
+	  File[] files = new File(fBaseDir, pck).listFiles();
+		if (files == null) {
+			return null;
+		}
+
+		String recmake = "";
+		final List<String> generatedFiles = new ArrayList<String>();
+		out.print(word + "=");
+		for (int k = 0; k < files.length; k++) { 
+			if (files[k].isFile()) {
+				String fName = files[k].getName();
+				String coqModuleName = Util.coqify(pck + fName);
+				String filename = coqModuleName + postfix + ".vo";
+			    out.print(" " + filename);
+			    generatedFiles.add(filename);
+			} else if (files[k].isDirectory()) {
+			    recmake = "cd" + files[k].getName() + " && " + "$(MAKE) all";
+			    
+			}
+			
+		} 
+		out.println();
+		out.println(recmake);
+   /* final List<String> generatedFiles = new ArrayList<String>();
     String filename;
     out.print(word + "=");
     for (ClassExecutor ce: fTreated) {
@@ -111,7 +153,7 @@ public class MakefileGenerator {
     filename = fBaseName + postfix + ".vo";
     out.print(" " + filename);
     generatedFiles.add(filename);
-    out.println();
+    out.println();*/
     return generatedFiles;
   }
   
