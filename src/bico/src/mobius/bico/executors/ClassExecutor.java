@@ -5,11 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import mobius.bico.Util;
 import mobius.bico.Util.Stream;
-import mobius.bico.coq.Export;
-import mobius.bico.coq.Import;
+
 import mobius.bico.coq.LoadPath;
 
 import org.apache.bcel.classfile.Constant;
@@ -74,8 +74,8 @@ public class ClassExecutor extends ASignatureExecutor {
 	// /** the executor which spawned this class executor. */
 	// private final Executor fExecutor;
 
-	/** classes to be parsed from standard library. */
-	protected static final HashMap<String, ExternalClass> fExtLibsLocal = new HashMap<String, ExternalClass>();
+	/** dependencies of the current class   */
+	protected  final HashMap<String, ExternalClass> fExtLibsLocal = new HashMap<String, ExternalClass>();
 
 	/**
 	 * Create a class executor in the context of another executor.
@@ -200,7 +200,8 @@ public class ClassExecutor extends ASignatureExecutor {
 	 */
 	public void doSignature() throws ClassNotFoundException {
 		fOutSig.println(fLibPath);
-		printLoadPaths();
+		String loadPathsForDep = printLoadPaths();
+		fOutSig.println(loadPathsForDep);
 		fOutSig.println(Constants.REQ_IMPORT + Constants.SPACE
 				+ "ImplemProgramWithMap.\n");
 		fOutSig.println(Constants.IMPORT + Constants.SPACE + "P.\n");
@@ -208,8 +209,9 @@ public class ClassExecutor extends ASignatureExecutor {
 				+ "_type.");
 		fOutSig.println(Constants.IMPORT + Constants.SPACE + fCoqName
 				+ "Type.\n");
-		printImportedClasses();
-
+		String reqImports = printImportedClasses();
+		fOutSig.println(reqImports);
+		
 		fOutSig.incPrintln(Constants.MODULE + Constants.SPACE + fModuleName
 				+ "Signature.\n");
 		fOutSig.println(Constants.IMPORT + Constants.SPACE + fModuleName
@@ -224,14 +226,35 @@ public class ClassExecutor extends ASignatureExecutor {
 		fOutSig.close();
 	}
 
-	private void printImportedClasses() {
-		// TODO Auto-generated method stub
+	private String printImportedClasses() {		
+		Iterator<ExternalClass>  exc = fExtLibsLocal.values().iterator();
+		if (exc == null) {
+			return null;
+		}
+		// store here the add load path statements
+		String s = "";
 		
+		while (exc.hasNext()) {
+			ExternalClass ex = exc.next();
+			s = s + ex.printReqExport(ex.getSignatureName());
+			s = s + ex.printExport(ex.getSignatureModule());
+		}
+		return s;
 	}
 
-	private void printLoadPaths() {
-		// TODO Auto-generated method stub
+	private String printLoadPaths() {
+		Iterator<LoadPath>  lps = loadPaths.values().iterator();
+		if (lps == null) {
+			return null;
+		}
+		// store here the add load path statements
+		String s = "";
 		
+		while (lps.hasNext()) {
+			LoadPath lp = lps.next();
+			s = s + lp. print(); 
+		}
+		return s;
 	}
 
 	/**
@@ -409,13 +432,6 @@ public class ClassExecutor extends ASignatureExecutor {
 			fExtLibsLocal.put(clname, cl);
 			extractLoadPath(cl);
 		}
-
-		/*
-		 * if (!f.exists() && (fExtLibsLocal.get(clname) == null)) {
-		 * ExternalClass cl = new ExternalClass(clname);
-		 * fExtLibsLocal.put(clname, cl); } else if ((fExtLibsLocal.get(clname) !=
-		 * null) ) { return; }
-		 */
 	}
 
 	/**
@@ -517,22 +533,18 @@ public class ClassExecutor extends ASignatureExecutor {
 		File f = new File(getBaseDir(), cl.getClassName());
 		// if the file exists in the base directory of the current application
 		// and the path is not already such path then add it
-		if (f.exists() && (loadPaths.get(f.getPath()) == null)) {
-			loadPaths.put(f.getPath(), new LoadPath(f.getPath()));
+		if (f.exists() && (loadPaths.get(f.getParent()) == null)) {
+			loadPaths.put(f.getParent(), new LoadPath(f.getParent()));
 			return;
 		}
 		f = new File(pathToAPI, cl.getClassName());
 		// if the file exists in the API directory of the current application
 		// and the path is not already such path then add it
-		if (f.exists() && (loadPaths.get(f.getPath()) == null)) {
-			loadPaths.put(f.getPath(), new LoadPath(f.getPath()));
+		if ((f.isFile()) && (loadPaths.get(f.getParent()) == null)) {
+			loadPaths.put(f.getParent(), new LoadPath(f.getParent()));
 			return;
 		}
 	}
 
-	public void addToRequireExport() {
-	}
-
-	public void addToRequireImport() {
-	}
+	
 }

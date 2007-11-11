@@ -1,15 +1,19 @@
 package mobius.bico.executors;
 
+import mobius.bico.Util;
+import mobius.bico.coq.CoqModulePrint;
+
 
 /**
  * 
  * @author bagside
  *
  */
-public class ExternalClass {
+public class ExternalClass extends CoqModulePrint {
 	private String path;
 	private String name;
 	private String bicoFileName;
+	private String moduleName;
 	
 	public ExternalClass(String _clname) {
 		String clname;
@@ -18,9 +22,15 @@ public class ExternalClass {
 		} else {
 			clname = _clname;
 		}
+		
+		setModuleName(clname);
 		setPath(clname);
 		setName(clname);
 		setBase();
+	}
+
+	private void setModuleName(String clname) {
+		moduleName = Util.coqify(clname);
 	}
 
 	public String getPath() {
@@ -41,23 +51,50 @@ public class ExternalClass {
 	}
 
 	
+	public String getTypeCoqFileName() {
+		return  getTypeName() + ".v";
+	}
+	
+	
+	public String getSignatureCoqFileName() {
+		return getSignatureName() + ".v";
+	}
+	
+
+	public String getBicoClassCoqFileName() {
+		return getBicoClassName() + ".v";
+	}
+	
 	public String getTypeName() {
-		return bicoFileName + "_type.v";
+		return moduleName + "_type";
 	}
 	
 	
 	public String getSignatureName() {
-		return bicoFileName + "_signature.v";
+		return moduleName + "_signature";
 	}
 	
 
 	public String getBicoClassName() {
-		return bicoFileName + ".v";
+		return moduleName;
+	}
+	
+	
+
+	public String getTypeModule() {
+		return moduleName + "Type";
+	}
+	
+	public String getSignatureModule() {
+		return moduleName + "Signature";
+	}
+	
+
+	public String getBicoClassModule() {
+		return moduleName;
 	}
 	
 	public String getClassName() {
-	   return path + Constants.LINUX_PATH_SEPARATOR  + name + Constants.CLASS_SUFFIX;
+		return path + Constants.LINUX_PATH_SEPARATOR  + name + Constants.CLASS_SUFFIX;
 	}
-	
-	
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import mobius.bico.MakefileGenerator;
 import mobius.bico.Util;
@@ -68,14 +69,14 @@ public class Executor extends ABasicExecutor {
 	 * Path "en dur" to the Mobius coq formalisation of a Java bytecode logic
 	 * and operational semantics
 	 */
-	public static final String pathToLib = "~bagside/SVN/";
+	public static final String pathToLib = "/home/bagside"+File.separatorChar+"SVN" +File.separatorChar;
 	
 
 	/**
 	 * Path "en dur" to the Mobius coq formalisation of a Java bytecode logic
 	 * and operational semantics
 	 */
-	public static final String pathToAPI = pathToLib + "Formalisation/java";
+	public static final String pathToAPI = pathToLib + "Formalisation" +File.separatorChar+ "java";
 	
 
 	/** the standard lib paths. */
@@ -167,14 +168,6 @@ public class Executor extends ABasicExecutor {
 		System.out.println("Class Path " + clPath);
 		// set the Repository to be a synthetic repository
 		fRepos = SyntheticRepository.getInstance(new ClassPath(clPath));
-		// initialise the files that must be processed also, i.e. the files
-		// that are in the import of the class to be converted to bicolano
-		/*
-		 * try { setJavaClass(fRepos.loadClass(fName)); } catch
-		 * (ClassNotFoundException exc) { exc.printStackTrace(); }
-		 */
-		/* addToOtherLibs(fName); */
-		/* initFOtherLibs(); */
 	}
 
 	public Executor(Executor e) {
@@ -202,6 +195,7 @@ public class Executor extends ABasicExecutor {
 			return;
 		}
 
+		
 		for (int k = 0; k < files.length; k++) {
 			// if the file is a class file then
 			// handle it
@@ -212,6 +206,7 @@ public class Executor extends ABasicExecutor {
 				className = className.replace(Constants.LINUX_PATH_SEPARATOR,
 						Constants.JAVA_NAME_SEPARATOR);
 				handleLibraryClass(className);
+				
 			} else if (cf.isDirectory()) {
 				String _p = null;
 				// else handle the next package which is in the current
@@ -223,6 +218,7 @@ public class Executor extends ABasicExecutor {
 							+ cf.getName();
 				}
 				doApplication(_p);
+				new MakefileGenerator(getBaseDir(),_p ).generate();
 			}
 		}
 	}
@@ -387,26 +383,7 @@ public class Executor extends ABasicExecutor {
 		System.out.println("Output file: " + fCoqFileName);
 	}
 
-	/**
-	 * Initialize the working directory and file from the given path.
-	 * 
-	 * @param path
-	 *            the path list containing the directory.
-	 */
-	/*
-	 * private void initWorkingDir(final List<File> path) { if (path.size() >
-	 * 1) { throw new IllegalArgumentException("It looks bad. " + "You have
-	 * specified to many valid paths " + "to handle: \n" + path + "\nChoose only
-	 * one, then come back!"); } else if (path.size() == 0) { throw new
-	 * IllegalArgumentException( "You must specify at least one directory " +
-	 * "to write the output file into..."); }
-	 * 
-	 * final File pathname = path.get(0); setBaseDir(pathname); if
-	 * (!pathname.isDirectory()) { setBaseDir(pathname.getParentFile()); }
-	 * fCoqName = fImplemSpecif.getFileName(Util.coqify(pathname.getName()));
-	 * fCoqFileName = new File(getBaseDir(), fCoqName + ".v");
-	 * System.out.println("Output file: " + fCoqFileName); }
-	 */
+	
 
 	/**
 	 * Launch bico !
@@ -418,6 +395,8 @@ public class Executor extends ABasicExecutor {
 	 *             found
 	 */
 	public void start() throws ClassNotFoundException, IOException {
+		doApplication();
+		/*
 		if (fShowHelp) {
 			System.out.println(HELP_MSG);
 		}
@@ -432,16 +411,16 @@ public class Executor extends ABasicExecutor {
 		fCoqFileName.createNewFile();
 		final FileOutputStream fwr = new FileOutputStream(fCoqFileName);
 		fOut = new Util.Stream(fwr);
-		// handleClass(javaClass);
+		
 		doMain();
-
+		
 		fOut.close(); // closing output file
 		doType();
 		doSignature();
-		writeDictionnary();
+		writeDictionnary();*/
 	}
 
-	/**
+/*	*//**
 	 * Write the main file. This generates for instance the file "B_classMap.v",
 	 * i.e. packageName_className.v
 	 * 
@@ -449,19 +428,19 @@ public class Executor extends ABasicExecutor {
 	 *             if there is a problem with name resolution
 	 * @throws IOException
 	 *             if there is a problem writing from the disk
-	 */
+	 *//*
 	private void doMain() throws ClassNotFoundException, IOException {
 		// write prelude ;)
 		doBeginning();
 
 		// commented on 30/10
 		// handle library classes specified as 'the other libs'
-		/*
+		
 		 * Iterator<String> iter = fOtherLibs.values().iterator(); while (
 		 * iter.hasNext()) { String current = iter.next();
 		 * System.out.println("Handling classes imported in the current class: " +
 		 * current); handleLibraryClass(current); }
-		 */
+		 
 		doApplication();
 		addToTreated();
 		Iterator<ExternalClass> iter = fExtLibs.values().iterator();
@@ -487,11 +466,16 @@ public class Executor extends ABasicExecutor {
 		fOut.println("(*End of current libs DONE*)");
 		doEnding();
 		generateMakefile();
-	}
+	}*/
 
 	/**
-	 * Generates the makefile to compile everything.
+	 * 
+	 *@deprecated
 	 */
+	//commented by Mariela
+	/**
+	 * Generates the makefile to compile everything.
+	 *//*
 	private void generateMakefile() {
 		final List<ClassExecutor> treated = new ArrayList<ClassExecutor>();
 		treated.addAll(fTreatedClasses);
@@ -502,7 +486,7 @@ public class Executor extends ABasicExecutor {
 	public MakefileGenerator getMakefileGenerator(final File file,
 			final String name, final List<ClassExecutor> treated) {
 		return new MakefileGenerator(file, name, treated);
-	}
+	}*/
 
 	/**
 	 * Write the signature file.
@@ -572,8 +556,7 @@ public class Executor extends ABasicExecutor {
 		for (int i = 0; i < fSpecialLibs.length; i++) {
 			final String str = fImplemSpecif.requireLib(Util
 					.coqify(fSpecialLibs[i]));
-			out
-					.println(Constants.LOAD + Constants.SPACE + "\"" + str
+			out.println(Constants.LOAD + Constants.SPACE + "\"" + str
 							+ ".v\".");
 		}
 
@@ -635,30 +618,25 @@ public class Executor extends ABasicExecutor {
 	 * @throws IOException
 	 *             if the class executor has a writing problem
 	 */
-	public void handleLibraryClass(final String clname)
+	public ClassExecutor handleLibraryClass(final String clname)
 			throws ClassNotFoundException, IOException {
 		if (clname == null) {
-			return;
+			return null;
 		}
 		String c = clname;
 		if (c.endsWith(Constants.CLASS_SUFFIX)) {
 			c = clname.substring(0, clname.length() - 6);
 		}
 
-		// if the class is already in the repository then it is already
-		// compiled in bicolano and thus return
-		/*
-		 * if (fRepos.findClass(clname.replace('/', '.')) != null) { return; }
-		 */
 		// if the class is already treated then return
 		if (fCurrentLibs.get(c.replace('/', '.')) != null) {
-			return;
+			return null;
 		}
 		/*
 		 * final MyClassLoader mcl = new MyClassLoader(); mcl.loadClass(clname);
 		 * final ClassLoaderRepository rep = new ClassLoaderRepository(mcl);
 		 */
-		handleClass(fRepos.loadClass(c));
+		return handleClass(fRepos.loadClass(c));
 
 	}
 
@@ -693,7 +671,7 @@ public class Executor extends ABasicExecutor {
 	 * @throws IOException
 	 *             if the class executor has a writing problem
 	 */
-	private void handleClass(final JavaClass jc) throws ClassNotFoundException,
+	private ClassExecutor handleClass(final JavaClass jc) throws ClassNotFoundException,
 			IOException {
 		
 		// fRepos.storeClass(jc);
@@ -704,6 +682,7 @@ public class Executor extends ABasicExecutor {
 		fCurrentLibs.put(jc.getClassName(), ce);
 		/* addToTreated(ce); */
 		ce.start();
+		return ce;
 	}
 
 	/*
