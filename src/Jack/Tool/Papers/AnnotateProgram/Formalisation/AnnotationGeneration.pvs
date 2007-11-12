@@ -613,6 +613,9 @@ BEGIN
     subset?(var_names(ann_program(mp)),
             union(var_names(program(mp)), var_names(new_gvds(mp))))
 
+  var_names_declared_in_MVA_subset_ghostvars : LEMMA % :-)
+    subset?(var_names(vdsA(mva(mp))), var_names(getGhostDecls(ann_program(mp))))
+
   ann_program_defines_MVA_vars : LEMMA % :-)
     FORALL (n : Name) : var_names(new_gvds(mp))(n) IMPLIES
       EXISTS (c : Class, gd : FieldDecl) :
