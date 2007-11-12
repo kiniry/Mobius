@@ -21,6 +21,8 @@ import mobius.bico.implem.MapImplemSpecif;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.util.ClassLoaderRepository;
+import org.apache.bcel.util.ClassPath;
+import org.apache.bcel.util.SyntheticRepository;
 
 /**
  * The main entry point to bico.
@@ -101,20 +103,10 @@ public class Executor extends ABasicExecutor {
    * 
    * @deprecated do not use, use a proper constructor instead
    */
-  private Executor() {
-  	/**
-  	 * commented Mariela - use of ClassLoaderRepository is not the best
-  	 * choice probably
-  	 */
-  	/*
-  	 * super(new ClassLoaderRepository(ClassLoader.getSystemClassLoader()),
-  	 * new MapImplemSpecif(), new MethodHandler(), null, new
-  	 * CamlDictionary(), null);
-  	 */
-  
+  private Executor() {  
   	super(new ClassLoaderRepository(ClassLoader.getSystemClassLoader()),
           new MapImplemSpecif(), new MethodHandler(), null,
-  			new CamlDictionary(), new File(""));
+          new CamlDictionary(), new File(""));
   }
   
 //  /**
@@ -261,32 +253,51 @@ public class Executor extends ABasicExecutor {
   /**
    * Create a new Executor object.
    * 
-   * @param implem
-   *            specify the implementation to use
-   * @param workingDir
-   *            the current working dir
-   * @param outputDir
-   *            the output directory
-   * @param classToTreat
-   *            the list of classes to treat
+   * @param implem specify the implementation to use
+   * @param workingDir the current working dir
+   * @param outputDir the output directory
+   * @param clzzPath the classpath to use
+   * @param classToTreat the list of classes to treat
+   */
+  public Executor(final IImplemSpecifics implem, 
+                  final File workingDir,
+                  final File outputDir, 
+                  final ClassPath clzzPath,
+                  final List<String> classToTreat) {
+    super(SyntheticRepository.getInstance(clzzPath),
+          implem, 
+          new MethodHandler(), 
+          null,
+          new CamlDictionary(), 
+          workingDir);
+    
+    
+    // if the list of other classes to treat is empty exit from the
+    // constructor
+    if (classToTreat != null) {
+      for (String clName: classToTreat) { 
+        //addToOtherLibs(clName); 
+      }
+    }
+  }
+  /**
+   * Create a new Executor object.
+   * 
+   * @param implem specify the implementation to use
+   * @param workingDir the current working dir
+   * @param outputDir the output directory
+   * @param classToTreat the list of classes to treat
    */
   public Executor(final IImplemSpecifics implem, 
                   final File workingDir,
                   final File outputDir, 
                   final List<String> classToTreat) {
-    super(new ClassLoaderRepository(ClassLoader.getSystemClassLoader()), 
-          implem, new MethodHandler(), null,
-          new CamlDictionary(), workingDir);
-    
-    //fCoqFileName = outFile;
-    // if the list of other classes to treat is empty exit from the
-    // constructor
-    if (classToTreat == null) {
-      return;
-    }
-    /*
-     * for (String clName: classToTreat) { addToOtherLibs(clName); }
-     */
+    this(implem, 
+         workingDir, 
+         outputDir,
+         new ClassPath(workingDir.getAbsolutePath() + 
+                       File.pathSeparatorChar + ClassPath.getClassPath()),
+         classToTreat);
   }
   
  

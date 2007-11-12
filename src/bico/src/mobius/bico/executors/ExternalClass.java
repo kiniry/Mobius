@@ -40,7 +40,12 @@ public class ExternalClass extends CoqModulePrint {
   
   private void setPath(String clname) {
   	int i = clname.lastIndexOf(Constants.LINUX_PATH_SEPARATOR);
-  	path = clname.substring(0, i);
+    if (i == -1) {
+      path = clname;
+    }
+    else {
+      path = clname.substring(0, i);
+    }
   }
   private void setName(String clname) {
   	int i = clname.lastIndexOf(Constants.LINUX_PATH_SEPARATOR);

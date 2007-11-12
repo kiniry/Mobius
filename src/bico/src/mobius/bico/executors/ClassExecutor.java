@@ -433,7 +433,7 @@ public class ClassExecutor extends ASignatureExecutor {
     clname = clname.replace(Constants.JAVA_NAME_SEPARATOR,
                             Constants.LINUX_PATH_SEPARATOR);
     if (!clname.endsWith(Constants.CLASS_SUFFIX)) {
-      clname = Util.removeClassSuffix(clname);
+      clname = clname + Constants.CLASS_SUFFIX;
     }
   
     // if the class file is not already in the hash map of imported classes
