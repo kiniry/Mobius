@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/mobius.simplify.feature_1.5.5.jar" id="mobius.simplify.feature" version="1.5.5">
+      <category name="mobius"/>
+   </feature>
+   <category-def name="mobius" label="Mobius PVE">
+      <description>
+         Mobius Program Verification Environment
+      </description>
+   </category-def>
+</site>
