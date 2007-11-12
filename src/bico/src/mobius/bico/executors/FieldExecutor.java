@@ -1,8 +1,11 @@
 package mobius.bico.executors;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import mobius.bico.Util;
+import mobius.bico.Util.Stream;
+import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
@@ -47,31 +50,35 @@ class FieldExecutor extends ASignatureExecutor {
    * cannot be resolved
    */
   public void start() throws ClassNotFoundException {
-	//doImport();
     for (Field field : fJavaClass.getFields()) {
       doField(field);
-      fOut.println();
+      getOut().println();
     }
     
   }
+  
+  
   /**
-   * probably should be @deprecated
+   * Write the import.
+   * @deprecated 
    */
+  //FIXME: write "use ... instead" 
   private void doImport() {
-	  ArrayList<String> modulesToImports = startModulesToBeImported();
-	  for (String moduleToImport : modulesToImports) {
-		  String signature = Util.classFormatName2Standard(moduleToImport); 
-		  signature = Util.coqify(signature) + "_signature";
-		  fOut.println(Constants.REQ_IMPORT + Constants.SPACE + signature   + ".v.");
-		  fOut.println(Constants.IMPORT + Constants.SPACE + signature+ ".");
-	  }
-	
+    final List<String> modulesToImports = startModulesToBeImported();
+    for (String moduleToImport : modulesToImports) {
+      String signature = Util.classFormatName2Standard(moduleToImport); 
+      signature = Util.coqify(signature) + "_signature";
+      getOut().println(Constants.REQ_IMPORT + Constants.SPACE + signature   + ".v.");
+      getOut().println(Constants.IMPORT + Constants.SPACE + signature+ ".");
+    }
   }
 
 /**
    * Enumerates in a Coq friendly form all the fields of the class.
    */
   public void doEnumeration() {
+    final Stream fOut = getOut();
+    final IImplemSpecifics fImplemSpecif = getImplemSpecif();
     // fields
     final Field[] ifield = fJavaClass.getFields();
     if (ifield.length == 0) {
@@ -91,34 +98,32 @@ class FieldExecutor extends ASignatureExecutor {
 
   /**
    * Collects the modules  which contain the description of the field type
-   * to be imported in the current module
+   * to be imported in the current module.
    * 
-   * @throws ClassNotFoundException if a class typing a field
-   * cannot be resolved
+   * @return The list of module to be imported
    */
-  public ArrayList<String> startModulesToBeImported() {
-	  /*the list of modules to be imported in the current module. 
-	   *  For instance, the module which describes the type of the field 
-	   *  must be imported in the current module:
-	   *  
-	   *  Require Import D_type.v
-	   *  
-	   *  Field c := (Name, D)
-	   *  
-	   */
-	ArrayList<String> modulesToBeImported = new ArrayList<String>();
+  public List<String> startModulesToBeImported() {
+    /*the list of modules to be imported in the current module. 
+     *  For instance, the module which describes the type of the field 
+     *  must be imported in the current module:
+     *  
+     *  Require Import D_type.v
+     *  
+     *  Field c := (Name, D)
+     *  
+     */
+    final List<String> modulesToBeImported = 
+      new ArrayList<String>();
     for (Field field : fJavaClass.getFields()) {
-      Type type = field.getType();
-   	  if (type  instanceof ObjectType) {
-   		  String  signature = ((ObjectType)type).getSignature();
-   		  modulesToBeImported.add(signature);  
-   	  }
+      final Type type = field.getType();
+      if (type  instanceof ObjectType) {
+        final String  signature = ((ObjectType)type).getSignature();
+        modulesToBeImported.add(signature);  
+      }
     }
     return modulesToBeImported;
   }
   
-  
-	
   
   /**
    * Definition of the field signature.
@@ -140,7 +145,7 @@ class FieldExecutor extends ASignatureExecutor {
     fOutSig.println(strf);
     
     // !!! here will be conversion
-    strf = Util.convertType(field.getType(), fRepos);
+    strf = Util.convertType(field.getType(), getRepository());
     fOutSig.println(strf);
     fOutSig.decTab();
     fOutSig.println(".\n");
@@ -158,13 +163,14 @@ class FieldExecutor extends ASignatureExecutor {
     
     String strf = "Definition " + Util.coqify(field.getName()) +
            "Field : Field := FIELD.Build_t";
-    fOut.println(strf);
-    fOut.incTab();
+    final Stream out = getOut();
+    out.println(strf);
+    out.incTab();
     strf = Util.coqify(field.getName()) + "ShortFieldSignature";
-    fOut.println(strf);
+    out.println(strf);
     
-    fOut.println("" + field.isFinal());
-    fOut.println("" + field.isStatic());
+    out.println("" + field.isFinal());
+    out.println("" + field.isStatic());
     String visibility = "Package";
     if (field.isPrivate()) {
       visibility = "Private";
@@ -175,12 +181,12 @@ class FieldExecutor extends ASignatureExecutor {
     if (field.isPublic()) {
       visibility = "Public";
     }
-    fOut.println(visibility);
+    out.println(visibility);
     // FIXME current solution
     strf = "FIELD.UNDEF";
-    fOut.println(strf);
-    fOut.decTab();
-    fOut.println(".");
+    out.println(strf);
+    out.decTab();
+    out.println(".");
   }
 
   /**
@@ -194,9 +200,9 @@ class FieldExecutor extends ASignatureExecutor {
     
     for (Field field : fJavaClass.getFields()) {
       fieldIdx++;
-      fDico.addField(field.getName(), 
-                     fDico.getCoqPackageName(fJavaClass), 
-                     fDico.getCoqClassName(fJavaClass), 
+      getDico().addField(field.getName(), 
+                     getDico().getCoqPackageName(fJavaClass), 
+                     getDico().getCoqClassName(fJavaClass), 
                      fieldIdx);
       doFieldSignature(field, fieldIdx);
     }

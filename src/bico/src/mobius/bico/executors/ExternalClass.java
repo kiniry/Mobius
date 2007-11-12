@@ -10,24 +10,24 @@ import mobius.bico.coq.CoqModulePrint;
  *
  */
 public class ExternalClass extends CoqModulePrint {
-	private String path;
-	private String name;
-	private String bicoFileName;
-	private String moduleName;
-	
-	public ExternalClass(String _clname) {
-		String clname;
-		if (_clname.endsWith(Constants.CLASS_SUFFIX)) {
-			clname = _clname.substring(0, _clname.length() - 6) ;
-		} else {
-			clname = _clname;
-		}
-		
-		setModuleName(clname);
-		setPath(clname);
-		setName(clname);
-		setBase();
-	}
+  private String path;
+  private String name;
+  private String bicoFileName;
+  private String moduleName;
+  
+  public ExternalClass(String _clname) {
+    String clname;
+    if (_clname.endsWith(Constants.CLASS_SUFFIX)) {
+    	clname = _clname.substring(0, _clname.length() - 6) ;
+    } else {
+    	clname = _clname;
+    }
+    
+    setModuleName(clname);
+    setPath(clname);
+    setName(clname);
+    setBase();
+  }
 
 	private void setModuleName(String clname) {
 		moduleName = Util.coqify(clname);

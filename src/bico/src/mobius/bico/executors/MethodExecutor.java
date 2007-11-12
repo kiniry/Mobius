@@ -1,6 +1,8 @@
 package mobius.bico.executors;
 
 import mobius.bico.Util;
+import mobius.bico.Util.Stream;
+import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.visitors.InstructionVisitor;
 
 import org.apache.bcel.Constants;
@@ -36,6 +38,10 @@ class MethodExecutor extends ASignatureExecutor {
   
   /** the constant pool corresponding to the class. */
   private ConstantPoolGen fConstantPool;
+
+
+  private final Stream fOut;
+  private final IImplemSpecifics fImplemSpecif;
   
   /**
    * The constructor.
@@ -46,6 +52,8 @@ class MethodExecutor extends ASignatureExecutor {
     super(be);
     fClass = cg;
     fConstantPool = cg.getConstantPool();
+    fOut = getOut();
+    fImplemSpecif = getImplemSpecif();
   }
   
   /**
@@ -60,7 +68,7 @@ class MethodExecutor extends ASignatureExecutor {
     
     for (Method meth: methods) {
       final MethodGen mg = new MethodGen(meth, fClass.getClassName(), fConstantPool);
-      final String name = fMethodHandler.getName(mg);
+      final String name = getMethodHandler().getName(mg);
      
       if (!meth.isAbstract()) {
         doInstructions(mg, name);
@@ -84,7 +92,7 @@ class MethodExecutor extends ASignatureExecutor {
     else {
       String str2 = "(";
       for (int i = 0; i < imeth.length - 1; i++) {
-        str2 += fImplemSpecif.methodsCons(fMethodHandler.getName(imeth[i]) + "Method");
+        str2 += fImplemSpecif.methodsCons(getMethodHandler().getName(imeth[i]) + "Method");
        
       }
       str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()) +
@@ -118,13 +126,13 @@ class MethodExecutor extends ASignatureExecutor {
     else {
       str = "(";
       for (int i = 0; i < atrr.length; i++) {
-        str = str.concat(Util.convertType(atrr[i], fRepos) + "::");
+        str = str.concat(Util.convertType(atrr[i], getRepository()) + "::");
       }
       str = str.concat("nil)");
       fOutSig.println(str);
     }
     final Type t = method.getReturnType();
-    fOutSig.println(Util.convertTypeOption(t, fRepos));
+    fOutSig.println(Util.convertTypeOption(t, getRepository()));
     fOutSig.decPrintln(".");
     
     String clName = "className";
@@ -308,7 +316,7 @@ class MethodExecutor extends ASignatureExecutor {
    */
   private String doInstruction(final int pos, 
                                final Instruction ins) throws ClassNotFoundException {
-    final String ret = InstructionVisitor.translate(fMethodHandler, fConstantPool, ins);
+    final String ret = InstructionVisitor.translate(getMethodHandler(), fConstantPool, ins);
     return "(" + ret + ")";
 
   }
@@ -327,12 +335,12 @@ class MethodExecutor extends ASignatureExecutor {
       methodName++;
       final MethodGen mg = new MethodGen(meth, fClass.getClassName(), 
                                          fConstantPool);
-      fDico.addMethod(mg.getClassName() + "." + mg.getName(), 
-                      fDico.getCoqPackageName(fClass.getJavaClass()),
-                      fDico.getCoqClassName(fClass.getJavaClass()),
+      getDico().addMethod(mg.getClassName() + "." + mg.getName(), 
+                      getDico().getCoqPackageName(fClass.getJavaClass()),
+                      getDico().getCoqClassName(fClass.getJavaClass()),
                       methodName);
-      fMethodHandler.addMethod(mg);
-      final String name = fMethodHandler.getName(mg);
+      getMethodHandler().addMethod(mg);
+      final String name = getMethodHandler().getName(mg);
       doMethodSignature(meth, methodName, name);
     }
     
