@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="escjava.simplify"
+   name="Escjava-Simplify"
+   version="1.5.5"
+   provider-name="David R. Cok and the MOBIUS Project">
+
+</plugin>
