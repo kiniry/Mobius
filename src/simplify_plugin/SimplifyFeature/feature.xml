@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="SimplifyFeature"
-      label="SimplifyFeature Feature"
+      id="mobius.simplify.feature"
+      label="Simplify Feature"
       version="1.5.5"
       provider-name="EU MOBIUS IST-15905 Project">
 
@@ -36,14 +36,14 @@ For inquiries please contact: Hewlett-Packard Company.
    </license>
 
    <url>
-      <update url="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/"/>
+      <update url="http://kind.ucd.ie/products/opensource/Simplify/simplify-eclipse/updates/"/>
       <discovery label="The original Simplify technical report." url="http://www.hpl.hp.com/techreports/2003/HPL-2003-148.pdf"/>
       <discovery label="The ESC/Java2 release website.  The latest Simplify releases are always included with ESC/Java2." url="http://kind.ucd.ie/products/opensource/ESCJava2/"/>
       <discovery label="The Java Programming Toolkit Source Release website at Hewlett-Packard." url="http://www.hpl.hp.com/downloads/crl/jtk/"/>
    </url>
 
    <plugin
-         id="mobius.simplify"
+         id="mobius.simplify.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
