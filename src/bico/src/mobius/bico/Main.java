@@ -115,12 +115,12 @@ public final class Main {
       else if (low.equals(Constants.OPTION_MAP)) {
         implem = new MapImplemSpecif();
       } 
-      else if (low.equals(Constants.OPTION_LIB)) {
+      else if (low.equals(Constants.OPTION_CLASSPATH)) {
         i = i + 1;
         arg = args[i];
         baseDir = new File(arg);
       } 
-      else if (low.equals(Constants.OPTION_EXT_LIB)) {
+      else if (low.equals(Constants.OPTION_OUTPUT)) {
         // this keyword introduces the base working class path
         i = i + 1;
         arg = args[i];

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mobius.bico.Util;
-import mobius.bico.Util.Stream;
+import mobius.bico.coq.CoqStream;
 import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dico;
 import mobius.bico.dico.MethodHandler;
@@ -333,14 +333,13 @@ public class Executor extends ABasicExecutor {
     final File typ = new File(getBaseDir(), fName + "_signature"
     		+ suffix);
     /* final File typ = new File( fCoqName + "_signature" + suffix); */
-    final Stream out = new Stream(new FileOutputStream(typ));
+    final CoqStream out = new CoqStream(new FileOutputStream(typ));
     out.println(libPath);
     out.println(getImplemSpecif().getBeginning());
     
     // out.println("Require Import " + fName + "_type.");
     out.println();
-    out.incPrintln(Constants.MODULE + Constants.SPACE + fName
-    		+ "Signature.");
+    out.incPrintln(Constants.MODULE + fName + "Signature.");
     
 //    Iterator<ExternalClass> iter = fExtLibs.values().iterator();
 //    while (iter.hasNext()) {
@@ -357,8 +356,7 @@ public class Executor extends ABasicExecutor {
     
 
     
-    out.decPrintln(Constants.END_MODULE + Constants.SPACE + fName
-    		+ "Signature.");
+    out.decPrintln(Constants.END_MODULE + fName + "Signature.");
   
   }
   
@@ -370,12 +368,12 @@ public class Executor extends ABasicExecutor {
    */
   private void doType() throws FileNotFoundException {
     final File typ = new File(getBaseDir(), fName + "_type" + suffix);
-    final Stream out = new Stream(new FileOutputStream(typ));
+    final CoqStream out = new CoqStream(new FileOutputStream(typ));
     out.println(libPath);
     out.println(getImplemSpecif().getBeginning());
     
     out.println();
-    out.incPrintln(Constants.MODULE + Constants.SPACE + fName + "Type.");
+    out.incPrintln(Constants.MODULE + fName + "Type.");
     
 //    Iterator<ExternalClass> iter = fExtLibs.values().iterator();
 //    while (iter.hasNext()) {
@@ -388,7 +386,7 @@ public class Executor extends ABasicExecutor {
     for (int i = 0; i < fSpecialLibs.length; i++) {
     	final String str = getImplemSpecif().requireLib(Util
     			.coqify(fSpecialLibs[i]));
-    	out.println(Constants.LOAD + Constants.SPACE + "\"" + str
+    	out.println(Constants.LOAD + "\"" + str
     				+ ".v\".");
     }
     
@@ -410,7 +408,7 @@ public class Executor extends ABasicExecutor {
    */
   private void writeDictionnary() throws FileNotFoundException {
     final File dicoFile = new File(getBaseDir(), "dico.ml");
-    final Stream out = new Util.Stream(new FileOutputStream(dicoFile));
+    final CoqStream out = new CoqStream(new FileOutputStream(dicoFile));
     getDico().write(out);
     out.close();
   }
@@ -439,6 +437,9 @@ public class Executor extends ABasicExecutor {
    * @return
    */
   public boolean isSpecialLib(String clname) {
+    if (clname.startsWith("java")) {
+      return true;
+    }
     for (String lib: fSpecialLibs) {
       if (lib.equals(clname)) {
         return true;
@@ -526,24 +527,24 @@ public class Executor extends ABasicExecutor {
    * Write the file preable.
    */
   private void doBeginning() {
-    final Stream out = getOut();
+    final CoqStream out = getOut();
     out.println(libPath);
     out.println(getImplemSpecif().getBeginning());
     out.println("Require Import ImplemSWp.");
     out.println("Import P.");
     out.println("Import MDom.\n");
     
-    out.println(Constants.REQ_EXPORT + Constants.SPACE + fName
+    out.println(Constants.REQ_EXPORT + fName
     		+ "_type.");
-    System.out.println(Constants.REQ_EXPORT + Constants.SPACE + fName
+    System.out.println(Constants.REQ_EXPORT + fName
     		+ "_type.");
-    out.println(Constants.REQ_EXPORT + Constants.SPACE + fName
+    out.println(Constants.REQ_EXPORT + fName
     		+ "_signature.");
     
-    out.println(Constants.EXPORT + Constants.SPACE + fName + "Type.");
-    out.println(Constants.EXPORT + Constants.SPACE + fName
+    out.println(Constants.EXPORT + fName + "Type.");
+    out.println(Constants.EXPORT + fName
     		+ "Signature.");
-    out.incPrintln(Constants.MODULE + Constants.SPACE + fName
+    out.incPrintln(Constants.MODULE + fName
     		+ "Program.");
   
   }
@@ -552,7 +553,7 @@ public class Executor extends ABasicExecutor {
    * Write the file ending.
    */
   private void doEnding() {
-    final Stream out = getOut();
+    final CoqStream out = getOut();
     defineClassAndInterface();
     
     // the program definition
@@ -565,7 +566,7 @@ public class Executor extends ABasicExecutor {
     		+ "| None => fun x y => true");
     out.println("end");
     out.decPrintln(".\n");
-    out.decPrintln(Constants.END_DEFINITION + Constants.SPACE + fName
+    out.decPrintln(Constants.END_DEFINITION + fName
     		+ "Program.\n");
   }
   
@@ -576,7 +577,7 @@ public class Executor extends ABasicExecutor {
    */
   private void defineClassAndInterface() {
     final IImplemSpecifics implem = getImplemSpecif();
-    final Stream ot = getOut();
+    final CoqStream ot = getOut();
     final List<ClassExecutor> treatedInterfaces = new ArrayList<ClassExecutor>();
     final List<ClassExecutor> treatedClasses = new ArrayList<ClassExecutor>();
   
@@ -589,7 +590,7 @@ public class Executor extends ABasicExecutor {
       }
     }
     // all classes
-    String str = Constants.DEFINITION + Constants.SPACE + "AllClasses : "
+    String str = Constants.DEFINITION + "AllClasses : "
     		+ implem.classType() + " := ";
     for (ClassExecutor clss : treatedClasses) {
     	str += implem.classCons(clss.getModuleName() + ".class");
@@ -603,7 +604,7 @@ public class Executor extends ABasicExecutor {
     ot.println();
     
     // all interfaces
-    str = Constants.DEFINITION + Constants.SPACE + "AllInterfaces : "
+    str = Constants.DEFINITION + "AllInterfaces : "
     		+ implem.interfaceType() + " := ";
     for (ClassExecutor interf : treatedInterfaces) {
     	str += implem.interfaceCons(interf.getModuleName()

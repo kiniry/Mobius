@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mobius.bico.Util;
-import mobius.bico.Util.Stream;
+import mobius.bico.coq.CoqStream;
 import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Field;
@@ -68,8 +68,8 @@ class FieldExecutor extends ASignatureExecutor {
     for (String moduleToImport : modulesToImports) {
       String signature = Util.classFormatName2Standard(moduleToImport); 
       signature = Util.coqify(signature) + "_signature";
-      getOut().println(Constants.REQ_IMPORT + Constants.SPACE + signature   + ".v.");
-      getOut().println(Constants.IMPORT + Constants.SPACE + signature+ ".");
+      getOut().println(Constants.REQ_IMPORT + signature   + ".v.");
+      getOut().println(Constants.IMPORT + signature + ".");
     }
   }
 
@@ -77,7 +77,7 @@ class FieldExecutor extends ASignatureExecutor {
    * Enumerates in a Coq friendly form all the fields of the class.
    */
   public void doEnumeration() {
-    final Stream fOut = getOut();
+    final CoqStream fOut = getOut();
     final IImplemSpecifics fImplemSpecif = getImplemSpecif();
     // fields
     final Field[] ifield = fJavaClass.getFields();
@@ -163,7 +163,7 @@ class FieldExecutor extends ASignatureExecutor {
     
     String strf = "Definition " + Util.coqify(field.getName()) +
            "Field : Field := FIELD.Build_t";
-    final Stream out = getOut();
+    final CoqStream out = getOut();
     out.println(strf);
     out.incTab();
     strf = Util.coqify(field.getName()) + "ShortFieldSignature";

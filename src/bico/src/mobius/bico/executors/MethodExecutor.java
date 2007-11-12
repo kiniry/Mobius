@@ -1,7 +1,7 @@
 package mobius.bico.executors;
 
 import mobius.bico.Util;
-import mobius.bico.Util.Stream;
+import mobius.bico.coq.CoqStream;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.visitors.InstructionVisitor;
 
@@ -40,7 +40,7 @@ class MethodExecutor extends ASignatureExecutor {
   private ConstantPoolGen fConstantPool;
 
 
-  private final Stream fOut;
+  private final CoqStream fOut;
   private final IImplemSpecifics fImplemSpecif;
   
   /**

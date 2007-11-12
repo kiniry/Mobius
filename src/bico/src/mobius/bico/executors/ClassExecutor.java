@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import mobius.bico.Util;
-import mobius.bico.Util.Stream;
 
 import mobius.bico.coq.LoadPath;
+import mobius.bico.coq.CoqStream;
 
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantCP;
@@ -44,7 +44,7 @@ public class ClassExecutor extends ASignatureExecutor {
   		+ "Formalisation/Library/Map\".\n" + "Add LoadPath \"" + pathToLib
   		+ "Formalisation/Bicolano\".\n";
   
-  private String fCoqName;
+  private final String fCoqName;
   
   /** the current class which is inspected. */
   private ClassGen fClass;
@@ -99,8 +99,7 @@ public class ClassExecutor extends ASignatureExecutor {
                        final String name) throws FileNotFoundException {
     super(exec, cg);
     fClass = cg;
-    /* fName = name; */
-    fCoqName = name;
+    fCoqName = Util.coqify(cg.getClassName());
     setBaseDir(exec.getBaseDir());
     
     final JavaClass javaClass = fClass.getJavaClass();
@@ -113,7 +112,7 @@ public class ClassExecutor extends ASignatureExecutor {
     fWorkingDir = new File(getBaseDir(), fPackageDir.getPath());
     
     // WRITE THE FILE in directory fWorkingDir
-    setOut(new Util.Stream(new FileOutputStream(new File(fWorkingDir,
+    setOut(new CoqStream(new FileOutputStream(new File(fWorkingDir,
                                                          fModuleName + ".v"))));
     
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
@@ -165,27 +164,24 @@ public class ClassExecutor extends ASignatureExecutor {
    *             if there was a problem retrieving a field or a method
    */
   private void doMain() throws ClassNotFoundException {
-    final Stream fOut = getOut();
+    final CoqStream fOut = getOut();
     fOut.println(fLibPath);
     fOut.println(Constants.REQ_IMPORT + 
-                 Constants.SPACE + 
                  "ImplemProgramWithMap.\n");
-    fOut.println(Constants.IMPORT + Constants.SPACE + "P.\n");
-    fOut.println(Constants.REQ_IMPORT + Constants.SPACE + 
-                 fCoqName + "_signature.");
-    fOut.println(Constants.REQ_IMPORT + Constants.SPACE + fCoqName
+    fOut.println(Constants.IMPORT + "P.\n");
+    fOut.println(Constants.REQ_IMPORT + fCoqName + "_signature.");
+    fOut.println(Constants.REQ_IMPORT + fCoqName
     		+ "_type.");
-    fOut.println(Constants.IMPORT + Constants.SPACE + fCoqName
+    fOut.println(Constants.IMPORT + fCoqName
     		+ "Signature.");
-    fOut.println(Constants.IMPORT + Constants.SPACE + fCoqName + "Type.");
+    fOut.println(Constants.IMPORT + fCoqName + "Type.");
     fOut.println();
     
-    fOut.incPrintln(Constants.MODULE + Constants.SPACE + fModuleName
+    fOut.incPrintln(Constants.MODULE + fModuleName
     		+ ".\n");
     fOut
-    		.println(Constants.IMPORT + Constants.SPACE + fModuleName
-    				+ "Type.");
-    fOut.println(Constants.IMPORT + Constants.SPACE + fModuleName
+    		.println(Constants.IMPORT + fModuleName + "Type.");
+    fOut.println(Constants.IMPORT + fModuleName
     		+ "Signature.");
     
     fFieldExecutor.start();
@@ -194,8 +190,7 @@ public class ClassExecutor extends ASignatureExecutor {
     
     doClassDefinition();
     
-    fOut.decPrintln(Constants.END_MODULE + Constants.SPACE + fModuleName
-    		+ ".\n");
+    fOut.decPrintln(Constants.END_MODULE + fModuleName + ".\n");
     fOut.flush();
     fOut.close();
   }
@@ -208,47 +203,39 @@ public class ClassExecutor extends ASignatureExecutor {
    *             class.
    */
   public void doSignature() throws ClassNotFoundException {
+    
     fOutSig.println(fLibPath);
     String loadPathsForDep = printLoadPaths();
     fOutSig.println(loadPathsForDep);
-    fOutSig.println(Constants.REQ_IMPORT + Constants.SPACE
-    		+ "ImplemProgramWithMap.\n");
-    fOutSig.println(Constants.IMPORT + Constants.SPACE + "P.\n");
-    fOutSig.println(Constants.REQ_IMPORT + Constants.SPACE + fCoqName
-    		+ "_type.");
-    fOutSig.println(Constants.IMPORT + Constants.SPACE + fCoqName
-    		+ "Type.\n");
-    String reqImports = printImportedClasses();
-    fOutSig.println(reqImports);
+    fOutSig.reqImport("ImplemProgramWithMap");
+    fOutSig.imprt("P");
+    fOutSig.reqImport(fCoqName + "_type");
+    fOutSig.imprt(fCoqName + "Type");
+    fOutSig.println();
     
-    fOutSig.incPrintln(Constants.MODULE + Constants.SPACE + fModuleName
-    		+ "Signature.\n");
-    fOutSig.println(Constants.IMPORT + Constants.SPACE + fModuleName
-    		+ "Type.\n");
+    for (ExternalClass ex: fExtLibsLocal.values()) {
+      fOutSig.reqExport(ex.getTypeName());
+      fOutSig.exprt(ex.getTypeModule());
+    }
+    fOutSig.println();
+    fOutSig.startModule(fModuleName + "Signature");
+    fOutSig.imprt(fModuleName + "Type");
     fFieldExecutor.doSignature();
     
     fMethExecutor.doSignature();
     
-    fOutSig.decPrintln(Constants.END_MODULE + Constants.SPACE + fModuleName
-    		+ "Signature.\n");
+    fOutSig.endModule(fModuleName + "Signature");
     fOutSig.flush();
     fOutSig.close();
   }
   
-  private String printImportedClasses() {		
-    Iterator<ExternalClass>  exc = fExtLibsLocal.values().iterator();
-    if (exc == null) {
-    	return null;
+  private void printImportedClasses(CoqStream out) {		
+    out = getOut();
+    for (ExternalClass ex: fExtLibsLocal.values()) {
+      out.reqExport(ex.getTypeName());
+      out.exprt(ex.getTypeModule());
     }
-    // store here the add load path statements
-    String s = "";
     
-    while (exc.hasNext()) {
-      ExternalClass ex = exc.next();
-      s = s + ex.printReqExport(ex.getSignatureName());
-      s = s + ex.printExport(ex.getSignatureModule());
-    }
-    return s;
   }
   
   private String printLoadPaths() {
@@ -281,13 +268,13 @@ public class ClassExecutor extends ASignatureExecutor {
      * "_type.v");
      */
     final File typeFile = new File(fWorkingDir, fModuleName + "_type.v");
-    final Stream fOutTyp = new Util.Stream(new FileOutputStream(typeFile));
+    final CoqStream fOutTyp = new CoqStream(new FileOutputStream(typeFile));
     
     fOutTyp.println(fLibPath);
     
     fOutTyp.println("Require Import ImplemProgramWithMap.\n"
     		+ "Import P.\n");
-    fOutTyp.incPrintln(Constants.MODULE + Constants.SPACE + fModuleName
+    fOutTyp.incPrintln(Constants.MODULE + fModuleName
     		+ "Type.\n");
     
     // classname
@@ -302,7 +289,7 @@ public class ClassExecutor extends ASignatureExecutor {
     }
     fOutTyp.println(def);
     
-    fOutTyp.decPrintln(Constants.END_MODULE + Constants.SPACE + fModuleName
+    fOutTyp.decPrintln(Constants.END_MODULE + fModuleName
     		+ "Type.\n");
     fOutTyp.flush();
     fOutTyp.close();
@@ -312,7 +299,7 @@ public class ClassExecutor extends ASignatureExecutor {
    * Do the proper class definition.
    */
   protected void doClassDefinition() {
-    final Stream fOut = getOut();
+    final CoqStream fOut = getOut();
     final JavaClass jc = fClass.getJavaClass();
     if (jc.isInterface()) {
     	fOut
@@ -346,7 +333,7 @@ public class ClassExecutor extends ASignatureExecutor {
    * Enumerates the interfaces of the class.
    */
   private void enumerateInterfaces() {
-    final Stream fOut = getOut();
+    final CoqStream fOut = getOut();
     final String[] inames = fClass.getInterfaceNames();
     if (inames.length == 0) {
     	fOut.println("nil");

@@ -3,8 +3,7 @@ package mobius.bico.executors;
 import java.io.File;
 import java.io.IOException;
 
-import mobius.bico.Util;
-import mobius.bico.Util.Stream;
+import mobius.bico.coq.CoqStream;
 import mobius.bico.dico.Dictionary;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.implem.IImplemSpecifics;
@@ -29,7 +28,7 @@ public abstract class ABasicExecutor {
   private IImplemSpecifics fImplemSpecif;
   
   /** the output file. */
-  private Stream fOut;
+  private CoqStream fOut;
   
   /** the current bcel repository used. */
   private Repository fRepos;
@@ -48,7 +47,7 @@ public abstract class ABasicExecutor {
    * @param baseDir the file to set the field base dir to.
    */
   public ABasicExecutor(final Repository repos, final IImplemSpecifics implemSpecif, 
-                        final MethodHandler methodHandler, final Util.Stream out, 
+                        final MethodHandler methodHandler, final CoqStream out, 
                         final Dictionary dico, final File baseDir) {
     fImplemSpecif = implemSpecif;
     fMethodHandler = methodHandler;
@@ -88,7 +87,7 @@ public abstract class ABasicExecutor {
    * The current output stream of the executor.
    * @return an output stream
    */
-  public final Stream getOut() {
+  public final CoqStream getOut() {
     return fOut;
   }
   
@@ -164,7 +163,7 @@ public abstract class ABasicExecutor {
    * @param out the new bcel repos.
    * @deprecated use the constructor instead! 
    */
-  public void setOut(final Stream out) {
+  public void setOut(final CoqStream out) {
     fOut = out;
     
   }

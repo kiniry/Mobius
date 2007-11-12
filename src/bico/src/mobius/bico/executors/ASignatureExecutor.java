@@ -8,7 +8,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 
 import mobius.bico.Util;
-import mobius.bico.Util.Stream;
+import mobius.bico.coq.CoqStream;
 
 /**
  * An abstract class used to add signature handling to 
@@ -17,7 +17,7 @@ import mobius.bico.Util.Stream;
  */
 public abstract class ASignatureExecutor extends ABasicExecutor {
   /** the stream where to write the things which concern the signature. */
-  final Stream fOutSig;
+  final CoqStream fOutSig;
   
   
   /**
@@ -41,7 +41,7 @@ public abstract class ASignatureExecutor extends ABasicExecutor {
                             final ClassGen cg) throws FileNotFoundException  {
     super(be);
     final File strm = determineStrmFileName(be.getBaseDir(), cg);
-    fOutSig = new Util.Stream(new FileOutputStream(strm));
+    fOutSig = new CoqStream(new FileOutputStream(strm));
   }
   
   /**

@@ -1,7 +1,6 @@
 package mobius.bico.executors;
 
 import mobius.bico.Util;
-import mobius.bico.coq.CoqModulePrint;
 
 
 /**
@@ -9,7 +8,7 @@ import mobius.bico.coq.CoqModulePrint;
  * @author bagside
  *
  */
-public class ExternalClass extends CoqModulePrint {
+public class ExternalClass {
   private String path;
   private String name;
   private String bicoFileName;
