@@ -1,4 +1,4 @@
-package mobius.bico;
+package mobius.bico.executors;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import mobius.bico.executors.ClassExecutor;
+import mobius.bico.Util;
 
 /**
  * Generates a makefile to compile everything
@@ -16,13 +16,13 @@ import mobius.bico.executors.ClassExecutor;
  */
 public class MakefileGenerator {
 
-  /** the base directory in which is the application compiled currently */
+  /** the base directory in which is the application compiled currently. */
   private final File fBaseDir;
   /** the main files prefix. */
   private final String fBaseName;
   /** all the classes that were generated in the process. */
   private final List<ClassExecutor> fTreated;
-  /**where to generate the makefile.*/
+  /** where to generate the makefile.*/
   private final String pck;
 
   /**
@@ -47,9 +47,9 @@ public class MakefileGenerator {
    * @param baseName the name of the file 
    * @param treated all the classes to treat
    */
-  public MakefileGenerator(final File _baseDir, String _pckg) {
-    fBaseDir = _baseDir;
-    pck = _pckg;
+  public MakefileGenerator(final File baseDir, String pckg) {
+    fBaseDir = baseDir;
+    pck = pckg;
     fBaseName = null;
     fTreated = null;
   }
@@ -119,41 +119,31 @@ public class MakefileGenerator {
   public List<String> printCompileInstr(final PrintStream out,
                                          final String word,
                                          final String postfix) {
-	  File[] files = new File(fBaseDir, pck).listFiles();
-		if (files == null) {
-			return null;
-		}
-
-		String recmake = "";
-		final List<String> generatedFiles = new ArrayList<String>();
-		out.print(word + "=");
-		for (int k = 0; k < files.length; k++) { 
-			if (files[k].isFile()) {
-				String fName = files[k].getName();
-				String coqModuleName = Util.coqify(pck + fName);
-				String filename = coqModuleName + postfix + ".vo";
-			    out.print(" " + filename);
-			    generatedFiles.add(filename);
-			} else if (files[k].isDirectory()) {
-			    recmake = "cd" + files[k].getName() + " && " + "$(MAKE) all";
-			    
-			}
-			
-		} 
-		out.println();
-		out.println(recmake);
-   /* final List<String> generatedFiles = new ArrayList<String>();
-    String filename;
-    out.print(word + "=");
-    for (ClassExecutor ce: fTreated) {
-      filename = ce.getModuleFileName() + postfix + ".vo";
-      out.print(" " + filename);
-      generatedFiles.add(filename);
+    final File[] files = new File(fBaseDir, pck).listFiles();
+    if (files == null) {
+      return null;
     }
-    filename = fBaseName + postfix + ".vo";
-    out.print(" " + filename);
-    generatedFiles.add(filename);
-    out.println();*/
+    
+    String recmake = "";
+    final List<String> generatedFiles = new ArrayList<String>();
+    out.print(word + "=");
+    for (int k = 0; k < files.length; k++) { 
+      if (files[k].isFile()) {
+        String fName = files[k].getName();
+        String coqModuleName = Util.coqify(pck + fName);
+        String filename = coqModuleName + postfix + ".vo";
+        out.print(" " + filename);
+        generatedFiles.add(filename);
+      } 
+      else if (files[k].isDirectory()) {
+        recmake = "cd" + files[k].getName() + " && " + "$(MAKE) all";
+          
+      }
+
+    } 
+    out.println();
+    out.println(recmake);
+
     return generatedFiles;
   }
   

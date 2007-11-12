@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import mobius.bico.MakefileGenerator;
 import mobius.bico.Util;
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.CamlDictionary;
@@ -170,12 +169,9 @@ public class Executor extends ABasicExecutor {
       }
     });
     
-    final File[] dirfiles = f.listFiles(new FileFilter() {
-      public boolean accept(final File cf) {
-        System.out.println(cf);
-        return cf.isDirectory() && !cf.getParent().equals(cf);
-      }
-    });
+    final File[] dirfiles = f.listFiles(new Util.DirectoryFilter());
+    
+    System.out.println("Entering directory " + f + ".");
     if (classfiles == null) {
       return;
     }
@@ -192,14 +188,18 @@ public class Executor extends ABasicExecutor {
     }
     
     for (File cf: dirfiles) {
+      
       final String p = pkg + cf.getName() + 
                        Constants.PATH_SEPARATOR;
       // else handle the next package which is in the current
       // directory
       
       doApplication(p);
-      new MakefileGenerator(getBaseDir(), p).generate();
+      
+     
     }
+    new MakefileGenerator(getBaseDir(), pkg).generate();
+    System.out.println("Leaving directory " + f + ".");
   }
   
   /**

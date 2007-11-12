@@ -1,5 +1,7 @@
 package mobius.bico;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -474,5 +476,12 @@ public final class Util {
   public static String removeClassSuffix(final String clzz) {
     return clzz.substring(0, clzz.length() - 
                             Constants.CLASS_SUFFIX.length());
+  }
+  
+  public static class DirectoryFilter implements FileFilter {
+    public boolean accept(final File cf) {
+      return cf.isDirectory() && !cf.getParent().equals(cf)
+              && cf.getName().indexOf('.') == -1;
+    }
   }
 }
