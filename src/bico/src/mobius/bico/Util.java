@@ -477,6 +477,10 @@ public final class Util {
     return clzz.substring(0, clzz.length() - 
                             Constants.CLASS_SUFFIX.length());
   }
+  public static String removeCoqSuffix(final String coqfile) {
+    return coqfile.substring(0, coqfile.length() - 
+                            ".v".length());
+  }
   
   public static class DirectoryFilter implements FileFilter {
     public boolean accept(final File cf) {

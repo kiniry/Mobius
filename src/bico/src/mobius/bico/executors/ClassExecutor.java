@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import mobius.bico.Util;
@@ -429,12 +431,7 @@ public class ClassExecutor extends ASignatureExecutor {
     if (clname == null) {
       return;
     }
-  
-    clname = clname.replace(Constants.JAVA_NAME_SEPARATOR,
-                            Constants.LINUX_PATH_SEPARATOR);
-    if (!clname.endsWith(Constants.CLASS_SUFFIX)) {
-      clname = clname + Constants.CLASS_SUFFIX;
-    }
+
   
     // if the class file is not already in the hash map of imported classes
     // then add it
@@ -551,5 +548,14 @@ public class ClassExecutor extends ASignatureExecutor {
     }
   }
   
+  /**
+   * Returns the list of all the classes that are used by this class.
+   * @return a valid list of the dependencies
+   */
+  public List<String> getClassDependencies() {
+    final List<String> al = new ArrayList<String>();
+    al.addAll(fExtLibsLocal.keySet());
+    return al;
+  }
 
 }

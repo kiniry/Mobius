@@ -3,6 +3,8 @@ package mobius.bico;
 import java.io.File;
 import java.io.IOException;
 import java.security.Permission;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.bcel.Repository;
 
@@ -100,7 +102,7 @@ public final class Main {
     IImplemSpecifics implem = new MapImplemSpecif();
     File baseDir = null;
     File targetDir = null;
-    
+    final List<String> clzz = new ArrayList<String>();
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
       final String low = arg.toLowerCase();
@@ -126,15 +128,6 @@ public final class Main {
       } 
       else {
         final File f = new File(arg);
-        if ((f.exists()) || ((f.getParentFile() != null) &&
-            f.getParentFile() .exists())) {
-         // paths.add(f); 
-        } 
-        else {
-          // we suppose it's to be found in the class path
-         // fOtherLibs.add(arg); 
-        }
-        
         if (f.isDirectory()) {
           // if the file f is a directory then this is the path at which 
           // all classes involved can be found setBaseDir(f); 
@@ -142,13 +135,18 @@ public final class Main {
             baseDir = f;
           }
         }
-        else {
-           // we suppose it's to be found in the class path 
-          //fOtherLibs.add(arg); 
+        else if ((f.exists()) || ((f.getParentFile() != null) &&
+            f.getParentFile() .exists())) {
+          clzz.add(f.getAbsolutePath()); 
+        } 
+        else  {
+          // we suppose it's to be found in the class path
+          clzz.add(arg); 
         }
+        
       }
       
     }
-    return new Executor(implem, baseDir, targetDir, null);
+    return new Executor(implem, baseDir, targetDir, clzz);
   }
 }

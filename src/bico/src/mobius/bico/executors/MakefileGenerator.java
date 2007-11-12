@@ -18,41 +18,26 @@ public class MakefileGenerator {
 
   /** the base directory in which is the application compiled currently. */
   private final File fBaseDir;
-  /** the main files prefix. */
-  private final String fBaseName;
   /** all the classes that were generated in the process. */
   private final List<ClassExecutor> fTreated;
-  /** where to generate the makefile.*/
-  private final String pck;
+  /** where to generate the makefile. */
+  private final File fWorkingDir;
 
   /**
    * Initialize the generator.
    * @param baseDir the base directory
-   * @param baseName the name of the file 
    * @param treated all the classes to treat
    */
   public MakefileGenerator(final File baseDir, 
-                           final String baseName, 
+                           final File workingDir,
                            final List<ClassExecutor> treated) {
     fBaseDir = baseDir;
-    fBaseName = baseName;
     fTreated = treated;
-    pck = null;
+    fWorkingDir = workingDir;
   }
   
   
-  /**
-   * Initialize the generator.
-   * @param baseDir the base directory
-   * @param baseName the name of the file 
-   * @param treated all the classes to treat
-   */
-  public MakefileGenerator(final File baseDir, String pckg) {
-    fBaseDir = baseDir;
-    pck = pckg;
-    fBaseName = null;
-    fTreated = null;
-  }
+
   
 
   
@@ -60,7 +45,7 @@ public class MakefileGenerator {
    * Generates the makefile in the given directory.
    */
   public void generate() {
-    final File mkfile = new File (new File(fBaseDir, pck), "Makefile");
+    final File mkfile = new File (fWorkingDir, "Makefile");
     final List<String> generatedFiles = new ArrayList<String>();
     
     try {
@@ -76,8 +61,10 @@ public class MakefileGenerator {
       out.println("$(Extra): $(Main)");*/
       out.println("all:  $(Main)");
       out.println("$(Main): $(Signature)"); 
-      out.println("$(Signature): $(Type)"); 
+      out.println("$(Signature): type"); 
 
+      out.println("type: $(Type)");
+      out.println("\tcd " + "; make type");
       out.println("\nclean:");
       out.print("\trm -f");
       for (String name: generatedFiles) {
@@ -119,7 +106,8 @@ public class MakefileGenerator {
   public List<String> printCompileInstr(final PrintStream out,
                                          final String word,
                                          final String postfix) {
-    final File[] files = new File(fBaseDir, pck).listFiles();
+    
+    final File[] files = fWorkingDir.listFiles();
     if (files == null) {
       return null;
     }
@@ -130,15 +118,15 @@ public class MakefileGenerator {
     for (int k = 0; k < files.length; k++) { 
       if (files[k].isFile()) {
         String fName = files[k].getName();
-        String coqModuleName = Util.coqify(pck + fName);
+        String coqModuleName = Util.removeCoqSuffix(fName);
         String filename = coqModuleName + postfix + ".vo";
         out.print(" " + filename);
         generatedFiles.add(filename);
       } 
-      else if (files[k].isDirectory()) {
-        recmake = "cd" + files[k].getName() + " && " + "$(MAKE) all";
-          
-      }
+//      else if (files[k].isDirectory()) {
+//        recmake = "cd " + files[k].getName() + " && " + "$(MAKE) all";
+//          
+//      }
 
     } 
     out.println();
