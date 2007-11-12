@@ -12,6 +12,7 @@ public class Constants {
   /** constants representing options passed to  the entry point */
   public static final String OPTION_MAP = "-map";
   public static final String OPTION_LIST = "-list";
+  /** the base working class path. */
   public static final String OPTION_LIB = "-lib";
   public static final String OPTION_EXT_LIB = "-ext";
   public static final String OPTION_HELP = "-help";

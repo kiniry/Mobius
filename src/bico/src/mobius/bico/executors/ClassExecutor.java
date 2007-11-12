@@ -419,29 +419,30 @@ public class ClassExecutor extends ASignatureExecutor {
    * external libraries and also add a load path to the class if such does not
    * exist already
    * 
-   * @param clname
+   * @param clzz
    * @throws ClassNotFoundException
    * @throws IOException
    */
-  protected void handleImportedLib(String clname)
+  protected void handleImportedLib(String clzz)
   		throws ClassNotFoundException, IOException {
-  	if (clname == null) {
-  		return;
-  	}
+    String clname = clzz;
+    if (clname == null) {
+      return;
+    }
   
-  	clname = clname.replace(Constants.JAVA_NAME_SEPARATOR,
-  			Constants.LINUX_PATH_SEPARATOR);
-  	if (!clname.endsWith(Constants.CLASS_SUFFIX)) {
-  		clname = clname + Constants.CLASS_SUFFIX;
-  	}
+    clname = clname.replace(Constants.JAVA_NAME_SEPARATOR,
+                            Constants.LINUX_PATH_SEPARATOR);
+    if (!clname.endsWith(Constants.CLASS_SUFFIX)) {
+      clname = Util.removeClassSuffix(clname);
+    }
   
-  	// if the class file is not already in the hash map of imported classes
-  	// then add it
-  	if ((fExtLibsLocal.get(clname) == null)) {
-  		ExternalClass cl = new ExternalClass(clname);
-  		fExtLibsLocal.put(clname, cl);
-  		extractLoadPath(cl);
-  	}
+    // if the class file is not already in the hash map of imported classes
+    // then add it
+    if ((fExtLibsLocal.get(clname) == null)) {
+      final ExternalClass cl = new ExternalClass(clname);
+      fExtLibsLocal.put(clname, cl);
+      extractLoadPath(cl);
+    }
   }
   
   /**

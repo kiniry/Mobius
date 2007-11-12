@@ -101,6 +101,10 @@ public abstract class ABasicExecutor {
     return fMethodHandler;
   }
   
+  /**
+   * Returns the implementation specific object.
+   * @return a valid implementation object
+   */
   public final IImplemSpecifics getImplemSpecif() {
     return fImplemSpecif;
   }
@@ -133,7 +137,7 @@ public abstract class ABasicExecutor {
   }
   
   public File getPathToAPI() {
-    return null;
+    return getBaseDir();
   }
   
   /**
@@ -141,7 +145,7 @@ public abstract class ABasicExecutor {
    * @param implem the implementation specifics elements.
    * @deprecated use the constructor instead! 
    */
-  public void setImplemSpecif(IImplemSpecifics implem) {
+  public void setImplemSpecif(final IImplemSpecifics implem) {
     fImplemSpecif = implem;
   }
   

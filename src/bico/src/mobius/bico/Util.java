@@ -3,6 +3,8 @@ package mobius.bico;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import mobius.bico.executors.Constants;
+
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.BasicType;
@@ -463,4 +465,14 @@ public final class Util {
 		return name;
 	}
 
+  
+  /**
+   * Removes the class suffix from the given string.
+   * @param clzz the name to remove the suffix from
+   * @return a string without the class suffix
+   */
+  public static String removeClassSuffix(final String clzz) {
+    return clzz.substring(0, clzz.length() - 
+                            Constants.CLASS_SUFFIX.length());
+  }
 }

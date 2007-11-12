@@ -1,6 +1,7 @@
 package mobius.bico.executors;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,36 +9,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import mobius.bico.MakefileGenerator;
 import mobius.bico.Util;
 import mobius.bico.Util.Stream;
 import mobius.bico.dico.CamlDictionary;
-import mobius.bico.dico.Dico;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.implem.IImplemSpecifics;
-import mobius.bico.implem.ListImplemSpecif;
 import mobius.bico.implem.MapImplemSpecif;
 
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantCP;
-import org.apache.bcel.classfile.ConstantFieldref;
-import org.apache.bcel.classfile.ConstantMethodref;
-import org.apache.bcel.classfile.ConstantNameAndType;
-import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.ReferenceType;
-import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.ClassLoaderRepository;
-import org.apache.bcel.util.ClassPath;
-import org.apache.bcel.util.Repository;
-import org.apache.bcel.util.SyntheticRepository;
 
 /**
  * The main entry point to bico.
@@ -47,22 +30,6 @@ import org.apache.bcel.util.SyntheticRepository;
  */
 public class Executor extends ABasicExecutor {
 
-  /** the help message. */
-  public static final String HELP_MSG = "------------------------------------------------------------------------------------\n"
-  		+ "Bico converts *.class files into Coq format\n"
-  		+ "The default behaviour being to generate the files for Bicolano's \n"
-  		+ "implementation with maps.\n"
-  		+ "Its use is 'java -jar bico.jar Args'\n"
-  		+ "Args being a combination of the following arguments:\n"
-  		+ "<directory> - specify directory in which Bico does its job (there must be only one \n"
-  		+ "              directory, and this argument is mandatory)\n"
-  		+ "help        - it prints this help message\n"
-  		+ "-list       - forces the use of lists (incompatible with the -map argument)\n"
-  		+ "-map        - forces the use of maps (incompatible with the -list argument)\n"
-  		+ "<classname> - generates also the file for this class, bico must be able to find it \n"
-  		+ "              in its class path\n"
-  		+ "-----------------------------------------------------------------------------------";
-  
   /** the coq files extension. */
   public static final String suffix = ".v";
   
@@ -70,14 +37,14 @@ public class Executor extends ABasicExecutor {
    * Path "en dur" to the Mobius coq formalisation of a Java bytecode logic
    * and operational semantics
    */
-  public static final String pathToLib = "/home/bagside"+File.separatorChar+"SVN" +File.separatorChar;
+  public static final String pathToLib = "";
   
   
   /**
    * Path "en dur" to the Mobius coq formalisation of a Java bytecode logic
    * and operational semantics
    */
-  public static final String pathToAPI = pathToLib + "Formalisation" +File.separatorChar+ "java";
+  public static final String pathToAPI = ""; //pathToLib //+ //"Formalisation" +File.separatorChar+ "java";
   
   
   /** the standard lib paths. */
@@ -110,29 +77,29 @@ public class Executor extends ABasicExecutor {
   /** list of already treated interfaces. */
   private static final List<ClassExecutor> fTreatedInterfaces = new ArrayList<ClassExecutor>();
   
-  /** tells whether or not the help message must be shown. */
-  private boolean fShowHelp;
-  
-  /** the name of the class file to be converted to bicolano. */
-  private String fName;
+//  /** tells whether or not the help message must be shown. */
+//  private boolean fShowHelp;
+//  
   
   /** the name of the executor file which will be declined to Type and Sig. */
-  private String fCoqName;
+  private String fName;
   
 
   
-  /**
-   * directory where are the classes referenced in the file to be compiled in
-   * bico.
-   */
-  File fLibDir;
+//  /**
+//   * directory where are the classes referenced in the file to be compiled in
+//   * bico.
+//   */
+  //File fLibDir;
   
 
   
-  private File fExtDir;
+  //private File fExtDir;
   
   /**
    * Minimal constructor.
+   * 
+   * @deprecated do not use, use a proper constructor instead
    */
   private Executor() {
   	/**
@@ -150,77 +117,97 @@ public class Executor extends ABasicExecutor {
   			new CamlDictionary(), new File(""));
   }
   
-  /**
-   * Parses the arguments given in the parameter. Each argument is in one cell
-   * of the array, as in a {@link #main(String[])} method. Mainly initialize
-   * all the private variables from <code>Executor</code>
-   * 
-   * @param args
-   *            The argument given to <tt>bico</tt>
-   */
-  public Executor(final String[] args) {
-  	this();
-  	// initialise the arguments. In particular, the path fBaseDir to the
-  	// class files will be set properly
-  	init(args);
-  	String clPath = getBaseDir().getAbsolutePath().toString()
-  			+ File.pathSeparatorChar + ClassPath.getClassPath();
-  	System.out.println("Class Path " + clPath);
-  	// set the Repository to be a synthetic repository
-    setRepository(SyntheticRepository.getInstance(new ClassPath(clPath)));
-  }
+//  /**
+//   * Parses the arguments given in the parameter. Each argument is in one cell
+//   * of the array, as in a {@link #main(String[])} method. Mainly initialize
+//   * all the private variables from <code>Executor</code>
+//   * 
+//   * @param args
+//   *            The argument given to <tt>bico</tt>
+//   */
+//  public Executor(final String[] args) {
+//    this();
+//    // initialise the arguments. In particular, the path fBaseDir to the
+//    // class files will be set properly
+//    init(args);
+//    final String clPath = getBaseDir().getAbsolutePath().toString() + 
+//                          File.pathSeparatorChar + ClassPath.getClassPath();
+//    System.out.println("Class Path " + clPath);
+//    // set the Repository to be a synthetic repository
+//    setRepository(SyntheticRepository.getInstance(new ClassPath(clPath)));
+//  }
   
-  public Executor(Executor e) {
+  
+  /**
+   * Minimal constructor.
+   * The copy constructor.
+   * @param e the executor to create a copy from
+   */
+  public Executor(final Executor e) {
     super((ABasicExecutor) e);
   }
   
-  private void doApplication() throws ClassNotFoundException, IOException {
-  	doApplication("");
-  
-  }
   
   /**
-   * treat all classes in the directory passed as value to the input parameter
-   * -lib
+   * Treat all classes in the directory passed as value to the 
+   * input parameter <code>-lib</code>.
    * 
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  public void doApplication(String _package) throws ClassNotFoundException,
-  		IOException {
-  	File baseDir = getBaseDir();
-  	File f = new File(baseDir, _package);
-  	File[] files = f.listFiles();
-  	if (files == null) {
-  		return;
-  	}
+  private void doApplication() throws ClassNotFoundException, IOException {
+    doApplication("");
   
-  	
-  	for (int k = 0; k < files.length; k++) {
-  		// if the file is a class file then
-  		// handle it
-  		File cf = files[k];
-  		if ((cf.isFile()) && cf.getName().endsWith(Constants.CLASS_SUFFIX)) {
-  			String className = _package + "."
-  					+ cf.getName().substring(0, cf.getName().length() - 6);
-  			className = className.replace(Constants.PATH_SEPARATOR,
-  					Constants.JAVA_NAME_SEPARATOR);
-  			handleLibraryClass(className);
-  			
-  		} else if (cf.isDirectory()) {
-  			String _p = null;
-  			// else handle the next package which is in the current
-  			// directory
-  			if ("".equals(_package)) {
-  				_p = cf.getName();
-  			} else {
-  				_p = _package + Constants.PATH_SEPARATOR
-  						+ cf.getName();
-  			}
-  			doApplication(_p);
-  			new MakefileGenerator(getBaseDir(),_p ).generate();
-  		}
-  	}
+  }
+  
+  /**
+   * Treat all classes in the directory passed as value to the 
+   * input parameter <code>-lib</code>.
+   * 
+   * @param pkg the current package name
+   * @throws IOException
+   * @throws ClassNotFoundException
+   */
+  private void doApplication(final String pkg) 
+        throws ClassNotFoundException, IOException {
+    final File baseDir = getBaseDir();
+    final File f = new File(baseDir, pkg);
+    final File[] classfiles = f.listFiles(new FileFilter() {
+      public boolean accept(final File cf) {
+        return ((cf.isFile()) && cf.getName().endsWith(Constants.CLASS_SUFFIX));
+      }
+    });
+    
+    final File[] dirfiles = f.listFiles(new FileFilter() {
+      public boolean accept(final File cf) {
+        System.out.println(cf);
+        return cf.isDirectory() && !cf.getParent().equals(cf);
+      }
+    });
+    if (classfiles == null) {
+      return;
+    }
+   
+    for (File cf: classfiles) {
+      // if the file is a class file then
+      // handle it
+      String className = 
+        pkg + Util.removeClassSuffix(cf.getName());        
+      className =
+        className.replace(Constants.LINUX_PATH_SEPARATOR,
+                          Constants.JAVA_NAME_SEPARATOR);
+      handleLibraryClass(className);
+    }
+    
+    for (File cf: dirfiles) {
+      final String p = pkg + cf.getName() + 
+                       Constants.PATH_SEPARATOR;
+      // else handle the next package which is in the current
+      // directory
+      
+      doApplication(p);
+      new MakefileGenerator(getBaseDir(), p).generate();
+    }
   }
   
   /**
@@ -278,93 +265,38 @@ public class Executor extends ABasicExecutor {
    *            specify the implementation to use
    * @param workingDir
    *            the current working dir
-   * @param outFile
-   *            the output file
+   * @param outputDir
+   *            the output directory
    * @param classToTreat
    *            the list of classes to treat
    */
-  public Executor(final IImplemSpecifics implem, final File workingDir,
-  		final File outFile, final List<String> classToTreat) {
-  	this();
-  	setImplemSpecif(implem);
-  	setBaseDir(workingDir);
-  	fCoqFileName = outFile;
-  	// if the list of other classes to treat is empty exit from the
-  	// constructor
-  	if (classToTreat == null) {
-  		return;
-  	}
-  	/*
-  	 * for (String clName: classToTreat) { addToOtherLibs(clName); }
-  	 */
+  public Executor(final IImplemSpecifics implem, 
+                  final File workingDir,
+                  final File outputDir, 
+                  final List<String> classToTreat) {
+    super(new ClassLoaderRepository(ClassLoader.getSystemClassLoader()), 
+          implem, new MethodHandler(), null,
+          new CamlDictionary(), workingDir);
+    
+    //fCoqFileName = outFile;
+    // if the list of other classes to treat is empty exit from the
+    // constructor
+    if (classToTreat == null) {
+      return;
+    }
+    /*
+     * for (String clName: classToTreat) { addToOtherLibs(clName); }
+     */
   }
   
-  /**
-   * Init the executor with the arguments from the command line.
-   * 
-   * @param args
-   *            the arguments
-   */
-  private void init(final String[] args) {
-    // dealing with args
-    // we first sort out arguments from path...
-    /* final List<File> paths = new Vector<File>(); */
-    for (int i = 0; i < args.length; i++) {
-      String arg = args[i];
-      final String low = arg.toLowerCase();
-      if (low.equals(Constants.OPTION_HELP)) {
-      	fShowHelp = true;
-      } 
-      else if (low.equals(Constants.OPTION_LIST)) {
-      	setImplemSpecif(new ListImplemSpecif());
-      } 
-      else if (low.equals(Constants.OPTION_MAP)) {
-      	setImplemSpecif(new MapImplemSpecif());
-      } 
-      else if (low.equals(Constants.OPTION_LIB)) {
-      	// this keyword introduces the base working class path
-      	i = i + 1;
-      	arg = args[i];
-      	final File f = new File(arg);
-      	setBaseDir(f);
-      } 
-      else if (low.equals(Constants.OPTION_EXT_LIB)) {
-      	// this keyword introduces the base working class path
-      	i = i + 1;
-      	arg = args[i];
-      	final File f = new File(arg);
-      	setExtDir(f);
-      } 
-      else {
-      	initFName(arg);
-      	initWorkingFile(arg);
-      	initCoqFName();
-      	/* final File f = new File(arg); */
-      
-      // commented by Mariela
-      /*
-       * if ((f.exists()) || ((f.getParentFile() != null) &&
-       * f.getParentFile() .exists())) { paths.add(f); } else { // we
-       * suppose it's to be found in the class path
-       * fOtherLibs.add(arg); }
-       */
-      /*
-       * if (f.isDirectory()) { // if the file f is a directory then
-       * this is the path at which // all classes involved can be
-       * found setBaseDir(f); } else { // we suppose it's to be found
-       * in the class path //fOtherLibs.add(arg); }
-       */
-      }
-    }
-    /* initWorkingDir(paths); */
-  }
+ 
   
   private void setExtDir(File f) {
-  	fExtDir = f;
+  	//fExtDir = f;
   }
   
   private void initFName(String _fname) {
-  	fName = _fname;
+  	//fName = _fname;
   }
   
   /**
@@ -374,7 +306,7 @@ public class Executor extends ABasicExecutor {
    * @param _fName
    */
   private void initWorkingFile(String _fName) {
-  	fCoqName = getImplemSpecif().getFileName(Util.coqify(_fName));
+  	fName = getImplemSpecif().getFileName(Util.coqify(_fName));
   }
   
   /**
@@ -382,8 +314,8 @@ public class Executor extends ABasicExecutor {
    * stored
    */
   private void initCoqFName() {
-  	fCoqFileName = new File(getBaseDir(), fCoqName + ".v");
-  	System.out.println("Output file: " + fCoqFileName);
+    fCoqFileName = new File(getBaseDir(), fName + ".v");
+    System.out.println("Output file: " + fCoqFileName);
   }
   
   
@@ -401,7 +333,7 @@ public class Executor extends ABasicExecutor {
   	doApplication();
   	/*
   	if (fShowHelp) {
-  		System.out.println(HELP_MSG);
+  		
   	}
   	Dico.initDico(fDico);
   	System.out.println("Using fImplemSpecif: " + fImplemSpecif + ".");
@@ -498,38 +430,38 @@ public class Executor extends ABasicExecutor {
    *             in case the file cannot be written
    */
   private void doSignature() throws FileNotFoundException {
-  	final File typ = new File(getBaseDir(), fCoqName + "_signature"
-  			+ suffix);
-  	/* final File typ = new File( fCoqName + "_signature" + suffix); */
-  	final Stream out = new Stream(new FileOutputStream(typ));
-  	out.println(libPath);
-  	out.println(getImplemSpecif().getBeginning());
-  
-  	// out.println("Require Import " + fName + "_type.");
-  	out.println();
-  	out.incPrintln(Constants.MODULE + Constants.SPACE + fCoqName
-  			+ "Signature.");
-  
-  	Iterator<ExternalClass> iter = fExtLibs.values().iterator();
-  	while (iter.hasNext()) {
-  		ExternalClass current = iter.next();
-  		out.println(Constants.LOAD + Constants.SPACE + "\""
-  				+ current.getSignatureName() + "\".");
-  	}
-  
-  	// the already treated classes + interfaces
-  	for (ClassExecutor ce : fTreatedClasses) {
-  		out.println(Constants.LOAD + Constants.SPACE + "\""
-  				+ ce.getModuleFileName() + "_signature.v\".");
-  	}
-  
-  	for (ClassExecutor ce : fTreatedInterfaces) {
-  		out.println(Constants.LOAD + Constants.SPACE + "\""
-  				+ ce.getModuleFileName() + "_signature.v\".");
-  	}
-  
-  	out.decPrintln(Constants.END_MODULE + Constants.SPACE + fCoqName
-  			+ "Signature.");
+    final File typ = new File(getBaseDir(), fName + "_signature"
+    		+ suffix);
+    /* final File typ = new File( fCoqName + "_signature" + suffix); */
+    final Stream out = new Stream(new FileOutputStream(typ));
+    out.println(libPath);
+    out.println(getImplemSpecif().getBeginning());
+    
+    // out.println("Require Import " + fName + "_type.");
+    out.println();
+    out.incPrintln(Constants.MODULE + Constants.SPACE + fName
+    		+ "Signature.");
+    
+    Iterator<ExternalClass> iter = fExtLibs.values().iterator();
+    while (iter.hasNext()) {
+    	ExternalClass current = iter.next();
+    	out.println(Constants.LOAD + Constants.SPACE + "\""
+    			+ current.getSignatureName() + "\".");
+    }
+    
+    // the already treated classes + interfaces
+    for (ClassExecutor ce : fTreatedClasses) {
+    	out.println(Constants.LOAD + Constants.SPACE + "\""
+    			+ ce.getModuleFileName() + "_signature.v\".");
+    }
+    
+    for (ClassExecutor ce : fTreatedInterfaces) {
+    	out.println(Constants.LOAD + Constants.SPACE + "\""
+    			+ ce.getModuleFileName() + "_signature.v\".");
+    }
+    
+    out.decPrintln(Constants.END_MODULE + Constants.SPACE + fName
+    		+ "Signature.");
   
   }
   
@@ -540,13 +472,13 @@ public class Executor extends ABasicExecutor {
    *             if the type file cannot be created
    */
   private void doType() throws FileNotFoundException {
-    final File typ = new File(getBaseDir(), fCoqName + "_type" + suffix);
+    final File typ = new File(getBaseDir(), fName + "_type" + suffix);
     final Stream out = new Stream(new FileOutputStream(typ));
     out.println(libPath);
     out.println(getImplemSpecif().getBeginning());
     
     out.println();
-    out.incPrintln(Constants.MODULE + Constants.SPACE + fCoqName + "Type.");
+    out.incPrintln(Constants.MODULE + Constants.SPACE + fName + "Type.");
     
     Iterator<ExternalClass> iter = fExtLibs.values().iterator();
     while (iter.hasNext()) {
@@ -574,7 +506,7 @@ public class Executor extends ABasicExecutor {
     		+ ce.getModuleFileName() + "_type.v\".");
     }
     
-    out.decPrintln(Constants.END_MODULE + Constants.SPACE + fCoqName
+    out.decPrintln(Constants.END_MODULE + Constants.SPACE + fName
     		+ "Type.");
   }
   
@@ -628,7 +560,7 @@ public class Executor extends ABasicExecutor {
     }
     String c = clname;
     if (c.endsWith(Constants.CLASS_SUFFIX)) {
-      c = clname.substring(0, clname.length() - Constants.CLASS_SUFFIX.length());
+      c = Util.removeClassSuffix(c);
     }
     
     // if the class is already treated then return
@@ -693,15 +625,15 @@ public class Executor extends ABasicExecutor {
    * fTreatedClasses.add(ce); } }
    */
   public void addToTreated() {
-  	Iterator<ClassExecutor> it = fCurrentLibs.values().iterator();
-  	while (it.hasNext()) {
-  		ClassExecutor ce = it.next();
-  		if (ce.getJavaClass().isInterface()) {
-  			fTreatedInterfaces.add(ce);
-  		} else {
-  			fTreatedClasses.add(ce);
-  		}
-  	}
+    
+    for (ClassExecutor ce: fCurrentLibs.values()) {
+      if (ce.getJavaClass().isInterface()) {
+        fTreatedInterfaces.add(ce);
+      } 
+      else {
+        fTreatedClasses.add(ce);
+      }
+    }
   }
   
   /**
@@ -716,7 +648,7 @@ public class Executor extends ABasicExecutor {
    */
   public ClassExecutor getClassExecutor(final ClassGen cg)
   		throws FileNotFoundException {
-  	return new ClassExecutor(this, cg, fCoqName);
+  	return new ClassExecutor(this, cg, fName);
   }
   
   /**
@@ -730,17 +662,17 @@ public class Executor extends ABasicExecutor {
     out.println("Import P.");
     out.println("Import MDom.\n");
     
-    out.println(Constants.REQ_EXPORT + Constants.SPACE + fCoqName
+    out.println(Constants.REQ_EXPORT + Constants.SPACE + fName
     		+ "_type.");
-    System.out.println(Constants.REQ_EXPORT + Constants.SPACE + fCoqName
+    System.out.println(Constants.REQ_EXPORT + Constants.SPACE + fName
     		+ "_type.");
-    out.println(Constants.REQ_EXPORT + Constants.SPACE + fCoqName
+    out.println(Constants.REQ_EXPORT + Constants.SPACE + fName
     		+ "_signature.");
     
-    out.println(Constants.EXPORT + Constants.SPACE + fCoqName + "Type.");
-    out.println(Constants.EXPORT + Constants.SPACE + fCoqName
+    out.println(Constants.EXPORT + Constants.SPACE + fName + "Type.");
+    out.println(Constants.EXPORT + Constants.SPACE + fName
     		+ "Signature.");
-    out.incPrintln(Constants.MODULE + Constants.SPACE + fCoqName
+    out.incPrintln(Constants.MODULE + Constants.SPACE + fName
     		+ "Program.");
   
   }
@@ -762,7 +694,7 @@ public class Executor extends ABasicExecutor {
     		+ "| None => fun x y => true");
     out.println("end");
     out.decPrintln(".\n");
-    out.decPrintln(Constants.END_DEFINITION + Constants.SPACE + fCoqName
+    out.decPrintln(Constants.END_DEFINITION + Constants.SPACE + fName
     		+ "Program.\n");
   }
   
@@ -802,12 +734,12 @@ public class Executor extends ABasicExecutor {
   
   /**
    * Returns the name of the module, the content of the field
-   * {@link #fCoqName}.
+   * {@link #fName}.
    * 
    * @return not null
    */
   public String getModuleName() {
-  	return fCoqName;
+    return fName;
   }
   
   /**
@@ -816,7 +748,7 @@ public class Executor extends ABasicExecutor {
    * @return a list: can be empty.
    */
   public List<ClassExecutor> getTreatedClasses() {
-  	return fTreatedClasses;
+    return fTreatedClasses;
   }
   
   /**
@@ -825,7 +757,7 @@ public class Executor extends ABasicExecutor {
    * @return a list: can be empty.
    */
   public List<ClassExecutor> getTreatedInterfaces() {
-  	return fTreatedInterfaces;
+    return fTreatedInterfaces;
   }
   
 }
