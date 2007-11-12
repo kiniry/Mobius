@@ -1,16 +1,22 @@
-Type= java/lang/java_lang_String_type.vo bicoMap_type.vo
-Signature= java/lang/java_lang_String_signature.vo bicoMap_signature.vo
-Main= java/lang/java_lang_String.vo bicoMap.vo
-Extra= 
-all:  $(Extra)
-$(Extra): $(Main)
-$(Main): $(Signature)
-$(Signature): $(Type)
+BCEL=`find ../ -name bcel-5.2.jar`
+
+jar: clean java
+	@ echo Packing:
+	cd tmp; jar xf ${BCEL}; jar cmf  ../manifest.mf ../bico.jar mobius org
+	rm -rf tmp
+	cp bico.jar ../implem/
+
+jar-without-bcel: clean java
+	@ echo Packing:
+	cd tmp; jar cmf  ../manifest.mf ../bico.jar mobius
+	rm -rf tmp
+
 
 clean:
-	rm -f java/lang/java_lang_String_type.vo bicoMap_type.vo java/lang/java_lang_String_signature.vo bicoMap_signature.vo java/lang/java_lang_String.vo bicoMap.vo
+	@ echo Cleaning...
+	@ rm -f bico.jar
 
-# implicit rules
-%.vo : %.v
-	coqc $<
-
+java:
+	@ echo Compiling:
+	mkdir -p tmp
+	cd src; javac -source 1.5 -sourcepath ../src -classpath ${BCEL} -d ../tmp `find ./ -name *.java`
