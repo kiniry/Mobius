@@ -1,0 +1,36 @@
+----------------------------------------------------------------------------
+
+BUILDING A WORKING VERSION OF Simplify FROM Subversion SOURCES
+
+We have modified Simplify slightly so that it will build properly on
+OS X 10.4 using the Critical Mass Modula-3 (CM3) compiler.  We also
+use CM3 on Linux.
+
+We had to patch the following modules so that they would build
+correctly on OS X with CM3 5.2.0:
+  m3-comm/tcp     m3-libs/set     m3-libs/table-list,
+  m3-tools/mtex   m3-ui/X11R4     m3-ui/ui
+
+The patched versions of these modules are available in
+ESCTools/Simplify/libs.
+
+We have not compared these patched versions with those available now
+that CM3 5.2.6 is available.  It may be the case that these modules
+now build properly on all platforms with more recent CM3 releases.
+
+Note that Simplify relies upon many modules.  You *must* install all
+of these modules prior to building Simplify.  The full list of
+necessary modules is found in the file ESCTools/Simplify/README.
+
+You can obtain the compiler either by using fink or directly from
+Elgosoft.  See the following URLs for more information:
+  http://www.elegosoft.com/cm3/                  (Elgosoft)
+  http://fink.sourceforge.net/                   (Fink)
+  
+You are advised to look for the archives of the M3-Devel mailing list at:
+
+https://mail.elegosoft.com/pipermail/m3devel/
+
+if you need help with installing the CM3 compiler.
+
+----------------------------------------------------------------------------
