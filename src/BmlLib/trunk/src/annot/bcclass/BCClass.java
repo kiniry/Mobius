@@ -110,6 +110,7 @@ public class BCClass {
 		MLog.putMsg(MLog.PInfo, "filename=" + dirName);
 		MLog.putMsg(MLog.PInfo, "className=" + className);
 		ClassPath cp = new ClassPath(dirName);
+		SyntheticRepository.getInstance(cp).clear();
 		JavaClass jc = SyntheticRepository.getInstance(cp).loadClass(className);
 		load(jc);
 	}
@@ -371,11 +372,11 @@ public class BCClass {
 		Attribute[] attrs = removeBMLAttributes(jc.getAttributes());
 		jc.setAttributes(attrs);
 		MLog.putMsg(MLog.PProgress, "  saving second constant pool");
-		cp.save(jc);
 		attrs = jc.getAttributes();
 		if (invariant != null)
 			attrs = addAttribute(attrs, aw.writeAttribute(invariant));
 		jc.setAttributes(attrs);
+		cp.save(jc);
 	}
 
 	/**

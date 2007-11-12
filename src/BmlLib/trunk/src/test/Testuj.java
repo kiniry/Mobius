@@ -108,9 +108,6 @@ public final class Testuj {
 	 */
 	private static void test(boolean ok, int attr_id, String newval,
 			String exprected) throws IOException, ClassNotFoundException {
-		if (goFullSaveAndLoadTests)
-			if (attr_id == 3)
-				attr_id = 2;// ?
 		testC++;
 		try {
 			BCPrintableAttribute pa = at[attr_id];
@@ -316,7 +313,7 @@ public final class Testuj {
 		test(true, 2, "forall int a; a > 0");
 		test(true, 2, "forall int a int b; a > b");
 		test(false, 2, "forall int true; (true > 0)");
-		test(true, 2, "forall int xyz; xyz > 0");
+		test(true, 0, "forall int xyz; xyz > 0");
 		test(true, 2, "(exists int a; a < 0) && (forall int b; b > 1)");
 		test(true, 2, "forall int a; (exists int b; a < b)");
 		test(true, 3, "(forall int a; a > 0) && 1 < 2");
@@ -374,11 +371,15 @@ public final class Testuj {
 		test(true, 3, "1 << 2 << 3 + 4 >> 5 >> 6 + 7 >>> 8 >>> 9 < 10");
 		test(true, 3, "1 + 2 - 3 * 4 / 5 % 6 - 7 == 8");
 		test(true, 3, "(1 + 2) * (3 + 4) < 1 << 2 >> (3 + 4) * 5");
-		test(true, 3, "1 << (2 << 3) < 4", "1 << 2 << 3 < 4");
+		test(true, 3, "1 << (2 << 3) < 4");
 		test(true, 3, "1 << 2 + (3 * 4) < 5", "1 << 2 + 3 * 4 < 5");
 		test(false, 3, "1 << 2 >> true < 3");
 		test(false, 3, "(1 << (2 >> true)) < 3");
 		test(false, 3, "1 << (2 >> true) < 3");
+		test(true, 2, "1 + (2 + 3) > 0", "1 + 2 + 3 > 0");
+		test(true, 2, "1 - (2 - 3) > 0");
+		test(true, 2, "1 - (2 + 3) > 0");
+		test(true, 2, "1 + (2 - 3) > 0", "1 + 2 - 3 > 0");
 
 		// unary minus tests:
 		test(true, 3, "-1 < 2");

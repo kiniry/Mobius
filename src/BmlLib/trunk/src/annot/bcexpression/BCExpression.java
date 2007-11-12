@@ -292,6 +292,7 @@ public abstract class BCExpression {
 		conf.setRoot_pri(Priorities.MAX_PRI);
 		conf.incInd();
 		conf.setGoControlPrint(false);
+		computeSize();
 		String str = printCode(conf);
 		prefix = conf.getPrettyPrinter().cleanup(prefix);
 		str = conf.getPrettyPrinter().breakLines(str, prefix.length() + 1);
@@ -337,7 +338,13 @@ public abstract class BCExpression {
 		str += sub;
 		if (lvlinc)
 			str += IDisplayStyle.expr_block_end;
-		if (priority > rp) {
+		boolean addParenthness = priority > rp;
+		if (parent != null)
+			if ((priority == rp)
+					&& (!Priorities.isConvertible(parent.connector))
+					&& (childNo > 0))
+				addParenthness = true;
+		if (addParenthness) {
 			String str2 = "";
 			for (int i = 0; i < str.length(); i++) {
 				char ch = str.charAt(i);

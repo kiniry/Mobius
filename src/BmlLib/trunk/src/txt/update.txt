@@ -52,7 +52,7 @@ This document describes changes in code required to extend
 
 3. To add an Expression:
 	- add opcedes to Code interface,
-	- update Priorities.setPriorities(),
+	- update Priorities.setPriorities(): both priority and convertible,
 	- create subclass of BCExpression or ane of it's subclasses,
 	- update makeOld, removeOld methods for OLD expressions.
 	- update AttributeReader.readExpression(),

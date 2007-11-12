@@ -102,7 +102,13 @@ public final class OldTests {
 	 * Number of failed tests so far.
 	 */
 	private static int errc = 0;
-	
+
+	/**
+	 * Set it to true to ignore save / load error
+	 * in the next test.
+	 */
+	private static boolean ignoreSaveLoadFailure = false;
+
 	/**
 	 * A random stream.
 	 */
@@ -543,8 +549,23 @@ public final class OldTests {
 				errc++;
 			}
 		} else {
-			System.out.println("hash2 = " + hash2 + " (ok)");
+			MLog.mask = MLog.PERRORS;
+			bcc.saveJC();
+			bcc = new BCClass(bcc.getJc());
+			String code2 = bcc.printCode();
+			if (!ignoreSaveLoadFailure && !code1.equals(code2)) {
+				System.out.println("ERROR: BCClass changed while saving / loading");
+				System.out.println("old code:\n" + code1);
+				System.out.println("new code:\n" + code2);
+				errc++;
+			} else {
+				if (ignoreSaveLoadFailure)
+					System.out.println("Skipping save / load test.");
+				System.out.println("hash2 = " + hash2 + " (ok)");
+			}
+			MLog.mask = oldMask;
 		}
+		ignoreSaveLoadFailure = false;
 	}
 
 	/**
@@ -668,7 +689,11 @@ public final class OldTests {
 		replaceTest("/*", "*/", 680, 280, true, "  ");
 		replaceTest("Empty\n\n", "\npublic", 734, 169, true, "");
 		replaceTest("V (28)\n", "8:", 655, 138, true, "/* \\assert forall int a; a > 0 */\n");
+		// current BML-annotated .class file format don't support
+		// storeing minor munber, so diffrent bytecodes are equal after saving.
+		ignoreSaveLoadFailure = true;
 		replaceTest("(26)\n/* \n * ", " * \\assert ((", 917, 65, true, "\\loop specification\n *   \\modifies nothing\n");
+		ignoreSaveLoadFailure = true;
 		replaceTest("(26)\n/* \n * ", " * \\assert ((", 200, 879, true, "\\loop specification\n *   \\modifies nothing\n *   \\invariant true\n *   \\decreases 2 + 2\n");
 		replaceTest("p", null, 899, noChange, false, "");
 		replaceTest("p", null, 195, 298, true);

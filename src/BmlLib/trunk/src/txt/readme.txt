@@ -1,5 +1,5 @@
 1. Status.
-	Incomplete. This library supports only a few BML annotation
+	This library supports only a few BML annotation
 	types, and some BML expression types yet. It can
 	load a .class file with annotations, save it,
 	parse supported BML annotations or fragment of bytecode

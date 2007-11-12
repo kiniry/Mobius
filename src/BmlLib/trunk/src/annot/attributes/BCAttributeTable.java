@@ -64,6 +64,9 @@ public abstract class BCAttributeTable implements IBCAttribute {
 	 * Loads all annotations from BCEL's Unknown method
 	 * attribute to BCAttributeMap (<code>parent</code>),
 	 * using attributeReader.
+	 * Uncomment remaining instruction to support
+	 * <code>minor</code> number loading (also update then
+	 * {@link #save(AttributeWriter)} method).
 	 * 
 	 * @param ar - stream to load annotations from.
 	 * @throws ReadAttributeException - if data left
@@ -74,12 +77,15 @@ public abstract class BCAttributeTable implements IBCAttribute {
 		int n = ar.readAttributesCount();
 		for (int i = 0; i < n; i++) {
 			int pc = ar.readShort();
+//			int minor = ar.readShort();
 			InCodeAttribute ica = loadSingle(method, ar);
 			ica.setIh(method.findAtPC(pc));
+//			ica.setMinor(minor);
 			if (ica.getIh() == null)
 				throw new ReadAttributeException("Attribute unplaceble: pc="
 						+ pc);
-			parent.addAttribute(ica);
+			parent.addAttribute(ica); //this should be removed if we uncomment next instruction.
+//			parent.addAttribute(ica, minor);
 		}
 	}
 
@@ -89,15 +95,18 @@ public abstract class BCAttributeTable implements IBCAttribute {
 	 * method attribute using AttributeWriter. The type
 	 * of annotations saved to Unknown attribute is determined
 	 * by subclasses.
+	 * Uncomment remaining instruction to support
+	 * <code>minor</code> number saving (also update then
+	 * {@link #load(AttributeReader)} method).
 	 * 
 	 * @param aw - stream to save annotations to.
 	 */
 	public void save(AttributeWriter aw) {
 		aw.writeAttributeCount(parent.getAttributeCount(singleType()));
-//		aw.writeAttributeCount(parent.getLength());
 		InCodeAttribute[] all = parent.getAllAttributes(singleType());
 		for (int i = 0; i < all.length; i++) {
 			aw.writeShort(all[i].getPC());
+//			aw.writeShort(all[i].getMinor());
 			all[i].saveSingle(aw);
 		}
 	}

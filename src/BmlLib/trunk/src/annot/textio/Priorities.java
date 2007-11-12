@@ -17,6 +17,12 @@ public abstract class Priorities implements Code {
 	private static int[] priorities;
 
 	/**
+	 * True for binary operators op, where
+	 * forall a, b ; a op b == b op a
+	 */
+	private static boolean[] convertibles;
+
+	/**
 	 * Priority of expressions that have no subexpressions.
 	 */
 	public static final int LEAF = 0;
@@ -37,6 +43,9 @@ public abstract class Priorities implements Code {
 	 */
 	private static void setPriorities() {
 		priorities = new int[255];
+		convertibles = new boolean[255];
+		for (int i = 0; i < 255; i++)
+			convertibles[i] = false;
 		for (int i = 0; i < 255; i++)
 			priorities[i] = -1;
 		priorities[ARRAY_ACCESS] = 1;
@@ -71,6 +80,19 @@ public abstract class Priorities implements Code {
 		priorities[EXISTS] = 17;
 		priorities[FORALL_WITH_NAME] = 17;
 		priorities[EXISTS_WITH_NAME] = 17;
+		
+		convertibles[MULT] = true;
+		convertibles[PLUS] = true;
+		convertibles[AND] = true;
+		convertibles[OR] = true;
+		convertibles[BITWISEAND] = true;
+		convertibles[BITWISEOR] = true;
+		convertibles[BITWISEXOR] = true;
+		convertibles[EQ] = true;
+		convertibles[NOTEQ] = true;
+		convertibles[EQUIV] = true;
+		convertibles[NOTEQUIV] = true;
+		convertibles[COND_EXPR] = true;
 	}
 
 	/**
@@ -92,4 +114,19 @@ public abstract class Priorities implements Code {
 		return priorities[opcode];
 	}
 
+	/**
+	 * Checks whether given operator is convertible.
+	 * XXX jak to siê nazywa po angielsku?
+	 * 
+	 * @param opcode - operator opcode.
+	 * @return true for binary operators op, where
+	 * forall a, b ; a op b == b op a
+	 */
+	public static boolean isConvertible(int opcode) {
+		if (priorities == null)
+			setPriorities();
+		if (opcode > 255)
+			throw new RuntimeException("invalid opcode: " + opcode);
+		return convertibles[opcode];
+	}
 }
