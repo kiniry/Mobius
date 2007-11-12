@@ -166,7 +166,7 @@ public class Executor extends ABasicExecutor {
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  private void doApplication() throws ClassNotFoundException, IOException {
+  public void doApplication() throws ClassNotFoundException, IOException {
     collectClasses("");
     System.out.println("There are " + fPendingClasses.size() + " classe(s) pending.");
     while (!fPendingClasses.isEmpty()) {
@@ -236,6 +236,8 @@ public class Executor extends ABasicExecutor {
     System.out.println("Working path: " + getBaseDir());
     
     doApplication();
+    
+    generateMakefiles();
     /*
     // creating file for output
     if (fCoqFileName.exists()) {
@@ -323,6 +325,14 @@ public class Executor extends ABasicExecutor {
   	return new MakefileGenerator(file, name, treated);
   }*/
   
+  public void generateMakefiles() {
+    
+    final ClassesMakefileGen cmg = new ClassesMakefileGen(getBaseDir(), 
+                                                                fTreatedClasses.values());
+    cmg.generate();
+  }
+
+
   /**
    * Write the signature file.
    * 

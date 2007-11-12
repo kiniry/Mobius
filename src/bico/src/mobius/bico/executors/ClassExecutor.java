@@ -100,8 +100,7 @@ public class ClassExecutor extends ASignatureExecutor {
     super(exec, cg);
     fClass = cg;
     fCoqName = Util.coqify(cg.getClassName());
-    setBaseDir(exec.getBaseDir());
-    
+
     final JavaClass javaClass = fClass.getJavaClass();
     
     fModuleName = Util.coqify(javaClass.getClassName());

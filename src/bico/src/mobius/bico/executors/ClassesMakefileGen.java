@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import mobius.bico.Util;
@@ -14,26 +15,24 @@ import mobius.bico.Util;
  * that was generated.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class MakefileGenerator {
+public class ClassesMakefileGen {
 
   /** the base directory in which is the application compiled currently. */
   private final File fBaseDir;
   /** all the classes that were generated in the process. */
-  private final List<ClassExecutor> fTreated;
-  /** where to generate the makefile. */
-  private final File fWorkingDir;
+  private final List<ClassExecutor> fTreated = new ArrayList<ClassExecutor>();
+
 
   /**
    * Initialize the generator.
    * @param baseDir the base directory
    * @param treated all the classes to treat
    */
-  public MakefileGenerator(final File baseDir, 
-                           final File workingDir,
-                           final List<ClassExecutor> treated) {
+  public ClassesMakefileGen(final File baseDir, 
+                           final Collection<ClassExecutor> treated) {
     fBaseDir = baseDir;
-    fTreated = treated;
-    fWorkingDir = workingDir;
+    fTreated.addAll(treated);
+    //fWorkingDir = workingDir;
   }
   
   
@@ -45,7 +44,7 @@ public class MakefileGenerator {
    * Generates the makefile in the given directory.
    */
   public void generate() {
-    final File mkfile = new File (fWorkingDir, "Makefile");
+    final File mkfile = new File (fBaseDir, "Makefile");
     final List<String> generatedFiles = new ArrayList<String>();
     
     try {
@@ -107,7 +106,7 @@ public class MakefileGenerator {
                                          final String word,
                                          final String postfix) {
     
-    final File[] files = fWorkingDir.listFiles();
+    final File[] files = fBaseDir.listFiles();
     if (files == null) {
       return null;
     }

@@ -40,8 +40,13 @@ public abstract class ASignatureExecutor extends ABasicExecutor {
   public ASignatureExecutor(final ABasicExecutor be,
                             final ClassGen cg) throws FileNotFoundException  {
     super(be);
-    final File strm = determineStrmFileName(be.getBaseDir(), cg);
+    setBaseDir(new File(be.getBaseDir(), 
+                        File.separator + "classes"));
+    getBaseDir().mkdirs();
+    
+    final File strm = determineStrmFileName(getBaseDir(), cg);
     fOutSig = new CoqStream(new FileOutputStream(strm));
+    
   }
   
   /**
