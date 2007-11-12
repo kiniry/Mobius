@@ -685,7 +685,8 @@ public final class OldTests {
 		replaceTest("(20)", "\n3:", 286, 993, true, "\n/* \\assert false */");
 		replaceTest("(20)", "\n3:", 442, 993, true, "\n  /* \\assert false */  ");
 		replaceTest("()\n", "\n0:", 160, 535, true, "");
-		replaceTest("/*", "*/", 99, noChange, false, "");
+		replaceTest("/*", "*/", 216, 280, true, "");
+		replaceTest("/*", "\n", 350, noChange, true, "");
 		replaceTest("/*", "*/", 680, 280, true, "  ");
 		replaceTest("Empty\n\n", "\npublic", 734, 169, true, "");
 		replaceTest("V (28)\n", "8:", 655, 138, true, "/* \\assert forall int a; a > 0 */\n");

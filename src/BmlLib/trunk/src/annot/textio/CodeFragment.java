@@ -368,10 +368,14 @@ public class CodeFragment {
 	}
 
 	private static boolean isCommentStart(String line) {
+		if (line.matches(" */\\*(.|\n)*"))//!
+			return true;
 		return line.matches(" *"+Parsing.escape(IDisplayStyle.comment_start)+"(.|\n)*");
 	}
 
 	private static boolean isCommentEnd(String line) {
+		if (line.matches("(.|\n)*\\*/ *"))//!
+			return true;
 		return line.matches("(.|\n)*"+Parsing.escape(IDisplayStyle.comment_end)+" *");
 	}
 
@@ -516,7 +520,8 @@ public class CodeFragment {
 				inMethodSpec = false;
 			if (isCommentStart(line)) {
 				if (inComment) {
-					MLog.putMsg(MLog.PInfo, "invalid comment parenthness: /*/*");
+					MLog.putMsg(MLog.PInfo, "line " + l
+						+ ": invalid comment parenthness: /*/*");
 					return false;
 				}
 				inComment = true;
@@ -874,6 +879,8 @@ public class CodeFragment {
 		shortCode = shortCode.replaceAll(
 				Parsing.escape(IDisplayStyle.comment_end)
 				+ " *\n", "\n");
+		shortCode = shortCode.replaceAll("\n */\\*", "\n");//!
+		shortCode = shortCode.replaceAll("\\*/ *\n", "\n");//!
 		if (isCommentStart(shortCode))
 			shortCode = shortCode.substring(IDisplayStyle.comment_length);
 		while (shortCode.indexOf("\n\n") >= 0)

@@ -44,9 +44,9 @@ public interface IDisplayStyle {
 	 * Beginning, next line, and end of BML annotation comment.
 	 * All should have the same length:
 	 */
-	public static final String comment_start = "/* ";
+	public static final String comment_start = "/* ";//careful
 	public static final String comment_next = " * ";
-	public static final String comment_end = " */";
+	public static final String comment_end = " */";//careful
 
 	/**
 	 * length of comment marks above.
