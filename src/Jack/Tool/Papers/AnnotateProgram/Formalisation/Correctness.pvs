@@ -1,126 +1,3 @@
-RelatedStateProperties[CP, Name : TYPE+] : THEORY
-BEGIN
-
-  ASSUMING
-
-    CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
-
-    infinite_namespace : ASSUMPTION
-      is_infinite({n : Name | TRUE})
-
-    IMPORTING VariableNames[CP, Name]
-
-    name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
-        FORALL(mp : (wf_MP)) : 
-          injective?(f(mp))
-
-  ENDASSUMING
-
-
-  IMPORTING Equivalence[CP, Name]
-
-  mp : VAR (wf_MP)
-
-  % TODO: fix, needs change in get_address
-  get_address_same_in_related_states : LEMMA
-    FORALL(vn : Name, sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-        get_address(vn, sMP) = get_address(vn, sAP)
-
-  % TODO: fix, needs change in get_dynamic_type
-  get_dynamic_type_name_same_in_related_states : LEMMA % :-)
-    FORALL(vn : Name, sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-        get_dynamic_type_name(vn, sMP) = get_dynamic_type_name(vn, sAP)
-  
-  MP_modeled_implies_same_exception : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      MP_modeled?(mp)(sMP, sAP) IMPLIES
-      up?(ex(pstate(sMP))) OR NOT up?(ex(pstate(sAP))) IMPLIES
-        ex(pstate(sMP)) = ex(pstate(sAP))
-
-  related_states_implies_same_exception : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES 
-      up?(ex(pstate(sMP))) OR NOT up?(ex(pstate(sAP))) IMPLIES
-        ex(pstate(sMP)) = ex(pstate(sAP))
-
-  related_states_implies_same_lookup : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState, n : Name) :
-      related_states(mp)(sMP, sAP) IMPLIES 
-      ext_declared_var_names(program(mp))(n) IMPLIES
-        lookup(n, sMP) = lookup(n, sAP)
-  
-  % TODO: fix     
-  MP_modeled_preserved_by_update : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
-        MP_modeled?(mp)(update_PState(sMP, upd), update_PState(sAP, upd))
-
-  related_states_preserved_by_update_local : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState)(vn : Name, v : (defined?)) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      is_local(vn, pstate(sMP)) IMPLIES
-      is_local(vn, pstate(sAP)) IMPLIES
-        related_states(mp)(update_PState(sMP, update_local(vn, v)), 
-                           update_PState(sAP, update_local(vn, v)))
-
-  related_states_preserved_by_catch : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-        related_states(mp)(update_PState(sMP, catch), 
-                           update_PState(sAP, catch))
-
-  related_states_preserved_by_raise : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState, e : Excpt) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT (JMLExc?(e) AND cp(astate(sMP)) = halted) IMPLIES
-        related_states(mp)(update_PState(sMP, raise(e)), 
-                           update_PState(sAP, raise(e)))
-
-  related_states_preserved_by_update_stack : LEMMA % :-)
-    FORALL (sMP : MPState, sAP : APState,
-            this_val : Val, arg :  (getLocalDecls(program(mp))), 
-            param_val : Val, lvds : finite_set[LocalVarDecl]) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
-      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
-                                   getLocalDecls(program(mp))(l)) IMPLIES
-        related_states(mp)(update_stack(this_val, arg, param_val,
-                                        lvds, sMP),
-                           update_stack(this_val, arg, param_val,
-                                        lvds, sAP))
-
-
-  % NOTE: The use of equalities[Val] is needed for disambiaguation
-  MP_modeled_lookup_correspondence : LEMMA % :-)
-    FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
-      wf_state(ann_program(mp))(sAP) IMPLIES
-      MP_modeled?(mp)(sMP, sAP) IMPLIES
-      cps(mva(mp))(q1) IMPLIES
-      cps(mva(mp))(q2) IMPLIES
-      cp(astate(sMP)) = q1 IMPLIES
-        (q1 = q2) =
-        equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
-                           Int(val2int(lookup(name_of(mp)(q2), sAP)))))
-
-  related_states_lookup_correspondence : LEMMA % :-)
-    FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
-      related_states(mp)(sMP, sAP) IMPLIES
-      cps(mva(mp))(q1) IMPLIES
-      cps(mva(mp))(q2) IMPLIES
-      cp(astate(sMP)) = q1 IMPLIES
-        (q1 = q2) =
-        equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
-                           Int(val2int(lookup(name_of(mp)(q2), sAP)))))
-
-
-END RelatedStateProperties
-
-
 AnnEventPreservesMPModeled[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -142,7 +19,7 @@ BEGIN
   ENDASSUMING
 
 
-  IMPORTING RelatedStateProperties[CP, Name],
+  IMPORTING RelatedStatesProperties[CP, Name],
             APSemanticsProperties,
             listfuncs
 
@@ -173,10 +50,10 @@ BEGIN
                 gvs := gvs(sMP1) #) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
- % If sMP1 and sAP1 are related states and for a given transition t, sMVA is the
- % state of the automaton after performing t and sAP2 is the state of the 
- % annotated program after executing the annotations that model the effect of t, 
- % then sMVA is still well modeled by sAP2.
+  % If sMP1 and sAP1 are related states and for a given transition t, sMVA is the
+  % state of the automaton after performing t and sAP2 is the state of the 
+  % annotated program after executing the annotations that model the effect of t, 
+  % then sMVA is still well modeled by sAP2.
   update_vars_preserves_MP_modeled : LEMMA
     FORALL (t : Transition, n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :

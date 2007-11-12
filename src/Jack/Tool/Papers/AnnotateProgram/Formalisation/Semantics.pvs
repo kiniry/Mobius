@@ -3,8 +3,10 @@ BEGIN
 
   % Functions whose existence we assume
   get_address(vn : Name, sigma : PState) : int
+%  get_address(vn : Name, sigma : PSt) : int
 
   get_dynamic_type_name(vn : Name, sigma : PState) : Name
+%  get_dynamic_type_name(vn : Name, sigma : PSt) : Name
 
 END ReferenceFunctions
 
@@ -114,9 +116,11 @@ BEGIN
 
   get_address(vn : Name, sigma : FullState) : int =
     get_address(vn, pstate(sigma))
+%    get_address(vn, st(pstate(sigma)))
 
   get_dynamic_type_name(vn : Name, sigma : FullState) : Name =
     get_dynamic_type_name(vn, pstate(sigma))
+%    get_dynamic_type_name(vn, st(pstate(sigma)))
 
   IMPORTING WellFormedProgram[Name]
 
