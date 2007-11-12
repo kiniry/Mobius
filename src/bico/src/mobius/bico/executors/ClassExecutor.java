@@ -37,7 +37,7 @@ import org.apache.bcel.generic.Type;
  */
 public class ClassExecutor extends ASignatureExecutor {
   /** the standard lib paths. */
-  private final String pathToLib = "";
+  private final String pathToLib = "../";
   // FIXME: should be relative to the package dir
   private final String fLibPath = "Add LoadPath \"" + pathToLib
   		+ "Formalisation/Library\".\n" + "Add LoadPath \"" + pathToLib
@@ -384,8 +384,8 @@ public class ClassExecutor extends ASignatureExecutor {
   }
   
   /**
-   * @deprecated - this method should be replaced by getBaseDir Return the
-   *             current working directory.
+   * Returns the current working directory.
+   * <code>baseDirectory + packageDirectory</code>
    * @return the content of the field {@link #fWorkingDir}
    */
   public File getWorkingDir() {

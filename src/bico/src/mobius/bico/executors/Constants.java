@@ -27,7 +27,7 @@ public class Constants {
   public static final String LOAD = "Load ";
   public static final String END_MODULE = "End ";
   public static final String REQ_EXPORT = "Require Export ";
-  public static final String EXPORT = "Export";
+  public static final String EXPORT = "Export ";
   public static final String REQ_IMPORT = "Require Import ";
   public static final String IMPORT = "Import ";
   public static final String DEFINITION = "Definition ";

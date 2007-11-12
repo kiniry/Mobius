@@ -30,7 +30,7 @@ public class ClassesMakefileGen {
    */
   public ClassesMakefileGen(final File baseDir, 
                            final Collection<ClassExecutor> treated) {
-    fBaseDir = baseDir;
+    fBaseDir = new File(baseDir, "classes");
     fTreated.addAll(treated);
     //fWorkingDir = workingDir;
   }
@@ -44,43 +44,88 @@ public class ClassesMakefileGen {
    * Generates the makefile in the given directory.
    */
   public void generate() {
-    final File mkfile = new File (fBaseDir, "Makefile");
+    generate("");
+  }
+  
+  private void generate(String pkgDir) {
+    final File workingDir = new File(fBaseDir, pkgDir);
+    final File mkfile = new File (workingDir, "Makefile");
     final List<String> generatedFiles = new ArrayList<String>();
     
+    
+    final File[] subdirs = workingDir.listFiles(new Util.DirectoryFilter());
     try {
       final PrintStream out = new PrintStream(new FileOutputStream(mkfile));
-
-      generatedFiles.addAll(printCompileInstr(out, "Type", "_type"));
-      generatedFiles.addAll(printCompileInstr(out, "Signature", "_signature"));
-      generatedFiles.addAll(printCompileInstr(out, "Main", ""));
+      final List<String> list = getCurrentPkgFileList(workingDir);
+      generatedFiles.addAll(printCompileInstr(out, list, "Type", "_type"));
+      generatedFiles.addAll(printCompileInstr(out, list, "Signature", "_signature"));
+      generatedFiles.addAll(printCompileInstr(out, list, "Main", ""));
       generatedFiles.addAll(getExtraGeneratedFiles(out));
       
+      out.println("\nall: $(Extra) signature");
+      for (File dir: subdirs) {
+        out.println("\tcd " + dir.getName() + "; make all");
+      }
       
-/*      out.println("all:  $(Extra)");
-      out.println("$(Extra): $(Main)");*/
-      out.println("all:  $(Main)");
-      out.println("$(Main): $(Signature)"); 
-      out.println("$(Signature): type"); 
-
-      out.println("type: $(Type)");
-      out.println("\tcd " + "; make type");
-      out.println("\nclean:");
-      out.print("\trm -f");
-      for (String name: generatedFiles) {
-        out.print(" " + name);
+      out.println("\nsignature: $(Signature) type");
+      for (File dir: subdirs) {
+        out.println("\tcd " + dir.getName() + "; make signature");
+      }
+      
+      
+      out.println("\ntype: $(Type)");
+      for (File dir: subdirs) {
+        out.println("\tcd " + dir.getName() + "; make type");
       }
       out.println();
       out.println("\n# implicit rules");
       out.println("%.vo : %.v");
       out.println("\tcoqc $<\n");
-      out.close();
+      
     } 
     catch (FileNotFoundException e) {
       System.err.println("Failed to write the Makefile");
       e.printStackTrace();
     }
+     
+//      
+//      
+///*      out.println("all:  $(Extra)");
+//      out.println("$(Extra): $(Main)");*/
+//      out.println("all:  $(Main)");
+//      out.println("$(Main): $(Signature)"); 
+//      out.println("$(Signature): type"); 
+//
+//      out.println("type: $(Type)");
+//      out.println("\tcd " + "; make type");
+//      out.println("\nclean:");
+//      out.print("\trm -f");
+//      for (String name: generatedFiles) {
+//        out.print(" " + name);
+//      }
+//      out.println();
+//      out.println("\n# implicit rules");
+//      out.println("%.vo : %.v");
+//      out.println("\tcoqc $<\n");
+//      out.close();
+    
     
   }
+
+
+  private List<String> getCurrentPkgFileList(File workingDir) {
+    final List<String> list = new ArrayList<String>();
+    for (ClassExecutor ce: fTreated) {
+      if (ce.getWorkingDir().equals(workingDir)) {
+        list.add(ce.getModuleFileName());
+      }
+    }
+    return list;
+  }
+
+
+
+
 
 
   /**
@@ -103,6 +148,7 @@ public class ClassesMakefileGen {
    * by the compilation
    */
   public List<String> printCompileInstr(final PrintStream out,
+                                         final List<String> list,
                                          final String word,
                                          final String postfix) {
     
@@ -114,20 +160,13 @@ public class ClassesMakefileGen {
     String recmake = "";
     final List<String> generatedFiles = new ArrayList<String>();
     out.print(word + "=");
-    for (int k = 0; k < files.length; k++) { 
-      if (files[k].isFile()) {
-        String fName = files[k].getName();
-        String coqModuleName = Util.removeCoqSuffix(fName);
-        String filename = coqModuleName + postfix + ".vo";
-        out.print(" " + filename);
-        generatedFiles.add(filename);
-      } 
-//      else if (files[k].isDirectory()) {
-//        recmake = "cd " + files[k].getName() + " && " + "$(MAKE) all";
-//          
-//      }
+    for (String coqModuleName: list) {
+      final String name = coqModuleName + postfix + ".v";
+      String filename = coqModuleName + postfix + ".vo";
+      out.print(" " + filename);
+      generatedFiles.add(filename);
+    }
 
-    } 
     out.println();
     out.println(recmake);
 
