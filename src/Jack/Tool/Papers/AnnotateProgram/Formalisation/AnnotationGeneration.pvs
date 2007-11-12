@@ -614,7 +614,8 @@ BEGIN
             union(var_names(program(mp)), var_names(new_gvds(mp))))
 
   var_names_declared_in_MVA_subset_ghostvars : LEMMA % :-)
-    subset?(var_names(vdsA(mva(mp))), var_names(getGhostDecls(ann_program(mp))))
+    subset?(var_names(vdsA(mva(mp))), 
+            var_names(getGhostDecls(ann_program(mp))))
 
   ann_program_defines_MVA_vars : LEMMA % :-)
     FORALL (n : Name) : var_names(new_gvds(mp))(n) IMPLIES
@@ -636,71 +637,66 @@ BEGIN
         wf_Body(ann_program(mp))(e)
 
 
-  % PROVE
-  one_action_source_wf_Body : LEMMA
+  
+  one_action_source_wf_Body : LEMMA % :-)
     FORALL (a : Action, oa : OneAction) :
       wf_Action(mva(mp))(a) IMPLIES
       member(oa, a) IMPLIES
         wf_Body(ann_program(mp))(source(oa))
 
-  % PROVE
-  one_action_translation_wf_Body : LEMMA
+  one_action_translation_wf_Body : LEMMA % :-)
     FORALL (a : Action, oa : OneAction) :
       wf_Action(mva(mp))(a) IMPLIES
       member(oa, a) IMPLIES
         wf_Body(ann_program(mp))(Set(target(oa), source(oa)))
 
-  % PROVE
-  ann_action_yields_wf_Body : LEMMA
+  ann_action_yields_wf_Body : LEMMA % :-)
     FORALL (a : Action) :
       wf_Action(mva(mp))(a) IMPLIES
         wf_Body(ann_program(mp))(ann_action(a))
 
-  % PROVE
-  update_vars_wf_Stmt : LEMMA
+  update_vars_wf_Stmt : LEMMA % :-)
     FORALL (t : Transition) :
       ts(mva(mp))(t) IMPLIES
         wf_Stmt(ann_program(mp))(update_vars(mp)(t))
 
-  % PROVE
-  guard_to_expression_wf_BoolExpr : LEMMA
+  guard_to_expression_wf_BoolExpr : LEMMA % :-)
     FORALL (t : Transition) :
       ts(mva(mp))(t) IMPLIES
         wf_BoolExpr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t)))
 
-  % PROVE
-  ann_guard_actions_wf_Branches : LEMMA
-    FORALL (ts : finite_set[Transition]) :
-      subset?(ts, ts(mva(mp))) IMPLIES
-        wf_Branches(ann_program(mp))(ann_guard_actions(mp)(ts))
+%  % PROVE
+%  ann_guard_actions_wf_Branches : LEMMA
+%    FORALL (ts : finite_set[Transition]) :
+%      subset?(ts, ts(mva(mp))) IMPLIES
+%        wf_Branches(ann_program(mp))(ann_guard_actions(mp)(ts))
 
-  % PROVE
-  ann_trans_cp_wf : LEMMA
-    FORALL (q : CP, ts : finite_set[Transition]) :
-      LET p = ann_trans_cp(mp)(q, ts) IN
-      cps(mva(mp))(q) IMPLIES
-      subset?(ts, ts(mva(mp))) IMPLIES
-        (wf_BoolExpr(ann_program(mp))(p`1) AND
-         wf_Stmt(ann_program(mp))(p`2))
+%  % PROVE
+%  ann_trans_cp_wf : LEMMA
+%    FORALL (q : CP, ts : finite_set[Transition]) :
+%      LET p = ann_trans_cp(mp)(q, ts) IN
+%      cps(mva(mp))(q) IMPLIES
+%      subset?(ts, ts(mva(mp))) IMPLIES
+%        (wf_BoolExpr(ann_program(mp))(p`1) AND
+%         wf_Stmt(ann_program(mp))(p`2))
 
-  % PROVE
-  ann_event_wf_Branches : LEMMA
-    FORALL (ts : finite_set[Transition]) :
-      subset?(ts, ts(mva(mp))) IMPLIES
-        wf_Branches(ann_program(mp))(set2list(ann_event_set(mp)(ts)))
+%  % PROVE
+%  ann_event_wf_Branches : LEMMA
+%    FORALL (ts : finite_set[Transition]) :
+%      subset?(ts, ts(mva(mp))) IMPLIES
+%        wf_Branches(ann_program(mp))(set2list(ann_event_set(mp)(ts)))
 
   ann_event_wf_Body : LEMMA % :-)
     FORALL (ts : finite_set[Transition]) :
       subset?(ts, ts(mva(mp))) IMPLIES
         wf_Body(ann_program(mp))(ann_event(mp)(ts))
 
-  % PROVE: fix the proof
-  ann_program_preserves_wf_method : LEMMA
+  ann_program_preserves_wf_method : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp)))) :
       wf_Method(ann_program(mp))(ann_method(mp)(m))
 
-  % PROVE: fix the proof
-  ann_program_preserves_wf_body : LEMMA
+ 
+  ann_program_preserves_wf_body : LEMMA % :-)
     FORALL (b : (wf_Body(program(mp)))) :
       wf_Body(ann_program(mp))(b)
 
