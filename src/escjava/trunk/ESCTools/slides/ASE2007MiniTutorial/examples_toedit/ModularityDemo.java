@@ -2,7 +2,7 @@ public abstract class ModularityDemo {
 
     protected byte[] b;
 
-    public void ModularityDemo() 
+    public ModularityDemo() 
     { b = new byte[20]; }
 
     public void m()
