@@ -20,7 +20,8 @@ public class Constants {
   public static final String OPTION_OUTPUT = "-o";
   /** to show the help message. */
   public static final String OPTION_HELP = "-help";
-  
+  /** to tell the location of the bicolano jar. */
+  public static final Object OPTION_LIB = "-lib";  
   
   /* Coq syntax */
   public static final String MODULE = "Module ";
@@ -36,4 +37,5 @@ public class Constants {
   
   
   public static final String CLASS_SUFFIX = ".class";
+
 }

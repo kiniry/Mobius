@@ -92,8 +92,8 @@ public final class Main {
   /**
    * Init the executor with the arguments from the command line.
    * 
-   * @param args
-   *            the arguments
+   * @param args the arguments
+   * @return a newly created executor.
    */
   private static Executor init(final String[] args) {
     // dealing with args
@@ -125,7 +125,10 @@ public final class Main {
         i = i + 1;
         arg = args[i];
         targetDir = new File(arg);
-      } 
+      }
+      else if (low.equals(Constants.OPTION_LIB)) {
+        i = i + 1;
+      }
       else {
         final File f = new File(arg);
         if (f.isDirectory()) {
@@ -146,6 +149,13 @@ public final class Main {
         
       }
       
+    }
+    
+    if (baseDir == null) {
+      baseDir = new File("");
+    }
+    if (targetDir == null) {
+      targetDir = baseDir;
     }
     return new Executor(implem, baseDir, targetDir, clzz);
   }

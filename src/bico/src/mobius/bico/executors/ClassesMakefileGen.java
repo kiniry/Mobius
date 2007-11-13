@@ -62,12 +62,16 @@ public class ClassesMakefileGen {
       generatedFiles.addAll(printCompileInstr(out, list, "Main", ""));
       generatedFiles.addAll(getExtraGeneratedFiles(out));
       
-      out.println("\nall: $(Extra) signature");
+      out.println("\nall: main $(Extra) ");
+      for (File dir: subdirs) {
+        out.println("\tcd " + dir.getName() + "; make all");
+      }
+      out.println("\nmain: signature $(Main) ");
       for (File dir: subdirs) {
         out.println("\tcd " + dir.getName() + "; make all");
       }
       
-      out.println("\nsignature: $(Signature) type");
+      out.println("\nsignature: type $(Signature)");
       for (File dir: subdirs) {
         out.println("\tcd " + dir.getName() + "; make signature");
       }
@@ -81,33 +85,17 @@ public class ClassesMakefileGen {
       out.println("\n# implicit rules");
       out.println("%.vo : %.v");
       out.println("\tcoqc $<\n");
-      
+      out.close();
     } 
     catch (FileNotFoundException e) {
       System.err.println("Failed to write the Makefile");
       e.printStackTrace();
     }
      
-//      
-//      
-///*      out.println("all:  $(Extra)");
-//      out.println("$(Extra): $(Main)");*/
-//      out.println("all:  $(Main)");
-//      out.println("$(Main): $(Signature)"); 
-//      out.println("$(Signature): type"); 
-//
-//      out.println("type: $(Type)");
-//      out.println("\tcd " + "; make type");
-//      out.println("\nclean:");
-//      out.print("\trm -f");
-//      for (String name: generatedFiles) {
-//        out.print(" " + name);
-//      }
-//      out.println();
-//      out.println("\n# implicit rules");
-//      out.println("%.vo : %.v");
-//      out.println("\tcoqc $<\n");
-//      out.close();
+
+    for (File dir: subdirs) {
+      generate(pkgDir + dir.getName() + File.separator);
+    }
     
     
   }
@@ -117,7 +105,7 @@ public class ClassesMakefileGen {
     final List<String> list = new ArrayList<String>();
     for (ClassExecutor ce: fTreated) {
       if (ce.getWorkingDir().equals(workingDir)) {
-        list.add(ce.getModuleFileName());
+        list.add(ce.getModuleName());
       }
     }
     return list;

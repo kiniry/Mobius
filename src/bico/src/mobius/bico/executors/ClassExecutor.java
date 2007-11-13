@@ -6,14 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import mobius.bico.Util;
-
-import mobius.bico.coq.LoadPath;
 import mobius.bico.coq.CoqStream;
+import mobius.bico.coq.LoadPath;
+import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantCP;
@@ -36,15 +35,12 @@ import org.apache.bcel.generic.Type;
  *         (czarnik@mimuw.edu.pl), L. Hubert (laurent.hubert@irisa.fr)
  */
 public class ClassExecutor extends ASignatureExecutor {
-  /** the standard lib paths. */
-  private final String pathToLib = "../";
+
   // FIXME: should be relative to the package dir
-  private final String fLibPath = "Add LoadPath \"" + pathToLib
-  		+ "Formalisation/Library\".\n" + "Add LoadPath \"" + pathToLib
-  		+ "Formalisation/Library/Map\".\n" + "Add LoadPath \"" + pathToLib
-  		+ "Formalisation/Bicolano\".\n";
+  private final String fLibPath;
   
-  private final String fCoqName;
+  /** the coq version*/
+  private final String fFileName;
   
   /** the current class which is inspected. */
   private ClassGen fClass;
@@ -81,16 +77,14 @@ public class ClassExecutor extends ASignatureExecutor {
   /** dependencies of the current class.   */
   private  final Map<String, ExternalClass> fExtLibsLocal = 
     new HashMap<String, ExternalClass>();
+  private Executor fExec;
 
   /**
    * Create a class executor in the context of another executor.
    * 
-   * @param exec
-   *            the BasicExecutor to get the initialization from
-   * @param cg
-   *            the class object to manipulate
-   * @param name
-   *            the name of the main file
+   * @param exec the Executor to get the initialization from
+   * @param cg the class object to manipulate
+   * @param name the name of the main file
    * @throws FileNotFoundException
    *             if the file cannot be opened
    */
@@ -99,10 +93,10 @@ public class ClassExecutor extends ASignatureExecutor {
                        final String name) throws FileNotFoundException {
     super(exec, cg);
     fClass = cg;
-    fCoqName = Util.coqify(cg.getClassName());
+    fFileName = Util.coqify(cg.getClassName());
 
     final JavaClass javaClass = fClass.getJavaClass();
-    
+    fExec = exec;
     fModuleName = Util.coqify(javaClass.getClassName());
     
     fPackageDir = new File(javaClass.getPackageName().replace('.',
@@ -116,8 +110,16 @@ public class ClassExecutor extends ASignatureExecutor {
     
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
-    
-    // fExecutor = exec;
+    String pathToLib = ".." + File.separator;
+    for (String s: javaClass.getPackageName().split("\\.")) {
+      if (!s.equals("")) {
+        pathToLib += ".." + File.separator;
+      }
+    }
+    fLibPath = 
+      "Add LoadPath \"" + pathToLib + "Formalisation/Library\".\n" + 
+      "Add LoadPath \"" + pathToLib + "Formalisation/Library/Map\".\n" + 
+      "Add LoadPath \"" + pathToLib + "Formalisation/Bicolano\".\n";
   }
   
   /**
@@ -168,12 +170,12 @@ public class ClassExecutor extends ASignatureExecutor {
     fOut.println(Constants.REQ_IMPORT + 
                  "ImplemProgramWithMap.\n");
     fOut.println(Constants.IMPORT + "P.\n");
-    fOut.println(Constants.REQ_IMPORT + fCoqName + "_signature.");
-    fOut.println(Constants.REQ_IMPORT + fCoqName
+    fOut.println(Constants.REQ_IMPORT + fFileName + "_signature.");
+    fOut.println(Constants.REQ_IMPORT + fFileName
     		+ "_type.");
-    fOut.println(Constants.IMPORT + fCoqName
+    fOut.println(Constants.IMPORT + fFileName
     		+ "Signature.");
-    fOut.println(Constants.IMPORT + fCoqName + "Type.");
+    fOut.println(Constants.IMPORT + fFileName + "Type.");
     fOut.println();
     
     fOut.incPrintln(Constants.MODULE + fModuleName
@@ -206,15 +208,22 @@ public class ClassExecutor extends ASignatureExecutor {
     fOutSig.println(fLibPath);
     String loadPathsForDep = printLoadPaths();
     fOutSig.println(loadPathsForDep);
-    fOutSig.reqImport("ImplemProgramWithMap");
+    final IImplemSpecifics implem = getImplemSpecif();
+    fOutSig.println(implem.getBeginning());
     fOutSig.imprt("P");
-    fOutSig.reqImport(fCoqName + "_type");
-    fOutSig.imprt(fCoqName + "Type");
+    fOutSig.reqImport(fFileName + "_type");
+    fOutSig.imprt(fFileName + "Type");
     fOutSig.println();
     
     for (ExternalClass ex: fExtLibsLocal.values()) {
-      fOutSig.reqExport(ex.getTypeName());
-      fOutSig.exprt(ex.getTypeModule());
+      if (fExec.isSpecialLib(ex.getClassName())) {
+        fOutSig.reqExport(implem.requireLib(ex.getBicoClassName()));
+        fOutSig.exprt(ex.getTypeModule());
+      }
+      else {
+        fOutSig.reqExport(ex.getTypeName());
+        fOutSig.exprt(ex.getTypeModule());
+      }
     }
     fOutSig.println();
     fOutSig.startModule(fModuleName + "Signature");
@@ -238,16 +247,10 @@ public class ClassExecutor extends ASignatureExecutor {
   }
   
   private String printLoadPaths() {
-    Iterator<LoadPath>  lps = loadPaths.values().iterator();
-    if (lps == null) {
-    	return null;
-    }
     // store here the add load path statements
     String s = "";
-    
-    while (lps.hasNext()) {
-    	LoadPath lp = lps.next();
-    	s = s + lp. print(); 
+    for (LoadPath lp: loadPaths.values()) {
+      s = s + lp.printRelative(fWorkingDir);
     }
     return s;
   }
