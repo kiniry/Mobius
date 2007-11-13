@@ -7,8 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import mobius.bico.Util;
@@ -33,33 +35,18 @@ import org.apache.bcel.util.SyntheticRepository;
  */
 public class Executor extends ABasicExecutor {
 
-  /** the coq files extension. */
+  /** the coq files extension (.v). */
   public static final String suffix = ".v";
   
-  /**
-   * Path "en dur" to the Mobius coq formalisation of a Java bytecode logic
-   * and operational semantics.
-   */
-  public static final String pathToLib = "";
-  
-  
-  /**
-   * Path "en dur" to the Mobius coq formalisation of a Java bytecode logic
-   * and operational semantics.
-   */
-  public static final String pathToAPI = ""; //pathToLib //+ //"Formalisation" +File.separatorChar+ "java";
-  
-  
+   
   /** the standard lib paths. */
   public static final String libPath = 
-  	"Add LoadPath \"" + pathToLib + "Formalisation/Library\".\n" + 
-  	"Add LoadPath \"" + pathToLib + "Formalisation/Library/Map\".\n" + 
-  	"Add LoadPath \"" + pathToLib + "Formalisation/Logic\".\n" + 
-  	"Add LoadPath \"" + pathToLib + "Formalisation/Bicolano\".\n" + 
-  	"Add LoadPath \"" + pathToLib + pathToAPI + "\".\n";
+    "Add LoadPath \"Formalisation/Library\".\n" + 
+    "Add LoadPath \"Formalisation/Library/Map\".\n" + 
+    "Add LoadPath \"Formalisation/Logic\".\n" + 
+    "Add LoadPath \"Formalisation/Bicolano\".\n"; 
+    
   
-//  /** the name of the output file. */
-//  private File fCoqFileName;
   
   /** classes already parsed. */
   private final Map<String, ClassExecutor> fTreatedClasses = 
@@ -74,15 +61,13 @@ public class Executor extends ABasicExecutor {
     "java.lang.Object",
     "java.lang.Throwable", 
     "java.lang.Exception", 
-    "java.lang.String",
     "java.lang.NullPointerException",
-    "java.util.LinkedList"
   };
   
 
   
   /** the name of the executor file which will be declined to Type and Sig. */
-  private String fName;
+  private final String fName;
 
   
   /**
@@ -94,6 +79,7 @@ public class Executor extends ABasicExecutor {
     super(new ClassLoaderRepository(ClassLoader.getSystemClassLoader()),
           new MapImplemSpecif(), new MethodHandler(), null,
           new CamlDictionary(), new File(""));
+    fName = "Bico";
   }
   
   
@@ -135,6 +121,7 @@ public class Executor extends ABasicExecutor {
     if (classToTreat != null) {
       fPendingClasses.addAll(classToTreat);
     }
+    fName = "Bico";
   }
   /**
    * Create a new Executor object.
@@ -185,7 +172,7 @@ public class Executor extends ABasicExecutor {
    * @throws ClassNotFoundException
    */
   private void collectClasses(final String pkg) 
-        throws ClassNotFoundException, IOException {
+    throws ClassNotFoundException, IOException {
     final File baseDir = getBaseDir();
     final File f = new File(baseDir, pkg);
     final File[] classfiles = f.listFiles(new FileFilter() {
@@ -237,8 +224,11 @@ public class Executor extends ABasicExecutor {
     
     doApplication();
     
-    generateMakefiles();
-    /*
+    generateClassMakefiles();
+    
+
+    writeDictionnary();
+    File fCoqFileName = new File(getBaseDir(), fName + suffix);
     // creating file for output
     if (fCoqFileName.exists()) {
       fCoqFileName.delete();
@@ -246,18 +236,22 @@ public class Executor extends ABasicExecutor {
     }
     fCoqFileName.createNewFile();
     final FileOutputStream fwr = new FileOutputStream(fCoqFileName);
-    fOut = new Util.Stream(fwr);
+    setOut(new CoqStream(fwr));
+    doType();
+    doSignature();
+    doMain();
+    
+    /*
+
     
     doMain();
     
     fOut.close(); // closing output file
-    doType();
-    doSignature();
-    writeDictionnary();
+
     */
   }
   
-  /*	*//**
+  /**
    * Write the main file. This generates for instance the file "B_classMap.v",
    * i.e. packageName_className.v
    * 
@@ -265,67 +259,53 @@ public class Executor extends ABasicExecutor {
    *             if there is a problem with name resolution
    * @throws IOException
    *             if there is a problem writing from the disk
-   *//*
-  private void doMain() throws ClassNotFoundException, IOException {
-  	// write prelude ;)
-  	doBeginning();
-  
-  	// commented on 30/10
-  	// handle library classes specified as 'the other libs'
-  	
-  	 * Iterator<String> iter = fOtherLibs.values().iterator(); while (
-  	 * iter.hasNext()) { String current = iter.next();
-  	 * System.out.println("Handling classes imported in the current class: " +
-  	 * current); handleLibraryClass(current); }
-  	 
-  	doApplication();
-  	addToTreated();
-  	Iterator<ExternalClass> iter = fExtLibs.values().iterator();
-  	fOut.println("(*Start of external librariess*)");
-  	while (iter.hasNext()) {
-  		ExternalClass current = iter.next();
-  		fOut.println(Constants.LOAD + Constants.SPACE + "\""
-  				+ current.getBicoClassName() + "\".");
-  
-  	}
-  	fOut.println("(*End of xternal libraries DONE*)");
-  	fOut.println("(*Start of libraries of the current application*)");
-  	// the already treated classes + interfaces
-  	for (ClassExecutor ce : fTreatedClasses) {
-  		fOut.println(Constants.LOAD + Constants.SPACE + "\""
-  				+ ce.getModuleFileName() + ".v\".");
-  	}
-  
-  	for (ClassExecutor ce : fTreatedInterfaces) {
-  		fOut.println(Constants.LOAD + Constants.SPACE + "\""
-  				+ ce.getModuleFileName() + ".v\".");
-  	}
-  	fOut.println("(*End of current libs DONE*)");
-  	doEnding();
-  	generateMakefile();
-  }*/
-  
-  /**
-   * 
-   *@deprecated
    */
-  //commented by Mariela
-  /**
-   * Generates the makefile to compile everything.
-   *//*
-  private void generateMakefile() {
-  	final List<ClassExecutor> treated = new ArrayList<ClassExecutor>();
-  	treated.addAll(fTreatedClasses);
-  	treated.addAll(fTreatedInterfaces);
-  	getMakefileGenerator(getBaseDir(), fCoqName, treated).generate();
+  private void doMain() throws ClassNotFoundException, IOException {
+    // write prelude ;)
+    CoqStream fOut = getOut();
+    final CoqStream out = getOut();
+    printLoadPath(out);
+    out.println(getImplemSpecif().getBeginning());
+    out.println("Require Import ImplemSWp.");
+    out.println("Import P.");
+    out.println("Import MDom.\n");
+    
+    out.reqExport(fName + "_type");
+    out.reqExport(fName + "_signature");
+    
+    out.exprt(fName + "Type");
+    out.exprt(fName + "Signature");
+    out.startModule(fName + "Program");
+    // the special library
+    for (int i = 0; i < fSpecialLibs.length; i++) {
+      final String str = getImplemSpecif().requireLib(Util.coqify(fSpecialLibs[i]));
+      out.load(str + ".v");
+    }
+    out.println();
+    // the already treated classes + interfaces
+    for (Entry<String, ClassExecutor> ce : fTreatedClasses.entrySet()) {
+      out.load(ce.getValue() + ".v");
+    }
+    
+    defineClassAndInterface();
+    
+    // the program definition
+    out.incPrintln("Definition program : Program := PROG.Build_t");
+    out.println("AllClasses");
+    out.println("AllInterfaces");
+    out.decPrintln(".\n");
+    out.incPrintln("Definition subclass :=");
+    out.println("match P.subclass_test program with\n" + 
+                "| Some f => f\n" + 
+                "| None => fun x y => true\n" +
+                "end");
+    out.decPrintln(".\n");
+    out.endModule(fName + "Program");
   }
+
   
-  public MakefileGenerator getMakefileGenerator(final File file,
-  		final String name, final List<ClassExecutor> treated) {
-  	return new MakefileGenerator(file, name, treated);
-  }*/
   
-  public void generateMakefiles() {
+  public void generateClassMakefiles() {
     
     final ClassesMakefileGen cmg = new ClassesMakefileGen(getBaseDir(), 
                                                                 fTreatedClasses.values());
@@ -340,28 +320,25 @@ public class Executor extends ABasicExecutor {
    *             in case the file cannot be written
    */
   private void doSignature() throws FileNotFoundException {
-    final File typ = new File(getBaseDir(), fName + "_signature"
-    		+ suffix);
+    final File typ = new File(getBaseDir(), fName + "_signature" + suffix);
     /* final File typ = new File( fCoqName + "_signature" + suffix); */
     final CoqStream out = new CoqStream(new FileOutputStream(typ));
-    out.println(libPath);
+    printLoadPath(out);
     out.println(getImplemSpecif().getBeginning());
     
-    // out.println("Require Import " + fName + "_type.");
     out.println();
     out.incPrintln(Constants.MODULE + fName + "Signature.");
     
-//    Iterator<ExternalClass> iter = fExtLibs.values().iterator();
-//    while (iter.hasNext()) {
-//    	ExternalClass current = iter.next();
-//    	out.println(Constants.LOAD + Constants.SPACE + "\""
-//    			+ current.getSignatureName() + "\".");
-//    }
-    
+    // the special library
+    for (int i = 0; i < fSpecialLibs.length; i++) {
+      final String str = getImplemSpecif().requireLib(Util.coqify(fSpecialLibs[i]));
+      out.load(str + ".v");
+    }
+    out.println();
     // the already treated classes + interfaces
     for (Entry<String, ClassExecutor> ce : 
            fTreatedClasses.entrySet()) {
-    	out.println(Constants.LOAD + " \"" + ce.getValue().getModuleFileName() + "_signature.v\".");
+      out.load(ce.getValue().getModuleFileName() + "_signature.v");
     }
     
 
@@ -379,35 +356,48 @@ public class Executor extends ABasicExecutor {
   private void doType() throws FileNotFoundException {
     final File typ = new File(getBaseDir(), fName + "_type" + suffix);
     final CoqStream out = new CoqStream(new FileOutputStream(typ));
-    out.println(libPath);
+
+    printLoadPath(out);
     out.println(getImplemSpecif().getBeginning());
     
     out.println();
     out.incPrintln(Constants.MODULE + fName + "Type.");
-    
-//    Iterator<ExternalClass> iter = fExtLibs.values().iterator();
-//    while (iter.hasNext()) {
-//    	ExternalClass current = iter.next();
-//    	out.println(Constants.LOAD + Constants.SPACE + "\""
-//    		+ current.getTypeName() + "\".");
-//    }
+
     
     // the special library
     for (int i = 0; i < fSpecialLibs.length; i++) {
-    	final String str = getImplemSpecif().requireLib(Util
-    			.coqify(fSpecialLibs[i]));
-    	out.println(Constants.LOAD + "\"" + str
-    				+ ".v\".");
+      final String str = getImplemSpecif().requireLib(Util.coqify(fSpecialLibs[i]));
+      out.load(str + ".v");
     }
-    
+    out.println();
     // the already treated classes + interfaces
     for (Entry<String, ClassExecutor> ce : fTreatedClasses.entrySet()) {
-      out.println(Constants.LOAD + " \"" + 
-                  ce.getValue() + "_type.v\".");
+      out.load(ce.getValue() + "_type.v");
     }
     
     out.decPrintln(Constants.END_MODULE + " " + 
                    fName + "Type.");
+  }
+
+
+  private void printLoadPath(final CoqStream out) {
+    out.println(libPath);
+    final Set<String> set = new HashSet<String>();
+    for (Entry<String, ClassExecutor> ce : fTreatedClasses.entrySet()) {
+      final String pkg = "classes/" + ce.getValue().getPackageDir().toString();
+      set.add(pkg);
+    }
+    
+    // the special library
+    for (int i = 0; i < fSpecialLibs.length; i++) {
+      final String str = getImplemSpecif().requireLib(Util.coqify(fSpecialLibs[i]));
+      out.load(str + ".v");
+    }
+    out.println();
+    
+    for (String s: set) {
+      out.println (Constants.ADD_LOAD_PATH + "\"" + s + "\".");
+    }
   }
   
   /**
@@ -442,11 +432,11 @@ public class Executor extends ABasicExecutor {
 
   
   /**
-   * Tells if 
-   * @param clname
-   * @return
+   * Tells if the given classname represents a special lib.
+   * @param clname the class name to verify
+   * @return true if nothing should be generated for it
    */
-  public boolean isSpecialLib(String clname) {
+  public boolean isSpecialLib(final String clname) {
     if (clname.startsWith("java")) {
       return true;
     }
@@ -472,9 +462,11 @@ public class Executor extends ABasicExecutor {
    *             if the specified class cannot be found
    * @throws IOException
    *             if the class executor has a writing problem
+   * @return the newly created class executor for the given class or 
+   * <code>null</code>
    */
-  public ClassExecutor handleClass(final String clname)
-      throws ClassNotFoundException, IOException {
+  public ClassExecutor handleClass(final String clname) throws ClassNotFoundException, 
+                                                               IOException {
     if (clname == null) {
       return null;
     }
@@ -496,9 +488,11 @@ public class Executor extends ABasicExecutor {
    *             resolution problems
    * @throws IOException
    *             if the class executor has a writing problem
+   * @return the newly created class executor for the given class or 
+   * <code>null</code>
    */
   private ClassExecutor handleClass(final JavaClass jc) throws ClassNotFoundException,
-  		IOException {
+                                                               IOException {
     final ClassGen cg = new ClassGen(jc);
     String pn = jc.getPackageName();
     pn = Util.getCoqPackageName(pn);
@@ -528,58 +522,12 @@ public class Executor extends ABasicExecutor {
    * @throws FileNotFoundException
    *             if a file is missing
    */
-  public ClassExecutor getClassExecutor(final ClassGen cg)
-  		throws FileNotFoundException {
-  	return new ClassExecutor(this, cg, fName);
+  public ClassExecutor getClassExecutor(final ClassGen cg) 
+    throws FileNotFoundException {
+    return new ClassExecutor(this, cg, fName);
   }
   
-  /**
-   * Write the file preable.
-   */
-  private void doBeginning() {
-    final CoqStream out = getOut();
-    out.println(libPath);
-    out.println(getImplemSpecif().getBeginning());
-    out.println("Require Import ImplemSWp.");
-    out.println("Import P.");
-    out.println("Import MDom.\n");
     
-    out.println(Constants.REQ_EXPORT + fName
-    		+ "_type.");
-    System.out.println(Constants.REQ_EXPORT + fName
-    		+ "_type.");
-    out.println(Constants.REQ_EXPORT + fName
-    		+ "_signature.");
-    
-    out.println(Constants.EXPORT + fName + "Type.");
-    out.println(Constants.EXPORT + fName
-    		+ "Signature.");
-    out.incPrintln(Constants.MODULE + fName
-    		+ "Program.");
-  
-  }
-  
-  /**
-   * Write the file ending.
-   */
-  private void doEnding() {
-    final CoqStream out = getOut();
-    defineClassAndInterface();
-    
-    // the program definition
-    out.incPrintln("Definition program : Program := PROG.Build_t");
-    out.println("AllClasses");
-    out.println("AllInterfaces");
-    out.decPrintln(".\n");
-    out.incPrintln("Definition subclass :=");
-    out.println("match P.subclass_test program with\n" + "| Some f => f\n"
-    		+ "| None => fun x y => true");
-    out.println("end");
-    out.decPrintln(".\n");
-    out.decPrintln(Constants.END_DEFINITION + fName
-    		+ "Program.\n");
-  }
-  
   /**
    * Define all classes and interfaces.
    * 
@@ -600,25 +548,21 @@ public class Executor extends ABasicExecutor {
       }
     }
     // all classes
-    String str = Constants.DEFINITION + "AllClasses : "
-    		+ implem.classType() + " := ";
+    String str = Constants.DEFINITION + "AllClasses : " + implem.classType() + " := ";
     for (ClassExecutor clss : treatedClasses) {
-    	str += implem.classCons(clss.getModuleName() + ".class");
+      str += implem.classCons(clss.getModuleName() + ".class");
     }
     for (int i = 0; i < fSpecialLibs.length; i++) {
-    	str += implem.classCons(Util.coqify(fSpecialLibs[i])
-    			+ ".class");
+      str += implem.classCons(Util.coqify(fSpecialLibs[i]) + ".class");
     }
     str += " " + implem.classEnd() + ".";
     ot.println(1, str);
     ot.println();
     
     // all interfaces
-    str = Constants.DEFINITION + "AllInterfaces : "
-    		+ implem.interfaceType() + " := ";
+    str = Constants.DEFINITION + "AllInterfaces : " + implem.interfaceType() + " := ";
     for (ClassExecutor interf : treatedInterfaces) {
-    	str += implem.interfaceCons(interf.getModuleName()
-    			+ ".interface");
+      str += implem.interfaceCons(interf.getModuleName() + ".interface");
     }
     str += " " + implem.interfaceEnd() + ".";
     ot.println(1, str);

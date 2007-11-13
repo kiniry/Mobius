@@ -546,5 +546,9 @@ public class ClassExecutor extends ASignatureExecutor {
     al.addAll(fExtLibsLocal.keySet());
     return al;
   }
+  
+  public String toString () {
+    return getModuleName();
+  }
 
 }
