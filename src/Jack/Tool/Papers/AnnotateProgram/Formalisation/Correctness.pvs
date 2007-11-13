@@ -1,4 +1,4 @@
-AnnEventPreservesMPModeled[CP, Name : TYPE+] : THEORY
+AnnEventPreservesRelatedStates[CP, Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
@@ -25,17 +25,16 @@ BEGIN
 
   mp : VAR (wf_MP)
 
+
   % Eexecuting an action on a MVA modifies its variables in the same way that
   % the execution of the annotations representing that action modifies the 
   % corresponding ghost variables in the annotated program.
-  % NOTE: We need a quantification over a to be able to apply induction.
-  ann_action_preserves_MP_modeled : LEMMA % :-)
+  % NOTE: We need a quantification over "a" to be able to apply induction.
+  ann_action_preserves_related_states : LEMMA % :-)
     FORALL (t : Transition, a : Action, n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
-      wf_state(mp)(sMP1) IMPLIES
-      wf_state(ann_program(mp))(sAP1) IMPLIES
-      MP_modeled?(mp)(sMP1, sAP1) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
       a = action(t) IMPLIES
       wf_Action(mva(mp))(a) IMPLIES
       (EXISTS (t1 : Transition) : 
@@ -48,13 +47,13 @@ BEGIN
                            #),
                 pstate := pstate(sMP1),
                 gvs := gvs(sMP1) #) IMPLIES
-        MP_modeled?(mp)(sMP2, sAP2)
+        related_states(mp)(sMP2, sAP2)
 
   % If sMP1 and sAP1 are related states and for a given transition t, sMVA is the
   % state of the automaton after performing t and sAP2 is the state of the 
   % annotated program after executing the annotations that model the effect of t, 
   % then sMVA is still well modeled by sAP2.
-  update_vars_preserves_MP_modeled : LEMMA
+  update_vars_preserves_related_states : LEMMA
     FORALL (t : Transition, n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
@@ -68,14 +67,14 @@ BEGIN
                 gvs := gvs(sMP1) #) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       derive(ann_program(mp))(update_vars(mp)(t), sAP1, Unit, sAP2)(n) IMPLIES
-        MP_modeled?(mp)(sMP2, sAP2)
+        related_states(mp)(sMP2, sAP2)
 
   % If sMP1 and sAP1 are related stated, sMP2 is the state of the monitored
   % progran after evaluating on_method_MVA with some event type et and some
   % method m, ts is the set of transitions that has (et, name(m)) as event and
   % sAP2 is the state of the annotated program after the execution of ann_event
-  % with ts as argument, then sMP2 and sAP2 comply with MP_modeled?.
-  ann_event_preserves_MP_modeled : LEMMA % :-)
+  % with ts as argument, then sMP2 and sAP2 are in related_states.
+  ann_event_preserves_related_states : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp))), et : EventType,  n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
@@ -87,10 +86,10 @@ BEGIN
       NOT up?(ex(pstate(sAP1))) IMPLIES
       derive(ann_program(mp))(ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
                               sAP1, Unit, sAP2)(n) IMPLIES
-        MP_modeled?(mp)(sMP2, sAP2)
+        related_states(mp)(sMP2, sAP2)
 
 
-END AnnEventPreservesMPModeled
+END AnnEventPreservesRelatedStates
 
 
 MethodCallsPreserveRelatedState[CP, Name : TYPE+] : THEORY
@@ -114,7 +113,7 @@ BEGIN
   ENDASSUMING
 
 
-  IMPORTING AnnEventPreservesMPModeled[CP, Name]
+  IMPORTING AnnEventPreservesRelatedStates[CP, Name]
 
   mp : VAR (wf_MP)
 

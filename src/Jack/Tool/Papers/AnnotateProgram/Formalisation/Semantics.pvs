@@ -588,7 +588,6 @@ BEGIN
              ENDIF AND
         pstate(s1) = pstate(s2)
 
-  % TODO: See execute_CaseJML_TCC4
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : FullProgram,
             branches : ({l : list[[BoolExpr, Stmt]] | wf_Branches(program(p))(l)}),
@@ -600,9 +599,9 @@ BEGIN
                       % MH: HACK Needed: this looks like PVS bug to me
                       % If we replace the s by the CaseJML(xs), it does not
                       % type check
-                      LET s : Stmt = CaseJML(xs) IN
-                      derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x), s),
-                                       s1, Unit, s2)(n - 1) AND
+                      % AT: with the .pvs.lisp file this hack is not needed
+                      derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x), 
+                                       CaseJML(xs)), s1, Unit, s2)(n - 1) AND
                       pstate(s1) = pstate(s2)
       ENDCASES
 

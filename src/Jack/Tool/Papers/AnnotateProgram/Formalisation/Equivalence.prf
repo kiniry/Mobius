@@ -344,7 +344,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((Excpt type-decl nil Excpt_adt nil)
     (lift type-decl nil lift_adt nil)
     (Name formal-nonempty-type-decl nil RelatedStatesProperties nil)
@@ -652,6 +652,28 @@
     (MP_modeled? const-decl "boolean" Equivalence nil)
     (related_states const-decl "boolean" Equivalence nil))
    4948 1060 t nil))
+ (related_states_preserved_by_raise2 0
+  (related_states_preserved_by_raise2-1 nil 3403905387 3403906226
+   ("" (skosimp)
+    (("" (expand "related_states")
+      (("" (prop)
+        (("1" (postpone) nil nil) ("2" (postpone) nil nil)
+         ("3" (expand "MP_modeled?")
+          (("3" (prop)
+            (("1" (postpone) nil nil)
+             ("2" (expand "Program_modeled?")
+              (("2" (expand* "update_PState" "raise")
+                (("2" (assert)
+                  (("2" (flatten) (("2" (postpone) nil nil)) nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 838912 420 t shostak))
  (related_states_preserved_by_update_stack 0
   (related_states_preserved_by_update_stack-1 nil 3403606228 3403627069
    ("" (skosimp*)
