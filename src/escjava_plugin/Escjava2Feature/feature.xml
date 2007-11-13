@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="mobius.ESCJava2"
+      id="mobius.ESCJava2.feature"
       label="ESCJava2"
-      version="2.0.3"
+      version="2.0.4"
       provider-name="David R. Cok and EU MOBIUS IST-15905 Project">
    <install-handler/>
 
@@ -750,8 +750,21 @@ limitations under the License.
       <discovery label="The ESC/Java2 website." url="http://kind.ucd.ie/products/opensource/ESCJava2/"/>
    </url>
 
+   <includes
+         id="mobius.simplify.feature"
+         version="0.0.0"
+         search-location="self"/>
+
    <requires>
-      <import feature="SimplifyFeature" version="1.5.5" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.console"/>
