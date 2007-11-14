@@ -240,15 +240,9 @@ public class Executor extends ABasicExecutor {
     doType();
     doSignature();
     doMain();
-    
-    /*
+    generateMainMakefile();
+    getOut().close(); // closing output file
 
-    
-    doMain();
-    
-    fOut.close(); // closing output file
-
-    */
   }
   
   /**
@@ -303,12 +297,18 @@ public class Executor extends ABasicExecutor {
     out.endModule(fName + "Program");
   }
 
+
+
   
+  public void generateMainMakefile() {
+    
+    final MakefileGen mg = new MakefileGen(getBaseDir());
+    mg.generate();
+  }
   
   public void generateClassMakefiles() {
-    
     final ClassesMakefileGen cmg = new ClassesMakefileGen(getBaseDir(), 
-                                                                fTreatedClasses.values());
+                                                          fTreatedClasses.values());
     cmg.generate();
   }
 

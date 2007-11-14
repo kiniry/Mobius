@@ -492,7 +492,7 @@ public class ClassExecutor extends ASignatureExecutor {
       }      
       else if (co[i] instanceof ConstantClass) {
         final ConstantClass cons = (ConstantClass) co[i];
-        System.out.println(cons.getConstantValue(cp).toString());
+        //System.out.println(cons.getConstantValue(cp).toString());
         handleImportedLib(cons.getConstantValue(cp).toString().replace('/', '.'));
       }
     }
