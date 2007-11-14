@@ -4,7 +4,6 @@ import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.textio.BMLConfig;
-import annot.textio.Priorities;
 
 /**
  * This class represents a shared object (bound or local

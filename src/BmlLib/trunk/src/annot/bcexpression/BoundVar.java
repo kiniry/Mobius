@@ -1,14 +1,13 @@
 package annot.bcexpression;
 
+import annot.bcexpression.formula.QuantifiedFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.javatype.JavaType;
-import annot.formula.QuantifiedFormula;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
-import annot.textio.Priorities;
 
 /**
  * This class represents bound variable. It represents

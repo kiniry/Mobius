@@ -5,7 +5,6 @@ import annot.bcexpression.javatype.JavaReferenceType;
 import annot.bcexpression.javatype.JavaType;
 import annot.io.Code;
 import annot.textio.BMLConfig;
-import annot.textio.Priorities;
 
 /**
  * This class represents <code>'this'</code> expression.

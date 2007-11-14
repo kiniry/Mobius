@@ -1,8 +1,8 @@
 package annot.bcexpression;
 
+import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.javatype.JavaType;
-import annot.formula.AbstractFormula;
 import annot.io.AttributeWriter;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;

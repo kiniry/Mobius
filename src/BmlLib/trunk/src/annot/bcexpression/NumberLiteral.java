@@ -7,7 +7,6 @@ import annot.io.AttributeWriter;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
-import annot.textio.Priorities;
 
 /**
  * This class represents an integer literal. Each occurence

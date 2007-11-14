@@ -1,7 +1,7 @@
 package annot.bcexpression;
 
+import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaType;
-import annot.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.Code;
