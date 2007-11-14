@@ -50,12 +50,9 @@ public class ClassExecutor extends ASignatureExecutor {
   /** an executor to generate things concerning fields. */
   private final FieldExecutor fFieldExecutor;
   
-  /** the coqified name of the class (package + classname). */
-  private final String fModuleName;
-  
-  /** the directory which corresponds to the current package. */
-  private final File fPackageDir;
-  
+  /** the coqified naming informations for the class. */
+  private final ClassNamingData fNamingData;
+    
   /** the real directory which corresponds to the current package. */
   private final File fWorkingDir;
   
@@ -82,14 +79,13 @@ public class ClassExecutor extends ASignatureExecutor {
                        final String name) throws FileNotFoundException {
     super(exec, cg);
     fClass = cg;
-
-    final JavaClass javaClass = fClass.getJavaClass();
     fExecutor = exec;
-    fModuleName = Util.coqify(javaClass.getClassName());
-    fPackageDir = Util.getPackageDir(javaClass);
-    fWorkingDir = new File(getBaseDir(), fPackageDir.getPath());
-    setOut(new CoqStream(new FileOutputStream(new File(fWorkingDir,
-                                                         fModuleName + ".v"))));
+    fNamingData = new ClassNamingData(fClass);
+    fWorkingDir = new File(getBaseDir(), 
+                           fNamingData.getPkgDir().getPath());
+    setOut(new CoqStream(new FileOutputStream(
+             new File(fWorkingDir, fNamingData.getBicoClassFileName()))));
+                                                         
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
     fLibPath = computePathToLibraries(); 
@@ -124,15 +120,15 @@ public class ClassExecutor extends ASignatureExecutor {
     initFOtherLibs();
     // first, handle the classes on which the current class depends
     /* initFOtherLibs(); */
-    System.out.print("  --> Generating " + fModuleName + "Type: ");
+    System.out.print("  --> Generating " + fNamingData.getTypeModule() + ": ");
     doType();
     System.out.println("done.");
     
-    System.out.print("  --> Generating " + fModuleName + "Signature: ");
+    System.out.print("  --> Generating " + fNamingData.getSignatureModule() + ": ");
     doSignature();
     System.out.println("done.");
     
-    System.out.print("  --> Generating " + fModuleName + ": ");
+    System.out.print("  --> Generating " + fNamingData.getBicoClassModule() + ": ");
     doMain();
     System.out.println("done.");
   
@@ -172,9 +168,9 @@ public class ClassExecutor extends ASignatureExecutor {
 
     out.println();
     
-    out.startModule(fModuleName);
-    out.imprt(fModuleName + "Type");
-    out.imprt(fModuleName + "Signature");
+    out.startModule(fNamingData.getBicoClassModule());
+    out.imprt(fNamingData.getTypeModule());
+    out.imprt(fNamingData.getSignatureModule());
     
     fFieldExecutor.start();
     
@@ -182,7 +178,7 @@ public class ClassExecutor extends ASignatureExecutor {
     
     doClassDefinition();
     
-    out.endModule(fModuleName);
+    out.endModule(fNamingData.getBicoClassModule());
     out.flush();
     out.close();
   }
@@ -214,13 +210,13 @@ public class ClassExecutor extends ASignatureExecutor {
       }
     }
     fOutSig.println();
-    fOutSig.startModule(fModuleName + "Signature");
-    fOutSig.imprt(fModuleName + "Type");
+    fOutSig.startModule(fNamingData.getSignatureModule());
+    fOutSig.imprt(fNamingData.getTypeModule());
     fFieldExecutor.doSignature();
     
     fMethExecutor.doSignature();
     
-    fOutSig.endModule(fModuleName + "Signature");
+    fOutSig.endModule(fNamingData.getSignatureModule());
     fOutSig.flush();
     fOutSig.close();
   }
@@ -251,14 +247,14 @@ public class ClassExecutor extends ASignatureExecutor {
      * final File typeFile = new File(getBaseDir(), fModuleName +
      * "_type.v");
      */
-    final File typeFile = new File(fWorkingDir, fModuleName + "_type.v");
+    final File typeFile = new File(fWorkingDir, fNamingData.getTypeFileName());
     final CoqStream fOutTyp = new CoqStream(new FileOutputStream(typeFile));
     
     fOutTyp.println(fLibPath);
     
     fOutTyp.println(getImplemSpecif().getBeginning());
     fOutTyp.imprt("P");
-    fOutTyp.startModule(fModuleName + "Type");
+    fOutTyp.startModule(fNamingData.getTypeModule());
     
     // classname
     String def;
@@ -273,7 +269,7 @@ public class ClassExecutor extends ASignatureExecutor {
     }
     fOutTyp.println(def);
     
-    fOutTyp.endModule(fModuleName + "Type");
+    fOutTyp.endModule(fNamingData.getTypeModule());
     fOutTyp.flush();
     fOutTyp.close();
   }
@@ -338,7 +334,7 @@ public class ClassExecutor extends ASignatureExecutor {
    * @return a string representing the module name
    */
   public String getModuleName() {
-    return fModuleName;
+    return fNamingData.getBicoClassModule();
   }
   
   /**
@@ -366,7 +362,7 @@ public class ClassExecutor extends ASignatureExecutor {
    * @return the path corresponding to the package
    */
   public File getPackageDir() {
-    return fPackageDir;
+    return fNamingData.getPkgDir();
   }
   
   /**
@@ -400,8 +396,13 @@ public class ClassExecutor extends ASignatureExecutor {
   private void handleImportedLib(final String clzz)
   		throws ClassNotFoundException, IOException {
     final String clname = clzz;
+    ClassNamingData cl = null;
     try {
-      getRepository().loadClass(clname);
+      final JavaClass jc = getRepository().loadClass(clname);
+      // if the class file is not already in the hash map of imported classes
+      // then add it
+      cl = new ClassNamingData(jc);
+
     }
     catch (ClassNotFoundException e) {
       return;
@@ -410,11 +411,8 @@ public class ClassExecutor extends ASignatureExecutor {
       return;
     }
     
-    // if the class file is not already in the hash map of imported classes
-    // then add it
-    final ClassNamingData cl = new ClassNamingData(clname);
     fExtLibsLocal.add(cl);
-    extractLoadPath(cl);
+    extractLoadPath(cl);    
   }
   
   /**
