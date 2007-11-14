@@ -45,11 +45,6 @@ public class OLD extends OldExpression {
 	}
 
 	@Override
-	protected int getPriority() {
-		return Priorities.LEAF;
-	}
-
-	@Override
 	public JavaType getType1() {
 		return getSubExpr(0).getType();
 	}

@@ -36,11 +36,6 @@ public class THIS extends OldExpression {
 	}
 
 	@Override
-	protected int getPriority() {
-		return Priorities.LEAF;
-	}
-
-	@Override
 	public JavaType getType1() {
 		return JavaReferenceType.ANY;
 	}

@@ -65,18 +65,6 @@ public class Predicate0Ar extends AbstractFormula {
 	}
 
 	/**
-	 * Predicate 0Arg. has no subexpressions, so it has
-	 * the highest priority.
-	 * 
-	 * @return priority of this expression
-	 * 		(from annot.textio.Priorities).
-	 */
-	@Override
-	protected int getPriority() {
-		return Priorities.LEAF;
-	}
-
-	/**
 	 * @return JavaType of this predicate, that is, JavaBool.
 	 */
 	@Override

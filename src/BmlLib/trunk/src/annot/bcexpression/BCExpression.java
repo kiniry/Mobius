@@ -214,7 +214,9 @@ public abstract class BCExpression {
 	 * @return priority of this expression
 	 * 		(from annot.textio.Priorities).
 	 */
-	protected abstract int getPriority();
+	protected int getPriority() {
+		return Priorities.getPriority(connector);
+	}
 
 	/**
 	 * This method should check if all subexpression have

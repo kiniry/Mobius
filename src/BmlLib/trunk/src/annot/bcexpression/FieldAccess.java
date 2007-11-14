@@ -55,11 +55,6 @@ public class FieldAccess extends BCExpression {
 	}
 
 	@Override
-	protected int getPriority() {
-		return Priorities.getPriority(getConnector());
-	}
-
-	@Override
 	public JavaType getType1() {
 		return getSubExpr(1).getType();
 	}

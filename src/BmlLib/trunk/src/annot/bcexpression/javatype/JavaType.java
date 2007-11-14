@@ -106,11 +106,6 @@ public abstract class JavaType extends BCExpression {
 		return JavaReferenceType.ANY; //XXX
 	}
 
-	@Override
-	public int getPriority() {
-		return Priorities.LEAF;
-	}
-
 	/**
 	 * @return type of JavaType, that is,
 	 * 		{@link JavaBasicType#JavaType}.

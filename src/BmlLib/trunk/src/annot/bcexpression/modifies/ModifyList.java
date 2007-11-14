@@ -30,13 +30,13 @@ public class ModifyList extends BCExpression {
 	}
 
 	@Override
-	protected JavaType checkType1() {
-		return JavaBasicType.ModifyExpressionType;
+	protected int getPriority() {
+		return Priorities.LEAF;
 	}
 
 	@Override
-	protected int getPriority() {
-		return Priorities.LEAF;
+	protected JavaType checkType1() {
+		return JavaBasicType.ModifyExpressionType;
 	}
 
 	@Override

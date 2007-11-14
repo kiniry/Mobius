@@ -45,11 +45,6 @@ public class ArrayAccess extends BCExpression {
 	}
 
 	@Override
-	protected int getPriority() {
-		return Priorities.getPriority(Code.ARRAY_ACCESS);
-	}
-
-	@Override
 	public JavaType getType1() {
 		return ((JavaArrayType)getSubExpr(0).getType()).getSingleType();
 	}

@@ -89,18 +89,6 @@ public class NumberLiteral extends AbstractIntExpression {
 	}
 
 	/**
-	 * NumberLiteral has no subexpressions, so it has
-	 * the highest priority.
-	 * 
-	 * @return priority of this expression
-	 * 		(from annot.textio.Priorities).
-	 */
-	@Override
-	protected int getPriority() {
-		return Priorities.LEAF;
-	}
-
-	/**
 	 * @return JavaType of this expression, that is, JavaInt.
 	 */
 	@Override

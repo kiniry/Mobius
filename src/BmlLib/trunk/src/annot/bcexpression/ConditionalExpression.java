@@ -54,11 +54,6 @@ public class ConditionalExpression extends AbstractIntExpression {
 	}
 
 	@Override
-	protected int getPriority() {
-		return Priorities.getPriority(Code.COND_EXPR);
-	}
-
-	@Override
 	protected JavaType checkType1() {
 		if ((getSubExpr(0).getType() != JavaBasicType.JavaBool)
 			|| (getSubExpr(1).getType() != JavaBasicType.JavaInt)

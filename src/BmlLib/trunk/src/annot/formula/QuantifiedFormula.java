@@ -213,15 +213,6 @@ public class QuantifiedFormula extends AbstractFormula {
 	}
 
 	/**
-	 * @return priority of this expression
-	 * 		(from annot.textio.Priorities).
-	 */
-	@Override
-	protected int getPriority() {
-		return Priorities.getPriority(getConnector());
-	}
-
-	/**
 	 * Checks if subexpression has correct type
 	 * and return type of this expression.
 	 * 

@@ -119,18 +119,6 @@ public class BoundVar extends BCExpression {
 	}
 
 	/**
-	 * Bound variable has no subexpressions, so it has
-	 * the highest priority.
-	 * 
-	 * @return priority of this expression
-	 * 		(from annot.textio.Priorities).
-	 */
-	@Override
-	protected int getPriority() {
-		return Priorities.LEAF;
-	}
-
-	/**
 	 * Checks if all subexpression have
 	 * correct types and return type of this expression.
 	 * 

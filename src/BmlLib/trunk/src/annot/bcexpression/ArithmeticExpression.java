@@ -58,11 +58,6 @@ public class ArithmeticExpression extends AbstractIntExpression {
 	}
 
 	@Override
-	protected int getPriority() {
-		return Priorities.getPriority(getConnector());
-	}
-
-	@Override
 	protected JavaType checkType1() {
 		if ((getSubExpr(0).getType() != JavaBasicType.JavaInt)
 			|| (getSubExpr(1).getType() != JavaBasicType.JavaInt))

@@ -112,15 +112,6 @@ public class Predicate2Ar extends AbstractFormula {
 	}
 
 	/**
-	 * @return priority of this expression
-	 * 		(from annot.textio.Priorities).
-	 */
-	@Override
-	protected int getPriority() {
-		return Priorities.getPriority(getConnector());
-	}
-
-	/**
 	 * Checks if all subexpressions have correct types
 	 * and return type of this predicate.
 	 * 

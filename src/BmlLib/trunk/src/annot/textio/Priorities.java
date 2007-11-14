@@ -47,7 +47,7 @@ public abstract class Priorities implements Code {
 		for (int i = 0; i < 255; i++)
 			convertibles[i] = false;
 		for (int i = 0; i < 255; i++)
-			priorities[i] = -1;
+			priorities[i] = LEAF;
 		priorities[ARRAY_ACCESS] = 1;
 		priorities[FIELD_ACCESS] = 1;
 		priorities[NOT] = 3;
