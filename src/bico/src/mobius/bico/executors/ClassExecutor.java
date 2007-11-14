@@ -177,7 +177,6 @@ public class ClassExecutor extends ASignatureExecutor {
     out.println(implem.getBeginning());
     out.imprt("P");
     
-    System.out.println(fExtLibsLocal);
     for (ExternalClass ex: fExtLibsLocal.values()) {
       if (fExec.isSpecialLib(ex.getClassName())) {
         out.reqExport(implem.requireLib(ex.getBicoClassName()));
