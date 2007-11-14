@@ -102,4 +102,8 @@ public class ExternalClass {
   public String getClassName() {
   	return path + Constants.LINUX_PATH_SEPARATOR  + name + Constants.CLASS_SUFFIX;
   }
+  
+  public String toString() {
+    return moduleName;
+  }
 }

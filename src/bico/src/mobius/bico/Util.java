@@ -347,6 +347,7 @@ public final class Util {
     if (name.endsWith(";")) {
       name = name.substring(0, name.length() - 1);
     }
+    name = name.replace('/', '.');
     return name;
   }
   

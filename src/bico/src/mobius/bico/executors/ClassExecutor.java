@@ -16,10 +16,12 @@ import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantCP;
+import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantFieldref;
 import org.apache.bcel.classfile.ConstantMethodref;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -165,25 +167,33 @@ public class ClassExecutor extends ASignatureExecutor {
    *             if there was a problem retrieving a field or a method
    */
   private void doMain() throws ClassNotFoundException {
-    final CoqStream fOut = getOut();
-    fOut.println(fLibPath);
-    fOut.println(Constants.REQ_IMPORT + 
-                 "ImplemProgramWithMap.\n");
-    fOut.println(Constants.IMPORT + "P.\n");
-    fOut.println(Constants.REQ_IMPORT + fFileName + "_signature.");
-    fOut.println(Constants.REQ_IMPORT + fFileName
-    		+ "_type.");
-    fOut.println(Constants.IMPORT + fFileName
-    		+ "Signature.");
-    fOut.println(Constants.IMPORT + fFileName + "Type.");
-    fOut.println();
+    final CoqStream out = getOut();
+    final IImplemSpecifics implem = getImplemSpecif();
     
-    fOut.incPrintln(Constants.MODULE + fModuleName
-    		+ ".\n");
-    fOut
-    		.println(Constants.IMPORT + fModuleName + "Type.");
-    fOut.println(Constants.IMPORT + fModuleName
-    		+ "Signature.");
+    out.println(fLibPath);
+    final String loadPathsForDep = printLoadPaths();
+    out.println(loadPathsForDep);
+    
+    out.println(implem.getBeginning());
+    out.imprt("P");
+    
+    System.out.println(fExtLibsLocal);
+    for (ExternalClass ex: fExtLibsLocal.values()) {
+      if (fExec.isSpecialLib(ex.getClassName())) {
+        out.reqExport(implem.requireLib(ex.getBicoClassName()));
+        out.exprt(ex.getSignatureModule());
+      }
+      else {
+        out.reqExport(ex.getSignatureName());
+        out.exprt(ex.getSignatureModule());
+      }
+    }
+
+    out.println();
+    
+    out.incPrintln(Constants.MODULE + fModuleName + ".\n");
+    out.println(Constants.IMPORT + fModuleName + "Type.");
+    out.println(Constants.IMPORT + fModuleName + "Signature.");
     
     fFieldExecutor.start();
     
@@ -191,9 +201,9 @@ public class ClassExecutor extends ASignatureExecutor {
     
     doClassDefinition();
     
-    fOut.decPrintln(Constants.END_MODULE + fModuleName + ".\n");
-    fOut.flush();
-    fOut.close();
+    out.decPrintln(Constants.END_MODULE + fModuleName + ".\n");
+    out.flush();
+    out.close();
   }
   
   /**
@@ -206,7 +216,7 @@ public class ClassExecutor extends ASignatureExecutor {
   public void doSignature() throws ClassNotFoundException {
     
     fOutSig.println(fLibPath);
-    String loadPathsForDep = printLoadPaths();
+    final String loadPathsForDep = printLoadPaths();
     fOutSig.println(loadPathsForDep);
     final IImplemSpecifics implem = getImplemSpecif();
     fOutSig.println(implem.getBeginning());
@@ -303,17 +313,19 @@ public class ClassExecutor extends ASignatureExecutor {
     final CoqStream fOut = getOut();
     final JavaClass jc = fClass.getJavaClass();
     if (jc.isInterface()) {
-    	fOut.incPrintln("Definition interface : Interface := INTERFACE.Build_t");
-    	fOut.println("name");
-    } else {
-    	fOut.incPrintln("Definition class : Class := CLASS.Build_t");
-    	fOut.println("name");
-    	final String superClassName = Util.coqify(jc.getSuperclassName());
-    	if (superClassName == null) {
-    		fOut.println("None");
-    	} else {
-    		fOut.println("(Some " + superClassName + "Type.name)");
-    	}
+      fOut.incPrintln("Definition interface : Interface := INTERFACE.Build_t");
+      fOut.println("name");
+    } 
+    else {
+      fOut.incPrintln("Definition class : Class := CLASS.Build_t");
+      fOut.println("name");
+      final String superClassName = Util.coqify(jc.getSuperclassName());
+      if (superClassName == null) {
+        fOut.println("None");
+      } 
+      else {
+        fOut.println("(Some " + superClassName + "Type.name)");
+      }
     }
     enumerateInterfaces();
     
@@ -413,14 +425,19 @@ public class ClassExecutor extends ASignatureExecutor {
    * @throws ClassNotFoundException
    * @throws IOException
    */
-  protected void handleImportedLib(final String clzz)
+  private void handleImportedLib(final String clzz)
   		throws ClassNotFoundException, IOException {
     final String clname = clzz;
-    if (clname == null) {
+    try {
+      getRepository().loadClass(clname);
+    }
+    catch (ClassNotFoundException e) {
       return;
     }
-
-  
+    catch (IllegalArgumentException e) {
+      return;
+    }
+    
     // if the class file is not already in the hash map of imported classes
     // then add it
     if ((fExtLibsLocal.get(clname) == null)) {
@@ -446,7 +463,7 @@ public class ClassExecutor extends ASignatureExecutor {
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  protected void initFOtherLibs() throws ClassNotFoundException, IOException {
+  private void initFOtherLibs() throws ClassNotFoundException, IOException {
     final JavaClass jc = fClass.getJavaClass();
     final ConstantPool cp = jc.getConstantPool();
     final Constant[] co = cp.getConstantPool();
@@ -457,18 +474,26 @@ public class ClassExecutor extends ASignatureExecutor {
         final int k = c.getNameAndTypeIndex();
         final ConstantNameAndType nt = (ConstantNameAndType) cp.getConstant(k);
         String type = nt.getSignature(cp);
-        
+  
         type = Util.classFormatName2Standard(type);
         handleImportedLib(type);
-        
-        // addToOtherLibs(type);
+ 
       } 
       else if (cp.getConstant(i) instanceof ConstantMethodref) {
         c = (ConstantMethodref) co[i];
-        String typeWhereDecl = c.getClass(cp);
-        typeWhereDecl = Util.classFormatName2Standard(typeWhereDecl);
-        handleImportedLib(typeWhereDecl);
+        String type = c.getClass(cp);
+        type = Util.classFormatName2Standard(type);
+        handleImportedLib(type);
       
+      }
+      else if (co[i] instanceof ConstantUtf8) {
+        final ConstantUtf8 cons = (ConstantUtf8) co[i];
+        handleImportedLib(Util.classFormatName2Standard(cons.getBytes()));     
+      }      
+      else if (co[i] instanceof ConstantClass) {
+        final ConstantClass cons = (ConstantClass) co[i];
+        System.out.println(cons.getConstantValue(cp).toString());
+        handleImportedLib(cons.getConstantValue(cp).toString().replace('/', '.'));
       }
     }
     

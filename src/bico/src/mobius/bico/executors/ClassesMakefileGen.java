@@ -32,13 +32,7 @@ public class ClassesMakefileGen {
                            final Collection<ClassExecutor> treated) {
     fBaseDir = new File(baseDir, "classes");
     fTreated.addAll(treated);
-    //fWorkingDir = workingDir;
   }
-  
-  
-
-  
-
   
   /**
    * Generates the makefile in the given directory.
@@ -96,8 +90,6 @@ public class ClassesMakefileGen {
     for (File dir: subdirs) {
       generate(pkgDir + dir.getName() + File.separator);
     }
-    
-    
   }
 
 
@@ -130,6 +122,7 @@ public class ClassesMakefileGen {
   /**
    * Print the compile instruction.
    * @param out the output stream to the makefile
+   * @param list the list of the modules to compile
    * @param word the word in the comment describing what is done
    * @param postfix the postfix element of the name
    * @return the files that should be generated
@@ -145,18 +138,16 @@ public class ClassesMakefileGen {
       return null;
     }
     
-    String recmake = "";
     final List<String> generatedFiles = new ArrayList<String>();
     out.print(word + "=");
     for (String coqModuleName: list) {
-      final String name = coqModuleName + postfix + ".v";
-      String filename = coqModuleName + postfix + ".vo";
+      //final String name = coqModuleName + postfix + ".v";
+      final String filename = coqModuleName + postfix + ".vo";
       out.print(" " + filename);
       generatedFiles.add(filename);
     }
 
     out.println();
-    out.println(recmake);
 
     return generatedFiles;
   }
