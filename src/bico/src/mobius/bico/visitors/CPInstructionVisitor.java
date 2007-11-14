@@ -160,7 +160,7 @@ public final class CPInstructionVisitor extends EmptyVisitor {
   public void visitNEW(final NEW ins) {
     fRes = "New " + 
           Util.coqify(((NEW) ins).getType(fConstantPool).toString()) + 
-          "Type.className";
+          "Type.name";
   }
   
   /**

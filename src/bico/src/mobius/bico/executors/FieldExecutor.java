@@ -150,7 +150,7 @@ class FieldExecutor extends ASignatureExecutor {
     fOutSig.decTab();
     fOutSig.println(".\n");
     strf = "Definition " + Util.coqify(field.getName()) +
-           "FieldSignature : FieldSignature := (className, " + 
+           "FieldSignature : FieldSignature := (name, " + 
            Util.coqify(field.getName()) + "ShortFieldSignature).\n";
     fOutSig.println(strf);
   }

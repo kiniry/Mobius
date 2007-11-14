@@ -135,10 +135,8 @@ class MethodExecutor extends ASignatureExecutor {
     fOutSig.println(Util.convertTypeOption(t, getRepository()));
     fOutSig.decPrintln(".");
     
-    String clName = "className";
-    if (fClass.getJavaClass().isInterface()) {
-      clName = "interfaceName";
-    }
+    String clName = "name";
+
 
     str = "Definition " + name + " : MethodSignature := " + 
                    "(" + clName + ", " + name + "Short).\n\n";
@@ -292,7 +290,7 @@ class MethodExecutor extends ASignatureExecutor {
             str += "(Some ";
             final String exName = method.getConstantPool().getConstantString(catchType,
                                                                 Constants.CONSTANT_Class);
-            str += Util.coqify(exName) + "Type.className) ";
+            str += Util.coqify(exName) + "Type.name) ";
           }
           str += codExc.getStartPC() + "%N " + 
                  codExc.getEndPC() + "%N " + 

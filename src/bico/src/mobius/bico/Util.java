@@ -39,19 +39,20 @@ public final class Util {
    * @return null only if str == null
    */
   public static String coqify(final String raw) {
-  	String str = raw;
-  	if (str == null) {
-  		return null;
-  	} else {
-  		str = str.replace('.', '_');
-  		str = str.replace('/', '_');
-  		// strout = strout.replace("(","_");
-  		// strout = strout.replace(")","_");
-  		str = str.replace('>', '_');
-  		str = str.replace('$', '_');
-  		str = str.replace('<', '_');
-  		return str;
-  	}
+    String str = raw;
+    if (str == null) {
+      return null;
+    } 
+    else {
+      str = str.replace('.', '_');
+      str = str.replace('/', '_');
+      // strout = strout.replace("(","_");
+      // strout = strout.replace(")","_");
+      str = str.replace('>', '_');
+      str = str.replace('$', '_');
+      str = str.replace('<', '_');
+      return str;
+    }
   }
   
   /**
@@ -60,12 +61,13 @@ public final class Util {
    * @return s with the first char toUpperCase
    */
   public static String upCase(final String s) {
-  	if (s != null && s.length() > 0) {
-  		final char c1 = Character.toUpperCase(s.charAt(0));
-  		return Character.toString(c1) + s.substring(1);
-  	} else {
-  		return null;
-  	}
+    if (s != null && s.length() > 0) {
+      final char c1 = Character.toUpperCase(s.charAt(0));
+      return Character.toString(c1) + s.substring(1);
+    } 
+    else {
+      return null;
+    }
   }
   
   /**
@@ -76,7 +78,7 @@ public final class Util {
    * @return i%Z or (-i)%Z
    */
   public static String printZ(final Number index) {
-  	return Util.printZ(index.intValue());
+    return Util.printZ(index.intValue());
   }
   
   /**
@@ -87,11 +89,12 @@ public final class Util {
    * @return i%Z or (-i)%Z
    */
   public static String printZ(final int index) {
-  	if (index < 0) {
-  		return "(" + index + ")%Z";
-  	} else {
-  		return String.valueOf(index) + "%Z";
-  	}
+    if (index < 0) {
+      return "(" + index + ")%Z";
+    } 
+    else {
+      return String.valueOf(index) + "%Z";
+    }
   }
   
   /**
@@ -105,10 +108,10 @@ public final class Util {
    * @return the name of the instruction, uppercase, tagged as Unimplemented
    */
   public static String unimplemented(final String instruction,
-  		final Instruction ins) {
-  	final String name = ins.getName();
-  	System.err.println("Unimplemented " + instruction + ": " + name);
-  	return upCase(name) + " (* Unimplemented *)";
+                                     final Instruction ins) {
+    final String name = ins.getName();
+    System.err.println("Unimplemented " + instruction + ": " + name);
+    return upCase(name) + " (* Unimplemented *)";
   }
   
   /**
@@ -122,9 +125,9 @@ public final class Util {
    * @return a valid coq structure
    */
   public static String unknown(final String str, final Instruction ins) {
-  	final String name = ins.getName();
-  	System.err.println("Unknown " + str + ": " + name);
-  	return "Nop (* " + name + " *)";
+    final String name = ins.getName();
+    System.err.println("Unknown " + str + ": " + name);
+    return "Nop (* " + name + " *)";
   }
   
   /**
@@ -136,7 +139,7 @@ public final class Util {
    *            the type which was found
    */
   static void unhandled(final String str, final Type t) {
-  	System.err.println("Unhandled type (" + str + "): " + t.toString());
+    System.err.println("Unhandled type (" + str + "): " + t.toString());
   }
   
   /**
@@ -149,9 +152,9 @@ public final class Util {
    * @return a valid coq structure
    */
   public static String unhandled(final String str, final Instruction ins) {
-  	final String name = ins.getName();
-  	System.err.println("Unhandled " + str + ": " + name);
-  	return "Nop (* " + name + " *)";
+    final String name = ins.getName();
+    System.err.println("Unhandled " + str + ": " + name);
+    return "Nop (* " + name + " *)";
   }
   
   /**
@@ -162,7 +165,7 @@ public final class Util {
    * @return a String saying that the instruction is unhandled
    */
   public static String unhandled(final Instruction ins) {
-  	return unhandled("Instruction", ins);
+    return unhandled("Instruction", ins);
   }
   
   /**
@@ -177,11 +180,11 @@ public final class Util {
    *             if the type couldn't be resolved
    */
   public static String convertTypeOption(final Type t, final Repository repos)
-  		throws ClassNotFoundException {
-  	if (t == Type.VOID || t == null) {
-  		return "None";
-  	}
-  	return "(Some " + Util.convertType(t, repos) + ")";
+    throws ClassNotFoundException {
+    if (t == Type.VOID || t == null) {
+      return "None";
+    }
+    return "(Some " + Util.convertType(t, repos) + ")";
   }
   
   /**
@@ -196,18 +199,17 @@ public final class Util {
    *             if the type cannot be resolved
    */
   public static String convertType(final Type t, final Repository repos)
-  		throws ClassNotFoundException {
-  	if (t instanceof BasicType) {
-  		return "(PrimitiveType " + Util.convertPrimitiveType((BasicType) t)
-  				+ ")";
-  	} else if (t instanceof ReferenceType) {
-  		return "(ReferenceType "
-  				+ Util.convertReferenceType((ReferenceType) t, repos) + ")";
-  	} else {
-  		unhandled("Unhandled Type: ", t);
-  		return "(ReferenceType (ObjectType javaLangObject (* "
-  				+ t.toString() + " *) )";
-  	}
+    throws ClassNotFoundException {
+    if (t instanceof BasicType) {
+      return "(PrimitiveType " + Util.convertPrimitiveType((BasicType) t) + ")";
+    } 
+    else if (t instanceof ReferenceType) {
+      return "(ReferenceType " + Util.convertReferenceType((ReferenceType) t, repos) + ")";
+    } 
+    else {
+      unhandled("Unhandled Type: ", t);
+      return "(ReferenceType (ObjectType javaLangObject (* " + t.toString() + " *) )";
+    }
   }
   
   /**
@@ -220,143 +222,132 @@ public final class Util {
    *             if a type cannot have its class resolved
    */
   public static String convertReferenceType(final ReferenceType type,
-  		final Repository repos) throws ClassNotFoundException {
-  	String convertedType;
-  	if (type instanceof ArrayType) {
-  		convertedType = "(ArrayType "
-  				+ convertType(((ArrayType) type).getElementType(), repos)
-  				+ ")";
-  	} else if (type instanceof ObjectType) {
-  		final ObjectType ot = (ObjectType) type;
-  		try {
-  			if (ot.referencesClassExact()) {
-  				convertedType = "(ClassType " + coqify(ot.getClassName())
-  						+ "Type.className)";
-  			} else if (ot.referencesInterfaceExact()) {
-  				// TODO: adjust to the structure of "interface" modules
-  				convertedType = "(InterfaceType "
-  						+ coqify(ot.getClassName()) + "Type.interfaceName)";
-  			} else {
-  				unhandled("ObjectType", type);
-  				convertedType = "(ObjectType javaLangObject (* "
-  						+ type.toString() + " *) )";
-  			}
-  		} catch (ClassNotFoundException e) {
-  			final JavaClass jc = repos.findClass(ot.getClassName());
-  			if (jc != null) {
-  				if (jc.isClass()) {
-  					return "(ClassType " + coqify(ot.getClassName())
-  							+ "Type.className)";
-  				} else if (jc.isInterface()) {
-  					return "(InterfaceType " + coqify(ot.getClassName())
-  							+ "Type.interfaceName)";
-  				}
-  			}
-  			throw e;
-  		}
-  	} else {
-  		unhandled("ReferenceType", type);
-  		convertedType = "(ObjectType javaLangObject (* " + type.toString()
-  				+ " *) )";
-  	}
-  	return convertedType;
+                                            final Repository repos) 
+    throws ClassNotFoundException {
+    String convertedType;
+    if (type instanceof ArrayType) {
+      convertedType = "(ArrayType " + 
+                        convertType(((ArrayType) type).getElementType(), repos) + ")";
+    } 
+    else if (type instanceof ObjectType) {
+      final ObjectType ot = (ObjectType) type;
+      try {
+        if (ot.referencesClassExact()) {
+          convertedType = "(ClassType " + coqify(ot.getClassName()) + "Type.name)";
+        } 
+        else if (ot.referencesInterfaceExact()) {
+          convertedType = "(InterfaceType " + coqify(ot.getClassName()) + "Type.name)";
+        } 
+        else {
+          unhandled("ObjectType", type);
+          convertedType = "(ObjectType javaLangObject (* " + type.toString() + " *) )";
+        }
+      }
+      catch (ClassNotFoundException e) {
+        final JavaClass jc = repos.findClass(ot.getClassName());
+        if (jc != null) {
+          if (jc.isClass()) {
+            return "(ClassType " + coqify(ot.getClassName()) + "Type.name)";
+          } 
+          else if (jc.isInterface()) {
+            return "(InterfaceType " + coqify(ot.getClassName()) + "Type.name)";
+          }
+        }
+        throw e;
+      }
+    } 
+    else {
+      unhandled("ReferenceType", type);
+      convertedType = "(ObjectType javaLangObject (* " + type.toString() + " *) )";
+    }
+    return convertedType;
   }
   
   /**
-   * @param t
-   *            the type to convert
+   * Converts a primitive type to a string.
+   * @param t the type to convert
    * @return Coq value of t of type primitiveType
    */
   static String convertPrimitiveType(final BasicType t) {
-  	if (t == Type.BOOLEAN || t == Type.BYTE || t == Type.SHORT
-  			|| t == Type.INT) {
-  		return (t.toString().toUpperCase());
-  	} else {
-  		unhandled("BasicType", t);
-  		return ("INT (* " + t.toString() + " *)");
-  	}
+    if (t.equals(Type.BOOLEAN) || t == Type.BYTE || 
+        t == Type.SHORT || t == Type.INT) {
+      return (t.toString().toUpperCase());
+    } 
+    else {
+      unhandled("BasicType", t);
+      return ("INT (* " + t.toString() + " *)");
+    }
   }
   
   /**
    * Returns a Coq version of the package name. If the package is a.bc.de it
    * will return aBcDe
    * 
-   * @param pkg
-   *            the original package name
+   * @param pkg the original package name
    * @return the coqified version
    */
   public static String getCoqPackageName(final String pkg) {
-  	String pn;
-  	if (pkg.length() == 0) {
-  		pn = "EmptyPackageName";
-  	} else {
-  		final char[] pna = pkg.toCharArray();
-  		int j = 0;
-  		for (int i = 0; i < pna.length; i++) {
-  			if (pna[i] == '.') {
-  				pna[j] = Character.toUpperCase(pna[++i]);
-  			} else {
-  				pna[j] = pna[i];
-  			}
-  			j++;
-  		}
-  		pn = new String(pna, 0, j);
-  	}
-  	return pn;
+    String pn;
+    if (pkg.length() == 0) {
+      pn = "EmptyPackageName";
+    } 
+    else {
+      final char[] pna = pkg.toCharArray();
+      int j = 0;
+      for (int i = 0; i < pna.length; i++) {
+        if (pna[i] == '.') {
+          pna[j] = Character.toUpperCase(pna[++i]);
+        } 
+        else {
+          pna[j] = pna[i];
+        }
+        j++;
+      }
+      pn = new String(pna, 0, j);
+    }
+    return pn;
   }
   
   /**
    * In the class constant pool a String value representing a reference type
    * name have the following format : RefT ::= Lclname; | [ RefT | [ BasicT
    * where clName is a String representing a class name of the form a/b/c
-   * BasicT ::= I | B | S
+   * BasicT ::= I | B | S.
    * 
-   * @param name -
-   *            String representing a reference type name in the class file
-   *            format
+   * @param clname String representing a reference type name 
+   * in the class file format
    * @return
    */
-  public static String classFormatName2Standard(String _name) {
-  	if (_name == null) {
-  		return null;
-  	}
-  	String name = _name;
-  	// if it is an array type 
-  	while (name.startsWith("[")) {
-  		name = name.substring(1, name.length());
-  	}
-  	// if "name" denotes a basic type then return
-  	if (Type.BOOLEAN.getSignature().equals(name)) {
-  		return null;
-  	} else if (Type.INT.getSignature().equals(name)) {
-  		return null;
-  	} else if (Type.SHORT.getSignature().equals(name)) {
-  		return null;
-  	} else if (Type.BYTE.getSignature().equals(name)) {
-  		return null;
-  	} else if (Type.CHAR.getSignature().equals(name)) {
-  		return null;
-  	} else if (Type.LONG.getSignature().equals(name)) {
-  		return null;
-  	} else if (Type.FLOAT.getSignature().equals(name)) {
-  		return null;
-  	} else if (Type.DOUBLE.getSignature().equals(name)) {
-  		return null;
-  	} else if (Type.VOID.getSignature().equals(name)) {
-  		return null;
-  	} 
-  
-  	// else the type is not a basic type and thus, proceed
-  	// to getting a well formed Java class type
-  
-  	if (name.startsWith("L")) {
-  		name = name.substring(1, name.length());
-  	} 
-  
-  	if (name.endsWith(";")) {
-  		name = name.substring(0, name.length() - 1);
-  	}
-  	return name;
+  public static String classFormatName2Standard(final String clname) {
+    String name = clname;
+    // if it is an array type 
+    while (name.startsWith("[")) {
+      name = name.substring(1);
+    }
+    // if "name" denotes a basic type then return
+    if (Type.BOOLEAN.getSignature().equals(name) ||
+        Type.INT.getSignature().equals(name) ||
+        Type.SHORT.getSignature().equals(name) ||
+        Type.BYTE.getSignature().equals(name) ||
+        Type.CHAR.getSignature().equals(name) ||
+        Type.LONG.getSignature().equals(name) ||
+        Type.FLOAT.getSignature().equals(name) ||
+        Type.DOUBLE.getSignature().equals(name) ||
+        Type.VOID.getSignature().equals(name)) {
+      return null;
+    } 
+    
+    // else the type is not a basic type and thus, proceed
+    // to getting a well formed Java class type
+    
+    if (name.startsWith("L")) {
+      name = name.substring(1);
+    } 
+    
+    if (name.endsWith(";")) {
+      name = name.substring(0, name.length() - 1);
+    }
+    return name;
   }
   
   
@@ -369,15 +360,30 @@ public final class Util {
     return clzz.substring(0, clzz.length() - 
                             Constants.CLASS_SUFFIX.length());
   }
+  
+  /**
+   * Removes the coq suffix (.v) from the given string.
+   * @param coqfile the string from which to remove the suffix
+   * @return the same string without its last 2 characters
+   */
   public static String removeCoqSuffix(final String coqfile) {
     return coqfile.substring(0, coqfile.length() - 
                             ".v".length());
   }
   
+  /**
+   * Filters only valid directory names (directories with names that can be packages).
+   * @author J. Charles (julien.charles@inria.fr)
+   */
   public static class DirectoryFilter implements FileFilter {
+    /**
+     * Accept directories.
+     * @param cf the file to inspect
+     * @return true if this is a directory, and contains no dots
+     */
     public boolean accept(final File cf) {
-      return cf.isDirectory() && !cf.getParent().equals(cf)
-              && cf.getName().indexOf('.') == -1;
+      return cf.isDirectory() && !cf.getParent().equals(cf) && 
+              cf.getName().indexOf('.') == -1;
     }
   }
 }

@@ -274,25 +274,24 @@ public class ClassExecutor extends ASignatureExecutor {
     
     fOutTyp.println(fLibPath);
     
-    fOutTyp.println("Require Import ImplemProgramWithMap.\n"
-    		+ "Import P.\n");
-    fOutTyp.incPrintln(Constants.MODULE + fModuleName
-    		+ "Type.\n");
+    fOutTyp.println(getImplemSpecif().getBeginning());
+    fOutTyp.imprt("P");
+    fOutTyp.startModule(fModuleName + "Type");
     
     // classname
     String def;
     if (jc.isInterface()) {
-    	def = "Definition interfaceName : InterfaceName := " + "("
-    			+ packageName + "%positive, " + className + "%positive).\n";
-    } else {
-    	def = "Definition className : ClassName := " + "(" + packageName
-    			+ "%positive, " + className + "%positive).\n";
+      def = "Definition name : InterfaceName := " + 
+            "(" + packageName + "%positive, " + className + "%positive).\n";
+    } 
+    else {
+      def = "Definition name : ClassName := " + 
+            "(" + packageName + "%positive, " + className + "%positive).\n";
     
     }
     fOutTyp.println(def);
     
-    fOutTyp.decPrintln(Constants.END_MODULE + fModuleName
-    		+ "Type.\n");
+    fOutTyp.endModule(fModuleName + "Type");
     fOutTyp.flush();
     fOutTyp.close();
   }
@@ -304,17 +303,16 @@ public class ClassExecutor extends ASignatureExecutor {
     final CoqStream fOut = getOut();
     final JavaClass jc = fClass.getJavaClass();
     if (jc.isInterface()) {
-    	fOut
-    			.incPrintln("Definition interface : Interface := INTERFACE.Build_t");
-    	fOut.println("interfaceName");
+    	fOut.incPrintln("Definition interface : Interface := INTERFACE.Build_t");
+    	fOut.println("name");
     } else {
     	fOut.incPrintln("Definition class : Class := CLASS.Build_t");
-    	fOut.println("className");
+    	fOut.println("name");
     	final String superClassName = Util.coqify(jc.getSuperclassName());
     	if (superClassName == null) {
     		fOut.println("None");
     	} else {
-    		fOut.println("(Some " + superClassName + "Type.className)");
+    		fOut.println("(Some " + superClassName + "Type.name)");
     	}
     }
     enumerateInterfaces();
@@ -338,14 +336,15 @@ public class ClassExecutor extends ASignatureExecutor {
     final CoqStream fOut = getOut();
     final String[] inames = fClass.getInterfaceNames();
     if (inames.length == 0) {
-    	fOut.println("nil");
-    } else {
-    	String str = "(";
-    	for (int i = 0; i < inames.length; i++) {
-    		str = str.concat(Util.coqify(inames[i]) + ".interfaceName ::");
-    	}
-    	str = str.concat("nil)");
-    	fOut.println(str);
+      fOut.println("nil");
+    } 
+    else {
+      String str = "(";
+      for (int i = 0; i < inames.length; i++) {
+        str = str + Util.coqify(inames[i]) + ".name ::";
+      }
+      str = str.concat("nil)");
+      fOut.println(str);
     }
   }
   
@@ -414,9 +413,9 @@ public class ClassExecutor extends ASignatureExecutor {
    * @throws ClassNotFoundException
    * @throws IOException
    */
-  protected void handleImportedLib(String clzz)
+  protected void handleImportedLib(final String clzz)
   		throws ClassNotFoundException, IOException {
-    String clname = clzz;
+    final String clname = clzz;
     if (clname == null) {
       return;
     }
@@ -449,15 +448,14 @@ public class ClassExecutor extends ASignatureExecutor {
    */
   protected void initFOtherLibs() throws ClassNotFoundException, IOException {
     final JavaClass jc = fClass.getJavaClass();
-    ConstantPool cp = jc.getConstantPool();
-    Constant[] co = cp.getConstantPool();
+    final ConstantPool cp = jc.getConstantPool();
+    final Constant[] co = cp.getConstantPool();
     for (int i = 0; i < co.length; i++) {
       ConstantCP c = null;
       if (cp.getConstant(i) instanceof ConstantFieldref) {
         c = (ConstantFieldref) co[i];
-        int k = c.getNameAndTypeIndex();
-        ConstantNameAndType nt = (ConstantNameAndType) cp
-        		.getConstant(k);
+        final int k = c.getNameAndTypeIndex();
+        final ConstantNameAndType nt = (ConstantNameAndType) cp.getConstant(k);
         String type = nt.getSignature(cp);
         
         type = Util.classFormatName2Standard(type);
@@ -474,40 +472,38 @@ public class ClassExecutor extends ASignatureExecutor {
       }
     }
     
-    Field[] fs = jc.getFields();
+    final Field[] fs = jc.getFields();
     for (int i = 0; i < fs.length; i++) {
-    	String type = fs[i].getSignature();
-    	type = Util.classFormatName2Standard(type);
-    	handleImportedLib(type);
+      String type = fs[i].getSignature();
+      type = Util.classFormatName2Standard(type);
+      handleImportedLib(type);
     
     }
     
     final Method[] ms = jc.getMethods();
     for (Method met: ms) {
-      Type retT = met.getReturnType();
-      if ((retT instanceof ArrayType)
-      		&& (((ArrayType) retT).getBasicType() instanceof ReferenceType)) {
-      	handleImportedLib(((ArrayType) retT).getBasicType().toString());
+      final Type retT = met.getReturnType();
+      if ((retT instanceof ArrayType) && 
+          (((ArrayType) retT).getBasicType() instanceof ReferenceType)) {
+        handleImportedLib(((ArrayType) retT).getBasicType().toString());
       } 
-      else if ((!(retT instanceof ArrayType))
-    			&& retT instanceof ReferenceType) {
-    		handleImportedLib(retT.toString());
-    
-    	}
+      else if ((!(retT instanceof ArrayType)) && 
+               retT instanceof ReferenceType) {
+        handleImportedLib(retT.toString());
+      }
     
       final Type[] argT = met.getArgumentTypes();
       if (argT != null) {
-      	for (int k = 0; k < argT.length; k++) {
-      		if ((argT[k] instanceof ArrayType)
-      				&& (((ArrayType) argT[k]).getBasicType() instanceof ReferenceType)) {
-      
-      			handleImportedLib(((ArrayType) argT[k]).getBasicType()
-      					.toString());
-      		} else if ((!(argT[k] instanceof ArrayType))
-      				&& argT[k] instanceof ReferenceType) {
-      			handleImportedLib(argT[k].toString());
-      		}
-      	}
+        for (int k = 0; k < argT.length; k++) {
+          if ((argT[k] instanceof ArrayType) && 
+              (((ArrayType) argT[k]).getBasicType() instanceof ReferenceType)) {
+            handleImportedLib(((ArrayType) argT[k]).getBasicType().toString());
+          } 
+          else if ((!(argT[k] instanceof ArrayType)) && 
+                   argT[k] instanceof ReferenceType) {
+            handleImportedLib(argT[k].toString());
+          }
+        }
       }
     
     }
