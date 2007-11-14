@@ -146,13 +146,11 @@ BEGIN
 
   mp : VAR (wf_MP)
 
-  % TODO: fix, needs change in get_address
-  get_address_same_in_related_states : LEMMA
+  get_address_same_in_related_states : LEMMA % :-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
         get_address(vn, sMP) = get_address(vn, sAP)
 
-  % TODO: fix, needs change in get_dynamic_type
   get_dynamic_type_name_same_in_related_states : LEMMA % :-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
@@ -180,7 +178,8 @@ BEGIN
     FORALL (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp)(sMP, sAP) IMPLIES
       (FORALL (pstate1, pstate2 : PState) : 
-        (st(pstate1) = st(pstate2) IMPLIES upd(pstate1) = upd(pstate2))) IMPLIES
+        (st(pstate1) = st(pstate2) IMPLIES st(upd(pstate1)) = st(upd(pstate2))))
+      IMPLIES
       (FORALL (pstate : PState) : (ex(upd(pstate)) = ex(pstate))) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
         MP_modeled?(mp)(update_PState(sMP, upd), update_PState(sAP, upd))
@@ -206,7 +205,6 @@ BEGIN
         related_states(mp)(update_PState(sMP, raise(e)), 
                            update_PState(sAP, raise(e)))
 
-  % TODO: fix
   related_states_preserved_by_update_stack : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState,
             this_val : Val, arg :  (getLocalDecls(program(mp))), 

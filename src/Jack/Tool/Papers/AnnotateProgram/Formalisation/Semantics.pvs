@@ -1,12 +1,11 @@
-ReferenceFunctions[Name : TYPE+, PState : TYPE] : THEORY
+ReferenceFunctions[Name : TYPE+, PSt : TYPE] : THEORY
 BEGIN
 
   % Functions whose existence we assume
-  get_address(vn : Name, sigma : PState) : int
-%  get_address(vn : Name, sigma : PSt) : int
+  get_address(vn : Name, sigma : PSt) : int
 
-  get_dynamic_type_name(vn : Name, sigma : PState) : Name
-%  get_dynamic_type_name(vn : Name, sigma : PSt) : Name
+  get_dynamic_type_name(vn : Name, sigma : PSt) : Name
+
 
 END ReferenceFunctions
 
@@ -84,8 +83,6 @@ SemanticsJMLTypes[Name : TYPE+,
                   (IMPORTING State[Name]) gvs : [FullState -> Store]] : THEORY
 BEGIN
 
-%  IMPORTING Program[Name]
-
   update_GhostVars_type(f : [FullState, [Store -> Store] -> FullState]) :
     boolean =
     FORALL (s1, s2 : FullState, upd : [Store -> Store]) :
@@ -112,15 +109,13 @@ Semantics[Name : TYPE+,
           on_method_exit_exceptional : (on_method_event_type)] : THEORY
 BEGIN
 
-  IMPORTING ReferenceFunctions[Name, PState]
+  IMPORTING ReferenceFunctions[Name, PSt]
 
   get_address(vn : Name, sigma : FullState) : int =
-    get_address(vn, pstate(sigma))
-%    get_address(vn, st(pstate(sigma)))
+    get_address(vn, st(pstate(sigma)))
 
   get_dynamic_type_name(vn : Name, sigma : FullState) : Name =
-    get_dynamic_type_name(vn, pstate(sigma))
-%    get_dynamic_type_name(vn, st(pstate(sigma)))
+    get_dynamic_type_name(vn, st(pstate(sigma)))
 
   IMPORTING WellFormedProgram[Name]
 
@@ -128,7 +123,6 @@ BEGIN
     FORALL (p : Program, vn : Name, sigma : FullState) :
       wf_Program(p) IMPLIES
         class_names(p)(get_dynamic_type_name(vn, sigma))
-
 
 
   update_stack(this_val : Val, arg : LocalVarDecl, param_val : Val,
@@ -145,10 +139,8 @@ BEGIN
     ELSE s
     ENDIF
 
-
   return_of_stmt(sigma2 : FullState) : Val =
     IF up?(ex(pstate(sigma2))) THEN Bottom ELSE Unit ENDIF
-
 
   check_for_exception(intermed, final : FullState,
                       v : Val, otherwise : bool) : bool =
@@ -160,6 +152,7 @@ BEGIN
   check_for_exception_final(final : FullState,
                             v : Val, otherwise : bool) : bool =
     check_for_exception(final, final, v, otherwise)
+
 
   derive(p : FullProgram)
         (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)

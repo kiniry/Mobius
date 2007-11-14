@@ -22,7 +22,7 @@ BEGIN
       vdsA(mva(mp))(v) IMPLIES
         NOT ext_declared_var_names(program(mp))(name(v))
 
-  MVA_events_correspond_to_methods(mp : MonitoredProgramPre, 
+  MVA_events_correspond_to_methods(mp : MonitoredProgramPre,
                                    c : Class) : boolean =
     FORALL (ev : Event, n : Name) :
       classes(program(mp))(c) IMPLIES
@@ -30,7 +30,7 @@ BEGIN
       mname(ev) = n IMPLIES
         EXISTS (m : Method) : methods(c)(m) AND name(m) = n
 
-  % NOTE: We restrict ourselves to the case where the automaton monitors 
+  % NOTE: We restrict ourselves to the case where the automaton monitors
   % one of the classes of the program.
   % Requirements:
   % Variables in vdsP must be fields in the program
@@ -46,7 +46,7 @@ BEGIN
   MonitoredProgram : TYPE = (compatible)
 
   get_monitored_class(mp : MonitoredProgram) : Class =
-    choose({c : Class | classes(program(mp))(c) AND 
+    choose({c : Class | classes(program(mp))(c) AND
                         name(c) = class_name(mva(mp))})
 
   name_get_monitored_class : LEMMA % :-)
@@ -64,14 +64,14 @@ BEGIN
   get_monitored_class_unique_for_wf_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram) :
       wf_MP(mp) IMPLIES
-        get_monitored_class(mp) = the({c : Class | classes(program(mp))(c) AND 
+        get_monitored_class(mp) = the({c : Class | classes(program(mp))(c) AND
                                                    name(c) = class_name(mva(mp))})
 
 
 END MonitoredProgram
 
 
-% The semantics of MonitoredPrograms assumes that the program is annotated, 
+% The semantics of MonitoredPrograms assumes that the program is annotated,
 % thus this can be thought as MonitoredAnnotatedProgramSemantics
 MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
@@ -86,20 +86,20 @@ BEGIN
        gvs : Store
     #]
 
-  IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState, 
+  IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState,
                            LAMBDA (mp : MonitoredProgram) : program(mp),
                            LAMBDA (s : MPState) : pstate(s)],
             SemanticsJMLTypes[Name, MPState, LAMBDA (s : MPState) : gvs(s)]
 
   update_PState : (update_PState_type) =
-    LAMBDA (s : MPState, upd : [PState -> PState]) : 
+    LAMBDA (s : MPState, upd : [PState -> PState]) :
       s WITH [pstate := upd(pstate(s))]
 
   update_AState(s : MPState, upd : [MPState -> AState]) : MPState =
       s WITH [astate := upd(s)]
 
   update_GhostVars : (update_GhostVars_type) =
-    LAMBDA (s : MPState, upd : [Store -> Store]) : 
+    LAMBDA (s : MPState, upd : [Store -> Store]) :
       s WITH [gvs := upd(gvs(s))]
 
   IMPORTING SemanticsJML[Name, MonitoredProgram, MPState,
@@ -131,7 +131,7 @@ BEGIN
     FORALL (mp : MonitoredProgram, s : MPState, vn : Name) :
       wf_state(mp)(s) IMPLIES
       wf_Program(program(mp)) IMPLIES
-      is_ghost(vn, s) IMPLIES 
+      is_ghost(vn, s) IMPLIES
         NOT is_local(vn, pstate(s)) AND NOT is_field(vn, pstate(s))
 
 
@@ -151,11 +151,11 @@ BEGIN
     ENDIF
 
   on_method_entry_MP : (on_method_event_type) =
-    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val, 
+    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
-    EXISTS(s_new : MPState) : 
+    EXISTS(s_new : MPState) :
       on_method_entry(mp, md, a, s1, s_new, n, derive_rec) AND
       IF up?(ex(pstate(s_new)))
       THEN s2 = s_new
@@ -166,18 +166,18 @@ BEGIN
 
 
   on_method_exit_normal_MP : (on_method_event_type) =
-    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val, 
+    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
-    IF up?(ex(pstate(s1))) 
+    IF up?(ex(pstate(s1)))
     THEN s1 = s2 AND n = 0
-    ELSE 
-    EXISTS (m1, m2, m3 : nat, tau1, tau2, tau3 : MPState, 
+    ELSE
+    EXISTS (m1, m2, m3 : nat, tau1, tau2, tau3 : MPState,
             inv : (wf_BoolExpr(program(mp)))) :
       n = m1 + m2 + m3 + 1 AND
       derive_rec(n)(mp)(post_set(md), s1, Unit, tau1)(m1) AND
-      tau2 = tau1 WITH 
+      tau2 = tau1 WITH
              [ astate := on_method_MVA(ExitNormal)(mp, md)(tau1) ] AND
       inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
@@ -186,30 +186,30 @@ BEGIN
     ENDIF
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
-    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val, 
+    LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     NOT cp(astate(s1)) = halted AND
-    IF up?(ex(pstate(s1))) 
-    THEN 
-    EXISTS (m1, m2 : nat, tau1, tau2, tau3 : MPState, 
+    IF up?(ex(pstate(s1)))
+    THEN
+    EXISTS (m1, m2 : nat, tau1, tau2, tau3 : MPState,
             inv : (wf_BoolExpr(program(mp)))) :
       n = m1 + m2 + 1 AND
-      derive_rec(n)(mp)(exc_set(md), update_PState(s1, catch), 
+      derive_rec(n)(mp)(exc_set(md), update_PState(s1, catch),
                        Unit, tau1)(m1) AND
-      tau2 = tau1 WITH 
+      tau2 = tau1 WITH
              [ astate := on_method_MVA(ExitExceptional)(mp, md)(tau1) ] AND
       inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
       s2 = (IF up?(ex(pstate(tau3)))
-            THEN tau3 
+            THEN tau3
             ELSE update_PState(tau3, raise(down(ex(pstate(s1)))))
             ENDIF) AND
       st(pstate(s1)) = st(pstate(s2))
     ELSE s1 = s2 AND n = 0
     ENDIF
 
-  IMPORTING Semantics[Name, MonitoredProgram, MPState, 
+  IMPORTING Semantics[Name, MonitoredProgram, MPState,
                       LAMBDA (mp : MonitoredProgram) : program(mp),
                       LAMBDA (s : MPState) : pstate(s),
                       lookup,
@@ -238,7 +238,7 @@ BEGIN
     run_FullProgram(mp)(main, arg)(initial_MP_state(mp)(this_val), final)
 
 
-  IMPORTING SemanticsProofs[Name, MonitoredProgram, MPState, 
+  IMPORTING SemanticsProofs[Name, MonitoredProgram, MPState,
                       LAMBDA (mp : MonitoredProgram) : program(mp),
                       LAMBDA (s : MPState) : pstate(s),
                       lookup,
@@ -264,16 +264,16 @@ BEGIN
       wf_MP(mp) IMPLIES wf_state(mp)(initial_MP_state(mp)(this_val))
 
    wf_update_PState : LEMMA % :-)
-     FORALL (p : MonitoredProgram, s1 : MPState, 
+     FORALL (p : MonitoredProgram, s1 : MPState,
              upd : [PState[Name] -> PState[Name]]) :
        wf_state(p)(s1) IMPLIES
        LET s2 = update_PState(s1, upd) IN
-       (wf_state(program(p))(pstate(s1)) IMPLIES 
+       (wf_state(program(p))(pstate(s1)) IMPLIES
            wf_state(program(p))(pstate(s2))) IMPLIES
        wf_state(p)(s2)
 
    wf_update_GhostVars : LEMMA % :-)
-     FORALL (p : MonitoredProgram, s1 : MPState, 
+     FORALL (p : MonitoredProgram, s1 : MPState,
              upd : [Store -> Store]) :
        wf_state(p)(s1) IMPLIES
        LET s2 = update_GhostVars(s1, upd) IN
@@ -281,16 +281,16 @@ BEGIN
        wf_state(p)(s2)
 
   wf_state_update_stack : LEMMA % :-)
-    FORALL(p : MonitoredProgram, this_val : Val, 
-           arg : (getLocalDecls(program(p))), 
-           param_val : Val, lvds : finite_set[LocalVarDecl], s : MPState) : 
+    FORALL(p : MonitoredProgram, this_val : Val,
+           arg : (getLocalDecls(program(p))),
+           param_val : Val, lvds : finite_set[LocalVarDecl], s : MPState) :
       wf_state(p)(s) IMPLIES
-      (FORALL (l : LocalVarDecl) : 
+      (FORALL (l : LocalVarDecl) :
          lvds(l) IMPLIES getLocalDecls(program(p))(l)) IMPLIES
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
   on_method_MVA_yields_wf_AState : LEMMA % :-)
-    FORALL (mp : MonitoredProgram, s : MPState, m : (wf_Method(program(mp))), 
+    FORALL (mp : MonitoredProgram, s : MPState, m : (wf_Method(program(mp))),
             et : EventType) :
       wf_state(mp)(s) IMPLIES
         wf_AState(mva(mp))(on_method_MVA(et)(mp, m)(s))
