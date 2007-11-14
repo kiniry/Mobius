@@ -387,4 +387,9 @@ public final class Util {
               cf.getName().indexOf('.') == -1;
     }
   }
+
+  public static File getPackageDir(JavaClass javaClass) {
+    return new File(javaClass.getPackageName().replace('.',
+                                                       File.separatorChar));
+  }
 }

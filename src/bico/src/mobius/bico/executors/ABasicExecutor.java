@@ -161,7 +161,6 @@ public abstract class ABasicExecutor {
   /**
    * Set the current output stream.
    * @param out the new bcel repos.
-   * @deprecated use the constructor instead! 
    */
   public void setOut(final CoqStream out) {
     fOut = out;

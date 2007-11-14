@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
@@ -38,14 +38,11 @@ import org.apache.bcel.generic.Type;
  */
 public class ClassExecutor extends ASignatureExecutor {
 
-  // FIXME: should be relative to the package dir
+  /** the path to the libraries, relative to the package dir. */
   private final String fLibPath;
   
-  /** the coq version*/
-  private final String fFileName;
-  
   /** the current class which is inspected. */
-  private ClassGen fClass;
+  private final ClassGen fClass;
   
   /** an executor to generate things concerning methods. */
   private final MethodExecutor fMethExecutor;
@@ -54,32 +51,22 @@ public class ClassExecutor extends ASignatureExecutor {
   private final FieldExecutor fFieldExecutor;
   
   /** the coqified name of the class (package + classname). */
-  private String fModuleName;
+  private final String fModuleName;
   
   /** the directory which corresponds to the current package. */
-  private File fPackageDir;
+  private final File fPackageDir;
   
   /** the real directory which corresponds to the current package. */
-  private File fWorkingDir;
+  private final File fWorkingDir;
   
-  private final Map<String, LoadPath> loadPaths = new HashMap<String, LoadPath>();
-  /*
-   * private final HashMap<String, Import> imports = new HashMap<String,
-   * Import>(); private final HashMap<String, Export> exports = new HashMap<String,
-   * Export>();
-   */
-  /** the name of the library file where the whole program should be written. */
-  /*
-   * private String fName;
-   */
-  
-  // /** the executor which spawned this class executor. */
-  // private final Executor fExecutor;
+  /** the set of the load path necessary for this class. */
+  private final Set<LoadPath> fLoadPaths = new HashSet<LoadPath>();
   
   /** dependencies of the current class.   */
-  private  final Map<String, ExternalClass> fExtLibsLocal = 
-    new HashMap<String, ExternalClass>();
-  private Executor fExec;
+  private  final Set<ClassNamingData> fExtLibsLocal = new HashSet<ClassNamingData>();
+  
+  /** the executor which spawned this class executor. */
+  private Executor fExecutor;
 
   /**
    * Create a class executor in the context of another executor.
@@ -95,41 +82,36 @@ public class ClassExecutor extends ASignatureExecutor {
                        final String name) throws FileNotFoundException {
     super(exec, cg);
     fClass = cg;
-    fFileName = Util.coqify(cg.getClassName());
 
     final JavaClass javaClass = fClass.getJavaClass();
-    fExec = exec;
+    fExecutor = exec;
     fModuleName = Util.coqify(javaClass.getClassName());
-    
-    fPackageDir = new File(javaClass.getPackageName().replace('.',
-                                                              File.separatorChar));
-    /* fWorkingDir = new File(exec.getBaseDir(), fPackageDir.getPath()); */
+    fPackageDir = Util.getPackageDir(javaClass);
     fWorkingDir = new File(getBaseDir(), fPackageDir.getPath());
-    
-    // WRITE THE FILE in directory fWorkingDir
     setOut(new CoqStream(new FileOutputStream(new File(fWorkingDir,
                                                          fModuleName + ".v"))));
-    
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
+    fLibPath = computePathToLibraries(); 
+  }
+  
+  public String computePathToLibraries () {
     String pathToLib = ".." + File.separator;
-    for (String s: javaClass.getPackageName().split("\\.")) {
+    for (String s: fClass.getJavaClass().getPackageName().split("\\.")) {
       if (!s.equals("")) {
         pathToLib += ".." + File.separator;
       }
     }
-    fLibPath = 
-      "Add LoadPath \"" + pathToLib + "Formalisation/Library\".\n" + 
-      "Add LoadPath \"" + pathToLib + "Formalisation/Library/Map\".\n" + 
-      "Add LoadPath \"" + pathToLib + "Formalisation/Bicolano\".\n";
+    return "Add LoadPath \"" + pathToLib + "Formalisation/Library\".\n" + 
+           "Add LoadPath \"" + pathToLib + "Formalisation/Library/Map\".\n" + 
+           "Add LoadPath \"" + pathToLib + "Formalisation/Bicolano\".\n";
   }
   
   /**
    * Real handling of one class in jc.
    * 
-   * @throws ClassNotFoundException
-   *             if a class cannot be resolved
-   * @throws IOException
+   * @throws ClassNotFoundException if a class cannot be resolved
+   * @throws IOException if something cannot be written
    */
   @Override
   public void start() throws ClassNotFoundException, IOException {
@@ -171,14 +153,14 @@ public class ClassExecutor extends ASignatureExecutor {
     final IImplemSpecifics implem = getImplemSpecif();
     
     out.println(fLibPath);
-    final String loadPathsForDep = printLoadPaths();
-    out.println(loadPathsForDep);
+    printLoadPaths(out);
+    
     
     out.println(implem.getBeginning());
     out.imprt("P");
     
-    for (ExternalClass ex: fExtLibsLocal.values()) {
-      if (fExec.isSpecialLib(ex.getClassName())) {
+    for (ClassNamingData ex: fExtLibsLocal) {
+      if (fExecutor.isSpecialLib(ex.getClassName())) {
         out.reqExport(implem.requireLib(ex.getBicoClassName()));
         out.exprt(ex.getSignatureModule());
       }
@@ -190,9 +172,9 @@ public class ClassExecutor extends ASignatureExecutor {
 
     out.println();
     
-    out.incPrintln(Constants.MODULE + fModuleName + ".\n");
-    out.println(Constants.IMPORT + fModuleName + "Type.");
-    out.println(Constants.IMPORT + fModuleName + "Signature.");
+    out.startModule(fModuleName);
+    out.imprt(fModuleName + "Type");
+    out.imprt(fModuleName + "Signature");
     
     fFieldExecutor.start();
     
@@ -200,7 +182,7 @@ public class ClassExecutor extends ASignatureExecutor {
     
     doClassDefinition();
     
-    out.decPrintln(Constants.END_MODULE + fModuleName + ".\n");
+    out.endModule(fModuleName);
     out.flush();
     out.close();
   }
@@ -215,17 +197,14 @@ public class ClassExecutor extends ASignatureExecutor {
   public void doSignature() throws ClassNotFoundException {
     
     fOutSig.println(fLibPath);
-    final String loadPathsForDep = printLoadPaths();
-    fOutSig.println(loadPathsForDep);
+    printLoadPaths(fOutSig);
     final IImplemSpecifics implem = getImplemSpecif();
     fOutSig.println(implem.getBeginning());
     fOutSig.imprt("P");
-    fOutSig.reqImport(fFileName + "_type");
-    fOutSig.imprt(fFileName + "Type");
     fOutSig.println();
     
-    for (ExternalClass ex: fExtLibsLocal.values()) {
-      if (fExec.isSpecialLib(ex.getClassName())) {
+    for (ClassNamingData ex: fExtLibsLocal) {
+      if (fExecutor.isSpecialLib(ex.getClassName())) {
         fOutSig.reqExport(implem.requireLib(ex.getBicoClassName()));
         fOutSig.exprt(ex.getTypeModule());
       }
@@ -246,22 +225,16 @@ public class ClassExecutor extends ASignatureExecutor {
     fOutSig.close();
   }
   
-  private void printImportedClasses(CoqStream out) {		
-    out = getOut();
-    for (ExternalClass ex: fExtLibsLocal.values()) {
-      out.reqExport(ex.getTypeName());
-      out.exprt(ex.getTypeModule());
-    }
-    
-  }
-  
-  private String printLoadPaths() {
+
+  /**
+   * Prints the load path necessary for a class, which involves dependencies.
+   * @param out the output stream where to print the load path
+   */
+  private void printLoadPaths(final CoqStream out) {
     // store here the add load path statements
-    String s = "";
-    for (LoadPath lp: loadPaths.values()) {
-      s = s + lp.printRelative(fWorkingDir);
+    for (LoadPath lp: fLoadPaths) {
+      out.addLoadPath(lp.getRelative(fWorkingDir));
     }
-    return s;
   }
   
   /**
@@ -370,7 +343,7 @@ public class ClassExecutor extends ASignatureExecutor {
   
   /**
    * THIS IS THE METHOD WHICH RETURNS THE PATH + FILE WHICH WILL BE LOADED IN
-   * X_MAP.v : "LOAD PATH + FILE.V" Returns the module name with the right
+   * X_MAP.v : "LOAD PATH + FILE" Returns the module name with the right
    * relative path.
    * 
    * @return a string representing the module name + the package dir
@@ -439,11 +412,9 @@ public class ClassExecutor extends ASignatureExecutor {
     
     // if the class file is not already in the hash map of imported classes
     // then add it
-    if ((fExtLibsLocal.get(clname) == null)) {
-      final ExternalClass cl = new ExternalClass(clname);
-      fExtLibsLocal.put(clname, cl);
-      extractLoadPath(cl);
-    }
+    final ClassNamingData cl = new ClassNamingData(clname);
+    fExtLibsLocal.add(cl);
+    extractLoadPath(cl);
   }
   
   /**
@@ -537,23 +508,14 @@ public class ClassExecutor extends ASignatureExecutor {
   /**
    * Adds a load path to this class if such a path does not already exists.
    * 
-   * @param cl -
-   *            the external class to which a load path is added
+   * @param cl the external class to which a load path is added
    */
-  private void extractLoadPath(final ExternalClass cl) {
-    File f = new File(getBaseDir(), cl.getClassName());
+  private void extractLoadPath(final ClassNamingData cl) {
+    final File f = new File(getBaseDir(), cl.getClassFile().getPath());
     // if the file exists in the base directory of the current application
     // and the path is not already such path then add it
-    if (f.exists() && (loadPaths.get(f.getParent()) == null)) {
-      loadPaths.put(f.getParent(), new LoadPath(f.getParent()));
-      return;
-    }
-    f = new File(getPathToAPI(), cl.getClassName());
-    // if the file exists in the API directory of the current application
-// and the path is not already such path then add it
-    if ((f.isFile()) && (loadPaths.get(f.getParent()) == null)) {
-      loadPaths.put(f.getParent(), new LoadPath(f.getParent()));
-      return;
+    if (f.exists()) {
+      fLoadPaths.add(new LoadPath(f.getParent()));
     }
   }
   
@@ -563,12 +525,15 @@ public class ClassExecutor extends ASignatureExecutor {
    */
   public List<String> getClassDependencies() {
     final List<String> al = new ArrayList<String>();
-    al.addAll(fExtLibsLocal.keySet());
+    for (ClassNamingData ec : fExtLibsLocal) {
+      al.add(ec.getClassName());
+    }
     return al;
   }
   
+  @Override
   public String toString () {
-    return getModuleName();
+    return "Class Executor: " + getModuleName();
   }
 
 }

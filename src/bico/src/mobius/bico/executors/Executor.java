@@ -278,7 +278,7 @@ public class Executor extends ABasicExecutor {
     out.println();
     // the already treated classes + interfaces
     for (Entry<String, ClassExecutor> ce : fTreatedClasses.entrySet()) {
-      out.load(ce.getValue() + ".v");
+      out.load(ce.getValue().getModuleName() + ".v");
     }
     
     defineClassAndInterface();
@@ -338,7 +338,7 @@ public class Executor extends ABasicExecutor {
     // the already treated classes + interfaces
     for (Entry<String, ClassExecutor> ce : 
            fTreatedClasses.entrySet()) {
-      out.load(ce.getValue().getModuleFileName() + "_signature.v");
+      out.load(ce.getValue().getModuleName() + "_signature.v");
     }
     
 
@@ -372,7 +372,7 @@ public class Executor extends ABasicExecutor {
     out.println();
     // the already treated classes + interfaces
     for (Entry<String, ClassExecutor> ce : fTreatedClasses.entrySet()) {
-      out.load(ce.getValue() + "_type.v");
+      out.load(ce.getValue().getModuleName() + "_type.v");
     }
     
     out.decPrintln(Constants.END_MODULE + " " + 
