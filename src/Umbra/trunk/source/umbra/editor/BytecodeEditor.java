@@ -206,7 +206,7 @@ public class BytecodeEditor extends TextEditor {
         //XXX changed: obtaining JavaClass from bmlp field
         BCClass bcc = bmlp.getBcc();
         bcc.saveJC();
-        jc = bcc.getJc();
+        jc = bcc.getJC();
       }
       final String path3 = a_fileFrom.getLocation().toOSString();
       jc.dump(path3);

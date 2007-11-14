@@ -367,9 +367,9 @@ public class BytecodeStrings {
   /**
    * TODO.
    */
-  public static final String[] BML_KEYWORDS = new String[] {"\\requires",
-                                                            "\\ensures",
-                                                            "\\exsures" };
+  public static final String[] BML_KEYWORDS = new String[] {"requires",
+                                                            "ensures",
+                                                            "exsures" };
 
   /**
    * TODO.
