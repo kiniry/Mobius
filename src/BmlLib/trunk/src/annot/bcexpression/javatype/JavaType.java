@@ -9,7 +9,6 @@ import annot.bcexpression.BCExpression;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.IDisplayStyle;
-import annot.textio.Priorities;
 
 /**
  * This class represents return type of an expression.
