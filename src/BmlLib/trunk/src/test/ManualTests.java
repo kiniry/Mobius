@@ -19,14 +19,14 @@ import annot.bcclass.MLog;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.NumberLiteral;
+import annot.bcexpression.formula.AbstractFormula;
+import annot.bcexpression.formula.Formula;
+import annot.bcexpression.formula.Predicate0Ar;
+import annot.bcexpression.formula.Predicate2Ar;
+import annot.bcexpression.formula.QuantifiedFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.util.DesugarWalker;
 import annot.bcexpression.util.ExpressionWalker;
-import annot.formula.AbstractFormula;
-import annot.formula.Formula;
-import annot.formula.Predicate0Ar;
-import annot.formula.Predicate2Ar;
-import annot.formula.QuantifiedFormula;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
@@ -53,7 +53,7 @@ class myInt {
  * 
  * @author tomekb
  */
-public final class OldTests {
+public final class ManualTests {
 
 	/**
 	 * whether random formula generator should also generate
@@ -551,7 +551,7 @@ public final class OldTests {
 		} else {
 			MLog.mask = MLog.PERRORS;
 			bcc.saveJC();
-			bcc = new BCClass(bcc.getJc());
+			bcc = new BCClass(bcc.getJC());
 			String code2 = bcc.printCode();
 			if (!ignoreSaveLoadFailure && !code1.equals(code2)) {
 				System.out.println("ERROR: BCClass changed while saving / loading");

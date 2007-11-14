@@ -21,7 +21,7 @@ import annot.textio.Parsing;
  * 
  * @author tomekb
  */
-public final class Testuj {
+public final class AutomatedTests {
 
 	/**
 	 * whether show stac trace of exception in test failures
@@ -170,14 +170,14 @@ public final class Testuj {
 	 */
 	private static void start() throws ClassNotFoundException,
 			ReadAttributeException {
-		bcc = OldTests.createSampleClass();
+		bcc = ManualTests.createSampleClass();
 		at = bcc.getAllAttributes(AType.C_ALL);
 		String code = bcc.printCode();
 		oldMask = MLog.mask;
 		MLog.mask = IMessageLog.PERRORS;
 		if (goShowBytecode)
 			System.out.println(code);
-		System.out.println(OldTests.xxx);
+		System.out.println(ManualTests.xxx);
 	}
 
 	/**
@@ -191,9 +191,9 @@ public final class Testuj {
 	private static boolean checkSaveAndLoad() throws IOException,
 			ClassNotFoundException {
 		String code1 = bcc.printCode();
-		ConstantPoolGen cpg = new ConstantPoolGen(bcc.getJc().getConstantPool());
+		ConstantPoolGen cpg = new ConstantPoolGen(bcc.getJC().getConstantPool());
 		cpg.addDouble(1.23);
-		bcc.getJc().setConstantPool(cpg.getFinalConstantPool());
+		bcc.getJC().setConstantPool(cpg.getFinalConstantPool());
 		bcc.saveToFile(Paths.tmp_path + "test/tmp03.class");
 		try {
 			bcc = new BCClass(Paths.tmp_path, "test.tmp03");
@@ -219,7 +219,7 @@ public final class Testuj {
 			}
 			return false;
 		}
-		cpg = new ConstantPoolGen(bcc.getJc().getConstantPool());
+		cpg = new ConstantPoolGen(bcc.getJC().getConstantPool());
 		if (cpg.lookupDouble(1.23) < 0) {
 			System.out.println("ERROR: constant pool changed!");
 			return false;
