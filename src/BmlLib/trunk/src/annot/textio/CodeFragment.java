@@ -1,6 +1,6 @@
 package annot.textio;
 
-import test.OldTests;
+import test.ManualTests;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.MLog;
@@ -451,7 +451,7 @@ public class CodeFragment {
 		String newCode = "";
 		for (int l=0; l<lines.length; l++)
 			newCode += lines[l] + "\n";
-		MLog.putMsg(MLog.PDebug, OldTests.xxx);
+		MLog.putMsg(MLog.PDebug, ManualTests.xxx);
 		MLog.putMsg(MLog.PDebug, "newCode:\n" + newCode);
 		return newCode;
 	}
