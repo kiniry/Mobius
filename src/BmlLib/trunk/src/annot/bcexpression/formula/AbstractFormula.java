@@ -1,4 +1,4 @@
-package annot.formula;
+package annot.bcexpression.formula;
 
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.javatype.JavaBasicType;

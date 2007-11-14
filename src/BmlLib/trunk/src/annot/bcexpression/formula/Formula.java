@@ -7,7 +7,7 @@ import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
-import annot.tmp.AbstractFormula;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class represents expression of boolean result type

@@ -3,10 +3,10 @@ package annot.attributes;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.modifies.ModifyList;
-import annot.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
 import annot.textio.IDisplayStyle;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class represents "loop specification table" method

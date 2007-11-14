@@ -5,14 +5,14 @@ import java.util.Vector;
 import org.antlr.runtime.RecognitionException;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
-import annot.formula.AbstractFormula;
-import annot.formula.Predicate0Ar;
+import annot.bcexpression.formula.Predicate0Ar;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
 import annot.textio.Parsing;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class represents method specification attribute.

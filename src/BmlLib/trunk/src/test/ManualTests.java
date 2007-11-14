@@ -19,7 +19,6 @@ import annot.bcclass.MLog;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.NumberLiteral;
-import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
 import annot.bcexpression.formula.Predicate0Ar;
 import annot.bcexpression.formula.Predicate2Ar;
@@ -33,6 +32,7 @@ import annot.textio.BMLConfig;
 import annot.textio.CodeFragment;
 import annot.textio.CodePosition;
 import annot.textio.CodeSearch;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * Simple class for storeing an integer value.

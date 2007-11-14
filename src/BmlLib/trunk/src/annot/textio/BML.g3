@@ -14,7 +14,7 @@ options {
 	import annot.bcexpression.*;
 	import annot.bcexpression.javatype.*;
 	import annot.bcexpression.modifies.*;
-	import annot.formula.*;
+	import annot.bcexpression.formula.*;
 	import annot.io.Code;
 	import annot.io.ReadAttributeException;
 

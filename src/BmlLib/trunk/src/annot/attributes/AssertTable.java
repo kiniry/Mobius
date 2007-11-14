@@ -1,7 +1,7 @@
 package annot.attributes;
 
 import annot.bcclass.BCMethod;
-import annot.formula.AbstractFormula;
+import annot.bcexpression.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
 import annot.textio.IDisplayStyle;

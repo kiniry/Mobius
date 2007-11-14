@@ -71,7 +71,7 @@ public class AttributeWriter {
 		byte[] bytes = new byte[pos];
 		for (int i = 0; i < pos; i++)
 			bytes[i] = output[i];
-		return new Unknown(attr.getIndex(), pos, bytes, bcc.getJc()
+		return new Unknown(attr.getIndex(), pos, bytes, bcc.getJC()
 				.getConstantPool());
 	}
 

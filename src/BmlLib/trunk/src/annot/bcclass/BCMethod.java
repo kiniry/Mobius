@@ -125,7 +125,7 @@ public class BCMethod {
 				bcode += ih.getPosition()
 						+ ": "
 						+ ih.getInstruction().toString(
-								bcc.getJc().getConstantPool()) + "\n";
+								bcc.getJC().getConstantPool()) + "\n";
 			}
 		} else {
 			bcode += bcelMethod.getMethod().getCode().toString();

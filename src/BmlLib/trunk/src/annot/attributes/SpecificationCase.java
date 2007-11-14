@@ -5,14 +5,14 @@ import java.util.Vector;
 
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
+import annot.bcexpression.formula.Predicate0Ar;
 import annot.bcexpression.modifies.ModifyList;
-import annot.formula.AbstractFormula;
-import annot.formula.Predicate0Ar;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class represents single specification case

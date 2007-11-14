@@ -432,7 +432,7 @@ public class BCClass {
 	/**
 	 * @return BCEL's JavaClass
 	 */
-	public JavaClass getJc() {
+	public JavaClass getJC() {
 		return jc;
 	}
 

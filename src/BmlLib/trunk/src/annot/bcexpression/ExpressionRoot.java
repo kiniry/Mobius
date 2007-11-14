@@ -1,6 +1,5 @@
 package annot.bcexpression;
 
-import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -8,6 +7,7 @@ import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Priorities;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class represents a root of an expression.

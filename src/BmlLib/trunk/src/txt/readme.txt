@@ -10,9 +10,9 @@
 2. Testing.
 	After installing this library, set proper paths in
 	test.Paths class (these paths are used for tests only),
-	and run test.OldTests (it should not crash), and
-	test.Testuj (it should not crash and it should display that
-	all tests passes).
+	and run test.ManualTests (it should not crash), and
+	test.AutomatedTests (it should not crash and it should
+	display that all tests passes).
 
 3. Using this library.
 	Create a annot.bcclass.BCClass (from JavaClass or from

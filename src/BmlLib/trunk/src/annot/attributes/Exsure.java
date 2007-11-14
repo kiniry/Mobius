@@ -3,11 +3,11 @@ package annot.attributes;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.javatype.JavaReferenceType;
-import annot.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class represents method's exception type (throws

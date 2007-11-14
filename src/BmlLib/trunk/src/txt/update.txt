@@ -18,7 +18,7 @@ This document describes changes in code required to extend
 		- update AttributeReader.readAttribute(ua),
 		- update CodeFragment.getAllAttributeNames(),
 		- add parser rule to BML.g3 grammar,
-		- add test cases to OldTests,
+		- add test cases to ManualTests,
 		- write JavaDocs.
 	b). Method attribute:
 		- create a subclass of MethodAttribute,
@@ -31,7 +31,7 @@ This document describes changes in code required to extend
 		- update CodeFragment.performChanges#annotations,
 		- add parser rule,
 		- update BML.g3#method,
-		- add test cases to OldTests,
+		- add test cases to ManualTests,
 		- write JavaDocs.
 	c). inCode atribute:
 		- add new attribute type to AType interface,
@@ -47,7 +47,7 @@ This document describes changes in code required to extend
 		- update AttributeReader.readAttribute(ua),
 		- update CodeFragment.getAllAttributeNames(),
 		- add parser rule to BML.g3 grammar,
-		- add test cases to OldTests,
+		- add test cases to ManualTests,
 		- write JavaDocs.
 
 3. To add an Expression:
@@ -57,7 +57,7 @@ This document describes changes in code required to extend
 	- update makeOld, removeOld methods for OLD expressions.
 	- update AttributeReader.readExpression(),
 	- add parser rules to grammatic (annot.textio.BML.g3),
-	- create test cases in test.Testuj.ParserTest(),
+	- create test cases in test.AutomatedTests.ParserTest(),
 	- write JavaDocs.
 
 4. To change display style:

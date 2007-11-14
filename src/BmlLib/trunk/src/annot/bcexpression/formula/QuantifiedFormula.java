@@ -13,7 +13,7 @@ import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.IDisplayStyle;
-import annot.tmp.AbstractFormula;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class represents a quantifier with bound variable

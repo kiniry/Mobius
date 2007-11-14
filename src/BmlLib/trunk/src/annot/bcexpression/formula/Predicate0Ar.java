@@ -4,7 +4,7 @@ import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.javatype.JavaType;
 import annot.io.Code;
 import annot.textio.BMLConfig;
-import annot.tmp.AbstractFormula;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class represents 0Arg predicate, that is, TRUE

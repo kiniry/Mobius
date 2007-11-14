@@ -29,6 +29,10 @@ import annot.bcexpression.RESULT;
 import annot.bcexpression.SingleOccurence;
 import annot.bcexpression.THIS;
 import annot.bcexpression.UnaryArithmeticExpression;
+import annot.bcexpression.formula.Formula;
+import annot.bcexpression.formula.Predicate0Ar;
+import annot.bcexpression.formula.Predicate2Ar;
+import annot.bcexpression.formula.QuantifiedFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.javatype.JavaType;
 import annot.bcexpression.modifies.ModifiesArray;
@@ -39,12 +43,8 @@ import annot.bcexpression.modifies.ModifiesSingleIndex;
 import annot.bcexpression.modifies.ModifiesStar;
 import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.SpecArray;
-import annot.formula.AbstractFormula;
-import annot.formula.Formula;
-import annot.formula.Predicate0Ar;
-import annot.formula.Predicate2Ar;
-import annot.formula.QuantifiedFormula;
 import annot.textio.IDisplayStyle;
+import annot.bcexpression.formula.AbstractFormula;
 
 /**
  * This class is responsible for loading BML attributes from
