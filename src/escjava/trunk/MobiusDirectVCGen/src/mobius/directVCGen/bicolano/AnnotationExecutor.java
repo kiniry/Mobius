@@ -8,10 +8,12 @@ import java.util.Collection;
 import java.util.List;
 
 import mobius.bico.Util;
-import mobius.bico.Util.Stream;
+import mobius.bico.coq.CoqStream;
 import mobius.bico.dico.Dictionary;
 import mobius.bico.executors.ClassExecutor;
+import mobius.bico.executors.ClassesMakefileGen;
 import mobius.bico.executors.Executor;
+import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.generic.ClassGen;
 
@@ -21,6 +23,7 @@ import org.apache.bcel.generic.ClassGen;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class AnnotationExecutor extends Executor {
+   
   /** the current working directory. */
   private final File fWorkingDir;
 
@@ -33,9 +36,8 @@ public class AnnotationExecutor extends Executor {
    * @param args the 'normal' arguments that should be given
    * to bico
    */
-  public AnnotationExecutor(final File workingDir,
-                            final String [] args) {
-    super(args);
+  public AnnotationExecutor(IImplemSpecifics implem, File workingDir, File outputDir, List<String> classToTreat) {
+    super(implem, workingDir, outputDir, classToTreat);
     fWorkingDir = workingDir; 
   }
 
@@ -50,7 +52,7 @@ public class AnnotationExecutor extends Executor {
     
     // the coffee
     final File typ = new File(getBaseDir(), getModuleName() + "_annotations" + suffix);
-    final Stream out = new Stream(new FileOutputStream(typ));
+    final CoqStream out = new CoqStream(new FileOutputStream(typ));
     out.println(libPath);
     
     out.println();
@@ -58,10 +60,6 @@ public class AnnotationExecutor extends Executor {
 
     // the already treated classes + interfaces
     for (ClassExecutor ce: getTreatedClasses()) {
-      out.println("Load \"" + ce.getModuleFileName() + "_annotations.v\".");
-    }
-    
-    for (ClassExecutor ce: getTreatedInterfaces()) {
       out.println("Load \"" + ce.getModuleFileName() + "_annotations.v\".");
     }
 
@@ -102,6 +100,8 @@ public class AnnotationExecutor extends Executor {
     out.decPrintln("End " + getModuleName() + "Annotations.");
     
   }  
+
+
   /**
    * Returns an instance of a class executor.
    * This method is there as an extension point.
@@ -110,19 +110,17 @@ public class AnnotationExecutor extends Executor {
    * @return a ClassExecutor instance
    * @throws FileNotFoundException if a file is missing
    */
+
   public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
-    return new AnnotationClassExecutor(this, cg, fWorkingDir, this.getModuleName());
+    return new AnnotationClassExecutor(this, cg, getModuleName());
   }
 
   /**
-   * @return The make file generator.
-   * @param file the target directory
-   * @param name the name of the output file
-   * @param treated a list of all the treated classes
    */
-  public mobius.bico.MakefileGenerator getMakefileGenerator(final File file, 
-                                                            final String name, 
-                                                            final List<ClassExecutor> treated) {
-    return new MakefileGenerator(file, name, treated);
+  public void generateClassMakefiles() {
+    final ClassesMakefileGen cmg = new MakefileGenerator(getBaseDir(), 
+                                                          getTreatedClasses());
+    cmg.generate();
   }
+
 }

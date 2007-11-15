@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javafe.ast.RoutineDecl;
-import mobius.bico.Util.Stream;
+import mobius.bico.coq.CoqStream;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.executors.ABasicExecutor;
 import mobius.directVCGen.formula.Expression;
@@ -29,11 +29,11 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private final MethodGen fMeth;
   
   /** the stream where to write the annotations. */
-  private final Stream fAnnotOut;
+  private final CoqStream fAnnotOut;
   /** the class from which the inspected method is taken. */
   private ClassGen fClass;
 
-  public AnnotationMethodExecutor(ABasicExecutor be, final Stream annotationOut, 
+  public AnnotationMethodExecutor(ABasicExecutor be, final CoqStream annotationOut, 
                                   ClassGen clzz, final Method met, final RoutineDecl rout) {
     super(be);
     if (rout == null) {
@@ -71,7 +71,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
              needed + 
             "%nat,,global_spec)";
 
-    final Stream out = getAnnotationOut();
+    final CoqStream out = getAnnotationOut();
     
     out.println("Module " + nameModule + ".");
     out.incTab();
@@ -101,12 +101,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     
   }
   
-  protected Stream getAnnotationOut() {
+  protected CoqStream getAnnotationOut() {
     return fAnnotOut;
   }
 
   private void doMethodPre(final String namePre) {
-    final Stream out = getAnnotationOut();
+    final CoqStream out = getAnnotationOut();
     out.println("Definition mk_" + namePre + " := ");
     final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgs(fRout);
 
@@ -136,7 +136,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   
   
   private void doMethodPost(final String namePost) {
-    final Stream out = getAnnotationOut();
+    final CoqStream out = getAnnotationOut();
     // definition of the mk method
     out.println("Definition mk_" + namePost + " := ");
     final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgsWithoutHeap(fRout);
@@ -231,7 +231,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   }
   
   private String doLetPre() {
-    final Stream out = getAnnotationOut();
+    final CoqStream out = getAnnotationOut();
     String vars = "";
     final String hname = Formula.generateFormulas(Heap.var).toString();
     out.println("let " + hname + " := (snd s0) " + " in");
@@ -248,7 +248,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   
   
   private String doLetPost() {
-    final Stream out = getAnnotationOut();
+    final CoqStream out = getAnnotationOut();
     String vars = "";
     final String olhname = Formula.generateFormulas(Heap.varPre).toString();
     out.println("let " + olhname + " := (snd s0) " + " in");

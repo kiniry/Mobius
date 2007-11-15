@@ -6,7 +6,7 @@ import java.util.List;
 import javafe.ast.ASTNode;
 import javafe.ast.RoutineDecl;
 import javafe.util.Location;
-import mobius.bico.Util.Stream;
+import mobius.bico.coq.CoqStream;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Ref;
@@ -42,7 +42,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
   
 
   /** the output file. */
-  private final Stream fOut;
+  private final CoqStream fOut;
   private List<QuantVariableRef> fVariables;
   
 
@@ -53,7 +53,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
    * @param decl the routine which is currently inspected
    * @param met the method to inspect
    */
-  private AnnotationVisitor(final Stream out, 
+  private AnnotationVisitor(final CoqStream out, 
                             final RoutineDecl decl, 
                             final MethodGen met) {
     fOut = out;
@@ -210,7 +210,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
    * @param met the method to inspect, from BCEL
    * @return an enumeration of assertions
    */
-  public static String getAssertion(final Stream out, 
+  public static String getAssertion(final CoqStream out, 
                                     final RoutineDecl decl, 
                                     final MethodGen met) {
     final AnnotationVisitor vis = new AnnotationVisitor(out, decl, met);

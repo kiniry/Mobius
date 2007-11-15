@@ -2,9 +2,11 @@ package mobius.directVCGen.bicolano;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import javafe.tc.TypeSig;
 import mobius.bico.executors.Executor;
+import mobius.bico.implem.MapImplemSpecif;
 
 
 /**
@@ -23,10 +25,12 @@ public class AnnotationCompiler {
    * @param clzz the class to treat
    */
   public AnnotationCompiler(final File pkgsdir, final String clzz) {
-    final String [] args = {pkgsdir.toString() + File.separator + 
-                            "Bico", clzz, "java.lang.String"};
-    
-    fExecutor = new AnnotationExecutor(pkgsdir, args);
+    final List<String> classes = new ArrayList<String>();
+    classes.add(clzz);
+    fExecutor = new AnnotationExecutor(new MapImplemSpecif(),
+                                       pkgsdir,
+                                       pkgsdir, 
+                                       classes);
   }
 
   /**

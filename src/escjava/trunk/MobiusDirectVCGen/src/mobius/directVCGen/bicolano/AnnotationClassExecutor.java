@@ -6,10 +6,9 @@ import java.io.FileOutputStream;
 
 import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
-import mobius.bico.Util;
-import mobius.bico.Util.Stream;
-import mobius.bico.executors.ABasicExecutor;
+import mobius.bico.coq.CoqStream;
 import mobius.bico.executors.ClassExecutor;
+import mobius.bico.executors.Executor;
 import mobius.directVCGen.formula.jmlTranslator.JmlVisitor;
 
 import org.apache.bcel.classfile.Method;
@@ -23,7 +22,7 @@ public class AnnotationClassExecutor extends ClassExecutor {
   /** the type sygnature of the currently handled class. */
   private final TypeSig fSig;
   
-  public AnnotationClassExecutor(ABasicExecutor be, ClassGen cg, File workingDir, String name) throws FileNotFoundException {
+  public AnnotationClassExecutor(Executor be, ClassGen cg, String name) throws FileNotFoundException {
     super(be, cg, name);
     fClass = cg;
     String [] pkg = fClass.getJavaClass().getPackageName().split("\\.");
@@ -60,27 +59,23 @@ public class AnnotationClassExecutor extends ClassExecutor {
       }
     }
     
-    Stream anOut;
+    CoqStream anOut;
     try {
-      anOut = new Util.Stream(new FileOutputStream(
+      anOut = new CoqStream(new FileOutputStream(
                                          new File(getWorkingDir(), 
                                                   getModuleName() + 
                                          "_annotations.v")));
     
-      anOut.println("Add LoadPath \"Formalisation/Library\".");
-      anOut.println("Add LoadPath \"Formalisation/Library/Map\".");
-      anOut.println("Add LoadPath \"Formalisation/Bicolano\".");
-      anOut.println("Add LoadPath \"Formalisation/Logic\".");
+      anOut.println(getLibPath());
 
 
       anOut.println("Require Export defs_types.");
       anOut.println("Require Export Bool.");
       anOut.println("Require Export Sumbool.");
-      anOut.println("Require Export BicoMap.");
       anOut.println("Require Export ImplemSWp.");
-      anOut.println("Export BicoMapProgram.");
+      
 
-      anOut.println("Import P Mwp.");
+      anOut.println("Import Mwp.");
 
       anOut.incPrintln("Module " + this.getModuleName() + "Annotations.");
       
