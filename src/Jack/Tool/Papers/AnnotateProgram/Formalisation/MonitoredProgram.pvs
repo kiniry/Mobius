@@ -295,7 +295,7 @@ BEGIN
       wf_state(mp)(s) IMPLIES
         wf_AState(mva(mp))(on_method_MVA(et)(mp, m)(s))
 
-  % PROVE
+  % 
   derive_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
            (sigma1, sigma2 : MPState, n : nat) :
@@ -304,5 +304,13 @@ BEGIN
       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
         wf_state(mp)(sigma2)
 
+
+  derive_never_leaves_halted : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
+           (sigma1, sigma2 : MPState, n : nat) :
+      wf_MP(mp) IMPLIES
+      cp(astate(sigma1)) = halted IMPLIES
+      derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
+        cp(astate(sigma2)) = halted
 
 END MonitoredProgramSemantics
