@@ -308,7 +308,7 @@ public class Executor extends ABasicExecutor {
   
   public void generateClassMakefiles() {
     final ClassesMakefileGen cmg = new ClassesMakefileGen(getBaseDir(), 
-                                                          fTreatedClasses.values());
+                                                          getTreatedClasses());
     cmg.generate();
   }
 

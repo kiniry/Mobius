@@ -85,13 +85,12 @@ public class ClassExecutor extends ASignatureExecutor {
                            fNamingData.getPkgDir().getPath());
     setOut(new CoqStream(new FileOutputStream(
              new File(fWorkingDir, fNamingData.getBicoClassFileName()))));
-                                                         
     fFieldExecutor = new FieldExecutor(this, fClass.getJavaClass());
     fMethExecutor = new MethodExecutor(this, fClass);
     fLibPath = computePathToLibraries(); 
   }
   
-  public String computePathToLibraries () {
+  private String computePathToLibraries () {
     String pathToLib = ".." + File.separator;
     for (String s: fClass.getJavaClass().getPackageName().split("\\.")) {
       if (!s.equals("")) {
@@ -100,7 +99,8 @@ public class ClassExecutor extends ASignatureExecutor {
     }
     return "Add LoadPath \"" + pathToLib + "Formalisation/Library\".\n" + 
            "Add LoadPath \"" + pathToLib + "Formalisation/Library/Map\".\n" + 
-           "Add LoadPath \"" + pathToLib + "Formalisation/Bicolano\".\n";
+           "Add LoadPath \"" + pathToLib + "Formalisation/Bicolano\".\n" +
+           "Add LoadPath \"" + pathToLib + "Formalisation/Logic\".\n" ;
   }
   
   /**
@@ -532,6 +532,10 @@ public class ClassExecutor extends ASignatureExecutor {
   @Override
   public String toString () {
     return "Class Executor: " + getModuleName();
+  }
+  
+  public String getLibPath() {
+    return fLibPath;
   }
 
 }
