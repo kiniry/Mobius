@@ -6,7 +6,9 @@ public class Constants {
 
   /** path separator for the Window file system. */
   public static final char PATH_SEPARATOR = File.separatorChar;
+  /** path separator for the Linux file system. */
   public static final char LINUX_PATH_SEPARATOR = '/';
+  /** the separator for the packages. */
   public static final char JAVA_NAME_SEPARATOR = '.';
   
   /* constants representing options passed to  the entry point */

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -256,7 +257,6 @@ public class Executor extends ABasicExecutor {
    */
   private void doMain() throws ClassNotFoundException, IOException {
     // write prelude ;)
-    CoqStream fOut = getOut();
     final CoqStream out = getOut();
     printLoadPath(out);
     out.println(getImplemSpecif().getBeginning());
@@ -412,22 +412,7 @@ public class Executor extends ABasicExecutor {
     getDico().write(out);
     out.close();
   }
-  
-  /**
-   * Scan for classes in the current directory.
-   * 
-   * @return a list of class files found in the current directory
-   */
-  /*
-   * private List<String> findFiles() { // FIXME: should not be needed final
-   * List<String> files = new ArrayList<String>(); final File f =
-   * fCoqFileName.getParentFile(); final String[] list = f.list();
-   * 
-   * for (String current : list) { if (current.endsWith(".class")) { final int
-   * pom = current.indexOf("."); files.add(current.substring(0, pom)); } }
-   * System.out.println("Found " + files.size() + " class file(s) in the
-   * working path."); return files; }
-   */
+
   
 
   
@@ -579,5 +564,10 @@ public class Executor extends ABasicExecutor {
     return fName;
   }
   
+  
+  public Collection<ClassExecutor> getTreatedClasses() {
+    
+    return fTreatedClasses.values();
+  }
   
 }

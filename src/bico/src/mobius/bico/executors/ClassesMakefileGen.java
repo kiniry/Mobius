@@ -41,44 +41,25 @@ public class ClassesMakefileGen {
     generate("");
   }
   
-  private void generate(String pkgDir) {
+  /**
+   * Generates the makefile in the given package directory
+   * given by the argument.
+   * @param pkgDir the package directory
+   */
+  private void generate(final String pkgDir) {
     final File workingDir = new File(fBaseDir, pkgDir);
+    workingDir.mkdir();
     final File mkfile = new File (workingDir, "Makefile");
-    final List<String> generatedFiles = new ArrayList<String>();
-    
     
     final File[] subdirs = workingDir.listFiles(new Util.DirectoryFilter());
     try {
       final PrintStream out = new PrintStream(new FileOutputStream(mkfile));
       final List<String> list = getCurrentPkgFileList(workingDir);
-      generatedFiles.addAll(printCompileInstr(out, list, "Type", "_type"));
-      generatedFiles.addAll(printCompileInstr(out, list, "Signature", "_signature"));
-      generatedFiles.addAll(printCompileInstr(out, list, "Main", ""));
-      generatedFiles.addAll(getExtraGeneratedFiles(out));
-      
-      out.println("\nall: main $(Extra) ");
-      for (File dir: subdirs) {
-        out.println("\tcd " + dir.getName() + "; make all");
-      }
-      out.println("\nmain: signature $(Main) ");
-      for (File dir: subdirs) {
-        out.println("\tcd " + dir.getName() + "; make all");
-      }
-      
-      out.println("\nsignature: type $(Signature)");
-      for (File dir: subdirs) {
-        out.println("\tcd " + dir.getName() + "; make signature");
-      }
-      
-      
-      out.println("\ntype: $(Type)");
-      for (File dir: subdirs) {
-        out.println("\tcd " + dir.getName() + "; make type");
-      }
-      out.println();
-      out.println("\n# implicit rules");
-      out.println("%.vo : %.v");
-      out.println("\tcoqc $<\n");
+      final List<String> generatedFiles = getMakefileInstructions(out, subdirs, list);
+      out.println("\n");
+      out.println("# implicit rules\n" +
+                  "%.vo : %.v\n" +
+                  "\tcoqc $<\n");
       out.close();
     } 
     catch (FileNotFoundException e) {
@@ -86,14 +67,77 @@ public class ClassesMakefileGen {
       e.printStackTrace();
     }
      
-
     for (File dir: subdirs) {
       generate(pkgDir + dir.getName() + File.separator);
     }
   }
 
+  /**
+   * 
+   * @param out
+   * @param subdirs
+   * @param listModule
+   * @return
+   */
+  public List<String> getMakefileInstructions(final PrintStream out, 
+                                              final File[] subdirs, 
+                                              final List<String> listModule) {
+    final List<String> generatedFiles = new ArrayList<String>();
+    
+    
+    
+    printMakeInstr(out, "all", "main", subdirs);
+    
+    generatedFiles.addAll(
+      printCompileInstr(out, listModule, subdirs, 
+                        "Type", "", "_type"));
+    generatedFiles.addAll(
+      printCompileInstr(out, listModule, subdirs, 
+                        "Signature", "type", "_signature"));
+    generatedFiles.addAll(
+      printCompileInstr(out, listModule, subdirs, 
+                        "Main", "signature", ""));
+    return generatedFiles;
+  }
+  
+  
+  
+  public List<String> printCompileInstr(final PrintStream out,
+                                        final List<String> listModules,
+                                        final File[] subdirs,
+                                        final String word,
+                                        final String dependencies,
+                                        final String postfix) {
+    final List<String> files  = (printCompileInstr(out, listModules, word, postfix));
+    printMakeInstr(out, word.toLowerCase(), dependencies + " $(" + word + ")", subdirs);
+    return files;
+  
+  }
+  /**
+   * Print a make file instruction.
+   * @param out the makefile stream
+   * @param name the label of this compilation clause
+   * @param dependencies the dependencies of the label
+   * @param subdirs the subdirectories to compile recursively
+   */
+  public void printMakeInstr(final PrintStream out,
+                              final String name, 
+                              final String dependencies, 
+                              final File[] subdirs) {
+    out.println("\n" + name + ": " + dependencies);
+    for (File dir: subdirs) {
+      out.println("\tcd " + dir.getName() + "; make " + name);
+    }
+    
+  }
 
-  private List<String> getCurrentPkgFileList(File workingDir) {
+  /**
+   * Get all the classes that should be in the given working directory.
+   * @param workingDir the working directory to inspect
+   * @return the list of the module name of the classes
+   * in the working directory
+   */
+  private List<String> getCurrentPkgFileList(final File workingDir) {
     final List<String> list = new ArrayList<String>();
     for (ClassExecutor ce: fTreated) {
       if (ce.getWorkingDir().equals(workingDir)) {
@@ -103,20 +147,6 @@ public class ClassesMakefileGen {
     return list;
   }
 
-
-
-
-
-
-  /**
-   * Writes the compilation instructions for the extra files.
-   * @param out the make file were to print the commands
-   * @return the list of files that are supposed to be generated
-   */
-  protected List<String> getExtraGeneratedFiles(final PrintStream out) {
-    out.println("Extra= ");
-    return new ArrayList<String>();
-  }
 
 
   /**
