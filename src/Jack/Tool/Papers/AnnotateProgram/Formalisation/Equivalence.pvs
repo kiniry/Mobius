@@ -52,14 +52,10 @@ BEGIN
       gvs(sMP)(n) = gvs(sAP)(n)
 
   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
-    % any exception in the monitored prog also happens in the annotated prog
-    (up?(ex(pstate(sMP))) IMPLIES
-       up?(ex(pstate(sAP))) AND ex(pstate(sMP)) = ex(pstate(sAP))) AND
-    % the only new exceptions are JMLExc and it happens when cp reached halted
-    (up?(ex(pstate(sAP))) IMPLIES (NOT up?(ex(pstate(sMP))) =
-       (JMLExc?(down(ex(pstate(sAP)))) AND cp(astate(sMP)) = halted))) AND
-    st(pstate(sMP)) = st(pstate(sAP)) AND
-    Program_gvs_modeled?(sMP, sAP)
+    IF cp(astate(sMP)) = halted 
+    THEN up?(ex(pstate(sAP))) AND JMLExc?(down(ex(pstate(sAP))))
+    ELSE pstate(sMP) = pstate(sAP) AND Program_gvs_modeled?(sMP, sAP)
+    ENDIF
 
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
@@ -149,31 +145,34 @@ BEGIN
   get_address_same_in_related_states : LEMMA % :-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
         get_address(vn, sMP) = get_address(vn, sAP)
 
   get_dynamic_type_name_same_in_related_states : LEMMA % :-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
         get_dynamic_type_name(vn, sMP) = get_dynamic_type_name(vn, sAP)
   
   MP_modeled_implies_same_exception : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES
-      up?(ex(pstate(sMP))) OR NOT up?(ex(pstate(sAP))) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
         ex(pstate(sMP)) = ex(pstate(sAP))
 
   related_states_implies_same_exception : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES 
-      up?(ex(pstate(sMP))) OR NOT up?(ex(pstate(sAP))) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
         ex(pstate(sMP)) = ex(pstate(sAP))
 
   related_states_implies_same_lookup : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState, n : Name) :
       related_states(mp)(sMP, sAP) IMPLIES 
+      NOT cp(astate(sMP)) = halted IMPLIES
       ext_declared_var_names(program(mp))(n) IMPLIES
         lookup(n, sMP) = lookup(n, sAP)
-  
+
   MP_modeled_preserved_by_update : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp)(sMP, sAP) IMPLIES
@@ -181,12 +180,13 @@ BEGIN
         (st(pstate1) = st(pstate2) IMPLIES st(upd(pstate1)) = st(upd(pstate2))))
       IMPLIES
       (FORALL (pstate : PState) : (ex(upd(pstate)) = ex(pstate))) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
         MP_modeled?(mp)(update_PState(sMP, upd), update_PState(sAP, upd))
 
   related_states_preserved_by_update_local : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState)(vn : Name, v : (defined?)) :
       related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
       is_local(vn, pstate(sMP)) IMPLIES
       is_local(vn, pstate(sAP)) IMPLIES
         related_states(mp)(update_PState(sMP, update_local(vn, v)), 
@@ -195,13 +195,14 @@ BEGIN
   related_states_preserved_by_catch : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
         related_states(mp)(update_PState(sMP, catch), 
                            update_PState(sAP, catch))
 
   related_states_preserved_by_raise : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState, e : Excpt) :
       related_states(mp)(sMP, sAP) IMPLIES
-      NOT (JMLExc?(e) AND cp(astate(sMP)) = halted) IMPLIES
+      (cp(astate(sMP)) = halted IMPLIES JMLExc?(e)) IMPLIES
         related_states(mp)(update_PState(sMP, raise(e)), 
                            update_PState(sAP, raise(e)))
 
@@ -210,7 +211,7 @@ BEGIN
             this_val : Val, arg :  (getLocalDecls(program(mp))), 
             param_val : Val, lvds : finite_set[LocalVarDecl]) :
       related_states(mp)(sMP, sAP) IMPLIES
-      NOT up?(ex(pstate(sAP))) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
       (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
                                    getLocalDecls(program(mp))(l)) IMPLIES
         related_states(mp)(update_stack(this_val, arg, param_val,

@@ -27,7 +27,7 @@ BEGIN
 
 
   % Eexecuting an action on a MVA modifies its variables in the same way that
-  % the execution of the annotations representing that action modifies the 
+  % the execution of the annotations representing that action modifies the
   % corresponding ghost variables in the annotated program.
   % NOTE: We need a quantification over "a" to be able to apply induction.
   ann_action_preserves_related_states : LEMMA % :-)

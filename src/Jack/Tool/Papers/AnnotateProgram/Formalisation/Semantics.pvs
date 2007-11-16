@@ -330,9 +330,9 @@ BEGIN
           derive(p)(IF up?(ex(pstate(tau1))) THEN c2 ELSE Skip ENDIF,
                     update_PState(tau1, catch), Unit, tau2)(m2) AND
           derive(p)(c3, update_PState(tau2, catch), Unit, tau3)(m3) AND
-          sigma2 = IF up?(ex(pstate(tau2)))
+          sigma2 = IF NOT up?(ex(pstate(tau3)))
                    THEN update_PState(tau3, raise(down(ex(pstate(tau2)))))
-                   ELSE tau3 % update_PState(tau3, raise(down(ex(pstate(tau3)))))
+                   ELSE tau3
                    ENDIF,
       While(e, c) :
         n > 0 AND
@@ -342,7 +342,7 @@ BEGIN
       Assert(e) :
         n > 0 AND
         v = return_of_stmt(sigma2) AND
-         execute_assert(p, e, sigma1, sigma2, n, derive_rec)
+        execute_assert(p, e, sigma1, sigma2, n, derive_rec)
     ENDCASES
     ENDIF
   MEASURE n
@@ -589,10 +589,6 @@ BEGIN
       CASES branches OF
         null : n = 0 AND s1 = s2,
         cons(x, xs) : n > 0 AND
-                      % MH: HACK Needed: this looks like PVS bug to me
-                      % If we replace the s by the CaseJML(xs), it does not
-                      % type check
-                      % AT: with the .pvs.lisp file this hack is not needed
                       derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x), 
                                        CaseJML(xs)), s1, Unit, s2)(n - 1) AND
                       pstate(s1) = pstate(s2)

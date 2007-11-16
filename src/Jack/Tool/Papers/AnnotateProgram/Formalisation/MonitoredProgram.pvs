@@ -154,7 +154,7 @@ BEGIN
     LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
-    NOT cp(astate(s1)) = halted AND
+%    NOT cp(astate(s1)) = halted AND
     EXISTS(s_new : MPState) :
       on_method_entry(mp, md, a, s1, s_new, n, derive_rec) AND
       IF up?(ex(pstate(s_new)))
@@ -169,7 +169,7 @@ BEGIN
     LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
-    NOT cp(astate(s1)) = halted AND
+%    NOT cp(astate(s1)) = halted AND
     IF up?(ex(pstate(s1)))
     THEN s1 = s2 AND n = 0
     ELSE
@@ -189,7 +189,7 @@ BEGIN
     LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
-    NOT cp(astate(s1)) = halted AND
+%    NOT cp(astate(s1)) = halted AND
     IF up?(ex(pstate(s1)))
     THEN
     EXISTS (m1, m2 : nat, tau1, tau2, tau3 : MPState,
