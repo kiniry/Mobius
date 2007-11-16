@@ -1,0 +1,49 @@
+LegalProgramRestriction[Name : TYPE+,
+          FullProgram : TYPE,
+          FullState : TYPE,
+          (IMPORTING WellFormedProgram[Name]) program : [FullProgram -> Program],
+          (IMPORTING State[Name]) pstate : [FullState -> PState],
+          lookup : [Name, FullState -> Val],
+          (IMPORTING SemanticsTypes[Name, FullProgram, FullState,
+                                    program, pstate])
+          update_PState : (update_PState_type),
+          execute_set : (execute_set_type),
+          execute_assert : (execute_assert_type),
+          execute_CaseJML : (execute_CaseJML_type),
+          on_method_entry : (on_method_event_type),
+          on_method_exit_normal : (on_method_event_type),
+          on_method_exit_exceptional : (on_method_event_type)] : THEORY
+BEGIN
+
+  IMPORTING WellFormedProgram[Name],
+            Semantics[Name, FullProgram, FullState, program, pstate,
+                      lookup, update_PState, execute_set, execute_assert,
+                      execute_CaseJML, on_method_entry, 
+                      on_method_exit_normal, on_method_exit_exceptional]
+
+  try_cond(p : Program)(b : (wf_Body(p))) : bool
+
+  legal_Body(p : Program)(b : (wf_Body(p))) : bool =
+   FORALL(b1 : Body) : 
+     subterm(b1, b) IMPLIES
+     TryCatch?(b1) IMPLIES 
+     try_cond(p)(b1)
+
+
+  legal_Program(p : Program) : bool =
+    FORALL(c : Class) :
+       classes(p)(c) IMPLIES
+         legal_Body(p)(inv(c)) % this is nonsense, but it is needed to be able 
+                            % to apply the induction hypothesis
+         AND
+         FORALL(m : Method) :
+           methods(c)(m) IMPLIES
+             legal_Body(p)(pre(m)) AND 
+             legal_Body(p)(post(m)) AND
+             legal_Body(p)(body(m)) AND 
+             legal_Body(p)(pre_set(m)) AND
+             legal_Body(p)(post_set(m)) AND 
+             legal_Body(p)(exc_set(m)) AND
+             legal_Body(p)(res(m))
+
+END LegalProgramRestriction
