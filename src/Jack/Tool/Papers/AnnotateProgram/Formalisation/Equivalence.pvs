@@ -52,10 +52,8 @@ BEGIN
       gvs(sMP)(n) = gvs(sAP)(n)
 
   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
-    IF cp(astate(sMP)) = halted 
-    THEN up?(ex(pstate(sAP))) AND JMLExc?(down(ex(pstate(sAP))))
-    ELSE pstate(sMP) = pstate(sAP) AND Program_gvs_modeled?(sMP, sAP)
-    ENDIF
+    pstate(sMP) = pstate(sAP) AND 
+    Program_gvs_modeled?(sMP, sAP)
 
   % Says if an state of a MP is correctly modeled by a state of an AP
   MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
@@ -111,7 +109,10 @@ BEGIN
   related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
     wf_state(mp)(sMP) AND
     wf_state(ann_program(mp))(sAP) AND
-    MP_modeled?(mp)(sMP, sAP)
+    IF cp(astate(sMP)) = halted
+    THEN up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
+    ELSE MP_modeled?(mp)(sMP, sAP)
+    ENDIF
 
 
 END Equivalence
@@ -153,11 +154,16 @@ BEGIN
       related_states(mp)(sMP, sAP) IMPLIES
       NOT cp(astate(sMP)) = halted IMPLIES
         get_dynamic_type_name(vn, sMP) = get_dynamic_type_name(vn, sAP)
+
+  halted_implies_exception : LEMMA % :-)
+    FORALL (sMP : MPState, sAP : APState) :
+      related_states(mp)(sMP, sAP) IMPLIES 
+      cp(astate(sMP)) = halted IMPLIES
+        up?(ex(pstate(sAP)))
   
   MP_modeled_implies_same_exception : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES
-      NOT cp(astate(sMP)) = halted IMPLIES
         ex(pstate(sMP)) = ex(pstate(sAP))
 
   related_states_implies_same_exception : LEMMA % :-)
@@ -235,6 +241,7 @@ BEGIN
   related_states_lookup_correspondence : LEMMA % :-)
     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
       cps(mva(mp))(q1) IMPLIES
       cps(mva(mp))(q2) IMPLIES
       cp(astate(sMP)) = q1 IMPLIES
