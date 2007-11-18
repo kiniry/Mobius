@@ -229,7 +229,7 @@ BEGIN
           derive(p)(c, sigma1, v1, tau)(m1) AND
           check_for_exception(tau, sigma2, v,
                 Bool?(v1) AND
-                derive(p)(IF b(v1) THEN t ELSE e ENDIF, tau, v, sigma2)(m2)) 
+                derive(p)(IF b(v1) THEN t ELSE e ENDIF, tau, v, sigma2)(m2))
           AND
           (up?(ex(pstate(tau))) IMPLIES m2 = 0),
       MethodCall(e, mn, pr) :
@@ -589,7 +589,7 @@ BEGIN
       CASES branches OF
         null : n = 0 AND s1 = s2,
         cons(x, xs) : n > 0 AND
-                      derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x), 
+                      derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x),
                                        CaseJML(xs)), s1, Unit, s2)(n - 1) AND
                       pstate(s1) = pstate(s2)
       ENDCASES

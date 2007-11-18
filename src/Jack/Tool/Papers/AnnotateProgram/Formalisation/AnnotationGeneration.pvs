@@ -182,10 +182,10 @@ BEGIN
 
 
   subterm_ann_action : LEMMA % :-)
-    FORALL(a : Action, b : Body) : 
+    FORALL(a : Action, b : Body) :
       Set?(b) IMPLIES
         subterm(b, ann_action(a)) =
-          (EXISTS(oa : OneAction) : 
+          (EXISTS(oa : OneAction) :
              member(oa, a) AND
              subterm(b, Set(target(oa), source(oa))))
 
@@ -348,7 +348,7 @@ BEGIN
   ann_method_res_type : LEMMA % :-)
     FORALL (m : Method) :
       res_type(ann_method(mp)(m)) = res_type(m)
-  
+
   ann_method_wf_Body1 : LEMMA % :-)
     FORALL(m : Method) :
       wf_Method(program(mp))(m) IMPLIES
@@ -382,23 +382,23 @@ BEGIN
       wf_Method(program(mp))(m) IMPLIES
       Set?(b) IMPLIES
       LET am = ann_method(mp)(m) IN
-      (subterm(b, body(am)) IMPLIES 
+      (subterm(b, body(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (subterm(b, pre(am)) IMPLIES 
+      (subterm(b, pre(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (subterm(b, post(am)) IMPLIES 
+      (subterm(b, post(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (subterm(b, res(am)) IMPLIES 
+      (subterm(b, res(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (subterm(b, pre_set(am)) IMPLIES 
+      (subterm(b, pre_set(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b)) OR
          var_names(new_gvds(mp))(target(b))) AND
-      (subterm(b, post_set(am)) IMPLIES 
+      (subterm(b, post_set(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b)) OR
          var_names(new_gvds(mp))(target(b))) AND
-      (subterm(b, exc_set(am)) IMPLIES 
+      (subterm(b, exc_set(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b)) OR
-         var_names(new_gvds(mp))(target(b))) 
+         var_names(new_gvds(mp))(target(b)))
 
 
 END AnnotateMethod
@@ -621,7 +621,7 @@ BEGIN
             union(var_names(program(mp)), var_names(new_gvds(mp))))
 
   var_names_declared_in_MVA_subset_ghostvars : LEMMA % :-)
-    subset?(var_names(vdsA(mva(mp))), 
+    subset?(var_names(vdsA(mva(mp))),
             var_names(getGhostDecls(ann_program(mp))))
 
   ann_program_defines_MVA_vars : LEMMA % :-)
@@ -642,7 +642,7 @@ BEGIN
     FORALL (e : Expr) :
       wf_Body(mva(mp))(e) IMPLIES
         wf_Body(ann_program(mp))(e)
-  
+
   one_action_source_wf_Body : LEMMA % :-)
     FORALL (a : Action, oa : OneAction) :
       wf_Action(mva(mp))(a) IMPLIES
@@ -687,7 +687,7 @@ BEGIN
     FORALL (m : (wf_Method(program(mp)))) :
       wf_Method(ann_program(mp))(ann_method(mp)(m))
 
- 
+
   ann_program_preserves_wf_body : LEMMA % :-)
     FORALL (b : (wf_Body(program(mp)))) :
       wf_Body(ann_program(mp))(b)

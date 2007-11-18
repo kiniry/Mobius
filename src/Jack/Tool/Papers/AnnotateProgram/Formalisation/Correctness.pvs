@@ -180,11 +180,13 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
+  % TODO: prove
   on_method_exit_normal_preserves_related_states_annotated : LEMMA
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       well_behaved_MVA(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       up?(get_class[Name](program(mp))(a)) IMPLIES
       name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
@@ -211,6 +213,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
+  % TODO: fix
   on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-)
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
@@ -240,11 +243,13 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
+  % TODO: prove
   on_method_exit_exceptional_preserves_related_states_annotated : LEMMA
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       well_behaved_MVA(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
       up?(ex(pstate(sAP1))) IMPLIES
       up?(get_class[Name](program(mp))(a)) IMPLIES
       name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
@@ -271,6 +276,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
+  % TODO: fix
   on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-)
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
