@@ -190,7 +190,7 @@ BEGIN
             s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
 %    NOT cp(astate(s1)) = halted AND
-    IF up?(ex(pstate(s1)))
+    IF up?(ex(pstate(s1))) AND NOT down(ex(pstate(s1))) = JMLExc
     THEN
     EXISTS (m1, m2 : nat, tau1, tau2, tau3 : MPState,
             inv : (wf_BoolExpr(program(mp)))) :

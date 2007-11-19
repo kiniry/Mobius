@@ -30,6 +30,12 @@ BEGIN
      try_cond(p)(b1)
 
 
+  legal_Body_preserved_by_proper_subterm : LEMMA % :-)
+    FORALL(p : PreProgram)(b1, b2 : Body) :
+      legal_Body(p)(b1) IMPLIES
+      b2 << b1 IMPLIES
+        legal_Body(p)(b2)
+
   legal_Program(p : Program) : bool =
     FORALL(c : Class) :
        classes(p)(c) IMPLIES

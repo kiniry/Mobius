@@ -322,16 +322,20 @@ BEGIN
         n = 0 AND
         v = return_of_stmt(sigma2) AND
         sigma2 = update_PState(sigma1, raise(Throwable)),
-      TryCatch(c1, c2, c3) :
+      TryCatch(c1, e, c2, c3) :
         v = return_of_stmt(sigma2) AND
         EXISTS (m1, m2, m3 : nat)(tau1, tau2, tau3 : FullState) :
           n = m1 + m2 + m3 + 1 AND
           derive(p)(c1, sigma1, Unit, tau1)(m1) AND
-          derive(p)(IF up?(ex(pstate(tau1))) THEN c2 ELSE Skip ENDIF,
-                    update_PState(tau1, catch), Unit, tau2)(m2) AND
+          IF up?(ex(pstate(tau1))) AND down(ex(pstate(tau1))) = e
+          THEN derive(p)(c2, update_PState(tau1, catch), Unit, tau2)(m2)
+          ELSE tau1 = tau2 AND m2 = 0
+          ENDIF AND
           derive(p)(c3, update_PState(tau2, catch), Unit, tau3)(m3) AND
           sigma2 = IF NOT up?(ex(pstate(tau3)))
-                   THEN update_PState(tau3, raise(down(ex(pstate(tau2)))))
+                   THEN update_PState(tau3, 
+                                      LAMBDA (ptau3 : PState) : ptau3 
+                                             WITH [ex := ex(pstate(tau2))])
                    ELSE tau3
                    ENDIF,
       While(e, c) :
@@ -661,7 +665,7 @@ BEGIN
     LAMBDA (p : FullProgram, md : (wf_Method(program(p))), a : Val,
             s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
-    IF up?(ex(pstate(s1)))
+    IF up?(ex(pstate(s1))) AND NOT down(ex(pstate(s1))) = JMLExc
     THEN
     EXISTS (m1, m2 : nat, tau1, tau2 : FullState,
             inv : (wf_BoolExpr(program(p)))) :

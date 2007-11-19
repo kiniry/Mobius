@@ -46,6 +46,8 @@ Body[Name : TYPE+] : DATATYPE
                          WITH SUBTYPES Expr, NumExpr, BoolExpr, RefExpr, Stmt
 BEGIN
 
+  IMPORTING Excpt
+
   % Numerical expressions. They are parameterized with a variable name to handle
   %  the case of variable evaluation.
   Int(i : int) : Int?                     : NumExpr
@@ -97,7 +99,7 @@ BEGIN
   Skip : Skip?                                      : Stmt
   StmtExpr(expr : Expr) : StmtExpr?                 : Stmt
   Throw : Throw?                                    : Stmt
-  TryCatch(try : Stmt, catch : Stmt, 
+  TryCatch(try : Stmt, exc : Excpt, catch : Stmt, 
            finally : Stmt) : TryCatch?              : Stmt
   While(test : BoolExpr, body : Stmt) : While?      : Stmt
   Assert(expr : BoolExpr) : Assert?                 : Stmt
@@ -212,7 +214,7 @@ BEGIN
        1, % Skip
        LAMBDA(n : nat) : n + 1, % StmtExpr
        1, % Throw
-       LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % TryCatchFinally
+       LAMBDA(n1 : nat, e : Excpt, n2, n3 : nat) : n1 + n2 + n3 + 1, % TryCatchFinally
        LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % While
        LAMBDA(n : nat) : n + 1)(b) % Assert
 
@@ -254,7 +256,7 @@ BEGIN
        Skip : emptyset[Name],
        StmtExpr(expr) : var_names(expr),
        Throw : emptyset[Name],
-       TryCatch(try, catch, finally) : 
+       TryCatch(try, exc, catch, finally) : 
          union(var_names(try), union(var_names(catch), var_names(finally))),
        While(test, body) : union(var_names(test), var_names(body)),
        Assert(expr) : var_names(expr)
