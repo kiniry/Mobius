@@ -100,7 +100,9 @@ public class ClassExecutor extends ASignatureExecutor {
     return "Add LoadPath \"" + pathToLib + "Formalisation/Library\".\n" + 
            "Add LoadPath \"" + pathToLib + "Formalisation/Library/Map\".\n" + 
            "Add LoadPath \"" + pathToLib + "Formalisation/Bicolano\".\n" +
-           "Add LoadPath \"" + pathToLib + "Formalisation/Logic\".\n" ;
+           "Add LoadPath \"" + pathToLib + "Formalisation/Logic\".\n" +
+           "Add LoadPath \"" + pathToLib + "\".\n"; // always useful
+
   }
   
   /**
