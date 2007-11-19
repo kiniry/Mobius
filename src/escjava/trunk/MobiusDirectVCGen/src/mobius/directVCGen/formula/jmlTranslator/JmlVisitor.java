@@ -1000,7 +1000,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       
       final Term forAllTerm = Logic.forall(vars, t);
       //addToPostcondition(forAllTerm, o);
-      Lookup.addNormalPostcondition(prop,forAllTerm);
+      Lookup.addNormalPostcondition(prop, forAllTerm);
       Lookup.addExceptionalPostcondition(prop.getDecl(), forAllTerm);
     } 
   }

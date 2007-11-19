@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mobius.bico.executors.Executor;
-import mobius.bico.implem.MapImplemSpecif;
 
 
 /**
@@ -27,10 +26,7 @@ public class AnnotationCompiler {
   public AnnotationCompiler(final File pkgsdir, final String clzz) {
     final List<String> classes = new ArrayList<String>();
     classes.add(clzz);
-    fExecutor = new AnnotationExecutor(new MapImplemSpecif(),
-                                       pkgsdir,
-                                       pkgsdir, 
-                                       classes);
+    fExecutor = new AnnotationExecutor(pkgsdir, classes);
   }
 
   /**

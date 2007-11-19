@@ -44,6 +44,7 @@ import javafe.ast.VarInit;
 import javafe.ast.WhileStmt;
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
@@ -576,7 +577,7 @@ public class StmtVCGen extends ExpressionVisitor {
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 
     // first: the exceptional post
-    final QuantVariableRef exc = Expression.rvar(Ref.sort);
+    final QuantVariableRef exc = Expression.rvar(Heap.sortValue);
     final Term tExcp = Logic.forall(exc.qvar, 
                Logic.implies(excpPost.substWith(exc).subst(Ref.varThis, 
                                                            newThis), 

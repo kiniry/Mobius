@@ -232,7 +232,7 @@ public class Lookup {
     //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
     Post p = exceptionalPostconditions.get(m);
     if (p == null) {
-      p = new Post(Expression.rvar(Ref.sort), Logic.True());
+      p = new Post(Expression.rvar(Heap.sortValue), Logic.True());
     }
     return p;
   }
@@ -273,7 +273,7 @@ public class Lookup {
     final Post pOld = exceptionalPostconditions.get(rd);
     Post pNew;
     if (pOld == null) {
-      pNew = new Post(Expression.rvar(Ref.sort), term);
+      pNew = new Post(Expression.rvar(Heap.sortValue), term);
     }
     else {
       pNew = Post.and(pOld, term);

@@ -150,7 +150,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     
 
     // first: the exceptional post
-    final QuantVariableRef exc = Expression.rvar(Ref.sort);
+    final QuantVariableRef exc = Expression.rvar(Heap.sortValue);
     final Term excpPost =  Util.getExcpPost(Type.javaLangThrowable(), entry).substWith(exc)
                                     .subst(Heap.var, newHeap);
     final Term methExcp = Logic.implies(pre, methExcpPost.substWith(exc));

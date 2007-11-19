@@ -2,17 +2,17 @@ Add LoadPath "Formalisation/Bicolano".
 Add LoadPath "Formalisation/Library".
 Add LoadPath "Formalisation/Library/Map".
 Add LoadPath "Formalisation/Logic".
-
+Add Rec LoadPath "classes".
 Require Export Bool.
 Require Export Sumbool.
 
-Require Export BicoMap.
-Export BicoMapProgram.
+Require Export Bico.
+Export BicoProgram.
 Import P.
 Require Export ImplemSWp.
 Import Mwp.
 
-Variable heap: Heap.t.
+(* Variable heap: Heap.t. *)
 Definition p := program.
 
 Definition get (heap: Heap.t) (loc: Heap.AdressingMode)  : value :=

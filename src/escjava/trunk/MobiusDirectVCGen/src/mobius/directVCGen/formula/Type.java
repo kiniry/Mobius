@@ -82,11 +82,11 @@ public final class Type {
       if (Types.isReferenceType(type)) {
         
         if (Types.toClassTypeSig(type) != null) {
-          name = "(ClassType " + name.substring(2) + "Type.className)";
+          name = "(ClassType " + name.substring(2) + "Type.name)";
         }
         else {
         // gee! it's an interface!
-          name = "(InterfaceType " + name.substring(2) + "Type.interfaceName)";
+          name = "(InterfaceType " + name.substring(2) + "Type.name)";
         }
         name = "(ReferenceType " + name + ")";
       }
@@ -109,10 +109,10 @@ public final class Type {
       String name = UniqName.type(type);
       if (Types.isReferenceType(type)) {
         if (Types.toClassTypeSig(type) != null) {
-          name =  name.substring(2) + "Type.className";
+          name =  name.substring(2) + "Type.name";
         }
         else {
-          name =  name.substring(2) + "Type.interfaceName";
+          name =  name.substring(2) + "Type.name";
         }
       }
       t = Expression.rvar(name, Type.sort);

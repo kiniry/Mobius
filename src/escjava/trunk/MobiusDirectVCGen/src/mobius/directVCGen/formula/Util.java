@@ -193,7 +193,7 @@ public class Util {
    */
   public static Term getNewExcpPost(final Term type, final VCEntry post) {
     final Post p = Util.getExcpPost(type, post);
-    final QuantVariableRef e = Expression.rvar(Ref.sort);
+    final QuantVariableRef e = Expression.rvar(Heap.sortValue);
     final QuantVariableRef heap = Heap.newVar();
     
     return Logic.forall(heap,
@@ -230,7 +230,7 @@ public class Util {
       }
     }
     
-    QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
+    final QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
     
     if (!isVoid(fMeth)) {
       args.addFirst(Expression.normal(Expression.some(qvr)));

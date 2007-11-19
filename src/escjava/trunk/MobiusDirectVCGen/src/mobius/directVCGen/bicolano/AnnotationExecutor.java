@@ -13,7 +13,8 @@ import mobius.bico.dico.Dictionary;
 import mobius.bico.executors.ClassExecutor;
 import mobius.bico.executors.ClassesMakefileGen;
 import mobius.bico.executors.Executor;
-import mobius.bico.implem.IImplemSpecifics;
+import mobius.bico.executors.MakefileGen;
+import mobius.bico.implem.MapImplemSpecif;
 
 import org.apache.bcel.generic.ClassGen;
 
@@ -23,22 +24,33 @@ import org.apache.bcel.generic.ClassGen;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class AnnotationExecutor extends Executor {
-   
-  /** the current working directory. */
-  private final File fWorkingDir;
 
   
   /**
    * Create the special annotation executor.
-   * @param workingDir the directory where to generate the files
-   * @param sig the type signature which expresses the program
-   * to treat
-   * @param args the 'normal' arguments that should be given
-   * to bico
+   * @param sourceDir the directory where to find the files to
+   * translate
+   * @param outputDir the directory where to generate the files
+   * for bico
+   * @param classToTreat the list of the class names to look at, 
+   * additionnaly to what can be found in the source dir
    */
-  public AnnotationExecutor(IImplemSpecifics implem, File workingDir, File outputDir, List<String> classToTreat) {
-    super(implem, workingDir, outputDir, classToTreat);
-    fWorkingDir = workingDir; 
+  public AnnotationExecutor(final File sourceDir, 
+                            final File outputDir, 
+                            final List<String> classToTreat) {
+    super(new MapImplemSpecif(), sourceDir, outputDir, classToTreat);
+  }
+  /**
+   * Create the special annotation executor. The source
+   * files are taken from the classpath.
+   * @param outputDir the directory where to generate the files
+   * for bico
+   * @param classToTreat the list of the class names to look at, 
+   * additionnaly to what can be found in the source dir
+   */
+  public AnnotationExecutor(final File outputDir, 
+                            final List<String> classToTreat) {
+    super(new MapImplemSpecif(),  outputDir, outputDir, classToTreat);
   }
 
   /**
@@ -54,7 +66,7 @@ public class AnnotationExecutor extends Executor {
     final File typ = new File(getBaseDir(), getModuleName() + "_annotations" + suffix);
     final CoqStream out = new CoqStream(new FileOutputStream(typ));
     out.println(libPath);
-    
+    out.println("Add Rec LoadPath \"classes\".");
     out.println();
     out.incPrintln("Module " + getModuleName() + "Annotations.");
 
@@ -95,8 +107,8 @@ public class AnnotationExecutor extends Executor {
     out.decPrintln(".\n");
 
     out.incPrintln("Definition anno_prog :="); 
-    out.println("AnnoProg BicoMapProgram.program " +
-        "BicoMapProgram.subclass program_spec.");
+    out.println("AnnoProg BicoProgram.program " +
+        "BicoProgram.subclass program_spec.");
     out.decPrintln("End " + getModuleName() + "Annotations.");
     
   }  
@@ -117,10 +129,20 @@ public class AnnotationExecutor extends Executor {
 
   /**
    */
+  @Override
   public void generateClassMakefiles() {
-    final ClassesMakefileGen cmg = new MakefileGenerator(getBaseDir(), 
+    final ClassesMakefileGen cmg = new ClassMkfileGenerator(getBaseDir(), 
                                                           getTreatedClasses());
     cmg.generate();
   }
-
+  
+  /**
+   */
+  @Override
+  public void generateMainMakefile() {
+    
+    final MakefileGen mg = new MkfileGenerator(getBaseDir());
+    mg.generate();
+  }
+  
 }

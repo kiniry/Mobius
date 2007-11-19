@@ -9,9 +9,9 @@ import java.util.List;
 import mobius.bico.executors.ClassExecutor;
 import mobius.bico.executors.ClassesMakefileGen;
 
-public class MakefileGenerator extends ClassesMakefileGen {
+public class ClassMkfileGenerator extends ClassesMakefileGen {
 
-  public MakefileGenerator(File baseDir, Collection<ClassExecutor> treated) {
+  public ClassMkfileGenerator(File baseDir, Collection<ClassExecutor> treated) {
     super(baseDir, treated);
   }
 
