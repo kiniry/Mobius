@@ -26,7 +26,9 @@ import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ArrayType;
+import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
 
@@ -90,6 +92,10 @@ public class ClassExecutor extends ASignatureExecutor {
     fLibPath = computePathToLibraries(); 
   }
   
+  /**
+   * Computes the add to load path instructions for Coq.
+   * @return a String containing a serie of Add LoadPath
+   */
   private String computePathToLibraries () {
     String pathToLib = ".." + File.separator;
     for (String s: fClass.getJavaClass().getPackageName().split("\\.")) {
@@ -119,7 +125,7 @@ public class ClassExecutor extends ASignatureExecutor {
       throw new NullPointerException();
     }
     getDico().addClass(jc);
-    initFOtherLibs();
+    findDependencies();
     // first, handle the classes on which the current class depends
     /* initFOtherLibs(); */
     System.out.print("  --> Generating " + fNamingData.getTypeModule() + ": ");
@@ -391,28 +397,16 @@ public class ClassExecutor extends ASignatureExecutor {
    * external libraries and also add a load path to the class if such does not
    * exist already
    * 
-   * @param clzz
-   * @throws ClassNotFoundException
-   * @throws IOException
+   * @param clzz the class to load
+   * @throws ClassNotFoundException if the specified class
+   * does not exists
    */
   private void handleImportedLib(final String clzz)
-  		throws ClassNotFoundException, IOException {
+    throws ClassNotFoundException {
     final String clname = clzz;
     ClassNamingData cl = null;
-    try {
-      final JavaClass jc = getRepository().loadClass(clname);
-      // if the class file is not already in the hash map of imported classes
-      // then add it
-      cl = new ClassNamingData(jc);
-
-    }
-    catch (ClassNotFoundException e) {
-      return;
-    }
-    catch (IllegalArgumentException e) {
-      return;
-    }
-    
+    final JavaClass jc = getRepository().loadClass(clname);
+    cl = new ClassNamingData(jc);
     fExtLibsLocal.add(cl);
     extractLoadPath(cl);    
   }
@@ -430,13 +424,96 @@ public class ClassExecutor extends ASignatureExecutor {
    * methods in the class
    * </ul>
    * 
-   * @throws IOException
-   * @throws ClassNotFoundException
+   * @throws ClassNotFoundException if one of the class dependencies cannot be resolved
    */
-  private void initFOtherLibs() throws ClassNotFoundException, IOException {
+  private void findDependencies() throws ClassNotFoundException {
+
+    for (String str: findConstantPoolDependencies()) {
+      try {
+        handleImportedLib(str);
+      }
+      catch (ClassNotFoundException e) {
+        // if one of the class name of the list was part of
+        // a fantasy...
+      }
+      
+    }
+    
+    final List<String> dependencies = new ArrayList<String>();
+    dependencies.addAll(findFieldDependencies());
+    dependencies.addAll(findMethodDependencies());
+    for (String str: dependencies) {
+      handleImportedLib(str);
+    }
+    
+  }
+  
+  
+  /** 
+   * Find all the dependencies from the methods signatures.
+   * @return the list of the dependencies found.
+   */
+  private List<String> findMethodDependencies() {
+    final JavaClass jc = fClass.getJavaClass();
+    final List<String> dependencies = new ArrayList<String>();
+    
+    final Method[] ms = jc.getMethods();
+    for (Method met: ms) {
+      final Type retType = met.getReturnType();
+      if (retType instanceof ReferenceType) {
+        final String className = Util.getTypeName((ReferenceType)retType);
+        if (className != null) {
+          dependencies.add(className);
+        }
+      }
+    
+      final Type[] argT = met.getArgumentTypes();
+      if (argT != null) {
+        for (Type type: argT) {
+          if (type instanceof ReferenceType) {
+            final String className = Util.getTypeName((ReferenceType)type);
+            if (className != null) {
+              dependencies.add(className);
+            }
+          }
+        }
+      }
+    
+    }
+    return dependencies;
+  }
+  
+  /** 
+   * Find all the dependencies from the fields signatures.
+   * @return the list of the dependencies found.
+   */
+  private List<String> findFieldDependencies() {
+    final JavaClass jc = fClass.getJavaClass();
+    final List<String> dependencies = new ArrayList<String>();
+    final Field[] fs = jc.getFields();
+    for (Field field: fs) {
+      final Type type = field.getType();
+      if (type instanceof ReferenceType) {
+        final String className = Util.getTypeName((ReferenceType) type);
+        if (className != null) {
+          dependencies.add(className);
+        }
+      }
+    }
+    return dependencies;
+  }
+
+
+
+  /** 
+   * Find all the dependencies from the constant pool.
+   * @return the list of the dependencies found.
+   */
+  private List<String> findConstantPoolDependencies() {
     final JavaClass jc = fClass.getJavaClass();
     final ConstantPool cp = jc.getConstantPool();
     final Constant[] co = cp.getConstantPool();
+    final List<String> dependencies = new ArrayList<String>();
     for (int i = 0; i < co.length; i++) {
       ConstantCP c = null;
       if (cp.getConstant(i) instanceof ConstantFieldref) {
@@ -444,65 +521,30 @@ public class ClassExecutor extends ASignatureExecutor {
         final int k = c.getNameAndTypeIndex();
         final ConstantNameAndType nt = (ConstantNameAndType) cp.getConstant(k);
         String type = nt.getSignature(cp);
-  
         type = Util.classFormatName2Standard(type);
-        handleImportedLib(type);
+        if (type != null) {
+          dependencies.add(type);
+        }
  
       } 
       else if (cp.getConstant(i) instanceof ConstantMethodref) {
         c = (ConstantMethodref) co[i];
-        String type = c.getClass(cp);
-        type = Util.classFormatName2Standard(type);
-        handleImportedLib(type);
-      
+        final String type = c.getClass(cp);
+        dependencies.add(type);
       }
       else if (co[i] instanceof ConstantUtf8) {
         final ConstantUtf8 cons = (ConstantUtf8) co[i];
-        handleImportedLib(Util.classFormatName2Standard(cons.getBytes()));     
+        final String type = Util.classFormatName2Standard(cons.getBytes());
+        if (type != null) {
+          dependencies.add(type);
+        }
       }      
       else if (co[i] instanceof ConstantClass) {
         final ConstantClass cons = (ConstantClass) co[i];
-        //System.out.println(cons.getConstantValue(cp).toString());
-        handleImportedLib(cons.getConstantValue(cp).toString().replace('/', '.'));
+        dependencies.add(cons.getConstantValue(cp).toString().replace('/', '.'));
       }
     }
-    
-    final Field[] fs = jc.getFields();
-    for (int i = 0; i < fs.length; i++) {
-      String type = fs[i].getSignature();
-      type = Util.classFormatName2Standard(type);
-      handleImportedLib(type);
-    
-    }
-    
-    final Method[] ms = jc.getMethods();
-    for (Method met: ms) {
-      final Type retT = met.getReturnType();
-      if ((retT instanceof ArrayType) && 
-          (((ArrayType) retT).getBasicType() instanceof ReferenceType)) {
-        handleImportedLib(((ArrayType) retT).getBasicType().toString());
-      } 
-      else if ((!(retT instanceof ArrayType)) && 
-               retT instanceof ReferenceType) {
-        handleImportedLib(retT.toString());
-      }
-    
-      final Type[] argT = met.getArgumentTypes();
-      if (argT != null) {
-        for (int k = 0; k < argT.length; k++) {
-          if ((argT[k] instanceof ArrayType) && 
-              (((ArrayType) argT[k]).getBasicType() instanceof ReferenceType)) {
-            handleImportedLib(((ArrayType) argT[k]).getBasicType().toString());
-          } 
-          else if ((!(argT[k] instanceof ArrayType)) && 
-                   argT[k] instanceof ReferenceType) {
-            handleImportedLib(argT[k].toString());
-          }
-        }
-      }
-    
-    }
-  
+    return dependencies;
   }
   
   /**
@@ -531,6 +573,9 @@ public class ClassExecutor extends ASignatureExecutor {
     return al;
   }
   
+  /**
+   * @return "Class Executor: module_name.
+   */
   @Override
   public String toString () {
     return "Class Executor: " + getModuleName();

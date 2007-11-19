@@ -387,9 +387,31 @@ public final class Util {
               cf.getName().indexOf('.') == -1;
     }
   }
-
+  
+  public static class ClassFilter implements FileFilter {
+    public boolean accept(final File cf) {
+      return ((cf.isFile()) && cf.getName().endsWith(Constants.CLASS_SUFFIX));
+    }
+  }
+  
   public static File getPackageDir(JavaClass javaClass) {
     return new File(javaClass.getPackageName().replace('.',
                                                        File.separatorChar));
+  }
+  public static String getTypeName(final ReferenceType rtyp) {
+    String className = null;
+    
+    if (rtyp instanceof ObjectType) {
+      final ObjectType otyp = (ObjectType) rtyp;
+      className = otyp.getClassName();
+    }
+    else if (rtyp instanceof ArrayType) {
+      final ArrayType atyp = (ArrayType) rtyp;
+      final Type type = atyp.getBasicType();
+      if (type instanceof ReferenceType) {
+        className = getTypeName((ReferenceType) type);
+      }
+    }
+    return className;
   }
 }

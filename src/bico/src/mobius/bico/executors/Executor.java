@@ -1,7 +1,6 @@
 package mobius.bico.executors;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,6 +26,8 @@ import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.util.ClassLoaderRepository;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
+
+
 
 /**
  * The main entry point to bico.
@@ -69,7 +70,8 @@ public class Executor extends ABasicExecutor {
   
   /** the name of the executor file which will be declined to Type and Sig. */
   private final String fName;
-
+  /** the directory from which to collect the files to translate. */
+  private final File fSourceDir;
   
   /**
    * Minimal constructor.
@@ -81,6 +83,7 @@ public class Executor extends ABasicExecutor {
           new MapImplemSpecif(), new MethodHandler(), null,
           new CamlDictionary(), new File(""));
     fName = "Bico";
+    fSourceDir = new File("");
   }
   
   
@@ -92,6 +95,7 @@ public class Executor extends ABasicExecutor {
   public Executor(final Executor e) {
     super((ABasicExecutor) e);
     fName = e.fName;
+    fSourceDir = e.fSourceDir;
     fPendingClasses.addAll(e.fPendingClasses);
   }
   
@@ -102,13 +106,13 @@ public class Executor extends ABasicExecutor {
    * Create a new Executor object.
    * 
    * @param implem specify the implementation to use
-   * @param workingDir the current working dir
+   * @param sourceDir the current working dir
    * @param outputDir the output directory
    * @param clzzPath the classpath to use
    * @param classToTreat the list of classes to treat
    */
   public Executor(final IImplemSpecifics implem, 
-                  final File workingDir,
+                  final File sourceDir,
                   final File outputDir, 
                   final ClassPath clzzPath,
                   final List<String> classToTreat) {
@@ -117,29 +121,30 @@ public class Executor extends ABasicExecutor {
           new MethodHandler(), 
           null,
           new CamlDictionary(), 
-          workingDir);
+          outputDir);
 
     if (classToTreat != null) {
       fPendingClasses.addAll(classToTreat);
     }
     fName = "Bico";
+    fSourceDir = sourceDir;
   }
   /**
    * Create a new Executor object.
    * 
    * @param implem specify the implementation to use
-   * @param workingDir the current working dir
+   * @param sourceDir the current working dir
    * @param outputDir the output directory
    * @param classToTreat the list of classes to treat
    */
   public Executor(final IImplemSpecifics implem, 
-                  final File workingDir,
+                  final File sourceDir,
                   final File outputDir, 
                   final List<String> classToTreat) {
     this(implem, 
-         workingDir, 
+         sourceDir, 
          outputDir,
-         new ClassPath(workingDir.getAbsolutePath() + 
+         new ClassPath(sourceDir.getAbsolutePath() + 
                        File.pathSeparatorChar + ClassPath.getClassPath()),
          classToTreat);
   }
@@ -150,9 +155,8 @@ public class Executor extends ABasicExecutor {
   /**
    * Treat all classes in the directory passed as value to the 
    * input parameter <code>-lib</code>.
-   * 
-   * @throws IOException
-   * @throws ClassNotFoundException
+   * @throws IOException 
+   * @throws ClassNotFoundException 
    */
   public void doApplication() throws ClassNotFoundException, IOException {
     collectClasses("");
@@ -169,23 +173,12 @@ public class Executor extends ABasicExecutor {
    * input parameter <code>-lib</code>.
    * 
    * @param pkg the current package name
-   * @throws IOException
-   * @throws ClassNotFoundException
    */
-  private void collectClasses(final String pkg) 
-    throws ClassNotFoundException, IOException {
-    final File baseDir = getBaseDir();
-    final File f = new File(baseDir, pkg);
-    final File[] classfiles = f.listFiles(new FileFilter() {
-      public boolean accept(final File cf) {
-        return ((cf.isFile()) && cf.getName().endsWith(Constants.CLASS_SUFFIX));
-      }
-    });
-    
+  private void collectClasses(final String pkg) {
+    final File f = new File(fSourceDir, pkg);
+    final File[] classfiles = f.listFiles(new Util.ClassFilter());    
     final File[] dirfiles = f.listFiles(new Util.DirectoryFilter());
     
-    System.out.println("Entering directory " + f + ".");
-    System.out.println("Found " + classfiles.length + " classes.");
     for (File cf: classfiles) {
       String className = 
         pkg + Util.removeClassSuffix(cf.getName()); 
@@ -195,18 +188,10 @@ public class Executor extends ABasicExecutor {
     }
     
     for (File cf: dirfiles) {
-      
       final String p = pkg + cf.getName() + 
                        Constants.PATH_SEPARATOR;
-      // else handle the next package which is in the current
-      // directory
-      
       collectClasses(p);
-      
-     
     }
-    //new MakefileGenerator(getBaseDir(), pkg, ).generate();
-    System.out.println("Leaving directory " + f + ".");
   }
   
   /**
@@ -229,7 +214,7 @@ public class Executor extends ABasicExecutor {
     
 
     writeDictionnary();
-    File fCoqFileName = new File(getBaseDir(), fName + suffix);
+    final File fCoqFileName = new File(getBaseDir(), fName + suffix);
     // creating file for output
     if (fCoqFileName.exists()) {
       fCoqFileName.delete();
@@ -299,13 +284,19 @@ public class Executor extends ABasicExecutor {
 
 
 
-  
+  /**
+   * This method is called to generate the main makefile.
+   */
   public void generateMainMakefile() {
     
     final MakefileGen mg = new MakefileGen(getBaseDir());
     mg.generate();
   }
   
+  /**
+   * This method is called to generate all the class make files
+   * (the makefiles of the subdirectories).
+   */
   public void generateClassMakefiles() {
     final ClassesMakefileGen cmg = new ClassesMakefileGen(getBaseDir(), 
                                                           getTreatedClasses());
@@ -450,8 +441,8 @@ public class Executor extends ABasicExecutor {
    * @return the newly created class executor for the given class or 
    * <code>null</code>
    */
-  public ClassExecutor handleClass(final String clname) throws ClassNotFoundException, 
-                                                               IOException {
+  public ClassExecutor handleClass(final String clname) 
+    throws ClassNotFoundException, IOException {
     if (clname == null) {
       return null;
     }
@@ -564,7 +555,11 @@ public class Executor extends ABasicExecutor {
     return fName;
   }
   
-  
+  /**
+   * Returns the collection of all the classes that were 
+   * translated.
+   * @return a list of the classes
+   */
   public Collection<ClassExecutor> getTreatedClasses() {
     
     return fTreatedClasses.values();
