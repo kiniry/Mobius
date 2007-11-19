@@ -24,18 +24,23 @@ public class DirectVCGen extends Visitor {
   private final File fPkgsdir;
   /** the directory representing the class. */
   private File fClassDir;
+
+  private final File fVCsDir;
+
   
 
 
   /**
    * Build a new vc gen, ready to generate new verification conditions!
-   * @param basedir the basedir where the libraries can be found
+   * @param baseDir the basedir where the libraries can be found
    * @param pkgsdir the package dir where to put the generated directories and
    * files
    */
-  public DirectVCGen(final File basedir, final File pkgsdir) {
-    this.fPkgsdir = pkgsdir;
-    this.fBasedir = basedir;
+  public DirectVCGen(final File baseDir, final File pkgsdir) {
+    fPkgsdir = pkgsdir;
+    fBasedir = baseDir;
+    fVCsDir = new File(baseDir, "vcs");
+    fVCsDir.mkdirs();
   }
 
   /**
@@ -57,7 +62,7 @@ public class DirectVCGen extends Visitor {
    */
   @Override
   public void visitMethodDecl(final /*@non_null*/ MethodDecl md) {
-    final MethodVisitor mv = MethodVisitor.treatRoutine(fBasedir, fClassDir, md);
+    final MethodVisitor mv = MethodVisitor.treatRoutine(getBaseDir(), fClassDir, md);
     System.out.println(mv);
   }
 
@@ -67,7 +72,7 @@ public class DirectVCGen extends Visitor {
    */
   @Override
   public void visitConstructorDecl(final /*@non_null*/ ConstructorDecl cd) {
-    final MethodVisitor mv = MethodVisitor.treatRoutine(fBasedir, fClassDir, cd);
+    final MethodVisitor mv = MethodVisitor.treatRoutine(getBaseDir(), fClassDir, cd);
     System.out.println(mv);
   }
 
@@ -105,5 +110,8 @@ public class DirectVCGen extends Visitor {
   public File getBaseDir() {
     return fBasedir;
   }
-
+  
+  public File getVcsDir() {
+    return fVCsDir;
+  }
 }

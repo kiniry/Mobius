@@ -91,7 +91,7 @@ public final class MethodVisitor extends DirectVCGen {
     
     
     try {
-      final BcCoqFile bcf = new BcCoqFile(getBaseDir(), getPkgsDir());
+      final BcCoqFile bcf = new BcCoqFile(getVcsDir(), getPkgsDir());
       String name = "" + fMeth.id();
       if (name.equals("" + fMeth.parent.id)) {
         name = "_init_";
@@ -110,7 +110,7 @@ public final class MethodVisitor extends DirectVCGen {
                new FileOutputStream(new File(getPkgsDir(), name + rawsuffix)));
         fos.println(t);
         fos.close();
-        final CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir(), name);
+        final CoqFile cf = new CoqFile(getVcsDir(), getPkgsDir(), name);
         cf.writeProof(Formula.generateFormulas(t));
         if (all == null) {
           all = t;
@@ -127,7 +127,7 @@ public final class MethodVisitor extends DirectVCGen {
     // write the file
 
     try {
-      final CoqFile cf = new CoqFile(getBaseDir(), getPkgsDir());
+      final CoqFile cf = new CoqFile(getVcsDir(), getPkgsDir());
       final STerm term = Formula.generateFormulas(all);
       cf.writeProof(term);
       
@@ -135,7 +135,7 @@ public final class MethodVisitor extends DirectVCGen {
       if (name.equals("" + fMeth.parent.id)) {
         name = "_init_";
       }
-      final EquivCoqFile ecf = new EquivCoqFile(getBaseDir(), getPkgsDir());
+      final EquivCoqFile ecf = new EquivCoqFile(getVcsDir(), getPkgsDir());
       ecf.doIt("" + fMeth.parent.id, name, term);
     } 
     catch (FileNotFoundException e) {

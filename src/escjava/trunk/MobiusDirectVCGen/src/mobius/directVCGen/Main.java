@@ -205,7 +205,7 @@ public class Main extends escjava.Main {
     final TypeSig sig = TypeCheck.inst.getSig(td);
     sig.typecheck();
     final String[] pkgs = sig.getPackageName().split("\\.");
-    fPkgsdir = fBasedir;
+    fPkgsdir = new File(fBasedir, "vcs");
     for (int i = 0; i < pkgs.length; i++) {
       fPkgsdir = new File(fPkgsdir, pkgs[i]);
     }

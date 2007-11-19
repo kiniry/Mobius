@@ -31,6 +31,7 @@ import javafe.ast.UnaryExpr;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import javafe.ast.WhileStmt;
+import javafe.util.Location;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
@@ -123,11 +124,13 @@ public class JmlVisitor extends BasicJMLTranslator {
   
   
   
-  /* (non-Javadoc 
-   * @see javafe.ast.VisitorArgResult#visitRoutineDecl(javafe.ast.RoutineDecl, java.lang.Object)
+  /**
+   * @param x a routine
+   * @param o must be of type MethodProperties
    */
   @Override
-  public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
+  public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
+                                       final Object o) {
     final MethodProperties prop = (MethodProperties) o;
     fGlobal.visibleTypeSet = VisibleTypeCollector.getVisibleTypeSet(x);
     prop.fIsHelper = false;
@@ -136,11 +139,14 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     boolean hasPost = false;
     int tag;
-    // Check, if method has at least one postcondition/exceptional postcondition or is a helper method
+    // Check, if method has at least one postcondition/exceptional 
+    // postcondition or is a helper method
     if (x.pmodifiers != null) {
       for (int i = 0; i < x.pmodifiers.size(); i++) {
         tag = x.pmodifiers.elementAt(i).getTag();
-        if ((tag == TagConstants.ENSURES) | (tag == TagConstants.POSTCONDITION) | (tag == TagConstants.POSTCONDITION_REDUNDANTLY)) {
+        if ((tag == TagConstants.ENSURES) | 
+            (tag == TagConstants.POSTCONDITION) | 
+            (tag == TagConstants.POSTCONDITION_REDUNDANTLY)) {
           hasPost = true;
         }
         else if (x.pmodifiers.elementAt(i).getTag() == TagConstants.HELPER) {
@@ -148,10 +154,13 @@ public class JmlVisitor extends BasicJMLTranslator {
         }
       }
     }
-    // If method is not decorated with any postcondition, we add a dummy postcondition node "//@ ensures true;"
+    // If method is not decorated with any postcondition, 
+    // we add a dummy postcondition node "//@ ensures true;"
     if (!hasPost) {
       final LiteralExpr litEx = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.TRUE, 0);
-      final ExprModifierPragma postc = ExprModifierPragma.make(TagConstants.ENSURES, litEx, 0);  //FIXME: cbr: which loc? (here set to 0)
+      final ExprModifierPragma postc = 
+        ExprModifierPragma.make(TagConstants.ENSURES, 
+                                litEx, Location.NULL);
       if (x.pmodifiers != null) {
         x.pmodifiers.addElement(postc);
       }
@@ -160,15 +169,17 @@ public class JmlVisitor extends BasicJMLTranslator {
     // Add dummy exceptional postcondition to Lookup hash map   
     //Lookup.exceptionalPostconditions.put(x, new Post(Expression.rvar(Ref.sort), Logic.True())); 
     //prop.put("firstExPost", Boolean.TRUE);
-    if (x.body != null) {
-      x.body.accept(this, prop);
-    }
-    doAssignable(o);
+    
+    visitASTNode(x, prop);
+//    if (x.body != null) {
+//      x.body.accept(this, prop);
+//    }
+    doAssignable(prop);
     
     if (!prop.fIsHelper) {
-      invPredToPreconditions(o);
-      invPredToPostconditions(o);
-      invPredToExceptionalPostconditions(o);    
+      invPredToPreconditions(prop);
+      invPredToPostconditions(prop);
+      invPredToExceptionalPostconditions(prop);    
     }  
     return null;
   }
@@ -189,7 +200,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     if (!prop.fIsHelper) {
       final Term constraints = Lookup.getConstraint(x.getParent());
-      //addToPostcondition(constraints, prop);
       Lookup.addNormalPostcondition(prop, constraints);
       Lookup.addExceptionalPostcondition(prop.getDecl(), constraints);
     }  
@@ -208,7 +218,6 @@ public class JmlVisitor extends BasicJMLTranslator {
  
     if (!prop.fIsHelper) {
       final Term initially = (Term) prop.get("initiallyFOL");
-      //addToPostcondition(initially, prop);
       Lookup.addNormalPostcondition(prop, initially);
       Lookup.addExceptionalPostcondition(prop.getDecl(), initially);
     } 
@@ -785,7 +794,6 @@ public class JmlVisitor extends BasicJMLTranslator {
   public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
     final String name = Types.printName(x.type);
     return Expression.rvar(name, Type.typeToSort(x.type)); // Ref.sort);
-    //return visitExpr(x, o);
   }
   
   public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, Object o) {
@@ -909,7 +917,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     }    
     final Term implTerm = Logic.implies(andTerm, invTerm);
     final Term forAllTerm = Logic.forall(vars, implTerm);
-    //addToPrecondition(forAllTerm, o);
     Lookup.addPrecondition(prop.getDecl(), forAllTerm);
   }
 
@@ -934,18 +941,14 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
   
   
-  public void invPredToPostconditions(final /*@non_null*/ Object o) { 
-    //this.addToPostcondition(this.invPostPred(o), o);
-    final MethodProperties prop = (MethodProperties) o;
+  public void invPredToPostconditions(final /*@non_null*/ MethodProperties prop) { 
     Lookup.addNormalPostcondition(prop, 
-                                  invPostPred(o));
+                                  invPostPred(prop));
   }
 
   
-  private void invPredToExceptionalPostconditions(Object o) {
-    final MethodProperties prop = (MethodProperties) o;
-    Lookup.addExceptionalPostcondition(prop.getDecl(), 
-                                       invPostPred(o));
+  private void invPredToExceptionalPostconditions(MethodProperties prop) {
+    Lookup.addExceptionalPostcondition(prop.getDecl(), invPostPred(prop));
   }
   
 
@@ -999,57 +1002,12 @@ public class JmlVisitor extends BasicJMLTranslator {
       }
       
       final Term forAllTerm = Logic.forall(vars, t);
-      //addToPostcondition(forAllTerm, o);
       Lookup.addNormalPostcondition(prop, forAllTerm);
       Lookup.addExceptionalPostcondition(prop.getDecl(), forAllTerm);
     } 
   }
 
   
-//  /**
-//   * Adds a given Term to preconditions of a given method.
-//   * @param folTerm to add to preconditions in Lookup hash map
-//   * @param o Properties object contains the concerning method
-//   */
-//  public void addToPrecondition(final Term folTerm, final Object o) {
-//    if (folTerm != null) {
-//      final MethodProperties prop = (MethodProperties) o;
-//      final RoutineDecl rd = prop.fMethod;
-//      Term allPres = Lookup.preconditions.get(rd);
-//      
-//      if (allPres == null) {
-//        allPres = folTerm;
-//      }
-//      else {
-//        allPres = Logic.Safe.and(allPres, folTerm);
-//      }
-//      Lookup.preconditions.put(rd, allPres);
-//    }
-//  }  
-  
-  
-//  /**
-//   * Adds a given Term to postconditions of a given method. 
-//   * @param folTerm to add to postconditions in Lookup hash map
-//   * @param o Properties object contains the concerning method
-//   */
-//  public void addToPostcondition(final Term folTerm, final Object o) {
-//    final MethodProperties prop = (MethodProperties) o;
-//    if (folTerm != null) {
-//      final Post folPost = new Post(folTerm);
-//      final RoutineDecl rd = prop.fMethod;
-//      Post allPosts = Lookup.postconditions.get(rd);
-//      
-//      if (allPosts == null) {
-//        final QuantVariableRef result = prop.fResult;
-//        Lookup.postconditions.put(rd, new Post(result, folTerm));
-//      }
-//      else {
-//        allPosts = Post.and(allPosts, folPost);
-//        Lookup.postconditions.put(rd, allPosts);
-//      }
-//    }
-//  }
   
   
   
