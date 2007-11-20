@@ -77,19 +77,21 @@ public class EscjavaUtils {
 		                                EscjavaPlugin.ESCJAVA_JAR_FILENAME);
 	}
 	
-	/**TODO
+	/**
+	 * Install JML JDK specifications as a source folder.
+	 * 
 	 * @param javaProject
-	 * @param name
+	 * @param sourceFolderName
 	 * @param location
 	 */
 	static public void installSpecsAsSrcFolder(IJavaProject javaProject,
-			String name, String location) {
+			String sourceFolderName, String location) {
 		try {
 			IClasspathEntry[] classpath = javaProject.getRawClasspath();
 	
-			IFolder f = javaProject.getProject().getFolder(name);
+			IFolder f = javaProject.getProject().getFolder(sourceFolderName);
 			if (f.exists()) {
-				Log.errorlog("Source folder " + name + " already exists in project " + javaProject.getElementName(),null);
+				Log.errorlog("Source folder " + sourceFolderName + " already exists in project " + javaProject.getElementName(),null);
 				return;
 			}
 			f.createLink(new Path(location),IResource.NONE,null);
@@ -103,7 +105,7 @@ public class EscjavaUtils {
 			javaProject.setRawClasspath(newClasspath, null);
 			// FIXME - the source folder ought to be marked as
 			// exported, but there does not seem to be a way to do this
-			if (Log.on) Log.log("Installed specs at " + name + " in project " + javaProject.getElementName()
+			if (Log.on) Log.log("Installed specs at " + sourceFolderName + " in project " + javaProject.getElementName()
 					+ ", location " + location);
 		} catch (Exception e) {
 			Log.errorlog("Failed to install the JML specifications",e);
@@ -178,7 +180,7 @@ public class EscjavaUtils {
 				newIds[ids.length] = "org.eclipse.jdt.core.javanature";
 				description.setNatureIds(newIds);
 				project.setDescription(description, null);
-			}
+			
 
 			IJavaProject javaProject = JavaCore.create(project);
 			if (location.endsWith(".jar")) {
@@ -212,6 +214,7 @@ public class EscjavaUtils {
 			
 			if (Log.on) Log.log("Installed specs at " + folderName + " in project " + javaProject.getElementName()
 					+ ", location " + location);
+			}
 		} catch (Exception e) {
 			Log.errorlog("Failed to install the JML specifications",e);
 		}
@@ -262,7 +265,9 @@ public class EscjavaUtils {
 			// If not, find the specs in the plugin
 			location = findSpecs();
 			// Create (if it does not exist) a project and link the specs into it
-			installSpecsAsProject(EscjavaPlugin.JMLSPECS_PROJECT_NAME,EscjavaPlugin.JMLSPECS_PROJECT_NAME,location);
+			installSpecsAsProject(EscjavaPlugin.JMLSPECS_PROJECT_NAME,
+					EscjavaPlugin.JMLSPECS_FOLDER_NAME,
+					location);
 			// Put the new project on the argument project's classpath
 			installSpecsUsingProject(javaProject,EscjavaPlugin.JMLSPECS_PROJECT_NAME);
 			return;

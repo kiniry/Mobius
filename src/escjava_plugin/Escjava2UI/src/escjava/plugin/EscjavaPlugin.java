@@ -70,6 +70,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	 * This is the id of the auto-check builder extension made for Escjava checking
 	 */
 	public static final String ESCJAVA_AUTOCHECK_BUILDER = UI_PLUGIN_ID + ".autocheckEscjavaBuilder";
+	public static final String JMLSPECS_FOLDER_NAME = "specs";
 	
 
 	/**
