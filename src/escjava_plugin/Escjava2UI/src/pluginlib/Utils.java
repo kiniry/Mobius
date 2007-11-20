@@ -498,7 +498,7 @@ public class Utils {
 				}
 			}
 		} catch (JavaModelException e) {
-			Log.errorlog("Unexpected failure to process the classpath: ",e);
+			Log.errorlog("Unexpected failure to process the classpath or project does not have a Java nature: ",e);
 		}		
 	}
 	
@@ -551,7 +551,7 @@ public class Utils {
 				}
 			}
 		} catch (JavaModelException e) {
-			Log.errorlog("Unexpected failure to process the classpath: ",e);
+			Log.errorlog("Unexpected failure to process the classpath or project does not have a Java nature: ",e);
 		}
 		return null;
 	}

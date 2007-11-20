@@ -61,7 +61,7 @@ public class EscjavaDecorator implements org.eclipse.jface.viewers.ILightweightL
 				if (!c.exists()) return;
 				r = c.getCorrespondingResource();
 			} catch (JavaModelException e) {
-				Log.errorlog("Failed to get the resource for a compilation unit " + 
+				Log.errorlog("Failed to get the resource for a compilation unit or project does not have a Java nature: " + 
 						((ICompilationUnit)element).getElementName(), e);
 				return;
 			}
