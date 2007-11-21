@@ -50,27 +50,27 @@ public final class MethodVisitor extends DirectVCGen {
   /**
    * The internal constructor should not be called from outside
    * (IMHO it makes no sense).
-   * @param basedir the directory of the library files
+   * @param cfg the vcgen from which to configure this instance
    * @param methoddir the directory of the method
    * @param rd the method to treat
    */
-  private MethodVisitor(final File basedir, final File methoddir,  final RoutineDecl rd) {
-    super(basedir, methoddir);
-    methoddir.mkdirs();
+  private MethodVisitor(final DirectVCGen cfg, final File methoddir,  final RoutineDecl rd) {
+    super(cfg, methoddir);
+    getWorkingDir().mkdirs();
     fMeth = rd;
     
   }
 
   /**
    * 
-   * @param basedir the base directory (the one of the library files)
+   * @param parent the vcgen which calls this method visitor
    * @param classDir the directory of the class
    * @param rd the routine to inspect
    * @return the properly configured method visitor
    */
-  public static MethodVisitor treatRoutine(final File basedir, final File classDir,
+  public static MethodVisitor treatRoutine(final DirectVCGen parent, final File classDir,
                                            final RoutineDecl rd) {
-    final MethodVisitor mv = new MethodVisitor(basedir, 
+    final MethodVisitor mv = new MethodVisitor(parent, 
                                    new File(classDir, getRoutinePrettyName(rd)), rd);
     if (rd.body != null) {
       rd.body.accept(mv);
@@ -91,7 +91,7 @@ public final class MethodVisitor extends DirectVCGen {
     
     
     try {
-      final BcCoqFile bcf = new BcCoqFile(getVcsDir(), getPkgsDir());
+      final BcCoqFile bcf = new BcCoqFile(getBaseDir(), getWorkingDir());
       String name = "" + fMeth.id();
       if (name.equals("" + fMeth.parent.id)) {
         name = "_init_";
@@ -107,10 +107,10 @@ public final class MethodVisitor extends DirectVCGen {
       final String name = "goal" + num++;
       try {
         final PrintStream fos = new PrintStream(
-               new FileOutputStream(new File(getPkgsDir(), name + rawsuffix)));
+               new FileOutputStream(new File(getWorkingDir(), name + rawsuffix)));
         fos.println(t);
         fos.close();
-        final CoqFile cf = new CoqFile(getVcsDir(), getPkgsDir(), name);
+        final CoqFile cf = new CoqFile(getBaseDir(), getWorkingDir(), name);
         cf.writeProof(Formula.generateFormulas(t));
         if (all == null) {
           all = t;
@@ -127,7 +127,7 @@ public final class MethodVisitor extends DirectVCGen {
     // write the file
 
     try {
-      final CoqFile cf = new CoqFile(getVcsDir(), getPkgsDir());
+      final CoqFile cf = new CoqFile(getBaseDir(), getWorkingDir());
       final STerm term = Formula.generateFormulas(all);
       cf.writeProof(term);
       
@@ -135,7 +135,7 @@ public final class MethodVisitor extends DirectVCGen {
       if (name.equals("" + fMeth.parent.id)) {
         name = "_init_";
       }
-      final EquivCoqFile ecf = new EquivCoqFile(getVcsDir(), getPkgsDir());
+      final EquivCoqFile ecf = new EquivCoqFile(getBaseDir(), getWorkingDir());
       ecf.doIt("" + fMeth.parent.id, name, term);
     } 
     catch (FileNotFoundException e) {

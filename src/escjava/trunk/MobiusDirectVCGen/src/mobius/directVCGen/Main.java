@@ -16,7 +16,7 @@ import javafe.util.ErrorSet;
 import javafe.util.Location;
 import mobius.directVCGen.bicolano.AnnotationCompiler;
 import mobius.directVCGen.bicolano.Unarchiver;
-import mobius.directVCGen.formula.jmlTranslator.JmlVisitor;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
@@ -36,8 +36,7 @@ public class Main extends escjava.Main {
   /** the basedir where to stock all the generated files. */
   private final File fBasedir;
 
-  /** the directory which represents the package of the currently treated typedecl. */
-  private File fPkgsdir;
+
   
   /**
    * Create a main object from a base directory.
@@ -66,13 +65,14 @@ public class Main extends escjava.Main {
     }
 
     try {
+
+      fOut.println("Configuring everything:\n");
       final File basedir = configBaseDir(args);
       
       // Configuring bicolano and all the preludes
       final File bicodir = new File(args[1]);
       final Unarchiver arc = new Unarchiver(bicodir);
       arc.inflat(basedir);
-      
       
       // Configuring log file
       final File logfile = new File(basedir, "MobiusDirectVCGen.log");
@@ -102,7 +102,7 @@ public class Main extends escjava.Main {
    */
   private static File configBaseDir(final String[] args) throws FileNotFoundException {
     // Configuring base dir
-    final File basedir = new File(args[0], "vcs" + File.separator);
+    final File basedir = new File(args[0], "mobius" + File.separator);
     fOut.println("Output dir is set to: " + basedir);
     fOut.print("Making the directories if they don't exist... ");
     if (!basedir.exists()) {
@@ -204,12 +204,6 @@ public class Main extends escjava.Main {
     // preparation: type checking + package dir creation
     final TypeSig sig = TypeCheck.inst.getSig(td);
     sig.typecheck();
-    final String[] pkgs = sig.getPackageName().split("\\.");
-    fPkgsdir = new File(fBasedir, "vcs");
-    for (int i = 0; i < pkgs.length; i++) {
-      fPkgsdir = new File(fPkgsdir, pkgs[i]);
-    }
-    fPkgsdir.mkdirs();
 
     try {
       processTDstage1(td, sig, errorCount);
@@ -228,12 +222,15 @@ public class Main extends escjava.Main {
 
   }
 
+
+
   /**
    * Generate the bicolano class files as well as their annotations.
    * Annotations are taken from the annotated source.
    * @param sig the annotated source
    */
   private void doBcVCGen(final TypeSig sig) {
+    System.out.println("\n\nGenerating the Bytecode VCs:\n");
     // Compile the bytecode version of the file
     final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName());
     try {
@@ -252,9 +249,10 @@ public class Main extends escjava.Main {
    * @param sig the annotated source
    */
   private void doSrcVCGen(final TypeSig sig) {
+    System.out.println("\n\nGenerating the Source VCs:\n");
     final long endTime = currentTime();
-
-    sig.getCompilationUnit().accept(new DirectVCGen(fBasedir, fPkgsdir));
+    
+    sig.accept(new DirectVCGen(fBasedir));
     fOut.println("[" + timeUsed(endTime) + "]\n");
   }
 
@@ -277,9 +275,13 @@ public class Main extends escjava.Main {
     // Create a pretty-printer that shows types
     final DelegatingPrettyPrint p = new javafe.tc.TypePrint();
     p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
-    final OutputStream out = new FileOutputStream(new File(fPkgsdir, sig.simpleName + ".typ"));
-    
-    
+    File workingDir = new File(fBasedir, "src");
+    workingDir = new File(workingDir, Util.getPkgDir(sig).getPath());
+    workingDir.mkdirs();
+    final OutputStream out = new FileOutputStream(
+                                 new File(workingDir, 
+                                          sig.simpleName + ".typ"));
+        
     fOut.println("Writing the Source code with types.");
     p.print(out, 0, td);
 

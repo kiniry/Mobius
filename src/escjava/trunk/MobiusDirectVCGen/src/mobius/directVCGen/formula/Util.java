@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -21,6 +22,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import javafe.tc.TypeSig;
 
 
 
@@ -274,5 +276,21 @@ public class Util {
     args.addAll(prop.fArgs);
     args.addAll(prop.getLocalVars());
     return args;
+  }
+  
+  public static File getPkgDir(final TypeSig sig) {
+    File pkgsDir = new File("");
+    final String[] pkgs; 
+    if (sig.getPackageName().equals(TypeSig.THE_UNNAMED_PACKAGE)) {
+      pkgs = new String[0];
+    }
+    else {
+      pkgs = sig.getPackageName().split("\\.");
+    }
+    for (int i = 0; i < pkgs.length; i++) {
+      pkgsDir = new File(pkgsDir, pkgs[i]);
+    }
+    return pkgsDir;
+    
   }
 }

@@ -30,29 +30,29 @@ public class CoqFile {
 
   /**
    * Construct an object used to print a proof obligation in a file.
-   * @param configDir the library directory
-   * @param baseDir the directory where the generated file should be put 
+   * @param baseDir the library directory
+   * @param workingDir the directory where the generated file should be put 
    * @param name the preferred name the file should have
    * @throws FileNotFoundException if opening the file fails
    */
-  public CoqFile(final File configDir, final File baseDir, 
+  public CoqFile(final File baseDir, final File workingDir, 
                  final String name) throws FileNotFoundException {
-    final File f = new File(baseDir, name + suffix);
+    final File f = new File(workingDir, name + suffix);
     getOldProof(f);
     fOut = new PrintStream(new FileOutputStream(f));
-    fBase = configDir.toString();
+    fBase = baseDir.toString();
 
   }
   
   /**
    * Construct an object used to print a proof obligation in a file.
    * The name is the default one ("sourceVc").
-   * @param configDir the library directory
-   * @param baseDir the directory where the generated file should be put 
+   * @param baseDir the library directory
+   * @param workingDir the directory where the generated file should be put 
    * @throws FileNotFoundException if opening the file fails
    */
-  public CoqFile(final File configDir, final File baseDir) throws FileNotFoundException {
-     this (configDir, baseDir, "sourceVc");
+  public CoqFile(final File baseDir, final File workingDir) throws FileNotFoundException {
+     this (baseDir, workingDir, "sourceVc");
   }
 
   /**

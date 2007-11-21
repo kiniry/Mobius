@@ -6,7 +6,10 @@ import javafe.ast.ASTNode;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.MethodDecl;
+import javafe.ast.Type;
 import javafe.ast.Visitor;
+import escjava.tc.TypeSig;
+import mobius.directVCGen.formula.Util;
 
 /**
  * The main entry point of the VCGen. 
@@ -21,11 +24,10 @@ public class DirectVCGen extends Visitor {
   /** the base directory which contains the libraries. */
   private final File fBasedir;
   /** the directory representing the packages. */
-  private final File fPkgsdir;
+  private File fPkgsdir;
   /** the directory representing the class. */
   private File fClassDir;
 
-  private final File fVCsDir;
 
   
 
@@ -33,16 +35,42 @@ public class DirectVCGen extends Visitor {
   /**
    * Build a new vc gen, ready to generate new verification conditions!
    * @param baseDir the basedir where the libraries can be found
-   * @param pkgsdir the package dir where to put the generated directories and
-   * files
    */
-  public DirectVCGen(final File baseDir, final File pkgsdir) {
-    fPkgsdir = pkgsdir;
+  public DirectVCGen(final File baseDir) {
     fBasedir = baseDir;
-    fVCsDir = new File(baseDir, "vcs");
-    fVCsDir.mkdirs();
   }
-
+  
+  
+  /**
+   * Build a new vc gen, ready to generate new verification conditions!
+   * @param cfg the basedir where the libraries can be found
+   * @param classDir the directory that is used to build the 
+   *                 working dir
+   */
+  public DirectVCGen(final DirectVCGen cfg,
+                     final File classDir) {
+    fBasedir = cfg.fBasedir;
+    
+    fPkgsdir = cfg.fPkgsdir;
+    fClassDir = classDir;
+    
+  }
+  
+  /**
+   * Initialize the direct vc gen.
+   * @param type a type signature
+   */
+  @Override
+  public void visitType(final /*@non_null*/ Type type) {
+    if (type instanceof TypeSig) {
+      final TypeSig sig = (TypeSig) type;
+      fPkgsdir = new File("vcs", Util.getPkgDir(sig).getPath());
+      new File(fBasedir, fPkgsdir.getPath()).mkdirs();
+      sig.getCompilationUnit().accept(this);
+    }
+  }
+  
+ 
   /**
    * Visit a class to compute the vcs associated with it.
    * @param x the class to visit
@@ -52,7 +80,7 @@ public class DirectVCGen extends Visitor {
 
     System.out.println("Treating class: " + x.id);
     fClassDir = new File(fPkgsdir,  "" + x.id);
-    fClassDir.mkdirs();
+    getWorkingDir().mkdirs();
     visitTypeDecl(x);
   }
 
@@ -62,7 +90,7 @@ public class DirectVCGen extends Visitor {
    */
   @Override
   public void visitMethodDecl(final /*@non_null*/ MethodDecl md) {
-    final MethodVisitor mv = MethodVisitor.treatRoutine(getBaseDir(), fClassDir, md);
+    final MethodVisitor mv = MethodVisitor.treatRoutine(this, fClassDir, md);
     System.out.println(mv);
   }
 
@@ -72,14 +100,14 @@ public class DirectVCGen extends Visitor {
    */
   @Override
   public void visitConstructorDecl(final /*@non_null*/ ConstructorDecl cd) {
-    final MethodVisitor mv = MethodVisitor.treatRoutine(getBaseDir(), fClassDir, cd);
+    final MethodVisitor mv = MethodVisitor.treatRoutine(this, fClassDir, cd);
     System.out.println(mv);
   }
 
 
-  /*
-   * (non-Javadoc)
-   * @see javafe.ast.Visitor#visitASTNode(javafe.ast.ASTNode)
+  /**
+   * Visits every child node of a given one.
+   * @param x the node to inspect
    */
   @Override
   public void visitASTNode(final ASTNode x) {
@@ -111,7 +139,11 @@ public class DirectVCGen extends Visitor {
     return fBasedir;
   }
   
-  public File getVcsDir() {
-    return fVCsDir;
+  
+  public File getWorkingDir() {
+    return new File (getBaseDir(), fClassDir.getPath());
   }
+
+
+  
 }
