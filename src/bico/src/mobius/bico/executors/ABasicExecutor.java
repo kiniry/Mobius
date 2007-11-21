@@ -135,10 +135,6 @@ public abstract class ABasicExecutor {
     return fBaseDir;
   }
   
-  public File getPathToAPI() {
-    return getBaseDir();
-  }
-  
   /**
    * Set the current implementation.
    * @param implem the implementation specifics elements.
