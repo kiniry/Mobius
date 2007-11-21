@@ -16,9 +16,9 @@ include ${TOP}/Makefile.defs
 
 ##############################################################################
 ## Variables needed in the Makefile.
-export CLASSDIRECTORY = ${JAVAFE_ROOT}/classfiles
-export SOURCEDIRECTORY = ${JAVAFE_ROOT}/java
-export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/test
+export CLASSDIRECTORY = ${JAVAFE_ROOT}/Javafe/classfiles
+export SOURCEDIRECTORY = ${JAVAFE_ROOT}/Javafe/java
+export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/Javafe/test
 export CAN_CLASSDIRECTORY = ${call canonicalize,${CLASSDIRECTORY}}
 
 ## This one is needed in submakes that don't define their own classpath
@@ -165,7 +165,7 @@ self_typecheck:
 
 ## This tests a binary release that is untarred in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the esctools1.jar file that is being tested.
-## The current directory should be the usual ESCTOOLS_ROOT directory so that
+## The current directory should be the usual JAVAFE_ROOT directory so that
 ## the tests are available.
 test-release: 
 	@echo TESTING RELEASE - Javafe

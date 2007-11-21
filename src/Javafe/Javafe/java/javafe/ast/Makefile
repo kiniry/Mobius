@@ -4,8 +4,8 @@
 # Dependence on astgen programs:
 #
 
-ASTGEN = 	${JAVAFE_ROOT}/astgen/astgen
-ASTFILELIST = 	${JAVAFE_ROOT}/astgen/astfilelist
+ASTGEN = 	${JAVAFE_ROOT}/Javafe/astgen/astgen
+ASTFILELIST = 	${JAVAFE_ROOT}/Javafe/astgen/astfilelist
 
 #
 # Generating Java files:
@@ -25,7 +25,7 @@ source: ASTNode.java typevecs
 typevecs: $(TypeVec) 
 
 $(ASTFILELIST) $(ASTGEN):
-	${MAKE} -C ${JAVAFE_ROOT}/astgen
+	${MAKE} -C ${JAVAFE_ROOT}/Javafe/astgen
 
 ASTNode.java TypeDeclElem.java tags: hierarchy.j $(ASTGEN) $(ASTFILELIST) \
 		make_tags manual_tags insert_ensures manual_gettag_spec TypeDeclElem.j

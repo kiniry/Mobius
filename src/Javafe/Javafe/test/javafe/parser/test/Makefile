@@ -5,8 +5,8 @@
 JAVA ?= java
 
 parseidempotence_java_files = $(wildcard *.java) \
-	$(wildcard ${JAVAFE_ROOT}/java/javafe/parser/*.java) \
-	$(wildcard ${JAVAFE_ROOT}/java/javafe/ast/*.java)
+	$(wildcard ${JAVAFE_ROOT}/Javafe/java/javafe/parser/*.java) \
+	$(wildcard ${JAVAFE_ROOT}/Javafe/java/javafe/ast/*.java)
 
 ## FIXME _ what about testparse? (It is very verbose)
 
@@ -84,6 +84,6 @@ testparse:
 	@echo "TESTING Javafe: testparse"
 	@${JAVA} -classpath ${CLASSPATH} javafe.parser.test.TestParse progress check print verboseprogress \
 		compilation-unit.j *.java \
-		${JAVAFE_ROOT}/java/javafe/parser/*.java \
-		${JAVAFE_ROOT}/java/javafe/ast/*.java
+		${JAVAFE_ROOT}/Javafe/java/javafe/parser/*.java \
+		${JAVAFE_ROOT}/Javafe/java/javafe/ast/*.java
 

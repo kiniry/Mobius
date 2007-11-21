@@ -1,11 +1,11 @@
 #!/bin/tcsh -f
 echo "TESTING Javafe: typecheckJavafe"
 
-if ( ! $?ESCTOOLS_ROOT ) ( echo Must define ESCTOOLS_ROOT ; exit 1 )
+if ( ! $?JAVAFE_ROOT ) ( echo Must define JAVAFE_ROOT ; exit 1 )
 
-if ( ! $?SOURCEDIRECTORY ) setenv SOURCEDIRECTORY ${ESCTOOLS_ROOT}/Javafe/java
+if ( ! $?SOURCEDIRECTORY ) setenv SOURCEDIRECTORY ${JAVAFE_ROOT}/Javafe/java
 
-cd ${ESCTOOLS_ROOT}/Javafe/java/javafe
+cd ${JAVAFE_ROOT}/Javafe/java/javafe
 
 if ( $?COMSPEC ) setenv S ";" 
 if ( ! $?COMSPEC ) setenv S ":" 

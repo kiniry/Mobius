@@ -1,35 +1,15 @@
-ESC/Java2, a revision of the original DEC/SRC ESC/Java developed at
-DEC/Compaq/HP.  The revisions were performed by David Cok and Joe
-Kiniry. You can read the general background on the original DEC/SRC
+JavaFE, a revision of the Java front end of the original DEC/SRC ESC/Java 
+developed at DEC/Compaq/HP.  The revisions were performed by David Cok and 
+Joe Kiniry. You can read the general background on the original DEC/SRC
 ESC/Java in README.txt.
 
-If you obtained ESC/Java2 as part of a binary release, you should 
+If you obtained JavaFE as part of a binary release, you should 
 ignore this file and consult README.release for installation and 
 execution instructions concerning the release.
 
-This document is meant to describe the patch/source release of
-ESC/Java2, thus the paths herein are in reference to the patch/source
+This document is meant to describe the source release of
+JavaFE, thus the paths herein are in reference to the source
 release, not the binary release.
-
-----------------------------------------------------------------------------
-
-PURPOSE OF ESCJAVA2
-
-The primary purpose of the work on Escjava2 is to alter the tool so
-that it parses the current version of JML (Java Modeling Language -
-http://www.jmlspecs.org), while checking at least the same set of
-features that the final HP/Compaq version (1.4.2) of Escjava checks.
-
-A secondary purpose is to increase the number of features of JML that
-ESC/Java checks.
-
-A third purpose is to provide a distribution in a form that is more
-widely available and more easily accessible, in order to promote the
-use of specification and associated static and dynamic checking.
-
-A fourth purpose is to bring some of the other tools (Rcc, Houdini,
-Calvin) to a similar state---working and accessible.  Thus far we
-have "revived" Houdini and Rcc.  Calvin is still untouched.
 
 ----------------------------------------------------------------------------
 
@@ -120,11 +100,11 @@ ESC/Java developers communicate on the ESCJava-Developers mailing
 list, hosted at UCD.
 
 Please see the SRG Mailman web pages at
-  <http://topos.ucd.ie/mailman/listinfo>
+  <http://kind.ucd.ie/mailman/listinfo>
 for more information.
 
 To make a new bug report: 
-  <mailto:mobius-ticket@mobius.ucd.ie?subject=component=ESCJava2> 
+  <mailto:mobius-ticket@mobius.ucd.ie?subject=component=JavaFE> 
 
 ----------------------------------------------------------------------------
 
@@ -141,7 +121,7 @@ on further distribution of the source.
 
 ----------------------------------------------------------------------------
 
-OBTAINING CURRENT SOURCE FOR ESC/Java2
+OBTAINING CURRENT SOURCE FOR JavaFE
 
 A subversion repository of the current work is maintained by Joe Kiniry
 <kiniry@acm.org>.  Build and execution instructions are provided later
@@ -156,12 +136,6 @@ To obtain access to the subversion distribution, you will need:
 - Building it will require other UNIX tools: e.g. flex, cc, diff,
   bash, tcsh
 - Some tests use JUnit
-- To (optionally) build the Simplify tool you will need a Modula-3
-  compiler
-
-To get read-only access to the source code:
-
-  svn co https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools
 
 To obtain access to the Subversion distribution, follow these steps:
 
@@ -173,44 +147,14 @@ a) Provide evidence to Joe that you have obtained the original sources
 b) Create an account on the UCD Trac server located at
    http://mobius.ucd.ie/
 
-   Notify Joe that you wish to have access to our Subversion repository via
-   the Trac.  Make sure you tell him your Trac username.
-
-c) The module name of ESC/Java2 is "ESCTools."
-
-   Choose a place where you would like to have the subversion distribution
-   installed.  The following commands will create a subdirectory of
-   the current directory, name it ESCTools and place a working copy of
-   the Subversion repository in ESCTools.
-
-d) Execute a subversion checkout on the server (replacing the characters
+c) Execute a subversion checkout on the server (replacing the characters
    'username' in the command below with your Trac username):
  
-   svn co svn+ssh://username@mobius.ucd.ie/Volumes/Data/subversion/svn_mobius/src/escjava/trunk/ESCTools
-
-e) If you want to avoid using your password on every subversion transaction,
-  you will need to generate a public key/private key pair and copy the
-  public key to your account on mobius.ucd.ie.  Login to this
-  computer is only allowed via SSH:
-
-	i) On your own computer, create (if necessary) and cd into ~/.ssh
-	ii) If there are no files id_dsa and id_dsa.pub, create them
-           by running
-		ssh-keygen -t dsa
-	iii) Be sure id_dsa is readable only by you
-		(chmod go-rwx ~/.ssh/id_dsa)
-        iv) type out the id_dsa.pub file (cat id_dsa.pub)
-	v) Login in to the subversion server:  ssh username@mobius.ucd.ie
-		(replace 'username' by your username on mobius.ucd.ie)
-	vi) On mobius.ucd.ie, edit the file ~/.ssh/authorized_keys,
-		pasting in the contents of id_dsa.pub on a line of its own
-		(being careful not to introduce any spurious line breaks)
-	vii) Be sure that ~/.ssh/authorized_keys is readable only by you
-		(chmod go-rwx ~/.ssh/authorized_keys)
+   svn co https://mobius.ucd.ie/repos/src/Javafe
 
 ----------------------------------------------------------------------------
 
-SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING ESC/Java2
+SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING JavaFE
 
 Development has taken place on Linux (Redhat 8/9), MacOSX (10.3 and
 later), and Windows XP.  The build environment uses GNU make.
@@ -523,55 +467,3 @@ escj executable:
 		the VM (as opposed to the application)
 	ESCJ_VERBOSE - set to non-empty to print the options being
 		invoked on escj
-
-ESC/Java uses Simplify.  There are numerous environment variables that
-affect the behavior of Simplify.  The most important are:
-
-	PROVER_KILL_TIME - set to the maximum number of seconds
-		Simplify should attempt to solve a given predicate
-		(i.e.., the amount of time Simplify should spend
-		verifying each Java method).  The default is 300
-		seconds.
-	PROVER_CC_LIMIT - the maximum number of counterexamples to
-		find.  The default is 10.
-	ESCJ_SIMPLIFY_DIR - the directory in which to find the
-		executable named by $SIMPLIFY.  This is by default
-		automatically set to a directory in the release or
-		in the CVS distribution.
-
-----------------------------------------------------------------------------
-
-BUILDING A WORKING VERSION OF Simplify FROM Subversion SOURCES
-
-We have modified Simplify slightly so that it will build properly on
-OS X 10.4 using the Critical Mass Modula-3 (CM3) compiler.  We also
-use CM3 on Linux.
-
-We had to patch the following modules so that they would build
-correctly on OS X with CM3 5.2.0:
-  m3-comm/tcp     m3-libs/set     m3-libs/table-list,
-  m3-tools/mtex   m3-ui/X11R4     m3-ui/ui
-
-The patched versions of these modules are available in
-ESCTools/Simplify/libs.
-
-We have not compared these patched versions with those available now
-that CM3 5.2.6 is available.  It may be the case that these modules
-now build properly on all platforms with more recent CM3 releases.
-
-Note that Simplify relies upon many modules.  You *must* install all
-of these modules prior to building Simplify.  The full list of
-necessary modules is found in the file ESCTools/Simplify/README.
-
-You can obtain the compiler either by using fink or directly from
-Elgosoft.  See the following URLs for more information:
-  http://www.elegosoft.com/cm3/                  (Elgosoft)
-  http://fink.sourceforge.net/                   (Fink)
-
-----------------------------------------------------------------------------
-----------------------------------------------------------------------------
-
-Other things to comment on: (FIXME)
-- Mocha
-- Describing the tests
-

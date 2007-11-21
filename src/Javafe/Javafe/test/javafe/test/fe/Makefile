@@ -9,7 +9,7 @@ include ${TOP}/Makefile.defs
 ## It is conditionally defined here so that the tests in this directory can
 ## be run via this Makefile directly.  The definition here must be the same as
 ## it is in ${JAVAFE_ROOT}
-export CLASSDIRECTORY ?= ${JAVAFE_ROOT}/classfiles
+export CLASSDIRECTORY ?= ${JAVAFE_ROOT}/Javafe/classfiles
 export CAN_CLASSDIRECTORY ?= ${call canonicalize,${CLASSDIRECTORY}}
 
 ## Define, use CLASSPATH so it can be overridden during release testing
@@ -87,14 +87,14 @@ ex%: testclasses
 testclasses: ${CLASSDIRECTORY}/javafe/test/Print.class
 
 ${CLASSDIRECTORY}/javafe/test/Print.class:
-	${MAKE} -C ${JAVAFE_ROOT} javafe_test
+	${MAKE} -C ${JAVAFE_ROOT}/Javafe javafe_test
 
 ## This target simply executes a given test, e.g. 'make test1-run' runs test1
 ## Must have variables JAVA and JAVAFE_ROOT set
 
 %-run: testclasses
 	( cd $*; \
-		export JAVAFE=$(call canonicalize,${ESCTOOLS_ROOT}/Javafe); \
+		export JAVAFE=$(call canonicalize,${JAVAFE_ROOT}/Javafe); \
 		export CLASSPATH=$(call canonicalize,$*) ;\
 		export TOOL="${TOOL} -classpath ." ; \
 		./run )
