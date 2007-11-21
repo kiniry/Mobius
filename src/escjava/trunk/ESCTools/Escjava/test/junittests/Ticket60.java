@@ -1,5 +1,5 @@
 // Test for Trac Ticket #60
-public class Ticket59 {
+public class Ticket60 {
 	
 	int x, z = 0;
 	
