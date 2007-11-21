@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.Map.Entry;
 
 import mobius.bico.Util;
@@ -55,8 +57,8 @@ public class Executor extends ABasicExecutor {
     new HashMap<String, ClassExecutor>();
   
   /** classes that are left to be treated. */
-  private final List<String> fPendingClasses = 
-    new ArrayList<String>();
+  private final Stack<String> fPendingClasses = 
+    new Stack<String>();
   
   /** classes to be read from hand-made files. */
   private final String[] fSpecialLibs = { 
@@ -162,8 +164,7 @@ public class Executor extends ABasicExecutor {
     collectClasses("");
     System.out.println("There are " + fPendingClasses.size() + " classe(s) pending.");
     while (!fPendingClasses.isEmpty()) {
-      handleClass(fPendingClasses.get(0));
-      fPendingClasses.remove(0);
+      handleClass(fPendingClasses.pop());
     }
   
   }
@@ -205,15 +206,13 @@ public class Executor extends ABasicExecutor {
    */
   public void start() throws ClassNotFoundException, IOException {
     Dico.initDico(getDico());
-    System.out.println("Using fImplemSpecif: " + getImplemSpecif() + ".");
+    System.out.println("Using implem: " + getImplemSpecif() + ".");
     System.out.println("Working path: " + getBaseDir());
     
     doApplication();
     
     generateClassMakefiles();
     
-
-    writeDictionnary();
     final File fCoqFileName = new File(getBaseDir(), fName + suffix);
     // creating file for output
     if (fCoqFileName.exists()) {
@@ -234,13 +233,8 @@ public class Executor extends ABasicExecutor {
   /**
    * Write the main file. This generates for instance the file "B_classMap.v",
    * i.e. packageName_className.v
-   * 
-   * @throws ClassNotFoundException
-   *             if there is a problem with name resolution
-   * @throws IOException
-   *             if there is a problem writing from the disk
    */
-  private void doMain() throws ClassNotFoundException, IOException {
+  private void doMain() {
     // write prelude ;)
     final CoqStream out = getOut();
     printLoadPath(out);
@@ -335,6 +329,7 @@ public class Executor extends ABasicExecutor {
 
     
     out.decPrintln(Constants.END_MODULE + fName + "Signature.");
+    out.close();
   
   }
   
@@ -368,6 +363,7 @@ public class Executor extends ABasicExecutor {
     
     out.decPrintln(Constants.END_MODULE + " " + 
                    fName + "Type.");
+    out.close();
   }
 
 
@@ -396,8 +392,9 @@ public class Executor extends ABasicExecutor {
    * 
    * @throws FileNotFoundException
    *             If there is a problem in writing.
+   * @deprecated not used
    */
-  private void writeDictionnary() throws FileNotFoundException {
+  public void writeDictionnary() throws FileNotFoundException {
     final File dicoFile = new File(getBaseDir(), "dico.ml");
     final CoqStream out = new CoqStream(new FileOutputStream(dicoFile));
     getDico().write(out);
@@ -443,9 +440,6 @@ public class Executor extends ABasicExecutor {
    */
   public ClassExecutor handleClass(final String clname) 
     throws ClassNotFoundException, IOException {
-    if (clname == null) {
-      return null;
-    }
     if (isSpecialLib(clname) ||
         fTreatedClasses.containsKey(clname)) {
       return null;

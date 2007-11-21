@@ -394,10 +394,12 @@ public final class Util {
     }
   }
   
-  public static File getPackageDir(JavaClass javaClass) {
+  public static File getPackageDir(final JavaClass javaClass) {
     return new File(javaClass.getPackageName().replace('.',
                                                        File.separatorChar));
   }
+  
+  
   public static String getTypeName(final ReferenceType rtyp) {
     String className = null;
     

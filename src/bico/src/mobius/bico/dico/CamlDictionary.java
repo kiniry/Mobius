@@ -146,6 +146,7 @@ public class CamlDictionary implements Dictionary {
       fPkg = pkgNumber;
     }
     
+    @Override
     public String toString() {
       return "(" + fPkg + ", " + fClass + ")";
     }
