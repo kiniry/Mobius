@@ -468,7 +468,6 @@ source-release: cleanup alldocs
 	cp -rf docs ${RELTEMP}
 	cp -rf papers ${RELTEMP}
 	cp -rf slides ${RELTEMP}
-	cp -rf Simplify ${RELTEMP}
 	cp -rf specs* ${RELTEMP}
 	cp license.txt ${RELTEMP}
 	mkdir ${RELTEMP}/jars
@@ -480,7 +479,7 @@ source-release: cleanup alldocs
 	cp ${ESCJ_ROOT}/escj.bat ${RELTEMP} 
 	cp ${ESCJ_ROOT}/escjava2.exe ${RELTEMP} 
 	cp ${ESCJ_ROOT}/escjava2.sample ${RELTEMP} 
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP} 
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.* ${RELTEMP} 
 	cp README.first README.txt ${RELTEMP} 
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
@@ -530,6 +529,7 @@ srcjar:
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
+	rm -rf ${RELTEMP}/sub
 	
 .PHONY: binary-release
 binary-release: build jars alldocs cleanup
@@ -578,12 +578,13 @@ binary-release: build jars alldocs cleanup
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2 ${RELTEMP}
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2.exe ${RELTEMP}
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2.sample ${RELTEMP}
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4.* ${RELTEMP}
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.* ${RELTEMP}
 #   The two readme files below are irrelevant for binary release
 #   cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
+	-rm -rf ${RELTEMP}/sub
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELTAR}.zip *
@@ -710,7 +711,7 @@ generate-toplevel-archive: clean
 # 	cp $(JML2_SPECS_JAR) ${RELTEMP}/ESCTools
 # 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}/ESCTools
 	mkdir -p ${RELTEMP}/ESCTools/Escjava/release/master/bin
-	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.* \
+	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.* \
 		${RELTEMP}/ESCTools/Escjava/release/master/bin
 	( cd ${RELTEMP}/ESCTools; tar cjf ${PATCH_DIR}/${TOPLEVEL_TAR} . ; )
 	rm -rf ${RELTEMP}/ESCTools
