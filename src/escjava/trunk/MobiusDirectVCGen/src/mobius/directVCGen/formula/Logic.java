@@ -109,15 +109,17 @@ public final class Logic {
 
   /** 
    * The true of type prop.
+   * @return a term representing the true predicate
    */
-  public static Term True() {
+  public static Term trueValue() {
     return Formula.lf.mkPredLiteral(true);
   }
 
   /** 
    * The false of type prop.
+   * @return a term representing the false predicate
    */
-  public static Term False() {
+  public static Term falseValue() {
     return Formula.lf.mkPredLiteral(false);
   }
 
@@ -591,8 +593,9 @@ public final class Logic {
                                     final QuantVariableRef target, 
                                     final QuantVariableRef field) {
     if (heap.getSort() != Heap.sort || heapPre.getSort() != Heap.sort) {
-      throw new IllegalArgumentException("Type of the first and second param should be heap (" + 
-                                         Heap.sort + "), found: " + heap.getSort()+ " and " + heapPre.getSort());
+      throw new IllegalArgumentException("Type of the first and second " +
+          "param should be heap (" + Heap.sort + "), found: " + 
+          heap.getSort() + " and " + heapPre.getSort());
     }
     if (target.getSort() != Ref.sort) {
       throw new IllegalArgumentException("Type of the third param should be ref (" + 
@@ -602,7 +605,9 @@ public final class Logic {
       throw new IllegalArgumentException("Type of the fourth param should be fieldsig (" + 
                                          Type.sortField + "), found: " + field.getSort());
     }
-    return Formula.lf.mkFnTerm(Formula.lf.symAssignPred, new Term [] {heap, heapPre, target, field});
+    return Formula.lf.mkFnTerm(Formula.lf.symAssignPred, 
+                               new Term [] {heap, heapPre, 
+                                            target, field});
   }
 
   /**
@@ -620,7 +625,8 @@ public final class Logic {
     
     while (iter.hasNext()) {
       final QuantVariableRef[] setVar = (QuantVariableRef[]) iter.next();
-      t1 = Logic.equals(Heap.loc(Heap.var, t, f.qvar), Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
+      t1 = Logic.equals(Heap.loc(Heap.var, t, f.qvar), 
+                        Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
       if (t2 == null) {
         t2 = t1;
       }
@@ -647,8 +653,8 @@ public final class Logic {
     System.out.println(formula);
     System.out.println(formula.subst(rv2,
                                      Logic.implies(Logic.boolToPred(rv2), 
-                                                   Logic.False())));
-    System.out.println(Logic.and(Logic.True(), Logic.False()));
+                                                   Logic.falseValue())));
+    System.out.println(Logic.and(Logic.trueValue(), Logic.falseValue()));
   }
 
 

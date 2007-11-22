@@ -13,22 +13,19 @@ import escjava.sortedProver.NodeBuilder.Sort;
  */
 public final class Heap {
   /** the sort that represents the type of a heap. */
-  public  static final Sort sort = Formula.lf.sortMap;
-  public  static final Sort sortValue = Formula.lf.sortValue;
+  public static final Sort sort = Formula.lf.sortMap;
+  
+  /** the sort that represents the type value. */
+  public static final Sort sortValue = Formula.lf.sortValue;
+  
   /** the variable representing the heap. */
   public static final QuantVariableRef var = Expression.rvar("heap", sort);
-
-  /** the variable used for the local variables. */
-  private static final QuantVariableRef lvvar = Expression.rvar("lv", Ref.sort);
-
-  public static final QuantVariableRef lvvarPre = Expression.old(lvvar);
 
   /** the variable representing the heap in the prestate. */
   public static final QuantVariableRef varPre = Expression.old(var);
 
   /** the counter to count the number of instanciation of the heap variable. */
   private static int heapc;
-  private static int lvc;
   
   /**
    * @deprecated
@@ -40,55 +37,56 @@ public final class Heap {
   /**
    * Creates a formula that represents a store upon a static variable.
    * @param heap the current heap
-   * @param var the static field where to do the store
+   * @param field the static field where to do the store
    * @param val the value to store
    * @return the new heap, after the store 
    */
-  public static Term store(final QuantVariableRef heap, final QuantVariable var,
+  public static Term store(final QuantVariableRef heap, final QuantVariable field,
                            final  Term val) {
     return Formula.lf.mkFnTerm(Formula.lf.symStore, 
-                               new Term[] {heap, Expression.rvar(var), sortToValue(val)});
+                               new Term[] {heap, Expression.rvar(field), sortToValue(val)});
   }
 
   /**
    * Creates a formula that represents a store upon an instance field.
    * @param heap the heap on which to do the store
    * @param obj the instance object to which belong the field
-   * @param var the name of the field to store
+   * @param field the name of the field to store
    * @param val the value to store in the field
    * @return a newly formed heap, after the store
    */
   public static Term store(final QuantVariableRef heap, final Term obj, 
-                           final QuantVariable var, final Term val) {
+                           final QuantVariable field, final Term val) {
     return Formula.lf.mkFnTerm(Formula.lf.symDynStore, 
-                               new Term[] {heap, obj, Expression.rvar(var), sortToValue(val)});
+                               new Term[] {heap, obj, Expression.rvar(field), 
+                                           sortToValue(val)});
   }
 
 
   /**
    * Creates a formula that represents a store to an array.
    * @param heap the current heap
-   * @param var the variable that represents the array
+   * @param array the variable that represents the array
    * @param idx the index to which to store the value
    * @param val the value to store
    * @return the newly formed heap
    */
-  public static Term storeArray(final QuantVariableRef heap, final Term var, 
+  public static Term storeArray(final QuantVariableRef heap, final Term array, 
                                 final Term idx, final Term val) {
     if (!heap.getSort().equals(Heap.sort)) {
       throw new IllegalArgumentException("The heap argument should be of sort heap, found: " + 
                                          heap.getSort());
     }
-    if (!var.getSort().equals(Ref.sort)) {
+    if (!array.getSort().equals(Ref.sort)) {
       throw new IllegalArgumentException("The var argument should be of sort reference, " +
-          "found: " + var.getSort());
+          "found: " + array.getSort());
     }
 
     if (!idx.getSort().equals(Num.sortInt)) {
       throw new IllegalArgumentException("The idx argument should be of sort int, found: " + 
                                          idx.getSort());
     }
-    return Formula.lf.mkFnTerm(Formula.lf.symArrStore, new Term[] {heap,  var, 
+    return Formula.lf.mkFnTerm(Formula.lf.symArrStore, new Term[] {heap,  array, 
                                                                    idx, 
                                                                    sortToValue(val)});
   }
@@ -96,27 +94,28 @@ public final class Heap {
   /**
    * The select for a static field.
    * @param heap the heap on which to do the select
-   * @param var the name of the field to select
+   * @param field the name of the field to select
    * @return the term representing the select
    */
-  public static Term select(final QuantVariableRef heap, final QuantVariable var) {
+  public static Term select(final QuantVariableRef heap, final QuantVariable field) {
     final Term select = Formula.lf.mkFnTerm(Formula.lf.symSelect, 
-                                      new Term[] {heap, Expression.rvar(var)});
-    return valueToSort(select, var.type);
+                                      new Term[] {heap, Expression.rvar(field)});
+    return valueToSort(select, field.type);
   }
 
   /**
    * The select for a dynamic field.
    * @param heap the heap on which to do the select
    * @param obj the object to which the field belong
-   * @param var the name of the field on which to do the select
+   * @param field the name of the field on which to do the select
    * @param type the type of the result of the select
    * @return the term representing the select
    */
   public static Term select(final QuantVariableRef heap, final Term obj, 
-                            final QuantVariable var, Sort type) {
+                            final QuantVariable field, 
+                            final Sort type) {
     final Term select = Formula.lf.mkFnTerm(Formula.lf.symDynSelect, 
-                                      new Term[] {heap, obj, Expression.rvar(var)});
+                                      new Term[] {heap, obj, Expression.rvar(field)});
     return valueToSort(select, type);
   }
   
@@ -125,13 +124,13 @@ public final class Heap {
    * The location (loc) for a dynamic field.
    * @param heap the heap on which to do the loc
    * @param obj the object to which the field belong
-   * @param var the name of the field on which to do the loc
+   * @param field the name of the field on which to do the loc
    * @return the term representing the loc
    */
   public static Term loc(final QuantVariableRef heap, final Term obj, 
-                            final QuantVariable var) {
+                            final QuantVariable field) {
     final Term loc = Formula.lf.mkFnTerm(Formula.lf.symDynLoc, 
-                                      new Term[] {heap, obj, Expression.rvar(var)});
+                                      new Term[] {heap, obj, Expression.rvar(field)});
     //return valueToSort(loc, var.type);
     return loc;
   }
@@ -140,20 +139,20 @@ public final class Heap {
   /**
    * The select for an element of an array.
    * @param heap the heap on which to do the select
-   * @param var the array
+   * @param array the array
    * @param idx the index of the element to retrieve
    * @param type the type of the element to retrieve
    * @return the construct well instanciated
    */
-  public static Term selectArray(final Term heap, final Term var, 
+  public static Term selectArray(final Term heap, final Term array, 
                                  final Term idx, final Sort type) {
     if (!heap.getSort().equals(Heap.sort)) {
       throw new IllegalArgumentException("The heap argument should be of sort heap, found: " + 
                                          heap.getSort());
     }
-    if (!var.getSort().equals(Ref.sort)) {
+    if (!array.getSort().equals(Ref.sort)) {
       throw new IllegalArgumentException("The var argument should be of sort reference, " +
-          "found: " + var.getSort());
+          "found: " + array.getSort());
     }
 
     if (!idx.getSort().equals(Num.sortInt)) {
@@ -161,7 +160,7 @@ public final class Heap {
                                          idx.getSort());
     }
     final Term select = Formula.lf.mkFnTerm(Formula.lf.symArrSelect, 
-                                            new Term[] {heap, var, idx});
+                                            new Term[] {heap, array, idx});
     return valueToSort(select, type);
   }
 
@@ -235,9 +234,7 @@ public final class Heap {
   public static QuantVariableRef newVar() {
     return Expression.rvar("heap" + (heapc++), Heap.sort);
   }
-  public static QuantVariableRef newLvVar() {
-    return Expression.rvar("lv" + (lvc++), Ref.sort);
-  }
+
   /**
    * Create the term to represent creation of a new object.
    * It takes the old heap, the type of the location to allocate
@@ -299,7 +296,4 @@ public final class Heap {
 
   }
 
-  public static QuantVariableRef getLvVar() {
-    return lvvar;
-  }
 }

@@ -12,7 +12,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
  */
 public final class Bool {
   /** the sort representing the booleans. */
-  public static Sort sort = Formula.lf.sortBool;
+  public static final Sort sort = Formula.lf.sortBool;
   
   /**
    * @deprecated

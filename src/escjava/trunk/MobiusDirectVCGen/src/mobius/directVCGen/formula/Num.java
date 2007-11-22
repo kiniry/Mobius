@@ -12,9 +12,9 @@ import escjava.sortedProver.NodeBuilder.Sort;
  */
 public final class Num {
   /** the sort that represents integers. */
-  public static Sort sortInt = Formula.lf.sortInt;
+  public static final Sort sortInt = Formula.lf.sortInt;
   /** the sort that represents real numbers. */
-  public static Sort sortReal = Formula.lf.sortReal;
+  public static final Sort sortReal = Formula.lf.sortReal;
 
   /**
    * @deprecated

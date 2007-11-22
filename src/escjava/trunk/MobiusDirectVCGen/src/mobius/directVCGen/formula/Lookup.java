@@ -64,7 +64,7 @@ public class Lookup {
   public static Term getInvariant(final TypeDecl type) {
     Term t = invariants.get(type);
     if (t == null) {
-      t = Logic.True();
+      t = Logic.trueValue();
     }
     return t;
   }
@@ -96,7 +96,7 @@ public class Lookup {
     //return buildStdCond(m, "_pre", false);
     Term t = constraints.get(type);
     if (t == null) {
-      t = Logic.True();
+      t = Logic.trueValue();
     }
     return t;
   }
@@ -128,7 +128,7 @@ public class Lookup {
     //return buildStdCond(m, "_pre", false);
     Term t = preconditions.get(m);
     if (t == null) {
-      t = Logic.True();
+      t = Logic.trueValue();
     }
     return t;
   }
@@ -162,7 +162,7 @@ public class Lookup {
     //return new Post(buildStdCond (m, "_norm", true)); 
     Post p = postconditions.get(m);
     if (p == null) {
-      p = new Post(Logic.True());
+      p = new Post(Logic.trueValue());
     }
     return p;
   }
@@ -177,7 +177,7 @@ public class Lookup {
     Post pNew = post;
     
     if (pNew == null && fFailSave) {
-      pNew = new Post(Expression.rvar(Ref.sort), Logic.True());
+      pNew = new Post(Expression.rvar(Ref.sort), Logic.trueValue());
     }
     
     if (pNew != null && pNew.getRVar() == null && fFailSave) {
@@ -228,7 +228,7 @@ public class Lookup {
     //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
     Post p = exceptionalPostconditions.get(m);
     if (p == null) {
-      p = new Post(Expression.rvar(Heap.sortValue), Logic.True());
+      p = new Post(Expression.rvar(Heap.sortValue), Logic.trueValue());
     }
     return p;
   }
@@ -243,7 +243,7 @@ public class Lookup {
     Post pNew = post;
     
     if (pNew == null && fFailSave) {
-      pNew = new Post(Expression.rvar(Ref.sort), Logic.True());
+      pNew = new Post(Expression.rvar(Ref.sort), Logic.trueValue());
     }
     
     if (pNew != null && pNew.getRVar() == null && fFailSave) {

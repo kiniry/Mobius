@@ -10,10 +10,10 @@ import escjava.sortedProver.NodeBuilder.Sort;
  */
 public final class Ref {  
   /** the sort that represents references. */
-  public static Sort sort = Formula.lf.sortRef;
+  public static final Sort sort = Formula.lf.sortRef;
 
   /** the variable made to represent this. */
-  public static QuantVariableRef varThis = Expression.rvar(
+  public static final QuantVariableRef varThis = Expression.rvar(
                                              Expression.var("this", 
                                                             Heap.sortValue));
 

@@ -25,10 +25,10 @@ import escjava.translate.UniqName;
  */
 public final class Type {
   /** the sort representing a type. */
-  public static Sort sort = Formula.lf.sortType;
+  public static final Sort sort = Formula.lf.sortType;
   
   /** the sort representing a field. */
-  public static Sort sortField = Formula.lf.sortField;
+  public static final Sort sortField = Formula.lf.sortField;
   
   /** an hash map not to compute twice the types/term correspondance. */
   private static final Map<javafe.ast.Type, QuantVariableRef> types = 

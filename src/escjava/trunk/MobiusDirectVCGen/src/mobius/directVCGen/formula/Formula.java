@@ -23,17 +23,17 @@ public final class Formula {
    * the sort that represents any sort... should not be used.
    * @deprecated use any other sort from any other library
    */
-  public static Sort sort = lf.sortAny;
+  public static final Sort sort = lf.sortAny;
   
   /**
    * program is inner to Coq's representation: it is
    * dubious that it should appear in formulas.
    * @deprecated use only at the Coq level
    */
-  public static QuantVariable program = Expression.var("p");
+  public static final QuantVariable program = Expression.var("p");
 
   /** the sort used to represent a value. */
-  public static Sort sortValue = lf.sortValue;
+  public static final Sort sortValue = lf.sortValue;
 
   /**
    * @deprecated
