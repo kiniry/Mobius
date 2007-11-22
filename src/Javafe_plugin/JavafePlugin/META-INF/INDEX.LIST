@@ -1,0 +1,15 @@
+JarIndex-Version: 1.0
+
+/Users/dermotcochran/Documents/workspace_mobius/Javafe/jars/JavaFE.jar
+javafe
+javafe/ast
+javafe/decsrc
+javafe/filespace
+javafe/genericfile
+javafe/parser
+javafe/reader
+javafe/tc
+javafe/util
+junitutils
+tohtml
+

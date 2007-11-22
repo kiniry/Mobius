@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JavaFE Plugin
+Bundle-SymbolicName: mobius.javafe.plugin
+Bundle-Version: 2.0.4
+Bundle-Vendor: https://mobius.ucd.ie/
