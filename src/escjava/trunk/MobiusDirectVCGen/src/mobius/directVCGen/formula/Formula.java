@@ -2,7 +2,6 @@ package mobius.directVCGen.formula;
 
 import mobius.directVCGen.formula.coq.CoqNodeBuilder;
 import escjava.sortedProver.Lifter;
-import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.STerm;
 import escjava.sortedProver.NodeBuilder.Sort;
@@ -25,15 +24,6 @@ public final class Formula {
    */
   public static final Sort sort = lf.sortAny;
   
-  /**
-   * program is inner to Coq's representation: it is
-   * dubious that it should appear in formulas.
-   * @deprecated use only at the Coq level
-   */
-  public static final QuantVariable program = Expression.var("p");
-
-  /** the sort used to represent a value. */
-  public static final Sort sortValue = lf.sortValue;
 
   /**
    * @deprecated
@@ -86,6 +76,7 @@ public final class Formula {
    * Every use of this function should be replaced by a 'proper'
    * library call.
    * @deprecated to be used for convenience only
+   * @return returns the current lifter
    */
   public static Lifter getCurrentLifter() {
     return lf;

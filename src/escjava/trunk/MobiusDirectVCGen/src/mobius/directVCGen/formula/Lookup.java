@@ -203,10 +203,10 @@ public class Lookup {
     final Post pOld = postconditions.get(mp.getDecl());
     Post pNew;
     if (pOld == null) {
-      if (mp.fResult == null){
+      if (mp.fResult == null) {
         pNew = new Post(null, term);
       }
-      else{
+      else {
         pNew = new Post(mp.fResult, term);
       }
     }
