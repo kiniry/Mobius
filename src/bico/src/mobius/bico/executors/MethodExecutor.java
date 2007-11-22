@@ -92,11 +92,10 @@ class MethodExecutor extends ASignatureExecutor {
     else {
       String str2 = "(";
       for (int i = 0; i < imeth.length - 1; i++) {
-        str2 += fImplemSpecif.methodsCons(getMethodHandler().getName(imeth[i]) + "Method");
+        str2 += fImplemSpecif.methodsCons(getMethodHandler().getName(imeth[i]));
        
       }
-      str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()) +
-                                       "Method");
+      str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()));
       str2 += ")";
       fOut.println(str2);
     }
@@ -153,7 +152,7 @@ class MethodExecutor extends ASignatureExecutor {
   private void doMethod(final Method method, final String name) throws ClassNotFoundException {
     
     // method
-    String str = "Definition " + name + "Method : Method := METHOD.Build_t";
+    String str = "Definition " + name + " : Method := METHOD.Build_t";
     // System.out.println(str);
     fOut.println(str);
     fOut.incTab();

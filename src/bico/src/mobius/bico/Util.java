@@ -20,14 +20,13 @@ import org.apache.bcel.util.Repository;
  * @author J. Charles (julien.charles@inria.fr), P. Czarnik
  *         (czarnik@mimuw.edu.pl), L. Hubert (laurent.hubert@irisa.fr)
  */
-public final class Util {
+public class Util {
   /** the size of a tab used in writeln. */
   public static final String TAB = "  ";
   
   /**
-   * @deprecated
    */
-  private Util() {
+  protected Util() {
   
   }
   
