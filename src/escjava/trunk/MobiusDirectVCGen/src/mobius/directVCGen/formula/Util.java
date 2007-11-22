@@ -1,12 +1,15 @@
 package mobius.directVCGen.formula;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.Vector;
 
 import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
+import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.DirectVCGen;
@@ -22,18 +25,28 @@ import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
-import javafe.tc.TypeSig;
 
 
-
-public class Util {
+/**
+ * This class contains library methods to be used in the direct
+ * vc gen.
+ * @author J. Charles (Julien.Charles@inria.fr)
+ */
+public final class Util extends mobius.bico.Util {
   
   /**
-   * 
-   * @param decl
+   */
+  private Util() {
+  }
+  
+  /**
+   * Returns the string representing the annotations 
+   * bounded to this method. The form of what is returned is: 
+   * <code>classNameAnnotations.methName</code>
+   * @param decl the method from which we want to get the annotations
    * @return The name of the Annotations version of the method
    */
-  public static String getMethodName(RoutineDecl decl) {
+  public static String getMethodName(final RoutineDecl decl) {
     if (decl instanceof MethodDecl) {
       return decl.parent.id + "Annotations." + decl.id();
     }
@@ -42,7 +55,16 @@ public class Util {
     }
   }
   
-  public static InstructionHandle findLastInstruction(List<LineNumberGen> list) {
+  
+  /**
+   * Find the last instruction of a loop.
+   * In practice, it finds the last instruction before the test.
+   * Usually it is pointed by the first goto encountered
+   * @param list the list of lines corresponding to the loop.
+   * @return an instruction being the last instruction of the
+   * inspected loop.
+   */
+  public static InstructionHandle findLastInstruction(final List<LineNumberGen> list) {
     InstructionHandle baseih = list.get(0).getInstruction();
     for (LineNumberGen lng: list) {
       if (lng.getInstruction().getPosition() <
@@ -52,7 +74,7 @@ public class Util {
     }
     
     InstructionHandle ih = baseih;
-    if(ih.getPrev() != null) {
+    if (ih.getPrev() != null) {
       ih = ih.getPrev();
     }
     // first we find the first goto
@@ -64,7 +86,43 @@ public class Util {
     return bi.getTarget();
   }
   
-  public static boolean belongs(LocalVariableGen local, List<LineNumberGen> lines) {
+  
+  /**
+   * Returns the variables of a method, alive at a given line.
+   * @deprecated not used anymore, a more precise method of
+   * collecting the variables is used instead
+   * @param met the method to inspect
+   * @param lines the lines to consider
+   * @return the variables used in a given method
+   */
+  public static List<LocalVariableGen> getValidVariables(final MethodGen met, 
+                                                         final List<LineNumberGen> lines) {
+    final List<LocalVariableGen> res = new Vector<LocalVariableGen>();
+    final LocalVariableGen[] lvt = met.getLocalVariables();
+    int skip = met.getArgumentNames().length; // we skip the n first variables
+   
+    for (LocalVariableGen local: lvt) {
+      if (skip > 0) {
+        skip--;
+      }
+      else if (Util.belongs(local, lines)) {
+        
+        res.add(local);
+      }
+    }
+    return res;
+  }
+  
+  /**
+   * Returns true if a variable is alive for a given program point.
+   * @deprecated used only by {@link #getValidVariables(MethodGen, List)}
+   * which is deprecated.
+   * @param local a local variable
+   * @param lines lines of a method
+   * @return if a variable is alive at given line(s)
+   */
+  private static boolean belongs(final LocalVariableGen local, 
+                                final List<LineNumberGen> lines) {
     
     for (LineNumberGen line: lines) {
       final int linePc = line.getLineNumber().getStartPC();
@@ -76,7 +134,14 @@ public class Util {
     }
     return false;
   }
-  public static LineNumberGen getLineNumberFromLine(MethodGen met, int lineNum) {
+  
+  /**
+   * Return a line number gen corresponding to the given line.
+   * @param met the method context
+   * @param lineNum the number which is the line
+   * @return a valid line number gen
+   */
+  private static LineNumberGen getLineNumberFromLine(final MethodGen met, final int lineNum) {
     final LineNumberGen [] tab = met.getLineNumbers();
     if (tab.length == 0) {
       return null;
@@ -95,7 +160,16 @@ public class Util {
     }
     return min;
   }
-  public static List<LineNumberGen> getLineNumbers(MethodGen met, int lineNum) {
+  
+  /**
+   * Return a list of line number gen corresponding at the
+   * given instruction which starts at the given line on the 
+   * source code of a given method. 
+   * @param met the method to inspect
+   * @param lineNum the source line number to get the lines from
+   * @return a list of lines "bcel friendly"
+   */
+  public static List<LineNumberGen> getLineNumbers(final MethodGen met, final int lineNum) {
     final List<LineNumberGen> res = new Vector<LineNumberGen>();
     final LineNumberGen first = Util.getLineNumberFromLine(met, lineNum);
     final LineNumberGen [] tab = met.getLineNumbers();
@@ -108,38 +182,24 @@ public class Util {
     return res;
   }
   
+
   /**
-   * @deprecated
-   * @param lines
-   * @return
+   * Returns the term representing the assertion, instanciated
+   * with the right variables.
+   * 
+   * @param meth the method currently inspected
+   * @param annot the annotation to instanciate
+   * @return a term representing the annotation
    */
-  public static List<LocalVariableGen> getValidVariables(MethodGen met, List<LineNumberGen> lines) {
-    final List<LocalVariableGen> res = new Vector<LocalVariableGen>();
-    final LocalVariableGen[] lvt = met.getLocalVariables();
-    int skip = met.getArgumentNames().length; // we skip the n first variables
-   
-    for (LocalVariableGen local: lvt) {
-      if (skip > 0) {
-        skip--;
-      }
-      else if (Util.belongs(local, lines)) {
-        
-        res.add(local);
-      }
-    }
-    return res;
-  }
-  
-  public static Term getAssertion(RoutineDecl meth, 
-                                  AAnnotation annot, 
-                                  List<QuantVariableRef> variables) {
+  public static Term getAssertion(final RoutineDecl meth, 
+                                  final AAnnotation annot) {
     final Term res;
     if (DirectVCGen.fByteCodeTrick) {
       final String methname = Util.getMethodName(meth);
       final Term[] tab = new Term[annot.fArgs.size()];
       int i = 0;
       for (QuantVariableRef qvr: annot.fArgs) {
-        tab[i] = qvr;//variables.get(qvr);
+        tab[i] = qvr;
         i++;
       }
       
@@ -150,8 +210,18 @@ public class Util {
     }
     return res;
   }
-  // TODO: add comments
-  public static Post getExcpPost(final Term typ, final VCEntry vce) {
+  
+  
+  /**
+   * Returns the exceptionnal postcondition for a given exception
+   * type.
+   * @param typ the type of the exception
+   * @param vce the global postcondition from which to get the
+   * informations
+   * @return a valid postcondition
+   */
+  public static Post getExcpPost(final Term typ, 
+                                 final VCEntry vce) {
     Post res = null;
     Post nottypeof = null;
     for (ExcpPost p: vce.lexcpost) {
@@ -186,6 +256,7 @@ public class Util {
     res = Post.and(res, Post.implies(nottypeof, ex));
     return res;
   }
+  
   /**
    * This method returns a valid new object (with all the necessary properties)
    * to use while creating a new exception.
@@ -203,27 +274,35 @@ public class Util {
                           Logic.implies(Heap.newObject(Heap.var, type, heap, e),
                                         p.substWith(e).subst(Heap.var, heap))));
   }
-  public static Term mkNewEnv(QuantVariableRef newHeap, final Term post) {
-    final Term h = Logic.forall(newHeap, post);
-    return h;
-  }
-  public static Term mkNewEnv(Term post) {
-    final QuantVariableRef heap = Heap.newVar();
-    return mkNewEnv(heap, post.subst(Heap.var, heap));
-  }
-  public static Term mkNewEnv(Post post) {
-    return mkNewEnv(post.getPost());
+  
+  
+  /**
+   * Substitutes a variable by a value in a given postcondition.
+   * This function is just a delegate to help the refactoring.
+   * Right now, in this specific state it should be deleted.
+   * 
+   * @param post the postcondition
+   * @param var the variable
+   * @param val the value
+   * @return a transformed term
+   */
+  public static Term substVarWithVal(final Post post, 
+                                     final Term var, 
+                                     final Term val) {
+    return post.subst(var, val);
   }
   
-  public static Term substVarWithVal(final Post fPost, final Term var, final Term val) {
-    return fPost.subst(var, val);
-  }
-  
-  public static Term[] getNormalPostconditionArgs(RoutineDecl fMeth) {
+  /**
+   * Returns a new array containing all the arguments of the
+   * postcondition.
+   * @param meth the method from which to compute the postcondition arguments
+   * @return a newly created array
+   */
+  public static Term[] getNormalPostconditionArgs(final RoutineDecl meth) {
     Term[] tab;
     final LinkedList<Term> args = new LinkedList<Term> ();
     args.add(Heap.varPre); 
-    for (QuantVariableRef qvr:Lookup.getInst().getPreconditionArgs(fMeth)) {
+    for (QuantVariableRef qvr:Lookup.getInst().getPreconditionArgs(meth)) {
       if (!qvr.equals(Heap.var)) {
         args.add(Expression.old(qvr));
       }
@@ -232,9 +311,9 @@ public class Util {
       }
     }
     
-    final QuantVariableRef qvr = Lookup.getNormalPostcondition(fMeth).getRVar();
+    final QuantVariableRef qvr = Lookup.getNormalPostcondition(meth).getRVar();
     
-    if (!isVoid(fMeth)) {
+    if (!isVoid(meth)) {
       args.addFirst(Expression.normal(Expression.some(qvr)));
     }
     else {
@@ -243,28 +322,29 @@ public class Util {
     tab = args.toArray(new Term [args.size()]);
     return tab;
   }
-
-  public static boolean isVoid(RoutineDecl fMeth) {
-    if (fMeth instanceof MethodDecl) {
-      final MethodDecl md = (MethodDecl) fMeth;
-      return javafe.tc.Types.isVoidType(md.returnType);
-      
-    }
-    else {
-      return true;
-    }
-  }
-  public static Term[] getExcPostconditionArgs(RoutineDecl fMeth) {
-    final Term[] tab = getNormalPostconditionArgs(fMeth);
+  
+  
+  /**
+   * Returns the arguments that will be used to instanciate an 
+   * exceptionnal postcondition.
+   * @param meth the method context
+   * @return the array containing all the arguments.
+   */
+  public static Term[] getExcPostconditionArgs(final RoutineDecl meth) {
+    final Term[] tab = getNormalPostconditionArgs(meth);
     tab[0] = Expression.sym("Exception", 
-                           new Term [] {Lookup.getExceptionalPostcondition(fMeth).getRVar()});
+                           new Term [] {Lookup.getExceptionalPostcondition(meth).getRVar()});
     return tab;
   }
   
+  /**
+   * Build the argument list for an invariant or an assertion for instance.
+   * @param prop the properties from which to build the arguments
+   * @return a list of variables ordered, which are the arguments
+   */
   public static List<QuantVariableRef> buildArgs(final MethodProperties prop) {
     final List<QuantVariableRef> args = new LinkedList<QuantVariableRef>();
     // olds
-    
     for (QuantVariableRef qvr: prop.fArgs) {
       if (qvr.qvar.name.equals("this")) {
         continue;
@@ -278,6 +358,30 @@ public class Util {
     return args;
   }
   
+  /**
+   * Tells whether or not the method return type is void.
+   * @param meth the method to inspect
+   * @return true if the method returns void
+   */
+  public static boolean isVoid(final RoutineDecl meth) {
+    if (meth instanceof MethodDecl) {
+      final MethodDecl md = (MethodDecl) meth;
+      return javafe.tc.Types.isVoidType(md.returnType);  
+    }
+    else {
+      return true;
+    }
+  }
+  
+
+  
+  /**
+   * Returns the package directory corresponding to a given
+   * signature.
+   * @param sig the signature to get the package directory from
+   * @return a file which is not filesystem valid, but corresponds
+   * to a package
+   */
   public static File getPkgDir(final TypeSig sig) {
     File pkgsDir = new File("");
     final String[] pkgs; 
@@ -292,5 +396,27 @@ public class Util {
     }
     return pkgsDir;
     
+  }
+
+  /**
+   * Retrieve all directory paths contained in a given directory.
+   * @param baseFile the directory from which to start
+   * @return the list of all the existing path from the base directory
+   */
+  public static List<String> findAllPath(final File baseFile) {
+    final List<String> result = new ArrayList<String>();
+    final Stack<String> files = new Stack<String>();
+    result.add("");
+    files.add("");
+    while (!files.isEmpty()) {
+      final String prefix = files.pop();
+      final File[] dirs = new File(baseFile, prefix).listFiles(new DirectoryFilter());
+      
+      for (File f: dirs) {
+        result.add(prefix + File.separator + f.getName());
+        files.add(prefix + File.separator + f.getName());
+      }
+    }
+    return result;
   }
 }

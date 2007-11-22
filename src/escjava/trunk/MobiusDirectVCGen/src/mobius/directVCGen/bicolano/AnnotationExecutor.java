@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
 import mobius.bico.dico.Dictionary;
 import mobius.bico.executors.ClassExecutor;
@@ -15,6 +14,7 @@ import mobius.bico.executors.ClassesMakefileGen;
 import mobius.bico.executors.Executor;
 import mobius.bico.executors.MakefileGen;
 import mobius.bico.implem.MapImplemSpecif;
+import mobius.directVCGen.formula.Util;
 
 import org.apache.bcel.generic.ClassGen;
 
@@ -66,7 +66,12 @@ public class AnnotationExecutor extends Executor {
     final File typ = new File(getBaseDir(), getModuleName() + "_annotations" + suffix);
     final CoqStream out = new CoqStream(new FileOutputStream(typ));
     out.println(libPath);
-    out.println("Add Rec LoadPath \"classes\".");
+    
+    final List<String> pathList = Util.findAllPath(new File(getBaseDir(), "classes"));
+    for (String path: pathList) {
+      out.println("Add LoadPath \"classes" + path + "\".");
+    }
+    
     out.println();
     out.incPrintln("Module " + getModuleName() + "Annotations.");
 
@@ -109,7 +114,8 @@ public class AnnotationExecutor extends Executor {
     out.incPrintln("Definition anno_prog :="); 
     out.println("AnnoProg BicoProgram.program " +
         "BicoProgram.subclass program_spec.");
-    out.decPrintln("End " + getModuleName() + "Annotations.");
+    out.decPrintln("");
+    out.endModule(getModuleName() + "Annotations");
     
   }  
 

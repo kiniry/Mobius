@@ -29,8 +29,9 @@ public class VarCorrVisitor extends ABasicVisitor {
                             final MethodGen met) {
     final LocalVariableGen[] tab = met.getLocalVariables();
     fMet = met;
-    if (tab.length == 0)
+    if (tab.length == 0) {
       return;
+    }
     old.add(Ref.varThis);
     int i = 1;
     for (FormalParaDecl para: decl.args.toArray()) {

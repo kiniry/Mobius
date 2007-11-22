@@ -229,7 +229,7 @@ public class StmtVCGen extends ExpressionVisitor {
   public /*@non_null*/ Object visitWhileStmt(final /*@non_null*/ WhileStmt x, final Object o) {
     final VCEntry vce = (VCEntry)o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
-    final Term inv = Util.getAssertion(fMeth, fAnnot.getInvariant(x), getVars());
+    final Term inv = Util.getAssertion(fMeth, fAnnot.getInvariant(x));
 
     
     final Term post = vce.fPost.getPost();
@@ -379,7 +379,7 @@ public class StmtVCGen extends ExpressionVisitor {
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
     
     if (s instanceof WhileStmt || s instanceof DoStmt || s instanceof ForStmt) {
-      final Term t =  Util.getAssertion(fMeth, fAnnot.getInvariant(s), getVars());
+      final Term t =  Util.getAssertion(fMeth, fAnnot.getInvariant(s));
       vce = mkEntryLoopLabel(x.label, vce, new Post(t));
     }
     vce.fPost = (Post) x.stmt.accept(fExprVisitor, vce);
@@ -616,7 +616,7 @@ public class StmtVCGen extends ExpressionVisitor {
 
     final VCEntry vce = (VCEntry)o;
     vce.fPost = treatAnnot(vce, fAnnot.getAnnotPost(x));
-    final Term inv =  Util.getAssertion(fMeth, fAnnot.getInvariant(x), getVars());
+    final Term inv =  Util.getAssertion(fMeth, fAnnot.getInvariant(x));
     final Term post = vce.fPost.getPost();
     final Post pinv = new Post(inv);
     final VCEntry vceBody = mkEntryWhile(vce, pinv);

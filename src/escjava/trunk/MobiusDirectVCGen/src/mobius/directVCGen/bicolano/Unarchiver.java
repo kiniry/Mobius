@@ -9,8 +9,11 @@ import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import mobius.directVCGen.formula.Util;
 
 /**
  * A class to inflat bicolano as well as the static preludes from
@@ -121,18 +124,18 @@ public class Unarchiver {
     // we skip the first three lines
     in.readLine(); in.readLine(); in.readLine(); in.readLine();
     // and we replace them by system dependent lines
-    out.println("Add LoadPath \"" + //basedir.getAbsolutePath() + 
-                //File.separator + 
+    out.println("Add LoadPath \"" +  
                 bicodir + "\".");
-    out.println("Add LoadPath \"" + // basedir.getAbsolutePath() + 
-                //File.separator + 
+    out.println("Add LoadPath \"" +  
                 libdir + "\".");
-    out.println("Add LoadPath \"" + //basedir.getAbsolutePath() + 
-                //File.separator + 
+    out.println("Add LoadPath \"" + 
                 libmapdir + "\".");
-    out.println("Add LoadPath \"" + //basedir.getAbsolutePath() + 
-                //File.separator + 
+    out.println("Add LoadPath \"" + 
                 liblogicdir + "\".");
+    final List<String> pathList = Util.findAllPath(new File(basedir, "classes"));
+    for (String path: pathList) {
+      out.println("Add LoadPath \"classes" + path + "\".");
+    }
     String str;
     while ((str = in.readLine()) != null) {
       out.println(str);

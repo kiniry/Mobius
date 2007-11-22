@@ -2,7 +2,7 @@ Add LoadPath "Formalisation/Bicolano".
 Add LoadPath "Formalisation/Library".
 Add LoadPath "Formalisation/Library/Map".
 Add LoadPath "Formalisation/Logic".
-Add Rec LoadPath "classes".
+
 Require Export Bool.
 Require Export Sumbool.
 
