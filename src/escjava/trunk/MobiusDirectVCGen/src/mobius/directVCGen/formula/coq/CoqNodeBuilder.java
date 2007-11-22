@@ -22,13 +22,16 @@ import escjava.sortedProver.Lifter.SortVar;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class CoqNodeBuilder extends HeapNodeBuilder {
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildSort(escjava.sortedProver.NodeBuilder.Sort)
+
+  /**
+   * Build the Coq representation of a sort.
+   * @param type the type to convert
+   * @return the coq term representing the sort,
+   * of type CType.
    */
   @Override
   public SAny buildSort(final Sort type) {
-    SAny res;
+    CType res;
     Sort realtype;
     if (type instanceof SortVar) {
       realtype = type.theRealThing();
@@ -63,7 +66,6 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
     }
     else {
       res = new CType("value");
-      //throw new IllegalArgumentException();
     }
     return res;
   }
@@ -256,9 +258,9 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
     return new CPred("not", new STerm[] {arg});
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildTrue()
+  /**
+   * Build a node representing <code>True</code>.
+   * @return the predicate <code>True</code>
    */
   @Override
   public SPred buildTrue() {
@@ -345,9 +347,14 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
   }
 
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildValueConversion(escjava.sortedProver.NodeBuilder.Sort, escjava.sortedProver.NodeBuilder.Sort, escjava.sortedProver.NodeBuilder.SValue)
+  /**
+   * Add the conversion function to a given term.
+   * It converts from a sort to another sort. One of the sort
+   * has to be a value.
+   * @param from the sort to convert from
+   * @param to the sort to convert to
+   * @param val the term to convert
+   * @return the new converted term
    */
   @Override
   public SValue buildValueConversion(final Sort from, final Sort to, final SValue val) {
@@ -431,9 +438,9 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildIntFun(int, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SInt)
    */
   @Override
-  public SInt buildIntFun(final int intFunTag, final SInt arg1, final SInt arg2) {
+  public SInt buildIntFun(final int tag, final SInt arg1, final SInt arg2) {
     SInt res;
-    switch (intFunTag) {
+    switch (tag) {
       case NodeBuilder.funADD:
         res = new CInt("Int.add", new STerm[] {arg1, arg2});
         break;
@@ -451,7 +458,7 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
         break;
       default:
         throw new UnsupportedOperationException("Cannot translate the tag: " + 
-                                                NodeBuilder.tagsIds[intFunTag]);
+                                                NodeBuilder.tagsIds[tag]);
     }
     return res;
 
@@ -463,9 +470,9 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
    * @see escjava.sortedProver.NodeBuilder#buildIntPred(int, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SInt)
    */
   @Override
-  public SPred buildIntPred(final int intPredTag, final SInt arg1, final SInt arg2) {
+  public SPred buildIntPred(final int tag, final SInt arg1, final SInt arg2) {
     CPred res;
-    switch (intPredTag) {
+    switch (tag) {
       case NodeBuilder.predLE:
         res = new CPred(false, "<=", arg1,
                       arg2);
@@ -487,7 +494,7 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
             arg2);
         break;
       default:
-        throw new UnsupportedOperationException(NodeBuilder.tagsIds[intPredTag]);
+        throw new UnsupportedOperationException(NodeBuilder.tagsIds[tag]);
     }
     return res;
   }
@@ -502,9 +509,7 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
   public SPred buildAssignCompat(final SMap map, final SValue val, final SAny type) {
     String typeStmt = type.toString();
     if (typeStmt.startsWith("T_")) {
-      typeStmt = typeStmt.substring(2);
-      
-      
+      typeStmt = typeStmt.substring(2); 
     }
     return new CPred("assign_compatible", new STerm [] {new CMap("p"), map, val, type});
   }
@@ -533,8 +538,7 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
       case NodeBuilder.predNE:
       default:
         sym = "refneq";
-        break;
-      
+        break; 
     }
     
     return new CBool(false, sym, new STerm[] {arg1, arg2});
