@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <description url="http://kind/products/opensource/Javafe/javafe-eclipse/updates/">
-      Javafe update site
-   </description>
-   <feature url="features/mobius.javafe.feature_2.0.4.jar" id="mobius.javafe.feature" version="2.0.4"/>
-</site>
