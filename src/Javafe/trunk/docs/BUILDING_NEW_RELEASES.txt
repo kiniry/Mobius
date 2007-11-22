@@ -7,7 +7,9 @@ o Resynchronize with Subversion
 o Release builds (binary and source) 
   JAVAFE_VERSION=2.0b4 make releases
 o Take release to another machine, unpack, install, and test.
-o Tag repository for new release e.g. svn copy trunk/ tags/escjava-2-0b4/ 
+o Tag repository for new release e.g. svn copy trunk/ tags/javafe-2-0b4/ 
+o Build eclipse plug-in, feature and update site for JavaFE
+o Build the enclosing features and update sites e.g. ESCJava2 and MobiusPVE
 o Upload to <products/opensource/archives> on release site
 o Announce to world
  + KindSoftware website
