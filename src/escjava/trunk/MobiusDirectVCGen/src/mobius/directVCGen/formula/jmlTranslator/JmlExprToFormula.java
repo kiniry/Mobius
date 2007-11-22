@@ -37,7 +37,7 @@ public class JmlExprToFormula {
   }
 
   public Term and(final BinaryExpr expr, final Object o) {
-    final boolean pred = ((ContextProperties) o).pred;
+    final boolean pred = ((ContextProperties) o).fInspectingPred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -53,7 +53,7 @@ public class JmlExprToFormula {
 
 
   public Object or(final BinaryExpr expr, final Object o) {
-    final boolean pred = ((ContextProperties) o).pred;
+    final boolean pred = ((ContextProperties) o).fInspectingPred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -84,12 +84,12 @@ public class JmlExprToFormula {
    * @return term in the excepted sort, if possible
    */
   public Object eq(final BinaryExpr expr, final Object o) {
-    final boolean predOld = ((ContextProperties) o).pred;
+    final boolean predOld = ((ContextProperties) o).fInspectingPred;
     //set Properties.prop:=false (equality operation wants sortBool)
-    ((ContextProperties) o).pred = false;
+    ((ContextProperties) o).fInspectingPred = false;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
-    ((ContextProperties) o).pred = predOld;
+    ((ContextProperties) o).fInspectingPred = predOld;
     if (!predOld && 
         (t1.getSort() != Logic.sort) &&
         (t2.getSort() != Logic.sort)) {
@@ -110,7 +110,7 @@ public class JmlExprToFormula {
    * ne(t1,t2) <--> not(equal(t1,t2)).
    */
   public Object ne(final BinaryExpr expr, final Object o) {
-    final boolean pred = ((ContextProperties) o).pred;
+    final boolean pred = ((ContextProperties) o).fInspectingPred;
     final Term t = (Term) eq(expr, o);
 
     if (!pred && (t.getSort() != Logic.sort)) {
@@ -124,7 +124,7 @@ public class JmlExprToFormula {
 
 
   public Object ge(final BinaryExpr expr, final Object o) {
-    final Boolean pred = ((ContextProperties)o).pred;
+    final Boolean pred = ((ContextProperties)o).fInspectingPred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -138,7 +138,7 @@ public class JmlExprToFormula {
 
 
   public Object gt(final BinaryExpr expr, final Object o) {
-    final Boolean pred = ((ContextProperties)o).pred;
+    final Boolean pred = ((ContextProperties)o).fInspectingPred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -152,7 +152,7 @@ public class JmlExprToFormula {
 
 
   public Object le(final BinaryExpr expr, final Object o) {
-    final Boolean pred = ((ContextProperties)o).pred;
+    final Boolean pred = ((ContextProperties)o).fInspectingPred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -166,7 +166,7 @@ public class JmlExprToFormula {
 
 
   public Object lt(final BinaryExpr expr, final Object o) {
-    final Boolean pred = ((ContextProperties)o).pred;
+    final Boolean pred = ((ContextProperties)o).fInspectingPred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -289,7 +289,7 @@ public class JmlExprToFormula {
   }
 
   public Object implies(final BinaryExpr expr, final Object o) {
-    final boolean pred = ((ContextProperties) o).pred;
+    final boolean pred = ((ContextProperties) o).fInspectingPred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -415,7 +415,7 @@ public class JmlExprToFormula {
 
   public Object variableAccess(final VariableAccess x, final Object o) {
     final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
-    final boolean predProp = ((ContextProperties)o).pred;
+    final boolean predProp = ((ContextProperties)o).fInspectingPred;
     Term res = null;
     
     
@@ -433,7 +433,7 @@ public class JmlExprToFormula {
 
   public Object genericVarDecl(final GenericVarDecl x, final Object o) {
     final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
-    final boolean predProp = ((ContextProperties)o).pred;
+    final boolean predProp = ((ContextProperties)o).fInspectingPred;
 
     Term res;
     if (oldProp) {

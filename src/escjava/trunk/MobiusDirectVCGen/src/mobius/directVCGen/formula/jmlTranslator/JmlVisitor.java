@@ -115,7 +115,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
-    fGlobal.classId = x.id;
+    fGlobal.setClassId(x.id);
     
     //Use default properties to start with.
     return visitTypeDecl(x, new ContextProperties());
@@ -962,7 +962,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     final MethodProperties prop = (MethodProperties) o;
     final java.util.Set<FieldAccess> subSet = (HashSet) prop.get("subsetCheckingSet");
     FieldAccess fa;
-    final Identifier parentId = fGlobal.classId;
+    final Identifier parentId = fGlobal.getClassId();
     Identifier typeId;
     boolean result = true;
     final Iterator iter = subSet.iterator();

@@ -13,8 +13,9 @@ import mobius.directVCGen.formula.Lookup;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 
-/** 
+/**
  * Properties that are passed as argument of the visitor. 
+ * @author Hernann Lehner and J. Charles (julien.charles@inria.fr)
  */
 public final class MethodProperties extends ContextProperties {
 
@@ -25,23 +26,12 @@ public final class MethodProperties extends ContextProperties {
   /** valid properties string. */
   private static final List<String> validStr = 
     new ArrayList<String>();
-  
-  static
-  {
-    validStr.add("freshSet");
-    validStr.add("subsetCheckingSetConstraints");
-    validStr.add("subSetCheckingSetInitially");
-    validStr.add("routinebegin");
-    validStr.add("quantifier");
-    validStr.add("quantVars");
-  }
+
   
   
   /** key to represent a result in the properties set. */  
   public QuantVariableRef fResult;
   
-  /** the current method which is inspected. */
-  private final RoutineDecl fMethod;
   
   /** tells whether or not we are inspecting a constructor. */
   public final boolean fIsConstructor;
@@ -57,30 +47,42 @@ public final class MethodProperties extends ContextProperties {
   public boolean fNothing;
 
   /** the local variables. */
-  public LinkedList<List<QuantVariableRef>> fLocalVars = new LinkedList<List<QuantVariableRef>> ();
+  public LinkedList<List<QuantVariableRef>> fLocalVars = 
+      new LinkedList<List<QuantVariableRef>> ();
   
   /** the arguments of the method. */
   public LinkedList<QuantVariableRef> fArgs;
 
-
+  /** the current method which is inspected. */
+  private final RoutineDecl fMethod;
+  
+  /** the counter to get the assert number, for the naming. */
   private int fAssert;
   
   /**
    * initialize the properties with default values.
    * @param met the method which is inspected
    */
-  public MethodProperties(final RoutineDecl met) { 
+  public MethodProperties(final RoutineDecl met) {
+    initProperties();
+    
     validStr.addAll(super.getValidStr());
     fMethod = met;
     fArgs = new LinkedList<QuantVariableRef>(); 
     fArgs.addAll(Lookup.mkArguments(met));
-    initProperties();
+
     fIsConstructor = fMethod instanceof ConstructorDecl;
   }
   
 
   
   private void initProperties() {
+    validStr.add("freshSet");
+    validStr.add("subsetCheckingSetConstraints");
+    validStr.add("subSetCheckingSetInitially");
+    validStr.add("routinebegin");
+    validStr.add("quantifier");
+    validStr.add("quantVars");
     
     put("freshSet", new HashSet<QuantVariableRef>());
     put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());

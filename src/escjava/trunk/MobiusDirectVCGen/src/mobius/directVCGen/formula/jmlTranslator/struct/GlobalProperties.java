@@ -7,7 +7,11 @@ import java.util.Set;
 import javafe.ast.FieldAccess;
 import javafe.ast.Identifier;
 
-/** Properties that are passed as argument of the visitor. */
+/**
+ * Properties that are passed as argument of the visitor.
+ * Made to replace Claudia's properties use. 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public final class GlobalProperties extends Properties {
   /** */
   private static final long serialVersionUID = 1L;
@@ -16,16 +20,16 @@ public final class GlobalProperties extends Properties {
   private static final String [] validStr = {
     "doSubsetChecking"
   };
+
   
   public Set<javafe.ast.Type> visibleTypeSet = new HashSet<javafe.ast.Type>();
-  
 
   
+  public final Set<FieldAccess> subsetCheckingSet = new HashSet<FieldAccess>();
 
-
-  public Identifier classId = Identifier.intern("");
+  /** the currently inspected class identifier. */
+  private Identifier fClassId = Identifier.intern("");
   
-  public final HashSet<FieldAccess> subsetCheckingSet = new HashSet<FieldAccess>();
   
   public GlobalProperties() {
     initProperties(); 
@@ -43,5 +47,18 @@ public final class GlobalProperties extends Properties {
       }
     }
     throw new IllegalArgumentException("Invalid key: " + key);
+  }
+
+  /**
+   * Returns the current class id
+   * or the id made of the empty string.
+   * @return the current class id
+   */
+  public Identifier getClassId() {
+    return fClassId;
+  }
+
+  public void setClassId(final Identifier id) {
+    fClassId = id;
   }
 }
