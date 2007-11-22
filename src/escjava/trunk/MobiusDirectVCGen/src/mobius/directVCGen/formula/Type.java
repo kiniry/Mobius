@@ -27,6 +27,7 @@ public final class Type {
   /** the sort representing a type. */
   public static Sort sort = Formula.lf.sortType;
   
+  /** the sort representing a field. */
   public static Sort sortField = Formula.lf.sortField;
   
   /** an hash map not to compute twice the types/term correspondance. */
@@ -100,6 +101,12 @@ public final class Type {
     }
   }
     
+  /**
+   * Translate a type to a valid name of the form: 
+   * <code>classNameType.name</code>.
+   * @param type a javafe resolved type
+   * @return a variable having the name <code>classNameType.name</code>.
+   */
   public static QuantVariableRef translateToName(final javafe.ast.Type type) {
     QuantVariableRef t = types.get(type);
     if (t != null) {
@@ -212,9 +219,19 @@ public final class Type {
     return translateToType(Types.getJavaLang("ArithmeticException"));
   }
   
+  
+  /**
+   * @return a term representing the class name:
+   * <code>ArithmeticExceptionType.name</code>
+   */
   public static Term javaLangArithmeticExceptionName() {
     return translateToName(Types.getJavaLang("ArithmeticException"));
   }
+  
+  /**
+   * @return a term representing the class name:
+   * <code>NullPointerExceptionType.name</code>
+   */
   public static Term javaLangNullPointerExceptionName() {
     return translateToName(Types.getJavaLang("NullPointerException"));
   }
