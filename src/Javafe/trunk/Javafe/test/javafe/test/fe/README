@@ -96,6 +96,6 @@ Creation of new tests:
       - create an ans file if the correct answer is known.
 
       - add the ans file and any other files besides the run file in
-	testXXX to cvs.
+	testXXX to subversion.
 
       - do a commit of the testXXX directory.

@@ -11,6 +11,4 @@ o Tag repository for new release e.g. svn copy trunk/ tags/escjava-2-0b4/
 o Upload to <products/opensource/archives> on release site
 o Announce to world
  + KindSoftware website
- + All JMLSpecs mailing lists
- + ESC/Java developer list
  + FreshMeat

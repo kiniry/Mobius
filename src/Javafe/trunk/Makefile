@@ -410,7 +410,7 @@ binary-release: build jars alldocs cleanup
 	cp -rf ${JAVAFE_ROOT}/Utils/BCEL ${RELTEMP}/Utils
 #   The two readme files below are irrelevant for binary release
 #   cp README.first README.txt ${RELTEMP}
-	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
+	cd release-files; cp `ls | grep -v .svn` ${RELTEMP} 
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
@@ -427,7 +427,6 @@ test-binary-release:
 	    unset JAVAFE_CLASSPATH ; \
 	    unset JAVAFE_RELEASE ; \
 	    tar xjf ${RELTAR}.tbz ;\
-	    ${RELTEST}/quicktest
 	    
 test-source-release:
 	@echo "Testing source release ............"
