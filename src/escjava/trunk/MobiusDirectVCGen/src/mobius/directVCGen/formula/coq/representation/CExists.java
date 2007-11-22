@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula.coq.representation;
 
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.CoqNodeBuilder;
 import escjava.sortedProver.NodeBuilder.QuantVar;
 import escjava.sortedProver.NodeBuilder.SPred;
@@ -68,7 +69,7 @@ public class CExists extends CForall {
    */
   public String toString() {
     String res  = "(exists";
-    res +=  CoqNodeBuilder.normalize(fVars[0].name) + ":" + fBuilder.buildSort(fVars[0].type);
+    res +=  Util.normalize(fVars[0].name) + ":" + fBuilder.buildSort(fVars[0].type);
     res += ", " + fArgs[0] + ")";
     return res;
   }

@@ -2,6 +2,7 @@
 package mobius.directVCGen.formula.coq.representation;
 
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.CoqNodeBuilder;
 import escjava.sortedProver.NodeBuilder.QuantVar;
 import escjava.sortedProver.NodeBuilder.STerm;
@@ -48,10 +49,10 @@ public class CForall extends CPred {
 //      else 
       if (v.type.equals(Ref.sort)) {
         // Location$
-        res += " (" + CoqNodeBuilder.normalize(v.name) + ": Location)";
+        res += " (" + Util.normalize(v.name) + ": Location)";
       }
       else {
-        res += " (" + CoqNodeBuilder.normalize(v.name) + ":" + 
+        res += " (" + Util.normalize(v.name) + ":" + 
                  this.fBuilder.buildSort(v.type) + ")";
       }
     }

@@ -26,6 +26,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.SValue;
 
 
 /**
@@ -447,5 +448,32 @@ public final class Util extends mobius.bico.Util {
       }
     }
     return result;
+  }
+  
+  /**
+   * Return the symbol to get a location out of a value.
+   * @param r the value to convert
+   * @return a location term
+   */
+  public static SValue getLoc(final SValue r) {
+    return r; //new CRef("loc", new STerm[] {r});
+  }
+  
+  /**
+   * Normalize the symbols ... remove from the string
+   * the characters Coq would not like to see
+   * @param name the string to modify
+   * @return the modified string
+   */
+  public static String normalize(final String name) {
+    String resName = name;
+    if (name.startsWith("#")) {
+      resName = resName.substring(1);
+    }
+    resName = resName.replace(':', '_');
+    resName = resName.replace('.', '_');
+    resName = resName.replace('\\', '_');
+    resName = resName.replace('?', '.');
+    return resName;
   }
 }
