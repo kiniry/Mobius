@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.bcel.generic.ClassGen;
-
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
@@ -20,8 +18,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 /**
- * @author hel
- *
+ * @author Herman Lehner
  */
 public class Lookup {
   
@@ -60,12 +57,11 @@ public class Lookup {
     new HashMap<RoutineDecl, List<QuantVariableRef>>(); 
   
   /**
-   * Returns the FOL Term representation of the precondition of method m.
-   * @param m the method of interest
+   * Returns the FOL Term representation of the class invariant.
+   * @param type the type to get the invariant from
    * @return the precondition or <code>True</code>
    */
   public static Term getInvariant(final TypeDecl type) {
-    //return buildStdCond(m, "_pre", false);
     Term t = invariants.get(type);
     if (t == null) {
       t = Logic.True();
@@ -310,6 +306,8 @@ public class Lookup {
   public List<QuantVariableRef> getPreconditionArgs(final RoutineDecl m) {
     return fPreArgs.get(m);
   }
+  
+  
   public List<QuantVariableRef> getPreconditionArgsWithoutHeap(final RoutineDecl m) {
     return fPreArgsWithoutHeap.get(m);
   }

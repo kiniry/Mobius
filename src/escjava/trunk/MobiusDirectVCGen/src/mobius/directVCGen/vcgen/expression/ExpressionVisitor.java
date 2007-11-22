@@ -179,7 +179,7 @@ public class ExpressionVisitor extends ABasicVisitor {
         term = result.substWith(Ref.strValue((String)expr.value));
         break;
       case TagConstants.NULLLIT:
-        term = result.substWith(Ref.Null());
+        term = result.substWith(Ref.nullValue());
         break;
       default:
         throw new IllegalArgumentException("Unknown construct :" +

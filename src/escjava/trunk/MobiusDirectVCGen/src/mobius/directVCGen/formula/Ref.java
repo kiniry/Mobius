@@ -13,7 +13,9 @@ public final class Ref {
   public static Sort sort = Formula.lf.sortRef;
 
   /** the variable made to represent this. */
-  public static QuantVariableRef varThis = Expression.rvar(Expression.var("this", Heap.sortValue));
+  public static QuantVariableRef varThis = Expression.rvar(
+                                             Expression.var("this", 
+                                                            Heap.sortValue));
 
   /**
    * @deprecated
@@ -25,7 +27,7 @@ public final class Ref {
    * The symbol that represents null.
    * @return the term that represents null
    */
-  public static Term Null() {
+  public static Term nullValue() {
     return Formula.lf.mkNullLiteral();
   }
 
@@ -39,7 +41,13 @@ public final class Ref {
     return Formula.lf.symbolRef(str);
   }
 
-  public static QuantVariableRef fromLoc(QuantVariableRef var) {
+  /**
+   * Returns the term representing the conversion from a location
+   * to a reference.
+   * @param var a variable of the type location
+   * @return a variables of the type reference
+   */
+  public static QuantVariableRef fromLoc(final QuantVariableRef var) {
     String name = var.qvar.name;
     
     final Sort s = var.getSort();

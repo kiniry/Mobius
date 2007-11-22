@@ -4,7 +4,6 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.Term;
-import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.Sort;
 
 /**
@@ -62,6 +61,14 @@ public final class Bool {
     return t; 
   }
   
+  /**
+   * Creates a binary term of type bool, over ref terms.
+   * It type-checks everything.
+   * @param l the left-side element of the term
+   * @param r the right-side element of the term
+   * @param tag the tag associated with the term
+   * @return a well-formed term well-typed et al
+   */
   private static Term refBinaryOp(final Term l, final Term r, final int tag) {
     if (l.getSort() != Ref.sort || r.getSort() != Ref.sort) {
       throw new IllegalArgumentException("The sorts of the arguments should " +

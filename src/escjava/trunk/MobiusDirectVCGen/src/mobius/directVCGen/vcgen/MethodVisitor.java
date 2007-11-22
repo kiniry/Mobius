@@ -155,7 +155,6 @@ public final class MethodVisitor extends DirectVCGen {
     Post normPost;
     Post excpPost;
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(fMeth);
-    Expression.fVariables = variables;
     
     final String name = Util.getMethodName(fMeth);
     Term[] tab = Util.getNormalPostconditionArgs(fMeth);

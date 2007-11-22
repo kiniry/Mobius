@@ -465,7 +465,7 @@ public final class Logic {
   public static Term equalsNull(final Term t) {
     Term res = null;
     if (t.getSort().equals(Heap.sortValue)) {
-      res = equals(t, Ref.Null());
+      res = equals(t, Ref.nullValue());
     }
     else {
       throw new IllegalArgumentException("The sort " + t.getSort() + " is invalid!"); 

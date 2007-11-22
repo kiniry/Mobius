@@ -385,7 +385,7 @@ public class JmlExprToFormula {
       case javafe.ast.TagConstants.STRINGLIT:
         return null;
       case javafe.ast.TagConstants.NULLLIT:
-        return Ref.Null();
+        return Ref.nullValue();
       case javafe.ast.TagConstants.BYTELIT:
         return Num.value((Byte) x.value);
       case javafe.ast.TagConstants.SHORTLIT:

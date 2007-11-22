@@ -1,10 +1,5 @@
 package mobius.directVCGen.formula;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javafe.ast.FieldDecl;
 import javafe.ast.GenericVarDecl;
 import javafe.ast.MethodDecl;
@@ -16,7 +11,6 @@ import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.FnSymbol;
 import escjava.sortedProver.NodeBuilder.PredSymbol;
 import escjava.sortedProver.NodeBuilder.Sort;
-import escjava.tc.Types;
 import escjava.translate.UniqName;
 
 /**
@@ -50,7 +44,6 @@ public final class Expression {
   /** the name of the result variable (<code>\result</code>). */
   private static final String result = "\\result";
 
-  
 
   static {
     length = var("length", Num.sortInt);
@@ -214,7 +207,6 @@ public final class Expression {
   }
   
   
-  public static List<QuantVariableRef> fVariables = new ArrayList<QuantVariableRef>();
 
   /**
    * Returns a reference over a variable which has the given
@@ -318,7 +310,14 @@ public final class Expression {
   public static FnTerm sym(final String name, final Sort s) {
     return Formula.lf.symbolRef (name, s);
   }
-  public static FnTerm sym(final String name, Term [] args ) {
+  
+  /**
+   * Create a symbol.
+   * @param name the name of the symbol
+   * @param args the arguments of the symbol
+   * @return the symbol applied to the arguments
+   */
+  public static FnTerm sym(final String name, final Term [] args) {
     final Sort [] tab = new Sort[args.length];
     for (int i = 0; i < tab.length; i++) {
       if (args[i].getSort().equals(Logic.sort)) {
@@ -333,7 +332,15 @@ public final class Expression {
 
   }
   
-  public static FnTerm sym(final String name, Sort ret, Term [] args ) {
+  /**
+   * Create a symbol.
+   * @param name the name of the symbol
+   * @param ret the return type of the symbol
+   * @param args the arguments of the symbol
+   * @return the symbol applied to the arguments
+   */
+  public static FnTerm sym(final String name, 
+                           final Sort ret, final Term [] args) {
     final Sort [] tab = new Sort[args.length];
     for (int i = 0; i < tab.length; i++) {
       if (args[i].getSort().equals(Logic.sort)) {
@@ -367,29 +374,32 @@ public final class Expression {
   public static QuantVariableRef getResultRVar(final MethodDecl meth) {
     return rvar(Expression.result, Type.getReturnType(meth));
   }
-  public static Term doLvGet(Sort s, QuantVariableRef lv, int index) {
-    final Term idx = Expression.rvar(index + "%N", Num.sortInt);
-    return Expression.sym("do_lvget", s, new Term[] {lv, idx});
-  }
-  public static Term lvUpd(QuantVariableRef lv,
-                           Term var, Term val) {
-    final Term idx = ((FnTerm)var).args[1];
-    final Term upd = Expression.sym("LocalVar.update", Heap.getLvVar().getSort(), 
-                   new Term[] {lv, idx, Heap.sortToValue(val)});
-    //(LocalVar.update lv1 2%N (Num (I (MDom.Int.const 1))))
-    return upd;
-  }
   
   
+  /**
+   * The function Some of the option type of Coq.
+   * Takes one argument, the content of the some 
+   * @param s the term to put inside the some
+   * @return a Some expression
+   */
   public static Term some(final Term s) {
     return Expression.sym("Some", new Term [] {s});
   }
   
+  /**
+   * The variable None of the option type.
+   * @return a None variable
+   */
   public static Term none() {
     return Expression.sym("None", new Term [] {});
   }
   
-  public static Term normal(final Term optionres) {
-    return Expression.sym("Normal", new Term [] {optionres});
+  /**
+   * 
+   * @param res the result which is either Some variable or None
+   * @return <code>Normal res</code>
+   */
+  public static Term normal(final Term res) {
+    return Expression.sym("Normal", new Term [] {res});
   }
 }
