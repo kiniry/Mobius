@@ -73,7 +73,7 @@ export JAR_FILES = ${JAVAFE_ROOT}/jars
 ##   d) ${JAVAFE_ROOT}/original-specs, the specs that shipped with the
 ##      original Compaq SRC ESC/Java release (very lightweight and incomplete)
 export JML2_SPECS_JAR := ${JAR_FILES}/jmlspecs.jar
-export JAVAFE_SPECS_JAR := ${JAR_FILES}/javafecspecs.jar
+export JAVAFE_SPECS_JAR := ${JAR_FILES}/javafespecs.jar
 export JAVAFE_SPECS := ${JAVAFE_ROOT}/specs
 
 ##########################################################################
@@ -160,7 +160,7 @@ export RELDIR  ?= ${JAVAFE_ROOT}/release
 # Variables relevant to names of release files
 export RELNAME ?= ${JAVAFE_PROJECT}-${JAVAFE_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${JAVAFE_RELEASE_DATE}
-export RELJAR  ?= ${JAR_FILES}/JAVAFE2.jar
+export RELJAR  ?= ${JAR_FILES}/JavaFE.jar
 export RELSRCJAR  ?= ${JAR_FILES}/javafe2src.jar
 export RELCODENAME ?= "Mobius PVE Internal Release"
 export RELTAR  ?= ${RELNAME-DATE}-binary

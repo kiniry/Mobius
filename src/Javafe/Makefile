@@ -22,8 +22,7 @@ include Makefile.defs
 ##
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.  Note though, that the
-## subdirectories other than Javafe presume that Javafe has been
-## built.
+## subdirectories other than Javafe presume that Javafe has been built.
 ##
 ## These are additional top-level-only targets
 ##  source-release - makes the tar file constituting a full source release
@@ -53,7 +52,7 @@ nodocs: clean build jars test
 
 nodocs+: clean build jars alltests
 
-jars: $(JAVAFE_SPECS_JAR) jar srcjar
+jars: jar srcjar
 
 ################################################################################
 ## Top-level build and test rules
@@ -329,8 +328,6 @@ jmlc_javafe_1b1:
 	generate-patches generate-archives generate-specs-archive \
 	generate-toplevel-archive zero-length-files version
 
-## FIXME: get mocha right
-
 releases: releases-notests 
 	${MAKE} test-releases
 
@@ -347,27 +344,16 @@ releases-notests:
 source-release: cleanup alldocs
 	@echo "Creating source release..."
 	cp -rf ${JAVAFE_SPECS} ${RELTEMP} 
-	rm -rf ${RELTEMP}/original-specs 
-	cp -r ${ORIG_SRC_SPECS} ${RELTEMP} 
 #   Copy all source code, tests, libs, Makefiles, ChangeLog, etc. 
 	cp -rf ${UTILS_SOURCE_DIR} ${RELTEMP}
 	cp -rf ${JAVAFE_ROOT}/Javafe ${RELTEMP}
-	cp ${XMLRPC_LIB} ${RELTEMP}/Javafe/xmlrpc.jar 
 	cp Makefile ${RELTEMP}
 	cp Makefile.defs ${RELTEMP}
-	cp Makefile.local.* ${RELTEMP} 
-	cp build.xml ${RELTEMP} 
-	cp prj.el ${RELTEMP} 
-	cp ChangeLog ${RELTEMP} 
-	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP} 
+	cp ChangeLog ${RELTEMP}
 	cp -rf docs ${RELTEMP}
-	cp -rf papers ${RELTEMP}
-	cp -rf slides ${RELTEMP}
-	cp -rf Simplify ${RELTEMP}
 	cp -rf specs* ${RELTEMP}
 	cp license.txt ${RELTEMP}
 	mkdir ${RELTEMP}/jars
-	cp -r jars/mochalib.jar ${RELTEMP}/jars
 #   Copy Javadoc API docs 
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}/docs 
 #   Copy other miscellaneous files 
@@ -386,8 +372,7 @@ jar:	build
 	mkdir -p ${RELTEMP}/sub/junitutils
 	( cd ${JAVAFE_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils )
-	( cd ${RELTEMP}/sub; jar xf $(JAVAFE_SPECS_JAR) )
-	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
+	( cd ${RELTEMP}/sub; jar cf \
 	  ${RELJAR} *; jar i ${RELJAR}; )
 	cp ${RELJAR} ${JAVAFE_ROOT}
 	rm -rf ${RELTEMP}/sub
@@ -414,14 +399,10 @@ binary-release: build jars alldocs cleanup
 #       Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
 	cp -rf ${JAVAFE_SPECS} ${RELTEMP}
-	rm -rf ${RELTEMP}/original-specs
-	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
 #       Copy Javadoc API docs
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}
 	mkdir ${RELTEMP}/docs
 	cp ${RELJAR} ${RELTEMP}
-	cp $(JAVAFE_SPECS_JAR) ${RELTEMP}
-#       cp $(JML2_SPECS_JAR) ${RELTEMP}
 #       Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils build
@@ -465,74 +446,6 @@ test-source-release:
 		unset JAR_FILES ; \
 		tar xjf ${RELSRCTAR}.tbz ;\
 		JAVAFE_ROOT=${RELTEST} $(MAKE) -s clean build test                         
-
-## Note - we need to unset lots of environmental variables here because we
-## want them to be reset based on the value of ESC_RELEASE in install.sh.
-## Otherwise, since the variables are only conditionally set in Makefile.defs
-## or in Makefile, they will continue to have the value already set in the
-## current environment (when this Make was invoked) rather than getting new
-## values when the Make in install.sh is invoked.  So include here any variable
-## that is conditionally set and might have a different value when running a
-## release than when running from the build environment.
-test-patch-release:
-	@echo "Testing patch release ........"
-	rm -rf ${RELTEST}
-	mkdir -p ${RELTEST}
-	cd ${RELTEST}; \
-		tar xvjf ${RELDIR}/*patch.tbz; \
-		unset ESCJ_ROOT; \
-		unset JAVAFE_ROOT; \
-		unset ESC_SPECS; \
-		unset JUNIT_LIB; \
-		unset ANT_LIB; \
-		unset PATCH_DIR; \
-		unset RELDIR; \
-		unset RELTEMP; \
-		unset RELTEST; \
-		unset ESCJ_SIMPLIFY_DIR; \
-		unset ESC_CLASSPATH ;\
-		chmod a+x install.sh; \
-		./install.sh ${ORIGINAL_TAR_DIR} 
-
-generate-archives: generate-toplevel-archive generate-specs-archive
-
-## Contains both specs and original-specs for the patch release
-generate-specs-archive:
-	mkdir -p ${RELTEMP}
-	rm -rf ${RELTEMP}/specs
-	rm -rf ${RELTEMP}/original-specs
-	cp -rf ${JAVAFE_SPECS} ${RELTEMP}
-	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
-	( cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs; )
-	rm -rf ${RELTEMP}/specs ${RELTEMP}/original-specs
-
-generate-toplevel-archive: clean
-	rm -rf ${RELTEMP}/JavaFE
-	mkdir -p ${RELTEMP}/JavaFE
-	cp ${JAVAFE_ROOT}/ChangeLog ${JAVAFE_ROOT}/Makefile \
-		${JAVAFE_ROOT}/Makefile.defs \
-		${JAVAFE_ROOT}/README.first ${JAVAFE_ROOT}/README.txt \
-		${JAVAFE_ROOT}/build.xml \
-		${RELTEMP}/JavaFE
-	cp -rf ${JAVAFE_ROOT}/docs ${RELTEMP}/JavaFE
-	cp -rf ${JAVAFE_ROOT}/Utils ${RELTEMP}/JavaFE
-	cp -rf ${JAR_FILES} ${RELTEMP}/JavaFE
-# 	cp $(JML2_SPECS_JAR) ${RELTEMP}/JavaFE
-# 	cp $(JAVAFE_SPECS_JAR) ${RELTEMP}/JavaFE
-	rm -rf ${RELTEMP}/JavaFE
-
-## Until we can figure out how to have diff/patch detect and generate
-## 0 length files, we have to archive them up all independently.
-zero-length-files:
-	mkdir -p ${PATCH_DIR}
-	cd ${JAVAFE_ROOT}; \
-	find . -empty ! -name .M3SHIP -print0 | \
-		xargs -0 tar cjf ${PATCH_PREFIX}-ZeroLengthFiles.tbz
-	( cd ${JAVAFE_ROOT}; \
-	  for f in `cd ${ESCTOOLS_ORIGINAL}; find . -empty`; do \
-	      if [ ! -e $$f ]; then echo $$f; fi; \
-	  done ) > ${PATCH_PREFIX}-emptyFilesThatDisappeared
-
  
 ################################################################################
 ## Show system variables
