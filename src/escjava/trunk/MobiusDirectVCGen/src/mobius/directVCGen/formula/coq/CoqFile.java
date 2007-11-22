@@ -87,16 +87,15 @@ public class CoqFile {
    * Write the header of the coq file (load path, requires...).
    */
   public void writeHeader() {
-    fOut.println("Add LoadPath \"" + fBase + File.separator + "Formalisation\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
+    fOut.println("Add LoadPath \"" + "Formalisation\".\n" +
+                 "Add LoadPath \"" + "Formalisation" +
                  File.separator + "Bicolano" + "\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
+                 "Add LoadPath \"" + "Formalisation" +
                  File.separator + "Logic" + "\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
+                 "Add LoadPath \"" + "Formalisation" +
                  File.separator + "Library" + "\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
-                 File.separator + "Library" + 
-                 File.separator + "Map" + "\".\n");
+                 "Add LoadPath \"" + "Formalisation" +
+                 File.separator + "Library" + File.separator + "Map" + "\".\n");
 
     final List<String> paths = Util.findAllPath(new File(fBase, "classes"));
     for (String p: paths) {
@@ -137,7 +136,12 @@ public class CoqFile {
     return fOldProof;
   }
   
-  
+  /**
+   * Retrieve the old proof script from a given file.
+   * The proof script is considered to be the text between 
+   * <code>Proof with</code> and <code>Qed</code>.
+   * @param f the file from which to retrieve the proof
+   */
   private void getOldProof(final File f) {
     if (f.exists()) {
       fOldProof = "";

@@ -38,16 +38,6 @@ public class CType extends CTerm implements SAny {
     super(false, checkType(rep), new STerm[0]);
   }
 
-  private static String checkType(String rep) {
-    String res = rep;
-    
-    res = res.replaceAll("_name", ".name");
-    
-    res = res.replaceAll("_name", ".name");
-    //res = res.replaceAll("_([a-zA-Z]*)FieldSignature", ".\\1FieldSignature");
-    return res;
-  }
-
   /**
    * Constructs a formula of type Type, with only 2 children.
    * The symbol is considered as prefix.
@@ -58,4 +48,20 @@ public class CType extends CTerm implements SAny {
   public CType(final String rep, final STerm h, final STerm loc) {
     this(rep, new STerm[] {h, loc});
   }
+  
+  /**
+   * Retrieve the type name in the right format. If the 
+   * name ends with <code>_name</code>, 
+   * it changes it to <code>.name</code>.
+   * @param rep the name to check
+   * @return the String in the right format
+   */
+  private static String checkType(final String rep) {
+    String res = rep;
+    
+    res = res.replaceAll("_name", ".name");
+    return res;
+  }
+
+
 }

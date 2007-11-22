@@ -17,7 +17,7 @@ public class EquivCoqFile extends CoqFile {
 
 
 
-  public EquivCoqFile(File configDir, File baseDir) throws FileNotFoundException {
+  public EquivCoqFile(final File configDir, final File baseDir) throws FileNotFoundException {
     super(configDir, baseDir, fVcFileName);
   }
 
@@ -28,7 +28,7 @@ public class EquivCoqFile extends CoqFile {
     final PrintStream out = getOut();
     writeHeader();
 
-    String methSig = Util.getMethodSigModule(decl);
+    final String methSig = Util.getMethodSigModule(decl);
     out.println("Lemma l :\n" +
         "   " + term + "\n" +
         "<-> \n" +
