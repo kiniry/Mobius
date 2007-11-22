@@ -98,4 +98,26 @@ public abstract class UnsupportedNodeBuilder extends EscNodeBuilder  {
   public SInt buildIntFun(final int tag, final SInt arg) {
     throw new UnsupportedOperationException();
   }
+  
+  /**
+   * Unsupported operation.
+   * @param positive ignored
+   * @param name ignored
+   * @param pred ignored
+   * @return throws an exception
+   */
+  @Override
+  public SPred buildLabel(final boolean positive, final String name, final SPred pred) {
+    throw new UnsupportedOperationException("Labels have no real meanings for us, right?");
+  }
+  
+  /**
+   * Unsupported operation.
+   * @param terms ignored
+   * @return throws an exception
+   */
+  @Override
+  public SPred buildDistinct(final SAny[] terms) {
+    throw new UnsupportedOperationException("Distinct elements don't mean anything for Coq!");
+  }
 }
