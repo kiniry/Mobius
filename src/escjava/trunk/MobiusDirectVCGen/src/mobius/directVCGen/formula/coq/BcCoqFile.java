@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
+import javafe.ast.RoutineDecl;
+
+import mobius.directVCGen.formula.Util;
+
 public class BcCoqFile extends CoqFile {
   
   /** the name of the vc file name: "byteVc". */
@@ -11,23 +15,22 @@ public class BcCoqFile extends CoqFile {
 
 
 
-  public BcCoqFile(File configDir, File baseDir) throws FileNotFoundException {
+  public BcCoqFile(final File configDir, final File baseDir) throws FileNotFoundException {
     super(configDir, baseDir, fVcFileName);
   }
 
 
-  
-  public void doIt(String classname, String meth) {
+  public void doIt(final RoutineDecl decl) {
     // bytecode
     final PrintStream out = getOut();
     writeHeader();
 
     out.println("Lemma l :\n" +  
-      "  interp_swp BicoMapAnnotations.anno_prog BicoMapProgram.program\n" + 
-      "    (certifiedMethod BicoMapAnnotations.anno_prog " +
-                                    classname + "Signature." + meth + " " +
-                                    classname + "." + meth + "Method " + 
-                                    classname + "Annotations." + meth + ".spec).");
+      "  interp_swp BicoAnnotations.anno_prog BicoProgram.program\n" + 
+      "    (certifiedMethod BicoAnnotations.anno_prog " +
+                                    Util.getMethodSigModule(decl) + " " +
+                                    Util.getMethodModule(decl) + " " + 
+                                    Util.getMethodAnnotModule(decl) + ".spec).");
     out.println("Proof with auto.");
     out.print(getProof());
     out.println("Qed.");

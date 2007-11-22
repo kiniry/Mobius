@@ -7,6 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintStream;
+import java.util.List;
+
+import mobius.directVCGen.formula.Util;
 
 import escjava.sortedProver.NodeBuilder.STerm;
 
@@ -26,6 +29,7 @@ public class CoqFile {
   /** the name of the directory which contains bicolano's library files. */
   private String fBase;
 
+  /** the script containing the old proof. */
   private String fOldProof;
 
   /**
@@ -83,8 +87,7 @@ public class CoqFile {
    * Write the header of the coq file (load path, requires...).
    */
   public void writeHeader() {
-    fOut.println("Add LoadPath \"" + fBase + "\".\n" +
-                 "Add LoadPath \"" + fBase + File.separator + "Formalisation\".\n" +
+    fOut.println("Add LoadPath \"" + fBase + File.separator + "Formalisation\".\n" +
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
                  File.separator + "Bicolano" + "\".\n" +
                  "Add LoadPath \"" + fBase + File.separator + "Formalisation" +
@@ -95,9 +98,14 @@ public class CoqFile {
                  File.separator + "Library" + 
                  File.separator + "Map" + "\".\n");
 
-    fOut.println("Require Import BicoMap_annotations.");
+    final List<String> paths = Util.findAllPath(new File(fBase, "classes"));
+    for (String p: paths) {
+      fOut.println("Add LoadPath \"classes" + p + "\".");
+    }
+    fOut.println();
+    fOut.println("Require Import Bico_annotations.");
     fOut.println("Require Import defs_types.");
-    fOut.println("Import BicoMapAnnotations P Mwp.");
+    fOut.println("Import BicoAnnotations P Mwp.");
     fOut.println();
     fOut.println("Load \"defs_tac.v\".");
     fOut.println("Open Local Scope Z_scope.");
@@ -111,21 +119,32 @@ public class CoqFile {
     return fOut;
   }
   
+  /**
+   * Returns the default proof that should be generated in case
+   * the file is newly created.
+   * @return a string containing the proof script
+   */
   protected String getDefaultProof() {
     return "   nintros; repeat (split; nintros); cleanstart.\n";
   }
   
+  
+  /**
+   * Returns the proof of the file.
+   * @return a string representing a proof script
+   */
   public String getProof() {
     return fOldProof;
   }
   
-  private void getOldProof(File f) {
+  
+  private void getOldProof(final File f) {
     if (f.exists()) {
       fOldProof = "";
       try {
         final LineNumberReader reader = new LineNumberReader(new FileReader(f));
         String line = reader.readLine();
-        //System.out.println (f + "\n" + line);
+        
         while ((line != null) && !line.startsWith("Proof with")) {
           line = reader.readLine();
         }
@@ -136,7 +155,6 @@ public class CoqFile {
           
         }
         reader.close();
-//        System.out.println (fOldProof);
        
       } 
       catch (IOException e) {

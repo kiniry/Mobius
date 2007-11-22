@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
+import mobius.directVCGen.formula.Util;
+
+import javafe.ast.RoutineDecl;
+
 import escjava.sortedProver.NodeBuilder.STerm;
 
 public class EquivCoqFile extends CoqFile {
@@ -19,20 +23,20 @@ public class EquivCoqFile extends CoqFile {
 
 
   
-  public void doIt(String classname, String meth, 
-                   final STerm term) {
+  public void doIt(final RoutineDecl decl, final STerm term) {
     // bytecode
     final PrintStream out = getOut();
     writeHeader();
 
+    String methSig = Util.getMethodSigModule(decl);
     out.println("Lemma l :\n" +
         "   " + term + "\n" +
         "<-> \n" +
-        "   interp_swp BicoMapAnnotations.anno_prog BicoMapProgram.program\n" + 
-        "      (certifiedMethod BicoMapAnnotations.anno_prog " +
-                                    classname + "Signature." + meth + " " +
-                                    classname + "." + meth + "Method " + 
-                                    classname + "Annotations." + meth + ".spec).");
+        "   interp_swp BicoAnnotations.anno_prog BicoProgram.program\n" + 
+        "      (certifiedMethod BicoAnnotations.anno_prog " +
+                                    methSig + " " +
+                                    Util.getMethodModule(decl) + " " +
+                                    Util.getMethodAnnotModule(decl) + ".spec).");
     out.println("Proof with assumption.");
     out.print(getProof());
     out.println("Qed.");

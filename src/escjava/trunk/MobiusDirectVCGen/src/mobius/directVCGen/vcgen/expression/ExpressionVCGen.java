@@ -84,7 +84,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final QuantVariableRef newHeap = Heap.newVar();
     
     //mking the args
-    final String name = Util.getMethodName(meth);
+    final String name = Util.getMethodAnnotModule(meth);
     final LinkedList<Term> args = new LinkedList<Term> ();
     args.add(Heap.varPre);
     args.addAll(Lookup.getInst().getPreconditionArgs(meth));

@@ -278,7 +278,7 @@ public class StmtVCGen extends ExpressionVisitor {
     // also be the variable \result
     
     final VCEntry vce = (VCEntry) o;
-    final String name = Util.getMethodName(fMeth);
+    final String name = Util.getMethodAnnotModule(fMeth);
     final Term[] tab = Util.getNormalPostconditionArgs(fMeth);
     final Post normPost = new Post(Lookup.getNormalPostcondition(fMeth).getRVar(), 
                         Expression.sym(name + ".mk_post", tab));

@@ -92,12 +92,7 @@ public final class MethodVisitor extends DirectVCGen {
     
     try {
       final BcCoqFile bcf = new BcCoqFile(getBaseDir(), getWorkingDir());
-      String name = "" + fMeth.id();
-      if (name.equals("" + fMeth.parent.id)) {
-        name = "_init_";
-      }
-      
-      bcf.doIt("" + fMeth.parent.id, name);
+      bcf.doIt(fMeth);
     } 
     catch (FileNotFoundException e1) {
       e1.printStackTrace();
@@ -131,12 +126,10 @@ public final class MethodVisitor extends DirectVCGen {
       final STerm term = Formula.generateFormulas(all);
       cf.writeProof(term);
       
-      String name = "" + fMeth.id();
-      if (name.equals("" + fMeth.parent.id)) {
-        name = "_init_";
-      }
+      
+      
       final EquivCoqFile ecf = new EquivCoqFile(getBaseDir(), getWorkingDir());
-      ecf.doIt("" + fMeth.parent.id, name, term);
+      ecf.doIt(fMeth, term);
     } 
     catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -156,7 +149,7 @@ public final class MethodVisitor extends DirectVCGen {
     Post excpPost;
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(fMeth);
     
-    final String name = Util.getMethodName(fMeth);
+    final String name = Util.getMethodAnnotModule(fMeth);
     Term[] tab = Util.getNormalPostconditionArgs(fMeth);
     normPost = new Post(Lookup.getNormalPostcondition(fMeth).getRVar(), 
                         Expression.sym(name + ".mk_post", tab));

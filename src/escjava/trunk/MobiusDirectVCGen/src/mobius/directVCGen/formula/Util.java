@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
+import javafe.ast.TypeDecl;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
@@ -46,16 +47,44 @@ public final class Util extends mobius.bico.Util {
    * @param decl the method from which we want to get the annotations
    * @return The name of the Annotations version of the method
    */
-  public static String getMethodName(final RoutineDecl decl) {
+  public static String getMethodAnnotModule(final RoutineDecl decl) {
+    final TypeDecl clzz = decl.parent;
+    final TypeSig sig = TypeSig.getSig(clzz);
+    final String name = sig.getExternalName().replace('.', '_');
+
     if (decl instanceof MethodDecl) {
-      return decl.parent.id + "Annotations." + decl.id();
+      return name + "Annotations." + decl.id();
     }
     else {
-      return decl.parent.id + "Annotations._init_";
+      return name + "Annotations._init_";
     }
   }
   
+  public static String getMethodSigModule(final RoutineDecl decl) {
+    final TypeDecl clzz = decl.parent;
+    final TypeSig sig = TypeSig.getSig(clzz);
+    final String name = sig.getExternalName().replace('.', '_');
+
+    if (decl instanceof MethodDecl) {
+      return name + "Signature." + decl.id();
+    }
+    else {
+      return name + "Signature._init_";
+    }
+  }
   
+  public static String getMethodModule(final RoutineDecl decl) {
+    final TypeDecl clzz = decl.parent;
+    final TypeSig sig = TypeSig.getSig(clzz);
+    final String name = sig.getExternalName().replace('.', '_');
+
+    if (decl instanceof MethodDecl) {
+      return name + "." + decl.id();
+    }
+    else {
+      return name + "._init_";
+    }
+  }
   /**
    * Find the last instruction of a loop.
    * In practice, it finds the last instruction before the test.
@@ -195,7 +224,7 @@ public final class Util extends mobius.bico.Util {
                                   final AAnnotation annot) {
     final Term res;
     if (DirectVCGen.fByteCodeTrick) {
-      final String methname = Util.getMethodName(meth);
+      final String methname = Util.getMethodAnnotModule(meth);
       final Term[] tab = new Term[annot.fArgs.size()];
       int i = 0;
       for (QuantVariableRef qvr: annot.fArgs) {
