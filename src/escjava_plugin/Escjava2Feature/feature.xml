@@ -2,7 +2,7 @@
 <feature
       id="mobius.Escjava2.feature"
       label="Escjava2"
-      version="2.0.4"
+      version="2.0.5"
       provider-name="David R. Cok and EU MOBIUS IST-15905 Project">
    <install-handler/>
 
@@ -753,7 +753,12 @@ limitations under the License.
    <includes
          id="mobius.simplify.feature"
          version="0.0.0"
-         search-location="self"/>
+         search-location="both"/>
+
+   <includes
+         id="mobius.javafe.feature"
+         version="0.0.0"
+         search-location="both"/>
 
    <requires>
       <import plugin="org.eclipse.ui"/>
