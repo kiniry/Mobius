@@ -213,7 +213,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
-  % one branch open
+  % :-)
   on_method_exit_normal_preserves_related_states_annotated : LEMMA
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
@@ -300,7 +300,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
-  % TODO: on branch open
+  % :-)
   on_method_exit_exceptional_preserves_related_states_annotated : LEMMA
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
@@ -435,7 +435,8 @@ BEGIN
       derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
       legal_Body(ann_program(mp))(b) IMPLIES
-        related_states(mp)(sMP2, sAP2) AND v1 = v2
+        related_states(mp)(sMP2, sAP2) AND 
+        (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
 
   % The main result
   correctness_of_ann_program : THEOREM % :-)

@@ -195,9 +195,13 @@ BEGIN
         EXISTS (tau : FullState, v1, v2 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
           derive(p)(e1, sigma1, v1, tau)(m1) AND
-          derive(p)(e2, tau, v2, sigma2)(m2) AND
-          check_for_exception_final(sigma2, v,
-                Bool?(v1) AND Bool?(v2) AND v = Bool(b(v1) AND b(v2))),
+          check_for_exception(tau, sigma2, v,
+            IF Bool?(v1) AND b(v1)
+            THEN derive(p)(e2, tau, v2, sigma2)(m2) AND
+                 check_for_exception_final(sigma2, v,
+                                           Bool?(v2) AND v = Bool(b(v2)))
+            ELSE v = Bool(FALSE) AND sigma2 = tau
+            ENDIF), 
       Eq(e1, e2) :
         EXISTS (tau : FullState, v1, v2 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
