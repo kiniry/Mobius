@@ -45,7 +45,6 @@ import escjava.ast.GCExpr;
 import escjava.ast.ImportPragma;
 import escjava.ast.ModifiesGroupPragma;
 import escjava.ast.NothingExpr;
-import escjava.ast.ParsedSpecs;
 import escjava.ast.SetStmtPragma;
 import escjava.ast.TagConstants;
 import escjava.ast.TypeExpr;

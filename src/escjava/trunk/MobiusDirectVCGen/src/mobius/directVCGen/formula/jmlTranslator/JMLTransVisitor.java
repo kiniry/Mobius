@@ -1,6 +1,5 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
-import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.BinaryExpr;
 import javafe.ast.FieldAccess;
 import javafe.ast.FormalParaDecl;

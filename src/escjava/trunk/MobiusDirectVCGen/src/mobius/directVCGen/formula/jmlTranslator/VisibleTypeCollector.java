@@ -73,9 +73,7 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
-import escjava.tc.FlowInsensitiveChecks;
 import escjava.tc.TypeSig;
-import escjava.tc.Types;
 
 
 
