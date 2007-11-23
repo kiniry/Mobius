@@ -58,7 +58,6 @@ import escjava.tc.Types;
 /**
  * @author Claudia Brauchli (claudia@vis.ethz.ch)
  * @author Hermann Lehner (hermann.lehner@inf.ethz.ch)
- * 
  */
 public class JmlVisitor extends BasicJMLTranslator {
   /** global properties of a class. */
@@ -103,8 +102,11 @@ public class JmlVisitor extends BasicJMLTranslator {
     fTranslator = trans;
   }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitClassDecl(javafe.ast.ClassDecl, java.lang.Object)
+  /**
+   * Inspect a class and go recursively through its methods.
+   * @param x the class to inspect
+   * @param o ignored
+   * @return should be ignored
    */
   @Override
   public final Object visitClassDecl(final /*@non_null*/ ClassDecl x, 
@@ -115,9 +117,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     return visitTypeDecl(x, new ContextProperties());
   }
 
-  
-  
-  
   /**
    * Computes the annotations of a routine.
    * @param x a routine
@@ -181,11 +180,15 @@ public class JmlVisitor extends BasicJMLTranslator {
     return prop;
   }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitConstructorDecl(javafe.ast.ConstructorDecl, java.lang.Object)
+  /**
+   * Inspects a constructor.
+   * @param x the method to inspect
+   * @param o ignored
+   * @return the properties of the method
    */
   @Override
-  public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, final Object o) {
+  public final Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl x, 
+                                           final Object o) {
     final MethodProperties prop = new MethodProperties(x);
     prop.fResult =  null;
     visitRoutineDecl(x, prop);
@@ -200,10 +203,6 @@ public class JmlVisitor extends BasicJMLTranslator {
 
 
 
-
-  
-  
-  
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitLocalVarDecl(javafe.ast.LocalVarDecl, java.lang.Object)
    */
@@ -528,7 +527,6 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   @Override
   public final Object visitGCExpr(final /*@non_null*/ GCExpr x, final Object o) {
-    
     if (x instanceof TypeExpr) { 
       final String name = Types.printName(((TypeExpr)x).type);
       return Expression.rvar(name, Type.sort);
@@ -537,7 +535,6 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
 
 
-  
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitImportPragma(escjava.ast.ImportPragma, java.lang.Object)
    */
@@ -547,8 +544,6 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
 
 
-
-  
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitModifiesGroupPragma(escjava.ast.ModifiesGroupPragma, java.lang.Object)
    */
@@ -556,8 +551,6 @@ public class JmlVisitor extends BasicJMLTranslator {
   public final Object visitModifiesGroupPragma(final /*@non_null*/ ModifiesGroupPragma x, final Object o) {
     return visitASTNode(x, o);
   }
-
-
 
 
   /* (non-Javadoc)
@@ -572,8 +565,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     return res;
   }
 
-  
- 
 
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitNewInstanceExpr(escjava.ast.NewInstanceExpr, java.lang.Object)
@@ -583,12 +574,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     return Expression.rvar(name, Type.typeToSort(x.type)); // Ref.sort);
   }
   
-
-  
-  
-
-
-
 
   /**
    * Adds the class invariants and the invariants predicates
@@ -646,8 +631,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     Lookup.addNormalPostcondition(prop, invPostPred());
     Lookup.addExceptionalPostcondition(prop.getDecl(), invPostPred());
   }
-
-  
 
   
   /**
