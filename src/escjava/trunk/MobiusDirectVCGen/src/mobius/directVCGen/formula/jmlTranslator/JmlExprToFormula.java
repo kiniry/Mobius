@@ -2,7 +2,9 @@ package mobius.directVCGen.formula.jmlTranslator;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
+import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.BinaryExpr;
 import javafe.ast.FieldAccess;
 import javafe.ast.GenericVarDecl;
@@ -424,12 +426,12 @@ public class JmlExprToFormula {
     ContextProperties prop = (ContextProperties) o;
     if (prop.fresh) { 
       final QuantVariableRef qref = Expression.rvar(fieldAccess.decl);
-      final HashSet<Term> freshSet = (HashSet) ((ContextProperties)o).get("freshSet");
+      final Set<Term> freshSet = (HashSet) ((ContextProperties)o).get("freshSet");
       freshSet.add(qref);
       ((ContextProperties)o).put("freshSet", freshSet);
     }
     else { 
-      if ((Boolean) (fVisitor.fGlobal.get("doSubsetChecking"))) {
+      if (fVisitor.getDoSubsetChecking()) {
         final java.util.Set<FieldAccess> subSet = fVisitor.fGlobal.subsetCheckingSet;
         subSet.add(fieldAccess);
       }
@@ -449,7 +451,7 @@ public class JmlExprToFormula {
   
   
   /**
-   * Builds up a FOL term as: \fresh(x,y) --> and(%fresh(x:ref),%(y:ref)):PRED
+   * Builds up a FOL term as: \fresh(x,y) --> and(%fresh(x:ref),%(y:ref)):PRED.
    * @param x the NaryExpr with TagConstant.FRESH
    * @param o properties object holding whether fresh property is set and holds the freshSet
    * @return the generated FOL term
@@ -458,7 +460,7 @@ public class JmlExprToFormula {
     ((ContextProperties) o).fresh = true;
     fVisitor.visitGCExpr(x, o);
     ((ContextProperties) o).fresh = false;
-    final HashSet freshVars = (HashSet) ((ContextProperties)o).get("freshSet");
+    final Set freshVars = (HashSet) ((ContextProperties)o).get("freshSet");
     
     Term res = null;
     
@@ -529,5 +531,6 @@ public class JmlExprToFormula {
       return Logic.exists(qVarArray, exprTerm);
     }
   }
+
 }
  

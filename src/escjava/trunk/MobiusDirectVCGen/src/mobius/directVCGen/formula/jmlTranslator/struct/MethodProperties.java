@@ -10,6 +10,7 @@ import javafe.ast.ConstructorDecl;
 import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
 import mobius.directVCGen.formula.Lookup;
+import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 
@@ -37,7 +38,7 @@ public final class MethodProperties extends ContextProperties {
   public final boolean fIsConstructor;
   
   /** the routine is a JML \helper routine. See JML reference */
-  public  boolean fIsHelper;
+  public final boolean fIsHelper;
   
   /** the set of variables that can be assigned in the current method. */
   public  final Set<QuantVariableRef[]> fAssignableSet = new HashSet<QuantVariableRef[]>(); 
@@ -72,6 +73,25 @@ public final class MethodProperties extends ContextProperties {
     fArgs.addAll(Lookup.mkArguments(met));
 
     fIsConstructor = fMethod instanceof ConstructorDecl;
+    fIsHelper = isHelper(met);
+    
+  
+  }
+
+
+
+  public static boolean isHelper(final RoutineDecl met) {
+    boolean helper = false;
+    if (met.pmodifiers != null) {
+      for (int i = 0; i < met.pmodifiers.size(); i++) {
+        final int tag = met.pmodifiers.elementAt(i).getTag();
+        if (tag == TagConstants.HELPER) {
+          helper = true;
+          break;
+        }
+      }
+    }
+    return helper;
   }
   
 

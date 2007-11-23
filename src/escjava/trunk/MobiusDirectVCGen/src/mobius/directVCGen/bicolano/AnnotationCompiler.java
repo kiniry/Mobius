@@ -23,11 +23,14 @@ public class AnnotationCompiler {
    * @param pkgsdir the directory where to generate the file(s) 
    * @param clzz the class to treat
    */
-  public AnnotationCompiler(final File pkgsdir, final String clzz) {
+  public AnnotationCompiler(final File pkgsdir, final String clzz,
+                            final String classpath) {
     final List<String> classes = new ArrayList<String>();
     classes.add(clzz);
-    fExecutor = new AnnotationExecutor(pkgsdir, classes);
+    classes.add("java.lang.String");
+    fExecutor = new AnnotationExecutor(pkgsdir, classpath, classes);
   }
+
 
   /**
    * Start the generation of the bicolano compatible file as

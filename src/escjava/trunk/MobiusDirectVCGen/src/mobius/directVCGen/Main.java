@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import javafe.Options;
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
 import javafe.ast.TypeDecl;
@@ -18,6 +19,7 @@ import mobius.directVCGen.bicolano.AnnotationCompiler;
 import mobius.directVCGen.bicolano.Unarchiver;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.DirectVCGen;
+
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
 import escjava.translate.NoWarn;
@@ -58,7 +60,6 @@ public class Main extends escjava.Main {
                   "and the path to the file bicolano.jar");
       return;
     }
-
     final String[] escargs = new String[args.length - 2];
     for (int i = 2; i < args.length; i++) {
       escargs[i - 2] = args[i];
@@ -232,7 +233,9 @@ public class Main extends escjava.Main {
   private void doBcVCGen(final TypeSig sig) {
     System.out.println("\n\nGenerating the Bytecode VCs:\n");
     // Compile the bytecode version of the file
-    final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName());
+    
+    final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName(), 
+                                                         options.userPath);
     try {
       ac.start();
     } 

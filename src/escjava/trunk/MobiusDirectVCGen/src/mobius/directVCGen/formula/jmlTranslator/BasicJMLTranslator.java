@@ -27,6 +27,7 @@ import escjava.ast.NotModifiedExpr;
 import escjava.ast.NotSpecifiedExpr;
 import escjava.ast.NothingExpr;
 import escjava.ast.NowarnPragma;
+import escjava.ast.ParsedSpecs;
 import escjava.ast.ReachModifierPragma;
 import escjava.ast.RefinePragma;
 import escjava.ast.SetCompExpr;
@@ -77,6 +78,9 @@ public class BasicJMLTranslator extends ABasicVisitor{
     return null;
   }
 
+  public final Object visitParsedSpec(final /*@non_null*/ ParsedSpecs x, final Object o) {
+    return null;
+  }
   
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitStillDeferredDeclPragma(escjava.ast.StillDeferredDeclPragma, java.lang.Object)

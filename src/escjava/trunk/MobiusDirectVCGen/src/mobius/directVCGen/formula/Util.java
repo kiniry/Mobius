@@ -31,6 +31,7 @@ import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 
+import escjava.ast.ExprStmtPragma;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -492,9 +493,42 @@ public final class Util extends mobius.bico.Util {
     }
     return false;
   }
+  
   public static boolean isLoop(final Stmt s) {
     return s instanceof WhileStmt || 
         s instanceof ForStmt || 
         s instanceof DoStmt;
+  }
+  
+  
+  public static boolean isInvariant(final ExprStmtPragma s) {
+    final int tag = s.getTag();
+    return tag == TagConstants.LOOP_INVARIANT ||
+           tag == TagConstants.LOOP_INVARIANT_REDUNDANTLY ||
+           tag == TagConstants.MAINTAINING ||
+           tag == TagConstants.MAINTAINING_REDUNDANTLY;
+  }
+  
+  /**
+   * Check, if method has at least one postcondition/exceptional 
+   * postcondition.
+   * @param x The method to inspect
+   * @return true if it has a postcondition
+   */
+  public static boolean hasPost(final RoutineDecl x) {
+    boolean hasPost = false;
+
+    // 
+    if (x.pmodifiers != null) {
+      for (int i = 0; i < x.pmodifiers.size(); i++) {
+        final int tag = x.pmodifiers.elementAt(i).getTag();
+        if ((tag == TagConstants.ENSURES) | 
+            (tag == TagConstants.POSTCONDITION) | 
+            (tag == TagConstants.POSTCONDITION_REDUNDANTLY)) {
+          hasPost = true;
+        }
+      }
+    }
+    return hasPost;
   }
 }

@@ -33,6 +33,7 @@ public class AnnotationClassExecutor extends ClassExecutor {
     final String [] n = fClass.getJavaClass().getClassName().split("\\.");
     //System.out.println(n[n.length - 1]);
     fSig = OutsideEnv.lookup(pkg, n[n.length - 1]);
+    fSig.typecheck();
     fSig.getCompilationUnit().accept(new JmlVisitor(false), null);
   }
   

@@ -73,6 +73,9 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.VarExprModifierPragma;
 import escjava.ast.VisitorArgResult;
 import escjava.ast.WildRefExpr;
+import escjava.tc.FlowInsensitiveChecks;
+import escjava.tc.TypeSig;
+import escjava.tc.Types;
 
 
 
@@ -111,14 +114,14 @@ public final class VisibleTypeCollector extends VisitorArgResult {
 
   @Override
   public Object visitClassDecl(final /*@non_null*/ ClassDecl x, final Object o) {
+    fTypeSet.add(TypeSig.getSig(x));
     //should never be called
     return visitTypeDecl(x, null);
   }
 
   @Override
   public Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, final Object o) {
-    fTypeSet.add((Type) x.parent.getDecorations()[3]);
-    // FIXME should be replaced by the proper call to FlowInsensitiveChecks
+
     fAssign = false;
     visitASTNode(x, o); 
     if (fEverything) {

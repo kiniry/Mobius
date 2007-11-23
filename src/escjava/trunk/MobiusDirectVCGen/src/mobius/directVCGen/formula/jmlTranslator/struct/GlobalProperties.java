@@ -18,7 +18,6 @@ public final class GlobalProperties extends Properties {
 
   /** valid properties string. */
   private static final String [] validStr = {
-    "doSubsetChecking"
   };
 
   
@@ -35,8 +34,7 @@ public final class GlobalProperties extends Properties {
     initProperties(); 
   }
   
-  private void initProperties() {
-    put("doSubsetChecking", Boolean.FALSE);  
+  private void initProperties() { 
   }
   
   @Override

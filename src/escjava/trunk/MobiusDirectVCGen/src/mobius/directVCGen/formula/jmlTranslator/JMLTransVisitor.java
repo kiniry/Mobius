@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
+import javafe.ast.AmbiguousVariableAccess;
 import javafe.ast.BinaryExpr;
 import javafe.ast.FieldAccess;
 import javafe.ast.FormalParaDecl;
@@ -16,6 +17,7 @@ import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Num;
+import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.formula.jmlTranslator.struct.ContextProperties;
@@ -79,7 +81,10 @@ public class JMLTransVisitor extends JmlVisitor {
     return this.fTranslator.variableAccess(x, o);
 
   }
-
+//  public final Object visitAmbiguousVariableAccess(final /*@non_null*/ AmbiguousVariableAccess x, final Object o) {
+//    return this.fTranslator.ambiguousVariableAccess(x, o);
+//
+//  }
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitFieldAccess(javafe.ast.FieldAccess, java.lang.Object)
    */
@@ -141,17 +146,20 @@ public class JMLTransVisitor extends JmlVisitor {
   public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
     
     Term t;
-
+    final ContextProperties cprop = (ContextProperties) o;
+    
     if (x.tag == TagConstants.INITIALLY) {
-      fGlobal.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in initially to do the subset check
+      
+      // to collect all fields in initially to do the subset check
+      //fGlobal.put("doSubsetChecking", Boolean.TRUE);
+      System.out.println(x.expr);
       final Term initiallyFOL = (Term) x.expr.accept(this, o);
+      //fGlobal.put("doSubsetChecking", Boolean.FALSE);
       
-      
-      
-      fGlobal.put("doSubsetChecking", Boolean.FALSE);
       if (o instanceof MethodProperties) {
-        t = (Term) ((MethodProperties) o).get("initiallyFOL");
-        final boolean initIsValid = doSubsetChecking(o);
+        final MethodProperties prop = (MethodProperties) o;
+        t = (Term) prop.get("initiallyFOL");
+        final boolean initIsValid = doSubsetChecking(prop);
         if (initIsValid) {
           if (initiallyFOL != null) { 
             if (t != null) {
@@ -164,7 +172,9 @@ public class JMLTransVisitor extends JmlVisitor {
           ((MethodProperties) o).put("initiallyFOL", t);
         }
         else {
-          System.out.println("Initially error (subset check)! The following term was not conjoined to the overall type initially term: " + initiallyFOL.toString() + "\n");
+          System.out.println("Initially error (subset check)! " +
+              "The following term was not conjoined to the " +
+              "overall type initially term: " + initiallyFOL.toString() + "\n");
         }
       }
       else {
@@ -172,16 +182,16 @@ public class JMLTransVisitor extends JmlVisitor {
       }
     }
     else if (x.tag == TagConstants.INVARIANT) { 
-      fGlobal.put("doSubsetChecking", Boolean.TRUE);
+      //fGlobal.put("doSubsetChecking", Boolean.TRUE);
       t = (Term) x.expr.accept(this, o);
-      fGlobal.put("doSubsetChecking", Boolean.FALSE);
-      addToInv(x, t, o);
+      //fGlobal.put("doSubsetChecking", Boolean.FALSE);
+      addToInv(x, t, cprop);
     }
     else if (x.tag == TagConstants.CONSTRAINT) {
-      fGlobal.put("doSubsetChecking", Boolean.TRUE); 
+      //fGlobal.put("doSubsetChecking", Boolean.TRUE); 
       t = (Term) x.expr.accept(this, o);
-      fGlobal.put("doSubsetChecking", Boolean.FALSE);
-      constrToConstraints(x, t, o);
+      //fGlobal.put("doSubsetChecking", Boolean.FALSE);
+      constrToConstraints(x, t, cprop);
     }
     return null;
   }
@@ -301,6 +311,9 @@ public class JMLTransVisitor extends JmlVisitor {
     final MethodProperties prop = (MethodProperties)o;
 
     Term t = (Term)visitASTNode(x, o);
+    if (t.getSort().equals(Heap.sortValue)) {
+      t = Bool.value(true);
+    }
     t = Logic.boolToPred(t);
     switch (x.getTag()) {
       case TagConstants.REQUIRES:
@@ -336,19 +349,32 @@ public class JMLTransVisitor extends JmlVisitor {
     ghostVar.declaration = Expression.rvar(x.decl); 
     return ghostVar;
   }
-  public /*@non_null*/ Object visitQuantifiedExpr(/*@non_null*/ QuantifiedExpr x, Object o) {
+  public /*@non_null*/ Object visitQuantifiedExpr(/*@non_null*/ QuantifiedExpr x, 
+                                                  Object o) {
     return fTranslator.quantifier(x, o);
   }
   
-  public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, Object o) {
+  public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, 
+                                             Object o) {
     Term res = (Term) visitExpr(x, o);
     switch (x.op) {
       case TagConstants.UNARYSUB:
         res = Num.sub(res);
         break;
       case TagConstants.NOT:
+        if (res.getSort().equals(Bool.sort)) {
+          res = Bool.not(res);
+        }
+        else {
+          if (res.getSort().equals(Heap.sortValue)) {
+            System.out.println(res);
+            System.out.println(TagConstants.toString(x.op));
+            res = Ref.nullValue();
+          }
+          
+          
+        }
       default:
-        res = Bool.not(res);
         break;
     }
     

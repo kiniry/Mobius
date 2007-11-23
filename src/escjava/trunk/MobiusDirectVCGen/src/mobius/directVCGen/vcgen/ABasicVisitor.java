@@ -423,7 +423,9 @@ public abstract class ABasicVisitor extends VisitorArgResult {
    */
   @Override
   public Object visitParsedSpecs(final ParsedSpecs x, final Object o) { 
-    return visitASTNode(x, o);
+    // there is a recursive dependency over child 0 of parsed spec
+  
+    return o;
     
   }
 

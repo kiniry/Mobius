@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import javafe.tc.OutsideEnv;
+
 import mobius.bico.coq.CoqStream;
 import mobius.bico.dico.Dictionary;
 import mobius.bico.executors.ClassExecutor;
@@ -17,6 +19,7 @@ import mobius.bico.implem.MapImplemSpecif;
 import mobius.directVCGen.formula.Util;
 
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.util.ClassPath;
 
 /**
  * An executor that generates the annotations for the class
@@ -36,9 +39,12 @@ public class AnnotationExecutor extends Executor {
    * additionnaly to what can be found in the source dir
    */
   public AnnotationExecutor(final File sourceDir, 
-                            final File outputDir, 
+                            final File outputDir,
+                            final String classpath, 
                             final List<String> classToTreat) {
-    super(new MapImplemSpecif(), sourceDir, outputDir, classToTreat);
+    super(new MapImplemSpecif(), sourceDir, outputDir,
+          new ClassPath(classpath), classToTreat, false);
+
   }
   /**
    * Create the special annotation executor. The source
@@ -48,9 +54,9 @@ public class AnnotationExecutor extends Executor {
    * @param classToTreat the list of the class names to look at, 
    * additionnaly to what can be found in the source dir
    */
-  public AnnotationExecutor(final File outputDir, 
+  public AnnotationExecutor(final File outputDir, final String classpath, 
                             final List<String> classToTreat) {
-    super(new MapImplemSpecif(),  outputDir, outputDir, classToTreat);
+    this (outputDir, outputDir, classpath, classToTreat);
   }
 
   /**
