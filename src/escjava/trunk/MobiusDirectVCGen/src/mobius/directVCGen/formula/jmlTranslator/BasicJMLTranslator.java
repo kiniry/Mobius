@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula.jmlTranslator;
 
+import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.Condition;
 import escjava.ast.DecreasesInfo;
@@ -45,7 +46,13 @@ public class BasicJMLTranslator extends ABasicVisitor{
   public final Object visitSimpleModifierPragma(final /*@non_null*/ SimpleModifierPragma x, final Object o) {
     return null;
   }
-
+  
+  /* (non-Javadoc)
+   * @see escjava.ast.VisitorArgResult#visitAnOverview(escjava.ast.AnOverview, java.lang.Object)
+   */
+  public final Object visitAnOverview(final /*@non_null*/ AnOverview x, final Object o) {
+    return null;
+  }  
   
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitSimpleStmtPragma(escjava.ast.SimpleStmtPragma, java.lang.Object)

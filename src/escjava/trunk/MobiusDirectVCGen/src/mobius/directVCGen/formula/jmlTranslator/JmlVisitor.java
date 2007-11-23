@@ -6,36 +6,28 @@ import java.util.List;
 import java.util.Vector;
 
 import javafe.ast.ArrayRefExpr;
-import javafe.ast.BinaryExpr;
 import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.ConstructorDecl;
-import javafe.ast.DoStmt;
 import javafe.ast.FieldAccess;
-import javafe.ast.ForStmt;
-import javafe.ast.FormalParaDecl;
 import javafe.ast.Identifier;
-import javafe.ast.IfStmt;
-import javafe.ast.InstanceOfExpr;
 import javafe.ast.LiteralExpr;
 import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
-import javafe.ast.ModifierPragma;
 import javafe.ast.NewInstanceExpr;
 import javafe.ast.RoutineDecl;
 import javafe.ast.SkipStmt;
 import javafe.ast.Stmt;
-import javafe.ast.ThisExpr;
-import javafe.ast.TryCatchStmt;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
-import javafe.ast.WhileStmt;
 import javafe.util.Location;
+import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
@@ -47,8 +39,6 @@ import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.formula.jmlTranslator.struct.ContextProperties;
 import mobius.directVCGen.formula.jmlTranslator.struct.GlobalProperties;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
-import mobius.directVCGen.vcgen.struct.Post;
-import escjava.ast.AnOverview;
 import escjava.ast.CondExprModifierPragma;
 import escjava.ast.EverythingExpr;
 import escjava.ast.ExprDeclPragma;
@@ -57,11 +47,8 @@ import escjava.ast.ExprStmtPragma;
 import escjava.ast.GCExpr;
 import escjava.ast.ImportPragma;
 import escjava.ast.ModifiesGroupPragma;
-import escjava.ast.NaryExpr;
 import escjava.ast.NothingExpr;
 import escjava.ast.ParsedSpecs;
-import escjava.ast.QuantifiedExpr;
-import escjava.ast.ResExpr;
 import escjava.ast.SetStmtPragma;
 import escjava.ast.TagConstants;
 import escjava.ast.TypeExpr;
@@ -81,8 +68,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   /** global properties of a class. */
   final GlobalProperties fGlobal = new GlobalProperties();
   
-  /** Reference to JML Expression Translator. */
-  private final JmlExprToFormula fTranslator;
+  private JMLTransVisitor fTrans;
   
   /** the subset checking option. */
   private boolean fDoSubsetChecking;
@@ -92,7 +78,7 @@ public class JmlVisitor extends BasicJMLTranslator {
    * translate expressions.
    */
   public JmlVisitor() {
-    this(false);
+    this(false, null);
      
   }
 
@@ -102,13 +88,20 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @param doSubsetChecking if the subset checking has to be done
    */
   public JmlVisitor(final boolean doSubsetChecking) {
-    fDoSubsetChecking = doSubsetChecking;
-    
-    fTranslator = new JmlExprToFormula(this);
+    this(doSubsetChecking, 
+         new JMLTransVisitor(doSubsetChecking));
+
+    fTrans = new JMLTransVisitor(fDoSubsetChecking);
      
   }
 
 
+
+  public JmlVisitor(final boolean doSubsetChecking, 
+                    final JMLTransVisitor trans) {
+    fDoSubsetChecking = doSubsetChecking;
+    fTrans = trans;
+  }
 
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitClassDecl(javafe.ast.ClassDecl, java.lang.Object)
@@ -224,52 +217,9 @@ public class JmlVisitor extends BasicJMLTranslator {
     return prop;
   }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitFormalParaDecl(javafe.ast.FormalParaDecl, java.lang.Object)
-   */
-  @Override
-  public final Object visitFormalParaDecl(final /*@non_null*/ FormalParaDecl x, final Object o) {
-    return this.fTranslator.genericVarDecl(x, o);
-  }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitLiteralExpr(javafe.ast.LiteralExpr, java.lang.Object)
-   */
-  @Override
-  public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
-    if (((ContextProperties)o).interesting) {
-      return this.fTranslator.literal(x, o);
-    }
-    else {
-      return null;
-    }
-  }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitVariableAccess(javafe.ast.VariableAccess, java.lang.Object)
-   */
-  @Override
-  public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, final Object o) {
-    if (((ContextProperties)o).interesting) {
-      return this.fTranslator.variableAccess(x, o);
-    }
-    else {
-      return null;
-    }
-  }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitFieldAccess(javafe.ast.FieldAccess, java.lang.Object)
-   */
-  @Override
-  public final Object visitFieldAccess(final /*@non_null*/ FieldAccess x, final Object o) {
-    if (((ContextProperties)o).interesting) {
-      return this.fTranslator.fieldAccess(x, o);
-    }
-    else {
-      return null;
-    }
-  }
   
   
   
@@ -288,56 +238,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     return null;
   }
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitNaryExpr(escjava.ast.NaryExpr, java.lang.Object)
-   */
-  @Override
-  public final Object visitNaryExpr(final /*@non_null*/ NaryExpr x, final Object o) {
-    if (((ContextProperties) o).interesting) {
-      if (x.op == TagConstants.PRE) {
-        return this.fTranslator.oldExpr(x, o);
-      }
-      else if (x.op == TagConstants.FRESH) {
-        return this.fTranslator.freshExpr(x, o);
-      }
-      else if (x.op == TagConstants.TYPEOF) {
-        final Term exprTerm = (Term) visitGCExpr(x, o);
-        return Type.of(Heap.var, exprTerm);
-      }
-      else {
-        return visitGCExpr(x, o);
-      }
-    }
-    else {
-      return null;
-    }
-  }
-
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitInstanceOfExpr(javafe.ast.InstanceOfExpr, java.lang.Object)
-   */
-  @Override
-  public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, final Object o) {
-    if (((ContextProperties) o).interesting) {
-      return this.fTranslator.instanceOfExpr(x, o);
-    }
-    else {
-      return null;
-    }
-  }
-
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitThisExpr(javafe.ast.ThisExpr, java.lang.Object)
-   */
-  @Override
-  public final Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
-    if (((ContextProperties) o).interesting) {
-      return this.fTranslator.thisLiteral(x, o);
-    }
-    else {
-      return null;
-    }
-  }
 
   
   public /*@non_null*/ Object visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x, Object o) {
@@ -355,8 +255,9 @@ public class JmlVisitor extends BasicJMLTranslator {
   public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, final Object o) {
     final MethodProperties prop = ((MethodProperties) o);
     final int tag = x.getTag();
-    if (tag == TagConstants.ASSIGNABLE | tag == TagConstants.MODIFIABLE
-        | tag == TagConstants.MODIFIES) {
+    if (tag == TagConstants.ASSIGNABLE | 
+        tag == TagConstants.MODIFIABLE | 
+        tag == TagConstants.MODIFIES) {
       if (x.expr instanceof FieldAccess) {
         
         final FieldAccess var = (FieldAccess) x.expr;
@@ -388,52 +289,9 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
    */
   @Override
-  public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
+  public Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
     
-    ((ContextProperties) o).interesting = true;
-    Term t;
-
-    if (x.tag == TagConstants.INITIALLY) {
-      fGlobal.put("doSubsetChecking", Boolean.TRUE); // to collect all fields in initially to do the subset check
-      final Term initiallyFOL = (Term) x.expr.accept(this, o);
-      
-      
-      
-      fGlobal.put("doSubsetChecking", Boolean.FALSE);
-      if (o instanceof MethodProperties) {
-        t = (Term) ((MethodProperties) o).get("initiallyFOL");
-        final boolean initIsValid = doSubsetChecking(o);
-        if (initIsValid) {
-          if (initiallyFOL != null) { 
-            if (t != null) {
-              t = Logic.and(t, initiallyFOL);
-            }
-            else {
-              t = initiallyFOL;
-            }
-          }
-          ((MethodProperties) o).put("initiallyFOL", t);
-        }
-        else {
-          System.out.println("Initially error (subset check)! The following term was not conjoined to the overall type initially term: " + initiallyFOL.toString() + "\n");
-        }
-      }
-      else {
-        t = initiallyFOL;
-      }
-    }
-    else if (x.tag == TagConstants.INVARIANT) { 
-      fGlobal.put("doSubsetChecking", Boolean.TRUE);
-      t = (Term) x.expr.accept(this, o);
-      fGlobal.put("doSubsetChecking", Boolean.FALSE);
-      addToInv(x, t, o);
-    }
-    else if (x.tag == TagConstants.CONSTRAINT) {
-      fGlobal.put("doSubsetChecking", Boolean.TRUE); 
-      t = (Term) x.expr.accept(this, o);
-      fGlobal.put("doSubsetChecking", Boolean.FALSE);
-      constrToConstraints(x, t, o);
-    }
+    //FIXME: Should be a call to JML Trans...
     return null;
   }
   
@@ -468,25 +326,9 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
    */
   @Override
-  public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
-    final MethodProperties prop = (MethodProperties)o;
-    prop.interesting = true;
-    Term t = (Term)visitASTNode(x, o);
-    t = Logic.boolToPred(t);
-    switch (x.getTag()) {
-      case TagConstants.REQUIRES:
-        //addToPrecondition(t, o);
-        Lookup.addPrecondition(prop.getDecl(), t);
-        break;
-      case TagConstants.ENSURES:
-      case TagConstants.POSTCONDITION:
-      case TagConstants.POSTCONDITION_REDUNDANTLY:
-        //addToPostcondition(t, o);
-        Lookup.addNormalPostcondition(prop, t);
-        break;
-      default:
-        break;
-    }
+  public Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
+    //FIXME: Should be a call to JML Trans...
+    
     return null;
   }
 
@@ -494,22 +336,8 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @see escjava.ast.VisitorArgResult#visitVarExprModifierPragma(escjava.ast.VarExprModifierPragma, java.lang.Object)
    */
   @Override
-  public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
-    final MethodProperties prop = (MethodProperties) o;
-    prop.interesting = true;
-    
-    final RoutineDecl currentRoutine = prop.getDecl();
-    final Post allExPosts = Lookup.getExceptionalPostcondition(currentRoutine);
-    final QuantVariableRef commonExceptionVar = allExPosts.getRVar();
-
-    final Term typeOfException = Type.translateToType(x.arg.type);
-    final QuantVariableRef newExceptionVar = Expression.rvar(x.arg);
-
-    Term newExPost = (Term)x.expr.accept(this, o);
-    newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
-    final Term guard = Logic.assignCompat(Heap.var, commonExceptionVar, typeOfException);
-    final Post result = new Post (commonExceptionVar, Logic.Safe.implies(guard, newExPost));
-    Lookup.addExceptionalPostcondition(prop.getDecl(), result);
+  public Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
+    //FIXME: Should be a call to JML Trans...
     return null;
   }
 
@@ -540,111 +368,135 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @param annos Collection of statement pragmas as annotations
    * @param prop Object as Properties object
    */
-  public void handleStmt(final BlockStmt x, final List<AAnnotation> annos, 
+  public void handleStmt(final BlockStmt x, 
+                         final List<AAnnotation> annos, 
                          final MethodProperties prop) {
     Term inv = null;
-    Term t = null;
-    Set.Assignment assignment = null;
-    boolean interesting;
-   
     for (final Stmt s: x.stmts.toArray()) {
-      interesting = false;
-      if (s instanceof ExprStmtPragma) { //Asserts, Assumes and Loop Invariants
-        interesting = true; 
-        prop.interesting = true;
-        t = (Term)s.accept(this, prop);
-        switch (s.getTag()) {
-          case javafe.parser.TagConstants.ASSERT:
-            annos.add(new Cut("assert" + prop.getAssertNumber(), Util.buildArgs(prop), t));
-            break;
-          case TagConstants.ASSUME:
-            annos.add(new Assume(t));
-            break;
-          case TagConstants.LOOP_INVARIANT:
-          case TagConstants.LOOP_INVARIANT_REDUNDANTLY:
-          case TagConstants.MAINTAINING:
-          case TagConstants.MAINTAINING_REDUNDANTLY:
-            if (inv != null) {
-              inv = Logic.and(inv, t);
-            }
-            else {
-              inv = t;
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      else {
-        if (s instanceof VarDeclStmt) { // Ghost var declarations
-          for (final ModifierPragma p: ((VarDeclStmt) s).decl.pmodifiers.toArray()) {
-            if (p.getTag() == TagConstants.GHOST) {
-              interesting = true;
-              break;
-            }
-          }
-          final VarDeclStmt varDecl = (VarDeclStmt) s;
-          prop.fLocalVars.getLast().add(Expression.rvar(varDecl.decl));
-          if (interesting) {
-            prop.interesting = true;
-            final Set ghostVar = (Set) s.accept(this, prop);
-            annos.add(ghostVar);
-          }
-        }
-        else {
-          if (s instanceof SetStmtPragma) {
-            interesting = true;
-            prop.interesting = true;
-            assignment = (Set.Assignment)s.accept(this, prop);
-            final Set newSet = new Set();
-            newSet.assignment = assignment;
-            final Iterator iter = annos.iterator();
-   
-            while (iter.hasNext()) { 
-              final AAnnotation annot = (AAnnotation) iter.next();
-              if (annot instanceof Set) {
-                final Set existingSet = (Set) annot;
-                if (existingSet.declaration.equals(newSet.assignment.fVar)) {
-                  annos.remove(existingSet);
-                  newSet.declaration = existingSet.declaration;
-                  break;
-                }
-              }
-            }
-            annos.add(newSet);
-          }
-        }
-      }
-      if (interesting) {
+      if ((((s instanceof VarDeclStmt)) &&
+            Util.isGhostVar(((VarDeclStmt) s).decl)) || 
+          (s instanceof SetStmtPragma) ||
+          (s instanceof ExprStmtPragma)) {
+        inv = treatPragma(annos, prop, inv, s);
         x.stmts.removeElement(s);
       } 
       else { // Put annotations to next Java Stmt
-        prop.interesting = false;
         if (!annos.isEmpty()) {
           AnnotationDecoration.inst.setAnnotPre(s, annos);
           annos.clear();
         }
         if (inv != null) { // Add inv as invariant to next Loop Stmt
-          if (s instanceof WhileStmt || 
-              s instanceof ForStmt || 
-              s instanceof DoStmt) {
-            
-            AnnotationDecoration.inst.setInvariant(s, inv, prop);
-            
+          if (Util.isLoop(s)) {
+            AnnotationDecoration.inst.setInvariant(s, inv, prop); 
             inv = null;
           }
         }
-        if (s instanceof WhileStmt ||  // Visit body of Loop Stmt
-            s instanceof ForStmt || 
-            s instanceof DoStmt || 
-            s instanceof BlockStmt || 
-            s instanceof TryCatchStmt ||
-            s instanceof IfStmt) {
+//        if (s instanceof WhileStmt ||  // Visit body of Loop Stmt
+//            s instanceof ForStmt || 
+//            s instanceof DoStmt || 
+//            s instanceof BlockStmt || 
+//            s instanceof TryCatchStmt ||
+//            s instanceof IfStmt ||
+//            s instanceof VarDeclStmt) {
+        else {
           s.accept(this, prop);
         }
       }
     }
   }
+
+
+
+  private Term treatPragma(final List<AAnnotation> annos, 
+                           final MethodProperties prop, 
+                           final Term oldInv, final Stmt s) {
+    Term inv = oldInv;
+    if (s instanceof ExprStmtPragma) { //Asserts, Assumes and Loop Invariants
+      if (isInvariant((ExprStmtPragma)s)) {
+        inv = treatInvariant((ExprStmtPragma)s, inv, prop);
+      }
+      else {
+        annos.add(treatPragma((ExprStmtPragma)s, prop));
+      } 
+    }
+    else if (s instanceof SetStmtPragma) {
+      final Set newSet = treatSetStmt(annos, prop, s);
+      annos.add(newSet);
+    }
+    else if (s instanceof VarDeclStmt) { // Ghost var declarations
+      final VarDeclStmt varDecl = (VarDeclStmt) s;
+      
+      
+      if (Util.isGhostVar(varDecl.decl)) {
+        annos.add(treatGhostDecl(varDecl, prop));
+      }
+    }
+    return inv;
+  }
+
+  private AAnnotation treatGhostDecl(VarDeclStmt s, MethodProperties prop) {
+    return (Set) s.accept(fTrans, prop);
+  }
+
+  private AAnnotation treatPragma(ExprStmtPragma s, MethodProperties prop) {
+    final Term t = (Term)s.accept(fTrans, prop);
+    switch (s.getTag()) {
+      case javafe.parser.TagConstants.ASSERT:
+        return new Cut("assert" + prop.getAssertNumber(), 
+                       Util.buildArgs(prop), t);
+      case TagConstants.ASSUME:
+        return new Assume(t);
+      default:
+        break;
+    }
+    return null;
+  }
+
+  private Term treatInvariant(final ExprStmtPragma s,
+                              final Term oldInv,
+                              final MethodProperties prop) {
+    Term inv = oldInv;
+    final Term t = (Term) s.accept(fTrans, prop);
+    if (inv != null) {
+      inv = Logic.and(inv, t);
+    }
+    else {
+      inv = t;
+    }
+    return inv;
+  }
+
+  private boolean isInvariant(final ExprStmtPragma s) {
+    final int tag = s.getTag();
+    return tag == TagConstants.LOOP_INVARIANT ||
+           tag == TagConstants.LOOP_INVARIANT_REDUNDANTLY ||
+           tag == TagConstants.MAINTAINING ||
+           tag == TagConstants.MAINTAINING_REDUNDANTLY;
+  }
+
+  private Set treatSetStmt(final List<AAnnotation> annos, 
+                           final MethodProperties prop, final Stmt s) {
+    Set.Assignment assignment;
+    assignment = (Set.Assignment)s.accept(fTrans, prop);
+    final Set newSet = new Set();
+    newSet.assignment = assignment;
+    final Iterator iter = annos.iterator();
+
+    while (iter.hasNext()) { 
+      final AAnnotation annot = (AAnnotation) iter.next();
+      if (annot instanceof Set) {
+        final Set existingSet = (Set) annot;
+        if (existingSet.declaration.equals(newSet.assignment.fVar)) {
+          annos.remove(existingSet);
+          newSet.declaration = existingSet.declaration;
+          break;
+        }
+      }
+    }
+    return newSet;
+  }
+
+
   
   
   
@@ -681,19 +533,11 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @see javafe.ast.VisitorArgResult#visitVarDeclStmt(javafe.ast.VarDeclStmt, java.lang.Object)
    */
   @Override
-  public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
+  public Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
+    prop.fLocalVars.getLast().add(Expression.rvar(x.decl));
 
-    
-    //It's only called if we have a ghost variable declaration with maybe a set stmt
-    final Set ghostVar = new Set();
-    if (x.decl.init != null) {
-      ghostVar.assignment = new Set.Assignment();
-      ghostVar.assignment.fExpr = (Term) x.decl.init.accept(this, o);
-      ghostVar.assignment.fVar = Expression.rvar(x.decl);
-    }
-    ghostVar.declaration = Expression.rvar(x.decl); 
-    return ghostVar;
+    return prop;
   }
 
   /* (non-Javadoc)
@@ -752,23 +596,10 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
 
   
-  public /*@non_null*/ Object visitQuantifiedExpr(/*@non_null*/ QuantifiedExpr x, Object o) {
-    return fTranslator.quantifier(x, o);
-  }
+
   
 
   
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitResExpr(escjava.ast.ResExpr, java.lang.Object)
-   */
-  @Override
-  public final Object visitResExpr(final /*@non_null*/ ResExpr x, final Object o) {
-    final MethodProperties prop = (MethodProperties) o;
-    if (((ContextProperties)o).interesting) {
-      return this.fTranslator.resultLiteral(x, prop);
-    }
-   return null;
-  }
 
   
 
@@ -796,107 +627,12 @@ public class JmlVisitor extends BasicJMLTranslator {
     return Expression.rvar(name, Type.typeToSort(x.type)); // Ref.sort);
   }
   
-  public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, Object o) {
-    ((ContextProperties) o).put("unaryOp", (int) x.op);
-    return visitExpr(x, o);
-  }
-  
-  
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitBinaryExpr(javafe.ast.BinaryExpr, java.lang.Object)
-   */
-  public final Object visitBinaryExpr(final /*@non_null*/ BinaryExpr expr, final Object o) {
-    if (((ContextProperties)o).interesting) {
-      switch(expr.op) {
-        case TagConstants.EQ: 
-          return this.fTranslator.eq(expr, o);
-        case TagConstants.OR: 
-          return this.fTranslator.or(expr, o);
-        case TagConstants.AND: 
-          return this.fTranslator.and(expr, o);
-        case TagConstants.NE:
-          return this.fTranslator.ne(expr, o);
-        case TagConstants.GE: 
-          return this.fTranslator.ge(expr, o);
-        case TagConstants.GT: 
-          return this.fTranslator.gt(expr, o);
-        case TagConstants.LE: 
-          return this.fTranslator.le(expr, o);
-        case TagConstants.LT:  
-          return this.fTranslator.lt(expr, o);
-        case TagConstants.BITOR: 
-          return this.fTranslator.bitor(expr, o);
-        case TagConstants.BITXOR: 
-          return this.fTranslator.bitxor(expr, o);
-        case TagConstants.BITAND: 
-          return this.fTranslator.bitand(expr, o);
-        case TagConstants.LSHIFT:
-          return this.fTranslator.lshift(expr, o);
-        case TagConstants.RSHIFT: 
-          return this.fTranslator.rshift(expr, o);
-        case TagConstants.URSHIFT:
-          return this.fTranslator.urshift(expr, o);
-        case TagConstants.ADD: 
-          return this.fTranslator.add(expr, o);
-        case TagConstants.SUB: 
-          return this.fTranslator.sub(expr, o);
-        case TagConstants.DIV: 
-          return this.fTranslator.div(expr, o);
-        case TagConstants.MOD: 
-          return this.fTranslator.mod(expr, o);
-        case TagConstants.STAR: 
-          return this.fTranslator.star(expr, o);
-        case TagConstants.ASSIGN:
-          return this.fTranslator.assign(expr, o);
-        case TagConstants.ASGMUL: 
-          return this.fTranslator.asgmul(expr, o);
-        case TagConstants.ASGDIV: 
-          return this.fTranslator.asgdiv(expr, o);
-        case TagConstants.ASGREM: 
-          return this.fTranslator.asgrem(expr, o);
-        case TagConstants.ASGADD: 
-          return this.fTranslator.asgadd(expr, o);
-        case TagConstants.ASGSUB: 
-          return this.fTranslator.asgsub(expr, o);
-        case TagConstants.ASGLSHIFT: 
-          return this.fTranslator.asglshift(expr, o);
-        case TagConstants.ASGRSHIFT: 
-          return this.fTranslator.asgrshift(expr, o);
-        case TagConstants.ASGURSHIFT: 
-          return this.fTranslator.asgurshif(expr, o);
-        case TagConstants.ASGBITAND: 
-          return this.fTranslator.asgbitand(expr, o);
-          // jml specific operators 
-        case TagConstants.IMPLIES: 
-          return this.fTranslator.implies(expr, o);
-        case TagConstants.EXPLIES:
-          return this.fTranslator.explies(expr, o);
-        case TagConstants.IFF: // equivalence (equality)
-          return this.fTranslator.iff(expr, o);
-        case TagConstants.NIFF:    // discrepance (xor)
-          return this.fTranslator.niff(expr, o);
-        case TagConstants.SUBTYPE: 
-          return this.fTranslator.subtype(expr, o);
-        case TagConstants.DOTDOT: 
-          return this.fTranslator.dotdot(expr, o);
-  
-        default:
-          throw new IllegalArgumentException("Unknown construct :" +
-                                             TagConstants.toString(expr.op) +
-                                             " " +  expr);
-      }
-    } 
-    else {
-      return null;
-    }
-  }
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitAnOverview(escjava.ast.AnOverview, java.lang.Object)
-   */
-  public final Object visitAnOverview(final /*@non_null*/ AnOverview x, final Object o) {
-    return null;
-  }  
+  
+  
+
+
+
 
   /**
    * @param o Properties object also containing all modifiable types.

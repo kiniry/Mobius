@@ -24,8 +24,6 @@ public class ContextProperties extends Properties {
   /** tell wether or not we are being currently inside a fresh annotation. */
   public boolean fresh = false;
   
-  /** tell wether or not annotations are being currently inspected. */
-  public boolean interesting;
 
   
   /**
@@ -57,9 +55,7 @@ public class ContextProperties extends Properties {
 
   private void initProperties() {
     validStr.add("old");
-    validStr.add("unaryOp");
     super.put("old", Boolean.FALSE);
-    super.put("unaryOp", 0);
   }
 
   

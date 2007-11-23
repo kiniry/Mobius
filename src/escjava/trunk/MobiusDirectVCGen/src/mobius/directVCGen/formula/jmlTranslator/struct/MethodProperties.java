@@ -51,7 +51,7 @@ public final class MethodProperties extends ContextProperties {
       new LinkedList<List<QuantVariableRef>> ();
   
   /** the arguments of the method. */
-  public LinkedList<QuantVariableRef> fArgs;
+  private LinkedList<QuantVariableRef> fArgs;
 
   /** the current method which is inspected. */
   private final RoutineDecl fMethod;
@@ -115,5 +115,11 @@ public final class MethodProperties extends ContextProperties {
 
   public int getAssertNumber() {
     return fAssert++;
+  }
+
+
+
+  public List<QuantVariableRef> getArgs() {
+    return fArgs;
   }
 }

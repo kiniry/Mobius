@@ -137,8 +137,8 @@ public class JmlExprToFormula {
   }
 
 
-  public Object gt(final BinaryExpr expr, final Object o) {
-    final Boolean pred = ((ContextProperties)o).fInspectingPred;
+  public Term gt(final BinaryExpr expr, final ContextProperties o) {
+    final Boolean pred = o.fInspectingPred;
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -340,61 +340,33 @@ public class JmlExprToFormula {
 
 
   
-  public Object literal(final LiteralExpr x, final Object o) {
-    final int unaryOp = (Integer) ((ContextProperties) o).get("unaryOp");
-    ((ContextProperties) o).put("unaryOp", 0); // default value
-    final int neg = -1;
+  public Term literal(final LiteralExpr x, final Object o) {
+
     switch (x.getTag()) {
       case javafe.ast.TagConstants.BOOLEANLIT: 
-        switch (unaryOp) {
-          case TagConstants.NOT:
-            return Bool.value(!((Boolean) x.value));
-          default: 
-            return Bool.value((Boolean) x.value);
-        }
+        return Bool.value((Boolean) x.value);
       case javafe.ast.TagConstants.INTLIT:
-        switch (unaryOp) {
-          case TagConstants.UNARYSUB:
-            return Num.value((Integer) x.value * neg);
-          default: 
-            return Num.value((Integer) x.value);
-        }
+        return Num.value((Integer) x.value);
       case javafe.ast.TagConstants.LONGLIT:
-        switch (unaryOp) {
-          case TagConstants.UNARYSUB:
-            return Num.value((Long) x.value * -neg);
-          default: 
-            return Num.value((Long) x.value);
-        }
+        return Num.value((Long) x.value);
       case javafe.ast.TagConstants.CHARLIT:
         return Num.value((Character) x.value);
       case javafe.ast.TagConstants.FLOATLIT:
-        switch (unaryOp) {
-          case TagConstants.UNARYSUB:
-            return Num.value((Float) x.value * -neg);
-          default: 
-            return Num.value((Float) x.value);
-        }
+        return Num.value((Float) x.value);
       case javafe.ast.TagConstants.DOUBLELIT:
-        switch (unaryOp) {
-          case TagConstants.UNARYSUB:
-            return Num.value((Double) x.value * -neg);
-          default: 
-            return Num.value((Double) x.value);
-        } 
+        return Num.value((Double) x.value);
+
       case javafe.ast.TagConstants.STRINGLIT:
         return null;
+      
       case javafe.ast.TagConstants.NULLLIT:
         return Ref.nullValue();
+      
       case javafe.ast.TagConstants.BYTELIT:
         return Num.value((Byte) x.value);
+      
       case javafe.ast.TagConstants.SHORTLIT:
-        switch (unaryOp) {
-          case TagConstants.NOT:
-            return Num.value((Short) x.value * neg);
-          default: 
-            return Num.value((Short) x.value);
-        } 
+        return Num.value((Short) x.value);
       default: 
         throw new IllegalArgumentException("LiteralExpr " + x.toString() + 
                                            " has unknown type.");  

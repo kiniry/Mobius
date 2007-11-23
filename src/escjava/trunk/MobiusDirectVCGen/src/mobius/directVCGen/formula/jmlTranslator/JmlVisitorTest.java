@@ -136,7 +136,6 @@ public class JmlVisitorTest extends TestCase {
     fProp.put("quantVars", new HashSet<QuantVariable>());
     fProp.put("isHelper", Boolean.FALSE);
     fProp.put("fresh", Boolean.FALSE);
-    fProp.put("unaryOp", 0);
     fProp.put("interesting", Boolean.TRUE);
     fProp.put("doSubsetChecking", Boolean.TRUE);
     fProp.put("subsetCheckingSet", new HashSet<FieldAccess>());

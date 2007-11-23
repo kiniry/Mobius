@@ -7,9 +7,16 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
+import javafe.ast.DoStmt;
+import javafe.ast.ForStmt;
+import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
+import javafe.ast.ModifierPragma;
 import javafe.ast.RoutineDecl;
+import javafe.ast.Stmt;
 import javafe.ast.TypeDecl;
+import javafe.ast.VarDeclStmt;
+import javafe.ast.WhileStmt;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
@@ -24,6 +31,7 @@ import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 
+import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.SValue;
@@ -375,7 +383,7 @@ public final class Util extends mobius.bico.Util {
   public static List<QuantVariableRef> buildArgs(final MethodProperties prop) {
     final List<QuantVariableRef> args = new LinkedList<QuantVariableRef>();
     // olds
-    for (QuantVariableRef qvr: prop.fArgs) {
+    for (QuantVariableRef qvr: prop.getArgs()) {
       if (qvr.qvar.name.equals("this")) {
         continue;
       }
@@ -383,7 +391,7 @@ public final class Util extends mobius.bico.Util {
     }
     
     // new :)
-    args.addAll(prop.fArgs);
+    args.addAll(prop.getArgs());
     args.addAll(prop.getLocalVars());
     return args;
   }
@@ -475,5 +483,18 @@ public final class Util extends mobius.bico.Util {
     resName = resName.replace('\\', '_');
     resName = resName.replace('?', '.');
     return resName;
+  }
+  public static boolean isGhostVar(final LocalVarDecl s) {
+    for (final ModifierPragma p: s.pmodifiers.toArray()) {
+      if (p.getTag() == TagConstants.GHOST) {
+        return true;
+      }
+    }
+    return false;
+  }
+  public static boolean isLoop(final Stmt s) {
+    return s instanceof WhileStmt || 
+        s instanceof ForStmt || 
+        s instanceof DoStmt;
   }
 }
