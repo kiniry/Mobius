@@ -1,0 +1,71 @@
+------------------------------------------------------------------------
+r3187 | dcochran | 2007-11-21 16:27:50 +0000 (Wed, 21 Nov 2007) | 1 line
+Changed paths:
+   M /src/Javafe
+
+Ticket #72: Adapt Makefiles to build JavaFE as a standalone project
+------------------------------------------------------------------------
+r3186 | dcochran | 2007-11-21 16:27:18 +0000 (Wed, 21 Nov 2007) | 1 line
+Changed paths:
+   M /src/Javafe
+   M /src/Javafe/.classpath
+   M /src/Javafe/Javafe/Makefile
+   M /src/Javafe/Javafe/java/javafe/ast/Makefile
+   M /src/Javafe/Javafe/test/javafe/parser/test/Makefile
+   M /src/Javafe/Javafe/test/javafe/test/Makefile
+   M /src/Javafe/Javafe/test/javafe/test/fe/Makefile
+   M /src/Javafe/Javafe/test/javafe/test/typecheckJavafe
+   M /src/Javafe/Makefile
+   M /src/Javafe/Makefile.defs
+   M /src/Javafe/README.first
+   A /src/Javafe/jars
+   A /src/Javafe/libs
+   D /src/Javafe/release-files/escj
+   D /src/Javafe/release-files/escj.bat
+   D /src/Javafe/release-files/escjava2
+   D /src/Javafe/release-files/escjava2.exe
+   D /src/Javafe/release-files/escjava2.sample
+   D /src/Javafe/release-files/quicktest
+
+Ticket #72: Adapt Makefiles to build JavaFE as a standalone project
+------------------------------------------------------------------------
+r3184 | dcochran | 2007-11-21 13:09:14 +0000 (Wed, 21 Nov 2007) | 1 line
+Changed paths:
+   A /src/Javafe/docs (from /src/escjava/trunk/ESCTools/docs:3174)
+   A /src/Javafe/specs (from /src/escjava/trunk/ESCTools/specs:3174)
+
+Copied documentation and specifications from ESC/Java2 to JavaFE, pending further editing
+------------------------------------------------------------------------
+r3180 | dcochran | 2007-11-20 17:10:16 +0000 (Tue, 20 Nov 2007) | 1 line
+Changed paths:
+   A /src/Javafe/Makefile (from /src/escjava/trunk/ESCTools/Makefile:3174)
+   A /src/Javafe/Makefile.defs (from /src/escjava/trunk/ESCTools/Makefile.defs:3174)
+   A /src/Javafe/README.first (from /src/escjava/trunk/ESCTools/README.first:3174)
+   A /src/Javafe/README.txt (from /src/escjava/trunk/ESCTools/README.txt:3174)
+   A /src/Javafe/Utils (from /src/escjava/trunk/ESCTools/Utils:3174)
+   A /src/Javafe/license.txt (from /src/escjava/trunk/ESCTools/license.txt:3174)
+   A /src/Javafe/release-files (from /src/escjava/trunk/ESCTools/release-files:3174)
+
+Reuse build and license files from ESC/Java2
+------------------------------------------------------------------------
+r3176 | dcochran | 2007-11-19 17:14:05 +0000 (Mon, 19 Nov 2007) | 1 line
+Changed paths:
+   A /src/Javafe/Javafe (from /src/escjava/trunk/ESCTools/Javafe:3174)
+
+Moving copy of JavaFE to its own project
+------------------------------------------------------------------------
+r3165 | dcochran | 2007-11-13 18:34:04 +0000 (Tue, 13 Nov 2007) | 1 line
+Changed paths:
+   A /src/Javafe/.classpath
+   A /src/Javafe/.project
+   A /src/Javafe/.settings
+   A /src/Javafe/.settings/org.eclipse.jdt.core.prefs
+   A /src/Javafe/src
+
+Initial import.
+------------------------------------------------------------------------
+r3164 | dcochran | 2007-11-13 18:33:38 +0000 (Tue, 13 Nov 2007) | 1 line
+Changed paths:
+   A /src/Javafe
+
+Initial import.

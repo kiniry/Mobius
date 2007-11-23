@@ -1,0 +1,61 @@
+------------------------------------------------------------------------
+                              JavaFE
+------------------------------------------------------------------------
+
+These files constitute a release of JavaFE, the Java Front End of ESC/Java2, 
+an upgrade of the original ESC/Java from DEC-SRC/Compaq/HP.  It consists of the
+following files:
+
+  README.release - this file
+  README.txt - the original readme from DEC/SRC
+  README.first - a longer description of the ESCjava2 project
+  RELEASE_NOTES.txt - descriptions of changes and previous version
+
+  In the "docs" directory you will find:
+  Escjava2-ImplementationNotes.pdf - notes about the implementation
+    of ESC/Java2.
+  ESCJAVA-UsersManual.html - the User's Guide for the original
+    DEC/SRC ESC/Java tool.  Nearly all of the documentation included
+    in this User's Guide is still valid for ESC/Java2.  All backwards
+    incompatibilities are documented in the aforementioned
+    implementation notes.  We plan on providing a new ESC/Java2 User's
+    Guide in a future ESC/Java2 beta release.
+  Escjava2-UsersManual.pdf - An outline of the new users manual, which will be 
+    completed in future releases.
+  Escjava2-Extending.pdf - This document describes how to extend
+    ESC/Java2.  It describes the high-level architecture of the system
+    and how to extend it through a series of case studies.
+  Escjava2-Logics.pdf - This document describes the logics of
+    ESC/Java2.
+  Escjava2-Provers.pdf - This document describes the provers used by
+    ESC/Java2.
+
+  These last three booklets are under serious revision at this time;
+  they are by no means complete.
+
+  In the "examples" directory you will find all of the examples
+  discussed in the User's Manual.
+
+-----------------------INSTALLATION ----------------------------
+
+The installation package consists of a compressed tar file.
+
+The installation procedure consists of these steps:
+
+a) untar the tar file in a directory of your choice.
+
+b) Set the environment variable JAVAFE_ROOT to the absolute path
+of the directory in which you placed the release files. [If this is
+not set, the executables will attempt to guess an appropriate value.]
+
+d) The program requires some specification files for the Java system
+classes.  A basic set is provided with the release as the escspecs.jar
+file; they are used unless the user provides an alternate set.  An
+alternate set can be specified as a classpath in the JAVAFE_SPECS
+environment variable.     
+
+---------------------- PLUGIN ------------------------
+
+An Eclipse plugin for JavaFE is also available.  Please see
+http://kind.ucd.ie/products/opensource/JavaFE/
+for more details.
