@@ -68,7 +68,8 @@ public class Executor extends ABasicExecutor {
     "java.lang.NullPointerException",
   };
   
-
+  /** true if the java libs are generated. */
+  private boolean fGenerateJavaLibs = false; 
   
   /** the name of the executor file which will be declined to Type and Sig. */
   private final String fName;
@@ -117,7 +118,8 @@ public class Executor extends ABasicExecutor {
                   final File sourceDir,
                   final File outputDir, 
                   final ClassPath clzzPath,
-                  final List<String> classToTreat) {
+                  final List<String> classToTreat,
+                  final boolean generateLibs) {
     super(SyntheticRepository.getInstance(clzzPath),
           implem, 
           new MethodHandler(), 
@@ -130,6 +132,8 @@ public class Executor extends ABasicExecutor {
     }
     fName = "Bico";
     fSourceDir = sourceDir;
+
+    fGenerateJavaLibs = generateLibs;
   }
   /**
    * Create a new Executor object.
@@ -142,13 +146,14 @@ public class Executor extends ABasicExecutor {
   public Executor(final IImplemSpecifics implem, 
                   final File sourceDir,
                   final File outputDir, 
-                  final List<String> classToTreat) {
+                  final List<String> classToTreat,
+                  final boolean generateLibs) {
     this(implem, 
          sourceDir, 
          outputDir,
          new ClassPath(sourceDir.getAbsolutePath() + 
                        File.pathSeparatorChar + ClassPath.getClassPath()),
-         classToTreat);
+         classToTreat, generateLibs);
   }
   
  
@@ -250,7 +255,7 @@ public class Executor extends ABasicExecutor {
     out.exprt(fName + "Signature");
     out.startModule(fName + "Program");
     // the special library
-    for (int i = 0; i < fSpecialLibs.length; i++) {
+    for (int i = 0; (!fGenerateJavaLibs) && (i < fSpecialLibs.length); i++) {
       final String str = getImplemSpecif().requireLib(Util.coqify(fSpecialLibs[i]));
       out.load(str + ".v");
     }
@@ -315,7 +320,7 @@ public class Executor extends ABasicExecutor {
     out.incPrintln(Constants.MODULE + fName + "Signature.");
     
     // the special library
-    for (int i = 0; i < fSpecialLibs.length; i++) {
+    for (int i = 0; !fGenerateJavaLibs && i < fSpecialLibs.length; i++) {
       final String str = getImplemSpecif().requireLib(Util.coqify(fSpecialLibs[i]));
       out.load(str + ".v");
     }
@@ -351,7 +356,7 @@ public class Executor extends ABasicExecutor {
 
     
     // the special library
-    for (int i = 0; i < fSpecialLibs.length; i++) {
+    for (int i = 0; !fGenerateJavaLibs && i < fSpecialLibs.length; i++) {
       final String str = getImplemSpecif().requireLib(Util.coqify(fSpecialLibs[i]));
       out.load(str + ".v");
     }
@@ -376,7 +381,7 @@ public class Executor extends ABasicExecutor {
     }
     
     // the special library
-    for (int i = 0; i < fSpecialLibs.length; i++) {
+    for (int i = 0; !fGenerateJavaLibs && i < fSpecialLibs.length; i++) {
       final String str = getImplemSpecif().requireLib(Util.coqify(fSpecialLibs[i]));
       out.load(str + ".v");
     }
@@ -410,6 +415,9 @@ public class Executor extends ABasicExecutor {
    * @return true if nothing should be generated for it
    */
   public boolean isSpecialLib(final String clname) {
+    if (fGenerateJavaLibs) {
+      return false;
+    }
     if (clname.startsWith("java")) {
       return true;
     }
@@ -522,7 +530,7 @@ public class Executor extends ABasicExecutor {
     for (ClassExecutor clss : treatedClasses) {
       str += implem.classCons(clss.getModuleName() + ".class");
     }
-    for (int i = 0; i < fSpecialLibs.length; i++) {
+    for (int i = 0; !fGenerateJavaLibs && i < fSpecialLibs.length; i++) {
       str += implem.classCons(Util.coqify(fSpecialLibs[i]) + ".class");
     }
     str += " " + implem.classEnd() + ".";

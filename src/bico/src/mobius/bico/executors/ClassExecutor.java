@@ -402,6 +402,10 @@ public class ClassExecutor extends ASignatureExecutor {
     throws ClassNotFoundException {
     final String clname = clzz;
     ClassNamingData cl = null;
+    if (clname.equals("")) {
+      return;
+    }
+    
     final JavaClass jc = getRepository().loadClass(clname);
     cl = new ClassNamingData(jc);
     fExtLibsLocal.add(cl);

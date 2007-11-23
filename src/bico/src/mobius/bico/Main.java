@@ -41,6 +41,8 @@ public final class Main {
     "<classname> - generates also the file for this class, bico must be able to find it \n" + 
     "              in its class path\n" + 
     "-----------------------------------------------------------------------------------";
+
+
   
   /**
    * Does nothing.
@@ -102,6 +104,7 @@ public final class Main {
     IImplemSpecifics implem = new MapImplemSpecif();
     File baseDir = null;
     File targetDir = null;
+    boolean generateLibs = false;
     final List<String> clzz = new ArrayList<String>();
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
@@ -127,6 +130,7 @@ public final class Main {
         targetDir = new File(arg);
       }
       else if (low.equals(Constants.OPTION_LIB)) {
+        generateLibs = true;
         i = i + 1;
       }
       else {
@@ -157,6 +161,6 @@ public final class Main {
     if (targetDir == null) {
       targetDir = baseDir;
     }
-    return new Executor(implem, baseDir, targetDir, clzz);
+    return new Executor(implem, baseDir, targetDir, clzz, generateLibs);
   }
 }
