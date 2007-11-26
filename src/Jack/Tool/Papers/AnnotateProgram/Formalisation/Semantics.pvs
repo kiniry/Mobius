@@ -200,8 +200,9 @@ BEGIN
             THEN derive(p)(e2, tau, v2, sigma2)(m2) AND
                  check_for_exception_final(sigma2, v,
                                            Bool?(v2) AND v = Bool(b(v2)))
-            ELSE v = Bool(FALSE) AND sigma2 = tau
-            ENDIF), 
+            ELSE v = Bool(FALSE) AND sigma2 = tau AND m2 = 0
+            ENDIF) AND
+          (up?(ex(pstate(tau))) IMPLIES m2 = 0),
       Eq(e1, e2) :
         EXISTS (tau : FullState, v1, v2 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND

@@ -157,27 +157,28 @@ BEGIN
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_entry(ann_program(mp), ann_method(mp)(md), a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
   on_method_entry_preserves_related_states_halted_reached : LEMMA % :-)
-    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+    FORALL(md1 : (wf_Method(program(mp))), md2 : (wf_Method(ann_program(mp))),
+           a1, a2 : Val, 
            m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       related_states(mp)(sMP1, sAP1) IMPLIES
       cp(astate(sMP1)) = halted IMPLIES
-      on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_entry_MP(mp, md1, a1, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-      on_method_entry(ann_program(mp), ann_method(mp)(md), a, sAP1, sAP2, m2,
+      on_method_entry(ann_program(mp), md2, a2, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-        related_states(mp)(sMP2, sAP2)
+        related_states(mp)(sMP2, sAP2) AND cp(astate(sMP2)) = halted
 
 
   on_method_entry_preserves_related_states_not_annotated : LEMMA % :-)
@@ -208,7 +209,7 @@ BEGIN
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_entry(ann_program(mp), md, a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
@@ -244,28 +245,29 @@ BEGIN
       on_method_exit_normal(ann_program(mp), ann_method(mp)(md), 
                             a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
 
   on_method_exit_normal_preserves_related_states_halted_reached : LEMMA % :-)
-    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+    FORALL(md1 : (wf_Method(program(mp))), md2 : (wf_Method(ann_program(mp))),
+           a1, a2 : Val, 
            m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       related_states(mp)(sMP1, sAP1) IMPLIES
       cp(astate(sMP1)) = halted IMPLIES
-      on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_exit_normal_MP(mp, md1, a1, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-      on_method_exit_normal(ann_program(mp), ann_method(mp)(md), a, sAP1, sAP2, m2,
+      on_method_exit_normal(ann_program(mp), md2, a2, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-        related_states(mp)(sMP2, sAP2)
+        related_states(mp)(sMP2, sAP2) AND cp(astate(sMP2)) = halted
   
   on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-)
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
@@ -295,14 +297,15 @@ BEGIN
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_exit_normal(ann_program(mp), md, a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
   % :-)
   on_method_exit_exceptional_preserves_related_states_annotated : LEMMA
-    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), 
+           a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       well_behaved_MVA(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
@@ -331,27 +334,28 @@ BEGIN
       on_method_exit_exceptional(ann_program(mp), ann_method(mp)(md), 
                                   a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
   on_method_exit_exceptional_preserves_related_states_halted_reached : LEMMA % :-)
-    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+    FORALL(md1 : (wf_Method(program(mp))), md2 : (wf_Method(ann_program(mp))),
+           a1, a2 : Val, 
            m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       related_states(mp)(sMP1, sAP1) IMPLIES
       cp(astate(sMP1)) = halted IMPLIES
-      on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_exit_exceptional_MP(mp, md1, a1, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-      on_method_exit_exceptional(ann_program(mp), ann_method(mp)(md), a, sAP1, sAP2, m2,
+      on_method_exit_exceptional(ann_program(mp), md2, a2, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-        related_states(mp)(sMP2, sAP2)
+        related_states(mp)(sMP2, sAP2) AND cp(astate(sMP2)) = halted
 
 
   on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-)
@@ -382,7 +386,7 @@ BEGIN
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_exit_exceptional(ann_program(mp), md, a, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
-                             (b: (wf_Body(p)), sigma1: APState,
+                             (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
