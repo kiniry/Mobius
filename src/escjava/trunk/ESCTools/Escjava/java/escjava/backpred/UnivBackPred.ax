@@ -363,11 +363,11 @@
 
 
 (BG_PUSH
-  (FORALL (a0 b0 e s T v)
+  (FORALL (elems) (FORALL (a0 b0 s T v)
     (PATS (arrayMake a0 b0 s T v))
     (arrayFresh
 	(arrayMake a0 b0 s T v)
-	a0 b0 elems s T v )
+	a0 b0 elems s T v ))
 ))
 
 (BG_PUSH
