@@ -385,9 +385,12 @@ srcjar:
 	( cd ${JAVAFE_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
+	cp ${RELSRCJAR} ${JAVAFE_ROOT}
+	rm -rf ${RELTEMP}/sub
 	
 .PHONY: binary-release
-binary-release: build jars alldocs cleanup
+# Binary release needs to include the test classfiles used by clients of this library
+binary-release: build test jars alldocs cleanup
 	@echo "Creating binary release .........."
 #       RELDIR is the staging area for all files
 #       First copy all .class files to sub and build a jar file

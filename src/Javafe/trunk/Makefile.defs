@@ -106,10 +106,10 @@ export TEXI2PDF ?= texi2pdf
 ## archives for distribution.  They are used to create the Version.java
 ## file, which is used by Main.java to provide a version string.
 
-export JAVAFE_PROJECT ?= JavaFE
+export JAVAFE_PROJECT ?= Javafe
 export JAVAFE_VERSION ?= CURRENT
 
-export COPYRIGHT = 'JavaFE<br />&copy; 2003,2004,2005,2006 David Cok and Joseph Kiniry<br />&copy; 2005,2006,2007 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
+export COPYRIGHT = 'Javafe<br />&copy; 2003,2004,2005,2006 David Cok and Joseph Kiniry<br />&copy; 2005,2006,2007 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
 
 ##########################################################################
 ## The following definitions are used in various Makefiles and should
@@ -160,8 +160,8 @@ export RELDIR  ?= ${JAVAFE_ROOT}/release
 # Variables relevant to names of release files
 export RELNAME ?= ${JAVAFE_PROJECT}-${JAVAFE_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${JAVAFE_RELEASE_DATE}
-export RELJAR  ?= ${JAR_FILES}/JavaFE.jar
-export RELSRCJAR  ?= ${JAR_FILES}/javafe2src.jar
+export RELJAR  ?= ${JAR_FILES}/Javafe${JAVAFE_VERSION}.jar
+export RELSRCJAR  ?= ${JAR_FILES}/Javafe${JAVAFE_VERSION}src.jar
 export RELCODENAME ?= "Mobius PVE Internal Release"
 export RELTAR  ?= ${RELNAME-DATE}-binary
 export RELSRCTAR  ?= ${RELNAME-DATE}-source
