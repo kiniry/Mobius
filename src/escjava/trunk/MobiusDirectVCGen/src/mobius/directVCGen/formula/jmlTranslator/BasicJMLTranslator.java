@@ -40,7 +40,7 @@ import escjava.ast.VarDeclModifierPragma;
 import escjava.ast.WildRefExpr;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 
-public class BasicJMLTranslator extends ABasicVisitor{
+public class BasicJMLTranslator extends ABasicVisitor {
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitSimpleModifierPragma(escjava.ast.SimpleModifierPragma, java.lang.Object)
    */

@@ -9,7 +9,7 @@ import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
 import javafe.tc.TypeSig;
 
-public class MethodGetter extends ABasicVisitor {
+public final class MethodGetter extends ABasicVisitor {
   /** the name of the currently inspected method. */
   private final String fMetName;
   

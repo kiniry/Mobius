@@ -124,7 +124,7 @@ public class ExpressionVisitor extends ABasicVisitor {
       case TagConstants.BOOLEANLIT:
         // -2^31 <= z < 2^31 
         if ((Boolean)expr.value) {
-          val = 1;// Num.value(1); 
+          val = 1; // Num.value(1); 
         }
         else {
           val = 0; //Num.value(0); 

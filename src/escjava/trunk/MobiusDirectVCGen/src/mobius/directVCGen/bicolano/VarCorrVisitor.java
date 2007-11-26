@@ -5,26 +5,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafe.ast.ASTNode;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.RoutineDecl;
 import javafe.ast.VarDeclStmt;
-import javafe.util.Location;
+import javafe.ast.Visitor;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.vcgen.ABasicVisitor;
 
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
 
-public class VarCorrVisitor extends ABasicVisitor {
+/**
+ * This class is used mainly to decorate an ESC/Java method with
+ * informations about its variable, using the final format.
+ * It fills a {@link VarCorrDecoration} structure and adds it to the method.
+ * 
+ * @see mobius.directVCGen.bicolano.VarCorrDecoration
+ * @author J. Charles (julien.charles@inria.fr)
+ */
+public final class VarCorrVisitor extends Visitor {
+  
+  /** the variables and their bytecode correspondence. */
   private final Map<QuantVariableRef, LocalVariableGen> fVariables = 
     new HashMap<QuantVariableRef, LocalVariableGen>();
   /** the currently treated method. */
   private final MethodGen fMet;
-  final List<QuantVariableRef> old = new ArrayList<QuantVariableRef>();
   
+  /** the variable that could be 'made old'. */
+  private final List<QuantVariableRef> fOld = new ArrayList<QuantVariableRef>();
+  
+  
+  /**
+   * The constructor.
+   * @param decl the ESC/Java representation of the method
+   * @param met the bcel representation of the method
+   */
   private VarCorrVisitor(final RoutineDecl decl, 
                             final MethodGen met) {
     final LocalVariableGen[] tab = met.getLocalVariables();
@@ -32,39 +50,62 @@ public class VarCorrVisitor extends ABasicVisitor {
     if (tab.length == 0) {
       return;
     }
-    old.add(Ref.varThis);
+    fOld.add(Ref.varThis);
     int i = 1;
     for (FormalParaDecl para: decl.args.toArray()) {
       final QuantVariableRef qvr = Expression.rvar(para);
       
-      old.add(qvr); 
+      fOld.add(qvr); 
       i++;
     }
   }
-  public /*@non_null*/ Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, 
-                                               final Object o) {
-    int i;
-    int line = Location.toLineNumber(x.getStartLoc());
+
+  /**
+   * Adds the variable which is being declared to the list of variables.
+   * @param x the variable being declared
+   */
+  @Override
+  public /*@non_null*/ void visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x) { 
     final LocalVariableGen[] tab = fMet.getLocalVariables();
     for (LocalVariableGen var : tab) {
-      
       if (var.getName().equals(x.decl.id.toString())) {
         fVariables.put(Expression.rvar(x.decl), var);
       }
-        
     }
-    return o;
     
   }
 
-  
+  /**
+   * Returns all the variables necessary for a method, and
+   * annotates the escjava method with all some informations about
+   * the variable. Basically it decorates the method with a fully filled
+   * {@link VarCorrDecoration} structure. 
+   * @param decl the ESC/Java declaration of the method
+   * @param met the bcel version of the method
+   * @return a list of variables.
+   */
   public static List<QuantVariableRef> getVariables(final RoutineDecl decl, 
                                     final MethodGen met) {
     final VarCorrVisitor vis = new VarCorrVisitor(decl, met);
-    decl.accept(vis, null);
+    decl.accept(vis);
     
-    VarCorrDecoration.inst.set(decl, vis.fVariables, vis.old);
+    VarCorrDecoration.inst.set(decl, vis.fVariables, vis.fOld);
  
     return VarCorrDecoration.inst.get(decl);
+  }
+
+  /**
+   * Just goes recursively through all the children nodes :).
+   * @param x the currently inspected node
+   */
+  @Override
+  public void visitASTNode(final ASTNode x) {
+    final int max = x.childCount();
+    for (int i = 0; i < max; i++) {
+      final Object child = x.childAt(i);
+      if (child instanceof ASTNode) {
+        ((ASTNode) child).accept(this);
+      }
+    }
   }
 }
