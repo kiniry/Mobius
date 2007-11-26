@@ -8,13 +8,18 @@ import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
 import mobius.bico.coq.CoqStream;
 import mobius.bico.executors.ClassExecutor;
-import mobius.bico.executors.Executor;
 import mobius.directVCGen.formula.jmlTranslator.JmlVisitor;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 
 
+/**
+ * Write the normal class definitions like a normal executor,
+ * plus a file for the annotations.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class AnnotationClassExecutor extends ClassExecutor {
   /** the current class which is inspected. */
   private ClassGen fClass;
@@ -22,8 +27,15 @@ public class AnnotationClassExecutor extends ClassExecutor {
   /** the type sygnature of the currently handled class. */
   private final TypeSig fSig;
   
-  public AnnotationClassExecutor(Executor be, ClassGen cg, String name) throws FileNotFoundException {
-    super(be, cg, name);
+  /**
+   * Create an executor that can produce annotations.
+   * @param be the parent executor.
+   * @param cg the class which is currently treated
+   * @throws FileNotFoundException in case the file cannot be written on the disk
+   */
+  public AnnotationClassExecutor(final AnnotationExecutor be, 
+                                 final ClassGen cg) throws FileNotFoundException {
+    super(be, cg);
     fClass = cg;
     String [] pkg = fClass.getJavaClass().getPackageName().split("\\.");
     //System.out.println(pkg[0] + " " + pkg.length);
@@ -37,12 +49,12 @@ public class AnnotationClassExecutor extends ClassExecutor {
     fSig.getCompilationUnit().accept(new JmlVisitor(false), null);
   }
   
-  public void doClassDefinition() {
-    super.doClassDefinition();
-
-    // first we print 
-    final Method[] methods = fClass.getMethods();
-    
+  /**
+   * Check if the field {@link #fClass} is consistent with the field
+   * {@link #fSig}.
+   * @return true if both fields have the same class name and package
+   */
+  private boolean checkConsistency() {
     // building the full name from fSig: basically an array
     final String[] pk = fSig.packageName;
     final String [] fullNameSig = new String[pk.length + 1];
@@ -52,24 +64,36 @@ public class AnnotationClassExecutor extends ClassExecutor {
     
     // checking if both are equal
     if (fullName.length != fullNameSig.length) {
-      return;
+      return false;
     }
     for (int i = 0; i < fullName.length; i++) {
       if (!fullName[i].equals(fullNameSig[i])) {
-        return;
+        return false;
       }
     }
+    return true;
+  }
+  
+  /**
+   * Do the annotation definition for each class.
+   */
+  @Override
+  public void doClassDefinition() {
+    super.doClassDefinition();
     
-    CoqStream anOut;
+    if (!checkConsistency()) {
+      return;
+    }
+
     try {
-      anOut = new CoqStream(new FileOutputStream(
+      final Method[] methods = fClass.getMethods(); 
+      
+      final CoqStream anOut = new CoqStream(new FileOutputStream(
                                          new File(getWorkingDir(), 
-                                                  getModuleName() + 
-                                         "_annotations.v")));
+                                                  getModuleName() + "_annotations.v")));
     
       anOut.println(getLibPath());
       
-
       anOut.println("Require Export defs_types.");
       anOut.println("Require Export Bool.");
       anOut.println("Require Export Sumbool.");

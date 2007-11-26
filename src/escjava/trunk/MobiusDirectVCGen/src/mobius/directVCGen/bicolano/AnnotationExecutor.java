@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import javafe.tc.OutsideEnv;
-
 import mobius.bico.coq.CoqStream;
 import mobius.bico.dico.Dictionary;
 import mobius.bico.executors.ClassExecutor;
@@ -136,7 +134,7 @@ public class AnnotationExecutor extends Executor {
    */
 
   public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
-    return new AnnotationClassExecutor(this, cg, getModuleName());
+    return new AnnotationClassExecutor(this, cg);
   }
 
   /**
