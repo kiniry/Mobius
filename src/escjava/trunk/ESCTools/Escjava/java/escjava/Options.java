@@ -723,6 +723,7 @@ public class Options extends javafe.SrcToolOptions {
     public static final Option optProver = Option.registerOption(new String[] {"-Prover"});
 
     public static final Option optERST = Option.registerOption(new String[] { "-ReachabilitySpecTest", "-erst"});
+    // TODO: exclude erst with idc, at the moment optERST doesn't let idc to operate --mikolas
 
 
     private static final Option[][] excludes = { 
