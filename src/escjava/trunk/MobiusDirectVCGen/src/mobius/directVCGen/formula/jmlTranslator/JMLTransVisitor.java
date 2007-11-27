@@ -56,11 +56,11 @@ public class JMLTransVisitor extends JmlVisitor {
     fTranslator = new JmlExprToFormula(this);
      
   }
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitFormalParaDecl(javafe.ast.FormalParaDecl, java.lang.Object)
-   */
+
+
   @Override
-  public final Object visitFormalParaDecl(final /*@non_null*/ FormalParaDecl x, final Object o) {
+  public final Object visitFormalParaDecl(final /*@non_null*/ FormalParaDecl x, 
+                                          final Object o) {
     return fTranslator.genericVarDecl(x, o);
   }
   
