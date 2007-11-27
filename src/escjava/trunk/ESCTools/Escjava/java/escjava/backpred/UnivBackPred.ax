@@ -361,14 +361,15 @@
 	  (AND
 	    (EQ (select (select e a) i) v)))))))
 
-
 (BG_PUSH
-  (FORALL (elems) (FORALL (a0 b0 s T v)
-    (PATS (arrayMake a0 b0 s T v))
-    (arrayFresh
-	(arrayMake a0 b0 s T v)
-	a0 b0 elems s T v ))
-))
+  (FORALL (a0 b0 s T v e A)
+    (PATS (arrayFresh A a0 b0 (asElems e) s T v))
+    (IMPLIES
+      (EQ A (arrayMake a0 b0 s T v))
+      (arrayFresh A a0 b0 (asElems e) s T v)
+    )
+  )
+)
 
 (BG_PUSH
   (FORALL (a0 b0 a1 b1 s1 s2 T1 T2 v)
