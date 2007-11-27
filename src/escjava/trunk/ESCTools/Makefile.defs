@@ -181,6 +181,10 @@ export UTILS_CLASSFILES = ${ESCTOOLS_ROOT}/Utils
 ## Byte Code Engineering Library
 export BCEL_LIB ?= ${ESCTOOLS_ROOT}/Utils/BCEL/bcel-5.2/bcel-5.2.jar
 
+## Java Front End Library
+export JAVAFE_VERSION ?= 2.0.4
+export JAVAFE_LIB ?= ${ESCTOOLS_ROOT}/Utils/Javafe/Javafe${JAVAFE_VERSION}.jar
+
 ## Pertinent definitions for Javafe
 export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
 export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java

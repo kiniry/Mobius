@@ -73,7 +73,7 @@ build buildall: source fix-perms
 	done
 
 source: fix-perms
-	$(MAKE) -C Javafe source
+#	$(MAKE) -C Javafe source
 	$(MAKE) -C Escjava source generate_files
 
 test: build test0 jml
