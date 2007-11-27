@@ -174,7 +174,8 @@ public final class AnnotationVisitor extends ABasicVisitor {
       varcount++;
     }
     
-    fOut.println("Definition " + annot.fName + " (s0:InitState) (s:LocalState): list Prop := ");
+    fOut.println("Definition " + annot.fName + " (s0:InitState) " +
+        "(s:LocalState): list Prop := ");
     fOut.incTab();
     fOut.println("(" + lets + "  mk_" + annot.fName + " " +  vars + "):: nil.");
     fOut.decTab();

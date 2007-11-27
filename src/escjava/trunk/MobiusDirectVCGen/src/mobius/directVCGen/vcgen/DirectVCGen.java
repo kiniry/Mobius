@@ -139,7 +139,10 @@ public class DirectVCGen extends Visitor {
     return fBasedir;
   }
   
-  
+  /**
+   * Returns the current working directory.
+   * @return the base dir + the relative package dir
+   */
   public File getWorkingDir() {
     return new File (getBaseDir(), fClassDir.getPath());
   }

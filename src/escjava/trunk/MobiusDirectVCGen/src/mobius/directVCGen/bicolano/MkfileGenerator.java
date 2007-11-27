@@ -7,7 +7,12 @@ import mobius.bico.executors.MakefileGen;
 
 public class MkfileGenerator extends MakefileGen {
 
-  public MkfileGenerator(File baseDir) {
+  /**
+   * Create a makefile generator that will generate a makefile in the given
+   * directory.
+   * @param baseDir the directory where to generate the makefile
+   */
+  public MkfileGenerator(final File baseDir) {
     super(baseDir);
   }
   
@@ -27,6 +32,7 @@ public class MkfileGenerator extends MakefileGen {
     out.println("\tcoqc defs_types.v");
   }
   
+
   public void compileAll(final PrintStream out) {
     out.println("\nall: bicolano annot  ");
     out.println("\tcd classes; make all");

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import javafe.Options;
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
 import javafe.ast.TypeDecl;
@@ -19,7 +18,6 @@ import mobius.directVCGen.bicolano.AnnotationCompiler;
 import mobius.directVCGen.bicolano.Unarchiver;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.DirectVCGen;
-
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
 import escjava.translate.NoWarn;
