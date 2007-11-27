@@ -728,24 +728,13 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
   /*@ non_null */TypeSig sig,
   /*@ non_null */InitialState initState) {
 
-      // === experimental for SpecTester, blame mikolas (Nov 2007)
-      if (options().isOptionOn(Options.optERST)) {
+      boolean checkBodyless = false; // pass immediately routines with no body
+    checkBodyless |= Main.options().idc;
+    checkBodyless |= options().isOptionOn(Options.optERST) && (r instanceof MethodDecl);
 
-          if (r.body == null && r instanceof MethodDecl) { // skipping constructors and implemented methods
-              if (!options().quiet)
-                  System.out.println("          running reachability-based spec-checker"); // TODO: use standard loging mechanism
-
-              MethodDecl testMethod =  
-                  SpecTester.fabricateTest(((MethodDecl) r), sig, initState); // create the testing method
-              GuardedCmd testGC = computeBody(testMethod, initState);  // compute GC 
-              SpecTester.runReachability(testGC); // run reachability on it
-          }
-      }
-      // === end of experimental for SpecTester
-
-    if (r.body == null && !Main.options().idc)
+    if (r.body == null && !checkBodyless)
       return "passed immediately";
-    if (r.parent.specOnly && !Main.options().idc)
+    if (r.parent.specOnly && !checkBodyless)
       return "passed immediately";
     if (Location.toLineNumber(r.getEndLoc()) < options().startLine)
       return "skipped";
@@ -763,6 +752,24 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
         && !options().routinesToCheck.contains(fullName)) {
       return "skipped";
     }
+
+      // === experimental for SpecTester, blame mikolas (Nov 2007)
+      if (options().isOptionOn(Options.optERST)) {
+          if (r.body == null && r instanceof MethodDecl) { // skipping constructors and implemented methods
+              if (!options().quiet)
+                  System.out.println("          running reachability-based spec-checker"); // TODO: use standard loging mechanism
+
+              MethodDecl testMethod =  
+                  SpecTester.fabricateTest(((MethodDecl) r), sig, initState); // create the testing method
+              GuardedCmd testGC = computeBody(testMethod, initState);  // compute GC 
+              SpecTester.runReachability(testGC); // run reachability on it
+              return "processed by reachability-based spec-checker (only); a bug has been found if an (Assert) is unreachable";
+          }
+
+      }
+      // === end of experimental for SpecTester
+
+
 
     // ==== Stage 3 continues here ====
     /*
