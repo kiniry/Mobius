@@ -60,7 +60,7 @@ public class SpecTester {
         statements.addElement(call); 
 
         // stick and assert false after the call
-        // statements.addElement(createAssertFalse(r.getStartLoc()));
+        statements.addElement(createAssertFalse(r.getStartLoc()));
 
         // create the whole testing method
         BlockStmt body = BlockStmt.make(statements, r.getStartLoc(), r.getStartLoc());
@@ -71,7 +71,7 @@ public class SpecTester {
                                          TypeNameVec.make(),
                                          body, 
                                          r.getStartLoc(), r.getStartLoc(), r.getStartLoc(), r.getStartLoc(), 
-                                         Identifier.intern("blah"),
+                                         Identifier.intern(r.id + "_testingMethod"),
                                          JavafePrimitiveType.make(TagConstants.VOIDTYPE, r.getStartLoc()),
                                          r.getStartLoc());
 
