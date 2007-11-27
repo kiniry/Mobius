@@ -20,6 +20,7 @@ import escjava.ast.Modifiers;
 import escjava.backpred.FindContributors;
 import escjava.completeness.FloatingPointCompletenessVisitor;
 import escjava.dfa.daganalysis.ReachabilityAnalysis;
+import escjava.dfa.daganalysis.SpecTester;
 import escjava.gui.GUI;
 import escjava.AnnotationHandler;
 
@@ -726,6 +727,21 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
   public String processRoutineDecl(/*@ non_null */RoutineDecl r,
   /*@ non_null */TypeSig sig,
   /*@ non_null */InitialState initState) {
+
+      // === experimental for SpecTester, blame mikolas (Nov 2007)
+      if (options().isOptionOn(Options.optERST)) {
+
+          if (r.body == null && r instanceof MethodDecl) { // skipping constructors and implemented methods
+              if (!options().quiet)
+                  System.out.println("          running reachability-based spec-checker"); // TODO: use standard loging mechanism
+
+              MethodDecl testMethod =  
+                  SpecTester.fabricateTest(((MethodDecl) r), sig, initState); // create the testing method
+              GuardedCmd testGC = computeBody(testMethod, initState);  // compute GC 
+              SpecTester.runReachability(testGC); // run reachability on it
+          }
+      }
+      // === end of experimental for SpecTester
 
     if (r.body == null && !Main.options().idc)
       return "passed immediately";

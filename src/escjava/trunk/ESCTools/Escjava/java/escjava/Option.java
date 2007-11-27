@@ -59,6 +59,12 @@ public class Option {
         return null;
     }
 
+
+    // Tests whether the given option has been registered.
+    /*@ pure */ public static boolean isRegistered(/*@ non_null*/Option o) {
+        return options.contains(o);
+    }
+
     /*@ pure */public /*@ non_null*/String toString() {
         String retv;
         if (names.length > 0) {

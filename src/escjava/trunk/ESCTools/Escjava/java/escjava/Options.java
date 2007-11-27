@@ -282,6 +282,7 @@ public class Options extends javafe.SrcToolOptions {
                 "Prover resource flags can be added after colon, (e.g., fx7:TimeLimit=30,MaxQuantIters=100)."},
             //$$
             { "-ReachabilityAnalysis, -era", "Enable reachability analysis." },
+            { "-ReachabilitySpecTest, -erst", "Enable reachability analysis spec testing." },
 	    { "-idc", "Check that assertions are defined (i.e. not undefined) in the sense of the new JML semantics."},
 	    { "-debug", "Turn on for selected modules."},
 	    { "-warnUnsoundIncomplete", "Turn on warnings about locations where ESC/Java2 reasons unsoundly or incompletely." }
@@ -710,16 +711,18 @@ public class Options extends javafe.SrcToolOptions {
     }
 
     // Option processing
-    private static final Option optLoop            = Option.registerOption(new String[] {"-Loop"});
-    private static final Option optLoopSafe        = Option.registerOption(new String[] {"-LoopSafe"});
-    private static final Option optLoopFallThru    = Option.registerOption(new String[] {"-LoopFallThru"});
-    private static final Option optPredAbstract    = Option.registerOption(new String[] {"-PredAbstract"});
-    private static final Option optInferPredicates = Option.registerOption(new String[] {"-InferPredicates"});
+    public static final Option optLoop            = Option.registerOption(new String[] {"-Loop"});
+    public static final Option optLoopSafe        = Option.registerOption(new String[] {"-LoopSafe"});
+    public static final Option optLoopFallThru    = Option.registerOption(new String[] {"-LoopFallThru"});
+    public static final Option optPredAbstract    = Option.registerOption(new String[] {"-PredAbstract"});
+    public static final Option optInferPredicates = Option.registerOption(new String[] {"-InferPredicates"});
 
-    private static final Option optEaJava = Option.registerOption(new String[] {"-JavaAssertions", "-eaJava"});
-    private static final Option optEaJML  = Option.registerOption(new String[] {"-JMLAssertions", "-eaJML"});
+    public static final Option optEaJava = Option.registerOption(new String[] {"-JavaAssertions", "-eaJava"});
+    public static final Option optEaJML  = Option.registerOption(new String[] {"-JMLAssertions", "-eaJML"});
 
-    private static final Option optProver = Option.registerOption(new String[] {"-Prover"});
+    public static final Option optProver = Option.registerOption(new String[] {"-Prover"});
+
+    public static final Option optERST = Option.registerOption(new String[] { "-ReachabilitySpecTest", "-erst"});
 
 
     private static final Option[][] excludes = { 
@@ -728,6 +731,18 @@ public class Options extends javafe.SrcToolOptions {
     };
 
     private OptionsConsistency consistency = new OptionsConsistency(excludes);
+
+    //
+
+    /**
+     *  Query whether a certain option is on.
+     *
+     * @param o an option previously registered with <code>Option.registerOption</code>
+     */
+    public boolean isOptionOn(/*@non_null*/Option o) {
+        assert Option.isRegistered(o);
+        return consistency.isOn(o);
+    }
 
      public Options() {
          consistency.addInduces(optPredAbstract, new Option[] { optLoopSafe }); // options optPredAbstract implie loopSafe on
@@ -1492,7 +1507,13 @@ public class Options extends javafe.SrcToolOptions {
             enableReachabilityAnalysis = true;
             noPeepOptGCAssertFalse = true;
             return offset;
-        }
+        } else if (optERST.isMe(option)) {
+            // TODO: do I need to do anything here? --mikolas
+            return offset;
+        } 
+
+
+
         // Pass on unrecognized options:
         return super.processOption(option, args, offset);
     }
