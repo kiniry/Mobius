@@ -35,6 +35,7 @@ public class AnnotationExecutor extends Executor {
    * for bico
    * @param classToTreat the list of the class names to look at, 
    * additionnaly to what can be found in the source dir
+   * @param classpath the class path where to find all the source files
    */
   public AnnotationExecutor(final File sourceDir, 
                             final File outputDir,
@@ -51,6 +52,7 @@ public class AnnotationExecutor extends Executor {
    * for bico
    * @param classToTreat the list of the class names to look at, 
    * additionnaly to what can be found in the source dir
+   * @param classpath the class path where to find all the source files
    */
   public AnnotationExecutor(final File outputDir, final String classpath, 
                             final List<String> classToTreat) {
@@ -84,6 +86,22 @@ public class AnnotationExecutor extends Executor {
       out.println("Load \"" + ce.getModuleFileName() + "_annotations.v\".");
     }
 
+    defineProgramSpecs(out);
+
+    out.incPrintln("Definition anno_prog :="); 
+    out.println("AnnoProg BicoProgram.program " +
+        "BicoProgram.subclass program_spec.");
+    out.decPrintln("");
+    out.endModule(getModuleName() + "Annotations");
+    
+  }
+  
+  /**
+   * Write on the output port given as an argument the definition
+   * of the program specs, given as MethSpecTab type object.
+   * @param out the stream on which to write the result
+   */
+  private void defineProgramSpecs(final CoqStream out) {
     out.incPrintln("Definition program_spec: MethSpecTab :=");
     final Dictionary dico = getDico();
     final Collection<Integer> meths = dico.getMethods();
@@ -114,13 +132,6 @@ public class AnnotationExecutor extends Executor {
     }
     out.decTab();
     out.decPrintln(".\n");
-
-    out.incPrintln("Definition anno_prog :="); 
-    out.println("AnnoProg BicoProgram.program " +
-        "BicoProgram.subclass program_spec.");
-    out.decPrintln("");
-    out.endModule(getModuleName() + "Annotations");
-    
   }  
 
 

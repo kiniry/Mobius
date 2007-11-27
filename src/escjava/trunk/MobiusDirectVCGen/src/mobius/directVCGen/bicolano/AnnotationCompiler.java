@@ -22,6 +22,7 @@ public class AnnotationCompiler {
    * Initialized the annotation compiler with the given arguments.
    * @param pkgsdir the directory where to generate the file(s) 
    * @param clzz the class to treat
+   * @param classpath the current classpath used by to find the source files
    */
   public AnnotationCompiler(final File pkgsdir, final String clzz,
                             final String classpath) {
