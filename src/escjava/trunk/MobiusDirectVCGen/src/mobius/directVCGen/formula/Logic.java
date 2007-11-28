@@ -130,10 +130,10 @@ public final class Logic {
    * @return the BoolPred conversion object
    */
   public static Term boolToPred(final Term e) {
-    if (e.getSort() == Bool.sort) {
+    if (e.getSort().equals(Bool.sort)) {
       return Formula.lf.mkFnTerm(Formula.lf.symIsTrue, new Term[] {e});
     }
-    else if (e.getSort() == Logic.sort) {
+    else if (e.getSort().equals(Logic.sort)) {
       return e;
     }
     else {
@@ -162,23 +162,31 @@ public final class Logic {
    * to pred.
    */
   public static final class Safe {
+    
+    /** @deprecated */
+    private Safe() {
+      
+    }
+    
     /**
      * Create a And in the prop territory, from 2 booleans or
      * 2 properties. The 2 arguments should not have different types.
+     * If one of the argument is null, it returns the other one.
      * @see Logic#and(Term, Term)
      * @param f1 The first argument of the and, of type Prop
      * @param f2 The second argument of the and, of type Prop
      * @return a newly created and connector
      */
     public static Term and(final Term f1, final Term f2) {
-      Term left = f1, right = f2;
-      if (f1.getSort().equals(Bool.sort)) {
-        left = Logic.boolToPred(f1);
+      if (f1 == null) {
+        return Logic.boolToPred(f2);
       }
-      if (f2.getSort().equals(Bool.sort)) {
-        right = Logic.boolToPred(f1);
+      
+      if (f2 == null) {
+        return Logic.boolToPred(f1);
       }
-      return Logic.and(left, right);
+
+      return Logic.and(Logic.boolToPred(f1), Logic.boolToPred(f2));
     }
 
     /**

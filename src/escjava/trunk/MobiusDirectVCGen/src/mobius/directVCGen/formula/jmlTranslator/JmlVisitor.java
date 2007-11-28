@@ -203,9 +203,6 @@ public class JmlVisitor extends BasicJMLTranslator {
 
 
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitLocalVarDecl(javafe.ast.LocalVarDecl, java.lang.Object)
-   */
   @Override
   public Object visitLocalVarDecl(final /*@non_null*/ LocalVarDecl x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
@@ -219,7 +216,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
 
 
-  
+  @Override
   public /*@non_null*/ Object visitArrayRefExpr(final /*@non_null*/ ArrayRefExpr x, 
                                                 final Object o) {
     final Term var = (Term) x.array.accept(this, o); 
@@ -229,12 +226,10 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
   
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitCondExprModifierPragma(escjava.ast.CondExprModifierPragma, java.lang.Object)
-   */
   @Override
-  public final Object visitCondExprModifierPragma(final /*@non_null*/ CondExprModifierPragma x, 
-                                                  final Object o) {
+  public final Object visitCondExprModifierPragma(
+                                  final /*@non_null*/ CondExprModifierPragma x, 
+                                  final Object o) {
     final MethodProperties prop = ((MethodProperties) o);
     final int tag = x.getTag();
     if (tag == TagConstants.ASSIGNABLE || 
@@ -256,21 +251,14 @@ public class JmlVisitor extends BasicJMLTranslator {
     return visitASTNode(x, o);
   }
  
-  
- 
-
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitEverythingExpr(escjava.ast.EverythingExpr, java.lang.Object)
-   */
+  /** {@inheritDoc} */  
   @Override
   public final Object visitEverythingExpr(final /*@non_null*/ EverythingExpr x, 
                                           final Object o) {
     return visitASTNode(x, o);
   }
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
-   */
+
   @Override
   public Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
     
@@ -308,9 +296,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
   
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
-   */
+
   @Override
   public Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, 
                                         final Object o) {
@@ -318,9 +304,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     return null;
   }
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitVarExprModifierPragma(escjava.ast.VarExprModifierPragma, java.lang.Object)
-   */
+
   @Override
   public Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, 
                                            final Object o) {
@@ -340,7 +324,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   // since old are computed by the wp.
   public void argsToGhost(final List<AAnnotation> annos, 
                           final Object o) {  
-    final RoutineDecl m = ((MethodProperties) o).getDecl();
+    ///final RoutineDecl m = ((MethodProperties) o).getDecl();
     
 //    for (final FormalParaDecl p: m.args.toArray()) {
 //      final Term t1 = Expression.rvar(p);
@@ -351,6 +335,7 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
   
   /**
+   * Get the annotation for the given statement.
    * @param x BlockStmt holding all statements of one entire block
    * @param annos Collection of statement pragmas as annotations
    * @param prop Object as Properties object
@@ -405,8 +390,6 @@ public class JmlVisitor extends BasicJMLTranslator {
     }
     else if (s instanceof VarDeclStmt) { // Ghost var declarations
       final VarDeclStmt varDecl = (VarDeclStmt) s;
-      
-      
       if (Util.isGhostVar(varDecl.decl)) {
         annos.add(treatGhostDecl(varDecl, prop));
       }
@@ -414,11 +397,11 @@ public class JmlVisitor extends BasicJMLTranslator {
     return inv;
   }
 
-  private AAnnotation treatGhostDecl(VarDeclStmt s, MethodProperties prop) {
+  private AAnnotation treatGhostDecl(final VarDeclStmt s, final MethodProperties prop) {
     return (Set) s.accept(fTranslator, prop);
   }
 
-  private AAnnotation treatPragma(ExprStmtPragma s, MethodProperties prop) {
+  private AAnnotation treatPragma(final ExprStmtPragma s, final MethodProperties prop) {
     final Term t = (Term)s.accept(fTranslator, prop);
     switch (s.getTag()) {
       case javafe.parser.TagConstants.ASSERT:
@@ -472,12 +455,6 @@ public class JmlVisitor extends BasicJMLTranslator {
 
 
   
-  
-  
-  
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitBlockStmt(javafe.ast.BlockStmt, java.lang.Object)
-   */
   @Override
   public final Object visitBlockStmt(final /*@non_null*/ BlockStmt x, final Object o) {
     final List<AAnnotation> annos = new Vector<AAnnotation>();
@@ -503,9 +480,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     return null;
   }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitVarDeclStmt(javafe.ast.VarDeclStmt, java.lang.Object)
-   */
+
   @Override
   public Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
@@ -514,17 +489,14 @@ public class JmlVisitor extends BasicJMLTranslator {
     return prop;
   }
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitExprStmtPragma(escjava.ast.ExprStmtPragma, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
-  public final Object visitExprStmtPragma(final /*@non_null*/ ExprStmtPragma x, final Object o) {
+  public final Object visitExprStmtPragma(final /*@non_null*/ ExprStmtPragma x, 
+                                          final Object o) {
     return visitASTNode(x, o);
   }
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitGCExpr(escjava.ast.GCExpr, java.lang.Object)
-   */
+
   @Override
   public final Object visitGCExpr(final /*@non_null*/ GCExpr x, final Object o) {
     if (x instanceof TypeExpr) { 
@@ -535,28 +507,23 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
 
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitImportPragma(escjava.ast.ImportPragma, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
   public final Object visitImportPragma(final /*@non_null*/ ImportPragma x, final Object o) {
     return visitASTNode(x, o);
   }
 
-
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitModifiesGroupPragma(escjava.ast.ModifiesGroupPragma, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
-  public final Object visitModifiesGroupPragma(final /*@non_null*/ ModifiesGroupPragma x, final Object o) {
+  public final Object visitModifiesGroupPragma(final /*@non_null*/ ModifiesGroupPragma x, 
+                                               final Object o) {
     return visitASTNode(x, o);
   }
 
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitSetStmtPragma(escjava.ast.SetStmtPragma, java.lang.Object)
-   */
-  public final Object visitSetStmtPragma(final /*@non_null*/ SetStmtPragma x, final Object o) {
+  @Override
+  public final Object visitSetStmtPragma(final /*@non_null*/ SetStmtPragma x, 
+                                         final Object o) {
     final Set.Assignment res = new Set.Assignment();
     if (x.target instanceof VariableAccess) {
       res.fVar = (QuantVariableRef) x.target.accept(this, o);
@@ -566,10 +533,9 @@ public class JmlVisitor extends BasicJMLTranslator {
   }
 
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitNewInstanceExpr(escjava.ast.NewInstanceExpr, java.lang.Object)
-   */
-  public /*@non_null*/ Object visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x, Object o) {
+  @Override
+  public /*@non_null*/ Object visitNewInstanceExpr(final /*@non_null*/ NewInstanceExpr x, 
+                                                   final Object o) {
     final String name = Types.printName(x.type);
     return Expression.rvar(name, Type.typeToSort(x.type)); // Ref.sort);
   }

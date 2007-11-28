@@ -69,7 +69,7 @@ public class JMLTransVisitor extends JmlVisitor {
    */
   @Override
   public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
-    return this.fTranslator.literal(x, o);
+    return fTranslator.literal(x, o);
   }
 
   /* (non-Javadoc)
@@ -77,19 +77,16 @@ public class JMLTransVisitor extends JmlVisitor {
    */
   @Override
   public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, final Object o) {
-    return this.fTranslator.variableAccess(x, o);
+    return fTranslator.variableAccess(x, o);
 
   }
-//  public final Object visitAmbiguousVariableAccess(final /*@non_null*/ AmbiguousVariableAccess x, final Object o) {
-//    return this.fTranslator.ambiguousVariableAccess(x, o);
-//
-//  }
+
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitFieldAccess(javafe.ast.FieldAccess, java.lang.Object)
    */
   @Override
   public final Object visitFieldAccess(final /*@non_null*/ FieldAccess x, final Object o) {
-    return this.fTranslator.fieldAccess(x, o);
+    return fTranslator.fieldAccess(x, o);
   }
   
   /* (non-Javadoc)
@@ -97,19 +94,22 @@ public class JMLTransVisitor extends JmlVisitor {
    */
   @Override
   public final Object visitNaryExpr(final /*@non_null*/ NaryExpr x, final Object o) {
+    final ContextProperties prop = (ContextProperties) o;
+    Term res = null;
     if (x.op == TagConstants.PRE) {
-      return this.fTranslator.oldExpr(x, o);
+      res = fTranslator.oldExpr(x, prop);
     }
     else if (x.op == TagConstants.FRESH) {
-      return this.fTranslator.freshExpr(x, o);
+      res = fTranslator.freshExpr(x, prop);
     }
     else if (x.op == TagConstants.TYPEOF) {
-      final Term exprTerm = (Term) visitGCExpr(x, o);
-      return Type.of(Heap.var, exprTerm);
+      final Term exprTerm = (Term) visitGCExpr(x, prop);
+      res = Type.of(Heap.var, exprTerm);
     }
     else {
-      return visitGCExpr(x, o);
+      res = (Term) visitGCExpr(x, o);
     }
+    return res;
   }
     
   
@@ -119,7 +119,7 @@ public class JMLTransVisitor extends JmlVisitor {
    */
   @Override
   public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, final Object o) {
-    return this.fTranslator.instanceOfExpr(x, o);
+    return fTranslator.instanceOfExpr(x, o);
   }
 
   /* (non-Javadoc)
@@ -127,7 +127,7 @@ public class JMLTransVisitor extends JmlVisitor {
    */
   @Override
   public final Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
-    return this.fTranslator.thisLiteral(x, o);
+    return fTranslator.thisLiteral(x, o);
   }
 
   /* (non-Javadoc)
@@ -136,7 +136,7 @@ public class JMLTransVisitor extends JmlVisitor {
   @Override
   public final Object visitResExpr(final /*@non_null*/ ResExpr x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    return this.fTranslator.resultLiteral(x, prop);
+    return fTranslator.resultLiteral(x, prop);
   }
   /* (non-Javadoc)
    * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
@@ -154,20 +154,13 @@ public class JMLTransVisitor extends JmlVisitor {
       System.out.println(x.expr);
       final Term initiallyFOL = (Term) x.expr.accept(this, o);
       //fGlobal.put("doSubsetChecking", Boolean.FALSE);
-      
+      t = initiallyFOL;
+
       if (o instanceof MethodProperties) {
         final MethodProperties prop = (MethodProperties) o;
-        t = (Term) prop.get("initiallyFOL");
         final boolean initIsValid = doSubsetChecking(prop);
         if (initIsValid) {
-          if (initiallyFOL != null) { 
-            if (t != null) {
-              t = Logic.and(t, initiallyFOL);
-            }
-            else {
-              t = initiallyFOL;
-            }
-          }
+          t = Logic.Safe.and(t, (Term) prop.get("initiallyFOL"));
           ((MethodProperties) o).put("initiallyFOL", t);
         }
         else {
@@ -175,9 +168,6 @@ public class JMLTransVisitor extends JmlVisitor {
               "The following term was not conjoined to the " +
               "overall type initially term: " + initiallyFOL.toString() + "\n");
         }
-      }
-      else {
-        t = initiallyFOL;
       }
     }
     else if (x.tag == TagConstants.INVARIANT) { 
@@ -197,7 +187,9 @@ public class JMLTransVisitor extends JmlVisitor {
   /* (non-Javadoc)
    * @see javafe.ast.VisitorArgResult#visitBinaryExpr(javafe.ast.BinaryExpr, java.lang.Object)
    */
-  public final Object visitBinaryExpr(final /*@non_null*/ BinaryExpr expr, final Object o) {
+  @Override
+  public final Object visitBinaryExpr(final /*@non_null*/ BinaryExpr expr, 
+                                      final Object o) {
     final ContextProperties prop = (ContextProperties) o;
     switch(expr.op) {
       case TagConstants.EQ: 
@@ -284,7 +276,8 @@ public class JMLTransVisitor extends JmlVisitor {
    * @see escjava.ast.VisitorArgResult#visitVarExprModifierPragma(escjava.ast.VarExprModifierPragma, java.lang.Object)
    */
   @Override
-  public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, final Object o) {
+  public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, 
+                                                 final Object o) {
     final MethodProperties prop = (MethodProperties) o;
     
     final RoutineDecl currentRoutine = prop.getDecl();
@@ -306,7 +299,8 @@ public class JMLTransVisitor extends JmlVisitor {
    * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
    */
   @Override
-  public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, final Object o) {
+  public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, 
+                                              final Object o) {
     final MethodProperties prop = (MethodProperties)o;
 
     Term t = (Term)visitASTNode(x, o);
@@ -348,13 +342,15 @@ public class JMLTransVisitor extends JmlVisitor {
     ghostVar.declaration = Expression.rvar(x.decl); 
     return ghostVar;
   }
-  public /*@non_null*/ Object visitQuantifiedExpr(/*@non_null*/ QuantifiedExpr x, 
-                                                  Object o) {
+  
+  public /*@non_null*/ Object visitQuantifiedExpr(final /*@non_null*/ QuantifiedExpr x, 
+                                                  final Object o) {
     return fTranslator.quantifier(x, o);
   }
   
-  public /*@non_null*/ Object visitUnaryExpr(/*@non_null*/ UnaryExpr x, 
-                                             Object o) {
+  
+  public /*@non_null*/ Object visitUnaryExpr(final /*@non_null*/ UnaryExpr x, 
+                                             final Object o) {
     Term res = (Term) visitExpr(x, o);
     switch (x.op) {
       case TagConstants.UNARYSUB:
@@ -370,8 +366,6 @@ public class JMLTransVisitor extends JmlVisitor {
             System.out.println(TagConstants.toString(x.op));
             res = Ref.nullValue();
           }
-          
-          
         }
       default:
         break;

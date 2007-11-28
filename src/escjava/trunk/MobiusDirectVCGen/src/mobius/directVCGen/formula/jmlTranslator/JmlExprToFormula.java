@@ -455,11 +455,11 @@ public class JmlExprToFormula {
    * @param o properties object holding whether fresh property is set and holds the freshSet
    * @return the generated FOL term
    */
-  public Object freshExpr(final NaryExpr x, final Object o) { 
-    ((ContextProperties) o).fresh = true;
+  public Term freshExpr(final NaryExpr x, final ContextProperties o) { 
+    o.fresh = true;
     fVisitor.visitGCExpr(x, o);
-    ((ContextProperties) o).fresh = false;
-    final Set freshVars = (HashSet) ((ContextProperties)o).get("freshSet");
+    o.fresh = false;
+    final Set freshVars = (HashSet) o.get("freshSet");
     
     Term res = null;
     
@@ -492,11 +492,11 @@ public class JmlExprToFormula {
     return Logic.and(Logic.and(notEqualNull, isNotAliveInPreHeap), isAliveInHeap);
   }
   
-  public Object oldExpr(final NaryExpr x, final Object o) {
-    final boolean old = (Boolean) ((ContextProperties) o).get("old");
-    ((ContextProperties) o).put("old", Boolean.TRUE);
-    final Object res = fVisitor.visitGCExpr(x, o);
-    ((ContextProperties) o).put("old", old);
+  public Term oldExpr(final NaryExpr x, final ContextProperties o) {
+    final boolean old = (Boolean) o.get("old"); 
+    o.put("old", Boolean.TRUE);
+    final Term res = (Term) fVisitor.visitGCExpr(x, o);
+    o.put("old", old);
     return res;
   }
 
