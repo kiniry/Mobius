@@ -173,7 +173,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     visitRoutineDecl(x, prop);
     
     if (!prop.fIsHelper) {
-      final Term constraints = Lookup.getConstraint(x.getParent());
+      final Term constraints = Lookup.getInst().getConstraint(x.getParent());
       Lookup.addNormalPostcondition(prop, constraints);
       Lookup.addExceptionalPostcondition(prop.getDecl(), constraints);
     }  
@@ -277,18 +277,17 @@ public class JmlVisitor extends BasicJMLTranslator {
     boolean constIsValid = true;
     Term constTerm = t;
     
-    final Term allConst = Lookup.getConstraint(x.parent);
+    final Term allConst = Lookup.getInst().getConstraint(x.parent);
     
     if (fDoSubsetChecking) { 
       constIsValid = doSubsetChecking(o);
     }
-    if (constIsValid && allConst != null) {
-      constTerm = Logic.and(allConst, constTerm); 
+    
+    if (constIsValid) {
+      constTerm = Logic.Safe.and(allConst, constTerm); 
+      Lookup.getInst().addConstraint(x.parent, constTerm); 
     }
-    else if (constIsValid) {
-      Lookup.addConstraint(x.parent, constTerm); 
-    }
-    else if (!constIsValid) {
+    else {
       System.out.println("Constraint error (subset check)! " +
           "The following term was not conjoined to " +
           "the overall type constraints: " + t.toString() + "\n");
@@ -663,7 +662,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     if (t != null) {
       boolean invIsValid = true;
       Term invTerm = t;
-      final Term allInvs = Lookup.getInvariant(x.parent);
+      final Term allInvs = Lookup.getInst().getInvariant(x.parent);
       
       if (fDoSubsetChecking) { 
         invIsValid = doSubsetChecking(prop);
@@ -672,7 +671,7 @@ public class JmlVisitor extends BasicJMLTranslator {
         invTerm = Logic.and(allInvs, invTerm); 
       }
       else if (invIsValid) {
-        Lookup.addInvariant(x.parent, invTerm); 
+        Lookup.getInst().addInvariant(x.parent, invTerm); 
       }
       else if (!invIsValid) {
         System.out.println("Invariant error (subset check)! " +
