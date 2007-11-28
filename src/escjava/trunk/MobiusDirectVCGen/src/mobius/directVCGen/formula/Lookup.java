@@ -18,7 +18,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 /**
- * @author Herman Lehner
+ * @author Herman Lehner (hermann.lehner@inf.ethz.ch)
  */
 public class Lookup {
   
@@ -44,10 +44,10 @@ public class Lookup {
     new HashMap<RoutineDecl, Post>();
 
   /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
-  private static Map<TypeDecl, Term> invariants = new HashMap<TypeDecl, Term>();
+  private final Map<TypeDecl, Term> fInvariants = new HashMap<TypeDecl, Term>();
 
   /** map containing ClassDecl as keys and Terms (the constraint) as value. **/
-  private static Map<TypeDecl, Term> constraints = new HashMap<TypeDecl, Term>();
+  private final Map<TypeDecl, Term> fConstraints = new HashMap<TypeDecl, Term>();
   
   /** the argument lists of each precondition. */
   private final Map<RoutineDecl, List<QuantVariableRef>> fPreArgs = 
@@ -61,22 +61,23 @@ public class Lookup {
    * @param type the type to get the invariant from
    * @return the precondition or <code>True</code>
    */
-  public static Term getInvariant(final TypeDecl type) {
-    Term t = invariants.get(type);
+  public Term getInvariant(final TypeDecl type) {
+    Term t = fInvariants.get(type);
     if (t == null) {
       t = Logic.trueValue();
     }
     return t;
   }
+  
+  
 
   /**
-   * Adds a given Term to precondition of a given method. 
-   * @param rd the method
+   * Adds a given Term to the invariant of a given class. 
+   * @param type the type
    * @param term fol term to be used as condition
    */
-  public static void addInvariant(final TypeDecl type, 
-                                            final Term term) {
-    final Term pOld = invariants.get(type);
+  public void addInvariant(final TypeDecl type, final Term term) {
+    final Term pOld = fInvariants.get(type);
     Term pNew;
     if (pOld == null) {
       pNew = term;
@@ -84,17 +85,17 @@ public class Lookup {
     else {
       pNew = Logic.and(pOld, term);
     }
-    invariants.put(type, pNew);
+    fInvariants.put(type, pNew);
   }
   
   /**
-   * Returns the FOL Term representation of the precondition of method m.
-   * @param m the method of interest
+   * Returns the FOL Term representation of the constraints of a given class.
+   * @param type the class which we want to get the constraints from
    * @return the precondition or <code>True</code>
    */
-  public static Term getConstraint(final TypeDecl type) {
+  public Term getConstraint(final TypeDecl type) {
     //return buildStdCond(m, "_pre", false);
-    Term t = constraints.get(type);
+    Term t = fConstraints.get(type);
     if (t == null) {
       t = Logic.trueValue();
     }
@@ -102,13 +103,13 @@ public class Lookup {
   }
 
   /**
-   * Adds a given Term to precondition of a given method. 
-   * @param rd the method
-   * @param term fol term to be used as condition
+   * Adds a given Term to the constraints of a given class.
+   * @param type the class targeted
+   * @param term fol term to be used as constraint
    */
-  public static void addConstraint(final TypeDecl type, 
-                                            final Term term) {
-    final Term pOld = constraints.get(type);
+  public void addConstraint(final TypeDecl type, 
+                            final Term term) {
+    final Term pOld = fConstraints.get(type);
     Term pNew;
     if (pOld == null) {
       pNew = term;
@@ -116,7 +117,7 @@ public class Lookup {
     else {
       pNew = Logic.and(pOld, term);
     }
-    constraints.put(type, pNew);
+    fConstraints.put(type, pNew);
   }  
   
   /**
@@ -285,7 +286,11 @@ public class Lookup {
     return inst;
   }
 
-  
+  /**
+   * Compute the precondition arguments. The call to this method should be done only
+   * once for each method.
+   * @param rout the method to compute the arguments for
+   */
   public void computePreconditionArgs(final RoutineDecl rout) {
     final List<RoutineDecl> lrout = new ArrayList<RoutineDecl>();
     lrout.addAll(preconditions.keySet());
@@ -303,26 +308,41 @@ public class Lookup {
     
   }
   
+  /**
+   * Returns the list of the arguments of the precondition.
+   * Mostly, the heap, plus the arguments of the method.
+   * @param m the method to get the precondition arguments from
+   * @return a list of variables
+   */
   public List<QuantVariableRef> getPreconditionArgs(final RoutineDecl m) {
     return fPreArgs.get(m);
   }
   
   
+  /**
+   * Returns the list of the arguments of the precondition,
+   * without the heap. These are mainly the arguments of the method.
+   * @param m the method to get the precondtion arguments from
+   * @return a list of variables
+   */
   public List<QuantVariableRef> getPreconditionArgsWithoutHeap(final RoutineDecl m) {
     return fPreArgsWithoutHeap.get(m);
   }
-  /**
-   * @return the content of the object
-   */
+  
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     final String pre = "Preconditions: \n" +
                        "Arguments:" + fPreArgs + "\n" +
                        "Terms: " + preconditions + "\n";
-    return pre;
-           
+    return pre;     
   }
   
+  /**
+   * Creates the arguments list of a method from its signature.
+   * @param rd the method to get the arguments from
+   * @return a list of variables
+   */
   public static List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     final FormalParaDeclVec fpdvec = rd.args;
