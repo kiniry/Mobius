@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="mobiusPVE"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="MobiusPVE">
+         <property
+               name="windowImages"
+               value="eclipse.gif,eclipse32.gif,eclipse48.gif,platform:/plugin/mobius.escjava2.plugin/icons/Mobius.gif,platform:/plugin/mobius.escjava2.plugin/icons/Mobius.gif">
+         </property>
+         <property
+               name="aboutText"
+               value="Welcome to the Mobius program verification environment (PVE)">
+         </property>
+         <property
+               name="aboutImage"
+               value="platform:/plugin/mobius.escjava2.plugin/icons/mobius_logo.gif">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="C8D5EA">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="0,280,455,15">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="7,220,441,20">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="MobiusPVE"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="MobiusPVE">
+         <property
+               name="windowImages"
+               value="eclipse.gif,eclipse32.gif,eclipse48.gif,platform:/plugin/mobius.escjava2.plugin/icons/Mobius.gif,platform:/plugin/mobius.escjava2.plugin/icons/Mobius.gif">
+         </property>
+         <property
+               name="aboutText"
+               value="Welcome to the Mobius program verification environment (PVE)">
+         </property>
+         <property
+               name="aboutImage"
+               value="platform:/plugin/mobius.escjava2.plugin/icons/mobius_logo.gif">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="C8D5EA">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="0,280,455,15">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="7,220,441,20">
+         </property>
+         <property
+               name="appName"
+               value="MobiusPVE">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+      </product>
+   </extension>
+
+</plugin>
