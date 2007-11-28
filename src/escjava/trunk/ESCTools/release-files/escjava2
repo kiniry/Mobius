@@ -22,4 +22,4 @@ fi
 
 ######## Execute
 
-./escj -specs $ESCTOOLS_RELEASE/specs $*
+$ESCTOOLS_RELEASE/escj -specs $ESCTOOLS_RELEASE/specs $*
