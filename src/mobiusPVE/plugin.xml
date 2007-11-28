@@ -3,29 +3,11 @@
 <plugin>
 
    <extension
-         id="MobiusPVE"
-         name="Mobius PVE"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="mobiuspve.Application">
-         </run>
-      </application>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            name="RCP Perspective"
-            class="mobiuspve.Perspective"
-            id="MobiusPVE.perspective">
-      </perspective>
-   </extension>
-   <extension
-         id="MobiusPVE"
-         name="Mobius PVE"
+         id="product"
          point="org.eclipse.core.runtime.products">
       <product
             application="MobiusPVE.application"
+            description="Mobius Program Verification Environment"
             name="Mobius PVE">
          <property
                name="windowImages"
