@@ -502,7 +502,7 @@ public class Executor extends ABasicExecutor {
    */
   public ClassExecutor getClassExecutor(final ClassGen cg) 
     throws FileNotFoundException {
-    return new ClassExecutor(this, cg, fName);
+    return new ClassExecutor(this, cg);
   }
   
     

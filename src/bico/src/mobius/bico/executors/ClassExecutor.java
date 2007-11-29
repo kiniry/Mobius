@@ -69,13 +69,11 @@ public class ClassExecutor extends ASignatureExecutor {
    * 
    * @param exec the Executor to get the initialization from
    * @param cg the class object to manipulate
-   * @param name the name of the main file
    * @throws FileNotFoundException
    *             if the file cannot be opened
    */
   public ClassExecutor(final Executor exec, 
-                       final ClassGen cg,
-                       final String name) throws FileNotFoundException {
+                       final ClassGen cg) throws FileNotFoundException {
     super(exec, cg);
     fClass = cg;
     fExecutor = exec;
