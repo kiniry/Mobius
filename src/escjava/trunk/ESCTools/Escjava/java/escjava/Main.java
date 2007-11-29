@@ -757,15 +757,14 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
       if (options().isOptionOn(Options.optERST)) {
           if (r.body == null && r instanceof MethodDecl) { // skipping constructors and implemented methods
               if (!options().quiet)
-                  System.out.println("          running reachability-based spec-checker"); // TODO: use standard loging mechanism
+                  System.out.println("          running reachability-based spec-checker"); // TODO: use standard logging mechanism
 
               MethodDecl testMethod =  
                   SpecTester.fabricateTest(((MethodDecl) r), sig, initState); // create the testing method
-              GuardedCmd testGC = computeBody(testMethod, initState);  // compute GC 
+              GuardedCmd testGC = computeBody(testMethod, initState);  // compute GC of the tester's body
               SpecTester.runReachability(testGC); // run reachability on it
               return "processed by reachability-based spec-checker (only); a bug has been found if an (Assert) is unreachable";
           }
-
       }
       // === end of experimental for SpecTester
 
