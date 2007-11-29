@@ -2,18 +2,16 @@
 <feature
       id="mobius.Escjava2.feature"
       label="Escjava2"
-      version="2.0.5"
-      provider-name="David R. Cok and EU MOBIUS IST-15905 Project">
+      version="2.0.6"
+      provider-name="David R. Cok and EU MOBIUS IST-15905 Project"
+      plugin="mobius.escjava2.plugin">
    <install-handler/>
 
-   <description url="http://kind.ucd.ie/products/opensource/ESCJava2/">
-      This feature encapsulates the ESC/Java2 tool.
-   </description>
-
-   <copyright url="http://kind.ucd.ie/products/opensource/ESCJava2/download.html">
+   <copyright>
       Copyright (c) 2004-2005 David R. Cok.
-Copyright (c) 2004-2007 Joe Kiniry, Radboud University Nijmegen, and University College Dublin.
-Copyright (c) 2006-2007 EU Mobius IST-15905 project and others.
+Copyright (c) 2004-2007 Joe Kiniry, Radboud University Nijmegen,
+and University College Dublin.
+Copyright (c) 2006-2007 EU Mobius IST-15905 project.
    </copyright>
 
    <license>
@@ -745,19 +743,49 @@ limitations under the License.
    </license>
 
    <url>
-      <update url="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/"/>
-      <discovery label="Java Programming Toolkit Source Release" url="http://www.hpl.hp.com/downloads/crl/jtk/"/>
-      <discovery label="The ESC/Java2 website." url="http://kind.ucd.ie/products/opensource/ESCJava2/"/>
+      <update label="ESCJava2 Update Site" url="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/"/>
    </url>
+
+   <includes
+         id="com.atlassw.tools.eclipse.checkstyle"
+         version="0.0.0"
+         optional="true"
+         search-location="self"/>
+
+   <includes
+         id="edu.ksu.cis.projects.jmleclipse.jmluifeature"
+         version="0.0.0"
+         optional="true"
+         search-location="self"/>
+
+   <includes
+         id="edu.ksu.cis.projects.jmleclipsefeature"
+         version="0.0.0"
+         optional="true"
+         search-location="self"/>
+
+   <includes
+         id="edu.umd.cs.findbugs.plugin.eclipse"
+         version="0.0.0"
+         optional="true"
+         search-location="self"/>
+
+   <includes
+         id="net.sourceforge.pmd.eclipse"
+         version="0.0.0"
+         optional="true"
+         search-location="self"/>
 
    <includes
          id="mobius.simplify.feature"
          version="0.0.0"
+         name="Simplify"
          search-location="both"/>
 
    <includes
          id="mobius.javafe.feature"
          version="0.0.0"
+         name="Javafe"
          search-location="both"/>
 
    <requires>
