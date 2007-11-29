@@ -3,7 +3,7 @@
    <description url="http://kind.ucd.ie/products/opensource/ESCjava2/escjava-eclipse/updates">
       The ESC/Java2 plugin update site.
    </description>
-   <feature url="features/mobius.Escjava2.feature_2.0.5.jar" id="mobius.Escjava2.feature" version="2.0.5">
+   <feature url="features/mobius.Escjava2.feature_2.0.6.jar" id="mobius.Escjava2.feature" version="2.0.6">
       <category name="Mobius PVE"/>
    </feature>
    <category-def name="Mobius PVE" label="Mobius">
