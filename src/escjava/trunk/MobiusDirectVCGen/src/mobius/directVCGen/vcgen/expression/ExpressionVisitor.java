@@ -20,7 +20,6 @@ import javafe.ast.ThisExpr;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
-import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
@@ -117,9 +116,6 @@ public class ExpressionVisitor extends ABasicVisitor {
     Term term = null;
     int val;
 
-    final Term intMin = Num.value(Integer.MIN_VALUE);
-    final Term intMax = Num.value(Integer.MAX_VALUE);
-    // System out.println(TagConstants.toString(expr.tag));
     switch (expr.tag) {
       case TagConstants.BOOLEANLIT:
         // -2^31 <= z < 2^31 
@@ -130,13 +126,13 @@ public class ExpressionVisitor extends ABasicVisitor {
           val = 0; //Num.value(0); 
         }
         final QuantVariableRef ival = Expression.rvar("Ival", Type.sort);
-        Term vval = Heap.sortToValue(Num.value(val));
+        final Term vval = Heap.sortToValue(Num.value(val));
         final Term compat = Expression.sym("compat_ValKind_value", new Term[] {ival, vval});
         
         term =  Logic.implies (Expression.sym("(Int.range " + val + ")", new Term [] {}),
                      Logic.implies(Logic.assignCompat(Heap.var, vval, 
-                                                      Expression.rvar("(PrimitiveType BOOLEAN)", 
-                                                                     Type.sort)),
+                                        Expression.rvar("(PrimitiveType BOOLEAN)", 
+                                                        Type.sort)),
                          Logic.implies(compat, result.nonSafeSubst(result.getRVar(), vval))));
         
         break;
@@ -321,6 +317,7 @@ public class ExpressionVisitor extends ABasicVisitor {
     return visitExpr(x, o);
   }
 
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitAmbiguousMethodInvocation(final /*@non_null*/ 
                                                              AmbiguousMethodInvocation x, 

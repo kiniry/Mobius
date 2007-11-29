@@ -15,7 +15,6 @@ import javafe.ast.ModifierPragma;
 import javafe.ast.RoutineDecl;
 import javafe.ast.Stmt;
 import javafe.ast.TypeDecl;
-import javafe.ast.VarDeclStmt;
 import javafe.ast.WhileStmt;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.annotation.AAnnotation;

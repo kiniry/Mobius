@@ -43,8 +43,6 @@ public final class MethodVisitor extends DirectVCGen {
   /** the vcs that have been calculated. */
   private LinkedList<Term> fVcs = new LinkedList<Term>();
   
-
-  
   
 
   /**
@@ -87,9 +85,7 @@ public final class MethodVisitor extends DirectVCGen {
   private void dump() {
     int num = 1;
     final String rawsuffix = ".raw";
-    
-    
-    
+        
     try {
       final BcCoqFile bcf = new BcCoqFile(getBaseDir(), getWorkingDir());
       bcf.doIt(fMeth);

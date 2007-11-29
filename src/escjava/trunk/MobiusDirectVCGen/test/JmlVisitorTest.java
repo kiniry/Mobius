@@ -476,7 +476,7 @@ public class JmlVisitorTest extends TestCase {
     x = ExprDeclPragma.make(TagConstants.INVARIANT, binExpr, 0, loc1);
     x.parent = twoClassDecl;
     fVisitor.visitExprDeclPragma(x, fProp);
-    evaluatedTerm = (Term) Lookup.getInvariant(twoClassDecl);
+    evaluatedTerm = (Term) Lookup.getInst().getInvariant(twoClassDecl);
     //***************Term**********************************
     expectedTerm = Logic.le(xFieldAccessTermInt, fourTermInt);
     //*************Test************************
@@ -490,7 +490,7 @@ public class JmlVisitorTest extends TestCase {
     x = ExprDeclPragma.make(TagConstants.CONSTRAINT, binExpr, 0, loc1);
     x.parent = twoClassDecl;
     fVisitor.visitExprDeclPragma(x, fProp);
-    evaluatedTerm = (Term) Lookup.getConstraint(twoClassDecl);
+    evaluatedTerm = (Term) Lookup.getInst().getConstraint(twoClassDecl);
     //***************Term**********************************
     expectedTerm = Logic.gt(yFieldAccessTermInt, zeroTermInt);
     //*************Test************************
