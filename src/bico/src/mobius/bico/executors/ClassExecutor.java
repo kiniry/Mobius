@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
 import mobius.bico.coq.LoadPath;
 import mobius.bico.implem.IImplemSpecifics;
+import mobius.bico.visitors.DependenciesVisitor;
 
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantCP;
@@ -426,125 +428,15 @@ public class ClassExecutor extends ASignatureExecutor {
    * @throws ClassNotFoundException if one of the class dependencies cannot be resolved
    */
   private void findDependencies() throws ClassNotFoundException {
-
-    for (String str: findConstantPoolDependencies()) {
-      try {
-        handleImportedLib(str);
-      }
-      catch (ClassNotFoundException e) {
-        // if one of the class name of the list was part of
-        // a fantasy...
-      }
-      
-    }
-    
-    final List<String> dependencies = new ArrayList<String>();
-    dependencies.addAll(findFieldDependencies());
-    dependencies.addAll(findMethodDependencies());
-    for (String str: dependencies) {
+    final JavaClass jc = fClass.getJavaClass();
+    final Collection<String> deps = DependenciesVisitor.getDependencies(jc);
+    for (String str: deps) {
       handleImportedLib(str);
     }
-    
   }
   
   
-  /** 
-   * Find all the dependencies from the methods signatures.
-   * @return the list of the dependencies found.
-   */
-  private List<String> findMethodDependencies() {
-    final JavaClass jc = fClass.getJavaClass();
-    final List<String> dependencies = new ArrayList<String>();
-    
-    final Method[] ms = jc.getMethods();
-    for (Method met: ms) {
-      final Type retType = met.getReturnType();
-      if (retType instanceof ReferenceType) {
-        final String className = Util.getTypeName((ReferenceType)retType);
-        if (className != null) {
-          dependencies.add(className);
-        }
-      }
-    
-      final Type[] argT = met.getArgumentTypes();
-      if (argT != null) {
-        for (Type type: argT) {
-          if (type instanceof ReferenceType) {
-            final String className = Util.getTypeName((ReferenceType)type);
-            if (className != null) {
-              dependencies.add(className);
-            }
-          }
-        }
-      }
-    
-    }
-    return dependencies;
-  }
-  
-  /** 
-   * Find all the dependencies from the fields signatures.
-   * @return the list of the dependencies found.
-   */
-  private List<String> findFieldDependencies() {
-    final JavaClass jc = fClass.getJavaClass();
-    final List<String> dependencies = new ArrayList<String>();
-    final Field[] fs = jc.getFields();
-    for (Field field: fs) {
-      final Type type = field.getType();
-      if (type instanceof ReferenceType) {
-        final String className = Util.getTypeName((ReferenceType) type);
-        if (className != null) {
-          dependencies.add(className);
-        }
-      }
-    }
-    return dependencies;
-  }
-
-
-
-  /** 
-   * Find all the dependencies from the constant pool.
-   * @return the list of the dependencies found.
-   */
-  private List<String> findConstantPoolDependencies() {
-    final JavaClass jc = fClass.getJavaClass();
-    final ConstantPool cp = jc.getConstantPool();
-    final Constant[] co = cp.getConstantPool();
-    final List<String> dependencies = new ArrayList<String>();
-    for (int i = 0; i < co.length; i++) {
-      ConstantCP c = null;
-      if (cp.getConstant(i) instanceof ConstantFieldref) {
-        c = (ConstantFieldref) co[i];
-        final int k = c.getNameAndTypeIndex();
-        final ConstantNameAndType nt = (ConstantNameAndType) cp.getConstant(k);
-        String type = nt.getSignature(cp);
-        type = Util.classFormatName2Standard(type);
-        if (type != null) {
-          dependencies.add(type);
-        }
  
-      } 
-      else if (cp.getConstant(i) instanceof ConstantMethodref) {
-        c = (ConstantMethodref) co[i];
-        final String type = c.getClass(cp);
-        dependencies.add(type);
-      }
-      else if (co[i] instanceof ConstantUtf8) {
-        final ConstantUtf8 cons = (ConstantUtf8) co[i];
-        final String type = Util.classFormatName2Standard(cons.getBytes());
-        if (type != null) {
-          dependencies.add(type);
-        }
-      }      
-      else if (co[i] instanceof ConstantClass) {
-        final ConstantClass cons = (ConstantClass) co[i];
-        dependencies.add(cons.getConstantValue(cp).toString().replace('/', '.'));
-      }
-    }
-    return dependencies;
-  }
   
   /**
    * Adds a load path to this class if such a path does not already exists.
