@@ -25,16 +25,18 @@ import escjava.sortedProver.Lifter.Term;
 public class AnnotationMethodExecutor extends ABasicExecutor {
   /** the current routine (method) that is treated - esc java style. */
   private final RoutineDecl fRout;
+  
   /** the current method (routine) that is treated - bcel style. */
   private final MethodGen fMeth;
   
   /** the stream where to write the annotations. */
   private final CoqStream fAnnotOut;
+  
   /** the class from which the inspected method is taken. */
   private ClassGen fClass;
 
-  public AnnotationMethodExecutor(ABasicExecutor be, final CoqStream annotationOut, 
-                                  ClassGen clzz, final Method met, final RoutineDecl rout) {
+  public AnnotationMethodExecutor(final ABasicExecutor be, final CoqStream annotationOut, 
+                                  final ClassGen clzz, final Method met, final RoutineDecl rout) {
     super(be);
     if (rout == null) {
       throw new NullPointerException();
@@ -48,6 +50,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     fAnnotOut = annotationOut;
   }
 
+  /** {@inheritDoc}  */
   @Override
   public void start() {
     Lookup.getInst().computePreconditionArgs(fRout);

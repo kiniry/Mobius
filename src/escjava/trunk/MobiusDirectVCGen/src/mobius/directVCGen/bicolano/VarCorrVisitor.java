@@ -76,22 +76,18 @@ public final class VarCorrVisitor extends Visitor {
   }
 
   /**
-   * Returns all the variables necessary for a method, and
-   * annotates the escjava method with all some informations about
+   * Annotates the escjava method with all some informations about
    * the variable. Basically it decorates the method with a fully filled
    * {@link VarCorrDecoration} structure. 
    * @param decl the ESC/Java declaration of the method
    * @param met the bcel version of the method
-   * @return a list of variables.
    */
-  public static List<QuantVariableRef> getVariables(final RoutineDecl decl, 
-                                    final MethodGen met) {
+  public static void annotateWithVariables(final RoutineDecl decl, 
+                                  final MethodGen met) {
     final VarCorrVisitor vis = new VarCorrVisitor(decl, met);
     decl.accept(vis);
     
     VarCorrDecoration.inst.set(decl, vis.fVariables, vis.fOld);
- 
-    return VarCorrDecoration.inst.get(decl);
   }
 
   /**

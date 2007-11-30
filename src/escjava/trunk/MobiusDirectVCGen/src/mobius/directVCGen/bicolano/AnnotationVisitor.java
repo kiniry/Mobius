@@ -43,7 +43,6 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
   /** the output file. */
   private final CoqStream fOut;
-  private List<QuantVariableRef> fVariables;
   
 
 
@@ -215,7 +214,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
                                     final RoutineDecl decl, 
                                     final MethodGen met) {
     final AnnotationVisitor vis = new AnnotationVisitor(out, decl, met);
-    vis.fVariables = VarCorrVisitor.getVariables(decl, met);
+    VarCorrVisitor.annotateWithVariables(decl, met);
     final String res = (String) decl.accept(vis, assertionEmpty);
  
     return res;

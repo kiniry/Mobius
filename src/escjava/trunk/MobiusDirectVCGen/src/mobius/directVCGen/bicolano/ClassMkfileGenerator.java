@@ -11,7 +11,7 @@ import mobius.bico.executors.ClassesMakefileGen;
 
 public class ClassMkfileGenerator extends ClassesMakefileGen {
 
-  public ClassMkfileGenerator(File baseDir, Collection<ClassExecutor> treated) {
+  public ClassMkfileGenerator(final File baseDir, final Collection<ClassExecutor> treated) {
     super(baseDir, treated);
   }
 
