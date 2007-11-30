@@ -177,7 +177,7 @@ public class AnnotationDecoration extends ASTDecoration {
     if (v == null) {
       return null;
     }
-    return v.fInv.fName;
+    return v.fInv.getName();
   }
 
   /**
@@ -192,6 +192,6 @@ public class AnnotationDecoration extends ASTDecoration {
     if (v == null) {
       return null;
     }
-    return v.fInv.fArgs;
+    return v.fInv.getArgs();
   }
 }

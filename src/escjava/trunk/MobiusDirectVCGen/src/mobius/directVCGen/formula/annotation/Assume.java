@@ -9,8 +9,8 @@ import escjava.sortedProver.Lifter.Term;
  * Represents an assume; 
  * for instance like <code>assume t</code>
  * which is translated in the vcs as: <code>t -> post</code>.
- * 
- * @author H. Lehner 
+
+ * @author H. Lehner and J. Charles (julien.charles@inria.fr) 
  */
 public class Assume extends AAnnotation {
   /**

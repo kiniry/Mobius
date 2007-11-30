@@ -24,11 +24,11 @@ public abstract class AAnnotation {
   public static final int annotSet = annotCut + 1;
 
   /** FOL-Term that represents the annotation at that point. */
-  public final Term fFormula;
+  private final Term fFormula;
   /** the name of the annotation that is used for the generation. */
-  public final String fName;
+  private final String fName;
   /** the arguments of the annotation. */
-  public final List<QuantVariableRef> fArgs;
+  private final List<QuantVariableRef> fArgs;
   
 
   /**
@@ -76,4 +76,27 @@ public abstract class AAnnotation {
     return "" + fFormula;
   }
 
+  /**
+   * Returns the formula that represents the annotation.
+   * @return either a valid formula or null
+   */
+  public Term getFormula() {
+    return fFormula;
+  }
+  
+  /**
+   * Returns the name of the formula.
+   * @return a valid name, usually a prefix followed by a number
+   */
+  public String getName() {
+    return fName;
+  }
+  
+  /**
+   * Returns the arguments of the annotation.
+   * @return a list of variables representing the arguments of the annotation
+   */
+  public List<QuantVariableRef> getArgs() {
+    return fArgs;
+  }
 }

@@ -108,7 +108,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
       final InstructionHandle ih = Util.findLastInstruction(lineList);
       res = "(PCM.update " + res + " " + ih.getPosition() + "%N" +
-                    " (" + inv.fName + ",," +  
+                    " (" + inv.getName() + ",," +  
                         fMet.getInstructionList().getEnd().getPosition() + "%nat))";
     }
     
@@ -131,7 +131,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
   private void buildDefiner(final AAnnotation annot) {
     String lets = "";
     String vars = "";
-    final Iterator<QuantVariableRef> iter = annot.fArgs.iterator();
+    final Iterator<QuantVariableRef> iter = annot.getArgs().iterator();
     QuantVariableRef var;
     // olds
     var = iter.next(); // the old heap
@@ -174,10 +174,10 @@ public final class AnnotationVisitor extends ABasicVisitor {
       varcount++;
     }
     
-    fOut.println("Definition " + annot.fName + " (s0:InitState) " +
+    fOut.println("Definition " + annot.getName() + " (s0:InitState) " +
         "(s:LocalState): list Prop := ");
     fOut.incTab();
-    fOut.println("(" + lets + "  mk_" + annot.fName + " " +  vars + "):: nil.");
+    fOut.println("(" + lets + "  mk_" + annot.getName() + " " +  vars + "):: nil.");
     fOut.decTab();
   }
 
@@ -189,15 +189,15 @@ public final class AnnotationVisitor extends ABasicVisitor {
    */
   private void buildMker(final AAnnotation annot) {
     String varsAndType = "";
-    for (QuantVariableRef qvr: annot.fArgs) {
+    for (QuantVariableRef qvr: annot.getArgs()) {
       final String vname = Formula.generateFormulas(qvr).toString();
       varsAndType += "(" + vname + ": " + Formula.generateType(qvr.getSort()) +  ") ";
       
     }
-    fOut.println("Definition mk_" + annot.fName + ":= ");
+    fOut.println("Definition mk_" + annot.getName() + ":= ");
     fOut.incTab();
     fOut.println("fun " + varsAndType + "=> \n" + 
-                   Formula.generateFormulas(annot.fFormula) + ".");
+                   Formula.generateFormulas(annot.getFormula()) + ".");
     fOut.decTab();
   }
 

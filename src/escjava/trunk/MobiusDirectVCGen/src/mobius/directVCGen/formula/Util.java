@@ -234,17 +234,17 @@ public final class Util extends mobius.bico.Util {
     final Term res;
     if (DirectVCGen.fByteCodeTrick) {
       final String methname = Util.getMethodAnnotModule(meth);
-      final Term[] tab = new Term[annot.fArgs.size()];
+      final Term[] tab = new Term[annot.getArgs().size()];
       int i = 0;
-      for (QuantVariableRef qvr: annot.fArgs) {
+      for (QuantVariableRef qvr: annot.getArgs()) {
         tab[i] = qvr;
         i++;
       }
       
-      res = Expression.sym(methname + ".mk_" + annot.fName, tab);
+      res = Expression.sym(methname + ".mk_" + annot.getName(), tab);
     }
     else {
-      res = annot.fFormula;
+      res = annot.getFormula();
     }
     return res;
   }

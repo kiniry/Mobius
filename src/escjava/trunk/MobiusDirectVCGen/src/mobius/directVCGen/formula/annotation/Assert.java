@@ -9,11 +9,14 @@ import escjava.sortedProver.Lifter.Term;
  * Represents an assert; 
  * for instance like <code>assert t</code>
  * which is translated in the vcs as:  <code>t</code>, <code>t -> post</code>.
+ * @author H. Lehner and J. Charles (julien.charles@inria.fr)
  */
 public class Assert extends AAnnotation {
   /**
    * Constructor that takes one argument, the term contained in the
    * assert.
+   * @param name the name of the assertion
+   * @param args the arguments of the annotation
    * @param t the term of the assert, should not be <code>null</code>
    */
   public Assert(final String name, 
@@ -24,10 +27,8 @@ public class Assert extends AAnnotation {
       throw new NullPointerException();
     }
   }
-  /*
-   * (non-Javadoc)
-   * @see mobius.directVCGen.formula.annotation.AAnnotation#getID()
-   */
+  
+  /** {@inheritDoc} */
   @Override
   public int getID() {
     return annotAssert;

@@ -6,14 +6,12 @@ import escjava.sortedProver.Lifter.Term;
 //TODO: add comments
 public class Set extends AAnnotation {
 
-  /**
-   * FOL-Terms  containing variable declarations. (Each Term is just a Variable)
-   * TODO: Could maybe be Vector&lt;SortVar&gt; instead
-   */
-  public QuantVariableRef declaration;
+  /** FOL-Terms  containing variable declarations. (Each Term is just a Variable) */
+  //TODO: Could maybe be Vector<SortVar> instead
+  public QuantVariableRef fDeclaration;
 
   /** FOL-Terms translation of JML's set statement. */
-  public Assignment assignment;
+  public Assignment fAssignment;
   
   /**
    * Default constructor.
@@ -27,8 +25,8 @@ public class Set extends AAnnotation {
    * @param assign the JML assignment associated to this construct
    */
   public Set(final QuantVariableRef decl, final Assignment assign) {
-    this.declaration = decl;
-    this.assignment = assign;
+    fDeclaration = decl;
+    fAssignment = assign;
   }
   
   /** {@inheritDoc} */
@@ -68,7 +66,7 @@ public class Set extends AAnnotation {
   /** {@inheritDoc} */
   @Override
   public String toString() {
-    return "Declare " + declaration + ", Set " + assignment;
+    return "Declare " + fDeclaration + ", Set " + fAssignment;
   }
 
 }

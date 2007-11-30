@@ -636,7 +636,7 @@ public class JmlVisitorTest extends TestCase {
     allStmts = BlockStmt.make(vec, 0, 0);
     fVisitor.visitBlockStmt(allStmts, fProp);
     list =  AnnotationDecoration.inst.getAnnotPre((ASTNode) javaSkipStmt);
-    assumeTerm = list.get(0).formula;
+    assumeTerm = list.get(0).getFormula();
     //***************Term**********************************
     expectedTerm = Logic.gt(xFieldAccessTermInt, zeroTermInt);
     //*************Test************************
@@ -654,7 +654,7 @@ public class JmlVisitorTest extends TestCase {
     allStmts = BlockStmt.make(vec, 0, 0);
     fVisitor.visitBlockStmt(allStmts, fProp);
     list =  AnnotationDecoration.inst.getAnnotPre((ASTNode) javaSkipStmt);
-    assumeTerm = list.get(0).formula;
+    assumeTerm = list.get(0).getFormula();
     //***************Term**********************************
     expectedTerm = Logic.gt(xFieldAccessTermInt, zeroTermInt);
     //*************Test************************
@@ -671,7 +671,8 @@ public class JmlVisitorTest extends TestCase {
     vec = StmtVec.make(new Stmt[] {jmlStmt, javaWhileStmt});
     allStmts = BlockStmt.make(vec, 0, 0);
     fVisitor.visitBlockStmt(allStmts, fProp);
-    evaluatedTerm = AnnotationDecoration.inst.getInvariant((ASTNode) javaWhileStmt).formula;
+    evaluatedTerm = AnnotationDecoration.inst.getInvariant(
+                                           (ASTNode) javaWhileStmt).getFormula();
     //***************Term**********************************
     expectedTerm = Logic.gt(xFieldAccessTermInt, sevenTermInt);
     //*************Test************************
@@ -689,7 +690,7 @@ public class JmlVisitorTest extends TestCase {
     allStmts = BlockStmt.make(vec, 0, 0);
     fVisitor.visitBlockStmt(allStmts, fProp);
     list =  AnnotationDecoration.inst.getAnnotPre((ASTNode) javaSkipStmt);
-    assumeTerm = list.get(0).formula;
+    assumeTerm = list.get(0).getFormula();
     //***************Term**********************************
     expectedTerm = Logic.gt(xFieldAccessTermInt, zeroTermInt);
     //*************Test************************
@@ -711,7 +712,7 @@ public class JmlVisitorTest extends TestCase {
     fVisitor.visitBlockStmt(allStmts, fProp);
     list =  AnnotationDecoration.inst.getAnnotPre((ASTNode) javaSkipStmt);
     Set ghostSet = (Set)list.get(0);
-    Term evaluatedGhostDecl = ghostSet.declaration;
+    Term evaluatedGhostDecl = ghostSet.fDeclaration;
     //***************Term*********************************
     Term expectedGhostDecl = Expression.rvar(ghostDecl);
     //***************Test***********************************
@@ -727,8 +728,8 @@ public class JmlVisitorTest extends TestCase {
     fVisitor.visitBlockStmt(allStmts, fProp);
     list =  AnnotationDecoration.inst.getAnnotPre((ASTNode) javaSkipStmt);
     ghostSet = (Set)list.get(0);
-    evaluatedGhostDecl = ghostSet.declaration;
-    Term evaluatedGhostAssig = ghostSet.assignment.fExpr;
+    evaluatedGhostDecl = ghostSet.fDeclaration;
+    Term evaluatedGhostAssig = ghostSet.fAssignment.fExpr;
     //***************Term**********************************
     expectedGhostDecl = Expression.rvar(ghostDecl);
     Term expectedGhostAssig = Num.value((Integer) ((LiteralExpr) ghostDecl.init).value);
@@ -749,7 +750,7 @@ public class JmlVisitorTest extends TestCase {
     fVisitor.visitBlockStmt(allStmts, fProp);
     list =  AnnotationDecoration.inst.getAnnotPre((ASTNode) javaSkipStmt);
     ghostSet = (Set)list.get(0);
-    evaluatedGhostAssig = ghostSet.assignment.fExpr;
+    evaluatedGhostAssig = ghostSet.fAssignment.fExpr;
     expectedGhostAssig = Num.value((Integer) ((LiteralExpr) ghostDecl.init).value);
     //***************Test***********************************
     assertEquals(expectedGhostAssig.toString(), evaluatedGhostAssig.toString());

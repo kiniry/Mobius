@@ -9,10 +9,13 @@ import escjava.sortedProver.Lifter.Term;
  * Represents a cut; 
  * for instance like <code>cut t</code>
  * which is translated in the vcs as: <code>t /\ (t -> post)</code>.
+ * @author H. Lehner and J. Charles (julien.charles@inria.fr)
  */
 public class Cut extends AAnnotation {
   /**
    * Construct an cut statement around the given term.
+   * @param name the name of the annotation
+   * @param args the arguments of the annotation
    * @param t the term which is the formula contained in 
    * the cut
    */
@@ -25,11 +28,7 @@ public class Cut extends AAnnotation {
     }
   }
 
-  
-  /*
-   * (non-Javadoc)
-   * @see mobius.directVCGen.formula.annotation.AAnnotation#getID()
-   */
+  /** {@inheritDoc} */
   @Override
   public int getID() {
     return annotCut;

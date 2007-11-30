@@ -335,10 +335,10 @@ public class JMLTransVisitor extends JmlVisitor {
     //It's only called if we have a ghost variable declaration with maybe a set stmt
     final Set ghostVar = new Set();
     if (x.decl.init != null) {
-      ghostVar.assignment = new Set.Assignment(Expression.rvar(x.decl),
+      ghostVar.fAssignment = new Set.Assignment(Expression.rvar(x.decl),
                                                (Term) x.decl.init.accept(this, o));
     }
-    ghostVar.declaration = Expression.rvar(x.decl); 
+    ghostVar.fDeclaration = Expression.rvar(x.decl); 
     return ghostVar;
   }
   

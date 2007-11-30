@@ -111,26 +111,26 @@ public class StmtVCGen extends ExpressionVisitor {
       final AAnnotation aa = annot.get(i);
       switch(aa.getID()) {
         case AAnnotation.annotAssert:
-          fVcs.add(Logic.implies(aa.fFormula, post));
-          post = aa.fFormula;
+          fVcs.add(Logic.implies(aa.getFormula(), post));
+          post = aa.getFormula();
           break;
         case AAnnotation.annotCut:
-          post = Logic.and(aa.fFormula, Logic.implies(aa.fFormula, post));
+          post = Logic.and(aa.getFormula(), Logic.implies(aa.getFormula(), post));
           break;
         case AAnnotation.annotAssume:
-          post = Logic.implies(aa.fFormula, post);
+          post = Logic.implies(aa.getFormula(), post);
           break;
         case AAnnotation.annotSet: {
           final mobius.directVCGen.formula.annotation.Set s = 
             (mobius.directVCGen.formula.annotation.Set) aa;
-          if (s.assignment != null) {
-            post.subst(s.assignment.fVar, s.assignment.fExpr);
+          if (s.fAssignment != null) {
+            post.subst(s.fAssignment.fVar, s.fAssignment.fExpr);
           }
-          else if (s.declaration != null) {
-            if (s.assignment == null) {
-              post = Logic.forall(s.declaration.qvar, post);
+          else if (s.fDeclaration != null) {
+            if (s.fAssignment == null) {
+              post = Logic.forall(s.fDeclaration.qvar, post);
             }
-            addVarDecl(s.declaration.qvar);
+            addVarDecl(s.fDeclaration.qvar);
           }
           break;
         }
