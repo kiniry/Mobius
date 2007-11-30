@@ -1,4 +1,4 @@
-package mobius.directVCGen.formula.jmlTranslator;
+package mobius.directVCGen.translator;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,9 +33,9 @@ import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Assume;
 import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
-import mobius.directVCGen.formula.jmlTranslator.struct.ContextProperties;
-import mobius.directVCGen.formula.jmlTranslator.struct.GlobalProperties;
-import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.ContextProperties;
+import mobius.directVCGen.translator.struct.GlobalProperties;
+import mobius.directVCGen.translator.struct.MethodProperties;
 import escjava.ast.CondExprModifierPragma;
 import escjava.ast.EverythingExpr;
 import escjava.ast.ExprDeclPragma;

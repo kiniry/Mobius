@@ -8,7 +8,7 @@ import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
 import mobius.bico.coq.CoqStream;
 import mobius.bico.executors.ClassExecutor;
-import mobius.directVCGen.formula.jmlTranslator.JmlVisitor;
+import mobius.directVCGen.translator.JmlVisitor;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;

@@ -6,7 +6,7 @@ import java.util.Vector;
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.MethodProperties;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 

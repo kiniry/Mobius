@@ -1,4 +1,4 @@
-package mobius.directVCGen.formula.jmlTranslator;
+package mobius.directVCGen.translator;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,8 +18,8 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
-import mobius.directVCGen.formula.jmlTranslator.struct.ContextProperties;
-import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.ContextProperties;
+import mobius.directVCGen.translator.struct.MethodProperties;
 import escjava.ast.NaryExpr;
 import escjava.ast.QuantifiedExpr;
 import escjava.ast.ResExpr;

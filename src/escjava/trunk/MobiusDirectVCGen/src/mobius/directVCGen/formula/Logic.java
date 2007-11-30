@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import mobius.directVCGen.formula.jmlTranslator.struct.GlobalProperties;
-import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.GlobalProperties;
+import mobius.directVCGen.translator.struct.MethodProperties;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;

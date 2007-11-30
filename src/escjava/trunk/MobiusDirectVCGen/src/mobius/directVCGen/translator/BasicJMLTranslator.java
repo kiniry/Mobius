@@ -1,4 +1,4 @@
-package mobius.directVCGen.formula.jmlTranslator;
+package mobius.directVCGen.translator;
 
 import mobius.directVCGen.vcgen.ABasicVisitor;
 import escjava.ast.AnOverview;

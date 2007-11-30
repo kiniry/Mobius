@@ -1,4 +1,4 @@
-package mobius.directVCGen.formula.jmlTranslator;
+package mobius.directVCGen.translator;
 
 import java.util.HashSet;
 import java.util.Set;

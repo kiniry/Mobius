@@ -11,7 +11,7 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
-import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.Modifiers;
 import escjava.sortedProver.Lifter.QuantVariableRef;

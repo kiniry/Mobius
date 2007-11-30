@@ -18,7 +18,7 @@ import javafe.ast.TypeDecl;
 import javafe.ast.WhileStmt;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.annotation.AAnnotation;
-import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
