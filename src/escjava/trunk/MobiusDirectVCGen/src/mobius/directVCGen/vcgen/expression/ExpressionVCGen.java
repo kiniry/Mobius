@@ -180,10 +180,10 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     p = new Post(r,
                  Logic.and(Logic.implies(Logic.assignCompat(Heap.var, r, 
                                                             Type.translateToType(x.type)),
-                                                            p.substWith(Bool.value(true))), 
-                                                            Logic.implies(Logic.not(Logic.typeLE(Type.of(Heap.var, r), 
-                                                                                                 Type.translateToType(x.type))),
-                                                                                                 p.substWith(Bool.value(false)))));
+                                        p.substWith(Bool.value(true))), 
+                           Logic.implies(Logic.not(Logic.typeLE(Type.of(Heap.var, r), 
+                                                                Type.translateToType(x.type))),
+                                         p.substWith(Bool.value(false)))));
     entry.fPost = p;
     final Post pre = getPre(x.expr, entry);
     return pre;
@@ -204,7 +204,8 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     e.fPost = pelse;
     pelse = getPre(x.els, e);
 
-    Post pcond = new Post(cond, Logic.and(Logic.implies(Logic.boolToPred(cond), pthen.getPost()),
+    Post pcond = new Post(cond, Logic.and(Logic.implies(Logic.boolToPred(cond), 
+                                                        pthen.getPost()),
                                           Logic.implies(Logic.not(Logic.boolToPred(cond)), 
                                                         pelse.getPost())));
     // now for the wp...
@@ -233,12 +234,13 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
         //QuantVariable f = Expression.var(field.decl);
         //Sort s = f.type;
         final QuantVariableRef obj = entry.fPost.getRVar();
-        entry.fPost = new Post(obj, 
-                               Logic.and(Logic.implies(Logic.equalsNull(obj), 
-                                                       Util.getNewExcpPost(Type.javaLangNullPointerExceptionName(), 
-                                                                      entry)),
-                                         Logic.implies(Logic.not(Logic.equalsNull(obj)), 
-                                                       entry.fPost.getPost())));
+        final Term excPost =  
+          Util.getNewExcpPost(Type.javaLangNullPointerExceptionName(), entry);
+        entry.fPost = 
+          new Post(obj, 
+                   Logic.and(Logic.implies(Logic.equalsNull(obj), excPost),
+                             Logic.implies(Logic.not(Logic.equalsNull(obj)), 
+                                           entry.fPost.getPost())));
         return getPre(eod.expr, entry);
   
       }
@@ -258,19 +260,17 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post newInstance(final NewInstanceExpr ni, final VCEntry entry) {
     getInvocation(ni.decl, ni.args, entry);
-
-
-   final QuantVariableRef newThis = entry.fPost.getRVar();
-   final QuantVariableRef newHeap = Heap.newVar();
-   
-    entry.fPost = new Post(Logic.forall(newThis, 
-                                       Logic.forall(newHeap, 
-                                                    Logic.implies(Heap.newObject(Heap.var, 
-                                                                       Type.translateToName(ni.type),
-                                                                       newHeap, newThis), 
-                                                          entry.fPost.subst(Heap.var, 
-                            
-                                                                           newHeap)))));
+    final QuantVariableRef newThis = entry.fPost.getRVar();
+    final QuantVariableRef newHeap = Heap.newVar();
+    final Term newObject = Heap.newObject(Heap.var, 
+                                          Type.translateToName(ni.type),
+                                          newHeap, newThis);
+    entry.fPost = 
+      new Post(Logic.forall(newThis, 
+                            Logic.forall(newHeap, 
+                                         Logic.implies(newObject, 
+                                                       entry.fPost.subst(Heap.var, 
+                                                                         newHeap)))));
     final List<QuantVariableRef> v = mkArguments(ni.decl);
     final ExprVec ev = ni.args;
     for (int i = ev.size() - 1; i >= 0; i--) {
@@ -288,7 +288,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     }
     else { // not static :)
       final QuantVariableRef obj = Expression.rvar(Heap.sortValue);
-      Term normal = entry.fPost.substWith(Heap.select(Heap.var, obj, f,
+      final Term normal = entry.fPost.substWith(Heap.select(Heap.var, obj, f,
                                                             Type.getSort(field)));
       
       entry.fPost = new Post(obj, normal);

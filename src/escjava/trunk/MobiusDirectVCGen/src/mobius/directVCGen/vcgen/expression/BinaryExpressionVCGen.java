@@ -164,10 +164,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                            TagConstants.toString(tag) +
                                            " " +  left + " " + right);
     }
+    final Term excPost = Util.getNewExcpPost(Type.javaLangArithmeticExceptionName(), 
+                                             post);
     final Post rPost = new Post(rvar, 
                           Logic.and(Logic.implies(Logic.equals(rvar, Num.value(0)),
-                                                  Util.getNewExcpPost(Type.javaLangArithmeticExceptionName(), 
-                                                                 post)),
+                                                  excPost),
                                     Logic.implies(Logic.not(Logic.equals(rvar, 
                                                                          Num.value(0))), 
                                                   post.fPost.substWith(formula))
@@ -265,8 +266,9 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
       //QuantVariableRef val = Expression.rvar(Type.getSort(arr));
       final QuantVariableRef idx = Expression.rvar(Num.sortInt);
       final QuantVariableRef exc = Expression.rvar(Ref.sort);
-      final Term tExcp = Logic.implies(Logic.equalsNull(arrVar), 
-                               Util.getNewExcpPost(Type.javaLangNullPointerException(), entry));
+      final Term tExcp = 
+        Logic.implies(Logic.equalsNull(arrVar), 
+                      Util.getNewExcpPost(Type.javaLangNullPointerException(), entry));
 
       // the normal post
       Term tNormal = entry.fPost.subst(Heap.var, 

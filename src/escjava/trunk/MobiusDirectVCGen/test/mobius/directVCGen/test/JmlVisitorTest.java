@@ -1,17 +1,58 @@
+package mobius.directVCGen.test;
 
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import javafe.ast.*;
-import mobius.directVCGen.formula.*;
+
+import javafe.ast.ASTNode;
+import javafe.ast.ArrayInit;
+import javafe.ast.ArrayRefExpr;
+import javafe.ast.ArrayType;
+import javafe.ast.BinaryExpr;
+import javafe.ast.BlockStmt;
+import javafe.ast.ClassDecl;
+import javafe.ast.Expr;
+import javafe.ast.ExprObjectDesignator;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldAccess;
+import javafe.ast.FieldDecl;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.Identifier;
+import javafe.ast.InstanceOfExpr;
+import javafe.ast.JavafePrimitiveType;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.MethodDecl;
+import javafe.ast.ModifierPragma;
+import javafe.ast.ModifierPragmaVec;
+import javafe.ast.Name;
+import javafe.ast.SimpleName;
+import javafe.ast.SkipStmt;
+import javafe.ast.Stmt;
+import javafe.ast.StmtVec;
+import javafe.ast.ThisExpr;
+import javafe.ast.TypeDeclElemVec;
+import javafe.ast.TypeName;
+import javafe.ast.TypeNameVec;
+import javafe.ast.UnaryExpr;
+import javafe.ast.VarDeclStmt;
+import javafe.ast.VariableAccess;
+import javafe.ast.WhileStmt;
+import junit.framework.TestCase;
+import mobius.directVCGen.formula.Bool;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Type;
-import mobius.directVCGen.vcgen.struct.*;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.formula.jmlTranslator.JmlExprToFormula;
 import mobius.directVCGen.formula.jmlTranslator.JmlVisitor;
+import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.ExprDeclPragma;
 import escjava.ast.ExprModifierPragma;
 import escjava.ast.ExprStmtPragma;
@@ -27,7 +68,6 @@ import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.tc.Types;
-import junit.framework.TestCase;
 
 
 public class JmlVisitorTest extends TestCase {
@@ -146,18 +186,31 @@ public class JmlVisitorTest extends TestCase {
    
 //*********************** Decls *****************************************************    
     
-    twoClassDecl = ClassDecl.make(0, null, Identifier.intern("Two"), TypeNameVec.make(), null, TypeDeclElemVec.make(), loc1, loc2, loc1, loc2, null);
+    twoClassDecl = ClassDecl.make(0, null, Identifier.intern("Two"), 
+                                  TypeNameVec.make(), null, 
+                                  TypeDeclElemVec.make(), 
+                                  loc1, loc2, loc1, loc2, null);
     fProp.put("classId", twoClassDecl.id);
-    oneClassDecl = ClassDecl.make(0, null, Identifier.intern("One"), TypeNameVec.make(), null, TypeDeclElemVec.make(), loc1, loc2, loc1, loc2, null);
-    xFieldDeclInt = FieldDecl.make(0, null, Identifier.intern("x"), JavafePrimitiveType.make(TagConstants.INTTYPE, loc1), loc1, null, 0);
-    yFieldDeclInt = FieldDecl.make(0, null, Identifier.intern("y"), JavafePrimitiveType.make(TagConstants.INTTYPE, loc1), loc2, null, 0);
-    xFieldDeclRef = FieldDecl.make(0, null, Identifier.intern("x"), TypeName.make(Name.make("Two", loc1)), loc2, null, 0);
-    yFieldDeclRef = FieldDecl.make(0, null, Identifier.intern("y"), TypeName.make(Name.make("Two", loc1)), loc2, null, 0);
+    oneClassDecl = ClassDecl.make(0, null, Identifier.intern("One"), 
+                                  TypeNameVec.make(), null, 
+                                  TypeDeclElemVec.make(), loc1, loc2, loc1, loc2, null);
+    xFieldDeclInt = FieldDecl.make(0, null, Identifier.intern("x"), 
+                                   JavafePrimitiveType.make(TagConstants.INTTYPE, loc1), 
+                                   loc1, null, 0);
+    yFieldDeclInt = FieldDecl.make(0, null, Identifier.intern("y"), 
+                                   JavafePrimitiveType.make(TagConstants.INTTYPE, loc1), 
+                                   loc2, null, 0);
+    xFieldDeclRef = FieldDecl.make(0, null, Identifier.intern("x"), 
+                                   TypeName.make(Name.make("Two", loc1)), loc2, null, 0);
+    yFieldDeclRef = FieldDecl.make(0, null, Identifier.intern("y"), 
+                                   TypeName.make(Name.make("Two", loc1)), loc2, null, 0);
     xFieldDeclRef.parent = twoClassDecl;
     yFieldDeclRef.parent = twoClassDecl;
     xFieldDeclInt.parent = twoClassDecl;
     yFieldDeclInt.parent = twoClassDecl;
-    xLocalDeclInt = LocalVarDecl.make(0, null, Identifier.intern("x"), JavafePrimitiveType.make(TagConstants.INTTYPE, 0), 1000001, null, 0);
+    xLocalDeclInt = LocalVarDecl.make(0, null, Identifier.intern("x"), 
+                                      JavafePrimitiveType.make(TagConstants.INTTYPE, 0), 
+                                      1000001, null, 0);
     
     xFieldODExpr = ExprObjectDesignator.make(loc2, ThisExpr.make(null, loc1));
     yFieldODExpr = ExprObjectDesignator.make(loc1, ThisExpr.make(null, loc2));    
@@ -176,7 +229,8 @@ public class JmlVisitorTest extends TestCase {
     sevenTermRealNeg = Num.value((Double) (-7.0));    
     
 //    xFieldAccessTermInt = Heap.select(Heap.var, Ref.varThis, Expression.var(xFieldDeclInt));
-//    xOldFieldAccessTermInt = Heap.select(Heap.varPre, Ref.varThis, Expression.var(xFieldDeclInt));
+//    xOldFieldAccessTermInt = Heap.select(Heap.varPre, Ref.varThis, 
+    // Expression.var(xFieldDeclInt));
 //    yFieldAccessTermInt = Heap.select(Heap.var, Ref.varThis, Expression.var(yFieldDeclInt));
 //    xFieldAccessTermRef = Heap.select(Heap.var, Ref.varThis, Expression.var(xFieldDeclRef));
 //    yFieldAccessTermRef = Heap.select(Heap.var, Ref.varThis, Expression.var(yFieldDeclRef));
@@ -220,12 +274,18 @@ public class JmlVisitorTest extends TestCase {
     //*************Expression************************
     arrayFieldODExpr = ExprObjectDesignator.make(loc1, ThisExpr.make(null, loc2));
     arrayInit = ArrayInit.make(null, 0, 0);
-    arrayFieldDeclInt = FieldDecl.make(0, null, Identifier.intern("a"), ArrayType.make(JavafePrimitiveType.make(TagConstants.INTTYPE, 0), 0), 0, arrayInit, 0);
+    arrayFieldDeclInt = FieldDecl.make(0, null, Identifier.intern("a"), 
+                               ArrayType.make(
+                                    JavafePrimitiveType.make(TagConstants.INTTYPE, 0), 
+                                                      0), 0, arrayInit, 0);
     arrayFieldDeclInt.parent = twoClassDecl;
     arrayFieldAccessIndexExpr = FieldAccess.make(arrayFieldODExpr, Identifier.intern("a"), 0);
     arrayFieldAccessIndexExpr.decl = arrayFieldDeclInt;
-    indexLocalDeclInt = LocalVarDecl.make(0, null, Identifier.intern("i"), JavafePrimitiveType.make(TagConstants.INTTYPE, 0), 1000001, null, 0);
-    indexLocalVarAccessExpr = VariableAccess.make(Identifier.intern("i"), 0 , indexLocalDeclInt);
+    indexLocalDeclInt = LocalVarDecl.make(0, null, Identifier.intern("i"), 
+                                          JavafePrimitiveType.make(TagConstants.INTTYPE, 0), 
+                                          1000001, null, 0);
+    indexLocalVarAccessExpr = VariableAccess.make(Identifier.intern("i"), 
+                                                  0 , indexLocalDeclInt);
     
     arrayRefExpr = ArrayRefExpr.make(arrayFieldAccessIndexExpr, indexLocalVarAccessExpr, 0, 0);
     final Object[] dec = new Object[3];
@@ -246,14 +306,15 @@ public class JmlVisitorTest extends TestCase {
   
   
   /**
-   * Testing of JmlExprToFormula.eq(Expr, Object)
+   * Testing of JmlExprToFormula.eq(Expr, Object).
    *
    */
-  public void testEq() {    
+  public void testEq() {
     
     // 4 == ((7*0)+4)
     fProp.put("pred", Boolean.TRUE);
-    expTerm1 = Logic.equals(fourTermInt, Num.add(Num.mul(sevenTermInt, zeroTermInt), fourTermInt));
+    expTerm1 = Logic.equals(fourTermInt, Num.add(Num.mul(sevenTermInt, zeroTermInt), 
+                                                 fourTermInt));
     binExpr1 = javafe.ast.BinaryExpr.make(TagConstants.STAR, sevenExprInt, zeroExprInt, 0);
     binExpr1 = javafe.ast.BinaryExpr.make(TagConstants.ADD, binExpr1, fourExprInt, 0);
     binExpr1 = javafe.ast.BinaryExpr.make(TagConstants.EQ, fourExprInt, binExpr1, 0);
@@ -261,38 +322,45 @@ public class JmlVisitorTest extends TestCase {
     
     // 4 == ((7*0)+4)
     fProp.put("pred", Boolean.FALSE);
-    expTerm1 = Bool.equals(fourTermInt, Num.add(Num.mul(sevenTermInt, zeroTermInt), fourTermInt)); 
+    expTerm1 = Bool.equals(fourTermInt, Num.add(Num.mul(sevenTermInt, zeroTermInt), 
+                                                fourTermInt)); 
     assertEquals(expTerm1.toString(), fVisitor.visitBinaryExpr(binExpr1, fProp).toString());
    
     //  x == 4
     fProp.put("pred", Boolean.FALSE);
-    binExpr2 = javafe.ast.BinaryExpr.make(TagConstants.EQ, xFieldAccessExprInt, fourExprInt,  0); 
+    binExpr2 = javafe.ast.BinaryExpr.make(TagConstants.EQ, xFieldAccessExprInt, 
+                                          fourExprInt,  0); 
     expTerm2 = Bool.equals(xFieldAccessTermInt, fourTermInt); 
     assertEquals(expTerm2.toString(), fVisitor.visitBinaryExpr(binExpr2, fProp).toString());
     
     //  (x > 7 ) == (4 == y)
     fProp.put("pred", Boolean.FALSE);
-    binExpr1 = javafe.ast.BinaryExpr.make(TagConstants.GT, xFieldAccessExprInt, sevenExprInt, loc1);
-    binExpr2 = javafe.ast.BinaryExpr.make(TagConstants.EQ, fourExprInt, yFieldAccessExprInt, loc2);
+    binExpr1 = javafe.ast.BinaryExpr.make(TagConstants.GT, xFieldAccessExprInt, 
+                                          sevenExprInt, loc1);
+    binExpr2 = javafe.ast.BinaryExpr.make(TagConstants.EQ, fourExprInt, 
+                                          yFieldAccessExprInt, loc2);
     binExpr = javafe.ast.BinaryExpr.make(TagConstants.EQ, binExpr1, binExpr2, loc2);
-    expTerm2 = Bool.equals(Bool.gt(xFieldAccessTermInt, sevenTermInt), Bool.equals(fourTermInt, yFieldAccessTermInt)); 
+    expTerm2 = Bool.equals(Bool.gt(xFieldAccessTermInt, sevenTermInt), 
+                           Bool.equals(fourTermInt, yFieldAccessTermInt)); 
     String ow =  fVisitor.visitBinaryExpr(binExpr2, fProp).toString();
     String tw = expTerm2.toString();
     assertEquals(expTerm2.toString(), fVisitor.visitBinaryExpr(binExpr, fProp).toString());
     // the same with pred = true
     fProp.put("pred", Boolean.TRUE);
-    expTerm2 = Logic.equals(Bool.gt(xFieldAccessTermInt, sevenTermInt), Bool.equals(fourTermInt, yFieldAccessTermInt)); 
+    expTerm2 = Logic.equals(Bool.gt(xFieldAccessTermInt, sevenTermInt), 
+                            Bool.equals(fourTermInt, yFieldAccessTermInt)); 
     assertEquals(expTerm2.toString(), fVisitor.visitBinaryExpr(binExpr, fProp).toString());  
     
     //  -4 != -7
     fProp.put("pred", Boolean.FALSE);
-    binExpr2 = javafe.ast.BinaryExpr.make(TagConstants.NE, fourExprIntNeg, sevenExprIntNeg,  0); 
+    binExpr2 = javafe.ast.BinaryExpr.make(TagConstants.NE, fourExprIntNeg, 
+                                          sevenExprIntNeg,  0); 
     expTerm2 = Bool.not(Bool.equals(fourTermIntNeg, sevenTermIntNeg)); 
     assertEquals(expTerm2.toString(), fVisitor.visitBinaryExpr(binExpr2, fProp).toString());
   }
   
   /**
-   * Testing of \fresh JML feature in JmlExprToFormula.freshExpression(NaryExpr, Object)
+   * Testing of \fresh JML feature in JmlExprToFormula.freshExpression(NaryExpr, Object).
    */
   public void testVisitNaryExpr() { //fresh=NaryExpr with tag = TagConstant.Fresh
 
@@ -301,17 +369,20 @@ public class JmlVisitorTest extends TestCase {
     ExprVec freshVarVec = ExprVec.make();
     freshVarVec.addElement(xFieldAccessExprRef);
     freshVarVec.addElement(yFieldAccessExprRef);    
-    NaryExpr naryFreshExpr = NaryExpr.make(0, 0, TagConstants.FRESH, Identifier.intern(""), freshVarVec);
+    NaryExpr naryFreshExpr = NaryExpr.make(0, 0, TagConstants.FRESH, 
+                                           Identifier.intern(""), freshVarVec);
     
     evaluatedTerm = (Term) fVisitor.visitNaryExpr(naryFreshExpr, fProp);
     //***************Term**********************************
     expTerm1 = Logic.not(Logic.equalsNull(Expression.rvar((GenericVarDecl) xFieldDeclRef)));
-    expTerm2 = Logic.not(Logic.isAlive(Heap.varPre, Expression.rvar((GenericVarDecl) xFieldDeclRef)));
+    expTerm2 = Logic.not(Logic.isAlive(Heap.varPre, 
+                                       Expression.rvar((GenericVarDecl) xFieldDeclRef)));
     expTerm3 = Logic.isAlive(Heap.var, Expression.rvar((GenericVarDecl) xFieldDeclRef));
     expTerm4 = Logic.and(Logic.and(expTerm1, expTerm2), expTerm3);
     
     expTerm1 = Logic.not(Logic.equalsNull(Expression.rvar((GenericVarDecl) yFieldDeclRef)));
-    expTerm2 = Logic.not(Logic.isAlive(Heap.varPre, Expression.rvar((GenericVarDecl) yFieldDeclRef)));
+    expTerm2 = Logic.not(Logic.isAlive(Heap.varPre, 
+                                       Expression.rvar((GenericVarDecl) yFieldDeclRef)));
     expTerm3 = Logic.isAlive(Heap.var, Expression.rvar((GenericVarDecl) yFieldDeclRef));
     expTerm5 = Logic.and(Logic.and(expTerm1, expTerm2), expTerm3);
     expectedTerm = Logic.and(expTerm5, expTerm4);
@@ -325,8 +396,11 @@ public class JmlVisitorTest extends TestCase {
   public void testBinaryExpr() { 
     //############# Expression ###########################
     // typeof(true) == type(boolean)
-    final TypeExpr type1 = TypeExpr.make(0, 0, JavafePrimitiveType.make(TagConstants.BOOLEANTYPE, 0));
-    final TypeExpr type2 = TypeExpr.make(0, 0, JavafePrimitiveType.make(TagConstants.BOOLEANTYPE, 0));
+    final TypeExpr type1 = TypeExpr.make(0, 0, 
+                                         JavafePrimitiveType.make(
+                                                    TagConstants.BOOLEANTYPE, 0));
+    final TypeExpr type2 = TypeExpr.make(0, 0, 
+                               JavafePrimitiveType.make(TagConstants.BOOLEANTYPE, 0));
     binExpr = javafe.ast.BinaryExpr.make(TagConstants.EQ, type1, type2, loc1);
     evaluatedTerm = (Term) fVisitor.visitBinaryExpr(binExpr, fProp);
     //***************Term**********************************
@@ -340,7 +414,8 @@ public class JmlVisitorTest extends TestCase {
     //############# Expression ###########################
     // old(x) >= x;
     ExprVec exprVec = ExprVec.make(new Expr[]{xFieldAccessExprInt});
-    NaryExpr naryE = NaryExpr.make(0, 0, TagConstants.PRE, Identifier.intern(""), exprVec);
+    NaryExpr naryE = NaryExpr.make(0, 0, TagConstants.PRE, 
+                                   Identifier.intern(""), exprVec);
     binExpr = javafe.ast.BinaryExpr.make(TagConstants.GE, naryE, xFieldAccessExprInt, loc1);
     evaluatedTerm = (Term) fVisitor.visitBinaryExpr(binExpr, fProp);
     //***************Term**********************************
@@ -353,15 +428,16 @@ public class JmlVisitorTest extends TestCase {
   
   
   /**
-   * Testing array access (array:a, index:i)
+   * Testing array access (array:a, index:i).
    */
   public void testVisitArrayRefExpr() {
     //*************Test************************
-    assertEquals(arrayFieldAccessIndexTerm.toString(), fVisitor.visitArrayRefExpr(arrayRefExpr, fProp).toString());
+    assertEquals(arrayFieldAccessIndexTerm.toString(), 
+                 fVisitor.visitArrayRefExpr(arrayRefExpr, fProp).toString());
   }
   
   /**
-   * Testing of forAll and Exists quantors
+   * Testing of forAll and Exists quantors.
    */
   public void testQuantifier() {
     final GenericVarDeclVec qvarsExpr = GenericVarDeclVec.make();
@@ -378,8 +454,12 @@ public class JmlVisitorTest extends TestCase {
     qvarsExpr.removeAllElements();
     qvarsExpr.addElement(indexLocalDeclInt);
     rangeExpr = BinaryExpr.make(TagConstants.LT, indexLocalVarAccessExpr, fourExprInt, loc1);
-    expr = BinaryExpr.make(TagConstants.IMPLIES, rangeExpr, BinaryExpr.make(TagConstants.LT, arrayRefExpr, sevenExprInt, loc2), loc1); //PS: expr = range -> expr
-    qExpr = QuantifiedExpr.make(0, 0, TagConstants.FORALL, qvarsExpr, rangeExpr, expr, null, null); 
+    expr = BinaryExpr.make(TagConstants.IMPLIES, rangeExpr, 
+                           BinaryExpr.make(TagConstants.LT, 
+                                           arrayRefExpr, sevenExprInt, loc2), loc1); 
+                // PS: expr = range -> expr
+    qExpr = QuantifiedExpr.make(0, 0, TagConstants.FORALL, 
+                                qvarsExpr, rangeExpr, expr, null, null); 
     //***************Term**********************************
     qvarsTerm =  new QuantVariable[1];
     qvarsTerm[0] = indexLocalVarAccessTerm.qvar;
@@ -396,15 +476,38 @@ public class JmlVisitorTest extends TestCase {
     qvarsExpr.removeAllElements();
     qvarsExpr.addElement(indexLocalDeclInt);
     qvarsExpr.addElement(xLocalDeclInt);
-    rangeExpr = BinaryExpr.make(TagConstants.AND, BinaryExpr.make(TagConstants.LT, indexLocalVarAccessExpr, fourExprInt, loc1), BinaryExpr.make(TagConstants.LT, xVariableAccessExprInt, sevenExprInt, loc1), loc2);
-    expr = BinaryExpr.make(TagConstants.IMPLIES, rangeExpr, BinaryExpr.make(TagConstants.AND, BinaryExpr.make(TagConstants.LT, arrayRefExpr, sevenExprInt, loc2), BinaryExpr.make(TagConstants.GT, BinaryExpr.make(TagConstants.ADD, arrayRefExpr, xVariableAccessExprInt, loc1), zeroExprInt, loc1), loc2), loc1); //PS: expr = range -> expr
-    qExpr = QuantifiedExpr.make(0, 0, TagConstants.FORALL, qvarsExpr, rangeExpr, expr, null, null); 
+    rangeExpr = BinaryExpr.make(TagConstants.AND, 
+                                BinaryExpr.make(TagConstants.LT, 
+                                                indexLocalVarAccessExpr, 
+                                                fourExprInt, loc1), 
+                                BinaryExpr.make(TagConstants.LT, 
+                                                xVariableAccessExprInt, 
+                                                sevenExprInt, loc1), loc2);
+    expr = BinaryExpr.make(TagConstants.IMPLIES, rangeExpr, 
+                           BinaryExpr.make(TagConstants.AND, 
+                                           BinaryExpr.make(TagConstants.LT, 
+                                                           arrayRefExpr, 
+                                                           sevenExprInt, loc2), 
+                                           BinaryExpr.make(TagConstants.GT, 
+                                                           BinaryExpr.make(TagConstants.ADD, 
+                                                                     arrayRefExpr, 
+                                                                     xVariableAccessExprInt, 
+                                                                     loc1), 
+                                                           zeroExprInt, loc1), 
+                                           loc2), loc1); //PS: expr = range -> expr
+    qExpr = QuantifiedExpr.make(0, 0, TagConstants.FORALL, 
+                                qvarsExpr, rangeExpr, expr, null, null); 
     //***************Term**********************************
     qvarsTerm =  new QuantVariable[2];
     qvarsTerm[0] = indexLocalVarAccessTerm.qvar;
     qvarsTerm[1] = xLocalVarAccessTerm.qvar;
-    rangeTerm = Logic.and(Logic.lt(indexLocalVarAccessTerm, fourTermInt), Logic.lt(xLocalVarAccessTerm, sevenTermInt));
-    exprTerm = Logic.implies(rangeTerm, Logic.and(Logic.lt(arrayFieldAccessIndexTerm, sevenTermInt), Logic.gt(Num.add(arrayFieldAccessIndexTerm, xLocalVarAccessTerm), zeroTermInt)));
+    rangeTerm = Logic.and(Logic.lt(indexLocalVarAccessTerm, fourTermInt), 
+                          Logic.lt(xLocalVarAccessTerm, sevenTermInt));
+    exprTerm = Logic.implies(rangeTerm, Logic.and(Logic.lt(arrayFieldAccessIndexTerm, 
+                                                           sevenTermInt), 
+                                                  Logic.gt(Num.add(arrayFieldAccessIndexTerm, 
+                                                                   xLocalVarAccessTerm), 
+                                                           zeroTermInt)));
     qTerm = Logic.forall(qvarsTerm, exprTerm);
     //***************Test***********************************
     assertEquals(qTerm.toString(), fVisitor.visitQuantifiedExpr(qExpr, fProp).toString());
@@ -415,13 +518,18 @@ public class JmlVisitorTest extends TestCase {
     qvarsExpr.removeAllElements();
     qvarsExpr.addElement(indexLocalDeclInt);
     rangeExpr = BinaryExpr.make(TagConstants.GT, indexLocalVarAccessExpr, zeroExprInt, loc1);
-    expr = BinaryExpr.make(TagConstants.IMPLIES, rangeExpr, BinaryExpr.make(TagConstants.NE, arrayRefExpr, sevenExprInt, loc2), loc1); //PS: expr = range -> expr
-    qExpr = QuantifiedExpr.make(0, 0, TagConstants.EXISTS, qvarsExpr, rangeExpr, expr, null, null); 
+    expr = BinaryExpr.make(TagConstants.IMPLIES, rangeExpr, 
+                           BinaryExpr.make(TagConstants.NE, arrayRefExpr, 
+                                           sevenExprInt, loc2), 
+                           loc1); //PS: expr = range -> expr
+    qExpr = QuantifiedExpr.make(0, 0, TagConstants.EXISTS, 
+                                qvarsExpr, rangeExpr, expr, null, null); 
     //***************Term**********************************
     qvarsTerm =  new QuantVariable[1];
     qvarsTerm[0] = indexLocalVarAccessTerm.qvar;
     rangeTerm = Logic.gt(indexLocalVarAccessTerm, zeroTermInt);
-    exprTerm = Logic.implies(rangeTerm, Logic.not(Logic.equals(arrayFieldAccessIndexTerm, sevenTermInt)));
+    exprTerm = Logic.implies(rangeTerm, 
+                             Logic.not(Logic.equals(arrayFieldAccessIndexTerm, sevenTermInt)));
     qTerm = Logic.exists(qvarsTerm, exprTerm);
     //***************Test***********************************
     assertEquals(qTerm.toString(), fVisitor.visitQuantifiedExpr(qExpr, fProp).toString());
@@ -436,15 +544,22 @@ public class JmlVisitorTest extends TestCase {
     rangeExpr = BinaryExpr.make(TagConstants.LE, indexLocalVarAccessExpr, sevenExprInt, loc1);
     expr = BinaryExpr.make(TagConstants.IMPLIES, rangeExpr,  
                            BinaryExpr.make(TagConstants.OR, 
-                                           BinaryExpr.make(TagConstants.EQ, arrayRefExpr, xLocalVarAccessExprInt, loc1), 
-                                           BinaryExpr.make(TagConstants.LT, arrayRefExpr, sevenExprInt, loc2), loc1), loc1); //PS: expr = range -> expr
-    qExpr = QuantifiedExpr.make(0, 0, TagConstants.EXISTS, qvarsExpr, rangeExpr, expr, null, null); 
+                                           BinaryExpr.make(TagConstants.EQ, arrayRefExpr, 
+                                                           xLocalVarAccessExprInt, loc1), 
+                                           BinaryExpr.make(TagConstants.LT, arrayRefExpr, 
+                                                           sevenExprInt, loc2), loc1), loc1); 
+                  // PS: expr = range -> expr
+    qExpr = QuantifiedExpr.make(0, 0, TagConstants.EXISTS, qvarsExpr, 
+                                rangeExpr, expr, null, null); 
     //***************Term**********************************
     qvarsTerm =  new QuantVariable[2];
     qvarsTerm[0] = indexLocalVarAccessTerm.qvar;
     qvarsTerm[1] = xLocalVarAccessTerm.qvar;
     rangeTerm = Logic.le(indexLocalVarAccessTerm, sevenTermInt);
-    exprTerm = Logic.implies(rangeTerm, Logic.or(Logic.equals(arrayFieldAccessIndexTerm, xLocalVarAccessTerm), Logic.lt(arrayFieldAccessIndexTerm, sevenTermInt)));
+    exprTerm = Logic.implies(rangeTerm, 
+                             Logic.or(Logic.equals(arrayFieldAccessIndexTerm, 
+                                                   xLocalVarAccessTerm), 
+                                      Logic.lt(arrayFieldAccessIndexTerm, sevenTermInt)));
     qTerm = Logic.exists(qvarsTerm, exprTerm);
     //***************Test***********************************
     assertEquals(qTerm.toString(), fVisitor.visitQuantifiedExpr(qExpr, fProp).toString());
@@ -452,7 +567,7 @@ public class JmlVisitorTest extends TestCase {
   }
   
   /**
-   * Testing of Initially, Invariant and Constraint features
+   * Testing of Initially, Invariant and Constraint features.
    */
   public void testVisitExprDeclPragma() { 
     ExprDeclPragma x;
@@ -499,7 +614,7 @@ public class JmlVisitorTest extends TestCase {
   }
   
   /**
-   * Testing of Assert, Assume, Maintaining, Ghost and Set features
+   * Testing of Assert, Assume, Maintaining, Ghost and Set features.
    */
   public void testVisitBlockStmt() { 
     fProp.put("routinebegin", Boolean.FALSE); 
@@ -585,7 +700,10 @@ public class JmlVisitorTest extends TestCase {
     // ghost int ghosti;
     final SimpleModifierPragma modPragma = SimpleModifierPragma.make(TagConstants.GHOST, 0);
     final ModifierPragmaVec modVec = ModifierPragmaVec.make(new ModifierPragma[]{modPragma});
-    final LocalVarDecl ghostDecl = LocalVarDecl.make(0, modVec, Identifier.intern("ghosti"), JavafePrimitiveType.make(TagConstants.INTTYPE, 0), 0, null, 0);
+    final LocalVarDecl ghostDecl = LocalVarDecl.make(0, modVec, 
+                                           Identifier.intern("ghosti"), 
+                                           JavafePrimitiveType.make(TagConstants.INTTYPE, 0), 
+                                           0, null, 0);
     VarDeclStmt ghostStmt = VarDeclStmt.make(ghostDecl);    
     javaSkipStmt = SkipStmt.make(loc2); 
     vec = StmtVec.make(new Stmt[] {ghostStmt, javaSkipStmt});
@@ -622,7 +740,8 @@ public class JmlVisitorTest extends TestCase {
     // set ghosti = 10;
     final LiteralExpr litExpr = LiteralExpr.make(TagConstants.INTLIT, 10, loc1);
     ghostDecl.init = LiteralExpr.make(TagConstants.INTLIT, 10, loc1);
-    final VariableAccess ghostVar = VariableAccess.make(Identifier.intern("ghosti"), loc1, ghostDecl);
+    final VariableAccess ghostVar = VariableAccess.make(Identifier.intern("ghosti"), 
+                                                        loc1, ghostDecl);
     final SetStmtPragma ghostSetStmt = SetStmtPragma.make(ghostVar, 0, litExpr, loc1);
     javaSkipStmt = SkipStmt.make(loc2); 
     vec = StmtVec.make(new Stmt[] {ghostSetStmt, javaSkipStmt});
@@ -655,21 +774,27 @@ public class JmlVisitorTest extends TestCase {
     final Term typeOfException = Type.translate(extype);
    */
   //  FormalParaDecl args = FormalParaDecl.make(0, null, Identifier.intern(""), extype , loc1);
- //   final VarExprModifierPragma pragmaSignalsOnly = VarExprModifierPragma.make(TagConstants.SIGNALS, args, exception, loc1);
-   // final ModifierPragmaVec pragmaVec = ModifierPragmaVec.make(new ModifierPragma[] {pragmaSignalsOnly});
-   // final MethodDecl methodDecl = MethodDecl.make(0, pragmaVec, null, null, null, null, 0, 0, 0, 0, Identifier.intern("Test"), JavafePrimitiveType.make(103,0), 0);
+ //   final VarExprModifierPragma pragmaSignalsOnly = 
+    //VarExprModifierPragma.make(TagConstants.SIGNALS, args, exception, loc1);
+   // final ModifierPragmaVec pragmaVec = 
+    //ModifierPragmaVec.make(new ModifierPragma[] {pragmaSignalsOnly});
+   // final MethodDecl methodDecl = 
+    //MethodDecl.make(0, pragmaVec, null, null, null, null, 0, 0, 0, 0, 
+    //Identifier.intern("Test"), JavafePrimitiveType.make(103,0), 0);
   //  fProp.put("method", methodDecl);
     
     //***************Signals_only******************************
-  //  Lookup.exceptionalPostconditions.put(methodDecl, new Post(Expression.rvar(Ref.sort), Logic.True())); 
-  //  fVisitor.visitVarExprModifierPragma(pragmaSignalsOnly, fProp); //neue methode machen, da nicht in requires, ensures
+  //  Lookup.exceptionalPostconditions.put(methodDecl, 
+    //new Post(Expression.rvar(Ref.sort), Logic.True())); 
+  //  fVisitor.visitVarExprModifierPragma(pragmaSignalsOnly, fProp); 
+    //neue methode machen, da nicht in requires, ensures
   //  evaluatedTerm = ((Post) Lookup.exceptionalPostconditions.get(methodDecl)).getPost();
   }
   
   
   
   /**
-   * Testing of Requires and Ensures features
+   * Testing of Requires and Ensures features.
    */
   public void testVisitExprModifierPragma() { 
 
@@ -677,10 +802,15 @@ public class JmlVisitorTest extends TestCase {
     // ensures x > 0;
     
     binExpr = BinaryExpr.make(TagConstants.GT, xFieldAccessExprInt, zeroExprInt, loc2);
-    ExprModifierPragma pragmaEnsures = ExprModifierPragma.make(TagConstants.ENSURES, binExpr, loc1);
-    final ExprModifierPragma pragmaRequires = ExprModifierPragma.make(TagConstants.REQUIRES, binExpr, loc1);
-    ModifierPragmaVec pragmaVec = ModifierPragmaVec.make(new ModifierPragma[] {pragmaEnsures, pragmaRequires});
-    MethodDecl methodDecl = MethodDecl.make(0, pragmaVec, null, null, null, null, 0, 0, 0, 0, Identifier.intern("Test"), JavafePrimitiveType.make(103, 0), 0);
+    ExprModifierPragma pragmaEnsures = ExprModifierPragma.make(TagConstants.ENSURES, 
+                                                               binExpr, loc1);
+    final ExprModifierPragma pragmaRequires = 
+      ExprModifierPragma.make(TagConstants.REQUIRES, binExpr, loc1);
+    ModifierPragmaVec pragmaVec = 
+      ModifierPragmaVec.make(new ModifierPragma[] {pragmaEnsures, pragmaRequires});
+    MethodDecl methodDecl = 
+      MethodDecl.make(0, pragmaVec, null, null, null, null, 0, 0, 0, 0, 
+                      Identifier.intern("Test"), JavafePrimitiveType.make(103, 0), 0);
     fProp.put("method", methodDecl);
     
     //***************Requires******************************
@@ -705,7 +835,9 @@ public class JmlVisitorTest extends TestCase {
     binExpr = BinaryExpr.make(TagConstants.GT, resultExpr, zeroExprInt, loc2);
     pragmaEnsures = ExprModifierPragma.make(TagConstants.ENSURES, binExpr, loc1);
     pragmaVec = ModifierPragmaVec.make(new ModifierPragma[] {pragmaEnsures});
-    methodDecl = MethodDecl.make(0, pragmaVec, null, null, null, null, 0, 0, 0, 0, Identifier.intern("Test"), JavafePrimitiveType.make(103, 0), 0);
+    methodDecl = MethodDecl.make(0, pragmaVec, null, null, null, null, 
+                                 0, 0, 0, 0, Identifier.intern("Test"), 
+                                 JavafePrimitiveType.make(103, 0), 0);
     fProp.put("method", methodDecl);
     fProp.put("result", Expression.getResultRVar(methodDecl));
     //**************Ensures*******************************
