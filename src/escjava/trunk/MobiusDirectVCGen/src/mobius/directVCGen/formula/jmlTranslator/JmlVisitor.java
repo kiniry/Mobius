@@ -407,7 +407,8 @@ public class JmlVisitor extends BasicJMLTranslator {
         return new Cut("assert" + prop.getAssertNumber(), 
                        Util.buildArgs(prop), t);
       case TagConstants.ASSUME:
-        return new Assume(t);
+        return new Assume("assume" + prop.getAssertNumber(), 
+                          Util.buildArgs(prop), t);
       default:
         break;
     }
@@ -523,12 +524,12 @@ public class JmlVisitor extends BasicJMLTranslator {
   @Override
   public final Object visitSetStmtPragma(final /*@non_null*/ SetStmtPragma x, 
                                          final Object o) {
-    final Set.Assignment res = new Set.Assignment();
+    
     if (x.target instanceof VariableAccess) {
-      res.fVar = (QuantVariableRef) x.target.accept(this, o);
-      res.fExpr = (Term) x.value.accept(this, o);
+      return new Set.Assignment((QuantVariableRef) x.target.accept(this, o),
+                         (Term) x.value.accept(this, o));
     }
-    return res;
+    return new Set.Assignment(null, null);
   }
 
 

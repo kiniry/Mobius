@@ -21,7 +21,7 @@ import escjava.sortedProver.Lifter.SortVar;
  * memory model which ESC/Java2 doesn't.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class CoqNodeBuilder extends HeapNodeBuilder {
+public class CoqNodeBuilder extends AHeapNodeBuilder {
 
   /**
    * Build the Coq representation of a sort.
@@ -70,61 +70,46 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
     return res;
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildAnd(escjava.sortedProver.NodeBuilder.SPred[])
-   */
+  /** {@inheritDoc} */
   @Override
   public SPred buildAnd(final SPred[] args) {
     return new CPred(false, "/\\", args);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildAnyEQ(escjava.sortedProver.NodeBuilder.SAny, escjava.sortedProver.NodeBuilder.SAny)
-   */
+  /** {@inheritDoc} */
   @Override
   public SPred buildAnyEQ(final SAny arg1, final SAny arg2) {
     return new CPred(false, "=", new STerm[] {arg1, arg2});
   }
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildAnyNE(escjava.sortedProver.NodeBuilder.SAny, escjava.sortedProver.NodeBuilder.SAny)
-   */
+  /** {@inheritDoc} */
   @Override
   public SPred buildAnyNE(final SAny arg1, final SAny arg2) {
     return new CPred(false, "not", new STerm[] {buildAnyEQ(arg1, arg2)});
   }
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildBool(boolean)
-   */
+
+  /** {@inheritDoc} */
   @Override
   public SBool buildBool(final boolean b) {
     return new CBool(b ? "true" : "false");
   }
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildImplies(escjava.sortedProver.NodeBuilder.SPred, escjava.sortedProver.NodeBuilder.SPred)
-   */
+  /** {@inheritDoc} */
   @Override
   public SPred buildImplies(final SPred arg1, final SPred arg2) {
     return new CPred(false, "->", new STerm [] {arg1, arg2});
   }
   
+  /** {@inheritDoc} */
   @Override
   public SPred buildForAll(final QuantVar[] vars, final SPred body, 
                            final STerm[][] pats, final STerm[] nopats) {
     return new CForall(this, vars, body);
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildQVarRef(escjava.sortedProver.NodeBuilder.QuantVar)
-   */
+
+  /** {@inheritDoc} */
   @Override
   public SAny buildQVarRef(final QuantVar var) {
     final String name = Util.normalize(var.name);
@@ -175,20 +160,14 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
 
 
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildInt(long)
-   */
+  /** {@inheritDoc} */
   @Override
   public SInt buildInt(final long n) {
     return new CInt("Int.const", new STerm[]{new CInt("(" + n + ")")});
     //return new CInt("Int.const " + n);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildIntBoolFun(int, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SInt)
-   */
+  /** {@inheritDoc} */
   @Override
   public SBool buildIntBoolFun(final int tag, final SInt arg1, final SInt arg2) {
     switch (tag) {
@@ -209,19 +188,15 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
     }
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildIsTrue(escjava.sortedProver.NodeBuilder.SBool)
-   */
+
+  /** {@inheritDoc} */
   @Override
   public SPred buildIsTrue(final SBool val) {
     return new CPred("Is_true", new STerm[] {val});
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildExists(escjava.sortedProver.NodeBuilder.QuantVar[], escjava.sortedProver.NodeBuilder.SPred)
-   */
+
+  /** {@inheritDoc} */
   @Override
   public SPred buildExists(final QuantVar[] vars, final SPred body) {
     if (vars.length == 0) {
@@ -230,29 +205,20 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
     return new CExists(this, vars, body);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildNull()
-   */
+  /** {@inheritDoc} */
   @Override
   public SRef buildNull() {
     return new CRef("Null");
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildITE(escjava.sortedProver.NodeBuilder.SPred, escjava.sortedProver.NodeBuilder.SValue, escjava.sortedProver.NodeBuilder.SValue)
-   */
+  /** {@inheritDoc} */
   @Override
   public SValue buildITE(final SPred cond, final SValue thenPart, final SValue elsePart) {
     // should not appear in this form ... the typing is a bit loosy
     throw new UnsupportedOperationException("I don't like this construct, get rid of it!");
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildNot(escjava.sortedProver.NodeBuilder.SPred)
-   */
+  /** {@inheritDoc} */
   @Override
   public SPred buildNot(final SPred arg) {
     return new CPred("not", new STerm[] {arg});
@@ -267,19 +233,14 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
     return new CPred("True");
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildOr(escjava.sortedProver.NodeBuilder.SPred[])
-   */
+
+  /** {@inheritDoc} */
   @Override
   public SPred buildOr(final SPred[] args) {
     return new CPred(false, "\\/", args);
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildPredCall(escjava.sortedProver.NodeBuilder.PredSymbol, escjava.sortedProver.NodeBuilder.SAny[])
-   */
+  /** {@inheritDoc} */
   @Override
   public SPred buildPredCall(final PredSymbol fn, final SAny[] args) {
     
@@ -321,10 +282,7 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
     return pred;
   }
   
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildFnCall(escjava.sortedProver.NodeBuilder.FnSymbol, escjava.sortedProver.NodeBuilder.SAny[])
-   */
+  /** {@inheritDoc} */
   @Override
   public SAny buildFnCall(final FnSymbol fn, final SAny[] args) {
     SAny res = null;
@@ -433,10 +391,7 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
     return new CPred(false, "<->", new STerm [] {arg1, arg2});
   }
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildIntFun(int, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SInt)
-   */
+  /** {@inheritDoc} */
   @Override
   public SInt buildIntFun(final int tag, final SInt arg1, final SInt arg2) {
     SInt res;
@@ -465,10 +420,7 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
   }
 
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildIntPred(int, escjava.sortedProver.NodeBuilder.SInt, escjava.sortedProver.NodeBuilder.SInt)
-   */
+  /** {@inheritDoc} */
   @Override
   public SPred buildIntPred(final int tag, final SInt arg1, final SInt arg2) {
     CPred res;
@@ -501,10 +453,7 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
 
 
 
-  /*
-   * (non-Javadoc)
-   * @see escjava.sortedProver.NodeBuilder#buildAssignCompat(escjava.sortedProver.NodeBuilder.SMap, escjava.sortedProver.NodeBuilder.SValue, escjava.sortedProver.NodeBuilder.SAny)
-   */
+  /** {@inheritDoc} */
   @Override
   public SPred buildAssignCompat(final SMap map, final SValue val, final SAny type) {
     String typeStmt = type.toString();
@@ -517,15 +466,15 @@ public class CoqNodeBuilder extends HeapNodeBuilder {
 
 
   
-  
-  
+  /** {@inheritDoc} */
+  @Override
   public SPred buildAssignPred(final SMap map, final SMap preMap, 
                                final SRef target, final SRef loc) {
     return new CPred("assignPred", new STerm [] {map, preMap, target, loc});
   }
   
 
-
+  /** {@inheritDoc} */
   @Override
   public SBool buildRefBoolFun(final int refPredTag, 
                                final SRef arg1, 

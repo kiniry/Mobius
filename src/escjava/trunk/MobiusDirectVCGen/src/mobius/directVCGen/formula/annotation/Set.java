@@ -12,9 +12,7 @@ public class Set extends AAnnotation {
    */
   public QuantVariableRef declaration;
 
-  /**
-   * FOL-Terms translation of JML's set statement.
-   */
+  /** FOL-Terms translation of JML's set statement. */
   public Assignment assignment;
   
   /**
@@ -33,10 +31,7 @@ public class Set extends AAnnotation {
     this.assignment = assign;
   }
   
-  /*
-   * (non-Javadoc)
-   * @see mobius.directVCGen.formula.annotation.AAnnotation#getID()
-   */
+  /** {@inheritDoc} */
   @Override
   public int getID() {
     return annotSet;
@@ -44,38 +39,34 @@ public class Set extends AAnnotation {
 
 
   /**
-   * Inner class that represents an JML assignment (set statement).
+   * Inner class that represents a JML assignment (set statement).
    */
   public static class Assignment {
-    // TODO: add comments
-    public Assignment() {
-      super();
-    }
+    /** the variable which is being assigned. */
+    public final QuantVariableRef fVar;
+    /** the expression which is assigned to the variable. */
+    public final Term fExpr;
+    
+
 
     // TODO: add comments
-    public Assignment(QuantVariableRef var, Term expr) {
+    public Assignment(final QuantVariableRef var, final Term expr) {
       this.fVar = var;
       this.fExpr = expr;
     }
 
-    // TODO: add comments
-    public QuantVariableRef fVar;
-    // TODO: add comments
-    public Term fExpr;
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+
+    /** {@inheritDoc} */
+    @Override
     public String toString() {
       return fVar + " := " + fExpr;
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see mobius.directVCGen.formula.annotation.AAnnotation#toString()
-   */
+
+  /** {@inheritDoc} */
+  @Override
   public String toString() {
     return "Declare " + declaration + ", Set " + assignment;
   }

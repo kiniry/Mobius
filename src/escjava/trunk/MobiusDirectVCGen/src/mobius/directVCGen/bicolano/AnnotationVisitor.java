@@ -197,7 +197,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     fOut.println("Definition mk_" + annot.fName + ":= ");
     fOut.incTab();
     fOut.println("fun " + varsAndType + "=> \n" + 
-                   Formula.generateFormulas(annot.formula) + ".");
+                   Formula.generateFormulas(annot.fFormula) + ".");
     fOut.decTab();
   }
 

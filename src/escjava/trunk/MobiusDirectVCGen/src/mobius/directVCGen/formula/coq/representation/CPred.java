@@ -29,6 +29,17 @@ public class CPred extends CAny implements SPred {
   }
 
   /**
+   * Constructs a formula of type pred where its symbol is 
+   * considered as prefix.
+   * @param rep the symbol attached to this node
+   * @param arg the children of the node
+   */
+  public CPred(final String rep, final STerm arg) {
+    super(true, rep, new STerm[] {arg});
+  }
+
+  
+  /**
    * Constructs a formula which has no child attached to it.
    * @param rep the symbol attached to the node
    */
@@ -45,5 +56,15 @@ public class CPred extends CAny implements SPred {
    */
   public CPred(final boolean b, final String rep, final STerm t1, final STerm t2) {
     this(b, rep, new STerm [] {t1, t2});
+  }
+  
+  /**
+   * Creates a comma separated expression (t1, t2).
+   * @param t1 the first argument of the couple
+   * @param t2 the second argument of the couple
+   * @return a couple
+   */
+  public static CPred mkCouple(final STerm t1, final STerm t2) {
+    return new CPred(false, ",", t1, t2);
   }
 }

@@ -1,12 +1,10 @@
 package mobius.directVCGen.formula.annotation;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
-import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.jmlTranslator.struct.MethodProperties;
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -182,6 +180,13 @@ public class AnnotationDecoration extends ASTDecoration {
     return v.fInv.fName;
   }
 
+  /**
+   * Returns the arguments (a variable list) associated with the invariant,
+   * if the node is decorated with an invariant. Returns <code>null</code>
+   * otherwise.
+   * @param x the node that contains the invariant
+   * @return a variable list that are the arguments of the invariant
+   */
   public List<QuantVariableRef> getInvariantArgs(final ASTNode x) {
     final Annotation v =  getAnnot(x);
     if (v == null) {

@@ -111,14 +111,14 @@ public class StmtVCGen extends ExpressionVisitor {
       final AAnnotation aa = annot.get(i);
       switch(aa.getID()) {
         case AAnnotation.annotAssert:
-          fVcs.add(Logic.implies(aa.formula, post));
-          post = aa.formula;
+          fVcs.add(Logic.implies(aa.fFormula, post));
+          post = aa.fFormula;
           break;
         case AAnnotation.annotCut:
-          post = Logic.and(aa.formula, Logic.implies(aa.formula, post));
+          post = Logic.and(aa.fFormula, Logic.implies(aa.fFormula, post));
           break;
         case AAnnotation.annotAssume:
-          post = Logic.implies(aa.formula, post);
+          post = Logic.implies(aa.fFormula, post);
           break;
         case AAnnotation.annotSet: {
           final mobius.directVCGen.formula.annotation.Set s = 

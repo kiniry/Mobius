@@ -240,7 +240,7 @@ public final class Logic {
     Term left = l;
     Term right = r;
     
-    if ((l.getSort() == Formula.sort) | (r.getSort() == Formula.sort)) {
+    if ((l.getSort().equals(Formula.sort)) | (r.getSort().equals(Formula.sort))) {
       return Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{left, right});
     }
     
@@ -624,7 +624,8 @@ public final class Logic {
    * @param o Parameter object also containing a list of modifiable types.
    * @return A Term expressing the check described above.
    */
-  public static Term isAssignable(final QuantVariableRef t, final QuantVariableRef f, final Object o) {
+  public static Term isAssignable(final QuantVariableRef t, 
+                                  final QuantVariableRef f, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
     Term t1 = null;
     Term t2 = null;

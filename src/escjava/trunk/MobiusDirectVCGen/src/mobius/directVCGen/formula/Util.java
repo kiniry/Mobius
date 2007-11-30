@@ -244,7 +244,7 @@ public final class Util extends mobius.bico.Util {
       res = Expression.sym(methname + ".mk_" + annot.fName, tab);
     }
     else {
-      res = annot.formula;
+      res = annot.fFormula;
     }
     return res;
   }

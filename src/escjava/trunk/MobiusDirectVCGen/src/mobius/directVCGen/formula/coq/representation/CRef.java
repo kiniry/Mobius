@@ -27,7 +27,16 @@ public class CRef extends CValue implements SRef {
   public CRef(final String rep, final STerm [] args) {
     super(true, rep, args);
   }
-
+  
+  /**
+   * Constructs a formula of type reference where its
+   * symbol is considered as a prefix.
+   * @param rep the symbol attached to this formula
+   * @param arg the child of the formula
+   */
+  public CRef(final String rep, final STerm arg) {
+    super(true, rep, new STerm [] {arg});
+  }
   /**
    * Constructs a formula of type reference with no child.
    * @param rep the symbol attached to this node

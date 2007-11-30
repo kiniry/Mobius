@@ -7,7 +7,7 @@ import escjava.sortedProver.EscNodeBuilder;
  * of the Coq node builder.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public abstract class UnsupportedNodeBuilder extends EscNodeBuilder  {
+public abstract class AUnsupportedNodeBuilder extends EscNodeBuilder  {
 
   /**
    * Unsupported operation.

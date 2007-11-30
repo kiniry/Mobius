@@ -601,7 +601,7 @@ public final class VisibleTypeCollector extends VisitorArgResult {
   }
 
   
-  public static Set<Type> getVisibleTypeSet(RoutineDecl x) {
+  public static Set<Type> getVisibleTypeSet(final RoutineDecl x) {
     final VisibleTypeCollector vtc = new VisibleTypeCollector();
     x.accept(vtc, null);
     return vtc.fTypeSet;

@@ -506,13 +506,15 @@ public class JmlExprToFormula {
   }
 
   
+  @SuppressWarnings("unchecked")
   public Term quantifier(final QuantifiedExpr x, final Object o) {
   
     ((MethodProperties) o).put("quantifier", Boolean.TRUE); 
     fVisitor.visitGCExpr(x, o);  
     ((MethodProperties) o).put("quantifier", Boolean.FALSE); 
     
-    final java.util.Set<QuantVariable> qVarsSet    = (HashSet) ((MethodProperties) o).get("quantVars");
+    final java.util.Set<QuantVariable> qVarsSet = 
+      (HashSet) ((MethodProperties) o).get("quantVars");
     final QuantVariable[] qVarArray = new QuantVariable[qVarsSet.size()];
     final Iterator iter = qVarsSet.iterator();
     int i = 0;
