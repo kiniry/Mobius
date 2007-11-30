@@ -108,11 +108,11 @@ public final class Expression {
    * It is here for development/testing purpose only, therefore
    * it is marked as deprecated.
    * @param str the name of the variable
-   * @return a variable of the sort any ({@link Formula#sort})
+   * @return a variable of the sort value ({@link Heap#sortValue})
    * @deprecated use another method instead, like {@link #var(Sort)}
    */
   public static QuantVariable var(final String str) {
-    return var(str, Formula.sort);
+    return var(str, Heap.sortValue);
   }
 
   /**

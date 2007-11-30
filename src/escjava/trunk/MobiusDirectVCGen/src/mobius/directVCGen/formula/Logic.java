@@ -29,7 +29,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
 public final class Logic {
 
   /** the sort to represent the predicates. */
-  public static Sort sort = Formula.lf.sortPred;
+  public static final Sort sort = Formula.lf.sortPred;
 
   /**
    * @deprecated
@@ -240,7 +240,7 @@ public final class Logic {
     Term left = l;
     Term right = r;
     
-    if ((l.getSort().equals(Formula.sort)) | (r.getSort().equals(Formula.sort))) {
+    if (Formula.isAny(l.getSort()) | Formula.isAny(r.getSort())) {
       return Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{left, right});
     }
     
@@ -347,7 +347,7 @@ public final class Logic {
                                          "found: " + f.getSort());
     }
     
-    List<QuantVariable> vars = new ArrayList<QuantVariable>();
+    final List<QuantVariable> vars = new ArrayList<QuantVariable>();
     for (QuantVariableRef qvr: v) {
       vars.add(qvr.qvar);
     }

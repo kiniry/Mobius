@@ -22,7 +22,8 @@ public final class Formula {
    * the sort that represents any sort... should not be used.
    * @deprecated use any other sort from any other library
    */
-  public static final Sort sort = lf.sortAny;
+  private static final Sort sortAny = lf.sortAny;
+  
   
 
   /**
@@ -82,4 +83,12 @@ public final class Formula {
     return lf;
   }
 
+  /**
+   * Tells whether or not we are manipulating the sort Any.
+   * @param s the Sort to check
+   * @return true if the sort is Any
+   */
+  public static boolean isAny(final Sort s) {
+    return s.equals(sortAny);
+  }
 }
