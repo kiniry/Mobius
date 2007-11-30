@@ -1,4 +1,4 @@
-package mobius.directVCGen.bicolano;
+package mobius.directVCGen.bico;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
  * informations about its variable, using the final format.
  * It fills a {@link VarCorrDecoration} structure and adds it to the method.
  * 
- * @see mobius.directVCGen.bicolano.VarCorrDecoration
+ * @see mobius.directVCGen.bico.VarCorrDecoration
  * @author J. Charles (julien.charles@inria.fr)
  */
 public final class VarCorrVisitor extends Visitor {

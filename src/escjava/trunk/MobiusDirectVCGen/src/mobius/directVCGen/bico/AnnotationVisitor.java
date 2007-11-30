@@ -1,4 +1,4 @@
-package mobius.directVCGen.bicolano;
+package mobius.directVCGen.bico;
 
 import java.util.Iterator;
 import java.util.List;

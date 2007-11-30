@@ -13,7 +13,7 @@ import javafe.ast.BlockStmt;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
-import mobius.directVCGen.bicolano.VarCorrDecoration;
+import mobius.directVCGen.bico.VarCorrDecoration;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;

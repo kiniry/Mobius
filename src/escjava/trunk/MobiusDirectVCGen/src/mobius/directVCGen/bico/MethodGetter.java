@@ -1,4 +1,4 @@
-package mobius.directVCGen.bicolano;
+package mobius.directVCGen.bico;
 
 import org.apache.bcel.classfile.Method;
 
