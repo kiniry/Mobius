@@ -24,20 +24,21 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * file name, the beginning and the end of the word 
  * and the word to find back the word in a text...
  * Indeed it is a data structure to store some tags!
- * @author J. Charles
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public final class TagStruct implements Serializable {
   /** */
   private static final long serialVersionUID = 1L;
   
-  /** the word being tagged */
-  public final String name;
-  /** the file name of the file where the tag can be found */
-  public final String filename;
-  /** the beginning of the tag in the file */
-  public final int beg;
-  /** the end of the tag in the file */
-  public final int end;
+  /** the word being tagged. */
+  public final String fName;
+  /** the file name of the file where the tag can be found. */
+  public final String fFilename;
+  /** the beginning of the tag in the file. */
+  public final int fBeg;
+  /** the end of the tag in the file. */
+  public final int fEnd;
   
   
   /**
@@ -51,11 +52,14 @@ public final class TagStruct implements Serializable {
    * @param begin the beginning of the tag in the file
    * @param end the end of the tag in the file
    */
-  public TagStruct (String name, String filename, int begin, int end) {
-    this.name = name;
-    this.beg = begin;
-    this.end = end;
-    this.filename = filename;      
+  public TagStruct (final String name, 
+                    final String filename, 
+                    final int begin, 
+                    final int end) {
+    fName = name;
+    fBeg = begin;
+    fEnd = end;
+    fFilename = filename;      
   }
   
   
@@ -63,26 +67,26 @@ public final class TagStruct implements Serializable {
    * Open an editor, and highlight the tag in the file.
    */
   public void show() {
-    IWorkbenchPage wp = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    IWorkspace ws = ResourcesPlugin.getWorkspace();
-    IFile f = ws.getRoot().getFileForLocation(new Path(filename));
+    final IWorkbenchPage wp = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IWorkspace ws = ResourcesPlugin.getWorkspace();
+    final IFile f = ws.getRoot().getFileForLocation(new Path(fFilename));
     try {
-      IEditorPart ep = IDE.openEditor(wp, f, true);
-      if(ep instanceof ProverEditor) {
-        ITextEditor te = (ITextEditor) ep;
-        te.selectAndReveal(beg, end);
+      final IEditorPart ep = IDE.openEditor(wp, f, true);
+      if (ep instanceof ProverEditor) {
+        final ITextEditor te = (ITextEditor) ep;
+        te.selectAndReveal(fBeg, fEnd);
       }
-    } catch (PartInitException e) {
-      Logger.err.println("Failed to initialize an editor for the file " + filename + ".");
+    } 
+    catch (PartInitException e) {
+      Logger.err.println("Failed to initialize an editor for the file " + fFilename + ".");
       e.printStackTrace();
     }
     
   }
   
-  /**
-   * Show the tag in the form "name (beg, end) -> file"
-   */
+  /** {@inheritDoc} */
+  @Override
   public String toString() {
-    return name + " (" + beg + ", " + end + ") -> " + filename;
+    return fName + " (" + fBeg + ", " + fEnd + ") -> " + fFilename;
   }
 }

@@ -131,7 +131,7 @@ public class CompileFile implements IActionDelegate {
       try {
         //System.out.println("here");
         final Process p = Runtime.getRuntime().exec(fCmd);
-        LineNumberReader in = new LineNumberReader( new InputStreamReader(p.getInputStream()));
+        LineNumberReader in = new LineNumberReader(new InputStreamReader(p.getInputStream()));
         String s;
         String res = "";
         try {

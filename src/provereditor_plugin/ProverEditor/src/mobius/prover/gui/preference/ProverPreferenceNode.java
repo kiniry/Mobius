@@ -6,16 +6,18 @@ import org.eclipse.jface.preference.PreferenceNode;
 
 /**
  * The preference node is used to wrap up the preference pages
- * and add them dynamically to Eclipse's preference pages. 
+ * and add them dynamically to Eclipse's preference pages.
+ *  
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProverPreferenceNode extends PreferenceNode {
-  /** the language regarding the node  */
+  /** the language regarding the node.  */
   private String fLanguage;
-  /** the current preference store */
+  /** the current preference store. */
   private IPreferenceStore fPrefs;
-  /** the page to wrap up */
+  /** the page to wrap up. */
   private ProverPreferencePage fPage;
-  /** the dispose fix */
+  /** the dispose fix. */
   private boolean fDisposed;
   
   
@@ -25,7 +27,8 @@ public class ProverPreferenceNode extends PreferenceNode {
    * @param language the language to have a preference page for
    * @param prefs the current preference store
    */
-  public ProverPreferenceNode(String language, IPreferenceStore prefs) {
+  public ProverPreferenceNode(final String language, 
+                              final IPreferenceStore prefs) {
     super(language + "Page");
     fLanguage = language;
     fPrefs = prefs;
@@ -34,10 +37,8 @@ public class ProverPreferenceNode extends PreferenceNode {
     setPage(fPage);
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.jface.preference.IPreferenceNode#createPage()
-   */
+  /** {@inheritDoc} */
+  @Override 
   public void createPage() {
     fPage = new ProverPreferencePage(fLanguage);
     fPage.setDefault(fPrefs);
@@ -80,11 +81,9 @@ public class ProverPreferenceNode extends PreferenceNode {
   public int getGraceTime() {
     return fPage.getGraceTime();
   }
-  
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.jface.preference.IPreferenceNode#disposeResources()
-   */
+
+  /** {@inheritDoc} */
+  @Override
   public void disposeResources() {
     // ok this is a violent way to handle it... we DON'T 
     // dispose anything.
@@ -92,12 +91,10 @@ public class ProverPreferenceNode extends PreferenceNode {
     //super.disposeResources();
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.jface.preference.IPreferenceNode#getPage()
-   */
+  /** {@inheritDoc} */
+  @Override 
   public IPreferencePage getPage() {
-    if(fDisposed) {
+    if (fDisposed) {
       createPage();
     }
     return super.getPage();

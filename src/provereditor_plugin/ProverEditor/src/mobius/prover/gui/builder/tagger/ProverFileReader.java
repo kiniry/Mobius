@@ -231,7 +231,7 @@ public class ProverFileReader extends Reader {
     }
   }
 
-  public int getCount(){
+  public int getCount() {
     return fCount;
   }
 

@@ -12,24 +12,26 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * The prover preference page. For each prover a prover preference
  * page is added, giving the properties for the grace time,
  * the ide, the top level and the compiler.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProverPreferencePage extends FieldEditorPreferencePage 
   implements IWorkbenchPreferencePage {
 
-  /** the string representing the property to store the grace time */
+  /** the string representing the property to store the grace time. */
   private final String PROVER_GRACETIME;
-  /** the string representing the property to store the ide location */
+  /** the string representing the property to store the ide location. */
   private final String PROVER_IDE;
-  /** the string representing the property to store the top level location */
+  /** the string representing the property to store the top level location. */
   private final String PROVER_TOP;
-  /** the string representing the property to store the compiler location */
+  /** the string representing the property to store the compiler location. */
   private final String PROVER_COMP;
 
-  /** the current preference store */
+  /** the current preference store. */
   private IPreferenceStore fPrefs;
-  /** the current language associated with the preference page */
+  /** the current language associated with the preference page. */
   private String fLanguage;
-  /** the different fields shown in the page */
+  /** the different fields shown in the page. */
   private FieldEditor [] fFields = new FieldEditor[4];
   
   
@@ -38,7 +40,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * @param language the language for whiche the preference page
    * have to be created
    */  
-  public ProverPreferencePage(String language) {
+  public ProverPreferencePage(final String language) {
     super(GRID);
     fLanguage = language;
     PROVER_GRACETIME = fLanguage + "Editor.gracetime";
@@ -61,11 +63,11 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
         PROVER_IDE,
         fLanguage + " ide path:",
         true,
-        getFieldEditorParent()){
-            public boolean checkState() {
-              return true;
-            }
-          }; 
+        getFieldEditorParent()) {
+      public boolean checkState() {
+        return true;
+      }
+    }; 
     fFields [1] =    new FileFieldEditor(
            PROVER_TOP,
            fLanguage + " toplevel path:",
@@ -88,7 +90,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * Sets the preference store.
    * @param prefs the new preference store.
    */
-  public void setDefault(IPreferenceStore prefs) {
+  public void setDefault(final IPreferenceStore prefs) {
     fPrefs = prefs; 
     fPrefs.setDefault(PROVER_GRACETIME, 10);
     fPrefs.setDefault(PROVER_IDE, "ide");
@@ -133,16 +135,12 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
     return fPrefs.getInt(PROVER_GRACETIME);
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-   */
-  public void init(IWorkbench workbench) { }
+  /** {@inheritDoc} */
+  @Override
+  public void init(final IWorkbench workbench) { }
   
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
-   */
+  /** {@inheritDoc} */
+  @Override
   protected IPreferenceStore doGetPreferenceStore() {
     return fPrefs;
   }
