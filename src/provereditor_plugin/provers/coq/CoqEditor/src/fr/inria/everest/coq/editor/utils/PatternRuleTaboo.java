@@ -6,7 +6,10 @@ import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.Token;
 
 public class PatternRuleTaboo extends MultiLineRule {
-  public PatternRuleTaboo(String startSequence, String endSequence, IToken token) {
+  
+  public PatternRuleTaboo(final String startSequence, 
+                          final String endSequence, 
+                          final IToken token) {
     super(startSequence, endSequence, token, (char) 0);
   }
 
@@ -16,28 +19,31 @@ public class PatternRuleTaboo extends MultiLineRule {
    * <code>resume</code> flag is set.
    *
    * @param scanner the character scanner to be used
-   * @param resume <code>true</code> if detection should be resumed, <code>false</code> otherwise
+   * @param resume <code>true</code> if detection should be resumed, 
+   * <code>false</code> otherwise
    * @return the token resulting from this evaluation
    * @since 2.0
    */
-  protected IToken doEvaluate(ICharacterScanner scanner, boolean resume) {
+  protected IToken doEvaluate(final ICharacterScanner scanner, 
+                              final boolean resume) {
 
     if (resume) {
-
-      if (endSequenceDetected(scanner))
+      if (endSequenceDetected(scanner)) {
         return fToken;
-
-
-    } else {
-
-      int c= scanner.read();
+      }
+    } 
+    else {
+      final int c = scanner.read();
       if (c == fStartSequence[0]) {
         if (sequenceDetected(scanner, fStartSequence, false)) {
-          if (endSequenceDetected(scanner))
+          if (endSequenceDetected(scanner)) {
             return fToken;
-          else
-            for(int i = 0; i < fStartSequence.length -1; i++)
+          }
+          else {
+            for (int i = 0; i < fStartSequence.length - 1; i++) {
               scanner.unread();
+            }
+          }
         }
 
         
@@ -56,29 +62,33 @@ public class PatternRuleTaboo extends MultiLineRule {
    * @param scanner the character scanner to be used
    * @return <code>true</code> if the end sequence has been detected
    */
-  protected boolean endSequenceDetected(ICharacterScanner scanner) {
+  protected boolean endSequenceDetected(final ICharacterScanner scanner) {
     
   
     int c; int count = 0;
-    while ((c= scanner.read()) != ICharacterScanner.EOF && (c != '=')) {
-      count ++;
+    while ((c = scanner.read()) != ICharacterScanner.EOF && (c != '=')) {
+      count++;
       if (c == fEscapeCharacter) {
         // Skip escaped character(s)
         if (fEscapeContinuesLine) {
-          c= scanner.read();
-        } else {
+          c = scanner.read();
+        } 
+        else {
           scanner.read();
         }
-        count ++;
+        count++;
 
-      } else if (fEndSequence.length > 0 && c == fEndSequence[0]) {
+      } 
+      else if (fEndSequence.length > 0 && c == fEndSequence[0]) {
         // Check if the specified end sequence has been found.
-        if (sequenceDetected(scanner, fEndSequence, true))
+        if (sequenceDetected(scanner, fEndSequence, true)) {
           return true;
+        }
       }
     }
-    for(int i = 0; i < count + 1; i++)
+    for (int i = 0; i < count + 1; i++) {
       scanner.unread();
+    }
     return false;
   }
 

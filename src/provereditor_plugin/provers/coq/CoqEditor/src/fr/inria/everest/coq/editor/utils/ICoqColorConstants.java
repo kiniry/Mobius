@@ -13,16 +13,16 @@ import org.eclipse.swt.widgets.Display;
 public interface ICoqColorConstants extends IColorConstants {
   
   // Colors...
-  public final static Color TAG_COLOR = 
+  Color TAG_COLOR = 
     new Color(Display.getCurrent(), new RGB(100, 0, 100));
-  public final static Color STRING_COLOR = 
+  Color STRING_COLOR = 
     new Color(Display.getCurrent(), new RGB(0, 0, 200));
-  public final static Color COMMENT_COLOR = 
+  Color COMMENT_COLOR = 
     new Color(Display.getCurrent(), new RGB(0, 100, 0));
-  public final static Color LEMMA_COLOR = 
+  Color LEMMA_COLOR = 
     new Color(Display.getCurrent(), new RGB(200, 30, 30));
-  public final static Color LIGHTGREY = 
-    new Color(Display.getCurrent(), new RGB(230,230, 230));
+  Color LIGHTGREY = 
+    new Color(Display.getCurrent(), new RGB(230, 230, 230));
   // Some tokens
   IToken completed = new Token(new BasicTextAttribute(BLUE));
   IToken forall = new Token(new BasicTextAttribute(DARKRED));

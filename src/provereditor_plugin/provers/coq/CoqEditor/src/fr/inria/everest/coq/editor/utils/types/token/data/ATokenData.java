@@ -15,26 +15,28 @@ public abstract class ATokenData {
   protected int fLen;
   protected IDocument fDoc;
   
-  public ATokenData spawn(IDocument doc, BasicRuleScanner scanner) {
+  public ATokenData spawn(final IDocument doc, final BasicRuleScanner scanner) {
     ATokenData td;
     try {
-       td = (ATokenData) this.clone();
-       td.fOffset = scanner.getTokenOffset();
-       td.fLen = scanner.getTokenLength();
-       td.fDoc = doc;
-       try {
+      td = (ATokenData) this.clone();
+      td.fOffset = scanner.getTokenOffset();
+      td.fLen = scanner.getTokenLength();
+      td.fDoc = doc;
+      try {
         td.fText = td.fDoc.get(td.fOffset, td.fLen);
-      } catch (BadLocationException e) {
+      } 
+      catch (BadLocationException e) {
         td.fText = "---> Undefined";
       }
-       return td;
-    } catch (CloneNotSupportedException e) {
+      return td;
+    } 
+    catch (CloneNotSupportedException e) {
       e.printStackTrace();
     }
     
     return null;
   }
-  public abstract ProverType parse(ProverEditor editor) ;
+  public abstract ProverType parse(final ProverEditor editor);
   public int getEnd() {
     return fOffset + fLen;
   }

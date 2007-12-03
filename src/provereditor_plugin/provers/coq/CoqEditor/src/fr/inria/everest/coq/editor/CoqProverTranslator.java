@@ -24,13 +24,14 @@ import fr.inria.everest.coq.editor.utils.ICoqColorConstants;
 
 public class CoqProverTranslator extends AProverTranslator implements ICoqColorConstants {
   
-  public final static CoqProverTranslator instance = new CoqProverTranslator();
-  public final static String [] vernac = {"forall", "Proof",
-      "Load", "Require", "Qed", "Import", "Open", "Scope", 
-      "match","end", "Section", "End" 
+  public static final CoqProverTranslator instance = new CoqProverTranslator();
+  public static final String [] vernac = {
+    "forall", "Proof",
+    "Load", "Require", "Qed", "Import", "Open", "Scope", 
+    "match", "end", "Section", "End" 
   };
-  public final static String [] lem = {
-      "Definition", "Variable", "Lemma", "Fixpoint", "Axiom", "Hypothesis", "Inductive"
+  public static final String [] lem = {
+    "Definition", "Variable", "Lemma", "Fixpoint", "Axiom", "Hypothesis", "Inductive"
   };
         
   public final static String [][] replacements = {
@@ -40,24 +41,35 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
     {"============================",
       "-----------------------------------------------------------------------------------"
     }
-    };  
+  };  
   
+  private static final Pattern [] [] pats = {
+    {Pattern.compile("\\s*Module Type\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+    {Pattern.compile("\\s*Module\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+    {Pattern.compile("\\s*Definition\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+    {Pattern.compile("\\s*Lemma\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+    {Pattern.compile("\\s*Fixpoint\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+    {Pattern.compile("\\s*Axiom\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+    {Pattern.compile("\\s*Parameter\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+    {Pattern.compile("\\s*Inductive\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+    {Pattern.compile("\\s*Variable\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+  };
   
 
   private IRule [] proofRules;
   private IRule [] fileRules;
   private IRule [] parsingRules;
 
+
+  public static Image [] imgs;
   
   
   public static AProverTranslator getInstance() {
     return instance;
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.AProverTranslator#getReplacements()
-   */
+  /** {@inheritDoc} */
+  @Override
   public String [][] getReplacements() {
     return replacements;
   }
@@ -70,79 +82,77 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
     for (int i = 0; i < lem.length; i++) {
       wr.addWord(lem[i], lemma);
     }
-    WordRule wexpr = new WordRule(new ExprDetector(), tag);
+    final WordRule wexpr = new WordRule(new ExprDetector(), tag);
     wexpr.addWord(".", tag);
-    IRule [] rules = {
-        new MultiLineRule("(*", "*)", comment),
-        new MultiLineRule("\"", "\"", string),
-        new SingleLineRule("(*", "*)", comment),
-        new SingleLineRule("\"", "\"", string),
-        wr,
-        wexpr
-        
+    final IRule [] rules = {
+      new MultiLineRule("(*", "*)", comment),
+      new MultiLineRule("\"", "\"", string),
+      new SingleLineRule("(*", "*)", comment),
+      new SingleLineRule("\"", "\"", string),
+      wr,
+      wexpr
     };
     return rules;
   }
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.AProverTranslator#getFileRules()
-   */
+ 
+  /** {@inheritDoc} */
+  @Override
   public IRule [] getProverTheoryRules() {
-    if(fileRules == null)
+    if (fileRules == null) {
       fileRules = initFileRules();
+    }
     return fileRules;
   }
   
   
   private IRule [] initProofRules() {
-    WordRule wr = new WordRule(new WordDetector(), def);
+    final WordRule wr = new WordRule(new WordDetector(), def);
     for (int i = 0; i < vernac.length; i++) {
       wr.addWord(vernac[i], tag);
     }
     for (int i = 0; i < lem.length; i++) {
       wr.addWord(lem[i], lemma);
     }
-    WordRule wexpr = new WordRule(new ExprDetector(), tag);
+    final WordRule wexpr = new WordRule(new ExprDetector(), tag);
     wexpr.addWord(".", tag);
-    WordRule hypothesis = new WordRule(new WordDetector(), comment);
+    final WordRule hypothesis = new WordRule(new WordDetector(), comment);
     hypothesis.setColumnConstraint(2);
-//    WordPatternRule hypothesis = new WordPatternRule(new WordDetector(), "  ", " :", comment);
-//    hypothesis.setColumnConstraint(0);
-    SingleLineRule subg = new SingleLineRule("Subgoal", ":", completed);
+
+    final SingleLineRule subg = new SingleLineRule("Subgoal", ":", completed);
     subg.setColumnConstraint(0);
-    MultiLineRule mlr = new MultiLineRule("subgoal", "",subgoal2, (char) 0, true);
+    final MultiLineRule mlr = new MultiLineRule("subgoal", "", subgoal2, (char) 0, true);
     mlr.setColumnConstraint(0);
-    IRule [] rules = {
-        new SingleLineRule("Proof ", "completed", completed),
-        subg, mlr, hypothesis,
-        new MultiLineRule("forall ", ",", forall),
-        new MultiLineRule("exists ", ",", forall),
-        new MultiLineRule("(*", "*)", comment),
-        new MultiLineRule("\"", "\"", string),
-        new SingleLineRule("(*", "*)", comment),
-        new SingleLineRule("\"", "\"", string),
-        wr, wexpr};
+    final IRule [] rules = {
+      new SingleLineRule("Proof ", "completed", completed),
+      subg, mlr, hypothesis,
+      new MultiLineRule("forall ", ",", forall),
+      new MultiLineRule("exists ", ",", forall),
+      new MultiLineRule("(*", "*)", comment),
+      new MultiLineRule("\"", "\"", string),
+      new SingleLineRule("(*", "*)", comment),
+      new SingleLineRule("\"", "\"", string),
+      wr, wexpr
+    };
     return rules;
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.AProverTranslator#getProofRules()
-   */
+  /** {@inheritDoc} */
+  @Override
   public IRule [] getProverStateRules() {        
-    if(proofRules == null)
+    if(proofRules == null) {
       proofRules = initProofRules();
+    }
     return proofRules;
   }
 
   private IRule[] initParsingRules() {
-    WordRule endofsentence = new FixedSizeWordRule(new IWordDetector() {
+    final WordRule endofsentence = new FixedSizeWordRule(new IWordDetector() {
 
-      public boolean isWordStart(char c) {
+      public boolean isWordStart(final char c) {
         return c == '.';
       }
 
-      public boolean isWordPart(char c) {
+      public boolean isWordPart(final char c) {
         return Character.isWhitespace(c);
       }
       
@@ -152,7 +162,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
     endofsentence.addWord(".\n", SENTENCE_TOKEN);
     endofsentence.addWord(".\t", SENTENCE_TOKEN);
     
-    IRule [] rules = {
+    final IRule [] rules = {
       new MultiLineRule("(*", "*)", COMMENT_TOKEN),
       new MultiLineRule("\"", "\"", COMMENT_TOKEN),
 
@@ -163,34 +173,29 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
     return rules;
   }
 
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.AProverTranslator#getParsingRules()
-   */
+  /** {@inheritDoc} */
+  @Override
   public IRule[] getParsingRules() {
-    if(parsingRules == null) {
+    if (parsingRules == null) {
       parsingRules = initParsingRules();
     }
     return parsingRules;
   }
 
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.AProverTranslator#isErrorMsg(java.lang.String)
-   */
-  public boolean isErrorMsg(String s) {
+  /** {@inheritDoc} */
+  @Override
+  public boolean isErrorMsg(final String s) {
     return s.matches("Error.*") || s.matches("Invalid module name.*");
   }
 
 
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.AProverTranslator#getIdeCommand(java.lang.String, java.lang.String[], java.lang.String)
-   */
-  public String[] getIdeCommand(String ide, String[] path, String file) {
-    String [] cmds = new String[1 + (path.length * 2) + 1];
+  /** {@inheritDoc} */
+  @Override
+  public String[] getIdeCommand(final String ide, final String[] path, 
+                                final String file) {
+    final String [] cmds = new String[1 + (path.length * 2) + 1];
     cmds[0] = ide;
-    for(int i = 0; i < path.length; i++) {
+    for (int i = 0; i < path.length; i++) {
       cmds[(i * 2) + 1] = "-I";
       cmds[(i * 2) + 2] = path[i];
     }
@@ -198,36 +203,38 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
     return cmds;
   }
 
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.AProverTranslator#getCompilingCommand(java.lang.String, java.lang.String[], java.lang.String)
-   */
-  public String[] getCompilingCommand(String ide, String[] path, String file) {
-    if(path == null)
+  /** {@inheritDoc} */
+  @Override
+  public String[] getCompilingCommand(final String ide, 
+                                      final String[] p, 
+                                      final String file) {
+    String [] path = p;
+    if (path == null) {
       path = new String[0];
-    String [] cmds = new String[1 + (path.length * 2) + 1];
+    }
+    final String [] cmds = new String[1 + (path.length * 2) + 1];
     cmds[0] = ide;
-    for(int i = 0; i < path.length; i++) {
+    for (int i = 0; i < path.length; i++) {
       cmds[(i * 2) + 1] = "-I";
       cmds[(i * 2) + 2] = path[i];
     }
     //cmds[cmds.length - 2] = "-compile";
-    cmds[cmds.length - 1] = file.substring(0, file.length() -2);
+    cmds[cmds.length - 1] = file.substring(0, file.length() - 2);
     return cmds;
   }
 
   
-  public static Image [] imgs;
   public Image createImage(String path) {
     InputStream is = this.getClass().getClassLoader().getResourceAsStream(path);
-    Image img = new Image(PlatformUI.getWorkbench().getDisplay(), is);
+    final Image img = new Image(PlatformUI.getWorkbench().getDisplay(), is);
     return img;
   }
   
   public ProverType getFileOutline(ProverEditor ed, IDocument doc, ProverType root) {
 
-    if(imgs == null) {
-      Image [] tab = { createImage("/icons/module.gif"),
+    if (imgs == null) {
+      final Image [] tab = {
+          createImage("/icons/module.gif"),
           createImage("/icons/moduleb.gif"),
           createImage("/icons/sections.gif"),
           createImage("/icons/defs1.gif"),
@@ -237,26 +244,18 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
           createImage("/icons/defs5.gif"),
           createImage("/icons/defs6.gif"),
           createImage("/icons/defs7.gif"),
-          createImage("/icons/defs8.gif")};
+          createImage("/icons/defs8.gif")
+      };
       imgs = tab;
     }
-    CoqConstructFinder ccf = new CoqConstructFinder(ed, doc);
+    final CoqConstructFinder ccf = new CoqConstructFinder(ed, doc);
     
     ccf.parse(root);
     return root;
   }
   
-  private final static Pattern [] [] pats = {
-    {Pattern.compile("\\s*Module Type\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    {Pattern.compile("\\s*Module\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    {Pattern.compile("\\s*Definition\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    {Pattern.compile("\\s*Lemma\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    {Pattern.compile("\\s*Fixpoint\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    {Pattern.compile("\\s*Axiom\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    {Pattern.compile("\\s*Parameter\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    {Pattern.compile("\\s*Inductive\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    {Pattern.compile("\\s*Variable\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
-    };
+
+  
   public Pattern [][] getTagPatterns() {
     return pats;
   }

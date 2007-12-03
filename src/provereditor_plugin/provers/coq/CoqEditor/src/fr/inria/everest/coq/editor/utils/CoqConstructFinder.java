@@ -19,15 +19,15 @@ import fr.inria.everest.coq.editor.utils.types.token.data.ComplexBegin;
 import fr.inria.everest.coq.editor.utils.types.token.data.ComplexEnd;
 import fr.inria.everest.coq.editor.utils.types.token.data.Simple;
 
-public class CoqConstructFinder implements ICoqColorConstants{
-  int fOffset;
-  int fOffsetEnd;
-  IDocument fDoc;
+public class CoqConstructFinder implements ICoqColorConstants {
+  private int fOffset;
+  private int fOffsetEnd;
+  private IDocument fDoc;
   private BasicRuleScanner fScanner;
   private ProverEditor fEditor;
   
   
-  public CoqConstructFinder(ProverEditor editor, IDocument doc) {
+  public CoqConstructFinder(final ProverEditor editor, final IDocument doc) {
     fDoc = doc;
     fOffset = 0;
     fOffsetEnd = fDoc.getLength();
@@ -36,7 +36,8 @@ public class CoqConstructFinder implements ICoqColorConstants{
 
     fScanner.setRange(doc, fOffset, fOffsetEnd);
   }
-  public CoqConstructFinder(ProverEditor editor, IDocument doc, int startOffset, int endOffset) {
+  public CoqConstructFinder(final ProverEditor editor, final IDocument doc, 
+                            final int startOffset, final int endOffset) {
     this(editor, doc);
     fOffset = startOffset;
     fOffsetEnd = endOffset;
@@ -45,29 +46,29 @@ public class CoqConstructFinder implements ICoqColorConstants{
     
   }
 
-  public ProverType parse(ProverType root) {
+  public ProverType parse(final ProverType root) {
     IToken tok;
-    LinkedList tokens = new LinkedList();
+    final LinkedList<ATokenData> tokens = new LinkedList<ATokenData>();
     do {
       tok = fScanner.nextToken();
-      if(tok.isOther() && tok.getData() instanceof ATokenData) {
-        ATokenData data = (ATokenData)tok.getData();  
+      if (tok.isOther() && tok.getData() instanceof ATokenData) {
+        final ATokenData data = (ATokenData)tok.getData();  
         tokens.addLast(data.spawn(fDoc, fScanner));
         //System.out.println(tokens.getFirst());
       }
     } while (!tok.isEOF());
     //tokens.removeLast();
     
-    while(tokens.size() > 0) {
-      ATokenData data = (ATokenData)tokens.removeFirst();
+    while (tokens.size() > 0) {
+      final ATokenData data = (ATokenData)tokens.removeFirst();
 
-      if(data instanceof Simple) {
+      if (data instanceof Simple) {
         
-        ProverType pt = data.parse(fEditor);
+        final ProverType pt = data.parse(fEditor);
         root.add(pt);
       }
       else if (data instanceof ComplexBegin) {
-        ProverType pt = getComplex((ComplexBegin)data, tokens);
+        final ProverType pt = getComplex((ComplexBegin)data, tokens);
         root.add(pt);
       }
       else {
@@ -76,17 +77,18 @@ public class CoqConstructFinder implements ICoqColorConstants{
     }
     return root;
   }
-  public ProverType getComplex(ComplexBegin begin, LinkedList tokens) {
+  public ProverType getComplex(final ComplexBegin begin, 
+                               final LinkedList<ATokenData> tokens) {
     
-    CoqType root =(CoqType) begin.parse(fEditor);
-    while(tokens.size() > 0) {
-      ATokenData data = (ATokenData)tokens.removeFirst();
-      if(data instanceof Simple) {        
-        ProverType pt = data.parse(fEditor);
+    final CoqType root = (CoqType) begin.parse(fEditor);
+    while (tokens.size() > 0) {
+      final ATokenData data = tokens.removeFirst();
+      if (data instanceof Simple) {        
+        final ProverType pt = data.parse(fEditor);
         root.add(pt);
       }
       else if (data instanceof ComplexBegin) {
-        ProverType pt = getComplex((ComplexBegin)data, tokens);
+        final ProverType pt = getComplex((ComplexBegin)data, tokens);
         root.add(pt);
       }
       else {
@@ -109,29 +111,29 @@ public class CoqConstructFinder implements ICoqColorConstants{
   
   private IRule [] getRules() {
     final IRule [] rules = {
-        new MultiLineRule("(*", "*)", comment),
-        new MultiLineRule("\"", "\"", string),
-        new SingleLineRule("(*", "*)", comment),
-        new SingleLineRule("\"", "\"", string),
-        new MultiLineRule("Declare ", ".", declare),
-        new MultiLineRule("Variable ", ".", declare),
-        new MultiLineRule("Hypothesis ", ".", declare),
-        new MultiLineRule("Record ", ".", declare),
-        new PatternRuleTaboo("Module ", ".", module),
-        new PatternRuleTaboo("Section ", ".", module),
-        new PatternRuleTaboo("Parameter ", ":", declare),
-        new MultiLineRule("Definition ", ".", declare),
-        new MultiLineRule("Axiom ", ".", declare),
-        new MultiLineRule("Fixpoint ", ".", declare),
-        new SingleLineRule("Module ", ":=", declare),
-        new SingleLineRule("Let ", ":=", declare),
+      new MultiLineRule("(*", "*)", comment),
+      new MultiLineRule("\"", "\"", string),
+      new SingleLineRule("(*", "*)", comment),
+      new SingleLineRule("\"", "\"", string),
+      new MultiLineRule("Declare ", ".", declare),
+      new MultiLineRule("Variable ", ".", declare),
+      new MultiLineRule("Hypothesis ", ".", declare),
+      new MultiLineRule("Record ", ".", declare),
+      new PatternRuleTaboo("Module ", ".", module),
+      new PatternRuleTaboo("Section ", ".", module),
+      new PatternRuleTaboo("Parameter ", ":", declare),
+      new MultiLineRule("Definition ", ".", declare),
+      new MultiLineRule("Axiom ", ".", declare),
+      new MultiLineRule("Fixpoint ", ".", declare),
+      new SingleLineRule("Module ", ":=", declare),
+      new SingleLineRule("Let ", ":=", declare),
 
-        new SingleLineRule("Theorem ", ".", declare),
-        new SingleLineRule("Lemma ", ".", declare),
-        new MultiLineRule("Inductive ", ":=", declare),
-        new MultiLineRule("Scheme ", ":=", declare),
-        new MultiLineRule("Parameter ", ":=", declare),
-        new MultiLineRule("End ", ".", endmodule)
+      new SingleLineRule("Theorem ", ".", declare),
+      new SingleLineRule("Lemma ", ".", declare),
+      new MultiLineRule("Inductive ", ":=", declare),
+      new MultiLineRule("Scheme ", ":=", declare),
+      new MultiLineRule("Parameter ", ":=", declare),
+      new MultiLineRule("End ", ".", endmodule)
     };
     return rules;
   }

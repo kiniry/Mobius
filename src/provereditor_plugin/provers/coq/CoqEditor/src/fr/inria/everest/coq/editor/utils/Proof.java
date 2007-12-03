@@ -13,28 +13,30 @@ public class Proof {
     fBeginPos = beginPos;
   }
   
-  public boolean isProofName(int pos){
+  public boolean isProofName(final int pos){
     return (fNamePos >= pos) && ((fBeginPos == 0) || (fBeginPos > pos));    
   }
   
-  public boolean isWithinProof(int pos){
+  public boolean isWithinProof(final int pos){
     return (fNamePos <= pos) && ((fEndPos == 0) || (fEndPos > pos));    
   }
   
-  public String getProof(IDocument doc) {
+  public String getProof(final IDocument doc) {
     String s = null;
     try {
       s = doc.get(fNamePos, fBeginPos - fNamePos);
-    } catch (BadLocationException e) {
+    } 
+    catch (BadLocationException e) {
       e.printStackTrace();
     }
     return s;
   }
-  public Object getFullProof(IDocument doc) {
+  public Object getFullProof(final IDocument doc) {
     String s = null;
     try {
       s = doc.get(fNamePos, fEndPos - fNamePos);
-    } catch (BadLocationException e) {
+    } 
+    catch (BadLocationException e) {
       e.printStackTrace();
     }
     return s;

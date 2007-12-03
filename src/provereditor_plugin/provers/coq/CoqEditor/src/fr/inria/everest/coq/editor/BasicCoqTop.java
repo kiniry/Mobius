@@ -101,13 +101,13 @@ public class BasicCoqTop implements IProverTopLevel  {
   public int hasToSkipUndo(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
 
     int res;
-    if((res = ph.hasToSkip(this, itl, document, cmd, beg, end)) 
-        != IProverTopLevel.DONT_SKIP) {
+    if((res = ph.hasToSkip(this, itl, document, cmd, beg, end)) != 
+        IProverTopLevel.DONT_SKIP) {
       return res;
     }
-    if(fModuleName != null) {
+    if (fModuleName != null) {
       // fetch the end of a module
-      if((cmd.indexOf("Module " + fModuleName) != -1) ||
+      if ((cmd.indexOf("Module " + fModuleName) != -1) ||
         (cmd.indexOf("Module Type " + fModuleName) != -1) ||
         (cmd.indexOf("Section " + fModuleName) != -1)) {
         fModuleName = null;
@@ -115,16 +115,16 @@ public class BasicCoqTop implements IProverTopLevel  {
       }
       return IProverTopLevel.SKIP_AND_CONTINUE;
     }
-    if(cmd.trim().startsWith("End ")) {
+    if (cmd.trim().startsWith("End ")) {
       // we will have to skip a module :)
       fModuleName = cmd.substring(4, cmd.length() - 1);
       return IProverTopLevel.SKIP_AND_CONTINUE;
     }
     
     // the commands to skip
-    String [] vernac = {"Proof", "Show ", "Print "};
+    final String [] vernac = {"Proof", "Show ", "Print "};
     for (int i = 0; i < vernac.length; i++) {
-      if(cmd.startsWith(vernac[i])) {
+      if (cmd.startsWith(vernac[i])) {
         return IProverTopLevel.SKIP;
       }
     }
@@ -155,10 +155,10 @@ public class BasicCoqTop implements IProverTopLevel  {
    */
   public String[] getCommands(String top, String[] path) {
     String [] cmds;
-    if(path != null) {
+    if (path != null) {
       cmds = new String[2 + path.length * 2];
       
-      for(int i = 0; i < path.length; i++) {
+      for (int i = 0; i < path.length; i++) {
         cmds[(2 * i) + 2] = "-I";
         cmds[(2 * i) + 3] = path[i];
       }
