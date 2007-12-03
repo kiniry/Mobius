@@ -9,12 +9,24 @@ import java.util.List;
 import mobius.bico.executors.ClassExecutor;
 import mobius.bico.executors.ClassesMakefileGen;
 
-public class ClassMkfileGenerator extends ClassesMakefileGen {
 
+/**
+ * Write the class makefile, adding the compilation for
+ * the class annotations.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
+public class ClassMkfileGenerator extends ClassesMakefileGen {
+  /**
+   * Constructor.
+   * @param baseDir the base directory.
+   * @param treated all the treated classes
+   */
   public ClassMkfileGenerator(final File baseDir, final Collection<ClassExecutor> treated) {
     super(baseDir, treated);
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<String> getMakefileInstructions(final PrintStream out, 
                                               final File[] subdirs, 

@@ -35,8 +35,10 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   /** the class from which the inspected method is taken. */
   private ClassGen fClass;
 
-  public AnnotationMethodExecutor(final ABasicExecutor be, final CoqStream annotationOut, 
-                                  final ClassGen clzz, final Method met, final RoutineDecl rout) {
+  public AnnotationMethodExecutor(final ABasicExecutor be, 
+                                  final CoqStream annotationOut, 
+                                  final ClassGen clzz, 
+                                  final Method met, final RoutineDecl rout) {
     super(be);
     if (rout == null) {
       throw new NullPointerException();

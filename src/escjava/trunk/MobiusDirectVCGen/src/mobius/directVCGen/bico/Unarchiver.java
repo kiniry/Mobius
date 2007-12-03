@@ -29,8 +29,7 @@ public class Unarchiver {
   private static final String libdir = "Formalisation" + File.separator + "Library";
   /** the directory in the archive of the Map library: /Formalisation/Library/Map. */
   private static final String libmapdir = libdir + File.separator + "Map";
-  
-  
+  /** the directory in the archive of the logic directory. */
   private static final String liblogicdir = "Formalisation" + File.separator + "Logic";
 
   /** the jar file containing bicolano. */

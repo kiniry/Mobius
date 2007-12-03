@@ -62,7 +62,8 @@ public final class AnnotationVisitor extends ABasicVisitor {
   }
 
 
-  public /*@non_null*/ Object visitRoutineDecl(/*@non_null*/ RoutineDecl x, Object o) {
+  public /*@non_null*/ Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
+                                               final Object o) {
     if (x.body != null) {
       return x.body.accept(this, o);
     }
@@ -77,9 +78,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
     
     if (fAnnot.getAnnotPost(x) != null) {
       // let's do something
-      
-//      System.out.println("post " + Location.toLineNumber(x.getStartLoc()) + ": " + 
-//                         fAnnot.getAnnotPost(x));
+
     }
     if (fAnnot.getAnnotPre(x) != null) {
       // let's do something else
@@ -90,10 +89,6 @@ public final class AnnotationVisitor extends ABasicVisitor {
         buildMker(annot);
         buildDefiner(annot);      
       }
-      
-//      System.out.println("pre " + Location.toLineNumber(x.getStartLoc()) + ": " + 
-//                         fAnnot.getAnnotPre(x));
-
     }
     if (fAnnot.getInvariant(x) != null) {
    
