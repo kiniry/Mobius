@@ -33,5 +33,6 @@ Export-Package: prover,
  prover.gui.editor.outline,
  prover.gui.editor.outline.types,
  prover.gui.jobs,
+ prover.gui.popup,
  prover.plugins,
  prover.plugins.exceptions

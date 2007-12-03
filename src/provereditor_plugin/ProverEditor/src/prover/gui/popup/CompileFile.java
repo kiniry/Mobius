@@ -40,9 +40,20 @@ public class CompileFile implements IActionDelegate {
 		if(! (fSel.getFirstElement() instanceof IFile))
 			return;
 		IFile f = (IFile) fSel.getFirstElement();
+		Job job = compile(f, false);
+		job.schedule();
+	}
+
+	/**
+	 * Compile the given file.
+	 * @param f the file to compile
+	 * @param silent if there has to be some prompt if the compilation fails
+	 * @return the created job or null
+	 */
+	public static Job compile(IFile f, boolean silent) {
 		Prover prover = Prover.findProverFromFile(f.toString());
 		if(prover == null)
-			return;
+			return null;
 		String name =  f.getLocation().toString();
 		HashSet hsPath;
 		try {
@@ -58,8 +69,8 @@ public class CompileFile implements IActionDelegate {
 			path[i] = path[0] + File.separator + iter.next().toString();
 		}
 		String[] cmd = prover.getTranslator().getCompilingCommand(prover.getCompiler().trim(), path, name);
-		Job job = new CompilationJob(prover, f, cmd);
-		job.schedule();
+		Job job = new CompilationJob(prover, f, cmd, silent);
+		return job;
 	}
 
 	/*
@@ -92,7 +103,8 @@ public class CompileFile implements IActionDelegate {
 		private String [] fCmd;
 		/** The current prover object assiciated with the current file */
 		private Prover fProver;
-		
+		/** tell if the job should be silent */
+		private boolean bSilent;
 		
 		/**
 		 * Create a new Compilation Job.
@@ -100,11 +112,12 @@ public class CompileFile implements IActionDelegate {
 		 * @param file the file to compile
 		 * @param cmd the command to compile the file
 		 */
-		public CompilationJob(Prover prover, IFile file, String[] cmd) {
+		public CompilationJob(Prover prover, IFile file, String[] cmd, boolean silent) {
 			super("Compiling " + file.getName());
 			fFile = file;
 			fCmd = cmd;
 			fProver = prover;
+			bSilent = silent;
 		}
 
 		/*
@@ -130,7 +143,9 @@ public class CompileFile implements IActionDelegate {
 					if (fProver.isErrorMsg(s)) {
 						while((s = in.readLine()) != null)
 							res += s + "\n";
-						return ProverStatus.getErrorStatus("The fFile " + fFile.getName() + " was not compiled.", 
+						if(bSilent)
+							return ProverStatus.getOkStatus();
+						return ProverStatus.getErrorStatus("The file " + fFile.getName() + " was not compiled.", 
 											res);  			
 					}
 					 			
@@ -141,13 +156,18 @@ public class CompileFile implements IActionDelegate {
 					if (fProver.isErrorMsg(s)) {
 						while((s = in.readLine()) != null)
 							res += s + "\n";
-						return ProverStatus.getErrorStatus("The fFile " + fFile.getName() + " was not compiled.", 
+						
+						if(bSilent)
+							return ProverStatus.getOkStatus();
+						return ProverStatus.getErrorStatus("The file " + fFile.getName() + " was not compiled.", 
 											res);  			
 					}
 					 			
 				}
 				fFile.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
 			} catch (IOException e) {
+				if(bSilent)
+					return ProverStatus.getOkStatus();
 				return ProverStatus.getErrorStatus(
 						"I was unable to find the path to the compilation program. Check the path." , 
 							e.toString());
