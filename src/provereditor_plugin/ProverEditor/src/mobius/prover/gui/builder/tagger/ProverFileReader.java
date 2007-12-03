@@ -14,7 +14,7 @@ public class ProverFileReader extends Reader {
 
   private Reader fIn;
 
-  private char fCb[] = new char[8192];
+  private char [] fCb = new char[8192];
   private int fNChars;
   private int fNextChar;
 

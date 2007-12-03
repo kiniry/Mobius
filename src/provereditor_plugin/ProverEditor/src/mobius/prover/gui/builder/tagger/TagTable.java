@@ -185,7 +185,7 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
     public TagFile(final String file, final TagList list) {
       fName = file;
       final Iterator<TagStruct> iter = list.iterator();
-      fTs = new TagStruct[list.list.size()];
+      fTs = new TagStruct[list.size()];
       for (int i = 0; iter.hasNext(); i++) {
         fTs[i] = (TagStruct)iter.next();
       }

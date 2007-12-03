@@ -12,16 +12,31 @@ import java.util.List;
  */
 public final class TagList implements Iterable<TagStruct> {
   /** the list containing the tags. */
-  final List<TagStruct> list = new ArrayList<TagStruct>();
+  private final List<TagStruct> fList = new ArrayList<TagStruct>();
   
-  /** add a tag structure to the list. */
+  /** 
+   * Add a tag structure to the list.
+   * @param ts the tag to add 
+   */
   public void add(final TagStruct ts) {
-    list.add(ts);
+    fList.add(ts);
   }
   
-  /** return the iterator of the tag list. */
+  /**
+   * Returns the size of the list.
+   * @return a number greater or equal than 0
+   */
+  public int size() {
+    return fList.size();
+  }
+  
+  
+  /** 
+   * Return the iterator of the tag list.
+   * @return an iterator 
+   */
   public Iterator<TagStruct> iterator() {
-    return list.iterator();
+    return fList.iterator();
   } 
   
 }

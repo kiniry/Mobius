@@ -126,7 +126,7 @@ public class Tagger {
 
   /**
    * Save the tags for the given project.
-   * @param project
+   * @param project a valid project
    */
   private void saveTags(final IProject project) {
     final IFile file = project.getFile(fFilename);
