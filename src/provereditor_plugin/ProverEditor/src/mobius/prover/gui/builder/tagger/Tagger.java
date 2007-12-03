@@ -22,30 +22,31 @@ import org.eclipse.core.runtime.CoreException;
 
 
 public class Tagger {
-  /** the current instance of the tagger */
+  /** the current instance of the tagger. */
   public static final Tagger instance = new Tagger();  
-  /** the file name of the file where the tags are stored */
-  public static final String filename = ".prover_editor_tags"; 
+  /** the file name of the file where the tags are stored. */
+  public static final String fFilename = ".prover_editor_tags"; 
   
-  /** the tags contained in the current selected project */
-  private TagTable tags = new TagTable();
-  /** the current selected project */
+  /** the tags contained in the current selected project. */
+  private TagTable fTags = new TagTable();
+  /** the current selected project. */
   private IProject fProject;
   
   /**
    * @return the tags of the current project
    */
   public Iterator<TagStruct> getTags() {
-    return tags;
+    return fTags;
   }
   
   /**
    * Try to load tags from the project of a file.
    * @param f the file from which to start
    */
-  public void run(IFile f) {
-    if(f == null)
+  public void run(final IFile f) {
+    if (f == null) {
       return;
+    }
     loadTags(f.getProject());
   }
   
@@ -54,9 +55,9 @@ public class Tagger {
    * project.
    * @param project the project from which the tag file will be removed
    */
-  public static void performCleanBuild(IProject project) {
-    IFile file = project.getFile(filename);
-    File tagfile = file.getRawLocation().toFile();
+  public static void performCleanBuild(final IProject project) {
+    final IFile file = project.getFile(fFilename);
+    final File tagfile = file.getRawLocation().toFile();
     tagfile.delete();
   }
   
@@ -64,12 +65,13 @@ public class Tagger {
    * Add the tag of the given file to the tag table.
    * @param f the file to find tags in
    */
-  public void performAddChangedFile(IFile f) {
-    IProject project = f.getProject();
+  public void performAddChangedFile(final IFile f) {
+    final IProject project = f.getProject();
     loadTags(project);
     try {
       tag(f.getRawLocation().toFile());
-    } catch (IOException e) {
+    } 
+    catch (final IOException e) {
       Logger.err.println("Did not manage to read/write from the file " + f + " " + e);
     }
   }
@@ -79,18 +81,18 @@ public class Tagger {
    * its tags too should be removed.
    * @param f the file to remove
    */
-  public void performRemoveFile(IFile f) {
-    IProject project = f.getProject();
+  public void performRemoveFile(final IFile f) {
+    final IProject project = f.getProject();
     loadTags(project);
-    tags.remove(f.getRawLocation().toFile().toString());
+    fTags.remove(f.getRawLocation().toFile().toString());
   }
   
   /**
    * Build the tags for all the files in the whole project.
    * @param project the project to build the tags for
    */
-  public void performFullBuild(IProject project) {
-    File f = project.getLocation().toFile();
+  public void performFullBuild(final IProject project) {
+    final File f = project.getLocation().toFile();
     tagDirectory(f);
     saveTags(project);  
   }
@@ -99,21 +101,22 @@ public class Tagger {
    * Load the tags from the given project.
    * @param project the project from which to load the tags
    */
-  private void loadTags(IProject project) {
-    if(project == null || project.equals(fProject)) {
+  private void loadTags(final IProject project) {
+    if (project == null || project.equals(fProject)) {
       return;
     }
     fProject = project;
-    IFile file = project.getFile(filename);
-    File tagfile = file.getRawLocation().toFile();
-    if(file.exists()) {
+    final IFile file = project.getFile(fFilename);
+    final File tagfile = file.getRawLocation().toFile();
+    if (file.exists()) {
       try {
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(tagfile));
-        tags.load(ois);
+        final ObjectInputStream ois = new ObjectInputStream(new FileInputStream(tagfile));
+        fTags.load(ois);
         ois.close();
         
-      } catch (IOException e) {
-        Logger.err.println("There was a proble loading " + filename + ".");
+      } 
+      catch (final IOException e) {
+        Logger.err.println("There was a proble loading " + fFilename + ".");
       }
     }
     else {
@@ -122,23 +125,25 @@ public class Tagger {
   }
 
   /**
-   * Save the tags for the given project
+   * Save the tags for the given project.
    * @param project
    */
-  private void saveTags(IProject project) {
-    IFile file = project.getFile(filename);
-    File tagfile = file.getRawLocation().toFile();
+  private void saveTags(final IProject project) {
+    final IFile file = project.getFile(fFilename);
+    final File tagfile = file.getRawLocation().toFile();
     try {
-      ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tagfile));
-      tags.save(oos);
+      final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tagfile));
+      fTags.save(oos);
       oos.close();
-    } catch (IOException e) {
-      Logger.err.println("There was a problem saving " + filename + ".");
+    } 
+    catch (IOException e) {
+      Logger.err.println("There was a problem saving " + fFilename + ".");
     }
     
     try {
       project.refreshLocal(IResource.DEPTH_ONE, null);
-    } catch (CoreException e) {
+    } 
+    catch (CoreException e) {
       Logger.warn.println("Could not refresh the view!");
     }
   }
@@ -148,29 +153,32 @@ public class Tagger {
    * It also goes recursively into the subdirectories.
    * @param f the directory to start from
    */
-  private void tagDirectory(File f) {
-    File [] dirs = f.listFiles(new FileFilter(){
-      public boolean accept(File pathname) {
+  private void tagDirectory(final File f) {
+    final File [] dirs = f.listFiles(new FileFilter() {
+      public boolean accept(final File pathname) {
         return pathname.isDirectory();
       }
     });
-    File [] files = f.listFiles(new FileFilter(){
-      public boolean accept(File pathname) {
+    final File [] files = f.listFiles(new FileFilter() {
+      public boolean accept(final File pathname) {
         return pathname.getName().endsWith(".v");
       }
     });
-    if(files != null)
-      for(int i = 0; i < files.length; i++) {
+    if (files != null) {
+      for (int i = 0; i < files.length; i++) {
         try {
           tag(files[i]);
-        } catch (IOException e) {
+        } 
+        catch (IOException e) {
           e.printStackTrace();
         }
       }
-    if(dirs != null)
-      for(int i = 0; i < dirs.length; i++) {
+    }
+    if (dirs != null) {
+      for (int i = 0; i < dirs.length; i++) {
         tagDirectory(dirs[i]);
       }
+    }
   }
 
   /**
@@ -178,24 +186,25 @@ public class Tagger {
    * @param file the file to get the tag from
    * @throws IOException if there is a read error
    */
-  private void tag(File file) throws IOException {
-    Prover pr = Prover.findProverFromFile(file.toString());
-    if(pr == null)
+  private void tag(final File file) throws IOException {
+    final Prover pr = Prover.findProverFromFile(file.toString());
+    if (pr == null) {
       return;
-    Pattern[][] pats = pr.getTranslator().getTagPatterns();
-    TagList l = new TagList();
-    ProverFileReader lnr = new ProverFileReader(new FileReader(file));
+    }
+    final Pattern[][] pats = pr.getTranslator().getTagPatterns();
+    final TagList l = new TagList();
+    final ProverFileReader lnr = new ProverFileReader(new FileReader(file));
     String str;
     int offset = 0;
-    String filename = file.getAbsolutePath();
-    while((str = lnr.readLine()) != null) {
+    final String filename = file.getAbsolutePath();
+    while ((str = lnr.readLine()) != null) {
       
-      String old = str;
-      for(int i = 0; i < pats.length; i++) {
+      final String old = str;
+      for (int i = 0; i < pats.length; i++) {
         str = old;
         Matcher m = pats[i][0].matcher(str);
-        if(m.find()) {
-          int wordbeg = m.end() + offset;
+        if (m.find()) {
+          final int wordbeg = m.end() + offset;
           str = str.substring(m.end());
           m = pats[i][1].matcher(str);
           m.find();
@@ -208,7 +217,7 @@ public class Tagger {
       offset += lnr.getCount();
     }
     lnr.close();
-    tags.add(filename,l);
+    fTags.add(filename, l);
   }
 
 

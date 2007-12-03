@@ -21,7 +21,7 @@ public class IncompleteProofException extends ProverException {
    * problem.
    * @param description A description of the problem encountered
    */
-  public IncompleteProofException(String description) {
+  public IncompleteProofException(final String description) {
     super(description);
   }
 

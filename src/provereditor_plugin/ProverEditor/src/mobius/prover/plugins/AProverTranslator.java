@@ -18,21 +18,22 @@ import org.eclipse.jface.text.rules.Token;
  * of a prover plugin in ProverEditor.
  */
 public abstract class AProverTranslator {
-  /** a token to return by a rule when encountering a comment while parsing */
+  /** a token to return by a rule when encountering a comment while parsing. */
   public static final IToken COMMENT_TOKEN = new Token("comment");
-  /** a token to return by a rule when encountering the end of a command while parsing */
+  
+  /** a token to return by a rule when encountering the end of a command while parsing. */
   public static final IToken SENTENCE_TOKEN = new Token("sentence");
   
-  /** some basic unicode replacements */
-  private final static String [][] unicodeReplacements = {
+  /** some basic unicode replacements. */
+  private static final String [][] unicodeReplacements = {
     {"<->", "\u2194"},
     {"->", "\u2192"},
     {"exists", "\u2203"},
     {"\\\\/", "\u2228"},
     {"/\\\\", "\u2227"}
-    };
-  /** basic replacements: no replacements */
-  private final static String [][] replacements = {};
+  };
+  /** basic replacements: no replacements. */
+  private static final String [][] replacements = {};
   
   /**
    * Returns an array consisting of a set of pairs, where \result[i][0] is paired with 
@@ -122,13 +123,15 @@ public abstract class AProverTranslator {
   
   
   /**
-   * Experimental -- do not use
+   * Experimental -- do not use.
    * @param editor 
    * @param doc
    * @param root
    * @return
    */
-  public ProverType getFileOutline(ProverEditor editor, IDocument doc, ProverType root) {
+  public ProverType getFileOutline(final ProverEditor editor, 
+                                   final IDocument doc, 
+                                   final ProverType root) {
     return root;
   }
   

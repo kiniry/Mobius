@@ -22,7 +22,7 @@ public class ProverException extends AProverException {
    * The constructor. Takes a description of the error as parameter.
    * @param description The source of the error.
    */
-  public ProverException(String description) {
+  public ProverException(final String description) {
     super(description);
   }
   
@@ -32,7 +32,7 @@ public class ProverException extends AProverException {
    * @param location The location of the error.
    * @param description The source of the error.
    */
-  public ProverException(String location, String description) {
+  public ProverException(final String location, final String description) {
     super("ProverEditor." + location + ": " + description);
   }
 }

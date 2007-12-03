@@ -17,20 +17,21 @@ import mobius.prover.plugins.Logger;
  * with the file names. It enables to iterate of the tags
  * of all the files of the project, that's why it has iterator's
  * methods.
- * @author J. Charles
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class TagTable implements Iterator<TagStruct>, Serializable {
-	/** */
-	private static final long serialVersionUID = 1L;
-	
-	/** the list of tag files in the current project */
-	private List<TagFile> listTagFiles = new ArrayList<TagFile>();
-	/** the current file that is being checked for its tags */
-	private TagFile current;
-	/** the iterator of the tag of the file that is currently selected */
-	private Iterator<TagStruct> iter;
-	/** the position of the currently selected file in the list of tag files */
-	private int pos = 0;
+  /** */
+  private static final long serialVersionUID = 1L;
+
+  /** the list of tag files in the current project. */
+  private List<TagFile> fListTagFiles = new ArrayList<TagFile>();
+  /** the current file that is being checked for its tags. */
+  private TagFile fCurrent;
+  /** the iterator of the tag of the file that is currently selected. */
+  private Iterator<TagStruct> fIter;
+  /** the position of the currently selected file in the list of tag files. */
+  private int fPos;
   
 
   /**
@@ -39,23 +40,23 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    * @param name the name of the file
    * @param tags the tags found in the file
    */
-  public void add(String name, TagList tags) {
-    TagFile  tf = new TagFile(name, tags);
-    if((current != null) && current.equals(tf)) {
-      listTagFiles.set(pos, tf);
-      current = tf;
-      iter = tf.iterator();
+  public void add(final String name, final TagList tags) {
+    final TagFile tf = new TagFile(name, tags);
+    if ((fCurrent != null) && fCurrent.equals(tf)) {
+      fListTagFiles.set(fPos, tf);
+      fCurrent = tf;
+      fIter = tf.iterator();
     }
     else {
-      int ind; 
-      if ((ind = listTagFiles.indexOf(tf)) != -1) {
-        listTagFiles.set(ind, tf);
+      final int ind = fListTagFiles.indexOf(tf); 
+      if (ind != -1) {
+        fListTagFiles.set(ind, tf);
       }
       else {
-        listTagFiles.add(tf);
-        if(current == null) {
-          iter = tf.iterator();
-          current = tf;
+        fListTagFiles.add(tf);
+        if (fCurrent == null) {
+          fIter = tf.iterator();
+          fCurrent = tf;
         }
       }
     }
@@ -67,10 +68,10 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    * Or does nothing if the file cannot be found.
    * @param name the name of the tag file to remove
    */
-  public void remove(String name) {
-    int ind; 
-    if ((ind = listTagFiles.indexOf(new TagFile(name))) != -1) {
-      listTagFiles.remove(ind);
+  public void remove(final String name) {
+    final int ind = fListTagFiles.indexOf(new TagFile(name)); 
+    if (ind != -1) {
+      fListTagFiles.remove(ind);
     }
   }
   
@@ -78,43 +79,39 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
   /**
    * Unsupported operation.
    */
-  /*
-   * (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
+  @Override
   public void remove() {
     throw new UnsupportedOperationException();
   }
 
   
-  /*
-   * (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
+  /** {@inheritDoc} */
+  @Override
   public boolean hasNext() {
-    if(current == null)
-      return false;
-    if(iter.hasNext()) {
-      return true;
+    boolean res;
+    if (fCurrent == null) {
+      res = false;
+    }
+    else if (fIter.hasNext()) {
+      res = true;
     }
     else {
       getNext();
-      if(pos == 0)
-        return false;
-      return iter.hasNext();
+      if (fPos == 0) {
+        res = false;
+      }
+      else {
+        res = fIter.hasNext();
+      }
     }
+    return res;
   }
   
   
-  /**
-   * Iterate on the tags of the current selected file.
-   */
-  /*
-   * (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
+  /** {@inheritDoc} */
+  @Override
   public TagStruct next() {
-    return iter.next();
+    return fIter.next();
   }
   
   
@@ -123,11 +120,11 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    * change the current iterator, etc...
    */
   private void getNext() {
-    if(listTagFiles.size() > 0) {
-      pos ++;
-      pos %= listTagFiles.size();
-      current = (TagFile)listTagFiles.get(pos);
-      iter = current.iterator();
+    if (fListTagFiles.size() > 0) {
+      fPos++;
+      fPos %= fListTagFiles.size();
+      fCurrent = (TagFile)fListTagFiles.get(fPos);
+      fIter = fCurrent.iterator();
     }
   }
   
@@ -137,20 +134,21 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    * @param ois the stream from where to load the table
    * @throws IOException if there is a read error
    */
-  public void load(ObjectInputStream ois) throws IOException {
+  public void load(final ObjectInputStream ois) throws IOException {
     try {
       
-      Object [] os = (Object []) ois.readObject();
-      listTagFiles = new ArrayList<TagFile>();
-      for(int i= 0; i < os.length; i++) {
-        listTagFiles.add((TagFile)os[i]);
+      final Object [] os = (Object []) ois.readObject();
+      fListTagFiles = new ArrayList<TagFile>();
+      for (int i = 0; i < os.length; i++) {
+        fListTagFiles.add((TagFile)os[i]);
       }
-    }  catch (ClassNotFoundException e) {
+    }  
+    catch (ClassNotFoundException e) {
       Logger.err.println("I cannot find the an array class!");
     }
-    if(listTagFiles.size() > 0) {
-      current = (TagFile)listTagFiles.get(0);
-      iter = current.iterator();
+    if (fListTagFiles.size() > 0) {
+      fCurrent = (TagFile)fListTagFiles.get(0);
+      fIter = fCurrent.iterator();
     }
   }
   
@@ -160,8 +158,8 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    * @param oos the output stream where to write the tale
    * @throws IOException if there is a write error
    */
-  public void save(ObjectOutputStream oos) throws IOException {
-    oos.writeObject(listTagFiles.toArray());
+  public void save(final ObjectOutputStream oos) throws IOException {
+    oos.writeObject(fListTagFiles.toArray());
   }  
   
   /**
@@ -172,10 +170,10 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
     /** */
     private static final long serialVersionUID = 1L;
     
-    /** the name of the file, used to differenciate 2 tag file */
-    public final String name;
-    /** the tags corresponding to the file */
-    public final TagStruct [] ts;
+    /** the name of the file, used to differenciate 2 tag file. */
+    public final String fName;
+    /** the tags corresponding to the file. */
+    public final TagStruct [] fTs;
     
     
     /**
@@ -184,68 +182,56 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
      * @param file the name of the file being treated
      * @param list the list of the tags of the file
      */
-    public TagFile(String file, TagList list) {
-      name = file;
-      Iterator<TagStruct> iter = list.iterator();
-      ts = new TagStruct[list.list.size()];
-      for(int i = 0; iter.hasNext(); i++) {
-        ts[i] = (TagStruct)iter.next();
+    public TagFile(final String file, final TagList list) {
+      fName = file;
+      final Iterator<TagStruct> iter = list.iterator();
+      fTs = new TagStruct[list.list.size()];
+      for (int i = 0; iter.hasNext(); i++) {
+        fTs[i] = (TagStruct)iter.next();
       }
     }
     
     
     /**
      * Construct a new tag file with no tags 
-     * associated with the file
+     * associated with the file.
      * @param file the name of the file
      */
-    public TagFile(String file) {
-      name = file;
-      ts = new TagStruct[0];
+    public TagFile(final String file) {
+      fName = file;
+      fTs = new TagStruct[0];
     }
     
-    
-    /**
-     * Check if the name of 2 tag file is the same.
-     */
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals(Object o) {
-      return (o != null) && (o instanceof TagFile) && ((TagFile) o).name.equals(name);
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(final Object o) {
+      return (o != null) && (o instanceof TagFile) && ((TagFile) o).fName.equals(fName);
     }
     
-    /**
-     * Returns the hash code of {@link #name}
-     */
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
+    /** {@inheritDoc} */
+    @Override
     public int hashCode() {
-      return name.hashCode();
+      return fName.hashCode();
     }
     
     
     /**
      * Create an iterator over the array of tags of the
      * tag file.
-     * @return an iterator of the field {@link #ts}
+     * @return an iterator of the field {@link #fTs}
      */
     public Iterator<TagStruct> iterator() {
       return new Iterator<TagStruct>() {
-        int pos;
-        public void remove() {
-          
-        }
-
+        /** the position in the table. */
+        private int fPos;
+        public void remove() { }
+        
         public boolean hasNext() {
-          return pos < ts.length;
+          return fPos < fTs.length;
         }
 
         public TagStruct next() {
-          return ts[pos++];
+          return fTs[fPos++];
         }
         
       };

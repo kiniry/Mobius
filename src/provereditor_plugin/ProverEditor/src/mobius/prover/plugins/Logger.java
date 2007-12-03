@@ -6,15 +6,16 @@ import java.io.PrintStream;
  * Logging utilities. 3 stream to write the different kind of messages.
  * The main feature is for the warning and error streams to have
  * the name of the file and the line written to the output.
- * @author J. Charles
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class Logger {
-  /** the error stream */
-  public final static /*@ non_null @*/ NormalLogger err = new ErrorLogger();
-  /** the warning stream */
-  public final static NormalLogger warn = new WarningLogger();
-  /** the output stream */
-  public final static NormalLogger out = new NormalLogger();
+  /** the error stream. */
+  public static final /*@ non_null @*/ NormalLogger err = new ErrorLogger();
+  /** the warning stream. */
+  public static final NormalLogger warn = new WarningLogger();
+  /** the output stream. */
+  public static final NormalLogger out = new NormalLogger();
 
 
   /**
@@ -23,13 +24,13 @@ public class Logger {
    * It's the basis for the other logger classes.
    * @author J. Charles
    */
-  public static class NormalLogger extends PrintStream{
+  public static class NormalLogger extends PrintStream {
     
     /**
      * Initialize the logger with the specified stream.
      * @param ps the stream to write to
      */
-    protected NormalLogger(PrintStream ps) {
+    protected NormalLogger(final PrintStream ps) {
       super(ps);
     }
     
@@ -46,7 +47,7 @@ public class Logger {
      * @param o the object from which its class has to be output
      * @param str the message
      */
-    public void println(Object o, String str) {
+    public void println(final Object o, final String str) {
       print(o.getClass());
       println(str);
     }
@@ -65,7 +66,7 @@ public class Logger {
      * Initialize the logger with the specified stream.
      * @param ps the stream to write to
      */
-    protected WarningLogger(PrintStream ps) {
+    protected WarningLogger(final PrintStream ps) {
       super(ps);
     }
     
@@ -82,9 +83,9 @@ public class Logger {
      * ie. it will give something like:
      * "Callee.java (233) : My message"
      */
-    public void println(String str) {
-      StackTraceElement [] ste = new Exception().getStackTrace();    
-      super.println(ste[1] + ": " +str); 
+    public void println(final String str) {
+      final StackTraceElement [] ste = new Exception().getStackTrace();    
+      super.println(ste[1] + ": " + str); 
     }
   }
   

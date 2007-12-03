@@ -21,7 +21,7 @@ public interface IProverTopLevel {
    * {@link #hasToSkipSendCommand(ITopLevel, IDocument, String, int, int)}
    * that denotes the command in question should/will be sent to the prover.
    */ 
-  public final static int DONT_SKIP = 0;
+  int DONT_SKIP = 0;
   
   /** 
    * The constant returned by 
@@ -30,7 +30,7 @@ public interface IProverTopLevel {
    * that denotes the command in question should/will be skipped and the evaluation will
    * end immediately.
    */ 
-  public final static int SKIP = 1;
+  int SKIP = 1;
   
   /** 
    * The constant returned by 
@@ -39,7 +39,7 @@ public interface IProverTopLevel {
    * that denotes the command in question should/will be skipped and the next command will be
    * evaluated.
    */ 
-  public final static int SKIP_AND_CONTINUE = 2;
+  int SKIP_AND_CONTINUE = 2;
 
   /**
    * Send the string <var>cmd</var> to the top-level of the theorem prover available via 
@@ -50,11 +50,18 @@ public interface IProverTopLevel {
    * @throws AProverException indicates that an error occured while interacting with the 
    * prover top-level.
    */
-  public void sendCommand(/*@ non_null @*/ ITopLevel itl, /*@ non_null @*/ String cmd)
+  void sendCommand(/*@ non_null @*/ ITopLevel itl, /*@ non_null @*/ String cmd)
     throws AProverException;
 
+  
+  /*@ requires 0 <= beg & beg <= end;
+    @ ensures \result == IProverTopLevel.DONT_SKIP | 
+    @                    IProverTopLevel.SKIP | 
+    @                    IProverTopLevel.SKIP_AND_CONTINUE;
+    @*/
   /**
-   * This method is always called before {@link mobius.prover.exec.toplevel.TopLevel#undo()} is 
+   * This method is always called before 
+   * {@link mobius.prover.exec.toplevel.TopLevel#undo()} is 
    * called if the undo action was triggered by the GUI.
    *
    * <p> This method must determine whether:
@@ -63,7 +70,7 @@ public interface IProverTopLevel {
    * <li> skip the undo command and stop, and therefore do not send it while in 
    * {@link #undo(ITopLevel)} method, or </li>
    * <li> skip this particular undo command and attempt to undo again. </li>
-   * <ul>
+   * </ul>
    * </p>
    * 
    * <p> For example, consider the following Coq (bracketed numbers on the right are not Coq
@@ -108,12 +115,8 @@ public interface IProverTopLevel {
    * {@link mobius.prover.plugins.IProverTopLevel#SKIP}, or 
    * {@link mobius.prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE}
    */
-  /*@ requires 0 <= beg & beg <= end;
-    @ ensures \result == IProverTopLevel.DONT_SKIP | 
-    @                    IProverTopLevel.SKIP | 
-    @                    IProverTopLevel.SKIP_AND_CONTINUE;
-    @*/
-  public int hasToSkipUndo(/*@ non_null @*/ ITopLevel itl, /*@ non_null @*/ IDocument doc, 
+
+  int hasToSkipUndo(/*@ non_null @*/ ITopLevel itl, /*@ non_null @*/ IDocument doc, 
                            /*@ non_null @*/ String cmd, int beg, int end);
   
   /**
@@ -129,7 +132,7 @@ public interface IProverTopLevel {
    * {@link #sendCommand(ITopLevel, String)} method, or </li>
    * <li> skip this particular send command and attempt to send again (i.e., evaluate the
    * next command). </li>
-   * <ul>
+   * </ul>
    * </p>
    * 
    * @param itl the top-level to whom the command shall be sent.
@@ -143,7 +146,7 @@ public interface IProverTopLevel {
    * {@link mobius.prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE}
    */
   // @todo Review the meaning of "doc", "beg", and "end" in this method and its peer above.
-  public int hasToSkipSendCommand(ITopLevel itl, IDocument doc, String cmd, int beg, int end);
+  int hasToSkipSendCommand(ITopLevel itl, IDocument doc, String cmd, int beg, int end);
   
   /**
    * Send the appropriate "undo" command to the top-level of the theorem prover available via
@@ -155,7 +158,7 @@ public interface IProverTopLevel {
    * @throws AProverException indicates that an error occured while interacting with the 
    * prover top-level.
    */
-  public void undo(/*@ non_null @*/ ITopLevel itl) throws AProverException;
+  void undo(/*@ non_null @*/ ITopLevel itl) throws AProverException;
 
   /**
    * Compute the top-level command for a specific prover from the top-level path
@@ -175,7 +178,7 @@ public interface IProverTopLevel {
   // in path path[0] but will look for theories in path[0] and path[1]. The
   // result would be the array \result = { "/usr/bin/coqtop", "-I", path[0],
   // "-I", path[1] }
-  public /*@ non_null @*/ String[] getCommands(/*@ non_null @*/ String top,
+  /*@ non_null @*/ String[] getCommands(/*@ non_null @*/ String top,
                                                /*@ non_null @*/ String[] path);
 
 }
