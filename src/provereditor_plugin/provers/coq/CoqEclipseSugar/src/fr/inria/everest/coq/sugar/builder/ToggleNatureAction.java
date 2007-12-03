@@ -2,6 +2,8 @@ package fr.inria.everest.coq.sugar.builder;
 
 import java.util.Iterator;
 
+import mobius.prover.gui.builder.ProjectNature;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
@@ -12,7 +14,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import prover.gui.builder.ProjectNature;
 
 public class ToggleNatureAction implements IObjectActionDelegate {
 

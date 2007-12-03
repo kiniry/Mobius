@@ -1,12 +1,13 @@
 package fr.inria.everest.coq.sugar.builder;
 
 
+import mobius.prover.gui.builder.ProjectNature;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
-import prover.gui.builder.ProjectNature;
 
 public class CoqProjectWizard extends BasicNewProjectResourceWizard {
 
