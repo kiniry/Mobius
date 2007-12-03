@@ -7,10 +7,10 @@ import fr.inria.everest.coq.editor.utils.types.Declaration;
 
 public class Simple extends ATokenData{
 
-	public ProverType parse(ProverEditor editor) {
-		return new Declaration(editor, fText, fOffset, fLen);
-	}
-	public Object clone() {
-		return new Simple();
-	}
+  public ProverType parse(ProverEditor editor) {
+    return new Declaration(editor, fText, fOffset, fLen);
+  }
+  public Object clone() {
+    return new Simple();
+  }
 }

@@ -8,26 +8,26 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class CoqType extends ProverType {
-	String fName;
-	protected Image fImg;
+  String fName;
+  protected Image fImg;
 
-	
-	public CoqType(ProverEditor editor, String name) {
-		super(editor);
-		fName = name;
-	}
-	
-	public String toString() {
-		return fName;
-	}
-	
+  
+  public CoqType(ProverEditor editor, String name) {
+    super(editor);
+    fName = name;
+  }
+  
+  public String toString() {
+    return fName;
+  }
+  
 
-	public void setEnd(int end) {
-		setLength(end - getOffset());
-	}
+  public void setEnd(int end) {
+    setLength(end - getOffset());
+  }
 
-	public Image getImage() {
-		return fImg;	
-	}
+  public Image getImage() {
+    return fImg;  
+  }
 }
 
