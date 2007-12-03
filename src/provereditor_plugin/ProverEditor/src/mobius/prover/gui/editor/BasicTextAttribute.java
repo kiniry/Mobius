@@ -6,32 +6,32 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * A text attribute class with enhanced background color support.
+ *
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class BasicTextAttribute extends TextAttribute {
-  /** the background color */
-  private Color fBgColor = null;
+  /** the background color. */
+  private Color fBgColor;
   
   /**
    * Create a text attribute with the specified foreground color.
    * @param foreground A color. Cannot be <code>null</code>
    */
-  public BasicTextAttribute(Color foreground) {
+  public BasicTextAttribute(final Color foreground) {
     super(foreground);
     fBgColor = super.getBackground();
   }
   
   /**
-   * Change the background color of the text attribute
+   * Change the background color of the text attribute.
    * @param bgColor the new background color
    */
-  public void setBackground(Color bgColor) {
+  public void setBackground(final Color bgColor) {
     fBgColor = bgColor;
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.jface.text.TextAttribute#getBackground()
-   */
+  /** {@inheritDoc} */
+  @Override
   public Color getBackground() {
     return fBgColor;
   }

@@ -6,6 +6,8 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 
 /**
  * A minimal implementation of a RuleBasedScanner.
+ *
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class BasicRuleScanner extends RuleBasedScanner implements IColorConstants {
 
@@ -20,12 +22,14 @@ public class BasicRuleScanner extends RuleBasedScanner implements IColorConstant
    * Create a new scanner using the specified rules.
    * @param rules the rules to scan with.
    */
-  public BasicRuleScanner(IRule[] rules) {
+  public BasicRuleScanner(final IRule[] rules) {
     super();
-    if(rules == null) {
-      rules = new IRule[0];
+    if (rules == null) {
+      setRules(new IRule[0]);
     }
-    setRules(rules);
+    else {
+      setRules(rules);
+    }
   }
   
   /**

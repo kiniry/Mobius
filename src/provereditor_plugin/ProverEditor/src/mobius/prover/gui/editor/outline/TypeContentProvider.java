@@ -9,37 +9,49 @@ import org.eclipse.jface.viewers.Viewer;
 public class TypeContentProvider implements ITreeContentProvider {
   private static final Object[] EMPTY_ARRAY = new Object[0];
 
+  /** {@inheritDoc} */
+  @Override
   public void dispose() {
-    // TODO Auto-generated method stub
-
+    
   }
-
-  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+  
+  /** {@inheritDoc} */
+  @Override
+  public void inputChanged(final Viewer viewer, final Object oldInput, 
+                           final Object newInput) {
   }
-
-  public Object[] getChildren(Object parent) {
-    if(parent instanceof ProverType) {
+  
+  /** {@inheritDoc} */
+  @Override
+  public Object[] getChildren(final Object parent) {
+    if (parent instanceof ProverType) {
       return ((ProverType)parent).getSubtypes();
     }
     return EMPTY_ARRAY;
   }
-
-  public Object getParent(Object elem) {
-    if(elem instanceof ProverType) {
+  
+  /** {@inheritDoc} */
+  @Override
+  public Object getParent(final Object elem) {
+    if (elem instanceof ProverType) {
       return ((ProverType)elem).getSupertype();
     }
     return null;
   }
-
-  public boolean hasChildren(Object elem) {
-    if(elem instanceof ProverType) {
-      Object[] os = ((ProverType)elem).getSubtypes();
+  
+  /** {@inheritDoc} */
+  @Override
+  public boolean hasChildren(final Object elem) {
+    if (elem instanceof ProverType) {
+      final Object[] os = ((ProverType)elem).getSubtypes();
       return (os != null) && (os.length > 0);
     }
     return false;
   }
-
-  public Object[] getElements(Object input) {
+  
+  /** {@inheritDoc} */
+  @Override
+  public Object[] getElements(final Object input) {
     return getChildren(input);
   }
 

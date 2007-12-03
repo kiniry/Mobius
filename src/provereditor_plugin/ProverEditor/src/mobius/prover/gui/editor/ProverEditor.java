@@ -7,16 +7,19 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 
+
 /**
  * The editor used to edit any prover language defined file.
  * It selects the right scanner to highlight with the right color
  * and parse for the right language.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
-public class ProverEditor extends TextEditor{
-  /** the viewer associated with the editor */
+public class ProverEditor extends TextEditor {
+  /** the viewer associated with the editor. */
   private BasicSourceViewerConfig fViewer;
-  /** a rule scanner to highlight the file in the editor */
-  private LimitRuleScanner fScanner = null;
+  /** a rule scanner to highlight the file in the editor. */
+  private LimitRuleScanner fScanner;
   
   
   /**
@@ -24,7 +27,8 @@ public class ProverEditor extends TextEditor{
    */
   public ProverEditor() {
     super();
-    setSourceViewerConfiguration(fViewer = new BasicSourceViewerConfig(this));
+    fViewer = new BasicSourceViewerConfig(this);
+    setSourceViewerConfiguration(fViewer);
   }
   
   /**
@@ -41,8 +45,8 @@ public class ProverEditor extends TextEditor{
    * @return A scanner to highlight the file opened in the editor.
    */
   public LimitRuleScanner getScanner() {
-    if(fScanner == null) {
-      Prover p = Prover.findProverFromFile(getTitle());
+    if (fScanner == null) {
+      final Prover p = Prover.findProverFromFile(getTitle());
       if (p != null) {
         fScanner = p.getRuleScanner();
       }
@@ -54,18 +58,20 @@ public class ProverEditor extends TextEditor{
   }
   
   @SuppressWarnings("unchecked")
-  public Object getAdapter(Class cl) {
-    if(cl == IContentOutlinePage.class) {
-      IContentOutlinePage cop = new BasicContentOutline(this);
+  public Object getAdapter(final Class cl) {
+    if (cl == IContentOutlinePage.class) {
+      final IContentOutlinePage cop = new BasicContentOutline(this);
       return cop;
     }
     else {
       return super.getAdapter(cl);
     }
   }
-   protected void initializeKeyBindingScopes() {
-          setKeyBindingScopes(new String[] { //"org.eclipse.ui.textEditorScope", 
-               "ProverEditor.context" });
-    }
+  
+  protected void initializeKeyBindingScopes() {
+    setKeyBindingScopes(
+            new String[] {"ProverEditor.context"});
+       //"org.eclipse.ui.textEditorScope",          
+  }
 
 }

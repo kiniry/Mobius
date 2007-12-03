@@ -8,35 +8,41 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class TypeLabelProvider implements ILabelProvider {
-
-  public void addListener(ILabelProviderListener listener) {
-    // TODO Auto-generated method stub
+  /** {@inheritDoc} */
+  @Override
+  public void addListener(final ILabelProviderListener listener) {
 
   }
-
+  
+  /** {@inheritDoc} */
+  @Override
   public void dispose() {
-    // TODO Auto-generated method stub
 
   }
-
-  public boolean isLabelProperty(Object element, String property) {
-    // TODO Auto-generated method stub
+  
+  /** {@inheritDoc} */
+  @Override
+  public boolean isLabelProperty(final Object element, final String property) {
     return false;
   }
 
-  public void removeListener(ILabelProviderListener listener) {
-    // TODO Auto-generated method stub
-
+  /** {@inheritDoc} */
+  @Override
+  public void removeListener(final ILabelProviderListener listener) {
   }
-
-  public Image getImage(Object element) {
-    if(element instanceof ProverType) {
+  
+  /** {@inheritDoc} */
+  @Override
+  public Image getImage(final Object element) {
+    if (element instanceof ProverType) {
       return ((ProverType)element).getImage();
     }
     return null;
   }
 
-  public String getText(Object element) {
+  /** {@inheritDoc} */
+  @Override
+  public String getText(final Object element) {
     if (element == null) {
       return "";
     }

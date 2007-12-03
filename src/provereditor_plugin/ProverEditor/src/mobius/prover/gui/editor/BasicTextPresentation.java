@@ -10,9 +10,11 @@ import org.eclipse.swt.custom.StyleRange;
  * This class is just the same as the normal text presentation
  * class, but some useful methods are added.
  * @see TextPresentation
+ *
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class BasicTextPresentation extends TextPresentation {
-  /** the viewer associated with the text presentation */
+  /** the viewer associated with the text presentation. */
   private TextViewer fViewer;
   
   /**
@@ -20,7 +22,7 @@ public class BasicTextPresentation extends TextPresentation {
    * viewer.
    * @param viewer a text viewer, cannot be null.
    */
-  public BasicTextPresentation(TextViewer viewer) {
+  public BasicTextPresentation(final TextViewer viewer) {
     super();
     fViewer = viewer;
   }
@@ -30,10 +32,10 @@ public class BasicTextPresentation extends TextPresentation {
    * @param pres the presentation to be the copy of.
    */
   @SuppressWarnings("unchecked")
-  public BasicTextPresentation(BasicTextPresentation pres) {
+  public BasicTextPresentation(final BasicTextPresentation pres) {
     super();
-    Iterator<StyleRange> iter = pres.getAllStyleRangeIterator();
-    while(iter.hasNext()) {
+    final Iterator<StyleRange> iter = pres.getAllStyleRangeIterator();
+    while (iter.hasNext()) {
       this.addStyleRange((StyleRange) iter.next().clone());
     }
     this.setDefaultStyleRange(pres.getDefaultStyleRange());
@@ -48,10 +50,8 @@ public class BasicTextPresentation extends TextPresentation {
     return fViewer;
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see java.lang.Object#clone()
-   */
+  /** {@inheritDoc} */
+  @Override
   public Object clone() {
     return new BasicTextPresentation(this);
   }

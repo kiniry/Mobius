@@ -10,14 +10,16 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class ProverType {
-  private List<ProverType> subtypes = new ArrayList<ProverType>();
-  private ProverType supertype = null;
+  private List<ProverType> fSubtypes = new ArrayList<ProverType>();
+  private ProverType fSupertype;
   
-  private int fOffset = 0;
-  private int fLength = 0;
+  private int fOffset;
+  private int fLength;
   private ProverEditor fEditor;
+
+  private String fPath = toString();
   
-  public ProverType(ProverEditor editor) {
+  public ProverType(final ProverEditor editor) {
     fEditor = editor;
   }
   
@@ -25,7 +27,7 @@ public class ProverType {
     return fLength;
   }
 
-  protected void setLength(int length) {
+  protected void setLength(final int length) {
     fLength = length;
   }
 
@@ -33,23 +35,23 @@ public class ProverType {
     return fOffset;
   }
 
-  protected void setOffset(int offset) {
+  protected void setOffset(final int offset) {
     fOffset = offset;
   }
 
-  public void add(ProverType pt) {
-    subtypes.add(pt);
-    pt.supertype = this;
+  public void add(final ProverType pt) {
+    fSubtypes.add(pt);
+    pt.fSupertype = this;
     pt.addPath(getPath());
   }
 
 
 
   public Object [] getSubtypes() {
-    return subtypes.toArray();
+    return fSubtypes.toArray();
   }
   public Object getSupertype() {
-    return supertype;
+    return fSupertype;
   }
   public Image getImage() {
     return null;
@@ -57,36 +59,43 @@ public class ProverType {
 
   public void selectAndReveal() {  
     //System.out.println(fOffset + " " + fLength);
-    if(fOffset != 0 || fLength != 0) {
-      
+    if (fOffset != 0 || fLength != 0) {
       fEditor.selectAndReveal(fOffset, fLength);
     }
   }
 
-  String fPath = toString();
   public String getPath() {
     return fPath;
   }
-  private void addPath(String path) {
+  private void addPath(final String path) {
     fPath = path + "." + toString();
   }  
+  
+  /** {@inheritDoc} */
+  @Override
   public String toString() {
     return "root";
   }
 
-  public ProverType findFromPath(String path) {
-    if(!path.startsWith(fPath))
-      return null;
-    if(path.length() == fPath.length())
-      return this;
-    Iterator<ProverType> iter = subtypes.iterator();
-    while(iter.hasNext()) {
-      ProverType pt = (ProverType)iter.next();
-      ProverType res = pt.findFromPath(path);
-      if(res != null)
-        return res;
+  public ProverType findFromPath(final String path) {
+    ProverType res = null;
+    if (!path.startsWith(fPath)) {
+      res = null;
     }
-    return null;
+    else if (path.length() == fPath.length()) {
+      res = this;
+    }
+    else {
+      final Iterator<ProverType> iter = fSubtypes.iterator();
+      while (iter.hasNext()) {
+        final ProverType pt = (ProverType)iter.next();
+        final ProverType typ = pt.findFromPath(path);
+        if (typ != null) {
+          res = typ;
+        }
+      }
+    }
+    return res;
   }
   
 }
