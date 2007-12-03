@@ -7,40 +7,40 @@ import org.eclipse.jface.viewers.Viewer;
 
 
 public class TypeContentProvider implements ITreeContentProvider {
-	private static final Object[] EMPTY_ARRAY = new Object[0];
+  private static final Object[] EMPTY_ARRAY = new Object[0];
 
-	public void dispose() {
-		// TODO Auto-generated method stub
+  public void dispose() {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+  }
 
-	public Object[] getChildren(Object parent) {
-		if(parent instanceof ProverType) {
-			return ((ProverType)parent).getSubtypes();
-		}
-		return EMPTY_ARRAY;
-	}
+  public Object[] getChildren(Object parent) {
+    if(parent instanceof ProverType) {
+      return ((ProverType)parent).getSubtypes();
+    }
+    return EMPTY_ARRAY;
+  }
 
-	public Object getParent(Object elem) {
-		if(elem instanceof ProverType) {
-			return ((ProverType)elem).getSupertype();
-		}
-		return null;
-	}
+  public Object getParent(Object elem) {
+    if(elem instanceof ProverType) {
+      return ((ProverType)elem).getSupertype();
+    }
+    return null;
+  }
 
-	public boolean hasChildren(Object elem) {
-		if(elem instanceof ProverType) {
-			Object[] os = ((ProverType)elem).getSubtypes();
-			return (os != null) && (os.length > 0);
-		}
-		return false;
-	}
+  public boolean hasChildren(Object elem) {
+    if(elem instanceof ProverType) {
+      Object[] os = ((ProverType)elem).getSubtypes();
+      return (os != null) && (os.length > 0);
+    }
+    return false;
+  }
 
-	public Object[] getElements(Object input) {
-		return getChildren(input);
-	}
+  public Object[] getElements(Object input) {
+    return getChildren(input);
+  }
 
 }

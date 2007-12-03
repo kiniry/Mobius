@@ -9,38 +9,38 @@ import org.eclipse.swt.graphics.Image;
 
 public class TypeLabelProvider implements ILabelProvider {
 
-	public void addListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
+  public void addListener(ILabelProviderListener listener) {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	public void dispose() {
-		// TODO Auto-generated method stub
+  public void dispose() {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	public boolean isLabelProperty(Object element, String property) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+  public boolean isLabelProperty(Object element, String property) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public void removeListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
+  public void removeListener(ILabelProviderListener listener) {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	public Image getImage(Object element) {
-		if(element instanceof ProverType) {
-			return ((ProverType)element).getImage();
-		}
-		return null;
-	}
+  public Image getImage(Object element) {
+    if(element instanceof ProverType) {
+      return ((ProverType)element).getImage();
+    }
+    return null;
+  }
 
-	public String getText(Object element) {
-		if (element == null) {
-			return "";
-		}
-		return element.toString();
-	}
+  public String getText(Object element) {
+    if (element == null) {
+      return "";
+    }
+    return element.toString();
+  }
 
 }

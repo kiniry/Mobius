@@ -14,28 +14,28 @@ import org.eclipse.core.runtime.CoreException;
  * @author J. Charles
  */
 public class DeltaVisitor implements IResourceDeltaVisitor {
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
-	 */
-	public boolean visit(IResourceDelta delta) throws CoreException {
-		IResource res = delta.getResource();
-		int type = res.getType();
-		Tagger tag = Tagger.instance;
-		if(type == IResource.FILE) {
-			switch(delta.getKind()) {
-				case IResourceDelta.ADDED:
-				case IResourceDelta.CHANGED:
-					tag.performAddChangedFile((IFile) res);
-					break;
-				case IResourceDelta.REMOVED:
-					tag.performRemoveFile((IFile) res);
-					break;
-				default:
-					break;
-			}
-		}
-		return true;
-	}
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+   */
+  public boolean visit(IResourceDelta delta) throws CoreException {
+    IResource res = delta.getResource();
+    int type = res.getType();
+    Tagger tag = Tagger.instance;
+    if(type == IResource.FILE) {
+      switch(delta.getKind()) {
+        case IResourceDelta.ADDED:
+        case IResourceDelta.CHANGED:
+          tag.performAddChangedFile((IFile) res);
+          break;
+        case IResourceDelta.REMOVED:
+          tag.performRemoveFile((IFile) res);
+          break;
+        default:
+          break;
+      }
+    }
+    return true;
+  }
 
 }

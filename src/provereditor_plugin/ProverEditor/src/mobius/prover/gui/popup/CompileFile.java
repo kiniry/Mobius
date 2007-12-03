@@ -29,155 +29,155 @@ import org.eclipse.ui.IActionDelegate;
  */
 public class CompileFile implements IActionDelegate {
 
-	/** The current selection in the workbench */
-	private IStructuredSelection fSel = null;
-	
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
-	public void run(IAction action) {
-		if(fSel == null)
-			return;
-		if(! (fSel.getFirstElement() instanceof IFile))
-			return;
-		IFile f = (IFile) fSel.getFirstElement();
-		Job job = compile(f, false);
-		job.schedule();
-	}
+  /** The current selection in the workbench */
+  private IStructuredSelection fSel = null;
+  
+  /*
+   *  (non-Javadoc)
+   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+   */
+  public void run(IAction action) {
+    if(fSel == null)
+      return;
+    if(! (fSel.getFirstElement() instanceof IFile))
+      return;
+    IFile f = (IFile) fSel.getFirstElement();
+    Job job = compile(f, false);
+    job.schedule();
+  }
 
-	/**
-	 * Compile the given file.
-	 * @param f the file to compile
-	 * @param silent if there has to be some prompt if the compilation fails
-	 * @return the created job or null
-	 */
-	public static Job compile(IFile f, boolean silent) {
-		Prover prover = Prover.findProverFromFile(f.toString());
-		if(prover == null)
-			return null;
-		String name =  f.getLocation().toString();
-		Set<String> hsPath;
-		try {
-			hsPath = AddToLoadPath.getPaths(f.getProject().getLocation().toString());
-		} catch (IOException e) {
-			hsPath = new HashSet<String>();
-		}
-		String [] path = new String[hsPath.size() + 2];
-		path [0]= f.getProject().getLocation().toString();
-		path [1] = f.getLocation().removeLastSegments(1).toString();
-		Iterator<String> iter = hsPath.iterator();
-		for(int i = 2; i < path.length; i++) {
-			path[i] = path[0] + File.separator + iter.next().toString();
-		}
-		String[] cmd = prover.getTranslator().getCompilingCommand(prover.getCompiler().trim(), path, name);
-		Job job = new CompilationJob(prover, f, cmd, silent);
-		return job;
-	}
+  /**
+   * Compile the given file.
+   * @param f the file to compile
+   * @param silent if there has to be some prompt if the compilation fails
+   * @return the created job or null
+   */
+  public static Job compile(IFile f, boolean silent) {
+    Prover prover = Prover.findProverFromFile(f.toString());
+    if(prover == null)
+      return null;
+    String name =  f.getLocation().toString();
+    Set<String> hsPath;
+    try {
+      hsPath = AddToLoadPath.getPaths(f.getProject().getLocation().toString());
+    } catch (IOException e) {
+      hsPath = new HashSet<String>();
+    }
+    String [] path = new String[hsPath.size() + 2];
+    path [0]= f.getProject().getLocation().toString();
+    path [1] = f.getLocation().removeLastSegments(1).toString();
+    Iterator<String> iter = hsPath.iterator();
+    for(int i = 2; i < path.length; i++) {
+      path[i] = path[0] + File.separator + iter.next().toString();
+    }
+    String[] cmd = prover.getTranslator().getCompilingCommand(prover.getCompiler().trim(), path, name);
+    Job job = new CompilationJob(prover, f, cmd, silent);
+    return job;
+  }
 
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			fSel = (IStructuredSelection) selection;
-			Object o = fSel.getFirstElement();
-	    	if (o instanceof IFile) {
-	    		IFile f = (IFile) o;
-	    		if(Prover.findProverFromFile(f.toString()) != null) {
-	    			action.setEnabled(true);
-	    			return;
-	    		}
-	    	}
-		}
-		action.setEnabled(false);
-	}
-	
+  /*
+   *  (non-Javadoc)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   */
+  public void selectionChanged(IAction action, ISelection selection) {
+    if (selection instanceof IStructuredSelection) {
+      fSel = (IStructuredSelection) selection;
+      Object o = fSel.getFirstElement();
+        if (o instanceof IFile) {
+          IFile f = (IFile) o;
+          if(Prover.findProverFromFile(f.toString()) != null) {
+            action.setEnabled(true);
+            return;
+          }
+        }
+    }
+    action.setEnabled(false);
+  }
+  
 
-	/**
-	 * This class represents the Job used to compile a file.
-	 */
-	private static class CompilationJob extends Job {
-		/** The file to compile */
-		private IFile fFile;
-		/** The command line to compile the file */
-		private String [] fCmd;
-		/** The current prover object assiciated with the current file */
-		private Prover fProver;
-		/** tell if the job should be silent */
-		private boolean bSilent;
-		
-		/**
-		 * Create a new Compilation Job.
-		 * @param prover the prover object to compile the file with
-		 * @param file the file to compile
-		 * @param cmd the command to compile the file
-		 */
-		public CompilationJob(Prover prover, IFile file, String[] cmd, boolean silent) {
-			super("Compiling " + file.getName());
-			fFile = file;
-			fCmd = cmd;
-			fProver = prover;
-			bSilent = silent;
-		}
+  /**
+   * This class represents the Job used to compile a file.
+   */
+  private static class CompilationJob extends Job {
+    /** The file to compile */
+    private IFile fFile;
+    /** The command line to compile the file */
+    private String [] fCmd;
+    /** The current prover object assiciated with the current file */
+    private Prover fProver;
+    /** tell if the job should be silent */
+    private boolean bSilent;
+    
+    /**
+     * Create a new Compilation Job.
+     * @param prover the prover object to compile the file with
+     * @param file the file to compile
+     * @param cmd the command to compile the file
+     */
+    public CompilationJob(Prover prover, IFile file, String[] cmd, boolean silent) {
+      super("Compiling " + file.getName());
+      fFile = file;
+      fCmd = cmd;
+      fProver = prover;
+      bSilent = silent;
+    }
 
-		/*
-		 *  (non-Javadoc)
-		 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				//System.out.println("here");
-				Process p = Runtime.getRuntime().exec(fCmd);
-				LineNumberReader in = new LineNumberReader( new InputStreamReader(p.getInputStream()));
-				String s;
-				String res = "";
-				try {
-					p.waitFor();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				while((s = in.readLine()) != null){
-					res += s + "\n";
-//					System.out.println("1" + res);
-					if (fProver.isErrorMsg(s)) {
-						while((s = in.readLine()) != null)
-							res += s + "\n";
-						if(bSilent)
-							return ProverStatus.getOkStatus();
-						return ProverStatus.getErrorStatus("The file " + fFile.getName() + " was not compiled.", 
-											res);  			
-					}
-					 			
-				}in = new LineNumberReader( new InputStreamReader(p.getErrorStream()));
-				while((s = in.readLine()) != null){
-					res += s + "\n";
-//					System.out.println("1" + res);
-					if (fProver.isErrorMsg(s)) {
-						while((s = in.readLine()) != null)
-							res += s + "\n";
-						
-						if(bSilent)
-							return ProverStatus.getOkStatus();
-						return ProverStatus.getErrorStatus("The file " + fFile.getName() + " was not compiled.", 
-											res);  			
-					}
-					 			
-				}
-				fFile.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
-			} catch (IOException e) {
-				if(bSilent)
-					return ProverStatus.getOkStatus();
-				return ProverStatus.getErrorStatus(
-						"I was unable to find the path to the compilation program. Check the path." , 
-							e.toString());
-			} catch (CoreException e) {
-				e.printStackTrace();
-			} 		
-			
-			return ProverStatus.getOkStatus();
-		}
-	}
+    /*
+     *  (non-Javadoc)
+     * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    protected IStatus run(IProgressMonitor monitor) {
+      try {
+        //System.out.println("here");
+        Process p = Runtime.getRuntime().exec(fCmd);
+        LineNumberReader in = new LineNumberReader( new InputStreamReader(p.getInputStream()));
+        String s;
+        String res = "";
+        try {
+          p.waitFor();
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        while((s = in.readLine()) != null){
+          res += s + "\n";
+//          System.out.println("1" + res);
+          if (fProver.isErrorMsg(s)) {
+            while((s = in.readLine()) != null)
+              res += s + "\n";
+            if(bSilent)
+              return ProverStatus.getOkStatus();
+            return ProverStatus.getErrorStatus("The file " + fFile.getName() + " was not compiled.", 
+                      res);        
+          }
+                 
+        }in = new LineNumberReader( new InputStreamReader(p.getErrorStream()));
+        while((s = in.readLine()) != null){
+          res += s + "\n";
+//          System.out.println("1" + res);
+          if (fProver.isErrorMsg(s)) {
+            while((s = in.readLine()) != null)
+              res += s + "\n";
+            
+            if(bSilent)
+              return ProverStatus.getOkStatus();
+            return ProverStatus.getErrorStatus("The file " + fFile.getName() + " was not compiled.", 
+                      res);        
+          }
+                 
+        }
+        fFile.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
+      } catch (IOException e) {
+        if(bSilent)
+          return ProverStatus.getOkStatus();
+        return ProverStatus.getErrorStatus(
+            "I was unable to find the path to the compilation program. Check the path." , 
+              e.toString());
+      } catch (CoreException e) {
+        e.printStackTrace();
+      }     
+      
+      return ProverStatus.getOkStatus();
+    }
+  }
 }

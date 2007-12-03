@@ -10,18 +10,18 @@ import java.util.List;
  * @author J. Charles
  */
 public final class TagList implements Iterable<TagStruct> {
-	/** the list containing the tags */
-	final List<TagStruct> list = new ArrayList<TagStruct>();
-	
-	/** add a tag structure to the list */
-	public void add(TagStruct ts) {
-		list.add(ts);
-	}
-	
-	/** return the iterator of the tag list */
-	public Iterator<TagStruct> iterator() {
-		return list.iterator();
-	}
-	
-	
+  /** the list containing the tags */
+  final List<TagStruct> list = new ArrayList<TagStruct>();
+  
+  /** add a tag structure to the list */
+  public void add(TagStruct ts) {
+    list.add(ts);
+  }
+  
+  /** return the iterator of the tag list */
+  public Iterator<TagStruct> iterator() {
+    return list.iterator();
+  }
+  
+  
 }

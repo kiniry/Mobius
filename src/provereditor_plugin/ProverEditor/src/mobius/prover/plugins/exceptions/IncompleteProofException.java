@@ -13,16 +13,16 @@ package mobius.prover.plugins.exceptions;
  */
 public class IncompleteProofException extends ProverException {
 
-	/** A serial UID to have much more fun... */
-	private static final long serialVersionUID = 1L;
+  /** A serial UID to have much more fun... */
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * Create a new exception, with a message specifying the 
-	 * problem.
-	 * @param description A description of the problem encountered
-	 */
-	public IncompleteProofException(String description) {
-		super(description);
-	}
+  /**
+   * Create a new exception, with a message specifying the 
+   * problem.
+   * @param description A description of the problem encountered
+   */
+  public IncompleteProofException(String description) {
+    super(description);
+  }
 
 }

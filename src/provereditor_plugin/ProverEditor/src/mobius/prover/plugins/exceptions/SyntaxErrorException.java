@@ -10,15 +10,15 @@ package mobius.prover.plugins.exceptions;
  * detected by the prover.
  */
 public class SyntaxErrorException extends ProverException{
-	/** Serial UID to have much more fun... */
-	private static final long serialVersionUID = 1L;
+  /** Serial UID to have much more fun... */
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * The constructor. Takes a description of the error as parameter.
-	 * @param description The source of the error.
-	 */
-	public SyntaxErrorException(String description) {
-		super(description);
-	}
+  /**
+   * The constructor. Takes a description of the error as parameter.
+   * @param description The source of the error.
+   */
+  public SyntaxErrorException(String description) {
+    super(description);
+  }
 
 }

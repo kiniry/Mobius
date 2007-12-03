@@ -6,21 +6,21 @@ import org.eclipse.jface.text.rules.IWordDetector;
  */
 public class ExprDetector implements IWordDetector {
 
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.jface.text.rules.IWordDetector#isWordStart(char)
-	 */
-	public boolean isWordStart(char c) {
-		return c == '-' || c == '<' ||c == '>' ||
-			c == ':' || c == '.' ||c == ',';
-	}
+  /*
+   *  (non-Javadoc)
+   * @see org.eclipse.jface.text.rules.IWordDetector#isWordStart(char)
+   */
+  public boolean isWordStart(char c) {
+    return c == '-' || c == '<' ||c == '>' ||
+      c == ':' || c == '.' ||c == ',';
+  }
 
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.jface.text.rules.IWordDetector#isWordPart(char)
-	 */
-	public boolean isWordPart(char c) {
-		return isWordStart(c);
-	}
+  /*
+   *  (non-Javadoc)
+   * @see org.eclipse.jface.text.rules.IWordDetector#isWordPart(char)
+   */
+  public boolean isWordPart(char c) {
+    return isWordStart(c);
+  }
 
 }

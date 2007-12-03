@@ -29,28 +29,28 @@ public class ProverFileReader extends Reader {
      * @param  in   A Reader
      */
     public ProverFileReader(Reader in) {
-		super(in);
-		this.in = in; 
+    super(in);
+    this.in = in; 
     }
 
     /** Check to make sure that the stream has not been closed */
     private void ensureOpen() throws IOException {
-		if (in == null)
-		    throw new IOException("Stream closed");
+    if (in == null)
+        throw new IOException("Stream closed");
     }
 
     /**
      * Fill the input buffer.
      */
     private void fill() throws IOException {
-		int n;
-		do {
-		    n = in.read(cb, 0, cb.length);
-		} while (n == 0);
-		if (n > 0) {
-		    nChars = n;
-		    nextChar = 0;
-		}
+    int n;
+    do {
+        n = in.read(cb, 0, cb.length);
+    } while (n == 0);
+    if (n > 0) {
+        nChars = n;
+        nextChar = 0;
+    }
     }
 
     /**
@@ -62,24 +62,24 @@ public class ProverFileReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     public int read() throws IOException {
-		synchronized (lock) {
-		    ensureOpen();
-		    for (;;) {
-				if (nextChar >= nChars) {
-				    fill();
-				    if (nextChar >= nChars)
-				    	return -1;
-				}
-				if (skipLF) {
-				    skipLF = false;
-				    if (cb[nextChar] == '\n') {
-						nextChar++;
-						continue;
-				    }
-				}
-				return cb[nextChar++];
-		    }
-		}
+    synchronized (lock) {
+        ensureOpen();
+        for (;;) {
+        if (nextChar >= nChars) {
+            fill();
+            if (nextChar >= nChars)
+              return -1;
+        }
+        if (skipLF) {
+            skipLF = false;
+            if (cb[nextChar] == '\n') {
+            nextChar++;
+            continue;
+            }
+        }
+        return cb[nextChar++];
+        }
+    }
     }
 
     /**
@@ -87,33 +87,33 @@ public class ProverFileReader extends Reader {
      * stream if necessary.
      */
     private int read1(char[] cbuf, int off, int len) throws IOException {
-		if (nextChar >= nChars) {
-		    /* If the requested length is at least as large as the buffer, and
-		       if there is no mark/reset activity, and if line feeds are not
-		       being skipped, do not bother to copy the characters into the
-		       local buffer.  In this way buffered streams will cascade
-		       harmlessly. */
-		    if (len >= cb.length && !skipLF) {
-		    	return in.read(cbuf, off, len);
-		    }
-		    fill();
-		}
-		if (nextChar >= nChars) 
-			return -1;
-		if (skipLF) {
-		    skipLF = false;
-		    if (cb[nextChar] == '\n') {
-			nextChar++;
-			if (nextChar >= nChars)
-			    fill();
-			if (nextChar >= nChars)
-			    return -1;
-		    }
-		}
-		int n = Math.min(len, nChars - nextChar);
-		System.arraycopy(cb, nextChar, cbuf, off, n);
-		nextChar += n;
-		return n;
+    if (nextChar >= nChars) {
+        /* If the requested length is at least as large as the buffer, and
+           if there is no mark/reset activity, and if line feeds are not
+           being skipped, do not bother to copy the characters into the
+           local buffer.  In this way buffered streams will cascade
+           harmlessly. */
+        if (len >= cb.length && !skipLF) {
+          return in.read(cbuf, off, len);
+        }
+        fill();
+    }
+    if (nextChar >= nChars) 
+      return -1;
+    if (skipLF) {
+        skipLF = false;
+        if (cb[nextChar] == '\n') {
+      nextChar++;
+      if (nextChar >= nChars)
+          fill();
+      if (nextChar >= nChars)
+          return -1;
+        }
+    }
+    int n = Math.min(len, nChars - nextChar);
+    System.arraycopy(cb, nextChar, cbuf, off, n);
+    nextChar += n;
+    return n;
     }
 
     /*
@@ -122,22 +122,22 @@ public class ProverFileReader extends Reader {
      */
     public int read(char cbuf[], int off, int len) throws IOException {
         synchronized (lock) {
-		    ensureOpen();
+        ensureOpen();
             if ((off < 0) || (off > cbuf.length) || (len < 0) ||
                 ((off + len) > cbuf.length) || ((off + len) < 0)) {
                 throw new IndexOutOfBoundsException();
             } else if (len == 0) {
                 return 0;
             }
-	
-		    int n = read1(cbuf, off, len);
-		    if (n <= 0) return n;
-		    while ((n < len) && in.ready()) {
-				int n1 = read1(cbuf, off + n, len - n);
-				if (n1 <= 0) break;
-				n += n1;
-		    }
-		    return n;
+  
+        int n = read1(cbuf, off, len);
+        if (n <= 0) return n;
+        while ((n < len) && in.ready()) {
+        int n1 = read1(cbuf, off + n, len - n);
+        if (n1 <= 0) break;
+        n += n1;
+        }
+        return n;
         }
     }
 
@@ -153,72 +153,72 @@ public class ProverFileReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     String readLine() throws IOException {
-		StringBuffer s = null;
-		int startChar;
-		count = 0;
+    StringBuffer s = null;
+    int startChar;
+    count = 0;
         synchronized (lock) {
             ensureOpen();
-		    for (;;) {
-				if (nextChar >= nChars)
-				    fill();
-				if (nextChar >= nChars) { /* EOF */
-				    if (s != null && s.length() > 0) {
-				    	count += s.length();
-				    	return s.toString();
-				    }
-				    else {
-				    	return null;
-				    }
-				}
-				boolean eol = false;
-				char c = 0;
-				int i;
-		
-		                /* Skip a leftover '\n', if necessary */
-				if (skipLF && (cb[nextChar] == '\n')) 
-		                    nextChar++;
-				skipLF = false;
-				
-		
-			    charLoop:
-				for (i = nextChar; i < nChars; i++) {
-				    c = cb[i];
-				    if ((c == '\n') || (c == '\r')) {
-				    	count++;
-						eol = true;
-						break charLoop;
-				    }
-				}
-		
-				startChar = nextChar;
-				nextChar = i;
-		
-				if (eol) {
-				    String str;
-				    if (s == null) {
-				    	str = new String(cb, startChar, i - startChar);
-				    } else {
-						s.append(cb, startChar, i - startChar);
-						str = s.toString();
-				    }
-				    nextChar++;
-				    if (c == '\r') {
-				    	count++;
-				    	skipLF = true;
-				    }
-				    count += str.length();
-				    return str;
-				}
-				
-				if (s == null) 
-				    s = new StringBuffer(80);
-				s.append(cb, startChar, i - startChar);
-		    }
+        for (;;) {
+        if (nextChar >= nChars)
+            fill();
+        if (nextChar >= nChars) { /* EOF */
+            if (s != null && s.length() > 0) {
+              count += s.length();
+              return s.toString();
+            }
+            else {
+              return null;
+            }
+        }
+        boolean eol = false;
+        char c = 0;
+        int i;
+    
+                    /* Skip a leftover '\n', if necessary */
+        if (skipLF && (cb[nextChar] == '\n')) 
+                        nextChar++;
+        skipLF = false;
+        
+    
+          charLoop:
+        for (i = nextChar; i < nChars; i++) {
+            c = cb[i];
+            if ((c == '\n') || (c == '\r')) {
+              count++;
+            eol = true;
+            break charLoop;
+            }
+        }
+    
+        startChar = nextChar;
+        nextChar = i;
+    
+        if (eol) {
+            String str;
+            if (s == null) {
+              str = new String(cb, startChar, i - startChar);
+            } else {
+            s.append(cb, startChar, i - startChar);
+            str = s.toString();
+            }
+            nextChar++;
+            if (c == '\r') {
+              count++;
+              skipLF = true;
+            }
+            count += str.length();
+            return str;
+        }
+        
+        if (s == null) 
+            s = new StringBuffer(80);
+        s.append(cb, startChar, i - startChar);
+        }
         }
     }
 
     public int getCount(){
-    	return count;
+      return count;
     }
 
 
@@ -232,33 +232,33 @@ public class ProverFileReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     public boolean ready() throws IOException {
-		synchronized (lock) {
-		    ensureOpen();
-	
-		    /* 
-		     * If newline needs to be skipped and the next char to be read
-		     * is a newline character, then just skip it right away.
-		     */
-		    if (skipLF) {
-				/* Note that in.ready() will return true if and only if the next 
-				 * read on the stream will not block.
-				 */
-				if (nextChar >= nChars && in.ready()) {
-				    fill();
-				}
-				if (nextChar < nChars) {
-				    if (cb[nextChar] == '\n') 
-					nextChar++;
-				    skipLF = false;
-				} 
-		    }
-		    return (nextChar < nChars) || in.ready();
-		}
+    synchronized (lock) {
+        ensureOpen();
+  
+        /* 
+         * If newline needs to be skipped and the next char to be read
+         * is a newline character, then just skip it right away.
+         */
+        if (skipLF) {
+        /* Note that in.ready() will return true if and only if the next 
+         * read on the stream will not block.
+         */
+        if (nextChar >= nChars && in.ready()) {
+            fill();
+        }
+        if (nextChar < nChars) {
+            if (cb[nextChar] == '\n') 
+          nextChar++;
+            skipLF = false;
+        } 
+        }
+        return (nextChar < nChars) || in.ready();
+    }
     }
 
 
     public boolean markSupported() {
-    	return false;
+      return false;
     }
 
 
@@ -268,13 +268,13 @@ public class ProverFileReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     public void close() throws IOException {
-		synchronized (lock) {
-		    if (in == null)
-			return;
-		    in.close();
-		    in = null;
-		    cb = null;
-		}
+    synchronized (lock) {
+        if (in == null)
+      return;
+        in.close();
+        in = null;
+        cb = null;
+    }
     }
 
 }

@@ -20,60 +20,60 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ProgressAction extends AProverAction {
 
-	/*
-	 * (non-Javadoc)
-	 * @see prover.gui.actions.AProverAction#trigger()
-	 */
-	public void trigger() {
-		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
-		} catch (PartInitException e) {	}
-		IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		IEditorPart ed = ap.getActiveEditor();
-		if(ed instanceof ProverEditor) {
-			ProverEditor ce = (ProverEditor) ed;
-			Job job = new UpdateJob(ce);
-			job.schedule();
-			
-		}		
-	}
-	
-	
-	/**
-	 * The Job to send a progress action to the top level.
-	
-	 */
-	private class UpdateJob extends Job {
-		/** The target editor where to progress */
-		private ProverEditor fEditor;
-		
-		/**
-		 * Create a new Job to progress.
-		 * @param editor The target editor
-		 */
-		public UpdateJob(ProverEditor editor) {
-			super("TopLevel is progressing...");
-			fEditor = editor;
-		}	
-		
-		/*
-		 *  (non-Javadoc)
-		 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-		 */
-		public IStatus run(IProgressMonitor monitor) {
-			try {
-				TopLevelManager.getInstance().progress(new ProverFileContext(fEditor));
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
-			return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
-		}
-	}
+  /*
+   * (non-Javadoc)
+   * @see prover.gui.actions.AProverAction#trigger()
+   */
+  public void trigger() {
+    try {
+      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
+    } catch (PartInitException e) {  }
+    IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    IEditorPart ed = ap.getActiveEditor();
+    if(ed instanceof ProverEditor) {
+      ProverEditor ce = (ProverEditor) ed;
+      Job job = new UpdateJob(ce);
+      job.schedule();
+      
+    }    
+  }
+  
+  
+  /**
+   * The Job to send a progress action to the top level.
+  
+   */
+  private class UpdateJob extends Job {
+    /** The target editor where to progress */
+    private ProverEditor fEditor;
+    
+    /**
+     * Create a new Job to progress.
+     * @param editor The target editor
+     */
+    public UpdateJob(ProverEditor editor) {
+      super("TopLevel is progressing...");
+      fEditor = editor;
+    }  
+    
+    /*
+     *  (non-Javadoc)
+     * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public IStatus run(IProgressMonitor monitor) {
+      try {
+        TopLevelManager.getInstance().progress(new ProverFileContext(fEditor));
+      }
+      catch(Exception e) {
+        e.printStackTrace();
+      }
+      return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
+    }
+  }
 
 
-	
-	
+  
+  
 
 
 }

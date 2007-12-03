@@ -6,12 +6,12 @@ package mobius.prover.exec;
  * the ProverEditor.
  */
 public abstract class AProverException extends Exception {
-	/**
-	 * Create a new prover exception.
-	 * @param description A description of the error.
-	 */
-	public AProverException(String description) {
-		super(description);
-	}
+  /**
+   * Create a new prover exception.
+   * @param description A description of the error.
+   */
+  public AProverException(String description) {
+    super(description);
+  }
 
 }

@@ -9,100 +9,100 @@ import java.io.PrintStream;
  * @author J. Charles
  */
 public class Logger {
-	/** the error stream */
-	public final static /*@ non_null @*/ NormalLogger err = new ErrorLogger();
-	/** the warning stream */
-	public final static NormalLogger warn = new WarningLogger();
-	/** the output stream */
-	public final static NormalLogger out = new NormalLogger();
+  /** the error stream */
+  public final static /*@ non_null @*/ NormalLogger err = new ErrorLogger();
+  /** the warning stream */
+  public final static NormalLogger warn = new WarningLogger();
+  /** the output stream */
+  public final static NormalLogger out = new NormalLogger();
 
 
-	/**
-	 * A simple extension of a print stream for the standard
-	 * output.
-	 * It's the basis for the other logger classes.
-	 * @author J. Charles
-	 */
-	public static class NormalLogger extends PrintStream{
-		
-		/**
-		 * Initialize the logger with the specified stream.
-		 * @param ps the stream to write to
-		 */
-		protected NormalLogger(PrintStream ps) {
-			super(ps);
-		}
-		
-		/**
-		 * Initialize the logger with {@link System#out}.
-		 */
-		public NormalLogger() {
-			this(System.out);
-		}
-		
-		/**
-		 * Print the object class and then output the message
-		 * using the {@link #println(String)} method.
-		 * @param o the object from which its class has to be output
-		 * @param str the message
-		 */
-		public void println(Object o, String str) {
-			print(o.getClass());
-			println(str);
-		}
-			
-	}
-	
-	/**
-	 * When println is called the warning logger adds the
-	 * file and the line from where the logging message has
-	 * been generated. Otherwise it has the same behaviour as
-	 * {@link NormalLogger}.
-	 * @author J. Charles
-	 */
-	public static class WarningLogger extends NormalLogger {
-		/**
-		 * Initialize the logger with the specified stream.
-		 * @param ps the stream to write to
-		 */
-		protected WarningLogger(PrintStream ps) {
-			super(ps);
-		}
-		
-		/**
-		 * Initialize the logger with {@link System#out}.
-		 */
-		public WarningLogger() {
-		}
+  /**
+   * A simple extension of a print stream for the standard
+   * output.
+   * It's the basis for the other logger classes.
+   * @author J. Charles
+   */
+  public static class NormalLogger extends PrintStream{
+    
+    /**
+     * Initialize the logger with the specified stream.
+     * @param ps the stream to write to
+     */
+    protected NormalLogger(PrintStream ps) {
+      super(ps);
+    }
+    
+    /**
+     * Initialize the logger with {@link System#out}.
+     */
+    public NormalLogger() {
+      this(System.out);
+    }
+    
+    /**
+     * Print the object class and then output the message
+     * using the {@link #println(String)} method.
+     * @param o the object from which its class has to be output
+     * @param str the message
+     */
+    public void println(Object o, String str) {
+      print(o.getClass());
+      println(str);
+    }
+      
+  }
+  
+  /**
+   * When println is called the warning logger adds the
+   * file and the line from where the logging message has
+   * been generated. Otherwise it has the same behaviour as
+   * {@link NormalLogger}.
+   * @author J. Charles
+   */
+  public static class WarningLogger extends NormalLogger {
+    /**
+     * Initialize the logger with the specified stream.
+     * @param ps the stream to write to
+     */
+    protected WarningLogger(PrintStream ps) {
+      super(ps);
+    }
+    
+    /**
+     * Initialize the logger with {@link System#out}.
+     */
+    public WarningLogger() {
+    }
 
-		/**
-		 * Print the parameter with the second element
-		 * of the stack trace (the file and the line where
-		 * this method was called) in front of it.
-		 * ie. it will give something like:
-		 * "Callee.java (233) : My message"
-		 */
-		public void println(String str) {
-			StackTraceElement [] ste = new Exception().getStackTrace();		
-			super.println(ste[1] + ": " +str); 
-		}
-	}
-	
-	/**
-	 * It has the same behaviour as {@link WarningLogger} but it outputs
-	 * to the error stream.
-	 * @author J. Charles
-	 */
-	public static final class ErrorLogger extends WarningLogger {
-		/**
-		 * Initialize the logger with {@link System#err}.
-		 */
-		public ErrorLogger() {
-			super(System.err);
-		}
+    /**
+     * Print the parameter with the second element
+     * of the stack trace (the file and the line where
+     * this method was called) in front of it.
+     * ie. it will give something like:
+     * "Callee.java (233) : My message"
+     */
+    public void println(String str) {
+      StackTraceElement [] ste = new Exception().getStackTrace();    
+      super.println(ste[1] + ": " +str); 
+    }
+  }
+  
+  /**
+   * It has the same behaviour as {@link WarningLogger} but it outputs
+   * to the error stream.
+   * @author J. Charles
+   */
+  public static final class ErrorLogger extends WarningLogger {
+    /**
+     * Initialize the logger with {@link System#err}.
+     */
+    public ErrorLogger() {
+      super(System.err);
+    }
 
-	}
+  }
 
-	
+  
 
 }

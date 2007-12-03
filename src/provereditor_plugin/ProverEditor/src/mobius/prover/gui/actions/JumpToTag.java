@@ -18,37 +18,37 @@ import org.eclipse.core.resources.IFile;
  */
 public class JumpToTag extends AProverAction{
 
-	/*
-	 * (non-Javadoc)
-	 * @see prover.gui.actions.AProverAction#trigger()
-	 */
-	public void trigger() {
-		Tagger tagger = Tagger.instance;
-		Iterator<TagStruct> iter = tagger.getTags();
-		if(iter != null) {
-			ProverEditor pe = (ProverEditor) getActiveEditor();
-			ProverFileContext pfe = new ProverFileContext(pe);
-			IFile f = pfe.getFile();
-			tagger.run(f);
-			
-			String word = pfe.getWord();
+  /*
+   * (non-Javadoc)
+   * @see prover.gui.actions.AProverAction#trigger()
+   */
+  public void trigger() {
+    Tagger tagger = Tagger.instance;
+    Iterator<TagStruct> iter = tagger.getTags();
+    if(iter != null) {
+      ProverEditor pe = (ProverEditor) getActiveEditor();
+      ProverFileContext pfe = new ProverFileContext(pe);
+      IFile f = pfe.getFile();
+      tagger.run(f);
+      
+      String word = pfe.getWord();
 
-			while(iter.hasNext()) {
-				TagStruct ts = (TagStruct) iter.next();
-				if(ts.name.equals(word)) {
-					ts.show();
-					return;
-				}
-			}
-			while(iter.hasNext()) {
-				TagStruct ts = (TagStruct) iter.next();
-				if(ts.name.equals(word)) {
-					ts.show();
-					return;
-				}
-			}
-		}
-		return;
-	}
+      while(iter.hasNext()) {
+        TagStruct ts = (TagStruct) iter.next();
+        if(ts.name.equals(word)) {
+          ts.show();
+          return;
+        }
+      }
+      while(iter.hasNext()) {
+        TagStruct ts = (TagStruct) iter.next();
+        if(ts.name.equals(word)) {
+          ts.show();
+          return;
+        }
+      }
+    }
+    return;
+  }
 
 }

@@ -13,59 +13,59 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * and parse for the right language.
  */
 public class ProverEditor extends TextEditor{
-	/** the viewer associated with the editor */
-	private BasicSourceViewerConfig fViewer;
-	/** a rule scanner to highlight the file in the editor */
-	private LimitRuleScanner fScanner = null;
-	
-	
-	/**
-	 * Create a new editor.
-	 */
-	public ProverEditor() {
-		super();
-		setSourceViewerConfiguration(fViewer = new BasicSourceViewerConfig(this));
-	}
-	
-	/**
-	 * Return the source viewer associated with the editor.
-	 * @return a source viewer, not <code>null</code>.
-	 */
-	public BasicSourceViewerConfig getSourceViewerConfig() {
-		return fViewer;
-	}
-	
-	
-	/**
-	 * Returns the scanner associated with the editor.
-	 * @return A scanner to highlight the file opened in the editor.
-	 */
-	public LimitRuleScanner getScanner() {
-		if(fScanner == null) {
-			Prover p = Prover.findProverFromFile(getTitle());
-			if (p != null) {
-				fScanner = p.getRuleScanner();
-			}
-			else { 
-				fScanner = new LimitRuleScanner(null);
-			}
-		}
-		return fScanner;
-	}
-	
-	@SuppressWarnings("unchecked")
+  /** the viewer associated with the editor */
+  private BasicSourceViewerConfig fViewer;
+  /** a rule scanner to highlight the file in the editor */
+  private LimitRuleScanner fScanner = null;
+  
+  
+  /**
+   * Create a new editor.
+   */
+  public ProverEditor() {
+    super();
+    setSourceViewerConfiguration(fViewer = new BasicSourceViewerConfig(this));
+  }
+  
+  /**
+   * Return the source viewer associated with the editor.
+   * @return a source viewer, not <code>null</code>.
+   */
+  public BasicSourceViewerConfig getSourceViewerConfig() {
+    return fViewer;
+  }
+  
+  
+  /**
+   * Returns the scanner associated with the editor.
+   * @return A scanner to highlight the file opened in the editor.
+   */
+  public LimitRuleScanner getScanner() {
+    if(fScanner == null) {
+      Prover p = Prover.findProverFromFile(getTitle());
+      if (p != null) {
+        fScanner = p.getRuleScanner();
+      }
+      else { 
+        fScanner = new LimitRuleScanner(null);
+      }
+    }
+    return fScanner;
+  }
+  
+  @SuppressWarnings("unchecked")
   public Object getAdapter(Class cl) {
-		if(cl == IContentOutlinePage.class) {
-			IContentOutlinePage cop = new BasicContentOutline(this);
-			return cop;
-		}
-		else {
-			return super.getAdapter(cl);
-		}
-	}
-	 protected void initializeKeyBindingScopes() {
-	        setKeyBindingScopes(new String[] { //"org.eclipse.ui.textEditorScope", 
-	        		 "ProverEditor.context" });
-	  }
+    if(cl == IContentOutlinePage.class) {
+      IContentOutlinePage cop = new BasicContentOutline(this);
+      return cop;
+    }
+    else {
+      return super.getAdapter(cl);
+    }
+  }
+   protected void initializeKeyBindingScopes() {
+          setKeyBindingScopes(new String[] { //"org.eclipse.ui.textEditorScope", 
+               "ProverEditor.context" });
+    }
 
 }

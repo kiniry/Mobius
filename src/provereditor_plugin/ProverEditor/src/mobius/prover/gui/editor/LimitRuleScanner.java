@@ -14,83 +14,83 @@ import org.eclipse.jface.text.rules.Token;
  * {@link IColorConstants#NORMAL_COLOR}. 
  */
 public class LimitRuleScanner extends BasicRuleScanner implements IColorConstants {
-	/** the limit to which the background shall be different */
-	private int limit = 0;
+  /** the limit to which the background shall be different */
+  private int limit = 0;
 
-	/**
-	 * Create a new rule scanner.
-	 */
-	public LimitRuleScanner() {
-		this(null);
-	}
-	
-	/**
-	 * Create a new rule scanner, with the given rules.
-	 * @param rules the rules to set the colors
-	 */
-	public LimitRuleScanner(IRule[] rules) {
-		super();
-		if(rules == null) {
-			rules = new IRule[0];
-		}
-		setRules(rules);
-		setDefaultReturnToken(new Token(
-			new BasicTextAttribute(DEFAULT_TAG_COLOR)));
-	}
-	
-	
-	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.jface.text.rules.ITokenScanner#nextToken()
-	 */
-	public IToken nextToken() {
-		fTokenOffset= fOffset;
-		IToken tok = getNextToken(fTokenOffset);
-		if(tok.equals(Token.EOF))
-			return tok;
-		if(fTokenOffset < limit) {
-			((BasicTextAttribute)tok.getData()).setBackground(HILIT_COLOR);
-		}
-		else {
-			((BasicTextAttribute)tok.getData()).setBackground(NORMAL_COLOR);
-		}
-		return tok;
-	}
-	
-	/**
-	 * Returns the next token found. 
-	 * @param off the offset where to start looking at
-	 * @return the token without the specific background color
-	 */
-	private IToken getNextToken(int off) {
-		fColumn= UNDEFINED;
-		if (fRules != null) {
-			for (int i= 0; i < fRules.length; i++) {
-				IToken token= (fRules[i].evaluate(this));
-				if (!token.isUndefined())
-					return token;
-			}
-		}
+  /**
+   * Create a new rule scanner.
+   */
+  public LimitRuleScanner() {
+    this(null);
+  }
+  
+  /**
+   * Create a new rule scanner, with the given rules.
+   * @param rules the rules to set the colors
+   */
+  public LimitRuleScanner(IRule[] rules) {
+    super();
+    if(rules == null) {
+      rules = new IRule[0];
+    }
+    setRules(rules);
+    setDefaultReturnToken(new Token(
+      new BasicTextAttribute(DEFAULT_TAG_COLOR)));
+  }
+  
+  
+  /*
+   *  (non-Javadoc)
+   * @see org.eclipse.jface.text.rules.ITokenScanner#nextToken()
+   */
+  public IToken nextToken() {
+    fTokenOffset= fOffset;
+    IToken tok = getNextToken(fTokenOffset);
+    if(tok.equals(Token.EOF))
+      return tok;
+    if(fTokenOffset < limit) {
+      ((BasicTextAttribute)tok.getData()).setBackground(HILIT_COLOR);
+    }
+    else {
+      ((BasicTextAttribute)tok.getData()).setBackground(NORMAL_COLOR);
+    }
+    return tok;
+  }
+  
+  /**
+   * Returns the next token found. 
+   * @param off the offset where to start looking at
+   * @return the token without the specific background color
+   */
+  private IToken getNextToken(int off) {
+    fColumn= UNDEFINED;
+    if (fRules != null) {
+      for (int i= 0; i < fRules.length; i++) {
+        IToken token= (fRules[i].evaluate(this));
+        if (!token.isUndefined())
+          return token;
+      }
+    }
 
-		if (read() == EOF)
-			return Token.EOF;
-		return fDefaultReturnToken;
-	}
-	
-	/**
-	 * Set the limit to which the background shall be different
-	 * @param l the offset where to divide the two parts of the
-	 * text
-	 */
-	public void setLimit(int l) {
-		limit  = l;
-	}
-	/**
-	 * Return the limit dividing the two highlighted differently part.
-	 * @return a valid offset
-	 */
-	public  int getLimit() {
-		return limit;
-	}
+    if (read() == EOF)
+      return Token.EOF;
+    return fDefaultReturnToken;
+  }
+  
+  /**
+   * Set the limit to which the background shall be different
+   * @param l the offset where to divide the two parts of the
+   * text
+   */
+  public void setLimit(int l) {
+    limit  = l;
+  }
+  /**
+   * Return the limit dividing the two highlighted differently part.
+   * @return a valid offset
+   */
+  public  int getLimit() {
+    return limit;
+  }
 
 }

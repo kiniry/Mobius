@@ -13,20 +13,20 @@ import org.eclipse.ui.PlatformUI;
  * The action that send a break command to the top level.
  */
 public class BreakAction extends AProverAction {
-	
-	/*
-	 * (non-Javadoc)
-	 * @see prover.gui.actions.AProverAction#trigger()
-	 */
-	public void trigger() {
-		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
-		} catch (PartInitException e) {	}
-		IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		IEditorPart ed = ap.getActiveEditor();
-		if(ed instanceof ProverEditor) {
-			TopLevelManager.getInstance().doBreak();			
-		}
-	}
+  
+  /*
+   * (non-Javadoc)
+   * @see prover.gui.actions.AProverAction#trigger()
+   */
+  public void trigger() {
+    try {
+      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
+    } catch (PartInitException e) {  }
+    IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    IEditorPart ed = ap.getActiveEditor();
+    if(ed instanceof ProverEditor) {
+      TopLevelManager.getInstance().doBreak();      
+    }
+  }
 
 }
