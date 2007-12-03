@@ -14,67 +14,74 @@ import org.eclipse.ui.IActionDelegate;
 
 /**
  * The action used to launch an external ide to edit the prover file.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class LaunchIde implements IActionDelegate {
 
-  /** The current selection in the workbench */
-  IStructuredSelection sel = null;
+  /** The current selection in the workbench. */
+  IStructuredSelection fSel;
 
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
-  public void run(IAction action) {
-    if(sel == null) return;
-    Thread myJob = new Thread("Prover Ide") {
-          public void run() {
-            Object o = sel.getFirstElement();
-            if (o instanceof IFile) {
-              IFile f = (IFile) o;
-              String rawloc = f.getRawLocation().toString(); 
-              Prover prover = Prover.findProverFromFile(rawloc);
-              IPath parent = f.getParent().getRawLocation();
-              String [] path = null; 
-              if(parent != null) {
-                path = new String[2];
-                path[1] = parent.toString();
-              } else {
-                path = new String[1]; 
-              }
-              path[0] = f.getProject().getLocation().toString();
-              String [] cmds = prover.getTranslator().getIdeCommand(prover.getIde(), path,rawloc);
-                  
-              
-              try {
-                Process p = Runtime.getRuntime().exec(cmds);
-                  p.waitFor();
-              } catch (IOException e) {
-                System.err.println("I was unable to find an ide for TopLevel. Check the path.");
-              } catch (InterruptedException e2) {
-                e2.printStackTrace();
-              }
+   /** {@inheritDoc} */
+  @Override
+  public void run(final IAction action) {
+    if (fSel == null) {
+      return;
+    }
+    final Thread myJob = 
+      new Thread("Prover Ide") {
+        /** {@inheritDoc} */
+        @Override
+        public void run() {
+          final Object o = fSel.getFirstElement();
+          if (o instanceof IFile) {
+            final IFile f = (IFile) o;
+            final String rawloc = f.getRawLocation().toString(); 
+            final Prover prover = Prover.findProverFromFile(rawloc);
+            final IPath parent = f.getParent().getRawLocation();
+            String [] path = null; 
+            if (parent != null) {
+              path = new String[2];
+              path[1] = parent.toString();
+            } 
+            else {
+              path = new String[1]; 
+            }
+            path[0] = f.getProject().getLocation().toString();
+            final String [] cmds = prover.getTranslator().getIdeCommand(
+                                            prover.getIde(), path, rawloc);
+                
+            
+            try {
+              final Process p = Runtime.getRuntime().exec(cmds);
+              p.waitFor();
+            } 
+            catch (IOException e) {
+              System.err.println("I was unable to find an ide for TopLevel. Check the path.");
+            } 
+            catch (InterruptedException e2) {
+              e2.printStackTrace();
             }
           }
-       };
-       myJob.start();
+        }
+      };
+    myJob.start();
     
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged(IAction action, ISelection selection) {
+  /** {@inheritDoc} */
+  @Override
+  public void selectionChanged(final IAction action, final ISelection selection) {
     if (selection instanceof IStructuredSelection) {
-      sel = (IStructuredSelection) selection;
-      Object o = sel.getFirstElement();
-        if (o instanceof IFile) {
-          IFile f = (IFile) o;
-          if(f.toString().endsWith(".v")) {
-            action.setEnabled(true);
-            return;
-          }
+      fSel = (IStructuredSelection) selection;
+      final Object o = fSel.getFirstElement();
+      if (o instanceof IFile) {
+        final IFile f = (IFile) o;
+        if (f.toString().endsWith(".v")) {
+          action.setEnabled(true);
+          return;
         }
+      }
     }
     action.setEnabled(false);
   }

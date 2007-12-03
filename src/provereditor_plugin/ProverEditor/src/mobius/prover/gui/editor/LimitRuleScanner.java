@@ -12,10 +12,12 @@ import org.eclipse.jface.text.rules.Token;
  * text. The first part is highlighted with the color 
  * {@link IColorConstants#HILIT_COLOR} the second part with the color
  * {@link IColorConstants#NORMAL_COLOR}. 
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class LimitRuleScanner extends BasicRuleScanner implements IColorConstants {
-  /** the limit to which the background shall be different */
-  private int limit = 0;
+  /** the limit to which the background shall be different. */
+  private int fLimit;
 
   /**
    * Create a new rule scanner.
@@ -28,27 +30,28 @@ public class LimitRuleScanner extends BasicRuleScanner implements IColorConstant
    * Create a new rule scanner, with the given rules.
    * @param rules the rules to set the colors
    */
-  public LimitRuleScanner(IRule[] rules) {
+  public LimitRuleScanner(final IRule[] rules) {
     super();
-    if(rules == null) {
-      rules = new IRule[0];
+    
+    if (rules == null) {
+      setRules(new IRule[0]);
     }
-    setRules(rules);
+    else {
+      setRules(rules);
+    }
     setDefaultReturnToken(new Token(
       new BasicTextAttribute(DEFAULT_TAG_COLOR)));
   }
   
-  
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.jface.text.rules.ITokenScanner#nextToken()
-   */
+  /** {@inheritDoc} */
+  @Override
   public IToken nextToken() {
-    fTokenOffset= fOffset;
-    IToken tok = getNextToken(fTokenOffset);
-    if(tok.equals(Token.EOF))
+    fTokenOffset = fOffset;
+    final IToken tok = getNextToken(fTokenOffset);
+    if (tok.equals(Token.EOF)) {
       return tok;
-    if(fTokenOffset < limit) {
+    }
+    if (fTokenOffset < fLimit) {
       ((BasicTextAttribute)tok.getData()).setBackground(HILIT_COLOR);
     }
     else {
@@ -62,35 +65,37 @@ public class LimitRuleScanner extends BasicRuleScanner implements IColorConstant
    * @param off the offset where to start looking at
    * @return the token without the specific background color
    */
-  private IToken getNextToken(int off) {
-    fColumn= UNDEFINED;
+  private IToken getNextToken(final int off) {
+    fColumn = UNDEFINED;
     if (fRules != null) {
-      for (int i= 0; i < fRules.length; i++) {
-        IToken token= (fRules[i].evaluate(this));
-        if (!token.isUndefined())
+      for (int i = 0; i < fRules.length; i++) {
+        final IToken token = fRules[i].evaluate(this);
+        if (!token.isUndefined()) {
           return token;
+        }
       }
     }
 
-    if (read() == EOF)
+    if (read() == EOF) {
       return Token.EOF;
+    }
     return fDefaultReturnToken;
   }
   
   /**
-   * Set the limit to which the background shall be different
+   * Set the limit to which the background shall be different.
    * @param l the offset where to divide the two parts of the
    * text
    */
-  public void setLimit(int l) {
-    limit  = l;
+  public void setLimit(final int l) {
+    fLimit  = l;
   }
   /**
    * Return the limit dividing the two highlighted differently part.
    * @return a valid offset
    */
   public  int getLimit() {
-    return limit;
+    return fLimit;
   }
 
 }

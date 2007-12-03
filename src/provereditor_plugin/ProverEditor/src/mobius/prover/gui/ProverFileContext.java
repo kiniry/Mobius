@@ -27,8 +27,8 @@ public class ProverFileContext {
    */
   public static final ProverFileContext empty = new ProverFileContext(null);
   
-  /** a word pattern */
-  private final static Pattern pat = Pattern.compile("[^a-zA-Z_0-9]");
+  /** a word pattern. */
+  private static final Pattern pat = Pattern.compile("[^a-zA-Z_0-9]");
 
 
   public final ProverEditor ce;
@@ -41,9 +41,9 @@ public class ProverFileContext {
    * The constructor to initialize the different fields.
    * @param ce The editor giving the different context elements.
    */
-  public ProverFileContext(ProverEditor ce) {
+  public ProverFileContext(final ProverEditor ce) {
     this.ce = ce;
-    if(ce == null) {
+    if (ce == null) {
       doc = null;
       sv = null;
       scan = null;
@@ -59,42 +59,48 @@ public class ProverFileContext {
   }
   
   public Point getWordPoint() {
-    Point p = viewer.getSelectedRange();
-    int x = getBeginning(p.x);
-    int y = getEnd(p.x);
-    Point word = new Point(x, y - x);
+    final Point p = viewer.getSelectedRange();
+    final int x = getBeginning(p.x);
+    final int y = getEnd(p.x);
+    final Point word = new Point(x, y - x);
     return word;
   }
+  
   public String getWord() {
     String res = "";
-    Point p = getWordPoint();
+    final Point p = getWordPoint();
     try {
       res = doc.get(p.x, p.y);
-    } catch (BadLocationException e) {
+    }
+    catch (BadLocationException e) {
       e.printStackTrace();
     }
     return res;
   }
   
   
-  private int getEnd(int x) {
+  private int getEnd(final int x) {
     int end = 0;
-    int len = doc.getLength();
+    final int len = doc.getLength();
     int diff = x + 10 > len ? len - x : 10;
     
-    while(end == 0) {
+    while (end == 0) {
       try {
-        String str = doc.get(x, diff);
-        Matcher m = pat.matcher(str);
-        if(m.find())
-          end = m.end() -1;
-        if(x + diff == len)
+        final String str = doc.get(x, diff);
+        final Matcher m = pat.matcher(str);
+        if (m.find()) {
+          end = m.end() - 1;
+        }
+        if (x + diff == len) {
           break;
-        if(end == 0)
+        }
+        if (end == 0) {
           diff += 10;
+        }
         
-      } catch (BadLocationException e) {
-        diff --;
+      } 
+      catch (BadLocationException e) {
+        diff--;
         //e.printStackTrace();
       }
       
@@ -102,22 +108,26 @@ public class ProverFileContext {
     return x + end;
 
   }
-  private int getBeginning(int x) {
+  private int getBeginning(final int x) {
     int end = 0;
     int diff = x - 10 < 0 ? x : 10;
-    while(end == 0) {
+    while (end == 0) {
       try {
-        String str = doc.get(x - diff, diff);
-        Matcher m = pat.matcher(str);
-        while(m.find())
+        final String str = doc.get(x - diff, diff);
+        final Matcher m = pat.matcher(str);
+        while (m.find()) {
           end = m.end();
-        if(x - diff == 0)
+        }
+        if (x - diff == 0) {
           break;
-        if(end == 0)
+        }
+        if (end == 0) {
           diff += 10;
+        }
         
-      } catch (BadLocationException e) {
-        diff --;
+      } 
+      catch (BadLocationException e) {
+        diff--;
         //e.printStackTrace();
       }
       
@@ -127,9 +137,9 @@ public class ProverFileContext {
 
   public IFile getFile() {
     ResourcesPlugin.getWorkspace().getRoot().getProject();
-    IEditorInput ei = ce.getEditorInput();
-    if(ei instanceof IFileEditorInput) {
-      IFileEditorInput fei = (IFileEditorInput) ei;
+    final IEditorInput ei = ce.getEditorInput();
+    if (ei instanceof IFileEditorInput) {
+      final IFileEditorInput fei = (IFileEditorInput) ei;
       return fei.getFile();
     }
     return null;

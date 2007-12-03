@@ -39,6 +39,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
@@ -51,37 +53,37 @@ import org.eclipse.ui.progress.UIJob;
  */
 public class TopLevelManager extends ViewPart implements IColorConstants {
   /* Private fields: */
-  /** the greetings message */
-  public final static String GREETINGS = "This is ProverEditor version " + 
+  /** the greetings message. */
+  public static final String GREETINGS = "This is ProverEditor version " + 
                       ProverEditorPlugin.MAJORVERSION + "." + 
                       ProverEditorPlugin.VERSION + "." + 
-                      ProverEditorPlugin.SUBVERSION +" !\n";   
-  /** the current TopLevelManager instance */
+                      ProverEditorPlugin.SUBVERSION + " !\n";   
+  /** the current TopLevelManager instance. */
   private static TopLevelManager instance;
   
   /* Instance fields: */
-  /** the context associated with the current top level */
+  /** the context associated with the current top level. */
   private ProverFileContext fProverContext = ProverFileContext.empty;
-  /** the current running top level */
+  /** the current running top level. */
   private TopLevel fTopLevel;
-  /** the current prover running */
+  /** the current prover running. */
   private Prover fProver;
-  /** the translator currently used */
+  /** the translator currently used. */
   private AProverTranslator fTranslator;
-  /** the parser used to parse the currently evaluated document */
+  /** the parser used to parse the currently evaluated document. */
   private BasicRuleScanner fParser;
   
-  /** the lock system to avoid race conditions */
-  private boolean fLock = false;
-  /** the list of offset being the steps already taken by progress */
+  /** the lock system to avoid race conditions. */
+  private boolean fLock;
+  /** the list of offset being the steps already taken by progress. */
   private Stack<Integer> fParsedList = new Stack<Integer>();
 
   /* The text viewer used to show the prover state related fields: */
-  /** the text viewer to show the state of the prover */
+  /** the text viewer to show the state of the prover. */
   private TextViewer fStateText;
-  /** the current text presentation associated with the text viewer */
+  /** the current text presentation associated with the text viewer. */
   private BasicTextPresentation fStatePres;
-  /** the scanner used to color the text in the text viewer */
+  /** the scanner used to color the text in the text viewer. */
   private BasicRuleScanner fStateScan;
   
   
@@ -103,25 +105,20 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   }
   
   /**
-   * Returns the parser for the current prover 
+   * Returns the parser for the current prover .
    * @return a parser to get the sentences.
    */
   public BasicRuleScanner getParser() {
     return fParser;
   }
-  /*
-   *  (non-Javadoc)
-   * @see prover.exec.toplevel.stream.IStreamListener#append(int, java.lang.String)
-   */
-  public void append(StreamHandler handler, String str) {
+
+  public void append(final StreamHandler handler, final String str) {
     append(str);
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
-  public void createPartControl(Composite parent) {
+  /** {@inheritDoc} */
+  @Override
+  public void createPartControl(final Composite parent) {
     IDocument doc = null;
     if (fStateText == null) {
       doc = new Document("");
@@ -138,15 +135,12 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 
   }
 
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-   */
-  public void setFocus() {}
+  /** {@inheritDoc} */
+  @Override
+  public void setFocus() {
+    
+  }
   
-  
-  
-
   
   /**
    * Sets the lock.
@@ -154,8 +148,9 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    *  <code>false</code> if the lock was already set.
    */
   protected synchronized boolean lock() {
-    if(fLock)
+    if (fLock) {
       return false;
+    }
     fLock = true; return true;
   }
   
@@ -175,16 +170,17 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * @return true if the progress was successful, false otherwise or if the
    *  lock was already set.
    */
-  public boolean progress(ProverFileContext pc) {
-    if(!lock())
+  public boolean progress(final ProverFileContext pc) {
+    if (!lock()) {
       return true;
+    }
     boolean res;
-    if(isNewDoc(pc)) {
+    if (isNewDoc(pc)) {
       reset(pc);
       res = false;
     }
     else {
-      int oldlimit =pc.scan.getLimit();
+      final int oldlimit = pc.scan.getLimit();
       res = progress_intern(pc, oldlimit, oldlimit);
     }
     unlock();
@@ -192,25 +188,29 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   }
   
   
-  private boolean progress_intern (ProverFileContext pc, int realoldlimit, int oldlimit) { 
-    if(fParser == null)
+  private boolean progress_intern (final ProverFileContext pc, 
+                                   final int realoldlimit, 
+                                   final int oldlimit) { 
+    if (fParser == null) {
       return false;
+    }
     fParser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
     UpdateJob uj;
     IToken tok;
     do {
       tok = fParser.nextToken();
     } while(tok != AProverTranslator.SENTENCE_TOKEN && (!tok.isEOF()));
-    if(tok.isEOF()) {
+    if (tok.isEOF()) {
       return false;
     }
       
-    int newlimit = fParser.getTokenOffset() + fParser.getTokenLength() - 1;
+    final int newlimit = fParser.getTokenOffset() + fParser.getTokenLength() - 1;
     try {
       String cmd;
       try {
         cmd = pc.doc.get(realoldlimit, newlimit - oldlimit).trim();
-      } catch (BadLocationException e) {
+      } 
+      catch (BadLocationException e) {
         // it should not happen
         System.err.println("TopLevel.progress_intern: " + e);
         return false;
@@ -223,11 +223,13 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       
       
       //we send the command
-      switch(fProver.getTopLevelTranslator().hasToSkipSendCommand(fTopLevel, pc.doc, cmd, oldlimit, newlimit)) {
+      switch (fProver.getTopLevelTranslator().hasToSkipSendCommand(fTopLevel, 
+                                                                   pc.doc, cmd, 
+                                                                   oldlimit, newlimit)) {
         case IProverTopLevel.DONT_SKIP: {
           fTopLevel.sendCommand(cmd);
           append(fTopLevel.getStdBuffer());
-          if(fTopLevel.isAlive()) {
+          if (fTopLevel.isAlive()) {
             fParsedList.push(new Integer(realoldlimit));
           }
           else {
@@ -238,18 +240,20 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
           }
           break;
         }
-        case IProverTopLevel.SKIP: 
-          break;
         case IProverTopLevel.SKIP_AND_CONTINUE: {
           progress_intern(pc, realoldlimit, newlimit);
           break;
         }
+        case IProverTopLevel.SKIP:
+        default:
+          break;
       }
-    } catch (AProverException e) {
+    } 
+    catch (AProverException e) {
       pc.scan.setLimit(realoldlimit);
       uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
       uj.schedule();
-      ColorAppendJob caj = new ColorAppendJob(fStatePres, e.toString(), RED);
+      final ColorAppendJob caj = new ColorAppendJob(fStatePres, e.toString(), RED);
       caj.prepare();
       return false;
     } 
@@ -265,9 +269,10 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * @return true if the undo was successful, false otherwise or if the
    *  lock was already set.
    */
-  public boolean regress(ProverFileContext pc) {
-    if(!lock())
+  public boolean regress(final ProverFileContext pc) {
+    if (!lock()) {
       return true;
+    }
     boolean res;
     if (isNewDoc(pc)) {
       reset(pc);
@@ -280,23 +285,28 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     return res;
   }  
   
-  protected boolean regress_intern(ProverFileContext pc) {
-    int oldlimit = pc.scan.getLimit();
-    if((oldlimit > 0) && (fParsedList.size() > 0)) {
-      int newlimit = ((Integer) fParsedList.pop()).intValue();
+  protected boolean regress_intern(final ProverFileContext pc) {
+    final int oldlimit = pc.scan.getLimit();
+    if ((oldlimit > 0) && (fParsedList.size() > 0)) {
+      final int newlimit = ((Integer) fParsedList.pop()).intValue();
       String cmd;
       try {
         cmd = pc.doc.get(newlimit, oldlimit - newlimit).trim();
-      } catch (BadLocationException e) {
+      } 
+      catch (BadLocationException e) {
         // it should not happen
         System.err.println("TopLevel.regress_intern: " + e);
         return false;
       }
-      switch(fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, pc.doc, cmd, newlimit, oldlimit)) {
+      switch(fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, 
+                                                           pc.doc, 
+                                                           cmd, newlimit, 
+                                                           oldlimit)) {
         case IProverTopLevel.DONT_SKIP: {
           try {
             fTopLevel.undo();
-          } catch (AProverException e) {
+          } 
+          catch (AProverException e) {
             append(e.toString());
           }
           pc.scan.setLimit(newlimit);
@@ -315,7 +325,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       }
       
       
-      UpdateJob uj = new UpdateJob(pc.sv.getPresentationReconciler(), oldlimit + 1);
+      final UpdateJob uj = new UpdateJob(pc.sv.getPresentationReconciler(), oldlimit + 1);
       uj.schedule();
     }
     return true;
@@ -331,12 +341,12 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    */
   public void respawn() {
     fTopLevel.stop();
-    Job job = new Job("Toplevel Starting") {
+    final Job job = new Job("Toplevel Starting") {
 
-      protected IStatus run(IProgressMonitor monitor) {
+      protected IStatus run(final IProgressMonitor monitor) {
         new UIJob("Updating Toplevel monitor") {
 
-          public IStatus runInUIThread(IProgressMonitor monitor) {
+          public IStatus runInUIThread(final IProgressMonitor monitor) {
             fStateText.setDocument(new Document(""));
             fStatePres = new BasicTextPresentation(fStateText);
             
@@ -345,7 +355,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
             return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
           }
           
-        }.schedule();
+        } .schedule();
         
         reset(fProverContext);
         return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
@@ -360,19 +370,20 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * Reset the view, reset the toplevel, and set up everything.
    */
   private synchronized void reset() {
-    if(fTopLevel != null) {
+    if (fTopLevel != null) {
       fTopLevel.stop();
     }
-    IEditorInput input = fProverContext.ce.getEditorInput();
+    final IEditorInput input = fProverContext.ce.getEditorInput();
     
-    IFile path= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
+    final IFile path = (input instanceof IFileEditorInput) ? 
+        ((IFileEditorInput) input).getFile() : null;
     fProver = Prover.findProverFromFile(path.getRawLocation().toString());
     fTranslator = fProver.getTranslator();
-      fStateScan = new LimitRuleScanner(fTranslator.getProverStateRules());
-      fParser = new BasicRuleScanner(fTranslator.getParsingRules());
+    fStateScan = new LimitRuleScanner(fTranslator.getProverStateRules());
+    fParser = new BasicRuleScanner(fTranslator.getParsingRules());
     String [] tab = null;
     
-    if(path != null) {
+    if (path != null) {
       
 //      if(path.getParent().getRawLocation() == null) {
 //        tab = new String [0];
@@ -384,25 +395,28 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       Set<String> hsPath;
       try {
         hsPath = AddToLoadPath.getPaths(path.getProject().getLocation().toString());
-      } catch (IOException e) {
+      } 
+      catch (IOException e) {
         hsPath = new HashSet<String>();
       }
       tab = new String[hsPath.size() + 2];
-      tab [0]= path.getProject().getLocation().toString();
+      tab [0] = path.getProject().getLocation().toString();
       tab [1] = path.getLocation().removeLastSegments(1).toString();
-      Iterator<String> iter = hsPath.iterator();
-      for(int i = 2; i < tab.length; i++) {
+      final Iterator<String> iter = hsPath.iterator();
+      for (int i = 2; i < tab.length; i++) {
         tab[i] = tab[0] + File.separator + iter.next().toString();
       }
 
     }
-    new ColorAppendJob(fStatePres, "\nEditing file: \n" + path.getName() + "\n", DARKRED).prepare();
+    new ColorAppendJob(fStatePres, "\nEditing file: \n" + 
+                       path.getName() + "\n", DARKRED).prepare();
     
     try {
       
       fTopLevel = new TopLevel(fProver.getName(), tab);
       //fTopLevel.addStandardStreamListener(this);
-    } catch (AProverException e) {
+    } 
+    catch (AProverException e) {
       new ColorAppendJob(fStatePres, e.toString(), RED).prepare();
     }
   
@@ -415,29 +429,31 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   /**
    * Add the string given as an argument to the text viewer
    * used to show the state of the prover.
-   * @param str The string to add to the text viewer of the prover.
+   * @param strToAppend The string to add to the text viewer of the prover.
    */
-  public void append(String str) {
+  public void append(final String strToAppend) {
     int ind = 0;
-    if((ind = str.indexOf("\n\n\n")) != -1) {
+    String str = strToAppend;
+    ind = str.indexOf("\n\n\n");
+    if (ind != -1) {
       append(str.substring(0, ind));
       str = str.substring(ind);
     }
     
-    String [][] unicodeReplacements = fTranslator.getUnicodeReplacements();
+    final String [][] unicodeReplacements = fTranslator.getUnicodeReplacements();
     
-    if(isUnicodeMode()) {
-      for(int i =0; i < unicodeReplacements.length; i++) {
+    if (isUnicodeMode()) {
+      for (int i = 0; i < unicodeReplacements.length; i++) {
         str = str.replaceAll(unicodeReplacements[i][0], 
             unicodeReplacements[i][1]);
       }
     }
-    String [][] replacements = fTranslator.getReplacements();
-    for(int i =0; i < replacements.length; i++) {
+    final String [][] replacements = fTranslator.getReplacements();
+    for (int i = 0; i < replacements.length; i++) {
       str = str.replaceAll(replacements[i][0], 
           replacements[i][1]);
     }
-    AppendJob job = new AppendJob(fProverContext.ce, fStateScan, fStatePres);
+    final AppendJob job = new AppendJob(fProverContext.ce, fStateScan, fStatePres);
     
   
     job.add(str);
@@ -451,8 +467,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * @param pc The prover context which we have to
    * reset the view with
    */
-  public void reset(ProverFileContext pc) {
-    if(pc.doc != null) {
+  public void reset(final ProverFileContext pc) {
+    if (pc.doc != null) {
       fProverContext = pc;
       reset();
     }
@@ -464,7 +480,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * @param pc The context to test
    * @return true if the documents are different.
    */
-  public boolean isNewDoc(ProverFileContext pc) {
+  public boolean isNewDoc(final ProverFileContext pc) {
     return pc.doc != fProverContext.doc;
   }
 
@@ -484,9 +500,13 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    */
   public void doBreak() {
     try {
-      if(fTopLevel != null)
+      if (fTopLevel != null) {
         fTopLevel.doBreak();
-    } catch (AProverException e) { }
+      }
+    } 
+    catch (AProverException e) { 
+      
+    }
   }
   
 
@@ -496,9 +516,9 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   
    */
   private class UpdateJob extends UIJob {
-    /** the limit of the update */
+    /** the limit of the update. */
     private int fLimit;
-    /** the presentation reconciler to update */
+    /** the presentation reconciler to update. */
     private BasicPresentationReconciler fReconciler;
     
     /**
@@ -506,7 +526,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
      * @param reconciler The reconciler to update.
      * @param limit The limit of the update.
      */
-    public UpdateJob(BasicPresentationReconciler reconciler, int limit) {
+    public UpdateJob(final BasicPresentationReconciler reconciler, 
+                     final int limit) {
       super("Updating text");
       fReconciler = reconciler;
       fLimit = limit;
@@ -516,18 +537,17 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
      * Create a job to update a presentation reconciler in a UIThread context.
      * @param reconciler The reconciler to update.
      */
-    public UpdateJob(BasicPresentationReconciler reconciler) {
+    public UpdateJob(final BasicPresentationReconciler reconciler) {
       this(reconciler, reconciler.getDocument().getLength());
     }
     
-    
-    /*
-     *  (non-Javadoc)
-     * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    public IStatus runInUIThread(IProgressMonitor monitor) {
+    /** {@inheritDoc} */
+    @Override
+    public IStatus runInUIThread(final IProgressMonitor monitor) {
       fReconciler.everythingHasChanged(0, fLimit); 
-      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(fProverContext.ce);
+      final IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      final IWorkbenchPage page = win.getActivePage();
+      page.activate(fProverContext.ce);
       return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
     }
     
