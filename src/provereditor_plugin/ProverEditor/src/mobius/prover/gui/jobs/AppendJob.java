@@ -25,30 +25,35 @@ import org.eclipse.ui.progress.UIJob;
  * A job to add some text to the specified document. 
  * It uses a fScanner to highlight the words.
  * To schedule this Job the {@link #prepare()} method shall be used.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
-  /** The string to append to the document */
+  /** The string to append to the document. */
   private StringBuffer fStrToAppend;
-  /** The document to modify */
+  /** The document to modify. */
   private IDocument fDoc;
-  /** The viewer to target */
+  /** The viewer to target. */
   private TextViewer fViewer;
   
-  /** The presentation containing the highlight informations */
+  /** The presentation containing the highlight informations. */
   private BasicTextPresentation fPresentation;
   /** The scanner to colour the words. */
   private BasicRuleScanner fScanner;
   /** The length of the document before any modifications. */
   private int fLen;
-  /** The part that has to have focus after the end of the append job */
+  /** The part that has to have focus after the end of the append job. */
   private IWorkbenchPart fEditor;
   
   /**
    * Create a new AppendJob.
+   * @param pe the prover editor instance target of this job
    * @param scanner The scanner used to decide which word to highlight
    * @param tp The information about the document that shall be updated
    */
-  public AppendJob(ProverEditor pe, BasicRuleScanner scanner, BasicTextPresentation tp) {
+  public AppendJob(final ProverEditor pe, 
+                   final BasicRuleScanner scanner, 
+                   final BasicTextPresentation tp) {
     super("Updating view");
     fStrToAppend = new StringBuffer();
     fPresentation = (BasicTextPresentation)tp.clone();
@@ -59,37 +64,30 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
     
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see prover.gui.jobs.IAppendJob#add(java.lang.StringBuffer)
-   */
-  public void add(StringBuffer str) {
+  /** {@inheritDoc} */
+  @Override
+  public void add(final StringBuffer str) {
     fStrToAppend.append(str);
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see prover.gui.jobs.IAppendJob#add(java.lang.String)
-   */
-  public void add(String str) {
+  /** {@inheritDoc} */
+  @Override
+  public void add(final String str) {
     add(new StringBuffer(str));
   }
 
-  /*
-   *  (non-Javadoc)
-   * @see prover.gui.jobs.IAppendJob#getLength()
-   */
+
+  /** {@inheritDoc} */
+  @Override
   public int getLength() {
     return fStrToAppend.length();
   }
   
   
-  /*
-   *  (non-Javadoc)
-   * @see prover.gui.jobs.IAppendJob#prepare()
-   */
+  /** {@inheritDoc} */
+  @Override
   public void prepare() {
-    SimpleAppendJob saj = new SimpleAppendJob(fViewer);
+    final SimpleAppendJob saj = new SimpleAppendJob(fViewer);
     saj.add(fStrToAppend);
     fLen = fDoc.getLength();
     saj.schedule();
@@ -97,17 +95,15 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
   }
   
   
-  /*
-   *  (non-Javadoc)
-   * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public IStatus runInUIThread(IProgressMonitor monitor) {
-    if(fScanner != null) {
+  /** {@inheritDoc} */
+  @Override
+  public IStatus runInUIThread(final IProgressMonitor monitor) {
+    if (fScanner != null) {
       fScanner.setRange(fDoc, fLen, fStrToAppend.length());
       IToken tok;
       while (!(tok = fScanner.nextToken()).isEOF()) {
-        if(tok != fScanner.getDefaultReturnToken()) {
-          BasicTextAttribute bta = (BasicTextAttribute)tok.getData();
+        if (tok != fScanner.getDefaultReturnToken()) {
+          final BasicTextAttribute bta = (BasicTextAttribute)tok.getData();
           fPresentation.mergeStyleRange(new StyleRange(fScanner.getTokenOffset(), 
               fScanner.getTokenLength(), bta.getForeground(), 
               bta.getBackground()));

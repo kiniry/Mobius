@@ -4,6 +4,8 @@ package mobius.prover.gui.jobs;
  * Jobs to append some text to viewers.
  * To schedule this Job the {@link #prepare()} method shall be used
  * instead of the usual {@link org.eclipse.ui.progress.Job#schedule()}.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public interface IAppendJob {
 
@@ -12,23 +14,23 @@ public interface IAppendJob {
    * the Job. It is to be used instead of 
    * {@link org.eclipse.ui.progress.Job#schedule()}.
    */
-  public void prepare();
+  void prepare();
   
   /**
    * Add the specified string to be append to the target document.
    * @param str The string to append
    */
-  public void add(String str);
+  void add(String str);
   
   /**
    * Add the specified StringBuffer to be append to the target document.
    * @param str The string to append
    */
-  public void add(StringBuffer str);
+  void add(StringBuffer str);
   
   /**
    * Returns the length of the String to add to the document.
    * @return the length, superior to 0.
    */
-  public int getLength();
+  int getLength();
 }
