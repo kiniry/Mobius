@@ -9,11 +9,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import prover.exec.AProverException;
-import prover.exec.toplevel.TopLevel;
-import prover.plugins.exceptions.IncompleteProofException;
-import prover.plugins.exceptions.ProverException;
-import prover.plugins.exceptions.SyntaxErrorException;
+import mobius.prover.exec.AProverException;
+import mobius.prover.exec.toplevel.TopLevel;
+import mobius.prover.plugins.exceptions.IncompleteProofException;
+import mobius.prover.plugins.exceptions.ProverException;
+import mobius.prover.plugins.exceptions.SyntaxErrorException;
+
 
 
 

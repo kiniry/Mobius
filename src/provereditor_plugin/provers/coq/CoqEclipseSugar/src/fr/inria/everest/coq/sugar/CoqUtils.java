@@ -1,7 +1,7 @@
 package fr.inria.everest.coq.sugar;
 
-import prover.ProverEditorPlugin;
-import prover.exec.AProverException;
+import mobius.prover.ProverEditorPlugin;
+import mobius.prover.exec.AProverException;
 
 public class CoqUtils {
 	public static CoqTop createNewCoqTop() throws AProverException {
