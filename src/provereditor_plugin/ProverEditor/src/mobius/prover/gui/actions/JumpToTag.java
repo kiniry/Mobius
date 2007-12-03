@@ -14,35 +14,34 @@ import org.eclipse.core.resources.IFile;
  * This class is used to trigger the 'tag jumping',
  * ie. highlighting a word and afterwartd jumping to its
  * next appearance in the current project.
- * @author J. Charles
+ *
+ * @author J. Charles (julien.charles@inria.fr)
  */
-public class JumpToTag extends AProverAction{
+public class JumpToTag extends AProverAction {
 
-  /*
-   * (non-Javadoc)
-   * @see prover.gui.actions.AProverAction#trigger()
-   */
+  /** {@inheritDoc} */
+  @Override
   public void trigger() {
-    Tagger tagger = Tagger.instance;
-    Iterator<TagStruct> iter = tagger.getTags();
-    if(iter != null) {
-      ProverEditor pe = (ProverEditor) getActiveEditor();
-      ProverFileContext pfe = new ProverFileContext(pe);
-      IFile f = pfe.getFile();
+    final Tagger tagger = Tagger.instance;
+    final Iterator<TagStruct> iter = tagger.getTags();
+    if (iter != null) {
+      final ProverEditor pe = (ProverEditor) getActiveEditor();
+      final ProverFileContext pfe = new ProverFileContext(pe);
+      final IFile f = pfe.getFile();
       tagger.run(f);
       
-      String word = pfe.getWord();
+      final String word = pfe.getWord();
 
-      while(iter.hasNext()) {
-        TagStruct ts = (TagStruct) iter.next();
-        if(ts.name.equals(word)) {
+      while (iter.hasNext()) {
+        final TagStruct ts = (TagStruct) iter.next();
+        if (ts.name.equals(word)) {
           ts.show();
           return;
         }
       }
-      while(iter.hasNext()) {
-        TagStruct ts = (TagStruct) iter.next();
-        if(ts.name.equals(word)) {
+      while (iter.hasNext()) {
+        final TagStruct ts = (TagStruct) iter.next();
+        if (ts.name.equals(word)) {
           ts.show();
           return;
         }

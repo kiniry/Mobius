@@ -12,21 +12,24 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * The action to send a back command to the toplevel.
+ *
+ * @author J. Charles (julien.charles@inria.fr)
  */
-public class BackAction extends AProverAction{
+public class BackAction extends AProverAction {
 
-  /*
-   * (non-Javadoc)
-   * @see prover.gui.actions.AProverAction#trigger()
-   */
+  /** {@inheritDoc} */
+  @Override
   public void trigger() {
     try {
       PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
-    } catch (PartInitException e) {  }
-    IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    IEditorPart ed = ap.getActiveEditor();
-    if(ed instanceof ProverEditor) {
-      ProverEditor ce = (ProverEditor) ed;
+    } 
+    catch (PartInitException e) {
+      
+    }
+    final IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IEditorPart ed = ap.getActiveEditor();
+    if (ed instanceof ProverEditor) {
+      final ProverEditor ce = (ProverEditor) ed;
       TopLevelManager.getInstance().regress(new ProverFileContext(ce));      
     }
   }

@@ -14,6 +14,8 @@ import org.eclipse.jface.text.presentation.PresentationReconciler;
 /**
  * A presentation reconciler to avoid editing of a text below a limit
  * defined by a scanner associated with it.
+ *
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class BasicPresentationReconciler extends PresentationReconciler {
   /** the document associated with the reconciler. */

@@ -13,21 +13,24 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * This Class trigger an action to reset the current proof.
+ *
+ * @author J. Charles (julien.charles@inria.fr)
  */
-public class ResetAction extends AProverAction{
-  /*
-   * (non-Javadoc)
-   * @see prover.gui.actions.AProverAction#trigger()
-   */
+public class ResetAction extends AProverAction {
+
+  /** {@inheritDoc} */
+  @Override
   public void trigger() {
     try {
       PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
-    } catch (PartInitException e) {  }
-    IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    IEditorPart ed = ap.getActiveEditor();
-    if(! (ed instanceof ProverEditor))
+    } 
+    catch (PartInitException e) {  }
+    final IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IEditorPart ed = ap.getActiveEditor();
+    if (!(ed instanceof ProverEditor)) {
       return;
-    ProverEditor ce = (ProverEditor) ed;
+    }
+    final ProverEditor ce = (ProverEditor) ed;
     TopLevelManager.getInstance().reset(new ProverFileContext(ce));    
   }
 }

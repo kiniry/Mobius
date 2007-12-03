@@ -11,34 +11,37 @@ import org.eclipse.ui.PlatformUI;
 
 
 /**
- * The action to start a new toplevel
+ * The action to start a new toplevel.
+ * @author J. Charles (julien.charles@inria.fr)
  */
-public class BeginAction extends AProverAction{
+public class BeginAction extends AProverAction {
   
-  /*
-   * (non-Javadoc)
-   * @see prover.gui.actions.AProverAction#trigger()
-   */
+
+  /** {@inheritDoc} */
+  @Override
   public void trigger() {
     try {
       PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
-    } catch (PartInitException e) {  }
-    IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    IEditorPart ed = ap.getActiveEditor();
-    if(ed instanceof ProverEditor) {
-      TopLevelManager ctm = TopLevelManager.getInstance();
-      if(ctm != null)
+    } 
+    catch (PartInitException e) {  
+      
+    }
+    final IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IEditorPart ed = ap.getActiveEditor();
+    if (ed instanceof ProverEditor) {
+      final TopLevelManager ctm = TopLevelManager.getInstance();
+      if (ctm != null) {
         ctm.reset(new ProverFileContext((ProverEditor)ed));
+      }
     }
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see prover.gui.actions.AProverAction#isEnabled()
-   */
+
+  /** {@inheritDoc} */
+  @Override
   public boolean isEnabled() {
-    IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    IEditorPart ed = ap.getActiveEditor();
+    final IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IEditorPart ed = ap.getActiveEditor();
     return (ed instanceof ProverEditor); 
   }
   

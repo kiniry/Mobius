@@ -18,36 +18,36 @@ import org.eclipse.ui.progress.UIJob;
 
 /**
  * An action to progress until the end of the file.
+ *
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProgressEndAction  extends AProverAction {
-  /** the target editor */
+  /** the target editor. */
   private ProverEditor fEditor;
 
-  /*
-   * (non-Javadoc)
-   * @see prover.gui.actions.AProverAction#trigger()
-   */
+  /** {@inheritDoc} */
+  @Override
   public void trigger() {
+    final IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    
     try {
-      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
-    } catch (PartInitException e) {  }
-    IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    IEditorPart editor = ap.getActiveEditor();
-    if(editor instanceof ProverEditor) {
+      ap.showView("ProverEditor.topview");
+    } 
+    catch (PartInitException e) {  }
+    final IEditorPart editor = ap.getActiveEditor();
+    if (editor instanceof ProverEditor) {
       fEditor = (ProverEditor) editor;
-      Job j = new Job("TopLevel Editor is computing...") {
-        /*
-         *  (non-Javadoc)
-         * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        protected IStatus run(IProgressMonitor monitor) {
+      final Job j = new Job("TopLevel Editor is computing...") {
+
+        protected IStatus run(final IProgressMonitor monitor) {
           boolean notlastres = true;
-          if(TopLevelManager.getInstance() == null)
+          if (TopLevelManager.getInstance() == null) {
             System.out.println("nul");
+          }
           while (notlastres) {
-            notlastres = TopLevelManager.getInstance().progress( new ProverFileContext(fEditor));
-            UIJob job = new UIJob("CoqEditor is updating..."){
-              public IStatus runInUIThread(IProgressMonitor monitor) {
+            notlastres = TopLevelManager.getInstance().progress(new ProverFileContext(fEditor));
+            final UIJob job = new UIJob("CoqEditor is updating...") {
+              public IStatus runInUIThread(final IProgressMonitor monitor) {
                 return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
               }
             };
@@ -55,7 +55,8 @@ public class ProgressEndAction  extends AProverAction {
             try {
               job.join();
             
-            } catch (InterruptedException e) {
+            } 
+            catch (InterruptedException e) {
               e.printStackTrace();
             }
           }

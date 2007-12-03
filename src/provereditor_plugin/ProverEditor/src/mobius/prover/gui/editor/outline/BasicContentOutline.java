@@ -20,7 +20,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 
 public class BasicContentOutline extends ContentOutlinePage {
-  private TreeViewer tree;
+  private TreeViewer fTree;
   private ProverEditor fEditor;
 
   public BasicContentOutline(final ProverEditor editor) {
@@ -29,12 +29,12 @@ public class BasicContentOutline extends ContentOutlinePage {
 
   public void createControl(final Composite parent) {
     super.createControl(parent);
-    tree = this.getTreeViewer();
-    tree.setContentProvider(new TypeContentProvider());
-    tree.setLabelProvider(new TypeLabelProvider());
-    tree.setInput(getInitialInput());
-    tree.expandAll();
-    tree.addPostSelectionChangedListener(new ISelectionChangedListener() {
+    fTree = this.getTreeViewer();
+    fTree.setContentProvider(new TypeContentProvider());
+    fTree.setLabelProvider(new TypeLabelProvider());
+    fTree.setInput(getInitialInput());
+    fTree.expandAll();
+    fTree.addPostSelectionChangedListener(new ISelectionChangedListener() {
       public void selectionChanged(final SelectionChangedEvent event) {
         final ISelection sel = event.getSelection();
         if (sel instanceof StructuredSelection) {
@@ -56,18 +56,18 @@ public class BasicContentOutline extends ContentOutlinePage {
           if (pe.isDirty()) {
             return;
           }
-          final StructuredSelection s  = (StructuredSelection) tree.getSelection();
+          final StructuredSelection s  = (StructuredSelection) fTree.getSelection();
           final ProverType pt = (ProverType)s.getFirstElement();
           String path = "";
           if (pt != null) {
             path = pt.getPath();
           }
           final ProverType init = (ProverType)getInitialInput(pe); 
-          tree.setInput(init);
-          tree.expandAll();
+          fTree.setInput(init);
+          fTree.expandAll();
           final ProverType selection = init.findFromPath(path);
           if (selection != null) {
-            tree.setSelection(new StructuredSelection(selection));
+            fTree.setSelection(new StructuredSelection(selection));
           }
           
         }
