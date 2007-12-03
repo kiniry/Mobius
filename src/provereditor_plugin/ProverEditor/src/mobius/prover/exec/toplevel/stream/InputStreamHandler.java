@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 /**
  * This class is alike {@link java.io.PrintWriter} except that
  * the buffer is flushed after each print command.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class InputStreamHandler extends PrintWriter {
   
@@ -17,24 +19,20 @@ public class InputStreamHandler extends PrintWriter {
    * Construct a new InputStreamHandler for the stream o.
    * @param o The stream to write to.
    */
-  public InputStreamHandler(OutputStream o) {
-    super( new OutputStreamWriter(o));
+  public InputStreamHandler(final OutputStream o) {
+    super(new OutputStreamWriter(o));
   }
 
-  /*
-   *  (non-Javadoc)
-   * @see java.io.PrintWriter#println(java.lang.String)
-   */
-  public void println(String str) {
+  /** {@inheritDoc} */
+  @Override
+  public void println(final String str) {
     super.println(str);
     flush();
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see java.io.PrintWriter#print(java.lang.String)
-   */
-  public void print(String str) {
+  /** {@inheritDoc} */
+  @Override
+  public void print(final String str) {
     super.print(str);
     flush();
   }

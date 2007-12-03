@@ -5,6 +5,8 @@ import mobius.prover.Prover;
 /**
  * This exception is thrown when the grace time has ended.
  * The prove is timed out.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class TimeOutException extends ToplevelException {
   /** A serial UID to have much more fun... */
@@ -14,7 +16,7 @@ public class TimeOutException extends ToplevelException {
    * Create a new exception.
    * @param pkind The prover being timed out
    */
-  public TimeOutException(Prover pkind) {
+  public TimeOutException(final Prover pkind) {
     super(pkind, "Timed out !");
   }
 }

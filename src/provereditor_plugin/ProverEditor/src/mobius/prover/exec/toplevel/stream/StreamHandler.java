@@ -9,24 +9,28 @@ import java.util.Set;
  * A stream handler is used to manage a stream.
  * It associates a stream with a thread in order to read
  * it asynchonously, in a non-blocking way.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
-public class StreamHandler implements Runnable{
-  /** the input stream from which we read the input */
+public class StreamHandler implements Runnable {
+  /** the size of the buffer used to read the stream. */
+  private static final int SIZE = 256;
+  /** the input stream from which we read the input. */
   private InputStream fIn;
-  /** the buffer to which input is added */
+  /** the buffer to which input is added. */
   private StringBuffer fBuff = new StringBuffer();
-  /** tells if input is still being read */
-  private boolean fbHasFinished;
-  /** the current thread */ 
+  /** tells if input is still being read. */
+  private boolean fHasFinished;
+  /** the current thread. */ 
   private Thread fThread;
-  /** the list of listeners */
+  /** the list of listeners. */
   private Set<IStreamListener> fListenerSet = new HashSet<IStreamListener>();
   
   /**
-   * Create a new Stream Handler for the specified stream
+   * Create a new Stream Handler for the specified stream.
    * @param inputStream The input stream to create a handler for
    */
-  protected StreamHandler(InputStream inputStream) {
+  protected StreamHandler(final InputStream inputStream) {
     fIn = inputStream;
   }
 
@@ -34,12 +38,12 @@ public class StreamHandler implements Runnable{
    * Sets the thread associated with the handler.
    * @param t the new thread to associate with the handler
    */
-  protected void setThread(Thread t) {
+  protected void setThread(final Thread t) {
     fThread = t;
   }
   
   /**
-   * Returns the current thread associated with the hamdler
+   * Returns the current thread associated with the hamdler.
    * @return a valid thread or null if it has not been set yet 
    */
   public Thread getThread() {
@@ -52,9 +56,9 @@ public class StreamHandler implements Runnable{
    * @param inputStream the sourced stream
    * @return The new stream handler object
    */
-  public static StreamHandler createStreamHandler(InputStream inputStream) {
-    StreamHandler sh = new StreamHandler(inputStream);
-    Thread t = new Thread(sh);
+  public static StreamHandler createStreamHandler(final InputStream inputStream) {
+    final StreamHandler sh = new StreamHandler(inputStream);
+    final Thread t = new Thread(sh);
     t.start();
     sh.setThread(t);
     return sh;
@@ -64,15 +68,15 @@ public class StreamHandler implements Runnable{
    * Add a listener to listen to the events of this thread.
    * @param isl the listener to add
    */
-  public void addStreamListener(IStreamListener isl) {
+  public void addStreamListener(final IStreamListener isl) {
     fListenerSet.add(isl);
   }
   
   /**
-   * Remove a listener that was previously registered to the stream
+   * Remove a listener that was previously registered to the stream.
    * @param isl the listener to remove
    */
-  public void removeStreamListener(IStreamListener isl) {
+  public void removeStreamListener(final IStreamListener isl) {
     fListenerSet.remove(isl);
   }
   
@@ -81,7 +85,7 @@ public class StreamHandler implements Runnable{
    * stream.
    */
   protected void fireToListeners() {
-    String str = fBuff.toString();
+    final String str = fBuff.toString();
     for (IStreamListener isl: fListenerSet) {
       isl.append(this, str);
     }
@@ -94,26 +98,27 @@ public class StreamHandler implements Runnable{
    * with the stream content.
    * @throws IOException If there was an error from the stream
    */
-  protected void read() throws IOException{
+  protected void read() throws IOException {
     int read = 1;
     StringBuffer buff = new StringBuffer();
     // On mange differentes infos
-    char []cTab = new char [256];
-    byte []bTab = new byte [256];
+    final char [] cTab = new char [SIZE];
+    final byte [] bTab = new byte [SIZE];
     while ((read  = fIn.available()) >= 0) {
-      int toRead = (read %256);
-      read = fIn.read(bTab, 0, (toRead == 0) ? 256 : toRead);
-      if(fIn.available() == 0){
-        fbHasFinished = true;
+      final int toRead = (read % SIZE);
+      read = fIn.read(bTab, 0, (toRead == 0) ? SIZE : toRead);
+      if (fIn.available() == 0) {
+        fHasFinished = true;
       }
       else {
-        fbHasFinished = false;
+        fHasFinished = false;
       }
       for (int i = 0; i < cTab.length; i++) {
         cTab[i] = (char) bTab[i];
       }
-      if(read > 0)
-        buff.append(cTab,0, read);
+      if (read > 0) {
+        buff.append(cTab, 0, read);
+      }
       
       fBuff.append(buff);
       buff = new StringBuffer();
@@ -140,18 +145,18 @@ public class StreamHandler implements Runnable{
   }
   
   
-  
-  /*
-   *  (non-Javadoc)
-   * @see java.lang.Runnable#run()
-   */
+  /** {@inheritDoc} */
+  @Override
   public void run() {
-    fbHasFinished = false;
+    fHasFinished = false;
     try {
       read();
-    } catch (IOException e) {}
+    } 
+    catch (IOException e) {
+      e.printStackTrace();
+    }
     
-    fbHasFinished = true;  
+    fHasFinished = true;  
   }
   
   /**
@@ -159,6 +164,6 @@ public class StreamHandler implements Runnable{
    * @return tells if there is no more input available
    */
   public boolean hasFinished() {
-    return fbHasFinished;
+    return fHasFinished;
   }
 }

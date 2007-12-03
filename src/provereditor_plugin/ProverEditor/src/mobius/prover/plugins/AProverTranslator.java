@@ -103,7 +103,8 @@ public abstract class AProverTranslator {
    * {@link java.lang.Runtime#exec(java.lang.String[])} that will cause <var>file</var> to be
    * loaded into the "normal" IDE for this prover, as specified in the project preferences?
    */
-  public abstract String[] /*@ non_null @*/ getIdeCommand(String ide, String[] path, String file);
+  public abstract String[] /*@ non_null @*/ getIdeCommand(String ide, 
+                                                          String[] path, String file);
   
   /**
    * Compute the "compiling" command, (the command to execute that will cause the prover to
@@ -120,7 +121,8 @@ public abstract class AProverTranslator {
    * {@link java.lang.Runtime#exec(java.lang.String[])} that will cause <var>file</var> to be
    * compiled?
    */
-  public abstract /*@ non_null @*/ String[] getCompilingCommand(String comp, String[] path, String file);
+  public abstract /*@ non_null @*/ String[] getCompilingCommand(String comp, 
+                                                                String[] path, String file);
 
   
   

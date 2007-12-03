@@ -4,8 +4,8 @@ import mobius.prover.exec.toplevel.stream.IStreamListener;
 
 /**
  * Basic interactions needed to dialog with the toplevel.
- * @author J.Charles
- *
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public interface ITopLevel {
   
@@ -17,58 +17,58 @@ public interface ITopLevel {
    * @throws AProverException thrown if anything goes wrong.
    */
   //@ signals (TopLevelDeathException) !isAlive(); 
-  public void sendToProver(String s) throws AProverException;
+  void sendToProver(String s) throws AProverException;
   
   
   /**
    * If the user tells  the prover to stop what it is
    * currently doing; usually by sending a Ctrl-Break 
    * message or something like that.
-   * @throws AProverException
+   * @throws AProverException thrown if anything goes wrong.
    */
-  public void doBreak() throws AProverException;
+  void doBreak() throws AProverException;
   
   
   /**
    * Tells wether or not the top level is alive.
    * @return true if the top level is working.
    */
-  public boolean isAlive();
+  boolean isAlive();
   
   /**
    * Stop the top level process.
    */
-  public void stop();
+  void stop();
   
   
   /**
    * Clear the snapshot of the standard output
    * and the error output of the prover.
    */
-  public void clearBuffer();
+  void clearBuffer();
   
   /**
    * Clear the snapshot of the standard output of the prover.
    */
-  public void clearStdBuffer();
+  void clearStdBuffer();
   
   /**
    * Clear the snapshot of the error output of the prover.
    */
-  public void clearErrBuffer();
+  void clearErrBuffer();
   
   
   /**
    * Returns the content of the standard output from the prover.
    * @return A snapshot of the standard output of the prover
    */
-  public String getStdBuffer();
+  String getStdBuffer();
 
   /**
    * Returns the content of the error output from the prover.
    * @return A snapshot of the error output of the prover
    */
-  public String getErrBuffer();
+  String getErrBuffer();
   
   /**
    * Wait for the input coming from the standard stream.
@@ -76,7 +76,7 @@ public interface ITopLevel {
    * @throws AProverException In case of the grace time, 
    * death of the thread, death of the prover, or an I/O error
    */
-  public void waitForStandardInput() throws AProverException;
+  void waitForStandardInput() throws AProverException;
   
   /**
    * Wait for the input coming from the error stream.
@@ -84,33 +84,33 @@ public interface ITopLevel {
    * @throws AProverException In case of the grace time, 
    * death of the thread, death of the prover, or an I/O error
    */
-  public void waitForErrorInput() throws AProverException;
+  void waitForErrorInput() throws AProverException;
   
   /**
    * Add a listener to listen to the events of the standard stream.
    * @param isl the listener to add
    */
-  public void addStandardStreamListener(IStreamListener isl);
+  void addStandardStreamListener(IStreamListener isl);
   
   /**
    * Remove a listener that was previously registered to listen
-   * to the standard stream
+   * to the standard stream.
    * @param isl the listener to remove
    */
-  public void removeStandardStreamListener(IStreamListener isl);
+  void removeStandardStreamListener(IStreamListener isl);
 
   /**
    * Add a listener to listen to the events of the error stream.
    * @param isl the listener to add
    */
-  public void addErrorStreamListener(IStreamListener isl);
+  void addErrorStreamListener(IStreamListener isl);
 
   /**
    * Remove a listener that was previously registered to listen
-   * to the error stream
+   * to the error stream.
    * @param isl the listener to remove
    */
-  public void removeErrorStreamListener(IStreamListener isl);
+  void removeErrorStreamListener(IStreamListener isl);
 
 
 }
