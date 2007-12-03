@@ -2,10 +2,11 @@ package fr.inria.everest.coq.editor.utils;
 
 import java.util.Stack;
 
+import mobius.prover.exec.ITopLevel;
+import mobius.prover.plugins.IProverTopLevel;
+
 import org.eclipse.jface.text.IDocument;
 
-import prover.exec.ITopLevel;
-import prover.plugins.IProverTopLevel;
 import fr.inria.everest.coq.editor.BasicCoqTop;
 
 public class ProofHandler {

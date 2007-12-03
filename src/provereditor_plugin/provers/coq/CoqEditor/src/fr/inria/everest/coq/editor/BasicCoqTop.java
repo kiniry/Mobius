@@ -3,13 +3,14 @@
  */
 package fr.inria.everest.coq.editor;
 
+import mobius.prover.exec.AProverException;
+import mobius.prover.exec.ITopLevel;
+import mobius.prover.plugins.IProverTopLevel;
+import mobius.prover.plugins.exceptions.ProverException;
+import mobius.prover.plugins.exceptions.SyntaxErrorException;
+
 import org.eclipse.jface.text.IDocument;
 
-import prover.exec.AProverException;
-import prover.exec.ITopLevel;
-import prover.plugins.IProverTopLevel;
-import prover.plugins.exceptions.ProverException;
-import prover.plugins.exceptions.SyntaxErrorException;
 import fr.inria.everest.coq.editor.utils.ProofHandler;
 
 
