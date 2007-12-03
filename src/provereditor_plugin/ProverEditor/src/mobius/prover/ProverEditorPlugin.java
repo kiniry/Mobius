@@ -50,9 +50,8 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
     plugin = this;
   }
   
-  /**
-   * This method is called upon plug-in activation.
-   */
+  /** {@inheritDoc} */
+  @Override
   public void start(final BundleContext context) throws Exception {
     super.start(context);
     fPrefs = PlatformUI.getPreferenceStore(); 
@@ -62,7 +61,7 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
     if (Platform.getExtensionRegistry() != null) {
       final IExtensionPoint[] ipd = 
         Platform.getExtensionRegistry().getExtensionPoints(PROVER_EXTENSION_NAMESPACE);
-      Platform.getExtensionRegistry().addRegistryChangeListener(new IRegistryChangeListener(){
+      Platform.getExtensionRegistry().addRegistryChangeListener(new IRegistryChangeListener() {
         public void registryChanged(final IRegistryChangeEvent event) {
           final IExtensionDelta [] ied = event.getExtensionDeltas(PROVER_EXTENSION_NAMESPACE);
           for (int i = 0; i < ied.length; i++) {
@@ -81,16 +80,15 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
     }
   }
   
-  /**
-   * This method is called when the plug-in is stopped.
-   */
+  /** {@inheritDoc} */
+  @Override
   public void stop(final BundleContext context) throws Exception {
     super.stop(context);
     plugin = null;
   }
   
   /**
-   * Returns the shared instance.
+   * @return the shared instance.
    */
   public static ProverEditorPlugin getDefault() {
     return plugin;
@@ -124,12 +122,7 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
     
     for (int k = 0; k < ice.length; k++) {
       if (ice[k].getName().equals("language")) {
-        try {
-          new Prover(fPrefs, ice[k]);
-        } 
-        catch (final Exception ce) {
-          System.err.println(ce.getMessage());
-        }
+        new Prover(fPrefs, ice[k]);
       }
     }
   }
@@ -153,8 +146,8 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
    * @return the prover instance denominated by the parameter
    * or <code>null</code> if it wasn't found. 
    */
-  public Prover getProver(String language) {
-    Prover pn = (Prover) Prover.get(language);
+  public Prover getProver(final String language) {
+    final Prover pn = (Prover) Prover.get(language);
     return pn;
   }
 }
