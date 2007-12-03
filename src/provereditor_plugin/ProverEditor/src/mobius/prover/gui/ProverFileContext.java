@@ -31,35 +31,35 @@ public class ProverFileContext {
   private static final Pattern pat = Pattern.compile("[^a-zA-Z_0-9]");
 
 
-  public final ProverEditor ce;
-  public final IDocument doc; 
-  public final BasicSourceViewerConfig sv; 
-  public final LimitRuleScanner scan;
-  public final ITextViewer viewer;
+  public final ProverEditor fCe;
+  public final IDocument fDoc; 
+  public final BasicSourceViewerConfig fSv; 
+  public final LimitRuleScanner fScan;
+  public final ITextViewer fViewer;
   
   /**
    * The constructor to initialize the different fields.
    * @param ce The editor giving the different context elements.
    */
   public ProverFileContext(final ProverEditor ce) {
-    this.ce = ce;
+    this.fCe = ce;
     if (ce == null) {
-      doc = null;
-      sv = null;
-      scan = null;
-      viewer = null;
+      fDoc = null;
+      fSv = null;
+      fScan = null;
+      fViewer = null;
     }
     else {
-      sv = ce.getSourceViewerConfig();
-      doc = sv.getPresentationReconciler().getDocument();      
-      scan = sv.getTagScanner();
-      viewer = sv.getPresentationReconciler().getViewer();
+      fSv = ce.getSourceViewerConfig();
+      fDoc = fSv.getPresentationReconciler().getDocument();      
+      fScan = fSv.getTagScanner();
+      fViewer = fSv.getPresentationReconciler().getViewer();
       
     }
   }
   
   public Point getWordPoint() {
-    final Point p = viewer.getSelectedRange();
+    final Point p = fViewer.getSelectedRange();
     final int x = getBeginning(p.x);
     final int y = getEnd(p.x);
     final Point word = new Point(x, y - x);
@@ -70,7 +70,7 @@ public class ProverFileContext {
     String res = "";
     final Point p = getWordPoint();
     try {
-      res = doc.get(p.x, p.y);
+      res = fDoc.get(p.x, p.y);
     }
     catch (BadLocationException e) {
       e.printStackTrace();
@@ -81,12 +81,12 @@ public class ProverFileContext {
   
   private int getEnd(final int x) {
     int end = 0;
-    final int len = doc.getLength();
+    final int len = fDoc.getLength();
     int diff = x + 10 > len ? len - x : 10;
     
     while (end == 0) {
       try {
-        final String str = doc.get(x, diff);
+        final String str = fDoc.get(x, diff);
         final Matcher m = pat.matcher(str);
         if (m.find()) {
           end = m.end() - 1;
@@ -113,7 +113,7 @@ public class ProverFileContext {
     int diff = x - 10 < 0 ? x : 10;
     while (end == 0) {
       try {
-        final String str = doc.get(x - diff, diff);
+        final String str = fDoc.get(x - diff, diff);
         final Matcher m = pat.matcher(str);
         while (m.find()) {
           end = m.end();
@@ -137,7 +137,7 @@ public class ProverFileContext {
 
   public IFile getFile() {
     ResourcesPlugin.getWorkspace().getRoot().getProject();
-    final IEditorInput ei = ce.getEditorInput();
+    final IEditorInput ei = fCe.getEditorInput();
     if (ei instanceof IFileEditorInput) {
       final IFileEditorInput fei = (IFileEditorInput) ei;
       return fei.getFile();

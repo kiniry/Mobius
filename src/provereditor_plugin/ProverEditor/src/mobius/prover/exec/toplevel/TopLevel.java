@@ -38,6 +38,8 @@ public class TopLevel implements ITopLevel {
   public static final String BREAKSTR;
   /** The Break character. */
   private static final char BREAK = 3;
+  /** a second equals 1000 milli seconds ;). */
+  private static final int SECOND = 1000;
   
   static {
     BREAKSTR = "" + BREAK;
@@ -195,7 +197,7 @@ public class TopLevel implements ITopLevel {
     try {
       Thread.yield();
       for (i = 0; i < fGraceTime && (!stream.hasFinished()) && isAlive(); i++) {
-        stream.getThread().join(1000);
+        stream.getThread().join(SECOND);
       } 
       if (!stream.hasFinished()) {
         if (!isAlive()) {

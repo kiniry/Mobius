@@ -22,7 +22,6 @@ public final class TagList implements Iterable<TagStruct> {
   /** return the iterator of the tag list. */
   public Iterator<TagStruct> iterator() {
     return list.iterator();
-  }
-  
+  } 
   
 }

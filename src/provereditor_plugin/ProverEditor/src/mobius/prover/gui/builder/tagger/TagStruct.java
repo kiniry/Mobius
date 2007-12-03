@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -32,13 +33,13 @@ public final class TagStruct implements Serializable {
   private static final long serialVersionUID = 1L;
   
   /** the word being tagged. */
-  public final String fName;
+  private final String fName;
   /** the file name of the file where the tag can be found. */
-  public final String fFilename;
+  private final String fFilename;
   /** the beginning of the tag in the file. */
-  public final int fBeg;
+  private final int fBeg;
   /** the end of the tag in the file. */
-  public final int fEnd;
+  private final int fEnd;
   
   
   /**
@@ -67,7 +68,8 @@ public final class TagStruct implements Serializable {
    * Open an editor, and highlight the tag in the file.
    */
   public void show() {
-    final IWorkbenchPage wp = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IWorkbench bench = PlatformUI.getWorkbench();
+    final IWorkbenchPage wp = bench.getActiveWorkbenchWindow().getActivePage();
     final IWorkspace ws = ResourcesPlugin.getWorkspace();
     final IFile f = ws.getRoot().getFileForLocation(new Path(fFilename));
     try {
@@ -88,5 +90,13 @@ public final class TagStruct implements Serializable {
   @Override
   public String toString() {
     return fName + " (" + fBeg + ", " + fEnd + ") -> " + fFilename;
+  }
+  
+  /**
+   * Returns the word being tagged.
+   * @return the content of the field {@link #fName}
+   */
+  public String getName() {
+    return fName;
   }
 }

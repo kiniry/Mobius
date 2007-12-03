@@ -87,7 +87,7 @@ public class BasicContentOutline extends ContentOutlinePage {
     final ProverFileContext ctxt = new ProverFileContext(editor);
     
     final Prover p = Prover.findProverFromFile(editor.getTitle());
-    p.getTranslator().getFileOutline(editor, ctxt.doc, ft);
+    p.getTranslator().getFileOutline(editor, ctxt.fDoc, ft);
     return root;
   }
 

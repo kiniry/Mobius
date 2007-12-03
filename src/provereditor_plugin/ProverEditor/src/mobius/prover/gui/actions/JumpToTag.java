@@ -34,14 +34,14 @@ public class JumpToTag extends AProverAction {
 
       while (iter.hasNext()) {
         final TagStruct ts = (TagStruct) iter.next();
-        if (ts.fName.equals(word)) {
+        if (ts.getName().equals(word)) {
           ts.show();
           return;
         }
       }
       while (iter.hasNext()) {
         final TagStruct ts = (TagStruct) iter.next();
-        if (ts.fName.equals(word)) {
+        if (ts.getName().equals(word)) {
           ts.show();
           return;
         }

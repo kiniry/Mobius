@@ -180,7 +180,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       res = false;
     }
     else {
-      final int oldlimit = pc.scan.getLimit();
+      final int oldlimit = pc.fScan.getLimit();
       res = progress_intern(pc, oldlimit, oldlimit);
     }
     unlock();
@@ -194,7 +194,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     if (fParser == null) {
       return false;
     }
-    fParser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
+    fParser.setRange(pc.fDoc, oldlimit, pc.fDoc.getLength() - oldlimit);
     UpdateJob uj;
     IToken tok;
     do {
@@ -208,7 +208,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     try {
       String cmd;
       try {
-        cmd = pc.doc.get(realoldlimit, newlimit - oldlimit).trim();
+        cmd = pc.fDoc.get(realoldlimit, newlimit - oldlimit).trim();
       } 
       catch (BadLocationException e) {
         // it should not happen
@@ -217,14 +217,14 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       }
       
       // first we lock the evaluated part
-      pc.scan.setLimit(newlimit);
-      uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
+      pc.fScan.setLimit(newlimit);
+      uj = new UpdateJob(pc.fSv.getPresentationReconciler(), newlimit);
       uj.schedule();
       
       
       //we send the command
       switch (fProver.getTopLevelTranslator().hasToSkipSendCommand(fTopLevel, 
-                                                                   pc.doc, cmd, 
+                                                                   pc.fDoc, cmd, 
                                                                    oldlimit, newlimit)) {
         case IProverTopLevel.DONT_SKIP: {
           fTopLevel.sendCommand(cmd);
@@ -233,8 +233,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
             fParsedList.push(new Integer(realoldlimit));
           }
           else {
-            pc.scan.setLimit(oldlimit);
-            uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
+            pc.fScan.setLimit(oldlimit);
+            uj = new UpdateJob(pc.fSv.getPresentationReconciler(), newlimit);
             uj.schedule();
             return false;
           }
@@ -250,8 +250,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       }
     } 
     catch (AProverException e) {
-      pc.scan.setLimit(realoldlimit);
-      uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
+      pc.fScan.setLimit(realoldlimit);
+      uj = new UpdateJob(pc.fSv.getPresentationReconciler(), newlimit);
       uj.schedule();
       final ColorAppendJob caj = new ColorAppendJob(fStatePres, e.toString(), RED);
       caj.prepare();
@@ -286,12 +286,12 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   }  
   
   protected boolean regress_intern(final ProverFileContext pc) {
-    final int oldlimit = pc.scan.getLimit();
+    final int oldlimit = pc.fScan.getLimit();
     if ((oldlimit > 0) && (fParsedList.size() > 0)) {
       final int newlimit = ((Integer) fParsedList.pop()).intValue();
       String cmd;
       try {
-        cmd = pc.doc.get(newlimit, oldlimit - newlimit).trim();
+        cmd = pc.fDoc.get(newlimit, oldlimit - newlimit).trim();
       } 
       catch (BadLocationException e) {
         // it should not happen
@@ -299,7 +299,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
         return false;
       }
       switch(fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, 
-                                                           pc.doc, 
+                                                           pc.fDoc, 
                                                            cmd, newlimit, 
                                                            oldlimit)) {
         case IProverTopLevel.DONT_SKIP: {
@@ -309,15 +309,15 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
           catch (AProverException e) {
             append(e.toString());
           }
-          pc.scan.setLimit(newlimit);
+          pc.fScan.setLimit(newlimit);
           break;
         }
         case IProverTopLevel.SKIP: {
-          pc.scan.setLimit(newlimit);
+          pc.fScan.setLimit(newlimit);
           break;
         }
         case IProverTopLevel.SKIP_AND_CONTINUE: {
-          pc.scan.setLimit(newlimit);
+          pc.fScan.setLimit(newlimit);
           regress_intern(pc);
           break;
         }
@@ -325,7 +325,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       }
       
       
-      final UpdateJob uj = new UpdateJob(pc.sv.getPresentationReconciler(), oldlimit + 1);
+      final UpdateJob uj = new UpdateJob(pc.fSv.getPresentationReconciler(), oldlimit + 1);
       uj.schedule();
     }
     return true;
@@ -373,7 +373,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     if (fTopLevel != null) {
       fTopLevel.stop();
     }
-    final IEditorInput input = fProverContext.ce.getEditorInput();
+    final IEditorInput input = fProverContext.fCe.getEditorInput();
     
     final IFile path = (input instanceof IFileEditorInput) ? 
         ((IFileEditorInput) input).getFile() : null;
@@ -421,8 +421,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     }
   
     // we reset the view
-    fProverContext.scan.setLimit(0);
-    new UpdateJob(fProverContext.sv.getPresentationReconciler()).schedule();
+    fProverContext.fScan.setLimit(0);
+    new UpdateJob(fProverContext.fSv.getPresentationReconciler()).schedule();
   }
 
   
@@ -453,7 +453,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       str = str.replaceAll(replacements[i][0], 
           replacements[i][1]);
     }
-    final AppendJob job = new AppendJob(fProverContext.ce, fStateScan, fStatePres);
+    final AppendJob job = new AppendJob(fProverContext.fCe, fStateScan, fStatePres);
     
   
     job.add(str);
@@ -468,7 +468,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * reset the view with
    */
   public void reset(final ProverFileContext pc) {
-    if (pc.doc != null) {
+    if (pc.fDoc != null) {
       fProverContext = pc;
       reset();
     }
@@ -481,7 +481,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * @return true if the documents are different.
    */
   public boolean isNewDoc(final ProverFileContext pc) {
-    return pc.doc != fProverContext.doc;
+    return pc.fDoc != fProverContext.fDoc;
   }
 
   /**
@@ -547,7 +547,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       fReconciler.everythingHasChanged(0, fLimit); 
       final IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
       final IWorkbenchPage page = win.getActivePage();
-      page.activate(fProverContext.ce);
+      page.activate(fProverContext.fCe);
       return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
     }
     
