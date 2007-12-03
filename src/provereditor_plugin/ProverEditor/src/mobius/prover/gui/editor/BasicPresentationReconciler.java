@@ -128,7 +128,7 @@ public class BasicPresentationReconciler extends PresentationReconciler {
 	 */
 	private class DocumentListener implements IDocumentListener {
 		/** the list of events to undo */
-		private Stack fUpcoming = new Stack();
+		private Stack<DocumentEvent> fUpcoming = new Stack<DocumentEvent>();
 		/** a flag to avoid recursive call */
 		private boolean flag = false;
 		

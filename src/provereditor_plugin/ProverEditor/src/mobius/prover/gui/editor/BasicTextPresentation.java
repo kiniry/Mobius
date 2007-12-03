@@ -29,11 +29,12 @@ public class BasicTextPresentation extends TextPresentation {
 	 * A copy constructor.
 	 * @param pres the presentation to be the copy of.
 	 */
-	public BasicTextPresentation(BasicTextPresentation pres) {
+	@SuppressWarnings("unchecked")
+  public BasicTextPresentation(BasicTextPresentation pres) {
 		super();
-		Iterator iter = pres.getAllStyleRangeIterator();
+		Iterator<StyleRange> iter = pres.getAllStyleRangeIterator();
 		while(iter.hasNext()) {
-			this.addStyleRange((StyleRange) ((StyleRange)iter.next()).clone());
+			this.addStyleRange((StyleRange) iter.next().clone());
 		}
 		this.setDefaultStyleRange(pres.getDefaultStyleRange());
 		fViewer = pres.fViewer;

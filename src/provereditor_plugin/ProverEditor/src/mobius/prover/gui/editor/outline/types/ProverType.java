@@ -10,7 +10,7 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class ProverType {
-	private List subtypes = new ArrayList();
+	private List<ProverType> subtypes = new ArrayList<ProverType>();
 	private ProverType supertype = null;
 	
 	private int fOffset = 0;
@@ -79,7 +79,7 @@ public class ProverType {
 			return null;
 		if(path.length() == fPath.length())
 			return this;
-		Iterator iter = subtypes.iterator();
+		Iterator<ProverType> iter = subtypes.iterator();
 		while(iter.hasNext()) {
 			ProverType pt = (ProverType)iter.next();
 			ProverType res = pt.findFromPath(path);
