@@ -5,7 +5,6 @@ Bundle-SymbolicName: prover.editor; singleton:=true
 Bundle-Version: 0.9.7
 Bundle-Activator: mobius.prover.ProverEditorPlugin
 Bundle-Vendor: Inria - Everest Team
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
  org.eclipse.core.runtime,
