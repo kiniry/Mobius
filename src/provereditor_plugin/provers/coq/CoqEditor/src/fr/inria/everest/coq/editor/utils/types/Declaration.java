@@ -1,7 +1,7 @@
 package fr.inria.everest.coq.editor.utils.types;
 
+import mobius.prover.gui.editor.ProverEditor;
 import fr.inria.everest.coq.editor.CoqProverTranslator;
-import prover.gui.editor.ProverEditor;
 
 public class Declaration extends CoqType {
 

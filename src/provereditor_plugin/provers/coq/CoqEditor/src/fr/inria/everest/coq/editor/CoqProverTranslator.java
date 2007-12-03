@@ -3,6 +3,11 @@ package fr.inria.everest.coq.editor;
 import java.io.InputStream;
 import java.util.regex.Pattern;
 
+import mobius.prover.gui.editor.FixedSizeWordRule;
+import mobius.prover.gui.editor.ProverEditor;
+import mobius.prover.gui.editor.detector.ExprDetector;
+import mobius.prover.gui.editor.detector.WordDetector;
+import mobius.prover.gui.editor.outline.types.ProverType;
 import mobius.prover.plugins.AProverTranslator;
 
 import org.eclipse.jface.text.IDocument;
@@ -14,11 +19,6 @@ import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
-import prover.gui.editor.FixedSizeWordRule;
-import prover.gui.editor.ProverEditor;
-import prover.gui.editor.detector.ExprDetector;
-import prover.gui.editor.detector.WordDetector;
-import prover.gui.editor.outline.types.ProverType;
 import fr.inria.everest.coq.editor.utils.CoqConstructFinder;
 import fr.inria.everest.coq.editor.utils.ICoqColorConstants;
 

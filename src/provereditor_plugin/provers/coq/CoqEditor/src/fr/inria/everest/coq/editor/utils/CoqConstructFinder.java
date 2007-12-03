@@ -2,15 +2,16 @@ package fr.inria.everest.coq.editor.utils;
 
 import java.util.LinkedList;
 
+import mobius.prover.gui.editor.BasicRuleScanner;
+import mobius.prover.gui.editor.ProverEditor;
+import mobius.prover.gui.editor.outline.types.ProverType;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 
-import prover.gui.editor.BasicRuleScanner;
-import prover.gui.editor.ProverEditor;
-import prover.gui.editor.outline.types.ProverType;
 import fr.inria.everest.coq.editor.utils.types.CoqType;
 import fr.inria.everest.coq.editor.utils.types.token.TypeToken;
 import fr.inria.everest.coq.editor.utils.types.token.data.ATokenData;

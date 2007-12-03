@@ -1,10 +1,11 @@
 package fr.inria.everest.coq.editor.utils.types;
 
 
+import mobius.prover.gui.editor.ProverEditor;
+import mobius.prover.gui.editor.outline.types.ProverType;
+
 import org.eclipse.swt.graphics.Image;
 
-import prover.gui.editor.ProverEditor;
-import prover.gui.editor.outline.types.ProverType;
 
 public class CoqType extends ProverType {
 	String fName;

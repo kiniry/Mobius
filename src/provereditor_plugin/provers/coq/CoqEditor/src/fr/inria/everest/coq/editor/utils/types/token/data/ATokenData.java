@@ -1,11 +1,12 @@
 package fr.inria.everest.coq.editor.utils.types.token.data;
 
+import mobius.prover.gui.editor.BasicRuleScanner;
+import mobius.prover.gui.editor.ProverEditor;
+import mobius.prover.gui.editor.outline.types.ProverType;
+
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
-import prover.gui.editor.BasicRuleScanner;
-import prover.gui.editor.ProverEditor;
-import prover.gui.editor.outline.types.ProverType;
 
 public abstract class ATokenData {
 

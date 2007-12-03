@@ -1,7 +1,7 @@
 package fr.inria.everest.coq.editor.utils.types.token.data;
 
-import prover.gui.editor.ProverEditor;
-import prover.gui.editor.outline.types.ProverType;
+import mobius.prover.gui.editor.ProverEditor;
+import mobius.prover.gui.editor.outline.types.ProverType;
 
 public class ComplexEnd extends ATokenData{
 	public ProverType parse(ProverEditor editor) {

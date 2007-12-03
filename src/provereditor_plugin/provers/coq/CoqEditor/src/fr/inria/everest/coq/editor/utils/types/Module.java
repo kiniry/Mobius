@@ -1,6 +1,6 @@
 package fr.inria.everest.coq.editor.utils.types;
 
-import prover.gui.editor.ProverEditor;
+import mobius.prover.gui.editor.ProverEditor;
 import fr.inria.everest.coq.editor.CoqProverTranslator;
 
 
