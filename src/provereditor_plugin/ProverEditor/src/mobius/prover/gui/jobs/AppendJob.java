@@ -1,6 +1,12 @@
 package mobius.prover.gui.jobs;
 
 
+import mobius.prover.gui.editor.BasicRuleScanner;
+import mobius.prover.gui.editor.BasicTextAttribute;
+import mobius.prover.gui.editor.BasicTextPresentation;
+import mobius.prover.gui.editor.IColorConstants;
+import mobius.prover.gui.editor.ProverEditor;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -13,11 +19,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.gui.editor.BasicRuleScanner;
-import prover.gui.editor.BasicTextAttribute;
-import prover.gui.editor.BasicTextPresentation;
-import prover.gui.editor.IColorConstants;
-import prover.gui.editor.ProverEditor;
 
 
 /**

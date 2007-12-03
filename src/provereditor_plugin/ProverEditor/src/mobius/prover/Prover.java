@@ -2,6 +2,7 @@ package mobius.prover;
 
 import java.util.Hashtable;
 
+import mobius.prover.gui.editor.LimitRuleScanner;
 import mobius.prover.gui.preference.ProverPreferenceNode;
 import mobius.prover.plugins.AProverTranslator;
 import mobius.prover.plugins.IProverTopLevel;
@@ -11,7 +12,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
-import prover.gui.editor.LimitRuleScanner;
 
 
 /**

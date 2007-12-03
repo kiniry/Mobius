@@ -2,13 +2,13 @@ package mobius.prover.gui.actions;
 
 import mobius.prover.gui.ProverFileContext;
 import mobius.prover.gui.TopLevelManager;
+import mobius.prover.gui.editor.BasicRuleScanner;
+import mobius.prover.gui.editor.ProverEditor;
 import mobius.prover.plugins.AProverTranslator;
 
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.ui.IEditorPart;
 
-import prover.gui.editor.BasicRuleScanner;
-import prover.gui.editor.ProverEditor;
 
 public class JumpForward extends AProverAction {
 	/**

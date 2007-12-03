@@ -1,6 +1,8 @@
 package mobius.prover.gui.jobs;
 
 
+import mobius.prover.gui.editor.IColorConstants;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -10,7 +12,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.gui.editor.IColorConstants;
 
 /**
  * A Job to append text to the specified document contained in a viewer.

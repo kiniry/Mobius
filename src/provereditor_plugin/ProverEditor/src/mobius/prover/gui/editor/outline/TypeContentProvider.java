@@ -1,9 +1,10 @@
-package prover.gui.editor.outline;
+package mobius.prover.gui.editor.outline;
+
+import mobius.prover.gui.editor.outline.types.ProverType;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import prover.gui.editor.outline.types.ProverType;
 
 public class TypeContentProvider implements ITreeContentProvider {
 	private static final Object[] EMPTY_ARRAY = new Object[0];

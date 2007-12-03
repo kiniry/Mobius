@@ -1,4 +1,4 @@
-package prover.gui.editor;
+package mobius.prover.gui.editor;
 
 import java.util.Iterator;
 

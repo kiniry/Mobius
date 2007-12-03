@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mobius.prover.gui.TopLevelManager;
+import mobius.prover.gui.editor.ProverEditor;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -18,7 +19,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
-import prover.gui.editor.ProverEditor;
 
 /**
  * Action used for the toolbar buttons provided by ProverEditor.

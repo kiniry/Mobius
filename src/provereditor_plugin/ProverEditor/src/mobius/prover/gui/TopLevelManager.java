@@ -12,6 +12,11 @@ import mobius.prover.ProverEditorPlugin;
 import mobius.prover.exec.AProverException;
 import mobius.prover.exec.toplevel.TopLevel;
 import mobius.prover.exec.toplevel.stream.StreamHandler;
+import mobius.prover.gui.editor.BasicPresentationReconciler;
+import mobius.prover.gui.editor.BasicRuleScanner;
+import mobius.prover.gui.editor.BasicTextPresentation;
+import mobius.prover.gui.editor.IColorConstants;
+import mobius.prover.gui.editor.LimitRuleScanner;
 import mobius.prover.gui.jobs.AppendJob;
 import mobius.prover.gui.jobs.ColorAppendJob;
 import mobius.prover.gui.popup.AddToLoadPath;
@@ -38,11 +43,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.gui.editor.BasicPresentationReconciler;
-import prover.gui.editor.BasicRuleScanner;
-import prover.gui.editor.BasicTextPresentation;
-import prover.gui.editor.IColorConstants;
-import prover.gui.editor.LimitRuleScanner;
 
 /**
  * The top level manager is the main class of the gui of ProverEditor.

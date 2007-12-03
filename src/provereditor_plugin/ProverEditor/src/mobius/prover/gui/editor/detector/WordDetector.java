@@ -1,4 +1,4 @@
-package prover.gui.editor.detector;
+package mobius.prover.gui.editor.detector;
 
 import org.eclipse.jface.text.rules.IWordDetector;
 

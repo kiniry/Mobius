@@ -5,10 +5,10 @@ import java.util.Iterator;
 import mobius.prover.gui.ProverFileContext;
 import mobius.prover.gui.builder.tagger.TagStruct;
 import mobius.prover.gui.builder.tagger.Tagger;
+import mobius.prover.gui.editor.ProverEditor;
 
 import org.eclipse.core.resources.IFile;
 
-import prover.gui.editor.ProverEditor;
 
 /**
  * This class is used to trigger the 'tag jumping',

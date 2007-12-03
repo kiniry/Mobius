@@ -1,11 +1,11 @@
-package prover.gui.editor;
+package mobius.prover.gui.editor;
 
 import mobius.prover.Prover;
+import mobius.prover.gui.editor.outline.BasicContentOutline;
 
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-import prover.gui.editor.outline.BasicContentOutline;
 
 /**
  * The editor used to edit any prover language defined file.
@@ -52,7 +52,9 @@ public class ProverEditor extends TextEditor{
 		}
 		return fScanner;
 	}
-	public Object getAdapter(Class cl) {
+	
+	@SuppressWarnings("unchecked")
+  public Object getAdapter(Class cl) {
 		if(cl == IContentOutlinePage.class) {
 			IContentOutlinePage cop = new BasicContentOutline(this);
 			return cop;

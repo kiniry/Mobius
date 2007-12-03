@@ -1,6 +1,9 @@
 package mobius.prover.gui.jobs;
 
 
+import mobius.prover.gui.editor.BasicTextPresentation;
+import mobius.prover.gui.editor.IColorConstants;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -10,8 +13,6 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 
-import prover.gui.editor.BasicTextPresentation;
-import prover.gui.editor.IColorConstants;
 
 /**
  * A Job to append some text with the specified color.

@@ -3,6 +3,10 @@ package mobius.prover.gui;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import mobius.prover.gui.editor.BasicSourceViewerConfig;
+import mobius.prover.gui.editor.LimitRuleScanner;
+import mobius.prover.gui.editor.ProverEditor;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.BadLocationException;
@@ -12,9 +16,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 
-import prover.gui.editor.BasicSourceViewerConfig;
-import prover.gui.editor.LimitRuleScanner;
-import prover.gui.editor.ProverEditor;
 
 /**
  * A data structure to have an easy way to handle the different 

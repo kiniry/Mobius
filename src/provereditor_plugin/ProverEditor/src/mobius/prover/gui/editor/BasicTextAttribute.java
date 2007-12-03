@@ -1,4 +1,4 @@
-package prover.gui.editor;
+package mobius.prover.gui.editor;
 
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.swt.graphics.Color;

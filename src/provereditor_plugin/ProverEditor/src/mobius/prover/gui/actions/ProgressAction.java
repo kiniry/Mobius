@@ -2,6 +2,7 @@ package mobius.prover.gui.actions;
 
 import mobius.prover.gui.ProverFileContext;
 import mobius.prover.gui.TopLevelManager;
+import mobius.prover.gui.editor.ProverEditor;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -13,7 +14,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import prover.gui.editor.ProverEditor;
 
 /**
  * An action to progress in ProverEditor.

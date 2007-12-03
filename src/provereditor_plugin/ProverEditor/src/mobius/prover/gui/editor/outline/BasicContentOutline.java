@@ -1,10 +1,13 @@
-package prover.gui.editor.outline;
+package mobius.prover.gui.editor.outline;
 
 
 
 
 import mobius.prover.Prover;
 import mobius.prover.gui.ProverFileContext;
+import mobius.prover.gui.editor.ProverEditor;
+import mobius.prover.gui.editor.outline.types.FileType;
+import mobius.prover.gui.editor.outline.types.ProverType;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -15,9 +18,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
-import prover.gui.editor.ProverEditor;
-import prover.gui.editor.outline.types.FileType;
-import prover.gui.editor.outline.types.ProverType;
 
 public class BasicContentOutline extends ContentOutlinePage {
     private TreeViewer tree;

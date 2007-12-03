@@ -2,13 +2,14 @@ package mobius.prover.plugins;
 
 import java.util.regex.Pattern;
 
+import mobius.prover.gui.editor.ProverEditor;
+import mobius.prover.gui.editor.outline.types.ProverType;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
-import prover.gui.editor.ProverEditor;
-import prover.gui.editor.outline.types.ProverType;
 
 /**
  * This class is the main class to implement by a plugin
