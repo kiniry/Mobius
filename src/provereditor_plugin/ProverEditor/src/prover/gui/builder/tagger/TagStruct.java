@@ -3,6 +3,8 @@ package prover.gui.builder.tagger;
 
 import java.io.Serializable;
 
+import mobius.prover.plugins.Logger;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -15,7 +17,6 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import prover.gui.editor.ProverEditor;
-import prover.plugins.Logger;
 
 
 /**

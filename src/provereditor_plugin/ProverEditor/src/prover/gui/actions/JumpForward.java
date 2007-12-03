@@ -1,5 +1,7 @@
 package prover.gui.actions;
 
+import mobius.prover.plugins.AProverTranslator;
+
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.ui.IEditorPart;
 
@@ -7,7 +9,6 @@ import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
 import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.ProverEditor;
-import prover.plugins.AProverTranslator;
 
 public class JumpForward extends AProverAction {
 	/**

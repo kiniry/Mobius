@@ -1,4 +1,4 @@
-package prover;
+package mobius.prover;
 
 
 import org.eclipse.core.runtime.IConfigurationElement;

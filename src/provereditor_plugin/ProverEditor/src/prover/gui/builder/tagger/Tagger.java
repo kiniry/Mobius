@@ -11,13 +11,14 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import mobius.prover.Prover;
+import mobius.prover.plugins.Logger;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
-import prover.Prover;
-import prover.plugins.Logger;
 
 
 public class Tagger {

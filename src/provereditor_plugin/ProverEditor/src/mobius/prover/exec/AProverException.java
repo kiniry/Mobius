@@ -1,4 +1,4 @@
-package prover.exec;
+package mobius.prover.exec;
 
 /**
  * A generic exception containing a description.

@@ -1,10 +1,10 @@
 /*
  * Created on Mar 3, 2005
  */
-package prover.exec.toplevel.exceptions;
+package mobius.prover.exec.toplevel.exceptions;
 
-import prover.Prover;
-import prover.plugins.exceptions.ProverException;
+import mobius.prover.Prover;
+import mobius.prover.plugins.exceptions.ProverException;
 
 
 /**

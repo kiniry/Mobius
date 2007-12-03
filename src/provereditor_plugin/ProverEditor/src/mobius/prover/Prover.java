@@ -1,7 +1,10 @@
-package prover;
+package mobius.prover;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+
+import mobius.prover.plugins.AProverTranslator;
+import mobius.prover.plugins.IProverTopLevel;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -10,8 +13,6 @@ import org.eclipse.ui.PlatformUI;
 
 import prover.gui.editor.LimitRuleScanner;
 import prover.gui.preference.ProverPreferenceNode;
-import prover.plugins.AProverTranslator;
-import prover.plugins.IProverTopLevel;
 
 
 /**

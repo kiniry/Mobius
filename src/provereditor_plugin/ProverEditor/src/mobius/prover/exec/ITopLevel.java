@@ -1,6 +1,6 @@
-package prover.exec;
+package mobius.prover.exec;
 
-import prover.exec.toplevel.stream.IStreamListener;
+import mobius.prover.exec.toplevel.stream.IStreamListener;
 
 /**
  * Basic interactions needed to dialog with the toplevel.

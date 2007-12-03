@@ -2,7 +2,7 @@
  * Created on Mar 7, 2005
  *
  */
-package prover.plugins.exceptions;
+package mobius.prover.plugins.exceptions;
 
 
 /**

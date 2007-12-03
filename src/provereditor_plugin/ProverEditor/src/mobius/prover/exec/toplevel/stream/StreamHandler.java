@@ -1,4 +1,4 @@
-package prover.exec.toplevel.stream;
+package mobius.prover.exec.toplevel.stream;
 
 import java.io.IOException;
 import java.io.InputStream;

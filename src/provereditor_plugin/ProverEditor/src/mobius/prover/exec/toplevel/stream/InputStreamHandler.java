@@ -1,7 +1,7 @@
 /*
  * Created on Feb 18, 2005
  */
-package prover.exec.toplevel.stream;
+package mobius.prover.exec.toplevel.stream;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

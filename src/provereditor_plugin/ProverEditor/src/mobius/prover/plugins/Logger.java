@@ -1,4 +1,4 @@
-package prover.plugins;
+package mobius.prover.plugins;
 
 import java.io.PrintStream;
 

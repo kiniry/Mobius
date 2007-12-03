@@ -1,8 +1,8 @@
-package prover.exec.toplevel.stream;
+package mobius.prover.exec.toplevel.stream;
 
 /**
  * A listener to listen to 
- * {@link prover.exec.toplevel.stream.StreamHandler} events.
+ * {@link mobius.prover.exec.toplevel.stream.StreamHandler} events.
  */
 public interface IStreamListener {
 	/**

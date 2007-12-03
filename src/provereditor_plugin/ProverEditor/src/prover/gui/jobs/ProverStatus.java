@@ -1,10 +1,11 @@
 package prover.gui.jobs;
 
+import mobius.prover.ProverEditorPlugin;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 
-import prover.ProverEditorPlugin;
 
 /**
  * A class to ease the returning of status for the Jobs.

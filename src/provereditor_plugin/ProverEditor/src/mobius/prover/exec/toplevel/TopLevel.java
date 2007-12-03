@@ -6,22 +6,23 @@
 /********************************************************************************
 /* Warnings/Remarks:
 /*******************************************************************************/
-package prover.exec.toplevel;
+package mobius.prover.exec.toplevel;
 
 import java.io.IOException;
 
-import prover.Prover;
-import prover.exec.AProverException;
-import prover.exec.ITopLevel;
-import prover.exec.toplevel.exceptions.ThreadDeathException;
-import prover.exec.toplevel.exceptions.TimeOutException;
-import prover.exec.toplevel.exceptions.TopLevelDeathException;
-import prover.exec.toplevel.exceptions.ToplevelException;
-import prover.exec.toplevel.stream.IStreamListener;
-import prover.exec.toplevel.stream.InputStreamHandler;
-import prover.exec.toplevel.stream.StreamHandler;
-import prover.plugins.IProverTopLevel;
-import prover.plugins.exceptions.ProverException;
+import mobius.prover.Prover;
+import mobius.prover.exec.AProverException;
+import mobius.prover.exec.ITopLevel;
+import mobius.prover.exec.toplevel.exceptions.ThreadDeathException;
+import mobius.prover.exec.toplevel.exceptions.TimeOutException;
+import mobius.prover.exec.toplevel.exceptions.TopLevelDeathException;
+import mobius.prover.exec.toplevel.exceptions.ToplevelException;
+import mobius.prover.exec.toplevel.stream.IStreamListener;
+import mobius.prover.exec.toplevel.stream.InputStreamHandler;
+import mobius.prover.exec.toplevel.stream.StreamHandler;
+import mobius.prover.plugins.IProverTopLevel;
+import mobius.prover.plugins.exceptions.ProverException;
+
 
 
 /**
@@ -268,7 +269,7 @@ public class TopLevel implements ITopLevel {
 	
 	/**
 	 * Tries to undo the last step from the top level,
-	 * by calling the {@link prover.plugins.IProverTopLevel#undo(ITopLevel)}.
+	 * by calling the {@link mobius.prover.plugins.IProverTopLevel#undo(ITopLevel)}.
 	 * @throws AProverException If there was an error.
 	 */
 	public void undo() throws AProverException {

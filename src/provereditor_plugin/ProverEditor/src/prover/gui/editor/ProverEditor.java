@@ -1,9 +1,10 @@
 package prover.gui.editor;
 
+import mobius.prover.Prover;
+
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-import prover.Prover;
 import prover.gui.editor.outline.BasicContentOutline;
 
 /**

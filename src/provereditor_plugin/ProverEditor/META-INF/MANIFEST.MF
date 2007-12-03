@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ProverEditor Plug-in
 Bundle-SymbolicName: prover.editor; singleton:=true
 Bundle-Version: 0.9.7
-Bundle-Activator: prover.ProverEditorPlugin
+Bundle-Activator: mobius.prover.ProverEditorPlugin
 Bundle-Vendor: Inria - Everest Team
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -19,11 +19,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  org.eclipse.ui.views
 Eclipse-LazyStart: true
-Export-Package: prover,
- prover.exec,
- prover.exec.toplevel,
- prover.exec.toplevel.exceptions,
- prover.exec.toplevel.stream,
+Export-Package: mobius.prover,
+ mobius.prover.exec,
+ mobius.prover.exec.toplevel,
+ mobius.prover.exec.toplevel.exceptions,
+ mobius.prover.exec.toplevel.stream,
  prover.gui,
  prover.gui.actions,
  prover.gui.builder,
@@ -34,5 +34,5 @@ Export-Package: prover,
  prover.gui.editor.outline.types,
  prover.gui.jobs,
  prover.gui.popup,
- prover.plugins,
- prover.plugins.exceptions
+ mobius.prover.plugins,
+ mobius.prover.plugins.exceptions

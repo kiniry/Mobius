@@ -1,6 +1,6 @@
-package prover.exec.toplevel.exceptions;
+package mobius.prover.exec.toplevel.exceptions;
 
-import prover.Prover;
+import mobius.prover.Prover;
 
 /**
  * This exception is thrown if the thread associated with one

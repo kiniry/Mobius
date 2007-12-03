@@ -3,6 +3,8 @@ package prover.gui.editor.outline;
 
 
 
+import mobius.prover.Prover;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -12,7 +14,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
-import prover.Prover;
 import prover.gui.ProverFileContext;
 import prover.gui.editor.ProverEditor;
 import prover.gui.editor.outline.types.FileType;

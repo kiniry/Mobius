@@ -1,6 +1,6 @@
-package prover.exec.toplevel.exceptions;
+package mobius.prover.exec.toplevel.exceptions;
 
-import prover.Prover;
+import mobius.prover.Prover;
 
 /**
  * This exception is thrown when the grace time has ended.

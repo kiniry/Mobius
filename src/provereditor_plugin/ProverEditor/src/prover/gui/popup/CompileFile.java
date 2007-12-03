@@ -8,6 +8,8 @@ import java.io.LineNumberReader;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import mobius.prover.Prover;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -19,7 +21,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 
-import prover.Prover;
 import prover.gui.jobs.ProverStatus;
 
 /**

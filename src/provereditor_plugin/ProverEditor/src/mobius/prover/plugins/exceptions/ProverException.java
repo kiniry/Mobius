@@ -6,9 +6,9 @@
 /********************************************************************************
 /* Warnings/Remarks:
 /*******************************************************************************/
-package prover.plugins.exceptions;
+package mobius.prover.plugins.exceptions;
 
-import prover.exec.AProverException;
+import mobius.prover.exec.AProverException;
 
 
 /**

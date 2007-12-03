@@ -6,6 +6,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Stack;
 
+import mobius.prover.Prover;
+import mobius.prover.ProverEditorPlugin;
+import mobius.prover.exec.AProverException;
+import mobius.prover.exec.toplevel.TopLevel;
+import mobius.prover.exec.toplevel.stream.StreamHandler;
+import mobius.prover.plugins.AProverTranslator;
+import mobius.prover.plugins.IProverTopLevel;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,11 +33,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.Prover;
-import prover.ProverEditorPlugin;
-import prover.exec.AProverException;
-import prover.exec.toplevel.TopLevel;
-import prover.exec.toplevel.stream.StreamHandler;
 import prover.gui.editor.BasicPresentationReconciler;
 import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.BasicTextPresentation;
@@ -39,8 +42,6 @@ import prover.gui.jobs.AppendJob;
 import prover.gui.jobs.ColorAppendJob;
 import prover.gui.popup.AddToLoadPath;
 import prover.gui.preference.PreferencePage;
-import prover.plugins.AProverTranslator;
-import prover.plugins.IProverTopLevel;
 
 /**
  * The top level manager is the main class of the gui of ProverEditor.
@@ -478,7 +479,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 
 	/**
 	 * Tries to send a Ctrl-Break command to the prover.
-	 * @see prover.exec.ITopLevel#doBreak()
+	 * @see mobius.prover.exec.ITopLevel#doBreak()
 	 */
 	public void doBreak() {
 		try {

@@ -1,9 +1,10 @@
-package prover.plugins;
+package mobius.prover.plugins;
+
+import mobius.prover.exec.AProverException;
+import mobius.prover.exec.ITopLevel;
 
 import org.eclipse.jface.text.IDocument;
 
-import prover.exec.AProverException;
-import prover.exec.ITopLevel;
 
 
 /**
@@ -53,7 +54,7 @@ public interface IProverTopLevel {
     throws AProverException;
 
 	/**
-	 * This method is always called before {@link prover.exec.toplevel.TopLevel#undo()} is 
+	 * This method is always called before {@link mobius.prover.exec.toplevel.TopLevel#undo()} is 
    * called if the undo action was triggered by the GUI.
    *
 	 * <p> This method must determine whether:
@@ -103,9 +104,9 @@ public interface IProverTopLevel {
 	 * @param cmd the command that will be sent to the next {@link #undo(ITopLevel)} call.
 	 * @param beg the starting point of the command in the text.
 	 * @param end the ending point of the command in the text.
-	 * @return One of the values {@link prover.plugins.IProverTopLevel#DONT_SKIP},
-   * {@link prover.plugins.IProverTopLevel#SKIP}, or 
-   * {@link prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE}
+	 * @return One of the values {@link mobius.prover.plugins.IProverTopLevel#DONT_SKIP},
+   * {@link mobius.prover.plugins.IProverTopLevel#SKIP}, or 
+   * {@link mobius.prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE}
 	 */
   /*@ requires 0 <= beg & beg <= end;
     @ ensures \result == IProverTopLevel.DONT_SKIP | 
@@ -135,11 +136,11 @@ public interface IProverTopLevel {
    * @param doc the current document from which the command was taken.
    * @param cmd the command that will be sent to the next {@link #undo(ITopLevel)} call.
 	 * @param beg the command in the text before any 
-	 * {@link prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE} that could have happened.
+	 * {@link mobius.prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE} that could have happened.
 	 * @param end the ending point of the command in the text.
-   * @return One of the values {@link prover.plugins.IProverTopLevel#DONT_SKIP},
-   * {@link prover.plugins.IProverTopLevel#SKIP}, or 
-   * {@link prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE}
+   * @return One of the values {@link mobius.prover.plugins.IProverTopLevel#DONT_SKIP},
+   * {@link mobius.prover.plugins.IProverTopLevel#SKIP}, or 
+   * {@link mobius.prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE}
 	 */
   // @todo Review the meaning of "doc", "beg", and "end" in this method and its peer above.
 	public int hasToSkipSendCommand(ITopLevel itl, IDocument doc, String cmd, int beg, int end);
