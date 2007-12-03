@@ -11,18 +11,18 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * The delta visitor used by the tags builder.
- * @author J. Charles
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class DeltaVisitor implements IResourceDeltaVisitor {
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
-   */
-  public boolean visit(IResourceDelta delta) throws CoreException {
-    IResource res = delta.getResource();
-    int type = res.getType();
-    Tagger tag = Tagger.instance;
-    if(type == IResource.FILE) {
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean visit(final IResourceDelta delta) throws CoreException {
+    final IResource res = delta.getResource();
+    final int type = res.getType();
+    final Tagger tag = Tagger.instance;
+    if (type == IResource.FILE) {
       switch(delta.getKind()) {
         case IResourceDelta.ADDED:
         case IResourceDelta.CHANGED:

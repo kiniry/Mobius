@@ -171,9 +171,9 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
     private static final long serialVersionUID = 1L;
     
     /** the name of the file, used to differenciate 2 tag file. */
-    public final String fName;
+    private final String fName;
     /** the tags corresponding to the file. */
-    public final TagStruct [] fTs;
+    private final TagStruct [] fTs;
     
     
     /**

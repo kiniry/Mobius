@@ -13,19 +13,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * The project build for tags.
- * @author J. Charles
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProjectBuilder extends IncrementalProjectBuilder {
-  /** the builder id ie.: "prover.editor.builder" */
+  /** the builder id ie.: "prover.editor.builder". */
   public static final String BUILDER_ID = "prover.editor.builder";
   
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-   */
+  /** {@inheritDoc} */
+  @Override
   @SuppressWarnings("unchecked")
-  protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
-      throws CoreException {
+  protected IProject[] build(final int kind, 
+                             final Map args, 
+                             final IProgressMonitor monitor)
+    throws CoreException {
     switch(kind) {
       case CLEAN_BUILD :
         Tagger.performCleanBuild(getProject());
@@ -35,7 +36,7 @@ public class ProjectBuilder extends IncrementalProjectBuilder {
         break;
       case INCREMENTAL_BUILD:
       case AUTO_BUILD:
-        IResourceDelta delta = getDelta(getProject());
+        final IResourceDelta delta = getDelta(getProject());
         delta.accept(new DeltaVisitor());
         break;
       default:

@@ -8,23 +8,20 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * The nature used to add a tag builder to a project.
- * @author J. Charles
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProjectNature implements IProjectNature {
-  /** the id of the nature ie: "prover.editor.nature" */
+  /** the id of the nature ie: "prover.editor.nature". */
   public static final String NATURE_ID = "prover.editor.nature";
+  /** the current project associated with this nature. */
+  private IProject fProject;
   
-  
-  /**
-   * Configure the nature; add the builder to the project.
-   */
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.core.resources.IProjectNature#configure()
-   */
+  /** {@inheritDoc} */
+  @Override
   public void configure() throws CoreException {
-    IProjectDescription desc = fProject.getDescription();
-    ICommand[] commands = desc.getBuildSpec();
+    final IProjectDescription desc = fProject.getDescription();
+    final ICommand[] commands = desc.getBuildSpec();
 
     for (int i = 0; i < commands.length; ++i) {
       if (commands[i].getBuilderName().equals(ProjectBuilder.BUILDER_ID)) {
@@ -32,9 +29,9 @@ public class ProjectNature implements IProjectNature {
       }
     }
 
-    ICommand[] newCommands = new ICommand[commands.length + 1];
+    final ICommand[] newCommands = new ICommand[commands.length + 1];
     System.arraycopy(commands, 0, newCommands, 0, commands.length);
-    ICommand command = desc.newCommand();
+    final ICommand command = desc.newCommand();
     command.setBuilderName(ProjectBuilder.BUILDER_ID);
     newCommands[newCommands.length - 1] = command;
     desc.setBuildSpec(newCommands);
@@ -42,19 +39,14 @@ public class ProjectNature implements IProjectNature {
 
   }
 
-  /**
-   * Deconfigure the nature; remove the builder from the project.
-   */
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.core.resources.IProjectNature#deconfigure()
-   */
+  /** {@inheritDoc} */
+  @Override
   public void deconfigure() throws CoreException {
-    IProjectDescription description = getProject().getDescription();
-    ICommand[] commands = description.getBuildSpec();
+    final IProjectDescription description = getProject().getDescription();
+    final ICommand[] commands = description.getBuildSpec();
     for (int i = 0; i < commands.length; ++i) {
       if (commands[i].getBuilderName().equals(ProjectBuilder.BUILDER_ID)) {
-        ICommand[] newCommands = new ICommand[commands.length - 1];
+        final ICommand[] newCommands = new ICommand[commands.length - 1];
         System.arraycopy(commands, 0, newCommands, 0, i);
         System.arraycopy(commands, i + 1, newCommands, i,
             commands.length - i - 1);
@@ -64,23 +56,18 @@ public class ProjectNature implements IProjectNature {
     }
 
   }
-  /** the current project associated with this nature */
-  private IProject fProject = null;
+
   
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.core.resources.IProjectNature#getProject()
-   */
+  /** {@inheritDoc} */
+  @Override
   public IProject getProject() {
     return fProject;
   }
-
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
-   */
-  public void setProject(IProject project) {
-    fProject =project;
+ 
+  /** {@inheritDoc} */
+  @Override
+  public void setProject(final IProject project) {
+    fProject = project;
   }
 
 }
