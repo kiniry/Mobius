@@ -1,4 +1,4 @@
-package prover.gui.popup;
+package mobius.prover.gui.popup;
 
 import java.io.IOException;
 

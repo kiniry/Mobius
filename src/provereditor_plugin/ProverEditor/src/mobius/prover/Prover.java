@@ -1,8 +1,8 @@
 package mobius.prover;
 
 import java.util.Hashtable;
-import java.util.Iterator;
 
+import mobius.prover.gui.preference.ProverPreferenceNode;
 import mobius.prover.plugins.AProverTranslator;
 import mobius.prover.plugins.IProverTopLevel;
 
@@ -12,7 +12,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
 import prover.gui.editor.LimitRuleScanner;
-import prover.gui.preference.ProverPreferenceNode;
 
 
 /**
@@ -22,7 +21,8 @@ import prover.gui.preference.ProverPreferenceNode;
  */
 public class Prover {
 	/** A set containing all the prover instances */
-	private static Hashtable fProverSet = new Hashtable();
+	private static Hashtable<String, Prover> fProverSet = 
+	  new Hashtable<String, Prover>();
 	
 	/**
 	 * Retrieve the prover whose name is specified.
@@ -31,7 +31,7 @@ public class Prover {
 	 * <code>null</code> if none were found
 	 */
 	public static Prover get(String language) {
-		return (Prover) fProverSet.get(language);
+		return fProverSet.get(language);
 	}
 	
 	/**
@@ -41,12 +41,11 @@ public class Prover {
 	 * <code>null</code> if none were found
 	 */
 	public static Prover findProverFromFile(String str) {
-		Iterator iter = fProverSet.values().iterator();
-		while(iter.hasNext()) {
-			Prover p = (Prover)iter.next();
-			if(p.extensionMatch(str))
-					return p;
+	  for (Prover p : fProverSet.values()) {
+		  if(p.extensionMatch(str))
+        return p;
 		}
+		
 		return null;
 	}	
 	

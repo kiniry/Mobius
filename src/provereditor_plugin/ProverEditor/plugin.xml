@@ -10,14 +10,14 @@
             label="Prover Editor"
             visible="true">
          <action
-               class="prover.gui.actions.BreakAction"
+               class="mobius.prover.gui.actions.BreakAction"
                icon="icons/dead.gif"
                id="ProverEditor.break"
                label="Break"
                style="push"
                toolbarPath="ProverEditor.actions"/>
          <action
-               class="prover.gui.actions.ResetAction"
+               class="mobius.prover.gui.actions.ResetAction"
                definitionId="ProverEditor.reset_command"
                icon="icons/uptoo.gif"
                id="ProverEditor.resetproof"
@@ -26,7 +26,7 @@
                style="push"
                toolbarPath="ProverEditor.actions"/>
          <action
-               class="prover.gui.actions.ProgressEndAction"
+               class="mobius.prover.gui.actions.ProgressEndAction"
                definitionId="ProverEditor.eval_all_command"
                icon="icons/downtoo.gif"
                id="ProverEditor.progressend"
@@ -35,7 +35,7 @@
                style="push"
                toolbarPath="ProverEditor.actions"/>
          <action
-               class="prover.gui.actions.BackAction"
+               class="mobius.prover.gui.actions.BackAction"
                definitionId="ProverEditor.back_command"
                icon="icons/up.gif"
                id="CoqEditor.back"
@@ -44,7 +44,7 @@
                style="push"
                toolbarPath="ProverEditor.actions"/>
          <action
-               class="prover.gui.actions.ProgressAction"
+               class="mobius.prover.gui.actions.ProgressAction"
                definitionId="ProverEditor.progress_command"
                icon="icons/down.gif"
                id="ProverEditor.progress"
@@ -53,7 +53,7 @@
                style="push"
                toolbarPath="ProverEditor.actions"/>
          <action
-               class="prover.gui.actions.BeginAction"
+               class="mobius.prover.gui.actions.BeginAction"
                icon="icons/icon_lego.gif"
                id="ProverEditor.beginproof"
                label="Respawn Prover"
@@ -115,7 +115,7 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="ProverEditor.category"
-            defaultHandler="prover.gui.actions.ProgressAction"
+            defaultHandler="mobius.prover.gui.actions.ProgressAction"
             description="Progress in the current proof"
             id="ProverEditor.progress_command"
             name="Progress Command"/>
@@ -125,42 +125,42 @@
             name="Prover Editor"/>
       <command
             categoryId="ProverEditor.category"
-            defaultHandler="prover.gui.actions.BackAction"
+            defaultHandler="mobius.prover.gui.actions.BackAction"
             description="Back in the current proof"
             id="ProverEditor.back_command"
             name="Back Command"/>
       <command
             categoryId="ProverEditor.category"
-            defaultHandler="prover.gui.actions.ResetAction"
+            defaultHandler="mobius.prover.gui.actions.ResetAction"
             description="Reset the file"
             id="ProverEditor.reset_command"
             name="Reset Command"/>
       <command
             categoryId="ProverEditor.category"
-            defaultHandler="prover.gui.actions.ProgressEndAction"
+            defaultHandler="mobius.prover.gui.actions.ProgressEndAction"
             description="Evaluate all in the file"
             id="ProverEditor.eval_all_command"
             name="Evaluate All Command"/>
       <command
             categoryId="ProverEditor.category"
-            defaultHandler="prover.gui.actions.JumpBackward"
+            defaultHandler="mobius.prover.gui.actions.JumpBackward"
             id="ProverEditor.jump_backward"
             name="Jump Backward"/>
       <command
             categoryId="ProverEditor.category"
-            defaultHandler="prover.gui.actions.JumpForward"
+            defaultHandler="mobius.prover.gui.actions.JumpForward"
             id="ProverEditor.jump_forward"
             name="Jump Forward"/>
       <command
       		categoryId="ProverEditor.category"
-            defaultHandler="prover.gui.actions.JumpToTag"
+            defaultHandler="mobius.prover.gui.actions.JumpToTag"
             id="ProverEditor.jump_tag"
             name="Jump to tag"/>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="prover.gui.preference.PreferencePage"
+            class="mobius.prover.gui.preference.PreferencePage"
             id="ProverEditor.page"
             name="Prover Editor"/>
    </extension>
@@ -175,12 +175,12 @@
                label="Prover Editor"
                />  
          <action
-               class="prover.gui.popup.CompileFile"
+               class="mobius.prover.gui.popup.CompileFile"
                id="ProverEditor.compile"
                label="Compile"
                menubarPath="ProverEditor_menu/s"/>
          <action
-               class="prover.gui.popup.LaunchIde"
+               class="mobius.prover.gui.popup.LaunchIde"
                id="ProverEditor.launchide"
                label="Launch an IDE"
                menubarPath="ProverEditor_menu/s"/>
@@ -191,7 +191,7 @@
             nameFilter="*"
             objectClass="org.eclipse.core.resources.IFolder">
            <action
-               class="prover.gui.popup.AddToLoadPath"
+               class="mobius.prover.gui.popup.AddToLoadPath"
                id="ProverEditor.addtopath"
                label="ProverEditor: Add to loadpath"
                />  
@@ -201,7 +201,7 @@
          point="org.eclipse.ui.views">
       <view
             category="Prover"
-            class="prover.gui.TopLevelManager"
+            class="mobius.prover.gui.TopLevelManager"
             icon="icons/icon_lego_gray.gif"
             id="ProverEditor.topview"
             name="Prover Editor Toplevel"/>

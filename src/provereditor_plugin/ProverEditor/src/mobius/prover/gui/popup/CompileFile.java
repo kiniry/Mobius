@@ -1,4 +1,4 @@
-package prover.gui.popup;
+package mobius.prover.gui.popup;
 
 
 import java.io.File;
@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import mobius.prover.Prover;
+import mobius.prover.gui.jobs.ProverStatus;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -21,7 +22,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 
-import prover.gui.jobs.ProverStatus;
 
 /**
  * The action triggering a compilation deed.

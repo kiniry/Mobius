@@ -3,7 +3,7 @@ package mobius.prover.exec.toplevel.stream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * A stream handler is used to manage a stream.
@@ -20,7 +20,7 @@ public class StreamHandler implements Runnable{
 	/** the current thread */ 
 	private Thread fThread;
 	/** the list of listeners */
-	private HashSet fListenerSet = new HashSet();
+	private Set<IStreamListener> fListenerSet = new HashSet<IStreamListener>();
 	
 	/**
 	 * Create a new Stream Handler for the specified stream
@@ -82,10 +82,8 @@ public class StreamHandler implements Runnable{
 	 */
 	protected void fireToListeners() {
 		String str = fBuff.toString();
-		Iterator iter = fListenerSet.iterator();
-		while(iter.hasNext()) {
-			IStreamListener isl = (IStreamListener)iter.next();
-			isl.append(this, str);
+		for (IStreamListener isl: fListenerSet) {
+      isl.append(this, str);
 		}
 	}
 

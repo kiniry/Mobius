@@ -1,10 +1,11 @@
-package prover.gui.actions;
+package mobius.prover.gui.actions;
 
 import java.util.Iterator;
 
+import mobius.prover.gui.ProverFileContext;
+
 import org.eclipse.core.resources.IFile;
 
-import prover.gui.ProverFileContext;
 import prover.gui.builder.tagger.TagStruct;
 import prover.gui.builder.tagger.Tagger;
 import prover.gui.editor.ProverEditor;

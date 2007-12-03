@@ -1,8 +1,10 @@
-package prover.gui.actions;
+package mobius.prover.gui.actions;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import mobius.prover.gui.TopLevelManager;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -17,7 +19,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
-import prover.gui.TopLevelManager;
 import prover.gui.editor.ProverEditor;
 
 /**

@@ -9,9 +9,9 @@ import java.util.List;
  * is add some tags, and read all the tags using an iterator.
  * @author J. Charles
  */
-public final class TagList{
+public final class TagList implements Iterable<TagStruct> {
 	/** the list containing the tags */
-	final List list = new ArrayList();
+	final List<TagStruct> list = new ArrayList<TagStruct>();
 	
 	/** add a tag structure to the list */
 	public void add(TagStruct ts) {
@@ -19,7 +19,7 @@ public final class TagList{
 	}
 	
 	/** return the iterator of the tag list */
-	public Iterator iterator() {
+	public Iterator<TagStruct> iterator() {
 		return list.iterator();
 	}
 	

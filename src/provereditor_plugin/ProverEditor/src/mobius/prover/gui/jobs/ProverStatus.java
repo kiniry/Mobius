@@ -1,4 +1,4 @@
-package prover.gui.jobs;
+package mobius.prover.gui.jobs;
 
 import mobius.prover.ProverEditorPlugin;
 

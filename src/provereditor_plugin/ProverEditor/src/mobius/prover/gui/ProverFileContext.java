@@ -1,4 +1,4 @@
-package prover.gui;
+package mobius.prover.gui;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

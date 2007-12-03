@@ -1,4 +1,4 @@
-package prover.gui.popup;
+package mobius.prover.gui.popup;
 
 
 import java.io.File;
@@ -9,6 +9,8 @@ import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import mobius.prover.gui.jobs.ProverStatus;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -23,7 +25,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.gui.jobs.ProverStatus;
 
 /**
  * The action triggering a compilation deed.

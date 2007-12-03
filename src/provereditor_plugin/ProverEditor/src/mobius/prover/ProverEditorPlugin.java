@@ -1,6 +1,8 @@
 package mobius.prover;
 
 
+import mobius.prover.gui.preference.PreferencePage;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionDelta;
@@ -14,7 +16,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import prover.gui.preference.PreferencePage;
 
 
 /**

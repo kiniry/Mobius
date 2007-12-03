@@ -1,4 +1,7 @@
-package prover.gui.actions;
+package mobius.prover.gui.actions;
+
+import mobius.prover.gui.ProverFileContext;
+import mobius.prover.gui.TopLevelManager;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -11,8 +14,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.gui.ProverFileContext;
-import prover.gui.TopLevelManager;
 import prover.gui.editor.ProverEditor;
 
 /**

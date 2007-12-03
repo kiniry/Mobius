@@ -1,12 +1,12 @@
-package prover.gui.actions;
+package mobius.prover.gui.actions;
 
+import mobius.prover.gui.ProverFileContext;
+import mobius.prover.gui.TopLevelManager;
 import mobius.prover.plugins.AProverTranslator;
 
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.ui.IEditorPart;
 
-import prover.gui.ProverFileContext;
-import prover.gui.TopLevelManager;
 import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.ProverEditor;
 

@@ -1,4 +1,4 @@
-package prover.gui.preference;
+package mobius.prover.gui.preference;
 
 import org.eclipse.jface.preference.IPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;

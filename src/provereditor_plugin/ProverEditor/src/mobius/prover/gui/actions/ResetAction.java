@@ -1,12 +1,13 @@
-package prover.gui.actions;
+package mobius.prover.gui.actions;
+
+import mobius.prover.gui.ProverFileContext;
+import mobius.prover.gui.TopLevelManager;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import prover.gui.ProverFileContext;
-import prover.gui.TopLevelManager;
 import prover.gui.editor.ProverEditor;
 
 

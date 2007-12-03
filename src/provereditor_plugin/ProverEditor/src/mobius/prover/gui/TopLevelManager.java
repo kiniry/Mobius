@@ -1,4 +1,4 @@
-package prover.gui;
+package mobius.prover.gui;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,10 @@ import mobius.prover.ProverEditorPlugin;
 import mobius.prover.exec.AProverException;
 import mobius.prover.exec.toplevel.TopLevel;
 import mobius.prover.exec.toplevel.stream.StreamHandler;
+import mobius.prover.gui.jobs.AppendJob;
+import mobius.prover.gui.jobs.ColorAppendJob;
+import mobius.prover.gui.popup.AddToLoadPath;
+import mobius.prover.gui.preference.PreferencePage;
 import mobius.prover.plugins.AProverTranslator;
 import mobius.prover.plugins.IProverTopLevel;
 
@@ -38,10 +42,6 @@ import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.BasicTextPresentation;
 import prover.gui.editor.IColorConstants;
 import prover.gui.editor.LimitRuleScanner;
-import prover.gui.jobs.AppendJob;
-import prover.gui.jobs.ColorAppendJob;
-import prover.gui.popup.AddToLoadPath;
-import prover.gui.preference.PreferencePage;
 
 /**
  * The top level manager is the main class of the gui of ProverEditor.

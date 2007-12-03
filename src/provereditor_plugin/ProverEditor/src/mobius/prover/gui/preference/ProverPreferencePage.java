@@ -1,4 +1,4 @@
-package prover.gui.preference;
+package mobius.prover.gui.preference;
 
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
