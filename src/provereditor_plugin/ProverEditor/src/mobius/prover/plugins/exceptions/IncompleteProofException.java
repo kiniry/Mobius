@@ -10,6 +10,8 @@ package mobius.prover.plugins.exceptions;
  * It is to express the fact that the proof the user is 
  * trying to save (or trying to do anything with it...)
  * is still incomplete.
+ * 
+ *  @author J. Charles (julien.charles@inria.fr)
  */
 public class IncompleteProofException extends ProverException {
 

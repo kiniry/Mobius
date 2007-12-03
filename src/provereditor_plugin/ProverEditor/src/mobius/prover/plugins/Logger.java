@@ -82,6 +82,7 @@ public class Logger {
      * this method was called) in front of it.
      * ie. it will give something like:
      * "Callee.java (233) : My message"
+     * @param str the message to print
      */
     public void println(final String str) {
       final StackTraceElement [] ste = new Exception().getStackTrace();    

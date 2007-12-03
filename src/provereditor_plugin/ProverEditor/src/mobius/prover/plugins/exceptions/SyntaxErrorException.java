@@ -8,6 +8,8 @@ package mobius.prover.plugins.exceptions;
 /**
  * Exception to be thrown in case of a syntax error
  * detected by the prover.
+ * 
+ *  @author J. Charles (julien.charles@inria.fr)
  */
 public class SyntaxErrorException extends ProverException {
   /** Serial UID to have much more fun... */

@@ -13,6 +13,8 @@ import mobius.prover.exec.AProverException;
 
 /**
  * A basic implementation of a prover exception.
+ * 
+ *  @author J. Charles (julien.charles@inria.fr)
  */
 public class ProverException extends AProverException {
   /** Serial UID to have much more fun... */
