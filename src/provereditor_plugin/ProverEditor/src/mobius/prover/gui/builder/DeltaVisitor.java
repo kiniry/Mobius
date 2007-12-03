@@ -1,4 +1,6 @@
-package prover.gui.builder;
+package mobius.prover.gui.builder;
+
+import mobius.prover.gui.builder.tagger.Tagger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -6,7 +8,6 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
-import prover.gui.builder.tagger.Tagger;
 
 /**
  * The delta visitor used by the tags builder.

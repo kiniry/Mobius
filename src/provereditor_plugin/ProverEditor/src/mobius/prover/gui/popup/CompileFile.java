@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import mobius.prover.Prover;
 import mobius.prover.gui.jobs.ProverStatus;
@@ -56,16 +57,16 @@ public class CompileFile implements IActionDelegate {
 		if(prover == null)
 			return null;
 		String name =  f.getLocation().toString();
-		HashSet hsPath;
+		Set<String> hsPath;
 		try {
 			hsPath = AddToLoadPath.getPaths(f.getProject().getLocation().toString());
 		} catch (IOException e) {
-			hsPath = new HashSet();
+			hsPath = new HashSet<String>();
 		}
 		String [] path = new String[hsPath.size() + 2];
 		path [0]= f.getProject().getLocation().toString();
 		path [1] = f.getLocation().removeLastSegments(1).toString();
-		Iterator iter = hsPath.iterator();
+		Iterator<String> iter = hsPath.iterator();
 		for(int i = 2; i < path.length; i++) {
 			path[i] = path[0] + File.separator + iter.next().toString();
 		}

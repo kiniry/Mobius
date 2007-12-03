@@ -9,6 +9,7 @@ import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import mobius.prover.gui.jobs.ProverStatus;
 
@@ -87,7 +88,7 @@ public class AddToLoadPath implements IActionDelegate {
 			File f = new File(fRoot + File.separator + ".prover_paths");
 			//System.out.println (f);
 			try {
-				HashSet paths = getPaths(f); 
+				Set<String> paths = getPaths(f); 
 				paths.add(fFolder);
 				writePaths(f, paths);
 			}
@@ -113,13 +114,13 @@ public class AddToLoadPath implements IActionDelegate {
 
 		
 	}
-	public static HashSet getPaths(String project) throws IOException {
+	public static Set<String> getPaths(String project) throws IOException {
 		File f = new File(project + File.separator + ".prover_paths");
 		return getPaths(f);
 	}
 
-	private static HashSet getPaths(File f) throws IOException {
-		HashSet hs = new HashSet();
+	private static Set<String> getPaths(File f) throws IOException {
+		Set<String> hs = new HashSet<String>();
 		if(!f.exists())
 			return hs;
 		LineNumberReader lnr = new LineNumberReader(new FileReader(f));
@@ -131,9 +132,9 @@ public class AddToLoadPath implements IActionDelegate {
 		return hs;
 	}
 
-	private static void writePaths(File f, HashSet paths) throws IOException {
+	private static void writePaths(File f, Set<String> paths) throws IOException {
 		PrintStream ps = new PrintStream(new FileOutputStream(f));
-		Iterator iter = paths.iterator();
+		Iterator<String> iter = paths.iterator();
 		while(iter.hasNext()) {
 			ps.println(iter.next().toString());
 		}

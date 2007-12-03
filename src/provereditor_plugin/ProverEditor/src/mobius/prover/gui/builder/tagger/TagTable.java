@@ -1,4 +1,4 @@
-package prover.gui.builder.tagger;
+package mobius.prover.gui.builder.tagger;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,16 +19,16 @@ import mobius.prover.plugins.Logger;
  * methods.
  * @author J. Charles
  */
-public class TagTable implements Iterator, Serializable {
+public class TagTable implements Iterator<TagStruct>, Serializable {
 	/** */
 	private static final long serialVersionUID = 1L;
 	
 	/** the list of tag files in the current project */
-	private List listTagFiles = new ArrayList();
+	private List<TagFile> listTagFiles = new ArrayList<TagFile>();
 	/** the current file that is being checked for its tags */
 	private TagFile current;
 	/** the iterator of the tag of the file that is currently selected */
-	private Iterator iter;
+	private Iterator<TagStruct> iter;
 	/** the position of the currently selected file in the list of tag files */
 	private int pos = 0;
 	
@@ -113,7 +113,7 @@ public class TagTable implements Iterator, Serializable {
 	 * (non-Javadoc)
 	 * @see java.util.Iterator#next()
 	 */
-	public Object next() {
+	public TagStruct next() {
 		return iter.next();
 	}
 	
@@ -141,9 +141,9 @@ public class TagTable implements Iterator, Serializable {
 		try {
 			
 			Object [] os = (Object []) ois.readObject();
-			listTagFiles = new ArrayList();
+			listTagFiles = new ArrayList<TagFile>();
 			for(int i= 0; i < os.length; i++) {
-				listTagFiles.add(os[i]);
+				listTagFiles.add((TagFile)os[i]);
 			}
 		}  catch (ClassNotFoundException e) {
 			Logger.err.println("I cannot find the an array class!");
@@ -186,7 +186,7 @@ public class TagTable implements Iterator, Serializable {
 		 */
 		public TagFile(String file, TagList list) {
 			name = file;
-			Iterator iter = list.iterator();
+			Iterator<TagStruct> iter = list.iterator();
 			ts = new TagStruct[list.list.size()];
 			for(int i = 0; iter.hasNext(); i++) {
 				ts[i] = (TagStruct)iter.next();
@@ -233,8 +233,8 @@ public class TagTable implements Iterator, Serializable {
 		 * tag file.
 		 * @return an iterator of the field {@link #ts}
 		 */
-		public Iterator iterator() {
-			return new Iterator() {
+		public Iterator<TagStruct> iterator() {
+			return new Iterator<TagStruct>() {
 				int pos;
 				public void remove() {
 					
@@ -244,7 +244,7 @@ public class TagTable implements Iterator, Serializable {
 					return pos < ts.length;
 				}
 
-				public Object next() {
+				public TagStruct next() {
 					return ts[pos++];
 				}
 				

@@ -1,6 +1,8 @@
-package prover.gui.builder;
+package mobius.prover.gui.builder;
 
 import java.util.Map;
+
+import mobius.prover.gui.builder.tagger.Tagger;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
@@ -8,7 +10,6 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import prover.gui.builder.tagger.Tagger;
 
 /**
  * The project build for tags.
@@ -22,7 +23,8 @@ public class ProjectBuilder extends IncrementalProjectBuilder {
 	 * (non-Javadoc)
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
+	@SuppressWarnings("unchecked")
+  protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
 		switch(kind) {
 			case CLEAN_BUILD :

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Stack;
 
 import mobius.prover.Prover;
@@ -73,7 +74,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 	/** the lock system to avoid race conditions */
 	private boolean fLock = false;
 	/** the list of offset being the steps already taken by progress */
-	private Stack fParsedList = new Stack();
+	private Stack<Integer> fParsedList = new Stack<Integer>();
 
 	/* The text viewer used to show the prover state related fields: */
 	/** the text viewer to show the state of the prover */
@@ -380,16 +381,16 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 //				tab = new String [1];
 //				tab[0] = path.getParent().getRawLocation().toString();
 //			}
-			HashSet hsPath;
+			Set<String> hsPath;
 			try {
 				hsPath = AddToLoadPath.getPaths(path.getProject().getLocation().toString());
 			} catch (IOException e) {
-				hsPath = new HashSet();
+				hsPath = new HashSet<String>();
 			}
 			tab = new String[hsPath.size() + 2];
 			tab [0]= path.getProject().getLocation().toString();
 			tab [1] = path.getLocation().removeLastSegments(1).toString();
-			Iterator iter = hsPath.iterator();
+			Iterator<String> iter = hsPath.iterator();
 			for(int i = 2; i < tab.length; i++) {
 				tab[i] = tab[0] + File.separator + iter.next().toString();
 			}

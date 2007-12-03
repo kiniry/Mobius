@@ -1,4 +1,4 @@
-package prover.gui.builder.tagger;
+package mobius.prover.gui.builder.tagger;
 
 import java.util.ArrayList;
 import java.util.Iterator;

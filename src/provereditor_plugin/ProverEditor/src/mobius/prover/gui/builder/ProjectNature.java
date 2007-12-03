@@ -1,4 +1,4 @@
-package prover.gui.builder;
+package mobius.prover.gui.builder;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;

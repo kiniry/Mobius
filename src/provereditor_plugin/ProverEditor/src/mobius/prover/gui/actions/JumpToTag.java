@@ -3,11 +3,11 @@ package mobius.prover.gui.actions;
 import java.util.Iterator;
 
 import mobius.prover.gui.ProverFileContext;
+import mobius.prover.gui.builder.tagger.TagStruct;
+import mobius.prover.gui.builder.tagger.Tagger;
 
 import org.eclipse.core.resources.IFile;
 
-import prover.gui.builder.tagger.TagStruct;
-import prover.gui.builder.tagger.Tagger;
 import prover.gui.editor.ProverEditor;
 
 /**
@@ -24,7 +24,7 @@ public class JumpToTag extends AProverAction{
 	 */
 	public void trigger() {
 		Tagger tagger = Tagger.instance;
-		Iterator iter = tagger.getTags();
+		Iterator<TagStruct> iter = tagger.getTags();
 		if(iter != null) {
 			ProverEditor pe = (ProverEditor) getActiveEditor();
 			ProverFileContext pfe = new ProverFileContext(pe);

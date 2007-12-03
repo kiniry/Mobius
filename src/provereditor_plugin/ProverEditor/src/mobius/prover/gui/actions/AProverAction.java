@@ -1,7 +1,6 @@
 package mobius.prover.gui.actions;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import mobius.prover.gui.TopLevelManager;
@@ -26,9 +25,9 @@ import prover.gui.editor.ProverEditor;
  */
 public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  IHandler{
 	/** The set of all the actions of type {@link AProverAction} */
-	private static Set fSet = new HashSet();
+	private static Set<IAction> fSet = new HashSet<IAction>();
 	/** the set of the handler listener for this handler */
-	private Set fHandlerSet = new HashSet();
+	private Set<IHandlerListener> fHandlerSet = new HashSet<IHandlerListener>();
 	
 	/**
 	 * Returns the current active editor of the workbench.
@@ -68,9 +67,7 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
 	 * @param b Whether or not it the actions shall be enabled
 	 */
 	public static void setAllEnabled(boolean b) {
-		Iterator i = fSet.iterator();
-		while(i.hasNext()) {
-			IAction a = (IAction)i.next();
+		for (IAction a: fSet) {
 			a.setEnabled(b);
 		}
 	}
@@ -109,9 +106,7 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
 	 * @param event the event to advertise
 	 */
 	protected void fireChangeToHandlers(HandlerEvent event) {
-		Iterator iter = fHandlerSet.iterator();
-		while(iter.hasNext()) {
-			IHandlerListener hl = (IHandlerListener)iter.next();
+		for (IHandlerListener hl: fHandlerSet) {
 			hl.handlerChanged(event);
 		}
 	}

@@ -1,4 +1,4 @@
-package prover.gui.builder.tagger;
+package mobius.prover.gui.builder.tagger;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -35,7 +35,7 @@ public class Tagger {
 	/**
 	 * @return the tags of the current project
 	 */
-	public Iterator getTags() {
+	public Iterator<TagStruct> getTags() {
 		return tags;
 	}
 	

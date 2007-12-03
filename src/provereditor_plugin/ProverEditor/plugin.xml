@@ -221,7 +221,7 @@
       <builder
             hasNature="true"
             isConfigurable="true">
-         <run class="prover.gui.builder.ProjectBuilder"/>
+         <run class="mobius.prover.gui.builder.ProjectBuilder"/>
       </builder>
    </extension>
    <extension
@@ -229,7 +229,7 @@
          name="ProverEditor Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
-         <run class="prover.gui.builder.ProjectNature"/>
+         <run class="mobius.prover.gui.builder.ProjectNature"/>
       </runtime>
       <builder id="prover.editor.builder"/>
    </extension>
