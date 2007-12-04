@@ -1,3 +1,4 @@
 ## Makefile.local
 ## Replace /home/username/workspace/ESCJava2 with the location of ESCTools
+## echo "ESCTOOLS_ROOT ?= " $PWD > Makefile.local
 export ESCTOOLS_ROOT ?= /home/username/workspace/ESCJava2
