@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: MobiusPVE Plug-in
-Bundle-SymbolicName: MobiusPVE; singleton:=true
-Bundle-Version: 2.0.6
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
-Eclipse-LazyStart: true
-Bundle-Vendor: Mobius IST
