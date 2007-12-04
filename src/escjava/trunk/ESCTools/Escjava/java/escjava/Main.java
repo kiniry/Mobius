@@ -727,17 +727,24 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
   public String processRoutineDecl(/*@ non_null */RoutineDecl r,
   /*@ non_null */TypeSig sig,
   /*@ non_null */InitialState initState) {
+    // ==== skip method according to option setting ====
 
-      boolean checkBodyless = false; // pass immediately routines with no body
+    boolean checkBodyless = false; // should pass immediately routines with no body
+
+    // or analyses that process specs only, by default bodyless are skipped
     checkBodyless |= Main.options().idc;
-    checkBodyless |= options().isOptionOn(Options.optERST) && (r instanceof MethodDecl);
+    checkBodyless |= options().isOptionOn(Options.optERST) && SpecTester.knowHowToCheck(r);
 
     if (r.body == null && !checkBodyless)
-      return "passed immediately";
+        return "passed immediately";
+
     if (r.parent.specOnly && !checkBodyless)
-      return "passed immediately";
+        return "passed immediately";
+
     if (Location.toLineNumber(r.getEndLoc()) < options().startLine)
-      return "skipped";
+        return "skipped";
+
+
     String simpleName = TypeCheck.inst.getRoutineName(r).intern();
     String fullName = sig.toString() + "." + simpleName
                       + javafe.tc.TypeCheck.getSignature(r);
@@ -753,16 +760,26 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
       return "skipped";
     }
 
+    // ==== actual analysis ====
+
       // === experimental for SpecTester, blame mikolas (Nov 2007)
-      if (options().isOptionOn(Options.optERST)) {
-          if (r.body == null && r instanceof MethodDecl) { // skipping constructors and implemented methods
+      if (options().isOptionOn(Options.optERST) &&  SpecTester.knowHowToCheck(r) ) {
+          boolean isModel = 
+              Utils.findModifierPragma(r.parent.pmodifiers, TagConstants.MODEL) != null ||
+              Utils.findModifierPragma(r.pmodifiers, TagConstants.MODEL) != null;
+
+          if (isModel) {
+              return "skipping a model method (even though not happy about it)"; //TODO: figure out how to check model methods as well--mikolas
+          }
+
+          if (r.body==null) { // TODO: what exactly should we skip?--mikolas
               if (!options().quiet)
-                  System.out.println("          running reachability-based spec-checker"); // TODO: use standard logging mechanism
+                  System.out.println("          running reachability-based spec-checker"); // TODO: use standard logging mechanism--mikolas
 
               MethodDecl testMethod =  
-                  SpecTester.fabricateTest(((MethodDecl) r), sig, initState); // create the testing method
+                  SpecTester.fabricateTest(r, sig, initState); // create the testing method
               GuardedCmd testGC = computeBody(testMethod, initState);  // compute GC of the tester's body
-              SpecTester.runReachability(testGC); // run reachability on it
+              SpecTester.runReachability(testGC, r.getStartLoc()); // run reachability on it
               return "processed by reachability-based spec-checker (only); a bug has been found if an (Assert) is unreachable";
           }
       }
