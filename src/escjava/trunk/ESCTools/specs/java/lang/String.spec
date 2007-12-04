@@ -125,7 +125,7 @@ public final class String
       @  public exceptional_behavior
       @   requires ascii != null
       @             && (offset < 0
-      @                 || (offset + count) < ascii.length
+      @                 || (offset + count) >= ascii.length
       @                 || count < 0);
       @   signals_only StringIndexOutOfBoundsException;
       @
