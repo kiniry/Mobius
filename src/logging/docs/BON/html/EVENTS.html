@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd xhtml 1.0 transitional//en"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>
+Cluster Chart: EVENTS
+</title>
+<link type="text/css" rel="stylesheet" href="../bon.css" />
+</head>
+
+<body>    
+<table border="2">
+  <tr>
+    <th>
+	CLUSTER
+    </th>
+	<td colspan="2" width="50%" class="yellow"><span class="italic-caps">
+	EVENTS</span>
+    </td>
+	<td width="25%" class="yellow">
+	<span class="bold">Part:</span> 1/1
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">PURPOSE</span>            
+      </dt>
+      <dd>
+	  Events are the notion of generic important information that need
+	  be reported or recorded.  This cluster collects all the different
+	  kinds of events that are used in the system.
+      </dd>
+    </dl>
+</td>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  INDEXING</span>
+      </dt>
+      <dd>
+	  <span class="bold">author:</span> Joseph Kiniry<br />
+	  <span class="bold">keywords:</span> events, messages,
+	  statistics, assertions<br />
+	  <span class="bold">system:</span> <a href="MONITORING_SYSTEM.html"><span class="italic-caps">MONITORING_SYSTEM</span></a>
+      </dd>
+    </dl>
+</td>
+</tr>
+</table>
+<table border="2">
+  <tr>
+    <th>
+	Class/(Cluster)
+    </th>
+    <th>
+	Description
+    </th>
+  </tr>
+  <tr>
+    <td>
+	<a href="ASSERTION.html"><span class="italic-caps">ASSERTION</span></a>
+    </td>
+    <td>
+	Represents a single type of important predicate that the system
+	should validate.  Assertion failures result in everything from
+	messages or statistics being logged to system failure.
+    </td>
+  </tr>
+  <tr>
+    <td>
+	<a href="EVENT.html"><span class="italic-caps">EVENT</span></a>
+    </td>
+    <td>
+	Represents a single event to be recorded (or that has been
+	recorded) in the event-log.  The event includes a source,
+	description, importance, and time, among other things.
+    </td>
+  </tr>
+  <tr>
+    <td>
+	<a href="LEVEL.html"><span class="italic-caps">LEVEL</span></a>
+    </td>
+    <td>
+	Represents the importance level of a particular event.
+    </td>
+  </tr>
+  <tr>
+    <td>
+	<a href="LOG.html"><span class="italic-caps">LOG</span></a>
+    </td>
+    <td>
+	Manages the storage and retrieval of events that are reported by
+        various parts of the system framework and/or the application
+        built on top of it.
+    </td>
+  </tr>
+  <tr>
+    <td>
+	<a href="MESSAGE.html"><span class="italic-caps">MESSAGE</span></a>
+    </td>
+    <td>
+	Represents a single textual message that needs to be displayed or
+	recorded.
+    </td>
+  </tr>
+  <tr>
+    <td>
+	<a href="STATISTIC.html"><span class="italic-caps">STATISTIC</span></a>
+    </td>
+    <td>
+	This class represents a statistic that can be monitored in the
+	monitoring system.  Each statistic has its own unique ID
+	(node-unique, not necessarily globally unique), a description,
+	units, and other useful information that is represented in this
+	class.
+    </td>
+  </tr>
+  <tr>
+    <td>
+	<a href="TYPE.html"><span class="italic-caps">TYPE</span></a>
+    </td>
+    <td>
+	Represents the type of a particular event.  The set of core event
+	types each have such a name and a description.
+    </td>
+  </tr>
+</table>
+</body>
+</html>

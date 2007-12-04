@@ -1,0 +1,216 @@
+Monitoring Architecture Overview
+
+Authors: Joseph Kiniry
+
+Version: $Revision: 1.1.1.1 $
+
+------------------------------------------------------------
+Revision History:
+
+$Log: Monitoring.txt,v $
+Revision 1.1.1.1  2002/12/29 12:35:59  kiniry
+Import from move from Caltech.
+
+Revision 1.1  2001/05/26 20:19:33  kiniry
+Added BON design documents snapshot.  It has been cleaned up quite a bit
+but still needs to be synched with Chara's current work on BON templates
+and stylesheet.
+
+Revision 1.2  2000/07/19 22:09:32  kiniry
+Made monitoring diagram.
+
+
+------------------------------------------------------------
+
+Related Documents:
+
+  Monitoring_Diagram.eps - A high-level diagram of the monitoring system.
+
+1. Introduction
+===============
+
+Many modern systems are complex, concurrent, and distributed.  To
+build a reliable, comprehensible, maintainable system we must design
+in a set of vital features including statistics gathering, logging,
+and assertions.  All of this information should be "tunable" while the
+system is running, but the use of the monitoring system should not
+incur a significant performance penalty.
+
+2. Requirements
+===============
+
+Primary goals of the monitoring framework.  
+
+The framework *must*:
+
+o Provide event types supporting statistics gathering, message
+logging, and assertions.
+
+o Support run-time tuning.  Clients of the system (in particular,
+debugging tools or support personnel) should be able to tell the
+system which types of messages and/or importance level of messages are
+currently of import.
+
+o Provide some form of "typing" on events.  Types and their meaning
+are defined by the designer at design/compile-time.
+
+o Provide some form of "leveling" on events.  Level ranges and meaning
+are defined by the designer at design/compile-time.
+
+o Be able to log messages to a file, the system console, and over a
+network.
+
+Secondary requirements include:
+
+o Tuning monitoring based upon the source class and/or package from
+which the event originates.
+
+o Be able to log messages to a database or a GUI window.
+
+Things that are _not_ goals of the monitoring framework include:
+
+o Dynamically defining new message types or level ranges at run-time.
+
+3. Overview
+===========
+
+Modern application development is terrificly complicated.  Today's
+developers are asked to participate in building desktop applications
+in large teams with millions of lines of code.  Large-scale
+applications must be built by judicious use of existing code and
+ideas: code and design reuse, compositional architectures, patterns,
+and other such models are the modern tools of our trade.
+
+Concurrent and Distributed Applications
+
+Systems that are concurrent and distributed are even more complex.  It
+has been recognized that, without significant forethought to problems
+of system statistics gathering, logging, and understanding,
+maintaining such systems rapidly becomes impossible.
+
+Modern Methods, Dark Ages
+
+But how do most developers do development and testing?  Surprising,
+many developers use advanced integrated modeling and development
+environments coupled with a smattering of low-tech print statements.
+
+What is wrong with this scenario?  First, it is an undisciplined
+development methodology: there is little or no relationship between
+application requirements and test code.  Second, there is no
+relationship between component specification and component test code
+suites.  Third, test code is manually embedded in the code that is
+shipped, leaving a host of deployment issues to deal with at
+delivery-time.  Fourth, output is unstructured and usually unparsable.
+Finally, there is no easy way to redirect or log test output to any
+destination other than a pipe or a file.
+
+Even more incredible, popular languages (i.e. Java) are designed
+without regard for system debugging and do not support important
+debugging constructs like assertions.  (Even "archaic" languages
+like C and Fortran have an assertion mechanism!)
+
+Debugging in Java
+
+Surprisingly, given its popularity, the Java programming language
+provides very few built-in constructs for debugging classes,
+components, and systems.
+
+Typically, a Java programmer relies upon language features and
+development tools for debugging.  Java provides array bounds checking,
+static type checking, variable initialization testing, and exceptions
+to assist in code debugging.  While programming environments provide
+sophisticated source-code debuggers, most developers seem fixated on
+using primitive printlns to debug their code.
+
+Java is missing several traditional core debugging constructs as well,
+the most critical of which is assertions.  Assertions are program
+statements of the form "at this point in execution the following
+*must* be true".  They are used to specify predicates that must remain
+inviolate for a program to exhibit correct behavior.  Typically, if an
+assertion is violated, a program is aborted, though in object-oriented
+systems we often have options other than halting the program execution
+(e.g. throwing an exception).
+
+The Monitoring System
+
+The Monitoring system defines exactly this set of functionality.
+It supports gathering and processing statistics, logging textual
+messages, and making assertions on system state.
+
+Each system and/or component has a complementary set of monitoring classes
+which define (a) the statistics that are to be gathered on the system, (b)
+the run-time debugging and logging messages that are specific to the
+system, and (c) the assertion types that are vital to system correctness.
+
+Each of these categories of system events are defined at *design* and
+*compile*-time; they are not typically defined at run-time.  A
+designer knows what needs to be logged because she defined the
+system.  
+
+The debugger or support person knows what messages types and the like
+are important to understanding what is wrong with the system as it is
+running, so they "tune" the system and watch its behavior.
+
+Filling the Holes
+
+Given the requirements of this system, we have chosen to use the
+IDebug framework as the "backend" for the monitoring system.
+
+IDebug has been designed to "fill the holes in Java".  It is a
+debugging framework composed of a set of JavaBeans and other classes
+that provide fundamental debugging constructs like assertions, error
+messages, logging, and more.  Applications and/or components using
+IDebug have a unified, manageable, flexible and extendible interface
+to debugging as well as a complementary testing process.
+
+Thus, most of the debugging system is already written, as it is part
+of IDebug.
+
+4. Dictionary
+=============
+
+o Assertion - Represents a single type of important predicate that the
+system should validate. Assertion failures result in everything from
+messages or statistics being logged to system failure.
+
+o Checker - Checks the state of the system for validity against
+particular assertions.
+
+o Collector - Performs the collection of particular statistics during
+the operation of a program. Individual statistics can be registered
+for collection, and may be activated or deactivated. The collector can
+cache statistic collection in memory, and can also write statistics
+and logging information to a long-term storage device for subsequent
+analysis.
+
+o Event - Represents a single important event of any kind. The event
+includes a source, description, importance, and time, among other
+things.
+
+o Level - Represents the importance level of a particular event. 
+
+o Log - Manages the storage and retrieval of events that are reported
+by various parts of the system framework and/or the application built on
+top of it.
+
+o Logger - Performs the collection of particular statistics during the
+operation of a program. Individual statistics can be registered for
+collection, and may be activated or deactivated. The collector can
+cache statistic collection in memory, and can also write statistics
+and logging information to a long-term storage device for subsequent
+analysis.
+
+o Message - Represents a single textual message that needs to be
+displayed or recorded.
+
+o Statistic - This class represents a statistic that can be monitored
+in the monitoring system. Each statistic has its own unique ID
+(node-unique, not necessarily globally unique), a description, units,
+and other useful information that is represented in this class.
+
+o Tuner - "Tune" the monitoring system to collect specific types and
+levels of system statistics, messages, and assertions.
+
+o Type - a string associated with an event that specifies the type of
+the event.  The set of core event types each have such a name and a
+description.

@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- SUMMARY:      The Readme file for the IDebug package. -->
+
+<!-- AUTHOR:       Joseph R. Kiniry -->
+<!-- ORG:          KindSoftware, LLC -->
+<!-- E-MAIL:       Joseph R. Kiniry <kiniry@acm.org>-->
+
+<!--
+ IDebug
+ Copyright (c) 1997-2001 Joseph Kiniry
+ Copyright (c) 2000-2001 KindSoftware, LLC
+ Copyright (c) 1997-1999 California Institute of Technology
+ All Rights Reserved
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>README for IDebug</title>
+<!-- $id: index.html,v 1.11 1999/05/02 19:21:47 kiniry Exp $ -->
+<link rel="stylesheet" type="text/css" href="docs/idebug.css" />
+<link rev="made" href="mailto:kiniry@acm.org" />
+<meta name="keywords" content="IDebug, debugging, framework, Java" />
+<meta name="description" content="IDebug: an advanced debugging framework
+for Java" />
+</head>
+
+<body>
+<h1 align="center">README for IDebug</h1>
+
+<hr />
+
+<p> Welcome to IDebug, an advanced debugging framework for Java! </p>
+
+<h2>Source Code</h2>
+
+<p> This release of IDebug <strong>does</strong> include source code.  See
+    the <a href="source">source</a> directory for more information. </p>
+
+<p> If you wish to contribute to IDebug, please email <a
+    href="mailto:idebug@kindsoftware.com">idebug@kindsoftware.com</a>
+    and we can discuss our process (e.g. patches, CVS access, contributor
+    maintaining ownership of additions/changes, etc.). </p>
+
+<h2>Documentation</h2>
+
+<p> This release of IDebug comes with several sets of documentation. </p>
+
+<ol>
+  <li> The IDebug <a href="docs/brief.txt">brief</a>, a short summary of
+      the framework.
+  </li>
+
+  <li> A <a href="docs/Monitoring.txt">design overview</a> for a
+      top-level perspective of the system.  This document includes system
+      requirements, background, and a design dictionary.
+  </li>
+
+  <li> A full <a href="docs/BON/index.html">BON specification</a>
+      of IDebug.  See <a
+      href="http://www.eiffel.com/products/bon.html">ISE's BON summary</a>
+      for more information on BON.<br />
+      Note that in the design overview and BON specification we call the
+      general system being specified the "Monitoring" system.  IDebug is an
+      implementation of this specification.
+  </li>
+      
+  <li> Full <a href="docs/javadoc/index.html">Javadoc-generated</a>
+      documentation is included in the docs/javadoc directory.
+  </li>
+
+  <li> A <a href="docs/manual/index.html">technical report</a>
+      describing IDebug is included in the directory docs/manual.
+      This document isn't a true "user's manual".  Such a document
+      will be included in the 1.0 release of IDebug.
+  </li>
+
+  <li> Miscellaneous other documentation (<a
+      href="RELEASE_NOTES.html">release notes</a>, <a
+      href="FAQ.html">FAQ</a>, <a href="TODO.html">TODO list</a>,
+      etc.)  are included in several text files in the same directory
+      as this file.
+  </li>
+
+  <li> <em>Use the source!</em> The source code, or more specifically, the
+      full <a
+      href="http://www.eiffel.com/doc/manuals/technology/contract/page.html">Design
+      by Contract</a> specification that can be found in the source, is your
+      best guide toward the correct use of IDebug.  We, of course, use the
+      excellent <a
+      href="http://www.infospheres.caltech.edu/resources/code_standards/java_standard.html">Infospheres
+      Java Code Standard</a> in IDebug.
+  </li>
+      
+</ol>
+
+<h2>Using IDebug</h2>
+
+<p> To learn how to use IDebug, one should read the IDebug <a
+href="docs/manual/index.html">technical report</a> and peruse the <a
+href="docs/javadoc/index.html">Javadoc documentation</a>.  The <a
+href="docs/BON/index.html">BON specification</a> is also quite useful in
+getting a more top-level view of the architecture.  Additionally, the
+source code for the IDebug blackbox test suite has been included in the <a
+href="source/idebug/testsuite/">source/idebug/testsuite</a> directory,
+which should be very revealing to the interested developer.  In that same
+directory one can find an example extension to the
+<var>DebugConstants</var> interface called <var>FrenchConstants</var>. </p>
+
+<p> Simply add the IDebug jar file to your <var>CLASSPATH</var> to use
+IDebug.  We suggest using the <code>idebughc</code> class for all
+development and testing and switching to the interface-identical
+<code>idebug</code> package for system delivery. </p>
+
+<h2>Questions or comments?</h2>
+
+<p> Please email <a
+href="mailto:idebug@kindsoftware.com">idebug@kindsoftware.com</a>. </p>
+
+<hr />
+<!-- ============================================================ -->
+<!-- Toolbar at bottom of all major top-level pages -->
+
+<p align="center">
+[ <a href="index.html">Index</a> ]
+[ Readme ]
+[ <a href="FAQ.html"> FAQ </a> ] 
+[ <a href="RELEASE_NOTES.html"> Release Notes </a> ] 
+[ <a href="TODO.html"> To-Do List </a> ] <br />
+[ <a href="docs/manual/index.html">Technical Report</a> ]
+[ <a href="docs/BON/index.html">BON</a> ]
+[ <a href="docs/javadoc/index.html">Javadocs</a> ]
+[ <a href="LICENSE.html">License</a> ]
+</p>
+
+<hr />
+<!-- ============================================================ -->
+
+<p align="center">
+<a href="http://www.anybrowser.org/campaign/">
+<img src="docs/graphics/anybrowser.png"
+     height="31" width="88" border="0"
+     alt="Best Viewed With Any Browser." />
+</a>
+<a href="http://validator.w3.org/check/referer">
+<img src="docs/graphics/vxhtml10.png"
+     height="31" width="88" border="0"
+     alt="XHTML 1.0 Checked!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+<img src="docs/graphics/vcss.png"
+     height="31" width="88" border="0"
+     alt="CSS, Level 2 Checked!" />
+</a>
+</p>
+
+<address>by Joseph R. Kiniry &lt;kiniry@acm.org&gt;</address>
+<!-- hhmts start -->
+Last modified: Tue Jun 19 09:44:02 PDT 2001
+<!-- hhmts end -->
+</body>
+</html>

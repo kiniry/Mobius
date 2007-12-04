@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- SUMMARY:      Release notes for the IDebug package. -->
+
+<!-- AUTHOR:       Joseph R. Kiniry -->
+<!-- ORG:          KindSoftware, LLC -->
+<!-- E-MAIL:       Joseph R. Kiniry <kiniry@acm.org>-->
+
+<!--
+ IDebug
+ Copyright (c) 1997-2001 Joseph Kiniry
+ Copyright (c) 2000-2001 KindSoftware, LLC
+ Copyright (c) 1997-1999 California Institute of Technology
+ All Rights Reserved
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Release Notes for IDebug</title>
+<!-- $id: index.html,v 1.11 1999/05/02 19:21:47 kiniry Exp $ -->
+<link rel="stylesheet" type="text/css" href="docs/idebug.css" />
+<link rev="made" href="mailto:kiniry@acm.org" />
+<meta name="keywords" content="IDebug, debugging, framework, Java" />
+<meta name="description" content="IDebug: an advanced debugging framework
+for Java" />
+</head>
+
+<body>
+<h1 align="center">Release Notes for IDebug</h1>
+
+<hr />
+
+<p> This document includes a summary of major changes for each revision of
+IDebug. </p>
+
+<h2>Changes made for IDebug 1.137-2001-Jun-19</h2>
+<ul>
+  <li> IDebug's version number scheme has changed.  The version number
+      is a monotonically increasing natural number that is the sum of the
+      decimal part of the CVS version numbers of all core source files with
+      a integer part matching that of the files.  I.e. If three files A, B,
+      and C were the core source files and their numbers were 1.12, 1.22,
+      and 1.2 respectively, then the release version number would be 12 +
+      22 + 2 = 26 => 1.26.  The postfix of the version is the release date.
+      This scheme was partially followed in the last release. </li>
+  <li> The <code>WindowOutput</code> implementation of
+      <code>DebugOutput</code> is now completely finished.  Clear and save
+      functionality is included. </li>
+  <li> Small tweaks to the BON specification, in particular to the object
+      creation chart, have been made to increase completeness. </li>
+  <li> Figured out all bugs in Jass with author of said tool.  All IDebug
+      source is now fully annotated and processed. </li>
+</ul>
+
+<h2>Changes made for IDebug 0.126</h2>
+
+<ul>
+  <li> IDebug is now implemented with the <a
+      href="http://theoretica.informatik.uni-oldenburg.de/~jass/">Jass</a>
+      tool so that specifications are automatically translated into test
+      code. The package <code>idebughc</code> contains the <em>High
+      Confidence</em> (HC) version of IDebug with all assertions still in
+      the code.  The <code>idebug</code> package contains exactly the same
+      code without the specification assertions. </li>
+  <li> The full BON specification is now included. </li>
+  <li> The interface <code>DebugOutput</code> now has an abstract base
+      class implementation called <code>DebugOutputBase</code> for better
+      encapsulation and decoupling. </li>
+  <li> A new statistics framework has been integrated.  See the
+      <code>Statistic</code>, <code>Collect</code>, and
+      <code>SimpleCollect</code> classes. </li>
+  <li> This version is not API compatible with previous versions of
+      IDebug. </li>
+</ul>
+      
+
+<h2>Changes made for IDebug 0.95</h2>
+
+<ul>
+  <li> Full source code is now included with the IDebug release. </li>
+  <li> One small documentation clarification has been made. </li>
+  <li> Many classes and some methods have been renamed and the package has
+      been refactored based upon feedback from users of the 0.9 framework.
+      This version is not API compatible with IDebug 0.9. </li>
+</ul>
+
+<h2>Changes made for IDebug 0.9</h2>
+
+<ul>
+  <li> No changes to report; first public release of IDebug. </li>
+</ul>
+
+<hr />
+<!-- ============================================================ -->
+<!-- Toolbar at bottom of all major top-level pages -->
+
+<p align="center">
+[ <a href="index.html">Index</a> ]
+[ <a href="README.html"> Readme </a> ]
+[ <a href="FAQ.html"> FAQ </a> ] 
+[ Release Notes ] 
+[ <a href="TODO.html"> To-Do List </a> ] <br />
+[ <a href="docs/manual/index.html">Technical Report</a> ]
+[ <a href="docs/BON/index.html">BON</a> ]
+[ <a href="docs/javadoc/index.html">Javadocs</a> ]
+[ <a href="LICENSE.html">License</a> ]
+</p>
+
+<hr />
+<!-- ============================================================ -->
+
+<p align="center">
+<a href="http://www.anybrowser.org/campaign/">
+<img src="docs/graphics/anybrowser.png"
+     height="31" width="88" border="0"
+     alt="Best Viewed With Any Browser." />
+</a>
+<a href="http://validator.w3.org/check/referer">
+<img src="docs/graphics/vxhtml10.png"
+     height="31" width="88" border="0"
+     alt="XHTML 1.0 Checked!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+<img src="docs/graphics/vcss.png"
+     height="31" width="88" border="0"
+     alt="CSS, Level 2 Checked!" />
+</a>
+</p>
+
+<address>by Joseph R. Kiniry &lt;kiniry@acm.org&gt;</address>
+<!-- hhmts start -->
+Last modified: Tue Jun 19 10:17:11 PDT 2001
+<!-- hhmts end -->
+</body>
+</html>

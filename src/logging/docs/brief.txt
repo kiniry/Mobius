@@ -1,0 +1,123 @@
+        A Distributed Debugging and Assertion Package for Java
+
+                           Joseph R. Kiniry
+
+   Department of Computer Science,           KindSoftware, LLC
+ California Institute of Technology,        45 S. Grand Oaks Ave.
+          Mailstop 256-80,                   Pasadena, CA 99107
+        Pasadena, CA 91125
+
+
+Abstract
+
+The IDebug debugging package is an advanced debugging framework for
+Java. This package provides the standard core debugging and specification
+constructs such as assertions, debug levels, call stacks, and specialized
+exceptions.
+
+Additionally, work is ongoing for providing support for debugging
+distributed object systems via currying call stacks across virtual machine
+contexts and debug information logging with a variety of networking mediums
+including unicast, multicast, RMI, distributed events, and
+JavaSpaces. Finally, we are working on support for debugging mobile
+multi-agent systems by providing mobile debug logs.
+
+Debugging functionality can be fine-tuned to a per-thread and/or a
+per-class basis, debugging contexts can be stored and recovered from
+persistent store, and several aspects of the debugging run-time are
+configurable at the meta-level.
+
+Introduction
+
+Programming technologies have evolved greatly over the years. New
+programming models have emerged, new languages gain popularity, new tools
+are adopted, and yet several core debugging constructs have not changed. We
+believe that the two primary constructs for general debugging are the
+execution trace and the assertion.
+
+Object-Oriented Debugging
+
+Debugging object-oriented programs is not the same as debugging procedural
+ones. Because most object models enforce modularity and encapsulation, one
+must test both the implementation and the interface of a class.
+
+A specification of an interface is called a Contract. A class's contract
+specifies the externally visible behavior that a class fulfills.
+
+Contracts are typically specified via three constructs: preconditions and
+postconditions on methods, and class invariants.  Using these three
+constructs, the safety properties of a class can be completely specified.
+
+Debugging in Java
+
+Surprisingly (given its popularity), the Java programming language provides
+very few built-in constructs for debugging classes.
+
+Typically, a Java programmer relies upon certain aspects of the language
+(array bounds checking, static type and variable initialization checking,
+etc.), declared and runtime exceptions, source-code debuggers, and
+primative println's to debug their code.
+
+Java is missing several core debugging constructs, the most critical of
+which is assertions. Assertions are statements of the form ``at this point
+in execution the following must be true''. They are used to specify
+predicates that must remain inviolate for a program to exhibit correct
+behavior. Typically, if an assertion fails a program is aborted, though in
+object-oriented systems we often have other options (e.g. throwing an
+exception).
+
+Debugging Frameworks
+
+A framework is a collection of classes that provide a unified model and
+interface to a specific piece of functionality. A framework in Java is
+typically implemented as a collection of classes organized into a package.
+
+The IDebug Debugging Framework
+
+The IDebug debugging framework is implemented as a set of javabeans
+(Java components) collected into the package
+edu.caltech.cs.infospheres.debug. These classes can be used either (a) as
+``normal'' classes with standard manual debugging techniques, or (b) as
+components within visual javabean programming tools.
+
+This package provides the standard core debugging and specification
+constructs such as the previously discussed assertions, debug levels, call
+stack, and specialized exceptions. Debug levels permit a developer to
+assign a ``depth'' to debug statements; a lattice of information that can
+be pruned at runtime according to the demands of the current
+execution. Call stack introspection is provided as part of the Java
+language specification. The IDebug framework uses the call stack to support
+a runtime user-configurable filter for debug messages based upon the
+current execution context of a thread. Finally, a set of specialized
+exceptions are provided for fine-tuning the debug process.
+
+Additionally, we are working support for debugging distributed systems. One
+problem typical of debugging distributed systems is a loss of context when
+communication between two non-local entities takes place. E.g. When object
+A invokes a method m on object B, the thread within m does not have access
+to the call stack from the calling thread in A.  Thus, the IDebug package
+will support what we call "call-stack currying". Information such as source
+object identity, calling thread call stack, and more is available to the
+debugging framework on both sides of a communication. Such information can
+be curried across arbitrary communication mediums (sockets, RMI, etc.).
+
+The IDebug package will also soon support debugging mobile agent
+systems. Mobile agent architectures can support disconnected computing. For
+example, an object O can migrate from machine A to machine B, which might
+then becomes disconnected from the network (i.e. absolutely no
+communication can take place between B and A). Since B cannot communicate
+with A, and printing debugging information on B's display might not be
+useful or possible, B must log debugging information for later
+inspection. To support this functionality, the IDebug package will provide
+serializable debug logs. These logs can be carried around by a mobile
+object and inspected at a later time by the object's owner or developer.
+
+The IDebug package is very configurable. First, debugging functionality can
+be fine-tuned on a per-thread basis. Each thread can have its own debugging
+context. The context states the classes of interest to that particular
+thread. I.e. If a thread T specifies that it is interested in a class C but
+not a second class D, then debugging statements in C will be considered
+when T is inside of C, but debugging statements in D will be ignored at all
+times. These debugging contexts can be stored and recovered from persistent
+store. Thus, ``named'' special-purpose contexts can be created for reuse
+across a development team.

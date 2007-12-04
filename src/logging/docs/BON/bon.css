@@ -1,0 +1,89 @@
+body
+{font-family: Georgia, Verdana, serif;
+ background-color: #336666; font-size: 100%}
+
+td
+{color: #FFFFCC;
+vertical-align: baseline}
+
+th
+{background-color: #CCCCCC;
+color: #003333;
+font-weight: bold;
+text-align: center;
+width: 25%}
+
+a:link
+{color: #66CCFF;
+font-weight: bold}
+
+a:active
+{color: #FF0066;
+font-weight: bold}
+
+a:visited
+{color: #3399FF;
+font-weight: bold}
+
+a:hover
+{color: #99FF33;
+font-weight: bold}
+
+dt
+{font-weight: bold;
+vertical-align: baseline}
+
+table
+{vertical-align: baseline;
+width: 100%}
+
+.white
+{background-color: #FFFFFF;
+color: #003333;
+width: 50%}
+
+.yellow
+{background-color: #FFFF99;
+color: #003333;
+text-align: center;
+width: 50%}
+
+.jrk
+{color: #FF9999}
+
+.caw
+{color: #FFCC00}
+
+.ns 
+{color: #FFFF33}
+
+.bold
+{font-weight: bold}
+
+.italic-caps
+{font-style: italic;
+text-transform: uppercase}
+
+dd
+{font-family: Georgia, Verdana, serif} 
+ 
+dt 
+{font-family: Georgia, Verdana, serif} 
+
+table 
+{font-family: Georgia, Verdana, serif} 
+
+td 
+{font-family: Georgia, Verdana, serif;
+font-size: 100%} 
+
+th {font-family: Georgia, Verdana, serif;
+font-size: 100%} 
+
+h1 
+{color: #FFFFFF; font-size: 200%; background-color: 
+#3399FF}
+
+h2 
+{color: #FFFF99; font-size: 150%}
+

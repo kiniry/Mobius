@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd xhtml 1.0 transitional//en"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>
+Class Chart: COLLECTOR
+</title>
+<link type="text/css" rel="stylesheet" href="../bon.css" />
+</head>
+
+<body>
+<table border="2">
+  <tr>
+    <th>
+	CLASS
+    </th>
+	<td colspan="2" width="50%" class="yellow"><span class="italic-caps">
+	COLLECTOR
+	</span>
+    </td>
+	<td width="25%" class="yellow">
+	<span class="bold">Part:</span> 1/1
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  TYPE OF OBJECT</span>
+      </dt>
+      <dd>
+	  Performs the collection of particular statistics during the
+	  operation of a program. Individual statistics can be registered
+	  for collection, and may be activated or deactivated. The
+	  collector can cache statistic collection in memory, and can also
+	  write statistics and logging information to a long-term storage
+	  device for subsequent analysis.
+      </dd>
+    </dl>
+</td>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  INDEXING</span>
+      </dt>
+      <dd>
+	  <span class="bold">cluster:</span> <a href="PROCESSING.html">
+	  <span class="italic-caps">PROCESSING</span></a><br />
+	  <span class="bold">created:</span> 2000-07-19 Joseph Kiniry<br />
+	  <span class="bold">revised:</span> $Id: COLLECTOR.html,v 1.1.1.1 2002/12/29 12:36:02 kiniry Exp $
+      </dd>
+    </dl>
+</td>
+</tr>
+</table>
+<table border="2">
+  <tr>
+    <th>
+	Queries
+    </th>
+    <td>
+	What is the current value for specific statistic?
+    </td>
+  </tr>
+  <tr>
+    <th>
+	Commands
+    </th>
+    <td>
+	Report on a particular statistic. <br />
+	Report on all statistics. <br />
+	Increment a statistic by a specified value. <br />
+	Increment a statistic by the default value. <br />
+	Decrement a statistic by a specified value. <br />
+	Decrement a statistic by the default value. <br />
+	Reset a statistic to the default start value. <br />
+	Set a statistic to a specific value.
+    </td>
+  </tr>
+  <tr>
+    <th>
+	Constraints
+    </th>
+    <td>
+	A newly registered statistic is deactivated by default. <br />
+	No two statistics can be registered with the same unique ID.
+    </td>
+  </tr>
+</table>
+</body>
+</html>

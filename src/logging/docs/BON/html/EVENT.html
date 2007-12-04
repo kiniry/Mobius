@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd xhtml 1.0 transitional//en"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>
+Class Chart: EVENT
+</title>
+<link type="text/css" rel="stylesheet" href="../bon.css" />
+</head>
+
+<body>
+<table border="2">
+  <tr>
+    <th>
+	CLASS
+    </th>
+	<td colspan="2" width="50%" class="yellow"><span class="italic-caps">
+	EVENT
+	
+	</span>
+    </td>
+	<td width="25%" class="yellow">
+	<span class="bold">Part:</span> 1/1
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  TYPE OF OBJECT</span>
+      </dt>
+      <dd>
+	  Represents a single important event of any kind. The event
+	  includes a source, description, importance, and time, among
+	  other things.
+      </dd>
+    </dl>
+</td>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  INDEXING</span>
+      </dt>
+      <dd>
+	  <span class="bold">cluster:</span> <a href="EVENTS.html">
+	  <span class="italic-caps">EVENTS</span></a><br />
+	  <span class="bold">created:</span> 2000-07-06 Joseph Kiniry<br />
+	  <span class="bold">revised:</span> $Id: EVENT.html,v 1.1.1.1 2002/12/29 12:36:02 kiniry Exp $ 
+      </dd>
+    </dl>
+</td>
+</tr>
+</table>
+<table border="2">
+  <tr>
+    <th>
+	Queries
+    </th>
+    <td>
+	What is the source system of this event? <br />
+	What is the source component of this event? <br />
+	What type of event is this? <br />
+	When was this event generated? <br />
+	What is the description of this event? <br />
+	How important is this event? <br />
+	What is a printable representation of this event? <br />
+	Is this event equal to another one?
+    </td>
+  </tr>
+  <tr>
+    <th>
+	Commands
+    </th>
+    <td>
+	Create a new event with the following specification.
+    </td>
+  </tr>
+  <tr>
+    <th>
+	Constraints
+    </th>
+    <td>
+	All fields of event are set only once, at construction time. <br />
+	All fields of event must be specified; none may be left blank. <br />
+	Two events are considered to be identical if all fields of both
+	events have identical values. <br />
+	Events cannot be cloned.
+    </td>
+  </tr>
+</table>
+</body>
+</html>

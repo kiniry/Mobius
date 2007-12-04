@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd xhtml 1.0 transitional//en"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>
+Class Chart: STATISTIC
+</title>
+<link type="text/css" rel="stylesheet" href="../bon.css" />
+</head>
+
+<body>
+<table border="2">
+  <tr>
+    <th>
+	CLASS
+    </th>
+	<td colspan="2" width="50%" class="yellow"><span class="italic-caps">
+	STATISTIC
+	</span>
+    </td>
+	<td width="25%" class="yellow">
+	<span class="bold">Part:</span> 1/1
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  TYPE OF OBJECT</span>
+      </dt>
+      <dd>
+	  This class represents a statistic that can be monitored in the
+	  monitoring system. Each statistic has its own unique ID
+	  (node-unique, not necessarily globally unique), a description,
+	  units, and other useful information that is represented in this
+	  class.
+      </dd>
+    </dl>
+</td>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  INDEXING</span>
+      </dt>
+      <dd>
+	  <span class="bold">cluster:</span> <a href="EVENTS.html">
+	  <span class="italic-caps">EVENTS</span></a><br />
+	  <span class="bold">created:</span> 2000-07-06 Joseph Kiniry<br />
+	  <span class="bold">revised:</span> $Id: STATISTIC.html,v 1.1.1.1 2002/12/29 12:36:04 kiniry Exp $
+      </dd>
+    </dl>
+</td>
+</tr>
+</table>
+<table border="2">
+  <tr>
+    <th>
+	Queries
+    </th>
+    <td>
+	What is the unique ID of this statistic? <br />
+	What are its units? <br />
+	What is its default scaling factor? <br />
+	What is its default start value? <br />
+	What is its default increment? <br />
+	What is its default decrement? <br />
+    </td>
+  </tr>
+  <tr>
+    <th>
+	Commands
+    </th>
+    <td>
+	Create a new statistic by specifying its units, scaling factor,
+	default start value, default increment and default decrement.
+    </td>
+  </tr>
+  <tr>
+    <th>
+	Constraints
+    </th>
+    <td>
+	Unique ID must be unique across all statistics on a node. <br />
+	All static properties must be specified at, and cannot be changed
+	after, construction time.
+    </td>
+  </tr>
+</table>
+</body>
+</html>

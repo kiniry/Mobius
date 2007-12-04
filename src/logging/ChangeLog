@@ -1,0 +1,108 @@
+2001-06-24  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Makefile: Corrected reference to test suite package so that
+	javadoc documentation documents idebughc.testsuite.
+
+2001-06-09  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Makefile: Added documentation on what to tweak for new builds
+	and a bit on the existence of environmental variables to run-time
+	configure the build.
+	(%.pdf): Added creation of temporary softlink to bibliography to
+	avoid adding bib to archives.
+	(version): Added version number for new release.
+
+	* source/idebughc/Collect.jass:
+	* source/idebughc/Debug.jass:
+	* source/idebughc/DebugConstants.jass: Fixed package on @see tag.
+
+	* source/idebughc/ServletLogContext.jass: Added package-scoped
+	constructor to private inner-class DummyServletContext to work
+	around Jass 2.0.3 bug.
+
+2001-06-03  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* WindowOutput - Changed FileDialog into a FileChooser.  Added a
+	JOptionPane for every error/confirm message.  WindowOutput seems
+	to be done.
+
+2001-06-01  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Makefile - Added onetest rule for easy single-blackbox testing.
+
+	* TestSuite - Added 20 second pause post-successful WindowOutput
+	test so that the user can interactively test the buttons.
+
+	* WindowOutput - Added support for "save" behavior.  Added close
+	button which currently does nothing.
+
+2001-05-28  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Documentation - BON design is now included.
+
+	* Source - Major changes include: base package is now idebughc,
+	idebug is generated; use of Jass tool for assertion generation
+	from specification; unified Makefile support for Jass;
+	SimpleCollect is now in the examples subpackage; WindowOutput is
+	partially implemented (save button doesn't yet work); Statistics
+	subsystem is fully in-place but not yet documented at the
+	top-level; all source specification and documentation is now
+	complete and correct.
+
+	* Release - Preparing for new release.
+
+2001-01-12  Todd Papaioannou  <toddp@acm.org>
+
+	* Visibility - Opened up from protected to public all methods in
+	abstract class DebugOutput. This now allows you to use this class
+	as an attribute in a class, and it instantiate as a subclass,
+	e.g. ConsoleOutput or WriterOutput, at runtime, dependant on your
+	needs.
+
+	* WriterOutput - Fixed a bug in WriterOutput where the
+	PrinterWriter was never used, but System.err was used instead. All
+	methods in WriterOutput now use PrinterWriter for their output.
+
+2000-10-06  Joseph R. Kiniry  <kiniry@acm.org>
+	
+	* Collect - Changed visibility of constructor from package to
+	public.  I'm using the new statistics framework for the Dali 3D
+	system and thus it is getting its first real "external" workout,
+	so some visibility changes are bound to occur.
+
+2000-07-23  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Refactoring - Refactored DebugOutput class hierarchy to improve
+	decoupling.  DebugOutput has become an abstract class in the
+	process.
+
+	* Statistics - Integrated new functionality to help log
+	information about your running system in the form of statistics.
+	See the Statistic, Collect, and SimpleCollect classes.
+
+2000-06-25  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Release - Removed all UML documentation from release because of
+	TogetherJ problems.
+
+2000-06-14  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* Design - Finished first pass of UML documentation for 0.95 release.
+
+1999-06-27  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* ClassRename - Updated documentation to reflect new class naming.
+
+	* ClassRename - Renamed nearly all classes based upon input from
+	testers and reviewers.  Package name "IDebug" becomes "idebug" and 
+	the following classes are renamed: DebugOutputConsole,
+	DebugContext, DebugConstantsInterface, DebugOutputInterface,
+	DebugConstantsImpl, DebugOuputServletLog, DebugUtilities,
+	DebugOutputWriter, DebugTests, DebugFrenchConstants.  Their new
+	names are (respectively) ConsoleOutput, Context, DebugConstants,
+	DebugOutput, DefaultDebugConstants, ServletLogOutput, Utilites,
+	WriterOutput, TestSuite, and FrenchConstants.  This renaming was
+	primarily motivated by the irritation at the redundant use of the
+	"Debug" string and the thought that draconian adherence to our
+	code standard isn't always the Right Thing.
+

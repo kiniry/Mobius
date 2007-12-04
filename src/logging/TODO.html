@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- SUMMARY:      TODO file for the IDebug package. -->
+
+<!-- AUTHOR:       Joseph R. Kiniry -->
+<!-- ORG:          KindSoftware, LLC -->
+<!-- E-MAIL:       Joseph R. Kiniry <kiniry@acm.org>-->
+
+<!--
+ IDebug
+ Copyright (c) 1997-2001 Joseph Kiniry
+ Copyright (c) 2000-2001 KindSoftware, LLC
+ Copyright (c) 1997-1999 California Institute of Technology
+ All Rights Reserved
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>TODO list for IDebug</title>
+<!-- $id: index.html,v 1.11 1999/05/02 19:21:47 kiniry Exp $ -->
+<link rel="stylesheet" type="text/css" href="docs/idebug.css" />
+<link rev="made" href="mailto:kiniry@acm.org" />
+<meta name="keywords" content="IDebug, debugging, framework, Java" />
+<meta name="description" content="IDebug: an advanced debugging framework
+for Java" />
+</head>
+
+<body>
+<h1 align="center">TODO list for IDebug</h1>
+
+<hr />
+
+<ul>
+  <li> Review ASSERTION, LOGGER class diagrams. </li>
+
+  <li> Document overridding methodology for
+      <code>DebugOutput</code>. (i.e. <code>printMsg</code> methods) </li>
+      
+  <li> Design and document <code>Report</code> objects for statistics
+      reporting which are mentioned in <code>Collect</code> and related
+      classes. </li>
+      
+  <li> Implement versions that use JML, ESC/Java, iContract, and MetaMata
+      so that a comparison paper can be written. </li>
+      
+  <li> Jass question - can an abstract class implement Cloneable and have
+      changeonly{} ensures clauses?  What would be the point and semantics?
+  </li>
+      
+  <li> Check order of all javadoc tags (alphabetical). </li>
+      
+  <li> Recheck visibility of all class attributes. </li>
+      
+  <li> Check that every method labeled with QUERY has a changeOnly{}
+      postcondition. </li>
+      
+  <li> Recheck default semantics on Object methods and insert comment for
+      such in all classes. </li>
+      
+  <li> Move all inherited Object methods (e.g. clone) to top of inherited
+      methods list. </li>
+      
+  <li> Update all copyright notices for 2001. </li>
+
+  <li> Validate all XHTML/CSS. </li>
+          
+  <li> Factor out string formatting in various <code>DebugOutput</code>
+      classes. </li>
+      
+  <li> Make test suite exercise every existing <code>DebugOutput</code>
+      implementation. </li>
+      
+  <li> Write detailed <em>Users Guide</em> documentation on the use of the
+      statistics subsystem. </li>
+
+  <li> Write more implementations of the <var>DebugOutput</var> interface.
+      Suggestions: </li>
+
+      <ul>
+        <li> <var>DebugOutputDB</var> --- used to log debugging
+	    messages to a database via standard JDBC. </li>
+        <li> <var>DebugOutputEventSource</var> --- send messages
+            to arbitrary listeners within a Java virtual machine
+            (perhaps as part of a compositional Java Beans-based
+            application). </li>
+        <li> <var>DebugOutputFrame</var> --- to send debugging
+            messages to an arbitrary frame within a larger GUI. </li>
+        <li> <var>DebugOutputLog</var> --- to persistently log
+            messages for off-line debugging. </li>
+        <li> <var>DebugOutputMessager</var> --- send messages via a
+            JMS-conformant messaging infrastructure to a/some remote
+            objects. </li>
+        <li> <var>DebugOutputRemoteEventSource</var> --- to provide
+            debugging messages as distributed events (perhaps as part
+            of a Jini application). </li>
+        <li> <var>DebugOutputSpace</var> --- store debugging events in
+            a JavaSpace. </li>
+      </ul>
+
+  <li> Integrate with Dan Zimmerman's <a
+      href="http://www.infospheres.caltech.edu/releases/index.html">UberNet</a>
+      to show an example of call stack currying. </li>
+
+  <li> Separate <var>@author</var> through <var>@version</var>
+      information from <var>@see</var> and other specification. </li>
+
+  <li> Add more tests to blackbox test suite:
+      <ul>
+	<li> Statistics testing. </li>
+      </ul>
+  </li>
+
+  <li> Improvements on code standard and specification semantics:
+      <ul>
+        <li> Indicate type of objects. </li>
+        <li> Indicate valid state of object (non-null, non-empty,
+            etc.). </li>
+        <li> Indicate that invariants are valid in postcondition. </li>
+      </ul>
+  </li>
+
+   <li> Look up work of Baskar Sridharan (Purdue University) for
+       ideas.  He presented a paper at the TDCS workshop at ICSE-99
+       entitled "An Extensible Framework for Monitoring and
+       Controlling CORBA-Based Distributed Systems". </li>
+
+   <li> Consider integration with new <var>assert</var> proposed Java
+       extension. </li>
+</ul>
+
+<hr />
+<!-- ============================================================ -->
+<!-- Toolbar at bottom of all major top-level pages -->
+
+<p align="center">
+[ <a href="index.html">Index</a> ]
+[ <a href="README.html"> Readme </a> ]
+[ <a href="FAQ.html"> FAQ </a> ] 
+[ <a href="RELEASE_NOTES.html"> Release Notes </a> ] 
+[ To-Do List ] <br />
+[ <a href="docs/manual/index.html">Technical Report</a> ]
+[ <a href="docs/BON/index.html">BON</a> ]
+[ <a href="docs/javadoc/index.html">Javadocs</a> ]
+[ <a href="LICENSE.html">License</a> ]
+</p>
+
+<hr />
+<!-- ============================================================ -->
+
+<p align="center">
+<a href="http://www.anybrowser.org/campaign/">
+<img src="docs/graphics/anybrowser.png"
+     height="31" width="88" border="0"
+     alt="Best Viewed With Any Browser." />
+</a>
+<a href="http://validator.w3.org/check/referer">
+<img src="docs/graphics/vxhtml10.png"
+     height="31" width="88" border="0"
+     alt="XHTML 1.0 Checked!" />
+</a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+<img src="docs/graphics/vcss.png"
+     height="31" width="88" border="0"
+     alt="CSS, Level 2 Checked!" />
+</a>
+</p>
+
+<address>by Joseph R. Kiniry &lt;kiniry@acm.org&gt;</address>
+<!-- hhmts start -->
+Last modified: Tue Jun 19 10:12:37 PDT 2001
+<!-- hhmts end -->
+</body>
+</html>

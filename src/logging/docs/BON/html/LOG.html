@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd xhtml 1.0 transitional//en"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>
+Class Chart: LOG
+</title>
+<link type="text/css" rel="stylesheet" href="../bon.css" />
+</head>
+<body>
+<table border="2">
+  <tr>
+    <th>
+	CLASS
+    </th>
+	<td colspan="2" width="50%" class="yellow"><span class="italic-caps">
+	LOG
+	</span>
+    </td>
+	<td width="25%" class="yellow">
+	<span class="bold">Part:</span> 1/1
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  TYPE OF OBJECT</span>
+      </dt>
+      <dd>
+	  Manages the storage and retrieval of events that are reported by
+	  various parts of the system framework and/or the application
+	  built on top of it.
+      </dd>
+    </dl>
+</td>
+    <td colspan="2" class="white">
+    <dl>
+      <dt><span class="bold">
+	  INDEXING</span>
+      </dt>
+      <dd>
+	  <span class="bold">cluster:</span> <a href="EVENTS.html">
+	  <span class="italic-caps">EVENTS</span></a><br />
+	  <span class="bold">created:</span> 2000-07-19 Joseph Kiniry<br />
+	  <span class="bold">revised:</span> $Id: LOG.html,v 1.1.1.1 2002/12/29 12:36:03 kiniry Exp $
+      </dd>
+    </dl>
+</td>
+</tr>
+</table>
+<table border="2">
+  <tr>
+    <th>
+	Queries
+    </th>
+    <td>
+	Which events meet a specified criteria? <br />
+	What is the list of all event sources? <br />
+    </td>
+  </tr>
+  <tr>
+    <th>
+	Commands
+    </th>
+    <td>
+	Create event. <br />
+	Store event. <br />
+	Delete event. <br />
+	Clear event log. <br />
+	Delete events meeting specified criteria. <br />
+	Export event log to a file. <br />
+	Import event log from a file. <br />
+    </td>
+  </tr>
+  <tr>
+    <th>
+	Constraints
+    </th>
+    <td>
+	No event appears twice in a given event log; each event must be
+	unique. <br />
+	The event-log must be able to import a log-file exported by any
+	event-log. <br />
+	The event-log must be able to export a log-file that can be
+	imported by any event-log.
+    </td>
+  </tr>
+</table>
+</body>
+</html>
