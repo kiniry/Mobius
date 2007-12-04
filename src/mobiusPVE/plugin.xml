@@ -12,7 +12,7 @@
             name="Mobius PVE">
          <property
                name="windowImages"
-               value="icons/alt_window_16.gif,icons/alt_window_32.gif">
+               value="icons/Mobius.gif,icons/Mobius.gif">
          </property>
          <property
                name="appName"
@@ -33,6 +33,10 @@
          <property
                name="preferenceCustomization"
                value="plugin_customization.ini">
+         </property>
+         <property
+               name="aboutImage"
+               value="icons/Mobius.gif">
          </property>
       </product>
    </extension>

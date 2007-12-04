@@ -3,6 +3,9 @@
 
 <product name="Mobius PVE" id="MobiusPVE.product" application="org.eclipse.ui.ide.workbench" useFeatures="true">
 
+   <aboutInfo>
+      <image path="/MobiusPVE/icons/Mobius.gif"/>
+   </aboutInfo>
 
    <configIni use="default"/>
 
@@ -10,7 +13,7 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="icons/alt_window_16.gif" i32="icons/alt_window_32.gif"/>
+   <windowImages i16="/MobiusPVE/icons/Mobius.gif" i32="/MobiusPVE/icons/Mobius.gif"/>
 
    <splash
       startupProgressRect="5,275,445,15"
@@ -25,6 +28,7 @@
 
 
    <vm>
+      <macos type="ee">J2SE-1.5</macos>
    </vm>
 
    <plugins>
