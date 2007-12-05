@@ -240,7 +240,7 @@ BEGIN
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7 : FullState)
-               (a, pv, old_val_arg, w : Val)(md : (wf_Method(program(p))))
+               (a, pv, old_val_arg, w, x : Val)(md : (wf_Method(program(p))))
                (inv : (wf_BoolExpr(program(p)))) :
           n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
           % evaluate the receiver object
@@ -265,7 +265,9 @@ BEGIN
           % update the value of this, the argument and initialize the local vars
           tau4 = update_stack(a, arg(md), pv, lvars(md), tau3) AND
           % execute the body
-          derive(p)(body(md), tau4, Unit, tau5)(m4) AND
+          derive(p)(body(md), tau4, x, tau5)(m4) AND
+          % body returns either Unit or Bottom value
+          x = return_of_stmt(tau5) AND
           % evaluate the result
           IF Void?(res_type(md))
           THEN tau6 = tau5 AND w = Unit AND m5 = 0
