@@ -1,20 +1,21 @@
 class A {
+
     A a = new A();
+}
+
+class InnocentException extends Exception {
 }
 
 class FinallyTest {
 
     public static void main (String [] args) {
+        A a;
 	try {
 	    try { 
-		int i = 0;
-		while (true) {
-		    Object A = new A();
-		    System.out.println (i++);
-		}
+		a = new A();
 	    }
 	    finally {
-		throw new NullPointerException();
+		throw new InnocentException();
 	    }
 	}
 	catch (Exception e) {
@@ -25,8 +26,9 @@ class FinallyTest {
 
     // throws java.lang.StackOverflowError
     public static void main3 (String [] args) {
+	A a = new A();
     }
-	
+    
 
     // print: we leven nog
     public static void main2 (String [] args) {
