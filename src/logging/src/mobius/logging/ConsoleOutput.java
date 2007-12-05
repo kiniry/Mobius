@@ -48,12 +48,12 @@ import java.io.Writer;
  * console via the stderr file descriptor. </p> 
  *
  * @version $Revision: 1.1.1.1 $ $Date: 2002/12/29 12:36:09 $
- * @author Joseph R. Kiniry <kiniry@acm.org>
+ * @author Joseph R. Kiniry (kiniry@acm.org)
  * @concurrency (GUARDED) All methods are synchronized.
  * @see Context
  * @see Debug
  */
-
+//@ non_null_by_default
 public class ConsoleOutput extends AbstractDebugOutputBase 
   implements DebugOutput, Cloneable
 {
@@ -66,45 +66,41 @@ public class ConsoleOutput extends AbstractDebugOutputBase
    *
    * @param the_debug the Debug class associated with this ConsoleOutput.
    */
-  //@ ensures debug == the_debug;
-  public ConsoleOutput(final /*@ non_null @*/ Debug the_debug)
-  {
+  //@ assignable my_debug;
+  //@ ensures my_debug == the_debug;
+  public ConsoleOutput(final /*@ non_null @*/ Debug the_debug) {
     super();
     my_debug = the_debug;
-
-    /** changeonly{debug}; **/
   }
 
   // Inherited Methods
 
-  public synchronized void printMsg(String category, String message)
-  {
+  /** {@inheritDoc} */
+  public synchronized void printMsg(String category, String message) {
     System.err.print("<" + category + ">: " + message);
   }
 
-  public synchronized void printMsg(int level, String message)
-  {
+  /** {@inheritDoc} */
+  public synchronized void printMsg(int level, String message) {
     System.err.print("[" + level + "]: " + message);
   }
 
-  public synchronized void printMsg(String message)
-  {
+  /** {@inheritDoc} */
+  public synchronized void printMsg(String message) {
     System.err.print(message);
   }
 
-  public synchronized Writer getWriter()
-  {
+  /** {@inheritDoc} */
+  public synchronized /*@ non_null @*/ Writer getWriter() {
     return new PrintWriter(System.err, true);
-
-    /** ensure [Result_non_null] (Result != null); **/
   }
 
-  public Object clone() throws CloneNotSupportedException
-  {
+  /** {@inheritDoc} */
+  public Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
-      throw new RuntimeException(cnse.getMessage());
+      throw new RuntimeException(cnse.getMessage(), cnse);
     }
   }
 

@@ -47,7 +47,7 @@ import java.util.Date;
  * <p> Event is a utility base class from which all log/monitoring events
  * can derive or have embedded. </p>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph Kiniry (kiniry@acm.org)
  * @bon Represents a single important event of any kind. The event includes
  * a source, description, importance, and time, among other things.
@@ -62,7 +62,7 @@ import java.util.Date;
  * thus no values tag is necessary in the specification.
  * @design Events cannot be cloned.
  */
-
+//@ non_null_by_default
 public abstract class AbstractEvent extends Object implements Serializable, Cloneable
 {
   // Attributes
@@ -73,7 +73,7 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * @see #getSourceHost
    * @example sourceHost = "joe.kindsoftware.com"
    */
-  private String my_source_host;
+  private final String my_source_host;
 
   /**
    * The source component for this event.
@@ -81,14 +81,14 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * @see #getSourceComponent
    * @example sourceComponent = "Monitoring System, version 0.1.0"
    */
-  private String my_source_component;
+  private final String my_source_component;
 
   /**
    * The date on which this event was created.
    *
    * @see #getCreationDate
    */
-  private Date my_creation_date;
+  private final Date my_creation_date;
 
   /**
    * The text description of this event.
@@ -96,7 +96,7 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * @see #getDescription
    * @example description = "Available memory is beneath 1.0 MB."
    */
-  private String my_description;
+  private final String my_description;
 
   /**
    * The "type" of this event.
@@ -104,7 +104,7 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * @see #getType
    * @example type = "MEMORY_WARNING"
    */
-  private String my_type;
+  private final String my_type;
 
   /**
    * The "level" of this event.
@@ -113,7 +113,7 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * @see DebugConstants
    * @example level = debugConstants.WARNING
    */
-  private int my_level;
+  private final int my_level;
 
   // Constructors
 
@@ -132,40 +132,32 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * time in which this method is called and it returns.
    * @generates A new, valid instance of Event.
    */
-  public AbstractEvent(/*@ non_null @*/ String the_source_host,
-                       /*@ non_null @*/ String the_source_component,
-                       /*@ non_null @*/ String the_description,
-                       /*@ non_null @*/ String the_event_type,
-                       int the_event_level)
-  {
+  //@ ensures \result.getSourceHost().equals(the_source_host);
+  //@ ensures \result.getSourceComponent().equals(the_source_component);
+  //@ ensures \result.getCreationDate() != null;
+  //@ ensures \result.getDescription().equals(the_description);
+  //@ ensures \result.getType().equals(the_event_type);
+  //@ ensures \result.getLevel() == the_event_level;
+  public AbstractEvent(final /*@ non_null @*/ String the_source_host,
+                       final /*@ non_null @*/ String the_source_component,
+                       final /*@ non_null @*/ String the_description,
+                       final /*@ non_null @*/ String the_event_type,
+                       final int the_event_level) {
+    super();
     this.my_source_host = the_source_host;
     this.my_source_component = the_source_component;
     this.my_creation_date = new Date();
     this.my_description = the_description;
     this.my_type = the_event_type;
     this.my_level = the_event_level;
-
-    /** ensure [sourceHost_is_valid] (sourceHost == sourceH);
-               [sourceComponent_is_valid] (sourceComponent == sourceC);
-               [creationDate_is_valid] (creationDate != null);
-               [description_is_valid] (description == desc);
-               [type_is_valid] (type == t); 
-               [level_is_valid] (level == l); **/
-    /* ensure [sourceHost_is_valid] Result.getSourceHost().equals(sourceH);
-               [sourceComponent_is_valid] 
-                 Result.getSourceComponent().equals(sourceC);
-               [creationDate_is_valid] Result.getCreationDate() != null;
-               [description_is_valid] Result.getDescription().equals(desc);
-               [type_is_valid] Result.getType().equals(t); 
-               [level_is_valid] (Result.getLevel() == l); */
   }
-  
+
   // Inherited methods
 
   /**
    * <p> What is a printable representation of this event? </p>
    *
-   * @ensures Result = "[short-date/time-form | sourceHost | 
+   * @ensures Result = "[short-date/time-form | sourceHost |
    *                     sourceComponent] type : level -\n\tDescription"
    * @overrides java.lang.Object.toString()
    * @return a printable representation of the event.
@@ -197,12 +189,8 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    *          being compared have identical values)
    * @overrides java.lang.Object.equals()
    */
-
-  public boolean equals(Object obj)
-  {
-    /** require [obj_non_null] (obj != null); 
-                [obj_is_Event] (obj instanceof Event); **/
-
+  //@ requires (obj instanceof Event);
+  public boolean equals(/*@ non_null @*/ Object obj) {
     if (obj instanceof AbstractEvent) {
       AbstractEvent an_event = (AbstractEvent)obj;
       return (my_source_host.equals(an_event.getSourceHost()) &&
@@ -212,13 +200,12 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
        my_type.equals(an_event.getType()) && my_level == an_event.getLevel());
     } else return false;
   }
-  
-  public Object clone() throws CloneNotSupportedException
-  {
+
+  public Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
-      throw new RuntimeException(cnse.getMessage());
+      throw new RuntimeException(cnse.getMessage(), cnse);
     }
   }
 

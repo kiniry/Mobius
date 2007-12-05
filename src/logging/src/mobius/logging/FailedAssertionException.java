@@ -43,11 +43,11 @@ package mobius.logging;
 /**
  * <p> The runtime exception thrown when an assertion is violated. </p>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Assert
  */
-
+//@ non_null_by_default
 public class FailedAssertionException extends Error
 {
   // Attributes

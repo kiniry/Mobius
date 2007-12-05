@@ -64,8 +64,8 @@ package mobius.logging.testsuite;
  * <p> If TestSuite is not passed any parameters then the default test mode
  * will be executed (currently, ConsoleOutput). </p>
  *
- * @version $Date: 2002/12/29 12:36:19 $
- * @author Joseph R. Kiniry <kiniry@acm.org>
+ * @version alpha-1
+ * @author Joseph R. Kiniry (kiniry@acm.org)
  *
  * @history Tests originally were located in a main() method of the
  * Debug class.  They were moved to this class as of version 0.15 (or
@@ -130,12 +130,12 @@ public class TestSuite
   /**
    * Find first use of a legal test mode string in parameter list and
    * return it.  If no legal string exists and the argument list is
-   * non-null, throw an IllegalArgumentException.  Otherwise, return
+   * non-null, throw an <code>IllegalArgumentException</code>.  Otherwise, return
    * the default test mode string "console".
-   * 
+   *
    * @param argv the arguments passed to this program from the command-line.
+   * @return a string representing which test mode is in operation.
    */
-
   private static String testArgs(String [] argv)
   {
     if (argv == null)
@@ -160,10 +160,10 @@ public class TestSuite
    * and return the value true.  Otherwise, return a false.
    *
    * @param argv the arguments passed to this program from the command-line.
+   * @return true iff we have shown the version information on the console.
    * @postcondition (("--version" in argv) implies show version info)
    * @postcondition (Result == ("--version" in argv))
    */
-
   private static boolean showVersion(String [] argv)
   {
     if (argv == null) 
@@ -173,11 +173,12 @@ public class TestSuite
 
     for (int i = 0; i < argv.length; i++) {
       if (argv[i].indexOf("--version") != -1) {
-        System.out.println("The IDebug test suite.\n");
-        System.out.println("Copyright (c) 1997-2001 Joseph Kiniry");
+        System.out.println("The Mobius Logging test suite.\n");
+        System.out.println("Copyright (c) 1997-2007 Joseph Kiniry");
         System.out.println("Copyright (c) 2000-2001 KindSoftware, LLC");
         System.out.println("Copyright (c) 1997-1999 " +
                            "California Institute of Technology");
+        System.out.println("Copyright (c) 2007 University College Dublin")
         System.out.println("All rights reserved.");
         System.out.println("See accompanying LICENSE files for more " +
                            "information.");

@@ -47,12 +47,12 @@ import java.util.Map;
 /**
  * <p> A collection of shared algorithms for the this package. </p>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Debug
  * @see Context
  */
-
+//@ non_null_by_default
 class Utilities
 {
   // Attributes

@@ -112,7 +112,7 @@ import java.util.Map;
  * </table>
  * </p>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Debug
  * @see Context
@@ -123,7 +123,7 @@ import java.util.Map;
  * @see DefaultDebugConstants
  * @see mobius.logging.examples.FrenchConstants
  */
-
+//@ non_null_by_default
 public interface DebugConstants
 {
   // Public Attributes

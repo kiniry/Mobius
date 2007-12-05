@@ -53,11 +53,11 @@ import javax.servlet.*;
  * <p> The class used to send debugging messages from within Java
  * servlets. </p>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @concurrency (GUARDED) All methods are synchronized.
  */
-
+//@ non_null_by_default
 public class ServletLogOutput extends AbstractDebugOutputBase
   implements DebugOutput, Cloneable
 {
@@ -114,7 +114,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
-      throw new RuntimeException(cnse.getMessage());
+      throw new RuntimeException(cnse.getMessage(), cnse);
     }
   }
 

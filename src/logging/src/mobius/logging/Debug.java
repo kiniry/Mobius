@@ -183,7 +183,7 @@ import java.util.Map;
  * per-thread debugging state and, if not, return the global output
  * interface?
  */
-
+//@ non_null_by_default
 public class Debug implements Cloneable
 {
   // Attributes
@@ -213,14 +213,14 @@ public class Debug implements Cloneable
    */
   protected Map my_thread_map;
 
-  /*@ constraint (my_debug_constants != null) ==>
-    @            (\old(my_debug_constants) == my_debug_constants);
-    @*/
   /**
    * <p> The debugging constants for this class. </p>
    *
    * @modifies SINGLE-ASSIGNMENT
    */
+  /*@ constraint (my_debug_constants != null) ==>
+    @            (\old(my_debug_constants) == my_debug_constants);
+    @*/
   protected DebugConstants my_debug_constants;
 
   /**
@@ -260,24 +260,24 @@ public class Debug implements Cloneable
   //@ constraint (my_assert != null) ==> (\old(my_assert) == my_assert);
   protected Assert my_assert;
 
-  //@ constraint (my_collect != null) ==> (\old(my_collect) == my_collect);
   /**
    * <p> The <code>Collect</code> object associated with this
    * <code>Debug</code> object, when instantiated. </p>
    *
    * @modifies SINGLE-ASSIGNMENT
    */
+  //@ constraint (my_collect != null) ==> (\old(my_collect) == my_collect);
   protected AbstractCollect my_collect;
 
-  /*@ constraint (my_debug_utilities != null) ==>
-    @            (\old(my_debug_utilities) == my_debug_utilities);
-    @*/
   /**
    * <p> Private debugging utility class that encapsulates several helpful
    * algorithms. </p>
    *
    * @modifies SINGLE-ASSIGNMENT
    */
+  /*@ constraint (my_debug_utilities != null) ==>
+    @            (\old(my_debug_utilities) == my_debug_utilities);
+    @*/
   protected Utilities my_debug_utilities;
 
   /**
@@ -328,7 +328,7 @@ public class Debug implements Cloneable
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
-      throw new RuntimeException(cnse.getMessage());
+      throw new RuntimeException(cnse.getMessage(), cnse);
     }
   }
 
@@ -406,11 +406,10 @@ public class Debug implements Cloneable
    * @return a boolean indicating if any debugging is turned on.
    */
 
-  public synchronized boolean isOn()
-  {
+  public synchronized boolean isOn() {
     return my_is_on;
   }
- 
+
   /**
    * <p> Returns a boolean indicating whether any debugging facilities are
    * turned on for a particular thread. </p>
@@ -429,10 +428,9 @@ public class Debug implements Cloneable
     // for this particular thread.
     if (my_thread_map.containsKey(thread)) {
       // Get the object that describes the per-thread debugging state.
-      Context debugContext = 
-        (Context)(my_thread_map.get(thread));
+      final Context the_debug_context = (Context)(my_thread_map.get(thread));
 
-      return debugContext.isOn();
+      return the_debug_context.isOn();
     }
     else return false;
   }
@@ -445,12 +443,10 @@ public class Debug implements Cloneable
    * @return a boolean indicating if any debugging is turned on.
    * @review kiniry Are the isOff() methods necessary at all?
    */
-
-  public synchronized boolean isOff()
-  {
+  public synchronized boolean isOff() {
     return (!isOn());
   }
-  
+
 
   /**
    * <p> Returns a boolean indicating whether any debugging facilities are

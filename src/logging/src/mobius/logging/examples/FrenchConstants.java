@@ -43,20 +43,20 @@ package mobius.logging.examples;
 import java.util.Map;
 import mobius.logging.DebugConstants;
 
-/** 
+/**
  * <p> FrenchConstants is an interface that collects the various constants
  * of the debugging package including debug level ranges, standard
  * debugging messages, etc.  It is a subtype of DebugConstants and is used
  * as an example of how to modify the semantics (customize) the debug
  * package. </p>
  *
- * @version $Date: 2002/12/29 12:36:18 $
- * @author Joseph R. Kiniry <kiniry@acm.org>
+ * @version alpha-1
+ * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see DebugConstants
  *
  * @note An example extension to the IDebug package.
  */
-
+//@ non_null_by_default
 public interface FrenchConstants extends DebugConstants
 {
   // Public Attributes
@@ -68,22 +68,20 @@ public interface FrenchConstants extends DebugConstants
    * <EM>incremental</EM> I.e. A debug level of k is <EM>lower
    * than/less important than</EM> a debug level of k+1.
    */
-
   int LEVEL_MIN = 1;
 
   /**
-   * The maximum debug level.*/
-
+   * The maximum debug level.
+   */
   int LEVEL_MAX = 100;
 
   /**
    * Various messages that can be localized or otherwise customized.
    */
-
   String ERROR_STRING = "l'error";
   // "affirmation échouée";
   String FAILED_ASSERTION_STRING = "affirmation echouee";
-  
+
   /**
    * @design The default categories are as follows:
    * <table align="abscenter" border="1" cellspacing="0" cellpadding="0">

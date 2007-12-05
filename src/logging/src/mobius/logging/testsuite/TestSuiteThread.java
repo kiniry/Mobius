@@ -45,8 +45,8 @@ import mobius.logging.*;
 /**
  * <p> TestSuite is the black-box testsuite for the Debug class. </p>
  *
- * @version $Date: 2002/12/29 12:36:20 $
- * @author Joseph R. Kiniry <kiniry@acm.org>
+ * @version alpha-1
+ * @author Joseph R. Kiniry (kiniry@acm.org)
  *
  * @note The actual code of the IDebug test suite.
  */
@@ -66,32 +66,28 @@ public class TestSuiteThread extends Thread
    * @param the_test_mode the test mode for this test suite thread.  Exactly one
    * of the following strings: "console", "servletlog", "window", "writer".
    */
-
-  TestSuiteThread(String the_test_mode)
-  {
-    /** require [tm_valid] (tm.equals("console") || tm.equals("servletlog")
-         || tm.equals("window") || tm.equals("writer")); **/
-
+  //@ requires (tm.equals("console") || tm.equals("servletlog") || tm.equals("window") || tm.equals("writer"));
+  //@ ensures testMode == tm;
+  TestSuiteThread(final String the_test_mode) {
+    super();
     this.testMode = the_test_mode;
-
-    /** ensure [testMode_is_valid] (testMode == tm); **/
   }
-  
+
   // Inherited Methods
   // Public Methods
-  
+
   public void run()
   {
     Debug debug = new Debug();
-    
+
     System.out.println("TESTING IDEBUG PACKAGE.\n");
     System.out.println("Using test mode " + testMode + ".\n");
-    
+
     System.out.println("Class-global testing\n" +
                        "====================");
-    
+
     // Collect all the necessary references to the debugging modules.
-    
+
     // Assert assert = debug.getAssert();
     DebugConstants debugConstants = debug.getDebugConstants();
 

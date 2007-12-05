@@ -59,12 +59,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * whatsoever</strong>.  Regardless of the current debug context, etc.,
  * this class will keep track of all statistics. </p>
  *
- * @version $Revision: 1.1.1.1 $ $Date: 2002/12/29 12:36:18 $
- * @author Joseph R. Kiniry <kiniry@acm.org>
+ * @version alpha-1
+ * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Statistic
- * @see AbstractCollect 
+ * @see AbstractCollect
  */
-
+//@ non_null_by_default
 public class SimpleCollect extends AbstractCollect implements Cloneable
 {
   // Attributes
@@ -72,8 +72,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
   /**
    * <p> A map used to hold the data being collected. </p>
    */
-
-  private /*@ non_null @*/ Map data;
+  private final /*@ non_null @*/ Map my_data;
 
   // Constructors
 
@@ -82,183 +81,179 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    */
   public SimpleCollect()
   {
-    data = new ConcurrentHashMap();
+    super();
+    my_data = new ConcurrentHashMap();
   }
 
   // Inherited methods
 
-  public Object clone() throws CloneNotSupportedException
-  {
+  /** {@inheritDoc} */
+  public Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
-      throw new RuntimeException(cnse.getMessage());
+      throw new RuntimeException(cnse.getMessage(), cnse);
     }
   }
 
   /**
    * <p> Register a statistic with the collector. </p>
    *
-   * @param statistic the statistic to register.
+   * @param the_statistic the statistic to register.
    */
-
-  public void register(/*@ non_null @*/ Statistic statistic)
-  {
-    super.register(statistic);
-    reset(statistic);
-
-    /** ensure [statistic_registered] isRegistered(statistic); **/
+  //@ ensures isRegistered(the_statistic); 
+  public void register(final /*@ non_null @*/ Statistic the_statistic) {
+    super.register(the_statistic);
+    reset(the_statistic);
   }
 
   /**
    * <p> Unregister a statistic with the collector. </p>
    *
-   * @param statistic the statistic to unregister.
+   * @param the_statistic the statistic to unregister.
    */
-
-  public void unregister(Statistic statistic)
-  {
-    super.unregister(statistic);
-    data.remove(statistic);
-
-    /** ensure [statistic_registered] !isRegistered(statistic); **/
+  //@ ensures !isRegistered(statistic);
+  public void unregister(final Statistic the_statistic) {
+    super.unregister(the_statistic);
+    my_data.remove(the_statistic);
   }
 
   /**
    * <p> What is the current value for specific statistic? </p>
    *
-   * @param statistic the statistic being modified.
+   * @param the_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
-
-  public double currentValue(/*@ non_null @*/ Statistic statistic)
-  {
-    return ((Double)data.get(statistic)).doubleValue();
+  public double currentValue(final /*@ non_null @*/ Statistic the_statistic) {
+    return ((Double)my_data.get(the_statistic)).doubleValue();
   }
 
   /**
    * <p> Report on a particular statistic. </p>
    *
-   * @param statistic the statistic being reported on.
+   * @param the_statistic the statistic being reported on.
    * @return a simple <code>String</code> textual report.
    */
 
-  public Object report(Statistic statistic)
+  public Object report(final /*@ non_null @*/ Statistic the_statistic)
   {
-    return "[" + statistic.getID() + "]" + 
-     (((Double)data.get(statistic)).doubleValue() * statistic.getScale()) +
-      " " + statistic.getUnits();
+    return "[" + the_statistic.getID() + "]" +
+      (((Double)my_data.get(the_statistic)).doubleValue() * the_statistic.getScale()) +
+      " " + the_statistic.getUnits();
   }
 
   /**
    * <p> Report on all statistics. </p>
    *
-   * @return a report on all statistics as a concatented
+   * @return a report on all statistics as a concatenated
    * <code>String</code> textual report.
    * @see #report(Statistic)
    */
 
   public Object reportAll()
   {
-    String fullReport = "";
-    Iterator keys = data.keySet().iterator();
+    String result_full_report = "";
+    final Iterator keys = my_data.keySet().iterator();
 
     while (keys.hasNext()) {
-      fullReport = fullReport + report((Statistic)keys.next()) + "\n";
+      result_full_report = result_full_report + report((Statistic)keys.next()) + "\n";
     }
-    return fullReport;
+    return result_full_report;
   }
 
   /**
    * <p> Increment a statistic by a specified value. </p>
    *
-   * @param statistic the statistic being modified.
-   * @param value the amount to increment the statistic.
+   * @param the_statistic the statistic being modified.
+   * @param the_value the amount to increment the statistic.
    * @return the old value of the statistic.
    */
 
-  public double increment(Statistic statistic, double value)
+  public double increment(final /*@ non_null @*/ Statistic the_statistic,
+                          final double the_value)
   {
-    double oldValue = currentValue(statistic);
+    final double oldValue = currentValue(the_statistic);
 
-    data.put(statistic, new Double(oldValue + value));
+    my_data.put(the_statistic, new Double(oldValue + the_value));
     return oldValue;
   }
 
   /**
    * <p> Increment a statistic by the default value. </p>
    *
-   * @param statistic the statistic being modified.
+   * @param the_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
 
-  public double increment(Statistic statistic)
+  public double increment(final /*@ non_null @*/ Statistic the_statistic)
   {
-    double oldValue = currentValue(statistic);
+    final double oldValue = currentValue(the_statistic);
 
-    data.put(statistic, new Double(oldValue + statistic.getIncrement()));
+    my_data.put(the_statistic, new Double(oldValue + the_statistic.getIncrement()));
     return oldValue;
   }
 
   /**
    * <p> Decrement a statistic by a specified value. </p>
    *
-   * @param statistic the statistic being modified.
-   * @param value the amount to decrement the statistic.
+   * @param the_statistic the statistic being modified.
+   * @param the_value the amount to decrement the statistic.
    * @return the old value of the statistic.
    */
 
-  public double decrement(Statistic statistic, double value)
+  public double decrement(final /*@ non_null @*/ Statistic the_statistic,
+                          final double the_value)
   {
-    double oldValue = currentValue(statistic);
+    final double oldValue = currentValue(the_statistic);
 
-    data.put(statistic, new Double(oldValue - value));
+    my_data.put(the_statistic, new Double(oldValue - the_value));
     return oldValue;
   }
 
   /**
    * <p> Decrement a statistic by the default value. </p>
    *
-   * @param statistic the statistic being modified.
+   * @param the_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
 
-  public double decrement(Statistic statistic)
+  public double decrement(final /*@ non_null @*/ Statistic the_statistic)
   {
-    double oldValue = currentValue(statistic);
+    final double oldValue = currentValue(the_statistic);
 
-    data.put(statistic, new Double(oldValue + statistic.getDecrement()));
+    my_data.put(the_statistic, new Double(oldValue + the_statistic.getDecrement()));
     return oldValue;
   }
 
   /**
    * <p> Reset a statistic to the default start value. </p>
    *
-   * @param statistic the statistic to reset.
+   * @param the_statistic the statistic to reset.
    * @return the old value of the statistic.
    */
 
-  public double reset(Statistic statistic)
+  public double reset(final /*@ non_null @*/ Statistic the_statistic)
   {
-    double oldValue = currentValue(statistic);
+    final double oldValue = currentValue(the_statistic);
 
-    data.put(statistic, new Double(statistic.getStart()));
+    my_data.put(the_statistic, new Double(the_statistic.getStart()));
     return oldValue;
   }
 
   /**
    * <p> Set a statistic to a specific value. </p>
    *
-   * @param statistic the statistic being modified.
-   * @param value the new value of the statistic.
+   * @param the_statistic the statistic being modified.
+   * @param the_value the new value of the statistic.
    * @return the old value of the statistic.
    */
 
-  public double set(Statistic statistic, double value)
+  public double set(final /*@ non_null @*/ Statistic the_statistic,
+                    final double the_value)
   {
-    double oldValue = currentValue(statistic);
+    final double oldValue = currentValue(the_statistic);
 
-    data.put(statistic, new Double(value));
+    my_data.put(the_statistic, new Double(the_value));
     return oldValue;
   }
 

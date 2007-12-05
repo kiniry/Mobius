@@ -73,12 +73,12 @@ import java.util.Map;
  * herein). </li>
  * </ul>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Statistic
  * @see mobius.logging.examples.SimpleCollect
  */
-
+//@ non_null_by_default
 public abstract class AbstractCollect
 {
   // Attributes
@@ -87,8 +87,7 @@ public abstract class AbstractCollect
    * <p> A <code>Map</code> used to track statistics
    * definitions. </p>
    */
-
-  private Map my_statistics;
+  private /*@ non_null @*/ Map my_statistics;
 
   /**
    * <p> The <code>Debug</code> object associated with this
@@ -96,8 +95,8 @@ public abstract class AbstractCollect
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-
-  private Debug my_debug;
+  //@ constraint (my_debug != null) ==> (my_debug == \old(my_debug));
+  private /*@ non_null @*/ Debug my_debug;
 
   // Inherited Methods
   // Constructors
@@ -105,16 +104,12 @@ public abstract class AbstractCollect
   /**
    * <p> Construct a new <code>Collect</code> class. </p>
    */
-  public AbstractCollect()
-  {
+  public AbstractCollect() {
     this.my_statistics = new ConcurrentHashMap();
   }
 
   // Public Methods
 
-  /*@ private normal_behavior
-    @   ensures \result <==> (a_debug.collect == this);
-    @*/
   /**
    * <p> Checks a debug instance to make sure its <code>collect</code>
    * attribute references this <code>Collect</code> object. </p>
@@ -125,15 +120,11 @@ public abstract class AbstractCollect
    * @return true iff <code>a_debug</code>'s collect field references
    * <code>this</code>.
    */
-
-  public boolean checkDebugCollectRef(Debug a_debug)
-  {
+  //@ ensures \result <==> (a_debug.collect == this);
+  public boolean checkDebugCollectRef(Debug a_debug) {
     return (a_debug.getCollect() == this);
   }
 
-  //@ requires checkDebugCollectRef(a_debug);
-  //@ assignable my_debug;
-  //@ ensures my_debug == a_debug;
   /**
    * <p> Set the debug instance associated with this collect instance.
    * This method <strong>must</strong> be called with the correct debug
@@ -144,23 +135,23 @@ public abstract class AbstractCollect
    * @param a_debug the debug object associated with this <code>Collect</code>
    * object.
    */
-
-  public final void setDebug(final Debug a_debug)
-  {
+  //@ requires checkDebugCollectRef(a_debug);
+  //@ assignable my_debug;
+  //@ ensures my_debug == a_debug;
+  public final void setDebug(final Debug a_debug) {
     my_debug = a_debug;
   }
 
-  //@ requires checkStatisticID(a_statistic);
-  //@ assignable my_statistics;
-  //@ ensures isRegistered(a_statistic);
   /**
    * <p> Register a statistic with the collector. </p>
    *
    * @concurrency CONCURRENT
    * @param a_statistic the statistic to register.
    */
-  public void register(final Statistic a_statistic)
-  {
+  //@ requires checkStatisticID(a_statistic);
+  //@ assignable my_statistics;
+  //@ ensures isRegistered(a_statistic);
+  public void register(final Statistic a_statistic) {
     my_statistics.put(a_statistic, a_statistic);
   }
 
@@ -174,10 +165,7 @@ public abstract class AbstractCollect
    * @return a boolean indicating if the value of the statistic
    * <code>a_statistic</code> has changed at all.
    */
-  public boolean checkStatisticID(Statistic a_statistic)
-  {
-    /** require [statistic_non_null] (statistic != null); **/
-
+  public boolean checkStatisticID(/*@ non_null @*/ Statistic a_statistic) {
     final Object the_old_value = my_statistics.get(a_statistic);
     if (the_old_value != null) {
       // make sure value hasn't changed.
@@ -186,20 +174,18 @@ public abstract class AbstractCollect
     return true;
   }
 
-  //@ assignable my_statistics;
-  //@ ensures !isRegistered(a_statistic);
   /**
    * <p> Unregister a statistic with the collector. </p>
    *
    * @concurrency CONCURRENT
    * @param a_statistic the statistic to unregister.
    */
-  public void unregister(final Statistic a_statistic)
-  {
+  //@ assignable my_statistics;
+  //@ ensures !isRegistered(a_statistic);
+  public void unregister(final Statistic a_statistic) {
     my_statistics.remove(a_statistic);
   }
 
-  //@ ensures \result <==> my_statistics.get(a_statistic) == a_statistic;
   /**
    * <p> Check to see if a statistic is registered yet. </p>
    *
@@ -209,8 +195,8 @@ public abstract class AbstractCollect
    * some point in time in the execution trace of this collect instance.
    * @modifies QUERY
    */
-  public boolean isRegistered(Statistic a_statistic)
-  {
+  //@ ensures \result <==> my_statistics.get(a_statistic) == a_statistic;
+  public boolean isRegistered(Statistic a_statistic) {
     return (my_statistics.get(a_statistic) == a_statistic);
   }
 
@@ -304,9 +290,7 @@ public abstract class AbstractCollect
    * @see Context
    * @modifies QUERY
    */
-  protected final /*@ pure @*/
-    boolean isValidCategory(final String the_category)
-  {
+  protected final /*@ pure @*/ boolean isValidCategory(final String the_category) {
     return my_debug.my_debug_utilities.categoryTest(the_category);
   }
 
@@ -320,12 +304,10 @@ public abstract class AbstractCollect
    * invoking the method, etc.)
    * @see Context
    */
-
-  protected final boolean isValidLevel(int level)
-  {
+  protected final boolean isValidLevel(int level) {
     return my_debug.my_debug_utilities.levelTest(level);
   }
-  
+
   // Package Methods
   // Private Methods
 
@@ -335,5 +317,5 @@ public abstract class AbstractCollect
  * Local Variables:
  * Mode: Java
  * fill-column: 75
- * End: 
+ * End:
  */

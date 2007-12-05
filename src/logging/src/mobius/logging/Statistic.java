@@ -47,7 +47,7 @@ import java.io.Serializable;
  * necessarily globally unique), a description, units, and other useful
  * information that is represented in this class. </P>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @bon This class represents a statistic that can be monitored in the
  * monitoring system. Each statistic has its own unique ID (node-unique, not
@@ -65,7 +65,7 @@ import java.io.Serializable;
  * @bon All static properties must be specified at, and cannot be changed
  * after, construction time.
  */
-
+//@ non_null_by_default
 public class Statistic implements Serializable
 {
   // Attributes
@@ -79,7 +79,7 @@ public class Statistic implements Serializable
    *
    * @see Statistic
    */
-  private static int my_current_ID;
+  private static volatile int my_current_ID;
 
   /**
    * <p> The unique ID for this statistic. </p>
@@ -87,7 +87,7 @@ public class Statistic implements Serializable
    * @see #getID
    * @example uniqueID = 42
    */
-  private int my_unique_ID;
+  private final int my_unique_ID;
 
   /**
    * <p> Units of statistic. </p>
@@ -95,7 +95,7 @@ public class Statistic implements Serializable
    * @see #getUnits
    * @example units = "messages/second"
    */
-  private String my_units;
+  private final String my_units;
 
   /**
    * <p> Scaling factor of values. </p>
@@ -108,7 +108,7 @@ public class Statistic implements Serializable
    * whatever thing is reporting is moving/delivering/deleting/whatever
    * 4,200 messages/second.
    */
-  private double my_scale;
+  private final double my_scale;
 
   /**
    * <p> Default starting value for statistic. </p>
@@ -116,7 +116,7 @@ public class Statistic implements Serializable
    * @see #getStart
    * @see AbstractCollect#reset
    */
-  private double my_default_start_value;
+  private final double my_default_start_value;
 
   /**
    * <p> Default increment value for statistic. </p>
@@ -132,7 +132,7 @@ public class Statistic implements Serializable
    * @see #getDecrement
    * @see AbstractCollect#decrement(Statistic)
    */
-  private double my_default_decrement;
+  private final double my_default_decrement;
 
   // Constructors
 
@@ -162,8 +162,7 @@ public class Statistic implements Serializable
    */
   public /*@ pure @*/ Statistic(final String the_units,
                                 final double the_scale, final float the_start,
-                                final float the_increment, final float the_decrement)
-  {
+                                final float the_increment, final float the_decrement) {
     my_unique_ID = my_current_ID;
     my_current_ID = my_current_ID + 1;
     this.my_units = the_units;
@@ -180,11 +179,19 @@ public class Statistic implements Serializable
    * @modifies QUERY
    * @overrides java.lang.Object.hashCode
    */
-  public /*@ pure @*/ int hashCode()
-  {
+  public /*@ pure @*/ int hashCode() {
     return my_unique_ID;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    // todo Auto-generated method stub
+    return super.equals(obj);
+  }
+  
   // Public Methods
 
   //@ ensures \result == my_unique_ID;

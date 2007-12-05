@@ -64,7 +64,7 @@ import javax.swing.JTextArea;
  * <p> The primary class used to send messages to a window created by
  * the IDebug framework. </p>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @concurrency (GUARDED) All methods are synchronized.
  * @see Context
@@ -72,7 +72,7 @@ import javax.swing.JTextArea;
  *
  * @todo Can we actually provide a valid Writer for getWriter()?
  */
-
+//@ non_null_by_default
 public class WindowOutput extends AbstractDebugOutputBase
   implements DebugOutput, Cloneable
 {
@@ -143,7 +143,7 @@ public class WindowOutput extends AbstractDebugOutputBase
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
-      throw new RuntimeException(cnse.getMessage());
+      throw new RuntimeException(cnse.getMessage(), cnse);
     }
   }
 
@@ -164,7 +164,7 @@ public class WindowOutput extends AbstractDebugOutputBase
 
     // Create the text area to write into and a surrounding scrollpane so
     // that the user can look back at text that has scrolled by.
-    my_text_area = new JTextArea(30, 80); // NOPMD
+    my_text_area = new JTextArea(30, 80);
     my_text_area.setEditable(false);
     my_text_area.setLineWrap(true);
     my_text_area.setWrapStyleWord(true);

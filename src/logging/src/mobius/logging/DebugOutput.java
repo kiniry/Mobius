@@ -47,10 +47,10 @@ import java.io.Writer;
  * send debugging messages to various types of devices must implement. </p>
  *
  * @version $Revision: 1.1.1.1 $ $Date: 2002/12/29 12:36:13 $
- * @author Joseph R. Kiniry <kiniry@acm.org>
+ * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see AbstractDebugOutputBase
  */
-
+//@ non_null_by_default
 public interface DebugOutput
 {
   // Attributes
@@ -61,150 +61,135 @@ public interface DebugOutput
   /**
    * <p> Print out the debugging message, no questions asked. </p>
    *
-   * @param category is the category of this message.
-   * @param message is the debugging message to print.
+   * @param the_category is the category of this message.
+   * @param the_message is the debugging message to print.
    */
-
-  void printMsg(String category, String message);
+  void printMsg(String the_category, String the_message);
 
   /**
    * <p> Print out the debugging message, no questions asked. </p>
    *
-   * @returns a boolean indicating if the message was printed.
-   * @param level The debugging level of this message.
-   * @param message The debugging message to print.
+   * @param the_level The debugging level of this message.
+   * @param the_message The debugging message to print.
    */
-
-  void printMsg(int level, String message);
+  void printMsg(int the_level, String the_message);
 
   /**
    * <p> Print out the debugging message, no questions asked. </p>
    *
-   * @param message The debugging message to print.
+   * @param the_message The debugging message to print.
    */
-
-  void printMsg(String message);
+  void printMsg(String the_message);
 
   /**
    * <p> Print out a debugging message if the debugging context
-   * warrents. </p> 
+   * warrants. </p>
    *
-   * @returns a boolean indicating if the message was printed.
-   * @param level The debugging level of this message.
-   * @param message The debugging message to print.
+   * @return a boolean indicating if the message was printed.
+   * @param the_level The debugging level of this message.
+   * @param the_message The debugging message to print.
    */
-
-  boolean print(int level, String message);
+  boolean print(int the_level, String the_message);
 
   /**
-   * <p> Print out an object if the debugging context warrents. </p>
+   * <p> Print out an object if the debugging context warrants. </p>
    *
-   * @returns a boolean indicating if the message was printed.
-   * @param level The debugging level of this message.
-   * @param object The object to print.
+   * @return a boolean indicating if the message was printed.
+   * @param the_level The debugging level of this message.
+   * @param the_object The object to print.
    */
-
-  boolean print(int level, Object object);
+  boolean print(int the_level, Object the_object);
 
   /**
    * <p> Print out a debugging message if the debugging context
-   * warrents. </p> 
+   * warrants. </p>
    *
-   * @returns a boolean indicating if the message was printed.
-   * @param category The category of this message.
-   * @param message The debugging message to print.
+   * @return a boolean indicating if the message was printed.
+   * @param the_category The category of this message.
+   * @param the_message The debugging message to print.
    */
-
-  boolean print(String category, String message);
-  
-  /**
-   * <p> Print out an object if the debugging context warrents. </p>
-   *
-   * @returns a boolean indicating if the message was printed.
-   * @param category The category of this message.
-   * @param object The object to print.
-   */
-
-  boolean print(String category, Object object);
+  boolean print(String the_category, String the_message);
 
   /**
-   * <p> Print out an object if the debugging context warrents. </p>
+   * <p> Print out an object if the debugging context warrants. </p>
    *
-   * @returns a boolean indicating if the message was printed.
-   * @param category The category of this message.
-   * @param object The object to print.
+   * @return a boolean indicating if the message was printed.
+   * @param the_category The category of this message.
+   * @param the_object The object to print.
    */
+  boolean print(String the_category, Object the_object);
 
-  boolean println(String category, Object object);
+  /**
+   * <p> Print out an object if the debugging context warrants. </p>
+   *
+   * @return a boolean indicating if the message was printed.
+   * @param the_category The category of this message.
+   * @param the_object The object to print.
+   */
+  boolean println(String the_category, Object the_object);
 
   /**
    * <p> Print out a debugging message if the debugging context
-   * warrents. </p> 
+   * warrants. </p>
    *
-   * @returns a boolean indicating if the message was printed.
-   * @param category The category of this message.
-   * @param message The debugging message to print.
+   * @return a boolean indicating if the message was printed.
+   * @param the_category The category of this message.
+   * @param the_message The debugging message to print.
    */
-
-  boolean println(String category, String message);
+  boolean println(String the_category, String the_message);
 
   /**
-   * <p> Print out an object if the debugging context warrents. </p>
+   * <p> Print out an object if the debugging context warrants. </p>
    *
-   * @returns a boolean indicating if the message was printed.
-   * @param level The debugging level of this message.
-   * @param object The object to print.
+   * @return a boolean indicating if the message was printed.
+   * @param the_level The debugging level of this message.
+   * @param the_object The object to print.
    */
-
-  boolean println(int level, Object object);
+  boolean println(int the_level, Object the_object);
 
   /**
    * <p> Print out a debugging message if the debugging context
-   * warrents. </p>
+   * warrants. </p>
    *
-   * @returns a boolean indicating if the message was printed.
-   * @param level The debugging level of this message.
-   * @param message The debugging message to print.
+   * @return a boolean indicating if the message was printed.
+   * @param the_level The debugging level of this message.
+   * @param the_message The debugging message to print.
    */
-
-  boolean println(int level, String message);
+  boolean println(int the_level, String the_message);
 
   /**
    * <p> Returns a <code>Writer</code> for this output interface if one is
-   * available. </p> 
+   * available. </p>
    *
    * @return a <code>Writer</code> for this output interface if one is
    * available.
    * @see java.io.Writer
    */
-
   Writer getWriter();
 
   /**
    * <p> Tests to see if the current debug context is interested in a given
    * category. </p>
    *
-   * @param category the category to inspect.
+   * @param the_category the category to inspect.
    * @return a boolean indicating if the category in question is valid at
    * this time for this context (i.e. debugging framework state, thread,
    * class invoking the method, etc.)
    * @see Context
    */
-
-  boolean isValidCategory(String category);
+  boolean isValidCategory(String the_category);
 
   /**
    * <p> Tests to see if the current debug context is interested in a given
    * level. </p>
    *
-   * @param level the level to inspect.
+   * @param the_level the level to inspect.
    * @return a boolean indicating if the level in question is valid at this
    * time for this context (i.e. debugging framework state, thread, class
    * invoking the method, etc.)
    * @see Context
    */
-
-  boolean isValidLevel(int level);
+  boolean isValidLevel(int the_level);
 
   // Protected Methods
   // Package Methods

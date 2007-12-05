@@ -52,8 +52,8 @@ import java.util.Map;
  * <p> Each thread within a program is either in a debugging state or it is
  * not.  To signal that it is in the debugging state, that thread should do
  * the following (perhaps in an initDebug() method):
- * 
- * <ol> 
+ *
+ * <ol>
  * <li> Create a new Context object for that thread.  E.g.  <code>Context
  * debugContext = new Context();</code> All of the following method calls
  * are applied to this object, unless otherwise noted. </li>
@@ -83,7 +83,7 @@ import java.util.Map;
  * runtime system knows the threads context. </p>
  *
  * @version $Revision: 1.1.1.1 $ $Date: 2002/12/29 12:36:10 $
- * @author Joseph R. Kiniry <kiniry@acm.org>
+ * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Debug
  * @see DebugConstants
  *
@@ -93,7 +93,7 @@ import java.util.Map;
  * clone() method is part of the IDebug context design and is not
  * implemented for changeonly semantics.
  */
-
+//@ non_null_by_default
 public class Context implements Cloneable, Serializable
 {
   // Attributes
@@ -121,7 +121,7 @@ public class Context implements Cloneable, Serializable
    * context.  A key of this map is the <code>String</code>
    * representation of a class (<code>Class.getName()</code>), while a data
    * value is a <code>Boolean</code> indicating if a the given class has
-   * debugging enabled. </li> 
+   * debugging enabled. </li>
    * </ol>
    * </p>
    *
@@ -129,7 +129,7 @@ public class Context implements Cloneable, Serializable
    * per-thread group maps of the <code>Debug</code> class, keyed on
    * references to the thread or thread group, respectively. </p>
    */
-  
+
   /**
    * A default UID.
    * @review kiniry Put in real UIDs?
@@ -139,16 +139,14 @@ public class Context implements Cloneable, Serializable
   /**
    * @serial The debugging constants for this class.
    */
-  
   private DebugConstants my_debug_constants = null;
-  
+
   /**
    * @serial A flag indicating if debugging is enabled for this
    * context.  If (isOn == false), all Debug calls like assert() and
    * print(), but for the query and state change functions (like
    * isOn(), turnOn(), etc.), are short-circuited and do nothing.
    */
-  
   private boolean my_is_on;
 
   /**
@@ -160,27 +158,23 @@ public class Context implements Cloneable, Serializable
    * this behavior by subtyping DebugConstants and installing the new
    * constant during the construction of a Context.
    */
-
   private int my_level;
 
   /**
    * @serial A map that binds category keys (Strings) to levels
    * (Integers).
    */
-
-  private Map my_category_map;
+  private /*@ non_null @*/ Map my_category_map;
 
   /**
    * @serial A map that binds class names (Strings) to enable flags
    * (Booleans).
    */
-
-  private Map my_class_map;
+  private /*@ non_null @*/ Map my_class_map;
 
   /**
    * The thread that owns this context.
    */
-
   private transient Thread my_thread;
 
   /**
@@ -188,12 +182,8 @@ public class Context implements Cloneable, Serializable
    * All debugging messages that come from the owning thread will use this
    * output interface. </p>
    */
-
   private transient DebugOutput my_debug_output_interface;
 
-  //@ assignable my_is_on, my_level;
-  //@ assignable my_category_map, my_class_map;
-  //@ assignable my_debug_constants, my_debug_output_interface, my_thread;
   /**
    * <p> The standard constructor.  The thread that is constructing the
    * context is the "owning thread".  All calls to this context will be
@@ -211,10 +201,21 @@ public class Context implements Cloneable, Serializable
    * @param a_debug_output an implementation of <code>DebugOutput</code> that defines
    * the semantics of debugging output.
    */
-
-  public Context(/*@ non_null @*/ DebugConstants some_debug_constants,
-                 /*@ non_null @*/ DebugOutput a_debug_output)
-  {
+  //@ assignable my_is_on, my_level;
+  //@ assignable my_category_map, my_class_map;
+  //@ assignable my_debug_constants, my_debug_output_interface, my_thread;
+  // @todo kiniry put fields in objectState and use datagroup in frame axiom
+  //@ ensures my_is_on == false;
+  //@ ensures my_level == 0;
+  //@ ensures my_category_map != null;
+  //@ ensures my_class_map != null;
+  //@ ensures my_debug_constants != null;
+  //@ ensures my_debug_output_interface != null;
+  //@ ensures my_thread != null;
+  // @todo kiniry Change these postconditions into an initially assertion.
+  public Context(final /*@ non_null @*/ DebugConstants some_debug_constants,
+                 final /*@ non_null @*/ DebugOutput a_debug_output) {
+    super();
     my_is_on = false;
     my_level = 0;
     my_category_map = new ConcurrentHashMap();
@@ -224,15 +225,6 @@ public class Context implements Cloneable, Serializable
     my_debug_constants.initCategories(my_category_map);
     my_debug_output_interface = a_debug_output;
     my_thread = Thread.currentThread();
-
-    /** ensure [isOn_initialized] (isOn == false);
-               [level_initialized] (level == 0);
-               [categoryMap_initialized] (categoryMap != null);
-               [classMap_initialized] (classMap != null);
-               [debugConstants_initialized] (debugConstants != null);
-               [debugOutputInterface_initialized] 
-                 (debugOutputInterface != null);
-               [thread_initialized] (thread != null); **/
   }
 
   /**
@@ -245,22 +237,18 @@ public class Context implements Cloneable, Serializable
    * @return the clone of the Context.
    * @throws CloneNotSupportedException never.
    */
-
-  public Object clone() throws CloneNotSupportedException
-  {
+  public /*@ non_null @*/ Object clone() throws CloneNotSupportedException {
     Context contextClone = null;
     try {
       contextClone = (Context)super.clone();
     } catch (CloneNotSupportedException cnse) {
-      throw new RuntimeException(cnse.getMessage());
+      throw new RuntimeException(cnse.getMessage(), cnse);
     }
     contextClone.my_thread = Thread.currentThread();
     contextClone.my_debug_output_interface = my_debug_output_interface;
 
     return contextClone;
-
-    /** ensure [Result_non_null] (Result != null); **/
-  } 
+  }
 
   /**
    * @return the thread that owns this context.
@@ -268,14 +256,11 @@ public class Context implements Cloneable, Serializable
    * @concurrency CONCURRENT
    * @modifies QUERY
    */
-  public /*@ pure @*/ Thread getThread()
-  {
+  //@ ensures \result == my_thread;
+  public /*@ pure @*/ Thread getThread() {
     return my_thread;
-
-    /** ensure [Result_is_correct] (Result == thread); **/
   }
 
-  //@ assignable my_is_on;
   /**
    * <p> Turns on debugging facilities for the owner thread.  Note that if
    * you do not <code>turnOff()</code> debugging for this thread before it
@@ -284,14 +269,12 @@ public class Context implements Cloneable, Serializable
    *
    * @concurrency GUARDED
    */
-  public synchronized void turnOn()
-  {
+  //@ assignable my_is_on;
+  //@ ensures my_is_on;
+  public synchronized void turnOn() {
     my_is_on = true;
-
-    /** ensure [isOn_is_true] (isOn == true); **/
   }
 
-  //@ assignable my_is_on;
   /**
    * <p> Turns off debugging facilities for the owner thread.  Note that if
    * you do not <code>turnOff</code> debugging for this thread before it
@@ -302,12 +285,10 @@ public class Context implements Cloneable, Serializable
    * @review Create a garbage collection thread for Debug to clean up dead
    * threads?
    */
-
-  public synchronized void turnOff()
-  {
+  //@ assignable my_is_on;
+  //@ ensures !my_is_on;
+  public synchronized void turnOff() {
     my_is_on = false;
-
-    /** ensure [isOn_is_false] (isOn == false); **/
   }
 
   /**
@@ -315,9 +296,8 @@ public class Context implements Cloneable, Serializable
    * @modifies QUERY
    * @return a boolean indicating if any debugging is turned on.
    */
-
-  public /*@ pure @*/ synchronized boolean isOn()
-  {
+  //@ ensures \result == my_is_on;
+  public /*@ pure @*/ synchronized boolean isOn() {
     return my_is_on;
   }
 
@@ -335,13 +315,11 @@ public class Context implements Cloneable, Serializable
    * the database.  A false indicates either the category was already in
    * the database at a different level or the parameters were invalid.
    */
-
-  public synchronized boolean addCategory(String category, int level)
-  {
-    /** require [category_non_null] (category != null);
-                [category_length_positive] (category.length() > 0);
-                [level_in_valid_range] validLevel(level); **/
-
+  //@ requires category.length() > 0;
+  //@ requires validLevel(level);
+  //@ ensures containsCategory(category);
+  public synchronized boolean addCategory(/*@ non_null @*/ String category,
+                                          int level) {
     // See if an entry for the passed category exists.
     if (my_category_map.containsKey(category)) {
       return (((Integer)(my_category_map.get(category))).intValue() == level);
@@ -351,11 +329,8 @@ public class Context implements Cloneable, Serializable
     my_category_map.put(category, Integer.valueOf(level));
 
     return true;
-
-    /** ensure [category_added] containsCategory(category); **/
   }
 
-  //@ assignable my_category_map;
   /**
    * <p> Removes a category from the database of legal debugging categories
    * for the owner thread. </p>
@@ -366,19 +341,15 @@ public class Context implements Cloneable, Serializable
    * removed from the database.  A false indicates that the parameters
    * were invalid.
    */
-
-  public synchronized boolean removeCategory(String a_category)
-  {
-    /** require [category_non_null] (category != null);
-                [category_length_positive] (category.length() > 0); **/
-
+  //@ requires category.length() > 0;
+  //@ assignable my_category_map;
+  //@ ensures !containsCategory(category);
+  public synchronized boolean removeCategory(/*@ non_null @*/ String a_category) {
     // If is in the map, remove it.
     if (my_category_map.containsKey(a_category)) {
       my_category_map.remove(a_category);
       return true;
     } else return false;
-
-    /** ensure [category_removed] !containsCategory(category); **/
   }
 
   /**
@@ -388,11 +359,8 @@ public class Context implements Cloneable, Serializable
    * @return a boolean indicating if a category is in the class-global
    * category database.
    */
-  public synchronized /*@ pure @*/ boolean containsCategory(String a_category)
-  {
-    /** require [category_non_null] (category != null);
-                [category_length_positive] (category.length() > 0); **/
-
+  //@ requires category.length() > 0;
+  public synchronized /*@ pure @*/ boolean containsCategory(/*@ non_null @*/ String a_category) {
     return (my_category_map.containsKey(a_category));
   }
 
@@ -403,12 +371,9 @@ public class Context implements Cloneable, Serializable
    * @return the level of the category provided it is in the category
    * database of this context.
    */
-  public synchronized /*@ pure @*/ int getCategoryLevel(String a_category)
-  {
-    /** require [category_non_null] (category != null);
-                [category_length_positive] (category.length() > 0); 
-                [contains_category] containsCategory(category); **/
-
+  //@ requires category.length() > 0;
+  //@ requires containsCategory(category);
+  public synchronized /*@ pure @*/ int getCategoryLevel(/*@ non_null @*/ String a_category) {
     return ((Integer)(my_category_map.get(a_category))).intValue();
   }
 
@@ -421,8 +386,7 @@ public class Context implements Cloneable, Serializable
    * are no categories defined in the database as of yet.
    * @see Map#elements
    */
-  public synchronized /*@ pure @*/ Iterator listCategories()
-  {
+  public synchronized /*@ pure @*/ Iterator listCategories() {
     return (my_category_map.values().iterator());
   }
 
@@ -434,11 +398,8 @@ public class Context implements Cloneable, Serializable
    * @concurrency GUARDED
    * @param className the name of the class to check.
    */
-  public synchronized /*@ pure @*/ boolean containsClass(String className)
-  {
-    /** require [className_non_null] (className != null);
-                [className_length_positive] (className.length() > 0); **/
-
+  //@ requires className.length() > 0;
+  public synchronized /*@ pure @*/ boolean containsClass(final /*@ non_null @*/ String className) {
     return my_class_map.containsKey(className);
   }
 
@@ -450,14 +411,10 @@ public class Context implements Cloneable, Serializable
    * @concurrency GUARDED
    * @param classRef the class to check.
    */
-  public synchronized /*@ pure @*/ boolean containsClass(Class classRef)
-  {
-    /** require [classRef_non_null] (classRef != null); **/
-
+  public synchronized /*@ pure @*/ boolean containsClass(final /*@ non_null @*/ Class classRef) {
     return containsClass(classRef.getName());
   }
 
-  //@ assignable my_class_map;
   /**
    * <p> Adds a class to this Context's database of classes that have
    * debugging enabled. </p>
@@ -466,15 +423,11 @@ public class Context implements Cloneable, Serializable
    * @param a_class_reference the class to add to the global table of classes
    * that have debugging enabled.
    */
-  public synchronized void addClass(Class a_class_reference)
-  {
-    /** require [classRef_non_null] (classRef != null); **/
-
-    Utilities.addClassToMap(my_class_map, 
-                                  a_class_reference.getName());
+  //@ assignable my_class_map;
+  public synchronized void addClass(final /*@ non_null @*/ Class a_class_reference) {
+    Utilities.addClassToMap(my_class_map, a_class_reference.getName());
   }
 
-  //@ assignable my_class_map;
   /**
    * <p> Adds a class to this Context's database of classes that have
    * debugging enabled. Note that a class of "*" means that all classes
@@ -486,17 +439,12 @@ public class Context implements Cloneable, Serializable
    * @concurrency GUARDED
    * @param a_class_name the name of the class to add.
    */
-  
-  public synchronized void addClass(String a_class_name)
-  {
-    /** require [className_non_null] (className != null);
-                [className_length_positive] (className.length() > 0); **/
-
-    Utilities.addClassToMap(my_class_map, 
-                                  a_class_name);
+  //@ requires className.length() > 0;
+  //@ assignable my_class_map;
+  public synchronized void addClass(final /*@ non_null @*/ String a_class_name) {
+    Utilities.addClassToMap(my_class_map, a_class_name);
   }
 
-  //@ assignable my_class_map;
   /**
    * <p> Removes a class from this Context's database of classes that have
    * debugging enabled. </p>
@@ -505,16 +453,11 @@ public class Context implements Cloneable, Serializable
    * @param a_class_reference the class to remove from this Context's table of
    * classes that have debugging enabled.
    */
-
-  public synchronized void removeClass(Class a_class_reference)
-  {
-    /** require [classRef_non_null] (classRef != null); **/
-
-    Utilities.removeClassFromMap(my_class_map,
-                                       a_class_reference.getName());
+  //@ assignable my_class_map;
+  public synchronized void removeClass(final /*@ non_null @*/ Class a_class_reference) {
+    Utilities.removeClassFromMap(my_class_map, a_class_reference.getName());
   }
 
-  //@ assignable my_class_map;
   /**
    * <p> Removes a class from this Context's database of classes that have
    * debugging enabled.  Note that a class of "*" means that all classes
@@ -525,13 +468,10 @@ public class Context implements Cloneable, Serializable
    * @param a_class_name the class to remove from this Context's table of
    * classes that have debugging enabled.
    */
-  public synchronized void removeClass(String a_class_name)
-  {
-    /** require [className_non_null] (className != null);
-                [className_length_positive] (className.length() > 0); **/
-
-    Utilities.removeClassFromMap(my_class_map, 
-                                       a_class_name);
+  //@ requires className.length() > 0;
+  //@ assignable my_class_map;
+  public synchronized void removeClass(/*@ non_null @*/ String a_class_name) {
+    Utilities.removeClassFromMap(my_class_map, a_class_name);
   }
 
   /**
@@ -546,25 +486,21 @@ public class Context implements Cloneable, Serializable
    * are no enabled classes.
    * @see Map#elements
    */
-  public synchronized /*@ pure @*/ Iterator listClasses()
-  {
+  public synchronized /*@ pure @*/ Iterator listClasses() {
     return (my_class_map.values().iterator());
   }
 
-  //@ assignable my_level;
   /**
    * <p> Set a new debugging level for the owning thread. </p>
    *
    * @concurrency GUARDED
    * @param the_new_level the new debugging level.
    */
-  public synchronized void setLevel(int the_new_level)
-  {
-    /** require [valid_level] validLevel(l); **/
-
+  //@ requires validLevel(the_new_level);
+  //@ assignable my_level;
+  //@ ensures getLevel() == the_new_level;
+  public synchronized void setLevel(int the_new_level) {
     my_level = the_new_level;
-
-    /** ensure [level_set] (getLevel() == l); **/
   }
 
   /**
@@ -572,8 +508,8 @@ public class Context implements Cloneable, Serializable
    * @concurrency GUARDED
    * @return the current debugging level for the owning thread.
    */
-  public synchronized /*@ pure @*/ int getLevel()
-  {
+  //@ ensures validLevel(\result);
+  public synchronized /*@ pure @*/ int getLevel() {
     return my_level;
   }
 
@@ -582,8 +518,7 @@ public class Context implements Cloneable, Serializable
    * @modifies QUERY
    * @return the <code>DebugOutput</code> for the owning thread.
    */
-  public /*@ pure @*/ DebugOutput getOutputInterface()
-  {
+  public /*@ pure @*/ DebugOutput getOutputInterface() {
     return my_debug_output_interface;
   }
 
@@ -594,8 +529,7 @@ public class Context implements Cloneable, Serializable
    * @param a_level the level to check.
    */
 
-  public /*@ pure @*/ boolean validLevel(int a_level)
-  {
+  public /*@ pure @*/ boolean validLevel(int a_level) {
     return ((a_level >= DebugConstants.LEVEL_MIN) &&
             (a_level <= DebugConstants.LEVEL_MAX));
   }
@@ -603,8 +537,6 @@ public class Context implements Cloneable, Serializable
   // Protected Methods
   // Package Methods
   // Private Methods
-
-  /** invariant [level_in_valid_range] validLevel(getLevel()); **/
 
 } // end of class Context
 

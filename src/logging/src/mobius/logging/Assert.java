@@ -45,23 +45,23 @@ package mobius.logging;
 /**
  * <p> The core interface to making assertions. </p>
  *
- * @version alpha-0
+ * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Debug
  * @see Context
  */
-
+//@ non_null_by_default
 public class Assert implements Cloneable
 {
   // Attributes
 
-  //@ constraint (my_debug != null) ==> (\old(my_debug) == my_debug);
   /**
    * <p> The <code>Debug</code> object associated with this
    * <code>Assert</code> object. </p>
    *
    * @modifies SINGLE-ASSIGNMENT
    */
+  //@ constraint (my_debug != null) ==> (\old(my_debug) == my_debug);
   private Debug my_debug;
 
   // Constructors
@@ -149,10 +149,7 @@ public class Assert implements Cloneable
    */
   public final synchronized /*@ pure @*/ void assertTrue(final boolean the_assertion,
                                                          final String the_assertion_text,
-                                                         final Object the_assertion_message)
-  {
-    /** require [message_is_non_null] (message != null); **/
-
+                                                         /*@ non_null @*/ final Object the_assertion_message) {
     if (!the_assertion) {
       final String output = my_debug.getDebugConstants().FAILED_ASSERTION_STRING +
         " `" + the_assertion_text + "': " + the_assertion_message.toString() + "\n";
@@ -172,7 +169,7 @@ public class Assert implements Cloneable
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
-      throw new RuntimeException(cnse.getMessage());
+      throw new RuntimeException(cnse.getMessage(), cnse);
     }
   }
 

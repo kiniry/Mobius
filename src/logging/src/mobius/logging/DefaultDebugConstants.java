@@ -47,9 +47,9 @@ import java.util.Map;
  * framework. </p>
  *
  * @version $Revision: 1.1.1.1 $ $Date: 2002/12/29 12:36:14 $
- * @author Joseph R. Kiniry <kiniry@acm.org>
+ * @author Joseph R. Kiniry (kiniry@acm.org)
  */
-
+//@ non_null_by_default
 public class DefaultDebugConstants implements DebugConstants
 {
   // Attributes
