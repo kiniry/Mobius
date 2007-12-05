@@ -277,7 +277,9 @@ functions are instantiated as identity relations, \emph{i.e.,}
 
 \beta(P, a, \tau_1, \tau_2) & = & 
 (\etp{a, \tau_1}{\ttt, \tau_1} \wedge \tau_1 = \tau_2) \vee\\
-&& (\etp{a, \tau_1}{\fff, \tau_1} \wedge \tau_2 = \tau_1(\ex := \JMLExc))
+&& (\etp{a, \tau_1}{\fff, \tau_1} \wedge \tau_2 = \tau_1(\ex :=
+\JMLExc))\vee\\
+&& (\etp{a, \tau_1}{\perp, \tau_2} \wedge \ex(\tau_2) \not= \perp)\\
 %\gammanorm(P, \md, \tau_1, \tau_2) & = & \\
 %\gammaexc(P, \md, \tau_1, \tau_2) & = & 
 \smallskip\\
