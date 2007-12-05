@@ -38,9 +38,10 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
   }
 
   /**
-   * The method used to create Document structure when
+   * The method used to create {@link IDocument} structure when
    * the editor is initialized. An additional listener is installed.
    * It is related to contribution class that allow displaying control label.
+   * TODO write more doc
    *
    * @param an_element TODO
    * @return TODO

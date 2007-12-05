@@ -61,7 +61,7 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
 
   /**
    * This method saves the editor content in the file associated with it
-   * and then creates new input from the JavaClass structure in BCEL.
+   * and then creates new input from the {@link JavaClass} structure in BCEL.
    * Finally replaces content of the editor window with the newly generated
    * input. The general idea is that the current modifications are stored
    * in a file and then retrieved back to the editor to obtain a nicely

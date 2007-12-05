@@ -166,21 +166,21 @@ public class BytecodeEditor extends TextEditor {
   /**
    * This method is run automatically while standard Eclipse
    * 'save' action is executed. Additionally to the usual
-   * editor saving, it also updates structure JavaClass in BCEL
-   * and binary files to allow Bytecode modifications being seen
+   * editor saving, it also updates structure {@link JavaClass} in BCEL
+   * and binary files to allow bytecode modifications being seen
    * while executing. The original binary file is saved with the name
    * with '_' at the beginning in case later rebuilding (if there has
    * not existed such yet, the binary file is simply rewritten, otherwise
    * it is saved unchanged).
    *
-   * @param a_progress_monitor TODO
+   * @param a_progress_monitor not used
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
     super.doSave(a_progress_monitor);
-    final IPath active = ((FileEditorInput)getEditorInput()).getFile().
+    final IPath edited_path = ((FileEditorInput)getEditorInput()).getFile().
                                                              getFullPath();
-    final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(active);
+    final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(edited_path);
     IFile a_fileFrom;
     try {
       a_fileFrom = UmbraHelper.getClassFileFileFor(
@@ -290,16 +290,6 @@ public class BytecodeEditor extends TextEditor {
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
     final JavaClass jc = strin.loadClass(clname);
     strin.removeClass(jc);
-    //controlPrint(jc);
-//    ClassGen cg = new ClassGen(jc);
-//    String clname2 = cg.getClassName();
-//    ConstantPoolGen cpg = cg.getConstantPool();
-//    Method[] methods = jc.getMethods();
-//    byte[][] names = new byte[methods.length][256];
-//    byte[][] code = new byte[methods.length][4096];
-//    int[] namesLen = new int[methods.length];
-//    int[] codeLen = new int[methods.length];
-//    int off = 0;
     BCClass bcc;
     try {
       bcc = new BCClass(jc);
@@ -324,11 +314,10 @@ public class BytecodeEditor extends TextEditor {
       try {
         stream.close();
       } catch (IOException e) {
-        //This cannot happen.
+        //This should not happen.
         UmbraPlugin.messagelog("IMPOSSIBLE: Stream close generated exception " +
                                "in BytecodeEditor.refreshBytecode");
       }
-
     } catch (ReadAttributeException e1) {
       e1.printStackTrace();
     }

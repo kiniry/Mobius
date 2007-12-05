@@ -55,9 +55,10 @@ public class BytecodeContribution extends ControlContribution {
   private BytecodeController my_bcc;
 
   /**
-   * TODO.
+   * This flag is <code>true</code> when the internal structures that connect
+   * the text .btc file with the BCEL representation are initialised.
    */
-  private boolean my_ready_flag;
+  private boolean my_ready_flag; //@ initially false;
 
   /**
    * TODO.
@@ -100,7 +101,8 @@ public class BytecodeContribution extends ControlContribution {
    * in the Umbra plugin bytecode contributor.
    *
    * TODO what's my_mod_table_flag
-   * @param a_doc TODO
+   *
+   * @param a_doc a document for which the internal structures are initialised
    */
   private void init(final IDocument a_doc) {
     my_bcc = new BytecodeController();
@@ -172,8 +174,10 @@ public class BytecodeContribution extends ControlContribution {
         my_end_line = an_event.fDocument.getLineOfOffset(
               an_event.getOffset() + an_event.getLength());
       } catch (BadLocationException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        //This should not happen as the offsets from the event are generated
+        //based on the current document
+        UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
+                               "differ from the ones in the event (1)");
       }
       System.out.println("about returned.");
     }
@@ -205,14 +209,18 @@ public class BytecodeContribution extends ControlContribution {
         if (an_event == my_current_event) {
           stop_rem = my_end_line;
         } else {
+          //TODO maybe this should be an error?
           throw new RuntimeException("documentChanged event does not match " +
                                      "documentAboutToBeChanged event");
         }
         my_current_event = null;
       } catch (BadLocationException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        //This should not happen as the offsets from the event are generated
+        //based on the current document
+        UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
+                               "differ from the ones in the event (2)");
       }
+
       if (BMLParsing.umbraEnabled) {
         my_bcc.removeIncorrects(start_rem, stop_rem);
         my_bcc.addAllLines(an_event.fDocument, start_rem, stop_rem, stop);
