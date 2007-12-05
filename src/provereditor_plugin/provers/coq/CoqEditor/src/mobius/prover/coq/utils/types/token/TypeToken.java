@@ -1,8 +1,9 @@
-package fr.inria.everest.coq.editor.utils.types.token;
+package mobius.prover.coq.utils.types.token;
+
+import mobius.prover.coq.utils.types.token.data.ATokenData;
 
 import org.eclipse.jface.text.rules.IToken;
 
-import fr.inria.everest.coq.editor.utils.types.token.data.ATokenData;
 
 public class TypeToken implements IToken {
   

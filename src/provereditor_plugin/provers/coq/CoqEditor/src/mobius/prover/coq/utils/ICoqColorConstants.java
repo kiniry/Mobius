@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.editor.utils;
+package mobius.prover.coq.utils;
 
 import mobius.prover.gui.editor.BasicTextAttribute;
 import mobius.prover.gui.editor.IColorConstants;

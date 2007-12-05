@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.editor.utils;
+package mobius.prover.coq.utils;
 
 import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IToken;

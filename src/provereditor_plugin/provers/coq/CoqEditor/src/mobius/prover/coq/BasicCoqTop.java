@@ -1,8 +1,9 @@
 /*
  * Created on Mar 3, 2005
  */
-package fr.inria.everest.coq.editor;
+package mobius.prover.coq;
 
+import mobius.prover.coq.utils.ProofHandler;
 import mobius.prover.exec.AProverException;
 import mobius.prover.exec.ITopLevel;
 import mobius.prover.plugins.IProverTopLevel;
@@ -11,7 +12,6 @@ import mobius.prover.plugins.exceptions.SyntaxErrorException;
 
 import org.eclipse.jface.text.IDocument;
 
-import fr.inria.everest.coq.editor.utils.ProofHandler;
 
 
 

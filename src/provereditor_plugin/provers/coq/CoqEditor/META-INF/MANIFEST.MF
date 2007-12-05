@@ -3,9 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CoqEditor Plug-in
 Bundle-SymbolicName: coq.editor; singleton:=true
 Bundle-Version: 0.9.4
-Bundle-Activator: fr.inria.everest.coq.editor.CoqEditorPlugin
+Bundle-Activator: mobius.prover.coq.CoqEditorPlugin
 Bundle-Vendor: Inria - Everest Team
-Bundle-Localization: plugin
 Require-Bundle: prover.editor,
  org.eclipse.ui,
  org.eclipse.jdt.ui,
@@ -16,4 +15,4 @@ Require-Bundle: prover.editor,
  org.eclipse.core.resources,
  org.eclipse.ui.ide
 Eclipse-LazyStart: true
-Export-Package: fr.inria.everest.coq.editor
+Export-Package: mobius.prover.coq

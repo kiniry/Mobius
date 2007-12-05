@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.editor;
+package mobius.prover.coq;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.editor.utils.types;
+package mobius.prover.coq.utils.types;
 
 
 import mobius.prover.gui.editor.ProverEditor;

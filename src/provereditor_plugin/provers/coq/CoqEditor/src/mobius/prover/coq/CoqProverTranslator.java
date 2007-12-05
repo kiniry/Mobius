@@ -1,8 +1,10 @@
-package fr.inria.everest.coq.editor;
+package mobius.prover.coq;
 
 import java.io.InputStream;
 import java.util.regex.Pattern;
 
+import mobius.prover.coq.utils.CoqConstructFinder;
+import mobius.prover.coq.utils.ICoqColorConstants;
 import mobius.prover.gui.editor.FixedSizeWordRule;
 import mobius.prover.gui.editor.ProverEditor;
 import mobius.prover.gui.editor.detector.ExprDetector;
@@ -19,8 +21,6 @@ import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
-import fr.inria.everest.coq.editor.utils.CoqConstructFinder;
-import fr.inria.everest.coq.editor.utils.ICoqColorConstants;
 
 public class CoqProverTranslator extends AProverTranslator implements ICoqColorConstants {
   

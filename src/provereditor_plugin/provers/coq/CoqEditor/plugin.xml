@@ -19,8 +19,8 @@
       <language
             extension=".v"
             name="Coq"
-            translator="fr.inria.everest.coq.editor.CoqProverTranslator"
-            provertoplevel="fr.inria.everest.coq.editor.BasicCoqTop"/>
+            translator="mobius.prover.coq.CoqProverTranslator"
+            provertoplevel="mobius.prover.coq.BasicCoqTop"/>
    </extension>
 
 </plugin>

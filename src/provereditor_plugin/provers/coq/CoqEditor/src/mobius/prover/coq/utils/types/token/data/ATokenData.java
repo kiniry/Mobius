@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.editor.utils.types.token.data;
+package mobius.prover.coq.utils.types.token.data;
 
 import mobius.prover.gui.editor.BasicRuleScanner;
 import mobius.prover.gui.editor.ProverEditor;

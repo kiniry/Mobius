@@ -1,7 +1,13 @@
-package fr.inria.everest.coq.editor.utils;
+package mobius.prover.coq.utils;
 
 import java.util.LinkedList;
 
+import mobius.prover.coq.utils.types.CoqType;
+import mobius.prover.coq.utils.types.token.TypeToken;
+import mobius.prover.coq.utils.types.token.data.ATokenData;
+import mobius.prover.coq.utils.types.token.data.ComplexBegin;
+import mobius.prover.coq.utils.types.token.data.ComplexEnd;
+import mobius.prover.coq.utils.types.token.data.Simple;
 import mobius.prover.gui.editor.BasicRuleScanner;
 import mobius.prover.gui.editor.ProverEditor;
 import mobius.prover.gui.editor.outline.types.ProverType;
@@ -12,12 +18,6 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 
-import fr.inria.everest.coq.editor.utils.types.CoqType;
-import fr.inria.everest.coq.editor.utils.types.token.TypeToken;
-import fr.inria.everest.coq.editor.utils.types.token.data.ATokenData;
-import fr.inria.everest.coq.editor.utils.types.token.data.ComplexBegin;
-import fr.inria.everest.coq.editor.utils.types.token.data.ComplexEnd;
-import fr.inria.everest.coq.editor.utils.types.token.data.Simple;
 
 public class CoqConstructFinder implements ICoqColorConstants {
   private int fOffset;

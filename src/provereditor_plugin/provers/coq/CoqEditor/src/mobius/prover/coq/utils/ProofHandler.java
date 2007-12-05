@@ -1,13 +1,13 @@
-package fr.inria.everest.coq.editor.utils;
+package mobius.prover.coq.utils;
 
 import java.util.Stack;
 
+import mobius.prover.coq.BasicCoqTop;
 import mobius.prover.exec.ITopLevel;
 import mobius.prover.plugins.IProverTopLevel;
 
 import org.eclipse.jface.text.IDocument;
 
-import fr.inria.everest.coq.editor.BasicCoqTop;
 
 public class ProofHandler {
   /** the name of the proof as written in the prompt. */

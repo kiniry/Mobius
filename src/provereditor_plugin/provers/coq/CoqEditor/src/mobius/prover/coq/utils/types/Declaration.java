@@ -1,9 +1,9 @@
-package fr.inria.everest.coq.editor.utils.types;
+package mobius.prover.coq.utils.types;
 
 import org.eclipse.swt.graphics.Image;
 
+import mobius.prover.coq.CoqProverTranslator;
 import mobius.prover.gui.editor.ProverEditor;
-import fr.inria.everest.coq.editor.CoqProverTranslator;
 
 public class Declaration extends CoqType {
 

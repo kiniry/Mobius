@@ -1,8 +1,8 @@
-package fr.inria.everest.coq.editor.utils.types.token.data;
+package mobius.prover.coq.utils.types.token.data;
 
+import mobius.prover.coq.utils.types.Declaration;
 import mobius.prover.gui.editor.ProverEditor;
 import mobius.prover.gui.editor.outline.types.ProverType;
-import fr.inria.everest.coq.editor.utils.types.Declaration;
 
 
 public class Simple extends ATokenData {
