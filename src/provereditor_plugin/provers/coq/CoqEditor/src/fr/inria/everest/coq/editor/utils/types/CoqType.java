@@ -8,21 +8,34 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class CoqType extends ProverType {
-  String fName;
-  protected Image fImg;
-
+  /** the name of the node. */
+  private String fName;
+  /** the image used for the node. */
+  private Image fImg;
   
-  public CoqType(ProverEditor editor, String name) {
+  public CoqType(final ProverEditor editor) {
+    this(editor, null);
+  }
+  
+  public CoqType(final ProverEditor editor, 
+                 final String name) {
     super(editor);
     fName = name;
   }
   
+  /** {@inheritDoc} */
+  @Override
   public String toString() {
     return fName;
   }
   
-
-  public void setEnd(int end) {
+  protected void setName(final String name) {
+    fName = name;
+  }
+  protected void setImage(final Image img) {
+    fImg = img;
+  }
+  public void setEnd(final int end) {
     setLength(end - getOffset());
   }
 

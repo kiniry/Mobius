@@ -75,7 +75,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
   }
 
   private IRule [] initFileRules() {
-    WordRule wr = new WordRule(new WordDetector(), def);
+    final WordRule wr = new WordRule(new WordDetector(), def);
     for (int i = 0; i < vernac.length; i++) {
       wr.addWord(vernac[i], tag);
     }
@@ -224,13 +224,15 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
   }
 
   
-  public Image createImage(String path) {
-    InputStream is = this.getClass().getClassLoader().getResourceAsStream(path);
+  public Image createImage(final String path) {
+    final InputStream is = this.getClass().getClassLoader().getResourceAsStream(path);
     final Image img = new Image(PlatformUI.getWorkbench().getDisplay(), is);
     return img;
   }
   
-  public ProverType getFileOutline(ProverEditor ed, IDocument doc, ProverType root) {
+  public ProverType getFileOutline(final ProverEditor ed, 
+                                   final IDocument doc, 
+                                   final ProverType root) {
 
     if (imgs == null) {
       final Image [] tab = {
@@ -255,7 +257,8 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
   }
   
 
-  
+  /** {@inheritDoc} */
+  @Override
   public Pattern [][] getTagPatterns() {
     return pats;
   }

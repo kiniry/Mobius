@@ -4,29 +4,49 @@ import mobius.prover.gui.editor.ProverEditor;
 import fr.inria.everest.coq.editor.CoqProverTranslator;
 
 
-
-public class Module extends CoqType{
+/**
+ * A node representing a module or a module type.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
+public class Module extends CoqType {
   
-
+  /** the name of the module. */
   private String fShortName;
 
-  public Module(ProverEditor editor, String name, int start) {
+  /**
+   * Construct a node representing a module or a module type.
+   * @param editor the current prover editor
+   * @param name the name of the module of the form: 
+   * <code>Module ModuleName</code> or
+   * <code>Module Type ModuleName</code> 
+   * @param start the line where the module has been discovered
+   */
+  public Module(final ProverEditor editor, 
+                final String name, 
+                final int start) {
     super(editor, name.trim());  
 
-    String [] tab = toString().split(" ");
+    final String [] tab = toString().split(" ");
     fShortName = tab[1];
-    if(tab[1].equals("Type")) {
+    if (tab[1].equals("Type")) {
       fShortName = tab[2];
     }
-    fImg = CoqProverTranslator.imgs[0];
+    setImage(CoqProverTranslator.imgs[0]);
     setOffset(start);
   }
 
-
+  /**
+   * Returns the module name.
+   * @return a valid module name
+   */
   public String getShortName() {
     return fShortName;
   }
-
+  
+  
+  /** {@inheritDoc} */
+  @Override
   public String toString() {
     return super.toString();
   }

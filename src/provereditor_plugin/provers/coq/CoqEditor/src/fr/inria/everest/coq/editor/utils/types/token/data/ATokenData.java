@@ -10,10 +10,11 @@ import org.eclipse.jface.text.IDocument;
 
 public abstract class ATokenData {
 
-  String fText;
+  protected String fText;
   protected int fOffset;
   protected int fLen;
-  protected IDocument fDoc;
+  
+  private IDocument fDoc;
   
   public ATokenData spawn(final IDocument doc, final BasicRuleScanner scanner) {
     ATokenData td;
@@ -37,6 +38,8 @@ public abstract class ATokenData {
     return null;
   }
   public abstract ProverType parse(final ProverEditor editor);
+  
+  
   public int getEnd() {
     return fOffset + fLen;
   }
