@@ -1,0 +1,220 @@
+\documentclass[]{llncs}
+\title{Run-time verification does not find all errors}
+\author{M. Huisman}
+\institute{INRIA Sophia Antipolis-Mediterran\'ee, France}
+
+\def \bsl       {\symbol{92}}
+\def \unsc      {\symbol{95}}
+
+\pagestyle{plain}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Introduction}
+
+It is common folklore that runtime verification does not miss any
+errors. Provided that one has a correct specification of the intended
+program behaviour, if runtime verification does not signal an error in
+the execution, the execution did not violate the specification. And
+thus, if one would be able to use runtime verification on all possible
+executions of  the program, this would give a 100 \% guarantee that
+the program respects its specification. And only because in general it is
+impossible to consider all possible execution paths of a program, it
+makes sense to apply static verification and other static analysis
+methods.
+
+However, this point of view is actually to optimistic: because of a
+subtle interplay between the programming language semantics, and the
+implementation of the runtime verifier, it is possible to miss
+specification violations - even though they could have been detected
+using static verification.
+
+This paper illustrates an example where such an interplay happens, and
+runtime checking might miss errors. We concentrate on applications
+written in Java, annotated with JML~\cite{LeavensBR99}. The JML
+language comes together with a runtime checker, that compiles the
+specification into runtime checks, in such a way that appropriate
+errors are thrown if the annotations are violated. However, since
+the way to signal specification violations is encoded in the
+programming language itself, the JML errors are treated as any
+other kind of exception. And thus, in particular, it is possible to
+catch them, and return to a ``normal'' program state again. Moreover,
+because of the subtle semantics of Java for \texttt{try-catch-finally}
+statements, it is even possible to overwrite a JML error with another
+exception, and thus to catch it without explicitly
+mentioning it in the program text.
+
+This paper emerged as a unexpected difficulty in a larger project on
+inlining security monitors (in collaboration with A. Tamalet,
+University of Nijmegen, Netherlands). Ultimate goal of the project is
+to develop a static verification method that can make monitoring of an
+application unnecessary. The translation is defined in two steps:
+first the monitor is translated into appropriate annotations of the
+methods directly involved in the security property that the monitor
+encodes, next the annotations are propagated, so that a verification
+condition generator can generate provable proof
+obligations. Correctness of the procedure is also proven in two steps:
+(1) a monitored program only gets stuck, if runtime checking of the
+basic annotations would raise an exception; (2) propagation
+annotations would never result in an incorrect program being
+accepted. One of the initial assumptions was that any incorrect
+application would always be rejected by runtime annotation
+checking. However, when formalising the correctness proof, we realised
+that this assumption was actually incorrect.
+
+This paper does not intend to say that runtime verification is not
+useful. Instead, its intention is to share an observation, and to make
+people aware of a possible subtle interaction between application and
+runtime verification mechanism. Below, we will first discuss an
+example where the runtime annotation violations are not signalled to
+the user. Next, we give an explanation for this behaviour, based on
+the Java language semantics. Then, Section~\ref{SecExploiting}
+discusses how this issue can be exploited to create possible security
+threats, while Section~\ref{SecAvoiding} discusses which conditions
+should be imposed on the program to avoid this problem. Finally,
+Section~\ref{SecConcl} concludes and gives some general observations.
+
+\section{Example}\label{SecExample}
+
+This section illustrates how a program can be manipulated, so that it
+does not signal specification violations. Suppose that we have a
+method \texttt{decrypt}, whose first argument is a \texttt{key}, and
+its second a special \texttt{access\unsc code} that determines
+whether one is allowed to do the decryption. Thus, the access code
+should be in a particular range; for simplicity let us assume that it
+should be below 10. In JML, this method could be specified as follows.
+
+\begin{verbatim}
+//@ requires access_code < 10;
+public void decrypt(int [] key, int access_code){
+}
+\end{verbatim}
+
+
+Now suppose that somebody that does not know the proper access code
+still wants to attempt to decrypt a message. A naive attempt could be
+to just guess an access code (say 36), and to call the decrypt message anyway:
+
+\begin{verbatim}
+public void sneakyMethod() {
+  int r = 36; 
+  decrypt(key, r);                                           
+}
+\end{verbatim}
+
+However, any attempt with a wrong guess, would be signalled by the
+runtime checker:
+\begin{verbatim}
+> jmlrac TryCatchExample
+Exception in thread "main" 
+org.jmlspecs.jmlrac.runtime.JMLInternalPreconditionError: 
+by method TryCatch.decrypt
+        at TryCatch.sneakyMethod(TryCatchExample.java:432)
+        at TryCatch.internal$cheat(TryCatchExample.java:11)
+        at TryCatch.cheat(TryCatchExample.java:292)
+        at TryCatchExample.internal$main(TryCatchExample.java:1101)
+        at TryCatchExample.main(TryCatchExample.java:1373)
+\end{verbatim}
+
+A possible way to hide this would be to put the code inside a
+try-block, and to try to catch the JML error.
+
+\begin{verbatim}
+public void sneakyMethod() {
+  try{ 
+    int r = 36; 
+    decrypt(key, r);                                           
+  }           
+  catch (Error e){
+  }
+}
+\end{verbatim}
+Runtime checking would not signal any error anymore, even though one
+attempts to call \texttt{decrypt} with illegal arguments. However, an
+attentive code inspector might get suspicious by the attempt to catch
+an \texttt{Error}, since ``the class \texttt{Error} and its subclasses
+are exceptions from which ordinary programs are not ordinarily
+expected to recover.''~\cite[\S 11.5]{GoslingJSB05}. (JML errors are a
+subclass of the class \texttt{Error}, which inherits directly from
+\texttt{Throwable}. Therefore, errors can be distinguished from
+exceptions, from which recovery might be possible.
+
+A smarter way to hide this attempt is by using a finally block to
+override the possible JML error.
+\begin{verbatim}
+    public void sneakyMethod() throws InnocentException {
+	try{ 
+	    int r = 36; 
+	    decrypt(key, r);                                           
+	    }           
+	finally{
+	    throw new InnocentException();
+	}
+    }
+\end{verbatim}
+In this case, the program will throw an
+\texttt{InnocentException}~--~or terminate normally if this
+\texttt{InnocentException} is caught by the method that triggered
+\texttt{sneakyMethod}. With this program code, manual code inspection
+might not be straightforward (remember that the code for the
+\texttt{decrypt} method and the invocation of \texttt{sneakyMethod}
+might be stored in different classes). Naturally, tools for static
+validation of JML annotations (such as ESC/Java~\cite{CokK04} or
+Jack~\cite{BartheBCGHLPR07:FMCO}) would detect the attempt to call
+\texttt{decrypt} with illegal arguments.
+
+\section{A Semantics-based Explanation}\label{SecExplanation}
+
+This failure of runtime checking with \texttt{jmlrac} can be explained
+directly on the basis of the Java semantics. The Java language
+specification gives a detailed description of the behaviour of the
+\texttt{try-catch} and the 
+\texttt{try-catch-finally} statements~\cite[\S
+14.20]{GoslingJSB05}. For space reasons, we repeat only some fragments of
+the specification that are relevant to the examples above.
+
+A \texttt{try} statement with a \texttt{finally} block is executed by first executing the \texttt{try} block. [..]
+If execution of the try block completes abruptly because of a
+throw of a value V, then there is a choice:
+\begin{itemize}
+\item If the run-time type of V is assignable to the parameter of
+any catch clause of the try statement, then the first (leftmost) such
+catch clause is selected. The value V is assigned to the parameter of
+the selected catch clause, and the Block of that catch clause is
+executed. [..]
+\item If the run-time type of V is not assignable to the parameter
+of any catch clause of the try statement, then the finally block is
+executed. Then there is a choice:
+     \begin{itemize}
+     \item If the finally block completes normally, then the try statement completes abruptly because of a throw of the value V.
+     \item If the finally block completes abruptly for reason S, then
+the try statement completes abruptly for reason S (and the throw of
+value V is discarded and forgotten). 
+     \end{itemize}
+  \item If execution of the try block completes abruptly for any other
+reason R, then the finally block is executed. Then there is a choice:
+     \begin{itemize}
+     \item If the finally block completes normally, then the try statement completes abruptly for reason R.
+     \item If the finally block completes abruptly for reason S, then
+the try statement completes abruptly for reason S (and reason R is
+discarded). 
+     \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+
+\section{How Can This be Exploited}\label{SecExploiting}
+
+\section{When does Run-time Checking Work?}\label{SecAvoiding}
+
+\section{Conclusions}\label{SecConcl}
+
+\bibliographystyle{plain}
+\bibliography{bibli,../specification,/user/mhuisman/home/Research/Everest/Biblio/everest}
+
+
+\end{document}
