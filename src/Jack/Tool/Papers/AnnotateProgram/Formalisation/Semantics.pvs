@@ -239,7 +239,7 @@ BEGIN
           (up?(ex(pstate(tau))) IMPLIES m2 = 0),
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
-               (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8 : FullState)
+               (tau1, tau2, tau3, tau4, tau5, tau6, tau7 : FullState)
                (a, pv, old_val_arg, w : Val)(md : (wf_Method(program(p))))
                (inv : (wf_BoolExpr(program(p)))) :
           n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
@@ -248,44 +248,45 @@ BEGIN
           % evaluate the parameter
           derive(p)(pr, tau1, pv, tau2)(m2) AND
           % see if the receiver is null (and there were no previous exceptions)
-          tau3 = IF bottom?(ex(pstate(tau2))) AND Null?(a)
-                 THEN update_PState(tau2,  raise(NullPointer))
-                 ELSE tau2
-                 ENDIF AND
+          IF bottom?(ex(pstate(tau2))) AND Null?(a)
+          THEN sigma2 = update_PState(tau2,  raise(NullPointer)) AND
+               m3 = 0 AND m4 = 0 AND m5 = 0 AND m6 = 0
+          ELSE 
           % lookup method definition
           IF up?(lookup_mthd(program(p), a, mn))
           THEN md = down(lookup_mthd(program(p), a, mn))
           ELSE FALSE % should not happen in a wf_Program
           ENDIF AND
           % actions taken at the entry of the method
-          on_method_entry(p, md, a, tau3, tau4, m3, bounded_derive_rec(m3)) AND
+          on_method_entry(p, md, a, tau2, tau3, m3, bounded_derive_rec(m3)) AND
           % give a name the value of the argument before the call,
-          old_val_arg = lookup_local(name(arg(md)), pstate(tau4)) AND
+          old_val_arg = lookup_local(name(arg(md)), pstate(tau3)) AND
           % update the value of this, the argument and initialize the local vars
-          tau5 = update_stack(a, arg(md), pv, lvars(md), tau4) AND
+          tau4 = update_stack(a, arg(md), pv, lvars(md), tau3) AND
           % execute the body
-          derive(p)(body(md), tau5, Unit, tau6)(m4) AND
+          derive(p)(body(md), tau4, Unit, tau5)(m4) AND
           % evaluate the result
           IF Void?(res_type(md))
-          THEN tau7 = tau6 AND w = Unit AND m5 = 0
-          ELSE derive(p)(res(md), tau6, w, tau7)(m5)
+          THEN tau6 = tau5 AND w = Unit AND m5 = 0
+          ELSE derive(p)(res(md), tau5, w, tau6)(m5)
           ENDIF AND
           % actions taken at the exit of the method
-          IF bottom?(ex(pstate(tau7)))
-          THEN on_method_exit_normal(p, md, a, tau7, tau8, m6,
+          IF bottom?(ex(pstate(tau6)))
+          THEN on_method_exit_normal(p, md, a, tau6, tau7, m6,
                                      bounded_derive_rec(m6))
-          ELSE on_method_exit_exceptional(p, md, a, tau7, tau8, m6,
+          ELSE on_method_exit_exceptional(p, md, a, tau6, tau7, m6,
                                           bounded_derive_rec(m6))
           ENDIF AND
           % check whether evaluation of subexpressions was exceptional if so,
           % return bottom value, otherwise return value returned by method body
-          IF up?(ex(pstate(tau8)))
+          IF up?(ex(pstate(tau7)))
           THEN v = Bottom
           ELSE v = w
           ENDIF AND
           % restore the value of the argument
-          sigma2 = update_PState(tau8,
-                                 update_local(name(arg(md)), old_val_arg)),
+          sigma2 = update_PState(tau7,
+                                 update_local(name(arg(md)), old_val_arg))
+          ENDIF,
       NExpr(n) :
         n > 0 AND
         derive(p)(n, sigma1, v, sigma2)(n - 1),
