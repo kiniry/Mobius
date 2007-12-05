@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Coq Sugar for Eclipse Plug-in
 Bundle-SymbolicName: coq.sugar; singleton:=true
 Bundle-Version: 0.9.4
-Bundle-Activator: fr.inria.everest.coq.editor.CoqEditorPlugin
+Bundle-Activator: mobius.prover.coq.CoqEditorPlugin
 Bundle-Vendor: Inria - Everest Team
 Bundle-Localization: plugin
 Require-Bundle: prover.editor,
@@ -17,4 +17,4 @@ Require-Bundle: prover.editor,
  org.eclipse.ui.ide,
  coq.editor
 Eclipse-LazyStart: true
-Export-Package: fr.inria.everest.coq.sugar
+Export-Package: mobius.prover.coq.sugar

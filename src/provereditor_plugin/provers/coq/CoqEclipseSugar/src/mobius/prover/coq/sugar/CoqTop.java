@@ -1,7 +1,7 @@
 /*
  * Created on Mar 3, 2005
  */
-package fr.inria.everest.coq.sugar;
+package mobius.prover.coq.sugar;
 
 import java.io.IOException;
 import java.io.LineNumberReader;

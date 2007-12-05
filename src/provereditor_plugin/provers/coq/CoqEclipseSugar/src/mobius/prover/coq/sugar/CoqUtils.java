@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.sugar;
+package mobius.prover.coq.sugar;
 
 import mobius.prover.ProverEditorPlugin;
 import mobius.prover.exec.AProverException;

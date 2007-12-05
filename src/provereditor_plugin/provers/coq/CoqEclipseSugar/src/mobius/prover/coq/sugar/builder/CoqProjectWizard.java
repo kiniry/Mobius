@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.sugar.builder;
+package mobius.prover.coq.sugar.builder;
 
 
 import mobius.prover.gui.builder.ProjectNature;

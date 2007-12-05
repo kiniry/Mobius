@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.sugar.builder;
+package mobius.prover.coq.sugar.builder;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredSelection;

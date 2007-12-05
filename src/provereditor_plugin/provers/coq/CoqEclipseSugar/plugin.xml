@@ -7,7 +7,7 @@
          point="org.eclipse.ui.newWizards">
       <wizard
             category="CoqEditor.category"
-            class="fr.inria.everest.coq.sugar.builder.CoqProjectWizard"
+            class="mobius.prover.coq.sugar.builder.CoqProjectWizard"
             icon="icons/coqtoo.gif"
             id="CoqEditor.wizard"
             name="Coq Project"
@@ -15,7 +15,7 @@
       <primaryWizard id="CoqEditor.primaryWizard"/>
       <wizard
             category="CoqEditor.category"
-            class="fr.inria.everest.coq.sugar.builder.CoqFileWizard"
+            class="mobius.prover.coq.sugar.builder.CoqFileWizard"
             descriptionImage="icons/coq.gif"
             icon="icons/coq.gif"
             id="CoqEditor.file.wiz"

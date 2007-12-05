@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.sugar;
+package mobius.prover.coq.sugar;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
