@@ -13,11 +13,11 @@ public class Proof {
     fBeginPos = beginPos;
   }
   
-  public boolean isProofName(final int pos){
+  public boolean isProofName(final int pos) {
     return (fNamePos >= pos) && ((fBeginPos == 0) || (fBeginPos > pos));    
   }
   
-  public boolean isWithinProof(final int pos){
+  public boolean isWithinProof(final int pos) {
     return (fNamePos <= pos) && ((fEndPos == 0) || (fEndPos > pos));    
   }
   

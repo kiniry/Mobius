@@ -92,5 +92,4 @@ public class PatternRuleTaboo extends MultiLineRule {
     return false;
   }
 
-
 }

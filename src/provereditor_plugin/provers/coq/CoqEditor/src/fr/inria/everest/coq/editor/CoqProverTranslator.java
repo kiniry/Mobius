@@ -24,17 +24,22 @@ import fr.inria.everest.coq.editor.utils.ICoqColorConstants;
 
 public class CoqProverTranslator extends AProverTranslator implements ICoqColorConstants {
   
+  /** the current instance of the translator. */
   public static final CoqProverTranslator instance = new CoqProverTranslator();
+  
+  /** the typical vernaculars strings. */
   public static final String [] vernac = {
     "forall", "Proof",
     "Load", "Require", "Qed", "Import", "Open", "Scope", 
     "match", "end", "Section", "End" 
   };
+  
   public static final String [] lem = {
     "Definition", "Variable", "Lemma", "Fixpoint", "Axiom", "Hypothesis", "Inductive"
   };
-        
-  public final static String [][] replacements = {
+       
+  /** the replacements for given strings. */
+  public static final String [][] replacements = {
     {"\ufffd", " "},
     {"([0-9]+) subgoals", "\n\n\\Subgoals :"},
     {"([0-9]+) subgoal", "\n\n\\Subgoal :"},
@@ -139,7 +144,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
   /** {@inheritDoc} */
   @Override
   public IRule [] getProverStateRules() {        
-    if(proofRules == null) {
+    if (proofRules == null) {
       proofRules = initProofRules();
     }
     return proofRules;
@@ -230,6 +235,8 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
     return img;
   }
   
+  /** {@inheritDoc} */
+  @Override
   public ProverType getFileOutline(final ProverEditor ed, 
                                    final IDocument doc, 
                                    final ProverType root) {

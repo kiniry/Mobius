@@ -19,13 +19,12 @@ import fr.inria.everest.coq.editor.utils.ProofHandler;
  * The class BasicCoqTop contains minimal higher level interactions with the toplevel.
  * @author J. Charles
  */
-
 public class BasicCoqTop implements IProverTopLevel  {
 
-  /** if fModuleName <> <code>null</code> we are trying to skip a module */ 
-  private String fModuleName = null;
-  /** object to help skip proofs */
-  private ProofHandler ph = new ProofHandler();
+  /** if fModuleName <> <code>null</code> we are trying to skip a module. */ 
+  private String fModuleName;
+  /** object to help skip proofs. */
+  private ProofHandler fProofHandler = new ProofHandler();
   
   
   /**
@@ -34,51 +33,61 @@ public class BasicCoqTop implements IProverTopLevel  {
    * @param itl the current top level to consider
    * @return <code>true</code> or <code>false</code> depending if we are within a proof
    */
-  public boolean isProofMode(ITopLevel itl) {
+  public boolean isProofMode(final ITopLevel itl) {
     try {
-      while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
+      while (itl.getErrBuffer().trim().equals("") && itl.isAlive()) {
         itl.waitForErrorInput();
-    } catch (AProverException e) {}
+      }
+    }
+    catch (AProverException e) {
+      
+    }
     return !itl.getErrBuffer().trim().startsWith("Coq <");
   }  
   
   /**
    * Send the given command to coqtop. A command is a sentence which ends with a dot.
+   * @param itl the current top level to consider
    * @param s The command to send
    * @throws SyntaxErrorException If coq yells about a syntax error.
-   * @throws ProverException if there is an unexpected problem
+   * @throws AProverException if there is an unexpected problem
    */
-  public void sendCommand(ITopLevel itl, String s) throws AProverException {
+  public void sendCommand(final ITopLevel itl, 
+                          final String s) 
+    throws AProverException, SyntaxErrorException {
     try {
       itl.sendToProver(s);
     }
-    catch (AProverException e){
+    catch (AProverException e) {
       e.printStackTrace();
       throw e;
     }
-    while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
+    while (itl.getErrBuffer().trim().equals("") && itl.isAlive()) {
       itl.waitForErrorInput();
-    if(itl.getStdBuffer().trim().equals(""))
+    }
+    if (itl.getStdBuffer().trim().equals("")) {
       itl.waitForStandardInput();
-    String str = itl.getStdBuffer().trim();
-    if(str.indexOf("Syntax error: ") != -1)
-      throw new SyntaxErrorException(str.toString());
-    if(str.indexOf("Error:") != -1)
-      throw new SyntaxErrorException(str.toString());
-    if(str.indexOf("Anomaly:") != -1)
-      throw new SyntaxErrorException(str.toString());
-    if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
+    }
+    final String str = itl.getStdBuffer().trim();
+    if (str.indexOf("Syntax error: ") != -1) {
+      throw new SyntaxErrorException(str);
+    }
+    if (str.indexOf("Error:") != -1) {
+      throw new SyntaxErrorException(str);
+    }
+    if (str.indexOf("Anomaly:") != -1) {
+      throw new SyntaxErrorException(str);
+    }
+    if (str.startsWith("Toplevel input") || str.indexOf("User error") != -1) {
       throw new ProverException("An error occured during the proof:\n" + str + "\n");
+    }
   }
   
   
-  
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.IProverTopLevel#undo(prover.exec.ITopLevel)
-   */
-  public void undo(ITopLevel itl) throws AProverException {
-    if(isProofMode(itl)) {
+  /** {@inheritDoc} */
+  @Override
+  public void undo(final ITopLevel itl) throws AProverException {
+    if (isProofMode(itl)) {
       try {
         sendCommand(itl, "Undo 1.");
       }
@@ -93,16 +102,16 @@ public class BasicCoqTop implements IProverTopLevel  {
 
 
   
-
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.IProverTopLevel#hasToSkip(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
-   */
-  public int hasToSkipUndo(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
+  /** {@inheritDoc} */
+  @Override
+  public int hasToSkipUndo(final ITopLevel itl, 
+                           final IDocument document, 
+                           final String cmd, 
+                           final int beg, final int end) {
 
     int res;
-    if((res = ph.hasToSkip(this, itl, document, cmd, beg, end)) != 
-        IProverTopLevel.DONT_SKIP) {
+    res = fProofHandler.hasToSkip(this, itl, document, cmd, beg, end);
+    if (res != IProverTopLevel.DONT_SKIP) {
       return res;
     }
     if (fModuleName != null) {
@@ -117,7 +126,8 @@ public class BasicCoqTop implements IProverTopLevel  {
     }
     if (cmd.trim().startsWith("End ")) {
       // we will have to skip a module :)
-      fModuleName = cmd.substring(4, cmd.length() - 1);
+      fModuleName = cmd.substring(4, 
+                                  cmd.length() - 1);
       return IProverTopLevel.SKIP_AND_CONTINUE;
     }
     
@@ -134,33 +144,33 @@ public class BasicCoqTop implements IProverTopLevel  {
   }
 
   
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.IProverTopLevel#hasToSend(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
-   */
 
-  
-  public int hasToSkipSendCommand(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {
+  /** {@inheritDoc} */
+  @Override
+  public int hasToSkipSendCommand(final ITopLevel itl, 
+                                  final IDocument doc, 
+                                  final String cmd, 
+                                  final int beg, final int end) {
     int res;
-    if((res = ph.hasToSend(this, itl, doc, cmd, beg, end)) 
-        != IProverTopLevel.DONT_SKIP) {
+    res = fProofHandler.hasToSend(this, itl, doc, cmd, beg, end);
+    if (res != IProverTopLevel.DONT_SKIP) {
       return res;
     }
     return IProverTopLevel.DONT_SKIP;
   }
   
-  /*
-   *  (non-Javadoc)
-   * @see prover.plugins.IProverTopLevel#getCommands(java.lang.String, java.lang.String[])
-   */
-  public String[] getCommands(String top, String[] path) {
+  /** {@inheritDoc} */
+  @Override
+  public String[] getCommands(final String top, 
+                              final String[] path) {
     String [] cmds;
     if (path != null) {
       cmds = new String[2 + path.length * 2];
       
       for (int i = 0; i < path.length; i++) {
-        cmds[(2 * i) + 2] = "-I";
-        cmds[(2 * i) + 3] = path[i];
+        final int pos = (2 * (i + 1));
+        cmds[pos] = "-I";
+        cmds[pos + 1] = path[i];
       }
       
     }
