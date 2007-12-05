@@ -250,6 +250,7 @@ BEGIN
           % see if the receiver is null (and there were no previous exceptions)
           IF bottom?(ex(pstate(tau2))) AND Null?(a)
           THEN sigma2 = update_PState(tau2,  raise(NullPointer)) AND
+               v = Bottom AND
                m3 = 0 AND m4 = 0 AND m5 = 0 AND m6 = 0
           ELSE 
           % lookup method definition
