@@ -182,3 +182,38 @@ javafe_test:
 	  ${JAVAC} -classpath $(call canonicalize,${JAVAFE_CLASSPATH}:${TESTSOURCEDIRECTORY}) \
 	  -d $(call canonicalize,${CLASSDIRECTORY}) \
 	  ${JAVAFETESTTARGETS} )
+	  
+###########################
+## Build AST vector classes
+###########################
+
+AST_DIR = ${SOURCEDIRECTORY}/javafe/ast
+
+ASTGEN_DIR = ${JAVAFE_ROOT}/astgen
+ASTGEN = ${ASTGEN_DIR}/astgen
+ASTFILELIST = ${ASTGEN_DIR}/astfilelist
+
+${ASTFILELIST} ${ASTGEN}:
+	${MAKE} -C ${ASTGEN_DIR}
+
+VECTEMPLATE = ${SOURCEDIRECTORY}/javafe/util/_TYPE_Vec.j
+
+# The component type for these is in Javafe.
+JavafeTypeVec = \
+	${AST_DIR}/LocalVarDeclVec.java \
+	${AST_DIR}/GenericVarDeclVec.java
+
+.PHONY: vector
+
+vector: source ${AST_DIR}/GeneratedTags.java ${JavafeTypeVec}
+
+# FIXME - ought to make these depend on the component type.
+${AST_DIR}/%Vec.java: ${VECTEMPLATE}
+	@if [ -e ${JAVAFE_SOURCE_DIR}/javafe/ast/$*.java ]; then \
+		sed s/_TYPE_/$*/g ${VECTEMPLATE} | \
+		sed s/_PKG_/javafe.ast/g              | \
+		sed s/_COMPONENTPKG_/javafe.ast/g > $@ ;\
+	else \
+		echo "Could not find component for $@" ;\
+	fi
+

@@ -66,7 +66,7 @@ build buildall: source fix-perms
 	done
 
 source: fix-perms
-	$(MAKE) -C Javafe source
+	$(MAKE) -C Javafe source vector
 
 test: build test0 jml
 
@@ -338,6 +338,7 @@ test-releases:
 
 releases-notests:
 	@echo "Making release versions ${JAVAFE_PROJECT}-${JAVAFE_VERSION} ........"
+	mkdir -p $(JAVAFE_ROOT)/releases
 	${MAKE} binary-release
 	${MAKE} source-release
 
@@ -353,8 +354,8 @@ source-release: cleanup alldocs
 	cp -rf docs ${RELTEMP}
 	cp -rf specs* ${RELTEMP}
 	cp license.txt ${RELTEMP}
-	cp -rf astgen-1.0.0.* {RELTEMP}
-	cp -rf astfilelist-1.0.0.* {RELTEMP}
+	cp -rf astgen-1.0.0.* ${RELTEMP}
+	cp -rf astfilelist-1.0.0.* ${RELTEMP}
 	mkdir ${RELTEMP}/jars
 #   Copy Javadoc API docs 
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}/docs 
@@ -408,8 +409,8 @@ binary-release: build test jars alldocs cleanup
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}
 	mkdir ${RELTEMP}/docs
 	cp ${RELJAR} ${RELTEMP}
-	cp -rf astgen-1.0.0.* {RELTEMP}
-	cp -rf astfilelist-1.0.0.* {RELTEMP}
+	cp -rf astgen-1.0.0.* ${RELTEMP}
+	cp -rf astfilelist-1.0.0.* ${RELTEMP}
 #       Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils build

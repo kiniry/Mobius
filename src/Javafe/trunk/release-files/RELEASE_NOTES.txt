@@ -1,8 +1,18 @@
+version 2.0b5 "Mobius PVE Architecture Decomposition Release" (6 December 2007)
+
+New major features include:
+
+o Vector and Test classes are now included in the Javafe library
+o Binary executables for ASTGEN and ASTFILELIST have been prebuilt for Mac OS X
+  and linux.
+
+--------------------------------------------------------------------------------
+
 version 2.0b4 "Mobius PVE Architecture Decomposition Release" (22 November 2007)
 
 New major features include:
 
-The JavaFE subsystem has been extracted from ESC/Java2.
+o The JavaFE subsystem has been extracted from ESC/Java2.
 
 -------------------------------------------------------------
 version 2.0b3 "Mobius PVE Internal Release" (23 October 2007)

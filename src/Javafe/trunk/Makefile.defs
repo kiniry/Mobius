@@ -55,7 +55,7 @@ endif
 ## Check if JAVAFE_ROOT is set
 
 ifndef JAVAFE_ROOT
-  $(error You must have JAVAFE_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
+  $(warning You must have JAVAFE_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
   export JAVAFE_ROOT ?= $PWD
 endif
 
@@ -145,7 +145,7 @@ export JAVAFE_CLASSPATH_CAN = ${call canonicalize,${JAVAFE_CLASSPATH}}
 ## Pertinent locations for building a release
 
 # Do something like this when you build a release:
-#   ESC_VERSION=2.0a0 ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases
+#   JAVAFE_VERSION=2.0.b5 make releases
 export JAVAFE_RELEASE_DATE ?= `date "+%d-%m-%y"`
 
 # Temp directory for constructing releases
@@ -158,11 +158,12 @@ export RELTEST ?= ${JAVAFE_ROOT}/release-test
 export RELDIR  ?= ${JAVAFE_ROOT}/release
 
 # Variables relevant to names of release files
+export RELDIR ?= ${JAVAFE_ROOT}/releases
 export RELNAME ?= ${JAVAFE_PROJECT}-${JAVAFE_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${JAVAFE_RELEASE_DATE}
 export RELJAR  ?= ${JAR_FILES}/Javafe${JAVAFE_VERSION}.jar
 export RELSRCJAR  ?= ${JAR_FILES}/Javafe${JAVAFE_VERSION}src.jar
-export RELCODENAME ?= "Mobius PVE Internal Release"
+export RELCODENAME ?= "Mobius PVE Architectural Decomposition Release"
 export RELTAR  ?= ${RELNAME-DATE}-binary
 export RELSRCTAR  ?= ${RELNAME-DATE}-source
 export RELPATCHTAR  ?= ${RELNAME-DATE}-patch
