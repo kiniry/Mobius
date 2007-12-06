@@ -308,15 +308,16 @@ BEGIN
           derive(p)(e, sigma1, v1, tau)(m1) AND
           check_for_exception(tau, sigma2, v,
                 Bool?(v1) AND
-                derive(p)(IF b(v1) THEN c1 ELSE c2 ENDIF, tau, Unit,
+                derive(p)(IF b(v1) THEN c1 ELSE c2 ENDIF, tau, v,
                           sigma2)(m2)) AND
           (up?(ex(pstate(tau))) IMPLIES m2 = 0),
       Sequence(c1, c2) :
         v = return_of_stmt(sigma2) AND
-         EXISTS(m1, m2 : nat)(tau : FullState) :
+         EXISTS(m1, m2 : nat, v1 : Val)(tau : FullState) :
            n = m1 + m2 + 1 AND
-           derive(p)(c1, sigma1, Unit, tau)(m1) AND
-           derive(p)(c2, tau, Unit, sigma2)(m2),
+           derive(p)(c1, sigma1, v1, tau)(m1) AND
+           v1 = return_of_stmt(tau) AND
+           derive(p)(c2, tau, v, sigma2)(m2),
       Set(vn, e) :
         n > 0 AND
         v = return_of_stmt(sigma2) AND
@@ -333,14 +334,18 @@ BEGIN
         sigma2 = update_PState(sigma1, raise(Throwable)),
       TryCatch(c1, e, c2, c3) :
         v = return_of_stmt(sigma2) AND
-        EXISTS (m1, m2, m3 : nat)(tau1, tau2, tau3 : FullState) :
+        EXISTS (m1, m2, m3 : nat)(tau1, tau2, tau3 : FullState)
+               (v1, v2, v3 : Val) :
           n = m1 + m2 + m3 + 1 AND
-          derive(p)(c1, sigma1, Unit, tau1)(m1) AND
+          derive(p)(c1, sigma1, v1, tau1)(m1) AND
+          v1 = return_of_stmt(tau1) AND
           IF up?(ex(pstate(tau1))) AND down(ex(pstate(tau1))) = e
-          THEN derive(p)(c2, update_PState(tau1, catch), Unit, tau2)(m2)
+          THEN derive(p)(c2, update_PState(tau1, catch), v2, tau2)(m2) AND
+               v2 = return_of_stmt(tau2) 
           ELSE tau1 = tau2 AND m2 = 0
           ENDIF AND
-          derive(p)(c3, update_PState(tau2, catch), Unit, tau3)(m3) AND
+          derive(p)(c3, update_PState(tau2, catch), v3, tau3)(m3) AND
+          v3 = return_of_stmt(tau3) AND
           sigma2 = IF NOT up?(ex(pstate(tau3)))
                    THEN update_PState(tau3, 
                                       LAMBDA (ptau3 : PState) : ptau3 
@@ -351,7 +356,7 @@ BEGIN
         n > 0 AND
         v = return_of_stmt(sigma2) AND
         derive(p)(IfThenElse(e, While(e, c), Skip),
-                  sigma1, Unit, sigma2)(n - 1),
+                  sigma1, v, sigma2)(n - 1),
       Assert(e) :
         n > 0 AND
         v = return_of_stmt(sigma2) AND
@@ -363,8 +368,8 @@ BEGIN
 
   derives(p : FullProgram)
          (b : (wf_Body(program(p))), sigma1 : FullState)
-         (v : Val, sigma2 : FullState) : bool =
-    EXISTS (n : nat) :
+         (sigma2 : FullState) : bool =
+    EXISTS (n : nat, v : Val) :
       derive(p)(b, sigma1, v, sigma2)(n)
 
   run_FullProgram(p : FullProgram)(main : Name, arg : int)
@@ -372,7 +377,7 @@ BEGIN
     LET c  = StmtExpr(MethodCall(RExpr(RefVarEval(This)),
                                  main, NExpr(Int(arg))))
     IN
-      derives(p)(c, initial)(Unit, final)
+      derives(p)(c, initial)(final)
 
 
 END Semantics
@@ -518,10 +523,10 @@ ENDASSUMING
 
   derive_determ : LEMMA % :-)
     FORALL (p : FullProgram)(sigma : FullState)(b : (wf_Body(program(p)))) :
-      FORALL (v1, v2 : Val, sigma1, sigma2 : FullState) :
-        derives(p)(b, sigma)(v1, sigma1) AND
-        derives(p)(b, sigma)(v2, sigma2) IMPLIES
-          v1 = v2 AND sigma1 = sigma2
+      FORALL (sigma1, sigma2 : FullState) :
+        derives(p)(b, sigma)(sigma1) AND
+        derives(p)(b, sigma)(sigma2) IMPLIES
+          sigma1 = sigma2
 
 
   derive_bottom_iff_exception_step : LEMMA % :-)

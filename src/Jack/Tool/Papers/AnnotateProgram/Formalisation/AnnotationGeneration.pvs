@@ -466,15 +466,19 @@ BEGIN
     FORALL(c : Class) :
       wf_Class(program(mp))(c) IMPLIES
       LET ac = ann_class(mp)(c) IN
-        (FORALL (m1, m2 : Method) :
+        FORALL (m1, m2 : Method) :
            methods(ac)(m1) IMPLIES
            methods(ac)(m2) IMPLIES
            name(m1) = name(m2) IMPLIES
-           m1 = m2)
-     AND
-     (FORALL (v : Name) : var_names(inv(ann_class(mp)(c)))(v) IMPLIES
-                          ext_declared_var_names(program(mp))(v) OR
-                          var_names(new_gvds(mp))(v))
+           m1 = m2
+
+  ann_class_inv_wf_Body1 : LEMMA % :-)
+    FORALL(c : Class) :
+      wf_Body(program(mp))(inv(c)) IMPLIES
+       (FORALL (v : Name) : var_names(inv(ann_class(mp)(c)))(v) IMPLIES
+                            ext_declared_var_names(program(mp))(v) OR
+                            var_names(new_gvds(mp))(v))
+
 
   ann_class_inv : LEMMA % :-)
     FORALL(c : Class) :

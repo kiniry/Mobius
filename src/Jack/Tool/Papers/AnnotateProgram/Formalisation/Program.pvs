@@ -433,7 +433,6 @@ BEGIN
     FORALL (c1, c2, c3 : Body) :
       c1 << c2 AND c2 << c3 IMPLIES c1 << c3
 
-%  IMPORTING list_map_funcs[[BoolExpr, Stmt], set[Name]]
 
   subterm_subset_varnames : LEMMA % :-)
     FORALL(b1, b2 : Body) :
@@ -464,34 +463,34 @@ BEGIN
            s(x) AND (subterm(b, proj_1(x)) OR subterm(b, proj_2(x))))
 
 
-%  program_code(p : PreProgram)(s : Stmt) : boolean =
-%    EXISTS(c : Class, m : Method) :
-%      classes(p)(c) AND
-%      methods(c)(m) AND
-%      s << body(m)
-
-%  direct_sub_expr(s : Stmt) : RECURSIVE list[Expr] =
-%    CASES s OF
-%      CaseJML(branches) : append(map(proj_1)(branches),
-%                                 map(direct_sub_expr o proj_2)(branches)),
-%      IfThenElse(c, t, e) : cons(c, append(direct_sub_expr(t), 
-%                                           direct_sub_expr(e))),
-%      Sequence(s1, s2) : append(direct_sub_expr(s1), direct_sub_expr(s2)),
-%      Set(target, source) : cons(source, null),
-%      Skip : null
-%      StmtExpr(expr) : cons(expr, null),
-%      Throw : null,
-%      TryCatch(t, c, f) : TryCatch?
-%  While(test : Expr, body : Stmt) : While?
-
-%  program_code(p : PreProgram)(e : Expr) : boolean =
-%    EXISTS(c : Class, m : Method) :
-%      classes(p)(c) AND
-%      methods(c)(m) AND
-%      e << body(m)
-
-
 END ProgramFunctions
+
+
+ProgramRestriction[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING Program[Name]
+
+    method_pred(p : PreProgram)(m : Method)
+               (pred : [PreProgram -> [Body -> bool]]) : bool =
+      pred(p)(pre(m)) AND 
+      pred(p)(post(m)) AND
+      pred(p)(body(m)) AND 
+      pred(p)(pre_set(m)) AND
+      pred(p)(post_set(m)) AND 
+      pred(p)(exc_set(m)) AND
+      pred(p)(res(m))
+
+    program_pred(p : PreProgram)
+                (pred : [PreProgram -> [Body -> bool]]) : bool =
+      FORALL(c : Class) :
+        classes(p)(c) IMPLIES
+         pred(p)(inv(c)) 
+         AND
+         FORALL(m : Method) :
+           methods(c)(m) IMPLIES method_pred(p)(m)(pred)
+
+END ProgramRestriction
 
 
 % Program's syntax requirements.
@@ -500,7 +499,8 @@ END ProgramFunctions
 WellFormedProgram[Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING ProgramFunctions[Name]
+  IMPORTING ProgramFunctions[Name],
+            ProgramRestriction[Name]
 
   wf_Body(p : PreProgram)(b : Body) : boolean = 
     (FORALL(v : Name) : var_names(b)(v) IMPLIES ext_declared_var_names(p)(v))
@@ -538,14 +538,9 @@ BEGIN
     FORALL(p : PreProgram, l : list[[BoolExpr, Stmt]]) :
       wf_Body(p)(CaseJML(l)) = wf_Branches(p)(l)
 
+
   wf_Method(p : PreProgram)(m : Method) : boolean =
-    wf_Body(p)(body(m)) AND
-    wf_Body(p)(pre(m)) AND
-    wf_Body(p)(post(m)) AND
-    wf_Body(p)(pre_set(m)) AND
-    wf_Body(p)(post_set(m)) AND
-    wf_Body(p)(exc_set(m)) AND
-    wf_Body(p)(res(m))
+    method_pred(p)(m)(wf_Body)
 
   wf_Class(p : PreProgram)(c : Class) : boolean =
     (FORALL (m1, m2 : Method) :
@@ -554,9 +549,7 @@ BEGIN
        name(m1) = name(m2) IMPLIES
          m1 = m2) 
      AND
-    (FORALL (m : Method) : methods(c)(m) IMPLIES wf_Method(p)(m)) AND
-    (FORALL (m : Method) : methods(c)(m) IMPLIES classname(m) = name(c)) AND
-     wf_Body(p)(inv(c))
+    (FORALL (m : Method) : methods(c)(m) IMPLIES classname(m) = name(c))
 
   wf_Classes(p : PreProgram) : boolean =
     FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(p)(c)
@@ -580,9 +573,6 @@ BEGIN
       name(c1) = name(c2) IMPLIES
         c1 = c2
 
-%  wf_program_all_variables_declared(p : PreProgram) : boolean =
-%    FORALL(v : Name) : var_names(p)(v) IMPLIES declared_var_names(p)(v)
-
   wf_program_methods_only_in_one_class(p : PreProgram) : boolean =
     FORALL (c1, c2 : Class, m : Method) :
       classes(p)(c1) IMPLIES
@@ -592,13 +582,7 @@ BEGIN
         c1 = c2
 
 
-%  % Basic type information
-%  invariants_are_bool_expr(p : PreProgram) : boolean =
-%    FORALL (c : Class) :
-%      classes(p)(c) IMPLIES
-%        BExpr?(inv(c))
 
-  % TODO: review this definition
   % NOTE: In a complete specification, wf_Program would include only syntactic
   % requirements and then we would define well_typed_Program. Since we don't
   % have many type requirements, it doesn't make sense to have two different
@@ -607,9 +591,8 @@ BEGIN
     wf_program_variables_disjoint_def(p) AND
     wf_program_variables_not_reserved_words_def(p) AND
     wf_program_has_unique_class_names_def(p) AND
-    wf_Classes(p)% AND
-%    wf_program_methods_only_in_one_class(p)
-%    invariants_are_bool_expr(p)
+    wf_Classes(p)AND
+    program_pred(p)(wf_Body)
 
   
   Program : TYPE = (wf_Program)
