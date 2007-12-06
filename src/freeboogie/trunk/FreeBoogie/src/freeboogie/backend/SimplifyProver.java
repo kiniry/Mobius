@@ -9,6 +9,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Used to interact with Simplify.
@@ -20,6 +21,8 @@ import java.util.List;
  * @author reviewed by TODO
  */
 public class SimplifyProver implements Prover {
+  
+  private static final Logger log = Logger.getLogger("freeboogie.backend");
   
   private Process prover;
   private List<String> cmd;
@@ -110,7 +113,7 @@ public class SimplifyProver implements Prover {
   private void sendTerm(Term t) {
     StringBuilder sb = new StringBuilder();
     printTerm(t, sb);
-    //System.out.println("me> " + sb);
+    log.info("backend> " + sb);
     out.print(sb);
   }
   
@@ -164,7 +167,7 @@ public class SimplifyProver implements Prover {
   /* @see freeboogie.backend.Prover#isSat(freeboogie.backend.Term) */
   public boolean isSat(Term t) throws ProverException {
     waitPrompt();
-    //System.out.println("Got prompt, sending query.");
+    log.fine("Got prompt, sending query.");
     sendTerm(builder.mk("not", t));
     out.println();
     out.flush();
@@ -176,10 +179,10 @@ public class SimplifyProver implements Prover {
         int c = in.read();
         if (c == '\n' || c == '\r') {
           String line = sb.toString();
+          log.info("simplify> " + line);
           if (line.contains("Valid")) return false;
           if (line.contains("Invalid") || line.contains("Unknown"))
             return true;
-          //System.out.println("simplify> " + line);
           sb.setLength(0);
           continue;
         }
@@ -207,7 +210,8 @@ public class SimplifyProver implements Prover {
 
   /* @see freeboogie.backend.Prover#restartProver() */
   public void restartProver() throws ProverException {
-    ProcessBuilder pb = new ProcessBuilder(this.cmd);
+    log.fine("exec: " + cmd);
+    ProcessBuilder pb = new ProcessBuilder(cmd);
     try {
       prover = pb.start();
       in = new BufferedReader(new InputStreamReader(prover.getInputStream()));
@@ -231,9 +235,9 @@ public class SimplifyProver implements Prover {
   /**
    * Runs some basic tests.
    * @param args the command line arguments
-   * @throws ProverException thrown if something goes wrong
+   * @throws Exception thrown if something goes wrong
    */
-  public static void main(String[] args) throws ProverException {
+  public static void main(String[] args) throws Exception {
     Prover p = new SimplifyProver(args);
     TermBuilder b = p.getBuilder();
     Term x = b.mk("var_pred", "x");

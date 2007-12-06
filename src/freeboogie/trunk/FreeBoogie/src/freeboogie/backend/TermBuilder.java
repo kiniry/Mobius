@@ -1,5 +1,7 @@
 package freeboogie.backend;
 
+import java.util.logging.Logger;
+
 import freeboogie.util.StackedHashMap;
 
 /**
@@ -11,6 +13,9 @@ import freeboogie.util.StackedHashMap;
  * @author reviewed by TODO
  */
 public abstract class TermBuilder {
+  
+  private static Logger log = Logger.getLogger("freeboogie.backend");
+  
   private StackedHashMap<String, TermDef> termDefs =
     new StackedHashMap<String, TermDef>();
   
@@ -21,6 +26,7 @@ public abstract class TermBuilder {
    * @param retSort {@code s}
    */
   public void def(String name, Sort[] argSorts, Sort retSort) {
+    log.fine("register symbol " + name);
     termDefs.put(name, new TermDef(argSorts, retSort));
   }
 
@@ -31,6 +37,7 @@ public abstract class TermBuilder {
    * @param retSort {@code sr}
    */
   public void def(String name, Sort naryArgSort, Sort retSort) {
+    log.fine("register nary symbol " + name);
     termDefs.put(name, new TermDef(naryArgSort, retSort));
   }
 
@@ -41,6 +48,7 @@ public abstract class TermBuilder {
    * @param retSort the prover sort
    */
   public void def(String name, Class cls, Sort retSort) {
+    log.fine("register meta-symbol " + name + " for Java type " + cls.getName());
     termDefs.put(name, new TermDef(cls, retSort));
   }
   

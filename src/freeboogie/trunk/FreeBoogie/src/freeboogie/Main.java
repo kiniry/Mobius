@@ -1,7 +1,12 @@
 package freeboogie;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -61,11 +66,23 @@ class Printer<U extends Ast, D extends Ast> extends Closure<D> {
  */
 public class Main {
   
+  private static Logger log = Logger.getLogger("freeboogie"); 
+  
   /**
    * The main entry point of the application.
    * @param args the command line arguments
    */
   public static void main(String[] args) {
+    try {
+      FileHandler logh = new FileHandler("freeboogie.log");
+      logh.setFormatter(new SimpleFormatter());
+      log.addHandler(logh);
+      log.setLevel(Level.ALL);
+    } catch (IOException e) {
+      Err.warning("Can't create log file. Nevermind.");
+      log.setLevel(Level.OFF);
+    }
+    
     // parse command line arguments
     Options opt = new Options();
     opt.regBool("-pp", "pretty print");
