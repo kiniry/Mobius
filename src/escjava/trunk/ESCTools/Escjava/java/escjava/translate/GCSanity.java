@@ -11,6 +11,7 @@ import javafe.util.Set;
 import javafe.util.Assert;
 
 import javafe.ast.*;
+import javafe.ast.GenericVarDecl;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
 

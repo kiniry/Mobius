@@ -1,6 +1,6 @@
 package escjava.dfa.buildcfd;
 
-import escjava.ast.GenericVarDeclVec;
+import javafe.ast.GenericVarDeclVec;
 import escjava.ast.LoopCmd;
 import escjava.dfa.cfd.CFD;
 

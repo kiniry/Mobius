@@ -55,9 +55,65 @@ endif
 ## Check if ESCTOOLS_ROOT is set
 
 ifndef ESCTOOLS_ROOT
-  $(error You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
+  $(warning You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
   export ESCTOOLS_ROOT ?= $PWD
 endif
+
+################################################################################
+## Make sure that AST_TOOLS_DIR is set
+
+export AST_TOOLS_DIR ?= ${ESCTOOLS_ROOT}/Escjava/release/master/bin
+
+################################################################################
+## AST tools setup
+
+## Check if ASTGEN and ASTFILELIST are set; guess a value if not
+## Set ASTGEN and ASTFILELIST  as appropriate
+## (Caution: don't use tabs here, just spaces)
+
+ifndef ESC_ASTGEN
+  os = $(shell uname -s)
+  processor = $(shell uname -p)
+  ifeq ("${os}","Linux")
+    export ASTGEN =  astgen-1.0.0.linux
+    $(warning Guessing a value for ASTGEN: ${ASTGEN})
+  endif
+  ifeq ("${os}","Darwin")
+    export ASTGEN =  astgen-1.0.0.macosx
+    $(warning Guessing a value for ASTGEN: ${ASTGEN})
+  endif
+  ifeq ("${os}","CYGWIN_NT-5.1")
+    export ASTGEN =  astgen-1.0.0.exe
+    $(warning Guessing a value for ASTGEN: ${ASTGEN})
+  endif
+endif
+ifndef ASTGEN
+  $(error You must have ASTGEN defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs.  It should be defined to be the name of, not the path to, an appropriate astgen executable in $ESCTOOLS_ROOT/Escjava/release/master/bin: os = ${os})
+endif
+export ESC_ASTGEN = ${AST_TOOLS_DIR}/${ASTGEN}
+
+ifndef ESC_ASTFILELIST
+  os = $(shell uname -s)
+  processor = $(shell uname -p)
+  ifeq ("${os}","Linux")
+    export ASTFILELIST =  astfilelist-1.0.0.linux
+    $(warning Guessing a value for ASTFILELIST: ${ASTFILELIST})
+  endif
+  ifeq ("${os}","Darwin")
+    export ASTFILELIST =  astfilelist-1.0.0.macosx
+    $(warning Guessing a value for ASTFILELIST: ${ASTFILELIST})
+  endif
+  ifeq ("${os}","CYGWIN_NT-5.1")
+    export ASTFILELIST =  astfilelist-1.0.0.exe
+    $(warning Guessing a value for ASTFILELIST: ${ASTFILELIST})
+  endif
+endif
+ifndef ASTFILELIST
+  $(error You must have ASTFILELIST defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs.  It should be defined to be the name of, not the path to, an appropriate astfilelist executable in $ESCTOOLS_ROOT/Escjava/release/master/bin: os = ${os})
+endif
+export ESC_ASTFILELIST = ${AST_TOOLS_DIR}/${ASTFILELIST}
+
+
 
 ################################################################################
 ## Make sure that ESCJ_SIMPLIFY_DIR is set
@@ -182,18 +238,8 @@ export UTILS_CLASSFILES = ${ESCTOOLS_ROOT}/Utils
 export BCEL_LIB ?= ${ESCTOOLS_ROOT}/Utils/BCEL/bcel-5.2/bcel-5.2.jar
 
 ## Java Front End Library
-export JAVAFE_VERSION ?= 2.0.4
+export JAVAFE_VERSION ?= 2.0.5
 export JAVAFE_LIB ?= ${ESCTOOLS_ROOT}/Utils/Javafe/Javafe${JAVAFE_VERSION}.jar
-
-## Pertinent definitions for Javafe
-export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
-export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java
-export JAVAFE_CLASSFILES = ${JAVAFE_ROOT}/classfiles
-export JAVAFE_CLASSFILES4RAC = ${JAVAFE_ROOT}/classfiles4rac
-
-# This is the path needed to run Javafe (only used for testing)
-export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}:${BCEL_LIB}
-export JAVAFE_CLASSPATH_CAN = ${call canonicalize,${JAVAFE_CLASSPATH}}
 
 ## Pertinent things for Escjava
 export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava
@@ -206,7 +252,7 @@ export MOCHA_LIB = ${JAR_FILES}/mochalib.jar
 
 ## This is the path needed to *run* Escjava.
 export ESC_CLASSPATH = \
-	${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}:${BCEL_LIB}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
+	${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}:${BCEL_LIB}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${JAVAFE_LIB}
 export ESCJAVA_CLASSPATH=$(ESC_CLASSPATH)
 
 ## The front-end for Escjava that should be used for testing.
@@ -273,16 +319,6 @@ export ESCTOOLS_ORIGINAL ?= ${ESCTOOLS_ROOT}/original_archives
 
 export UTILS_PACKAGE_LIST = junitutils
 
-export JAVAFE_PACKAGE_LIST = \
-	javafe javafe.ast javafe.parser  \
-	javafe.reader javafe.genericfile javafe.filespace \
-	javafe.tc javafe.util \
-
-export JAVAFE_PACKAGE_PATHS = \
-	javafe javafe/ast javafe/parser  \
-	javafe/reader javafe/genericfile javafe/filespace \
-	javafe/tc javafe/util \
-
 export ESCJAVA_PACKAGE_LIST = escjava \
 	escjava.ant escjava.ast escjava.backpred escjava.gui \
 	escjava.pa escjava.pa.generic escjava.parser \
@@ -300,7 +336,7 @@ export ESCJAVA_PACKAGE_PATHS = escjava \
 	escjava/vcGeneration/sammy escjava/vcGeneration/simplify escjava/vcGeneration/xml
 
 export PACKAGE_LIST = \
-	  ${UTILS_PACKAGE_LIST} $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
+	  ${UTILS_PACKAGE_LIST} $(ESCJAVA_PACKAGE_LIST)
 
 ################################################################################
 ## JUnit
@@ -325,16 +361,13 @@ export ANT_SOURCEPATH ?= /usr/local/Java/jakarta-ant/src
 
 ## This contains items needed for compiling/running JUnit tests, but
 ## not for compiling or running the tools themselves.
-export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB}:${BCEL_LIB}
+export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB}:${BCEL_LIB};${JAVAFE_LIB}
 
 ################################################################################
 ## The classpath needed to build all of ESC/Java2.
 
-## This is the path needed to build Javafe
-export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}:${BCEL_LIB}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
-
 ## This is the path needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = ${ESCJAVA_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${BCEL_LIB}
+export ESCJAVA_BUILD_CLASSPATH = ${ESCJAVA_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${BCEL_LIB}:${JAVAFE_LIB}
 
 ##########################################################################
 ##########################################################################
@@ -384,7 +417,7 @@ export MOCHA_CLASSES = ${MOCHA_SOURCE_DIR}:${JAR_FILES}/mochalib.jar
 
 # A colon-separated list of directories that contain the source code
 # for the whole of ESC/Java.
-export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DIR}:${UTILS_SOURCE_DIR}
+export SOURCEPATH = ${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DIR}:${UTILS_SOURCE_DIR}
 
 #
 # Need to sources here because we can't read binary inner classes;
@@ -409,9 +442,8 @@ ifneq ($(USE_RAC),)
     endif
   endif
 USE_RACC:=
-RAC_CLASSES=$(JAVAFE_CLASSFILES4RAC):$(ESCJAVA_CLASSFILES4RAC):$(JML_RUNTIME_JAR)
+RAC_CLASSES=$(ESCJAVA_CLASSFILES4RAC):$(JML_RUNTIME_JAR)
 CLASSPATH:=${RAC_CLASSES}:${CLASSPATH}
-JAVAFE_CLASSPATH:=${RAC_CLASSES}:${JAVAFE_CLASSPATH}
 ESC_CLASSPATH:=${RAC_CLASSES}:${ESC_CLASSPATH}
 ESCJAVA_CLASSPATH:=${RAC_CLASSES}:${ESCJAVA_CLASSPATH}
 ESCJAVA_BUILD_CLASSPATH:=${RAC_CLASSES}:${ESCJAVA_BUILD_CLASSPATH}

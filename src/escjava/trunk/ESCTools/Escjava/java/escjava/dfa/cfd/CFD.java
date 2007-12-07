@@ -17,7 +17,7 @@ import javafe.util.Assert;
 
 
 
-import escjava.ast.GenericVarDeclVec;
+import javafe.ast.GenericVarDeclVec;
 import escjava.dfa.cfd.NodeList.Enumeration;
 
 public class CFD  {

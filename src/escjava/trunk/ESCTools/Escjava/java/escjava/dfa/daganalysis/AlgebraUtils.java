@@ -17,7 +17,7 @@ import javafe.ast.VariableAccess;
 import javafe.util.Assert;
 
 //import escjava.ast.*;
-import escjava.ast.GenericVarDeclVec;
+import javafe.ast.GenericVarDeclVec;
 import escjava.ast.NaryExpr;
 import escjava.ast.QuantifiedExpr;
 import escjava.ast.LabelExpr;

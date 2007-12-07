@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 import javafe.ast.*;
+import javafe.ast.GenericVarDecl;
 import javafe.util.*;
 
 import escjava.ast.*;

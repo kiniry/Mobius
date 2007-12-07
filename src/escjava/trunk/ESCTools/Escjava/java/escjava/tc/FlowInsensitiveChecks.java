@@ -6,6 +6,8 @@ package escjava.tc;
 import java.util.Enumeration;
 
 import javafe.ast.*;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.LocalVarDecl;
 
 import javafe.tc.Env;
 import javafe.tc.EnvForLocals;

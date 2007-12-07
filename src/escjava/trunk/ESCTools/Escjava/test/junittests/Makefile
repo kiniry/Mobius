@@ -210,5 +210,7 @@ skip:
 .PHONY: clean
 clean:
 	@rm -f core*
+	@rm -f listtests
+	@touch listtests
 
 # End of file

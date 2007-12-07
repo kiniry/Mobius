@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import javafe.ast.Expr;
-import escjava.ast.GenericVarDeclVec;
+import javafe.ast.GenericVarDeclVec;
 
 /**
  * This class represents an exception node in control flow diagram.

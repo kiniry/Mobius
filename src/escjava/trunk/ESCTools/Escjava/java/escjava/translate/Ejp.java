@@ -4,6 +4,8 @@
 package escjava.translate;
 
 import javafe.ast.*;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.LocalVarDecl;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
 import escjava.sp.VarMap;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import javafe.ast.Expr;
+import javafe.ast.GenericVarDeclVec;
 import escjava.ast.*;
 
 /**

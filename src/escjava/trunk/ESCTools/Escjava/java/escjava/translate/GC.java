@@ -6,6 +6,7 @@ package escjava.translate;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import javafe.ast.*;
+import javafe.ast.GenericVarDecl;
 import javafe.tc.*;
 import javafe.util.Location;
 import javafe.util.Assert;

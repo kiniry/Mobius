@@ -13,7 +13,7 @@
 ## The name of a Simplify executable in $ESCTOOLS_RELEASE
 ## SIMPLIFY=Simplify-1.5.4.linux
 
-########## Check if ESCTOOLS_RELEASE is defined; try to guess it if it is not
+##########  
 
 if [ -z "escj" ]; then
 	echo "The escj bash script needs to be in the same directory as escjava2"
@@ -22,4 +22,4 @@ fi
 
 ######## Execute
 
-$ESCTOOLS_RELEASE/escj -specs $ESCTOOLS_RELEASE/specs $*
+${ESCTOOLS_RELEASE}/release-files/escj -specs ${ESCTOOLS_RELEASE}/specs $*

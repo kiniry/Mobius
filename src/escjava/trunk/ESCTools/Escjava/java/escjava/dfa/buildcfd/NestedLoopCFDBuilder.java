@@ -5,7 +5,7 @@ import java.io.Writer;
 
 import javafe.ast.Expr;
 import javafe.util.Assert;
-import escjava.ast.GenericVarDeclVec;
+import javafe.ast.GenericVarDeclVec;
 import escjava.ast.LoopCmd;
 import escjava.dfa.cfd.CFD;
 import escjava.dfa.cfd.CodeNode;

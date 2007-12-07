@@ -46,7 +46,7 @@ import escjava.ast.CondExprModifierPragma;
 import escjava.ast.EscPrettyPrint;
 import escjava.ast.EverythingExpr;
 import escjava.ast.ExprModifierPragma;
-import escjava.ast.GenericVarDeclVec;
+import javafe.ast.GenericVarDeclVec;
 import escjava.ast.ImportPragma;
 import escjava.ast.LabelExpr;
 import escjava.ast.ModelConstructorDeclPragma;

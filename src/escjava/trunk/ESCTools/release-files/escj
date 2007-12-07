@@ -109,6 +109,14 @@ if [ -z "$ESCJ_SIMPLIFY_DIR" ]; then
   warn "Guessing ESCJ_SIMPLIFY_DIR=$ESCJ_SIMPLIFY_DIR"
 fi
 
+############ Setting JAVAFE_LIB, if necessary
+
+if [ -z "$JAVAFE_LIB" ]; then
+  JAVAFE_LIB=$ESCTOOLS_ROOT/Utils/Javafe/Javafe2.0.5.jar
+  warn "Guessing JAVAFE_LIB=$JAVAFE_LIB"
+fi
+
+
 ############ Setting BCEL_LIB, if necessary
 
 if [ -z "$BCEL_LIB" ]; then
@@ -231,9 +239,9 @@ fi
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
     if (( $VCSVER > 0 )) ; then
-	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${JAVAFE_LIB}:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
     else
-	ESC_CLASSPATH=${ESCTOOLS_ROOT}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}:${JAVAFE_LIB}
     fi
     warn "Setting ESC_CLASSPATH=$ESC_CLASSPATH"
 fi

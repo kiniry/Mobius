@@ -13,14 +13,13 @@ include ${TOP}/Makefile.defs
 # following variables needed here:
 # JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, 
 # ESCJAVA_BUILD_CLASSPATH, ESCJAVA_CLASSFILES, 
-# JAVAFE_ROOT, JAVAFE_SOURCE_DIR
-# (Building Escjava relies on the AST building tools in ${JAVAFE_ROOT}/astgen)
+# (Building Escjava relies on the AST building tools)
 
 JAVA_VM_FLAGS ?=-Xmx512m
 
 # Various conventional UNIX tools are used in the following, including
 # cc in preprocess only mode.  Also, the "astgen" and "astfilelist"
-# programs in Javafe are used here.
+# programs from Javafe are used here.
 
 ###########################################################################
 # Defining relevant directory locations and other variables.
@@ -29,9 +28,7 @@ ESCTOOLS_ROOT_REL = ..
 ESCTOOLS_UTILS_ROOT_REL = $(ESCTOOLS_ROOT_REL)/Utils
 ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
 ESCJAVA_SOURCE_DIR_REL = java
-JAVAFE_SOURCE_DIR ?= ${JAVAFE_ROOT}/java
 
-JAVAFE_SOURCE_DIR_REL ?= $(ESCTOOLS_ROOT_REL)/Javafe/java
 
 # The following definitions all use =, not :=, so that the wildcard functions
 # are evaluated at the time of use, rather than at the time of definition.
@@ -74,20 +71,6 @@ ESCJAVA_SOURCE_FILES = \
 	$(subst escjava,$(ESCJAVA_SOURCE_DIR)/escjava,$(javafile)))
 
 #	${ESCJAVA_SOURCE_DIR}/escjava/Version.java
-
-JAVAFE_SOURCE_FILES_RELATIVE = \
-		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/*.java) \
-		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/ast/*.java) \
-		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/parser/*.java) \
-		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/reader/*.java) \
-		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/genericfile/*.java) \
-		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/filespace/*.java) \
-		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/tc/*.java) \
-		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/util/*.java)
-
-JAVAFE_SOURCE_FILES = \
-	$(foreach javafile,$(JAVAFE_SOURCE_FILES_RELATIVE),\
-	$(subst ../Javafe/javafe,$(JAVAFE_SOURCE_DIR)/javafe,$(javafile)))
 
 OTHER_SOURCE_FILES_RELATIVE = \
 	$(wildcard $(ESCTOOLS_UTILS_ROOT_REL)/junitutils/*.java)
@@ -237,23 +220,9 @@ clean_mocha:
 
 AST_DIR = ${ESCJAVA_SOURCE_DIR}/escjava/ast
 
-# Dependence on Javafe astgen programs:
-
-ASTGEN_DIR = ${JAVAFE_ROOT}/astgen
-ASTGEN = ${ASTGEN_DIR}/astgen
-ASTFILELIST = ${ASTGEN_DIR}/astfilelist
-
-${ASTFILELIST} ${ASTGEN}:
-	${MAKE} -C ${ASTGEN_DIR}
-
 # Generating Java files:
 
-VECTEMPLATE = ${JAVAFE_SOURCE_DIR}/javafe/util/_TYPE_Vec.j
-
-# The component type for these is in Javafe.
-JavafeTypeVec = \
-	${AST_DIR}/LocalVarDeclVec.java \
-	${AST_DIR}/GenericVarDeclVec.java
+VECTEMPLATE = ${AST_DIR}/_TYPE_Vec.j
 
 # The component type for these (e.g. GuardedCmd.java) is in Escjava.
 TypeVec = \
@@ -272,7 +241,7 @@ TypeVec = \
 
 source: generate_escjava_ast_source
 
-generate_escjava_ast_source: ${AST_DIR}/GeneratedTags.java ${TypeVec} ${JavafeTypeVec}
+generate_escjava_ast_source: ${AST_DIR}/GeneratedTags.java ${TypeVec}
 
 # FIXME - ought to make these depend on the component type.
 ${AST_DIR}/%Vec.java: ${VECTEMPLATE}
@@ -280,18 +249,14 @@ ${AST_DIR}/%Vec.java: ${VECTEMPLATE}
 		sed s/_TYPE_/$*/g ${VECTEMPLATE} | \
 		sed s/_PKG_/escjava.ast/g              | \
 		sed s/_COMPONENTPKG_/escjava.ast/g > $@ ;\
-	elif [ -e ${JAVAFE_SOURCE_DIR}/javafe/ast/$*.java ]; then \
-		sed s/_TYPE_/$*/g ${VECTEMPLATE} | \
-		sed s/_PKG_/escjava.ast/g              | \
-		sed s/_COMPONENTPKG_/javafe.ast/g > $@ ;\
 	else \
 		echo "Could not find component for $@" ;\
 	fi
 
 
 # This also generates all the .java files implied by "hierarchy.j".
-${AST_DIR}/GeneratedTags.java ${AST_DIR}/AnOverview.java: ${ASTGEN} ${AST_DIR}/hierarchy.j
-	@(cd ${AST_DIR}; ${ASTGEN} < hierarchy.j; \
+${AST_DIR}/GeneratedTags.java ${AST_DIR}/AnOverview.java: ${AST_DIR}/hierarchy.j
+	@(cd ${AST_DIR}; ${ESC_ASTGEN} < hierarchy.j; \
 		grep -v "//@" AnOverview.java > AnOverview.tmp; \
 		mv AnOverview.tmp AnOverview.java; \
 		grep -v "//@" GCExpr.java > GCExpr.tmp; \
@@ -302,9 +267,9 @@ ${AST_DIR}/GeneratedTags.java ${AST_DIR}/AnOverview.java: ${ASTGEN} ${AST_DIR}/h
 ## These three classes are the three root abstract classes of 
 ## escjava.ast.  Why do we need to strip out their specs? -Joe
 
-clean_escjava_ast: ${ASTFILELIST}
-	(cd ${AST_DIR}; rm -f `${ASTFILELIST} < ${AST_DIR}/hierarchy.j`)
-	rm -f *~ ${TypeVec} ${JavafeTypeVec} ${AST_DIR}/ASTGEN* ${AST_DIR}/zASTGEN* *.tmp
+clean_escjava_ast:
+	(cd ${AST_DIR}; rm -f `${ESC_ASTFILELIST} < ${AST_DIR}/hierarchy.j`)
+	rm -f *~ ${TypeVec} ${AST_DIR}/ASTGEN* ${AST_DIR}/zASTGEN* *.tmp
 	rm -f ${AST_DIR}/*.class ${CLASSDIRECTORY}/escjava/ast/*.class
 
 ###########################################################################
@@ -366,7 +331,7 @@ clean_misc:
 	find . -name 'core.*' -exec rm -f {} \;
 
 clean_archives:
-	rm -f ${CLASSDIRECTORY}/escjava.zip ${CLASSDIRECTORY}/javafe.zip
+	rm -f ${CLASSDIRECTORY}/escjava.zip
 	rm -f ${CLASSDIRECTORY}/compiled.zip
 
 clean_jniw:
@@ -389,11 +354,11 @@ archives: archive_esctools
 
 TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 
-.PHONY: test_escjava tests build_javafe_test junittests jdktests \
+.PHONY: test_escjava tests junittests jdktests \
 	checkspecs javaspecs test_escjava_parser \
 	test_matrix self_test test-release self_typecheck
 
-test_escjava: build build_javafe_test 
+test_escjava: build
 	$(MAKE) tests
 
 tests:
@@ -402,11 +367,8 @@ tests:
 	$(MAKE) -C test/nijmegen/OCF runtests
 	$(MAKE) -C test/nijmegen/JCF runtests
 	$(MAKE) jdktests
-	$(MAKE) self_typecheck
+	##$(MAKE) self_typecheck
 	##$(MAKE) test_matrix   ## FIXME
-
-build_javafe_test:
-	$(MAKE) -C ${JAVAFE_ROOT} javafe_test
 
 junittests:
 	$(MAKE) -C test/junittests runtests
@@ -425,21 +387,21 @@ javaspecs:
 	$(MAKE) -C test/javaspecs runtests
 
 test_escjava_parser:
-	$(MAKE) -C ${JAVAFE_SOURCE_DIR}/.. javafe_test
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
 
 self_typecheck:
+	@echo "Using SPECS=${SPECS}"
 	@JAVA_VM_FLAGS=-Xmx256m \
-	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:${CLASSPATH})" \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:${CLASSPATH}:${JAVAFE_LIB})" \
 		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
-		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
+		-specs "$(call canonicalize,${ESCTOOLS_ROOT}/specs})" \
 		-source 1.4 -typecheck -quiet \
 		${PACKAGE_LIST}
 
 
 %-self:
 	JAVA_VM_FLAGS=-Xmx256m \
-	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:${CLASSPATH}:${JAVAFE_LIB})" \
 		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
 		-source 1.4 -typecheck -quiet \
@@ -448,13 +410,13 @@ self_typecheck:
 test_matrix:
 	JAVA_VM_FLAGS=-Xmx256m \
 	${ESCJ} -source 1.4 -sourcepath ${TESTSOURCEDIRECTORY} \
-		-classpath "${call canonicalize,${TESTSOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
+		-classpath "${call canonicalize,${TESTSOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs" \
 		${TESTSOURCEDIRECTORY}/matrix/*.java
 
 self_test_nocheck: build
 	JAVA_VM_FLAGS=-Xmx256m \
-		${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+		${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:${CLASSPATH}:${JAVAFE_LIB})" \
 		-sourcepath "$(call canonicalize,${SOURCEPATH})" \
 		-vclimit 1000000 \
 		-nocheck -source 1.4 -quiet -nosemicolonwarnings \
@@ -464,7 +426,7 @@ self_test: build
 	@echo PROVER_KILL_TIME=${PROVER_KILL_TIME}
 	@echo JAVA_VM_FLAGS=${JAVA_VM_FLAGS}
 	export JAVA_VM_FLAGS="$(JAVA_VM_FLAGS)"; \
-	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:${CLASSPATH}:${JAVAFE_LIB})" \
 		-sourcepath "$(call canonicalize,${SOURCEPATH})" \
 		-vclimit 1000000 \
 		-source 1.4 -nosemicolonwarnings \
@@ -483,9 +445,6 @@ self_test0:
 
 test-release:
 	@echo TESTING RELEASE - Escjava
-	$(MAKE) JAVAFE_CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) \
-		CLASSDIRECTORY=${RELTEMP} \
-		build_javafe_test
 	$(MAKE) ESC_CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) \
 		CLASSDIRECTORY=${RELTEMP} \
 		ALLTESTS=1 \
@@ -499,7 +458,7 @@ test-release:
 
 string:
 	${ESCJ} \
-		-classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+		-classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:${CLASSPATH})" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${JML2_SPECS_JAR}" \
 		-nowarn Deadlock -nowarn Post -nowarn Invariant \
 		-source 1.4 -quiet -noSemicolonWarnings \
