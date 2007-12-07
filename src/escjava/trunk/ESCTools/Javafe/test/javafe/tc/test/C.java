@@ -1,3 +1,0 @@
-// This is in the wrong package...
-
-class C {}

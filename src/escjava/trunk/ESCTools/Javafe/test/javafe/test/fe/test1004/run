@@ -1,5 +1,0 @@
-#!/bin/sh
-
-## Checks that erroneous var decls in an if branch are detected
-
-${TOOL} C.java

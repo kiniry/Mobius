@@ -1,5 +1,0 @@
-#!/bin/sh
-
-## Check that references to instance&static members work right      [1.1]
-
-${TOOL} Refs.java
