@@ -3,7 +3,7 @@
 (SemanticsJMLTypes)
 (Semantics
  (update_stack_TCC1 0
-  (update_stack_TCC1-1 nil 3390908871 3405927942
+  (update_stack_TCC1-1 nil 3390908871 3406013838
    ("" (skosimp*)
     (("" (typepred "lvds!1")
       (("" (expand "is_finite")
@@ -104,15 +104,15 @@
     (defined? const-decl "boolean" ValProp nil)
     (default_value const-decl "(defined?)" ValProp nil)
     (nonempty? const-decl "bool" sets nil))
-   2074 180 t shostak))
+   327 320 t shostak))
  (derive_TCC1 0
-  (derive_TCC1-1 nil 3395749931 3405927943 ("" (tcc)) proved nil 401
-   360 nil nil))
+  (derive_TCC1-1 nil 3395749931 3406013838 ("" (tcc)) proved nil 551
+   500 nil nil))
  (derive_TCC2 0
-  (derive_TCC2-1 nil 3395749931 3405927943 ("" (tcc)) proved nil 356
-   350 nil nil))
+  (derive_TCC2-1 nil 3395749931 3406013839 ("" (tcc)) proved nil 506
+   500 nil nil))
  (derive_TCC3 0
-  (derive_TCC3-1 nil 3395749931 3405927943
+  (derive_TCC3-1 nil 3395749931 3406013839
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -178,9 +178,9 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   420 380 t nil))
+   586 530 t nil))
  (derive_TCC4 0
-  (derive_TCC4-1 nil 3395749931 3405927944 ("" (tcc)) proved
+  (derive_TCC4-1 nil 3395749931 3406013840 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -244,9 +244,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   617 570 nil nil))
+   799 720 nil nil))
  (derive_TCC5 0
-  (derive_TCC5-2 nil 3403269980 3405927945
+  (derive_TCC5-2 nil 3403269980 3406013841
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -304,7 +304,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   426 380 nil nil)
+   568 530 nil nil)
   (derive_TCC5-1 nil 3395749931 3403269717
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -339,7 +339,7 @@
     (member const-decl "bool" sets nil))
    157 156 t nil))
  (derive_TCC6 0
-  (derive_TCC6-1 nil 3395749931 3405927945 ("" (tcc)) proved
+  (derive_TCC6-1 nil 3395749931 3406013841 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -403,9 +403,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   609 560 nil nil))
+   779 730 nil nil))
  (derive_TCC7 0
-  (derive_TCC7-1 nil 3395749931 3405927946 ("" (tcc)) proved
+  (derive_TCC7-1 nil 3395749931 3406013842 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -470,9 +470,9 @@
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil))
-   535 490 nil nil))
+   699 660 nil nil))
  (derive_TCC8 0
-  (derive_TCC8-2 nil 3403269989 3405927946
+  (derive_TCC8-2 nil 3403269989 3406013843
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -530,7 +530,7 @@
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   324 320 t nil)
+   494 460 t nil)
   (derive_TCC8-1 nil 3395749931 3403269718
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -557,10 +557,10 @@
      "(strict_total_order?[real])" real_props nil))
    155 149 t nil))
  (derive_TCC9 0
-  (derive_TCC9-1 nil 3395749931 3405927946 ("" (tcc)) proved nil 368
-   370 nil nil))
+  (derive_TCC9-1 nil 3395749931 3406013843 ("" (tcc)) proved nil 517
+   520 nil nil))
  (derive_TCC10 0
-  (derive_TCC10-2 nil 3403269995 3405927947
+  (derive_TCC10-2 nil 3403269995 3406013844
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -618,7 +618,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   408 380 nil nil)
+   552 520 nil nil)
   (derive_TCC10-1 nil 3395749931 3403269720
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -653,7 +653,7 @@
     (member const-decl "bool" sets nil))
    194 195 t nil))
  (derive_TCC11 0
-  (derive_TCC11-1 nil 3395749931 3405927947 ("" (tcc)) proved
+  (derive_TCC11-1 nil 3395749931 3406013845 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -719,9 +719,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   593 570 nil nil))
+   777 730 nil nil))
  (derive_TCC12 0
-  (derive_TCC12-2 nil 3403269999 3405927948
+  (derive_TCC12-2 nil 3403269999 3406013845
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -779,7 +779,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   416 390 nil nil)
+   575 540 nil nil)
   (derive_TCC12-1 nil 3395749931 3403269722
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -814,7 +814,7 @@
     (member const-decl "bool" sets nil))
    160 159 t nil))
  (derive_TCC13 0
-  (derive_TCC13-1 nil 3395749931 3405927948 ("" (tcc)) proved
+  (derive_TCC13-1 nil 3395749931 3406013846 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -880,9 +880,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   614 580 nil nil))
+   782 730 nil nil))
  (derive_TCC14 0
-  (derive_TCC14-2 nil 3403270003 3405927949
+  (derive_TCC14-2 nil 3403270003 3406013846
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -940,7 +940,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   385 380 nil nil)
+   563 530 nil nil)
   (derive_TCC14-1 nil 3395749931 3403269723
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -975,7 +975,7 @@
     (member const-decl "bool" sets nil))
    159 159 t nil))
  (derive_TCC15 0
-  (derive_TCC15-1 nil 3395749931 3405927949 ("" (tcc)) proved
+  (derive_TCC15-1 nil 3395749931 3406013847 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -1041,9 +1041,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   585 550 nil nil))
+   762 720 nil nil))
  (derive_TCC16 0
-  (derive_TCC16-2 nil 3403270008 3405927950
+  (derive_TCC16-2 nil 3403270008 3406013848
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -1101,7 +1101,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   401 380 nil nil)
+   548 520 nil nil)
   (derive_TCC16-1 nil 3395749931 3403269725
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -1136,7 +1136,7 @@
     (member const-decl "bool" sets nil))
    178 177 t nil))
  (derive_TCC17 0
-  (derive_TCC17-1 nil 3395749931 3405927950 ("" (tcc)) proved
+  (derive_TCC17-1 nil 3395749931 3406013849 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -1202,9 +1202,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   592 580 nil nil))
+   784 730 nil nil))
  (derive_TCC18 0
-  (derive_TCC18-1 nil 3395749931 3405927951
+  (derive_TCC18-1 nil 3395749931 3406013849
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -1241,9 +1241,9 @@
      real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
-   226 230 t nil))
+   375 380 t nil))
  (derive_TCC19 0
-  (derive_TCC19-2 nil 3403270013 3405927951
+  (derive_TCC19-2 nil 3403270013 3406013849
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -1305,7 +1305,7 @@
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   353 320 t nil)
+   508 470 t nil)
   (derive_TCC19-1 nil 3395749931 3403269726
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -1338,10 +1338,10 @@
     (add const-decl "(nonempty?)" sets nil))
    112 113 t nil))
  (derive_TCC20 0
-  (derive_TCC20-1 nil 3395749931 3405927951 ("" (tcc)) proved nil 362
-   370 nil nil))
+  (derive_TCC20-1 nil 3395749931 3406013850 ("" (tcc)) proved nil 545
+   500 nil nil))
  (derive_TCC21 0
-  (derive_TCC21-1 nil 3395749931 3405927952 ("" (tcc)) proved
+  (derive_TCC21-1 nil 3395749931 3406013851 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -1406,9 +1406,9 @@
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil))
-   524 510 nil nil))
+   653 650 nil nil))
  (derive_TCC22 0
-  (derive_TCC22-3 nil 3403270321 3405927952
+  (derive_TCC22-3 nil 3403270321 3406013851
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -1465,7 +1465,7 @@
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   336 340 t nil)
+   505 480 t nil)
   (derive_TCC22-2 nil 3403270025 3403270161
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -1516,10 +1516,10 @@
      "(strict_total_order?[real])" real_props nil))
    151 150 t nil))
  (derive_TCC23 0
-  (derive_TCC23-1 nil 3395749931 3405927953 ("" (tcc)) proved nil 388
-   370 nil nil))
+  (derive_TCC23-1 nil 3395749931 3406013852 ("" (tcc)) proved nil 544
+   500 nil nil))
  (derive_TCC24 0
-  (derive_TCC24-2 nil 3403270031 3405927953
+  (derive_TCC24-2 nil 3403270031 3406013852
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -1577,7 +1577,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   383 380 nil nil)
+   525 530 nil nil)
   (derive_TCC24-1 nil 3395749931 3403269729
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -1612,7 +1612,7 @@
     (member const-decl "bool" sets nil))
    160 160 t nil))
  (derive_TCC25 0
-  (derive_TCC25-1 nil 3395749931 3405927954 ("" (tcc)) proved
+  (derive_TCC25-1 nil 3395749931 3406013853 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -1684,9 +1684,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   616 590 nil nil))
+   775 740 nil nil))
  (derive_TCC26 0
-  (derive_TCC26-2 nil 3403270034 3405927954
+  (derive_TCC26-2 nil 3403270034 3406013854
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -1744,7 +1744,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   412 390 nil nil)
+   536 540 nil nil)
   (derive_TCC26-1 nil 3395749931 3403269731
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -1779,7 +1779,7 @@
     (member const-decl "bool" sets nil))
    198 197 t nil))
  (derive_TCC27 0
-  (derive_TCC27-3 nil 3403270324 3405927955
+  (derive_TCC27-3 nil 3403270324 3406013854
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -1847,7 +1847,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   438 410 t nil)
+   596 550 t nil)
   (derive_TCC27-2 nil 3403270037 3403270164
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -1906,7 +1906,7 @@
     (member const-decl "bool" sets nil))
    161 161 t nil))
  (derive_TCC28 0
-  (derive_TCC28-1 nil 3395749931 3405927955 ("" (tcc)) proved
+  (derive_TCC28-1 nil 3395749931 3406013855 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -1978,9 +1978,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   626 590 nil nil))
+   795 760 nil nil))
  (derive_TCC29 0
-  (derive_TCC29-2 nil 3403270040 3405927956
+  (derive_TCC29-2 nil 3403270040 3406013856
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -2038,7 +2038,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   451 440 nil nil)
+   600 570 nil nil)
   (derive_TCC29-1 nil 3395749931 3403269734
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -2073,7 +2073,7 @@
     (member const-decl "bool" sets nil))
    130 129 t nil))
  (derive_TCC30 0
-  (derive_TCC30-1 nil 3395749931 3405927957 ("" (tcc)) proved
+  (derive_TCC30-1 nil 3395749931 3406013857 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -2148,9 +2148,9 @@
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1199 1170 nil nil))
+   1449 1360 nil nil))
  (derive_TCC31 0
-  (derive_TCC31-2 nil 3403270056 3405927957
+  (derive_TCC31-2 nil 3403270056 3406013858
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
     ((";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
@@ -2208,7 +2208,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   456 430 nil nil)
+   615 580 nil nil)
   (derive_TCC31-1 nil 3395749931 3403269735
    ("" (skosimp*)
     (("" (typepred "b!1")
@@ -2243,7 +2243,7 @@
     (member const-decl "bool" sets nil))
    128 128 t nil))
  (derive_TCC32 0
-  (derive_TCC32-1 nil 3395749931 3405927959 ("" (tcc)) proved
+  (derive_TCC32-1 nil 3395749931 3406013859 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -2318,9 +2318,9 @@
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1239 1170 nil nil))
+   1450 1360 nil nil))
  (derive_TCC33 0
-  (derive_TCC33-1 nil 3395749931 3405927960 ("" (tcc)) proved
+  (derive_TCC33-1 nil 3395749931 3406013861 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -2400,9 +2400,9 @@
     (lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1704 1620 nil nil))
+   1891 1790 nil nil))
  (derive_TCC34 0
-  (derive_TCC34-1 nil 3395749931 3405928127
+  (derive_TCC34-1 nil 3395749931 3406013862
    ("" (skosimp*)
     (("" (typepred "md!1")
       (("" (expand "wf_Method")
@@ -2440,9 +2440,9 @@
      integers nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   12525 430 t nil))
+   546 540 t nil))
  (derive_TCC35 0
-  (derive_TCC35-1 nil 3395749931 3405927962 ("" (tcc)) proved
+  (derive_TCC35-1 nil 3395749931 3406013864 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -2524,9 +2524,9 @@
     (lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1780 1690 nil nil))
+   2053 1920 nil nil))
  (derive_TCC36 0
-  (derive_TCC36-1 nil 3395749931 3405928139
+  (derive_TCC36-1 nil 3395749931 3406013864
    ("" (skosimp*)
     (("" (typepred "md!1")
       (("" (expand "wf_Method")
@@ -2564,9 +2564,9 @@
      integers nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   7847 430 t nil))
+   580 530 t nil))
  (derive_TCC37 0
-  (derive_TCC37-1 nil 3396354176 3405927965 ("" (tcc)) proved
+  (derive_TCC37-1 nil 3396354176 3406013866 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -2649,9 +2649,9 @@
     (lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1833 1720 nil nil))
+   2060 1950 nil nil))
  (derive_TCC38 0
-  (derive_TCC38-1 nil 3396354176 3405927967 ("" (tcc)) proved
+  (derive_TCC38-1 nil 3396354176 3406013869 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -2734,9 +2734,9 @@
     (lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1843 1770 nil nil))
+   2127 1980 nil nil))
  (derive_TCC39 0
-  (derive_TCC39-1 nil 3401446930 3405927968 ("" (subtype-tcc) nil nil)
+  (derive_TCC39-1 nil 3401446930 3406013870 ("" (subtype-tcc) nil nil)
    proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -2813,9 +2813,9 @@
     (method_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1357 1310 nil nil))
+   1571 1500 nil nil))
  (derive_TCC40 0
-  (derive_TCC40-1 nil 3401446930 3405927968 ("" (subtype-tcc) nil nil)
+  (derive_TCC40-1 nil 3401446930 3406013871 ("" (subtype-tcc) nil nil)
    proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -2878,9 +2878,9 @@
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil))
-   439 420 nil nil))
+   598 570 nil nil))
  (derive_TCC41 0
-  (derive_TCC41-3 nil 3403270328 3405927969
+  (derive_TCC41-3 nil 3403270328 3406013871
    (";;; Proof derive_TCC8-2 for formula Semantics.derive_TCC8"
     (skosimp*)
     ((";;; Proof derive_TCC8-2 for formula Semantics.derive_TCC8"
@@ -2931,7 +2931,7 @@
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   342 310 nil nil)
+   498 460 nil nil)
   (derive_TCC41-2 nil 3403270064 3403270166
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -2982,10 +2982,10 @@
     (boolean nonempty-type-decl nil booleans nil))
    753 750 nil nil))
  (derive_TCC42 0
-  (derive_TCC42-1 nil 3401446930 3405927969
-   ("" (termination-tcc) nil nil) proved nil 361 360 nil nil))
+  (derive_TCC42-1 nil 3401446930 3406013872
+   ("" (termination-tcc) nil nil) proved nil 519 510 nil nil))
  (derive_TCC43 0
-  (derive_TCC43-1 nil 3401446930 3405927970 ("" (subtype-tcc) nil nil)
+  (derive_TCC43-1 nil 3401446930 3406013872 ("" (subtype-tcc) nil nil)
    proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -3047,9 +3047,9 @@
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil))
-   462 420 nil nil))
+   611 560 nil nil))
  (derive_TCC44 0
-  (derive_TCC44-3 nil 3403270332 3405927970
+  (derive_TCC44-3 nil 3403270332 3406013873
    (";;; Proof derive_TCC8-2 for formula Semantics.derive_TCC8"
     (skosimp*)
     ((";;; Proof derive_TCC8-2 for formula Semantics.derive_TCC8"
@@ -3100,7 +3100,7 @@
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   327 320 nil nil)
+   493 460 nil nil)
   (derive_TCC44-2 nil 3403270068 3403270167
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -3151,10 +3151,10 @@
     (boolean nonempty-type-decl nil booleans nil))
    557 556 nil nil))
  (derive_TCC45 0
-  (derive_TCC45-1 nil 3401446930 3405927970
-   ("" (termination-tcc) nil nil) proved nil 403 350 nil nil))
+  (derive_TCC45-1 nil 3401446930 3406013873
+   ("" (termination-tcc) nil nil) proved nil 508 510 nil nil))
  (derive_TCC46 0
-  (derive_TCC46-3 nil 3403270335 3405927971
+  (derive_TCC46-3 nil 3403270335 3406013875
    (""
     (case "FORALL (l: list[[BoolExpr[Name], Stmt[Name]]], p: FullProgram, b: (wf_Body[Name](program(p))), sigma2 : FullState, v : Val, n : nat):
                 v = return_of_stmt(sigma2) AND n > 0 AND b = CaseJML(l)
@@ -3417,7 +3417,7 @@
     (CaseJML adt-constructor-decl
      "[list[[BoolExpr, Stmt]] -> (CaseJML?)]" Body_adt nil)
     (wf_Branches const-decl "boolean" WellFormedProgram nil))
-   936 900 t nil)
+   1149 1070 t nil)
   (derive_TCC46-2 nil 3403270070 3403270169
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -3547,7 +3547,7 @@
     (cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil))
    247 247 t nil))
  (derive_TCC47 0
-  (derive_TCC47-3 nil 3403270337 3405927972
+  (derive_TCC47-3 nil 3403270337 3406013875
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -3615,7 +3615,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   432 400 t nil)
+   586 550 t nil)
   (derive_TCC47-2 nil 3403270074 3403270170
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -3674,7 +3674,7 @@
     (member const-decl "bool" sets nil))
    181 181 t nil))
  (derive_TCC48 0
-  (derive_TCC48-1 nil 3401446930 3405927972
+  (derive_TCC48-1 nil 3401446930 3406013876
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -3726,9 +3726,9 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   377 340 t nil))
+   529 490 t nil))
  (derive_TCC49 0
-  (derive_TCC49-3 nil 3403270340 3405927972
+  (derive_TCC49-3 nil 3403270340 3406013876
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -3794,7 +3794,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   393 390 t nil)
+   577 540 t nil)
   (derive_TCC49-2 nil 3403270078 3403270171
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -3853,7 +3853,7 @@
     (member const-decl "bool" sets nil))
    181 180 t nil))
  (derive_TCC50 0
-  (derive_TCC50-3 nil 3403270343 3405927973
+  (derive_TCC50-3 nil 3403270343 3406013877
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -3921,7 +3921,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   438 420 t nil)
+   565 550 t nil)
   (derive_TCC50-2 nil 3403270081 3403270172
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -3980,7 +3980,7 @@
     (member const-decl "bool" sets nil))
    164 164 t nil))
  (derive_TCC51 0
-  (derive_TCC51-1 nil 3401446930 3405927973
+  (derive_TCC51-1 nil 3401446930 3406013877
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -4032,9 +4032,9 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   367 360 t nil))
+   536 480 t nil))
  (derive_TCC52 0
-  (derive_TCC52-3 nil 3403270345 3405927974
+  (derive_TCC52-3 nil 3403270345 3406013878
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -4100,7 +4100,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   413 370 t nil)
+   570 530 t nil)
   (derive_TCC52-2 nil 3403270085 3403270173
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -4159,7 +4159,7 @@
     (member const-decl "bool" sets nil))
    180 179 t nil))
  (derive_TCC53 0
-  (derive_TCC53-1 nil 3401446930 3405927974
+  (derive_TCC53-1 nil 3401446930 3406013878
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -4211,9 +4211,9 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   381 360 t nil))
+   498 500 t nil))
  (derive_TCC54 0
-  (derive_TCC54-3 nil 3403270347 3405927974
+  (derive_TCC54-3 nil 3403270347 3406013879
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -4279,7 +4279,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   390 380 t nil)
+   564 520 t nil)
   (derive_TCC54-2 nil 3403270087 3403270174
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -4338,7 +4338,7 @@
     (member const-decl "bool" sets nil))
    180 180 t nil))
  (derive_TCC55 0
-  (derive_TCC55-1 nil 3401446930 3405927975 ("" (subtype-tcc) nil nil)
+  (derive_TCC55-1 nil 3401446930 3406013880 ("" (subtype-tcc) nil nil)
    proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -4408,9 +4408,9 @@
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   524 500 nil nil))
+   690 650 nil nil))
  (derive_TCC56 0
-  (derive_TCC56-3 nil 3403270350 3405927975
+  (derive_TCC56-3 nil 3403270350 3406013880
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Expr")
@@ -4475,7 +4475,7 @@
     (member const-decl "bool" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (wf_Expr const-decl "boolean" WellFormedProgram nil))
-   359 330 t nil)
+   516 480 t nil)
   (derive_TCC56-2 nil 3403270090 3403270175
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -4532,7 +4532,7 @@
     (boolean nonempty-type-decl nil booleans nil))
    96 96 t nil))
  (derive_TCC57 0
-  (derive_TCC57-1 nil 3401446930 3405927976
+  (derive_TCC57-1 nil 3401446930 3406013881
    ("" (termination-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -4599,9 +4599,9 @@
     (real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (return_of_stmt const-decl "Val" Semantics nil))
-   507 500 nil nil))
+   700 660 nil nil))
  (derive_TCC58 0
-  (derive_TCC58-3 nil 3403270352 3405927976
+  (derive_TCC58-3 nil 3403270352 3406013882
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -4657,7 +4657,7 @@
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   434 400 t nil)
+   596 550 t nil)
   (derive_TCC58-2 nil 3403270094 3403270176
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -4708,11 +4708,11 @@
      "(strict_total_order?[real])" real_props nil))
    154 153 t nil))
  (derive_TCC59 0
-  (derive_TCC59-1 nil 3401446930 3405927977
+  (derive_TCC59-1 nil 3401446930 3406013882
    ("" (termination-tcc) nil nil) proved
-   ((return_of_stmt const-decl "Val" Semantics nil)) 370 360 nil nil))
+   ((return_of_stmt const-decl "Val" Semantics nil)) 515 510 nil nil))
  (derive_TCC60 0
-  (derive_TCC60-3 nil 3403270355 3405927977
+  (derive_TCC60-3 nil 3403270355 3406013883
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -4778,7 +4778,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   429 390 t nil)
+   585 540 t nil)
   (derive_TCC60-2 nil 3403270097 3403270177
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -4837,7 +4837,7 @@
     (member const-decl "bool" sets nil))
    273 272 t nil))
  (derive_TCC61 0
-  (derive_TCC61-1 nil 3401446930 3405927978
+  (derive_TCC61-1 nil 3401446930 3406013883
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -4886,9 +4886,9 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   389 370 t nil))
+   548 520 t nil))
  (derive_TCC62 0
-  (derive_TCC62-3 nil 3403270358 3405927978
+  (derive_TCC62-3 nil 3403270358 3406013884
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -4954,7 +4954,7 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (subterm adt-def-decl "boolean" Body_adt nil))
-   402 410 t nil)
+   594 550 t nil)
   (derive_TCC62-2 nil 3403270099 3403270178
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -5013,7 +5013,7 @@
     (member const-decl "bool" sets nil))
    165 164 t nil))
  (derive_TCC63 0
-  (derive_TCC63-3 nil 3403270362 3405927978
+  (derive_TCC63-3 nil 3403270362 3406013884
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -5069,7 +5069,7 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   392 370 t nil)
+   518 510 t nil)
   (derive_TCC63-2 nil 3403270105 3403270179
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -5105,7 +5105,7 @@
     nil)
    unfinished ((emptyset const-decl "set" sets nil)) 34 34 t nil))
  (derive_TCC64 0
-  (derive_TCC64-1 nil 3401446930 3405927979
+  (derive_TCC64-1 nil 3401446930 3406013885
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (lemma "wf_Body_preserved_by_proper_subterm")
@@ -5163,9 +5163,9 @@
      integers nil)
     (wf_Body_preserved_by_proper_subterm formula-decl nil
      WellFormedProgram nil))
-   271 270 t nil))
+   451 410 t nil))
  (derive_TCC65 0
-  (derive_TCC65-3 nil 3403270365 3405927979
+  (derive_TCC65-3 nil 3403270365 3406013885
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -5229,7 +5229,7 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   393 360 t nil)
+   549 520 t nil)
   (derive_TCC65-2 nil 3403270107 3403270180
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -5288,7 +5288,7 @@
     (member const-decl "bool" sets nil))
    183 183 t nil))
  (derive_TCC66 0
-  (derive_TCC66-1 nil 3401446930 3405927979
+  (derive_TCC66-1 nil 3401446930 3406013886
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -5352,9 +5352,9 @@
      real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
-   310 310 t nil))
+   453 450 t nil))
  (derive_TCC67 0
-  (derive_TCC67-1 nil 3401446930 3405927980
+  (derive_TCC67-1 nil 3401446930 3406013887
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (lemma "wf_Body_preserved_by_proper_subterm")
@@ -5483,9 +5483,9 @@
     (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (wf_Body_preserved_by_proper_subterm formula-decl nil
      WellFormedProgram nil))
-   646 620 t nil))
+   851 790 t nil))
  (derive_TCC68 0
-  (derive_TCC68-3 nil 3403270368 3405927980
+  (derive_TCC68-3 nil 3403270368 3406013887
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -5524,7 +5524,7 @@
      "(strict_total_order?[real])" real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
-   334 310 t nil)
+   454 450 t nil)
   (derive_TCC68-2 nil 3403270111 3403270181
    (";;; Proof derive_TCC3-1 for formula Semantics.derive_TCC3"
     (skosimp*)
@@ -5595,7 +5595,7 @@
     (emptyset const-decl "set" sets nil))
    163 160 t nil))
  (derive_TCC69 0
-  (derive_TCC69-1 nil 3401600202 3405927981
+  (derive_TCC69-1 nil 3401600202 3406013888
    ("" (skosimp*)
     (("" (expand "wf_BoolExpr")
       (("" (typepred "b!1")
@@ -5648,9 +5648,9 @@
     (Program type-eq-decl nil WellFormedProgram nil)
     (program formal-const-decl "[FullProgram -> Program]" Semantics
      nil))
-   293 290 t nil))
+   470 430 t nil))
  (run_FullProgram_TCC1 0
-  (run_FullProgram_TCC1-1 nil 3401446930 3405927981
+  (run_FullProgram_TCC1-1 nil 3401446930 3406013888
    ("" (skosimp*)
     (("" (replace -1 :hide? t)
       (("" (expand "wf_Body")
@@ -5687,10 +5687,10 @@
     (Name formal-nonempty-type-decl nil Semantics nil)
     (subterm adt-def-decl "boolean" Body_adt nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil))
-   426 400 t nil)))
+   559 560 t nil)))
 (SemanticsProofs
  (derive_determ_step 0
-  (derive_determ_step-2 nil 3403534328 3405928044
+  (derive_determ_step-2 nil 3403534328 3406013955
    (""
     (lemma
      "wf_induction[[nat, nat], (LAMBDA(i, j : [nat, nat]) : proj_1(i) < proj_1(j) AND proj_2(i) < proj_2(j))]")
@@ -6869,9 +6869,9 @@
                                                                (then
                                                                 (skosimp*)
                                                                 (copy
-                                                                 -6)
+                                                                 -7)
                                                                 (inst
-                                                                 -7
+                                                                 -8
                                                                  "(m1!1, m1!2)")
                                                                 (inst
                                                                  -1
@@ -6880,18 +6880,18 @@
                                                                 (apply
                                                                  (repeat
                                                                   (inst?
-                                                                   -7
+                                                                   -8
                                                                    :where
                                                                    (-5
-                                                                    -10))))
+                                                                    -11))))
                                                                 (assert)
                                                                 (flatten)
                                                                 (replace
-                                                                 -7)
-                                                                (replace
                                                                  -8)
                                                                 (replace
-                                                                 -9)))
+                                                                 -9)
+                                                                (replace
+                                                                 -10)))
                                                               (("1"
                                                                 (apply
                                                                  (then
@@ -6899,8 +6899,8 @@
                                                                    (inst?
                                                                     -1
                                                                     :where
-                                                                    (-6
-                                                                     -12)))
+                                                                    (-7
+                                                                     -15)))
                                                                   (assert)
                                                                   (flatten)
                                                                   (assert)))
@@ -7050,7 +7050,7 @@
                                                                         (skosimp*)
                                                                         (("1"
                                                                           (copy
-                                                                           -8)
+                                                                           -10)
                                                                           (("1"
                                                                             (inst
                                                                              -1
@@ -7064,7 +7064,7 @@
                                                                                    -1
                                                                                    :where
                                                                                    (-5
-                                                                                    -12))))
+                                                                                    -14))))
                                                                                 (("1"
                                                                                   (assert)
                                                                                   (("1"
@@ -7086,7 +7086,7 @@
                                                                                              t)
                                                                                             (("1"
                                                                                               (inst
-                                                                                               -10
+                                                                                               -13
                                                                                                "(m3!1, m3!2)")
                                                                                               (("1"
                                                                                                 (assert)
@@ -7094,17 +7094,17 @@
                                                                                                   (apply
                                                                                                    (repeat
                                                                                                     (inst?
-                                                                                                     -10
+                                                                                                     -13
                                                                                                      :where
-                                                                                                     (-8
-                                                                                                      -15))))
+                                                                                                     (-10
+                                                                                                      -19))))
                                                                                                   (("1"
                                                                                                     (assert)
                                                                                                     (("1"
                                                                                                       (flatten)
                                                                                                       (("1"
                                                                                                         (replace
-                                                                                                         -10
+                                                                                                         -13
                                                                                                          :hide?
                                                                                                          t)
                                                                                                         (("1"
@@ -7113,7 +7113,7 @@
                                                                                                             (apply
                                                                                                              (branch
                                                                                                               (split
-                                                                                                               -9)
+                                                                                                               -12)
                                                                                                               ((then
                                                                                                                 (flatten)
                                                                                                                 (assert)
@@ -7134,7 +7134,7 @@
                                                                                           (apply
                                                                                            (branch
                                                                                             (split
-                                                                                             -6)
+                                                                                             -8)
                                                                                             ((then
                                                                                               (flatten)
                                                                                               (assert)
@@ -7142,28 +7142,38 @@
                                                                                               (assert)))))
                                                                                           (("1"
                                                                                             (inst
-                                                                                             -11
+                                                                                             -15
                                                                                              "(m2!1, m2!2)")
                                                                                             (("1"
                                                                                               (assert)
                                                                                               (("1"
-                                                                                                (apply
-                                                                                                 (repeat
-                                                                                                  (inst?
-                                                                                                   -11
-                                                                                                   :where
-                                                                                                   (-3
-                                                                                                    -15))))
+                                                                                                (replace
+                                                                                                 -5)
                                                                                                 (("1"
-                                                                                                  (assert)
-                                                                                                  nil
+                                                                                                  (apply
+                                                                                                   (repeat
+                                                                                                    (inst?
+                                                                                                     -15
+                                                                                                     :where
+                                                                                                     (-20
+                                                                                                      -3))))
+                                                                                                  (("1"
+                                                                                                    (assert)
+                                                                                                    (("1"
+                                                                                                      (flatten)
+                                                                                                      (("1"
+                                                                                                        (assert)
+                                                                                                        nil
+                                                                                                        nil))
+                                                                                                      nil))
+                                                                                                    nil))
                                                                                                   nil))
                                                                                                 nil))
                                                                                               nil))
                                                                                             nil)
                                                                                            ("2"
                                                                                             (split
-                                                                                             -14)
+                                                                                             -18)
                                                                                             (("1"
                                                                                               (flatten)
                                                                                               (("1"
@@ -7330,178 +7340,28 @@
         nil))
       nil))
     nil)
-   proved
-   ((well_founded?_product formula-decl nil WF nil)
-    (wf_nat formula-decl nil naturalnumbers nil)
-    (FullProgram formal-type-decl nil SemanticsProofs nil)
-    (Name formal-nonempty-type-decl nil SemanticsProofs nil)
-    (Body type-decl nil Body_adt nil) (Val type-decl nil Val_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
-    (PreProgram type-eq-decl nil Program nil)
-    (wf_Body const-decl "boolean" WellFormedProgram nil)
-    (wf_Program const-decl "boolean" WellFormedProgram nil)
-    (Program type-eq-decl nil WellFormedProgram nil)
-    (program formal-const-decl "[FullProgram -> Program]"
-     SemanticsProofs nil)
-    (FullState formal-type-decl nil SemanticsProofs nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (PSt type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
-    (pstate formal-const-decl "[FullState -> PState]" SemanticsProofs
+   unfinished
+   ((< const-decl "bool" reals nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
-    (lookup formal-const-decl "[Name, FullState -> Val]"
-            SemanticsProofs nil)
-    (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState formal-const-decl "(update_PState_type)"
-     SemanticsProofs nil)
-    (OR const-decl "[bool, bool -> bool]" booleans nil)
-    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (wf_Expr const-decl "boolean" WellFormedProgram nil)
-    (upto nonempty-type-eq-decl nil naturalnumbers nil)
-    (<= const-decl "bool" reals nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (derive_type type-eq-decl nil SemanticsTypes nil)
-    (derive_rec_type type-eq-decl nil SemanticsTypes nil)
-    (execute_set_type const-decl "boolean" SemanticsTypes nil)
-    (execute_set formal-const-decl "(execute_set_type)" SemanticsProofs
-     nil)
-    (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (wf_BoolExpr const-decl "boolean" WellFormedProgram nil)
-    (execute_assert_type const-decl "boolean" SemanticsTypes nil)
-    (execute_assert formal-const-decl "(execute_assert_type)"
-     SemanticsProofs nil)
-    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (list type-decl nil list_adt nil)
-    (wf_Branches const-decl "boolean" WellFormedProgram nil)
-    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML formal-const-decl "(execute_CaseJML_type)"
-     SemanticsProofs nil)
-    (wf_Method const-decl "boolean" WellFormedProgram nil)
-    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (on_method_entry formal-const-decl "(on_method_event_type)"
-     SemanticsProofs nil)
-    (on_method_exit_normal formal-const-decl "(on_method_event_type)"
-     SemanticsProofs nil)
-    (on_method_exit_exceptional formal-const-decl
-     "(on_method_event_type)" SemanticsProofs nil)
-    (derive def-decl "bool" Semantics nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (int_minus_int_is_int application-judgement "int" integers nil)
-    (posint_plus_nnint_is_posint application-judgement "posint"
-     integers nil)
-    (tgt adt-accessor-decl "[(MethodCall?) -> Expr]" Body_adt nil)
-    (update_stack const-decl "FullState" Semantics nil)
-    (on_method_exit_normal_deterministic formula-decl nil
-     SemanticsProofs nil)
-    (on_method_exit_exceptional_deterministic formula-decl nil
-     SemanticsProofs nil)
-    (on_method_entry_deterministic formula-decl nil SemanticsProofs
-     nil)
-    (arg adt-accessor-decl "[(MethodCall?) -> Expr]" Body_adt nil)
-    (Null? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (RefExpr type-eq-decl nil Body_adt nil)
-    (r adt-accessor-decl "[(RExpr?) -> RefExpr]" Body_adt nil)
-    (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
-     nil)
-    (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
-     nil)
-    (Unit adt-constructor-decl "(Unit?)" Val_adt nil)
-    (Unit? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (target shared-adt-accessor-decl
-            "[{x: Body | Set?(x) OR Assign?(x)} -> Name]" Body_adt nil)
-    (execute_set_deterministic formula-decl nil SemanticsProofs nil)
-    (expr adt-accessor-decl
-          "[d: {x: Body | Assert?(x) OR StmtExpr?(x)} ->
-   {x1: Body |
-            IF StmtExpr?(d)
-              THEN     Assign?(x1) OR BExpr?(x1) OR CondExpr?(x1)
-                    OR MethodCall?(x1) OR NExpr?(x1) OR RExpr?(x1)
-            ELSE     TT?(x1) OR FF?(x1) OR Neg?(x1) OR Conj?(x1) OR Eq?(x1)
-                  OR BoolVarEval?(x1)
-            ENDIF}]" Body_adt nil)
-    (catch adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
-    (catch const-decl "PState" State nil)
-    (finally adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
-    (try adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
-    (execute_assert_deterministic formula-decl nil SemanticsProofs nil)
-    (Skip adt-constructor-decl "(Skip?)" Body_adt nil)
-    (body adt-accessor-decl "[(While?) -> Stmt]" Body_adt nil)
-    (While adt-constructor-decl "[[BoolExpr, Stmt] -> (While?)]"
-     Body_adt nil)
-    (IfThenElse adt-constructor-decl
-     "[[BoolExpr, Stmt, Stmt] -> (IfThenElse?)]" Body_adt nil)
-    (s1 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
-    (s2 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
-    (execute_CaseJML_deterministic formula-decl nil SemanticsProofs
-     nil)
-    (branches adt-accessor-decl
-     "[(CaseJML?) -> list[[BoolExpr, Stmt]]]" Body_adt nil)
-    (n adt-accessor-decl "[(NExpr?) -> NumExpr]" Body_adt nil)
-    (NumExpr type-eq-decl nil Body_adt nil)
-    (test shared-adt-accessor-decl
-     "[{x: Body | While?(x) OR IfThenElse?(x) OR CondExpr?(x)} -> BoolExpr]"
-     Body_adt nil)
-    (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
-    (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
-    (source shared-adt-accessor-decl
-     "[{x: Body | Set?(x) OR Assign?(x)} -> Expr]" Body_adt nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
-    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (real_ge_is_total_order name-judgement "(total_order?[real])"
-     real_props nil)
-    (b shared-adt-accessor-decl
-     "[{x: Body | BExpr?(x) OR Neg?(x)} -> BoolExpr]" Body_adt nil)
-    (real_gt_is_strict_total_order name-judgement
-     "(strict_total_order?[real])" real_props nil)
-    (real_lt_is_strict_total_order name-judgement
-     "(strict_total_order?[real])" real_props nil)
-    (int_plus_int_is_int application-judgement "int" integers nil)
-    (b1 adt-accessor-decl
-     "[d: {x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} ->
-   {x1: Body |
-            IF Plus?(d) THEN Int?(x1) OR Plus?(x1) OR NumVarEval?(x1)
-            ELSE IF Conj?(d)
-                   THEN     TT?(x1) OR FF?(x1) OR Neg?(x1) OR Conj?(x1)
-                         OR Eq?(x1) OR BoolVarEval?(x1)
-                 ELSE     Assign?(x1) OR BExpr?(x1) OR CondExpr?(x1)
-                       OR MethodCall?(x1) OR NExpr?(x1) OR RExpr?(x1)
-                 ENDIF
-            ENDIF}]" Body_adt nil)
-    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (IF const-decl "[boolean, T, T -> T]" if_def nil)
-    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (wf_induction formula-decl nil wf_induction nil)
+    (well_founded? const-decl "bool" orders nil)
+    (pred type-eq-decl nil defined_types nil)
+    (check_for_exception const-decl "bool" Semantics nil)
+    (check_for_exception_final const-decl "bool" Semantics nil)
     (b2 adt-accessor-decl
      "[d: {x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} ->
    {x1: Body |
@@ -7513,28 +7373,176 @@
                        OR MethodCall?(x1) OR NExpr?(x1) OR RExpr?(x1)
                  ENDIF
             ENDIF}]" Body_adt nil)
-    (check_for_exception_final const-decl "bool" Semantics nil)
-    (check_for_exception const-decl "bool" Semantics nil)
-    (pred type-eq-decl nil defined_types nil)
-    (well_founded? const-decl "bool" orders nil)
-    (wf_induction formula-decl nil wf_induction nil)
-    (number nonempty-type-decl nil numbers nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IF const-decl "[boolean, T, T -> T]" if_def nil)
+    (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (b1 adt-accessor-decl
+     "[d: {x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} ->
+   {x1: Body |
+            IF Plus?(d) THEN Int?(x1) OR Plus?(x1) OR NumVarEval?(x1)
+            ELSE IF Conj?(d)
+                   THEN     TT?(x1) OR FF?(x1) OR Neg?(x1) OR Conj?(x1)
+                         OR Eq?(x1) OR BoolVarEval?(x1)
+                 ELSE     Assign?(x1) OR BExpr?(x1) OR CondExpr?(x1)
+                       OR MethodCall?(x1) OR NExpr?(x1) OR RExpr?(x1)
+                 ENDIF
+            ENDIF}]" Body_adt nil)
+    (int_plus_int_is_int application-judgement "int" integers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (b shared-adt-accessor-decl
+     "[{x: Body | BExpr?(x) OR Neg?(x)} -> BoolExpr]" Body_adt nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (source shared-adt-accessor-decl
+     "[{x: Body | Set?(x) OR Assign?(x)} -> Expr]" Body_adt nil)
+    (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
+    (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
+    (test shared-adt-accessor-decl
+     "[{x: Body | While?(x) OR IfThenElse?(x) OR CondExpr?(x)} -> BoolExpr]"
+     Body_adt nil)
+    (NumExpr type-eq-decl nil Body_adt nil)
+    (n adt-accessor-decl "[(NExpr?) -> NumExpr]" Body_adt nil)
+    (branches adt-accessor-decl
+     "[(CaseJML?) -> list[[BoolExpr, Stmt]]]" Body_adt nil)
+    (execute_CaseJML_deterministic formula-decl nil SemanticsProofs
      nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (< const-decl "bool" reals nil))
-   63311 59730 t nil)
+    (s2 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
+    (s1 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
+    (IfThenElse adt-constructor-decl
+     "[[BoolExpr, Stmt, Stmt] -> (IfThenElse?)]" Body_adt nil)
+    (While adt-constructor-decl "[[BoolExpr, Stmt] -> (While?)]"
+     Body_adt nil)
+    (body adt-accessor-decl "[(While?) -> Stmt]" Body_adt nil)
+    (Skip adt-constructor-decl "(Skip?)" Body_adt nil)
+    (execute_assert_deterministic formula-decl nil SemanticsProofs nil)
+    (try adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
+    (finally adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
+    (catch const-decl "PState" State nil)
+    (catch adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
+    (expr adt-accessor-decl
+          "[d: {x: Body | Assert?(x) OR StmtExpr?(x)} ->
+   {x1: Body |
+            IF StmtExpr?(d)
+              THEN     Assign?(x1) OR BExpr?(x1) OR CondExpr?(x1)
+                    OR MethodCall?(x1) OR NExpr?(x1) OR RExpr?(x1)
+            ELSE     TT?(x1) OR FF?(x1) OR Neg?(x1) OR Conj?(x1) OR Eq?(x1)
+                  OR BoolVarEval?(x1)
+            ENDIF}]" Body_adt nil)
+    (execute_set_deterministic formula-decl nil SemanticsProofs nil)
+    (target shared-adt-accessor-decl
+            "[{x: Body | Set?(x) OR Assign?(x)} -> Name]" Body_adt nil)
+    (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
+     nil)
+    (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
+     nil)
+    (r adt-accessor-decl "[(RExpr?) -> RefExpr]" Body_adt nil)
+    (RefExpr type-eq-decl nil Body_adt nil)
+    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Null? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (arg adt-accessor-decl "[(MethodCall?) -> Expr]" Body_adt nil)
+    (on_method_entry_deterministic formula-decl nil SemanticsProofs
+     nil)
+    (on_method_exit_exceptional_deterministic formula-decl nil
+     SemanticsProofs nil)
+    (on_method_exit_normal_deterministic formula-decl nil
+     SemanticsProofs nil)
+    (update_stack const-decl "FullState" Semantics nil)
+    (tgt adt-accessor-decl "[(MethodCall?) -> Expr]" Body_adt nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (derive def-decl "bool" Semantics nil)
+    (on_method_exit_exceptional formal-const-decl
+     "(on_method_event_type)" SemanticsProofs nil)
+    (on_method_exit_normal formal-const-decl "(on_method_event_type)"
+     SemanticsProofs nil)
+    (on_method_entry formal-const-decl "(on_method_event_type)"
+     SemanticsProofs nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (execute_CaseJML formal-const-decl "(execute_CaseJML_type)"
+     SemanticsProofs nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (wf_Branches const-decl "boolean" WellFormedProgram nil)
+    (list type-decl nil list_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (execute_assert formal-const-decl "(execute_assert_type)"
+     SemanticsProofs nil)
+    (execute_assert_type const-decl "boolean" SemanticsTypes nil)
+    (wf_BoolExpr const-decl "boolean" WellFormedProgram nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (execute_set formal-const-decl "(execute_set_type)" SemanticsProofs
+     nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (derive_rec_type type-eq-decl nil SemanticsTypes nil)
+    (derive_type type-eq-decl nil SemanticsTypes nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (<= const-decl "bool" reals nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (wf_Expr const-decl "boolean" WellFormedProgram nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (update_PState formal-const-decl "(update_PState_type)"
+     SemanticsProofs nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (lookup formal-const-decl "[Name, FullState -> Val]"
+            SemanticsProofs nil)
+    (pstate formal-const-decl "[FullState -> PState]" SemanticsProofs
+     nil)
+    (PState type-eq-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (FullState formal-type-decl nil SemanticsProofs nil)
+    (program formal-const-decl "[FullProgram -> Program]"
+     SemanticsProofs nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil) (Body type-decl nil Body_adt nil)
+    (Name formal-nonempty-type-decl nil SemanticsProofs nil)
+    (FullProgram formal-type-decl nil SemanticsProofs nil)
+    (wf_nat formula-decl nil naturalnumbers nil)
+    (well_founded?_product formula-decl nil WF nil))
+   66298 60040 t nil)
   (derive_determ_step-1 nil 3403506316 3403534307
    (""
     (lemma
@@ -8860,7 +8868,7 @@
     nil)
    unfinished nil 142684 13702 t shostak))
  (derive_determ 0
-  (derive_determ-1 nil 3395752130 3405928045
+  (derive_determ-1 nil 3395752130 3406013955
    ("" (skosimp*)
     (("" (expand "derives")
       (("" (skosimp*)
@@ -8915,9 +8923,9 @@
     (boolean nonempty-type-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (FullProgram formal-type-decl nil SemanticsProofs nil))
-   159 160 t shostak))
+   322 300 t shostak))
  (derive_bottom_iff_exception_step 0
-  (derive_bottom_iff_exception_step-2 nil 3401608082 3405928052
+  (derive_bottom_iff_exception_step-2 nil 3401608082 3406013963
    ("" (use "wf_induction[nat, LAMBDA(x, y : nat) : x < y]")
     (("1"
       (inst -1
@@ -9880,7 +9888,7 @@
     (wf_induction formula-decl nil wf_induction nil)
     (well_founded? const-decl "bool" orders nil)
     (pred type-eq-decl nil defined_types nil))
-   7548 7240 t nil)
+   7800 7350 t nil)
   (derive_bottom_iff_exception_step-1 nil 3395752639 3401608061
    ("" (use "wf_induction[nat, LAMBDA(x, y : nat) : x < y]")
     (("1"
@@ -10634,7 +10642,7 @@
     (wf_induction formula-decl nil wf_induction nil))
    15150 2600 t shostak))
  (derive_boolean_expr_type_TCC1 0
-  (derive_boolean_expr_type_TCC1-1 nil 3401446935 3405928053
+  (derive_boolean_expr_type_TCC1-1 nil 3401446935 3406013963
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -10682,9 +10690,9 @@
     (member const-decl "bool" sets nil)
     (union const-decl "set" sets nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil))
-   415 410 nil nil))
+   580 550 nil nil))
  (derive_boolean_expr_type 0
-  (derive_boolean_expr_type-1 nil 3396347233 3405928055
+  (derive_boolean_expr_type-1 nil 3396347233 3406013966
    ("" (skosimp)
     (("" (induct "b")
       (("1" (typepred "b!1") (("1" (assert) nil nil)) nil)
@@ -10856,10 +10864,10 @@
     (int_minus_int_is_int application-judgement "int" integers nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   2724 2470 t nil)))
+   3060 2710 t nil)))
 (SemanticsJML
  (wf_initial_ghost_state_TCC1 0
-  (wf_initial_ghost_state_TCC1-1 nil 3392370163 3405928055 ("" (tcc))
+  (wf_initial_ghost_state_TCC1-1 nil 3392370163 3406013967 ("" (tcc))
    proved
    ((Name formal-nonempty-type-decl nil SemanticsJML nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
@@ -10869,9 +10877,9 @@
     (nonempty? const-decl "bool" sets nil)
     (choose const-decl "(p)" sets nil)
     (get_GhostDecl const-decl "lift[FieldDecl]" ProgramFunctions nil))
-   64 60 nil nil))
+   196 200 nil nil))
  (wf_initial_ghost_state 0
-  (wf_initial_ghost_state-1 nil 3392370167 3405928056
+  (wf_initial_ghost_state-1 nil 3392370167 3406013967
    ("" (skosimp*)
     (("" (expand "wf_ghoststate")
       (("" (skosimp*)
@@ -10972,9 +10980,9 @@
      SemanticsJML nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil))
-   134 130 t shostak))
+   334 250 t shostak))
  (execute_set_TCC1 0
-  (execute_set_TCC1-1 nil 3390908875 3405928056 ("" (tcc)) proved
+  (execute_set_TCC1-1 nil 3390908875 3406013972 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -11039,9 +11047,9 @@
      "(strict_total_order?[real])" real_props nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil))
-   302 270 nil nil))
+   4866 400 nil nil))
  (execute_set_TCC2 0
-  (execute_set_TCC2-1 nil 3390908875 3405928056
+  (execute_set_TCC2-1 nil 3390908875 3406013972
    ("" (skosimp*)
     (("" (typepred "e!1")
       (("" (expand "wf_Expr") (("" (propax) nil nil)) nil)) nil))
@@ -11078,12 +11086,12 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil))
-   11 10 t nil))
+   143 140 t nil))
  (execute_set_TCC3 0
-  (execute_set_TCC3-1 nil 3390908875 3405928056 ("" (tcc)) proved nil
-   202 200 nil nil))
+  (execute_set_TCC3-1 nil 3390908875 3406013972 ("" (tcc)) proved nil
+   335 330 nil nil))
  (execute_set_TCC4 0
-  (execute_set_TCC4-1 nil 3401446938 3405928056
+  (execute_set_TCC4-1 nil 3401446938 3406013973
    ("" (subtype-tcc) nil nil) proved
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -11135,9 +11143,9 @@
     (Name formal-nonempty-type-decl nil SemanticsJML nil)
     (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (int_minus_int_is_int application-judgement "int" integers nil))
-   201 200 nil nil))
+   362 330 nil nil))
  (execute_CaseJML_TCC1 0
-  (execute_CaseJML_TCC1-1 nil 3390908875 3405928057 ("" (tcc) nil nil)
+  (execute_CaseJML_TCC1-1 nil 3390908875 3406013973 ("" (tcc) nil nil)
    proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -11215,10 +11223,10 @@
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil))
-   398 370 t nil))
+   506 510 t nil))
  (execute_CaseJML_TCC2 0
   (execute_CaseJML_TCC2-2 "no proof, because old one suddenly broken"
-   3401701533 3405928057
+   3401701533 3406013974
    ("" (skosimp*)
     (("" (typepred "branches!1")
       (("" (case "wf_Branches(program(p!1))(xs!1)")
@@ -11380,7 +11388,7 @@
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil)
     (every_is_forall formula-decl nil listfuncs nil))
-   480 440 t shostak)
+   602 580 t shostak)
   (execute_CaseJML_TCC2-1 nil 3390908875 3401701497
    ("" (induct "xs")
     (("1" (skosimp*)
@@ -11540,10 +11548,10 @@
     (list type-decl nil list_adt nil))
    5099 135 t nil))
  (execute_CaseJML_TCC3 0
-  (execute_CaseJML_TCC3-1 nil 3390908875 3405928057 ("" (tcc) nil nil)
-   proved nil 202 200 t shostak))
+  (execute_CaseJML_TCC3-1 nil 3390908875 3406013974 ("" (tcc) nil nil)
+   proved nil 373 340 t shostak))
  (execute_CaseJML_TCC4 0
-  (execute_CaseJML_TCC4-1 nil 3395749089 3405928058 ("" (tcc) nil nil)
+  (execute_CaseJML_TCC4-1 nil 3395749089 3406013975 ("" (tcc) nil nil)
    proved
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -11625,18 +11633,18 @@
     (FullProgram formal-type-decl nil SemanticsJML nil)
     (Name formal-nonempty-type-decl nil SemanticsJML nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil))
-   394 350 t shostak))
+   499 500 t shostak))
  (check_assertion_TCC1 0
-  (check_assertion_TCC1-1 nil 3395749089 3405928058
+  (check_assertion_TCC1-1 nil 3395749089 3406013975
    ("" (skosimp*) (("" (assert) nil nil)) nil) proved
    ((int_minus_int_is_int application-judgement "int" integers nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
-   13 10 t shostak))
+   176 130 t shostak))
  (check_assertion_TCC2 0
-  (check_assertion_TCC2-1 nil 3401446938 3405928058
+  (check_assertion_TCC2-1 nil 3401446938 3406013975
    ("" (skosimp*)
     (("" (typepred "e!1")
       (("" (expand "wf_BoolExpr") (("" (propax) nil nil)) nil)) nil))
@@ -11673,12 +11681,12 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil))
-   12 10 t nil))
+   143 140 t nil))
  (execute_assert_TCC1 0
-  (execute_assert_TCC1-1 nil 3397383993 3405928058
-   ("" (subtype-tcc) nil nil) proved nil 147 140 nil nil))
+  (execute_assert_TCC1-1 nil 3397383993 3406013975
+   ("" (subtype-tcc) nil nil) proved nil 276 280 nil nil))
  (execute_assert_TCC2 0
-  (execute_assert_TCC2-1 nil 3397383993 3405928059
+  (execute_assert_TCC2-1 nil 3397383993 3406013976
    ("" (subtype-tcc) nil nil) proved
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -11749,9 +11757,9 @@
     (Name formal-nonempty-type-decl nil SemanticsJML nil)
     (execute_assert_type const-decl "boolean" SemanticsTypes nil)
     (int_minus_int_is_int application-judgement "int" integers nil))
-   816 770 nil nil))
+   948 910 nil nil))
  (on_method_entry_TCC1 0
-  (on_method_entry_TCC1-1 nil 3390908875 3405928060 ("" (tcc)) proved
+  (on_method_entry_TCC1-1 nil 3390908875 3406013977 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -11823,9 +11831,9 @@
     (lookup_inv const-decl "BoolExpr" ProgramFunctions nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1069 1030 nil nil))
+   1221 1180 nil nil))
  (on_method_entry_TCC2 0
-  (on_method_entry_TCC2-2 "" 3395751614 3405928061 ("" (tcc)) proved
+  (on_method_entry_TCC2-2 "" 3395751614 3406013979 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -11901,7 +11909,7 @@
     (int_minus_int_is_int application-judgement "int" integers nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1114 1070 t shostak)
+   1256 1220 t shostak)
   (on_method_entry_TCC2-1 nil 3390908875 3395751480
    ("" (subtype-tcc) nil nil) unfinished
    ((int_minus_int_is_int application-judgement "int" integers nil)
@@ -11929,7 +11937,7 @@
     (boolean nonempty-type-decl nil booleans nil))
    143 143 nil nil))
  (on_method_entry_TCC3 0
-  (on_method_entry_TCC3-2 nil 3405928162 nil
+  (on_method_entry_TCC3-2 nil 3405928162 3406013979
    (";;; Proof on_method_entry_TCC3-1 for formula SemanticsJML.on_method_entry_TCC3"
     (skosimp*)
     ((";;; Proof on_method_entry_TCC3-1 for formula SemanticsJML.on_method_entry_TCC3"
@@ -11943,7 +11951,39 @@
             ((";;; Proof on_method_entry_TCC3-1 for formula SemanticsJML.on_method_entry_TCC3"
               (assert) nil))))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil)
+   proved
+   ((program formal-const-decl "[FullProgram -> Program[Name]]"
+     SemanticsJML nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (FullProgram formal-type-decl nil SemanticsJML nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil SemanticsJML nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil)
+    (wf_BoolExpr const-decl "boolean" WellFormedProgram nil))
+   430 390 nil nil)
   (on_method_entry_TCC3-1 nil 3390908875 3405928061
    ("" (skosimp*)
     (("" (typepred "md!1")
@@ -11984,7 +12024,7 @@
      integers nil))
    155 150 t shostak))
  (on_method_entry_TCC4 0
-  (on_method_entry_TCC4-1 nil 3390908875 3405928062 ("" (tcc)) proved
+  (on_method_entry_TCC4-1 nil 3390908875 3406013980 ("" (tcc)) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -12060,9 +12100,9 @@
     (int_minus_int_is_int application-judgement "int" integers nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   1161 1110 t shostak))
+   1282 1240 t shostak))
  (on_method_entry_TCC5 0
-  (on_method_entry_TCC5-2 nil 3405928176 nil
+  (on_method_entry_TCC5-2 nil 3405928176 3406013981
    (";;; Proof on_method_entry_TCC5-1 for formula SemanticsJML.on_method_entry_TCC5"
     (skosimp*)
     ((";;; Proof on_method_entry_TCC5-1 for formula SemanticsJML.on_method_entry_TCC5"
@@ -12074,7 +12114,38 @@
           ((";;; Proof on_method_entry_TCC5-1 for formula SemanticsJML.on_method_entry_TCC5"
             (assert) nil))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil)
+   proved
+   ((program formal-const-decl "[FullProgram -> Program[Name]]"
+     SemanticsJML nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (FullProgram formal-type-decl nil SemanticsJML nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil SemanticsJML nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   430 400 nil nil)
   (on_method_entry_TCC5-1 nil 3390908875 3405928063
    ("" (skosimp*)
     (("" (typepred "md!1")
@@ -12112,7 +12183,7 @@
      integers nil))
    187 170 t nil))
  (on_method_entry_TCC6 0
-  (on_method_entry_TCC6-1 nil 3401446938 3405928065
+  (on_method_entry_TCC6-1 nil 3401446938 3406013983
    ("" (subtype-tcc) nil nil) proved
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -12188,9 +12259,9 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (int_minus_int_is_int application-judgement "int" integers nil))
-   2199 2070 nil nil))
+   2341 2270 nil nil))
  (on_method_exit_normal_TCC1 0
-  (on_method_exit_normal_TCC1-1 nil 3390908875 3405928065
+  (on_method_exit_normal_TCC1-1 nil 3390908875 3406013983
    ("" (skosimp*) (("" (assert) nil nil)) nil) proved
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
@@ -12200,9 +12271,9 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   67 60 t shostak))
+   193 190 t shostak))
  (on_method_exit_normal_TCC2 0
-  (on_method_exit_normal_TCC2-2 nil 3405928190 nil
+  (on_method_exit_normal_TCC2-2 nil 3405928190 3406013984
    (";;; Proof on_method_exit_normal_TCC2-1 for formula SemanticsJML.on_method_exit_normal_TCC2"
     (skosimp*)
     ((";;; Proof on_method_exit_normal_TCC2-1 for formula SemanticsJML.on_method_exit_normal_TCC2"
@@ -12214,7 +12285,38 @@
           ((";;; Proof on_method_exit_normal_TCC2-1 for formula SemanticsJML.on_method_exit_normal_TCC2"
             (assert) nil))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil)
+   proved
+   ((program formal-const-decl "[FullProgram -> Program[Name]]"
+     SemanticsJML nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (FullProgram formal-type-decl nil SemanticsJML nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil SemanticsJML nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   437 400 nil nil)
   (on_method_exit_normal_TCC2-1 nil 3390908875 3405928065
    ("" (skosimp*)
     (("" (typepred "md!1")
@@ -12252,7 +12354,7 @@
      integers nil))
    155 150 t nil))
  (on_method_exit_normal_TCC3 0
-  (on_method_exit_normal_TCC3-1 nil 3390908875 3405928065
+  (on_method_exit_normal_TCC3-1 nil 3390908875 3406013984
    ("" (skosimp*)
     (("" (typepred "post(md!1)")
       (("" (assert) (("" (postpone) nil nil)) nil)) nil))
@@ -12297,9 +12399,9 @@
      integers nil)
     (real_le_is_total_order name-judgement "(total_order?[real])"
      real_props nil))
-   70 70 t shostak))
+   203 210 t shostak))
  (on_method_exit_normal_TCC4 0
-  (on_method_exit_normal_TCC4-1 nil 3390908875 3405928065
+  (on_method_exit_normal_TCC4-1 nil 3390908875 3406013984
    ("" (skosimp*)
     (("" (typepred "md!1")
       (("" (expand "wf_Method")
@@ -12341,9 +12443,9 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   181 160 t shostak))
+   321 290 t shostak))
  (on_method_exit_normal_TCC5 0
-  (on_method_exit_normal_TCC5-2 nil 3405928202 nil
+  (on_method_exit_normal_TCC5-2 nil 3405928202 3406013985
    (";;; Proof on_method_exit_normal_TCC5-1 for formula SemanticsJML.on_method_exit_normal_TCC5"
     (skosimp*)
     ((";;; Proof on_method_exit_normal_TCC5-1 for formula SemanticsJML.on_method_exit_normal_TCC5"
@@ -12357,7 +12459,39 @@
             ((";;; Proof on_method_exit_normal_TCC5-1 for formula SemanticsJML.on_method_exit_normal_TCC5"
               (assert) nil))))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil)
+   proved
+   ((program formal-const-decl "[FullProgram -> Program[Name]]"
+     SemanticsJML nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (FullProgram formal-type-decl nil SemanticsJML nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil SemanticsJML nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil)
+    (wf_BoolExpr const-decl "boolean" WellFormedProgram nil))
+   423 420 nil nil)
   (on_method_exit_normal_TCC5-1 nil 3390908875 3405928065
    ("" (skosimp*)
     (("" (typepred "md!1")
@@ -12398,7 +12532,7 @@
      integers nil))
    159 150 t nil))
  (on_method_exit_normal_TCC6 0
-  (on_method_exit_normal_TCC6-1 nil 3401446938 3405928068
+  (on_method_exit_normal_TCC6-1 nil 3401446938 3406013987
    ("" (subtype-tcc) nil nil) proved
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -12474,9 +12608,9 @@
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (int_minus_int_is_int application-judgement "int" integers nil))
-   2212 2090 nil nil))
+   2427 2340 nil nil))
  (on_method_exit_exceptional_TCC1 0
-  (on_method_exit_exceptional_TCC1-1 nil 3390908875 3405928068
+  (on_method_exit_exceptional_TCC1-1 nil 3390908875 3406013988
    ("" (skosimp*) (("" (assert) nil nil)) nil) proved
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
@@ -12486,9 +12620,9 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   58 60 t shostak))
+   226 190 t shostak))
  (on_method_exit_exceptional_TCC2 0
-  (on_method_exit_exceptional_TCC2-2 nil 3405928214 nil
+  (on_method_exit_exceptional_TCC2-2 nil 3405928214 3406013988
    (";;; Proof on_method_exit_exceptional_TCC2-1 for formula SemanticsJML.on_method_exit_exceptional_TCC2"
     (skosimp*)
     ((";;; Proof on_method_exit_exceptional_TCC2-1 for formula SemanticsJML.on_method_exit_exceptional_TCC2"
@@ -12500,7 +12634,38 @@
           ((";;; Proof on_method_exit_exceptional_TCC2-1 for formula SemanticsJML.on_method_exit_exceptional_TCC2"
             (assert) nil))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil)
+   proved
+   ((program formal-const-decl "[FullProgram -> Program[Name]]"
+     SemanticsJML nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (FullProgram formal-type-decl nil SemanticsJML nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil SemanticsJML nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil))
+   399 390 nil nil)
   (on_method_exit_exceptional_TCC2-1 nil 3390908875 3405928068
    ("" (skosimp*)
     (("" (typepred "md!1")
@@ -12538,13 +12703,13 @@
      integers nil))
    143 150 t nil))
  (on_method_exit_exceptional_TCC3 0
-  (on_method_exit_exceptional_TCC3-1 nil 3390908875 3405928068
+  (on_method_exit_exceptional_TCC3-1 nil 3390908875 3406013989
    ("" (tcc)) proved
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   578 540 nil nil))
+   734 700 nil nil))
  (on_method_exit_exceptional_TCC4 0
-  (on_method_exit_exceptional_TCC4-1 nil 3397385085 3405928069
+  (on_method_exit_exceptional_TCC4-1 nil 3397385085 3406013989
    ("" (expand "on_method_event_type")
     (("" (skosimp*)
       (("" (split -1)
@@ -12588,16 +12753,16 @@
      integers nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil))
-   68 70 t nil))
+   205 200 t nil))
  (on_method_exit_exceptional_TCC5 0
-  (on_method_exit_exceptional_TCC5-1 nil 3401446938 3405928069
+  (on_method_exit_exceptional_TCC5-1 nil 3401446938 3406014051
    ("" (expand "on_method_event_type")
     (("" (skosimp*)
       (("" (split -1)
         (("1" (flatten)
           (("1" (skosimp*)
             (("1" (assert)
-              (("1" (replace -6)
+              (("1" (replace -7)
                 (("1" (lift-if)
                   (("1" (assert)
                     (("1" (split 2)
@@ -12673,5 +12838,5 @@
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   122 120 t nil)))
+   18930 360 t nil)))
 
