@@ -6,7 +6,7 @@
       (("" (skosimp*) (("" (inst?) (("" (assert) nil nil)) nil)) nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((nonempty? const-decl "bool" sets nil)
     (member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
@@ -45,7 +45,7 @@
    ("" (skosimp*)
     (("" (expand "get_monitored_class") (("" (assert) nil nil)) nil))
     nil)
-   proved
+   unchecked
    ((get_monitored_class const-decl "Class" MonitoredProgram nil)) 52
    50 t shostak))
  (get_monitored_class_in_classes 0
@@ -53,7 +53,7 @@
    ("" (skosimp*)
     (("" (expand "get_monitored_class") (("" (propax) nil nil)) nil))
     nil)
-   proved
+   unchecked
    ((get_monitored_class const-decl "Class" MonitoredProgram nil)) 50
    50 t shostak))
  (get_monitored_class_unique_for_wf_MP_TCC1 0
@@ -80,7 +80,7 @@
         nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
     (Class type-eq-decl nil Program nil)
@@ -91,9 +91,7 @@
     (LocalVarDecl type-eq-decl nil Program nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (mp!1 skolem-const-decl "MonitoredProgram" MonitoredProgram nil)
-    (c!1 skolem-const-decl "Class[Name]" MonitoredProgram nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil) nil nil
     (= const-decl "[T, T -> boolean]" equalities nil)
     (wf_program_has_unique_class_names_def const-decl "boolean"
      WellFormedProgram nil)
@@ -125,7 +123,7 @@
   (get_monitored_class_unique_for_wf_MP-2 nil 3399183561 3405932547
    ("" (skosimp)
     (("" (expand* "get_monitored_class" "choose" "the") nil nil)) nil)
-   proved
+   unchecked
    ((get_monitored_class const-decl "Class" MonitoredProgram nil)
     (choose const-decl "(p)" sets nil) (the const-decl "(p)" sets nil))
    55 60 nil nil)
@@ -140,7 +138,7 @@
 (MonitoredProgramSemantics
  (update_PState_TCC1 0
   (update_PState_TCC1-1 nil 3391514279 3406018484
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
@@ -168,7 +166,7 @@
    165 170 nil nil))
  (update_GhostVars_TCC1 0
   (update_GhostVars_TCC1-1 nil 3391514279 3406018484
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil)
     (Store type-eq-decl nil State nil)
@@ -205,7 +203,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_PSt const-decl "boolean" MVASemantics nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -242,11 +240,7 @@
      ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    nil nil nil
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (This const-decl "Name" Program nil)
@@ -258,8 +252,7 @@
     (BoolExpr type-eq-decl nil Body_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
     (is_local const-decl "boolean" State nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil))
+    (LocalVarDecl type-eq-decl nil Program nil) nil)
    3881 3770 t shostak))
  (wf_state_vars_tricotomy 0
   (wf_state_vars_tricotomy-1 nil 3396777599 3406018488
@@ -286,7 +279,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
     (union const-decl "set" sets nil)
@@ -372,7 +365,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_Program const-decl "boolean" WellFormedProgram nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (wf_program_variables_not_reserved_words_def const-decl "boolean"
@@ -396,7 +389,7 @@
   (on_method_MVA_TCC1-1 nil 3387174104 3406018489
    ("" (skosimp*) (("" (typepred "s!1") (("" (grind) nil nil)) nil))
     nil)
-   proved
+   unchecked
    ((get_monitored_class const-decl "Class" MonitoredProgram nil)
     (choose const-decl "(p)" sets nil)
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
@@ -432,12 +425,7 @@
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      MonitoredProgramSemantics nil)
-    (wf_state const-decl "boolean" State nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
+    (wf_state const-decl "boolean" State nil) nil nil nil
     (is_local const-decl "boolean" State nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
@@ -445,8 +433,7 @@
     (wf_AState const-decl "boolean" MVASemantics nil)
     (wf_Store const-decl "boolean" MVASemantics nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (defined? const-decl "boolean" ValProp nil) nil
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil))
    756 750 t nil))
  (on_method_MVA_TCC2 0
@@ -462,7 +449,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_PEvent const-decl "boolean" MVASemantics nil)
     (wf_state_implies_wf_PSt formula-decl nil MonitoredProgramSemantics
      nil)
@@ -498,7 +485,7 @@
     (("" (typepred "mva(mp!1)")
       (("" (expand "complete") (("" (flatten) nil nil)) nil)) nil))
     nil)
-   proved
+   unchecked
    ((MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
@@ -544,7 +531,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((on_method_entry const-decl "(on_method_event_type)" SemanticsJML
      nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -572,7 +559,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -595,7 +582,7 @@
           ((";;; Proof on_method_exit_normal_MP_TCC2-1 for formula MonitoredProgramSemantics.on_method_exit_normal_MP_TCC2"
             (flatten) nil))))))))
     ";;; developed with shostak decision procedures")
-   proved
+   unchecked
    ((MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
@@ -669,13 +656,13 @@
    146 140 t nil))
  (on_method_exit_normal_MP_TCC3 0
   (on_method_exit_normal_MP_TCC3-1 nil 3401773402 3406018491
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
    467 460 nil nil))
  (on_method_exit_normal_MP_TCC4 0
   (on_method_exit_normal_MP_TCC4-1 nil 3401773402 3406018492
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((nat nonempty-type-eq-decl nil naturalnumbers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
@@ -726,20 +713,14 @@
     (wf_BoolExpr const-decl "boolean" WellFormedProgram nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (defined? const-decl "boolean" ValProp nil)
+    nil (defined? const-decl "boolean" ValProp nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (wf_Store const-decl "boolean" MVASemantics nil)
     (wf_AState const-decl "boolean" MVASemantics nil)
     (is_field const-decl "boolean" State nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (is_local const-decl "boolean" State nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (is_local const-decl "boolean" State nil) nil nil nil
     (wf_state const-decl "boolean" State nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      MonitoredProgramSemantics nil)
@@ -781,7 +762,7 @@
    1247 1210 nil nil))
  (on_method_exit_normal_MP_TCC5 0
   (on_method_exit_normal_MP_TCC5-1 nil 3401773402 3406018493
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((nat nonempty-type-eq-decl nil naturalnumbers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
@@ -866,18 +847,12 @@
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (check_assertion const-decl "boolean" SemanticsJML nil)
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (wf_Store const-decl "boolean" MVASemantics nil)
+    nil (wf_Store const-decl "boolean" MVASemantics nil)
     (wf_AState const-decl "boolean" MVASemantics nil)
     (is_field const-decl "boolean" State nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (is_local const-decl "boolean" State nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (is_local const-decl "boolean" State nil) nil nil nil
     (wf_state const-decl "boolean" State nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
@@ -905,7 +880,7 @@
             ((";;; Proof on_method_exit_normal_MP_TCC6-1 for formula MonitoredProgramSemantics.on_method_exit_normal_MP_TCC6"
               (flatten) nil))))))))))
     ";;; developed with shostak decision procedures")
-   proved
+   unchecked
    ((MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
@@ -991,7 +966,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((on_method_event_type const-decl "boolean" SemanticsTypes nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
@@ -1051,7 +1026,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -1074,7 +1049,7 @@
           ((";;; Proof on_method_exit_exceptional_MP_TCC2-1 for formula MonitoredProgramSemantics.on_method_exit_exceptional_MP_TCC2"
             (flatten) nil))))))))
     ";;; developed with shostak decision procedures")
-   proved
+   unchecked
    ((MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
@@ -1148,13 +1123,13 @@
    141 140 t nil))
  (on_method_exit_exceptional_MP_TCC3 0
   (on_method_exit_exceptional_MP_TCC3-1 nil 3401773402 3406018494
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
    468 460 nil nil))
  (on_method_exit_exceptional_MP_TCC4 0
   (on_method_exit_exceptional_MP_TCC4-1 nil 3401773402 3406018496
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((nat nonempty-type-eq-decl nil naturalnumbers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (integer_pred const-decl "[rational -> boolean]" integers nil)
@@ -1205,20 +1180,14 @@
     (wf_BoolExpr const-decl "boolean" WellFormedProgram nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (defined? const-decl "boolean" ValProp nil)
+    nil (defined? const-decl "boolean" ValProp nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (wf_Store const-decl "boolean" MVASemantics nil)
     (wf_AState const-decl "boolean" MVASemantics nil)
     (is_field const-decl "boolean" State nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (is_local const-decl "boolean" State nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (is_local const-decl "boolean" State nil) nil nil nil
     (wf_state const-decl "boolean" State nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      MonitoredProgramSemantics nil)
@@ -1288,7 +1257,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((update_PState const-decl "(update_PState_type)"
      MonitoredProgramSemantics nil)
     (raise const-decl "PState" State nil)
@@ -1298,7 +1267,7 @@
    125 130 t nil))
  (initial_MP_state_TCC1 0
   (initial_MP_state_TCC1-1 nil 3387174104 3406018496
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -1328,12 +1297,7 @@
     (union const-decl "set" sets nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    nil nil nil nil
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
@@ -1522,7 +1486,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((on_method_entry_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -1586,11 +1550,10 @@
     (= const-decl "[T, T -> boolean]" equalities nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
-    (wf_Method const-decl "boolean" WellFormedProgram nil)
-    (m1!1 skolem-const-decl "nat" MonitoredProgramSemantics nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil) nil
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (m1!2 skolem-const-decl "nat" MonitoredProgramSemantics nil)
+    nil
     (real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (wf_BoolExpr const-decl "boolean" WellFormedProgram nil)
@@ -1752,7 +1715,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (on_method_exit_normal_MP const-decl "(on_method_event_type)"
@@ -1930,7 +1893,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (on_method_exit_exceptional_MP const-decl "(on_method_event_type)"
@@ -2048,7 +2011,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
      nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
@@ -2112,8 +2075,7 @@
     (Store type-eq-decl nil State nil)
     (AState type-eq-decl nil MVASemantics nil)
     (< const-decl "bool" reals nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (n2!1 skolem-const-decl "nat" MonitoredProgramSemantics nil)
+    (below type-eq-decl nil naturalnumbers nil) nil
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])"
@@ -2162,7 +2124,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((int_minus_int_is_int application-judgement "int" integers nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
@@ -2183,9 +2145,7 @@
      real_props nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (n1!1 skolem-const-decl "nat" MonitoredProgramSemantics nil)
-    (n2!1 skolem-const-decl "nat" MonitoredProgramSemantics nil)
-    (below type-eq-decl nil naturalnumbers nil)
+    nil nil (below type-eq-decl nil naturalnumbers nil)
     (< const-decl "bool" reals nil)
     (AState type-eq-decl nil MVASemantics nil)
     (Store type-eq-decl nil State nil)
@@ -2288,7 +2248,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((execute_assert const-decl "(execute_assert_type)" SemanticsJML
      nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
@@ -2352,11 +2312,9 @@
     (<= const-decl "bool" reals nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (< const-decl "bool" reals nil)
-    (below type-eq-decl nil naturalnumbers nil)
-    (n2!1 skolem-const-decl "nat" MonitoredProgramSemantics nil)
+    (below type-eq-decl nil naturalnumbers nil) nil
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
-    (n1!1 skolem-const-decl "nat" MonitoredProgramSemantics nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil) nil
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil))
    218 180 t nil))
@@ -2372,7 +2330,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((on_method_exit_exceptional_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
     (on_method_exit_normal_MP const-decl "(on_method_event_type)"
@@ -2500,7 +2458,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_MP const-decl "boolean" MonitoredProgram nil)
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (wf_initial_ghost_state formula-decl nil SemanticsJML nil)
@@ -2527,9 +2485,7 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bottom? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (get_GhostDecl const-decl "lift[FieldDecl]" ProgramFunctions nil)
-    (mp!1 skolem-const-decl "MonitoredProgram[CP, Name]"
-     MonitoredProgramSemantics nil)
-    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    nil (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (FieldDecl type-eq-decl nil Program nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
@@ -2566,24 +2522,18 @@
    220 220 t shostak))
  (wf_update_PState 0
   (wf_update_PState-1 nil 3392375856 3406018499 ("" (grind) nil nil)
-   proved
+   unchecked
    ((NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (defined? const-decl "boolean" ValProp nil)
+    nil (defined? const-decl "boolean" ValProp nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (wf_Store const-decl "boolean" MVASemantics nil)
     (wf_AState const-decl "boolean" MVASemantics nil)
     (is_field const-decl "boolean" State nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (is_local const-decl "boolean" State nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (is_local const-decl "boolean" State nil) nil nil nil
     (wf_state const-decl "boolean" State nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      MonitoredProgramSemantics nil)
@@ -2626,7 +2576,7 @@
       (("" (expand "update_GhostVars")
         (("" (flatten) (("" (assert) nil))))))))
     nil)
-   proved
+   unchecked
    ((wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      MonitoredProgramSemantics nil))
@@ -2878,7 +2828,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((update_stack const-decl "FullState" Semantics nil)
     (default_value const-decl "(defined?)" ValProp nil)
     (defined? const-decl "boolean" ValProp nil)
@@ -2894,9 +2844,7 @@
     (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (wf_state const-decl "boolean" State nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (NOT const-decl "[bool -> bool]" booleans nil) nil nil
     (wf_state_update_locals formula-decl nil State nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (wf_state_update_local formula-decl nil State nil)
@@ -2914,9 +2862,7 @@
     (Transition type-eq-decl nil MVA nil)
     (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
     (Event type-eq-decl nil MVA nil)
-    (EventType type-decl nil EventType_adt nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
+    (EventType type-decl nil EventType_adt nil) nil
     (PreProgram type-eq-decl nil Program nil)
     (Class type-eq-decl nil Program nil)
     (Method type-eq-decl nil Program nil)
@@ -2934,31 +2880,8 @@
     (Store type-eq-decl nil State nil)
     (AState type-eq-decl nil MVASemantics nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
-    (lvds!1 skolem-const-decl "finite_set[LocalVarDecl[Name]]"
-     MonitoredProgramSemantics nil)
-    (l!1 skolem-const-decl "LocalVarDecl[Name]"
-     MonitoredProgramSemantics nil)
-    (x!1 skolem-const-decl "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]):
-      lvds!1(l) AND
-       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
-     MonitoredProgramSemantics nil)
-    (injective? const-decl "bool" functions nil)
-    (x1!1 skolem-const-decl "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]):
-      lvds!1(l) AND
-       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
-     MonitoredProgramSemantics nil)
-    (x2!1 skolem-const-decl "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]):
-      lvds!1(l) AND
-       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
-     MonitoredProgramSemantics nil)
-    (l!1 skolem-const-decl "LocalVarDecl[Name]"
-     MonitoredProgramSemantics nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (l!1 skolem-const-decl "LocalVarDecl[Name]"
-     MonitoredProgramSemantics nil)
+    nil nil nil (injective? const-decl "bool" functions nil) nil nil
+    nil (nonempty_exists formula-decl nil sets_lemmas nil) nil
     (choose const-decl "(p)" sets nil)
     (below type-eq-decl nil nat_types nil)
     (< const-decl "bool" reals nil)
@@ -3045,7 +2968,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((on_method_MVA const-decl "AState" MonitoredProgramSemantics nil)
     (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
@@ -3096,15 +3019,7 @@
     (wf_MVA const-decl "boolean" WellFormedMVA nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
-    (total const-decl "boolean" MVASemantics nil)
-    (mp!1 skolem-const-decl "MonitoredProgram[CP, Name]"
-     MonitoredProgramSemantics nil)
-    (t!1 skolem-const-decl "Transition[CP, Name]"
-     MonitoredProgramSemantics nil)
-    (s!1 skolem-const-decl "MPState" MonitoredProgramSemantics nil)
-    (et!1 skolem-const-decl "EventType" MonitoredProgramSemantics nil)
-    (m!1 skolem-const-decl "(wf_Method(program(mp!1)))"
-     MonitoredProgramSemantics nil)
+    (total const-decl "boolean" MVASemantics nil) nil nil nil nil nil
     (wf_AState const-decl "boolean" MVASemantics nil)
     (step const-decl "AState" MVASemantics nil))
    293 260 t shostak))
@@ -5037,7 +4952,7 @@
                                                                                                       nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
      ("2" (use "wf_nat") nil))
     ";;; developed with shostak decision procedures")
-   unfinished nil 19767 16490 nil nil)
+   unchecked nil 19767 16490 nil nil)
   (derive_yields_wf_state_MP-2 nil 3405932140 3405932535
    ("" (lemma "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
     (("1"
@@ -10477,6 +10392,104 @@ wf_state(mp!1)(s2)")
     (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
     (wf_nat formula-decl nil naturalnumbers nil))
    1686477 36250 t shostak))
+ (on_method_MVA_never_leaves_halted 0
+  (on_method_MVA_never_leaves_halted-1 nil 3406035341 3406035462
+   ("" (skosimp*)
+    (("" (typepred "mva(mp!1)")
+      (("" (expand* "complete" "trap_state" "total")
+        (("" (flatten)
+          (("" (expand "on_method_MVA")
+            (("" (lift-if)
+              (("" (assert)
+                (("" (split 1)
+                  (("1" (skosimp*)
+                    (("1" (expand "step")
+                      (("1" (inst?)
+                        (("1" (assert) nil nil)
+                         ("2" (rewrite "nonempty_exists")
+                          (("2"
+                            (inst -7 "halted"
+                             "(# etype := etype!1, mname := name(md!1) #)"
+                             "stA(astate(s!1))" "st(pstate(s!1))")
+                            (("2" (assert)
+                              (("2"
+                                (skosimp*)
+                                (("2"
+                                  (inst 1 "t!1")
+                                  (("2" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (propax) nil nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (CP formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
+    (Name formal-nonempty-type-decl nil MonitoredProgramSemantics nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (step const-decl "AState" MVASemantics nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (t!1 skolem-const-decl "Transition[CP, Name]"
+     MonitoredProgramSemantics nil)
+    (PSt type-eq-decl nil State nil) (halted const-decl "CP" MVA nil)
+    (choose const-decl "(p)" sets nil) (set type-eq-decl nil sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (mp!1 skolem-const-decl "MonitoredProgram[CP, Name]"
+     MonitoredProgramSemantics nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (AState type-eq-decl nil MVASemantics nil)
+    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
+    (s!1 skolem-const-decl "MPState" MonitoredProgramSemantics nil)
+    (etype!1 skolem-const-decl "EventType" MonitoredProgramSemantics
+     nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (md!1 skolem-const-decl "(wf_Method(program(mp!1)))"
+     MonitoredProgramSemantics nil)
+    (on_method_MVA const-decl "AState" MonitoredProgramSemantics nil)
+    (total const-decl "boolean" MVASemantics nil)
+    (trap_state const-decl "boolean" MVASemantics nil))
+   120188 270 t shostak))
  (derive_never_leaves_halted 0
   (derive_never_leaves_halted-1 nil 3404128932 3406019298
    ("" (lemma "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
@@ -12296,7 +12309,7 @@ wf_state(mp!1)(s2)")
       nil)
      ("2" (use "wf_nat") nil nil))
     nil)
-   proved
+   unchecked
    ((< const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
@@ -12322,46 +12335,30 @@ wf_state(mp!1)(s2)")
     (check_for_exception const-decl "bool" Semantics nil)
     (arg adt-accessor-decl "[(MethodCall?) -> Expr]" Body_adt nil)
     (update_stack const-decl "FullState" Semantics nil)
-    (catch const-decl "PState" State nil)
-    (m2!2 skolem-const-decl "nat" MonitoredProgramSemantics nil)
-    (tau1!2 skolem-const-decl "MPState" MonitoredProgramSemantics nil)
+    (catch const-decl "PState" State nil) nil nil
     (ExitExceptional? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
     (ExitExceptional adt-constructor-decl "(ExitExceptional?)"
      EventType_adt nil)
-    (t!1 skolem-const-decl "Transition[CP, Name]"
-     MonitoredProgramSemantics nil)
-    (m2!2 skolem-const-decl "nat" MonitoredProgramSemantics nil)
-    (check_assertion const-decl "boolean" SemanticsJML nil)
+    nil nil (check_assertion const-decl "boolean" SemanticsJML nil)
     (Unit? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
     (Unit adt-constructor-decl "(Unit?)" Val_adt nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
-    (nonempty_exists formula-decl nil sets_lemmas nil)
-    (t!1 skolem-const-decl "Transition[CP, Name]"
-     MonitoredProgramSemantics nil)
-    (choose const-decl "(p)" sets nil)
-    (md!1 skolem-const-decl "(wf_Method(program(mp!1)))"
-     MonitoredProgramSemantics nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil) nil
+    (choose const-decl "(p)" sets nil) nil
     (ExitNormal adt-constructor-decl "(ExitNormal?)" EventType_adt nil)
     (ExitNormal? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
-    (tau1!2 skolem-const-decl "MPState" MonitoredProgramSemantics nil)
-    (mp!1 skolem-const-decl "MonitoredProgram[CP, Name]"
-     MonitoredProgramSemantics nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    nil nil (AND const-decl "[bool, bool -> bool]" booleans nil)
     (nonempty? const-decl "bool" sets nil)
     (set type-eq-decl nil sets nil)
     (total const-decl "boolean" MVASemantics nil)
     (trap_state const-decl "boolean" MVASemantics nil)
     (on_method_MVA const-decl "AState" MonitoredProgramSemantics nil)
-    (step const-decl "AState" MVASemantics nil)
-    (m1!2 skolem-const-decl "nat" MonitoredProgramSemantics nil)
-    (s_new!1 skolem-const-decl "MPState" MonitoredProgramSemantics nil)
+    (step const-decl "AState" MVASemantics nil) nil nil
     (Entry? adt-recognizer-decl "[EventType -> boolean]" EventType_adt
      nil)
-    (Entry adt-constructor-decl "(Entry?)" EventType_adt nil)
-    (t!1 skolem-const-decl "Transition[CP, Name]"
-     MonitoredProgramSemantics nil)
+    (Entry adt-constructor-decl "(Entry?)" EventType_adt nil) nil
     (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
      nil)
     (tgt adt-accessor-decl "[(MethodCall?) -> Expr]" Body_adt nil)
@@ -12394,8 +12391,7 @@ wf_state(mp!1)(s2)")
     (branches adt-accessor-decl
      "[(CaseJML?) -> list[[BoolExpr, Stmt]]]" Body_adt nil)
     (list_induction formula-decl nil list_adt nil)
-    (extend const-decl "R" extend nil)
-    (every adt-def-decl "boolean" list_adt nil)
+    (extend const-decl "R" extend nil) nil
     (CaseJML adt-constructor-decl
      "[list[[BoolExpr, Stmt]] -> (CaseJML?)]" Body_adt nil)
     (IfThenElse adt-constructor-decl

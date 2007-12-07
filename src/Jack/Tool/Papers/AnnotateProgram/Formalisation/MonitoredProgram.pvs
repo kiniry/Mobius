@@ -305,6 +305,13 @@ BEGIN
         wf_state(mp)(sigma2)
 
 
+  on_method_MVA_never_leaves_halted : LEMMA % :-)
+     FORALL (etype : EventType)
+            (mp : MonitoredProgram, md : (wf_Method(program(mp))))
+            (s : MPState) :
+       cp(astate(s)) = halted IMPLIES
+       cp(on_method_MVA(etype)(mp, md)(s)) = halted
+
   derive_never_leaves_halted : LEMMA % :-)
     FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
            (sigma1, sigma2 : MPState, n : nat) :
