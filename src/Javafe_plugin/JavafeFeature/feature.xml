@@ -2,7 +2,7 @@
 <feature
       id="mobius.javafe.feature"
       label="Javafe Feature"
-      version="2.0.5"
+      version="2.0.6"
       provider-name="Mobius IST-15905">
 
    <description url=" ">
