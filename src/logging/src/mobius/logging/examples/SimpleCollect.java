@@ -6,19 +6,19 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -64,9 +64,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see Statistic
  * @see AbstractCollect
  */
-//@ non_null_by_default
-public class SimpleCollect extends AbstractCollect implements Cloneable
-{
+//@ nullable_by_default
+public class SimpleCollect extends AbstractCollect
+  implements Cloneable {
   // Attributes
 
   /**
@@ -79,8 +79,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
   /**
    * <p> Construct a new <code>SimpleCollect</code> class. </p>
    */
-  public SimpleCollect()
-  {
+  public SimpleCollect() {
     super();
     my_data = new ConcurrentHashMap();
   }
@@ -88,7 +87,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
   // Inherited methods
 
   /** {@inheritDoc} */
-  public Object clone() throws CloneNotSupportedException {
+  public final Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
@@ -101,7 +100,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    *
    * @param the_statistic the statistic to register.
    */
-  //@ ensures isRegistered(the_statistic); 
+  //@ ensures isRegistered(the_statistic);
   public void register(final /*@ non_null @*/ Statistic the_statistic) {
     super.register(the_statistic);
     reset(the_statistic);
@@ -134,9 +133,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    * @param the_statistic the statistic being reported on.
    * @return a simple <code>String</code> textual report.
    */
-
-  public Object report(final /*@ non_null @*/ Statistic the_statistic)
-  {
+  public Object report(final /*@ non_null @*/ Statistic the_statistic) {
     return "[" + the_statistic.getID() + "]" +
       (((Double)my_data.get(the_statistic)).doubleValue() * the_statistic.getScale()) +
       " " + the_statistic.getUnits();
@@ -149,9 +146,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    * <code>String</code> textual report.
    * @see #report(Statistic)
    */
-
-  public Object reportAll()
-  {
+  public Object reportAll() {
     String result_full_report = "";
     final Iterator keys = my_data.keySet().iterator();
 
@@ -168,10 +163,8 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    * @param the_value the amount to increment the statistic.
    * @return the old value of the statistic.
    */
-
   public double increment(final /*@ non_null @*/ Statistic the_statistic,
-                          final double the_value)
-  {
+                          final double the_value) {
     final double oldValue = currentValue(the_statistic);
 
     my_data.put(the_statistic, new Double(oldValue + the_value));
@@ -184,9 +177,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    * @param the_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
-
-  public double increment(final /*@ non_null @*/ Statistic the_statistic)
-  {
+  public double increment(final /*@ non_null @*/ Statistic the_statistic) {
     final double oldValue = currentValue(the_statistic);
 
     my_data.put(the_statistic, new Double(oldValue + the_statistic.getIncrement()));
@@ -200,10 +191,8 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    * @param the_value the amount to decrement the statistic.
    * @return the old value of the statistic.
    */
-
   public double decrement(final /*@ non_null @*/ Statistic the_statistic,
-                          final double the_value)
-  {
+                          final double the_value) {
     final double oldValue = currentValue(the_statistic);
 
     my_data.put(the_statistic, new Double(oldValue - the_value));
@@ -216,9 +205,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    * @param the_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
-
-  public double decrement(final /*@ non_null @*/ Statistic the_statistic)
-  {
+  public double decrement(final /*@ non_null @*/ Statistic the_statistic) {
     final double oldValue = currentValue(the_statistic);
 
     my_data.put(the_statistic, new Double(oldValue + the_statistic.getDecrement()));
@@ -231,9 +218,7 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    * @param the_statistic the statistic to reset.
    * @return the old value of the statistic.
    */
-
-  public double reset(final /*@ non_null @*/ Statistic the_statistic)
-  {
+  public double reset(final /*@ non_null @*/ Statistic the_statistic) {
     final double oldValue = currentValue(the_statistic);
 
     my_data.put(the_statistic, new Double(the_statistic.getStart()));
@@ -247,10 +232,8 @@ public class SimpleCollect extends AbstractCollect implements Cloneable
    * @param the_value the new value of the statistic.
    * @return the old value of the statistic.
    */
-
   public double set(final /*@ non_null @*/ Statistic the_statistic,
-                    final double the_value)
-  {
+                    final double the_value) {
     final double oldValue = currentValue(the_statistic);
 
     my_data.put(the_statistic, new Double(the_value));

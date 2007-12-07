@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -44,7 +44,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
-/** 
+/**
  * <p> <code>Debug</code> is the core class of the Mobius logging and debugging
  * facilities. </p>
  *
@@ -183,9 +183,9 @@ import java.util.Map;
  * per-thread debugging state and, if not, return the global output
  * interface?
  */
-//@ non_null_by_default
-public class Debug implements Cloneable
-{
+//@ nullable_by_default
+public class Debug
+  implements Cloneable {
   // Attributes
 
   /**
@@ -293,9 +293,7 @@ public class Debug implements Cloneable
    * <code>setOutputInterface</code> need be called on the newly
    * constructed <code>Debug</code> object before it can be used. </p>
    */
-
-  public Debug()
-  {
+  public Debug() {
     init(new DefaultDebugConstants(), null);
   }
 
@@ -309,10 +307,8 @@ public class Debug implements Cloneable
    * @param a_collect an implementation of the <code>Collect</code> class.
    * @see mobius.logging.examples.SimpleCollect
    */
-
   public Debug(final /*@ non_null @*/ DebugConstants some_constants,
-               final /*@ non_null @*/ AbstractCollect a_collect)
-  {
+               final /*@ non_null @*/ AbstractCollect a_collect) {
     init(some_constants, a_collect);
   }
 
@@ -323,8 +319,7 @@ public class Debug implements Cloneable
   /**
    * {@inheritDoc}
    */
-  public final Object clone() throws CloneNotSupportedException
-  {
+  public final Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
@@ -341,8 +336,7 @@ public class Debug implements Cloneable
    * @modifies debugOutputInterface
    * @param the_new_debug_output the new output interface.
    */
-  public void setOutputInterface(final DebugOutput the_new_debug_output)
-  {
+  public void setOutputInterface(final DebugOutput the_new_debug_output) {
     this.my_debug_output_interface = the_new_debug_output;
   }
 
@@ -352,8 +346,7 @@ public class Debug implements Cloneable
    * @return the <code>Assert</code> object associated with this
    * <code>Debug</code> object.
    */
-  public /*@ pure @*/ Assert getAssert()
-  {
+  public /*@ pure @*/ Assert getAssert() {
     return my_assert;
   }
 
@@ -363,8 +356,7 @@ public class Debug implements Cloneable
    * @return the <code>Collect</code> object associated with this
    * <code>Debug</code> object.
    */
-  public /*@ pure @*/ AbstractCollect getCollect()
-  {
+  public /*@ pure @*/ AbstractCollect getCollect() {
     return my_collect;
   }
 
@@ -375,12 +367,11 @@ public class Debug implements Cloneable
    * thread or, if that thread has no interface, the global output
    * interface.
    */
-  public /*@ pure @*/ DebugOutput getOutputInterface()
-  {
-    Thread currentThread = Thread.currentThread();
+  public /*@ pure @*/ DebugOutput getOutputInterface() {
+    final Thread currentThread = Thread.currentThread();
 
     if (my_thread_map.containsKey(currentThread)) {
-      Context debugContext =
+      final Context debugContext =
         (Context)(my_thread_map.get(currentThread));
       return debugContext.getOutputInterface();
     } else return this.my_debug_output_interface;
@@ -392,9 +383,7 @@ public class Debug implements Cloneable
    * @return the <code>DebugConstants</code> for this <code>Debug</code>
    * object.
    */
-
-  public DebugConstants getDebugConstants()
-  {
+  public DebugConstants getDebugConstants() {
     return my_debug_constants;
   }
 
@@ -405,7 +394,6 @@ public class Debug implements Cloneable
    * @modifies QUERY
    * @return a boolean indicating if any debugging is turned on.
    */
-
   public synchronized boolean isOn() {
     return my_is_on;
   }
@@ -421,9 +409,7 @@ public class Debug implements Cloneable
    * @return a boolean indicating whether any debugging facilities are
    * turned on for a particular thread.
    */
-
-  public synchronized boolean isOn(/*@ non_null @*/ Thread thread)
-  {
+  public synchronized boolean isOn(/*@ non_null @*/ Thread thread) {
     // Make sure that there is a legal entry in the threadMap
     // for this particular thread.
     if (my_thread_map.containsKey(thread)) {
@@ -431,8 +417,7 @@ public class Debug implements Cloneable
       final Context the_debug_context = (Context)(my_thread_map.get(thread));
 
       return the_debug_context.isOn();
-    }
-    else return false;
+    } else return false;
   }
 
   /**
@@ -459,21 +444,17 @@ public class Debug implements Cloneable
    * turned off for a particular thread.
    * @review kiniry Are the isOff() methods necessary at all?
    */
-
-  public synchronized boolean isOff(/*@ non_null @*/ Thread thread)
-  {
+  public synchronized boolean isOff(/*@ non_null @*/ Thread thread) {
     return (!isOn(thread));
   }
-  
+
   /**
    * <p> Turns on class-global debugging facilities. </p>
    *
    * @concurrency GUARDED
    * @modifies isOn
    */
-
-  public synchronized void turnOn()
-  {
+  public synchronized void turnOn() {
     my_is_on = true;
   }
 
@@ -483,9 +464,7 @@ public class Debug implements Cloneable
    * @concurrency GUARDED
    * @modifies isOn
    */
-
-  public synchronized void turnOff()
-  {
+  public synchronized void turnOff() {
     my_is_on = false;
   }
 
@@ -496,7 +475,7 @@ public class Debug implements Cloneable
    *
    * @concurrency GUARDED
    * @modifies threadMap, categoryMap
-   * @param category the category to add to the global set of 
+   * @param category the category to add to the global set of
    * categories.
    * @param level the debugging level associated with the passed
    * category.
@@ -506,12 +485,10 @@ public class Debug implements Cloneable
    * were invalid.
    */
   //@ requires 0 < category.length();
-  public synchronized boolean addCategory(/*@ non_null @*/ String category, 
-                                          int level)
-  {
+  public synchronized boolean addCategory(/*@ non_null @*/ String category,
+                                          int level) {
     // Get a reference to the global category map.
-    Map categoryMap = 
-      (Map)(my_thread_map.get("GLOBAL_CATEGORIES"));
+    final Map categoryMap = (Map)(my_thread_map.get("GLOBAL_CATEGORIES"));
 
     return addCategoryToMap(categoryMap, category, level);
   }
@@ -528,11 +505,9 @@ public class Debug implements Cloneable
    * were invalid.
    */
   //@ requires 0 < category.length();
-  public synchronized boolean removeCategory(/*@ non_null @*/ String category)
-  {
+  public synchronized boolean removeCategory(/*@ non_null @*/ String category) {
     // Get a reference to the global category map.
-    Map categoryMap =
-      (Map)(my_thread_map.get("GLOBAL_CATEGORIES"));
+    final Map categoryMap = (Map)(my_thread_map.get("GLOBAL_CATEGORIES"));
 
     return removeCategoryFromMap(categoryMap, category);
   }
@@ -548,16 +523,14 @@ public class Debug implements Cloneable
    * category database.
    */
   //@ requires 0 < category.length();
-  public synchronized boolean containsCategory(/*@ non_null @*/ String category)
-  {
+  public synchronized boolean containsCategory(/*@ non_null @*/ String category) {
     // Get global category map.
-    Map map =
-      (Map)(my_thread_map.get("GLOBAL_CATEGORIES"));
-    
+    final Map map = (Map)(my_thread_map.get("GLOBAL_CATEGORIES"));
+
     // If entry exists, return a true; otherwise return a false.
     return (map.containsKey(category));
   }
-  
+
   /**
    * <p> Returns an <code>Iterator</code> that contains the list of
    * class-global debugging categories that are currently in the category
@@ -569,13 +542,10 @@ public class Debug implements Cloneable
    * debugging categories that are currently in the category database.
    * @see Map#values
    */
-
-  public synchronized Iterator listCategories()
-  {
+  public synchronized Iterator listCategories() {
     // Get global category map.
-    Map map = 
-      (Map)(my_thread_map.get("GLOBAL_CATEGORIES"));
-    
+    final Map map = (Map)(my_thread_map.get("GLOBAL_CATEGORIES"));
+
     return (map.values().iterator());
   }
 
@@ -588,12 +558,9 @@ public class Debug implements Cloneable
    * @param classRef the class to add to the global table of classes
    * that have debugging enabled.
    */
-
-  public synchronized void addClass(/*@ non_null @*/ Class classRef)
-  {
+  public synchronized void addClass(/*@ non_null @*/ Class classRef) {
     //  Get a reference to the global class map.
-    Map classMap = 
-      (Map)(my_thread_map.get("GLOBAL_CLASSES"));
+    final Map classMap = (Map)(my_thread_map.get("GLOBAL_CLASSES"));
 
     Utilities.addClassToMap(classMap, classRef.getName());
   }
@@ -610,15 +577,13 @@ public class Debug implements Cloneable
    * @param className the name of the class to add.
    */
   //@ requires 0 < className.length();
-  public synchronized void addClass(/*@ non_null @*/ String className)
-  {
+  public synchronized void addClass(/*@ non_null @*/ String className) {
     //  Get a reference to the global class map.
-    Map classMap = 
-      (Map)(my_thread_map.get("GLOBAL_CLASSES"));
+    final Map classMap = (Map)(my_thread_map.get("GLOBAL_CLASSES"));
 
     Utilities.addClassToMap(classMap, className);
   }
-  
+
   /**
    * <p> Removes a class the the class-global database of classes that have
    * debugging enabled. </p>
@@ -627,15 +592,11 @@ public class Debug implements Cloneable
    * @modifies threadMap, classMap
    * @param classRef the class to remove.
    */
-
-  public synchronized void removeClass(/*@ non_null @*/ Class classRef)
-  {
+  public synchronized void removeClass(/*@ non_null @*/ Class classRef) {
     //  Get a reference to the global class map.
-    Map classMap = 
-      (Map)(my_thread_map.get("GLOBAL_CLASSES"));
+    final Map classMap = (Map)(my_thread_map.get("GLOBAL_CLASSES"));
 
-    Utilities.removeClassFromMap(classMap, 
-                                       classRef.getName());
+    Utilities.removeClassFromMap(classMap, classRef.getName());
   }
 
   /**
@@ -650,14 +611,11 @@ public class Debug implements Cloneable
    * @param className the name of the class to remove.
    */
   //@ requires 0 < className.length();
-  public synchronized void removeClass(/*@ non_null @*/ String className)
-  {
+  public synchronized void removeClass(/*@ non_null @*/ String className) {
     //  Get a reference to the global class map.
-    Map classMap = 
-      (Map)(my_thread_map.get("GLOBAL_CLASSES"));
+    final Map classMap = (Map)(my_thread_map.get("GLOBAL_CLASSES"));
 
-    Utilities.removeClassFromMap(classMap, 
-                                       className);
+    Utilities.removeClassFromMap(classMap, className);
   }
 
   /**
@@ -670,9 +628,7 @@ public class Debug implements Cloneable
    * @return the <code>Context</code> corresponding to thread, or
    * <code>null</code> if no such context exists.
    */
-
-  public synchronized Context getContext(/*@ non_null @*/ Thread thread)
-  {
+  public synchronized Context getContext(/*@ non_null @*/ Thread thread) {
     if (my_thread_map.containsKey(thread))
       return (Context)(my_thread_map.get(thread));
     else return null;
@@ -690,9 +646,7 @@ public class Debug implements Cloneable
    * database sucessfully or that the thread was already in the
    * database.  A false indicates that the context was invalid.
    */
-
-  public synchronized boolean addContext(/*@ non_null @*/ Context the_debug_context)
-  {
+  public synchronized boolean addContext(/*@ non_null @*/ Context the_debug_context) {
     // @review kiniry Why is a null value being checked given the precondition?
     if (the_debug_context == null)
       return false;
@@ -714,11 +668,9 @@ public class Debug implements Cloneable
    * database at all.  A false indicates that the context was
    * invalid or not in the table.
    */
-
-  public synchronized boolean removeContext(/*@ non_null @*/ Context debugContext)
-  {
+  public synchronized boolean removeContext(/*@ non_null @*/ Context debugContext) {
     // @review kiniry Why is a null value being checked given the precondition?
-    if ((debugContext != null) && 
+    if ((debugContext != null) &&
         (my_thread_map.containsKey(debugContext))) {
       my_thread_map.remove(debugContext);
       return true;
@@ -736,18 +688,15 @@ public class Debug implements Cloneable
    * database). Returns a null if a null is passed, otherwise a zero-length
    * Enumeration will be returned if there is no information on the thread
    * at all.
-   * @see Map#elements
    */
-
-  public synchronized Iterator listClasses()
-  {
+  public synchronized Iterator listClasses() {
     // Get global category map.
-    Map map = 
+    final Map map =
       (Map)(my_thread_map.get("GLOBAL_CLASSES"));
-    
+
     return (map.values().iterator());
   }
-  
+
   /**
    * <p> Set a new class-global debugging level. </p>
    *
@@ -758,15 +707,13 @@ public class Debug implements Cloneable
    * The only reason why a setLevel might fail is if the level passed
    * is out of range.
    */
-
-  public synchronized boolean setLevel(int level)
-  {
-    if ((level >= my_debug_constants.LEVEL_MIN) && 
+  public synchronized boolean setLevel(int level) {
+    if ((level >= my_debug_constants.LEVEL_MIN) &&
         (level <= my_debug_constants.LEVEL_MAX)) {
       this.my_level = level;
       return true;
     } else return false;
-    
+
   }
 
   /**
@@ -777,8 +724,7 @@ public class Debug implements Cloneable
    * @return the current class-global debugging level.
    */
 
-  public synchronized int getLevel()
-  {
+  public synchronized int getLevel() {
     return my_level;
   }
 
@@ -791,11 +737,8 @@ public class Debug implements Cloneable
    * @return an <code>Enumeration</code> that is the list of class-global
    * threads that currently have debugging enabled (they are in the thread
    * database).
-   * @see Map#keys
    */
-
-  public synchronized Iterator listThreads()
-  {
+  public synchronized Iterator listThreads() {
     return my_thread_map.keySet().iterator();
   }
 
@@ -816,20 +759,20 @@ public class Debug implements Cloneable
    * defines the semantics of this debug context.
    * @param the_collect an implementation of the <code>Collect</code> class.
    */
+  //@ assignable my_thread_map, my_debug_constants, my_assert, my_collect, my_debug_utilities;
   //@ ensures threadMap != null;
   //@ ensures getAssert() != null;
   //@ ensures getCollect() == the_collect;
   //@ ensures the_debug_utilities != null;
   //@ ensures getDebugConstants() == the_debug_constants;
   private void init(DebugConstants the_debug_constants,
-                    AbstractCollect the_collect)
-  {
+                    AbstractCollect the_collect) {
     my_thread_map = new ConcurrentHashMap();
-    Map categoryMap = new ConcurrentHashMap();
+    final Map categoryMap = new ConcurrentHashMap();
     my_thread_map.put("GLOBAL_CATEGORIES", categoryMap);
     this.my_debug_constants = the_debug_constants;
     my_debug_constants.initCategories(categoryMap);
-    Map classMap = new ConcurrentHashMap();
+    final Map classMap = new ConcurrentHashMap();
     my_thread_map.put("GLOBAL_CLASSES", classMap);
     classMap.put("*", Boolean.TRUE);
 
@@ -838,9 +781,6 @@ public class Debug implements Cloneable
     this.my_collect = the_collect;
 
     my_debug_utilities = new Utilities(this);
-
-    /** changeonly{threadMap, debugConstants, assert, collect, 
-                   debugUtilities}; **/
   }
 
   /**
@@ -862,10 +802,9 @@ public class Debug implements Cloneable
    * were invalid.
    */
   //@ requires 0 < category.length();
-  private synchronized boolean 
-    addCategoryToMap(/*@ non_null @*/ Map map, 
-                     /*@ non_null @*/ String category, int level)
-  {
+  private synchronized boolean
+  addCategoryToMap(/*@ non_null @*/ Map map,
+                     /*@ non_null @*/ String category, int level) {
     // See if an entry for the passed category exists.
     if (map.containsKey(category)) {
       return (((Integer)(map.get(category))).intValue() == level);
@@ -889,17 +828,16 @@ public class Debug implements Cloneable
    * were invalid.
    */
   //@ requires 0 < category.length();
-  private synchronized boolean 
-    removeCategoryFromMap(/*@ non_null @*/ Map map, 
-                          /*@ non_null @*/ String category)
-  {
+  private synchronized boolean
+  removeCategoryFromMap(/*@ non_null @*/ Map map,
+                          /*@ non_null @*/ String category) {
      // If is in the map, remove it.
     if (map.containsKey(category))
       map.remove(category);
-    
+
     return true;
   }
-  
+
 } // end of class Debug
 
 /*

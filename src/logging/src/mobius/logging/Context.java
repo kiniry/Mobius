@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -82,7 +82,7 @@ import java.util.Map;
  * via the <code>addContext()</code> method so that the debugging
  * runtime system knows the threads context. </p>
  *
- * @version $Revision: 1.1.1.1 $ $Date: 2002/12/29 12:36:10 $
+ * @version alpha_1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Debug
  * @see DebugConstants
@@ -93,8 +93,9 @@ import java.util.Map;
  * clone() method is part of the IDebug context design and is not
  * implemented for changeonly semantics.
  */
-//@ non_null_by_default
-public class Context implements Cloneable, Serializable
+//@ nullable_by_default
+public class Context
+  implements Cloneable, Serializable
 {
   // Attributes
 
@@ -139,7 +140,7 @@ public class Context implements Cloneable, Serializable
   /**
    * @serial The debugging constants for this class.
    */
-  private DebugConstants my_debug_constants = null;
+  private DebugConstants my_debug_constants;
 
   /**
    * @serial A flag indicating if debugging is enabled for this
@@ -360,7 +361,8 @@ public class Context implements Cloneable, Serializable
    * category database.
    */
   //@ requires category.length() > 0;
-  public synchronized /*@ pure @*/ boolean containsCategory(/*@ non_null @*/ String a_category) {
+  public synchronized /*@ pure @*/ boolean
+  containsCategory(/*@ non_null @*/ String a_category) {
     return (my_category_map.containsKey(a_category));
   }
 
@@ -384,7 +386,6 @@ public class Context implements Cloneable, Serializable
    * categories that are currently in this Context's category
    * database.  An empty iterator will be returned if there
    * are no categories defined in the database as of yet.
-   * @see Map#elements
    */
   public synchronized /*@ pure @*/ Iterator listCategories() {
     return (my_category_map.values().iterator());
@@ -399,7 +400,8 @@ public class Context implements Cloneable, Serializable
    * @param className the name of the class to check.
    */
   //@ requires className.length() > 0;
-  public synchronized /*@ pure @*/ boolean containsClass(final /*@ non_null @*/ String className) {
+  public synchronized /*@ pure @*/ boolean
+  containsClass(final /*@ non_null @*/ String className) {
     return my_class_map.containsKey(className);
   }
 
@@ -411,7 +413,8 @@ public class Context implements Cloneable, Serializable
    * @concurrency GUARDED
    * @param classRef the class to check.
    */
-  public synchronized /*@ pure @*/ boolean containsClass(final /*@ non_null @*/ Class classRef) {
+  public synchronized /*@ pure @*/ boolean
+  containsClass(final /*@ non_null @*/ Class classRef) {
     return containsClass(classRef.getName());
   }
 
@@ -484,7 +487,6 @@ public class Context implements Cloneable, Serializable
    * currently have debugging enabled (they are in the class database)
    * for the owning thread. Returns an empty iterator if there
    * are no enabled classes.
-   * @see Map#elements
    */
   public synchronized /*@ pure @*/ Iterator listClasses() {
     return (my_class_map.values().iterator());

@@ -1,7 +1,7 @@
 /*
  * Software Engineering Tools.
  *
- * $Id: DefaultDebugConstants.jass,v 1.1.1.1 2002/12/29 12:36:14 kiniry Exp $
+ * $Id: Event.jass,v 1.1.1.1 2002/12/29 12:36:15 kiniry Exp $
  *
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
@@ -40,56 +40,69 @@
 
 package mobius.logging;
 
-import java.util.Map;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
- * <p> The default implementation of debug semantics for the IDebug
- * framework. </p>
+ * <p> Event is the type of all log/monitoring events. </p>
  *
- * @version alpha_1
- * @author Joseph R. Kiniry (kiniry@acm.org)
+ * @version alpha-1
+ * @author Joseph Kiniry (kiniry@acm.org)
+ * @bon Represents a single important event of any kind. The event includes
+ * a source, description, importance, and time, among other things.
  */
 //@ nullable_by_default
-public class DefaultDebugConstants
-  implements DebugConstants {
-  // Attributes
-  // Inherited Methods
-  // Constructors
+interface Event extends Serializable, Cloneable {
+
   // Public Methods
 
   /**
-   * Initializes default categories of debugging facilities.
+   * <p> What is the source system of this event? </p>
    *
-   * @concurrency CONCURRENT
-   * @param the_categories_map is the map to initialize.
-   *
-   * @see DebugConstants The default debug categories are documented in
-   * DebugConstants.
+   * @design Original examples show source host being a textual machine
+   * name and/or port number, but this isn't a requirement.
+   * @return the source system for this event.
    */
-  //@ ensures the_categories_map.size() == 6;
-  public void initCategories(/*@ non_null @*/ Map the_categories_map) {
-    the_categories_map.put(ASSERTION, Integer.valueOf(ASSERTION_LEVEL));
-    the_categories_map.put(FAILURE, Integer.valueOf(FAILURE_LEVEL));
-    the_categories_map.put(CRITICAL, Integer.valueOf(CRITICAL_LEVEL));
-    the_categories_map.put(ERROR, Integer.valueOf(ERROR_LEVEL));
-    the_categories_map.put(WARNING, Integer.valueOf(WARNING_LEVEL));
-    the_categories_map.put(NOTICE, Integer.valueOf(NOTICE_LEVEL));
-  }
+  String getSourceHost();
 
   /**
-   * @param the_level the level to check.
-   * @return a boolean indicating if the passed level is valid.
+   * <p> What is the source component of this event? </p>
+   *
+   * @design Original examples show source component being a textual name
+   * of a component and a version number, but this isn't a requirement.
+   * @return the source component of this event.
    */
+  String getSourceComponent();
 
-  public boolean checkLevel(int the_level) {
-    return ((LEVEL_MIN <= the_level) && (the_level <= LEVEL_MAX));
-  }
+  /**
+   * <p> When was this event generated? </p>
+   *
+   * @return the time at which this event was generated.
+   */
+  Date getCreationDate();
 
-  // Protected Methods
-  // Package Methods
-  // Private Methods
+  /**
+   * <p> What is the description of this event? </p>
+   *
+   * @return the description of this event.
+   */
+  String getDescription();
+  /**
+   * <p> What type of event is this? </p>
+   *
+   * @return the type of this event.
+   * @see DebugConstants
+   */
+  String getType();
 
-} // end of class DefaultDebugConstants
+  /**
+   * <p> How important is this event? </p>
+   *
+   * @return the level of importance of this event.
+   */
+  int getLevel();
+
+} // end of class Event
 
 /*
  * Local Variables:
@@ -97,4 +110,3 @@ public class DefaultDebugConstants
  * fill-column: 75
  * End:
  */
-

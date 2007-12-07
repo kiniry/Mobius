@@ -50,9 +50,9 @@ package mobius.logging;
  * @see Debug
  * @see Context
  */
-//@ non_null_by_default
-public class Assert implements Cloneable
-{
+//@ nullable_by_default
+public class Assert
+  implements Cloneable {
   // Attributes
 
   /**
@@ -75,8 +75,7 @@ public class Assert implements Cloneable
    *
    * @param the_debug the debugging interface associated with this assertion interface.
    */
-  Assert(final Debug the_debug)
-  {
+  Assert(final Debug the_debug) {
     my_debug = the_debug;
   }
 
@@ -96,8 +95,7 @@ public class Assert implements Cloneable
    * @concurrency GUARDED
    * @modifies QUERY
    */
-  public static synchronized /*@ pure @*/ void assertTrue(final boolean the_assertion)
-  {
+  public static synchronized /*@ pure @*/ void assertTrue(final boolean the_assertion) {
     if (!the_assertion) {
       Utilities.dumpStackSafe();
       throw new FailedAssertionException();
@@ -119,8 +117,7 @@ public class Assert implements Cloneable
    * @modifies QUERY
    */
   public final synchronized /*@ pure @*/ void assertTrue(final boolean the_assertion,
-                                                         final String the_assertion_text)
-  {
+                                                         final String the_assertion_text) {
     if (!the_assertion) {
       final String output = my_debug.getDebugConstants().FAILED_ASSERTION_STRING +
         " `" + the_assertion_text + "'\n";
@@ -147,9 +144,10 @@ public class Assert implements Cloneable
    * @concurrency GUARDED
    * @modifies QUERY
    */
-  public final synchronized /*@ pure @*/ void assertTrue(final boolean the_assertion,
-                                                         final String the_assertion_text,
-                                                         /*@ non_null @*/ final Object the_assertion_message) {
+  public final synchronized /*@ pure @*/ void
+  assertTrue(final boolean the_assertion,
+             final String the_assertion_text,
+             /*@ non_null @*/ final Object the_assertion_message) {
     if (!the_assertion) {
       final String output = my_debug.getDebugConstants().FAILED_ASSERTION_STRING +
         " `" + the_assertion_text + "': " + the_assertion_message.toString() + "\n";
@@ -164,8 +162,7 @@ public class Assert implements Cloneable
   /**
    * {@inheritDoc}
    */
-  public final Object clone() throws CloneNotSupportedException
-  {
+  public final Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {

@@ -78,9 +78,8 @@ import java.util.Map;
  * @see Statistic
  * @see mobius.logging.examples.SimpleCollect
  */
-//@ non_null_by_default
-public abstract class AbstractCollect
-{
+//@ nullable_by_default
+public abstract class AbstractCollect {
   // Attributes
 
   /**
@@ -311,7 +310,7 @@ public abstract class AbstractCollect
   // Package Methods
   // Private Methods
 
-} // end of class Collect
+} // end of class AbstractCollect
 
 /*
  * Local Variables:

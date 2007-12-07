@@ -6,19 +6,19 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -65,9 +65,9 @@ import java.io.Serializable;
  * @bon All static properties must be specified at, and cannot be changed
  * after, construction time.
  */
-//@ non_null_by_default
-public class Statistic implements Serializable
-{
+//@ nullable_by_default
+public class Statistic
+  implements Serializable {
   // Attributes
 
   /** Placeholder serialVersionUID. */
@@ -183,15 +183,12 @@ public class Statistic implements Serializable
     return my_unique_ID;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
+  /** {@inheritDoc} */
   public boolean equals(Object obj) {
     // todo Auto-generated method stub
     return super.equals(obj);
   }
-  
+
   // Public Methods
 
   //@ ensures \result == my_unique_ID;
@@ -199,8 +196,7 @@ public class Statistic implements Serializable
    * @modifies QUERY
    * @return What is my unique ID?
    */
-  public /*@ pure @*/ int getID()
-  {
+  public /*@ pure @*/ int getID() {
     return my_unique_ID;
   }
 
@@ -209,8 +205,7 @@ public class Statistic implements Serializable
    * @modifies QUERY
    * @return What are my units?
    */
-  public /*@ pure @*/ String getUnits()
-  {
+  public /*@ pure @*/ String getUnits() {
     return my_units;
   }
 
@@ -219,8 +214,7 @@ public class Statistic implements Serializable
    * @modifies QUERY
    * @return What is my default scaling factor?
    */
-  public /*@ pure @*/ double getScale()
-  {
+  public /*@ pure @*/ double getScale() {
     return my_scale;
   }
 
@@ -229,8 +223,7 @@ public class Statistic implements Serializable
    * @modifies QUERY
    * @return What is my default start value?
    */
-  public /*@ pure @*/ double getStart()
-  {
+  public /*@ pure @*/ double getStart() {
     return my_default_start_value;
   }
 
@@ -239,8 +232,7 @@ public class Statistic implements Serializable
    * @modifies QUERY
    * @return What is my default increment?
    */
-  public /*@ pure @*/ double getIncrement()
-  {
+  public /*@ pure @*/ double getIncrement() {
     return my_default_increment;
   }
 
@@ -249,8 +241,7 @@ public class Statistic implements Serializable
    * @modifies QUERY
    * @return What is my default decrement?
    */
-  public /*@ pure @*/ double getDecrement()
-  {
+  public /*@ pure @*/ double getDecrement() {
     return my_default_decrement;
   }
 

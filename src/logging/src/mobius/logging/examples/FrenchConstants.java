@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -56,9 +56,8 @@ import mobius.logging.DebugConstants;
  *
  * @note An example extension to the IDebug package.
  */
-//@ non_null_by_default
-public interface FrenchConstants extends DebugConstants
-{
+//@ nullable_by_default
+public interface FrenchConstants extends DebugConstants {
   // Public Attributes
 
   /**
@@ -75,11 +74,11 @@ public interface FrenchConstants extends DebugConstants
    */
   int LEVEL_MAX = 100;
 
-  /**
-   * Various messages that can be localized or otherwise customized.
-   */
+  // Various messages that can be localized or otherwise customized.
+  /** What is an error called? */
   String ERROR_STRING = "l'error";
   // "affirmation échouée";
+  /** What is a failed assertion called? */
   String FAILED_ASSERTION_STRING = "affirmation echouee";
 
   /**

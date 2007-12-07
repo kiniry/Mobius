@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -57,10 +57,9 @@ import javax.servlet.*;
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @concurrency (GUARDED) All methods are synchronized.
  */
-//@ non_null_by_default
+//@ nullable_by_default
 public class ServletLogOutput extends AbstractDebugOutputBase
-  implements DebugOutput, Cloneable
-{
+  implements DebugOutput, Cloneable {
   // Attributes
 
   /**
@@ -80,8 +79,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
    * @param the_debug the <code>Debug</code> class associated with this
    * <code>ServletLogOutput</code>.
    */
-  public /*@ pure @*/ ServletLogOutput(final Debug the_debug)
-  {
+  public /*@ pure @*/ ServletLogOutput(final Debug the_debug) {
     my_debug = the_debug;
     my_servlet_context = new DummyServletContext();
   }
@@ -98,8 +96,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
    */
   public /*@ pure @*/
   ServletLogOutput(final Debug the_debug,
-                   final ServletContext the_servlet_context)
-  {
+                   final ServletContext the_servlet_context) {
     my_debug = the_debug;
     my_servlet_context = the_servlet_context;
   }
@@ -109,8 +106,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
   /**
    * {@inheritDoc}
    */
-  public Object clone() throws CloneNotSupportedException
-  {
+  public Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
@@ -121,32 +117,28 @@ public class ServletLogOutput extends AbstractDebugOutputBase
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(String a_category, String a_message)
-  {
+  public synchronized void printMsg(String a_category, String a_message) {
     my_servlet_context.log("<" + a_category + ">: " + a_message);
   }
 
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(int a_level, String a_message)
-  {
+  public synchronized void printMsg(int a_level, String a_message) {
     my_servlet_context.log("[" + a_level + "]: " + a_message);
   }
 
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(String a_message)
-  {
+  public synchronized void printMsg(String a_message) {
     my_servlet_context.log(a_message);
   }
 
   /**
    * {@inheritDoc}
    */
-  public synchronized Writer getWriter()
-  {
+  public synchronized Writer getWriter() {
     return null;
   }
 
@@ -165,128 +157,118 @@ public class ServletLogOutput extends AbstractDebugOutputBase
    *
    * @history This class comes from the Jiki.
    */
-  private class DummyServletContext implements ServletContext
-  {
-    DummyServletContext()
-    {
+  private class DummyServletContext implements ServletContext {
+    /** A default empty constructor. */
+    DummyServletContext() {
       super();
     }
-
-    public Servlet getServlet(String name) throws ServletException
-    {
+    /** {@inheritDoc} */
+    public Servlet getServlet(String name) throws ServletException {
       return null;
     }
-
-    public Enumeration getServlets()
-    {
+    /** {@inheritDoc} */
+    public Enumeration getServlets() {
       return null;
     }
-
-    public Enumeration getServletNames()
-    {
+    /** {@inheritDoc} */
+    public Enumeration getServletNames() {
       return null;
     }
-
-    public void log(String msg)
-    {
+    /** {@inheritDoc} */
+    public void log(String msg) {
       System.err.print(msg);
     }
-
-    public void log(Exception exception, String msg)
-    {
+    /** {@inheritDoc} */
+    public void log(Exception exception, String msg) {
       System.err.print(msg);
       exception.printStackTrace(System.err);
     }
-
-    public String getRealPath(String path)
-    {
+    /** {@inheritDoc} */
+    public String getRealPath(String path) {
       return path;
     }
-
-    public String getMimeType(String file)
-    {
+    /** {@inheritDoc} */
+    public String getMimeType(String file) {
       return null;
     }
-
-    public String getServerInfo()
-    {
+    /** {@inheritDoc} */
+    public String getServerInfo() {
       return "DummyServletContext, originally a part of Jiki " +
         "- http://www.jiki.org/.";
     }
-
-    public Object getAttribute(String name)
-    {
+    /** {@inheritDoc} */
+    public Object getAttribute(String name) {
       return null;
     }
-
+    /** {@inheritDoc} */
     public Enumeration getAttributeNames() {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public ServletContext getContext(String arg0) {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public String getInitParameter(String arg0) {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public Enumeration getInitParameterNames() {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public int getMajorVersion() {
       // todo Auto-generated method stub
       return 0;
     }
-
+    /** {@inheritDoc} */
     public int getMinorVersion() {
       // todo Auto-generated method stub
       return 0;
     }
-
+    /** {@inheritDoc} */
     public RequestDispatcher getNamedDispatcher(String arg0) {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public RequestDispatcher getRequestDispatcher(String arg0) {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public URL getResource(String arg0) throws MalformedURLException {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public InputStream getResourceAsStream(String arg0) {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public Set getResourcePaths(String arg0) {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public String getServletContextName() {
       // todo Auto-generated method stub
       return null;
     }
-
+    /** {@inheritDoc} */
     public void log(String arg0, Throwable arg1) {
       // todo Auto-generated method stub
     }
-
+    /** {@inheritDoc} */
     public void removeAttribute(String arg0) {
       // todo Auto-generated method stub
     }
-
+    /** {@inheritDoc} */
     public void setAttribute(String arg0, Object arg1) {
       // todo Auto-generated method stub
     }
@@ -299,4 +281,3 @@ public class ServletLogOutput extends AbstractDebugOutputBase
  * fill-column: 75
  * End:
  */
-

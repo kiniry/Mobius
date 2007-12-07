@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -72,10 +72,9 @@ import javax.swing.JTextArea;
  *
  * @todo Can we actually provide a valid Writer for getWriter()?
  */
-//@ non_null_by_default
+//@ nullable_by_default
 public class WindowOutput extends AbstractDebugOutputBase
-  implements DebugOutput, Cloneable
-{
+  implements DebugOutput, Cloneable {
   // Attributes
 
   /** The frame used by this class. */
@@ -93,8 +92,7 @@ public class WindowOutput extends AbstractDebugOutputBase
    *
    * @param the_debug the Debug class associated with this WindowOutput.
    */
-  public WindowOutput(final Debug the_debug)
-  {
+  public WindowOutput(final Debug the_debug) {
     this.my_debug = the_debug;
 
     // set up swing components.
@@ -106,40 +104,35 @@ public class WindowOutput extends AbstractDebugOutputBase
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(final String the_category, final String the_message)
-  {
+  public synchronized void printMsg(final String the_category, final String the_message) {
     my_text_area.append("<" + the_category + ">: " + the_message);
   }
 
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(final int the_level, final String the_message)
-  {
+  public synchronized void printMsg(final int the_level, final String the_message) {
     my_text_area.append("[" + the_level + "]: " + the_message);
   }
 
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(final String the_message)
-  {
+  public synchronized void printMsg(final String the_message) {
     my_text_area.append(the_message);
   }
 
   /**
    * {@inheritDoc}
    */
-  public synchronized Writer getWriter()
-  {
+  public synchronized Writer getWriter() {
     return null;
   }
 
   /**
    * {@inheritDoc}
    */
-  public Object clone() throws CloneNotSupportedException
-  {
+  public Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
@@ -157,14 +150,14 @@ public class WindowOutput extends AbstractDebugOutputBase
    * messages, a "clear" button to clear the current messages, and a "save"
    * button to save the current debugging messages to a textfile.
    */
-  private void createUI()
-  {
+  private void createUI() {
     // Create the top-level container and add contents to it.
     my_frame = new JFrame("IDebug Output");
 
     // Create the text area to write into and a surrounding scrollpane so
     // that the user can look back at text that has scrolled by.
-    my_text_area = new JTextArea(30, 80);
+    final int rows = 30, columns = 80;
+    my_text_area = new JTextArea(rows, columns);
     my_text_area.setEditable(false);
     my_text_area.setLineWrap(true);
     my_text_area.setWrapStyleWord(true);
@@ -240,12 +233,17 @@ public class WindowOutput extends AbstractDebugOutputBase
 
     // Create a panel into which we'll put the buttons.
     final JPanel panel = new JPanel();
-    panel.setBorder(BorderFactory.createEmptyBorder(30, //top    NOPMD
-                                                    30, //left   NOPMD
-                                                    10, //bottom NOPMD
-                                                    30) //right  NOPMD
+    final int panel_top_border_width = 30,
+      panel_left_border_width = 30,
+      panel_bottom_border_width = 10,
+      panel_right_border_width = 30;
+    panel.setBorder(BorderFactory.createEmptyBorder(panel_top_border_width,
+                                                    panel_left_border_width,
+                                                    panel_bottom_border_width,
+                                                    panel_right_border_width)
     );
-    panel.setLayout(new GridLayout(1, 2)); // NOPMD
+    final int grid_rows = 1, grid_columns = 2;
+    panel.setLayout(new GridLayout(grid_rows, grid_columns));
     panel.add(clearButton);
     panel.add(saveButton);
     panel.add(closeButton);
@@ -269,4 +267,5 @@ public class WindowOutput extends AbstractDebugOutputBase
  * Local Variables:
  * Mode: Java
  * fill-column: 75
- * End: */
+ * End:
+ */

@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -58,9 +58,9 @@ import java.io.Writer;
  * @see WindowOutput
  * @see WriterOutput
  */
-//@ non_null_by_default
-public abstract class AbstractDebugOutputBase implements DebugOutput
-{
+//@ nullable_by_default
+public abstract class AbstractDebugOutputBase
+  implements DebugOutput {
   // Attributes
 
   /**
@@ -103,7 +103,6 @@ public abstract class AbstractDebugOutputBase implements DebugOutput
   /**
    * <p> Print out the debugging message, no questions asked. </p>
    *
-   * @return a boolean indicating if the message was printed.
    * @param the_level The debugging level of this message.
    * @param the_message The debugging message to print.
    */
@@ -124,7 +123,7 @@ public abstract class AbstractDebugOutputBase implements DebugOutput
    * @param the_level The debugging level of this message.
    * @param the_message The debugging message to print.
    */
-  //@ ensures \esult == isValidLevel(the_level));
+  //@ ensures \result == isValidLevel(the_level));
   public final boolean print(final int the_level, final String the_message) {
     // If the level is outside of the valid range, return false.
     if ((the_level < my_debug.getDebugConstants().LEVEL_MIN) ||
@@ -264,7 +263,7 @@ public abstract class AbstractDebugOutputBase implements DebugOutput
   // Package Methods
   // Private Methods
 
-} // end of class DebugOutputBase
+} // end of class AbstractDebugOutputBase
 
 /*
  * Local Variables:

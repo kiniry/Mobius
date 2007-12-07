@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -52,9 +52,8 @@ import java.util.Map;
  * @see Debug
  * @see Context
  */
-//@ non_null_by_default
-class Utilities
-{
+//@ nullable_by_default
+class Utilities {
   // Attributes
 
   /**
@@ -72,8 +71,7 @@ class Utilities
    *
    * @param the_debug the debug instance for this utility class.
    */
-  Utilities(final Debug the_debug)
-  {
+  Utilities(final Debug the_debug) {
     this.my_debug = the_debug;
   }
 
@@ -85,8 +83,7 @@ class Utilities
    *
    * @concurrency GUARDED
    */
-  public static synchronized void printStackTrace()
-  {
+  public static synchronized void printStackTrace() {
     final Throwable throwable = new Throwable();
     throwable.printStackTrace();
   }
@@ -100,8 +97,7 @@ class Utilities
    * @see java.lang.Thread#dumpStack
    */
 
-  public static synchronized void dumpStackSafe()
-  {
+  public static synchronized void dumpStackSafe() {
     final Thread currentThread = Thread.currentThread();
     currentThread.dumpStack();
   }
@@ -122,8 +118,7 @@ class Utilities
    */
 
   static synchronized void addClassToMap(final /*@ non_null @*/ Map the_map,
-                                         final /*@ non_null @*/ String the_class_name)
-  {
+                                         final /*@ non_null @*/ String the_class_name) {
     // If we are adding "*", the tabled should be cleared and the "*"
     // should be inserted.
     if (the_class_name.equals("*")) {
@@ -155,8 +150,7 @@ class Utilities
    */
 
   static synchronized void removeClassFromMap(final /*@ non_null @*/ Map the_map,
-                                              final /*@ non_null @*/ String the_class_name)
-  {
+                                              final /*@ non_null @*/ String the_class_name) {
     // If we are removing the class "*", just clear the map.
     if (the_class_name.equals("*")) {
       the_map.clear();
@@ -174,10 +168,9 @@ class Utilities
    * @return true iff the current debug context warrants output.
    */
 
-  synchronized boolean levelTest(final int the_level)
-  {
+  synchronized boolean levelTest(final int the_level) {
     // Get the current thread.
-    Thread currentThread = Thread.currentThread();
+    final Thread currentThread = Thread.currentThread();
 
     // Check to see if global-debugging is enabled.
     if (my_debug.isOn()) {
@@ -213,8 +206,7 @@ class Utilities
    * @param a_category is the category of this message.
    */
 
-  synchronized boolean categoryTest(final String a_category)
-  {
+  synchronized boolean categoryTest(final String a_category) {
     int the_category_level = 0;
 
     // Get the current thread.
@@ -280,8 +272,7 @@ class Utilities
    * is permitted to print in the current debugging context.
    */
 
-  synchronized boolean sourceClassValid()
-  {
+  synchronized boolean sourceClassValid() {
     int index, startIndex, parenIndex;
     Throwable throwable;
     StringWriter stringWriter;
@@ -289,7 +280,7 @@ class Utilities
     StringBuffer stringBuffer;
     String string, matchString, className;
     Map classMap;
-    
+
     // Create a new Throwable object so that we can get a snapshot of
     // the current execution stack.  Snapshot the stack into a
     // StringBuffer that we can parse.
@@ -358,7 +349,7 @@ class Utilities
     // context didn't specify that output should appear. So, now we check
     // the per-thread context.
 
-    Thread currentThread = Thread.currentThread();
+    final Thread currentThread = Thread.currentThread();
 
     // If there is no per-thread context for the current thread, return a
     // false.
@@ -367,14 +358,14 @@ class Utilities
       return false;
 
     // The table has the key, so get the record for this thread.
-    Context debugContext =
+    final Context debugContext =
       (Context)(my_debug.my_thread_map.get(currentThread));
 
     // Is debugging turned on at all for this thread? If not, return a
     // false.
     if (!debugContext.isOn())
       return false;
-    
+
     // Debugging is enabled for this thread, so perform the same check as
     // above to see if the calling class should output debugging
     // information.  This time, if we fail, we fail.
@@ -386,7 +377,7 @@ class Utilities
   }
 
   // Private Methods
-  
+
 } // end of class Utilities
 
 /*
@@ -395,4 +386,3 @@ class Utilities
  * fill-column: 75
  * End:
  */
-

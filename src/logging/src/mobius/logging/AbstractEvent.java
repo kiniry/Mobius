@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -44,7 +44,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * <p> Event is a utility base class from which all log/monitoring events
+ * <p> AbstractEvent is a utility base class from which all log/monitoring events
  * can derive or have embedded. </p>
  *
  * @version alpha-1
@@ -62,9 +62,9 @@ import java.util.Date;
  * thus no values tag is necessary in the specification.
  * @design Events cannot be cloned.
  */
-//@ non_null_by_default
-public abstract class AbstractEvent extends Object implements Serializable, Cloneable
-{
+//@ nullable_by_default
+public abstract class AbstractEvent extends Object
+  implements Event, Serializable, Cloneable {
   // Attributes
 
   /**
@@ -132,12 +132,12 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * time in which this method is called and it returns.
    * @generates A new, valid instance of Event.
    */
-  //@ ensures \result.getSourceHost().equals(the_source_host);
-  //@ ensures \result.getSourceComponent().equals(the_source_component);
-  //@ ensures \result.getCreationDate() != null;
-  //@ ensures \result.getDescription().equals(the_description);
-  //@ ensures \result.getType().equals(the_event_type);
-  //@ ensures \result.getLevel() == the_event_level;
+  //@ ensures getSourceHost().equals(the_source_host);
+  //@ ensures getSourceComponent().equals(the_source_component);
+  //@ ensures getCreationDate() != null;
+  //@ ensures getDescription().equals(the_description);
+  //@ ensures getType().equals(the_event_type);
+  //@ ensures getLevel() == the_event_level;
   public AbstractEvent(final /*@ non_null @*/ String the_source_host,
                        final /*@ non_null @*/ String the_source_component,
                        final /*@ non_null @*/ String the_description,
@@ -163,16 +163,15 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * @return a printable representation of the event.
    * @complexity O(1) - Note that String catenation is very expensive, so
    * use this method sparingly.  Also, the length of the output is directly
-   * proportional to the event description. 
+   * proportional to the event description.
    */
-
-  public String toString()
-  {
+  public String toString() {
     return "[" + my_creation_date.toString() + " | " + my_source_host + " | " +
       my_source_component + "] " + my_type + ":" + my_level + " - " + my_description;
   }
 
   // @todo kiniry Implement hashCode.
+  /** {@inheritDoc} */
   public int hashCode() {
     assert false;
     //@ assert false;
@@ -183,24 +182,26 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
    * <p> Is this event equal to another one? </p>
    *
    * @param obj the event with which to compare.
-   * @return if two Events are equal.
-   * @ensures (Result == true) iff 
+   * @return if two AbstractEvents are equal.
+   * @ensures (Result == true) iff
    *          (for_all attributes of Event : attributes of the objects
    *          being compared have identical values)
    * @overrides java.lang.Object.equals()
    */
-  //@ requires (obj instanceof Event);
-  public boolean equals(/*@ non_null @*/ Object obj) {
+  //@ also
+  //@ requires (obj instanceof AbstractEvent);
+  public boolean equals(Object obj) {
     if (obj instanceof AbstractEvent) {
-      AbstractEvent an_event = (AbstractEvent)obj;
+      final AbstractEvent an_event = (AbstractEvent)obj;
       return (my_source_host.equals(an_event.getSourceHost()) &&
-       my_source_component.equals(an_event.getSourceComponent()) && 
+       my_source_component.equals(an_event.getSourceComponent()) &&
        my_creation_date.equals(an_event.getCreationDate()) &&
-       my_description.equals(an_event.getDescription()) && 
+       my_description.equals(an_event.getDescription()) &&
        my_type.equals(an_event.getType()) && my_level == an_event.getLevel());
     } else return false;
   }
 
+  /** {@inheritDoc} */
   public Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
@@ -211,81 +212,41 @@ public abstract class AbstractEvent extends Object implements Serializable, Clon
 
   // Public Methods
 
-  /**
-   * <p> What is the source system of this event? </p>
-   *
-   * @design Original examples show source host being a textual machine
-   * name and/or port number, but this isn't a requirement.
-   * @return the source system for this event.
-   */
-  
-  public String getSourceHost()
-  {
+  /** {@inheritDoc} */
+  public String getSourceHost() {
     return my_source_host;
   }
-  
-  /**
-   * <p> What is the source component of this event? </p>
-   *
-   * @design Original examples show source component being a textual name
-   * of a component and a version number, but this isn't a requirement.
-   * @return the source component of this event.
-   */
-  
-  public String getSourceComponent()
-  {
+
+  /** {@inheritDoc} */
+  public String getSourceComponent() {
     return my_source_component;
   }
 
-  /**
-   * <p> When was this event generated? </p>
-   *
-   * @return the time at which this event was generated.
-   */
-  
-  public Date getCreationDate()
-  {
+  /** {@inheritDoc} */
+  public Date getCreationDate() {
     return my_creation_date;
   }
 
-  /**
-   * <p> What is the description of this event? </p>
-   *
-   * @return the description of this event.
-   */
-  
-  public String getDescription()
-  {
+  /** {@inheritDoc} */
+  public String getDescription() {
     return my_description;
   }
 
-  /**
-   * <p> What type of event is this? </p>
-   *
-   * @return the type of this event.
-   * @see DebugConstants
-   */
-  
-  public String getType()
-  {
+  /** {@inheritDoc} */
+  public String getType() {
     return my_type;
   }
 
-  /**
-   * <p> How important is this event? </p>
-   *
-   * @return the level of importance of this event.
-   */
-  
-  public int getLevel()
-  {
+  /** {@inheritDoc} */
+  public int getLevel() {
     return my_level;
   }
 
   // Protected Methods
   // Package Methods
   // Private Methods
-} // end of class Event
+
+} // end of class AbstractEvent
 
 /*
  * Local Variables:

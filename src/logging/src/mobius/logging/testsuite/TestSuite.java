@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -45,17 +45,17 @@ package mobius.logging.testsuite;
  *
  * <p> This program accepts the following arguments:
  * <dl>
- *  <dt><code>--console</dt>
+ *  <dt><sample>--console</sample></dt>
  *  <dd>Exercise the <code>ConsoleOutput</code> implementation of the
  *      <code>DebugOutput</code> interface.  This is the default test
  *      mode.</dd>
- *  <dt><code>--servletlog</dt>
+ *  <dt><sample>--servletlog</sample></dt>
  *  <dd>Exercise the <code>ServletLogOutput</code> implementation of the
  *      <code>DebugOutput</code> interface.</dd>
- *  <dt><code>--window</dt>
+ *  <dt><sample>--window</sample></dt>
  *  <dd>Exercise the <code>WindowOutput</code> implementation of the
  *      <code>DebugOutput</code> interface.</dd>
- *  <dt><code>--writer</dt>
+ *  <dt><sample>--writer</sample></dt>
  *  <dd>Exercise the <code>WriterOutput</code> implementation of the
  *      <code>DebugOutput</code> interface.</dd>
  * </dl>
@@ -82,9 +82,8 @@ package mobius.logging.testsuite;
  *
  * @note The top-level class of the IDebug test suite.
  */
-
-public class TestSuite
-{
+//@ non_null_by_default
+public class TestSuite {
   // Attributes
   // Constructors
   // Inherited Methods
@@ -93,25 +92,23 @@ public class TestSuite
   /**
    * A main() that contains the test code for the Debug class.
    *
-   * @param argv the arguments passed to this program from the command-line.
+   * @param the_arguments the arguments passed to this program from the command-line.
    * @design Since the debug package now is non-static, we have to
    * start up our own thread of control.
    */
-
-  public static void main(String [] argv)
-  {
+  public static void main(final String [] the_arguments) {
     // Check for --help argument.
-    if (showHelp(argv))
+    if (showHelp(the_arguments))
       System.exit(0);
 
     // Check for --version argument.
-    if (showVersion(argv))
+    if (showVersion(the_arguments))
       System.exit(0);
 
     // Check validity of test mode argument.
-    String testMode = null;
+    String the_test_mode = null;
     try {
-      testMode = testArgs(argv);
+      the_test_mode = testArgs(the_arguments);
     } catch (IllegalArgumentException iae) {
       System.err.println("Illegal argument: " + iae.getMessage());
       System.err.println("Run with the '--help' argument for help.");
@@ -119,8 +116,8 @@ public class TestSuite
     }
 
     // Run tests.
-    TestSuiteThread testSuiteThread = new TestSuiteThread(testMode);
-    testSuiteThread.start();
+    final TestSuiteThread the_test_suite_thread = new TestSuiteThread(the_test_mode);
+    the_test_suite_thread.start();
   }
 
   // Protected Methods
@@ -133,22 +130,21 @@ public class TestSuite
    * non-null, throw an <code>IllegalArgumentException</code>.  Otherwise, return
    * the default test mode string "console".
    *
-   * @param argv the arguments passed to this program from the command-line.
+   * @param the_arguments the arguments passed to this program from the command-line.
    * @return a string representing which test mode is in operation.
    */
-  private static String testArgs(String [] argv)
-  {
-    if (argv == null)
+  private static String testArgs(final String [] the_arguments) {
+    if (the_arguments == null)
       return "console";
-    if (argv.length == 0)
+    if (the_arguments.length == 0)
       return "console";
 
-    for (int i = 0; i < argv.length; i++) {
-      if (argv[i].equals("--console") || 
-          argv[i].equals("--servletlog") ||
-          argv[i].equals("--window") ||
-          argv[i].equals("--writer"))
-        return argv[i].substring("--".length());
+    for (int i = 0; i < the_arguments.length; i++) {
+      if (the_arguments[i].equals("--console") ||
+          the_arguments[i].equals("--servletlog") ||
+          the_arguments[i].equals("--window") ||
+          the_arguments[i].equals("--writer"))
+        return the_arguments[i].substring("--".length());
     }
     throw new IllegalArgumentException("Argument list is non-null and " +
                          "erroneous.\nUse --help for more information.");
@@ -164,9 +160,8 @@ public class TestSuite
    * @postcondition (("--version" in argv) implies show version info)
    * @postcondition (Result == ("--version" in argv))
    */
-  private static boolean showVersion(String [] argv)
-  {
-    if (argv == null) 
+  private static boolean showVersion(String [] argv) {
+    if (argv == null)
       return false;
     if (argv.length == 0)
       return false;
@@ -178,7 +173,7 @@ public class TestSuite
         System.out.println("Copyright (c) 2000-2001 KindSoftware, LLC");
         System.out.println("Copyright (c) 1997-1999 " +
                            "California Institute of Technology");
-        System.out.println("Copyright (c) 2007 University College Dublin")
+        System.out.println("Copyright (c) 2007 University College Dublin");
         System.out.println("All rights reserved.");
         System.out.println("See accompanying LICENSE files for more " +
                            "information.");
@@ -194,25 +189,26 @@ public class TestSuite
    * System.out and return the value true.  Otherwise, return a false.
    *
    * @param argv the arguments passed to this program from the command-line.
+   * @return true iff a help message ws printed.
    * @postcondition (("--help" in argv) implies show help)
    * @postcondition (Result == ("--help" in argv))
    */
-
-  private static boolean showHelp(String [] argv)
-  {
-    if (argv == null) 
+  private static boolean showHelp(String [] argv) {
+    if (argv == null)
       return false;
     if (argv.length == 0)
       return false;
-    
+
     for (int i = 0; i < argv.length; i++) {
       if (argv[i].indexOf("--help") != -1) {
         System.out.println("Usage: TestSuite [TESTOPTION]...");
         System.out.println("Test the IDebug debugging framework according to TESTOPTION.");
         System.out.println("Example: java idebughc.testsuite.TestSuite --window\n");
         System.out.println("TESTOPTION is exactly one of the following:");
-        System.out.println("  --console      exercise the ConsoleOutput implementation of the");
-        System.out.println("                 DebugOutput interface.  This is the default test mode.");
+        System.out.println("  --console      " +
+                           "exercise the ConsoleOutput implementation of the");
+        System.out.println("                 " +
+                           "DebugOutput interface.  This is the default test mode.");
         System.out.println("  --servletlog   exercise the ServletLogOutput implementation");
         System.out.println("  --window       exercise the WindowOutput implementation");
         System.out.println("  --writer       exercise the WriterOutput implementation\n");
@@ -224,7 +220,7 @@ public class TestSuite
     }
     return false;
   }
-  
+
   // Inner Classes
 
 }

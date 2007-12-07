@@ -6,20 +6,20 @@
  * Copyright (c) 1997-2001 Joseph Kiniry
  * Copyright (c) 2000-2001 KindSoftware, LLC
  * Copyright (c) 1997-1999 California Institute of Technology
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
  * - Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * - Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * - Neither the name of the Joseph Kiniry, KindSoftware, nor the
  * California Institute of Technology, nor the names of its contributors
  * may be used to endorse or promote products derived from this software
@@ -53,10 +53,9 @@ import java.io.Writer;
  * @see Context
  * @see Debug
  */
-//@ non_null_by_default
+//@ nullable_by_default
 public class WriterOutput extends AbstractDebugOutputBase
-  implements DebugOutput, Cloneable
-{
+  implements DebugOutput, Cloneable {
   // Attributes
 
   /**
@@ -75,8 +74,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * @param a_debug the <code>Debug</code> object associated with this
    * <code>WriterOutput</code>.
    */
-  public WriterOutput(final Debug a_debug)
-  {
+  public WriterOutput(final Debug a_debug) {
     my_debug = a_debug;
   }
 
@@ -92,8 +90,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * <code>WriterOutput</code>.
    */
   public WriterOutput(final Debug a_debug,
-                      final PrintWriter a_print_writer)
-  {
+                      final PrintWriter a_print_writer) {
     my_debug = a_debug;
     my_print_writer = a_print_writer;
   }
@@ -107,8 +104,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    *
    * @param the_new_print_writer the new <code>PrintWriter</code>.
    */
-  public void setPrintWriter(final PrintWriter the_new_print_writer)
-  {
+  public void setPrintWriter(final PrintWriter the_new_print_writer) {
     my_print_writer = the_new_print_writer;
   }
 
@@ -118,8 +114,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public synchronized void printMsg(final String a_category, final String a_message)
-  {
+  public synchronized void printMsg(final String a_category, final String a_message) {
     my_print_writer.print("<" + a_category + ">: " + a_message);
     my_print_writer.flush();
   }
@@ -128,8 +123,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public synchronized void printMsg(int a_level, String a_message)
-  {
+  public synchronized void printMsg(int a_level, String a_message) {
     my_print_writer.print("[" + a_level + "]: " + a_message);
     my_print_writer.flush();
   }
@@ -138,8 +132,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public synchronized void printMsg(String a_message)
-  {
+  public synchronized void printMsg(String a_message) {
     my_print_writer.print(a_message);
     my_print_writer.flush();
   }
@@ -148,8 +141,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public /*@ pure @*/ synchronized Writer getWriter()
-  {
+  public /*@ pure @*/ synchronized Writer getWriter() {
     return my_print_writer;
   }
 
@@ -157,8 +149,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public Object clone() throws CloneNotSupportedException
-  {
+  public Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
