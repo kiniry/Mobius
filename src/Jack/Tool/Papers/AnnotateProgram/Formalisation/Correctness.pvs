@@ -55,7 +55,7 @@ BEGIN
   % state of the automaton after performing t and sAP2 is the state of the 
   % annotated program after executing the annotations that model the effect of t, 
   % then sMVA is still well modeled by sAP2.
-  update_vars_preserves_MP_modeled : LEMMA
+  update_vars_preserves_MP_modeled : LEMMA % :-)
     FORALL (t : Transition, n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
@@ -89,6 +89,16 @@ BEGIN
       derive(ann_program(mp))(ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
                               sAP1, Unit, sAP2)(n) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
+
+  % ann_event as used by the annotation algorithm does not throw a new exception
+  ann_event_does_not_throw_exception : LEMMA % :-)
+    FORALL (m : (wf_Method(program(mp))), et : EventType,  v : Val, n : nat)
+           (sAP1, sAP2 : APState) :
+      well_behaved_MVA(mp) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      derive(ann_program(mp))(ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
+                              sAP1, v, sAP2)(n) IMPLIES
+        NOT up?(ex(pstate(sAP2)))
 
 
 END AnnEventPreservesMPModeled

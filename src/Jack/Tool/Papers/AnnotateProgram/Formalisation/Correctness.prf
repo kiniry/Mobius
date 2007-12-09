@@ -733,7 +733,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((ann_action_yields_wf_Body formula-decl nil
      AnnotateProgramProperties nil)
     (update const-decl "Store" MVASemantics nil)
@@ -2896,7 +2896,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((derive def-decl "bool" Semantics nil)
     (on_method_MVA const-decl "AState" MonitoredProgramSemantics nil)
     (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
@@ -3098,7 +3098,38 @@
     (finite_remove application-judgement "finite_set" finite_sets nil)
     (extend const-decl "R" extend nil)
     (id const-decl "(bijective?[T, T])" identity nil))
-   16899 12400 t shostak)))
+   16899 12400 t shostak))
+ (ann_event_does_not_throw_exception_TCC1 0
+  (ann_event_does_not_throw_exception_TCC1-1 nil 3406195375 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (ann_event_does_not_throw_exception_TCC2 0
+  (ann_event_does_not_throw_exception_TCC2-1 nil 3406195375 nil
+   ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
+ (ann_event_does_not_throw_exception 0
+  (ann_event_does_not_throw_exception-1 nil 3406195520 3406195895
+   ("" (skosimp*)
+    (("" (expand "ann_event")
+      (("" (expand "derive")
+        (("" (prop)
+          (("" (expand* "execute_CaseJML" "extend" "id")
+            (("" (prop) (("" (lift-if) (("" (assert) nil nil)) nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((ann_event const-decl "Stmt" AnnotateEvent nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
+     nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (extend const-decl "R" extend nil)
+    (derive def-decl "bool" Semantics nil))
+   374879 4770 t shostak)))
 (MethodCallsPreserveRelatedState
  (IMP_VariableNames_TCC1 0
   (IMP_VariableNames_TCC1-1 nil 3398591374 3406019586
@@ -4509,7 +4540,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((on_method_entry const-decl "(on_method_event_type)" SemanticsJML
      nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -6316,7 +6347,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((on_method_entry const-decl "(on_method_event_type)" SemanticsJML
      nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -6418,8 +6449,8 @@
     (total const-decl "boolean" MVASemantics nil)
     (set type-eq-decl nil sets nil)
     (nonempty? const-decl "bool" sets nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil) nil nil nil
-    (choose const-decl "(p)" sets nil) nil
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (choose const-decl "(p)" sets nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (on_method_MVA const-decl "AState" MonitoredProgramSemantics nil)
@@ -7218,7 +7249,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((on_method_entry_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
     (finite_set type-eq-decl nil finite_sets nil)
@@ -9806,7 +9837,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((related_states_implies_same_exception formula-decl nil
      RelatedStatesProperties nil)
     (CP formal-nonempty-type-decl nil MethodCallsPreserveRelatedState
@@ -12265,7 +12296,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((on_method_exit_normal_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -13358,7 +13389,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (on_method_exit_normal_MP const-decl "(on_method_event_type)"
@@ -13530,8 +13561,7 @@
     (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (down adt-accessor-decl "[(up?) -> T]" lift_adt nil)
     (get_class const-decl "lift[Class]" ProgramFunctions nil)
-    (PRED type-eq-decl nil defined_types nil)
-    (every adt-def-decl "boolean" lift_adt nil)
+    (PRED type-eq-decl nil defined_types nil) nil
     (methods const-decl "finite_set[Method]" ProgramFunctions nil)
     (lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -15823,7 +15853,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
     (finite_set type-eq-decl nil finite_sets nil)
@@ -18118,7 +18148,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
@@ -19093,7 +19123,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (on_method_exit_exceptional_MP const-decl "(on_method_event_type)"
@@ -21640,7 +21670,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((related_states const-decl "boolean" Equivalence nil)
     (wf_initial_MP_state formula-decl nil MonitoredProgramSemantics
      nil)
