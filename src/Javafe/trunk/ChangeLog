@@ -1,4 +1,16 @@
 ------------------------------------------------------------------------
+r3312 | dcochran | 2007-12-06 16:38:23 +0000 (Thu, 06 Dec 2007) | 1 line
+
+Ignore generated vector AST files
+------------------------------------------------------------------------
+r3311 | dcochran | 2007-12-06 16:32:57 +0000 (Thu, 06 Dec 2007) | 1 line
+
+Ignore generated files
+------------------------------------------------------------------------
+r3310 | dcochran | 2007-12-06 16:26:49 +0000 (Thu, 06 Dec 2007) | 1 line
+
+Version 2.0.5: include AST vector classes in the release
+------------------------------------------------------------------------
 r3306 | dcochran | 2007-12-05 12:03:13 +0000 (Wed, 05 Dec 2007) | 1 line
 
 Include prebuilt binaries in the next release
