@@ -98,7 +98,21 @@ BEGIN
       NOT up?(ex(pstate(sAP1))) IMPLIES
       derive(ann_program(mp))(ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
                               sAP1, v, sAP2)(n) IMPLIES
-        NOT up?(ex(pstate(sAP2)))
+        NOT up?(ex(pstate(sAP2))) AND v = Unit
+
+
+  % lemma not used, but to show consistency of what we do
+  % some open branches, because assumptions on guard_to_expression and
+  % action not in right form
+  ann_event_does_derive : LEMMA % 
+    FORALL (m : (wf_Method(program(mp))), et : EventType,  v : Val, n : nat)
+           (sAP1, sAP2 : APState) :
+      well_behaved_MVA(mp) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      EXISTS (n : nat, v : Val, sAP2 : APState) : 
+        derive(ann_program(mp))
+              (ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
+                             sAP1, v, sAP2)(n) 
 
 
 END AnnEventPreservesMPModeled

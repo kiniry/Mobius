@@ -298,7 +298,6 @@ BEGIN
         derive(p)(r, sigma1, v, sigma2)(n - 1),
       % Program's statements
       CaseJML(l) :
-        n > 0 AND
         v = return_of_stmt(sigma2) AND
         execute_CaseJML(p, l, sigma1, sigma2, v, n, derive_rec),
       IfThenElse(e, c1, c2) :

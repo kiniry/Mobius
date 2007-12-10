@@ -222,6 +222,15 @@ BEGIN
   ann_event(mp)(ts : finite_set[Transition]) : Stmt =
     CaseJML(set2list(ann_event_set(mp)(ts)))
 
+  var_names_ann_event_set : LEMMA % :-)
+    FORALL (ts : finite_set[Transition]) :
+      subset?(ts, ts(mva(mp))) IMPLIES
+        subset?({n : Name | EXISTS (x : [BoolExpr, Stmt]) :
+                              ann_event_set(mp)(ts)(x) AND 
+                              (var_names(proj_1(x))(n) OR 
+                               var_names(proj_2(x))(n))},
+                union(var_names(program(mp)), var_names(new_gvds(mp))))
+
   var_names_ann_event : LEMMA % :-)
     FORALL (ts : finite_set[Transition]) :
       subset?(ts, ts(mva(mp))) IMPLIES
@@ -235,13 +244,20 @@ BEGIN
         ext_declared_var_names(program(mp))(v) OR
         var_names(new_gvds(mp))(v)
 
+  ann_event_set_set_ghostvar : LEMMA % :-)
+    FORALL (ts : finite_set[Transition], b: Body, x : [BoolExpr, Stmt]):
+      subset?(ts, ts(mva(mp))) IMPLIES
+      Set?(b) IMPLIES
+      ann_event_set(mp)(ts)(x) IMPLIES
+      (subterm(b, proj_1(x)) OR subterm(b, proj_2(x))) IMPLIES
+        var_names(new_gvds(mp))(target(b))
+
   ann_event_set_ghostvar : LEMMA % :-)
     FORALL (ts : finite_set[Transition], b: Body):
       subset?(ts, ts(mva(mp))) IMPLIES
       Set?(b) IMPLIES
       subterm(b, ann_event(mp)(ts)) IMPLIES
         var_names(new_gvds(mp))(target(b))
-
 
 END AnnotateEvent
 
