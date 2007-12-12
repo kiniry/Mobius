@@ -188,9 +188,9 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
   on_method_entry_preserves_related_states_halted_reached : LEMMA % :-)
-    FORALL(md1 : (wf_Method(program(mp))), md2 : (wf_Method(ann_program(mp))),
-           a1, a2 : Val, 
-           m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+    FORALL(md1 : (wf_Method(program(mp))), 
+           a1 : Val, 
+           m1 : nat, sMP1, sMP2 : MPState) :
       cp(astate(sMP1)) = halted IMPLIES
       on_method_entry_MP(mp, md1, a1, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
@@ -273,9 +273,9 @@ BEGIN
 
 
   on_method_exit_normal_preserves_related_states_halted_reached : LEMMA % :-)
-    FORALL(md1 : (wf_Method(program(mp))), md2 : (wf_Method(ann_program(mp))),
-           a1, a2 : Val, 
-           m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+    FORALL(md1 : (wf_Method(program(mp))), 
+           a1 : Val, 
+           m1 : nat, sMP1, sMP2 : MPState) : 
       cp(astate(sMP1)) = halted IMPLIES
       on_method_exit_normal_MP(mp, md1, a1, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
@@ -357,9 +357,9 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
   on_method_exit_exceptional_preserves_related_states_halted_reached : LEMMA % :-)
-    FORALL(md1 : (wf_Method(program(mp))), md2 : (wf_Method(ann_program(mp))),
-           a1, a2 : Val, 
-           m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+    FORALL(md1 : (wf_Method(program(mp))), 
+           a1 : Val, 
+           m1 : nat, sMP1, sMP2 : MPState) : 
       cp(astate(sMP1)) = halted IMPLIES
       on_method_exit_exceptional_MP(mp, md1, a1, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
