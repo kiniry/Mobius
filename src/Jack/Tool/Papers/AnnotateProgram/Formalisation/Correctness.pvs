@@ -173,7 +173,8 @@ BEGIN
         derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Body(ann_program(mp))(b) IMPLIES
-          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
@@ -225,7 +226,8 @@ BEGIN
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program(ann_program(mp)) IMPLIES
         legal_Body(ann_program(mp))(b) IMPLIES
-          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
@@ -260,7 +262,8 @@ BEGIN
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program(ann_program(mp)) IMPLIES
         legal_Body(ann_program(mp))(b) IMPLIES
-          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
@@ -313,7 +316,8 @@ BEGIN
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program(ann_program(mp)) IMPLIES
         legal_Body(ann_program(mp))(b) IMPLIES
-          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
@@ -349,7 +353,8 @@ BEGIN
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program(ann_program(mp)) IMPLIES
         legal_Body(ann_program(mp))(b) IMPLIES
-          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
@@ -402,7 +407,8 @@ BEGIN
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program(ann_program(mp)) IMPLIES
         legal_Body(ann_program(mp))(b) IMPLIES
-          related_states(mp)(sMP2, sAP2) AND v1 = v2) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
