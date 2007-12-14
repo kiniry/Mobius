@@ -1,16 +1,17 @@
 o Synchronize all workspaces (svn update)
 o Update ChangeLog
 o Full build and alltests. 'make clean build alltests'
-o Update the version number: the current version is 2.0b4
+o Update the version number: the current version is 2.0.6
 o Update release-files/RELEASE_NOTES.txt
 o Resynchronize with Subversion
 o Release builds (binary and source) 
-  JAVAFE_VERSION=2.0b4 make releases
+  JAVAFE_VERSION=2.0.7 make releases
 o Take release to another machine, unpack, install, and test.
-o Tag repository for new release e.g. svn copy trunk/ tags/javafe-2-0b4/ 
-o Build eclipse plug-in, feature and update site for JavaFE
-o Build the enclosing features and update sites e.g. ESCJava2 and MobiusPVE
+o Tag repository for new release e.g. 
+    svn copy src/Javafe/trunk/ src/Javafe/tags/javafe-2.0.7/ 
+o Build eclipse plug-in, feature and update site for Javafe
+o Build the features and update sites wihich depend upon Javafe e.g. ESC/Java2
 o Upload to <products/opensource/archives> on release site
 o Announce to world
- + KindSoftware website
+ + KindSoftware website news & rssfeed.xml
  + FreshMeat
