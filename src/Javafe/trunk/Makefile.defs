@@ -55,8 +55,7 @@ endif
 ## Check if JAVAFE_ROOT is set
 
 ifndef JAVAFE_ROOT
-  $(warning You must have JAVAFE_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
-  export JAVAFE_ROOT ?= $PWD
+  $(error You must have JAVAFE_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
 endif
 
 ##########################################################################

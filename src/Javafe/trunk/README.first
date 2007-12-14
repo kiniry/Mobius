@@ -1,14 +1,14 @@
-JavaFE/2, a revision of the Java front end of the original DEC/SRC ESC/Java 
-developed at DEC/Compaq/HP.  The revisions were performed by David Cok and 
-Joe Kiniry. You can read the general background on the original DEC/SRC
-ESC/Java in README.txt.
+Javafe, a revision of the Java front end of the original DEC/SRC ESC/Java 
+developed at DEC/Compaq/HP.  The original revisions were performed by David Cok 
+and Joe Kiniry. Additional minor revisions were made by Dermot Cochran.  You 
+can read the general background on the original DEC/SRC ESC/Java in README.txt.
 
-If you obtained JavaFE as part of a binary release, you should 
+If you obtained Javafe as part of a binary release, you should 
 ignore this file and consult README.release for installation and 
 execution instructions concerning the release.
 
 This document is meant to describe the source release of
-JavaFE, thus the paths herein are in reference to the source
+Javafe, thus the paths herein are in reference to the source
 release, not the binary release.
 
 ----------------------------------------------------------------------------
@@ -40,18 +40,14 @@ ESC/Java 1 from November, 2001 a reality.
 MAILING LISTS
 
 The JMLSpecs-Escjava mailing list, hosted at SourceForge.net, is the
-main mailing list for SRC ESC/Java, ESC/Java2 and JavaFE *users*.
+main mailing list for SRC ESC/Java, ESC/Java2 and Javafe *users*.
 
 Please see the JMLSpecs project
   <http://sourceforge.net/projects/jmlspecs/>
 for more information.
 
-ESC/Java2 and JavaFE developers communicate on the ESCJava-Developers mailing
+ESC/Java2 and Javafe developers communicate on the ESCJava-Developers mailing
 list, hosted at UCD.
-
-Please see the UCD SRG Mailman web pages at
-  <http://kind.ucd.ie/mailman/listinfo>
-for more information.
 
 To make a new bug report sent an email to: 
 
@@ -60,7 +56,7 @@ mobius-ticket AT mobius DOT ucd DOT ie
 ----------------------------------------------------------------------------
 
 OBTAINING THE ORIGINAL SOURCE FOR SRC's "Java Programming Toolkit
-Source Release" (which includes EscJava):
+Source Release" (which includes Javafe):
 
 The source has been available from
   http://www.research.compaq.com/downloads.html 
@@ -72,10 +68,10 @@ on further distribution of the source.
 
 ----------------------------------------------------------------------------
 
-OBTAINING CURRENT SOURCE FOR JavaFE
+OBTAINING CURRENT SOURCE FOR Javafe
 
 A subversion repository of the current work is maintained by Joe Kiniry
-<kiniry@acm.org>.  Build and execution instructions are provided later
+<kiniry AT acm.org>.  Build and execution instructions are provided later
 in this README file.
 
 To obtain access to the subversion distribution, you will need:
@@ -92,16 +88,16 @@ To obtain access to the Subversion distribution, follow these steps:
 
 a) Provide evidence to Joe that you have obtained the original sources
    from SRC (see above) and agreed to the license restrictions.
-   Sufficient evidence is the size (in bytes) of the Javafe and
-   ESC/Java archives you have downloaded from SRC.
+   Sufficient evidence is the size (in bytes) of the Javafe 
+   archives you have downloaded from SRC.
 
-b) Create an account on the UCD Trac server located at
-   http://mobius.ucd.ie/
+b) Create an account on the Mobius Trac server located at
+   https://mobius.ucd.ie/
 
 c) Execute a subversion checkout on the server (replacing the characters
-   'username' in the command below with your Trac username):
+   'username' in the command below with your Mobius Trac username):
  
-   svn co https://mobius.ucd.ie/repos/src/Javafe/trunk
+   svn co https://username@mobius.ucd.ie/repos/src/Javafe/trunk
 
 ----------------------------------------------------------------------------
 
@@ -123,14 +119,14 @@ Developers use both bash and tcsh as working shells.
 
   Unfortunately, various Cygwin tools do not work well on Windows
   when paths that include whitespace are used.  Please avoid using
-  such paths at this time.  E.g., do *not* install JavaFE in
+  such paths at this time.  E.g., do *not* install Javafe in
   C:\Program Files\etc.   
 
   JavaFE will not currently run on Windows 95 because the most
   recent version of Java that is available for Windows 95 is 1.3.1.
-  While we use JDK 1.4 for JavaFE development, ESC/Java2 can be
+  While we use JDK 1.4 for JavaFE development, Javafe can be
   built with JDK 1.3, but unfortunately, at this point in time the
-  spec files that come with JavaFE and JML 4 are JDK 1.4-specific
+  spec files that come with Javafe and JML 4 are JDK 1.4-specific
 
 The user (you) must specify two variables.  These are needed both in
 building and in executing.  You can specify them either:
@@ -144,13 +140,9 @@ b) for Makefiles, by creating a file $JAVAFE_ROOT/Makefile.local
    containing the definitions of the variables (see
    Makefile.local.template for a starting point).
 
-c) for executables, namely escj, by creating a wrapper script file
-   that sets the variables prior to invoking escj.  A sample such
-   wrapper script is found in $ESCTOOLS_ROOT/release-files/escjava2.sample
-
 The required variables are:
 
-JAVAFE_ROOT - defined to be the absolute path to the ESCTools
+JAVAFE_ROOT - defined to be the absolute path to the Javafe
         directory
 
         The Makefile and shell scripts make a guess at an
@@ -222,11 +214,11 @@ JUNIT_LIB - the location of the JUnit library, used in compiling and
         All testing is performed with the version included in CVS.
 
 ANT_LIB - the location of the Ant jar file, used in compiling the
-        ESC/Java2 Ant task.
+        Javafe Ant task.
 
 ----------------------------------------------------------------------------
 
-BUILDING A WORKING VERSION OF JavaFE FROM Subversion SOURCES
+BUILDING A WORKING VERSION OF Javafe FROM Subversion SOURCES
 
 The following tools are *necessary* to build JavaFE from source:
 
