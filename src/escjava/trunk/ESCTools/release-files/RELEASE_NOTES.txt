@@ -1,3 +1,14 @@
+--------------------------------------------------------------
+version 2.0b4 "Mobius PVE Internal Release" (21 December 2007)
+
+New major features include:
+o Simplify has moved into its own project
+o Javafe has moved into its own project; ESC/Java2 now builds
+  against an external Javafe library
+o Prebuilt binaries have been added for the ASTGEN and ASTFILELIST
+  tools which are part of Javafe
+
+-------------------------------------------------------------
 version 2.0b3 "Mobius PVE Internal Release" (23 October 2007)
 
 New major features include:
