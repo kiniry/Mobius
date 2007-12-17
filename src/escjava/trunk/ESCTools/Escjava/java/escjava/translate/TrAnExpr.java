@@ -2042,7 +2042,49 @@ public class TrAnExpr {
       return GC.nary(fullName(rd,false), rd, ev);      
   }
 
+
+    //TODO: make the freshner somewhat nicer   
+    private static int fcounter = 0;
+ 
+   /**
+    *  Make new vars that should be fresh.
+    *
+    * @param bounds original vars, <code>ArrayList</code> of <code>GenericVarDecl</code>
+    * @param newBounds to this <code>ArrayList</code> fresh  <code>GenericVarDecl</code> will be added; one for each old var
+    * @return a substitution that will replace old vars with the new ones.
+    */
+    //@ ensures \fresh(\result);
+    /*@pure*/static private Hashtable makeFreshner(/*@non_null*/ArrayList bounds, /*@non_null*/ArrayList newBounds) {
+        Hashtable subst = new Hashtable();
+        java.util.Set boundsSet = new java.util.HashSet(bounds);
+        for (java.util.Iterator it = boundsSet.iterator(); it.hasNext(); ) {
+            GenericVarDecl oldVar = (GenericVarDecl) it.next();
+            String newIdStr = oldVar.id + "_freshness" + fcounter++;
+            Identifier newId = Identifier.intern(newIdStr);
+            GenericVarDecl newVar = LocalVarDecl.make(oldVar.modifiers, null, newId, oldVar.type, oldVar.locId, null, Location.NULL);
+
+            /*debug System.out.println("old var: " + oldVar); */
+            /*debug System.out.println("new var: " + newVar); */
+
+            VariableAccess newVarAccess = VariableAccess.make(newVar.id, Location.NULL, newVar);
+            subst.put(oldVar, newVarAccess);
+            newBounds.add(newVar);
+        }
+        return subst;
+    }
+
+
   static private Expr createForall(Expr expr, Expr fcall, ArrayList bounds)  {
+      // rename and substitue vars to obtain unique
+      ArrayList newBounds = new ArrayList(bounds.size());
+      Hashtable subst = makeFreshner(bounds, newBounds);
+      // substitute old vars with fresh ones
+      expr = escjava.translate.Substitute.doSubst(subst, expr);
+      fcall = escjava.translate.Substitute.doSubst(subst, fcall);
+      bounds = newBounds;
+
+      // create a forall expr for each bound var
+      // TODO: why both the expression with pats and with no pats?--mikolas
       Expr ee = expr;
       Expr ee2 = ee;
       ExprVec pats = ExprVec.make(1);
@@ -2052,7 +2094,8 @@ public class TrAnExpr {
         ee = GC.forall(oo,ee);
         ee2 = GC.forallwithpats(oo,ee2,pats);
       }
-      return GC.and(ee,ee2);
+      Expr retv = GC.and(ee,ee2);
+      return retv;
   }
   
   /** Translates an individual represents clause into a class-level axiom. */
