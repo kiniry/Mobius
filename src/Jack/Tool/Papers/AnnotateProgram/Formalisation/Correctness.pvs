@@ -153,7 +153,7 @@ BEGIN
 
   mp : VAR (wf_MP)
 
-  on_method_entry_preserves_related_states_annotated : LEMMA % :-)
+  on_method_entry_preserves_related_states_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
@@ -187,7 +187,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
-  on_method_entry_preserves_related_states_halted_reached : LEMMA % :-)
+  on_method_entry_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
            a1 : Val, 
            m1 : nat, sMP1, sMP2 : MPState) :
@@ -200,7 +200,7 @@ BEGIN
         cp(astate(sMP2)) = halted
 
 
-  on_method_entry_preserves_related_states_not_annotated : LEMMA % :-)
+  on_method_entry_preserves_related_states_not_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       legal_Program(ann_program(mp)) IMPLIES
@@ -272,7 +272,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
 
-  on_method_exit_normal_preserves_related_states_halted_reached : LEMMA % :-)
+  on_method_exit_normal_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
            a1 : Val, 
            m1 : nat, sMP1, sMP2 : MPState) : 
@@ -284,7 +284,7 @@ BEGIN
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         cp(astate(sMP2)) = halted
   
-  on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-)
+  on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       legal_Program(ann_program(mp)) IMPLIES
@@ -356,7 +356,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
-  on_method_exit_exceptional_preserves_related_states_halted_reached : LEMMA % :-)
+  on_method_exit_exceptional_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
            a1 : Val, 
            m1 : nat, sMP1, sMP2 : MPState) : 
@@ -369,7 +369,7 @@ BEGIN
         cp(astate(sMP2)) = halted
 
 
-  on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-)
+  on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       legal_Program(ann_program(mp)) IMPLIES
