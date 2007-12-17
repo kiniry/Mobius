@@ -763,13 +763,13 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
     // ==== actual analysis ====
 
       // === experimental for SpecTester, blame mikolas (Nov 2007)
-      if (options().isOptionOn(Options.optERST) &&  SpecTester.knowHowToCheck(r) ) {
+    if (options().isOptionOn(Options.optERST) &&  SpecTester.knowHowToCheck(r) ) {
           boolean isModel = 
               Utils.findModifierPragma(r.parent.pmodifiers, TagConstants.MODEL) != null ||
               Utils.findModifierPragma(r.pmodifiers, TagConstants.MODEL) != null;
 
-          if (isModel) {
-              return "skipping a model method (even though not happy about it)"; //TODO: figure out how to check model methods as well--mikolas
+          if (false && isModel) {
+              return "skipping a model method (even though not happy about it)"; //TODO: do more testing if this really works, then throw this out--mikolas
           }
 
           if (r.body==null) { // TODO: what exactly should we skip?--mikolas
