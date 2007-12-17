@@ -12,50 +12,54 @@ Clauses can be Dangerous}}
 \maketitle
 
 \begin{abstract}
-This paper shows how a subtle interaction between programming language
-semantics and run-time checking can cause a run-time checker to fail
-to report errors. We focus on programs written in Java, annotated with
-JML. We give some simple examples of annotation violations that are
-not reported by the run-time checker, because the errors are caught
-within the program text; even without any explicit reference to
-them. We explain this behaviour, based on the official Java Language
-Specification. We also discuss what can be consequences of this problem
-for security, and different ways in which it can be avoided.
+This paper discusses how a subtle interaction between programming
+language semantics and run-time checking can cause a run-time checker
+to fail to report errors. We focus on programs written in Java,
+annotated with JML. We give some simple examples of annotation
+violations that are not reported by the run-time checker, because the
+errors are caught within the program text; even without any explicit
+reference to them. We explain this behaviour, based on the official
+Java Language Specification. We also discuss what can be consequences
+of this problem for security, and different ways in which it can be
+avoided.
 
 \end{abstract}
 
 \section{Introduction}
 
-It is common folklore that run-time verification does not miss any
-errors. Provided that one has a correct specification of the intended
-program behaviour, if run-time verification does not signal an error in
-the execution, the execution did not violate the specification. And
-thus, if one would be able to use run-time verification on all possible
-executions of  the program, this would give a 100 \% guarantee that
-the program respects its specification. And only because in general it is
-impossible to consider all possible execution paths of a program, it
-makes sense to apply static verification and other static analysis
-methods.
+It is common folklore that run-time verification has the potential to
+find all errors. Provided that one has a correct specification of the
+intended program behaviour, if run-time verification does not signal
+an error in the execution, the execution did not violate the
+specification. Thus, if one would be able to use run-time verification
+on all possible executions of the program, this would give a 100 \%
+guarantee that the program respects its specification. And only
+because in general it is impossible to consider all possible execution
+paths of a program, it makes sense to apply static verification and
+other static analysis methods.
 
-However, this point of view is actually to optimistic: because of a
+However, this point of view is actually too optimistic: because of a
 subtle interplay between the programming language semantics, and the
 implementation of the run-time verifier, it is possible to miss
 specification violations - even though they could have been detected
 using static verification.
 
-This paper illustrates an example where such an interplay happens, and
-run-time checking might miss errors. We concentrate on applications
+This paper illustrates how such an interplay can happen, and cause
+run-time checking to miss errors. We concentrate on applications
 written in Java, annotated with JML~\cite{LeavensBR99}. JML is an
 expressive annotation language for Java, that allows one to encode
-many useful security properties. The JML language comes together with
-the JML tool set, containing a run-time checker, that compiles the
-specification into run-time checks, in such a way that appropriate
-errors are thrown if the annotations are violated. However, since the
-way to signal specification violations is encoded in the programming
-language itself, the JML errors are treated as any other kind of
-exception. And thus, in particular, it is possible to catch them, and
-return to a ``normal'' program state again. Moreover, because of the
-subtle semantics of Java for
+many useful security properties. It is supported by a wide variety of
+tools, for run-time and static verification, annotation generation
+\emph{etc.}, see~\cite{BurdyCCEKLLP03}. The standard JML run-time
+checker tool compiles the specification into run-time checks (using
+\texttt{jmlc}). Then when the actual run-time checker \texttt{jmlrac}
+is executed, appropriate errors are thrown if the annotations are
+violated~\cite{Cheon03}. However, since the way to signal
+specification violations is encoded in the programming language
+itself, the JML errors are treated as any other kind of exception. And
+thus, in particular, it is possible to catch them, and return to a
+``normal'' program state again. Moreover, because of the subtle
+semantics of Java for
 \texttt{try-catch-finally} statements, it is even possible to
 overwrite a JML error with another exception, and thus to catch it
 without explicitly mentioning it in the program text.
@@ -70,27 +74,39 @@ methods directly involved in the security property that the monitor
 encodes, next the annotations are propagated, so that a verification
 condition generator can generate provable proof
 obligations. Correctness of the procedure is also proven in two steps:
-(1) a monitored program only gets stuck, if run-time checking of the
-basic annotations would raise an exception; (2) propagation
+(1) a monitored program only gets stuck if run-time checking of the
+basic annotations would raise an exception; (2) propagation of
 annotations would never result in an incorrect program being
-accepted. One of the initial assumptions was that any incorrect
-application would always be rejected by run-time annotation
+accepted. One of the initial assumptions of the project was that any
+incorrect application would always be rejected by run-time annotation
 checking. However, when formalising the correctness proof, we realised
 that this assumption was actually incorrect.
 
 This paper does not intend to say that run-time verification is not
 useful. Instead, its intention is to share an observation, and to make
-people aware of a possible subtle interaction between application and
-run-time verification mechanism. Below, we will first discuss an
-example where the run-time annotation violations are not signalled to
-the user. Next, we give an explanation for this behaviour, based on
-the Java language semantics. Then, Section~\ref{SecExploiting}
-discusses how this issue impacts security of an application, 
-while Section~\ref{SecAvoiding} discusses which conditions
-should be imposed on the program to avoid this problem. Finally,
-Section~\ref{SecConcl} concludes and gives some general observations.
+people aware of a possible subtle interaction between an application
+and the run-time verification mechanism, caused by the Java semantics
+of the \texttt{try-catch-finally} statement~\cite{GoslingJSB05}. It is
+well-known that the semantics of this statement can have an unexpected
+impact on a program, see~\emph{e.g.},~\cite{Eckel02,Jenkov-online},
+and that to avoid problems appropriate programming patterns should be
+applied. However, this paper discusses the issue from a different
+angle. In particular, it discusses how run-time verification can be
+affected by the semantics of the \texttt{try-catch-finally} statement,
+and how a too large trust in the run-time verifier could compromise
+security. Moreover, the programming patterns that are proposed to
+resolve this issue do not necessarily apply also in the case of
+run-time verification.
 
-\section{Example}\label{SecExample}
+Below, we first discuss some examples where the run-time annotation
+violations are not signalled to the user. Next, we give an explanation
+for this behaviour, based on the Java Language Semantics. Then,
+Section~\ref{SecExploiting} discusses how this issue could impact
+security of an application, while Section~\ref{SecAvoiding} discusses
+how the problem could be avoided. Finally, Section~\ref{SecConcl}
+concludes and gives some general observations.
+
+\section{Examples}\label{SecExample}
 
 This section illustrates how a program can be manipulated, so that it
 does not signal specification violations. Suppose that we have a
@@ -103,13 +119,15 @@ should be below 10. In JML, this method could be specified as follows.
 \begin{verbatim}
 //@ requires access_code < 10;
 public void decrypt(int [] key, int access_code){
+  ...
 }
 \end{verbatim}
 
 
-Now suppose that somebody that does not know the proper access code
-still wants to attempt to decrypt a message. A naive attempt could be
-to just guess an access code (say 36), and to call the decrypt message anyway:
+Now suppose that somebody who does not know the proper access code
+nevertheless would like to try to decrypt a message. A naive attempt
+would be to just guess an access code (say 36), and to call the
+decrypt message anyway:
 
 \begin{verbatim}
 public void sneakyMethod() {
@@ -118,8 +136,8 @@ public void sneakyMethod() {
 }
 \end{verbatim}
 
-However, any attempt with a wrong guess, would be signalled by the
-run-time checker:
+However, any attempt with a wrong guess, would be signalled by the JML
+run-time checker \texttt{jmlrac}:
 \begin{verbatim}
 > jmlrac TryCatchExample
 Exception in thread "main" 
@@ -133,7 +151,7 @@ by method TryCatch.decrypt
 \end{verbatim}
 
 A possible way to hide this would be to put the code inside a
-try-block, and to try to catch the JML error.
+try-block, and to catch the JML error.
 
 \begin{verbatim}
 public void sneakyMethod() {
@@ -145,50 +163,54 @@ public void sneakyMethod() {
   }
 }
 \end{verbatim}
-Run-Time checking would not signal any error anymore, even though one
-attempts to call \texttt{decrypt} with illegal arguments. However, an
-attentive code inspector might get suspicious by the attempt to catch
-an \texttt{Error}, since ``the class \texttt{Error} and its subclasses
-are exceptions from which ordinary programs are not ordinarily
-expected to recover.''~\cite[\S 11.5]{GoslingJSB05}. (JML errors are a
-subclass of the class \texttt{Error}, which inherits directly from
-\texttt{Throwable}. Therefore, errors can be distinguished from
-exceptions, from which recovery might be possible.
+Run-time checking with \texttt{jmlrac} would not signal any error
+anymore, even though one attempts to call \texttt{decrypt} with
+illegal arguments. However, an attentive code inspector might get
+suspicious by the attempt to catch an \texttt{Error}, since ``the
+class \texttt{Error} and its subclasses are exceptions from which
+ordinary programs are not ordinarily expected to recover.''~\cite[\S
+11.5]{GoslingJSB05}. (JML errors are a subclass of the class
+\texttt{Error}, which inherits directly from \texttt{Throwable}, and
+is thus incompatible with the class \texttt{Exception}). Therefore,
+errors can be distinguished from exceptions, from which recovery might
+be possible.
 
 A smarter way to hide this attempt is by using a finally block to
 override the possible JML error.
 \begin{verbatim}
-public void sneakyMethod() throws InnocentException {
+public void sneakyMethod() throws ArbitraryException {
   try{ 
     int r = 36; 
     decrypt(key, r);                                           
   }           
   finally{
-    throw new InnocentException();
+    throw new ArbitraryException();
   }
 }
 \end{verbatim}
 In this case, the program will throw an
-\texttt{InnocentException}~--~or terminate normally if this
-\texttt{InnocentException} is caught by the method that triggered
+\texttt{ArbitraryException}~--~or terminate normally if this
+\texttt{ArbitraryException} is caught by the method that triggered
 \texttt{sneakyMethod}. With this program code, manual code inspection
 might not be straightforward (remember that the code for the
 \texttt{decrypt} method and the invocation of \texttt{sneakyMethod}
 might be stored in different classes). Naturally, tools for static
 validation of JML annotations (such as ESC/Java~\cite{CokK04} or
-Jack~\cite{BartheBCGHLPR07:FMCO}) would detect the attempt to call
+Jack~\cite{BartheBCGHLPR07:FMCO}) would detect this attempt to call
 \texttt{decrypt} with illegal arguments.
 
 \section{A Semantics-based Explanation}\label{SecExplanation}
 
-This failure of run-time checking with \texttt{jmlrac} can be explained
-directly on the basis of the Java semantics. The Java language
-specification gives a detailed description of the behaviour of the
+This failure of run-time checking with \texttt{jmlrac} can be
+explained directly on the basis of the Java semantics. The Java
+Language Specification gives a detailed description of the behaviour
+of the
 \texttt{try-catch} and the 
 \texttt{try-catch-finally} statements~\cite[\S
 14.20]{GoslingJSB05}. For space reasons, we repeat only some fragments of
 the specification that are relevant to the examples above.
 
+\begin{quotation}
 A \texttt{try-catch-finally} statement with a \texttt{finally} block
 is executed by first executing the \texttt{try} block. [..]  If
 execution of the \texttt{try} block completes abruptly because of a
@@ -198,7 +220,7 @@ throw of a value \(V\), then there is a choice:
 any \texttt{catch} clause of the \texttt{try-catch-finally} statement,
 then the first (leftmost) such \texttt{catch} clause is selected. The
 value \(V\) is assigned to the parameter of the selected
-\texttt{catch} clause, and the Block of that \texttt{catch} clause is
+\texttt{catch} clause, and the block of that \texttt{catch} clause is
 executed. [..]
 
 \item If the run-time type of \(V\) is not assignable to the parameter
@@ -216,62 +238,122 @@ and forgotten).
 \end{itemize} 
 [...]
 \end{itemize}
+\end{quotation}
+
+Notice that also if execution of \texttt{catch} clause results in a
+throw of an exception, similar rules apply for the execution of the
+\texttt{finally} clause.
+
 
 It is not too complicated to give a formal specification (in a formal
 language) of the behaviour of the \texttt{try-catch-finally}
 statement, based on the description above (from~\cite{GoslingJSB05}),
 see for example the formalisation used within the LOOP
-project~\cite{Jacobs01}. 
+project~\cite{Jacobs01}.
 
 Thus, in the second example above, the JML error is caught explicitly
-by the catch clause, since it its run-time type is assignable to the
+by the catch clause, since its run-time type is assignable to the
 parameter \texttt{Error e}.
 
 In the third example, there is no matching \texttt{catch} clause (as
 there are none). Thus, the \texttt{finally} block will be executed
-directly, and as this will throw an (innocent) exception, the JML
+directly, and as this will throw an (arbitrary) exception, the JML
 error will be discarded. Thus, this behaviour of the \texttt{finally}
-clause in fact allows implicit catching of all exceptions, including
+block in fact allows implicit catching of all exceptions, including
 errors from which recovery should not be possible.
+
+As mentioned above, this behaviour of finally clauses is well-known, and
+requires use of special programming patterns to avoid
+problems~\cite{Eckel02,Jenkov-online}. Finally clauses are typically
+used to perform clean-up on objects that deal with an external
+resource, \emph{e.g.},\ to close a file. Correct use of finally
+clauses ensures that even though a program might terminate because of
+an exception, it will not corrupt external resources. Notice however
+that finally clauses are not essential; algorithms exist to eliminate
+\texttt{jsr} instructions~--~their bytecode counterpart~--~, see
+\emph{e.g.,}~\cite{ArthoB05}.
+
+Notice further that the semantics of the \texttt{try-catch-finally}
+statement prescribes that any abrupt completion of the
+\texttt{finally} block discards the throw of value \(V\). Thus, any
+\texttt{return}, \texttt{break} or \texttt{continue} statement would
+have a similar effect. In particular, the following variation of
+\texttt{sneakyMethod}: 
+\begin{verbatim}
+public void sneakyMethod() {
+  try{ 
+    int r = 36; 
+    decrypt(key, r);                                           
+  }           
+  finally{
+    return;
+  }
+}
+\end{verbatim}
+would have the same effect as the example above, \emph{i.e.}, it would
+discard the JML error, but instead of throwing a new exception,
+\texttt{sneakyMethod} would terminate normally.
+
+Finally, we would like to remark that IDEs like Eclipse try to help
+the user to avoid writing a \texttt{finally} block that completes
+abruptly. From the Eclipse 3.0 release notes:
+
+\begin{quotation}
+The Java compiler can now find and flag finally blocks which cannot
+complete normally  (as defined in the Java Language
+Specification). Finally blocks which cannot complete normally can be
+confusing and are considered bad practice.
+\end{quotation}
+
+However, this feature has limited value, as it does not give a warning
+when in a \texttt{finally} block a method is called that might throw
+an exception~--~even when this method has an explicit throws clause as
+part of its declaration.
+
 
 \section{Consequences for Security}\label{SecExploiting}
 
 The main consequence of the behaviour described above, is that it
-causes run-time checking not to be completely transparent,
-\emph{i.e.,}\ it is not always the case that if no annotation
-violations are reported, running a program with run-time checking
-enabled results in the same behaviour as running the original
-program~\cite{BurdyCCEKLLP03}. In particular, both the second and the
-third example program in Section~\ref{SecExample} might behave differently
-when executed with run-time checking enabled: run-time checking will
-ensure that the method \texttt{decrypt} is not executed, while it will
-be executed in a normal execution. In fact, the annotation violation is
-detected by the run-time checker, but the underlying program semantics
-causes the violation not be reported.
+causes run-time checking (with \texttt{jmlrac}) not to be completely
+transparent, where \emph{transparency} means that if no annotation
+violations are reported (to the user), running a program with run-time
+checking enabled results in the same behaviour as running the original
+program without run-time checking~\cite{BurdyCCEKLLP03}.
 
-This loss of transparency can in particular be exploited to call a
+In particular, both the second and the third example program in
+Section~\ref{SecExample} will behave differently when executed with
+run-time checking enabled or disabled: run-time checking will ensure
+that the method \texttt{decrypt} is not executed, while it will be
+executed when run-time checking is disabled. In fact, the annotation
+violation is detected by the run-time checker, but the underlying
+program semantics causes the violation not be reported to the user.
+
+The loss of transparency can in particular be exploited to call a
 method in an inconsistent state. Suppose we have a method \texttt{m}
-that requires data to be consistent in some particular way, specified
-as a class invariant (for example: the value of a variable is within a
-particular range). If we call method
-\texttt{m} within a \texttt{try-catch-finally} statement in a state that
-does not respect this invariant, the violation of the invariant will
-not be reported. If we run the program without run-time checking, the
-method will be called in this inconsistent state, which can have
-highly unexpected behaviour, and can easily break certain security
-properties. 
+that requires data to be consistent, as specified by a class invariant
+(for example: the value of a variable is within a certain range). If
+we call method \texttt{m} within a \texttt{try-catch-finally}
+statement in a state that does not respect this invariant, the
+violation of the invariant will not be reported to the
+user~--~provided the state is set back to a consistent one before
+completing the caller of method \texttt{m}.  This might make him/her
+believe that the invariant is never violated, and thus that it is safe
+to run the program without run-time checking enabled (which is more
+efficient). But if this is done, the method
+\texttt{m} will be called in this inconsistent state, which can cause
+highly unexpected behaviour, and can easily violate security.
 
 However, without adding additional \texttt{try-catch-finally}
-statements, it is not possible to propagate the problem~--~provided
-the program is sufficiently annotated. In particular, run-time
-checking will check whether the postcondition of the method containing
-the \texttt{try-catch-finally} statement holds when leaving the
-method, and whether all visible class invariants have been
+statements, it is not possible to disguise all the annotation
+violations~--~provided the program is sufficiently annotated. In
+particular, run-time checking will check whether the postcondition of
+the method containing the \texttt{try-catch-finally} statement holds
+when leaving the method, and whether all class invariants have been
 re-established. Thus, this prevents the inconsistent state to be
 propagated. However, this has the consequence that the error is
-reported at a different point, than that where it occurred,
-\emph{i.e.,}\ it breaks the ability of the run-time checker to isolate
-problems~\cite{BurdyCCEKLLP03}.  
+reported at a different point, than that where it occurred, and thus
+it breaks \emph{isolation}, \emph{i.e.,}\ the ability of the run-time
+checker to identify the source of a problem~\cite{BurdyCCEKLLP03}.
 
 \section{When does Run-time Checking Work?}\label{SecAvoiding} 
 
@@ -280,24 +362,27 @@ The problem discussed above is caused by the semantics related to the
 exceptions. Therefore, a simple way to avoid the problem is by
 forbidding all uses of the finally clauses; but of course this
 solution is a bit drastic, as it would mean that the JML run-time checker
-cannot be used for every program written in Java. 
+cannot be used for every program written in Java. Moreover, as
+mentioned above, finally clauses are useful to ensure clean-up of
+external resources. 
 
-In fact, it is sufficient to restrict the behaviour of
-\texttt{try-catch-finally} statements where the \texttt{try} or the
-\texttt{catch} clause could throw a JML error. To ensure that the JML
-error is not discarded, either the finally clause should terminate
-normally, or it should throw a JML error itself. This ensures that the
-whole \texttt{try-catch-finally} statement will terminates in an
-exceptional state, because of a JML error. Thus, the following
-conditions are sufficient to ensure that run-time checking will report
-all annotation violations:
+In fact, to guarantee that run-time checking with \texttt{jmlrac} will
+report all annotation violations to the user, it is sufficient to
+restrict the behaviour of \texttt{try-catch-finally} statements where
+the \texttt{try} or the \texttt{catch} clause could throw a JML
+error. To ensure that the JML error is not discarded, either the
+finally clause should terminate normally, or it should throw a JML
+error itself. This ensures that the whole \texttt{try-catch-finally}
+statement will terminate in an exceptional state, because of a JML
+error. This is expressed by the following conditions: 
 
 \begin{itemize}
-\item If execution of the \texttt{try} block completes abruptly because of a
-throw of a JML error \(J\), then execution of the whole \texttt{try}
-statement completes abruptly because of a throw of a JML error \(J\).
-\item If execution of the \texttt{try} block completes abruplty
-because of a throw a value \(V\), that is not assignable to a JML
+\item If execution of the \texttt{try} block completes abruptly 
+because of a throw of a JML error \(J\), then execution of the whole
+\texttt{try-catch-finally} statement completes abruptly because of a 
+throw of a JML error \(J\).
+\item If execution of the \texttt{try} block completes abruptly
+because of a throw of a value \(V\), that is not assignable to a JML
 error, and if execution of the (leftmost) matching \texttt{catch}
 clause completes abruptly because of a throw of a JML error \(J\),
 then execution of the whole \texttt{try-catch-finally} statement
@@ -310,25 +395,25 @@ the \texttt{try} or \texttt{catch} block terminated with. Requiring
 that these JML errors are identical would ensure even better isolation
 of the problem.
 
-However, it is not always easy to determine statically whether a code
-fragment satisfies this property. For example, consider the following
-code fragment.
+However, it is not always easy to determine statically whether a
+program satisfies this property. For example, consider the following
+code fragment, where we suppose that method \texttt{m} throws a JML
+error, and does not change the variable \texttt{b}.
 \begin{verbatim}
 try {	
   if (b) {m();}
   }	
 finally {
   if (!b) {
-     throw new NullPointerException();
+     throw new ArbitraryException();
   }
 }
 \end{verbatim}
-Suppose that method \texttt{m} throws a JML error, and does not change
-the variable \texttt{b}. This code fragment satisfies the conditions
-above, because if \texttt{m} is called, and the JML error is thrown,
-the finally clause will not throw a \texttt{NullPointerException},
-thus the JML error will not be discarded. However, it requires
-advanced analysis techniques to determine this statically.
+This satisfies the conditions above, because if \texttt{m} is called,
+and the JML error is thrown, the finally clause will not throw a
+\texttt{ArbitraryException}, thus the JML error will not be
+discarded. However, it requires advanced analysis techniques to
+determine this statically.
 
 \begin{figure}[t]
 \begin{verbatim}
@@ -344,7 +429,7 @@ class FinallyCatchesAll {
          A a = new A();
        }
        finally {
-         throw new InnocentException();
+         throw new ArbitraryException();
        }
      }
      catch (Exception e) {
@@ -357,21 +442,23 @@ class FinallyCatchesAll {
 \end{figure}
 
 In fact, we believe that the real source of the problem is that a
-finally clause can (implicitly) catch errors and discard
-them, even though recovery from errors should not be possible. This
-problem is not only related to run-time checking errors, it applies to
-\emph{all} errors. Consider for example the program in
+finally clause can (implicitly) catch exceptions \emph{and} errors and
+discard them, even though recovery from errors should not be possible,
+see the Java Language Specification~\cite[\S 11.5]{GoslingJSB05}. This
+problem is not only related to errors thrown by the run-time checker,
+it applies to \emph{all} errors. Consider for example the program in
 Figure~\ref{FigStackOverflow}. The call to the constructor of class
 \texttt{A} will recursively invoke itself, to initialise the
-\texttt{a} field in class \texttt{A}. This will quickly result in a
+field \texttt{a} in class \texttt{A}. This will quickly result in a
 \texttt{java.lang.StackOverflowError}. However, the finally clause
-will discard this error, and throw some other, innocent
+will discard this error, and throw some other, arbitrary
 exception. This exception is caught in the surrounding
 \texttt{try-catch} statement, and thus the program will terminate by
 printing \texttt{still alive}~--~and the occurrence of the
-StackOverflowError has been forgotten. Notice that in a similar way,
-\texttt{OutOfMemoryError}s and internal JVM errors can be
-discarded. 
+\texttt{StackOverflowError} has been forgotten. Notice that in a
+similar way other errors, such as \texttt{NoClassDefFoundError}, 
+\texttt{OutOfMemoryError} and internal JVM errors, can be
+discarded.
 
 This leads us to believe that the semantics of the
 \texttt{try-catch-finally} statement should be adapted such that a
@@ -383,9 +470,21 @@ whole \texttt{try-catch-finally} statement completes abruptly because
 of a throw of value \(V\). This means that the only way to recover
 from an error is by an explicit catch. In particular, to
 ensure that run-time checking does report all annotation violations,
-it is sufficient to check that there are no \texttt{catch} clause for
+it is sufficient to check that there are no \texttt{catch} clauses for
 class \texttt{Throwable}, \texttt{Error} or any JML-specific error
-class.
+class. However, this would mean that upon occurrence of an error, the
+JVM would have to ensure that external resources are handled
+appropriately. 
+
+An alternative solution would be to prioritise throwables, in such a
+way that errors have a higher priority than exceptions, and to require
+that finally clauses cannot discard errors (unless maybe, it throws an
+error itself). Thus, if a \texttt{try} (or \texttt{catch}) block
+throws an error \(E\), the finally \texttt{block} is executed. If
+execution of the \texttt{finally} block results in exception \(E'\),
+then exception \(E'\) is discarded, and the whole
+\texttt{try-catch-finally} statement terminates abruptly because of a
+throw of error \(E\).
 
 
 
@@ -394,27 +493,33 @@ This paper discusses a case where run-time checking does not report an
 annotation violation, even though it properly detects it. This is due
 to an interaction between the run-time checker, and the semantics of
 the programming language of the application that is being checked. We
-argue that in this case, run-time checking is not transparent
-(\emph{i.e.},\ applications for which no run-time errors can be
-detected can have different behaviours depending on whether run-time
-checking is active or not. In many cases, the annotation violation
-will still be signalled later, because other, related annotations are
-violated, but this makes that the run-time checker looses its ability
-to isolate problems at the point where they occur.
+argue that in this case, run-time checking is not transparent,
+\emph{i.e.},\ applications for which no run-time errors are reported
+to the user can have different behaviours depending on whether
+run-time checking is enabled or not. In many cases, the annotation
+violation will still be signalled later, because other, related
+annotations are violated, but this has the consequence that the
+run-time checker looses its ability to isolate problems at the point
+where they occur.
 
 We concentrated on the case of Java applications, annotated with JML,
-but the observations that we made here are applicable in any context
-where the run-time checker is inlined into the code of the application
-that is being monitored. If the programming language contains a
-mechanism to recover from the error mechanism that is used to signal
-run-time annotations errors, this means that it is possible to recover
-from these errors~--~and thus not to report them. 
+but the observations that we presented here are applicable in any
+context where the run-time checker is inlined into the code of the
+application that is being monitored. If the programming language
+contains a mechanism to recover from the errors that are used to
+signal run-time annotation violations, then it is possible to recover
+from these errors~--~and thus not to report them to the user.
 
 In the case of Java, an additional complexity is that this recovery
-also can happen implicitly, by means of the finally clause. We show
+also can happen implicitly, by means of the finally clause. We showed
 that this finally clause also allows to recover (implicitly) from
 other errors, that are in fact supposed to be unrecoverable.
 
+\subsection*{Acknowledgements}
+I would like to thank Alejandro Tamalet, who gave me useful feedback
+on an earlier version of this paper, and pointed me to several places
+where related problems were signalled. Moreover, he also suggested the
+idea to prioritise errors over exceptions.
 
 \bibliographystyle{plain}
 \bibliography{bibli,../specification,/user/mhuisman/home/Research/Everest/Biblio/everest}
