@@ -32,7 +32,7 @@ find all errors. Provided that one has a correct specification of the
 intended program behaviour, if run-time verification does not signal
 an error in the execution, the execution did not violate the
 specification. Thus, if one would be able to use run-time verification
-on all possible executions of the program, this would give a 100 \%
+on all possible executions of a program, this would give a 100 \%
 guarantee that the program respects its specification. And only
 because in general it is impossible to consider all possible execution
 paths of a program, it makes sense to apply static verification and
@@ -41,8 +41,8 @@ other static analysis methods.
 However, this point of view is actually too optimistic: because of a
 subtle interplay between the programming language semantics, and the
 implementation of the run-time verifier, it is possible to miss
-specification violations - even though they could have been detected
-using static verification.
+specification violations - even though they can be detected using
+static verification.
 
 This paper illustrates how such an interplay can happen, and cause
 run-time checking to miss errors. We concentrate on applications
@@ -64,7 +64,7 @@ semantics of Java for
 overwrite a JML error with another exception, and thus to catch it
 without explicitly mentioning it in the program text.
 
-This paper emerged as a unexpected difficulty in a larger project on
+This paper emerged as an unexpected difficulty in a larger project on
 inlining security monitors (in collaboration with A. Tamalet,
 University of Nijmegen, Netherlands). Ultimate goal of the project is
 to develop a static verification method that can make monitoring of an
@@ -96,15 +96,17 @@ affected by the semantics of the \texttt{try-catch-finally} statement,
 and how a too large trust in the run-time verifier could compromise
 security. Moreover, the programming patterns that are proposed to
 resolve this issue do not necessarily apply also in the case of
-run-time verification.
+run-time verification. In particular, one cannot expect the programmer
+to add code in the implementation of a finally block, that checks
+whether run-time annotation checking might have produced an error.
 
 Below, we first discuss some examples where the run-time annotation
 violations are not signalled to the user. Next, we give an explanation
 for this behaviour, based on the Java Language Semantics. Then,
 Section~\ref{SecExploiting} discusses how this issue could impact
-security of an application, while Section~\ref{SecAvoiding} discusses
-how the problem could be avoided. Finally, Section~\ref{SecConcl}
-concludes and gives some general observations.
+security, while Section~\ref{SecAvoiding} discusses how the problem
+could be avoided. Finally, Section~\ref{SecConcl} concludes and gives
+some general observations.
 
 \section{Examples}\label{SecExample}
 
@@ -130,7 +132,7 @@ would be to just guess an access code (say 36), and to call the
 decrypt message anyway:
 
 \begin{verbatim}
-public void sneakyMethod() {
+public void sneakyMethod(){
   int r = 36; 
   decrypt(key, r);                                           
 }
@@ -154,7 +156,7 @@ A possible way to hide this would be to put the code inside a
 try-block, and to catch the JML error.
 
 \begin{verbatim}
-public void sneakyMethod() {
+public void sneakyMethod(){
   try{ 
     int r = 36; 
     decrypt(key, r);                                           
@@ -178,7 +180,7 @@ be possible.
 A smarter way to hide this attempt is by using a finally block to
 override the possible JML error.
 \begin{verbatim}
-public void sneakyMethod() throws ArbitraryException {
+public void sneakyMethod() throws ArbitraryException{
   try{ 
     int r = 36; 
     decrypt(key, r);                                           
@@ -191,13 +193,14 @@ public void sneakyMethod() throws ArbitraryException {
 In this case, the program will throw an
 \texttt{ArbitraryException}~--~or terminate normally if this
 \texttt{ArbitraryException} is caught by the method that triggered
-\texttt{sneakyMethod}. With this program code, manual code inspection
-might not be straightforward (remember that the code for the
-\texttt{decrypt} method and the invocation of \texttt{sneakyMethod}
-might be stored in different classes). Naturally, tools for static
-validation of JML annotations (such as ESC/Java~\cite{CokK04} or
-Jack~\cite{BartheBCGHLPR07:FMCO}) would detect this attempt to call
-\texttt{decrypt} with illegal arguments.
+\texttt{sneakyMethod}. For this program, manual code inspection to
+reveal whether a JML error occurred might not be straightforward
+(remember that the code for the \texttt{decrypt} method and the
+invocation of \texttt{sneakyMethod} might be stored in different
+classes). Naturally, tools for static validation of JML annotations
+(such as ESC/Java~\cite{CokK04} or Jack~\cite{BartheBCGHLPR07:FMCO})
+would detect this attempt to call \texttt{decrypt} with illegal
+arguments.
 
 \section{A Semantics-based Explanation}\label{SecExplanation}
 
@@ -240,9 +243,9 @@ and forgotten).
 \end{itemize}
 \end{quotation}
 
-Notice that also if execution of \texttt{catch} clause results in a
-throw of an exception, similar rules apply for the execution of the
-\texttt{finally} clause.
+Notice that if execution of a \texttt{catch} block completes abruptly
+because of a throw of an exception, similar rules apply for the
+execution of the \texttt{finally} block.
 
 
 It is not too complicated to give a formal specification (in a formal
@@ -280,7 +283,7 @@ statement prescribes that any abrupt completion of the
 have a similar effect. In particular, the following variation of
 \texttt{sneakyMethod}: 
 \begin{verbatim}
-public void sneakyMethod() {
+public void sneakyMethod(){
   try{ 
     int r = 36; 
     decrypt(key, r);                                           
@@ -317,8 +320,8 @@ The main consequence of the behaviour described above, is that it
 causes run-time checking (with \texttt{jmlrac}) not to be completely
 transparent, where \emph{transparency} means that if no annotation
 violations are reported (to the user), running a program with run-time
-checking enabled results in the same behaviour as running the original
-program without run-time checking~\cite{BurdyCCEKLLP03}.
+checking results in the same behaviour as running the program without
+run-time checking~\cite{BurdyCCEKLLP03}.
 
 In particular, both the second and the third example program in
 Section~\ref{SecExample} will behave differently when executed with
@@ -391,7 +394,7 @@ completes abruptly because of a throw of a JML error \(J\).
 
 Notice that here we leave it unspecified whether the JML error that
 the whole statement terminates with is the same as the JML error that
-the \texttt{try} or \texttt{catch} block terminated with. Requiring
+the \texttt{try} or \texttt{catch} block terminates with. Requiring
 that these JML errors are identical would ensure even better isolation
 of the problem.
 
@@ -414,6 +417,12 @@ and the JML error is thrown, the finally clause will not throw a
 \texttt{ArbitraryException}, thus the JML error will not be
 discarded. However, it requires advanced analysis techniques to
 determine this statically.
+
+An alternative solution would be to have \texttt{jmlc} instrument the
+\texttt{finally} block (by an additional \texttt{try-catch-finally}
+statement, so that it ensures that JML errors are not
+discarded~--~even when the \texttt{finally} block throws another
+exception.
 
 \begin{figure}[t]
 \begin{verbatim}
@@ -502,8 +511,8 @@ annotations are violated, but this has the consequence that the
 run-time checker looses its ability to isolate problems at the point
 where they occur.
 
-We concentrated on the case of Java applications, annotated with JML,
-but the observations that we presented here are applicable in any
+This paper concentrates on the case of Java applications, annotated
+with JML, but the observations presented here are applicable in any
 context where the run-time checker is inlined into the code of the
 application that is being monitored. If the programming language
 contains a mechanism to recover from the errors that are used to
