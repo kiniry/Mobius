@@ -101,19 +101,6 @@ BEGIN
         NOT up?(ex(pstate(sAP2))) AND v = Unit
 
 
-  % lemma not used, but to show consistency of what we do
-  % some open branches, because assumptions on guard_to_expression and
-  % action not in right form
-  ann_event_does_derive : LEMMA % 
-    FORALL (m : (wf_Method(program(mp))), et : EventType,  v : Val, n : nat)
-           (sAP1, sAP2 : APState) :
-      well_behaved_MVA(mp) IMPLIES
-      NOT up?(ex(pstate(sAP1))) IMPLIES
-      EXISTS (n : nat, v : Val, sAP2 : APState) : 
-        derive(ann_program(mp))
-              (ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
-                             sAP1, v, sAP2)(n) 
-
 
 END AnnEventPreservesMPModeled
 
@@ -420,7 +407,7 @@ BEGIN
       IF bottom?(ex(pstate(tauMP2))) AND Null?(a1)
       THEN sMP2 = update_PState(tauMP2, raise(NullPointer)) AND
            v1 = Bottom AND m31 = 0 AND m41 = 0 AND m51 = 0 AND m61 = 0
-      ELSIF up?(ex(pstate(tauMP2))) 
+      ELSE IF up?(ex(pstate(tauMP2))) 
       THEN sMP2 = tauMP2 AND 
             v1 = Bottom AND 
             m31 = 0 AND m41 = 0 AND m51 = 0 AND m61 = 0
@@ -480,7 +467,7 @@ BEGIN
                  update_PState(tauMP7,
                                update_local(name(arg(md1)),
                                             old_val_arg1))
-      ENDIF IMPLIES
+      ENDIF ENDIF IMPLIES
       ex(pstate(sMP1)) = ex(pstate(sAP1)) IMPLIES
       (FORALL (y: [nat, nat]):
         PROJ_1(y) < PROJ_1(x) AND PROJ_2(y) < PROJ_2(x) IMPLIES
