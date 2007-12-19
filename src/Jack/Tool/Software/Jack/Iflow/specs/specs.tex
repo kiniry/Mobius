@@ -1,0 +1,563 @@
+
+\documentclass [a4paper,twoside]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% My standard font setup
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+%\usepackage{euler}
+%\usepackage{charter}
+\usepackage{xspace}
+%\usepackage{fancyheadings}
+%\usepackage{fancyhdr}
+\usepackage{a4}
+\usepackage{listings}
+\usepackage{supertabular}
+%\usepackage{wrapfig}
+\usepackage[obeyspaces]{url}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Much nicer tables
+\usepackage{booktabs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  "x" will now typeset x in \ttfamily font.
+\catcode`\"=\active
+{\gdef"{\begingroup\ttfamily\let"=\endgroup}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Things to make this a technical report
+\newif\ifdraft
+   \draftfalse
+% Set \drafttrue (that is: ensure it is not commented out) if you 
+% want the CVS-line on every chapter.  Comment it out for ``official''
+% versions 
+\drafttrue
+
+%%%%%%   
+\newif\ifpdf
+\ifx\pdfoutput\undefined
+        \pdffalse
+\else
+        \pdfoutput=1
+        \pdftrue
+\fi
+%%%%%%
+
+\ifpdf
+        \usepackage[pdftex]{graphicx}
+\else
+        \usepackage{graphicx}
+\ifdraft
+        \usepackage[dvips,light,first,bottomafter]{draftcopy}
+        %\usepackage[active]{srcltx}        
+\draftcopyName{$Revision: 1.4 $}{120}
+\fi
+\fi
+
+
+
+%From Anders Andersen (AAndersen@ACM.org)
+% A much nicer footnote.
+\makeatletter
+\let\fnote\footnote
+\def\footnote#1{\@ifnextchar.{\@afootnote{#1}}{\fnote{#1}}}
+\def\@afootnote#1{\makebox[0pt][l]{\footnotemark}\footnotetext{#1}}
+\makeatother
+
+\newcommand{\cvs}[1]{\ifdraft 
+  \begin{center}
+    \begingroup \urlstyle{tt}\tiny\Url{#1} 
+  \end{center}
+\fi}
+
+\begin{document}
+\DeclareGraphicsExtensions{.jpg, .png, .pdf, .eps}
+
+% Some useful definitions
+\def\ipd{\textsf{ipd}}
+\def\pd{\textsf{pd}}
+\def\END{\textsf{End}}
+
+\title{Embedding security levels into the Java Bytecode: a specification}
+
+\author{Luca Martini}
+\maketitle
+
+
+\begin{abstract}
+\noindent
+This documents contains a specification on how to embed security
+levels into the Java Bytecode. Security levels are used to perform
+non-interference checking following the method proposed in
+\cite{BartheRezk}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Specification}
+To include the security levels information into the Java Bytecode
+maintaining the code executable by Java Virtual Machines, we implement
+some attributes following the recommendation of Java Virtual Machine
+specification \cite[\S4.7]{VMSPEC2}.
+
+
+\subsection{Security levels}\label{sec:lev}
+A \texttt{class} file consists of a stream of 8-bit bytes. We chose to
+represent each security level with a single byte. This leads to have
+security types lattices with at most 256 elements, that seems to
+be a reasonable limit. We propose this encoding for the simplest
+lattice $\{H,L\}, L\leq H$.
+
+\begin{center}
+\begin{tabular}{|ll|}\hline
+\textbf{Type}&\textbf{Encoding}\\\hline\hline
+$L$ & 0x00\\
+$H$ & 0x01\\\hline
+\end{tabular}
+\end{center}
+
+\subsection{Fields attribute}
+The \textbf{\texttt{SecLeveField}} attribute contains the security
+specification of a field: it is described by the following C-like
+structure:
+\lstset{language=c, basicstyle=\bfseries\ttfamily}
+\begin{lstlisting}[frame=tb]
+SecLevelField_attribute {
+        u2 attribute_name_index;
+        u4 attribute_length;
+        u1 security_level;
+}
+\end{lstlisting}
+
+\begin{tabular}{rp{220pt}}
+\textbf{\texttt{attribute\_name\_index}}& 
+This value must be a valid index into the constant pool. The
+\verb+constant_pool+ entry at \verb+attribute_name_index+ must be a
+\verb+CONSTANT_Utf8_info+ structure representing the string
+``SecLevelField''. \\
+\textbf{\texttt{attribute\_length}}&
+This value is the size, in bytes, of the whole attribute (except for the first six bytes) and therefore must be set to 1.\\
+\textbf{\texttt{security\_level}}& This value contains the security levels of the fields, e.g. encoded using the specfication of \ref{sec:lev}. 
+\end{tabular}
+
+This attribute \textit{can} be stored in the \verb+attributes[]+ array
+of the \verb+field_info+ structure.  Since the attributes are
+optional, we assume that the fields that do not have it, are assigned
+a bottom security level.
+
+\subsection{Methods attributes}
+These attribute \emph{must} be stored in the \verb+attributes[]+ array
+of the \verb+method_info+ structure. We defined two type of optional
+attributes: the \texttt{SecLevelMethod} attribute (responsible for
+specifying one or more security signatures for a method) and the
+\texttt{ExceptionSafe} attribute, that can signal that some program
+points in the method will not throw any exceptions.
+
+\subsubsection{The \texttt{SecLevelMethod} attribute}
+
+The \textbf{\texttt{SecLevelMethod}} attribute contains the security
+specification of a method: it is described by the following C-like
+structure:
+\begin{lstlisting}[frame=tb]
+SecLevelMethod_attribute {
+        u2 attribute_name_index;
+        u4 attribute_length;
+        u2 registers_count; 
+        {  u1 register_level;
+           u1 is_array;
+        }  registers[registers_count];
+        u1 effect;
+        u1 exceffect;
+        u1 impl_par;
+        u1 return_value;
+}
+\end{lstlisting}
+
+\begin{supertabular}{rp{220pt}}
+\textbf{\texttt{attribute\_name\_index}}& 
+This value must be a valid index into the constant pool. The
+\verb+constant_pool+ entry at \verb+attribute_name_index+ must be a
+\verb+CONSTANT_Utf8_info+ structure representing the string
+``SecLevelMethod''. \\
+\textbf{\texttt{attribute\_length}}&
+This value is the size, in bytes, of the whole attribute (except for
+the first six bytes) and therefore must be set to
+6+\verb+2*registers_count+.\\
+\textbf{\texttt{registers\_count}}& 
+This value represents the number of the registers used by
+the method. This value must agree with the \verb+max_locals+ field of
+the \verb+Code+ attribute. For all non-{\tt static} method is at less 1, 
+since one register is used to save the reference {\tt this} at the entry 
+of the method.\\
+\textbf{\texttt{registers}}& 
+This arrays contains the security types of the register used by the
+method. Since it is assumed that the security type of a register does
+not change during the (abstract) execution of the method, this array
+gives also the specification of the level of the parameters. The boolean 
+field \verb+is_array+ specifies if the corresponding register will contain 
+an array reference: \textsf{true} is encoded as 0xff and \textsf{false} as 
+0x00.\\
+\textbf{\texttt{effect}}& 
+This fields represents the level of the heap effect of the method.\\
+\textbf{\texttt{exceffect}}& 
+This fields represents the level of the exception effect of the
+method.\\
+\textbf{\texttt{impl\_par}}& 
+This value is the security level of the implicit parameter of the
+method, i.e. the reference of the object on which the method is
+invoked. This is unnecessary, since on instance method invocation,
+local variable 0 is always used to pass a reference to the object on
+which the instance method is being invoked \cite[\S3.6.1]{VMSPEC2}.\\
+\textbf{\texttt{return\_value}}& 
+This fields represents the level of the optional return parameter of
+the method. For void methods is unmeaningful, but must be present. It
+must be used according to the method signature provided by the method
+descriptor.\\
+\end{supertabular}
+
+Please note that \cite{BartheRezk} allows method to have more than one
+security signature, diifering only for the level of the implicit
+parameter.
+
+
+\subsubsection{The \texttt{ExceptionSafe} attribute}\label{sec:es}
+This attribute describe assumptions on the exceptional behavior of
+some instructions in a method. More in detail, it contains a reference
+to a class $C$ and a set of program points $PPs$. If such attribute is
+present in a method $m$, we can assume that every program point $p \in
+PPs$ will not raise any exceptions of type $C$. These assumption can be
+very useful in simplifying the control flow graph of the method. As
+specified in \cite[\S 6]{VMSPEC2}, many bytecode instructions can
+raise runtime exceptions (for instance, every non-\texttt{static}
+field access can raise a \texttt{NullPointerException}, ). This brings
+to a very complex control flow graph, with edges from all exception
+thrower instructions to exception handlers or the end point of the
+method. However, for many of these instructions it is easy to prove
+that will not generate any exception. As an example, think to accesses
+to non-\texttt{static} fields of a class $C$ inside of a
+non-\texttt{static} method $C.m$. If the method is successfully
+invoked, then the read-only \texttt{this} reference is nonnull and can
+be used to safe accesses to fields and methods. In any case, these
+assumptions must be proved correct in some way (i.e. proof
+obligations).
+
+\begin{lstlisting}[frame=tb]
+ExceptionSafe_attribute {  
+        u2 attribute_name_index;
+        u4 attribute_length;
+        u2 exception_name_index;
+        u2 nothrow_count;
+        u2 nothrow_pc[nothrow_count];
+\end{lstlisting}
+
+\begin{tabular}{rp{220pt}}
+\textbf{\texttt{attribute\_name\_index}}& 
+This value must be a valid index into the constant pool. The
+\verb+constant_pool+ entry at \verb+attribute_name_index+ must be a
+\verb+CONSTANT_Utf8_info+ structure representing the string
+``ExceptionSafe''. \\
+\textbf{\texttt{attribute\_length}}&
+This value is the size, in bytes, of the whole attribute (except for
+the first six bytes) and therefore must be set to
+10+\verb+2*nothrow_count+.\\
+\textbf{\texttt{exception\_name\_index}}& 
+This value must be a valid index into the constant pool. The
+\verb+constant_pool+ entry at \verb+exception_name_index+ must be a
+\verb+Class_info+ structure representing the exception class which the 
+attribute refers to. It must be a valid exception class (that is, it 
+must be a subclass of \texttt{Throwable}).\\
+\textbf{\texttt{no\_throw\_count}}&
+This is the number of bytecode instructions this attribute refers to.\\ 
+\textbf{\texttt{no\_throw\_pc}}&
+This array contains the offsets, in the method code, of the instructions
+that do not raise the exception.\\
+\end{tabular}
+
+
+\section{Modifying existing classfiles}
+\label{sec:modify}
+
+After having specified how security levels are represented, and what
+is the structure of the attribute for fields and methods, in this
+section we explain how to create these attributes and how to embed it
+into the classfiles.
+
+Instead of including the specification directly on the Java source
+files, we decided to provide it in a separate text file (whose format
+is described below). In this way, we can use the ByteCode Engineering
+Library (BCEL)\cite{bcel} to include security specification into existing
+classfiles that can be wether the results of a compilation or handly
+written bytecode sources. 
+
+The small Java program that performs this action is called
+\texttt{LevelParse} and accepts as input a textual file respecting
+this simplified syntax:
+
+\begin{center}
+\begin{tabular}{rl}
+\textit{SpecFile} ::=& \{ClassDecl\}$^*$\\
+\textit{ClassDeclaration} ::=&\texttt{@class} myClass \\
+& \{FieldMethDecl\}$^*$ \\
+& \texttt{@endclass}\\
+\textit{FieldMethDecl} ::=& FieldDecl $|$ MethodDecl $|$ ExceptionDecl\\
+\textit{FieldDecl} ::=& \texttt{@field} Level myField FieldSignature\\
+\textit{MethodDecl} ::=& \texttt{@method} MethodId\\
+& \{MethodAttrDecl\}$^*$\\
+& \texttt{@endmethod}\\
+\textit{MethodId} ::=& myMethod MethodSignature\\
+\textit{MethodAttrDecl} ::=& \texttt{@heapeffect} Level \\
+& $|$ \texttt{@exceffect} Level\\
+& $|$ \texttt{@exceffect} Level\\
+& $|$ \texttt{@return} Level\\
+& $|$ \texttt{@implicit} Level\\
+& $|$ \texttt{@register} Number LevelArray\\
+\textit{Level} ::=& H $|$ L\\
+\textit{LevelArray} ::=& Level $|$ Level[]\\
+\textit{ExceptionDecl} ::=& \texttt{@excsafe} ExceptionClass MethodId $<$pplist$>$\\
+\end{tabular}
+\end{center}
+
+where \emph{myClass}, \emph{MyField}, and \emph{myMethod} are names
+respectively for a generic class, a generic field and a generic
+method; \emph{FieldSignature} and \emph{MethodSignature} are the Java
+descriptors respectively of a field and a of method (see
+\cite[\S4.3]{VMSPEC2}); \texttt{Number} is a number that identifies the
+local variable that the \texttt{@register} directive refers to. Every
+directive must be put on a separate lines; it is possible also to add
+comment lines, using the keyword \texttt{@comment}: all the contents of
+these lines are then ignored by the parser.  
+
+Each \emph{FieldDecl} creates a \texttt{SecLevelField} attribute for
+the specified field, while each \texttt{MethodDecl} creates a
+\texttt{SecLevelMethodAttribute}.  Multiple (different) attributes of
+this last type may refer to the same method. The \emph{MethodAttrDecl}
+lines allows to set the fields of the
+\texttt{SecLevelMethodAttribute}. If a \emph{MethodAttrDecl} is
+missing, its corresponding field in the
+\texttt{SecLevelMethodAttribute} is set to the low level.
+
+
+
+\subsection{The \texttt{LevelsTemplate} utility}
+\label{sec:template}
+To make the writing of specification textual file faster, a little
+utility tool, written in Java using BCEL as well, is provided.
+\texttt{LevelsTemplate} accepts as input a list of classfiles and
+gives as output a textual file. This last file, if processed with
+\texttt{LevelParse}, adds a a security attribute to every method and
+field of the classes passed as parameters. All the levels specified in
+the textual file are bound to $L$. The utility inserts also in the
+textual file, as comments, the number of local variables used by each
+method, and, if the \texttt{LineNumberTable} debug attribute is
+present, the mapping variables/registers. The utility suggests also
+that some program points will be \texttt{NullPointerException} safe,
+as described in subsection \ref{sec:es}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{small}
+  \begin{tabular}{l|l}
+
+  \begin{minipage}{150pt}
+\lstset{language=Java, keywordstyle=\rmfamily\bfseries}
+    \begin{lstlisting}
+public class B {
+  int j;
+  int k;
+    
+  boolean lessOrEq(B b1) {
+     if ((b1 != null) && 
+         (j <= b1.j) && 
+         (k <= b1.k)) {
+            return true;
+     }
+     return false;
+  }
+    
+  public void exchange() { 
+     int tmp = k; 
+     k = j;
+     j = tmp;
+  }
+    
+}
+\end{lstlisting}
+  \end{minipage}
+&
+    \begin{minipage}{180pt}
+\begin{verbatim}
+@class B
+   @field L j I
+   @field L k I
+
+   @method <init> ()V
+   @comment max locals 1
+      @heapeffect L
+      @exceffect L
+      @register 0 L
+      @implicit L
+   @endmethod
+
+   @exceptionsafe java.lang.NullPointerException 
+                            lessOrEq (LB;)Z 5 16
+   @method lessOrEq (LB;)Z
+   @comment max locals 2
+      @heapeffect L
+      @exceffect L
+      @register 0 L
+   @comment B b1
+      @register 1 L
+      @implicit L
+      @return L
+   @endmethod
+
+   @exceptionsafe java.lang.NullPointerException 
+                                exchange ()V 1 7
+   @method exchange ()V
+   @comment max locals 2
+      @heapeffect L
+      @exceffect L
+      @register 0 L
+   @comment int tmp
+      @register 1 L
+      @implicit L
+   @endmethod
+@endclass
+\end{verbatim}
+  \end{minipage}
+\end{tabular}
+\end{small}
+\caption{An example of use of the  \texttt{LevelsTemplate} utility: the 
+  \texttt{B} classfile (whose source is on the left) generates the textual 
+  file on the right (the \texttt{@exceptionsafe} lines are broken due to 
+  space lack).}
+\label{fig:exampletemplate}
+\end{figure}
+
+
+\subsection{Viewing the embedded attributes}
+\label{sec:jmlclasslib}
+
+Using a modified version of the \texttt{jclasslib} bytecode
+viewer\cite{jclasslib}, called \texttt{jmlclasslib}\footnote{This name
+  came from the fact that this extended version of the class viewer
+  was developed primarily to show JML attributes
+  \cite{JMLAnnotations}} it is possible to show the value of the
+embedded security atttributes (see Figure \ref{fig:jml1}).
+
+\begin{figure}[htbp]
+  \centering
+\includegraphics[width=\linewidth]{jml1}
+  \caption{The jmlclasslib in action}
+  \label{fig:jml1}
+\end{figure}
+
+
+\section{The Information flow analysis}
+\label{sec:if}
+
+In this section we will describe some detail about the implementation
+of the analysis proposed in \cite{BartheRezk} and its extension to
+array instructions. Since the performed analysis is similar in
+principle to a bytecode verification, we choose to reuse part of the
+code of the \emph{Justice} bytecode verifier (developed by the Enver
+Haase) included in the BCEL library. In particular we borrowed from
+that verifier the implementation of the Kildall algorithm\cite{kild}
+to calculate the least fix point iteration.  
+
+To handle implicit flows, it is necessary to calculate execution
+dependencies between instructions. Since bytecode, as a low level
+language, is not structured, this task required to build control
+regions. Let us assume $G=(V,E)$ a directed graph in which the set of
+vertices $V$ represents program points and the set of edges $E
+\subseteq V \times V$ represent control flow successor relation. The
+set $V$ contains also a meta-node \END that represents the exit point
+of the method (then every return instruction and every unhandled
+exception thrower must have $\END$ as a successor). We assume that
+\END is reachable from every program point. We denote with
+$\rightarrow$ the successor relation and with $\rightarrow^\star$ its
+transitive closure; we denote with $\Pi$ the set of all paths defined
+by $\rightarrow$.  Let us recall some definition about ppostdomination relation.
+
+\textbf{Definition} (\textit{Postdomination}) Given two nodes $a,b \in V$ we say that $a$ \textit{postdominates} $b$, and we denote it by $a
+\ \pd \ b$, if and only if for every path $\pi=b\rightarrow^\star$ \END, it
+is $a \in \pi$.
+
+\textbf{Definition} (\textit{Immediate Postdominator}) The node $a$ is
+the \textit{immediate postdominator} of a node $b$, denoted by
+$a=\ipd(b)$, if and only if for all node $c$ such that $c\ \pd \ b$,
+it is also $c\ \pd \ a$.
+
+It is possible to prove that the immediate postdominator exists and is unique for all vertices $v \in V, v \neq \END$.
+
+We can then define \emph{control regions}.
+
+\textbf{Definition} (\textit{Control Region}) The control region of a
+node $a$ is the set of nodes defined as:
+\begin{displaymath}
+  \mathsf{Region}(a) = \{ \text{nodes } b | \exists \pi=a\rightarrow b \  \land \ipd(a) \not\in \pi\}
+\end{displaymath}
+
+
+Then, to build the control region it is necessary to calculate:
+\begin{itemize}
+\item the successor(s) of every instruction (also ``exceptional'' successors)
+\item postdominator tree (we use the bit vector algorithm presented in \cite{aho-sethi-ullman}) 
+\item immediate postdominators (using the definition)
+\end{itemize}
+
+
+
+\subsection{Array extension}\label{sec:array}
+In this subsection we will describe the rule that we added to (and
+changed from) the type system in \cite{BartheRezk}.  The main
+difficulty in handling array instructions derives from the fact that
+in Java Language (and therefore in Java Bytecode) arrays are
+non-primitive objects. This means that they can suffer from aliasing.
+In the context of our analysis the aliasing can be a problem. consider the following Java Program:
+\begin{center}
+  \begin{lstlisting}
+    int[] x; 
+    int[] y = new int[1] {0}; 
+    int[] z = new int[1] {0}; 
+    if(/*high guard*/) { 
+      x=y; 
+    }
+    else { 
+      x=z; 
+    } 
+    x[0]=1;
+\end{lstlisting}
+\end{center}
+and suppose \textsf{vt}$(x)=H$, \textsf{vt}$(y)=\mathsf{vt}(z)=L$.
+Following the rules of \cite{BartheRezk}, the assignment in the branch
+are legals (they are flows from $L$ to $H$) and also the write in the
+array should be considered legal. But, at the the end, checking if
+\texttt{y[0]} or \texttt{z[0]} is possible to infer the value of the
+high guard. This because in this example we allowed high array
+references to point to low arrays. Please note that it is not possible
+to specify directly a security level for their contents as we do for
+fields without adding annotations to the bytecode (array elements do
+not have ``names'' in the bytecode, they are indexed by values). We
+adopted the solution of adding an additional security level to array
+references, that never changes its value and imposing, during the
+abstract execution of the program, that the assignment of array
+references is legal only if the involved references hold the same
+non-mutable level. Then we had to modify all instruction that can
+involve array reference assignment (\texttt{astore},
+\texttt{putfield}, \texttt{areturn}) adding this extra constraint.
+With these modification, we have that the content of a stack item or
+of a local variable can be either a single, or a pair of security
+levels, and the information flow checking must perform also some
+typing checks (that normally are demanded to the Bytecode Verifier) to
+ensure that array instructions manipulate array references in a
+correct way.
+
+\addcontentsline{toc}{section}{References} 
+\bibliographystyle{plain}
+\bibliography{../SECURITY}
+
+\end{document}
