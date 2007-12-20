@@ -11,6 +11,8 @@ o All support, research and feature request tickets have moved from
   the UCD GForge (http://sort.ucd.ie/projects/escjava/) to the 
   Mobius Trac (https://mobius.ucd.ie)
 o Radu Grigore has made improvements to the background predicate
+o Mikolas Janota added a new command line option -erst for checking 
+  model methods
 o Numerous bugs have been identified, fixed, and added. :)
   
 The following tickets are FIXED or CLOSED in this release:
@@ -22,7 +24,8 @@ Gforge 	Trac ID	Summary
 
 The following issues are known to EXIST in this release:
 
-Gforge	Trac ID	Summary 																 
+Gforge	Trac ID	Summary 
+n/a		415		Modify specs_test to work with either Java 1.4 or Java 1.5																 
 55				inheritance of invariants												 
 105				handling DSA for recursive specs is broken								 
 111				Recursive postconditions												 

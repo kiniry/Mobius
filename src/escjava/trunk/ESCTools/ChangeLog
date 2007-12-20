@@ -23,7 +23,7 @@ Added windows binaries for AST tools
 ------------------------------------------------------------------------
 r3318 | dcochran | 2007-12-07 15:48:49 +0000 (Fri, 07 Dec 2007) | 1 line
 
-Move Javafe out from the active trunk pf ESC/Java2 - it now has  its own project
+Move Javafe out from the active trunk of ESC/Java2 - it now has  its own project
 ------------------------------------------------------------------------
 r3317 | dcochran | 2007-12-07 15:12:23 +0000 (Fri, 07 Dec 2007) | 1 line
 
@@ -94,10 +94,8 @@ Fixing comments.
 ------------------------------------------------------------------------
 r3247 | erikpoll | 2007-11-28 12:16:16 +0000 (Wed, 28 Nov 2007) | 5 lines
 
-
 fixed it so this script will run when called from other working
 directory
-
 
 ------------------------------------------------------------------------
 r3238 | mikolas | 2007-11-27 20:47:12 +0000 (Tue, 27 Nov 2007) | 2 lines
