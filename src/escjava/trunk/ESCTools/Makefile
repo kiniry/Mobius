@@ -5,6 +5,7 @@
 ## author: David Cok
 ## author: Joe Kiniry
 ## author: Patrice Chalin
+## author: Dermot Cochran
 ##
 
 export TOP = .
@@ -23,9 +24,7 @@ include Makefile.defs
 ##  all+   - does all of the above
 ##
 ## You can run each of these in a subdirectory and only apply it to
-## the code in that subdirectory, if you like.  Note though, that the
-## subdirectories other than Javafe presume that Javafe has been
-## built.
+## the code in that subdirectory, if you like.
 ##
 ## These are additional top-level-only targets
 ##  patch-release  - makes the tar file constituting a patch release
@@ -63,7 +62,7 @@ jars: $(ESCJAVA2_SPECS_JAR) jar srcjar
 ################################################################################
 ## Top-level build and test rules
 
-.PHONY: build buildall test javafetests escjavatests alltests \
+.PHONY: build buildall test escjavatests alltests \
 	escjavaalltests findbugs self_typecheck test1
 
 build buildall: source fix-perms
@@ -72,7 +71,6 @@ build buildall: source fix-perms
 	done
 
 source: fix-perms
-#	$(MAKE) -C Javafe source
 	$(MAKE) -C Escjava source generate_files
 
 test: build test0
@@ -282,7 +280,6 @@ javadoc: build
 	  -author -version -use \
 	  -linksource \
 	  -group EscJava "escjava.*" \
-	  -group Javafe  "javafe.*" \
 	  -group Utils   "junitutils.*" \
 	  -tag warning -tag todo -tag note -tag design -tag usage \
 	  -tag requires \
