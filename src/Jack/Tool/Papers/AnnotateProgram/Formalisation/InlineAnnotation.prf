@@ -1,0 +1,1366 @@
+(NewVar)
+(InlineVariableNames)
+(InlineNewVariableDeclarations
+ (IMP_InlineVariableNames_TCC1 0
+  (IMP_InlineVariableNames_TCC1-1 nil 3407157570 3407160139
+   ("" (use "infinite_namespace") nil nil) unchecked
+   ((infinite_namespace formula-decl nil InlineNewVariableDeclarations
+     nil))
+   9 10 t nil))
+ (res_ex_TCC1 0
+  (res_ex_TCC1-1 nil 3407157570 3407160139
+   ("" (use "name_of_exists")
+    (("" (skosimp*) (("" (inst?) nil nil)) nil)) nil)
+   unchecked
+   ((Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (NewVar type-decl nil NewVar_adt nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (legal_names const-decl "bool" InlineVariableNames nil)
+    (injective? const-decl "bool" functions nil)
+    (name_of_exists formula-decl nil InlineNewVariableDeclarations
+     nil))
+   74 80 t nil))
+ (res_ex_disjoint 0
+  (res_ex_disjoint-1 nil 3407159805 3407160135
+   ("" (skosimp*)
+    (("" (expand "res")
+      (("" (expand "ex")
+        (("" (typepred "res_ex(p!1)")
+          (("" (expand "injective?")
+            (("" (copy -1)
+              (("" (copy -1)
+                (("" (inst -1 "res(m1!1)" "res(m2!1)")
+                  (("" (inst -2 "res(m1!1)" "ex(m2!1)")
+                    (("" (inst -3 "ex(m1!1)" "ex(m2!1)")
+                      (("" (assert)
+                        (("" (skosimp*)
+                          (("" (assert)
+                            (("" (split 3)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (case "m(res(m1!1)) = m(res(m2!1))")
+                                  (("1" (assert) nil nil)
+                                   ("2"
+                                    (replace -2)
+                                    (("2" (propax) nil nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (assert)
+                                (("2"
+                                  (case "m(ex(m1!1)) = m(ex(m2!1))")
+                                  (("1" (assert) nil nil)
+                                   ("2"
+                                    (replace -3)
+                                    (("2" (propax) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished
+   ((res const-decl "Name" InlineNewVariableDeclarations nil)
+    (res_ex const-decl "(injective?[NewVar[Name], (legal_names(p))])"
+     InlineNewVariableDeclarations nil)
+    (injective? const-decl "bool" functions nil)
+    (legal_names const-decl "bool" InlineVariableNames nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (NewVar type-decl nil NewVar_adt nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (res adt-constructor-decl "[Method -> (res?)]" NewVar_adt nil)
+    (res? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (m shared-adt-accessor-decl "[NewVar -> Method[Name]]" NewVar_adt
+     nil)
+    (ex? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (ex adt-constructor-decl "[Method -> (ex?)]" NewVar_adt nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil))
+   168535 210 t shostak))
+ (new_res_lvars_TCC1 0
+  (new_res_lvars_TCC1-1 nil 3407159572 3407160140
+   ("" (skosimp*)
+    (("" (typepred "methods(p!1)")
+      (("" (expand "is_finite")
+        (("" (skosimp*)
+          ((""
+            (inst 1 "N!1" "LAMBDA(lv : ({lv: LocalVarDecl[Name] |
+                     EXISTS (m: Method[Name]):
+                       methods[Name](p!1)(m) AND
+                        lv = new_res_lvar(p!1, m)})) : f!1(choose({m: Method[Name] |
+                       methods[Name](p!1)(m) AND
+                        lv = new_res_lvar(p!1, m)}))")
+            (("1" (expand "injective?")
+              (("1" (skosimp*)
+                (("1" (inst?)
+                  (("1" (assert) nil nil)
+                   ("2" (rewrite "nonempty_exists")
+                    (("2" (typepred "x2!1")
+                      (("2" (skosimp*)
+                        (("2" (inst?) (("2" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("3" (rewrite "nonempty_exists")
+                    (("3" (typepred "x1!1")
+                      (("3" (skosimp*)
+                        (("3" (inst?) (("3" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (skosimp*)
+              (("2" (typepred "lv!1")
+                (("2" (skosimp*)
+                  (("2" (rewrite "nonempty_exists")
+                    (("2" (inst?) (("2" (assert) nil nil)) nil)) nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (methods const-decl "finite_set[Method]" ProgramFunctions nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (JType type-decl nil JType_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (injective? const-decl "bool" functions nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (choose const-decl "(p)" sets nil)
+    (below type-eq-decl nil nat_types nil)
+    (< const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (nonempty? const-decl "bool" sets nil))
+   310 270 t nil))
+ (new_ex_lvars_TCC1 0
+  (new_ex_lvars_TCC1-1 nil 3407159572 3407160140
+   ("" (skosimp*)
+    (("" (typepred "methods(p!1)")
+      (("" (expand "is_finite")
+        (("" (skosimp*)
+          ((""
+            (inst 1 "N!1" "LAMBDA(lv : ({lv: LocalVarDecl[Name] |
+                       EXISTS (m: Method[Name]):
+                         methods[Name](p!1)(m) AND
+                          lv = new_ex_lvar(p!1, m)})) : f!1(choose({m: Method[Name] |
+                         methods[Name](p!1)(m) AND
+                          lv = new_ex_lvar(p!1, m)}))")
+            (("1" (expand "injective?")
+              (("1" (skosimp*)
+                (("1" (inst?)
+                  (("1" (assert) nil nil)
+                   ("2" (rewrite "nonempty_exists")
+                    (("2" (typepred "x2!1")
+                      (("2" (skosimp*)
+                        (("2" (inst?) (("2" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("3" (rewrite "nonempty_exists")
+                    (("3" (typepred "x1!1")
+                      (("3" (skosimp*)
+                        (("3" (inst?) (("3" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (skosimp*)
+              (("2" (typepred "lv!1")
+                (("2" (skosimp*)
+                  (("2" (rewrite "nonempty_exists")
+                    (("2" (inst?) (("2" (assert) nil nil)) nil)) nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (methods const-decl "finite_set[Method]" ProgramFunctions nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (JType type-decl nil JType_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (injective? const-decl "bool" functions nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (choose const-decl "(p)" sets nil)
+    (below type-eq-decl nil nat_types nil)
+    (< const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (nonempty? const-decl "bool" sets nil))
+   307 270 t nil))
+ (new_res_lvar_new_lvar 0
+  (new_res_lvar_new_lvar-1 nil 3407161315 3407161334
+   ("" (skosimp*)
+    (("" (expand "new_lvars")
+      (("" (expand "union")
+        (("" (flatten)
+          (("" (expand "member")
+            (("" (expand "new_res_lvars") (("" (inst?) nil nil)) nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (JType type-decl nil JType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil))
+   18666 20 t shostak))
+ (new_ex_lvar_new_lvar 0
+  (new_ex_lvar_new_lvar-1 nil 3407161340 3407161348
+   ("" (skosimp*)
+    (("" (expand "new_lvars")
+      (("" (expand "union")
+        (("" (flatten)
+          (("" (expand "member")
+            (("" (expand "new_ex_lvars") (("" (inst?) nil nil)) nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (JType type-decl nil JType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil))
+   7729 20 t shostak)))
+(InlineMethodAnnotation
+ (IMP_InlineVariableNames_TCC1 0
+  (IMP_InlineVariableNames_TCC1-1 nil 3407157671 3407162010
+   ("" (use "infinite_namespace") nil nil) proved
+   ((infinite_namespace formula-decl nil InlineMethodAnnotation nil)) 8
+   0 t nil))
+ (IMP_InlineNewVariableDeclarations_TCC1 0
+  (IMP_InlineNewVariableDeclarations_TCC1-1 nil 3407157671 3407162010
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil InlineMethodAnnotation nil)) 10 10
+   t nil))
+ (inline_method_TCC1 0
+  (inline_method_TCC1-1 nil 3407157671 3407162010
+   ("" (skosimp*)
+    (("" (expand "inline_method_body") (("" (propax) nil nil)) nil))
+    nil)
+   proved
+   ((inline_method_body const-decl "Body" InlineMethodAnnotation nil))
+   18 20 t nil))
+ (inline_method_TCC2 0
+  (inline_method_TCC2-1 nil 3407158174 3407162010
+   ("" (subtype-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil))
+   189 180 nil nil))
+ (inline_methods_TCC1 0
+  (inline_methods_TCC1-1 nil 3407157671 3407162011
+   ("" (skosimp*)
+    (("" (typepred "ms!1")
+      (("" (expand "is_finite")
+        (("" (skosimp*)
+          ((""
+            (inst 1 "N!1" "LAMBDA(m : ({m: Method[Name] |
+                     EXISTS (n: Method[Name]):
+                       ms!1(n) AND m = inline_method(p!1)(n)})) : f!1(choose({n: Method[Name] |
+                       ms!1(n) AND m = inline_method(p!1)(n)}))")
+            (("1" (expand "injective?")
+              (("1" (skosimp*)
+                (("1" (inst? -1 :where -2)
+                  (("1" (assert) nil nil)
+                   ("2" (rewrite "nonempty_exists")
+                    (("2" (typepred "x2!1")
+                      (("2" (skosimp*)
+                        (("2" (assert) (("2" (inst?) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("3" (assert)
+                    (("3" (rewrite "nonempty_exists")
+                      (("3" (typepred "x1!1")
+                        (("3" (skosimp*)
+                          (("3" (inst?) (("3" (assert) nil nil)) nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (assert)
+              (("2" (skosimp*)
+                (("2" (rewrite "nonempty_exists")
+                  (("2" (typepred "m!1")
+                    (("2" (skosimp*)
+                      (("2" (inst?) (("2" (assert) nil nil)) nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (JType type-decl nil JType_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (m!1 skolem-const-decl "({m: Method[Name] |
+    EXISTS (n: Method[Name]): ms!1(n) AND m = inline_method(p!1)(n)})"
+     InlineMethodAnnotation nil)
+    (n!1 skolem-const-decl "Method[Name]" InlineMethodAnnotation nil)
+    (injective? const-decl "bool" functions nil)
+    (x1!1 skolem-const-decl "({m: Method[Name] |
+    EXISTS (n: Method[Name]): ms!1(n) AND m = inline_method(p!1)(n)})"
+     InlineMethodAnnotation nil)
+    (x2!1 skolem-const-decl "({m: Method[Name] |
+    EXISTS (n: Method[Name]): ms!1(n) AND m = inline_method(p!1)(n)})"
+     InlineMethodAnnotation nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (n!1 skolem-const-decl "Method[Name]" InlineMethodAnnotation nil)
+    (choose const-decl "(p)" sets nil)
+    (below type-eq-decl nil nat_types nil)
+    (< const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (ms!1 skolem-const-decl "finite_set[Method[Name]]"
+     InlineMethodAnnotation nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (inline_method const-decl "Method" InlineMethodAnnotation nil)
+    (p!1 skolem-const-decl "Program[Name]" InlineMethodAnnotation nil)
+    (nonempty? const-decl "bool" sets nil))
+   221 190 t nil))
+ (inline_method_name 0
+  (inline_method_name-1 nil 3407157713 3407162011
+   ("" (skosimp*)
+    (("" (expand "inline_method") (("" (propax) nil nil)) nil)) nil)
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
+   10 t shostak))
+ (inline_method_arg 0
+  (inline_method_arg-1 nil 3407157722 3407162011
+   (";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+    (skosimp*)
+    ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+      (expand "inline_method")
+      ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 39
+   10 nil nil))
+ (inline_method_pre 0
+  (inline_method_pre-1 nil 3407157724 3407162011
+   (";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+    (skosimp*)
+    ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+      (expand "inline_method")
+      ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
+   10 nil nil))
+ (inline_method_post 0
+  (inline_method_post-1 nil 3407157727 3407162011
+   (";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+    (skosimp*)
+    ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+      (expand "inline_method")
+      ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
+   10 nil nil))
+ (inline_method_lvars 0
+  (inline_method_lvars-1 nil 3407157730 3407162011
+   (";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+    (skosimp*)
+    ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+      (expand "inline_method")
+      ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
+   10 nil nil))
+ (inline_method_body 0
+  (inline_method_body-1 nil 3407158189 3407162011
+   ("" (skosimp*)
+    (("" (expand "inline_method") (("" (propax) nil nil)) nil)) nil)
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
+   10 t shostak))
+ (inline_method_pre_set 0
+  (inline_method_pre_set-1 nil 3407157734 3407162011
+   (";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+    (skosimp*)
+    ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+      (expand "inline_method")
+      ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
+   10 nil nil))
+ (inline_method_post_set 0
+  (inline_method_post_set-1 nil 3407157736 3407162011
+   (";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+    (skosimp*)
+    ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+      (expand "inline_method")
+      ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
+   10 nil nil))
+ (inline_method_exc_set 0
+  (inline_method_exc_set-1 nil 3407157739 3407162011
+   (";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+    (skosimp*)
+    ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+      (expand "inline_method")
+      ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 10
+   20 nil nil))
+ (inline_method_res 0
+  (inline_method_res-1 nil 3407158199 3407162011
+   ("" (skosimp*)
+    (("" (expand "inline_method") (("" (propax) nil nil)) nil)) nil)
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 12
+   10 t nil))
+ (inline_method_res_type 0
+  (inline_method_res_type-1 nil 3407157742 3407162011
+   (";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+    (skosimp*)
+    ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+      (expand "inline_method")
+      ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved
+   ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 37
+   10 nil nil))
+ (inline_method_wf_Body1 0
+  (inline_method_wf_Body1-1 nil 3407157747 3407161647
+   ("" (skosimp*)
+    (("" (assert)
+      (("" (auto-rewrite-theory "InlineMethodAnnotation")
+        (("" (assert)
+          ((""
+            (auto-rewrite "emptyset" "var_names" "union" "member" "add"
+                          "singleton")
+            (("" (expand* "wf_Method" "method_pred" "wf_Body")
+              (("" (flatten)
+                (("" (assert)
+                  (("" (split 1)
+                    (("1" (skosimp*)
+                      (("1" (assert)
+                        (("1" (case "var_names(exc_set(m!1))(v!1)")
+                          (("1" (inst? -14) (("1" (assert) nil nil))
+                            nil)
+                           ("2" (assert)
+                            (("2" (case "ex(p!1)(m!1) = v!1")
+                              (("1"
+                                (inst 3 "new_ex_lvar(p!1,m!1)")
+                                (("1"
+                                  (use "new_ex_lvar_new_lvar")
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (expand "new_ex_lvar")
+                                      (("1" (propax) nil nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (assert)
+                                (("2"
+                                  (split -1)
+                                  (("1"
+                                    (inst? -9)
+                                    (("1" (assert) nil nil))
+                                    nil)
+                                   ("2"
+                                    (inst? -7)
+                                    (("2" (assert) nil nil))
+                                    nil)
+                                   ("3"
+                                    (inst 4 "new_res_lvar(p!1,m!1)")
+                                    (("3"
+                                      (use "new_res_lvar_new_lvar")
+                                      (("3"
+                                        (assert)
+                                        (("3"
+                                          (expand "new_res_lvar")
+                                          (("3" (propax) nil nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil)
+                                   ("4"
+                                    (inst? -15)
+                                    (("4" (assert) nil nil))
+                                    nil)
+                                   ("5"
+                                    (inst? -11)
+                                    (("5" (assert) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil)
+                     ("2" (propax) nil nil) ("3" (propax) nil nil)
+                     ("4" (skosimp*)
+                      (("4" (lift-if)
+                        (("4" (assert)
+                          (("4" (inst 1 "new_res_lvar(p!1,m!1)")
+                            (("4" (use "new_res_lvar_new_lvar")
+                              (("4"
+                                (assert)
+                                (("4"
+                                  (expand "new_res_lvar")
+                                  (("4"
+                                    (apply
+                                     (branch
+                                      (split -2)
+                                      ((then
+                                        (flatten)
+                                        (assert)
+                                        (flatten)
+                                        (assert)))))
+                                    nil
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvar_new_lvar formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvar_new_lvar formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (Body type-decl nil Body_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (JType type-decl nil JType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
+    (member const-decl "bool" sets nil)
+    (emptyset const-decl "set" sets nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (union const-decl "set" sets nil)
+    (singleton const-decl "(singleton?)" sets nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (inline_method_body const-decl "Body" InlineMethodAnnotation nil)
+    (inline_method const-decl "Method" InlineMethodAnnotation nil))
+   210326 2450 t shostak))
+ (inline_method_wf_Body2_TCC1 0
+  (inline_method_wf_Body2_TCC1-1 nil 3407157671 3407162012
+   ("" (subtype-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (ext_declared_var_names const-decl "finite_set[Name]"
+     ProgramFunctions nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (inline_method_body const-decl "Body" InlineMethodAnnotation nil)
+    (inline_method const-decl "Method" InlineMethodAnnotation nil))
+   869 830 nil nil))
+ (inline_method_wf_Body2_TCC2 0
+  (inline_method_wf_Body2_TCC2-1 nil 3407157671 3407162013
+   ("" (subtype-tcc) nil nil) proved
+   ((Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (ext_declared_var_names const-decl "finite_set[Name]"
+     ProgramFunctions nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (methods const-decl "finite_set[Method]" ProgramFunctions nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (inline_method_body const-decl "Body" InlineMethodAnnotation nil)
+    (inline_method const-decl "Method" InlineMethodAnnotation nil))
+   916 880 nil nil))
+ (inline_method_wf_Body2_TCC3 0
+  (inline_method_wf_Body2_TCC3-1 nil 3407157671 3407162014
+   ("" (subtype-tcc) nil nil) proved
+   ((Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (ext_declared_var_names const-decl "finite_set[Name]"
+     ProgramFunctions nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (methods const-decl "finite_set[Method]" ProgramFunctions nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (inline_method_body const-decl "Body" InlineMethodAnnotation nil)
+    (inline_method const-decl "Method" InlineMethodAnnotation nil))
+   947 880 nil nil))
+ (inline_method_wf_Body2 0
+  (inline_method_wf_Body2-1 nil 3407161656 3407162006
+   ("" (skosimp*)
+    (("" (assert)
+      (("" (auto-rewrite-theory "InlineMethodAnnotation")
+        (("" (expand* "wf_Method" "method_pred" "wf_Body")
+          (("" (assert)
+            ((""
+              (auto-rewrite "union" "member" "add" "singleton"
+                            "emptyset")
+              (("" (flatten)
+                (("" (assert)
+                  (("" (split 1)
+                    (("1" (expand "subterm" 1)
+                      (("1" (flatten)
+                        (("1" (split -1)
+                          (("1" (inst? -9) (("1" (assert) nil nil))
+                            nil)
+                           ("2" (expand "subterm" -1)
+                            (("2" (case "subterm(b!1, exc_set(m!1))")
+                              (("1"
+                                (inst? -14)
+                                (("1" (assert) nil nil))
+                                nil)
+                               ("2"
+                                (assert)
+                                (("2"
+                                  (case "subterm(b!1, Skip)")
+                                  (("1"
+                                    (expand "subterm" -1)
+                                    (("1" (propax) nil nil))
+                                    nil)
+                                   ("2"
+                                    (expand "subterm" -1)
+                                    (("2"
+                                      (assert)
+                                      (("2"
+                                        (expand "subterm" -1)
+                                        (("2"
+                                          (split -1)
+                                          (("1"
+                                            (expand "subterm" -1)
+                                            (("1"
+                                              (split -1)
+                                              (("1"
+                                                (inst? -7)
+                                                (("1"
+                                                  (assert)
+                                                  nil
+                                                  nil))
+                                                nil)
+                                               ("2"
+                                                (expand "subterm" -1)
+                                                (("2"
+                                                  (expand "subterm" -1)
+                                                  (("2"
+                                                    (expand
+                                                     "subterm"
+                                                     -1)
+                                                    (("2"
+                                                      (expand
+                                                       "subterm"
+                                                       -1)
+                                                      (("2"
+                                                        (propax)
+                                                        nil
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil)
+                                           ("2"
+                                            (expand "subterm" -1)
+                                            (("2"
+                                              (expand "subterm" -1)
+                                              (("2"
+                                                (inst? -15)
+                                                (("2"
+                                                  (assert)
+                                                  nil
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil)
+                                           ("3"
+                                            (inst? -11)
+                                            (("3" (assert) nil nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil)
+                     ("2" (inst? -2) (("2" (assert) nil nil)) nil)
+                     ("3" (inst? -4) (("3" (assert) nil nil)) nil)
+                     ("4" (lift-if)
+                      (("4" (apply (repeat (rewrite "subterm" -1)))
+                        (("4" (prop) nil nil)) nil))
+                      nil)
+                     ("5" (apply (repeat (rewrite "subterm" -1))) nil
+                      nil)
+                     ("6" (apply (repeat (rewrite "subterm" -1))) nil
+                      nil)
+                     ("7" (apply (repeat (rewrite "subterm" -1))) nil
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((method_pred const-decl "bool" ProgramRestriction nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (TT adt-constructor-decl "(TT?)" Body_adt nil)
+    (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]" Body_adt
+     nil)
+    (RExpr adt-constructor-decl "[RefExpr -> (RExpr?)]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RefExpr type-eq-decl nil Body_adt nil)
+    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Null? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr adt-constructor-decl "[BoolExpr -> (BExpr?)]" Body_adt nil)
+    (BoolVarEval adt-constructor-decl "[Name -> (BoolVarEval?)]"
+     Body_adt nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumExpr type-eq-decl nil Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Body_adt nil)
+    (NumVarEval adt-constructor-decl "[Name -> (NumVarEval?)]" Body_adt
+     nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (Body type-decl nil Body_adt nil)
+    (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (JType type-decl nil JType_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Skip adt-constructor-decl "(Skip?)" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (inline_method_body const-decl "Body" InlineMethodAnnotation nil)
+    (inline_method const-decl "Method" InlineMethodAnnotation nil)
+    (nonempty_add_finite application-judgement "non_empty_finite_set"
+     finite_sets nil))
+   350681 7000 t shostak)))
+(InlineClassAnnotation
+ (IMP_InlineVariableNames_TCC1 0
+  (IMP_InlineVariableNames_TCC1-1 nil 3407157695 3407163438
+   ("" (use "infinite_namespace") nil nil) proved
+   ((infinite_namespace formula-decl nil InlineClassAnnotation nil)) 6
+   10 t nil))
+ (IMP_InlineMethodAnnotation_TCC1 0
+  (IMP_InlineMethodAnnotation_TCC1-1 nil 3407157695 3407163438
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil InlineClassAnnotation nil)) 8 10 t
+   nil))
+ (inv_inline_class 0
+  (inv_inline_class-1 nil 3407162024 3407163438
+   ("" (skosimp*)
+    (("" (expand "inline_class") (("" (propax) nil nil)) nil)) nil)
+   proved ((inline_class const-decl "Class" InlineClassAnnotation nil))
+   8 10 t shostak))
+ (FieldDecls_inline_class 0
+  (FieldDecls_inline_class-1 nil 3407162032 3407163438
+   (";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+    (skosimp*)
+    ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+      (expand "inline_class")
+      ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved ((inline_class const-decl "Class" InlineClassAnnotation nil))
+   7 10 nil nil))
+ (GhostDecls_inline_class 0
+  (GhostDecls_inline_class-1 nil 3407162037 3407163438
+   (";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+    (skosimp*)
+    ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+      (expand "inline_class")
+      ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved ((inline_class const-decl "Class" InlineClassAnnotation nil))
+   37 10 nil nil))
+ (name_inline_class 0
+  (name_inline_class-1 nil 3407162039 3407163438
+   (";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+    (skosimp*)
+    ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+      (expand "inline_class")
+      ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
+        (propax) nil))))
+    ";;; developed with shostak decision procedures")
+   proved ((inline_class const-decl "Class" InlineClassAnnotation nil))
+   8 10 nil nil))
+ (inline_class_almost_wf_Class 0
+  (inline_class_almost_wf_Class-1 nil 3407163151 3407163438
+   ("" (skosimp*)
+    (("" (assert)
+      (("" (skosimp*)
+        (("" (expand "wf_Class")
+          (("" (flatten)
+            (("" (expand "inline_class")
+              (("" (expand "inline_methods")
+                (("" (skosimp*)
+                  (("" (replace -6)
+                    (("" (replace -4)
+                      (("" (inst -1 "n!1" "n!2")
+                        (("" (assert)
+                          (("" (expand "inline_method")
+                            (("" (propax) nil nil)) nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((wf_Class const-decl "boolean" WellFormedProgram nil)
+    (inline_class const-decl "Class" InlineClassAnnotation nil)
+    (inline_method const-decl "Method" InlineMethodAnnotation nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (JType type-decl nil JType_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil InlineClassAnnotation nil)
+    (inline_methods const-decl "finite_set[Method]"
+     InlineMethodAnnotation nil))
+   168 170 t shostak))
+ (inline_class_inv_wf_Body1 0
+  (inline_class_inv_wf_Body1-1 nil 3407162046 3407163439
+   ("" (skosimp*)
+    (("" (rewrite "inv_inline_class")
+      (("" (assert)
+        (("" (expand "wf_Body")
+          (("" (flatten) (("" (inst?) (("" (assert) nil nil)) nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((inv_inline_class formula-decl nil InlineClassAnnotation nil)
+    (Name formal-nonempty-type-decl nil InlineClassAnnotation nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil))
+   102 80 t shostak))
+ (inline_class_inv_wf_Body2_TCC1 0
+  (inline_class_inv_wf_Body2_TCC1-1 nil 3407157695 3407163439
+   ("" (subtype-tcc) nil nil) proved
+   ((boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (Name formal-nonempty-type-decl nil InlineClassAnnotation nil)
+    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (ext_declared_var_names const-decl "finite_set[Name]"
+     ProgramFunctions nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (inline_class const-decl "Class" InlineClassAnnotation nil))
+   568 520 nil nil))
+ (inline_class_inv_wf_Body2 0
+  (inline_class_inv_wf_Body2-1 nil 3407163383 3407163437
+   ("" (skosimp*)
+    (("" (rewrite "inv_inline_class")
+      (("" (expand "wf_Body")
+        (("" (flatten) (("" (inst? -2) (("" (assert) nil nil)) nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((inv_inline_class formula-decl nil InlineClassAnnotation nil)
+    (Name formal-nonempty-type-decl nil InlineClassAnnotation nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (Body type-decl nil Body_adt nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil))
+   9732 90 t shostak)))
+(InlineProgramAnnotation
+ (IMP_InlineVariableNames_TCC1 0
+  (IMP_InlineVariableNames_TCC1-1 nil 3407157696 nil
+   ("" (assuming-tcc) nil nil) unchecked nil nil nil nil nil))
+ (IMP_InlineClassAnnotation_TCC1 0
+  (IMP_InlineClassAnnotation_TCC1-1 nil 3407157696 nil
+   ("" (assuming-tcc) nil nil) unchecked nil nil nil nil nil))
+ (inline_program_TCC1 0
+  (inline_program_TCC1-1 nil 3407157696 nil ("" (subtype-tcc) nil nil)
+   unchecked nil nil nil nil nil))
+ (inline_program_TCC2 0
+  (inline_program_TCC2-1 nil 3407157696 nil ("" (subtype-tcc) nil nil)
+   unchecked nil nil nil nil nil))
+ (LocalDecls_inline_program 0
+  (LocalDecls_inline_program-1 nil 3407163445 3407163550
+   ("" (skosimp*)
+    (("" (auto-rewrite "union" "member" "add")
+      (("" (apply-extensionality :hide? t)
+        (("" (expand "getLocalDecls")
+          (("" (expand "inline_program")
+            (("" (expand "inline_class")
+              (("" (expand "inline_methods")
+                (("" (expand "getLocalDecls") (("" (postpone) nil nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 104925 280 t shostak)))
+

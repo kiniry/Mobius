@@ -1,3 +1,13 @@
+NewVar[Name : TYPE] : DATATYPE
+BEGIN
+
+  IMPORTING Program[Name]
+
+  res(m : Method) : res?
+  ex(m : Method) : ex?
+
+END NewVar
+
 InlineVariableNames[Name : TYPE+] : THEORY
 BEGIN
 
@@ -10,16 +20,8 @@ BEGIN
 
   IMPORTING WellFormedProgram[Name]
 
-  forbidden_names(p : Program) : set[Name] =
-    union(declared_var_names(p), reserved_words)
-
-  res(p : Program)(m : Name) : {n : Name | NOT forbidden_names(p)(n)}
-
-  legal_names(p : Program) : set[Name] =
-    {n : Name | NOT forbidden_names(p)(n) AND 
-                NOT EXISTS(c : Class, m : Name) : 
-                  classes(p)(c) AND
-                  method_names(p, c)(m) AND res(p)(m) = n}
+  legal_names(p : Program)(n : Name) : bool =
+    NOT union(declared_var_names(p), reserved_words)(n)
 
 
 END InlineVariableNames
@@ -30,48 +32,66 @@ BEGIN
 
   ASSUMING
 
-
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
 
+  IMPORTING NewVar[Name], InlineVariableNames[Name]
+
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+        FORALL(p : Program) :
+          injective?(f(p))
 
   ENDASSUMING
 
-%  IMPORTING MonitoredProgramSemantics[CP, Name],
-%            set2list
+  res_ex(p : Program): (injective?[NewVar[Name], (legal_names(p))])
 
-%  mp : VAR (wf_MP)
+  res(p : Program)(m : Method) : Name = res_ex(p)(res(m))
 
-%  name_of(mp) : (injective?[CP, (legal_names(mp))])
+  ex(p : Program)(m : Method) : Name = res_ex(p)(ex(m))
 
-%  unique : (injective?[CP, nat])
+  p : VAR Program
+  m : VAR Method
 
-%  halted(mp) : Name = name_of(mp)(halted)
-
-
-%  % Variables that will be added in the annotation process
-
-%  new_cp_gvd(mp) : FieldDecl =
-%    (# name := cp(mp),
-%       jtype := IntType,
-%       init_val := Int(unique(init_cp(mva(mp)))) #)
-
-%  new_cps_gvds(mp) : finite_set[FieldDecl] =
-%    {gd : FieldDecl | EXISTS (q : (cps(mva(mp)))) :
-%                      name(gd) = name_of(mp)(q) AND
-%                      jtype(gd) = IntType AND
-%                      init_val(gd) = Int(unique(q))}
-
-%  new_mva_vars_gvds(mp) : finite_set[FieldDecl] =
-%    {gd : FieldDecl | EXISTS (v : (vdsA(mva(mp)))) :
-%                      name(gd) = name(v) AND
-%                      jtype(gd) = jtype(v) AND
-%                      init_val(gd) = init_val(v)}
-
-%  new_gvds(mp) : finite_set[FieldDecl] =
-%    add(new_cp_gvd(mp), union(new_cps_gvds(mp), new_mva_vars_gvds(mp)))
+  res_ex_disjoint : LEMMA % :-)
+    FORALL(m1, m2 : Method) :
+     (NOT res(p)(m1) = ex(p)(m2)) AND
+     (NOT m1 = m2 IMPLIES
+         (NOT res(p)(m1) = res(p)(m2)) AND
+         (NOT ex(p)(m1) = ex(p)(m2)))
 
 
+  % Variables that will be added for the inline process
+
+  new_res_lvar(p, m) : LocalVarDecl =
+    (# name := res(p)(m),
+       jtype := res_type(m) #)
+
+  new_ex_lvar(p, m) : LocalVarDecl =
+    (# name := ex(p)(m),
+       jtype := BoolType #)
+
+  new_res_lvars(p) : finite_set[LocalVarDecl] =
+    {lv : LocalVarDecl | EXISTS (m : Method) : 
+                        methods(p)(m) AND lv = new_res_lvar(p, m) }
+
+
+  new_ex_lvars(p) : finite_set[LocalVarDecl] =
+    {lv : LocalVarDecl | EXISTS (m : Method) : 
+                        methods(p)(m) AND lv = new_ex_lvar(p, m) }
+
+  new_lvars(p) : finite_set[LocalVarDecl] =
+    union(new_res_lvars(p), new_ex_lvars(p))
+
+  new_res_lvar_new_lvar : LEMMA % :-)
+     methods(p)(m) IMPLIES
+     new_lvars(p)(new_res_lvar(p, m))
+
+  new_ex_lvar_new_lvar : LEMMA % :-)
+     methods(p)(m) IMPLIES
+     new_lvars(p)(new_ex_lvar(p, m))
+ 
 %  new_vars_derived_from_mp : LEMMA % :-)
 %    var_names(new_gvds(mp))(cp(mp)) AND
 %    (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
@@ -136,145 +156,190 @@ BEGIN
 
   ASSUMING
 
+
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
 
 
+  IMPORTING NewVar[Name], InlineVariableNames[Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+        FORALL(p : Program) :
+          injective?(f(p))
+
+
   ENDASSUMING
 
-%  IMPORTING AnnotateEvent[CP, Name]
 
-%  mp : VAR (wf_MP)
+  IMPORTING InlineNewVariableDeclarations[Name]
 
-%  a : VAR (wf_MVA)
+  p : VAR Program
+  m : VAR Method
+
+  % with every method call, ex initialised to false
+
+  % several try-catches needed, because we do not model subclass hierarchy
+  % of exceptions
+
+  % inline_method_body(p)(m) gives in Java-like syntax:
+  % pre_set(m);
+  % try{
+  %   try{
+  %     try{
+  %       body(m);
+  %       ex := true;
+  %     }
+  %     catch(Throwable){
+  %       exc_set(m);
+  %     }
+  %   catch(NullPointerExc){
+  %       exc_set(m);
+  %   }
+  % catch(JMLExc){
+  %   exc_set(m);
+  % }
+  % finally{
+  %   if (ex){
+  %    res := res(m);
+  %    post_set(m);
+  % }
+  inline_method_body(p)(m) : Body = 
+    Sequence(
+      pre_set(m),
+      TryCatch(
+       TryCatch(
+        TryCatch(
+          Sequence(
+             body(m),
+             StmtExpr(Assign(ex(p)(m), BExpr(TT)))),
+                              % this is only executed if body terminates
+                              % normally
+          Throwable,
+          exc_set(m),
+          Skip),
+        NullPointer,
+        exc_set(m),
+        Skip),
+       JMLExc,
+       exc_set(m),
+       IfThenElse(
+         BoolVarEval(ex(p)(m)),
+         Sequence(StmtExpr(Assign(res(p)(m), res(m))),
+                  post_set(m)),
+         Skip)))
+         
+
+  inline_method(p)(m : Method) : Method =
+    m WITH [pre_set  := Skip,
+            post_set := Skip,
+            exc_set := Skip,
+            lvars := add(new_res_lvar(p, m),
+                     add(new_ex_lvar(p, m), lvars(m))),
+            body := inline_method_body(p)(m),
+            res := CASES res_type(m) OF
+                     IntType : NExpr(NumVarEval(res(p)(m))),
+                     BoolType : BExpr(BoolVarEval(res(p)(m))),
+                     RefType : RExpr(RefVarEval(res(p)(m))),
+                     Void : BExpr(TT)
+                   ENDCASES]
 
 
-%  filter_event(a)(et : EventType)(m : Name) : finite_set[Transition] =
-%    {t : Transition | ts(a)(t) AND etype(event(t)) = et AND mname(event(t)) = m}
+  inline_methods(p)(ms : finite_set[Method]) : finite_set[Method] =
+    {m : Method | EXISTS (n : Method) : ms(n) AND m = inline_method(p)(n)}
 
-%  filter_event_subset : LEMMA % :-)
-%    FORALL(et : EventType, m : Name) :
-%      subset?(filter_event(a)(et)(m), ts(a))
+  inline_method_name : LEMMA % :-)
+    FORALL (m : Method) :
+      name(inline_method(p)(m)) = name(m)
 
-%  filter_event_cp_is_finite : LEMMA % :-)
-%    FORALL (et : EventType, n : Name, q : CP) :
-%      is_finite({t: Transition | filter_event(mva(mp))(et)(n)(t) AND scp(t) = q})
+  inline_method_arg : LEMMA % :-)
+    FORALL (m : Method) :
+      arg(inline_method(p)(m)) = arg(m)
 
-%  ann_method(mp)(m : Method) : Method =
-%    LET ann_event_type = LAMBDA (et : EventType) :
-%                           ann_event(mp)(filter_event(mva(mp))(et)(name(m)))
-%    IN
-%    m WITH [pre_set  := Sequence(pre_set(m),
-%                        Sequence(ann_event_type(Entry),
-%                        Assert(Neg(Eq(NExpr(NumVarEval(cp(mp))),
-%                                      NExpr(NumVarEval(halted(mp)))))))),
-%            post_set := Sequence(post_set(m), ann_event_type(ExitNormal)),
-%            exc_set  := Sequence(exc_set(m), ann_event_type(ExitExceptional))]
+  inline_method_pre : LEMMA % :-)
+    FORALL (m : Method) :
+      pre(inline_method(p)(m)) = pre(m)
 
+  inline_method_post : LEMMA % :-)
+    FORALL (m : Method) :
+      post(inline_method(p)(m)) = post(m)
 
-%  ann_methods(mp)(ms : finite_set[Method]) : finite_set[Method] =
-%    {m : Method | EXISTS (n : Method) : ms(n) AND m = ann_method(mp)(n)}
+  inline_method_lvars : LEMMA % :-)
+    FORALL (m : Method) :
+      lvars(inline_method(p)(m)) = 
+        add(new_res_lvar(p, m),
+        add(new_ex_lvar(p, m), lvars(m)))
 
+  inline_method_body : LEMMA % :-)
+    FORALL (m : Method) :
+      body(inline_method(p)(m)) = inline_method_body(p)(m)
 
-%  % NOTE: The following lemmas are simple but are useful as autorewrite rules
+  inline_method_pre_set : LEMMA % :-)
+    FORALL (m : Method) :
+      pre_set(inline_method(p)(m)) = Skip
 
-%  ann_method_name : LEMMA % :-)
-%    FORALL (m : Method) :
-%      name(ann_method(mp)(m)) = name(m)
+  inline_method_post_set : LEMMA % :-)
+    FORALL (m : Method) :
+      post_set(inline_method(p)(m)) = Skip
 
-%  ann_method_arg : LEMMA % :-)
-%    FORALL (m : Method) :
-%      arg(ann_method(mp)(m)) = arg(m)
+  inline_method_exc_set : LEMMA % :-)
+    FORALL (m : Method) :
+      exc_set(inline_method(p)(m)) = Skip
 
-%  ann_method_pre : LEMMA % :-)
-%    FORALL (m : Method) :
-%      pre(ann_method(mp)(m)) = pre(m)
+  inline_method_res : LEMMA % TO DO
+    FORALL (m : Method) :
+      res(inline_method(p)(m)) = 
+        CASES res_type(m) OF
+          IntType : NExpr(NumVarEval(res(p)(m))),
+          BoolType : BExpr(BoolVarEval(res(p)(m))),
+          RefType : RExpr(RefVarEval(res(p)(m))),
+          Void : BExpr(TT)
+        ENDCASES
 
-%  ann_method_post : LEMMA % :-)
-%    FORALL (m : Method) :
-%      post(ann_method(mp)(m)) = post(m)
+  inline_method_res_type : LEMMA % :-)
+    FORALL (m : Method) :
+      res_type(inline_method(p)(m)) = res_type(m)
 
-%  ann_method_lvars : LEMMA % :-)
-%    FORALL (m : Method) :
-%      lvars(ann_method(mp)(m)) = lvars(m)
+  inline_method_wf_Body1 : LEMMA % :-)
+    FORALL(m : Method) :
+      methods(p)(m) IMPLIES
+      wf_Method(p)(m) IMPLIES
+      LET im = inline_method(p)(m) IN
+      (FORALL(v : Name) : var_names(body(im))(v) IMPLIES
+                          ext_declared_var_names(p)(v) OR
+                          var_names(new_lvars(p))(v))
+      AND
+      (FORALL(v : Name) : var_names(pre(im))(v) IMPLIES
+                          ext_declared_var_names(p)(v))
+      AND
+      (FORALL(v : Name) : var_names(post(im))(v) IMPLIES
+                          ext_declared_var_names(p)(v))
+      AND
+      (FORALL(v : Name) : var_names(res(im))(v) IMPLIES
+                          var_names(new_lvars(p))(v))
+      AND
+      (FORALL(v : Name) : NOT var_names(pre_set(im))(v))
+      AND
+      (FORALL(v : Name) : NOT var_names(post_set(im))(v))
+      AND
+      (FORALL(v : Name) : NOT var_names(exc_set(im))(v))
 
-%  ann_method_body : LEMMA % :-)
-%    FORALL (m : Method) :
-%      body(ann_method(mp)(m)) = body(m)
-
-%  ann_method_pre_set : LEMMA % :-)
-%    FORALL (m : Method) :
-%      Sequence?(pre_set(ann_method(mp)(m))) AND
-%        s1(pre_set(ann_method(mp)(m))) = pre_set(m)
-
-%  ann_method_post_set : LEMMA % :-)
-%    FORALL (m : Method) :
-%      Sequence?(post_set(ann_method(mp)(m))) AND
-%        s1(post_set(ann_method(mp)(m))) = post_set(m)
-
-%  ann_method_exc_set : LEMMA % :-)
-%    FORALL (m : Method) :
-%      Sequence?(exc_set(ann_method(mp)(m))) AND
-%        s1(exc_set(ann_method(mp)(m))) = exc_set(m)
-
-%  ann_method_res : LEMMA % :-)
-%    FORALL (m : Method) :
-%      res(ann_method(mp)(m)) = res(m)
-
-%  ann_method_res_type : LEMMA % :-)
-%    FORALL (m : Method) :
-%      res_type(ann_method(mp)(m)) = res_type(m)
-
-%  ann_method_wf_Body1 : LEMMA % :-)
-%    FORALL(m : Method) :
-%      wf_Method(program(mp))(m) IMPLIES
-%      LET am = ann_method(mp)(m) IN
-%      (FORALL(v : Name) : var_names(body(am))(v) IMPLIES
-%                          ext_declared_var_names(program(mp))(v))
-%      AND
-%      (FORALL(v : Name) : var_names(pre(am))(v) IMPLIES
-%                          ext_declared_var_names(program(mp))(v))
-%      AND
-%      (FORALL(v : Name) : var_names(post(am))(v) IMPLIES
-%                          ext_declared_var_names(program(mp))(v))
-%      AND
-%      (FORALL(v : Name) : var_names(res(am))(v) IMPLIES
-%                          ext_declared_var_names(program(mp))(v))
-%      AND
-%      (FORALL(v : Name) : var_names(pre_set(am))(v) IMPLIES
-%                          ext_declared_var_names(program(mp))(v) OR
-%                          var_names(new_gvds(mp))(v))
-%      AND
-%      (FORALL(v : Name) : var_names(post_set(am))(v) IMPLIES
-%                          ext_declared_var_names(program(mp))(v) OR
-%                          var_names(new_gvds(mp))(v))
-%      AND
-%      (FORALL(v : Name) : var_names(exc_set(am))(v) IMPLIES
-%                          ext_declared_var_names(program(mp))(v) OR
-%                          var_names(new_gvds(mp))(v))
-
-%  ann_method_wf_Body2 : LEMMA % :-)
-%    FORALL(m : Method, b : Body) :
-%      wf_Method(program(mp))(m) IMPLIES
-%      Set?(b) IMPLIES
-%      LET am = ann_method(mp)(m) IN
-%      (subterm(b, body(am)) IMPLIES
-%         var_names(getGhostDecls(program(mp)))(target(b))) AND
-%      (subterm(b, pre(am)) IMPLIES
-%         var_names(getGhostDecls(program(mp)))(target(b))) AND
-%      (subterm(b, post(am)) IMPLIES
-%         var_names(getGhostDecls(program(mp)))(target(b))) AND
-%      (subterm(b, res(am)) IMPLIES
-%         var_names(getGhostDecls(program(mp)))(target(b))) AND
-%      (subterm(b, pre_set(am)) IMPLIES
-%         var_names(getGhostDecls(program(mp)))(target(b)) OR
-%         var_names(new_gvds(mp))(target(b))) AND
-%      (subterm(b, post_set(am)) IMPLIES
-%         var_names(getGhostDecls(program(mp)))(target(b)) OR
-%         var_names(new_gvds(mp))(target(b))) AND
-%      (subterm(b, exc_set(am)) IMPLIES
-%         var_names(getGhostDecls(program(mp)))(target(b)) OR
-%         var_names(new_gvds(mp))(target(b)))
+  inline_method_wf_Body2 : LEMMA % :-)
+    FORALL(m : Method, b : Body) :
+      wf_Method(p)(m) IMPLIES
+      Set?(b) IMPLIES
+      LET im = inline_method(p)(m) IN
+      (subterm(b, body(im)) IMPLIES
+         var_names(getGhostDecls(p))(target(b)) OR
+         var_names(new_lvars(p))(target(b))) AND
+      (subterm(b, pre(im)) IMPLIES
+         var_names(getGhostDecls(p))(target(b))) AND
+      (subterm(b, post(im)) IMPLIES
+         var_names(getGhostDecls(p))(target(b))) AND
+      (NOT subterm(b, res(im))) AND
+      (NOT subterm(b, pre_set(im))) AND
+      (NOT subterm(b, post_set(im))) AND
+      (NOT subterm(b, exc_set(im)))
 
 
 END InlineMethodAnnotation
@@ -285,79 +350,68 @@ BEGIN
 
   ASSUMING
 
+
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
+
+  IMPORTING NewVar[Name], InlineVariableNames[Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+        FORALL(p : Program) :
+          injective?(f(p))
 
 
   ENDASSUMING
 
-%  IMPORTING AnnotateMethod[CP, Name]
+  IMPORTING InlineMethodAnnotation[Name]
 
-%  mp : VAR (wf_MP)
-
-%  a : VAR (wf_MVA)
+  p : VAR Program
 
 
-%  ann_class(mp)(c : Class) : Class =
-%    IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
-%    THEN c WITH [inv := Conj(Neg(Eq(NExpr(NumVarEval(cp(mp))),
-%                                    NExpr(NumVarEval(halted(mp))))), inv(c)),
-%                 ghost_vars := union(ghost_vars(c),
-%                                     new_gvds(mp)),
-%                 methods := ann_methods(mp)(methods(c))]
-%    ELSE c
-%    ENDIF
+  inline_class(p)(c : Class) : Class =
+    c WITH [methods := inline_methods(p)(methods(c))]
 
-%  FieldDecls_ann_class : LEMMA % :-)
-%    FORALL(c : Class) :
-%      fields(ann_class(mp)(c)) = fields(c)
+  inv_inline_class : LEMMA
+    FORALL(c : Class) :
+      inv(inline_class(p)(c)) = inv(c)
 
-%  LocalDecls_ann_class : LEMMA % :-)
-%    FORALL(c : Class) :
-%      getLocalDecls(ann_class(mp)(c)) = getLocalDecls(c)
+  FieldDecls_inline_class : LEMMA % :-)
+    FORALL(c : Class) :
+      fields(inline_class(p)(c)) = fields(c)
 
-%  GhostDecls_ann_class_annotated : LEMMA % :-)
-%    FORALL(c : Class) :
-%      classes(program(mp))(c) IMPLIES
-%      name(c) = class_name(mva(mp)) IMPLIES
-%        ghost_vars(ann_class(mp)(c)) = union(ghost_vars(c), new_gvds(mp))
+  GhostDecls_inline_class : LEMMA % :-)
+    FORALL(c : Class) :
+      ghost_vars(inline_class(p)(c)) = ghost_vars(c)
 
-%  GhostDecls_ann_class_not_annotated : LEMMA % :-)
-%    FORALL(c : Class) :
-%      classes(program(mp))(c) IMPLIES
-%      NOT name(c) = class_name(mva(mp)) IMPLIES
-%        ghost_vars(ann_class(mp)(c)) = ghost_vars(c)
+  name_inline_class : LEMMA
+    FORALL(c : Class) :
+      name(inline_class(p)(c)) = name(c)
 
+  inline_class_almost_wf_Class : LEMMA % :-)
+    FORALL(c : Class) :
+      wf_Class(p)(c) IMPLIES
+      LET ic = inline_class(p)(c) IN
+        FORALL (m1, m2 : Method) :
+           methods(ic)(m1) IMPLIES
+           methods(ic)(m2) IMPLIES
+           name(m1) = name(m2) IMPLIES
+           m1 = m2
 
-%  ann_class_almost_wf_Class : LEMMA % :-)
-%    FORALL(c : Class) :
-%      wf_Class(program(mp))(c) IMPLIES
-%      LET ac = ann_class(mp)(c) IN
-%        FORALL (m1, m2 : Method) :
-%           methods(ac)(m1) IMPLIES
-%           methods(ac)(m2) IMPLIES
-%           name(m1) = name(m2) IMPLIES
-%           m1 = m2
+  inline_class_inv_wf_Body1 : LEMMA % :-)
+    FORALL(c : Class) :
+      wf_Body(p)(inv(c)) IMPLIES
+       (FORALL (v : Name) : var_names(inv(inline_class(p)(c)))(v) IMPLIES
+                            ext_declared_var_names(p)(v))
 
-%  ann_class_inv_wf_Body1 : LEMMA % :-)
-%    FORALL(c : Class) :
-%      wf_Body(program(mp))(inv(c)) IMPLIES
-%       (FORALL (v : Name) : var_names(inv(ann_class(mp)(c)))(v) IMPLIES
-%                            ext_declared_var_names(program(mp))(v) OR
-%                            var_names(new_gvds(mp))(v))
+  inline_class_inv_wf_Body2 : LEMMA % :-)
+    FORALL(c : Class) :
+      wf_Body(p)(inv(c)) IMPLIES
+         FORALL(b : Body) : 
+           Set?(b) IMPLIES 
+           subterm(b, inv(inline_class(p)(c))) IMPLIES 
+            var_names(getGhostDecls(p))(target(b))
 
-
-%  ann_class_inv : LEMMA % :-)
-%    FORALL(c : Class) :
-%    IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
-%    THEN Conj?(inv(ann_class(mp)(c))) AND
-%         b2(inv(ann_class(mp)(c))) = inv(c)
-%    ELSE inv(ann_class(mp)(c)) = inv(c)
-%    ENDIF
-
-%  ann_program_preserves_class_name : LEMMA % :-)
-%    FORALL(c : Class) :
-%      name(ann_class(mp)(c)) = name(c)
 
 
 END InlineClassAnnotation
@@ -368,24 +422,37 @@ BEGIN
 
   ASSUMING
 
+  IMPORTING NewVar[Name], InlineVariableNames[Name]
+
+
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+        FORALL(p : Program) :
+          injective?(f(p))
 
 
   ENDASSUMING
 
-%  IMPORTING AnnotateClass[CP, Name]
+  IMPORTING InlineClassAnnotation[Name]
 
-%  mp : VAR (wf_MP)
+  p : VAR Program
 
-%  a : VAR (wf_MVA)
+  % Inline set-annotations into method bodies
 
-%  % Program annotation
+  inline_program(p) : Program =
+    (# classes := {c : Class | EXISTS (c1 : Class) :
+                                 classes(p)(c1) AND
+                                 c = inline_class(p)(c1)} #)
 
-%  ann_program(mp) : Program =
-%    (# classes := {c : Class | EXISTS (c1 : Class) :
-%                                 classes(program(mp))(c1) AND
-%                                 c = ann_class(mp)(c1)} #)
+
+  LocalDecls_inline_program : LEMMA % :-)
+    FORALL(c : Class) :
+      classes(p)(c) IMPLIES
+      getLocalDecls(inline_program(p)) = 
+         union(getLocalDecls(p), new_lvars(p))
 
 
 END InlineProgramAnnotation
@@ -421,7 +488,7 @@ END InlineProgramAnnotation
 
 %  ann_program_class_correspondence : LEMMA % :-)
 %    FORALL(c : Class) : classes(ann_program(mp))(c) IMPLIES
-%      EXISTS (c1 : Class) : classes(program(mp))(c1) AND c = ann_class(mp)(c1)
+%      EXISTS (c1 : Class) : classes(program(mp))(c1) AND c = inline_class(mp)(c1)
 
 %  ann_program_method_correspondence : LEMMA % :-)
 %    FORALL(c : Class, m : Method) :
@@ -453,11 +520,11 @@ END InlineProgramAnnotation
 
 %  ann_program_add_ghost_var_decls : LEMMA % :-)
 %    getGhostDecls(ann_program(mp)) =
-%      union(getGhostDecls(program(mp)), new_gvds(mp))
+%      union(getGhostDecls(program(mp)), new_lvars(mp))
 
 %  ann_program_ext_declared_var_names : LEMMA % :-)
 %     ext_declared_var_names(ann_program(mp)) =
-%       union(ext_declared_var_names(program(mp)), var_names(new_gvds(mp)))
+%       union(ext_declared_var_names(program(mp)), var_names(new_lvars(mp)))
 
 %  ann_program_preserves_wf_state : LEMMA % :-)
 %    FORALL (s : PState) :
@@ -480,14 +547,14 @@ END InlineProgramAnnotation
 
 %  var_names_ann_program : LEMMA % :-)
 %    subset?(var_names(ann_program(mp)),
-%            union(var_names(program(mp)), var_names(new_gvds(mp))))
+%            union(var_names(program(mp)), var_names(new_lvars(mp))))
 
 %  var_names_declared_in_MVA_subset_ghostvars : LEMMA % :-)
 %    subset?(var_names(vdsA(mva(mp))),
 %            var_names(getGhostDecls(ann_program(mp))))
 
 %  ann_program_defines_MVA_vars : LEMMA % :-)
-%    FORALL (n : Name) : var_names(new_gvds(mp))(n) IMPLIES
+%    FORALL (n : Name) : var_names(new_lvars(mp))(n) IMPLIES
 %      EXISTS (c : Class, gd : FieldDecl) :
 %        classes(ann_program(mp))(c) AND
 %        name(c) = class_name(mva(mp)) AND
@@ -496,7 +563,7 @@ END InlineProgramAnnotation
 %  new_vars_ghost_in_ann_program : LEMMA % :-)
 %    FORALL (n : Name, s : APState) :
 %      wf_state(ann_program(mp))(s) IMPLIES
-%      var_names(new_gvds(mp))(n) IMPLIES
+%      var_names(new_lvars(mp))(n) IMPLIES
 %        is_ghost(n, s)
 
 
