@@ -1,4 +1,311 @@
 ------------------------------------------------------------------------
+r3331 | dcochran | 2007-12-20 13:47:32 +0000 (Thu, 20 Dec 2007) | 1 line
+
+Second draft of release notes
+------------------------------------------------------------------------
+r3330 | mikolas | 2007-12-17 23:40:07 +0000 (Mon, 17 Dec 2007) | 2 lines
+
+Enabling checking model methods for -erst.
+
+------------------------------------------------------------------------
+r3329 | mikolas | 2007-12-17 23:00:27 +0000 (Mon, 17 Dec 2007) | 2 lines
+
+Introducing fresh variables when introducing axioms about called methods.
+
+------------------------------------------------------------------------
+r3328 | dcochran | 2007-12-15 15:46:55 +0000 (Sat, 15 Dec 2007) | 1 line
+
+First draft of release notes for 2.0b4
+------------------------------------------------------------------------
+r3323 | dcochran | 2007-12-14 14:39:23 +0000 (Fri, 14 Dec 2007) | 1 line
+
+Added windows binaries for AST tools
+------------------------------------------------------------------------
+r3318 | dcochran | 2007-12-07 15:48:49 +0000 (Fri, 07 Dec 2007) | 1 line
+
+Move Javafe out from the active trunk pf ESC/Java2 - it now has  its own project
+------------------------------------------------------------------------
+r3317 | dcochran | 2007-12-07 15:12:23 +0000 (Fri, 07 Dec 2007) | 1 line
+
+Remove dependency on Javafe source code
+------------------------------------------------------------------------
+r3308 | rgrig | 2007-12-06 13:56:39 +0000 (Thu, 06 Dec 2007) | 1 line
+
+escj executable
+------------------------------------------------------------------------
+r3305 | dcochran | 2007-12-05 11:34:51 +0000 (Wed, 05 Dec 2007) | 1 line
+
+Add linux executables for astgen and astfilelist
+------------------------------------------------------------------------
+r3303 | dcochran | 2007-12-05 11:01:32 +0000 (Wed, 05 Dec 2007) | 1 line
+
+Add Mac OS X universal binary for astfilelist
+------------------------------------------------------------------------
+r3300 | dcochran | 2007-12-04 17:56:22 +0000 (Tue, 04 Dec 2007) | 1 line
+
+Add Mac OS X powerpc binary for astfilelist
+------------------------------------------------------------------------
+r3299 | mikolas | 2007-12-04 17:41:28 +0000 (Tue, 04 Dec 2007) | 2 lines
+
+Fixing Ticket #107, String(byte[] ascii, int hibyte, int offset, int count) inconsistency.
+
+------------------------------------------------------------------------
+r3298 | dcochran | 2007-12-04 17:40:17 +0000 (Tue, 04 Dec 2007) | 1 line
+
+Add Mac OS X universal binary for astgen
+------------------------------------------------------------------------
+r3295 | dcochran | 2007-12-04 17:11:53 +0000 (Tue, 04 Dec 2007) | 1 line
+
+Add Mac OS X powerpc binary for astgen
+------------------------------------------------------------------------
+r3294 | mikolas | 2007-12-04 17:04:08 +0000 (Tue, 04 Dec 2007) | 2 lines
+
+Spectester now handles constructors as well.
+
+------------------------------------------------------------------------
+r3291 | dcochran | 2007-12-04 15:12:23 +0000 (Tue, 04 Dec 2007) | 1 line
+
+Removed test for /only_assigned operator until this has been fixed.
+------------------------------------------------------------------------
+r3290 | dcochran | 2007-12-04 14:46:49 +0000 (Tue, 04 Dec 2007) | 1 line
+
+This test case now produces an extra warning
+------------------------------------------------------------------------
+r3289 | dcochran | 2007-12-04 14:44:11 +0000 (Tue, 04 Dec 2007) | 1 line
+
+This test case now produces an extra warning.
+------------------------------------------------------------------------
+r3288 | dcochran | 2007-12-04 14:36:20 +0000 (Tue, 04 Dec 2007) | 1 line
+
+Update instructions for building Makefile.local
+------------------------------------------------------------------------
+r3286 | dcochran | 2007-12-04 13:12:52 +0000 (Tue, 04 Dec 2007) | 1 line
+
+Remove older version of Javafe library
+------------------------------------------------------------------------
+r3283 | dcochran | 2007-12-04 10:19:02 +0000 (Tue, 04 Dec 2007) | 1 line
+
+Moved Simplify into its own project
+------------------------------------------------------------------------
+r3271 | mikolas | 2007-11-29 18:32:02 +0000 (Thu, 29 Nov 2007) | 2 lines
+
+Fixing comments.
+
+------------------------------------------------------------------------
+r3247 | erikpoll | 2007-11-28 12:16:16 +0000 (Wed, 28 Nov 2007) | 5 lines
+
+
+fixed it so this script will run when called from other working
+directory
+
+
+------------------------------------------------------------------------
+r3238 | mikolas | 2007-11-27 20:47:12 +0000 (Tue, 27 Nov 2007) | 2 lines
+
+Adding "assert false" after the call to the tested method.
+
+------------------------------------------------------------------------
+r3237 | mikolas | 2007-11-27 20:46:40 +0000 (Tue, 27 Nov 2007) | 2 lines
+
+Adding a todo.
+
+------------------------------------------------------------------------
+r3236 | mikolas | 2007-11-27 20:46:24 +0000 (Tue, 27 Nov 2007) | 2 lines
+
+Moving SpecTester after the tests for method-skipping.
+
+------------------------------------------------------------------------
+r3235 | mikolas | 2007-11-27 19:43:37 +0000 (Tue, 27 Nov 2007) | 2 lines
+
+Adding reachability-based spec tester.
+
+------------------------------------------------------------------------
+r3234 | dcochran | 2007-11-27 15:33:12 +0000 (Tue, 27 Nov 2007) | 1 line
+
+#97: Updated Javafe library in preparation for altering the Makefiles
+------------------------------------------------------------------------
+r3233 | dcochran | 2007-11-27 15:32:15 +0000 (Tue, 27 Nov 2007) | 1 line
+
+#97: Updated Javafe library in preparation for altering the Makefiles
+------------------------------------------------------------------------
+r3232 | dcochran | 2007-11-27 15:22:27 +0000 (Tue, 27 Nov 2007) | 1 line
+
+This test has been revived by Radu's fix for the back predicate.
+------------------------------------------------------------------------
+r3231 | rgrig | 2007-11-27 14:33:17 +0000 (Tue, 27 Nov 2007) | 1 line
+
+fixed the fixed axiom. now Simplify understands it. (the previous version was only understood by Z3 for some obscure reason)
+------------------------------------------------------------------------
+r3227 | rgrig | 2007-11-26 19:15:36 +0000 (Mon, 26 Nov 2007) | 1 line
+
+small bug in background predicate, fixed
+------------------------------------------------------------------------
+r3215 | dcochran | 2007-11-23 11:05:11 +0000 (Fri, 23 Nov 2007) | 1 line
+
+https://mobius.ucd.ie/ticket/72: Added Javafe as an external library
+------------------------------------------------------------------------
+r3183 | dcochran | 2007-11-21 10:56:01 +0000 (Wed, 21 Nov 2007) | 1 line
+
+Renamed variables so as to avoid ESC/Java2 warnings about the 'peer' keyword.
+------------------------------------------------------------------------
+r3182 | dcochran | 2007-11-21 10:54:53 +0000 (Wed, 21 Nov 2007) | 3 lines
+
+Fixes #61: A temporary folder called 'sub' has included in the archive file of the binary build. This temporary folder is now removed before the archive files, e.g. .zip, are created.
+
+Also, the source code for Simplify Theorem Prover is no longer included in the source build, because the Simplify component has been moved into its own project.
+------------------------------------------------------------------------
+r3181 | dcochran | 2007-11-21 10:50:35 +0000 (Wed, 21 Nov 2007) | 1 line
+
+Fixes test for #60
+------------------------------------------------------------------------
+r3167 | leavens | 2007-11-13 21:14:34 +0000 (Tue, 13 Nov 2007) | 1 line
+
+Propogating the fix
+------------------------------------------------------------------------
+r3166 | leavens | 2007-11-13 21:02:34 +0000 (Tue, 13 Nov 2007) | 1 line
+
+Fixed a typo
+------------------------------------------------------------------------
+r3148 | dcochran | 2007-11-09 12:15:01 +0000 (Fri, 09 Nov 2007) | 1 line
+
+Ticket #60: Added keyword for only_assigned; this is parsed but not checked.
+------------------------------------------------------------------------
+r3143 | dcochran | 2007-11-08 10:40:26 +0000 (Thu, 08 Nov 2007) | 1 line
+
+Automated tests for ticket #59
+------------------------------------------------------------------------
+r3142 | leavens | 2007-11-08 04:27:17 +0000 (Thu, 08 Nov 2007) | 1 line
+
+notes on what happened at ASE 2007
+------------------------------------------------------------------------
+r3141 | dcochran | 2007-11-07 17:01:51 +0000 (Wed, 07 Nov 2007) | 1 line
+
+Fixes #56: Add 'refines' synonym for 'refine' keyword
+------------------------------------------------------------------------
+r3140 | dcochran | 2007-11-07 15:38:07 +0000 (Wed, 07 Nov 2007) | 1 line
+
+Use ESCJava2 plugin on ESCJava2
+------------------------------------------------------------------------
+r3139 | dcochran | 2007-11-07 15:36:51 +0000 (Wed, 07 Nov 2007) | 1 line
+
+Fixes #62: Make escjava2 script comments suitable for a bash script
+------------------------------------------------------------------------
+r3138 | dcochran | 2007-11-07 15:26:52 +0000 (Wed, 07 Nov 2007) | 1 line
+
+Use Simplify 1.5.5 universal binary for Mac OS X
+------------------------------------------------------------------------
+r3137 | dcochran | 2007-11-07 15:26:03 +0000 (Wed, 07 Nov 2007) | 1 line
+
+Fixes #62: Make escjava2 script comments suitable for a bash script
+------------------------------------------------------------------------
+r3136 | dcochran | 2007-11-07 15:19:02 +0000 (Wed, 07 Nov 2007) | 1 line
+
+Restored solaris version of Simplify
+------------------------------------------------------------------------
+r3135 | leavens | 2007-11-07 13:51:23 +0000 (Wed, 07 Nov 2007) | 1 line
+
+propogating changes
+------------------------------------------------------------------------
+r3131 | jcharles | 2007-11-07 11:38:37 +0000 (Wed, 07 Nov 2007) | 1 line
+
+
+------------------------------------------------------------------------
+r3124 | leavens | 2007-11-07 03:39:05 +0000 (Wed, 07 Nov 2007) | 1 line
+
+Night before version
+------------------------------------------------------------------------
+r3123 | jcharles | 2007-11-06 15:53:53 +0000 (Tue, 06 Nov 2007) | 1 line
+
+corrected the bug introduced by the differenciation of the field sort from the ref sort.
+------------------------------------------------------------------------
+r3120 | jcharles | 2007-11-06 11:51:20 +0000 (Tue, 06 Nov 2007) | 1 line
+
+
+------------------------------------------------------------------------
+r3119 | leavens | 2007-11-05 23:29:52 +0000 (Mon, 05 Nov 2007) | 1 line
+
+Better version of this
+------------------------------------------------------------------------
+r3109 | leavens | 2007-11-05 14:52:59 +0000 (Mon, 05 Nov 2007) | 1 line
+
+Adding these missing files
+------------------------------------------------------------------------
+r3099 | leavens | 2007-11-05 06:56:19 +0000 (Mon, 05 Nov 2007) | 1 line
+
+Don't keep this
+------------------------------------------------------------------------
+r3098 | leavens | 2007-11-05 06:52:45 +0000 (Mon, 05 Nov 2007) | 1 line
+
+More work on this.
+------------------------------------------------------------------------
+r3097 | leavens | 2007-11-04 22:55:11 +0000 (Sun, 04 Nov 2007) | 1 line
+
+Adding these
+------------------------------------------------------------------------
+r3096 | leavens | 2007-11-04 22:53:52 +0000 (Sun, 04 Nov 2007) | 1 line
+
+More work on this
+------------------------------------------------------------------------
+r3095 | leavens | 2007-11-04 04:50:50 +0000 (Sun, 04 Nov 2007) | 1 line
+
+Adding ASE 2007 tutorial materials, which are still under development
+------------------------------------------------------------------------
+r3088 | dcochran | 2007-11-02 14:43:14 +0000 (Fri, 02 Nov 2007) | 1 line
+
+Added Mac OS X universal binary for Simplify
+------------------------------------------------------------------------
+r3079 | jcharles | 2007-10-25 15:57:56 +0100 (Thu, 25 Oct 2007) | 1 line
+
+changed one of the types
+------------------------------------------------------------------------
+r3075 | dcochran | 2007-10-24 17:24:28 +0100 (Wed, 24 Oct 2007) | 1 line
+
+Minor update to Simplify build process for Mac OS X
+------------------------------------------------------------------------
+r3065 | dcochran | 2007-10-23 15:04:02 +0100 (Tue, 23 Oct 2007) | 1 line
+
+Updated Windows .bat file for ESCJava2
+------------------------------------------------------------------------
+r3057 | dcochran | 2007-10-23 10:25:21 +0100 (Tue, 23 Oct 2007) | 1 line
+
+Moved release date for ESCJava2.0b3
+------------------------------------------------------------------------
+r3056 | dcochran | 2007-10-23 10:17:01 +0100 (Tue, 23 Oct 2007) | 1 line
+
+Exclude Makefile.local from the source release
+------------------------------------------------------------------------
+r3055 | dcochran | 2007-10-23 10:16:05 +0100 (Tue, 23 Oct 2007) | 1 line
+
+Update version number in Windows .bat file for ESCJava2
+------------------------------------------------------------------------
+r3054 | dcochran | 2007-10-23 10:14:56 +0100 (Tue, 23 Oct 2007) | 1 line
+
+Restore linux version of SImplify
+------------------------------------------------------------------------
+r3050 | dcochran | 2007-10-22 15:26:04 +0100 (Mon, 22 Oct 2007) | 1 line
+
+Removed unused EXPORT statement
+------------------------------------------------------------------------
+r3049 | dcochran | 2007-10-22 15:24:06 +0100 (Mon, 22 Oct 2007) | 1 line
+
+Fixed handling of VCSVER
+------------------------------------------------------------------------
+r3048 | dcochran | 2007-10-22 15:00:42 +0100 (Mon, 22 Oct 2007) | 1 line
+
+Cleaned up SVN properties
+------------------------------------------------------------------------
+r3046 | dcochran | 2007-10-22 10:48:56 +0100 (Mon, 22 Oct 2007) | 1 line
+
+Updated tag version in release instructions
+------------------------------------------------------------------------
+r3045 | dcochran | 2007-10-22 10:44:29 +0100 (Mon, 22 Oct 2007) | 1 line
+
+Do not rebuild the PDF of KOA
+------------------------------------------------------------------------
+r3044 | dcochran | 2007-10-19 14:52:39 +0100 (Fri, 19 Oct 2007) | 1 line
+
+
+------------------------------------------------------------------------
 r3043 | dcochran | 2007-10-19 13:44:05 +0100 (Fri, 19 Oct 2007) | 1 line
 Changed paths:
    M /src/escjava/trunk/ESCTools/Escjava/test/jdktests/TestList.java-expected
