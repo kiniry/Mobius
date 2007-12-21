@@ -327,7 +327,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((new_lvars const-decl "finite_set[LocalVarDecl]"
      InlineNewVariableDeclarations nil)
     (new_res_lvars const-decl "finite_set[LocalVarDecl]"
@@ -357,7 +357,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((new_lvars const-decl "finite_set[LocalVarDecl]"
      InlineNewVariableDeclarations nil)
     (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
@@ -373,16 +373,812 @@
     (Method type-eq-decl nil Program nil)
     (member const-decl "bool" sets nil)
     (union const-decl "set" sets nil))
-   7729 20 t shostak)))
+   7729 20 t shostak))
+ (new_lvars_not_field_decls 0
+  (new_lvars_not_field_decls-1 nil 3407217366 3407217785
+   ("" (skosimp*)
+    ((""
+      (auto-rewrite "disjoint?" "intersection" "member" "union"
+                    "empty?")
+      (("" (assert)
+        (("" (skosimp*)
+          (("" (expand "new_lvars")
+            (("" (rewrite "var_names_union2")
+              (("" (assert)
+                (("" (split -1)
+                  (("1" (expand "var_names" -1)
+                    (("1" (skosimp*)
+                      (("1" (expand "new_res_lvars")
+                        (("1" (skosimp*)
+                          (("1" (expand "new_res_lvar")
+                            (("1" (replace -2 :hide? t)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (expand "res")
+                                  (("1"
+                                    (typepred "res_ex(p!1)(res(m!1))")
+                                    (("1"
+                                      (expand "legal_names")
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (flatten)
+                                          (("1"
+                                            (expand
+                                             "declared_var_names")
+                                            (("1" (propax) nil nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (expand "var_names" -1)
+                    (("2" (skosimp*)
+                      (("2" (expand "new_ex_lvars")
+                        (("2" (skosimp*)
+                          (("2" (replace -2 :hide? t)
+                            (("2" (expand "new_ex_lvar")
+                              (("2"
+                                (expand "ex")
+                                (("2"
+                                  (typepred "res_ex(p!1)(ex(m!1))")
+                                  (("2"
+                                    (expand "legal_names")
+                                    (("2"
+                                      (assert)
+                                      (("2"
+                                        (expand "declared_var_names")
+                                        (("2" (propax) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((finite_intersection1 application-judgement "finite_set"
+     finite_sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (member const-decl "bool" sets nil)
+    (new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (union const-decl "set" sets nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (ex adt-constructor-decl "[Method -> (ex?)]" NewVar_adt nil)
+    (ex? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (res adt-constructor-decl "[Method -> (res?)]" NewVar_adt nil)
+    (res? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (res_ex const-decl "(injective?[NewVar[Name], (legal_names(p))])"
+     InlineNewVariableDeclarations nil)
+    (injective? const-decl "bool" functions nil)
+    (NewVar type-decl nil NewVar_adt nil)
+    (legal_names const-decl "bool" InlineVariableNames nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (var_names_union2 formula-decl nil ProgramFunctions nil))
+   144518 230 t shostak))
+ (new_lvars_not_ghost_decls 0
+  (new_lvars_not_ghost_decls-1 nil 3407217797 3407217813
+   ("" (skosimp*)
+    ((""
+      (auto-rewrite "disjoint?" "intersection" "member" "union"
+                    "empty?")
+      (("" (assert)
+        (("" (skosimp*)
+          (("" (expand "new_lvars")
+            (("" (rewrite "var_names_union2")
+              (("" (assert)
+                (("" (split -1)
+                  (("1" (expand "var_names" -1)
+                    (("1" (skosimp*)
+                      (("1" (expand "new_res_lvars")
+                        (("1" (skosimp*)
+                          (("1" (expand "new_res_lvar")
+                            (("1" (replace -2 :hide? t)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (expand "res")
+                                  (("1"
+                                    (typepred "res_ex(p!1)(res(m!1))")
+                                    (("1"
+                                      (expand "legal_names")
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (flatten)
+                                          (("1"
+                                            (expand
+                                             "declared_var_names")
+                                            (("1" (propax) nil nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (expand "var_names" -1)
+                    (("2" (skosimp*)
+                      (("2" (expand "new_ex_lvars")
+                        (("2" (skosimp*)
+                          (("2" (replace -2 :hide? t)
+                            (("2" (expand "new_ex_lvar")
+                              (("2"
+                                (expand "ex")
+                                (("2"
+                                  (typepred "res_ex(p!1)(ex(m!1))")
+                                  (("2"
+                                    (expand "legal_names")
+                                    (("2"
+                                      (assert)
+                                      (("2"
+                                        (expand "declared_var_names")
+                                        (("2" (propax) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((var_names_union2 formula-decl nil ProgramFunctions nil)
+    (JType type-decl nil JType_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (res adt-constructor-decl "[Method -> (res?)]" NewVar_adt nil)
+    (res? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (res_ex const-decl "(injective?[NewVar[Name], (legal_names(p))])"
+     InlineNewVariableDeclarations nil)
+    (injective? const-decl "bool" functions nil)
+    (NewVar type-decl nil NewVar_adt nil)
+    (legal_names const-decl "bool" InlineVariableNames nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (ex? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (ex adt-constructor-decl "[Method -> (ex?)]" NewVar_adt nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (union const-decl "set" sets nil)
+    (new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (member const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (finite_intersection1 application-judgement "finite_set"
+     finite_sets nil))
+   15483 190 t shostak))
+ (new_lvars_not_old_local_decls 0
+  (new_lvars_not_old_local_decls-1 nil 3407217824 3407217827
+   ("" (skosimp*)
+    ((""
+      (auto-rewrite "disjoint?" "intersection" "member" "union"
+                    "empty?")
+      (("" (assert)
+        (("" (skosimp*)
+          (("" (expand "new_lvars")
+            (("" (rewrite "var_names_union2")
+              (("" (assert)
+                (("" (split -1)
+                  (("1" (expand "var_names" -1)
+                    (("1" (skosimp*)
+                      (("1" (expand "new_res_lvars")
+                        (("1" (skosimp*)
+                          (("1" (expand "new_res_lvar")
+                            (("1" (replace -2 :hide? t)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (expand "res")
+                                  (("1"
+                                    (typepred "res_ex(p!1)(res(m!1))")
+                                    (("1"
+                                      (expand "legal_names")
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (flatten)
+                                          (("1"
+                                            (expand
+                                             "declared_var_names")
+                                            (("1" (propax) nil nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (expand "var_names" -1)
+                    (("2" (skosimp*)
+                      (("2" (expand "new_ex_lvars")
+                        (("2" (skosimp*)
+                          (("2" (replace -2 :hide? t)
+                            (("2" (expand "new_ex_lvar")
+                              (("2"
+                                (expand "ex")
+                                (("2"
+                                  (typepred "res_ex(p!1)(ex(m!1))")
+                                  (("2"
+                                    (expand "legal_names")
+                                    (("2"
+                                      (assert)
+                                      (("2"
+                                        (expand "declared_var_names")
+                                        (("2" (propax) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((finite_intersection1 application-judgement "finite_set"
+     finite_sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (member const-decl "bool" sets nil)
+    (new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (union const-decl "set" sets nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (ex adt-constructor-decl "[Method -> (ex?)]" NewVar_adt nil)
+    (ex? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (legal_names const-decl "bool" InlineVariableNames nil)
+    (NewVar type-decl nil NewVar_adt nil)
+    (injective? const-decl "bool" functions nil)
+    (res_ex const-decl "(injective?[NewVar[Name], (legal_names(p))])"
+     InlineNewVariableDeclarations nil)
+    (res? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (res adt-constructor-decl "[Method -> (res?)]" NewVar_adt nil)
+    (declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (var_names_union2 formula-decl nil ProgramFunctions nil))
+   1677 130 t nil))
+ (new_lvars_not_reserved_words 0
+  (new_lvars_not_reserved_words-1 nil 3407218472 3407218538
+   ("" (skosimp*)
+    ((""
+      (auto-rewrite "disjoint?" "union" "member" "intersection"
+                    "empty?")
+      (("" (assert)
+        (("" (skosimp*)
+          (("" (expand "new_lvars")
+            (("" (rewrite "var_names_union2")
+              (("" (assert)
+                (("" (split -1)
+                  (("1" (expand "var_names")
+                    (("1" (skosimp*)
+                      (("1" (expand "new_res_lvars")
+                        (("1" (skosimp*)
+                          (("1" (replace -2)
+                            (("1" (expand "new_res_lvar")
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (expand "res")
+                                  (("1"
+                                    (typepred "res_ex(p!1)(res(m!1))")
+                                    (("1"
+                                      (expand "legal_names")
+                                      (("1"
+                                        (assert)
+                                        (("1" (assert) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (expand "var_names")
+                    (("2" (skosimp*)
+                      (("2" (expand "new_ex_lvars")
+                        (("2" (skosimp*)
+                          (("2" (replace -2)
+                            (("2" (expand "new_ex_lvar")
+                              (("2"
+                                (expand "ex")
+                                (("2"
+                                  (typepred "res_ex(p!1)(ex(m!1))")
+                                  (("2"
+                                    (expand "legal_names")
+                                    (("2"
+                                      (assert)
+                                      (("2" (assert) nil nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((var_names_union2 formula-decl nil ProgramFunctions nil)
+    (JType type-decl nil JType_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (res adt-constructor-decl "[Method -> (res?)]" NewVar_adt nil)
+    (res? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (res_ex const-decl "(injective?[NewVar[Name], (legal_names(p))])"
+     InlineNewVariableDeclarations nil)
+    (injective? const-decl "bool" functions nil)
+    (NewVar type-decl nil NewVar_adt nil)
+    (legal_names const-decl "bool" InlineVariableNames nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (ex? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (ex adt-constructor-decl "[Method -> (ex?)]" NewVar_adt nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (union const-decl "set" sets nil)
+    (new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (member const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (finite_intersection1 application-judgement "finite_set"
+     finite_sets nil))
+   65819 200 t shostak))
+ (new_vars_not_ext_declared_var_names 0
+  (new_vars_not_ext_declared_var_names-1 nil 3407217832 3407218023
+   ("" (skosimp*)
+    (("" (expand "ext_declared_var_names")
+      (("" (use "new_lvars_not_old_local_decls")
+        (("" (use "new_lvars_not_field_decls")
+          (("" (use "new_lvars_not_ghost_decls")
+            ((""
+              (auto-rewrite "disjoint?" "union" "member" "intersection"
+                            "empty?")
+              (("" (assert)
+                (("" (skosimp*)
+                  (("" (apply (repeat (inst?)))
+                    (("" (assert)
+                      (("" (expand "new_lvars")
+                        (("" (rewrite "var_names_union2")
+                          (("" (assert)
+                            (("" (hide-all-but (-1 -2))
+                              ((""
+                                (split -1)
+                                (("1"
+                                  (expand "var_names")
+                                  (("1"
+                                    (skosimp*)
+                                    (("1"
+                                      (expand "new_res_lvars")
+                                      (("1"
+                                        (skosimp*)
+                                        (("1"
+                                          (replace -2)
+                                          (("1"
+                                            (expand "new_res_lvar")
+                                            (("1"
+                                              (assert)
+                                              (("1"
+                                                (expand "res")
+                                                (("1"
+                                                  (typepred
+                                                   "res_ex(p!1)(res(m!1))")
+                                                  (("1"
+                                                    (expand
+                                                     "legal_names")
+                                                    (("1"
+                                                      (assert)
+                                                      (("1"
+                                                        (expand
+                                                         "reserved_words")
+                                                        (("1"
+                                                          (propax)
+                                                          nil
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil)
+                                 ("2"
+                                  (expand "var_names")
+                                  (("2"
+                                    (skosimp*)
+                                    (("2"
+                                      (expand "new_ex_lvars")
+                                      (("2"
+                                        (skosimp*)
+                                        (("2"
+                                          (replace -2)
+                                          (("2"
+                                            (expand "new_ex_lvar")
+                                            (("2"
+                                              (expand "ex")
+                                              (("2"
+                                                (typepred
+                                                 "res_ex(p!1)(ex(m!1))")
+                                                (("2"
+                                                  (expand
+                                                   "legal_names")
+                                                  (("2"
+                                                    (assert)
+                                                    (("2"
+                                                      (expand
+                                                       "reserved_words")
+                                                      (("2"
+                                                        (propax)
+                                                        nil
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((new_lvars_not_old_local_decls formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (new_lvars_not_ghost_decls formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (finite_intersection2 application-judgement "finite_set"
+     finite_sets nil)
+    (finite_intersection1 application-judgement "finite_set"
+     finite_sets nil)
+    (member const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (res const-decl "Name" InlineNewVariableDeclarations nil)
+    (reserved_words const-decl "finite_set[Name]" Program nil)
+    (res adt-constructor-decl "[Method -> (res?)]" NewVar_adt nil)
+    (res? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (res_ex const-decl "(injective?[NewVar[Name], (legal_names(p))])"
+     InlineNewVariableDeclarations nil)
+    (injective? const-decl "bool" functions nil)
+    (NewVar type-decl nil NewVar_adt nil)
+    (legal_names const-decl "bool" InlineVariableNames nil)
+    (NOT const-decl "[bool -> bool]" booleans nil) nil
+    (new_ex_lvar const-decl "LocalVarDecl"
+     InlineNewVariableDeclarations nil)
+    (ex? adt-recognizer-decl "[NewVar -> boolean]" NewVar_adt nil)
+    (ex adt-constructor-decl "[Method -> (ex?)]" NewVar_adt nil)
+    (ex const-decl "Name" InlineNewVariableDeclarations nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (var_names_union2 formula-decl nil ProgramFunctions nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_lvars_not_field_decls formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (ext_declared_var_names const-decl "finite_set[Name]"
+     ProgramFunctions nil))
+   159655 420 t shostak))
+ (new_lvars_not_ext_declared_var_names 0
+  (new_lvars_not_ext_declared_var_names-1 nil 3407218547 3407218580
+   ("" (skosimp*)
+    (("" (expand "ext_declared_var_names")
+      (("" (use "new_lvars_not_old_local_decls")
+        (("" (use "new_lvars_not_field_decls")
+          (("" (use "new_lvars_not_ghost_decls")
+            (("" (use "new_lvars_not_reserved_words")
+              ((""
+                (auto-rewrite "disjoint?" "union" "member"
+                              "intersection" "empty?")
+                (("" (assert)
+                  (("" (skosimp*)
+                    (("" (apply (repeat (inst?)))
+                      (("" (assert)
+                        (("" (expand "reserved_words")
+                          (("" (propax) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((ext_declared_var_names const-decl "finite_set[Name]"
+     ProgramFunctions nil)
+    (new_lvars_not_field_decls formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (new_lvars_not_reserved_words formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (finite_intersection2 application-judgement "finite_set"
+     finite_sets nil)
+    (finite_intersection1 application-judgement "finite_set"
+     finite_sets nil)
+    (member const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (reserved_words const-decl "finite_set[Name]" Program nil)
+    (new_lvars_not_ghost_decls formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (Name formal-nonempty-type-decl nil InlineNewVariableDeclarations
+     nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (new_lvars_not_old_local_decls formula-decl nil
+     InlineNewVariableDeclarations nil))
+   33140 250 t shostak)))
 (InlineMethodAnnotation
  (IMP_InlineVariableNames_TCC1 0
   (IMP_InlineVariableNames_TCC1-1 nil 3407157671 3407162010
-   ("" (use "infinite_namespace") nil nil) proved
+   ("" (use "infinite_namespace") nil nil) unchecked
    ((infinite_namespace formula-decl nil InlineMethodAnnotation nil)) 8
    0 t nil))
  (IMP_InlineNewVariableDeclarations_TCC1 0
   (IMP_InlineNewVariableDeclarations_TCC1-1 nil 3407157671 3407162010
-   ("" (use "name_of_exists") nil nil) proved
+   ("" (use "name_of_exists") nil nil) unchecked
    ((name_of_exists formula-decl nil InlineMethodAnnotation nil)) 10 10
    t nil))
  (inline_method_TCC1 0
@@ -390,12 +1186,12 @@
    ("" (skosimp*)
     (("" (expand "inline_method_body") (("" (propax) nil nil)) nil))
     nil)
-   proved
+   unchecked
    ((inline_method_body const-decl "Body" InlineMethodAnnotation nil))
    18 20 t nil))
  (inline_method_TCC2 0
   (inline_method_TCC2-1 nil 3407158174 3407162010
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -467,7 +1263,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (Method type-eq-decl nil Program nil)
@@ -481,19 +1277,8 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil)
-    (m!1 skolem-const-decl "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = inline_method(p!1)(n)})"
-     InlineMethodAnnotation nil)
-    (n!1 skolem-const-decl "Method[Name]" InlineMethodAnnotation nil)
     (injective? const-decl "bool" functions nil)
-    (x1!1 skolem-const-decl "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = inline_method(p!1)(n)})"
-     InlineMethodAnnotation nil)
-    (x2!1 skolem-const-decl "({m: Method[Name] |
-    EXISTS (n: Method[Name]): ms!1(n) AND m = inline_method(p!1)(n)})"
-     InlineMethodAnnotation nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
-    (n!1 skolem-const-decl "Method[Name]" InlineMethodAnnotation nil)
     (choose const-decl "(p)" sets nil)
     (below type-eq-decl nil nat_types nil)
     (< const-decl "bool" reals nil)
@@ -510,8 +1295,6 @@
      nil)
     (number nonempty-type-decl nil numbers nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (ms!1 skolem-const-decl "finite_set[Method[Name]]"
-     InlineMethodAnnotation nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (Val type-decl nil Val_adt nil)
     (defined? const-decl "boolean" ValProp nil)
@@ -522,14 +1305,13 @@
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (inline_method const-decl "Method" InlineMethodAnnotation nil)
-    (p!1 skolem-const-decl "Program[Name]" InlineMethodAnnotation nil)
     (nonempty? const-decl "bool" sets nil))
    221 190 t nil))
  (inline_method_name 0
   (inline_method_name-1 nil 3407157713 3407162011
    ("" (skosimp*)
     (("" (expand "inline_method") (("" (propax) nil nil)) nil)) nil)
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
    10 t shostak))
  (inline_method_arg 0
@@ -541,7 +1323,7 @@
       ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 39
    10 nil nil))
  (inline_method_pre 0
@@ -553,7 +1335,7 @@
       ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
    10 nil nil))
  (inline_method_post 0
@@ -565,7 +1347,7 @@
       ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
    10 nil nil))
  (inline_method_lvars 0
@@ -577,14 +1359,14 @@
       ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
    10 nil nil))
  (inline_method_body 0
   (inline_method_body-1 nil 3407158189 3407162011
    ("" (skosimp*)
     (("" (expand "inline_method") (("" (propax) nil nil)) nil)) nil)
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
    10 t shostak))
  (inline_method_pre_set 0
@@ -596,7 +1378,7 @@
       ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
    10 nil nil))
  (inline_method_post_set 0
@@ -608,7 +1390,7 @@
       ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 11
    10 nil nil))
  (inline_method_exc_set 0
@@ -620,14 +1402,14 @@
       ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 10
    20 nil nil))
  (inline_method_res 0
   (inline_method_res-1 nil 3407158199 3407162011
    ("" (skosimp*)
     (("" (expand "inline_method") (("" (propax) nil nil)) nil)) nil)
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 12
    10 t nil))
  (inline_method_res_type 0
@@ -639,7 +1421,7 @@
       ((";;; Proof inline_method_name-1 for formula InlineMethodAnnotation.inline_method_name"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unfinished
    ((inline_method const-decl "Method" InlineMethodAnnotation nil)) 37
    10 nil nil))
  (inline_method_wf_Body1 0
@@ -752,7 +1534,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((new_res_lvar const-decl "LocalVarDecl"
      InlineNewVariableDeclarations nil)
     (new_res_lvar_new_lvar formula-decl nil
@@ -781,14 +1563,12 @@
     (Expr type-eq-decl nil Body_adt nil)
     (Method type-eq-decl nil Program nil)
     (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (member const-decl "bool" sets nil)
     (emptyset const-decl "set" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (union const-decl "set" sets nil)
     (singleton const-decl "(singleton?)" sets nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil)
     (method_pred const-decl "bool" ProgramRestriction nil)
@@ -797,7 +1577,7 @@
    210326 2450 t shostak))
  (inline_method_wf_Body2_TCC1 0
   (inline_method_wf_Body2_TCC1-1 nil 3407157671 3407162012
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -819,12 +1599,6 @@
     (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
@@ -845,7 +1619,7 @@
    869 830 nil nil))
  (inline_method_wf_Body2_TCC2 0
   (inline_method_wf_Body2_TCC2-1 nil 3407157671 3407162013
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -867,12 +1641,6 @@
     (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
@@ -900,7 +1668,7 @@
    916 880 nil nil))
  (inline_method_wf_Body2_TCC3 0
   (inline_method_wf_Body2_TCC3-1 nil 3407157671 3407162014
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -922,12 +1690,6 @@
     (Name formal-nonempty-type-decl nil InlineMethodAnnotation nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
@@ -1075,7 +1837,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((method_pred const-decl "bool" ProgramRestriction nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
@@ -1137,20 +1899,21 @@
 (InlineClassAnnotation
  (IMP_InlineVariableNames_TCC1 0
   (IMP_InlineVariableNames_TCC1-1 nil 3407157695 3407163438
-   ("" (use "infinite_namespace") nil nil) proved
+   ("" (use "infinite_namespace") nil nil) unchecked
    ((infinite_namespace formula-decl nil InlineClassAnnotation nil)) 6
    10 t nil))
  (IMP_InlineMethodAnnotation_TCC1 0
   (IMP_InlineMethodAnnotation_TCC1-1 nil 3407157695 3407163438
-   ("" (use "name_of_exists") nil nil) proved
+   ("" (use "name_of_exists") nil nil) unchecked
    ((name_of_exists formula-decl nil InlineClassAnnotation nil)) 8 10 t
    nil))
  (inv_inline_class 0
   (inv_inline_class-1 nil 3407162024 3407163438
    ("" (skosimp*)
     (("" (expand "inline_class") (("" (propax) nil nil)) nil)) nil)
-   proved ((inline_class const-decl "Class" InlineClassAnnotation nil))
-   8 10 t shostak))
+   unfinished
+   ((inline_class const-decl "Class" InlineClassAnnotation nil)) 8 10 t
+   shostak))
  (FieldDecls_inline_class 0
   (FieldDecls_inline_class-1 nil 3407162032 3407163438
    (";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
@@ -1160,8 +1923,9 @@
       ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved ((inline_class const-decl "Class" InlineClassAnnotation nil))
-   7 10 nil nil))
+   unfinished
+   ((inline_class const-decl "Class" InlineClassAnnotation nil)) 7 10
+   nil nil))
  (GhostDecls_inline_class 0
   (GhostDecls_inline_class-1 nil 3407162037 3407163438
    (";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
@@ -1171,8 +1935,9 @@
       ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved ((inline_class const-decl "Class" InlineClassAnnotation nil))
-   37 10 nil nil))
+   unfinished
+   ((inline_class const-decl "Class" InlineClassAnnotation nil)) 37 10
+   nil nil))
  (name_inline_class 0
   (name_inline_class-1 nil 3407162039 3407163438
    (";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
@@ -1182,8 +1947,9 @@
       ((";;; Proof inv_inline_class-1 for formula InlineClassAnnotation.inv_inline_class"
         (propax) nil))))
     ";;; developed with shostak decision procedures")
-   proved ((inline_class const-decl "Class" InlineClassAnnotation nil))
-   8 10 nil nil))
+   unfinished
+   ((inline_class const-decl "Class" InlineClassAnnotation nil)) 8 10
+   nil nil))
  (inline_class_almost_wf_Class 0
   (inline_class_almost_wf_Class-1 nil 3407163151 3407163438
    ("" (skosimp*)
@@ -1212,7 +1978,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((wf_Class const-decl "boolean" WellFormedProgram nil)
     (inline_class const-decl "Class" InlineClassAnnotation nil)
     (inline_method const-decl "Method" InlineMethodAnnotation nil)
@@ -1239,7 +2005,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((inv_inline_class formula-decl nil InlineClassAnnotation nil)
     (Name formal-nonempty-type-decl nil InlineClassAnnotation nil)
     (Val type-decl nil Val_adt nil)
@@ -1262,7 +2028,7 @@
    102 80 t shostak))
  (inline_class_inv_wf_Body2_TCC1 0
   (inline_class_inv_wf_Body2_TCC1-1 nil 3407157695 3407163439
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -1284,12 +2050,6 @@
     (Name formal-nonempty-type-decl nil InlineClassAnnotation nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
@@ -1309,7 +2069,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((inv_inline_class formula-decl nil InlineClassAnnotation nil)
     (Name formal-nonempty-type-decl nil InlineClassAnnotation nil)
     (Val type-decl nil Val_adt nil)
@@ -1333,27 +2093,54 @@
    9732 90 t shostak)))
 (InlineProgramAnnotation
  (IMP_InlineVariableNames_TCC1 0
-  (IMP_InlineVariableNames_TCC1-1 nil 3407157696 nil
-   ("" (assuming-tcc) nil nil) unchecked nil nil nil nil nil))
+  (IMP_InlineVariableNames_TCC1-1 nil 3407157696 3407215558
+   ("" (use "infinite_namespace") nil nil) unchecked
+   ((infinite_namespace formula-decl nil InlineProgramAnnotation nil))
+   7688 10 t nil))
  (IMP_InlineClassAnnotation_TCC1 0
-  (IMP_InlineClassAnnotation_TCC1-1 nil 3407157696 nil
-   ("" (assuming-tcc) nil nil) unchecked nil nil nil nil nil))
+  (IMP_InlineClassAnnotation_TCC1-1 nil 3407157696 3407215569
+   ("" (use "name_of_exists") nil nil) unchecked
+   ((name_of_exists formula-decl nil InlineProgramAnnotation nil)) 7562
+   10 t nil))
  (inline_program_TCC1 0
-  (inline_program_TCC1-1 nil 3407157696 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
- (inline_program_TCC2 0
-  (inline_program_TCC2-1 nil 3407157696 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
- (LocalDecls_inline_program 0
-  (LocalDecls_inline_program-1 nil 3407163445 3407163550
+  (inline_program_TCC1-1 nil 3407157696 3407215906
    ("" (skosimp*)
-    (("" (auto-rewrite "union" "member" "add")
-      (("" (apply-extensionality :hide? t)
-        (("" (expand "getLocalDecls")
-          (("" (expand "inline_program")
-            (("" (expand "inline_class")
-              (("" (expand "inline_methods")
-                (("" (expand "getLocalDecls") (("" (postpone) nil nil))
+    (("" (typepred "classes(p!1)")
+      (("" (expand "is_finite")
+        (("" (skosimp*)
+          ((""
+            (inst 1 "N!1" "LAMBDA(c : ({c: Class[Name] |
+                     EXISTS (c1: Class[Name]):
+                       classes(p!1)(c1) AND
+                        c = inline_class[Name](p!1)(c1)})) : f!1(choose({c1: Class[Name] |
+                       classes(p!1)(c1) AND
+                        c = inline_class[Name](p!1)(c1)}))")
+            (("1" (expand "injective?")
+              (("1" (skosimp*)
+                (("1" (inst? -1 :where -2)
+                  (("1" (assert) nil nil)
+                   ("2" (rewrite "nonempty_exists")
+                    (("2" (typepred "x2!1")
+                      (("2" (skosimp*)
+                        (("2" (inst?) (("2" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("3" (rewrite "nonempty_exists")
+                    (("3" (typepred "x1!1")
+                      (("3" (skosimp*)
+                        (("3" (inst?) (("3" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (skosimp*)
+              (("2" (rewrite "nonempty_exists")
+                (("2" (typepred "c!1")
+                  (("2" (skosimp*)
+                    (("2" (inst?) (("2" (assert) nil nil)) nil)) nil))
                   nil))
                 nil))
               nil))
@@ -1362,5 +2149,1240 @@
         nil))
       nil))
     nil)
-   unfinished nil 104925 280 t shostak)))
+   unchecked
+   ((nonempty? const-decl "bool" sets nil)
+    (inline_class const-decl "Class" InlineClassAnnotation nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (< const-decl "bool" reals nil)
+    (below type-eq-decl nil nat_types nil)
+    (choose const-decl "(p)" sets nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (injective? const-decl "bool" functions nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Name formal-nonempty-type-decl nil InlineProgramAnnotation nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil))
+   711 530 t nil))
+ (inline_program_TCC2 0
+  (inline_program_TCC2-1 nil 3407157696 3407220204
+   ("" (skosimp*)
+    (("" (typepred "p!1")
+      (("" (expand "wf_Program")
+        ((""
+          (case "getFieldDecls((# classes
+                                             := {c: Class[Name]
+                                                 |
+                                                 EXISTS
+                                                 (c1: Class[Name]):
+                                                 classes(p!1)(c1)
+                                                 AND
+                                                 c
+                                                 =
+                                                 inline_class[Name]
+                                                 (p!1)(c1)} #)) = getFieldDecls(p!1)")
+          (("1"
+            (case "getGhostDecls((# classes
+                                             := {c: Class[Name]
+                                                 |
+                                                 EXISTS
+                                                 (c1: Class[Name]):
+                                                 classes(p!1)(c1)
+                                                 AND
+                                                 c
+                                                 =
+                                                 inline_class[Name]
+                                                 (p!1)(c1)} #)) = getGhostDecls(p!1)")
+            (("1"
+              (case "getLocalDecls((# classes
+                                             := {c: Class[Name]
+                                                 |
+                                                 EXISTS
+                                                 (c1: Class[Name]):
+                                                 classes(p!1)(c1)
+                                                 AND
+                                                 c
+                                                 =
+                                                 inline_class[Name]
+                                                 (p!1)(c1)} #)) = union(getLocalDecls(p!1), new_lvars(p!1))")
+              (("1" (auto-rewrite (-1 -2 -3))
+                (("1" (prop)
+                  (("1" (hide-all-but (-4 1))
+                    (("1" (expand "wf_program_variables_disjoint_def")
+                      (("1" (assert)
+                        (("1" (flatten)
+                          (("1" (assert)
+                            (("1"
+                              (case-replace
+                               "var_names(union(getLocalDecls(p!1), new_lvars(p!1))) = union(var_names(getLocalDecls(p!1)), var_names(new_lvars(p!1)))"
+                               :hide? t)
+                              (("1"
+                                (rewrite "disjoint?_union")
+                                (("1"
+                                  (split 1)
+                                  (("1"
+                                    (use "new_lvars_not_field_decls")
+                                    (("1"
+                                      (rewrite "disjoint?_commutative")
+                                      nil
+                                      nil))
+                                    nil)
+                                   ("2"
+                                    (rewrite "disjoint?_commutative")
+                                    (("2"
+                                      (rewrite "disjoint?_union")
+                                      (("2"
+                                        (rewrite
+                                         "disjoint?_commutative")
+                                        (("2"
+                                          (use
+                                           "new_lvars_not_ghost_decls")
+                                          (("2"
+                                            (rewrite
+                                             "disjoint?_commutative")
+                                            nil
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (rewrite "var_names_union2")
+                                nil
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (hide-all-but (-5 1))
+                    (("2"
+                      (expand "wf_program_variables_not_reserved_words_def")
+                      (("2" (expand "declared_var_names")
+                        (("2" (assert)
+                          (("2"
+                            (auto-rewrite "disjoint?" "union" "member"
+                                          "empty?" "intersection")
+                            (("2" (assert)
+                              (("2"
+                                (skosimp*)
+                                (("2"
+                                  (inst?)
+                                  (("2"
+                                    (assert)
+                                    (("2"
+                                      (prop)
+                                      (("2"
+                                        (rewrite "var_names_union2")
+                                        (("2"
+                                          (assert)
+                                          (("2"
+                                            (assert)
+                                            (("2"
+                                              (use
+                                               "new_lvars_not_reserved_words")
+                                              (("2"
+                                                (assert)
+                                                (("2"
+                                                  (inst?)
+                                                  (("2"
+                                                    (assert)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("3" (hide-all-but (-6 1))
+                    (("3"
+                      (expand "wf_program_has_unique_class_names_def")
+                      (("3" (skosimp*)
+                        (("3" (replace -2 :hide? t)
+                          (("3" (replace -3 :hide? t)
+                            (("3" (rewrite "name_inline_class")
+                              (("3"
+                                (rewrite "name_inline_class")
+                                (("3"
+                                  (inst -4 "c1!2" "c1!3")
+                                  (("3" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("4" (hide-all-but (-7 1))
+                    (("4" (expand "wf_Classes")
+                      (("4" (skosimp*)
+                        (("4" (replace -2 :hide? t)
+                          (("4" (expand "wf_Class")
+                            (("4" (inst -2 "c1!1")
+                              (("4"
+                                (assert)
+                                (("4"
+                                  (flatten)
+                                  (("4"
+                                    (split 1)
+                                    (("1"
+                                      (skosimp*)
+                                      (("1"
+                                        (expand "inline_class")
+                                        (("1"
+                                          (expand "inline_methods")
+                                          (("1"
+                                            (skosimp*)
+                                            (("1"
+                                              (replace -2 :hide? t)
+                                              (("1"
+                                                (replace -3 :hide? t)
+                                                (("1"
+                                                  (inst -5 "n!1" "n!2")
+                                                  (("1"
+                                                    (assert)
+                                                    (("1"
+                                                      (expand
+                                                       "inline_method"
+                                                       -3)
+                                                      (("1"
+                                                        (propax)
+                                                        nil
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil)
+                                     ("2"
+                                      (skosimp*)
+                                      (("2"
+                                        (rewrite "name_inline_class")
+                                        (("2"
+                                          (expand "inline_class")
+                                          (("2"
+                                            (expand "inline_methods")
+                                            (("2"
+                                              (skosimp*)
+                                              (("2"
+                                                (replace -2 :hide? t)
+                                                (("2"
+                                                  (inst -4 "n!1")
+                                                  (("2"
+                                                    (assert)
+                                                    (("2"
+                                                      (expand
+                                                       "inline_method")
+                                                      (("2"
+                                                        (propax)
+                                                        nil
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("5" (hide-all-but (-8 1))
+                    (("5" (expand "program_pred")
+                      (("5" (skosimp*)
+                        (("5" (replace -2 :hide? t)
+                          (("5" (rewrite "inv_inline_class")
+                            (("5" (inst -2 "c1!1")
+                              (("5"
+                                (assert)
+                                (("5"
+                                  (flatten)
+                                  (("5"
+                                    (split 1)
+                                    (("1"
+                                      (expand "wf_Body" 1)
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (use
+                                           "inline_class_inv_wf_Body1")
+                                          (("1"
+                                            (use
+                                             "inline_class_inv_wf_Body2")
+                                            (("1"
+                                              (assert)
+                                              (("1"
+                                                (rewrite
+                                                 "inv_inline_class")
+                                                (("1"
+                                                  (assert)
+                                                  (("1"
+                                                    (split 1)
+                                                    (("1"
+                                                      (skosimp*)
+                                                      (("1"
+                                                        (inst? -3)
+                                                        (("1"
+                                                          (assert)
+                                                          (("1"
+                                                            (expand
+                                                             "ext_declared_var_names")
+                                                            (("1"
+                                                              (assert)
+                                                              (("1"
+                                                                (auto-rewrite
+                                                                 "union"
+                                                                 "member")
+                                                                (("1"
+                                                                  (assert)
+                                                                  (("1"
+                                                                    (rewrite
+                                                                     "var_names_union2")
+                                                                    (("1"
+                                                                      (assert)
+                                                                      (("1"
+                                                                        (prop)
+                                                                        nil
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil)
+                                                     ("2"
+                                                      (propax)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil)
+                                     ("2"
+                                      (skosimp*)
+                                      (("2"
+                                        (assert)
+                                        (("2"
+                                          (expand "inline_class" -1)
+                                          (("2"
+                                            (expand "inline_methods")
+                                            (("2"
+                                              (skosimp*)
+                                              (("2"
+                                                (replace -2 :hide? t)
+                                                (("2"
+                                                  (inst -4 "n!1")
+                                                  (("2"
+                                                    (assert)
+                                                    (("2"
+                                                      (expand
+                                                       "method_pred"
+                                                       1)
+                                                      (("2"
+                                                        (expand
+                                                         "wf_Body"
+                                                         1)
+                                                        (("2"
+                                                          (expand
+                                                           "ext_declared_var_names")
+                                                          (("2"
+                                                            (assert)
+                                                            (("2"
+                                                              (rewrite
+                                                               "var_names_union2")
+                                                              (("2"
+                                                                (use
+                                                                 "inline_method_wf_Body1")
+                                                                (("2"
+                                                                  (lemma
+                                                                   "inline_method_wf_Body2")
+                                                                  (("2"
+                                                                    (inst
+                                                                     -1
+                                                                     "p!1"
+                                                                     "n!1"
+                                                                     _)
+                                                                    (("2"
+                                                                      (assert)
+                                                                      (("2"
+                                                                        (expand
+                                                                         "wf_Method")
+                                                                        (("2"
+                                                                          (split
+                                                                           -2)
+                                                                          (("1"
+                                                                            (flatten)
+                                                                            (("1"
+                                                                              (assert)
+                                                                              (("1"
+                                                                                (auto-rewrite
+                                                                                 "union"
+                                                                                 "member")
+                                                                                (("1"
+                                                                                  (assert)
+                                                                                  (("1"
+                                                                                    (expand
+                                                                                     "ext_declared_var_names")
+                                                                                    (("1"
+                                                                                      (assert)
+                                                                                      (("1"
+                                                                                        (split
+                                                                                         1)
+                                                                                        (("1"
+                                                                                          (skosimp*)
+                                                                                          (("1"
+                                                                                            (inst?
+                                                                                             -3)
+                                                                                            (("1"
+                                                                                              (assert)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("2"
+                                                                                          (skosimp*)
+                                                                                          (("2"
+                                                                                            (inst?
+                                                                                             -10)
+                                                                                            (("2"
+                                                                                              (assert)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("3"
+                                                                                          (skosimp*)
+                                                                                          (("3"
+                                                                                            (inst?
+                                                                                             -4)
+                                                                                            (("3"
+                                                                                              (assert)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("4"
+                                                                                          (skosimp*)
+                                                                                          (("4"
+                                                                                            (inst?
+                                                                                             -10)
+                                                                                            (("4"
+                                                                                              (assert)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("5"
+                                                                                          (skosimp*)
+                                                                                          (("5"
+                                                                                            (inst?
+                                                                                             -2)
+                                                                                            (("5"
+                                                                                              (assert)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("6"
+                                                                                          (skosimp*)
+                                                                                          (("6"
+                                                                                            (inst?
+                                                                                             -10)
+                                                                                            (("6"
+                                                                                              (assert)
+                                                                                              (("6"
+                                                                                                (postpone)
+                                                                                                nil
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("7"
+                                                                                          (skosimp*)
+                                                                                          (("7"
+                                                                                            (inst?
+                                                                                             -6)
+                                                                                            nil
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("8"
+                                                                                          (skosimp*)
+                                                                                          (("8"
+                                                                                            (inst?
+                                                                                             -10)
+                                                                                            (("8"
+                                                                                              (assert)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("9"
+                                                                                          (skosimp*)
+                                                                                          (("9"
+                                                                                            (inst?
+                                                                                             -7)
+                                                                                            nil
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("10"
+                                                                                          (assert)
+                                                                                          (("10"
+                                                                                            (skosimp*)
+                                                                                            (("10"
+                                                                                              (inst?
+                                                                                               -10)
+                                                                                              (("10"
+                                                                                                (assert)
+                                                                                                nil
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("11"
+                                                                                          (skosimp*)
+                                                                                          (("11"
+                                                                                            (inst?
+                                                                                             -8)
+                                                                                            nil
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("12"
+                                                                                          (assert)
+                                                                                          (("12"
+                                                                                            (skosimp*)
+                                                                                            (("12"
+                                                                                              (inst?
+                                                                                               -10)
+                                                                                              (("12"
+                                                                                                (assert)
+                                                                                                nil
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("13"
+                                                                                          (skosimp*)
+                                                                                          (("13"
+                                                                                            (assert)
+                                                                                            (("13"
+                                                                                              (inst?
+                                                                                               -5)
+                                                                                              (("13"
+                                                                                                (assert)
+                                                                                                nil
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("14"
+                                                                                          (skosimp*)
+                                                                                          (("14"
+                                                                                            (inst?
+                                                                                             -10)
+                                                                                            (("14"
+                                                                                              (assert)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil)
+                                                                           ("2"
+                                                                            (hide
+                                                                             2)
+                                                                            (("2"
+                                                                              (expand
+                                                                               "methods")
+                                                                              (("2"
+                                                                                (inst?)
+                                                                                (("2"
+                                                                                  (assert)
+                                                                                  nil
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil)
+               ("2" (hide-all-but 1)
+                (("2" (auto-rewrite "union" "member")
+                  (("2" (apply-extensionality :hide? t)
+                    (("1" (expand "getLocalDecls")
+                      (("1" (iff)
+                        (("1" (split 1)
+                          (("1" (skosimp*)
+                            (("1" (replace -2 :hide? t)
+                              (("1"
+                                (inst 1 "c1!1")
+                                (("1"
+                                  (assert)
+                                  (("1"
+                                    (expand "inline_class")
+                                    (("1"
+                                      (expand "getLocalDecls")
+                                      (("1"
+                                        (skosimp*)
+                                        (("1"
+                                          (expand "inline_methods")
+                                          (("1"
+                                            (skosimp*)
+                                            (("1"
+                                              (replace -3 :hide? t)
+                                              (("1"
+                                                (inst 1 "n!1")
+                                                (("1"
+                                                  (assert)
+                                                  (("1"
+                                                    (expand
+                                                     "inline_method")
+                                                    (("1"
+                                                      (assert)
+                                                      (("1"
+                                                        (expand "add")
+                                                        (("1"
+                                                          (assert)
+                                                          (("1"
+                                                            (prop)
+                                                            (("1"
+                                                              (use
+                                                               "new_res_lvar_new_lvar")
+                                                              (("1"
+                                                                (assert)
+                                                                (("1"
+                                                                  (expand
+                                                                   "methods")
+                                                                  (("1"
+                                                                    (inst?)
+                                                                    (("1"
+                                                                      (assert)
+                                                                      nil
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil)
+                                                             ("2"
+                                                              (use
+                                                               "new_ex_lvar_new_lvar")
+                                                              (("2"
+                                                                (assert)
+                                                                (("2"
+                                                                  (expand
+                                                                   "methods")
+                                                                  (("2"
+                                                                    (inst?)
+                                                                    (("2"
+                                                                      (assert)
+                                                                      nil
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (skosimp*)
+                            (("2" (split -1)
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (inst 1 "inline_class(p!1)(c!1)")
+                                  (("1"
+                                    (split 1)
+                                    (("1" (inst 1 "c!1") nil nil)
+                                     ("2"
+                                      (expand "inline_class")
+                                      (("2"
+                                        (expand "getLocalDecls")
+                                        (("2"
+                                          (skosimp*)
+                                          (("2"
+                                            (inst
+                                             1
+                                             "inline_method(p!1)(m!1)")
+                                            (("2"
+                                              (split 1)
+                                              (("1"
+                                                (expand
+                                                 "inline_methods")
+                                                (("1" (inst?) nil nil))
+                                                nil)
+                                               ("2"
+                                                (expand
+                                                 "inline_method")
+                                                (("2"
+                                                  (expand "add")
+                                                  (("2"
+                                                    (assert)
+                                                    (("2"
+                                                      (prop)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (expand "new_lvars")
+                                (("2"
+                                  (assert)
+                                  (("2"
+                                    (split -1)
+                                    (("1"
+                                      (expand "new_res_lvars")
+                                      (("1"
+                                        (skosimp*)
+                                        (("1"
+                                          (expand "methods")
+                                          (("1"
+                                            (skosimp*)
+                                            (("1"
+                                              (inst
+                                               1
+                                               "inline_class(p!1)(c!1)")
+                                              (("1"
+                                                (split 1)
+                                                (("1"
+                                                  (inst 1 "c!1")
+                                                  nil
+                                                  nil)
+                                                 ("2"
+                                                  (expand
+                                                   "getLocalDecls")
+                                                  (("2"
+                                                    (inst
+                                                     1
+                                                     "inline_method(p!1)(m!1)")
+                                                    (("2"
+                                                      (split 1)
+                                                      (("1"
+                                                        (expand
+                                                         "inline_class")
+                                                        (("1"
+                                                          (expand
+                                                           "inline_methods")
+                                                          (("1"
+                                                            (inst?)
+                                                            nil
+                                                            nil))
+                                                          nil))
+                                                        nil)
+                                                       ("2"
+                                                        (expand
+                                                         "inline_method")
+                                                        (("2"
+                                                          (expand
+                                                           "add")
+                                                          (("2"
+                                                            (assert)
+                                                            nil
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil)
+                                     ("2"
+                                      (expand "new_ex_lvars")
+                                      (("2"
+                                        (skosimp*)
+                                        (("2"
+                                          (expand "methods")
+                                          (("2"
+                                            (skosimp*)
+                                            (("2"
+                                              (inst
+                                               1
+                                               "inline_class(p!1)(c!1)")
+                                              (("2"
+                                                (split 1)
+                                                (("1"
+                                                  (inst 1 "c!1")
+                                                  nil
+                                                  nil)
+                                                 ("2"
+                                                  (expand
+                                                   "getLocalDecls")
+                                                  (("2"
+                                                    (inst
+                                                     1
+                                                     "inline_method(p!1)(m!1)")
+                                                    (("2"
+                                                      (split 1)
+                                                      (("1"
+                                                        (expand
+                                                         "inline_class")
+                                                        (("1"
+                                                          (expand
+                                                           "inline_methods")
+                                                          (("1"
+                                                            (inst?)
+                                                            nil
+                                                            nil))
+                                                          nil))
+                                                        nil)
+                                                       ("2"
+                                                        (expand
+                                                         "inline_method")
+                                                        (("2"
+                                                          (expand
+                                                           "add")
+                                                          (("2"
+                                                            (assert)
+                                                            nil
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil)
+                     ("2" (use "inline_program_TCC1") nil nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (hide 2)
+              (("2" (apply-extensionality :hide? t)
+                (("1" (auto-rewrite "GhostDecls_inline_class")
+                  (("1" (expand "getGhostDecls")
+                    (("1" (assert)
+                      (("1" (iff)
+                        (("1" (split 1)
+                          (("1" (skosimp*)
+                            (("1" (replace -2)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (inst? 1)
+                                  (("1" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (skosimp*)
+                            (("2" (inst 1 "inline_class(p!1)(c!1)")
+                              (("2"
+                                (assert)
+                                (("2" (inst?) nil nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (use "inline_program_TCC1") nil nil))
+                nil))
+              nil))
+            nil)
+           ("2" (hide 2)
+            (("2" (auto-rewrite "FieldDecls_inline_class")
+              (("2" (expand "getFieldDecls")
+                (("2" (apply-extensionality :hide? t)
+                  (("2" (iff)
+                    (("2" (split 1)
+                      (("1" (skosimp*)
+                        (("1" (replace -2)
+                          (("1" (assert)
+                            (("1" (inst?) (("1" (assert) nil nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil)
+                       ("2" (skosimp*)
+                        (("2" (inst 1 "inline_class(p!1)(c!1)")
+                          (("2" (assert) (("2" (inst?) nil nil)) nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (use "inline_program_TCC1") nil nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 1600877 9170 t nil))
+ (LocalDecls_inline_program 0
+  (LocalDecls_inline_program-1 nil 3407163445 3407215513
+   ("" (skosimp*)
+    (("" (auto-rewrite "union" "add" "member")
+      (("" (apply-extensionality :hide? t)
+        (("" (expand "getLocalDecls")
+          (("" (expand "getLocalDecls")
+            (("" (expand "inline_program")
+              (("" (iff)
+                (("" (split 1)
+                  (("1" (skosimp*)
+                    (("1" (inst 1 "c1!1")
+                      (("1" (assert)
+                        (("1" (replace -2 :hide? t)
+                          (("1" (expand "inline_class")
+                            (("1" (expand "inline_methods")
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (inst?)
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (replace -3 :hide? t)
+                                      (("1"
+                                        (expand "inline_method")
+                                        (("1"
+                                          (assert)
+                                          (("1"
+                                            (prop)
+                                            (("1"
+                                              (use
+                                               "new_res_lvar_new_lvar")
+                                              (("1"
+                                                (assert)
+                                                (("1"
+                                                  (expand "methods")
+                                                  (("1"
+                                                    (inst?)
+                                                    (("1"
+                                                      (assert)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil)
+                                             ("2"
+                                              (use
+                                               "new_ex_lvar_new_lvar")
+                                              (("2"
+                                                (assert)
+                                                (("2"
+                                                  (expand "methods")
+                                                  (("2"
+                                                    (inst?)
+                                                    (("2"
+                                                      (assert)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (skosimp*)
+                    (("2" (split -1)
+                      (("1" (skosimp*)
+                        (("1" (inst 1 "inline_class(p!1)(c!1)")
+                          (("1" (split 1)
+                            (("1" (inst 1 "c!1") nil nil)
+                             ("2" (inst 1 "inline_method(p!1)(m!1)")
+                              (("2"
+                                (split 1)
+                                (("1"
+                                  (expand "inline_class")
+                                  (("1"
+                                    (expand "inline_methods")
+                                    (("1" (inst?) nil nil))
+                                    nil))
+                                  nil)
+                                 ("2"
+                                  (expand "inline_method")
+                                  (("2"
+                                    (assert)
+                                    (("2" (prop) nil nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil)
+                       ("2" (expand "new_lvars")
+                        (("2" (assert)
+                          (("2" (split -1)
+                            (("1" (expand "new_res_lvars")
+                              (("1"
+                                (skosimp*)
+                                (("1"
+                                  (expand "methods")
+                                  (("1"
+                                    (skosimp*)
+                                    (("1"
+                                      (inst 1 "inline_class(p!1)(c!1)")
+                                      (("1"
+                                        (split 1)
+                                        (("1" (inst?) nil nil)
+                                         ("2"
+                                          (inst
+                                           1
+                                           "inline_method(p!1)(m!1)")
+                                          (("2"
+                                            (split 1)
+                                            (("1"
+                                              (expand "inline_class")
+                                              (("1"
+                                                (expand
+                                                 "inline_methods")
+                                                (("1" (inst?) nil nil))
+                                                nil))
+                                              nil)
+                                             ("2"
+                                              (expand "inline_method")
+                                              (("2" (assert) nil nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil)
+                             ("2" (expand "new_ex_lvars")
+                              (("2"
+                                (skosimp*)
+                                (("2"
+                                  (expand "methods")
+                                  (("2"
+                                    (skosimp*)
+                                    (("2"
+                                      (inst 1 "inline_class(p!1)(c!1)")
+                                      (("2"
+                                        (split 1)
+                                        (("1" (inst 1 "c!1") nil nil)
+                                         ("2"
+                                          (inst
+                                           1
+                                           "inline_method(p!1)(m!1)")
+                                          (("2"
+                                            (split 1)
+                                            (("1"
+                                              (expand "inline_class")
+                                              (("1"
+                                                (expand
+                                                 "inline_methods")
+                                                (("1" (inst?) nil nil))
+                                                nil))
+                                              nil)
+                                             ("2"
+                                              (expand "inline_method")
+                                              (("2" (assert) nil nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished
+   ((inline_methods const-decl "finite_set[Method]"
+     InlineMethodAnnotation nil)
+    (nonempty_add_finite application-judgement "non_empty_finite_set"
+     finite_sets nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (new_ex_lvar_new_lvar formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (new_res_lvar_new_lvar formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (methods const-decl "finite_set[Method]" ProgramFunctions nil)
+    (inline_method const-decl "Method" InlineMethodAnnotation nil)
+    (inline_class const-decl "Class" InlineClassAnnotation nil)
+    (new_ex_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (new_res_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (member const-decl "bool" sets nil) (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (inline_program const-decl "Program" InlineProgramAnnotation nil)
+    (union const-decl "set" sets nil)
+    (new_lvars const-decl "finite_set[LocalVarDecl]"
+     InlineNewVariableDeclarations nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Name formal-nonempty-type-decl nil InlineProgramAnnotation nil)
+    (JType type-decl nil JType_adt nil))
+   439608 1040 t shostak)))
 

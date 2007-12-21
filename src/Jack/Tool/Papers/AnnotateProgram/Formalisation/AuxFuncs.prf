@@ -1,7 +1,7 @@
 (set2list
  (set2list_TCC1 0
   (set2list_TCC1-1 nil 3387877128 3390299916 ("" (subtype-tcc) nil nil)
-   unchecked
+   proved-complete
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (set type-eq-decl nil sets nil)
@@ -20,7 +20,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-complete
    ((card_remove formula-decl nil finite_sets nil)
     (remove const-decl "set" sets nil)
     (finite_set type-eq-decl nil finite_sets nil)
@@ -100,7 +100,7 @@
       nil)
      ("2" (use "wf_card") nil nil))
     nil)
-   untried
+   proved-complete
    ((set2list def-decl "list[T]" set2list nil)
     (member def-decl "bool" list_props nil)
     (list type-decl nil list_adt nil)
@@ -196,7 +196,7 @@
       nil)
      ("2" (use "wf_card") nil nil))
     nil)
-   untried
+   proved-complete
    ((card_remove formula-decl nil finite_sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (choose const-decl "(p)" sets nil)
@@ -236,7 +236,7 @@
 (listfuncs
  (before_TCC1 0
   (before_TCC1-1 nil 3388429891 3390292587
-   ("" (termination-tcc) nil nil) unchecked
+   ("" (termination-tcc) nil nil) proved-complete
    ((length def-decl "nat" list_props nil)) 195 170 nil nil))
  (before_distinct 0
   (before_distinct-1 nil 3392381403 3392381563
@@ -250,7 +250,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   proved-complete
    ((list_induction formula-decl nil list_adt nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (before def-decl "boolean" listfuncs nil)
@@ -271,7 +271,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   proved-complete
    ((list type-decl nil list_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -295,7 +295,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-complete
    ((append def-decl "list[T]" list_props nil)
     (null adt-constructor-decl "(null?)" list_adt nil)
     (null? adt-recognizer-decl "[list -> boolean]" list_adt nil)
@@ -320,7 +320,7 @@
         nil))
       nil))
     nil)
-   proved
+   proved-complete
    ((list_induction formula-decl nil list_adt nil)
     (T formal-type-decl nil listfuncs nil)
     (append def-decl "list[T]" list_props nil)
@@ -410,7 +410,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   proved-complete
    ((list_induction formula-decl nil list_adt nil)
     (member def-decl "bool" list_props nil)
     (pred type-eq-decl nil defined_types nil)
@@ -467,7 +467,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   proved-complete
    ((list_induction formula-decl nil list_adt nil)
     (member def-decl "bool" list_props nil)
     (pred type-eq-decl nil defined_types nil)
@@ -487,7 +487,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   proved-complete
    ((list_inclusive formula-decl nil list_adt nil)
     (list type-decl nil list_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -499,14 +499,14 @@
    65 40 t shostak)))
 (listsum
  (sum_TCC1 0
-  (sum_TCC1-1 nil 3397556841 nil ("" (subtype-tcc) nil nil) unchecked
-   nil nil nil nil nil))
+  (sum_TCC1-1 nil 3397556841 nil ("" (subtype-tcc) nil nil)
+   proved-complete nil nil nil nil nil))
  (sum_TCC2 0
   (sum_TCC2-1 nil 3397556841 nil ("" (termination-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   proved-complete nil nil nil nil nil))
  (sum_geq_than_elements 0
   (sum_geq_than_elements-1 nil 3397556841 3397556849
-   ("" (induct-and-simplify "l") nil nil) untried
+   ("" (induct-and-simplify "l") nil nil) proved-complete
    ((nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
      integers nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])"
@@ -534,7 +534,7 @@
 (list_map_funcs
  (list_map_member 0
   (list_map_member-1 nil 3397382384 3397382391
-   ("" (induct-and-simplify "xs") nil nil) untried
+   ("" (induct-and-simplify "xs") nil nil) proved-complete
    ((list_induction formula-decl nil list_adt nil)
     (member def-decl "bool" list_props nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -544,13 +544,13 @@
 (list_of_set_funcs
  (list_to_union_TCC1 0
   (list_to_union_TCC1-1 nil 3397382258 nil ("" (subtype-tcc) nil nil)
-   unchecked nil nil nil nil nil))
+   proved-complete nil nil nil nil nil))
  (list_to_union_TCC2 0
   (list_to_union_TCC2-1 nil 3397382258 nil
-   ("" (termination-tcc) nil nil) unchecked nil nil nil nil nil))
+   ("" (termination-tcc) nil nil) proved-complete nil nil nil nil nil))
  (list_to_union_subset 0
   (list_to_union_subset-1 nil 3397382261 3397382267
-   ("" (induct-and-simplify "l") nil nil) untried
+   ("" (induct-and-simplify "l") nil nil) proved-complete
    ((subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
     (member const-decl "bool" sets nil)
@@ -566,7 +566,7 @@
 (FunProp
  (nat2string_TCC1 0
   (nat2string_TCC1-1 nil 3390113818 3390292588
-   ("" (subtype-tcc) nil nil) unchecked
+   ("" (subtype-tcc) nil nil) proved-complete
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
@@ -584,7 +584,7 @@
    65 60 nil nil))
  (nat2string_TCC2 0
   (nat2string_TCC2-1 nil 3390113818 3390292588
-   ("" (subtype-tcc) nil nil) unchecked nil 10 10 nil nil))
+   ("" (subtype-tcc) nil nil) proved-complete nil 10 10 nil nil))
  (nat2string_injective 0
   (nat2string_injective-1 nil 3390113998 3390292588
    ("" (expand "injective?")
@@ -615,7 +615,7 @@
         nil))
       nil))
     nil)
-   untried
+   proved-complete
    ((number nonempty-type-decl nil numbers nil)
     (boolean nonempty-type-decl nil booleans nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -752,7 +752,7 @@
         nil))
       nil))
     nil)
-   untried
+   proved-complete
    ((list2finseq const-decl "finseq[T]" list2finseq nil)
     (cdr adt-accessor-decl "[(cons?) -> list]" list_adt nil)
     (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
@@ -795,7 +795,7 @@
        ("2" (use "nat2string_injective") nil nil))
       nil))
     nil)
-   untried
+   proved-complete
    ((composition_injective judgement-tcc nil function_props nil)
     (injective? const-decl "bool" functions nil)
     (list2finseq const-decl "finseq[T]" list2finseq nil)
@@ -822,4 +822,64 @@
     (boolean nonempty-type-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil))
    33 30 t shostak)))
+(SetProp
+ (disjoint?_commutative 0
+  (disjoint?_commutative-1 nil 3407216726 3407216742
+   ("" (skosimp*)
+    ((""
+      (auto-rewrite "disjoint?" "intersection" "member" "union"
+                    "empty?")
+      (("" (assert)
+        (("" (iff)
+          (("" (split 1)
+            (("1" (skosimp*)
+              (("1" (inst?) (("1" (assert) nil nil)) nil)) nil)
+             ("2" (skosimp*)
+              (("2" (inst?) (("2" (assert) nil nil)) nil)) nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((A formal-type-decl nil SetProp nil)
+    (member const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil))
+   16264 30 t shostak))
+ (disjoint?_union 0
+  (disjoint?_union-1 nil 3407216411 3407216479
+   ("" (skosimp*)
+    ((""
+      (auto-rewrite "disjoint?" "intersection" "member" "union"
+                    "empty?")
+      (("" (assert)
+        (("" (iff)
+          (("" (split 1)
+            (("1" (skosimp*)
+              (("1" (split 1)
+                (("1" (skosimp*)
+                  (("1" (inst?) (("1" (assert) nil nil)) nil)) nil)
+                 ("2" (skosimp*)
+                  (("2" (inst?) (("2" (assert) nil nil)) nil)) nil))
+                nil))
+              nil)
+             ("2" (skosimp*)
+              (("2" (inst?)
+                (("2" (inst?) (("2" (assert) nil nil)) nil)) nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unchecked
+   ((A formal-type-decl nil SetProp nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil))
+   68842 110 t shostak)))
 

@@ -292,6 +292,10 @@ BEGIN
     FORALL(fs1, fs2 : finite_set[FieldDecl]) :
       var_names(union(fs1, fs2)) = union(var_names(fs1), var_names(fs2))
 
+  var_names_union2 : LEMMA % :-)
+    FORALL(ls1, ls2 : finite_set[LocalVarDecl]) :
+      var_names(union(ls1, ls2)) = union(var_names(ls1), var_names(ls2))
+
   IMPORTING WF_Card[[BoolExpr, Stmt]], set2list[[BoolExpr, Stmt]]
 
 

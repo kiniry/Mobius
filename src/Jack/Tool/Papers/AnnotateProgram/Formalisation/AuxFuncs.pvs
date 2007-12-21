@@ -149,3 +149,18 @@ BEGIN
 
 
 END FunProp
+
+
+SetProp [A : TYPE] : THEORY
+BEGIN
+
+  disjoint?_commutative : LEMMA % :-)
+    FORALL(S1, S2 : set[A]) :
+      disjoint?(S1, S2) = disjoint?(S2, S1)
+
+  disjoint?_union : LEMMA % :-)
+    FORALL(S1, S2, S3 : set[A]) :
+      disjoint?(S1, union(S2, S3)) =
+        (disjoint?(S1, S2) AND disjoint?(S1, S3))
+
+END SetProp

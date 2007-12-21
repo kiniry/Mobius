@@ -91,61 +91,26 @@ BEGIN
   new_ex_lvar_new_lvar : LEMMA % :-)
      methods(p)(m) IMPLIES
      new_lvars(p)(new_ex_lvar(p, m))
+
+  IMPORTING ProgramFunctions[Name], SetProp[Name]
+
+  new_lvars_not_field_decls : LEMMA % :-)
+     disjoint?(var_names(new_lvars(p)), var_names(getFieldDecls(p)))
  
-%  new_vars_derived_from_mp : LEMMA % :-)
-%    var_names(new_gvds(mp))(cp(mp)) AND
-%    (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
-%      var_names(new_gvds(mp))(name_of(mp)(q))) AND
-%    (FORALL (v : MVAVarDecl) : vdsA(mva(mp))(v) IMPLIES
-%      var_names(new_gvds(mp))(name(v)))
+  new_lvars_not_ghost_decls : LEMMA % :-)
+     disjoint?(var_names(new_lvars(p)), var_names(getGhostDecls(p)))
 
+  new_lvars_not_old_local_decls : LEMMA % :-)
+     disjoint?(var_names(new_lvars(p)), var_names(getLocalDecls(p)))
 
-%  % The generated ghost variables must have different names
-%  wf_new_vars : LEMMA % :-)
-%    (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
-%        NOT name_of(mp)(q) = cp(mp)) AND
-%    (FORALL (vd : MVAVarDecl) : vdsA(mva(mp))(vd) IMPLIES
-%        NOT name(vd) = cp(mp)) AND
-%    (FORALL (q : CP, vd : MVAVarDecl) :
-%      cps(mva(mp))(q) IMPLIES
-%      vdsA(mva(mp))(vd) IMPLIES
-%        NOT name_of(mp)(q) = name(vd)) AND
-%    disjoint?(var_names(new_gvds(mp)), reserved_words) AND
-%    disjoint?(var_names(new_gvds(mp)), declared_var_names(program(mp)))
+  new_lvars_not_reserved_words : LEMMA % :-)
+     disjoint?(var_names(new_lvars(p)), reserved_words)
 
+  new_vars_not_ext_declared_var_names : LEMMA % :-)
+     disjoint?(var_names(new_lvars(p)), ext_declared_var_names(p))
 
-%  cp_new_ghostvar : LEMMA % :-)
-%    var_names(new_gvds(mp))(cp(mp))
-
-%  halted_new_ghostvar : LEMMA % :-)
-%    var_names(new_gvds(mp))(halted(mp))
-
-%  new_cp_gvd(mp)(q : (cps(mva(mp)))) : FieldDecl =
-%    (# name := name_of(mp)(q), jtype := IntType, init_val := Int(unique(q)) #)
-
-%  new_cp_gvd_new_ghostvar : LEMMA % :-)
-%    FORALL (q : CP) :
-%      cps(mva(mp))(q) IMPLIES
-%        new_gvds(mp)(new_cp_gvd(mp)(q))
-
-%  new_mva_var_gvd(mp)(vd : (vdsA(mva(mp)))) : FieldDecl =
-%    (# name := name(vd), jtype := jtype(vd), init_val := init_val(vd) #)
-
-%  new_mva_var_new_ghostvar : LEMMA % :-)
-%    FORALL (vd : MVAVarDecl) :
-%      vdsA(mva(mp))(vd) IMPLIES
-%        new_gvds(mp)(new_mva_var_gvd(mp)(vd))
-
-%  cp_not_cps_ghostvar : LEMMA % :-)
-%    NOT new_cps_gvds(mp)(new_cp_gvd(mp))
-
-%  cp_not_mva_ghostvar : LEMMA % :-)
-%    NOT new_mva_vars_gvds(mp)(new_cp_gvd(mp))
-
-%  var_names_MVA_subset_var_names_new_gdvs : LEMMA % :-)
-%    subset?(var_names(mva(mp)),
-%            union(var_names(program(mp)), var_names(new_gvds(mp))))
-
+  new_lvars_not_ext_declared_var_names : LEMMA % :-)
+     disjoint?(var_names(new_lvars(p)), ext_declared_var_names(p))
 
 
 END InlineNewVariableDeclarations
@@ -330,8 +295,7 @@ BEGIN
       Set?(b) IMPLIES
       LET im = inline_method(p)(m) IN
       (subterm(b, body(im)) IMPLIES
-         var_names(getGhostDecls(p))(target(b)) OR
-         var_names(new_lvars(p))(target(b))) AND
+         var_names(getGhostDecls(p))(target(b))) AND
       (subterm(b, pre(im)) IMPLIES
          var_names(getGhostDecls(p))(target(b))) AND
       (subterm(b, post(im)) IMPLIES
@@ -422,11 +386,12 @@ BEGIN
 
   ASSUMING
 
-  IMPORTING NewVar[Name], InlineVariableNames[Name]
-
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
+
+  IMPORTING NewVar[Name], InlineVariableNames[Name]
+
 
     name_of_exists : ASSUMPTION
       EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
@@ -442,6 +407,8 @@ BEGIN
 
   % Inline set-annotations into method bodies
 
+  IMPORTING SetProp[Name] % to prove TCC
+
   inline_program(p) : Program =
     (# classes := {c : Class | EXISTS (c1 : Class) :
                                  classes(p)(c1) AND
@@ -449,10 +416,8 @@ BEGIN
 
 
   LocalDecls_inline_program : LEMMA % :-)
-    FORALL(c : Class) :
-      classes(p)(c) IMPLIES
-      getLocalDecls(inline_program(p)) = 
-         union(getLocalDecls(p), new_lvars(p))
+    getLocalDecls(inline_program(p)) = 
+      union(getLocalDecls(p), new_lvars(p))
 
 
 END InlineProgramAnnotation
