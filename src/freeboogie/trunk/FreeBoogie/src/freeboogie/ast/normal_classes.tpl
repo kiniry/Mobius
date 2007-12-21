@@ -9,7 +9,7 @@ package freeboogie.ast;
 import java.math.BigInteger; // for AtomNum
 
 public final class \ClassName extends \BaseName {
-\enums{  public enum \EnumName {\values[, ]{
+\enums{  public static enum \EnumName {\values[, ]{
     \VALUE_NAME}
   }}
 \invariants{  //@ invariant \inv_text;

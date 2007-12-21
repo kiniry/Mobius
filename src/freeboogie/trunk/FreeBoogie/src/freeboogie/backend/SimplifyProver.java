@@ -9,7 +9,12 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+import freeboogie.util.Err;
 
 /**
  * Used to interact with Simplify.
@@ -238,6 +243,18 @@ public class SimplifyProver implements Prover {
    * @throws Exception thrown if something goes wrong
    */
   public static void main(String[] args) throws Exception {
+    try {
+      FileHandler logh = new FileHandler("simplify.log");
+      logh.setFormatter(new SimpleFormatter());
+      log.addHandler(logh);
+      log.setUseParentHandlers(false);
+      //log.setLevel(Level.WARNING); // for release
+      log.setLevel(Level.ALL); // for debug
+    } catch (IOException e) {
+      Err.warning("Can't create log file. Nevermind.");
+      log.setLevel(Level.OFF);
+    }
+    
     Prover p = new SimplifyProver(args);
     TermBuilder b = p.getBuilder();
     Term x = b.mk("var_pred", "x");

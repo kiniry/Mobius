@@ -111,6 +111,7 @@
       <fileset dir="test/functional" includes="**/out" />
       <fileset dir="test/functional" includes="**/err" />
       <fileset dir="test/functional" includes="**/*.log" />
+      <fileset dir="test/custom/parser" includes="*.lex" />
     </delete>
     <defaultexcludes remove="**/*~" />
     <delete>

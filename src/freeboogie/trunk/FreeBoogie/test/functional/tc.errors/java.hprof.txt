@@ -1,4 +1,4 @@
-JAVA PROFILE 1.0.1, created Tue May 22 17:34:05 2007
+JAVA PROFILE 1.0.1, created Thu Dec  6 16:51:06 2007
 
 Header for -agentlib:hprof (or -Xrunhprof) ASCII Output (JDK 5.0 JVMTI based)
 
@@ -68,27 +68,30 @@ THREAD END (id = 200001)
 THREAD START (obj=5000013e, id = 200006, name="DestroyJavaVM", group="main")
 THREAD END (id = 200006)
 THREAD END (id = 200002)
-TRACE 300051:
-	java.lang.String.toLowerCase(String.java:2432)
-TRACE 300108:
-	freeboogie.tc.TypeChecker$1.<clinit>(TypeChecker.java:536)
+TRACE 300053:
+	java.security.Security.<clinit>(Security.java:50)
 TRACE 300109:
-	java.lang.String.substring(String.java:1931)
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:278)
 TRACE 300110:
-	org.antlr.runtime.ANTLRStringStream.consume(ANTLRStringStream.java:97)
+	freeboogie.parser.FbParser.expr_list(FbParser.java:2916)
 TRACE 300111:
-	java.io.FileOutputStream.writeBytes(FileOutputStream.java:Unknown line)
+	org.antlr.runtime.CommonTokenStream.LT(CommonTokenStream.java:254)
 TRACE 300112:
-	freeboogie.parser.FbParser.expr(FbParser.java:1592)
+	org.antlr.runtime.CommonTokenStream.LA(CommonTokenStream.java:300)
 TRACE 300113:
-	org.antlr.runtime.BaseRecognizer.pushFollow(BaseRecognizer.java:585)
-CPU SAMPLES BEGIN (total = 7) Tue May 22 17:34:05 2007
+	org.antlr.runtime.CommonTokenStream.fillBuffer(CommonTokenStream.java:96)
+TRACE 300114:
+	freeboogie.parser.FbParser.global_decl_tail(FbParser.java:546)
+TRACE 300118:
+	java.util.IdentityHashMap$KeySet.iterator(IdentityHashMap.java:940)
+CPU SAMPLES BEGIN (total = 8) Thu Dec  6 16:51:06 2007
 rank   self  accum   count trace method
-   1 14.29% 14.29%       1 300051 java.lang.String.toLowerCase
-   2 14.29% 28.57%       1 300108 freeboogie.tc.TypeChecker$1.<clinit>
-   3 14.29% 42.86%       1 300109 java.lang.String.substring
-   4 14.29% 57.14%       1 300110 org.antlr.runtime.ANTLRStringStream.consume
-   5 14.29% 71.43%       1 300111 java.io.FileOutputStream.writeBytes
-   6 14.29% 85.71%       1 300112 freeboogie.parser.FbParser.expr
-   7 14.29% 100.00%       1 300113 org.antlr.runtime.BaseRecognizer.pushFollow
+   1 12.50% 12.50%       1 300053 java.security.Security.<clinit>
+   2 12.50% 25.00%       1 300109 sun.misc.URLClassPath.getLoader
+   3 12.50% 37.50%       1 300110 freeboogie.parser.FbParser.expr_list
+   4 12.50% 50.00%       1 300111 org.antlr.runtime.CommonTokenStream.LT
+   5 12.50% 62.50%       1 300112 org.antlr.runtime.CommonTokenStream.LA
+   6 12.50% 75.00%       1 300113 org.antlr.runtime.CommonTokenStream.fillBuffer
+   7 12.50% 87.50%       1 300114 freeboogie.parser.FbParser.global_decl_tail
+   8 12.50% 100.00%       1 300118 java.util.IdentityHashMap$KeySet.iterator
 CPU SAMPLES END
