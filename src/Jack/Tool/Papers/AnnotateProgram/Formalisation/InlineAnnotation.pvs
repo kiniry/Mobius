@@ -423,227 +423,153 @@ BEGIN
 END InlineProgramAnnotation
 
 
-%% Properties relating MPs and APs through ann_program
-%AnnotateProgramProperties[CP, Name : TYPE+] : THEORY
-%BEGIN
 
-%  ASSUMING
+InlineProgramAnnotationProperties[Name : TYPE+] : THEORY
+BEGIN
 
-%    CP_is_enumerable : ASSUMPTION
-%      EXISTS (f : [CP -> nat]) : injective?(f)
+  ASSUMING
 
-%    infinite_namespace : ASSUMPTION
-%      is_infinite({n : Name | TRUE})
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
 
-%    IMPORTING VariableNames[CP, Name]
+  IMPORTING NewVar[Name], InlineVariableNames[Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+        FORALL(p : Program) :
+          injective?(f(p))
 
 
-%    name_of_exists : ASSUMPTION
-%      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) :
-%        FORALL(mp : (wf_MP)) :
-%          injective?(f(mp))
+  ENDASSUMING
 
-%  ENDASSUMING
 
-%  IMPORTING AnnotateProgram[CP, Name],
-%            AnnotatedProgramSemantics[Name],
-%            MonitoredProgramSemantics[CP, Name]
+  IMPORTING InlineProgramAnnotation[Name],
+            AnnotatedProgramSemantics[Name]
 
-%  mp : VAR (wf_MP)
+  p : VAR Program
 
-%  ann_program_class_correspondence : LEMMA % :-)
-%    FORALL(c : Class) : classes(ann_program(mp))(c) IMPLIES
-%      EXISTS (c1 : Class) : classes(program(mp))(c1) AND c = inline_class(mp)(c1)
+  inline_program_class_correspondence : LEMMA % :-)
+    FORALL(c : Class) : classes(inline_program(p))(c) IMPLIES
+      EXISTS (c1 : Class) : classes(p)(c1) AND c = inline_class(p)(c1)
 
-%  ann_program_method_correspondence : LEMMA % :-)
-%    FORALL(c : Class, m : Method) :
-%      classes(ann_program(mp))(c) IMPLIES
-%      methods(c)(m) IMPLIES
-%        EXISTS (c1 : Class, m1 : Method) :
-%          classes(program(mp))(c1) AND
-%          methods(c1)(m1) AND
-%          (IF name(c1) = class_name(mva(mp))
-%           THEN m = ann_method(mp)(m1)
-%           ELSE m = m1
-%           ENDIF)
+  inline_program_method_correspondence : LEMMA % :-)
+    FORALL(c : Class, m : Method) :
+      classes(inline_program(p))(c) IMPLIES
+      methods(c)(m) IMPLIES
+        EXISTS (c1 : Class, m1 : Method) :
+          classes(p)(c1) AND methods(c1)(m1) AND m = inline_method(p)(m1)
 
-%  ann_program_preserves_var_decls : LEMMA % :-)
-%    getFieldDecls(program(mp)) = getFieldDecls(ann_program(mp)) AND
-%    getLocalDecls(program(mp)) = getLocalDecls(ann_program(mp)) AND
-%    subset?(getGhostDecls(program(mp)), getGhostDecls(ann_program(mp)))
+  inline_program_preserves_Field_decls : LEMMA % :-)
+    getFieldDecls(inline_program(p)) = getFieldDecls(p) 
 
-%  ann_program_preserves_var_decl_names : LEMMA % :-)
-%    FORALL (vn : Name) :
-%      (var_names(getFieldDecls(program(mp)))(vn) IFF
-%       var_names(getFieldDecls(ann_program(mp)))(vn))
-%      AND
-%      (var_names(getGhostDecls(program(mp)))(vn) IMPLIES
-%       var_names(getGhostDecls(ann_program(mp)))(vn))
-%      AND
-%      (var_names(getLocalDecls(program(mp)))(vn) IFF
-%       var_names(getLocalDecls(ann_program(mp)))(vn))
 
-%  ann_program_add_ghost_var_decls : LEMMA % :-)
-%    getGhostDecls(ann_program(mp)) =
-%      union(getGhostDecls(program(mp)), new_lvars(mp))
+  inline_program_preserves_Ghost_decls : LEMMA % :-)
+    getGhostDecls(inline_program(p)) = getGhostDecls(p)
 
-%  ann_program_ext_declared_var_names : LEMMA % :-)
-%     ext_declared_var_names(ann_program(mp)) =
-%       union(ext_declared_var_names(program(mp)), var_names(new_lvars(mp)))
 
-%  ann_program_preserves_wf_state : LEMMA % :-)
+  inline_program_add_LocalVar_decls : LEMMA % :-)
+    getLocalDecls(inline_program(p)) = union(getLocalDecls(p), new_lvars(p))
+
+  inline_program_ext_declared_var_names : LEMMA % :-)
+     ext_declared_var_names(inline_program(p)) =
+       union(ext_declared_var_names(p), var_names(new_lvars(p)))
+
+
+% NOT PROVABLE AS IS NOW: SEE IF USED
+%  inline_program_preserves_wf_state : LEMMA % :-)
 %    FORALL (s : PState) :
-%      wf_state(program(mp))(s) IMPLIES
-%        wf_state(ann_program(mp))(s)
+%      wf_state(p)(s) IMPLIES
+%        wf_state(inline_program(p))(s)
 
-
-%  ann_program_preserves_pstate_vars : LEMMA % :-)
-%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
-%      wf_state(mp)(sMP) IMPLIES
-%      wf_state(ann_program(mp))(sAP) IMPLIES
-%        (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
-%        (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP)))
-
-%  ann_program_preserves_ghoststate_vars : LEMMA % :-)
-%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
-%      wf_state(mp)(sMP) IMPLIES
-%      wf_state(ann_program(mp))(sAP) IMPLIES
-%        (is_ghost(vn, sMP) IMPLIES is_ghost(vn, sAP))
-
-%  var_names_ann_program : LEMMA % :-)
-%    subset?(var_names(ann_program(mp)),
-%            union(var_names(program(mp)), var_names(new_lvars(mp))))
-
-%  var_names_declared_in_MVA_subset_ghostvars : LEMMA % :-)
-%    subset?(var_names(vdsA(mva(mp))),
-%            var_names(getGhostDecls(ann_program(mp))))
-
-%  ann_program_defines_MVA_vars : LEMMA % :-)
-%    FORALL (n : Name) : var_names(new_lvars(mp))(n) IMPLIES
-%      EXISTS (c : Class, gd : FieldDecl) :
-%        classes(ann_program(mp))(c) AND
-%        name(c) = class_name(mva(mp)) AND
-%        ghost_vars(c)(gd) AND name(gd) = n
-
-%  new_vars_ghost_in_ann_program : LEMMA % :-)
+%  new_vars_local_in_inline_program : LEMMA % :-)
 %    FORALL (n : Name, s : APState) :
-%      wf_state(ann_program(mp))(s) IMPLIES
-%      var_names(new_lvars(mp))(n) IMPLIES
-%        is_ghost(n, s)
+%      wf_state(inline_program(p))(s) IMPLIES
+%      var_names(new_lvars(p))(n) IMPLIES
+%        is_local(n, pstate(s))
 
 
-%  wf_Body_MVA_implies_wf_Body : LEMMA % :-)
-%    FORALL (e : Expr) :
-%      wf_Body(mva(mp))(e) IMPLIES
-%        wf_Body(ann_program(mp))(e)
+% NOT SURE THAT THESE WILL BE USED
+%  inline_program_preserves_fields : LEMMA % :-)
+%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
+%      wf_state(p)(sMP) IMPLIES
+%      wf_state(inline_program(p))(sAP) IMPLIES
+%        (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP)))
 
-%  one_action_source_wf_Body : LEMMA % :-)
-%    FORALL (a : Action, oa : OneAction) :
-%      wf_Action(mva(mp))(a) IMPLIES
-%      member(oa, a) IMPLIES
-%        wf_Body(ann_program(mp))(source(oa))
+%  inline_program_preserves_ghoststate_vars : LEMMA % :-)
+%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
+%      wf_state(p)(sMP) IMPLIES
+%      wf_state(inline_program(p))(sAP) IMPLIES
+%        (is_ghost(vn, sMP) IFF is_ghost(vn, sAP))
 
-%  one_action_translation_wf_Body : LEMMA % :-)
-%    FORALL (a : Action, oa : OneAction) :
-%      wf_Action(mva(mp))(a) IMPLIES
-%      member(oa, a) IMPLIES
-%        wf_Body(ann_program(mp))(Set(target(oa), source(oa)))
+%  inline_program_preserves_local_vars : LEMMA % :-)
+%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
+%      wf_state(p)(sMP) IMPLIES
+%      wf_state(inline_program(p))(sAP) IMPLIES
+%        (is_local(vn, sMP) IMPLIES is_local(vn, sAP))
 
-%  ann_action_yields_wf_Body : LEMMA % :-)
-%    FORALL (a : Action) :
-%      wf_Action(mva(mp))(a) IMPLIES
-%        wf_Body(ann_program(mp))(ann_action(a))
-
-%  update_vars_wf_Stmt : LEMMA % :-)
-%    FORALL (t : Transition) :
-%      ts(mva(mp))(t) IMPLIES
-%        wf_Stmt(ann_program(mp))(update_vars(mp)(t))
-
-%  guard_to_expression_wf_BoolExpr : LEMMA % :-)
-%    FORALL (t : Transition) :
-%      ts(mva(mp))(t) IMPLIES
-%        wf_BoolExpr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t)))
-
-% ann_trans_cp_wf : LEMMA % :-)
-%   FORALL (q : CP, ts : finite_set[Transition]) :
-%     LET p = ann_trans_cp(mp)(q, ts) IN
-%     cps(mva(mp))(q) IMPLIES
-%     subset?(ts, ts(mva(mp))) IMPLIES
-%       (wf_BoolExpr(ann_program(mp))(p`1) AND
-%        wf_Stmt(ann_program(mp))(p`2))
-
-%  ann_event_wf_Body : LEMMA % :-)
-%    FORALL (ts : finite_set[Transition]) :
-%      subset?(ts, ts(mva(mp))) IMPLIES
-%        wf_Body(ann_program(mp))(ann_event(mp)(ts))
-
-%  ann_program_preserves_wf_method : LEMMA % :-)
-%    FORALL (m : (wf_Method(program(mp)))) :
-%      wf_Method(ann_program(mp))(ann_method(mp)(m))
+  var_names_inline_program : LEMMA % :-)
+    subset?(var_names(inline_program(p)),
+            union(var_names(p), var_names(new_lvars(p))))
 
 
-%  ann_program_preserves_wf_body : LEMMA % :-)
-%    FORALL (b : (wf_Body(program(mp)))) :
-%      wf_Body(ann_program(mp))(b)
+  % not directly: needs methods(p)(m)
+  inline_program_preserves_wf_method : LEMMA % :-)
+    FORALL (m : (wf_Method(p))) :
+      wf_Method(inline_program(p))(inline_method(p)(m))
 
 
-%  get_class_ann_program : LEMMA % :-)
-%    FORALL (c1, c2 : Class, tgt : Val) :
-%      up?(get_class(program(mp))(tgt)) IMPLIES
-%      up?(get_class(ann_program(mp))(tgt)) IMPLIES
-%      c1 = down(get_class(program(mp))(tgt)) IMPLIES
-%      c2 = down(get_class(ann_program(mp))(tgt)) IMPLIES
-%        name(c1) = name(c2)
-
-%  same_class_name_ann_class_implies_same_class : LEMMA % :-)
-%    FORALL (c1, c2 : Class) :
-%      classes(program(mp))(c1) IMPLIES
-%      classes(ann_program(mp))(c2) IMPLIES
-%      name(c1) = name(c2) IMPLIES
-%        IF name(c1) = class_name(mva(mp))
-%        THEN c2 = ann_class(mp)(c1)
-%        ELSE c2 = c1
-%        ENDIF
-
-%  same_method_name_ann_class_implies_same_method : LEMMA % :-)
-%    FORALL (c1, c2 : Class, m1, m2 : Method) :
-%      classes(program(mp))(c1) IMPLIES
-%      c2 = ann_class(mp)(c1) IMPLIES
-%      name(c1) = class_name(mva(mp)) IMPLIES
-%      methods(c1)(m1) IMPLIES
-%      methods(c2)(m2) IMPLIES
-%      name(m1) = name(m2) IMPLIES
-%        m2 = ann_method(mp)(m1)
+  inline_program_preserves_wf_body : LEMMA % :-)
+    FORALL (b : (wf_Body(p))) :
+      wf_Body(inline_program(p))(b)
 
 
-%  lookup_mthd_ann_program : LEMMA % :-)
-%    FORALL (m1, m2 : Method, mn : Name, tgt : Val) :
-%      up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
-%      up?(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
-%      m1 = down(lookup_mthd(program(mp), tgt, mn)) IMPLIES
-%      m2 = down(lookup_mthd(ann_program(mp), tgt, mn)) IMPLIES
-%        IF name(down(get_class(program(mp))(tgt))) = class_name(mva(mp))
-%        THEN m2 = ann_method(mp)(m1)
-%        ELSE m2 = m1
-%        ENDIF
+  get_class_inline_program : LEMMA % :-)
+    FORALL (c1, c2 : Class, tgt : Val) :
+      up?(get_class(p)(tgt)) IMPLIES
+      up?(get_class(inline_program(p))(tgt)) IMPLIES
+      c1 = down(get_class(p)(tgt)) IMPLIES
+      c2 = down(get_class(inline_program(p))(tgt)) IMPLIES
+        name(c1) = name(c2)
+
+  same_class_name_inline_class_implies_same_class : LEMMA % :-)
+    FORALL (c1, c2 : Class) :
+      classes(p)(c1) IMPLIES
+      classes(inline_program(p))(c2) IMPLIES
+      name(c1) = name(c2) IMPLIES
+        c2 = inline_class(p)(c1)
+
+  same_method_name_inline_class_implies_same_method : LEMMA % :-)
+    FORALL (c1, c2 : Class, m1, m2 : Method) :
+      classes(p)(c1) IMPLIES
+      c2 = inline_class(p)(c1) IMPLIES
+      methods(c1)(m1) IMPLIES
+      methods(c2)(m2) IMPLIES
+      name(m1) = name(m2) IMPLIES
+        m2 = inline_method(p)(m1)
 
 
-%  ann_program_preserves_class_names : LEMMA % :-)
-%    class_names(program(mp)) = class_names(ann_program(mp))
-
-%  up_get_class_equivalence : LEMMA % :-)
-%    FORALL(a : Val) :
-%      up?(get_class(program(mp))(a)) IMPLIES
-%        up?(get_class(ann_program(mp))(a))
-
-%  get_class_equivalence : LEMMA % :-)
-%    FORALL(a : Val) :
-%      up?(get_class(program(mp))(a)) IMPLIES
-%      IF name(down(get_class(program(mp))(a))) = class_name(mva(mp))
-%      THEN get_class(ann_program(mp))(a) =
-%             up(ann_class(mp)(down(get_class(program(mp))(a))))
-%      ELSE get_class(ann_program(mp))(a) = get_class(program(mp))(a)
-%      ENDIF
+  lookup_mthd_inline_program : LEMMA % :-)
+    FORALL (m1, m2 : Method, mn : Name, tgt : Val) :
+      up?(lookup_mthd(p, tgt, mn)) IMPLIES
+      up?(lookup_mthd(inline_program(p), tgt, mn)) IMPLIES
+      m1 = down(lookup_mthd(p, tgt, mn)) IMPLIES
+      m2 = down(lookup_mthd(inline_program(p), tgt, mn)) IMPLIES
+        m2 = inline_method(p)(m1)
 
 
-%END AnnotateProgramProperties
+  inline_program_preserves_class_names : LEMMA % :-)
+    class_names(p) = class_names(inline_program(p))
+
+  up_get_class_equivalence : LEMMA % :-)
+    FORALL(a : Val) :
+      up?(get_class(p)(a)) IMPLIES
+        up?(get_class(inline_program(p))(a))
+
+  get_class_equivalence : LEMMA % :-)
+    FORALL(a : Val) :
+      up?(get_class(p)(a)) IMPLIES
+      get_class(inline_program(p))(a) =
+        up(inline_class(p)(down(get_class(p)(a))))
+
+
+END InlineProgramAnnotationProperties
