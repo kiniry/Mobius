@@ -8,59 +8,81 @@ import javafe.util.Info;
 
 import escjava.backpred.BackPred;
 import escjava.sortedProver.SortedProverResponse;
-import escjava.prover.SExp;
-import escjava.prover.SList;
-import escjava.prover.Simplify;
-import escjava.prover.SimplifyOutput;
-import escjava.prover.SimplifyResult;
 import escjava.sortedProver.CounterExampleResponse;
 import escjava.sortedProver.EscNodeBuilder;
-import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.SortedProver;
-import escjava.sortedProver.SortedProverCallback;
 import escjava.sortedProver.NodeBuilder.SPred;
+import escjava.sortedProver.SortedProverCallback;
 import escjava.sortedProver.simplify.SimplifyNodeBuilder.Sx;
+import escjava.sortedProver.NodeBuilder;
 import escjava.translate.VcToString;
 
 /*@ non_null_by_default @*/
 public class SimplifyProver extends SortedProver
 {
-	SimplifyNodeBuilder nodeBuilder = new SimplifyNodeBuilder();
-	Simplify simpl = new Simplify();
-	int pushHeight;
-	BackPred backPred = new BackPred();
+	private SimplifyNodeBuilder nodeBuilder;
+	private SimplifyProcess simpl;
+	private int pushHeight;
+	private BackPred backPred;
 	
-	SortedProverResponse ok = new SortedProverResponse(SortedProverResponse.OK);
+	private SortedProverResponse ok;
+  private SortedProverResponse yes;
+  private SortedProverResponse no;
+  private SortedProverResponse fail;
 
-	public EscNodeBuilder getNodeBuilder()
-	{
+  public SimplifyProver() {
+    this(new String[] {System.getProperty("simplify", "simplify")});
+  }
+
+  public SimplifyProver(String[] cmd) {
+    nodeBuilder = new SimplifyNodeBuilder();
+    backPred = new BackPred();
+    ok = new SortedProverResponse(SortedProverResponse.OK);
+    yes = new SortedProverResponse(SortedProverResponse.YES);
+    no = new SortedProverResponse(SortedProverResponse.NO);
+    fail = new SortedProverResponse(SortedProverResponse.FAIL);
+    try {
+      simpl = new SimplifyProcess(cmd);
+    } catch (ProverError e) {
+      started = false;
+    }
+  }
+
+	public EscNodeBuilder getNodeBuilder() {
 		return nodeBuilder;
 	}
 
-	public SortedProverResponse startProver()
-	{
+	public SortedProverResponse startProver()	{
 		started = true;
 		return ok;
 	}
 
-	public SortedProverResponse setProverResourceFlags(Properties properties)
-	{
+	public SortedProverResponse setProverResourceFlags(Properties properties)	{
 		return ok;
 	}
 
-	public SortedProverResponse sendBackgroundPredicate()
-	{
+	public SortedProverResponse sendBackgroundPredicate()	{
 		backgroundPredicateSent = true;
-		backPred.genUnivBackPred(simpl.subProcessToStream());
-		simpl.sendCommands("");
-		return ok;
+		backPred.genUnivBackPred(simpl.out());
+    try {
+  		simpl.sendCommand("");
+	  	return ok;
+    } catch (ProverError e) {
+      started = false;
+      return fail;
+    }
 	}
 
 	public SortedProverResponse declareAxiom(SPred formula) 
 	{
 		Assert.notFalse(pushHeight == 0);
-		simpl.sendCommand("(BG_PUSH\n" + formulaToString(formula) + "\n)");
-		return ok;
+    try {
+  		simpl.sendCommand("(BG_PUSH\n" + formulaToString(formula) + "\n)");
+	  	return ok;
+    } catch (ProverError e) {
+      started = false;
+      return fail;
+    }
 	}
 	
 	String formulaToString(SPred form)
@@ -74,56 +96,49 @@ public class SimplifyProver extends SortedProver
 	public SortedProverResponse makeAssumption(SPred formula)
 	{	
 		pushHeight++;
-		simpl.sendCommand("(BG_PUSH\n" + formulaToString(formula) + "\n)");
-		return ok;
+    try {
+      simpl.sendCommand("(BG_PUSH\n" + formulaToString(formula) + "\n)");
+      return ok;
+    } catch (ProverError e) {
+      --pushHeight;
+      started = false;
+      return fail;
+    }
 	}
 
 	public SortedProverResponse retractAssumption(int count)
 	{
 		Assert.notFalse(pushHeight >= count);
-		pushHeight -= count;
-		while (count-- > 0)
-			simpl.sendCommand("(BG_POP)");
-		return ok;
+    try {
+      pushHeight -= count;
+      while (count-- > 0)
+        simpl.sendCommand("(BG_POP)");
+      return ok;
+    } catch (ProverError e) {
+      started = false;
+      return fail;
+    }
 	}
 	
 	public SortedProverResponse isValid(SPred formula, SortedProverCallback callback, Properties properties)
 	{
-	    simpl.startProve();
-	    String form = formulaToString(formula);
-	    if (Info.on)
-	    	Info.out("[proving formula\n" + form + "]");
-	    simpl.subProcessToStream().println(form);
-        Enumeration en = simpl.streamProve();
-        int cc = 0;
-        
-        SimplifyOutput lastOut = null; 
-        while (en.hasMoreElements()) {
-        	lastOut = (SimplifyOutput) en.nextElement();
-        	
-        	if (lastOut.getKind() == SimplifyOutput.COUNTEREXAMPLE) {
-        		SList labs = ((SimplifyResult)lastOut).getLabels();
-        		if (labs != null) {
-        			SExp[] lst = labs.toArray();
-        			String[] labels = new String[lst.length];
-        			for (int i = 0; i < lst.length; ++i)
-        				labels[i] = lst[i].toString();
-        			callback.processResponse(new CounterExampleResponse(labels));        			
-        			// we ignore any possible discharge hint called on the response
-        		}
-        	}
-        }
-        
-        if (lastOut != null && lastOut.getKind() == SimplifyOutput.VALID)
-        	return new SortedProverResponse(SortedProverResponse.YES);
-        
-		return new SortedProverResponse(SortedProverResponse.NO);
+    try {
+      String form = formulaToString(formula);
+      if (Info.on)
+        Info.out("[proving formula\n" + form + "]");
+      boolean result = simpl.isValid(form);
+      if (!result) 
+        callback.processResponse(new CounterExampleResponse(simpl.getLabels()));
+      return result ? yes : no;
+    } catch (ProverError e) {
+      started = false;
+      return fail;
+    }
 	}
 
-	public SortedProverResponse stopProver()
-	{
+	public SortedProverResponse stopProver() {
 		started = false;
-		simpl.close();
+		simpl.stopProver();
 		return ok;
 	}
 }
