@@ -154,7 +154,6 @@ public class BytecodeContribution extends ControlContribution {
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
-      System.out.println("about started.");
       if (!my_ready_flag)
         init(an_event.fDocument); //this marks my_ready_flag as true
       UmbraPlugin.messagelog("documentAboutToBeChanged " +
@@ -179,7 +178,6 @@ public class BytecodeContribution extends ControlContribution {
         UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
                                "differ from the ones in the event (1)");
       }
-      System.out.println("about returned.");
     }
 
     /**
@@ -221,7 +219,7 @@ public class BytecodeContribution extends ControlContribution {
                                "differ from the ones in the event (2)");
       }
 
-      if (BMLParsing.umbraEnabled) {
+      if (BMLParsing.UMBRA_ENABLED) {
         my_bcc.removeIncorrects(start_rem, stop_rem);
         my_bcc.addAllLines(an_event.fDocument, start_rem, stop_rem, stop);
         my_bcc.checkAllLines(start_rem, stop);
@@ -229,9 +227,7 @@ public class BytecodeContribution extends ControlContribution {
           displayError(an_event.fDocument, my_bcc.getFirstError());
         else displayCorrect(an_event.fDocument);
       }
-      System.out.println("<<<<");
       ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
-      System.out.println(">>>>");
     }
 
   }

@@ -11,15 +11,6 @@
             extensions="btc"
             default="true"
       />
-      <editor
-            id="umbra.BoogiePLEditor"
-            name="BoogiePL Editor"
-            class="umbra.editor.boogiepl.BoogiePLEditor"
-            contributorClass="umbra.editor.boogiepl.BoogiePLEditorContributor"
-            icon="icons/bytecode_file.gif"
-            extensions="bpl"
-            default="true"
-      />
    </extension>
    <extension point="org.eclipse.ui.editorActions">
       <editorContribution

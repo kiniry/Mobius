@@ -498,11 +498,6 @@ public class BytecodeController {
       }
     }
 
-    //String[] s = BytecodeStrings.INSTRUCTIONS;
-    //for (int i = 0; i < s.length; i++) {
-    //  if ((l.startsWith(s[i] + " ")) || (l.equalsIgnoreCase(s[i])))
-    //    return new InstructionLineController(line);
-    //}
     return new UnknownLineController(a_line);
   }
 

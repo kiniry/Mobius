@@ -19,7 +19,6 @@ import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -81,13 +80,13 @@ public class BytecodeEditor extends TextEditor {
    * to the {@link #my_javaclass}.
    */
   private ClassGen my_classgen;
-  
+
   /**
    * BML-annotated bytecode (text + AST) displayed in this
    * editor. All bytecode modifications should be made
    * on this object.
    */
-  private BMLParsing bmlp;
+  private BMLParsing my_bmlp;
 
   /**
    * This field contains the number of history items. This
@@ -148,17 +147,17 @@ public class BytecodeEditor extends TextEditor {
    *           (used in particular during synchronization)
    * @param a_javaclass    BCEL structures that Bytecode has been
    *           generated from and may be modificated with
-   * @param bmlp  structures that represents current bytecode
+   * @param a_bmlp  structures that represents current bytecode
    *            (text and ast)
    */
   public final void setRelation(final CompilationUnitEditor an_editor,
                                 final JavaClass a_javaclass,
-                                final BMLParsing bmlp) {
+                                final BMLParsing a_bmlp) {
     my_related_editor = an_editor;
     my_javaclass = a_javaclass;
     my_classgen = new ClassGen(a_javaclass);
-    //XXX changed: here bmlp is updated after editor recreation.
-    this.bmlp = bmlp;
+    //XXX changed: here my_bmlp is updated after editor recreation.
+    this.my_bmlp = a_bmlp;
     ((BytecodeDocumentProvider)getDocumentProvider()).
             setRelation(an_editor, this, getEditorInput());
   }
@@ -181,9 +180,9 @@ public class BytecodeEditor extends TextEditor {
     final IPath edited_path = ((FileEditorInput)getEditorInput()).getFile().
                                                              getFullPath();
     final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(edited_path);
-    IFile a_fileFrom;
+    IFile a_file_from;
     try {
-      a_fileFrom = UmbraHelper.getClassFileFileFor(
+      a_file_from = UmbraHelper.getClassFileFileFor(
                ((FileEditorInput)getEditorInput()).getFile(),
                this, UmbraHelper.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
@@ -196,19 +195,19 @@ public class BytecodeEditor extends TextEditor {
     final IFile fileTo = workspace.getRoot().getFile(pathTo);
     try {
       if (!fileTo.exists())
-        a_fileFrom.copy(pathTo, true, null);
+        a_file_from.copy(pathTo, true, null);
     } catch (CoreException e1) {
       e1.printStackTrace();
     }
     try {
       JavaClass jc = my_classgen.getJavaClass();
-      if (BMLParsing.enabled) {
-        //XXX changed: obtaining JavaClass from bmlp field
-        BCClass bcc = bmlp.getBcc();
+      if (BMLParsing.BMLLIB_ENABLED) {
+        //XXX changed: obtaining JavaClass from my_bmlp field
+        final BCClass bcc = my_bmlp.getBcc();
         bcc.saveJC();
         jc = bcc.getJC();
       }
-      final String path3 = a_fileFrom.getLocation().toOSString();
+      final String path3 = a_file_from.getLocation().toOSString();
       jc.dump(path3);
     } catch (IOException e) {
       e.printStackTrace();
@@ -293,8 +292,8 @@ public class BytecodeEditor extends TextEditor {
     BCClass bcc;
     try {
       bcc = new BCClass(jc);
-      //XXX changed: here bmlp object is initialized from JavaClass
-      bmlp = new BMLParsing(bcc);
+      //XXX changed: here my_bmlp object is initialized from JavaClass
+      my_bmlp = new BMLParsing(bcc);
       //this is where the textual representation is generated
       //FIXME we have to make sure it makes sense!!!
       final char[] bccode = bcc.printCode().toCharArray();
@@ -324,138 +323,6 @@ public class BytecodeEditor extends TextEditor {
 
     my_javaclass = jc;
   }
-
-//  private BCLocalVariable[] createLocalVariables(MethodGen m,
-//                                                 ConstantPoolGen cpGen) {
-//    LocalVariableGen[] locVarTable = m.getLocalVariables();
-//    if (locVarTable == null) {
-//      return null;
-//    }
-//    BCLocalVariable[] bclv = new BCLocalVariable[locVarTable.length];
-//    for (int i = 0; i < locVarTable.length; i++) {
-//      JavaType type = JavaType.getJavaType(locVarTable[i].getType());
-//      BCLocalVariable lv = new BCLocalVariable(locVarTable[i]
-//          .getLocalVariable(cpGen), type);
-//      bclv[i] = lv;
-//    }
-//    return bclv;
-//  }
-//
-//  private String addAnnot(Method method, ConstantPoolGen cpg, BCClass bcc,
-//                          String cn) throws IOException,
-//                                            ReadAttributeException {
-//    //UmbraPlugin.messagelog(method.getAttributes().length +
-//                             " annotation(s):");
-//    if (method.getAttributes().length > 1) {
-//      Unknown att = (Unknown)method.getAttributes()[1];
-////      UmbraPlugin.messagelog(att.getBytes().length);
-////      UmbraPlugin.messagelog();
-////      for (int i = 0; i < att.getBytes().length; i++) {
-////        UmbraPlugin.messagelog.print(Integer.toHexString(
-////                               (att.getBytes()[i] + 256) % 256) + " ");
-////      }
-////      UmbraPlugin.messagelog();
-//      MethodGen mg = new MethodGen(method, cn, cpg);
-//      BCLocalVariable[] bclv = createLocalVariables(mg, cpg);
-//      return AttributeReader.printAttribute(att, bcc, bclv);
-//    }
-//    return "";
-//  }
-
-//  /**
-//   * Computes position of the next instruction line in the Bytecode method.
-//   *
-//   * @param code  processing Bytecode method
-//   * @param pos  index of a character in code
-//   * @return    index of first ":" in the next instruction line.
-//   */
-//  private int nextLineOff(String code, int pos) {
-//    // pozycja nast�pnego dwukropka
-//    boolean nline = false;
-//    int len = code.length();
-//    int res = -1;
-//    char c;
-//    for(;;) {
-//      if (pos >= len)
-//        break;
-//      c = code.charAt(pos);
-//      if ((c == ':') && (nline))
-//        break;
-//      if ((c < '0') || (c > '9'))
-//        nline = false;
-//      if (c == '\n') {
-//        nline = true;
-//        res = pos + 1;
-//      }
-//      pos++;
-//    };
-//    //if ((res >= len) || (res < 0)) UmbraPlugin.messagelog("the end");
-//    //else UmbraPlugin.messagelog("<" + code.charAt(res) + ">");
-//    return res;
-//  }
-//
-//  /**
-//   * Counts instructions in a Bytecode
-//   *
-//   * @param bareCode  processing bytecode method
-//   * @return    number of instructions in bareCode
-//   */
-//  private int getOffset(String bareCode) {
-//    /* ile dwukropk�w? */
-//    int p = 0;
-//    int ile = 0;
-//    while (p >= 0) {
-//      p = nextLineOff(bareCode, p);
-//      ile++;
-//    };
-//    return ile - 1;
-//  }
-//
-//  /**
-//   * Adds comments to one Bytecode method.
-//   *
-//   * @param bareCode    one method of the Bytecode (as a String with no
-//                        comments)
-//   * @param commentTab  array of comments (as Strings, without leading
-//                        slashes)
-//   *             for each line of bytecode
-//   * @param interlineTab   array of comments between lines
-//   * @param off      position of bareCode's first line's comment in commentTab
-//   * @return        bareCode with inserted comments from commentTab
-//   */
-//  private String addComment(String bareCode, String[] commentTab,
-//                            String[] interlineTab, int off) {
-//    if ((commentTab == null) || (interlineTab == null)) return bareCode;
-//    int len = commentTab.length;
-//    if (interlineTab.length != len) return bareCode;
-//    int n = 0;
-//    String newCode = "";
-//    UmbraPlugin.messagelog("off=" + off);
-//    for(;;) {
-//      int i = nextLineOff(bareCode, 0);
-//      if (i == -1)
-//        i = bareCode.length() - 1;
-//      String line = bareCode.substring(0, i);
-//      UmbraPlugin.messagelog("line = <<" + line + ">>");
-//      bareCode = bareCode.substring(i, bareCode.length()) + " ";
-//      if (n + off - 1 >= len)
-//        break;
-//      if (n > 0){
-//        if (commentTab[n + off - 1] != null) {
-//          line = line.replaceFirst("\n", " //" +
-//                                   commentTab[n + off - 1] + "\n");
-//        }
-//        if ((interlineTab[n + off - 1] != null)
-//          && (interlineTab[n + off - 1].compareTo("") != 0)) {
-//          line = "//" + interlineTab[n + off - 1] + "\n" + line;
-//        }
-//      }
-//      newCode = newCode + line;
-//      n++;
-//    };
-//    newCode += bareCode;
-//    return newCode;
-//  }
 
   /**
    * Updating number of historical versions executed
@@ -518,37 +385,6 @@ public class BytecodeEditor extends TextEditor {
   }
 
   /**
-   * debugging helper
-   *
-  private void controlPrint(JavaClass jc) {
-    UmbraPlugin.messagelog();
-    UmbraPlugin.messagelog("Control print of instruction list:");
-    ClassGen cg = new ClassGen(jc);
-    ConstantPoolGen cpg = cg.getConstantPool();
-    Method[] methods = cg.getMethods();
-    MethodGen mg = new MethodGen(methods[1], cg.getClassName(), cpg);
-    InstructionList il = mg.getInstructionList();
-    InstructionHandle ih[] = il.getInstructionHandles();
-    UmbraPlugin.messagelog("" + il.getLength() + " " + ih.length);
-    for (int i = 0; i < il.getLength(); i++) {
-      UmbraPlugin.messagelog.print("" + i + ". ");
-      if (ih[i] == null) UmbraPlugin.messagelog("Null");
-      else {
-        UmbraPlugin.messagelog("(" + ih[i].getPosition() + ")");
-        Instruction ins = ih[i].getInstruction();
-        if (ins == null) UmbraPlugin.messagelog("Null instruction");
-        else UmbraPlugin.messagelog.print(ins.getName());
-        if (ih[i].getNext() == null) UmbraPlugin.messagelog.
-                               print(" next: null");
-        else UmbraPlugin.messagelog.print(" next: " +
-                                          ih[i].getNext().getPosition());
-        if (ih[i].getPrev() == null) UmbraPlugin.messagelog(" prev: null");
-        else UmbraPlugin.messagelog(" prev: " + ih[i].getPrev().getPosition());
-      }
-    }
-  }
-
-  /**
    * This method disposes the color allocated from the system and then calls
    * the superclass finalization.
    *
@@ -566,6 +402,6 @@ public class BytecodeEditor extends TextEditor {
    * be made on this object.
    */
   public BMLParsing getBmlp() {
-    return bmlp;
+    return my_bmlp;
   }
 }

@@ -1,165 +1,96 @@
 package umbra.editor;
 
 import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.ui.IActionBars;
-
-import annot.attributes.SingleAssert;
 import annot.bcclass.BCClass;
-import annot.bcclass.BCMethod;
 import annot.textio.CodeFragment;
 
 /**
- * This class is responsible for communication with bmllib
+ * This class is responsible for communication with BMLLib
  * library (except code position synchronization, that calls
- * only stateless, static methods from bmllib). It stores only
+ * only stateless, static methods from BMLLib). It stores only
  * official copies of BCClass, which represents BML-annotated
- * bytecode. All used JavaClass'es should be the same (==)
- * as the one in it's BCClass (accessible via
- * {@link #getBcc()}.getJc()).
- * One BMLParsing per one open editor.
- * 
- * @author tomekb
+ * bytecode. All the JavaClass' that are used in Umbra editor
+ * should be the same (==) as the one in the corresponding BCClass
+ * (accessible via {@link #getBcc()}.getJc()).
+ *
+ * There is one BMLParsing object per one open editor.
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BMLParsing {
-  
-  /**
-   * enables / disables using bmllib for parsing any changes
-   * in document.
-   */
-  public static final boolean enabled = true;
 
   /**
-   * enables / disables using original <code>Umbra</code>
-   * mechanisms for parsing any changes in document.
+   * This field is set to <code>true</code> when BMLLib is used
+   * for parsing changes in bytecode documents.
    */
-  public static final boolean umbraEnabled = false;
-  
-  //for debugging only:
-  private static int last_instance_id = 0;
-  private static int instance_id;
-  
+  public static final boolean BMLLIB_ENABLED = true;
+
+  /**
+   * The field is set to <code>true</code> when the original Umbra
+   * mechanisms are used to parse the changes in bytecode documents.
+   */
+  public static final boolean UMBRA_ENABLED = false;
+
+
   /**
    * This represents BML-annotated bytecode whose code
    * (if correct) is displayed in the editor.
    */
-  private BCClass bcc;
-  
+  private BCClass my_bcc;
+
   /**
    * This represents BML-annotated bytecode (the same as in
-   * <code>bcc</code> with it's current (may be incorrect)
-   * String representation and it's changes since last time
+   * <code>my_bcc</code> with its current (maybe incorrect)
+   * string representation and its changes since last time
    * it was correct.
    */
-  private CodeFragment cf;
-  
-  /**
-   * Number of edit actions, since last refresh action.
-   * Used only for debug purposes.
-   */
-  private int change_number; //unused
-  
-  /**
-   * currently modyfying document (the one which currently
-   * handling onChange event came from).
-   */
-  private BytecodeDocument doc;
+  private CodeFragment my_cFgmt;
 
-  /**
-   * Displays a debug message (to stdout).
-   * 
-   * @param msg - message to be displayed.
-   */
-  private void syso(String msg) {
-    System.out.println("(" + instance_id + ") " + msg);
-  }
-  
-  /**
-   * Changes status value to givan String. This value
-   * is displayed in the status bar, at the bottom of Eclipse.
-   * 
-   * @param msg - new status value.
-   */
-  private void showMsg(String msg) {
-    msg = "(" + instance_id + "): " + msg;
-    msg = "|/-\\".charAt(change_number % 4) + "  " + msg;
-    final BytecodeEditor editor = doc.getEditor();
-    final IActionBars bars = editor.getEditorSite().getActionBars();
-    bars.getStatusLineManager().setMessage(msg);
-  }
-
-  /**
-   * Adds some example BML annotation to Empty.class's
-   * bytecode (affecting <code>bcc</code>), if there are
-   * no such annotations yet. Used only for debugging. Should
-   * be removed in final version.
-   */
-  @SuppressWarnings("unused")
-  @Deprecated
-  private void addSomeAnnotations() {
-    if (bcc.getAllAttributes().length > 0)
-      return;
-    BCMethod m = bcc.getMethod(1);
-    m.addAttribute(new SingleAssert(m, 0, -1));
-    m.addAttribute(new SingleAssert(m, 5, -1));
-    m.addAttribute(new SingleAssert(m, 5, -1));
-    m.addAttribute(new SingleAssert(m, 5, -1));
-  }
-  
   /**
    * A standard constructor. Should be used just after loading
-   * JavaClass (from file and then into BCClass).
-   * 
-   * @param bcc - BCClass representing bytecode in editor this
+   * a JavaClass (from file and then into BCClass).
+   *
+   * @param a_bcc BCClass representing bytecode in editor this
    *    object is related with. Editor's initial code should
    *    be the same as (.equal()) <code>bcc.printCode()</code>
    *    returns.
    */
-  public BMLParsing(BCClass bcc) {
-    if (!enabled) {
-      syso("****** BML parsing disabled. Set BMLParsing.enabled = true to enable it. ******");
+  public BMLParsing(final BCClass a_bcc) {
+    if (!BMLLIB_ENABLED) {
       return;
     }
-    this.instance_id = last_instance_id++;
-    this.bcc = bcc;
-//    addSomeAnnotations();
-    String code = bcc.printCode();
-    this.cf = new CodeFragment(bcc, code);
-    syso("init");
+    this.my_bcc = a_bcc;
+    final String code = a_bcc.printCode();
+    this.my_cFgmt = new CodeFragment(a_bcc, code);
   }
 
   /**
    * This method should be called on every bytecode document's
    * change. It parses changes made in the document into
-   * it's BCClass (if document is correct) and displays proper
+   * its BCClass (if document is correct) and displays proper
    * message (that bytecode is correct or incorrect) in the
    * status bar.
-   * 
-   * @param event - DocumentEvent describing document changes
+   *
+   * @param an_event -DocumentEvent describing document changes
    *    currently made, eg. event parameter of
    *    <code>documentChanged()</code> in editor's listener.
    */
-  public void onChange(DocumentEvent event) {
-    if (!enabled)
+  public void onChange(final DocumentEvent an_event) {
+    if (!BMLLIB_ENABLED)
       return;
-    doc = (BytecodeDocument)event.fDocument;
-    change_number++;
-    syso("onChange");
     String msg = "";
-    cf.modify(event.fOffset, event.fLength, event.fText);
+    my_cFgmt.modify(an_event.fOffset, an_event.fLength, an_event.fText);
     msg += "annotations status: ";
-    if (cf.isCorrect()) {
+    if (my_cFgmt.isCorrect()) {
       msg += "correct";
     } else {
       msg += "incorrect";
     }
-    if (!cf.isCorrect())
-      if (cf.getErrMsg() != null)
-        msg += ": " + cf.getErrMsg();
-    syso(cf.toString());
-    showMsg(msg);
-    if (!cf.getCode().equals(event.fDocument.get())) {
-      syso("cf.getCode="+cf.getCode());
-      syso("\ndocument text="+event.fDocument.get());
+    if (!my_cFgmt.isCorrect())
+      if (my_cFgmt.getErrMsg() != null)
+        msg += ": " + my_cFgmt.getErrMsg();
+    if (!my_cFgmt.getCode().equals(an_event.fDocument.get())) {
       throw new RuntimeException("CodeFragment's code is out of date!");
     }
   }
@@ -171,7 +102,7 @@ public class BMLParsing {
    *    any changes in the bytecode).
    */
   public BCClass getBcc() {
-    return bcc;
+    return my_bcc;
   }
 
 }

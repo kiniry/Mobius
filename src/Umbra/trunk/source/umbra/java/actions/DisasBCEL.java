@@ -82,7 +82,9 @@ public class DisasBCEL implements IEditorActionDelegate {
                                             getFullPath(),
                                 null, null);
       final JavaClass jc = bc_editor.getJavaClass();
-      //XXX changed: copying bmlp object from old bytecode editor to openAndDisassemble method.
+      /* XXX changed: copying bmlp object from old bytecode editor to
+       *     openAndDisassemble method.
+       */
       final BMLParsing bmlp = bc_editor.getBmlp();
       page.closeEditor(bc_editor, true);
       openEditorAndDisassemble(page, input, jc, bmlp);
@@ -101,21 +103,21 @@ public class DisasBCEL implements IEditorActionDelegate {
    * @param an_input an input wchich will be presented in the editor
    * @param a_jclass a BCEL Java class structure to be associated with the
    *                 editor
-   * @param bmlp  structures that represents current bytecode
+   * @param a_bmlp  structures that represents current bytecode
    *            (text and ast)
    * @throws PartInitException if the editor could not be created or initialized
    */
   private void openEditorAndDisassemble(final IWorkbenchPage a_page,
                                         final FileEditorInput an_input,
                                         final JavaClass a_jclass,
-                                        final BMLParsing bmlp)
+                                        final BMLParsing a_bmlp)
     throws PartInitException {
     Composition.startDisas();
     final BytecodeEditor a_beditor = (BytecodeEditor)a_page.openEditor(an_input,
                         UmbraHelper.BYTECODE_EDITOR_CLASS, true);
     a_page.bringToTop(a_beditor);
     //XXX changed: copying bmlp into new bytecode editor.
-    a_beditor.setRelation(my_editor, a_jclass, bmlp);
+    a_beditor.setRelation(my_editor, a_jclass, a_bmlp);
     Composition.stopDisas();
   }
 

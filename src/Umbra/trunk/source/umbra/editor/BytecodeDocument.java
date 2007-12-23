@@ -155,12 +155,14 @@ public class BytecodeDocument extends Document {
    */
   private int[] syncBS(final IDocument a_source_doc,
                        final JavaClass a_java_class,
-                       int a_line_no) throws BadLocationException
+                       final int a_line_no) throws BadLocationException
   // Synchronizacja: Btc --> Src
   {
-    String code = get();
-    //XXX changed! uses bmllib to correct input selection in case of selecting BML annotation.
-    a_line_no = CodeFragment.goDown(code, a_line_no);
+    final String code = get();
+    /* XXX changed! uses bmllib to correct input selection in case of
+     * selecting BML annotation.
+     */
+    final int a_line_no1 = CodeFragment.goDown(code, a_line_no);
     final int[] res = new int[NO_OF_POSITIONS];
     final int maxL = a_source_doc.getNumberOfLines() - 1;
     int l_od = 0;
@@ -200,10 +202,10 @@ public class BytecodeDocument extends Document {
           break;
         }
         posln = getLineOfOffset(pos);
-        if (posln == a_line_no) {
+        if (posln == a_line_no1) {
           l_od = lnr;
         }
-        if (posln > a_line_no) {
+        if (posln > a_line_no1) {
           l_od = pop;
           l_do = lnrmax - 1;
           if (endpos > 0)
@@ -278,10 +280,10 @@ public class BytecodeDocument extends Document {
    */
   private int[] syncSB(final IDocument a_source_doc,
                        final JavaClass a_java_class,
-                       int a_line_no) throws BadLocationException
+                       final int a_line_no) throws BadLocationException
   // Synchronisation Src --> Btc
   {
-    String code = get();
+    final String code = get();
     final int[] result = new int [NO_OF_POSITIONS];
     int j, l, pc, ln;
     int bcln = 0;
@@ -405,7 +407,7 @@ public class BytecodeDocument extends Document {
   public final boolean isListenerAdded() {
     return !getDocumentListeners().isEmpty();
   }
-  
+
   /**
    * @see BMLParsing
    * @return Current bytecode (text + AST) for this document
