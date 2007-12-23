@@ -9,6 +9,7 @@
 			<accessrule kind="accessible" pattern="org/eclipse/ui/ide/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/part/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/texteditor/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/ui/javaeditor/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/bmllib.jar"/>
