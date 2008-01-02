@@ -306,11 +306,11 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
-   * This method adds to the document in the parameter a listener
+   * This method adds to the document <code>a_doc</code> a listener
    * which keeps track of all the document modifications.
    *
-   * @param a_doc the modifications of which will be notified
-   * by the listener
+   * @param a_doc a document the modifications of which will be notified
+   *   by the listener
    */
   public final void addListener(final IDocument a_doc) {
     final BytecodeDocument doc = (BytecodeDocument) a_doc;
