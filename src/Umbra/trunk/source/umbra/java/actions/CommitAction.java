@@ -22,7 +22,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
-import umbra.UmbraPlugin;
 
 /**
  * The action is used to commit changes made to Java source code.
@@ -30,6 +29,7 @@ import umbra.UmbraPlugin;
  * to the commited version.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class CommitAction implements IEditorActionDelegate {
@@ -47,7 +47,6 @@ public class CommitAction implements IEditorActionDelegate {
    */
   public final void setActiveEditor(final IAction an_action,
                                     final IEditorPart a_target_editor) {
-    UmbraPlugin.messagelog("CommitAction:" + an_action.getText());
     my_editor = (CompilationUnitEditor)a_target_editor;
   }
 

@@ -8,6 +8,9 @@
  */
 package umbra.editor.parsing;
 
+import umbra.instructions.IConstInstruction;
+import umbra.instructions.LoadStoreConstInstruction;
+
 /**
  * String arrays used to identify keywords and instruction
  * names in bytecode.
@@ -169,6 +172,77 @@ public class BytecodeStrings {
                                                             "dup2_x1",
                                                             "dup2_x2", "pop",
                                                             "pop2", "swap"};
+  /**
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref IConstInstruction} class.
+   */
+  public static final String[] ICONST_INS = new String[] {"iconst_0",
+                                                          "iconst_1",
+                                                          "iconst_2",
+                                                          "iconst_3",
+                                                          "iconst_4",
+                                                          "iconst_5"};
+
+  /**
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref LoadStoreConstInstruction} class.
+   */
+  public static final String[] LOAD_STORE_INS = new String[] {"aload_0",
+                                                              "aload_1",
+                                                              "aload_2",
+                                                              "aload_3",
+                                                              "astore_0",
+                                                              "astore_1",
+                                                              "astore_2",
+                                                              "astore_3",
+                                                              "dload_0",
+                                                              "dload_1",
+                                                              "dload_2",
+                                                              "dload_3",
+                                                              "dstore_0",
+                                                              "dstore_1",
+                                                              "dstore_2",
+                                                              "dstore_3",
+                                                              "fload_0",
+                                                              "fload_1",
+                                                              "fload_2",
+                                                              "fload_3",
+                                                              "fstore_0",
+                                                              "fstore_1",
+                                                              "fstore_2",
+                                                              "fstore_3",
+                                                              "iload_0",
+                                                              "iload_1",
+                                                              "iload_2",
+                                                              "iload_3",
+                                                              "istore_0",
+                                                              "istore_1",
+                                                              "istore_2",
+                                                              "istore_3",
+                                                              "lload_0",
+                                                              "lload_1",
+                                                              "lload_2",
+                                                              "lload_3",
+                                                              "lstore_0",
+                                                              "lstore_1",
+                                                              "lstore_2",
+                                                              "lstore_3",
+                                                              "aaload",
+                                                              "aastore",
+                                                              "baload",
+                                                              "bastore",
+                                                              "caload",
+                                                              "castore",
+                                                              "daload",
+                                                              "dastore",
+                                                              "faload",
+                                                              "fastore",
+                                                              "iaload",
+                                                              "iastore",
+                                                              "laload",
+                                                              "lastore",
+                                                              "saload",
+                                                              "sastore"};
 
   /**
    * TODO.
@@ -192,52 +266,8 @@ public class BytecodeStrings {
                                                           "lor", "lrem",
                                                           "lshl", "lshr",
                                                           "lushr", "lxor",
-                                                          "aaload", "aastore",
-                                                          "baload", "bastore",
-                                                          "caload", "castore",
-                                                          "daload", "dastore",
-                                                          "faload", "fastore",
-                                                          "iaload", "iastore",
-                                                          "laload", "lastore",
-                                                          "saload", "sastore",
                                                           "arraylength",
-                                                          "athrow", "iconst_0",
-                                                          "iconst_1",
-                                                          "iconst_2",
-                                                          "iconst_3",
-                                                          "iconst_4",
-                                                          "iconst_5",
-                                                          "iconst_m1", "lcmp",
-                                                          "aload_0", "aload_1",
-                                                          "aload_2", "aload_3",
-                                                          "astore_0",
-                                                          "astore_1",
-                                                          "astore_2",
-                                                          "astore_3",
-                                                          "dload_0", "dload_1",
-                                                          "dload_2", "dload_3",
-                                                          "dstore_0",
-                                                          "dstore_1",
-                                                          "dstore_2",
-                                                          "dstore_3",
-                                                          "fload_0", "fload_1",
-                                                          "fload_2", "fload_3",
-                                                          "fstore_0",
-                                                          "fstore_1",
-                                                          "fstore_2",
-                                                          "fstore_3",
-                                                          "iload_0", "iload_1",
-                                                          "iload_2", "iload_3",
-                                                          "istore_0",
-                                                          "istore_1",
-                                                          "istore_2",
-                                                          "istore_3",
-                                                          "lload_0", "lload_1",
-                                                          "lload_2", "lload_3",
-                                                          "lstore_0",
-                                                          "lstore_1",
-                                                          "lstore_2",
-                                                          "lstore_3",
+                                                          "athrow", "lcmp",
                                                           "monitorenter",
                                                           "monitorexit",
                                                           "areturn", "dreturn",
@@ -367,9 +397,9 @@ public class BytecodeStrings {
   /**
    * TODO.
    */
-  public static final String[] BML_KEYWORDS = new String[] {"requires",
-                                                            "ensures",
-                                                            "exsures" };
+  public static final String[] BML_KEYWORDS = new String[] {"\\requires",
+                                                            "\\ensures",
+                                                            "\\exsures" };
 
   /**
    * TODO.
@@ -415,4 +445,6 @@ public class BytecodeStrings {
    */
   public static final char[] KEY_TYPE_CHARS = new char[] {'B', 'C', 'D', 'I',
                                                           'S', 'V'};
+
+
 }

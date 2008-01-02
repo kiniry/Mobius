@@ -60,7 +60,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
    * @param an_action the action that triggered the operation
    */
   public final void run(final IAction an_action) {
-    final ITextSelection selection = (ITextSelection)my_editor.
+    final ITextSelection selection = (ITextSelection) my_editor.
                     getSelectionProvider().getSelection();
     final int off = selection.getOffset();
     final IFile activef = ((FileEditorInput)my_editor.getEditorInput()).

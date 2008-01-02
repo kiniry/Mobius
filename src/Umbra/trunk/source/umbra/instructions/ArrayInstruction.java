@@ -150,7 +150,6 @@ public class ArrayInstruction extends StringInstruction {
         String ins_type = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
         ins_type = ins_type.toUpperCase();
         if (getType(ins_type) == null) {
-          UmbraPlugin.messagelog("E04");
           return false;
         }
 

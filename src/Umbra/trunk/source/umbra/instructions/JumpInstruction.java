@@ -34,7 +34,6 @@ import org.apache.bcel.generic.JSR;
 import org.apache.bcel.generic.JSR_W;
 
 import umbra.UmbraHelper;
-import umbra.UmbraPlugin;
 import umbra.editor.parsing.BytecodeStrings;
 
 
@@ -99,7 +98,7 @@ public class JumpInstruction extends NumInstruction {
    * TODO.
    * @return TODO
    */
-  private int getInd() {
+  protected int getInd() {
     final String my_line_text = getMy_line_text();
     boolean isd;
     final String counter = "0123456789";
@@ -220,14 +219,6 @@ public class JumpInstruction extends NumInstruction {
     // add parameter to getInstruction
     iha = an_ins_list.findHandle(i);
     if (iha == null) iha = an_ins_list.findHandle(i - MAGIC_THREE);
-    UmbraPlugin.messagelog("i = " + i);
-    if (an_ins_list == null) UmbraPlugin.messagelog("null il");
-    else if (iha == null) UmbraPlugin.messagelog("null iha");
-    else if (iha.getInstruction() == null)
-        UmbraPlugin.messagelog("null ins (drugie)");
-    else UmbraPlugin.messagelog(iha.getInstruction().getName());
-    if (an_ins == null) UmbraPlugin.messagelog("null ins");
-    else UmbraPlugin.messagelog(an_ins.getName());
     ((BranchInstruction)an_ins).setTarget(iha);
     //UmbraPlugin.messagelog("Just failed");
   }

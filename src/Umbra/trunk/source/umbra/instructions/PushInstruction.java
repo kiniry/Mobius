@@ -80,7 +80,7 @@ public class PushInstruction extends NumInstruction {
    * TODO.
    * @return TODO
    */
-  private int getInd() {
+  protected int getInd() {
     boolean isd;
     final String licznik = "0123456789";
     int liczba;

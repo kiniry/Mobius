@@ -104,9 +104,6 @@ public abstract class InstructionLineController extends BytecodeLineController {
   public final boolean addHandle(final InstructionHandle a_handle,
                final InstructionList a_list,
                final MethodGen a_method_gen, final int a_method_num) {
-    UmbraPlugin.messagelog("InstructionLineController#addHandle my_name=" +
-                           getName());
-    UmbraPlugin.messagelog("my_instr_list=" + a_list.toString());
     this.my_instr_handle = a_handle;
     this.my_instr_list = a_list;
     this.my_methodgen = a_method_gen;
@@ -146,6 +143,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
         my_instr_handle = newList.append(an_instruction);
       } else {
         if (an_instruction instanceof BranchInstruction) {
+          // TODO: this report should look like differently
           if (((BranchInstruction)an_instruction).getTarget() == null)
             UmbraPlugin.messagelog("null target");
           else
@@ -238,41 +236,21 @@ public abstract class InstructionLineController extends BytecodeLineController {
                            final boolean the_last,
                            final LinkedList the_instructions,
                            final int an_off) {
-    UmbraPlugin.messagelog("oldline=" + an_old_line.getMy_line_text());
-    UmbraPlugin.messagelog("nextline=" + the_next_line.getMy_line_text());
-    UmbraPlugin.messagelog("cg=" + ((a_classgen == null) ? "null" : "ok"));
-    UmbraPlugin.messagelog("ins=" + ((an_ins == null) ? "null" :
-                                                        an_ins.getName()));
-    UmbraPlugin.messagelog("MetEnd=" + a_meth_end);
-    UmbraPlugin.messagelog("theLast=" + the_last);
-    UmbraPlugin.messagelog("off=" + an_off);
     my_methodgen = an_old_line.getMethod();
     my_instr_list = an_old_line.getList();
     my_instr_handle = an_old_line.getHandle();
     setIndex(an_old_line.getIndex());
-    UmbraPlugin.messagelog("my_instr_handle=" + ((my_instr_handle == null) ?
-                           "null" :
-                           ((my_instr_handle.getInstruction() == null) ?
-                           "null ins" :
-                           my_instr_handle.getInstruction().getName())));
-    if (my_instr_list == null) UmbraPlugin.messagelog("my_instr_list = null");
-    else printInstructionList(my_instr_list);
     if (my_instr_handle == null) {
-      UmbraPlugin.messagelog("A");
       initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
                  the_instructions, an_off);
     } else if (my_instr_handle.getInstruction() == null) {
-      UmbraPlugin.messagelog("B");
       initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
                  the_instructions, an_off);
     } else if (an_ins != null) {
-      UmbraPlugin.messagelog("C");
       my_instr_handle.setInstruction(an_ins);
-      UmbraPlugin.messagelog("");
       updateMethod(a_classgen);
       the_instructions.set(an_off, this);
     } else {
-      UmbraPlugin.messagelog("D");
       dispose(the_next_line, a_classgen, the_last, the_instructions, an_off);
     }
   }
@@ -345,8 +323,6 @@ public abstract class InstructionLineController extends BytecodeLineController {
                             final int an_off) {
     final InstructionHandle me = getHandle();
     final InstructionHandle next = the_next_line.getHandle();
-    UmbraPlugin.messagelog("InstructionLineController#dispose   my_name=" +
-                           getName());
     final InstructionTargeter[] tgters = my_instr_handle.getTargeters();
     if (tgters != null)
       for (int i = 0; i < tgters.length; i++) {
@@ -363,10 +339,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
     my_instr_handle = null;
     my_methodgen.setInstructionList(my_instr_list);
     updateMethod(a_classgen);
-    UmbraPlugin.messagelog("I am here");
     the_instructions.remove(an_off);
     printInstructionList(my_instr_list);
-    UmbraPlugin.messagelog("Done");
   }
 
   /**

@@ -56,40 +56,6 @@ public class LdcInstruction extends OtherInstruction {
   /**
    * TODO.
    * @return TODO
-   */
-  private int getInd() {
-    final String my_line_text = getMy_line_text();
-    boolean isd;
-    final String licznik = "0123456789";
-    int number;
-    if (my_line_text.lastIndexOf("(") >= my_line_text.lastIndexOf(")")) {
-      UmbraPlugin.messagelog("linia jest niepoprawna nic nie tworzy " +
-                             my_line_text.lastIndexOf("(") + " " +
-                             my_line_text.lastIndexOf(")"));
-    } else {
-      isd = true;
-      for (int i = my_line_text.lastIndexOf("(") + 1;
-           i < my_line_text.lastIndexOf(")"); i++) {
-        if (!Character.isDigit(my_line_text.charAt(i))) {
-          isd = false;
-        }
-      }
-      if (isd) {
-        number = 0;
-        for (int i = my_line_text.lastIndexOf("(") + 1;
-             i < my_line_text.lastIndexOf(")"); i++) {
-          number = 10 * number +
-                              licznik.indexOf(my_line_text.substring(i, i + 1));
-        }
-        return number;
-      }
-    }
-    return 0;
-  }
-
-  /**
-   * TODO.
-   * @return TODO
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {

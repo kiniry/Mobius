@@ -49,7 +49,6 @@ public class TagRule extends MultiLineRule {
    */
   public TagRule(final IToken a_token) {
     super("<", ">", a_token);
-    UmbraPlugin.messagelog("TagRule constructor");
   }
 
   /**
@@ -64,8 +63,6 @@ public class TagRule extends MultiLineRule {
   protected final boolean sequenceDetected (final ICharacterScanner a_scanner,
                                             final char[] a_sequence,
                                             final boolean an_eof_allowed_flag) {
-    UmbraPlugin.messagelog("TagRule#sequenceDetected: " +
-                           new String(a_sequence));
     final int c = a_scanner.read();
     if (a_sequence[0] == '<') {
       if (c == '?') {
@@ -98,7 +95,6 @@ public class TagRule extends MultiLineRule {
    */
   protected final IToken doEvaluate(final ICharacterScanner a_scanner,
                                     final boolean a_resume_flag) {
-    UmbraPlugin.messagelog("TagRule#doEvaluate: ");
     if (a_resume_flag) {
       if (endSequenceDetected(a_scanner))
         return fToken;

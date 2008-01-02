@@ -138,7 +138,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     URL url;
     try {
       url = new URL(an_install_url, "icons/change_color_backward.gif");
-      UmbraPlugin.messagelog(url.toExternalForm());
       icon_right = ImageDescriptor.
         createFromURL(url);
       icon_left = ImageDescriptor.

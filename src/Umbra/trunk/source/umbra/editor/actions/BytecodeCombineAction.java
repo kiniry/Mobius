@@ -267,7 +267,6 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     for (int i = 0; i < modified.length && i < oldMeths && i < meths; i++) {
       if (modified[i]) {
         cg.setMethodAt(oldCg.getMethodAt(i), i);
-        UmbraPlugin.messagelog(oldCg.getMethodAt(i).getCode().toString(true));
       }
     }
     return cg;

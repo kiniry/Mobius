@@ -127,7 +127,6 @@ public class BytecodeDocument extends Document {
       final int[] syncLine = syncBS(sDoc, my_javaclass, line);
       final int syncPos = sDoc.getLineOffset(syncLine[0]);
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
-      UmbraPlugin.messagelog("sync(" + syncLine[0] + ", " + syncLine[1] + ")");
       my_related_editor.getEditorSite().getPage().activate(my_related_editor);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode",
                                                "Synchronisation failed");

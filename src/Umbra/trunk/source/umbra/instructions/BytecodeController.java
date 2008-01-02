@@ -160,8 +160,6 @@ public class BytecodeController {
       if (met_end && i < methods.length) {
         mg = new MethodGen(methods[i], cg.getClassName(), cpg);
         il = mg.getInstructionList();
-        UmbraPlugin.messagelog("method number[" + i + "]" + mg.getName() +
-                           "il=" + il.toString());
         ih = il.getStart();
         end = il.getEnd();
         met_end = false;
@@ -237,9 +235,6 @@ public class BytecodeController {
               final int a_start_rem, final int an_end_rem, final int a_stop)
   {
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
-    UmbraPlugin.messagelog("startRem=" + a_start_rem);
-    UmbraPlugin.messagelog("stopRem=" + an_end_rem);
-    UmbraPlugin.messagelog("stop=" + a_stop);
     // i - index in the removed lines
     // j - index in the inserted lines
     for (int i = a_start_rem, j = a_start_rem;
@@ -438,6 +433,8 @@ public class BytecodeController {
         }
       }
       if (ok) {
+        final String[] sIConst =  BytecodeStrings.ICONST_INS;
+        final String[] sLSConst = BytecodeStrings.LOAD_STORE_INS;
         final String[] s1 = BytecodeStrings.SINGLE_INS;
         final String[] s2 = BytecodeStrings.PUSH_INS;
         final String[] s3 = BytecodeStrings.JUMP_INS;
@@ -449,8 +446,16 @@ public class BytecodeController {
         final String[] s9 = BytecodeStrings.INVOKE_INS;
         final String[] s10 = BytecodeStrings.LDC_INS;
         final String[] s11 = BytecodeStrings.UNCLASSIFIED_INS;
-        //wazna jest kolejnosc bo aload_0 przed aload
-        // i ty tworzenie inshan !!!!!!!!!
+        //the sequence is important since aload_0 is before aload
+        // i ty tworzenie inshan !!!!!!!!! ??
+        for (j = 0; j < sIConst.length; j++) {
+          if (subline.equalsIgnoreCase(sIConst[j]))
+            return new LoadStoreConstInstruction(a_line, sIConst[j]);
+        }
+        for (j = 0; j < sLSConst.length; j++) {
+          if (subline.equalsIgnoreCase(sLSConst[j]))
+            return new LoadStoreConstInstruction(a_line, sLSConst[j]);
+        }
         for (j = 0; j < s1.length; j++) {
           if (subline.equalsIgnoreCase(s1[j]))
             return new SingleInstruction(a_line, s1[j]);
@@ -587,7 +592,6 @@ public class BytecodeController {
     if (i == -1) return null;
     final String nl = a_line_text.substring(i + SINGLE_LINE_COMMENT_MARK_LEN,
                                             a_line_text.indexOf("\n"));
-    UmbraPlugin.messagelog(SINGLE_LINE_COMMENT_MARK + nl);
     return nl;
   }
 
