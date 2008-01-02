@@ -53,23 +53,8 @@ public class DisasBCEL implements IEditorActionDelegate {
    * @see org.eclipse.ui.IActionDelegate#run(IAction)
    */
   public final void run(final IAction an_action) {
-    final IPath active = ((FileEditorInput) (my_editor.getEditorInput())).
-                                                     getFile().getFullPath();
-    if (my_editor.isSaveOnCloseNeeded()) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
-                    UmbraHelper.DISAS_MESSAGE_TITLE,
-                    UmbraHelper.DISAS_SAVE_BYTECODE_FIRST);
-      return;
-    }
-    if (active.toPortableString().
-        lastIndexOf(UmbraHelper.JAVA_EXTENSION) == -1) {
-      MessageDialog.openInformation(my_editor.getSite().getShell(),
-                      UmbraHelper.DISAS_MESSAGE_TITLE,
-                      UmbraHelper.INVALID_EXTENSION.
-                      replaceAll(UmbraHelper.SUBSTITUTE,
-                           UmbraHelper.JAVA_EXTENSION));
-      return;
-    }
+    if (checkIfSaveNeeded()) return;
+    if (checkJavaExtension()) return;
     final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IWorkbenchPage page = my_editor.getEditorSite().getPage();
     try {
@@ -82,8 +67,8 @@ public class DisasBCEL implements IEditorActionDelegate {
                                             getFullPath(),
                                 null, null);
       final JavaClass jc = bc_editor.getJavaClass();
-      /* XXX changed: copying bmlp object from old bytecode editor to
-       *     openAndDisassemble method.
+      /* passing a bmlp object from an old bytecode editor to
+       * openAndDisassemble method.
        */
       final BMLParsing bmlp = bc_editor.getBmlp();
       page.closeEditor(bc_editor, true);
@@ -93,6 +78,47 @@ public class DisasBCEL implements IEditorActionDelegate {
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * This method checks if the source code editor edits .java file.
+   * In case the file is not a .java file a popup
+   * with appropriate message is shown.
+   *
+   * @return <code>true</code> if the file is not a .java file,
+   *   <code>false</code> otherwise
+   */
+  private boolean checkJavaExtension() {
+    final IPath active = ((FileEditorInput) (my_editor.getEditorInput())).
+    getFile().getFullPath();
+    if (active.toPortableString().
+        lastIndexOf(UmbraHelper.JAVA_EXTENSION) == -1) {
+      MessageDialog.openInformation(my_editor.getSite().getShell(),
+                      UmbraHelper.DISAS_MESSAGE_TITLE,
+                      UmbraHelper.INVALID_EXTENSION.
+                      replaceAll(UmbraHelper.SUBSTITUTE,
+                           UmbraHelper.JAVA_EXTENSION));
+      return true;
+    }  else
+      return false;
+  }
+
+  /**
+   * This method checks if the source code editor must be saved before an
+   * action can be performed. In case the editor must be saved a popup
+   * with appropriate message is shown.
+   *
+   * @return <code>true</code> when the save is needed, <code>false</code>
+   * otherwise
+   */
+  private boolean checkIfSaveNeeded() {
+    if (my_editor.isSaveOnCloseNeeded()) {
+      MessageDialog.openWarning(my_editor.getSite().getShell(),
+                    UmbraHelper.DISAS_MESSAGE_TITLE,
+                    UmbraHelper.DISAS_SAVE_BYTECODE_FIRST);
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -116,7 +142,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     final BytecodeEditor a_beditor = (BytecodeEditor)a_page.openEditor(an_input,
                         UmbraHelper.BYTECODE_EDITOR_CLASS, true);
     a_page.bringToTop(a_beditor);
-    //XXX changed: copying bmlp into new bytecode editor.
+    //copying bmlp into new bytecode editor.
     a_beditor.setRelation(my_editor, a_jclass, a_bmlp);
     Composition.stopDisas();
   }
