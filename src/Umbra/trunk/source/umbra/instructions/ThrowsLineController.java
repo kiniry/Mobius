@@ -10,7 +10,7 @@ package umbra.instructions;
 
 
 /**
- * This is a class for a special Bytecode lines related to
+ * This is a class for a special bytecode lines related to
  * thrown exceptions, not to be edited by a user.
  *
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
@@ -32,7 +32,11 @@ public class ThrowsLineController extends BytecodeLineController {
 
 
   /**
-   * TODO we don't quite know how it looks like as the type is given.
+   * Checks the correcness of throws lines.
+   * Currently, the correctness of this kind of line is handled
+   * in a very crude way. This is due to the fact that the bytecode
+   * textual representation has no throws lines for the time being.
+   *
    * @return currently, it returns always <code>true</code>
    */
   public final boolean correct() {
