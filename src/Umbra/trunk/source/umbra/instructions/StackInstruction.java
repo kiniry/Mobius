@@ -61,6 +61,9 @@ public class StackInstruction extends NumInstruction {
     super(a_line_text, a_name);
   }
 
+  /*@
+    @ ensures my_line_text.contains(":");
+    @*/
   /**
    * Stack instruction line is correct if it has one number parameter preceded
    * with %.
@@ -86,25 +89,30 @@ public class StackInstruction extends NumInstruction {
     return false;
   }
 
-
+  /*@ requires my_line_text.contains(":");
+    @
+    @*/
   /**
+   * This method parses the parameter of the current instruction.
+   *
    * This method retrieves the numerical value of the index parameter of the
    * instruction in {@link BytecodeLineController#getMy_line_text()}. This
-   * parameter is located after the last '%' character in the line.
-   *
-   * TODO this may be done simpler, and it is duplicated code
+   * parameter is located after the first '%' character in the line.
+   * The method assumes {@link BytecodeLineController#getMy_line_text()}
+   * is correct.
    *
    * @return the value of the numerical parameter of the instruction
    */
   protected int getInd() {
     final String my_line_text = getMy_line_text();
+    //TODO rewrite this
     boolean isd;
     final String licznik = "0123456789";
     int liczba;
 
     isd = true;
     int dokad = my_line_text.length();
-    for (int i = my_line_text.lastIndexOf("%") + 1; //XXX maybe first?
+    for (int i = my_line_text.indexOf("%") + 1;
          i < my_line_text.length(); i++) {
       if (!Character.isDigit(my_line_text.charAt(i))) {
         dokad = i;

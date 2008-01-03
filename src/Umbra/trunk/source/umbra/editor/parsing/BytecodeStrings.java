@@ -8,6 +8,8 @@
  */
 package umbra.editor.parsing;
 
+import umbra.instructions.LoadStoreArrayInstruction;
+
 
 /**
  * String arrays used to identify keywords and instruction
@@ -42,10 +44,8 @@ public class BytecodeStrings {
                                                             "lushr", "lxor",
                                                             "aaload",
                                                             "aastore",
-                                                            "baload",
-                                                            "bastore",
-                                                            "caload",
-                                                            "castore",
+                                                            "baload", "bastore",
+                                                            "caload", "castore",
                                                             "daload",
                                                             "dastore",
                                                             "faload",
@@ -170,6 +170,29 @@ public class BytecodeStrings {
                                                             "dup2_x1",
                                                             "dup2_x2", "pop",
                                                             "pop2", "swap"};
+
+  /**
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref ArithmeticInstruction} class.
+   */
+  public static final String[] ARITHMETIC_INS = new String[] {"dadd", "ddiv",
+                                                              "dmul", "dneg",
+                                                              "drem", "dsub",
+                                                              "fadd", "fdiv",
+                                                              "fmul", "fneg",
+                                                              "frem", "fsub",
+                                                              "iadd", "iand",
+                                                              "imul", "idiv",
+                                                              "ineg", "ior",
+                                                              "isub", "irem",
+                                                              "iushr", "ixor",
+                                                              "lsub", "ladd",
+                                                              "land", "ldiv",
+                                                              "lmul", "lneg",
+                                                              "lor", "lrem",
+                                                              "lshl", "lshr",
+                                                              "lushr", "lxor"};
+
   /**
    * This constant contains an array with all the names of instructions handled
    * in {@ref IConstInstruction} class.
@@ -224,46 +247,34 @@ public class BytecodeStrings {
                                                               "lstore_0",
                                                               "lstore_1",
                                                               "lstore_2",
-                                                              "lstore_3",
-                                                              "aaload",
-                                                              "aastore",
-                                                              "baload",
-                                                              "bastore",
-                                                              "caload",
-                                                              "castore",
-                                                              "daload",
-                                                              "dastore",
-                                                              "faload",
-                                                              "fastore",
-                                                              "iaload",
-                                                              "iastore",
-                                                              "laload",
-                                                              "lastore",
-                                                              "saload",
-                                                              "sastore"};
+                                                              "lstore_3"};
+
+  /**
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref LoadStoreArrayInstruction} class.
+   */
+  public static final String[] LOAD_STORE_ARRAY_INS = {"aaload",
+                                                       "aastore",
+                                                       "baload",
+                                                       "bastore",
+                                                       "caload",
+                                                       "castore",
+                                                       "daload",
+                                                       "dastore",
+                                                       "faload",
+                                                       "fastore",
+                                                       "iaload",
+                                                       "iastore",
+                                                       "laload",
+                                                       "lastore",
+                                                       "saload",
+                                                       "sastore"};
 
   /**
    * TODO.
    * instructions with no arguments required
    */
   public static final String[] SINGLE_INS = new String[] {"aconst_null",
-                                                          "dadd", "ddiv",
-                                                          "dmul", "dneg",
-                                                          "drem", "dsub",
-                                                          "fadd", "fdiv",
-                                                          "fmul", "fneg",
-                                                          "frem", "fsub",
-                                                          "iadd", "iand",
-                                                          "imul", "idiv",
-                                                          "ineg", "ior",
-                                                          "isub", "irem",
-                                                          "iushr", "ixor",
-                                                          "lsub", "ladd",
-                                                          "land", "ldiv",
-                                                          "lmul", "lneg",
-                                                          "lor", "lrem",
-                                                          "lshl", "lshr",
-                                                          "lushr", "lxor",
                                                           "arraylength",
                                                           "athrow", "lcmp",
                                                           "monitorenter",
