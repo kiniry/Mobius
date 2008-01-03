@@ -108,7 +108,7 @@ public final class UmbraHelper {
    * is disassembled.
    */
   public static final String DISAS_SAVE_BYTECODE_FIRST =
-    "You must save the bytecode before you can disassemble it.";
+    "You must save the source code before you can show its bytecode.";
 
   /**
    * The message which requires the user to save the bytecode before it is

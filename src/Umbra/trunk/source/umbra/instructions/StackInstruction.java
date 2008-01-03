@@ -62,8 +62,10 @@ public class StackInstruction extends NumInstruction {
   }
 
   /**
-   * Stack instruction line is correct if it has
-   * one number parameter preceded with %.
+   * Stack instruction line is correct if it has one number parameter preceded
+   * with %.
+   *
+   * TODO better description
    *
    * @return <code>true</code> when the syntax of the instruction line is
    *         correct

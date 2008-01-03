@@ -13,7 +13,6 @@ import org.apache.bcel.generic.NEWARRAY;
 import org.apache.bcel.generic.Type;
 
 import umbra.UmbraHelper;
-import umbra.UmbraPlugin;
 import umbra.editor.parsing.BytecodeStrings;
 
 

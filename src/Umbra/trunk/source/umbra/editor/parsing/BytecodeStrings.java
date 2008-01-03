@@ -8,8 +8,6 @@
  */
 package umbra.editor.parsing;
 
-import umbra.instructions.IConstInstruction;
-import umbra.instructions.LoadStoreConstInstruction;
 
 /**
  * String arrays used to identify keywords and instruction
