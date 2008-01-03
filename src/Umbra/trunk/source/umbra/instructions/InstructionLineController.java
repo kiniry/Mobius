@@ -297,8 +297,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *
    * @return true if the instruction is correct
    */
-  public boolean correct()
-  {
+  public boolean correct() {
     return true;
   }
 
@@ -457,16 +456,17 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
-   * @param a_name the name to set
+   * @param a_name the mnemonic name to set
    */
   protected void setName(final String a_name) {
     my_name = a_name;
   }
 
   /**
-   * @return the my_name
+   * @return the name of the mnemonic
    */
   protected String getName() {
     return my_name;
   }
+
 }

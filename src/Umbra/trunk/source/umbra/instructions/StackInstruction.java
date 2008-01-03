@@ -20,7 +20,6 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.LLOAD;
 import org.apache.bcel.generic.LSTORE;
 
-import umbra.UmbraHelper;
 import umbra.editor.parsing.BytecodeStrings;
 
 
@@ -65,28 +64,30 @@ public class StackInstruction extends NumInstruction {
     @ ensures my_line_text.contains(":");
     @*/
   /**
-   * Stack instruction line is correct if it has one number parameter preceded
-   * with %.
-   *
-   * TODO better description
+   * Check the correctness of a stack instruction line. The line is correct when
+   * it has the form:
+   *      whitespase number : whitespace mnemonic whitespace
+   *      % whitespace number lineend
    *
    * @return <code>true</code> when the syntax of the instruction line is
    *         correct
    * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    String s;
-    s = UmbraHelper.stripAllWhitespace(getMy_line_text());
-    final String[] s2 = BytecodeStrings.STACK_INS;
-    if (s.indexOf("%") < s.indexOf(":") + 1)
-      return false;
-    int res = 0;
-    for (int j = 0; j < s2.length; j++) {
-      res = checkInstructionWithNumber(s, s2[j], '%');
-      if (res != 0) return res > 0;
-    }
-    return false;
+  public final boolean correct() {
+    boolean res = true;
+    my_parser.resetParser();
+    res = !my_parser.swallowWhitespace();
+    res = res && my_parser.swallowNumber(); //line number
+    res = res && my_parser.swallowDelimiter(':'); // :
+    res = res && my_parser.swallowWhitespace(); //whitespace before mnemonic
+    res = res && (my_parser.swallowMnemonic(BytecodeStrings.STACK_INS) >= 0);
+                           //mnemonic
+    res = res && my_parser.swallowWhitespace(); //whitespace before delimiter
+    res = res && my_parser.swallowDelimiter('%'); // %
+    res = res && my_parser.swallowWhitespace(); //whitespace before the number
+    res = res && my_parser.swallowNumber(); // number
+    res = res && !my_parser.swallowWhitespace();
+    return res;
   }
 
   /*@ requires my_line_text.contains(":");

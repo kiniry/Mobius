@@ -33,6 +33,12 @@ import umbra.UmbraPlugin;
 public abstract class BytecodeLineController {
 
   /**
+   * This is an object contains a parser which allows to check the
+   * correctness of the bytecode line and to parse its parameters.
+   */
+  protected InstructionParser my_parser;
+
+  /**
    * The number of the method that contains the current line.
    * This is an index in the {@ref ClassGen} object in the
    * {@ref BytecodeDocument} object
@@ -57,6 +63,7 @@ public abstract class BytecodeLineController {
   public /*@ pure @*/ BytecodeLineController(final String a_line) {
     super();
     my_line_text = a_line;
+    my_parser = new InstructionParser(a_line);
   }
 
   /**
