@@ -114,7 +114,6 @@ public class PushInstruction extends NumInstruction {
     if (!correct())
       return null;
     index = getInd();
-
     byte b = 0;
     b = (byte)index;
     Instruction res = null;
@@ -124,9 +123,6 @@ public class PushInstruction extends NumInstruction {
     if (getName().compareTo("sipush") == 0) {
       res = new SIPUSH(b);
     }
-
-
     return res;
-
   }
 }

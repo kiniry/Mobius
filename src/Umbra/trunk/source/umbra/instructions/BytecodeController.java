@@ -433,8 +433,10 @@ public class BytecodeController {
         }
       }
       if (ok) {
+        final String[] sIArith =  BytecodeStrings.ARITHMETIC_INS;
         final String[] sIConst =  BytecodeStrings.ICONST_INS;
         final String[] sLSConst = BytecodeStrings.LOAD_STORE_INS;
+        final String[] sLSArr = BytecodeStrings.LOAD_STORE_ARRAY_INS;
         final String[] s1 = BytecodeStrings.SINGLE_INS;
         final String[] s2 = BytecodeStrings.PUSH_INS;
         final String[] s3 = BytecodeStrings.JUMP_INS;
@@ -448,9 +450,17 @@ public class BytecodeController {
         final String[] s11 = BytecodeStrings.UNCLASSIFIED_INS;
         //the sequence is important since aload_0 is before aload
         // i ty tworzenie inshan !!!!!!!!! ??
+        for (j = 0; j < sIArith.length; j++) {
+          if (subline.equalsIgnoreCase(sIArith[j]))
+            return new ArithmeticInstruction(a_line, sIArith[j]);
+        }
         for (j = 0; j < sIConst.length; j++) {
           if (subline.equalsIgnoreCase(sIConst[j]))
             return new LoadStoreConstInstruction(a_line, sIConst[j]);
+        }
+        for (j = 0; j < sLSArr.length; j++) {
+          if (subline.equalsIgnoreCase(sLSArr[j]))
+            return new LoadStoreArrayInstruction(a_line, sLSArr[j]);
         }
         for (j = 0; j < sLSConst.length; j++) {
           if (subline.equalsIgnoreCase(sLSConst[j]))

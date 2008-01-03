@@ -8,33 +8,17 @@
  */
 package umbra.instructions;
 
-import org.apache.bcel.generic.AALOAD;
-import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ASTORE;
-import org.apache.bcel.generic.BALOAD;
-import org.apache.bcel.generic.BASTORE;
-import org.apache.bcel.generic.CALOAD;
-import org.apache.bcel.generic.CASTORE;
-import org.apache.bcel.generic.DALOAD;
-import org.apache.bcel.generic.DASTORE;
 import org.apache.bcel.generic.DLOAD;
 import org.apache.bcel.generic.DSTORE;
-import org.apache.bcel.generic.FALOAD;
-import org.apache.bcel.generic.FASTORE;
 import org.apache.bcel.generic.FLOAD;
 import org.apache.bcel.generic.FSTORE;
-import org.apache.bcel.generic.IALOAD;
-import org.apache.bcel.generic.IASTORE;
 import org.apache.bcel.generic.ILOAD;
 import org.apache.bcel.generic.ISTORE;
 import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.LALOAD;
-import org.apache.bcel.generic.LASTORE;
 import org.apache.bcel.generic.LLOAD;
 import org.apache.bcel.generic.LSTORE;
-import org.apache.bcel.generic.SALOAD;
-import org.apache.bcel.generic.SASTORE;
 
 import umbra.editor.parsing.BytecodeStrings;
 
@@ -45,23 +29,7 @@ import umbra.editor.parsing.BytecodeStrings;
  * form:
  * <ul>
  *    <li>xload_&lt;num&gt;,</li>
- *    <li>xstore_&lt;num&gt;,</li>
- *    <li>aaload,</li>
- *    <li>aastore,</li>
- *    <li>baload,</li>
- *    <li>bastore,</li>
- *    <li>caload,</li>
- *    <li>castore,</li>
- *    <li>daload,</li>
- *    <li>dastore,</li>
- *    <li>faload,</li>
- *    <li>fastore,</li>
- *    <li>iaload,</li>
- *    <li>iastore,</li>
- *    <li>laload,</li>
- *    <li>lastore,</li>
- *    <li>saload,</li>
- *    <li>sastore.</li>
+ *    <li>xstore_&lt;num&gt;.</li>
  * </ul>
  * where x is one of a, c, d, f l.
  *
@@ -88,7 +56,7 @@ public class LoadStoreConstInstruction extends SingleInstruction {
    * @param a_name the mnemonic name of the instruction
    * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public LoadStoreConstInstruction(final String a_line_text,
+  public /*@ pure @*/ LoadStoreConstInstruction(final String a_line_text,
                                    final String a_name) {
     super(a_line_text, a_name);
   }
@@ -337,98 +305,13 @@ public class LoadStoreConstInstruction extends SingleInstruction {
   }
 
   /**
-   * This method creates the objects that represent array load or store
-   * instructions. It checks if the name of the current instruction is one of
-   * these and in that case creates an appropriate object. In case the name is
-   * of a different kind it returns the parameter <code>a_res</code>.
-   *
-   * The array load or store instructions are:
-   * <ul>
-   *    <li>aaload,</li>
-   *    <li>aastore,</li>
-   *    <li>baload,</li>
-   *    <li>bastore,</li>
-   *    <li>caload,</li>
-   *    <li>castore,</li>
-   *    <li>daload,</li>
-   *    <li>dastore,</li>
-   *    <li>faload,</li>
-   *    <li>fastore,</li>
-   *    <li>iaload,</li>
-   *    <li>iastore,</li>
-   *    <li>laload,</li>
-   *    <li>lastore,</li>
-   *    <li>saload,</li>
-   *    <li>sastore.</li>
-   * </ul>
-   *
-   * @param a_res a helper value returned in case the current instruction is
-   *   not in the current set
-   * @return the object that represents the current instruction or res in
-   *   case the current instruction is not in the current set
-   */
-  private /*@ pure @*/ Instruction getArrayLoadStoreInstruction(
-                             final /*@ nullable @*/ Instruction a_res) {
-    Instruction ires = a_res;
-    if (getName().compareTo("aaload") == 0)
-      ires = new AALOAD();
-    if (getName().compareTo("aastore") == 0)
-      ires = new AASTORE();
-    if (getName().compareTo("baload") == 0)
-      ires = new BALOAD();
-    if (getName().compareTo("bastore") == 0)
-      ires = new BASTORE();
-    if (getName().compareTo("caload") == 0)
-      ires = new CALOAD();
-    if (getName().compareTo("castore") == 0)
-      ires = new CASTORE();
-    if (getName().compareTo("daload") == 0)
-      ires = new DALOAD();
-    if (getName().compareTo("dastore") == 0)
-      ires = new DASTORE();
-    if (getName().compareTo("faload") == 0)
-      ires = new FALOAD();
-    if (getName().compareTo("fastore") == 0)
-      ires = new FASTORE();
-    if (getName().compareTo("iaload") == 0)
-      ires = new IALOAD();
-    if (getName().compareTo("iastore") == 0)
-      ires = new IASTORE();
-    if (getName().compareTo("laload") == 0)
-      ires = new LALOAD();
-    if (getName().compareTo("lastore") == 0)
-      ires = new LASTORE();
-    if (getName().compareTo("saload") == 0)
-      ires = new SALOAD();
-    if (getName().compareTo("sastore") == 0)
-      ires = new SASTORE();
-    return ires;
-  }
-
-  /**
    * This method, based on the value of the field
    * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
    * object for an instruction with no parameters that loads or stores a
    * for a constant value i.e.
    * <ul>
    *    <li>xload_&lt;num&gt;,</li>
-   *    <li>xstore_&lt;num&gt;,</li>
-   *    <li>aaload,</li>
-   *    <li>aastore,</li>
-   *    <li>baload,</li>
-   *    <li>bastore,</li>
-   *    <li>caload,</li>
-   *    <li>castore,</li>
-   *    <li>daload,</li>
-   *    <li>dastore,</li>
-   *    <li>faload,</li>
-   *    <li>fastore,</li>
-   *    <li>iaload,</li>
-   *    <li>iastore,</li>
-   *    <li>laload,</li>
-   *    <li>lastore,</li>
-   *    <li>saload,</li>
-   *    <li>sastore.</li>
+   *    <li>xstore_&lt;num&gt;.</li>
    * </ul>
    * where x is one of a, c, d, f l.
    *
@@ -445,7 +328,6 @@ public class LoadStoreConstInstruction extends SingleInstruction {
       return null;
     Instruction res = null;
     res = getConstLoadStoreInstruction(res);
-    res = getArrayLoadStoreInstruction(res);
     return res;
   }
 

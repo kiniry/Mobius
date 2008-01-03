@@ -54,7 +54,7 @@ public abstract class BytecodeLineController {
    * @param a_line the string representation of the line in the bytecode
    *               document
    */
-  public BytecodeLineController(final String a_line) {
+  public /*@ pure @*/ BytecodeLineController(final String a_line) {
     super();
     my_line_text = a_line;
   }

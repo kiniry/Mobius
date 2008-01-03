@@ -81,7 +81,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param a_name the mnemonic name of the instruction
    * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public InstructionLineController(final String a_line_text,
+  public /*@ pure @*/ InstructionLineController(final String a_line_text,
                                    final String a_name) {
     super(a_line_text);
     setName(a_name);

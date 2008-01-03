@@ -40,7 +40,8 @@ public class IConstInstruction extends SingleInstruction {
    * @param a_name the mnemonic name of the instruction
    * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public IConstInstruction(final String a_line_text, final String a_name) {
+  public /*@ pure @*/ IConstInstruction(final String a_line_text,
+                                        final String a_name) {
     super(a_line_text, a_name);
   }
 
