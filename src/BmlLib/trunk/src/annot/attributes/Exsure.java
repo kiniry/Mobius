@@ -1,8 +1,12 @@
 package annot.attributes;
 
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantUtf8;
+
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.javatype.JavaReferenceType;
+import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
@@ -44,19 +48,28 @@ public class Exsure {
 	}
 
 	/**
-	 * A constructor from AttributeReader.
-	 * 
-	 * @param ar - input stream to load from,
-	 * @throws ReadAttributeException - if remaining stream in
-	 * 		<code>ar</code> doesn't represent correct Exsure
-	 * 		attribute.
+	 * A constructor from AttributeReader. Each exsures entry has the form
+	 * <pre>
+   * {
+   *    u2 exception_index;
+   *    formula_info exsures_formula;
+   * }
+   * </pre>
+   *
+	 * @param ar input stream to load from
+	 * @throws ReadAttributeException if remaining stream in
+	 * 		<code>ar</code> does not represent a correct Exsure
+	 * 		attribute
 	 */
 	public Exsure(AttributeReader ar) throws ReadAttributeException {
-		BCExpression expr = ar.readExpression();
+    int cpindex = ar.readShort(); // read the exception index
+    String name = ar.findString(cpindex); //interpret from the constant pool
+		BCExpression expr = JavaType.getJavaType(name);
 		if (!(expr instanceof JavaReferenceType))
 			throw new ReadAttributeException("JavaType expected");
 		this.excType = (JavaReferenceType)expr;
-		this.postcondition = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
+		this.postcondition = new ExpressionRoot<AbstractFormula>(this,
+        ar.readFormula()); // read the exsures formula
 	}
 	
 	/**
@@ -71,12 +84,19 @@ public class Exsure {
 	}
 	
 	/**
-	 * Writes this exsure to AttributeWriter.
+	 * Writes this exsure to AttributeWriter. The format in which we write is:
+   * <pre>
+   * {
+   *    u2 exception_index;
+   *    formula_info exsures_formula;
+   * }
+   * </pre>
 	 * 
 	 * @param aw - output stream to save to.
 	 */
 	public void writeSingle(AttributeWriter aw) {
-		excType.write(aw);
+		int cpindex = aw.findConstant(excType.getSignature());
+    aw.writeShort(cpindex);
 		postcondition.write(aw);
 	}
 

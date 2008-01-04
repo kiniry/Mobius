@@ -107,7 +107,7 @@ public class SpecificationCase {
 		this.modifies = new ExpressionRoot<ModifyList>(this, new ModifyList(ar));
 		this.postcondition = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
 		this.excondition = new Vector<Exsure>();
-		int count = ar.readAttributesCount();
+    int count = ar.readAttributesCount();
 		for (int i=0; i<count; i++) {
 			Exsure ex = new Exsure(ar);
 			excondition.add(ex);

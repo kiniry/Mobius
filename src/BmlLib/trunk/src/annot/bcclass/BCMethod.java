@@ -113,6 +113,8 @@ public class BCMethod {
 		String code = "";
 		if (mspec != null)
 			code += mspec.printCode(conf);
+    else
+      code += "/*\n *\n */\n";
 		code += toString();
 		String bcode = "";
 		if (displayStyle) {
