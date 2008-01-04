@@ -9,6 +9,7 @@
 package umbra.editor.parsing;
 
 import umbra.instructions.LoadStoreArrayInstruction;
+import umbra.instructions.PushInstruction;
 
 
 /**
@@ -289,9 +290,9 @@ public class BytecodeStrings {
                                                           "swap"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref PushInstruction} class.
    */
-  //dodatkowo liczba - stosowe
   public static final String[] PUSH_INS = new String[] {"bipush", "sipush"};
 
   /**
@@ -337,9 +338,9 @@ public class BytecodeStrings {
   public static final String[] ARRAY_INS = new String[] {"newarray"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref NewInstruction} class.
    */
-  //inicjowanie - dodatkowo <java.costam> (liczba)
   public static final String[] NEW_INS = new String[] {"anewarray",
                                                        "checkcast",
                                                        "instanceof", "new"};

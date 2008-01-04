@@ -12,16 +12,19 @@ import org.apache.bcel.generic.BIPUSH;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.SIPUSH;
 
-import umbra.UmbraHelper;
 import umbra.editor.parsing.BytecodeStrings;
 
 /**
- * This class is related to some subset of instructions
- * depending on parameters. It redefines some crucial while
- * handling with single instruction methods(correctness, getting handle).
- * Here are two instructions resposible for pushing onto the stack.
+ * This class handles the creation and correctness for push
+ * instructions i.e.:
+ *
+ *<ul>
+ *    <li>bipush,</li>
+ *    <li>sipush.</li>
+ * </ul>
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class PushInstruction extends NumInstruction {
@@ -41,79 +44,70 @@ public class PushInstruction extends NumInstruction {
   }
 
   /**
-   * Push instruction line is correct if it has
-   * one simple number parameter.
+   * Push instruction line is correct if it has one simple number parameter.
+   * The exact definition of this kind of a line is as follows:
+   *    whitespase number : whitespace mnemonic whitespace number
+   *    whitespace lineend
    *
-   * @return TODO
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
    * @see InstructionLineController#correct()
    */
   public final boolean correct() {
-    final String my_line_text = getMy_line_text();
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = BytecodeStrings.PUSH_INS;
-    int j;
-    int y;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) &&
-          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
-        for (y = ((s.indexOf(s2[j])) + (s2[j].length())); y < s.length(); y++) {
-          if (!(Character.isDigit(s.charAt(y)))) return false;
-        }
-        int counter = 0;
-        boolean lastisdig = false;
-        for (y = ((my_line_text.indexOf(s2[j])) + (s2[j].length()) + 1);
-             y < my_line_text.length(); y++) {
-          if (Character.isDigit(my_line_text.charAt(y))) {
-            if (!(lastisdig)) counter++;
-            lastisdig = true;
-          } else if (Character.isWhitespace(my_line_text.charAt(y))) {
-            lastisdig = false;
-          }
-        }
-        if (counter == 1) return true;
-      }
-    }
-    return false;
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(BytecodeStrings.PUSH_INS) >= 0);
+                           //mnemonic
+    res = res && parser.swallowWhitespace(); //whitespace before the number
+    res = res && parser.swallowNumber(); // number
+    res = res && !parser.swallowWhitespace();
+    return res;
   }
 
   /**
-   * TODO.
-   * @return TODO
+  /**
+   * This method parses the parameter of the current instruction.
+   *
+   * This method retrieves the numerical value of the parameter of the
+   * instruction in {@link BytecodeLineController#getMy_line_text()}. This
+   * parameter is located after the mnemonic (with some whitespace inbetween).
+   * The method assumes {@link BytecodeLineController#getMy_line_text()}
+   * is correct.
+   *
+   * @return the value of the numerical parameter of the instruction
    */
   protected int getInd() {
-    boolean isd;
-    final String licznik = "0123456789";
-    int liczba;
-
-    String line1;
-    line1 = UmbraHelper.stripAllWhitespace(getMy_line_text());
-
-    isd = true;
-    // zakladam ze poprawnosc jest juz wyzej
-    final int dokad = line1.length();
-    final int skad = line1.indexOf(getName()) + getName().length();
-
-    if (isd) {
-      liczba = 0;
-      for (int i = skad; i < dokad; i++) {
-        liczba = 10 * liczba + licznik.indexOf(line1.substring(i, i + 1));
-      }
-      return liczba;
-    }
-    return 0;
+    final InstructionParser parser = getParser();
+    parser.resetParser();
+    parser.seekMnemonic(BytecodeStrings.PUSH_INS); // mnemonic
+    parser.swallowWhitespace(); //whitespace before the num
+    parser.swallowNumber(); // number
+    return parser.getResult();
   }
 
   /**
-   * TODO.
+   * This method, based on the value of the field
+   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * object for a push instruction. It computes the parameter of the
+   * instruction before the instruction is constructed. The method can construct
+   * one of the instructions:
+   * <ul>
+   *    <li>bipush,</li>
+   *    <li>sipush.</li>
+   * </ul>
+   * This method also checks the syntactical correctness of the current
+   * instruction line.
    *
-   * @return TODO
+   * @return the freshly constructed BCEL instruction or <code>null</code>
+   *         in case the instruction is not a push instruction and
+   *         in case the instruction line is incorrect
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-    int index = 0;
     if (!correct())
       return null;
-    index = getInd();
+    final int index = getInd();
     byte b = 0;
     b = (byte)index;
     Instruction res = null;

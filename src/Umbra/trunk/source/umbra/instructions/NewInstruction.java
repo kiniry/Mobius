@@ -18,13 +18,18 @@ import umbra.UmbraHelper;
 import umbra.editor.parsing.BytecodeStrings;
 
 /**
- * This class is related to some subset of instructions
- * depending on parameters. It redefines some crucial while
- * handling with single instruction methods(correctness, getting handle).
- * This is a set of various instructions with class name
- * as a parameter.
+ * This class handles the creation and correctness for instructions to create
+ * objects, check their types, and cast them, namely:
+ *
+ *<ul>
+ *   <li>anewarray,</li>
+ *   <li>checkcast,</li>
+ *   <li>instanceof,</li>
+ *   <li>new.</li>
+ * </ul>
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class NewInstruction extends StringInstruction {
@@ -65,48 +70,51 @@ public class NewInstruction extends StringInstruction {
 
 
   /**
-   * New instruction line is correct if it has
-   * one parameter that is a class name and
-   * another one that is a number in ().
+   * New instruction line is correct if it has one parameter that is a class
+   * name in <> and another one that is a number in (). The presise format is:
+   *    whitespase number : whitespace mnemonic whitespace
+   *    &lt; whitespace classname whitespace &gt; whitespace
+   *    ( whitespace number whitespace ) whitespace lineend
    *
-   * @return TODO
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
    * @see InstructionLineController#correct()
    */
   public final boolean correct() {
-    final String my_line_text = getMy_line_text();
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = BytecodeStrings.NEW_INS;
-    int j, y;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) &&
-          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
-        //zakladam ze zawsze z (number)
-        // w <char lub java.costam> wiec tez nie wiadomo co
-        if (s.indexOf("<") < LESS_FORBIDDEN_BOUND) return false;
-        if (s.indexOf(">") < GREATER_FORBIDDEN_BOUND) return false;
-        //&*poprawiam
-        if (s.lastIndexOf("(") < LEFT_PAREN_FORBIDDEN_BOUND) return false;
-        if (s.lastIndexOf(")") < RIGHT_PAREN_FORBIDDEN_BOUND) return false;
-        int m, n, o;
-        m = my_line_text.lastIndexOf("(");
-        n = my_line_text.lastIndexOf(")");
-        if (m + 1 >= n) {
-          return false;
-        }
-        for (o = m + 1; o < n; o++) {
-          if (!(Character.isDigit(my_line_text.charAt(o)))) {
-            return false;
-          }
-        }
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(BytecodeStrings.NEW_INS) >= 0);
+                           //mnemonic
+    res = res && parser.swallowWhitespace(); //whitespace before the classname
+    res = res && classnameWithDelimiters(parser);
+    res = res && parser.swallowWhitespace();
+    res = res && numberWithDelimiters(parser);
+    res = res && !parser.swallowWhitespace();
+    return res;
+  }
 
-        //to dziala dla wszystkich moze by tak isLetter||.
-        for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++) {
-          if (!(Character.isDefined(s.charAt(y)))) return false;
-        }
-        return true;
-      }
-    }
-    return false;
+
+  private boolean numberWithDelimiters(InstructionParser parser) {
+    boolean res = true;
+    res = res && parser.swallowDelimiter('('); // (
+    res = res && parser.swallowWhitespace();
+    res = res && parser.swallowNumber(); // number
+    res = res && parser.swallowDelimiter(')'); // )
+    res = res && parser.swallowWhitespace();
+    return res;
+  }
+
+
+  private boolean classnameWithDelimiters(InstructionParser parser) {
+    boolean res = true;
+    res = res && parser.swallowDelimiter('<'); // <
+    res = res && parser.swallowWhitespace();
+    if (res)
+      res = res && parser.swallowClassname(); //class name
+    res = res && parser.swallowWhitespace();
+    res = res && parser.swallowDelimiter('>'); // >
+    return res;
   }
 
 

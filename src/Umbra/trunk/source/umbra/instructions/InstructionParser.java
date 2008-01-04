@@ -66,7 +66,7 @@ public class InstructionParser {
    * the first character to be analysed is not whitespace.
    *
    * @return <code>true</code> when the further analysis is not finished yet,
-   *   <code>false</code> otherwise
+   *   <code>false</code> when at the end of the string
    */
   public boolean swallowWhitespace() {
     if (my_index == my_line.length()) return false;
@@ -157,5 +157,54 @@ public class InstructionParser {
    */
   public boolean isFinished() {
     return my_index == my_line.length();
+  }
+
+  /**
+   * The method moves the current index right after the first occurrence of
+   * the given delimiter character {@ref #a_ch}. In case the character does
+   * not occur in the part of the parsed string starting at the current index,
+   * then the index is set so that the parser is finished.
+   *
+   * @param a_ch the delimiter character which is sought
+   */
+  public void seekDelimiter(final char a_ch) {
+    final int where = my_line.indexOf(a_ch, my_index);
+    if (where > 0)
+      my_index = my_line.length();
+    else
+      my_index = where + 1;
+  }
+
+  /**
+   * The method moves the current index right after the first occurrence of
+   * one of the mnemonics from <code>an_inventory</code>. We pick the
+   * longest mnemonic that occurs in the string. In case none of the
+   * mnemonics from <code>the_inventory</code> occurs in the part of the parsed
+   * string starting at the current index, then the index is set so that the
+   * parser is finished.
+   *
+   * @param the_inventory  the array of the mnemonics to be checked
+   */
+  public void seekMnemonic(final String[] the_inventory) {
+    int res = -1;
+    for (int i = 0; i < the_inventory.length; i++) {
+      if (my_line.indexOf(the_inventory[i], my_index) >= my_index) {
+        if (res == -1 ||
+            the_inventory[res].length() >  the_inventory[i].length())
+          res = i;
+      }
+    }
+    my_index = my_line.indexOf(the_inventory[res], my_index) +
+               the_inventory[res].length();
+  }
+
+  /**
+   * We assume the string is not finished.
+   * @return
+   */
+  public boolean swallowClassname() {
+    if (!Character.isJavaIdentifierStart(my_line.charAt(my_index)))
+        return false;
+    
   }
 }

@@ -30,7 +30,6 @@ import org.apache.bcel.generic.POP2;
 import org.apache.bcel.generic.RETURN;
 import org.apache.bcel.generic.SWAP;
 
-import umbra.UmbraHelper;
 import umbra.editor.parsing.BytecodeStrings;
 
 
@@ -315,7 +314,10 @@ public class SingleInstruction extends InstructionLineController {
 
 
   /**
-   * Simple instruction line is correct if it has no parameter.
+   * Simple instruction line is correct if it has no parameter. That means this
+   * must have the form:
+   *   whitespase number : whitespace mnemonic whitespace lineend
+   * where mnemonic comes from {@ref BytecodeStrings#SINGLE_INS}.
    *
    * @return <code>true</code> when the instruction mnemonic is the only text
    *         in the line of the instruction text
@@ -329,12 +331,9 @@ public class SingleInstruction extends InstructionLineController {
    * This method checks the correctness of the current instruction line and if
    * the mnemonic occurs in our inventory of known mnemonics.
    *
-   * The instruction line is correct when:
-   * <ul>
-   *   <li>it contains ":",</li>
-   *   <li>the text after ":" contains only a mnemonic from
-   *     <code>an_inventory</code> and some whitespace.</li>
-   * </ul>
+   * The instruction line is correct when it has the form:
+   *   whitespase number : whitespace mnemonic whitespace lineend
+   * where mnemonic comes from {@ref #an_inventory}.
    *
    * @param an_inventory an array with all the correct mnemonics
    * @return <code>true</code> when the instruction mnemonic is the only text
@@ -342,22 +341,11 @@ public class SingleInstruction extends InstructionLineController {
    * @see InstructionLineController#correct()
    */
   protected final boolean correct(final String[] an_inventory) {
-    final String line = getMy_line_text();
-    final String s = UmbraHelper.stripAllWhitespace(line);
-    int j;
-    if (s.indexOf(':') < 0) return false;
-    for (j = 0; j < an_inventory.length; j++) {
-      if (!line.contains(an_inventory[j])) break;
-      // the line must contain the mnemonic from inventory
-      if ((s.indexOf(an_inventory[j]) > 0) &&
-          (s.indexOf(an_inventory[j]) == s.indexOf(":") + 1))
-             /* the mnemonic occurs in the line right after the : with
-              * whitespace omitted
-              */
-        if (((s.indexOf(an_inventory[j])) + (an_inventory[j].length())) ==
-            s.length()) // and is the only string after :
-          return true;
-    }
-    return false;
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(an_inventory) >= 0); //mnemonic
+    res = res && !parser.swallowWhitespace(); //final whitespace
+    return res;
   }
 }

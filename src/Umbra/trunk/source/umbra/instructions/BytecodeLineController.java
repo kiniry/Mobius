@@ -36,7 +36,7 @@ public abstract class BytecodeLineController {
    * This is an object contains a parser which allows to check the
    * correctness of the bytecode line and to parse its parameters.
    */
-  protected InstructionParser my_parser;
+  private InstructionParser my_parser;
 
   /**
    * The number of the method that contains the current line.
@@ -50,7 +50,7 @@ public abstract class BytecodeLineController {
   /**
    * The string representation of the line in the bytecode file that contains
    * the current instruction. We assume that the comments have been stripped
-   * off the line.
+   * off the line. The line text does not change in the lifetime of the object.
    */
   private String my_line_text;
 
@@ -96,8 +96,8 @@ public abstract class BytecodeLineController {
    * containing appropriate BCEL instruction object
    * that matches with the instruction name.
    *
-   * @return Handle to the appropriate instruction;
-   *   null if the line is not an instruction one.
+   * @return handle of the type {@ref Instruction} to the appropriate
+   *   instruction or <code>null</code> if the line is not an instruction one.
    */
   public Instruction getInstruction() {
     return null;
@@ -262,5 +262,12 @@ public abstract class BytecodeLineController {
    */
   public String getMy_line_text() {
     return my_line_text;
+  }
+
+  /**
+   * @return the line parser for the current line
+   */
+  protected InstructionParser getParser() {
+    return my_parser;
   }
 }

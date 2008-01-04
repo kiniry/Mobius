@@ -1,18 +1,20 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) ${date} University of Warsaw"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
 package umbra.instructions;
 
+
 /**
  * This is abstract class for all instructions with a number as a
  * parameter.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class NumInstruction extends MultiInstruction {
@@ -26,37 +28,6 @@ public class NumInstruction extends MultiInstruction {
    * The constant to indicate one that the instruction has two parameters.
    */
   private static final int PARAMS_TWO = 2;
-
-  /**
-   * The first state when whitespace is scanned.
-   */
-  private static final int STATE_FIRST_WHITESPACE = 0;
-
-  /**
-   * The first state when a number is scanned.
-   */
-  private static final int STATE_FIRST_NUMBER = 1;
-
-  /**
-   * The state when whitespace is scanned between the first and the second
-   * number.
-   */
-  private static final int STATE_SECOND_WHITESPACE = 2;
-
-  /**
-   * The second state when a number is scanned.
-   */
-  private static final int STATE_SECOND_NUMBER = 3;
-
-  /**
-   * The state when the final whitespace is scanned.
-   */
-  private static final int STATE_FINAL_WHITESPACE = 4;
-
-  /**
-   * The variable which contains the internal state for parsing.
-   */
-  private int my_parsestate;
 
   /**
    * This creates an instance of an instruction
@@ -76,19 +47,9 @@ public class NumInstruction extends MultiInstruction {
    * The method checks if the instruction <code>an_instr</code> occurs
    * correctly formatted in the line <code>a_line</code>.
    *
-   * The line is incorrect when:
-   * <ul>
-   *   <li>it does not contain ":",</li>
-   *   <li>the parameters of the opcodes are not decimal numbers.</li>
-   * </ul>
-   *
-   * The line should be checked elsewhere when:
-   * <ul>
-   *   <li>the line does not contain the opcoce <code>an_instr</code>,</li>
-   *   <li>the opcode is not followed by a delimiter from
-   *       <code>a_char_label</code>,</li>
-   *   <li>the line does not contain two parameters.</li>
-   * </ul>
+   * The line is correct when it has the format
+   *    whitespase number : whitespace mnemonic whitespace a_char_label
+   *    whitespace number whitespace [number] whitespace lineend
    *
    * @param a_line a bytecode line with all the whitespace stripped
    * @param an_instr an instruction text to be checked
@@ -99,130 +60,49 @@ public class NumInstruction extends MultiInstruction {
   protected int checkInstructionWithNumber(final String a_line,
                                            final String an_instr,
                                            final char a_char_label) {
-    int res = 0;
-    // : must occur for the string to be correct
-    if (a_line.indexOf(":") < 0) res = -1;
-    //if the instruction starts right after the line number then
-    //we proceed, otherwise we check another instruction
-    if (res == 0 && a_line.indexOf(an_instr) == a_line.indexOf(":") + 1) {
-      //if a_char_label is right after the instruction then we proceed,
-      // otherwise we check another instruction
-      if (a_line.indexOf(an_instr) +
-          (an_instr.length()) + 1 > a_line.indexOf(a_char_label)) {
-        //then the rest must be digits
-        for (int y = (a_line.indexOf(a_char_label) + 1);
-             y < a_line.length(); y++) {
-          if (!(Character.isDigit(a_line.charAt(y)))) {
-            res = -1;
-            break;
-          }
-        }
-        //checking if there are two numbers or one
-        if (res == 0) {
-          res = checkNoParameters(a_char_label);
-          return res != 1 ? -1 : 1;
-        }
-      }
-    }
-    return res;
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    final String [] inv = {an_instr};
+    res = res && (parser.swallowMnemonic(inv) >= 0); //mnemonic
+    res = res && parser.swallowWhitespace(); //whitespace before the delimiter
+    res = res && parser.swallowDelimiter(a_char_label);
+    res = res && parser.swallowWhitespace(); //whitespace after the delimiter
+    if (res)
+      return checkNoParameters(parser);
+    else
+      return -1;
   }
 
   /**
-   * This method checks the number of parameters in the instruction included
-   * in <code>a_line</code>
+   * This method counts the number of parameters in the instruction parsed
+   * by <code>a_parser</code>.
    *
-   * The parameters start right after <code>a_char_label</code> character
-   * and are separated with whitespace. Any number of whitespace before
-   * and after each parameter is allowed.
+   * We assume the index of the parser is situated so that the first number
+   * is about to be read (with no whitespace before that). We try then to
+   * read the first number and in case there is still something in the line
+   * the second number.
    *
-   * @param a_char_label the delimiter of parameters
+   * @param a_parser the parser which parses the analysed string
    * @return 1, 2 mean one and two parameters resp., in other cases -1 is
    *   returned
    */
-  private int checkNoParameters(final char a_char_label) {
-    final String my_line_text = getMy_line_text();
-    my_parsestate = 0;
-    for (int i = my_line_text.indexOf(a_char_label);
-         i < my_line_text.length(); i++) {
-      switch (my_parsestate) {
-        case STATE_FIRST_WHITESPACE: //the first whitespace
-          i = handleWhitespace(my_line_text, i);
-          break;
-        case STATE_FIRST_NUMBER: //the first number
-          i = handleNumber(my_line_text, i);
-          break;
-        case STATE_SECOND_WHITESPACE: //the separator whitespace
-          i = handleWhitespace(my_line_text, i);
-          break;
-        case STATE_SECOND_NUMBER: //the second number
-          i = handleNumber(my_line_text, i);
-          break;
-        case STATE_FINAL_WHITESPACE: //the final whitespace
-          i = handleWhitespace(my_line_text, i);
-          break;
-        default:
-          break;
-      }
-    }
-    return stateToParNumber();
-  }
-
-  /**
-   * This method converts the current state number to the number of parameters.
-   *
-   * @return 2 when my_parsestate is {@ref #STATE_SECOND_NUMBER} or
-   *   {@ref #STATE_FINAL_WHITESPACE};
-   *         1 when my_parsestate is {@ref #STATE_FIRST_NUMBER} or
-   *   {@ref #STATE_SECOND_WHITESPACE};
-   *        -1 otherwise
-   */
-  private int stateToParNumber() {
-    if (my_parsestate == STATE_SECOND_NUMBER ||
-        my_parsestate == STATE_FINAL_WHITESPACE)
-      return PARAMS_TWO;
-    if (my_parsestate == STATE_FIRST_NUMBER ||
-        my_parsestate == STATE_SECOND_WHITESPACE)
-      return PARAMS_ONE;
-    return -1;
-  }
-
-  /**
-   * Handle the state when a number is scanned. In case the character at
-   * <code>an_i</code> in <code>a_line</code> is a digit do nothing. Otherwise,
-   * advance the {@ref #my_parsestate} and decrease the counter
-   * <code>an_i</code> to make sure the next state is checked for the same
-   * position.
-   *
-   * @param a_line the text of the line
-   * @param an_i the position in the line
-   * @return <code>an_i - 1</code> when my_parsestate is advanced,
-   *   <code>an_i</code> otherwise
-   */
-  private int handleNumber(final String a_line, final int an_i) {
-    if (!Character.isDigit(a_line.charAt(an_i))) {
-      my_parsestate++;
-      return an_i - 1;
-    }
-    return an_i;
-  }
-
-  /**
-   * Handle the state when whitespace is scanned. In case the character at
-   * <code>an_i</code> in <code>a_line</code> is whitespace do nothing.
-   * Otherwise, advance the {@ref #my_parsestate} and decrease the counter
-   * <code>an_i</code> to make sure the next my_parsestate is checked for the
-   * same position.
-   *
-   * @param a_line the text of the line
-   * @param an_i the position in the line
-   * @return <code>an_i - 1</code> when my_parsestate is advanced,
-   *   <code>an_i</code> otherwise
-   */
-  private int handleWhitespace(final String a_line, final int an_i) {
-    if (!Character.isWhitespace(a_line.charAt(an_i))) {
-      my_parsestate++;
-      return an_i - 1;
-    }
-    return an_i;
+  private int checkNoParameters(final InstructionParser a_parser) {
+    boolean res = true;
+    int parnum = 0;
+    res = res && a_parser.swallowNumber(); // number
+    if (res)
+      parnum = PARAMS_ONE;
+    else
+      return -1;
+    res = res && a_parser.swallowWhitespace(); //whitespace between the numbers
+    if (!res) return parnum;
+    res = res && a_parser.swallowNumber(); // second optional number
+    res = res && !a_parser.swallowWhitespace();
+    if (res)
+      parnum = PARAMS_TWO;
+    else
+      parnum = -1;
+    return parnum;
   }
 }

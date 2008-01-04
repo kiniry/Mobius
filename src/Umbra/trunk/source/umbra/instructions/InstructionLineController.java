@@ -469,4 +469,27 @@ public abstract class InstructionLineController extends BytecodeLineController {
     return my_name;
   }
 
+  /*@
+    @ ensures \result ==> getParser().isInitialised();
+    @*/
+  /**
+   * This method parses initial part of a instruction line. This is a helper
+   * method which parses the common part of each instruction line i.e.:
+   *
+   *  whitespace number : whitespace
+   *
+   * @return <code>true</code> when all the parsing is done sucessfully,
+   *   <code>false</code> in case the initial portion of the line is not of
+   *   the required form
+   */
+  protected boolean parseTillMnemonic() {
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    parser.resetParser();
+    res = !parser.swallowWhitespace();
+    res = res && parser.swallowNumber(); //line number
+    res = res && parser.swallowDelimiter(':'); // :
+    res = res && parser.swallowWhitespace(); //whitespace before mnemonic
+    return res;
+  }
 }

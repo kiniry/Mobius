@@ -61,13 +61,13 @@ public class StackInstruction extends NumInstruction {
   }
 
   /*@
-    @ ensures my_line_text.contains(":");
+    @ ensures my_line_text.contains(":") && my_line_text.contains("%");
     @*/
   /**
    * Check the correctness of a stack instruction line. The line is correct when
    * it has the form:
    *      whitespase number : whitespace mnemonic whitespace
-   *      % whitespace number lineend
+   *      % whitespace number whitespace lineend
    *
    * @return <code>true</code> when the syntax of the instruction line is
    *         correct
@@ -75,22 +75,19 @@ public class StackInstruction extends NumInstruction {
    */
   public final boolean correct() {
     boolean res = true;
-    my_parser.resetParser();
-    res = !my_parser.swallowWhitespace();
-    res = res && my_parser.swallowNumber(); //line number
-    res = res && my_parser.swallowDelimiter(':'); // :
-    res = res && my_parser.swallowWhitespace(); //whitespace before mnemonic
-    res = res && (my_parser.swallowMnemonic(BytecodeStrings.STACK_INS) >= 0);
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(BytecodeStrings.STACK_INS) >= 0);
                            //mnemonic
-    res = res && my_parser.swallowWhitespace(); //whitespace before delimiter
-    res = res && my_parser.swallowDelimiter('%'); // %
-    res = res && my_parser.swallowWhitespace(); //whitespace before the number
-    res = res && my_parser.swallowNumber(); // number
-    res = res && !my_parser.swallowWhitespace();
+    res = res && parser.swallowWhitespace(); //whitespace before delimiter
+    res = res && parser.swallowDelimiter('%'); // %
+    res = res && parser.swallowWhitespace(); //whitespace before the number
+    res = res && parser.swallowNumber(); // number
+    res = res && !parser.swallowWhitespace();
     return res;
   }
 
-  /*@ requires my_line_text.contains(":");
+  /*@ requires my_line_text.contains("%");
     @
     @*/
   /**
@@ -105,30 +102,12 @@ public class StackInstruction extends NumInstruction {
    * @return the value of the numerical parameter of the instruction
    */
   protected int getInd() {
-    final String my_line_text = getMy_line_text();
-    //TODO rewrite this
-    boolean isd;
-    final String licznik = "0123456789";
-    int liczba;
-
-    isd = true;
-    int dokad = my_line_text.length();
-    for (int i = my_line_text.indexOf("%") + 1;
-         i < my_line_text.length(); i++) {
-      if (!Character.isDigit(my_line_text.charAt(i))) {
-        dokad = i;
-        break;
-      }
-    }
-    if (isd) {
-      liczba = 0;
-      for (int i = my_line_text.lastIndexOf("%") + 1; i < dokad; i++) {
-        liczba = 10 * liczba +
-                              licznik.indexOf(my_line_text.substring(i, i + 1));
-      }
-      return liczba;
-    }
-    return 0;
+    final InstructionParser parser = getParser();
+    parser.resetParser();
+    parser.seekDelimiter('%'); // %
+    parser.swallowWhitespace(); //whitespace before the num
+    parser.swallowNumber(); // number
+    return parser.getResult();
   }
 
   /**
@@ -220,6 +199,7 @@ public class StackInstruction extends NumInstruction {
    *   not an i-instruction
    * @return the object that represents the current i-instruction or res in
    *   case the current instruction is not an i-instruction
+   * @see BytecodeLineController#getInstruction()
    */
   private /*@ pure @*/ Instruction getIInstruction(final int an_index,
                              final /*@ nullable @*/  Instruction a_res) {
