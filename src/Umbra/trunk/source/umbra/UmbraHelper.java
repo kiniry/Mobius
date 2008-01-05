@@ -8,16 +8,22 @@
  */
 package umbra;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
@@ -27,6 +33,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * application.
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @author Krzysztof Jakubczyk
  * @version a-01
  */
 public final class UmbraHelper {
@@ -61,6 +68,11 @@ public final class UmbraHelper {
    * The file extension for the Java files.
    */
   public static final String JAVA_EXTENSION     = ".java";
+
+  /**
+   * The file extension for the Java class files, without dot.
+   */
+  public static final String CLASS_EXTENSION_NONDOT      = "class";
 
   /**
    * The file extension for the Java class files.
@@ -342,7 +354,7 @@ public final class UmbraHelper {
     final IPath outputloc = jproject.getOutputLocation();
     final String newloc = outputloc.append(a_java_file.getFullPath().
               removeFirstSegments(1)).toPortableString();
-    final String fname = replaceLast(newloc, an_extension, CLASS_EXTENSION);
+    final String fname = replaceLast(newloc, an_extension, CLASS_EXTENSION_NONDOT);
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile file = workspace.getRoot().
              getFile(Path.fromPortableString(fname));
@@ -368,5 +380,77 @@ public final class UmbraHelper {
       return (the_data.indexOf(a_pattern) + a_pattern.length());
     else
       return -1;
+  }
+
+  /**
+   * This method returns java class file path file of javaElement.
+   * @param element
+   * @return output class file path
+   * @throws JavaModelException
+   */
+  public static IPath getClassFilePath(final IJavaElement element)
+      throws JavaModelException {
+    return getPackageOutputPath(element).append(element.getUnderlyingResource()
+                                                .getName())
+        .removeFileExtension().addFileExtension(CLASS_EXTENSION_NONDOT);
+  }
+
+// Better, easier way, but VALID ONLY FROM ECLIPSE VERSION 3.3
+//
+//public static IPath getClassFilePath2(final IJavaElement element) throws JavaModelException {
+//  IRegion region = JavaCore.newRegion();
+//  region.add(element);
+//  IResource[] ress = JavaCore.getGeneratedResources(region, false);
+//  String originalName = element.getCorrespondingResource().getFullPath().removeFileExtension().lastSegment();
+//  for(IResource resource: ress){      
+//    String resourceName = resource.getFullPath().removeFileExtension().lastSegment();
+//    if (resourceName.equals(originalName))
+//      return resource.getProjectRelativePath();
+//  }
+//  return null;
+//}
+
+  /**
+   * Method returns output path (containing output .class files) of the
+   * package where javaElement is situated.
+   *
+   * @param javaElement the element to find output package of
+   * @return package output path of javaElement
+   * @throws JavaModelException
+   */
+  public static IPath getPackageOutputPath(final IJavaElement javaElement)
+      throws JavaModelException {
+    IJavaProject project = javaElement.getJavaProject();
+    IPath path = project.getOutputLocation();
+    return path.append(getPackageName(javaElement).replace(Signature.C_DOT,
+                                                           File.separatorChar));
+  }
+
+  /**
+   * This method returns a package of given IJavaElement.
+   *
+   * @param javaElement the element we want to find package of
+   * @return java package name
+   */
+  public static String getPackageName(final IJavaElement javaElement) {
+    int elementType = javaElement.getElementType();
+    if (elementType == IJavaElement.PACKAGE_FRAGMENT
+        || elementType == IJavaElement.PACKAGE_FRAGMENT_ROOT) {
+      return javaElement.getElementName();
+    } else {
+      return javaElement.getAncestor(IJavaElement.PACKAGE_FRAGMENT)
+          .getElementName();
+    }
+  }
+
+  /**
+   * Method returns IJavaElement associated with IEditorPart.
+   *
+   * @param editor the editor to get IJavaElement from
+   * @return java element associated with editor
+   */
+  public static IJavaElement getJavaElement(final IEditorPart editor) {
+    IEditorInput editorInput = editor.getEditorInput();
+    return (IJavaElement) editorInput.getAdapter(IJavaElement.class);
   }
 }
