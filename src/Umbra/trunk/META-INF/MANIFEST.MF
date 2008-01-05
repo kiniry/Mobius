@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.core.resources,
  mobius.bmllib
 Bundle-ClassPath: libs/asm.jar,
  libs/b2bpl.jar,
- umbra.jar
+ .
 Eclipse-LazyStart: true
 Bundle-Activator: umbra.UmbraPlugin
 Bundle-Vendor: Mobius

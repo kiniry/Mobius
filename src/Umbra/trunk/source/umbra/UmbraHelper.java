@@ -12,16 +12,22 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IRegion;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
+import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -384,46 +390,49 @@ public final class UmbraHelper {
 
   /**
    * This method returns java class file path file of javaElement.
-   * @param element
+   * Proposed usage:
+   *  getClassFilePath(getSelectedType(editor))
+   * @param javaType type to find output class file path
    * @return output class file path
    * @throws JavaModelException
    */
-  public static IPath getClassFilePath(final IJavaElement element)
+  public static IPath getClassFilePath(final IType javaType)
       throws JavaModelException {
-    return getPackageOutputPath(element).append(element.getUnderlyingResource()
+    return getOutputTypePath(javaType).append(javaType.getUnderlyingResource()
                                                 .getName())
         .removeFileExtension().addFileExtension(CLASS_EXTENSION_NONDOT);
   }
 
-// Better, easier way, but VALID ONLY FROM ECLIPSE VERSION 3.3
-//
-//public static IPath getClassFilePath2(final IJavaElement element) throws JavaModelException {
-//  IRegion region = JavaCore.newRegion();
-//  region.add(element);
-//  IResource[] ress = JavaCore.getGeneratedResources(region, false);
-//  String originalName = element.getCorrespondingResource().getFullPath().removeFileExtension().lastSegment();
-//  for(IResource resource: ress){      
-//    String resourceName = resource.getFullPath().removeFileExtension().lastSegment();
-//    if (resourceName.equals(originalName))
-//      return resource.getProjectRelativePath();
+// Better, easier way, but VALID ONLY SINCE ECLIPSE VERSION 3.3
+// usage: getClassFilePath2(getSelectedType(editor))
+//  public static IPath getClassFilePath2(final IType element) throws JavaModelException {
+//    IJavaElement enclosingCompilationUnit = (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
+//    IRegion region = JavaCore.newRegion();
+//    region.add(enclosingCompilationUnit);
+//    IResource[] ress = JavaCore.getGeneratedResources(region, false);
+//    String originalName = element.getTypeQualifiedName() + CLASS_EXTENSION;
+//    for(IResource resource: ress){      
+//      String resourceName = resource.getName();
+//      if (resourceName.equals(originalName))
+//        return resource.getProjectRelativePath();
+//    }
+//    return null;
 //  }
-//  return null;
-//}
 
   /**
    * Method returns output path (containing output .class files) of the
    * package where javaElement is situated.
    *
-   * @param javaElement the element to find output package of
+   * @param javaType the element to find output package of
    * @return package output path of javaElement
    * @throws JavaModelException
    */
-  public static IPath getPackageOutputPath(final IJavaElement javaElement)
+  public static IPath getOutputTypePath(final IType javaType)
       throws JavaModelException {
-    IJavaProject project = javaElement.getJavaProject();
+    IJavaProject project = javaType.getJavaProject();
     IPath path = project.getOutputLocation();
-    return path.append(getPackageName(javaElement).replace(Signature.C_DOT,
-                                                           File.separatorChar));
+    return path.append(javaType.getFullyQualifiedName().replace(Signature.C_DOT,
+                                                                File.separatorChar));
   }
 
   /**
@@ -452,5 +461,32 @@ public final class UmbraHelper {
   public static IJavaElement getJavaElement(final IEditorPart editor) {
     IEditorInput editorInput = editor.getEditorInput();
     return (IJavaElement) editorInput.getAdapter(IJavaElement.class);
+  }
+
+  /**
+   * Method returns enclosing IType for IJavaElement.
+   *
+   * @param javaElement the IJavaElement
+   * @return enclosing IType of javaElement
+   */
+  public static IType getEnclosingType(final IJavaElement javaElement) {
+    return (IType) javaElement.getAncestor(IJavaElement.TYPE);
+  }
+
+  /**
+   * Method returns the selected IType in IEditorPart.
+   *
+   * @param editor the editor to find IType. IMPORTANT: must be JavaEditor.
+   * @return IType selected in editor
+   * @throws JavaModelException
+   */
+  public static IType getSelectedType(final IEditorPart editor) throws JavaModelException{
+    IJavaElement element = SelectionConverter.getElementAtOffset((JavaEditor) editor);
+    IType type = UmbraHelper.getEnclosingType(element);
+    if (type == null) {
+      ICompilationUnit elem = (ICompilationUnit) getJavaElement(editor);
+      type = elem.findPrimaryType();
+    }
+    return type;
   }
 }
