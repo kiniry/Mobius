@@ -14,8 +14,7 @@ import com.sun.tools.javac.util.Context;
  *
  */
 public class TranslationManager {
-  public static Jml2BmlTranslator getTranslator(Context context,
-                                                Map<Tree, Tree> parents) {
+  public static Jml2BmlTranslator getTranslator(Context context) {
     Jml2BmlTranslator translator = new Jml2BmlTranslator(context);
     registerTranslationRules(translator, context);
     return translator;

@@ -1,3 +1,11 @@
+/*
+ * @title       "Jml2Bml"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2008-01-06 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package jml2bml.rules;
 
 import jml2bml.bytecode.BytecodeUtils;
@@ -31,6 +39,7 @@ import com.sun.tools.javac.util.Name;
 /**
  * Rule for translating JML expressions.
  * @author Jedrek
+ * @author kjk
  *
  */
 public class ExpressionRule extends TranslationRule<BCExpression, Void> {
@@ -51,7 +60,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Void> {
   @Override
   public BCExpression visitIdentifier(IdentifierTree node, Void p) {
     // FIXME translate identifier properly!
-    return node.getName().toBCExpression();
+	return null;
+//    return node.getName().toBCExpression();
   };
 
   @Override

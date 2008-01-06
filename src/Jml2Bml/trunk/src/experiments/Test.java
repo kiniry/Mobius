@@ -14,6 +14,5 @@ public class Test {
     int c;
     c = a + b;
     int[] d;
-    //@assert (\forall int k; 0 <= k && k < 10 ==> d[k] != 2);
   }
 }

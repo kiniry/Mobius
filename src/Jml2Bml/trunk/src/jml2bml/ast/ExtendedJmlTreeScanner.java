@@ -1,4 +1,12 @@
-package experiments;
+/*
+ * @title       "Jml2Bml"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2008-01-06 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package jml2bml.ast;
 
 import org.jmlspecs.openjml.JmlTreeVisitor;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;

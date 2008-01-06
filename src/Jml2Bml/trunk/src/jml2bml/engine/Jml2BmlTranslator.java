@@ -3,6 +3,7 @@ package jml2bml.engine;
 import java.util.LinkedList;
 import java.util.List;
 
+import jml2bml.ast.ExtendedJmlTreeScanner;
 import jml2bml.bytecode.BmlAnnotation;
 import jml2bml.bytecode.BytecodeUtils;
 import jml2bml.bytecode.Location;
@@ -12,7 +13,6 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.comp.JmlEnter;
 import com.sun.tools.javac.util.Context;
 
-import experiments.ExtendedJmlTreeScanner;
 
 /**
  * This visitor traverses the Tree and generates bml for jml annotations. All
@@ -61,14 +61,14 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Void, Boolean> {
       if (cl.equals(node.getClass())) {
         for (TranslationRule rule : rules) {
           // try to apply the rule
-          String annotation = node.accept(rule, null);
-          if (annotation != null) {
-            // succeeded
-            Location location = bytecodeUtils.findLocation(node);
-            BmlAnnotation bml = new BmlAnnotation(annotation, location);
-            bytecodeUtils.insertAnnotation(bml);
-            return Boolean.FALSE;
-          }
+          /*String annotation = */node.accept(rule, null);
+//          if (annotation != null) {
+//            // succeeded
+//            Location location = bytecodeUtils.findLocation(node);
+//            BmlAnnotation bml = new BmlAnnotation(annotation, location);
+//            bytecodeUtils.insertAnnotation(bml);
+//            return Boolean.FALSE;
+//          }
         }
         return v;
       }
