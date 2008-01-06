@@ -1,5 +1,6 @@
 package jml2bml.rules;
 
+import jml2bml.engine.Symbols;
 import annot.bcexpression.BCExpression;
 
 import com.sun.tools.javac.util.Context;
@@ -15,7 +16,7 @@ public class RulesFactory {
   /**
    * Returns an instance of ExpressionRule
    */
-  public static TranslationRule<BCExpression, Void> getExpressionRule(Context context) {
+  public static TranslationRule<BCExpression, Symbols> getExpressionRule(Context context) {
     return new ExpressionRule(context);
   }
 

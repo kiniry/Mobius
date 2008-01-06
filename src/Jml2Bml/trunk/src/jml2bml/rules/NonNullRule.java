@@ -13,7 +13,7 @@ import com.sun.tools.javac.util.Context;
  * @author Jedrek
  * 
  */
-public class NonNullRule extends TranslationRule {
+public class NonNullRule extends TranslationRule<String, Void> {
   private BytecodeUtils bytecodeUtils;
 
   public NonNullRule(Context context) {

@@ -8,24 +8,28 @@
  */
 package jml2bml.rules;
 
-import jml2bml.bytecode.BytecodeUtils;
-import jml2bml.engine.JmlTokens;
-import jml2bml.engine.KeywordTranslator;
+import jml2bml.engine.Symbols;
+import jml2bml.engine.UniqueIndexGenerator;
 import jml2bml.engine.Utils;
+import jml2bml.engine.Variable;
+import jml2bml.exceptions.NotTranslatedException;
 
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 
 import annot.bcexpression.ArithmeticExpression;
+import annot.bcexpression.ArrayAccess;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.NumberLiteral;
+import annot.bcexpression.formula.Predicate0Ar;
 import annot.bcexpression.formula.QuantifiedFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.javatype.JavaType;
 import annot.io.ReadAttributeException;
 
+import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -42,7 +46,7 @@ import com.sun.tools.javac.util.Name;
  * @author kjk
  *
  */
-public class ExpressionRule extends TranslationRule<BCExpression, Void> {
+public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
 
   public ExpressionRule(final Context context) {
   }
@@ -50,7 +54,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Void> {
   // ------- visitor methods
   // TODO probably more nodes should be visited here
   @Override
-  public BCExpression visitBinary(BinaryTree node, Void p) {
+  public BCExpression visitBinary(BinaryTree node, Symbols p) {
     BCExpression lhs = scan(node.getLeftOperand(), p);
     BCExpression rhs = scan(node.getRightOperand(), p);
     int operator = Utils.mapJCOperatorToBmlLib(node.getKind());
@@ -58,23 +62,36 @@ public class ExpressionRule extends TranslationRule<BCExpression, Void> {
   }
 
   @Override
-  public BCExpression visitIdentifier(IdentifierTree node, Void p) {
+  public BCExpression visitIdentifier(IdentifierTree node, Symbols p) {
     // FIXME translate identifier properly!
-	return null;
-//    return node.getName().toBCExpression();
+    String name = node.getName().toString();
+    Variable variable = p.get(name);
+    System.out.println(name);
+    if (variable == null){
+      return null;
+      //throw new RuntimeException("Invalid variable " + name);
+    }
+    if (variable.isBoundVariable()){
+      return variable.getVariable();
+    }
+    //TODO handle other cases;
+    return null;
   };
 
   @Override
-  public BCExpression visitLiteral(LiteralTree node, Void p) {
+  public BCExpression visitLiteral(LiteralTree node, Symbols p) {
+    System.out.println(node);
     Kind kind = node.getKind();
     if (kind == Kind.INT_LITERAL)
       return new NumberLiteral(((Integer) node.getValue()).intValue());
-    throw new RuntimeException("Not implemented literal: " + node);
+    if (kind == Kind.BOOLEAN_LITERAL)
+      return new Predicate0Ar(((Boolean)node.getValue()).booleanValue());
+    throw new NotTranslatedException("Not implemented literal: " + node);
   };
 
   @Override
   public BCExpression visitConditionalExpression(ConditionalExpressionTree node,
-                                           Void p) {
+                                           Symbols p) {
     BCExpression condition = scan(node.getCondition(), p);
     BCExpression trueExpr = scan(node.getTrueExpression(), p);
     BCExpression falseExpr = scan(node.getFalseExpression(), p);
@@ -83,28 +100,28 @@ public class ExpressionRule extends TranslationRule<BCExpression, Void> {
   }
 
   @Override
-  public BCExpression visitParenthesized(ParenthesizedTree node, Void p) {
+  public BCExpression visitParenthesized(ParenthesizedTree node, Symbols p) {
     return scan(node.getExpression(), p);
   }
 
   @Override
-  public BCExpression visitJmlQuantifiedExpr(JmlQuantifiedExpr node, Void p) {
+  public BCExpression visitJmlQuantifiedExpr(JmlQuantifiedExpr node, Symbols p) {
     int quantifierType = Utils.mapJCOperatorToBmlLib(node.op);
     QuantifiedFormula formula = new QuantifiedFormula(quantifierType);
     JavaBasicType type = (JavaBasicType)scan(node.localtype, p);
+    Symbols symbols = new Symbols(p);
     for (Name name : node.names){
-      //FIXME what is the second parameter?
-      int index = 0;
-      BoundVar var = new BoundVar(type,index,formula,name.toString());
+      BoundVar var = new BoundVar(type,UniqueIndexGenerator.getNext(),formula,name.toString());
       formula.addVariable(var);
+      symbols.put(name.toString(), new Variable(var, node));
     }
-    final BCExpression predicate = scan(node.predicate, p);
+    final BCExpression predicate = scan(node.predicate, symbols);
     formula.setFormula(predicate);
     return formula;
   }
 
   @Override
-  public BCExpression visitJmlBinary(JmlBinary node, Void p) {
+  public BCExpression visitJmlBinary(JmlBinary node, Symbols p) {
     BCExpression lhs = scan(node.getLeftOperand(), p);
     BCExpression rhs = scan(node.getRightOperand(), p);
     int operator = Utils.mapJCOperatorToBmlLib(node.op);
@@ -112,13 +129,17 @@ public class ExpressionRule extends TranslationRule<BCExpression, Void> {
   }
   
   @Override
-  public BCExpression visitPrimitiveType(PrimitiveTypeTree node, Void p) {
+  public BCExpression visitPrimitiveType(PrimitiveTypeTree node, Symbols p) {
     try {
     return JavaType.getJavaBasicType(Utils.mapJCTypeKindToBmlLib(node.getPrimitiveTypeKind()));
     }catch (ReadAttributeException e){
-      return null;
-      //FIXME handle the exception
+      throw new RuntimeException(e);
     }
     
+  }
+  
+  @Override
+  public BCExpression visitArrayAccess(ArrayAccessTree node, Symbols p) {
+    return new ArrayAccess(scan(node.getExpression(),p), scan(node.getIndex(), p));
   }
 }

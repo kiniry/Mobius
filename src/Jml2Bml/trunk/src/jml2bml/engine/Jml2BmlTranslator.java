@@ -57,9 +57,10 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Void, Boolean> {
     if (Boolean.FALSE.equals(v)) {
       return v;
     }
+    node.accept(new SymbolsBuilder(), null);
     for (Class<?> cl : JmlNodes.JML_CLASSES) {
       if (cl.equals(node.getClass())) {
-        for (TranslationRule rule : rules) {
+        for (TranslationRule<String, Void> rule : rules) {
           // try to apply the rule
           /*String annotation = */node.accept(rule, null);
 //          if (annotation != null) {
