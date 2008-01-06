@@ -84,7 +84,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Void> {
     JavaBasicType type = (JavaBasicType)scan(node.localtype, p);
     for (Name name : node.names){
       //FIXME what is the second parameter?
-      BoundVar var = new BoundVar(type,0,formula,name.toString());
+      int index = 0;
+      BoundVar var = new BoundVar(type,index,formula,name.toString());
       formula.addVariable(var);
     }
     final BCExpression predicate = scan(node.predicate, p);
