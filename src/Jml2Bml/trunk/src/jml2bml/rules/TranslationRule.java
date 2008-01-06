@@ -96,433 +96,433 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.TreeScanner;
 
-public abstract class TranslationRule extends TreeScanner<String, Void>
-    implements JmlTreeVisitor<String, Void> {
+public abstract class TranslationRule<R, P> extends TreeScanner<R, P>
+    implements JmlTreeVisitor<R, P> {
 
-  protected String preVisit(Tree node, Void p) {
+  protected R preVisit(Tree node, P p) {
     return null;
   }
 
-  public String visitCompilationUnit(CompilationUnitTree node, Void p) {
+  public R visitCompilationUnit(CompilationUnitTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitImport(ImportTree node, Void p) {
+  public R visitImport(ImportTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitClass(ClassTree node, Void p) {
+  public R visitClass(ClassTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitMethod(MethodTree node, Void p) {
+  public R visitMethod(MethodTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitVariable(VariableTree node, Void p) {
+  public R visitVariable(VariableTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitEmptyStatement(EmptyStatementTree node, Void p) {
+  public R visitEmptyStatement(EmptyStatementTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitBlock(BlockTree node, Void p) {
+  public R visitBlock(BlockTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitDoWhileLoop(DoWhileLoopTree node, Void p) {
+  public R visitDoWhileLoop(DoWhileLoopTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitWhileLoop(WhileLoopTree node, Void p) {
+  public R visitWhileLoop(WhileLoopTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitForLoop(ForLoopTree node, Void p) {
+  public R visitForLoop(ForLoopTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitEnhancedForLoop(EnhancedForLoopTree node, Void p) {
+  public R visitEnhancedForLoop(EnhancedForLoopTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitLabeledStatement(LabeledStatementTree node, Void p) {
+  public R visitLabeledStatement(LabeledStatementTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitSwitch(SwitchTree node, Void p) {
+  public R visitSwitch(SwitchTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitCase(CaseTree node, Void p) {
+  public R visitCase(CaseTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitSynchronized(SynchronizedTree node, Void p) {
+  public R visitSynchronized(SynchronizedTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitTry(TryTree node, Void p) {
+  public R visitTry(TryTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitCatch(CatchTree node, Void p) {
+  public R visitCatch(CatchTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitConditionalExpression(ConditionalExpressionTree node,
-                                           Void p) {
+  public R visitConditionalExpression(ConditionalExpressionTree node,
+                                           P p) {
     return preVisit(node, p);
   }
 
-  public String visitIf(IfTree node, Void p) {
+  public R visitIf(IfTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitExpressionStatement(ExpressionStatementTree node, Void p) {
+  public R visitExpressionStatement(ExpressionStatementTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitBreak(BreakTree node, Void p) {
+  public R visitBreak(BreakTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitContinue(ContinueTree node, Void p) {
+  public R visitContinue(ContinueTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitReturn(ReturnTree node, Void p) {
+  public R visitReturn(ReturnTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitThrow(ThrowTree node, Void p) {
+  public R visitThrow(ThrowTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitAssert(AssertTree node, Void p) {
+  public R visitAssert(AssertTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitMethodInvocation(MethodInvocationTree node, Void p) {
+  public R visitMethodInvocation(MethodInvocationTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitNewClass(NewClassTree node, Void p) {
+  public R visitNewClass(NewClassTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitNewArray(NewArrayTree node, Void p) {
+  public R visitNewArray(NewArrayTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitParenthesized(ParenthesizedTree node, Void p) {
+  public R visitParenthesized(ParenthesizedTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitAssignment(AssignmentTree node, Void p) {
+  public R visitAssignment(AssignmentTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitCompoundAssignment(CompoundAssignmentTree node, Void p) {
+  public R visitCompoundAssignment(CompoundAssignmentTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitUnary(UnaryTree node, Void p) {
+  public R visitUnary(UnaryTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitBinary(BinaryTree node, Void p) {
+  public R visitBinary(BinaryTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitTypeCast(TypeCastTree node, Void p) {
+  public R visitTypeCast(TypeCastTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitInstanceOf(InstanceOfTree node, Void p) {
+  public R visitInstanceOf(InstanceOfTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitArrayAccess(ArrayAccessTree node, Void p) {
+  public R visitArrayAccess(ArrayAccessTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitMemberSelect(MemberSelectTree node, Void p) {
+  public R visitMemberSelect(MemberSelectTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitIdentifier(IdentifierTree node, Void p) {
+  public R visitIdentifier(IdentifierTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitLiteral(LiteralTree node, Void p) {
+  public R visitLiteral(LiteralTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitPrimitiveType(PrimitiveTypeTree node, Void p) {
+  public R visitPrimitiveType(PrimitiveTypeTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitArrayType(ArrayTypeTree node, Void p) {
+  public R visitArrayType(ArrayTypeTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitParameterizedType(ParameterizedTypeTree node, Void p) {
+  public R visitParameterizedType(ParameterizedTypeTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitTypeParameter(TypeParameterTree node, Void p) {
+  public R visitTypeParameter(TypeParameterTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitWildcard(WildcardTree node, Void p) {
+  public R visitWildcard(WildcardTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitModifiers(ModifiersTree node, Void p) {
+  public R visitModifiers(ModifiersTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitAnnotation(AnnotationTree node, Void p) {
+  public R visitAnnotation(AnnotationTree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitOther(Tree node, Void p) {
+  public R visitOther(Tree node, P p) {
     return preVisit(node, p);
   }
 
-  public String visitErroneous(ErroneousTree node, Void p) {
-    return preVisit(node, p);
-  }
-
-  @Override
-  public String visitJmlBinary(JmlBinary node, Void p) {
+  public R visitErroneous(ErroneousTree node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlClassDecl(JmlClassDecl node, Void p) {
+  public R visitJmlBinary(JmlBinary node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlCompilationUnit(JmlCompilationUnit node, Void p) {
+  public R visitJmlClassDecl(JmlClassDecl node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlDoWhileLoop(JmlDoWhileLoop node, Void p) {
+  public R visitJmlCompilationUnit(JmlCompilationUnit node, P p) {
+    return preVisit(node, p);
+  }
+
+  @Override
+  public R visitJmlDoWhileLoop(JmlDoWhileLoop node, P p) {
     return preVisit(node, p);
 
   }
 
   @Override
-  public String visitJmlEnhancedForLoop(JmlEnhancedForLoop node, Void p) {
+  public R visitJmlEnhancedForLoop(JmlEnhancedForLoop node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlForLoop(JmlForLoop node, Void p) {
+  public R visitJmlForLoop(JmlForLoop node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlFunction(JmlFunction node, Void p) {
+  public R visitJmlFunction(JmlFunction node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlGroupName(JmlGroupName node, Void p) {
+  public R visitJmlGroupName(JmlGroupName node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlImport(JmlImport node, Void p) {
+  public R visitJmlImport(JmlImport node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlLblExpression(JmlLblExpression node, Void p) {
+  public R visitJmlLblExpression(JmlLblExpression node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodClauseAssignable(JmlMethodClauseAssignable node,
-                                               Void p) {
+  public R visitJmlMethodClauseAssignable(JmlMethodClauseAssignable node,
+                                               P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodClauseConditional(
+  public R visitJmlMethodClauseConditional(
                                                 JmlMethodClauseConditional node,
-                                                Void p) {
+                                                P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodClauseDecl(JmlMethodClauseDecl node, Void p) {
+  public R visitJmlMethodClauseDecl(JmlMethodClauseDecl node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodClauseExpr(JmlMethodClauseExpr node, Void p) {
+  public R visitJmlMethodClauseExpr(JmlMethodClauseExpr node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodClauseGroup(JmlMethodClauseGroup node, Void p) {
+  public R visitJmlMethodClauseGroup(JmlMethodClauseGroup node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodClauseSigOnly(JmlMethodClauseSigOnly node, Void p) {
+  public R visitJmlMethodClauseSigOnly(JmlMethodClauseSigOnly node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodClauseSignals(JmlMethodClauseSignals node, Void p) {
+  public R visitJmlMethodClauseSignals(JmlMethodClauseSignals node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodDecl(JmlMethodDecl node, Void p) {
+  public R visitJmlMethodDecl(JmlMethodDecl node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlMethodSpecs(JmlMethodSpecs node, Void p) {
+  public R visitJmlMethodSpecs(JmlMethodSpecs node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlPrimitiveTypeTree(JmlPrimitiveTypeTree node, Void p) {
+  public R visitJmlPrimitiveTypeTree(JmlPrimitiveTypeTree node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlQuantifiedExpr(JmlQuantifiedExpr node, Void p) {
+  public R visitJmlQuantifiedExpr(JmlQuantifiedExpr node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlRefines(JmlRefines node, Void p) {
+  public R visitJmlRefines(JmlRefines node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlSetComprehension(JmlSetComprehension node, Void p) {
+  public R visitJmlSetComprehension(JmlSetComprehension node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlSingleton(JmlSingleton node, Void p) {
+  public R visitJmlSingleton(JmlSingleton node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlSpecificationCase(JmlSpecificationCase node, Void p) {
+  public R visitJmlSpecificationCase(JmlSpecificationCase node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlStatement(JmlStatement node, Void p) {
+  public R visitJmlStatement(JmlStatement node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlStatementDecls(JmlStatementDecls node, Void p) {
+  public R visitJmlStatementDecls(JmlStatementDecls node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlStatementExpr(JmlStatementExpr node, Void p) {
+  public R visitJmlStatementExpr(JmlStatementExpr node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlStatementLoop(JmlStatementLoop node, Void p) {
+  public R visitJmlStatementLoop(JmlStatementLoop node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlStatementSpec(JmlStatementSpec node, Void p) {
+  public R visitJmlStatementSpec(JmlStatementSpec node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlStoreRefArrayRange(JmlStoreRefArrayRange node, Void p) {
+  public R visitJmlStoreRefArrayRange(JmlStoreRefArrayRange node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlStoreRefKeyword(JmlStoreRefKeyword node, Void p) {
+  public R visitJmlStoreRefKeyword(JmlStoreRefKeyword node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlStoreRefListExpression(JmlStoreRefListExpression node,
-                                               Void p) {
+  public R visitJmlStoreRefListExpression(JmlStoreRefListExpression node,
+                                               P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseConditional(JmlTypeClauseConditional node,
-                                              Void p) {
+  public R visitJmlTypeClauseConditional(JmlTypeClauseConditional node,
+                                              P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseConstraint(JmlTypeClauseConstraint node,
-                                             Void p) {
+  public R visitJmlTypeClauseConstraint(JmlTypeClauseConstraint node,
+                                             P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseDecl(JmlTypeClauseDecl node, Void p) {
+  public R visitJmlTypeClauseDecl(JmlTypeClauseDecl node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseExpr(JmlTypeClauseExpr node, Void p) {
+  public R visitJmlTypeClauseExpr(JmlTypeClauseExpr node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseIn(JmlTypeClauseIn node, Void p) {
+  public R visitJmlTypeClauseIn(JmlTypeClauseIn node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseInitializer(JmlTypeClauseInitializer node,
-                                              Void p) {
+  public R visitJmlTypeClauseInitializer(JmlTypeClauseInitializer node,
+                                              P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseMaps(JmlTypeClauseMaps node, Void p) {
+  public R visitJmlTypeClauseMaps(JmlTypeClauseMaps node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseMonitorsFor(JmlTypeClauseMonitorsFor node,
-                                              Void p) {
+  public R visitJmlTypeClauseMonitorsFor(JmlTypeClauseMonitorsFor node,
+                                              P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlTypeClauseRepresents(JmlTypeClauseRepresents node,
-                                             Void p) {
+  public R visitJmlTypeClauseRepresents(JmlTypeClauseRepresents node,
+                                             P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlVariableDecl(JmlVariableDecl node, Void p) {
+  public R visitJmlVariableDecl(JmlVariableDecl node, P p) {
     return preVisit(node, p);
   }
 
   @Override
-  public String visitJmlWhileLoop(JmlWhileLoop node, Void p) {
+  public R visitJmlWhileLoop(JmlWhileLoop node, P p) {
     return preVisit(node, p);
   }
 

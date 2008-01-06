@@ -1,12 +1,22 @@
 package jml2bml.rules;
 
 import jml2bml.bytecode.BytecodeUtils;
-import jml2bml.engine.BmlKeywords;
 import jml2bml.engine.JmlTokens;
 import jml2bml.engine.KeywordTranslator;
+import jml2bml.engine.Utils;
 
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
+
+import annot.bcexpression.ArithmeticExpression;
+import annot.bcexpression.BCExpression;
+import annot.bcexpression.BoundVar;
+import annot.bcexpression.ConditionalExpression;
+import annot.bcexpression.NumberLiteral;
+import annot.bcexpression.formula.QuantifiedFormula;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
+import annot.io.ReadAttributeException;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ConditionalExpressionTree;
@@ -14,6 +24,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 
@@ -22,86 +33,81 @@ import com.sun.tools.javac.util.Name;
  * @author Jedrek
  *
  */
-public class ExpressionRule extends TranslationRule {
-  private BytecodeUtils bytecodeUtils;
+public class ExpressionRule extends TranslationRule<BCExpression, Void> {
 
-  public ExpressionRule(Context context) {
-    bytecodeUtils = context.get(BytecodeUtils.class);
+  public ExpressionRule(final Context context) {
   }
 
   // ------- visitor methods
   // TODO probably more nodes should be visited here
   @Override
-  public String visitBinary(BinaryTree node, Void p) {
-    String lhs = scan(node.getLeftOperand(), p);
-    String rhs = scan(node.getRightOperand(), p);
-    String operator = JmlTokens.operatorName(node.getKind());
-    return lhs + operator + rhs;
+  public BCExpression visitBinary(BinaryTree node, Void p) {
+    BCExpression lhs = scan(node.getLeftOperand(), p);
+    BCExpression rhs = scan(node.getRightOperand(), p);
+    int operator = Utils.mapJCOperatorToBmlLib(node.getKind());
+    return new ArithmeticExpression(operator, lhs, rhs);
   }
 
   @Override
-  public String visitIdentifier(IdentifierTree node, Void p) {
+  public BCExpression visitIdentifier(IdentifierTree node, Void p) {
     // FIXME translate identifier properly!
-    return node.getName().toString();
+    return node.getName().toBCExpression();
   };
 
   @Override
-  public String visitLiteral(LiteralTree node, Void p) {
-    return node.toString();
-
+  public BCExpression visitLiteral(LiteralTree node, Void p) {
+    Kind kind = node.getKind();
+    if (kind == Kind.INT_LITERAL)
+      return new NumberLiteral(((Integer) node.getValue()).intValue());
+    throw new RuntimeException("Not implemented literal: " + node);
   };
 
   @Override
-  public String visitConditionalExpression(ConditionalExpressionTree node,
+  public BCExpression visitConditionalExpression(ConditionalExpressionTree node,
                                            Void p) {
-    String condition = scan(node.getCondition(), p);
-    String trueExpr = scan(node.getTrueExpression(), p);
-    String falseExpr = scan(node.getFalseExpression(), p);
-    return condition + " ? " + trueExpr + " : " + falseExpr;
+    BCExpression condition = scan(node.getCondition(), p);
+    BCExpression trueExpr = scan(node.getTrueExpression(), p);
+    BCExpression falseExpr = scan(node.getFalseExpression(), p);
+    return new ConditionalExpression(condition, trueExpr, falseExpr);
 
   }
 
   @Override
-  public String visitParenthesized(ParenthesizedTree node, Void p) {
-    return "(" + scan(node.getExpression(), p) + ")";
+  public BCExpression visitParenthesized(ParenthesizedTree node, Void p) {
+    return scan(node.getExpression(), p);
   }
 
   @Override
-  public String visitJmlQuantifiedExpr(JmlQuantifiedExpr node, Void p) {
-    String quantifyType = BmlKeywords.EXISTS;
-    if (JmlTokens.FORALL.equals(node.op.name().toString())) {
-      quantifyType = BmlKeywords.FORALL;
-    } else if (JmlTokens.FORALL.equals(node.op.name().toString())) {
-      quantifyType = BmlKeywords.EXISTS;
+  public BCExpression visitJmlQuantifiedExpr(JmlQuantifiedExpr node, Void p) {
+    int quantifierType = Utils.mapJCOperatorToBmlLib(node.op);
+    QuantifiedFormula formula = new QuantifiedFormula(quantifierType);
+    JavaBasicType type = (JavaBasicType)scan(node.localtype, p);
+    for (Name name : node.names){
+      //FIXME what is the second parameter?
+      BoundVar var = new BoundVar(type,0,formula,name.toString());
+      formula.addVariable(var);
     }
-    String localType = scan(node.localtype, p);
-    String names = "";
-    for (Name name : node.names) {
-      String n = name.toString();
-      if (n.length() > 0) {
-        if (names.length() > 0){
-          names += ",";
-        }
-        names += n;
-      }
-    }
-    if (names.length() >0)
-      names += "; ";
-    final String predicate = scan(node.predicate, p);
-    return quantifyType + " " +localType + " " + names+ predicate;
+    final BCExpression predicate = scan(node.predicate, p);
+    formula.setFormula(predicate);
+    return formula;
   }
 
   @Override
-  public String visitJmlBinary(JmlBinary node, Void p) {
-    String lhs = scan(node.getLeftOperand(), p);
-    String rhs = scan(node.getRightOperand(), p);
-    String operator = KeywordTranslator.translate(node.op.name());
-    return lhs + operator + rhs;
+  public BCExpression visitJmlBinary(JmlBinary node, Void p) {
+    BCExpression lhs = scan(node.getLeftOperand(), p);
+    BCExpression rhs = scan(node.getRightOperand(), p);
+    int operator = Utils.mapJCOperatorToBmlLib(node.op);
+    return new ArithmeticExpression(operator, lhs, rhs);
   }
   
   @Override
-  public String visitPrimitiveType(PrimitiveTypeTree node, Void p) {
-    return node.getPrimitiveTypeKind().toString();
+  public BCExpression visitPrimitiveType(PrimitiveTypeTree node, Void p) {
+    try {
+    return JavaType.getJavaBasicType(Utils.mapJCTypeKindToBmlLib(node.getPrimitiveTypeKind()));
+    }catch (ReadAttributeException e){
+      return null;
+      //FIXME handle the exception
+    }
     
   }
 }

@@ -12,7 +12,7 @@ import com.sun.tools.javac.util.Context;
  * @author Jedrek
  *
  */
-public class AssertRule extends TranslationRule {
+public class AssertRule extends TranslationRule<String, Void> {
   private final Context my_context;
 
   public AssertRule(final Context context) {

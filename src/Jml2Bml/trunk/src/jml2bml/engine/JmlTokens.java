@@ -13,7 +13,7 @@ public class JmlTokens {
 
   public static final String ASSERT = "assert";
 
-  public static final String FORALL = "\\forall";
+  public static final String FORALL = "BSFORALL";
   public static final String EXISTS = "\\exists";
 
   public static String operatorName(Tree.Kind kind) {
