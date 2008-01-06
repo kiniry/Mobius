@@ -1,0 +1,17 @@
+<project name="Jml2Bml" default="classes" basedir=".">
+	<property name="src" location="src/toCompile"/>
+	<property name="classes" location="classes"/>
+	<path id="classpath"><fileset dir="lib" includes="*.jar" /></path>
+
+  	<target name="classes" depends="clean">
+    	<mkdir dir="${classes}" />
+    	<javac srcdir="${src}" destdir="${classes}" debug="yes" debuglevel="vars">
+      		<classpath refid="classpath" /> 
+    	</javac>
+  	</target>
+  
+  	<target name="clean">
+    	<delete dir="${classes}" />
+  	</target>
+</project>
+
