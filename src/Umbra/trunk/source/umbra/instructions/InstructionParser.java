@@ -18,6 +18,29 @@ package umbra.instructions;
 public class InstructionParser {
 
   /**
+   * Java reserved literals as enumerated in JLS 3rd edition, 3.9 Keywords.
+   */
+  private static final String[] JAVA_RES_LITERALS = {
+    "null",  "true",  "false"
+  };
+
+  /**
+   * Java reserved keywords as enumerated in JLS 3rd edition, 3.9 Keywords.
+   */
+  private static final String[] JAVA_KEYWORDS = {
+    "abstract",  "continue",    "for",          "new",          "switch",
+    "assert",    "default",     "if",           "package",      "synchronized",
+    "boolean",   "do",          "goto",         "private",      "this",
+    "break",     "double",      "implements",   "protected",    "throw",
+    "byte",      "else",        "import",       "public",       "throws",
+    "case",      "enum",        "instanceof",   "return",       "transient",
+    "catch",     "extends",     "int",          "short",        "try",
+    "char",      "final",       "interface",    "static",       "void",
+    "class",     "finally",     "long",         "strictfp",     "volatile",
+    "const",     "float",       "native",       "super",        "while"
+  };
+
+  /**
    * This field contains the value of the instruction line
    * which is parsed.
    */
@@ -199,12 +222,94 @@ public class InstructionParser {
   }
 
   /**
-   * We assume the string is not finished.
-   * @return
+   * This method swallows a single class name. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of a class name. We assume the string is not
+   * finished before the method is called.
+   *
+   * The Java class name (TypeName) is parsed using the following specification:
+   * <pre>
+   * TypeName:
+   *    Identifier
+   *    TypeName . Identifier
+   * </pre>
+   * from JLS 3rd edition, 4.3 Reference Types and Values. We additionally
+   * assume that a Java classname is finished when it is followed either
+   * by whitespace or by '>'.
+   *
+   * @return <code>true</code> when the class name has been suceessfully
+   *   swallowed, <code>false</code> otherwise.
    */
   public boolean swallowClassname() {
+    while (swallowIdentifier()) {
+      if (!(my_line.charAt(my_index) == '.')) {
+        return Character.isWhitespace(my_line.charAt(my_index)) ||
+            my_line.charAt(my_index) == '>';
+      }
+      my_index++;
+    }
+    return false;
+  }
+
+  /**
+   * This method swallows a single proper identifier. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of an identifier. We assume the string is not
+   * finished before the method is called.
+   *
+   * The exact format, according to JLS 3rd edition 3.8 Identifiers, is:
+   * <pre>
+   * Identifier:
+   *    IdentifierChars but not a Keyword or BooleanLiteral or NullLiteral
+   *
+   * IdentifierChars:
+   *     JavaLetter
+   *     IdentifierChars JavaLetterOrDigit
+   * </pre>
+   * where a "JavaLetter" is a character for which the method
+   * {@ref Character#isJavaIdentifierStart(int)} returns true and
+   * a "JavaLetterOrDigit" is a character for which the method
+   * {@ref Character#isJavaIdentifierPart(int)} returns true.
+   *
+   * @return <code>true</code> when the identifier has been properly identified
+   *   and swallowed, <code>false</code> when the starting portion of the
+   *   string cannot start an identifier
+   */
+  private boolean swallowIdentifier() {
     if (!Character.isJavaIdentifierStart(my_line.charAt(my_index)))
-        return false;
-    
+      return false;
+    final StringBuffer buf = new StringBuffer("");
+    do {
+      buf.append(my_line.charAt(my_index));
+      my_index++;
+    } while (Character.isJavaIdentifierPart(my_line.charAt(my_index)));
+    final String s = new String(buf);
+    return !isJavaResLiteral(s) && !isJavaKeyword(s);
+  }
+
+  /**
+   * Checks if the given string is a Java keyword.
+   *
+   * @param a_string the string to check
+   * @return <code>true</code> when the given string is a Java keyword,
+   *   <code>false</code> otherwise
+   */
+  private boolean isJavaKeyword(final /*@ non_null @*/ String a_string) {
+    for (int i = 0; i < JAVA_KEYWORDS.length; i++)
+      if (a_string.equals(JAVA_KEYWORDS[i])) return true;
+    return false;
+  }
+
+  /**
+   * Checks if the given string is a Java reserved literal.
+   *
+   * @param a_string the string to check
+   * @return <code>true</code> when the given string is a Java reserved literal
+   *   <code>false</code> otherwise
+   */
+  private boolean isJavaResLiteral(final /*@ non_null @*/ String a_string) {
+    for (int i = 0; i < JAVA_RES_LITERALS.length; i++)
+      if (a_string.equals(JAVA_RES_LITERALS[i])) return true;
+    return false;
   }
 }

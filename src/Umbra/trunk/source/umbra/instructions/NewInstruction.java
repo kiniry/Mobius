@@ -110,8 +110,7 @@ public class NewInstruction extends StringInstruction {
     boolean res = true;
     res = res && parser.swallowDelimiter('<'); // <
     res = res && parser.swallowWhitespace();
-    if (res)
-      res = res && parser.swallowClassname(); //class name
+    res = res && parser.swallowClassname(); //class name
     res = res && parser.swallowWhitespace();
     res = res && parser.swallowDelimiter('>'); // >
     return res;
