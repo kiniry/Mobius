@@ -27,7 +27,7 @@ import com.sun.tools.javac.util.Context;
  * 
  */
 
-public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Void, Boolean> {
+public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> {
   private final List<TranslationRule> rules;
 
   private final BytecodeUtils bytecodeUtils;
@@ -53,17 +53,17 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Void, Boolean> {
    * @return - if the children should be visited
    */
   @Override
-  protected Boolean preVisit(Tree node, Boolean v) {
+  protected Symbols preVisit(Tree node, Symbols v) {
     super.preVisit(node, v);
     if (Boolean.FALSE.equals(v)) {
       return v;
     }
-    node.accept(new SymbolsBuilder(context), null);
+    Symbols symbs = node.accept(new SymbolsBuilder(context), v);
     for (Class<?> cl : JmlNodes.JML_CLASSES) {
       if (cl.equals(node.getClass())) {
-        for (TranslationRule<String, Void> rule : rules) {
+        for (TranslationRule<String, Symbols> rule : rules) {
           // try to apply the rule
-          /*String annotation = */node.accept(rule, null);
+          /*String annotation = */node.accept(rule, symbs);
 //          if (annotation != null) {
 //            // succeeded
 //            Location location = bytecodeUtils.findLocation(node);

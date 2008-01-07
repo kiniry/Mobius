@@ -10,6 +10,8 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.LocalVariable;
 
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.util.Context;
@@ -65,10 +67,26 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     final BCMethod m = BytecodeUtil.findMethod(((MethodTree) method).getName(),
                                                cl);
     final LocalVariable var = m.findLocalVariable(node.name.toString());
+    System.out.println("local " + node.name.toString() + " | " + var);
     s.put(node.name.toString(), new Variable(var, node));
   }
 
   private void handleField(JmlVariableDecl node, Tree clazz, Symbols s) {
 
+  }
+  
+  @Override
+  public Symbols visitBlock(BlockTree node, Symbols p) {
+    return new Symbols(p);
+  }
+  
+  @Override
+  public Symbols visitClass(ClassTree node, Symbols p) {
+    return new Symbols(p);
+  }
+  
+  @Override
+  public Symbols visitMethod(MethodTree node, Symbols p) {
+    return new Symbols(p);
   }
 }

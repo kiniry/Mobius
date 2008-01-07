@@ -5,6 +5,7 @@ import javax.tools.JavaFileObject;
 
 import jml2bml.ast.AncestorFinder;
 import jml2bml.engine.Jml2BmlTranslator;
+import jml2bml.engine.Symbols;
 import jml2bml.engine.TranslationManager;
 
 import org.jmlspecs.openjml.JmlTree;
@@ -52,7 +53,7 @@ public class Main {
     // TODO: move from context
     context.put(AncestorFinder.class, parentFinder);
     Jml2BmlTranslator translator = TranslationManager.getTranslator(context);
-    tree.accept(translator, Boolean.TRUE);
+    tree.accept(translator, new Symbols());
     JmlEnter enter = (JmlEnter) JmlEnter.instance(context);
     ((JmlTree.JmlCompilationUnit) tree).mode = JmlTree.JmlCompilationUnit.JAVA_SOURCE_FULL;
     enter.visitTopLevel(tree);

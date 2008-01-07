@@ -23,14 +23,14 @@ public class RulesFactory {
   /**
    * Returns an instance of NonNullRule
    */
-  public static TranslationRule getNonNullRule(Context context) {
+  public static TranslationRule<String, Symbols> getNonNullRule(Context context) {
     return new NonNullRule(context);
   }
 
   /**
    * Returns an instance of AssertRule
    */
-  public static TranslationRule<String, Void> getAssertRule(Context context) {
+  public static TranslationRule<String, Symbols> getAssertRule(Context context) {
     return new AssertRule(context);
   }
 }

@@ -31,7 +31,7 @@ import com.sun.tools.javac.util.Context;
  * @author kjk
  *
  */
-public class AssertRule extends TranslationRule<String, Void> {
+public class AssertRule extends TranslationRule<String, Symbols> {
   private final Context my_context;
 
   public AssertRule(final Context context) {
@@ -45,7 +45,7 @@ public class AssertRule extends TranslationRule<String, Void> {
    * @param p - additional data (not used)
    * @return bml-assert annotation or null.
    */
-  public String visitJmlStatementExpr(final JmlStatementExpr node, final Void p) {
+  public String visitJmlStatementExpr(final JmlStatementExpr node, final Symbols p) {
 
     final String token = node.token.internedName();
     if (JmlTokens.ASSERT.equals(token)) {
@@ -60,7 +60,7 @@ public class AssertRule extends TranslationRule<String, Void> {
       BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
       if (node.expression != null) {
         BCExpression expression = node.expression.accept(expressionRule,
-                                                         new Symbols());
+                                                         p);
         System.out.println("Jestem");
         InstructionHandle ih1 = bcMethod.getBcelMethod().getInstructionList()
             .getInstructionHandles()[0];

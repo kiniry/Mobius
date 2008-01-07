@@ -1,0 +1,11 @@
+@author Jedrek
+
+This file contains detected bmllib problems.
+
+1. duplicates in local variables names. The getLocalVariable(String name) 
+method in BCMethod does not support case of duplicates in local variable names 
+(loops has mostly local control variables that can have the same name in different
+loops)
+
+2. If an local variable is declared, but not initialized, it won't be found by 
+getLocalVariable(String name) in BCMethod. 
