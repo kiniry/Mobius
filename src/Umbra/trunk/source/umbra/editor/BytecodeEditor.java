@@ -288,6 +288,16 @@ public class BytecodeEditor extends TextEditor {
     final ClassPath cp = new ClassPath(pathName);
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
     final JavaClass jc = strin.loadClass(clname);
+//  FIXME: If my_related_editor is always present and is JavaEditor, then
+//    the following code can be used to replace all above:
+//    IType type = UmbraHelper.getSelectedType(my_related_editor);
+//    final ClassPath cp = new ClassPath(getPath(type.getJavaProject().getOutputLocation()).toString());
+//    final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
+//    final JavaClass jc = strin.loadClass(type.getFullyQualifiedName());
+//
+//  otherwise information about current paths (project and type qualified name)
+//  should be remembered here    
+    
     strin.removeClass(jc);
     BCClass bcc;
     try {
