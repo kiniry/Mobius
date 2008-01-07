@@ -43,7 +43,7 @@ public class AncestorFinder {
 	 * 
 	 * @param treeElement the element to find ancestor of
 	 * @param ancestorKind the kind of ancestor to find
-	 * @return the ancestor of treeElement that is of kint ancestorKind
+	 * @return the ancestor of treeElement that is of kind ancestorKind
 	 */
 	public Tree getAncestor(Tree treeElement, Kind ancestorKind){
 		if (!parents.containsKey(treeElement))

@@ -33,8 +33,9 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Void, Boolean> {
   private final BytecodeUtils bytecodeUtils;
 
   private final JmlEnter jmlEnter;
-
+  private final Context context;
   public Jml2BmlTranslator(Context context) {
+    this.context = context;
     this.rules = new LinkedList<TranslationRule>();
     this.bytecodeUtils = context.get(BytecodeUtils.class);
     this.jmlEnter = context.get(JmlEnter.class);
@@ -57,7 +58,7 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Void, Boolean> {
     if (Boolean.FALSE.equals(v)) {
       return v;
     }
-    node.accept(new SymbolsBuilder(), null);
+    node.accept(new SymbolsBuilder(context), null);
     for (Class<?> cl : JmlNodes.JML_CLASSES) {
       if (cl.equals(node.getClass())) {
         for (TranslationRule<String, Void> rule : rules) {

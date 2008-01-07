@@ -2,7 +2,8 @@ package experiments;
 
 
 public class Test {
-
+  public String str;
+  public static String sss;
   public static void main(/*@ non_null */String[] args) throws Exception {
     //@ ghost int x = 4;
     //@ ghost int y = 5;
@@ -14,5 +15,6 @@ public class Test {
     int c;
     c = a + b;
     int[] d;
+    Object x = new Object(){String vvv;};
   }
 }

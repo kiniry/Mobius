@@ -1,22 +1,74 @@
 package jml2bml.engine;
 
+import jml2bml.ast.AncestorFinder;
 import jml2bml.ast.ExtendedJmlTreeScanner;
+import jml2bml.bytecode.BytecodeUtil;
 
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
 
-import com.sun.source.tree.VariableTree;
+import annot.bcclass.BCClass;
+import annot.bcclass.BCMethod;
+import annot.bcexpression.LocalVariable;
 
-public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols>{
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.tools.javac.util.Context;
 
-  @Override
-  public Symbols visitJmlVariableDecl(JmlVariableDecl node, Symbols p) {
-    
-    System.out.println(node.getKind());
-    return null;
+public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
+  private final AncestorFinder ancestorFinder;
+
+  private final Context context;
+
+  public SymbolsBuilder(Context context) {
+    this.context = context;
+    ancestorFinder = context.get(AncestorFinder.class);
   }
-  
+
+  public Symbols scan(Tree node, Symbols p) {
+    return p;
+  };
+
+  public Symbols scan(Iterable<? extends Tree> nodes, Symbols p) {
+    return p;
+  };
+
+  //TODO handle modifiers (static)
   @Override
-  public Symbols visitVariable(VariableTree node, Symbols p) {
-    System.out.println("ABC" + node.getKind());
+  public Symbols visitJmlVariableDecl(final JmlVariableDecl node,
+                                      final Symbols p) {
+    final Tree block = ancestorFinder.getAncestor(node, Tree.Kind.BLOCK);
+    final Tree method = ancestorFinder.getAncestor(node, Tree.Kind.METHOD);
+    if (method != null && block != null) {
+
+      final Tree clazz = ancestorFinder.getAncestor(node, Tree.Kind.CLASS);
+      if (method == ancestorFinder.getAncestor(clazz, Tree.Kind.METHOD)) {
+        //field in an inner class
+        handleField(node, clazz, p);
+      } else {
+        //local variable
+        handleLocal(node, method, p);
+      }
+    } else if (method != null) {
+      //parameter
+      handleLocal(node, method, p);
+    } else {
+      //class field
+      final Tree clazz = ancestorFinder.getAncestor(node, Tree.Kind.CLASS);
+      handleField(node, clazz, p);
+    }
+
+    return p;
+  }
+
+  private void handleLocal(JmlVariableDecl node, Tree method, Symbols s) {
+    final BCClass cl = context.get(BCClass.class);
+    final BCMethod m = BytecodeUtil.findMethod(((MethodTree) method).getName(),
+                                               cl);
+    final LocalVariable var = m.findLocalVariable(node.name.toString());
+    s.put(node.name.toString(), new Variable(var, node));
+  }
+
+  private void handleField(JmlVariableDecl node, Tree clazz, Symbols s) {
+
   }
 }
