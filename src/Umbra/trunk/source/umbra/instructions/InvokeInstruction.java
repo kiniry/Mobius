@@ -57,6 +57,11 @@ public class InvokeInstruction extends StringInstruction {
    * Invoke instruction line is correct if its parameter
    * contains class name at the beginning and a number in ()
    * at the end.
+   *    whitespase number : whitespace mnemonic whitespace methodname ;
+   *    whitespace ( whitespace number whitespace ) whitespace
+   *    [ number whitespace number whitespace ] lineend
+   * where the text between [] is optional and occurs only when the
+   * mnemonic is "invokeinterface".
    *
    * @return TODO
    * @see InstructionLineController#correct()
@@ -113,6 +118,9 @@ public class InvokeInstruction extends StringInstruction {
     if (!correct())
       return null;
     Instruction res = null;
+    if (getName().compareTo("invokeinterface") == 0) {
+      res = new INVOKESPECIAL(index);
+    }
     if (getName().compareTo("invokespecial") == 0) {
       res = new INVOKESPECIAL(index);
     }
