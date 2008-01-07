@@ -95,4 +95,21 @@ public class MultiInstruction extends InstructionLineController {
     return 0;
   }
 
+  /**
+   * This method tries to parse a number in (). The precise format is:
+   *    ( whitespace number whitespace )
+   *
+   * @param a_parser the parser which is to parse the number
+   * @return <code>true</code> when the syntax of the number is
+   *         correct
+   */
+  protected boolean numberWithDelimiters(final InstructionParser a_parser) {
+    boolean res = true;
+    res = res && a_parser.swallowDelimiter('('); // (
+    res = res && a_parser.swallowWhitespace();
+    res = res && a_parser.swallowNumber(); // number
+    res = res && a_parser.swallowDelimiter(')'); // )
+    res = res && a_parser.swallowWhitespace();
+    return res;
+  }
 }

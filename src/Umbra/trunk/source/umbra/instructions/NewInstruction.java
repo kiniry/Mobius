@@ -14,7 +14,6 @@ import org.apache.bcel.generic.INSTANCEOF;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEW;
 
-import umbra.UmbraHelper;
 import umbra.editor.parsing.BytecodeStrings;
 
 /**
@@ -35,26 +34,6 @@ import umbra.editor.parsing.BytecodeStrings;
 public class NewInstruction extends StringInstruction {
 
   /**
-   * A position before which the '(' character cannot occur in a correct line.
-   */
-  private static final int LEFT_PAREN_FORBIDDEN_BOUND = 2;
-
-  /**
-   * A position before which the ')' character cannot occur in a correct line.
-   */
-  private static final int RIGHT_PAREN_FORBIDDEN_BOUND = 2;
-
-  /**
-   * A position before which the '<' character cannot occur in a correct line.
-   */
-  private static final int LESS_FORBIDDEN_BOUND = 2;
-
-  /**
-   * A position before which the '>' character cannot occur in a correct line.
-   */
-  private static final int GREATER_FORBIDDEN_BOUND = 2;
-
-  /**
    * This creates an instance of an instruction
    * named as <code>a_name</code> in a line the text of which is
    * <code>a_line_text</code>. Currently it just calls the constructor of the
@@ -71,7 +50,7 @@ public class NewInstruction extends StringInstruction {
 
   /**
    * New instruction line is correct if it has one parameter that is a class
-   * name in <> and another one that is a number in (). The presise format is:
+   * name in <> and another one that is a number in (). The precise format is:
    *    whitespase number : whitespace mnemonic whitespace
    *    &lt; whitespace classname whitespace &gt; whitespace
    *    ( whitespace number whitespace ) whitespace lineend
@@ -94,25 +73,21 @@ public class NewInstruction extends StringInstruction {
     return res;
   }
 
-
-  private boolean numberWithDelimiters(InstructionParser parser) {
+  /**
+   * This method tries to parse a class name in <>. The precise format is:
+   *    &lt; whitespace classname whitespace &gt;
+   *
+   * @param a_parser the parser which is to parse the class name
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
+   */
+  private boolean classnameWithDelimiters(final InstructionParser a_parser) {
     boolean res = true;
-    res = res && parser.swallowDelimiter('('); // (
-    res = res && parser.swallowWhitespace();
-    res = res && parser.swallowNumber(); // number
-    res = res && parser.swallowDelimiter(')'); // )
-    res = res && parser.swallowWhitespace();
-    return res;
-  }
-
-
-  private boolean classnameWithDelimiters(InstructionParser parser) {
-    boolean res = true;
-    res = res && parser.swallowDelimiter('<'); // <
-    res = res && parser.swallowWhitespace();
-    res = res && parser.swallowClassname(); //class name
-    res = res && parser.swallowWhitespace();
-    res = res && parser.swallowDelimiter('>'); // >
+    res = res && a_parser.swallowDelimiter('<'); // <
+    res = res && a_parser.swallowWhitespace();
+    res = res && a_parser.swallowClassname(); //class name
+    res = res && a_parser.swallowWhitespace();
+    res = res && a_parser.swallowDelimiter('>'); // >
     return res;
   }
 

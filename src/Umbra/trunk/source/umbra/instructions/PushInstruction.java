@@ -66,7 +66,6 @@ public class PushInstruction extends NumInstruction {
   }
 
   /**
-  /**
    * This method parses the parameter of the current instruction.
    *
    * This method retrieves the numerical value of the parameter of the

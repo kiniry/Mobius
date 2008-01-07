@@ -8,6 +8,11 @@
  */
 package umbra.editor.parsing;
 
+import org.objectweb.asm.tree.LdcInsnNode;
+
+import b2bpl.bytecode.instructions.LdcInstruction;
+
+import umbra.instructions.IncInstruction;
 import umbra.instructions.LoadStoreArrayInstruction;
 import umbra.instructions.PushInstruction;
 
@@ -296,9 +301,11 @@ public class BytecodeStrings {
   public static final String[] PUSH_INS = new String[] {"bipush", "sipush"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref JumpInstruction} class.
+   *
+   * FIXME: "lookupswitch", "tableswitch" are not handled
    */
-  //  dodatkowo #liczba - skokowe
   public static final String[] JUMP_INS = new String[] {"goto", "goto_w",
                                                         "if_acmpeq",
                                                         "if_acmpne",
@@ -316,9 +323,9 @@ public class BytecodeStrings {
                                                         "tableswitch"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref IncInstruction} class.
    */
-  //dodatkowo %liczba i liczba
   public static final String[] INCC_INS = new String[] {"iinc"};
 
   /**
@@ -364,9 +371,9 @@ public class BytecodeStrings {
                                                           "invokevirtual"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref LdcInstruction} class.
    */
-  // "true" || "false" || "null" || "tr" || liczba + (liczba)
   public static final String[] LDC_INS = new String[] {"ldc", "ldc_w",
                                                        "ldc2_w"};
 

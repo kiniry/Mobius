@@ -11,27 +11,19 @@ package umbra.instructions;
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.Instruction;
 
-import umbra.UmbraHelper;
-import umbra.UmbraPlugin;
 import umbra.editor.parsing.BytecodeStrings;
 
 
 /**
- * This class is related to some subset of instructions
- * depending on parameters. It redefines some crucial while
- * handling with single instruction methods(correctness, getting handle).
- * This is only dealing with iinc instruction.
+ * This class handles the creation and correctness for iinc
+ * instruction.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class IncInstruction extends NumInstruction {
-
-  /**
-   * TODO.
-   */
-  private static final int NUMBERS_NO = 2;
 
   /**
    * This creates an instance of an instruction
@@ -50,152 +42,82 @@ public class IncInstruction extends NumInstruction {
 
   /**
    * Inc instruction line is correct if it has
-   * two simple number parameters (first preceded with %).
+   * two simple number parameters (first preceded with %). The precise format
+   * is as follows:
+   *    whitespase number : whitespace mnemonic whitespace % number
+   *    whitespace number whitespace lineend
    *
-   * @return TODO
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
    * @see InstructionLineController#correct()
-   * @see InstructionLineController#chkcorr(String, String)
    */
   public final boolean correct() {
-    return super.chkcorr(getMy_line_text(), "W%DW?-D?W");
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(BytecodeStrings.INCC_INS) >= 0);
+                           //mnemonic
+    res = res && parser.swallowWhitespace(); //whitespace before the number
+    res = res && parser.swallowDelimiter('%'); //
+    res = res && parser.swallowNumber(); // number
+    res = res && parser.swallowWhitespace();
+    res = res && parser.swallowNumber(); // 2nd number
+    res = res && !parser.swallowWhitespace();
+    return res;
   }
 
   /**
-   * TODO.
-   * @return TODO
-   */
-  public final boolean correct0() {
-    final String my_line_text = getMy_line_text();
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = BytecodeStrings.INCC_INS;
-    int j;
-    int y;
-    UmbraPlugin.LOG.print(s);
-    if (s.indexOf("%") < s.indexOf(":") + 1) {
-      UmbraPlugin.LOG.print("hej1");
-      return false;
-    }
-    boolean isminus = false;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) &&
-          (s.indexOf(s2[j]) <= s.indexOf(":") + 1))
-        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%")) {
-          for (y = (s.indexOf("%") + 1); y < s.length(); y++) {
-            if (!(Character.isDigit(s.charAt(y)))) {
-              UmbraPlugin.LOG.print("tu ten minus " + s + " " + my_line_text);
-              if (isminus)
-                return false;
-              else if (s.charAt(y) == '-')
-                isminus = true;
-              else
-                return false;
-            }
-          }
-          int counter = 0;
-          boolean lastisdig = false;
-          for (y = ((my_line_text.indexOf(s2[j])) + (s2[j].length()) + 1);
-               y < my_line_text.length(); y++) {
-            if (Character.isDigit(my_line_text.charAt(y))) {
-              if (!(lastisdig)) counter++;
-              lastisdig = true;
-            } else
-              if (Character.isWhitespace(my_line_text.charAt(y))) {
-                lastisdig = false;
-              }
-          }
-          if (counter == NUMBERS_NO) return true;
-        }
-
-    }
-    return false;
-  }
-
-  /**
-   * TODO.
-   * @return TODO
+   * This method parses the first parameter of the current instruction.
+   *
+   * This method retrieves the numerical value of the parameter of the
+   * instruction in {@link BytecodeLineController#getMy_line_text()}. This
+   * parameter is located after the mnemonic followed by % (with no whitespace
+   * inbetween). The method assumes
+   * {@link BytecodeLineController#getMy_line_text()} is correct.
+   *
+   * @return the value of the numerical parameter of the instruction
    */
   private int getInd1() {
-    final String my_line_text = getMy_line_text();
-    boolean isd;
-    final String licznik = "0123456789";
-    int number = 0;
-
-    isd = true;
-    int dokad = my_line_text.length();
-    for (int i = my_line_text.lastIndexOf("%") + 1;
-         i < my_line_text.length(); i++) {
-      if (!Character.isDigit(my_line_text.charAt(i))) {
-        dokad = i;
-        break;
-      }
-    }
-    if (isd) {
-      number = 0;
-      for (int i = my_line_text.lastIndexOf("%") + 1; i < dokad; i++) {
-        number = 10 * number +
-                              licznik.indexOf(my_line_text.substring(i, i + 1));
-      }
-      return number;
-    }
-    return 0;
+    final InstructionParser parser = getParser();
+    parseTillMnemonic(); //parse up to mnemonic
+    parser.swallowMnemonic(BytecodeStrings.INCC_INS); //mnemonic
+    parser.swallowWhitespace(); //whitespace before the number
+    parser.swallowDelimiter('%'); //
+    parser.swallowNumber(); // number
+    return parser.getResult();
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * This method parses the second parameter of the current instruction.
+   *
+   * This method retrieves the numerical value of the parameter of the
+   * instruction in {@link BytecodeLineController#getMy_line_text()}. This
+   * parameter is located after the first parameter (with some whitespace
+   * inbetween). The method assumes
+   * {@link BytecodeLineController#getMy_line_text()} is correct. It also
+   * assumes that the internal parser state has not been modified between the
+   * call to {@ref #getInd1()} and the call of this method.
+   *
+   * @return the value of the second numerical parameter of the instruction
    */
   private int getInd2() {
-    final String my_line_text = getMy_line_text();
-    boolean isd;
-    final String licznik = "0123456789";
-    int number = 0;
-
-    isd = true;
-    //sets after first number parameter
-    int skadskad = my_line_text.length();
-    for (int i = my_line_text.lastIndexOf("%") + 1;
-         i < my_line_text.length(); i++) {
-      if (!Character.isDigit(my_line_text.charAt(i))) {
-        skadskad = i;
-        break;
-      }
-    }
-    //sets the starting point of second number parameter
-    int skad = 0;
-    for (int i = skadskad; i < my_line_text.length(); i++) {
-      if (Character.isDigit(my_line_text.charAt(i))) {
-        skad = i;
-        break;
-      }
-    }
-    //sets the ending point of second number parameter
-    int dokad = my_line_text.length();
-    for (int i = skad; i < my_line_text.length(); i++) {
-      if (!Character.isDigit(my_line_text.charAt(i))) {
-        dokad = i;
-        break;
-      }
-    }
-
-
-    //always convert to int
-    if (isd) {
-      number = 0;
-      for (int i = skad; i < dokad; i++) {
-        number = 10 * number +
-                 licznik.indexOf(my_line_text.substring(i, i + 1));
-      }
-      if (my_line_text.charAt(skad - 1) == '-') {
-        number = number * (-1);
-      }
-      return number;
-    }
-    return 0;
+    final InstructionParser parser = getParser();
+    parser.swallowWhitespace(); //whitespace before the number
+    parser.swallowNumber(); // number
+    return parser.getResult();
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * This method, based on the value of the field
+   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * object for the iinc instruction. It computes the parameters of the
+   * instruction before the instruction is constructed.
+   * This method also checks the syntactical correctness of the current
+   * instruction line.
+   *
+   * @return the freshly constructed BCEL instruction or <code>null</code>
+   *         in case the instruction is not the iinc instruction and
+   *         in case the instruction line is incorrect
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {

@@ -23,6 +23,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Shell;
 
+import umbra.UmbraException;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
@@ -262,8 +263,14 @@ public class BytecodeController {
       my_modified[a_next_line.getIndex()] = true;
       if (a_start_rem <= j && j <= a_stop) { //we are in the area of inserted
                                              //lines
-        i = addInstructions(a_doc, a_start_rem, an_end_rem, i, j, oldlc,
-                  a_next_line, the_last_flag, metEnd);
+        try {
+          i = addInstructions(a_doc, a_start_rem, an_end_rem, i, j, oldlc,
+                    a_next_line, the_last_flag, metEnd);
+        } catch (UmbraException e) {
+          MessageDialog.openInformation(new Shell(), "Bytecode",
+                      "A jump instruction has improp");
+          break;
+        }
       } else { // we are beyond the area of the inserted instructions
         if (a_start_rem <= i && i <= an_end_rem) {
           oldlc.dispose(a_next_line, cg, the_last_flag, my_instructions, off);
@@ -290,6 +297,7 @@ public class BytecodeController {
    * @param the_methend_flag true when <code>a_j</code> is the last instruction
    *        in a method
    * @return TODO
+   * @throws UmbraException TODO
    */
   private int addInstructions(final IDocument a_doc,
                               final int a_start_of_rem,
@@ -299,7 +307,8 @@ public class BytecodeController {
                               final BytecodeLineController an_old_lc,
                               final BytecodeLineController the_next_line,
                               final boolean the_last_flag,
-                              final boolean the_methend_flag) {
+                              final boolean the_methend_flag)
+    throws UmbraException {
     int res = a_i;
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
     final int off = getInstructionOff(a_j);

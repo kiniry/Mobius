@@ -41,6 +41,28 @@ public class InstructionParser {
   };
 
   /**
+   * Octal digits.
+   */
+  private static final String OCTAL_DIGITS = "01234567";
+
+  /**
+   * Zero-three digits.
+   */
+  private static final String ZEROTOTHREE_DIGITS = "0123";
+
+  /**
+   * The maximal length of an octal escape.
+   */
+  private static final int MAX_OCTAL_NUMBER_LENGTH = 3;
+
+  /**
+   * The meaningful escape characters. These are as described in JLS 3rd
+   * edition, 3.10.6 Escape Sequences for Character and String Literals:
+   * b, t, n, f, r, ", ', \.
+   */
+  private static final String ESCAPE_CODE_CHARACTERS = "btnfr\"\'\\";
+
+  /**
    * This field contains the value of the instruction line
    * which is parsed.
    */
@@ -310,6 +332,153 @@ public class InstructionParser {
   private boolean isJavaResLiteral(final /*@ non_null @*/ String a_string) {
     for (int i = 0; i < JAVA_RES_LITERALS.length; i++)
       if (a_string.equals(JAVA_RES_LITERALS[i])) return true;
+    return false;
+  }
+
+  /**
+   * This method swallows a single string. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of a string. We assume the parsed string is not
+   * finished before the method is called. We assume there is no newline
+   * character in {@ref #my_line}.
+   *
+   * The exact format, according to JLS 3rd edition 3.10.5 String Literals, is:
+   * <pre>
+   * StringLiteral:
+   *         " StringCharacters_opt "
+   *
+   * StringCharacters:
+   *         StringCharacter
+   *         StringCharacters StringCharacter
+   *
+   * StringCharacter:
+   *         InputCharacter but not " or \
+   *         EscapeSequence
+   * </pre>
+   *
+   * @return <code>true</code> when the string has been properly identified
+   *   and swallowed, <code>false</code> when the starting portion of the
+   *   string cannot start a string
+   */
+  public boolean swallowString() {
+    while (my_line.charAt(my_index) != '"') {
+      if (my_line.charAt(my_index) == '\\') {
+        if (!swallowEscape()) return false;
+      } else {
+        my_index++;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * This method swallows a single escape sequence. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of an escape sequence i.e. '\\'. We assume the
+   * parsed string is not finished before the method is called. We assume there
+   * is no newline character in {@ref #my_line}.
+   *
+   * The precise format as described in JLS 3rd edition, 3.10.6 Escape Sequences
+   * for Character and String Literals, is:
+   * <pre>
+   * EscapeSequence:
+   *     \ b                     - \u0008: backspace BS
+   *     \ t                     - \u0009: horizontal tab HT
+   *     \ n                     - \u000a: linefeed LF
+   *     \ f                     - \u000c: form feed FF
+   *     \ r                     - \u000d: carriage return CR
+   *     \ "                     - \u0022: double quote "
+   *     \ '                     - \u0027: single quote '
+   *     \ \                     - \u005c: backslash \
+   *     OctalEscape             - \u0000 to \u00ff: from octal value
+   * </pre>
+   *
+   * @return <code>true</code> when the escape sequence has been properly
+   *   identified and swallowed, <code>false</code> when the starting portion
+   *   of the string cannot start a string
+   */
+  private boolean swallowEscape() {
+    boolean res = true;
+    if (my_line.charAt(my_index) == '\\') {
+      my_index++;
+    } else {
+      return false;
+    }
+    if (isOctalDigit(my_line.charAt(my_index))) {
+      return swallowOctalNumber();
+    } else if (isEscapeChar(my_line.charAt(my_index))) {
+      my_index++;
+      res = true;
+    } else {
+      res = false;
+    }
+    return res;
+  }
+
+  /**
+   * Check if a character is a meaningful escape character. The meaningful
+   * escape characters are as described in JLS 3rd edition, 3.10.6 Escape
+   * Sequences for Character and String Literals: b, t, n, f, r, ", ', \.
+   *
+   * @param a_char the character to check
+   * @return <code>true</code> when a_char is a meaningful escape character
+   */
+  private boolean isEscapeChar(final char a_char) {
+    for (int i = 0; i < ESCAPE_CODE_CHARACTERS.length(); i++)
+      if (ESCAPE_CODE_CHARACTERS.charAt(i) == a_char) return true;
+    return false;
+  }
+
+  /**
+   * This method swallows an octal number form an octal escape sequence.
+   * We assume the parsed string is not finished before the method is called.
+   * The precise format as described in JLS 3rd edition, 3.10.6 Escape Sequences
+   * for Character and String Literals, is:
+   * <pre>
+   * OctalEscape:
+   *     \ OctalDigit
+   *     \ OctalDigit OctalDigit
+   *     \ ZeroToThree OctalDigit OctalDigit
+   * </pre>
+   * This method assumes that \ is already swallowed.
+   *
+   * @return <code>true</code> when an octal number has been successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  private boolean swallowOctalNumber() {
+    boolean ztt = false;
+    if (isZeroToThreeDigit(my_line.charAt(my_index))) ztt = true;
+    for (int i = 0; i < MAX_OCTAL_NUMBER_LENGTH; i++) {
+      if (!isOctalDigit(my_line.charAt(my_index++))) {
+        return true;
+      } else {
+        if (i == MAX_OCTAL_NUMBER_LENGTH - 1) return ztt;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Check if a character is an octal digit.
+   *
+   * @param a_char the character to check
+   * @return <code>true</code> when a_char is an octal digit
+   */
+  private boolean isOctalDigit(final char a_char) {
+    for (int i = 0; i < OCTAL_DIGITS.length(); i++)
+      if (OCTAL_DIGITS.charAt(i) == a_char) return true;
+    return false;
+  }
+
+  /**
+   * Check if a character is 0, 1, 2, or 3.
+   *
+   * @param a_char the character to check
+   * @return <code>true</code> when a_char is 0, 1, 2, or 3
+   */
+  private boolean isZeroToThreeDigit(final char a_char) {
+    for (int i = 0; i < ZEROTOTHREE_DIGITS.length(); i++)
+      if (ZEROTOTHREE_DIGITS.charAt(i) == a_char) return true;
     return false;
   }
 }

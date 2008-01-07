@@ -13,7 +13,6 @@ import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
 import org.apache.bcel.generic.LDC_W;
 
-import umbra.UmbraHelper;
 import umbra.editor.parsing.BytecodeStrings;
 
 
@@ -24,19 +23,10 @@ import umbra.editor.parsing.BytecodeStrings;
  * These instruction are dealing with long data.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class LdcInstruction extends OtherInstruction {
-
-  /**
-   * A position before which the '(' character cannot occur in a correct line.
-   */
-  private static final int LEFT_PAREN_FORBIDDEN_BOUND = 2;
-
-  /**
-   * A position before which the ')' character cannot occur in a correct line.
-   */
-  private static final int RIGHT_PAREN_FORBIDDEN_BOUND = 2;
 
   /**
    * This creates an instance of an instruction
@@ -53,8 +43,21 @@ public class LdcInstruction extends OtherInstruction {
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * This method, based on the value of the field
+   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * object for an LCD instruction, i.e.:
+   * <ul>
+   *    <li>ldc,</li>
+   *    <li>ldc_w,</li>
+   *    <li>ldc2_w.</li>
+   * </ul>
+   *
+   * This method also checks the syntactical correctness of the current
+   * instruction line.
+   *
+   * @return the freshly constructed BCEL instruction or <code>null</code>
+   *         in case the instruction is not a instruction from the current set
+   *         and in case the instruction line is incorrect
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
@@ -77,97 +80,45 @@ public class LdcInstruction extends OtherInstruction {
   }
 
   /**
-   * Ldc instruction line is correct if it has
-   * one main parameter that may be a simple number
-   * as well as a string in "" and another one that
-   * is a number in ().
+   * LDC instruction line is correct if it has one parameter that is a string
+   * enclosed by two " and another one that is a number in (). The precise
+   * format is:
+   *    whitespase number : whitespace mnemonic whitespace
+   *    " string " whitespace ( whitespace number whitespace )
+   *    whitespace lineend
    *
-   * @return TODO
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
    * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    String str;
-    final String my_line_text = getMy_line_text();
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = BytecodeStrings.LDC_INS;
-    int j, y, okok, okokok;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) &&
-          (s.indexOf(s2[j]) <= s.indexOf(":") + 1))
-        if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%"))
-        {
-        //parameter checking
-          if (s.lastIndexOf("(") < LEFT_PAREN_FORBIDDEN_BOUND) return false;
-          if (s.lastIndexOf(")") < RIGHT_PAREN_FORBIDDEN_BOUND) return false;
-          int m, n, o;
-          m = my_line_text.lastIndexOf("(");
-          n = my_line_text.lastIndexOf(")");
-          if (m + 1 >= n) {
-            return false;
-          }
-          for (o = m + 1; o < n; o++) {
-            if (!(Character.isDigit(my_line_text.charAt(o)))) return false;
-          }
-          //two types: number and (number) or string and (number)
-          okok = 0;
-          for (y = (s.indexOf(s2[j]) + s2[j].length());
-               y < s.lastIndexOf("("); y++) {
-            if (!(Character.isDigit(s.charAt(y)))) okok++;
-          }
-          okokok = 0;
-          str = "\"\"";
-          if (okok > 0) {
-            if (((s.indexOf(s2[j]) + s2[j].length())) == s.indexOf("\"")) {
-              //here is null, true or false, true charsetName
-              //checking if there is second" and if there are are 2
-              if (!(s.indexOf("\"") == (s.lastIndexOf("(") - 1))) {
-                if ((s.charAt(s.lastIndexOf("(") - 1)) == str.charAt(1)) {
-                  okokok++;
-                }
-              }
-            }
-          }
+  public final boolean correct() {
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(BytecodeStrings.LDC_INS) >= 0);
+                           //mnemonic
+    res = res && parser.swallowWhitespace(); //whitespace before the classname
+    res = res && stringWithDelimiters(parser);
+    res = res && parser.swallowWhitespace();
+    res = res && numberWithDelimiters(parser);
+    res = res && !parser.swallowWhitespace();
+    return res;
+  }
 
-//        //if there are two numbers or one
-          int c, d, e;
-          int f, g, l;
-          f = 0;
-          g = 0;
-          l = 0;
-          e = my_line_text.lastIndexOf("(");
-          d = my_line_text.indexOf(s2[j]) + s2[j].length();
-          for (c = d; c < e; c++) {
-            l = 0;
-            if (Character.isDigit(my_line_text.charAt(c))) {
-              f = 1;
-            }
-            if (f == 1) {
-              if (!(Character.isDigit(my_line_text.charAt(c)))) {
-                if (g == 1) {
-                  l = 0;
-                } else {
-                  g = 1;
-                  l = 1;
-                }
-              }
-            }
-            if ((l == 0) && (g == 1)) {
-              if  (!(Character.isDigit(my_line_text.charAt(c)))) {
-                okok = 1;
-              }
-            }
-          }
-
-          if ((okok == 0) || (okokok > 0)) {
-            for (y = (s.lastIndexOf("(") + 1); y < s.lastIndexOf(")"); y++) {
-              if (!(Character.isDigit(s.charAt(y)))) return false;
-            }
-            return true;
-          }
-          return false;
-        }
-    }
-    return false;
+  /**
+   * This method tries to parse a string in ". The precise format is:
+   *    " string "
+   *
+   * @param a_parser the parser which is to parse the string
+   * @return <code>true</code> when the syntax of the string is
+   *         correct
+   */
+  private boolean stringWithDelimiters(final InstructionParser a_parser) {
+    boolean res = true;
+    res = res && a_parser.swallowDelimiter('"'); // (
+    res = res && a_parser.swallowString(); // number
+    res = res && a_parser.swallowDelimiter('"'); // )
+    res = res && a_parser.swallowWhitespace();
+    return res;
   }
 }

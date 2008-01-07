@@ -15,6 +15,7 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
+import umbra.UmbraException;
 import umbra.UmbraPlugin;
 
 /**
@@ -109,9 +110,10 @@ public abstract class BytecodeLineController {
    *
    * @param an_ilist TODO
    * @param an_ins TODO
+   * @throws UmbraException TODO
    */
   public void setTarget(final InstructionList an_ilist,
-                        final Instruction an_ins) {
+                        final Instruction an_ins) throws UmbraException {
 
   }
 
