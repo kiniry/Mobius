@@ -16,6 +16,7 @@ import jml2bml.engine.Symbols;
 import jml2bml.exceptions.NotTranslatedException;
 
 import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.LineNumberGen;
 import org.jmlspecs.openjml.JmlTree.JmlAbstractStatement;
 import org.jmlspecs.openjml.JmlTree.JmlStatementExpr;
 
@@ -26,9 +27,13 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -67,35 +72,51 @@ public class AssertRule extends TranslationRule<String, Symbols> {
       //Find an enclosing method
       MethodTree method = (MethodTree) finder.getAncestor(node, Kind.METHOD);
       BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
-      
-      //Find statement the assert applies to
-      StatementTree stmt = findFirstNotEmptySibling(finder, node);
+
       if (node.expression != null) {
         final BCExpression expression = node.expression.accept(expressionRule,
                                                                p);
         if (expression.getType1() != JavaBasicType.JavaBool)
           throw new NotTranslatedException("assert expression must be boolean");
         final AbstractFormula form = (AbstractFormula) expression;
-        System.out.println("Assertion: "+form+" should be added to statement: "+stmt);
-        //insert as the last assertion in first instruction
-        InstructionHandle ih1 = bcMethod.getBcelMethod().getInstructionList()
-            .getInstructionHandles()[0];
-        int count = bcMethod.getAmap().getAllAt(ih1).size();
-        SingleAssert ass = new SingleAssert(bcMethod, ih1, count, form);
+
+        final StatementTree targetStatement = findFirstNotEmptySibling(finder, node);
+        System.out.println("Assertion: "+form+" should be added to statement: "+targetStatement);
+        final InstructionHandle targetIH = translateStatement(targetStatement, bcMethod);
+        int count = bcMethod.getAmap().getAllAt(targetIH).size();
+        SingleAssert ass = new SingleAssert(bcMethod, targetIH, count, form);
         bcMethod.addAttribute(ass);
       }
     }
     return null;
   }
-  
-  private static boolean isJmlStatement(StatementTree stmt){
+
+  private static boolean isJmlStatement(final StatementTree stmt) {
     return (stmt instanceof JmlAbstractStatement);
   }
-  
-  private static StatementTree findFirstNotEmptySibling(TreeNodeFinder finder, StatementTree stmt){
+
+  private static StatementTree findFirstNotEmptySibling(final TreeNodeFinder finder,
+                                                        StatementTree stmt) {
     do {
       stmt = finder.getNextStatement(stmt);
-    } while(stmt != null || isJmlStatement(stmt));
+    } while(stmt != null && isJmlStatement(stmt));
     return stmt;
+  }
+
+  public InstructionHandle translateStatement(final StatementTree stmt,
+                                              final BCMethod method) {
+    if (stmt == null) {
+      return method.getInstructions().getEnd();
+    } else {
+      final LineMap lineMap = my_context.get(LineMap.class);
+      final JCTree jctree = (JCTree) stmt;
+      final long sourceLine = lineMap.getLineNumber(jctree.getStartPosition());
+      for (LineNumberGen lng : method.getBcelMethod().getLineNumbers()) {
+        //FIXME: can one source line have more than one line number in output??
+        if (sourceLine == lng.getSourceLine())
+          return lng.getInstruction();
+      }
+    }
+    throw new NotTranslatedException("Error with finding target instruction in bytecode");
   }
 }

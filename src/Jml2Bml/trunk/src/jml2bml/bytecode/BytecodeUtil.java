@@ -14,16 +14,19 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 
 /**
- * @author kjk
+ * @author kjk (kjk@mimuw.edu.pl)
  *
  */
-public class BytecodeUtil {
-	public static BCMethod findMethod(Name name, BCClass clazz) {
-		for(int i = 0; i<clazz.getMethodCount(); i++) {
-			BCMethod method = clazz.getMethod(i);
-			if (name.contentEquals(method.getBcelMethod().getName()))
-				return method;
-		}
-		return null;
-	}
+public final class BytecodeUtil {
+  private BytecodeUtil() {
+  }
+
+  public static BCMethod findMethod(final Name name, final BCClass clazz) {
+    for (int i = 0; i < clazz.getMethodCount(); i++) {
+      final BCMethod method = clazz.getMethod(i);
+      if (name.contentEquals(method.getBcelMethod().getName()))
+        return method;
+    }
+    return null;
+  }
 }

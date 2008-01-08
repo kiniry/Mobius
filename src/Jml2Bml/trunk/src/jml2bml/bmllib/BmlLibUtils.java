@@ -16,11 +16,11 @@ import com.sun.source.tree.Tree.Kind;
  * @author kjk (kjk@mimuw.edu.pl)
  *
  */
-public class BmlLibUtils {
+final public class BmlLibUtils {
   private BmlLibUtils() { }
 
-  public static boolean isBinaryOperatorPredicate2Ar(int operator){
-    switch(operator){
+  public static boolean isBinaryOperatorPredicate2Ar(final int operator) {
+    switch(operator) {
       case Code.GRT:
       case Code.GRTEQ:
       case Code.LESS:

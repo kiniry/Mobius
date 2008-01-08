@@ -40,10 +40,10 @@ public class TreeNodeFinder {
       return node;
     }
 
-    public Tree visitBlock(BlockTree block, Tree p){
-      Tree result = super.visitBlock(block, p);
-      Iterator<? extends StatementTree> iter = block.getStatements().iterator();
-      if (iter.hasNext()){
+    public Tree visitBlock(BlockTree block, Tree p) {
+      final Tree result = super.visitBlock(block, p);
+      final Iterator<? extends StatementTree> iter = block.getStatements().iterator();
+      if (iter.hasNext()) {
         StatementTree stmt = iter.next();
         while (iter.hasNext()) {
           final StatementTree next = iter.next();
@@ -62,7 +62,7 @@ public class TreeNodeFinder {
   private Map<Tree, Tree> parents;
 
   /**
-   * Maps a statemet to the next statement in a block.
+   * Maps a statement to the next statement in a block.
    */
   private Map<StatementTree, StatementTree> nextStatemtentMap;
 
@@ -77,21 +77,29 @@ public class TreeNodeFinder {
    *
    * @param treeElement the element to find ancestor of
    * @param ancestorKind the kind of ancestor to find
-   * @return the ancestor of treeElement that is of kind ancestorKind
+   * @return the ancestor of treeElement that is of kind ancestorKind,
+   *         when no ancestor of that kind found {@code null} is a result.
    */
-  public Tree getAncestor(Tree treeElement, final Kind ancestorKind) {
+  public Tree getAncestor(final Tree treeElement, final Kind ancestorKind) {
     if (!parents.containsKey(treeElement))
       throw new RuntimeException("tree element not from current tree");
 
-    treeElement = parents.get(treeElement);
-    while (treeElement != null) {
-      if (treeElement.getKind() == ancestorKind)
-        return treeElement;
-      treeElement = parents.get(treeElement);
+    Tree element = parents.get(treeElement);
+    while (element != null) {
+      if (element.getKind() == ancestorKind)
+        return element;
+      element = parents.get(element);
     }
     return null;
   }
 
+  /**
+   * Method finds a statement following {@code statement}.
+   *
+   * @param statement
+   * @return a statement following statement in parameter
+   *         when no statement after {@code null} is a result.
+   */
   public StatementTree getNextStatement(final StatementTree statement) {
     return nextStatemtentMap.get(statement);
   }

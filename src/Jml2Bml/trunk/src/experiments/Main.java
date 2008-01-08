@@ -15,6 +15,7 @@ import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
+import com.sun.source.tree.LineMap;
 import com.sun.tools.javac.comp.JmlEnter;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -54,6 +55,9 @@ public class Main {
     JavaCompiler compiler = JavaCompiler.instance(context);
     JCCompilationUnit tree = compiler.parse(getJavaFileObject(context,
                                                               sourceFile));
+    
+    context.put(LineMap.class, tree.getLineMap());
+    
     TreeNodeFinder parentFinder = new TreeNodeFinder(tree);
     // TODO: move from context
     context.put(TreeNodeFinder.class, parentFinder);

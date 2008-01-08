@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jmlruntime.jar"/>
 	<classpathentry kind="lib" path="lib/jmlspecs.jar"/>
-	<classpathentry kind="lib" path="lib/openjml.jar"/>
+	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJDK"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BCEL5.1"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BmlLib"/>
 	<classpathentry kind="output" path="bin"/>
