@@ -18,6 +18,8 @@ import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
+import annot.bcexpression.FieldRef;
+import annot.bcexpression.LocalVariable;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.formula.Formula;
 import annot.bcexpression.formula.Predicate0Ar;
@@ -768,7 +770,7 @@ public final class ManualTests {
 	 * shows it's bytecode, launches desugar and shows modified
 	 * bytecode.
 	 */
-	public static void desugarTest() throws ClassNotFoundException, ReadAttributeException {
+	private static void desugarTest() throws ClassNotFoundException, ReadAttributeException {
 		bcc = createSampleClass2();
 		String code = bcc.printCode();
 		System.out.println("Old code:\n" + code);
@@ -781,6 +783,26 @@ public final class ManualTests {
 	}
 
 	/**
+	 * A simple test for searching for fields
+	 * and localVariables by name.
+	 */
+	private static void variableSearchTest() throws ClassNotFoundException, ReadAttributeException {
+		final String fname = "text";
+		bcc = createSampleClass();
+		System.out.println(bcc.printCp());
+		System.out.println(bcc.printCode());
+		System.out.println(xxx);
+		int fi = bcc.getFieldIndex(fname);
+		System.out.println(bcc.getCp().getConstant(fi).toString());
+		final String vname = "last";
+		FieldRef fr = new FieldRef(false, bcc.getCp(), fi);
+		System.out.println("field name, should be '"+ fname + "': " + fr.toString());
+		LocalVariable lv = bcc.getMethod(2).findLocalVariable(vname, bcc.getMethod(2).findAtPC(19));
+		System.out.println("start_pc = " + lv.getBcelLvGen().getStart().getPosition());
+		System.out.println("local variable name, should be '" + vname + "': " + lv.getName());
+	}
+	
+	/**
 	 * Main method for running these tests.
 	 * 
 	 * @param args - unused.
@@ -789,6 +811,7 @@ public final class ManualTests {
 		try {
 //			addRemoveTest();
 			codeReplaceTest();
+//			variableSearchTest();
 //			pp_test();
 //			iterTest();
 //			desugarTest();

@@ -639,7 +639,7 @@ public abstract class BCExpression {
 	 * @return new key to store application-specific data
 	 * 		in AST nodes.
 	 */
-	public Object getNewHandle() {
+	public static Object getNewHandle() {
 		return new Object();
 	}
 

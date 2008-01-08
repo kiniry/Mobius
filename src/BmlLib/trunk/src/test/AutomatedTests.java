@@ -262,6 +262,7 @@ public final class AutomatedTests {
 		// formula tests:
 		test(true, 3, "false && true");
 		test(true, 3, "false && true && false");
+		test(false, 3, "false && (1 + true)");
 		test(true, 3, "false ==> true");
 //		test(true, 3, "false ==> true ==> false"); FIXME! Parsing error.
 		test(true, 3, "false ==> (true ==> false)", "false ==> true ==> false");

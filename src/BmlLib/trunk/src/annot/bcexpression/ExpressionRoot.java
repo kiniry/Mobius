@@ -47,7 +47,7 @@ public class ExpressionRoot<T extends BCExpression> extends BCExpression {
 
 	@Override
 	protected JavaType checkType1() {
-		return getSubExpr(0).getType();
+		return getSubExpr(0).checkType();
 	}
 
 	@Override

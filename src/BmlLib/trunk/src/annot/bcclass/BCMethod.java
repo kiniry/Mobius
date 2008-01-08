@@ -228,15 +228,36 @@ public class BCMethod {
 
 	/**
 	 * Seraches for local variable of given name.
+	 * WARNING: Results may be undetermined if there are
+	 * many local variables of the same name in this method.
 	 * 
+	 * @deprecated, use {@link #findLocalVariable(String, InstructionHandle)}
+	 * 		instead.
 	 * @param name - name of local variable to look for.
+	 * @return (any) local variable of given name,
+	 * 		or <code>null</code> if no variable could be found.
+	 */
+	@Deprecated
+	public LocalVariable findLocalVariable(String name) {
+		return findLocalVariable(name, null);
+	}
+
+	/**
+	 * Seraches for local variable of given name and range.
+	 * 
+	 * @param name - name of local variable to look for,
+	 * @param startIH - instruction handle of first
+	 * 		instruction in the method where this variable
+	 * 		is visible.
 	 * @return local variable of given name,
 	 * 		or <code>null</code> if no variable could be found.
 	 */
-	public LocalVariable findLocalVariable(String name) {
+	public LocalVariable findLocalVariable(String name, InstructionHandle startIH) {
 		for (int i=0; i<lvars.length; i++)
 			if (lvars[i].getName().equals(name))
-				return lvars[i];
+				if ((startIH == null)
+						|| (startIH == lvars[i].getBcelLvGen().getStart()))
+					return lvars[i];
 		return null;
 	}
 	
@@ -288,6 +309,7 @@ public class BCMethod {
 	/**
 	 * Returns local variable of given index.
 	 * 
+	 * @param isOld - false, unless we need OLD(local variable)
 	 * @param index - number of local variable
 	 * 		(in this method),
 	 * @return <code>index</code>-th local variable of this

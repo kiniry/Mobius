@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantFieldref;
+import org.apache.bcel.classfile.ConstantNameAndType;
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
@@ -17,6 +21,7 @@ import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.FieldRef;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -460,4 +465,40 @@ public class BCClass {
 		return parser;
 	}
 
+	/**
+	 * Searches constant pool for index of this class'es field
+	 * of given name.
+	 * 
+	 * @param fieldName - name of a field in this class.
+	 * @return field's index, for use in
+	 * 		{@link FieldRef#FieldRef(boolean, BCConstantPool, int)},
+	 * 		<br> or <b>-1</b> if this class has no fields
+	 * 		of given name.
+	 */
+	public int getFieldIndex(String fieldName) { // O(n)
+		Field[] ftab = jc.getFields();
+		for (int i=0; i<ftab.length; i++) //search for field (nameIndex)
+			if (fieldName.equals(ftab[i].getName())) {
+				int ni = ftab[i].getNameIndex();
+				Constant[] ctab = jc.getConstantPool().getConstantPool();
+				for (int j=0; j<ctab.length; j++) //search for NameAndType
+					if (ctab[j] instanceof ConstantNameAndType) {
+						ConstantNameAndType cnt = (ConstantNameAndType)(ctab[j]);
+						if (cnt.getNameIndex() == ni) {
+							for (int k=0; k<ctab.length; k++) // search for FieldRef
+								if (ctab[k] instanceof ConstantFieldref) {
+									ConstantFieldref cfr = (ConstantFieldref)(ctab[k]);
+									if ((cfr.getClassIndex() == 1) //XXX why 1?
+											&& (cfr.getNameAndTypeIndex() == j))
+										return k;
+								}
+							MLog.putMsg(MLog.PError, "Couldn't find FirldRef in constant pool.");
+							return -1;
+						}
+					}
+				MLog.putMsg(MLog.PError, "Couldn't find field's Name in constant pool.");
+				return -1;
+			}
+		return -1;
+	}
 }
