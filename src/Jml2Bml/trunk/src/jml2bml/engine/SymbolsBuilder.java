@@ -67,7 +67,6 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     final BCMethod m = BytecodeUtil.findMethod(((MethodTree) method).getName(),
                                                cl);
     final LocalVariable var = m.findLocalVariable(node.name.toString());
-    System.out.println("local " + node.name.toString() + " | " + var);
     s.put(node.name.toString(), new Variable(var, node));
   }
 

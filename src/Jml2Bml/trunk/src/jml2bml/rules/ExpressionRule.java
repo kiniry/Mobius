@@ -127,6 +127,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   }
 
   //FIXME: (kjk) Is this method needed (we have visitBinary, maybe that one should be moved to this one??
+  //[JF] yes, this is needed. I think there are cases, where visitJmlBinary is invoked and visitBinary - not
   @Override
   public BCExpression visitJmlBinary(JmlBinary node, Symbols p) {
     BCExpression lhs = scan(node.getLeftOperand(), p);
