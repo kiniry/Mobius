@@ -16,11 +16,18 @@ public class Test {
     int a = 1, b = 2;
     int c;
     c = a + b;
+    //@ assert 2 + 2*(1+4) > 123412;
     int[] d = null;
     d[0] = 1;
     for (int i = 0; i <1 ; i++);
     for (int j = 0; j < 1; j ++);
     for (int i = 0; i <1 ; i++);
    // Object x = new Object(){public String toString(){int mmm = 12;return null;}};
+  }
+  
+  public int a(){
+    //@ assert 1 == 1;
+    return 3;
+    //@ assert 2 == 2;
   }
 }

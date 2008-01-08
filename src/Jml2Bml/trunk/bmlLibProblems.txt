@@ -1,4 +1,5 @@
 @author Jedrek
+@author kjk
 
 This file contains detected bmllib problems.
 
@@ -8,4 +9,14 @@ method in BCMethod does not support case of duplicates in local variable names
 loops)
 
 2. If an local variable is declared, but not initialized, it won't be found by 
-getLocalVariable(String name) in BCMethod. 
+getLocalVariable(String name) in BCMethod.
+
+3. kjk: Probably BmlLib should give API for checking type of operator - 
+what type of node it should return and what parameter types are aplicable
+Now we have something like it in jml2bml.bmllib
+
+4. kjk: When building expressions Bml should check if parameters aren't null??
+
+5. kjk: Maybe it should be possible to add it. Assert annotation as
+the last to the instruction handle - now it must be made around
+(get list of annotations at handle, it's size ??) 

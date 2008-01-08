@@ -17,7 +17,7 @@ import com.sun.source.tree.Tree.Kind;
  *
  */
 public class BmlLibUtils {
-  private BmlLibUtils() {}
+  private BmlLibUtils() { }
 
   public static boolean isBinaryOperatorPredicate2Ar(int operator){
     switch(operator){
@@ -32,8 +32,8 @@ public class BmlLibUtils {
         return false;
     }
   }
-  
-  public static int translateBinaryOperator(Kind kind) {
+
+  public static int translateBinaryOperator(final Kind kind) {
     //TODO: check if all translated ok
     if (kind == Kind.AND) return Code.AND;
 //    if (kind == Kind.CONDITIONAL_AND) return

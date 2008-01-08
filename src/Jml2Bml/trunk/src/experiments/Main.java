@@ -3,7 +3,7 @@ package experiments;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
-import jml2bml.ast.AncestorFinder;
+import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.engine.Jml2BmlTranslator;
 import jml2bml.engine.Symbols;
@@ -54,9 +54,9 @@ public class Main {
     JavaCompiler compiler = JavaCompiler.instance(context);
     JCCompilationUnit tree = compiler.parse(getJavaFileObject(context,
                                                               sourceFile));
-    AncestorFinder parentFinder = new AncestorFinder(tree);
+    TreeNodeFinder parentFinder = new TreeNodeFinder(tree);
     // TODO: move from context
-    context.put(AncestorFinder.class, parentFinder);
+    context.put(TreeNodeFinder.class, parentFinder);
     Jml2BmlTranslator translator = TranslationManager.getTranslator(context);
     tree.accept(translator, new Symbols());
     JmlEnter enter = (JmlEnter) JmlEnter.instance(context);

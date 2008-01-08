@@ -1,6 +1,6 @@
 package jml2bml.engine;
 
-import jml2bml.ast.AncestorFinder;
+import jml2bml.ast.TreeNodeFinder;
 import jml2bml.ast.ExtendedJmlTreeScanner;
 import jml2bml.bytecode.BytecodeUtil;
 
@@ -17,13 +17,13 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.util.Context;
 
 public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
-  private final AncestorFinder ancestorFinder;
+  private final TreeNodeFinder ancestorFinder;
 
   private final Context context;
 
   public SymbolsBuilder(Context context) {
     this.context = context;
-    ancestorFinder = context.get(AncestorFinder.class);
+    ancestorFinder = context.get(TreeNodeFinder.class);
   }
 
   public Symbols scan(Tree node, Symbols p) {

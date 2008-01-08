@@ -9,8 +9,11 @@
 package jml2bml.ast;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
@@ -20,12 +23,13 @@ import com.sun.source.tree.Tree.Kind;
  * @author Jedrek (fulara@mimuw.edu.pl)
  * @author kjk    (kjk@mimuw.edu.pl)
  */
-public class AncestorFinder {
+public class TreeNodeFinder {
   /**
    * Class responsible for filling {@code parents} field in
    * {@code AncestorFinder} class.
    *
    * @author Jedrek (fulara@mimuw.edu.pl)
+   * @author kjk    (kjk@mimuw.edu.pl)
    *
    */
   private class ParentFinder extends ExtendedJmlTreeScanner<Tree, Tree> {
@@ -35,6 +39,21 @@ public class AncestorFinder {
       parents.put(node, p);
       return node;
     }
+
+    public Tree visitBlock(BlockTree block, Tree p){
+      Tree result = super.visitBlock(block, p);
+      Iterator<? extends StatementTree> iter = block.getStatements().iterator();
+      if (iter.hasNext()){
+        StatementTree stmt = iter.next();
+        while (iter.hasNext()) {
+          final StatementTree next = iter.next();
+          nextStatemtentMap.put(stmt, next);
+          stmt = next;
+        }
+        nextStatemtentMap.put(stmt, null);
+      }
+      return result;
+    }
   }
 
   /**
@@ -42,8 +61,14 @@ public class AncestorFinder {
    */
   private Map<Tree, Tree> parents;
 
-  public AncestorFinder(final Tree tree) {
+  /**
+   * Maps a statemet to the next statement in a block.
+   */
+  private Map<StatementTree, StatementTree> nextStatemtentMap;
+
+  public TreeNodeFinder(final Tree tree) {
     parents = new HashMap<Tree, Tree>();
+    nextStatemtentMap = new HashMap<StatementTree, StatementTree>();
     tree.accept(new ParentFinder(), null);
   }
 
@@ -65,5 +90,9 @@ public class AncestorFinder {
       treeElement = parents.get(treeElement);
     }
     return null;
+  }
+
+  public StatementTree getNextStatement(final StatementTree statement) {
+    return nextStatemtentMap.get(statement);
   }
 }
