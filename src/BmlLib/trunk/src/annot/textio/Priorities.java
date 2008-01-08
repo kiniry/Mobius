@@ -9,6 +9,11 @@ import annot.io.Code;
  */
 public abstract class Priorities implements Code {
 
+	public static final int ANONE = 0;
+	public static final int ALEFT = 1;
+	public static final int ARIGHT = 2;
+	public static final int ABOTH = 3;
+	
 	/**
 	 * Expression's priority array, from expression's type
 	 * (connector, from {@link Code} interface) to it's
@@ -17,10 +22,11 @@ public abstract class Priorities implements Code {
 	private static int[] priorities;
 
 	/**
-	 * True for binary operators op, where
-	 * forall a, b ; a op b == b op a
+	 * Whether binary operators are associative
+	 * (ANONE, ALEFT, ARIGHT or ABOTH, for non-associative,
+	 * left-, right- and both-associative opcodes)
 	 */
-	private static boolean[] convertibles;
+	private static int[] associative;
 
 	/**
 	 * Priority of expressions that have no subexpressions.
@@ -43,9 +49,9 @@ public abstract class Priorities implements Code {
 	 */
 	private static void setPriorities() {
 		priorities = new int[255];
-		convertibles = new boolean[255];
+		associative = new int[255];
 		for (int i = 0; i < 255; i++)
-			convertibles[i] = false;
+			associative[i] = ALEFT;
 		for (int i = 0; i < 255; i++)
 			priorities[i] = LEAF;
 		priorities[ARRAY_ACCESS] = 1;
@@ -81,18 +87,20 @@ public abstract class Priorities implements Code {
 		priorities[FORALL_WITH_NAME] = 17;
 		priorities[EXISTS_WITH_NAME] = 17;
 		
-		convertibles[MULT] = true;
-		convertibles[PLUS] = true;
-		convertibles[AND] = true;
-		convertibles[OR] = true;
-		convertibles[BITWISEAND] = true;
-		convertibles[BITWISEOR] = true;
-		convertibles[BITWISEXOR] = true;
-		convertibles[EQ] = true;
-		convertibles[NOTEQ] = true;
-		convertibles[EQUIV] = true;
-		convertibles[NOTEQUIV] = true;
-		convertibles[COND_EXPR] = true;
+		associative[MULT] = ABOTH;
+		associative[PLUS] = ABOTH;
+		associative[AND] = ABOTH;
+		associative[OR] = ABOTH;
+		associative[BITWISEAND] = ABOTH;
+		associative[BITWISEOR] = ABOTH;
+		associative[BITWISEXOR] = ABOTH;
+		associative[EQ] = ABOTH;
+		associative[NOTEQ] = ABOTH;
+		associative[EQUIV] = ABOTH;
+		associative[NOTEQUIV] = ABOTH;
+		associative[COND_EXPR] = ABOTH;
+		
+		associative[IMPLIES] = ARIGHT;
 	}
 
 	/**
@@ -115,18 +123,21 @@ public abstract class Priorities implements Code {
 	}
 
 	/**
-	 * Checks whether given operator is convertible.
-	 * XXX jak to siê nazywa po angielsku?
+	 * Checks whether given operator is associative.
 	 * 
-	 * @param opcode - operator opcode.
-	 * @return true for binary operators op, where
-	 * forall a, b ; a op b == b op a
+	 * @param opcode - operator opcode,
+	 * @param dir - associavity direction (ANONE, ALEFT,
+	 * 				ARIGHT or ABOTH, for non-associative,
+	 * 				left-, right- and both-associative
+	 * 				opcodes)
+	 * @return true for binary operators op that are assotiative
+	 * 				in (at least) given direction.
 	 */
-	public static boolean isConvertible(int opcode) {
+	public static boolean isAssociative(int opcode, int dir) {
 		if (priorities == null)
 			setPriorities();
 		if (opcode > 255)
 			throw new RuntimeException("invalid opcode: " + opcode);
-		return convertibles[opcode];
+		return (associative[opcode] & dir) > 0;
 	}
 }

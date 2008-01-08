@@ -688,9 +688,9 @@ public final class ManualTests {
 		replaceTest("/*", "*/", 216, 280, true, "");
 		replaceTest("/*", "\n", 350, noChange, true, "");
 		replaceTest("/*", "*/", 680, 280, true, "  ");
-		replaceTest("Empty\n\n", "\npublic", 734, 169, true, "");
+		replaceTest("Empty\n\n", "\npublic", 734, 383, true, ""); //XXX changed after alx's BCMethod.printCode() modification.
 		replaceTest("V (28)\n", "8:", 655, 138, true, "/* \\assert forall int a; a > 0 */\n");
-		// current BML-annotated .class file format don't support
+		// TODO current BML-annotated .class file format don't support
 		// storeing minor munber, so diffrent bytecodes are equal after saving.
 		ignoreSaveLoadFailure = true;
 		replaceTest("(26)\n/* \n * ", " * \\assert ((", 917, 65, true, "\\loop specification\n *   \\modifies nothing\n");

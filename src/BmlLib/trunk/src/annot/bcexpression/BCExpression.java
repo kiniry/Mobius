@@ -74,8 +74,8 @@ public abstract class BCExpression {
 	@Deprecated
 	protected BCExpression() {
 		this.subExpr = new BCExpression[0];
-		this.priority = getPriority();
 		init();
+		this.priority = getPriority();
 	}
 
 	/**
@@ -341,10 +341,22 @@ public abstract class BCExpression {
 		if (lvlinc)
 			str += IDisplayStyle.expr_block_end;
 		boolean addParenthness = priority > rp;
-		if (parent != null)
+		int chn = childNo;
+		BCExpression parn = parent;
+		while (parn != null) {
+			if (parn.getPriority() != Priorities.PRI_TRANSPARENT)
+				break;
+			chn = parn.childNo;
+			parn = parn.getParent();
+		}
+		if (parn != null)
 			if ((priority == rp)
-					&& (!Priorities.isConvertible(parent.connector))
-					&& (childNo > 0))
+					&& (((!Priorities.isAssociative(parn.connector, Priorities.ARIGHT))
+							&& (chn > 0))
+						|| ((!Priorities.isAssociative(parn.connector, Priorities.ALEFT))
+								&& (chn < parent.getSubExprCount() - 1))
+						)
+				)
 				addParenthness = true;
 		if (addParenthness) {
 			String str2 = "";
@@ -594,7 +606,7 @@ public abstract class BCExpression {
 	 * @param subExpr - new subexpression to be set at
 	 * 		<code>index</code> position.
 	 */
-	protected void setSubExpr(int index, BCExpression subExpr) {
+	public void setSubExpr(int index, BCExpression subExpr) {
 		this.subExpr[index] = subExpr;
 	}
 

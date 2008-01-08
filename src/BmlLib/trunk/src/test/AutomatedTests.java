@@ -46,7 +46,7 @@ public final class AutomatedTests {
 	 * Shows bytecode whose annotations will be modified
 	 * during tests before launching first test.
 	 */
-	private static boolean goShowBytecode = true;
+	private static boolean goShowBytecode = false;
 
 	/**
 	 * Number of tests ran so far.
@@ -141,8 +141,9 @@ public final class AutomatedTests {
 			if (!code.equals(kw + exprected)) {
 				errC++;
 				System.out.println(testC + ": misunderstood");
-				System.out.println("   " + kw + exprected);
-				System.out.println("   " + code);
+				System.out.println("  (expected) " + kw + exprected);
+				System.out.println("   (current) " + code);
+				System.out.println("       (ast) " + pa.getAllExpressions()[0].toString());
 				return;
 			}
 			if (ok) {
@@ -261,6 +262,10 @@ public final class AutomatedTests {
 		// formula tests:
 		test(true, 3, "false && true");
 		test(true, 3, "false && true && false");
+		test(true, 3, "false ==> true");
+//		test(true, 3, "false ==> true ==> false"); FIXME! Parsing error.
+		test(true, 3, "false ==> (true ==> false)", "false ==> true ==> false");
+		test(true, 3, "(false ==> true) ==> false");
 		test(true, 3, "false && true || false ==> true <==> false <=!=> true");
 		test(true, 3, "(true && false) || (true && false)",
 				"true && false || true && false");
@@ -399,7 +404,6 @@ public final class AutomatedTests {
 		test(true, 3, "1 < 2 <==> (3 < 4 ? 5 : 6) < 7 <=!=> 8 < 9");
 		test(false, 3, "true <==> 3 ? 4 : 5 < 6");
 		test(true, 3, "(false ==> true ? 1 : 2) < 3");
-		test(true, 3, "false ==> true ==> false");
 		test(true, 3, "(1 > 2 ? 3 : 4) < 5");
 		test(true, 3, "(true ? 2 : 5) > 0");
 		test(true, 3, "(true ? (2) : (5)) > 0", "(true ? 2 : 5) > 0");

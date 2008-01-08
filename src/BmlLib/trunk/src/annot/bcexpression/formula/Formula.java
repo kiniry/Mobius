@@ -114,8 +114,8 @@ public class Formula extends AbstractFormula {
 		if (getSubExprCount() == 1) {
 			return printRoot(null) + getSubExpr(0).toString();
 		} else {
-			return getSubExpr(0).toString() + printRoot(null)
-					+ getSubExpr(1).toString();
+			return "(" + getSubExpr(0).toString() + printRoot(null)
+					+ getSubExpr(1).toString() + ")";
 		}
 	}
 

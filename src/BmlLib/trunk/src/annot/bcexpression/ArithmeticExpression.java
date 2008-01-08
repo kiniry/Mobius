@@ -103,8 +103,8 @@ public class ArithmeticExpression extends AbstractIntExpression {
 
 	@Override
 	public String toString() {
-		return getSubExpr(0).toString() + printRoot()
-			+ getSubExpr(1).toString();
+		return "(" + getSubExpr(0).toString() + printRoot()
+			+ getSubExpr(1).toString() + ")";
 	}
 
 }
