@@ -14,9 +14,6 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.PUTFIELD;
 import org.apache.bcel.generic.PUTSTATIC;
 
-import umbra.UmbraHelper;
-import umbra.editor.parsing.BytecodeStrings;
-
 
 /**
  * This class is related to some subset of instructions
@@ -62,6 +59,7 @@ public class FieldInstruction extends StringInstruction {
    * @see InstructionLineController#correct()
    */
   public final boolean correct() {
+    return true; /*
     final String my_line_text = getMy_line_text();
     final String s = UmbraHelper.stripAllWhitespace(my_line_text);
     final String[] s2 = BytecodeStrings.FIELD_INS;
@@ -85,7 +83,7 @@ public class FieldInstruction extends StringInstruction {
         return true;
       }
     }
-    return false;
+    return false; */
   }
 
   /**

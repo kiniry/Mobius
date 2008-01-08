@@ -13,30 +13,24 @@ import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 
-import umbra.UmbraHelper;
 import umbra.editor.parsing.BytecodeStrings;
 
 
 /**
- * This class is related to some subset of instructions
- * depending on parameters. It redefines some crucial while
- * handling with single instruction methods (correctness, getting handle).
- * Instructions of this kind are used to call other methods.
+ * This class handles the creation and correctness for invoke instructions. The
+ * invoke instructions are:
+ * <ul>
+ *   <li>invokeinterface,</li>
+ *   <li>invokespecial,</li>
+ *   <li>invokestatic,</li>
+ *   <li>invokevirtual.</li>
+ * </ul>
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class InvokeInstruction extends StringInstruction {
-
-  /**
-   * A position before which the '(' character cannot occur in a correct line.
-   */
-  private static final int LEFT_PAREN_FORBIDDEN_BOUND = 2;
-
-  /**
-   * A position before which the ')' character cannot occur in a correct line.
-   */
-  private static final int RIGHT_PAREN_FORBIDDEN_BOUND = 2;
 
   /**
    * This creates an instance of an instruction
@@ -57,39 +51,52 @@ public class InvokeInstruction extends StringInstruction {
    * Invoke instruction line is correct if its parameter
    * contains class name at the beginning and a number in ()
    * at the end.
-   *    whitespase number : whitespace mnemonic whitespace methodname ;
-   *    whitespace ( whitespace number whitespace ) whitespace
-   *    [ number whitespace number whitespace ] lineend
+   *    whitespase number : whitespace mnemonic whitespace methodname
+   *    whitespace ( whitespace number whitespace )
+   *    [ whitespace number whitespace number ] whitespace lineend
    * where the text between [] is optional and occurs only when the
-   * mnemonic is "invokeinterface".
+   * mnemonic is "invokeinterface". Additionally the final number
+   * parameter should always be 0.
    *
-   * @return TODO
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
    * @see InstructionLineController#correct()
    */
   public final boolean correct() {
-    final String my_line_text = getMy_line_text();
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = BytecodeStrings.INVOKE_INS;
-    int j;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) &&
-          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
-        if (s.lastIndexOf("(") < LEFT_PAREN_FORBIDDEN_BOUND)
-          return false; //TODO is it all right
-        if (s.lastIndexOf(")") < RIGHT_PAREN_FORBIDDEN_BOUND) return false;
-        int m, n, o;
-        m = my_line_text.lastIndexOf("(");
-        n = my_line_text.lastIndexOf(")");
-        if (m + 1 >= n) return false;
-        for (o = m + 1; o < n; o++) {
-          if (!(Character.isDigit(my_line_text.charAt(o)))) {
-            return false;
-          }
-        }
-        return true;
-      }
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(BytecodeStrings.INVOKE_INS) >= 0);
+                           //mnemonic
+    res = res && parser.swallowWhitespace(); //whitespace before the method name
+    res = res && parser.swallowMethodReference(); // method name
+    res = res && parser.swallowWhitespace(); //whitespace before the number
+    res = res && numberWithDelimiters(parser); // number
+    if (res && parser.getMnemonic() == BytecodeStrings.INVOKEINTERFACE_NO) {
+      res = res && invokeinterfaceParams(parser);
     }
-    return false;
+    res = res && !parser.swallowWhitespace();
+    return res;
+  }
+
+
+  /**
+   * This method tries to parse additional optional parameters of the
+   * invokeinterface instruction. The precise format is:
+   *    whitespace number whitespace number
+   * Additionally, the second number must be 0;
+   *
+   * @param a_parser the parser which is to parse the parameters
+   * @return <code>true</code> when the syntax of the parameters is
+   *   correct
+   */
+  private boolean invokeinterfaceParams(final InstructionParser a_parser) {
+    boolean res = a_parser.swallowWhitespace();
+    res = res && a_parser.swallowNumber();
+    res = res && a_parser.swallowWhitespace();
+    res = res && a_parser.swallowNumber();
+    res = res && (a_parser.getResult() == 0);
+    return res;
   }
 
   /**
@@ -99,6 +106,7 @@ public class InvokeInstruction extends StringInstruction {
    * of the instruction before the instruction is constructed. The method can
    * construct one of the instructions:
    * <ul>
+   *   <li>invokeinterface,</li>
    *   <li>invokespecial,</li>
    *   <li>invokestatic,</li>
    *   <li>invokevirtual.</li>

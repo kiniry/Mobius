@@ -241,9 +241,10 @@ public abstract class BytecodeLineController {
   }
 
   /**
-   * TODO.
+   * This method sets the number of the method which the current line belongs
+   * to.
    *
-   * @param an_index TODO
+   * @param an_index number of the method
    */
   public void setIndex(final int an_index) {
     my_index = an_index;

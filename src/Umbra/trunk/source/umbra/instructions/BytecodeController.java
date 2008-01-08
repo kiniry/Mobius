@@ -279,7 +279,7 @@ public class BytecodeController {
         }
       }
     }
-    controlPrint(1);
+    //controlPrint(1);
     return;
   }
 
@@ -349,6 +349,14 @@ public class BytecodeController {
     return res;
   }
 
+  private String removeEOL(final String lineName) {
+    String ls = System.getProperty("line.separator");
+    if (lineName.endsWith(ls)) {
+      return lineName.substring(0, lineName.lastIndexOf(ls) - 1);
+    }
+    return lineName;
+  }
+
   /**
    * Checks whether all lines of a selected area are correct
    * (they satisfies some given syntax conditions). TODO check
@@ -366,6 +374,7 @@ public class BytecodeController {
       final BytecodeLineController line =
                                (BytecodeLineController)(my_editor_lines.get(i));
       if (!line.correct()) {
+        System.out.println("incorrect line="+line.getLineContent());
         ok = false;
         my_incorrect.addLast(my_editor_lines.get(i));
       }
@@ -405,14 +414,12 @@ public class BytecodeController {
 
     //naglowki - public static void private
     // i na wszelki wypadek - int char protected boolean String byte
-    if ((l.startsWith("public")) || (l.startsWith("static")) ||
-      (l.startsWith("void")) || (l.startsWith("private")) ||
-      (l.startsWith("int")) || (l.startsWith("char")) ||
-      (l.startsWith("protected")) || (l.startsWith("boolean")) ||
-      (l.startsWith("String")) || (l.startsWith("byte")) ||
-      (l.startsWith("package")) || (l.startsWith("class")) ||
-      (l.startsWith("}")))
-      return new HeaderLineController(a_line);
+    
+    final String[] sHeaderInits =  BytecodeStrings.HEADER_PREFIX;
+    for (int k = 0; k < sHeaderInits.length; k++) {
+      if (l.startsWith(sHeaderInits[k]))
+        return new HeaderLineController(a_line);
+    }      
 
     if ((l.startsWith("*")) || (l.startsWith("/*")))
       return new AnnotationLineController(a_line);
@@ -465,7 +472,7 @@ public class BytecodeController {
         }
         for (j = 0; j < sIConst.length; j++) {
           if (subline.equalsIgnoreCase(sIConst[j]))
-            return new LoadStoreConstInstruction(a_line, sIConst[j]);
+            return new IConstInstruction(a_line, sIConst[j]);
         }
         for (j = 0; j < sLSArr.length; j++) {
           if (subline.equalsIgnoreCase(sLSArr[j]))

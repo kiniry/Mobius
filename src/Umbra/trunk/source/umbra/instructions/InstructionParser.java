@@ -51,6 +51,11 @@ public class InstructionParser {
   private static final String ZEROTOTHREE_DIGITS = "0123";
 
   /**
+   * Base type descriptor characters.
+   */
+  private static final String BASE_TYPE_DESCRIPTORS = "BCDFIJSZ";
+
+  /**
    * The maximal length of an octal escape.
    */
   private static final int MAX_OCTAL_NUMBER_LENGTH = 3;
@@ -61,6 +66,11 @@ public class InstructionParser {
    * b, t, n, f, r, ", ', \.
    */
   private static final String ESCAPE_CODE_CHARACTERS = "btnfr\"\'\\";
+
+  /**
+   * Contains cached line separator string.
+   */
+  private static String a_LINE_SEPARATOR;
 
   /**
    * This field contains the value of the instruction line
@@ -82,6 +92,13 @@ public class InstructionParser {
    * is called.
    */
   private int my_result;
+
+  /**
+   * The number of the last parsed mnemonic. The number is an index in the
+   * array given as the parameter to {@ref #swallowMnemonic(String[])}.
+   * If no sensible mnemonic have been found the field has the value -1;
+   */
+  private int my_mnemonicno = -1;
 
   /**
    * This constructor sets the string to be parsed and resets the parser
@@ -114,12 +131,23 @@ public class InstructionParser {
    *   <code>false</code> when at the end of the string
    */
   public boolean swallowWhitespace() {
-    if (my_index == my_line.length()) return false;
+    if (my_index == my_line.length() ||
+        my_line.substring(my_index).startsWith(getEOL())) return false;
     while (Character.isWhitespace(my_line.charAt(my_index))) {
       my_index++;
-      if (my_index == my_line.length()) return false;
+      if (my_index == my_line.length() ||
+          my_line.substring(my_index).startsWith(getEOL())) return false;
     }
     return true;
+  }
+
+  /**
+   * @return the line separator specific for the current system
+   */
+  private String getEOL() {
+    if (a_LINE_SEPARATOR == null)
+      a_LINE_SEPARATOR = System.getProperty("line.separator");
+    return a_LINE_SEPARATOR;
   }
 
   /**
@@ -144,8 +172,11 @@ public class InstructionParser {
     }
     if (oldindex == my_index) return false; //no digits were read
     if (my_index < my_line.length() &&
-        !Character.isWhitespace(my_line.charAt(my_index)))
+        !Character.isWhitespace(my_line.charAt(my_index)) &&
+        my_line.charAt(my_index) != ':' &&
+        my_line.charAt(my_index) != ')')
       // the line is not finished and the character at index is not whitespace
+      // or :
       return false;
     my_result = Integer.parseInt(my_line.substring(oldindex, my_index));
     return true;
@@ -178,15 +209,18 @@ public class InstructionParser {
    *   mnemonic or -1 in case no mnemonic from the inventory occurs
    */
   public int swallowMnemonic(final String[] the_inventory) {
-    int res = -1;
+    my_mnemonicno  = -1;
     for (int i = 0; i < the_inventory.length; i++) {
       if (my_line.indexOf(the_inventory[i], my_index) == my_index) {
-        if (res == -1 ||
-            the_inventory[res].length() >  the_inventory[i].length())
-          res = i;
+        if (my_mnemonicno == -1 ||
+            the_inventory[my_mnemonicno].length() >  the_inventory[i].length())
+          my_mnemonicno = i;
       }
     }
-    return res;
+    if (my_mnemonicno >= 0) {
+      my_index += the_inventory[my_mnemonicno].length();
+    }
+    return my_mnemonicno;
   }
 
   /**
@@ -263,14 +297,7 @@ public class InstructionParser {
    *   swallowed, <code>false</code> otherwise.
    */
   public boolean swallowClassname() {
-    while (swallowIdentifier()) {
-      if (!(my_line.charAt(my_index) == '.')) {
-        return Character.isWhitespace(my_line.charAt(my_index)) ||
-            my_line.charAt(my_index) == '>';
-      }
-      my_index++;
-    }
-    return false;
+    return swallowClassnameWithDelim('.');
   }
 
   /**
@@ -368,7 +395,7 @@ public class InstructionParser {
         my_index++;
       }
     }
-    return false;
+    return true;
   }
 
   /**
@@ -479,6 +506,335 @@ public class InstructionParser {
   private boolean isZeroToThreeDigit(final char a_char) {
     for (int i = 0; i < ZEROTOTHREE_DIGITS.length(); i++)
       if (ZEROTOTHREE_DIGITS.charAt(i) == a_char) return true;
+    return false;
+  }
+
+  /**
+   * Returns the index of the last mnemonic found by
+   * {@ref #swallowMnemonic(String[])}. In case no mnemonic was found, the
+   * method returns -1.
+   *
+   * @return the number of the last mnemonic found
+   */
+  public int getMnemonic() {
+    return my_mnemonicno;
+  }
+  /**
+   * This method swallows a single method reference. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of a reference name. We assume the string is not
+   * finished before the method is called.
+   *
+   * As JVMS, 5.1 The Runtime Constant Pool says, a symbolic reference gives
+   * the name and descriptor of the method, as well as a symbolic reference to
+   * the class in which the method is to be found. This takes up the form:
+   * <pre>
+   *   (Identifier .)* Identifier whitespace MethodDescriptor
+   * </pre>
+   *
+   * @return <code>true</code> when a method symbolic reference is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  public boolean swallowMethodReference() {
+    if (!swallowMethodName()) return false;
+    if (!swallowWhitespace()) return false;
+    return swallowMethodDescriptor();
+  }
+
+  /**
+   * This method swallows a single method descriptor. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of a reference name. We assume the string is not
+   * finished before the method is called.
+   *
+   * As JVMS, 4.3.3 Method Descriptors says, a method descriptor represents the
+   * parameters that the method takes and the value that it returns:
+   * <pre>
+   * MethodDescriptor:
+   *      ( ParameterDescriptor* ) ReturnDescriptor
+   * </pre>
+   *
+   * @return <code>true</code> when a method descriptor is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  private boolean swallowMethodDescriptor() {
+    boolean res = true;
+    res = res && swallowDelimiter('(');
+    if (my_line.charAt(my_index) != ')') {
+      res = res && swallowParameterDescriptor();
+    }
+    res = res && swallowDelimiter(')');
+    res = res && swallowWhitespace();
+    return res && swallowReturnDescriptor();
+  }
+
+  /**
+   * This method swallows a single return descriptor. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of a return descriptor. We assume the string is not
+   * finished before the method is called.
+   *
+   * As JVMS, 4.3.3 Method Descriptors says, a return descriptor represents the
+   * type of the value returned from a method. It is a series of characters
+   * generated by the grammar:
+   * <pre>
+   * ReturnDescriptor:
+   *     FieldType
+   *     V
+   * </pre>
+   *
+   * @return <code>true</code> when a return descriptor is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  private boolean swallowReturnDescriptor() {
+    boolean res = false;
+    if (isBaseTypeDescriptor(my_line.charAt(my_index)) ||
+        isVoidTypeDescriptor(my_line.charAt(my_index))) {
+      my_index++;
+      res = true;
+    }
+    res = res && swallowRefTypeDescriptor();
+    return res;
+  }
+
+  /**
+   * This method swallows a reference type descriptor. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of an array descriptor. We assume the string is not
+   * finished before the method is called.
+   *
+   * As JVMS, 4.3.3 Method Descriptors says, a filed type descriptor is
+   * a series of characters generated by the grammar:
+   * <pre>
+   * FiledType:
+   *   BaseType
+   *   ArrayType
+   *   ObjectType
+   * </pre>
+   * We omit here the BaseType case.
+   *
+   * @return <code>true</code> when a parameter descriptor is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  private boolean swallowRefTypeDescriptor() {
+    boolean res = true;
+    if (isArrayTypeDescriptor(my_line.charAt(my_index))) {
+      my_index++;
+      res = swallowArrayTypeDescriptor();
+    }
+    if (!res && isObjectTypeDescriptor(my_line.charAt(my_index))) {
+      my_index++;
+      res = swallowObjectTypeDescriptor();
+    }
+    return res;
+  }
+
+  /**
+   * This method swallows an object type descriptor. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of an object type descriptor. We assume the string
+   * is not finished before the method is called.
+   *
+   * As JVMS, 4.3.3 Method Descriptors says, an object type descriptor is
+   * a series of characters generated by the grammar:
+   * <pre>
+   * ObjectType:
+   *   L &lt;classname&gt; ;
+   * </pre>
+   * we assume L is already swallowed so we swallow here only the class name.
+   *
+   * @return <code>true</code> when a return descriptor is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  private boolean swallowObjectTypeDescriptor() {
+    final boolean res = swallowClassnameWithDelim('/');
+    return res && swallowDelimiter(';');
+  }
+
+  /**
+   * This method swallows a single class name with different possible
+   * name chunk separators. The separator is in the parameter
+   * <code>a_separator</code>. This method may not advance the index in case
+   * the first character to be analysed is not the proper first character of a
+   * class name. We assume the string is not finished before the method is
+   * called.
+   *
+   * The Java class name (TypeName) is parsed using the following specification:
+   * <pre>
+   * TypeName:
+   *    Identifier
+   *    TypeName separator Identifier
+   * </pre>
+   * from JLS 3rd edition, 4.3 Reference Types and Values. We additionally
+   * assume that a Java classname is finished when it is followed either
+   * by whitespace or by one of '>', ';'.
+   *
+   * @param a_separator the name chunk separator
+   * @return <code>true</code> when the class name has been suceessfully
+   *   swallowed, <code>false</code> otherwise.
+   */
+  private boolean swallowClassnameWithDelim(final char a_separator) {
+    while (swallowIdentifier()) {
+      if (!(my_line.charAt(my_index) == a_separator)) {
+        return Character.isWhitespace(my_line.charAt(my_index)) ||
+            my_line.charAt(my_index) == '>' ||
+            my_line.charAt(my_index) == ';';
+      }
+      my_index++;
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the given character starts an object type descriptor.
+   *
+   * @param a_c a character to check
+   * @return <code>true</code> when the character starts an object type
+   *   descriptor
+   */
+  private boolean isObjectTypeDescriptor(final char a_c) {
+    return (a_c == 'L');
+  }
+
+  /**
+   * This method swallows an array type descriptor. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of an array descriptor. We assume the string is not
+   * finished before the method is called.
+   *
+   * As JVMS, 4.3.3 Method Descriptors says, an object type descriptor is
+   * a series of characters generated by the grammar:
+   * <pre>
+   * ArrayType:
+   *   [ ComponentType ;
+   * </pre>
+   * we assume [ is already swallowed so we swallow here only the component
+   * type.
+   *
+   * @return <code>true</code> when a return descriptor is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  private boolean swallowArrayTypeDescriptor() {
+    boolean res = false;
+    res = swallowFieldType(); //ComponentType :: = FieldType
+    res = res && swallowDelimiter(';');
+    return res;
+  }
+
+  /**
+   * This method swallows a filed type descriptor. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of an array descriptor. We assume the string is not
+   * finished before the method is called.
+   *
+   * As JVMS, 4.3.3 Method Descriptors says, a filed type descriptor is
+   * a series of characters generated by the grammar:
+   * <pre>
+   * FiledType:
+   *   BaseType
+   *   ArrayType
+   *   ObjectType
+   * </pre>
+   *
+   * @return <code>true</code> when a return descriptor is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  private boolean swallowFieldType() {
+    boolean res = false;
+    if (isBaseTypeDescriptor(my_line.charAt(my_index))) {
+      my_index++;
+      res = true;
+    }
+    res = res && swallowRefTypeDescriptor();
+    return res;
+  }
+
+  /**
+   * Checks if the given character starts an array type descriptor.
+   *
+   * @param a_c a character to check
+   * @return <code>true</code> when the character starts an array type
+   *   descriptor
+   */
+  private boolean isArrayTypeDescriptor(final char a_c) {
+    return (a_c == '[');
+  }
+
+  /**
+   * Checks if the given character starts a base type descriptor.
+   *
+   * @param a_c a character to check
+   * @return <code>true</code> when the character starts a byse type
+   *   descriptor
+   */
+  private boolean isBaseTypeDescriptor(final char a_c) {
+    for (int i = 0; i < BASE_TYPE_DESCRIPTORS.length(); i++) {
+      if (a_c == BASE_TYPE_DESCRIPTORS.charAt(i)) return true;
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the given character starts a void type descriptor.
+   *
+   * @param a_c a character to check
+   * @return <code>true</code> when the character starts a void type
+   *   descriptor
+   */
+  private boolean isVoidTypeDescriptor(final char a_c) {
+    return (a_c == 'V');
+  }
+
+  /**
+   * This method swallows a single parameter descriptor. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of a parameter descriptor. We assume the string is
+   * not finished before the method is called.
+   *
+   * As JVMS, 4.3.3 Method Descriptors says, a parameter descriptor represents
+   * a parameter passed to a method:
+   * <pre>
+   * ParameterDescriptor:
+   *      FieldType
+   * </pre>
+   *
+   * @return <code>true</code> when a parameter descriptor is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  private boolean swallowParameterDescriptor() {
+    return swallowFieldType();
+  }
+
+  /**
+   * This method swallows a single method name. This method may not
+   * advance the index in case the first character to be analysed is not the
+   * proper first character of a class name. We assume the string is not
+   * finished before the method is called.
+   *
+   * The Java method name is parsed using the following specification:
+   * <pre>
+   * MethodName:
+   *    Identifier
+   *    MethodName . Identifier
+   * </pre>
+   * We additionally assume that a Java method is finished when it is followed
+   * by whitespace.
+   *
+   * @return <code>true</code> when the method name has been suceessfully
+   *   swallowed, <code>false</code> otherwise.
+   */
+  private boolean swallowMethodName() {
+    while (swallowIdentifier()) {
+      if (!(my_line.charAt(my_index) == '.')) {
+        return Character.isWhitespace(my_line.charAt(my_index));
+      }
+      my_index++;
+    }
+    if (my_line.charAt(my_index) == '<') {
+      swallowDelimiter('<'); //FIXME this is a hack to parse <init>
+      swallowIdentifier();
+      return swallowDelimiter('>');
+    }
     return false;
   }
 }

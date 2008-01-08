@@ -306,8 +306,8 @@ public class BytecodeEditor extends TextEditor {
       my_bmlp = new BMLParsing(bcc);
       //this is where the textual representation is generated
       //FIXME we have to make sure it makes sense!!!
-      final char[] bccode = bcc.printCode().toCharArray();
-      System.err.println("bcode="+bccode);
+      final String bcode = bcc.printCode();
+      final char[] bccode = bcode.toCharArray();
       final byte[] contents = new byte[bccode.length];
       //here a char array is transformed to byte array
       for (int i = 0; i < bccode.length; i++) {

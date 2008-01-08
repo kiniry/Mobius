@@ -12,7 +12,6 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -20,7 +19,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IRegion;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -360,7 +358,7 @@ public final class UmbraHelper {
     final IPath outputloc = jproject.getOutputLocation();
     final String newloc = outputloc.append(a_java_file.getFullPath().
               removeFirstSegments(1)).toPortableString();
-    final String fname = replaceLast(newloc, an_extension, CLASS_EXTENSION_NONDOT);
+    final String fname = replaceLast(newloc, an_extension, CLASS_EXTENSION);
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile file = workspace.getRoot().
              getFile(Path.fromPortableString(fname));
@@ -405,13 +403,15 @@ public final class UmbraHelper {
 
 // Better, easier way, but VALID ONLY SINCE ECLIPSE VERSION 3.3
 // usage: getClassFilePath2(getSelectedType(editor))
-//  public static IPath getClassFilePath2(final IType element) throws JavaModelException {
-//    IJavaElement enclosingCompilationUnit = (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
+//  public static IPath getClassFilePath2(final IType element)
+//        throws JavaModelException {
+//    IJavaElement enclosingCompilationUnit = (ICompilationUnit)
+//        element.getAncestor(IJavaElement.COMPILATION_UNIT);
 //    IRegion region = JavaCore.newRegion();
 //    region.add(enclosingCompilationUnit);
 //    IResource[] ress = JavaCore.getGeneratedResources(region, false);
 //    String originalName = element.getTypeQualifiedName() + CLASS_EXTENSION;
-//    for(IResource resource: ress){      
+//    for(IResource resource: ress){
 //      String resourceName = resource.getName();
 //      if (resourceName.equals(originalName))
 //        return resource.getProjectRelativePath();
@@ -432,7 +432,7 @@ public final class UmbraHelper {
     IJavaProject project = javaType.getJavaProject();
     IPath path = project.getOutputLocation();
     return path.append(javaType.getFullyQualifiedName().replace(Signature.C_DOT,
-                                                                File.separatorChar));
+                                                     File.separatorChar));
   }
 
   /**
@@ -443,8 +443,8 @@ public final class UmbraHelper {
    */
   public static String getPackageName(final IJavaElement javaElement) {
     int elementType = javaElement.getElementType();
-    if (elementType == IJavaElement.PACKAGE_FRAGMENT
-        || elementType == IJavaElement.PACKAGE_FRAGMENT_ROOT) {
+    if (elementType == IJavaElement.PACKAGE_FRAGMENT ||
+        elementType == IJavaElement.PACKAGE_FRAGMENT_ROOT) {
       return javaElement.getElementName();
     } else {
       return javaElement.getAncestor(IJavaElement.PACKAGE_FRAGMENT)
@@ -480,8 +480,10 @@ public final class UmbraHelper {
    * @return IType selected in editor
    * @throws JavaModelException
    */
-  public static IType getSelectedType(final IEditorPart editor) throws JavaModelException{
-    IJavaElement element = SelectionConverter.getElementAtOffset((JavaEditor) editor);
+  public static IType getSelectedType(final IEditorPart editor)
+      throws JavaModelException {
+    IJavaElement element = SelectionConverter.getElementAtOffset(
+                                         (JavaEditor) editor);
     IType type = UmbraHelper.getEnclosingType(element);
     if (type == null) {
       ICompilationUnit elem = (ICompilationUnit) getJavaElement(editor);

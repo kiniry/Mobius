@@ -109,7 +109,6 @@ public class MultiInstruction extends InstructionLineController {
     res = res && a_parser.swallowWhitespace();
     res = res && a_parser.swallowNumber(); // number
     res = res && a_parser.swallowDelimiter(')'); // )
-    res = res && a_parser.swallowWhitespace();
     return res;
   }
 }

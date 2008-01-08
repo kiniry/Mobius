@@ -8,14 +8,7 @@
  */
 package umbra.editor.parsing;
 
-import org.objectweb.asm.tree.LdcInsnNode;
-
-import b2bpl.bytecode.instructions.LdcInstruction;
-
-import umbra.instructions.IncInstruction;
-import umbra.instructions.LoadStoreArrayInstruction;
-import umbra.instructions.PushInstruction;
-
+import umbra.instructions.HeaderLineController;
 
 /**
  * String arrays used to identify keywords and instruction
@@ -362,13 +355,18 @@ public class BytecodeStrings {
                                                          "putstatic"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref InvokeInstruction} class.
    */
-  //invokeinstr - java.costam; rozne nawiasy [( V i (liczba)
   public static final String[] INVOKE_INS = new String[] {"invokeinterface",
                                                           "invokespecial",
                                                           "invokestatic",
                                                           "invokevirtual"};
+
+  /**
+   * Contains the index to {@ref #INVOKE_INS} of "invokeinterface".
+   */
+  public static final int INVOKEINTERFACE_NO = 0;
 
   /**
    * This constant contains an array with all the names of instructions handled
@@ -463,5 +461,19 @@ public class BytecodeStrings {
   public static final char[] KEY_TYPE_CHARS = new char[] {'B', 'C', 'D', 'I',
                                                           'S', 'V'};
 
+  /**
+   * This constant contains an array with all the possible prefixes of method
+   * headers in bytecode text files. The header lines are handled by
+   * {@ref HeaderLineController} class.
+   */
+  public static final String[] HEADER_PREFIX = new String[] { "public",
+                                                              "static", "void",
+                                                              "private",
+                                                              "int", "char",
+                                                              "protected",
+                                                              "boolean",
+                                                              "String", "byte",
+                                                              "package",
+                                                              "class", "}" };
 
 }
