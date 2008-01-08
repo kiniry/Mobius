@@ -8,6 +8,7 @@
  */
 package jml2bml.rules;
 
+import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.engine.Symbols;
 import jml2bml.engine.UniqueIndexGenerator;
 import jml2bml.engine.Utils;
@@ -24,6 +25,7 @@ import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.formula.Predicate0Ar;
+import annot.bcexpression.formula.Predicate2Ar;
 import annot.bcexpression.formula.QuantifiedFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.javatype.JavaType;
@@ -42,8 +44,8 @@ import com.sun.tools.javac.util.Name;
 
 /**
  * Rule for translating JML expressions.
- * @author Jedrek
- * @author kjk
+ * @author Jedrek (fulara@mimuw.edu.pl)
+ * @author kjk    (kjk@mimuw.edu.pl)
  *
  */
 public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
@@ -57,8 +59,12 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   public BCExpression visitBinary(BinaryTree node, Symbols p) {
     BCExpression lhs = scan(node.getLeftOperand(), p);
     BCExpression rhs = scan(node.getRightOperand(), p);
-    int operator = Utils.mapJCOperatorToBmlLib(node.getKind());
-    return new ArithmeticExpression(operator, lhs, rhs);
+    int operator = BmlLibUtils.translateBinaryOperator(node.getKind());
+    //TODO: (kjk) This should be done better!!
+    if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator))
+      return new Predicate2Ar(operator, lhs, rhs);
+    else
+      return new ArithmeticExpression(operator, lhs, rhs);
   }
 
   @Override
@@ -67,11 +73,11 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     String name = node.getName().toString();
     Variable variable = p.get(name);
     System.out.println(name);
-    if (variable == null){
+    if (variable == null) {
       return null;
       //throw new RuntimeException("Invalid variable " + name);
     }
-    if (variable.isBoundVariable()){
+    if (variable.isBoundVariable()) {
       return variable.getVariable();
     }
     //TODO handle other cases;
@@ -110,8 +116,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     QuantifiedFormula formula = new QuantifiedFormula(quantifierType);
     JavaBasicType type = (JavaBasicType)scan(node.localtype, p);
     Symbols symbols = new Symbols(p);
-    for (Name name : node.names){
-      BoundVar var = new BoundVar(type,UniqueIndexGenerator.getNext(),formula,name.toString());
+    for (Name name : node.names) {
+      BoundVar var = new BoundVar(type, UniqueIndexGenerator.getNext(), formula, name.toString());
       formula.addVariable(var);
       symbols.put(name.toString(), new Variable(var, node));
     }
@@ -120,6 +126,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     return formula;
   }
 
+  //FIXME: (kjk) Is this method needed (we have visitBinary, maybe that one should be moved to this one??
   @Override
   public BCExpression visitJmlBinary(JmlBinary node, Symbols p) {
     BCExpression lhs = scan(node.getLeftOperand(), p);
@@ -131,8 +138,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   @Override
   public BCExpression visitPrimitiveType(PrimitiveTypeTree node, Symbols p) {
     try {
-    return JavaType.getJavaBasicType(Utils.mapJCTypeKindToBmlLib(node.getPrimitiveTypeKind()));
-    }catch (ReadAttributeException e){
+      return JavaType.getJavaBasicType(Utils.mapJCTypeKindToBmlLib(node.getPrimitiveTypeKind()));
+    } catch (ReadAttributeException e) {
       throw new RuntimeException(e);
     }
     
@@ -140,6 +147,6 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   
   @Override
   public BCExpression visitArrayAccess(ArrayAccessTree node, Symbols p) {
-    return new ArrayAccess(scan(node.getExpression(),p), scan(node.getIndex(), p));
+    return new ArrayAccess(scan(node.getExpression(), p), scan(node.getIndex(), p));
   }
 }

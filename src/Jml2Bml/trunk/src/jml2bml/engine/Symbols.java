@@ -27,7 +27,7 @@ public class Symbols {
     }
     return parentSymbols.get(variableName);
   }
-  public void put(String variableName, Variable val){
+  public void put(String variableName, Variable val) {
     variables.put(variableName, val);
   }
 }

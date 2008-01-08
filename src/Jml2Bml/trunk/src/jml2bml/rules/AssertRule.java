@@ -6,12 +6,12 @@
  */
 package jml2bml.rules;
 
-import java.io.IOException;
-
 import jml2bml.ast.AncestorFinder;
 import jml2bml.bytecode.BytecodeUtil;
+import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.engine.JmlTokens;
 import jml2bml.engine.Symbols;
+import jml2bml.exceptions.NotTranslatedException;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.jmlspecs.openjml.JmlTree.JmlStatementExpr;
@@ -20,6 +20,8 @@ import annot.attributes.SingleAssert;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.formula.AbstractFormula;
+import annot.bcexpression.javatype.JavaBasicType;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree.Kind;
@@ -55,29 +57,24 @@ public class AssertRule extends TranslationRule<String, Symbols> {
       BCExpression expr;
       AncestorFinder finder = my_context.get(AncestorFinder.class);
       BCClass clazz = my_context.get(BCClass.class);
+      ClassFileLocation classLoc = my_context.get(ClassFileLocation.class);
 
       MethodTree method = (MethodTree) finder.getAncestor(node, Kind.METHOD);
       BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
       if (node.expression != null) {
-        BCExpression expression = node.expression.accept(expressionRule,
+        final BCExpression expression = node.expression.accept(expressionRule,
                                                          p);
-        System.out.println("Jestem");
+        if (expression.getType1() != JavaBasicType.JavaBool)
+          throw new NotTranslatedException("assert expression must be boolean");
+        final AbstractFormula form = (AbstractFormula) expression;
+        //insert as the last assertion in first instruction
         InstructionHandle ih1 = bcMethod.getBcelMethod().getInstructionList()
             .getInstructionHandles()[0];
-        SingleAssert ass = new SingleAssert(bcMethod, ih1, 1);
+        int count = bcMethod.getAmap().getAllAt(ih1).size();
+        SingleAssert ass = new SingleAssert(bcMethod, ih1, count, form);
         bcMethod.addAttribute(ass);
-        bcMethod.save();
       }
-        try {
-          clazz.saveToFile("Test.class");
-        } catch (IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        
-
-      }
-    return null;
     }
+    return null;
   }
-
+}

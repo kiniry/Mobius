@@ -4,6 +4,7 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 import jml2bml.ast.AncestorFinder;
+import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.engine.Jml2BmlTranslator;
 import jml2bml.engine.Symbols;
 import jml2bml.engine.TranslationManager;
@@ -12,6 +13,7 @@ import org.jmlspecs.openjml.JmlTree;
 
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
+import annot.textio.BMLConfig;
 
 import com.sun.tools.javac.comp.JmlEnter;
 import com.sun.tools.javac.main.JavaCompiler;
@@ -26,8 +28,9 @@ import com.sun.tools.javac.util.List;
 
 public class Main {
   public static void main(String[] args) throws ClassNotFoundException, ReadAttributeException {
-    new Main().compile(ProjectDirectory.PROJECT_DIR
-                       + "\\src\\experiments\\Test.java", ProjectDirectory.PROJECT_DIR + "\\bin", "experiments.Test");
+    ClassFileLocation classLoc = new ClassFileLocation(ProjectDirectory.PROJECT_DIR + "\\bin", "experiments.Test");
+    new Main().compile(ProjectDirectory.PROJECT_DIR + "\\src\\experiments\\Test.java",
+                       classLoc);
   }
 
   /**
@@ -41,10 +44,12 @@ public class Main {
    * @throws ReadAttributeException 
    * @throws ClassNotFoundException 
    */
-  public void compile(String sourceFile, String classDirFile, String className)
+  public void compile(String sourceFile, ClassFileLocation classLoc)
       throws ClassNotFoundException, ReadAttributeException {
     Context context = Factory.getContext();
-    BCClass clazz = new BCClass(classDirFile, className);
+    context.put(ClassFileLocation.class, classLoc);
+    BCClass clazz = new BCClass(classLoc.getDirectoryName(), 
+                                classLoc.getClassQualifiedName());
     context.put(BCClass.class, clazz);
     JavaCompiler compiler = JavaCompiler.instance(context);
     JCCompilationUnit tree = compiler.parse(getJavaFileObject(context,
@@ -59,6 +64,9 @@ public class Main {
     enter.visitTopLevel(tree);
 
     System.out.println("envir " + enter.getTopLevelEnv(tree));
+    
+    clazz.saveJC();
+    System.out.println(clazz.printCode());
 
   }
 

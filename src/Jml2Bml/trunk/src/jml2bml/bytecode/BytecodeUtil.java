@@ -18,8 +18,8 @@ import annot.bcclass.BCMethod;
  *
  */
 public class BytecodeUtil {
-	public static BCMethod findMethod(Name name, BCClass clazz){
-		for(int i=0; i<clazz.getMethodCount(); i++){
+	public static BCMethod findMethod(Name name, BCClass clazz) {
+		for(int i = 0; i<clazz.getMethodCount(); i++) {
 			BCMethod method = clazz.getMethod(i);
 			if (name.contentEquals(method.getBcelMethod().getName()))
 				return method;

@@ -34,8 +34,7 @@ public class ExpressionTranslator extends TreeScanner<BCExpression, Void> {
 	public BCExpression myScan(Tree node, Void p) {
 		BCExpression result = scan(node, p);
 		if (result == null)
-			throw new RuntimeException("Not implemented node: "
-					+ node.getKind() + ": " + node);
+			throw new RuntimeException("Not implemented node: " + node.getKind() + ": " + node);
 		return result;
 	}
 

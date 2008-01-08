@@ -11,28 +11,28 @@ public class Variable {
   private boolean isLocalVariable = false;
   private BCExpression var;
   private Tree jmlNode;
-  public boolean isBoundVariable(){
+  public boolean isBoundVariable() {
     return isBoundVariable;
   }
-  public boolean isLocalVariable(){
+  public boolean isLocalVariable() {
     return isLocalVariable;
   }
   
-  public Variable(BoundVar var, Tree jmlNode){
+  public Variable(BoundVar var, Tree jmlNode) {
     this.var = var;
     this.jmlNode = jmlNode;
     this.isBoundVariable = true;
   }
-  public Variable(LocalVariable var, Tree jmlNode){
+  public Variable(LocalVariable var, Tree jmlNode) {
     this.var = var;
     this.jmlNode = jmlNode;
     this.isLocalVariable = true;
   }
   
-  public BCExpression getVariable(){
+  public BCExpression getVariable() {
     return var;
   }
-  public Tree getJmlNode(){
+  public Tree getJmlNode() {
     return jmlNode;
   }
 }

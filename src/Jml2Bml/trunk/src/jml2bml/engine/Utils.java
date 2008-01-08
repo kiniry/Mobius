@@ -13,10 +13,6 @@ public class Utils {
     return 0;
   }
 
-  public static int mapJCOperatorToBmlLib(Tree.Kind kind) {
-    return 0;
-  }
-
   public static String mapJCTypeKindToBmlLib(TypeKind primitiveTypeKind) {
     if (TypeKind.BOOLEAN.compareTo(primitiveTypeKind) == 0) {
       return "boolean";

@@ -55,9 +55,6 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> 
   @Override
   protected Symbols preVisit(Tree node, Symbols v) {
     super.preVisit(node, v);
-    if (Boolean.FALSE.equals(v)) {
-      return v;
-    }
     Symbols symbs = node.accept(new SymbolsBuilder(context), v);
     for (Class<?> cl : JmlNodes.JML_CLASSES) {
       if (cl.equals(node.getClass())) {

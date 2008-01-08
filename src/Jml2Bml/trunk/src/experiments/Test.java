@@ -5,6 +5,8 @@ public class Test {
   public String str;
   public static String sss;
   public static void main(/*@ non_null */String[] args) throws Exception {
+    //@ assert 2 + 2*(1+4) < 5;
+    //@ assert 2 + 2*(1+4) > 123412;
     // @ ghost int x = 4;
     // @ ghost int y = 5;
     // @ assert x + y < 11;
