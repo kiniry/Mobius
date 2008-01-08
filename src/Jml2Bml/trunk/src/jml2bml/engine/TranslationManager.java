@@ -10,7 +10,7 @@ import com.sun.tools.javac.util.Context;
 
 /**
  * This class allows the user to register his own translation rules
- * @author Jedrek
+ * @author Jedrek (fulara@mimuw.edu.pl)
  *
  */
 public class TranslationManager {

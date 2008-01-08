@@ -4,9 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jml2bml.ast.ExtendedJmlTreeScanner;
-import jml2bml.bytecode.BmlAnnotation;
-import jml2bml.bytecode.BytecodeUtils;
-import jml2bml.bytecode.Location;
 import jml2bml.rules.TranslationRule;
 
 import com.sun.source.tree.Tree;
@@ -30,14 +27,11 @@ import com.sun.tools.javac.util.Context;
 public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> {
   private final List<TranslationRule> rules;
 
-  private final BytecodeUtils bytecodeUtils;
-
   private final JmlEnter jmlEnter;
   private final Context context;
   public Jml2BmlTranslator(Context context) {
     this.context = context;
     this.rules = new LinkedList<TranslationRule>();
-    this.bytecodeUtils = context.get(BytecodeUtils.class);
     this.jmlEnter = context.get(JmlEnter.class);
   }
 
