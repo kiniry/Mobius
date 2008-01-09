@@ -32,9 +32,7 @@ public class EmptyLineController extends BytecodeLineController {
    * @return  true - an empty line is always correct
    * @see BytecodeLineController#correct()
    */
-  public final boolean correct()
-  {
-    //sprawdzanie poprawnosci juz przy wyborze typu
+  public final boolean correct() {
     return true;
   }
 }

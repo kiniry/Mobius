@@ -268,7 +268,7 @@ public class BytecodeController {
                     a_next_line, the_last_flag, metEnd);
         } catch (UmbraException e) {
           MessageDialog.openInformation(new Shell(), "Bytecode",
-                      "A jump instruction has improp");
+                      "A jump instruction has improper destination");
           break;
         }
       } else { // we are beyond the area of the inserted instructions
@@ -328,7 +328,6 @@ public class BytecodeController {
       } else {
         if (comment != null) my_interline.put(the_next_line, comment);
       }
-      //UmbraPlugin.messagelog("After target");
       if (res >= a_start_of_rem && res <= an_end_rem) {
         lc.update(an_old_lc, the_next_line, cg, ins, the_methend_flag,
                   the_last_flag, my_instructions, off);
