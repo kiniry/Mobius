@@ -240,7 +240,8 @@ BEGIN
       MethodCall(e, mn, pr) :
         EXISTS (m1, m2, m3, m4, m5, m6 : nat)
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7 : FullState)
-               (a, pv, old_val_arg, w, x : Val)(md : (wf_Method(program(p))))
+               (a, pv, w, x : Val)(old_lvs : Store)
+               (md : (wf_Method(program(p))))
                (inv : (wf_BoolExpr(program(p)))) :
           n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
           % evaluate the receiver object
@@ -262,12 +263,12 @@ BEGIN
           THEN md = down(lookup_mthd(program(p), a, mn))
           ELSE FALSE % should not happen in a wf_Program
           ENDIF AND
-          % actions taken at the entry of the method
-          on_method_entry(p, md, a, tau2, tau3, m3, bounded_derive_rec(m3)) AND
-          % give a name the value of the argument before the call,
-          old_val_arg = lookup_local(name(arg(md)), pstate(tau3)) AND
+          % remember old local store
+          old_lvs = lvs(st(pstate(tau2))) AND
           % update the value of this, the argument and initialize the local vars
-          tau4 = update_stack(a, arg(md), pv, lvars(md), tau3) AND
+          tau3 = update_stack(a, arg(md), pv, lvars(md), tau2) AND
+          % actions taken at the entry of the method
+          on_method_entry(p, md, a, tau3, tau4, m3, bounded_derive_rec(m3)) AND
           % execute the body
           derive(p)(body(md), tau4, x, tau5)(m4) AND
           % body returns either Unit or Bottom value
@@ -290,9 +291,11 @@ BEGIN
           THEN v = Bottom
           ELSE v = w
           ENDIF AND
-          % restore the value of the argument
+          % restore the old local store
           sigma2 = update_PState(tau7,
-                                 update_local(name(arg(md)), old_val_arg))
+                                 LAMBDA(pstate : PState) : 
+                                   pstate WITH 
+                                   [st := st(pstate) WITH [lvs := old_lvs]])
           ENDIF,
       NExpr(n) :
         n > 0 AND
