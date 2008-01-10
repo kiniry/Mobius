@@ -1,5 +1,5 @@
 --------------------------------------------------------------
-version 2.0b4 "Mobius PVE Internal Release" (21 December 2007)
+version 2.0b4 "Mobius PVE Internal Release" (11 January 2008)
 
 New major features include:
 o Simplify has moved into its own project
