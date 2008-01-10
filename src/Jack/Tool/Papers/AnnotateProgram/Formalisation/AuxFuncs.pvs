@@ -10,9 +10,7 @@ BEGIN
     MEASURE
       Card(s)
 
-  %CONVERSION set2list
-
-  IMPORTING FiniteSetInduction[T]
+  IMPORTING WF_Card[T]
 
   set2list_same_elements : LEMMA % :-)
     FORALL (s : finite_set[T], x : T) :
@@ -21,7 +19,6 @@ BEGIN
   % NOTE: This is not used now, but it is useful
   set_list_set: LEMMA % :-)
     FORALL (s : finite_set[T]) : list2set(set2list(s)) = s
-
 
   
 END set2list
@@ -77,6 +74,7 @@ BEGIN
 
     
 END listfuncs
+
 
 listsum : THEORY
 BEGIN

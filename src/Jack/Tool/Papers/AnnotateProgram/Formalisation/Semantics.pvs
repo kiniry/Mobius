@@ -248,14 +248,17 @@ BEGIN
           derive(p)(e, sigma1, a, tau1)(m1) AND
           % evaluate the parameter
           derive(p)(pr, tau1, pv, tau2)(m2) AND
-          % see if the receiver is null (and there were no previous exceptions)
+          % if the receiver is null and no other exception was raisen, raise a
+          % NullPointer exception
           IF bottom?(ex(pstate(tau2))) AND Null?(a)
           THEN sigma2 = update_PState(tau2,  raise(NullPointer)) AND
                v = Bottom AND
                m3 = 0 AND m4 = 0 AND m5 = 0 AND m6 = 0
-          ELSIF up?(ex(pstate(tau2))) 
-          THEN sigma2 = tau2 AND 
-               v = Bottom AND 
+          % if the evaluation of the target or the argument threw an exception,
+          % propagate it
+          ELSIF up?(ex(pstate(tau2)))
+          THEN sigma2 = tau2 AND
+               v = Bottom AND
                m3 = 0 AND m4 = 0 AND m5 = 0 AND m6 = 0
           ELSE
           % lookup method definition
@@ -267,7 +270,7 @@ BEGIN
           old_lvs = lvs(st(pstate(tau2))) AND
           % update the value of this, the argument and initialize the local vars
           tau3 = update_stack(a, arg(md), pv, lvars(md), tau2) AND
-          % actions taken at the entry of the method
+          % actions taken at the entry of the method (inv, precond, pre_set)
           on_method_entry(p, md, a, tau3, tau4, m3, bounded_derive_rec(m3)) AND
           % execute the body
           derive(p)(body(md), tau4, x, tau5)(m4) AND
@@ -278,7 +281,7 @@ BEGIN
           THEN tau6 = tau5 AND w = Unit AND m5 = 0
           ELSE derive(p)(res(md), tau5, w, tau6)(m5)
           ENDIF AND
-          % actions taken at the exit of the method
+          % actions taken at the exit of the method (pos_set, inv, postcond)
           IF bottom?(ex(pstate(tau6)))
           THEN on_method_exit_normal(p, md, a, tau6, tau7, m6,
                                      bounded_derive_rec(m6))
@@ -291,7 +294,7 @@ BEGIN
           THEN v = Bottom
           ELSE v = w
           ENDIF AND
-          % restore the old local store
+          % restore the old local store (to allow recursion)
           sigma2 = update_PState(tau7,
                                  LAMBDA(pstate : PState) : 
                                    pstate WITH 

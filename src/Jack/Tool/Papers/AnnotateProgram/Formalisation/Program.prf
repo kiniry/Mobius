@@ -27,7 +27,7 @@
         nil))
       nil))
     nil)
-   proved-complete
+   unchecked
    ((number nonempty-type-decl nil numbers nil)
     (boolean nonempty-type-decl nil booleans nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields
@@ -1201,7 +1201,7 @@
    ("" (skosimp*)
     (("" (apply-extensionality :hide? t) (("" (grind) nil nil)) nil))
     nil)
-   unchecked
+   untried
    ((Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -1255,12 +1255,11 @@
         nil))
       nil))
     nil)
-   proved
+   untried
    ((Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (set type-eq-decl nil sets nil) (union const-decl "set" sets nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (LocalVarDecl type-eq-decl nil Program nil)
@@ -1358,7 +1357,7 @@
                                                     nil)))))))))))))))))))))))))))))))))))))))))))))
        ("2" (use "wf_card[[BoolExpr, Stmt]]") nil))))
     "")
-   unchecked
+   untried
    ((pred type-eq-decl nil defined_types nil)
     (well_founded? const-decl "bool" orders nil)
     (wf_induction formula-decl nil wf_induction nil)
@@ -1430,7 +1429,7 @@
     (wf_card formula-decl nil WF_Card nil))
    365 290 nil nil))
  (getFieldDecls_TCC1 0
-  (getFieldDecls_TCC1-3 nil 3391148557 3404451415
+  (getFieldDecls_TCC1-3 nil 3391148557 3408997159
    ("" (skosimp*)
     (("" (use "finite_set_induction[Class]")
       ((""
@@ -1439,17 +1438,30 @@
         (("" (split -1)
           (("1" (inst -1 "classes(p!1)") nil nil)
            ("2" (hide 2)
-            (("2" (skosimp*)
+            (("2" (expand "emptyset")
               (("2"
-                (case-replace " ({f: FieldDecl |
-                  EXISTS (c: Class): add(t!1, x!1)(c) AND fields(c)(f)}) = union({f : FieldDecl | fields(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND fields(c)(f)})")
+                (case-replace
+                 "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
+                (("1" (use "finite_emptyset[FieldDecl]") nil nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (expand "emptyset") (("2" (propax) nil nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (hide 2)
+            (("3" (skosimp*)
+              (("3"
+                (case-replace "({f: FieldDecl |
+    EXISTS (c: Class): add(e!1, S!1)(c) AND fields(c)(f)}) = union({f : FieldDecl | fields(e!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : S!1(c) AND fields(c)(f)})")
                 (("1" (hide -1)
                   (("1" (use "finite_union[FieldDecl]")
                     (("1" (hide -1 2)
-                      (("1" (typepred "fields(t!1)")
+                      (("1" (typepred "fields(e!1)")
                         (("1"
                           (case-replace
-                           "fields(t!1) = {f : FieldDecl | fields(t!1)(f)}")
+                           "fields(e!1) = {f : FieldDecl | fields(e!1)(f)}")
                           (("1" (assert)
                             (("1" (apply-extensionality :hide? t) nil
                               nil))
@@ -1459,32 +1471,23 @@
                       nil))
                     nil))
                   nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (hide -1 2)
-                    (("2" (expand "union")
-                      (("2" (expand "add")
-                        (("2" (expand "member")
-                          (("2" (iff)
-                            (("2" (prop)
-                              (("1"
-                                (skosimp*)
-                                (("1"
-                                  (split -1)
-                                  (("1" (assert) nil nil)
-                                   ("2"
-                                    (inst?)
-                                    (("2" (assert) nil nil))
-                                    nil))
-                                  nil))
-                                nil)
-                               ("2" (inst?) nil nil)
-                               ("3"
-                                (skosimp*)
-                                (("3"
-                                  (inst?)
-                                  (("3" (assert) nil nil))
-                                  nil))
+                 ("2" (hide -1 2)
+                  (("2" (expand* "union" "add" "member")
+                    (("2" (apply-extensionality :hide? t)
+                      (("2" (iff)
+                        (("2" (prop)
+                          (("1" (skosimp*)
+                            (("1" (split -1)
+                              (("1" (assert) nil nil)
+                               ("2"
+                                (inst?)
+                                (("2" (assert) nil nil))
                                 nil))
+                              nil))
+                            nil)
+                           ("2" (inst?) nil nil)
+                           ("3" (skosimp*)
+                            (("3" (inst?) (("3" (assert) nil nil))
                               nil))
                             nil))
                           nil))
@@ -1494,24 +1497,14 @@
                   nil))
                 nil))
               nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
-              (("3"
-                (case-replace
-                 "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
-                (("1" (use "finite_emptyset[FieldDecl]") nil nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (grind) nil nil)) nil))
-                nil))
-              nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unchecked
-   ((finite_set_induction formula-decl nil FiniteSetInduction nil)
+   proved
+   ((finite_set_induction formula-decl nil finite_sets_inductions
+     "finite_sets/")
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -1526,25 +1519,29 @@
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
-    (nonempty_add_finite application-judgement "non_empty_finite_set"
-     finite_sets nil)
+    (nonempty_add_finite application-judgement
+     "non_empty_finite_set[Class]" ProgramFunctions nil)
     (PreProgram type-eq-decl nil Program nil)
+    (emptyset const-decl "set" sets nil)
+    (finite_emptyset judgement-tcc nil finite_sets nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (FALSE const-decl "bool" booleans nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (member const-decl "bool" sets nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
+    (S!1 skolem-const-decl "finite_set[Class]" ProgramFunctions nil)
+    (e!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
     (finite_union judgement-tcc nil finite_sets nil)
     (union const-decl "set" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (nonempty? const-decl "bool" sets nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (emptyset const-decl "set" sets nil)
-    (finite_emptyset judgement-tcc nil finite_sets nil)
-    (finite_emptyset name-judgement "finite_set" finite_sets nil)
-    (FALSE const-decl "bool" booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (pred type-eq-decl nil defined_types nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil))
-   188 160 t nil)
+   266963 1340 t nil)
   (getFieldDecls_TCC1-2 nil 3390902649 3391148163
    ("" (skosimp*)
     (("" (use "finite_set_induction[Class]")
@@ -1641,7 +1638,7 @@
     nil)
    unchecked nil 5557840 390 t nil))
  (getLocalDecls_TCC1 0
-  (getLocalDecls_TCC1-2 nil 3390903916 3404451415
+  (getLocalDecls_TCC1-2 nil 3390903916 3408997370
    ("" (skosimp*)
     (("" (use "finite_set_induction[Method]")
       ((""
@@ -1650,51 +1647,45 @@
         (("" (split -1)
           (("1" (inst?) nil nil)
            ("2" (hide 2)
-            (("2" (skosimp*)
+            (("2" (expand "emptyset")
               (("2"
-                (case-replace "{l: LocalVarDecl |
-                                  EXISTS (m: Method):
-                                    add(t!1, x!1)(m) AND (lvars(m)(l) OR l = arg(m))} = union(lvars(t!1), union(singleton(arg(t!1)), {l : LocalVarDecl | EXISTS (m: Method): x!1(m) AND (lvars(m)(l) OR l = arg(m))}))"
+                (case-replace
+                 "{f : LocalVarDecl | FALSE} = emptyset[LocalVarDecl]")
+                (("1" (use "finite_emptyset[LocalVarDecl]") nil nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (expand "emptyset") (("2" (propax) nil nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (hide 2)
+            (("3" (skosimp*)
+              (("3"
+                (case-replace "{l: LocalVarDecl | EXISTS (m: Method):
+     add(e!1, S!1)(m) AND (lvars(m)(l) OR l = arg(m))} = union(lvars(e!1), union(singleton(arg(e!1)), {l : LocalVarDecl | EXISTS (m: Method): S!1(m) AND (lvars(m)(l) OR l = arg(m))}))"
                  :hide? t)
                 (("1" (use "finite_union[LocalVarDecl]")
                   (("1" (use "finite_union[LocalVarDecl]") nil nil))
                   nil)
                  ("2" (hide -1 2)
-                  (("2" (apply-extensionality :hide? t)
-                    (("2" (expand "union")
-                      (("2" (expand "add")
-                        (("2" (expand "singleton")
-                          (("2" (expand "member")
-                            (("2" (iff)
-                              (("2"
-                                (prop)
-                                (("1"
-                                  (skosimp*)
-                                  (("1"
-                                    (inst?)
-                                    (("1"
-                                      (split -1)
-                                      (("1" (assert) nil nil)
-                                       ("2" (assert) nil nil))
-                                      nil))
-                                    nil))
-                                  nil)
-                                 ("2"
-                                  (inst?)
-                                  (("2" (assert) nil nil))
-                                  nil)
-                                 ("3"
-                                  (inst?)
-                                  (("3" (assert) nil nil))
-                                  nil)
-                                 ("4"
-                                  (skosimp*)
-                                  (("4"
-                                    (inst?)
-                                    (("4" (assert) nil nil))
-                                    nil))
-                                  nil))
+                  (("2" (expand* "union" "add" "singleton" "member")
+                    (("2" (apply-extensionality :hide? t)
+                      (("2" (iff)
+                        (("2" (prop)
+                          (("1" (skosimp*)
+                            (("1" (inst?)
+                              (("1"
+                                (split -1)
+                                (("1" (assert) nil nil)
+                                 ("2" (assert) nil nil))
                                 nil))
+                              nil))
+                            nil)
+                           ("2" (inst?) (("2" (assert) nil nil)) nil)
+                           ("3" (inst?) (("3" (assert) nil nil)) nil)
+                           ("4" (skosimp*)
+                            (("4" (inst?) (("4" (assert) nil nil))
                               nil))
                             nil))
                           nil))
@@ -1704,24 +1695,14 @@
                   nil))
                 nil))
               nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
-              (("3"
-                (case-replace
-                 "{f : LocalVarDecl | FALSE} = emptyset[LocalVarDecl]")
-                (("1" (use "finite_emptyset[LocalVarDecl]") nil nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (grind) nil nil)) nil))
-                nil))
-              nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unchecked
-   ((finite_set_induction formula-decl nil FiniteSetInduction nil)
+   proved
+   ((finite_set_induction formula-decl nil finite_sets_inductions
+     "finite_sets/")
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-eq-decl nil Body_adt nil)
@@ -1730,40 +1711,43 @@
     (BoolExpr type-eq-decl nil Body_adt nil)
     (Expr type-eq-decl nil Body_adt nil)
     (Method type-eq-decl nil Program nil)
-    (nonempty_add_finite application-judgement "non_empty_finite_set"
-     finite_sets nil)
-    (Val type-decl nil Val_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
+    (nonempty_add_finite application-judgement
+     "non_empty_finite_set[Method]" ProgramFunctions nil)
     (Class type-eq-decl nil Program nil)
-    (member const-decl "bool" sets nil)
-    (finite_union judgement-tcc nil finite_sets nil)
-    (singleton const-decl "(singleton?)" sets nil)
-    (singleton? const-decl "bool" sets nil)
-    (union const-decl "set" sets nil)
-    (add const-decl "(nonempty?)" sets nil)
-    (nonempty? const-decl "bool" sets nil)
-    (nonempty_union2 application-judgement "(nonempty?)" sets nil)
-    (nonempty_union1 application-judgement "(nonempty?)" sets nil)
-    (nonempty_singleton_finite application-judgement
-     "non_empty_finite_set" finite_sets nil)
+    (lift type-decl nil lift_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
     (emptyset const-decl "set" sets nil)
     (finite_emptyset judgement-tcc nil finite_sets nil)
     (finite_emptyset name-judgement "finite_set" finite_sets nil)
     (FALSE const-decl "bool" booleans nil)
+    (member const-decl "bool" sets nil)
+    (finite_union judgement-tcc nil finite_sets nil)
+    (S!1 skolem-const-decl "finite_set[Method]" ProgramFunctions nil)
+    (e!1 skolem-const-decl "Method[Name]" ProgramFunctions nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (nonempty_union1 application-judgement "(nonempty?)" sets nil)
+    (nonempty_union2 application-judgement "(nonempty?)" sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (union const-decl "set" sets nil)
+    (singleton? const-decl "bool" sets nil)
+    (singleton const-decl "(singleton?)" sets nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (pred type-eq-decl nil defined_types nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (boolean nonempty-type-decl nil booleans nil))
-   207 160 t nil)
+   179978 1220 t nil)
   (getLocalDecls_TCC1-1 nil 3390821142 3390821234
    ("" (subtype-tcc) nil nil) unchecked nil 605 450 nil nil))
  (getLocalDecls_TCC2 0
-  (getLocalDecls_TCC2-2 nil 3401620970 3404451415
+  (getLocalDecls_TCC2-2 nil 3401620970 3408997555
    ("" (skosimp*)
     (("" (use "finite_set_induction[Class]")
       ((""
@@ -1772,18 +1756,31 @@
         (("" (split -1)
           (("1" (inst -1 "classes(p!1)") nil nil)
            ("2" (hide 2)
-            (("2" (skosimp*)
+            (("2" (expand "emptyset")
               (("2"
-                (case-replace " {l: LocalVarDecl |
-              EXISTS (c: Class): add(t!1, x!1)(c) AND getLocalDecls(c)(l)}                    = union({l : LocalVarDecl | getLocalDecls(t!1)(l)},{l : LocalVarDecl | EXISTS(c : Class) : x!1(c) AND getLocalDecls(c)(l)})"
+                (case-replace
+                 "{f : LocalVarDecl | FALSE} = emptyset[LocalVarDecl]")
+                (("1" (use "finite_emptyset[LocalVarDecl]") nil nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (expand "emptyset") (("2" (propax) nil nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (hide 2)
+            (("3" (skosimp*)
+              (("3"
+                (case-replace
+                 " {l: LocalVarDecl | EXISTS (c: Class): add(e!1, S!1)(c) AND getLocalDecls(c)(l)}                    = union({l : LocalVarDecl | getLocalDecls(e!1)(l)},{l : LocalVarDecl | EXISTS(c : Class) : S!1(c) AND getLocalDecls(c)(l)})"
                  :hide? t)
                 (("1" (use "finite_union[LocalVarDecl]")
-                  (("1" (typepred "getLocalDecls(t!1)")
+                  (("1" (typepred "getLocalDecls(e!1)")
                     (("1" (assert)
                       (("1" (hide -2 2)
                         (("1"
                           (case-replace
-                           "{l: LocalVarDecl[Name] | getLocalDecls(t!1)(l)} = getLocalDecls(t!1)"
+                           "{l: LocalVarDecl[Name] | getLocalDecls(e!1)(l)} = getLocalDecls(e!1)"
                            :hide? t)
                           (("1" (apply-extensionality :hide? t) nil
                             nil))
@@ -1793,10 +1790,10 @@
                     nil))
                   nil)
                  ("2" (hide -1 2)
-                  (("2" (apply-extensionality :hide? t)
-                    (("2"
-                      (auto-rewrite "union" "member" "add" "singleton")
-                      (("2" (assert)
+                  (("2"
+                    (auto-rewrite "union" "member" "add" "singleton")
+                    (("2" (assert)
+                      (("2" (apply-extensionality :hide? t)
                         (("2" (iff)
                           (("2" (prop)
                             (("1" (skosimp*)
@@ -1824,24 +1821,14 @@
                   nil))
                 nil))
               nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
-              (("3"
-                (case-replace
-                 "{f : LocalVarDecl | FALSE} = emptyset[LocalVarDecl]")
-                (("1" (use "finite_emptyset[LocalVarDecl]") nil nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (grind) nil nil)) nil))
-                nil))
-              nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unchecked
-   ((finite_set_induction formula-decl nil FiniteSetInduction nil)
+   proved
+   ((finite_set_induction formula-decl nil finite_sets_inductions
+     "finite_sets/")
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -1856,25 +1843,31 @@
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
-    (nonempty_add_finite application-judgement "non_empty_finite_set"
-     finite_sets nil)
+    (nonempty_add_finite application-judgement
+     "non_empty_finite_set[Class]" ProgramFunctions nil)
     (PreProgram type-eq-decl nil Program nil)
+    (emptyset const-decl "set" sets nil)
+    (finite_emptyset judgement-tcc nil finite_sets nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (FALSE const-decl "bool" booleans nil)
     (member const-decl "bool" sets nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (finite_union judgement-tcc nil finite_sets nil)
+    (e!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
+    (S!1 skolem-const-decl "finite_set[Class]" ProgramFunctions nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (union const-decl "set" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (nonempty? const-decl "bool" sets nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (emptyset const-decl "set" sets nil)
-    (finite_emptyset judgement-tcc nil finite_sets nil)
-    (finite_emptyset name-judgement "finite_set" finite_sets nil)
-    (FALSE const-decl "bool" booleans nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (pred type-eq-decl nil defined_types nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil))
-   186 150 t nil)
+   167718 1120 t nil)
   (getLocalDecls_TCC2-1 nil 3401620807 3401620866
    ("" (subtype-tcc) nil nil) unfinished nil 249 249 nil nil))
  (arg_in_getLocalDecls 0
@@ -1887,7 +1880,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
@@ -1904,7 +1897,7 @@
     (Name formal-nonempty-type-decl nil ProgramFunctions nil))
    17 10 t shostak))
  (getGhostDecls_TCC1 0
-  (getGhostDecls_TCC1-3 nil 3391148598 3404451415
+  (getGhostDecls_TCC1-3 nil 3391148598 3408997701
    ("" (skosimp*)
     (("" (use "finite_set_induction[Class]")
       ((""
@@ -1913,17 +1906,30 @@
         (("" (split -1)
           (("1" (inst -1 "classes(p!1)") nil nil)
            ("2" (hide 2)
-            (("2" (skosimp*)
+            (("2" (expand "emptyset")
               (("2"
-                (case-replace " ({f: FieldDecl |
-                          EXISTS (c: Class): add(t!1, x!1)(c) AND ghost_vars(c)(f)}) = union({f : FieldDecl | ghost_vars(t!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : x!1(c) AND ghost_vars(c)(f)})")
+                (case-replace
+                 "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
+                (("1" (use "finite_emptyset[FieldDecl]") nil nil)
+                 ("2" (apply-extensionality :hide? t)
+                  (("2" (expand "emptyset") (("2" (propax) nil nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil)
+           ("3" (hide 2)
+            (("3" (skosimp*)
+              (("3"
+                (case-replace
+                 "({f: FieldDecl | EXISTS (c: Class): add(e!1, S!1)(c) AND ghost_vars(c)(f)}) = union({f : FieldDecl | ghost_vars(e!1)(f)}, {f : FieldDecl | EXISTS (c : Class) : S!1(c) AND ghost_vars(c)(f)})")
                 (("1" (hide -1)
                   (("1" (use "finite_union[FieldDecl]")
                     (("1" (hide -1 2)
-                      (("1" (typepred "ghost_vars(t!1)")
+                      (("1" (typepred "ghost_vars(e!1)")
                         (("1"
                           (case-replace
-                           "ghost_vars(t!1) = {f : FieldDecl | ghost_vars(t!1)(f)}")
+                           "ghost_vars(e!1) = {f : FieldDecl | ghost_vars(e!1)(f)}")
                           (("1" (assert)
                             (("1" (apply-extensionality :hide? t) nil
                               nil))
@@ -1933,9 +1939,9 @@
                       nil))
                     nil))
                   nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (hide -1 2)
-                    (("2" (expand* "union" "add" "member")
+                 ("2" (hide -1 2)
+                  (("2" (expand* "union" "add" "member")
+                    (("2" (apply-extensionality :hide? t)
                       (("2" (iff)
                         (("2" (prop)
                           (("1" (skosimp*)
@@ -1962,24 +1968,14 @@
                   nil))
                 nil))
               nil))
-            nil)
-           ("3" (hide 2)
-            (("3" (expand "emptyset")
-              (("3"
-                (case-replace
-                 "{f : FieldDecl | FALSE} = emptyset[FieldDecl]")
-                (("1" (use "finite_emptyset[FieldDecl]") nil nil)
-                 ("2" (apply-extensionality :hide? t)
-                  (("2" (grind) nil nil)) nil))
-                nil))
-              nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unchecked
-   ((finite_set_induction formula-decl nil FiniteSetInduction nil)
+   proved
+   ((finite_set_induction formula-decl nil finite_sets_inductions
+     "finite_sets/")
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -1994,25 +1990,29 @@
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
-    (nonempty_add_finite application-judgement "non_empty_finite_set"
-     finite_sets nil)
+    (nonempty_add_finite application-judgement
+     "non_empty_finite_set[Class]" ProgramFunctions nil)
     (PreProgram type-eq-decl nil Program nil)
+    (emptyset const-decl "set" sets nil)
+    (finite_emptyset judgement-tcc nil finite_sets nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (FALSE const-decl "bool" booleans nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (member const-decl "bool" sets nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
+    (S!1 skolem-const-decl "finite_set[Class]" ProgramFunctions nil)
+    (e!1 skolem-const-decl "Class[Name]" ProgramFunctions nil)
     (finite_union judgement-tcc nil finite_sets nil)
     (union const-decl "set" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (nonempty? const-decl "bool" sets nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (emptyset const-decl "set" sets nil)
-    (finite_emptyset judgement-tcc nil finite_sets nil)
-    (finite_emptyset name-judgement "finite_set" finite_sets nil)
-    (FALSE const-decl "bool" booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (pred type-eq-decl nil defined_types nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil))
-   182 160 t nil)
+   121940 1160 t nil)
   (getGhostDecls_TCC1-2 nil 3390903999 3391148164
    ("" (skosimp*)
     (("" (use "finite_set_induction[Class]")
@@ -2375,38 +2375,51 @@
     (nonempty? const-decl "bool" sets nil))
    181 160 t nil))
  (methods_TCC1 0
-  (methods_TCC1-1 nil 3392356310 3404451416
+  (methods_TCC1-1 nil 3392356310 3408996605
    ("" (skosimp*)
     (("" (use "finite_set_induction[Class]")
       ((""
         (inst -1
          "LAMBDA(C : finite_set[Class]) : is_finite[Method[Name]]
-            ({m: Method[Name] |
-                EXISTS (c: Class[Name]): C(c) AND methods(c)(m)})")
+              ({m: Method[Name] |
+                  EXISTS (c: Class[Name]): C(c) AND methods(c)(m)})")
         (("" (assert)
           (("" (split -1)
             (("1" (inst -1 "classes(p!1)") nil nil)
              ("2" (hide 2)
-              (("2" (skosimp*)
+              (("2" (expand "emptyset")
                 (("2"
-                  (case-replace "({m: Method[Name] |
-                   EXISTS (c: Class[Name]): add(t!1, x!1)(c) AND methods(c)(m)})
-     = union({m : Method[Name] | methods(t!1)(m)}, {m : Method[Name] | EXISTS (c : Class[Name]) : x!1(c) AND methods(c)(m)})"
+                  (case-replace
+                   "{m: Method[Name] | FALSE} = emptyset[Method[Name]]")
+                  (("1" (use "finite_emptyset[Method[Name]]") nil nil)
+                   ("2" (apply-extensionality :hide? t)
+                    (("2" (expand "emptyset") (("2" (propax) nil nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("3" (hide 2)
+              (("3" (skosimp*)
+                (("3"
+                  (case-replace
+                   "({m: Method[Name] | EXISTS (c: Class[Name]): add(e!1, S!1)(c) AND methods(c)(m)})
+         = union({m : Method[Name] | methods(e!1)(m)}, {m : Method[Name] | EXISTS (c : Class[Name]) : S!1(c) AND methods(c)(m)})"
                    :hide? t)
                   (("1" (use "finite_union[Method[Name]]")
                     (("1" (hide -1 2)
-                      (("1" (typepred "methods(t!1)")
+                      (("1" (typepred "methods(e!1)")
                         (("1"
                           (case-replace
-                           "methods(t!1) = {m : Method[Name] | methods(t!1)(m)}"
+                           "methods(e!1) = {m : Method[Name] | methods(e!1)(m)}"
                            :hide? t)
                           (("1" (grind) nil nil)) nil))
                         nil))
                       nil))
                     nil)
                    ("2" (hide -1 2)
-                    (("2" (apply-extensionality :hide? t)
-                      (("2" (expand* "union" "add" "member")
+                    (("2" (expand* "union" "add" "member")
+                      (("2" (apply-extensionality :hide? t)
                         (("2" (iff)
                           (("2" (prop)
                             (("1" (skosimp*)
@@ -2429,17 +2442,6 @@
                     nil))
                   nil))
                 nil))
-              nil)
-             ("3" (hide 2)
-              (("3" (expand "emptyset")
-                (("3"
-                  (case-replace
-                   "{m: Method[Name] | FALSE} = emptyset[Method[Name]]")
-                  (("1" (use "finite_emptyset[Method[Name]]") nil nil)
-                   ("2" (apply-extensionality :hide? t)
-                    (("2" (grind) nil nil)) nil))
-                  nil))
-                nil))
               nil))
             nil))
           nil))
@@ -2447,7 +2449,8 @@
       nil))
     nil)
    unchecked
-   ((finite_set_induction formula-decl nil FiniteSetInduction nil)
+   ((finite_set_induction formula-decl nil finite_sets_inductions
+     "finite_sets/")
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -2462,13 +2465,8 @@
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
-    (nonempty_add_finite application-judgement "non_empty_finite_set"
-     finite_sets nil)
-    (FALSE const-decl "bool" booleans nil)
-    (finite_emptyset name-judgement "finite_set" finite_sets nil)
-    (finite_emptyset judgement-tcc nil finite_sets nil)
-    (emptyset const-decl "set" sets nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
+    (nonempty_add_finite application-judgement
+     "non_empty_finite_set[Class]" ProgramFunctions nil)
     (nonempty? const-decl "bool" sets nil)
     (add const-decl "(nonempty?)" sets nil)
     (union const-decl "set" sets nil)
@@ -2489,15 +2487,24 @@
     (int nonempty-type-eq-decl nil integers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (injective? const-decl "bool" functions nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil) nil nil
     (finite_union judgement-tcc nil finite_sets nil)
     (member const-decl "bool" sets nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (FALSE const-decl "bool" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (finite_emptyset name-judgement "finite_set[Method]"
+     ProgramFunctions nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (finite_emptyset judgement-tcc nil finite_sets nil)
+    (emptyset const-decl "set" sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (pred type-eq-decl nil defined_types nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil))
-   491 450 t nil))
+   509251 14430 t nil))
  (get_class_TCC1 0
   (get_class_TCC1-1 nil 3390821142 3404451416
    ("" (subtype-tcc) nil nil) unchecked
@@ -2534,9 +2541,8 @@
         nil))
       nil))
     nil)
-   unchecked
-   ((get_class const-decl "lift[Class]" ProgramFunctions nil)) 35 30 t
-   shostak))
+   untried ((get_class const-decl "lift[Class]" ProgramFunctions nil))
+   35 30 t shostak))
  (lookup_mthd_TCC1 0
   (lookup_mthd_TCC1-1 nil 3396591590 3404451416
    ("" (subtype-tcc) nil nil) unchecked
@@ -2600,7 +2606,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil))
    28 30 t shostak))
  (proper_subterm_sequence 0
@@ -3161,7 +3167,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((= const-decl "[T, T -> boolean]" equalities nil)
     (some_is_exists formula-decl nil listfuncs nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
@@ -3761,7 +3767,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((proper_subterm_set_clause const-decl "boolean" ProgramFunctions
      nil)
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
@@ -3965,7 +3971,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((some_is_exists formula-decl nil listfuncs nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (Stmt type-eq-decl nil Body_adt nil)
@@ -4278,7 +4284,7 @@
         nil nil))
       nil))
     nil)
-   unchecked
+   untried
    ((Body type-decl nil Body_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -4336,7 +4342,7 @@
     (("" (use "subterm_subset_varnames")
       (("" (assert) (("" (grind) nil nil)) nil)) nil))
     nil)
-   unchecked
+   untried
    ((subterm_subset_varnames formula-decl nil ProgramFunctions nil)
     (Body type-decl nil Body_adt nil)
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
@@ -4544,7 +4550,7 @@
               (expand "subterm") (flatten) (assert)))
       nil nil))
     nil)
-   unchecked
+   untried
    ((list type-decl nil list_adt nil)
     (PRED type-eq-decl nil defined_types nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
@@ -4863,7 +4869,7 @@
                 (then (inst -2 "b1!1" "b2!1") (assert))))))
       nil nil))
     nil)
-   unchecked
+   untried
    ((list type-decl nil list_adt nil)
     (PRED type-eq-decl nil defined_types nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
@@ -5218,7 +5224,7 @@
        ("2" (use "wf_card[[BoolExpr, Stmt]]") nil nil))
       nil))
     nil)
-   unchecked
+   untried
    ((pred type-eq-decl nil defined_types nil)
     (well_founded? const-decl "bool" orders nil)
     (wf_induction formula-decl nil wf_induction nil)
@@ -5302,7 +5308,6 @@
    ((Name formal-nonempty-type-decl nil WellFormedProgram nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    nil nil nil nil
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
@@ -5351,7 +5356,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((Name formal-nonempty-type-decl nil WellFormedProgram nil)
     (subterm_subset_varnames formula-decl nil ProgramFunctions nil)
     (Body type-decl nil Body_adt nil)
@@ -5568,7 +5573,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil)
     (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
     (pred type-eq-decl nil defined_types nil)
@@ -5578,14 +5583,13 @@
     (emptyset const-decl "set" sets nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    nil nil nil nil
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
     (member const-decl "bool" sets nil)
     (union const-decl "set" sets nil)
-    (subterm adt-def-decl "boolean" Body_adt nil) nil nil
+    (subterm adt-def-decl "boolean" Body_adt nil)
     (list_induction formula-decl nil list_adt nil)
     (Name formal-nonempty-type-decl nil WellFormedProgram nil)
     (Body type-decl nil Body_adt nil)
@@ -5635,7 +5639,7 @@
         (("" (ground) nil nil)) nil))
       nil))
     nil)
-   unchecked
+   untried
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -5670,7 +5674,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -5703,7 +5707,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -5738,7 +5742,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -5767,7 +5771,7 @@
       (("" (flatten) (("" (inst?) (("" (assert) nil nil)) nil)) nil))
       nil))
     nil)
-   unchecked
+   untried
    ((wf_Class const-decl "boolean" WellFormedProgram nil)
     (Name formal-nonempty-type-decl nil WellFormedProgram nil)
     (LocalVarDecl type-eq-decl nil Program nil)
@@ -5816,7 +5820,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   untried
    ((wf_program_methods_only_in_one_class const-decl "boolean"
      WellFormedProgram nil)
     (wf_Classes const-decl "boolean" WellFormedProgram nil)
@@ -6203,9 +6207,8 @@
         nil))
       nil))
     nil)
-   unchecked
-   (nil
-    (Union_surjective name-judgement
+   untried
+   ((Union_surjective name-judgement
      "(surjective?[setofsets[T], set[T]])" sets_lemmas nil)
     (member const-decl "bool" sets nil)
     (union const-decl "set" sets nil)
@@ -6213,13 +6216,13 @@
      nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    nil nil (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (Body type-decl nil Body_adt nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
-    (is_finite const-decl "bool" finite_sets nil) nil
+    (is_finite const-decl "bool" finite_sets nil)
     (singleton? const-decl "bool" sets nil)
     (singleton const-decl "(singleton?)" sets nil)
-    (program_pred const-decl "bool" ProgramRestriction nil) nil nil
+    (program_pred const-decl "bool" ProgramRestriction nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil)
@@ -6245,7 +6248,7 @@
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (set type-eq-decl nil sets nil)
-    (= const-decl "[T, T -> boolean]" equalities nil) nil
+    (= const-decl "[T, T -> boolean]" equalities nil)
     (Union const-decl "set" sets nil))
    330473 2630 t shostak)))
 

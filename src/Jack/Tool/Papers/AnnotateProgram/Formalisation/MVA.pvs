@@ -47,16 +47,16 @@ BEGIN
        tcp : CP          % target control point
     #]
 
-  % halted is our characterization of a state where the automaton is blocked
+  % halted represents an error state
   halted : CP
 
   % An MVA consists of:
-  % a name of the class that the automaton monitors,
+  % the name of the class that the automaton monitors,
   % a finite set of control points other than halted,
   % an initial control point,
   % a finite set of events,
   % a finite set of variable declarations used by the automaton,
-  % a finite set of vars decls from the program that may be used in guards,
+  % a finite set of var decls from the program used in guards and actions,
   % a finite transition relation
   MVA : TYPE =
     [# name : Name,
@@ -82,11 +82,11 @@ BEGIN
 END MVA
 
 
+% Constraints for well-formed MVAs
 WellFormedMVA[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVA[CP, Name],
-            ProgramFunctions[Name] % imports var_names
+  IMPORTING MVA[CP, Name]
 
   wf_Body(a : MVA)(b : Body) : boolean =
     subset?(var_names(b), var_names(a)) AND
@@ -149,6 +149,7 @@ BEGIN
 END WellFormedMVA
 
 
+% Operational semantics for MVAs
 MVASemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 

@@ -167,8 +167,8 @@ BEGIN
 
   IMPORTING Program[Name],
             %% Used for proving TCCs
-            FiniteSetInduction[Class],
-            FiniteSetInduction[Method]
+            finite_sets@finite_sets_inductions[Class],
+            finite_sets@finite_sets_inductions[Method]
 
   % Used variable names
 

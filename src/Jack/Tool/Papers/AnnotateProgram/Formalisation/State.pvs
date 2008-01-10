@@ -130,9 +130,11 @@ BEGIN
       is_local(vn, s) IMPLIES
         wf_state(p)(update_local(vn, v)(s))
 
-  IMPORTING FiniteSetInduction[[Name, Val]]
+%  AT: Check that the following import is not needed
+%  IMPORTING FiniteSetInduction[[Name, Val]]
 
-  wf_state_update_locals : LEMMA % :-)
+  % FIXME
+  wf_state_update_locals : LEMMA %
     FORALL(p : Program, s : PState, V : finite_set[[Name, Val]]) :
       wf_state(p)(s) IMPLIES
       (FORALL(v : [Name, Val]) : 
@@ -146,7 +148,7 @@ BEGIN
         wf_state(p)(update(vn, v)(s))
 
 
-  wf_state_raise : LEMMA % :-)f
+  wf_state_raise : LEMMA % :-)
     FORALL(p : Program, s : PState, exc : Excpt) :
       wf_state(p)(s) IMPLIES
         wf_state(p)(raise(exc)(s))
@@ -157,7 +159,7 @@ BEGIN
         wf_state(p)(catch(s))
 
 
-  wf_state_arg_is_local : LEMMA  %:-)
+  wf_state_arg_is_local : LEMMA % :-)
     FORALL(p : Program, s : PState, c : Class, m : Method) :
       wf_state(p)(s) IMPLIES
       classes(p)(c) IMPLIES
@@ -165,5 +167,3 @@ BEGIN
         is_local(name(arg(m)), s)
 
 END State
-
-
