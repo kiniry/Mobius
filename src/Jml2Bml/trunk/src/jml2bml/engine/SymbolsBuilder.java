@@ -8,6 +8,7 @@ import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
+import annot.bcexpression.FieldRef;
 import annot.bcexpression.LocalVariable;
 
 import com.sun.source.tree.BlockTree;
@@ -38,6 +39,9 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
   @Override
   public Symbols visitJmlVariableDecl(final JmlVariableDecl node,
                                       final Symbols p) {
+    if ("this".equals(node.name.toString())){
+        return p;
+    }
     final Tree block = ancestorFinder.getAncestor(node, Tree.Kind.BLOCK);
     final Tree method = ancestorFinder.getAncestor(node, Tree.Kind.METHOD);
     if (method != null && block != null) {
@@ -71,7 +75,15 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
   }
 
   private void handleField(JmlVariableDecl node, Tree clazz, Symbols s) {
+    final BCClass cl = context.get(BCClass.class);
 
+    int nameIndex = cl.getFieldIndex(node.getName().toString());
+    if (nameIndex == -1){
+      //FIXME throw an exception
+    }
+    //FIXME handle the isOld properly!
+    s.put(node.name.toString(), new Variable((FieldRef)null, node));
+    
   }
   
   @Override

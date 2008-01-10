@@ -1,12 +1,15 @@
 package experiments;
-
-
 public class Test {
-  public String str;
+  public String old_str = "abc";
+  public String str = "aaa";
   public static String sss;
   
   //@ requires 2 == 2;
   public static void main(/*@ non_null */String[] args) throws Exception {
+    Test test = new Test();
+    sss = "";
+    //@ assert sss != null;
+    //@ assert this != null;
     //@ assert 2 + 2*(1+4) < 5;
     //@ assert 2 + 2*(1+4) > 123412;
     // @ ghost int x = 4;

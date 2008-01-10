@@ -10,6 +10,7 @@ import com.sun.source.tree.Tree;
 
 public class Utils {
   public static int mapJCOperatorToBmlLib(JmlToken token) {
+    //FIXME
     return 0;
   }
 

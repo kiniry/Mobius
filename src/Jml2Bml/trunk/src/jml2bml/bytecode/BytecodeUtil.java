@@ -11,7 +11,10 @@ package jml2bml.bytecode;
 import javax.lang.model.element.Name;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
+import annot.bcexpression.BCExpression;
+import annot.bcexpression.FieldRef;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
@@ -28,5 +31,15 @@ public final class BytecodeUtil {
         return method;
     }
     return null;
+  }
+
+  public static BCExpression createFieldRef(boolean isOld, String name,
+                                            BCClass clazz) {
+    int nameIndex = clazz.getFieldIndex(name);
+    if (nameIndex == -1){
+      //FIXME throw an exception
+    }
+    return  new FieldRef(isOld, clazz.getCp(), nameIndex);
+
   }
 }

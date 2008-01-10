@@ -1,7 +1,10 @@
 package jml2bml.engine;
 
+import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
+
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
+import annot.bcexpression.FieldRef;
 import annot.bcexpression.LocalVariable;
 
 import com.sun.source.tree.Tree;
@@ -9,6 +12,7 @@ import com.sun.source.tree.Tree;
 public class Variable {
   private boolean isBoundVariable = false;
   private boolean isLocalVariable = false;
+  private boolean isField = false;
   private BCExpression var;
   private Tree jmlNode;
   public boolean isBoundVariable() {
@@ -16,6 +20,10 @@ public class Variable {
   }
   public boolean isLocalVariable() {
     return isLocalVariable;
+  }
+  
+  public boolean isField(){
+    return isField;
   }
   
   public Variable(BoundVar var, Tree jmlNode) {
@@ -29,6 +37,11 @@ public class Variable {
     this.isLocalVariable = true;
   }
   
+  public Variable(FieldRef var, JmlVariableDecl node) {  
+    this.var = var;
+    this.jmlNode = node;
+    this.isField = true;
+  }
   public BCExpression getVariable() {
     return var;
   }
