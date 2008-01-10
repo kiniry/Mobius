@@ -397,8 +397,8 @@ BEGIN
            tauMP7 : MPState,
            sAP1, sAP2, tauAP1, tauAP2, tauAP3, tauAP4, tauAP5, tauAP6,
            tauAP7 : APState,
-           a1, a2, pv1, pv2, v1, v2, w1, w2, old_val_arg1, old_val_arg2,
-           x1, x2 : Val, 
+           a1, a2, pv1, pv2, v1, v2, w1, w2, x1, x2 : Val, 
+           old_lvs1, old_lvs2 : Store,
            md1 : (wf_Method(program(mp))), md2 : (wf_Method(ann_program(mp)))):
       MethodCall?(b) IMPLIES
       x`1 = 1 + m11 + m21 + m31 + m41 + m51 + m61 IMPLIES
@@ -415,7 +415,9 @@ BEGIN
            THEN md1 = down(lookup_mthd(program(mp), a1, name(b)))
            ELSE FALSE
            ENDIF AND
-           on_method_entry_MP(mp, md1, a1, tauMP2, tauMP3, m31,
+           old_lvs1 = lvs(st(pstate(tauMP2))) AND
+           tauMP3 = update_stack(a1, arg(md1), pv1, lvars(md1), tauMP2) AND
+           on_method_entry_MP(mp, md1, a1, tauMP3, tauMP4, m31, 
                               LAMBDA (k: upto(m31))
                                           (p: MonitoredProgram[CP, Name])
                                           (b: (wf_Body(program(p))),
@@ -424,8 +426,6 @@ BEGIN
                                            sigma2: MPState[CP, Name])
                                           (m: below(k)):
                                      derive(p)(b, sigma1, v, sigma2)(m))
-            AND old_val_arg1 = lookup_local(name(arg(md1)), pstate(tauMP3))
-            AND tauMP4 = update_stack(a1, arg(md1), pv1, lvars(md1), tauMP3)
             AND derive(mp)(body(md1), tauMP4, x1, tauMP5)(m41)
             AND x1 = Semantics.return_of_stmt(tauMP5)
             AND IF Void?(res_type(md1))
@@ -465,8 +465,9 @@ BEGIN
                 ENDIF
             AND sMP2 =
                  update_PState(tauMP7,
-                               update_local(name(arg(md1)),
-                                            old_val_arg1))
+                               LAMBDA(pstate : PState) : 
+                                 pstate WITH 
+                                 [st := st(pstate) WITH [lvs := old_lvs1]])
       ENDIF ENDIF IMPLIES
       ex(pstate(sMP1)) = ex(pstate(sAP1)) IMPLIES
       (FORALL (y: [nat, nat]):
@@ -498,8 +499,10 @@ BEGIN
       ELSE IF up?(lookup_mthd(ann_program(mp), a2, name(b)))
            THEN md2 = down(lookup_mthd(ann_program(mp), a2, name(b)))
            ELSE FALSE
-           ENDIF
-           AND on_method_entry(ann_program(mp), md2, a2, tauAP2, tauAP3, m32,
+           ENDIF AND
+           old_lvs2 = lvs(st(pstate(tauAP2))) AND
+           tauAP3 = update_stack(a2, arg(md2), pv2, lvars(md2), tauAP2) AND
+           on_method_entry(ann_program(mp), md2, a2, tauAP3, tauAP4, m32, 
                                 LAMBDA (k: upto(m32))
                                        (p: Program[Name])
                                        (b: (wf_Body(id(p))),
@@ -508,8 +511,6 @@ BEGIN
                                         sigma2: APState[Name])
                                        (m: below(k)):
                                   derive(p)(b, sigma1, v, sigma2)(m))
-            AND old_val_arg2 = lookup_local(name(arg(md2)), pstate(tauAP3))
-            AND tauAP4 = update_stack(a2, arg(md2), pv2, lvars(md2), tauAP3)
             AND derive(ann_program(mp))(body(md2), tauAP4, x2, tauAP5)(m42)
             AND x2 = Semantics.return_of_stmt(tauAP5)
             AND IF Void?(res_type(md2))
@@ -541,8 +542,10 @@ BEGIN
             AND IF up?(ex(pstate(tauAP7))) THEN v2 = Bottom
                 ELSE v2 = w2
                 ENDIF
-            AND sAP2 = update_PState(tauAP7, update_local(name(arg(md2)),
-                                            old_val_arg2))
+            AND sAP2 = update_PState(tauAP7,
+                               LAMBDA(pstate : PState) : 
+                                 pstate WITH 
+                                 [st := st(pstate) WITH [lvs := old_lvs2]])
       ENDIF IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
       legal_Body(ann_program(mp))(b) IMPLIES
