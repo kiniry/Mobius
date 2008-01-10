@@ -8,6 +8,10 @@
  */
 package jml2bml.rules;
 
+import jml2bml.bytecode.BytecodeUtil;
+import jml2bml.engine.Symbols;
+import jml2bml.exceptions.NotTranslatedException;
+
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
 
@@ -19,16 +23,7 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.Name;
-
-import jml2bml.ast.TreeNodeFinder;
-import jml2bml.bytecode.BytecodeUtil;
-import jml2bml.engine.Symbols;
-import jml2bml.exceptions.NotTranslatedException;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
@@ -42,7 +37,6 @@ public class RequiresRule extends TranslationRule<String, Symbols> {
 
   public String visitJmlMethodClauseExpr(JmlMethodClauseExpr node, Symbols symb) {
     if (node.token == JmlToken.REQUIRES) {
-      System.out.println("Requires");
       if (node.expression == null)
         throw new NotTranslatedException("Expression is null");
       final BCClass bcClazz = myContext.get(BCClass.class);

@@ -11,6 +11,7 @@ public class JmlNodes {
    */
   public static final Class < ? > [] JML_CLASSES = {
                                                 JmlTree.JmlStatementExpr.class,
+                                                JmlTree.JmlMethodClauseExpr.class,
                                                 JCTree.JCAnnotation.class };
 
 }
