@@ -21,67 +21,79 @@ Gforge 	Trac ID	Summary
 272				Simplify needs xwindows library under mac os
 579				JML keyword refines is not recognized	
 509				build simplify for OS X on intel
+484		234		do not include api/src-html in binary release
+
+The following existing issues been reassigned to the Javafe sub-project:
+Gforge 	Trac ID	Summary
+291				fields of subclasses of ASTNode are declared public
+317		204		Escjava/test/junittests/SpecFile.jml fails under cygwin
+
+The following existing issues been reassigned to the Simplify sub-project:
+Gforge 	Trac ID	Summary
+412		205		Simplify crashes when blank lines added
 
 The following issues are known to EXIST in this release:
 
 Gforge	Trac ID	Summary 
-n/a		415		Modify specs_test to work with either Java 1.4 or Java 1.5																 
-55				inheritance of invariants												 
-105				handling DSA for recursive specs is broken								 
-111				Recursive postconditions												 
-124				problems with quantifier triggering										 
-125				Must be able to reason about clone() in ESC/Java, verif. too			 
-126				remaining scope problem with java/jml fields							 
-127				SecurityKey and KeySet example.											 
-129				Model imports change name resolution									 
-131				Typechecking with no specs results in mysterious typechecking errors.	 
-137				specs for java.util.Calendar, java.util.Date, and 
-				java.util.GregorianCalendar need to be finished							 
-143				[found-by-jmlc] ERRORTYPE tag constant is not a legal PrimitiveType
-				tag value																 
-155				TestByteArrayInputStream missing five previously issued warnings		 
-158				cannot typecheck several classes in JDK 1.4's source due to inner 
-				class resolution problems												
-161				deeply nested inner classes and inheritance								
-185				String's infix + operator doesn't type check							
-187				bogus warning in Map.spec when working with two byte[], one of them 
-    			obtained from a string arg												
-208				assertion failure in escjava.translate.Inner.getEnclosingInstanceField	
-209				Mysterious broken object invariant (with -LoopSafe option)				
-210				javafe.util.AssertionFailureException									
-211				main() should have a default spec										
-217				The String class in JRE_1.4.2_10-build3 does not typecheck.				
-219				Pollution with multiple provers targeted by VC generator				
-220				source file generation in escjava.vcGeneration							
-222				Type checking errors with new VC generator								
-226				Hidden warnings															
-229				Java builder in Eclipse does not output .class files in expected 
-    			location																
-231				javafe.util.AssertionFailureException in modeBatch(), 
-				GCSanity assertion														
-238				sos.koa.Candidate: toString() causes escj to crash						
-243				problem with += when lvalue is array element							
-247				Houdini CopyLoaded does not copy all required files						
-251				add support for \same keyword											
-270				method call resolution (static vs. dynamic types)								
-290				nullity annotations should be cleaned up								
-291				fields of subclasses of ASTNode are declared public						
-317				Escjava/test/junittests/SpecFile.jml fails under cygwin					
-318				[found-by-esc] various errors reported by esc when run on junitutils	
-412				Simplify crashes when blank lines added									
-414				non-pure methods can be used in assertion expressions					
-474				attempting to process the escjava package with escjava2 results in an 
-    			infinite loop															
-480				universes type system support breaks Java parsing of some existing code 
-484				do not include api/src-html in binary release																						
-488				Can't generate VCs without having a Simplify binary around				
+n/a		415		Modify specs_test to work with either Java 1.4 or Java 1.5
+55				inheritance of invariants
+105				handling DSA for recursive specs is broken
+111				Recursive postconditions
+124				problems with quantifier triggering
+125				Must be able to reason about clone() in ESC/Java, verif. tool
+126				remaining scope problem with java/jml fields
+127				SecurityKey and KeySet example.
+129				Model imports change name resolution
+131				Typechecking with no specs results in mysterious typechecking
+				errors.
+137				specs for java.util.Calendar, java.util.Date, and
+				java.util.GregorianCalendar need to be finished
+143				[found-by-jmlc] ERRORTYPE tag constant is not a legal 
+				PrimitiveType tag value
+155				TestByteArrayInputStream missing five previously issued 
+				warnings
+158				cannot typecheck several classes in JDK 1.4's source due to
+				inner class resolution problems
+161				deeply nested inner classes and inheritance
+185				String's infix + operator doesn't type check
+187				bogus warning in Map.spec when working with two byte[], one of 
+				them obtained from a string arg
+208				assertion failure in 
+				escjava.translate.Inner.getEnclosingInstanceField	
+209				Mysterious broken object invariant (with -LoopSafe option)
+210				javafe.util.AssertionFailureException
+211				main() should have a default spec
+217				The String class in JRE_1.4.2_10-build3 does not typecheck.
+219				Pollution with multiple provers targeted by VC generator
+220				source file generation in escjava.vcGeneration
+222				Type checking errors with new VC generator
+226				Hidden warnings
+229				Java builder in Eclipse does not output .class files in
+				expected location
+231				javafe.util.AssertionFailureException in modeBatch(), GCSanity
+				assertion
+238				sos.koa.Candidate: toString() causes escj to crash
+243				problem with += when lvalue is array element
+247				Houdini CopyLoaded does not copy all required files
+251				add support for \same keyword
+270				method call resolution (static vs. dynamic types)
+290				nullity annotations should be cleaned up
+318				[found-by-esc] various errors reported by esc when run on 
+				junitutils
+414		203		non-pure methods can be used in assertion expressions
+474				attempting to process the escjava package with escjava2 results
+				in an infinite loop
+480				universes type system support breaks Java parsing of some
+				existing code
+484				do not include api/src-html in binary release
+488				Can't generate VCs without having a Simplify binary around
 498				grammar change for JML expression \max									
 499				stack too big in parsing background predicate - implement more 
 				constant folding														
 500				make error reporting in the new backend use javafe.utils.ErrorSet for 
 				the moment																
 508				nowarn NonNull doesn't work for method calls							
-511				Run escjava on itself													
+511		200		Run escjava on itself													
 513				Reinstate tests that should still pass in Escjava/test/jdktests			
 514				build fails under cygwin when using javac								
 516				private helper methods													
@@ -98,7 +110,7 @@ n/a		415		Modify specs_test to work with either Java 1.4 or Java 1.5
 580				Null is still the default for declarations, contrary to JML				
 582				pure equals() in escjava/sortedProver/Lifter classes call non-pure 
 				hashCode																
-583				ESC/Java2 doesn't detect rep exposure									
+583		201		ESC/Java2 doesn't detect rep exposure									
 584				Using -nonNullByDefault doesn't get out all Null warnings 
 				(just for arrays?)								 						
 586				conditionally disable handful of tests that are currently failing in 
