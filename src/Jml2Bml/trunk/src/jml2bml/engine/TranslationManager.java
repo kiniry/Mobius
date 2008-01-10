@@ -2,7 +2,6 @@ package jml2bml.engine;
 
 import java.util.Map;
 
-import jml2bml.rules.NonNullRule;
 import jml2bml.rules.RulesFactory;
 
 import com.sun.source.tree.Tree;
@@ -27,8 +26,9 @@ public class TranslationManager {
    */
   private static void registerTranslationRules(Jml2BmlTranslator translator,
                                                Context context) {
-    translator.registerTranslationRule(RulesFactory.getNonNullRule(context));
-    translator.registerTranslationRule(RulesFactory.getExpressionRule(context));
+// FIXME: we shouldn't run expression rule by itself??
+//    translator.registerTranslationRule(RulesFactory.getExpressionRule(context));
     translator.registerTranslationRule(RulesFactory.getAssertRule(context));
+    translator.registerTranslationRule(RulesFactory.getEnsuresRule(context));
   }
 }

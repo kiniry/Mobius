@@ -21,16 +21,13 @@ public class RulesFactory {
   }
 
   /**
-   * Returns an instance of NonNullRule
-   */
-  public static TranslationRule<String, Symbols> getNonNullRule(Context context) {
-    return new NonNullRule(context);
-  }
-
-  /**
    * Returns an instance of AssertRule
    */
   public static TranslationRule<String, Symbols> getAssertRule(Context context) {
     return new AssertRule(context);
+  }
+
+  public static TranslationRule<String, Symbols> getEnsuresRule(Context context) {
+    return new RequiresRule(context);
   }
 }

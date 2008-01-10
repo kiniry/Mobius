@@ -1,6 +1,6 @@
 /*
  * @title       "Jml2Bml"
- * @description "An editor for the Java bytecode and BML specifications"
+ * @description "JML to BML Compiler"
  * @copyright   "(c) 2008-01-06 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
@@ -21,10 +21,10 @@ public final class BytecodeUtil {
   private BytecodeUtil() {
   }
 
-  public static BCMethod findMethod(final Name name, final BCClass clazz) {
+  public static BCMethod findMethod(final CharSequence name, final BCClass clazz) {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
-      if (name.contentEquals(method.getBcelMethod().getName()))
+      if (method.getBcelMethod().getName().contentEquals(name))
         return method;
     }
     return null;

@@ -1,6 +1,6 @@
 /*
  * @title       "Jml2Bml"
- * @description "An editor for the Java bytecode and BML specifications"
+ * @description ""JML to BML Compiler"
  * @copyright   "(c) 2008-01-06 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
@@ -17,6 +17,7 @@ import jml2bml.exceptions.NotTranslatedException;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
+import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlAbstractStatement;
 import org.jmlspecs.openjml.JmlTree.JmlStatementExpr;
 
@@ -27,8 +28,6 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -59,34 +58,31 @@ public class AssertRule extends TranslationRule<String, Symbols> {
   public String visitJmlStatementExpr(final JmlStatementExpr node,
                                       final Symbols p) {
 
-    final String token = node.token.internedName();
-    if (JmlTokens.ASSERT.equals(token)) {
-      final TranslationRule<BCExpression, Symbols> expressionRule = RulesFactory
-          .getExpressionRule(my_context);
-
-      BCExpression expr;
-      TreeNodeFinder finder = my_context.get(TreeNodeFinder.class);
-      BCClass clazz = my_context.get(BCClass.class);
-      ClassFileLocation classLoc = my_context.get(ClassFileLocation.class);
+    if (node.token == JmlToken.ASSERT) {
+      final TreeNodeFinder finder = my_context.get(TreeNodeFinder.class);
+      final BCClass clazz = my_context.get(BCClass.class);
 
       //Find an enclosing method
-      MethodTree method = (MethodTree) finder.getAncestor(node, Kind.METHOD);
-      BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
+      final MethodTree method = (MethodTree) finder.getAncestor(node, Kind.METHOD);
+      final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
 
       if (node.expression != null) {
-        final BCExpression expression = node.expression.accept(expressionRule,
+        final BCExpression expression = node.expression.accept(RulesFactory
+                                                               .getExpressionRule(my_context),
                                                                p);
         if (expression.getType1() != JavaBasicType.JavaBool)
           throw new NotTranslatedException("assert expression must be boolean");
         final AbstractFormula form = (AbstractFormula) expression;
 
-        final StatementTree targetStatement = findFirstNotEmptySibling(finder, node);
-        System.out.println("Assertion: "+form+" should be added to statement: "+targetStatement);
-        final InstructionHandle targetIH = translateStatement(targetStatement, bcMethod);
-        int count = bcMethod.getAmap().getAllAt(targetIH).size();
-        SingleAssert ass = new SingleAssert(bcMethod, targetIH, count, form);
-        bcMethod.addAttribute(ass);
+        final StatementTree targetStmt = findFirstNotEmptySibling(finder, node);
+        System.out.println("Assertion: "+form+" should be added to statement: "+targetStmt);
+        final InstructionHandle targetIH = translateStatement(targetStmt,
+                                                              bcMethod);
+        final int count = bcMethod.getAmap().getAllAt(targetIH).size();
+        bcMethod.addAttribute(new SingleAssert(bcMethod, targetIH,
+                                               count, form));
       }
+      //TODO: what with node.optionalExpression??
     }
     return null;
   }

@@ -4,6 +4,8 @@ package experiments;
 public class Test {
   public String str;
   public static String sss;
+  
+  //@ requires 2 == 2;
   public static void main(/*@ non_null */String[] args) throws Exception {
     //@ assert 2 + 2*(1+4) < 5;
     //@ assert 2 + 2*(1+4) > 123412;
@@ -22,7 +24,7 @@ public class Test {
     for (int i = 0; i <1 ; i++);
     for (int j = 0; j < 1; j ++);
     for (int i = 0; i <1 ; i++);
-    Object x = new Object(){public String toString(){int mmm = 12;return null;}};
+//    Object x = new Object(){public String toString(){int mmm = 12;return null;}};
   }
   
   public int a(){
