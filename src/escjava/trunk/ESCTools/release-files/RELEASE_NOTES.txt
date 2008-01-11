@@ -100,15 +100,15 @@ n/a		427		ESC/Java2 support for JML 5.5 keywords
 				Escjava/test/jdktests
 514		196		build fails under cygwin when using javac
 516		229		private helper methods
-519				RCC: thread_shared default does not always work
+519		171		RCC: thread_shared default does not always work
 530		230		several tests are failing in ESCTools/Escjava/test/escjava/test
-547				Semantics of Informal predicate (* .. *) incorrect
+547		178		Semantics of Informal predicate (* .. *) incorrect
 549		119		skip method in InputStream and ByteArrayInputStream is
 				inconsistent
 550		118		The spec of InputStream is wrong
-551				The initially clause is not propagated to the descendants
-567				non_null treated wrongly for arrays
-568				Specification of the get method in Map
+551		176		The initially clause is not propagated to the descendants
+567		222		non_null treated wrongly for arrays
+568		224		Specification of the get method in Map
 570		124		semantics of modifies \everything
 577		116		Modifies warning disappears
 580		267		Null is still the default for declarations, contrary to JML
@@ -165,7 +165,7 @@ n/a		427		ESC/Java2 support for JML 5.5 keywords
 				developments v-v code_contract and measured_by
 191		324		research: specification soundness checking
 192		323		research: generalised specification-aware warnings
-193				research: soundness and completeness warning system
+193		322		research: soundness and completeness warning system
 194		326		research: loop checking
 195		325		research: JavaCard and MIDP support (generalised Java platform
 				variant support) 
