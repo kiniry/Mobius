@@ -1,0 +1,139 @@
+InlineEquivalence[Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING NewVar[Name], InlineVariableNames[Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+        FORALL(p : Program) :
+          injective?(f(p))
+
+  ENDASSUMING
+
+  IMPORTING AnnotatedProgramSemantics[Name],
+            InlineProgramAnnotationProperties[Name]
+
+
+  p : VAR Program
+
+  Program_lvs_modeled?(sAP1, sAP2 : APState) : boolean =
+    FORALL (n : Name) : defined?(lvs(st(pstate(sAP1)))(n)) IMPLIES
+      lvs(st(pstate(sAP1)))(n) = lvs(st(pstate(sAP2)))(n)
+
+  Program_modeled?(sAP1, sAP2 : APState) : boolean =
+    ex(pstate(sAP1)) = ex(pstate(sAP2)) AND
+    fvs(st(pstate(sAP1))) = fvs(st(pstate(sAP2))) AND 
+    Program_lvs_modeled?(sAP1, sAP2) AND
+    gvs(sAP1) = gvs(sAP2) 
+
+
+  inline_related_states(p)(sAP1, sAP2 : APState) : boolean = 
+    wf_state(p)(sAP1) AND
+    wf_state(inline_program(p))(sAP2) AND
+    Program_modeled?(sAP1, sAP2)
+
+END InlineEquivalence
+
+
+InlineRelatedStatesProperties[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING NewVar[Name], InlineVariableNames[Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+        FORALL(p : Program) :
+          injective?(f(p))
+
+  ENDASSUMING
+
+
+  IMPORTING InlineEquivalence[Name]
+
+  p : VAR Program
+
+  % unclear how to prove this
+  get_address_same_in_inline_related_states : LEMMA % 
+    FORALL(vn : Name, sAP1, sAP2 : APState) :
+      inline_related_states(p)(sAP1, sAP2) IMPLIES
+        get_address(vn, sAP1) = get_address(vn, sAP2)
+
+  % unclear how to prove this
+  get_dynamic_type_name_same_in_inline_related_states : LEMMA % 
+    FORALL(vn : Name, sAP1, sAP2 : APState) :
+      inline_related_states(p)(sAP1, sAP2) IMPLIES
+        get_dynamic_type_name(vn, sAP1) = get_dynamic_type_name(vn, sAP2)
+
+  
+  Program_modeled_implies_same_exception : LEMMA % :-)
+    FORALL (sAP1, sAP2 : APState) :
+      Program_modeled?(sAP1, sAP2) IMPLIES
+        ex(pstate(sAP1)) = ex(pstate(sAP2))
+
+  inline_related_states_implies_same_exception : LEMMA % :-)
+    FORALL (sAP1, sAP2 : APState) :
+      inline_related_states(p)(sAP1, sAP2) IMPLIES 
+        ex(pstate(sAP1)) = ex(pstate(sAP2))
+
+  inline_related_states_implies_same_lookup : LEMMA % :-)
+    FORALL (sAP1, sAP2 : APState, n : Name) :
+      inline_related_states(p)(sAP1, sAP2) IMPLIES 
+      ext_declared_var_names(p)(n) IMPLIES
+        lookup(n, sAP1) = lookup(n, sAP2)
+
+%  % needs reformulation
+%  Program_modeled_preserved_by_update : LEMMA % 
+%    FORALL (sAP1, sAP2 : APState)(upd : [PState -> PState]) :
+%      inline_related_states(p)(sAP1, sAP2) IMPLIES
+%      (FORALL (pstate1, pstate2 : PState) : 
+%        (st(pstate1) = st(pstate2) IMPLIES st(upd(pstate1)) = st(upd(pstate2))))
+%      IMPLIES
+%      (FORALL (pstate : PState) : (ex(upd(pstate)) = ex(pstate))) IMPLIES
+%        Program_modeled?(update_PState(sAP1, upd), update_PState(sAP2, upd))
+
+  % needs reformulation?
+  inline_related_states_preserved_by_update : LEMMA % :-)
+    FORALL (sAP1, sAP2 : APState)(vn : Name, v : (defined?)) :
+      inline_related_states(p)(sAP1, sAP2) IMPLIES
+      ext_declared_var_names(p)(vn) IMPLIES
+        inline_related_states(p)(update_PState(sAP1, update(vn, v)), 
+                                 update_PState(sAP2, update(vn, v)))
+
+  inline_related_states_preserved_by_catch : LEMMA % :-)
+    FORALL (sAP1, sAP2 : APState) :
+      inline_related_states(p)(sAP1, sAP2) IMPLIES
+      inline_related_states(p)(update_PState(sAP1, catch), 
+                        update_PState(sAP2, catch))
+
+  inline_related_states_preserved_by_raise : LEMMA % :-)
+    FORALL (sAP1, sAP2 : APState, e : Excpt) :
+      inline_related_states(p)(sAP1, sAP2) IMPLIES
+        inline_related_states(p)(update_PState(sAP1, raise(e)), 
+                          update_PState(sAP2, raise(e)))
+
+  inline_related_states_preserved_by_update_stack : LEMMA % 
+    FORALL (sAP1, sAP2 : APState,
+            this_val : Val, arg :  (getLocalDecls(p)), 
+            param_val : Val, lvds : finite_set[LocalVarDecl]) :
+      inline_related_states(p)(sAP1, sAP2) IMPLIES
+      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
+                                   getLocalDecls(p)(l)) IMPLIES
+        inline_related_states(p)(update_stack(this_val, arg, param_val,
+                                       lvds, sAP1),
+                          update_stack(this_val, arg, param_val,
+                                       lvds, sAP2))
+
+
+ 
+
+END InlineRelatedStatesProperties
