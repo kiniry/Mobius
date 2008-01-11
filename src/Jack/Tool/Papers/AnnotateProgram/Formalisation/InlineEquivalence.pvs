@@ -40,7 +40,7 @@ BEGIN
 END InlineEquivalence
 
 
-InlineRelatedStatesProperties[CP, Name : TYPE+] : THEORY
+InlineRelatedStatesProperties[Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
