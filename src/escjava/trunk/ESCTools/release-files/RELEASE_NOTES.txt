@@ -18,14 +18,14 @@ o Numerous bugs have been identified, fixed, and added. :)
 The following tickets are FIXED or CLOSED in this release:
 
 Gforge 	Trac ID	Summary 
-272				Simplify needs xwindows library under mac os
+272		140		Simplify needs xwindows library under mac os
 579		199		JML keyword refines is not recognized	
-509				build simplify for OS X on intel
+509		n/a		build simplify for OS X on intel
 484		234		do not include api/src-html in binary release
 
 The following existing issues been reassigned to the Javafe sub-project:
 Gforge 	Trac ID	Summary
-291				fields of subclasses of ASTNode are declared public
+291		231		fields of subclasses of ASTNode are declared public
 317		204		Escjava/test/junittests/SpecFile.jml fails under cygwin
 249		308		feature request: pretty-printing AST subtrees
 
