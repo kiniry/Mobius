@@ -3,12 +3,12 @@
 
 This file contains detected bmllib problems.
 
-1. duplicates in local variables names. The getLocalVariable(String name) 
+1. fulara: duplicates in local variables names. The getLocalVariable(String name) 
 method in BCMethod does not support case of duplicates in local variable names 
 (loops has mostly local control variables that can have the same name in different
 loops)
 
-2. If an local variable is declared, but not initialized, it won't be found by 
+2. fulara: If an local variable is declared, but not initialized, it won't be found by 
 getLocalVariable(String name) in BCMethod.
 
 3. kjk: Probably BmlLib should give API for checking type of operator - 
@@ -20,3 +20,5 @@ Now we have something like it in jml2bml.bmllib
 5. kjk: Maybe it should be possible to add it. Assert annotation as
 the last to the instruction handle - now it must be made around
 (get list of annotations at handle, it's size ??) 
+
+6. fulara: no support for method calls in bmllib.

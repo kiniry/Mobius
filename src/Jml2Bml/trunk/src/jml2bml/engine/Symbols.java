@@ -3,8 +3,12 @@ package jml2bml.engine;
 import java.util.HashMap;
 import java.util.Map;
 
+import annot.bcclass.BCClass;
+
 public class Symbols {
   private Symbols parentSymbols;
+
+  private BCClass clazz;
 
   private Map<String, Variable> variables;
 
@@ -13,7 +17,11 @@ public class Symbols {
     variables = new HashMap<String, Variable>();
   }
 
-  public Symbols(Symbols parentSymbols) {
+  /**
+   * Creates new instance of Symbols, with given parentSymbols.
+   * @param parentSymbols - symbol table for enclosing block / method / class
+   */
+  public Symbols(final Symbols parentSymbols) {
     this.parentSymbols = parentSymbols;
     variables = new HashMap<String, Variable>();
   }
@@ -27,7 +35,27 @@ public class Symbols {
     }
     return parentSymbols.get(variableName);
   }
+
   public void put(String variableName, Variable val) {
     variables.put(variableName, val);
+  }
+
+  /**
+   * Finds the current BCClass.
+   * @return current BCClass
+   */
+  public BCClass findClass() {
+    if (clazz != null) {
+      return clazz;
+    }
+    if (parentSymbols != null) {
+      return parentSymbols.findClass();
+    }
+    return null;
+  }
+
+  public void setClass(BCClass clazz) {
+    this.clazz = clazz;
+    
   }
 }

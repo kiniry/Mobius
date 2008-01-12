@@ -21,6 +21,7 @@ import annot.bcclass.BCClass;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccess;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.BooleanExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
@@ -36,6 +37,7 @@ import annot.io.Code;
 import annot.io.ReadAttributeException;
 
 import com.sun.source.tree.ArrayAccessTree;
+import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -44,6 +46,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 
@@ -73,6 +76,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator))
       return new Predicate2Ar(operator, lhs, rhs);
     else
+      System.out.println("oper "+operator);
       return new ArithmeticExpression(operator, lhs, rhs);
   }
 
@@ -155,7 +159,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
    * Handling quantified expressions.
    * @param node - node to parse
    *= @param p - sybmol table at this point
-   * (it will be extended here, by addind bounded variables)
+   * (it will be extended here, by adding bounded variables)
    * @return parsed expression
    */
   @Override
@@ -185,7 +189,13 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   public BCExpression visitJmlBinary(final JmlBinary node, final Symbols p) {
     final BCExpression lhs = scan(node.getLeftOperand(), p);
     final BCExpression rhs = scan(node.getRightOperand(), p);
-    final int operator = Utils.mapJCOperatorToBmlLib(node.op);
+    int operator = Utils.mapJCOperatorToBmlLib(node.op);
+    if (node.op == null)
+      operator = Utils.mapJCTagToBmlLib(node.getTag());
+    if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator)) {
+      return new Predicate2Ar(operator, lhs, rhs);
+    }
+    
     return new ArithmeticExpression(operator, lhs, rhs);
   }
 
@@ -205,7 +215,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   public BCExpression visitMemberSelect(final MemberSelectTree node,
                                         final Symbols p) {
     final BCExpression expr = scan(node.getExpression(), p);
-
+    
     return new FieldAccess(Code.FIELD_ACCESS, expr, expr);
     //FIXME!!!
   }
@@ -222,4 +232,5 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     return new ArrayAccess(scan(node.getExpression(), p), scan(node.getIndex(),
                                                                p));
   }
+
 }

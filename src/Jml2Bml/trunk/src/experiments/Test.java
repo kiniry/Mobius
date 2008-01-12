@@ -11,7 +11,10 @@ public class Test {
   
   //@ requires 2 == 2;  
   public static void main(/*@ non_null */String[] args) throws Exception {
-    Test test = new Test();
+    Test2 test = new Test2();
+    test.abc = "s";
+    //test.efg = "aa";
+    test.abc = "23";
     sss = "";
     //@ assert sss != null;
     
@@ -29,16 +32,21 @@ public class Test {
     c = a + b;
     //@ assert 2 + 2*(1+4) > 123412;
     int[] d = null;
+    //@ assert d.length < 123;
+    //@ assert (\forall int k; k >=0 && k < 10 ==> d[k] != a);
     d[0] = 1;
     for (int i = 0; i <1 ; i++);
     for (int j = 0; j < 1; j ++);
     for (int i = 0; i <1 ; i++);
-//    Object x = new Object(){public String toString(){int mmm = 12;return null;}};
+    //Object x = new Object(){public String toString(){int mmm = 12;return null;}};
   }
   
   public int a(){
     //@ assert 1 == 1;
     return 3;
     //@ assert 2 == 2;
+  }
+  private class Klasa{
+    private int abc;
   }
 }

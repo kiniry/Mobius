@@ -75,7 +75,9 @@ public class Main {
     // TODO: move from context
     context.put(TreeNodeFinder.class, parentFinder);
     Jml2BmlTranslator translator = TranslationManager.getTranslator(context);
-    tree.accept(translator, new Symbols());
+    Symbols syms = new Symbols();
+    syms.setClass(context.get(BCClass.class));
+    tree.accept(translator, syms);
     JmlEnter enter = (JmlEnter) JmlEnter.instance(context);
     ((JmlTree.JmlCompilationUnit) tree).mode = JmlTree.JmlCompilationUnit.JAVA_SOURCE_FULL;
     enter.visitTopLevel(tree);
@@ -84,7 +86,7 @@ public class Main {
     
     clazz.saveJC();
     System.out.println(clazz.printCode());
-
+    System.out.println(clazz.printCp());
   }
 
   private JavaFileObject getJavaFileObject(Context context, String filename) {

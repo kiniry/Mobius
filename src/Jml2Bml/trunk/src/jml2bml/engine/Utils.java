@@ -6,10 +6,18 @@ import javax.lang.model.type.TypeKind;
 
 import org.jmlspecs.openjml.JmlToken;
 
-import com.sun.source.tree.Tree;
+import annot.io.Code;
+
+import com.sun.tools.javac.tree.JCTree;
 
 public class Utils {
   public static int mapJCOperatorToBmlLib(JmlToken token) {
+    if (JmlToken.BSFORALL.equals(token))
+      return Code.FORALL_WITH_NAME;
+    if (JmlToken.BSEXISTS.equals(token))
+      return Code.EXISTS_WITH_NAME;
+    if (JmlToken.IMPLIES.equals(token))
+      return Code.IMPLIES;
     //FIXME
     return 0;
   }
@@ -23,4 +31,16 @@ public class Utils {
     }
     return null;
   }
+
+  public static int mapJCTagToBmlLib(int tag) {
+    if (tag == JCTree.AND)
+    {
+      return Code.AND;
+    }
+    if (tag == JCTree.OR){
+      return Code.OR;
+    }
+    return -3;
+  }
+
 }

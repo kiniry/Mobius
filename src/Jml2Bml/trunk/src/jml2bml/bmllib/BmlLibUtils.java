@@ -27,6 +27,9 @@ final public class BmlLibUtils {
       case Code.LESSEQ:
       case Code.EQ:
       case Code.NOTEQ:
+      case Code.AND:
+      case Code.OR:
+      case Code.IMPLIES:
         return true;
       default:
         return false;
@@ -36,8 +39,6 @@ final public class BmlLibUtils {
   public static int translateBinaryOperator(final Kind kind) {
     //TODO: check if all translated ok
     if (kind == Kind.AND) return Code.AND;
-//    if (kind == Kind.CONDITIONAL_AND) return
-//    if (kind == Kind.CONDITIONAL_OR) return
     if (kind == Kind.DIVIDE) return Code.DIV;
     if (kind == Kind.EQUAL_TO) return Code.EQ;
     if (kind == Kind.GREATER_THAN) return Code.GRT;
@@ -52,6 +53,9 @@ final public class BmlLibUtils {
     if (kind == Kind.PLUS) return Code.PLUS;
     if (kind == Kind.REMAINDER) return Code.REM;
     if (kind == Kind.RIGHT_SHIFT) return Code.SHR;
+    if (kind == Kind.CONDITIONAL_AND) return Code.AND;
+    if (kind == Kind.CONDITIONAL_OR) return Code.OR;
+    
 //    if (kind == Kind.UNSIGNED_RIGHT_SHIFT) return
 //    if (kind == Kind.XOR) return 
     throw new RuntimeException("Not implemented binary operator: " + kind);
