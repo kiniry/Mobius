@@ -15,6 +15,8 @@ import jml2bml.exceptions.NotTranslatedException;
 
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
+import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
+import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 
 import annot.attributes.MethodSpecification;
 import annot.attributes.SpecificationCase;
@@ -24,6 +26,7 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.util.Context;
 
@@ -44,12 +47,14 @@ public class RequiresRule extends TranslationRule<String, Symbols> {
       final BCClass bcClazz = myContext.get(BCClass.class);
       final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
       
-      //TODO: add finding method in tree
+      //Finding method in tree
+      Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
+      Tree nextClassMember = finder.getNextMember(specs);
+      if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
+        throw new NotTranslatedException("Cannot find method for the requires: "+ node);
+      JmlMethodDecl method = (JmlMethodDecl)nextClassMember;
       
-      finder.getAncestor(node, Kind.OTHER);
-//      
-      String methodName = "main";
-      final BCMethod bcMethod = BytecodeUtil.findMethod(methodName, bcClazz);
+      final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), bcClazz);
 
       final BCExpression expression = node.expression.accept(RulesFactory.getExpressionRule(myContext),
                                                              symb);
@@ -66,5 +71,4 @@ public class RequiresRule extends TranslationRule<String, Symbols> {
     }
     return null;
   }
-
 }

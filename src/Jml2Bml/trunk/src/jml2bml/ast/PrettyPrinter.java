@@ -41,7 +41,7 @@ public class PrettyPrinter {
   /** The output stream. */
   private final PrintStream out;
 
-  /** The pretty printer visitor */ 
+  /** The pretty printer visitor */
   private PrettyPrinterVisitor printerVisitor;
 
   /** Indentation per level */
@@ -53,6 +53,6 @@ public class PrettyPrinter {
   }
 
   public void prettyPrint(final Tree tree) {
-    tree.accept(printerVisitor, INDENT);
+    tree.accept(printerVisitor, "");
   }
 }
