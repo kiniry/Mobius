@@ -8,8 +8,6 @@
  */
 package jml2bml.bytecode;
 
-import javax.lang.model.element.Name;
-
 import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;

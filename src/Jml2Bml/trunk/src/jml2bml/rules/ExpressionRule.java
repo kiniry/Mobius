@@ -14,7 +14,6 @@ import jml2bml.engine.Utils;
 import jml2bml.engine.Variable;
 import jml2bml.exceptions.NotTranslatedException;
 
-import org.apache.bcel.classfile.JavaClass;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 
@@ -206,7 +205,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   public BCExpression visitMemberSelect(final MemberSelectTree node,
                                         final Symbols p) {
     final BCExpression expr = scan(node.getExpression(), p);
-    
+
     return new FieldAccess(Code.FIELD_ACCESS, expr, expr);
     //FIXME!!!
   }

@@ -10,8 +10,6 @@ package jml2bml.rules;
 
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.BytecodeUtil;
-import jml2bml.bytecode.ClassFileLocation;
-import jml2bml.engine.JmlTokens;
 import jml2bml.engine.Symbols;
 import jml2bml.exceptions.NotTranslatedException;
 

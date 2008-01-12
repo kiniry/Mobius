@@ -19,9 +19,9 @@ import com.sun.tools.javac.util.Context;
  * translation rules. They have to extend the TranslationRule class and
  * overwrite appropriate visitXYZ methods. If such an rule is not applicable to
  * a node type, visit method for this node type should not be overwritten.
- * 
+ *
  * @author Jedrek
- * 
+ *
  */
 
 public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> {

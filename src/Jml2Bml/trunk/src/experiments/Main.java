@@ -1,8 +1,17 @@
+/*
+ * @title       "Jml2Bml"
+ * @description "JML to BML Compiler"
+ * @copyright   "(c) 2008-01-06 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package experiments;
 
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
+import jml2bml.ast.PrettyPrinter;
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.engine.Jml2BmlTranslator;
@@ -13,7 +22,6 @@ import org.jmlspecs.openjml.JmlTree;
 
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
-import annot.textio.BMLConfig;
 
 import com.sun.source.tree.LineMap;
 import com.sun.tools.javac.comp.JmlEnter;
@@ -28,10 +36,14 @@ import com.sun.tools.javac.util.List;
  */
 
 public class Main {
-  public static void main(String[] args) throws ClassNotFoundException, ReadAttributeException {
-    ClassFileLocation classLoc = new ClassFileLocation(ProjectDirectory.PROJECT_DIR + "\\bin", "experiments.Test");
-    new Main().compile(ProjectDirectory.PROJECT_DIR + "\\src\\experiments\\Test.java",
-                       classLoc);
+  public static void main(String[] args) throws ClassNotFoundException,
+      ReadAttributeException {
+    ClassFileLocation classLoc = new ClassFileLocation(
+                                                       ProjectDirectory.PROJECT_DIR
+                                                           + "\\bin",
+                                                       "experiments.Test");
+    new Main().compile(ProjectDirectory.PROJECT_DIR
+                       + "\\src\\experiments\\Test.java", classLoc);
   }
 
   /**
@@ -55,7 +67,8 @@ public class Main {
     JavaCompiler compiler = JavaCompiler.instance(context);
     JCCompilationUnit tree = compiler.parse(getJavaFileObject(context,
                                                               sourceFile));
-    
+
+    new PrettyPrinter(System.out).prettyPrint(tree);
     context.put(LineMap.class, tree.getLineMap());
     
     TreeNodeFinder parentFinder = new TreeNodeFinder(tree);

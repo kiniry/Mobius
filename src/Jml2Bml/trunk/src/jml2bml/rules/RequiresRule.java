@@ -8,6 +8,7 @@
  */
 package jml2bml.rules;
 
+import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.engine.Symbols;
 import jml2bml.exceptions.NotTranslatedException;
@@ -23,6 +24,7 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -40,8 +42,12 @@ public class RequiresRule extends TranslationRule<String, Symbols> {
       if (node.expression == null)
         throw new NotTranslatedException("Expression is null");
       final BCClass bcClazz = myContext.get(BCClass.class);
-
+      final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
+      
       //TODO: add finding method in tree
+      
+      finder.getAncestor(node, Kind.OTHER);
+//      
       String methodName = "main";
       final BCMethod bcMethod = BytecodeUtil.findMethod(methodName, bcClazz);
 
