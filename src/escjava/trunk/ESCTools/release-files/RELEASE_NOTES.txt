@@ -27,7 +27,6 @@ The following existing issues been reassigned to the Javafe sub-project:
 Gforge 	Trac ID	Summary
 291		231		fields of subclasses of ASTNode are declared public
 317		204		Escjava/test/junittests/SpecFile.jml fails under cygwin
-249		308		feature request: pretty-printing AST subtrees
 
 The following existing issues been reassigned to the Simplify sub-project:
 Gforge 	Trac ID	Summary
@@ -38,7 +37,6 @@ The following issues are known to EXIST in this release:
 
 Gforge	Trac ID	Summary 
 n/a		425		Modify specs_test to work with both Java 1.4 and Java 1.5
-n/a		427		ESC/Java2 support for JML 5.5 keywords
 55		283		inheritance of invariants
 105		284		handling DSA for recursive specs is broken
 111		281		Recursive postconditions
@@ -95,14 +93,12 @@ n/a		427		ESC/Java2 support for JML 5.5 keywords
 500		236		make error reporting in the new backend use
 				javafe.utils.ErrorSet for the moment
 508		249		nowarn NonNull doesn't work for method calls
-511		200		Run escjava on itself
 513		245		Reinstate tests that should still pass in
 				Escjava/test/jdktests
 514		196		build fails under cygwin when using javac
 516		229		private helper methods
 519		171		RCC: thread_shared default does not always work
 530		230		several tests are failing in ESCTools/Escjava/test/escjava/test
-547		178		Semantics of Informal predicate (* .. *) incorrect
 549		119		skip method in InputStream and ByteArrayInputStream is
 				inconsistent
 550		118		The spec of InputStream is wrong
@@ -117,67 +113,12 @@ n/a		427		ESC/Java2 support for JML 5.5 keywords
 583		201		ESC/Java2 doesn't detect rep exposure
 584		266		Using -nonNullByDefault doesn't get out all Null warnings
 				(just for arrays?)
-587		114		ESC/Java2 doesn't recognize the \pre expression keyword
 588		254		ESC/Java passes methods with framing problems
 589		209		Parser doesn't allow nullable modifier in quantifier 
 				declarations
 595		115		The specification of FileOutpuStream is wrong
 596		242		NullPointerException thrown with @pure modified comes before
 				@modifies spec
-36		291		feature request: Add SMT-LIB benchmark generation facility
-102		292		feature request: Add file/folder chooser to CLASSPATH GUI
-114		293		feature request: Implement support for code specification cases
-116		295		feature request: Add support for the PVS theorem prover
-117		294		feature request: Check all theorems in the new PVS logic
-118		296		feature request: Finish new escjava3 logic
-119		297		feature request: Design and write a new VC generator for the
-				sorted escjava2 logic.
-120		298		feature request: Design and write a new VC generator for the 
-				PVS unsorted escjava logic.
-121		316		feature request: Review the PVS sorted escjava2 logic for
-				realisation in SMT
-122		319		feature request: non-null references by default
-140		318		feature request: definedness checking
-141		317		feature request: support new JML assertion logic
-165		299		feature request: Warn when @ preceded by spaces at start of 
-				comment
-168		301		feature request: characterisation of specification semantics in
-				different tools
-169		315		feature request: automatically detect misuse of full JML specs
-170		302		feature request: add support for new and old keywords used in 
-				Rodriguez et al's ECOOP05 paper
-171		304		feature request: add support for the "when" keyword
-174		309		feature request: runtime environmental robustness improvements
-184		303		feature request: specification soundness checker
-186		305		feature request: Integrate Clement's documentation into the 
-				Implementation Notes and the Extending book
-213		306		feature request: consider "trickling out" warnings
-230		312		feature request: Packages extract to current directory
-248		307		feature request: XML or s-expression-based pretty printing
-252		310		feature request: assert warnings as soundness passes
-307		311		feature request: Add -visibility switch to filter specs for
-				static checking.
-308		320		feature request: add support for Universes type annotations and
-				typechecking
-309		313		feature request: model methods in interfaces
-502		314		feature request: resolve desugaring method ambiguity
-569		300		feature request: Improving ESC/Java2 support for new JML
-				developments v-v code_contract and measured_by
-191		324		research: specification soundness checking
-192		323		research: generalised specification-aware warnings
-193		322		research: soundness and completeness warning system
-194		326		research: loop checking
-195		325		research: JavaCard and MIDP support (generalised Java platform
-				variant support) 
-196		327		research: immutability
-197		331		research: new JML model classes
-198		328		research: purity
-199		329		research: escjava3_logic
-548		321		research: Translation of informal predicate, (* .. *)
-552		330		research: develop a full PVS VC generator
-585		332		finish off implementation and documentation of reachability 
-				analysis
-605		241		ESC/Java2 doesn't recognize the \only_assigned() operator
 606		255		Problem with java.io.Outstream specification
 
 -------------------------------------------------------------

@@ -212,7 +212,7 @@ e) If you want to avoid using your password on every subversion transaction,
 
 SETTING UP YOUR ENVIRONMENT FOR BUILDING AND RUNNING ESC/Java2
 
-Development has taken place on Linux (Redhat 8/9), MacOSX (10.3 and
+Development has taken place on Linux (Redhat 8/9/10), MacOSX (10.3 and
 later), and Windows XP.  The build environment uses GNU make.
 Developers use both bash and tcsh as working shells.
 
@@ -272,7 +272,7 @@ ESCTOOLS_ROOT - defined to be the absolute path to the ESCTools
 
 SIMPLIFY - defined to be the *name* of (*not* the path to) an
         appropriate Simplify executable, currently one of
-		Simplify-1.5.4.macosx
+		Simplify-1.5.5.macosx
 		Simplify-1.5.4.exe   (for Windows) 
 		Simplify-1.5.4.linux
 		Simplify-1.5.4.solaris (not tested on Solaris)
@@ -446,11 +446,6 @@ releases - generates a release package (uses the variables ESC_PROJECT
 
 The $ESCTOOLS_ROOT directory contains a number of major subsystems:
 	Utils - utility material used by multiple subsystems
-	Javafe - the front-end Java parser (used by the other tools)
-	Simplify - a fast, automatic theorem prover (used by the other
-                   tools),
-  	  (Simplify IS NOT CURRENTLY PART OF THE MAKE SYSTEM.  For
-           information on building Simplify, see below.)
 	Escjava - the Extended Static Checker
 	Calvin - NOT YET WORKING
 	Rcc - the Race Condition Checker (maintained by Radu Grigore)
@@ -467,7 +462,7 @@ stand-alone, for the most part.  Where those Makefiles are usable
 directly, there are comments in the Makefile to that effect.
 
 Additionally, there is a nearly complete Ant build.xml file for all
-the Java parts of Javafe and Escjava in the top-level directory.  Use
+the Java parts of Escjava in the top-level directory.  Use
 at your own risk, as it is not currently being kept up-to-date.
 
 ----------------------------------------------------------------------------
@@ -536,37 +531,7 @@ affect the behavior of Simplify.  The most important are:
 		find.  The default is 10.
 	ESCJ_SIMPLIFY_DIR - the directory in which to find the
 		executable named by $SIMPLIFY.  This is by default
-		automatically set to a directory in the release or
-		in the CVS distribution.
-
-----------------------------------------------------------------------------
-
-BUILDING A WORKING VERSION OF Simplify FROM Subversion SOURCES
-
-We have modified Simplify slightly so that it will build properly on
-OS X 10.4 using the Critical Mass Modula-3 (CM3) compiler.  We also
-use CM3 on Linux.
-
-We had to patch the following modules so that they would build
-correctly on OS X with CM3 5.2.0:
-  m3-comm/tcp     m3-libs/set     m3-libs/table-list,
-  m3-tools/mtex   m3-ui/X11R4     m3-ui/ui
-
-The patched versions of these modules are available in
-ESCTools/Simplify/libs.
-
-We have not compared these patched versions with those available now
-that CM3 5.2.6 is available.  It may be the case that these modules
-now build properly on all platforms with more recent CM3 releases.
-
-Note that Simplify relies upon many modules.  You *must* install all
-of these modules prior to building Simplify.  The full list of
-necessary modules is found in the file ESCTools/Simplify/README.
-
-You can obtain the compiler either by using fink or directly from
-Elgosoft.  See the following URLs for more information:
-  http://www.elegosoft.com/cm3/                  (Elgosoft)
-  http://fink.sourceforge.net/                   (Fink)
+		automatically set to a directory in the release.
 
 ----------------------------------------------------------------------------
 ----------------------------------------------------------------------------

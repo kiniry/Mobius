@@ -1,4 +1,5 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
+/* Copyright 2007, 2008, University College Dublin, Ireland */
 
 package escjava;
 

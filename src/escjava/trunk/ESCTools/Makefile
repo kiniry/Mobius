@@ -402,13 +402,11 @@ releases: releases-notests
 
 test-releases:
 	@echo "Testing the releases..."
-	${MAKE} test-patch-release
 	${MAKE} test-source-release
 	${MAKE} test-binary-release
 
 releases-notests:
 	@echo "Making release versions ${ESC_PROJECT}-${ESC_VERSION} ........"
-	${MAKE} patch-release
 	${MAKE} binary-release
 	${MAKE} source-release
 

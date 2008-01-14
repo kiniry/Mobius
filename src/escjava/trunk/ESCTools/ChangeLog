@@ -1,4 +1,19 @@
 ------------------------------------------------------------------------
+r3336 | rgrig | 2007-12-23 15:27:43 +0000 (Sun, 23 Dec 2007) | 1 line
+
+------------------------------------------------------------------------
+r3335 | rgrig | 2007-12-23 14:50:16 +0000 (Sun, 23 Dec 2007) | 1 line
+
+makes the sorted prover backend work with z3. just make sure that the command 
+'z3' starts z3 on your system, which you can do even on linux using wine
+------------------------------------------------------------------------
+r3333 | dcochran | 2007-12-20 18:41:14 +0000 (Thu, 20 Dec 2007) | 1 line
+
+Fixed specs_test build target and added related issue to the release notes
+------------------------------------------------------------------------
+r3332 | dcochran | 2007-12-20 17:38:08 +0000 (Thu, 20 Dec 2007) | 1 line
+
+------------------------------------------------------------------------
 r3331 | dcochran | 2007-12-20 13:47:32 +0000 (Thu, 20 Dec 2007) | 1 line
 
 Second draft of release notes

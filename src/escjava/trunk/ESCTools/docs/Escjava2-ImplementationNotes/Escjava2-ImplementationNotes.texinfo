@@ -21,7 +21,7 @@
 @sp 1
 
 
-@center May 2007
+@center January 2008
 
 @sp 2
 
@@ -55,13 +55,10 @@ F.3.1 [@i{Logics and Meanings of Programs}]
 @sp 1
 
 Copyright @copyright{} 2003-2004 David R. Cok
-Copyright @copyright{} 2005-2006 Joseph R. Kiniry
-Copyright @copyright{} 2007 Systems Research Group, University College Dublin
+Copyright @copyright{} 2005-2008 Joseph R. Kiniry
 
 
 @sp 4
-@*CVS Version: $Revision$
-@*CVS Date: $Date$
 @end titlepage
 
 @contents
@@ -482,9 +479,9 @@ Security of Systems group at the Radboud University Nijmegen (what used
 to be known as Katholieke Universiteit Nijmegen or the University of
 Nijmegen) in Nijmegen, Netherlands.
 (@url{http://www.niii.kun.nl/sos/research/escjava/}).  The project is
-now hosted by the KindSoftware Research Group in the Department of
-Computer Science at University College Dublin from version 2.0a8
-onward. (@url{http://secure.ucd.ie/})
+now hosted by the Systems Research Group in the School of
+Computer Science and Informatics at University College Dublin from version 2.0a8
+onward. (@url{http://kind.ucd.ie/})
 
 The work of producing ESC/Java2 stands on the very much more
 considerable effort of the ESC/Java team in conceiving of and
@@ -505,6 +502,7 @@ The ESC/Java2 tool relies on the following software packages that are
 separately available and may have their own license restrictions.
 @itemize @bullet
 @cindex ESC/Java
+@cindex Javafe
 @cindex Simplify
 @item The original source for ESC/Java, Simplify and related tools, available 
 at
@@ -532,6 +530,10 @@ specifications are those available with the releases of JML.
 to use the two in combination.  ESC/Java2 is obviously dependent on
 the grammar and semantics of JML.  JML is available at
 @uref{http://www.jmlspecs.org/}.
+
+@cindex Javafe
+@item The Java 1.4 front-end for ESC/Java2
+@uref{http://kind.ucd.ie/products/opensource/JavaFE/}
 @end itemize
 
 @c ---------Contacts ------------------
@@ -550,15 +552,19 @@ Further information about JML and ESC/Java2 can be obtained from these sources.
         @*@center @email{jmlspecs-developers@@lists.sourceforge.net}
 @item The ESC/Java2 mailing list on sourceforge: 
         @*@center @email{jmlspecs-escjava@@lists.sourceforge.net}
+@item The Kind Software website: @uref{http://kind.ucd.ie/products/opensource/ESCJava2/}
 @end itemize
 
-JML utilizes (the Java subset of) the multijava compiler.
+JML utilized (the Java subset of) the multijava compiler.
 Information about multijava can be obtained from these sources.
 @itemize @bullet
 @item The multijava website: @uref{http://www.multijava.org/}
 @item The multijava project on sourceforge: 
              @uref{http://sourceforge.net/projects/multijava/}
 @end itemize
+
+Future versions of JML will not be based on multijava but instead will use, for 
+example, the Eclipse JDT or OpenJDK See the JML mailing list foir more details.
 
 @c --------------------------------------------------------------------------
 @node Running ESCJava2, Status, Introduction, Top
@@ -567,8 +573,8 @@ Information about multijava can be obtained from these sources.
 There are three essential items that you need in order to run ESC/Java2:
 a build of ESC/Java2 itself, an executable for Simplify for your
 platform, and a version of the JML specifications for the Java system
-classes.  These are available together as a single release from the KUN
-ESC/Java2 website (@url{http://www.cs.kun.nl/sos/research/nl}).
+classes.  These are available together as a single release from the Kind Software
+ESC/Java2 website (@url{http://kind.ucd.ie/products/opensource/ESCJava2/}).
 However, you may want to substitute an alternate version of the JML
 specifications that you generate yourself or you obtain from the JML
 website.  The specifications included with ESC/Java2 are a snapshot of
@@ -955,7 +961,7 @@ of which the annotation writer should be aware.  Consider the text
 @example
 /**  Javadoc material.
 <esc>
-	... annotations ...
+... annotations ...
 </esc>
      More javadoc material.
 */
@@ -3759,11 +3765,12 @@ in JML and are not yet implemented in ESC/Java2.
 @item @emph{informal predicate} : An informal predicate consists of text 
 enclosed within the delimiters @code{(*} and @code{*)}.  Informal
 predicates are interpreted as boolean expressions that are always true
-(independent of what the text may say!), and they may only be used in
-contexts where a boolean expression is allowed.  
+in a positive context and always false in a negative context, and they may only be used in
+contexts where a boolean expression is allowed.
 
 @*@strong{Status:}
-This feature is fully implemented in ESC/Java2 (as well as ESC/Java).
+This feature is partly implemented in ESC/Java2 (as well as ESC/Java).  Informal predicates
+are currently interpreted as always true, regardless of context.
 
 @end itemize
 
@@ -4336,32 +4343,32 @@ type, and @code{e} is an expression of any type.
 @c types??? ]]]
 @multitable @columnfractions .45 .20 .35
 @item
-	@tab JML
-	@tab Java
+@tab JML
+@tab Java
 @item Type names denoting the type of type values
-	@tab \TYPE
-	@tab java.lang.Class
+@tab \TYPE
+@tab java.lang.Class
 @item Expression that is a type literal
 corresponding to a given type name
-	@tab @code{\type(T)}
-	@tab @code{T.class}
+@tab @code{\type(T)}
+@tab @code{T.class}
 @item Expression whose value is the type value corresponding 
 to the name in a String
-	@tab
-	@tab @code{Class.forName(s)}
+@tab
+@tab @code{Class.forName(s)}
 @item Expression whose value is the type value corresponding 
 to the dynamic type of an expression 
-	@tab @code{\typeof(e)}
-	@tab @code{e.getClass()}
+@tab @code{\typeof(e)}
+@tab @code{e.getClass()}
 @item subtype relationship between two type values 
-	@tab @code{t1 <: t2}
-	@tab @code{t2.isAssignableFrom(t1)}
+@tab @code{t1 <: t2}
+@tab @code{t2.isAssignableFrom(t1)}
 @item Expression has type or is subtype of type name
-	@tab @code{\typeof(t) <: \type(T)}
-	@tab @code{t instanceof T}
+@tab @code{\typeof(t) <: \type(T)}
+@tab @code{t instanceof T}
 @item A type value corresponding to the element type of an array type
-	@tab @code{\elemtype(t)}
-	@tab @code{t.getComponentType()}
+@tab @code{\elemtype(t)}
+@tab @code{t.getComponentType()}
 @end multitable
 
 In JML and ESC/Java2, @code{\TYPE} and @code{java.lang.Class} have
@@ -5164,6 +5171,12 @@ read Java 1.4 source but ignores any Java assert statements
 @item @code{-enableassertions} : as in Java, causes parsing to 
 read Java 1.4 source and to use Java assert statements
 
+@cindex -era
+@item @code{-era} : enable reachability analysis
+
+@cindex -erst
+@item @code{-erst}: enable reachability analysis with specification testing
+ 
 @cindex -f
 @item @code{-f} @emph{filename} : the
 text within the named file is inserted at that location in the command-line;
@@ -5289,7 +5302,7 @@ ESC/Java)
 
 @cindex -warn
 @item @code{-warn} @emph{warning-type} : turns on the reporting of 
-warnings of the given type
+warnings of the given type.  Types of wanings include: UnsoundIncomplete,
 
 @item [[[FIXME - check for others to be documented; group the above by type]]]
 
@@ -5309,9 +5322,8 @@ described in this section.
 @item @code{ESCTOOLS_ROOT}
 @item @code{SIMPLIFY} - the name of the Simplify executable 
 appropriate to the platform on which ESC/Java2 is running.  Current
-options are Simplify-1.5.4.linux, Simplify-1.5.4.macosx,
-Simplify-1.5.4.solaris, and Simplify-1.5.4.exe (for Windows).  [[[
-Only the first two have had any testing. ]]]
+options are Simplify-1.5.4.linux, Simplify-1.5.5.macosx,
+Simplify-1.5.4.solaris, and Simplify-1.5.4.exe (for Windows).  [[[Only Mac OS X, Linux and Windows have been tested]]]
 
 
 @item @code{CLASSPATH}
@@ -5477,14 +5489,14 @@ syntactically identical String literals also compare equal as objects.
 Also, the concatenation of two String literals produces a String literal
 (at compile time).  Thus,
 @example
-	String a,b,c;
-	a = "sample";
-	b = "sample";
-	c = "sam" + "ple";
-	boolean t = (a==b);        // This is true
-	t = (a==c);                // This is also true
-	b = new String("sample");
-	t = (a==b);                // This is NOT true
+String a,b,c;
+a = "sample";
+b = "sample";
+c = "sam" + "ple";
+boolean t = (a==b);        // This is true
+t = (a==c);                // This is also true
+b = new String("sample");
+t = (a==b);                // This is NOT true
 @end example
 
 The Simplify prover does not have any built-in knowledge of Strings.
@@ -5500,13 +5512,13 @@ The intern operation maps Strings that compare equal using the equals
 method to the same Object.   String literals are automatically interned.
 Thus
 @example
-	boolean t;
-	String a,b,c;
-	a = "sample";
-	b = new String("sample");
-	c = b.intern();
-	t = (a==b);                // This is NOT true
-	t = (a==c);                // This IS true
+boolean t;
+String a,b,c;
+a = "sample";
+b = new String("sample");
+c = b.intern();
+t = (a==b);                // This is NOT true
+t = (a==c);                // This IS true
 @end example
 Interning is not yet implemented in ESC/Java2.
 
@@ -5660,7 +5672,7 @@ replacing it with the predicate @code{ x == \old(x) } for each argument
 @section Major features of Java not implemented in ESC/Java2
 
 @menu
-* Java 1.5::                    
+* Java 1.5 and 1.6::                    
 * anonymous and block-level classes::  
 * serialization::               
 * most multi-threading considerations::  
@@ -5672,7 +5684,9 @@ replacing it with the predicate @code{ x == \old(x) } for each argument
 @cindex Java 1.5
 @subsection Java 1.5
 
-ESC/Java2 does not implement any of the new features in Java 1.5.
+ESC/Java2 does not implement any of the new features in Java 1.5 or 1.6.
+Version 2.0b3 onwards will parse Java 1.5 bytecode using BCEL, so that 
+ESC/Java2 can be run within a Java 1.5 JVM.
 
 @c ----------------------------------------------------------------------------
 @node anonymous and block-level classes, serialization, Java 1.5, Major features of Java not implemented
@@ -5695,7 +5709,7 @@ See @ref{anonymous classes} and @ref{block-level class declarations}.
 @node Java generics,  , most multi-threading considerations, Major features of Java not implemented
 @subsection Java generics
 
-Support for generic typing in Java (or any other features of Java 1.5) is 
+Support for generic typing in Java (or any other features of Java 1.5 or 1.6) is 
 not implemented in ESC/Java2.
 
 @c ----------------------------------------------------------------------------
@@ -5956,8 +5970,8 @@ declarations).  ESC/Java2 allows in addition the following.
 just before the opening @{ or the ; marking an absent body.
 @*@strong{Example:}
 @example
-	public void m() //@@ pure ensures true;
-	@{@}
+public void m() //@@ pure ensures true;
+@{@}
 @end example
 
 @item Annotations on field declarations may be placed between the initializer
@@ -5965,14 +5979,14 @@ for the field and the terminating semicolon.  This syntax also applies to
 local variable declarations within routine bodies.
 @*@strong{Example:}
 @example
-	public Object o = new Object() /*@@ non_null */;
+public Object o = new Object() /*@@ non_null */;
 @end example
 
 @item Annotations on formal parameters may be placed between the identifier
 and the following comma or right parenthesis.
 @*@strong{Example:}
 @example
-	public void m(Object o /*@@ non_null*/, Object oo /*@@ non_null */);
+public void m(Object o /*@@ non_null*/, Object oo /*@@ non_null */);
 @end example
 
 @end itemize

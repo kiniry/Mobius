@@ -36,8 +36,9 @@ and ESCJ 27) by K. Rustan M. Leino, Greg Nelson, and James B. Saxe,
 October 12, 2000.
 
 Modified by Joseph Kiniry 1 April 2007.
+Modified by Dermot Cochran 14 January 2008.
 
-Current editor Joseph Kiniry.
+Current editors Joseph Kiniry and Dermot Cochran.
 
 This document describes ESC/Java2.  All ``public'' features of ESC/Java2
 are described in some detail with examples.  Some ``private'' (research)
@@ -56,7 +57,7 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
 Portions Copyright @copyright{} 1999, 2000 K. Rustan Leino, Greg Nelson,
 Jim Saxe, and Compaq Computer Corporation.
 
-Portions Copyright @copyright{} 2007 Joseph R. Kiniry and University
+Portions Copyright @copyright{} 2007, 2008 Joseph R. Kiniry and University
 College Dublin.
 
 @b{Original Compaq limitation of liability:} This publication and the
@@ -149,7 +150,7 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 
 @c To be published by the KindSoftware Research Group, Department of
 @c Computer Science, University College Dublin as technical report TBD
-@c See @uref{http://secure.ucd.ie/}
+@c See @uref{http://kind.ucd.ie/}
 @end titlepage
 
 @c metadata used in HTML
@@ -266,8 +267,8 @@ goes on to document all the core JML pragmas supported by ESC/Java2 and
 all the kinds of warnings that it generates.  It also provides basic
 information about running ESC/Java2.
 
-This manual documents Version 2.0b0 of ESC/Java2, release in April,
-2007.  We sometimes speak of ``the current ESC/Java2'', rather than just
+This manual documents Version 2.0b4 of ESC/Java2, release in January,
+2008.  We sometimes speak of ``the current ESC/Java2'', rather than just
 ``ESC/Java2''--to emphasize that particular features, bugs, or
 limitations under discussion are artifacts of the prior versions,
 particularly ESC/Java1, and may be subject to change in future versions.
