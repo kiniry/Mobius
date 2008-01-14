@@ -148,10 +148,10 @@ BEGIN
   % of exceptions
 
   % inline_method_body(p)(m) gives in Java-like syntax:
-  % pre_set(m);
   % try{
   %   try{
   %     try{
+  %       pre_set(m);
   %       body(m);
   %       ex := true;
   %     }
@@ -170,14 +170,14 @@ BEGIN
   %    post_set(m);
   % }
   inline_method_body(p)(m) : Body = 
-    Sequence(
-      pre_set(m),
-      TryCatch(
+    TryCatch(
        TryCatch(
         TryCatch(
-          Sequence(
+         Sequence(
+           pre_set(m),
+           Sequence(
              body(m),
-             StmtExpr(Assign(ex(p)(m), BExpr(TT)))),
+             StmtExpr(Assign(ex(p)(m), BExpr(TT))))),
                               % this is only executed if body terminates
                               % normally
           Throwable,
@@ -192,7 +192,7 @@ BEGIN
          BoolVarEval(ex(p)(m)),
          Sequence(StmtExpr(Assign(res(p)(m), res(m))),
                   post_set(m)),
-         Skip)))
+         Skip))
          
 
   inline_method(p)(m : Method) : Method =
