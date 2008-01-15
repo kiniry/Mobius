@@ -8,7 +8,6 @@
  */
 package umbra.editor.parsing;
 
-import umbra.instructions.HeaderLineController;
 
 /**
  * String arrays used to identify keywords and instruction
@@ -346,9 +345,9 @@ public class BytecodeStrings {
                                                        "instanceof", "new"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref FieldInstruction} class.
    */
-  //fieldinstructions - dodatkowo java.costam (liczba)
   public static final String[] FIELD_INS = new String[] {"getfield",
                                                          "getstatic",
                                                          "putfield",
@@ -412,9 +411,9 @@ public class BytecodeStrings {
   /**
    * TODO.
    */
-  public static final String[] BML_KEYWORDS = new String[] {"\\requires",
-                                                            "\\ensures",
-                                                            "\\exsures" };
+  public static final String[] BML_KEYWORDS = new String[] {"requires",
+                                                            "ensures",
+                                                            "exsures" };
 
   /**
    * TODO.
@@ -466,14 +465,14 @@ public class BytecodeStrings {
    * headers in bytecode text files. The header lines are handled by
    * {@ref HeaderLineController} class.
    */
-  public static final String[] HEADER_PREFIX = new String[] { "public",
-                                                              "static", "void",
-                                                              "private",
-                                                              "int", "char",
-                                                              "protected",
-                                                              "boolean",
-                                                              "String", "byte",
-                                                              "package",
-                                                              "class", "}" };
+  public static final String[] HEADER_PREFIX = new String[] {"public",
+                                                             "static", "void",
+                                                             "private",
+                                                             "int", "char",
+                                                             "protected",
+                                                             "boolean",
+                                                             "String", "byte",
+                                                             "package",
+                                                             "class", "}" };
 
 }

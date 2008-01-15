@@ -13,5 +13,10 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/bmllib.jar"/>
+	<classpathentry kind="lib" path="/BCEL5.1/bcel-5.1.jar" sourcepath="/BCEL5.1/bcel-5.1-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/chrzaszcz/Mobius/WP3/Task_3.6_Program_Verification_Environment/libs/bcel-5.1/bcel-5.1.zip!/bcel-5.1/docs/apidocs"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

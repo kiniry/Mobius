@@ -18,61 +18,6 @@ package umbra.instructions;
 public class InstructionParser {
 
   /**
-   * Java reserved literals as enumerated in JLS 3rd edition, 3.9 Keywords.
-   */
-  private static final String[] JAVA_RES_LITERALS = {
-    "null",  "true",  "false"
-  };
-
-  /**
-   * Java reserved keywords as enumerated in JLS 3rd edition, 3.9 Keywords.
-   */
-  private static final String[] JAVA_KEYWORDS = {
-    "abstract",  "continue",    "for",          "new",          "switch",
-    "assert",    "default",     "if",           "package",      "synchronized",
-    "boolean",   "do",          "goto",         "private",      "this",
-    "break",     "double",      "implements",   "protected",    "throw",
-    "byte",      "else",        "import",       "public",       "throws",
-    "case",      "enum",        "instanceof",   "return",       "transient",
-    "catch",     "extends",     "int",          "short",        "try",
-    "char",      "final",       "interface",    "static",       "void",
-    "class",     "finally",     "long",         "strictfp",     "volatile",
-    "const",     "float",       "native",       "super",        "while"
-  };
-
-  /**
-   * Octal digits.
-   */
-  private static final String OCTAL_DIGITS = "01234567";
-
-  /**
-   * Zero-three digits.
-   */
-  private static final String ZEROTOTHREE_DIGITS = "0123";
-
-  /**
-   * Base type descriptor characters.
-   */
-  private static final String BASE_TYPE_DESCRIPTORS = "BCDFIJSZ";
-
-  /**
-   * The maximal length of an octal escape.
-   */
-  private static final int MAX_OCTAL_NUMBER_LENGTH = 3;
-
-  /**
-   * The meaningful escape characters. These are as described in JLS 3rd
-   * edition, 3.10.6 Escape Sequences for Character and String Literals:
-   * b, t, n, f, r, ", ', \.
-   */
-  private static final String ESCAPE_CODE_CHARACTERS = "btnfr\"\'\\";
-
-  /**
-   * Contains cached line separator string.
-   */
-  private static String a_LINE_SEPARATOR;
-
-  /**
    * This field contains the value of the instruction line
    * which is parsed.
    */
@@ -132,23 +77,19 @@ public class InstructionParser {
    */
   public boolean swallowWhitespace() {
     if (my_index == my_line.length() ||
-        my_line.substring(my_index).startsWith(getEOL())) return false;
+        my_line.substring(my_index).
+                startsWith(InstructionParserHelper.getEOL()))
+      return false;
     while (Character.isWhitespace(my_line.charAt(my_index))) {
       my_index++;
       if (my_index == my_line.length() ||
-          my_line.substring(my_index).startsWith(getEOL())) return false;
+          my_line.substring(my_index).
+                  startsWith(InstructionParserHelper.getEOL())) return false;
     }
     return true;
   }
 
-  /**
-   * @return the line separator specific for the current system
-   */
-  private String getEOL() {
-    if (a_LINE_SEPARATOR == null)
-      a_LINE_SEPARATOR = System.getProperty("line.separator");
-    return a_LINE_SEPARATOR;
-  }
+
 
   /**
    * This method swallows all the digits starting from the current
@@ -333,33 +274,8 @@ public class InstructionParser {
       my_index++;
     } while (Character.isJavaIdentifierPart(my_line.charAt(my_index)));
     final String s = new String(buf);
-    return !isJavaResLiteral(s) && !isJavaKeyword(s);
-  }
-
-  /**
-   * Checks if the given string is a Java keyword.
-   *
-   * @param a_string the string to check
-   * @return <code>true</code> when the given string is a Java keyword,
-   *   <code>false</code> otherwise
-   */
-  private boolean isJavaKeyword(final /*@ non_null @*/ String a_string) {
-    for (int i = 0; i < JAVA_KEYWORDS.length; i++)
-      if (a_string.equals(JAVA_KEYWORDS[i])) return true;
-    return false;
-  }
-
-  /**
-   * Checks if the given string is a Java reserved literal.
-   *
-   * @param a_string the string to check
-   * @return <code>true</code> when the given string is a Java reserved literal
-   *   <code>false</code> otherwise
-   */
-  private boolean isJavaResLiteral(final /*@ non_null @*/ String a_string) {
-    for (int i = 0; i < JAVA_RES_LITERALS.length; i++)
-      if (a_string.equals(JAVA_RES_LITERALS[i])) return true;
-    return false;
+    return !InstructionParserHelper.isJavaResLiteral(s) &&
+           !InstructionParserHelper.isJavaKeyword(s);
   }
 
   /**
@@ -431,29 +347,15 @@ public class InstructionParser {
     } else {
       return false;
     }
-    if (isOctalDigit(my_line.charAt(my_index))) {
+    if (InstructionParserHelper.isOctalDigit(my_line.charAt(my_index))) {
       return swallowOctalNumber();
-    } else if (isEscapeChar(my_line.charAt(my_index))) {
+    } else if (InstructionParserHelper.isEscapeChar(my_line.charAt(my_index))) {
       my_index++;
       res = true;
     } else {
       res = false;
     }
     return res;
-  }
-
-  /**
-   * Check if a character is a meaningful escape character. The meaningful
-   * escape characters are as described in JLS 3rd edition, 3.10.6 Escape
-   * Sequences for Character and String Literals: b, t, n, f, r, ", ', \.
-   *
-   * @param a_char the character to check
-   * @return <code>true</code> when a_char is a meaningful escape character
-   */
-  private boolean isEscapeChar(final char a_char) {
-    for (int i = 0; i < ESCAPE_CODE_CHARACTERS.length(); i++)
-      if (ESCAPE_CODE_CHARACTERS.charAt(i) == a_char) return true;
-    return false;
   }
 
   /**
@@ -474,38 +376,16 @@ public class InstructionParser {
    */
   private boolean swallowOctalNumber() {
     boolean ztt = false;
-    if (isZeroToThreeDigit(my_line.charAt(my_index))) ztt = true;
-    for (int i = 0; i < MAX_OCTAL_NUMBER_LENGTH; i++) {
-      if (!isOctalDigit(my_line.charAt(my_index++))) {
+    if (InstructionParserHelper.isZeroToThreeDigit(my_line.charAt(my_index)))
+      ztt = true;
+    for (int i = 0; i < InstructionParserHelper.MAX_OCTAL_NUMBER_LENGTH; i++) {
+      if (!InstructionParserHelper.isOctalDigit(my_line.charAt(my_index++))) {
         return true;
       } else {
-        if (i == MAX_OCTAL_NUMBER_LENGTH - 1) return ztt;
+        if (i == InstructionParserHelper.MAX_OCTAL_NUMBER_LENGTH - 1)
+          return ztt;
       }
     }
-    return false;
-  }
-
-  /**
-   * Check if a character is an octal digit.
-   *
-   * @param a_char the character to check
-   * @return <code>true</code> when a_char is an octal digit
-   */
-  private boolean isOctalDigit(final char a_char) {
-    for (int i = 0; i < OCTAL_DIGITS.length(); i++)
-      if (OCTAL_DIGITS.charAt(i) == a_char) return true;
-    return false;
-  }
-
-  /**
-   * Check if a character is 0, 1, 2, or 3.
-   *
-   * @param a_char the character to check
-   * @return <code>true</code> when a_char is 0, 1, 2, or 3
-   */
-  private boolean isZeroToThreeDigit(final char a_char) {
-    for (int i = 0; i < ZEROTOTHREE_DIGITS.length(); i++)
-      if (ZEROTOTHREE_DIGITS.charAt(i) == a_char) return true;
     return false;
   }
 
@@ -588,10 +468,12 @@ public class InstructionParser {
    */
   private boolean swallowReturnDescriptor() {
     boolean res = false;
-    if (isBaseTypeDescriptor(my_line.charAt(my_index)) ||
-        isVoidTypeDescriptor(my_line.charAt(my_index))) {
+    if (InstructionParserHelper.isBaseTypeDescriptor(
+                                       my_line.charAt(my_index)) ||
+        InstructionParserHelper.isVoidTypeDescriptor(
+                                       my_line.charAt(my_index))) {
       my_index++;
-      res = true;
+      return true;
     }
     res = res && swallowRefTypeDescriptor();
     return res;
@@ -617,16 +499,17 @@ public class InstructionParser {
    *   swallowed, <code>false</code> otherwise
    */
   private boolean swallowRefTypeDescriptor() {
-    boolean res = true;
-    if (isArrayTypeDescriptor(my_line.charAt(my_index))) {
+    if (InstructionParserHelper.isArrayTypeDescriptor(
+                    my_line.charAt(my_index))) {
       my_index++;
-      res = swallowArrayTypeDescriptor();
+      return swallowArrayTypeDescriptor();
     }
-    if (!res && isObjectTypeDescriptor(my_line.charAt(my_index))) {
+    if (InstructionParserHelper.isObjectTypeDescriptor(
+                    my_line.charAt(my_index))) {
       my_index++;
-      res = swallowObjectTypeDescriptor();
+      return swallowObjectTypeDescriptor();
     }
-    return res;
+    return false;
   }
 
   /**
@@ -686,14 +569,35 @@ public class InstructionParser {
   }
 
   /**
-   * Checks if the given character starts an object type descriptor.
+   * This method swallows a single field name with different possible
+   * name chunk separators. The separator is in the parameter
+   * <code>a_separator</code>. This method may not advance the index in case
+   * the first character to be analysed is not the proper first character of a
+   * class name. We assume the string is not finished before the method is
+   * called.
    *
-   * @param a_c a character to check
-   * @return <code>true</code> when the character starts an object type
-   *   descriptor
+   * We assume that a Java field name (TypeName) is parsed using the
+   * following specification:
+   * <pre>
+   * FieldName:
+   *    Identifier
+   *    FieldName . Identifier
+   * </pre>
+   *
+   * FIXME: this is not based on a part of JLS as I do not know where to find
+   * that
+   *
+   * @return <code>true</code> when the class name has been suceessfully
+   *   swallowed, <code>false</code> otherwise.
    */
-  private boolean isObjectTypeDescriptor(final char a_c) {
-    return (a_c == 'L');
+  public boolean swallowFieldName() {
+    while (swallowIdentifier()) {
+      if (!(my_line.charAt(my_index) == '.')) {
+        return Character.isWhitespace(my_line.charAt(my_index));
+      }
+      my_index++;
+    }
+    return false;
   }
 
   /**
@@ -739,50 +643,16 @@ public class InstructionParser {
    * @return <code>true</code> when a return descriptor is successfully
    *   swallowed, <code>false</code> otherwise
    */
-  private boolean swallowFieldType() {
+  public boolean swallowFieldType() {
     boolean res = false;
-    if (isBaseTypeDescriptor(my_line.charAt(my_index))) {
+    if (InstructionParserHelper.isBaseTypeDescriptor(
+                        my_line.charAt(my_index))) {
       my_index++;
       res = true;
+    } else {
+      res =  swallowRefTypeDescriptor();
     }
-    res = res && swallowRefTypeDescriptor();
     return res;
-  }
-
-  /**
-   * Checks if the given character starts an array type descriptor.
-   *
-   * @param a_c a character to check
-   * @return <code>true</code> when the character starts an array type
-   *   descriptor
-   */
-  private boolean isArrayTypeDescriptor(final char a_c) {
-    return (a_c == '[');
-  }
-
-  /**
-   * Checks if the given character starts a base type descriptor.
-   *
-   * @param a_c a character to check
-   * @return <code>true</code> when the character starts a byse type
-   *   descriptor
-   */
-  private boolean isBaseTypeDescriptor(final char a_c) {
-    for (int i = 0; i < BASE_TYPE_DESCRIPTORS.length(); i++) {
-      if (a_c == BASE_TYPE_DESCRIPTORS.charAt(i)) return true;
-    }
-    return false;
-  }
-
-  /**
-   * Checks if the given character starts a void type descriptor.
-   *
-   * @param a_c a character to check
-   * @return <code>true</code> when the character starts a void type
-   *   descriptor
-   */
-  private boolean isVoidTypeDescriptor(final char a_c) {
-    return (a_c == 'V');
   }
 
   /**

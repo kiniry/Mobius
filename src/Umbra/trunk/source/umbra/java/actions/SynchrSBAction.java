@@ -52,7 +52,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
   }
 
   /**
-   * This method handles the action of the syncronisation between the
+   * This method handles the action of the synchronisation between the
    * source code and the bytecode i.e. it takes the selection in
    * the source code and shows the corresponding selection in the
    * bytecode.
@@ -74,6 +74,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
                   UmbraHelper.JAVA_EXTENSION + "\" file");
       return;
     }
+
     final IFile file = UmbraHelper.getBTCFileName(activef, my_editor);
     final FileEditorInput input = new FileEditorInput(file);
     try {

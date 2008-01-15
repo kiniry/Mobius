@@ -24,13 +24,13 @@ public class BMLParsing {
    * This field is set to <code>true</code> when BMLLib is used
    * for parsing changes in bytecode documents.
    */
-  public static final boolean BMLLIB_ENABLED = true;
+  public static final boolean BMLLIB_ENABLED = false;
 
   /**
    * The field is set to <code>true</code> when the original Umbra
    * mechanisms are used to parse the changes in bytecode documents.
    */
-  public static final boolean UMBRA_ENABLED = false;
+  public static final boolean UMBRA_ENABLED = true;
 
 
   /**

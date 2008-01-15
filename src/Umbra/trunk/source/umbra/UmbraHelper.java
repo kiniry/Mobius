@@ -37,7 +37,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * application.
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
- * @author Krzysztof Jakubczyk
+ * @author Krzysztof Jakubczyk (kjk@mimuw.edu.pl)
  * @version a-01
  */
 public final class UmbraHelper {
@@ -392,7 +392,7 @@ public final class UmbraHelper {
    *  getClassFilePath(getSelectedType(editor))
    * @param javaType type to find output class file path
    * @return output class file path
-   * @throws JavaModelException
+   * @throws JavaModelException TODO
    */
   public static IPath getClassFilePath(final IType javaType)
       throws JavaModelException {
@@ -425,7 +425,7 @@ public final class UmbraHelper {
    *
    * @param javaType the element to find output package of
    * @return package output path of javaElement
-   * @throws JavaModelException
+   * @throws JavaModelException TODO
    */
   public static IPath getOutputTypePath(final IType javaType)
       throws JavaModelException {
@@ -455,38 +455,39 @@ public final class UmbraHelper {
   /**
    * Method returns IJavaElement associated with IEditorPart.
    *
-   * @param editor the editor to get IJavaElement from
+   * @param an_editor the editor to get IJavaElement from
    * @return java element associated with editor
    */
-  public static IJavaElement getJavaElement(final IEditorPart editor) {
-    IEditorInput editorInput = editor.getEditorInput();
+  public static IJavaElement getJavaElement(final IEditorPart an_editor) {
+    final IEditorInput editorInput = an_editor.getEditorInput();
     return (IJavaElement) editorInput.getAdapter(IJavaElement.class);
   }
 
   /**
    * Method returns enclosing IType for IJavaElement.
    *
-   * @param javaElement the IJavaElement
+   * @param a_java_element the IJavaElement
    * @return enclosing IType of javaElement
    */
-  public static IType getEnclosingType(final IJavaElement javaElement) {
-    return (IType) javaElement.getAncestor(IJavaElement.TYPE);
+  public static IType getEnclosingType(final IJavaElement a_java_element) {
+    return (IType) a_java_element.getAncestor(IJavaElement.TYPE);
   }
 
   /**
    * Method returns the selected IType in IEditorPart.
    *
-   * @param editor the editor to find IType. IMPORTANT: must be JavaEditor.
+   * @param an_editor the editor to find IType. IMPORTANT: must be JavaEditor.
    * @return IType selected in editor
-   * @throws JavaModelException
+   * @throws JavaModelException TODO
    */
-  public static IType getSelectedType(final IEditorPart editor)
-      throws JavaModelException {
-    IJavaElement element = SelectionConverter.getElementAtOffset(
-                                         (JavaEditor) editor);
+  public static IType getSelectedType(final IEditorPart an_editor)
+    throws JavaModelException {
+    final IJavaElement element = SelectionConverter.getElementAtOffset(
+                                         (JavaEditor) an_editor);
     IType type = UmbraHelper.getEnclosingType(element);
     if (type == null) {
-      ICompilationUnit elem = (ICompilationUnit) getJavaElement(editor);
+      final ICompilationUnit elem =
+                                  (ICompilationUnit) getJavaElement(an_editor);
       type = elem.findPrimaryType();
     }
     return type;

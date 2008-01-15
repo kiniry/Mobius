@@ -273,4 +273,26 @@ public abstract class BytecodeLineController {
   protected InstructionParser getParser() {
     return my_parser;
   }
+
+  /**
+   * Checks if the line can be an end of comment. End of comment line can only
+   * be of {@ref AnnotationLineController} type so the default behaviour is
+   * to always return false.
+   *
+   * @return <code>true</code> when the line contains the end of comment
+   *   sequence, <code>false</code> otherwise
+   */
+  public boolean isCommentEnd() {
+    return false;
+  }
+
+  /**
+   * Checks is the line can be an end of a comment.
+   *
+   * @return <code>true</code> when the line contains the end of comment
+   *   sequence, <code>false</code> otherwise
+   */
+  public boolean isCommentStart() {
+    return getMy_line_text().contains("/*");
+  }
 }

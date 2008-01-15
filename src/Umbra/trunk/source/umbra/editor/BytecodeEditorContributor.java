@@ -18,6 +18,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -311,6 +312,13 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final ISelection ns = new TextSelection(off, len);
     final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
                           getSelectionProvider();
+    BytecodeDocument bdoc = an_editor.getDocument();
+//    try {
+//      bdoc.computePartitioning(0, bdoc.getLength());
+//    } catch (BadLocationException e) {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
     sp.setSelection(ns);
     my_bcode_cntrbtn.reinit();
     if (proper) Composition.stopDisas();

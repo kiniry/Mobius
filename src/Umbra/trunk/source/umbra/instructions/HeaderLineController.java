@@ -23,7 +23,7 @@ public class HeaderLineController extends BytecodeLineController {
 
   /**
    * This creates an instance of a bytecode line handle
-   * which occurs at the beginning of a method 
+   * which occurs at the beginning of a method
    * <code>a_line</code>. Currently it just calls the constructor of the
    * superclass.
    *

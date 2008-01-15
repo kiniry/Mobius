@@ -10,7 +10,7 @@ package umbra.instructions;
 
 
 /**
- * This class is resposible for all lines that we cannot classify.
+ * This class is responsible for all lines that we cannot classify.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01

@@ -234,8 +234,8 @@ public class BytecodeDocument extends Document {
 
   /**
    * Highlights the area computed in {@link #syncSB(IDocument, JavaClass, int)
-   * syncSB} method in related bytecode editor. Works correctly only inside
-   * a method.
+   * syncSB} method in related bytecode editor. Works correctly only when the
+   * position {@ref a_pos} is inside a method.
    *
    * @see #synchronizeBS(int)
    * @param a_pos index of line in source code editor. Lines in related bytecode
@@ -267,7 +267,7 @@ public class BytecodeDocument extends Document {
    * to update {@ref JavaClass} structures. Works correctly only inside
    * a method.
    *
-   * @param a_source_doc {@ref IDocument} with source (java) code
+   * @param a_source_doc {@ref IDocument} with source Java code
    * @param a_java_class {@ref JavaClass} with current bytecode
    * @param a_line_no an index of line in <code>a_source_doc</code>
    * @return array of 2 ({@ref #NO_OF_POSITIONS}) ints representing index of
@@ -279,12 +279,10 @@ public class BytecodeDocument extends Document {
    */
   private int[] syncSB(final IDocument a_source_doc,
                        final JavaClass a_java_class,
-                       final int a_line_no) throws BadLocationException
-  // Synchronisation Src --> Btc
-  {
+                       final int a_line_no) throws BadLocationException {
     final String code = get();
     final int[] result = new int [NO_OF_POSITIONS];
-    int j, l, pc, ln;
+    int j, lineNumTableLen, pc, ln;
     int bcln = 0;
     int popln = 0;
     final int maxL = getNumberOfLines() - 1;
@@ -301,7 +299,7 @@ public class BytecodeDocument extends Document {
     Method m;
     for (int i = 0; i < methods.length; i++) {
       m = methods[i];
-      l = m.getLineNumberTable().getLineNumberTable().length;
+      lineNumTableLen = m.getLineNumberTable().getLineNumberTable().length;
       if (a_src_line.startsWith(m.toString())) {
         while (bcln < maxL) {
           bcln++;
@@ -314,7 +312,7 @@ public class BytecodeDocument extends Document {
         break;
       }
       l_do = -1;
-      for (j = 0; j < l; j++) {
+      for (j = 0; j < lineNumTableLen; j++) {
         pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
         ln = m.getLineNumberTable().getLineNumberTable()[j].getLineNumber() - 1;
         popln = bcln;
@@ -350,7 +348,7 @@ public class BytecodeDocument extends Document {
         l_do = bcln - 1;
         break;
       }
-      if (j < l)
+      if (j < lineNumTableLen)
         break;
       if ((l_od != 0) && (l_do == maxL)) {
         l_do = l_od;

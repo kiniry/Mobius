@@ -97,6 +97,12 @@ public class BytecodeController {
   private boolean[] my_modified;
 
   /**
+   * This field contains the value of the inline comment from the currently
+   * parsed line.
+   */
+  private String my_current_comment;
+
+  /**
    * TODO.
    */
   public BytecodeController() {
@@ -145,59 +151,149 @@ public class BytecodeController {
    *   structures linked into it
    */
   public final void init(final IDocument a_doc) {
+    // i - iterates over methods
+    // j - iterates over lines in the document
+    int j = 0;
+    int i = 0;
+    final LineContext ctxt = new LineContext();
+    try {
+      j = swallowClassHeader(a_doc, j, ctxt);
+    }  catch (BadLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode",
+                         "The current document has no positions for line " + j);
+    }
+    while (j < a_doc.getNumberOfLines() - 1) {
+      try {
+        j = swallowMethod(a_doc, j, i, ctxt);
+      } catch (BadLocationException e) {
+        MessageDialog.openInformation(new Shell(), "Bytecode",
+                      "The current document has no positions for line " + j);
+      } catch (UmbraException e) {
+        MessageDialog.openInformation(new Shell(), "Bytecode",
+                      "The current document has too many methods (" + i + ")");
+      }
+      i++;
+    }
+
+    final int instrNum = ((BytecodeLineController)my_instructions.getLast()).
+                                getIndex() + 1;
+    my_modified = new boolean[instrNum];
+    for (i = 0; i < my_modified.length; i++) my_modified[i] = false;
+  }
+
+  /**
+   * The method parses the initial portion of a byte code text. This portion
+   * contains the information about the class which the code implements.
+   * The exact format is:
+   * <pre>
+   * public PackageName
+   * [ emptylines ]
+   * AccessModifier class ClassName
+   * [ emptylines ]
+   * </pre>
+   * Note that emptylines may be comments as well.
+   *
+   * @param a_doc the document to be parsed
+   * @param the_current_line the line from which we start the parsing (mostly 0)
+   * @param a_ctxt the parsing context
+   * @return the advanced line number, the first line number which has not been
+   *   analysed by the current method
+   * @throws BadLocationException in case one of the locations in the document
+   *   was wrongly calculated
+   */
+  private int swallowClassHeader(final IDocument a_doc,
+                                 final int the_current_line,
+                                 final LineContext a_ctxt)
+    throws BadLocationException {
+    int j = the_current_line;
+    String line = getLineFromDoc(a_doc, j, a_ctxt);
+    a_ctxt.setInitial();
+    BytecodeLineController lc = getType(line, a_ctxt);
+    my_editor_lines.add(j, lc);
+    j++;
+    j = swallowEmptyLines(a_doc, j, a_ctxt);
+    line = getLineFromDoc(a_doc, j, a_ctxt);
+    a_ctxt.seClassToBeRead();
+    lc = getType(line, a_ctxt);
+    my_editor_lines.add(j, lc);
+    j++;
+    return swallowEmptyLines(a_doc, j, a_ctxt);
+  }
+
+  private int swallowEmptyLines(IDocument a_doc, int the_current_lno,
+                                LineContext ctxt)
+    throws BadLocationException {
+    int j = the_current_lno;
+    int context_state = LineContext.STATE_UNDEFINED;
+    while (j < a_doc.getNumberOfLines() - 1) {
+      final String line = getLineFromDoc(a_doc, j, ctxt);
+      final BytecodeLineController lc = getType(line, ctxt);
+      my_editor_lines.add(j, lc);
+      if (lc.isCommentEnd() && ctxt.isInsideComment()) {
+        ctxt.setState(context_state);
+      } else if (lc.isCommentStart()) {
+        context_state = ctxt.getState();
+        ctxt.isInsideComment();
+      } else if (!ctxt.isInsideComment() &&
+                 !(lc instanceof EmptyLineController)) {
+        break;
+      }
+      j++;
+    }
+    return j;
+  }
+
+  private String getLineFromDoc(IDocument a_doc, int j,
+                                LineContext ctxt) throws BadLocationException {
+    String line = a_doc.get(a_doc.getLineOffset(j), a_doc.getLineLength(j));
+    String lineName = removeCommentFromLine(line);
+    my_current_comment = extractCommentFromLine(line, ctxt);
+    return lineName;
+  }
+
+  private int swallowMethod(final IDocument a_doc, int the_line_no,
+                            int i, LineContext ctxt)
+    throws BadLocationException, UmbraException {
+    int j = the_line_no;
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
     final ConstantPoolGen cpg = cg.getConstantPool();
     final Method[] methods = cg.getMethods();
     String part_comment = "";
-    boolean met_end = true;
     MethodGen mg = null;
     InstructionList il = null;
     InstructionHandle ih = null;
-    InstructionHandle end = null;
-    int ic = 0; // counts lines with my_instructions
-    // i - iterates over methods
-    // j - iterates over lines in the document
-    for (int i = 0, j = 0; j < a_doc.getNumberOfLines() - 1; j++) {
-      if (met_end && i < methods.length) {
-        mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-        il = mg.getInstructionList();
-        ih = il.getStart();
-        end = il.getEnd();
-        met_end = false;
-        i++;
+    int ic = my_instructions.size(); // counts lines with instructions
+    if (i >= methods.length) // too many methods
+      throw new UmbraException();
+
+    mg = new MethodGen(methods[i], cg.getClassName(), cpg);
+    il = mg.getInstructionList();
+    ih = il.getStart();
+
+    for (; j < a_doc.getNumberOfLines() - 1; j++) {
+      final String lineName = getLineFromDoc(a_doc, j, ctxt);
+      final BytecodeLineController lc = getType(lineName, ctxt);
+      if (lc.isCommentStart()) { // ignore comments
+        j = swallowEmptyLines(a_doc, j, ctxt) - 1;
+        continue;
       }
-      String line = "";
-      try {
-        line = a_doc.get(a_doc.getLineOffset(j), a_doc.getLineLength(j));
-      } catch (BadLocationException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode",
-            "The current document has no positions for line " + j);
-      }
-      final String lineName = removeCommentFromLine(line);
-      final String comment = extractCommentFromLine(line);
-      final BytecodeLineController lc = getType(lineName);
       my_editor_lines.add(j, lc);
+      if (lc instanceof HeaderLineController) { // method header
+        continue;
+      }
+      if (lc instanceof EmptyLineController) { //method end
+        return ++j;
+      }
       if (lc.addHandle(ih, il, mg, i - 1)) { //this is an instruction line
-        my_instructions.add(ic, lc);
-        if (comment != null) my_comments.put(lc, comment);
+        my_instructions.add(ic++, lc);
+        if (my_current_comment != null) my_comments.put(lc, my_current_comment);
         if (part_comment.compareTo("") != 0) {
           my_interline.put(lc, part_comment);
           part_comment = "";
         }
-        if (ih == end) {
-          met_end = true;
-        } else {
-          ih = ih.getNext();
-        }
-        ic++;
-      } else //this is non-instruction line in the editor
-        if (comment != null) part_comment.concat("\n" + comment);
+      }
     }
-
-    final int methodNum = ((BytecodeLineController)my_instructions.getLast()).
-                                getIndex() + 1;
-    my_modified = new boolean[methodNum];
-    for (int i = 0; i < my_modified.length; i++) my_modified[i] = false;
+    return j;
   }
 
   /**
@@ -265,7 +361,7 @@ public class BytecodeController {
                                              //lines
         try {
           i = addInstructions(a_doc, a_start_rem, an_end_rem, i, j, oldlc,
-                    a_next_line, the_last_flag, metEnd);
+                    a_next_line, the_last_flag, metEnd, new LineContext());
         } catch (UmbraException e) {
           MessageDialog.openInformation(new Shell(), "Bytecode",
                       "A jump instruction has improper destination");
@@ -296,6 +392,7 @@ public class BytecodeController {
    * @param the_last_flag TODO
    * @param the_methend_flag true when <code>a_j</code> is the last instruction
    *        in a method
+   * @param a_context the context of the currently added instruction line
    * @return TODO
    * @throws UmbraException TODO
    */
@@ -307,7 +404,8 @@ public class BytecodeController {
                               final BytecodeLineController an_old_lc,
                               final BytecodeLineController the_next_line,
                               final boolean the_last_flag,
-                              final boolean the_methend_flag)
+                              final boolean the_methend_flag,
+                              final LineContext a_context)
     throws UmbraException {
     int res = a_i;
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
@@ -317,8 +415,8 @@ public class BytecodeController {
                                     a_doc.getLineLength(a_j));
       //%%
       final String lineName = removeCommentFromLine(line);
-      final String comment = extractCommentFromLine(line);
-      final BytecodeLineController lc = getType(lineName);
+      final String comment = extractCommentFromLine(line, a_context);
+      final BytecodeLineController lc = getType(lineName, a_context);
       lc.setIndex(((BytecodeLineController)my_editor_lines.get(a_j - 1)).
                                                            getIndex());
       if (comment != null) my_comments.put(lc, comment);
@@ -373,7 +471,7 @@ public class BytecodeController {
       final BytecodeLineController line =
                                (BytecodeLineController)(my_editor_lines.get(i));
       if (!line.correct()) {
-        System.out.println("incorrect line="+line.getLineContent());
+        System.out.println("incorrect line=" + line.getLineContent());
         ok = false;
         my_incorrect.addLast(my_editor_lines.get(i));
       }
@@ -386,11 +484,16 @@ public class BytecodeController {
    * contents. TODO check
    *
    * @param a_line the string contents of inserted or modified line
+   * @param a_context information on the previous lines
    * @return instance of subclass of a line controller
    *     that contents of the given line satisfies
    *     classification conditions (unknown if it does not for all)
    */
-  private BytecodeLineController getType(final String a_line) {
+  private BytecodeLineController getType(final String a_line,
+                                         final LineContext a_context) {
+    if (a_context.isInsideComment()) {
+      return new AnnotationLineController(a_line);
+    }
     int i;
     boolean ok;
     int j;
@@ -413,14 +516,13 @@ public class BytecodeController {
 
     //naglowki - public static void private
     // i na wszelki wypadek - int char protected boolean String byte
-    
     final String[] sHeaderInits =  BytecodeStrings.HEADER_PREFIX;
     for (int k = 0; k < sHeaderInits.length; k++) {
       if (l.startsWith(sHeaderInits[k]))
         return new HeaderLineController(a_line);
-    }      
+    }
 
-    if ((l.startsWith("*")) || (l.startsWith("/*")))
+    if (l.startsWith("/*"))
       return new AnnotationLineController(a_line);
 
 
@@ -607,12 +709,17 @@ public class BytecodeController {
    * The method checks if the given line contains a single line comment
    * and extracts the comment string. In case there is no
    * comment in the line, it returns <code>null</code>.
+   * In case the parsing context is such that we are inside a many-line
+   * comment, then the comment inside a line is always empty.
    *
    * @param a_line_text the line to check for my_comments
+   * @param a_ctxt the parsing context for the line
    * @return comment or <code>null</code> in case there is no comment in the
    *         line
    */
-  private String extractCommentFromLine(final String a_line_text) {
+  private String extractCommentFromLine(final String a_line_text,
+                                        final LineContext a_ctxt) {
+    if (a_ctxt.isInsideComment()) return null;
     final int i = a_line_text.indexOf(SINGLE_LINE_COMMENT_MARK);
     if (i == -1) return null;
     final String nl = a_line_text.substring(i + SINGLE_LINE_COMMENT_MARK_LEN,

@@ -38,4 +38,24 @@ public class AnnotationLineController extends BytecodeLineController {
   {
     return true;
   }
+
+  /**
+   * Checks is the line can be an end of comment. This holds when the
+   * final non-whitespace sequence in the line is * / string.
+   *
+   * @return <code>true</code> when the line contains the end of comment
+   *   sequence, <code>false</code> otherwise
+   */
+  public boolean isCommentEnd() {
+    String line = getMy_line_text();
+    int where = line.lastIndexOf("*/");
+    if (where > 0) {
+      where += "*/".length();
+      for (int i = where; i < line.length(); i++) {
+        if (!Character.isWhitespace(line.charAt(i))) return false;
+      }
+      return true;
+    }
+    return false;
+  }
 }

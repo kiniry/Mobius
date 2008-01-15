@@ -14,27 +14,24 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.PUTFIELD;
 import org.apache.bcel.generic.PUTSTATIC;
 
+import umbra.editor.parsing.BytecodeStrings;
+
 
 /**
- * This class is related to some subset of instructions
- * depending on parameters. It redefines some crucial while
- * handling with single instruction methods (correctness, getting handle).
- * This subset is similar to ordinary Java subset.
+ * This class handles the creation and correctness for instructions to store and
+ * load field values. These instructions are:
+ * <ul>
+ *   <li>getfield,</li>
+ *   <li>getstatic,</li>
+ *   <li>putfield,</li>
+ *   <li>putstatic.</li>
+ * </ul>
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class FieldInstruction extends StringInstruction {
-
-  /**
-   * A position before which the '(' character cannot occur in a correct line.
-   */
-  private static final int LEFT_PAREN_FORBIDDEN_BOUND = 2;
-
-  /**
-   * A position before which the ')' character cannot occur in a correct line.
-   */
-  private static final int RIGHT_PAREN_FORBIDDEN_BOUND = 2;
 
   /**
    * This creates an instance of an instruction
@@ -52,38 +49,31 @@ public class FieldInstruction extends StringInstruction {
 
 
   /**
-   * Field instruction line is correct if its
-   * parameter contains a number in ().
+   * Field instruction line is correct if it has two parameters. The first one
+   * is the name of the field and the second is the descriptor of the field.
+   * The precise format is:
+   *    whitespase number : whitespace mnemonic whitespace fieldname
+   *    typedescriptor whitespace ( whitespace number whitespace ) whitespace
+   *    endline
    *
-   * @return TODO
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
    * @see InstructionLineController#correct()
    */
   public final boolean correct() {
-    return true; /*
-    final String my_line_text = getMy_line_text();
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = BytecodeStrings.FIELD_INS;
-    int j;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) &&
-          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
-
-        if (s.lastIndexOf("(") < LEFT_PAREN_FORBIDDEN_BOUND) return false;
-        if (s.lastIndexOf(")") < RIGHT_PAREN_FORBIDDEN_BOUND) return false;
-        int m, n, o;
-        m = my_line_text.lastIndexOf("(");
-        n = my_line_text.lastIndexOf(")");
-        //UmbraPlugin.messagelog(m + " " + n + " " + my_line_text);
-        if (m + 1 >= n) return false;
-        for (o = m + 1; o < n; o++) {
-          if (!(Character.isDigit(my_line_text.charAt(o)))) {
-            return false;
-          }
-        }
-        return true;
-      }
-    }
-    return false; */
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(BytecodeStrings.FIELD_INS) >= 0);
+                           //mnemonic
+    res = res && parser.swallowWhitespace(); //whitespace before the method name
+    res = res && parser.swallowFieldName(); // field name
+    res = res && parser.swallowWhitespace(); //whitespace before the field type
+    res = res && parser.swallowFieldType();
+    res = res && parser.swallowWhitespace(); //whitespace before the number
+    res = res && numberWithDelimiters(parser);
+    res = res && !parser.swallowWhitespace();
+    return res;
   }
 
   /**

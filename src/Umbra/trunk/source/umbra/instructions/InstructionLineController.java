@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) ${date} University of Warsaw"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -31,22 +31,6 @@ import umbra.UmbraPlugin;
  * @version a-01
  */
 public abstract class InstructionLineController extends BytecodeLineController {
-
-  /**
-   * TODO.
-   */
-  private static final int RBRACE_AFTER = 2;
-
-  /**
-   * A list of characters that should be left intact by the method
-   * {@ref #typ(String)}.
-   */
-  private static final String SKIP_CHARS = ":-#%()<>;|";
-
-  /**
-   * The length of the {@ref SKIP_CHARS} constant.
-   */
-  private static final int SKIP_CHARS_LEN = SKIP_CHARS.length();
 
   /**
    * The list of instructions in the method in which the current instruction
