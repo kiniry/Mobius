@@ -17,6 +17,7 @@ import com.sun.tools.javac.util.Context;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
+ * @author Jedrek (fulara@mimuw.edu.pl)
  *
  */
 public final class BytecodeUtil {

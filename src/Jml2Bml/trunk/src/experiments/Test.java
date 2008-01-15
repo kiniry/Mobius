@@ -1,17 +1,23 @@
 package experiments;
+
+import org.jmlspecs.openjml.JmlTree.JmlBinary;
+
 public class Test {
-  public String old_str = "abc";
-  public String str = "aaa";
+  public String old_str = "experiments/Test2";
+  public String str = "abc";
   public static String sss;
+  public static JmlBinary node = null;
   
   //@ requires 5 == 2;  
-  public static void dupa(){
+  public static void dupa(String jf1){
+    System.out.println(jf1);
     int k = 3;
   }
   
   //@ requires 2 == 2;  
   public static void main(/*@ non_null */String[] args) throws Exception {
     Test2 test = new Test2();
+    dupa(null);
     test.abc = "s";
     //test.efg = "aa";
     test.abc = "23";
@@ -33,6 +39,8 @@ public class Test {
     //@ assert 2 + 2*(1+4) > 123412;
     int[] d = null;
     //@ assert d.length < 123;
+    //@ assert test.abc == test.efg;
+    //@ assert node.op == null;
     //@ assert (\forall int k; k >=0 && k < 10 ==> d[k] != a);
     d[0] = 1;
     for (int i = 0; i <1 ; i++);

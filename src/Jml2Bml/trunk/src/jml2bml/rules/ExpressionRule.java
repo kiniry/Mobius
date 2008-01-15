@@ -7,10 +7,11 @@
 package jml2bml.rules;
 
 import jml2bml.bmllib.BmlLibUtils;
+import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
+import jml2bml.engine.Constants;
 import jml2bml.engine.Symbols;
 import jml2bml.engine.UniqueIndexGenerator;
-import jml2bml.engine.Utils;
 import jml2bml.engine.Variable;
 import jml2bml.exceptions.NotTranslatedException;
 
@@ -20,11 +21,12 @@ import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 import annot.bcclass.BCClass;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccess;
+import annot.bcexpression.ArrayLength;
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.BooleanExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
+import annot.bcexpression.FieldRef;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.THIS;
@@ -37,7 +39,6 @@ import annot.io.Code;
 import annot.io.ReadAttributeException;
 
 import com.sun.source.tree.ArrayAccessTree;
-import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -46,7 +47,6 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 
@@ -59,7 +59,7 @@ import com.sun.tools.javac.util.Name;
 public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   private final Context context;
 
-  private boolean isOld = true;
+  private boolean isOld = false;
 
   public ExpressionRule(final Context context) {
     this.context = context;
@@ -76,18 +76,17 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator))
       return new Predicate2Ar(operator, lhs, rhs);
     else
-      System.out.println("oper "+operator);
-      return new ArithmeticExpression(operator, lhs, rhs);
+      System.out.println("oper " + operator);
+    return new ArithmeticExpression(operator, lhs, rhs);
   }
 
   @Override
   public BCExpression visitIdentifier(IdentifierTree node, Symbols p) {
     // FIXME translate identifier properly!
     final String name = node.getName().toString();
-    final BCClass clazz = context.get(BCClass.class);
     System.out.println(name);
     if ("this".equals(name)) {
-      return new THIS(isOld, clazz);
+      return new THIS(isOld, p.findClass());
     }
     final Variable variable = p.get(name);
     if (variable == null) {
@@ -104,7 +103,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
       //field access is handled in a different way:
       //(cannot be taken from the symbol table, we have to know, 
       //whether it's old or not
-      return BytecodeUtil.createFieldRef(isOld, name, clazz);
+      return BytecodeUtil.createFieldRef(isOld, name, p.findClass());
     }
     return null;
   };
@@ -165,7 +164,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   @Override
   public BCExpression visitJmlQuantifiedExpr(final JmlQuantifiedExpr node,
                                              final Symbols p) {
-    final int quantifierType = Utils.mapJCOperatorToBmlLib(node.op);
+    final int quantifierType = BmlLibUtils.mapJCOperatorToBmlLib(node.op);
     final QuantifiedFormula formula = new QuantifiedFormula(quantifierType);
     final JavaBasicType type = (JavaBasicType) scan(node.localtype, p);
     final Symbols symbols = new Symbols(p);
@@ -189,13 +188,13 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   public BCExpression visitJmlBinary(final JmlBinary node, final Symbols p) {
     final BCExpression lhs = scan(node.getLeftOperand(), p);
     final BCExpression rhs = scan(node.getRightOperand(), p);
-    int operator = Utils.mapJCOperatorToBmlLib(node.op);
+    int operator = BmlLibUtils.mapJCOperatorToBmlLib(node.op);
     if (node.op == null)
-      operator = Utils.mapJCTagToBmlLib(node.getTag());
+      operator = BmlLibUtils.mapJCTagToBmlLib(node.getTag());
     if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator)) {
       return new Predicate2Ar(operator, lhs, rhs);
     }
-    
+
     return new ArithmeticExpression(operator, lhs, rhs);
   }
 
@@ -203,7 +202,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   public BCExpression visitPrimitiveType(final PrimitiveTypeTree node,
                                          final Symbols p) {
     try {
-      return JavaType.getJavaBasicType(Utils.mapJCTypeKindToBmlLib(node
+      return JavaType.getJavaBasicType(BmlLibUtils.mapJCTypeKindToBmlLib(node
           .getPrimitiveTypeKind()));
     } catch (ReadAttributeException e) {
       throw new RuntimeException(e);
@@ -214,10 +213,35 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   @Override
   public BCExpression visitMemberSelect(final MemberSelectTree node,
                                         final Symbols p) {
+    //FIXME no function calls supported
     final BCExpression expr = scan(node.getExpression(), p);
-    
-    return new FieldAccess(Code.FIELD_ACCESS, expr, expr);
-    //FIXME!!!
+    final JavaType type = expr.checkType();
+    final String identifier = node.getIdentifier().toString();
+    if (Constants.ARRAY_LENGTH.equals(identifier)) {
+      //special case - array length
+      if (type != null
+          && type.toString().startsWith(Constants.ARRAYTYPE_PREFIX)) {
+        return new FieldAccess(Code.FIELD_ACCESS, expr, new ArrayLength());
+      }
+    }
+    //simplest case - there exist also in java code the same field access
+    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(),
+                                                            identifier, p);
+    if (fieldRefIndex != -1) {
+      return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
+          .createFieldRef(isOld, fieldRefIndex, p));
+    }
+    //hardest case
+    ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p);
+    fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(),
+                                                            identifier, p);
+    if (fieldRefIndex != -1) {
+      return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
+          .createFieldRef(isOld, fieldRefIndex, p));
+    }
+    //FIXME rzucic bledem
+    return null;
+
   }
 
   /**
