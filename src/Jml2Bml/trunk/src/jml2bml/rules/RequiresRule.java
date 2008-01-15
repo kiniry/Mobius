@@ -44,7 +44,7 @@ public class RequiresRule extends TranslationRule<String, Symbols> {
     if (node.token == JmlToken.REQUIRES) {
       if (node.expression == null)
         throw new NotTranslatedException("Expression is null");
-      final BCClass bcClazz = myContext.get(BCClass.class);
+      final BCClass bcClazz = symb.findClass();
       final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
       
       //Finding method in tree

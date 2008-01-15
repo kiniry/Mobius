@@ -39,7 +39,7 @@ public class Test {
     //@ assert 2 + 2*(1+4) > 123412;
     int[] d = null;
     //@ assert d.length < 123;
-    //@ assert test.abc == test.efg;
+    //@ assert test.parent.abc == test.efg;
     //@ assert node.op == null;
     //@ assert (\forall int k; k >=0 && k < 10 ==> d[k] != a);
     d[0] = 1;

@@ -93,8 +93,7 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
 
   @Override
   public Symbols visitJmlClassDecl(JmlClassDecl node, Symbols p) {
-    Symbols newSymbols = new Symbols(p);
-    System.out.println(node.getSimpleName());
+    final Symbols newSymbols = new Symbols(p);
     newSymbols.setClass(BytecodeUtil.createClass(node.name, context, p));
     return newSymbols;
   }

@@ -86,7 +86,6 @@ public class Main {
     
     clazz.saveJC();
     System.out.println(clazz.printCode());
-    System.out.println(clazz.printCp());
   }
 
   private JavaFileObject getJavaFileObject(Context context, String filename) {

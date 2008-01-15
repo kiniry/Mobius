@@ -58,7 +58,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
 
     if (node.token == JmlToken.ASSERT) {
       final TreeNodeFinder finder = my_context.get(TreeNodeFinder.class);
-      final BCClass clazz = my_context.get(BCClass.class);
+      final BCClass clazz = p.findClass();
 
       //Find an enclosing method
       final MethodTree method = (MethodTree) finder.getAncestor(node, Kind.METHOD);

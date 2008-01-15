@@ -18,7 +18,6 @@ import jml2bml.exceptions.NotTranslatedException;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 
-import annot.bcclass.BCClass;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccess;
 import annot.bcexpression.ArrayLength;
@@ -26,7 +25,6 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
-import annot.bcexpression.FieldRef;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.THIS;
@@ -68,29 +66,28 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   // ------- visitor methods
   // TODO probably more nodes should be visited here
   @Override
-  public BCExpression visitBinary(BinaryTree node, Symbols p) {
-    BCExpression lhs = scan(node.getLeftOperand(), p);
-    BCExpression rhs = scan(node.getRightOperand(), p);
-    int operator = BmlLibUtils.translateBinaryOperator(node.getKind());
+  public BCExpression visitBinary(final BinaryTree node, final Symbols p) {
+    final BCExpression lhs = scan(node.getLeftOperand(), p);
+    final BCExpression rhs = scan(node.getRightOperand(), p);
+    final int operator = BmlLibUtils.translateBinaryOperator(node.getKind());
     //TODO: (kjk) This should be done better!!
-    if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator))
+    if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator)) {
       return new Predicate2Ar(operator, lhs, rhs);
-    else
-      System.out.println("oper " + operator);
-    return new ArithmeticExpression(operator, lhs, rhs);
+    } else {
+      return new ArithmeticExpression(operator, lhs, rhs);
+    }
   }
 
   @Override
-  public BCExpression visitIdentifier(IdentifierTree node, Symbols p) {
-    // FIXME translate identifier properly!
+  public BCExpression visitIdentifier(final IdentifierTree node, final Symbols p) {
     final String name = node.getName().toString();
-    System.out.println(name);
-    if ("this".equals(name)) {
+    if (Constants.THIS.equals(name)) {
       return new THIS(isOld, p.findClass());
     }
     final Variable variable = p.get(name);
     if (variable == null) {
       return null;
+      //FIXME
       //throw new RuntimeException("Invalid variable " + name);
     }
     if (variable.isBoundVariable()) {
@@ -101,7 +98,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     }
     if (variable.isField()) {
       //field access is handled in a different way:
-      //(cannot be taken from the symbol table, we have to know, 
+      //(cannot be taken from the symbol table, we have to know,
       //whether it's old or not
       return BytecodeUtil.createFieldRef(isOld, name, p.findClass());
     }
@@ -179,11 +176,6 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     return formula;
   }
 
-  /*FIXME: (kjk) Is this method needed (we have visitBinary,
-   *maybe that one should be moved to this one??
-   *[JF] yes, this is needed. I think there are cases,
-   *where visitJmlBinary is invoked and visitBinary - not
-   */
   @Override
   public BCExpression visitJmlBinary(final JmlBinary node, final Symbols p) {
     final BCExpression lhs = scan(node.getLeftOperand(), p);
@@ -225,16 +217,16 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
       }
     }
     //simplest case - there exist also in java code the same field access
-    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(),
-                                                            identifier, p);
+    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type
+        .toString(), identifier, p);
     if (fieldRefIndex != -1) {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
           .createFieldRef(isOld, fieldRefIndex, p));
     }
-    //hardest case
+    //hardest case: we have to extend the constant pool.
     ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p);
     fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(),
-                                                            identifier, p);
+                                                               identifier, p);
     if (fieldRefIndex != -1) {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
           .createFieldRef(isOld, fieldRefIndex, p));
