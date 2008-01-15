@@ -36,7 +36,7 @@ and ESCJ 27) by K. Rustan M. Leino, Greg Nelson, and James B. Saxe,
 October 12, 2000.
 
 Modified by Joseph Kiniry 1 April 2007.
-Modified by Dermot Cochran 14 January 2008.
+Modified by Dermot Cochran 14-15 January 2008.
 
 Current editors Joseph Kiniry and Dermot Cochran.
 
@@ -267,7 +267,7 @@ goes on to document all the core JML pragmas supported by ESC/Java2 and
 all the kinds of warnings that it generates.  It also provides basic
 information about running ESC/Java2.
 
-This manual documents Version 2.0b4 of ESC/Java2, release in January,
+This manual documents Version 2.0b4 of ESC/Java2, released in January,
 2008.  We sometimes speak of ``the current ESC/Java2'', rather than just
 ``ESC/Java2''--to emphasize that particular features, bugs, or
 limitations under discussion are artifacts of the prior versions,
@@ -888,13 +888,13 @@ ESC/Java pragmas.
 
  
 @item
-<a NAME="ESC/Java is checker for almost all of Java 1.2."></a>@b{ESC/Java
-is checker for (almost all of) Java 1.2.}
+<a NAME="ESC/Java is checker for almost all of Java 1.4."></a>@b{ESC/Java
+is checker for (almost all of) Java 1.4.}
 
 
-ESC/Java is targeted for Java 1.2, as described in
-@uref{http://java.sun.com/docs/books/jls/, The Java Specification
-Language}, by James Gosling, Bill Joy, and Guy Steele, supplemented by
+ESC/Java is targeted for Java 1.4, as described in
+@uref{http://java.sun.com/docs/books/jls/, The Java
+Language Specification, Third Edition}, by James Gosling, Bill Joy, Guy Steele and Gilad Bracha, supplemented by
 the ``@xref{[ICS], Inner Classes Specification},'' except for some
 limitations described in <a href="#6 Java language support and
 limitations">section 6</a> of this manual.

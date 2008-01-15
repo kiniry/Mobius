@@ -27,7 +27,6 @@ include Makefile.defs
 ## the code in that subdirectory, if you like.
 ##
 ## These are additional top-level-only targets
-##  patch-release  - makes the tar file constituting a patch release
 ##  source-release - makes the tar file constituting a full source release
 ##  binary-release - makes the tar file constituting a binary release
 ##  releases-notests - makes both releases without doing any tests
@@ -36,9 +35,7 @@ include Makefile.defs
 ##  self_typecheck - run escjava2's typechecker on all source files
 ##
 ## You can run each of these in a subdirectory and only apply it to
-## the code in that subdirectory, if you like.  Note though, that the
-## subdirectories other than Javafe presume that Javafe has been
-## built.
+## the code in that subdirectory, if you like.
 
 export ESCJAVA = ${ESCTOOLS_ROOT}/release-files/escj
 
@@ -390,8 +387,8 @@ jmlc_escjava_1b1:
 ################################################################################
 ## Rules to build various release types
 
-.PHONY: releases test-releases releases-notests source-release patch-release \
-	jar srcjar binary-release test-binary-release test-patch-release \
+.PHONY: releases test-releases releases-notests source-release \
+	jar srcjar binary-release test-binary-release \
 	generate-patches generate-archives generate-specs-archive \
 	generate-toplevel-archive zero-length-files version
 
@@ -434,6 +431,9 @@ source-release: cleanup alldocs
 	cp license.txt ${RELTEMP}
 	mkdir ${RELTEMP}/jars
 	cp -r jars/mochalib.jar ${RELTEMP}/jars
+	mkdir -p ${RELTEMP}/Utils
+	cp -rf ${ESCTOOLS_ROOT}/Utils/BCEL ${RELTEMP}/Utils
+	cp -rf ${ESCTOOLS_ROOT}/Utils/Javafe ${RELTEMP}/Utils
 #   Copy Javadoc API docs 
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}/docs 
 #   Copy other miscellaneous files 
@@ -450,18 +450,6 @@ source-release: cleanup alldocs
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELSRCTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELSRCTAR}.zip *
 	rm -rf ${RELTEMP}
-
-patch-release: clean
-	@echo "Creating patch release .........."
-	rm -rf ${PATCH_DIR}
-	mkdir -p ${PATCH_DIR}
-	${MAKE} jars generate-patches generate-archives zero-length-files
-	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
-	mkdir -p ${RELDIR}
-	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR}.tbz *
-	cd ${PATCH_DIR}; tar cvzf ${RELDIR}/${RELPATCHTAR}.tgz *
-	cd ${PATCH_DIR}; zip -Ar ${RELDIR}/${RELPATCHTAR}.zip *
-	rm -rf ${PATCH_DIR}
 
 version:
 	$(MAKE) -C Escjava version
@@ -581,67 +569,7 @@ test-source-release:
 		unset ESC_CLASSPATH ;\
 		unset JAR_FILES ; \
 		tar xjf ${RELSRCTAR}.tbz ;\
-		ESCTOOLS_ROOT=${RELTEST} $(MAKE) -s clean build test                         
-
-## Note - we need to unset lots of environmental variables here because we
-## want them to be reset based on the value of ESC_RELEASE in install.sh.
-## Otherwise, since the variables are only conditionally set in Makefile.defs
-## or in Makefile, they will continue to have the value already set in the
-## current environment (when this Make was invoked) rather than getting new
-## values when the Make in install.sh is invoked.  So include here any variable
-## that is conditionally set and might have a different value when running a
-## release than when running from the build environment.
-test-patch-release:
-	@echo "Testing patch release ........"
-	rm -rf ${RELTEST}
-	mkdir -p ${RELTEST}
-	cd ${RELTEST}; \
-		tar xvjf ${RELDIR}/*patch.tbz; \
-		unset ESCJ_ROOT; \
-		unset ESCTOOLS_ROOT; \
-		unset ESC_SPECS; \
-		unset JUNIT_LIB; \
-		unset ANT_LIB; \
-		unset PATCH_DIR; \
-		unset RELDIR; \
-		unset RELTEMP; \
-		unset RELTEST; \
-		unset ESCJ_SIMPLIFY_DIR; \
-		unset ESC_CLASSPATH ;\
-		chmod a+x install.sh; \
-		./install.sh ${ORIGINAL_TAR_DIR} 
-
-## These patches are used by unpacking the original
-## Compaq/H.P. ESCTools sources as appropriate, cd-ing to the
-## top-level directory "ESCTools" and running
-##   bzcat ~/ESCTools-<version>-<date>-<envelope>.patch.bz | patch -Np1
-## the appropriate number of times.
-
-PATCH_PREFIX = ${PATCH_DIR}/${PATCH_NAME}
-generate-patches: clean
-	@echo "Generating patches..."
-	( cd ${ESCTOOLS_ROOT}/.. ; mkdir -p ${PATCH_DIR}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
-		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
-		| bzip2 > ${PATCH_DIR}/${CALVIN_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
-		--exclude=Simplify-1* --exclude=javadoc \
-		${ESCTOOLS_ORIGINAL}/Escjava ESCTools/Escjava \
-		| bzip2 > ${PATCH_DIR}/${ESCJAVA_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
-		${ESCTOOLS_ORIGINAL}/Houdini ESCTools/Houdini \
-		| bzip2 > ${PATCH_DIR}/${HOUDINI_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
-		${ESCTOOLS_ORIGINAL}/Javafe ESCTools/Javafe \
-		| bzip2 > ${PATCH_DIR}/${JAVAFE_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=.svn \
-		${ESCTOOLS_ORIGINAL}/Rcc ESCTools/Rcc \
-		| bzip2 > ${PATCH_DIR}/${RCC_PATCHES}; \
-	LC_ALL=C TZ=UTC0 diff -Naur --exclude=PPC_DARWIN --exclude=.#* --exclude=.svn \
-		--exclude=*.dylib --exclude=*.a --exclude=*.io --exclude=*.mo \
-		${ESCTOOLS_ORIGINAL}/Simplify ESCTools/Simplify \
-		| bzip2 > ${PATCH_DIR}/${SIMPLIFY_PATCHES}; \
-	)
+		ESCTOOLS_ROOT=${RELTEST} $(MAKE) -s clean build test
 
 generate-archives: generate-toplevel-archive generate-specs-archive
 
