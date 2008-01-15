@@ -566,23 +566,24 @@ EOM: 'EOM';
 EOA: 'EOA';
 
 // bml level
+// IDisplayStyle must be modified as well
 
-ASSERT: '\\assert';
-LOOPSPEC: '\\loop specification';
-LINVARIANT: '\\invariant';
-LDECREASES: '\\decreases';
-CLASSINVARIANT: '\\class invariant';
-REQUIRES: '\\requires';
+ASSERT: 'assert';
+LOOPSPEC: 'loop_specification';
+LINVARIANT: 'loop_inv';
+LDECREASES: 'decreases';
+CLASSINVARIANT: 'invariant';
+REQUIRES: 'requires';
 SC_START: '{|';
 SC_END: '|}';
-PRECONDITION: '\\precondition';
-MODIFIES: '\\modifies';
-POSTCONDITION: '\\ensures';
+PRECONDITION: 'precondition';
+MODIFIES: 'modifies';
+POSTCONDITION: 'ensures';
 COMMA: ',';
-EXSURES: '\\exsures';
+EXSURES: 'exsures';
 COLON: ':';
-NOTHING: 'nothing';
-EVERYTHING: 'everything';
+NOTHING: '\\nothing';
+EVERYTHING: '\\everything';
 LOG_AND: '&&';
 LOG_OR: '||';
 IMPLIES: '==>';
@@ -590,8 +591,8 @@ EQUIV: '<==>';
 NOTEQUIV: '<=!=>';
 LOG_NOT: '~';
 SEMICOLON: ';';
-FORALL: 'forall';
-EXISTS: 'exists';
+FORALL: '\\forall';
+EXISTS: '\\exists';
 TRUE: 'true';
 FALSE: 'false';
 LESS: '<';

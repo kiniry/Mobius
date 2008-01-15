@@ -3,7 +3,9 @@ package annot.textio;
 /**
  * This interface describe how BML annotations should be
  * displayed.
- * 
+ *
+ * Note: be careful to modify BML.g3 as well
+ *
  * @author tomekb
  */
 public interface IDisplayStyle {
@@ -44,9 +46,9 @@ public interface IDisplayStyle {
 	 * Beginning, next line, and end of BML annotation comment.
 	 * All should have the same length:
 	 */
-	public static final String comment_start = "/* ";//careful
-	public static final String comment_next = " * ";
-	public static final String comment_end = " */";//careful
+	public static final String comment_start = "/*@ ";//careful
+	public static final String comment_next = "  @ ";
+	public static final String comment_end = "  @*/";//careful
 
 	/**
 	 * length of comment marks above.
@@ -86,20 +88,22 @@ public interface IDisplayStyle {
 	 * remember to update lexer (in BML.g3).
 	 * Must not end with whitespace (it causes errors
 	 * in tests)!
+   *
+   * Be careful to modify BML.g3 as well
 	 */
-	public static final String _classInvariant = "\\class invariant";
-	public static final String _assert = "\\assert";
-	public static final String _requires = "\\requires";
+	public static final String _classInvariant = "invariant";
+	public static final String _assert = "assert";
+	public static final String _requires = "requires";
 	public static final String _sc_start = "{|";
 	public static final String _sc_end = "|}";
-	public static final String _precondition = "\\precondition";
-	public static final String _modifies = "\\modifies";
-	public static final String _postcondition = "\\ensures";
-	public static final String _exsures = "\\exsures";
+	public static final String _precondition = "precondition";
+	public static final String _modifies = "modifies";
+	public static final String _postcondition = "ensures";
+	public static final String _exsures = "exsures";
 	public static final String _result = "\\result";
-	public static final String _loopspec = "\\loop specification";
-	public static final String _loop_modifies = "\\modifies";
-	public static final String _loop_invariant = "\\invariant";
-	public static final String _loop_decreases = "\\decreases";
+	public static final String _loopspec = "loop_specification";
+	public static final String _loop_modifies = "modifies";
+	public static final String _loop_invariant = "loop_inv";
+	public static final String _loop_decreases = "decreases";
 
 }
