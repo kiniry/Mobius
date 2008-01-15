@@ -95,6 +95,7 @@ test200 Good
 test201 Good
 test202 FIX	Tests error messages with a bad sourcepath - fails, mjm
 test203 Good    See https://mobius.ucd.ie/ticket/34 - dcochran
+test204 Good    See https://mobius.ucd.ie/ticket/437 - dcochran
 
 testA0	Good	non_null on array types imposes nonnullelements.
 testB1	Omit	new assertion semantics (idc) test 1: not ready to commit it yet.
