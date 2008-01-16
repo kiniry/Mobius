@@ -37,7 +37,7 @@ include Makefile.defs
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.
 
-export ESCJAVA = ${ESCTOOLS_ROOT}/release-files/escj
+export ESCJAVA ?= ${ESCTOOLS_ROOT}/release-files/escj
 
 # List subprojects in the order in which they should be built.
 SUBDIRS = Utils Escjava 
@@ -437,11 +437,15 @@ source-release: cleanup alldocs
 #   Copy Javadoc API docs 
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}/docs 
 #   Copy other miscellaneous files 
-	cp ${ESCJ_ROOT}/escj ${RELTEMP} 
-	cp ${ESCJ_ROOT}/escj.bat ${RELTEMP} 
-	cp ${ESCJ_ROOT}/escjava2.exe ${RELTEMP} 
-	cp ${ESCJ_ROOT}/escjava2.sample ${RELTEMP} 
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.* ${RELTEMP} 
+	mkdir -p ${RELTEMP}/release-files
+	mkdir -p ${RELTEMP}/Escjava/release/master/bin
+	cp ${ESCJ_ROOT}/escj ${RELTEMP}/release-files 
+	cp ${ESCJ_ROOT}/escj.bat ${RELTEMP}/release-files 
+	cp ${ESCJ_ROOT}/escjava2.exe ${RELTEMP}/release-files 
+	cp ${ESCJ_ROOT}/escjava2.sample ${RELTEMP}/release-files 
+	cp ${ESCJ_ROOT}/escjava2 ${RELTEMP}/release-files 
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4.* ${RELTEMP}/Escjava/release/master/bin
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.5.* ${RELTEMP}/Escjava/release/master/bin
 	cp README.first README.txt ${RELTEMP} 
 	cd release-files; cp `ls | grep -v .svn` ${RELTEMP} 
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
@@ -527,12 +531,17 @@ binary-release: build jars alldocs cleanup
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2 ${RELTEMP}
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2.exe ${RELTEMP}
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2.sample ${RELTEMP}
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.* ${RELTEMP}
+	mkdir -p ${RELTEMP}/Escjava/release/master/bin
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4.* \
+		${RELTEMP}/Escjava/release/master/bin
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.5.* \
+		${RELTEMP}/Escjava/release/master/bin	
 #   The two readme files below are irrelevant for binary release
-#   cp README.first README.txt ${RELTEMP}
+#   README.first README.txt
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
+	-find ${RELTEMP} -name "src-html" -exec rm -rf {} \; > /dev/null 2>&1
 	-rm -rf ${RELTEMP}/sub
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELTAR}.tgz *
@@ -545,11 +554,11 @@ test-binary-release:
 	mkdir -p ${RELTEST}
 	cp ${RELDIR}/${RELTAR}.tbz ${RELTEST}
 	cd ${RELTEST} ;\
-	    unset ESC_CLASSPATH ; \
-	    unset ESCTOOLS_RELEASE ; \
-	    tar xjf ${RELTAR}.tbz ;\
-	    ${RELTEST}/quicktest
-	    
+		unset ESC_CLASSPATH ; \
+		unset ESCTOOLS_RELEASE ; \
+		tar xjf ${RELTAR}.tbz ;\
+		${RELTEST}/quicktest
+
 test-source-release:
 	@echo "Testing source release ............"
 	rm -rf ${RELTEST}
