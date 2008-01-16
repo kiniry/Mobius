@@ -27,6 +27,7 @@ import org.apache.bcel.generic.IMUL;
 import org.apache.bcel.generic.INEG;
 import org.apache.bcel.generic.IOR;
 import org.apache.bcel.generic.IREM;
+import org.apache.bcel.generic.ISHL;
 import org.apache.bcel.generic.ISUB;
 import org.apache.bcel.generic.IUSHR;
 import org.apache.bcel.generic.IXOR;
@@ -52,12 +53,10 @@ import umbra.editor.parsing.BytecodeStrings;
  * with no parameters. The instructions handled here are in the following
  * categories:
  * <ul>
- *    <li>pushing the const null value on the top of the operand stack,</li>
- *    <li>array specific instructions,</li>
- *    <li>monitor instructions,</li>
- *    <li>return instructions,</li>
- *    <li>dup instructions,</li>
- *    <li>instructions to manipulate the top of the operand stack.</li>
+   *    <li>arithmetic instructions for doubles,</li>
+   *    <li>arithmetic instructions for floats,</li>
+   *    <li>arithmetic instructions for integers, and</li>
+   *    <li>arithmetic instructions for longs.</li>
  * </ul>
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
@@ -202,6 +201,7 @@ public class ArithmeticInstruction extends SingleInstruction {
    *    <li>imul,</li>
    *    <li>ineg,</li>
    *    <li>irem,</li>
+   *    <li>ishl,</li>
    *    <li>iushr,</li>
    *    <li>or a boolean operation on ints.</li>
    * </ul>
@@ -226,6 +226,8 @@ public class ArithmeticInstruction extends SingleInstruction {
       ires = new INEG();
     if (getName().compareTo("irem") == 0)
       ires = new IREM();
+    if (getName().compareTo("ishl") == 0)
+      ires = new ISHL();
     if (getName().compareTo("iushr") == 0)
       ires = new IUSHR();
     ires = getIBoolOpInstruction(ires);

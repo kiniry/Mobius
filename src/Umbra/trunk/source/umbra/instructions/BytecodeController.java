@@ -224,16 +224,15 @@ public class BytecodeController {
                                 LineContext ctxt)
     throws BadLocationException {
     int j = the_current_lno;
-    int context_state = LineContext.STATE_UNDEFINED;
     while (j < a_doc.getNumberOfLines() - 1) {
       final String line = getLineFromDoc(a_doc, j, ctxt);
       final BytecodeLineController lc = getType(line, ctxt);
       my_editor_lines.add(j, lc);
       if (lc.isCommentEnd() && ctxt.isInsideComment()) {
-        ctxt.setState(context_state);
+        ctxt.revertState();
       } else if (lc.isCommentStart()) {
-        context_state = ctxt.getState();
-        ctxt.isInsideComment();
+        ctxt.rememberState();
+        ctxt.setInsideComment();
       } else if (!ctxt.isInsideComment() &&
                  !(lc instanceof EmptyLineController)) {
         break;
@@ -492,7 +491,8 @@ public class BytecodeController {
   private BytecodeLineController getType(final String a_line,
                                          final LineContext a_context) {
     if (a_context.isInsideComment()) {
-      return new AnnotationLineController(a_line);
+      final AnnotationLineController lc = new AnnotationLineController(a_line);
+      return lc;
     }
     int i;
     boolean ok;
@@ -522,8 +522,9 @@ public class BytecodeController {
         return new HeaderLineController(a_line);
     }
 
-    if (l.startsWith("/*"))
+    if (l.startsWith("/*")) {
       return new AnnotationLineController(a_line);
+    }
 
 
     //instrukcje liczba i :
@@ -554,6 +555,7 @@ public class BytecodeController {
         final String[] sIConst =  BytecodeStrings.ICONST_INS;
         final String[] sLSConst = BytecodeStrings.LOAD_STORE_INS;
         final String[] sLSArr = BytecodeStrings.LOAD_STORE_ARRAY_INS;
+        final String[] sConv = BytecodeStrings.CONV_INS;
         final String[] s1 = BytecodeStrings.SINGLE_INS;
         final String[] s2 = BytecodeStrings.PUSH_INS;
         final String[] s3 = BytecodeStrings.JUMP_INS;
@@ -578,6 +580,10 @@ public class BytecodeController {
         for (j = 0; j < sLSArr.length; j++) {
           if (subline.equalsIgnoreCase(sLSArr[j]))
             return new LoadStoreArrayInstruction(a_line, sLSArr[j]);
+        }
+        for (j = 0; j < sConv.length; j++) {
+          if (subline.equalsIgnoreCase(sConv[j]))
+            return new ConversionInstruction(a_line, sLSArr[j]);
         }
         for (j = 0; j < sLSConst.length; j++) {
           if (subline.equalsIgnoreCase(sLSConst[j]))

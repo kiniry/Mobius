@@ -183,6 +183,7 @@ public class BytecodeStrings {
                                                               "imul", "idiv",
                                                               "ineg", "ior",
                                                               "isub", "irem",
+                                                              "ishl",
                                                               "iushr", "ixor",
                                                               "lsub", "ladd",
                                                               "land", "ldiv",
@@ -295,8 +296,6 @@ public class BytecodeStrings {
   /**
    * This constant contains an array with all the names of instructions handled
    * in {@ref JumpInstruction} class.
-   *
-   * FIXME: "lookupswitch", "tableswitch" are not handled
    */
   public static final String[] JUMP_INS = new String[] {"goto", "goto_w",
                                                         "if_acmpeq",
@@ -313,6 +312,26 @@ public class BytecodeStrings {
                                                         "jsr", "jsr_w",
                                                         "lookupswitch",
                                                         "tableswitch"};
+
+  /**
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref ConversionInstruction} class.
+   */
+  public static final String[] CONV_INS = new String[] {"d2f",
+                                                        "d2i",
+                                                        "d2l",
+                                                        "f2d",
+                                                        "f2i",
+                                                        "f2l",
+                                                        "i2b",
+                                                        "i2c",
+                                                        "i2d",
+                                                        "i2f",
+                                                        "i2l",
+                                                        "i2s",
+                                                        "l2d",
+                                                        "l2f",
+                                                        "l2i"};
 
   /**
    * This constant contains an array with all the names of instructions handled
@@ -375,26 +394,11 @@ public class BytecodeStrings {
                                                        "ldc2_w"};
 
   /**
-   * TODO.
+   * This array contains instructions which are not handled by the Umbra
+   * plugin.
    */
-  // nie bo nie bylo
   public static final String[] UNCLASSIFIED_INS =
                                           new String[] {"breakpoint",
-                                                        "d2f",
-                                                        "d2i",
-                                                        "d2l",
-                                                        "f2d",
-                                                        "f2i",
-                                                        "f2l",
-                                                        "i2b",
-                                                        "i2c",
-                                                        "i2d",
-                                                        "i2f",
-                                                        "i2l",
-                                                        "i2s",
-                                                        "l2d",
-                                                        "l2f",
-                                                        "l2i",
                                                         "multilinewarray",
                                                         "dcmpg",
                                                         "dcmpl",

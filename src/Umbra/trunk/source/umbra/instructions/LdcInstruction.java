@@ -86,6 +86,10 @@ public class LdcInstruction extends OtherInstruction {
    *    whitespase number : whitespace mnemonic whitespace
    *    " string " whitespace ( whitespace number whitespace )
    *    whitespace lineend
+   * or
+   *    whitespase number : whitespace mnemonic whitespace
+   *    number whitespace ( whitespace number whitespace )
+   *    whitespace lineend
    *
    * @return <code>true</code> when the syntax of the instruction line is
    *         correct
@@ -98,7 +102,11 @@ public class LdcInstruction extends OtherInstruction {
     res = res && (parser.swallowMnemonic(BytecodeStrings.LDC_INS) >= 0);
                            //mnemonic
     res = res && parser.swallowWhitespace(); //whitespace before the classname
-    res = res && stringWithDelimiters(parser);
+    if (parser.getLine().charAt(getIndex()) == '\"') {
+      res = res && stringWithDelimiters(parser);
+    } else {
+      res = res && parser.swallowNumber();
+    }
     res = res && parser.swallowWhitespace();
     res = res && numberWithDelimiters(parser);
     res = res && !parser.swallowWhitespace();

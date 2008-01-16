@@ -48,7 +48,7 @@ import umbra.editor.parsing.BytecodeStrings;
  *    <li>if instructions that compare with 0,</li>
  *    <li>subroutine instructions.</li>
  * </ul>
- * FIXME: "lookupswitch", "tableswitch" are not handled.
+ * FIXME: "lookupswitch", "tableswitch" are handled in a special simplified way.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
@@ -76,6 +76,7 @@ public class JumpInstruction extends NumInstruction {
    * follows:
    *    whitespase number : whitespace mnemonic whitespace # number
    *    whitespace lineend
+   * FIXME: tableswitch and lookupswitch are handled in a special way
    *
    * @return <code>true</code> when the syntax of the instruction line is
    *         correct
@@ -87,6 +88,12 @@ public class JumpInstruction extends NumInstruction {
     res = parseTillMnemonic(); //parse up to mnemonic
     res = res && (parser.swallowMnemonic(BytecodeStrings.JUMP_INS) >= 0);
                            //mnemonic
+    if (BytecodeStrings.JUMP_INS[parser.getMnemonic()].equals("tableswitch")) {
+      return true;
+    }
+    if (BytecodeStrings.JUMP_INS[parser.getMnemonic()].equals("lookupwitch")) {
+      return true;
+    }
     res = res && parser.swallowWhitespace(); //whitespace before the number
     res = res && parser.swallowDelimiter('#'); // #
     res = res && parser.swallowNumber(); // number

@@ -47,7 +47,7 @@ public class AnnotationLineController extends BytecodeLineController {
    *   sequence, <code>false</code> otherwise
    */
   public boolean isCommentEnd() {
-    String line = getMy_line_text();
+    final String line = getMy_line_text();
     int where = line.lastIndexOf("*/");
     if (where > 0) {
       where += "*/".length();

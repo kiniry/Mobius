@@ -15,21 +15,8 @@ package umbra.instructions;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class InstructionParser {
+public class InstructionParser extends InstructionTypeParser {
 
-  /**
-   * This field contains the value of the instruction line
-   * which is parsed.
-   */
-  private String my_line;
-
-  /**
-   * The pointer inside the line. It points ot the first character which
-   * has not been analysed yet. If this field is equal to my_line.length()
-   * the analysis is finished.
-   */
-  private int my_index;
-  //@ invariant 0 <= my_index && my_index <= my_line.length();
 
   /**
    * This field contains the number parsed from the chunk of the digits.
@@ -47,49 +34,14 @@ public class InstructionParser {
 
   /**
    * This constructor sets the string to be parsed and resets the parser
-   * so that it is ready to analyse the content.
+   * so that it is ready to analyse the content. It relies on the
+   * work in the superclass.
    *
    * @param a_line the line with the content to parse
    */
   public /*@ pure @*/ InstructionParser(final String a_line) {
-    my_line = a_line;
-    resetParser();
+    super(a_line);
   }
-
-  /*@
-    @ ensures my_index == 0;
-    @*/
-  /**
-   * This method resets the parser so that it starts the analysis
-   * from the beginning.
-   */
-  public void resetParser() {
-    my_index = 0;
-  }
-
-  /**
-   * This method swallows all the whitespace starting from the current
-   * position of the index. This method may not advance the index in case
-   * the first character to be analysed is not whitespace.
-   *
-   * @return <code>true</code> when the further analysis is not finished yet,
-   *   <code>false</code> when at the end of the string
-   */
-  public boolean swallowWhitespace() {
-    if (my_index == my_line.length() ||
-        my_line.substring(my_index).
-                startsWith(InstructionParserHelper.getEOL()))
-      return false;
-    while (Character.isWhitespace(my_line.charAt(my_index))) {
-      my_index++;
-      if (my_index == my_line.length() ||
-          my_line.substring(my_index).
-                  startsWith(InstructionParserHelper.getEOL())) return false;
-    }
-    return true;
-  }
-
-
 
   /**
    * This method swallows all the digits starting from the current
@@ -105,40 +57,24 @@ public class InstructionParser {
    */
   public boolean swallowNumber() {
     boolean res = true;
-    if (my_index == my_line.length()) res = false;
-    final int oldindex = my_index;
-    while (Character.isDigit(my_line.charAt(my_index)) && res) {
-      my_index++;
-      if (my_index == my_line.length()) break;
+    final String line = getLine();
+    int index = getIndex();
+    if (index == line.length()) res = false;
+    final int oldindex = index;
+    while (Character.isDigit(line.charAt(index)) && res) {
+      index = incIndex();
+      if (index == line.length()) break;
     }
-    if (oldindex == my_index) return false; //no digits were read
-    if (my_index < my_line.length() &&
-        !Character.isWhitespace(my_line.charAt(my_index)) &&
-        my_line.charAt(my_index) != ':' &&
-        my_line.charAt(my_index) != ')')
+    if (oldindex == index) return false; //no digits were read
+    if (index < line.length() &&
+        !Character.isWhitespace(line.charAt(index)) &&
+        line.charAt(index) != ':' &&
+        line.charAt(index) != ')')
       // the line is not finished and the character at index is not whitespace
       // or :
       return false;
-    my_result = Integer.parseInt(my_line.substring(oldindex, my_index));
+    my_result = Integer.parseInt(line.substring(oldindex, index));
     return true;
-  }
-
-  /**
-   * This method swallows the given delimiter. This method may not advance
-   * the index in case the first character to be analysed is not the delimiter
-   * or the analysis is finished before the method is called.
-   *
-   * @param a_ch the character with the delimiter to swallow
-   * @return <code>true</code> when the delimiter was successfully swallowed,
-   *   <code>false</code> otherwise
-   */
-  public boolean swallowDelimiter(final char a_ch) {
-    if (my_index == my_line.length()) return false;
-    if (my_line.charAt(my_index) == a_ch) {
-      my_index++;
-      return true;
-    }
-    return false;
   }
 
   /**
@@ -150,16 +86,18 @@ public class InstructionParser {
    *   mnemonic or -1 in case no mnemonic from the inventory occurs
    */
   public int swallowMnemonic(final String[] the_inventory) {
+    final String line = getLine();
+    final int index = getIndex();
     my_mnemonicno  = -1;
     for (int i = 0; i < the_inventory.length; i++) {
-      if (my_line.indexOf(the_inventory[i], my_index) == my_index) {
+      if (line.indexOf(the_inventory[i], index) == index) {
         if (my_mnemonicno == -1 ||
             the_inventory[my_mnemonicno].length() >  the_inventory[i].length())
           my_mnemonicno = i;
       }
     }
     if (my_mnemonicno >= 0) {
-      my_index += the_inventory[my_mnemonicno].length();
+      moveIndex(the_inventory[my_mnemonicno].length());
     }
     return my_mnemonicno;
   }
@@ -172,14 +110,6 @@ public class InstructionParser {
   }
 
   /**
-   * @return <code>true</code> when the index is at the end of the parsed
-   *   string
-   */
-  public boolean isFinished() {
-    return my_index == my_line.length();
-  }
-
-  /**
    * The method moves the current index right after the first occurrence of
    * the given delimiter character {@ref #a_ch}. In case the character does
    * not occur in the part of the parsed string starting at the current index,
@@ -188,11 +118,15 @@ public class InstructionParser {
    * @param a_ch the delimiter character which is sought
    */
   public void seekDelimiter(final char a_ch) {
-    final int where = my_line.indexOf(a_ch, my_index);
-    if (where > 0)
-      my_index = my_line.length();
+    final String line = getLine();
+    final int index = getIndex();
+    final int where = line.indexOf(a_ch, index);
+    int offset = 0;
+    if (where < 0)
+      offset = line.length() - index;
     else
-      my_index = where + 1;
+      offset = where + 1;
+    moveIndex(offset);
   }
 
   /**
@@ -206,76 +140,18 @@ public class InstructionParser {
    * @param the_inventory  the array of the mnemonics to be checked
    */
   public void seekMnemonic(final String[] the_inventory) {
+    final String line = getLine();
+    final int index = getIndex();
     int res = -1;
     for (int i = 0; i < the_inventory.length; i++) {
-      if (my_line.indexOf(the_inventory[i], my_index) >= my_index) {
+      if (line.indexOf(the_inventory[i], index) >= index) {
         if (res == -1 ||
             the_inventory[res].length() >  the_inventory[i].length())
           res = i;
       }
     }
-    my_index = my_line.indexOf(the_inventory[res], my_index) +
-               the_inventory[res].length();
-  }
-
-  /**
-   * This method swallows a single class name. This method may not
-   * advance the index in case the first character to be analysed is not the
-   * proper first character of a class name. We assume the string is not
-   * finished before the method is called.
-   *
-   * The Java class name (TypeName) is parsed using the following specification:
-   * <pre>
-   * TypeName:
-   *    Identifier
-   *    TypeName . Identifier
-   * </pre>
-   * from JLS 3rd edition, 4.3 Reference Types and Values. We additionally
-   * assume that a Java classname is finished when it is followed either
-   * by whitespace or by '>'.
-   *
-   * @return <code>true</code> when the class name has been suceessfully
-   *   swallowed, <code>false</code> otherwise.
-   */
-  public boolean swallowClassname() {
-    return swallowClassnameWithDelim('.');
-  }
-
-  /**
-   * This method swallows a single proper identifier. This method may not
-   * advance the index in case the first character to be analysed is not the
-   * proper first character of an identifier. We assume the string is not
-   * finished before the method is called.
-   *
-   * The exact format, according to JLS 3rd edition 3.8 Identifiers, is:
-   * <pre>
-   * Identifier:
-   *    IdentifierChars but not a Keyword or BooleanLiteral or NullLiteral
-   *
-   * IdentifierChars:
-   *     JavaLetter
-   *     IdentifierChars JavaLetterOrDigit
-   * </pre>
-   * where a "JavaLetter" is a character for which the method
-   * {@ref Character#isJavaIdentifierStart(int)} returns true and
-   * a "JavaLetterOrDigit" is a character for which the method
-   * {@ref Character#isJavaIdentifierPart(int)} returns true.
-   *
-   * @return <code>true</code> when the identifier has been properly identified
-   *   and swallowed, <code>false</code> when the starting portion of the
-   *   string cannot start an identifier
-   */
-  private boolean swallowIdentifier() {
-    if (!Character.isJavaIdentifierStart(my_line.charAt(my_index)))
-      return false;
-    final StringBuffer buf = new StringBuffer("");
-    do {
-      buf.append(my_line.charAt(my_index));
-      my_index++;
-    } while (Character.isJavaIdentifierPart(my_line.charAt(my_index)));
-    final String s = new String(buf);
-    return !InstructionParserHelper.isJavaResLiteral(s) &&
-           !InstructionParserHelper.isJavaKeyword(s);
+    moveIndex(line.indexOf(the_inventory[res], index) +
+               the_inventory[res].length() - index);
   }
 
   /**
@@ -283,7 +159,7 @@ public class InstructionParser {
    * advance the index in case the first character to be analysed is not the
    * proper first character of a string. We assume the parsed string is not
    * finished before the method is called. We assume there is no newline
-   * character in {@ref #my_line}.
+   * character in {@ref #line}.
    *
    * The exact format, according to JLS 3rd edition 3.10.5 String Literals, is:
    * <pre>
@@ -304,11 +180,12 @@ public class InstructionParser {
    *   string cannot start a string
    */
   public boolean swallowString() {
-    while (my_line.charAt(my_index) != '"') {
-      if (my_line.charAt(my_index) == '\\') {
+    final String line = getLine();
+    while (line.charAt(getIndex()) != '"') {
+      if (line.charAt(getIndex()) == '\\') {
         if (!swallowEscape()) return false;
       } else {
-        my_index++;
+        incIndex();
       }
     }
     return true;
@@ -319,7 +196,7 @@ public class InstructionParser {
    * advance the index in case the first character to be analysed is not the
    * proper first character of an escape sequence i.e. '\\'. We assume the
    * parsed string is not finished before the method is called. We assume there
-   * is no newline character in {@ref #my_line}.
+   * is no newline character in {@ref #line}.
    *
    * The precise format as described in JLS 3rd edition, 3.10.6 Escape Sequences
    * for Character and String Literals, is:
@@ -341,16 +218,18 @@ public class InstructionParser {
    *   of the string cannot start a string
    */
   private boolean swallowEscape() {
+    final String line = getLine();
+    int index = getIndex();
     boolean res = true;
-    if (my_line.charAt(my_index) == '\\') {
-      my_index++;
+    if (line.charAt(index) == '\\') {
+      index = incIndex();
     } else {
       return false;
     }
-    if (InstructionParserHelper.isOctalDigit(my_line.charAt(my_index))) {
+    if (InstructionParserHelper.isOctalDigit(line.charAt(index))) {
       return swallowOctalNumber();
-    } else if (InstructionParserHelper.isEscapeChar(my_line.charAt(my_index))) {
-      my_index++;
+    } else if (InstructionParserHelper.isEscapeChar(line.charAt(index))) {
+      index = incIndex();
       res = true;
     } else {
       res = false;
@@ -375,15 +254,21 @@ public class InstructionParser {
    *   swallowed, <code>false</code> otherwise
    */
   private boolean swallowOctalNumber() {
+    final String line = getLine();
+    final int index = getIndex();
     boolean ztt = false;
-    if (InstructionParserHelper.isZeroToThreeDigit(my_line.charAt(my_index)))
+    if (InstructionParserHelper.isZeroToThreeDigit(line.charAt(index))) {
       ztt = true;
+    }
     for (int i = 0; i < InstructionParserHelper.MAX_OCTAL_NUMBER_LENGTH; i++) {
-      if (!InstructionParserHelper.isOctalDigit(my_line.charAt(my_index++))) {
+      if (!InstructionParserHelper.isOctalDigit(line.charAt(index))) {
+        incIndex();
         return true;
       } else {
-        if (i == InstructionParserHelper.MAX_OCTAL_NUMBER_LENGTH - 1)
+        incIndex();
+        if (i == InstructionParserHelper.MAX_OCTAL_NUMBER_LENGTH - 1) {
           return ztt;
+        }
       }
     }
     return false;
@@ -396,9 +281,10 @@ public class InstructionParser {
    *
    * @return the number of the last mnemonic found
    */
-  public int getMnemonic() {
+  public final int getMnemonic() {
     return my_mnemonicno;
   }
+
   /**
    * This method swallows a single method reference. This method may not
    * advance the index in case the first character to be analysed is not the
@@ -438,9 +324,10 @@ public class InstructionParser {
    *   swallowed, <code>false</code> otherwise
    */
   private boolean swallowMethodDescriptor() {
+    final String line = getLine();
     boolean res = true;
     res = res && swallowDelimiter('(');
-    if (my_line.charAt(my_index) != ')') {
+    while (line.charAt(getIndex()) != ')' && res) {
       res = res && swallowParameterDescriptor();
     }
     res = res && swallowDelimiter(')');
@@ -467,193 +354,20 @@ public class InstructionParser {
    *   swallowed, <code>false</code> otherwise
    */
   private boolean swallowReturnDescriptor() {
+    final String line = getLine();
+    final int index = getIndex();
     boolean res = false;
     if (InstructionParserHelper.isBaseTypeDescriptor(
-                                       my_line.charAt(my_index)) ||
+                                       line.charAt(index)) ||
         InstructionParserHelper.isVoidTypeDescriptor(
-                                       my_line.charAt(my_index))) {
-      my_index++;
+                                       line.charAt(index))) {
+      incIndex();
       return true;
     }
     res = res && swallowRefTypeDescriptor();
     return res;
   }
 
-  /**
-   * This method swallows a reference type descriptor. This method may not
-   * advance the index in case the first character to be analysed is not the
-   * proper first character of an array descriptor. We assume the string is not
-   * finished before the method is called.
-   *
-   * As JVMS, 4.3.3 Method Descriptors says, a filed type descriptor is
-   * a series of characters generated by the grammar:
-   * <pre>
-   * FiledType:
-   *   BaseType
-   *   ArrayType
-   *   ObjectType
-   * </pre>
-   * We omit here the BaseType case.
-   *
-   * @return <code>true</code> when a parameter descriptor is successfully
-   *   swallowed, <code>false</code> otherwise
-   */
-  private boolean swallowRefTypeDescriptor() {
-    if (InstructionParserHelper.isArrayTypeDescriptor(
-                    my_line.charAt(my_index))) {
-      my_index++;
-      return swallowArrayTypeDescriptor();
-    }
-    if (InstructionParserHelper.isObjectTypeDescriptor(
-                    my_line.charAt(my_index))) {
-      my_index++;
-      return swallowObjectTypeDescriptor();
-    }
-    return false;
-  }
-
-  /**
-   * This method swallows an object type descriptor. This method may not
-   * advance the index in case the first character to be analysed is not the
-   * proper first character of an object type descriptor. We assume the string
-   * is not finished before the method is called.
-   *
-   * As JVMS, 4.3.3 Method Descriptors says, an object type descriptor is
-   * a series of characters generated by the grammar:
-   * <pre>
-   * ObjectType:
-   *   L &lt;classname&gt; ;
-   * </pre>
-   * we assume L is already swallowed so we swallow here only the class name.
-   *
-   * @return <code>true</code> when a return descriptor is successfully
-   *   swallowed, <code>false</code> otherwise
-   */
-  private boolean swallowObjectTypeDescriptor() {
-    final boolean res = swallowClassnameWithDelim('/');
-    return res && swallowDelimiter(';');
-  }
-
-  /**
-   * This method swallows a single class name with different possible
-   * name chunk separators. The separator is in the parameter
-   * <code>a_separator</code>. This method may not advance the index in case
-   * the first character to be analysed is not the proper first character of a
-   * class name. We assume the string is not finished before the method is
-   * called.
-   *
-   * The Java class name (TypeName) is parsed using the following specification:
-   * <pre>
-   * TypeName:
-   *    Identifier
-   *    TypeName separator Identifier
-   * </pre>
-   * from JLS 3rd edition, 4.3 Reference Types and Values. We additionally
-   * assume that a Java classname is finished when it is followed either
-   * by whitespace or by one of '>', ';'.
-   *
-   * @param a_separator the name chunk separator
-   * @return <code>true</code> when the class name has been suceessfully
-   *   swallowed, <code>false</code> otherwise.
-   */
-  private boolean swallowClassnameWithDelim(final char a_separator) {
-    while (swallowIdentifier()) {
-      if (!(my_line.charAt(my_index) == a_separator)) {
-        return Character.isWhitespace(my_line.charAt(my_index)) ||
-            my_line.charAt(my_index) == '>' ||
-            my_line.charAt(my_index) == ';';
-      }
-      my_index++;
-    }
-    return false;
-  }
-
-  /**
-   * This method swallows a single field name with different possible
-   * name chunk separators. The separator is in the parameter
-   * <code>a_separator</code>. This method may not advance the index in case
-   * the first character to be analysed is not the proper first character of a
-   * class name. We assume the string is not finished before the method is
-   * called.
-   *
-   * We assume that a Java field name (TypeName) is parsed using the
-   * following specification:
-   * <pre>
-   * FieldName:
-   *    Identifier
-   *    FieldName . Identifier
-   * </pre>
-   *
-   * FIXME: this is not based on a part of JLS as I do not know where to find
-   * that
-   *
-   * @return <code>true</code> when the class name has been suceessfully
-   *   swallowed, <code>false</code> otherwise.
-   */
-  public boolean swallowFieldName() {
-    while (swallowIdentifier()) {
-      if (!(my_line.charAt(my_index) == '.')) {
-        return Character.isWhitespace(my_line.charAt(my_index));
-      }
-      my_index++;
-    }
-    return false;
-  }
-
-  /**
-   * This method swallows an array type descriptor. This method may not
-   * advance the index in case the first character to be analysed is not the
-   * proper first character of an array descriptor. We assume the string is not
-   * finished before the method is called.
-   *
-   * As JVMS, 4.3.3 Method Descriptors says, an object type descriptor is
-   * a series of characters generated by the grammar:
-   * <pre>
-   * ArrayType:
-   *   [ ComponentType ;
-   * </pre>
-   * we assume [ is already swallowed so we swallow here only the component
-   * type.
-   *
-   * @return <code>true</code> when a return descriptor is successfully
-   *   swallowed, <code>false</code> otherwise
-   */
-  private boolean swallowArrayTypeDescriptor() {
-    boolean res = false;
-    res = swallowFieldType(); //ComponentType :: = FieldType
-    res = res && swallowDelimiter(';');
-    return res;
-  }
-
-  /**
-   * This method swallows a filed type descriptor. This method may not
-   * advance the index in case the first character to be analysed is not the
-   * proper first character of an array descriptor. We assume the string is not
-   * finished before the method is called.
-   *
-   * As JVMS, 4.3.3 Method Descriptors says, a filed type descriptor is
-   * a series of characters generated by the grammar:
-   * <pre>
-   * FiledType:
-   *   BaseType
-   *   ArrayType
-   *   ObjectType
-   * </pre>
-   *
-   * @return <code>true</code> when a return descriptor is successfully
-   *   swallowed, <code>false</code> otherwise
-   */
-  public boolean swallowFieldType() {
-    boolean res = false;
-    if (InstructionParserHelper.isBaseTypeDescriptor(
-                        my_line.charAt(my_index))) {
-      my_index++;
-      res = true;
-    } else {
-      res =  swallowRefTypeDescriptor();
-    }
-    return res;
-  }
 
   /**
    * This method swallows a single parameter descriptor. This method may not
@@ -675,36 +389,4 @@ public class InstructionParser {
     return swallowFieldType();
   }
 
-  /**
-   * This method swallows a single method name. This method may not
-   * advance the index in case the first character to be analysed is not the
-   * proper first character of a class name. We assume the string is not
-   * finished before the method is called.
-   *
-   * The Java method name is parsed using the following specification:
-   * <pre>
-   * MethodName:
-   *    Identifier
-   *    MethodName . Identifier
-   * </pre>
-   * We additionally assume that a Java method is finished when it is followed
-   * by whitespace.
-   *
-   * @return <code>true</code> when the method name has been suceessfully
-   *   swallowed, <code>false</code> otherwise.
-   */
-  private boolean swallowMethodName() {
-    while (swallowIdentifier()) {
-      if (!(my_line.charAt(my_index) == '.')) {
-        return Character.isWhitespace(my_line.charAt(my_index));
-      }
-      my_index++;
-    }
-    if (my_line.charAt(my_index) == '<') {
-      swallowDelimiter('<'); //FIXME this is a hack to parse <init>
-      swallowIdentifier();
-      return swallowDelimiter('>');
-    }
-    return false;
-  }
 }
