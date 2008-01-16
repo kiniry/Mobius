@@ -1,3 +1,0 @@
-This package defines a generic directed graph.
-
-One instantiation, with int edge types and node types, is given.

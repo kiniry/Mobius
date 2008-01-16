@@ -1,3 +1,0 @@
-/*
- * Just a comment without any package header...
- */

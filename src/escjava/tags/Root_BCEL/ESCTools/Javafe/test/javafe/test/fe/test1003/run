@@ -1,5 +1,0 @@
-#!/bin/sh
-
-## Test flow-sensitive checks   [disabled]
-
-${TOOL} Flow.java

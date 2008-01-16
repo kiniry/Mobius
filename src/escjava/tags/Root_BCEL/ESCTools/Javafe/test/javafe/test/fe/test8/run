@@ -1,6 +1,0 @@
-#!/bin/sh
-
-## Check references to nonexistant supertypes
-
-${TOOL} Orphan.java
-

@@ -1,4 +1,0 @@
-AnonClass.java:12: Error: No such method x() in type AnonClass$12$<anonymous>
-        (new AnonClass() { void p() {} }).x();        // Error
-                                          ^
-1 error

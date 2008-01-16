@@ -1,0 +1,196 @@
+Erik writes:
+
+> on ESC/Java, but if you have somthing on connection to provers that I
+> should say, please let me know what that is...  Thanks,
+
+Good point. For a CAV audience I would be sure to include diagrams showing
+how this might hook up to the SAT solvers
+and model checkers they are working on.
+Eg. for ESC/Java a diagram like
+
+   JML-annotated Java --- ESC/Java (ie. a VC Generator) ---> theorem prover
+
+mentioning that currenly this works for Simplify, Fx7, Coq (and
+maybe some others I forget here) and for Bogor a diagram
+
+   JML-annotated Java --- Bogor ---> model checker
+
+(Not sure which model-checker is actually used there)
+
+Joe writes:
+
+> I'm going to mine the old ETAPS tutorial for material
+> on ESC/Java, but if you have somthing on connection to provers that I
+> should say, please let me know what that is...
+
+If you want to talk about/mention ongoing work in static checkers you might
+mention:
+ o that the current release of ESC/Java2 supports the Fx7 prover and Coq,
+ o in an experimental branch, we do proof generation and proof checking on
+Fx7,
+ o we generate VCs in both Simplify and SMT-LIB formats,
+ o we have a new specification-aware dead code detector (I presume you
+already saw the rejected FTfJP paper that has been improved and submitted to
+SAVCBS),
+ o Patrice's "underdefined" specification checker is also included,
+ o while we do some VC generation for PVS, it is not ready for prime-time
+yet,
+ o we have re-released a new RCC,
+ o a re-birthed Houdini is included in the source release,
+ and more.
+
+Attached is a talk I gave at the KeY Symposium last week that might have
+some things you'd like to review or chat with me about.  Let me know if you
+have any questions and we can do a Skype call, e.g.
+
+
+
+
+    [ Part 3: "Attached Text" ]
+
+
+BTW, I answered your query about Universes typechecking in a separate
+email---it is fussy and re-prioritized for the next release due to many
+peoples' interest in using it.
+
+Joe
+
+> Thanks,
+> 
+>         Gary T. Leavens
+>         Department of Computer Science, Iowa State University
+>         229 Atanasoff Hall, Ames, Iowa 50011-1041 USA
+>         http://www.cs.iastate.edu/~leavens  phone: +1-515-294-1580
+> 
+> Talk -*- Outline -*-
+> 
+> * Introduction
+> ** Objectives
+> ** Tutorial Overview (Outline)
+> ** Listener Names and Interests
+> 
+> * JML Overview
+> ** Basics
+> *** JML = Java Modeling Language
+> *** Goals and Purpose
+> *** Sequential Behavior
+> ** What JML is Like
+> *** Introductory Example (stress viewpoint)
+> *** Tools for JML
+> *** How Tools Complement each Other
+> ** Importance of JML
+> *** Large Number of Researchers
+> **** Papers
+> **** Sharing customers, Reuse syntax, etc.
+> ** Related Work
+> *** Eiffel
+> *** Larch
+> *** Spec#
+> *** Jass
+> *** OCL, Z, ...
+> ** Where to find more
+> 
+> * Reading and Writing JML
+> ** Lightweight specification of functional behavior
+> *** requires and ensures
+> *** assignable and pure
+> *** invariants
+> *** spec_public
+> *** Semantics of Specifications
+> ** Exercises specifying types
+> ** Basic tool use (demo + exercise)
+
+Use the revised Bag example I sent you?  Or the Purse example, as it also
+includes unit tests?  (Did I send it to you?)  Mentioning/demoing jmlunit in
+Eclipse is quite compelling also.
+
+> *** ESC/Java2
+> *** jmlc
+> *** KeY (optional)
+> ** Tips and Pitfalls
+> *** Object Identity (example)
+> *** Aliasing (example)
+> *** Protective Specifications (example)
+> 
+> * Subtyping
+> ** Modular Verification Problem
+> *** Case Analysis
+> *** Behavioral Subtyping
+> *** Using Both Techniques by Casting
+> ** Multiple Specification Cases
+> *** Semantics
+> *** Use of \same
+
+\same is not supported in ESC2 I think.
+
+> *** Specifying Exceptional Behavior
+> **** tips
+> **** pitfalls
+> *** exercise (if Time)
+> ** Specification Inheritance
+> *** Forces Behavioral Subtyping
+> *** Definitions and Semantics
+> *** Exercise
+> *** How Tools React to Bad Subtyping
+> ** Advanced topics (optional)
+> *** Multiple inheritance
+> *** Invariants, Subtyping, and Privacy
+> *** Code Contracts for Super Calls
+> *** Modular Subclass Verification (Clyde Ruby)
+
+I am still interested in hearing more about this topic; I have not yet read
+Clyde's papers/thesis.  We need to understand this to support it in future
+versions of ESC + Mobius.
+
+> * Abstraction in Specification
+> ** Motivation
+> *** Client View
+> *** Other Views
+> **** Subtypes
+> **** Private View
+> ** Privacy Considerations
+> *** Information Hiding for Maintenance
+> *** Document Obligations for Soundness
+> ** Data abstration in JML
+> *** Model Fields
+> *** Represents Clauses
+> *** Semantics
+> *** Relation to spec_public
+> ** Frame Axioms and Datagroups
+> *** Declarations
+> *** Definition and Semantics
+> *** Example
+> *** Exercise
+> ** Advanced Data Abstraction
+> *** Invariant Methodologies
+> *** Helper Methods
+> *** History Constraints
+> *** Ghost Fields
+> 
+> * ESC/Java2
+> ** What it Does (demo)
+> ** Warnings
+> *** Kinds of Warnings
+> *** How to Interpret Messages
+> *** Exercise
+> ** Multithreading support
+
+Mention RCC here?
+
+> ** Connection to Provers
+> 
+> * Conclusions
+> ** Advantages of JML
+> ** Needs, current work
+> ** Current Research
+> *** Ownership and Invariants
+> *** Multithreading
+> *** Testing Research
+> ** Collaboration
+> *** Future Work and Needs
+> *** What Collaborations Might Interest You?
+> ** Website
+> ** Acknowledgments
+> 
+> $Id$
+

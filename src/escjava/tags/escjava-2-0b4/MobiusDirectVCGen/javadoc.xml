@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="javadoc">
+<target name="javadoc">
+<javadoc access="private" 
+	author="true" 
+	classpath="../ESCTools/Utils/ant.jar:../ESCTools/classfiles:../ESCTools/Utils/junit.jar:../ESCTools/Escjava/xmlrpc-1.2-b1-modified.jar:samples" 
+	destdir="javadoc" 
+	nodeprecated="false" 
+	nodeprecatedlist="false" 
+	noindex="false" nonavbar="false" notree="false" 
+	packagenames="mobius.directVCGen.formula.coq,mobius.directVCGen.formula,mobius.directVCGen.vcgen.expression,mobius.directVCGen,mobius.directVCGen.vcgen.stmt,mobius.directVCGen.formula.annotation,mobius.directVCGen.formula.coq.representation,mobius.directVCGen.vcgen,mobius.directVCGen.bicolano,mobius.directVCGen.formula.jmlTranslator,mobius.directVCGen.vcgen.struct" source="1.5" sourcefiles="samples/LightweightAnnotation.java,samples/BlockSample.java,samples/Bill.java,samples/Test2.java,samples/ToyExample.java,samples/HeavyweightAnnotation.java,samples/A.java,samples/Super.java" 
+	sourcepath="src:samples" 
+	splitindex="true" use="false" version="true">
+<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+</javadoc>
+</target>
+</project>

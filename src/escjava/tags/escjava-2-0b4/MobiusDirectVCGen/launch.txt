@@ -1,0 +1,27 @@
+The arguments to give to the main are: a directory, the location of the 
+bicolano (and prelude) jar. After you just have to give the normal 
+'ESC/Java style' arguments.
+
+For instance if my workspace where I want to have the files output is 
+MobiusDirectVCGen, the first argument will be something like: 
+${workspace_loc:MobiusDirectVCGen/}
+
+The second argument is the jar of bicolano: it can be built with the script 
+/logic/bicolano-jar.sh, if in the directory logic you have a directory named 
+Formalisation (aka bicolano).
+So the second argument should look like:
+${workspace_loc:MobiusDirectVCGen/}/logic/bicolano.jar
+
+After it's the usual arguments: ToyExample for instance if you want to treat 
+the file ToyExample which is a class.
+
+So it makes the arguments look the following:
+${workspace_loc:MobiusDirectVCGen/} ${workspace_loc:MobiusDirectVCGen/}/logic/bicolano.jar ToyExample
+
+If the directory containing the class ToyExample is
+${workspace_loc:MobiusDirectVCGen/}/samples,
+don't forget to set the working directory as others, with specified
+${workspace_loc:MobiusDirectVCGen/}/samples.
+
+
+You can now test MobiusDirectVCGen!

@@ -1,0 +1,17 @@
+Things to do when I (or we) will have time:
+
+- Properly handle the fields especially generate them when 
+  generating all the class names.
+  
+- Same for the class names generation
+
+- Make the Coq back-end type properly everything
+	see: select, store, MSelect, MStore are badly constructed.
+	
+- Change the ant file when bug 
+   http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5101868
+  is fixed.
+  
+- The comments need proof reading would somebody do that for me (us)?
+
+- test checkin
