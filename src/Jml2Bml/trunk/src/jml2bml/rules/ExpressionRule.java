@@ -13,6 +13,7 @@ import jml2bml.engine.Constants;
 import jml2bml.engine.Symbols;
 import jml2bml.engine.UniqueIndexGenerator;
 import jml2bml.engine.Variable;
+import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedException;
 
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
@@ -86,9 +87,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     }
     final Variable variable = p.get(name);
     if (variable == null) {
-      return null;
-      //FIXME
-      //throw new RuntimeException("Invalid variable " + name);
+      throw new Jml2BmlException("Invalid variable " + name);
     }
     if (variable.isBoundVariable()) {
       return variable.getVariable();
@@ -124,6 +123,9 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     }
     if (kind == Kind.NULL_LITERAL) {
       return new NULL();
+    }
+    if (kind == Kind.STRING_LITERAL){
+      //FIXME find out how string literals are represented
     }
     throw new NotTranslatedException("Not implemented literal: " + node);
   };
@@ -209,6 +211,9 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     final BCExpression expr = scan(node.getExpression(), p);
     final JavaType type = expr.checkType();
     final String identifier = node.getIdentifier().toString();
+    if (type == null) {
+      throw new Jml2BmlException("Cannot determine type for object " + expr);
+    }
     if (Constants.ARRAY_LENGTH.equals(identifier)) {
       //special case - array length
       if (type != null
@@ -231,8 +236,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
           .createFieldRef(isOld, fieldRefIndex, p));
     }
-    //FIXME rzucic bledem
-    return null;
+    throw new Jml2BmlException("Unresolved field access in type "
+                               + type.toString() + " to field " + identifier);
 
   }
 

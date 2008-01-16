@@ -6,14 +6,15 @@
  */
 package jml2bml.bytecode;
 
-
-import jml2bml.engine.Symbols;
+import jml2bml.exceptions.Jml2BmlException;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.FieldRef;
+import annot.io.ReadAttributeException;
 
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Name;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
@@ -21,11 +22,26 @@ import com.sun.tools.javac.util.Context;
  *
  */
 public final class BytecodeUtil {
+  /**
+   * Inner classes counter. I think it should be done in another way.
+   */
   private static int innerClassNum = 1;
+
+  /**
+   * Hidden constructor.
+   */
   private BytecodeUtil() {
   }
 
-  public static BCMethod findMethod(final CharSequence name, final BCClass clazz) {
+  /**
+   * Searches for method of given name in given class.
+   * @param name name of the method
+   * @param clazz BCClass object representing the class
+   * @return BCMethod representing method <code>name</code>,
+   * or null, if the methow was not found.
+   */
+  public static BCMethod findMethod(final CharSequence name,
+                                    final BCClass clazz) {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
       if (method.getBcelMethod().getName().contentEquals(name))
@@ -34,22 +50,38 @@ public final class BytecodeUtil {
     return null;
   }
 
-  public static BCExpression createFieldRef(boolean isOld, String name,
-                                            BCClass clazz) {
-    int nameIndex = clazz.getFieldIndex(name);
+  /**
+   * Creates FieldRef object for given field name in given class.
+   * It is assumed that the field exists in this class. In the other case
+   * an exception will be thrown.
+   * @param isOld - if the reference occurs in \old clause
+   * @param name - name of the field
+   * @param clazz - class containing the field
+   * @return FieldRef object.
+   */
+  public static BCExpression createFieldRef(final boolean isOld,
+                                            final String name,
+                                            final BCClass clazz) {
+    final int nameIndex = clazz.getFieldIndex(name);
     if (nameIndex == -1) {
-      //FIXME throw an exception
+      throw new Jml2BmlException("Field " + name
+                                 + " does not exist in given class.");
     }
     return new FieldRef(isOld, clazz.getCp(), nameIndex);
 
   }
 
-  public static BCClass createClass(com.sun.tools.javac.util.Name name,
-                                    Context context, Symbols symbols) {
+  /**
+   * Creates BCClass object for class of given name.
+   * @param name - class name
+   * @param context - application context
+   * @return BCClass corresponding to given class name
+   */
+  public static BCClass createClass(final Name name, final Context context) {
     //Really hacked!
-    ClassFileLocation loc = context.get(ClassFileLocation.class);
+    final ClassFileLocation loc = context.get(ClassFileLocation.class);
     String qName = loc.getClassQualifiedName();
-    String cName = qName.substring(qName.lastIndexOf(".") + 1);
+    final String cName = qName.substring(qName.lastIndexOf(".") + 1);
     if (!cName.equals(name.toString())) {
       if (name.toString().length() == 0) {
         qName += "$" + innerClassNum;
@@ -60,10 +92,10 @@ public final class BytecodeUtil {
     }
     try {
       return new BCClass(loc.getDirectoryName(), qName);
-    } catch (Exception e) {
-      //FIXME handle the exception!!
-      System.out.println(e);
-      return null;
+    } catch (ClassNotFoundException e) {
+      throw new Jml2BmlException("Class " + qName + " not found.");
+    } catch (ReadAttributeException e) {
+      throw new Jml2BmlException("Error while loading class " + qName + ".");
     }
   }
 }
