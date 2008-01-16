@@ -29,6 +29,6 @@ public class TranslationManager {
 // FIXME: we shouldn't run expression rule by itself??
 //    translator.registerTranslationRule(RulesFactory.getExpressionRule(context));
     translator.registerTranslationRule(RulesFactory.getAssertRule(context));
-    translator.registerTranslationRule(RulesFactory.getEnsuresRule(context));
+    translator.registerTranslationRule(RulesFactory.getSpecificationCaseRule(context));
   }
 }

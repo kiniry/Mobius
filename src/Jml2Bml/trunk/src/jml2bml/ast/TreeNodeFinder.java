@@ -14,9 +14,6 @@ import java.util.Map;
 
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
@@ -37,10 +34,29 @@ public class TreeNodeFinder {
    */
   private class ParentFinder extends ExtendedJmlTreeScanner<Tree, Tree> {
 
-    @Override
-    protected Tree preVisit(Tree node, Tree p) {
+    public Tree scan(final Tree node, final Tree p) {
       parents.put(node, p);
-      return node;
+      return super.scan(node, node);
+    }
+
+    /**
+     * When a node in a tree has many children (ie. block has list of statements,
+     * class has a list of members), this method is executed. It joins executing
+     * methods for blocks, classes etc. separately.
+     */
+    public Tree scan(Iterable<? extends Tree> nodes, Tree p) {
+      Tree result = super.scan(nodes, p);
+      final Iterator<? extends Tree> iter = nodes.iterator();
+      if (iter.hasNext()) {
+        Tree stmt = iter.next();
+        while (iter.hasNext()) {
+          final Tree next = iter.next();
+          nextSiblingMap.put(stmt, next);
+          stmt = next;
+        }
+        nextSiblingMap.put(stmt, null);
+      }
+      return result;
     }
 
     public Tree visitJmlClassDecl(JmlClassDecl classNode, Tree node) {
@@ -57,38 +73,18 @@ public class TreeNodeFinder {
       }
       return result;
     }
-
-    public Tree visitBlock(BlockTree block, Tree p) {
-      final Tree result = super.visitBlock(block, p);
-      final Iterator<? extends StatementTree> iter = block.getStatements()
-          .iterator();
-      if (iter.hasNext()) {
-        StatementTree stmt = iter.next();
-        while (iter.hasNext()) {
-          final StatementTree next = iter.next();
-          nextStatemtentMap.put(stmt, next);
-          stmt = next;
-        }
-        nextStatemtentMap.put(stmt, null);
-      }
-      return result;
-    }
   }
 
   /** Map of parents of tree nodes. */
   private Map<Tree, Tree> parents;
-
-  /** Maps a statement to the next statement in a block. */
-  private Map<StatementTree, StatementTree> nextStatemtentMap;
 
   /** Maps a tree node to next sibling in a tree. */
   private Map<Tree, Tree> nextSiblingMap;
 
   public TreeNodeFinder(final Tree tree) {
     parents = new HashMap<Tree, Tree>();
-    nextStatemtentMap = new HashMap<StatementTree, StatementTree>();
     nextSiblingMap = new HashMap<Tree, Tree>();
-    tree.accept(new ParentFinder(), null);
+    tree.accept(new ParentFinder(), tree);
   }
 
   /**
@@ -113,7 +109,7 @@ public class TreeNodeFinder {
   }
 
   /**
-   * Finding ancestor of element that is of desired type
+   * Finding ancestor of element that is of desired type.
    *
    *
    * @param treeElement element to find ancestor of
@@ -135,17 +131,13 @@ public class TreeNodeFinder {
   }
 
   /**
-   * Method finds a statement following {@code statement}.
+   * Method finds a sibling of tree node in ast tree.
    *
-   * @param statement
-   * @return a statement following statement in parameter
-   *         when no statement after {@code null} is a result.
+   * @param tree the elem to get sibling of
+   * @return a tree node following tree in parameter
+   *         when no node after {@code null} is a result.
    */
-  public StatementTree getNextStatement(final StatementTree statement) {
-    return nextStatemtentMap.get(statement);
-  }
-
-  public Tree getNextMember(final Tree classMember) {
-    return nextSiblingMap.get(classMember);
+  public Tree getNextSibling(final Tree tree) {
+    return nextSiblingMap.get(tree);
   }
 }

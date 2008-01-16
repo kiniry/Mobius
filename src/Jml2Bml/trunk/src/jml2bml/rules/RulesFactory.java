@@ -21,13 +21,13 @@ public class RulesFactory {
   }
 
   /**
-   * Returns an instance of AssertRule
+   * Returns an instance of AssertRule.
    */
   public static TranslationRule<String, Symbols> getAssertRule(Context context) {
     return new AssertRule(context);
   }
 
-  public static TranslationRule<String, Symbols> getEnsuresRule(Context context) {
-    return new RequiresRule(context);
+  public static TranslationRule<String, Symbols> getSpecificationCaseRule(Context context) {
+    return new SpecificationCaseRule(context);
   }
 }

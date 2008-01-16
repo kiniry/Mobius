@@ -19,7 +19,7 @@ import com.sun.source.tree.Tree;
 public class PrettyPrinter {
 
   /**
-   * JMLTree pretty printer visitor(modified version of 
+   * JMLTree pretty printer visitor(modified version of
    * com.sun.tools.javac.parser.TreePrinter).
    * @author kjk (kjk@mimuw.edu.pl)
    */
@@ -38,14 +38,14 @@ public class PrettyPrinter {
     }
   }
 
+  /** Indentation per level. */
+  private static final String INDENT = "  ";
+
   /** The output stream. */
   private final PrintStream out;
 
-  /** The pretty printer visitor */
-  private PrettyPrinterVisitor printerVisitor;
-
-  /** Indentation per level */
-  private static final String INDENT = "  ";
+  /** The pretty printer visitor. */
+  private final PrettyPrinterVisitor printerVisitor;
 
   public PrettyPrinter(final PrintStream out) {
     this.printerVisitor = new PrettyPrinterVisitor();
@@ -53,6 +53,6 @@ public class PrettyPrinter {
   }
 
   public void prettyPrint(final Tree tree) {
-    tree.accept(printerVisitor, "");
+    printerVisitor.scan(tree, "");
   }
 }

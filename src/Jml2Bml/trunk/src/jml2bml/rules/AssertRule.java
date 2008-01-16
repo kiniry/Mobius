@@ -9,6 +9,7 @@
 package jml2bml.rules;
 
 import jml2bml.ast.TreeNodeFinder;
+import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.engine.Symbols;
 import jml2bml.exceptions.NotTranslatedException;
@@ -43,6 +44,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
   private final Context my_context;
 
   public AssertRule(final Context context) {
+    super();
     this.my_context = context;
   }
 
@@ -54,23 +56,19 @@ public class AssertRule extends TranslationRule<String, Symbols> {
    * @return bml-assert annotation or null.
    */
   public String visitJmlStatementExpr(final JmlStatementExpr node,
-                                      final Symbols p) {
+                                      final Symbols symb) {
 
     if (node.token == JmlToken.ASSERT) {
       final TreeNodeFinder finder = my_context.get(TreeNodeFinder.class);
-      final BCClass clazz = p.findClass();
+      final BCClass clazz = symb.findClass();
 
       //Find an enclosing method
       final MethodTree method = (MethodTree) finder.getAncestor(node, Kind.METHOD);
       final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
 
       if (node.expression != null) {
-        final BCExpression expression = node.expression.accept(RulesFactory
-                                                               .getExpressionRule(my_context),
-                                                               p);
-        if (expression.getType1() != JavaBasicType.JavaBool)
-          throw new NotTranslatedException("assert expression must be boolean");
-        final AbstractFormula form = (AbstractFormula) expression;
+        final AbstractFormula form = BmlLibUtils.getFormula(node.expression,
+                                                            symb, my_context);
 
         final StatementTree targetStmt = findFirstNotEmptySibling(finder, node);
         System.out.println("Assertion: "+form+" should be added to statement: "+targetStmt);
@@ -92,7 +90,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
   private static StatementTree findFirstNotEmptySibling(final TreeNodeFinder finder,
                                                         StatementTree stmt) {
     do {
-      stmt = finder.getNextStatement(stmt);
+      stmt = (StatementTree) finder.getNextSibling(stmt);
     } while(stmt != null && isJmlStatement(stmt));
     return stmt;
   }

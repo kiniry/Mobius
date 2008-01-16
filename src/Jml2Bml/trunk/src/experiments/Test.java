@@ -8,7 +8,14 @@ public class Test {
   public static String sss;
   public static JmlBinary node = null;
   
-  //@ requires 5 == 2;  
+  /*@ requires 2 == 2;
+  @ requires 3 == 3;
+  @ ensures 2>3;
+  @   also
+  @ requires 4 == 4;
+  @*/
+//  @ signals (java.lang.Exception) false; - causes error!!
+// @ signals (Exception) R; - causes error!!
   public static void dupa(String jf1){
     System.out.println(jf1);
     int k = 3;

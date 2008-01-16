@@ -24,7 +24,7 @@ import com.sun.tools.javac.util.Context;
  *
  */
 
-public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> {
+public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols>{
   private final List<TranslationRule> rules;
 
   private final JmlEnter jmlEnter;

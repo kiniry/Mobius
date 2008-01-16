@@ -68,7 +68,9 @@ public class Main {
     JCCompilationUnit tree = compiler.parse(getJavaFileObject(context,
                                                               sourceFile));
 
+    System.out.println("------------- PRETTY PRINT ------------");
     new PrettyPrinter(System.out).prettyPrint(tree);
+    System.out.println("----------- END PRETTY PRINT ----------");
     context.put(LineMap.class, tree.getLineMap());
     
     TreeNodeFinder parentFinder = new TreeNodeFinder(tree);
