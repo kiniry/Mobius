@@ -1,4 +1,3 @@
---------------------------------------------------------------
 version 2.0b4 "Mobius PVE Internal Release" (16 January 2008)
 
 New major features include:

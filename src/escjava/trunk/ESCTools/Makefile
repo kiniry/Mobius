@@ -531,11 +531,8 @@ binary-release: build jars alldocs cleanup
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2 ${RELTEMP}
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2.exe ${RELTEMP}
 	cp ${ESCTOOLS_ROOT}/release-files/escjava2.sample ${RELTEMP}
-	mkdir -p ${RELTEMP}/Escjava/release/master/bin
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4.* \
-		${RELTEMP}/Escjava/release/master/bin
-	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.5.* \
-		${RELTEMP}/Escjava/release/master/bin	
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4.* ${RELTEMP}
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.5.* ${RELTEMP}
 #   The two readme files below are irrelevant for binary release
 #   README.first README.txt
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
