@@ -55,8 +55,7 @@ endif
 ## Check if ESCTOOLS_ROOT is set
 
 ifndef ESCTOOLS_ROOT
-  $(warning You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
-  export ESCTOOLS_ROOT ?= $PWD
+  $(error You must have ESCTOOLS_ROOT defined, either as an environment variable or in the file Makefile.local in the same directory as Makefile.defs)
 endif
 
 ################################################################################
@@ -214,7 +213,7 @@ export TEXI2PDF ?= texi2pdf
 export ESC_PROJECT ?= ESCJava
 export ESC_VERSION ?= CURRENT
 
-export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005,2006 David Cok and Joseph Kiniry<br />&copy; 2005,2006,2007 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
+export COPYRIGHT = 'ESC/Java2<br />&copy; 2003-2006 David Cok and Joseph Kiniry<br />&copy; 2005-2008 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
 
 ##########################################################################
 ## The following definitions are used in various Makefiles and should
