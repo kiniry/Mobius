@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Shell;
 import umbra.UmbraException;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
-import umbra.editor.parsing.BytecodeWhitespaceDetector;
 import umbra.editor.parsing.BytecodeStrings;
+import umbra.editor.parsing.BytecodeWhitespaceDetector;
 
 /**
  * This class defines some structures related to BCEL as well

@@ -15,8 +15,8 @@ import org.eclipse.ui.PartInitException;
 
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
-import umbra.editor.Composition;
 import umbra.editor.ColorValues;
+import umbra.editor.Composition;
 
 /**
  *  This class defines an action of changing the coloring style. Two

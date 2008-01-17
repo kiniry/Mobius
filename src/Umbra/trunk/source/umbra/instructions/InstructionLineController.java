@@ -23,7 +23,7 @@ import org.apache.bcel.generic.TargetLostException;
 import umbra.UmbraPlugin;
 
 /**
- * This class defines a structure that describes a single bytecode
+ * This class defines a structure that describes a single byte code
  * instruction and contains related BCEL structures.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -56,7 +56,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
   private String my_name;
 
   /**
-   * The constructon creates the controler which
+   * The construction creates the controller which
    * binds the instruction mnemonic with the line text. The name is set locally
    * while the assignment of the line is done in the constructor of the
    * superclass.
@@ -80,7 +80,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param a_list the list of instructions in the current method
    * @param a_method_gen the object which represents the method of the current
    *    instruction in the BCEL representation of the current class
-   *    in the bytecode editor
+   *    in the byte code editor
    * @param a_method_num method number in the current class
    * @return always true as the subclasses of the current class correspond to
    *     instructions
@@ -98,7 +98,17 @@ public abstract class InstructionLineController extends BytecodeLineController {
   /**
    * This method is executed when a new line is inserted to
    * the method and it must be added to BCEL structures,
-   * especially new handle is generated. TODO more details
+   * especially new handle is generated.
+   * 
+   * This method checks if there is a valid instruction handle for the next
+   * instruction (provided as {@code a_next_line}). In that case it checks
+   * if the instruction to be added is valid ({@code an_instruction} and
+   * in that case either appends the instruction to the method list (in
+   * case the instruction is added at the end of the method (indicated by
+   * {@code a_method_end} or inserts it before the instruction from
+   * {@code a_next_line}. Next the list of instructions of the current
+   * method is updated, and the current method data structures too. Finally,
+   * the list of instructions {@code the_instructions} is updated.
    *
    * @param a_next_line a next line, necessary to get handle - a new handle is
    *   inserted before the next one
@@ -107,7 +117,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param a_method_end <code>true</code> if the line is inserted after the
    *   end of the method - then the <code>a_next_line</code> is actually the
    *   previous one and the handle is generated with 'append'
-   * @param the_instructions an array from {@ref BytecodeController} that the
+   * @param the_instructions an array from {@link BytecodeController} that the
    *   new line is added to
    * @param an_offset an offset in this array
    */
@@ -115,16 +125,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
                final ClassGen a_class_gen, final Instruction an_instruction,
                final boolean a_method_end, final LinkedList the_instructions,
                final int an_offset) {
-//    controlPrint(nextLine);
     final InstructionHandle next = a_next_line.getHandle();
     if (next != null) {
-      final InstructionList newList = a_next_line.getList();
+      final InstructionList instrsInMethod = a_next_line.getList();
       final MethodGen a_mg = a_next_line.getMethod();
-      //my_index = nextLine.getIndex();
       if (an_instruction == null) {
         my_instr_handle = null;
       } else if (a_method_end) {
-        my_instr_handle = newList.append(an_instruction);
+        my_instr_handle = instrsInMethod.append(an_instruction);
       } else {
         if (an_instruction instanceof BranchInstruction) {
           // TODO: this report should look like differently
@@ -134,15 +142,16 @@ public abstract class InstructionLineController extends BytecodeLineController {
             UmbraPlugin.messagelog(
                        Integer.toString(((BranchInstruction)an_instruction).
                        getTarget().getPosition()));
-          my_instr_handle = newList.insert(next,
+          my_instr_handle = instrsInMethod.insert(next,
                                            (BranchInstruction)an_instruction);
         } else
-          my_instr_handle = newList.insert(next, an_instruction);
+          my_instr_handle = instrsInMethod.insert(next, an_instruction);
       }
-      my_instr_list = newList;
+      my_instr_list = instrsInMethod;
       this.my_methodgen = a_mg;
       updateMethod(a_class_gen);
-      if (an_instruction != null) the_instructions.add(an_offset + 1, this);
+      if (an_instruction != null)
+        the_instructions.add(an_offset + 1, this);
     }
   }
 
@@ -178,7 +187,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * This is a debugging helper method which prints out to the standard
    * output the contents of the given BCEL instruction list.
    *
-   * @param an_ilist the isntruction list to print out
+   * @param an_ilist the instruction list to print out
    */
   public static void printInstructionList(final InstructionList an_ilist) {
     InstructionHandle ih = an_ilist.getStart();
@@ -292,7 +301,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *   any jump instruction directed to the removed one
    * @param a_classgen a class generator from BCEL, this should be the same as
    *   in the {@ref BytecodeDocument} object for the currently edited
-   *   bytecode file
+   *   byte code file
    * @param the_last currently not used
    * @param the_instructions an array from {@ref BytecodeController} that
    *   contains the current line

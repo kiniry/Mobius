@@ -49,7 +49,7 @@
                class="umbra.java.actions.CommitAction"
                icon="icons/commit.gif"
                id="umbra.commit"
-               label="Commit Cha&amp;nges in Bytecode"
+               label="Combine Changes with Bytecode"
                menubarPath="umbra.bytecodeMenu/showGroup"
                toolbarPath="showGroup"/>
       </editorContribution>

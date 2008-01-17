@@ -1,6 +1,7 @@
 package umbra.editor;
 
 import org.eclipse.jface.text.DocumentEvent;
+
 import annot.bcclass.BCClass;
 import annot.textio.CodeFragment;
 

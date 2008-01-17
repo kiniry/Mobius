@@ -11,6 +11,7 @@ package umbra.editor.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IEditorPart;
+
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 

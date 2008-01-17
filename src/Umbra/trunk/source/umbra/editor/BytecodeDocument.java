@@ -21,9 +21,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-import annot.textio.CodeFragment;
-
 import umbra.UmbraPlugin;
+import annot.textio.CodeFragment;
 
 /**
  * This class is an abstract model of a bytecode document.

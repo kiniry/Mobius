@@ -18,7 +18,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -32,8 +31,8 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 import umbra.UmbraPlugin;
-import umbra.editor.actions.BytecodeCombineAction;
 import umbra.editor.actions.BytecodeColorAction;
+import umbra.editor.actions.BytecodeCombineAction;
 import umbra.editor.actions.BytecodeRebuildAction;
 import umbra.editor.actions.BytecodeRefreshAction;
 import umbra.editor.actions.BytecodeRestoreAction;
