@@ -141,7 +141,7 @@ public class SingleAssert extends InCodeAttribute {
 	@Override
 	public String toString() {
 		return "assert at (" + getPC() + ", "
-				+ ((getMinor() == -1) ? "any" : getMinor()) + ")";
+				+ ((getMinor() == -1) ? "any" : (""+getMinor())) + ")";
 	}
 
 	/**

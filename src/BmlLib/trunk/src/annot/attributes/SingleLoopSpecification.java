@@ -109,7 +109,7 @@ public class SingleLoopSpecification extends InCodeAttribute {
 	@Override
 	public String toString() {
 		return "loop spec. at (" + getPC() + ", "
-		+ ((getMinor() == -1) ? "any" : getMinor()) + ")";
+		+ ((getMinor() == -1) ? "any" : (getMinor()+"")) + ")";
 	}
 
 }
