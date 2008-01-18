@@ -18,6 +18,11 @@ package umbra.instructions;
 public final class InstructionParserHelper {
 
   /**
+   * The maximal length of an octal escape.
+   */
+  public static final int MAX_OCTAL_NUMBER_LENGTH = 3;
+
+  /**
    * Java reserved literals as enumerated in JLS 3rd edition, 3.9 Keywords.
    */
   private static final String[] JAVA_RES_LITERALS = {
@@ -54,11 +59,6 @@ public final class InstructionParserHelper {
    * Base type descriptor characters.
    */
   private static final String BASE_TYPE_DESCRIPTORS = "BCDFIJSZ";
-
-  /**
-   * The maximal length of an octal escape.
-   */
-  public static final int MAX_OCTAL_NUMBER_LENGTH = 3;
 
   /**
    * The meaningful escape characters. These are as described in JLS 3rd

@@ -37,10 +37,10 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
    * the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
-   * the bytecode plugin
+   *   the bytecode plugin
    * @param a_bytecode_contribution the GUI elements contributed to the eclipse
-   * GUI by the bytecode editor. This reference should be the same as in the
-   * parameter <code>a_contributor</code>.
+   *   GUI by the bytecode editor. This reference should be the same as in the
+   *   parameter <code>a_contributor</code>.
    */
   public BytecodeRefreshAction(final BytecodeEditorContributor a_contributor,
                  final BytecodeContribution a_bytecode_contribution) {
@@ -61,7 +61,8 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
 
   /**
    * This method saves the editor content in the file associated with it
-   * and then creates new input from the {@link JavaClass} structure in BCEL.
+   * and then creates new input from the
+   * {@link org.apache.bcel.classfile.JavaClass} structure in BCEL.
    * Finally replaces content of the editor window with the newly generated
    * input. The general idea is that the current modifications are stored
    * in a file and then retrieved back to the editor to obtain a nicely

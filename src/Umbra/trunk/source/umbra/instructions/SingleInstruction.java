@@ -302,7 +302,7 @@ public class SingleInstruction extends InstructionLineController {
    * This method extracts the name from an instruction with the constant
    * embedded in the instruction name (e.g. iload_0). This method assumes
    * that all the sanity checks are done with the help of the method
-   * {@ref #extractConstNumber(String, int)}
+   * {@link #extractConstNumber(String, int)}
    *
    * @param a_name the string with the instruction name (e.g. iload_0)
    * @return the text of the instruction name (e.g. iload for iload_0)
@@ -333,7 +333,7 @@ public class SingleInstruction extends InstructionLineController {
    *
    * The instruction line is correct when it has the form:
    *   whitespase number : whitespace mnemonic whitespace lineend
-   * where mnemonic comes from {@ref #an_inventory}.
+   * where mnemonic comes from {@code an_inventory}.
    *
    * @param an_inventory an array with all the correct mnemonics
    * @return <code>true</code> when the instruction mnemonic is the only text

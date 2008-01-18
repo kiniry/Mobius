@@ -44,8 +44,8 @@ public class HeaderLineController extends BytecodeLineController {
    *   <code>false</code> otherwise
    */
   public final boolean correct() {
-    String[] prefs = BytecodeStrings.HEADER_PREFIX;
-    String line = getMy_line_text();
+    final String[] prefs = BytecodeStrings.HEADER_PREFIX;
+    final String line = getMy_line_text();
     for (int i = 0; i < prefs.length; i++)
       if (line.startsWith(prefs[i])) return true;
     return false;

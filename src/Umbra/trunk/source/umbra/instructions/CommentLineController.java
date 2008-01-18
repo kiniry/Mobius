@@ -1,0 +1,58 @@
+package umbra.instructions;
+
+/**
+ * This class handles the creation and correctness of line controllers that
+ * form comments.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
+ */
+public class CommentLineController extends BytecodeLineController {
+
+  /**
+   * This constructor remembers only the line text with the comment content.
+   *
+   * @param a_line the string representation of the line for the line
+   *               with comments
+   * @see BytecodeLineController#BytecodeLineController(String)
+   */
+  public CommentLineController(final String a_line) {
+    super(a_line);
+  }
+
+  /**
+   * The method checks if the given string can be the start of a multi-line
+   * comment.
+   * We use the heuristic that the line must start with "/*" possibly
+   * with some initial whitespace before the sequence.
+   *
+   * @param a_line the string to be checked
+   * @return <code>true</code> when the string can start comment
+   */
+  public static boolean isCommentStart(
+                              final /*@ non_null @*/ String a_line) {
+    return a_line.trim().startsWith("/*");
+  }
+
+
+  /**
+   * Checks is the line can be an end of comment. This holds when the
+   * final non-whitespace sequence in the line is * / string.
+   *
+   * @return <code>true</code> when the line contains the end of comment
+   *   sequence, <code>false</code> otherwise
+   */
+  public boolean isCommentEnd() {
+    final String line = getMy_line_text();
+    int where = line.lastIndexOf("*/");
+    if (where > 0) {
+      where += "*/".length();
+      for (int i = where; i < line.length(); i++) {
+        if (!Character.isWhitespace(line.charAt(i))) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+}

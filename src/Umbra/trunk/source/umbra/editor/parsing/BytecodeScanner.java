@@ -179,11 +179,11 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the words which
    * occur in a line with the "Code" keyword with the token in
-   * <code>the_tokens</code> under {@ref ColorValues#LINE}.
+   * <code>the_tokens</code> under {@link ColorValues#LINE}.
    * TODO - better description needed
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@ref ColorValues#LINE} token
+   *                   {@link ColorValues#LINE} token
    * @param the_insrule the rule in which the association is created
    */
   private void tokensForCodeline(final IToken[] the_tokens,
@@ -198,11 +198,11 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the words which
    * occur in a line with the "Line" keyword with the token in
-   * <code>the_tokens</code> under {@ref ColorValues#LINE}.
+   * <code>the_tokens</code> under {@link ColorValues#LINE}.
    * TODO - better description needed
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@ref ColorValues#LINE} token
+   *                   {@link ColorValues#LINE} token
    * @param the_insrule the rule in which the association is created
    */
   private void tokensForLinewords(final IToken[] the_tokens,
@@ -217,11 +217,11 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the BML keywords
    * with the token in <code>the_tokens</code> under
-   * {@ref ColorValues#ANNOTKEY}.
+   * {@link ColorValues#ANNOTKEY}.
    * TODO - better description needed
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@ref ColorValues#ANNOTKEY} token
+   *                   {@link ColorValues#ANNOTKEY} token
    * @param the_insrule the rule in which the association is created
 
    */
@@ -237,11 +237,11 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the words of the
    * bytecode instructions with the token in <code>the_tokens</code> under
-   * {@ref ColorValues#BTC_INSTR}.
+   * {@link ColorValues#BTC_INSTR}.
    * TODO - better description needed
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@ref ColorValues#BTC_INSTR} token
+   *                   {@link ColorValues#BTC_INSTR} token
    * @param the_insrule the rule in which the association is created
   */
   private void tokensForInstructions(final IToken[] the_tokens,

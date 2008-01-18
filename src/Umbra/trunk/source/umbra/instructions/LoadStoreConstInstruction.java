@@ -41,7 +41,7 @@ public class LoadStoreConstInstruction extends SingleInstruction {
   /**
    * The constant that represents the maximal value of the constant parameter
    * for instructions such as iload_&lt;n&gt;,
-   * see {@ref #getConstLoadStoreInstruction(Instruction)} for the full
+   * see {@link #getConstLoadStoreInstruction(Instruction)} for the full
    * inventory.
    */
   private static final int MAX_LOAD_STORE_NUM = 3;
@@ -111,7 +111,7 @@ public class LoadStoreConstInstruction extends SingleInstruction {
    * This method creates the objects that represent instructions that load
    * or store long numbers and are parametrised by constants (e.g. lload_0).
    * It assumes all the checks are done in
-   * {@ref #getConstLoadStoreInstruction(Instruction)}.
+   * {@link #getConstLoadStoreInstruction(Instruction)}.
    * In case the name mentioned in <code>a_name</code> is of a different kind it
    * returns the parameter <code>a_res</code>.
    *
@@ -147,30 +147,30 @@ public class LoadStoreConstInstruction extends SingleInstruction {
   /*@ requires 0 <= num && num <= MAX_LOAD_STORE_NUM;
     @ ensures a_res != null ==> \result == a_res;
     @*/
-/**
- * This method creates the objects that represent instructions that load
- * or store int numbers and are parametrised by constants (e.g. iload_0).
- * It assumes all the checks are done in
- * {@ref #getConstLoadStoreInstruction(Instruction)}.
- * In case the name mentioned in <code>a_name</code> is of a different kind it
- * returns the parameter <code>a_res</code>.
- *
- * The load or store instructions for ints that are parametrised by constants
- * are:
- * <ul>
- *    <li>iload_[0-3],</li>
- *    <li>istore_[0-3].</li>
- * </ul>
- *
- * @param a_res a helper value returned in case the current instruction is
- *   not in the current set
- * @param a_num the number constant with which the instruction should be
- *   created
- * @param a_name the name of the instruction (with the number stripped,
- *   e.g. for iload_0 it is iload)
- * @return the object that represents the current instruction or res in
- *   case the current instruction is not in the current set
- */
+  /**
+   * This method creates the objects that represent instructions that load
+   * or store int numbers and are parametrised by constants (e.g. iload_0).
+   * It assumes all the checks are done in
+   * {@link #getConstLoadStoreInstruction(Instruction)}.
+   * In case the name mentioned in <code>a_name</code> is of a different kind it
+   * returns the parameter <code>a_res</code>.
+   *
+   * The load or store instructions for ints that are parametrised by constants
+   * are:
+   * <ul>
+   *    <li>iload_[0-3],</li>
+   *    <li>istore_[0-3].</li>
+   * </ul>
+   *
+   * @param a_res a helper value returned in case the current instruction is
+   *  not in the current set
+   * @param a_num the number constant with which the instruction should be
+   *   created
+   * @param a_name the name of the instruction (with the number stripped,
+   *   e.g. for iload_0 it is iload)
+   * @return the object that represents the current instruction or res in
+   *  case the current instruction is not in the current set
+   */
   private Instruction getILSInstruction(
                 final /*@ nullable @*/ Instruction a_res,
                 final int a_num,
@@ -187,30 +187,30 @@ public class LoadStoreConstInstruction extends SingleInstruction {
   /*@ requires 0 <= num && num <= MAX_LOAD_STORE_NUM;
     @ ensures a_res != null ==> \result == a_res;
     @*/
-/**
- * This method creates the objects that represent instructions that load
- * or store float numbers and are parametrised by constants (e.g. fload_0).
- * It assumes all the checks are done in
- * {@ref #getConstLoadStoreInstruction(Instruction)}.
- * In case the name mentioned in <code>a_name</code> is of a different kind it
- * returns the parameter <code>a_res</code>.
- *
- * The load or store instructions for floats that are parametrised by constants
- * are:
- * <ul>
- *    <li>fload_[0-3],</li>
- *    <li>fstore_[0-3].</li>
- * </ul>
- *
- * @param a_res a helper value returned in case the current instruction is
- *   not in the current set
- * @param a_num the number constant with which the instruction should be
- *   created
- * @param a_name the name of the instruction (with the number stripped,
- *   e.g. for fload_0 it is fload)
- * @return the object that represents the current instruction or res in
- *   case the current instruction is not in the current set
- */
+  /**
+   * This method creates the objects that represent instructions that load
+   * or store float numbers and are parametrised by constants (e.g. fload_0).
+   * It assumes all the checks are done in
+   * {@ref #getConstLoadStoreInstruction(Instruction)}.
+   * In case the name mentioned in <code>a_name</code> is of a different kind it
+   * returns the parameter <code>a_res</code>.
+   *
+   * The load or store instructions for floats that are parametrised by
+   * constants are:
+   * <ul>
+   *    <li>fload_[0-3],</li>
+   *    <li>fstore_[0-3].</li>
+   * </ul>
+   *
+   * @param a_res a helper value returned in case the current instruction is
+   *   not in the current set
+   * @param a_num the number constant with which the instruction should be
+   *  created
+   * @param a_name the name of the instruction (with the number stripped,
+   *   e.g. for fload_0 it is fload)
+   * @return the object that represents the current instruction or res in
+   *   case the current instruction is not in the current set
+   */
   private Instruction getFLSInstruction(
                 final Instruction a_res,
                 final int a_num,
@@ -227,30 +227,30 @@ public class LoadStoreConstInstruction extends SingleInstruction {
   /*@ requires 0 <= num && num <= MAX_LOAD_STORE_NUM;
     @ ensures a_res != null ==> \result == a_res;
     @*/
-/**
- * This method creates the objects that represent instructions that load
- * or store double numbers and are parametrised by constants (e.g. dload_0).
- * It assumes all the checks are done in
- * {@ref #getConstLoadStoreInstruction(Instruction)}.
- * In case the name mentioned in <code>a_name</code> is of a different kind it
- * returns the parameter <code>a_res</code>.
- *
- * The load or store instructions for doubles that are parametrised by constants
- * are:
- * <ul>
- *    <li>dload_[0-3],</li>
- *    <li>dstore_[0-3].</li>
- * </ul>
- *
- * @param a_res a helper value returned in case the current instruction is
- *   not in the current set
- * @param a_num the number constant with which the instruction should be
- *   created
- * @param a_name the name of the instruction (with the number stripped,
- *   e.g. for dload_0 it is dload)
- * @return the object that represents the current instruction or res in
- *   case the current instruction is not in the current set
- */
+  /**
+   * This method creates the objects that represent instructions that load
+   * or store double numbers and are parametrised by constants (e.g. dload_0).
+   * It assumes all the checks are done in
+   * {@link #getConstLoadStoreInstruction(Instruction)}.
+   * In case the name mentioned in <code>a_name</code> is of a different kind it
+   * returns the parameter <code>a_res</code>.
+   *
+   * The load or store instructions for doubles that are parametrised by
+   * constants are:
+   * <ul>
+   *    <li>dload_[0-3],</li>
+   *    <li>dstore_[0-3].</li>
+   * </ul>
+   *
+   * @param a_res a helper value returned in case the current instruction is
+   *   not in the current set
+   * @param a_num the number constant with which the instruction should be
+   *   created
+   * @param a_name the name of the instruction (with the number stripped,
+   *   e.g. for dload_0 it is dload)
+   * @return the object that represents the current instruction or res in
+   *   case the current instruction is not in the current set
+   */
   private Instruction getDLSInstruction(
                 final Instruction a_res,
                 final int a_num,
@@ -271,7 +271,7 @@ public class LoadStoreConstInstruction extends SingleInstruction {
    * This method creates the objects that represent instructions that load
    * or store references and are parametrised by constants (e.g. aload_0).
    * It assumes all the checks are done in
-   * {@ref #getConstLoadStoreInstruction(Instruction)}.
+   * {@link #getConstLoadStoreInstruction(Instruction)}.
    * In case the name mentioned in <code>a_name</code> is of a different kind it
    * returns the parameter <code>a_res</code>.
    *
@@ -306,7 +306,7 @@ public class LoadStoreConstInstruction extends SingleInstruction {
 
   /**
    * This method, based on the value of the field
-   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * {@link InstructionLineController#getName()}, creates a new BCEL instruction
    * object for an instruction with no parameters that loads or stores a
    * for a constant value i.e.
    * <ul>

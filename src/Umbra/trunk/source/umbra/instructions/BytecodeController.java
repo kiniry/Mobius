@@ -228,13 +228,8 @@ public class BytecodeController {
       final String line = getLineFromDoc(a_doc, j, ctxt);
       final BytecodeLineController lc = getType(line, ctxt);
       my_editor_lines.add(j, lc);
-      if (lc.isCommentEnd() && ctxt.isInsideComment()) {
-        ctxt.revertState();
-      } else if (lc.isCommentStart()) {
-        ctxt.rememberState();
-        ctxt.setInsideComment();
-      } else if (!ctxt.isInsideComment() &&
-                 !(lc instanceof EmptyLineController)) {
+      if (!(lc instanceof CommentLineController)  &&
+          !(lc instanceof EmptyLineController)) {
         break;
       }
       j++;
@@ -491,9 +486,21 @@ public class BytecodeController {
   private BytecodeLineController getType(final String a_line,
                                          final LineContext a_context) {
     if (a_context.isInsideComment()) {
-      final AnnotationLineController lc = new AnnotationLineController(a_line);
+      final CommentLineController lc = new CommentLineController(a_line);
+      if (lc.isCommentEnd()) {
+        a_context.revertState();
+      }
       return lc;
     }
+
+    if (a_context.isInsideAnnotation()) {
+      final AnnotationLineController lc = new AnnotationLineController(a_line);
+      if (lc.isCommentEnd()) {
+        a_context.revertState();
+      }
+      return lc;
+    }
+
     int i;
     boolean ok;
     int j;
@@ -522,8 +529,14 @@ public class BytecodeController {
         return new HeaderLineController(a_line);
     }
 
-    if (l.startsWith("/*")) {
-      return new AnnotationLineController(a_line);
+    if (CommentLineController.isCommentStart(l)) {
+      if (AnnotationLineController.isAnnotationStart(l)) {
+        a_context.setInsideAnnotation();
+        return new AnnotationLineController(a_line);
+      } else {
+        a_context.setInsideComment();
+        return new CommentLineController(a_line);
+      }
     }
 
 

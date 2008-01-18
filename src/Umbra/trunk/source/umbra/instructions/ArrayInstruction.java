@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) ${date} University of Warsaw"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -12,59 +12,28 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEWARRAY;
 import org.apache.bcel.generic.Type;
 
-import umbra.UmbraHelper;
 import umbra.editor.parsing.BytecodeStrings;
 
 
 
 /**
- * This class is a superclass for a subset of instructions
- * depending on parameters. It redefines some crucial while
- * handling with single instruction methods(correctness, getting handle).
- * There is only one array instruction used to create new
- * array of a particular type.
- * TODO
+ * This class handles the creation and correctness for the instruction to
+ * create new arrays of primitive types (newarray).
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class ArrayInstruction extends StringInstruction {
 
   /**
-   * A position before which the '>' character cannot occur in a correct line.
+   * The types of the bytecode types used for the creation of
+   * array instructions. It corresponds to the names
+   * in the array {@link BytecodeStrings#PRIMITIVE_TYPE_NAMES}.
    */
-  private static final int GREATER_FORBIDDEN_BOUND = 2;
-
-  /**
-   * A position before which the '<' character cannot occur in a correct line.
-   */
-  private static final int LESS_FORBIDDEN_BOUND = 2;
-
-  /**
-   * The names of base bytecode types relevant for
-   * array instructions. It correspond to the types
-   * in the array {@ref TYPES}.
-   */
-  private static final String[] NAMES =
-  {"VOID", "BOOLEAN", "INT", "SHORT", "BYTE", "LONG",
-    "DOUBLE", "FLOAT", "CHAR"};
-
-  /**
-   * The types of the bytecode types relevant for
-   * array instructions. It correspond to the types
-   * in the array {@ref NAMES}.
-   */
-  private static final Type[] TYPES =
-  {Type.VOID, Type.BOOLEAN, Type.INT, Type.SHORT,
-   Type.BYTE, Type.LONG, Type.DOUBLE,
-   Type.FLOAT, Type.CHAR};
-
-  /**
-   * The number of types relevant to the array
-   * instructions. It is correlated with the arrays
-   * <code>NAMES</code> and <code>TYPES</code>
-   */
-  private static final int TYPE_COUNT = TYPES.length;
+  private static final Type[] TYPES = {Type.BOOLEAN, Type.CHAR, Type.FLOAT,
+                                       Type.DOUBLE, Type.BYTE, Type.SHORT,
+                                       Type.INT, Type.LONG};
 
   /**
    * This creates an instance of an instruction
@@ -82,83 +51,82 @@ public class ArrayInstruction extends StringInstruction {
   }
 
   /**
-   * This method returns the type that corresponds to
-   * the given name.
+   * This method parses the type name parameter of the current instruction.
    *
-   * @param an_ins_name the string for which the type
-   * @return the type for that name or <code>null</code> when no type
-   * corresponds to the name
+   * This method retrieves the type name value of the parameter of the
+   * instruction in {@link BytecodeLineController#getMy_line_text()}. This
+   * parameter is located after the mnemonic (with some whitespace inbetween).
+   * The method assumes {@link BytecodeLineController#getMy_line_text()}
+   * is correct.
+   *
+   * @return the value of the type name
    */
-  private static Type getType(final String an_ins_name) {
-    for (int i = 0; i < TYPE_COUNT; i++) {
-      if ((NAMES[i].startsWith(an_ins_name)) &&
-          (an_ins_name.startsWith(NAMES[i])))
-        return TYPES[i];
-    }
-    return null;
+  private Type getType() {
+    final InstructionParser parser = getParser();
+    parser.resetParser();
+    parser.seekDelimiter('<'); //  start of type
+    parser.swallowWhitespace(); //whitespace before the type
+    final int num = parser.swallowMnemonic(
+                               BytecodeStrings.PRIMITIVE_TYPE_NAMES);
+    return TYPES[num];
   }
 
 
   /**
-   * @return TODO
+   * This method, based on the value of the field
+   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * object for a push instruction. It computes the parameter of the
+   * instruction before the instruction is constructed. The method can construct
+   * one of the instructions:
+   * <ul>
+   *    <li>newarray.</li>
+   * </ul>
+   * This method also checks the syntactical correctness of the current
+   * instruction line.
+   *
+   * @return the freshly constructed BCEL instruction or <code>null</code>
+   *         in case the instruction is not a newarray instruction and
+   *         in case the instruction line is incorrect
    * @see BytecodeLineController#getInstruction()
    */
   public final Instruction getInstruction() {
-    //UmbraPlugin.messagelog("ArrayInstruction->getInstruction...");
-    final String my_line_text = getMy_line_text();
-    String an_ins_type = my_line_text.substring(my_line_text.indexOf("<") + 1,
-                                        my_line_text.indexOf(">"));
-    an_ins_type = an_ins_type.toUpperCase();
-    if (getType(an_ins_type) == null) {
-      //UmbraPlugin.messagelog("   Wrong instruction argument!");
+    if (!correct()) {
       return null;
     }
-    final byte r = getType(an_ins_type).getType();
-    //&*
-    final boolean isOK = correct();
-    if (isOK) {
-      if (getName().compareTo("newarray") == 0)
-        return new NEWARRAY(r);
+    final byte r = getType().getType();
+    if (getName().compareTo("newarray") == 0) {
+      return new NEWARRAY(r);
     }
-    //UmbraPlugin.messagelog("   Failed!");
     return null;
   }
 
 
   /**
-   * Array instruction line is correct if it has
-   * one parameter that is class (or non-classed type) name.
+   * Array instruction line is correct if it has one parameter being the
+   * type of the array elements. The exact definition of this kind of a line is
+   * as follows:
+   *    whitespase number : whitespace mnemonic whitespace
+   *    &lt; whitespace typename whitespace &gt; whitespace lineend
    *
-   * @return TODO
+   * @return <code>true</code> when the syntax of the instruction line is
+   *         correct
    * @see InstructionLineController#correct()
    */
-  public final boolean correct()
-  {
-    final String my_line_text = getMy_line_text();
-    final String s = UmbraHelper.stripAllWhitespace(my_line_text);
-    final String[] s2 = BytecodeStrings.ARRAY_INS;
-    int j, y;
-    for (j = 0; j < s2.length; j++) {
-      if ((s.indexOf(s2[j]) > 0) &&
-          (s.indexOf(s2[j]) <= s.indexOf(":") + 1)) {
-        //UmbraPlugin.messagelog(s);
-        //UmbraPlugin.messagelog("array " + s);
-        if (s.indexOf("<") < LESS_FORBIDDEN_BOUND) return false;
-        if (s.indexOf(">") < GREATER_FORBIDDEN_BOUND) return false;
-        // zmienione 7.26.15
-        String ins_type = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
-        ins_type = ins_type.toUpperCase();
-        if (getType(ins_type) == null) {
-          return false;
-        }
-
-        for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++) {
-          if (!(Character.isDefined(s.charAt(y)))) return false;
-        }
-        return true;
-      }
-    }
-
-    return false;
+  public final boolean correct() {
+    boolean res = true;
+    final InstructionParser parser = getParser();
+    res = parseTillMnemonic(); //parse up to mnemonic
+    res = res && (parser.swallowMnemonic(BytecodeStrings.ARRAY_INS) >= 0);
+                           //mnemonic
+    res = res && parser.swallowWhitespace(); //whitespace before the typename
+    res = res && parser.swallowDelimiter('<'); //<
+    res = res && parser.swallowWhitespace(); //whitespace before the typename
+    res = res &&
+       (parser.swallowMnemonic(BytecodeStrings.PRIMITIVE_TYPE_NAMES) >= 0);
+                           // typename
+    res = res && parser.swallowWhitespace(); //whitespace after the typename
+    res = res && parser.swallowDelimiter('>'); //<
+    res = res && !parser.swallowWhitespace();
+    return res;
   }
 }

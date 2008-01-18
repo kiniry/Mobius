@@ -11,53 +11,151 @@ package umbra.instructions;
 import java.util.Stack;
 
 /**
- * @author alx
+ * The line parser on which the parsing of the byte code textual representation
+ * is based is context sensitive. In particular this representation can contain
+ * multi-line comments the contents of which should not be parsed. This class
+ * allows to keep track of all such issues. Currently it handles the cases when
+ * the parsing is:
+ * <ul>
+ *   <li>at the beginning of a text file,</li>
+ *   <li>parses a class representation,</li>
+ *   <li>parses a multi-line comment,</li>
+ *   <li>parses a annotation comment.</li>
+ * </ul>
+ * This can be extended in the futer to handle line number table etc.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
  *
  */
 public class LineContext {
 
+  /**
+   * The context state which is used to mark an error situation.
+   */
   public static final int STATE_UNDEFINED = 0;
+
+  /**
+   * The context state which is used at the begining of parsing.
+   */
   private static final int STATE_INITIAL = 1;
+
+  /**
+   * The context state which is used in case we expect that the content
+   * of a class will be read.
+   */
   private static final int STATE_CLASS_TO_BE_READ = 2;
+
+  /**
+   * The context state which is uset in case the parsing is inside of a
+   * multi-line comment.
+   */
   private static final int STATE_INSIDE_COMMENT = 3;
 
+  /**
+   * The context state which is uset in case the parsing is inside of a
+   * BML annotation comment.
+   */
+  private static final int STATE_INSIDE_ANNOTATION = 4;
+
+  /**
+   * The current state of the context.
+   */
   private int my_state;
+
+  /**
+   * The stack of states used to handle the parsing of comments.
+   */
   private Stack my_state_stack;
 
+  /**
+   * The constructor initialises the internal state of the object so that it
+   * is in the internal state. It also initialises the stack of states which
+   * must be reverted.
+   */
   public LineContext() {
-    my_state = STATE_INITIAL;
+    setInitial();
     my_state_stack = new Stack();
   }
 
+  /**
+   * This method sets the internal state of the object to the initial value.
+   */
   public void setInitial() {
     my_state = STATE_INITIAL;
   }
 
+  /**
+   * The method sets the internal state of the object to the state in which
+   * we are about to parse the class.
+   */
   public void seClassToBeRead() {
-      my_state = STATE_CLASS_TO_BE_READ;
+    my_state = STATE_CLASS_TO_BE_READ;
   }
 
+  /**
+   * Returns <code>true</code> when the object is in the state inside a comment.
+   *
+   * @return <code>true</code> when the object is in the state inside a comment
+   *   <code>false</code> otherwise
+   */
   public boolean isInsideComment() {
     return my_state == STATE_INSIDE_COMMENT;
   }
 
-  public void setState(int a_state) {
-    my_state = a_state;
-  }
-
+  /**
+   * Returns the current state of the line context.
+   *
+   * @return the current state of the line context
+   */
   public int getState() {
     return my_state;
   }
 
+  /**
+   * Sets the current state to be the state inside a comment. Additionally,
+   * this method remembers the current state so that it can be restored
+   * by {@link #revertState()}.
+   */
   public void setInsideComment() {
+    rememberState();
     my_state = STATE_INSIDE_COMMENT;
   }
 
+  /**
+   * It remembers the current state on the history stack state. This
+   * functionality is needed to implement comments.
+   */
   public void rememberState() {
     my_state_stack.push(new Integer(my_state));
   }
-  
+
+  /**
+   * It restores from the history stack the previously remebered state. This
+   * functionality is needed to implement comments.
+   */
   public void revertState() {
     my_state = ((Integer)my_state_stack.pop()).intValue();
+  }
+
+  /**
+   * Returns <code>true</code> when the object is in the state inside an
+   * annotation.
+   *
+   * @return <code>true</code> when the object is in the state inside an
+   *   annotation <code>false</code> otherwise
+   */
+  public boolean isInsideAnnotation() {
+    return my_state == STATE_INSIDE_ANNOTATION;
+  }
+
+  /**
+   * Sets the current state to be the state inside an annotation. Additionally,
+   * this method remembers the current state so that it can be restored
+   * by {@link #revertState()}.
+   */
+  public void setInsideAnnotation() {
+    rememberState();
+    my_state = STATE_INSIDE_ANNOTATION;
   }
 }

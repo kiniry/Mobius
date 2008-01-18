@@ -270,8 +270,8 @@ public class BytecodeStrings {
                                                        "sastore"};
 
   /**
-   * TODO.
-   * instructions with no arguments required
+   * This constant contains an array with all the names of instructions handled
+   * in {@ref SingleInstruction} class.
    */
   public static final String[] SINGLE_INS = new String[] {"aconst_null",
                                                           "arraylength",
@@ -478,5 +478,13 @@ public class BytecodeStrings {
                                                              "String", "byte",
                                                              "package",
                                                              "class", "}" };
+  /**
+   * The names of base bytecode types relevant for array instructions. These
+   * are the primitive types.
+   */
+  public static final String[] PRIMITIVE_TYPE_NAMES = {"boolean", "char",
+                                                       "float", "double",
+                                                       "byte", "short",
+                                                       "int", "long"};
 
 }

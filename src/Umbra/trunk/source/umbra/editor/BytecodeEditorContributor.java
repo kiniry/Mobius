@@ -264,7 +264,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   }
 
   /**
-   * The same as {@ref #refreshEditor(IEditorPart, IEditorInput)}, but
+   * The same as {@link #refreshEditor(BytecodeEditor, IEditorInput)}, but
    * the input is obtained from the current editor window.
    *
    * @param an_editor TODO

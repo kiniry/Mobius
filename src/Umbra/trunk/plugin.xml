@@ -120,7 +120,6 @@
    <extension
          point="org.eclipse.help.toc">
       <toc
-            category="main"
             file="help/index.xml"
             primary="true">
       </toc>

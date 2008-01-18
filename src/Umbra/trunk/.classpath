@@ -3,13 +3,14 @@
 	<classpathentry kind="src" path="source"/>
 	<classpathentry exported="true" kind="lib" path="libs/asm.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/b2bpl.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/5.0"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/ide/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/part/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/ui/texteditor/**"/>
 			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/ui/javaeditor/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/ui/actions/*"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/bmllib.jar"/>

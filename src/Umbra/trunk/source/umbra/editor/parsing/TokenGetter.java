@@ -18,7 +18,7 @@ import umbra.editor.ColorValues;
 import umbra.editor.NonRuleBasedDamagerRepairer;
 
 /**
- * This method collects array of colors from {@ref ColorValues} class
+ * This method collects array of colors from {@link ColorValues} class
  * and returns them as a token array.
  * TODO ???
  *
@@ -36,9 +36,9 @@ public final class TokenGetter {
   /**
    * @param the_colour_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
-   *    {@ref BytecodeConfiguration} object
+   *    {@link umbra.editor.BytecodeConfiguration} object
    * @param a_mode the number of the current coloring style, it must be the
-   *    same as in the current {@ref BytecodeConfiguration} object
+   *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    * @param a_col a colour value with fixed meaning across the colouring styles
    * @return the colour value as a token
    */
@@ -51,9 +51,9 @@ public final class TokenGetter {
   /**
    * @param the_manager the color manager related to the current bytecode
    *    editor, it must be the same as the one in the current
-   *    {@ref BytecodeConfiguration} object
+   *    {@link umbra.editor.BytecodeConfiguration} object
    * @param a_mode the number of the current coloring style, it must be the
-   *    same as in the current {@ref BytecodeConfiguration} object
+   *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    * @return Array of tokens for each color value
    *           (for each window element to be coloured)
    *  TODO what the window element is?
@@ -72,9 +72,9 @@ public final class TokenGetter {
    *
    * @param a_manager manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
-   *    {@ref BytecodeConfiguration} object
+   *    {@link umbra.editor.BytecodeConfiguration} object
    * @param a_mode the number of the current coloring style, it must be the
-   *    same as in the current {@ref BytecodeConfiguration} object
+   *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    * @param a_col particular color as an attribute
    * @return each time a new damage repairer with the given colour parameters
    */
@@ -91,9 +91,9 @@ public final class TokenGetter {
    *
    * @param the_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
-   *    {@ref BytecodeConfiguration} object
+   *    {@link umbra.editor.BytecodeConfiguration} object
    * @param a_mode the number of the current coloring style, it must be the
-   *    same as in the current {@ref BytecodeConfiguration} object
+   *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    * @param a_col a colour value with fixed meaning across the colouring styles
    * @return the given colour as an attribute
    */

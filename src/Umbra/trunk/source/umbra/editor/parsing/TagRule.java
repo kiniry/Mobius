@@ -42,7 +42,7 @@ public class TagRule extends MultiLineRule {
   int my_loop;
 
   /**
-   * This constructor creates a {@ref MultiLineRule} the start of which
+   * This constructor creates a {@link MultiLineRule} the start of which
    * is "<" and the end of which is ">".
    *
    * @param a_token token the token to be returned on success
@@ -90,7 +90,7 @@ public class TagRule extends MultiLineRule {
    *                      be resumed i.e. it looks for the end sequence of
    *                      the rule
    * @return the recognized token (supplied in the constructor) or
-   *         {@ref Token#UNDEFINED} in case the rule does not apply
+   *         {@link Token#UNDEFINED} in case the rule does not apply
    * @see org.eclipse.jface.text.rules.PatternRule#doEvaluate(ICharacterScanner,
    *                                                          boolean)
    */

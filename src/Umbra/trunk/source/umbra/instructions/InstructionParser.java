@@ -111,7 +111,7 @@ public class InstructionParser extends InstructionTypeParser {
 
   /**
    * The method moves the current index right after the first occurrence of
-   * the given delimiter character {@ref #a_ch}. In case the character does
+   * the given delimiter character {@code a_ch}. In case the character does
    * not occur in the part of the parsed string starting at the current index,
    * then the index is set so that the parser is finished.
    *
@@ -159,7 +159,7 @@ public class InstructionParser extends InstructionTypeParser {
    * advance the index in case the first character to be analysed is not the
    * proper first character of a string. We assume the parsed string is not
    * finished before the method is called. We assume there is no newline
-   * character in {@ref #line}.
+   * character in {@link #getLine()} string.
    *
    * The exact format, according to JLS 3rd edition 3.10.5 String Literals, is:
    * <pre>
@@ -196,7 +196,7 @@ public class InstructionParser extends InstructionTypeParser {
    * advance the index in case the first character to be analysed is not the
    * proper first character of an escape sequence i.e. '\\'. We assume the
    * parsed string is not finished before the method is called. We assume there
-   * is no newline character in {@ref #line}.
+   * is no newline character in {@ref #getLine()} string.
    *
    * The precise format as described in JLS 3rd edition, 3.10.6 Escape Sequences
    * for Character and String Literals, is:

@@ -10,13 +10,14 @@ package umbra.instructions;
 
 
 /**
- * This is a class that contains some information.
- * TODO
+ * This class handles the creation and correctness of line controllers that
+ * contain BML annotations.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class AnnotationLineController extends BytecodeLineController {
+public class AnnotationLineController extends CommentLineController {
 
   /**
    * This constructor remembers only the line text with the BML annotations.
@@ -30,8 +31,10 @@ public class AnnotationLineController extends BytecodeLineController {
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * Checks the correctness of such lines. The Umbra parser considers them as
+   * always correct. The actual check is done elsewhere (in BmlLib).
+   *
+   * @return <code>ture</code>
    * @see BytecodeLineController#correct()
    */
   public final boolean correct()
@@ -40,22 +43,15 @@ public class AnnotationLineController extends BytecodeLineController {
   }
 
   /**
-   * Checks is the line can be an end of comment. This holds when the
-   * final non-whitespace sequence in the line is * / string.
+   * The method checks if the given string can be the start of a BML annotation.
+   * We use the heuristic that the line must start with "/*@" possibly
+   * with some initial whitespace before the sequence.
    *
-   * @return <code>true</code> when the line contains the end of comment
-   *   sequence, <code>false</code> otherwise
+   * @param a_line the string to be checked
+   * @return <code>true</code> when the string can start annotation.
    */
-  public boolean isCommentEnd() {
-    final String line = getMy_line_text();
-    int where = line.lastIndexOf("*/");
-    if (where > 0) {
-      where += "*/".length();
-      for (int i = where; i < line.length(); i++) {
-        if (!Character.isWhitespace(line.charAt(i))) return false;
-      }
-      return true;
-    }
-    return false;
+  public static boolean isAnnotationStart(
+                              final /*@ non_null @*/ String a_line) {
+    return a_line.trim().startsWith("/*@");
   }
 }

@@ -99,7 +99,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * This method is executed when a new line is inserted to
    * the method and it must be added to BCEL structures,
    * especially new handle is generated.
-   * 
+   *
    * This method checks if there is a valid instruction handle for the next
    * instruction (provided as {@code a_next_line}). In that case it checks
    * if the instruction to be added is valid ({@code an_instruction} and
@@ -343,6 +343,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
+   * Returns the name of the mnemonic.
+   *
    * @return the name of the mnemonic
    */
   protected String getName() {

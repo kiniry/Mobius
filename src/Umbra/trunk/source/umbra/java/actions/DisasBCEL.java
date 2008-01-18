@@ -45,7 +45,7 @@ public class DisasBCEL implements IEditorActionDelegate {
   private CompilationUnitEditor my_editor;
 
   /**
-   * Finds {@ref JavaClass} structure related to the current Java
+   * Finds {@link JavaClass} structure related to the current Java
    * source code. Generates new bytecode from it and displays
    * it in a new bytecode editor window.
    *
@@ -150,10 +150,10 @@ public class DisasBCEL implements IEditorActionDelegate {
   /**
    * Currently, does nothing.
    *
-   * @param an_action see {@ref IActionDelegate#selectionChanged(IAction,
-   *                   ISelection)}
-   * @param a_selection see {@ref IActionDelegate#selectionChanged(IAction,
-   *                       ISelection)}
+   * @param an_action see {@link
+   *   org.eclipse.ui.IActionDelegate#selectionChanged(IAction,ISelection)}
+   * @param a_selection see {@link
+   *   org.eclipse.ui.IActionDelegate#selectionChanged(IAction,ISelection)}
    */
   public void selectionChanged(final IAction an_action,
                                final ISelection a_selection) {
@@ -162,8 +162,9 @@ public class DisasBCEL implements IEditorActionDelegate {
   /**
    * It sets the editor with the Java source code.
    *
-   * @param an_action see {@ref IEditorActionDelegate#setActiveEditor(IAction,
-   *                    IEditorPart)}
+   * @param an_action see {@link
+   *   org.eclipse.ui.IEditorActionDelegate#setActiveEditor(IAction,
+   *   IEditorPart)}
    * @param a_target_editor the new editor to be active for the action
    */
   public final void setActiveEditor(final IAction an_action,
