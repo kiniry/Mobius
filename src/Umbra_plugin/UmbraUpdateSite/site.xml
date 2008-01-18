@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/mobius.Umbra.feature_0.0.1.jar" id="mobius.Umbra.feature" version="0.0.1" os="linux" nl="en"/>
+   <description url="http://www.mimuw.edu.pl/~alx/umbra/update/">
+      This is the update site for the Umbra byte code editor. This editor allows to edit both byte code mnemonics and BML specifications.
+   </description>
+   <feature url="features/mobius.Umbra.feature_0.0.1.jar" id="mobius.Umbra.feature" version="0.0.1" os="" nl="">
+      <category name="Mobius"/>
+   </feature>
+   <category-def name="Mobius" label="mobius"/>
 </site>
