@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>BMLlib</name>
+	<name>BmlLib</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -26,8 +26,13 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>escjava.plugin.autocheckEscjavaBuilder</name>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/escjava.plugin.autocheckEscjavaBuilder.launch</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
