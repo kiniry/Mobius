@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileset-config file-format-version="1.2.0" simple-config="true">
+    <fileset name="all" enabled="true" check-config-name="wu sent" local="false">
+        <file-match-pattern match-pattern="." include-pattern="true"/>
+    </fileset>
+    <filter name="FilesFromPackage" enabled="true">
+        <filter-data value="antlr3-generated"/>
+        <filter-data value="antlr3-generated/annot"/>
+        <filter-data value="antlr3-generated/annot/textio"/>
+    </filter>
+</fileset-config>
