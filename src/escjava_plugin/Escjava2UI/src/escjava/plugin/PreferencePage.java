@@ -89,7 +89,7 @@ public class PreferencePage extends pluginlib.PreferencePage {
       Options.noSemicolonWarnings);
 
   /**
-   * Enables caution as well as warning messages to be produced, correpsonding
+   * Enables caution as well as warning messages to be produced, corresponding
    * to the inverse of the -nocaution option
    */
   static final public PreferenceWidget.BooleanWidget cautionMessages = new PreferenceWidget.BooleanWidget(
@@ -115,12 +115,24 @@ public class PreferencePage extends pluginlib.PreferencePage {
       Options.checkPurity);
 
   /**
-   * The option widget corresponding to the choice of source version
-   * compatibility (Java 1.3 or Java 1.4) to be supported - this is essentially
-   * the interpretation to be applied to the assert keyword.
+   * The option widget corresponding to the choice of platform variant and 
+   * source version compatibility (Java 1.3, Java 1.4, Java 1.5, JavaCard 2.1,
+   * or MIDP 1.0) to be supported.
    */
   static final protected PreferenceWidget.ChoiceWidget source = new PreferenceWidget.ChoiceWidget(
       Options.source);
+  
+  /**
+   * The Specifications to use (a value is required).
+   */
+  static final public PreferenceWidget.FileWidget specs = new PreferenceWidget.FileWidget(
+      Options.specs);
+  
+  /**
+   * The boot class path to use (a value is required).
+   */
+  static final public PreferenceWidget.FileWidget bootclasspath = new PreferenceWidget.FileWidget(
+      Options.bootclasspath);
 
   /**
    * This allows the setting of the ESC/Java -ea, -da, -eajava, -eajml options.
@@ -147,7 +159,10 @@ public class PreferencePage extends pluginlib.PreferencePage {
                                                  suggest,
                                                  quiet,
                                                  new PreferenceWidget.Label(
-                                                     "Java language"), source,
+                                                     "Java language"), 
+                                                 source, 
+                                                 specs, 
+                                                 bootclasspath,
                                                  assertBehavior };
 
   /**

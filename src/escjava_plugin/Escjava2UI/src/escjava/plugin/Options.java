@@ -163,17 +163,36 @@ public class Options {
 			"Warnings are issued when an annotation contains an impure method [-checkPurity option]");
 
 
-	/** The option widget corresponding to the choice of source
-	 *  version compatibility (Java 1.3 or Java 1.4) to be supported -
-	 *  this is essentially the interpretation to be applied to the
-	 *  assert keyword.
+	/** The option widget corresponding to the choice of platform variant and 
+	 *  source version compatibility (Java 1.3, Java 1.4,  Java 1.5, 
+	 *  JavaCard 2.1 or MIDP 1.0) to be supported
 	 */
 	static final protected AbstractPreference.ChoiceOption source = new AbstractPreference.ChoiceOption(
 			(PLUGINID + "source"),
-			new String[]{"1.3","1.4"},
+			new String[]{"Java1.3","Java1.4","Java1.5","JavaCard2.1","MIDP1.0"},
 			1,
-			"Java source version",
+			"Java platform variant and source version",
 			"The version of Java that is supported [JML --source option]");
+	
+	/**
+	 * The Specifications to use (a value is required).
+	 */
+	static final public AbstractPreference.StringOption specs = new AbstractPreference.StringOption(
+			(SIMPLIFY_PLUGINID + "specs"), 
+			"", 
+			"Java platform specifications to use",
+			"The static checker needs a version of the JML specifications for" + Utils.eol +
+			"this Java platform and version.");
+	
+	/**
+	 * The boot classpath to use (a value is required).
+	 */
+	static final public AbstractPreference.StringOption bootclasspath = new AbstractPreference.StringOption(
+			(SIMPLIFY_PLUGINID + "bootclasspath"), 
+			"", 
+			"Boot classpath to use",
+			"The static checker needs to know the bootclasspath for" + Utils.eol +
+			"this Java platform and version.");
 
 	/**
 	 * This allows the setting of the Esc/Java -ea, -da, -eajava, -eajml options.

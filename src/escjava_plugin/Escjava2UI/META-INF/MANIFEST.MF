@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.core,
  mobius.escjava2.esctools,
  mobius.javafe.plugin,
- mobius.simplify.plugin
+ mobius.simplify.plugin,
+ MobiusUI
 Import-Package: org.eclipse.ui.texteditor
 Eclipse-LazyStart: true
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 Project

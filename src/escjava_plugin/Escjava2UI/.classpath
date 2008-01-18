@@ -4,5 +4,6 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="/jmlspecs"/>
+	<classpathentry kind="lib" path="Javafe2.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
