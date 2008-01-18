@@ -3,12 +3,10 @@
       id="mobius.Umbra.feature"
       label="Umbra"
       version="0.0.1"
-      provider-name="EU MOBIUS IST-15905 Project"
-      os="linux"
-      nl="en">
+      provider-name="EU MOBIUS IST-15905 Project">
 
    <description>
-      [Enter Feature Description here.]
+      This feature makes available the Umbra editor together with accompanying libraries.
    </description>
 
    <copyright>
@@ -185,12 +183,8 @@ Library.
    </license>
 
    <url>
-      <update label="Umbra at University of Warsaw" url="http://www.mimuw.edu.pl/~alx/umbra/"/>
+      <update label="Umbra at University of Warsaw" url="http://www.mimuw.edu.pl/~alx/umbra/update/"/>
    </url>
-
-   <includes
-         id="UmbraFeature"
-         version="0.0.0"/>
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
@@ -208,20 +202,20 @@ Library.
          id="mobius.bmllib"
          download-size="0"
          install-size="0"
-         version="1.1.0"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.apache.bcel_5.1"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
-         id="umbra"
+         id="mobius.umbra"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
