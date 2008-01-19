@@ -32,15 +32,15 @@
          <action
                toolbarPath="showGroup"
                label="Disassemble"
-               tooltip="Disassemble from Bytecode"
+               tooltip="Disassemble byte code"
                icon="icons/disassemble.gif"
                class="umbra.java.actions.DisasBCEL"
                menubarPath="umbra.bytecodeMenu/showGroup"
                id="umbra.BCELTest"/>
          <action
                toolbarPath="showGroup"
-               label="Show Bytecode"
-               tooltip="Show Bytecode of selected statement"
+               label="Show byte code"
+               tooltip="Show byte code of selected statement"
                class="umbra.java.actions.SynchrSBAction"
                icon="icons/synchronize.gif"
                menubarPath="umbra.bytecodeMenu/showGroup"
@@ -57,7 +57,7 @@
             targetID="umbra.BytecodeEditor"
             id="umbra.bytecodeEditorContribution">
          <menu
-               label="&amp;Bytecode"
+               label="&amp;Byte code"
                id="umbra.bytecodeMenu">
                <separator name="synchrGroup"/>
                <separator name="verifyGroup"/>
@@ -98,16 +98,16 @@
                id="umbra.clearHistory"/>
          <action
                toolbarPath="helpGroup"
-               label="&amp;Installation Info"
-               tooltip="Installation Info"
+               label="&amp;Installation info"
+               tooltip="Installation info"
                class="umbra.editor.actions.info.InstalInfoAction"
                icon="icons/help.gif"
                menubarPath="umbra.bytecodeMenu/helpGroup"
                id="umbra.instalInfo"/>
          <action
                toolbarPath="helpGroup"
-               label="&amp;User Guide"
-               tooltip="User Guide"
+               label="&amp;User guide"
+               tooltip="User guide"
                class="umbra.editor.actions.info.UserGuideAction"
                icon="icons/help.gif"
                menubarPath="umbra.bytecodeMenu/helpGroup"
