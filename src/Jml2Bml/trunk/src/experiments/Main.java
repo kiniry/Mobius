@@ -15,8 +15,8 @@ import jml2bml.ast.PrettyPrinter;
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.engine.Jml2BmlTranslator;
-import jml2bml.engine.Symbols;
 import jml2bml.engine.TranslationManager;
+import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlTree;
 

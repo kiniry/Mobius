@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jml2bml.ast.ExtendedJmlTreeScanner;
+import jml2bml.ast.SymbolsBuilder;
 import jml2bml.rules.TranslationRule;
+import jml2bml.symbols.Symbols;
 
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.comp.JmlEnter;

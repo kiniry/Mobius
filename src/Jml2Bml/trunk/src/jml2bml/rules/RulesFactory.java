@@ -1,6 +1,6 @@
 package jml2bml.rules;
 
-import jml2bml.engine.Symbols;
+import jml2bml.symbols.Symbols;
 import annot.bcexpression.BCExpression;
 
 import com.sun.tools.javac.util.Context;

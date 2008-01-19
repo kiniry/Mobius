@@ -1,7 +1,8 @@
-package jml2bml.engine;
+package jml2bml.symbols;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 import annot.bcclass.BCClass;
 
@@ -26,7 +27,12 @@ public class Symbols {
     variables = new HashMap<String, Variable>();
   }
 
-  public Variable get(String variableName) {
+  /**
+   * returns the variable associated with given name.
+   * @param variableName variable name
+   * @return variable (BoundVar instance or Localvariable instance)
+   */
+  public Variable get(final String variableName) {
     if (variables.containsKey(variableName)) {
       return variables.get(variableName);
     }
@@ -36,7 +42,12 @@ public class Symbols {
     return parentSymbols.get(variableName);
   }
 
-  public void put(String variableName, Variable val) {
+  /**
+   * Stores given variable.
+   * @param variableName name of the variable
+   * @param val the variable itself
+   */
+  public void put(final String variableName, final Variable val) {
     variables.put(variableName, val);
   }
 

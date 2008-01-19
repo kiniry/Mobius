@@ -13,8 +13,8 @@ import java.util.Vector;
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bytecode.BytecodeUtil;
-import jml2bml.engine.Symbols;
 import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;

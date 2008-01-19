@@ -1,4 +1,4 @@
-package jml2bml.engine;
+package jml2bml.utils;
 /**
  *
  * @author Jedrek (fulara@mimuw.edu.pl)

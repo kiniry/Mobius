@@ -3,8 +3,8 @@ package jml2bml.bmllib;
 import java.util.LinkedList;
 import java.util.List;
 
-import jml2bml.engine.Symbols;
 import jml2bml.exceptions.Jml2BmlException;
+import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantClass;

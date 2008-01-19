@@ -1,8 +1,8 @@
-package jml2bml.engine;
+package jml2bml.ast;
 
-import jml2bml.ast.TreeNodeFinder;
-import jml2bml.ast.ExtendedJmlTreeScanner;
 import jml2bml.bytecode.BytecodeUtil;
+import jml2bml.symbols.Symbols;
+import jml2bml.symbols.Variable;
 
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;

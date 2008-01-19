@@ -8,9 +8,9 @@ package jml2bml.bmllib;
 
 import javax.lang.model.type.TypeKind;
 
-import jml2bml.engine.Symbols;
 import jml2bml.exceptions.NotTranslatedException;
 import jml2bml.rules.RulesFactory;
+import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
 
@@ -29,9 +29,9 @@ import com.sun.tools.javac.util.Context;
 /**
  * @author kjk (kjk@mimuw.edu.pl)
  * @author Jedrek (fulara@mimuw.edu.pl)
- *
+ * @version 0-0.1
  */
-final public class BmlLibUtils {
+public final class BmlLibUtils {
   /**
    * Hidden constructor (util class).
    */

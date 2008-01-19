@@ -9,12 +9,12 @@ package jml2bml.rules;
 import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
-import jml2bml.engine.Constants;
-import jml2bml.engine.Symbols;
-import jml2bml.engine.UniqueIndexGenerator;
-import jml2bml.engine.Variable;
 import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.symbols.Symbols;
+import jml2bml.symbols.Variable;
+import jml2bml.utils.Constants;
+import jml2bml.utils.UniqueIndexGenerator;
 
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
