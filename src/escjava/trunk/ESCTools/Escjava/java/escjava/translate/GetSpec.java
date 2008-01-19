@@ -2147,94 +2147,101 @@ public final class GetSpec {
    */
   
   private static void checkConditions(/*@ non_null @*/ ConditionVec cv, 
-				      int loc, 
-				      /*@ non_null */ StackVector code,
-				      boolean nobody)
+  		int loc, 
+  		/*@ non_null */ StackVector code,
+  		boolean nobody)
   {
-    // [GKS]
-    Vector idcGCs=new Vector();
-    if (Main.options().idc) {
-      // First pass through the ConditionVec so that we build the IDC GCs.
-      // We expect postconditions to be in A /\ P1 /\ ... /\ Pk ==> Q form or
-      // to be just in the Q form.
-      // For every postcondition:
-      //   Break the implication and store the antecedent and consequents.
-      //   All the antecedents should be identical for the same specification 
-      //     block - if not throw an exception.
-      //   Conjoin all Qs per antecedent and pass that for IDC checking.
-      //   Iterate the GC gerenated by the IDC checking of the conjoin 
-      //   postconditions and append the antecedent to all ASSERT commands.
-      // Lets see how this will work out :>
-      LinkedHashMap mapAnte2AntePost=new LinkedHashMap();
-      for (int i=0;i<cv.size();i++) {
-	Condition cond = cv.elementAt(i);
-	if (Main.options().idc &&
-	    (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
-	     cond.label == TagConstants.CHKEXPRDEFEXCEPOST)) {
-	  if (Main.options().debug) {
-	    System.err.println("Processing-Post: " +
-			       EscPrettyPrint.inst.toString(cond.pred));
-	    //System.err.println("\tI.e.:" + cond.pred);
-	  }
-	  DefGCmd.processPostcondition(cond.label, mapAnte2AntePost, cond.pred);
-	}
-      }
-      java.util.Set s=mapAnte2AntePost.entrySet();
-      Iterator is=s.iterator();
-      while (is.hasNext()) {
-	Map.Entry me = (Map.Entry)is.next();
-	Object [] antePost=(Object[])me.getValue();
-	Expr ante=(Expr)antePost[0];
-	Expr conjPosts=(Expr)antePost[1];
-	DefGCmd oDefGCs = new DefGCmd();
-	// Pass the conjoint postconditions for IDC.
-	oDefGCs.trAndGen(conjPosts);
-	// Obtain the GCs.
-	GuardedCmd idcGC=oDefGCs.popFromCode();
-	// Translate the antecedent into a GCExpr.
-	Expr gcAnte=TrAnExpr.trSpecExpr(ante, oDefGCs.minHMap4Tr(), null);
-	gcAnte=GC.and(GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return),
-		      gcAnte);
-	// Add the antedents in the proper 
-	oDefGCs.morfAsserts(idcGC,gcAnte);
-	idcGCs.addElement(idcGC);
-      }
-    }
-    //[GKE]
-    // Flag to denote whether the IDC GCs were added.
-    boolean idcGCAdded=false;
-    for (int i = 0; i < cv.size(); i++) {
-      Condition cond = cv.elementAt(i);
+  	// [GKS]
+  	Vector idcGCs=new Vector();
+  	if (Main.options().idc) {
+  		// First pass through the ConditionVec so that we build the IDC GCs.
+  		// We expect postconditions to be in A /\ P1 /\ ... /\ Pk ==> Q form or
+  		// to be just in the Q form.
+  		// For every postcondition:
+  		//   Break the implication and store the antecedent and consequents.
+  		//   All the antecedents should be identical for the same specification 
+  		//     block - if not throw an exception.
+  		//   Conjoin all Qs per antecedent and pass that for IDC checking.
+  		//   Iterate the GC gerenated by the IDC checking of the conjoin 
+  		//   postconditions and append the antecedent to all ASSERT commands.
+  		// Lets see how this will work out :>
+  		LinkedHashMap mapAnte2AntePost=new LinkedHashMap();
+  		for (int i=0;i<cv.size();i++) {
+  			Condition cond = cv.elementAt(i);
+  			if (Main.options().idc &&
+  					(cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+  							cond.label == TagConstants.CHKEXPRDEFEXCEPOST)) {
+  				if (Main.options().debug) {
+  					System.err.println("Processing-Post: " +
+  							EscPrettyPrint.inst.toString(cond.pred));
+  					//System.err.println("\tI.e.:" + cond.pred);
+  				}
+  				DefGCmd.processPostcondition(cond.label, mapAnte2AntePost, cond.pred);
+  			}
+  		}
+  		java.util.Set s=mapAnte2AntePost.entrySet();
+  		Iterator is=s.iterator();
+  		while (is.hasNext()) {
+  			Map.Entry me = (Map.Entry)is.next();
+  			Object [] antePost=(Object[])me.getValue();
+  			String k=(String)me.getKey();
+  			Expr ante=(Expr)antePost[0];
+  			Expr conjPosts=(Expr)antePost[1];
+  			DefGCmd oDefGCs = new DefGCmd();
+  			// Pass the conjoint postconditions for IDC.
+  			oDefGCs.trAndGen(conjPosts);
+  			// Obtain the GCs.
+  			GuardedCmd idcGC=oDefGCs.popFromCode();
+  			// Translate the antecedent into a GCExpr.
+  			Expr gcAnte=TrAnExpr.trSpecExpr(ante, oDefGCs.minHMap4Tr(), null);
+  			if (k.startsWith(String.valueOf(TagConstants.CHKEXPRDEFNORMPOST)))
+  				gcAnte=GC.and(GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return),
+  					gcAnte);
+  			else if (k.startsWith(String.valueOf(TagConstants.CHKEXPRDEFEXCEPOST)))
+  				gcAnte=GC.and(GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_throw),
+    					gcAnte);
+  			else
+  				Assert.fail("Unknown key prefix: " + k);
+  			// Add the antedents in the proper 
+  			oDefGCs.morfAsserts(idcGC,gcAnte);
+  			idcGCs.addElement(idcGC);
+  		}
+  	}
+  	//[GKE]
+  	// Flag to denote whether the IDC GCs were added.
+  	boolean idcGCAdded=false;
+  	for (int i = 0; i < cv.size(); i++) {
+  		Condition cond = cv.elementAt(i);
 
-      //[GKS]
-      if (Main.options().idc &&
-	  (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
-	   cond.label == TagConstants.CHKEXPRDEFEXCEPOST)) {
-	if (!idcGCAdded) {
-	  if (Main.options().debug) {
-	    System.err.println("IDCGCs.SIZE: "+idcGCs.size());
-	  }
-	  for (int j=0;j<idcGCs.size();j++) {
-	    GuardedCmd idcGC=(GuardedCmd)idcGCs.elementAt(j);
-	    code.addElement(idcGC);
-	  }
-	  idcGCAdded=true;
-	}
-	continue;
-      }
-      // Add postconditions in the usual way.
-      if (!nobody)
-      {
-	if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
-	Translate.setop(cond.pred);
-	// if the condition is an object invariant, send its guarded command
-	// translation as auxiliary info to GC.check
-	if (cond.label == TagConstants.CHKOBJECTINVARIANT)
-	  code.addElement(GC.check(loc, cond, cond.pred));
-	else
-	  code.addElement(GC.check(loc, cond));
-      }
-    }
+  		//[GKS]
+  		if (Main.options().idc &&
+  				(cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+  						cond.label == TagConstants.CHKEXPRDEFEXCEPOST)) {
+  			if (!idcGCAdded) {
+  				if (Main.options().debug) {
+  					System.err.println("IDCGCs.SIZE: "+idcGCs.size());
+  				}
+  				for (int j=0;j<idcGCs.size();j++) {
+  					GuardedCmd idcGC=(GuardedCmd)idcGCs.elementAt(j);
+  					code.addElement(idcGC);
+  				}
+  				idcGCAdded=true;
+  			}
+  			continue;
+  		}
+  		// Add postconditions in the usual way.
+  		if (!nobody)
+  		{
+  			if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
+  			Translate.setop(cond.pred);
+  			// if the condition is an object invariant, send its guarded command
+  			// translation as auxiliary info to GC.check
+  			if (cond.label == TagConstants.CHKOBJECTINVARIANT)
+  				code.addElement(GC.check(loc, cond, cond.pred));
+  			else
+  				code.addElement(GC.check(loc, cond));
+  		}
+  	}
   }
   
   private static void checkModifiesConstraints(/*@ nullable */ Spec spec,

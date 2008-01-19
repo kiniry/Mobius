@@ -1,0 +1,208 @@
+A.java:6: Warning: Possible division by zero (ZeroDiv)
+    @ ensures \result == (i/i)*2; // divZero warning
+                           ^
+A.java:10: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "A.java", line 6, col 6:
+    @ ensures \result == (i/i)*2; // divZero warning
+      ^
+A.java:18: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "A.java", line 14, col 7:
+    @  ensures \result == (i/i)*2; // no divZero warning because of pr ...
+       ^
+A.java:38: Warning: Possible division by zero (ZeroDiv)
+    @  signals (RuntimeException e) i/i == i/i; // divZero warning
+                                     ^
+A.java:46: Warning: Possible division by zero (ZeroDiv)
+    @  ensures \result == (i/i)*2; // divZero warning
+                            ^
+A.java:55: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "A.java", line 46, col 7:
+    @  ensures \result == (i/i)*2; // divZero warning
+       ^
+A.java:62: Warning: Possible division by zero (ZeroDiv)
+    @  signals (RuntimeException e) i/i == i/i; // divZero warnings
+                                     ^
+Counterexample labels:
+    Pre:0.58.7
+
+A.java:70: Warning: Possible division by zero (ZeroDiv)
+  /*@ requires i/i==i/i; // divZero warning 
+                ^
+C.java:8: Warning: Possible division by zero (ZeroDiv)
+    @ ensures this.i == i/i; // divZero warning
+                         ^
+C.java:12: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "C.java", line 8, col 6:
+    @ ensures this.i == i/i; // divZero warning
+      ^
+C.java:21: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == o.i/o.i; // null, divZero warning
+                         ^
+C.java:21: Warning: Possible division by zero (ZeroDiv)
+  /*@ ensures this.i == o.i/o.i; // null, divZero warning
+                           ^
+C.java:25: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "C.java", line 21, col 6:
+  /*@ ensures this.i == o.i/o.i; // null, divZero warning
+      ^
+C.java:27: Warning: Possible null dereference (Null)
+  /*@ requires o.i >= 0;  // null warning
+                ^
+C.java:32: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "C.java", line 28, col 6:
+    @ ensures this.i == o.i; // no null warning - reported in precondi ...
+      ^
+C.java:34: Warning: Possible null dereference (Null)
+  /*@ requires o.i >= 0; // null warning
+                ^
+C.java:35: Warning: Possible null dereference (Null)
+    @ ensures this.i == o1.i; // null warning
+                          ^
+C.java:39: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "C.java", line 35, col 6:
+    @ ensures this.i == o1.i; // null warning
+      ^
+C.java:43: Warning: Possible null dereference (Null)
+    @  ensures this.i == o.i; // null warning
+                          ^
+C.java:47: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "C.java", line 43, col 7:
+    @  ensures this.i == o.i; // null warning
+       ^
+C.java:51: Warning: Possible null dereference (Null)
+    @  signals (RuntimeException e) o.i/o.i == o.i/o.i; // null, divZe ...
+                                     ^
+C.java:51: Warning: Possible division by zero (ZeroDiv)
+    @  signals (RuntimeException e) o.i/o.i == o.i/o.i; // null, divZe ...
+                                       ^
+C.java:67: Warning: Possible null dereference (Null)
+    this.i = o.i+o1.i; // null (o), null (o1) warnings
+              ^
+C.java:67: Warning: Possible null dereference (Null)
+    this.i = o.i+o1.i; // null (o), null (o1) warnings
+                   ^
+C.java:62: Warning: Possible null dereference (Null)
+    @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
+                                     ^
+Counterexample labels:
+    Pre:1.58.7
+
+C.java:62: Warning: Possible division by zero (ZeroDiv)
+    @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
+                                       ^
+Counterexample labels:
+    Pre:1.58.7
+
+C.java:68: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "C.java", line 59, col 7:
+    @  ensures this.i == o.i+o.i; // no null warnings because of body
+       ^
+C.java:68: Warning: Postcondition possibly not established (Post)
+  } // Postcondition not established warning
+  ^
+Associated declaration is "C.java", line 62, col 7:
+    @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
+       ^
+Counterexample labels:
+    Pre:1.58.7
+
+B.jml:6: Warning: Possible division by zero (ZeroDiv)
+    @ ensures \result == (i/i)*2; // divZero warning
+                           ^
+B.jml:30: Warning: Possible division by zero (ZeroDiv)
+    @  signals (RuntimeException e) i/i == i/i; // divZero warning
+                                     ^
+B.jml:36: Warning: Possible division by zero (ZeroDiv)
+    @  ensures \result == (i/i)*2; // divZero warning
+                            ^
+B.jml:48: Warning: Possible division by zero (ZeroDiv)
+    @  signals (RuntimeException e) i/i == i/i; // divZero warnings
+                                     ^
+Counterexample labels:
+    Pre:2.44.7
+
+B.jml:52: Warning: Possible division by zero (ZeroDiv)
+  /*@ requires i/i==i/i; // divZero warning 
+                ^
+D.jml:8: Warning: Possible null dereference (Null)
+    @ ensures this.i == i/i; // null(this),divZero warning
+                  ^
+D.jml:8: Warning: Possible division by zero (ZeroDiv)
+    @ ensures this.i == i/i; // null(this),divZero warning
+                         ^
+D.jml:13: Warning: Possible null dereference (Null)
+    @ ensures this.i == i+j+k; // null(this) warning
+                  ^
+D.jml:17: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == o.i/o.i; // null(this) null(o), divZero warnin ...
+                  ^
+D.jml:17: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == o.i/o.i; // null(this) null(o), divZero warnin ...
+                         ^
+D.jml:17: Warning: Possible division by zero (ZeroDiv)
+  /*@ ensures this.i == o.i/o.i; // null(this) null(o), divZero warnin ...
+                           ^
+D.jml:21: Warning: Possible null dereference (Null)
+  /*@ requires o.i >= 0;  // null(o) warning
+                ^
+D.jml:22: Warning: Possible null dereference (Null)
+    @ ensures this.i == o.i; // null(this) warning - no null(o) becaus ...
+                  ^
+D.jml:26: Warning: Possible null dereference (Null)
+  /*@ requires o.i >= 0; // null(o) warning
+                ^
+D.jml:27: Warning: Possible null dereference (Null)
+    @ ensures this.i == o1.i; // null(o1) warning
+                  ^
+D.jml:27: Warning: Possible null dereference (Null)
+    @ ensures this.i == o1.i; // null(o1) warning
+                          ^
+D.jml:33: Warning: Possible null dereference (Null)
+    @  ensures this.i == o.i; // null(this), null(o) warnings
+                   ^
+D.jml:33: Warning: Possible null dereference (Null)
+    @  ensures this.i == o.i; // null(this), null(o) warnings
+                          ^
+D.jml:39: Warning: Possible null dereference (Null)
+    @  signals (RuntimeException e) o.i/o.i == o.i/o.i; // null, divZe ...
+                                     ^
+D.jml:39: Warning: Possible division by zero (ZeroDiv)
+    @  signals (RuntimeException e) o.i/o.i == o.i/o.i; // null, divZe ...
+                                       ^
+D.jml:45: Warning: Possible null dereference (Null)
+    @  ensures this.i == o.i+o.i; // null(this), null(o) warning
+                   ^
+D.jml:45: Warning: Possible null dereference (Null)
+    @  ensures this.i == o.i+o.i; // null(this), null(o) warning
+                          ^
+D.jml:48: Warning: Possible null dereference (Null)
+    @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
+                                     ^
+Counterexample labels:
+    Pre:3.44.7
+
+D.jml:48: Warning: Possible division by zero (ZeroDiv)
+    @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
+                                       ^
+Counterexample labels:
+    Pre:3.44.7
+
+52 warnings

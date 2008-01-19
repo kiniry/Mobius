@@ -1355,7 +1355,7 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
     // used in GetSpec.surroundBodyBySpec()
     boolean nobody = false;
     if (r.body == null && Main.options().idc) {
-      GuardedCmd gc3 = GC.gets(GC.ecvar, GC.ec_return);
+      GuardedCmd gc3 = GC.skip();
       nobody = true;
       //GuardedCmd gc2=GC.assume(GC.falselit);
       //GuardedCmd gc3=GC.seq(gc1,gc2);
