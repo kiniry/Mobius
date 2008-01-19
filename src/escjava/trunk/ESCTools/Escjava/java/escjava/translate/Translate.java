@@ -3939,25 +3939,26 @@ Frame frameHandler = null;
     }
     call.spec = spec;
 
-    // Remove all precondition generated conditions through IDC.
+    //[GKS]
+    // Remove all precondition generated conditions through IDC for the call.
     for (int i=spec.pre.size()-1;i>=0;i--) {
-      Condition cond = spec.pre.elementAt(i);
-      int label = cond.label;
-      if (cond.label == TagConstants.CHKEXPRDEFINEDNESS) {
-	spec.pre.removeElementAt(i);
-      }
+    	Condition cond = spec.pre.elementAt(i);
+    	int label = cond.label;
+    	if (cond.label == TagConstants.CHKEXPRDEFINEDNESS) {
+    		spec.pre.removeElementAt(i);
+    	}
     }
 
-    // Remove all postcondition generated conditions through IDC.
+    // Remove all postcondition generated conditions through IDC for the call.
     for (int i=spec.post.size()-1;i>=0;i--) {
-      Condition cond = spec.post.elementAt(i);
-      int label = cond.label;
-      if (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
-	  cond.label == TagConstants.CHKEXPRDEFEXCEPOST) {
-	spec.post.removeElementAt(i);
-      }
+    	Condition cond = spec.post.elementAt(i);
+    	int label = cond.label;
+    	if (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+    			cond.label == TagConstants.CHKEXPRDEFEXCEPOST) {
+    		spec.post.removeElementAt(i);
+    	}
     }
-
+    //[GKE]
 
     Assert.notFalse( spec.dmd.args.size() == call.args.size(),
                      "formal args: " + spec.dmd.args.size()
