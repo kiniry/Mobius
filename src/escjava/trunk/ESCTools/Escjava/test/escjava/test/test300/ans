@@ -124,23 +124,38 @@ Associated declaration is "C.java", line 62, col 7:
 Counterexample labels:
     Pre:1.58.7
 
-E.java:12: Warning: Possible null dereference (Null)
-    @  requires a.length>0; //null(a) warning
+E.java:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, spurious null(this) wa ...
+                 ^
+E.java:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, spurious null(this) wa ...
+                 ^
+E.java:25: Warning: Possible null dereference (Null)
+    @  requires aa.length>0; //null(aa) warning
+                  ^
+E.java:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a) warning, no spurious null(this) ...
+                 ^
+E.java:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, spurious null(this) wa ...
                  ^
 E.java:7: Warning: Possible null dereference (Null)
-  //@ invariant a.length>0; // null(a) warning
+  //@ invariant a.length>0; // null(a) warning, no spurious null(this) ...
+                 ^
+E.java:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, spurious null(this) wa ...
+                 ^
+E.java:48: Warning: Possible null dereference (Null)
+    @  requires aa.length>0; //null(aa) warning
+                  ^
+E.java:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a) warning, no spurious null(this) ...
                 ^
 E.java:7: Warning: Possible null dereference (Null)
-  //@ invariant a.length>0; // null(a) warning
+  //@ invariant a.length>0; // null(a) warning, no spurious null(this) ...
                  ^
 E.java:4: Warning: Possible division by zero (ZeroDiv)
-  //@ invariant f/f == f/f; // divZero warning
-                 ^
-E.java:4: Warning: Possible division by zero (ZeroDiv)
-  //@ invariant f/f == f/f; // divZero warning
-                 ^
-E.java:4: Warning: Possible division by zero (ZeroDiv)
-  //@ invariant f/f == f/f; // divZero warning
+  //@ invariant f/f == f/f; // divZero warning, spurious null(this) wa ...
                  ^
 B.jml:6: Warning: Possible division by zero (ZeroDiv)
     @ ensures \result == (i/i)*2; // divZero warning
@@ -223,4 +238,37 @@ D.jml:48: Warning: Possible division by zero (ZeroDiv)
 Counterexample labels:
     Pre:4.44.7
 
-58 warnings
+F.jml:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, no spurious null(this) ...
+                 ^
+F.jml:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, no spurious null(this) ...
+                 ^
+F.jml:21: Warning: Possible null dereference (Null)
+    @  requires aa.length>0; //null(aa) warning
+                  ^
+F.jml:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
+                 ^
+F.jml:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, no spurious null(this) ...
+                 ^
+F.jml:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
+                 ^
+F.jml:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, no spurious null(this) ...
+                 ^
+F.jml:37: Warning: Possible null dereference (Null)
+    @  requires aa.length>0; //null(aa) warning
+                  ^
+F.jml:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
+                ^
+F.jml:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
+                 ^
+F.jml:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning, no spurious null(this) ...
+                 ^
+74 warnings
