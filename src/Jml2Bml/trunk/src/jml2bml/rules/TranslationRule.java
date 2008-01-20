@@ -296,234 +296,189 @@ public abstract class TranslationRule<R, P> extends TreeScanner<R, P>
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlBinary(JmlBinary node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlClassDecl(JmlClassDecl node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlCompilationUnit(JmlCompilationUnit node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlDoWhileLoop(JmlDoWhileLoop node, P p) {
     return preVisit(node, p);
 
   }
 
-  @Override
   public R visitJmlEnhancedForLoop(JmlEnhancedForLoop node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlForLoop(JmlForLoop node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlFunction(JmlFunction node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlGroupName(JmlGroupName node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlImport(JmlImport node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlLblExpression(JmlLblExpression node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodClauseAssignable(JmlMethodClauseAssignable node,
                                                P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodClauseConditional(
                                                 JmlMethodClauseConditional node,
                                                 P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodClauseDecl(JmlMethodClauseDecl node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodClauseExpr(JmlMethodClauseExpr node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodClauseGroup(JmlMethodClauseGroup node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodClauseSigOnly(JmlMethodClauseSigOnly node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodClauseSignals(JmlMethodClauseSignals node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodDecl(JmlMethodDecl node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlMethodSpecs(JmlMethodSpecs node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlPrimitiveTypeTree(JmlPrimitiveTypeTree node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlQuantifiedExpr(JmlQuantifiedExpr node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlRefines(JmlRefines node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlSetComprehension(JmlSetComprehension node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlSingleton(JmlSingleton node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlSpecificationCase(JmlSpecificationCase node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlStatement(JmlStatement node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlStatementDecls(JmlStatementDecls node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlStatementExpr(JmlStatementExpr node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlStatementLoop(JmlStatementLoop node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlStatementSpec(JmlStatementSpec node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlStoreRefArrayRange(JmlStoreRefArrayRange node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlStoreRefKeyword(JmlStoreRefKeyword node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlStoreRefListExpression(JmlStoreRefListExpression node,
                                                P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseConditional(JmlTypeClauseConditional node,
                                               P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseConstraint(JmlTypeClauseConstraint node,
                                              P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseDecl(JmlTypeClauseDecl node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseExpr(JmlTypeClauseExpr node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseIn(JmlTypeClauseIn node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseInitializer(JmlTypeClauseInitializer node,
                                               P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseMaps(JmlTypeClauseMaps node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseMonitorsFor(JmlTypeClauseMonitorsFor node,
                                               P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlTypeClauseRepresents(JmlTypeClauseRepresents node,
                                              P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlVariableDecl(JmlVariableDecl node, P p) {
     return preVisit(node, p);
   }
 
-  @Override
   public R visitJmlWhileLoop(JmlWhileLoop node, P p) {
     return preVisit(node, p);
   }
-
 }

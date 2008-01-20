@@ -734,7 +734,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlBinary(final JmlBinary node, final P p) {
     final P p1 = preVisit(node, p);
     R r = scan(node.lhs, p1);
@@ -748,7 +747,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlClassDecl(final JmlClassDecl node, final P p) {
     final P p1 = preVisit(node, p);
     return super.visitClass(node, p1);
@@ -760,7 +758,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlCompilationUnit(final JmlCompilationUnit node, final P p) {
     final P p1 = preVisit(node, p);
     return super.visitCompilationUnit(node, p1);
@@ -772,7 +769,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlDoWhileLoop(final JmlDoWhileLoop node, final P p) {
     final P p1 = preVisit(node, p);
     final R r = scan(node.loopSpecs, p1);
@@ -787,7 +783,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlEnhancedForLoop(final JmlEnhancedForLoop node, final P p) {
     final P p1 = preVisit(node, p);
     final R r = scan(node.loopSpecs, p1);
@@ -801,7 +796,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlForLoop(final JmlForLoop node, final P p) {
     final P p1 = preVisit(node, p);
     final R r = scan(node.loopSpecs, p1);
@@ -815,7 +809,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlFunction(final JmlFunction node, final P p) {
     return null;
   }
@@ -826,7 +819,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlGroupName(final JmlGroupName node, final P p) {
     final P p1 = preVisit(node, p);
     final R r = scan(node.selection, p1);
@@ -839,7 +831,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlImport(final JmlImport node, final P p) {
     final P p1 = preVisit(node, p);
     final R r = super.visitImport(node, p1);
@@ -852,7 +843,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlLblExpression(final JmlLblExpression node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.expression, p1);
@@ -864,7 +854,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlMethodClauseAssignable(final JmlMethodClauseAssignable node,
                                           final P p) {
     final P p1 = preVisit(node, p);
@@ -877,7 +866,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlMethodClauseConditional(
                                            final JmlMethodClauseConditional node,
                                            final P p) {
@@ -892,7 +880,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlMethodClauseDecl(final JmlMethodClauseDecl node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.stats, p1);
@@ -904,7 +891,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlMethodClauseExpr(final JmlMethodClauseExpr node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.expression, p1);
@@ -916,7 +902,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlMethodClauseGroup(final JmlMethodClauseGroup node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.cases, p1);
@@ -928,7 +913,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlMethodClauseSigOnly(final JmlMethodClauseSigOnly node,
                                        final P p) {
     final P p1 = preVisit(node, p);
@@ -941,7 +925,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlMethodClauseSignals(final JmlMethodClauseSignals node,
                                        final P p) {
     final P p1 = preVisit(node, p);
@@ -954,7 +937,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlMethodDecl(final JmlMethodDecl node, final P p) {
     final P p1 = preVisit(node, p);
     return super.visitMethod(node, p1);
@@ -966,7 +948,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children
    */
-  @Override
   public R visitJmlMethodSpecs(final JmlMethodSpecs node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.cases, p1);
@@ -978,7 +959,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return null
    */
-  @Override
   public R visitJmlPrimitiveTypeTree(final JmlPrimitiveTypeTree node, final P p) {
     return null;
   }
@@ -989,7 +969,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children
    */
-  @Override
   public R visitJmlQuantifiedExpr(final JmlQuantifiedExpr node, final P p) {
     final P p1 = preVisit(node, p);
     R r = scan(node.localtype, p1);
@@ -1004,7 +983,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return null
    */
-  @Override
   public R visitJmlRefines(final JmlRefines node, P p) {
     return null;
   }
@@ -1015,7 +993,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children
    */
-  @Override
   public R visitJmlSetComprehension(final JmlSetComprehension node, P p) {
     final P p1 = preVisit(node, p);
     R r = scan(node.newtype, p1);
@@ -1029,7 +1006,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return null
    */
-  @Override
   public R visitJmlSingleton(final JmlSingleton node, final P p) {
     return null;
   }
@@ -1040,7 +1016,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  @Override
   public R visitJmlSpecificationCase(final JmlSpecificationCase node, final P p) {
     final P p1 = preVisit(node, p);
     final R r = scan(node.clauses, p1);
@@ -1053,7 +1028,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children
    */
-  @Override
   public R visitJmlStatement(final JmlStatement node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.statement, p1);
@@ -1065,7 +1039,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children
    */
-  @Override
   public R visitJmlStatementDecls(final JmlStatementDecls node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.list, p1);
@@ -1077,7 +1050,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlStatementExpr(final JmlStatementExpr node, final P p) {
     final P p1 = preVisit(node, p);
     R r = scan(node.expression, p1);
@@ -1091,7 +1063,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children
    */
-  @Override
   public R visitJmlStatementLoop(final JmlStatementLoop node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.expression, p1);
@@ -1103,7 +1074,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children
    */
-  @Override
   public R visitJmlStatementSpec(final JmlStatementSpec node, final P p) {
     final P p1 = preVisit(node, p);
     return scan(node.statementSpecs, p1);
@@ -1115,7 +1085,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlStoreRefArrayRange(final JmlStoreRefArrayRange node,
                                       final P p) {
     final P p1 = preVisit(node, p);
@@ -1131,7 +1100,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return null
    */
-  @Override
   public R visitJmlStoreRefKeyword(final JmlStoreRefKeyword node, final P p) {
     return null;
   }
@@ -1142,7 +1110,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlStoreRefListExpression(final JmlStoreRefListExpression node,
                                           final P p) {
     final P p1 = preVisit(node, p);
@@ -1155,7 +1122,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseConditional(final JmlTypeClauseConditional node,
                                          final P p) {
     final P p1 = preVisit(node, p);
@@ -1170,7 +1136,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseConstraint(final JmlTypeClauseConstraint node,
                                         final P p) {
     final P p1 = preVisit(node, p);
@@ -1186,7 +1151,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseDecl(final JmlTypeClauseDecl node, final P p) {
     final P p1 = preVisit(node, p);
     final R r = scan(node.modifiers, p1);
@@ -1199,7 +1163,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseExpr(final JmlTypeClauseExpr node, final P p) {
     final P p1 = preVisit(node, p);
     R r = scan(node.modifiers, p1);
@@ -1214,7 +1177,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseIn(final JmlTypeClauseIn node, final P p) {
     final P p1 = preVisit(node, p);
     R r = scan(node.modifiers, p1);
@@ -1229,7 +1191,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseInitializer(final JmlTypeClauseInitializer node,
                                          final P p) {
     final P p1 = preVisit(node, p);
@@ -1243,7 +1204,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseMaps(final JmlTypeClauseMaps node, final P p) {
     final P p1 = preVisit(node, p);
     R r = scan(node.modifiers, p1);
@@ -1257,7 +1217,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseMonitorsFor(final JmlTypeClauseMonitorsFor node,
                                          final P p) {
     final P p1 = preVisit(node, p);
@@ -1272,7 +1231,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlTypeClauseRepresents(final JmlTypeClauseRepresents node,
                                         final P p) {
     final P p1 = preVisit(node, p);
@@ -1287,7 +1245,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlVariableDecl(final JmlVariableDecl node, final P p) {
     final P p1 = preVisit(node, p);
     return super.visitVariable(node, p1);
@@ -1299,12 +1256,10 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return result of visiting children.
    */
-  @Override
   public R visitJmlWhileLoop(final JmlWhileLoop node, final P p) {
     final P p1 = preVisit(node, p);
     final R r = scan(node.loopSpecs, p1);
     final R r1 = super.visitWhileLoop(node, p1);
     return reduce(r, r1);
   }
-
 }

@@ -89,7 +89,6 @@
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI"/>
         </module>
-        <module name="WhitespaceAround"/>
         <module name="ModifierOrder"/>
         <module name="RedundantModifier"/>
         <module name="AvoidNestedBlocks"/>

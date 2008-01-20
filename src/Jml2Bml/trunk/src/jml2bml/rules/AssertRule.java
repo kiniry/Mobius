@@ -23,9 +23,7 @@ import org.jmlspecs.openjml.JmlTree.JmlStatementExpr;
 import annot.attributes.SingleAssert;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
-import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
-import annot.bcexpression.javatype.JavaBasicType;
 
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
