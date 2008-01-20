@@ -49,12 +49,11 @@ public final class GetSpec {
 			/*@ non_null */FindContributors scope,
 			/*@ non_null */Set synTargs, /*@ nullable */ Hashtable premap) {
 		Spec spec = getCommonSpec(rd, scope, premap);
-		if (rd.body==null && Main.options().idc)
-		{
+		DefGCmd.addInvConds(scope, spec);
+		if (rd.body==null && Main.options().idc) {
 			return(spec);
 		}
-		else
-		{
+		else {
 			return extendSpecForBody(spec, scope, synTargs);
 		}
 	}
@@ -1469,41 +1468,6 @@ public final class GetSpec {
 			nonNullInitChecks(td, spec.post);
 		}
 
-		//[GKS] 
-		// IDC for invariants.
-		// The code here is borrowed from the code inside 
-		// GetSpec.collectInvariants().  There is quite a bit of processing of
-		// the invariants in there including their translation into a GCExpr.
-		// For IDC processing we need the ASTExpr which is how we IDC for
-		// pre-postoconditions.  The same condition tag is re-used in this case
-		// as it is for the preconditions, namely TagConstants.CHKEXPRDEFINEDNESS.
-		// FIXME: Very experimental code below!!  Probably more will have to be 
-		//        done here.
-		if(Main.options().idc)
-		{
-			Enumeration invariants = scope.invariants();
-			while (invariants.hasMoreElements()) {
-				ExprDeclPragma ep = (ExprDeclPragma)invariants.nextElement();
-				Expr J = ep.expr;
-				boolean Jvisible = !Main.options().filterInvariants	
-					|| exprIsVisible(scope.originType, J);
-				if (!Jvisible)
-					continue;
-				
-				if(!escjava.AnnotationHandler.isTrue(J)) {
-					if(Main.options().debug) {
-						System.err.println("GK-Trace-INV: " + 
-								EscPrettyPrint.inst.toString(J));
-						System.err.println("\ti.e.: "+ J);
-					}					
-					Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
-							J, J.getStartLoc());
-					spec.pre.addElement(cond);
-				}
-			}
-		}
-		//[GKE]
-		
 		InvariantInfo ii = mergeInvariants(collectInvariants(scope, spec.preVarMap));
 		// FIXME - Possibly causing bloated VCs
 		HashSet axsToAdd = collectInvariantsAxsToAdd;
@@ -2330,7 +2294,7 @@ public final class GetSpec {
 		return ii;
 	}
 
-	private static boolean exprIsVisible(/*@ non_null @*/ TypeSig originType, 
+	static boolean exprIsVisible(/*@ non_null @*/ TypeSig originType, 
 			/*@ non_null @*/ Expr e) {
 
 		switch (e.getTag()) {
