@@ -124,6 +124,24 @@ Associated declaration is "C.java", line 62, col 7:
 Counterexample labels:
     Pre:1.58.7
 
+E.java:12: Warning: Possible null dereference (Null)
+    @  requires a.length>0; //null(a) warning
+                 ^
+E.java:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a) warning
+                ^
+E.java:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a) warning
+                 ^
+E.java:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning
+                 ^
+E.java:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning
+                 ^
+E.java:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning
+                 ^
 B.jml:6: Warning: Possible division by zero (ZeroDiv)
     @ ensures \result == (i/i)*2; // divZero warning
                            ^
@@ -137,7 +155,7 @@ B.jml:48: Warning: Possible division by zero (ZeroDiv)
     @  signals (RuntimeException e) i/i == i/i; // divZero warnings
                                      ^
 Counterexample labels:
-    Pre:2.44.7
+    Pre:3.44.7
 
 B.jml:52: Warning: Possible division by zero (ZeroDiv)
   /*@ requires i/i==i/i; // divZero warning 
@@ -197,12 +215,12 @@ D.jml:48: Warning: Possible null dereference (Null)
     @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
                                      ^
 Counterexample labels:
-    Pre:3.44.7
+    Pre:4.44.7
 
 D.jml:48: Warning: Possible division by zero (ZeroDiv)
     @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
                                        ^
 Counterexample labels:
-    Pre:3.44.7
+    Pre:4.44.7
 
-52 warnings
+58 warnings
