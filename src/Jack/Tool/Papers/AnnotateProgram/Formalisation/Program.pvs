@@ -289,21 +289,20 @@ BEGIN
 
 
   var_names_union : LEMMA % :-)
-    FORALL(fs1, fs2 : finite_set[FieldDecl]) :
+    FORALL (fs1, fs2 : finite_set[FieldDecl]) :
       var_names(union(fs1, fs2)) = union(var_names(fs1), var_names(fs2))
 
   var_names_union2 : LEMMA % :-)
-    FORALL(ls1, ls2 : finite_set[LocalVarDecl]) :
+    FORALL (ls1, ls2 : finite_set[LocalVarDecl]) :
       var_names(union(ls1, ls2)) = union(var_names(ls1), var_names(ls2))
 
   IMPORTING WF_Card[[BoolExpr, Stmt]], set2list[[BoolExpr, Stmt]]
 
-
   var_names_CaseJML_set2list : LEMMA % :-)
-    FORALL(s : finite_set[[BoolExpr, Stmt]], n : Name) :
+    FORALL (s : finite_set[[BoolExpr, Stmt]], n : Name) :
       var_names(CaseJML(set2list(s)))(n) =
-          EXISTS(x : [BoolExpr, Stmt]) :
-            s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
+        EXISTS(x : [BoolExpr, Stmt]) :
+          s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
 
   % Declared variable names
@@ -387,10 +386,6 @@ BEGIN
       up?(get_class(p)(tgt)) IMPLIES
         classes(p)(down(get_class(p)(tgt)))
 
-  % TODO: This specification is not correct because we can not return any method
-  % in the program that has the required name, we should return the first in the
-  % hierarchy of classes of the dynamic type of tgt.
-  % Probably the best thing to do is to leave it undefined.
   lookup_mthd(p : PreProgram, tgt : Val, mn : Name) : lift[(methods(p))] =
     IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
     THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
@@ -406,9 +401,9 @@ BEGIN
          methods(down(get_class(p)(tgt)))(down(lookup_mthd(p, tgt, mn)))
 
 
-  % TODO: Maybe this function should be left undefined since it should also
-  % return the conjunction of the invariant of the the parent classes.
-  % If it can't find an invariant in tgt it just returns TRUE
+  % NOTE: We assume that the invariant contains the conjunction of the 
+  %       invariants of the the parent classes.
+  % If it can't find the class of tgt it just returns TRUE
   lookup_inv(p : PreProgram, tgt : Val) : BoolExpr =
     IF up?(get_class(p)(tgt))
     THEN inv(down(get_class(p)(tgt)))
@@ -439,28 +434,27 @@ BEGIN
 
 
   subterm_subset_varnames : LEMMA % :-)
-    FORALL(b1, b2 : Body) :
+    FORALL (b1, b2 : Body) :
       b1 << b2 IMPLIES subset?(var_names(b1), var_names(b2))
 
   subterm_subset_of_var : LEMMA % :-)
-    FORALL(b1, b2 : Body, v : set[Name]) :
+    FORALL (b1, b2 : Body, v : set[Name]) :
       subset?(var_names(b1), v) IMPLIES
         b2 << b1 IMPLIES subset?(var_names(b2), v)
 
 
   proper_subterm_implies_subterm : LEMMA % :-)
-    FORALL(b1, b2 : Body) : 
+    FORALL (b1, b2 : Body) : 
       b1 << b2 IMPLIES subterm(b1, b2) 
 
-
   subterm_transitive : LEMMA % :-)
-    FORALL(b1, b2, b3 : Body) :
+    FORALL (b1, b2, b3 : Body) :
       subterm(b1, b2) IMPLIES
         subterm(b2, b3) IMPLIES
           subterm(b1, b3)
 
   subterm_CaseJML_set2list : LEMMA % :-)
-    FORALL(s : finite_set[[BoolExpr, Stmt]], b : Body) :
+    FORALL (s : finite_set[[BoolExpr, Stmt]], b : Body) :
       Set?(b) IMPLIES
       subterm(b, CaseJML(set2list(s))) =
         (EXISTS(x : [BoolExpr, Stmt]) : 
@@ -608,7 +602,7 @@ BEGIN
   % Because we model the heap as a flat Store here we need to require that
   % variables have a unique name within the program.
   wf_program_variables_disjoint : LEMMA % :-)
-     FORALL(p : Program) :
+     FORALL (p : Program) :
        LET fname = var_names(getFieldDecls(p)),
            lname = var_names(getLocalDecls(p)),
            gname = var_names(getGhostDecls(p)) IN
@@ -641,11 +635,11 @@ BEGIN
         m1 = m2
 
   wf_program_methods_only_in_one_class : LEMMA % :-)
-    FORALL(p : Program) :
+    FORALL (p : Program) :
       wf_program_methods_only_in_one_class(p)
 
   wf_program_var_names_declared : LEMMA % :-)
-    FORALL(p : Program, n : Name) :
+    FORALL (p : Program, n : Name) :
       var_names(p)(n) IMPLIES ext_declared_var_names(p)(n)
 
 

@@ -24,8 +24,8 @@ BEGIN
             AnnotateProgram[CP, Name],
             AnnotateProgramProperties[CP, Name]
 
-
   mp : VAR (wf_MP)
+
 
   MVA_cp_modeled?(mp)(sA : AState, sAP : APState) : boolean =
     Int(unique(cp(sA))) = gvs(sAP)(cp(mp))
@@ -138,10 +138,10 @@ BEGIN
 
   ENDASSUMING
 
-
   IMPORTING Equivalence[CP, Name]
 
   mp : VAR (wf_MP)
+
 
   get_address_same_in_related_states : LEMMA % :-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
@@ -226,7 +226,7 @@ BEGIN
                                         lvds, sAP))
 
 
-  % NOTE: The use of equalities[Val] is needed for disambiaguation
+  % NOTE: The use of equalities[Val] is needed for disambiaguation of =
   MP_modeled_lookup_correspondence : LEMMA % :-)
     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
       wf_state(ann_program(mp))(sAP) IMPLIES

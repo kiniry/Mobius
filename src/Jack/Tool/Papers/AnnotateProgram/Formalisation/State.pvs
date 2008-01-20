@@ -7,15 +7,17 @@ BEGIN
             ValProp
 
   % A store is a mapping from names to values. Partial mappings are represented
-  % using the value Bottom.
+  % using the value Bottom
   Store : TYPE = [Name -> Val]
 
   update_store(n : Name, v : Val)(s : Store) : Store =
     s WITH [n := v]
 
-  % Field and local variables.
+  % Fields and local variables
   PSt : TYPE = [# fvs, lvs : Store #]
 
+  % A program state has a store for fields, a store for local vairables and may
+  % have an exception
   PState : TYPE = [# ex : lift[Excpt],
                      st : PSt #]
 
@@ -130,11 +132,9 @@ BEGIN
       is_local(vn, s) IMPLIES
         wf_state(p)(update_local(vn, v)(s))
 
-%  AT: Check that the following import is not needed
-%  IMPORTING FiniteSetInduction[[Name, Val]]
+  IMPORTING WF_Card[[Name, Val]]
 
-  % FIXME
-  wf_state_update_locals : LEMMA %
+  wf_state_update_locals : LEMMA % :-)
     FORALL(p : Program, s : PState, V : finite_set[[Name, Val]]) :
       wf_state(p)(s) IMPLIES
       (FORALL(v : [Name, Val]) : 
@@ -165,5 +165,6 @@ BEGIN
       classes(p)(c) IMPLIES
       methods(c)(m) IMPLIES
         is_local(name(arg(m)), s)
+
 
 END State

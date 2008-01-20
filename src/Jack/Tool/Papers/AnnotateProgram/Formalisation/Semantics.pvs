@@ -266,9 +266,9 @@ BEGIN
           THEN md = down(lookup_mthd(program(p), a, mn))
           ELSE FALSE % should not happen in a wf_Program
           ENDIF AND
-          % remember old local store
+          % remember the local store
           old_lvs = lvs(st(pstate(tau2))) AND
-          % update the value of this, the argument and initialize the local vars
+          % update 'this', the argument and initialize local variables
           tau3 = update_stack(a, arg(md), pv, lvars(md), tau2) AND
           % actions taken at the entry of the method (inv, precond, pre_set)
           on_method_entry(p, md, a, tau3, tau4, m3, bounded_derive_rec(m3)) AND
@@ -294,7 +294,7 @@ BEGIN
           THEN v = Bottom
           ELSE v = w
           ENDIF AND
-          % restore the old local store (to allow recursion)
+          % restore the local store (to allow recursion)
           sigma2 = update_PState(tau7,
                                  LAMBDA(pstate : PState) : 
                                    pstate WITH 

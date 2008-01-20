@@ -589,7 +589,7 @@ BEGIN
                          initial_AP_state(ann_program(mp))(root_object))
 
   % Inductive case
-  derive_maintains_related_states_for_unchanged_program : THEOREM
+  derive_preserves_related_states_for_unchanged_program : THEOREM % :-)
     FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n1, n2 : nat) :
