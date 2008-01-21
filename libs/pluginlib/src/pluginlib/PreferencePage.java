@@ -18,6 +18,27 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 abstract
 public class PreferencePage extends org.eclipse.jface.preference.PreferencePage 
 implements IWorkbenchPreferencePage {
+	
+	/** The option button corresponding to Eclipse logging. */
+	  static public PreferenceWidget.BooleanWidget logging = new PreferenceWidget.BooleanWidget(
+	      Options.logging);
+
+	  /** The choice of using the console or System.out for logging */
+	  static final public PreferenceWidget.BooleanWidget useConsole = new PreferenceWidget.BooleanWidget(
+	      Options.useConsole);
+
+	  /** The choice to send informational output to the log file as well */
+	  static final public PreferenceWidget.BooleanWidget alsoLogInfo = new PreferenceWidget.BooleanWidget(
+	      Options.alsoLogInfo);
+
+	  /**
+	   * This is the list of widgets in the JmlEclipse options section of the
+	   * properties page
+	   */
+	  final static public PreferenceWidget[] eclipseOptions = new PreferenceWidget[] {
+	                                                                          logging,
+	                                                                          useConsole,
+	                                                                          alsoLogInfo };
 
 	/** This method must be overridden to return an array of OptionWidget
 	 *  that the other methods here are to act upon.
