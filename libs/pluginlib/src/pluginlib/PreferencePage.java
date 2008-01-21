@@ -1,5 +1,5 @@
 /*
- * This file is part of the Esc/Java2 plugin project.
+ * This file is part of the Mobius plugin library project.
  * Copyright 2004-2005 David R. Cok
  * 
  */
