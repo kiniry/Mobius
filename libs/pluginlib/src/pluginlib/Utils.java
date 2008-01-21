@@ -461,9 +461,6 @@ public class Utils {
 			for (int i = 0; i < classPathEntries.length; ++i) {
 				IClasspathEntry cpe = classPathEntries[i];
 				IPath entry = cpe.getPath();
-				if (onlyExported && 
-						(cpe.getEntryKind() != IClasspathEntry.CPE_SOURCE &&
-								!entry.toOSString().endsWith(escjava.plugin.EscjavaPlugin.JML_JAR_FILENAME) )) continue; // FIXME no explicit library names
 				IResource res = getRoot().findMember(entry);
 				if (cpe.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
 					// Might be an internal or external library
