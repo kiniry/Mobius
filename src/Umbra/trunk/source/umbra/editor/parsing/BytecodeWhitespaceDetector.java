@@ -15,9 +15,16 @@ import org.eclipse.jface.text.rules.IWhitespaceDetector;
  * is a whitespace.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeWhitespaceDetector implements IWhitespaceDetector {
+
+  /**
+   * The array which contains all the characters we consider here to be
+   * whitespace characters.
+   */
+  public static final char[] WHITESPACE_CHARACTERS = {' ', '\t', '\n', '\r' };
 
   /**
    * This method defines which characters are whitespace characters.
@@ -26,7 +33,9 @@ public class BytecodeWhitespaceDetector implements IWhitespaceDetector {
    * @return <code>true</code> when the character is regarded as a whitespace
    */
   public final boolean isWhitespace(final char a_char) {
-    return (a_char == ' ' || a_char == '\t' ||
-            a_char == '\n' || a_char == '\r');
+    for (int i = 0; i < WHITESPACE_CHARACTERS.length; i++) {
+      if (WHITESPACE_CHARACTERS[i] == a_char) return true;
+    }
+    return false;
   }
 }

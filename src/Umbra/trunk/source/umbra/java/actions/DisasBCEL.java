@@ -46,8 +46,8 @@ public class DisasBCEL implements IEditorActionDelegate {
 
   /**
    * Finds {@link JavaClass} structure related to the current Java
-   * source code. Generates new bytecode from it and displays
-   * it in a new bytecode editor window.
+   * source code. Generates new byte code from it and displays
+   * it in a new byte code editor window.
    *
    * @param an_action see the IActionDelegate.run(IAction)
    * @see org.eclipse.ui.IActionDelegate#run(IAction)

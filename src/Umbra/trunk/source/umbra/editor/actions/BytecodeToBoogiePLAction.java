@@ -75,19 +75,8 @@ public class BytecodeToBoogiePLAction implements IEditorActionDelegate {
                   UmbraHelper.INVALID_EXTENSION.replace(UmbraHelper.SUBSTITUTE,
                        UmbraHelper.BYTECODE_EXTENSION));
     } else {
-      // replaceClass(active);
-
-
-      // my_editor.doSave(null);
-      // IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      // IProject project = root.getProject("selectedProject name");
-      // String entirePath = p.getLocation().toOSString();
-
       final IFile file = ((FileEditorInput)my_editor.getEditorInput()).
                                                      getFile();
-
-      // String location = root.getLocation().toString();
-
       final String projectPath = file.getProject().getLocation().toOSString();
       final String bytecodePath = file.getLocation().toOSString();
       final String boogiePLPath = UmbraHelper.replaceLast(bytecodePath,

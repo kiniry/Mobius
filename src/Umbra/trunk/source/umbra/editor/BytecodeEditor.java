@@ -279,7 +279,6 @@ public class BytecodeEditor extends TextEditor {
     final String pathName = getPath(outputloc).removeLastSegments(1).
                                                addTrailingSeparator().
                                                toPortableString();
-
     // Get class name together with its package name
     //FIXME there is a better way to obtain the name!!!
     final String tmp = a_path.removeFirstSegments(1).toOSString();

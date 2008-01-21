@@ -17,7 +17,7 @@ package umbra.editor.parsing;
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01
  */
-public class BytecodeStrings {
+public final class BytecodeStrings {
 
   /**
    * TODO.
@@ -487,4 +487,30 @@ public class BytecodeStrings {
                                                        "byte", "short",
                                                        "int", "long"};
 
+  /**
+   * This string contains the multi-line comment start.
+   */
+  public static final String COMMENT_LINE_START = "/*";
+
+  /**
+   * This string contains the multi-line comment end.
+   */
+  public static final String COMMENT_LINE_END = "*/";
+
+  /**
+   * This string contains the BML annotation comment start.
+   */
+  public static final String ANNOT_LINE_START = "/*@";
+
+  /**
+   * This string contains the BML annotation comment end.
+   */
+  public static final String ANNOT_LINE_END = "@*/";
+
+  /**
+   * Private constructor added to prevent the creation of objects of this
+   * type.
+   */
+  private BytecodeStrings() {
+  }
 }

@@ -20,14 +20,14 @@ public class InstructionParser extends InstructionTypeParser {
 
   /**
    * This field contains the number parsed from the chunk of the digits.
-   * It contains a sensible value right after the {@ref #swallowNumber()}
+   * It contains a sensible value right after the {@link #swallowNumber()}
    * is called.
    */
   private int my_result;
 
   /**
    * The number of the last parsed mnemonic. The number is an index in the
-   * array given as the parameter to {@ref #swallowMnemonic(String[])}.
+   * array given as the parameter to {@link #swallowMnemonic(String[])}.
    * If no sensible mnemonic have been found the field has the value -1;
    */
   private int my_mnemonicno = -1;
@@ -159,7 +159,7 @@ public class InstructionParser extends InstructionTypeParser {
    * advance the index in case the first character to be analysed is not the
    * proper first character of a string. We assume the parsed string is not
    * finished before the method is called. We assume there is no newline
-   * character in {@link #getLine()} string.
+   * character in the parsed string.
    *
    * The exact format, according to JLS 3rd edition 3.10.5 String Literals, is:
    * <pre>

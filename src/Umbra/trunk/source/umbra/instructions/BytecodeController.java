@@ -21,6 +21,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.swt.widgets.Shell;
 
 import umbra.UmbraException;
@@ -31,10 +32,10 @@ import umbra.editor.parsing.BytecodeWhitespaceDetector;
 
 /**
  * This class defines some structures related to BCEL as well
- * as to the bytecode editor contents. The structures are updated after
- * each Bytecode modification and its modification allow
+ * as to the byte code editor contents. The structures are updated after
+ * each byte code modification and its modification allow
  * updating BCEL. Especially a list of all lines (on purpose to
- * check corectness) as well as a list of instruction lines
+ * check correctness) as well as a list of instruction lines
  * to detect when BCEL modification is needed. Additional
  * structures keep the information which method has been
  * modified (in case of combining changes) and what comments
@@ -103,6 +104,11 @@ public class BytecodeController {
   private String my_current_comment;
 
   /**
+   * The automaton to pre-parse the lines of the byte code document.
+   */
+  private DispatchingAutomaton my_preparse_automaton;
+
+  /**
    * TODO.
    */
   public BytecodeController() {
@@ -162,6 +168,7 @@ public class BytecodeController {
       MessageDialog.openInformation(new Shell(), "Bytecode",
                          "The current document has no positions for line " + j);
     }
+    System.out.println("linesnum="+a_doc.getNumberOfLines());
     while (j < a_doc.getNumberOfLines() - 1) {
       try {
         j = swallowMethod(a_doc, j, i, ctxt);
@@ -220,13 +227,16 @@ public class BytecodeController {
     return swallowEmptyLines(a_doc, j, a_ctxt);
   }
 
-  private int swallowEmptyLines(IDocument a_doc, int the_current_lno,
-                                LineContext ctxt)
+  private int swallowEmptyLines(final IDocument a_doc,
+                                final int the_current_lno,
+                                final LineContext a_ctxt)
     throws BadLocationException {
     int j = the_current_lno;
     while (j < a_doc.getNumberOfLines() - 1) {
-      final String line = getLineFromDoc(a_doc, j, ctxt);
-      final BytecodeLineController lc = getType(line, ctxt);
+      final String line = getLineFromDoc(a_doc, j, a_ctxt);
+      final BytecodeLineController lc = getType(line, a_ctxt);
+      System.out.println("line="+lc.getLineContent());
+      System.out.println("type="+lc.getClass().toString());
       my_editor_lines.add(j, lc);
       if (!(lc instanceof CommentLineController)  &&
           !(lc instanceof EmptyLineController)) {
@@ -237,16 +247,21 @@ public class BytecodeController {
     return j;
   }
 
-  private String getLineFromDoc(IDocument a_doc, int j,
-                                LineContext ctxt) throws BadLocationException {
-    String line = a_doc.get(a_doc.getLineOffset(j), a_doc.getLineLength(j));
-    String lineName = removeCommentFromLine(line);
-    my_current_comment = extractCommentFromLine(line, ctxt);
+  private String getLineFromDoc(final IDocument a_doc,
+                                final int a_position,
+                                final LineContext a_ctxt)
+    throws BadLocationException {
+    final String line = a_doc.get(a_doc.getLineOffset(a_position),
+                                  a_doc.getLineLength(a_position));
+    final String lineName = removeCommentFromLine(line);
+    my_current_comment = extractCommentFromLine(line, a_ctxt);
     return lineName;
   }
 
-  private int swallowMethod(final IDocument a_doc, int the_line_no,
-                            int i, LineContext ctxt)
+  private int swallowMethod(final IDocument a_doc,
+                            final int the_line_no,
+                            final int a_method_no,
+                            final LineContext a_ctxt)
     throws BadLocationException, UmbraException {
     int j = the_line_no;
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
@@ -257,18 +272,20 @@ public class BytecodeController {
     InstructionList il = null;
     InstructionHandle ih = null;
     int ic = my_instructions.size(); // counts lines with instructions
-    if (i >= methods.length) // too many methods
+    if (a_method_no >= methods.length) // too many methods
       throw new UmbraException();
 
-    mg = new MethodGen(methods[i], cg.getClassName(), cpg);
+    mg = new MethodGen(methods[a_method_no], cg.getClassName(), cpg);
     il = mg.getInstructionList();
     ih = il.getStart();
 
     for (; j < a_doc.getNumberOfLines() - 1; j++) {
-      final String lineName = getLineFromDoc(a_doc, j, ctxt);
-      final BytecodeLineController lc = getType(lineName, ctxt);
+      final String lineName = getLineFromDoc(a_doc, j, a_ctxt);
+      System.out.println("lineName="+lineName);
+      final BytecodeLineController lc = getType(lineName, a_ctxt);
+      System.out.println("lc="+lc.getClass());
       if (lc.isCommentStart()) { // ignore comments
-        j = swallowEmptyLines(a_doc, j, ctxt) - 1;
+        j = swallowEmptyLines(a_doc, j, a_ctxt) - 1;
         continue;
       }
       my_editor_lines.add(j, lc);
@@ -278,7 +295,7 @@ public class BytecodeController {
       if (lc instanceof EmptyLineController) { //method end
         return ++j;
       }
-      if (lc.addHandle(ih, il, mg, i - 1)) { //this is an instruction line
+      if (lc.addHandle(ih, il, mg, a_method_no - 1)) { //instruction line
         my_instructions.add(ic++, lc);
         if (my_current_comment != null) my_comments.put(lc, my_current_comment);
         if (part_comment.compareTo("") != 0) {
@@ -440,14 +457,6 @@ public class BytecodeController {
     return res;
   }
 
-  private String removeEOL(final String lineName) {
-    String ls = System.getProperty("line.separator");
-    if (lineName.endsWith(ls)) {
-      return lineName.substring(0, lineName.lastIndexOf(ls) - 1);
-    }
-    return lineName;
-  }
-
   /**
    * Checks whether all lines of a selected area are correct
    * (they satisfies some given syntax conditions). TODO check
@@ -475,7 +484,11 @@ public class BytecodeController {
 
   /**
    * Chooses one of line types that matches the given line
-   * contents. TODO check
+   * contents. This method does a quick pre-parsing of the
+   * line content and based on that chooses which particular line controller
+   * should be used for the given line. It also uses the context information
+   * to return controllers in case the analysis is inside a comment or a
+   * BML annotation.
    *
    * @param a_line the string contents of inserted or modified line
    * @param a_context information on the previous lines
@@ -500,157 +513,121 @@ public class BytecodeController {
       }
       return lc;
     }
-
-    int i;
-    boolean ok;
-    int j;
-    final String l = removeWhiteSpace(removeColonFromLine(a_line));
-    if (l.length() == 0)
-      return new EmptyLineController(a_line);
-
-    //kod - tylko zaczynajace sie Code reszte przy poprawnosci
-    if (l.startsWith("Code") ||
-       (l.startsWith("LocalVariable")) ||
-       (l.startsWith("LineNumber")) ||
-       (l.startsWith("Attribute")))
-        return new CodeLineController(a_line);
-
-    //wyjatki throw Exception from nie znam reguly
-    if ((l.startsWith("throws")) ||
-      (l.startsWith("Exception")) ||
-      (l.startsWith("From")))
-      return new ThrowsLineController(a_line);
-
-    //naglowki - public static void private
-    // i na wszelki wypadek - int char protected boolean String byte
-    final String[] sHeaderInits =  BytecodeStrings.HEADER_PREFIX;
-    for (int k = 0; k < sHeaderInits.length; k++) {
-      if (l.startsWith(sHeaderInits[k]))
-        return new HeaderLineController(a_line);
+    final DispatchingAutomaton automaton = getAutomaton();
+    BytecodeLineController  blc;
+    try {
+      blc = automaton.execForString(a_line, a_line);
+    } catch (CannotCallRuleException e) {
+      blc = new UnknownLineController(a_line);
     }
-
-    if (CommentLineController.isCommentStart(l)) {
-      if (AnnotationLineController.isAnnotationStart(l)) {
+    if (blc instanceof CommentLineController) {
+      if (blc instanceof AnnotationLineController) {
         a_context.setInsideAnnotation();
-        return new AnnotationLineController(a_line);
       } else {
         a_context.setInsideComment();
-        return new CommentLineController(a_line);
       }
     }
-
-
-    //instrukcje liczba i :
-    // a potem w zaleznosci od rodzaju
-
-    final int ppos = a_line.indexOf(":");
-    if (ppos >= 0) { //nie >= czy jest : od 2 pozycji
-      //tzn liczy chyba od zerowej czyli sprawdzaczy cyfra przed
-      //UmbraPlugin.messagelog("dwukropek" + ppos + line.charAt(0) +
-      //                       line.charAt(1));
-      ok = true;
-      for (i = 0; i < ppos; i++) {
-        //UmbraPlugin.messagelog("i" + i + line.charAt(i) + line.charAt(1));
-        //sprawdza czy tylko numeryczne przed :
-        if  (!(Character.isDigit(a_line.charAt(i)))) ok = false;
-      }
-      String subline = a_line.substring(ppos + 1);
-      while (Character.isWhitespace(subline.charAt(0)))
-        subline = subline.substring(1);
-      for (i = 1; i < subline.length(); i++) {
-        if (Character.isWhitespace(subline.charAt(i))) {
-          subline = subline.substring(0, i);
-          break;
-        }
-      }
-      if (ok) {
-        final String[] sIArith =  BytecodeStrings.ARITHMETIC_INS;
-        final String[] sIConst =  BytecodeStrings.ICONST_INS;
-        final String[] sLSConst = BytecodeStrings.LOAD_STORE_INS;
-        final String[] sLSArr = BytecodeStrings.LOAD_STORE_ARRAY_INS;
-        final String[] sConv = BytecodeStrings.CONV_INS;
-        final String[] s1 = BytecodeStrings.SINGLE_INS;
-        final String[] s2 = BytecodeStrings.PUSH_INS;
-        final String[] s3 = BytecodeStrings.JUMP_INS;
-        final String[] s4 = BytecodeStrings.INCC_INS;
-        final String[] s5 = BytecodeStrings.STACK_INS;
-        final String[] s6 = BytecodeStrings.ARRAY_INS;
-        final String[] s7 = BytecodeStrings.NEW_INS;
-        final String[] s8 = BytecodeStrings.FIELD_INS;
-        final String[] s9 = BytecodeStrings.INVOKE_INS;
-        final String[] s10 = BytecodeStrings.LDC_INS;
-        final String[] s11 = BytecodeStrings.UNCLASSIFIED_INS;
-        //the sequence is important since aload_0 is before aload
-        // i ty tworzenie inshan !!!!!!!!! ??
-        for (j = 0; j < sIArith.length; j++) {
-          if (subline.equalsIgnoreCase(sIArith[j]))
-            return new ArithmeticInstruction(a_line, sIArith[j]);
-        }
-        for (j = 0; j < sIConst.length; j++) {
-          if (subline.equalsIgnoreCase(sIConst[j]))
-            return new IConstInstruction(a_line, sIConst[j]);
-        }
-        for (j = 0; j < sLSArr.length; j++) {
-          if (subline.equalsIgnoreCase(sLSArr[j]))
-            return new LoadStoreArrayInstruction(a_line, sLSArr[j]);
-        }
-        for (j = 0; j < sConv.length; j++) {
-          if (subline.equalsIgnoreCase(sConv[j]))
-            return new ConversionInstruction(a_line, sLSArr[j]);
-        }
-        for (j = 0; j < sLSConst.length; j++) {
-          if (subline.equalsIgnoreCase(sLSConst[j]))
-            return new LoadStoreConstInstruction(a_line, sLSConst[j]);
-        }
-        for (j = 0; j < s1.length; j++) {
-          if (subline.equalsIgnoreCase(s1[j]))
-            return new SingleInstruction(a_line, s1[j]);
-        }
-        for (j = 0; j < s2.length; j++) {
-          if (subline.equalsIgnoreCase(s2[j]))
-            return new PushInstruction(a_line, s2[j]);
-        }
-        for (j = 0; j < s3.length; j++) {
-          if (subline.equalsIgnoreCase(s3[j]))
-            return new JumpInstruction(a_line, s3[j]);
-        }
-        for (j = 0; j < s4.length; j++) {
-          if (subline.equalsIgnoreCase(s4[j]))
-            return new IncInstruction(a_line, s4[j]);
-        }
-        for (j = 0; j < s5.length; j++) {
-          if (subline.equalsIgnoreCase(s5[j]))
-            return new StackInstruction(a_line, s5[j]);
-        }
-        for (j = 0; j < s6.length; j++) {
-          if (subline.equalsIgnoreCase(s6[j]))
-            return new ArrayInstruction(a_line, s6[j]);
-        }
-        for (j = 0; j < s7.length; j++) {
-          if (subline.equalsIgnoreCase(s7[j]))
-            return new NewInstruction(a_line, s7[j]);
-        }
-        for (j = 0; j < s8.length; j++) {
-          if (subline.equalsIgnoreCase(s8[j]))
-            return new FieldInstruction(a_line, s8[j]);
-        }
-        for (j = 0; j < s9.length; j++) {
-          if (subline.equalsIgnoreCase(s9[j]))
-            return new InvokeInstruction(a_line, s9[j]);
-        }
-        for (j = 0; j < s10.length; j++) {
-          if (subline.equalsIgnoreCase(s10[j]))
-            return new LdcInstruction(a_line, s10[j]);
-        }
-        for (j = 0; j < s11.length; j++) {
-          if (subline.equalsIgnoreCase(s11[j]))
-            return new UnclassifiedInstruction(a_line, s11[j]);
-        }
-      }
-    }
-
-    return new UnknownLineController(a_line);
+    return blc;
   }
+
+  /**
+   * TODO
+   * @return
+   */
+  private DispatchingAutomaton getAutomaton() {
+    if (my_preparse_automaton == null) {
+      my_preparse_automaton = new DispatchingAutomaton();
+      my_preparse_automaton.addSimple("", EmptyLineController.class);
+      for (int i = 0;
+           i < BytecodeWhitespaceDetector.WHITESPACE_CHARACTERS.length;
+           i++) {
+        my_preparse_automaton.addStarRule(
+          Character.toString(BytecodeWhitespaceDetector.
+                             WHITESPACE_CHARACTERS[i]),
+          my_preparse_automaton);
+      }
+      my_preparse_automaton.addSimple("throws", ThrowsLineController.class);
+      my_preparse_automaton.addSimple("Exception", ThrowsLineController.class);
+      my_preparse_automaton.addSimple("From", ThrowsLineController.class);
+
+      final String[] sHeaderInits =  BytecodeStrings.HEADER_PREFIX;
+      for (int k = 0; k < sHeaderInits.length; k++) {
+        my_preparse_automaton.addSimple(sHeaderInits[k],
+                                        HeaderLineController.class);
+      }
+      my_preparse_automaton.addSimple(BytecodeStrings.COMMENT_LINE_START,
+                                      CommentLineController.class);
+      my_preparse_automaton.addSimple(BytecodeStrings.ANNOT_LINE_START,
+                                      AnnotationLineController.class);
+      final DispatchingAutomaton digitnode = my_preparse_automaton.
+               addSimple("1",
+                         UnknownLineController.class);
+      for (int i = 2; i < 10; i++) {
+        my_preparse_automaton.addStarRule(Integer.toString(i), digitnode);
+      }
+      for (int i = 0; i < 10; i++) {
+        my_preparse_automaton.addStarRule("1" + Integer.toString(i), digitnode);
+      }
+      final DispatchingAutomaton colonnode = digitnode.addSimple(":",
+                                               UnknownLineController.class);
+      for (int i = 0;
+           i < BytecodeWhitespaceDetector.WHITESPACE_CHARACTERS.length;
+           i++) {
+        colonnode.addStarRule(Character.toString(BytecodeWhitespaceDetector.
+                                                 WHITESPACE_CHARACTERS[i]),
+                              colonnode);
+      }
+      addMnemonics(colonnode, BytecodeStrings.ARITHMETIC_INS,
+                   ArithmeticInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.ICONST_INS,
+                   IConstInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.LOAD_STORE_INS,
+                   LoadStoreConstInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.LOAD_STORE_ARRAY_INS,
+                   LoadStoreArrayInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.CONV_INS,
+                   ConversionInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.SINGLE_INS,
+                   SingleInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.PUSH_INS,
+                   PushInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.JUMP_INS,
+                   JumpInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.INCC_INS,
+                   IncInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.STACK_INS,
+                   StackInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.ARRAY_INS,
+                   ArrayInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.NEW_INS,
+                   NewInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.FIELD_INS,
+                   FieldInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.INVOKE_INS,
+                   InvokeInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.LDC_INS,
+                   LdcInstruction.class);
+      addMnemonics(colonnode, BytecodeStrings.UNCLASSIFIED_INS,
+                   UnclassifiedInstruction.class);
+    }
+    return my_preparse_automaton;
+  }
+
+  /**
+   * 
+   * @param a_node
+   * @param the_mnemonics
+   * @param a_class
+   */
+  private void addMnemonics(final DispatchingAutomaton a_node,
+                            final String[] the_mnemonics,
+                            final Class a_class) {
+    for (int j = 0; j < the_mnemonics.length; j++) {
+      a_node.addMnemonic(the_mnemonics[j], the_mnemonics[j],
+                              a_class);
+    }
+  }
+
 
   /**
    * This method strips off the whitespace characters both at the beginning

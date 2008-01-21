@@ -144,7 +144,7 @@ public class InstructionNameParser extends InstructionParserGeneric {
    * FIXME: this is not based on a part of JLS as I do not know where to find
    * that
    *
-   * @return <code>true</code> when the class name has been suceessfully
+   * @return <code>true</code> when the class name has been successfully
    *   swallowed, <code>false</code> otherwise.
    */
   public boolean swallowFieldName() {

@@ -98,8 +98,8 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   }
 
   /**
-   * This method lazily retruns the value of the double click strategy
-   * associated with the current bytecode editor (that means in case
+   * This method lazily returns the value of the double click strategy
+   * associated with the current byte code editor (that means in case
    * it is <code>null</code> it creates a new strategy).
    *
    * @param a_source_viewer a source viewer for which the double click strategy
@@ -166,8 +166,8 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    *   <li>{@ref BytecodePartitionScanner#THROWS}.</li>
    * </ul>
    * The {@link NonRuleBasedDamagerRepairer} is initialised with
-   * the current values of the fields {@link #my_color_manager} and
-   * {@link #my_mode} combined with an abstrac color indication
+   * the current values of the color manager and the mode number
+   * combined with an abstract color indication
    * ({@link ColorValues#HEADER}, {@link ColorValues#THROWS}).
    *
    * @param a_source_viewer the source viewer for which the reconciler is

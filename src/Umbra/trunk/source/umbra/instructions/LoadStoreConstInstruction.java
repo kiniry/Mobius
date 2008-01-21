@@ -305,13 +305,13 @@ public class LoadStoreConstInstruction extends SingleInstruction {
   }
 
   /**
-   * This method, based on the value of the field
-   * {@link InstructionLineController#getName()}, creates a new BCEL instruction
+   * This method, based on the value of the instruction line (from
+   * {@link InstructionLineController}), creates a new BCEL instruction
    * object for an instruction with no parameters that loads or stores a
    * for a constant value i.e.
    * <ul>
-   *    <li>xload_&lt;num&gt;,</li>
-   *    <li>xstore_&lt;num&gt;.</li>
+   *    <li>xload_&lt;number&gt;,</li>
+   *    <li>xstore_&lt;number&gt;.</li>
    * </ul>
    * where x is one of a, c, d, f l.
    *

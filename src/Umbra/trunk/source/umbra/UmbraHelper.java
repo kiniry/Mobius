@@ -390,14 +390,15 @@ public final class UmbraHelper {
    * This method returns java class file path file of javaElement.
    * Proposed usage:
    *  getClassFilePath(getSelectedType(editor))
-   * @param javaType type to find output class file path
+   * @param a_java_type type to find output class file path
    * @return output class file path
    * @throws JavaModelException TODO
    */
-  public static IPath getClassFilePath(final IType javaType)
-      throws JavaModelException {
-    return getOutputTypePath(javaType).append(javaType.getUnderlyingResource()
-                                                .getName())
+  public static IPath getClassFilePath(final IType a_java_type)
+    throws JavaModelException {
+    return getOutputTypePath(a_java_type).append(a_java_type.
+                                                 getUnderlyingResource().
+                                                 getName())
         .removeFileExtension().addFileExtension(CLASS_EXTENSION_NONDOT);
   }
 
@@ -423,31 +424,32 @@ public final class UmbraHelper {
    * Method returns output path (containing output .class files) of the
    * package where javaElement is situated.
    *
-   * @param javaType the element to find output package of
+   * @param a_java_type the element to find output package of
    * @return package output path of javaElement
    * @throws JavaModelException TODO
    */
-  public static IPath getOutputTypePath(final IType javaType)
-      throws JavaModelException {
-    IJavaProject project = javaType.getJavaProject();
-    IPath path = project.getOutputLocation();
-    return path.append(javaType.getFullyQualifiedName().replace(Signature.C_DOT,
-                                                     File.separatorChar));
+  public static IPath getOutputTypePath(final IType a_java_type)
+    throws JavaModelException {
+    final IJavaProject project = a_java_type.getJavaProject();
+    final IPath path = project.getOutputLocation();
+    return path.append(a_java_type.getFullyQualifiedName().
+                                   replace(Signature.C_DOT,
+                                           File.separatorChar));
   }
 
   /**
    * This method returns a package of given IJavaElement.
    *
-   * @param javaElement the element we want to find package of
+   * @param a_java_element the element we want to find package of
    * @return java package name
    */
-  public static String getPackageName(final IJavaElement javaElement) {
-    int elementType = javaElement.getElementType();
+  public static String getPackageName(final IJavaElement a_java_element) {
+    final int elementType = a_java_element.getElementType();
     if (elementType == IJavaElement.PACKAGE_FRAGMENT ||
         elementType == IJavaElement.PACKAGE_FRAGMENT_ROOT) {
-      return javaElement.getElementName();
+      return a_java_element.getElementName();
     } else {
-      return javaElement.getAncestor(IJavaElement.PACKAGE_FRAGMENT)
+      return a_java_element.getAncestor(IJavaElement.PACKAGE_FRAGMENT)
           .getElementName();
     }
   }

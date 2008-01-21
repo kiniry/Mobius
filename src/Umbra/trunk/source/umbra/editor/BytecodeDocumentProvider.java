@@ -50,7 +50,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    * case the file does not exists, an empty file is created first.
    * Subsequently, the colouring of the document structure is set using
    * {@link BytecodePartitionScanner}. At last the document is added to the
-   * event listener associated with the bytecode editor (i.e. the one in
+   * event listener associated with the byte code editor (i.e. the one in
    * {@link BytecodeContribution}.
    *
    * @param an_element an element for which we create the document, the actual
@@ -59,10 +59,10 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    *   <code>an_element</code> is null or is not {@link IEditorInput}
    * @throws CoreException if the input for <code>an_element</code>
    *   cannot be accessed or for the reasons presented in
-   *   {@ref IFile.create(InputStream, boolean, IProgressMonitor)}
-   * @exception org.eclipse.core.runtime.OperationCanceledException in case the
-   *   operation to create the new file was cancelled, this may also happen in
-   *   case no user cancelled the operation
+   *   {@link IFile#create(InputStream, boolean, IProgressMonitor)}
+   * @throws org.eclipse.core.runtime.OperationCanceledException in case the
+   *   operation to create the new file was canceled, this may also happen in
+   *   case no user canceled the operation
    */
   protected final IDocument createDocument(final Object an_element)
     throws CoreException {

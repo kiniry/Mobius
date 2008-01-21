@@ -1,5 +1,7 @@
 package umbra.instructions;
 
+import umbra.editor.parsing.BytecodeStrings;
+
 /**
  * This class handles the creation and correctness of line controllers that
  * form comments.
@@ -31,7 +33,7 @@ public class CommentLineController extends BytecodeLineController {
    */
   public static boolean isCommentStart(
                               final /*@ non_null @*/ String a_line) {
-    return a_line.trim().startsWith("/*");
+    return a_line.trim().startsWith(BytecodeStrings.COMMENT_LINE_START);
   }
 
 
@@ -55,4 +57,14 @@ public class CommentLineController extends BytecodeLineController {
     return false;
   }
 
+  /**
+   * This method is used to check some basic condition of
+   * correctness. For comment lines this is always true.
+   *
+   * @return  true if the instruction is correct
+   * @see    InstructionLineController#correct()
+   */
+  public boolean correct()  {
+    return true;
+  }
 }

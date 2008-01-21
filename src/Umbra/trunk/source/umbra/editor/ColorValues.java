@@ -15,7 +15,7 @@ package umbra.editor;
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */
-public class ColorValues {
+public final class ColorValues {
 
   /**
    * TODO.
@@ -52,11 +52,11 @@ public class ColorValues {
    */
   public static final int COMMENT = 1;
   /**
-   * The color of unparsed text in bytecode (e.g. names of called methods).
+   * The color of unparsed text in byte code (e.g. names of called methods).
    */
   public static final int DEFAULT = 2;
   /**
-   * The color of piece of bytecode recognized to be an error (not used).
+   * The color of piece of byte code recognized to be an error (not used).
    */
   public static final int ERROR = 3;
   /**
@@ -85,11 +85,11 @@ public class ColorValues {
    */
   public static final int THROWS = 10;
   /**
-   * The color of numbers in bytecode that are surrounded by '( )'.
+   * The color of numbers in byte code that are surrounded by '( )'.
    */
   public static final int SQUARE = 11;
   /**
-   * The color of numbers appearing in bytecode except from cases listed
+   * The color of numbers appearing in byte code except from cases listed
    * below.
    */
   public static final int NUMBER = 12;
@@ -277,4 +277,10 @@ public class ColorValues {
                128, 128, 128, 0,
                128, 128, 128, 0}
   };
+
+  /**
+   * The private constructor to forbid the creation of objects with this type.
+   */
+  private ColorValues() {
+  }
 }

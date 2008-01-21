@@ -111,18 +111,20 @@ public class BytecodeDocument extends Document {
   /* synchronization of cursor's positions */
 
   /**
-   * Highlights the area computed in {@link #syncBS(IDocument, JavaClass, int)}
-   * method in related source code editor. Works correctly only inside a method.
+   * Highlights the area in the source code editor which corresponds to
+   * the marked area in the byte code editor. Works correctly only inside a
+   * method body.
    *
    * @see #synchronizeSB(int, IEditorPart)
-   * @param a_pos index of line in bytecode editor. Lines in related source code
-   * editor correspondings to this line will be highlighted.
+   * @param a_pos index of line in byte code editor. Lines in related source
+   *   code editor corresponding to this line will be highlighted.
    */
   public final void synchronizeBS(final int a_pos) {
     final IDocument sDoc = my_related_editor.getDocumentProvider().
                                getDocument(my_related_editor.getEditorInput());
     try {
       final int line = getLineOfOffset(a_pos);
+      // syncBS computes the area to highlight
       final int[] syncLine = syncBS(sDoc, my_javaclass, line);
       final int syncPos = sDoc.getLineOffset(syncLine[0]);
       final int syncLen = sDoc.getLineOffset(syncLine[1] + 1) - syncPos;
@@ -232,13 +234,13 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Highlights the area computed in {@link #syncSB(IDocument, JavaClass, int)
-   * syncSB} method in related bytecode editor. Works correctly only when the
-   * position {@ref a_pos} is inside a method.
+   * Highlights the area in the byte code editor which corresponds to the
+   * marked position in the source code editor. Works correctly only when the
+   * position {@code a_pos} is inside a method.
    *
    * @see #synchronizeBS(int)
-   * @param a_pos index of line in source code editor. Lines in related bytecode
-   *       editor correspondings to this line will be highlighted.
+   * @param a_pos index of line in source code editor. Lines in related byte
+   *       code editor corresponding  to this line will be highlighted
    * @param an_editor the source code editor
    */
   public final void synchronizeSB(final int a_pos,
@@ -261,19 +263,19 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Computes the area in current bytecode corresponding to given line of
-   * source code. The bytecode should be refreshed before calling this metod,
-   * to update {@ref JavaClass} structures. Works correctly only inside
+   * Computes the area in the current byte code corresponding to the given line
+   * of the source code. The byte code should be refreshed before calling this
+   * method, to update {@link JavaClass} structures. Works correctly only inside
    * a method.
    *
-   * @param a_source_doc {@ref IDocument} with source Java code
-   * @param a_java_class {@ref JavaClass} with current bytecode
+   * @param a_source_doc {@link IDocument} with source Java code
+   * @param a_java_class {@link JavaClass} with current byte code
    * @param a_line_no an index of line in <code>a_source_doc</code>
-   * @return array of 2 ({@ref #NO_OF_POSITIONS}) ints representing index of
-   *         first and last line of bytecode (corresponding to given source
-   *         line), in the related bytecode editor
+   * @return array of 2 ({@link #NO_OF_POSITIONS}) ints representing index of
+   *         first and last line of byte code (corresponding to given source
+   *         line), in the related byte code editor
    * @throws BadLocationException if line parameter is invalid. May occur also
-   *         if bytecode in {@ref JavaClass} <code>a_java_class</code>
+   *         if byte code in {@link JavaClass} <code>a_java_class</code>
    *         is out-of-date.
    */
   private int[] syncSB(final IDocument a_source_doc,
@@ -281,7 +283,7 @@ public class BytecodeDocument extends Document {
                        final int a_line_no) throws BadLocationException {
     final String code = get();
     final int[] result = new int [NO_OF_POSITIONS];
-    int j, lineNumTableLen, pc, ln;
+    int j, a_line_num_tablelen, pc, ln;
     int bcln = 0;
     int popln = 0;
     final int maxL = getNumberOfLines() - 1;
@@ -298,7 +300,7 @@ public class BytecodeDocument extends Document {
     Method m;
     for (int i = 0; i < methods.length; i++) {
       m = methods[i];
-      lineNumTableLen = m.getLineNumberTable().getLineNumberTable().length;
+      a_line_num_tablelen = m.getLineNumberTable().getLineNumberTable().length;
       if (a_src_line.startsWith(m.toString())) {
         while (bcln < maxL) {
           bcln++;
@@ -311,7 +313,7 @@ public class BytecodeDocument extends Document {
         break;
       }
       l_do = -1;
-      for (j = 0; j < lineNumTableLen; j++) {
+      for (j = 0; j < a_line_num_tablelen; j++) {
         pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
         ln = m.getLineNumberTable().getLineNumberTable()[j].getLineNumber() - 1;
         popln = bcln;
@@ -347,7 +349,7 @@ public class BytecodeDocument extends Document {
         l_do = bcln - 1;
         break;
       }
-      if (j < lineNumTableLen)
+      if (j < a_line_num_tablelen)
         break;
       if ((l_od != 0) && (l_do == maxL)) {
         l_do = l_od;
@@ -363,11 +365,11 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Gives specified line of the current bytecode.
+   * Gives specified line of the current byte code.
    *
-   * @param a_line  index of line in bytecode editor (starting from 0).
-   * Must be non-negative and less than number of lines in bytecode editor.
-   * @return  n-th line in bytecode editor
+   * @param a_line  index of line in byte code editor (starting from 0).
+   * Must be non-negative and less than number of lines in byte code editor.
+   * @return  n-th line in byte code editor
    * @throws BadLocationException  occurs when parameter n isn't a valid line
    *        number.
    */

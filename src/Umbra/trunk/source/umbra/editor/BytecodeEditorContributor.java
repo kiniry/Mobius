@@ -311,7 +311,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final ISelection ns = new TextSelection(off, len);
     final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
                           getSelectionProvider();
-    BytecodeDocument bdoc = an_editor.getDocument();
+//    final BytecodeDocument bdoc = an_editor.getDocument();
 //    try {
 //      bdoc.computePartitioning(0, bdoc.getLength());
 //    } catch (BadLocationException e) {
