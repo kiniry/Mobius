@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
@@ -22,6 +20,8 @@ import com.sun.source.tree.Tree.Kind;
  *
  * @author Jedrek (fulara@mimuw.edu.pl)
  * @author kjk    (kjk@mimuw.edu.pl)
+ *
+ * @version 0-0.1
  */
 public class TreeNodeFinder {
   /**
@@ -34,18 +34,30 @@ public class TreeNodeFinder {
    */
   private class ParentFinder extends ExtendedJmlTreeScanner<Tree, Tree> {
 
-    public Tree scan(final Tree node, final Tree p) {
-      parents.put(node, p);
+    /**
+     * Overriden scan method sets a node parent in {@code parents} structure.
+     *
+     * @param node the node to scan
+     * @param parent the node's parent
+     * @return parent node (the same result as original scan)
+     */
+    @Override
+    public Tree scan(final Tree node, final Tree parent) {
+      parents.put(node, parent);
       return super.scan(node, node);
     }
 
     /**
-     * When a node in a tree has many children (ie. block has list of statements,
-     * class has a list of members), this method is executed. It joins executing
-     * methods for blocks, classes etc. separately.
+     * When a node in a tree has many children (ie. block has list of
+     * statements, class has a list of members), this method is executed.
+     * It joins executing methods for blocks, classes etc. separately.
+     *
+     * @param nodes the nodes to scan
+     * @param parent parent node
+     * @return parent node (the same result as original scan)
      */
-    public Tree scan(Iterable<? extends Tree> nodes, Tree p) {
-      Tree result = super.scan(nodes, p);
+    @Override
+    public Tree scan(Iterable<? extends Tree> nodes, Tree parent) {
       final Iterator<? extends Tree> iter = nodes.iterator();
       if (iter.hasNext()) {
         Tree stmt = iter.next();
@@ -56,22 +68,7 @@ public class TreeNodeFinder {
         }
         nextSiblingMap.put(stmt, null);
       }
-      return result;
-    }
-
-    public Tree visitJmlClassDecl(JmlClassDecl classNode, Tree node) {
-      final Tree result = super.visitClass(classNode, node);
-      final Iterator<? extends Tree> iter = classNode.getMembers().iterator();
-      if (iter.hasNext()) {
-        Tree stmt = iter.next();
-        while (iter.hasNext()) {
-          final Tree next = iter.next();
-          nextSiblingMap.put(stmt, next);
-          stmt = next;
-        }
-        nextSiblingMap.put(stmt, null);
-      }
-      return result;
+      return super.scan(nodes, parent);
     }
   }
 
@@ -81,6 +78,10 @@ public class TreeNodeFinder {
   /** Maps a tree node to next sibling in a tree. */
   private Map<Tree, Tree> nextSiblingMap;
 
+  /**
+   * The constructor.
+   * @param tree tree on which we want perform find operations.
+   */
   public TreeNodeFinder(final Tree tree) {
     parents = new HashMap<Tree, Tree>();
     nextSiblingMap = new HashMap<Tree, Tree>();
@@ -116,7 +117,7 @@ public class TreeNodeFinder {
    * @param ofClass the class we want to find
    * @return the ancestor of treeElement that is assignable to type ofClass
    */
-  //TODO: Is this dirty, should be changed?? (we can't locate JML nodes differently now)
+  //TODO: Is this dirty, should be changed??
   public Tree getAncestor(final Tree treeElement, final Class<?> ofClass) {
     if (!parents.containsKey(treeElement))
       throw new RuntimeException("tree element not from current tree");

@@ -11,14 +11,12 @@ package jml2bml.rules;
 import java.util.Vector;
 
 import jml2bml.ast.TreeNodeFinder;
-import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.exceptions.NotTranslatedException;
 import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
-import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlSpecificationCase;
@@ -28,23 +26,26 @@ import annot.attributes.MethodSpecification;
 import annot.attributes.SpecificationCase;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
-import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
-import annot.bcexpression.javatype.JavaBasicType;
-import annot.bcexpression.javatype.JavaReferenceType;
 import annot.bcexpression.modifies.ModifyList;
 import annot.io.Code;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
+ *
+ * @version 0-0.1
  */
 public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
+
+  /**
+   * 
+   * @author kjk (kjk@mimuw.edu.pl)
+   */
   private class SpecificationCaseBuilder extends
       TranslationRule<String, Symbols> {
 
@@ -56,7 +57,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     public String visitJmlMethodClauseExpr(final JmlMethodClauseExpr node,
                                            final Symbols symb) {
       if (node.token == JmlToken.REQUIRES) {
-        final AbstractFormula form = BmlLibUtils.getFormula(node.expression,
+        final AbstractFormula form = TranslationUtil.getFormula(node.expression,
                                                             symb, myContext);
         if (precondition == null) {
           precondition = form;
@@ -64,7 +65,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
           precondition = new Formula(Code.AND, precondition, form);
         }
       } else if (node.token == JmlToken.ENSURES) {
-        final AbstractFormula form = BmlLibUtils.getFormula(node.expression,
+        final AbstractFormula form = TranslationUtil.getFormula(node.expression,
                                                             symb, myContext);
         if (postcondition == null) {
           postcondition = form;
@@ -76,21 +77,21 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
       return "";
     }
 
-//    public String visitJmlMethodClauseSignals(final JmlMethodClauseSignals node,
-//                                              final Symbols symb) {
-//      final AbstractFormula form = BmlLibUtils.getFormula(node.expression,
-//                                                          symb, myContext);
-//      final BCExpression bcExpr = node.vardef.vartype.accept(RulesFactory
-//                                                    .getExpressionRule(myContext), symb);
-//      JCVariableDecl decl = node.vardef;
-//      //FIXME: add finding java type
-//      JavaReferenceType jType = null;
-//      Exsure exc = new Exsure(jType, null);
-//      if (excondition == null)
-//        excondition = new Vector<Exsure>();
-//      excondition.add(exc);
-//      return "";
-//    }
+    //    public String visitJmlMethodClauseSignals(final JmlMethodClauseSignals node,
+    //                                              final Symbols symb) {
+    //      final AbstractFormula form = BmlLibUtils.getFormula(node.expression,
+    //                                                          symb, myContext);
+    //      final BCExpression bcExpr = node.vardef.vartype.accept(RulesFactory
+    //                                                    .getExpressionRule(myContext), symb);
+    //      JCVariableDecl decl = node.vardef;
+    //      //FIXME: add finding java type
+    //      JavaReferenceType jType = null;
+    //      Exsure exc = new Exsure(jType, null);
+    //      if (excondition == null)
+    //        excondition = new Vector<Exsure>();
+    //      excondition.add(exc);
+    //      return "";
+    //    }
   }
 
   private final Context myContext;

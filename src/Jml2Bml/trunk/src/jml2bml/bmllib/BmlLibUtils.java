@@ -8,23 +8,16 @@ package jml2bml.bmllib;
 
 import javax.lang.model.type.TypeKind;
 
-import jml2bml.exceptions.NotTranslatedException;
-import jml2bml.rules.RulesFactory;
 import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
 
 import annot.bcclass.BCClass;
-import annot.bcexpression.BCExpression;
 import annot.bcexpression.FieldRef;
-import annot.bcexpression.formula.AbstractFormula;
-import annot.bcexpression.javatype.JavaBasicType;
 import annot.io.Code;
 
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.util.Context;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
@@ -45,18 +38,18 @@ public final class BmlLibUtils {
    */
   public static boolean isBinaryOperatorPredicate2Ar(final int operator) {
     switch (operator) {
-    case Code.GRT:
-    case Code.GRTEQ:
-    case Code.LESS:
-    case Code.LESSEQ:
-    case Code.EQ:
-    case Code.NOTEQ:
-    case Code.AND:
-    case Code.OR:
-    case Code.IMPLIES:
-      return true;
-    default:
-      return false;
+      case Code.GRT:
+      case Code.GRTEQ:
+      case Code.LESS:
+      case Code.LESSEQ:
+      case Code.EQ:
+      case Code.NOTEQ:
+      case Code.AND:
+      case Code.OR:
+      case Code.IMPLIES:
+        return true;
+      default:
+        return false;
     }
   }
 
@@ -144,16 +137,5 @@ public final class BmlLibUtils {
                                         Symbols symbols) {
     BCClass clazz = symbols.findClass();
     return new FieldRef(isOld, clazz.getCp(), index);
-  }
-
-  public static AbstractFormula getFormula(JCExpression expression,
-                                           Symbols symb, Context context) {
-    if (expression == null)
-      return null;
-    final BCExpression bcExpr = expression.accept(RulesFactory
-        .getExpressionRule(context), symb);
-    if (bcExpr.getType1() != JavaBasicType.JavaBool)
-      throw new NotTranslatedException("assert expression must be boolean");
-    return (AbstractFormula) bcExpr;
   }
 }

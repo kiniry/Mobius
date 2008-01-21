@@ -9,7 +9,6 @@
 package jml2bml.rules;
 
 import jml2bml.ast.TreeNodeFinder;
-import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.exceptions.NotTranslatedException;
 import jml2bml.symbols.Symbols;
@@ -37,6 +36,7 @@ import com.sun.tools.javac.util.Context;
  * @author Jedrek (fulara@mimuw.edu.pl)
  * @author kjk    (kjk@mimuw.edu.pl)
  *
+ * @version 0-0.1
  */
 public class AssertRule extends TranslationRule<String, Symbols> {
   private final Context my_context;
@@ -50,9 +50,10 @@ public class AssertRule extends TranslationRule<String, Symbols> {
    * visiting Jml statement expression. If this node represents "assert" clause,
    * generate the corresponding bml annotation. In other cases return null.
    * @param node - node to visit
-   * @param p - additional data (not used)
+   * @param symb - additional data (not used)
    * @return bml-assert annotation or null.
    */
+  @Override
   public String visitJmlStatementExpr(final JmlStatementExpr node,
                                       final Symbols symb) {
 
@@ -61,20 +62,23 @@ public class AssertRule extends TranslationRule<String, Symbols> {
       final BCClass clazz = symb.findClass();
 
       //Find an enclosing method
-      final MethodTree method = (MethodTree) finder.getAncestor(node, Kind.METHOD);
-      final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
+      final MethodTree method = (MethodTree) finder.getAncestor(node,
+                                                                Kind.METHOD);
+      final BCMethod bcMethod = BytecodeUtil
+          .findMethod(method.getName(), clazz);
 
       if (node.expression != null) {
-        final AbstractFormula form = BmlLibUtils.getFormula(node.expression,
+        final AbstractFormula form = TranslationUtil.getFormula(node.expression,
                                                             symb, my_context);
 
         final StatementTree targetStmt = findFirstNotEmptySibling(finder, node);
-        System.out.println("Assertion: "+form+" should be added to statement: "+targetStmt);
+        System.out.println("Assertion: " + form
+                           + " should be added to statement: " + targetStmt);
         final InstructionHandle targetIH = translateStatement(targetStmt,
                                                               bcMethod);
         final int count = bcMethod.getAmap().getAllAt(targetIH).size();
-        bcMethod.addAttribute(new SingleAssert(bcMethod, targetIH,
-                                               count, form));
+        bcMethod
+            .addAttribute(new SingleAssert(bcMethod, targetIH, count, form));
       }
       //TODO: what with node.optionalExpression??
     }
@@ -89,7 +93,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
                                                         StatementTree stmt) {
     do {
       stmt = (StatementTree) finder.getNextSibling(stmt);
-    } while(stmt != null && isJmlStatement(stmt));
+    } while (stmt != null && isJmlStatement(stmt));
     return stmt;
   }
 

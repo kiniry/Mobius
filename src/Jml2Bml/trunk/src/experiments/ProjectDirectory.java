@@ -1,19 +1,45 @@
+/*
+ * @title       "Jml2Bml"
+ * @description "JML to BML Compiler"
+ * @copyright   "(c) 2008-01-06 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package experiments;
 
 import java.io.File;
 import java.io.IOException;
 
-public class ProjectDirectory {
+/**
+ * Class contains constant containing current directory, - useful for tests.
+ * @author kjk (kjk@mimuw.edu.pl)
+ *
+ * @version 0-0.1
+ */
+public final class ProjectDirectory {
+
+  /** Current directory constant. */
   public static final String PROJECT_DIR = getCurrentDir();
 
+  /**
+   * This class is static.
+   */
+  private ProjectDirectory() {
+  };
+
+  /**
+   * Method gets current working directory.
+   * @return current canonical path string
+   */
   private static String getCurrentDir() {
-    File dir1 = new File(".");
+    final File dir = new File(".");
     try {
-      System.out.println("Current dir : " + dir1.getCanonicalPath());
-      return dir1.getCanonicalPath();
+      return dir.getCanonicalPath();
     } catch (IOException e) {
       e.printStackTrace();
       return "Error";
     }
   }
+
 }
