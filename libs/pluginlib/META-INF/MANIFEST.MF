@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MobiusUILibrary Plug-in
+Bundle-SymbolicName: MobiusUILibrary
+Bundle-Version: 1.0.0
+Bundle-Vendor: David Cok and EU Mobius Partners
