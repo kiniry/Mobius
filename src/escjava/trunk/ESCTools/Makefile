@@ -54,7 +54,7 @@ nodocs: clean build jars test
 
 nodocs+: clean build jars alltests
 
-jars: $(ESCJAVA2_SPECS_JAR) jar srcjar
+jars: $(ESCJAVA2_SPECS_JAR) $(ESCJAVA2_SPECS_JAVA1_4_JAR) $(ESCJAVA2_SPECS_JAVACARD_JAR) jar srcjar
 
 ################################################################################
 ## Top-level build and test rules
@@ -210,6 +210,12 @@ cleanup:
 
 $(ESCJAVA2_SPECS_JAR):
 	( cd specs; jar cf $(ESCJAVA2_SPECS_JAR) . )
+	
+$(ESCJAVA2_SPECS_JAVA1_4_JAR):
+	( cd specs-java1.4; jar cf $(ESCJAVA2_SPECS_JAVA1_4_JAR) . )
+	
+$(ESCJAVA2_SPECS_JAVACARD_JAR):
+	( cd specs-javacard; jar cf $(ESCJAVA2_SPECS_JAVACARD_JAR) . )
 
 # RDG: We are not shipping jmlspecs.jar right now because the large VC
 # conditions generated for the full JML specs can make our theorem prover choke
@@ -252,7 +258,7 @@ papers:
 # The latest JML stable release specs.
 #SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
 # The ESC/Java2 specs.
-SPECS = $(ESCTOOLS_ROOT)/specs
+SPECS ?= $(ESCTOOLS_ROOT)/specs
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).
@@ -410,6 +416,8 @@ releases-notests:
 source-release: cleanup alldocs
 	@echo "Creating source release..."
 	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP} 
+	cp -rf ${ESCJAVA2_SPECS_JAVA1_4} ${RELTEMP} 
+	cp -rf ${ESCJAVA2_SPECS_JAVACARD} ${RELTEMP} 
 	rm -rf ${RELTEMP}/original-specs 
 	cp -r ${ORIG_SRC_SPECS} ${RELTEMP} 
 #   Copy all source code, tests, libs, Makefiles, ChangeLog, etc. 
@@ -467,6 +475,8 @@ jar:	build
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAR) )
+	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAVA1_4_JAR) )
+	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAVACARD_JAR) )
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
 	  ${RELJAR} *; jar i ${RELJAR}; )
 	cp ${RELJAR} ${ESCTOOLS_ROOT}
@@ -476,6 +486,8 @@ srcjar:
 	mkdir -p ${RELTEMP}/sub
 	cp -Rf ${ESCTOOLS_ROOT}/Escjava/java/* ${RELTEMP}/sub
 	cp -Rf ${ESCJAVA2_SPECS} ${RELTEMP}/sub/specs
+	cp -Rf ${ESCJAVA2_SPECS_JAVA1_4} ${RELTEMP}/sub/specs-java1.4
+	cp -Rf ${ESCJAVA2_SPECS_JAVACARD} ${RELTEMP}/sub/specs/javacard
 	cp -Rf ${ORIG_SRC_SPECS} ${RELTEMP}/sub/original-specs
 	mkdir -p ${RELTEMP}/sub/junitutils
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
@@ -494,8 +506,10 @@ binary-release: build jars alldocs cleanup
 	cp license.txt ${RELTEMP}
 	${MAKE} jars
 #       Now copy in all specs, new and old
-	rm -rf ${RELTEMP}/specs
+	rm -rf ${RELTEMP}/specs*
 	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
+	cp -rf ${ESCJAVA2_SPECS_JAVA1_4} ${RELTEMP}
+	cp -rf ${ESCJAVA2_SPECS_JAVACARD} ${RELTEMP}
 	rm -rf ${RELTEMP}/original-specs
 	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
 #       Copy Javadoc API docs
@@ -518,6 +532,8 @@ binary-release: build jars alldocs cleanup
 #       with specs in them.
 	cp ${RELJAR} ${RELTEMP}
 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
+	cp $(ESCJAVA2_SPECS_JAVA1_4_JAR) ${RELTEMP}
+	cp $(ESCJAVA2_SPECS_JAVACARD_JAR) ${RELTEMP}
 #       cp $(JML2_SPECS_JAR) ${RELTEMP}
 #       Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
@@ -582,9 +598,11 @@ generate-archives: generate-toplevel-archive generate-specs-archive
 ## Contains both specs and original-specs for the patch release
 generate-specs-archive:
 	mkdir -p ${RELTEMP}
-	rm -rf ${RELTEMP}/specs
+	rm -rf ${RELTEMP}/specs/*
 	rm -rf ${RELTEMP}/original-specs
 	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP}
+	cp -rf ${ESCJAVA2_SPECS_JAVA1_4} ${RELTEMP}
+	cp -rf ${ESCJAVA2_SPECS_JAVACARD} ${RELTEMP}
 	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP}
 	( cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs; )
 	rm -rf ${RELTEMP}/specs ${RELTEMP}/original-specs
