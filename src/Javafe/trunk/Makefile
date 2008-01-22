@@ -1,6 +1,6 @@
 ## $Id$
 ##
-## This file is part of JavaFE from 2007 onward.
+## This file is part of Javafe from 2007 onward.
 ##
 ## author: David Cok
 ## author: Joe Kiniry
@@ -37,7 +37,7 @@ include Makefile.defs
 ## built.
 
 # List subprojects in the order in which they should be built.  Javafe
-# must be before any other JavaFE directories.
+# must be before any other Javafe directories.
 SUBDIRS = Utils Javafe
 
 .PHONY: default all all+ nodocs nodocs+ jars
@@ -206,8 +206,8 @@ javadoc: build
 	  -bottom '<a href="http://kind.ucd.ie/products/opensource/E/">The ESC/Java2 Project Homepage</a>' \
 	  -stylesheetfile $(DOCS_STYLESHEET) \
 	  -private \
-	  -doctitle "JavaFE API" \
-	  -windowtitle "JavaFE" \
+	  -doctitle "Javafe API" \
+	  -windowtitle "Javafe" \
 	  -author -version -use \
 	  -linksource \
 	  -group Javafe  "javafe.*" \
@@ -228,11 +228,11 @@ jmldoc: build
 	  -overview docs/overview.html \
 	  -header $(COPYRIGHT) \
 	  -footer $(COPYRIGHT) \
-	  -bottom '<a href="http://kind.ucd.ie/products/opensource/Javafe/">The JavaFE Project Homepage</a>' \
+	  -bottom '<a href="http://kind.ucd.ie/products/opensource/Javafe/">The Javafe Project Homepage</a>' \
 	  -stylesheetfile $(DOCS_STYLESHEET) \
 	  -private --source 1.4 \
-	  -doctitle "JavaFE API" \
-	  -windowtitle "JavaFE" \
+	  -doctitle "Javafe API" \
+	  -windowtitle "Javafe" \
 	  -author -version -use \
 	  -linksource \
 	  -group Javafe  "javafe.*" \
@@ -354,14 +354,14 @@ source-release: cleanup alldocs
 	cp -rf docs ${RELTEMP}
 	cp -rf specs* ${RELTEMP}
 	cp license.txt ${RELTEMP}
-	cp -rf astgen-1.0.0.* ${RELTEMP}
-	cp -rf astfilelist-1.0.0.* ${RELTEMP}
+	mkdir -p ${RELTEMP}/bin
+	cp -rf release-files/bin/ast* ${RELTEMP}/bin
 	mkdir ${RELTEMP}/jars
 #   Copy Javadoc API docs 
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}/docs 
 #   Copy other miscellaneous files 
 	cp README.first README.txt ${RELTEMP} 
-	cd release-files; cp `ls | grep -v CVS` ${RELTEMP} 
+	cd release-files; cp README.release RELEASE_NOTES.txt ${RELTEMP} 
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
 	-find ${RELTEMP} -name "*~" -or -name ".#*" -exec rm -f {} \; > /dev/null 2>&1 
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR}.tbz *
@@ -409,8 +409,8 @@ binary-release: build test jars alldocs cleanup
 	cp -rf $(JAVADOC_GEN_DIR) ${RELTEMP}
 	mkdir ${RELTEMP}/docs
 	cp ${RELJAR} ${RELTEMP}
-	cp -rf astgen-1.0.0.* ${RELTEMP}
-	cp -rf astfilelist-1.0.0.* ${RELTEMP}
+	mkdir -p ${RELTEMP}/bin
+	cp -rf release-files/bin/ast* ${RELTEMP}/bin
 #       Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils build
@@ -418,7 +418,7 @@ binary-release: build test jars alldocs cleanup
 	cp -rf ${JAVAFE_ROOT}/Utils/BCEL ${RELTEMP}/Utils
 #   The two readme files below are irrelevant for binary release
 #   cp README.first README.txt ${RELTEMP}
-	cd release-files; cp `ls | grep -v .svn` ${RELTEMP} 
+	cd release-files; cp README.release RELEASE_NOTES.txt ${RELTEMP} 
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *

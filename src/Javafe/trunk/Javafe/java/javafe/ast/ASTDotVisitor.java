@@ -8,13 +8,9 @@
 
 package javafe.ast;
 
-import java.io.Writer;
-import java.io.FileWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import javafe.util.Location;
-import java.util.StringTokenizer;
 
 public class ASTDotVisitor extends Visitor {
   
