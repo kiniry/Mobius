@@ -4,6 +4,7 @@
 # Dependence on astgen programs:
 #
 
+JAVAFE_ROOT ?= ../../../..
 ASTGEN = 	${JAVAFE_ROOT}/Javafe/astgen/astgen
 ASTFILELIST = 	${JAVAFE_ROOT}/Javafe/astgen/astfilelist
 
