@@ -6,9 +6,10 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
 
 import umbra.UmbraPlugin;
+import umbra.instructions.InstructionParser;
 
 /**
  * This is abstract class for all instructions with at least one

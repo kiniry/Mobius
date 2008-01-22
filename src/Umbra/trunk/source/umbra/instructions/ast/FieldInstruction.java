@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
 
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.GETSTATIC;
@@ -15,6 +15,7 @@ import org.apache.bcel.generic.PUTFIELD;
 import org.apache.bcel.generic.PUTSTATIC;
 
 import umbra.editor.parsing.BytecodeStrings;
+import umbra.instructions.InstructionParser;
 
 
 /**

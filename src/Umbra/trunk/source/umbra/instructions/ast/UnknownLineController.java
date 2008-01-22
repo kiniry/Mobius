@@ -6,33 +6,28 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
+
 
 
 /**
- * This is a class for a line with whitespaces only.
+ * This class is responsible for all lines that we cannot classify.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01
  */
-public class EmptyLineController extends BytecodeLineController {
+public class UnknownLineController extends BytecodeLineController {
 
   /**
-   * This constructor remembers only the line text of the line which contains
-   * solely whitespaces.
+   * This constructor only remembers the line with the
+   * unrecognized content.
    *
-   * @param a_line_text the string representation of the line
+   * @param a_line_text the string representation of the line with unrecognized
+   * content
    * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public EmptyLineController(final String a_line_text) {
+  public UnknownLineController(final String a_line_text) {
     super(a_line_text);
   }
 
-  /**
-   * @return  true - an empty line is always correct
-   * @see BytecodeLineController#correct()
-   */
-  public final boolean correct() {
-    return true;
-  }
 }

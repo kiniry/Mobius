@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
 
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.GOTO;
@@ -35,6 +35,7 @@ import org.apache.bcel.generic.JSR_W;
 
 import umbra.UmbraException;
 import umbra.editor.parsing.BytecodeStrings;
+import umbra.instructions.InstructionParser;
 
 
 /**
@@ -380,7 +381,7 @@ public class JumpInstruction extends NumInstruction {
    * @param an_ins_list an instruction list with the jump instruction
    * @param an_ins the jump instruction to set the target for
    * @throws UmbraException when the jump instruction has improper target
-   * @see umbra.instructions.BytecodeLineController#setTarget(
+   * @see umbra.instructions.ast.BytecodeLineController#setTarget(
    *                            org.apache.bcel.generic.InstructionList,
    *                            org.apache.bcel.generic.Instruction)
    */

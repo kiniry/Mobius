@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
 
 import java.util.LinkedList;
 
@@ -21,6 +21,8 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.TargetLostException;
 
 import umbra.UmbraPlugin;
+import umbra.instructions.BytecodeController;
+import umbra.instructions.InstructionParser;
 
 /**
  * This class defines a structure that describes a single byte code
@@ -347,7 +349,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *
    * @return the name of the mnemonic
    */
-  protected String getName() {
+  public String getName() {
     return my_name;
   }
 

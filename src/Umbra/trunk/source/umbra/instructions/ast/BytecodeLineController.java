@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
 import java.util.LinkedList;
 
 import org.apache.bcel.generic.ClassGen;
@@ -17,6 +17,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import umbra.UmbraException;
 import umbra.UmbraPlugin;
+import umbra.instructions.InstructionParser;
 
 /**
  * This is completely abstract class that contains some information

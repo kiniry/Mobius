@@ -12,16 +12,14 @@
  */
 -->
 <title>
-Umbra plugin. Package umbra.instructions
+Umbra plugin. Package umbra.instructions.ast
 </title>
 </head>
 <body bgcolor="white">
-The umbra.instructions package contains the classes which handle the parsing
-of the text files obtained from BCEL (through BMLlib). This functionality is
-used to check if the byte code text modifications give rise to correct byte
-code. This package uses the abstract syntax tree placed in
-umbra.instructions.ast.
+The umbra.instructions.ast package contains the classes which implement the
+abstract syntax tree of the textual version of the class file generated
+by BCEL (through BMLlib). The classes check the syntax correctness of the 
+byte code lines that contain particular kind of instruction. This package
+is used in umbra.instructions.
 
-<!-- Put @see and @since tags down here. -->
-</body>
-</html>
+<!-- Put @see and @

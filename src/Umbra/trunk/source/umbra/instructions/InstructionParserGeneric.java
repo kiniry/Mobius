@@ -90,7 +90,7 @@ public class InstructionParserGeneric {
    *
    * @return the content of the current line
    */
-  protected String getLine() {
+  public String getLine() {
     return my_line;
   }
 

@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
 
 import org.apache.bcel.generic.DADD;
 import org.apache.bcel.generic.DDIV;

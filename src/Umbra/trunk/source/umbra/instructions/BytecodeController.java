@@ -29,6 +29,30 @@ import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeStrings;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
+import umbra.instructions.ast.AnnotationLineController;
+import umbra.instructions.ast.ArithmeticInstruction;
+import umbra.instructions.ast.ArrayInstruction;
+import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CommentLineController;
+import umbra.instructions.ast.ConversionInstruction;
+import umbra.instructions.ast.EmptyLineController;
+import umbra.instructions.ast.FieldInstruction;
+import umbra.instructions.ast.HeaderLineController;
+import umbra.instructions.ast.IConstInstruction;
+import umbra.instructions.ast.IncInstruction;
+import umbra.instructions.ast.InstructionLineController;
+import umbra.instructions.ast.InvokeInstruction;
+import umbra.instructions.ast.JumpInstruction;
+import umbra.instructions.ast.LdcInstruction;
+import umbra.instructions.ast.LoadStoreArrayInstruction;
+import umbra.instructions.ast.LoadStoreConstInstruction;
+import umbra.instructions.ast.NewInstruction;
+import umbra.instructions.ast.PushInstruction;
+import umbra.instructions.ast.SingleInstruction;
+import umbra.instructions.ast.StackInstruction;
+import umbra.instructions.ast.ThrowsLineController;
+import umbra.instructions.ast.UnclassifiedInstruction;
+import umbra.instructions.ast.UnknownLineController;
 
 /**
  * This class defines some structures related to BCEL as well
@@ -168,7 +192,6 @@ public class BytecodeController {
       MessageDialog.openInformation(new Shell(), "Bytecode",
                          "The current document has no positions for line " + j);
     }
-    System.out.println("linesnum="+a_doc.getNumberOfLines());
     while (j < a_doc.getNumberOfLines() - 1) {
       try {
         j = swallowMethod(a_doc, j, i, ctxt);
@@ -235,8 +258,6 @@ public class BytecodeController {
     while (j < a_doc.getNumberOfLines() - 1) {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);
       final BytecodeLineController lc = getType(line, a_ctxt);
-      System.out.println("line="+lc.getLineContent());
-      System.out.println("type="+lc.getClass().toString());
       my_editor_lines.add(j, lc);
       if (!(lc instanceof CommentLineController)  &&
           !(lc instanceof EmptyLineController)) {
@@ -281,9 +302,7 @@ public class BytecodeController {
 
     for (; j < a_doc.getNumberOfLines() - 1; j++) {
       final String lineName = getLineFromDoc(a_doc, j, a_ctxt);
-      System.out.println("lineName="+lineName);
       final BytecodeLineController lc = getType(lineName, a_ctxt);
-      System.out.println("lc="+lc.getClass());
       if (lc.isCommentStart()) { // ignore comments
         j = swallowEmptyLines(a_doc, j, a_ctxt) - 1;
         continue;

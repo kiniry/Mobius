@@ -6,18 +6,16 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
 
 
 /**
- * This is abstract class for all instructions which are
- * correct with number parameter as well as with a string
- * one (in "").
+ * This is abstract class for all instructions with a string as a parameter.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @version a-01
  */
-public class OtherInstruction extends MultiInstruction {
+public class StringInstruction extends MultiInstruction {
 
   /**
    * This creates an instance of an instruction
@@ -29,7 +27,7 @@ public class OtherInstruction extends MultiInstruction {
    * @param a_name the mnemonic name of the instruction
    * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public OtherInstruction(final String a_line_text, final String a_name) {
+  public StringInstruction(final String a_line_text, final String a_name) {
     super(a_line_text, a_name);
   }
 

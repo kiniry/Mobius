@@ -6,12 +6,13 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.instructions;
+package umbra.instructions.ast;
 
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.Instruction;
 
 import umbra.editor.parsing.BytecodeStrings;
+import umbra.instructions.InstructionParser;
 
 
 /**

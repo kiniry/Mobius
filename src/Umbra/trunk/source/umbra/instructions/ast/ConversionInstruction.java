@@ -7,7 +7,7 @@
  *               licence see LICENCE.txt file"
  */
 
-package umbra.instructions;
+package umbra.instructions.ast;
 
 import org.apache.bcel.generic.D2F;
 import org.apache.bcel.generic.D2I;

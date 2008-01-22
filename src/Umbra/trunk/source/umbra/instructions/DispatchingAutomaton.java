@@ -6,6 +6,9 @@ package umbra.instructions;
 import java.lang.reflect.InvocationTargetException;
 import java.util.TreeMap;
 
+import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.UnknownLineController;
+
 /**
  * This class implements an automaton which is used to quickly determine
  * the type of the currently analysed line of the byte code text. The
