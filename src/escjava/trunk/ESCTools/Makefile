@@ -194,6 +194,7 @@ clean-norel-noreltemp:
 	done
 	-rm -rf Javafe
 	-rm -rf Simplify
+	-rm -rf classfiles/*
 	$(MAKE) -C docs clean
 	$(MAKE) -C papers clean
 	$(MAKE) -C slides clean
