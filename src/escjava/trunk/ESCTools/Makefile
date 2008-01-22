@@ -192,6 +192,8 @@ clean-norel-noreltemp:
 	for d in $(SUBDIRS) ; do \
 	    ( $(MAKE) -C $$d clean || exit 1) ; \
 	done
+	-rm -rf Javafe
+	-rm -rf Simplify
 	$(MAKE) -C docs clean
 	$(MAKE) -C papers clean
 	$(MAKE) -C slides clean
