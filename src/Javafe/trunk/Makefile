@@ -421,6 +421,7 @@ binary-release: build test jars alldocs cleanup
 	cd release-files; cp README.release RELEASE_NOTES.txt ${RELTEMP} 
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
+	-find ${RELTEMP} -name "src-html" -exec rm -rf {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
 	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELTAR}.tgz *
 	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELTAR}.zip *
