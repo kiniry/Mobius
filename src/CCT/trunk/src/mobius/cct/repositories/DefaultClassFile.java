@@ -1,0 +1,40 @@
+package mobius.cct.repositories;
+
+import java.io.IOException;
+import java.io.OutputStream;
+
+import mobius.cct.certificates.Certificate;
+
+/**
+ * Default implementation of class file. No external 
+ * libraries (bcel, asm, ...) are used.
+ * @author Tadeusz Sznuk (ts209501@gmail.com)
+ */
+public class DefaultClassFile implements ClassFile {
+  /**
+   * Write class file to given output stream.
+   * @param os output stream.
+   * @throws IOException if it is thrown during writing to the stream.
+   * @throws InvalidCertificateException if the certificate does not match class.
+   */
+  @Override
+  public void write(final OutputStream os) 
+    throws IOException, InvalidCertificateException {
+  }
+  
+  /**
+   * Get certificate of this class.
+   * @return Class certificate.
+   */
+  @Override
+  public Certificate[] getCertificates() {
+    return null;
+  }
+  
+  /**
+   * Set certificates of this class.
+   * @param certs Class certificates.
+   */
+  public void setCertificates(final Certificate[] certs) {
+  }
+}
