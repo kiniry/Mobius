@@ -284,6 +284,7 @@ public class Options extends javafe.SrcToolOptions {
             //$$
             { "-ReachabilityAnalysis, -era", "Enable reachability analysis." },
             { "-ReachabilitySpecTest, -erst", "Enable reachability analysis spec testing." },
+            { "-ReachabilitySpecTestAll, -ersta", "Enable reachability analysis spec testing, run on methods that have implementation and skip the implementation." },
 	    { "-idc", "Check that assertions are defined (i.e. not undefined) in the sense of the new JML semantics."},
 	    { "-debug", "Turn on for selected modules."},
 	    { "-warnUnsoundIncomplete", "Turn on warnings about locations where ESC/Java2 reasons unsoundly or incompletely." }
@@ -728,6 +729,7 @@ public class Options extends javafe.SrcToolOptions {
 
 
     public static final Option optERST = Option.registerOption(new String[] { "-ReachabilitySpecTest", "-erst"});
+    public static final Option optERSTA = Option.registerOption(new String[] { "-ReachabilitySpecTestAll", "-ersta"});
     // TODO: exclude erst with idc, at the moment optERST doesn't let idc to operate --mikolas
 
 
@@ -1514,6 +1516,9 @@ public class Options extends javafe.SrcToolOptions {
             noPeepOptGCAssertFalse = true;
             return offset;
         } else if (optERST.isMe(option)) {
+            // TODO: do I need to do anything here? --mikolas
+            return offset;
+        }  else if (optERSTA.isMe(option)) {
             // TODO: do I need to do anything here? --mikolas
             return offset;
         } 

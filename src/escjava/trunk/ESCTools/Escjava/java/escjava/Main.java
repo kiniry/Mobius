@@ -762,17 +762,9 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
 
     // ==== actual analysis ====
 
-      // === experimental for SpecTester, blame mikolas (Nov 2007)
-    if (options().isOptionOn(Options.optERST) &&  SpecTester.knowHowToCheck(r) ) {
-          boolean isModel = 
-              Utils.findModifierPragma(r.parent.pmodifiers, TagConstants.MODEL) != null ||
-              Utils.findModifierPragma(r.pmodifiers, TagConstants.MODEL) != null;
-
-          if (false && isModel) {
-              return "skipping a model method (even though not happy about it)"; //TODO: do more testing if this really works, then throw this out--mikolas
-          }
-
-          if (r.body==null) { // TODO: what exactly should we skip?--mikolas
+    // === experimental for SpecTester, blame mikolas (Nov 2007)
+    if ( (options().isOptionOn(Options.optERSTA) || options().isOptionOn(Options.optERST) ) &&  SpecTester.knowHowToCheck(r) ) {
+        if (r.body==null || options().isOptionOn(Options.optERSTA)) { // TODO: what exactly should we skip?--mikolas
               if (!options().quiet)
                   System.out.println("          running reachability-based spec-checker"); // TODO: use standard logging mechanism--mikolas
 
