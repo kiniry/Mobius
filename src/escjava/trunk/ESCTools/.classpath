@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry excluding="escwizard/**|houdini/**|instrumenter/**|tohtml/**" kind="src" path="Escjava/java"/>
 	<classpathentry kind="src" path="Escjava/mochalib/java"/>
-	<classpathentry including="escjava/test/*.java" kind="src" path="Escjava/test"/>
 	<classpathentry including="junitutils/*.java" kind="src" path="Utils"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="Utils/junit.jar"/>
