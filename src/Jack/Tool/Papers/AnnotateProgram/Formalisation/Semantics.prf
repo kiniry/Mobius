@@ -7208,7 +7208,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-incomplete
    ((< const-decl "bool" reals nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
@@ -10608,7 +10608,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-incomplete
    ((derives const-decl "bool" Semantics nil)
     (derive_determ_step formula-decl nil SemanticsProofs nil)
     (FullState formal-type-decl nil SemanticsProofs nil)
@@ -11454,7 +11454,7 @@
       nil)
      ("2" (use "wf_nat") nil nil))
     nil)
-   unchecked
+   proved-incomplete
    ((wf_nat formula-decl nil naturalnumbers nil)
     (FullProgram formal-type-decl nil SemanticsProofs nil)
     (Name formal-nonempty-type-decl nil SemanticsProofs nil)
@@ -12378,7 +12378,7 @@
    15150 2600 t shostak))
  (derive_boolean_expr_type_TCC1 0
   (derive_boolean_expr_type_TCC1-1 nil 3401446935 3406611203
-   ("" (subtype-tcc) nil nil) unchecked
+   ("" (subtype-tcc) nil nil) proved-incomplete
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -12484,9 +12484,9 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-incomplete
    ((wf_Body const-decl "boolean" WellFormedProgram nil)
-    (FullState formal-type-decl nil SemanticsProofs nil) nil
+    (FullState formal-type-decl nil SemanticsProofs nil)
     (program formal-const-decl "[FullProgram -> Program]"
      SemanticsProofs nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -12616,7 +12616,7 @@
         nil))
       nil))
     nil)
-   proved
+   proved-incomplete
    ((update_PState formal-const-decl "(update_PState_type)"
      SemanticsProofs nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
@@ -12654,7 +12654,7 @@
 (SemanticsJML
  (wf_initial_ghost_state_TCC1 0
   (wf_initial_ghost_state_TCC1-1 nil 3392370163 3406013967 ("" (tcc))
-   proved-incomplete
+   unchecked
    ((Name formal-nonempty-type-decl nil SemanticsJML nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
@@ -12727,13 +12727,10 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
     (get_GhostDecl const-decl "lift[FieldDecl]" ProgramFunctions nil)
-    (p!1 skolem-const-decl "FullProgram" SemanticsJML nil)
-    (f!1 skolem-const-decl "FieldDecl[Name]" SemanticsJML nil)
-    (vn!1 skolem-const-decl "Name" SemanticsJML nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -12764,12 +12761,10 @@
     (Program type-eq-decl nil WellFormedProgram nil)
     (program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil))
+    (= const-decl "[T, T -> boolean]" equalities nil))
    347 250 t shostak))
  (execute_set_TCC1 0
-  (execute_set_TCC1-1 nil 3390908875 3406013972 ("" (tcc))
-   proved-incomplete
+  (execute_set_TCC1-1 nil 3390908875 3406013972 ("" (tcc)) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -12835,7 +12830,7 @@
     (("" (typepred "e!1")
       (("" (expand "wf_Expr") (("" (propax) nil nil)) nil)) nil))
     nil)
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -12869,11 +12864,11 @@
     (boolean nonempty-type-decl nil booleans nil))
    143 140 t nil))
  (execute_set_TCC3 0
-  (execute_set_TCC3-1 nil 3390908875 3406013972 ("" (tcc))
-   proved-incomplete nil 335 330 nil nil))
+  (execute_set_TCC3-1 nil 3390908875 3406013972 ("" (tcc)) unchecked
+   nil 335 330 nil nil))
  (execute_set_TCC4 0
   (execute_set_TCC4-1 nil 3401446938 3406013973
-   ("" (subtype-tcc) nil nil) proved-incomplete
+   ("" (subtype-tcc) nil nil) unchecked
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
@@ -12927,7 +12922,7 @@
    362 330 nil nil))
  (execute_CaseJML_TCC1 0
   (execute_CaseJML_TCC1-1 nil 3390908875 3406013973 ("" (tcc) nil nil)
-   proved-incomplete
+   unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -13101,7 +13096,7 @@
         nil))
       nil))
     nil)
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -13322,10 +13317,10 @@
    5099 135 t nil))
  (execute_CaseJML_TCC3 0
   (execute_CaseJML_TCC3-1 nil 3390908875 3406013974 ("" (tcc) nil nil)
-   proved-incomplete nil 373 340 t shostak))
+   unchecked nil 373 340 t shostak))
  (execute_CaseJML_TCC4 0
   (execute_CaseJML_TCC4-1 nil 3395749089 3406013975 ("" (tcc) nil nil)
-   proved-incomplete
+   unchecked
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (Body type-decl nil Body_adt nil)
@@ -13403,7 +13398,7 @@
    499 500 t shostak))
  (check_assertion_TCC1 0
   (check_assertion_TCC1-1 nil 3395749089 3406013975
-   ("" (skosimp*) (("" (assert) nil nil)) nil) proved-incomplete
+   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked
    ((int_minus_int_is_int application-judgement "int" integers nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
@@ -13416,7 +13411,7 @@
     (("" (typepred "e!1")
       (("" (expand "wf_BoolExpr") (("" (propax) nil nil)) nil)) nil))
     nil)
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -13451,10 +13446,10 @@
    143 140 t nil))
  (execute_assert_TCC1 0
   (execute_assert_TCC1-1 nil 3397383993 3406013975
-   ("" (subtype-tcc) nil nil) proved-incomplete nil 276 280 nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil 276 280 nil nil))
  (execute_assert_TCC2 0
   (execute_assert_TCC2-1 nil 3397383993 3406013976
-   ("" (subtype-tcc) nil nil) proved-incomplete
+   ("" (subtype-tcc) nil nil) unchecked
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
@@ -13521,7 +13516,7 @@
    948 910 nil nil))
  (on_method_entry_TCC1 0
   (on_method_entry_TCC1-1 nil 3390908875 3406013977 ("" (tcc))
-   proved-incomplete
+   unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -13589,8 +13584,7 @@
      integers nil))
    1221 1180 nil nil))
  (on_method_entry_TCC2 0
-  (on_method_entry_TCC2-2 "" 3395751614 3406013979 ("" (tcc))
-   proved-incomplete
+  (on_method_entry_TCC2-2 "" 3395751614 3406013979 ("" (tcc)) unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -13702,7 +13696,7 @@
             ((";;; Proof on_method_entry_TCC3-1 for formula SemanticsJML.on_method_entry_TCC3"
               (assert) nil))))))))))
     ";;; developed with shostak decision procedures")
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -13776,7 +13770,7 @@
    155 150 t shostak))
  (on_method_entry_TCC4 0
   (on_method_entry_TCC4-1 nil 3390908875 3406013980 ("" (tcc))
-   proved-incomplete
+   unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -13860,7 +13854,7 @@
           ((";;; Proof on_method_entry_TCC5-1 for formula SemanticsJML.on_method_entry_TCC5"
             (assert) nil))))))))
     ";;; developed with shostak decision procedures")
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -13930,7 +13924,7 @@
    187 170 t nil))
  (on_method_entry_TCC6 0
   (on_method_entry_TCC6-1 nil 3401446938 3406013983
-   ("" (subtype-tcc) nil nil) proved-incomplete
+   ("" (subtype-tcc) nil nil) unchecked
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
@@ -14002,7 +13996,7 @@
    2341 2270 nil nil))
  (on_method_exit_normal_TCC1 0
   (on_method_exit_normal_TCC1-1 nil 3390908875 3406013983
-   ("" (skosimp*) (("" (assert) nil nil)) nil) proved-incomplete
+   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -14025,7 +14019,7 @@
           ((";;; Proof on_method_exit_normal_TCC2-1 for formula SemanticsJML.on_method_exit_normal_TCC2"
             (assert) nil))))))))
     ";;; developed with shostak decision procedures")
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -14099,7 +14093,7 @@
     (("" (typepred "post(md!1)")
       (("" (assert) (("" (postpone) nil nil)) nil)) nil))
     nil)
-   proved-incomplete
+   unchecked
    ((BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -14151,7 +14145,7 @@
         nil))
       nil))
     nil)
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -14199,7 +14193,7 @@
             ((";;; Proof on_method_exit_normal_TCC5-1 for formula SemanticsJML.on_method_exit_normal_TCC5"
               (assert) nil))))))))))
     ";;; developed with shostak decision procedures")
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -14273,7 +14267,7 @@
    159 150 t nil))
  (on_method_exit_normal_TCC6 0
   (on_method_exit_normal_TCC6-1 nil 3401446938 3406013987
-   ("" (subtype-tcc) nil nil) proved-incomplete
+   ("" (subtype-tcc) nil nil) unchecked
    ((bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
@@ -14345,7 +14339,7 @@
    2427 2340 nil nil))
  (on_method_exit_exceptional_TCC1 0
   (on_method_exit_exceptional_TCC1-1 nil 3390908875 3406013988
-   ("" (skosimp*) (("" (assert) nil nil)) nil) proved-incomplete
+   ("" (skosimp*) (("" (assert) nil nil)) nil) unchecked
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -14368,7 +14362,7 @@
           ((";;; Proof on_method_exit_exceptional_TCC2-1 for formula SemanticsJML.on_method_exit_exceptional_TCC2"
             (assert) nil))))))))
     ";;; developed with shostak decision procedures")
-   proved-incomplete
+   unchecked
    ((program formal-const-decl "[FullProgram -> Program[Name]]"
      SemanticsJML nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -14438,7 +14432,7 @@
    143 150 t nil))
  (on_method_exit_exceptional_TCC3 0
   (on_method_exit_exceptional_TCC3-1 nil 3390908875 3406013989
-   ("" (tcc)) proved-incomplete
+   ("" (tcc)) unchecked
    ((posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
    734 700 nil nil))
@@ -14478,7 +14472,7 @@
         nil))
       nil))
     nil)
-   proved-incomplete
+   unchecked
    ((real_le_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
@@ -14535,7 +14529,7 @@
         nil))
       nil))
     nil)
-   proved-incomplete
+   unchecked
    ((update_PState formal-const-decl "(update_PState_type)"
      SemanticsJML nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
@@ -14572,5 +14566,26 @@
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil))
-   18930 360 t nil)))
+   18930 360 t nil))
+ (on_method_entry_only_throws_JMLExc 0
+  (on_method_entry_only_throws_JMLExc-1 nil 3410094753 3410095182
+   ("" (skosimp*)
+    (("" (expand "on_method_entry")
+      (("" (assert)
+        (("" (skosimp*)
+          (("" (expand "check_assertion")
+            (("" (skosimp*)
+              (("" (lift-if)
+                (("" (split -5)
+                  (("1" (flatten) (("1" (postpone) nil nil)) nil)
+                   ("2" (postpone) nil nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 42868 220 t shostak)))
 

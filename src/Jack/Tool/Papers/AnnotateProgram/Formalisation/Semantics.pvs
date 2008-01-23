@@ -730,4 +730,24 @@ BEGIN
     ENDIF
 
 
+  IMPORTING Semantics[Name, FullProgram, FullState, 
+                      program, pstate, lookup, update_PState, 
+                      execute_set, execute_assert, execute_CaseJML,
+                      on_method_entry, on_method_exit_normal, 
+                      on_method_exit_exceptional]
+
+
+  on_method_entry_only_throws_JMLExc : LEMMA
+     FORALL(p : FullProgram, md : (wf_Method(program(p))), a : Val,
+            s1, s2 : FullState, n : nat,
+            derive_rec : derive_rec_type(n)) :
+       NOT up?(ex(pstate(s1))) IMPLIES
+       on_method_entry(p, md, a, s1, s2, n,         
+          LAMBDA (k : upto(n))(p : FullProgram)
+               (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
+               (m : below(k)) : derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+       up?(ex(pstate(s2))) IMPLIES
+         down(ex(pstate(s2))) = JMLExc
+
+
 END SemanticsJML
