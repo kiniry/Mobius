@@ -552,7 +552,14 @@ ENDASSUMING
       NOT up?(ex(pstate(sigma2))) IMPLIES
         Bool?(v)
 
-
+  derive_after_raise : LEMMA % :-)
+    FORALL (p : FullProgram)(b : (wf_Body(program(p))))
+           (sigma1, sigma2, tau : FullState, v : Val, n : nat, e : Excpt) :
+              tau = update_PState(sigma1, raise(e)) IMPLIES
+              derive(p)(b, tau, v, sigma2)(n) IMPLIES
+              sigma2 = tau AND v = Bottom
+                 
+     
 END SemanticsProofs
 
 
@@ -626,19 +633,31 @@ BEGIN
 
   IMPORTING ProgramFunctions[Name]
 
+%  check_assertion(p : FullProgram)
+%                 (e : (wf_BoolExpr(program(p))), s1, s2 : FullState)(n : nat)
+%                 (derive : derive_type(n)) : boolean =
+%    n > 0 AND
+%    EXISTS (tau1 : FullState, v : Val) :
+%      derive(p)(e, s1, v, tau1)(n - 1) AND
+%      s2 = IF Bool?(v) THEN
+%             IF b(v)
+%             THEN tau1
+%             ELSE update_PState(tau1, raise(JMLExc))
+%             ENDIF
+%           ELSE tau1 % This may happen if v is bottom
+%           ENDIF
+
   check_assertion(p : FullProgram)
                  (e : (wf_BoolExpr(program(p))), s1, s2 : FullState)(n : nat)
                  (derive : derive_type(n)) : boolean =
     n > 0 AND
     EXISTS (tau1 : FullState, v : Val) :
       derive(p)(e, s1, v, tau1)(n - 1) AND
-      s2 = IF Bool?(v) THEN
-             IF b(v)
-             THEN tau1
-             ELSE update_PState(tau1, raise(JMLExc))
-             ENDIF
-           ELSE tau1 % This may happen if v is bottom
+      s2 = IF Bool?(v) AND b(v)
+           THEN tau1
+           ELSE update_PState(tau1, raise(JMLExc))
            ENDIF
+
 
   execute_assert : (execute_assert_type) =
     LAMBDA (p : FullProgram, e : (wf_BoolExpr(program(p))),
