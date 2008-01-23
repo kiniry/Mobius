@@ -21,7 +21,6 @@ import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.swt.widgets.Shell;
 
 import umbra.UmbraException;
@@ -63,7 +62,7 @@ import umbra.instructions.ast.UnknownLineController;
  * to detect when BCEL modification is needed. Additional
  * structures keep the information which method has been
  * modified (in case of combining changes) and what comments
- * are added to Bytecode
+ * are added to byte code
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
@@ -73,12 +72,12 @@ import umbra.instructions.ast.UnknownLineController;
 public class BytecodeController {
 
   /**
-   * The strings which starts a single line comment in a bytecode file.
+   * The strings which starts a single line comment in a byte code file.
    */
   private static final String SINGLE_LINE_COMMENT_MARK = "//";
 
   /**
-   * The lenght of the single line comment marker.
+   * The length of the single line comment marker.
    */
   private static final int SINGLE_LINE_COMMENT_MARK_LEN =
                                               SINGLE_LINE_COMMENT_MARK.length();
@@ -87,9 +86,9 @@ public class BytecodeController {
     @*/
 
   /**
-   * The list of all the lines in the current bytecode editor. These lines
+   * The list of all the lines in the current byte code editor. These lines
    * are stored as objects the classes of which are subclasses of
-   * {@ref BytecodeLineController}.
+   * {@link BytecodeLineController}.
    */
   private LinkedList my_editor_lines;
 
@@ -106,7 +105,7 @@ public class BytecodeController {
   private LinkedList my_incorrect;
 
   /**
-   * TODO.
+   * The container of all the in-line comments in the byte code document.
    */
   private Hashtable my_comments;
 
@@ -116,8 +115,8 @@ public class BytecodeController {
   private Hashtable my_interline;
 
   /**
-   * Keeps track of modified methods.
-   * TODO is that true?
+   * Keeps track of modified methods. Each time a method is modified
+   * an entry with the method number is marked <code>true</code> in the array.
    */
   private boolean[] my_modified;
 
@@ -133,7 +132,8 @@ public class BytecodeController {
   private DispatchingAutomaton my_preparse_automaton;
 
   /**
-   * TODO.
+   * The constructor which initialises all the internal containers to be
+   * empty.
    */
   public BytecodeController() {
     super();
@@ -171,13 +171,18 @@ public class BytecodeController {
   }
 
   /**
-   * Initialization of all the bytecode structures related to
+   * Initialisation of all the byte code structures related to
    * the document; it uses BCEL objects associated with the
    * document and based on them it generates the Umbra line
-   * structures (subclasses of the {@ref BytecodeLineController})
-   * together with the links to the BCEL objects. TODO all described?
+   * structures (subclasses of the {@link BytecodeLineController})
+   * together with the links to the BCEL objects.
    *
-   * @param a_doc the bytecode document with the corresponding BCEL
+   * This method initialises the parsing context, then it parses the header
+   * of the class and then one by one parses the methods. At the end
+   * the method initialises the structures to keep track of the modified
+   * methods.
+   *
+   * @param a_doc the byte code document with the corresponding BCEL
    *   structures linked into it
    */
   public final void init(final IDocument a_doc) {
@@ -205,10 +210,11 @@ public class BytecodeController {
       i++;
     }
 
-    final int instrNum = ((BytecodeLineController)my_instructions.getLast()).
+    final int methodNum = ((BytecodeLineController)my_instructions.getLast()).
                                 getIndex() + 1;
-    my_modified = new boolean[instrNum];
-    for (i = 0; i < my_modified.length; i++) my_modified[i] = false;
+    my_modified = new boolean[methodNum];
+    for (i = 0; i < my_modified.length; i++)
+      my_modified[i] = false;
   }
 
   /**
@@ -250,12 +256,28 @@ public class BytecodeController {
     return swallowEmptyLines(a_doc, j, a_ctxt);
   }
 
+  /**
+   * This method parses from the given document lines which are considered
+   * to be empty lines in the given context. A line is empty when it
+   * contains white spaces only or is one of the possible kinds of
+   * comment lines. The parsing stops at the first line which cannot
+   * be considered empty. This line will be parsed once more by subsequent
+   * parsing procedure.
+   *
+   * @param a_doc a document to extract empty lines from
+   * @param the_current_lno the first line to be analysed
+   * @param a_ctxt a parsing context in which the document is analysed
+   * @return the first line which is not an empty line; in case the end
+   *   of the document is reached this is the number of lines in the
+   *   document
+   * @throws BadLocationException
+   */
   private int swallowEmptyLines(final IDocument a_doc,
                                 final int the_current_lno,
                                 final LineContext a_ctxt)
     throws BadLocationException {
     int j = the_current_lno;
-    while (j < a_doc.getNumberOfLines() - 1) {
+    while (j < a_doc.getNumberOfLines()) {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);
       final BytecodeLineController lc = getType(line, a_ctxt);
       my_editor_lines.add(j, lc);
@@ -346,10 +368,10 @@ public class BytecodeController {
 
   /**
    * The method detects which kind of modification (adding lines,
-   * removing lines or both) has been made and preforms appropriate action
-   * to the bytecode structures of the given bytecode document.
+   * removing lines or both) has been made and performs appropriate action
+   * to the byte code structures of the given byte code document.
    *
-   * @param a_doc a bytecode document in which the modification have
+   * @param a_doc a byte code document in which the modification have
    *      been made to
    * @param a_start_rem a number of the first modified line as counted in the
    *                    old version of the document
@@ -826,7 +848,7 @@ public class BytecodeController {
 
   /**
    * Transforms a map from lines to my_comments into string array.
-   *
+   * TODO
    * @return Array of my_comments
    */
   public final String[] getComments() {

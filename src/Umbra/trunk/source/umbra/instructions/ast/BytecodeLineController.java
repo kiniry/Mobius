@@ -42,9 +42,9 @@ public abstract class BytecodeLineController {
 
   /**
    * The number of the method that contains the current line.
-   * This is an index in the {@ref ClassGen} object in the
-   * {@ref BytecodeDocument} object
-   * that describes the state of the bytecode editor which contains
+   * This is an index in the {@link ClassGen} object in the
+   * {@link BytecodeDocument} object
+   * that describes the state of the byte code editor which contains
    * the line that corresponds to the current object.
    */
   private int my_index;
@@ -79,7 +79,7 @@ public abstract class BytecodeLineController {
    * @param a_ilist the list of instructions in the current method
    * @param a_methodgen the object which represents the method of the current
    *    instruction in the BCEL representation of the current class
-   *    in the bytecode editor
+   *    in the byte code editor
    * @param an_index method number in the current class
    * @return true when the current line corresponds to an instruction, false
    *     otherwise

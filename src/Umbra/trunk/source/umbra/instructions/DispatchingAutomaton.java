@@ -1,5 +1,10 @@
-/**
- * 
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2007-2008 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
  */
 package umbra.instructions;
 
@@ -13,7 +18,7 @@ import umbra.instructions.ast.UnknownLineController;
  * This class implements an automaton which is used to quickly determine
  * the type of the currently analysed line of the byte code text. The
  * automaton is constructed out of nodes each of which has the outgoing
- * edges labeled with characters ({@link Character}). One can do the
+ * edges labelled with characters ({@link Character}). One can do the
  * following operations on the automaton:
  * <ul>
  *   <li>add a rule to create a {@link BytecodeLineController} when a terminal

@@ -154,12 +154,9 @@ public class BytecodeContribution extends ControlContribution {
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
-      if (!my_ready_flag)
-        try {
-          init(an_event.fDocument); //this marks my_ready_flag as true
-        } catch (Exception e) {
-          e.printStackTrace(System.err);
-        }
+      if (!my_ready_flag) {
+        init(an_event.fDocument); //this marks my_ready_flag as true
+      }
       my_current_event = an_event;
 
       try {
