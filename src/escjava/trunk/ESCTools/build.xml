@@ -4,6 +4,7 @@
  ESCTools Ant Build File
  Copyright (c) 2002,2003 Joseph R. Kiniry and the University of Nijmegen
  Copyright (c) 2004 Joseph R. Kiniry and University College Dublin
+ Modified 2008 Dermot Cochran and EU Mobius IST-15909 Partners
  All Rights Reserved
 -->
 
@@ -20,29 +21,25 @@
 <!-- LAST AUTHOR:  $Author$                                         -->
 <!-- ======================================================================= -->
 
-<project name="ESCTools" default="all">
+<project name="ESCJava2" default="all">
 
   <description>
     This buildfile is used to build ESCTools.
   </description>
 
-  <property name="project" value="ESCTools"/>
-  <property name="version" value="v1-December-2002"/>
+  <property name="project" value="ESCJava2"/>
+  <property name="version" value="2.0b4-January2008"/>
 
-  <property name="libs_dir" value="libs"/>
+  <property name="libs_dir" value="${basedir}/Utils"/>
 
   <!-- <property name="clean_build_every_time" value="t"/> -->
 
   <!-- Source code locations for various packages...I mean "envelopes". -->
+  <property name="escjava_root_dir" value="${basedir}/Escjava"/>
+  <property name="rcc_root_dir" value="${basedir}/Rcc"/>
+  <property name="houdini_root_dir" value="${basedir}/Houdini"/>
+  <property name="calvin_root_dir" value="${basedir}/Calvin"/>
 
-  <property name="javafe_root_dir" value="Javafe"/>
-  <property name="escjava_root_dir" value="Escjava"/>
-  <property name="rcc_root_dir" value="Rcc"/>
-  <property name="houdini_root_dir" value="Houdini"/>
-  <property name="calvin_root_dir" value="Calvin"/>
-
-  <property name="javafe_source_dir" value="${javafe_root_dir}/java"/>
-  <property name="javafe_test_dir" value="${javafe_root_dir}/test"/>
   <property name="escjava_source_dir" value="${escjava_root_dir}/java"/>
   <property name="escjava_test_dir" value="${escjava_root_dir}/test"/>
   <property name="mochalib_source_dir" value="${escjava_root_dir}/mochalib/java"/>
@@ -57,7 +54,6 @@
   <!-- Target locations for various build results. -->
 
   <!-- Classfiles are put here in a parallel hierarchy for each envelope. -->
-  <property name="javafe_classes_dir" value="${javafe_root_dir}/classfiles"/>
   <property name="escjava_classes_dir" value="${escjava_root_dir}/classfiles"/>
   <property name="mochalib_classes_dir" value="${escjava_root_dir}/mochalib/classfiles"/>
   <property name="rcc_classes_dir" value="${rcc_root_dir}/classfiles"/>
@@ -72,7 +68,6 @@
   <property name="javadoc_dir" value="${docs_dir}/api"/>
 
   <!-- Locations for per-envelope documentation generation. -->
-  <property name="javafe_docs_dir" value="${javafe_root_dir}/doc/api"/>
   <property name="escjava_docs_dir" value="${escjava_root_dir}/doc/api"/>
   <property name="rcc_docs_dir" value="${rcc_root_dir}/doc/api"/>
   <property name="houdini_docs_dir" value="${houdini_root_dir}/doc/api"/>
@@ -104,7 +99,6 @@
   <patternset id="classfiles" >
     <include name="**/*.class"/>
     <exclude name="**/decsrc/util/*.class"/>
-    <exclude name="Javafe/test/javafe/tc/test/*.class"/>
     <exclude name="Escjava/mochalib/classes/mocha/wrappers/jbdd/*.class"/>
   </patternset>
 
@@ -114,6 +108,12 @@
   <path id="libraries">
     <fileset dir="${libs_dir}">
       <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${libs_dir}/Javafe">
+          <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${libs_dir}/BCEL/bcel-5.2">
+         <include name="*.jar"/>
     </fileset>
   </path>
 
@@ -126,9 +126,6 @@
 
   <!-- All classfiles in the compile target directory. -->
   <path id="class_files">
-    <fileset dir="javafe_classes_dir">
-      <include name="**/*.class"/>
-    </fileset>
     <fileset dir="escjava_classes_dir">
       <include name="**/*.class"/>
     </fileset>
@@ -173,39 +170,28 @@
     <path refid="base_classpath"/>
   </path>
 
-  <path id="javafe_classpath">
-    <path refid="base_classpath"/>
-    <pathelement path="${javafe_classes_dir}"/>
-    <pathelement path="${javafe_root_dir}/decsrclib"/>
-  </path>
-
   <path id="rcc_classpath">
     <path refid="base_classpath"/>
-    <pathelement path="${javafe_classes_dir}"/>
     <pathelement path="${rcc_classes_dir}"/>
   </path>
 
   <path id="escjava_classpath">
     <path refid="base_classpath"/>
-    <pathelement path="${javafe_classes_dir}"/>
     <pathelement path="${escjava_classes_dir}"/>
     <pathelement path="${mochalib_classes_dir}"/>
   </path>
 
   <path id="calvin_classpath">
     <path refid="base_classpath"/>
-    <pathelement path="${javafe_classes_dir}"/>
     <pathelement path="${calvin_classes_dir}"/>
   </path>
 
   <path id="houdini_classpath">
     <path refid="base_classpath"/>
-    <pathelement path="${javafe_classes_dir}"/>
     <pathelement path="${houdini_classes_dir}"/>
   </path>
 
 <!--
-  <property name="javafe_classes_dir" value="${javafe_root_dir}/classes"/>
   <property name="escjava_classes_dir" value="${escjava_root_dir}/classes"/>
   <property name="rcc_classes_dir" value="${rcc_root_dir}/classes"/>
   <property name="houdini_classes_dir" value="${houdini_root_dir}/classes"/>
@@ -259,7 +245,6 @@
       Prepare directory tree for build.
     </description>
     <tstamp/>
-    <mkdir dir="${javafe_classes_dir}"/>
     <mkdir dir="${escjava_classes_dir}"/>
     <mkdir dir="${mochalib_classes_dir}"/>
     <mkdir dir="${rcc_classes_dir}"/>
@@ -268,7 +253,6 @@
     <mkdir dir="${opt_dir}"/>
     <mkdir dir="${jmlc_dir}"/>
     <mkdir dir="${javadoc_dir}"/>
-    <mkdir dir="${javafe_docs_dir}"/>
     <mkdir dir="${escjava_docs_dir}"/>
     <mkdir dir="${rcc_docs_dir}"/>
     <mkdir dir="${houdini_docs_dir}"/>
@@ -392,28 +376,10 @@
   </target>
 
   <!-- JML specification compilation. -->
-  <target name="jmlc" depends="jmlc_javafe">
+  <target name="jmlc" depends="jmlc_escjava">
     <description>
       Compile all JML specifications to test code.
     </description>
-  </target>
-
-  <target name="jmlc_javafe" depends="compile_javafe">
-    <description>
-      Compiles JML annotated Javafe files with runtime assertion checks.
-    </description>
-    <java classname="org.jmlspecs.jmlrac.Main"
-          fork="true"
-          classpathref="jml_classpath">
-      <jvmarg value="-Xmx128m"/>
-      <arg line="--destination ${jmlc_dir}"/>
-      <arg value="--recursive"/>
-      <arg value="--quiet"/>
-      <arg value="--purity"/>
-      <arg value="--multijava"/>
-      <arg line="--sourcepath '${javafe_source_dir}'"/>
-      <arg line="javafe.ast javafe.parser javafe.reader javafe.tc javafe.util"/>
-    </java>
   </target>
 
   <target name="jmlc_escjava" depends="compile_escjava">
@@ -451,67 +417,13 @@
     -->
   </target>
 
-  <target name="unit_test_javafe" depends="compile_javafe">
-    <description>
-      Run unit tests on Javafe envelope.
-    </description>
-    <exec dir="${javafe_source_dir}/javafe/parser/test" 
-          executable="make">
-      <arg line="runtest"/>
-    </exec>
-    <exec dir="${javafe_source_dir}/javafe/util" 
-          executable="make">
-      <arg line="runtest"/>
-    </exec>
-    <exec dir="${javafe_source_dir}/javafe/test" 
-          executable="make">
-      <arg line="runtest"/>
-    </exec>
-  </target>
-
-<!-- compile_rcc compile_calvin -->
-
-  <target name="compile" depends="compile_javafe,
-                                  compile_javafe_ast,
-                                  compile_escjava">
+  <target name="compile" depends="compile_escjava">
     <description>
       Compile all source code.
     </description>
   </target>
 
   <!-- Compile targets. -->
-
-  <target name="generate_javafe_ast">
-    <description>
-      Generate Javafe AST using the astgen tool.
-    </description>
-    <exec dir="${javafe_source_dir}/javafe/ast" 
-          executable="make">
-      <arg value="source"/>
-    </exec>
-  </target>
-
-  <target name="compile_javafe" depends="clean_javafe,
-                                         initialize,
-                                         generate_javafe_ast">
-    <description>
-      Compile all Javafe source code.
-    </description>
-    <javac srcdir="${javafe_source_dir}:${javafe_test_dir}"
-           destdir="${javafe_classes_dir}"
-           excludes="javafe/test/fe/**,javafe/test/lex/**,javafe/tc/test/**,jtools/**"
-           debug="on"
-           deprecation="off"
-           optimize="off"
-           failonerror="false"
-           source="1.3"
-           target="1.1"
-           classpathref="javafe_classpath">
-      <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
-                   compiler="jikes"/>
-    </javac>
-  </target>
-
   <target name="compile_rcc" depends="clean_rcc,
                                       initialize">
     <description>
@@ -535,54 +447,22 @@
     </javac>
   </target>
 
-  <target name="compile_javafe_ast" depends="initialize">
-    <description>
-      Compile the Javafe astgen source code which is written in C.
-    </description>
-    <exec dir="${javafe_source_dir}/../astgen" 
-          executable="make"/>
-  </target>
-
-  <target name="generate_escjava_ast">
-    <description>
-      Generate Escjava AST using the astgen tool.
-    </description>
-    <exec dir="${escjava_source_dir}/escjava/ast" 
-          executable="make">
-      <arg value="source"/>
-    </exec>
-  </target>
-
-  <target name="generate_default_backpred">
-    <description>
-      Generate the default universal background predicate.
-    </description>
-    <exec dir="${escjava_source_dir}/escjava/backpred" 
-          executable="make">
-      <arg value="source"/>
-    </exec>
-  </target>
-
-  <target name="compile_escjava" depends="compile_javafe,
-                                          compile_mochalib,
+  <target name="compile_escjava" depends="compile_mochalib,
                                           clean_escjava,
-                                          initialize,
-                                          generate_escjava_ast,
-                                          generate_default_backpred">
-                                          <!-- compile_simplify, -->
+                                          initialize">
     <description>
       Compile all ESC/Java source code.
     </description>
-    <!-- :${escjava_test_dir} -->
     <javac srcdir="${escjava_source_dir}:${escjava_test_dir}"
            destdir="${escjava_classes_dir}"
            excludes="instrumenter/**,escwizard/**,houdini/**,
                      escjava/reader/**,escjava/pa/**,
-                     escjava/test/**,CausedAnError**"
+                     escjava/test/**,CausedAnError**,junittests/**,
+                     jdktests/**,tohtml/**,nijmegen/**"
            debug="on"
            deprecation="off"
            optimize="off"
-           source="1.3"
+           source="1.4"
            target="1.1"
            failonerror="false"
            classpathref="escjava_classpath">
@@ -608,9 +488,7 @@
     </javac>
   </target>
 
-  <target name="compile_calvin" depends="compile_javafe,
-                                         compile_escjava,
-                                         compile_simplify,
+  <target name="compile_calvin" depends="compile_escjava,
                                          clean_calvin,
                                          initialize">
     <description>
@@ -633,9 +511,7 @@
     </javac>
   </target>
 
-  <target name="compile_houdini" depends="compile_javafe,
-                                          compile_escjava,
-                                          compile_simplify,
+  <target name="compile_houdini" depends="compile_escjava,
                                           clean_houdini,
                                           initialize">
     <description>
@@ -716,23 +592,14 @@
 
   <!-- create_rcc_jar create_calvin_jar -->
 
-  <target name="create_jars" depends="create_javafe_jar,
-                                      create_decsrc_jar,
-                                      create_escjava_jar,
+  <target name="create_jars" depends="create_escjava_jar,
                                       create_mochalib_jar">
     <description>
       Generate jar files of various builds.
     </description>
   </target>
 
-  <target name="create_javafe_jar" depends="compile_javafe">
-    <description>
-      Generate jar file of Javafe build results.
-    </description>
-    <jar destfile="${final_jars_dir}/javafe.jar"
-         basedir="${javafe_classes_dir}"
-         includes="javafe/**,tohtml/**"/>
-  </target>
+   
 
   <target name="create_decsrc_jar">
     <description>
@@ -801,31 +668,10 @@
 
   <!-- Documentation generation. -->
 
-  <target name="javadoc" depends="javadoc_javafe,
-                                  javadoc_escjava">
+  <target name="javadoc" depends="javadoc_escjava">
     <description>
       Create Javadoc documentation.
     </description>
-  </target>
-
-  <target name="javadoc_javafe" depends="initialize">
-    <description>
-      Create Javadoc documentation for the Javafe envelope.
-    </description>
-    <javadoc packagenames="javafe.*,jtools.*"
-             excludepackagenames="javafe.test.*,javafe.tc.test.*,jtools.*"
-             sourcepath="${javafe_source_dir}"
-             destdir="${javafe_docs_dir}"
-             maxmemory="256m"
-             author="true"
-             version="true"
-             access="private"
-             use="true"
-             splitindex="true"
-             additionalparam="-breakiterator"
-             windowtitle="ESCTools Javafe Envelope">
-      <classpath refid="javafe_classpath"/>
-    </javadoc>
   </target>
 
   <target name="javadoc_rcc" depends="initialize">
@@ -926,9 +772,6 @@
       Create library (jar) files for all ESCTools.  Note that this does not include
       the Calvin envelope since its package names clash with that of Escjava.
     </description>
-    <jar jarfile="${libs_dir}/${project}.jar" 
-         basedir="${javafe_classes_dir}"
-         includes="javafe/**,tohtml/**"/>
     <jar jarfile="${libs_dir}/${project}.jar"
          update="yes"
          basedir="${rcc_classes_dir}"
@@ -997,21 +840,6 @@
         <patternset refid="classfiles"/>
       </fileset>
     </delete>
-  </target>
-
-  <target name="clean_javafe" if="clean_build_every_time">
-    <description>
-      Deletes all classfiles in the Javafe envelope.
-    </description>
-    <delete dir="${javafe_classes_dir}"/>
-    <exec dir="${javafe_source_dir}/../astgen" 
-          executable="make">
-      <arg line="clean"/>
-    </exec>
-    <exec dir="${javafe_source_dir}/javafe/ast" 
-          executable="make">
-      <arg value="clean"/>
-    </exec>
   </target>
 
   <target name="clean_rcc" if="clean_build_every_time">

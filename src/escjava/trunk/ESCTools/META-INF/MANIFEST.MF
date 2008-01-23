@@ -34,7 +34,6 @@ Export-Package:
  escjava.soundness,
  escjava.sp,
  escjava.tc,
- escjava.test,
  escjava.translate,
  escjava.vcGeneration,
  escjava.vcGeneration.coq,
