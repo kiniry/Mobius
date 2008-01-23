@@ -6,5 +6,8 @@
    <feature url="features/mobius.Umbra.feature_0.0.1.jar" id="mobius.Umbra.feature" version="0.0.1" os="" nl="">
       <category name="Mobius"/>
    </feature>
+   <feature url="features/mobius.BMLLib.feature_0.0.1.jar" id="mobius.BMLLib.feature" version="0.0.1">
+      <category name="Mobius"/>
+   </feature>
    <category-def name="Mobius" label="mobius"/>
 </site>
