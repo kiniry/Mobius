@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="MobiusUILibraryFeature"
+      id="mobius.library.feature"
       label="Mobius UI Library Feature Feature"
       version="1.0.0"
       provider-name="David Cok and EU Mobius Partners">
