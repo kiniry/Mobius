@@ -16,13 +16,11 @@ import org.eclipse.swt.widgets.Composite;
  * the property page; each control is connected to an Option object.
  * 
  * @author David Cok
- *
  */
 abstract public class PreferenceWidget {
 	
 	/** The option object represented by this PreferenceWidget */
 	AbstractPreference option;
-	
 	
 	/**
 	 * Base class constructor, taking some common arguments.
