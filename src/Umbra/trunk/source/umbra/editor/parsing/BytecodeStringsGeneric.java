@@ -176,6 +176,21 @@ public class BytecodeStringsGeneric {
   public static final String COMMENT_LINE_END = "*/";
 
   /**
+   * The string which starts a single line comment in a byte code file.
+   */
+  public static final String SINGLE_LINE_COMMENT_MARK = "//";
+
+  /**
+   * The length of the single line comment marker.
+   */
+  public static final int SINGLE_LINE_COMMENT_MARK_LEN =
+                                              SINGLE_LINE_COMMENT_MARK.length();
+  /*@ static invariant SINGLE_LINE_COMMENT_MARK_LEN ==
+    @                  SINGLE_LINE_COMMENT_MARK.length();
+    @*/
+
+
+  /**
    * This string contains the BML annotation comment start.
    */
   public static final String ANNOT_LINE_START = "/*@";

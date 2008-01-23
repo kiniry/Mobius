@@ -81,6 +81,14 @@ public class BytecodeContribution extends ControlContribution {
    */
   private BytecodeEditorContributor my_editor_cntrbtr;
 
+  /**
+   * TODO
+   * Contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the file,
+   *   if this parameter is null then the array is not taken into account
+   */
+  private String[] my_comment_array;
+
   /* *
    * The current bytecode editor for which the contribution works.
    */
@@ -103,10 +111,13 @@ public class BytecodeContribution extends ControlContribution {
    * TODO what's my_mod_table_flag
    *
    * @param a_doc a document for which the internal structures are initialised
+   * @param a_comment_array contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the file,
+   *   if this parameter is null then the array is not taken into account
    */
-  private void init(final IDocument a_doc) {
+  private void init(final IDocument a_doc, final String[] a_comment_array) {
     my_bcc = new BytecodeController();
-    my_bcc.init(a_doc);
+    my_bcc.init(a_doc, a_comment_array);
     if (my_mod_table_flag) {
       my_bcc.setModified(my_modified);
       my_mod_table_flag = false;
@@ -155,7 +166,7 @@ public class BytecodeContribution extends ControlContribution {
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
       if (!my_ready_flag) {
-        init(an_event.fDocument); //this marks my_ready_flag as true
+        init(an_event.fDocument, my_comment_array); //this marks my_ready_flag as true
       }
       my_current_event = an_event;
 
@@ -322,9 +333,13 @@ public class BytecodeContribution extends ControlContribution {
 
   /**
    * TODO.
+   * @param a_comment_array contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the file,
+   *   if this parameter is null then the array is not taken into account
    */
-  public final void reinit() {
+  public final void reinit(String[] a_comment_array) {
     my_ready_flag = false;
+    my_comment_array = a_comment_array;
   }
 
   /**

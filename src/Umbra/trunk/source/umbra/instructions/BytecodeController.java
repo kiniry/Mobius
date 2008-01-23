@@ -24,9 +24,11 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Shell;
 
 import umbra.UmbraException;
+import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeStrings;
+import umbra.editor.parsing.BytecodeStringsGeneric;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.ArithmeticInstruction;
@@ -72,20 +74,6 @@ import umbra.instructions.ast.UnknownLineController;
 public class BytecodeController {
 
   /**
-   * The strings which starts a single line comment in a byte code file.
-   */
-  private static final String SINGLE_LINE_COMMENT_MARK = "//";
-
-  /**
-   * The length of the single line comment marker.
-   */
-  private static final int SINGLE_LINE_COMMENT_MARK_LEN =
-                                              SINGLE_LINE_COMMENT_MARK.length();
-  /*@ static invariant SINGLE_LINE_COMMENT_MARK_LEN ==
-    @                  SINGLE_LINE_COMMENT_MARK.length();
-    @*/
-
-  /**
    * The list of all the lines in the current byte code editor. These lines
    * are stored as objects the classes of which are subclasses of
    * {@link BytecodeLineController}.
@@ -110,7 +98,8 @@ public class BytecodeController {
   private Hashtable my_comments;
 
   /**
-   * TODO.
+   * The container of all the multi-line comments. Each element of the table is
+   * an association between a list
    */
   private Hashtable my_interline;
 
@@ -130,6 +119,10 @@ public class BytecodeController {
    * The automaton to pre-parse the lines of the byte code document.
    */
   private DispatchingAutomaton my_preparse_automaton;
+
+  private String[] my_comments_temp;
+
+  private int my_instruction_no;
 
   /**
    * The constructor which initialises all the internal containers to be
@@ -184,10 +177,16 @@ public class BytecodeController {
    *
    * @param a_doc the byte code document with the corresponding BCEL
    *   structures linked into it
+   * @param a_comment_array contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the file,
+   *   if this parameter is null then the array is not taken into account
    */
-  public final void init(final IDocument a_doc) {
+  public final void init(final IDocument a_doc,
+                         final String[] a_comment_array) {
     // i - iterates over methods
     // j - iterates over lines in the document
+    my_comments_temp = a_comment_array;
+    my_instruction_no = 0;
     int j = 0;
     int i = 0;
     final LineContext ctxt = new LineContext();
@@ -270,7 +269,8 @@ public class BytecodeController {
    * @return the first line which is not an empty line; in case the end
    *   of the document is reached this is the number of lines in the
    *   document
-   * @throws BadLocationException
+   * @throws BadLocationException in case the method reaches a line number
+   *   which is not within the given document
    */
   private int swallowEmptyLines(final IDocument a_doc,
                                 final int the_current_lno,
@@ -290,17 +290,60 @@ public class BytecodeController {
     return j;
   }
 
+  /**
+   * This method returns the {@link String} with the given line of the given
+   * document. Additionally, the method extracts the end-of-line comment and
+   * stores it in the internal state of the current object. The method needs
+   * the parsing context in case the line is a part of a multi-line context.
+   * In that case, the end-of-line comment should not be extracted.
+   *
+   * @param a_doc a document to extract the line from
+   * @param a_line the line number of the line to be extracted
+   * @param a_ctxt a context which indicates if we are inside a comment
+   * @return the string with the line content (with the end-of-line comment
+   *   stripped off)
+   * @throws BadLocationException in case the given line number is not within
+   *   the given document
+   */
   private String getLineFromDoc(final IDocument a_doc,
-                                final int a_position,
+                                final int a_line,
                                 final LineContext a_ctxt)
     throws BadLocationException {
-    final String line = a_doc.get(a_doc.getLineOffset(a_position),
-                                  a_doc.getLineLength(a_position));
-    final String lineName = removeCommentFromLine(line);
-    my_current_comment = extractCommentFromLine(line, a_ctxt);
+    final String line = a_doc.get(a_doc.getLineOffset(a_line),
+                                  a_doc.getLineLength(a_line));
+    final String lineName;
+    if (a_ctxt.isInsideComment() || a_ctxt.isInsideAnnotation()) {
+      lineName = removeCommentFromLine(line);
+      my_current_comment = extractCommentFromLine(line, a_ctxt);
+    } else {
+      lineName = line;
+      my_current_comment = null;
+    }
     return lineName;
   }
 
+  /**
+   * This method handles the parsing of these lines of a textual representation
+   * which contain a method. The method checks if the method currently to be
+   * parsed can fit into the structures withing the BCEL representation.
+   * Subsequently it parses line by line the given document starting with the
+   * given line and tries to parse the lines and associate with them the
+   * instructions from the BCEL structures. The current method ends when
+   * an empty line is met or when the end of the document is reached.
+   *
+   * @param a_doc a document to parse a method from
+   * @param the_line_no the line in the document starting with which the method
+   *   parsing begins
+   * @param a_method_no the number of the method to be parsed
+   * @param a_ctxt a parsing context
+   * @return the number of the first line after the method; it is the first
+   *   line after the empty method delimiting line or the last line in the
+   *   document in case the end of document is met
+   * @throws BadLocationException in case a line number is reached which is
+   *   not within the given document
+   * @throws UmbraException the given method number exceeds the number of
+   *   available methods in the BCEL structure
+   */
   private int swallowMethod(final IDocument a_doc,
                             final int the_line_no,
                             final int a_method_no,
@@ -308,19 +351,15 @@ public class BytecodeController {
     throws BadLocationException, UmbraException {
     int j = the_line_no;
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
-    final ConstantPoolGen cpg = cg.getConstantPool();
     final Method[] methods = cg.getMethods();
-    String part_comment = "";
-    MethodGen mg = null;
-    InstructionList il = null;
-    InstructionHandle ih = null;
     int ic = my_instructions.size(); // counts lines with instructions
     if (a_method_no >= methods.length) // too many methods
       throw new UmbraException();
 
-    mg = new MethodGen(methods[a_method_no], cg.getClassName(), cpg);
-    il = mg.getInstructionList();
-    ih = il.getStart();
+    final MethodGen mg = new MethodGen(methods[a_method_no], cg.getClassName(),
+                                       cg.getConstantPool());
+    final InstructionList il = mg.getInstructionList();
+    final InstructionHandle ih = il.getStart();
 
     for (; j < a_doc.getNumberOfLines() - 1; j++) {
       final String lineName = getLineFromDoc(a_doc, j, a_ctxt);
@@ -337,15 +376,25 @@ public class BytecodeController {
         return ++j;
       }
       if (lc.addHandle(ih, il, mg, a_method_no - 1)) { //instruction line
+        my_instruction_no++; TODO - partially implemented refresh of eol comments
         my_instructions.add(ic++, lc);
-        if (my_current_comment != null) my_comments.put(lc, my_current_comment);
-        if (part_comment.compareTo("") != 0) {
-          my_interline.put(lc, part_comment);
-          part_comment = "";
-        }
+        handleComments(lc);
       }
     }
     return j;
+  }
+
+  /**
+   * This method stores in the local comments structure the information about
+   * the currently extracted comment.
+   *
+   * @param a_lc the line controller to associate the comment to
+   */
+  private void handleComments(final BytecodeLineController a_lc) {
+    if (my_current_comment != null) {
+      my_comments.put(a_lc, my_current_comment);
+      my_current_comment = null;
+    }
   }
 
   /**
@@ -427,7 +476,7 @@ public class BytecodeController {
         }
       }
     }
-    //controlPrint(1);
+    if (UmbraHelper.DEBUG_MODE) controlPrint(1);
     return;
   }
 
@@ -714,7 +763,7 @@ public class BytecodeController {
     String res;
     int j = a_line.length() - 1;
 
-    final int k = (a_line.indexOf(SINGLE_LINE_COMMENT_MARK, 0));
+    final int k = (a_line.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK, 0));
     if (k != -1)
       j = k - 1;
     while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
@@ -757,10 +806,13 @@ public class BytecodeController {
   private String extractCommentFromLine(final String a_line_text,
                                         final LineContext a_ctxt) {
     if (a_ctxt.isInsideComment()) return null;
-    final int i = a_line_text.indexOf(SINGLE_LINE_COMMENT_MARK);
-    if (i == -1) return null;
-    final String nl = a_line_text.substring(i + SINGLE_LINE_COMMENT_MARK_LEN,
-                                            a_line_text.indexOf("\n"));
+    final int i = a_line_text.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK);
+    if (i == -1) {
+      return null;
+    }
+    final String nl = a_line_text.substring(i +
+                                  BytecodeStrings.SINGLE_LINE_COMMENT_MARK_LEN,
+                                  a_line_text.indexOf("\n"));
     return nl;
   }
 
@@ -876,9 +928,11 @@ public class BytecodeController {
   }
 
   /**
-   * TODO.
+   * This is a helper method used for debugging purposes. It prints out
+   * all the instructions in the internal Umbra representation of a class
+   * file.
    *
-   * @param an_index TODO
+   * @param an_index the number which allows to make different printouts
    */
   private void controlPrint(final int an_index) {
     UmbraPlugin.messagelog("");

@@ -159,6 +159,11 @@ public final class UmbraHelper {
     "umbra.BoogiePLEditor";
 
   /**
+   * This constant says if the debugging print outs should be generated.
+   */
+  public static final boolean DEBUG_MODE = true;
+
+  /**
    * A private empty constructor to prevent constructing of objects for this
    * class.
    */

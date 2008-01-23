@@ -21,7 +21,6 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.TargetLostException;
 
 import umbra.UmbraPlugin;
-import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
 
 /**
@@ -119,8 +118,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param a_method_end <code>true</code> if the line is inserted after the
    *   end of the method - then the <code>a_next_line</code> is actually the
    *   previous one and the handle is generated with 'append'
-   * @param the_instructions an array from {@link BytecodeController} that the
-   *   new line is added to
+   * @param the_instructions an array from
+   *   {@link umbra.instructions.BytecodeController} that the new line is
+   *   added to
    * @param an_offset an offset in this array
    */
   public final void initHandle(final BytecodeLineController a_next_line,

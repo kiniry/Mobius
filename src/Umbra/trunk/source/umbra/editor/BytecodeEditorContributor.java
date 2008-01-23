@@ -275,7 +275,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   public final void refreshEditor(final BytecodeEditor an_editor)
     throws PartInitException {
     final IEditorInput input = an_editor.getEditorInput();
-    refreshEditor(an_editor, input);
+    refreshEditor(an_editor, input, null);
   }
 
   /**
@@ -285,11 +285,15 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *
    * @param an_editor current editor to be closed
    * @param an_input input file to be displayed in new editor
+   * @param a_comment_array contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the file,
+   *   if this parameter is null then the array is not taken into account
    * @throws PartInitException if the new editor could not be created or
    *    initialized
    */
   public final void refreshEditor(final BytecodeEditor an_editor,
-                                  final IEditorInput an_input)
+                                  final IEditorInput an_input,
+                                  final String[] a_comment_array)
     throws PartInitException {
     final IWorkbenchPage page = an_editor.getEditorSite().getPage();
     final ITextSelection selection = (ITextSelection)an_editor.
@@ -319,7 +323,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 //      e.printStackTrace();
 //    }
     sp.setSelection(ns);
-    my_bcode_cntrbtn.reinit();
+    my_bcode_cntrbtn.reinit(a_comment_array);
     if (proper) Composition.stopDisas();
   }
 
