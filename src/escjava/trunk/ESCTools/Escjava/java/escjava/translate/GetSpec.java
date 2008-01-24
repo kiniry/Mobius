@@ -2108,7 +2108,7 @@ public final class GetSpec {
 	 * every condition <code>C</code> in <code>cv</code>.
 	 */
 
-	private static void addAssumptions(/*@ non_null @*/ ExprVec ev,
+	public static void addAssumptions(/*@ non_null @*/ ExprVec ev,
 			/*@ non_null @*/ StackVector code) 
 	{
 		for (int i = 0; i < ev.size(); i++) {
@@ -2118,7 +2118,7 @@ public final class GetSpec {
 		}
 	}
 
-	private static void assumeConditions(/*@ non_null @*/ ConditionVec cv, 
+	public static void assumeConditions(/*@ non_null @*/ ConditionVec cv, 
 			/*@ non_null @*/ StackVector code)
 	{
 		for (int i = 0; i < cv.size(); i++) {
