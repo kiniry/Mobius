@@ -69,6 +69,17 @@ public class SingleInstruction extends InstructionLineController {
   }
 
   /**
+   * This method returns the array of mnemonics for instructions with no
+   * parameters.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.SINGLE_INS;
+  }
+
+  /**
    * This method, based on the value of the field
    * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
    * object for an instruction with no parameters. The method can construct

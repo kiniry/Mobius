@@ -54,6 +54,17 @@ public class LoadStoreArrayInstruction extends SingleInstruction {
   }
 
   /**
+   * This method returns the array of load-store instructions mnemonics for
+   * arrays.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.LOAD_STORE_ARRAY_INS;
+  }
+
+  /**
    * This method creates the objects that represent array load or store
    * instructions. It checks if the name of the current instruction is one of
    * these and in that case creates an appropriate object. In case the name is

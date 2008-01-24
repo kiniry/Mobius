@@ -48,6 +48,15 @@ public class FieldInstruction extends StringInstruction {
     super(a_line_text, a_name);
   }
 
+  /**
+   * This method returns the array of field instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.FIELD_INS;
+  }
 
   /**
    * Field instruction line is correct if it has two parameters. The first one

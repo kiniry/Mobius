@@ -44,6 +44,16 @@ public class LdcInstruction extends OtherInstruction {
   }
 
   /**
+   * This method returns the array of ldc instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.LDC_INS;
+  }
+
+  /**
    * This method, based on the value of the field
    * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
    * object for an LCD instruction, i.e.:

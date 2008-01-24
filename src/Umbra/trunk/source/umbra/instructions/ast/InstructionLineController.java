@@ -21,6 +21,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.TargetLostException;
 
 import umbra.UmbraPlugin;
+import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
 
 /**
@@ -32,6 +33,29 @@ import umbra.instructions.InstructionParser;
  * @version a-01
  */
 public abstract class InstructionLineController extends BytecodeLineController {
+
+
+  /**
+   * This array contains the classes which are able to handle lines with
+   * mnemonics.
+   */
+  public static final Class[] INS_CLASS_HIERARCHY =
+  {ArithmeticInstruction.class,
+   IConstInstruction.class,
+   LoadStoreConstInstruction.class,
+   LoadStoreArrayInstruction.class,
+   ConversionInstruction.class,
+   SingleInstruction.class,
+   PushInstruction.class,
+   JumpInstruction.class,
+   IincInstruction.class,
+   StackInstruction.class,
+   ArrayInstruction.class,
+   NewInstruction.class,
+   FieldInstruction.class,
+   InvokeInstruction.class,
+   LdcInstruction.class,
+   UnclassifiedInstruction.class};
 
   /**
    * The list of instructions in the method in which the current instruction
@@ -55,6 +79,15 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * The mnemonic name of the current instruction.
    */
   private String my_name;
+
+  /**
+   * This method returns the array of mnemonics handled by the current class.
+   *
+   * @return the array of the handled mnemonics
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return new String[0];
+  }
 
   /**
    * The construction creates the controller which

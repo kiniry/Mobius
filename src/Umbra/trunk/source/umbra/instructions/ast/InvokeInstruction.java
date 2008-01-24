@@ -47,6 +47,15 @@ public class InvokeInstruction extends StringInstruction {
     super(a_line_text, a_name);
   }
 
+  /**
+   * This method returns the array of invoke instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.INVOKE_INS;
+  }
 
   /**
    * Invoke instruction line is correct if its parameter

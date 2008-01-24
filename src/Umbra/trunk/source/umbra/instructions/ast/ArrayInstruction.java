@@ -52,6 +52,16 @@ public class ArrayInstruction extends StringInstruction {
   }
 
   /**
+   * This method returns the array of array instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.ARRAY_INS;
+  }
+
+  /**
    * This method parses the type name parameter of the current instruction.
    *
    * This method retrieves the type name value of the parameter of the

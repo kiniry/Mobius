@@ -24,7 +24,7 @@ import umbra.instructions.InstructionParser;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class IncInstruction extends NumInstruction {
+public class IincInstruction extends NumInstruction {
 
   /**
    * This creates an instance of an instruction
@@ -36,10 +36,19 @@ public class IncInstruction extends NumInstruction {
    * @param a_name the mnemonic name of the instruction
    * @see InstructionLineController#InstructionLineController(String, String)
    */
-  public IncInstruction(final String a_line_text, final String a_name) {
+  public IincInstruction(final String a_line_text, final String a_name) {
     super(a_line_text, a_name);
   }
 
+  /**
+   * This method returns the array of inc instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.IINC_INS;
+  }
 
   /**
    * Inc instruction line is correct if it has
@@ -56,7 +65,7 @@ public class IncInstruction extends NumInstruction {
     boolean res = true;
     final InstructionParser parser = getParser();
     res = parseTillMnemonic(); //parse up to mnemonic
-    res = res && (parser.swallowMnemonic(BytecodeStrings.INCC_INS) >= 0);
+    res = res && (parser.swallowMnemonic(BytecodeStrings.IINC_INS) >= 0);
                            //mnemonic
     res = res && parser.swallowWhitespace(); //whitespace before the number
     res = res && parser.swallowDelimiter('%'); //
@@ -81,7 +90,7 @@ public class IncInstruction extends NumInstruction {
   private int getInd1() {
     final InstructionParser parser = getParser();
     parseTillMnemonic(); //parse up to mnemonic
-    parser.swallowMnemonic(BytecodeStrings.INCC_INS); //mnemonic
+    parser.swallowMnemonic(BytecodeStrings.IINC_INS); //mnemonic
     parser.swallowWhitespace(); //whitespace before the number
     parser.swallowDelimiter('%'); //
     parser.swallowNumber(); // number

@@ -46,6 +46,16 @@ public class IConstInstruction extends SingleInstruction {
   }
 
   /**
+   * This method returns the array of iconst instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.ICONST_INS;
+  }
+
+  /**
    * This method creates the objects that represent iconst instructions
    * (e.g. iconst_0). It checks if the name of the current instruction is one of
    * these and in that case creates an appropriate object. In case the name is

@@ -59,6 +59,16 @@ public class ConversionInstruction extends SingleInstruction {
   }
 
   /**
+   * This method returns the array of conversion instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.CONV_INS;
+  }
+
+  /**
    * Conversion instruction line is correct if it has no parameter.
    * That means this must have the form:
    *   whitespase number : whitespace mnemonic whitespace lineend

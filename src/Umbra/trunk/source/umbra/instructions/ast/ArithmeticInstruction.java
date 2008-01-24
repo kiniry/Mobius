@@ -64,6 +64,7 @@ import umbra.editor.parsing.BytecodeStrings;
  */
 public class ArithmeticInstruction extends SingleInstruction {
 
+
   /**
    * This creates an instance of an instruction
    * named as <code>a_name</code> with the line text
@@ -77,6 +78,16 @@ public class ArithmeticInstruction extends SingleInstruction {
   public /*@ pure @*/ ArithmeticInstruction(final String a_line_text,
                                             final String a_name) {
     super(a_line_text, a_name);
+  }
+
+  /**
+   * This method returns the array of arithmetic instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.ARITHMETIC_INS;
   }
 
   /**

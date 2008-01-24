@@ -8,6 +8,8 @@
  */
 package umbra.editor.parsing;
 
+import umbra.instructions.ast.ThrowsLineController;
+
 
 /**
  * String arrays used to identify keywords and instruction
@@ -75,7 +77,7 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
   /**
    * This constant contains an array with all the possible prefixes of method
    * headers in byte code text files. The header lines are handled by
-   * {@ref HeaderLineController} class.
+   * {@link umbra.instructions.ast.HeaderLineController} class.
    */
   public static final String[] HEADER_PREFIX = new String[] {"public",
                                                              "static", "void",
@@ -86,6 +88,16 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
                                                              "String", "byte",
                                                              "package",
                                                              "class", "}" };
+
+  /**
+   * This constant contains an array with all the possible prefixes of throw
+   * lines in byte code text files. The throw lines are handled by
+   * {@link umbra.instructions.ast.ThrowsLineController} class.
+   */
+  public static final String[] THROWS_PREFIX = new String[] {"throws",
+                                                             "Exception",
+                                                             "From"};
+
   /**
    * The names of base byte code types relevant for array instructions. These
    * are the primitive types.

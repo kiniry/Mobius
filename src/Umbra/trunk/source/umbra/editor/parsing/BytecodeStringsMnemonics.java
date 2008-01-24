@@ -181,9 +181,9 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref IncInstruction} class.
+   * in {@ref IincInstruction} class.
    */
-  public static final String[] INCC_INS = new String[] {"iinc"};
+  public static final String[] IINC_INS = new String[] {"iinc"};
 
   /**
    * TODO.

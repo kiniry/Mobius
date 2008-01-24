@@ -48,6 +48,15 @@ public class NewInstruction extends StringInstruction {
     super(a_line_text, a_name);
   }
 
+  /**
+   * This method returns the array of new instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.NEW_INS;
+  }
 
   /**
    * New instruction line is correct if it has one parameter that is a class

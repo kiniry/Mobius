@@ -62,6 +62,16 @@ public class LoadStoreConstInstruction extends SingleInstruction {
   }
 
   /**
+   * This method returns the array of load and store instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.LOAD_STORE_INS;
+  }
+
+  /**
    * This method creates the objects that represent instructions that load
    * or store numbers and are parametrised by constants (e.g. iload_0).
    * It checks if the name of the current instruction is one of these and in

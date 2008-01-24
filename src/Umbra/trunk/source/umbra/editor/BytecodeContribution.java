@@ -115,7 +115,8 @@ public class BytecodeContribution extends ControlContribution {
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account
    */
-  private void init(final IDocument a_doc, final String[] a_comment_array) {
+  private void init(final BytecodeDocument a_doc,
+                    final String[] a_comment_array) {
     my_bcc = new BytecodeController();
     my_bcc.init(a_doc, a_comment_array);
     if (my_mod_table_flag) {
@@ -166,7 +167,13 @@ public class BytecodeContribution extends ControlContribution {
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
       if (!my_ready_flag) {
-        init(an_event.fDocument, my_comment_array); //this marks my_ready_flag as true
+        if (an_event.fDocument instanceof BytecodeDocument) {
+          init((BytecodeDocument)an_event.fDocument,
+               my_comment_array); //this marks my_ready_flag as true
+        } else {
+          //This should not happen as we operate in a byte code editor
+          UmbraPlugin.messagelog("You are not editing a byte code document");
+        }
       }
       my_current_event = an_event;
 

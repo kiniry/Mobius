@@ -144,7 +144,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       my_editor.setJavaClass(jc);
       my_editor.refreshBytecode(a_path, null, null);
       final IEditorInput input = new FileEditorInput(a_file);
-      getContributor().refreshEditor(my_editor, input);
+      getContributor().refreshEditor(my_editor, input, null);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {

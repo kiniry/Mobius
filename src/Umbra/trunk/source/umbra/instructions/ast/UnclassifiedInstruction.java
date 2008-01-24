@@ -8,6 +8,8 @@
  */
 package umbra.instructions.ast;
 
+import umbra.editor.parsing.BytecodeStrings;
+
 
 
 /**
@@ -34,6 +36,18 @@ public class UnclassifiedInstruction extends InstructionLineController {
                                  final String a_name) {
     super(a_line_text, a_name);
   }
+
+
+  /**
+   * This method returns the array of unclassified instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.UNCLASSIFIED_INS;
+  }
+
   /**
    * Instruction out of classification is never correct.
    *

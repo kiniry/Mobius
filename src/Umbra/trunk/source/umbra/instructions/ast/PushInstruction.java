@@ -45,6 +45,16 @@ public class PushInstruction extends NumInstruction {
   }
 
   /**
+   * This method returns the array of push instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.PUSH_INS;
+  }
+
+  /**
    * Push instruction line is correct if it has one simple number parameter.
    * The exact definition of this kind of a line is as follows:
    *    whitespase number : whitespace mnemonic whitespace number

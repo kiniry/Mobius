@@ -72,6 +72,16 @@ public class JumpInstruction extends NumInstruction {
   }
 
   /**
+   * This method returns the array of jump instructions mnemonics.
+   *
+   * @return the array of the handled mnemonics
+   * @see InstructionLineController#getMnemonics()
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return BytecodeStrings.JUMP_INS;
+  }
+
+  /**
    * Jump instruction line is correct if it has one simple number parameter
    * preceded by '#'. The precise definition of this kind of a line is as
    * follows:

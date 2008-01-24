@@ -17,6 +17,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import umbra.UmbraException;
 import umbra.UmbraPlugin;
+import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
 
 /**
