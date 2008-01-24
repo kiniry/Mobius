@@ -6,7 +6,12 @@
       provider-name="Mobius IST-15905">
 
    <description url=" ">
-      
+      This feature contains the Java front end library for Mobius IST
+15905, which parses Java 1.3 or 1.4 source code and Java 1.3,
+1.4 or 1.5 bytecode.  It can be used to generate an Abstract
+Syntax Tree suitable for Extended Static Checking.  It uses the BCEL
+5.2 library when parsing Java 1.5 bytecode. The original verion of 
+Javafe was derived from the Java Programming Toolkit Source Release from HP labs.
    </description>
 
    <copyright>
