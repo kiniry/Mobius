@@ -1,5 +1,5 @@
 /*
- * This file is part of the Daikon plugin project.
+ * This file is part of the ESCJava2 plugin project.
  * Copyright 2004 David R. Cok
  * 
  * Created on Oct 9, 2004
@@ -60,10 +60,8 @@ public class Options {
 	      );
 
 	static final public AbstractPreference.ChoiceOption os = new AbstractPreference.ChoiceOption(
-			(PLUGINID + "osname"),
-			new String[]{"","Windows","Linux","MacOSX","Solaris"},
-			0,
-			"Internal Simplify Version",
+			(PLUGINID + "osname"), new String[] { "", "Windows", "Linux",
+					"MacOSX", "Solaris" }, 0, "Internal Simplify Version",
 			"The choice of internal version of Simplify (pick the host platform)");
 
 	/**
@@ -163,36 +161,17 @@ public class Options {
 			"Warnings are issued when an annotation contains an impure method [-checkPurity option]");
 
 
-	/** The option widget corresponding to the choice of platform variant and 
-	 *  source version compatibility (Java 1.3, Java 1.4,  Java 1.5, 
-	 *  JavaCard 2.1 or MIDP 1.0) to be supported
+	/** The option widget corresponding to the choice of source
+	 *  version compatibility (Java 1.3 or Java 1.4) to be supported -
+	 *  this is essentially the interpretation to be applied to the
+	 *  assert keyword.
 	 */
 	static final protected AbstractPreference.ChoiceOption source = new AbstractPreference.ChoiceOption(
 			(PLUGINID + "source"),
-			new String[]{"Java1.3","Java1.4","Java1.5","JavaCard2.1","MIDP1.0"},
+			new String[]{"1.3","1.4","1.5"/*,"JavaCard 2.1","MIDP 1.0"*/},
 			1,
-			"Java platform variant and source version",
+			"Java source version",
 			"The version of Java that is supported [JML --source option]");
-	
-	/**
-	 * The Specifications to use (a value is required).
-	 */
-	static final public AbstractPreference.StringOption specs = new AbstractPreference.StringOption(
-			(SIMPLIFY_PLUGINID + "specs"), 
-			"", 
-			"Java platform specifications to use",
-			"The static checker needs a version of the JML specifications for" + Utils.eol +
-			"this Java platform and version.");
-	
-	/**
-	 * The boot classpath to use (a value is required).
-	 */
-	static final public AbstractPreference.StringOption bootclasspath = new AbstractPreference.StringOption(
-			(SIMPLIFY_PLUGINID + "bootclasspath"), 
-			"", 
-			"Boot classpath to use",
-			"The static checker needs to know the bootclasspath for" + Utils.eol +
-			"this Java platform and version.");
 
 	/**
 	 * This allows the setting of the Esc/Java -ea, -da, -eajava, -eajml options.
@@ -217,7 +196,7 @@ public class Options {
 	 * corresponding to static warnings (each of which indicates whether
 	 * the corresponding warning is enabled or disabled).
 	 * 
-	 * @return The aray of static chcking warning options
+	 * @return The array of static checking warning options
 	 */
 	//@ modifies warningOptions;
 	//@ ensures \result != null;

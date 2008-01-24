@@ -418,7 +418,7 @@
             lightweight="true"
             location="TOP_RIGHT"
             label="ESC/Java2"
-            icon="icons/JMLSmall.png"
+            icon="$nl$/icons/JMLSmall.png"
             state="true"
             id="mobius.escjava2.plugin.ESCDecoratorA">
          <description>
@@ -462,6 +462,14 @@
    <extension
          point="org.eclipse.help.toc">
       <toc file="escjavaHelp.xml" primary="true" />
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="escjava2.plugin.EscjavaProperties"
+            id="mobius.escjava2.plugin.properties.EscJava"
+            name="ESC/Java2 Properties">
+      </page>
    </extension>
    
   

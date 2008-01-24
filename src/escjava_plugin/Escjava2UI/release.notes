@@ -1,9 +1,0 @@
-Mobius ESC/Java2 Plugin User Interface 2.0.6
-
-Release date:
-
-The pluginlib has been moved into its own plugin so that it can be re-used
-across all mobius plugins.
-
-The preference page now allows a different set of specifications and 
-bootclasspath to be used for different variants of Java e.g. JavaCard or MIDP.

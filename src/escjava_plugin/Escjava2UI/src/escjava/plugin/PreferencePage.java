@@ -24,29 +24,6 @@ import pluginlib.Widgets;
  * This class implements the preference page for the plugin
  */
 public class PreferencePage extends pluginlib.PreferencePage {
-
-  // FIXME - can we move these common widgets/options to the library
-
-  /** The option button corresponding to Eclipse logging. */
-  static public PreferenceWidget.BooleanWidget logging = new PreferenceWidget.BooleanWidget(
-      Options.logging);
-
-  /** The choice of using the console or System.out for logging */
-  static final public PreferenceWidget.BooleanWidget useConsole = new PreferenceWidget.BooleanWidget(
-      Options.useConsole);
-
-  /** The choice to send informational output to the log file as well */
-  static final public PreferenceWidget.BooleanWidget alsoLogInfo = new PreferenceWidget.BooleanWidget(
-      Options.alsoLogInfo);
-
-  /**
-   * This is the list of widgets in the JmlEclipse options section of the
-   * properties page
-   */
-  final static public PreferenceWidget[] eclipseOptions = new PreferenceWidget[] {
-                                                                          logging,
-                                                                          useConsole,
-                                                                          alsoLogInfo };
   
   static final public PreferenceWidget.BooleanWidget internalSimplify =
     new PreferenceWidget.BooleanWidget(Options.internalSimplify);
@@ -115,24 +92,12 @@ public class PreferencePage extends pluginlib.PreferencePage {
       Options.checkPurity);
 
   /**
-   * The option widget corresponding to the choice of platform variant and 
-   * source version compatibility (Java 1.3, Java 1.4, Java 1.5, JavaCard 2.1,
-   * or MIDP 1.0) to be supported.
+   * The option widget corresponding to the choice of source version
+   * compatibility (Java 1.3 or Java 1.4) to be supported - this is essentially
+   * the interpretation to be applied to the assert keyword.
    */
   static final protected PreferenceWidget.ChoiceWidget source = new PreferenceWidget.ChoiceWidget(
       Options.source);
-  
-  /**
-   * The Specifications to use (a value is required).
-   */
-  static final public PreferenceWidget.FileWidget specs = new PreferenceWidget.FileWidget(
-      Options.specs);
-  
-  /**
-   * The boot class path to use (a value is required).
-   */
-  static final public PreferenceWidget.FileWidget bootclasspath = new PreferenceWidget.FileWidget(
-      Options.bootclasspath);
 
   /**
    * This allows the setting of the ESC/Java -ea, -da, -eajava, -eajml options.
@@ -160,9 +125,7 @@ public class PreferencePage extends pluginlib.PreferencePage {
                                                  quiet,
                                                  new PreferenceWidget.Label(
                                                      "Java language"), 
-                                                 source, 
-                                                 specs, 
-                                                 bootclasspath,
+                                                 source,
                                                  assertBehavior };
 
   /**

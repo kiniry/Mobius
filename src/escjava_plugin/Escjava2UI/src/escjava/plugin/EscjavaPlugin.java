@@ -33,7 +33,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	 */
 	private List listeners = new ArrayList();
 	//@ constraint \not_modified(listeners);
-	// The List object does not chnage, though its content might
+	// The List object does not change, though its content might
 	
 	/** The shared instance of the singleton plugin. */
 	private static EscjavaPlugin plugin;
@@ -70,7 +70,9 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	 * This is the id of the auto-check builder extension made for Escjava checking
 	 */
 	public static final String ESCJAVA_AUTOCHECK_BUILDER = UI_PLUGIN_ID + ".autocheckEscjavaBuilder";
-	public static final String JMLSPECS_FOLDER_NAME = "specs";
+	public static final String JMLSPECS_FOLDER_NAME = "specs"; // Java 1.5
+	public static final String JMLSPECS_JAVA1_4_FOLDER_NAME = "specs-java1.4";
+	public static final String JMLSPECS_JAVACARD_FOLDER_NAME = "specs-javacard";
 	
 
 	/**
