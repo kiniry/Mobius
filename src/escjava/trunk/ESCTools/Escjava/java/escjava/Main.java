@@ -716,6 +716,43 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
 
   }
 
+
+  private void specTest(RoutineDecl r, TypeSig sig, InitialState initState) {
+      // method fabrication
+      MethodDecl testMethod =  
+          SpecTester.fabricateTest(r, sig, initState); // create the testing method
+
+      // get GC for the fabricated method
+      TrAnExpr.initForRoutine();
+      FindContributors scope = new FindContributors(testMethod);
+      GuardedCmd testBody = gctranslator.trBody(testMethod, scope, initState.getPreMap(), 
+                                                predictSynTargs(testMethod, initState, scope),
+                                                null,
+                                                /* issueCautions */true);
+      Spec spec = GetSpec.getSpecForBody(testMethod, scope, Targets.normal(testBody), initState.getPreMap());
+      //TODO: mimic target computation in computeBody--mikolas
+      GetSpec.addAxioms(Translate.axsToAdd, spec.preAssumptions);
+
+      // prepending the GC with assumptions (for invariants)
+      StackVector code = new StackVector();
+      code.push();
+      GetSpec.addAssumptions(spec.preAssumptions, code);
+      GetSpec.assumeConditions(spec.pre, code);
+      code.addElement(testBody);
+
+      GuardedCmd testGC =  GC.seq(GuardedCmdVec.popFromStackVector(code));
+      //      GuardedCmd testGC = computeBody(testMethod, initState);
+      if (options().pgc) {
+          System.out.println("\n**** Fabricated Guarded Command:");
+          ((EscPrettyPrint) PrettyPrint.inst).print(System.out, 0, testGC);
+          System.out.println();
+      }
+
+      // run reachability on the fabricated GC
+      SpecTester.runReachability(testGC, r.getStartLoc()); 
+  }
+
+
   /**
    * Run stages 3+..6 as requested on a RoutineDeclElem; returns a
    * short (~ 1 word) status message.
@@ -734,6 +771,7 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
     // or analyses that process specs only, by default bodyless are skipped
     checkBodyless |= Main.options().idc;
     checkBodyless |= options().isOptionOn(Options.optERST) && SpecTester.knowHowToCheck(r);
+    checkBodyless |= options().isOptionOn(Options.optERSTA) && SpecTester.knowHowToCheck(r);
 
     if (r.body == null && !checkBodyless)
         return "passed immediately";
@@ -768,14 +806,11 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
               if (!options().quiet)
                   System.out.println("          running reachability-based spec-checker"); // TODO: use standard logging mechanism--mikolas
 
-              MethodDecl testMethod =  
-                  SpecTester.fabricateTest(r, sig, initState); // create the testing method
-              GuardedCmd testGC = computeBody(testMethod, initState);  // compute GC of the tester's body
-              SpecTester.runReachability(testGC, r.getStartLoc()); // run reachability on it
-              return "processed by reachability-based spec-checker (only); a bug has been found if an (Assert) is unreachable";
+              specTest(r, sig, initState);
+              return "processed by reachability-based spec-checker (only); a bug has been found something  unreachable";
           }
-      }
-      // === end of experimental for SpecTester
+    }
+    // === end of experimental for SpecTester
 
 
 
@@ -1276,32 +1311,7 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
 
   }
 
-  /**
-   * This method computes the guarded command (including assuming
-   * the precondition, the translated body, the checked
-   * postcondition, and the modifies constraints) for the method or
-   * constructor <code>r</code> in scope <code>scope</code>.
-   *
-   * @return <code>null</code> if <code>r</code> doesn't have a body.
-   */
-
-  //@ requires r != null;
-  //@ requires initState != null;
-  protected GuardedCmd computeBody(RoutineDecl r, InitialState initState) {
-    if (r.getTag() == TagConstants.METHODDECL && ((MethodDecl) r).body == null
-        && !Main.options().idc) {
-      // no body
-      return null;
-    }
-
-    // don't check the routine if it's a helper
-    if (Helper.isHelper(r)) {
-      return null;
-    }
-
-    FindContributors scope = new FindContributors(r);
-    TrAnExpr.initForRoutine();
-
+  Set predictSynTargs(RoutineDecl r, InitialState initState, FindContributors scope) {
     /*
      * Compute an upper bound for synTargs if -O7 given.
      *
@@ -1330,6 +1340,37 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
       if (options().statsTime)
         System.out.println("      [prediction time: " + timeUsed(T) + "]");
     }
+
+    return predictedSynTargs;
+  }
+
+  /**
+   * This method computes the guarded command (including assuming
+   * the precondition, the translated body, the checked
+   * postcondition, and the modifies constraints) for the method or
+   * constructor <code>r</code> in scope <code>scope</code>.
+   *
+   * @return <code>null</code> if <code>r</code> doesn't have a body.
+   */
+
+  //@ requires r != null;
+  //@ requires initState != null;
+  protected GuardedCmd computeBody(RoutineDecl r, InitialState initState) {
+    if (r.getTag() == TagConstants.METHODDECL && ((MethodDecl) r).body == null
+        && !Main.options().idc) {
+      // no body
+      return null;
+    }
+
+    // don't check the routine if it's a helper
+    if (Helper.isHelper(r)) {
+      return null;
+    }
+
+    FindContributors scope = new FindContributors(r);
+    TrAnExpr.initForRoutine();
+
+    Set predictedSynTargs = predictSynTargs(r, initState, scope);
 
     /*
      * Translate the body:

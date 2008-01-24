@@ -110,7 +110,7 @@ public class SpecTester {
         // debug
         //    System.err.println("fabricated method: " + fr);
 
-        fr.setParent(r.getParent()); // put the method in the samme class as the tested routine
+        fr.setParent(r.getParent()); // put the method in the same class as the tested routine
         return fr;
     }
 
