@@ -4,15 +4,3 @@ Bundle-Name: Javafe plugin
 Bundle-SymbolicName: mobius.javafe.plugin
 Bundle-Version: 2.0.7
 Bundle-Vendor: https://mobius.ucd.ie/
-Export-Package: javafe,
- javafe.ast,
- javafe.decsrc,
- javafe.filespace,
- javafe.genericfile,
- javafe.parser,
- javafe.parser.test,
- javafe.reader,
- javafe.tc,
- javafe.test,
- javafe.test.lex,
- javafe.util
