@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mobius ESCJava2 Library Plug-in
 Bundle-SymbolicName: mobius.escjava2.esctools
 Bundle-Version: 2.0.5
-Bundle-Localization: plugin
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 project
 Bundle-ClassPath: escspecs.jar,
  esctools2.jar
@@ -58,6 +57,7 @@ Export-Package: escjava;
    escjava.ast",
  escjava.pa.generic;uses:="mocha.wrappers.jbdd",
  escjava.parser;uses:="javafe.util,javafe.ast,javafe.parser",
+ escjava.parser.test,
  escjava.prover,
  escjava.prover.jniw,
  escjava.reader;
@@ -78,6 +78,7 @@ Export-Package: escjava;
  escjava.sortedProver.fx7pg;uses:="escjava.sortedProver.trew,escjava.sortedProver",
  escjava.sortedProver.simplify;uses:="escjava.sortedProver",
  escjava.sortedProver.trew;uses:="escjava.sortedProver,escjava.sortedProver.auflia",
+ escjava.sortedProver.z3;uses:="escjava.sortedProver.simplify",
  escjava.soundness;
   uses:="escjava.translate,
    javafe.ast,
@@ -114,5 +115,33 @@ Export-Package: escjava;
    javafe.ast,
    escjava.translate,
    org.w3c.dom",
+ java,
+ java.awt,
+ java.awt.color,
+ java.awt.event,
+ java.io,
+ java.lang,
+ java.lang.reflect,
+ java.math,
+ java.net,
+ java.rmi,
+ java.util,
+ java.util.regex,
+ javacard,
+ javacard.framework,
+ javacard.framework.service,
+ javacard.security,
+ javacardx,
+ javacardx.crypto,
+ javax,
+ javax.swing,
+ javax.swing.event,
+ javax.swing.filechooser,
+ javax.swing.tree,
+ junit,
+ junit.framework,
+ junitutils;uses:="junit.framework",
+ org,
+ org.jmlspecs,
  org.jmlspecs.lang
 Eclipse-JREBundle: true
