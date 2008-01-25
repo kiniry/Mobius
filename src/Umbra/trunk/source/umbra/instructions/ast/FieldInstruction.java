@@ -40,7 +40,7 @@ public class FieldInstruction extends StringInstruction {
    * <code>a_line_text</code>. Currently it just calls the constructor of the
    * superclass.
    *
-   * @param a_line_text the line number of the instruction
+   * @param a_line_text the line text of the instruction
    * @param a_name the mnemonic name of the instruction
    * @see InstructionLineController#InstructionLineController(String, String)
    */
@@ -108,11 +108,11 @@ public class FieldInstruction extends StringInstruction {
    */
   public final Instruction getInstruction() {
     int index;
-    index = getInd();
 
     final boolean isOK = correct();
     Instruction res = null;
     if (isOK) {
+      index = getInd();
       if (getName().compareTo("getfield") == 0) {
         res = new GETFIELD(index);
       }

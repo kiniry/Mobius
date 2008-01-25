@@ -185,6 +185,12 @@ public class DispatchingAutomaton {
    * outgoing edge for the first character, we execute the rule in the
    * current node.
    *
+   * Note that this strategy allows to recognise a line such as:
+   * <pre>
+   *    12:  iinch
+   * </pre>
+   * as an {@link umbra.instructions.ast.IincInstruction} line.
+   *
    * This method may throw {@link SecurityException} in case the security
    * manager forbids to refer to the constructor of the class to be created.
    *

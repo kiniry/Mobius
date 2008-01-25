@@ -417,4 +417,12 @@ public class BytecodeDocument extends Document {
       throw new RuntimeException("bmlp not set yet!");
     return my_bcode_editor.getBmlp();
   }
+
+  /**
+   * Used only for testing.
+   * @param cg
+   */
+  public void setClassGen(ClassGen cg) {
+    my_classgen = cg;
+  }
 }

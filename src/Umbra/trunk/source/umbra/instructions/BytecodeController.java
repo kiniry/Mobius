@@ -143,18 +143,19 @@ public final class BytecodeController {
    * removing lines or both) has been made and performs appropriate action
    * to the byte code structures of the given byte code document.
    *
-   * @param a_doc a byte code document in which the modification have
-   *      been made to
+   * @param a_doc a byte code document in which the modification has
+   *   been made to
    * @param a_start_rem a number of the first modified line as counted in the
-   *                    old version of the document
+   *   old version of the document
    * @param an_end_rem a number of the last modified line as counted in the
-   *                   old version of the document
+   *   old version of the document
    * @param a_stop a number of the last modified line as counted in the new
-   *               version of the document
+   *   version of the document
    */
   public void addAllLines(final IDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
   {
+    try {
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
     // i - index in the removed lines
     // j - index in the inserted lines
@@ -200,6 +201,9 @@ public final class BytecodeController {
       }
     }
     if (UmbraHelper.DEBUG_MODE) controlPrint(1);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     return;
   }
 

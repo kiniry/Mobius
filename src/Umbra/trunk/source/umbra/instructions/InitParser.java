@@ -28,11 +28,12 @@ import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
-import umbra.instructions.ast.InstructionLineController;
 
 /**
  * This class handles the initial parsing of a byte code textual document.
- * It creates handlers for each line of the document and 
+ * It creates handlers for each line of the document and structures to handle
+ * the end-of-line comments. It is also able to reconstruct the end-of-line
+ * comments from the previous session (closed with the refresh action).
  *
  * This class is used by {@link BytecodeController} to initialise its internal
  * structures at the beginning of editing or after the refresh action is
@@ -116,6 +117,7 @@ public class InitParser {
     my_comment_array = a_comment_array;
     my_editor_lines = new LinkedList();
     my_instructions = new LinkedList();
+    my_comments = new Hashtable();
   }
 
   /**
@@ -146,6 +148,7 @@ public class InitParser {
     }
     while (a_line_no < my_doc.getNumberOfLines()) {
       try {
+        ctxt.incMethodNo();
         a_line_no = swallowMethod(a_line_no, a_method_count, ctxt);
       } catch (BadLocationException e) {
         MessageDialog.openInformation(new Shell(), "Bytecode",
@@ -189,12 +192,14 @@ public class InitParser {
     a_ctxt.setInitial();
     BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
     my_editor_lines.add(j, lc);
+    lc.setIndex(a_ctxt.getMethodNo());
     j++;
     j = swallowEmptyLines(my_doc, j, a_ctxt);
     line = getLineFromDoc(my_doc, j, a_ctxt);
     a_ctxt.seClassToBeRead();
     lc = Preparsing.getType(line, a_ctxt);
     my_editor_lines.add(j, lc);
+    lc.setIndex(a_ctxt.getMethodNo());
     j++;
     return swallowEmptyLines(my_doc, j, a_ctxt);
   }
@@ -235,12 +240,13 @@ public class InitParser {
     for (; j < my_doc.getNumberOfLines(); j++) {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(lineName,
-                                                                  a_ctxt);
+                                                           a_ctxt);
+      my_editor_lines.add(j, lc);
+      lc.setIndex(a_ctxt.getMethodNo());
       if (lc.isCommentStart()) { // ignore comments
         j = swallowEmptyLines(my_doc, j, a_ctxt);
         continue;
       }
-      my_editor_lines.add(j, lc);
       if (lc instanceof HeaderLineController) { // method header
         continue;
       }
@@ -286,6 +292,7 @@ public class InitParser {
         break;
       }
       my_editor_lines.add(j, lc);
+      lc.setIndex(a_ctxt.getMethodNo());
       j++;
     }
     return j;
@@ -352,6 +359,8 @@ public class InitParser {
    * comment in the line, it returns <code>null</code>.
    * In case the parsing context is such that we are inside a many-line
    * comment, then the comment inside a line is always empty.
+   * Additionally, this method removes the end-of-line char from the
+   * string.
    *
    * @param a_line_text the line to check for my_comments
    * @param a_ctxt the parsing context for the line
@@ -365,9 +374,11 @@ public class InitParser {
     if (i == -1) {
       return null;
     }
-    final String nl = a_line_text.substring(i +
+    String nl = a_line_text.substring(i +
                                   BytecodeStrings.SINGLE_LINE_COMMENT_MARK_LEN,
-                                  a_line_text.indexOf("\n"));
+                                  a_line_text.length());
+    if (a_line_text.indexOf('\n') != 0)
+      nl = nl.substring(0, a_line_text.indexOf('\n'));
     return nl;
   }
 
@@ -435,7 +446,7 @@ public class InitParser {
    *   represent the lines with instructions in the currently parsed document
    */
   public LinkedList getInstructions() {
-    return my_editor_lines;
+    return my_instructions;
   }
 
   /**

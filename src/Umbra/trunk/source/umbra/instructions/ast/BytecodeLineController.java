@@ -43,10 +43,13 @@ public abstract class BytecodeLineController {
 
   /**
    * The number of the method that contains the current line.
-   * This is an index in the {@link ClassGen} object in the
+   * This is an index in the {@link ClassGen} object available through the
    * {@link BytecodeDocument} object
    * that describes the state of the byte code editor which contains
    * the line that corresponds to the current object.
+   *
+   * Values not less than zero mean the line is associated with a method.
+   * Values less than zero mean the line is not associated with any method.
    */
   private int my_index;
 
@@ -67,6 +70,7 @@ public abstract class BytecodeLineController {
     super();
     my_line_text = a_line;
     my_parser = new InstructionParser(a_line);
+    my_index = -1;
   }
 
   /**
@@ -196,9 +200,10 @@ public abstract class BytecodeLineController {
   }
 
   /**
-   * TODO.
+   * Return the method number of the method in which the line is located. For
+   * lines that are not associated with any method this is equal to -1.
    *
-   * @return TODO
+   * @return method number
    */
   public final int getIndex() {
     return my_index;
@@ -244,7 +249,8 @@ public abstract class BytecodeLineController {
 
   /**
    * This method sets the number of the method which the current line belongs
-   * to.
+   * to. Normally, the number is not less than 0. The value -1 means the line
+   * is not associated with any method.
    *
    * @param an_index number of the method
    */

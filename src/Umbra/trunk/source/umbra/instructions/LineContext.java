@@ -22,6 +22,7 @@ import java.util.Stack;
  *   <li>parses a multi-line comment,</li>
  *   <li>parses a annotation comment.</li>
  * </ul>
+ * Additionally, this keeps track of the parsed methods.
  * This can be extended in the futer to handle line number table etc.
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
@@ -69,6 +70,13 @@ public class LineContext {
   private Stack my_state_stack;
 
   /**
+   * The number of the currently parsed method. It contains -1 in case the
+   * method number has not been set yet.
+   */
+  private int my_method;
+
+
+  /**
    * The constructor initialises the internal state of the object so that it
    * is in the internal state. It also initialises the stack of states which
    * must be reverted.
@@ -76,6 +84,7 @@ public class LineContext {
   public LineContext() {
     setInitial();
     my_state_stack = new Stack();
+    my_method = -1;
   }
 
   /**
@@ -157,5 +166,22 @@ public class LineContext {
   public void setInsideAnnotation() {
     rememberState();
     my_state = STATE_INSIDE_ANNOTATION;
+  }
+
+  /**
+   * This method advances by 1 the method number counter. Note that initially
+   * the method number is -1.
+   */
+  public void incMethodNo() {
+    my_method++;
+  }
+
+  /**
+   * This method returns the current method number.
+   *
+   * @return the current method number
+   */
+  public int getMethodNo() {
+    return my_method;
   }
 }

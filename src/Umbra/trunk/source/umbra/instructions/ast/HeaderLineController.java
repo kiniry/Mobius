@@ -51,15 +51,4 @@ public class HeaderLineController extends BytecodeLineController {
     return false;
   }
 
-  /**
-   * This method sets the number of the method which the current line belongs
-   * to. The method index of the header is equal to the number of the previous
-   * line increased by one. This code allows to change the method number with
-   * each method.
-   *
-   * @param an_index method number of the previous method
-   */
-  public final void setIndex(final int an_index) {
-    super.setIndex(an_index + 1);
-  }
 }

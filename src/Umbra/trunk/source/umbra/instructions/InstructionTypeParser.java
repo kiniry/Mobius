@@ -91,8 +91,7 @@ public class InstructionTypeParser extends InstructionNameParser {
     if (InstructionParserHelper.isObjectTypeDescriptor(
                     line.charAt(index))) {
       incIndex();
-      final boolean res = swallowObjectTypeDescriptor();
-      return res && swallowDelimiter(';');
+      return swallowObjectTypeDescriptor();
     }
     return false;
   }

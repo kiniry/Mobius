@@ -10,6 +10,7 @@ package umbra.instructions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import umbra.UmbraPlugin;
 import umbra.editor.parsing.BytecodeStrings;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
 import umbra.instructions.ast.AnnotationLineController;
@@ -22,18 +23,29 @@ import umbra.instructions.ast.ThrowsLineController;
 import umbra.instructions.ast.UnknownLineController;
 
 /**
- * @author alx
- * @version a-01
+ * This class handles the preparsing of document lines. It creates an automaton
+ * which recognises the particular line kind and creates the line handler. This
+ * automaton is used to obtain the line handler for the given string.
+ * Additionally, the process of getting of a line handler is controled by a
+ * document context. In particular, the context recognises situation when
+ * the parsing is inside of a multi-line comment or a BML annotation.
  *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
  */
 public final class Preparsing {
-
 
   /**
    * The automaton to pre-parse the lines of the byte code document.
    */
   private static DispatchingAutomaton my_preparse_automaton;
 
+  /**
+   * Private constructor added to prevent the creation of objects of this
+   * type.
+   */
+  private Preparsing() {
+  }
 
   /**
    * Chooses one of line types that matches the given line
@@ -85,8 +97,34 @@ public final class Preparsing {
 
 
   /**
-   * TODO
-   * @return
+   * This method returns the automaton which handles the preparsing of lines
+   * and creates appropriate line controllers. In case the automaton has not
+   * been created yet, the method creates it.
+   *
+   * The automaton has the following major states:
+   * <ul>
+   *   <li>INITIAL - where all the processing starts</li>
+   *   <li>DIGIT - where the digits of the byte code instruction number
+   *                are recognised,</li>
+   *   <li>COLON - after the colon of the byte code instruction is
+   *               swallowed,</li>
+   *   <li>many MNEMONIC states - to recognise mnemonics,</li>
+   *   <li>many THROWS states - to recognise throws lines,</li>
+   *   <li>many HEADER states - to recognise throws lines,</li>
+   *   <li>COMMENT - to recognise multi-line comment start,</li>
+   *   <li>ANNOT - to recognise BML annotation start.</li>
+   * </ul>
+   * The INITIAL state contains a loop over whitespace characters and outgoing
+   * edges (paths) to THROWS, HEADER, COMMENT, ANNOT and DIGIT states. The DIGIT
+   * state contains a loop over digits and an outgoing edge to the COLON state.
+   * The COLON state contains a loop over whitespace characters and outgoing
+   * edges to MNEMONIC states (paths to be precise).
+   *
+   * Note that this automaton is slightly inefficient as MNEMONIC, THROWS etc.
+   * states could be made a single one.
+   *
+   * @return the automaton to handle preparsing of lines
+   * @see DispatchingAutomaton for a description of the way the automaton works
    */
   public static DispatchingAutomaton getAutomaton() {
     if (my_preparse_automaton == null) {
@@ -118,26 +156,47 @@ public final class Preparsing {
     return my_preparse_automaton;
   }
 
-  private static void addSimpleForArray(final String[] sHeaderInits,
+  /**
+   * This method adds to the initial state of the preparsing automaton the
+   * all the paths which are described by characters from the given array.
+   * The method associates the given class as the class the objects of which
+   * are created when the end of the path is reached in the automaton.
+   *
+   * @param the_paths the description of paths to be added
+   * @param a_class the class the objects of which should be created when the
+   *   parsing reaches the terminal nodes created by this method
+   */
+  private static void addSimpleForArray(final String[] the_paths,
                                  final Class a_class) {
-    for (int k = 0; k < sHeaderInits.length; k++) {
-      my_preparse_automaton.addSimple(sHeaderInits[k],
+    for (int k = 0; k < the_paths.length; k++) {
+      my_preparse_automaton.addSimple(the_paths[k],
                                       a_class);
     }
   }
 
-  private static void addWhitespaceLoop(DispatchingAutomaton an_automaton) {
+  /**
+   * This method adds a whitespace loop to the given state of an automaton.
+   *
+   * @param a_state the state of the automaton
+   */
+  private static void addWhitespaceLoop(final DispatchingAutomaton a_state) {
     for (int i = 0;
          i < BytecodeWhitespaceDetector.WHITESPACE_CHARACTERS.length;
          i++) {
-      an_automaton.addStarRule(
+      a_state.addStarRule(
         Character.toString(BytecodeWhitespaceDetector.
                            WHITESPACE_CHARACTERS[i]),
-        an_automaton);
+        a_state);
     }
   }
 
-  private static void addAllMnemonics(final DispatchingAutomaton colonnode) {
+  /**
+   * This method adds all the paths to recognise byte code mnemonics to the
+   * given node of an automaton.
+   *
+   * @param a_node the node of the automaton to add the paths to
+   */
+  private static void addAllMnemonics(final DispatchingAutomaton a_node) {
     for (int i = 0; i < InstructionLineController.INS_CLASS_HIERARCHY.length;
          i++) {
       try {
@@ -145,24 +204,24 @@ public final class Preparsing {
             (InstructionLineController.INS_CLASS_HIERARCHY[i].
                 getMethod("getMnemonics").invoke(null));
         for (int j = 0; j < the_mnemonics.length; j++) {
-          colonnode.addMnemonic(the_mnemonics[j], the_mnemonics[j],
+          a_node.addMnemonic(the_mnemonics[j], the_mnemonics[j],
                              InstructionLineController.INS_CLASS_HIERARCHY[i]);
         }
       } catch (IllegalArgumentException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        UmbraPlugin.messagelog("Impossible IllegalArgumentException in" +
+                               " preparsing");
       } catch (SecurityException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        UmbraPlugin.messagelog("Impossible SecurityException in" +
+          " preparsing");
       } catch (IllegalAccessException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        UmbraPlugin.messagelog("Impossible IllegalAccessException in" +
+          " preparsing");
       } catch (InvocationTargetException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        UmbraPlugin.messagelog("Impossible InvocationTargetException in" +
+          " preparsing");
       } catch (NoSuchMethodException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        UmbraPlugin.messagelog("Impossible NoSuchMethodException in" +
+          " preparsing");
       }
     }
   }

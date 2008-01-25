@@ -18,5 +18,6 @@
 			<attribute name="javadoc_location" value="jar:file:/home/chrzaszcz/Mobius/WP3/Task_3.6_Program_Verification_Environment/libs/bcel-5.1/bcel-5.1.zip!/bcel-5.1/docs/apidocs"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
