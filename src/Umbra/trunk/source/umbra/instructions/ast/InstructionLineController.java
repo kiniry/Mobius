@@ -21,7 +21,6 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.TargetLostException;
 
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
 
 /**
@@ -81,15 +80,6 @@ public abstract class InstructionLineController extends BytecodeLineController {
   private String my_name;
 
   /**
-   * This method returns the array of mnemonics handled by the current class.
-   *
-   * @return the array of the handled mnemonics
-   */
-  public static /*@ non_null @*/ String[] getMnemonics() {
-    return new String[0];
-  }
-
-  /**
    * The construction creates the controller which
    * binds the instruction mnemonic with the line text. The name is set locally
    * while the assignment of the line is done in the constructor of the
@@ -103,6 +93,15 @@ public abstract class InstructionLineController extends BytecodeLineController {
                                    final String a_name) {
     super(a_line_text);
     setName(a_name);
+  }
+
+  /**
+   * This method returns the array of mnemonics handled by the current class.
+   *
+   * @return the array of the handled mnemonics
+   */
+  public static /*@ non_null @*/ String[] getMnemonics() {
+    return new String[0];
   }
 
   /**

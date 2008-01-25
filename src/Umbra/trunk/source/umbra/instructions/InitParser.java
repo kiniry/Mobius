@@ -8,7 +8,6 @@
  */
 package umbra.instructions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
@@ -25,68 +24,57 @@ import org.eclipse.swt.widgets.Shell;
 import umbra.UmbraException;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeStrings;
-import umbra.editor.parsing.BytecodeWhitespaceDetector;
-import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
-import umbra.instructions.ast.ThrowsLineController;
-import umbra.instructions.ast.UnknownLineController;
 
 /**
- * @author alx
+ * This class handles the initial parsing of a byte code textual document.
+ * It creates handlers for each line of the document and 
+ *
+ * This class is used by {@link BytecodeController} to initialise its internal
+ * structures at the beginning of editing or after the refresh action is
+ * performed.
+ *
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
  */
 public class InitParser {
 
+
   /**
    * The list of all the lines in the editor which contain codes of
    * instructions. These are represented as objects the classes of which
-   * are subclasses of {@ref InstructionLineController}.
+   * are subclasses of {@link InstructionLineController}.
    */
-  protected LinkedList my_instructions;
-
-
-  /**
-   * Keeps track of modified methods. Each time a method is modified
-   * an entry with the method number is marked <code>true</code> in the array.
-   */
-  protected boolean[] my_modified;
+  private LinkedList my_instructions;
 
   /**
    * The list of all the lines in the current byte code editor. These lines
    * are stored as objects the classes of which are subclasses of
    * {@link BytecodeLineController}.
    */
-  protected LinkedList my_editor_lines;
+  private LinkedList my_editor_lines;
 
   /**
-   * This field contains the value of the inline comment from the currently
+   * This field contains the value of the end-of-line comment from the currently
    * parsed line.
    */
   private String my_current_comment;
 
-
   /**
-   * The container of all the in-line comments in the byte code document.
+   * The container of associations between the Umbra representation of lines
+   * in the byte code editor and the end-of-line comments in these lines.
+   * The comments must be absent from the line representation for their
+   * correct parsing so they are held in this additional structure.
    */
-  protected Hashtable my_comments;
-
-  /**
-   * The automaton to pre-parse the lines of the byte code document.
-   */
-  private DispatchingAutomaton my_preparse_automaton;
-
-  /**
-   * This is an array which contains a temporary copy of the end-of-line
-   * comments used to enrich the current version of the text representation
-   * obtained from the BMLLib (and BCEL) with the comments from the previous
-   * one.
-   */
-  private String[] my_comments_temp;
+  private Hashtable my_comments;
 
   /**
    * A temporary counter of instruction lines. It is used to synchronise the
@@ -94,6 +82,41 @@ public class InitParser {
    */
   private int my_instruction_no;
 
+
+  /**
+   * The byte code document to be parsed. It contains the corresponding BCEL
+   * structures linked into it.
+   */
+  private BytecodeDocument my_doc;
+
+
+  /**
+   * This field contains the texts of end-of-line comments which were introduced
+   * in the previous session with, the current document. The i-th entry contains
+   * the comment for the i-th instruction in the document, if this array
+   * is null then the array is not taken into account.
+   */
+  private String[] my_comment_array;
+
+
+  /**
+   * This constructor initialises all the internal structures. It memorises
+   * the given document and array with end-of-line comments. Furthermore,
+   * it sets all the internal containers to be empty.
+   *
+   * @param a_doc the byte code document with the corresponding BCEL
+   *   structures linked into it
+   * @param a_comment_array contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the document,
+   *   if this parameter is null then the array is not taken into account
+   */
+  public InitParser(final BytecodeDocument a_doc,
+                    final String[] a_comment_array) {
+    my_doc = a_doc;
+    my_comment_array = a_comment_array;
+    my_editor_lines = new LinkedList();
+    my_instructions = new LinkedList();
+  }
 
   /**
    * Initialisation of all the byte code structures related to
@@ -107,30 +130,23 @@ public class InitParser {
    * the method initialises the structures to keep track of the modified
    * methods.
    *
-   * @param a_doc the byte code document with the corresponding BCEL
-   *   structures linked into it
-   * @param a_comment_array contains the texts of end-of-line comments, the
-   *   i-th entry contains the comment for the i-th instruction in the file,
-   *   if this parameter is null then the array is not taken into account
    */
-  public final void init(final BytecodeDocument a_doc,
-                         final String[] a_comment_array) {
-    my_comments_temp = a_comment_array;
+  public final void runParsing() {
     my_instruction_no = 0;
     int a_line_no = 0;
     int a_method_count = 0;
     final LineContext ctxt = new LineContext();
     try {
-      a_line_no = swallowClassHeader(a_doc, a_line_no, ctxt);
+      a_line_no = swallowClassHeader(a_line_no, ctxt);
     }  catch (BadLocationException e) {
       MessageDialog.openInformation(new Shell(), "Bytecode",
                          "The current document has no positions for line " +
                          a_line_no);
       return;
     }
-    while (a_line_no < a_doc.getNumberOfLines()) {
+    while (a_line_no < my_doc.getNumberOfLines()) {
       try {
-        a_line_no = swallowMethod(a_doc, a_line_no, a_method_count, ctxt);
+        a_line_no = swallowMethod(a_line_no, a_method_count, ctxt);
       } catch (BadLocationException e) {
         MessageDialog.openInformation(new Shell(), "Bytecode",
                       "The current document has no positions for line " +
@@ -144,13 +160,6 @@ public class InitParser {
       }
       a_method_count++;
     }
-
-    final int methodNum = ((BytecodeLineController)my_instructions.getLast()).
-                                getIndex() + 1;
-    my_modified = new boolean[methodNum];
-    for (a_method_count = 0; a_method_count < my_modified.length;
-         a_method_count++)
-      my_modified[a_method_count] = false;
   }
 
   /**
@@ -165,7 +174,6 @@ public class InitParser {
    * </pre>
    * Note that emptylines may be comments as well.
    *
-   * @param a_doc the document to be parsed
    * @param the_current_line the line from which we start the parsing (mostly 0)
    * @param a_ctxt the parsing context
    * @return the advanced line number, the first line number which has not been
@@ -173,23 +181,22 @@ public class InitParser {
    * @throws BadLocationException in case one of the locations in the document
    *   was wrongly calculated
    */
-  private int swallowClassHeader(final IDocument a_doc,
-                                 final int the_current_line,
+  private int swallowClassHeader(final int the_current_line,
                                  final LineContext a_ctxt)
     throws BadLocationException {
     int j = the_current_line;
-    String line = getLineFromDoc(a_doc, j, a_ctxt);
+    String line = getLineFromDoc(my_doc, j, a_ctxt);
     a_ctxt.setInitial();
-    BytecodeLineController lc = getType(line, a_ctxt);
+    BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
     my_editor_lines.add(j, lc);
     j++;
-    j = swallowEmptyLines(a_doc, j, a_ctxt);
-    line = getLineFromDoc(a_doc, j, a_ctxt);
+    j = swallowEmptyLines(my_doc, j, a_ctxt);
+    line = getLineFromDoc(my_doc, j, a_ctxt);
     a_ctxt.seClassToBeRead();
-    lc = getType(line, a_ctxt);
+    lc = Preparsing.getType(line, a_ctxt);
     my_editor_lines.add(j, lc);
     j++;
-    return swallowEmptyLines(a_doc, j, a_ctxt);
+    return swallowEmptyLines(my_doc, j, a_ctxt);
   }
 
 
@@ -197,13 +204,12 @@ public class InitParser {
    * This method handles the parsing of these lines of a textual representation
    * which contain a method. The method first swallows the eventual empty
    * lines before the method. Then the method checks if the method currently to
-   * be parsed can fit into the structures withing the BCEL representation.
+   * be parsed can fit into the structures within the BCEL representation.
    * Subsequently it parses line by line the given document starting with the
    * given line and tries to parse the lines and associate with them the
    * instructions from the BCEL structures. The current method ends when
    * an empty line is met or when the end of the document is reached.
    *
-   * @param a_doc a document to parse a method from
    * @param the_line_no the line in the document starting with which the method
    *   parsing begins
    * @param a_method_no the number of the method to be parsed
@@ -216,22 +222,22 @@ public class InitParser {
    * @throws UmbraException the given method number exceeds the number of
    *   available methods in the BCEL structure
    */
-  private int swallowMethod(final BytecodeDocument a_doc,
-                            final int the_line_no,
+  private int swallowMethod(final int the_line_no,
                             final int a_method_no,
                             final LineContext a_ctxt)
     throws BadLocationException, UmbraException {
-    int j = swallowEmptyLines(a_doc, the_line_no, a_ctxt);
-    final MethodGen mg = getMethodGenFromDoc(a_doc, a_method_no);
+    int j = swallowEmptyLines(my_doc, the_line_no, a_ctxt);
+    final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
     final InstructionList il = mg.getInstructionList();
     final InstructionHandle ih = il.getStart();
     int ic = my_instructions.size(); // counts lines with instructions
 
-    for (; j < a_doc.getNumberOfLines(); j++) {
-      final String lineName = getLineFromDoc(a_doc, j, a_ctxt);
-      final BytecodeLineController lc = getType(lineName, a_ctxt);
+    for (; j < my_doc.getNumberOfLines(); j++) {
+      final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
+      final BytecodeLineController lc = Preparsing.getType(lineName,
+                                                                  a_ctxt);
       if (lc.isCommentStart()) { // ignore comments
-        j = swallowEmptyLines(a_doc, j, a_ctxt);
+        j = swallowEmptyLines(my_doc, j, a_ctxt);
         continue;
       }
       my_editor_lines.add(j, lc);
@@ -239,7 +245,7 @@ public class InitParser {
         continue;
       }
       if (lc instanceof EmptyLineController) { //method end
-        return swallowEmptyLines(a_doc, j, a_ctxt);
+        return swallowEmptyLines(my_doc, j, a_ctxt);
       }
       if (lc.addHandle(ih, il, mg, a_method_no - 1)) { //instruction line
         my_instruction_no++;
@@ -274,7 +280,7 @@ public class InitParser {
     int j = the_current_lno;
     while (j < a_doc.getNumberOfLines()) {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);
-      final BytecodeLineController lc = getType(line, a_ctxt);
+      final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
       if (!(lc instanceof CommentLineController)  &&
           !(lc instanceof EmptyLineController)) {
         break;
@@ -320,10 +326,11 @@ public class InitParser {
 
 
   /**
-   * Removes an one-line comment from a line of bytecode.
+   * Removes an one-line comment from a line of byte code.
    *
-   * @param a_line a line of bytecode
-   * @return the bytecode line without one-line comment and final whitespaces
+   * @param a_line a line of byte code
+   * @return the byte code line without end-of-line comment and final
+   *   whitespace
    */
   public static final String removeCommentFromLine(final String a_line) {
     String res;
@@ -403,176 +410,43 @@ public class InitParser {
       my_comments.put(a_lc, my_current_comment);
       my_current_comment = null;
     }
-    if (my_comments_temp != null) {
-      if (my_comments_temp[my_instruction_no] != null) {
+    if (my_comment_array != null) {
+      if (my_comment_array[my_instruction_no] != null) {
         my_comments.put(a_lc, my_current_comment);
       }
     }
   }
 
   /**
-   * TODO
-   * @return
+   * Returns the list of all the lines in the internal representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent all the lines in the currently parsed document
    */
-  private DispatchingAutomaton getAutomaton() {
-    if (my_preparse_automaton == null) {
-      my_preparse_automaton = new DispatchingAutomaton();
-      my_preparse_automaton.addSimple("", EmptyLineController.class);
-      addWhitespaceLoop(my_preparse_automaton);
-      addSimpleForArray(BytecodeStrings.THROWS_PREFIX,
-                        ThrowsLineController.class);
-      addSimpleForArray(BytecodeStrings.HEADER_PREFIX,
-                        HeaderLineController.class);
-      my_preparse_automaton.addSimple(BytecodeStrings.COMMENT_LINE_START,
-                                      CommentLineController.class);
-      my_preparse_automaton.addSimple(BytecodeStrings.ANNOT_LINE_START,
-                                      AnnotationLineController.class);
-      final DispatchingAutomaton digitnode = my_preparse_automaton.
-               addSimple("0",
-                         UnknownLineController.class);
-      for (int i = 1; i < 10; i++) {
-        my_preparse_automaton.addStarRule(Integer.toString(i), digitnode);
-      }
-      for (int i = 0; i < 10; i++) {
-        my_preparse_automaton.addStarRule("0" + Integer.toString(i), digitnode);
-      }
-      final DispatchingAutomaton colonnode = digitnode.addSimple(":",
-                                               UnknownLineController.class);
-      addWhitespaceLoop(colonnode);
-      addAllMnemonics(colonnode);
-    }
-    return my_preparse_automaton;
-  }
-
-  private void addSimpleForArray(final String[] sHeaderInits,
-                                 final Class a_class) {
-    for (int k = 0; k < sHeaderInits.length; k++) {
-      my_preparse_automaton.addSimple(sHeaderInits[k],
-                                      a_class);
-    }
-  }
-
-  private static void addWhitespaceLoop(DispatchingAutomaton an_automaton) {
-    for (int i = 0;
-         i < BytecodeWhitespaceDetector.WHITESPACE_CHARACTERS.length;
-         i++) {
-      an_automaton.addStarRule(
-        Character.toString(BytecodeWhitespaceDetector.
-                           WHITESPACE_CHARACTERS[i]),
-        an_automaton);
-    }
-  }
-
-  private void addAllMnemonics(final DispatchingAutomaton colonnode) {
-    for (int i = 0; i < InstructionLineController.INS_CLASS_HIERARCHY.length;
-         i++) {
-      try {
-        final String[] the_mnemonics = (String[])
-            (InstructionLineController.INS_CLASS_HIERARCHY[i].
-                getMethod("getMnemonics").invoke(null));
-        for (int j = 0; j < the_mnemonics.length; j++) {
-          colonnode.addMnemonic(the_mnemonics[j], the_mnemonics[j],
-                             InstructionLineController.INS_CLASS_HIERARCHY[i]);
-        }
-      } catch (IllegalArgumentException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (SecurityException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (InvocationTargetException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (NoSuchMethodException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
+  public LinkedList getEditorLines() {
+    return my_editor_lines;
   }
 
   /**
-   * Chooses one of line types that matches the given line
-   * contents. This method does a quick pre-parsing of the
-   * line content and based on that chooses which particular line controller
-   * should be used for the given line. It also uses the context information
-   * to return controllers in case the analysis is inside a comment or a
-   * BML annotation.
+   * Returns the list of all the lines with instructions in the internal
+   * representation.
    *
-   * @param a_line the string contents of inserted or modified line
-   * @param a_context information on the previous lines
-   * @return instance of subclass of a line controller
-   *     that contents of the given line satisfies
-   *     classification conditions (unknown if it does not for all)
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent the lines with instructions in the currently parsed document
    */
-  protected BytecodeLineController getType(final String a_line,
-                                         final LineContext a_context) {
-    if (a_context.isInsideComment()) {
-      final CommentLineController lc = new CommentLineController(a_line);
-      if (lc.isCommentEnd()) {
-        a_context.revertState();
-      }
-      return lc;
-    }
-
-    if (a_context.isInsideAnnotation()) {
-      final AnnotationLineController lc = new AnnotationLineController(a_line);
-      if (lc.isCommentEnd()) {
-        a_context.revertState();
-      }
-      return lc;
-    }
-    final DispatchingAutomaton automaton = getAutomaton();
-    BytecodeLineController  blc;
-    try {
-      blc = automaton.execForString(a_line, a_line);
-    } catch (CannotCallRuleException e) {
-      blc = new UnknownLineController(a_line);
-    }
-    if (blc instanceof CommentLineController) {
-      if (blc instanceof AnnotationLineController) {
-        a_context.setInsideAnnotation();
-      } else {
-        a_context.setInsideComment();
-      }
-    }
-    return blc;
+  public LinkedList getInstructions() {
+    return my_editor_lines;
   }
 
   /**
-   * This method strips off the whitespace characters both at the beginning
-   * and at the end of the given string. It works similarly to
-   * {@ref String#trim()}, but it uses the local definition of the whitespace
-   * as in {@ref BytecodeWhitespaceDetector}.
+   * Returns the association between the lines in the internal Umbra
+   * representation and the end-of-line comments present in the textual
+   * representation.
    *
-   * @param a_string to strip off the whitespace
-   * @return the string with no whitespace
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent the lines with instructions in the currently parsed document
    */
-  private static String removeWhiteSpace(/*@ non_null @*/ final String a_string) {
-    String res = "";
-    if (a_string.length() != 0) {
-      final BytecodeWhitespaceDetector wd = new BytecodeWhitespaceDetector();
-      int i = 0;
-      boolean ok = true;
-      //count whitespace at the beginning
-      while (ok && i < a_string.length()) {
-        if (!wd.isWhitespace(a_string.charAt(i))) ok = false;
-        i++;
-      }
-      if (!ok) { //not only whitespace in the string
-        int j = a_string.length();
-        ok = true;
-        //count whitespace at the end
-        while (ok && j > 0) {
-          j--;
-          if (!wd.isWhitespace(a_string.charAt(j))) ok = false;
-        }
-        if (!ok) res = a_string.substring(i - 1, j + 1);
-      }
-    }
-    return res;
+  public Hashtable getComments() {
+    return my_comments;
   }
-
 }

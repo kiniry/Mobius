@@ -17,7 +17,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import umbra.UmbraException;
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.editor.BytecodeDocument;
 import umbra.instructions.InstructionParser;
 
 /**
@@ -25,9 +25,9 @@ import umbra.instructions.InstructionParser;
  * useful when the line is modified or BCEL structure is created.
  * Most details are implemented in subclasses.
  *
- * Methods of this class should operate on the {@ref ClassGen}
- * object which is located in the {@ref BytecodeDocument} object
- * that describes the state of the bytecode editor which contains
+ * Methods of this class should operate on the {@link ClassGen}
+ * object which is located in the {@link BytecodeDocument} object
+ * that describes the state of the byte code editor which contains
  * the line that corresponds to an object of the current class.
  *
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
@@ -37,7 +37,7 @@ public abstract class BytecodeLineController {
 
   /**
    * This is an object contains a parser which allows to check the
-   * correctness of the bytecode line and to parse its parameters.
+   * correctness of the byte code line and to parse its parameters.
    */
   private InstructionParser my_parser;
 
@@ -51,7 +51,7 @@ public abstract class BytecodeLineController {
   private int my_index;
 
   /**
-   * The string representation of the line in the bytecode file that contains
+   * The string representation of the line in the byte code file that contains
    * the current instruction. We assume that the comments have been stripped
    * off the line. The line text does not change in the lifetime of the object.
    */
@@ -60,8 +60,8 @@ public abstract class BytecodeLineController {
   /**
    * TODO.
    *
-   * @param a_line the string representation of the line in the bytecode
-   *               document
+   * @param a_line the string representation of the line in the byte code
+   *   document
    */
   public /*@ pure @*/ BytecodeLineController(final String a_line) {
     super();

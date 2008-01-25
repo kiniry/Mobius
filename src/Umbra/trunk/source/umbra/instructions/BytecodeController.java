@@ -35,19 +35,40 @@ import umbra.instructions.ast.InstructionLineController;
  * to detect when BCEL modification is needed. Additional
  * structures keep the information which method has been
  * modified (in case of combining changes) and what comments
- * are added to byte code
+ * are added to byte code.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class BytecodeController extends InitParser {
+public final class BytecodeController {
+
+  /**
+   * The list of all the lines in the current byte code editor. These lines
+   * are stored as objects the classes of which are subclasses of
+   * {@link BytecodeLineController}.
+   */
+  private LinkedList my_editor_lines;
+
+  /**
+   * The list of all the lines in the editor which contain codes of
+   * instructions. These are represented as objects the classes of which
+   * are subclasses of {@link InstructionLineController}.
+   */
+  private LinkedList my_instructions;
 
   /**
    * The list of all the lines which were detected to be incorrect.
    */
   private LinkedList my_incorrect;
+
+  /**
+   * Keeps track of modified methods. Each time a method is modified
+   * an entry with the method number is marked <code>true</code> in the array.
+   */
+  private boolean[] my_modified;
 
   /**
    * The container of all the multi-line comments. Each element of the table is
@@ -56,15 +77,20 @@ public class BytecodeController extends InitParser {
   private Hashtable my_interline;
 
   /**
+   * The container of associations between the Umbra representation of lines
+   * in the byte code editor and the end-of-line comments in these lines.
+   * The comments must be absent from the line representation for their
+   * correct parsing so they are held in this additional structure.
+   */
+  private Hashtable my_comments;
+
+  /**
    * The constructor which initialises all the internal containers to be
    * empty.
    */
   public BytecodeController() {
     super();
-    my_editor_lines = new LinkedList();
-    my_instructions = new LinkedList();
     my_incorrect = new LinkedList();
-    my_comments = new Hashtable();
     my_interline = new Hashtable();
   }
 
@@ -72,7 +98,7 @@ public class BytecodeController extends InitParser {
    * This is a debugging method. It prints out to the standard output the
    * list of all the instructions in the controller.
    */
-  public final void showInstructionList() {
+  public void showInstructionList() {
     for (int i = 0; i < my_editor_lines.size(); i++) {
       UmbraPlugin.LOG.print(
                 ((BytecodeLineController)(my_editor_lines.get(i))).
@@ -84,7 +110,7 @@ public class BytecodeController extends InitParser {
    * This method prints out to the standard output the
    * list of all the incorrect instructions in the controller.
    */
-  public final void showAllIncorrectLines()
+  public void showAllIncorrectLines()
   {
     UmbraPlugin.messagelog("" + my_incorrect.size() + " incorrects:");
     UmbraPlugin.LOG.flush();
@@ -102,7 +128,7 @@ public class BytecodeController extends InitParser {
    * @param a_start the first line which is checked for removing
    * @param a_stop the last line which is checked for removing
    */
-  public final void removeIncorrects(final int a_start, final int a_stop) {
+  public void removeIncorrects(final int a_start, final int a_stop) {
     for (int i = a_start; i <= a_stop; i++) {
       final BytecodeLineController line =
                                  (BytecodeLineController)my_editor_lines.get(i);
@@ -126,7 +152,7 @@ public class BytecodeController extends InitParser {
    * @param a_stop a number of the last modified line as counted in the new
    *               version of the document
    */
-  public final void addAllLines(final IDocument a_doc,
+  public void addAllLines(final IDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
   {
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
@@ -213,8 +239,8 @@ public class BytecodeController extends InitParser {
                                     a_doc.getLineLength(a_j));
       //%%
       final String lineName = InitParser.removeCommentFromLine(line);
-      final String comment = extractCommentFromLine(line, a_context);
-      final BytecodeLineController lc = getType(lineName, a_context);
+      final String comment = InitParser.extractCommentFromLine(line, a_context);
+      final BytecodeLineController lc = Preparsing.getType(lineName, a_context);
       lc.setIndex(((BytecodeLineController)my_editor_lines.get(a_j - 1)).
                                                            getIndex());
       if (comment != null) my_comments.put(lc, comment);
@@ -253,8 +279,8 @@ public class BytecodeController extends InitParser {
    * @return <code>true</code> if all lines of the area are correct,
    *   <code>false</code> otherwise
    */
-  public final boolean checkAllLines(final int a_start,
-                                     final int an_end)
+  public boolean checkAllLines(final int a_start,
+                               final int an_end)
   {
     boolean ok = true;
     for (int i = a_start; i <= an_end; i++) {
@@ -279,7 +305,7 @@ public class BytecodeController extends InitParser {
    * @param a_string the string to strip the initial characters from
    * @return TODO
    */
-  protected final String removeColonFromLine(final String a_string) {
+  protected String removeColonFromLine(final String a_string) {
     int i = 0;
     while ((i < a_string.length()) && (Character.isDigit(a_string.charAt(i))))
       i++;
@@ -295,7 +321,7 @@ public class BytecodeController extends InitParser {
    * @return <code>true</code> if there is no incorrect line within the whole
    *         document
    */
-  public final boolean allCorrect() {
+  public boolean allCorrect() {
     return my_incorrect.isEmpty();
   }
 
@@ -303,7 +329,7 @@ public class BytecodeController extends InitParser {
    * @return number of a line that the first error occurs
    * (not necessarily: number of the first line that an error occurs)
    */
-  public final int getFirstError() {
+  public int getFirstError() {
     return my_editor_lines.lastIndexOf(my_incorrect.getFirst());
   }
 
@@ -362,14 +388,14 @@ public class BytecodeController extends InitParser {
    * TODO.
    * @return TODO
    */
-  public final boolean[] getModified() {
+  public boolean[] getModified() {
     return my_modified;
   }
 
   /**
    * @param the_modified the array that indicates which methods were modified
    */
-  public final void setModified(final boolean[] the_modified) {
+  public void setModified(final boolean[] the_modified) {
     this.my_modified = the_modified;
   }
 
@@ -378,7 +404,7 @@ public class BytecodeController extends InitParser {
    * TODO
    * @return Array of my_comments
    */
-  public final String[] getComments() {
+  public String[] getComments() {
     final String[] commentTab = new String[my_instructions.size()];
     for (int i = 0; i < my_instructions.size(); i++) {
       final Object lc = my_instructions.get(i);
@@ -392,7 +418,7 @@ public class BytecodeController extends InitParser {
    * TODO.
    * @return TODO
    */
-  public final String[] getInterline() {
+  public String[] getInterline() {
     final String[] commentTab = new String[my_instructions.size()];
     for (int i = 0; i < my_instructions.size(); i++) {
       final Object lc = my_instructions.get(i);
@@ -437,4 +463,28 @@ public class BytecodeController extends InitParser {
       //}
     }
   }
+
+  /**
+   * 
+   * @param a_doc the byte code document with the corresponding BCEL
+   *   structures linked into it
+   * @param a_comment_array contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the document,
+   *   if this parameter is null then the array is not taken into account
+   */
+  public void init(final BytecodeDocument a_doc,
+                   final String[] a_comment_array) {
+    final InitParser initParser = new InitParser(a_doc, a_comment_array);
+    initParser.runParsing();
+    my_editor_lines = initParser.getEditorLines();
+    my_instructions = initParser.getInstructions();
+    my_comments = initParser.getComments();
+    final int methodNum = ((BytecodeLineController)my_instructions.getLast()).
+      getIndex() + 1;
+    my_modified = new boolean[methodNum];
+    for (int a_method_count = 0; a_method_count < my_modified.length;
+         a_method_count++)
+      my_modified[a_method_count] = false;
+  }
+
 }
