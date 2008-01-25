@@ -114,6 +114,5 @@ Export-Package: escjava;
    javafe.ast,
    escjava.translate,
    org.w3c.dom",
- junitutils;uses:="junit.framework",
  org.jmlspecs.lang
 Eclipse-JREBundle: true
