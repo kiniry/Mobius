@@ -7,8 +7,7 @@
  * @author Hermann Lehner, Aleksy Schubert, Joseph Kiniry
  */
 
-abstract class Bill
-{
+abstract class Bill {
   private /*@ spec_public @*/ int sum;
   //@ public invariant 0 <= sum;
  
@@ -19,6 +18,7 @@ abstract class Bill
    * @return the cost of the investment in this round, it's not
    * greater than <code>x</code>.
    */ 
+  //@ modifies \nothing;
   //@ ensures \result <= x;
   abstract int round_cost(int x) throws Exception;
   
@@ -39,7 +39,8 @@ abstract class Bill
         sum = sum + round_cost(i);
       }
       return true;
-    } catch (Exception e) {
+    } 
+    catch (Exception e) {
       return false;
     }
   }
