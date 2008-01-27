@@ -30,5 +30,6 @@ public class TranslationManager {
 //    translator.registerTranslationRule(RulesFactory.getExpressionRule(context));
     translator.registerTranslationRule(RulesFactory.getAssertRule(context));
     translator.registerTranslationRule(RulesFactory.getSpecificationCaseRule(context));
+    translator.registerTranslationRule(RulesFactory.getTypeClauseExprRule(context));
   }
 }

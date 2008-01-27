@@ -8,6 +8,8 @@
  */
 package experiments;
 
+import java.io.File;
+
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
@@ -40,10 +42,10 @@ public class Main {
       ReadAttributeException {
     ClassFileLocation classLoc = new ClassFileLocation(
                                                        ProjectDirectory.PROJECT_DIR
-                                                           + "\\bin",
+                                                           + File.separator + "bin",
                                                        "experiments.Test");
-    new Main().compile(ProjectDirectory.PROJECT_DIR
-                       + "\\src\\experiments\\Test.java", classLoc);
+    new Main().compile(ProjectDirectory.PROJECT_DIR + File.separator
+                       + "src" + File.separator + "experiments" + File.separator + "Test.java", classLoc);
   }
 
   /**

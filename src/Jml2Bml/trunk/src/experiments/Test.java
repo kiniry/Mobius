@@ -3,6 +3,8 @@ package experiments;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 
 public class Test {
+  private int k = 3;
+  /*@ invariant k >= 0; @*/    
   public String old_str = "experiments/Test2";
   public String str = "abc";
   public static String sss;

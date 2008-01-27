@@ -8,6 +8,8 @@
  */
 package jml2bml.ast;
 
+import jml2bml.exceptions.NotTranslatedException;
+
 import org.jmlspecs.openjml.JmlTreeVisitor;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
