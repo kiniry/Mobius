@@ -23,7 +23,7 @@ BEGIN
       s1 = s2 AND n = 1 AND v = Unit
 
   on_method_event : (on_method_event_type) =
-    LAMBDA (p : Program, md : (wf_Method(p)), a : Val, 
+    LAMBDA (p : Program, md : (wf_Method(p)), a : Val, v : ValOrExcpt,
             s1, s2 : PState, n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1

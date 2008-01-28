@@ -147,23 +147,21 @@ BEGIN
   % several try-catches needed, because we do not model subclass hierarchy
   % of exceptions
 
+  % MH: name ex a bit unfortunate, should rather be no_ex
+
   % inline_method_body(p)(m) gives in Java-like syntax:
   % try{
   %   try{
-  %     try{
-  %       pre_set(m);
-  %       body(m);
-  %       ex := true;
-  %     }
-  %     catch(Throwable){
-  %       exc_set(m);
-  %     }
-  %   catch(NullPointerExc){
-  %       exc_set(m);
+  %     pre_set(m);
+  %     body(m);
+  %     ex := true;
   %   }
-  % catch(JMLExc){
-  %   exc_set(m);
-  % }
+  %   catch(Throwable){
+  %     exc_set(m);
+  %    }
+  % catch(NullPointerExc){
+  %      exc_set(m);
+  %  }
   % finally{
   %   if (ex){
   %    res := res(m);
@@ -172,21 +170,17 @@ BEGIN
   inline_method_body(p)(m) : Body = 
     TryCatch(
        TryCatch(
-        TryCatch(
-         Sequence(
-           pre_set(m),
-           Sequence(
-             body(m),
-             StmtExpr(Assign(ex(p)(m), BExpr(TT))))),
-                              % this is only executed if body terminates
-                              % normally
-          Throwable,
-          exc_set(m),
-          Skip),
-        NullPointer,
-        exc_set(m),
-        Skip),
-       JMLExc,
+        Sequence(
+          pre_set(m),
+          Sequence(
+            body(m),
+            StmtExpr(Assign(ex(p)(m), BExpr(TT))))),
+                             % this is only executed if body terminates
+                             % normally
+         Throwable,
+         exc_set(m),
+         Skip),
+       NullPointer,
        exc_set(m),
        IfThenElse(
          BoolVarEval(ex(p)(m)),

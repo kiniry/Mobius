@@ -1,0 +1,32 @@
+(ContainsNoMethodCall
+ (contains_no_method_call_preserved_by_proper_subterm 0
+  (contains_no_method_call_preserved_by_proper_subterm-1 nil 3410170554
+   3410170892
+   ("" (skosimp*)
+    (("" (expand "contains_no_method_call")
+      (("" (skosimp*)
+        (("" (inst?)
+          (("" (assert)
+            (("" (lemma "subterm_transitive")
+              (("" (inst -1 "b1!2" "b2!1" "b1!1")
+                (("" (assert)
+                  (("" (use "proper_subterm_implies_subterm")
+                    (("" (assert) nil nil)) nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((proper_subterm_implies_subterm formula-decl nil ProgramFunctions
+     nil)
+    (subterm_transitive formula-decl nil ProgramFunctions nil)
+    (Body type-decl nil Body_adt nil)
+    (Name formal-nonempty-type-decl nil ContainsNoMethodCall nil)
+    (contains_no_method_call const-decl "bool" ContainsNoMethodCall
+     nil))
+   65847 200 t shostak)))
+

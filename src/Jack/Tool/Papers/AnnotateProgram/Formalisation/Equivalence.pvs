@@ -72,11 +72,12 @@ BEGIN
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_modeled?(mp)(sMVA, sAP) IMPLIES
       ts(mva(mp))(t) IMPLIES scp(t) = cp(sMVA) IMPLIES
-        EXISTS (e : BoolExpr, v : Val, n : nat) : 
+        EXISTS (e : [ValOrExcpt -> BoolExpr], v : Val, n : nat) : 
           guard_to_expression(mva(mp))(guard(t)) = e AND
-          wf_BoolExpr(ann_program(mp))(e) AND
-          derive(ann_program(mp))(e, sAP, v, sAP)(n) AND
-          (guard(t)(stA(sMVA), st(pstate(sAP))) = (v = Bool(TRUE)))
+          FORALL(arg : ValOrExcpt) :
+          wf_BoolExpr(ann_program(mp))(e(arg)) AND
+          derive(ann_program(mp))(e(arg), sAP, v, sAP)(n) AND
+          (guard(t)(stA(sMVA), st(pstate(sAP)), arg) = (v = Bool(TRUE)))
 
   % It is possible to evaluate expressions appearing in actions (they 
   % terminate) and they are side-effect-free. Note that the evaluation 
@@ -116,6 +117,7 @@ BEGIN
 
 
 END Equivalence
+
 
 
 RelatedStatesProperties[CP, Name : TYPE+] : THEORY

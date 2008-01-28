@@ -32,15 +32,6 @@ BEGIN
 END JType
 
 
-Excpt : DATATYPE
-BEGIN
-
-  Throwable : Throwable?
-  NullPointer : NullPointer?
-  JMLExc : JMLExc?
-
-
-END Excpt
 
 Body[Name : TYPE+] : DATATYPE
                          WITH SUBTYPES Expr, NumExpr, BoolExpr, RefExpr, Stmt
@@ -113,7 +104,8 @@ Program[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING ValProp[Name],
-            Body[Name]
+            Body[Name],
+            ValOrExcpt[Name]
 
   This : Name
 
@@ -138,13 +130,13 @@ BEGIN
   Method : TYPE = [# name : Name,
                      classname : Name,
                      arg : LocalVarDecl,
-                     pre : BoolExpr[Name],
-                     post : BoolExpr[Name],
+                     pre : [(defined?) -> BoolExpr[Name]],
+                     post : [(defined?) -> BoolExpr[Name]],
                      lvars : finite_set[LocalVarDecl],
                      body : Stmt[Name],
-                     pre_set : Stmt[Name],
-                     post_set : Stmt[Name],
-                     exc_set : Stmt[Name],
+                     pre_set : [(defined?) -> Stmt[Name]],
+                     post_set : [(defined?) -> Stmt[Name]],
+                     exc_set : [Excpt -> Stmt[Name]],
                      res : Expr[Name],
                      res_type : JType #]
 
@@ -271,9 +263,13 @@ BEGIN
 
 
   var_names(m : Method) : set[Name] =
-    Union({ns : set[Name] | ns = var_names(pre(m)) OR ns = var_names(post(m)) OR
-      ns = var_names(body(m)) OR ns = var_names(pre_set(m)) OR 
-      ns = var_names(post_set(m)) OR ns = var_names(exc_set(m)) OR 
+    Union({ns : set[Name] | 
+      ns = var_names(pre(m)(Unit)) OR 
+      ns = var_names(post(m)(Unit)) OR
+      ns = var_names(body(m)) OR 
+      ns = var_names(pre_set(m)(Unit)) OR 
+      ns = var_names(post_set(m)(Unit)) OR 
+      ns = var_names(exc_set(m)(Throwable)) OR 
       ns = var_names(lvars(m)) OR ns = var_names(res(m)) OR
       ns = singleton(name(arg(m)))})
 
@@ -303,6 +299,14 @@ BEGIN
       var_names(CaseJML(set2list(s)))(n) =
         EXISTS(x : [BoolExpr, Stmt]) :
           s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
+
+
+  var_names_CaseJML_branches : LEMMA % :-)
+    FORALL (branches : list[[BoolExpr, Stmt]], x : [BoolExpr, Stmt], 
+            n : Name) :
+      member(x, branches) IMPLIES
+      (var_names(proj_1(x))(n) OR var_names(proj_2(x))(n)) IMPLIES
+      var_names(CaseJML(branches))(n)
 
 
   % Declared variable names
@@ -414,7 +418,8 @@ BEGIN
   % Proper subtern (<<) properties
 
   proper_subterm_set_clause(s : Stmt, m : Method) : boolean =
-    s << pre_set(m) OR s << post_set(m) OR s << exc_set(m)
+    s << pre_set(m)(Unit) OR s << post_set(m)(Unit) OR 
+    s << exc_set(m)(Throwable)
 
   IMPORTING listfuncs
 
@@ -436,6 +441,10 @@ BEGIN
   subterm_subset_varnames : LEMMA % :-)
     FORALL (b1, b2 : Body) :
       b1 << b2 IMPLIES subset?(var_names(b1), var_names(b2))
+
+  subterm_subset_varnames2 : LEMMA % :-)
+    FORALL (b1, b2 : Body) :
+      subterm(b1, b2) IMPLIES subset?(var_names(b1), var_names(b2))
 
   subterm_subset_of_var : LEMMA % :-)
     FORALL (b1, b2 : Body, v : set[Name]) :
@@ -471,12 +480,12 @@ BEGIN
 
     method_pred(p : PreProgram)(m : Method)
                (pred : [PreProgram -> [Body -> bool]]) : bool =
-      pred(p)(pre(m)) AND 
-      pred(p)(post(m)) AND
+      (FORALL (v : (defined?)) : pred(p)(pre(m)(v))) AND 
+      (FORALL (v : (defined?)) : pred(p)(post(m)(v))) AND
       pred(p)(body(m)) AND 
-      pred(p)(pre_set(m)) AND
-      pred(p)(post_set(m)) AND 
-      pred(p)(exc_set(m)) AND
+      (FORALL(v : (defined?)) : pred(p)(pre_set(m)(v))) AND
+      (FORALL(v : (defined?)) : pred(p)(post_set(m)(v))) AND 
+      (FORALL(e : Excpt) : pred(p)(exc_set(m)(e))) AND
       pred(p)(res(m))
 
     program_pred(p : PreProgram)
@@ -488,6 +497,12 @@ BEGIN
          FORALL(m : Method) :
            methods(c)(m) IMPLIES method_pred(p)(m)(pred)
 
+    program_method_pred(p : PreProgram)(pred : [Method -> bool]) : bool =
+      FORALL(c : Class) :
+        classes(p)(c) IMPLIES
+         FORALL(m : Method) :
+           methods(c)(m) IMPLIES pred(m)
+     
 END ProgramRestriction
 
 

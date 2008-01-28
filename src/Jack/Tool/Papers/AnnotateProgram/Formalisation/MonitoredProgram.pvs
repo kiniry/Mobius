@@ -139,26 +139,27 @@ BEGIN
 
   on_method_MVA(etype : EventType)
                (mp : MonitoredProgram, md : (wf_Method(program(mp))))
-               (s : MPState) : AState =
+               (arg : ValOrExcpt)(s : MPState) : AState =
     IF wf_state(mp)(s) AND
        methods(get_monitored_class(mp))(md) AND
        evs(mva(mp))((# etype := etype, mname := name(md) #))
     THEN step(mva(mp))(astate(s), (# stP := st(pstate(s)),
                                      event := (# etype := etype,
-                                                 mname := name(md) #)
+                                                 mname := name(md) #),
+                                     arg := arg 
                                   #))
     ELSE astate(s)
     ENDIF
 
   on_method_entry_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
-            s1, s2 : MPState,
+            arg : ValOrExcpt, s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     EXISTS(s_new : MPState) :
-      on_method_entry(mp, md, a, s1, s_new, n, derive_rec) AND
+      on_method_entry(mp, md, a, arg, s1, s_new, n, derive_rec) AND
       IF up?(ex(pstate(s_new)))
       THEN s2 = s_new
-      ELSE s2 = (# astate := on_method_MVA(Entry)(mp, md)(s_new),
+      ELSE s2 = (# astate := on_method_MVA(Entry)(mp, md)(arg)(s_new),
                    pstate := pstate(s_new),
                    gvs := gvs(s_new) #)
       ENDIF
@@ -166,36 +167,40 @@ BEGIN
 
   on_method_exit_normal_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
-            s1, s2 : MPState,
+            arg : ValOrExcpt, s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1)))
     THEN s1 = s2 AND n = 0
     ELSE
-    EXISTS (m1, m2, m3 : nat, tau1, tau2, tau3 : MPState,
+    EXISTS (m1, m2, m3 : nat, tau1, tau2, tau3 : MPState, v : Val,
             inv : (wf_BoolExpr(program(mp)))) :
       n = m1 + m2 + m3 + 1 AND
-      derive_rec(n)(mp)(post_set(md), s1, Unit, tau1)(m1) AND
+      val?(arg) AND
+      derive_rec(n)(mp)(post_set(md)(v(arg)), s1, v, tau1)(m1) AND
+      v = return_of_stmt(tau1) AND
       tau2 = tau1 WITH
-             [ astate := on_method_MVA(ExitNormal)(mp, md)(tau1) ] AND
+             [ astate := on_method_MVA(ExitNormal)(mp, md)(arg)(tau1) ] AND
       inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
-      check_assertion(mp)(post(md), tau3, s2)(m3)(derive_rec(m3)) AND
+      check_assertion(mp)(post(md)(v(arg)), tau3, s2)(m3)(derive_rec(m3)) AND
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
   on_method_exit_exceptional_MP : (on_method_event_type) =
     LAMBDA (mp : MonitoredProgram, md : (wf_Method(program(mp))), a : Val,
-            s1, s2 : MPState,
+            arg : ValOrExcpt, s1, s2 : MPState,
             n : nat, derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1))) AND NOT down(ex(pstate(s1))) = JMLExc
     THEN
-    EXISTS (m1, m2 : nat, tau1, tau2, tau3 : MPState,
+    EXISTS (m1, m2 : nat, tau1, tau2, tau3 : MPState, v : Val,
             inv : (wf_BoolExpr(program(mp)))) :
       n = m1 + m2 + 1 AND
-      derive_rec(n)(mp)(exc_set(md), update_PState(s1, catch),
-                       Unit, tau1)(m1) AND
+      excpt?(arg) AND
+      derive_rec(n)(mp)(exc_set(md)(e(arg)), 
+                        update_PState(s1, catch), v, tau1)(m1) AND
+      v = return_of_stmt(tau1) AND
       tau2 = tau1 WITH
-             [ astate := on_method_MVA(ExitExceptional)(mp, md)(tau1) ] AND
+             [ astate := on_method_MVA(ExitExceptional)(mp, md)(arg)(tau1)] AND
       inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
       s2 = (IF up?(ex(pstate(tau3)))
@@ -205,6 +210,7 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
     ELSE s1 = s2 AND n = 0
     ENDIF
+
 
   IMPORTING Semantics[Name, MonitoredProgram, MPState,
                       LAMBDA (mp : MonitoredProgram) : program(mp),
@@ -289,9 +295,9 @@ BEGIN
 
   on_method_MVA_yields_wf_AState : LEMMA % :-)
     FORALL (mp : MonitoredProgram, s : MPState, m : (wf_Method(program(mp))),
-            et : EventType) :
+            et : EventType, arg : ValOrExcpt) :
       wf_state(mp)(s) IMPLIES
-        wf_AState(mva(mp))(on_method_MVA(et)(mp, m)(s))
+        wf_AState(mva(mp))(on_method_MVA(et)(mp, m)(arg)(s))
 
   derive_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
@@ -305,9 +311,9 @@ BEGIN
   on_method_MVA_never_leaves_halted : LEMMA % :-)
      FORALL (etype : EventType)
             (mp : MonitoredProgram, md : (wf_Method(program(mp))))
-            (s : MPState) :
+            (arg : ValOrExcpt, s : MPState) :
        cp(astate(s)) = halted IMPLIES
-       cp(on_method_MVA(etype)(mp, md)(s)) = halted
+       cp(on_method_MVA(etype)(mp, md)(arg)(s)) = halted
 
   derive_never_leaves_halted : LEMMA % :-)
     FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
@@ -319,10 +325,10 @@ BEGIN
 
   on_method_entry_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
-           (sigma1, sigma2 : MPState, n : nat) :
+           (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) :
       wf_MP(mp) IMPLIES
       wf_state(mp)(sigma1) IMPLIES
-        on_method_entry_MP(mp, m, a, sigma1, sigma2, n, 
+        on_method_entry_MP(mp, m, a, arg, sigma1, sigma2, n, 
         LAMBDA (k : upto(n))(mp : MonitoredProgram)
                (b : (wf_Body(program(mp))), sigma1 : MPState, v : Val, 
                 sigma2 : MPState)(m : below(k)) :
@@ -331,10 +337,10 @@ BEGIN
 
   on_method_exit_normal_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
-           (sigma1, sigma2 : MPState, n : nat) : 
+           (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) : 
       wf_MP(mp) IMPLIES
       wf_state(mp)(sigma1) IMPLIES
-        on_method_exit_normal_MP(mp, m, a, sigma1, sigma2, n, 
+        on_method_exit_normal_MP(mp, m, a, arg, sigma1, sigma2, n, 
         LAMBDA (k : upto(n))(mp : MonitoredProgram)
                (b : (wf_Body(program(mp))), sigma1 : MPState, v : Val, 
                 sigma2 : MPState)(m : below(k)) :
@@ -343,10 +349,10 @@ BEGIN
 
   on_method_exit_exceptional_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
-           (sigma1, sigma2 : MPState, n : nat) : 
+           (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) : 
       wf_MP(mp) IMPLIES
       wf_state(mp)(sigma1) IMPLIES
-        on_method_exit_exceptional_MP(mp, m, a, sigma1, sigma2, n, 
+        on_method_exit_exceptional_MP(mp, m, a, arg, sigma1, sigma2, n, 
         LAMBDA (k : upto(n))(mp : MonitoredProgram)
                (b : (wf_Body(program(mp))), sigma1 : MPState, v : Val, 
                 sigma2 : MPState)(m : below(k)) :

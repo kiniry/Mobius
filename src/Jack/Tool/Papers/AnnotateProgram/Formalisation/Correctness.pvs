@@ -78,26 +78,28 @@ BEGIN
   % with ts as argument, then sMP2 and sAP2 are in MP_modeled?.
   ann_event_preserves_MP_modeled : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp))), et : EventType,  n : nat)
-           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+           (v : ValOrExcpt, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       methods(get_monitored_class(mp))(m) IMPLIES
-      sMP2 = (# astate := on_method_MVA(et)(mp, m)(sMP1),
+      sMP2 = (# astate := on_method_MVA(et)(mp, m)(v)(sMP1),
                 pstate := pstate(sMP1),
                 gvs := gvs(sMP1) #) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      derive(ann_program(mp))(ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
+      derive(ann_program(mp))
+        (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v),
                               sAP1, Unit, sAP2)(n) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
   % ann_event as used by the annotation algorithm does not throw a new exception
   ann_event_does_not_throw_exception : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp))), et : EventType,  v : Val, n : nat)
-           (sAP1, sAP2 : APState) :
+           (arg : ValOrExcpt, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
-      derive(ann_program(mp))(ann_event(mp)(filter_event(mva(mp))(et)(name(m))),
-                              sAP1, v, sAP2)(n) IMPLIES
+      derive(ann_program(mp))
+            (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(arg),
+            sAP1, v, sAP2)(n) IMPLIES
         NOT up?(ex(pstate(sAP2))) AND v = Unit
 
 
@@ -136,12 +138,26 @@ BEGIN
                       execute_CaseJML,
                       on_method_entry,
                       on_method_exit_normal,
-                      on_method_exit_exceptional, id]
+                      on_method_exit_exceptional, id],
+            WfSetStmts[Name, MonitoredProgram, MPState, 
+                      LAMBDA (mp : MonitoredProgram) : program(mp),
+                      LAMBDA(s : MPState) : pstate(s),
+                      lookup,
+                      update_PState,
+                      execute_set,
+                      execute_assert,
+                      execute_CaseJML,
+                      on_method_entry_MP,
+                      on_method_exit_normal_MP,
+                      on_method_exit_exceptional_MP]
 
-  mp : VAR (wf_MP)
+
+  mp : VAR ({mp : MonitoredProgram | wf_MP(mp) AND 
+                                     wf_set_stmts(mp)})
 
   on_method_entry_preserves_related_states_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           v : ValOrExcpt, 
            m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
       well_behaved_MVA(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
@@ -162,12 +178,12 @@ BEGIN
         legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
-      on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_entry_MP(mp, md, a, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-      on_method_entry(ann_program(mp), ann_method(mp)(md), a, sAP1, sAP2, m2,
+      on_method_entry(ann_program(mp), ann_method(mp)(md), a, v, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
                              (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
@@ -176,10 +192,10 @@ BEGIN
 
   on_method_entry_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
-           a1 : Val, 
+           a1 : Val, v : ValOrExcpt,
            m1 : nat, sMP1, sMP2 : MPState) :
       cp(astate(sMP1)) = halted IMPLIES
-      on_method_entry_MP(mp, md1, a1, sMP1, sMP2, m1,
+      on_method_entry_MP(mp, md1, a1, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
@@ -189,6 +205,7 @@ BEGIN
 
   on_method_entry_preserves_related_states_not_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           v : ValOrExcpt,
            m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       legal_Program(ann_program(mp)) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
@@ -209,12 +226,12 @@ BEGIN
         legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
-      on_method_entry_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_entry_MP(mp, md, a, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-      on_method_entry(ann_program(mp), md, a, sAP1, sAP2, m2,
+      on_method_entry(ann_program(mp), md, a, v, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
                              (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
@@ -223,7 +240,8 @@ BEGIN
 
   % :-))
   on_method_exit_normal_preserves_related_states_annotated : LEMMA
-    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           v : ValOrExcpt, m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       well_behaved_MVA(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
@@ -245,13 +263,13 @@ BEGIN
         legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
-      on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_exit_normal_MP(mp, md, a, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_exit_normal(ann_program(mp), ann_method(mp)(md), 
-                            a, sAP1, sAP2, m2,
+                            a, v, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
                              (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
@@ -261,10 +279,10 @@ BEGIN
 
   on_method_exit_normal_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
-           a1 : Val, 
+           a1 : Val, v : ValOrExcpt,
            m1 : nat, sMP1, sMP2 : MPState) : 
       cp(astate(sMP1)) = halted IMPLIES
-      on_method_exit_normal_MP(mp, md1, a1, sMP1, sMP2, m1,
+      on_method_exit_normal_MP(mp, md1, a1, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
@@ -272,7 +290,8 @@ BEGIN
         cp(astate(sMP2)) = halted
   
   on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-))
-    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           m1, m2 : nat, v : ValOrExcpt,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       legal_Program(ann_program(mp)) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
@@ -293,12 +312,12 @@ BEGIN
         legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
-      on_method_exit_normal_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_exit_normal_MP(mp, md, a, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-      on_method_exit_normal(ann_program(mp), md, a, sAP1, sAP2, m2,
+      on_method_exit_normal(ann_program(mp), md, a, v, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
                              (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
@@ -308,7 +327,7 @@ BEGIN
   % :-))
   on_method_exit_exceptional_preserves_related_states_annotated : LEMMA
     FORALL(mn : Name, md : (wf_Method(program(mp))), 
-           a : (defined?), m1, m2 : nat,
+           a : (defined?), m1, m2 : nat, v : ValOrExcpt,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       well_behaved_MVA(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
@@ -330,13 +349,13 @@ BEGIN
         legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
-      on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_exit_exceptional_MP(mp, md, a, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
       on_method_exit_exceptional(ann_program(mp), ann_method(mp)(md), 
-                                  a, sAP1, sAP2, m2,
+                                  a, v, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
                              (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
@@ -345,10 +364,10 @@ BEGIN
 
   on_method_exit_exceptional_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
-           a1 : Val, 
+           a1 : Val, v : ValOrExcpt,
            m1 : nat, sMP1, sMP2 : MPState) : 
       cp(astate(sMP1)) = halted IMPLIES
-      on_method_exit_exceptional_MP(mp, md1, a1, sMP1, sMP2, m1,
+      on_method_exit_exceptional_MP(mp, md1, a1, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
@@ -357,7 +376,8 @@ BEGIN
 
 
   on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-))
-    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), m1, m2 : nat,
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           m1, m2 : nat, v : ValOrExcpt,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
       legal_Program(ann_program(mp)) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
@@ -378,12 +398,12 @@ BEGIN
         legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
-      on_method_exit_exceptional_MP(mp, md, a, sMP1, sMP2, m1,
+      on_method_exit_exceptional_MP(mp, md, a, v, sMP1, sMP2, m1,
                          LAMBDA (k: upto(m1))(p: MonitoredProgram)
                                 (b: (wf_Body(program(p))), sigma1: MPState,
                                  v: Val, sigma2: MPState)(m: below(k)):
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-      on_method_exit_exceptional(ann_program(mp), md, a, sAP1, sAP2, m2,
+      on_method_exit_exceptional(ann_program(mp), md, a, v, sAP1, sAP2, m2,
                       LAMBDA (k: upto(m2))(p: Program)
                              (b: (wf_Body(id(p))), sigma1: APState,
                               v: Val, sigma2: APState)(m: below(k)):
@@ -417,7 +437,8 @@ BEGIN
            ENDIF AND
            old_lvs1 = lvs(st(pstate(tauMP2))) AND
            tauMP3 = update_stack(a1, arg(md1), pv1, lvars(md1), tauMP2) AND
-           on_method_entry_MP(mp, md1, a1, tauMP3, tauMP4, m31, 
+           defined?(pv1) AND
+           on_method_entry_MP(mp, md1, a1, val(pv1), tauMP3, tauMP4, m31, 
                               LAMBDA (k: upto(m31))
                                           (p: MonitoredProgram[CP, Name])
                                           (b: (wf_Body(program(p))),
@@ -432,8 +453,10 @@ BEGIN
                 THEN tauMP6 = tauMP5 AND w1 = Unit AND m51 = 0
                 ELSE derive(mp)(res(md1), tauMP5, w1, tauMP6)(m51)
                 ENDIF
-            AND IF bottom?(ex(pstate(tauMP6)))
-                  THEN on_method_exit_normal_MP(mp, md1, a1, tauMP6, tauMP7, m61,
+            AND IF bottom?(ex(pstate(tauMP6))) 
+                  THEN defined?(w1) AND
+                       on_method_exit_normal_MP(mp, md1, a1, val(w1), 
+                                                tauMP6, tauMP7, m61,
                                                 LAMBDA
                                                 (k: upto(m61))
                                                 (p:
@@ -444,7 +467,9 @@ BEGIN
                                                  sigma2: MPState[CP, Name])
                                                 (m: below(k)):
                                                 derive(p)(b, sigma1, v, sigma2)(m))
-                ELSE on_method_exit_exceptional_MP(mp, md1,a1, tauMP6, tauMP7, m61,
+                ELSE on_method_exit_exceptional_MP(mp, md1,a1, 
+                                                   excpt(down(ex(pstate(tauMP6)))), 
+                                                   tauMP6, tauMP7, m61,
                                                    LAMBDA
                                                    (k: upto(m61))
                                                    (p:
@@ -502,7 +527,9 @@ BEGIN
            ENDIF AND
            old_lvs2 = lvs(st(pstate(tauAP2))) AND
            tauAP3 = update_stack(a2, arg(md2), pv2, lvars(md2), tauAP2) AND
-           on_method_entry(ann_program(mp), md2, a2, tauAP3, tauAP4, m32, 
+           defined?(pv2) AND
+           on_method_entry(ann_program(mp), md2, a2, val(pv2), 
+                           tauAP3, tauAP4, m32, 
                                 LAMBDA (k: upto(m32))
                                        (p: Program[Name])
                                        (b: (wf_Body(id(p))),
@@ -517,8 +544,10 @@ BEGIN
                 THEN tauAP6 = tauAP5 AND w2 = Unit AND m52 = 0
                 ELSE derive(ann_program(mp))(res(md2), tauAP5, w2, tauAP6)(m52)
                 ENDIF
-            AND IF bottom?(ex(pstate(tauAP6)))
-                  THEN on_method_exit_normal(ann_program(mp), md2, a2, tauAP6, tauAP7, m62,
+            AND IF bottom?(ex(pstate(tauAP6))) 
+                  THEN defined?(w2) AND
+                       on_method_exit_normal(ann_program(mp), md2, a2, val(w2),
+                                             tauAP6, tauAP7, m62,
                                              LAMBDA
                                              (k: upto(m62))
                                              (p: Program[Name])
@@ -528,7 +557,9 @@ BEGIN
                                               sigma2: APState[Name])
                                              (m: below(k)):
                                              derive(p)(b, sigma1, v, sigma2)(m))
-                ELSE on_method_exit_exceptional(ann_program(mp), md2, a2, tauAP6, tauAP7, m62,
+                ELSE on_method_exit_exceptional(ann_program(mp), md2, a2, 
+                                                excpt(down(ex(pstate(tauAP6)))),
+                                                tauAP6, tauAP7, m62,
                                                 LAMBDA
                                                 (k: upto(m62))
                                                 (p: Program[Name])
@@ -578,9 +609,11 @@ BEGIN
   ENDASSUMING
 
 
-  mp : VAR (wf_MP)
-
   IMPORTING MethodCallsPreserveRelatedState[CP, Name]
+
+  mp : VAR ({mp : MonitoredProgram | wf_MP(mp) AND 
+                                     wf_set_stmts(mp)})
+
 
   % Base case
   initial_states_are_equivalent : LEMMA % :-)
@@ -616,3 +649,5 @@ BEGIN
 
 
 END CorrectnessAnnProgram
+
+

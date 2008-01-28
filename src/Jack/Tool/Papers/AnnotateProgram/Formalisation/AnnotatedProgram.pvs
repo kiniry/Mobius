@@ -125,10 +125,10 @@ BEGIN
 
   on_method_entry_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, m : (wf_Method(p)), a : Val)
-           (sigma1, sigma2 : APState, n : nat) :
+           (arg : ValOrExcpt, sigma1, sigma2 : APState, n : nat) :
       wf_Program(p) IMPLIES
       wf_state(p)(sigma1) IMPLIES
-        on_method_entry(p, m, a, sigma1, sigma2, n, 
+        on_method_entry(p, m, a, arg, sigma1, sigma2, n, 
         LAMBDA (k : upto(n))(p : Program)
                (b : (wf_Body(p)), sigma1 : APState, v : Val, 
                 sigma2 : APState)(m : below(k)) :
@@ -137,10 +137,10 @@ BEGIN
 
   on_method_exit_normal_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, m : (wf_Method(p)), a : Val)
-           (sigma1, sigma2 : APState, n : nat) : 
+           (arg : ValOrExcpt, sigma1, sigma2 : APState, n : nat) : 
       wf_Program(p) IMPLIES
       wf_state(p)(sigma1) IMPLIES
-        on_method_exit_normal(p, m, a, sigma1, sigma2, n, 
+        on_method_exit_normal(p, m, a, arg, sigma1, sigma2, n, 
         LAMBDA (k : upto(n))(p : Program)
                (b : (wf_Body(p)), sigma1 : APState, v : Val, 
                 sigma2 : APState)(m : below(k)) :
@@ -150,10 +150,10 @@ BEGIN
 
   on_method_exit_exceptional_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, m : (wf_Method(p)), a : Val)
-           (sigma1, sigma2 : APState, n : nat) : 
+           (arg : ValOrExcpt, sigma1, sigma2 : APState, n : nat) : 
       wf_Program(p) IMPLIES
       wf_state(p)(sigma1) IMPLIES
-        on_method_exit_exceptional(p, m, a, sigma1, sigma2, n, 
+        on_method_exit_exceptional(p, m, a, arg, sigma1, sigma2, n, 
         LAMBDA (k : upto(n))(p : Program)
                (b : (wf_Body(p)), sigma1 : APState, v : Val, 
                 sigma2 : APState)(m : below(k)) :
@@ -166,9 +166,9 @@ BEGIN
 
   on_method_entry_AP : (on_method_event_type) =
     LAMBDA (p : Program, md : (wf_Method(p)), a : Val, 
-            s1, s2 : APState, n : nat,
+            arg : ValOrExcpt, s1, s2 : APState, n : nat,
             derive_rec : derive_rec_type(n)) :
-      on_method_entry(p, md, a, s1, s2, n, derive_rec)
+      on_method_entry(p, md, a, arg, s1, s2, n, derive_rec)
 
   determ_step_AP : LEMMA % :-)
     FORALL (p : Program)(n1, n2 : nat)(b : (wf_Body(p)))

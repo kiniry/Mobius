@@ -1,0 +1,45 @@
+WfSetStmts[Name : TYPE+, 
+                 FullProgram : TYPE,
+                 FullState : TYPE,
+                 (IMPORTING WellFormedProgram[Name]) program : [FullProgram -> Program],
+                 (IMPORTING State[Name]) pstate : [FullState -> PState],
+                 lookup : [Name, FullState -> Val],
+                 (IMPORTING SemanticsTypes[Name, FullProgram, FullState,
+                                           program, pstate])
+                 update_PState : (update_PState_type),
+                 execute_set : (execute_set_type),
+                 execute_assert : (execute_assert_type),
+                 execute_CaseJML : (execute_CaseJML_type),
+                 on_method_entry : (on_method_event_type),
+                 on_method_exit_normal : (on_method_event_type),
+                 on_method_exit_exceptional : (on_method_event_type)] : THEORY
+BEGIN
+
+  IMPORTING ProgramRestriction[Name],
+            Semantics[Name, FullProgram, FullState, program, pstate, lookup,
+                      update_PState, execute_set, execute_assert, 
+                      execute_CaseJML, on_method_entry, 
+                      on_method_exit_normal, on_method_exit_exceptional]
+
+  only_JMLExc(p : FullProgram)(b : (wf_Body(program(p)))) : bool =
+    FORALL(s1, s2 : FullState, v : Val, n : nat) :
+      NOT up?(ex(pstate(s1))) IMPLIES
+      derive(p)(b, s1, v, s2)(n) IMPLIES
+      up?(ex(pstate(s2))) IMPLIES down(ex(pstate(s2))) = JMLExc
+
+  no_exc(p : FullProgram)(b : (wf_Body(program(p)))) : bool =
+    FORALL(s1, s2 : FullState, v : Val, n : nat) :
+      NOT up?(ex(pstate(s1))) IMPLIES
+      derive(p)(b, s1, v, s2)(n) IMPLIES
+        NOT up?(ex(pstate(s2)))
+
+  wf_set_stmts(p : FullProgram)(m : Method) : bool =
+    methods(program(p))(m) IMPLIES
+      (FORALL (v : (defined?)) : only_JMLExc(p)(pre_set(m)(v))) AND
+      (FORALL (v : (defined?)) : no_exc(p)(post_set(m)(v))) AND
+      (FORALL (e : Excpt) : no_exc(p)(exc_set(m)(e)))
+
+  wf_set_stmts(p : FullProgram) : bool =
+    program_method_pred(program(p))(wf_set_stmts(p))
+
+END WfSetStmts

@@ -194,69 +194,72 @@ BEGIN
     Sequence(Set(cp(mp), NExpr(NumVarEval(name_of(mp)(tcp(t))))),
              ann_action(action(t)))
 
-  ann_guard_actions_set(mp)(ts : finite_set[Transition]) :
+  ann_guard_actions_set(mp)(ts : finite_set[Transition])(v : ValOrExcpt) :
                             finite_set[[BoolExpr, Stmt]] =
      {x : [BoolExpr, Stmt] | EXISTS (t : Transition) :
-          ts(t) AND x = (guard_to_expression(mva(mp))(guard(t)),
+          ts(t) AND x = (guard_to_expression(mva(mp))(guard(t))(v),
           update_vars(mp)(t))}
 
 
-  ann_guard_actions(mp)(ts : finite_set[Transition]) : list[[BoolExpr, Stmt]] =
-    set2list(ann_guard_actions_set(mp)(ts))
+  ann_guard_actions(mp)(ts : finite_set[Transition])
+                   (v : ValOrExcpt) : list[[BoolExpr, Stmt]] =
+    set2list(ann_guard_actions_set(mp)(ts)(v))
 
-  ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) : [BoolExpr, Stmt] =
+  ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) 
+              (v : ValOrExcpt) : [BoolExpr, Stmt] =
     (Eq(NExpr(NumVarEval(cp(mp))),
         NExpr(NumVarEval(name_of(mp)(q)))),
-     CaseJML(ann_guard_actions(mp)(ts)))
+     CaseJML(ann_guard_actions(mp)(ts)(v)))
 
 
-  ann_event_set(mp)(ts : finite_set[Transition]) :
+  ann_event_set(mp)(ts : finite_set[Transition])(v : ValOrExcpt) :
                          finite_set[[BoolExpr, Stmt]] =
     {c : [BoolExpr, Stmt] | EXISTS (q : CP) :
          cps(mva(mp))(q) AND
          nonempty?({t: Transition | ts(t) AND scp(t) = q}) AND
-         c = ann_trans_cp(mp)(q, {t: Transition | ts(t) AND scp(t) = q})}
+         c = ann_trans_cp(mp)(q, {t: Transition | ts(t) AND scp(t) = q})(v)}
 
   % Generates annotations to update the control point and the variables when an
   % event occurs
-  ann_event(mp)(ts : finite_set[Transition]) : Stmt =
-    CaseJML(set2list(ann_event_set(mp)(ts)))
+  ann_event(mp)(ts : finite_set[Transition])(v : ValOrExcpt) : Stmt =
+    CaseJML(set2list(ann_event_set(mp)(ts)(v)))
 
   var_names_ann_event_set : LEMMA % :-)
-    FORALL (ts : finite_set[Transition]) :
+    FORALL (ts : finite_set[Transition], v : ValOrExcpt) :
       subset?(ts, ts(mva(mp))) IMPLIES
         subset?({n : Name | EXISTS (x : [BoolExpr, Stmt]) :
-                              ann_event_set(mp)(ts)(x) AND 
+                              ann_event_set(mp)(ts)(v)(x) AND 
                               (var_names(proj_1(x))(n) OR 
                                var_names(proj_2(x))(n))},
                 union(var_names(program(mp)), var_names(new_gvds(mp))))
 
   var_names_ann_event : LEMMA % :-)
-    FORALL (ts : finite_set[Transition]) :
+    FORALL (ts : finite_set[Transition], v : ValOrExcpt) :
       subset?(ts, ts(mva(mp))) IMPLIES
-        subset?(var_names(ann_event(mp)(ts)),
+        subset?(var_names(ann_event(mp)(ts)(v)),
                 union(var_names(program(mp)), var_names(new_gvds(mp))))
 
   ann_event_var_names : LEMMA % :-)
-    FORALL (ts : finite_set[Transition], v : Name) :
+    FORALL (ts : finite_set[Transition], v : Name, ve : ValOrExcpt) :
       subset?(ts, ts(mva(mp))) IMPLIES
-      var_names(ann_event(mp)(ts))(v) IMPLIES
+      var_names(ann_event(mp)(ts)(ve))(v) IMPLIES
         ext_declared_var_names(program(mp))(v) OR
         var_names(new_gvds(mp))(v)
 
   ann_event_set_set_ghostvar : LEMMA % :-)
-    FORALL (ts : finite_set[Transition], b: Body, x : [BoolExpr, Stmt]):
+    FORALL (ts : finite_set[Transition], b: Body, x : [BoolExpr, Stmt],
+            v : ValOrExcpt):
       subset?(ts, ts(mva(mp))) IMPLIES
       Set?(b) IMPLIES
-      ann_event_set(mp)(ts)(x) IMPLIES
+      ann_event_set(mp)(ts)(v)(x) IMPLIES
       (subterm(b, proj_1(x)) OR subterm(b, proj_2(x))) IMPLIES
         var_names(new_gvds(mp))(target(b))
 
   ann_event_set_ghostvar : LEMMA % :-)
-    FORALL (ts : finite_set[Transition], b: Body):
+    FORALL (ts : finite_set[Transition], b: Body, v : ValOrExcpt):
       subset?(ts, ts(mva(mp))) IMPLIES
       Set?(b) IMPLIES
-      subterm(b, ann_event(mp)(ts)) IMPLIES
+      subterm(b, ann_event(mp)(ts)(v)) IMPLIES
         var_names(new_gvds(mp))(target(b))
 
 END AnnotateEvent
@@ -301,15 +304,20 @@ BEGIN
       is_finite({t: Transition | filter_event(mva(mp))(et)(n)(t) AND scp(t) = q})
 
   ann_method(mp)(m : Method) : Method =
-    LET ann_event_type = LAMBDA (et : EventType) :
-                           ann_event(mp)(filter_event(mva(mp))(et)(name(m)))
+    LET ann_event_type = LAMBDA (et : EventType)(v : ValOrExcpt) :
+                           ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v)
     IN
-    m WITH [pre_set  := Sequence(pre_set(m),
-                        Sequence(ann_event_type(Entry),
+    m WITH [pre_set  := LAMBDA(v : (defined?)) :
+                        Sequence(pre_set(m)(v),
+                        Sequence(ann_event_type(Entry)(val(v)),
                         Assert(Neg(Eq(NExpr(NumVarEval(cp(mp))),
                                       NExpr(NumVarEval(halted(mp)))))))),
-            post_set := Sequence(post_set(m), ann_event_type(ExitNormal)),
-            exc_set  := Sequence(exc_set(m), ann_event_type(ExitExceptional))]
+            post_set := LAMBDA(v : (defined?)) : 
+                        Sequence(post_set(m)(v), 
+                        ann_event_type(ExitNormal)(val(v))),
+            exc_set  := LAMBDA(e : Excpt) :
+                        Sequence(exc_set(m)(e), 
+                        ann_event_type(ExitExceptional)(excpt(e)))]
 
 
   ann_methods(mp)(ms : finite_set[Method]) : finite_set[Method] =
@@ -343,19 +351,19 @@ BEGIN
       body(ann_method(mp)(m)) = body(m)
 
   ann_method_pre_set : LEMMA % :-)
-    FORALL (m : Method) :
-      Sequence?(pre_set(ann_method(mp)(m))) AND
-        s1(pre_set(ann_method(mp)(m))) = pre_set(m)
+    FORALL (m : Method, v : (defined?)) :
+      Sequence?(pre_set(ann_method(mp)(m))(v)) AND
+        s1(pre_set(ann_method(mp)(m))(v)) = pre_set(m)(v)
 
   ann_method_post_set : LEMMA % :-)
-    FORALL (m : Method) :
-      Sequence?(post_set(ann_method(mp)(m))) AND
-        s1(post_set(ann_method(mp)(m))) = post_set(m)
+    FORALL (m : Method, v : (defined?)) :
+      Sequence?(post_set(ann_method(mp)(m))(v)) AND
+        s1(post_set(ann_method(mp)(m))(v)) = post_set(m)(v)
 
   ann_method_exc_set : LEMMA % :-)
-    FORALL (m : Method) :
-      Sequence?(exc_set(ann_method(mp)(m))) AND
-        s1(exc_set(ann_method(mp)(m))) = exc_set(m)
+    FORALL (m : Method, e : Excpt) :
+      Sequence?(exc_set(ann_method(mp)(m))(e)) AND
+        s1(exc_set(ann_method(mp)(m))(e)) = exc_set(m)(e)
 
   ann_method_res : LEMMA % :-)
     FORALL (m : Method) :
@@ -372,24 +380,29 @@ BEGIN
       (FORALL(v : Name) : var_names(body(am))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v))
       AND
-      (FORALL(v : Name) : var_names(pre(am))(v) IMPLIES
+      (FORALL(v : Name, val : (defined?)) : 
+                          var_names(pre(am)(val))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v))
       AND
-      (FORALL(v : Name) : var_names(post(am))(v) IMPLIES
+      (FORALL(v : Name, val : (defined?)) : 
+                          var_names(post(am)(val))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v))
       AND
       (FORALL(v : Name) : var_names(res(am))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v))
       AND
-      (FORALL(v : Name) : var_names(pre_set(am))(v) IMPLIES
+      (FORALL(v : Name, val : (defined?)) : 
+                          var_names(pre_set(am)(val))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v) OR
                           var_names(new_gvds(mp))(v))
       AND
-      (FORALL(v : Name) : var_names(post_set(am))(v) IMPLIES
+      (FORALL(v : Name, val : (defined?)) : 
+                          var_names(post_set(am)(val))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v) OR
                           var_names(new_gvds(mp))(v))
       AND
-      (FORALL(v : Name) : var_names(exc_set(am))(v) IMPLIES
+      (FORALL(v : Name, e : Excpt) : 
+                          var_names(exc_set(am)(e))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v) OR
                           var_names(new_gvds(mp))(v))
 
@@ -400,19 +413,24 @@ BEGIN
       LET am = ann_method(mp)(m) IN
       (subterm(b, body(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (subterm(b, pre(am)) IMPLIES
+      (FORALL (v : (defined?)) : 
+         subterm(b, pre(am)(v)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (subterm(b, post(am)) IMPLIES
+      (FORALL(v : (defined?)) :
+         subterm(b, post(am)(v)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
       (subterm(b, res(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (subterm(b, pre_set(am)) IMPLIES
+      (FORALL(v : (defined?)) :
+       subterm(b, pre_set(am)(v)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b)) OR
          var_names(new_gvds(mp))(target(b))) AND
-      (subterm(b, post_set(am)) IMPLIES
+      (FORALL(v : (defined?)) :
+         subterm(b, post_set(am)(v)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b)) OR
          var_names(new_gvds(mp))(target(b))) AND
-      (subterm(b, exc_set(am)) IMPLIES
+      (FORALL(e : Excpt) :
+         subterm(b, exc_set(am)(e)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b)) OR
          var_names(new_gvds(mp))(target(b)))
 
@@ -686,22 +704,22 @@ BEGIN
         wf_Stmt(ann_program(mp))(update_vars(mp)(t))
 
   guard_to_expression_wf_BoolExpr : LEMMA % :-)
-    FORALL (t : Transition) :
+    FORALL (t : Transition, v : ValOrExcpt) :
       ts(mva(mp))(t) IMPLIES
-        wf_BoolExpr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t)))
+        wf_BoolExpr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t))(v))
 
  ann_trans_cp_wf : LEMMA % :-)
-   FORALL (q : CP, ts : finite_set[Transition]) :
-     LET p = ann_trans_cp(mp)(q, ts) IN
+   FORALL (q : CP, ts : finite_set[Transition], v : ValOrExcpt) :
+     LET p = ann_trans_cp(mp)(q, ts)(v) IN
      cps(mva(mp))(q) IMPLIES
      subset?(ts, ts(mva(mp))) IMPLIES
        (wf_BoolExpr(ann_program(mp))(p`1) AND
         wf_Stmt(ann_program(mp))(p`2))
 
   ann_event_wf_Body : LEMMA % :-)
-    FORALL (ts : finite_set[Transition]) :
+    FORALL (ts : finite_set[Transition], v : ValOrExcpt) :
       subset?(ts, ts(mva(mp))) IMPLIES
-        wf_Body(ann_program(mp))(ann_event(mp)(ts))
+        wf_Body(ann_program(mp))(ann_event(mp)(ts)(v))
 
   ann_program_preserves_wf_method : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp)))) :

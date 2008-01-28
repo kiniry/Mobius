@@ -19,9 +19,9 @@ BEGIN
 
   ProgVarDecl : TYPE = LocalVarDecl
 
-  IMPORTING State[Name]
+  IMPORTING State[Name], ValOrExcpt[Name]
 
-  Guard : TYPE = [Store, PSt -> boolean]
+  Guard : TYPE = [Store, PSt, ValOrExcpt -> boolean]
 
   OneAction : TYPE =
     [# target : Name,
@@ -108,10 +108,10 @@ BEGIN
       name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
   wf_Guard(a : MVA)(g : Guard) : boolean =
-    FORALL (sA : Store, sP : PSt, n : Name, v : Val) :
+    FORALL (sA : Store, sP : PSt, arg : ValOrExcpt, n : Name, v : Val) :
       (NOT var_names(vdsA(a))(n) AND NOT var_names(vdsP(a))(n)) IMPLIES
-        g(sA, sP) = g(sA WITH [n |-> v], sP) AND
-        g(sA, sP) = g(sA, sP WITH [fvs := fvs(sP) WITH [n |-> v]])
+        g(sA, sP, arg) = g(sA WITH [n |-> v], sP, arg) AND
+        g(sA, sP, arg) = g(sA, sP WITH [fvs := fvs(sP) WITH [n |-> v]], arg)
 
   wf_Action(a : MVA)(l : Action) : boolean =
     FORALL (c : OneAction) :
@@ -156,23 +156,23 @@ BEGIN
   IMPORTING WellFormedMVA[CP, Name]
 
   deterministic(a : MVA) : boolean =
-    FORALL (t1, t2 : Transition, stA : Store, stP : PSt) :
+    FORALL (t1, t2 : Transition, stA : Store, stP : PSt, arg : ValOrExcpt) :
       ts(a)(t1) IMPLIES
       ts(a)(t2) IMPLIES
       scp(t2) = scp(t1) IMPLIES
       event(t2) = event(t1) IMPLIES
-      guard(t1)(stA, stP) IMPLIES
-      guard(t2)(stA, stP) IMPLIES
+      guard(t1)(stA, stP, arg) IMPLIES
+      guard(t2)(stA, stP, arg) IMPLIES
         t1 = t2
 
   total(a : MVA) : boolean =
-    FORALL (q : CP, e : Event, stA : Store, stP : PSt) :
+    FORALL (q : CP, e : Event, stA : Store, stP : PSt, arg : ValOrExcpt) :
       cps(a)(q) IMPLIES
       evs(a)(e) IMPLIES
         EXISTS (t : Transition) : ts(a)(t) AND
                                   scp(t) = q AND
                                   event(t) = e AND
-                                  guard(t)(stA, stP)
+                                  guard(t)(stA, stP, arg)
 
   trap_state(q : CP, a : (wf_MVA)) : boolean =
     FORALL (t : Transition) :
@@ -221,7 +221,8 @@ BEGIN
   % value of its variables at that point
   PEvent : TYPE =
     [# stP : PSt,
-       event : Event
+       event : Event,
+       arg : ValOrExcpt
     #]
 
   % Updates a store
@@ -237,13 +238,23 @@ BEGIN
   % in Equivalence.
   % TODO: To be more precise we should ask g to be well formed wrt a
 %  guard_to_expression(a : MVA)(g : (wf_Guard(a))) : BoolExpr
-  guard_to_expression(a : MVA)(g : Guard) : BoolExpr
+  guard_to_expression(a : MVA)(g : Guard) : [ValOrExcpt -> BoolExpr]
 
   guard_to_expression_yields_wf_BoolExpr : AXIOM
     FORALL(a : MVA, t : Transition) :
       wf_MVA(a) IMPLIES
       ts(a)(t) IMPLIES
-        wf_BoolExpr(a)(guard_to_expression(a)(guard(t)))
+        FORALL(v : ValOrExcpt) :
+          wf_BoolExpr(a)(guard_to_expression(a)(guard(t))(v))
+
+  IMPORTING ContainsNoMethodCall[Name]
+
+  guard_to_expression_contains_no_method_calls : AXIOM
+    FORALL(a : MVA, t : Transition) :
+      wf_MVA(a) IMPLIES
+      ts(a)(t) IMPLIES
+        FORALL(v : ValOrExcpt) :
+        contains_no_method_call(guard_to_expression(a)(guard(t))(v))
 
 
   % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
@@ -298,7 +309,7 @@ BEGIN
                        ts(a)(t) AND 
                        scp(t) = cp(s) AND 
                        event(t) = event(pe) AND
-                       guard(t)(stA(s), stP(pe))) IN
+                       guard(t)(stA(s), stP(pe), arg(pe))) IN
       (# cp := tcp(t),
          stA := execute_action(action(t))(stA(s), stP(pe))
       #)
@@ -353,8 +364,8 @@ BEGIN
   % with source control point cp and event e. The sets of variable declarations
   % are needed to make sure that the guard is defined in for those variables.
   build_guard(a : MVA)(cp : CP, e : Event) : Guard =
-   LAMBDA (stA : Store, stP : PSt) :
-     FORALL (p : Guard) : all_guards(a)(cp, e)(p) IMPLIES NOT p(stA, stP)
+   LAMBDA (stA : Store, stP : PSt, arg : ValOrExcpt) :
+     FORALL (p : Guard) : all_guards(a)(cp, e)(p) IMPLIES NOT p(stA, stP, arg)
 
   % Makes ts(a) complete with respect cps and evs(a)
   complete_trans(a : MVA) : finite_set[Transition] =
@@ -362,7 +373,9 @@ BEGIN
                             guard(t) = build_guard(a)(scp(t), event(t)) AND
                             action(t) = skip AND tcp(t) = halted},
           {t : Transition | scp(t) = halted AND evs(a)(event(t)) AND
-                            guard(t) = (LAMBDA (stA : Store, stP : PSt) : TRUE)
+                            guard(t) = (LAMBDA (stA : Store, 
+                                                stP : PSt, 
+                                                arg : ValOrExcpt) : TRUE)
                             AND action(t) = skip AND tcp(t) = halted})
 
 

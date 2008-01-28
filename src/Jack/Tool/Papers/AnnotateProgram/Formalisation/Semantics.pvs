@@ -16,7 +16,8 @@ SemanticsTypes[Name : TYPE+,
                (IMPORTING State[Name]) pstate : [FullState -> PState]] : THEORY
 BEGIN
 
-  IMPORTING WellFormedProgram[Name]
+  IMPORTING WellFormedProgram[Name],
+            ValOrExcpt[Name]
 
   derive_type(n : nat) : TYPE =
     [p : FullProgram ->
@@ -63,12 +64,12 @@ BEGIN
   % We allow on_method_event to throw an exception if an assertion failed
   on_method_event_type
     (f : [p : FullProgram, (wf_Method(program(p))), Val,
-          FullState, FullState, n : nat,
+          ValOrExcpt, FullState, FullState, n : nat,
          derive_rec_type(n) -> boolean]) : boolean =
     FORALL (p : FullProgram, md : (wf_Method(program(p))),
-            a : Val, s1, s2 : FullState,
+            a : Val, arg : ValOrExcpt, s1, s2 : FullState,
             n : nat, d : derive_rec_type(n)) :
-      f(p, md, a, s1, s2, n, d) IMPLIES
+      f(p, md, a, arg, s1, s2, n, d) IMPLIES
         st(pstate(s1)) = st(pstate(s2)) AND
         (up?(ex(pstate(s1))) IMPLIES up?(ex(pstate(s2))))
 
@@ -256,13 +257,13 @@ BEGIN
                m3 = 0 AND m4 = 0 AND m5 = 0 AND m6 = 0
           % if the evaluation of the target or the argument threw an exception,
           % propagate it
-          ELSIF up?(ex(pstate(tau2)))
+          ELSIF up?(ex(pstate(tau2))) 
           THEN sigma2 = tau2 AND
                v = Bottom AND
                m3 = 0 AND m4 = 0 AND m5 = 0 AND m6 = 0
-          ELSE
           % lookup method definition
-          IF up?(lookup_mthd(program(p), a, mn))
+          ELSE
+          (IF up?(lookup_mthd(program(p), a, mn))
           THEN md = down(lookup_mthd(program(p), a, mn))
           ELSE FALSE % should not happen in a wf_Program
           ENDIF AND
@@ -271,7 +272,10 @@ BEGIN
           % update 'this', the argument and initialize local variables
           tau3 = update_stack(a, arg(md), pv, lvars(md), tau2) AND
           % actions taken at the entry of the method (inv, precond, pre_set)
-          on_method_entry(p, md, a, tau3, tau4, m3, bounded_derive_rec(m3)) AND
+          defined?(pv) AND % condition on pv needed to prove TCCs 
+                           % -> is derivable
+          on_method_entry(p, md, a, val(pv), tau3, tau4, m3, 
+                          bounded_derive_rec(m3)) AND
           % execute the body
           derive(p)(body(md), tau4, x, tau5)(m4) AND
           % body returns either Unit or Bottom value
@@ -282,10 +286,14 @@ BEGIN
           ELSE derive(p)(res(md), tau5, w, tau6)(m5)
           ENDIF AND
           % actions taken at the exit of the method (pos_set, inv, postcond)
-          IF bottom?(ex(pstate(tau6)))
-          THEN on_method_exit_normal(p, md, a, tau6, tau7, m6,
+          IF bottom?(ex(pstate(tau6))) 
+          THEN defined?(w) AND           % condition on w needed to prove TCCs
+                                         % -> is derivable
+               on_method_exit_normal(p, md, a, val(w), tau6, tau7, m6,
                                      bounded_derive_rec(m6))
-          ELSE on_method_exit_exceptional(p, md, a, tau6, tau7, m6,
+          ELSE on_method_exit_exceptional(p, md, a, 
+                                          excpt(down(ex(pstate(tau6)))),
+                                          tau6, tau7, m6,
                                           bounded_derive_rec(m6))
           ENDIF AND
           % check whether evaluation of subexpressions was exceptional if so,
@@ -298,7 +306,7 @@ BEGIN
           sigma2 = update_PState(tau7,
                                  LAMBDA(pstate : PState) : 
                                    pstate WITH 
-                                   [st := st(pstate) WITH [lvs := old_lvs]])
+                                   [st := st(pstate) WITH [lvs := old_lvs]]))
           ENDIF,
       NExpr(n) :
         n > 0 AND
@@ -426,7 +434,7 @@ ASSUMING
 
     on_method_entry_deterministic : ASSUMPTION
       FORALL (p : FullProgram, m : (wf_Method(program(p))), v : Val,
-              s, s1, s2 : FullState, n1, n2 : nat,
+              arg : ValOrExcpt, s, s1, s2 : FullState, n1, n2 : nat,
               d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
         (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)
                 (sigma, sigma1, sigma2 : FullState)
@@ -435,13 +443,13 @@ ASSUMING
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
           d2(k2)(p)(b, sigma, v2, sigma2)(m2) IMPLIES
             sigma1 = sigma2 AND m1 = m2 AND v1 = v2) IMPLIES
-      on_method_entry(p, m, v, s, s1, n1, d1) IMPLIES
-      on_method_entry(p, m, v, s, s2, n2, d2) IMPLIES
+      on_method_entry(p, m, v, arg, s, s1, n1, d1) IMPLIES
+      on_method_entry(p, m, v, arg, s, s2, n2, d2) IMPLIES
         s1 = s2 AND n1 = n2
 
     on_method_exit_normal_deterministic : ASSUMPTION
       FORALL (p : FullProgram, m : (wf_Method(program(p))), v : Val,
-              s, s1, s2 : FullState, n1, n2 : nat,
+              arg : ValOrExcpt,  s, s1, s2 : FullState, n1, n2 : nat,
               d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
         (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)
                 (sigma, sigma1, sigma2 : FullState)
@@ -450,13 +458,13 @@ ASSUMING
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
           d2(k2)(p)(b, sigma, v2, sigma2)(m2) IMPLIES
             sigma1 = sigma2 AND m1 = m2 AND v1 = v2) IMPLIES
-      on_method_exit_normal(p, m, v, s, s1, n1, d1) IMPLIES
-      on_method_exit_normal(p, m, v, s, s2, n2, d2) IMPLIES
+      on_method_exit_normal(p, m, v, arg, s, s1, n1, d1) IMPLIES
+      on_method_exit_normal(p, m, v, arg, s, s2, n2, d2) IMPLIES
         s1 = s2 AND n1 = n2
 
     on_method_exit_exceptional_deterministic : ASSUMPTION
       FORALL (p : FullProgram, m : (wf_Method(program(p))), v : Val,
-              s, s1, s2 : FullState, n1, n2 : nat,
+              arg : ValOrExcpt, s, s1, s2 : FullState, n1, n2 : nat,
               d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
         (FORALL (b : (wf_Body(program(p))))(v1, v2 : Val)
                 (sigma, sigma1, sigma2 : FullState)
@@ -465,8 +473,8 @@ ASSUMING
           d1(k1)(p)(b, sigma, v1, sigma1)(m1) AND
           d2(k2)(p)(b, sigma, v2, sigma2)(m2) IMPLIES
             sigma1 = sigma2 AND m1 = m2 AND v1 = v2) IMPLIES
-      on_method_exit_exceptional(p, m, v, s, s1, n1, d1) IMPLIES
-      on_method_exit_exceptional(p, m, v, s, s2, n2, d2) IMPLIES
+      on_method_exit_exceptional(p, m, v, arg, s, s1, n1, d1) IMPLIES
+      on_method_exit_exceptional(p, m, v, arg, s, s2, n2, d2) IMPLIES
         s1 = s2 AND n1 = n2
 
   execute_CaseJML_deterministic : ASSUMPTION
@@ -672,7 +680,7 @@ BEGIN
 
   on_method_entry : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : (wf_Method(program(p))), a : Val,
-            s1, s2 : FullState, n : nat,
+            arg : ValOrExcpt, s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1)))
     THEN s1 = s2 AND n = 0
@@ -680,17 +688,18 @@ BEGIN
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : FullState, v : Val,
             inv : (wf_BoolExpr(program(p)))) :
       n = m1 + m2 + m3 + 1 AND
+      val?(arg) AND
       inv = lookup_inv(program(p), a) AND
       check_assertion(p)(inv, s1, tau1)(m1)(derive_rec(m1)) AND
-      check_assertion(p)(pre(md), tau1, tau2)(m2)(derive_rec(m2)) AND
-      derive_rec(n)(p)(pre_set(md), tau2, v, s2)(m3) AND
+      check_assertion(p)(pre(md)(v(arg)), tau1, tau2)(m2)(derive_rec(m2)) AND
+      derive_rec(n)(p)(pre_set(md)(v(arg)), tau2, v, s2)(m3) AND
       v = return_of_stmt(s2) AND
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
   on_method_exit_normal : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : (wf_Method(program(p))), a : Val,
-            s1, s2 : FullState, n : nat,
+            arg : ValOrExcpt, s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1)))
     THEN s1 = s2 AND n = 0
@@ -698,11 +707,12 @@ BEGIN
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : FullState, v : Val,
             inv : (wf_BoolExpr(program(p)))) :
       n = m1 + m2 + m3 + 1 AND
-      derive_rec(n)(p)(post_set(md), s1, v, tau1)(m1) AND
+      val?(arg) AND
+      derive_rec(n)(p)(post_set(md)(v(arg)), s1, v, tau1)(m1) AND
       v = return_of_stmt(tau1) AND
       inv = lookup_inv(program(p), a) AND
       check_assertion(p)(inv, tau1, tau2)(m2)(derive_rec(m2)) AND
-      check_assertion(p)(post(md), tau2, s2)(m3)(derive_rec(m3)) AND
+      check_assertion(p)(post(md)(v(arg)), tau2, s2)(m3)(derive_rec(m3)) AND
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
@@ -710,14 +720,16 @@ BEGIN
   % (JML has an exceptional postcondition but we are not modelling it)
   on_method_exit_exceptional : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : (wf_Method(program(p))), a : Val,
-            s1, s2 : FullState, n : nat,
+            arg : ValOrExcpt, s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1))) AND NOT down(ex(pstate(s1))) = JMLExc
     THEN
     EXISTS (m1, m2 : nat, tau1, tau2 : FullState, v : Val,
             inv : (wf_BoolExpr(program(p)))) :
       n = m1 + m2 + 1 AND
-      derive_rec(n)(p)(exc_set(md), update_PState(s1, catch), v, tau1)(m1) AND
+      excpt?(arg) AND
+      derive_rec(n)(p)(exc_set(md)(e(arg)),
+                       update_PState(s1, catch), v, tau1)(m1) AND
       v = return_of_stmt(tau1) AND
       inv = lookup_inv(program(p), a) AND
       check_assertion(p)(inv, tau1, tau2)(m2)(derive_rec(m2)) AND
@@ -730,24 +742,24 @@ BEGIN
     ENDIF
 
 
-  IMPORTING Semantics[Name, FullProgram, FullState, 
-                      program, pstate, lookup, update_PState, 
-                      execute_set, execute_assert, execute_CaseJML,
-                      on_method_entry, on_method_exit_normal, 
-                      on_method_exit_exceptional]
+%  IMPORTING Semantics[Name, FullProgram, FullState, 
+%                      program, pstate, lookup, update_PState, 
+%                      execute_set, execute_assert, execute_CaseJML,
+%                      on_method_entry, on_method_exit_normal, 
+%                      on_method_exit_exceptional]
 
 
-  on_method_entry_only_throws_JMLExc : LEMMA
-     FORALL(p : FullProgram, md : (wf_Method(program(p))), a : Val,
-            s1, s2 : FullState, n : nat,
-            derive_rec : derive_rec_type(n)) :
-       NOT up?(ex(pstate(s1))) IMPLIES
-       on_method_entry(p, md, a, s1, s2, n,         
-          LAMBDA (k : upto(n))(p : FullProgram)
-               (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
-               (m : below(k)) : derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-       up?(ex(pstate(s2))) IMPLIES
-         down(ex(pstate(s2))) = JMLExc
+%  on_method_entry_only_throws_JMLExc : LEMMA
+%     FORALL(p : FullProgram, md : (wf_Method(program(p))), a : Val,
+%            s1, s2 : FullState, n : nat,
+%            derive_rec : derive_rec_type(n)) :
+%       NOT up?(ex(pstate(s1))) IMPLIES
+%       on_method_entry(p, md, a, s1, s2, n,         
+%          LAMBDA (k : upto(n))(p : FullProgram)
+%               (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
+%               (m : below(k)) : derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+%       up?(ex(pstate(s2))) IMPLIES
+%         down(ex(pstate(s2))) = JMLExc
 
 
 END SemanticsJML

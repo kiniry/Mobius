@@ -1,0 +1,20 @@
+Excpt : DATATYPE
+BEGIN
+
+  Throwable : Throwable?
+  NullPointer : NullPointer?
+  JMLExc : JMLExc?
+
+
+END Excpt
+
+
+ValOrExcpt[Name : TYPE+] : DATATYPE
+BEGIN
+
+  IMPORTING ValProp[Name], Excpt
+
+  val(v : (defined?)) : val?
+  excpt (e : Excpt) : excpt?
+
+END ValOrExcpt

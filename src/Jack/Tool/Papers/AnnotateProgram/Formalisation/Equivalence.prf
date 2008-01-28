@@ -1,28 +1,29 @@
 (Equivalence
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-1 nil 3396603944 3404224304
+  (IMP_VariableNames_TCC1-1 nil 3396603944 3410269958
    ("" (use "infinite_namespace") nil nil) proved
-   ((infinite_namespace formula-decl nil Equivalence nil)) 35 40 t
+   ((infinite_namespace formula-decl nil Equivalence nil)) 158 150 t
    nil))
  (IMP_AnnotateProgram_TCC1 0
-  (IMP_AnnotateProgram_TCC1-1 nil 3396603944 3404224304
+  (IMP_AnnotateProgram_TCC1-1 nil 3396603944 3410269958
    ("" (use "CP_is_enumerable") nil nil) proved
-   ((CP_is_enumerable formula-decl nil Equivalence nil)) 36 30 t nil))
+   ((CP_is_enumerable formula-decl nil Equivalence nil)) 144 140 t
+   nil))
  (IMP_AnnotateProgram_TCC2 0
-  (yes "" 3396604154 3404224304 ("" (use "name_of_exists") nil nil)
-   proved ((name_of_exists formula-decl nil Equivalence nil)) 41 40 t
+  (yes "" 3396604154 3410269958 ("" (use "name_of_exists") nil nil)
+   proved ((name_of_exists formula-decl nil Equivalence nil)) 147 150 t
    shostak)
   (IMP_AnnotateProgram_TCC2-1 nil 3396603944 3396603953
    ("" (assuming-tcc) nil nil) unchecked nil 151 151 nil nil))
  (guard_to_expression_behavior_TCC1 0
-  (guard_to_expression_behavior_TCC1-1 nil 3401705163 3404224304
+  (guard_to_expression_behavior_TCC1-1 nil 3401705163 3410269958
    ("" (skosimp*) (("" (expand* "id" "wf_BoolExpr") nil nil)) nil)
    proved
    ((id const-decl "(bijective?[T, T])" identity nil)
     (wf_BoolExpr const-decl "boolean" WellFormedProgram nil))
-   139 50 t nil))
+   154 160 t nil))
  (eval_action_behavior_TCC1 0
-  (eval_action_behavior_TCC1-1 nil 3401705163 3404224305
+  (eval_action_behavior_TCC1-1 nil 3401705163 3410269959
    ("" (skosimp)
     (("" (expand* "id" "wf_Expr")
       (("" (use "wf_Body_MVA_implies_wf_Body") (("" (assert) nil nil))
@@ -64,9 +65,9 @@
     (CP formal-nonempty-type-decl nil Equivalence nil)
     (wf_Body_MVA_implies_wf_Body formula-decl nil
      AnnotateProgramProperties nil))
-   185 180 t nil))
+   294 240 t nil))
  (actions_have_no_side_effects_TCC1 0
-  (actions_have_no_side_effects_TCC1-1 nil 3403366900 3404224305
+  (actions_have_no_side_effects_TCC1-1 nil 3403366900 3410269959
    ("" (skosimp*)
     (("" (expand "id")
       (("" (use "one_action_source_wf_Body")
@@ -112,25 +113,25 @@
     (CP formal-nonempty-type-decl nil Equivalence nil)
     (one_action_source_wf_Body formula-decl nil
      AnnotateProgramProperties nil))
-   483 400 t nil)))
+   437 420 t nil)))
 (RelatedStatesProperties
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-1 nil 3403605625 3404213788
-   ("" (use "infinite_namespace") nil nil) unchecked
+  (IMP_VariableNames_TCC1-1 nil 3403605625 3410269959
+   ("" (use "infinite_namespace") nil nil) proved
    ((infinite_namespace formula-decl nil RelatedStatesProperties nil))
-   40 40 t nil))
+   146 140 t nil))
  (IMP_Equivalence_TCC1 0
-  (IMP_Equivalence_TCC1-1 nil 3403605625 3404213788
-   ("" (use "CP_is_enumerable") nil nil) unchecked
-   ((CP_is_enumerable formula-decl nil RelatedStatesProperties nil)) 41
-   30 t nil))
+  (IMP_Equivalence_TCC1-1 nil 3403605625 3410269959
+   ("" (use "CP_is_enumerable") nil nil) proved
+   ((CP_is_enumerable formula-decl nil RelatedStatesProperties nil))
+   153 150 t nil))
  (IMP_Equivalence_TCC2 0
-  (IMP_Equivalence_TCC2-1 nil 3403605625 3404213788
-   ("" (use "name_of_exists") nil nil) unchecked
-   ((name_of_exists formula-decl nil RelatedStatesProperties nil)) 122
-   40 t nil))
+  (IMP_Equivalence_TCC2-1 nil 3403605625 3410269960
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil RelatedStatesProperties nil)) 155
+   150 t nil))
  (get_address_same_in_related_states 0
-  (get_address_same_in_related_states-1 "" 3403605785 3404213788
+  (get_address_same_in_related_states-1 "" 3403605785 3410269960
    ("" (skosimp*)
     (("" (expand* "related_states" "MP_modeled?" "Program_modeled?")
       (("" (flatten)
@@ -140,12 +141,12 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((MP_modeled? const-decl "boolean" Equivalence nil)
     (Program_modeled? const-decl "boolean" Equivalence nil)
     (related_states const-decl "boolean" Equivalence nil)
     (get_address const-decl "int" Semantics nil))
-   312 290 t shostak)
+   333 280 t shostak)
   (get_address_same_in_related_states-2 nil 3403605756 nil
    (";;; Proof get_address_same_in_related_states-1 for formula RelatedStatesProperties.get_address_same_in_related_states"
     (skosimp*)
@@ -167,28 +168,27 @@
    ("" (postpone) nil nil) unfinished nil 9075 170 t shostak))
  (get_dynamic_type_name_same_in_related_states 0
   (get_dynamic_type_name_same_in_related_states-1 nil 3403605807
-   3404213789
+   3410269960
    ("" (skosimp*)
     (("" (expand* "related_states" "MP_modeled?" "Program_modeled?")
       (("" (expand "get_dynamic_type_name")
         (("" (flatten) (("" (assert) nil nil)) nil)) nil))
       nil))
     nil)
-   unchecked
+   proved
    ((MP_modeled? const-decl "boolean" Equivalence nil)
     (Program_modeled? const-decl "boolean" Equivalence nil)
     (related_states const-decl "boolean" Equivalence nil)
     (get_dynamic_type_name const-decl "Name" Semantics nil))
-   275 250 t nil))
+   277 260 t nil))
  (halted_implies_exception 0
-  (halted_implies_exception-2 nil 3404213928 3404213932
+  (halted_implies_exception-2 nil 3404213928 3410269961
    ("" (skosimp)
     (("" (expand* "related_states" "halted_implies_JMLExc")
       (("" (prop) nil nil)) nil))
     nil)
-   unchecked
-   ((related_states const-decl "boolean" Equivalence nil) nil) 3376 220
-   t nil)
+   proved ((related_states const-decl "boolean" Equivalence nil)) 268
+   260 t nil)
   (halted_implies_exception-1 nil 3404207888 3404213789
    ("" (skosimp)
     (("" (expand* "related_states" "MP_modeled?" "Program_modeled?")
@@ -200,15 +200,15 @@
     (MP_modeled? const-decl "boolean" Equivalence nil))
    339 250 t shostak))
  (MP_modeled_implies_same_exception 0
-  (MP_modeled_implies_same_exception-1 "" 3403605858 3404224477
+  (MP_modeled_implies_same_exception-1 "" 3403605858 3410269961
    ("" (skosimp*)
     (("" (expand* "MP_modeled?" "Program_modeled?")
       (("" (flatten) (("" (ground) nil nil)) nil)) nil))
     nil)
    proved
-   ((MP_modeled? const-decl "boolean" Equivalence nil)
-    (Program_modeled? const-decl "boolean" Equivalence nil))
-   204 50 t shostak)
+   ((Program_modeled? const-decl "boolean" Equivalence nil)
+    (MP_modeled? const-decl "boolean" Equivalence nil))
+   176 170 t shostak)
   (MP_modeled_implies_same_exception-2 nil 3403605842 nil
    ("" (skosimp*)
     (("" (expand* "MP_modeled?" "Program_modeled?")
@@ -241,7 +241,7 @@
   (MP_modeled_implies_same_exception-1 nil 3403605817 3403605831
    ("" (postpone) nil nil) unfinished nil 13813 170 t shostak))
  (related_states_implies_same_exception 0
-  (related_states_implies_same_exception-1 nil 3403605895 3404213789
+  (related_states_implies_same_exception-1 nil 3403605895 3410269964
    ("" (skosimp)
     (("" (expand "related_states")
       (("" (flatten)
@@ -250,7 +250,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((related_states const-decl "boolean" Equivalence nil)
     (MP_modeled_implies_same_exception formula-decl nil
      RelatedStatesProperties nil)
@@ -279,9 +279,9 @@
     (finite_set type-eq-decl nil finite_sets nil)
     (CP formal-nonempty-type-decl nil RelatedStatesProperties nil)
     (Name formal-nonempty-type-decl nil RelatedStatesProperties nil))
-   271 230 t nil))
+   3056 270 t nil))
  (related_states_implies_same_lookup 0
-  (related_states_implies_same_lookup-1 nil 3403605959 3404213792
+  (related_states_implies_same_lookup-1 nil 3403605959 3410270139
    ("" (skosimp*)
     (("" (expand "related_states")
       (("" (flatten)
@@ -299,7 +299,16 @@
                           ((""
                             (expand* "lookup_local" "lookup_field"
                              "is_ghost")
-                            (("" (ground) nil nil)) nil))
+                            (("" (assert)
+                              ((""
+                                (replace -10)
+                                ((""
+                                  (lift-if)
+                                  (("" (prop) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
                           nil))
                         nil))
                       nil))
@@ -312,7 +321,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((related_states const-decl "boolean" Equivalence nil)
     (wf_state_vars_tricotomy formula-decl nil MonitoredProgramSemantics
      nil)
@@ -352,9 +361,9 @@
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (ann_program_preserves_pstate_vars formula-decl nil
      AnnotateProgramProperties nil))
-   2282 2040 t nil))
+   147135 1600 t nil))
  (MP_modeled_preserved_by_update 0
-  (MP_modeled_preserved_by_update-1 nil 3403606019 3404224584
+  (MP_modeled_preserved_by_update-1 nil 3403606019 3410269966
    ("" (skosimp*)
     (("" (expand* "related_states" "MP_modeled?" "update_PState")
       (("" (prop)
@@ -380,9 +389,9 @@
     (MVA_cp_modeled? const-decl "boolean" Equivalence nil)
     (MVA_cps_modeled? const-decl "boolean" Equivalence nil)
     (MVA_vars_modeled? const-decl "boolean" Equivalence nil))
-   51447 540 t nil))
+   466 410 t nil))
  (related_states_preserved_by_update_local 0
-  (related_states_preserved_by_update_local-1 nil 3403606075 3404225086
+  (related_states_preserved_by_update_local-1 nil 3403606075 3410269966
    ("" (skosimp*)
     (("" (expand "related_states")
       (("" (lift-if)
@@ -420,62 +429,62 @@
       nil))
     nil)
    proved
-   ((FieldDecl type-eq-decl nil Program nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (PreProgram type-eq-decl nil Program nil)
-    (wf_Program const-decl "boolean" WellFormedProgram nil)
-    (wf_state_update_local formula-decl nil State nil)
-    (update_local const-decl "PState" State nil)
-    (PSt type-eq-decl nil State nil) (lift type-decl nil lift_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (AState type-eq-decl nil MVASemantics nil)
-    (Name formal-nonempty-type-decl nil RelatedStatesProperties nil)
-    (CP formal-nonempty-type-decl nil RelatedStatesProperties nil)
-    (wf_MP const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (compatible const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
-    (Program type-eq-decl nil WellFormedProgram nil)
-    (complete const-decl "boolean" MVASemantics nil)
-    (MVA type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (Val type-decl nil Val_adt nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Event type-eq-decl nil MVA nil)
-    (EventType type-decl nil EventType_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (wf_update_PState formula-decl nil MonitoredProgramSemantics nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (ann_program const-decl "Program" AnnotateProgram nil)
-    (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
-    (MP_modeled? const-decl "boolean" Equivalence nil)
-    (MVA_cp_modeled? const-decl "boolean" Equivalence nil)
-    (MVA_vars_modeled? const-decl "boolean" Equivalence nil)
-    (Program_gvs_modeled? const-decl "boolean" Equivalence nil)
-    (Program_modeled? const-decl "boolean" Equivalence nil)
-    (MVA_cps_modeled? const-decl "boolean" Equivalence nil)
-    (MVA_modeled? const-decl "boolean" Equivalence nil)
+   ((related_states const-decl "boolean" Equivalence nil)
     (update_PState const-decl "(update_PState_type)"
      MonitoredProgramSemantics nil)
-    (related_states const-decl "boolean" Equivalence nil))
-   481140 3150 t nil))
+    (MVA_modeled? const-decl "boolean" Equivalence nil)
+    (MVA_cps_modeled? const-decl "boolean" Equivalence nil)
+    (Program_modeled? const-decl "boolean" Equivalence nil)
+    (Program_gvs_modeled? const-decl "boolean" Equivalence nil)
+    (MVA_vars_modeled? const-decl "boolean" Equivalence nil)
+    (MVA_cp_modeled? const-decl "boolean" Equivalence nil)
+    (MP_modeled? const-decl "boolean" Equivalence nil)
+    (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
+    (ann_program const-decl "Program" AnnotateProgram nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)"
+     AnnotatedProgramSemantics nil)
+    (wf_update_PState formula-decl nil MonitoredProgramSemantics nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (CP formal-nonempty-type-decl nil RelatedStatesProperties nil)
+    (Name formal-nonempty-type-decl nil RelatedStatesProperties nil)
+    (AState type-eq-decl nil MVASemantics nil)
+    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (MPState type-eq-decl nil MonitoredProgramSemantics nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (lift type-decl nil lift_adt nil) (PSt type-eq-decl nil State nil)
+    (update_local const-decl "PState" State nil)
+    (wf_state_update_local formula-decl nil State nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (Method type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (FieldDecl type-eq-decl nil Program nil))
+   689 620 t nil))
  (related_states_preserved_by_catch 0
-  (related_states_preserved_by_catch-2 nil 3404060221 3404225250
+  (related_states_preserved_by_catch-2 nil 3404060221 3410269967
    ("" (skosimp*)
     (("" (expand "related_states")
       (("" (lift-if)
@@ -573,7 +582,7 @@
     (LocalVarDecl type-eq-decl nil Program nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
     (FieldDecl type-eq-decl nil Program nil))
-   81564 1010 t nil)
+   635 620 t nil)
   (related_states_preserved_by_catch-1 nil 3403606109 3404060190
    ("" (skosimp*)
     (("" (expand "related_states" 2)
@@ -671,7 +680,7 @@
      MonitoredProgramSemantics nil))
    465647 1140 t nil))
  (related_states_preserved_by_raise 0
-  (related_states_preserved_by_raise-1 nil 3403606145 3404225670
+  (related_states_preserved_by_raise-1 nil 3403606145 3410269968
    ("" (skosimp*)
     (("" (expand "related_states")
       (("" (split +)
@@ -762,9 +771,9 @@
     (FieldDecl type-eq-decl nil Program nil)
     (update_PState const-decl "(update_PState_type)"
      MonitoredProgramSemantics nil))
-   397231 1760 t nil))
+   680 620 t nil))
  (related_states_preserved_by_update_stack 0
-  (related_states_preserved_by_update_stack-1 nil 3403606228 3404226818
+  (related_states_preserved_by_update_stack-1 nil 3403606228 3410269971
    ("" (skosimp*)
     (("" (expand "related_states")
       (("" (split +)
@@ -895,14 +904,20 @@
     (l!1 skolem-const-decl "LocalVarDecl[Name]" RelatedStatesProperties
      nil)
     (x!1 skolem-const-decl "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]): lvds!1(l) AND name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
      RelatedStatesProperties nil)
     (injective? const-decl "bool" functions nil)
     (x1!1 skolem-const-decl "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]): lvds!1(l) AND name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
      RelatedStatesProperties nil)
     (x2!1 skolem-const-decl "({x: [Name, Val[Name]] |
-    EXISTS (l: LocalVarDecl[Name]): lvds!1(l) AND name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+    EXISTS (l: LocalVarDecl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
      RelatedStatesProperties nil)
     (l!1 skolem-const-decl "LocalVarDecl[Name]" RelatedStatesProperties
      nil)
@@ -930,7 +945,6 @@
     (lvds!1 skolem-const-decl "finite_set[LocalVarDecl[Name]]"
      RelatedStatesProperties nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Excpt type-decl nil Excpt_adt nil)
     (PSt type-eq-decl nil State nil)
     (O const-decl "T3" function_props nil)
     (update_local const-decl "PState" State nil)
@@ -958,6 +972,7 @@
     (FieldDecl type-eq-decl nil Program nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
     (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
     (Expr type-eq-decl nil Body_adt nil)
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
@@ -994,9 +1009,9 @@
     (finite_set type-eq-decl nil finite_sets nil)
     (wf_state_update_stack formula-decl nil MonitoredProgramSemantics
      nil))
-   1119830 16660 t nil))
+   3033 2710 t nil))
  (MP_modeled_lookup_correspondence 0
-  (MP_modeled_lookup_correspondence-1 nil 3403606671 3404213803
+  (MP_modeled_lookup_correspondence-1 nil 3403606671 3410269973
    ("" (skosimp)
     ((""
       (use "wf_state_ghost_not_local_or_field"
@@ -1071,7 +1086,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((wf_state_ghost_not_local_or_field formula-decl nil
      AnnotatedProgramSemantics nil)
     (Val type-decl nil Val_adt nil)
@@ -1083,6 +1098,7 @@
     (BoolExpr type-eq-decl nil Body_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
     (Expr type-eq-decl nil Body_adt nil)
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
@@ -1146,9 +1162,9 @@
     (injective? const-decl "bool" functions nil)
     (name_of const-decl "(injective?[CP, (legal_names(mp))])"
      NewVariableDeclarations nil))
-   3339 3010 t nil))
+   2525 2240 t nil))
  (related_states_lookup_correspondence 0
-  (related_states_lookup_correspondence-1 "" 3403606749 3404213804
+  (related_states_lookup_correspondence-1 "" 3403606749 3410269974
    ("" (skosimp)
     (("" (expand "related_states")
       (("" (flatten)
@@ -1157,7 +1173,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   proved
    ((related_states const-decl "boolean" Equivalence nil)
     (MP_modeled_lookup_correspondence formula-decl nil
      RelatedStatesProperties nil)
@@ -1186,7 +1202,7 @@
     (Name formal-nonempty-type-decl nil RelatedStatesProperties nil)
     (AState type-eq-decl nil MVASemantics nil)
     (MPState type-eq-decl nil MonitoredProgramSemantics nil))
-   468 440 nil shostak)
+   480 440 nil shostak)
   (related_states_lookup_correspondence-2 nil 3403606717 nil
    ("" (skosimp)
     (("" (expand "related_states")
