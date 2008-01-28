@@ -28,6 +28,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 import umbra.UmbraPlugin;
@@ -268,14 +269,20 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * the input is obtained from the current editor window.
    *
    * @param an_editor TODO
+   * @param interlineTab an array with multi-line comments
+   * @param commentTab an array with end-of-line comments
+   * @param input2 
    * @throws PartInitException if the new editor could not be created or
    *               initialized
    * @see #refreshEditor(BytecodeEditor, IEditorInput)
    */
-  public final void refreshEditor(final BytecodeEditor an_editor)
+  public final void refreshEditor(final BytecodeEditor an_editor,
+                                  final FileEditorInput input2,
+                                  final String[] commentTab,
+                                  final String[] interlineTab)
     throws PartInitException {
     final IEditorInput input = an_editor.getEditorInput();
-    refreshEditor(an_editor, input, null);
+    refreshEditor(an_editor, input, commentTab, interlineTab);
   }
 
   /**
@@ -288,12 +295,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @param a_comment_array contains the texts of end-of-line comments, the
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account
+   * @paraem an_interline multi-line comments TODO fix the protocol
    * @throws PartInitException if the new editor could not be created or
-   *    initialized
+   *    initialised
    */
   public final void refreshEditor(final BytecodeEditor an_editor,
                                   final IEditorInput an_input,
-                                  final String[] a_comment_array)
+                                  final String[] a_comment_array,
+                                  final String[] an_interline)
     throws PartInitException {
     final IWorkbenchPage page = an_editor.getEditorSite().getPage();
     final ITextSelection selection = (ITextSelection)an_editor.
@@ -323,7 +332,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 //      e.printStackTrace();
 //    }
     sp.setSelection(ns);
-    my_bcode_cntrbtn.reinit(a_comment_array);
+    my_bcode_cntrbtn.reinit(a_comment_array, an_interline);
     if (proper) Composition.stopDisas();
   }
 

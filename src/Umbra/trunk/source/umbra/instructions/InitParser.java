@@ -9,6 +9,7 @@
 package umbra.instructions;
 
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.apache.bcel.classfile.Method;
@@ -28,6 +29,7 @@ import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
+import umbra.instructions.ast.InstructionLineController;
 
 /**
  * This class handles the initial parsing of a byte code textual document.
@@ -192,14 +194,14 @@ public class InitParser {
     a_ctxt.setInitial();
     BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
     my_editor_lines.add(j, lc);
-    lc.setIndex(a_ctxt.getMethodNo());
+    lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
     j = swallowEmptyLines(my_doc, j, a_ctxt);
     line = getLineFromDoc(my_doc, j, a_ctxt);
     a_ctxt.seClassToBeRead();
     lc = Preparsing.getType(line, a_ctxt);
     my_editor_lines.add(j, lc);
-    lc.setIndex(a_ctxt.getMethodNo());
+    lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
     return swallowEmptyLines(my_doc, j, a_ctxt);
   }
@@ -234,15 +236,15 @@ public class InitParser {
     int j = swallowEmptyLines(my_doc, the_line_no, a_ctxt);
     final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
     final InstructionList il = mg.getInstructionList();
-    final InstructionHandle ih = il.getStart();
-    int ic = my_instructions.size(); // counts lines with instructions
+    il.setPositions();
+    final Iterator iter = il.iterator();
 
     for (; j < my_doc.getNumberOfLines(); j++) {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(lineName,
                                                            a_ctxt);
       my_editor_lines.add(j, lc);
-      lc.setIndex(a_ctxt.getMethodNo());
+      lc.setMethodNo(a_ctxt.getMethodNo());
       if (lc.isCommentStart()) { // ignore comments
         j = swallowEmptyLines(my_doc, j, a_ctxt);
         continue;
@@ -253,13 +255,44 @@ public class InitParser {
       if (lc instanceof EmptyLineController) { //method end
         return swallowEmptyLines(my_doc, j, a_ctxt);
       }
-      if (lc.addHandle(ih, il, mg, a_method_no - 1)) { //instruction line
-        my_instruction_no++;
-        my_instructions.add(ic++, lc);
-        handleComments(lc);
+      if (lc instanceof InstructionLineController) { //instruction line
+        handleleInstructionLine(lc, mg, il, iter);
       }
     }
     return j;
+  }
+
+  /*@
+    @ requires a_methgen.getInstructionList() == an_ilist;
+    @*/
+  /**
+   * This method incorporates the given instruction line controller into the
+   * internal structures and binds the controller with BCEL representation
+   * of its instruction. The iterator {@code an_iter} iterates over the
+   * instruction list {@code an_ilist} from the {@link MethodGen} object
+   * in {@code a_methgen}. When the iterator has the next instruction this
+   * instruction handle is associated with the given {@link BytecodeController}
+   * object {@code a_lctrl} together with the given instruction list and
+   * {@link MethodGen}. Except for that the method add the line controller
+   * to the instructions structure and handles the comments for the line.
+   *
+   * @param a_lctrl the line controller which is handled
+   * @param a_methgen a BCEL representation of method in which the instruction
+   *   lies
+   * @param an_ilist an instruction list from the method above
+   * @param an_iter the iterator in the instruction list above
+   */
+  private void handleleInstructionLine(final BytecodeLineController a_lctrl,
+                                       final MethodGen a_methgen,
+                                       final InstructionList an_ilist,
+                                       final Iterator an_iter) {
+    InstructionHandle ih = null;
+    if (an_iter.hasNext())
+      ih = (InstructionHandle)(an_iter.next());
+    a_lctrl.addHandle(ih, an_ilist, a_methgen);
+    my_instruction_no++;
+    my_instructions.add(a_lctrl);
+    handleComments(a_lctrl);
   }
 
   /**
@@ -292,7 +325,7 @@ public class InitParser {
         break;
       }
       my_editor_lines.add(j, lc);
-      lc.setIndex(a_ctxt.getMethodNo());
+      lc.setMethodNo(a_ctxt.getMethodNo());
       j++;
     }
     return j;
@@ -377,8 +410,8 @@ public class InitParser {
     String nl = a_line_text.substring(i +
                                   BytecodeStrings.SINGLE_LINE_COMMENT_MARK_LEN,
                                   a_line_text.length());
-    if (a_line_text.indexOf('\n') != 0)
-      nl = nl.substring(0, a_line_text.indexOf('\n'));
+    if (nl.indexOf('\n') >= 0)
+      nl = nl.substring(0, nl.indexOf('\n'));
     return nl;
   }
 

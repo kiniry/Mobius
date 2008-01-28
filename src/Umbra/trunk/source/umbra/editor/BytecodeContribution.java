@@ -24,9 +24,9 @@ import umbra.instructions.BytecodeController;
 
 /**
  * This class represents a GUI element that is contributed to the
- * eclipse GUI by the bytecode editor.
+ * eclipse GUI by the byte code editor.
  *
- * change performed in a bytecode editor.
+ * change performed in a byte code editor.
  * TODO more detailed description is needed
  *
  * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
@@ -89,6 +89,8 @@ public class BytecodeContribution extends ControlContribution {
    */
   private String[] my_comment_array;
 
+  private String[] my_interline;
+
   /* *
    * The current bytecode editor for which the contribution works.
    */
@@ -114,9 +116,11 @@ public class BytecodeContribution extends ControlContribution {
    * @param a_comment_array contains the texts of end-of-line comments, the
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account
+   * @param an_interline interline comments
    */
   private void init(final BytecodeDocument a_doc,
-                    final String[] a_comment_array) {
+                    final String[] a_comment_array,
+                    final String[] an_interline) {
     my_bcc = new BytecodeController();
     my_bcc.init(a_doc, a_comment_array);
     if (my_mod_table_flag) {
@@ -169,7 +173,7 @@ public class BytecodeContribution extends ControlContribution {
       if (!my_ready_flag) {
         if (an_event.fDocument instanceof BytecodeDocument) {
           init((BytecodeDocument)an_event.fDocument,
-               my_comment_array); //this marks my_ready_flag as true
+               my_comment_array, my_interline); //this marks my_ready_flag as true
         } else {
           //This should not happen as we operate in a byte code editor
           UmbraPlugin.messagelog("You are not editing a byte code document");
@@ -190,7 +194,7 @@ public class BytecodeContribution extends ControlContribution {
 
     /**
      * This method handles the event of the change in the current
-     * bytecode document. This method is called after the textual
+     * byte code document. This method is called after the textual
      * change is made. This method removes all the incorrect and
      * correct lines in the range that has been deleted and adds
      * all the lines in the range that has been added. Then it
@@ -198,7 +202,7 @@ public class BytecodeContribution extends ControlContribution {
      * displays the information on the error.
      *
      * @param an_event the event that triggers the change, it should be
-     * the same as in {@ref #documentAboutToBeChanged(DocumentEvent)}
+     *   the same as in {@link #documentAboutToBeChanged(DocumentEvent)}
      *
      * @see IDocumentListener#documentChanged(DocumentEvent)
      */
@@ -343,10 +347,12 @@ public class BytecodeContribution extends ControlContribution {
    * @param a_comment_array contains the texts of end-of-line comments, the
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account
+   * @param an_interline multi-line comments
    */
-  public final void reinit(String[] a_comment_array) {
+  public final void reinit(String[] a_comment_array, String[] an_interline) {
     my_ready_flag = false;
     my_comment_array = a_comment_array;
+    my_interline = an_interline;
   }
 
   /**

@@ -82,7 +82,7 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
       final FileEditorInput input = new FileEditorInput(file);
       final boolean[] modified = my_btcodeCntrbtn.getModified();
       my_btcodeCntrbtn.setModTable(modified);
-      my_contributor.refreshEditor(my_editor, input, commentTab);
+      my_contributor.refreshEditor(my_editor, input, commentTab, interlineTab);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (CoreException e) {

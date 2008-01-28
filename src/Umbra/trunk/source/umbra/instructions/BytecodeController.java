@@ -106,14 +106,19 @@ public final class BytecodeController {
     }
   }
 
+  /*@
+    @ requires UmbraHelper.DEBUG_MODE;
+    @*/
   /**
    * This method prints out to the standard output the
-   * list of all the incorrect instructions in the controller.
+   * list of all the incorrect instructions in the controller. We assume the
+   * calls to this method are guarded by checks of
+   * {@link UmbraHelper#DEBUG_MODE}.
    */
   public void showAllIncorrectLines()
   {
-    UmbraPlugin.messagelog("" + my_incorrect.size() + " incorrects:");
-    UmbraPlugin.LOG.flush();
+    UmbraPlugin.messagelog("showAllIncorrectLines" + my_incorrect.size() +
+                             " incorrects:");
     for (int i = 0; i < my_incorrect.size(); i++) {
       UmbraPlugin.messagelog(" " +
              ((BytecodeLineController)(my_incorrect.get(i))).getMy_line_text());
@@ -144,7 +149,7 @@ public final class BytecodeController {
    * to the byte code structures of the given byte code document.
    *
    * @param a_doc a byte code document in which the modification has
-   *   been made to
+   *   been made
    * @param a_start_rem a number of the first modified line as counted in the
    *   old version of the document
    * @param an_end_rem a number of the last modified line as counted in the
@@ -155,7 +160,6 @@ public final class BytecodeController {
   public void addAllLines(final IDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
   {
-    try {
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
     // i - index in the removed lines
     // j - index in the inserted lines
@@ -168,9 +172,9 @@ public final class BytecodeController {
       final int off = getInstructionOff(j);
       boolean the_last_flag = false;
       final boolean metEnd = (isEnd(j)) &&
-               (oldlc.getIndex() ==
+               (oldlc.getMethodNo() ==
                 ((InstructionLineController)my_instructions.
-                             get(off)).getIndex());
+                             get(off)).getMethodNo());
       if (metEnd) {
         if (isFirst(j)) {
           the_last_flag = true;
@@ -181,7 +185,7 @@ public final class BytecodeController {
              //ktora checmy wstawic i enter; zle inaczej: enter przed i potem
              //wpisac
         a_next_line = (BytecodeLineController)my_instructions.get(off + 1);
-      my_modified[a_next_line.getIndex()] = true;
+      my_modified[a_next_line.getMethodNo()] = true;
       if (a_start_rem <= j && j <= a_stop) { //we are in the area of inserted
                                              //lines
         try {
@@ -201,9 +205,6 @@ public final class BytecodeController {
       }
     }
     if (UmbraHelper.DEBUG_MODE) controlPrint(1);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     return;
   }
 
@@ -241,12 +242,11 @@ public final class BytecodeController {
     try {
       final String line = a_doc.get(a_doc.getLineOffset(a_j),
                                     a_doc.getLineLength(a_j));
-      //%%
       final String lineName = InitParser.removeCommentFromLine(line);
       final String comment = InitParser.extractCommentFromLine(line, a_context);
       final BytecodeLineController lc = Preparsing.getType(lineName, a_context);
-      lc.setIndex(((BytecodeLineController)my_editor_lines.get(a_j - 1)).
-                                                           getIndex());
+      lc.setMethodNo(((BytecodeLineController)my_editor_lines.get(a_j)).
+                                                           getMethodNo());
       if (comment != null) my_comments.put(lc, comment);
       final Instruction ins = lc.getInstruction();
       if (ins != null) {
@@ -276,7 +276,10 @@ public final class BytecodeController {
 
   /**
    * Checks whether all lines of a selected area are correct
-   * (they satisfy some syntax conditions). TODO check
+   * (they satisfy some syntax conditions). The method inspects all the
+   * lines in the given area as represented in the internal structures
+   * and checks the correctness of their content. In case a line is not
+   * correct, it is added to the structure of incorrect lines.
    *
    * @param a_start the first line number of the area
    * @param an_end the last line number of the area
@@ -300,25 +303,6 @@ public final class BytecodeController {
       }
     }
     return ok;
-  }
-
-  /**
-   * This method strips off the starting numbers, then the colon
-   * character (":") and then the whitespace characters.
-   *
-   * @param a_string the string to strip the initial characters from
-   * @return TODO
-   */
-  protected String removeColonFromLine(final String a_string) {
-    int i = 0;
-    while ((i < a_string.length()) && (Character.isDigit(a_string.charAt(i))))
-      i++;
-    if ((i < a_string.length()) && (a_string.charAt(i) == ':'))
-      i++;
-    while ((i < a_string.length()) &&
-           (Character.isWhitespace(a_string.charAt(i))))
-      i++;
-    return a_string.substring(i, a_string.length());
   }
 
   /**
@@ -358,8 +342,8 @@ public final class BytecodeController {
    * @param a_linenum a number of a line (including all lines in the textual
    *    representation)
    * @return <code>true</code> if <code>a_linenum</code> is a number of an
-   *     instruction in {@ref #my_instructions} array that is the last
-   *     instruction in a method or is a non-istruction one located after the
+   *     instruction in {@link #my_instructions} array that is the last
+   *     instruction in a method or is a non-instruction one located after the
    *     method
    */
   private boolean isEnd(final int a_linenum) {
@@ -367,14 +351,14 @@ public final class BytecodeController {
     if (off + 1 >= my_instructions.size()) return true;
     if (off == -1) return false;
     final int index1 = ((BytecodeLineController)my_instructions.get(off)).
-                                                             getIndex();
+                                                             getMethodNo();
     final int index2 = ((BytecodeLineController)my_instructions.get(off + 1)).
-             getIndex();
+             getMethodNo();
     return (index1 != index2);
   }
 
   /**
-   * @param a_linenum a numebr of a line (including all lines)
+   * @param a_linenum a number of a line (including all lines)
    * @return <code>true</code> if the line is located before the first
    *         instruction in a method TODO any method or a fixed method?
    */
@@ -382,9 +366,9 @@ public final class BytecodeController {
     final int off = getInstructionOff(a_linenum);
     if (off == 0) return true;
     final int index1 = ((BytecodeLineController)my_instructions.get(off)).
-                                                             getIndex();
+                                                             getMethodNo();
     final int index2 = ((BytecodeLineController)my_instructions.get(off - 1)).
-                                                             getIndex();
+                                                             getMethodNo();
     return (index1 != index2);
   }
 
@@ -469,7 +453,12 @@ public final class BytecodeController {
   }
 
   /**
-   * 
+   * This method handles the initial parsing of a byte code textual document.
+   * It creates a parser {@link InitParser} and runs it with the given
+   * document and array with comments pertinent to the instruction lines.
+   * Subsequently, it initialises the internal structures to handle editor
+   * lines, instructions, comments, and modifications.
+   *
    * @param a_doc the byte code document with the corresponding BCEL
    *   structures linked into it
    * @param a_comment_array contains the texts of end-of-line comments, the
@@ -483,12 +472,16 @@ public final class BytecodeController {
     my_editor_lines = initParser.getEditorLines();
     my_instructions = initParser.getInstructions();
     my_comments = initParser.getComments();
-    final int methodNum = ((BytecodeLineController)my_instructions.getLast()).
-      getIndex() + 1;
-    my_modified = new boolean[methodNum];
+    int a_methodnum = 0;
+    if (!my_instructions.isEmpty()) {
+      a_methodnum = ((BytecodeLineController)my_instructions.getLast()).
+                  getMethodNo() + 1;
+    }
+    my_modified = new boolean[a_methodnum];
     for (int a_method_count = 0; a_method_count < my_modified.length;
          a_method_count++)
       my_modified[a_method_count] = false;
+    if (UmbraHelper.DEBUG_MODE) controlPrint(0);
   }
 
 }

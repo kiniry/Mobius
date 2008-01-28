@@ -386,7 +386,8 @@ public class JumpInstruction extends NumInstruction {
 
   /**
    * Jump instruction requires an instruction number of
-   * its target as a parameter.
+   * its target as a parameter. Note that the {@link BranchInstruction}
+   * has only one target.
    *
    * @param an_ins_list an instruction list with the jump instruction
    * @param an_ins the jump instruction to set the target for
@@ -400,12 +401,10 @@ public class JumpInstruction extends NumInstruction {
     int i = 0;
     i = getInd();
     InstructionHandle iha = null;
-    // add parameter to getInstruction
     iha = an_ins_list.findHandle(i);
     if (iha == null) {
       throw new UmbraException();
     }
     ((BranchInstruction)an_ins).setTarget(iha);
-    //UmbraPlugin.messagelog("Just failed");
   }
 }

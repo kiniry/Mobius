@@ -112,8 +112,8 @@ public class LdcInstruction extends OtherInstruction {
     res = parseTillMnemonic(); //parse up to mnemonic
     res = res && (parser.swallowMnemonic(BytecodeStrings.LDC_INS) >= 0);
                            //mnemonic
-    res = res && parser.swallowWhitespace(); //whitespace before the classname
-    if (parser.getLine().charAt(getIndex()) == '\"') {
+    res = res && parser.swallowWhitespace(); //whitespace before the string
+    if (parser.getLine().charAt(parser.getIndex()) == '\"') {
       res = res && stringWithDelimiters(parser);
     } else {
       res = res && parser.swallowNumber();

@@ -8,10 +8,12 @@
  */
 package umbra.editor.actions;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
@@ -88,7 +90,10 @@ public class BytecodeColorAction extends Action {
     Composition.setMod(my_mod);
     if (my_active_editor != null) {
       try {
-        my_contributor.refreshEditor(my_active_editor);
+        final IFile file = ((FileEditorInput)my_active_editor.
+            getEditorInput()).getFile();
+        final FileEditorInput input = new FileEditorInput(file);
+        my_contributor.refreshEditor(my_active_editor, input, null, null);
       } catch (PartInitException e) {
         MessageDialog.openWarning(my_active_editor.getSite().getShell(),
             "Bytecode", "Cannot open a new editor after closing " +

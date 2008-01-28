@@ -57,8 +57,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
    UnclassifiedInstruction.class};
 
   /**
-   * The list of instructions in the method in which the current instruction
-   * occurs.
+   * The list of instructions in the method to which the current instruction
+   * belongs.
    */
   private InstructionList my_instr_list;
 
@@ -114,17 +114,15 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param a_method_gen the object which represents the method of the current
    *    instruction in the BCEL representation of the current class
    *    in the byte code editor
-   * @param a_method_num method number in the current class
    * @return always true as the subclasses of the current class correspond to
    *     instructions
    */
   public final boolean addHandle(final InstructionHandle a_handle,
                final InstructionList a_list,
-               final MethodGen a_method_gen, final int a_method_num) {
+               final MethodGen a_method_gen) {
     this.my_instr_handle = a_handle;
     this.my_instr_list = a_list;
     this.my_methodgen = a_method_gen;
-    setIndex(a_method_num);
     return true;
   }
 
@@ -266,7 +264,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
     my_methodgen = an_old_line.getMethod();
     my_instr_list = an_old_line.getList();
     my_instr_handle = an_old_line.getHandle();
-    setIndex(an_old_line.getIndex());
+    setMethodNo(an_old_line.getMethodNo());
     if (my_instr_handle == null) {
       initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
                  the_instructions, an_off);
@@ -289,7 +287,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param a_classgen a class generator from BCEL
    */
   private void updateMethod(final ClassGen a_classgen) {
-    final Method oldMet = a_classgen.getMethodAt(getIndex());
+    final Method oldMet = a_classgen.getMethodAt(getMethodNo());
     a_classgen.replaceMethod(oldMet, my_methodgen.getMethod());
     //UmbraPlugin.messagelog(cg.getMethodAt(my_index).getCode().toString());
   }
@@ -302,8 +300,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
-   * @return the BCEL list of the instructions in the method that contains
-   *   the current instruction
+   * @return the BCEL list of the instructions of the method to which the
+   *   current instruction belongs
    */
   public final InstructionList getList() {
     return my_instr_list;
@@ -358,7 +356,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
       my_instr_list.delete(my_instr_handle);
     } catch (TargetLostException e) {
       //This should not happen as the instruction my_instr_handle has been
-      //retargeted
+      //re-targeted
       UmbraPlugin.messagelog("IMPOSSIBLE: dispose generated exception " +
                              "in InstructionLineController.dispose(...)");
     }

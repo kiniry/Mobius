@@ -118,10 +118,10 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * FIXME this method should also pop up messages in case exceptions
    *       are thrown
    *
-   * @param a_file a file edited currently by the bytecode editor
+   * @param a_file a file edited currently by the byte code editor
    * @param a_path a workspace relative path to a Java source code file
-   * @param the_last_segment the strign which represents the last segment of
-   *        the classfile file name corresponding to the file edited by the
+   * @param the_last_segment the string which represents the last segment of
+   *        the class file file name corresponding to the file edited by the
    *        editor
    */
   private void updateMethods(final IFile a_file,
@@ -144,7 +144,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       my_editor.setJavaClass(jc);
       my_editor.refreshBytecode(a_path, null, null);
       final IEditorInput input = new FileEditorInput(a_file);
-      getContributor().refreshEditor(my_editor, input, null);
+      getContributor().refreshEditor(my_editor, input, null, null);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {

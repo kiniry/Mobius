@@ -9,6 +9,7 @@
 package umbra.instructions.ast;
 import java.util.LinkedList;
 
+import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
@@ -51,7 +52,7 @@ public abstract class BytecodeLineController {
    * Values not less than zero mean the line is associated with a method.
    * Values less than zero mean the line is not associated with any method.
    */
-  private int my_index;
+  private int my_methodno;
 
   /**
    * The string representation of the line in the byte code file that contains
@@ -70,7 +71,7 @@ public abstract class BytecodeLineController {
     super();
     my_line_text = a_line;
     my_parser = new InstructionParser(a_line);
-    my_index = -1;
+    my_methodno = -1;
   }
 
   /**
@@ -85,15 +86,12 @@ public abstract class BytecodeLineController {
    * @param a_methodgen the object which represents the method of the current
    *    instruction in the BCEL representation of the current class
    *    in the byte code editor
-   * @param an_index method number in the current class
    * @return true when the current line corresponds to an instruction, false
    *     otherwise
    */
   public boolean addHandle(final InstructionHandle an_ihandle,
                final InstructionList a_ilist,
-               final MethodGen a_methodgen,
-               final int an_index) {
-    my_index = an_index;
+               final MethodGen a_methodgen) {
     return false;
   }
 
@@ -112,15 +110,20 @@ public abstract class BytecodeLineController {
 
 
   /**
-   * TODO.
+   * Sets the target of the given instruction.
+   * This method is used to provide a common interface for all the instructions,
+   * but the actual work is done only in case of the jump instructions. Here
+   * it does nothing.
    *
-   * @param an_ilist TODO
-   * @param an_ins TODO
-   * @throws UmbraException TODO
+   * @param an_ilist an instruction list with the jump instruction
+   * @param an_ins the instruction to set the target for
+   * @throws UmbraException when the instruction has improper target
+   * @see umbra.instructions.ast.BytecodeLineController#setTarget(
+   *                            org.apache.bcel.generic.InstructionList,
+   *                            org.apache.bcel.generic.Instruction)
    */
   public void setTarget(final InstructionList an_ilist,
                         final Instruction an_ins) throws UmbraException {
-
   }
 
   /**
@@ -205,8 +208,8 @@ public abstract class BytecodeLineController {
    *
    * @return method number
    */
-  public final int getIndex() {
-    return my_index;
+  public final int getMethodNo() {
+    return my_methodno;
   }
 
 
@@ -254,8 +257,8 @@ public abstract class BytecodeLineController {
    *
    * @param an_index number of the method
    */
-  public void setIndex(final int an_index) {
-    my_index = an_index;
+  public void setMethodNo(final int an_index) {
+    my_methodno = an_index;
   }
 
   /**

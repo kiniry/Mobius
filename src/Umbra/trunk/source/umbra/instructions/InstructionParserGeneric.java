@@ -99,7 +99,7 @@ public class InstructionParserGeneric {
    *
    * @return the index in the current line
    */
-  protected int getIndex() {
+  public int getIndex() {
     return my_index;
   }
 
