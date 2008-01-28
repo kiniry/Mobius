@@ -257,12 +257,21 @@ BEGIN
         contains_no_method_call(guard_to_expression(a)(guard(t))(v))
 
 
+  action_sources_contains_no_method_calls : AXIOM
+    FORALL(a : MVA, t : Transition) :
+      wf_MVA(a) IMPLIES
+      ts(a)(t) IMPLIES
+        FORALL(l : OneAction) :
+          member(l, action(t)) IMPLIES
+            contains_no_method_call(source(l))
+
   % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
   % Since we only consider the PSt of the state of the program, actions can not
   % talk about existing ghost variables in the monitored program, but that is 
   % fine since we assumed that they are fields (although it could be extended to
   % handle ghosts as well).
   eval(e : Expr)(stA : Store, stP : PSt) : Val
+
 
   execute_action(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
     IF null?(l)

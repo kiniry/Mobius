@@ -31,10 +31,17 @@ BEGIN
   derive_equivalence : LEMMA % :-)
     FORALL(mp : (wf_MP), b : (wf_Body(program(mp))),
            sAP1, sAP2 : APState, v : Val, n : nat) :
-      contains_no_method_call(program(mp))(b) IMPLIES
+      contains_no_method_call(b) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
       derive(ann_program(mp))(b, sAP1, v, sAP2)(n) IMPLIES
         derive(mp)(b, make_MPState(mp)(sAP1), v, make_MPState(mp)(sAP2))(n)
+
+  ann_actions_contains_no_method_calls : LEMMA % :-)
+    FORALL(l : Action) :
+      (FORALL (oa : OneAction) : 
+         member(oa, l) IMPLIES contains_no_method_call(source(oa))) IMPLIES
+      contains_no_method_call(ann_action(l))
+
 
   contains_no_method_call_preserved_by_ann_program : LEMMA
     FORALL(mp : (wf_MP)) :
@@ -42,13 +49,13 @@ BEGIN
       contains_no_method_call_in_sets_in_program(ann_program(mp))
 
 
-  IMPORTING OnlyJMLExceptionInSet[Name, Program, APState, id, 
+  IMPORTING WfSetStmts[Name, Program, APState, id, 
                              LAMBDA(s : APState) : pstate(s), lookup,
                              update_PState, execute_set, execute_assert,
                              execute_CaseJML, on_method_entry,
                              on_method_exit_normal, 
                              on_method_exit_exceptional],
-            OnlyJMLExceptionInSet[Name, MonitoredProgram, MPState,
+            WfSetStmts[Name, MonitoredProgram, MPState,
                              LAMBDA(mp : MonitoredProgram) : program(mp),
                              LAMBDA(s : MPState) : pstate(s),
                              lookup, update_PState, execute_set,
@@ -56,11 +63,11 @@ BEGIN
                              on_method_entry_MP, on_method_exit_normal_MP,
                              on_method_exit_exceptional_MP]
 
-  only_JMLExc_in_sets_preserved_by_ann_program : LEMMA
+  wf_set_stmts_preserved_by_ann_program : LEMMA
     FORALL(mp : (wf_MP)) :
-      only_JMLExc_in_sets_in_program(mp) IMPLIES
+      wf_set_stmts(mp) IMPLIES
       actions_have_no_side_effects(mp) IMPLIES
-      only_JMLExc_in_sets_in_program(ann_program(mp))
+      wf_set_stmts(ann_program(mp))
 
 
 END MoreAnnotatedProgramProperties
