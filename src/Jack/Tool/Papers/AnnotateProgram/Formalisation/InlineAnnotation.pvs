@@ -171,21 +171,21 @@ BEGIN
     TryCatch(
        TryCatch(
         Sequence(
-          pre_set(m),
+          pre_set(m)(lookup_local(arg(m))),
           Sequence(
             body(m),
             StmtExpr(Assign(ex(p)(m), BExpr(TT))))),
                              % this is only executed if body terminates
                              % normally
          Throwable,
-         exc_set(m),
+         exc_set(m)(Throwable),
          Skip),
        NullPointer,
-       exc_set(m),
+       exc_set(m)(NullPointer),
        IfThenElse(
          BoolVarEval(ex(p)(m)),
          Sequence(StmtExpr(Assign(res(p)(m), res(m))),
-                  post_set(m)),
+                  post_set(m)(lookup_local(res(p)(m)))),
          Skip))
          
 
