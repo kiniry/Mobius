@@ -184,4 +184,8 @@ public class LineContext {
   public int getMethodNo() {
     return my_method;
   }
+
+  public void setMethodNo(int a_methodno) {
+    my_method = a_methodno;
+  }
 }

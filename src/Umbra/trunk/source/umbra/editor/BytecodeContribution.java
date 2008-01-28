@@ -173,7 +173,8 @@ public class BytecodeContribution extends ControlContribution {
       if (!my_ready_flag) {
         if (an_event.fDocument instanceof BytecodeDocument) {
           init((BytecodeDocument)an_event.fDocument,
-               my_comment_array, my_interline); //this marks my_ready_flag as true
+               my_comment_array, my_interline); //this marks my_ready_flag as
+                                                //true
         } else {
           //This should not happen as we operate in a byte code editor
           UmbraPlugin.messagelog("You are not editing a byte code document");

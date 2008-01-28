@@ -1,0 +1,276 @@
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package umbra.instructions;
+
+import java.util.Hashtable;
+import java.util.LinkedList;
+
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.MethodGen;
+import org.eclipse.jface.text.BadLocationException;
+
+import umbra.UmbraException;
+import umbra.editor.BytecodeDocument;
+import umbra.editor.parsing.BytecodeStrings;
+import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.InstructionLineController;
+
+/**
+ * @author alx
+ * @version a-01
+ *
+ */
+public class BytecodeTextParser {
+
+
+  /**
+   * Removes an one-line comment from a line of byte code.
+   *
+   * @param a_line a line of byte code
+   * @return the byte code line without end-of-line comment and final
+   *   whitespace
+   */
+  public static final String removeCommentFromLine(final String a_line) {
+    String res;
+    int j = a_line.length() - 1;
+
+    final int k = (a_line.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK, 0));
+    if (k != -1)
+      j = k - 1;
+    while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
+      j--;
+    res = a_line.substring(0, j + 1) + "\n";
+    return res;
+  }
+
+
+  /**
+   * The list of all the lines in the editor which contain codes of
+   * instructions. These are represented as objects the classes of which
+   * are subclasses of {@link InstructionLineController}.
+   */
+  private LinkedList my_instructions;
+
+  /**
+   * A temporary counter of instruction lines. It is used to synchronise the
+   * currently parsed document with an old comments structure.
+   */
+  private int my_instruction_no;
+
+
+  /**
+   * The list of all the lines in the current byte code editor. These lines
+   * are stored as objects the classes of which are subclasses of
+   * {@link BytecodeLineController}.
+   */
+  private LinkedList my_editor_lines;
+
+  /**
+   * This field contains the value of the end-of-line comment from the currently
+   * parsed line.
+   */
+  private String my_current_comment;
+
+
+  /**
+   * The container of associations between the Umbra representation of lines
+   * in the byte code editor and the end-of-line comments in these lines.
+   * The comments must be absent from the line representation for their
+   * correct parsing so they are held in this additional structure.
+   */
+  private Hashtable my_comments;
+
+
+  /**
+   * This field contains the texts of end-of-line comments which were introduced
+   * in the previous session with, the current document. The i-th entry contains
+   * the comment for the i-th instruction in the document, if this array
+   * is null then the array is not taken into account.
+   */
+  private String[] my_comment_array;
+
+  /**
+   * 
+   *
+   */
+  protected BytecodeTextParser(String[] a_comment_array) {
+    super();
+    my_editor_lines = new LinkedList();
+    my_instructions = new LinkedList();
+    my_comment_array = a_comment_array;
+    my_comments = new Hashtable();
+  }
+
+  /**
+   * Returns the list of all the lines in the internal representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent all the lines in the currently parsed document
+   */
+  public LinkedList getEditorLines() {
+    return my_editor_lines;
+  }
+
+  /**
+   * Returns the list of all the lines with instructions in the internal
+   * representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent the lines with instructions in the currently parsed document
+   */
+  public LinkedList getInstructions() {
+    return my_instructions;
+  }
+
+
+  /**
+   * This method retrieves from the given byte code document the BCEL structure
+   * corresponding to the method of the given number. This method checks if
+   * there are enough methods in the BCEL structure of the document and in
+   * case there are not enough of them it throws an exception.
+   *
+   * @param a_doc a document to retrieve the BCEL structure of a method
+   * @param a_method_no the method number of the method to retrieve the
+   *    structure for
+   * @return the BCEL structure which describes the method
+   * @throws UmbraException in case the given method number is wrong
+   */
+  protected static MethodGen getMethodGenFromDoc(final BytecodeDocument a_doc,
+                                                 final int a_method_no)
+    throws UmbraException {
+    final ClassGen cg = a_doc.getClassGen();
+    final Method[] methods = cg.getMethods();
+    if (a_method_no >= methods.length) // too many methods
+      throw new UmbraException();
+
+    final MethodGen mg = new MethodGen(methods[a_method_no], cg.getClassName(),
+                                       cg.getConstantPool());
+    return mg;
+  }
+  
+
+  /**
+   * This method returns the {@link String} with the given line of the given
+   * document. Additionally, the method extracts the end-of-line comment and
+   * stores it in the internal state of the current object. The method needs
+   * the parsing context in case the line is a part of a multi-line context.
+   * In that case, the end-of-line comment should not be extracted.
+   *
+   * @param a_doc a document to extract the line from
+   * @param a_line the line number of the line to be extracted
+   * @param a_ctxt a context which indicates if we are inside a comment
+   * @return the string with the line content (with the end-of-line comment
+   *   stripped off)
+   * @throws BadLocationException in case the given line number is not within
+   *   the given document
+   */
+  protected String getLineFromDoc(final BytecodeDocument a_doc,
+                                  final int a_line,
+                                  final LineContext a_ctxt)
+    throws BadLocationException {
+    final String line = a_doc.get(a_doc.getLineOffset(a_line),
+                                  a_doc.getLineLength(a_line));
+    final String lineName;
+    if (a_ctxt.isInsideComment() || a_ctxt.isInsideAnnotation()) {
+      lineName = removeCommentFromLine(line);
+      my_current_comment = extractCommentFromLine(line, a_ctxt);
+    } else {
+      lineName = line;
+      my_current_comment = null;
+    }
+    return lineName;
+  }
+
+
+  /**
+   * The method checks if the given line contains a single line comment
+   * and extracts the comment string. In case there is no
+   * comment in the line, it returns <code>null</code>.
+   * In case the parsing context is such that we are inside a many-line
+   * comment, then the comment inside a line is always empty.
+   * Additionally, this method removes the end-of-line char from the
+   * string.
+   *
+   * @param a_line_text the line to check for my_comments
+   * @param a_ctxt the parsing context for the line
+   * @return comment or <code>null</code> in case there is no comment in the
+   *         line
+   */
+  public static String extractCommentFromLine(final String a_line_text,
+                                        final LineContext a_ctxt) {
+    if (a_ctxt.isInsideComment()) return null;
+    final int i = a_line_text.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK);
+    if (i == -1) {
+      return null;
+    }
+    String nl = a_line_text.substring(i +
+                                  BytecodeStrings.SINGLE_LINE_COMMENT_MARK_LEN,
+                                  a_line_text.length());
+    if (nl.indexOf('\n') >= 0)
+      nl = nl.substring(0, nl.indexOf('\n'));
+    return nl;
+  }
+
+  /**
+   * @return the value of the current comment
+   */
+  public String getCurrentComment() {
+    return my_current_comment;
+  }
+
+  /**
+   * @param a_comment the current comment value to set
+   */
+  public void setCurrentComment(final String a_comment) {
+    this.my_current_comment = my_current_comment;
+  }
+
+
+  /**
+   * This method stores in the local comments structure the information about
+   * the currently extracted comment. It also handles the enriching of the
+   * comments in the current version of the document with the information
+   * from the previous one the content of which was refreshed.
+   *
+   * @param a_lc the line controller to associate the comment to
+   */
+  protected void handleComments(final BytecodeLineController a_lc) {
+    if (my_current_comment != null) {
+      my_comments.put(a_lc, my_current_comment);
+      my_current_comment = null;
+    }
+    if (my_comment_array != null) {
+      if (my_comment_array[my_instruction_no] != null) {
+        my_comments.put(a_lc, my_current_comment);
+      }
+    }
+  }
+
+
+  /**
+   * Returns the association between the lines in the internal Umbra
+   * representation and the end-of-line comments present in the textual
+   * representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent the lines with instructions in the currently parsed document
+   */
+  public Hashtable getComments() {
+    return my_comments;
+  }
+  
+  protected void initInstructionNo() {
+    my_instruction_no = 0;
+  }
+  
+  protected void incInstructionNo() {
+   my_instruction_no++;
+  }
+}

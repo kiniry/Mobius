@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -163,49 +164,69 @@ public final class BytecodeController {
     final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
     // i - index in the removed lines
     // j - index in the inserted lines
-    for (int i = a_start_rem, j = a_start_rem;
-         (i <= an_end_rem || j <= a_stop) && i < my_editor_lines.size();
-         i++, j++) {
-      final BytecodeLineController oldlc =
-                                 (BytecodeLineController)my_editor_lines.get(j);
-      BytecodeLineController a_next_line = null;
-      final int off = getInstructionOff(j);
-      boolean the_last_flag = false;
-      final boolean metEnd = (isEnd(j)) &&
-               (oldlc.getMethodNo() ==
-                ((InstructionLineController)my_instructions.
-                             get(off)).getMethodNo());
-      if (metEnd) {
-        if (isFirst(j)) {
-          the_last_flag = true;
-          a_next_line = (BytecodeLineController)my_instructions.get(off);
-        } else
-          a_next_line = (BytecodeLineController)my_instructions.get(off - 1);
-      } else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed
-             //ktora checmy wstawic i enter; zle inaczej: enter przed i potem
-             //wpisac
-        a_next_line = (BytecodeLineController)my_instructions.get(off + 1);
-      my_modified[a_next_line.getMethodNo()] = true;
-      if (a_start_rem <= j && j <= a_stop) { //we are in the area of inserted
-                                             //lines
-        try {
-          i = addInstructions(a_doc, a_start_rem, an_end_rem, i, j, oldlc,
-                    a_next_line, the_last_flag, metEnd, new LineContext());
-        } catch (UmbraException e) {
-          MessageDialog.openInformation(new Shell(), "Bytecode",
-                      "A jump instruction has improper destination");
-          break;
-        }
-      } else { // we are beyond the area of the inserted instructions
-        if (a_start_rem <= i && i <= an_end_rem) {
-          oldlc.dispose(a_next_line, cg, the_last_flag, my_instructions, off);
-          my_editor_lines.remove(oldlc);
-          j--;
-        }
-      }
-    }
+    final int methodno = ((BytecodeLineController)my_editor_lines.
+        get(a_start_rem)).getMethodNo();
+    final FragmentParser fgmparser = new FragmentParser(
+      (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno, null);
+    fgmparser.runParsing();
+    updateStructures((BytecodeDocument)a_doc, methodno,
+                     fgmparser.getEditorLines(),
+                     fgmparser.getInstructions(), fgmparser.getComments());
+
+//    for (int i = a_start_rem, j = a_start_rem;
+//         (i <= an_end_rem || j <= a_stop) && i < my_editor_lines.size();
+//         i++, j++) {
+//      final BytecodeLineController oldlc =
+//                                 (BytecodeLineController)my_editor_lines.get(j);
+//      BytecodeLineController a_next_line = null;
+//      final int off = getInstructionOff(j);
+//      boolean the_last_flag = false;
+//      final boolean metEnd = (isEnd(j)) &&
+//               (oldlc.getMethodNo() ==
+//                ((InstructionLineController)my_instructions.
+//                             get(off)).getMethodNo());
+//      if (metEnd) {
+//        if (isFirst(j)) {
+//          the_last_flag = true;
+//          a_next_line = (BytecodeLineController)my_instructions.get(off);
+//        } else
+//          a_next_line = (BytecodeLineController)my_instructions.get(off - 1);
+//      } else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed
+//             //ktora checmy wstawic i enter; zle inaczej: enter przed i potem
+//             //wpisac
+//        a_next_line = (BytecodeLineController)my_instructions.get(off + 1);
+//      my_modified[a_next_line.getMethodNo()] = true;
+//      if (a_start_rem <= j && j <= a_stop) { //we are in the area of inserted
+//                                             //lines
+//        try {
+//          i = addInstructions(a_doc, a_start_rem, an_end_rem, i, j, oldlc,
+//                    a_next_line, the_last_flag, metEnd, new LineContext());
+//        } catch (UmbraException e) {
+//          MessageDialog.openInformation(new Shell(), "Bytecode",
+//                      "A jump instruction has improper destination");
+//          break;
+//        }
+//      } else { // we are beyond the area of the inserted instructions
+//        if (a_start_rem <= i && i <= an_end_rem) {
+//          oldlc.dispose(a_next_line, cg, the_last_flag, my_instructions, off);
+//          my_editor_lines.remove(oldlc);
+//          j--;
+//        }
+//      }
+//    }
     if (UmbraHelper.DEBUG_MODE) controlPrint(1);
     return;
+  }
+
+  private void updateStructures(BytecodeDocument a_doc, 
+                                int methodno,
+                                LinkedList editorLines,
+                                LinkedList instructions,
+                                Hashtable comments) {
+    ClassGen cg = a_doc.getClassGen();
+    MethodGen mg = new MethodGen(cg.getMethodAt(methodno),
+                                 cg.getClassName(), cg.getConstantPool());
+    
   }
 
   /**
