@@ -332,10 +332,10 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param the_next_line the line after the removed one; it becomes a target of
    *   any jump instruction directed to the removed one
    * @param a_classgen a class generator from BCEL, this should be the same as
-   *   in the {@ref BytecodeDocument} object for the currently edited
+   *   in the {@link BytecodeDocument} object for the currently edited
    *   byte code file
    * @param the_last currently not used
-   * @param the_instructions an array from {@ref BytecodeController} that
+   * @param the_instructions an array from {@link BytecodeController} that
    *   contains the current line
    * @param an_off an offset in the <code>the_instructions</code> array which
    *   points to the instruction to be removed

@@ -20,6 +20,8 @@ import umbra.UmbraException;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CommentLineController;
+import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.InstructionLineController;
 
 /**
@@ -273,4 +275,41 @@ public class BytecodeTextParser {
   protected void incInstructionNo() {
    my_instruction_no++;
   }
+  
+  /**
+   * This method parses from the given document lines which are considered
+   * to be empty lines in the given context. A line is empty when it
+   * contains white spaces only or is one of the possible kinds of
+   * comment lines. The parsing stops at the first line which cannot
+   * be considered empty. This line will be parsed once more by the subsequent
+   * parsing procedure.
+   *
+   * @param a_doc a document to extract empty lines from
+   * @param the_current_lno the first line to be analysed
+   * @param a_ctxt a parsing context in which the document is analysed
+   * @return the first line which is not an empty line; in case the end
+   *   of the document is reached this is the number of lines in the
+   *   document
+   * @throws BadLocationException in case the method reaches a line number
+   *   which is not within the given document
+   */
+  protected int swallowEmptyLines(final BytecodeDocument a_doc,
+                                  final int the_current_lno,
+                                  final LineContext a_ctxt)
+    throws BadLocationException {
+    int j = the_current_lno;
+    while (j < a_doc.getNumberOfLines()) {
+      final String line = getLineFromDoc(a_doc, j, a_ctxt);
+      final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
+      if (!(lc instanceof CommentLineController)  &&
+          !(lc instanceof EmptyLineController)) {
+        break;
+      }
+      getEditorLines().add(j, lc);
+      lc.setMethodNo(a_ctxt.getMethodNo());
+      j++;
+    }
+    return j;
+  }
+
 }

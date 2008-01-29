@@ -75,33 +75,24 @@ public class FragmentParser extends BytecodeTextParser {
     ctxt.seClassToBeRead();
     ctxt.setMethodNo(my_methodno);
     int a_line_no = my_start;
-    while (a_line_no <= my_end) {
-      try {
-        a_line_no = swallowMethodBodyFragment(a_line_no, my_end,
-                                              my_methodno, ctxt);
-      } catch (BadLocationException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode",
-                      "The current document has no positions for line " +
-                      a_line_no);
-        break;
-      } catch (UmbraException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode",
-                      "The current document has too many methods (" +
-                      my_methodno + ")");
-        break;
-      }
+    try {
+      a_line_no = swallowMethodBodyFragment(a_line_no, my_end, ctxt);
+    } catch (BadLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode",
+                      "The current document has no positions for a line " +
+                      "after " + a_line_no);
+    } catch (UmbraException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode",
+                         "The current document has too many methods (" +
+                         my_methodno + ")");
     }
+    if (a_line_no > my_end)
+      throw new UmbraRuntimeException();
   }
 
   private int swallowMethodBodyFragment(int a_start, int an_end,
-                                        int a_methodno,
                                         LineContext a_ctxt)
     throws BadLocationException, UmbraException {
-    final MethodGen mg = BytecodeTextParser.getMethodGenFromDoc(my_doc,
-      a_methodno);
-    final InstructionList il = mg.getInstructionList();
-    il.setPositions();
-    final Iterator iter = il.iterator();
     int j = an_end;
     for (; j <= an_end; j++) {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
@@ -119,8 +110,8 @@ public class FragmentParser extends BytecodeTextParser {
       if (lc instanceof EmptyLineController) { //method end
         return swallowEmptyLines(my_doc, j, a_ctxt);
       }
-      if (lc instanceof InstructionLineController) { //instruction line
-        handleleInstructionLine(lc, mg, il, iter);
+      if (!(lc instanceof InstructionLineController)) { //instruction line
+        throw new UmbraRuntimeException();
       }
     }
     return j;

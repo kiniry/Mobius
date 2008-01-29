@@ -13,6 +13,6 @@ package umbra;
  * @version a-01
  *
  */
-public class UmbraRuntimeException extends Exception {
+public class UmbraRuntimeException extends RuntimeException {
 
 }

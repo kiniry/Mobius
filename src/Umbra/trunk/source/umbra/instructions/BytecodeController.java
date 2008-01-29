@@ -168,7 +168,12 @@ public final class BytecodeController {
         get(a_start_rem)).getMethodNo();
     final FragmentParser fgmparser = new FragmentParser(
       (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno, null);
-    fgmparser.runParsing();
+    fgmparser.runParsing(); // after that I must know all the instructions are
+                            //correct
+    updateInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
+    updateEditorLines(a_start_rem, an_end_rem, a_stop,
+                      fgmparser.getEditorLines());
+    updateComments();
     updateStructures((BytecodeDocument)a_doc, methodno,
                      fgmparser.getEditorLines(),
                      fgmparser.getInstructions(), fgmparser.getComments());
@@ -218,6 +223,28 @@ public final class BytecodeController {
     return;
   }
 
+  private void updateInstructions(int a_start_rem, int an_end_rem,
+                                  LinkedList instructions) {
+    int first = -1;
+    for (int i = a_start_rem; i <= an_end_rem; i++) {
+      Object o = my_editor_lines.get(i);
+      if (first < 0) {
+        first = my_instructions.indexOf(o);
+      }
+      my_instructions.remove(o);
+    }
+    my_instructions.addAll(first, instructions);
+  }
+
+  private void updateEditorLines(final int a_start_rem,
+                                 final int an_end_rem,
+                                 final int a_stop,
+                                 final LinkedList editorLines) {
+    for (int i = a_start_rem; i <= an_end_rem; i++)
+      my_editor_lines.remove(i);
+    my_editor_lines.addAll(a_start_rem, editorLines);
+  }
+
   private void updateStructures(BytecodeDocument a_doc, 
                                 int methodno,
                                 LinkedList editorLines,
@@ -226,7 +253,10 @@ public final class BytecodeController {
     ClassGen cg = a_doc.getClassGen();
     MethodGen mg = new MethodGen(cg.getMethodAt(methodno),
                                  cg.getClassName(), cg.getConstantPool());
+
     
+    
+    updateMethodGen();
   }
 
   /**
