@@ -8,7 +8,9 @@
  */
 package umbra.instructions;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.apache.bcel.generic.ClassGen;
@@ -24,7 +26,10 @@ import umbra.UmbraException;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
+import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CommentLineController;
+import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.InstructionLineController;
 
 /**
@@ -161,9 +166,6 @@ public final class BytecodeController {
   public void addAllLines(final IDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
   {
-    final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
-    // i - index in the removed lines
-    // j - index in the inserted lines
     final int methodno = ((BytecodeLineController)my_editor_lines.
         get(a_start_rem)).getMethodNo();
     final FragmentParser fgmparser = new FragmentParser(
@@ -171,13 +173,17 @@ public final class BytecodeController {
     fgmparser.runParsing(); // after that I must know all the instructions are
                             //correct
     updateInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
-    updateEditorLines(a_start_rem, an_end_rem, a_stop,
-                      fgmparser.getEditorLines());
-    updateComments();
-    updateStructures((BytecodeDocument)a_doc, methodno,
-                     fgmparser.getEditorLines(),
-                     fgmparser.getInstructions(), fgmparser.getComments());
+    updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
+    try {
+      updateEditorLines(a_start_rem, an_end_rem, a_stop,
+                        fgmparser.getEditorLines());
+    } catch (UmbraException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
+    // i - index in the removed lines
+    // j - index in the inserted lines
 //    for (int i = a_start_rem, j = a_start_rem;
 //         (i <= an_end_rem || j <= a_stop) && i < my_editor_lines.size();
 //         i++, j++) {
@@ -223,6 +229,22 @@ public final class BytecodeController {
     return;
   }
 
+  private void updateComments(int a_start_rem, 
+                              int an_end_rem, 
+                              int a_stop,
+                              Hashtable comments) {
+    for (int i = a_start_rem; i <= an_end_rem; i++) {
+      final Object o = my_editor_lines.get(i);
+      my_comments.remove(o);
+    }
+    for (final Enumeration enumer = comments.keys();
+         enumer.hasMoreElements();) {
+      final Object key = enumer.nextElement();
+      final Object value = comments.get(key);
+      my_comments.put(key, value);
+    }
+  }
+
   private void updateInstructions(int a_start_rem, int an_end_rem,
                                   LinkedList instructions) {
     int first = -1;
@@ -239,24 +261,63 @@ public final class BytecodeController {
   private void updateEditorLines(final int a_start_rem,
                                  final int an_end_rem,
                                  final int a_stop,
-                                 final LinkedList editorLines) {
-    for (int i = a_start_rem; i <= an_end_rem; i++)
+                                 final LinkedList editorLines) throws UmbraException {
+    MethodGen mg = null;
+    if (a_start_rem < an_end_rem) {
+      mg = ((InstructionLineController)my_editor_lines.get(a_start_rem)).
+           getMethod();
+    } else {
+      final InstructionLineController il = getInstructionLineAround(
+                                                   my_editor_lines,
+                                                   a_start_rem);
+      if (il != null) {
+        mg = il.getMethod();
+      } else {
+        throw new UmbraException();
+      }
+    }
+    for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++) {
+      //we replace for the common part
+      final InstructionLineController oldlc =
+        (InstructionLineController)my_editor_lines.get(i);
+      final InstructionLineController newlc =
+        (InstructionLineController)editorLines.get(i);
+      oldlc.replace(newlc);
       my_editor_lines.remove(i);
+      my_editor_lines.add(newlc);
+    }
+    if (an_end_rem < a_stop) { //we must add the new lines
+      for (int i = an_end_rem + 1; i <= a_stop; i++) {
+        final InstructionLineController newlc =
+          (InstructionLineController)editorLines.get(i);
+        newlc.addHandle(mg, i);
+      }
+    } else if (an_end_rem > a_stop) { //we must remove the deleted lines
+      for (int i = a_stop + 1; i <= an_end_rem; i++) {
+        final InstructionLineController oldlc =
+          (InstructionLineController)my_editor_lines.get(i);
+        oldlc.dispose();
+      }
+    }
     my_editor_lines.addAll(a_start_rem, editorLines);
+    mg.getInstructionList().update();
+    mg.update();
+    mg.getInstructionList().setPositions();
   }
 
-  private void updateStructures(BytecodeDocument a_doc, 
-                                int methodno,
-                                LinkedList editorLines,
-                                LinkedList instructions,
-                                Hashtable comments) {
-    ClassGen cg = a_doc.getClassGen();
-    MethodGen mg = new MethodGen(cg.getMethodAt(methodno),
-                                 cg.getClassName(), cg.getConstantPool());
-
-    
-    
-    updateMethodGen();
+  private InstructionLineController getInstructionLineAround(
+                        LinkedList the_editor_lines, int pos) {
+    int i = pos;
+    while (the_editor_lines.get(i) instanceof EmptyLineController ||
+           the_editor_lines.get(i) instanceof AnnotationLineController ||
+           the_editor_lines.get(i) instanceof CommentLineController) {
+      i++;
+    }
+    final Object o = the_editor_lines.get(i);
+    if (o instanceof InstructionLineController) {
+      return (InstructionLineController)o;
+    }
+    return null;
   }
 
   /**

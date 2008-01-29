@@ -20,6 +20,7 @@ import org.apache.bcel.generic.InstructionTargeter;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.TargetLostException;
 
+import umbra.UmbraException;
 import umbra.UmbraPlugin;
 import umbra.instructions.InstructionParser;
 
@@ -133,7 +134,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *
    * This method checks if there is a valid instruction handle for the next
    * instruction (provided as {@code a_next_line}). In that case it checks
-   * if the instruction to be added is valid ({@code an_instruction} and
+   * if the instruction to be added ({@code an_instruction}) is valid and
    * in that case either appends the instruction to the method list (in
    * case the instruction is added at the end of the method (indicated by
    * {@code a_method_end} or inserts it before the instruction from
@@ -405,5 +406,72 @@ public abstract class InstructionLineController extends BytecodeLineController {
     res = res && parser.swallowDelimiter(':'); // :
     res = res && parser.swallowWhitespace(); //whitespace before mnemonic
     return res;
+  }
+
+  /**
+   * This method replaces the current instruction handle in the method
+   * generation structure with the one for the given instruction.
+   *
+   * TODO
+   * this instruction line controller should not be used after the call
+   * to this method
+   *
+   * @param newlc
+   * @return true if the operation is possible
+   */
+  public boolean replace(InstructionLineController newlc) {
+    final Instruction ins = newlc.getInstruction();
+    if (ins == null) return false;
+    final MethodGen mg = getMethod();
+    final InstructionList il = mg.getInstructionList();
+    final InstructionHandle[] ihls = il.getInstructionHandles();
+    for (int i = 0; i < ihls.length; i++) {
+      if (ihls[i] == my_instr_handle) {
+        final InstructionHandle prevIh = my_instr_handle.getPrev();
+        final InstructionHandle newIh = il.append(prevIh, ins);
+        if (my_instr_handle.hasTargeters()) {
+          addTargeters(newIh, my_instr_handle.getTargeters());
+        }
+        try {
+          il.delete(my_instr_handle);
+        } catch (TargetLostException e) {
+          UmbraPlugin.messagelog("IMPOSSIBLE: lost targets");
+        }
+        break;
+      }
+    }
+    return true;
+  }
+
+  private void addTargeters(/*@ non_null @*/ InstructionHandle newIh,
+                            /*@ non_null @*/ InstructionTargeter[] targeters) {
+    for (int i=0; i < targeters.length; i++ ) {
+      newIh.addTargeter(targeters[i]);
+    }
+  }
+
+  public void addHandle(MethodGen mg, int i) {
+    this.my_methodgen = mg;
+    this.my_instr_list = mg.getInstructionList();
+    final InstructionHandle prevInstr =
+      my_instr_list.getInstructionHandles()[i - 1];
+    final Instruction ins = getInstruction();
+    this.my_instr_handle = my_instr_list.insert(prevInstr, ins);
+  }
+
+  public void dispose() throws UmbraException {
+    if (my_instr_handle.hasTargeters()) {
+      InstructionTargeter[] targeters = my_instr_handle.getTargeters();
+      InstructionHandle candidate = my_instr_handle.getNext();
+      if (candidate == null) {
+        candidate = my_instr_handle.getPrev();
+      }
+      addTargeters(candidate, targeters);
+    }
+    try {
+      my_instr_list.delete(getHandle());
+    } catch (TargetLostException e) {
+      throw new UmbraException();
+    }
   }
 }

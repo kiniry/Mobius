@@ -86,7 +86,7 @@ public class FragmentParser extends BytecodeTextParser {
                          "The current document has too many methods (" +
                          my_methodno + ")");
     }
-    if (a_line_no > my_end)
+    if (a_line_no > my_end + 1)
       throw new UmbraRuntimeException();
   }
 
@@ -98,7 +98,7 @@ public class FragmentParser extends BytecodeTextParser {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(lineName,
                                                            a_ctxt);
-      getEditorLines().add(j, lc);
+      getEditorLines().add(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       if (lc.isCommentStart()) { // ignore comments
         j = swallowComment(my_doc, j, an_end, a_ctxt);
