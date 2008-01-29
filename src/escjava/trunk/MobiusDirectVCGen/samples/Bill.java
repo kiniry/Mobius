@@ -9,15 +9,9 @@
 
 abstract class Bill {
   private /*@ spec_public @*/ int sum;
-  //@ public invariant 0 <= sum;
+  /*@ public invariant 0 <= sum; @*/
  
-  /**
-   * This method gives a cost of a single round.
-   * 
-   * @param x is the number of the particular round
-   * @return the cost of the investment in this round, it's not
-   * greater than <code>x</code>.
-   */ 
+
   //@ modifies \nothing;
   //@ ensures \result <= x;
   abstract int round_cost(int x) throws Exception;

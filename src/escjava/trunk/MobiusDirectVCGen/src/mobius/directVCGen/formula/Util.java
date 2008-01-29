@@ -449,7 +449,9 @@ public final class Util extends mobius.bico.Util {
     while (!files.isEmpty()) {
       final String prefix = files.pop();
       final File[] dirs = new File(baseFile, prefix).listFiles(new DirectoryFilter());
-      
+      if (dirs == null) {
+        continue;
+      }
       for (File f: dirs) {
         result.add(prefix + File.separator + f.getName());
         files.add(prefix + File.separator + f.getName());

@@ -28,7 +28,11 @@ public class AnnotationCompiler {
                             final String classpath) {
     final List<String> classes = new ArrayList<String>();
     classes.add(clzz);
-    fExecutor = new AnnotationExecutor(pkgsdir, classpath, classes);
+    String cp = classpath;
+    if (cp == null) {
+      cp = "";
+    }
+    fExecutor = new AnnotationExecutor(pkgsdir, cp, classes);
   }
 
 

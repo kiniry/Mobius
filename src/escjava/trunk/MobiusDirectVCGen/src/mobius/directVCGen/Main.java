@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
 import javafe.ast.TypeDecl;
@@ -17,6 +18,8 @@ import javafe.util.Location;
 import mobius.directVCGen.bico.AnnotationCompiler;
 import mobius.directVCGen.bico.Unarchiver;
 import mobius.directVCGen.formula.Util;
+import mobius.directVCGen.pojs.JavaCompiler;
+import mobius.directVCGen.pojs.JavacTool;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
@@ -58,6 +61,8 @@ public class Main extends escjava.Main {
                   "and the path to the file bicolano.jar");
       return;
     }
+
+    
     final String[] escargs = new String[args.length - 2];
     for (int i = 2; i < args.length; i++) {
       escargs[i - 2] = args[i];
@@ -67,7 +72,7 @@ public class Main extends escjava.Main {
 
       fOut.println("Configuring everything:\n");
       final File basedir = configBaseDir(args);
-      
+
       // Configuring bicolano and all the preludes
       final File bicodir = new File(args[1]);
       final Unarchiver arc = new Unarchiver(bicodir);
@@ -271,22 +276,38 @@ public class Main extends escjava.Main {
   public boolean processTDstage1(final TypeDecl td, final TypeSig sig, 
                                  final int errorCount) throws IOException {
 
-    NoWarn.typecheckRegisteredNowarns();
 
-    // Create a pretty-printer that shows types
-    final DelegatingPrettyPrint p = new javafe.tc.TypePrint();
-    p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
     File workingDir = new File(fBasedir, "src");
     workingDir = new File(workingDir, Util.getPkgDir(sig).getPath());
     workingDir.mkdirs();
+    
+    doTypeSrcGen(td, sig, workingDir);
+    doDesugaredSrcGen(sig, workingDir);
+    return true;
+  }
+
+  
+  private void doTypeSrcGen(final TypeDecl td, final TypeSig sig,
+                            File workingDir) throws FileNotFoundException {
+    fOut.println("Writing the Source code with types.");
+    NoWarn.typecheckRegisteredNowarns();
+    // Create a pretty-printer that shows types
+    final DelegatingPrettyPrint p = new javafe.tc.TypePrint();
+    p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
     final OutputStream out = new FileOutputStream(
                                  new File(workingDir, 
                                           sig.simpleName + ".typ"));
-        
-    fOut.println("Writing the Source code with types.");
-    p.print(out, 0, td);
 
-    return true;
+    p.print(out, 0, td);
+  }
+
+  private void doDesugaredSrcGen(final TypeSig sig, File workingDir) {
+    //final JavacTool javac = JavacTool.createMobiusJavac();
+    //javac.setOption(name, args)
+    final JavaCompiler jc = new JavaCompiler();
+    final String[] args = {"-XD-printflat", "-d", workingDir.toString(),
+                           sig.simpleName + ".java" };
+    jc.compile(args);
   }
 
 }
