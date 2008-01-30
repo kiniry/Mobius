@@ -93,7 +93,7 @@ public class FragmentParser extends BytecodeTextParser {
   private int swallowMethodBodyFragment(int a_start, int an_end,
                                         LineContext a_ctxt)
     throws BadLocationException, UmbraException {
-    int j = an_end;
+    int j = a_start;
     for (; j <= an_end; j++) {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(lineName,
@@ -110,7 +110,9 @@ public class FragmentParser extends BytecodeTextParser {
       if (lc instanceof EmptyLineController) { //method end
         return swallowEmptyLines(my_doc, j, a_ctxt);
       }
-      if (!(lc instanceof InstructionLineController)) { //instruction line
+      if (lc instanceof InstructionLineController) { //instruction line
+        getInstructions().add(lc);
+      } else {
         throw new UmbraRuntimeException();
       }
     }

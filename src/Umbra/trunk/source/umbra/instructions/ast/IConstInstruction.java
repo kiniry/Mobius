@@ -25,10 +25,10 @@ public class IConstInstruction extends SingleInstruction {
   /**
    * The constant that represents the maximal value of the constant parameter
    * for instructions such as iconst_&lt;n&gt;,
-   * see {@ref #getIConstInstruction(Instruction)} for the full
+   * see {@link #getIConstInstruction(Instruction)} for the full
    * inventory.
    */
-  private static final int MAX_ICONST_NUM = 0;
+  private static final int MAX_ICONST_NUM = 5;
 
   /**
    * This creates an instance of an instruction

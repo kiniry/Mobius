@@ -30,6 +30,7 @@ import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
+import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 
 /**
@@ -150,9 +151,10 @@ public final class BytecodeController {
   }
 
   /**
-   * The method detects which kind of modification (adding lines,
-   * removing lines or both) has been made and performs appropriate action
-   * to the byte code structures of the given byte code document.
+   * The method rearranges the internal representation of the byte code
+   * document to take into account the given change in the document.
+   *
+   * This method parses the range of TODO
    *
    * @param a_doc a byte code document in which the modification has
    *   been made
@@ -181,50 +183,6 @@ public final class BytecodeController {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
-    // i - index in the removed lines
-    // j - index in the inserted lines
-//    for (int i = a_start_rem, j = a_start_rem;
-//         (i <= an_end_rem || j <= a_stop) && i < my_editor_lines.size();
-//         i++, j++) {
-//      final BytecodeLineController oldlc =
-//                                 (BytecodeLineController)my_editor_lines.get(j);
-//      BytecodeLineController a_next_line = null;
-//      final int off = getInstructionOff(j);
-//      boolean the_last_flag = false;
-//      final boolean metEnd = (isEnd(j)) &&
-//               (oldlc.getMethodNo() ==
-//                ((InstructionLineController)my_instructions.
-//                             get(off)).getMethodNo());
-//      if (metEnd) {
-//        if (isFirst(j)) {
-//          the_last_flag = true;
-//          a_next_line = (BytecodeLineController)my_instructions.get(off);
-//        } else
-//          a_next_line = (BytecodeLineController)my_instructions.get(off - 1);
-//      } else //TODO poprawnie: 1 enter przed wpisaniem 2 wpisac przed ta przed
-//             //ktora checmy wstawic i enter; zle inaczej: enter przed i potem
-//             //wpisac
-//        a_next_line = (BytecodeLineController)my_instructions.get(off + 1);
-//      my_modified[a_next_line.getMethodNo()] = true;
-//      if (a_start_rem <= j && j <= a_stop) { //we are in the area of inserted
-//                                             //lines
-//        try {
-//          i = addInstructions(a_doc, a_start_rem, an_end_rem, i, j, oldlc,
-//                    a_next_line, the_last_flag, metEnd, new LineContext());
-//        } catch (UmbraException e) {
-//          MessageDialog.openInformation(new Shell(), "Bytecode",
-//                      "A jump instruction has improper destination");
-//          break;
-//        }
-//      } else { // we are beyond the area of the inserted instructions
-//        if (a_start_rem <= i && i <= an_end_rem) {
-//          oldlc.dispose(a_next_line, cg, the_last_flag, my_instructions, off);
-//          my_editor_lines.remove(oldlc);
-//          j--;
-//        }
-//      }
-//    }
     if (UmbraHelper.DEBUG_MODE) controlPrint(1);
     return;
   }
@@ -261,7 +219,62 @@ public final class BytecodeController {
   private void updateEditorLines(final int a_start_rem,
                                  final int an_end_rem,
                                  final int a_stop,
-                                 final LinkedList editorLines) throws UmbraException {
+                                 final LinkedList editorLines)
+    throws UmbraException {
+    final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+    int j = 0; // iterates over editorLines
+    for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++, j++) {
+      //we replace for the common part
+      final InstructionLineController oldlc =
+        (InstructionLineController)my_editor_lines.get(i);
+      final InstructionLineController newlc =
+        (InstructionLineController)editorLines.get(j);
+      oldlc.replace(newlc);
+      my_editor_lines.remove(i);
+      my_editor_lines.add(newlc);
+    }
+    if (an_end_rem < a_stop) { //we must add the new lines
+      int pos = getCurrentPositionInMethod(an_end_rem + 1);
+      for (int i = an_end_rem + 1; i <= a_stop; i++, j++, pos++) {
+        final InstructionLineController newlc =
+          (InstructionLineController)editorLines.get(j);
+        newlc.addHandle(mg, pos);
+      }
+    } else if (an_end_rem > a_stop) { //we must remove the deleted lines
+      for (int i = a_stop + 1; i <= an_end_rem; i++) {
+        final InstructionLineController oldlc =
+          (InstructionLineController)my_editor_lines.get(i);
+        oldlc.dispose();
+      }
+    }
+    my_editor_lines.addAll(a_start_rem, editorLines);
+    mg.getInstructionList().update();
+    mg.update();
+    mg.getInstructionList().setPositions();
+  }
+
+  private int getCurrentPositionInMethod(int i) {
+    for (int j = i; j >= 0; j--) {
+      final BytecodeLineController bcl =
+        (BytecodeLineController)my_editor_lines.get(j);
+      if (bcl instanceof InstructionLineController) {
+        return bcl.getNoInMethod();
+      } else if (bcl instanceof HeaderLineController) {
+        return 0;
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * @param a_start_rem
+   * @param an_end_rem
+   * @return
+   * @throws UmbraException
+   */
+  private MethodGen getCurrentMethodGen(final int a_start_rem,
+                                        final int an_end_rem)
+      throws UmbraException {
     MethodGen mg = null;
     if (a_start_rem < an_end_rem) {
       mg = ((InstructionLineController)my_editor_lines.get(a_start_rem)).
@@ -276,33 +289,7 @@ public final class BytecodeController {
         throw new UmbraException();
       }
     }
-    for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++) {
-      //we replace for the common part
-      final InstructionLineController oldlc =
-        (InstructionLineController)my_editor_lines.get(i);
-      final InstructionLineController newlc =
-        (InstructionLineController)editorLines.get(i);
-      oldlc.replace(newlc);
-      my_editor_lines.remove(i);
-      my_editor_lines.add(newlc);
-    }
-    if (an_end_rem < a_stop) { //we must add the new lines
-      for (int i = an_end_rem + 1; i <= a_stop; i++) {
-        final InstructionLineController newlc =
-          (InstructionLineController)editorLines.get(i);
-        newlc.addHandle(mg, i);
-      }
-    } else if (an_end_rem > a_stop) { //we must remove the deleted lines
-      for (int i = a_stop + 1; i <= an_end_rem; i++) {
-        final InstructionLineController oldlc =
-          (InstructionLineController)my_editor_lines.get(i);
-        oldlc.dispose();
-      }
-    }
-    my_editor_lines.addAll(a_start_rem, editorLines);
-    mg.getInstructionList().update();
-    mg.update();
-    mg.getInstructionList().setPositions();
+    return mg;
   }
 
   private InstructionLineController getInstructionLineAround(

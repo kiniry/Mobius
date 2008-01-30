@@ -306,4 +306,13 @@ public abstract class BytecodeLineController {
   public boolean isCommentStart() {
     return getMy_line_text().contains("/*");
   }
+
+  public int getNoInMethod() {
+    InstructionHandle[] ihs = getMethod().getInstructionList().
+                              getInstructionHandles();
+    for (int i = 0; i < ihs.length; i++) {
+      if (ihs[i] == getHandle()) return i;
+    }
+    return 0;
+  }
 }

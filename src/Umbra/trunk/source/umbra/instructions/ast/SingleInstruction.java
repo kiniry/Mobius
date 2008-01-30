@@ -297,7 +297,7 @@ public class SingleInstruction extends InstructionLineController {
       return -1;
     }
     try {
-      final String tail = a_name.substring(a_name.indexOf('_'));
+      final String tail = a_name.substring(a_name.indexOf('_') + 1);
       int num = Integer.parseInt(tail);
       if (!(0 <= num && num <= the_max))
         num = -1;

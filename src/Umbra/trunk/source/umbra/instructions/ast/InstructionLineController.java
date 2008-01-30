@@ -408,45 +408,65 @@ public abstract class InstructionLineController extends BytecodeLineController {
     return res;
   }
 
+  /*@ requires my_methodgen != null;
+    @
+    @*/
   /**
    * This method replaces the current instruction handle in the method
    * generation structure with the one for the given instruction.
    *
-   * TODO
-   * this instruction line controller should not be used after the call
-   * to this method
+   * First, we check if the given new line controller can give a proper
+   * BCEL representation of an instruction. If it cannot, <code>false</code>
+   * is returned. Next we check if the current instruction is the first one in
+   * the method. Depending on that we insert the new instruction either at the
+   * beginning of the method or after the instruction right before the
+   * current one (respectively). In case the current instruction is a target of
+   * some other instructions in the method, we re-target them to the new
+   * instruction. At last, we delete the current instruction from the
+   * instruction list of the current method.
    *
-   * @param newlc
-   * @return true if the operation is possible
+   * The current instruction line controller should not be used after the call
+   * to this method as it is disconnected from the BCEL structures.
+   *
+   * @param a_newlc the instruction line which should replace the current one
+   * @return <code>true</code> if the operation was carried out successfully,
+   *   <code>false</code> otherwise
    */
-  public boolean replace(InstructionLineController newlc) {
-    final Instruction ins = newlc.getInstruction();
+  public boolean replace(final InstructionLineController a_newlc) {
+    final Instruction ins = a_newlc.getInstruction();
     if (ins == null) return false;
     final MethodGen mg = getMethod();
     final InstructionList il = mg.getInstructionList();
-    final InstructionHandle[] ihls = il.getInstructionHandles();
-    for (int i = 0; i < ihls.length; i++) {
-      if (ihls[i] == my_instr_handle) {
-        final InstructionHandle prevIh = my_instr_handle.getPrev();
-        final InstructionHandle newIh = il.append(prevIh, ins);
-        if (my_instr_handle.hasTargeters()) {
-          addTargeters(newIh, my_instr_handle.getTargeters());
-        }
-        try {
-          il.delete(my_instr_handle);
-        } catch (TargetLostException e) {
-          UmbraPlugin.messagelog("IMPOSSIBLE: lost targets");
-        }
-        break;
-      }
+    final InstructionHandle prevIh = my_instr_handle.getPrev();
+    final InstructionHandle newIh;
+    if (prevIh != null)
+      newIh = il.append(prevIh, ins);
+    else
+      newIh = il.insert(ins);
+    if (my_instr_handle.hasTargeters()) {
+      addTargeters(newIh, my_instr_handle.getTargeters());
+      my_instr_handle.removeAllTargeters();
+    }
+    try {
+      il.delete(my_instr_handle);
+    } catch (TargetLostException e) {
+      UmbraPlugin.messagelog("IMPOSSIBLE: lost targets");
     }
     return true;
   }
 
-  private void addTargeters(/*@ non_null @*/ InstructionHandle newIh,
-                            /*@ non_null @*/ InstructionTargeter[] targeters) {
-    for (int i=0; i < targeters.length; i++ ) {
-      newIh.addTargeter(targeters[i]);
+  /**
+   * This method adds given {@link InstructionTargeter} objects to the
+   * given instruction.
+   *
+   * @param an_ins the {@link InstructionHandle} to add the targeters to
+   * @param the_trgtrs the array with targeters to add to the instruction
+   */
+  private static void addTargeters(
+                   final /*@ non_null @*/ InstructionHandle an_ins,
+                   final /*@ non_null @*/ InstructionTargeter[] the_trgtrs) {
+    for (int i = 0; i < the_trgtrs.length; i++) {
+      an_ins.addTargeter(the_trgtrs[i]);
     }
   }
 
