@@ -113,9 +113,10 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
       final BytecodeContribution bytecodeContribution = getContribution();
       ((BytecodeEditor)editor).refreshBytecode(active, null, null);
       final IEditorInput input = new FileEditorInput(btcFile);
-      final boolean[] modified = bytecodeContribution.getModified();
-      bytecodeContribution.setModTable(modified);
+      //memorise old modification information
+      final boolean[] modified = editor.getDocument().getModified();
       contributor.refreshEditor(editor, input, null, null);
+      editor.getDocument().setModTable(modified);
     } catch (ClassNotFoundException e1) {
       e1.printStackTrace();
     } catch (CoreException e1) {

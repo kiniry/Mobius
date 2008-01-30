@@ -11,6 +11,7 @@ package umbra.editor;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
@@ -21,7 +22,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.UmbraException;
 import umbra.UmbraPlugin;
+import umbra.instructions.BytecodeController;
 import annot.textio.CodeFragment;
 
 /**
@@ -46,6 +49,15 @@ public class BytecodeDocument extends Document {
    * TODO.
    */
   private static final int NO_OF_POSITIONS = 2;
+
+  /**
+   * For some unknown reason the document cannot be checked up
+   * to the final line. The document should be checked only
+   * up to length - this constant.
+   * TODO: this is weird
+   */
+  private static final int CHECK_ALL_LINES_DECREMENT = 2;
+
 
   /**
    * The Java source code editor for the source code file associated with
@@ -73,6 +85,43 @@ public class BytecodeDocument extends Document {
    * The bytecode editor that manipulates the current document.
    */
   private BytecodeEditor my_bcode_editor;
+
+  /**
+   * The object which contains the internal Umbra representation of the
+   * current document.
+   */
+  private BytecodeController my_bcc;
+
+  /**
+   * This flag is <code>true</code> when the internal structures that connect
+   * the text .btc file with the BCEL representation are initialised.
+   */
+  private boolean my_ready_flag; //@ initially false;
+
+  /**
+   * TODO.
+   */
+  private boolean my_mod_table_flag; //@ initially false;
+
+  /**
+   * This array keeps track of which methods in the class edited by the
+   * bytecode editor are modified. It contains <code>true</code> on i-th
+   * position when the i-th method is modified.
+   *
+   * TODO it's not completely true, the my_modified in my_bcc is the actual
+   * point
+   */
+  private boolean[] my_modified;
+
+  /**
+   * TODO
+   * Contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the file,
+   *   if this parameter is null then the array is not taken into account
+   */
+  private String[] my_comment_array;
+
+  private String[] my_interline;
 
   /**
    * The Java source code editor of the source code file associated
@@ -419,10 +468,105 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Used only for testing.
+   * Used only for testing. TODO really?
    * @param cg
    */
   public void setClassGen(ClassGen cg) {
     my_classgen = cg;
+  }
+
+  /**
+   * @return a {@ref String} table which represents bytecode comments
+   * associated with subsequent lines of the bytecode file associated with
+   * the current editor
+   */
+  public final String[] getCommentTab() {
+    return my_bcc.getComments();
+  }
+
+  /**
+   * TODO.
+   * @return TODO
+   */
+  public final String[] getInterlineTab() {
+    return my_bcc.getInterline();
+  }
+
+
+  /**
+   * @return boolean array, an entry is <code>true</code> whenever
+   * the corresponding method is modified by the bytecode editor
+   */
+  public final boolean[] getModified() {
+    return my_bcc.getModified();
+  }
+
+  /**
+   * Informs if the internal data structures that connect Umbra with BCEL
+   * are initialised.
+   *
+   * @return <code>true</code> when the structures are initialised,
+   *   <code>false</code> otherwise
+   */
+  public boolean isReady() {
+    return my_ready_flag;
+  }
+
+  /**
+   * This method initialises the internal structures of the bytecode
+   * controller. In particular it initialises the object that
+   * manages the BCEL operations and enables the relevant actions
+   * in the Umbra plugin bytecode contributor.
+   *
+   * TODO what's my_mod_table_flag
+   */
+  public void init() {
+    my_bcc.init(this, my_comment_array, my_interline);
+    if (my_mod_table_flag) {
+      my_bcc.setModified(my_modified);
+      my_mod_table_flag = false;
+    }
+    //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
+    my_bcc.checkAllLines(0, getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
+    my_ready_flag = true;
+  }
+
+  public void setModTable(boolean[] modified) {
+    my_modified = modified;
+    my_mod_table_flag = true;
+  }
+
+  public void updateFragment(int start_rem, int stop_rem, int stop)
+    throws UmbraException {
+    my_bcc.removeIncorrects(start_rem, stop_rem);
+    final int methodno = my_bcc.getMethodForLine(start_rem);
+    final MethodGen mg = my_bcc.addAllLines(this, start_rem, stop_rem, stop);
+    my_bcode_editor.replaceMethod(methodno, mg);
+    my_bcc.checkAllLines(start_rem, stop);
+  }
+
+  public boolean allCorrect() {
+    return my_bcc.allCorrect();
+  }
+
+  public int getFirstError() {
+    return my_bcc.getFirstError();
+  }
+
+  /**
+   * TODO.
+   * We must mark the document as not ready to reinit the internal structures
+   * when the first edit occurs.
+   *
+   * @param a_comment_array contains the texts of end-of-line comments, the
+   *   i-th entry contains the comment for the i-th instruction in the file,
+   *   if this parameter is null then the array is not taken into account
+   * @param an_interline multi-line comments
+   */
+  public final void reinit(final String[] a_comment_array,
+                           final String[] an_interline) {
+    my_ready_flag = false;
+    my_comment_array = a_comment_array;
+    my_interline = an_interline;
   }
 }

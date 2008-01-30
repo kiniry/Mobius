@@ -19,75 +19,20 @@ import org.eclipse.jface.text.BadLocationException;
 import umbra.UmbraException;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeStrings;
+import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
-import umbra.instructions.ast.InstructionLineController;
 
 /**
- * @author alx
+ * This class handles the operations which are common to all the document
+ * parsers that are used in Umbra.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
  */
 public class BytecodeTextParser {
-
-
-  /**
-   * Removes an one-line comment from a line of byte code.
-   *
-   * @param a_line a line of byte code
-   * @return the byte code line without end-of-line comment and final
-   *   whitespace
-   */
-  public static final String removeCommentFromLine(final String a_line) {
-    String res;
-    int j = a_line.length() - 1;
-
-    final int k = (a_line.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK, 0));
-    if (k != -1)
-      j = k - 1;
-    while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
-      j--;
-    res = a_line.substring(0, j + 1) + "\n";
-    return res;
-  }
-
-
-  /**
-   * The list of all the lines in the editor which contain codes of
-   * instructions. These are represented as objects the classes of which
-   * are subclasses of {@link InstructionLineController}.
-   */
-  private LinkedList my_instructions;
-
-  /**
-   * A temporary counter of instruction lines. It is used to synchronise the
-   * currently parsed document with an old comments structure.
-   */
-  private int my_instruction_no;
-
-
-  /**
-   * The list of all the lines in the current byte code editor. These lines
-   * are stored as objects the classes of which are subclasses of
-   * {@link BytecodeLineController}.
-   */
-  private LinkedList my_editor_lines;
-
-  /**
-   * This field contains the value of the end-of-line comment from the currently
-   * parsed line.
-   */
-  private String my_current_comment;
-
-
-  /**
-   * The container of associations between the Umbra representation of lines
-   * in the byte code editor and the end-of-line comments in these lines.
-   * The comments must be absent from the line representation for their
-   * correct parsing so they are held in this additional structure.
-   */
-  private Hashtable my_comments;
 
 
   /**
@@ -99,97 +44,59 @@ public class BytecodeTextParser {
   private String[] my_comment_array;
 
   /**
-   * 
-   *
+   * The container of associations between the Umbra representation of lines
+   * in the byte code editor and the end-of-line comments in these lines.
+   * The comments must be absent from the line representation for their
+   * correct parsing so they are held in this additional structure.
    */
-  protected BytecodeTextParser(String[] a_comment_array) {
+  private Hashtable my_comments;
+
+
+  /**
+   * This field contains the value of the end-of-line comment from the currently
+   * parsed line.
+   */
+  private String my_current_comment;
+
+
+  /**
+   * The list of all the lines in the current byte code editor. These lines
+   * are stored as objects the classes of which are subclasses of
+   * {@link BytecodeLineController}.
+   */
+  private LinkedList my_editor_lines;
+
+  /**
+   * A temporary counter of instruction lines. It is used to synchronise the
+   * currently parsed document with an old comments structure. This number
+   * is a sequence number increased by one with each instruction (not the
+   * byte code label number).
+   */
+  private int my_instruction_no;
+
+  /**
+   * The list of all the lines in the editor which contain codes of
+   * instructions. These are represented as objects the classes of which
+   * are subclasses of {@link InstructionLineController}.
+   */
+  private LinkedList my_instructions;
+
+  /**
+   * This constructor initialises internal structure to represent
+   * editor lines, instructions, and comments. The given parameter is the
+   * value of the array which contains the comments from the previous session
+   * with the current document.
+   *
+   * TODO link to a protocol for a_comment_array
+   * @param a_comment_array the comments from the previous session
+   */
+  protected BytecodeTextParser(final String[] a_comment_array) {
     super();
     my_editor_lines = new LinkedList();
     my_instructions = new LinkedList();
     my_comment_array = a_comment_array;
     my_comments = new Hashtable();
   }
-
-  /**
-   * Returns the list of all the lines in the internal representation.
-   *
-   * @return the list of the {@link BytecodeLineController} objects that
-   *   represent all the lines in the currently parsed document
-   */
-  public LinkedList getEditorLines() {
-    return my_editor_lines;
-  }
-
-  /**
-   * Returns the list of all the lines with instructions in the internal
-   * representation.
-   *
-   * @return the list of the {@link BytecodeLineController} objects that
-   *   represent the lines with instructions in the currently parsed document
-   */
-  public LinkedList getInstructions() {
-    return my_instructions;
-  }
-
-
-  /**
-   * This method retrieves from the given byte code document the BCEL structure
-   * corresponding to the method of the given number. This method checks if
-   * there are enough methods in the BCEL structure of the document and in
-   * case there are not enough of them it throws an exception.
-   *
-   * @param a_doc a document to retrieve the BCEL structure of a method
-   * @param a_method_no the method number of the method to retrieve the
-   *    structure for
-   * @return the BCEL structure which describes the method
-   * @throws UmbraException in case the given method number is wrong
-   */
-  protected static MethodGen getMethodGenFromDoc(final BytecodeDocument a_doc,
-                                                 final int a_method_no)
-    throws UmbraException {
-    final ClassGen cg = a_doc.getClassGen();
-    final Method[] methods = cg.getMethods();
-    if (a_method_no >= methods.length) // too many methods
-      throw new UmbraException();
-
-    final MethodGen mg = new MethodGen(methods[a_method_no], cg.getClassName(),
-                                       cg.getConstantPool());
-    return mg;
-  }
-  
-
-  /**
-   * This method returns the {@link String} with the given line of the given
-   * document. Additionally, the method extracts the end-of-line comment and
-   * stores it in the internal state of the current object. The method needs
-   * the parsing context in case the line is a part of a multi-line context.
-   * In that case, the end-of-line comment should not be extracted.
-   *
-   * @param a_doc a document to extract the line from
-   * @param a_line the line number of the line to be extracted
-   * @param a_ctxt a context which indicates if we are inside a comment
-   * @return the string with the line content (with the end-of-line comment
-   *   stripped off)
-   * @throws BadLocationException in case the given line number is not within
-   *   the given document
-   */
-  protected String getLineFromDoc(final BytecodeDocument a_doc,
-                                  final int a_line,
-                                  final LineContext a_ctxt)
-    throws BadLocationException {
-    final String line = a_doc.get(a_doc.getLineOffset(a_line),
-                                  a_doc.getLineLength(a_line));
-    final String lineName;
-    if (a_ctxt.isInsideComment() || a_ctxt.isInsideAnnotation()) {
-      lineName = removeCommentFromLine(line);
-      my_current_comment = extractCommentFromLine(line, a_ctxt);
-    } else {
-      lineName = line;
-      my_current_comment = null;
-    }
-    return lineName;
-  }
-
 
   /**
    * The method checks if the given line contains a single line comment
@@ -220,6 +127,64 @@ public class BytecodeTextParser {
     return nl;
   }
 
+
+  /**
+   * This method retrieves from the given byte code document the BCEL structure
+   * corresponding to the method of the given number. This method checks if
+   * there are enough methods in the BCEL structure of the document and in
+   * case there are not enough of them it throws an exception.
+   *
+   * @param a_doc a document to retrieve the BCEL structure of a method
+   * @param a_method_no the method number of the method to retrieve the
+   *    structure for
+   * @return the BCEL structure which describes the method
+   * @throws UmbraException in case the given method number is wrong
+   */
+  protected static MethodGen getMethodGenFromDoc(final BytecodeDocument a_doc,
+                                                 final int a_method_no)
+    throws UmbraException {
+    final ClassGen cg = a_doc.getClassGen();
+    final Method[] methods = cg.getMethods();
+    if (a_method_no >= methods.length) // too many methods
+      throw new UmbraException();
+
+    final MethodGen mg = new MethodGen(methods[a_method_no], cg.getClassName(),
+                                       cg.getConstantPool());
+    return mg;
+  }
+
+  /**
+   * Removes an one-line comment from a line of byte code.
+   *
+   * @param a_line a line of byte code
+   * @return the byte code line without end-of-line comment and final
+   *   whitespace
+   */
+  public static final String removeCommentFromLine(final String a_line) {
+    String res;
+    int j = a_line.length() - 1;
+
+    final int k = (a_line.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK, 0));
+    if (k != -1)
+      j = k - 1;
+    while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
+      j--;
+    res = a_line.substring(0, j + 1) + "\n";
+    return res;
+  }
+
+  /**
+   * Returns the association between the lines in the internal Umbra
+   * representation and the end-of-line comments present in the textual
+   * representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent the lines with instructions in the currently parsed document
+   */
+  public Hashtable getComments() {
+    return my_comments;
+  }
+
   /**
    * @return the value of the current comment
    */
@@ -228,10 +193,61 @@ public class BytecodeTextParser {
   }
 
   /**
-   * @param a_comment the current comment value to set
+   * Returns the list of all the lines in the internal representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent all the lines in the currently parsed document
    */
-  public void setCurrentComment(final String a_comment) {
-    this.my_current_comment = my_current_comment;
+  public LinkedList getEditorLines() {
+    return my_editor_lines;
+  }
+
+  /**
+   * Returns the list of all the lines with instructions in the internal
+   * representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent the lines with instructions in the currently parsed document
+   */
+  public LinkedList getInstructions() {
+    return my_instructions;
+  }
+
+  /**
+   * This method returns the {@link String} with the given line of the given
+   * document. Additionally, the method extracts the end-of-line comment and
+   * stores it in the internal state of the current object. The method needs
+   * the parsing context in case the line is a part of a multi-line context.
+   * In that case, the end-of-line comment should not be extracted.
+   *
+   * @param a_doc a document to extract the line from
+   * @param a_line the line number of the line to be extracted
+   * @param a_ctxt a context which indicates if we are inside a comment
+   * @return the string with the line content (with the end-of-line comment
+   *   stripped off)
+   * @throws UmbraLocationException in case the given line number is not within
+   *   the given document
+   */
+  protected String getLineFromDoc(final BytecodeDocument a_doc,
+                                  final int a_line,
+                                  final LineContext a_ctxt)
+    throws UmbraLocationException {
+    String line;
+    try {
+      line = a_doc.get(a_doc.getLineOffset(a_line),
+                                    a_doc.getLineLength(a_line));
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(a_line);
+    }
+    final String lineName;
+    if (a_ctxt.isInsideComment() || a_ctxt.isInsideAnnotation()) {
+      lineName = removeCommentFromLine(line);
+      my_current_comment = extractCommentFromLine(line, a_ctxt);
+    } else {
+      lineName = line;
+      my_current_comment = null;
+    }
+    return lineName;
   }
 
 
@@ -255,27 +271,31 @@ public class BytecodeTextParser {
     }
   }
 
+  /**
+   * Increases by one the current instruction number.
+   */
+  protected void incInstructionNo() {
+    my_instruction_no++;
+  }
 
   /**
-   * Returns the association between the lines in the internal Umbra
-   * representation and the end-of-line comments present in the textual
-   * representation.
+   * Initialises the instruction counter to the first value.
    *
-   * @return the list of the {@link BytecodeLineController} objects that
-   *   represent the lines with instructions in the currently parsed document
    */
-  public Hashtable getComments() {
-    return my_comments;
-  }
-  
   protected void initInstructionNo() {
     my_instruction_no = 0;
   }
-  
-  protected void incInstructionNo() {
-   my_instruction_no++;
+
+  /**
+   * This method sets the value of the end-of-line comment from the currently
+   * parsed line.
+   *
+   * @param a_comment the current comment value to set
+   */
+  public void setCurrentComment(final String a_comment) {
+    my_current_comment = a_comment;
   }
-  
+
   /**
    * This method parses from the given document lines which are considered
    * to be empty lines in the given context. A line is empty when it
@@ -290,13 +310,13 @@ public class BytecodeTextParser {
    * @return the first line which is not an empty line; in case the end
    *   of the document is reached this is the number of lines in the
    *   document
-   * @throws BadLocationException in case the method reaches a line number
+   * @throws UmbraLocationException in case the method reaches a line number
    *   which is not within the given document
    */
   protected int swallowEmptyLines(final BytecodeDocument a_doc,
                                   final int the_current_lno,
                                   final LineContext a_ctxt)
-    throws BadLocationException {
+    throws UmbraLocationException {
     int j = the_current_lno;
     while (j < a_doc.getNumberOfLines()) {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);

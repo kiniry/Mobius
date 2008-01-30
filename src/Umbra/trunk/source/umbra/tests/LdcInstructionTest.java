@@ -10,54 +10,42 @@ package umbra.tests;
 
 import junit.framework.TestCase;
 
-import org.apache.bcel.generic.Instruction;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import umbra.editor.parsing.BytecodeStrings;
-import umbra.instructions.ast.FieldInstruction;
+import umbra.instructions.ast.LdcInstruction;
 
 /**
- * @author alx
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
  */
-public class FieldInstructionTest extends TestCase {
+public class LdcInstructionTest extends TestCase {
 
   
-  private FieldInstruction instr;
+  private LdcInstruction instr;
   
-  private static String instrname = "getfield";
+  private static String instrname = "ldc";
   private static String line = 
-    "16:   getfield   List.list [Ljava/lang/Object; (18)";
-
-
-  /**
-   * Sets up the test fixture. 
-   * (Called before every test case method.) 
-   */ 
-  protected void setUp() { 
-       instr = new FieldInstruction(line, instrname);
-  } 
-
+    "3:    ldc               \"b a\" (25)";
 
   /**
-   * Tears down the test fixture. 
-   * (Called after every test case method.) 
-   */ 
-  protected void tearDown() { 
-       instr = null; 
-  }
-
-  /**
-   * Test method for
-   * {@link umbra.instructions.ast.FieldInstruction#getInstruction()}.
+   * @throws java.lang.Exception
    */
-  @Test
-  public void testGetInstruction() {
-    Instruction bcel = instr.getInstruction();
-    assertEquals("getfield", bcel.getName());
+  @Before
+  public void setUp() throws Exception {
+    instr = new LdcInstruction(line, instrname);
   }
 
+  /**
+   * @throws java.lang.Exception
+   */
+  @After
+  public void tearDown() throws Exception {
+    instr = null;
+  }
   /**
    * Test method for {@link umbra.instructions.ast.FieldInstruction#correct()}.
    */
@@ -72,9 +60,9 @@ public class FieldInstructionTest extends TestCase {
    */
   @Test
   public void testGetMnemonics() {
-    final String [] strings = FieldInstruction.getMnemonics();
-    for (int i = 0; i < BytecodeStrings.FIELD_INS.length; i++) {
-      assertEquals(true, BytecodeStrings.FIELD_INS[i].equals(strings[i]));
+    final String [] strings = LdcInstruction.getMnemonics();
+    for (int i = 0; i < BytecodeStrings.LDC_INS.length; i++) {
+      assertEquals(true, BytecodeStrings.LDC_INS[i].equals(strings[i]));
     }
   }
 

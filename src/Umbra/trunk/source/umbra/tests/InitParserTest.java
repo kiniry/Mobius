@@ -21,7 +21,6 @@ import org.junit.Test;
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.InitParser;
 import umbra.instructions.LineContext;
-import umbra.editor.BytecodeDocument;
 
 /**
  * @author alx

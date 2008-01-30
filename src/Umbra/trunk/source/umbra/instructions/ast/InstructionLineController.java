@@ -237,51 +237,6 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
-   * This method is executed when a line is modified
-   * but not inserted or removed. It usually replaces BCEL
-   * instruction related to a handle, but it can also call
-   * dispose method (if new version is incorrect) or
-   * init handle (if the previous one was incorrect).
-   *
-   * @param an_old_line the previous structure
-   * @param the_next_line a next line, necessary if new handle must be generated
-   * @param a_classgen a class generator from BCEL
-   * @param an_ins a BCEL instruction (to generate handle)
-   * @param a_meth_end <code>true</code> if the line is the last one of the
-   *   method
-   * @param the_last TODO
-   * @param the_instructions an array from {@ref BytecodeController} that the
-   *   line is included
-   * @param an_off an offset in this array
-   */
-  public final void update(final BytecodeLineController an_old_line,
-                           final BytecodeLineController the_next_line,
-                           final ClassGen a_classgen,
-                           final Instruction an_ins,
-                           final boolean a_meth_end,
-                           final boolean the_last,
-                           final LinkedList the_instructions,
-                           final int an_off) {
-    my_methodgen = an_old_line.getMethod();
-    my_instr_list = an_old_line.getList();
-    my_instr_handle = an_old_line.getHandle();
-    setMethodNo(an_old_line.getMethodNo());
-    if (my_instr_handle == null) {
-      initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
-                 the_instructions, an_off);
-    } else if (my_instr_handle.getInstruction() == null) {
-      initHandle(the_next_line, a_classgen, an_ins, a_meth_end,
-                 the_instructions, an_off);
-    } else if (an_ins != null) {
-      my_instr_handle.setInstruction(an_ins);
-      updateMethod(a_classgen);
-      the_instructions.set(an_off, this);
-    } else {
-      dispose(the_next_line, a_classgen, the_last, the_instructions, an_off);
-    }
-  }
-
-  /**
    * Replacing BCEL method with the new one with updated
    * instruction list.
    *
@@ -333,11 +288,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param the_next_line the line after the removed one; it becomes a target of
    *   any jump instruction directed to the removed one
    * @param a_classgen a class generator from BCEL, this should be the same as
-   *   in the {@link BytecodeDocument} object for the currently edited
-   *   byte code file
+   *   in the {@link umbra.editor.BytecodeDocument} object for the currently
+   *   edited byte code file
    * @param the_last currently not used
-   * @param the_instructions an array from {@link BytecodeController} that
-   *   contains the current line
+   * @param the_instructions an array from
+   *   {@link umbra.instructions.BytecodeController} that contains the current
+   *   line
    * @param an_off an offset in the <code>the_instructions</code> array which
    *   points to the instruction to be removed
    */
@@ -443,6 +399,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
       newIh = il.append(prevIh, ins);
     else
       newIh = il.insert(ins);
+    a_newlc.addHandle(newIh, il, mg);
     if (my_instr_handle.hasTargeters()) {
       addTargeters(newIh, my_instr_handle.getTargeters());
       my_instr_handle.removeAllTargeters();
@@ -470,6 +427,11 @@ public abstract class InstructionLineController extends BytecodeLineController {
     }
   }
 
+  /**
+   * TODO there should be only one  addHandle
+   * @param mg
+   * @param i
+   */
   public void addHandle(MethodGen mg, int i) {
     this.my_methodgen = mg;
     this.my_instr_list = mg.getInstructionList();

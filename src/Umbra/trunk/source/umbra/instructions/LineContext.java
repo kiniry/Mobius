@@ -185,7 +185,12 @@ public class LineContext {
     return my_method;
   }
 
-  public void setMethodNo(int a_methodno) {
+  /**
+   * This method initialises the internal method number to the given value.
+   *
+   * @param a_methodno the method number to be set
+   */
+  public void setMethodNo(final int a_methodno) {
     my_method = a_methodno;
   }
 }

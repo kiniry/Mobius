@@ -9,6 +9,7 @@
 package umbra.editor;
 
 import org.eclipse.jface.action.ControlContribution;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -16,15 +17,19 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 
+import umbra.UmbraException;
+import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
-import umbra.instructions.BytecodeController;
 
 /**
  * This class represents a GUI element that is contributed to the
- * eclipse GUI by the byte code editor.
+ * eclipse GUI by the byte code editor. It handles all the edit
+ * events and propagates them to the currently edited document
+ * so that they are recorded in the internal structures of the document.
  *
  * change performed in a byte code editor.
  * TODO more detailed description is needed
@@ -35,12 +40,7 @@ import umbra.instructions.BytecodeController;
 public class BytecodeContribution extends ControlContribution {
 
   /**
-   * TODO. what does the constant mean?
-   */
-  private static final int CHECK_ALL_LINES_DECREMENT = 2;
-
-  /**
-   * TODO.
+   * The only object of this class which is present in the system.
    */
   private static BytecodeContribution inUse;
 
@@ -50,88 +50,20 @@ public class BytecodeContribution extends ControlContribution {
   private boolean my_need_new_flag = true;
 
   /**
-   * TODO.
-   */
-  private BytecodeController my_bcc;
-
-  /**
-   * This flag is <code>true</code> when the internal structures that connect
-   * the text .btc file with the BCEL representation are initialised.
-   */
-  private boolean my_ready_flag; //@ initially false;
-
-  /**
-   * TODO.
-   */
-  private boolean my_mod_table_flag; //@ initially false;
-
-  /**
-   * This array keeps track of which methods in the class edited by the
-   * bytecode editor are modified. It contains <code>true</code> on i-th
-   * position when the i-th method is modified.
-   *
-   * TODO it's not completely true, the my_modified in my_bcc is the actual
-   * point
-   */
-  private boolean[] my_modified;
-
-  /**
-   * The manager that initialises all the actions within the
-   * bytecode plugin.
-   */
-  private BytecodeEditorContributor my_editor_cntrbtr;
-
-  /**
-   * TODO
-   * Contains the texts of end-of-line comments, the
-   *   i-th entry contains the comment for the i-th instruction in the file,
-   *   if this parameter is null then the array is not taken into account
-   */
-  private String[] my_comment_array;
-
-  private String[] my_interline;
-
-  /* *
    * The current bytecode editor for which the contribution works.
    */
-  //private IEditorPart my_editor; it's never read
+  private BytecodeEditor my_editor;
 
   /**
-   * TODO.
+   * This creates the object and stores it in a static variable so that
+   * it is available from everywhere through {@link #inUse()} method.
    */
   protected BytecodeContribution() {
     super("Bytecode");
-    inUse = this;
-  }
-
-  /**
-   * This method initialises the internal structures of the bytecode
-   * contribution. In particular it initialises the object that
-   * manages the BCEL operations and enables the relevant actions
-   * in the Umbra plugin bytecode contributor.
-   *
-   * TODO what's my_mod_table_flag
-   *
-   * @param a_doc a document for which the internal structures are initialised
-   * @param a_comment_array contains the texts of end-of-line comments, the
-   *   i-th entry contains the comment for the i-th instruction in the file,
-   *   if this parameter is null then the array is not taken into account
-   * @param an_interline interline comments
-   */
-  private void init(final BytecodeDocument a_doc,
-                    final String[] a_comment_array,
-                    final String[] an_interline) {
-    my_bcc = new BytecodeController();
-    my_bcc.init(a_doc, a_comment_array);
-    if (my_mod_table_flag) {
-      my_bcc.setModified(my_modified);
-      my_mod_table_flag = false;
+    if (UmbraHelper.DEBUG_MODE && inUse != null) {
+      UmbraPlugin.messagelog("Second BytecodeContribution!!!");
     }
-    //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
-    my_bcc.checkAllLines(0,
-                         a_doc.getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
-    my_ready_flag = true;
-    my_editor_cntrbtr.getRefreshAction().setEnabled(true);
+    inUse = this;
   }
 
   /**
@@ -139,17 +71,6 @@ public class BytecodeContribution extends ControlContribution {
    * change the content of the current bytecode document.
    */
   public class BytecodeListener implements IDocumentListener {
-
-    /**
-     * Data passed from documentAboutToBeChanged to documentChanged.
-     * Should be null if no event is currently being processed.
-     */
-    private DocumentEvent my_current_event; //@ initially null;
-
-    /**
-     * TODO.
-     */
-    private int my_end_line;
 
     /**
      * The current constructor does nothing.
@@ -165,31 +86,70 @@ public class BytecodeContribution extends ControlContribution {
      * object in case it has not been initialised yet.
      *
      * @param an_event the event that triggers the change, it should be
-     * the same as in {@ref #documentChanged(DocumentEvent)}
+     *   the same as in {@ref #documentChanged(DocumentEvent)}
      *
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
-      if (!my_ready_flag) {
-        if (an_event.fDocument instanceof BytecodeDocument) {
-          init((BytecodeDocument)an_event.fDocument,
-               my_comment_array, my_interline); //this marks my_ready_flag as
-                                                //true
-        } else {
-          //This should not happen as we operate in a byte code editor
-          UmbraPlugin.messagelog("You are not editing a byte code document");
-        }
-      }
-      my_current_event = an_event;
-
+      BytecodeDocument doc;
       try {
-        my_end_line = an_event.fDocument.getLineOfOffset(
-              an_event.getOffset() + an_event.getLength());
+        doc = (BytecodeDocument) an_event.fDocument;
+      } catch (ClassCastException e) {
+        //This should not happen as we operate in a byte code editor
+        UmbraPlugin.messagelog("You are not editing a byte code document");
+        return;
+      }
+      if (!doc.isReady()) {
+        doc.init(); //this marks the document as ready
+      }
+      int stop = 0;
+      int start_rem = 0;
+      int stop_rem = 0;
+      try {
+        start_rem = doc.getLineOfOffset(an_event.getOffset());
+        stop_rem = doc.getLineOfOffset(
+                                   an_event.getOffset() + an_event.getLength());
+        final int insertedLen = an_event.getText().length();
+        stop = doc.getLineOfOffset(an_event.getOffset() +
+            insertedLen);
       } catch (BadLocationException e) {
         //This should not happen as the offsets from the event are generated
         //based on the current document
         UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
-                               "differ from the ones in the event (1)");
+                               "differ from the ones in the event");
+      }
+
+      updateFragment(doc, start_rem, stop_rem, stop);
+    }
+
+
+    /**
+     * This method handles the update of a given fragment in the given
+     * document.
+     *
+     * @param a_doc a document which is updated, its contents are after the
+     *   update
+     * @param a_start the first line of the updated region
+     * @param an_oldend the last line of the updated region before the update
+     * @param a_newend the last line of the updated region after the update
+     */
+    private void updateFragment(final BytecodeDocument a_doc,
+                                final int a_start,
+                                final int an_oldend,
+                                final int a_newend) {
+      if (BMLParsing.UMBRA_ENABLED) {
+        try {
+          a_doc.updateFragment(a_start, an_oldend, a_newend);
+          my_editor.getAction(BytecodeEditorContributor.REFRESH_ID).
+                    setEnabled(true);
+        } catch (UmbraException e) {
+          MessageDialog.openInformation(new Shell(), "Bytecode",
+              "Invalid edit operation");
+          return;
+        }
+        if (!a_doc.allCorrect())
+          displayError(a_doc.getFirstError());
+        else displayCorrect();
       }
     }
 
@@ -208,44 +168,15 @@ public class BytecodeContribution extends ControlContribution {
      * @see IDocumentListener#documentChanged(DocumentEvent)
      */
     public final void documentChanged(final DocumentEvent an_event) {
-      int stop = 0;
-      int start_rem = 0, stop_rem = 0;
-      try {
-        start_rem = an_event.fDocument.getLineOfOffset(an_event.getOffset());
-        final int insertedLen = an_event.getText().length();
-        stop = an_event.fDocument.getLineOfOffset(an_event.getOffset() +
-            insertedLen);
-        if (an_event == my_current_event) {
-          stop_rem = my_end_line;
-        } else {
-          //TODO maybe this should be an error?
-          throw new RuntimeException("documentChanged event does not match " +
-                                     "documentAboutToBeChanged event");
-        }
-        my_current_event = null;
-      } catch (BadLocationException e) {
-        //This should not happen as the offsets from the event are generated
-        //based on the current document
-        UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
-                               "differ from the ones in the event (2)");
-      }
-
-      if (BMLParsing.UMBRA_ENABLED) {
-        my_bcc.removeIncorrects(start_rem, stop_rem);
-        my_bcc.addAllLines(an_event.fDocument, start_rem, stop_rem, stop);
-        my_bcc.checkAllLines(start_rem, stop);
-        if (!my_bcc.allCorrect())
-          displayError(an_event.fDocument, my_bcc.getFirstError());
-        else displayCorrect(an_event.fDocument);
-      }
       ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
     }
 
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * Returns the only contribution object that is active in the system.
+   *
+   * @return the active contribution object
    */
   public static BytecodeContribution inUse() {
     return inUse;
@@ -294,12 +225,9 @@ public class BytecodeContribution extends ControlContribution {
   /**
    * This method displays in the status line the information
    * that something is correct.
-   *
-   * @param a_doc the status line is extracted from
    */
-  private void displayCorrect(final IDocument a_doc) {
-    final BytecodeEditor editor = ((BytecodeDocument)a_doc).getEditor();
-    final IActionBars bars = editor.getEditorSite().getActionBars();
+  private void displayCorrect() {
+    final IActionBars bars = my_editor.getEditorSite().getActionBars();
     bars.getStatusLineManager().setMessage("Correct");
   }
 
@@ -307,12 +235,10 @@ public class BytecodeContribution extends ControlContribution {
    * This method displays in the status line the information
    * about an error in the indicated line.
    *
-   * @param a_doc the status line is extracted from
    * @param a_line the number of the line with the error
    */
-  private void displayError(final IDocument a_doc, final int a_line) {
-    final BytecodeEditor editor = ((BytecodeDocument)a_doc).getEditor();
-    final IActionBars bars = editor.getEditorSite().getActionBars();
+  private void displayError(final int a_line) {
+    final IActionBars bars = my_editor.getEditorSite().getActionBars();
     bars.getStatusLineManager().setMessage("Error detected: " + a_line);
   }
 
@@ -340,62 +266,7 @@ public class BytecodeContribution extends ControlContribution {
    *    executed
    */
   public void setActiveEditor(final IEditorPart a_target_editor) {
-    //my_editor = a_target_editor; it's never read
+    my_editor = (BytecodeEditor)a_target_editor;
   }
 
-  /**
-   * TODO.
-   * @param a_comment_array contains the texts of end-of-line comments, the
-   *   i-th entry contains the comment for the i-th instruction in the file,
-   *   if this parameter is null then the array is not taken into account
-   * @param an_interline multi-line comments
-   */
-  public final void reinit(String[] a_comment_array, String[] an_interline) {
-    my_ready_flag = false;
-    my_comment_array = a_comment_array;
-    my_interline = an_interline;
-  }
-
-  /**
-   * @return boolean array, an entry is <code>true</code> whenever
-   * the corresponding method is modified by the bytecode editor
-   */
-  public final boolean[] getModified() {
-    return my_bcc.getModified();
-  }
-
-  /**
-   * TODO.
-   * @param the_modified a table which indicates which methods are modified
-   */
-  public final void setModTable(final boolean[] the_modified) {
-    this.my_modified = the_modified;
-    my_mod_table_flag = true;
-  }
-
-  /**
-   * @return a {@ref String} table which represents bytecode comments
-   * associated with subsequent lines of the bytecode file associated with
-   * the current editor
-   */
-  public final String[] getCommentTab() {
-    return my_bcc.getComments();
-  }
-
-  /**
-   * TODO.
-   * @return TODO
-   */
-  public final String[] getInterlineTab() {
-    return my_bcc.getInterline();
-  }
-
-  /**
-   * TODO.
-   * @param a_contributor TODO
-   */
-  public final void addEditorContributor(
-                          final BytecodeEditorContributor a_contributor) {
-    my_editor_cntrbtr = a_contributor;
-  }
 }

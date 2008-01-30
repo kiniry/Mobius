@@ -10,17 +10,12 @@ package umbra.instructions;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.MethodGen;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.swt.widgets.Shell;
 
 import umbra.UmbraException;
 import umbra.UmbraHelper;
@@ -154,7 +149,11 @@ public final class BytecodeController {
    * The method rearranges the internal representation of the byte code
    * document to take into account the given change in the document.
    *
-   * This method parses the range of TODO
+   * This method parses the given range of the document (between
+   * {@code a_start_rem} and {@code a_stop}) and updates the local
+   * representation of instructions, comments, and editor lines with the
+   * structures resulting from the parsing. This update means that the
+   * values for the replaced or removed lines are also removed.
    *
    * @param a_doc a byte code document in which the modification has
    *   been made
@@ -164,14 +163,17 @@ public final class BytecodeController {
    *   old version of the document
    * @param a_stop a number of the last modified line as counted in the new
    *   version of the document
+   * @return the {@link MethodGen} structure which contains the updated
+   *   information about the content of the method body
+   * @throws UmbraException in case the change cannot be incorporated
+   *   into the internal structures
    */
-  public void addAllLines(final IDocument a_doc,
+  public MethodGen addAllLines(final IDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
-  {
-    final int methodno = ((BytecodeLineController)my_editor_lines.
-        get(a_start_rem)).getMethodNo();
+    throws UmbraException {
+    final int methodno = getMethodForLine(a_start_rem);
     final FragmentParser fgmparser = new FragmentParser(
-      (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno, null);
+      (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno);
     fgmparser.runParsing(); // after that I must know all the instructions are
                             //correct
     updateInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
@@ -182,23 +184,50 @@ public final class BytecodeController {
     } catch (UmbraException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      throw new UmbraException();
     }
     if (UmbraHelper.DEBUG_MODE) controlPrint(1);
-    return;
+    MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+    mg.getInstructionList().setPositions();
+    return mg;
   }
 
-  private void updateComments(int a_start_rem, 
-                              int an_end_rem, 
-                              int a_stop,
-                              Hashtable comments) {
-    for (int i = a_start_rem; i <= an_end_rem; i++) {
+  /**
+   * Returns the method in which the given line is located.
+   *
+   * @param a_lineno a line number to find the method for 
+   * @return the number of the method in which the line is located
+   */
+  public int getMethodForLine(final int a_lineno) {
+    return ((BytecodeLineController)my_editor_lines.
+        get(a_lineno)).getMethodNo();
+  }
+
+  /**
+   * This method updates the local representation of end-of-line comments
+   * within the given range with the given new comment content.
+   * The range of the old lines from {@code the_first} to {@code the_oldlast}
+   * is removed from the current representation and in that range the
+   * information for the lines from {@code the_first} to {@code the_newlast}
+   * is inserted as indicated in the {@code comments} parameter.
+   *
+   * @param the_first the first line of the edited region
+   * @param the_oldlast the last line of the old document
+   * @param the_newlast the last line of the new document
+   * @param the_comments te comments to add to the internal representation
+   */
+  private void updateComments(final int the_first,
+                              final int the_oldlast,
+                              final int the_newlast,
+                              final Hashtable the_comments) {
+    for (int i = the_first; i <= the_oldlast; i++) {
       final Object o = my_editor_lines.get(i);
       my_comments.remove(o);
     }
-    for (final Enumeration enumer = comments.keys();
+    for (final Enumeration enumer = the_comments.keys();
          enumer.hasMoreElements();) {
       final Object key = enumer.nextElement();
-      final Object value = comments.get(key);
+      final Object value = the_comments.get(key);
       my_comments.put(key, value);
     }
   }
@@ -222,7 +251,51 @@ public final class BytecodeController {
                                  final LinkedList editorLines)
     throws UmbraException {
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
-    int j = 0; // iterates over editorLines
+    final int j = replaceEditorLines(a_start_rem, an_end_rem, a_stop,
+                                     editorLines);
+    if (an_end_rem < a_stop) { //we must add the new lines
+      addEditorLines(an_end_rem, a_stop, editorLines, mg, j);
+    } else if (an_end_rem > a_stop) { //we must remove the deleted lines
+      removeEditorLines(an_end_rem, a_stop);
+    }
+    my_editor_lines.addAll(a_start_rem, editorLines);
+    mg.getInstructionList().update();
+    mg.update();
+    mg.getInstructionList().setPositions();
+  }
+
+  private void removeEditorLines(final int an_end_rem,
+                                 final int a_stop)
+    throws UmbraException {
+    for (int i = a_stop + 1; i <= an_end_rem; i++) {
+      try {
+        final InstructionLineController oldlc =
+          (InstructionLineController)my_editor_lines.get(i);
+        oldlc.dispose();
+      } catch (ClassCastException e) { //we crossed the method boundary
+        throw new UmbraException();
+      }
+    }
+  }
+
+  private void addEditorLines(final int an_end_rem, final int a_stop, final LinkedList editorLines, final MethodGen mg, int j) throws UmbraException {
+    int pos = getCurrentPositionInMethod(an_end_rem + 1);
+    for (int i = an_end_rem + 1; i <= a_stop; i++, j++, pos++) {
+      try {
+        final InstructionLineController newlc =
+          (InstructionLineController)editorLines.get(j);
+        newlc.addHandle(mg, pos);
+      } catch (ClassCastException e) { //we crossed the method boundary
+        throw new UmbraException();
+      }
+    }
+  }
+
+  private int replaceEditorLines(final int a_start_rem,
+                                 final int an_end_rem,
+                                 final int a_stop,
+                                 final LinkedList editorLines) {
+    int j = 0;
     for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++, j++) {
       //we replace for the common part
       final InstructionLineController oldlc =
@@ -233,24 +306,7 @@ public final class BytecodeController {
       my_editor_lines.remove(i);
       my_editor_lines.add(newlc);
     }
-    if (an_end_rem < a_stop) { //we must add the new lines
-      int pos = getCurrentPositionInMethod(an_end_rem + 1);
-      for (int i = an_end_rem + 1; i <= a_stop; i++, j++, pos++) {
-        final InstructionLineController newlc =
-          (InstructionLineController)editorLines.get(j);
-        newlc.addHandle(mg, pos);
-      }
-    } else if (an_end_rem > a_stop) { //we must remove the deleted lines
-      for (int i = a_stop + 1; i <= an_end_rem; i++) {
-        final InstructionLineController oldlc =
-          (InstructionLineController)my_editor_lines.get(i);
-        oldlc.dispose();
-      }
-    }
-    my_editor_lines.addAll(a_start_rem, editorLines);
-    mg.getInstructionList().update();
-    mg.update();
-    mg.getInstructionList().setPositions();
+    return j;
   }
 
   private int getCurrentPositionInMethod(int i) {
@@ -274,7 +330,7 @@ public final class BytecodeController {
    */
   private MethodGen getCurrentMethodGen(final int a_start_rem,
                                         final int an_end_rem)
-      throws UmbraException {
+  throws UmbraException {
     MethodGen mg = null;
     if (a_start_rem < an_end_rem) {
       mg = ((InstructionLineController)my_editor_lines.get(a_start_rem)).
@@ -305,72 +361,6 @@ public final class BytecodeController {
       return (InstructionLineController)o;
     }
     return null;
-  }
-
-  /**
-   * TODO.
-   *
-   * @param a_doc bytecode document for which the changes are analysed
-   * @param a_start_of_rem the beginning of the removed area
-   * @param an_end_rem the end of the removed area
-   * @param a_i TODO
-   * @param a_j TODO
-   * @param an_old_lc TODO
-   * @param the_next_line TODO
-   * @param the_last_flag TODO
-   * @param the_methend_flag true when <code>a_j</code> is the last instruction
-   *        in a method
-   * @param a_context the context of the currently added instruction line
-   * @return TODO
-   * @throws UmbraException TODO
-   */
-  private int addInstructions(final IDocument a_doc,
-                              final int a_start_of_rem,
-                              final int an_end_rem,
-                              final int a_i,
-                              final int a_j,
-                              final BytecodeLineController an_old_lc,
-                              final BytecodeLineController the_next_line,
-                              final boolean the_last_flag,
-                              final boolean the_methend_flag,
-                              final LineContext a_context)
-    throws UmbraException {
-    int res = a_i;
-    final ClassGen cg = ((BytecodeDocument)a_doc).getClassGen();
-    final int off = getInstructionOff(a_j);
-    try {
-      final String line = a_doc.get(a_doc.getLineOffset(a_j),
-                                    a_doc.getLineLength(a_j));
-      final String lineName = InitParser.removeCommentFromLine(line);
-      final String comment = InitParser.extractCommentFromLine(line, a_context);
-      final BytecodeLineController lc = Preparsing.getType(lineName, a_context);
-      lc.setMethodNo(((BytecodeLineController)my_editor_lines.get(a_j)).
-                                                           getMethodNo());
-      if (comment != null) my_comments.put(lc, comment);
-      final Instruction ins = lc.getInstruction();
-      if (ins != null) {
-        lc.setTarget(the_next_line.getList(), ins);
-      } else {
-        if (comment != null) my_interline.put(the_next_line, comment);
-      }
-      if (res >= a_start_of_rem && res <= an_end_rem) {
-        lc.update(an_old_lc, the_next_line, cg, ins, the_methend_flag,
-                  the_last_flag, my_instructions, off);
-        my_editor_lines.set(a_j, lc);
-      } else {
-        if (an_old_lc.getHandle() == null)
-          lc.initHandle(the_next_line, cg, ins, the_methend_flag,
-                        my_instructions, off);
-        else
-          lc.initHandle(an_old_lc, cg, ins, the_methend_flag,
-                        my_instructions, off);
-        my_editor_lines.add(a_j, lc);
-        res--;
-      }
-    } catch (BadLocationException e) {
-      e.printStackTrace();
-    }
-    return res;
   }
 
   /**
@@ -418,57 +408,6 @@ public final class BytecodeController {
    */
   public int getFirstError() {
     return my_editor_lines.lastIndexOf(my_incorrect.getFirst());
-  }
-
-  /**
-   * The method finds index in the instruction array that is linked with
-   * the position in the line array. TODO check
-   *
-   * @param a_linenum line number (including all lines in a document)
-   * @return instruction offset (including only instruction lines)
-   *   or -1 if the line is not an instruction
-   */
-  private int getInstructionOff(final int a_linenum) {
-    for (int i = a_linenum; i >= 0; i--) {
-      final Object line = my_editor_lines.get(i);
-      if (my_instructions.contains(line))
-        return my_instructions.indexOf(line);
-    }
-    return -1;
-  }
-
-  /**
-   * @param a_linenum a number of a line (including all lines in the textual
-   *    representation)
-   * @return <code>true</code> if <code>a_linenum</code> is a number of an
-   *     instruction in {@link #my_instructions} array that is the last
-   *     instruction in a method or is a non-instruction one located after the
-   *     method
-   */
-  private boolean isEnd(final int a_linenum) {
-    final int off = getInstructionOff(a_linenum);
-    if (off + 1 >= my_instructions.size()) return true;
-    if (off == -1) return false;
-    final int index1 = ((BytecodeLineController)my_instructions.get(off)).
-                                                             getMethodNo();
-    final int index2 = ((BytecodeLineController)my_instructions.get(off + 1)).
-             getMethodNo();
-    return (index1 != index2);
-  }
-
-  /**
-   * @param a_linenum a number of a line (including all lines)
-   * @return <code>true</code> if the line is located before the first
-   *         instruction in a method TODO any method or a fixed method?
-   */
-  private boolean isFirst(final int a_linenum) {
-    final int off = getInstructionOff(a_linenum);
-    if (off == 0) return true;
-    final int index1 = ((BytecodeLineController)my_instructions.get(off)).
-                                                             getMethodNo();
-    final int index2 = ((BytecodeLineController)my_instructions.get(off - 1)).
-                                                             getMethodNo();
-    return (index1 != index2);
   }
 
   /**
@@ -563,9 +502,14 @@ public final class BytecodeController {
    * @param a_comment_array contains the texts of end-of-line comments, the
    *   i-th entry contains the comment for the i-th instruction in the document,
    *   if this parameter is null then the array is not taken into account
+   * @param a_interline contains the texts of interline comments, the
+   *   i-th entry contains the comment for the i-th line in the document,
+   *   if this parameter is null then the array is not taken into account
+   *   TODO currently ignored
    */
   public void init(final BytecodeDocument a_doc,
-                   final String[] a_comment_array) {
+                   final String[] a_comment_array,
+                   final String[] a_interline) {
     final InitParser initParser = new InitParser(a_doc, a_comment_array);
     initParser.runParsing();
     my_editor_lines = initParser.getEditorLines();

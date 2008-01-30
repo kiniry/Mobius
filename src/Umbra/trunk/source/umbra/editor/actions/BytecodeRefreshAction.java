@@ -70,19 +70,19 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
    */
   public final void run() {
     final BytecodeEditor my_editor = getEditor();
-    final BytecodeContribution my_btcodeCntrbtn = getContribution();
     final BytecodeEditorContributor my_contributor = getContributor();
     my_editor.doSave(null);
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IPath active = file.getFullPath();
     try {
-      final String[] commentTab = my_btcodeCntrbtn.getCommentTab();
-      final String[] interlineTab = my_btcodeCntrbtn.getInterlineTab();
+      //memorize the current state of the session
+      final String[] commentTab = my_editor.getDocument().getCommentTab();
+      final String[] interlineTab = my_editor.getDocument().getInterlineTab();
+      final boolean[] modified = my_editor.getDocument().getModified();
       my_editor.refreshBytecode(active, commentTab, interlineTab);
       final FileEditorInput input = new FileEditorInput(file);
-      final boolean[] modified = my_btcodeCntrbtn.getModified();
-      my_btcodeCntrbtn.setModTable(modified);
       my_contributor.refreshEditor(my_editor, input, commentTab, interlineTab);
+      my_editor.getDocument().setModTable(modified);
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (CoreException e) {

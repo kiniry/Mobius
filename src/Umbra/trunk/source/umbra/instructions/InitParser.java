@@ -14,11 +14,11 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.swt.widgets.Shell;
 
 import umbra.UmbraException;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
@@ -87,20 +87,20 @@ public class InitParser extends BytecodeTextParser {
     final LineContext ctxt = new LineContext();
     try {
       a_line_no = swallowClassHeader(a_line_no, ctxt);
-    }  catch (BadLocationException e) {
+    }  catch (UmbraLocationException e) {
       MessageDialog.openInformation(new Shell(), "Bytecode",
                          "The current document has no positions for line " +
-                         a_line_no);
+                         e.getWrongLocation());
       return;
     }
     while (a_line_no < my_doc.getNumberOfLines()) {
       try {
         ctxt.incMethodNo();
         a_line_no = swallowMethod(a_line_no, a_method_count, ctxt);
-      } catch (BadLocationException e) {
+      } catch (UmbraLocationException e) {
         MessageDialog.openInformation(new Shell(), "Bytecode",
                       "The current document has no positions for line " +
-                      a_line_no);
+                      e.getWrongLocation());
         break;
       } catch (UmbraException e) {
         MessageDialog.openInformation(new Shell(), "Bytecode",
@@ -128,12 +128,12 @@ public class InitParser extends BytecodeTextParser {
    * @param a_ctxt the parsing context
    * @return the advanced line number, the first line number which has not been
    *   analysed by the current method
-   * @throws BadLocationException in case one of the locations in the document
+   * @throws UmbraLocationException in case one of the locations in the document
    *   was wrongly calculated
    */
   private int swallowClassHeader(final int the_current_line,
                                  final LineContext a_ctxt)
-    throws BadLocationException {
+    throws UmbraLocationException {
     int j = the_current_line;
     String line = getLineFromDoc(my_doc, j, a_ctxt);
     a_ctxt.setInitial();
@@ -169,7 +169,7 @@ public class InitParser extends BytecodeTextParser {
    * @return the number of the first line after the method; it is the first
    *   line after the empty method delimiting line or the last line in the
    *   document in case the end of document is met
-   * @throws BadLocationException in case a line number is reached which is
+   * @throws UmbraLocationException in case a line number is reached which is
    *   not within the given document
    * @throws UmbraException the given method number exceeds the number of
    *   available methods in the BCEL structure
@@ -177,7 +177,7 @@ public class InitParser extends BytecodeTextParser {
   private int swallowMethod(final int the_line_no,
                             final int a_method_no,
                             final LineContext a_ctxt)
-    throws BadLocationException, UmbraException {
+    throws UmbraLocationException, UmbraException {
     int j = swallowEmptyLines(my_doc, the_line_no, a_ctxt);
     final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
     final InstructionList il = mg.getInstructionList();

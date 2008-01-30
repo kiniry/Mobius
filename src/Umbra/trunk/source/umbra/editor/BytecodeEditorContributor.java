@@ -53,6 +53,11 @@ import umbra.editor.actions.BytecodeSynchrAction;
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 
   /**
+   * The identifier of the refresh action.
+   */
+  public static final String REFRESH_ID = "_refresh_action_id_";
+
+  /**
    * TODO.
    */
   private BytecodeContribution my_bcode_cntrbtn;
@@ -104,7 +109,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   public BytecodeEditorContributor() throws MalformedURLException {
     super();
     my_bcode_cntrbtn = BytecodeContribution.newItem();
-    my_bcode_cntrbtn.addEditorContributor(this);
     my_refresh_action = new BytecodeRefreshAction(this, my_bcode_cntrbtn);
     my_rebuild_action = new BytecodeRebuildAction(this);
     my_combine_action = new BytecodeCombineAction(this, my_bcode_cntrbtn);
@@ -113,6 +117,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
     assignIcons(installURL);
     my_refresh_action.setToolTipText("Refresh");
+    my_refresh_action.setId(REFRESH_ID);
     my_rebuild_action.setToolTipText("Rebuild");
     my_combine_action.setToolTipText("Combine");
     my_restore_action.setToolTipText("Restore");
@@ -332,7 +337,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 //      e.printStackTrace();
 //    }
     sp.setSelection(ns);
-    my_bcode_cntrbtn.reinit(a_comment_array, an_interline);
+    ((BytecodeEditor)newEditor).getDocument().reinit(a_comment_array,
+                                                     an_interline);
     if (proper) Composition.stopDisas();
   }
 

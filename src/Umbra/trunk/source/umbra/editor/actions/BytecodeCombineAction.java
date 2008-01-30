@@ -257,11 +257,10 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     final int meths = cg.getMethods().length;
     boolean[] modified;
     try {
-      modified = getContribution().getModified();
+      modified = getEditor().getDocument().getModified();
     } catch (NullPointerException e) {
       MessageDialog.openWarning(getEditor().getSite().getShell(),
           "Bytecode", "Nothing has been modified");
-
       throw e;
     }
     for (int i = 0; i < modified.length && i < oldMeths && i < meths; i++) {

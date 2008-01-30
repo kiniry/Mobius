@@ -14,6 +14,7 @@ import java.io.InputStream;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
@@ -414,5 +415,15 @@ public class BytecodeEditor extends TextEditor {
    */
   public BMLParsing getBmlp() {
     return my_bmlp;
+  }
+
+  /**
+   * 
+   * @param methodno
+   * @param mg
+   */
+  public void replaceMethod(int methodno, MethodGen mg) {
+    my_classgen.setMethodAt(mg.getMethod(), methodno);
+    my_javaclass.setMethods(my_classgen.getMethods());
   }
 }
