@@ -82,7 +82,7 @@ public class Widgets {
 	}
 
 	/**
-	 * A custom widget that is a spearator followed by a label,
+	 * A custom widget that is a separator followed by a label,
 	 * typically used as a title to a set of widgets below it.
 	 * 
 	 * @author David Cok
