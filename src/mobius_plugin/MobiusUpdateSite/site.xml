@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/mobius.primary.feature_1.0.0.jar" id="mobius.primary.feature" version="1.0.0"/>
+   <feature url="features/mobius.Escjava2.feature_2.0.7.jar" id="mobius.Escjava2.feature" version="2.0.7">
+      <category name="Mobius Program Verification Environment"/>
+   </feature>
+   <feature url="features/mobius.javafe.feature_2.0.7.jar" id="mobius.javafe.feature" version="2.0.7">
+      <category name="Mobius Program Verification Environment"/>
+   </feature>
+   <feature url="features/mobius.simplify.feature_1.5.6.jar" id="mobius.simplify.feature" version="1.5.6">
+      <category name="Mobius Program Verification Environment"/>
+   </feature>
+   <category-def name="Mobius Program Verification Environment" label="Mobius"/>
+   <category-def name="Other" label="Other">
+      <description>
+         Other plugins
+      </description>
+   </category-def>
+   <category-def name="JML" label="JML">
+      <description>
+         JML plugins
+      </description>
+   </category-def>
 </site>
