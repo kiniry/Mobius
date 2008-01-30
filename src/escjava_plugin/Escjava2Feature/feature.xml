@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="mobius.Escjava2.feature"
-      label="Escjava2"
-      version="2.0.7"
+      label="ESC/Java2"
+      version="2.0.8"
       provider-name="David R. Cok and EU MOBIUS IST-15905 Project"
       plugin="mobius.escjava2.plugin">
    <install-handler/>
@@ -747,7 +747,7 @@ limitations under the License.
    </license>
 
    <url>
-      <update label="ESCJava2 Update Site" url="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/"/>
+      <update label="ESC/Java2 Update Site" url="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/"/>
    </url>
 
    <includes
