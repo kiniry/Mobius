@@ -3,6 +3,15 @@
 	<name>Escjava2UpdateSite</name>
 	<comment></comment>
 	<projects>
+		<project>Escjava2Feature</project>
+		<project>Escjava2UI</project>
+		<project>Esctools</project>
+		<project>JavafeFeature</project>
+		<project>JavafePlugin</project>
+		<project>MobiusUILibrary</project>
+		<project>MobiusUILibraryFeature</project>
+		<project>SimplifyFeature</project>
+		<project>SimplifyPlugin</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
