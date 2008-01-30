@@ -5,6 +5,12 @@
 	<projects>
 		<project>Escjava2UI</project>
 		<project>Esctools</project>
+		<project>JavafeFeature</project>
+		<project>JavafePlugin</project>
+		<project>MobiusUILibrary</project>
+		<project>MobiusUILibraryFeature</project>
+		<project>SimplifyFeature</project>
+		<project>SimplifyPlugin</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
