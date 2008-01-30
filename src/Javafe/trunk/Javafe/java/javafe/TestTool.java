@@ -44,7 +44,7 @@ public class TestTool extends SrcTool {
     public class Options extends SrcToolOptions {
 	    /**
 	     * Print option information to <code>System.err</code>.  Each
-	     * printed line should be preceeded by two blank spaces. <p>
+	     * printed line should be preceded by two blank spaces. <p>
 	     *
 	     * Each overriding method should first call
 	     * <code>super.showOptions()</code>.<p>
