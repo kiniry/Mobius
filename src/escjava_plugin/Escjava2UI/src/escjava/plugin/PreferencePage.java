@@ -188,6 +188,8 @@ public class PreferencePage extends pluginlib.PreferencePage {
 
   /**
    * Creates and initializes the array of warning widgets
+   * 
+   * @requires Options.waningOptions() != null;
    */
   private static void initWarningWidgets() {
     AbstractPreference.BooleanOption[] opts = Options.warningOptions();

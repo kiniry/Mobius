@@ -464,12 +464,7 @@
       <toc file="escjavaHelp.xml" primary="true" />
    </extension>
    <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            class="escjava2.plugin.EscjavaProperties"
-            id="mobius.escjava2.plugin.properties.EscJava"
-            name="ESC/Java2 Properties">
-      </page>
+         point="org.eclipse.ui.editors">
    </extension>
    
   
