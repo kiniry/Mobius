@@ -6,7 +6,8 @@
       provider-name="EU MOBIUS IST-15905 Project">
 
    <description url=" ">
-      
+      This feature contains the Simplify theorem prover, for use with
+ESC/Java2.
    </description>
 
    <copyright url=" ">
