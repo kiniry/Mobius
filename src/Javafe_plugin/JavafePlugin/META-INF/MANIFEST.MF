@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Javafe plugin
 Bundle-SymbolicName: mobius.javafe.plugin
-Bundle-Version: 2.0.7
-Bundle-Vendor: https://mobius.ucd.ie/
+Bundle-Version: 2.0.8
+Bundle-Vendor: HP Labs and EU Mobius IST-15905
 Export-Package: javafe,
  javafe.ast,
  javafe.decsrc,
@@ -16,4 +16,19 @@ Export-Package: javafe,
  javafe.test,
  javafe.test.lex,
  javafe.util,
- junitutils
+ junitutils,
+ org.apache.bcel;uses:="org.apache.bcel.classfile,org.apache.bcel.util",
+ org.apache.bcel.classfile;uses:="org.apache.bcel,org.apache.bcel.generic,org.apache.bcel.util",
+ org.apache.bcel.generic;uses:="org.apache.bcel.classfile,org.apache.bcel.util",
+ org.apache.bcel.util;uses:="org.apache.bcel,org.apache.bcel.generic,org.apache.bcel.classfile",
+ org.apache.bcel.verifier;uses:="javax.swing.event,javax.swing",
+ org.apache.bcel.verifier.exc,
+ org.apache.bcel.verifier.statics;
+  uses:="org.apache.bcel.verifier,
+   org.apache.bcel,
+   org.apache.bcel.generic,
+   org.apache.bcel.classfile",
+ org.apache.bcel.verifier.structurals;uses:="org.apache.bcel.verifier,org.apache.bcel,org.apache.bcel.generic",
+ tohtml
+Bundle-ClassPath: libs/bcel-5.2.jar,
+ libs/Javafe2.0.5.jar
