@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mobius ESCJava2 Library Plug-in
 Bundle-SymbolicName: mobius.escjava2.esctools
-Bundle-Version: 2.0.5
+Bundle-Version: 2.0.6
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 project
 Bundle-ClassPath: escspecs.jar,
  esctools2.jar
@@ -145,3 +145,4 @@ Export-Package: escjava;
  org.jmlspecs,
  org.jmlspecs.lang
 Eclipse-JREBundle: true
+Require-Bundle: mobius.javafe.plugin;visibility:=reexport
