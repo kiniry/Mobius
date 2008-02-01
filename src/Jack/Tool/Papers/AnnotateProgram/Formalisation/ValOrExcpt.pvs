@@ -1,0 +1,10 @@
+ValOrExcpt[Name : TYPE+] : DATATYPE
+BEGIN
+
+  IMPORTING ValProp[Name], Excpt, Body[Name]
+
+  val(v : Expr) : val?
+  excpt (e : Excpt) : excpt?
+
+END ValOrExcpt
+
