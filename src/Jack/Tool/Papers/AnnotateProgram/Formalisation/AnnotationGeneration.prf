@@ -1,6 +1,6 @@
 (VariableNames
  (cp_TCC1 0
-  (cp_TCC1-1 nil 3396601202 3410272129
+  (cp_TCC1-1 nil 3396601202 3410851979
    (""
     (inst 1
      "LAMBDA(mp : MonitoredProgram) : choose({n : Name | NOT forbidden_names(mp)(n)})")
@@ -94,20 +94,20 @@
     (finite_set type-eq-decl nil finite_sets nil)
     (CP formal-nonempty-type-decl nil VariableNames nil)
     (Name formal-nonempty-type-decl nil VariableNames nil))
-   912 760 t nil)))
+   1237 1130 t nil)))
 (NewVariableDeclarations
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-2 nil 3397386732 3410272130
+  (IMP_VariableNames_TCC1-2 nil 3397386732 3410853038
    (";;; Proof IMP_VariableNames_TCC1-1 for formula AnnotateProgram.IMP_VariableNames_TCC1"
     (use "infinite_namespace") nil
     ";;; developed with SHOSTAK decision procedures")
    proved
    ((infinite_namespace formula-decl nil NewVariableDeclarations nil))
-   233 230 nil nil)
+   641 580 nil nil)
   (IMP_VariableNames_TCC1-1 nil 3397386612 nil
    ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
  (name_of_TCC1 0
-  (name_of_TCC1-2 nil 3397386758 3410272130
+  (name_of_TCC1-2 nil 3397386758 3410853039
    (";;; Proof name_of_TCC1-1 for formula AnnotateProgram.name_of_TCC1"
     (use "name_of_exists")
     ((";;; Proof name_of_TCC1-1 for formula AnnotateProgram.name_of_TCC1"
@@ -143,11 +143,11 @@
     (f!1 skolem-const-decl "[mp: (wf_MP) -> [CP -> (legal_names(mp))]]"
      NewVariableDeclarations nil)
     (name_of_exists formula-decl nil NewVariableDeclarations nil))
-   594 520 nil nil)
+   991 890 nil nil)
   (name_of_TCC1-1 nil 3397386612 nil ("" (existence-tcc) nil nil) nil
    nil nil nil nil nil))
  (unique_TCC1 0
-  (unique_TCC1-2 nil 3397386786 3410272131
+  (unique_TCC1-2 nil 3397386786 3410853039
    (";;; Proof unique_TCC1-1 for formula AnnotateProgram.unique_TCC1"
     (use "CP_is_enumerable")
     ((";;; Proof unique_TCC1-1 for formula AnnotateProgram.unique_TCC1"
@@ -174,17 +174,17 @@
     (injective? const-decl "bool" functions nil)
     (f!1 skolem-const-decl "[CP -> nat]" NewVariableDeclarations nil)
     (CP_is_enumerable formula-decl nil NewVariableDeclarations nil))
-   380 370 nil nil)
+   801 740 nil nil)
   (unique_TCC1-1 nil 3397386612 nil ("" (existence-tcc) nil nil) nil
    nil nil nil nil nil))
  (new_cp_gvd_TCC1 0
-  (new_cp_gvd_TCC1-1 nil 3398096023 3410272131
+  (new_cp_gvd_TCC1-1 nil 3398096023 3410853040
    ("" (subtype-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil NewVariableDeclarations nil)
     (defined? const-decl "boolean" ValProp nil))
-   467 460 nil nil))
+   951 840 nil nil))
  (new_cps_gvds_TCC1 0
-  (new_cps_gvds_TCC1-1 nil 3398096023 3410272132
+  (new_cps_gvds_TCC1-1 nil 3398096023 3410853042
    ("" (skosimp*)
     (("" (typepred "cps(mva(mp!1))")
       (("" (expand "is_finite")
@@ -319,9 +319,9 @@
     (unique const-decl "(injective?[CP, nat])" NewVariableDeclarations
      nil)
     (nonempty? const-decl "bool" sets nil))
-   791 740 t nil))
+   1292 1120 t nil))
  (new_mva_vars_gvds_TCC1 0
-  (new_mva_vars_gvds_TCC1-1 nil 3398096023 3410272132
+  (new_mva_vars_gvds_TCC1-1 nil 3398096023 3410853043
    ("" (skosimp*)
     (("" (typepred "vdsA(mva(mp!1))")
       (("" (expand "is_finite")
@@ -444,9 +444,9 @@
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (nonempty? const-decl "bool" sets nil))
-   400 350 t nil))
+   865 720 t nil))
  (new_vars_derived_from_mp 0
-  (new_vars_derived_from_mp-1 nil 3397386643 3410272134
+  (new_vars_derived_from_mp-1 nil 3397386643 3410853045
    ("" (skosimp*)
     (("" (expand "var_names")
       (("" (expand "new_gvds")
@@ -531,9 +531,9 @@
     (mp!1 skolem-const-decl "(wf_MP)" NewVariableDeclarations nil)
     (new_gvds const-decl "finite_set[FieldDecl]"
      NewVariableDeclarations nil))
-   1653 1590 t nil))
+   2262 2010 t nil))
  (wf_new_vars 0
-  (wf_new_vars-1 nil 3397386628 3410272138
+  (wf_new_vars-1 nil 3397386628 3410853050
    ("" (skosimp*)
     ((""
       (auto-rewrite ("empty?" "disjoint?" "intersection" "member"
@@ -823,9 +823,9 @@
     (injective? const-decl "bool" functions nil)
     (name_of const-decl "(injective?[CP, (legal_names(mp))])"
      NewVariableDeclarations nil))
-   4164 3930 t nil))
+   5137 4390 t nil))
  (cp_new_ghostvar 0
-  (cp_new_ghostvar-1 nil 3398086579 3410272140
+  (cp_new_ghostvar-1 nil 3398086579 3410853052
    ("" (skosimp*)
     (("" (expand "new_gvds")
       (("" (rewrite "add_as_union")
@@ -907,9 +907,9 @@
     (union const-decl "set" sets nil) (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (add_as_union formula-decl nil sets_lemmas nil))
-   1836 1760 t shostak))
+   2507 2180 t shostak))
  (halted_new_ghostvar 0
-  (halted_new_ghostvar-1 nil 3398086655 3410272140
+  (halted_new_ghostvar-1 nil 3398086655 3410853053
    ("" (skosimp*)
     (("" (expand "new_gvds")
       (("" (rewrite "add_as_union")
@@ -1024,15 +1024,15 @@
     (union const-decl "set" sets nil) (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (add_as_union formula-decl nil sets_lemmas nil))
-   326 320 t shostak))
+   793 690 t shostak))
  (new_cp_gvd_TCC2 0
-  (new_cp_gvd_TCC2-1 nil 3403876780 3410272141
+  (new_cp_gvd_TCC2-1 nil 3403876780 3410853054
    ("" (subtype-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil NewVariableDeclarations nil)
     (defined? const-decl "boolean" ValProp nil))
-   523 460 nil nil))
+   930 830 nil nil))
  (new_cp_gvd_new_ghostvar 0
-  (new_cp_gvd_new_ghostvar-1 nil 3403876818 3410272141
+  (new_cp_gvd_new_ghostvar-1 nil 3403876818 3410853055
    ("" (skosimp)
     ((""
       (expand* "new_gvds" "new_cps_gvds" "new_cp_gvd" "add" "union"
@@ -1071,9 +1071,9 @@
     (finite_set type-eq-decl nil finite_sets nil)
     (Name formal-nonempty-type-decl nil NewVariableDeclarations nil)
     (CP formal-nonempty-type-decl nil NewVariableDeclarations nil))
-   290 260 t shostak))
+   708 620 t shostak))
  (new_mva_var_new_ghostvar 0
-  (new_mva_var_new_ghostvar-1 nil 3403877388 3410272142
+  (new_mva_var_new_ghostvar-1 nil 3403877388 3410853056
    ("" (skosimp)
     ((""
       (expand* "new_gvds" "new_mva_vars_gvds" "new_mva_var_gvd" "add"
@@ -1113,9 +1113,9 @@
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil)
     (Name formal-nonempty-type-decl nil NewVariableDeclarations nil))
-   396 390 t shostak))
+   860 740 t shostak))
  (cp_not_cps_ghostvar 0
-  (cp_not_cps_ghostvar-1 nil 3398156394 3410272142
+  (cp_not_cps_ghostvar-1 nil 3398156394 3410853057
    ("" (skosimp*)
     (("" (expand "new_cps_gvds")
       (("" (skosimp*)
@@ -1173,9 +1173,9 @@
     (union const-decl "set" sets nil)
     (reserved_words const-decl "finite_set[Name]" Program nil)
     (new_cp_gvd const-decl "FieldDecl" NewVariableDeclarations nil))
-   629 590 t shostak))
+   1166 1000 t shostak))
  (cp_not_mva_ghostvar 0
-  (cp_not_mva_ghostvar-1 nil 3398156446 3410272144
+  (cp_not_mva_ghostvar-1 nil 3398156446 3410853059
    ("" (skosimp*)
     (("" (expand "new_mva_vars_gvds")
       (("" (skosimp*)
@@ -1232,9 +1232,9 @@
     (reserved_words const-decl "finite_set[Name]" Program nil)
     (new_cp_gvd const-decl "FieldDecl" NewVariableDeclarations nil)
     (FieldDecl type-eq-decl nil Program nil))
-   1775 1710 t shostak))
+   2300 2130 t shostak))
  (var_names_MVA_subset_var_names_new_gdvs 0
-  (var_names_MVA_subset_var_names_new_gdvs-1 nil 3401682644 3410272145
+  (var_names_MVA_subset_var_names_new_gdvs-1 nil 3401682644 3410853060
    (";;; Proof for formula AnnotateProgramProperties.var_names_MVA_subset_var_names_new_gdvs"
     (skosimp)
     ((";;; Proof for formula AnnotateProgramProperties.var_names_MVA_subset_var_names_new_gdvs"
@@ -1339,34 +1339,34 @@
      nil)
     (Union_surjective name-judgement
      "(surjective?[setofsets[T], set[T]])" sets_lemmas nil))
-   526 480 nil nil)))
+   976 850 nil nil)))
 (AnnotateEvent
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-1 nil 3401619498 3410272145
+  (IMP_VariableNames_TCC1-1 nil 3401619498 3410853005
    ("" (use "infinite_namespace") nil nil) proved
-   ((infinite_namespace formula-decl nil AnnotateEvent nil)) 221 220 t
+   ((infinite_namespace formula-decl nil AnnotateEvent nil)) 693 610 t
    nil))
  (IMP_NewVariableDeclarations_TCC1 0
-  (IMP_NewVariableDeclarations_TCC1-1 nil 3401619498 3410272145
+  (IMP_NewVariableDeclarations_TCC1-1 nil 3401619498 3410853006
    ("" (use "CP_is_enumerable") nil nil) proved
-   ((CP_is_enumerable formula-decl nil AnnotateEvent nil)) 231 230 t
+   ((CP_is_enumerable formula-decl nil AnnotateEvent nil)) 644 600 t
    nil))
  (IMP_NewVariableDeclarations_TCC2 0
-  (IMP_NewVariableDeclarations_TCC2-1 nil 3401619498 3410272145
+  (IMP_NewVariableDeclarations_TCC2-1 nil 3401619498 3410853006
    ("" (use "name_of_exists") nil nil) proved
-   ((name_of_exists formula-decl nil AnnotateEvent nil)) 245 230 t
+   ((name_of_exists formula-decl nil AnnotateEvent nil)) 691 600 t
    nil))
  (ann_action_TCC1 0
-  (ann_action_TCC1-1 nil 3401619498 3410272146
+  (ann_action_TCC1-1 nil 3401619498 3410853007
    ("" (termination-tcc) nil nil) proved
    ((real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil)
     (length def-decl "nat" list_props nil))
-   247 240 nil nil))
+   671 610 nil nil))
  (var_names_ann_action 0
-  (var_names_ann_action-1 nil 3401682404 3410272146
+  (var_names_ann_action-1 nil 3401682404 3410853008
    (";;; Proof for formula AnnotateProgramProperties.var_names_ann_action"
     (skolem 1 (_ "n!1"))
     ((";;; Proof for formula AnnotateProgramProperties.var_names_ann_action"
@@ -1430,6 +1430,7 @@
     (add const-decl "(nonempty?)" sets nil)
     (union const-decl "set" sets nil)
     (Set adt-constructor-decl "[[Name, Expr] -> (Set?)]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -1438,9 +1439,9 @@
     (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Sequence adt-constructor-decl "[[Stmt, Stmt] -> (Sequence?)]"
      Body_adt nil))
-   600 560 nil nil))
+   1027 930 nil nil))
  (subterm_ann_action 0
-  (subterm_ann_action-1 nil 3403600232 3410272147
+  (subterm_ann_action-1 nil 3403600232 3410853009
    ("" (induct "a")
     (("1" (grind) nil nil)
      ("2" (skosimp*)
@@ -1493,6 +1494,7 @@
     (CP formal-nonempty-type-decl nil AnnotateEvent nil)
     (OneAction type-eq-decl nil MVA nil)
     (Set adt-constructor-decl "[[Name, Expr] -> (Set?)]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -1521,9 +1523,9 @@
     (Body type-decl nil Body_adt nil) (Action type-eq-decl nil MVA nil)
     (boolean nonempty-type-decl nil booleans nil)
     (list type-decl nil list_adt nil))
-   512 420 t shostak))
+   875 770 t shostak))
  (ann_guard_actions_set_TCC1 0
-  (ann_guard_actions_set_TCC1-2 nil 3401619720 3410272148
+  (ann_guard_actions_set_TCC1-2 nil 3401619720 3410853010
    ("" (skosimp*)
     (("" (typepred "ts!1")
       (("" (expand "is_finite")
@@ -1671,11 +1673,11 @@
     (v!1 skolem-const-decl "ValOrExcpt[Name]" AnnotateEvent nil)
     (update_vars const-decl "Stmt" AnnotateEvent nil)
     (nonempty? const-decl "bool" sets nil))
-   876 810 t nil)
+   1355 1170 t nil)
   (ann_guard_actions_set_TCC1-1 nil 3401619498 nil
    ("" (subtype-tcc) nil nil) nil nil nil nil nil nil))
  (ann_event_set_TCC1 0
-  (ann_event_set_TCC1-1 nil 3401619498 3410272148
+  (ann_event_set_TCC1-1 nil 3401619498 3410853011
    ("" (skosimp*)
     (("" (typepred "ts!1")
       (("" (expand "is_finite")
@@ -1722,9 +1724,9 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (number nonempty-type-decl nil numbers nil))
-   258 260 t nil))
+   719 640 t nil))
  (ann_event_set_TCC2 0
-  (ann_event_set_TCC2-2 nil 3401619789 3410272157
+  (ann_event_set_TCC2-2 nil 3401619789 3410853022
    ("" (skosimp*)
     (("" (typepred "cps(mva(mp!1))")
       (("" (expand "is_finite")
@@ -2089,11 +2091,11 @@
     (ann_trans_cp const-decl "[BoolExpr, Stmt]" AnnotateEvent nil)
     (v!1 skolem-const-decl "ValOrExcpt[Name]" AnnotateEvent nil)
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil))
-   9578 8930 t nil)
+   10910 9630 t nil)
   (ann_event_set_TCC2-1 nil 3401619498 nil ("" (subtype-tcc) nil nil)
    nil nil nil nil nil nil))
  (var_names_ann_event_set 0
-  (var_names_ann_event_set-2 nil 3410272325 nil
+  (var_names_ann_event_set-2 nil 3410272325 3410853026
    (";;; Proof var_names_ann_event_set-1 for formula AnnotateEvent.var_names_ann_event_set"
     (auto-rewrite "defined?")
     ((";;; Proof var_names_ann_event_set-1 for formula AnnotateEvent.var_names_ann_event_set"
@@ -2503,7 +2505,169 @@
                                 (assert)
                                 nil))))))))))))))))))))))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil)
+   proved
+   ((subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (union const-decl "set" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (member const-decl "bool" sets nil)
+    (ann_event_set const-decl "finite_set[[BoolExpr, Stmt]]"
+     AnnotateEvent nil)
+    (ann_trans_cp const-decl "[BoolExpr, Stmt]" AnnotateEvent nil)
+    (ann_guard_actions const-decl "list[[BoolExpr, Stmt]]"
+     AnnotateEvent nil)
+    (ann_event_set_TCC1 subtype-tcc nil AnnotateEvent nil)
+    (update_vars const-decl "Stmt" AnnotateEvent nil)
+    (Sequence adt-constructor-decl "[[Stmt, Stmt] -> (Sequence?)]"
+     Body_adt nil)
+    (Set adt-constructor-decl "[[Name, Expr] -> (Set?)]" Body_adt nil)
+    (OneAction type-eq-decl nil MVA nil)
+    (list type-decl nil list_adt nil)
+    (ann_action def-decl "Stmt" AnnotateEvent nil)
+    (nonempty_add_finite application-judgement "non_empty_finite_set"
+     finite_sets nil)
+    (nonempty_union1 application-judgement "(nonempty?)" sets nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (var_names_ann_action formula-decl nil AnnotateEvent nil)
+    (wf_Action const-decl "boolean" WellFormedMVA nil)
+    (var_names const-decl "finite_set[Name]" MVA nil)
+    (MVA_prog_vars_are_fields const-decl "boolean" MonitoredProgram
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Union const-decl "set" sets nil)
+    (c!1 skolem-const-decl "Class[Name]" AnnotateEvent nil)
+    (var_names const-decl "set[Name]" ProgramFunctions nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (wf_Expr const-decl "boolean" WellFormedMVA nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (wf_Trans const-decl "boolean" WellFormedMVA nil)
+    (Union_surjective name-judgement
+     "(surjective?[setofsets[T], set[T]])" sets_lemmas nil)
+    (t!1 skolem-const-decl "Transition[CP, Name]" AnnotateEvent nil)
+    (mp!1 skolem-const-decl "(wf_MP)" AnnotateEvent nil)
+    (guard_to_expression_yields_wf_BoolExpr formula-decl nil
+     MVASemantics nil)
+    (wf_Body const-decl "boolean" WellFormedMVA nil)
+    (var_names_MVA_subset_var_names_new_gdvs formula-decl nil
+     NewVariableDeclarations nil)
+    (wf_BoolExpr const-decl "boolean" WellFormedMVA nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (ann_guard_actions_set const-decl "finite_set[[BoolExpr, Stmt]]"
+     AnnotateEvent nil)
+    (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (var_names_CaseJML_set2list formula-decl nil ProgramFunctions nil)
+    (Name formal-nonempty-type-decl nil AnnotateEvent nil)
+    (name_of const-decl "(injective?[CP, (legal_names(mp))])"
+     NewVariableDeclarations nil)
+    (injective? const-decl "bool" functions nil)
+    (legal_names const-decl "set[Name]" VariableNames nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (cp const-decl "{n: Name | NOT forbidden_names(mp)(n)}"
+     VariableNames nil)
+    (forbidden_names const-decl "set[Name]" VariableNames nil)
+    (set type-eq-decl nil sets nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (CP formal-nonempty-type-decl nil AnnotateEvent nil)
+    (NumVarEval adt-constructor-decl "[Name -> (NumVarEval?)]" Body_adt
+     nil)
+    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Body_adt nil)
+    (NumExpr type-eq-decl nil Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq adt-constructor-decl "[[Expr, Expr] -> (Eq?)]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Body type-decl nil Body_adt nil)
+    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (singleton const-decl "(singleton?)" sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (new_cp_gvd const-decl "FieldDecl" NewVariableDeclarations nil)
+    (new_mva_vars_gvds const-decl "finite_set[FieldDecl]"
+     NewVariableDeclarations nil)
+    (new_cps_gvds const-decl "finite_set[FieldDecl]"
+     NewVariableDeclarations nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (add_as_union formula-decl nil sets_lemmas nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (var_names const-decl "set[Name]" ProgramFunctions nil)
+    (IntType? adt-recognizer-decl "[JType -> boolean]" JType_adt nil)
+    (IntType adt-constructor-decl "(IntType?)" JType_adt nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (Int? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (unique const-decl "(injective?[CP, nat])" NewVariableDeclarations
+     nil)
+    (var_names_union formula-decl nil ProgramFunctions nil)
+    (singleton? const-decl "bool" sets nil)
+    (new_gvds const-decl "finite_set[FieldDecl]"
+     NewVariableDeclarations nil)
+    (cp_new_ghostvar formula-decl nil NewVariableDeclarations nil)
+    (nonempty_finite_union2 application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (finite_union application-judgement "finite_set" finite_sets nil))
+   3456 2890 nil nil)
   (var_names_ann_event_set-1 nil 3406272100 3410272160
    ("" (skosimp*)
     (("" (auto-rewrite "subset?" "member" "union" "add")
@@ -3075,13 +3239,13 @@
     (number nonempty-type-decl nil numbers nil)
     (IntType adt-constructor-decl "(IntType?)" JType_adt nil)
     (IntType? adt-recognizer-decl "[JType -> boolean]" JType_adt nil)
-    nil nil (add_as_union formula-decl nil sets_lemmas nil)
+    (add_as_union formula-decl nil sets_lemmas nil)
     (is_finite const-decl "bool" finite_sets nil)
     (new_cps_gvds const-decl "finite_set[FieldDecl]"
      NewVariableDeclarations nil)
     (new_mva_vars_gvds const-decl "finite_set[FieldDecl]"
      NewVariableDeclarations nil)
-    nil (FieldDecl type-eq-decl nil Program nil)
+    (FieldDecl type-eq-decl nil Program nil)
     (singleton const-decl "(singleton?)" sets nil)
     (nonempty_singleton_finite application-judgement
      "non_empty_finite_set" finite_sets nil)
@@ -3163,7 +3327,6 @@
     (wf_Body const-decl "boolean" WellFormedMVA nil)
     (guard_to_expression_yields_wf_BoolExpr formula-decl nil
      MVASemantics nil)
-    nil nil
     (Union_surjective name-judgement
      "(surjective?[setofsets[T], set[T]])" sets_lemmas nil)
     (wf_Trans const-decl "boolean" WellFormedMVA nil)
@@ -3172,9 +3335,9 @@
     (Excpt type-decl nil Excpt_adt nil)
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil) nil nil
+    (Class type-eq-decl nil Program nil)
     (Union const-decl "set" sets nil)
-    (LocalVarDecl type-eq-decl nil Program nil) nil
+    (LocalVarDecl type-eq-decl nil Program nil)
     (MVA_prog_vars_are_fields const-decl "boolean" MonitoredProgram
      nil)
     (var_names const-decl "finite_set[Name]" MVA nil)
@@ -3204,7 +3367,7 @@
      sets_lemmas nil))
    2534 2330 t nil))
  (var_names_ann_event 0
-  (var_names_ann_event-2 nil 3402742040 3410272160
+  (var_names_ann_event-2 nil 3402742040 3410853026
    ("" (skosimp*)
     (("" (expand "ann_event")
       (("" (use "var_names_ann_event_set")
@@ -3283,7 +3446,7 @@
     (is_finite const-decl "bool" finite_sets nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (var_names_ann_event_set formula-decl nil AnnotateEvent nil))
-   390 310 t nil)
+   743 660 t nil)
   (var_names_ann_event-1 nil 3401682730 3401704757
    ("" (skosimp*)
     (("" (expand "subset?" 1)
@@ -3942,7 +4105,7 @@
     (member const-decl "bool" sets nil))
    783 774 t nil))
  (ann_event_var_names 0
-  (ann_event_var_names-1 nil 3401682976 3410272161
+  (ann_event_var_names-1 nil 3401682976 3410853027
    ("" (skosimp*)
     (("" (use "var_names_ann_event")
       (("" (assert)
@@ -4004,9 +4167,9 @@
     (member const-decl "bool" sets nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil))
-   448 440 t shostak))
+   944 830 t shostak))
  (ann_event_set_set_ghostvar_TCC1 0
-  (ann_event_set_set_ghostvar_TCC1-1 nil 3406272065 3410272161
+  (ann_event_set_set_ghostvar_TCC1-1 nil 3406272065 3410853032
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -4041,9 +4204,9 @@
     (ann_event_set const-decl "finite_set[[BoolExpr, Stmt]]"
      AnnotateEvent nil)
     (subset? const-decl "bool" sets nil))
-   605 540 nil nil))
+   4619 920 nil nil))
  (ann_event_set_set_ghostvar 0
-  (ann_event_set_set_ghostvar-1 nil 3406272110 3410272164
+  (ann_event_set_set_ghostvar-1 nil 3406272110 3410853035
    ("" (skosimp*)
     (("" (expand "ann_event_set")
       (("" (skosimp*)
@@ -4373,6 +4536,7 @@
     (forbidden_names const-decl "set[Name]" VariableNames nil)
     (Set adt-constructor-decl "[[Name, Expr] -> (Set?)]" Body_adt nil)
     (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -4440,9 +4604,9 @@
     (subterm_CaseJML_set2list formula-decl nil ProgramFunctions nil)
     (subterm adt-def-decl "boolean" Body_adt nil)
     (Name formal-nonempty-type-decl nil AnnotateEvent nil))
-   2164 2020 t nil))
+   2627 2480 t nil))
  (ann_event_set_ghostvar_TCC1 0
-  (ann_event_set_ghostvar_TCC1-1 nil 3402770423 3410272168
+  (ann_event_set_ghostvar_TCC1-1 nil 3402770423 3410853036
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -4471,9 +4635,9 @@
     (ann_event const-decl "Stmt" AnnotateEvent nil)
     (member const-decl "bool" sets nil)
     (subset? const-decl "bool" sets nil))
-   4257 520 nil nil))
+   981 890 nil nil))
  (ann_event_set_ghostvar 0
-  (ann_event_set_ghostvar-1 nil 3403593988 3410272169
+  (ann_event_set_ghostvar-1 nil 3403593988 3410853037
    ("" (skosimp*)
     (("" (expand "ann_event")
       (("" (use "subterm_CaseJML_set2list")
@@ -4538,25 +4702,25 @@
      AnnotateEvent nil)
     (Name formal-nonempty-type-decl nil AnnotateEvent nil)
     (subterm_CaseJML_set2list formula-decl nil ProgramFunctions nil))
-   897 870 t shostak)))
+   1358 1230 t shostak)))
 (AnnotateMethod
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-1 nil 3401619631 3410272169
+  (IMP_VariableNames_TCC1-1 nil 3401619631 3410852965
    ("" (use "infinite_namespace") nil nil) proved
-   ((infinite_namespace formula-decl nil AnnotateMethod nil)) 229 230 t
+   ((infinite_namespace formula-decl nil AnnotateMethod nil)) 686 580 t
    nil))
  (IMP_AnnotateEvent_TCC1 0
-  (IMP_AnnotateEvent_TCC1-1 nil 3401619631 3410272169
+  (IMP_AnnotateEvent_TCC1-1 nil 3401619631 3410852965
    ("" (use "CP_is_enumerable") nil nil) proved
-   ((CP_is_enumerable formula-decl nil AnnotateMethod nil)) 224 220 t
+   ((CP_is_enumerable formula-decl nil AnnotateMethod nil)) 643 590 t
    nil))
  (IMP_AnnotateEvent_TCC2 0
-  (IMP_AnnotateEvent_TCC2-1 nil 3401619631 3410272170
+  (IMP_AnnotateEvent_TCC2-1 nil 3401619631 3410852966
    ("" (use "name_of_exists") nil nil) proved
-   ((name_of_exists formula-decl nil AnnotateMethod nil)) 231 230 t
+   ((name_of_exists formula-decl nil AnnotateMethod nil)) 678 590 t
    nil))
  (filter_event_TCC1 0
-  (filter_event_TCC1-2 nil 3401619964 3410272170
+  (filter_event_TCC1-2 nil 3401619964 3410852967
    (";;; Proof filter_event_TCC1-1 for formula AnnotateProgram.filter_event_TCC1"
     (skosimp*)
     ((";;; Proof filter_event_TCC1-1 for formula AnnotateProgram.filter_event_TCC1"
@@ -4609,11 +4773,11 @@
     (number_field_pred const-decl "[number -> boolean]" number_fields
      nil)
     (number nonempty-type-decl nil numbers nil))
-   888 780 nil nil)
+   1244 1130 nil nil)
   (filter_event_TCC1-1 nil 3401619631 nil ("" (subtype-tcc) nil nil)
    unfinished nil nil nil nil nil))
  (filter_event_subset 0
-  (filter_event_subset-1 nil 3401684085 3410272171
+  (filter_event_subset-1 nil 3401684085 3410852968
    ("" (skosimp*)
     (("" (expand "subset?")
       (("" (expand "member")
@@ -4628,9 +4792,9 @@
     (filter_event const-decl "finite_set[Transition]" AnnotateMethod
      nil)
     (member const-decl "bool" sets nil))
-   253 240 t shostak))
+   654 590 t shostak))
  (filter_event_cp_is_finite_TCC1 0
-  (filter_event_cp_is_finite_TCC1-1 nil 3402860754 3410272171
+  (filter_event_cp_is_finite_TCC1-1 nil 3402860754 3410852969
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -4690,9 +4854,9 @@
     (wf_MVA const-decl "boolean" WellFormedMVA nil)
     (finite_intersection1 application-judgement "finite_set"
      finite_sets nil))
-   668 590 nil nil))
+   1084 960 nil nil))
  (filter_event_cp_is_finite 0
-  (filter_event_cp_is_finite-1 nil 3402860771 3410272172
+  (filter_event_cp_is_finite-1 nil 3402860771 3410852970
    ("" (skosimp)
     (("" (expand "filter_event")
       (("" (typepred "ts(mva(mp!1))")
@@ -4743,9 +4907,9 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil))
-   277 260 t shostak))
+   707 610 t shostak))
  (ann_methods_TCC1 0
-  (ann_methods_TCC1-2 nil 3401620001 3410272172
+  (ann_methods_TCC1-2 nil 3401620001 3410852971
    (";;; Proof ann_methods_TCC1-1 for formula AnnotateProgram.ann_methods_TCC1"
     (skosimp*)
     ((";;; Proof ann_methods_TCC1-1 for formula AnnotateProgram.ann_methods_TCC1"
@@ -4781,10 +4945,8 @@
    ((is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (Method type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (Val type-decl nil Val_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (JType type-decl nil JType_adt nil)
     (Excpt type-decl nil Excpt_adt nil)
@@ -4832,6 +4994,8 @@
     (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
     (Guard type-eq-decl nil MVA nil)
     (Transition type-eq-decl nil MVA nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
     (MVAVarDecl type-eq-decl nil MVA nil)
     (ProgVarDecl type-eq-decl nil MVA nil)
     (MVA type-eq-decl nil MVA nil)
@@ -4844,77 +5008,77 @@
     (ann_method const-decl "Method" AnnotateMethod nil)
     (mp!1 skolem-const-decl "(wf_MP[CP, Name])" AnnotateMethod nil)
     (nonempty? const-decl "bool" sets nil))
-   444 370 nil nil)
+   882 730 nil nil)
   (ann_methods_TCC1-1 nil 3401619631 nil ("" (subtype-tcc) nil nil)
    unfinished nil nil nil nil nil))
  (ann_method_name 0
-  (ann_method_name-1 nil 3403429160 3410272172
+  (ann_method_name-1 nil 3403429160 3410852971
    ("" (skosimp)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 227 230
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 680 590
    t shostak))
  (ann_method_arg 0
-  (ann_method_arg-1 nil 3401620571 3410272173
+  (ann_method_arg-1 nil 3401620571 3410852972
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 226 230
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 646 590
    t shostak))
  (ann_method_pre 0
-  (ann_method_pre-1 nil 3401620551 3410272173
+  (ann_method_pre-1 nil 3401620551 3410852973
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 266 230
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 690 600
    t shostak))
  (ann_method_post 0
-  (ann_method_post-1 nil 3401620559 3410272173
+  (ann_method_post-1 nil 3401620559 3410852973
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 230 230
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 687 610
    t shostak))
  (ann_method_lvars 0
-  (ann_method_lvars-1 nil 3401620597 3410272173
+  (ann_method_lvars-1 nil 3401620597 3410852974
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 265 240
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 643 590
    t shostak))
  (ann_method_body 0
-  (ann_method_body-1 nil 3401620545 3410272174
+  (ann_method_body-1 nil 3401620545 3410852975
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 231 220
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 687 600
    t shostak))
  (ann_method_pre_set 0
-  (ann_method_pre_set-1 nil 3401620600 3410272174
+  (ann_method_pre_set-1 nil 3401620600 3410852975
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 252 240
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 654 600
    t shostak))
  (ann_method_post_set 0
-  (ann_method_post_set-1 nil 3401620605 3410272174
+  (ann_method_post_set-1 nil 3401620605 3410852976
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 276 240
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 610 600
    t shostak))
  (ann_method_exc_set 0
-  (ann_method_exc_set-1 nil 3401620608 3410272174
+  (ann_method_exc_set-1 nil 3401620608 3410852977
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 238 240
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 671 600
    t shostak))
  (ann_method_res 0
-  (ann_method_res-1 nil 3401620574 3410272175
+  (ann_method_res-1 nil 3401620574 3410852977
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 236 230
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 675 570
    t shostak))
  (ann_method_res_type 0
-  (ann_method_res_type-1 nil 3401620593 3410272175
+  (ann_method_res_type-1 nil 3401620593 3410852978
    ("" (skosimp*)
     (("" (expand "ann_method") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 228 230
+   proved ((ann_method const-decl "Method" AnnotateMethod nil)) 644 590
    t shostak))
  (ann_method_wf_Body1 0
-  (ann_method_wf_Body1-1 nil 3403610503 3410272178
+  (ann_method_wf_Body1-1 nil 3403610503 3410852982
    ("" (skosimp*)
     (("" (assert)
       (("" (auto-rewrite "union" "member" "singleton")
@@ -5061,10 +5225,18 @@
    proved
    ((halted_new_ghostvar formula-decl nil NewVariableDeclarations nil)
     (method_pred const-decl "bool" ProgramRestriction nil)
-    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
-    (Body type-decl nil Body_adt nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (Body type-decl nil Body_adt nil)
+    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -5081,7 +5253,6 @@
     (LocalVarDecl type-eq-decl nil Program nil)
     (Excpt type-decl nil Excpt_adt nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
     (Method type-eq-decl nil Program nil)
     (set type-eq-decl nil sets nil)
     (is_finite const-decl "bool" finite_sets nil)
@@ -5095,8 +5266,7 @@
     (Entry adt-constructor-decl "(Entry?)" EventType_adt nil)
     (val? adt-recognizer-decl "[ValOrExcpt -> boolean]" ValOrExcpt_adt
      nil)
-    (val adt-constructor-decl "[(defined?) -> (val?)]" ValOrExcpt_adt
-     nil)
+    (val adt-constructor-decl "[Expr -> (val?)]" ValOrExcpt_adt nil)
     (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -5106,12 +5276,6 @@
     (Assert adt-constructor-decl "[BoolExpr -> (Assert?)]" Body_adt
      nil)
     (Neg adt-constructor-decl "[BoolExpr -> (Neg?)]" Body_adt nil)
-    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Eq adt-constructor-decl "[[Expr, Expr] -> (Eq?)]" Body_adt nil)
     (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -5170,9 +5334,9 @@
     (CP formal-nonempty-type-decl nil AnnotateMethod nil)
     (new_vars_derived_from_mp formula-decl nil NewVariableDeclarations
      nil))
-   2801 2530 t nil))
+   3641 3100 t nil))
  (ann_method_wf_Body2_TCC1 0
-  (ann_method_wf_Body2_TCC1-1 nil 3403610870 3410272179
+  (ann_method_wf_Body2_TCC1-1 nil 3403610870 3410852984
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -5216,9 +5380,9 @@
     (ann_event const-decl "Stmt" AnnotateEvent nil)
     (halted const-decl "Name" NewVariableDeclarations nil)
     (ann_method const-decl "Method" AnnotateMethod nil))
-   1536 1430 nil nil))
+   2271 1960 nil nil))
  (ann_method_wf_Body2_TCC2 0
-  (ann_method_wf_Body2_TCC2-1 nil 3403610870 3410272181
+  (ann_method_wf_Body2_TCC2-1 nil 3403610870 3410852986
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -5240,6 +5404,16 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Body type-decl nil Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (Name formal-nonempty-type-decl nil AnnotateMethod nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
@@ -5262,9 +5436,9 @@
     (ann_event const-decl "Stmt" AnnotateEvent nil)
     (halted const-decl "Name" NewVariableDeclarations nil)
     (ann_method const-decl "Method" AnnotateMethod nil))
-   1611 1430 nil nil))
+   2221 1920 nil nil))
  (ann_method_wf_Body2_TCC3 0
-  (ann_method_wf_Body2_TCC3-1 nil 3403610870 3410272183
+  (ann_method_wf_Body2_TCC3-1 nil 3403610870 3410852989
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -5286,6 +5460,16 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Body type-decl nil Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (Name formal-nonempty-type-decl nil AnnotateMethod nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
@@ -5308,9 +5492,9 @@
     (ann_event const-decl "Stmt" AnnotateEvent nil)
     (halted const-decl "Name" NewVariableDeclarations nil)
     (ann_method const-decl "Method" AnnotateMethod nil))
-   1624 1420 nil nil))
+   2252 1940 nil nil))
  (ann_method_wf_Body2_TCC4 0
-  (ann_method_wf_Body2_TCC4-1 nil 3403610870 3410272184
+  (ann_method_wf_Body2_TCC4-1 nil 3403610870 3410852991
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -5354,9 +5538,9 @@
     (ann_event const-decl "Stmt" AnnotateEvent nil)
     (halted const-decl "Name" NewVariableDeclarations nil)
     (ann_method const-decl "Method" AnnotateMethod nil))
-   1504 1410 nil nil))
+   2252 1970 nil nil))
  (ann_method_wf_Body2_TCC5 0
-  (ann_method_wf_Body2_TCC5-1 nil 3403610870 3410272186
+  (ann_method_wf_Body2_TCC5-1 nil 3403610870 3410852993
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -5378,6 +5562,16 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Body type-decl nil Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (Name formal-nonempty-type-decl nil AnnotateMethod nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
@@ -5400,9 +5594,9 @@
     (ann_event const-decl "Stmt" AnnotateEvent nil)
     (halted const-decl "Name" NewVariableDeclarations nil)
     (ann_method const-decl "Method" AnnotateMethod nil))
-   1539 1450 nil nil))
+   2165 1920 nil nil))
  (ann_method_wf_Body2_TCC6 0
-  (ann_method_wf_Body2_TCC6-1 nil 3403610870 3410272187
+  (ann_method_wf_Body2_TCC6-1 nil 3403610870 3410852995
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -5424,6 +5618,16 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Body type-decl nil Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (Name formal-nonempty-type-decl nil AnnotateMethod nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
@@ -5454,9 +5658,9 @@
     (ann_event const-decl "Stmt" AnnotateEvent nil)
     (halted const-decl "Name" NewVariableDeclarations nil)
     (ann_method const-decl "Method" AnnotateMethod nil))
-   1635 1550 nil nil))
+   2277 2020 nil nil))
  (ann_method_wf_Body2_TCC7 0
-  (ann_method_wf_Body2_TCC7-1 nil 3403610870 3410272189
+  (ann_method_wf_Body2_TCC7-1 nil 3403610870 3410852998
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -5508,9 +5712,9 @@
     (ann_event const-decl "Stmt" AnnotateEvent nil)
     (halted const-decl "Name" NewVariableDeclarations nil)
     (ann_method const-decl "Method" AnnotateMethod nil))
-   1737 1560 nil nil))
+   2389 2090 nil nil))
  (ann_method_wf_Body2 0
-  (ann_method_wf_Body2-2 nil 3405934763 3410272191
+  (ann_method_wf_Body2-2 nil 3405934763 3410853004
    ("" (skosimp*)
     (("" (assert)
       (("" (auto-rewrite-theory "AnnotateMethod")
@@ -5637,12 +5841,6 @@
     (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Eq adt-constructor-decl "[[Expr, Expr] -> (Eq?)]" Body_adt nil)
-    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Neg adt-constructor-decl "[BoolExpr -> (Neg?)]" Body_adt nil)
     (Assert adt-constructor-decl "[BoolExpr -> (Assert?)]" Body_adt
      nil)
@@ -5652,8 +5850,7 @@
     (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (val adt-constructor-decl "[(defined?) -> (val?)]" ValOrExcpt_adt
-     nil)
+    (val adt-constructor-decl "[Expr -> (val?)]" ValOrExcpt_adt nil)
     (val? adt-recognizer-decl "[ValOrExcpt -> boolean]" ValOrExcpt_adt
      nil)
     (Entry adt-constructor-decl "(Entry?)" EventType_adt nil)
@@ -5675,13 +5872,14 @@
     (MVA type-eq-decl nil MVA nil)
     (ProgVarDecl type-eq-decl nil MVA nil)
     (MVAVarDecl type-eq-decl nil MVA nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
     (Transition type-eq-decl nil MVA nil)
     (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
     (Event type-eq-decl nil MVA nil)
     (EventType type-decl nil EventType_adt nil)
     (CP formal-nonempty-type-decl nil AnnotateMethod nil)
     (Method type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (JType type-decl nil JType_adt nil)
@@ -5700,17 +5898,24 @@
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (subterm adt-def-decl "boolean" Body_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
-    (Val type-decl nil Val_adt nil) (Body type-decl nil Body_adt nil)
+    (Body type-decl nil Body_adt nil)
     (Name formal-nonempty-type-decl nil AnnotateMethod nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (method_pred const-decl "bool" ProgramRestriction nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil))
-   1923 1770 t nil)
+   6732 2280 t nil)
   (ann_method_wf_Body2-1 nil 3403610885 3405934636
    ("" (skosimp*)
     (("" (assert)
@@ -5867,30 +6072,30 @@
    972 940 t shostak)))
 (AnnotateClass
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-1 nil 3401619633 3410272191
+  (IMP_VariableNames_TCC1-1 nil 3401619633 3410852950
    ("" (use "infinite_namespace") nil nil) proved
-   ((infinite_namespace formula-decl nil AnnotateClass nil)) 224 220 t
+   ((infinite_namespace formula-decl nil AnnotateClass nil)) 701 600 t
    nil))
  (IMP_AnnotateMethod_TCC1 0
-  (IMP_AnnotateMethod_TCC1-1 nil 3401619633 3410272191
+  (IMP_AnnotateMethod_TCC1-1 nil 3401619633 3410852951
    ("" (use "CP_is_enumerable") nil nil) proved
-   ((CP_is_enumerable formula-decl nil AnnotateClass nil)) 238 230 t
+   ((CP_is_enumerable formula-decl nil AnnotateClass nil)) 648 590 t
    nil))
  (IMP_AnnotateMethod_TCC2 0
-  (IMP_AnnotateMethod_TCC2-1 nil 3401619633 3410272192
+  (IMP_AnnotateMethod_TCC2-1 nil 3401619633 3410852951
    ("" (use "name_of_exists") nil nil) proved
-   ((name_of_exists formula-decl nil AnnotateClass nil)) 225 220 t
+   ((name_of_exists formula-decl nil AnnotateClass nil)) 699 600 t
    nil))
  (FieldDecls_ann_class 0
-  (FieldDecls_ann_class-1 nil 3401684150 3410272192
+  (FieldDecls_ann_class-1 nil 3401684150 3410852952
    ("" (skosimp*)
     (("" (expand "ann_class")
       (("" (lift-if) (("" (propax) nil nil)) nil)) nil))
     nil)
-   proved ((ann_class const-decl "Class" AnnotateClass nil)) 268 230 t
+   proved ((ann_class const-decl "Class" AnnotateClass nil)) 701 610 t
    shostak))
  (LocalDecls_ann_class 0
-  (LocalDecls_ann_class-1 nil 3401684165 3410272192
+  (LocalDecls_ann_class-1 nil 3401684165 3410852957
    ("" (skosimp*)
     (("" (expand "ann_class")
       (("" (lift-if)
@@ -5970,6 +6175,8 @@
     (MVA type-eq-decl nil MVA nil)
     (ProgVarDecl type-eq-decl nil MVA nil)
     (MVAVarDecl type-eq-decl nil MVA nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
     (Transition type-eq-decl nil MVA nil)
     (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
     (Event type-eq-decl nil MVA nil)
@@ -5978,10 +6185,8 @@
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (Method type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (Val type-decl nil Val_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (Excpt type-decl nil Excpt_adt nil)
     (Stmt type-eq-decl nil Body_adt nil)
@@ -5990,25 +6195,25 @@
     (ann_method const-decl "Method" AnnotateMethod nil)
     (getLocalDecls const-decl "finite_set[LocalVarDecl]"
      ProgramFunctions nil))
-   373 360 t shostak))
+   4773 750 t shostak))
  (GhostDecls_ann_class_annotated 0
-  (GhostDecls_ann_class_annotated-1 nil 3401684331 3410272193
+  (GhostDecls_ann_class_annotated-1 nil 3401684331 3410852957
    ("" (skosimp*)
     (("" (expand "ann_class")
       (("" (lift-if) (("" (assert) nil nil)) nil)) nil))
     nil)
-   proved ((ann_class const-decl "Class" AnnotateClass nil)) 238 230 t
+   proved ((ann_class const-decl "Class" AnnotateClass nil)) 626 600 t
    shostak))
  (GhostDecls_ann_class_not_annotated 0
-  (GhostDecls_ann_class_not_annotated-1 nil 3401684344 3410272193
+  (GhostDecls_ann_class_not_annotated-1 nil 3401684344 3410852958
    ("" (skosimp*)
     (("" (expand "ann_class") (("" (assert) nil nil)) nil)) nil)
    proved
    ((ann_class const-decl "Class" AnnotateClass nil)
     (finite_union application-judgement "finite_set" finite_sets nil))
-   287 240 t shostak))
+   646 600 t shostak))
  (ann_class_almost_wf_Class 0
-  (ann_class_almost_wf_Class-1 nil 3401684390 3410272193
+  (ann_class_almost_wf_Class-1 nil 3401684390 3410852959
    ("" (skosimp*)
     (("" (assert)
       (("" (expand "wf_Class")
@@ -6059,17 +6264,14 @@
     (Excpt type-decl nil Excpt_adt nil)
     (JType type-decl nil JType_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (Val type-decl nil Val_adt nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
     (Expr type-eq-decl nil Body_adt nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
     (Method type-eq-decl nil Program nil)
     (ann_method const-decl "Method" AnnotateMethod nil)
     (wf_Class const-decl "boolean" WellFormedProgram nil))
-   500 460 t shostak))
+   892 860 t shostak))
  (ann_class_inv_wf_Body1 0
-  (ann_class_inv_wf_Body1-1 nil 3405935060 3410272194
+  (ann_class_inv_wf_Body1-1 nil 3405935060 3410852961
    ("" (skosimp*)
     (("" (expand "wf_Body")
       (("" (skosimp*)
@@ -6167,6 +6369,7 @@
     (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Eq adt-constructor-decl "[[Expr, Expr] -> (Eq?)]" Body_adt nil)
     (Expr type-eq-decl nil Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -6189,9 +6392,9 @@
     (Body type-decl nil Body_adt nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (ann_class const-decl "Class" AnnotateClass nil))
-   1006 930 t shostak))
+   1511 1380 t shostak))
  (ann_class_inv_TCC1 0
-  (ann_class_inv_TCC1-1 nil 3401682275 3410272196
+  (ann_class_inv_TCC1-1 nil 3401682275 3410852963
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -6215,18 +6418,18 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil))
-   1224 1130 nil nil))
+   1909 1620 nil nil))
  (ann_class_inv 0
-  (ann_class_inv-1 nil 3401682311 3410272196
+  (ann_class_inv-1 nil 3401682311 3410852963
    ("" (skosimp*)
     (("" (expand "ann_class")
       (("" (assert) (("" (lift-if) (("" (propax) nil nil)) nil)) nil))
       nil))
     nil)
-   proved ((ann_class const-decl "Class" AnnotateClass nil)) 358 350 t
+   proved ((ann_class const-decl "Class" AnnotateClass nil)) 823 730 t
    shostak))
  (ann_program_preserves_class_name 0
-  (ann_program_preserves_class_name-1 nil 3401682902 3410272196
+  (ann_program_preserves_class_name-1 nil 3401682902 3410852964
    (";;; Proof for formula AnnotateProgramProperties.ann_program_preserves_class_name"
     (skosimp*)
     ((";;; Proof for formula AnnotateProgramProperties.ann_program_preserves_class_name"
@@ -6236,26 +6439,26 @@
         ((";;; Proof for formula AnnotateProgramProperties.ann_program_preserves_class_name"
           (propax) nil))))))
     "")
-   proved ((ann_class const-decl "Class" AnnotateClass nil)) 226 220
+   proved ((ann_class const-decl "Class" AnnotateClass nil)) 643 580
    nil nil)))
 (AnnotateProgram
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-1 nil 3396601203 3410272197
+  (IMP_VariableNames_TCC1-1 nil 3396601203 3410852937
    ("" (use "infinite_namespace") nil nil) proved
-   ((infinite_namespace formula-decl nil AnnotateProgram nil)) 254 230
+   ((infinite_namespace formula-decl nil AnnotateProgram nil)) 675 590
    t nil))
  (IMP_AnnotateClass_TCC1 0
-  (IMP_AnnotateClass_TCC1-1 nil 3401620497 3410272197
+  (IMP_AnnotateClass_TCC1-1 nil 3401620497 3410852938
    ("" (use "CP_is_enumerable") nil nil) proved
-   ((CP_is_enumerable formula-decl nil AnnotateProgram nil)) 222 220 t
+   ((CP_is_enumerable formula-decl nil AnnotateProgram nil)) 649 600 t
    nil))
  (IMP_AnnotateClass_TCC2 0
-  (IMP_AnnotateClass_TCC2-1 nil 3401620497 3410272197
+  (IMP_AnnotateClass_TCC2-1 nil 3401620497 3410852938
    ("" (use "name_of_exists") nil nil) proved
-   ((name_of_exists formula-decl nil AnnotateProgram nil)) 226 230 t
+   ((name_of_exists formula-decl nil AnnotateProgram nil)) 682 600 t
    nil))
  (ann_program_TCC1 0
-  (ann_program_TCC1-1 nil 3383987003 3410272198
+  (ann_program_TCC1-1 nil 3383987003 3410852940
    ("" (skosimp)
     (("" (typepred "classes(program(mp!1))")
       (("" (expand "is_finite")
@@ -6372,9 +6575,9 @@
     (= const-decl "[T, T -> boolean]" equalities nil)
     (ann_class const-decl "Class" AnnotateClass nil)
     (nonempty? const-decl "bool" sets nil))
-   593 550 t nil))
+   1195 1010 t nil))
  (ann_program_TCC2 0
-  (ann_program_TCC2-5 nil 3403612149 3410272205
+  (ann_program_TCC2-5 nil 3403612149 3410856340
    ("" (skosimp*)
     (("" (typepred "program(mp!1)")
       (("" (expand "wf_Program")
@@ -6872,8 +7075,9 @@
                                                                                                     (("2"
                                                                                                       (flatten)
                                                                                                       (("2"
-                                                                                                        (inst?
-                                                                                                         -3)
+                                                                                                        (inst
+                                                                                                         -3
+                                                                                                         "v!1")
                                                                                                         (("2"
                                                                                                           (assert)
                                                                                                           nil
@@ -6910,8 +7114,9 @@
                                                                                                     (("2"
                                                                                                       (flatten)
                                                                                                       (("2"
-                                                                                                        (inst?
-                                                                                                         -4)
+                                                                                                        (inst
+                                                                                                         -4
+                                                                                                         "v!1")
                                                                                                         (("2"
                                                                                                           (assert)
                                                                                                           nil
@@ -6969,8 +7174,9 @@
                                                                                                     (("2"
                                                                                                       (flatten)
                                                                                                       (("2"
-                                                                                                        (inst?
-                                                                                                         -5)
+                                                                                                        (inst
+                                                                                                         -5
+                                                                                                         "v!1")
                                                                                                         (("2"
                                                                                                           (assert)
                                                                                                           nil
@@ -7006,8 +7212,9 @@
                                                                                                     (("2"
                                                                                                       (flatten)
                                                                                                       (("2"
-                                                                                                        (inst?
-                                                                                                         -6)
+                                                                                                        (inst
+                                                                                                         -6
+                                                                                                         "v!1")
                                                                                                         (("2"
                                                                                                           (assert)
                                                                                                           nil
@@ -7700,124 +7907,125 @@
       nil))
     nil)
    proved
-   ((wf_MP const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (compatible const-decl "boolean" MonitoredProgram nil)
-    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
-    (Program type-eq-decl nil WellFormedProgram nil)
-    (complete const-decl "boolean" MVASemantics nil)
-    (MVA type-eq-decl nil MVA nil)
-    (ProgVarDecl type-eq-decl nil MVA nil)
-    (MVAVarDecl type-eq-decl nil MVA nil)
-    (Transition type-eq-decl nil MVA nil)
-    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
-    (Event type-eq-decl nil MVA nil)
-    (EventType type-decl nil EventType_adt nil)
-    (CP formal-nonempty-type-decl nil AnnotateProgram nil)
-    (wf_Program const-decl "boolean" WellFormedProgram nil)
-    (PreProgram type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (Val type-decl nil Val_adt nil)
-    (Name formal-nonempty-type-decl nil AnnotateProgram nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (ann_class const-decl "Class" AnnotateClass nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (is_finite const-decl "bool" finite_sets nil)
-    (set type-eq-decl nil sets nil)
-    (FieldDecls_ann_class formula-decl nil AnnotateClass nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (mp!1 skolem-const-decl "(wf_MP[CP, Name])" AnnotateProgram nil)
-    (wf_new_vars formula-decl nil NewVariableDeclarations nil)
-    (ann_class_inv_wf_Body1 formula-decl nil AnnotateClass nil)
-    (ext_declared_var_names const-decl "finite_set[Name]"
-     ProgramFunctions nil)
-    (ann_method_wf_Body1 formula-decl nil AnnotateMethod nil)
-    (wf_Method const-decl "boolean" WellFormedProgram nil)
-    (method_pred const-decl "bool" ProgramRestriction nil)
-    (ann_method_wf_Body2 formula-decl nil AnnotateMethod nil)
-    (wf_Body const-decl "boolean" WellFormedProgram nil)
-    (halted const-decl "Name" NewVariableDeclarations nil)
-    (cp const-decl "{n: Name | NOT forbidden_names(mp)(n)}"
-     VariableNames nil)
-    (forbidden_names const-decl "set[Name]" VariableNames nil)
-    (NumVarEval adt-constructor-decl "[Name -> (NumVarEval?)]" Body_adt
-     nil)
-    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Body_adt nil)
-    (NumExpr type-eq-decl nil Body_adt nil)
-    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Eq adt-constructor-decl "[[Expr, Expr] -> (Eq?)]" Body_adt nil)
-    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Neg adt-constructor-decl "[BoolExpr -> (Neg?)]" Body_adt nil)
-    (Conj adt-constructor-decl "[[BoolExpr, BoolExpr] -> (Conj?)]"
-     Body_adt nil)
-    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (OR const-decl "[bool, bool -> bool]" booleans nil)
-    (subterm adt-def-decl "boolean" Body_adt nil)
-    (Body type-decl nil Body_adt nil)
-    (This const-decl "Name" Program nil)
-    (program_pred const-decl "bool" ProgramRestriction nil)
-    (wf_Class const-decl "boolean" WellFormedProgram nil)
-    (ann_methods const-decl "finite_set[Method]" AnnotateMethod nil)
-    (ann_method const-decl "Method" AnnotateMethod nil)
-    (ann_class_almost_wf_Class formula-decl nil AnnotateClass nil)
-    (wf_Classes const-decl "boolean" WellFormedProgram nil)
-    (wf_program_has_unique_class_names_def const-decl "boolean"
-     WellFormedProgram nil)
-    (wf_program_variables_not_reserved_words_def const-decl "boolean"
-     WellFormedProgram nil)
-    (declared_var_names const-decl "finite_set[Name]" ProgramFunctions
-     nil)
-    (var_names_union formula-decl nil ProgramFunctions nil)
-    (disjoint? const-decl "bool" sets nil)
-    (empty? const-decl "bool" sets nil)
-    (intersection const-decl "set" sets nil)
-    (member const-decl "bool" sets nil)
-    (finite_intersection2 application-judgement "finite_set"
-     finite_sets nil)
-    (finite_intersection1 application-judgement "finite_set"
-     finite_sets nil)
-    (wf_program_variables_disjoint_def const-decl "boolean"
-     WellFormedProgram nil)
-    (new_gvds const-decl "finite_set[FieldDecl]"
-     NewVariableDeclarations nil)
-    (union const-decl "set" sets nil)
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (finite_union application-judgement "finite_set" finite_sets nil)
-    (LocalDecls_ann_class formula-decl nil AnnotateClass nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+   ((ann_program_TCC1 subtype-tcc nil AnnotateProgram nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (ann_program_TCC1 subtype-tcc nil AnnotateProgram nil))
-   7634 7180 t nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (LocalDecls_ann_class formula-decl nil AnnotateClass nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
+     nil)
+    (union const-decl "set" sets nil)
+    (new_gvds const-decl "finite_set[FieldDecl]"
+     NewVariableDeclarations nil)
+    (wf_program_variables_disjoint_def const-decl "boolean"
+     WellFormedProgram nil)
+    (finite_intersection1 application-judgement "finite_set"
+     finite_sets nil)
+    (finite_intersection2 application-judgement "finite_set"
+     finite_sets nil)
+    (member const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (var_names_union formula-decl nil ProgramFunctions nil)
+    (declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (wf_program_variables_not_reserved_words_def const-decl "boolean"
+     WellFormedProgram nil)
+    (wf_program_has_unique_class_names_def const-decl "boolean"
+     WellFormedProgram nil)
+    (wf_Classes const-decl "boolean" WellFormedProgram nil)
+    (ann_class_almost_wf_Class formula-decl nil AnnotateClass nil)
+    (ann_method const-decl "Method" AnnotateMethod nil)
+    (ann_methods const-decl "finite_set[Method]" AnnotateMethod nil)
+    (wf_Class const-decl "boolean" WellFormedProgram nil)
+    (program_pred const-decl "bool" ProgramRestriction nil)
+    (This const-decl "Name" Program nil)
+    (Body type-decl nil Body_adt nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj adt-constructor-decl "[[BoolExpr, BoolExpr] -> (Conj?)]"
+     Body_adt nil)
+    (Neg adt-constructor-decl "[BoolExpr -> (Neg?)]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq adt-constructor-decl "[[Expr, Expr] -> (Eq?)]" Body_adt nil)
+    (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumExpr type-eq-decl nil Body_adt nil)
+    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Body_adt nil)
+    (NumVarEval adt-constructor-decl "[Name -> (NumVarEval?)]" Body_adt
+     nil)
+    (forbidden_names const-decl "set[Name]" VariableNames nil)
+    (cp const-decl "{n: Name | NOT forbidden_names(mp)(n)}"
+     VariableNames nil)
+    (halted const-decl "Name" NewVariableDeclarations nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (ann_method_wf_Body2 formula-decl nil AnnotateMethod nil)
+    (method_pred const-decl "bool" ProgramRestriction nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (ann_method_wf_Body1 formula-decl nil AnnotateMethod nil)
+    (ext_declared_var_names const-decl "finite_set[Name]"
+     ProgramFunctions nil)
+    (ann_class_inv_wf_Body1 formula-decl nil AnnotateClass nil)
+    (wf_new_vars formula-decl nil NewVariableDeclarations nil)
+    (mp!1 skolem-const-decl "(wf_MP[CP, Name])" AnnotateProgram nil)
+    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
+     ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (FieldDecls_ann_class formula-decl nil AnnotateClass nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (ann_class const-decl "Class" AnnotateClass nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Name formal-nonempty-type-decl nil AnnotateProgram nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgram nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil))
+   556517 15350 t nil)
   (ann_program_TCC2-4 nil 3402747058 3403612132
    ("" (skosimp*)
     (("" (typepred "program(mp!1)")
@@ -10713,29 +10921,29 @@
   (CP_is_enumerable-1 nil 3392611795 3392611802 ("" (postpone) nil nil)
    unchecked nil 7000 150 t shostak))
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-1 nil 3396601223 3410272205
+  (IMP_VariableNames_TCC1-1 nil 3396601223 3410853061
    ("" (use "infinite_namespace") nil nil) proved
    ((infinite_namespace formula-decl nil AnnotateProgramProperties
      nil))
-   228 230 t nil))
+   668 590 t nil))
  (IMP_AnnotateProgram_TCC1 0
-  (IMP_AnnotateProgram_TCC1-1 nil 3390292134 3410272206
+  (IMP_AnnotateProgram_TCC1-1 nil 3390292134 3410853062
    ("" (use "CP_is_enumerable") nil nil) proved
    ((CP_is_enumerable formula-decl nil AnnotateProgramProperties nil))
-   237 230 t nil))
+   630 580 t nil))
  (IMP_AnnotateProgram_TCC2 0
-  (IMP_AnnotateProgram_TCC2-1 nil 3395037658 3410272206
+  (IMP_AnnotateProgram_TCC2-1 nil 3395037658 3410853062
    ("" (use "name_of_exists") nil nil) proved
    ((name_of_exists formula-decl nil AnnotateProgramProperties nil))
-   236 230 t nil))
+   665 590 t nil))
  (ann_program_class_correspondence 0
-  (ann_program_class_correspondence-1 nil 3392569211 3410272206
+  (ann_program_class_correspondence-1 nil 3392569211 3410853063
    ("" (skosimp*)
     (("" (expand "ann_program") (("" (propax) nil nil)) nil)) nil)
-   proved ((ann_program const-decl "Program" AnnotateProgram nil)) 342
-   320 t shostak))
+   proved ((ann_program const-decl "Program" AnnotateProgram nil)) 746
+   690 t shostak))
  (ann_program_method_correspondence 0
-  (ann_program_method_correspondence-1 nil 3392569244 3410272207
+  (ann_program_method_correspondence-1 nil 3392569244 3410853064
    ("" (skosimp*)
     (("" (use "ann_program_class_correspondence")
       (("" (assert)
@@ -10800,9 +11008,9 @@
     (finite_union application-judgement "finite_set" finite_sets nil)
     (ann_class const-decl "Class" AnnotateClass nil)
     (ann_methods const-decl "finite_set[Method]" AnnotateMethod nil))
-   706 650 t shostak))
+   1199 1080 t shostak))
  (ann_program_preserves_var_decls 0
-  (ann_program_preserves_var_decls-1 nil 3392566301 3410272208
+  (ann_program_preserves_var_decls-1 nil 3392566301 3410853066
    ("" (skosimp*)
     (("" (split)
       (("1" (expand* "ann_program" "getFieldDecls")
@@ -11001,9 +11209,9 @@
      nil)
     (subset? const-decl "bool" sets nil)
     (member const-decl "bool" sets nil))
-   1295 1190 t shostak))
+   2068 1780 t shostak))
  (ann_program_preserves_var_decl_names 0
-  (ann_program_preserves_var_decl_names-1 nil 3392567558 3410272209
+  (ann_program_preserves_var_decl_names-1 nil 3392567558 3410853067
    ("" (skosimp*)
     (("" (use "ann_program_preserves_var_decls")
       (("" (flatten)
@@ -11053,9 +11261,9 @@
     (subset? const-decl "bool" sets nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (member const-decl "bool" sets nil))
-   422 410 t shostak))
+   892 790 t shostak))
  (ann_program_add_ghost_var_decls 0
-  (ann_program_add_ghost_var_decls-1 nil 3396607040 3410272210
+  (ann_program_add_ghost_var_decls-1 nil 3396607040 3410853069
    ("" (skosimp*)
     (("" (apply-extensionality :hide? t)
       (("" (expand "getGhostDecls")
@@ -11193,9 +11401,9 @@
     (ann_program_class_correspondence formula-decl nil
      AnnotateProgramProperties nil)
     (member const-decl "bool" sets nil))
-   766 700 t shostak))
+   1351 1170 t shostak))
  (ann_program_ext_declared_var_names 0
-  (ann_program_ext_declared_var_names-1 nil 3401708815 3410272210
+  (ann_program_ext_declared_var_names-1 nil 3401708815 3410853070
    ("" (skosimp*)
     (("" (expand "ext_declared_var_names")
       (("" (auto-rewrite "union" "member")
@@ -11280,9 +11488,9 @@
      AnnotateProgramProperties nil)
     (ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil))
-   680 650 t shostak))
+   1142 1020 t shostak))
  (ann_program_preserves_wf_state 0
-  (ann_program_preserves_wf_state-1 nil 3390298254 3410272211
+  (ann_program_preserves_wf_state-1 nil 3390298254 3410853071
    ("" (skosimp*)
     (("" (use "ann_program_preserves_var_decls")
       (("" (expand "wf_state")
@@ -11321,9 +11529,9 @@
     (CP formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (wf_state const-decl "boolean" State nil))
-   589 460 t shostak))
+   936 820 t shostak))
  (ann_program_preserves_pstate_vars 0
-  (ann_program_preserves_pstate_vars-1 nil 3392567663 3410272212
+  (ann_program_preserves_pstate_vars-1 nil 3392567663 3410853072
    ("" (skosimp*)
     (("" (use "ann_program_preserves_var_decls")
       (("" (expand "wf_state")
@@ -11366,9 +11574,9 @@
     (wf_state const-decl "boolean" State nil)
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil))
-   546 540 t shostak))
+   951 920 t shostak))
  (ann_program_preserves_ghoststate_vars 0
-  (ann_program_preserves_ghoststate_vars-1 nil 3392567791 3410272212
+  (ann_program_preserves_ghoststate_vars-1 nil 3392567791 3410853073
    ("" (skosimp*)
     (("" (use "ann_program_preserves_var_decls")
       (("" (expand* "wf_state" "wf_ghoststate")
@@ -11420,9 +11628,9 @@
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil))
-   707 660 t shostak))
+   1165 1090 t shostak))
  (var_names_ann_program 0
-  (var_names_ann_program-2 nil 3410272352 nil
+  (var_names_ann_program-2 nil 3410272352 3410853082
    (";;; Proof var_names_ann_program-1 for formula AnnotateProgramProperties.var_names_ann_program"
     (auto-rewrite "subset?" "member" "union" "defined?")
     ((";;; Proof var_names_ann_program-1 for formula AnnotateProgramProperties.var_names_ann_program"
@@ -12133,7 +12341,181 @@
                                           (inst 1 "c1!1")
                                           nil))))))))))))))))))))))))))))))))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil)
+   proved
+   ((var_names const-decl "set[Name]" ProgramFunctions nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (Body type-decl nil Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj adt-constructor-decl "[[BoolExpr, BoolExpr] -> (Conj?)]"
+     Body_adt nil)
+    (Neg adt-constructor-decl "[BoolExpr -> (Neg?)]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq adt-constructor-decl "[[Expr, Expr] -> (Eq?)]" Body_adt nil)
+    (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumExpr type-eq-decl nil Body_adt nil)
+    (NExpr adt-constructor-decl "[NumExpr -> (NExpr?)]" Body_adt nil)
+    (NumVarEval adt-constructor-decl "[Name -> (NumVarEval?)]" Body_adt
+     nil)
+    (forbidden_names const-decl "set[Name]" VariableNames nil)
+    (cp const-decl "{n: Name | NOT forbidden_names(mp)(n)}"
+     VariableNames nil)
+    (halted const-decl "Name" NewVariableDeclarations nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (new_gvds const-decl "finite_set[FieldDecl]"
+     NewVariableDeclarations nil)
+    (ann_methods const-decl "finite_set[Method]" AnnotateMethod nil)
+    (Union_surjective name-judgement
+     "(surjective?[setofsets[T], set[T]])" sets_lemmas nil)
+    (var_names const-decl "set[Name]" ProgramFunctions nil)
+    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
+    (BExpr adt-constructor-decl "[BoolExpr -> (BExpr?)]" Body_adt nil)
+    (TT adt-constructor-decl "(TT?)" Body_adt nil)
+    (Throwable? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt nil)
+    (Throwable adt-constructor-decl "(Throwable?)" Excpt_adt nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (singleton? const-decl "bool" sets nil)
+    (singleton const-decl "(singleton?)" sets nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (n!1 skolem-const-decl "Method[Name]" AnnotateProgramProperties
+     nil)
+    (c1!1 skolem-const-decl "Class[Name]" AnnotateProgramProperties
+     nil)
+    (mp!1 skolem-const-decl "(wf_MP)" AnnotateProgramProperties nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (var_names_union formula-decl nil ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (legal_names const-decl "set[Name]" VariableNames nil)
+    (injective? const-decl "bool" functions nil)
+    (name_of const-decl "(injective?[CP, (legal_names(mp))])"
+     NewVariableDeclarations nil)
+    (halted const-decl "CP" MVA nil)
+    (IntType? adt-recognizer-decl "[JType -> boolean]" JType_adt nil)
+    (IntType adt-constructor-decl "(IntType?)" JType_adt nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (Int? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (unique const-decl "(injective?[CP, nat])" NewVariableDeclarations
+     nil)
+    (add_as_union formula-decl nil sets_lemmas nil)
+    (new_cps_gvds const-decl "finite_set[FieldDecl]"
+     NewVariableDeclarations nil)
+    (new_mva_vars_gvds const-decl "finite_set[FieldDecl]"
+     NewVariableDeclarations nil)
+    (new_cp_gvd const-decl "FieldDecl" NewVariableDeclarations nil)
+    (cp_new_ghostvar formula-decl nil NewVariableDeclarations nil)
+    (nonempty_finite_union2 application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (var_names_ann_event formula-decl nil AnnotateEvent nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence adt-constructor-decl "[[Stmt, Stmt] -> (Sequence?)]"
+     Body_adt nil)
+    (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
+    (ann_event const-decl "Stmt" AnnotateEvent nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (filter_event const-decl "finite_set[Transition]" AnnotateMethod
+     nil)
+    (Entry? adt-recognizer-decl "[EventType -> boolean]" EventType_adt
+     nil)
+    (Entry adt-constructor-decl "(Entry?)" EventType_adt nil)
+    (val? adt-recognizer-decl "[ValOrExcpt -> boolean]" ValOrExcpt_adt
+     nil)
+    (val adt-constructor-decl "[Expr -> (val?)]" ValOrExcpt_adt nil)
+    (Assert adt-constructor-decl "[BoolExpr -> (Assert?)]" Body_adt
+     nil)
+    (ExitNormal adt-constructor-decl "(ExitNormal?)" EventType_adt nil)
+    (ExitNormal? adt-recognizer-decl "[EventType -> boolean]"
+     EventType_adt nil)
+    (excpt adt-constructor-decl "[Excpt -> (excpt?)]" ValOrExcpt_adt
+     nil)
+    (excpt? adt-recognizer-decl "[ValOrExcpt -> boolean]"
+     ValOrExcpt_adt nil)
+    (ExitExceptional adt-constructor-decl "(ExitExceptional?)"
+     EventType_adt nil)
+    (ExitExceptional? adt-recognizer-decl "[EventType -> boolean]"
+     EventType_adt nil)
+    (setof type-eq-decl nil defined_types nil)
+    (setofsets type-eq-decl nil sets nil)
+    (ann_method const-decl "Method" AnnotateMethod nil)
+    (halted_new_ghostvar formula-decl nil NewVariableDeclarations nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
+    (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgramProperties nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (complete const-decl "boolean" MVASemantics nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (ann_class const-decl "Class" AnnotateClass nil)
+    (set type-eq-decl nil sets nil)
+    (var_names const-decl "set[Name]" ProgramFunctions nil)
+    (Union const-decl "set" sets nil)
+    (ann_program const-decl "Program" AnnotateProgram nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (subset? const-decl "bool" sets nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil))
+   8734 3840 nil nil)
   (var_names_ann_program-1 nil 3397470724 3410272219
    ("" (auto-rewrite "subset?" "member" "union")
     (("" (skosimp*)
@@ -13071,8 +13453,7 @@
     (union const-decl "set" sets nil)
     (member const-decl "bool" sets nil)
     (ann_program const-decl "Program" AnnotateProgram nil)
-    (Union const-decl "set" sets nil) nil
-    (set type-eq-decl nil sets nil)
+    (Union const-decl "set" sets nil) (set type-eq-decl nil sets nil)
     (ann_class const-decl "Class" AnnotateClass nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil)
@@ -13124,8 +13505,7 @@
     (ExitNormal adt-constructor-decl "(ExitNormal?)" EventType_adt nil)
     (Assert adt-constructor-decl "[BoolExpr -> (Assert?)]" Body_adt
      nil)
-    (val adt-constructor-decl "[(defined?) -> (val?)]" ValOrExcpt_adt
-     nil)
+    (val adt-constructor-decl "[Expr -> (val?)]" ValOrExcpt_adt nil)
     (val? adt-recognizer-decl "[ValOrExcpt -> boolean]" ValOrExcpt_adt
      nil)
     (Entry adt-constructor-decl "(Entry?)" EventType_adt nil)
@@ -13151,7 +13531,7 @@
     (var_names_ann_event formula-decl nil AnnotateEvent nil)
     (nonempty_finite_union2 application-judgement
      "non_empty_finite_set" finite_sets nil)
-    (cp_new_ghostvar formula-decl nil NewVariableDeclarations nil) nil
+    (cp_new_ghostvar formula-decl nil NewVariableDeclarations nil)
     (new_mva_vars_gvds const-decl "finite_set[FieldDecl]"
      NewVariableDeclarations nil)
     (new_cps_gvds const-decl "finite_set[FieldDecl]"
@@ -13179,18 +13559,18 @@
     (name_of const-decl "(injective?[CP, (legal_names(mp))])"
      NewVariableDeclarations nil)
     (injective? const-decl "bool" functions nil)
-    (legal_names const-decl "set[Name]" VariableNames nil) nil
+    (legal_names const-decl "set[Name]" VariableNames nil)
     (var_names_union formula-decl nil ProgramFunctions nil)
-    (PreProgram type-eq-decl nil Program nil) nil nil nil
+    (PreProgram type-eq-decl nil Program nil)
     (nonempty_singleton_finite application-judgement
      "non_empty_finite_set" finite_sets nil)
     (singleton const-decl "(singleton?)" sets nil)
-    (singleton? const-decl "bool" sets nil) nil
+    (singleton? const-decl "bool" sets nil)
     (Throwable adt-constructor-decl "(Throwable?)" Excpt_adt nil)
     (Throwable? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt nil)
     (Unit adt-constructor-decl "(Unit?)" Val_adt nil)
     (Unit? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil) nil
+    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (Union_surjective name-judgement
      "(surjective?[setofsets[T], set[T]])" sets_lemmas nil)
     (ann_methods const-decl "finite_set[Method]" AnnotateMethod nil)
@@ -13226,12 +13606,11 @@
     (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
     (Body type-decl nil Body_adt nil)
-    (finite_union application-judgement "finite_set" finite_sets nil)
-    nil)
+    (finite_union application-judgement "finite_set" finite_sets nil))
    6852 3000 t shostak))
  (var_names_declared_in_MVA_subset_ghostvars 0
   (var_names_declared_in_MVA_subset_ghostvars-1 nil 3403862450
-   3410272220
+   3410853083
    ("" (skosimp*)
     (("" (auto-rewrite "subset?" "member" "union" "add")
       (("" (assert)
@@ -13307,9 +13686,9 @@
     (subset? const-decl "bool" sets nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil))
-   599 540 t shostak))
+   1093 930 t shostak))
  (ann_program_defines_MVA_vars 0
-  (ann_program_defines_MVA_vars-2 nil 3394875181 3410272220
+  (ann_program_defines_MVA_vars-2 nil 3394875181 3410853084
    ("" (skosimp)
     (("" (typepred "mp!1")
       (("" (expand* "compatible" "var_names" "new_gvds")
@@ -13372,7 +13751,7 @@
     (new_gvds const-decl "finite_set[FieldDecl]"
      NewVariableDeclarations nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil))
-   611 590 t nil)
+   1169 1030 t nil)
   (ann_program_defines_MVA_vars-1 nil 3389956467 3394872339
    ("" (skosimp*)
     ((""
@@ -13419,7 +13798,7 @@
     (lift type-decl nil lift_adt nil))
    974962 4000 t shostak))
  (new_vars_ghost_in_ann_program 0
-  (new_vars_ghost_in_ann_program-1 nil 3394876088 3410272221
+  (new_vars_ghost_in_ann_program-1 nil 3394876088 3410853085
    ("" (skosimp*)
     ((""
       (expand* "wf_state" "wf_AState" "wf_ghoststate" "wf_Store"
@@ -13488,9 +13867,9 @@
      AnnotateProgramProperties nil)
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil))
-   468 410 t shostak))
+   887 770 t shostak))
  (wf_Body_MVA_implies_wf_Body 0
-  (wf_Body_MVA_implies_wf_Body-1 nil 3403370425 3410272222
+  (wf_Body_MVA_implies_wf_Body-1 nil 3403370425 3410853087
    ("" (skosimp)
     (("" (expand "wf_Body")
       (("" (split)
@@ -13696,9 +14075,9 @@
      nil)
     (subset? const-decl "bool" sets nil)
     (member const-decl "bool" sets nil))
-   1307 1220 t shostak))
+   1851 1610 t shostak))
  (one_action_source_wf_Body 0
-  (one_action_source_wf_Body-1 nil 3403614165 3410272223
+  (one_action_source_wf_Body-1 nil 3403614165 3410853088
    ("" (skosimp*)
     (("" (expand "wf_Body")
       (("" (expand "wf_Action")
@@ -13899,9 +14278,9 @@
     (Expr type-eq-decl nil Body_adt nil)
     (OneAction type-eq-decl nil MVA nil)
     (wf_Action const-decl "boolean" WellFormedMVA nil))
-   1110 1000 t shostak))
+   1606 1390 t shostak))
  (one_action_translation_wf_Body 0
-  (one_action_translation_wf_Body-1 nil 3403614375 3410272225
+  (one_action_translation_wf_Body-1 nil 3403614375 3410853090
    ("" (skosimp*)
     (("" (use "one_action_source_wf_Body")
       (("" (assert)
@@ -14045,6 +14424,7 @@
     (wf_Body const-decl "boolean" WellFormedProgram nil)
     (Set adt-constructor-decl "[[Name, Expr] -> (Set?)]" Body_adt nil)
     (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -14084,9 +14464,9 @@
     (var_names_declared_in_MVA_subset_ghostvars formula-decl nil
      AnnotateProgramProperties nil)
     (wf_Expr const-decl "boolean" WellFormedMVA nil))
-   1228 1180 t shostak))
+   1842 1620 t shostak))
  (ann_action_yields_wf_Body 0
-  (ann_action_yields_wf_Body-1 nil 3403860923 3410272225
+  (ann_action_yields_wf_Body-1 nil 3403860923 3410853092
    ("" (skosimp*)
     (("" (expand "wf_Body")
       (("" (use "one_action_translation_wf_Body")
@@ -14179,9 +14559,9 @@
     (list type-decl nil list_adt nil)
     (one_action_translation_wf_Body formula-decl nil
      AnnotateProgramProperties nil))
-   834 790 t shostak))
+   1369 1170 t shostak))
  (update_vars_wf_Stmt 0
-  (update_vars_wf_Stmt-1 nil 3403861319 3410272228
+  (update_vars_wf_Stmt-1 nil 3403861319 3410853095
    ("" (skosimp*)
     (("" (expand "wf_Stmt")
       (("" (expand "update_vars")
@@ -14407,6 +14787,7 @@
     (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Set adt-constructor-decl "[[Name, Expr] -> (Set?)]" Body_adt nil)
     (set type-eq-decl nil sets nil)
     (forbidden_names const-decl "set[Name]" VariableNames nil)
@@ -14445,9 +14826,9 @@
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (update_vars const-decl "Stmt" AnnotateEvent nil))
-   2225 2180 t shostak))
+   3077 2710 t shostak))
  (guard_to_expression_wf_BoolExpr 0
-  (guard_to_expression_wf_BoolExpr-1 nil 3403862105 3410272228
+  (guard_to_expression_wf_BoolExpr-1 nil 3403862105 3410853096
    ("" (skosimp*)
     (("" (expand "wf_BoolExpr")
       (("" (use "guard_to_expression_yields_wf_BoolExpr")
@@ -14576,9 +14957,9 @@
     (CP formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (guard_to_expression_yields_wf_BoolExpr formula-decl nil
      MVASemantics nil))
-   705 650 t shostak))
+   1133 1050 t shostak))
  (ann_trans_cp_wf 0
-  (ann_trans_cp_wf-1 nil 3403872295 3410272230
+  (ann_trans_cp_wf-1 nil 3403872295 3410853098
    ("" (beta)
     (("" (skosimp*)
       (("" (expand* "wf_BoolExpr" "wf_Stmt" "ann_trans_cp")
@@ -14937,9 +15318,9 @@
     (wf_BoolExpr const-decl "boolean" WellFormedProgram nil)
     (ann_trans_cp const-decl "[BoolExpr, Stmt]" AnnotateEvent nil)
     (wf_Stmt const-decl "boolean" WellFormedProgram nil))
-   1591 1470 t shostak))
+   2202 1950 t shostak))
  (ann_event_wf_Body 0
-  (ann_event_wf_Body-1 nil 3402484935 3410272231
+  (ann_event_wf_Body-1 nil 3402484935 3410853100
    ("" (skosimp)
     (("" (expand "wf_Body")
       (("" (split)
@@ -15028,9 +15409,9 @@
     (Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (CP formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (ann_event_var_names formula-decl nil AnnotateEvent nil))
-   810 770 t shostak))
+   1311 1170 t shostak))
  (ann_program_preserves_wf_method 0
-  (ann_program_preserves_wf_method-1 nil 3401708680 3410272233
+  (ann_program_preserves_wf_method-1 nil 3401708680 3410853102
    ("" (skosimp*)
     (("" (typepred "m!1")
       (("" (use "ann_method_wf_Body1")
@@ -15228,6 +15609,14 @@
     (wf_Body const-decl "boolean" WellFormedProgram nil)
     (ann_program_add_ghost_var_decls formula-decl nil
      AnnotateProgramProperties nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (Body type-decl nil Body_adt nil) (union const-decl "set" sets nil)
     (member const-decl "bool" sets nil)
     (var_names_union formula-decl nil ProgramFunctions nil)
@@ -15242,9 +15631,9 @@
      AnnotateProgramProperties nil)
     (method_pred const-decl "bool" ProgramRestriction nil)
     (ann_method_wf_Body1 formula-decl nil AnnotateMethod nil))
-   1744 1570 t shostak))
+   2359 2010 t shostak))
  (ann_program_preserves_wf_body 0
-  (ann_program_preserves_wf_body-1 nil 3401438501 3410272233
+  (ann_program_preserves_wf_body-1 nil 3401438501 3410853103
    ("" (skosimp*)
     (("" (typepred "b!1")
       (("" (expand "wf_Body")
@@ -15321,9 +15710,9 @@
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (var_names_union formula-decl nil ProgramFunctions nil))
-   363 350 t shostak))
+   830 740 t shostak))
  (get_class_ann_program 0
-  (get_class_ann_program-1 nil 3392567967 3410272234
+  (get_class_ann_program-1 nil 3392567967 3410853104
    ("" (skosimp*)
     (("" (replace -3 :hide? t)
       (("" (replace -3 :hide? t)
@@ -15354,10 +15743,10 @@
    proved
    ((get_class const-decl "lift[Class]" ProgramFunctions nil)
     (ann_program const-decl "Program" AnnotateProgram nil))
-   578 510 t shostak))
+   954 920 t shostak))
  (same_class_name_ann_class_implies_same_class 0
   (same_class_name_ann_class_implies_same_class-1 nil 3387512899
-   3410272234
+   3410853105
    ("" (skosimp)
     (("" (expand "ann_program")
       (("" (skosimp)
@@ -15413,10 +15802,10 @@
     (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil))
-   685 620 t shostak))
+   1151 1040 t shostak))
  (same_method_name_ann_class_implies_same_method 0
   (same_method_name_ann_class_implies_same_method-1 nil 3401684952
-   3410272235
+   3410853106
    ("" (skosimp)
     (("" (lemma "wf_class_has_unique_method_names")
       ((""
@@ -15485,9 +15874,9 @@
     (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil))
-   835 770 t nil))
+   1348 1260 t nil))
  (lookup_mthd_ann_program_TCC1 0
-  (lookup_mthd_ann_program_TCC1-1 nil 3398657929 3410272238
+  (lookup_mthd_ann_program_TCC1-1 nil 3398657929 3410853110
    ("" (subtype-tcc) nil nil) proved
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -15552,9 +15941,9 @@
     (ann_program const-decl "Program" AnnotateProgram nil)
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (method_names const-decl "finite_set[Name]" ProgramFunctions nil))
-   2834 2740 nil nil))
+   3838 3370 nil nil))
  (lookup_mthd_ann_program 0
-  (lookup_mthd_ann_program-1 nil 3387195852 3410272239
+  (lookup_mthd_ann_program-1 nil 3387195852 3410853112
    ("" (skosimp)
     (("" (expand "lookup_mthd")
       (("" (lift-if)
@@ -15703,9 +16092,9 @@
     (wf_MP const-decl "boolean" MonitoredProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (ann_program const-decl "Program" AnnotateProgram nil))
-   977 920 t shostak))
+   1662 1420 t shostak))
  (ann_program_preserves_class_names 0
-  (ann_program_preserves_class_names-1 nil 3398687801 3410272240
+  (ann_program_preserves_class_names-1 nil 3398687801 3410853113
    ("" (skosimp*)
     (("" (apply-extensionality :hide? t)
       (("" (expand "class_names")
@@ -15788,9 +16177,9 @@
     (ann_program_preserves_class_name formula-decl nil AnnotateClass
      nil)
     (ann_class const-decl "Class" AnnotateClass nil))
-   516 460 t shostak))
+   1028 860 t shostak))
  (up_get_class_equivalence 0
-  (up_get_class_equivalence-1 nil 3398687657 3410272240
+  (up_get_class_equivalence-1 nil 3398687657 3410853114
    ("" (skosimp*)
     (("" (expand "get_class")
       (("" (lift-if)
@@ -15835,9 +16224,9 @@
     (Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (ann_program_preserves_class_names formula-decl nil
      AnnotateProgramProperties nil))
-   416 380 t shostak))
+   859 750 t shostak))
  (get_class_equivalence 0
-  (get_class_equivalence-1 nil 3398688099 3410272242
+  (get_class_equivalence-1 nil 3398688099 3410853120
    ("" (skosimp*)
     (("" (use "up_get_class_equivalence")
       (("" (assert)
@@ -16245,5 +16634,5 @@
     (singleton? const-decl "bool" sets nil)
     (singleton const-decl "(singleton?)" sets nil)
     (class_names const-decl "finite_set[Name]" ProgramFunctions nil))
-   1719 1570 t shostak)))
+   6400 2190 t shostak)))
 
