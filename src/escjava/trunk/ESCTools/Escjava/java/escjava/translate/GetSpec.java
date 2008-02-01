@@ -49,11 +49,13 @@ public final class GetSpec {
 			/*@ non_null */FindContributors scope,
 			/*@ non_null */Set synTargs, /*@ nullable */ Hashtable premap) {
 		Spec spec = getCommonSpec(rd, scope, premap);
-		DefGCmd.addInvConds(scope, spec);
+		//[GKS]
+		if(Main.options().idc)
+			DefGCmd.addInvConds(scope, spec);
+		//[GKE]
 		if (rd.body==null && Main.options().idc) {
 			return(spec);
-		}
-		else {
+		}	else {
 			return extendSpecForBody(spec, scope, synTargs);
 		}
 	}
