@@ -274,7 +274,7 @@ BEGIN
           % actions taken at the entry of the method (inv, precond, pre_set)
           defined?(pv) AND % condition on pv needed to prove TCCs 
                            % -> is derivable
-          on_method_entry(p, md, a, val(pv), tau3, tau4, m3, 
+          on_method_entry(p, md, a, val(Const(pv)), tau3, tau4, m3, 
                           bounded_derive_rec(m3)) AND
           % execute the body
           derive(p)(body(md), tau4, x, tau5)(m4) AND
@@ -289,7 +289,7 @@ BEGIN
           IF bottom?(ex(pstate(tau6))) 
           THEN defined?(w) AND           % condition on w needed to prove TCCs
                                          % -> is derivable
-               on_method_exit_normal(p, md, a, val(w), tau6, tau7, m6,
+               on_method_exit_normal(p, md, a, val(Const(w)), tau6, tau7, m6,
                                      bounded_derive_rec(m6))
           ELSE on_method_exit_exceptional(p, md, a, 
                                           excpt(down(ex(pstate(tau6)))),
@@ -377,7 +377,11 @@ BEGIN
       Assert(e) :
         n > 0 AND
         v = return_of_stmt(sigma2) AND
-        execute_assert(p, e, sigma1, sigma2, n, derive_rec)
+        execute_assert(p, e, sigma1, sigma2, n, derive_rec),
+      Const(v1) : 
+        n = 0 AND
+        v = v1 AND
+        sigma1 = sigma2
     ENDCASES
     ENDIF
   MEASURE n
@@ -691,7 +695,8 @@ BEGIN
       val?(arg) AND
       inv = lookup_inv(program(p), a) AND
       check_assertion(p)(inv, s1, tau1)(m1)(derive_rec(m1)) AND
-      check_assertion(p)(pre(md)(v(arg)), tau1, tau2)(m2)(derive_rec(m2)) AND
+      check_assertion(p)(pre(md)(v(arg)), tau1, tau2)(m2)
+                                (derive_rec(m2)) AND
       derive_rec(n)(p)(pre_set(md)(v(arg)), tau2, v, s2)(m3) AND
       v = return_of_stmt(s2) AND
       st(pstate(s1)) = st(pstate(s2))
@@ -712,7 +717,8 @@ BEGIN
       v = return_of_stmt(tau1) AND
       inv = lookup_inv(program(p), a) AND
       check_assertion(p)(inv, tau1, tau2)(m2)(derive_rec(m2)) AND
-      check_assertion(p)(post(md)(v(arg)), tau2, s2)(m3)(derive_rec(m3)) AND
+      check_assertion(p)(post(md)(v(arg)), tau2, s2)(m3)
+                                 (derive_rec(m3)) AND
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 

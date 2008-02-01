@@ -307,12 +307,12 @@ BEGIN
     LET ann_event_type = LAMBDA (et : EventType)(v : ValOrExcpt) :
                            ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v)
     IN
-    m WITH [pre_set  := LAMBDA(v : (defined?)) :
+    m WITH [pre_set  := LAMBDA(v : Expr) :
                         Sequence(pre_set(m)(v),
                         Sequence(ann_event_type(Entry)(val(v)),
                         Assert(Neg(Eq(NExpr(NumVarEval(cp(mp))),
                                       NExpr(NumVarEval(halted(mp)))))))),
-            post_set := LAMBDA(v : (defined?)) : 
+            post_set := LAMBDA(v : Expr) : 
                         Sequence(post_set(m)(v), 
                         ann_event_type(ExitNormal)(val(v))),
             exc_set  := LAMBDA(e : Excpt) :
@@ -351,12 +351,12 @@ BEGIN
       body(ann_method(mp)(m)) = body(m)
 
   ann_method_pre_set : LEMMA % :-)
-    FORALL (m : Method, v : (defined?)) :
+    FORALL (m : Method, v : Expr) :
       Sequence?(pre_set(ann_method(mp)(m))(v)) AND
         s1(pre_set(ann_method(mp)(m))(v)) = pre_set(m)(v)
 
   ann_method_post_set : LEMMA % :-)
-    FORALL (m : Method, v : (defined?)) :
+    FORALL (m : Method, v : Expr) :
       Sequence?(post_set(ann_method(mp)(m))(v)) AND
         s1(post_set(ann_method(mp)(m))(v)) = post_set(m)(v)
 
@@ -380,23 +380,23 @@ BEGIN
       (FORALL(v : Name) : var_names(body(am))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v))
       AND
-      (FORALL(v : Name, val : (defined?)) : 
+      (FORALL(v : Name, val : Expr) : 
                           var_names(pre(am)(val))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v))
       AND
-      (FORALL(v : Name, val : (defined?)) : 
+      (FORALL(v : Name, val : Expr) : 
                           var_names(post(am)(val))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v))
       AND
       (FORALL(v : Name) : var_names(res(am))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v))
       AND
-      (FORALL(v : Name, val : (defined?)) : 
+      (FORALL(v : Name, val : Expr) : 
                           var_names(pre_set(am)(val))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v) OR
                           var_names(new_gvds(mp))(v))
       AND
-      (FORALL(v : Name, val : (defined?)) : 
+      (FORALL(v : Name, val : Expr) : 
                           var_names(post_set(am)(val))(v) IMPLIES
                           ext_declared_var_names(program(mp))(v) OR
                           var_names(new_gvds(mp))(v))
@@ -413,19 +413,19 @@ BEGIN
       LET am = ann_method(mp)(m) IN
       (subterm(b, body(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (FORALL (v : (defined?)) : 
+      (FORALL (v : Expr) : 
          subterm(b, pre(am)(v)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (FORALL(v : (defined?)) :
+      (FORALL(v : Expr) :
          subterm(b, post(am)(v)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
       (subterm(b, res(am)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b))) AND
-      (FORALL(v : (defined?)) :
+      (FORALL(v : Expr) :
        subterm(b, pre_set(am)(v)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b)) OR
          var_names(new_gvds(mp))(target(b))) AND
-      (FORALL(v : (defined?)) :
+      (FORALL(v : Expr) :
          subterm(b, post_set(am)(v)) IMPLIES
          var_names(getGhostDecls(program(mp)))(target(b)) OR
          var_names(new_gvds(mp))(target(b))) AND

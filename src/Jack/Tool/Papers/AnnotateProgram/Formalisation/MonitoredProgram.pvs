@@ -182,7 +182,8 @@ BEGIN
              [ astate := on_method_MVA(ExitNormal)(mp, md)(arg)(tau1) ] AND
       inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
-      check_assertion(mp)(post(md)(v(arg)), tau3, s2)(m3)(derive_rec(m3)) AND
+      check_assertion(mp)(post(md)(v(arg)), tau3, s2)(m3)
+                         (derive_rec(m3)) AND
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 

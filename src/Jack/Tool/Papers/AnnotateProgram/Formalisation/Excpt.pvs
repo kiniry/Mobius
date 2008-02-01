@@ -9,12 +9,3 @@ BEGIN
 END Excpt
 
 
-ValOrExcpt[Name : TYPE+] : DATATYPE
-BEGIN
-
-  IMPORTING ValProp[Name], Excpt
-
-  val(v : (defined?)) : val?
-  excpt (e : Excpt) : excpt?
-
-END ValOrExcpt

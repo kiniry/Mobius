@@ -438,7 +438,8 @@ BEGIN
            old_lvs1 = lvs(st(pstate(tauMP2))) AND
            tauMP3 = update_stack(a1, arg(md1), pv1, lvars(md1), tauMP2) AND
            defined?(pv1) AND
-           on_method_entry_MP(mp, md1, a1, val(pv1), tauMP3, tauMP4, m31, 
+           on_method_entry_MP(mp, md1, a1, val(Const(pv1)), tauMP3, tauMP4, 
+                              m31, 
                               LAMBDA (k: upto(m31))
                                           (p: MonitoredProgram[CP, Name])
                                           (b: (wf_Body(program(p))),
@@ -455,7 +456,7 @@ BEGIN
                 ENDIF
             AND IF bottom?(ex(pstate(tauMP6))) 
                   THEN defined?(w1) AND
-                       on_method_exit_normal_MP(mp, md1, a1, val(w1), 
+                       on_method_exit_normal_MP(mp, md1, a1, val(Const(w1)), 
                                                 tauMP6, tauMP7, m61,
                                                 LAMBDA
                                                 (k: upto(m61))
@@ -528,7 +529,7 @@ BEGIN
            old_lvs2 = lvs(st(pstate(tauAP2))) AND
            tauAP3 = update_stack(a2, arg(md2), pv2, lvars(md2), tauAP2) AND
            defined?(pv2) AND
-           on_method_entry(ann_program(mp), md2, a2, val(pv2), 
+           on_method_entry(ann_program(mp), md2, a2, val(Const(pv2)), 
                            tauAP3, tauAP4, m32, 
                                 LAMBDA (k: upto(m32))
                                        (p: Program[Name])
@@ -546,7 +547,8 @@ BEGIN
                 ENDIF
             AND IF bottom?(ex(pstate(tauAP6))) 
                   THEN defined?(w2) AND
-                       on_method_exit_normal(ann_program(mp), md2, a2, val(w2),
+                       on_method_exit_normal(ann_program(mp), md2, a2, 
+                                             val(Const(w2)),
                                              tauAP6, tauAP7, m62,
                                              LAMBDA
                                              (k: upto(m62))

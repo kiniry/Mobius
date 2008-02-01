@@ -35,8 +35,8 @@ BEGIN
 
   wf_set_stmts(p : FullProgram)(m : Method) : bool =
     methods(program(p))(m) IMPLIES
-      (FORALL (v : (defined?)) : only_JMLExc(p)(pre_set(m)(v))) AND
-      (FORALL (v : (defined?)) : no_exc(p)(post_set(m)(v))) AND
+      (FORALL (v : Expr) : only_JMLExc(p)(pre_set(m)(v))) AND
+      (FORALL (v : Expr) : no_exc(p)(post_set(m)(v))) AND
       (FORALL (e : Excpt) : no_exc(p)(exc_set(m)(e)))
 
   wf_set_stmts(p : FullProgram) : bool =

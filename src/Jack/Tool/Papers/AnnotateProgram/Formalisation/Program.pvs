@@ -37,7 +37,7 @@ Body[Name : TYPE+] : DATATYPE
                          WITH SUBTYPES Expr, NumExpr, BoolExpr, RefExpr, Stmt
 BEGIN
 
-  IMPORTING Excpt
+  IMPORTING Excpt, ValProp[Name]
 
   % Numerical expressions. They are parameterized with a variable name to handle
   %  the case of variable evaluation.
@@ -94,6 +94,7 @@ BEGIN
            finally : Stmt) : TryCatch?              : Stmt
   While(test : BoolExpr, body : Stmt) : While?      : Stmt
   Assert(expr : BoolExpr) : Assert?                 : Stmt
+  Const(v : (defined?)) : Const?                    : Expr
 
 
 END Body
@@ -130,12 +131,12 @@ BEGIN
   Method : TYPE = [# name : Name,
                      classname : Name,
                      arg : LocalVarDecl,
-                     pre : [(defined?) -> BoolExpr[Name]],
-                     post : [(defined?) -> BoolExpr[Name]],
+                     pre : [Expr -> BoolExpr[Name]],
+                     post : [Expr -> BoolExpr[Name]],
                      lvars : finite_set[LocalVarDecl],
                      body : Stmt[Name],
-                     pre_set : [(defined?) -> Stmt[Name]],
-                     post_set : [(defined?) -> Stmt[Name]],
+                     pre_set : [Expr -> Stmt[Name]],
+                     post_set : [Expr -> Stmt[Name]],
                      exc_set : [Excpt -> Stmt[Name]],
                      res : Expr[Name],
                      res_type : JType #]
@@ -208,7 +209,8 @@ BEGIN
        1, % Throw
        LAMBDA(n1 : nat, e : Excpt, n2, n3 : nat) : n1 + n2 + n3 + 1, % TryCatchFinally
        LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % While
-       LAMBDA(n : nat) : n + 1)(b) % Assert
+       LAMBDA(n : nat) : n + 1,
+       LAMBDA(v : Val) : 1)(b) % Assert
 
 
   var_names(b : Body) : RECURSIVE [Name -> boolean] =
@@ -251,7 +253,8 @@ BEGIN
        TryCatch(try, exc, catch, finally) : 
          union(var_names(try), union(var_names(catch), var_names(finally))),
        While(test, body) : union(var_names(test), var_names(body)),
-       Assert(expr) : var_names(expr)
+       Assert(expr) : var_names(expr),
+       Const(v) : emptyset[Name]
     ENDCASES
   MEASURE size(b)
 
@@ -264,11 +267,11 @@ BEGIN
 
   var_names(m : Method) : set[Name] =
     Union({ns : set[Name] | 
-      ns = var_names(pre(m)(Unit)) OR 
-      ns = var_names(post(m)(Unit)) OR
+      ns = var_names(pre(m)(BExpr(TT))) OR 
+      ns = var_names(post(m)(BExpr(TT))) OR
       ns = var_names(body(m)) OR 
-      ns = var_names(pre_set(m)(Unit)) OR 
-      ns = var_names(post_set(m)(Unit)) OR 
+      ns = var_names(pre_set(m)(BExpr(TT))) OR 
+      ns = var_names(post_set(m)(BExpr(TT))) OR 
       ns = var_names(exc_set(m)(Throwable)) OR 
       ns = var_names(lvars(m)) OR ns = var_names(res(m)) OR
       ns = singleton(name(arg(m)))})
@@ -418,7 +421,7 @@ BEGIN
   % Proper subtern (<<) properties
 
   proper_subterm_set_clause(s : Stmt, m : Method) : boolean =
-    s << pre_set(m)(Unit) OR s << post_set(m)(Unit) OR 
+    s << pre_set(m)(BExpr(TT)) OR s << post_set(m)(BExpr(TT)) OR 
     s << exc_set(m)(Throwable)
 
   IMPORTING listfuncs
@@ -480,11 +483,11 @@ BEGIN
 
     method_pred(p : PreProgram)(m : Method)
                (pred : [PreProgram -> [Body -> bool]]) : bool =
-      (FORALL (v : (defined?)) : pred(p)(pre(m)(v))) AND 
-      (FORALL (v : (defined?)) : pred(p)(post(m)(v))) AND
+      (FORALL (v : Expr) : pred(p)(pre(m)(v))) AND 
+      (FORALL (v : Expr) : pred(p)(post(m)(v))) AND
       pred(p)(body(m)) AND 
-      (FORALL(v : (defined?)) : pred(p)(pre_set(m)(v))) AND
-      (FORALL(v : (defined?)) : pred(p)(post_set(m)(v))) AND 
+      (FORALL(v : Expr) : pred(p)(pre_set(m)(v))) AND
+      (FORALL(v : Expr) : pred(p)(post_set(m)(v))) AND 
       (FORALL(e : Excpt) : pred(p)(exc_set(m)(e))) AND
       pred(p)(res(m))
 
