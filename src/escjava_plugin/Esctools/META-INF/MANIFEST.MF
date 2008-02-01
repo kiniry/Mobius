@@ -4,8 +4,7 @@ Bundle-Name: Mobius ESCJava2 Library Plug-in
 Bundle-SymbolicName: mobius.escjava2.esctools
 Bundle-Version: 2.0.6
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 project
-Bundle-ClassPath: escspecs.jar,
- esctools2.jar
+Bundle-ClassPath: libs/esctools2.jar
 Export-Package: escjava;
   uses:="escjava.sortedProver,
    javafe,
@@ -114,35 +113,6 @@ Export-Package: escjava;
   uses:="escjava.vcGeneration,
    javafe.ast,
    escjava.translate,
-   org.w3c.dom",
- java,
- java.awt,
- java.awt.color,
- java.awt.event,
- java.io,
- java.lang,
- java.lang.reflect,
- java.math,
- java.net,
- java.rmi,
- java.util,
- java.util.regex,
- javacard,
- javacard.framework,
- javacard.framework.service,
- javacard.security,
- javacardx,
- javacardx.crypto,
- javax,
- javax.swing,
- javax.swing.event,
- javax.swing.filechooser,
- javax.swing.tree,
- junit,
- junit.framework,
- junitutils;uses:="junit.framework",
- org,
- org.jmlspecs,
- org.jmlspecs.lang
+   org.w3c.dom"
 Eclipse-JREBundle: true
 Require-Bundle: mobius.javafe.plugin;visibility:=reexport
