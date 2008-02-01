@@ -171,7 +171,7 @@ BEGIN
     TryCatch(
        TryCatch(
         Sequence(
-          pre_set(m)(lookup_local(arg(m))),
+          pre_set(m)(var_lookup(name(arg(m)))(jtype(arg(m)))),
           Sequence(
             body(m),
             StmtExpr(Assign(ex(p)(m), BExpr(TT))))),
@@ -185,23 +185,18 @@ BEGIN
        IfThenElse(
          BoolVarEval(ex(p)(m)),
          Sequence(StmtExpr(Assign(res(p)(m), res(m))),
-                  post_set(m)(lookup_local(res(p)(m)))),
+                  post_set(m)(var_lookup(res(p)(m))(res_type(m)))),
          Skip))
          
 
   inline_method(p)(m : Method) : Method =
-    m WITH [pre_set  := Skip,
-            post_set := Skip,
-            exc_set := Skip,
+    m WITH [pre_set  := LAMBDA(v : Expr) : Skip,
+            post_set := LAMBDA(v : Expr) : Skip,
+            exc_set := LAMBDA (e : Excpt) : Skip,
             lvars := add(new_res_lvar(p, m),
                      add(new_ex_lvar(p, m), lvars(m))),
             body := inline_method_body(p)(m),
-            res := CASES res_type(m) OF
-                     IntType : NExpr(NumVarEval(res(p)(m))),
-                     BoolType : BExpr(BoolVarEval(res(p)(m))),
-                     RefType : RExpr(RefVarEval(res(p)(m))),
-                     Void : BExpr(TT)
-                   ENDCASES]
+            res := var_lookup(res(p)(m))(res_type(m))]
 
 
   inline_methods(p)(ms : finite_set[Method]) : finite_set[Method] =
@@ -235,25 +230,19 @@ BEGIN
 
   inline_method_pre_set : LEMMA % :-)
     FORALL (m : Method) :
-      pre_set(inline_method(p)(m)) = Skip
+      pre_set(inline_method(p)(m)) = LAMBDA(v : Expr) : Skip
 
   inline_method_post_set : LEMMA % :-)
     FORALL (m : Method) :
-      post_set(inline_method(p)(m)) = Skip
+      post_set(inline_method(p)(m)) = LAMBDA(v : Expr) : Skip
 
   inline_method_exc_set : LEMMA % :-)
     FORALL (m : Method) :
-      exc_set(inline_method(p)(m)) = Skip
+      exc_set(inline_method(p)(m)) = LAMBDA(e : Excpt) : Skip
 
   inline_method_res : LEMMA % TO DO
     FORALL (m : Method) :
-      res(inline_method(p)(m)) = 
-        CASES res_type(m) OF
-          IntType : NExpr(NumVarEval(res(p)(m))),
-          BoolType : BExpr(BoolVarEval(res(p)(m))),
-          RefType : RExpr(RefVarEval(res(p)(m))),
-          Void : BExpr(TT)
-        ENDCASES
+      res(inline_method(p)(m)) = var_lookup(res(p)(m))(res_type(m))
 
   inline_method_res_type : LEMMA % :-)
     FORALL (m : Method) :
@@ -268,20 +257,20 @@ BEGIN
                           ext_declared_var_names(p)(v) OR
                           var_names(new_lvars(p))(v))
       AND
-      (FORALL(v : Name) : var_names(pre(im))(v) IMPLIES
+      (FORALL(v : Name, e : Expr) : var_names(pre(im)(e))(v) IMPLIES
                           ext_declared_var_names(p)(v))
       AND
-      (FORALL(v : Name) : var_names(post(im))(v) IMPLIES
+      (FORALL(v : Name, e : Expr) : var_names(post(im)(e))(v) IMPLIES
                           ext_declared_var_names(p)(v))
       AND
       (FORALL(v : Name) : var_names(res(im))(v) IMPLIES
                           var_names(new_lvars(p))(v))
       AND
-      (FORALL(v : Name) : NOT var_names(pre_set(im))(v))
+      (FORALL(v : Name, e : Expr) : NOT var_names(pre_set(im)(e))(v))
       AND
-      (FORALL(v : Name) : NOT var_names(post_set(im))(v))
+      (FORALL(v : Name, e : Expr) : NOT var_names(post_set(im)(e))(v))
       AND
-      (FORALL(v : Name) : NOT var_names(exc_set(im))(v))
+      (FORALL(v : Name, e : Excpt) : NOT var_names(exc_set(im)(e))(v))
 
   inline_method_wf_Body2 : LEMMA % :-)
     FORALL(m : Method, b : Body) :
@@ -290,14 +279,16 @@ BEGIN
       LET im = inline_method(p)(m) IN
       (subterm(b, body(im)) IMPLIES
          var_names(getGhostDecls(p))(target(b))) AND
-      (subterm(b, pre(im)) IMPLIES
+      (FORALL(e : Expr) : 
+       subterm(b, pre(im)(e)) IMPLIES
          var_names(getGhostDecls(p))(target(b))) AND
-      (subterm(b, post(im)) IMPLIES
+      (FORALL(e : Expr) :
+       subterm(b, post(im)(e)) IMPLIES
          var_names(getGhostDecls(p))(target(b))) AND
       (NOT subterm(b, res(im))) AND
-      (NOT subterm(b, pre_set(im))) AND
-      (NOT subterm(b, post_set(im))) AND
-      (NOT subterm(b, exc_set(im)))
+      (FORALL(e : Expr) : NOT subterm(b, pre_set(im)(e))) AND
+      (FORALL(e : Expr) : NOT subterm(b, post_set(im)(e))) AND
+      (FORALL(e : Excpt) : NOT subterm(b, exc_set(im)(e)))
 
 
 END InlineMethodAnnotation
@@ -508,7 +499,8 @@ BEGIN
 
   % not directly: needs methods(p)(m)
   inline_program_preserves_wf_method : LEMMA % :-)
-    FORALL (m : (wf_Method(p))) :
+    FORALL (m : Method) :
+      methods(p)(m) IMPLIES
       wf_Method(inline_program(p))(inline_method(p)(m))
 
 

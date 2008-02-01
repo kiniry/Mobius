@@ -62,15 +62,15 @@ BEGIN
 
   p : VAR Program
 
-  % unclear how to prove this
-  get_address_same_in_inline_related_states : LEMMA % 
+
+  get_address_same_in_inline_related_states : LEMMA % :-)
     FORALL(vn : Name, sAP1, sAP2 : APState) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
       ext_declared_var_names(p)(vn) IMPLIES
         get_address(vn, sAP1) = get_address(vn, sAP2)
 
-  % unclear how to prove this
-  get_dynamic_type_name_same_in_inline_related_states : LEMMA % 
+
+  get_dynamic_type_name_same_in_inline_related_states : LEMMA % :-)
     FORALL(vn : Name, sAP1, sAP2 : APState) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
       ext_declared_var_names(p)(vn) IMPLIES

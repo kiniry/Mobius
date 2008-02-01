@@ -1,53 +1,68 @@
 (InlineEquivalence
  (IMP_InlineVariableNames_TCC1 0
-  (IMP_InlineVariableNames_TCC1-1 nil 3409035720 3409044962
+  (IMP_InlineVariableNames_TCC1-1 nil 3409035720 3410868979
    ("" (use "infinite_namespace") nil nil) proved
-   ((infinite_namespace formula-decl nil InlineEquivalence nil)) 3447
-   250 t nil))
+   ((infinite_namespace formula-decl nil InlineEquivalence nil)) 125
+   120 t nil))
  (IMP_InlineProgramAnnotationProperties_TCC1 0
   (IMP_InlineProgramAnnotationProperties_TCC1-1 nil 3409035720
-   3409044968 ("" (use "name_of_exists") nil nil) proved
-   ((name_of_exists formula-decl nil InlineEquivalence nil)) 3257 250 t
+   3410868979 ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil InlineEquivalence nil)) 118 120 t
    nil)))
 (InlineRelatedStatesProperties
  (IMP_InlineVariableNames_TCC1 0
-  (IMP_InlineVariableNames_TCC1-1 nil 3409036204 3409044923
+  (IMP_InlineVariableNames_TCC1-1 nil 3409036204 3410868979
    ("" (use "infinite_namespace") nil nil) proved
    ((infinite_namespace formula-decl nil InlineRelatedStatesProperties
      nil))
-   5976 260 t nil))
+   164 110 t nil))
  (IMP_InlineEquivalence_TCC1 0
-  (IMP_InlineEquivalence_TCC1-1 nil 3409036204 3409044935
+  (IMP_InlineEquivalence_TCC1-1 nil 3409036204 3410868979
    ("" (use "name_of_exists") nil nil) proved
    ((name_of_exists formula-decl nil InlineRelatedStatesProperties
      nil))
-   7479 250 t nil))
+   119 120 t nil))
  (get_address_same_in_inline_related_states 0
   (get_address_same_in_inline_related_states-1 nil 3409041892
-   3409044972
+   3410869051
    ("" (skosimp*)
     (("" (expand* "inline_related_states" "Program_modeled?")
       (("" (flatten)
-        (("" (expand "get_address") (("" (postpone) nil nil)) nil))
+        (("" (expand "get_address") (("" (assert) nil nil)) nil)) nil))
+      nil))
+    nil)
+   proved
+   ((Program_modeled? const-decl "boolean" InlineEquivalence nil)
+    (inline_related_states const-decl "boolean" InlineEquivalence nil)
+    (get_address const-decl "int" Semantics nil))
+   13259 230 t shostak))
+ (get_dynamic_type_name_same_in_inline_related_states 0
+  (get_dynamic_type_name_same_in_inline_related_states-1 nil 3409041993
+   3410869069
+   ("" (skosimp*)
+    (("" (expand "get_dynamic_type_name")
+      (("" (expand "inline_related_states")
+        (("" (expand "Program_modeled?")
+          (("" (flatten) (("" (assert) nil nil)) nil)) nil))
         nil))
       nil))
     nil)
-   unfinished nil 358 320 t shostak))
- (get_dynamic_type_name_same_in_inline_related_states 0
-  (get_dynamic_type_name_same_in_inline_related_states-1 nil 3409041993
-   3409044972 ("" (postpone) nil nil) unfinished nil 248 240 t
-   shostak))
+   proved
+   ((get_dynamic_type_name const-decl "Name" Semantics nil)
+    (Program_modeled? const-decl "boolean" InlineEquivalence nil)
+    (inline_related_states const-decl "boolean" InlineEquivalence nil))
+   14570 230 t shostak))
  (Program_modeled_implies_same_exception 0
-  (Program_modeled_implies_same_exception-1 nil 3409042333 3409042341
+  (Program_modeled_implies_same_exception-1 nil 3409042333 3410868980
    ("" (skosimp*)
     (("" (expand "Program_modeled?") (("" (flatten) nil nil)) nil))
     nil)
    proved
-   ((Program_modeled? const-decl "boolean" InlineEquivalence nil)) 7560
-   270 t shostak))
+   ((Program_modeled? const-decl "boolean" InlineEquivalence nil)) 184
+   130 t shostak))
  (inline_related_states_implies_same_exception 0
   (inline_related_states_implies_same_exception-1 nil 3409042347
-   3409042356
+   3410868980
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (expand "Program_modeled?") (("" (flatten) nil nil)) nil))
@@ -56,10 +71,10 @@
    proved
    ((inline_related_states const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil))
-   8391 330 t shostak))
+   218 220 t shostak))
  (inline_related_states_implies_same_lookup 0
   (inline_related_states_implies_same_lookup-1 nil 3409042364
-   3409043445
+   3410868981
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -189,6 +204,7 @@
     (BoolExpr type-eq-decl nil Body_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
     (Expr type-eq-decl nil Body_adt nil)
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
@@ -220,12 +236,11 @@
      ProgramFunctions nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil)
     (PSt type-eq-decl nil State nil)
-    (Excpt type-decl nil Excpt_adt nil)
     (wf_state_vars_local_or_field formula-decl nil State nil))
-   1080793 3840 t shostak))
+   1512 1400 t shostak))
  (inline_related_states_preserved_by_update 0
   (inline_related_states_preserved_by_update-1 nil 3409043468
-   3409044623
+   3410868983
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -427,8 +442,8 @@
     (= const-decl "[T, T -> boolean]" equalities nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
-    (union const-decl "set" sets nil)
     (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (wf_state_vars_local_or_field formula-decl nil State nil)
     (is_local const-decl "boolean" State nil)
@@ -437,9 +452,9 @@
     (update_field const-decl "PState" State nil)
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil))
-   1100786 2940 t shostak))
+   1490 1370 t shostak))
  (inline_related_states_preserved_by_catch 0
-  (inline_related_states_preserved_by_catch-1 nil 3409044630 3409044705
+  (inline_related_states_preserved_by_catch-1 nil 3409044630 3410868984
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -509,9 +524,9 @@
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil))
-   74718 1060 t shostak))
+   979 940 t shostak))
  (inline_related_states_preserved_by_raise 0
-  (inline_related_states_preserved_by_raise-1 nil 3409044719 3409044729
+  (inline_related_states_preserved_by_raise-1 nil 3409044719 3410868985
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -550,41 +565,41 @@
       nil))
     nil)
    proved
-   ((Program_modeled? const-decl "boolean" InlineEquivalence nil)
-    (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
-    (inline_program const-decl "Program" InlineProgramAnnotation nil)
-    (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
-    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties
-     nil)
-    (raise const-decl "PState" State nil)
-    (PSt type-eq-decl nil State nil) (lift type-decl nil lift_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (Program type-eq-decl nil WellFormedProgram nil)
-    (wf_Program const-decl "boolean" WellFormedProgram nil)
-    (PreProgram type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (Method type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (Val type-decl nil Val_adt nil)
-    (wf_state_raise formula-decl nil State nil)
+   ((inline_related_states const-decl "boolean" InlineEquivalence nil)
     (update_PState const-decl "(update_PState_type)"
      AnnotatedProgramSemantics nil)
-    (inline_related_states const-decl "boolean" InlineEquivalence nil))
-   5544 1000 t nil))
+    (wf_state_raise formula-decl nil State nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (lift type-decl nil lift_adt nil) (PSt type-eq-decl nil State nil)
+    (raise const-decl "PState" State nil)
+    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties
+     nil)
+    (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
+    (inline_program const-decl "Program" InlineProgramAnnotation nil)
+    (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
+    (Program_modeled? const-decl "boolean" InlineEquivalence nil))
+   976 930 t nil))
  (inline_related_states_preserved_by_update_stack 0
   (inline_related_states_preserved_by_update_stack-1 nil 3409044745
-   3409045481
+   3410868988
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -738,6 +753,7 @@
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
     (Expr type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
     (Stmt type-eq-decl nil Body_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
     (BoolExpr type-eq-decl nil Body_adt nil)
@@ -765,5 +781,5 @@
     (member const-decl "bool" sets nil)
     (union const-decl "set" sets nil)
     (NOT const-decl "[bool -> bool]" booleans nil))
-   352213 2670 t shostak)))
+   2659 2580 t shostak)))
 

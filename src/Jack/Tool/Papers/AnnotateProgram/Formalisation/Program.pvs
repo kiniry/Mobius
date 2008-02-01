@@ -312,6 +312,17 @@ BEGIN
       var_names(CaseJML(branches))(n)
 
 
+  % TO PROVE
+  var_names_predicate : LEMMA
+    FORALL(f : [Expr -> Body], v : Expr) :
+      subset?(var_names(f(v)), union(var_names(f(BExpr(TT))), var_names(v)))
+
+  % TO PROVE
+  var_names_exc_predicate : LEMMA
+    FORALL(f : [Excpt -> Body], e : Excpt) :
+      var_names(f(e)) = var_names(f(Throwable))
+
+
   % Declared variable names
 
   getFieldDecls(p : PreProgram) : finite_set[FieldDecl] =
@@ -472,6 +483,14 @@ BEGIN
         (EXISTS(x : [BoolExpr, Stmt]) : 
            s(x) AND (subterm(b, proj_1(x)) OR subterm(b, proj_2(x))))
 
+
+  var_lookup(n : Name)(t : JType) : Expr =
+    CASES t OF
+      IntType : NExpr(NumVarEval(n)),
+      BoolType : BExpr(BoolVarEval(n)),
+      RefType : RExpr(RefVarEval(n)),
+      Void : Const(Unit)
+    ENDCASES
 
 END ProgramFunctions
 

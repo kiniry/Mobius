@@ -201,9 +201,39 @@ BEGIN
 
   ENDASSUMING
 
-  p : VAR Program
 
   IMPORTING InlineRelatedStatesProperties[Name]
+  IMPORTING WfSetStmts[Name, Program, APState, id,
+                       LAMBDA (s : APState) : pstate(s),
+                       lookup,
+                       update_PState,
+                       execute_set,
+                       execute_assert,
+                       execute_CaseJML,
+                       on_method_entry,
+                       on_method_exit_normal,
+                       on_method_exit_exceptional]
+
+  p : VAR ({p : Program | wf_set_stmts(p)})
+
+  derive_maintains_inline_related_states_for_method_call : LEMMA
+    FORALL (b : (wf_Body(p)), v1, v2 : Val)
+           (sAP1a, sAP1b, sAP2a, sAP2b : APState)
+           (n1, n2 : nat) :
+      MethodCall?(b) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
+      inline_related_states(p)(sAP1a, sAP2a) IMPLIES
+      derive(p)(b, sAP1a, v1, sAP1b)(n1) IMPLIES
+      (FORALL(b : (wf_Body(p)), v1, v2 : Val)
+             (sAP1a, sAP1b, sAP2a, sAP2b : APState)
+             (m1 : below(n1), m2 : below(n2)) :
+        subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
+        inline_related_states(p)(sAP1a, sAP2a) IMPLIES
+        derive(p)(b, sAP1a, v1, sAP1b)(m1) IMPLIES
+        derive(inline_program(p))(b, sAP2a, v2, sAP2b)(m2) IMPLIES
+          inline_related_states(p)(sAP1b, sAP2b) AND v1 = v2) IMPLIES
+      derive(inline_program(p))(b, sAP2a, v2, sAP2b)(n2) IMPLIES
+        inline_related_states(p)(sAP1b, sAP2b) AND v1 = v2
 
   % Base case
   initial_states_are_equivalent : LEMMA % :-)
@@ -214,7 +244,7 @@ BEGIN
 
   % Inductive case
   derive_maintains_inline_related_states_for_unchanged_program : THEOREM
-    FORALL (b : (wf_Body(p)), v1, v2 : Val)
+    FORALL (p : (wf_set_stmts), b : (wf_Body(p)), v1, v2 : Val)
            (sAP1a, sAP1b, sAP2a, sAP2b : APState)
            (n1, n2 : nat) :
       subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
