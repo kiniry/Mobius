@@ -150,6 +150,8 @@ public class DefGCmd
 			if (!Modifiers.isStatic(fa.decl.modifiers) &&
 					fa.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR) {
 				ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
+				if (eod.expr.getTag() == TagConstants.THISEXPR)
+					break;
 				Expr odExpr = trAndGen(eod.expr);
 				Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
 				GuardedCmd gc = GC.check(eod.locDot,
@@ -371,6 +373,8 @@ public class DefGCmd
 					me.od instanceof ExprObjectDesignator) {
 				// Expr ex = ((ExprObjectDesignator)me.od).expr;
 				ExprObjectDesignator eod = (ExprObjectDesignator)me.od;
+				if (eod.expr.getTag() == TagConstants.THISEXPR)
+					break;
 				Expr odExpr = trAndGen(eod.expr);
 				Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
 				GuardedCmd gc = GC.check(eod.locDot,
