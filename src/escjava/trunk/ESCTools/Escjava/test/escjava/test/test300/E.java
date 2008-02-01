@@ -1,10 +1,10 @@
 public class E {
 
   //@ invariant this.f>=88; 
-  //@ invariant f/f == f/f; // divZero warning, spurious null(this) warnings in constructors
+  //@ invariant f/f == f/f; // divZero warning
   public int f;
 
-  //@ invariant a.length>0; // null(a) warning, no spurious null(this) warnings in constructor because it is reported first for f.
+  //@ invariant a.length>0; // null(a) warning
   public int [] a;
 
   /*@ ensures \result == this.f+1;
@@ -33,7 +33,7 @@ public class E {
 
   /*@ normal_behavior
     @  requires ff>=99;
-    @  requires aa.length>0; //null(aa) warning
+    @  requires aa.length>0;
     @  ensures this.f==ff;
     @  ensures this.a==aa;
     @*/

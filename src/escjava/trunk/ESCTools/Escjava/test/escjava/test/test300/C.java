@@ -48,7 +48,8 @@ public class C {
 
   /*@ exceptional_behavior
     @  requires i >= 0;
-    @  signals (RuntimeException e) o.i/o.i == o.i/o.i; // null, divZero warnings
+    @  signals (RuntimeException e) o.i/o.i == o.i/o.i; // null(o), divZero warnings
+    @                                                   // invariant null(charArray.owner) warning
     @*/
   public C(C o, int i, int j, int k) throws RuntimeException {
     throw new RuntimeException();
@@ -60,6 +61,7 @@ public class C {
     @ also exceptional_behavior
     @  requires i<0;
     @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero warning
+    @                                             // invariant null(charArray.owner) warning
     @*/
   public C(C o, C o1, int i, int j) throws RuntimeException {
     if (i<0)

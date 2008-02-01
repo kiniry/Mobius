@@ -19,7 +19,7 @@ public class A {
 
   /*@ exceptional_behavior
     @  requires i<0;
-    @  signals (RuntimeException e) i<0;
+    @  signals (RuntimeException e) i<0; // null(charArray.owner) because of invariant
     @*/
   public static int test2(int i) throws RuntimeException {
     throw new RuntimeException();
@@ -28,6 +28,7 @@ public class A {
   /*@ exceptional_behavior
     @  requires i<0;
     @  signals (RuntimeException e) i/i == i/i; // no divZero warning because of precondition
+    @                                           // null(charArray.owner) because of invariant
     @*/
   public static int test3(int i) throws RuntimeException {
     throw new RuntimeException();
@@ -36,10 +37,11 @@ public class A {
   /*@ exceptional_behavior
     @  requires i <= 0;
     @  signals (RuntimeException e) i/i == i/i; // divZero warning
+    @                                           // null(charArray.owner) because of invariant
     @*/
   public static int test4(int i) throws RuntimeException {
     throw new RuntimeException();
-  }  // Postcondition not established warning
+  }
 
   /*@ normal_behavior
     @  requires i>=0;
@@ -47,6 +49,7 @@ public class A {
     @ also exceptional_behavior
     @  requires i<0;
     @  signals (RuntimeException e) i/i == i/i; // no divZero because of precondition
+    @                                           // null(charArray.owner) because of invariant
     @*/
   public static int test5(int i) throws RuntimeException {
     if(i<0)
@@ -60,6 +63,7 @@ public class A {
     @ also exceptional_behavior
     @  requires i<=0;
     @  signals (RuntimeException e) i/i == i/i; // divZero warnings
+    @                                           // null(charArray.owner) because of invariant    
     @*/
   public static int test6(int i) throws RuntimeException {
     if(i<=0)

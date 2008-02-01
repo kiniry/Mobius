@@ -1,5 +1,5 @@
 #!/bin/sh
 # usage: run FLAGS
 
-${ESCJ} -idc $* *.java *jml
+${ESCJ} $* -specs /home/karabot/dev/workspaces/JML4/ESCJava2/specs -idc *.java *jml
 
