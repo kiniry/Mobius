@@ -30,7 +30,7 @@ public class LoopDetector {
     final List<InstructionContext> precInstr = graph
         .getPrecedingInstructions(instruction);
     final int number = graph.getInstructionNumber(instruction);
-    int min = number;
+    int min = number - 1;
     InstructionContext beforeLoop = null;
     for (InstructionContext prec : precInstr) {
       final int n = graph.getInstructionNumber(prec);
@@ -49,6 +49,8 @@ public class LoopDetector {
         if (n > max) {
           max = n;
           loopCondition = p;
+          System.out.println("PIERWSZY "+ n + "number " + number);
+          System.out.println(p + "|||" + instruction);
         }
       }
       if (loopCondition != null) {
@@ -58,6 +60,13 @@ public class LoopDetector {
     }
   }
 
+  /**
+   * Determines, whether given instruction is a very beggining of a loop
+   * (start of loading condition parameters). If yes - returns the condition
+   * instruction (after all condition parameters are loaded)
+   * @param instruction instruction to check
+   * @param graph control flow graph for a method
+   */
   private static void secondKindLoop(final InstructionContext instruction,
                                      final MyControlFlowGraph graph) {
     final List<InstructionContext> precInstr = graph
@@ -65,7 +74,6 @@ public class LoopDetector {
     if (precInstr.size() < 2) {
       return;
     }
-    System.out.println(instruction);
     final int number = graph.getInstructionNumber(instruction);
     int max = number;
     InstructionContext loopEnd = null;
@@ -77,7 +85,6 @@ public class LoopDetector {
       }
     }
     if (loopEnd != null) {
-      System.out.println(instruction + "number i max: " + number + " " + max);
       //now max is the number of the line with the longest jump;
       InstructionContext loopStart = null;
       final InstructionContext c = graph.getNextInstruction(loopEnd);
@@ -89,7 +96,7 @@ public class LoopDetector {
         int min = max + 1;
         for (InstructionContext p : prec) {
           final int n = graph.getInstructionNumber(p);
-          if (n < min) {
+          if (n < min && n >= number) {
             min = n;
             loopStart = p;
           }
