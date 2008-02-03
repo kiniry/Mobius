@@ -25,11 +25,13 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import umbra.UmbraException;
 import umbra.UmbraPlugin;
 import umbra.instructions.BytecodeController;
+import umbra.tests.InitParserTest;
+import annot.bcclass.BCClass;
 import annot.textio.CodeFragment;
 
 /**
- * This class is an abstract model of a bytecode document.
- * It mainly handles the synchronization between a bytecode file and a
+ * This class is an abstract model of a byte code document.
+ * It mainly handles the synchronisation between a byte code file and a
  * Java source code file (in both directions).
  *
  * FIXME more detailed description
@@ -124,6 +126,13 @@ public class BytecodeDocument extends Document {
   private String[] my_interline;
 
   /**
+   * BML-annotated byte code (text + AST) displayed in this
+   * editor. All byte code modifications should be made
+   * on this object.
+   */
+  private BMLParsing my_bmlp;
+
+  /**
    * The Java source code editor of the source code file associated
    * with the current bytecode document.
    *
@@ -200,7 +209,7 @@ public class BytecodeDocument extends Document {
    *         source code (corresponding to given bytecode line),
    *         in related source code editor
    * @throws BadLocationException if line parameter is invalid. May occur also
-   *         if bytecode in JavaClass jc is out-of-date.
+   *         if byte code in JavaClass jc is out-of-date.
    */
   private int[] syncBS(final IDocument a_source_doc,
                        final JavaClass a_java_class,
@@ -427,17 +436,25 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * This method updates the bytecode editor associated with the
+   * This method updates the byte code editor associated with the
    * current document. Additionally, it updates the fields that
-   * represent the bytecode of the document.
+   * represent the byte code of the document.
    *
-   * @param an_editor the bytecode editor
+   * @param an_editor the byte code editor
+   * @param a_javaclass BCEL representation of the current document
+   * @param a_bmlp
    */
-  public final void setEditor(final BytecodeEditor an_editor) {
+  public final void setEditor(final BytecodeEditor an_editor,
+                              final JavaClass a_javaclass,
+                              final BMLParsing a_bmlp) {
     my_bcode_editor = an_editor;
     an_editor.setDocument(this);
-    my_classgen = my_bcode_editor.getClassGen();
-    my_javaclass = my_bcode_editor.getJavaClass();
+    if (a_javaclass != my_javaclass) {
+      my_javaclass = a_javaclass;
+      my_classgen = new ClassGen(a_javaclass);
+      my_ready_flag = false;
+      my_bmlp = a_bmlp;
+    }
   }
 
   /**
@@ -456,23 +473,13 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * @see BMLParsing
-   * @return Current bytecode (text + AST) for this document
+   * Used only for testing in {@link InitParserTest}.
+   *
+   * @param a_classgen the class generation BCEL structure to assign to the
+   *   document
    */
-  public BMLParsing getBmlp() {
-    if (my_bcode_editor == null)
-      throw new RuntimeException("bcode_editor not set yet!");
-    if (my_bcode_editor.getBmlp() == null)
-      throw new RuntimeException("bmlp not set yet!");
-    return my_bcode_editor.getBmlp();
-  }
-
-  /**
-   * Used only for testing. TODO really?
-   * @param cg
-   */
-  public void setClassGen(ClassGen cg) {
-    my_classgen = cg;
+  public void setClassGen(final ClassGen a_classgen) {
+    my_classgen = a_classgen;
   }
 
   /**
@@ -502,8 +509,8 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Informs if the internal data structures that connect Umbra with BCEL
-   * are initialised.
+   * Informs if the internal data structures that connection between
+   * Umbra and BCEL is initialised.
    *
    * @return <code>true</code> when the structures are initialised,
    *   <code>false</code> otherwise
@@ -513,14 +520,15 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * This method initialises the internal structures of the bytecode
+   * This method initialises the internal structures of the byte code
    * controller. In particular it initialises the object that
    * manages the BCEL operations and enables the relevant actions
-   * in the Umbra plugin bytecode contributor.
+   * in the Umbra plugin byte code contributor.
    *
    * TODO what's my_mod_table_flag
    */
   public void init() {
+    my_bcc = new BytecodeController();
     my_bcc.init(this, my_comment_array, my_interline);
     if (my_mod_table_flag) {
       my_bcc.setModified(my_modified);
@@ -531,18 +539,20 @@ public class BytecodeDocument extends Document {
     my_ready_flag = true;
   }
 
-  public void setModTable(boolean[] modified) {
-    my_modified = modified;
+  public void setModTable(final boolean[] the_modified) {
+    my_modified = the_modified;
     my_mod_table_flag = true;
   }
 
-  public void updateFragment(int start_rem, int stop_rem, int stop)
+  public void updateFragment(final int a_start,
+                             final int an_oldend,
+                             final int a_newend)
     throws UmbraException {
-    my_bcc.removeIncorrects(start_rem, stop_rem);
-    final int methodno = my_bcc.getMethodForLine(start_rem);
-    final MethodGen mg = my_bcc.addAllLines(this, start_rem, stop_rem, stop);
-    my_bcode_editor.replaceMethod(methodno, mg);
-    my_bcc.checkAllLines(start_rem, stop);
+    my_bcc.removeIncorrects(a_start, an_oldend);
+    final int methodno = my_bcc.getMethodForLine(a_start);
+    final MethodGen mg = my_bcc.addAllLines(this, a_start, an_oldend, a_newend);
+    replaceMethod(methodno, mg);
+    my_bcc.checkAllLines(a_start, a_newend);
   }
 
   public boolean allCorrect() {
@@ -568,5 +578,46 @@ public class BytecodeDocument extends Document {
     my_ready_flag = false;
     my_comment_array = a_comment_array;
     my_interline = an_interline;
+  }
+
+  /**
+   *
+   * @param a_methodno
+   * @param a_methodgen
+   */
+  public void replaceMethod(final int a_methodno,
+                            final MethodGen a_methodgen) {
+    my_classgen.setMethodAt(a_methodgen.getMethod(), a_methodno);
+    my_javaclass.setMethods(my_classgen.getMethods());
+    my_modified[a_methodno] = true;
+  }
+
+  /**
+   * @return BML-annotated byte code (text + AST) displayed
+   * in this editor. All byte code modifications should
+   * be made on this object.
+   *
+   * @see BMLParsing
+   */
+  public BMLParsing getBmlp() {
+    return my_bmlp;
+  }
+
+  /**
+   * TODO responsible for changing the Bmllib structures based on the local
+   * changed methods
+   */
+  public void updateJavaClass() {
+    // TODO Auto-generated method stub
+    if (BMLParsing.BMLLIB_ENABLED) {
+      //XXX changed: obtaining JavaClass from my_bmlp field
+      final BCClass bcc = getBmlp().getBcc();
+      bcc.saveJC();
+      my_javaclass = bcc.getJC();
+    }
+  }
+
+  public String printCode() {
+    return getBmlp().getBcc().printCode();
   }
 }

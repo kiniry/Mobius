@@ -10,6 +10,8 @@ package umbra.editor;
 
 import java.io.ByteArrayInputStream;
 
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.IDocument;
@@ -33,9 +35,9 @@ import umbra.editor.parsing.BytecodePartitionScanner;
 public class BytecodeDocumentProvider extends FileDocumentProvider {
 
   /**
-   * This method creates a bytecode document with the empty content.
+   * This method creates a byte code document with the empty content.
    *
-   * @return a fresh {@ref BytecodeDocument} object with no content
+   * @return a fresh {@link BytecodeDocument} object with no content
    */
   protected final IDocument createEmptyDocument() {
     return new BytecodeDocument();
@@ -43,7 +45,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 
   /**
    * The method used to create {@link IDocument} structure when
-   * the editor is initialized. This method checks if the parameter
+   * the editor is initialised. This method checks if the parameter
    * <code>an_element</code> has the type {@link IEditorInput}. In case
    * the type is proper it creates an empty document and then fills its contents
    * with the data in the file associated with <code>an_element</code>. In
@@ -61,8 +63,8 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    *   cannot be accessed or for the reasons presented in
    *   {@link IFile#create(InputStream, boolean, IProgressMonitor)}
    * @throws org.eclipse.core.runtime.OperationCanceledException in case the
-   *   operation to create the new file was canceled, this may also happen in
-   *   case no user canceled the operation
+   *   operation to create the new file was cancelled, this may also happen in
+   *   case no user cancelled the operation
    */
   protected final IDocument createDocument(final Object an_element)
     throws CoreException {
@@ -94,27 +96,32 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
     return null;
   }
 
-
-
   /**
    * This method creates connection between the document specified by
    * <code>an_input</code> object and given editors.
    *
-   * This method sets <code>a_bcode_editor</code> as the editor amd
-   * <code>an_editor</code> as the related editor for a bytecode
-   * document designated by <code>an_input</code>. Additionally, it adds
-   * the document to the event listener for the bytecode editor actions.
+   * This method sets <code>a_bcode_editor</code> as the editor and
+   * <code>an_editor</code> as the related editor for a byte code
+   * document that works on <code>an_input</code>. Additionally, it adds
+   * the document to the event listener for the byte code editor actions.
    *
    * @param an_editor the editor of the Java source code
-   * @param a_bcode_editor the bytecode editor in which the textual
+   * @param a_bcode_editor the byte code editor in which the textual
    *   representation is to be edited
    * @param an_input input file with the textual representation of the bytecode
+   * @param a_javaclass a BCEL {@link JavaClass} structure to associate with
+   *   the document
+   * @param a_bmlp
    */
   public final void setRelation(final CompilationUnitEditor an_editor,
               final BytecodeEditor a_bcode_editor,
-              final IEditorInput an_input) {
+              final IEditorInput an_input,
+              final JavaClass a_javaclass,
+              final BMLParsing a_bmlp) {
     final BytecodeDocument document = (BytecodeDocument)getDocument(an_input);
-    document.setEditor(a_bcode_editor);
+    document.setEditor(a_bcode_editor, a_javaclass, a_bmlp);
+    final Method[] ms = a_javaclass.getMethods();
+    document.setModTable(new boolean[ms.length]);
     document.setRelatedEditor(an_editor);
     BytecodeContribution.inUse().addListener(document);
   }

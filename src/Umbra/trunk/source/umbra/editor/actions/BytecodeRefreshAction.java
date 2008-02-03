@@ -15,6 +15,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.editor.BytecodeContribution;
+import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 
@@ -75,11 +76,12 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IPath active = file.getFullPath();
     try {
-      //memorize the current state of the session
-      final String[] commentTab = my_editor.getDocument().getCommentTab();
-      final String[] interlineTab = my_editor.getDocument().getInterlineTab();
-      final boolean[] modified = my_editor.getDocument().getModified();
-      my_editor.refreshBytecode(active, commentTab, interlineTab);
+      //memorise the current state of the session
+      final BytecodeDocument doc = my_editor.getDocument();
+      final String[] commentTab = doc.getCommentTab();
+      final String[] interlineTab = doc.getInterlineTab();
+      final boolean[] modified = doc.getModified();
+      my_editor.refreshBytecode(active, doc, commentTab, interlineTab);
       final FileEditorInput input = new FileEditorInput(file);
       my_contributor.refreshEditor(my_editor, input, commentTab, interlineTab);
       my_editor.getDocument().setModTable(modified);

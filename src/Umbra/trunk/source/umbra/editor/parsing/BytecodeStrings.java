@@ -8,9 +8,6 @@
  */
 package umbra.editor.parsing;
 
-import umbra.instructions.ast.ThrowsLineController;
-
-
 /**
  * String arrays used to identify keywords and instruction
  * names in byte code.

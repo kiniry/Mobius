@@ -7,18 +7,13 @@
  *               licence see LICENCE.txt file"
  */
 package umbra.instructions.ast;
-import java.util.LinkedList;
 
-import org.apache.bcel.generic.BranchInstruction;
-import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
 import umbra.UmbraException;
-import umbra.UmbraPlugin;
-import umbra.editor.BytecodeDocument;
 import umbra.instructions.InstructionParser;
 
 /**
@@ -26,12 +21,14 @@ import umbra.instructions.InstructionParser;
  * useful when the line is modified or BCEL structure is created.
  * Most details are implemented in subclasses.
  *
- * Methods of this class should operate on the {@link ClassGen}
- * object which is located in the {@link BytecodeDocument} object
+ * Methods of this class should operate on the
+ * {@link org.apache.bcel.generic.ClassGen}
+ * object which is located in the {@link umbra.editor.BytecodeDocument} object
  * that describes the state of the byte code editor which contains
  * the line that corresponds to an object of the current class.
  *
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public abstract class BytecodeLineController {
@@ -129,55 +126,6 @@ public abstract class BytecodeLineController {
   /**
    * TODO.
    *
-   * @param the_next_line TODO
-   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument}
-   *        object that describes the state of the bytecode editor which
-   *        contains the line that corresponds to the current object.
-   * @param an_ins TODO
-   * @param a_methend_flag TODO
-   * @param the_instructions TODO
-   * @param an_off TODO
-   */
-  public void initHandle(final BytecodeLineController the_next_line,
-                         final ClassGen a_classgen,
-                         final Instruction an_ins,
-                         final boolean a_methend_flag,
-                         final LinkedList the_instructions,
-                         final int an_off) {
-  }
-
-  /**
-   * TODO.
-   *
-   * @param the_old_line TODO
-   * @param the_next_line TODO
-   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument}
-   *        object that describes the state of the bytecode editor which
-   *        contains the line that corresponds to the current object.
-   * @param an_ins TODO
-   * @param a_methend_flag TODO
-   * @param the_last_flag TODO
-   * @param the_instructions TODO
-   * @param an_off TODO
-   */
-  public void update(final BytecodeLineController the_old_line,
-                     final BytecodeLineController the_next_line,
-                     final ClassGen a_classgen,
-                     final Instruction an_ins,
-                     final boolean a_methend_flag,
-                     final boolean the_last_flag,
-                     final LinkedList the_instructions,
-                     final int an_off) {
-    if (the_old_line.getHandle() != null) { //in case this was an instruction
-                                            //before
-      the_old_line.dispose(the_next_line, a_classgen, the_last_flag,
-                           the_instructions, an_off);
-    }
-  }
-
-  /**
-   * TODO.
-   *
    * @return TODO
    */
   public InstructionHandle getHandle() {
@@ -212,8 +160,6 @@ public abstract class BytecodeLineController {
     return my_methodno;
   }
 
-
-
   /**
    * This method is used to check some basic condition of
    * correctness. For non-instruction line this is the only
@@ -225,29 +171,6 @@ public abstract class BytecodeLineController {
    */
   public boolean correct()  {
     return false;
-  }
-
-  /**
-   * TODO.
-   *
-   * @param the_next_line TODO
-   * @param a_classgen a {@ref ClassGen} object in the {@ref BytecodeDocument}
-   *       object that describes the state of the bytecode editor which contains
-   *       the line that corresponds to the current object.
-   * @param the_last TODO
-   * @param the_instructions an array with instruction representations. These
-   * are represented as objects the classes of which are subclasses of
-   * {@ref InstructionLineController}.
-   * @param an_off TODO
-   */
-  public void dispose(final BytecodeLineController the_next_line,
-            final ClassGen a_classgen,
-            final boolean the_last,
-            final LinkedList the_instructions, final int an_off) {
-    UmbraPlugin.messagelog("dispose(BytecodeLineController)" +
-                           ((InstructionLineController)(the_instructions.
-                                        get(an_off))).
-                                        getHandle().getInstruction().getName());
   }
 
   /**
@@ -272,7 +195,7 @@ public abstract class BytecodeLineController {
   }
 
   /**
-   * @return the line of the text with the bytecode line
+   * @return the line of the text with the byte code line
    */
   public String getMy_line_text() {
     return my_line_text;
@@ -287,7 +210,7 @@ public abstract class BytecodeLineController {
 
   /**
    * Checks if the line can be an end of comment. End of comment line can only
-   * be of {@ref AnnotationLineController} type so the default behaviour is
+   * be of {@link AnnotationLineController} type so the default behaviour is
    * to always return false.
    *
    * @return <code>true</code> when the line contains the end of comment
@@ -307,8 +230,12 @@ public abstract class BytecodeLineController {
     return getMy_line_text().contains("/*");
   }
 
+  /**
+   *
+   * @return
+   */
   public int getNoInMethod() {
-    InstructionHandle[] ihs = getMethod().getInstructionList().
+    final InstructionHandle[] ihs = getMethod().getInstructionList().
                               getInstructionHandles();
     for (int i = 0; i < ihs.length; i++) {
       if (ihs[i] == getHandle()) return i;

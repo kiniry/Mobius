@@ -15,12 +15,20 @@ package umbra.editor.parsing;
  */
 public class UmbraLocationException extends Exception {
 
-  private int my_wrong_location; 
-  
-  public UmbraLocationException(int a_line) {
+  /**
+   * The serial number of the class.
+   */
+  private static final long serialVersionUID = 1368987676616348613L;
+
+  /**
+   *  This field contains the location which is considered to be wrong.
+   */
+  private final int my_wrong_location;
+
+  public UmbraLocationException(final int a_line) {
     my_wrong_location = a_line;
   }
-  
+
   public int getWrongLocation() {
     return my_wrong_location;
   }

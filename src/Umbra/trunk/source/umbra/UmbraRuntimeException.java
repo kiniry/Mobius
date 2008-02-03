@@ -9,10 +9,18 @@
 package umbra;
 
 /**
- * @author alx
+ * This is an exception used in reporting runtime exceptional events within
+ * Umbra. This exception should not be handled either inside or outside Umbra.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
  */
 public class UmbraRuntimeException extends RuntimeException {
+
+  /**
+   * The serial ID for the exception.
+   */
+  private static final long serialVersionUID = 4428245399391845887L;
 
 }

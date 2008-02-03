@@ -427,23 +427,47 @@ public abstract class InstructionLineController extends BytecodeLineController {
     }
   }
 
+  /*@
+    @ requires an_ino >= 0;
+    @*/
   /**
-   * TODO there should be only one  addHandle
-   * @param mg
-   * @param i
+   * This method adds to the current line controller the given method generation
+   * structure ({@line MethodGen}) together with its instruction list and
+   * a handle for the new instruction inserted on the given position
+   * {@code an_ino}. All the instructions starting with the given number are
+   * shifted one position further.
+   *
+   * @param a_methodgen the method generation structure to add to the controller
+   * @param an_ino the instruction number in the instruction list
    */
-  public void addHandle(MethodGen mg, int i) {
-    this.my_methodgen = mg;
-    this.my_instr_list = mg.getInstructionList();
-    final InstructionHandle prevInstr =
-      my_instr_list.getInstructionHandles()[i - 1];
+  public final void makeHandleForPosition(final MethodGen a_methodgen,
+                        final int an_ino) {
+    this.my_methodgen = a_methodgen;
+    this.my_instr_list = a_methodgen.getInstructionList();
     final Instruction ins = getInstruction();
-    this.my_instr_handle = my_instr_list.insert(prevInstr, ins);
+    if (an_ino > 0) {
+      final InstructionHandle prevInstr =
+        my_instr_list.getInstructionHandles()[an_ino - 1];
+      this.my_instr_handle = my_instr_list.insert(prevInstr, ins);
+    } else {
+      my_instr_list.insert(ins);
+    }
   }
 
+  /**
+   * Removes the current instruction from the BCEL list of the instructions
+   * in the method. This method checks if the retargeting is required and
+   * then tries to find a good candidate for the new target. First, the
+   * next instruction is tried. If there is no next instruction then the
+   * previous one is used. After the new target is found, the method
+   * is retargeted to jump to the new instruction. Finally, the instruction
+   * is deleted. If the final deletion fails the method will throw an exception.
+   *
+   * @throws UmbraException in case the deletion failed
+   */
   public void dispose() throws UmbraException {
     if (my_instr_handle.hasTargeters()) {
-      InstructionTargeter[] targeters = my_instr_handle.getTargeters();
+      final InstructionTargeter[] targeters = my_instr_handle.getTargeters();
       InstructionHandle candidate = my_instr_handle.getNext();
       if (candidate == null) {
         candidate = my_instr_handle.getPrev();

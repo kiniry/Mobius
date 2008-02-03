@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
@@ -30,6 +28,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
@@ -40,23 +39,24 @@ import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
 /**
- * This is the main class that defines the bytecode editor.
- * It does so by subclassing {@ref TextEditor}, which is a standard class
+ * This is the main class that defines the byte code editor.
+ * It does so by subclassing {@link TextEditor}, which is a standard class
  * extended by each editor plugin.
  * Its additional features are attributes that describe
- * BCEL structures related to the edited bytecode
- * such as {@ref JavaClass}, to obtain particular instructions,
- * and {@ref ClassGen}, to allow changes in BCEL.
+ * BCEL structures related to the edited byte code
+ * such as {@link JavaClass}, to obtain particular instructions,
+ * and {@link org.apache.bcel.generic.ClassGen}, to allow changes in BCEL.
  *
  * The input file for this editor is a .btc
- * ({@ref UmbraHelper#BYTECODE_EXTENSION}) file which resides
- * alongside the corresponding .java ({@ref UmbraHelper#JAVA_EXTENSION})
+ * ({@link UmbraHelper#BYTECODE_EXTENSION}) file which resides
+ * alongside the corresponding .java ({@link UmbraHelper#JAVA_EXTENSION})
  * file. (Note that it is a different place from the place for .class,
- * {@ref UmbraHelper#CLASS_EXTENSION}, files).
+ * {@link UmbraHelper#CLASS_EXTENSION}, files).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 
@@ -64,30 +64,9 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * The Java source code editor that corresponds to the current
-   * bytecode editor.
+   * byte code editor.
    */
   private CompilationUnitEditor my_related_editor;
-
-
-  /**
-   * The BCEL structure which represents the bytecode the content of the
-   * current editor has been generated from. They also serve to modify
-   * the bytecode.
-   */
-  private JavaClass my_javaclass;
-
-  /**
-   * The BCEL structure to generate the bytecode file corresponding
-   * to the {@link #my_javaclass}.
-   */
-  private ClassGen my_classgen;
-
-  /**
-   * BML-annotated bytecode (text + AST) displayed in this
-   * editor. All bytecode modifications should be made
-   * on this object.
-   */
-  private BMLParsing my_bmlp;
 
   /**
    * This field contains the number of history items. This
@@ -97,19 +76,19 @@ public class BytecodeEditor extends TextEditor {
   private int my_history_num = -1;
 
   /**
-   * The bytecode editor configuration manager associated with the current
+   * The byte code editor configuration manager associated with the current
    * editor.
    */
   private BytecodeConfiguration my_bconf;
 
   /**
-   * Bytecode document edited by the editor.
+   * Byte code document currently edited by the editor.
    */
   private BytecodeDocument my_current_doc;
 
   /**
    * This constructor creates the class and initialises the default
-   * color manager.
+   * colour manager.
    */
   public BytecodeEditor() {
     super();
@@ -126,58 +105,70 @@ public class BytecodeEditor extends TextEditor {
   }
 
   /**
-   * @return Java code editor that Bytecode has been generated from
+   * Returns the Java source code editor associated with the current byte code
+   * editor.
+   *
+   * @return the Java source code editor that byte code text has been generated
+   *   from
    */
   public final CompilationUnitEditor getRelatedEditor() {
     return my_related_editor;
   }
 
   /**
-   * @return BCEL structure related to Bytecode
-   * that allows obtaining its particular instructions
-   */
-  public final JavaClass getJavaClass() {
-    return my_javaclass;
-  }
-
-  /**
-   * This is a function executed directly after initialization
-   * and it arranges the relation between the editor and BCEL structures.
+   * This is a function executed directly after the initialisation
+   * and it arranges the relation between the editor and its source code
+   * counterpart.
    *
-   * @param an_editor  Java code editor with intended relation
-   *           (used in particular during synchronization)
-   * @param a_javaclass    BCEL structures that Bytecode has been
-   *           generated from and may be modificated with
-   * @param a_bmlp  structures that represents current bytecode
-   *            (text and ast)
+   * @param an_editor Java code editor with intended relation
+   *   (used in particular during synchronisation)
    */
-  public final void setRelation(final CompilationUnitEditor an_editor,
-                                final JavaClass a_javaclass,
-                                final BMLParsing a_bmlp) {
+  public final void setRelation(final CompilationUnitEditor an_editor) {
     my_related_editor = an_editor;
-    my_javaclass = a_javaclass;
-    my_classgen = new ClassGen(a_javaclass);
-    //XXX changed: here my_bmlp is updated after editor recreation.
-    this.my_bmlp = a_bmlp;
-    ((BytecodeDocumentProvider)getDocumentProvider()).
-            setRelation(an_editor, this, getEditorInput());
+    final BytecodeDocument doc = getDocument();
+    ((BytecodeDocumentProvider)getDocumentProvider()).setRelation(an_editor,
+                                      this, getEditorInput(),
+                                      doc.getJavaClass(), doc.getBmlp());
+
   }
 
   /**
    * This method is run automatically while standard Eclipse
-   * 'save' action is executed. Additionally to the usual
-   * editor saving, it also updates structure {@link JavaClass} in BCEL
-   * and binary files to allow bytecode modifications being seen
-   * while executing. The original binary file is saved with the name
-   * with '_' at the beginning in case later rebuilding (if there has
-   * not existed such yet, the binary file is simply rewritten, otherwise
-   * it is saved unchanged).
+   * 'save' action is executed. Additionally, the current class file is saved
+   * under the name with '_' at the beginning for the later use (see
+   * {@link umbra.editor.actions.BytecodeRebuildAction} and
+   * {@link umbra.editor.actions.BytecodeCombineAction}). Except
+   * for that, the method updates structure {@link JavaClass} in BCEL and binary
+   * files to make visible in the class file the changes made in the editor.
    *
    * @param a_progress_monitor not used
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
     super.doSave(a_progress_monitor);
+    final IFile a_file_from = makeSpareCopy();
+    if (a_file_from == null) return;
+    try {
+      final BytecodeDocument doc = getDocument();
+      doc.updateJavaClass();
+      final JavaClass jc = doc.getJavaClass();
+      final String path3 = a_file_from.getLocation().toOSString();
+      jc.dump(path3);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * This method saves the the current class file under a special name. This
+   * name consists of '_' followed by the original name. The files of this
+   * kind are used in {@link BytecodeRebuildAction} and
+   * {@link BytecodeCombineAction}.
+   *
+   * @return the IFile which points to the class file being edited by the
+   *   current editor
+   */
+  private IFile makeSpareCopy() {
     final IPath edited_path = ((FileEditorInput)getEditorInput()).getFile().
                                                              getFullPath();
     final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(edited_path);
@@ -189,7 +180,7 @@ public class BytecodeEditor extends TextEditor {
     } catch (JavaModelException e2) {
       MessageDialog.openError(new Shell(), "Bytecode",
                               "No classfile path set for the project");
-      return;
+      return null;
     }
     final IPath pathTo = new Path(fnameTo);
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -198,54 +189,31 @@ public class BytecodeEditor extends TextEditor {
       if (!fileTo.exists())
         a_file_from.copy(pathTo, true, null);
     } catch (CoreException e1) {
-      e1.printStackTrace();
+      MessageDialog.openError(new Shell(), "Bytecode",
+        "The file \"" + a_file_from.getName() + "\" cannot be copied to " +
+        pathTo.toOSString());
+      return null;
     }
-    try {
-      JavaClass jc = my_classgen.getJavaClass();
-      if (BMLParsing.BMLLIB_ENABLED) {
-        //XXX changed: obtaining JavaClass from my_bmlp field
-        final BCClass bcc = my_bmlp.getBcc();
-        bcc.saveJC();
-        jc = bcc.getJC();
-      }
-      final String path3 = a_file_from.getLocation().toOSString();
-      jc.dump(path3);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    return a_file_from;
   }
 
   /**
-   * Transform a relative file path (inside the project) into the absolute one.
-   *
-   * @param a_path a relative path
-   * @return the corresponding absolute path
-   */
-  public final IPath getPath(final IPath a_path) {
-    return ResourcesPlugin.getWorkspace().getRoot().getFolder(a_path).
-                           getLocation();
-  }
-
-  /**
-   * Generates input file from a {@link JavaClass} structure and puts it into
-   * the editor window. The input file is created literally from the
-   * {@link JavaClass} code getting methods.
-   *
-   * This method can also add to the displayed text the comments which were
-   * added to the bytecode file before. They are displayed when they are given
-   * as the parameters <code>the_comments</code> and
-   * <code>the_interline_comments</code>.
-   *
-   * TODO probably obsolete:
-   * There is temporary limit of 256 characters for method name
-   * and 4096 characters for method code.
+   * This method loads in the content of the class file corresponding to the
+   * given Java source code file. The method finds the class file corresponding
+   * to the given Java source code file, loads it to BCEL and BMLlib structures
+   * then it generates the .btc file with the textual representation of the
+   * class file. The BCEL and BMLlib representation of the class file is
+   * associated with the given document. Additionally, the comment information
+   * from the previous session is connected to the document.
    *
    * @param a_path a workspace relative path to a Java source code file
-   * @param the_comments  a table of comments to be inserted
-   * @param the_interline_comments  Table of comments between instructions to be
-   *    also inserted
+   * @param a_doc the byte code document for which the refresh operation is
+   *   taken
+   * @param the_comments  a table of end-of-line comments to be inserted
+   * @param the_interline_comments  table of comments between instructions to be
+   *   also inserted
    * @throws ClassNotFoundException the class corresponding to the Java source
-   *         code file cannot be found
+   *   code file cannot be found
    * @throws CoreException the reasons for this exception include:
    *<ul>
    * <li> The location corresponding to the edited input
@@ -267,73 +235,123 @@ public class BytecodeEditor extends TextEditor {
    * </ul>
    */
   public final void refreshBytecode(final IPath a_path,
+                final BytecodeDocument a_doc,
                 final String[] the_comments,
                 final String[] the_interline_comments)
     throws ClassNotFoundException, CoreException {
+    final SyntheticRepository repository = getCurrentClassRepository();
+    final JavaClass jc = loadJavaClass(a_path, repository);
+    if (jc == null) return;
+    repository.removeClass(jc);
+    BCClass bcc;
+    try {
+      bcc = new BCClass(jc);
+      final BMLParsing bmlp = new BMLParsing(bcc);
+      a_doc.setEditor(this, jc, bmlp); //refresh BCEL structures
+      //this is where the textual representation is generated
+      final InputStream stream = getDocumentStream(a_doc);
+      final FileEditorInput input = (FileEditorInput)getEditorInput();
+      final IFile file = input.getFile();
+      writeDocToFile(stream, file);
+    } catch (ReadAttributeException e1) {
+      MessageDialog.openError(new Shell(), "Bytecode",
+                              "Cannot load the byte code from the file " +
+                              jc.getFileName());
+    }
+  }
 
+  /**
+   * This method saves the content of the given stream to the given file. The
+   * method checks if the resource pointed out by the file exists and in case
+   * it doesn't it creates the file.
+   *
+   * @param a_stream a stream which is written
+   * @param a_file a file into which the stream will be written
+   * @throws CoreException when the resource cannot be saved or created
+   */
+  private void writeDocToFile(final InputStream a_stream,
+                              final IFile a_file)
+    throws CoreException {
+    if (a_file.exists()) {
+      a_file.setContents(a_stream, true, true, null);
+    } else {
+      a_file.create(a_stream, true, null);
+    }
+    try {
+      a_stream.close();
+    } catch (IOException e) {
+      //This should not happen.
+      UmbraPlugin.messagelog("IMPOSSIBLE: Stream close generated exception " +
+                             "in BytecodeEditor.refreshBytecode");
+    }
+  }
+
+  /**
+   * Returns the stream which contains the textual representation of the given
+   * document.
+   *
+   * @param a_doc the document to retrieve the stream for
+   * @return the stream with the textual content
+   */
+  private static InputStream getDocumentStream(
+                             final /*@ non_null @*/ BytecodeDocument a_doc) {
+    final String bcode = a_doc.printCode();
+    final char[] bccode = bcode.toCharArray();
+    final byte[] contents = new byte[bccode.length];
+    for (int i = 0; i < bccode.length; i++) {
+      contents[i] = (byte) bccode[i];
+    }
+    final InputStream stream = new ByteArrayInputStream(contents);
+    return stream;
+  }
+
+  /**
+   * This method loads from the given Java class repository a class pointed out
+   * by the given path.
+   *
+   * @param a_path a workspace relative path to the class file
+   * @param a_repo the repository to load the class from
+   * @return the BCEL {@link JavaClass} structure with the content of the class
+   *   file
+   */
+  private JavaClass loadJavaClass(final IPath a_path,
+                                  final SyntheticRepository a_repo) {
+    final String tmp = a_path.removeFirstSegments(1).toOSString();
+    final String clname = (tmp.substring(0, tmp.lastIndexOf(".")));
+    if (UmbraHelper.DEBUG_MODE)
+      UmbraPlugin.messagelog("We open class: " + clname);
+    final JavaClass jc;
+    try {
+      jc = a_repo.loadClass(clname);
+    } catch (ClassNotFoundException e) {
+      MessageDialog.openError(new Shell(), "Bytecode",
+                              "Cannot find the class " + clname + ".class");
+      return null;
+    }
+    return jc;
+  }
+
+  /**
+   * The method gives the repository where all the class files associated
+   * with the current project are located.
+   *
+   * @return the repository of the class files
+   * @throws JavaModelException if the output location for the current project
+   *   does not exist
+   */
+  private SyntheticRepository getCurrentClassRepository()
+    throws JavaModelException {
     //obtain the classpath for the classes
     final IProject project = ((FileEditorInput)my_related_editor.
         getEditorInput()).getFile().getProject();
     final IJavaProject jproject = JavaCore.create(project);
-    final IPath outputloc = jproject.getOutputLocation().append("/A");
-                                                                //bogus name
-    final String pathName = getPath(outputloc).removeLastSegments(1).
+    final IPath outputloc = jproject.getOutputLocation().append("/-"); //bogus
+    final String pathName = UmbraHelper.getPath(outputloc).
+                                               removeLastSegments(1).
                                                addTrailingSeparator().
                                                toPortableString();
-    // Get class name together with its package name
-    //FIXME there is a better way to obtain the name!!!
-    final String tmp = a_path.removeFirstSegments(1).toOSString();
-    final String clname = (tmp.substring(0, tmp.lastIndexOf(".")));
-
     final ClassPath cp = new ClassPath(pathName);
-    final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
-    final JavaClass jc = strin.loadClass(clname);
-//  FIXME: If my_related_editor is always present and is JavaEditor, then
-//    the following code can be used to replace all above:
-//    IType type = UmbraHelper.getSelectedType(my_related_editor);
-//    final ClassPath cp = new ClassPath(getPath(type.getJavaProject().
-//                                  getOutputLocation()).toString());
-//    final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
-//    final JavaClass jc = strin.loadClass(type.getFullyQualifiedName());
-//
-//  otherwise information about current paths (project and type qualified name)
-//  should be remembered here
-
-    strin.removeClass(jc);
-    BCClass bcc;
-    try {
-      bcc = new BCClass(jc);
-      //XXX changed: here my_bmlp object is initialized from JavaClass
-      my_bmlp = new BMLParsing(bcc);
-      //this is where the textual representation is generated
-      //FIXME we have to make sure it makes sense!!!
-      final String bcode = bcc.printCode();
-      final char[] bccode = bcode.toCharArray();
-      final byte[] contents = new byte[bccode.length];
-      //here a char array is transformed to byte array
-      for (int i = 0; i < bccode.length; i++) {
-        contents[i] = (byte) bccode[i];
-      }
-      final FileEditorInput input = (FileEditorInput)getEditorInput();
-      final IFile file = input.getFile();
-      final InputStream stream = new ByteArrayInputStream(contents);
-      if (file.exists()) {
-        file.setContents(stream, true, true, null);
-      } else {
-        file.create(stream, true, null);
-      }
-      try {
-        stream.close();
-      } catch (IOException e) {
-        //This should not happen.
-        UmbraPlugin.messagelog("IMPOSSIBLE: Stream close generated exception " +
-                               "in BytecodeEditor.refreshBytecode");
-      }
-    } catch (ReadAttributeException e1) {
-      e1.printStackTrace();
-    }
-
-    my_javaclass = jc;
+    return SyntheticRepository.getInstance(cp);
   }
 
   /**
@@ -357,27 +375,11 @@ public class BytecodeEditor extends TextEditor {
   }
 
   /**
-   * @return the object which generates the class file
-   */
-  public final ClassGen getClassGen() {
-    return my_classgen;
-  }
-
-  /**
-   * This method sets the internal BCEL structures which contain the
-   * information oabout the Java class.
-   *
-   * @param a_javaclass the Java class representation
-   */
-  public final void setJavaClass(final JavaClass a_javaclass) {
-    my_javaclass = a_javaclass;
-    my_classgen = new ClassGen(a_javaclass);
-  }
-
-  /**
    * @param a_doc document to associate with the current editor
    */
   public final void setDocument(final BytecodeDocument a_doc) {
+    if (UmbraHelper.DEBUG_MODE)
+      UmbraPlugin.messagelog("Document in editor: " + a_doc.toString());
     my_current_doc = a_doc;
   }
 
@@ -390,18 +392,18 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * @param a_related_editor the Java source code editor to associate with the
-   *   current bytecode editor
+   *   current byte code editor
    */
   public void setRelatedEditor(final CompilationUnitEditor a_related_editor) {
     this.my_related_editor = a_related_editor;
   }
 
   /**
-   * This method disposes the color allocated from the system and then calls
-   * the superclass finalization.
+   * This method disposes the colour allocated from the system and then calls
+   * the superclass finalisation.
    *
    * @throws Throwable in case something wrong happens in the superclass
-   *    finalization
+   *    finalisation
    */
   protected void finalize() throws Throwable {
     //my_bconf.disposeColor();  //FIXME!! this instruction caused problems!
@@ -409,21 +411,18 @@ public class BytecodeEditor extends TextEditor {
   }
 
   /**
-   * @return BML-annotated bytecode (text + AST) displayed
-   * in this editor. All bytecode modifications should
-   * be made on this object.
+   * This method creates new colouring configuration and associates this with
+   * the current editor. A new document is always created with default gray
+   * colouring mode. In case, we want to make use of the code colouring
+   * functionality, we must change that mode into another one. This is done
+   * with the help of this method which replaces the colouring logic with
+   * a one which is created here.
    */
-  public BMLParsing getBmlp() {
-    return my_bmlp;
-  }
-
-  /**
-   * 
-   * @param methodno
-   * @param mg
-   */
-  public void replaceMethod(int methodno, MethodGen mg) {
-    my_classgen.setMethodAt(mg.getMethod(), methodno);
-    my_javaclass.setMethods(my_classgen.getMethods());
+  public void renewConfiguration() {
+    my_bconf = new BytecodeConfiguration();
+    final SourceViewer sv = ((SourceViewer)getSourceViewer());
+    sv.unconfigure();
+    setSourceViewerConfiguration(my_bconf);
+    sv.configure(my_bconf);
   }
 }

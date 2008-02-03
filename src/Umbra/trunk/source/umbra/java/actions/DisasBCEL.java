@@ -8,28 +8,31 @@
  */
 package umbra.java.actions;
 
-import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
-import umbra.editor.BMLParsing;
+import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
+import umbra.editor.parsing.BytecodePartitionScanner;
 
 /**
  * This class defines the action related to Java source editor.
- * Its execution causes generating new related bytecode file
+ * Its execution causes generating new related byte code file
  * in a new editor window.
  *
  * @author BYTECODE team (contact alx@mimuw.edu.pl)
@@ -39,14 +42,14 @@ import umbra.editor.Composition;
 public class DisasBCEL implements IEditorActionDelegate {
 
   /**
-   * The editor of a Java file for which the bytecode file is
+   * The editor of a Java file for which the byte code file is
    * generated.
    */
   private CompilationUnitEditor my_editor;
 
   /**
-   * Finds {@link JavaClass} structure related to the current Java
-   * source code. Generates new byte code from it and displays
+   * Finds {@link org.apache.bcel.classfile.JavaClass} structure related to the
+   * current Java source code. Generates new byte code from it and displays
    * it in a new byte code editor window.
    *
    * @param an_action see the IActionDelegate.run(IAction)
@@ -61,18 +64,15 @@ public class DisasBCEL implements IEditorActionDelegate {
       final IFile btcFile = UmbraHelper.getBTCFileName(jFile, my_editor);
       final FileEditorInput input = new FileEditorInput(btcFile);
       final BytecodeEditor bc_editor = (BytecodeEditor) (page.openEditor(input,
-                           UmbraHelper.BYTECODE_EDITOR_CLASS, true));
+                           UmbraHelper.BYTECODE_EDITOR_CLASS, false));
       bc_editor.setRelatedEditor(my_editor);
+      final BytecodeDocument doc = (BytecodeDocument)bc_editor.
+                                   getDocumentProvider().getDocument(input);
       bc_editor.refreshBytecode(UmbraHelper.getClassFileFile(jFile, my_editor).
                                             getFullPath(),
-                                null, null);
-      final JavaClass jc = bc_editor.getJavaClass();
-      /* passing a bmlp object from an old bytecode editor to
-       * openAndDisassemble method.
-       */
-      final BMLParsing bmlp = bc_editor.getBmlp();
-      page.closeEditor(bc_editor, true);
-      openEditorAndDisassemble(page, input, jc, bmlp);
+                                            doc,
+                                null, null); //this works on the doc
+      openEditorAndDisassemble(page, bc_editor, input, doc);
     } catch (CoreException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
@@ -122,28 +122,37 @@ public class DisasBCEL implements IEditorActionDelegate {
   }
 
   /**
-   * This method opens previously closed editor so that the content of the
-   * editor is coloured with the current colouring style.
+   * This method changes the colouring mode of a previously opened editor.
+   * Now, the content of the editor is coloured with the current colouring
+   * style instead of the gray style which is the default for documents with
+   * no connection with a class file.
    *
-   * @param a_page a workbench page in which the new editor is to be reopend
-   * @param an_input an input wchich will be presented in the editor
-   * @param a_jclass a BCEL Java class structure to be associated with the
-   *                 editor
-   * @param a_bmlp  structures that represents current bytecode
-   *            (text and ast)
-   * @throws PartInitException if the editor could not be created or initialized
+   * @param a_page a workbench page in which the new editor is reconfigured
+   * @param an_editor the editor to change the colouring for
+   * @param an_input an input which will be presented in the editor
+   * @param a_doc a document where the BCEL and BMLlib connection is already set
    */
   private void openEditorAndDisassemble(final IWorkbenchPage a_page,
+                                        final BytecodeEditor an_editor,
                                         final FileEditorInput an_input,
-                                        final JavaClass a_jclass,
-                                        final BMLParsing a_bmlp)
-    throws PartInitException {
+                                        final BytecodeDocument a_doc) {
     Composition.startDisas();
-    final BytecodeEditor a_beditor = (BytecodeEditor)a_page.openEditor(an_input,
-                        UmbraHelper.BYTECODE_EDITOR_CLASS, true);
-    a_page.bringToTop(a_beditor);
-    //copying bmlp into new bytecode editor.
-    a_beditor.setRelation(my_editor, a_jclass, a_bmlp);
+    a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
+                                 null);
+    final IDocumentPartitioner partitioner =
+      new FastPartitioner(
+        new BytecodePartitionScanner(),
+        new String[] {
+          BytecodePartitionScanner.TAG,
+          BytecodePartitionScanner.HEAD,
+          BytecodePartitionScanner.THROWS});
+    partitioner.connect(a_doc);
+    final Method[] ms = a_doc.getJavaClass().getMethods();
+    a_doc.setModTable(new boolean[ms.length]);
+    an_editor.renewConfiguration();
+    an_editor.setRelation(my_editor);
+    a_page.bringToTop(an_editor);
+    a_doc.setDocumentPartitioner(partitioner);
     Composition.stopDisas();
   }
 

@@ -203,7 +203,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 
   /**
    * This method disposes of the operating system resources associated with
-   * the colors in the bytecode editor.
+   * the colours in the byte code editor.
    */
   public final void disposeColor() {
     my_color_manager.dispose();

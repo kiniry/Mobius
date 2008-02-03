@@ -25,12 +25,13 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeContribution;
+import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 
 /**
- * This class defines action of restoring bytecode from
- * history. Current verion is replaced with one of these
+ * This class defines action of restoring byte code from
+ * history. Current version is replaced with one of these
  * kept in history as a file with bt1, bt2, etc. extensions.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
@@ -110,11 +111,11 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
     }
     final BytecodeEditorContributor contributor = getContributor();
     try {
-      final BytecodeContribution bytecodeContribution = getContribution();
-      ((BytecodeEditor)editor).refreshBytecode(active, null, null);
+      final BytecodeDocument doc = editor.getDocument();
+      ((BytecodeEditor)editor).refreshBytecode(active, doc, null, null);
       final IEditorInput input = new FileEditorInput(btcFile);
       //memorise old modification information
-      final boolean[] modified = editor.getDocument().getModified();
+      final boolean[] modified = doc.getModified();
       contributor.refreshEditor(editor, input, null, null);
       editor.getDocument().setModTable(modified);
     } catch (ClassNotFoundException e1) {

@@ -36,9 +36,9 @@ public final class Composition {
 
   /**
    * @return if called during disassembling - the current
-   * coloring style value;
-   * otherwise - it means that bytecode editor is open
-   * with no relation to the source, therefore it is colored grey.
+   * colouring style value;
+   * otherwise - it means that byte code editor is open
+   * with no relation to the source, therefore it is coloured grey.
    * TODO really?
    */
   public static int getMod() {

@@ -40,7 +40,7 @@ import umbra.UmbraPlugin;
 public class BytecodeContribution extends ControlContribution {
 
   /**
-   * The only object of this class which is present in the system.
+   * The only object of this class which is currently present in the system.
    */
   private static BytecodeContribution inUse;
 
@@ -50,7 +50,7 @@ public class BytecodeContribution extends ControlContribution {
   private boolean my_need_new_flag = true;
 
   /**
-   * The current bytecode editor for which the contribution works.
+   * The current byte code editor for which the contribution works.
    */
   private BytecodeEditor my_editor;
 
@@ -86,7 +86,7 @@ public class BytecodeContribution extends ControlContribution {
      * object in case it has not been initialised yet.
      *
      * @param an_event the event that triggers the change, it should be
-     *   the same as in {@ref #documentChanged(DocumentEvent)}
+     *   the same as in {@link #documentChanged(DocumentEvent)}
      *
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */

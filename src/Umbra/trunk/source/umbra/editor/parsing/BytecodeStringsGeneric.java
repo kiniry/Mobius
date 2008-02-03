@@ -9,7 +9,8 @@
 package umbra.editor.parsing;
 
 /**
- * @author alx
+ * TODO
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
  */

@@ -30,19 +30,23 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
+import annot.bcclass.BCClass;
+import annot.io.ReadAttributeException;
+
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
+import umbra.editor.BMLParsing;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 
 /**
- * This is an action associated with a bytecode editor (an
+ * This is an action associated with a byte code editor (an
  * extension .btc). The action allows linking changes
- * made to bytecode with the ones made to the source Java code.
+ * made to byte code with the ones made to the source Java code.
  * The current implementation works only when the changes are
  * made to different methods. In case a modification happens in the
- * same method, the bytecode modification is privileged.
+ * same method, the byte code modification is privileged.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -50,15 +54,15 @@ import umbra.editor.BytecodeEditorContributor;
 public class BytecodeCombineAction extends BytecodeEditorAction {
 
   /**
-   * This constructor creates the action to combine the bytecode edits with
+   * This constructor creates the action to combine the byte code edits with
    * the source code ones. It registers the name of the action with the text
    * "Combine" and stores locally the object which creates all the actions
-   * and which contributs the editor GUI elements to the eclipse GUI.
+   * and which contributes the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
-   * the bytecode plugin
+   * the byte code plugin
    * @param a_bytecode_contribution the GUI elements contributed to the eclipse
-   * GUI by the bytecode editor. This reference should be the same as in the
+   * GUI by the byte code editor. This reference should be the same as in the
    * parameter <code>a_contributor</code>.
    */
   public BytecodeCombineAction(final BytecodeEditorContributor a_contributor,
@@ -70,7 +74,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * The action is similar to rebuild - it generates
    * input from the original source in the same way.
    * The difference is that after this all methods are
-   * checked for bytecode modifications and if one
+   * checked for byte code modifications and if one
    * has been made, it is chosen and saved from JavaClass.
    *
    * FIXME write more description
@@ -113,7 +117,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
   /**
    * This method reads the Java classfile for the original Java code and
    * replaces all the methods with the ones that were modified in the currently
-   * edited bytecode file. It also does all the error handling.
+   * edited byte code file. It also does all the error handling.
    *
    * FIXME this method should also pop up messages in case exceptions
    *       are thrown
@@ -136,13 +140,16 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
       JavaClass jc = strin.loadClass(clname);
       strin.removeClass(jc);
-      final JavaClass oldJc = my_editor.getJavaClass();
+      final JavaClass oldJc = my_editor.getDocument().getJavaClass();
       final ClassGen cg = updateModifiedMethods(oldJc, jc);
       jc = cg.getJavaClass();
-      final String fullName = my_editor.getPath(a_path).toOSString();
+      final String fullName = UmbraHelper.getPath(a_path).toOSString();
       jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
-      my_editor.setJavaClass(jc);
-      my_editor.refreshBytecode(a_path, null, null);
+      my_editor.refreshBytecode(a_path, my_editor.getDocument(), null, null);
+      final BCClass bcc = new BCClass(jc);
+      //XXX changed: here my_bmlp object is initialised from JavaClass
+      final BMLParsing bmlp = new BMLParsing(bcc);
+      my_editor.getDocument().setEditor(my_editor, jc, bmlp);
       final IEditorInput input = new FileEditorInput(a_file);
       getContributor().refreshEditor(my_editor, input, null, null);
     } catch (ClassNotFoundException e) {
@@ -150,6 +157,9 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     } catch (IOException e) {
       e.printStackTrace();
     } catch (CoreException e) {
+      e.printStackTrace();
+    } catch (ReadAttributeException e) {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -183,7 +193,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
   }
 
   /**
-   * The method retruns a string representation of a classpath the entries
+   * The method returns a string representation of a classpath the entries
    * of which are in the parameter <code>the_entries</code> and which
    * is associated with the project <code>a_project</code>. The
    * <code>a_project_name</code> parameter is here for efficiency reasons.

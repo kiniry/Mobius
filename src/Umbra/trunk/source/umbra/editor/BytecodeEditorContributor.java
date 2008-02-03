@@ -42,10 +42,10 @@ import umbra.editor.actions.BytecodeSynchrAction;
 
 /**
  * This is managing class that adds actions to workbench menus and toolbars
- * for a bytecode editor. They appear when the editor is active. These actions
+ * for a byte code editor. They appear when the editor is active. These actions
  * are in particular: rebuild, refresh, combine, restore from history,
- * synchronize the position of the cursor between the bytecode and the Java
- * code, color change and check of the syntax correctness.
+ * synchronise the position of the cursor between the byte code and the Java
+ * code, colour change and check of the syntax correctness.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -55,7 +55,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   /**
    * The identifier of the refresh action.
    */
-  public static final String REFRESH_ID = "_refresh_action_id_";
+  public static final String REFRESH_ID = "umbra.editor.Refresh";
 
   /**
    * TODO.
@@ -63,17 +63,17 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   private BytecodeContribution my_bcode_cntrbtn;
 
   /**
-   * The action to change the color mode to the next one.
+   * The action to change the colour mode to the next one.
    */
   private BytecodeColorAction my_action_plus;
 
   /**
-   * The action to change the color mode to the previous one.
+   * The action to change the colour mode to the previous one.
    */
   private BytecodeColorAction my_action_minus;
 
   /**
-   * The action to refresh the content of the current bytecode editor.
+   * The action to refresh the content of the current byte code editor.
    */
   private BytecodeRefreshAction my_refresh_action;
 
@@ -84,7 +84,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 
   /**
    * The action to combine the modifications from the source code editor
-   * and from the bytecode editor.
+   * and from the byte code editor.
    */
   private BytecodeCombineAction my_combine_action;
 
@@ -95,34 +95,52 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   private BytecodeRestoreAction my_restore_action;
 
   /**
-   * The action to synchronize the position in the bytecode file with
+   * The action to synchronise the position in the byte code file with
    * the corresponding position in the source code file.
    */
   private BytecodeSynchrAction my_synchr_action;
 
   /**
    * The constructor is executed when the editor is started.
-   * It includes creating all actions and provide them with their icons.
-   *
-   * @throws MalformedURLException TODO
+   * This action happens when there is no byte code editor pane in the
+   * environment open and an action to open one is taken.
+   * This constructor creates all actions and provides them with their icons
+   * and tool tip texts. If necessary it assigns ids of the actions.
    */
-  public BytecodeEditorContributor() throws MalformedURLException {
+  public BytecodeEditorContributor() {
     super();
+
     my_bcode_cntrbtn = BytecodeContribution.newItem();
+    createActions();
+    final URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
+    assignIcons(installURL);
+    setupToolTipTexts();
+    my_refresh_action.setId(REFRESH_ID);
+    setupColorActions(installURL, Composition.getMod());
+  }
+
+  /**
+   * This method sets up the tool tip texts for all the actions except the
+   * colour mode actions.
+   */
+  private void setupToolTipTexts() {
+    my_refresh_action.setToolTipText("Refresh");
+    my_rebuild_action.setToolTipText("Rebuild");
+    my_combine_action.setToolTipText("Combine");
+    my_restore_action.setToolTipText("Restore");
+    my_synchr_action.setToolTipText("Synchronize");
+  }
+
+  /**
+   * This method creates the objects to handle all the actions except the
+   * colour mode actions.
+   */
+  private void createActions() {
     my_refresh_action = new BytecodeRefreshAction(this, my_bcode_cntrbtn);
     my_rebuild_action = new BytecodeRebuildAction(this);
     my_combine_action = new BytecodeCombineAction(this, my_bcode_cntrbtn);
     my_restore_action = new BytecodeRestoreAction(this, my_bcode_cntrbtn);
     my_synchr_action = new BytecodeSynchrAction();
-    final URL installURL = UmbraPlugin.getDefault().getBundle().getEntry("/");
-    assignIcons(installURL);
-    my_refresh_action.setToolTipText("Refresh");
-    my_refresh_action.setId(REFRESH_ID);
-    my_rebuild_action.setToolTipText("Rebuild");
-    my_combine_action.setToolTipText("Combine");
-    my_restore_action.setToolTipText("Restore");
-    my_synchr_action.setToolTipText("Synchronize");
-    setupColorActions(installURL, Composition.getMod());
   }
 
   /**
@@ -207,7 +225,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * New buttons for the actions are added to the toolbar. We call the
    * superclass method and add:
    * <ul>
-   *   <li>the widget of the bytecode contribution</li>
+   *   <li>the widget of the byte code contribution</li>
    *   <li>two icons for changing the colouring style</li>
    *   <li>the refresh action icon</li>
    *   <li>the rebuild action icon</li>
@@ -258,11 +276,13 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @param an_editor  the current editor window
    */
   public final void setActiveEditor(final IEditorPart an_editor) {
+    final BytecodeEditor beditor = (BytecodeEditor) an_editor;
     super.setActiveEditor(an_editor);
     my_bcode_cntrbtn.setActiveEditor(an_editor);
     my_action_plus.setActiveEditor(an_editor);
     my_action_minus.setActiveEditor(an_editor);
     my_refresh_action.setActiveEditor(an_editor);
+    beditor.setAction(REFRESH_ID, my_refresh_action);
     my_rebuild_action.setActiveEditor(an_editor);
     my_combine_action.setActiveEditor(an_editor);
     my_restore_action.setActiveEditor(an_editor);
@@ -274,20 +294,20 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * the input is obtained from the current editor window.
    *
    * @param an_editor TODO
-   * @param interlineTab an array with multi-line comments
-   * @param commentTab an array with end-of-line comments
-   * @param input2 
+   * @param the_interline an array with multi-line comments
+   * @param the_comments an array with end-of-line comments
+   * @param the_input
    * @throws PartInitException if the new editor could not be created or
-   *               initialized
+   *   initialised
    * @see #refreshEditor(BytecodeEditor, IEditorInput)
    */
   public final void refreshEditor(final BytecodeEditor an_editor,
-                                  final FileEditorInput input2,
-                                  final String[] commentTab,
-                                  final String[] interlineTab)
+                                  final FileEditorInput the_input,
+                                  final String[] the_comments,
+                                  final String[] the_interline)
     throws PartInitException {
     final IEditorInput input = an_editor.getEditorInput();
-    refreshEditor(an_editor, input, commentTab, interlineTab);
+    refreshEditor(an_editor, input, the_comments, the_interline);
   }
 
   /**
@@ -300,7 +320,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @param a_comment_array contains the texts of end-of-line comments, the
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account
-   * @paraem an_interline multi-line comments TODO fix the protocol
+   * @param an_interline multi-line comments TODO fix the protocol
    * @throws PartInitException if the new editor could not be created or
    *    initialised
    */
@@ -316,16 +336,17 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final int len = selection.getLength();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();
-    final JavaClass jc = ((BytecodeEditor)an_editor).getJavaClass();
+    final JavaClass jc = ((BytecodeEditor)an_editor).getDocument().
+                                                     getJavaClass();
     final boolean proper = (related != null);
     my_bcode_cntrbtn.survive();
     if (proper) Composition.startDisas();
     page.closeEditor(an_editor, true);
     final IEditorPart newEditor = page.openEditor(an_input,
                         "umbra.BytecodeEditor", true);
-    //XXX changed: copying bmlp from old to the new copy of bytecode editor.
-    final BMLParsing bmlp = ((BytecodeEditor)an_editor).getBmlp();
-    ((BytecodeEditor) newEditor).setRelation(related, jc, bmlp);
+    //XXX changed: copying bmlp from old to the new copy of byte code editor.
+    final BMLParsing bmlp = ((BytecodeEditor)an_editor).getDocument().getBmlp();
+    ((BytecodeEditor) newEditor).setRelation(related);
     final ISelection ns = new TextSelection(off, len);
     final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
                           getSelectionProvider();
@@ -337,8 +358,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 //      e.printStackTrace();
 //    }
     sp.setSelection(ns);
-    ((BytecodeEditor)newEditor).getDocument().reinit(a_comment_array,
-                                                     an_interline);
+    final BytecodeDocument ndoc = ((BytecodeEditor)newEditor).getDocument();
+    ndoc.setEditor((BytecodeEditor)newEditor, jc, bmlp);
+    ndoc.reinit(a_comment_array, an_interline);
     if (proper) Composition.stopDisas();
   }
 
@@ -365,7 +387,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   }*/
 
   /**
-   * @return the action to refresh the bytecode
+   * @return the action to refresh the byte code
    */
   public final BytecodeRefreshAction getRefreshAction() {
     return my_refresh_action;

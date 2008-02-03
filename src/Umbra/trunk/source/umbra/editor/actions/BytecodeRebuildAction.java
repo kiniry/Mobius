@@ -99,7 +99,8 @@ public class BytecodeRebuildAction extends Action {
       }
     }
     try {
-      ((BytecodeEditor)my_editor).refreshBytecode(active, null, null);
+      ((BytecodeEditor)my_editor).refreshBytecode(active,
+                                  my_editor.getDocument(), null, null);
       final IEditorInput input = new FileEditorInput(file);
       my_contributor.refreshEditor(my_editor, input, null, null);
     } catch (ClassNotFoundException e1) {

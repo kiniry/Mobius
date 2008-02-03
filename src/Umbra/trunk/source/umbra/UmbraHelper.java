@@ -93,12 +93,6 @@ public final class UmbraHelper {
    */
   public static final String BYTECODE_HISTORY_EXTENSION   = ".bt";
 
-  /**
-   * The extension for BoogiePL files.
-   */
-  public static final String BOOGIEPL_EXTENSION = ".bpl";
-
-
   /* *********************************************************************
    * GUI MESSAGES
    */
@@ -150,13 +144,6 @@ public final class UmbraHelper {
    */
   public static final String BYTECODE_EDITOR_CLASS =
     "umbra.BytecodeEditor";
-
-  /**
-   * The text editor extension identifier which identifies the BoogiePL
-   * editor.
-   */
-  public static final String BOOGIEPL_EDITOR_CLASS =
-    "umbra.BoogiePLEditor";
 
   /**
    * This constant says if the debugging print outs should be generated.
@@ -287,30 +274,16 @@ public final class UmbraHelper {
   }
 
   /**
-   * This method returns for a given path to a .bpl file a name of the
-   * classfile that was saved in order to keep the original copy of the
-   * classfile generated from the Java source code file. No check is made that
-   * the path indeed has the extension.
-   *
-   * @param a_path a path to a .bpl file
-   * @return corresponding name of the file with the saved version of the
-   * original bytecode
-   */
-  public static String getSavedClassFileNameForBPL(final IPath a_path) {
-    return getSavedClassFileNameForPrefix(a_path, BOOGIEPL_EXTENSION);
-  }
-
-  /**
    * This method returns for a given path to a file with the extension
-   * <code>an_extension</code> a name of the classfile that was saved in order
-   * to keep the original copy of the classfile generated from the Java source
+   * <code>an_extension</code> a name of the class file that was saved in order
+   * to keep the original copy of the class file generated from the Java source
    * code file. No check is made that the path indeed has the extension.
    *
    * @param a_path a path to a file
-   * @param an_extension the extension for which the orignal bytecode file
+   * @param an_extension the extension for which the orignal byte code file
    * name is returned
    * @return corresponding name of the file with the saved version of the
-   * original bytecode
+   * original byte code
    */
   public static String getSavedClassFileNameForPrefix(final IPath a_path,
                                                   final String an_extension) {
@@ -338,20 +311,20 @@ public final class UmbraHelper {
   }
 
   /**
-   * This method gives the proper classfile file for a given source
+   * This method gives the proper class file file for a given source
    * file (usually Java or .btc file).
    *
    * XXX Isn't there an eclipse method to do this task?
    *
    * @param a_java_file a source code file for which we try to find the
    *   class file
-   * @param an_editor a Java file editor in which the corresponging Java file
+   * @param an_editor a Java file editor in which the corresponding Java file
    *   is edited
    * @param an_extension an extension of the file for which we generate
    *   the .class file name (usually .java or .btc)
    * @return the {@link IFile}for the corresponding .class file
    * @throws JavaModelException in case the project in which the editor operates
-   *                            has no classfile output location set
+   *                            has no class file output location set
    */
   public static IFile getClassFileFileFor(final IFile a_java_file,
                      final AbstractTextEditor an_editor,
@@ -498,5 +471,16 @@ public final class UmbraHelper {
       type = elem.findPrimaryType();
     }
     return type;
+  }
+
+  /**
+   * Transform a relative file path (inside the project) into the absolute one.
+   *
+   * @param a_path a relative path
+   * @return the corresponding absolute path
+   */
+  public static final IPath getPath(final IPath a_path) {
+    return ResourcesPlugin.getWorkspace().getRoot().getFolder(a_path).
+                           getLocation();
   }
 }

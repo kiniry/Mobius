@@ -176,6 +176,7 @@ public final class BytecodeController {
       (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno);
     fgmparser.runParsing(); // after that I must know all the instructions are
                             //correct
+    final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
     updateInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     try {
@@ -187,7 +188,6 @@ public final class BytecodeController {
       throw new UmbraException();
     }
     if (UmbraHelper.DEBUG_MODE) controlPrint(1);
-    MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
     mg.getInstructionList().setPositions();
     return mg;
   }
@@ -195,7 +195,7 @@ public final class BytecodeController {
   /**
    * Returns the method in which the given line is located.
    *
-   * @param a_lineno a line number to find the method for 
+   * @param a_lineno a line number to find the method for
    * @return the number of the method in which the line is located
    */
   public int getMethodForLine(final int a_lineno) {
@@ -232,33 +232,34 @@ public final class BytecodeController {
     }
   }
 
-  private void updateInstructions(int a_start_rem, int an_end_rem,
-                                  LinkedList instructions) {
+  private void updateInstructions(final int a_start_rem,
+                                  final int an_end_rem,
+                                  final LinkedList the_instructions) {
     int first = -1;
     for (int i = a_start_rem; i <= an_end_rem; i++) {
-      Object o = my_editor_lines.get(i);
+      final Object o = my_editor_lines.get(i);
       if (first < 0) {
         first = my_instructions.indexOf(o);
       }
       my_instructions.remove(o);
     }
-    my_instructions.addAll(first, instructions);
+    my_instructions.addAll(first, the_instructions);
   }
 
   private void updateEditorLines(final int a_start_rem,
                                  final int an_end_rem,
                                  final int a_stop,
-                                 final LinkedList editorLines)
+                                 final LinkedList the_lines)
     throws UmbraException {
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
     final int j = replaceEditorLines(a_start_rem, an_end_rem, a_stop,
-                                     editorLines);
+                                     the_lines);
     if (an_end_rem < a_stop) { //we must add the new lines
-      addEditorLines(an_end_rem, a_stop, editorLines, mg, j);
+      addEditorLines(an_end_rem, a_stop, the_lines, mg, j);
     } else if (an_end_rem > a_stop) { //we must remove the deleted lines
       removeEditorLines(an_end_rem, a_stop);
     }
-    my_editor_lines.addAll(a_start_rem, editorLines);
+    my_editor_lines.addAll(a_start_rem, the_lines);
     mg.getInstructionList().update();
     mg.update();
     mg.getInstructionList().setPositions();
@@ -278,13 +279,18 @@ public final class BytecodeController {
     }
   }
 
-  private void addEditorLines(final int an_end_rem, final int a_stop, final LinkedList editorLines, final MethodGen mg, int j) throws UmbraException {
+  private void addEditorLines(final int an_end_rem,
+                              final int a_stop,
+                              final LinkedList the_lines,
+                              final MethodGen a_methgen,
+                              final int a_lineno) throws UmbraException {
+    int j = a_lineno;
     int pos = getCurrentPositionInMethod(an_end_rem + 1);
     for (int i = an_end_rem + 1; i <= a_stop; i++, j++, pos++) {
       try {
         final InstructionLineController newlc =
-          (InstructionLineController)editorLines.get(j);
-        newlc.addHandle(mg, pos);
+          (InstructionLineController)the_lines.get(j);
+        newlc.makeHandleForPosition(a_methgen, pos);
       } catch (ClassCastException e) { //we crossed the method boundary
         throw new UmbraException();
       }
@@ -294,14 +300,14 @@ public final class BytecodeController {
   private int replaceEditorLines(final int a_start_rem,
                                  final int an_end_rem,
                                  final int a_stop,
-                                 final LinkedList editorLines) {
+                                 final LinkedList the_lines) {
     int j = 0;
     for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++, j++) {
       //we replace for the common part
       final InstructionLineController oldlc =
         (InstructionLineController)my_editor_lines.get(i);
       final InstructionLineController newlc =
-        (InstructionLineController)editorLines.get(j);
+        (InstructionLineController)the_lines.get(j);
       oldlc.replace(newlc);
       my_editor_lines.remove(i);
       my_editor_lines.add(newlc);
@@ -309,8 +315,8 @@ public final class BytecodeController {
     return j;
   }
 
-  private int getCurrentPositionInMethod(int i) {
-    for (int j = i; j >= 0; j--) {
+  private int getCurrentPositionInMethod(final int a_pos) {
+    for (int j = a_pos; j >= 0; j--) {
       final BytecodeLineController bcl =
         (BytecodeLineController)my_editor_lines.get(j);
       if (bcl instanceof InstructionLineController) {
@@ -330,7 +336,7 @@ public final class BytecodeController {
    */
   private MethodGen getCurrentMethodGen(final int a_start_rem,
                                         final int an_end_rem)
-  throws UmbraException {
+    throws UmbraException {
     MethodGen mg = null;
     if (a_start_rem < an_end_rem) {
       mg = ((InstructionLineController)my_editor_lines.get(a_start_rem)).
@@ -349,8 +355,9 @@ public final class BytecodeController {
   }
 
   private InstructionLineController getInstructionLineAround(
-                        LinkedList the_editor_lines, int pos) {
-    int i = pos;
+                        final LinkedList the_editor_lines,
+                        final int a_pos) {
+    int i = a_pos;
     while (the_editor_lines.get(i) instanceof EmptyLineController ||
            the_editor_lines.get(i) instanceof AnnotationLineController ||
            the_editor_lines.get(i) instanceof CommentLineController) {

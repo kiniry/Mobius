@@ -23,7 +23,7 @@ import umbra.editor.BytecodeEditorContributor;
 public class BytecodeEditorAction extends Action {
 
   /**
-   * The current bytecode editor for which the action takes place.
+   * The current byte code editor for which the action takes place.
    */
   private BytecodeEditor my_editor;
 
