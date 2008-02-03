@@ -43,9 +43,9 @@ public class Main {
     ClassFileLocation classLoc = new ClassFileLocation(
                                                        ProjectDirectory.PROJECT_DIR
                                                            + File.separator + "bin",
-                                                       "experiments.Test3");
+                                                       "experiments.LoopTests");
     new Main().compile(ProjectDirectory.PROJECT_DIR + File.separator
-                       + "src" + File.separator + "experiments" + File.separator + "Test3.java", classLoc);
+                       + "src" + File.separator + "experiments" + File.separator + "LoopTests.java", classLoc);
   }
 
   /**

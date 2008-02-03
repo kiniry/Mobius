@@ -17,7 +17,7 @@ public class Test3 {
       }
     }
     int i = 0;
-    while (i < 6) {
+    while (true) {
       i++;
       if (i > 5) {
         System.out.println(i);

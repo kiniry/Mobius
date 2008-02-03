@@ -1,32 +1,72 @@
 package jml2bml.bytecode;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.verifier.structurals.ControlFlowGraph;
 import org.apache.bcel.verifier.structurals.InstructionContext;
 
 import annot.bcclass.BCMethod;
 
-public class LoopDetector {
-  public static void detectLoop(final BCMethod method) {
-    final MyControlFlowGraph graph = new MyControlFlowGraph(method);
-    System.out.println("AAAAAA DETECT LOOP POCZATEK "
-                       + method.getBcelMethod().getName());
-    final InstructionContext[] instructions = graph.getInstructionContext();
-    for (InstructionContext instruction : instructions) {
-      firstKindLoop(instruction, graph);
-      secondKindLoop(instruction, graph);
-    }
-    System.out.println("AAAAAA DETECT LOOP KONIEC");
+/**
+ * Class responsible for detecting loops in bytecode. For each loop,
+ * its condition instruction is found.
+ * @author Jedrek (fulara@mimuw.edu.pl)
+ * @version 0-0.1
+ */
+public final class LoopDetector {
+
+  /**
+   * Hidden constructor.
+   */
+  private LoopDetector() {
+
   }
 
-  private static void firstKindLoop(final InstructionContext instruction,
-                                    final MyControlFlowGraph graph) {
+  /**
+   * Detects all loops in the given method.
+   * @param method - given method
+   */
+  public static void detectLoop(final BCMethod method) {
+    final MyControlFlowGraph graph = new MyControlFlowGraph(method);
+    final InstructionContext[] instructions = graph.getInstructionContext();
+    for (InstructionContext instruction : instructions) {
+      InstructionContext loopCondition = null;
+      loopCondition = firstKindLoop(instruction, graph);
+      if (loopCondition != null) {
+        System.out.println("for method " + method.getBcelMethod().getName()
+                           + " found first loop type! Condition is at "
+                           + loopCondition);
+      } else {
+        loopCondition = secondKindLoop(instruction, graph);
+        if (loopCondition != null) {
+          System.out.println("for method " + method.getBcelMethod().getName()
+                             + " found second loop type! Condition is at "
+                             + loopCondition);
+        }
+      }
+    }
+  }
+
+  /**
+   * Determines whether the given instruction is the beggining
+   * of loading loop condition parameters.
+   * If yes, finds the loop condition statement
+   * (the instruction to which we want to assign the loop invariants)
+   * This method recognizes following type of loops:
+   * <code><br>
+   * [1] ...<br>
+   * [2] goto [4]<br>
+   * [3] loop body<br>
+   * [4] load condition parameters<br>
+   * [5] if condition is satisfied jump to [3]<br>
+   * [6] ...<br>
+   * </code><br>
+   * @param instruction tested instruction
+   * @param graph control flow graph for a method
+   * @return the loop condition statement or null
+   */
+  private static InstructionContext firstKindLoop(
+                                                  final InstructionContext instruction,
+                                                  final MyControlFlowGraph graph) {
     final List<InstructionContext> precInstr = graph
         .getPrecedingInstructions(instruction);
     final int number = graph.getInstructionNumber(instruction);
@@ -49,30 +89,37 @@ public class LoopDetector {
         if (n > max) {
           max = n;
           loopCondition = p;
-          System.out.println("PIERWSZY "+ n + "number " + number);
-          System.out.println(p + "|||" + instruction);
         }
       }
-      if (loopCondition != null) {
-        System.out.println("znalazlem poczatek petli pierwszego rodzaju :"
-                           + loopCondition);
-      }
+      return loopCondition;
     }
+    return null;
   }
 
   /**
    * Determines, whether given instruction is a very beggining of a loop
    * (start of loading condition parameters). If yes - returns the condition
-   * instruction (after all condition parameters are loaded)
+   * instruction (after all condition parameters are loaded). This method
+   * handles following type of loops:
+   * <code><br>
+   * [1] ... <br>
+   * [2] load condition parameters<br>
+   * [3] if condition is false, jump to [6]<br>
+   * [4] loop body<br>
+   * [5] goto [2]<br>
+   * [6] ...<br>
+   * </code><br>
    * @param instruction instruction to check
    * @param graph control flow graph for a method
+   * @return the loop condition instruction
    */
-  private static void secondKindLoop(final InstructionContext instruction,
-                                     final MyControlFlowGraph graph) {
+  private static InstructionContext secondKindLoop(
+                                                   final InstructionContext instruction,
+                                                   final MyControlFlowGraph graph) {
     final List<InstructionContext> precInstr = graph
         .getPrecedingInstructions(instruction);
-    if (precInstr.size() < 2) {
-      return;
+    if (precInstr.size() < 2){
+      return null;
     }
     final int number = graph.getInstructionNumber(instruction);
     int max = number;
@@ -102,11 +149,9 @@ public class LoopDetector {
           }
         }
       }
-      if (loopStart != null) {
-        System.out.println("znalazlem petle drugiego rodzaju, zaczyna sie w: "
-                           + loopStart);
-      }
+      return loopStart;
     }
+    return null;
   }
 
 }
