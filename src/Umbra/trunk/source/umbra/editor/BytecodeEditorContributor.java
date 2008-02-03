@@ -359,7 +359,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 //    }
     sp.setSelection(ns);
     final BytecodeDocument ndoc = ((BytecodeEditor)newEditor).getDocument();
-    ndoc.setEditor((BytecodeEditor)newEditor, jc, bmlp);
+    ndoc.setEditor((BytecodeEditor)newEditor, bmlp);
     ndoc.reinit(a_comment_array, an_interline);
     if (proper) Composition.stopDisas();
   }

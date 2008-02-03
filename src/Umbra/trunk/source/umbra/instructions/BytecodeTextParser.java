@@ -11,8 +11,6 @@ package umbra.instructions;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.text.BadLocationException;
 
@@ -87,7 +85,7 @@ public class BytecodeTextParser {
    * value of the array which contains the comments from the previous session
    * with the current document.
    *
-   * TODO link to a protocol for a_comment_array
+   * TODO link to the protocol for a_comment_array
    * @param a_comment_array the comments from the previous session
    */
   protected BytecodeTextParser(final String[] a_comment_array) {
@@ -143,14 +141,7 @@ public class BytecodeTextParser {
   protected static MethodGen getMethodGenFromDoc(final BytecodeDocument a_doc,
                                                  final int a_method_no)
     throws UmbraException {
-    final ClassGen cg = a_doc.getClassGen();
-    final Method[] methods = cg.getMethods();
-    if (a_method_no >= methods.length) // too many methods
-      throw new UmbraException();
-
-    final MethodGen mg = new MethodGen(methods[a_method_no], cg.getClassName(),
-                                       cg.getConstantPool());
-    return mg;
+    return a_doc.getMethodGen(a_method_no);
   }
 
   /**

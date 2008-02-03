@@ -85,8 +85,6 @@ public class InitParserTest {
       new ClassPath("/home/alx/workspace/Umbra/source/umbra/tests");
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
     final JavaClass jc = strin.loadClass("List");
-    ClassGen cg = new ClassGen(jc);
-    my_doc.setClassGen(cg);
     my_parser = new InitParser(my_doc, null);
   }
 

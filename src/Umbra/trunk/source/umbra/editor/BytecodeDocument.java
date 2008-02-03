@@ -9,6 +9,7 @@
 package umbra.editor;
 
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
@@ -34,7 +35,7 @@ public class BytecodeDocument extends Document {
   /**
    * For some unknown reason the document cannot be checked up
    * to the final line. The document should be checked only
-   * up to length - this constant.
+   * up to length minus this constant.
    * TODO: this is weird
    */
   private static final int CHECK_ALL_LINES_DECREMENT = 2;
@@ -42,28 +43,26 @@ public class BytecodeDocument extends Document {
 
   /**
    * The Java source code editor for the source code file associated with
-   * the current bytecode document.
+   * the current byte code document.
    */
   private CompilationUnitEditor my_related_editor;
 
   /**
    * The representation of the Java class the content of which
-   * we edint in the current document. The corresponding
+   * we edit in the current document. The corresponding
    * class generator object is in the {@link #my_classgen}
    * field.
    */
-  private JavaClass my_javaclass;
-  //@ invariant my_bcode_editor.javaClass == my_javaclass;
+  //private JavaClass my_javaclass;
 
   /**
    * The object to build Java classes. It is associated
    * with the {@link #my_javaclass} field.
    */
-  private ClassGen my_classgen;
-  //@ invariant my_bcode_editor.javaClass == my_javaclass;
+  //private ClassGen my_classgen;
 
   /**
-   * The bytecode editor that manipulates the current document.
+   * The byte code editor that manipulates the current document.
    */
   private BytecodeEditor my_bcode_editor;
 
@@ -86,7 +85,7 @@ public class BytecodeDocument extends Document {
 
   /**
    * This array keeps track of which methods in the class edited by the
-   * bytecode editor are modified. It contains <code>true</code> on i-th
+   * byte code editor are modified. It contains <code>true</code> on i-th
    * position when the i-th method is modified.
    *
    * TODO it's not completely true, the my_modified in my_bcc is the actual
@@ -115,10 +114,10 @@ public class BytecodeDocument extends Document {
 
   /**
    * The Java source code editor of the source code file associated
-   * with the current bytecode document.
+   * with the current byte code document.
    *
    * @param an_editor updates the Java source code editor associated with the
-   * current bytecode document.
+   * current byte code document.
    */
   public final void setRelatedEditor(final CompilationUnitEditor an_editor) {
     my_related_editor = an_editor;
@@ -126,7 +125,7 @@ public class BytecodeDocument extends Document {
 
   /**
    * @return the Java source code editor associated with the
-   * current bytecode document.
+   * current byte code document.
    */
   public final CompilationUnitEditor getRelatedEditor() {
     return my_related_editor;
@@ -137,14 +136,18 @@ public class BytecodeDocument extends Document {
    * the document.
    */
   public final JavaClass getJavaClass() {
-    return my_javaclass;
+    return getBmlp().getBcc().getJC();
   }
 
   /**
+   * The method returns the {@link ClassGen} object for the current
+   * representation of the Java class file. Each time this method is called
+   * a new object is generated.
+   *
    * @return the current generator of the Java class file
    */
   public final ClassGen getClassGen() {
-    return my_classgen;
+    return new ClassGen(getBmlp().getBcc().getJC());
   }
 
   /**
@@ -153,17 +156,13 @@ public class BytecodeDocument extends Document {
    * represent the byte code of the document.
    *
    * @param an_editor the byte code editor
-   * @param a_javaclass BCEL representation of the current document
-   * @param a_bmlp
+   * @param a_bmlp a BMLLib representation of the current class
    */
   public final void setEditor(final BytecodeEditor an_editor,
-                              final JavaClass a_javaclass,
                               final BMLParsing a_bmlp) {
     my_bcode_editor = an_editor;
     an_editor.setDocument(this);
-    if (a_javaclass != my_javaclass) {
-      my_javaclass = a_javaclass;
-      my_classgen = new ClassGen(a_javaclass);
+    if (a_bmlp != my_bmlp) {
       my_ready_flag = false;
       my_bmlp = a_bmlp;
     }
@@ -185,18 +184,8 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Used only for testing in {@link InitParserTest}.
-   *
-   * @param a_classgen the class generation BCEL structure to assign to the
-   *   document
-   */
-  public void setClassGen(final ClassGen a_classgen) {
-    my_classgen = a_classgen;
-  }
-
-  /**
-   * @return a {@ref String} table which represents bytecode comments
-   * associated with subsequent lines of the bytecode file associated with
+   * @return a {@link String} table which represents byte code comments
+   * associated with subsequent lines of the byte code file associated with
    * the current editor
    */
   public final String[] getCommentTab() {
@@ -214,7 +203,7 @@ public class BytecodeDocument extends Document {
 
   /**
    * @return boolean array, an entry is <code>true</code> whenever
-   * the corresponding method is modified by the bytecode editor
+   * the corresponding method is modified by the byte code editor
    */
   public final boolean[] getModified() {
     return my_bcc.getModified();
@@ -256,6 +245,19 @@ public class BytecodeDocument extends Document {
     my_mod_table_flag = true;
   }
 
+  /**
+   * The method updates the internal structures of the document to reflect the
+   * change. The change is already present in the textual representation of the
+   * document.
+   *
+   * @param a_start the first changed line
+   * @param an_oldend the last line of the change in the old version of the
+   *   document
+   * @param a_newend the last line of the change in the current version of the
+   *   document
+   * @throws UmbraException in case the change cannot be incorporated
+   *   into the internal structures
+   */
   public void updateFragment(final int a_start,
                              final int an_oldend,
                              final int a_newend)
@@ -299,8 +301,6 @@ public class BytecodeDocument extends Document {
    */
   public void replaceMethod(final int a_methodno,
                             final MethodGen a_methodgen) {
-    my_classgen.setMethodAt(a_methodgen.getMethod(), a_methodno);
-    my_javaclass.setMethods(my_classgen.getMethods());
     my_modified[a_methodno] = true;
   }
 
@@ -325,10 +325,15 @@ public class BytecodeDocument extends Document {
       //XXX changed: obtaining JavaClass from my_bmlp field
       final BCClass bcc = getBmlp().getBcc();
       bcc.saveJC();
-      my_javaclass = bcc.getJC();
     }
   }
 
+  /**
+   * This method returns the textual representation of the byte code. The
+   * textual representation is generated from the BMLlib structures.
+   *
+   * @return the textual representation of the byte code
+   */
   public String printCode() {
     return getBmlp().getBcc().printCode();
   }
@@ -350,5 +355,21 @@ public class BytecodeDocument extends Document {
   public void synchronizeBS(int pos) {
     DocumentSynchroniser synch = getDocSynch();
     synch.synchronizeBS(pos);
+  }
+
+  public void initModTable() {
+    final Method[] ms = getBmlp().getBcc().getJC().getMethods();
+    my_modified = new boolean[ms.length];
+  }
+
+  /**
+   * Returns the {@link MethodGen} structure which handles the modifications
+   * in the method of the given number.
+   *
+   * @param a_method_no the number of the method to be returned
+   * @return the BCEL structure which handles the editing of the given method
+   */
+  public MethodGen getMethodGen(final int a_method_no) {
+    return my_bmlp.getBcc().getMethod(a_method_no).getBcelMethod();
   }
 }

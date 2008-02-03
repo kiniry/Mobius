@@ -98,12 +98,12 @@ public class InitParser extends BytecodeTextParser {
         ctxt.incMethodNo();
         a_line_no = swallowMethod(a_line_no, a_method_count, ctxt);
       } catch (UmbraLocationException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode",
+        MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
                       "The current document has no positions for line " +
                       e.getWrongLocation());
         break;
       } catch (UmbraException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode",
+        MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
                       "The current document has too many methods (" +
                       a_method_count + ")");
         break;

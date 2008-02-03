@@ -101,11 +101,11 @@ public class FragmentParser extends BytecodeTextParser {
     try {
       a_line_no = swallowMethodBodyFragment(a_line_no, my_end, ctxt);
     } catch (UmbraLocationException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode",
+      MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
                       "The current document has no positions for a line " +
                       "after " + e.getWrongLocation());
     } catch (UmbraException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode",
+      MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
                          "The current document has too many methods (" +
                          my_methodno + ")");
     }

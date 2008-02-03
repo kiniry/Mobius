@@ -91,35 +91,6 @@ public class BytecodeContribution extends ControlContribution {
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
-      BytecodeDocument doc;
-      try {
-        doc = (BytecodeDocument) an_event.fDocument;
-      } catch (ClassCastException e) {
-        //This should not happen as we operate in a byte code editor
-        UmbraPlugin.messagelog("You are not editing a byte code document");
-        return;
-      }
-      if (!doc.isReady()) {
-        doc.init(); //this marks the document as ready
-      }
-      int stop = 0;
-      int start_rem = 0;
-      int stop_rem = 0;
-      try {
-        start_rem = doc.getLineOfOffset(an_event.getOffset());
-        stop_rem = doc.getLineOfOffset(
-                                   an_event.getOffset() + an_event.getLength());
-        final int insertedLen = an_event.getText().length();
-        stop = doc.getLineOfOffset(an_event.getOffset() +
-            insertedLen);
-      } catch (BadLocationException e) {
-        //This should not happen as the offsets from the event are generated
-        //based on the current document
-        UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
-                               "differ from the ones in the event");
-      }
-
-      updateFragment(doc, start_rem, stop_rem, stop);
     }
 
 
@@ -168,6 +139,35 @@ public class BytecodeContribution extends ControlContribution {
      * @see IDocumentListener#documentChanged(DocumentEvent)
      */
     public final void documentChanged(final DocumentEvent an_event) {
+      BytecodeDocument doc;
+      try {
+        doc = (BytecodeDocument) an_event.fDocument;
+      } catch (ClassCastException e) {
+        //This should not happen as we operate in a byte code editor
+        UmbraPlugin.messagelog("You are not editing a byte code document");
+        return;
+      }
+      if (!doc.isReady()) {
+        doc.init(); //this marks the document as ready
+      }
+      int stop = 0;
+      int start_rem = 0;
+      int stop_rem = 0;
+      try {
+        start_rem = doc.getLineOfOffset(an_event.getOffset());
+        stop_rem = doc.getLineOfOffset(
+                                   an_event.getOffset() + an_event.getLength());
+        final int insertedLen = an_event.getText().length();
+        stop = doc.getLineOfOffset(an_event.getOffset() +
+            insertedLen);
+      } catch (BadLocationException e) {
+        //This should not happen as the offsets from the event are generated
+        //based on the current document
+        UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
+                               "differ from the ones in the event");
+      }
+
+      updateFragment(doc, start_rem, stop_rem, stop);
       ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
     }
 

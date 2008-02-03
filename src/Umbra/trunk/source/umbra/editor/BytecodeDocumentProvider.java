@@ -108,20 +108,19 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    * @param an_editor the editor of the Java source code
    * @param a_bcode_editor the byte code editor in which the textual
    *   representation is to be edited
-   * @param an_input input file with the textual representation of the bytecode
+   * @param an_input input file with the textual representation of the byte code
    * @param a_javaclass a BCEL {@link JavaClass} structure to associate with
    *   the document
-   * @param a_bmlp
+   * @param a_bmlp a BMLLib representation of the class in the document
    */
   public final void setRelation(final CompilationUnitEditor an_editor,
               final BytecodeEditor a_bcode_editor,
               final IEditorInput an_input,
-              final JavaClass a_javaclass,
+              final JavaClass a_javaclass,//FIXME: this is not used
               final BMLParsing a_bmlp) {
     final BytecodeDocument document = (BytecodeDocument)getDocument(an_input);
-    document.setEditor(a_bcode_editor, a_javaclass, a_bmlp);
-    final Method[] ms = a_javaclass.getMethods();
-    document.setModTable(new boolean[ms.length]);
+    document.setEditor(a_bcode_editor, a_bmlp);
+    document.initModTable();
     document.setRelatedEditor(an_editor);
     BytecodeContribution.inUse().addListener(document);
   }

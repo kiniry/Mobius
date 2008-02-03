@@ -149,7 +149,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       final BCClass bcc = new BCClass(jc);
       //XXX changed: here my_bmlp object is initialised from JavaClass
       final BMLParsing bmlp = new BMLParsing(bcc);
-      my_editor.getDocument().setEditor(my_editor, jc, bmlp);
+      my_editor.getDocument().setEditor(my_editor, bmlp);
       final IEditorInput input = new FileEditorInput(a_file);
       getContributor().refreshEditor(my_editor, input, null, null);
     } catch (ClassNotFoundException e) {

@@ -247,7 +247,8 @@ public class BytecodeEditor extends TextEditor {
     try {
       bcc = new BCClass(jc);
       final BMLParsing bmlp = new BMLParsing(bcc);
-      a_doc.setEditor(this, jc, bmlp); //refresh BCEL structures
+      a_doc.setEditor(this, bmlp); //refresh BCEL structures
+      a_doc.initModTable();
       //this is where the textual representation is generated
       final InputStream stream = getDocumentStream(a_doc);
       final FileEditorInput input = (FileEditorInput)getEditorInput();

@@ -329,10 +329,18 @@ public final class BytecodeController {
   }
 
   /**
-   * @param a_start_rem
-   * @param an_end_rem
-   * @return
-   * @throws UmbraException
+   * This method returns the BCEL method structure responsible for the
+   * edition within the given range of lines. We try to find the instruction
+   * line around the first line in the given range
+   * (see {@link #getInstructionLineAround(LinkedList, int)}). In case we
+   * succeed, we return the MethodGen structure associated with this line.
+   *
+   * @param a_start_rem the first line of the edited area
+   * @param an_end_rem the last line of the edited area
+   * @return the {@link MethodGen} structure which handles the editing of this
+   *   area
+   * @throws UmbraException the {@link MethodGen} cannot be successfully
+   *   obtained
    */
   private MethodGen getCurrentMethodGen(final int a_start_rem,
                                         final int an_end_rem)
