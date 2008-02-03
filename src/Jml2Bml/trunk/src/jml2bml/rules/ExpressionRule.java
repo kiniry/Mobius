@@ -183,8 +183,6 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     final BCExpression lhs = scan(node.getLeftOperand(), p);
     final BCExpression rhs = scan(node.getRightOperand(), p);
     int operator = BmlLibUtils.mapJCOperatorToBmlLib(node.op);
-    if (node.op == null)
-      operator = BmlLibUtils.mapJCTagToBmlLib(node.getTag());
     if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator)) {
       return new Predicate2Ar(operator, lhs, rhs);
     }

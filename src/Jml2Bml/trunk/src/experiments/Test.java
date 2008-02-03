@@ -50,7 +50,7 @@ public class Test {
     //@ assert d.length < 123;
     //@ assert test.parent.abc == test.efg;
     //@ assert node.op == null;
-    //@ assert (\forall int k; \exists int m; k >=m && k < 10 ==> d[k] != -3 + d.length);
+    //@ assert (\forall int k; \exists int m; k >=m && k < 10 ==> d[k] != -3 <==> d.length > 5);
     d[0] = 1;
     for (int i = 0; i <1 ; i++);
     for (int j = 0; j < 1; j ++);

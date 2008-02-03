@@ -8,6 +8,7 @@ package jml2bml.bmllib;
 
 import javax.lang.model.type.TypeKind;
 
+import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
@@ -17,7 +18,6 @@ import annot.bcexpression.FieldRef;
 import annot.io.Code;
 
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
@@ -38,18 +38,19 @@ public final class BmlLibUtils {
    */
   public static boolean isBinaryOperatorPredicate2Ar(final int operator) {
     switch (operator) {
-      case Code.GRT:
-      case Code.GRTEQ:
-      case Code.LESS:
-      case Code.LESSEQ:
-      case Code.EQ:
-      case Code.NOTEQ:
-      case Code.AND:
-      case Code.OR:
-      case Code.IMPLIES:
-        return true;
-      default:
-        return false;
+    case Code.GRT:
+    case Code.GRTEQ:
+    case Code.LESS:
+    case Code.LESSEQ:
+    case Code.EQ:
+    case Code.NOTEQ:
+    case Code.AND:
+    case Code.OR:
+    case Code.IMPLIES:
+    case Code.EQUIV :
+      return true;
+    default:
+      return false;
     }
   }
 
@@ -98,18 +99,46 @@ public final class BmlLibUtils {
     //    if (kind == Kind.UNSIGNED_RIGHT_SHIFT) return
     //    if (kind == Kind.XOR) return 
     throw new RuntimeException("Not implemented binary operator: " + kind);
+
   }
 
-  public static int mapJCTagToBmlLib(int tag) {
-    if (tag == JCTree.AND) {
+  private static int booleanOperator(final Kind kind) {
+    if (kind == Kind.AND) {
       return Code.AND;
     }
-    if (tag == JCTree.OR) {
+    if (kind == Kind.EQUAL_TO) {
+      return Code.EQ;
+    }
+    if (kind == Kind.GREATER_THAN) {
+      return Code.GRT;
+    }
+    if (kind == Kind.GREATER_THAN_EQUAL) {
+      return Code.GRTEQ;
+    }
+    if (kind == Kind.LEFT_SHIFT) {
+      return Code.SHL;
+    }
+    if (kind == Kind.LESS_THAN) {
+      return Code.LESS;
+    }
+    if (kind == Kind.LESS_THAN_EQUAL) {
+      return Code.LESSEQ;
+    }
+    if (kind == Kind.NOT_EQUAL_TO) {
+      return Code.NOTEQ;
+    }
+    if (kind == Kind.OR) {
       return Code.OR;
     }
-    //FIXME
-    return -3;
+    if (kind == Kind.CONDITIONAL_AND) {
+      return Code.AND;
+    }
+    if (kind == Kind.CONDITIONAL_OR) {
+      return Code.OR;
+    }
+    return -1;
   }
+
 
   public static String mapJCTypeKindToBmlLib(TypeKind primitiveTypeKind) {
     if (TypeKind.BOOLEAN.compareTo(primitiveTypeKind) == 0) {
@@ -129,13 +158,15 @@ public final class BmlLibUtils {
       return Code.EXISTS_WITH_NAME;
     if (JmlToken.IMPLIES.equals(token))
       return Code.IMPLIES;
-    //FIXME
-    return 0;
-  }
+    if (JmlToken.EQUIVALENCE.equals(token))
+      return Code.EQUIV;
 
+    throw new Jml2BmlException("Unrecognized token " + token);
+  }
   public static FieldRef createFieldRef(boolean isOld, int index,
                                         Symbols symbols) {
     BCClass clazz = symbols.findClass();
     return new FieldRef(isOld, clazz.getCp(), index);
   }
+  
 }

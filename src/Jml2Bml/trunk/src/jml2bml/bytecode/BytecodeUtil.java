@@ -6,7 +6,19 @@
  */
 package jml2bml.bytecode;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import jml2bml.exceptions.Jml2BmlException;
+
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.verifier.structurals.ControlFlowGraph;
+import org.apache.bcel.verifier.structurals.InstructionContext;
+
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
@@ -38,12 +50,12 @@ public final class BytecodeUtil {
    * @param name name of the method
    * @param clazz BCClass object representing the class
    * @return BCMethod representing method <code>name</code>,
-   * or null, if the methow was not found.
+   * or null, if the method was not found.
    */
-  public static BCMethod findMethod(final CharSequence name,
-                                    final BCClass clazz) {
+  public static BCMethod findMethod(final CharSequence name, final BCClass clazz) {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
+      LoopDetector.detectLoop(method);
       if (method.getBcelMethod().getName().contentEquals(name))
         return method;
     }
@@ -98,4 +110,5 @@ public final class BytecodeUtil {
       throw new Jml2BmlException("Error while loading class " + qName + ".");
     }
   }
+
 }
