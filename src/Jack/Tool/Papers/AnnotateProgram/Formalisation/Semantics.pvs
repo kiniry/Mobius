@@ -571,6 +571,17 @@ ENDASSUMING
               derive(p)(b, tau, v, sigma2)(n) IMPLIES
               sigma2 = tau AND v = Bottom
                  
+
+  IMPORTING ContainsNoMethodCall[Name]
+
+  derive_does_not_change_unmentioned_var : LEMMA
+    FORALL (p : FullProgram)(b : (wf_Body(program(p))), v : Val)
+           (sigma1, sigma2 : FullState)(x : Name)
+           (n : nat) :
+      NOT var_names(b)(x) IMPLIES
+      contains_no_method_call(b) IMPLIES
+      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
+      lookup(x, pstate(sigma1)) = lookup(x, pstate(sigma2))
      
 END SemanticsProofs
 

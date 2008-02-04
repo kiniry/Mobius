@@ -214,7 +214,9 @@ BEGIN
                        on_method_exit_normal,
                        on_method_exit_exceptional]
 
-  p : VAR ({p : Program | wf_set_stmts(p)})
+  p : VAR ({p : Program | wf_set_stmts(p) AND 
+                          contains_no_method_call_in_sets_in_program(p)})
+
 
   derive_maintains_inline_related_states_for_method_call : LEMMA
     FORALL (b : (wf_Body(p)), v1, v2 : Val)
