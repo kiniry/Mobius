@@ -3,111 +3,139 @@
 With the emergence of a new generation of trusted personal devices
 (mobile phones, PDAs, smart cards \emph{etc.}), the need for
 techniques to ensure security of applications has become even more
-prominent. In particular because these devices are more and more
-connected to networks, \emph{and} provide support to execute complex
-applications, they are very vulnerable to attacks. If an attacker
-would succeed to spread an attack over the network that would
-massively disconnect or disrupt devices, this would have significant
-consequences.
+prominent. A common way to ensure security of an application is to
+monitor its execution with a security automaton~\cite{Schneider99}.
+Upon entry or exit of a security-critical method, the security
+automaton changes its internal state. If it reaches an ``illegal''
+state, the application will be stopped and a security violation will
+be reported. This approach is in particular suited to monitor
+properties are expressed as sequences of legal method calls, such as
+life cycle properties, or constraints that express how often or under
+which conditions a method can be called. 
 
-
-A traditional means to ensure security of an application is to monitor
-its execution with a security automaton.  Upon every entry or exit of
-a security-critical method, the security automaton changes its
-internal state. If it reaches an ``illegal'' state, the application
-will be stopped and a security violation will be reported. However,
-for trusted personal device applications, such a runtime monitoring
-approach is not suited. The device is passed to the end-user and out
-of reach of the provider. For the end-user, it is unacceptable that
-the device suddenly could be blocked, because of a security violation,
-and that he/she would have to return to the provider to unblock the
-device.
-
-Instead, for such applications a statical means to enforce security is
-necessary. A commonly advocated approach is to require that the application
-carries a correctness proof with it, that can be validated before
-installing the application on the device. In such a proof carrying
-code scenario, the application provider is required to create this
-proof. Traditional proof carrying code has focused on simple security
-properties that can be checked with a type checker. Within the
+However, for many applications, such a runtime monitoring approach is
+not suited. In particular, if an application installed on a
+stand-alone personal device that is handed out to an end-user, it is
+unacceptable that the device suddenly could be blocked, because of a
+security violation, and that the end-user would have to return to the
+provider to unblock the device.  Instead, for such applications
+statical means to enforce security are necessary. A commonly advocated
+approach is to require that the application carries a correctness
+proof with it, that can be validated before installing the application
+on the device. In such a proof carrying code scenario~\cite{Necula97},
+the application provider is required to create this proof. Traditional
+proof carrying code has focused on simple security properties that can
+be checked with a type checker. Within the
 \textsf{Mobius} project (see \texttt{http://mobius.inria.fr}), 
 a more advanced proof carrying code scenario is developed where
 security properties are encoded as logical formulae, and classical
 program verification techniques are used to produce the proof.
 
 However, typical program verification tools that can be used in such
-an approach use a pre-postcondition style for the specifications,
-while security properties are often more naturally expressed as
-automata or temporal properties. Typically, security experts
-characterise security requirements by a collection of security rules
-that have to be followed by the application developer, and automata or
-temporal logic are a natural and intuitive formalism to express this
-kind of properties.
+an approach use a Hoare logic style for the specifications
+(\emph{i.e.}, using pre- and postconditions), while security experts
+often characterise security requirements by a collection of security
+rules that have to be followed by the application developer. Automata
+or temporal logic are a natural and intuitive formalism to express
+such security rules. Therefore, as a first step towards static
+verification of security properties, this paper proposes a translation
+from security properties expressed as an automaton (or a safety
+temporal logic formula, which can be translated into an
+automaton~\cite{Wolper01}) into inline annotations. Based on these
+annotations, appropriate Hoare-style specifications can be generated,
+see~\cite{PavlovaBBHL04} for a propagation algorithm that does exactly
+this.
 
-As a first step towards static verification of security properties,
-this paper proposes a translation from security properties expressed
-as an automaton (or a safety temporal logic formula, which can be
-translated into an automaton~\cite{Wolper01}) into a specification that
-can be verified by a standard program verification tool. Since the
-Java Virtual Machine (and variations) is the most common platform for
-trusted personal devices\footnote{The standard Java set-up for such
-devices is the Connected Limited Device Configuration, see
+Since the Java Virtual Machine (and variations) is the most common
+platform for personal devices\footnote{The standard Java set-up for
+such devices is the Connected Limited Device Configuration, see
 \texttt{http://java.sun.com/products/cldc/}, together with the MIDP
-profile, see
-\texttt{http://java.sun.com/products/midp/}.}, we use JML as the
-program verification specification language.  JML (Java Modeling
-Language)~\cite{LeavensPCCRCK05} is a behavioural interface specification
-langugage for Java. It allows to express pre-postcondition style
-specifications, but also provides more advanced constructs like class
-invariants and history constraints. Several tools exist that allow to
-statically verify whether a program respects its JML annotations,
+profile, see \texttt{http://java.sun.com/products/midp/}.}, we use JML
+as the program verification specification language.  JML (Java
+Modeling Language)~\cite{LeavensPCCRCK05} is a behavioural interface
+specification langugage for Java. It allows to express Hoare-style
+specifications, including advanced constructs like class invariants
+and history constraints. Several tools and techniques exist that allow
+to validate JML specifications \emph{w.r.t.}\ a Java implementation,
+\emph{e.g.},\ static verification is provided by 
 \emph{e.g.}\ ESC/Java~\cite{CokK04} and
-JACK~\cite{BartheBCGHMPPSV06}. Moreover, one can also do
-runtime checking of a JML specification using the
-\texttt{jmlc} and
-\texttt{jmlrac} tools. Runtime checking of a JML specifications means
-that at every method entry or exit point preconditions or
-postconditions, class invariants, history constraints \emph{etc.} are
-evaluted, and an exception is returned if the annotation is
-violated. In addition, at any point in the program code, an assertion
+JACK~\cite{BartheBCGHMPPSV06}, while runtime checking is possible
+using the \texttt{jmlc} and \texttt{jmlrac} tools. The JML runtime
+checking tools evaluate at every method entry or exit point
+preconditions or postconditions, class invariants, history constraints
+\emph{etc.}, and if an annotation is violated, an exception is
+returned. In addition, at any point in the program code, an assertion
 can be added, that is supposed to hold whenever control reaches this
 point.
 
-We prove that our translation is security preserving: if the
-application monitored by the automaton does not produce a security
-violation, runtime checking of the generated JML annotations will 
-not produce an annotation exception. The next step is to
-propagate the annotations (as described
-in~\cite{PavlovaBBHL04}), which means that the annotations that
-are generated directly give rise to new program
+This paper discusses the first step of the translation: from security
+automaton to inline annotations. We prove that our translation is
+security preserving: if the application monitored by the automaton
+does not produce a security violation, runtime checking of the
+generated JML annotations will not produce an annotation
+exception. The next step will be to propagate the annotations (as
+described in~\cite{PavlovaBBHL04}), which means that the annotations
+that are generated directly give rise to new program
 annotations. Eventually, this will produce a completely annotated
 application, and if it can be proven statically that the annotated
 program respects its annotations, it also respects the security
-property expressed by the automaton.
+property expressed by the automaton.  
 
-This paper focuses on the first step of the process: from automata to
-core-annotations. All results in the paper have been established
-formally using the PVS theorem prover~\cite{OwreRRSS96}. In earlier work,
-we have presented the propagation
-algorithm~\cite{PavlovaBBHL04}, and proven correctness for a
-limited case (only static properties that do not depend on concrete
-program instances are considered, and branching conditions are not
-taken into account~--~the two possible branches are simply both
-propagated). It is future work to extend this to a complete
-correctness proof, and to improve the propagation algorithm to take
-branching conditions into account (as much as possible). We will then
-also exploit the existing PVS formalisation, to prove the formal
-correctness of the propagation with a theorem prover.
+The translation described in this paper is defined in several
+steps. First we define a translation from a partial automaton,
+\emph{i.e.},\ an automaton that can get \emph{stuck}, because it has
+no transition enabled, to a complete automaton, \emph{i.e},\ an
+automaton that always has a transition enabled, but that contains a
+special \textsf{halted} state, that models that an error has occurred,
+and from which one cannot leave. We show that the behaviour of a
+program that is monitored with a partial program is equivalent to the
+behaviour of a program that is monitored with a complete
+automaton. Then we define how the complete monitor gives rise to
+annotations. We do this by adding special ghost variables to model the
+monitor state. To every method specification, we add special
+\textsf{set} annotations that update the ghost variables upon entry
+and exit of a method~--~according to the updates in the automaton. To
+write  this in a convenient way, we introduce a special
+conditional construct to update ghost variables (called
+\textsf{CaseJML}). We show that the run-time monitoring of the program
+only throws a (new) exception to signal an annotation violation if the
+monitor reaches the \textsf{halted} state. Next, we inline the
+\textsf{set} annotations from the method specification to the method
+body. This requires a code transformation, to ensure that the ghost
+variables are also updated appropriately if the method throws an
+exception. We prove that the run-time checking behaviour of the
+program with the inlined \textsf{set} annotations is equivalent to the
+run-time checking behaviour of the program with the method
+specification-level \textsf{set} annotations. Finally, as a last step,
+we show that the special \textsf{CaseJML} construct can be transformed
+into a sequence of set instructions, and we prove again that this does
+not change the run-time checking behaviour of the program. All results
+in the paper have been established formally using the PVS theorem
+prover~\cite{OwreRRSS96}. \marginnote{To be changed, if necessary}
 
-The rest of this paper is organised as follows. The next section
-introduces the syntax and semantics of programs. Section~\ref{SecMVA}
-then discusses the particular automaton format that we use, and shows
-how it can be used to encode typical security
-properties. Section~\ref{SecAnnotGen} presents the annotation
-generation algorithm, and proves it
-correct. Section~\ref{SecTowardsStaticVer} discusses how these results
-will be extended to achieve static verification, while
-Section~\ref{SecImplem} discusses implementation of the
-algorithm. Finally, Section~\ref{SecConcl} concludes and discusses
-future work.
+Throughout this paper, we will use a simple example property to
+illustrate the different translations: the method \texttt{sendSMS} can
+be called at most \(N\) times in between calls to a \texttt{reset}
+method. Figure~\ref{FigExample} shows a security automaton that can be
+used to monitor this property. Even though very basic, this example is
+exemplaric of a wide range of important resource-related security properties.
+
+\marginnote{psfrag needed to improve layout}
+
+\begin{figure}[t]
+\begin{center}
+\epsfig{file=limited_sms.eps, width=4cm}
+\end{center}
+\caption{Example Security Automaton}\label{FigExample}
+\end{figure}
+
+The remainder of this paper is organised as
+follows. Section~\ref{SecMVA} formalises the automaton format that we
+use, and defines completion of automaton. Next,
+Section~\ref{SecProgram} defines the semantics of monitored and
+annotated programs. Then Section~\ref{SecAnnotGen} presents the
+different translations , and proves their
+correctness. Section~\ref{SecTowardsStaticVer} discusses how these
+results will be extended to achieve static verification. Finally,
+Section~\ref{SecConcl} concludes and discusses future work.
 

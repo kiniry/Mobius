@@ -1,2 +1,13 @@
 \section{Conclusions \& Future Work }\label{SecConcl}
 
+ In earlier work,
+we have presented the propagation
+algorithm~\cite{PavlovaBBHL04}, and proven correctness for a
+limited case (only static properties that do not depend on concrete
+program instances are considered, and branching conditions are not
+taken into account~--~the two possible branches are simply both
+propagated). It is future work to extend this to a complete
+correctness proof, and to improve the propagation algorithm to take
+branching conditions into account (as much as possible). We will then
+also exploit the existing PVS formalisation, to prove the formal
+correctness of the propagation with a theorem prover.

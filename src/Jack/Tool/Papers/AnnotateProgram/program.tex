@@ -1,4 +1,4 @@
-
+\
 \section{Programs and Semantics}\label{SecProgram}
 
 
@@ -330,6 +330,55 @@ value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
 abbreviate that the \(n\) entry of the \gvs entry of \(\tau\) is
 updated.} appropriately. In addition, it ensures that the program
 store is not affected by evaluation of the annotation.
+
+\subsection{Monitored Program Semantics}
+Given the definitions of MVA's and MVA transitions, we can instantiate
+the general program semantics to a monitored program semantics. This
+semantics is only defined when the MVA total and compatible with the
+program. An MVA \(a\) is said to be compatible with program \(P\),
+denoted \(a \sqsubseteq P\) if the program contains the class \(c\) that is
+being monitored, all variables declared as program variables in
+\(a\) are fields of the class \(c\) with the correct type, and every
+event name corresponds to a method in the class. 
+
+A monitored program is a product of the MVA and the program.
+The state of a monitored program consists of the state of the MVA and
+the program.
+
+\[ 
+\begin{array}{rcl}
+\Mprogram & =  & \opr \mva : \MVA, \program : \Program \clr\\
+\Mstate & = & \opr \mvastate : \MVAstate, \progstate : \Pstate \clr
+\end{array}
+\]
+Thus, \FullProgram gets instantiated as \Mprogram and \FullState as
+\Mstate, with mappings \program and \progstate. Now we can give
+appropriate instantiations for the \(\gamma\)- and
+\(\delta\)-functions. In fact, the \(\delta\)-functions are the same as
+for the standard or annotated program semantics (depending on whether
+we wish the monitored program to evaluate annotations that are
+possibly already there). For clarity we only show here how \gammain
+changes the state of the monitor; it is straightforward to add 
+annotation evaluation to this. 
+\[
+\begin{array}{l}
+\gammain(P, md, r, \tau_1, \tau_2) = \\
+\quad
+\begin{array}[t]{l}
+\mathsf{let\ } e = \opri \etype := \entry, \mname := \name(md) \clri \\
+\mathsf{in\ }
+\begin{array}[t]{l}
+\mathsf{if\ }  e \in \evs(\mva(P)) \\
+\mathsf{then\ }\begin{array}[t]{l}
+       \mvastate(\tau_2) = \Delta_a(\mvastate(\tau_1),
+\progstate(\tau_1), e) \wedge \\
+      \progstate(\tau_1) = \progstate(\tau_2)
+      \end{array}\\
+\mathsf{else\ } \tau_1 = \tau_2
+\end{array}
+\end{array}
+\end{array}
+\]
 
 
 \subsubsection{PVS formalisation}
