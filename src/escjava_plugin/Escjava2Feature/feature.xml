@@ -2,7 +2,7 @@
 <feature
       id="mobius.Escjava2.feature"
       label="ESC/Java2"
-      version="2.0.8"
+      version="2.0.7"
       provider-name="David R. Cok and EU MOBIUS IST-15905 Project"
       plugin="mobius.escjava2.plugin">
    <install-handler/>
