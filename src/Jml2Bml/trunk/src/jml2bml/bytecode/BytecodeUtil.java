@@ -32,6 +32,7 @@ import com.sun.tools.javac.util.Name;
  * @author kjk (kjk@mimuw.edu.pl)
  * @author Jedrek (fulara@mimuw.edu.pl)
  *
+ * @version 0.0-1
  */
 public final class BytecodeUtil {
   /**
@@ -76,8 +77,8 @@ public final class BytecodeUtil {
                                             final BCClass clazz) {
     final int nameIndex = clazz.getFieldIndex(name);
     if (nameIndex == -1) {
-      throw new Jml2BmlException("Field " + name
-                                 + " does not exist in given class.");
+      throw new Jml2BmlException("Field " + name +
+                                 " does not exist in given class.");
     }
     return new FieldRef(isOld, clazz.getCp(), nameIndex);
 

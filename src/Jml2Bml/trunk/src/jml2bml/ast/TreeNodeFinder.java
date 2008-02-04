@@ -43,7 +43,8 @@ public class TreeNodeFinder {
      */
     @Override
     public Tree scan(final Tree node, final Tree parent) {
-      parents.put(node, parent);
+      if (node != null)
+        parents.put(node, parent);
       return super.scan(node, node);
     }
 
@@ -57,16 +58,18 @@ public class TreeNodeFinder {
      * @return parent node (the same result as original scan)
      */
     @Override
-    public Tree scan(Iterable<? extends Tree> nodes, Tree parent) {
-      final Iterator<? extends Tree> iter = nodes.iterator();
-      if (iter.hasNext()) {
-        Tree stmt = iter.next();
-        while (iter.hasNext()) {
-          final Tree next = iter.next();
-          nextSiblingMap.put(stmt, next);
-          stmt = next;
+    public Tree scan(final Iterable<? extends Tree> nodes, final Tree parent) {
+      if (nodes != null) {
+        final Iterator<? extends Tree> iter = nodes.iterator();
+        if (iter.hasNext()) {
+          Tree stmt = iter.next();
+          while (iter.hasNext()) {
+            final Tree next = iter.next();
+            nextSiblingMap.put(stmt, next);
+            stmt = next;
+          }
+          nextSiblingMap.put(stmt, null);
         }
-        nextSiblingMap.put(stmt, null);
       }
       return super.scan(nodes, parent);
     }

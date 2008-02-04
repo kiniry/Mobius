@@ -10,9 +10,10 @@ public class JmlNodes {
    * rules will be fired
    */
   public static final Class < ? > [] JML_CLASSES = {
-                                                JmlTree.JmlTypeClauseExpr.class,
+                                                JmlTree.JmlStatementLoop.class,
                                                 JmlTree.JmlSpecificationCase.class,
                                                 JmlTree.JmlStatementExpr.class,
+                                                JmlTree.JmlTypeClauseExpr.class,
                                                 JCTree.JCAnnotation.class };
 
 }

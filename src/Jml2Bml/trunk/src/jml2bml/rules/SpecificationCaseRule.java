@@ -36,6 +36,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.util.Context;
 
 /**
+ * Translation rule for method specification.
+ * 
  * @author kjk (kjk@mimuw.edu.pl)
  *
  * @version 0-0.1
@@ -43,7 +45,7 @@ import com.sun.tools.javac.util.Context;
 public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
 
   /**
-   * 
+   * Constructor.
    * @author kjk (kjk@mimuw.edu.pl)
    */
   private class SpecificationCaseBuilder extends

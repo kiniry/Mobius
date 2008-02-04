@@ -30,8 +30,12 @@ public class RulesFactory {
   public static TranslationRule<String, Symbols> getSpecificationCaseRule(Context context) {
     return new SpecificationCaseRule(context);
   }
-  
+
   public static TranslationRule<String, Symbols> getTypeClauseExprRule(Context context) {
     return new TypeClauseExprRule(context);
+  }
+
+  public static TranslationRule<String, Symbols> getLoopInvariantRule(Context context) {
+    return new LoopInvariantRule(context);
   }
 }

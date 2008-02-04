@@ -47,7 +47,7 @@ public final class LoopDetector {
   }
 
   /**
-   * Determines whether the given instruction is the beggining
+   * Determines whether the given instruction is the beginning
    * of loading loop condition parameters.
    * If yes, finds the loop condition statement
    * (the instruction to which we want to assign the loop invariants)
@@ -97,7 +97,7 @@ public final class LoopDetector {
   }
 
   /**
-   * Determines, whether given instruction is a very beggining of a loop
+   * Determines, whether given instruction is a very beginning of a loop
    * (start of loading condition parameters). If yes - returns the condition
    * instruction (after all condition parameters are loaded). This method
    * handles following type of loops:
