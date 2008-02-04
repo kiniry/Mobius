@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="source"/>
+	<classpathentry kind="src" path="tests-src"/>
 	<classpathentry exported="true" kind="lib" path="libs/asm.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/b2bpl.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
-		<accessrules>
-			<accessrule kind="accessible" pattern="org/eclipse/ui/ide/**"/>
-			<accessrule kind="accessible" pattern="org/eclipse/ui/part/**"/>
-			<accessrule kind="accessible" pattern="org/eclipse/ui/texteditor/**"/>
-			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/ui/javaeditor/**"/>
-			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/ui/actions/*"/>
-		</accessrules>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="/BCEL5.1/bcel-5.1.jar" sourcepath="/BCEL5.1/bcel-5.1-src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/home/chrzaszcz/Mobius/WP3/Task_3.6_Program_Verification_Environment/libs/bcel-5.1/bcel-5.1.zip!/bcel-5.1/docs/apidocs"/>
