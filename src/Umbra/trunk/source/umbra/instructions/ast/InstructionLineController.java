@@ -8,11 +8,6 @@
  */
 package umbra.instructions.ast;
 
-import java.util.LinkedList;
-
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.BranchInstruction;
-import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
@@ -30,6 +25,7 @@ import umbra.instructions.InstructionParser;
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public abstract class InstructionLineController extends BytecodeLineController {
@@ -128,67 +124,6 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
-   * This method is executed when a new line is inserted to
-   * the method and it must be added to BCEL structures,
-   * especially new handle is generated.
-   *
-   * This method checks if there is a valid instruction handle for the next
-   * instruction (provided as {@code a_next_line}). In that case it checks
-   * if the instruction to be added ({@code an_instruction}) is valid and
-   * in that case either appends the instruction to the method list (in
-   * case the instruction is added at the end of the method (indicated by
-   * {@code a_method_end} or inserts it before the instruction from
-   * {@code a_next_line}. Next the list of instructions of the current
-   * method is updated, and the current method data structures too. Finally,
-   * the list of instructions {@code the_instructions} is updated.
-   *
-   * @param a_next_line a next line, necessary to get handle - a new handle is
-   *   inserted before the next one
-   * @param a_class_gen a class generator from BCEL
-   * @param an_instruction a BCEL instruction (to generate handle)
-   * @param a_method_end <code>true</code> if the line is inserted after the
-   *   end of the method - then the <code>a_next_line</code> is actually the
-   *   previous one and the handle is generated with 'append'
-   * @param the_instructions an array from
-   *   {@link umbra.instructions.BytecodeController} that the new line is
-   *   added to
-   * @param an_offset an offset in this array
-   */
-  public final void initHandle(final BytecodeLineController a_next_line,
-               final ClassGen a_class_gen, final Instruction an_instruction,
-               final boolean a_method_end, final LinkedList the_instructions,
-               final int an_offset) {
-    final InstructionHandle next = a_next_line.getHandle();
-    if (next != null) {
-      final InstructionList instrsInMethod = a_next_line.getList();
-      final MethodGen a_mg = a_next_line.getMethod();
-      if (an_instruction == null) {
-        my_instr_handle = null;
-      } else if (a_method_end) {
-        my_instr_handle = instrsInMethod.append(an_instruction);
-      } else {
-        if (an_instruction instanceof BranchInstruction) {
-          // TODO: this report should look like differently
-          if (((BranchInstruction)an_instruction).getTarget() == null)
-            UmbraPlugin.messagelog("null target");
-          else
-            UmbraPlugin.messagelog(
-                       Integer.toString(((BranchInstruction)an_instruction).
-                       getTarget().getPosition()));
-          my_instr_handle = instrsInMethod.insert(next,
-                                           (BranchInstruction)an_instruction);
-        } else
-          my_instr_handle = instrsInMethod.insert(next, an_instruction);
-      }
-      my_instr_list = instrsInMethod;
-      this.my_methodgen = a_mg;
-      updateMethod(a_class_gen);
-      if (an_instruction != null)
-        the_instructions.add(an_offset + 1, this);
-    }
-  }
-
-  /**
    * The debugging method that prints out to the standard output the
    * information on the line given in the parameter. It prints out:
    * <ul>
@@ -208,11 +143,17 @@ public abstract class InstructionLineController extends BytecodeLineController {
         UmbraPlugin.messagelog("Null instruction");
       else
         UmbraPlugin.messagelog(ins.getName());
-      final InstructionHandle nih = a_line.getHandle();
-      if (nih == null)
-        UmbraPlugin.messagelog("Null handle");
-      else
-        UmbraPlugin.messagelog(Integer.toString(nih.getPosition()));
+      if (a_line instanceof InstructionLineController) {
+        final InstructionLineController new_line =
+            (InstructionLineController) a_line;
+        final InstructionHandle nih = new_line.getHandle();
+        if (nih == null)
+          UmbraPlugin.messagelog("Null handle");
+        else
+          UmbraPlugin.messagelog(Integer.toString(nih.getPosition()));
+      } else {
+        UmbraPlugin.messagelog("Non-instruction handle");
+      }
     }
   }
 
@@ -237,18 +178,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
-   * Replacing BCEL method with the new one with updated
-   * instruction list.
+   * Returns the {@link InstructionHandle} structure which corresponds to the
+   * current instruction.
    *
-   * @param a_classgen a class generator from BCEL
-   */
-  private void updateMethod(final ClassGen a_classgen) {
-    final Method oldMet = a_classgen.getMethodAt(getMethodNo());
-    a_classgen.replaceMethod(oldMet, my_methodgen.getMethod());
-    //UmbraPlugin.messagelog(cg.getMethodAt(my_index).getCode().toString());
-  }
-
-  /**
    * @return the BCEL handle to the current instruction.
    */
   public final InstructionHandle getHandle() {
@@ -256,6 +188,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
+   * Returns the {@link InstructionList} structure in which the current
+   * instruction is located.
+   *
    * @return the BCEL list of the instructions of the method to which the
    *   current instruction belongs
    */
@@ -264,6 +199,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
+   * Returns the {@link MethodGen} structure responsible for the method in
+   * which the instruction resides.
+   *
    * @return the method in which the current instruction is located
    */
   public final MethodGen getMethod() {
@@ -280,48 +218,6 @@ public abstract class InstructionLineController extends BytecodeLineController {
    */
   public boolean correct() {
     return true;
-  }
-
-  /**
-   * This method removes the current instruction line from BCEL structures.
-   *
-   * @param the_next_line the line after the removed one; it becomes a target of
-   *   any jump instruction directed to the removed one
-   * @param a_classgen a class generator from BCEL, this should be the same as
-   *   in the {@link umbra.editor.BytecodeDocument} object for the currently
-   *   edited byte code file
-   * @param the_last currently not used
-   * @param the_instructions an array from
-   *   {@link umbra.instructions.BytecodeController} that contains the current
-   *   line
-   * @param an_off an offset in the <code>the_instructions</code> array which
-   *   points to the instruction to be removed
-   */
-  public final void dispose(final BytecodeLineController the_next_line,
-                            final ClassGen a_classgen,
-                            final boolean the_last,
-                            final LinkedList the_instructions,
-                            final int an_off) {
-    final InstructionHandle me = getHandle();
-    final InstructionHandle next = the_next_line.getHandle();
-    final InstructionTargeter[] tgters = my_instr_handle.getTargeters();
-    if (tgters != null)
-      for (int i = 0; i < tgters.length; i++) {
-        tgters[i].updateTarget(me, next);
-      }
-    try {
-      my_instr_list.delete(my_instr_handle);
-    } catch (TargetLostException e) {
-      //This should not happen as the instruction my_instr_handle has been
-      //re-targeted
-      UmbraPlugin.messagelog("IMPOSSIBLE: dispose generated exception " +
-                             "in InstructionLineController.dispose(...)");
-    }
-    my_instr_handle = null;
-    my_methodgen.setInstructionList(my_instr_list);
-    updateMethod(a_classgen);
-    the_instructions.remove(an_off);
-    printInstructionList(my_instr_list);
   }
 
   /**
@@ -480,4 +376,22 @@ public abstract class InstructionLineController extends BytecodeLineController {
       throw new UmbraException();
     }
   }
+
+  /**
+   * This method returns the number of the instruction handled by the current
+   * line controller. If no instruction can be associated with the line
+   * the value -1 is returned.
+   *
+   * @return the number of the instruction or -1 in case the number cannot
+   *   be determined
+   */
+  public int getNoInMethod() {
+    final InstructionHandle[] ihs = getMethod().getInstructionList().
+                              getInstructionHandles();
+    for (int i = 0; i < ihs.length; i++) {
+      if (ihs[i] == getHandle()) return i;
+    }
+    return -1;
+  }
+
 }

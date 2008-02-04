@@ -27,6 +27,12 @@ import umbra.instructions.InstructionParser;
  * that describes the state of the byte code editor which contains
  * the line that corresponds to an object of the current class.
  *
+ * Note that some methods which logically belong to
+ * {@link InstructionLineController} are defined already here. This is caused
+ * by the fact that some of the line controllers may be associated with a
+ * method even though they do not handle instructions (but e.g. comments
+ * or empty lines).
+ *
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
@@ -59,7 +65,10 @@ public abstract class BytecodeLineController {
   private String my_line_text;
 
   /**
-   * TODO.
+   * This constructor creates the controller with the given content of the
+   * line it handles. It also creates the local parser which handles the
+   * parsing of the content of the line and initialises the association with
+   * a method so that no method is associated with the line controller.
    *
    * @param a_line the string representation of the line in the byte code
    *   document
@@ -124,27 +133,23 @@ public abstract class BytecodeLineController {
   }
 
   /**
-   * TODO.
+   * Returns the {@link InstructionList} structure in which the current
+   * instruction is located. In case of {@link BytecodeLineController}, this
+   * method always returns <code>null</code>.
    *
-   * @return TODO
-   */
-  public InstructionHandle getHandle() {
-    return null;
-  }
-
-  /**
-   * TODO.
-   *
-   * @return TODO
+   * @return the BCEL list of the instructions of the method to which the
+   *   current instruction belongs
    */
   public InstructionList getList() {
     return null;
   }
 
   /**
-   * TODO.
+   * Returns the {@link MethodGen} structure responsible for the method in
+   * which the instruction resides. In case of {@link BytecodeLineController}
+   * this method always returns <code>null</code>.
    *
-   * @return TODO
+   * @return the method in which the current instruction is located
    */
   public MethodGen getMethod() {
     return null;
@@ -231,15 +236,15 @@ public abstract class BytecodeLineController {
   }
 
   /**
+   * This method returns the number of the instruction handled by the current
+   * line controller. If no instruction can be associated with the line
+   * the value -1 is returned. In case of {@link BytecodeLineController},
+   * this method always returns -1.
    *
-   * @return
+   * @return the number of the instruction or -1 in case the number cannot
+   *   be determined
    */
   public int getNoInMethod() {
-    final InstructionHandle[] ihs = getMethod().getInstructionList().
-                              getInstructionHandles();
-    for (int i = 0; i < ihs.length; i++) {
-      if (ihs[i] == getHandle()) return i;
-    }
-    return 0;
+    return -1;
   }
 }
