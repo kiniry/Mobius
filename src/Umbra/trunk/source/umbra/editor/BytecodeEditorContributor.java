@@ -11,7 +11,6 @@ package umbra.editor;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -336,8 +335,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final int len = selection.getLength();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();
-    final JavaClass jc = ((BytecodeEditor)an_editor).getDocument().
-                                                     getJavaClass();
     final boolean proper = (related != null);
     my_bcode_cntrbtn.survive();
     if (proper) Composition.startDisas();
@@ -350,13 +347,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final ISelection ns = new TextSelection(off, len);
     final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
                           getSelectionProvider();
-//    final BytecodeDocument bdoc = an_editor.getDocument();
-//    try {
-//      bdoc.computePartitioning(0, bdoc.getLength());
-//    } catch (BadLocationException e) {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
     sp.setSelection(ns);
     final BytecodeDocument ndoc = ((BytecodeEditor)newEditor).getDocument();
     ndoc.setEditor((BytecodeEditor)newEditor, bmlp);

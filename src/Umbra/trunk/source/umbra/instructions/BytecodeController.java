@@ -21,6 +21,7 @@ import umbra.UmbraException;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.actions.BytecodeCombineAction;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
@@ -74,7 +75,12 @@ public final class BytecodeController {
 
   /**
    * The container of all the multi-line comments. Each element of the table is
-   * an association between a list
+   * an association between an instruction line and a string with comments.
+   * The string may contain several lines of text. For a given instruction,
+   * the string contains the comment that is located after it.
+   * FIXME: this functionality is not realised in the current version.
+   *
+   * @see #getInterlineComments()
    */
   private Hashtable my_interline;
 
@@ -83,8 +89,10 @@ public final class BytecodeController {
    * in the byte code editor and the end-of-line comments in these lines.
    * The comments must be absent from the line representation for their
    * correct parsing so they are held in this additional structure.
+   *
+   * @see #getEOLComments()
    */
-  private Hashtable my_comments;
+  private Hashtable my_eolcomments;
 
   /**
    * The constructor which initialises all the internal containers to be
@@ -222,13 +230,13 @@ public final class BytecodeController {
                               final Hashtable the_comments) {
     for (int i = the_first; i <= the_oldlast; i++) {
       final Object o = my_editor_lines.get(i);
-      my_comments.remove(o);
+      my_eolcomments.remove(o);
     }
     for (final Enumeration enumer = the_comments.keys();
          enumer.hasMoreElements();) {
       final Object key = enumer.nextElement();
       final Object value = the_comments.get(key);
-      my_comments.put(key, value);
+      my_eolcomments.put(key, value);
     }
   }
 
@@ -246,6 +254,27 @@ public final class BytecodeController {
     my_instructions.addAll(first, the_instructions);
   }
 
+  /**
+   * This method updates the current representation of the editor lines so
+   * that the lines in the given area are replaced with the lines from the
+   * given list. The lines in the region between <code>a_start_rem</code>
+   * and the lower of <code>an_end_rem</code> and <code>a_stop</code> are
+   * replaced with the new ones. In case, <code>an_end_rem &lt; a_stop</code>
+   * the remaining lines in the given list are added to the current
+   * representation of editor lines. In case <code>an_end_rem &gt; a_stop</code>
+   * the excessive lines in the current representation are removed. At last,
+   * we notify all the listeners in the BCEL structures and we recalculate
+   * the positions in the BCEL instruction list.
+   *
+   * We assume that the given list contains at least
+   * <code>a_stop - a_start_rem + 1</code> elements.
+   *
+   * @param a_start_rem the first line to be updated
+   * @param an_end_rem the last line in the old structure to be updated
+   * @param a_stop the last line in the new structure
+   * @param the_lines the list with the lines to incorporate
+   * @throws UmbraException
+   */
   private void updateEditorLines(final int a_start_rem,
                                  final int an_end_rem,
                                  final int a_stop,
@@ -259,7 +288,7 @@ public final class BytecodeController {
     } else if (an_end_rem > a_stop) { //we must remove the deleted lines
       removeEditorLines(an_end_rem, a_stop);
     }
-    my_editor_lines.addAll(a_start_rem, the_lines);
+    //my_editor_lines.addAll(a_start_rem, the_lines);
     mg.getInstructionList().update();
     mg.update();
     mg.getInstructionList().setPositions();
@@ -297,6 +326,21 @@ public final class BytecodeController {
     }
   }
 
+  /**
+   * This method replaces all the line controllers in the given area with
+   * the lines from the given list. The first line of the area is delimited
+   * by <code>a_start_rem</code> the last line is the smaller of the
+   * values <code>an_end_rem</code> and <code>a_stop</code>. The lines in
+   * the internal representation are replaced with the lines from
+   * <code>the_lines</code> parameter.
+   *
+   * @param a_start_rem the beginning of the area
+   * @param an_end_rem one possible end of the area
+   * @param a_stop another possible end of the area
+   * @param the_lines the collection of the new lines to replace with the old
+   *   ones
+   * @return the number of the first line that was not replaced
+   */
   private int replaceEditorLines(final int a_start_rem,
                                  final int an_end_rem,
                                  final int a_stop,
@@ -315,6 +359,19 @@ public final class BytecodeController {
     return j;
   }
 
+  /**
+   * This method returns the number of the instruction (in its method)
+   * corresponding to the given position. The method searches for the first
+   * instruction line before the given position. In case the header line
+   * controller is met before any line controller, it assumes that the line
+   * is associated with the number 0. In case a line controller is met,
+   * the number of its instruction in the current method is returned. This
+   * method may return -1 in case the line controller has no association with
+   * an instruction in the BCEL structures.
+   *
+   * @param a_pos the number of the line in the editor
+   * @return instruction number (starting with 0) in the current method
+   */
   private int getCurrentPositionInMethod(final int a_pos) {
     for (int j = a_pos; j >= 0; j--) {
       final BytecodeLineController bcl =
@@ -362,6 +419,22 @@ public final class BytecodeController {
     return mg;
   }
 
+  /**
+   * The method finds the {@link InstructionLineController} which is located
+   * in the same method that the given position. We use here the strategy
+   * to examine the lines after the given one until something different that
+   * {@link EmptyLineController}, {@link AnnotationLineController}, or
+   * {@link CommentLineController} is found. In case the first other line
+   * found is an {@link InstructionLineController} we return that. Otherwise,
+   * <code>null</code> is returned.
+   *
+   * @param the_editor_lines the list of lines which is seeked for the
+   *   {@link InstructionLineController}
+   * @param a_pos the position for which we try to find the line controller
+   * @return the {@link InstructionLineController} which was found or
+   *   <code>null</code> in case all the "empty" lines were examined and no
+   *   instruction line was found
+   */
   private InstructionLineController getInstructionLineAround(
                         final LinkedList the_editor_lines,
                         final int a_pos) {
@@ -426,8 +499,14 @@ public final class BytecodeController {
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * Returns the information on which methods were modified in the editor. This
+   * is used to enable the possibility to replace the code of the methods
+   * modified on the source code level, but that were not modified at the byte
+   * code level. See {@link BytecodeCombineAction}. The returned array has
+   * <code>true</code> in entries that correspond to modified methods and
+   * <code>false</code> otherwise.
+   *
+   * @return the array with information on modified methods.
    */
   public boolean[] getModified() {
     return my_modified;
@@ -441,25 +520,32 @@ public final class BytecodeController {
   }
 
   /**
-   * Transforms a map from lines to my_comments into string array.
-   * TODO
-   * @return Array of my_comments
+   * This method returns the interoperable representation of the end-of-line
+   * comments. The i-th entry in the returned array gives the end-of-line
+   * comment that is located <i>after</i> the i-th instruction in the file.
+   * Each entry contains at most one line of text.
+   *
+   * @return array with end-of-line comments
    */
-  public String[] getComments() {
+  public String[] getEOLComments() {
     final String[] commentTab = new String[my_instructions.size()];
     for (int i = 0; i < my_instructions.size(); i++) {
       final Object lc = my_instructions.get(i);
-      final String com = (String)my_comments.get(lc);
+      final String com = (String)my_eolcomments.get(lc);
       commentTab[i] = com;
     }
     return commentTab;
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * This method returns the interoperable representation of the multi-line
+   * comments. The i-th entry in the returned array gives the multi-line comment
+   * that is located <i>after</i> the i-th instruction in the file. Each entry
+   * may contain several lines of text.
+   *
+   * @return array with multi-line comment strings
    */
-  public String[] getInterline() {
+  public String[] getInterlineComments() {
     final String[] commentTab = new String[my_instructions.size()];
     for (int i = 0; i < my_instructions.size(); i++) {
       final Object lc = my_instructions.get(i);
@@ -520,7 +606,7 @@ public final class BytecodeController {
    * @param a_interline contains the texts of interline comments, the
    *   i-th entry contains the comment for the i-th line in the document,
    *   if this parameter is null then the array is not taken into account
-   *   TODO currently ignored
+   *   FIXME: currently ignored
    */
   public void init(final BytecodeDocument a_doc,
                    final String[] a_comment_array,
@@ -529,7 +615,7 @@ public final class BytecodeController {
     initParser.runParsing();
     my_editor_lines = initParser.getEditorLines();
     my_instructions = initParser.getInstructions();
-    my_comments = initParser.getComments();
+    my_eolcomments = initParser.getComments();
     int a_methodnum = 0;
     if (!my_instructions.isEmpty()) {
       a_methodnum = ((BytecodeLineController)my_instructions.getLast()).

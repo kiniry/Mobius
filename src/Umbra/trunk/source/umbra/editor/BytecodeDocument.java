@@ -14,6 +14,7 @@ import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.Document;
+import org.eclipse.ui.IEditorPart;
 
 import umbra.UmbraException;
 import umbra.instructions.BytecodeController;
@@ -189,15 +190,18 @@ public class BytecodeDocument extends Document {
    * the current editor
    */
   public final String[] getCommentTab() {
-    return my_bcc.getComments();
+    return my_bcc.getEOLComments();
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * This method returns the interoperable representation of the multi-line
+   * comments. The protocol is described in
+   * {@link BytecodeController#getInterlineComments()}.
+   *
+   * @return array with multi-line comment strings
    */
   public final String[] getInterlineTab() {
-    return my_bcc.getInterline();
+    return my_bcc.getInterlineComments();
   }
 
 
@@ -338,9 +342,20 @@ public class BytecodeDocument extends Document {
     return getBmlp().getBcc().printCode();
   }
 
-  public void synchronizeSB(int off, BytecodeEditor bcEditor) {
-    DocumentSynchroniser synch = getDocSynch();
-    synch.synchronizeSB(off, bcEditor);
+  /**
+   * Highlights the area in the byte code editor which corresponds to the
+   * marked position in the source code editor. Works correctly only when the
+   * position {@code a_pos} is inside a method. We assume that the current
+   * Java document is edited in the given Java editor.
+   *
+   * @param a_pos index of line in source code editor. Lines in related byte
+   *       code editor corresponding  to this line will be highlighted
+   * @param an_editor the source code editor
+   */
+  public void synchronizeSB(final int a_pos,
+                            final IEditorPart an_editor) {
+    final DocumentSynchroniser synch = getDocSynch();
+    synch.synchronizeSB(a_pos, an_editor);
   }
 
   private DocumentSynchroniser getDocSynch() {
@@ -352,9 +367,17 @@ public class BytecodeDocument extends Document {
     return my_synchroniser;
   }
 
-  public void synchronizeBS(int pos) {
-    DocumentSynchroniser synch = getDocSynch();
-    synch.synchronizeBS(pos);
+  /**
+   * Highlights the area in the source code editor which corresponds to
+   * the marked area in the byte code editor. Works correctly only inside a
+   * method body.
+   *
+   * @param a_pos index of line in byte code editor. Lines in related source
+   *   code editor corresponding to this line will be highlighted.
+   */
+  public void synchronizeBS(final int a_pos) {
+    final DocumentSynchroniser synch = getDocSynch();
+    synch.synchronizeBS(a_pos);
   }
 
   public void initModTable() {

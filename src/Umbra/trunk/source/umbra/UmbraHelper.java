@@ -479,7 +479,7 @@ public final class UmbraHelper {
    * @param a_path a relative path
    * @return the corresponding absolute path
    */
-  public static final IPath getPath(final IPath a_path) {
+  public static IPath getPath(final IPath a_path) {
     return ResourcesPlugin.getWorkspace().getRoot().getFolder(a_path).
                            getLocation();
   }

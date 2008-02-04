@@ -92,7 +92,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
       final BytecodeDocument bDoc = ((BytecodeDocument)bcEditor.
                         getDocumentProvider().
                         getDocument(input));
-      bDoc.synchronizeSB(off, bcEditor);
+      bDoc.synchronizeSB(off, my_editor);
     } catch (PartInitException e) {
       e.printStackTrace();
     }
