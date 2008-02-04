@@ -49,15 +49,17 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	/**
 	 * Name of jarfile of ESC/Java2 build (has been "esctools2.jar" for a *long* time).
 	 */
-	public static final String ESCJAVA_JAR_FILENAME = "esctools2.jar";
+	public static final String ESCJAVA_JAR_FILENAME = "libs/esctools2.jar";
 	
 	/**
    * Name of jarfile of JML specs file (has been "jmlspecs.jar" for a *long* time).
    */
-  public static final String JML_JAR_FILENAME = "jmlspecs.jar";
+  public static final String JML_JAR_FILENAME = "libs/specs/escspecs.jar";
+  public static final String JML_JAVA1_4_JAR_FILENAME = "libs/specs/escspecs-java1.4.jar";
+  public static final String JML_JAVACARD2_1_JAR_FILENAME = "libs/specs/escspecs-javacard.jar";
   
   /**
-   * The name of the automatically-generated project that contains our specfications.
+   * The name of the automatically-generated project that contains our specifications.
    */
   public static final String JMLSPECS_PROJECT_NAME = "jmlspecs";
   
@@ -70,9 +72,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	 * This is the id of the auto-check builder extension made for Escjava checking
 	 */
 	public static final String ESCJAVA_AUTOCHECK_BUILDER = UI_PLUGIN_ID + ".autocheckEscjavaBuilder";
-	public static final String JMLSPECS_FOLDER_NAME = "specs"; // Java 1.5
-	public static final String JMLSPECS_JAVA1_4_FOLDER_NAME = "specs-java1.4";
-	public static final String JMLSPECS_JAVACARD_FOLDER_NAME = "specs-javacard";
+	public static final String JMLSPECS_FOLDER_NAME = "specs"; // default
 	
 
 	/**

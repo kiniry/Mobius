@@ -30,6 +30,8 @@ import pluginlib.Utils;
 public class EscjavaChecker extends escjava.Main 
 				implements javafe.util.ErrorSet.Reporter {
 
+	public static final String COULD_NOT_LOCATE_SPECIFICATIONS_FOR = "Could not locate specifications for ";
+
 	/** The project on whose files the checker is acting */
 	private IJavaProject project;
 	
@@ -157,12 +159,16 @@ public class EscjavaChecker extends escjava.Main
 	  }
 	  inputs.add("-Specs");
 	  try {
-		inputs.add(EscjavaUtils.findSpecs());
+		final String specLocationFileName = EscjavaUtils.findSpecs();
+		inputs.add(specLocationFileName);
 	} catch (Exception e1) {
+		final String ErrorMessageCouldNotLocateSpecifications 
+		  = EscjavaChecker.COULD_NOT_LOCATE_SPECIFICATIONS_FOR 
+		  + Options.source.getStringValue();
 		Utils.showMessageInUI(null, "Esc/Java",
-        "Could not locate specifications");
+        ErrorMessageCouldNotLocateSpecifications);
         Log.errorlog(
-            "Could not locate specifications", e1);
+            ErrorMessageCouldNotLocateSpecifications, e1);
         return false;
 	}
 	  

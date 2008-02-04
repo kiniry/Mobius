@@ -10,14 +10,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.debug.core,
  mobius.escjava2.esctools;visibility:=reexport,
- mobius.pluginlib;visibility:=reexport,
- mobius.javafe.plugin;visibility:=reexport,
+ mobius.pluginlib,
  org.eclipse.ui.editors
 Eclipse-LazyStart: true
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 Project
 Bundle-Activator: escjava.plugin.EscjavaPlugin
-Bundle-ClassPath: EscjavaPlugin.jar,
- src/
 Export-Package: escjava.plugin;
   uses:="org.eclipse.jdt.core,
    org.eclipse.jface.viewers,
@@ -34,3 +31,4 @@ Export-Package: escjava.plugin;
    pluginlib,
    org.eclipse.core.runtime,
    org.eclipse.swt.widgets"
+Bundle-ClassPath: escsrc/

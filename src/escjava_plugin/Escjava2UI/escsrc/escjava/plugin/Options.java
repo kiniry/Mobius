@@ -18,6 +18,12 @@ import pluginlib.Utils;
  * @author David R. Cok
  */
 public class Options {
+	public static final String JAVA_CARD_2_1 = "JavaCard 2.1";
+
+	public static final String JAVA_1_4 = "1.4";
+
+	public static final String JAVA_1_3 = "1.3";
+
 	/** A copy of the plugin's id */
 	final private static String PLUGINID = EscjavaPlugin.UI_PLUGIN_ID + ".";
 	
@@ -161,14 +167,12 @@ public class Options {
 			"Warnings are issued when an annotation contains an impure method [-checkPurity option]");
 
 
-	/** The option widget corresponding to the choice of source
-	 *  version compatibility (Java 1.3 or Java 1.4) to be supported -
-	 *  this is essentially the interpretation to be applied to the
-	 *  assert keyword.
+	/** The option widget corresponding to the choice of source version 
+	 *  compatibility (Java 1.3, Java 1.4 or Java Card 2.1) to be supported.
 	 */
 	static final protected AbstractPreference.ChoiceOption source = new AbstractPreference.ChoiceOption(
 			(PLUGINID + "source"),
-			new String[]{"1.3","1.4"/*,"1.5","JavaCard 2.1","MIDP 1.0"*/},
+			new String[]{Options.JAVA_1_3,Options.JAVA_1_4,Options.JAVA_CARD_2_1},
 			1,
 			"Java source version",
 			"The version of Java that is supported [JML --source option]");

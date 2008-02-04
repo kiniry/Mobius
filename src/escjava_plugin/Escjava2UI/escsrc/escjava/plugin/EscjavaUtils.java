@@ -67,14 +67,30 @@ public class EscjavaUtils {
 
 	
 	/**
-	 * Returns the absolute file-system location of the JML system specifications
+	 * Returns the absolute file-system location of the JML specifications for 
+	 * whichever version of Java is being checked.
 	 * 
-	 * @return The absolute file-system location of the JML specs
+	 * @return The absolute file-system location of the JML specifications for
+	 *         whichever version of Java is being checked
 	 * @throws Exception
 	 */
-	static public String findSpecs() throws Exception {
+	static /*@ non_null @*/ public String findSpecs() throws Exception {
+		
+		// Java 1.4 specifications
+		if (Options.source.getStringValue().equals(Options.JAVA_1_3) ||
+				Options.source.getStringValue().equals(Options.JAVA_1_4)) {
+			return Utils.findPluginResource(EscjavaPlugin.TOOLS_PLUGIN_ID, 
+                    EscjavaPlugin.JML_JAVA1_4_JAR_FILENAME);
+		}
+		
+		// Java Card 2.1 specifications
+		else if (Options.source.getStringValue().equals(Options.JAVA_CARD_2_1)) {
+			return Utils.findPluginResource(EscjavaPlugin.TOOLS_PLUGIN_ID, 
+                    EscjavaPlugin.JML_JAVACARD2_1_JAR_FILENAME);
+		}
+		else // default generic minimal specifications for Java
 		return Utils.findPluginResource(EscjavaPlugin.TOOLS_PLUGIN_ID, 
-		                                EscjavaPlugin.ESCJAVA_JAR_FILENAME);
+		                                EscjavaPlugin.JML_JAR_FILENAME);
 	}
 	
 	/**
@@ -263,6 +279,7 @@ public class EscjavaUtils {
 			// Check to see if the specs are already linked into the project
 			if (isSpecsInstalled(javaProject)) return;
 			// If not, find the specs in the plugin
+			// FIXME check which version of the specs are installed
 			location = findSpecs();
 			// Create (if it does not exist) a project and link the specs into it
 			installSpecsAsProject(EscjavaPlugin.JMLSPECS_PROJECT_NAME,
