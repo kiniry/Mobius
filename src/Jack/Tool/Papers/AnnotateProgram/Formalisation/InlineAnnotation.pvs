@@ -148,6 +148,8 @@ BEGIN
   % of exceptions
 
   % MH: name ex a bit unfortunate, should rather be no_ex
+  % AT: Right, but if you don't want to change the name we could assing it
+  %     false after body and then test !ex in the finally clause
 
   % inline_method_body(p)(m) gives in Java-like syntax:
   % try{

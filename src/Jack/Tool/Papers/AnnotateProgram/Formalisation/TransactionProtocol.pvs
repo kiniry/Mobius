@@ -113,4 +113,5 @@ BEGIN
   transaction_protocol_is_well_formed : LEMMA % :-)
     wf_MVA(transaction_protocol)
 
+
 END TransactionProtocol
