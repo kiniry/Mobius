@@ -1,7 +1,7 @@
 package experiments;
 
 public class LoopTests {
-  public void test1() {
+/*  public void test1() {
     int j=0;
     for(int i=0; i<2; i++){
       j++;
@@ -75,7 +75,7 @@ public class LoopTests {
         continue;
     }
   }
-  
+  */
   public void test11() {
     int i=0;
     outer :
@@ -87,7 +87,7 @@ public class LoopTests {
       }
     }
   }
-  
+  /*
   public void test12() {
     for(int i=0; i<100; i++) {
       inner: for(int j=0; j<100; j++)
@@ -126,5 +126,5 @@ public class LoopTests {
         j++;
     }
       
-  }
+  }*/
 }

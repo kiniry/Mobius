@@ -136,7 +136,7 @@ public final class LoopDetector {
       InstructionContext loopStart = null;
       final InstructionContext c = graph.getNextInstruction(loopEnd);
       if (c == null) {
-        //special case, loop condition is "true"
+        //special case, loop condition is "true" and no breakes inside
         loopStart = instruction;
       } else {
         final List<InstructionContext> prec = graph.getPrecedingInstructions(c);
@@ -149,9 +149,25 @@ public final class LoopDetector {
           }
         }
       }
+      if (loopStart != null){
+        System.out.println("BBBBBBB " + instruction);
+      }
+      if (!isConditional(loopStart)){
+        loopStart = instruction;
+      }
+      
       return loopStart;
     }
     return null;
+  }
+  
+  /**
+   * Checks if given instruction is conditional (has more than one successor).
+   * @param instruction instruction to check
+   * @return if the given instruction is conditional
+   */
+  private static boolean isConditional(InstructionContext instruction){
+    return instruction.getSuccessors().length > 1;
   }
 
 }

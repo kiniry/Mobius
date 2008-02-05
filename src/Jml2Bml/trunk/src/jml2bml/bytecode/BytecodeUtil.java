@@ -56,6 +56,7 @@ public final class BytecodeUtil {
   public static BCMethod findMethod(final CharSequence name, final BCClass clazz) {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
+      //only for tests, to remove in the future
       LoopDetector.detectLoop(method);
       if (method.getBcelMethod().getName().contentEquals(name))
         return method;
