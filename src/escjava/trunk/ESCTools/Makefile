@@ -480,6 +480,7 @@ jar:	build
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAR) )
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAVA1_4_JAR) )
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAVACARD_JAR) )
+	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
 	  ${RELJAR} *; jar i ${RELJAR}; )
 	cp ${RELJAR} ${ESCTOOLS_ROOT}
@@ -495,6 +496,7 @@ srcjar:
 	mkdir -p ${RELTEMP}/sub/junitutils
 	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
+	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
 	rm -rf ${RELTEMP}/sub
 	
