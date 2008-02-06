@@ -29,18 +29,18 @@ public final class LoopDetector {
     final MyControlFlowGraph graph = new MyControlFlowGraph(method);
     final InstructionContext[] instructions = graph.getInstructionContext();
     for (InstructionContext instruction : instructions) {
-      InstructionContext loopCondition = null;
-      loopCondition = firstKindLoop(instruction, graph);
-      if (loopCondition != null) {
+      LoopDescription loopDescription = null;
+      loopDescription = firstKindLoop(instruction, graph);
+      if (loopDescription != null) {
         System.out.println("for method " + method.getBcelMethod().getName()
                            + " found first loop type! Condition is at "
-                           + loopCondition);
+                           + loopDescription);
       } else {
-        loopCondition = secondKindLoop(instruction, graph);
-        if (loopCondition != null) {
+        loopDescription = secondKindLoop(instruction, graph);
+        if (loopDescription != null) {
           System.out.println("for method " + method.getBcelMethod().getName()
                              + " found second loop type! Condition is at "
-                             + loopCondition);
+                             + loopDescription);
         }
       }
     }
@@ -62,11 +62,11 @@ public final class LoopDetector {
    * </code><br>
    * @param instruction tested instruction
    * @param graph control flow graph for a method
-   * @return the loop condition statement or null
+   * @return triple (start [3], end [5], condition [5])
    */
-  private static InstructionContext firstKindLoop(
-                                                  final InstructionContext instruction,
-                                                  final MyControlFlowGraph graph) {
+  private static LoopDescription firstKindLoop(
+                                               final InstructionContext instruction,
+                                               final MyControlFlowGraph graph) {
     final List<InstructionContext> precInstr = graph
         .getPrecedingInstructions(instruction);
     final int number = graph.getInstructionNumber(instruction);
@@ -91,7 +91,8 @@ public final class LoopDetector {
           loopCondition = p;
         }
       }
-      return loopCondition;
+      return new LoopDescription(graph.getNextInstruction(beforeLoop),
+                                 loopCondition, loopCondition);
     }
     return null;
   }
@@ -111,14 +112,14 @@ public final class LoopDetector {
    * </code><br>
    * @param instruction instruction to check
    * @param graph control flow graph for a method
-   * @return the loop condition instruction
+   * @return triple (start [2], end [5], loopCondition [3])
    */
-  private static InstructionContext secondKindLoop(
-                                                   final InstructionContext instruction,
-                                                   final MyControlFlowGraph graph) {
+  private static LoopDescription secondKindLoop(
+                                                final InstructionContext instruction,
+                                                final MyControlFlowGraph graph) {
     final List<InstructionContext> precInstr = graph
         .getPrecedingInstructions(instruction);
-    if (precInstr.size() < 2){
+    if (precInstr.size() < 2) {
       return null;
     }
     final int number = graph.getInstructionNumber(instruction);
@@ -149,24 +150,20 @@ public final class LoopDetector {
           }
         }
       }
-      if (loopStart != null){
-        System.out.println("BBBBBBB " + instruction);
-      }
-      if (!isConditional(loopStart)){
+      if (!isConditional(loopStart)) {
         loopStart = instruction;
       }
-      
-      return loopStart;
+      return new LoopDescription(instruction, loopEnd, loopStart);
     }
     return null;
   }
-  
+
   /**
    * Checks if given instruction is conditional (has more than one successor).
    * @param instruction instruction to check
    * @return if the given instruction is conditional
    */
-  private static boolean isConditional(InstructionContext instruction){
+  private static boolean isConditional(InstructionContext instruction) {
     return instruction.getSuccessors().length > 1;
   }
 

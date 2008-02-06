@@ -75,7 +75,6 @@ public class LoopTests {
         continue;
     }
   }
-  */
   public void test11() {
     int i=0;
     outer :
@@ -87,7 +86,7 @@ public class LoopTests {
       }
     }
   }
-  /*
+*/  
   public void test12() {
     for(int i=0; i<100; i++) {
       inner: for(int j=0; j<100; j++)
@@ -98,7 +97,7 @@ public class LoopTests {
         break;
     }
   }
-  
+  /*
   public void test13() {
     try {
       for (int i=0; i<12; i++)
