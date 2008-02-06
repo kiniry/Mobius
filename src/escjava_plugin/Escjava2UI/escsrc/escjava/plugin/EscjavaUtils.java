@@ -46,7 +46,7 @@ public class EscjavaUtils {
     		".refines-java", ".refines-spec", ".refines-jml", ".spec", ".jml"
     };
     
-	/** A convenenience holder for the IPath of the (one) workspace. */
+	/** A convenience holder for the IPath of the (one) workspace. */
 	private static IPath workspacePath = null;
 	
 	/**
@@ -75,22 +75,39 @@ public class EscjavaUtils {
 	 * @throws Exception
 	 */
 	static /*@ non_null @*/ public String findSpecs() throws Exception {
+		String	specLocation = null;
 		
 		// Java 1.4 specifications
 		if (Options.source.getStringValue().equals(Options.JAVA_1_3) ||
 				Options.source.getStringValue().equals(Options.JAVA_1_4)) {
-			return Utils.findPluginResource(EscjavaPlugin.TOOLS_PLUGIN_ID, 
-                    EscjavaPlugin.JML_JAVA1_4_JAR_FILENAME);
+			specLocation = EscjavaPlugin.JML_JAVA1_4_JAR_FILENAME;
 		}
 		
 		// Java Card 2.1 specifications
 		else if (Options.source.getStringValue().equals(Options.JAVA_CARD_2_1)) {
-			return Utils.findPluginResource(EscjavaPlugin.TOOLS_PLUGIN_ID, 
-                    EscjavaPlugin.JML_JAVACARD2_1_JAR_FILENAME);
+			specLocation = EscjavaPlugin.JML_JAVACARD2_1_JAR_FILENAME;
 		}
-		else // default generic minimal specifications for Java
-		return Utils.findPluginResource(EscjavaPlugin.TOOLS_PLUGIN_ID, 
-		                                EscjavaPlugin.JML_JAR_FILENAME);
+		
+		// default generic minimal specifications for Java 
+		else { 
+			specLocation = EscjavaPlugin.JML_JAR_FILENAME;
+		}
+		
+		// Locate the specification
+		String pluginResource = null;
+		try {
+	        pluginResource = Utils.findPluginResource(
+		        EscjavaPlugin.TOOLS_PLUGIN_ID, specLocation);
+		}
+		
+		// Log useful information if specification cannot be found
+		catch (Exception ex) {
+			Log.errorlog("Failed to locate specifications at: " + 
+					specLocation + " in plugin " + 
+					EscjavaPlugin.TOOLS_PLUGIN_ID, ex);
+		}
+		
+		return pluginResource;
 	}
 	
 	/**
@@ -257,6 +274,9 @@ public class EscjavaUtils {
 			if (r instanceof IFolder) {
 				if (((IContainer)r).findMember(pp) != null) return true;
 			} else if (cpe.endsWith("jmlspecs.jar") ||  cpe.endsWith("escspecs.jar") ||
+					   cpe.endsWith(EscjavaPlugin.JML_JAR_FILENAME) ||
+					   cpe.endsWith(EscjavaPlugin.JML_JAVA1_4_JAR_FILENAME) ||
+					   cpe.endsWith(EscjavaPlugin.JML_JAVACARD2_1_JAR_FILENAME) ||
 					   cpe.endsWith(EscjavaPlugin.ESCJAVA_JAR_FILENAME)) return true;
 			// FIXME - should really check if this has 'pp' in it
 			//   the above is really a hack

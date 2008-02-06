@@ -90,7 +90,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	 * @param context
 	 * @throws Exception
 	 */
-	//@ modifies Log.log, Log.log.content
+	//@ modifies Log.log, Log.log.content;
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		Log.createLog(EscjavaPlugin.ESC_TOOL_NAME,this);

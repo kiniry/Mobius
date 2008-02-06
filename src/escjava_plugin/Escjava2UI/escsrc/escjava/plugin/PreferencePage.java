@@ -93,8 +93,7 @@ public class PreferencePage extends pluginlib.PreferencePage {
 
   /**
    * The option widget corresponding to the choice of source version
-   * compatibility (Java 1.3 or Java 1.4) to be supported - this is essentially
-   * the interpretation to be applied to the assert keyword.
+   * compatibility (Java 1.3, Java 1.4 or Java Card 2.1) to be supported  
    */
   static final protected PreferenceWidget.ChoiceWidget source = new PreferenceWidget.ChoiceWidget(
       Options.source);

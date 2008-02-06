@@ -1,0 +1,1 @@
+This plugin uses on ESCJava2.0b4, Javafe 2.0.5 and Simplify 1.5.6.
