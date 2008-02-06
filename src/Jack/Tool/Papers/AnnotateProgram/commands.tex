@@ -20,7 +20,7 @@
 
 \newcommand{\Name}{\ensuremath{\mathcal{N}}\xspace}
 \newcommand{\type}{\ensuremath{\mathsf{type}}\xspace}
-\newcommand{\Type}{\ensuremath{\mathit{Type}}\xspace}
+\newcommand{\Type}{\ensuremath{\mathcal{T}}\xspace}
 
 \newcommand{\entry}{\ensuremath{\mathsf{entry}}\xspace}
 \newcommand{\exit}{\ensuremath{\mathsf{exit}}\xspace}
@@ -39,7 +39,7 @@
 \newcommand{\Null}{\ensuremath{\mathsf{Null}}\xspace}
 \newcommand{\One}{\ensuremath{\mathbb{1}}\xspace}
 
-\newcommand{\Val}{\ensuremath{\mathit{Val}}\xspace}
+\newcommand{\Val}{\ensuremath{\mathcal{V}}\xspace}
 
 \newcommand{\opr}{\ensuremath{\texttt{[\#\:}}}
 \newcommand{\clr}{\ensuremath{\ \texttt{\#]}}}
@@ -78,6 +78,7 @@
 \newcommand{\Not}{\ensuremath{\mathsf{Not}}\xspace}
 \newcommand{\Conj}{\ensuremath{\mathsf{And}}\xspace}
 \newcommand{\GT}{\ensuremath{\mathsf{GT}}\xspace}
+\newcommand{\Eq}{\ensuremath{\mathsf{Eq}}\xspace}
 
 \newcommand{\Assign}{\ensuremath{\mathsf{Assign}}\xspace}
 \newcommand{\BExpr}{\ensuremath{\mathsf{BExpr}}\xspace}
@@ -95,6 +96,10 @@
 \newcommand{\Throw}{\ensuremath{\mathsf{Throw}}\xspace}
 \newcommand{\TryCatch}{\ensuremath{\mathsf{TryCatch}}\xspace}
 \newcommand{\While}{\ensuremath{\mathsf{While}}\xspace}
+\newcommand{\Const}{\ensuremath{\mathsf{Const}}\xspace}
+\newcommand{\Assert}{\ensuremath{\mathsf{Assert}}\xspace}
+
+\newcommand{\Excpt}{\ensuremath{\mathcal{E}}}
 
 \newcommand{\FieldDecl}{\ensuremath{\mathit{FieldDecl}}\xspace}
 \newcommand{\ArgDecl}{\ensuremath{\mathit{ArgDecl}}\xspace}
@@ -153,7 +158,7 @@
 \newcommand{\act}{\ensuremath{\mathit{act}}\xspace}
 
 \newcommand{\etp}[2]{%
-  P \vdash \langle #1 \rangle \triangleright_P \langle #2 \rangle}
+  P \vdash \langle #1 \rangle \triangleright \langle #2 \rangle}
 \newcommand{\stp}[2]{%
   P \vdash \langle #1 \rangle \Rightarrow_P #2}
 
@@ -164,17 +169,20 @@
 \newcommand{\deltaeval}{\ensuremath{\delta_{\textsc{eval}}\xspace}}
 \newcommand{\deltaset}{\ensuremath{\delta_{\textsc{set}}\xspace}}
 \newcommand{\deltacase}{\ensuremath{\delta_{\textsc{case}}\xspace}}
+\newcommand{\deltaassert}{\ensuremath{\delta_{\textsc{assert}}\xspace}}
 
-\newcommand{\md}{\ensuremath{\mathit{md}}}
-\newcommand{\mn}{\ensuremath{\mathit{mn}}}
+\newcommand{\md}{\ensuremath{\mathit{md}}\xspace}
+\newcommand{\ev}{\ensuremath{\mathit{ev}}\xspace}
+\newcommand{\invar}{\ensuremath{\mathit{inv}}\xspace}
+\newcommand{\mn}{\ensuremath{\mathit{mn}}\xspace}
 \newcommand{\with}{\ensuremath{\mathsf{\:with\:}}}
 \newcommand{\id}{\ensuremath{\mathsf{id}}\xspace}
 
 
 \newcommand{\br}[1]{\lbrack #1\rbrack}
-\newcommand{\pif}[3]{\mathsf{if}\, #1\, \mathsf{then}\, #2\, \mathsf{else}\, #3}
+\newcommand{\pif}[3]{\mathsf{if}\, #1\, \mathsf{then}\: #2\, \mathsf{else}\: #3}
 
-\newcommand{\oldval}{\ensuremath{\mathit{old\_val}}\xspace}
+\newcommand{\oldlvs}{\ensuremath{\mathit{old\_lvs}}\xspace}
 \newcommand{\halted}{\ensuremath{\mathsf{halted}}\xspace}
 
 \newcommand{\bp}{\ensuremath{\phantom{(}}}
@@ -185,3 +193,7 @@
 \newcommand{\marginnote}[1]{\marginpar{\mbox{#1}}}
 
 \newcommand{\complete}{\ensuremath{\mathsf{complete}\xspace}}
+
+\newcommand{\updatelvs}{\ensuremath{\mathsf{update\_lvs}}\xspace}
+\newcommand{\lookupmthd}{\ensuremath{\mathsf{lookup\_mthd}}\xspace}
+\newcommand{\lookupinv}{\ensuremath{\mathsf{lookup\_inv}}\xspace}

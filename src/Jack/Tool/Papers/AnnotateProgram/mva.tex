@@ -21,16 +21,30 @@ the method returns.
 \end{inparaenum}
 The action updates the automaton variables.
 
-Let \(\CP\) and \(\Name\) be an infinite, nonempty sets of control
-points and names, respectively.  Throughout, we assume that values can
-be booleans, integers, a special null constant, references and or the 
-special element of the one element set. \marginnote{How to phrase this?}
-Formally:
-\[\Val  =  \B(b : \mathbb{B}) \mid \I(i : \mathbb{Z}) \mid \Null \mid
-\R(i : \mathbb{Z}) \mid \One \mid \bot
+
+MVA and programs share the definitions of values, types and exceptions, denoted
+\Val, \Type and \Excpt, 
+respectively, defined by the following grammar (where \(\mathbb{B}\) and
+\(\mathbb{Z}\) denote the standard sets of booleans and integers,
+respectively).
+\[
+\begin{array}{rcl}
+\Val & = & \B(b : \mathbb{B}) \mid \I(i : \mathbb{Z}) \mid \Null \mid
+\R(i : \mathbb{Z}) \mid \One \mid \bot\\
+\Type & = & \Bool \mid \Int \mid \Ref \mid \Void\\
+\Excpt =  \Throwable \mid \NullPointer \mid \JMLExc
+\end{array}
 \]
-Further, we assume that we have a set of exceptions \Excp, containing
-\Throwable, \NullPointer and \JMLExc.
+
+Notice that there is a special type \(\Void\), inhabited by \(\One\)
+to model methods without results. Reference values contain a number,
+which can be considered as the location where the object is stored;
+\(\bot\) is used to denote the outcome of an undefined expression.
+
+Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
+enumerable nonempty sets of control points and names, respectively. We
+assume that \(\Name\) contains the special names \textsf{this} and
+\textsf{super}.
 
 
 An MVA consists of
@@ -57,19 +71,24 @@ variables declarations are the same as program field declarations
 the same format as local variable declarations in a program
 (\emph{i.e.}, they are not initialised in the
 monitor). Figure~\ref{FigMVAForm} shows the main types of the MVA
-definition.  We will use a PVS-like notation to declare abstract data
-types and records (enclosed by brackets \(\opr\) and \(\clr\)).
+definition (the types of \FieldDecl and \LocalVarDecl will also be
+used in the abstract syntax of programs).  Notice that the monitor
+variables are explicitly initialised, in contrast to the MVA's program
+variables: their value is retrieved from the program state.  We will
+use a PVS-like notation to declare abstract data types and records
+(enclosed by brackets \(\opr\) and \(\clr\)).
 
 \begin{figure}[t]
 \[
 \begin{array}{rcl}
-%\VarDeclA & = \opr & \name : \Name, \type : \Type, \init : \Val \clr\\
-%\VarDeclP & = \opr & \name : \Name, \type : \Type \clr\\
+\FieldDecl & = \opr & \type : \Type, \name : \Name, \init : \Val
+\clr \\ 
+\LocalVarDecl & = \opr & \type : \Type, \name : \Name \clr \\
 \EVENT & = \opr & \etype : (\entry \mid \exit \mid \excexit), 
                  \mname : \Name \clr\\
 \TRANS & = \opr & \scp, \tcp : \CP, \event : \EVENT, \\
 & & 
-\guard : \MVAstate \times \Pstate \times (\Val \mid \Excp) \rightarrow \mathbb{B}, \\
+\guard : \MVAstate \times \Pstate \times (\Val \mid \Excpt) \rightarrow \mathbb{B}, \\
 && \action : (\opr \target : \Name, \expr : \Expr \clr)^* \clr\\
 \MVA & = \opr & \name, \clname : \Name, \cps : \setof{\CP},
             \init : \CP, \evs : \setof{\EVENT},\\
@@ -127,19 +146,21 @@ point, and the store of automaton variables.
 Notice that the program store is not part of the automaton
 state. Given a MVA \(a\), the transition function \(\Delta_a\)
 describes how given a program store and an event, \(a\) changes its
-internal state (where \textit{apply} is a function that updates the
-automaton store according to the list of actions in the obvious way).
+internal state (where \(\epsilon\) is the arbitrary choice operator,
+and \textit{apply} is a function that updates the automaton store
+according to the list of actions in the obvious way).
 \[
 \begin{array}{l}
-\Delta_a  :  \MVAstate \times \Pstate \times \EVENT \hookrightarrow
+\Delta_a  :  \MVAstate \times \Pstate \times \EVENT \times (\Val \mid
+\Excpt) \hookrightarrow
 \MVAstate\\
-\Delta_a(\sigma_A, \sigma_P, e) = \\
+\Delta_a(\sigma_A, \sigma_P, e, v) = \\
 \quad
 \begin{array}[t]{l}
 \mathsf{let\ }t = \epsilon(\{t\in \trans(a)\mid
   \begin{array}[t]{l}
      \scp(t) = \cp(\sigma_A) \wedge \event(t) = e \wedge \\
-     \guard(t)(\stA(\sigma_A), \st(\fvs(\sigma_P)))\}) \mathsf{\ in}
+     \guard(t)(\stA(\sigma_A), \st(\fvs(\sigma_P)), v)\}) \mathsf{\ in}
   \end{array}\\
 \quad \opri \cp := \tcp(t), \stA := \mathit{apply}(\action(t),
 \stA(\sigma_A)) \clri
@@ -216,5 +237,6 @@ the complete MVA.
 \begin{center}
 \epsfig{file=completed.eps, width=4cm}
 \end{center}
+\label{FigCompleteMVA}
 \caption{Automaton of Figure~\ref{FigExample}, after completion}
 \end{figure}

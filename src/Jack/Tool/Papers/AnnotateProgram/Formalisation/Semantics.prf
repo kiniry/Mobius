@@ -17072,7 +17072,7 @@
     (derive def-decl "bool" Semantics nil))
    1026 980 t shostak))
  (derive_does_not_change_unmentioned_var 0
-  (derive_does_not_change_unmentioned_var-1 nil 3411129647 3411130670
+  (derive_does_not_change_unmentioned_var-1 nil 3411129647 3411291190
    ("" (skolem 1 "p!1")
     (("" (use "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
       (("1"
@@ -17551,33 +17551,130 @@
                                                           (split -5)
                                                           (("1"
                                                             (replace
-                                                             -5)
+                                                             -1
+                                                             :hide?
+                                                             t)
                                                             (("1"
-                                                              (lift-if)
+                                                              (replace
+                                                               -4)
                                                               (("1"
-                                                                (apply
-                                                                 (branch
-                                                                  (split
-                                                                   14)
-                                                                  ((then
-                                                                    (flatten)
-                                                                    (assert)
-                                                                    (flatten)
-                                                                    (assert)))))
+                                                                (lift-if)
                                                                 (("1"
-                                                                  (postpone)
-                                                                  nil
+                                                                  (apply
+                                                                   (branch
+                                                                    (split
+                                                                     14)
+                                                                    ((then
+                                                                      (flatten)
+                                                                      (assert)
+                                                                      (flatten)
+                                                                      (assert)))))
+                                                                  (("1"
+                                                                    (typepred
+                                                                     "update_PState")
+                                                                    (("1"
+                                                                      (expand
+                                                                       "update_PState_type")
+                                                                      (("1"
+                                                                        (inst
+                                                                         -1
+                                                                         "tau!1"
+                                                                         "update_PState(tau!1, update(target(b!1), v!1))"
+                                                                         "update(target(b!1), v!1)")
+                                                                        (("1"
+                                                                          (assert)
+                                                                          (("1"
+                                                                            (replace
+                                                                             -1
+                                                                             :hide?
+                                                                             t)
+                                                                            (("1"
+                                                                              (case-replace
+                                                                               "x!2 = target(b!1)")
+                                                                              (("1"
+                                                                                (expand
+                                                                                 "var_names"
+                                                                                 15)
+                                                                                (("1"
+                                                                                  (assert)
+                                                                                  nil
+                                                                                  nil))
+                                                                                nil)
+                                                                               ("2"
+                                                                                (expand
+                                                                                 "update")
+                                                                                (("2"
+                                                                                  (lift-if)
+                                                                                  (("2"
+                                                                                    (assert)
+                                                                                    (("2"
+                                                                                      (expand
+                                                                                       "update_local")
+                                                                                      (("2"
+                                                                                        (expand
+                                                                                         "update_field")
+                                                                                        (("2"
+                                                                                          (expand
+                                                                                           "lookup")
+                                                                                          (("2"
+                                                                                            (expand
+                                                                                             "is_local")
+                                                                                            (("2"
+                                                                                              (expand
+                                                                                               "lookup_local")
+                                                                                              (("2"
+                                                                                                (expand
+                                                                                                 "lookup_field")
+                                                                                                (("2"
+                                                                                                  (propax)
+                                                                                                  nil
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
                                                                   nil))
                                                                 nil))
                                                               nil))
                                                             nil)
                                                            ("2"
-                                                            (postpone)
-                                                            nil
+                                                            (use
+                                                             "contains_no_method_call_preserved_by_proper_subterm"
+                                                             ("b2"
+                                                              "source(b!1)"
+                                                              "b1"
+                                                              "b!1"))
+                                                            (("2"
+                                                              (assert)
+                                                              (("2"
+                                                                (expand
+                                                                 "<<")
+                                                                (("2"
+                                                                  (propax)
+                                                                  nil
+                                                                  nil))
+                                                                nil))
+                                                              nil))
                                                             nil)
                                                            ("3"
-                                                            (postpone)
-                                                            nil
+                                                            (expand
+                                                             "var_names"
+                                                             13)
+                                                            (("3"
+                                                              (assert)
+                                                              nil
+                                                              nil))
                                                             nil))
                                                           nil))
                                                         nil))
@@ -17586,8 +17683,1383 @@
                                                   nil))
                                                 nil)
                                                ("2"
-                                                (postpone)
-                                                nil
+                                                (apply
+                                                 (branch
+                                                  (split -1)
+                                                  ((then
+                                                    (flatten)
+                                                    (assert)
+                                                    (flatten)
+                                                    (assert)))))
+                                                (("1"
+                                                  (inst -4 "x!1 - 1")
+                                                  (("1"
+                                                    (assert)
+                                                    (("1"
+                                                      (apply
+                                                       (repeat
+                                                        (inst?
+                                                         -4
+                                                         :where
+                                                         -3)))
+                                                      (("1"
+                                                        (assert)
+                                                        (("1"
+                                                          (split -4)
+                                                          (("1"
+                                                            (use
+                                                             "contains_no_method_call_preserved_by_proper_subterm"
+                                                             ("b2"
+                                                              "b(b!1)"
+                                                              "b1"
+                                                              "b!1"))
+                                                            (("1"
+                                                              (expand
+                                                               "<<")
+                                                              (("1"
+                                                                (propax)
+                                                                nil
+                                                                nil))
+                                                              nil))
+                                                            nil)
+                                                           ("2"
+                                                            (expand
+                                                             "var_names"
+                                                             14)
+                                                            (("2"
+                                                              (propax)
+                                                              nil
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil)
+                                                 ("2"
+                                                  (apply
+                                                   (branch
+                                                    (split -1)
+                                                    ((then
+                                                      (flatten)
+                                                      (assert)
+                                                      (flatten)
+                                                      (assert)))))
+                                                  (("1"
+                                                    (skosimp*)
+                                                    (("1"
+                                                      (inst-cp
+                                                       -6
+                                                       "m1!1")
+                                                      (("1"
+                                                        (assert)
+                                                        (("1"
+                                                          (apply
+                                                           (repeat
+                                                            (inst?
+                                                             -7
+                                                             :where
+                                                             -3)))
+                                                          (("1"
+                                                            (assert)
+                                                            (("1"
+                                                              (split
+                                                               -7)
+                                                              (("1"
+                                                                (expand
+                                                                 "check_for_exception")
+                                                                (("1"
+                                                                  (apply
+                                                                   (branch
+                                                                    (split
+                                                                     -5)
+                                                                    ((then
+                                                                      (flatten)
+                                                                      (assert)
+                                                                      (flatten)
+                                                                      (assert)))))
+                                                                  (("1"
+                                                                    (inst
+                                                                     -8
+                                                                     "m2!1")
+                                                                    (("1"
+                                                                      (assert)
+                                                                      (("1"
+                                                                        (apply
+                                                                         (repeat
+                                                                          (inst?
+                                                                           -8
+                                                                           :where
+                                                                           -2)))
+                                                                        (("1"
+                                                                          (assert)
+                                                                          (("1"
+                                                                            (split
+                                                                             -8)
+                                                                            (("1"
+                                                                              (propax)
+                                                                              nil
+                                                                              nil)
+                                                                             ("2"
+                                                                              (skosimp*)
+                                                                              (("2"
+                                                                                (use
+                                                                                 "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                 ("b2"
+                                                                                  "then_expr(b!1)"
+                                                                                  "b1"
+                                                                                  "b!1"))
+                                                                                (("2"
+                                                                                  (expand
+                                                                                   "<<")
+                                                                                  (("2"
+                                                                                    (propax)
+                                                                                    nil
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil)
+                                                                             ("3"
+                                                                              (skosimp*)
+                                                                              (("3"
+                                                                                (use
+                                                                                 "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                 ("b2"
+                                                                                  "else_expr(b!1)"
+                                                                                  "b1"
+                                                                                  "b!1"))
+                                                                                (("3"
+                                                                                  (expand
+                                                                                   "<<")
+                                                                                  (("3"
+                                                                                    (propax)
+                                                                                    nil
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil)
+                                                                             ("4"
+                                                                              (expand
+                                                                               "var_names"
+                                                                               16)
+                                                                              (("4"
+                                                                                (flatten)
+                                                                                (("4"
+                                                                                  (assert)
+                                                                                  nil
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil)
+                                                                             ("5"
+                                                                              (expand
+                                                                               "var_names"
+                                                                               16)
+                                                                              (("5"
+                                                                                (flatten)
+                                                                                (("5"
+                                                                                  (assert)
+                                                                                  nil
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil)
+                                                                         ("2"
+                                                                          (skosimp*)
+                                                                          (("2"
+                                                                            (use
+                                                                             "wf_Body_preserved_by_proper_subterm"
+                                                                             ("b2"
+                                                                              "else_expr(b!1)"
+                                                                              "b1"
+                                                                              "b!1"))
+                                                                            (("2"
+                                                                              (expand
+                                                                               "<<")
+                                                                              (("2"
+                                                                                (propax)
+                                                                                nil
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil)
+                                                                         ("3"
+                                                                          (skosimp*)
+                                                                          (("3"
+                                                                            (use
+                                                                             "wf_Body_preserved_by_proper_subterm"
+                                                                             ("b2"
+                                                                              "then_expr(b!1)"
+                                                                              "b1"
+                                                                              "b!1"))
+                                                                            (("3"
+                                                                              (expand
+                                                                               "<<")
+                                                                              (("3"
+                                                                                (propax)
+                                                                                nil
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil)
+                                                               ("2"
+                                                                (use
+                                                                 "contains_no_method_call_preserved_by_proper_subterm"
+                                                                 ("b2"
+                                                                  "test(b!1)"
+                                                                  "b1"
+                                                                  "b!1"))
+                                                                (("2"
+                                                                  (expand
+                                                                   "<<")
+                                                                  (("2"
+                                                                    (propax)
+                                                                    nil
+                                                                    nil))
+                                                                  nil))
+                                                                nil)
+                                                               ("3"
+                                                                (expand
+                                                                 "var_names"
+                                                                 15)
+                                                                (("3"
+                                                                  (assert)
+                                                                  nil
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil)
+                                                   ("2"
+                                                    (apply
+                                                     (branch
+                                                      (split -1)
+                                                      ((then
+                                                        (flatten)
+                                                        (assert)
+                                                        (flatten)
+                                                        (assert)))))
+                                                    (("1"
+                                                      (expand
+                                                       "contains_no_method_call")
+                                                      (("1"
+                                                        (inst -4 "b!1")
+                                                        (("1"
+                                                          (expand
+                                                           "subterm")
+                                                          (("1"
+                                                            (propax)
+                                                            nil
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil)
+                                                     ("2"
+                                                      (apply
+                                                       (branch
+                                                        (split -1)
+                                                        ((then
+                                                          (flatten)
+                                                          (assert)
+                                                          (flatten)
+                                                          (assert)))))
+                                                      (("1"
+                                                        (inst
+                                                         -4
+                                                         "x!1 - 1")
+                                                        (("1"
+                                                          (assert)
+                                                          (("1"
+                                                            (apply
+                                                             (repeat
+                                                              (inst?
+                                                               -4
+                                                               :where
+                                                               -3)))
+                                                            (("1"
+                                                              (assert)
+                                                              (("1"
+                                                                (split
+                                                                 -4)
+                                                                (("1"
+                                                                  (use
+                                                                   "contains_no_method_call_preserved_by_proper_subterm"
+                                                                   ("b2"
+                                                                    "n(b!1)"
+                                                                    "b1"
+                                                                    "b!1"))
+                                                                  (("1"
+                                                                    (expand
+                                                                     "<<")
+                                                                    (("1"
+                                                                      (propax)
+                                                                      nil
+                                                                      nil))
+                                                                    nil))
+                                                                  nil)
+                                                                 ("2"
+                                                                  (expand
+                                                                   "var_names"
+                                                                   17)
+                                                                  (("2"
+                                                                    (propax)
+                                                                    nil
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil)
+                                                       ("2"
+                                                        (apply
+                                                         (branch
+                                                          (split -1)
+                                                          ((then
+                                                            (flatten)
+                                                            (assert)
+                                                            (flatten)
+                                                            (assert)))))
+                                                        (("1"
+                                                          (inst
+                                                           -4
+                                                           "x!1 - 1")
+                                                          (("1"
+                                                            (assert)
+                                                            (("1"
+                                                              (apply
+                                                               (repeat
+                                                                (inst?
+                                                                 -4
+                                                                 :where
+                                                                 -3)))
+                                                              (("1"
+                                                                (assert)
+                                                                (("1"
+                                                                  (split
+                                                                   -4)
+                                                                  (("1"
+                                                                    (use
+                                                                     "contains_no_method_call_preserved_by_proper_subterm"
+                                                                     ("b2"
+                                                                      "r(b!1)"
+                                                                      "b1"
+                                                                      "b!1"))
+                                                                    (("1"
+                                                                      (expand
+                                                                       "<<")
+                                                                      (("1"
+                                                                        (propax)
+                                                                        nil
+                                                                        nil))
+                                                                      nil))
+                                                                    nil)
+                                                                   ("2"
+                                                                    (expand
+                                                                     "var_names"
+                                                                     18)
+                                                                    (("2"
+                                                                      (propax)
+                                                                      nil
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil)
+                                                         ("2"
+                                                          (apply
+                                                           (branch
+                                                            (split -1)
+                                                            ((then
+                                                              (flatten)
+                                                              (assert)
+                                                              (flatten)
+                                                              (assert)))))
+                                                          (("1"
+                                                            (typepred
+                                                             "execute_CaseJML")
+                                                            (("1"
+                                                              (expand
+                                                               "execute_CaseJML_type")
+                                                              (("1"
+                                                                (inst?)
+                                                                (("1"
+                                                                  (assert)
+                                                                  nil
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil)
+                                                           ("2"
+                                                            (apply
+                                                             (branch
+                                                              (split
+                                                               -1)
+                                                              ((then
+                                                                (flatten)
+                                                                (assert)
+                                                                (flatten)
+                                                                (assert)))))
+                                                            (("1"
+                                                              (skosimp*)
+                                                              (("1"
+                                                                (inst-cp
+                                                                 -7
+                                                                 "m1!1")
+                                                                (("1"
+                                                                  (assert)
+                                                                  (("1"
+                                                                    (apply
+                                                                     (repeat
+                                                                      (inst?
+                                                                       -8
+                                                                       :where
+                                                                       -4)))
+                                                                    (("1"
+                                                                      (assert)
+                                                                      (("1"
+                                                                        (split
+                                                                         -8)
+                                                                        (("1"
+                                                                          (expand
+                                                                           "check_for_exception")
+                                                                          (("1"
+                                                                            (apply
+                                                                             (branch
+                                                                              (split
+                                                                               -6)
+                                                                              ((then
+                                                                                (flatten)
+                                                                                (assert)
+                                                                                (flatten)
+                                                                                (assert)))))
+                                                                            (("1"
+                                                                              (inst
+                                                                               -9
+                                                                               "m2!1")
+                                                                              (("1"
+                                                                                (assert)
+                                                                                (("1"
+                                                                                  (apply
+                                                                                   (repeat
+                                                                                    (inst?
+                                                                                     -9
+                                                                                     :where
+                                                                                     -2)))
+                                                                                  (("1"
+                                                                                    (assert)
+                                                                                    (("1"
+                                                                                      (split
+                                                                                       -9)
+                                                                                      (("1"
+                                                                                        (propax)
+                                                                                        nil
+                                                                                        nil)
+                                                                                       ("2"
+                                                                                        (skosimp*)
+                                                                                        (("2"
+                                                                                          (use
+                                                                                           "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                           ("b2"
+                                                                                            "then_stmt(b!1)"
+                                                                                            "b1"
+                                                                                            "b!1"))
+                                                                                          (("2"
+                                                                                            (expand
+                                                                                             "<<")
+                                                                                            (("2"
+                                                                                              (propax)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil)
+                                                                                       ("3"
+                                                                                        (skosimp*)
+                                                                                        (("3"
+                                                                                          (use
+                                                                                           "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                           ("b2"
+                                                                                            "else_stmt(b!1)"
+                                                                                            "b1"
+                                                                                            "b!1"))
+                                                                                          (("3"
+                                                                                            (expand
+                                                                                             "<<")
+                                                                                            (("3"
+                                                                                              (propax)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil)
+                                                                                       ("4"
+                                                                                        (expand
+                                                                                         "var_names"
+                                                                                         21)
+                                                                                        (("4"
+                                                                                          (flatten)
+                                                                                          (("4"
+                                                                                            (assert)
+                                                                                            nil
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil)
+                                                                                       ("5"
+                                                                                        (expand
+                                                                                         "var_names"
+                                                                                         21)
+                                                                                        (("5"
+                                                                                          (flatten)
+                                                                                          (("5"
+                                                                                            (assert)
+                                                                                            nil
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil)
+                                                                                   ("2"
+                                                                                    (skosimp*)
+                                                                                    (("2"
+                                                                                      (use
+                                                                                       "wf_Body_preserved_by_proper_subterm"
+                                                                                       ("b2"
+                                                                                        "else_stmt(b!1)"
+                                                                                        "b1"
+                                                                                        "b!1"))
+                                                                                      (("2"
+                                                                                        (expand
+                                                                                         "<<")
+                                                                                        (("2"
+                                                                                          (propax)
+                                                                                          nil
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil)
+                                                                                   ("3"
+                                                                                    (skosimp*)
+                                                                                    (("3"
+                                                                                      (use
+                                                                                       "wf_Body_preserved_by_proper_subterm"
+                                                                                       ("b2"
+                                                                                        "then_stmt(b!1)"
+                                                                                        "b1"
+                                                                                        "b!1"))
+                                                                                      (("3"
+                                                                                        (expand
+                                                                                         "<<")
+                                                                                        (("3"
+                                                                                          (propax)
+                                                                                          nil
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil)
+                                                                         ("2"
+                                                                          (use
+                                                                           "contains_no_method_call_preserved_by_proper_subterm"
+                                                                           ("b2"
+                                                                            "test(b!1)"
+                                                                            "b1"
+                                                                            "b!1"))
+                                                                          (("2"
+                                                                            (expand
+                                                                             "<<")
+                                                                            (("2"
+                                                                              (propax)
+                                                                              nil
+                                                                              nil))
+                                                                            nil))
+                                                                          nil)
+                                                                         ("3"
+                                                                          (expand
+                                                                           "var_names"
+                                                                           20)
+                                                                          (("3"
+                                                                            (assert)
+                                                                            nil
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil)
+                                                             ("2"
+                                                              (apply
+                                                               (branch
+                                                                (split
+                                                                 -1)
+                                                                ((then
+                                                                  (flatten)
+                                                                  (assert)
+                                                                  (flatten)
+                                                                  (assert)))))
+                                                              (("1"
+                                                                (skosimp*)
+                                                                (("1"
+                                                                  (inst-cp
+                                                                   -7
+                                                                   "m1!1")
+                                                                  (("1"
+                                                                    (inst
+                                                                     -7
+                                                                     "m2!1")
+                                                                    (("1"
+                                                                      (assert)
+                                                                      (("1"
+                                                                        (apply
+                                                                         (repeat
+                                                                          (inst?
+                                                                           -7
+                                                                           :where
+                                                                           -6)))
+                                                                        (("1"
+                                                                          (apply
+                                                                           (repeat
+                                                                            (inst?
+                                                                             -8
+                                                                             :where
+                                                                             -4)))
+                                                                          (("1"
+                                                                            (assert)
+                                                                            (("1"
+                                                                              (split
+                                                                               -8)
+                                                                              (("1"
+                                                                                (assert)
+                                                                                (("1"
+                                                                                  (split
+                                                                                   -8)
+                                                                                  (("1"
+                                                                                    (use
+                                                                                     "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                     ("b2"
+                                                                                      "s2(b!1)"
+                                                                                      "b1"
+                                                                                      "b!1"))
+                                                                                    (("1"
+                                                                                      (expand
+                                                                                       "<<")
+                                                                                      (("1"
+                                                                                        (propax)
+                                                                                        nil
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil)
+                                                                                   ("2"
+                                                                                    (expand
+                                                                                     "var_names"
+                                                                                     21)
+                                                                                    (("2"
+                                                                                      (assert)
+                                                                                      nil
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil)
+                                                                               ("2"
+                                                                                (use
+                                                                                 "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                 ("b2"
+                                                                                  "s1(b!1)"
+                                                                                  "b1"
+                                                                                  "b!1"))
+                                                                                (("2"
+                                                                                  (expand
+                                                                                   "<<")
+                                                                                  (("2"
+                                                                                    (propax)
+                                                                                    nil
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil)
+                                                                               ("3"
+                                                                                (expand
+                                                                                 "var_names"
+                                                                                 21)
+                                                                                (("3"
+                                                                                  (assert)
+                                                                                  nil
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil)
+                                                               ("2"
+                                                                (apply
+                                                                 (branch
+                                                                  (split
+                                                                   -1)
+                                                                  ((then
+                                                                    (flatten)
+                                                                    (assert)
+                                                                    (flatten)
+                                                                    (assert)))))
+                                                                (("1"
+                                                                  (typepred
+                                                                   "execute_set")
+                                                                  (("1"
+                                                                    (expand
+                                                                     "execute_set_type")
+                                                                    (("1"
+                                                                      (inst?)
+                                                                      (("1"
+                                                                        (assert)
+                                                                        nil
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil)
+                                                                 ("2"
+                                                                  (apply
+                                                                   (branch
+                                                                    (split
+                                                                     -1)
+                                                                    ((then
+                                                                      (flatten)
+                                                                      (assert)
+                                                                      (flatten)
+                                                                      (assert)))))
+                                                                  (("2"
+                                                                    (apply
+                                                                     (branch
+                                                                      (split
+                                                                       -1)
+                                                                      ((then
+                                                                        (flatten)
+                                                                        (assert)
+                                                                        (flatten)
+                                                                        (assert)))))
+                                                                    (("1"
+                                                                      (skosimp*)
+                                                                      (("1"
+                                                                        (inst
+                                                                         -5
+                                                                         "x!1 - 1")
+                                                                        (("1"
+                                                                          (assert)
+                                                                          (("1"
+                                                                            (apply
+                                                                             (repeat
+                                                                              (inst?
+                                                                               -5
+                                                                               :where
+                                                                               -4)))
+                                                                            (("1"
+                                                                              (assert)
+                                                                              (("1"
+                                                                                (split
+                                                                                 -5)
+                                                                                (("1"
+                                                                                  (use
+                                                                                   "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                   ("b2"
+                                                                                    "expr(b!1)"
+                                                                                    "b1"
+                                                                                    "b!1"))
+                                                                                  (("1"
+                                                                                    (expand
+                                                                                     "<<")
+                                                                                    (("1"
+                                                                                      (propax)
+                                                                                      nil
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil)
+                                                                                 ("2"
+                                                                                  (expand
+                                                                                   "var_names"
+                                                                                   24)
+                                                                                  (("2"
+                                                                                    (propax)
+                                                                                    nil
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil)
+                                                                     ("2"
+                                                                      (apply
+                                                                       (branch
+                                                                        (split
+                                                                         -1)
+                                                                        ((then
+                                                                          (flatten)
+                                                                          (assert)
+                                                                          (flatten)
+                                                                          (assert)))))
+                                                                      (("1"
+                                                                        (typepred
+                                                                         "update_PState")
+                                                                        (("1"
+                                                                          (expand
+                                                                           "update_PState_type")
+                                                                          (("1"
+                                                                            (inst?)
+                                                                            (("1"
+                                                                              (inst
+                                                                               -1
+                                                                               "sigma2!1")
+                                                                              (("1"
+                                                                                (assert)
+                                                                                (("1"
+                                                                                  (replace
+                                                                                   -1)
+                                                                                  (("1"
+                                                                                    (expand
+                                                                                     "raise")
+                                                                                    (("1"
+                                                                                      (expand
+                                                                                       "lookup")
+                                                                                      (("1"
+                                                                                        (expand
+                                                                                         "is_local")
+                                                                                        (("1"
+                                                                                          (expand
+                                                                                           "lookup_local")
+                                                                                          (("1"
+                                                                                            (expand
+                                                                                             "lookup_field")
+                                                                                            (("1"
+                                                                                              (propax)
+                                                                                              nil
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil)
+                                                                       ("2"
+                                                                        (apply
+                                                                         (branch
+                                                                          (split
+                                                                           -1)
+                                                                          ((then
+                                                                            (flatten)
+                                                                            (assert)
+                                                                            (flatten)
+                                                                            (assert)))))
+                                                                        (("1"
+                                                                          (skosimp*)
+                                                                          (("1"
+                                                                            (inst-cp
+                                                                             -10
+                                                                             "m1!1")
+                                                                            (("1"
+                                                                              (assert)
+                                                                              (("1"
+                                                                                (apply
+                                                                                 (repeat
+                                                                                  (inst?
+                                                                                   -11
+                                                                                   :where
+                                                                                   -4)))
+                                                                                (("1"
+                                                                                  (assert)
+                                                                                  (("1"
+                                                                                    (split
+                                                                                     -11)
+                                                                                    (("1"
+                                                                                      (inst-cp
+                                                                                       -11
+                                                                                       "m3!1")
+                                                                                      (("1"
+                                                                                        (assert)
+                                                                                        (("1"
+                                                                                          (apply
+                                                                                           (repeat
+                                                                                            (inst?
+                                                                                             -12
+                                                                                             :where
+                                                                                             -8)))
+                                                                                          (("1"
+                                                                                            (assert)
+                                                                                            (("1"
+                                                                                              (split
+                                                                                               -12)
+                                                                                              (("1"
+                                                                                                (typepred
+                                                                                                 "update_PState")
+                                                                                                (("1"
+                                                                                                  (expand
+                                                                                                   "update_PState_type")
+                                                                                                  (("1"
+                                                                                                    (inst-cp
+                                                                                                     -1
+                                                                                                     "tau2!1"
+                                                                                                     "update_PState(tau2!1, catch)"
+                                                                                                     "catch")
+                                                                                                    (("1"
+                                                                                                      (replace
+                                                                                                       -2
+                                                                                                       :hide?
+                                                                                                       t)
+                                                                                                      (("1"
+                                                                                                        (inst-cp
+                                                                                                         -1
+                                                                                                         "tau3!1"
+                                                                                                         "update_PState(tau3!1,  LAMBDA (ptau3: PState[Name]):
+                       ptau3 WITH [ex := ex(pstate(tau2!1))])"
+                                                                                                         " LAMBDA (ptau3: PState[Name]):
+                       ptau3 WITH [ex := ex(pstate(tau2!1))]")
+                                                                                                        (("1"
+                                                                                                          (replace
+                                                                                                           -2
+                                                                                                           :hide?
+                                                                                                           t)
+                                                                                                          (("1"
+                                                                                                            (replace
+                                                                                                             -3
+                                                                                                             :hide?
+                                                                                                             t)
+                                                                                                            (("1"
+                                                                                                              (case-replace
+                                                                                                               "lookup(x!2, pstate(sigma2!1)) = lookup(x!2, pstate(tau3!1))")
+                                                                                                              (("1"
+                                                                                                                (case-replace
+                                                                                                                 "lookup(x!2, catch(pstate(tau2!1))) = lookup(x!2, pstate(tau2!1))")
+                                                                                                                (("1"
+                                                                                                                  (case-replace
+                                                                                                                   "lookup(x!2, catch(pstate(tau1!1))) = lookup(x!2, pstate(tau1!1))")
+                                                                                                                  (("1"
+                                                                                                                    (apply
+                                                                                                                     (branch
+                                                                                                                      (split
+                                                                                                                       -11)
+                                                                                                                      ((then
+                                                                                                                        (skosimp*)
+                                                                                                                        (flatten)
+                                                                                                                        (assert)
+                                                                                                                        (flatten)
+                                                                                                                        (assert)))))
+                                                                                                                    (("1"
+                                                                                                                      (inst
+                                                                                                                       -18
+                                                                                                                       "m2!1")
+                                                                                                                      (("1"
+                                                                                                                        (assert)
+                                                                                                                        (("1"
+                                                                                                                          (apply
+                                                                                                                           (repeat
+                                                                                                                            (inst?
+                                                                                                                             -18
+                                                                                                                             :where
+                                                                                                                             -3)))
+                                                                                                                          (("1"
+                                                                                                                            (assert)
+                                                                                                                            (("1"
+                                                                                                                              (split
+                                                                                                                               -18)
+                                                                                                                              (("1"
+                                                                                                                                (inst
+                                                                                                                                 -9
+                                                                                                                                 "tau1!1"
+                                                                                                                                 "update_PState(tau1!1, catch)"
+                                                                                                                                 "catch")
+                                                                                                                                (("1"
+                                                                                                                                  (assert)
+                                                                                                                                  nil
+                                                                                                                                  nil))
+                                                                                                                                nil)
+                                                                                                                               ("2"
+                                                                                                                                (use
+                                                                                                                                 "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                                                                 ("b2"
+                                                                                                                                  "catch(b!1)"
+                                                                                                                                  "b1"
+                                                                                                                                  "b!1"))
+                                                                                                                                (("2"
+                                                                                                                                  (expand
+                                                                                                                                   "<<")
+                                                                                                                                  (("2"
+                                                                                                                                    (propax)
+                                                                                                                                    nil
+                                                                                                                                    nil))
+                                                                                                                                  nil))
+                                                                                                                                nil)
+                                                                                                                               ("3"
+                                                                                                                                (expand
+                                                                                                                                 "var_names"
+                                                                                                                                 +)
+                                                                                                                                (("3"
+                                                                                                                                  (assert)
+                                                                                                                                  nil
+                                                                                                                                  nil))
+                                                                                                                                nil))
+                                                                                                                              nil))
+                                                                                                                            nil))
+                                                                                                                          nil))
+                                                                                                                        nil))
+                                                                                                                      nil))
+                                                                                                                    nil)
+                                                                                                                   ("2"
+                                                                                                                    (expand
+                                                                                                                     "catch")
+                                                                                                                    (("2"
+                                                                                                                      (expand
+                                                                                                                       "lookup")
+                                                                                                                      (("2"
+                                                                                                                        (expand
+                                                                                                                         "is_local")
+                                                                                                                        (("2"
+                                                                                                                          (expand
+                                                                                                                           "lookup_local")
+                                                                                                                          (("2"
+                                                                                                                            (expand
+                                                                                                                             "lookup_field")
+                                                                                                                            (("2"
+                                                                                                                              (propax)
+                                                                                                                              nil
+                                                                                                                              nil))
+                                                                                                                            nil))
+                                                                                                                          nil))
+                                                                                                                        nil))
+                                                                                                                      nil))
+                                                                                                                    nil))
+                                                                                                                  nil)
+                                                                                                                 ("2"
+                                                                                                                  (expand*
+                                                                                                                   "catch"
+                                                                                                                   "lookup"
+                                                                                                                   "is_local"
+                                                                                                                   "lookup_local"
+                                                                                                                   "lookup_field")
+                                                                                                                  nil
+                                                                                                                  nil))
+                                                                                                                nil)
+                                                                                                               ("2"
+                                                                                                                (lift-if)
+                                                                                                                (("2"
+                                                                                                                  (apply
+                                                                                                                   (branch
+                                                                                                                    (split
+                                                                                                                     -11)
+                                                                                                                    ((then
+                                                                                                                      (skosimp*)
+                                                                                                                      (flatten)
+                                                                                                                      (assert)
+                                                                                                                      (flatten)
+                                                                                                                      (assert)))))
+                                                                                                                  (("2"
+                                                                                                                    (inst
+                                                                                                                     -2
+                                                                                                                     "tau3!1"
+                                                                                                                     "sigma2!1"
+                                                                                                                     " LAMBDA (ptau3: PState[Name]):
+                       ptau3 WITH [ex := ex(pstate(tau2!1))]")
+                                                                                                                    (("2"
+                                                                                                                      (assert)
+                                                                                                                      (("2"
+                                                                                                                        (replace
+                                                                                                                         -2)
+                                                                                                                        (("2"
+                                                                                                                          (expand*
+                                                                                                                           "catch"
+                                                                                                                           "lookup"
+                                                                                                                           "is_local"
+                                                                                                                           "lookup_local"
+                                                                                                                           "lookup_field")
+                                                                                                                          nil
+                                                                                                                          nil))
+                                                                                                                        nil))
+                                                                                                                      nil))
+                                                                                                                    nil))
+                                                                                                                  nil))
+                                                                                                                nil))
+                                                                                                              nil))
+                                                                                                            nil))
+                                                                                                          nil))
+                                                                                                        nil))
+                                                                                                      nil))
+                                                                                                    nil))
+                                                                                                  nil))
+                                                                                                nil)
+                                                                                               ("2"
+                                                                                                (use
+                                                                                                 "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                                 ("b2"
+                                                                                                  "finally(b!1)"
+                                                                                                  "b1"
+                                                                                                  "b!1"))
+                                                                                                (("2"
+                                                                                                  (expand
+                                                                                                   "<<")
+                                                                                                  (("2"
+                                                                                                    (propax)
+                                                                                                    nil
+                                                                                                    nil))
+                                                                                                  nil))
+                                                                                                nil)
+                                                                                               ("3"
+                                                                                                (expand
+                                                                                                 "var_names"
+                                                                                                 +)
+                                                                                                (("3"
+                                                                                                  (assert)
+                                                                                                  nil
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil)
+                                                                                     ("2"
+                                                                                      (use
+                                                                                       "contains_no_method_call_preserved_by_proper_subterm"
+                                                                                       ("b2"
+                                                                                        "try(b!1)"
+                                                                                        "b1"
+                                                                                        "b!1"))
+                                                                                      (("2"
+                                                                                        (expand
+                                                                                         "<<")
+                                                                                        (("2"
+                                                                                          (propax)
+                                                                                          nil
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil)
+                                                                                     ("3"
+                                                                                      (expand
+                                                                                       "var_names"
+                                                                                       +)
+                                                                                      (("3"
+                                                                                        (assert)
+                                                                                        nil
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil)
+                                                                         ("2"
+                                                                          (apply
+                                                                           (branch
+                                                                            (split
+                                                                             -1)
+                                                                            ((then
+                                                                              (skosimp*)
+                                                                              (flatten)
+                                                                              (assert)
+                                                                              (flatten)
+                                                                              (assert)))))
+                                                                          (("1"
+                                                                            (inst
+                                                                             -5
+                                                                             "x!1 - 1")
+                                                                            (("1"
+                                                                              (assert)
+                                                                              (("1"
+                                                                                (apply
+                                                                                 (repeat
+                                                                                  (inst?
+                                                                                   -5
+                                                                                   :where
+                                                                                   -4)))
+                                                                                (("1"
+                                                                                  (assert)
+                                                                                  (("1"
+                                                                                    (case-replace
+                                                                                     "While(test(b!1), body(b!1)) = b!1"
+                                                                                     :hide?
+                                                                                     t)
+                                                                                    (("1"
+                                                                                      (split
+                                                                                       -5)
+                                                                                      (("1"
+                                                                                        (expand
+                                                                                         "contains_no_method_call")
+                                                                                        (("1"
+                                                                                          (skosimp*)
+                                                                                          (("1"
+                                                                                            (rewrite
+                                                                                             "subterm"
+                                                                                             -1)
+                                                                                            (("1"
+                                                                                              (assert)
+                                                                                              (("1"
+                                                                                                (inst
+                                                                                                 -7
+                                                                                                 "b1!1")
+                                                                                                (("1"
+                                                                                                  (assert)
+                                                                                                  (("1"
+                                                                                                    (expand
+                                                                                                     "subterm"
+                                                                                                     -1
+                                                                                                     3)
+                                                                                                    (("1"
+                                                                                                      (use
+                                                                                                       "subterm_transitive"
+                                                                                                       ("b1"
+                                                                                                        "b1!1"
+                                                                                                        "b2"
+                                                                                                        "test(b!1)"
+                                                                                                        "b3"
+                                                                                                        "b!1"))
+                                                                                                      (("1"
+                                                                                                        (assert)
+                                                                                                        (("1"
+                                                                                                          (expand
+                                                                                                           "subterm"
+                                                                                                           1)
+                                                                                                          (("1"
+                                                                                                            (expand
+                                                                                                             "subterm"
+                                                                                                             1)
+                                                                                                            (("1"
+                                                                                                              (propax)
+                                                                                                              nil
+                                                                                                              nil))
+                                                                                                            nil))
+                                                                                                          nil))
+                                                                                                        nil))
+                                                                                                      nil))
+                                                                                                    nil))
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil)
+                                                                                       ("2"
+                                                                                        (rewrite
+                                                                                         "var_names"
+                                                                                         -1)
+                                                                                        (("2"
+                                                                                          (assert)
+                                                                                          (("2"
+                                                                                            (split
+                                                                                             -1)
+                                                                                            (("1"
+                                                                                              (expand
+                                                                                               "var_names"
+                                                                                               +)
+                                                                                              (("1"
+                                                                                                (assert)
+                                                                                                nil
+                                                                                                nil))
+                                                                                              nil)
+                                                                                             ("2"
+                                                                                              (expand
+                                                                                               "var_names"
+                                                                                               -)
+                                                                                              (("2"
+                                                                                                (assert)
+                                                                                                (("2"
+                                                                                                  (expand
+                                                                                                   "emptyset")
+                                                                                                  (("2"
+                                                                                                    (propax)
+                                                                                                    nil
+                                                                                                    nil))
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil)
+                                                                                     ("2"
+                                                                                      (apply-extensionality
+                                                                                       :hide?
+                                                                                       t)
+                                                                                      nil
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil)
+                                                                           ("2"
+                                                                            (apply
+                                                                             (branch
+                                                                              (split
+                                                                               -1)
+                                                                              ((then
+                                                                                (flatten)
+                                                                                (assert)
+                                                                                (flatten)
+                                                                                (assert)))))
+                                                                            (("2"
+                                                                              (typepred
+                                                                               "execute_assert")
+                                                                              (("2"
+                                                                                (expand
+                                                                                 "execute_assert_type")
+                                                                                (("2"
+                                                                                  (inst?)
+                                                                                  (("2"
+                                                                                    (assert)
+                                                                                    (("2"
+                                                                                      (expand*
+                                                                                       "lookup"
+                                                                                       "is_local"
+                                                                                       "lookup_local"
+                                                                                       "lookup_field")
+                                                                                      (("2"
+                                                                                        (replace
+                                                                                         -1)
+                                                                                        (("2"
+                                                                                          (propax)
+                                                                                          nil
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
                                                 nil))
                                               nil))
                                             nil))
@@ -17612,7 +19084,232 @@
        ("2" (use "wf_nat") nil nil))
       nil))
     nil)
-   unfinished nil 800324 10550 t shostak)))
+   proved
+   ((wf_nat formula-decl nil naturalnumbers nil)
+    (Name formal-nonempty-type-decl nil SemanticsProofs nil)
+    (Body type-decl nil Body_adt nil) (Val type-decl nil Val_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (BoolExpr type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (FullProgram formal-type-decl nil SemanticsProofs nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (program formal-const-decl "[FullProgram -> Program]"
+     SemanticsProofs nil)
+    (FullState formal-type-decl nil SemanticsProofs nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
+    (contains_no_method_call const-decl "bool" ContainsNoMethodCall
+     nil)
+    (PSt type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil)
+    (pstate formal-const-decl "[FullState -> PState]" SemanticsProofs
+     nil)
+    (lookup formal-const-decl "[Name, FullState -> Val]"
+            SemanticsProofs nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (update_PState formal-const-decl "(update_PState_type)"
+     SemanticsProofs nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (wf_Expr const-decl "boolean" WellFormedProgram nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (<= const-decl "bool" reals nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (derive_type type-eq-decl nil SemanticsTypes nil)
+    (derive_rec_type type-eq-decl nil SemanticsTypes nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (execute_set formal-const-decl "(execute_set_type)" SemanticsProofs
+     nil)
+    (TT? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (FF? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (wf_BoolExpr const-decl "boolean" WellFormedProgram nil)
+    (execute_assert_type const-decl "boolean" SemanticsTypes nil)
+    (execute_assert formal-const-decl "(execute_assert_type)"
+     SemanticsProofs nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (list type-decl nil list_adt nil)
+    (wf_Branches const-decl "boolean" WellFormedProgram nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (execute_CaseJML formal-const-decl "(execute_CaseJML_type)"
+     SemanticsProofs nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (on_method_entry formal-const-decl "(on_method_event_type)"
+     SemanticsProofs nil)
+    (on_method_exit_normal formal-const-decl "(on_method_event_type)"
+     SemanticsProofs nil)
+    (on_method_exit_exceptional formal-const-decl
+     "(on_method_event_type)" SemanticsProofs nil)
+    (derive def-decl "bool" Semantics nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (lookup const-decl "Val" State nil)
+    (check_for_exception const-decl "bool" Semantics nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (r adt-accessor-decl "[(RExpr?) -> RefExpr]" Body_adt nil)
+    (RefExpr type-eq-decl nil Body_adt nil)
+    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Null? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (v1!1 skolem-const-decl "Val[Name]" SemanticsProofs nil)
+    (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
+     nil)
+    (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
+     nil)
+    (expr adt-accessor-decl
+          "[d: {x: Body | Assert?(x) OR StmtExpr?(x)} ->
+   {x1: Body |
+            IF StmtExpr?(d)
+              THEN     Assign?(x1) OR BExpr?(x1) OR CondExpr?(x1)
+                    OR MethodCall?(x1) OR NExpr?(x1) OR RExpr?(x1)
+                    OR Const?(x1)
+            ELSE     TT?(x1) OR FF?(x1) OR Neg?(x1) OR Conj?(x1) OR Eq?(x1)
+                  OR BoolVarEval?(x1)
+            ENDIF}]" Body_adt nil)
+    (try adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
+    (catch adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
+    (finally adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
+    (catch const-decl "PState" State nil)
+    (IfThenElse adt-constructor-decl
+     "[[BoolExpr, Stmt, Stmt] -> (IfThenElse?)]" Body_adt nil)
+    (While adt-constructor-decl "[[BoolExpr, Stmt] -> (While?)]"
+     Body_adt nil)
+    (body adt-accessor-decl "[(While?) -> Stmt]" Body_adt nil)
+    (Skip adt-constructor-decl "(Skip?)" Body_adt nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (emptyset const-decl "set" sets nil)
+    (subterm_transitive formula-decl nil ProgramFunctions nil)
+    (Body_While_extensionality formula-decl nil Body_adt nil)
+    (Throwable adt-constructor-decl "(Throwable?)" Excpt_adt nil)
+    (Throwable? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt nil)
+    (raise const-decl "PState" State nil)
+    (s2 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
+    (s1 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
+    (branches adt-accessor-decl
+     "[(CaseJML?) -> list[[BoolExpr, Stmt]]]" Body_adt nil)
+    (NumExpr type-eq-decl nil Body_adt nil)
+    (n adt-accessor-decl "[(NExpr?) -> NumExpr]" Body_adt nil)
+    (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
+    (b!1 skolem-const-decl "(wf_Body(program(p!1)))" SemanticsProofs
+     nil)
+    (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
+    (p!1 skolem-const-decl "FullProgram" SemanticsProofs nil)
+    (v1!1 skolem-const-decl "Val[Name]" SemanticsProofs nil)
+    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
+    (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (wf_Body_preserved_by_proper_subterm formula-decl nil
+     WellFormedProgram nil)
+    (test shared-adt-accessor-decl
+     "[{x: Body | While?(x) OR IfThenElse?(x) OR CondExpr?(x)} -> BoolExpr]"
+     Body_adt nil)
+    (update const-decl "PState" State nil)
+    (target shared-adt-accessor-decl
+            "[{x: Body | Set?(x) OR Assign?(x)} -> Name]" Body_adt nil)
+    (update_field const-decl "PState" State nil)
+    (is_local const-decl "boolean" State nil)
+    (lookup_field const-decl "Val" State nil)
+    (lookup_local const-decl "Val" State nil)
+    (update_local const-decl "PState" State nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (source shared-adt-accessor-decl
+     "[{x: Body | Set?(x) OR Assign?(x)} -> Expr]" Body_adt nil)
+    (b shared-adt-accessor-decl
+     "[{x: Body | BExpr?(x) OR Neg?(x)} -> BoolExpr]" Body_adt nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IF const-decl "[boolean, T, T -> T]" if_def nil)
+    (Int? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (b2 adt-accessor-decl
+     "[d: {x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} ->
+   {x1: Body |
+            IF Plus?(d) THEN Int?(x1) OR Plus?(x1) OR NumVarEval?(x1)
+            ELSE IF Conj?(d)
+                   THEN     TT?(x1) OR FF?(x1) OR Neg?(x1) OR Conj?(x1)
+                         OR Eq?(x1) OR BoolVarEval?(x1)
+                 ELSE     Assign?(x1) OR BExpr?(x1) OR CondExpr?(x1)
+                       OR MethodCall?(x1) OR NExpr?(x1) OR RExpr?(x1)
+                       OR Const?(x1)
+                 ENDIF
+            ENDIF}]" Body_adt nil)
+    (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil)
+    (contains_no_method_call_preserved_by_proper_subterm formula-decl
+     nil ContainsNoMethodCall nil)
+    (<< adt-def-decl "(well_founded?[Body])" Body_adt nil)
+    (b1 adt-accessor-decl
+     "[d: {x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} ->
+   {x1: Body |
+            IF Plus?(d) THEN Int?(x1) OR Plus?(x1) OR NumVarEval?(x1)
+            ELSE IF Conj?(d)
+                   THEN     TT?(x1) OR FF?(x1) OR Neg?(x1) OR Conj?(x1)
+                         OR Eq?(x1) OR BoolVarEval?(x1)
+                 ELSE     Assign?(x1) OR BExpr?(x1) OR CondExpr?(x1)
+                       OR MethodCall?(x1) OR NExpr?(x1) OR RExpr?(x1)
+                       OR Const?(x1)
+                 ENDIF
+            ENDIF}]" Body_adt nil)
+    (int_plus_int_is_int application-judgement "int" integers nil)
+    (real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (< const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (wf_induction formula-decl nil wf_induction nil)
+    (well_founded? const-decl "bool" orders nil)
+    (pred type-eq-decl nil defined_types nil))
+   12866002 30200 t shostak)))
 (SemanticsJML
  (wf_initial_ghost_state_TCC1 0
   (wf_initial_ghost_state_TCC1-1 nil 3392370163 3410672611 ("" (tcc))
