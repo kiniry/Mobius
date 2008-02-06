@@ -1,10 +1,23 @@
 \section{Annotation Generation}\label{SecAnnotGen} 
 
 Given a security property encoded as an MVA, the annotation generation
-algorithm generates JML-annotations that capture this property,
+procedure generates JML-annotations that capture this property,
 \emph{i.e.}, if the program does not violate the generated
-JML-annotations, the respects the security property encoded by the
-MVA. The algorithm proceeds in two steps: the first step generates
+JML-annotations, it respects the security property encoded by the
+MVA. As explained above, the procedure is defined in several steps:
+\begin{inparaenum}[(\itshape i\upshape)]
+\item the monitor is completed (as described in Section~\ref{SecMVA});
+\item the annotations are generated at the method specification level,
+as special set-annotations;
+\item the method specification-level set-annotations are inlined in
+the method body; and
+\item the special \CaseJML construct that is used to make the
+annotations more compact is tranlated into a sequence of \Set
+annotations.
+\end{inparaenum} 
+Notice that the order of the last two steps can be swapped.
+
+the first step generates
 special pre-set, post-set and exceptional post-set annotations. This
 has the advantage that we do not have to do any code transformations;
 it is the program semantics for method calls that ensures that the set
