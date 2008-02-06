@@ -195,6 +195,7 @@ public class InitParser extends BytecodeTextParser {
         continue;
       }
       if (lc instanceof HeaderLineController) { // method header
+        ((HeaderLineController)lc).setMethod(mg);
         continue;
       }
       if (lc instanceof EmptyLineController) { //method end
@@ -235,9 +236,9 @@ public class InitParser extends BytecodeTextParser {
     if (an_iter.hasNext())
       ih = (InstructionHandle)(an_iter.next());
     a_lctrl.addHandle(ih, an_ilist, a_methgen);
-    incInstructionNo();
     getInstructions().add(a_lctrl);
     handleComments(a_lctrl);
+    incInstructionNo();
   }
 
 }

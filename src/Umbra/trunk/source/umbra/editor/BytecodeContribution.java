@@ -149,6 +149,7 @@ public class BytecodeContribution extends ControlContribution {
       }
       if (!doc.isReady()) {
         doc.init(); //this marks the document as ready
+        return;
       }
       int stop = 0;
       int start_rem = 0;

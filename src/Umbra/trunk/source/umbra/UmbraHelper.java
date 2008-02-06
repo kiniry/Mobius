@@ -121,6 +121,12 @@ public final class UmbraHelper {
     "You must save the source code before you can show its bytecode.";
 
   /**
+   * The message which informs the user that a path does not exists.
+   */
+  public static final String DISAS_PATH_DOES_NOT_EXIST =
+    "The path does not exist";
+
+  /**
    * The message which requires the user to save the bytecode before it is
    * translated to BoogiePL.
    */

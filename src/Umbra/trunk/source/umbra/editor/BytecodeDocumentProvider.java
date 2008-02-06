@@ -119,7 +119,6 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
               final BMLParsing a_bmlp) {
     final BytecodeDocument document = (BytecodeDocument)getDocument(an_input);
     document.setEditor(a_bcode_editor, a_bmlp);
-    document.initModTable();
     document.setRelatedEditor(an_editor);
     BytecodeContribution.inUse().addListener(document);
   }

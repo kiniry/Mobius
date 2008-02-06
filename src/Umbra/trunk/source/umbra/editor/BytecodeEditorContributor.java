@@ -339,18 +339,20 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     my_bcode_cntrbtn.survive();
     if (proper) Composition.startDisas();
     page.closeEditor(an_editor, true);
-    final IEditorPart newEditor = page.openEditor(an_input,
-                        "umbra.BytecodeEditor", true);
+    final BytecodeEditor newEditor = (BytecodeEditor)(page.openEditor(an_input,
+                        "umbra.BytecodeEditor", true));
+    final BytecodeDocument ndoc = (BytecodeDocument)newEditor.
+                                            getDocumentProvider().
+                                            getDocument(an_input);
     //XXX changed: copying bmlp from old to the new copy of byte code editor.
     final BMLParsing bmlp = ((BytecodeEditor)an_editor).getDocument().getBmlp();
+    ndoc.setEditor((BytecodeEditor)newEditor, bmlp);
+    ndoc.reinit(a_comment_array, an_interline);
     ((BytecodeEditor) newEditor).setRelation(related);
     final ISelection ns = new TextSelection(off, len);
     final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
                           getSelectionProvider();
     sp.setSelection(ns);
-    final BytecodeDocument ndoc = ((BytecodeEditor)newEditor).getDocument();
-    ndoc.setEditor((BytecodeEditor)newEditor, bmlp);
-    ndoc.reinit(a_comment_array, an_interline);
     if (proper) Composition.stopDisas();
   }
 

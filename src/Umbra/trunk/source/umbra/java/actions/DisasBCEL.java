@@ -8,7 +8,6 @@
  */
 package umbra.java.actions;
 
-import org.apache.bcel.classfile.Method;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -26,6 +25,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.BytecodeDocumentProvider;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
 import umbra.editor.parsing.BytecodePartitionScanner;
@@ -60,6 +60,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     if (checkJavaExtension()) return;
     final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IWorkbenchPage page = my_editor.getEditorSite().getPage();
+    IPath cpath = null;
     try {
       final IFile btcFile = UmbraHelper.getBTCFileName(jFile, my_editor);
       final FileEditorInput input = new FileEditorInput(btcFile);
@@ -68,16 +69,29 @@ public class DisasBCEL implements IEditorActionDelegate {
       bc_editor.setRelatedEditor(my_editor);
       final BytecodeDocument doc = (BytecodeDocument)bc_editor.
                                    getDocumentProvider().getDocument(input);
-      bc_editor.refreshBytecode(UmbraHelper.getClassFileFile(jFile, my_editor).
-                                            getFullPath(),
-                                            doc,
+      cpath = UmbraHelper.getClassFileFile(jFile, my_editor).getFullPath();
+      bc_editor.refreshBytecode(cpath, doc,
                                 null, null); //this works on the doc
+      doc.initModTable();
       openEditorAndDisassemble(page, bc_editor, input, doc);
     } catch (CoreException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
+      messageClassNotFound(cpath);
     }
+  }
+
+  /**
+   * This method opens a warning dialog with the information that the given
+   * path does not exist.
+   *
+   * @param a_path the path which does not exist
+   */
+  private void messageClassNotFound(final IPath a_path) {
+    MessageDialog.openWarning(my_editor.getSite().getShell(),
+                              UmbraHelper.DISAS_MESSAGE_TITLE,
+                              UmbraHelper.DISAS_PATH_DOES_NOT_EXIST +
+                              " (" + a_path.toString() + ")");
   }
 
   /**
@@ -147,12 +161,11 @@ public class DisasBCEL implements IEditorActionDelegate {
           BytecodePartitionScanner.HEAD,
           BytecodePartitionScanner.THROWS});
     partitioner.connect(a_doc);
-    final Method[] ms = a_doc.getJavaClass().getMethods();
-    a_doc.setModTable(new boolean[ms.length]);
-    an_editor.renewConfiguration();
+    a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
+                                 partitioner);
+    an_editor.renewConfiguration(a_doc);
     an_editor.setRelation(my_editor);
     a_page.bringToTop(an_editor);
-    a_doc.setDocumentPartitioner(partitioner);
     Composition.stopDisas();
   }
 

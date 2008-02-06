@@ -8,6 +8,8 @@
  */
 package umbra.instructions.ast;
 
+import org.apache.bcel.generic.MethodGen;
+
 import umbra.editor.parsing.BytecodeStrings;
 
 
@@ -20,6 +22,12 @@ import umbra.editor.parsing.BytecodeStrings;
  * @version a-01
  */
 public class HeaderLineController extends BytecodeLineController {
+
+  /**
+   * A BCEL object that represents the method the header of which is
+   * in the current object.
+   */
+  private MethodGen my_methodgen;
 
   /**
    * This creates an instance of a bytecode line handle
@@ -51,4 +59,23 @@ public class HeaderLineController extends BytecodeLineController {
     return false;
   }
 
+  /**
+   * Returns the {@link MethodGen} structure responsible for the method in
+   * which the instruction resides.
+   *
+   * @return the method in which the current instruction is located
+   */
+  public final MethodGen getMethod() {
+    return my_methodgen;
+  }
+
+  /**
+   * Sets the {@link MethodGen} structure responsible for the method the
+   * header of which resides in the current object.
+   *
+   * @param a_mg the {@link MethodGen} structure to associate with the header
+   */
+  public final void setMethod(final MethodGen a_mg) {
+    my_methodgen = a_mg;
+  }
 }

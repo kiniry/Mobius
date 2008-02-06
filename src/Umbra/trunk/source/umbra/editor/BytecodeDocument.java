@@ -49,20 +49,6 @@ public class BytecodeDocument extends Document {
   private CompilationUnitEditor my_related_editor;
 
   /**
-   * The representation of the Java class the content of which
-   * we edit in the current document. The corresponding
-   * class generator object is in the {@link #my_classgen}
-   * field.
-   */
-  //private JavaClass my_javaclass;
-
-  /**
-   * The object to build Java classes. It is associated
-   * with the {@link #my_javaclass} field.
-   */
-  //private ClassGen my_classgen;
-
-  /**
    * The byte code editor that manipulates the current document.
    */
   private BytecodeEditor my_bcode_editor;
@@ -78,21 +64,6 @@ public class BytecodeDocument extends Document {
    * the text .btc file with the BCEL representation are initialised.
    */
   private boolean my_ready_flag; //@ initially false;
-
-  /**
-   * TODO.
-   */
-  private boolean my_mod_table_flag; //@ initially false;
-
-  /**
-   * This array keeps track of which methods in the class edited by the
-   * byte code editor are modified. It contains <code>true</code> on i-th
-   * position when the i-th method is modified.
-   *
-   * TODO it's not completely true, the my_modified in my_bcc is the actual
-   * point
-   */
-  private boolean[] my_modified;
 
   /**
    * TODO
@@ -233,20 +204,14 @@ public class BytecodeDocument extends Document {
    * TODO what's my_mod_table_flag
    */
   public void init() {
-    my_bcc = new BytecodeController();
     my_bcc.init(this, my_comment_array, my_interline);
-    if (my_mod_table_flag) {
-      my_bcc.setModified(my_modified);
-      my_mod_table_flag = false;
-    }
     //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
     my_bcc.checkAllLines(0, getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
     my_ready_flag = true;
   }
 
   public void setModTable(final boolean[] the_modified) {
-    my_modified = the_modified;
-    my_mod_table_flag = true;
+    my_bcc.setModified(the_modified);
   }
 
   /**
@@ -267,9 +232,7 @@ public class BytecodeDocument extends Document {
                              final int a_newend)
     throws UmbraException {
     my_bcc.removeIncorrects(a_start, an_oldend);
-    final int methodno = my_bcc.getMethodForLine(a_start);
     final MethodGen mg = my_bcc.addAllLines(this, a_start, an_oldend, a_newend);
-    replaceMethod(methodno, mg);
     my_bcc.checkAllLines(a_start, a_newend);
   }
 
@@ -299,16 +262,6 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   *
-   * @param a_methodno
-   * @param a_methodgen
-   */
-  public void replaceMethod(final int a_methodno,
-                            final MethodGen a_methodgen) {
-    my_modified[a_methodno] = true;
-  }
-
-  /**
    * @return BML-annotated byte code (text + AST) displayed
    * in this editor. All byte code modifications should
    * be made on this object.
@@ -324,7 +277,6 @@ public class BytecodeDocument extends Document {
    * changed methods
    */
   public void updateJavaClass() {
-    // TODO Auto-generated method stub
     if (BMLParsing.BMLLIB_ENABLED) {
       //XXX changed: obtaining JavaClass from my_bmlp field
       final BCClass bcc = getBmlp().getBcc();
@@ -381,8 +333,7 @@ public class BytecodeDocument extends Document {
   }
 
   public void initModTable() {
-    final Method[] ms = getBmlp().getBcc().getJC().getMethods();
-    my_modified = new boolean[ms.length];
+    my_bcc.initModTable();
   }
 
   /**
@@ -394,5 +345,10 @@ public class BytecodeDocument extends Document {
    */
   public MethodGen getMethodGen(final int a_method_no) {
     return my_bmlp.getBcc().getMethod(a_method_no).getBcelMethod();
+  }
+
+  public BytecodeDocument() {
+    super();
+    this.my_bcc = new BytecodeController();
   }
 }

@@ -70,6 +70,9 @@ public final class BytecodeController {
   /**
    * Keeps track of modified methods. Each time a method is modified
    * an entry with the method number is marked <code>true</code> in the array.
+   * The field is first intialised to be <code>null</code>. It is first
+   * filled with values by the
+   * {@link #init(BytecodeDocument, String[], String[])} method.
    */
   private boolean[] my_modified;
 
@@ -185,6 +188,8 @@ public final class BytecodeController {
     fgmparser.runParsing(); // after that I must know all the instructions are
                             //correct
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+    my_modified[methodno] = true;
+    mg.removeLineNumbers();
     updateInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     try {
@@ -308,6 +313,15 @@ public final class BytecodeController {
     }
   }
 
+  /**
+   * 
+   * @param an_end_rem
+   * @param a_stop
+   * @param the_lines
+   * @param a_methgen
+   * @param a_lineno
+   * @throws UmbraException
+   */
   private void addEditorLines(final int an_end_rem,
                               final int a_stop,
                               final LinkedList the_lines,
@@ -340,19 +354,35 @@ public final class BytecodeController {
    * @param the_lines the collection of the new lines to replace with the old
    *   ones
    * @return the number of the first line that was not replaced
+   * @throws UmbraException in case it is impossible to remove the instruction
    */
   private int replaceEditorLines(final int a_start_rem,
                                  final int an_end_rem,
                                  final int a_stop,
-                                 final LinkedList the_lines) {
+                                 final LinkedList the_lines)
+    throws UmbraException {
     int j = 0;
     for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++, j++) {
       //we replace for the common part
-      final InstructionLineController oldlc =
-        (InstructionLineController)my_editor_lines.get(i);
-      final InstructionLineController newlc =
-        (InstructionLineController)the_lines.get(j);
-      oldlc.replace(newlc);
+      final BytecodeLineController oldlc =
+        (BytecodeLineController)my_editor_lines.get(i);
+      final BytecodeLineController newlc =
+        (BytecodeLineController)the_lines.get(j);
+      if (newlc instanceof InstructionLineController &&
+          oldlc instanceof InstructionLineController) {
+        final InstructionLineController iolc =
+          (InstructionLineController) oldlc;
+        final InstructionLineController ilc = (InstructionLineController) newlc;
+        iolc.replace(ilc);
+      } else if (newlc instanceof InstructionLineController) {
+        final InstructionLineController ilc = (InstructionLineController) newlc;
+        final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+        ilc.makeHandleForPosition(mg, getCurrentPositionInMethod(i));
+      } else if (oldlc instanceof InstructionLineController) {
+        final InstructionLineController iolc =
+          (InstructionLineController) oldlc;
+        iolc.dispose();
+      }
       my_editor_lines.remove(i);
       my_editor_lines.add(newlc);
     }
@@ -403,17 +433,12 @@ public final class BytecodeController {
                                         final int an_end_rem)
     throws UmbraException {
     MethodGen mg = null;
-    if (a_start_rem < an_end_rem) {
-      mg = ((InstructionLineController)my_editor_lines.get(a_start_rem)).
-           getMethod();
-    } else {
-      final InstructionLineController il = getInstructionLineAround(
-                                                   my_editor_lines,
-                                                   a_start_rem);
-      if (il != null) {
-        mg = il.getMethod();
-      } else {
-        throw new UmbraException();
+    for (int i = a_start_rem; i >= 0; i--) {
+      final BytecodeLineController bcl =
+        (BytecodeLineController)my_editor_lines.get(i);
+      if (bcl instanceof HeaderLineController) {
+        mg = ((HeaderLineController)bcl).getMethod();
+        break;
       }
     }
     return mg;
@@ -621,11 +646,22 @@ public final class BytecodeController {
       a_methodnum = ((BytecodeLineController)my_instructions.getLast()).
                   getMethodNo() + 1;
     }
-    my_modified = new boolean[a_methodnum];
-    for (int a_method_count = 0; a_method_count < my_modified.length;
-         a_method_count++)
-      my_modified[a_method_count] = false;
+    if (my_modified == null) {
+      my_modified = new boolean[a_methodnum];
+      for (int a_method_count = 0; a_method_count < my_modified.length;
+           a_method_count++)
+        my_modified[a_method_count] = false;
+    }
     if (UmbraHelper.DEBUG_MODE) controlPrint(0);
+  }
+
+  /**
+   * This method causes the initialisation of the table which keeps track
+   * of the modified methods.
+   *
+   */
+  public void initModTable() {
+    my_modified = null;
   }
 
 }

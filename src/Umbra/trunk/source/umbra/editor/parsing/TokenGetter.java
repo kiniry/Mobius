@@ -34,6 +34,7 @@ public final class TokenGetter {
   private TokenGetter() {
   }
   /**
+   * TODO
    * @param the_colour_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@link umbra.editor.BytecodeConfiguration} object

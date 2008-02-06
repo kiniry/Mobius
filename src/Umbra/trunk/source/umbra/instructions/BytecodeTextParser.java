@@ -257,7 +257,7 @@ public class BytecodeTextParser {
     }
     if (my_comment_array != null) {
       if (my_comment_array[my_instruction_no] != null) {
-        my_comments.put(a_lc, my_current_comment);
+        my_comments.put(a_lc, my_comment_array[my_instruction_no]);
       }
     }
   }

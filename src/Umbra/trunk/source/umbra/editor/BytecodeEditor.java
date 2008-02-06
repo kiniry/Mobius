@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextEditor;
@@ -248,7 +249,6 @@ public class BytecodeEditor extends TextEditor {
       bcc = new BCClass(jc);
       final BMLParsing bmlp = new BMLParsing(bcc);
       a_doc.setEditor(this, bmlp); //refresh BCEL structures
-      a_doc.initModTable();
       //this is where the textual representation is generated
       final InputStream stream = getDocumentStream(a_doc);
       final FileEditorInput input = (FileEditorInput)getEditorInput();
@@ -418,12 +418,18 @@ public class BytecodeEditor extends TextEditor {
    * functionality, we must change that mode into another one. This is done
    * with the help of this method which replaces the colouring logic with
    * a one which is created here.
+   *
+   * @param a_doc the document for which we change the colouring
    */
-  public void renewConfiguration() {
+  public void renewConfiguration(final BytecodeDocument a_doc) {
     my_bconf = new BytecodeConfiguration();
     final SourceViewer sv = ((SourceViewer)getSourceViewer());
     sv.unconfigure();
     setSourceViewerConfiguration(my_bconf);
     sv.configure(my_bconf);
+    //it is weird that this must be set by hand
+    final IAnnotationModel am = sv.getAnnotationModel();
+    am.connect(a_doc);
+    sv.refresh();
   }
 }
