@@ -78,6 +78,13 @@ BEGIN
   var_names(a : MVA) : finite_set[Name] =
     union(var_names(vdsA(a)), var_names(vdsP(a)))
 
+  get_MVAVarDecl(n : Name, a : MVA) : lift[MVAVarDecl] =
+    LET vds = {vd : MVAVarDecl | vdsA(a)(vd) AND name(vd) = n}  IN
+      IF empty?(vds) 
+      THEN bottom 
+      ELSE up(choose(vds))
+      ENDIF
+
 
 END MVA
 
@@ -149,8 +156,7 @@ BEGIN
 END WellFormedMVA
 
 
-% Operational semantics for MVAs
-MVASemantics[CP, Name : TYPE+] : THEORY
+MVAProperties[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING WellFormedMVA[CP, Name]
@@ -190,6 +196,94 @@ BEGIN
 
   AUTO_REWRITE- complete, total, deterministic
 
+  % Preconditions for completeMVA
+  good_for_monitoring(a : (wf_MVA)) : boolean =
+    deterministic(a) AND NOT cps(a)(halted)
+
+END MVAProperties
+
+
+MVACommonSemantics[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING WellFormedMVA[CP, Name]
+
+  % Updates a store
+  update(st : Store)(n : Name)(v : Val) : Store =
+    LAMBDA(m : Name) :
+      IF m = n
+      THEN v
+      ELSE st(m)
+      ENDIF
+
+
+
+  %  Well formed states
+
+  wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
+    FORALL (n : Name) :
+      var_names(vds)(n) IFF defined?(st(n))
+
+
+  % NOTE: Recall that we assume that variables in PSt are fields.
+  % Variables in PSt are a subset of the program variables, if we require them
+  % to be equal then we can use an IFF
+  wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
+    FORALL (n : Name) :
+      var_names(vds)(n) IMPLIES defined?(fvs(st)(n))
+
+
+  update_yields_wf_Store : LEMMA % :-)
+    FORALL (a : MVA, st : Store, n : Name, v : Val) :
+      wf_Store(vdsA(a))(st) IMPLIES
+      (Bottom?(st(n)) IFF Bottom?(v)) IMPLIES
+        wf_Store(vdsA(a))(update(st)(n)(v))
+
+  % A program event is an event that occurred in the program together with the 
+  % value of its variables at that point
+  PEvent : TYPE =
+    [# stP : PSt,
+       event : Event,
+       arg : ValOrExcpt
+    #]
+
+  wf_PEvent(a : MVA)(pe : PEvent) : boolean =
+    evs(a)(event(pe)) AND wf_PSt(vdsP(a))(stP(pe))
+
+  % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
+  % Since we only consider the PSt of the state of the program, actions can not
+  % talk about existing ghost variables in the monitored program, but that is 
+  % fine since we assumed that they are fields (although it could be extended to
+  % handle ghosts as well).
+  eval(e : Expr)(stA : Store, stP : PSt) : Val
+
+  % The evaluation of actions must return a defined value (thus it can not
+  % return a state with an exception). 
+  % Note that this is required by well_behaved_MVA, but for simplicity we
+  % ask it here (otherwise we have to move execute_action_yields_wf_state
+  % to MonitoredProgramSemantics).
+  eval_yields_not_bottom : AXIOM
+    FORALL (a : MVA, e : Expr, stA : Store, stP : PSt) :
+      wf_Store(vdsA(a))(stA) IMPLIES
+      wf_PSt(vdsP(a))(stP) IMPLIES
+        defined?(eval(e)(stA, stP))
+
+
+  execute_action(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
+    IF null?(l)
+    THEN stA
+    ELSE execute_action(cdr(l))(update(stA)(target(car(l)))
+                                            (eval(source(car(l)))(stA, stP)),
+                                 stP)
+    ENDIF
+  MEASURE length(l)
+
+  execute_action_yields_wf_state : LEMMA % :-)
+    FORALL (a : MVA, l : Action, stA : Store, stP : PSt) :
+      wf_Store(vdsA(a))(stA) IMPLIES
+      wf_PSt(vdsP(a))(stP) IMPLIES
+      wf_Action(a)(l) IMPLIES
+        wf_Store(vdsA(a))(execute_action(l)(stA, stP))
 
   % The state of a MVA is composed by its currrent control point and values for
   % its variables
@@ -197,13 +291,6 @@ BEGIN
     [# cp : CP,
        stA : Store
     #]
-
-  get_MVAVarDecl(n : Name, a : MVA) : lift[MVAVarDecl] =
-    LET vds = {vd : MVAVarDecl | vdsA(a)(vd) AND name(vd) = n}  IN
-      IF empty?(vds) 
-      THEN bottom 
-      ELSE up(choose(vds))
-      ENDIF
 
   % Initial state of a MVA
   initial_MVA_state(a : MVA) : AState =
@@ -216,22 +303,97 @@ BEGIN
          ENDIF
     #)
 
+  wf_AState(a : MVA)(s : AState) : boolean =
+    cps(a)(cp(s)) AND
+    wf_Store(vdsA(a))(stA(s))
 
-  % A program event is an event that occurred in the program together with the 
-  % value of its variables at that point
-  PEvent : TYPE =
-    [# stP : PSt,
-       event : Event,
-       arg : ValOrExcpt
-    #]
 
-  % Updates a store
-  update(st : Store)(n : Name)(v : Val) : Store =
-    LAMBDA(m : Name) :
-      IF m = n
-      THEN v
-      ELSE st(m)
+  %  Well-formed lemmas
+
+  wf_initial_MVA_state: LEMMA % :-)
+    FORALL (a: MVA) :
+      wf_MVA(a) IMPLIES wf_AState(a)(initial_MVA_state(a))
+
+
+
+END MVACommonSemantics
+
+
+% Operational semantics for MVAs
+MVAPartialSemantics[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MVACommonSemantics[CP, Name], 
+            MVAProperties[CP, Name]
+
+  % Single judgement for a MVA
+  step(a : MVA)(s : (wf_AState(a)), pe : (wf_PEvent(a))) : lift[AState] =
+      IF EXISTS (t : Transition) :
+                       ts(a)(t) AND 
+                       scp(t) = cp(s) AND 
+                       event(t) = event(pe) AND
+                       guard(t)(stA(s), stP(pe), arg(pe))
+      THEN LET t = choose(LAMBDA (t : Transition) : 
+                       ts(a)(t) AND 
+                       scp(t) = cp(s) AND 
+                       event(t) = event(pe) AND
+                       guard(t)(stA(s), stP(pe), arg(pe))) IN
+      up((# cp := tcp(t),
+         stA := execute_action(action(t))(stA(s), stP(pe))
+         #))
+      ELSE bottom
       ENDIF
+
+
+  %  Well-formed lemmas
+
+
+  step_yields_wf_state : THEOREM % :-)
+    FORALL (a : MVA, s : (wf_AState(a)), pe : (wf_PEvent(a))) :
+      wf_MVA(a) IMPLIES
+      up?(step(a)(s, pe)) IMPLIES
+      wf_AState(a)(down(step(a)(s, pe)))
+
+
+END MVAPartialSemantics
+
+
+% Operational semantics for MVAs
+MVATotalSemantics[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MVACommonSemantics[CP, Name],
+            MVAProperties[CP, Name]
+
+  % Single judgement for a MVA
+  step(a : (total))(s : (wf_AState(a)), pe : (wf_PEvent(a))) : AState =
+      LET t = choose(LAMBDA (t : Transition) : 
+                       ts(a)(t) AND 
+                       scp(t) = cp(s) AND 
+                       event(t) = event(pe) AND
+                       guard(t)(stA(s), stP(pe), arg(pe))) IN
+      (# cp := tcp(t),
+         stA := execute_action(action(t))(stA(s), stP(pe))
+      #)
+
+
+
+  %  Well-formed lemmas
+
+  step_yields_wf_state : THEOREM % :-)
+    FORALL (a : (total), s : (wf_AState(a)), pe : (wf_PEvent(a))) :
+      wf_MVA(a) IMPLIES
+      wf_AState(a)(step(a)(s, pe))
+
+
+END MVATotalSemantics
+
+
+
+MVAMonitoring[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING WellFormedMVA[CP, Name]
 
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
@@ -265,103 +427,13 @@ BEGIN
           member(l, action(t)) IMPLIES
             contains_no_method_call(source(l))
 
-  % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
-  % Since we only consider the PSt of the state of the program, actions can not
-  % talk about existing ghost variables in the monitored program, but that is 
-  % fine since we assumed that they are fields (although it could be extended to
-  % handle ghosts as well).
-  eval(e : Expr)(stA : Store, stP : PSt) : Val
-
-
-  execute_action(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
-    IF null?(l)
-    THEN stA
-    ELSE execute_action(cdr(l))(update(stA)(target(car(l)))
-                                            (eval(source(car(l)))(stA, stP)),
-                                 stP)
-    ENDIF
-  MEASURE length(l)
-
-
-  %  Well formed states
-
-  wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
-    FORALL (n : Name) :
-      var_names(vds)(n) IFF defined?(st(n))
-
-
-  % NOTE: Recall that we assume that variables in PSt are fields.
-  % Variables in PSt are a subset of the program variables, if we require them
-  % to be equal then we can use an IFF
-  wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
-    FORALL (n : Name) :
-      var_names(vds)(n) IMPLIES defined?(fvs(st)(n))
-
-
-  wf_AState(a : MVA)(s : AState) : boolean =
-    cps(a)(cp(s)) AND
-    wf_Store(vdsA(a))(stA(s))
-
-  wf_PEvent(a : MVA)(pe : PEvent) : boolean =
-    evs(a)(event(pe)) AND wf_PSt(vdsP(a))(stP(pe))
-
-
-  update_yields_wf_Store : LEMMA % :-)
-    FORALL (a : MVA, st : Store, n : Name, v : Val) :
-      wf_Store(vdsA(a))(st) IMPLIES
-      (Bottom?(st(n)) IFF Bottom?(v)) IMPLIES
-        wf_Store(vdsA(a))(update(st)(n)(v))
-
-  % Single judgement for a MVA
-  step(a : (total))(s : (wf_AState(a)), pe : (wf_PEvent(a))) : AState =
-      LET t = choose(LAMBDA (t : Transition) : 
-                       ts(a)(t) AND 
-                       scp(t) = cp(s) AND 
-                       event(t) = event(pe) AND
-                       guard(t)(stA(s), stP(pe), arg(pe))) IN
-      (# cp := tcp(t),
-         stA := execute_action(action(t))(stA(s), stP(pe))
-      #)
-
-
-  %  Well-formed lemmas
-
-  wf_initial_MVA_state: LEMMA % :-)
-    FORALL (a: MVA) :
-      wf_MVA(a) IMPLIES wf_AState(a)(initial_MVA_state(a))
-
-  % The evaluation of actions must return a defined value (thus it can not
-  % return a state with an exception). 
-  % Note that this is required by well_behaved_MVA, but for simplicity we
-  % ask it here (otherwise we have to move execute_action_yields_wf_state
-  % to MonitoredProgramSemantics).
-  eval_yields_not_bottom : AXIOM
-    FORALL (a : MVA, e : Expr, stA : Store, stP : PSt) :
-      wf_Store(vdsA(a))(stA) IMPLIES
-      wf_PSt(vdsP(a))(stP) IMPLIES
-        defined?(eval(e)(stA, stP))
-
-  execute_action_yields_wf_state : LEMMA % :-)
-    FORALL (a : MVA, l : Action, stA : Store, stP : PSt) :
-      wf_Store(vdsA(a))(stA) IMPLIES
-      wf_PSt(vdsP(a))(stP) IMPLIES
-      wf_Action(a)(l) IMPLIES
-        wf_Store(vdsA(a))(execute_action(l)(stA, stP))
-
-  step_yields_wf_state : THEOREM % :-)
-    FORALL (a : (total), s : (wf_AState(a)), pe : (wf_PEvent(a))) :
-      wf_MVA(a) IMPLIES
-      wf_AState(a)(step(a)(s, pe))
-
-
-END MVASemantics
+END MVAMonitoring
 
 
 MVACompletion[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVASemantics[CP, Name],
-            EpsilonProps
+  IMPORTING MVAProperties[CP, Name]
 
   % Returns the set of guards from transitions with cp as source control
   % point and e as event
@@ -388,12 +460,9 @@ BEGIN
                             AND action(t) = skip AND tcp(t) = halted})
 
 
-  % Preconditions for completeMVA
-  complete_MVA_pre(a : (wf_MVA)) : boolean =
-    deterministic(a) AND NOT cps(a)(halted)
 
   % Makes a deterministic MVA total
-  complete_MVA(a : (complete_MVA_pre)) : MVA =
+  complete_MVA(a : (good_for_monitoring)) : MVA =
     a WITH [cps := add(halted, cps(a)),
             ts := union(ts(a), complete_trans(a))]
 
@@ -403,23 +472,24 @@ BEGIN
       wf_MVA(a) IMPLIES wf_Guard(a)(build_guard(a)(cp, e))
 
   complete_MVA_yields_wf_MVA : LEMMA % :-)
-    FORALL (a : (complete_MVA_pre)) :
+    FORALL (a : (good_for_monitoring)) :
       wf_MVA(complete_MVA(a))
 
   complete_MVA_has_trap_state: LEMMA % :-)
-    FORALL (a : (complete_MVA_pre)) :
+    FORALL (a : (good_for_monitoring)) :
       trap_state(halted, complete_MVA(a))
 
   complete_MVA_is_deterministic : LEMMA % :-)
-    FORALL (a : (complete_MVA_pre)) :
+    FORALL (a : (good_for_monitoring)) :
       deterministic(complete_MVA(a))
 
   complete_MVA_is_total : LEMMA % :-)
-    FORALL (a : (complete_MVA_pre)) :
+
+    FORALL (a : (good_for_monitoring)) :
       total(complete_MVA(a))
 
   complete_MVA_is_complete : THEOREM % :-)
-    FORALL (a : (complete_MVA_pre)) :
+    FORALL (a : (good_for_monitoring)) :
       complete(complete_MVA(a))
 
 

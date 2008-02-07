@@ -1,7 +1,7 @@
 MonitoredProgram[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  IMPORTING MVASemantics[CP, Name],
+  IMPORTING MVAProperties[CP, Name],
             WellFormedProgram[Name]
 
   MonitoredProgramPre : TYPE =
@@ -77,7 +77,7 @@ MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MonitoredProgram[CP, Name],
-            MVASemantics[CP, Name]
+            MVATotalSemantics[CP, Name]
 
   % Monitored Program State
   MPState : TYPE =
