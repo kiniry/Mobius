@@ -8,7 +8,8 @@ BEGIN
 
   ENDASSUMING
 
-  IMPORTING MonitoredProgram[CP, Name]
+  IMPORTING MonitoredProgram[CP, Name],
+            MVAMonitoring[CP, Name]
 
   forbidden_names(mp : MonitoredProgram) : set[Name] =
     union(declared_var_names(program(mp)),

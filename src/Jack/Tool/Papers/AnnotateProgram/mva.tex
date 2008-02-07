@@ -26,7 +26,12 @@ MVA and programs share the definitions of values, types and exceptions, denoted
 \Val, \Type and \Excpt, 
 respectively, defined by the following grammar (where \(\mathbb{B}\) and
 \(\mathbb{Z}\) denote the standard sets of booleans and integers,
-respectively).
+respectively)\footnote{We will
+use a PVS-like notation to declare abstract data types and records
+(enclosed by brackets \(\opr\) and \(\clr\)). Further, if \(x\) is a
+record with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
+\textsf{y}, and \(x \opri\mathsf{y} := z\clri\) to denote the record
+\(x\) with the field \textsf{y} updated to \(z\).}.
 \[
 \begin{array}{rcl}
 \Val & = & \B(b : \mathbb{B}) \mid \I(i : \mathbb{Z}) \mid \Null \mid
@@ -74,9 +79,7 @@ monitor). Figure~\ref{FigMVAForm} shows the main types of the MVA
 definition (the types of \FieldDecl and \LocalVarDecl will also be
 used in the abstract syntax of programs).  Notice that the monitor
 variables are explicitly initialised, in contrast to the MVA's program
-variables: their value is retrieved from the program state.  We will
-use a PVS-like notation to declare abstract data types and records
-(enclosed by brackets \(\opr\) and \(\clr\)).
+variables: their value is retrieved from the program state.  
 
 \begin{figure}[t]
 \[
@@ -184,7 +187,7 @@ In a total MVA, the transition function \(\Delta_a\) is total. Notice
 that a partial automaton gets stuck on a certain input if and only if the
 complete MVA will reach the state \halted.
 
-\begin{equation}
+\begin{equation}\label{MVAcompletionProp}
 \Delta_a(s_A, s_P, e) = \perp \Leftrightarrow
 \cp (\Delta_{\complete(a)}(s_A, s_P, e)) = \halted
 \end{equation}

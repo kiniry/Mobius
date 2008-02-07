@@ -87,8 +87,12 @@ steps. First we define a translation from a partial automaton,
 no transition enabled, to a complete automaton, \emph{i.e},\ an
 automaton that always has a transition enabled, but that contains a
 special \textsf{halted} state, that models that an error has occurred,
-and from which one cannot leave. We show that the behaviour of a
-program that is monitored with a partial program is equivalent to the
+and from which one cannot leave. Often it is much more intuitive to
+specify a security property by a partial automaton, because this
+avoids that the automaton is cluttered up with transition that
+\emph{``go wrong''}. However, for many tools and algorithms, a total
+automaton is easier to handle. We show that the behaviour of a program
+that is monitored with a partial program is equivalent to the
 behaviour of a program that is monitored with a complete
 automaton. Then we define how the complete monitor gives rise to
 annotations. We do this by adding special ghost variables to model the

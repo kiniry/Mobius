@@ -22,9 +22,9 @@ bisimilar, \emph{i.e.}, we show for every program translation step
 \(\alpha\) there exists a relation \(R\) such that:
 \[
 \begin{array}{l}
-\etp{P}{b,\sigma_1}{v_1, \sigma_2} \Rightarrow\\
-\etp{\alpha(P)}{b, \tau_1}{v_2, \tau_2} \Rightarrow\\
-R(\sigma_1, \tau_1) \Rightarrow\\
+\etp{P}{b,\sigma_1}{v_1, \sigma_2} \Rightarrow
+\etp{\alpha(P)}{b, \tau_1}{v_2, \tau_2} \Rightarrow
+R(\sigma_1, \tau_1) \Rightarrow
 R(\sigma_2, \tau_2) 
 \end{array}
 \]
@@ -37,88 +37,206 @@ length. However, to be able to prove that this way, we have to make
 some restrictions. In particular, many translation steps introduce new
 (ghost) variables to encode the MVA. Therefore, to be able to apply
 induction, we typically require that the body \(b\) does not contain
-any new variables. The new variables occur only at specific points
-in the program, and for these point separate preservation lemmas have
-to be proven. Further, since we need to ensure in both programs the
-same branches of conditional expressions and statements are taken, and
-that the same values get assigned to the store, we also prove that the
-resulting values \(v_1\) and \(v_2\) are the same (however, sometimes
-this holds only under certain conditions).
+any new variables. The new variables occur only at specific points in
+the program, and for these point separate preservation lemmas have to
+be proven. Further, to be able to complete the proof, we need to
+ensure that in both bodies the same branches of conditional
+expressions and statements are taken, and that the same values get
+assigned to the store. Therefore, we also prove that the resulting
+values \(v_1\) and \(v_2\) are the same (however, sometimes this holds
+only under certain conditions).
 
 
-However, since many of the 
 
-This section presents more details of the different steps, and shows
-the 
+This section presents more details of the different translation steps,
+and shows the relation that relates the derivations in the two
+different programs. Further, for every step we discuss the conditions
+under which the equivalence holds.
 
-the first step generates
-special pre-set, post-set and exceptional post-set annotations. This
-has the advantage that we do not have to do any code transformations;
-it is the program semantics for method calls that ensures that the set
-statements are executed at appropriate points. However, these
-set-statements are not part of standard JML. Therefore, the second
-step of the algorithm generates standard JML set statements that are
-inserting in all relevant method bodies. To ensure that the
-appropriate set statements are executed (in particular upon method
-exit), a try-catch statement is wrapped around the method body. 
+%\begin{figure}
+%\begin{center}
+%\epsfig{file=annotgen_example, width=4cm}
+%\end{center}
+%\caption{MVA fragment to illustrate set-annotation
+%generation}\label{FigAnnotGenExample}
 
-Below we present both steps of the algorithm and we prove that the
-annotations capture the MVA appropriately.
+%\end{figure}
 
-\begin{figure}
-\begin{center}
-\epsfig{file=annotgen_example, width=4cm}
-\end{center}
-\caption{MVA fragment to illustrate set-annotation
-generation}\label{FigAnnotGenExample}
+\paragraph{Completion of the automaton}
+The first translation step does not change the program itself, it only
+completes the MVA.  Suppose that \(P\) be a monitored program, where
+\(\mva(P)\) is determistic and wellformed. Then the translation to a
+monitored program with a total MVA, \(\alpha_1(P)\) is defined as:
+\[
+\opri \mva := \complete(\mva(P)), \program(P) \clri
+\]
 
+The relation that is preserved between executions of \(P\) and
+\(\alpha_1(P)\) is the following (where \(\sigma\) is a state of
+\(P\) and \(\tau\) is a state of \(\alpha_1(P)\)
+\[R(\sigma, \tau) \hat=
+ \begin{array}[t]{l}
+  (\sigma.stuck \Leftrightarrow \tau.\mvastate.\cp = \halted) \:\wedge \\
+  (\sigma.\mvastate.\stA = \tau.\mvastate.\stA) \:\wedge \\
+  (\sigma.\progstate = \tau.\progstate)
+\end{array}
+\]
+
+To prove that this relation is preserved for any body \(b\), we make
+use of equivalence (\ref{MVAcompletionProp}) on
+Page~\pageref{MVAcompletionProp} and we observe further that
+\begin{inparaenum}[(\itshape i\upshape)]
+\item if \stuck has been set, it remains set,
+\item if \halted is reached, it is never left, and
+\item if the MVA is total, \stuck is never set.
+\end{inparaenum}. Formally, where \(P\) is a monitored program, and
+\(Q\) is a monitored program with compete MVA:
+\[
+\begin{array}[t]{rl}
+\sigma_1.\stuck \Rightarrow
+\etp{P}{b,\sigma_1}{v,\sigma_2} \Rightarrow & 
+\sigma_2.\stuck \\
+\sigma_1.\mvastate.\cp = \halted \Rightarrow
+\etp{P}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
+\sigma_2.\mvastate.\cp = \halted \\
+\neg \sigma_1.\stuck \Rightarrow
+\etp{Q}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
+\neg \sigma_2.\stuck 
+\end{array}
+\]
+
+For our running example, applying translation \(\alpha_1\) means that
+where class \texttt{Messaging} in Figure~\ref{FigExampleImplem} was
+first monitored with the partial MVA in Figure~\ref{FigExample}, after
+the translation it is monitored with the complete MVA in
+Figure~\ref{FigCompleteMVA}. 
+
+\paragraph{From MVA to Annotations}
+
+\begin{figure}[t]
+\[
+\begin{array}{rcl}
+\alpha_2(P) & = &\opri \classes := 
+\{\alpha_{2, \mathcal{C}}(c, \mva(P)) \mid c \in P.\classes\} \clri\\
+
+\alpha_{2,\mathcal{C}}(c, a) & = &
+\mathsf{if\ }c.\name = a.\clname\\
+&&
+\mathsf{then\ }c \:\opri 
+ \begin{array}[t]{l} 
+ \gvs := \gvs(c) \cup \newgvs(a)\\
+ \inv := \Conj(\Not(\Eq(\texttt{cp}, \texttt{halted})), c.\inv)\\
+ \methods := \{\alpha_{2,\mathcal{M}}(m, a) \mid m \in c.\methods\} \clri
+\end{array}\\
+&& \mathsf{else }c\\
+\alpha_{2,\mathcal{M}}(m, a) & = & m \: \opri
+  \begin{array}[t]{l}
+  \preset := \begin{array}[t]{l}
+             \preset(m); \alpha_{2,\mathcal{E}}(\entry, m.\name, a);\\
+             \Assert(\Not(\Eq(\texttt{cp}, \texttt{halted}))), 
+             \end{array}\\
+  \postset := \postset(m); \alpha_{2, \mathcal{E}}(\exit, m.\name, a)\\
+  \excset := \excset(m); \alpha_{2, \mathcal{E}}(\excexit, m.\name, a)
+  \clri
+  \end{array}\\
+\alpha_{2, \mathcal{E}}(e, n, a) & = & 
+  \alpha_{2, \mathcal{T}}(\{t \mid t \in a.\trans \wedge 
+                                   t.\event = \opri \event := e,
+                                                    \mname := m \clri
+                           \})\\
+\alpha_{2, \mathcal{T}}(ts) & = &
+  \CaseJML(
+    \{(\begin{array}[t]{l}
+       \Eq(\texttt{cp}, \texttt{q}),\\
+       \CaseJML(\{(t.\guard, \Set(\texttt{cp}, t.\tcp; t.\action)) \mid 
+                  t \in ts \wedge t.\scp = \texttt{q}
+               \}))\\
+    \mid \texttt{q} \in a.\cps 
+    \})
+    \end{array}
+\end{array}
+\]
+\caption{Formal definition of translation MVA into annotations}
+\label{FigMVAtoAnnot}
 \end{figure}
-\subsection{Step 1 of the Algorithm}
-The annotation generation algorithm selects the appropriate class of a
-program and annotates all relevant methods. The algorithm proceeds as
-follows.
-\begin{enumerate}
-\item It is ensured that all methods that have to be annotated have a
-body in this class. If a method is inherited from a superclass, a
-dummy-body is generated that directly calls the method from the
-superclass.
-\item New ghost variable declarations are added that encode the
-control points of the automaton:
-\begin{itemize}
+
+
+Figure~\ref{FigMVAtoAnnot} contains the formal definition of the
+second translation step: from MVA to method-level
+set-annotations. Given a monitored program \(P\) where \(\mva(P)\) is
+total. The annotation generation algorithm \(\alpha_2\) applies
+\(\alpha_{2, \mathcal{C}}\) to all
+class. This function checks whether the class is the one being
+monitored. If so, appropriate ghost variables are added to the class
+using function \newgvs, that is not formally defined here. Basically 
+\begin{inparaenum}[(\itshape i\upshape)]
 \item for each control point of the automaton, a (final) ghost
 variable declaration is generated, initialised to a unique value;
 \item a ghost variable \texttt{cp} is declared, initialised to the
 value of the ghost variable representing the initial control point;
 \item for each automaton variable declaration, a ghost variable is
 declared with corresponding type and initialisation.
-\end{itemize}
-\item A class invariant is added that the ghost variable \texttt{cp}
-should never be equal to the value of the ghost variable representing
-the special control point \halted.
-\item For each method that is mentioned in the set of events of the
-MVA, appropriate pre-, post- and exceptional post-set annotations are
-generated. The set annotations use the \CaseJML statement. The exact
-algorithm is best illustrated with an example. Suppose that we have
-the MVA displayed in Figure~\ref{FigAnnotGenExample}, where \texttt{x}
-is supposed to be an automaton variable. It has 
-three transitions labelled \(\opri \etype := \entry,
-\mname := m\clri\) for some method \(m\). The \preset annotation
-of method \(m\) contains a \CaseJML statement with three branches: the
-first branch tests whether \texttt{cp} has the value of the ghost
-variable representing control point \(c\) and \(p\) holds, the second
-tests whether we are in \(c\) and \(\neg p\) holds \emph{etc.}. Notice
-that the guards are now legal JML expressions, as all MVA variables
-have been mapped into ghost variable declarations. In the first branch
-\texttt{cp} is set to the ghost variable representing
-\(c''\), and the ghost variable \texttt{x} is set to 3. In the second
-branch,  \texttt{cp} is set to \(c'''\) and \texttt{x} to 5, and in
-the last branch (\texttt{cp} = \(c'\)) \texttt{cp} is always set to
-\(c'''\) and \texttt{x} is not changed.
-
+\end{inparaenum}
+Further, \(\alpha_{2, \mathcal{C}}\) adds the condition that the
+current control point should not be halted to the class
+invariant\footnote{For readability, we do not explicitly write the
+translation from MVA control points to ghost variables.}, and then it
+annotates all methods in the class using \(\alpha_{2,
+\mathcal{M}}\). For each method in the class, its \preset, \postset
+and \excset are extended with updates to the ghost variables encoding
+the automaton. In addition, at the end of the \preset, an \Assert
+statement is added to verify that the transition did not reach the
+\halted state: in that case program execution should terminate
+immediately, and without this \Assert, the invariant violation will
+only be detected after the body is executed. To encode the updates to
+the ghost variables, first \(\alpha_{2, \mathcal{E}}\) computes the
+set of relevant transitions (\emph{i.e.}, those where the event and
+method name correspond). For these transitions, a \CaseJML
+statement is generated, where the different cases correspond to the current
+control point being equal to a control point \texttt{q}, for any
+\texttt{q} in the automaton. For each such \texttt{q}, all transitions
+with \(t.\scp\) is \texttt{q} are selected and a \CaseJML
+statement is generated, testing for each of the transitions whether
+the guard holds, and if so, setting the control point \texttt{cp} to
+\(t.\tcp\), and executing the actions that correspond to this
+transition. 
 Notice that the order in which the different cases are generated is
-not important: since the MVA is total there is always exactly one case
-that applies.
-\end{enumerate}
+not important: since the MVA is total and deterministic there is
+always exactly one case that applies.
+
+
+
+
+For clearity of presentation, we have ignored here that \preset, \postset and
+\excset are actually functions, taking the method parameter, result or
+exception, respectively as input. However, in the complete PVS
+formalisation this is correctly handled. 
+
+Further, the formalasition does not formally discuss how the guard and
+the actions are translated into expressions in the programming
+language, but we assume the following for these
+...
+
+
+
+%The exact
+%algorithm is best illustrated with an example. Suppose that we have
+%the MVA displayed in Figure~\ref{FigAnnotGenExample}, where \texttt{x}
+%is supposed to be an automaton variable. It has three transitions
+%labelled \(\opri \etype := \entry,
+%\mname := m\clri\) for some method \(m\). The \preset annotation
+%of method \(m\) contains a \CaseJML statement with three branches: the
+%first branch tests whether \texttt{cp} has the value of the ghost
+%variable representing control point \(c\) and \(p\) holds, the second
+%tests whether we are in \(c\) and \(\neg p\) holds \emph{etc.}. Notice
+%that the guards are now legal JML expressions, as all MVA variables
+%have been mapped into ghost variable declarations. In the first branch
+%\texttt{cp} is set to the ghost variable representing
+%\(c''\), and the ghost variable \texttt{x} is set to 3. In the second
+%branch,  \texttt{cp} is set to \(c'''\) and \texttt{x} to 5, and in
+%the last branch (\texttt{cp} = \(c'\)) \texttt{cp} is always set to
+%\(c'''\) and \texttt{x} is not changed.
+
 
 
 \subsection{Step 2 of the Algorithm}

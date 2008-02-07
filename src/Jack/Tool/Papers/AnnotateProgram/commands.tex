@@ -152,13 +152,14 @@
 \newcommand{\JMLExc}{\ensuremath{\mathsf{JMLException}}\xspace}
 \newcommand{\fvs}{\ensuremath{\mathsf{fields}}\xspace}
 \newcommand{\gvs}{\ensuremath{\mathsf{ghost\_vars}}\xspace}
+\newcommand{\newgvs}{\ensuremath{\mathsf{new\_vars}}\xspace}
 \newcommand{\lvs}{\ensuremath{\mathsf{loc\_vars}}\xspace}
 
 \newcommand{\exc}{\ensuremath{\mathit{exc}}\xspace}
 \newcommand{\act}{\ensuremath{\mathit{act}}\xspace}
 
-\newcommand{\etp}[2]{%
-  P \vdash \langle #1 \rangle \triangleright \langle #2 \rangle}
+\newcommand{\etp}[3]{%
+  {#1} \vdash \langle {#2} \rangle \triangleright \langle {#3} \rangle}
 \newcommand{\stp}[2]{%
   P \vdash \langle #1 \rangle \Rightarrow_P #2}
 

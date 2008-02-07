@@ -1,4 +1,4 @@
-\
+
 \section{Programs and Semantics}\label{SecProgram}
 
 This section first defines an abstract syntax of programs, and then it
@@ -157,7 +157,7 @@ The behaviour of a program is described using a big step semantics. We
 closely follow Von Oheimb's formalisation of Java~\cite{Oheimb01},
 with simplifications wherever possible because of our simplified
 program syntax. For every body, we derive a judgement
-$\etp{e,\sigma}{v,\sigma'}$, meaning that  $e$
+$\etp{P}{e,\sigma}{v,\sigma'}$, meaning that  $e$
 evaluates to $v$, while transforming state $\sigma$ into $\sigma'$ in
 the context of program \(P\). Notice that \(v\) is \One for
 (normally) terminating \emph{statements}, while \(v\) is \(\bot\) whenever
@@ -219,22 +219,22 @@ is called upon a null reference \emph{etc.}
 \[
 \begin{array}{c}
 \ex(\progstate(\sigma_0)) = \bot \qquad % no exception in sigma_0
-\etp{o, \sigma_0}{r,\sigma_1} \qquad      % evaluate receiver 
-\etp{p, \sigma1}{\act, \sigma_2}\\          % evaluate argument
+\etp{P}{o, \sigma_0}{r,\sigma_1} \qquad      % evaluate receiver 
+\etp{P}{p, \sigma1}{\act, \sigma_2}\\          % evaluate argument
 %\ex(\progstate(\sigma_2)) = \bot \qquad   % no exceptions
 r \not= \Null \qquad                    % receiver not null
 \md = \lookupmthd(P, r, \mn) \\
 \oldlvs = \sigma_2.\progstate.\st.\lvs \qquad 
 \sigma_3 = \updatelvs(\sigma_2, r, \md.\lvars, md.\param, \act) \\
 \gammain(P, \md, r, \Const(\act), \sigma_3, \sigma_4) \qquad
-\etp{\md.body, \sigma_4}{\One,\sigma_5} \\
-\etp{\md.\res, \sigma_5}{v,\sigma_6}\qquad
+\etp{P}{\md.body, \sigma_4}{\One,\sigma_5} \\
+\etp{P}{\md.\res, \sigma_5}{v,\sigma_6}\qquad
 %\ex(\progstate(\sigma_6)) = \bot
 \gammanorm(P, \md, r, \Const(v), \sigma_6, \sigma_7)\\
 %\ex(\progstate(\sigma_7)) = \bot\\
 \hline
-\etp{\Call(o,\mn,p), \sigma_0}{v, \sigma_7 \with
-\progstate.\st.\lvs := \oldlvs}
+\etp{P}{\Call(o,\mn,p), \sigma_0}{v, \sigma_7 
+(\progstate.\st.\lvs := \oldlvs)}
 \end{array}
 \]
 \caption{Evaluation rule for normal termination of method
@@ -292,21 +292,21 @@ updated.} appropriately.
 \invar = \lookupinv(P, r) \qquad 
 \beta(P, \invar, \sigma_1, \tau_1) \qquad
 \beta(P, \md.\pre(\act), \tau_1, \tau_2) \\
-\etp{\preset(md)(\act), \tau_1}{v,\tau_2} \qquad v\in\{\bot,\One\} \qquad
+\etp{P}{\preset(md)(\act), \tau_1}{v,\tau_2} \qquad v\in\{\bot,\One\} \qquad
 \st(\pstate(\sigma_1)) = \st(\pstate(\sigma_2))\\
 \hline
 \gammain(P, \md, r, \act, \sigma_1, \sigma_2) 
 \smallskip\\
 
 
-\etp{e, \sigma_1}{v, \tau} \qquad
-\pif{v = \B(\ttt)}{\sigma_2 = \tau}{\sigma_2 = \tau \with (\ex := \JMLExc)}\\
+\etp{P}{e, \sigma_1}{v, \tau} \qquad
+\pif{v = \B(\ttt)}{\sigma_2 = \tau}{\sigma_2 = \tau (\ex := \JMLExc)}\\
 \hline
 \beta(P, e, \sigma_1, \sigma_2) 
 
 \smallskip\\
 
-\etp{e, \sigma_1}{v, \tau} \qquad
+\etp{P}{e, \sigma_1}{v, \tau} \qquad
 \pif{\ex(\pstate(\tau)) = \bot}{\sigma_2 = \tau (\gvs.n :=
 v)}{\sigma_2 = \tau}\\
 \hline
@@ -352,15 +352,15 @@ appropriate instantiations for the \(\gamma\)- and
 for the standard or annotated program semantics (depending on whether
 we wish the monitored program to evaluate annotations that are
 possibly already there). Here we show how \gammain changes the state
-of the monitor (for a total MVA), using \(\hat\gammain\) for the
-necessary checks at method entrance in the program itself (\emph{i.e},
-the evaluation of the method specification).
+of the monitor, using \(\hat\gammain\) for the necessary checks at
+method entrance in the program itself (\emph{i.e}, the evaluation of
+the method specification).
 
 \[
 \begin{array}{c}
 \hat\gammain(P, \md, r, \act, \sigma_1, \tau) \\
 \pif{\ex(\pstate(\tau)) = \bot}
-    {\sigma_2 = \tau \with (\mvastate := \delta(\entry)(P, \md, \act, \tau))}
+    {\sigma_2 = \delta(\entry)(P, \md, \act, \tau)}
     {\sigma_2 = \tau}\\
 \hline
 \gammain(P, \md, r, \act, \sigma_1, \sigma_2)
@@ -373,15 +373,40 @@ the evaluation of the method specification).
 \delta(\ev)(P, \md, \act, \sigma) =\\
 \qquad
 \begin{array}[t]{l}
-\mathsf{let\ } e = \opri \etype := \ev, \mname := \md.\name \clri
+\mathsf{let\ } 
+\begin{array}[t]{rcl}
+  e & = & \opri \etype := \ev, \mname := \md.\name \clri\\
+ \tau & = & \Delta_a(\mvastate(\sigma), \progstate(\sigma), e, \act)
+\end{array}
 \mathsf{in\ }\\
-\pif{e \in \evs(\mva(P))}{\Delta_a(\mvastate(\sigma),
-\progstate(\sigma), e, \act)}{\mvastate(\sigma)}
+\pif{\sigma.\stuck \vee \tau = \bot}
+    {\sigma (\stuck := \ttt)}
+    {\sigma (\mvastate := \tau)}
 \end{array}
 \end{array}
 \]
 
 
+\paragraph{Example}
+
+To be able to generate the annotations capturing the security policy
+specified by the LimitSMS automaton in Figure~\ref{FigExample}, below
+is a class declaration of class \texttt{Messaging} declaring the
+methods used by the automaton, plus a method \texttt{receiveSMS}, and
+a field \texttt{counter}. To illustrate our annotation algorithm, we
+do not need to give an implementation here, it is only important to
+know that the methods actually have an implementation.
+\begin{figure}[t]
+\begin{verbatim}
+class Messaging {
+  int counter;
+  void sendSMS(){ /* body sendSMS  */}
+  void receiveSMS(){... }
+  void reset() { /* body reset */}
+}
+\end{verbatim}
+\caption{Implementation of class \texttt{Messaging}}\label{FigExampleImplem}
+\end{figure}
 %\subsubsection{PVS formalisation}
 %As mentioned above, the syntax and semantics for MVA and programming
 %language have been formalised in PVS. 
