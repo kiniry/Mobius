@@ -612,14 +612,15 @@ public class Utils {
 		URL url = FileLocator.find(bundle, p, null);
 		// The substring call is to remove an initial /
 		// FIXME do we remove the / on all platforms?
-		// FIXME - do we need to do these back-and-forth conversions of wil this do:
+		// FIXME - do we need to do these back-and-forth conversions of will this do:
 		// return Platform.resolve(url).getPath().substring(1);
 		URL resolvedURL = FileLocator.resolve(url);
 		String filePath = resolvedURL.getPath();
 		Path resourcePath = new Path(filePath);
 		p = resourcePath.makeAbsolute();
 		String s = p.toOSString();
-		if (System.getProperty("os.name").startsWith("Windows")) s = s.substring(1);
+		// Removing this line because it loses the initial drive letter (C:)
+		// if (System.getProperty("os.name").startsWith("Windows")) s = s.substring(1);
 		return s;
 	}
 	
