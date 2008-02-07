@@ -17,6 +17,40 @@ annotations.
 \end{inparaenum} 
 Notice that the order of the last two steps can be swapped.
 
+For each step we basically prove that the old and the new program are
+bisimilar, \emph{i.e.}, we show for every program translation step
+\(\alpha\) there exists a relation \(R\) such that:
+\[
+\begin{array}{l}
+\etp{P}{b,\sigma_1}{v_1, \sigma_2} \Rightarrow\\
+\etp{\alpha(P)}{b, \tau_1}{v_2, \tau_2} \Rightarrow\\
+R(\sigma_1, \tau_1) \Rightarrow\\
+R(\sigma_2, \tau_2) 
+\end{array}
+\]
+If we then show that the initial program states are related by this
+relation, we can conclude that any reachable states in the program are
+related. 
+
+A natural way to prove this is by induction over the derivation
+length. However, to be able to prove that this way, we have to make
+some restrictions. In particular, many translation steps introduce new
+(ghost) variables to encode the MVA. Therefore, to be able to apply
+induction, we typically require that the body \(b\) does not contain
+any new variables. The new variables occur only at specific points
+in the program, and for these point separate preservation lemmas have
+to be proven. Further, since we need to ensure in both programs the
+same branches of conditional expressions and statements are taken, and
+that the same values get assigned to the store, we also prove that the
+resulting values \(v_1\) and \(v_2\) are the same (however, sometimes
+this holds only under certain conditions).
+
+
+However, since many of the 
+
+This section presents more details of the different steps, and shows
+the 
+
 the first step generates
 special pre-set, post-set and exceptional post-set annotations. This
 has the advantage that we do not have to do any code transformations;

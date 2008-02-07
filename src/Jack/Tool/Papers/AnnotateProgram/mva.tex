@@ -119,6 +119,18 @@ transitions from \halted to \halted for every possible
 event. 
 
 \marginnote{We could give formal definition of completion}
+
+An MVA is \emph{wellformed} if 
+\begin{inparaenum}[(\itshape i\upshape)]
+\item the monitor variable names do not overlap with the reserved
+words, 
+\item the program variable names that are used are unique, 
+\item the guards do not have a side-effect, 
+\item the ransition updates only uses declared variables, and
+\item transitions range between declared control points and are
+labelled with declared events.
+\end{inparaenum}.
+
 %Formally:
 %\[
 %\begin{array}[t]{l}

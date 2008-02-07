@@ -319,22 +319,30 @@ v)}{\sigma_2 = \tau}\\
 
 \paragraph{Monitored Program Semantics}
 We also instantiate the general program semantics for monitored
-programs. This semantics is only defined when the MVA total and
-compatible with the program. An MVA \(a\) is said to be compatible
-with program \(P\), denoted \(a \sqsubseteq P\) if the program
-contains the class \(c\) that is being monitored, all variables
-declared as program variables in
-\(a\) are fields of the class \(c\) with the correct type, and every
-event name corresponds to a method in the class. 
+programs. This semantics is only defined when the MVA compatible with
+the program. An MVA \(a\) is said to be compatible with program \(P\),
+denoted \(a \sqsubseteq P\) if
+\begin{inparaenum}[(\itshape i\upshape)]
+\item the program contains the class \(c\) that is being monitored, 
+\item all variables declared as program variables in
+\(a\) are fields of the class \(c\) with the correct type, and 
+\item every event name corresponds to a method in the class. 
+\end{inparaenum}
+A monitored program is a product of the MVA and the program. The state
+of a monitored program consists of the states of the MVA and the
+program, and a flag \stuck. If the MVA is partial, the flag
+\stuck is set when \(\Delta_a\) is not defined for a
+certain input. If the flag is set, this means that the security policy
+is violated, and the program should be stopped. If the MVA is total,
+the \stuck flag will never be set. Instead, violation of the security
+policy is modelled by the MVA reaching the error state \halted.
 
-A monitored program is a product of the MVA and the program.
-The state of a monitored program consists of the state of the MVA and
-the program.
 
 \[ 
 \begin{array}{rcl}
 \Mprogram & =  & \opr \mva : \MVA, \program : \Program \clr\\
-\Mstate & = & \opr \mvastate : \MVAstate, \progstate : \Pstate \clr
+\Mstate & = & \opr \mvastate : \MVAstate, \progstate : \Pstate, \stuck
+: \mathbb{B} \clr
 \end{array}
 \]
 Thus, \FullProgram gets instantiated as \Mprogram and \FullState as
@@ -343,8 +351,8 @@ appropriate instantiations for the \(\gamma\)- and
 \(\delta\)-relations. In fact, the \(\delta\)-relations are the same as
 for the standard or annotated program semantics (depending on whether
 we wish the monitored program to evaluate annotations that are
-possibly already there). Here we show how \gammain
-changes the state of the monitor, using \(\hat\gammain\) for the
+possibly already there). Here we show how \gammain changes the state
+of the monitor (for a total MVA), using \(\hat\gammain\) for the
 necessary checks at method entrance in the program itself (\emph{i.e},
 the evaluation of the method specification).
 
