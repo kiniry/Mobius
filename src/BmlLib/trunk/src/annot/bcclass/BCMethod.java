@@ -130,21 +130,24 @@ public class BCMethod {
 								bcc.getJC().getConstantPool()) + "\n";
 			}
 		} else {
-			bcode += bcelMethod.getMethod().getCode().toString();
-			bcode = bcode.substring(bcode.indexOf("\n") + 1);
-			bcode = bcode.split("\n\n")[0];
-			String[] lines_in = bcode.split("\n");
-			bcode = "";
-			for (int l = 0; l < lines_in.length; l++) {
-				String line = lines_in[l];
-				int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
-				String annotLines = "";
-				InCodeAttribute[] attrs = amap.getAllAt(findAtPC(pc)).getAll(
-						AType.C_ALL);
-				for (int i = 0; i < attrs.length; i++)
-					annotLines += attrs[i].printCode(conf);
-				bcode += Parsing.addComment(annotLines) + line + "\n";
-			}
+      Method m = bcelMethod.getMethod();
+      if (!m.isAbstract()) {
+        bcode += m.getCode().toString();
+        bcode = bcode.substring(bcode.indexOf("\n") + 1);
+        bcode = bcode.split("\n\n")[0];
+        String[] lines_in = bcode.split("\n");
+        bcode = "";
+        for (int l = 0; l < lines_in.length; l++) {
+          String line = lines_in[l];
+          int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
+          String annotLines = "";
+          InCodeAttribute[] attrs = amap.getAllAt(findAtPC(pc)).getAll(
+                                    AType.C_ALL);
+          for (int i = 0; i < attrs.length; i++)
+            annotLines += attrs[i].printCode(conf);
+          bcode += Parsing.addComment(annotLines) + line + "\n";
+        }
+      }
 		}
 		return code + bcode;
 	}
