@@ -53,7 +53,7 @@ public class FieldInstructionTest extends TestCase {
    */
   public void testGetInstruction() {
     Instruction bcel = instr.getInstruction();
-    assertEquals("getfield", bcel.getName());
+    assertEquals(instrname, bcel.getName());
   }
 
   /**
@@ -80,7 +80,7 @@ public class FieldInstructionTest extends TestCase {
    *        FieldInstruction(java.lang.String, java.lang.String)}.
    */
   public void testFieldInstruction() {
-    instr.getName().equals(instrname);
+    assertTrue(instr.getName().equals(instrname));
   }
 
 }

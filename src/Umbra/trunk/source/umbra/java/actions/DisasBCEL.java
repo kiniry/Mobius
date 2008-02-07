@@ -25,7 +25,6 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeDocument;
-import umbra.editor.BytecodeDocumentProvider;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
 import umbra.editor.parsing.BytecodePartitionScanner;

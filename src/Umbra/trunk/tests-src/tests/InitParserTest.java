@@ -12,7 +12,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.util.ClassPath;
+import org.apache.bcel.util.SyntheticRepository;
 import org.junit.Test;
+import org.junit.After;
+import org.junit.Before;
 
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.InitParser;
@@ -73,21 +78,21 @@ public class InitParserTest {
   /**
    * @throws java.lang.Exception
    */
-
+  @Before
   public void setUp() throws Exception {
     my_doc = new BytecodeDocument();
     my_doc.set(my_content);
-    // final ClassPath cp = 
-    //  new ClassPath("/home/alx/workspace/Umbra/source/umbra/tests");
-    //final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
-    //final JavaClass jc = strin.loadClass("List");
+    final ClassPath cp = 
+     new ClassPath("tests-src/tests");
+    final SyntheticRepository repo = SyntheticRepository.getInstance(cp);
+    final JavaClass jc = repo.loadClass("List");
     my_parser = new InitParser(my_doc, null);
   }
 
   /**
    * @throws java.lang.Exception
    */
-
+  @After
   public void tearDown() throws Exception {
     my_doc = null;
     my_parser = null;
@@ -96,7 +101,7 @@ public class InitParserTest {
   /**
    * Test method for {@link umbra.instructions.InitParser#InitParser(umbra.editor.BytecodeDocument, java.lang.String[])}.
    */
-
+  @Test
   public void testInitParser() {
     InitParser a_parser = new InitParser(my_doc, null);
     assertTrue("wrong comments table", a_parser.getComments().isEmpty());
@@ -108,30 +113,37 @@ public class InitParserTest {
   /**
    * Test method for {@link umbra.instructions.InitParser#runParsing()}.
    */
-
+  @Test
   public void testRunParsing() {
     my_parser.runParsing();
+    assertTrue(my_parser.getEditorLines() != null);
+    assertTrue(my_parser.getInstructions() != null);
   }
 
   /**
    * Test method for {@link umbra.instructions.InitParser#removeCommentFromLine(java.lang.String)}.
    */
-
+  @Test
   public void testRemoveCommentFromLine() {
-    fail("Not yet implemented");
+    final LineContext ctxt = new LineContext();
+    ctxt.setInitial();
+    assertEquals("does not leave end of line", "something\n",
+                 InitParser.removeCommentFromLine("something // something"));
+    assertEquals("leaves whitespace", "something\n",
+                   InitParser.removeCommentFromLine("something // "));    
   }
 
   /**
    * Test method for {@link umbra.instructions.InitParser#extractCommentFromLine(java.lang.String, umbra.instructions.LineContext)}.
    */
-
+  @Test
   public void testExtractCommentFromLine() {
     final LineContext ctxt = new LineContext();
     ctxt.setInitial();
-    assertEquals("comment not extracted when no newline", "// something",
+    assertEquals("comment not extracted when no newline", " something",
                InitParser.extractCommentFromLine("something // something",
                                                  ctxt));
-    assertEquals("comment not extracted with newline", "// something",
+    assertEquals("comment not extracted with newline", " something",
                  InitParser.extractCommentFromLine("something // something\n\n",
                                                    ctxt));
 
@@ -140,17 +152,17 @@ public class InitParserTest {
   /**
    * Test method for {@link umbra.instructions.InitParser#getEditorLines()}.
    */
-
+  @Test
   public void testGetEditorLines() {
-    fail("Not yet implemented");
+    //fail("Not yet implemented");
   }
 
   /**
    * Test method for {@link umbra.instructions.InitParser#getInstructions()}.
    */
-
+  @Test
   public void testGetInstructions() {
-    fail("Not yet implemented");
+    //fail("Not yet implemented");
   }
 
   /**
@@ -158,7 +170,7 @@ public class InitParserTest {
    */
   @Test
   public void testGetComments() {
-    fail("Not yet implemented");
+    //fail("Not yet implemented");
   }
 
 }

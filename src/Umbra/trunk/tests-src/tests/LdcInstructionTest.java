@@ -68,7 +68,7 @@ public class LdcInstructionTest extends TestCase {
    */
 
   public void testFieldInstruction() {
-    instr.getName().equals(instrname);
+    assertTrue(instr.getName().equals(instrname));
   }
 
 }

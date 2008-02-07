@@ -429,7 +429,7 @@ public class BytecodeEditor extends TextEditor {
     sv.configure(my_bconf);
     //it is weird that this must be set by hand
     final IAnnotationModel am = sv.getAnnotationModel();
-    am.connect(a_doc);
+    if (am != null) am.connect(a_doc);
     sv.refresh();
   }
 }
