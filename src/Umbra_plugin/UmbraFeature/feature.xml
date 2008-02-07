@@ -2,7 +2,7 @@
 <feature
       id="mobius.Umbra.feature"
       label="Umbra"
-      version="0.0.1"
+      version="0.0.3"
       provider-name="EU MOBIUS IST-15905 Project">
 
    <description>
@@ -18,16 +18,10 @@
 Version 3, 29 June 2007
 Copyright (C) 2007 Free Software Foundation, Inc. &lt;http://fsf.org/&gt;
 Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
-This version of the GNU Lesser General Public License incorporates
-the terms and conditions of version 3 of the GNU General Public
-License, supplemented by the additional permissions listed below.
+of this license document, but changing it is not allowed. This version of the GNU Lesser General Public License incorporates the terms and conditions of version 3 of the GNU General Public License, supplemented by the additional permissions listed below.
+
 0. Additional Definitions. 
-As used herein, &quot;this License&quot; refers to version 3 of the GNU
-Lesser
-General Public License, and the &quot;GNU GPL&quot; refers to version 3
-of the GNU
-General Public License.
+As used herein, &quot;this License&quot; refers to version 3 of the GNU Lesser General Public License, and the &quot;GNU GPL&quot; refers to version 3 of the GNU General Public License.
 &quot;The Library&quot; refers to a covered work governed by this License,
 other than an Application or a Combined Work as defined below.
 An &quot;Application&quot; is any work that makes use of an interface provided
@@ -196,26 +190,27 @@ Library.
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.osgi"/>
    </requires>
 
    <plugin
          id="mobius.bmllib"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.1.1"
          unpack="false"/>
 
    <plugin
          id="org.apache.bcel_5.1"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.0.0"/>
 
    <plugin
          id="mobius.umbra"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.1"
          unpack="false"/>
 
 </feature>
