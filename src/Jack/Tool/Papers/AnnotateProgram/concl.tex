@@ -1,13 +1,40 @@
 \section{Conclusions \& Future Work }\label{SecConcl}
 
- In earlier work,
-we have presented the propagation
-algorithm~\cite{PavlovaBBHL04}, and proven correctness for a
-limited case (only static properties that do not depend on concrete
-program instances are considered, and branching conditions are not
-taken into account~--~the two possible branches are simply both
-propagated). It is future work to extend this to a complete
-correctness proof, and to improve the propagation algorithm to take
-branching conditions into account (as much as possible). We will then
-also exploit the existing PVS formalisation, to prove the formal
-correctness of the propagation with a theorem prover.
+This paper presents an algorithm to inline security automata into the
+monitored program, in the form of JML annotations. The translation is
+defined in several steps. All steps are formalised and proven correct,
+using the PVS theorem prover. The algorithm might seem trivial, but
+several subtleties complicated the correctness proof. First of all,
+for the main step, where the monitor is encoded in method-level set
+annotations, it was not straightforward to state the correct relation
+that was maintained between the two program executions. In particular,
+once the \halted state is reached, the correspondence between the two
+program states is not preserved anymore, because the monitored program
+might continue executing, while the annotated program throws an
+exception. Also, to prove correctness of this translation step, it was
+important to specify the evaluation of pre/post-condition, class
+invariant and pre/post-set annotations in the right order, to ensure
+that the relation was established as quickly as possible~--~so that
+the induction hypothesis could be applied for the other
+steps. Finally, a last important issue here was the behaviour of the
+\TryCatch statement, where exceptions in the \emph{finally} block can
+overwrite other exceptions.
+
+The formalisation has been developed for a subset of Java. We believe
+that extending it to full (sequential) Java would be relatively
+straightforward. However, generalising to properties that are not
+restricted to a single class might be a bit more challenging.
+
+The ultimate goal of our work is to be able to do static
+verification. To achieve this, a weakest precondition calculus can be
+used to generate pre- and postconditions, based on the generated \Set
+annotations. In earlier work, we have presented such a propagation
+algorithm~\cite{PavlovaBBHL04}, and proven correctness for a limited
+case (only static properties that do not depend on concrete program
+instances are considered, and branching conditions are not taken into
+account~--~the two possible branches are simply both propagated). It
+is future work to extend this to a complete correctness proof, and to
+improve the propagation algorithm to take branching conditions into
+account (as much as possible). We will then also exploit the existing
+PVS formalisation, to prove the formal correctness of the propagation
+with a theorem prover.

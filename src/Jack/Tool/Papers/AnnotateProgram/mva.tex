@@ -198,18 +198,20 @@ Recall the example security automaton in Figure~\ref{FigExample},
 expressing that the method \texttt{sendSMS} can
 be called at most \(N\) times in between calls to a \texttt{reset}
 method. This automaton is formally described by the following
-automaton.
+automaton\footnote{Where \(\epsilon\) denotes an empty sequence.}.
 
 \[
 \begin{array}[t]{l}
 \opri 
 \begin{array}[t]{l}
 \name := \textrm{LimitSMS}, \clname := \texttt{Messaging},\\
-\cps := \{s\},
+\cps := \{s_1, s_2\},
 \init := s,\\
 \evs := \{
 \begin{array}[t]{l}
 \opri \etype := \entry, \mname := \texttt{sendSMS} \clri,\\
+\opri \etype := \exit, \mname := \texttt{sendSMS} \clri,\\
+\opri \etype := \excexit, \mname := \texttt{sendSMS} \clri,\\
 \opri \etype := \exit, \mname := \texttt{reset} \clri\},
 \end{array}
 \\
@@ -223,7 +225,25 @@ automaton.
              \event := \opri \etype := \entry, 
                              \mname := \texttt{sendSMS} \clri, \\
              \guard := \lambda(s_A, s_P, v). n(s_A) < N,
+             \action := \epsilon
+            \clri,
+\end{array}\\
+\opri 
+ \begin{array}[t]{l}
+\scp := s, \tcp := s, 
+             \event := \opri \etype := \exit, 
+                             \mname := \texttt{sendSMS} \clri, \\
+             \guard := \lambda(s_A, s_P, v). \ttt,
              \action := \opri \target := n, \expr := n + 1 \clri 
+            \clri,
+\end{array}\\
+\opri 
+ \begin{array}[t]{l}
+\scp := s, \tcp := s, 
+             \event := \opri \etype := \excexit, 
+                             \mname := \texttt{sendSMS} \clri, \\
+             \guard := \lambda(s_A, s_P, v). \ttt,
+             \action := \epsilon
             \clri,
 \end{array}\\
 \opri 
@@ -250,7 +270,7 @@ the complete MVA.
  
 \begin{figure}[t]
 \begin{center}
-\epsfig{file=completed.eps, width=4cm}
+\epsfig{file=completed_alt.eps, width=4cm}
 \end{center}
 \label{FigCompleteMVA}
 \caption{Automaton of Figure~\ref{FigExample}, after completion}

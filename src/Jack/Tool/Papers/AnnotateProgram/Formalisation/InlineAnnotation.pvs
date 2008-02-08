@@ -176,7 +176,8 @@ BEGIN
           pre_set(m)(var_lookup(name(arg(m)))(jtype(arg(m)))),
           Sequence(
             body(m),
-            StmtExpr(Assign(ex(p)(m), BExpr(TT))))),
+            Sequence(StmtExpr(Assign(res(p)(m), res(m))),
+                     StmtExpr(Assign(ex(p)(m), BExpr(TT)))))),
                              % this is only executed if body terminates
                              % normally
          Throwable,
@@ -186,8 +187,7 @@ BEGIN
        exc_set(m)(NullPointer),
        IfThenElse(
          BoolVarEval(ex(p)(m)),
-         Sequence(StmtExpr(Assign(res(p)(m), res(m))),
-                  post_set(m)(var_lookup(res(p)(m))(res_type(m)))),
+         post_set(m)(var_lookup(res(p)(m))(res_type(m))),
          Skip))
          
 

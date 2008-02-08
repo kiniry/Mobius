@@ -120,16 +120,19 @@ prover~\cite{OwreRRSS96}. The complete formalisation is available via
 
 Throughout this paper, we will use a simple example property to
 illustrate the different translations: the method \texttt{sendSMS} can
-be called at most \(N\) times in between calls to a \texttt{reset}
-method. Figure~\ref{FigExample} shows a security automaton that can be
-used to monitor this property. Even though very basic, this example is
-exemplaric of a wide range of important resource-related security properties.
+be called and terminate successfully at most \(N\) times in between
+calls to a \texttt{reset} method (notice that the counter is not
+increased upon exceptional termination of
+\texttt{sendSMS}). Figure~\ref{FigExample} shows a security automaton
+that can be used to monitor this property. Even though very basic,
+this example is representative for a wide range of important
+resource-related security properties.
 
 \marginnote{psfrag needed to improve layout}
 
 \begin{figure}[t]
 \begin{center}
-\epsfig{file=limited_sms.eps, width=4cm}
+\epsfig{file=limited_sms_alt.eps, width=4cm}
 \end{center}
 \caption{Example Security Automaton}\label{FigExample}
 \end{figure}
@@ -140,7 +143,6 @@ use, and defines completion of automaton. Next,
 Section~\ref{SecProgram} defines the semantics of monitored and
 annotated programs. Then Section~\ref{SecAnnotGen} presents the
 different translations , and proves their
-correctness. Section~\ref{SecTowardsStaticVer} discusses how these
-results will be extended to achieve static verification. Finally,
+correctness. Section~\ref{SecRelated} discusses related work, while
 Section~\ref{SecConcl} concludes and discusses future work.
 
