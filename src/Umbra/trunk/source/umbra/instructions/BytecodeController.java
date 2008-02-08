@@ -12,8 +12,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.text.IDocument;
 
@@ -21,7 +19,6 @@ import umbra.UmbraException;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
-import umbra.editor.actions.BytecodeCombineAction;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
@@ -46,7 +43,7 @@ import umbra.instructions.ast.InstructionLineController;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public final class BytecodeController {
+public final class BytecodeController extends BytecodeControllerHelper {
 
   /**
    * The list of all the lines in the current byte code editor. These lines
@@ -54,6 +51,10 @@ public final class BytecodeController {
    * {@link BytecodeLineController}.
    */
   private LinkedList my_editor_lines;
+  //@ invariant !my_editor_lines.containsNull;
+  /*@ invariant (\forall int i; 0 <= i && i < my_editor_lines.size();
+    @            my_editor_lines.get(i) instanceof BytecodeLineController);
+    @*/
 
   /**
    * The list of all the lines in the editor which contain codes of
@@ -61,20 +62,6 @@ public final class BytecodeController {
    * are subclasses of {@link InstructionLineController}.
    */
   private LinkedList my_instructions;
-
-  /**
-   * The list of all the lines which were detected to be incorrect.
-   */
-  private LinkedList my_incorrect;
-
-  /**
-   * Keeps track of modified methods. Each time a method is modified
-   * an entry with the method number is marked <code>true</code> in the array.
-   * The field is first intialised to be <code>null</code>. It is first
-   * filled with values by the
-   * {@link #init(BytecodeDocument, String[], String[])} method.
-   */
-  private boolean[] my_modified;
 
   /**
    * The container of all the multi-line comments. Each element of the table is
@@ -103,57 +90,7 @@ public final class BytecodeController {
    */
   public BytecodeController() {
     super();
-    my_incorrect = new LinkedList();
     my_interline = new Hashtable();
-  }
-
-  /**
-   * This is a debugging method. It prints out to the standard output the
-   * list of all the instructions in the controller.
-   */
-  public void showInstructionList() {
-    for (int i = 0; i < my_editor_lines.size(); i++) {
-      UmbraPlugin.LOG.print(
-                ((BytecodeLineController)(my_editor_lines.get(i))).
-                                  getMy_line_text());
-    }
-  }
-
-  /*@
-    @ requires UmbraHelper.DEBUG_MODE;
-    @*/
-  /**
-   * This method prints out to the standard output the
-   * list of all the incorrect instructions in the controller. We assume the
-   * calls to this method are guarded by checks of
-   * {@link UmbraHelper#DEBUG_MODE}.
-   */
-  public void showAllIncorrectLines()
-  {
-    UmbraPlugin.messagelog("showAllIncorrectLines" + my_incorrect.size() +
-                             " incorrects:");
-    for (int i = 0; i < my_incorrect.size(); i++) {
-      UmbraPlugin.messagelog(" " +
-             ((BytecodeLineController)(my_incorrect.get(i))).getMy_line_text());
-    }
-  }
-
-  /**
-   * The method removes from the collection of the incorrect lines
-   * all the lines which are between <code>a_start</code> and
-   * <code>a_stop</code>.
-   *
-   * @param a_start the first line which is checked for removing
-   * @param a_stop the last line which is checked for removing
-   */
-  public void removeIncorrects(final int a_start, final int a_stop) {
-    for (int i = a_start; i <= a_stop; i++) {
-      final BytecodeLineController line =
-                                 (BytecodeLineController)my_editor_lines.get(i);
-      if (my_incorrect.contains(line)) {
-        my_incorrect.remove(line);
-      }
-    }
   }
 
   /**
@@ -188,19 +125,13 @@ public final class BytecodeController {
     fgmparser.runParsing(); // after that I must know all the instructions are
                             //correct
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
-    my_modified[methodno] = true;
+    markModified(methodno);
     mg.removeLineNumbers();
-    updateInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
+    replaceInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
-    try {
-      updateEditorLines(a_start_rem, an_end_rem, a_stop,
+    updateEditorLines(a_start_rem, an_end_rem, a_stop,
                         fgmparser.getEditorLines());
-    } catch (UmbraException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      throw new UmbraException();
-    }
-    if (UmbraHelper.DEBUG_MODE) controlPrint(1);
+    if (UmbraHelper.DEBUG_MODE) controlPrint(my_instructions, 1);
     mg.getInstructionList().setPositions();
     return mg;
   }
@@ -245,16 +176,47 @@ public final class BytecodeController {
     }
   }
 
-  private void updateInstructions(final int a_start_rem,
-                                  final int an_end_rem,
+  /*@ requires 0 <= the_first <= the_last <= my_editor_lines.size();
+    @ requires (\forall int i; 0 <= i && i <= the_instructions.size();
+    @           the_instructions.get(i) instanceof InstructionLineController);
+    @ requires !the_instructions.constainsNull;
+    @*/
+  /**
+   * This method replaces the instructions on the local instruction list
+   * within the given range with the given new instructions.
+   * The instructions that reside in the lines between {@code the_first}
+   * and {@code the_last} inclusively are removed. Next all the instructions
+   * in the {@code the_instructions} table are inserted in place corresponding
+   * to the indicated range.
+   *
+   * @param the_first the first line to be replaced
+   * @param the_last the last line to be replaced
+   * @param the_instructions te instructions to be added to the representation
+   */
+  private void replaceInstructions(final int the_first,
+                                  final int the_last,
                                   final LinkedList the_instructions) {
     int first = -1;
-    for (int i = a_start_rem; i <= an_end_rem; i++) {
+    for (int i = the_first; i <= the_last; i++) {
       final Object o = my_editor_lines.get(i);
       if (first < 0) {
         first = my_instructions.indexOf(o);
       }
       my_instructions.remove(o);
+    }
+    if (first < 0) { //there is not instruction in the given range
+      //we try to find the first instruction after the region
+      for (int i = the_last + 1; i < my_editor_lines.size(); i++) {
+        final Object o = my_editor_lines.get(i);
+        if (first < 0) {
+          first = my_instructions.indexOf(o);
+          if (first >= 0) break;
+        }
+      }
+      if (first < 0) {
+        my_instructions.addAll(the_instructions);
+        return;
+      }
     }
     my_instructions.addAll(first, the_instructions);
   }
@@ -278,7 +240,10 @@ public final class BytecodeController {
    * @param an_end_rem the last line in the old structure to be updated
    * @param a_stop the last line in the new structure
    * @param the_lines the list with the lines to incorporate
-   * @throws UmbraException
+   * @throws UmbraException in case the BCEL structure that represents
+   *   the current method cannot be retrieved or the association between
+   *   the BCEL structures and editor lines cannot be removed or the
+   *   structure of the editor lines is malformed
    */
   private void updateEditorLines(final int a_start_rem,
                                  final int an_end_rem,
@@ -289,7 +254,7 @@ public final class BytecodeController {
     final int j = replaceEditorLines(a_start_rem, an_end_rem, a_stop,
                                      the_lines);
     if (an_end_rem < a_stop) { //we must add the new lines
-      addEditorLines(an_end_rem, a_stop, the_lines, mg, j);
+      addEditorLines(an_end_rem + 1, a_stop, the_lines, j, mg);
     } else if (an_end_rem > a_stop) { //we must remove the deleted lines
       removeEditorLines(an_end_rem, a_stop);
     }
@@ -299,43 +264,69 @@ public final class BytecodeController {
     mg.getInstructionList().setPositions();
   }
 
-  private void removeEditorLines(final int an_end_rem,
+  /**
+   * This method removes from the internal structures the lines of the region
+   * from {@code a_start} to {@code a_stop} inclusively. This method
+   * also removes the connection between the removed lines and the BCEL
+   * representation of the byte code.
+   *
+   * @param a_start the first line to be removed
+   * @param a_stop the last line to be removed
+   * @throws UmbraException in case the structure of the editor lines is
+   *   malformed
+   */
+  private void removeEditorLines(final int a_start,
                                  final int a_stop)
     throws UmbraException {
-    for (int i = a_stop + 1; i <= an_end_rem; i++) {
+    for (int i = a_stop + 1; i <= a_start; i++) {
       try {
-        final InstructionLineController oldlc =
-          (InstructionLineController)my_editor_lines.get(i);
-        oldlc.dispose();
-      } catch (ClassCastException e) { //we crossed the method boundary
+        final BytecodeLineController oldlc =
+          (BytecodeLineController)my_editor_lines.get(i);
+        if (oldlc instanceof InstructionLineController) {
+          ((InstructionLineController)oldlc).dispose();
+        }
+      } catch (ClassCastException e) { // malformed internal structure
+        UmbraPlugin.messagelog("IMPOSSIBLE: malformed structure of the " +
+                               "editor lines");
         throw new UmbraException();
       }
     }
   }
 
   /**
-   * 
-   * @param an_end_rem
-   * @param a_stop
-   * @param the_lines
-   * @param a_methgen
-   * @param a_lineno
-   * @throws UmbraException
+   * This method adds to the internal structures the lines of the region from
+   * {@code a_start} to {@code a_stop} inclusively. The
+   * {@link BytecodeLineController} structures that correspond to the lines
+   * are located in the given list {@code the_lines}. The first such structure
+   * which should be added is located at the index {@code an_index}. The method
+   * generation object {@link MethodGen} which is responsible for handling
+   * the edition operations on the byte code file is located in
+   * {@code a_methgen}.
+   *
+   * @param a_start the first line in the document to be added
+   * @param a_stop the last line in the document to be added
+   * @param the_lines the list of {@link BytecodeLineController} objects to
+   *   be added to the internal structures
+   * @param an_index the index of the first {@link BytecodeLineController} to be
+   *   added
+   * @param a_methgen the method generation object to associate with the added
+   *   lines
    */
-  private void addEditorLines(final int an_end_rem,
+  private void addEditorLines(final int a_start,
                               final int a_stop,
                               final LinkedList the_lines,
-                              final MethodGen a_methgen,
-                              final int a_lineno) throws UmbraException {
-    int j = a_lineno;
-    int pos = getCurrentPositionInMethod(an_end_rem + 1);
-    for (int i = an_end_rem + 1; i <= a_stop; i++, j++, pos++) {
+                              final int an_index,
+                              final MethodGen a_methgen) {
+    int j = an_index;
+    int pos = getCurrentPositionInMethod(a_start);
+    for (int i = a_start; i <= a_stop; i++, j++, pos++) {
       try {
         final InstructionLineController newlc =
           (InstructionLineController)the_lines.get(j);
         newlc.makeHandleForPosition(a_methgen, pos);
+        my_editor_lines.add(i, newlc);
       } catch (ClassCastException e) { //we crossed the method boundary
-        throw new UmbraException();
+        my_editor_lines.add(i, the_lines.get(j));
       }
     }
   }
@@ -353,8 +344,11 @@ public final class BytecodeController {
    * @param a_stop another possible end of the area
    * @param the_lines the collection of the new lines to replace with the old
    *   ones
-   * @return the number of the first line that was not replaced
-   * @throws UmbraException in case it is impossible to remove the instruction
+   * @return the number of the first line in {@code the_lines} that was not
+   *   replaced
+   * @throws UmbraException in case it is impossible to remove the association
+   *   between the line and its BCEL representation or the current method
+   *   generation structure cannot be obtained
    */
   private int replaceEditorLines(final int a_start_rem,
                                  final int an_end_rem,
@@ -501,47 +495,10 @@ public final class BytecodeController {
                                  line.getLineContent());
         }
         ok = false;
-        my_incorrect.addLast(my_editor_lines.get(i));
+        addIncorrect((BytecodeLineController)my_editor_lines.get(i));
       }
     }
     return ok;
-  }
-
-  /**
-   * @return <code>true</code> if there is no incorrect line within the whole
-   *         document
-   */
-  public boolean allCorrect() {
-    return my_incorrect.isEmpty();
-  }
-
-  /**
-   * @return number of a line that the first error occurs
-   * (not necessarily: number of the first line that an error occurs)
-   */
-  public int getFirstError() {
-    return my_editor_lines.lastIndexOf(my_incorrect.getFirst());
-  }
-
-  /**
-   * Returns the information on which methods were modified in the editor. This
-   * is used to enable the possibility to replace the code of the methods
-   * modified on the source code level, but that were not modified at the byte
-   * code level. See {@link BytecodeCombineAction}. The returned array has
-   * <code>true</code> in entries that correspond to modified methods and
-   * <code>false</code> otherwise.
-   *
-   * @return the array with information on modified methods.
-   */
-  public boolean[] getModified() {
-    return my_modified;
-  }
-
-  /**
-   * @param the_modified the array that indicates which methods were modified
-   */
-  public void setModified(final boolean[] the_modified) {
-    this.my_modified = the_modified;
   }
 
   /**
@@ -581,42 +538,6 @@ public final class BytecodeController {
   }
 
   /**
-   * This is a helper method used for debugging purposes. It prints out
-   * all the instructions in the internal Umbra representation of a class
-   * file.
-   *
-   * @param an_index the number which allows to make different printouts
-   */
-  private void controlPrint(final int an_index) {
-    UmbraPlugin.messagelog("");
-    UmbraPlugin.messagelog("Control print of bytecode modification (" +
-                           an_index + "):");
-    for (int i = 0; i < my_instructions.size(); i++) {
-      final InstructionLineController line =
-                              (InstructionLineController)my_instructions.get(i);
-      if (line == null) {
-        UmbraPlugin.messagelog("" + i + ". null");
-        return;
-      }
-      //if (line.index == index) {
-      UmbraPlugin.messagelog("" + i + ". " + line.getName());
-      final InstructionHandle ih = line.getHandle();
-      if (ih == null) UmbraPlugin.messagelog("  handle - null");
-      else {
-        UmbraPlugin.LOG.print("  handle(" + ih.getPosition() + ") ");
-        final Instruction ins = ih.getInstruction();
-        if (ins == null) UmbraPlugin.LOG.print("null instruction");
-        else UmbraPlugin.LOG.print(ins.getName());
-        if (ih.getNext() == null) UmbraPlugin.LOG.print(" next: null");
-        else UmbraPlugin.LOG.print(" next: " + ih.getNext().getPosition());
-        if (ih.getPrev() == null) UmbraPlugin.messagelog(" prev: null");
-        else UmbraPlugin.messagelog(" prev: " + ih.getPrev().getPosition());
-      }
-      //}
-    }
-  }
-
-  /**
    * This method handles the initial parsing of a byte code textual document.
    * It creates a parser {@link InitParser} and runs it with the given
    * document and array with comments pertinent to the instruction lines.
@@ -646,22 +567,29 @@ public final class BytecodeController {
       a_methodnum = ((BytecodeLineController)my_instructions.getLast()).
                   getMethodNo() + 1;
     }
-    if (my_modified == null) {
-      my_modified = new boolean[a_methodnum];
-      for (int a_method_count = 0; a_method_count < my_modified.length;
-           a_method_count++)
-        my_modified[a_method_count] = false;
-    }
-    if (UmbraHelper.DEBUG_MODE) controlPrint(0);
+    fillModTable(a_methodnum);
+    if (UmbraHelper.DEBUG_MODE) controlPrint(my_instructions, 0);
   }
 
   /**
-   * This method causes the initialisation of the table which keeps track
-   * of the modified methods.
+   * Returns the line controller for the given line.
    *
+   * @param a_lineno the line number of the retrieved controller line
+   * @return the controller line for the given line number
    */
-  public void initModTable() {
-    my_modified = null;
+  protected BytecodeLineController getLineController(final int a_lineno) {
+    return (BytecodeLineController)my_editor_lines.get(a_lineno);
+  }
+
+  /**
+   * Returns the line number for the given line.
+   *
+   * @param a_line the line controller for which we obtain the number of line
+   * @return the number of line for the given controller or -1 if there is no
+   *   such a line
+   */
+  protected int getLineControllerNo(final BytecodeLineController a_line) {
+    return my_editor_lines.indexOf(a_line);
   }
 
 }
