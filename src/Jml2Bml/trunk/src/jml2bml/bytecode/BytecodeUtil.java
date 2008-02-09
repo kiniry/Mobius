@@ -6,19 +6,7 @@
  */
 package jml2bml.bytecode;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import jml2bml.exceptions.Jml2BmlException;
-
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.verifier.structurals.ControlFlowGraph;
-import org.apache.bcel.verifier.structurals.InstructionContext;
-
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;

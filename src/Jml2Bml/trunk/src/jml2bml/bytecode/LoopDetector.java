@@ -1,5 +1,6 @@
 package jml2bml.bytecode;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.bcel.verifier.structurals.InstructionContext;
@@ -24,26 +25,25 @@ public final class LoopDetector {
   /**
    * Detects all loops in the given method.
    * @param method - given method
+   * @return list of loop descriptions (condition, start, end)
    */
-  public static void detectLoop(final BCMethod method) {
+  public static List<LoopDescription> detectLoop(final BCMethod method) {
     final MyControlFlowGraph graph = new MyControlFlowGraph(method);
     final InstructionContext[] instructions = graph.getInstructionContext();
+    final List<LoopDescription> res = new LinkedList<LoopDescription>();
     for (InstructionContext instruction : instructions) {
       LoopDescription loopDescription = null;
       loopDescription = firstKindLoop(instruction, graph);
       if (loopDescription != null) {
-        System.out.println("for method " + method.getBcelMethod().getName()
-                           + " found first loop type! Condition is at "
-                           + loopDescription);
+        res.add(loopDescription);
       } else {
         loopDescription = secondKindLoop(instruction, graph);
         if (loopDescription != null) {
-          System.out.println("for method " + method.getBcelMethod().getName()
-                             + " found second loop type! Condition is at "
-                             + loopDescription);
+          res.add(loopDescription);
         }
       }
     }
+    return res;
   }
 
   /**
@@ -91,6 +91,8 @@ public final class LoopDetector {
           loopCondition = p;
         }
       }
+      if (loopCondition == null)
+        return null;
       return new LoopDescription(graph.getNextInstruction(beforeLoop),
                                  loopCondition, loopCondition);
     }
@@ -152,6 +154,9 @@ public final class LoopDetector {
       }
       if (!isConditional(loopStart)) {
         loopStart = instruction;
+      }
+      if (loopStart == null){
+        return null;
       }
       return new LoopDescription(instruction, loopEnd, loopStart);
     }
