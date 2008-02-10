@@ -37,7 +37,7 @@ import com.sun.tools.javac.util.Context;
 
 /**
  * Translation rule for method specification.
- * 
+ *
  * @author kjk (kjk@mimuw.edu.pl)
  *
  * @version 0-0.1

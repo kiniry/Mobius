@@ -8,10 +8,13 @@ import com.sun.tools.javac.comp.JmlEnter;
 import com.sun.tools.javac.comp.JmlFlow;
 import com.sun.tools.javac.comp.JmlMemberEnter;
 import com.sun.tools.javac.comp.JmlResolve;
+import com.sun.tools.javac.main.OptionName;
+import com.sun.tools.javac.parser.EndPosParser;
 import com.sun.tools.javac.parser.JmlParser;
 import com.sun.tools.javac.parser.JmlScanner;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacFileManager;
+import com.sun.tools.javac.util.Options;
 
 public class Factory {
   public static Context getContext() {
@@ -26,6 +29,9 @@ public class Factory {
     JmlFlow.preRegister(context);
     JmlAttr.preRegister(context);
     JavacFileManager.preRegister(context);
+    Options opts = Options.instance(context);
+    
+    opts.put(OptionName.XJCOV.optionName, "true");
 
     return context;
   }

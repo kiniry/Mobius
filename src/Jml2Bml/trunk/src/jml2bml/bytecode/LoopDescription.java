@@ -1,5 +1,6 @@
 package jml2bml.bytecode;
 
+import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.verifier.structurals.InstructionContext;
 
 /**
@@ -10,14 +11,17 @@ import org.apache.bcel.verifier.structurals.InstructionContext;
  * @author Jedrek
  */
 public class LoopDescription {
+  /** Start of the loop. */
   private InstructionContext start;
 
+  /** End of the loop. */
   private InstructionContext end;
 
+  /** Where to add invariant to the loop. */
   private InstructionContext add;
 
   /**
-   * Creates the loop description object
+   * Creates the loop description object.
    * @param start - start of the loop
    * @param end - end of the loop
    * @param whereAdd - instruction to which the loop invariant should be added.
@@ -39,6 +43,14 @@ public class LoopDescription {
   }
 
   /**
+   * Returns start handle of the loop.
+   * @return start handle of the loop.
+   */
+  public InstructionHandle getLoopStartHandle() {
+    return start.getInstruction();
+  }
+
+  /**
    * Returns end of the loop.
    * @return end of the loop.
    */
@@ -47,10 +59,36 @@ public class LoopDescription {
   }
 
   /**
+   * Returns end handle of the loop.
+   * @return end handle of the loop.
+   */
+  public InstructionHandle getLoopEndHandle() {
+    return end.getInstruction();
+  }
+
+  /**
    * Returns the instruction to annotate with the loop invariant.
    * @return instruction to annotate
    */
   public InstructionContext getInstructionToAnnotate() {
     return add;
+  }
+
+  /**
+   * Returns the instruction handle to annotate with the loop invariant.
+   * @return instruction handle to annotate
+   */
+  public InstructionHandle getInstructionHandleToAnnotate() {
+    return add.getInstruction();
+  }
+
+  /**
+   * Overriden toString Object method.
+   * @return readable print
+   */
+  @Override
+  public String toString() {
+    return "Loop Description: (" + start.getInstruction() + "," +
+    end.getInstruction() + "): " + add.getInstruction();
   }
 }

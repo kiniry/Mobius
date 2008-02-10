@@ -33,6 +33,9 @@ public class TreeNodeFinder {
    *
    */
   private class ParentFinder extends ExtendedJmlTreeScanner<Tree, Tree> {
+    private boolean isInJmlComment = false;
+
+    private IsJml isJmlVisitor = new IsJml();
 
     /**
      * Overriden scan method sets a node parent in {@code parents} structure.
@@ -43,9 +46,15 @@ public class TreeNodeFinder {
      */
     @Override
     public Tree scan(final Tree node, final Tree parent) {
-      if (node != null)
+      final boolean isInJmlCommentCopy = isInJmlComment;
+      if (node != null) {
         parents.put(node, parent);
-      return super.scan(node, node);
+        isInJmlComment = isInJmlComment || node.accept(isJmlVisitor, null);
+        isJml.put(node, isInJmlComment);
+      }
+      final Tree result = super.scan(node, node);
+      isInJmlComment = isInJmlCommentCopy;
+      return result;
     }
 
     /**
@@ -81,6 +90,9 @@ public class TreeNodeFinder {
   /** Maps a tree node to next sibling in a tree. */
   private Map<Tree, Tree> nextSiblingMap;
 
+  /** Maps a tree node to inforamtion if it is in jml comment. */
+  private Map<Tree, Boolean> isJml;
+
   /**
    * The constructor.
    * @param tree tree on which we want perform find operations.
@@ -88,6 +100,7 @@ public class TreeNodeFinder {
   public TreeNodeFinder(final Tree tree) {
     parents = new HashMap<Tree, Tree>();
     nextSiblingMap = new HashMap<Tree, Tree>();
+    isJml = new HashMap<Tree, Boolean>();
     tree.accept(new ParentFinder(), tree);
   }
 
@@ -135,6 +148,16 @@ public class TreeNodeFinder {
   }
 
   /**
+   * Finding parent of element.
+   *
+   * @param treeElement element to find parent of
+   * @return parent of element or null if none
+   */
+  public Tree getParent(final Tree treeElement) {
+    return parents.get(treeElement);
+  }
+
+  /**
    * Method finds a sibling of tree node in ast tree.
    *
    * @param tree the elem to get sibling of
@@ -143,5 +166,9 @@ public class TreeNodeFinder {
    */
   public Tree getNextSibling(final Tree tree) {
     return nextSiblingMap.get(tree);
+  }
+
+  public boolean isInJmlComment(final Tree tree) {
+    return isJml.get(tree);
   }
 }

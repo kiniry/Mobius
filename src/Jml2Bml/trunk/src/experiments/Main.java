@@ -9,6 +9,7 @@
 package experiments;
 
 import java.io.File;
+import java.util.Map;
 
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
@@ -20,6 +21,7 @@ import jml2bml.engine.Jml2BmlTranslator;
 import jml2bml.engine.TranslationManager;
 import jml2bml.symbols.Symbols;
 
+import org.apache.bcel.classfile.Method;
 import org.jmlspecs.openjml.JmlTree;
 
 import annot.bcclass.BCClass;
@@ -72,8 +74,15 @@ public class Main {
 
     System.out.println("------------- PRETTY PRINT ------------");
     new PrettyPrinter(System.out).prettyPrint(tree);
+    System.out.println("LINE TABLES: ");
+    for (Method m: clazz.getJC().getMethods()){
+      System.out.println(m.getName());
+      System.out.println(m.getLineNumberTable());
+    }
     System.out.println("----------- END PRETTY PRINT ----------");
     context.put(LineMap.class, tree.getLineMap());
+
+    context.put(JCCompilationUnit.class, tree);
     
     TreeNodeFinder parentFinder = new TreeNodeFinder(tree);
     // TODO: move from context

@@ -103,8 +103,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
       return method.getInstructions().getEnd();
     } else {
       final LineMap lineMap = my_context.get(LineMap.class);
-      final JCTree jctree = (JCTree) stmt;
-      final long sourceLine = lineMap.getLineNumber(jctree.getStartPosition());
+      final long sourceLine = BytecodeUtil.getLineNumber(stmt, lineMap);
       for (LineNumberGen lng : method.getBcelMethod().getLineNumbers()) {
         //FIXME: can one source line have more than one line number in output??
         if (sourceLine == lng.getSourceLine())

@@ -6,17 +6,25 @@
  */
 package jml2bml.bytecode;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.LineNumberGen;
 
 import jml2bml.exceptions.Jml2BmlException;
+import jml2bml.exceptions.NotTranslatedException;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.FieldRef;
 import annot.io.ReadAttributeException;
 
+import com.sun.source.tree.Tree;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
+import com.sun.source.tree.LineMap;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
@@ -46,11 +54,6 @@ public final class BytecodeUtil {
   public static BCMethod findMethod(final CharSequence name, final BCClass clazz) {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
-      //only for tests, to remove in the future
-      List<LoopDescription> desc = LoopDetector.detectLoop(method);
-      for (LoopDescription d : desc){
-        System.out.println(d.getInstructionToAnnotate() +" | " + d.getLoopStart() + " | " + d.getLoopEnd());
-      }
       if (method.getBcelMethod().getName().contentEquals(name))
         return method;
     }
@@ -106,4 +109,18 @@ public final class BytecodeUtil {
     }
   }
 
+  public static long getLineNumber(Tree tree, LineMap lineMap) {
+    return lineMap.getLineNumber(((JCTree)tree).getStartPosition());
+  }
+  
+  
+  public static Map<InstructionHandle, Integer> getLineNumberMap(BCMethod method) {
+    Map<InstructionHandle, Integer> result = new HashMap<InstructionHandle, Integer>();   
+    for (LineNumberGen lng : method.getBcelMethod().getLineNumbers())
+      if (result.containsKey(lng.getInstruction()))
+        throw new NotTranslatedException("One bytecode instruction has more than one line number");
+      else
+        result.put(lng.getInstruction(), lng.getSourceLine());
+    return result;
+  }
 }
