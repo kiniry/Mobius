@@ -35,11 +35,21 @@ public final class LoopDetector {
       LoopDescription loopDescription = null;
       loopDescription = firstKindLoop(instruction, graph);
       if (loopDescription != null) {
+        System.out.println("found 1");
         res.add(loopDescription);
       } else {
         loopDescription = secondKindLoop(instruction, graph);
         if (loopDescription != null) {
           res.add(loopDescription);
+          System.out.println("found 2");
+        }
+        else {
+          loopDescription = findDoWhileLoop(instruction, graph);
+          if (loopDescription != null) {
+            res.add(loopDescription);
+            System.out.println("found 3");
+          }
+            
         }
       }
     }
@@ -143,7 +153,7 @@ public final class LoopDetector {
         loopStart = instruction;
       } else {
         final List<InstructionContext> prec = graph.getPrecedingInstructions(c);
-        int min = max + 1;
+        int min = max;
         for (InstructionContext p : prec) {
           final int n = graph.getInstructionNumber(p);
           if (n < min && n >= number) {
@@ -152,13 +162,39 @@ public final class LoopDetector {
           }
         }
       }
+      if (loopStart == null) {
+        return null;
+      }
       if (!isConditional(loopStart)) {
         loopStart = instruction;
       }
-      if (loopStart == null){
-        return null;
-      }
       return new LoopDescription(instruction, loopEnd, loopStart);
+    }
+    return null;
+  }
+
+  /**
+   * Tries to detect following kind of loop:
+   * <code>[0] ...<br>
+   * [1] loop body<br>
+   * [2] load parameters<br>
+   * [3] if condition is fulfilled goto 1<br>
+   * [4] ...<br>
+   * </code>
+   * This function is invoked only, when no other loop type was detected.
+   * @param instruction - candidate for <code>[3]</code>
+   * @param graph control flow graph for the method
+   * @return ([1],[3],[1])
+   */
+  private static LoopDescription findDoWhileLoop(
+                                            final InstructionContext instruction,
+                                            final MyControlFlowGraph graph) {
+    final int number = graph.getInstructionNumber(instruction);
+    for (InstructionContext next : instruction.getSuccessors()) {
+      final int n = graph.getInstructionNumber(next);
+      if (n < number) {
+        return new LoopDescription(next, instruction, next);
+      }
     }
     return null;
   }

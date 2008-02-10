@@ -29,21 +29,20 @@ public class LoopTests {
         j++;
       }
     }
-    
+   
     public void test5() {
       int j=0;
       while(j<15) {
         j++;
       }
     }
-    
+   
     public void test6() {
       int j=0;
       do {
         j++;
       } while(true);
-    }
-    
+    }    
     public void test7() {
       int j=0;
       do {
@@ -57,85 +56,96 @@ public class LoopTests {
         for (int j=0; j<15; j++)
           k++;
     }
-    
-    public void test9() {
-      int j=0;
-      while(true) {
+   */
+  public void testJF_ELSE() {
+    int j = 0;
+    if (j < 0) {
+      j = 17;
+    } else {
+      do {
         j++;
-        if (j>12)
-          break;
-      }
+      } while (j < 12);
     }
-    
-    public void test10() {
-      int j=0;
-      while(true) {
-        j++;
-        if (j<13)
-          continue;
-      }
-    }
-    public void test11() {
-      int i=0;
-      outer :
-      while (true) {
-        i++;
-        for(int j=0; j<13; j++) {
-          if (j>12 && i<j)
-            break outer;
-        }
-      }
-    }
+  }
 
-    public void test12() {
-      for(int i=0; i<100; i++) {
-        inner: for(int j=0; j<100; j++)
-          for (int k=0; k<100; k++)
-            if (i>12 && j>12 && k>12)
-              break inner;
-        if (i<13)
-          break;
-      }
-    }*/
+  public void test9() {
+    int j = 0;
+    while (true) {
+      j++;
+      if (j > 12)
+        break;
+    }
+  }
+  /*
+   public void test10() {
+     int j=0;
+     while(true) {
+       j++;
+       if (j<13)
+         continue;
+     }
+   }
+   public void test11() {
+     int i=0;
+     outer :
+     while (true) {
+       i++;
+       for(int j=0; j<13; j++) {
+         if (j>12 && i<j)
+           break outer;
+       }
+     }
+   }
+
+   public void test12() {
+     for(int i=0; i<100; i++) {
+       inner: for(int j=0; j<100; j++)
+         for (int k=0; k<100; k++)
+           if (i>12 && j>12 && k>12)
+             break inner;
+       if (i<13)
+         break;
+     }
+   }
   public void test15() {
-    a: for (int i = 0; i < 12; i++)
-      b: for (int j = 0; j < 12; j++)
-        c: for (int k = 0; k < 12; k++) {
-          for (int l = 0; l < 12; l++)
-            if (k < l)
-              break b;
-          if (j > k)
-            break a;
-        }
+   a: for (int i = 0; i < 12; i++)
+     b: for (int j = 0; j < 12; j++)
+       c: for (int k = 0; k < 12; k++) {
+         for (int l = 0; l < 12; l++)
+           if (k < l)
+             break b;
+         if (j > k)
+           break a;
+       }
   }
 
   /*
   public void test13() {
-    try {
-      for (int i=0; i<12; i++)
-        if (i>10)
-          throw new Exception();
-    } catch (Exception e) {
-      for (int j=0; j<12; j++)
-        if (j>10)
-          throw new RuntimeException();
-    }
+   try {
+     for (int i=0; i<12; i++)
+       if (i>10)
+         throw new Exception();
+   } catch (Exception e) {
+     for (int j=0; j<12; j++)
+       if (j>10)
+         throw new RuntimeException();
+   }
   }
   
   public void test14() {
-    try {
-      for (int i=0; i<12; i++)
-        if (i>10)
-          throw new Exception();
-    } catch (Exception e) {
-      for (int j=0; j<12; j++)
-        if (j>10)
-          break;
-    } finally {
-      int j=0;
-      while(j<12)
-        j++;
-    }
-      
+   try {
+     for (int i=0; i<12; i++)
+       if (i>10)
+         throw new Exception();
+   } catch (Exception e) {
+     for (int j=0; j<12; j++)
+       if (j>10)
+         break;
+   } finally {
+     int j=0;
+     while(j<12)
+       j++;
+   }
+     
   }*/
 }

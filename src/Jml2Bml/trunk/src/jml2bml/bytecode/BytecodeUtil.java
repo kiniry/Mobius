@@ -6,6 +6,8 @@
  */
 package jml2bml.bytecode;
 
+import java.util.List;
+
 import jml2bml.exceptions.Jml2BmlException;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
@@ -45,7 +47,10 @@ public final class BytecodeUtil {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
       //only for tests, to remove in the future
-      LoopDetector.detectLoop(method);
+      List<LoopDescription> desc = LoopDetector.detectLoop(method);
+      for (LoopDescription d : desc){
+        System.out.println(d.getInstructionToAnnotate() +" | " + d.getLoopStart() + " | " + d.getLoopEnd());
+      }
       if (method.getBcelMethod().getName().contentEquals(name))
         return method;
     }
