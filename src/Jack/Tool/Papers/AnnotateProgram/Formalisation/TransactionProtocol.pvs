@@ -1,114 +1,139 @@
+% This theory specifies the property "At most N embedded transactions" for a
+% simple transaction protocol with operations beginTransaction (bt),
+% comitTransaction (ct) and abortTransaction (at).
 TransactionProtocol : THEORY
 BEGIN
 
-  CP : TYPE
+  IMPORTING Examples
 
-  IMPORTING WellFormedMVA[CP, string],
-            Semantics
-
-%  EXPORTING transaction_protocol
+  N : posnat % Maximum number of embedded transactions
 
   % Control points
-  no_trans, in_trans : CP
+  q1 : CP = 1 % normal state
+  q2 : CP = 2 % bt was called but has not returned yet
+  q3 : CP = 3 % ct was called but has not returned yet
 
-  cps : set[CP] = {q : CP | q = no_trans OR q = in_trans}
+  cps : set[CP] = {q : CP | q = q1 OR q = q2 OR q = q3}
+
 
   % Events
-  bt_called : Event = (# etype := Entry, mname := "beginTransaction" #)
-
-  at_called : Event = (# etype := Entry, mname := "abortTransaction" #)
-
-  ct_called : Event = (# etype := Entry, mname := "commitTransaction" #)
+  bt_entry : Event = (# etype := Entry, mname := "beginTransaction" #)
+  bt_exitN : Event = (# etype := ExitNormal, mname := "beginTransaction" #)
+  bt_exitE : Event = (# etype := ExitExceptional, mname := "beginTransaction" #)
+  ct_entry : Event = (# etype := Entry, mname := "commitTransaction" #)
+  ct_exitN : Event = (# etype := ExitNormal, mname := "commitTransaction" #)
+  ct_exitE : Event = (# etype := ExitExceptional, mname := "commitTransaction" #)
+  at_exitN : Event = (# etype := ExitNormal, mname := "abortTransaction" #)
 
   evs : set[Event] = {e : Event | 
-    e = bt_called OR e = at_called OR e = ct_called }
+    e = bt_entry OR e = bt_exitN OR e = bt_exitE OR
+    e = ct_entry OR e = ct_exitN OR e = ct_exitE OR e = at_exitN}
+
 
   % OneActions
   inc_T : OneAction = (# target := "T", 
                          source := NExpr(Plus(NumVarEval("T"), Int(1))) #)
 
+  % NOTE: This action should use Minus instead of Plus, but to avoid having many
+  %       similar cases to prove we commented out many integer operations
   dec_T : OneAction = (# target := "T", 
-                         source := NExpr(Minus(NumVarEval("T"), Int(1))) #)
+                         source := NExpr(Plus(NumVarEval("T"), Int(1))) #)
+
 
   % MVA Variables
+  % <T> is an integer variable used to count the number of embedded transactions.
+  % It is initialized to zero.
   T_VarDecl : MVAVarDecl = (# name := "T", jtype := IntType, init_val := Int(0) #)
 
   vdsA : set[MVAVarDecl] = singleton(T_VarDecl)
 
+
   % Program Variables
+  % No variable from the program is used
   vdsP : set[ProgVarDecl] = emptyset
 
+
   % Guards
-  T_is_one : Guard = 
-    LAMBDA (stA : Store, stP : PSt) : val2int(stA("T")) = 1
+  T_lt_N : Guard = 
+    LAMBDA (stA : Store, stP : PSt, v : ValOrExcpt) : val2int(stA("T")) < N
 
-  T_gt_one : Guard = 
-    LAMBDA (stA : Store, stP : PSt) : val2int(stA("T")) > 1
+  T_is_pos : Guard = 
+    LAMBDA (stA : Store, stP : PSt, v : ValOrExcpt) : val2int(stA("T")) > 0
 
-  TRUE_guard : Guard = 
-    LAMBDA (stA : Store, stP : PSt) : TRUE
 
   % Transitions
-  t1 : Transition = (# scp := no_trans,
-                       event := bt_called,
+  t1 : Transition = (# scp := q1,
+                       event := bt_entry,
+                       guard := T_lt_N,
+                       action := skip,
+                       tcp := q2 #)
+
+  t2 : Transition = (# scp := q2,
+                       event := bt_exitN,
                        guard := TRUE_guard,
                        action := (: inc_T :),
-                       tcp := in_trans #)
+                       tcp := q1 #)
 
-  t2 : Transition = (# scp := in_trans,
-                       event := bt_called,
+  t3 : Transition = (# scp := q2,
+                       event := bt_exitE,
                        guard := TRUE_guard,
-                       action := (: inc_T :),
-                       tcp := in_trans #)
+                       action := skip,
+                       tcp := q1 #)
 
-  t3 : Transition = (# scp := in_trans,
-                       event := at_called,
-                       guard := T_gt_one,
-                       action := (: dec_T :),
-                       tcp := in_trans #)
+  t4 : Transition = (# scp := q1,
+                       event := ct_entry,
+                       guard := T_is_pos,
+                       action := skip,
+                       tcp := q3 #)
 
-  t4 : Transition = (# scp := in_trans,
-                       event := ct_called,
-                       guard := T_gt_one,
+  t5 : Transition = (# scp := q3,
+                       event := ct_exitN,
+                       guard := TRUE_guard,
                        action := (: dec_T :),
-                       tcp := in_trans #)
+                       tcp := q1 #)
 
-  t5 : Transition = (# scp := in_trans,
-                       event := at_called,
-                       guard := T_is_one,
-                       action := (: dec_T :),
-                       tcp := no_trans #)
+  t6 : Transition = (# scp := q3,
+                       event := ct_exitE,
+                       guard := TRUE_guard,
+                       action := skip,
+                       tcp := q1 #)
 
-  t6 : Transition = (# scp := in_trans,
-                       event := at_called,
-                       guard := T_is_one,
+  t7 : Transition = (# scp := q1,
+                       event := at_exitN,
+                       guard := T_is_pos,
                        action := (: dec_T :),
-                       tcp := no_trans #)
+                       tcp := q1 #)
 
   ts : set[Transition] = {t : Transition |  
-    t = t1 OR t = t2 OR t = t3 OR t = t4 OR t = t5 OR t = t6}
+    t = t1 OR t = t2 OR t = t3 OR t = t4 OR t = t5 OR t = t6 OR t = t7}
 
 
-  % MVA
+  % MVA: the automaton describing the property. Note that this MVA is not complete,
+  % but complete_MVA(transaction_protocol) can be used as a monitor.
+  % TODO: prove that the remaining TCCs: that cps, evs and ts are finite.
+  % AT: I am having problem instantiating the injective function, don't know how
+  %     to write its domain (should be the finite set itself, but it complains)
   transaction_protocol : MVA =
     (# name := "transaction_protocol",
        class_name := "Transactions.java",
        cps := cps,
-       init_cp := no_trans,
+       init_cp := q1,
        evs := evs,
        vdsA := vdsA,
        vdsP := vdsP,
        ts := ts
     #)
 
+
   % well-formedness proofs
+  wf_T_lt_N : LEMMA wf_Guard(transaction_protocol)(T_lt_N) % :-)
+
+  wf_T_is_pos : LEMMA wf_Guard(transaction_protocol)(T_is_pos) % :-)
+
   wf_inc_T : LEMMA wf_Action(transaction_protocol)((: inc_T :)) % :-)
 
   wf_dec_T : LEMMA wf_Action(transaction_protocol)((: dec_T :)) % :-)
 
-  wf_T_gt_one : LEMMA wf_Guard(transaction_protocol)(T_gt_one) % :-)
-
-  wf_T_is_one : LEMMA wf_Guard(transaction_protocol)(T_is_one) % :-)
 
   transaction_protocol_is_well_formed : LEMMA % :-)
     wf_MVA(transaction_protocol)

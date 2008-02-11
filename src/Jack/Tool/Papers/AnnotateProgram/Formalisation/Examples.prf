@@ -1,0 +1,18 @@
+(Examples
+ (IMP_WellFormedMVA_TCC1 0
+  (IMP_WellFormedMVA_TCC1-1 nil 3411713071 nil
+   ("" (existence-tcc) nil nil) nil nil nil nil nil nil))
+ (wf_TRUE_guard 0
+  (wf_TRUE_guard-1 nil 3411713072 3411713090
+   ("" (expand* "wf_Guard" "TRUE_guard") nil nil) proved
+   ((TRUE_guard const-decl "Guard" Examples nil)
+    (wf_Guard const-decl "boolean" WellFormedMVA nil))
+   18640 110 t shostak))
+ (wf_skip 0
+  (wf_skip-1 nil 3411713096 3411713130
+   ("" (expand* "wf_Action" "member" "skip") nil nil) proved
+   ((skip const-decl "Action" MVA nil)
+    (member def-decl "bool" list_props nil)
+    (wf_Action const-decl "boolean" WellFormedMVA nil))
+   33505 80 t shostak)))
+

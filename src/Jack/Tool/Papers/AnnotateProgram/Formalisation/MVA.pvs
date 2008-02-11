@@ -200,6 +200,7 @@ BEGIN
   good_for_monitoring(a : (wf_MVA)) : boolean =
     deterministic(a) AND NOT cps(a)(halted)
 
+
 END MVAProperties
 
 
@@ -215,7 +216,6 @@ BEGIN
       THEN v
       ELSE st(m)
       ENDIF
-
 
 
   %  Well formed states

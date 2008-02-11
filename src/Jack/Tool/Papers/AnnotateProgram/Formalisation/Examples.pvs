@@ -1,0 +1,31 @@
+% This theory is used by concrete MVAs
+% Currently there are two examples; see TransactionProtocol.pvs and LimitSMS.pvs
+Examples : THEORY
+BEGIN
+
+  CP : TYPE+ = int
+
+  IMPORTING WellFormedMVA[int, string]
+
+   halted_imp : AXIOM
+     halted = 0
+
+  % Concrete names for the reserved words
+  reserved_words_strings : AXIOM
+    This = "this" AND Super = "super" AND rsIf = "if" AND rsThen = "then" AND
+    rsElse = "else"
+
+  % A guard that always returns TRUE
+  TRUE_guard : Guard = 
+    LAMBDA (stA : Store, stP : PSt, v : ValOrExcpt) : TRUE
+
+  % TRUE_guard is a well formed guard
+  wf_TRUE_guard : LEMMA % :-)
+    FORALL (a : MVA) : wf_Guard(a)(TRUE_guard)
+
+  % skip is a well formed action
+  wf_skip : LEMMA % :-)
+    FORALL (a : MVA) : wf_Action(a)(skip)
+
+
+END Examples

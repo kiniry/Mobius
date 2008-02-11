@@ -1,0 +1,101 @@
+% Monitor for the property "sendSMS can be exit successfully at most N times
+% in between calls to reset". We assume that reset always finishes succesfully.
+LimitSMS : THEORY
+BEGIN
+
+  IMPORTING Examples
+
+  % Maximum number of SMSs that can be sent in between calls to reset
+  N : posnat
+
+  % Control points
+  s1 : CP = 1 % normal state
+  s2 : CP = 2 % sendSMS has been called but has not yet returned
+
+  cps : set[CP] = {q : CP | q = s1 OR q = s2}
+
+
+  % Events
+  sendSMS_entry : Event = (# etype := Entry, mname := "sendSMS" #)
+  sendSMS_exitN : Event = (# etype := ExitNormal, mname := "sendSMS" #)
+  sendSMS_exitE : Event = (# etype := ExitExceptional, mname := "sendSMS" #)
+  reset_exitN : Event = (# etype := ExitNormal, mname := "resert" #)
+
+  evs : set[Event] = {e : Event | e = sendSMS_entry OR e = sendSMS_exitN OR 
+                                  e = sendSMS_exitE OR e = reset_exitN}
+
+  % OneActions
+  inc_n : OneAction = (# target := "n",
+                         source := NExpr(Plus(NumVarEval("n"), Int(1))) #)
+
+  reset_n : OneAction = (# target := "n",
+                           source := NExpr(Int(0)) #)
+
+  % MVA Variables
+  % <n> coutns the number of SMS sent
+  n_var : MVAVarDecl = (# name := "n", jtype := IntType, init_val := Int(0) #)
+
+  vdsA : set[MVAVarDecl] = singleton(n_var)
+
+
+  % No program variables are used
+  vdsP : set[ProgVarDecl] = emptyset
+
+
+  % Guards
+  n_lt_N : Guard =
+    LAMBDA (stA : Store, stP : PSt, v : ValOrExcpt) : val2int(stA("n")) < N
+
+
+  % Transitions
+  t1 : Transition = (# scp := s1,
+                       event := sendSMS_entry,
+                       guard := n_lt_N,
+                       action := skip,
+                       tcp := s2 #)
+
+  t2 : Transition = (# scp := s2,
+                       event := sendSMS_exitN,
+                       guard := TRUE_guard,
+                       action := (: inc_n :),
+                       tcp := s1 #)
+
+  t3 : Transition = (# scp := s2,
+                       event := sendSMS_exitE,
+                       guard := TRUE_guard,
+                       action := skip,
+                       tcp := s1 #)
+
+  t4 : Transition = (# scp := s1,
+                       event := reset_exitN,
+                       guard := TRUE_guard,
+                       action := (: reset_n :),
+                       tcp := s1 #)
+
+
+  ts : set[Transition] = {t : Transition | t = t1 OR t = t2 OR t = t3 OR t = t4}
+
+
+  % MVA describing the property
+  limitSMS_prop : MVA =
+    (# name := "LimitSMS",
+       class_name := "Messaging",
+       cps := cps,
+       init_cp := s1,
+       evs := evs,
+       vdsA := vdsA,
+       vdsP := vdsP,
+       ts := ts #)
+
+
+  % Well-formedness properties
+  wf_n_lt_N : LEMMA wf_Guard(limitSMS_prop)(n_lt_N) % :-)
+
+  wf_inc_n : LEMMA wf_Action(limitSMS_prop)((: inc_n :)) % :-)
+
+  wf_reset_n : LEMMA wf_Action(limitSMS_prop)((: reset_n :)) % :-)
+
+  wf_limitSMS_prop : LEMMA wf_MVA(limitSMS_prop) % :-)
+
+
+END LimitSMS
