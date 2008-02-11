@@ -479,8 +479,8 @@ public class DefGCmd
 		}
 
 		case TagConstants.PRE: {
-			if(true) { break; } else { notImpl(e); }
-			return null;
+			NaryExpr ne = (NaryExpr)e;
+			return this.trAndGen(ne.exprs.elementAt(0));
 		}
 
 		case TagConstants.FRESH: {
