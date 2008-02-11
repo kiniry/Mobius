@@ -175,6 +175,30 @@ E.java:4: Warning: Possible division by zero (ZeroDiv)
 E.java:7: Warning: Possible null dereference (Null)
   //@ invariant a.length>0; // null(a) warning
                  ^
+G.java:5: Warning: Possible null dereference (Null)
+  /*@ requires a.length >= 0;  // null(a) warning
+                ^
+G.java:16: Warning: Possible negative array index (IndexNegative)
+    this.a[i]+=v; // idxNeg(i), idx2Large(i)
+          ^
+G.java:16: Warning: Array index possibly too large (IndexTooBig)
+    this.a[i]+=v; // idxNeg(i), idx2Large(i)
+          ^
+I.java:17: Warning: Possible null dereference (Null)
+    this.i = this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1),null(o2),nu ...
+                          ^
+I.java:17: Warning: Possible null dereference (Null)
+    this.i = this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1),null(o2),nu ...
+                                ^
+I.java:17: Warning: Possible null dereference (Null)
+    this.i = this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1),null(o2),nu ...
+                                      ^
+I.java:17: Warning: Possible division by zero (ZeroDiv)
+    this.i = this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1),null(o2),nu ...
+                                        ^
+I.java:14: Warning: Possible division by zero (ZeroDiv)
+  /*@ ensures this.i == \old(this.test0(o1.i, o2.i, o3.i/o3.i));
+                                                        ^
 B.jml:6: Warning: Possible division by zero (ZeroDiv)
     @ ensures \result == (i/i)*2; // divZero warning
                            ^
@@ -188,7 +212,7 @@ B.jml:48: Warning: Possible division by zero (ZeroDiv)
     @  signals (RuntimeException e) i/i == i/i; // divZero warnings
                                      ^
 Counterexample labels:
-    Pre:3.44.7
+    Pre:5.44.7
 
 B.jml:52: Warning: Possible division by zero (ZeroDiv)
   /*@ requires i/i==i/i; // divZero warning 
@@ -227,13 +251,13 @@ D.jml:48: Warning: Possible null dereference (Null)
     @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
                                      ^
 Counterexample labels:
-    Pre:4.44.7
+    Pre:6.44.7
 
 D.jml:48: Warning: Possible division by zero (ZeroDiv)
     @  signals (RuntimeException e) o.i/o.i == 1; // null, divZero war ...
                                        ^
 Counterexample labels:
-    Pre:4.44.7
+    Pre:6.44.7
 
 F.jml:4: Warning: Possible division by zero (ZeroDiv)
   //@ invariant f/f == f/f; // divZero warning
@@ -244,9 +268,6 @@ F.jml:4: Warning: Possible division by zero (ZeroDiv)
 F.jml:21: Warning: Possible null dereference (Null)
     @  requires aa.length>0; //null(aa) warning
                   ^
-F.jml:4: Warning: Possible division by zero (ZeroDiv)
-  //@ invariant f/f == f/f; // divZero warning
-                 ^
 F.jml:7: Warning: Possible null dereference (Null)
   //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
                  ^
@@ -255,14 +276,50 @@ F.jml:4: Warning: Possible division by zero (ZeroDiv)
                  ^
 F.jml:7: Warning: Possible null dereference (Null)
   //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
+                 ^
+F.jml:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning
                  ^
 F.jml:37: Warning: Possible null dereference (Null)
     @  requires aa.length>0; //null(aa) warning
                   ^
-F.jml:4: Warning: Possible division by zero (ZeroDiv)
-  //@ invariant f/f == f/f; // divZero warning
-                 ^
 F.jml:7: Warning: Possible null dereference (Null)
   //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
                  ^
-72 warnings
+F.jml:4: Warning: Possible division by zero (ZeroDiv)
+  //@ invariant f/f == f/f; // divZero warning
+                 ^
+H.jml:5: Warning: Possible null dereference (Null)
+  /*@ requires a.length >= 0;  // null(a) warning
+                ^
+H.jml:11: Warning: Possible negative array index (IndexNegative)
+    @ ensures this.a[i] == \old(this.a[i]+v); // idxNeg(i), idx2Large( ...
+                    ^
+H.jml:11: Warning: Array index possibly too large (IndexTooBig)
+    @ ensures this.a[i] == \old(this.a[i]+v); // idxNeg(i), idx2Large( ...
+                    ^
+J.jml:12: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == \old(this.test0(o1.i, o2.i, o3.i/o3.i)); //nul ...
+                                          ^
+J.jml:12: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == \old(this.test0(o1.i, o2.i, o3.i/o3.i)); //nul ...
+                                                ^
+J.jml:12: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == \old(this.test0(o1.i, o2.i, o3.i/o3.i)); //nul ...
+                                                      ^
+J.jml:12: Warning: Possible division by zero (ZeroDiv)
+  /*@ ensures this.i == \old(this.test0(o1.i, o2.i, o3.i/o3.i)); //nul ...
+                                                        ^
+J.jml:16: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1), ...
+                                     ^
+J.jml:16: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1), ...
+                                           ^
+J.jml:16: Warning: Possible null dereference (Null)
+  /*@ ensures this.i == this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1), ...
+                                                 ^
+J.jml:16: Warning: Possible division by zero (ZeroDiv)
+  /*@ ensures this.i == this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1), ...
+                                                   ^
+91 warnings
