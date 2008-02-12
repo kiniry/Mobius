@@ -1,4 +1,4 @@
-\section{Annotation Generation}\label{SecAnnotGen} 
+\section{Annotation Generation}\label{SecAnnotGen}
 
 Given a security property encoded as an MVA, the annotation generation
 procedure generates JML-annotations that capture this property,
@@ -12,9 +12,9 @@ as special set-annotations;
 \item the method specification-level set-annotations are inlined in
 the method body; and
 \item the special \CaseJML construct that is used to make the
-annotations more compact is tranlated into a sequence of \Set
+annotations more compact is translated into a sequence of \Set
 annotations.
-\end{inparaenum} 
+\end{inparaenum}
 Notice that the order of the last two steps can be swapped.
 
 For each step we basically prove that the old and the new program are
@@ -25,12 +25,12 @@ bisimilar, \emph{i.e.}, we show for every program translation step
 \etp{P}{b,\sigma_1}{v_1, \sigma_2} \Rightarrow
 \etp{\alpha(P)}{b, \tau_1}{v_2, \tau_2} \Rightarrow
 R(\sigma_1, \tau_1) \Rightarrow
-R(\sigma_2, \tau_2) 
+R(\sigma_2, \tau_2)
 \end{array}
 \]
 If we then show that the initial program states are related by this
 relation, we can conclude that any reachable states in the program are
-related. 
+related.
 
 A natural way to prove this is by induction over the derivation
 length. However, to be able to prove that this way, we have to make
@@ -64,8 +64,8 @@ under which the equivalence holds.
 
 \paragraph{Completion of the automaton}
 The first translation step does not change the program itself, it only
-completes the MVA.  Suppose that \(P\) be a monitored program, where
-\(\mva(P)\) is determistic and wellformed. Then the translation to a
+completes the MVA. Suppose that \(P\) is a monitored program, where
+\(\mva(P)\) is deterministic and wellformed. Then the translation to a
 monitored program with a total MVA, \(\alpha_1(P)\) is defined as:
 \[
 \opri \mva := \complete(\mva(P)), \program(P) \clri
@@ -94,14 +94,14 @@ Page~\pageref{MVAcompletionProp} and we observe further that
 \[
 \begin{array}[t]{rl}
 \sigma_1.\stuck \Rightarrow
-\etp{P}{b,\sigma_1}{v,\sigma_2} \Rightarrow & 
+\etp{P}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
 \sigma_2.\stuck \\
 \sigma_1.\mvastate.\cp = \halted \Rightarrow
 \etp{P}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
 \sigma_2.\mvastate.\cp = \halted \\
 \neg \sigma_1.\stuck \Rightarrow
 \etp{Q}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
-\neg \sigma_2.\stuck 
+\neg \sigma_2.\stuck
 \end{array}
 \]
 
@@ -109,21 +109,21 @@ For our running example, applying translation \(\alpha_1\) means that
 where class \texttt{Messaging} in Figure~\ref{FigExampleImplem} was
 first monitored with the partial MVA in Figure~\ref{FigExample}, after
 the translation it is monitored with the complete MVA in
-Figure~\ref{FigCompleteMVA}. 
+Figure~\ref{FigCompleteMVA}.
 
 \paragraph{From MVA to Annotations}
 
 \begin{figure}[t]
 \[
 \begin{array}{rcl}
-\alpha_2(P) & = &\opri \classes := 
+\alpha_2(P) & = &\opri \classes :=
 \{\alpha_{2, \mathcal{C}}(c, \mva(P)) \mid c \in P.\classes\} \clri\\
 
 \alpha_{2,\mathcal{C}}(c, a) & = &
 \mathsf{if\ }c.\name = a.\clname\\
 &&
-\mathsf{then\ }c \:\opri 
- \begin{array}[t]{l} 
+\mathsf{then\ }c \:\opri
+ \begin{array}[t]{l}
  \gvs := \gvs(c) \cup \newgvs(a)\\
  \inv := \Conj(\Not(\Eq(\texttt{cp}, \texttt{halted})), c.\inv)\\
  \methods := \{\alpha_{2,\mathcal{M}}(m, a) \mid m \in c.\methods\} \clri
@@ -133,14 +133,14 @@ Figure~\ref{FigCompleteMVA}.
   \begin{array}[t]{l}
   \preset := \begin{array}[t]{l}
              \preset(m); \alpha_{2,\mathcal{E}}(\entry, m.\name, a);\\
-             \Assert(\Not(\Eq(\texttt{cp}, \texttt{halted}))), 
+             \Assert(\Not(\Eq(\texttt{cp}, \texttt{halted}))),
              \end{array}\\
   \postset := \postset(m); \alpha_{2, \mathcal{E}}(\exit, m.\name, a)\\
   \excset := \excset(m); \alpha_{2, \mathcal{E}}(\excexit, m.\name, a)
   \clri
   \end{array}\\
-\alpha_{2, \mathcal{E}}(e, n, a) & = & 
-  \alpha_{2, \mathcal{T}}(\{t \mid t \in a.\trans \wedge 
+\alpha_{2, \mathcal{E}}(e, n, a) & = &
+  \alpha_{2, \mathcal{T}}(\{t \mid t \in a.\trans \wedge
                                    t.\event = \opri \event := e,
                                                     \mname := m \clri
                            \})\\
@@ -148,10 +148,10 @@ Figure~\ref{FigCompleteMVA}.
   \CaseJML(
     \{(\begin{array}[t]{l}
        \Eq(\texttt{cp}, \texttt{q}),\\
-       \CaseJML(\{(t.\guard, \Set(\texttt{cp}, t.\tcp; t.\action)) \mid 
+       \CaseJML(\{(t.\guard, \Set(\texttt{cp}, t.\tcp; t.\action)) \mid
                   t \in ts \wedge t.\scp = \texttt{q}
                \}))\\
-    \mid \texttt{q} \in a.\cps 
+    \mid \texttt{q} \in a.\cps
     \})
     \end{array}
 \end{array}
@@ -168,7 +168,7 @@ total. The annotation generation algorithm \(\alpha_2\) applies
 \(\alpha_{2, \mathcal{C}}\) to all
 class. This function checks whether the class is the one being
 monitored. If so, appropriate ghost variables are added to the class
-using function \newgvs, that is not formally defined here. Basically 
+using function \newgvs, that is not formally defined here. Basically
 \begin{inparaenum}[(\itshape i\upshape)]
 \item for each control point of the automaton, a (final) ghost
 variable declaration is generated, initialised to a unique value
@@ -201,7 +201,7 @@ with \(t.\scp\) is \texttt{q} are selected and a \CaseJML
 statement is generated, testing for each of the transitions whether
 the guard holds, and if so, setting the control point \texttt{cp} to
 \(t.\tcp\), and executing the actions that correspond to this
-transition. 
+transition.
 Notice that the order in which the different cases are generated is
 not important: since the MVA is total and deterministic there is
 always exactly one case that applies.
@@ -209,20 +209,20 @@ always exactly one case that applies.
 
 
 
-For clearity of presentation, we have ignored here that \preset, \postset and
+For clarity of presentation, we have ignored here that \preset, \postset and
 \excset are actually functions, taking the method parameter, result or
 exception, respectively as input. However, in the complete PVS
-formalisation this is correctly handled. 
+formalisation this is correctly handled.
 
 Further, the formalisation does not formally discuss how the guard and
 the actions are translated into expressions in the programming
 language, but we assume that we can translate the guard and the
 expressions in the actions into expressions in the programming
-language that 
+language that
 \begin{inparaenum}[(\itshape i\upshape)]
 \item are wellformed,
 \item give the same result,
-\item do not have side-effects, 
+\item do not have side-effects,
 \item do not throw exceptions,
 \item do not contain method calls.
 \end{inparaenum}
@@ -248,7 +248,7 @@ S(\sigma, \tau) & \hat= &
 \unique(\sigma.\mvastate.\cp) = \tau.\pstate.\gvs(\texttt{cp}) \:\wedge\\
 (\forall q \in P.\mva.\cps. \unique(q) =
 \tau.\pstate.\gvs(\texttt{q})) \:\wedge\\
-(\forall n \in P.\mva.\vdsA. \sigma.\mvastate(n.\name) = 
+(\forall n \in P.\mva.\vdsA. \sigma.\mvastate(n.\name) =
                              \tau.\pstate.\gvs(\texttt{n})) \:\wedge\\
 \sigma.\progstate.\pstate = \tau.\progstate.\pstate \:\wedge\\
 (\forall n \in P.\ghostvars. \sigma.\progstate.\gvs(n) =
@@ -267,7 +267,7 @@ that are declared in the original program \(P\). Notice that if an
 annotation that is already present in \(P\), both the monitored and
 the annotated program will throw a \JMLExc. Therefore, we cannot prove
 that the annotated program throws a \JMLExc if and only if \halted is
-reached. 
+reached.
 
 To prove that this relation is preserved, our induction hypothesis
 also includes the statement that if the control point is not \halted,
@@ -283,11 +283,11 @@ conclude that the resulting states are related. Next, the monitored
 program makes an MVA transition, and the annotated program executes
 the newly generated set annotations, followed by an \Assert to check
 whether \halted has been reached. Here we cannot use the induction
-hypothesis, but instead show manually that the relation is preserved. 
+hypothesis, but instead show manually that the relation is preserved.
 
 Notice that in \postset or \excset we do not have an \Assert
 statement. Since the invariant is evaluated immediately after the
-set-annotations, reaching of \halted will be detected immediately. 
+set-annotations, reaching of \halted will be detected immediately.
 
 Finally, to be able to complete the proof, we have to make a
 restriction on the behaviour of \TryCatch. We follow the Java Language
@@ -303,7 +303,7 @@ this problem), which would mean that the violation of the security
 policy is not signalled to the user. To avoid this, we require that
 for all \TryCatch statements in the program, if the \emph{try} or
 \emph{catch} block can throw a \JMLExc, then the whole statement
-should also terminates exceptionally because of a \JMLExc. 
+should also terminates exceptionally because of a \JMLExc.
 
 
 
@@ -339,7 +339,7 @@ generated~--~this is equivalent to a \Skip statement.
 \begin{verbatim}
 class Messaging {
   int counter;
-  
+
   /*@ pre_set  CaseSet [(cp == s1, CaseSet [(n < N, cp = s2),
                                             (n >= N, cp = halted)]),
                         (cp == s2, CaseSet [(true, cp = halted)]),
@@ -354,7 +354,7 @@ class Messaging {
 
   /*@ pre_set  CaseSet [];
       post_set CaseSet [];
-      exc_set  CaseSet []; @*/ 
+      exc_set  CaseSet []; @*/
   void receiveSMS(){... }
 
   /*@ pre_set  CaseSet [];
@@ -376,9 +376,9 @@ class Messaging {
 \alpha_{3, \mathcal{M}}(P, m) = m \opri
 \begin{array}[t]{l}
 \preset := \Skip, \postset := \Skip. \excset := \Skip,\\
-\lvars := \{\resl, \exl\} \cup m.\lvars, 
+\lvars := \{\resl, \exl\} \cup m.\lvars,
 \res := \lookup(\resl), \\
-\body := 
+\body :=
 \begin{array}[t]{l}
 \TryCatch(\\
 \quad \begin{array}[t]{l}
@@ -425,7 +425,7 @@ then the \postset is executed. The result expression of the method is
 the look up of the variable \resl. To conclude, \preset, \postset and
 \excset in the method specification are set to
 \Skip. Figure~\ref{FigInline} gives the formal definition of
-\(\alpha_{3, \mathcal{M}}\) (where \(P\) is a program, and \(m\) a method. 
+\(\alpha_{3, \mathcal{M}}\) (where \(P\) is a program, and \(m\) a method.
 
 To prove correctness of this translation, we use the following
 relation: all fields and ghost variables coincide, exceptions
@@ -456,7 +456,7 @@ not changed by the set annotations.
 %to true and the exception is rethrown. In the finally block the value
 %of \texttt{ex} is tested. If \texttt{ex} is false, the post
 %set-annotations are executed. Finally, the flag \texttt{ex} is set to
-%false.  
+%false.
 %\end{enumerate}
 
 

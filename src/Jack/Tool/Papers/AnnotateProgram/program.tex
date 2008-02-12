@@ -1,4 +1,3 @@
-
 \section{Programs and Semantics}\label{SecProgram}
 
 This section first defines an abstract syntax of programs, and then it
@@ -6,12 +5,12 @@ defines the semantics. The program syntax and semantics are fairly
 standard. However, an important feature is that the semantics is
 parametrised on what happens with specifications. In particular, we
 define a run-time checking and a monitoring semantics, that evaluate
-differently upon method call and exit. 
+differently upon method call and exit.
 
 % commented out: version with different constants
 %\[
 %\begin{array}{rcl}
-%\NumExpr & = & \I(i : \mathbb{Z}) \mid \Plus(n_1, n_2 : \NumExpr) \mid \ldots \mid 
+%\NumExpr & = & \I(i : \mathbb{Z}) \mid \Plus(n_1, n_2 : \NumExpr) \mid \ldots \mid
 %               \EvalN(n : \Name) \\
 %\BoolExpr & = & \ttt \mid \fff \mid \Not(b : \BoolExpr) \mid \Conj(b_1,
 %b_2 : \BoolExpr) \mid \ldots \mid \\
@@ -23,7 +22,7 @@ differently upon method call and exit.
 %            \RExpr(r : \RefExpr) \mid\\
 %      &   & \CondExpr(c : \BoolExpr, e_1, e_2 : \Expr) \mid
 %            \Assign(n : \Name, e : \Expr) \mid \\
-%      &   & \Call(o : \Expr, n : \Name, p : \Expr) \mid 
+%      &   & \Call(o : \Expr, n : \Name, p : \Expr) \mid
 %            \Const(v : \Val) \\
 %\Stmt & = & \Skip \mid
 %            \Sequence(s_1, s_2 : \Stmt) \mid
@@ -33,8 +32,8 @@ differently upon method call and exit.
 %            \Throw \mid\\
 %      &   & \TryCatch(t: \Stmt, e : \Excpt c, f : \Stmt) \mid
 %            \Set(n : \Name, e : \Expr) \mid\\
-%      &   & \CaseJML(b : \listof{\BoolExpr \times \Stmt}) \mid 
-%            \Assert(e : \BoolExpr) 
+%      &   & \CaseJML(b : \listof{\BoolExpr \times \Stmt}) \mid
+%            \Assert(e : \BoolExpr)
 %\end{array}
 %\]
 
@@ -50,7 +49,7 @@ b_2 : \BoolExpr) \mid \Eq(e_1, e_2 : \Expr) \mid \EvalB(n : \Name) \\
             \RExpr(r : \RefExpr) \mid\\
       &   & \CondExpr(c : \BoolExpr, e_1, e_2 : \Expr) \mid
             \Assign(n : \Name, e : \Expr) \mid \\
-      &   & \Call(o : \Expr, n : \Name, p : \Expr) \mid 
+      &   & \Call(o : \Expr, n : \Name, p : \Expr) \mid
             \Const(v : \Val) \\
 \Stmt & = & \Skip \mid
             \Sequence(s_1, s_2 : \Stmt) \mid
@@ -60,8 +59,8 @@ b_2 : \BoolExpr) \mid \Eq(e_1, e_2 : \Expr) \mid \EvalB(n : \Name) \\
             \Throw \mid\\
       &   & \TryCatch(t: \Stmt, e : \Excpt, c, f : \Stmt) \mid
             \Set(n : \Name, e : \Expr) \mid\\
-      &   & \CaseJML(b : \listof{\BoolExpr \times \Stmt}) \mid 
-            \Assert(e : \BoolExpr) 
+      &   & \CaseJML(b : \listof{\BoolExpr \times \Stmt}) \mid
+            \Assert(e : \BoolExpr)
 \end{array}
 \]
 \caption{Abstract syntax of expressions and
@@ -71,8 +70,8 @@ statements}\label{FigExprStmt}
 \begin{figure}[t]
 \[
 \begin{array}{rcl}
-\Method & = \opr & \name : \Name, 
-                   \param : \LocalVarDecl, 
+\Method & = \opr & \name : \Name,
+                   \param : \LocalVarDecl,
                    \lvars : \setof{\LocalVarDecl},
                    \body : \Stmt,\\
         &        & \res : \Expr,
@@ -131,7 +130,7 @@ expression, this expression is part of the method signature.  Further,
 methods can be annotated with pre- and postconditions, and classes
 with invariants. To support our annotation generation algorithm, for
 each method we define special annotations, called
-\(\preset\), \(\postset\) and \(\excset\). These annotations describe 
+\(\preset\), \(\postset\) and \(\excset\). These annotations describe
 the updates to the ghost variables at method entry, exit and
 exceptional exit, respectively. To allow the use of the method
 parameter, the method result and the possible return exception, pre-
@@ -139,13 +138,13 @@ and postcondition and the different specification-level set
 annotations are functions. The semantics will apply these
 appropriately.
 
-A program is said to be \emph{wellformed} if 
+A program is said to be \emph{wellformed} if
 \begin{inparaenum}[(\itshape i\upshape)]
 \item names of fields, local variables and ghost variables are
 disjoint;
 \item the names used in the program are not reserved words;
 \item class names are unique;
-\item method names are unique; 
+\item method names are unique;
 \item every variable name that is used is declared; and
 \item only ghost variables are the target of \Set statements.
 \end{inparaenum}
@@ -219,12 +218,12 @@ is called upon a null reference \emph{etc.}
 \[
 \begin{array}{c}
 \ex(\progstate(\sigma_0)) = \bot \qquad % no exception in sigma_0
-\etp{P}{o, \sigma_0}{r,\sigma_1} \qquad      % evaluate receiver 
+\etp{P}{o, \sigma_0}{r,\sigma_1} \qquad      % evaluate receiver
 \etp{P}{p, \sigma1}{\act, \sigma_2}\\          % evaluate argument
 %\ex(\progstate(\sigma_2)) = \bot \qquad   % no exceptions
 r \not= \Null \qquad                    % receiver not null
 \md = \lookupmthd(P, r, \mn) \\
-\oldlvs = \sigma_2.\progstate.\st.\lvs \qquad 
+\oldlvs = \sigma_2.\progstate.\st.\lvs \qquad
 \sigma_3 = \updatelvs(\sigma_2, r, \md.\lvars, md.\param, \act) \\
 \gammain(P, \md, r, \Const(\act), \sigma_3, \sigma_4) \qquad
 \etp{P}{\md.body, \sigma_4}{\One,\sigma_5} \\
@@ -233,25 +232,25 @@ r \not= \Null \qquad                    % receiver not null
 \gammanorm(P, \md, r, \Const(v), \sigma_6, \sigma_7)\\
 %\ex(\progstate(\sigma_7)) = \bot\\
 \hline
-\etp{P}{\Call(o,\mn,p), \sigma_0}{v, \sigma_7 
+\etp{P}{\Call(o,\mn,p), \sigma_0}{v, \sigma_7
 (\progstate.\st.\lvs := \oldlvs)}
 \end{array}
 \]
 \caption{Evaluation rule for normal termination of method
-calls}\label{FigEvalRules} 
+calls}\label{FigEvalRules}
 \end{figure}
 
 Besides the relations \gammain and \gammanorm, the semantics
-is also parametrised with 
+is also parametrised with
 \gammaexc, describing what happens upon exceptional termination of a
 method, and \deltaset, \deltacase, and \deltaassert, describing the
 semantics of the \Set, \CaseJML and \Assert statement,
 respectively. In a standard program semantics, where specifications
 are ignored, all these parameters are instantiated basically with the
-identity relation. 
+identity relation.
 
 %\paragraph{Standard program semantics}
-%To evaluate a program without considering the specifications, 
+%To evaluate a program without considering the specifications,
 %\(\FullProgram\) and \(\Program\) and
 %\(\FullState\) and \(\Pstate\) are identical, thus \program and
 %\progstate are identify functions. The specification evaluation
@@ -259,7 +258,7 @@ identity relation.
 %\(\gammain(P, \md, r, \tau_1, \tau_2) = \gammanorm(\ldots) =
 %\gammaexc(\ldots) = (\tau_1 = \tau_2)\), and \(\deltaeval(P,
 %\EvalG(n), \tau_1, v, \tau_2, \ldots) = \deltaset(\ldots) = \deltacase(\ldots) = (\tau_1 =
-%\tau_2)\).  
+%\tau_2)\).
 
 
 \paragraph{Annotated Program Semantics}
@@ -272,7 +271,7 @@ ghost variables:
 \]
 The types \FullProgram and \Program coincide, while \FullState is
 instantiated as \Astate, and the mapping \progstate is defined as
-\pstate. Figure~\ref{FigAnnotatedSem} shows some of the 
+\pstate. Figure~\ref{FigAnnotatedSem} shows some of the
 instantiations of the semantics parameters; the other instantiations
 are similar. Relation \gammain uses an auxiliary relation \(\beta\)
 which checks boolean expression \(e\) and raises a special \JMLExc if
@@ -284,25 +283,25 @@ ensure that the program store is not changed. The function
 and if this did not result in an exceptional state, it updates the
 value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
 abbreviate that the \(n\) entry of the \gvs entry of \(\tau\) is
-updated.} appropriately. 
+updated.} appropriately.
 
 \begin{figure}[t]
 \[
 \begin{array}[t]{c}
-\invar = \lookupinv(P, r) \qquad 
+\invar = \lookupinv(P, r) \qquad
 \beta(P, \invar, \sigma_1, \tau_1) \qquad
 \beta(P, \md.\pre(\act), \tau_1, \tau_2) \\
 \etp{P}{\preset(md)(\act), \tau_1}{v,\tau_2} \qquad v\in\{\bot,\One\} \qquad
 \st(\pstate(\sigma_1)) = \st(\pstate(\sigma_2))\\
 \hline
-\gammain(P, \md, r, \act, \sigma_1, \sigma_2) 
+\gammain(P, \md, r, \act, \sigma_1, \sigma_2)
 \smallskip\\
 
 
 \etp{P}{e, \sigma_1}{v, \tau} \qquad
 \pif{v = \B(\ttt)}{\sigma_2 = \tau}{\sigma_2 = \tau (\ex := \JMLExc)}\\
 \hline
-\beta(P, e, \sigma_1, \sigma_2) 
+\beta(P, e, \sigma_1, \sigma_2)
 
 \smallskip\\
 
@@ -310,10 +309,10 @@ updated.} appropriately.
 \pif{\ex(\pstate(\tau)) = \bot}{\sigma_2 = \tau (\gvs.n :=
 v)}{\sigma_2 = \tau}\\
 \hline
-\deltaset(P, \Set(e, n), \tau_1, \tau_2) 
+\deltaset(P, \Set(e, n), \tau_1, \tau_2)
 \end{array}
 \]
-\caption{Instantation of semantics for runtime annotation evaluation}
+\caption{Instantiation of semantics for runtime annotation evaluation}
 \label{FigAnnotatedSem}
 \end{figure}
 
@@ -323,10 +322,10 @@ programs. This semantics is only defined when the MVA compatible with
 the program. An MVA \(a\) is said to be compatible with program \(P\),
 denoted \(a \sqsubseteq P\) if
 \begin{inparaenum}[(\itshape i\upshape)]
-\item the program contains the class \(c\) that is being monitored, 
+\item the program contains the class \(c\) that is being monitored,
 \item all variables declared as program variables in
-\(a\) are fields of the class \(c\) with the correct type, and 
-\item every event name corresponds to a method in the class. 
+\(a\) are fields of the class \(c\) with the correct type, and
+\item every event name corresponds to a method in the class.
 \end{inparaenum}
 A monitored program is a product of the MVA and the program. The state
 of a monitored program consists of the states of the MVA and the
@@ -338,7 +337,7 @@ the \stuck flag will never be set. Instead, violation of the security
 policy is modelled by the MVA reaching the error state \halted.
 
 
-\[ 
+\[
 \begin{array}{rcl}
 \Mprogram & =  & \opr \mva : \MVA, \program : \Program \clr\\
 \Mstate & = & \opr \mvastate : \MVAstate, \progstate : \Pstate, \stuck
@@ -373,7 +372,7 @@ the method specification).
 \delta(\ev)(P, \md, \act, \sigma) =\\
 \qquad
 \begin{array}[t]{l}
-\mathsf{let\ } 
+\mathsf{let\ }
 \begin{array}[t]{rcl}
   e & = & \opri \etype := \ev, \mname := \md.\name \clri\\
  \tau & = & \Delta_a(\mvastate(\sigma), \progstate(\sigma), e, \act)
@@ -409,13 +408,13 @@ class Messaging {
 \end{figure}
 %\subsubsection{PVS formalisation}
 %As mentioned above, the syntax and semantics for MVA and programming
-%language have been formalised in PVS. 
+%language have been formalised in PVS.
 
 % To formalise the program semantics in PVS is not
 %completely straightforward. PVS does not allow one to define mutually
 %recursive definitions, and moreover for every recursive method call,
 %termination has to be shown. As a solution, we define a function
-%\texttt{deriv\_expr} parametrised with 
+%\texttt{deriv\_expr} parametrised with
 %natural number \(n\) and function \texttt{deriv\_stmt}, where the
 %argument \texttt{deriv\_stmt} is only applicable to natural numbers
 %strictly less than \(n\). The number \(n\) provides an upperbound on

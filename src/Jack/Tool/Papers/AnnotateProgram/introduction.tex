@@ -11,7 +11,7 @@ state, the application will be stopped and a security violation will
 be reported. This approach is in particular suited to monitor
 properties are expressed as sequences of legal method calls, such as
 life cycle properties, or constraints that express how often or under
-which conditions a method can be called. 
+which conditions a method can be called.
 
 However, for many applications, such a runtime monitoring approach is
 not suited. In particular, if an application installed on a
@@ -26,7 +26,7 @@ on the device. In such a proof carrying code scenario~\cite{Necula97},
 the application provider is required to create this proof. Traditional
 proof carrying code has focused on simple security properties that can
 be checked with a type checker. Within the
-\textsf{Mobius} project (see \texttt{http://mobius.inria.fr}), 
+\textsf{Mobius} project (see \texttt{http://mobius.inria.fr}),
 a more advanced proof carrying code scenario is developed where
 security properties are encoded as logical formulae, and classical
 program verification techniques are used to produce the proof.
@@ -53,11 +53,11 @@ such devices is the Connected Limited Device Configuration, see
 profile, see \texttt{http://java.sun.com/products/midp/}.}, we use JML
 as the program verification specification language.  JML (Java
 Modeling Language)~\cite{LeavensPCCRCK05} is a behavioural interface
-specification langugage for Java. It allows to express Hoare-style
+specification language for Java. It allows to express Hoare-style
 specifications, including advanced constructs like class invariants
 and history constraints. Several tools and techniques exist that allow
 to validate JML specifications \emph{w.r.t.}\ a Java implementation,
-\emph{e.g.},\ static verification is provided by 
+\emph{e.g.},\ static verification is provided by
 \emph{e.g.}\ ESC/Java~\cite{CokK04} and
 JACK~\cite{BartheBCGHMPPSV06}, while runtime checking is possible
 using the \texttt{jmlc} and \texttt{jmlrac} tools. The JML runtime
@@ -79,7 +79,7 @@ that are generated directly give rise to new program
 annotations. Eventually, this will produce a completely annotated
 application, and if it can be proven statically that the annotated
 program respects its annotations, it also respects the security
-property expressed by the automaton.  
+property expressed by the automaton.
 
 The translation described in this paper is defined in several
 steps. First we define a translation from a partial automaton,
@@ -115,9 +115,10 @@ we show that the special \textsf{CaseJML} construct can be transformed
 into a sequence of set instructions, and we prove again that this does
 not change the run-time checking behaviour of the program. All results
 in the paper have been established formally using the PVS theorem
-prover~\cite{OwreRRSS96}. The complete formalisation is available via 
+prover~\cite{OwreRRSS96}. The complete formalisation is available via
 \texttt{http://www....}. \marginnote{To be changed, if necessary}
 
+% TODO: describe the new version of the example
 Throughout this paper, we will use a simple example property to
 illustrate the different translations: the method \texttt{sendSMS} can
 be called and terminate successfully at most \(N\) times in between

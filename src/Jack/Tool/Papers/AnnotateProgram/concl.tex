@@ -12,8 +12,8 @@ once the \halted state is reached, the correspondence between the two
 program states is not preserved anymore, because the monitored program
 might continue executing, while the annotated program throws an
 exception. Also, to prove correctness of this translation step, it was
-important to specify the evaluation of pre/post-condition, class
-invariant and pre/post-set annotations in the right order, to ensure
+important to specify the evaluation of pre- and postcondition, class
+invariant and pre- and post-set annotations in the right order, to ensure
 that the relation was established as quickly as possible~--~so that
 the induction hypothesis could be applied for the other
 steps. Finally, a last important issue here was the behaviour of the
@@ -23,7 +23,7 @@ overwrite other exceptions.
 The formalisation has been developed for a subset of Java. We believe
 that extending it to full (sequential) Java would be relatively
 straightforward. However, generalising to properties that are not
-restricted to a single class might be a bit more challenging.
+restricted to a single class might be more challenging.
 
 The ultimate goal of our work is to be able to do static
 verification. To achieve this, a weakest precondition calculus can be

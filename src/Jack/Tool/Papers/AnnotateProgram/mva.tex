@@ -4,16 +4,16 @@ This section formally defines the format of the automata that we use
 to encode security properties. Our automata are particularly suited to
 describe the monitoring of an application, because transitions can
 depend on the state of the program being monitored. We call these
-automata \emph{Multi-Variable Automata} (MVA), because the internal
-state of the automata is defined by a set of variables. Transitions
+automata \emph{Multi-Variable Automata} (MVA), because their
+states are defined by a set of variables. Transitions
 between states are labelled with guards, events and actions. The event
 describes the method that is being called or exited in the monitored
 program. Distinction is made between normal and exceptional
-terminiation of methods. The guard describes the conditions under
+termination of methods. The guard describes the conditions under
 which the transition can be applied. It depends on
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the automaton state,
-\item the program state of the program that is being monitored, and
+\item the state of the program that is being monitored, and
 \item in case the event is method entry, the argument of the method;
 in case the event is normal method exit, the result of the method; and
 in case the event is exceptional method exit, the exception with which
@@ -23,13 +23,12 @@ The action updates the automaton variables.
 
 
 MVA and programs share the definitions of values, types and exceptions, denoted
-\Val, \Type and \Excpt, 
-respectively, defined by the following grammar (where \(\mathbb{B}\) and
-\(\mathbb{Z}\) denote the standard sets of booleans and integers,
-respectively)\footnote{We will
+\Val, \Type and \Excpt, respectively. They are defined by the following grammar,
+where \(\mathbb{B}\) and \(\mathbb{Z}\) denote the standard sets of booleans
+and integers, respectively\footnote{We will
 use a PVS-like notation to declare abstract data types and records
-(enclosed by brackets \(\opr\) and \(\clr\)). Further, if \(x\) is a
-record with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
+(enclosed by \(\opr\) and \(\clr\)). Further, if \(x\) is a
+record with field \textsf{y}, we use \(\mathsf{y}(x)\) to access field
 \textsf{y}, and \(x \opri\mathsf{y} := z\clri\) to denote the record
 \(x\) with the field \textsf{y} updated to \(z\).}.
 \[
@@ -50,6 +49,7 @@ Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
 enumerable nonempty sets of control points and names, respectively. We
 assume that \(\Name\) contains the special names \textsf{this} and
 \textsf{super}.
+% AT: We don't need super for our formalization
 
 
 An MVA consists of
@@ -58,8 +58,8 @@ An MVA consists of
 \item a class name, to specify which class is being monitored,
 \item a finite set of control points,
 \item an initial control point,
-\item a set of events, to specify which events are being monitored,
-\item a set of special MVA variable declarations, to describe
+\item a set of events, to specify which methods are being monitored,
+\item a set of special MVA variable declarations, to describe % AT: why special?
 the internal state of the automaton
 \item a set of program variable declarations, to specify which
 program variables will be inspected by the monitor, and
@@ -79,18 +79,19 @@ monitor). Figure~\ref{FigMVAForm} shows the main types of the MVA
 definition (the types of \FieldDecl and \LocalVarDecl will also be
 used in the abstract syntax of programs).  Notice that the monitor
 variables are explicitly initialised, in contrast to the MVA's program
-variables: their value is retrieved from the program state.  
+variables: their value is retrieved from the program state.
+% AT: The last sentence repetitive
 
 \begin{figure}[t]
 \[
 \begin{array}{rcl}
 \FieldDecl & = \opr & \type : \Type, \name : \Name, \init : \Val
-\clr \\ 
+\clr \\
 \LocalVarDecl & = \opr & \type : \Type, \name : \Name \clr \\
-\EVENT & = \opr & \etype : (\entry \mid \exit \mid \excexit), 
+\EVENT & = \opr & \etype : (\entry \mid \exit \mid \excexit),
                  \mname : \Name \clr\\
 \TRANS & = \opr & \scp, \tcp : \CP, \event : \EVENT, \\
-& & 
+& &
 \guard : \MVAstate \times \Pstate \times (\Val \mid \Excpt) \rightarrow \mathbb{B}, \\
 && \action : (\opr \target : \Name, \expr : \Expr \clr)^* \clr\\
 \MVA & = \opr & \name, \clname : \Name, \cps : \setof{\CP},
@@ -119,37 +120,44 @@ MVA. This function adds a special control state
 to this \halted control point, where the guard is the negation of the
 disjunction of all other guards. In addition, one adds unconditional
 transitions from \halted to \halted for every possible
-event. 
+event.
 
 \marginnote{We could give formal definition of completion}
 
-An MVA is \emph{wellformed} if 
+An MVA is \emph{wellformed} if
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the monitor variable names do not overlap with the reserved
-words, 
-\item the program variable names that are used are unique, 
-\item the guards do not have a side-effect, 
-\item the ransition updates only uses declared variables, and
+words,
+\item the program variable names that are used are unique,
+\item the guards do not have a side-effect,
+\item the transition updates only uses declared variables, and
 \item transitions range between declared control points and are
 labelled with declared events.
 \end{inparaenum}.
+% AT: This are not all the requirements, for instance it is not said that the
+% initial control point should be on the set of declared control points or that
+% guards depend only on the value of the declared variables.
+% I think that don't want to enuntiate all the requirements precisesly in
+% English but then we should say it. We can say that these are the most
+% important requirements.
+% For a complete English description see the comments I added to MVA.
 
 %Formally:
 %\[
 %\begin{array}[t]{l}
-%\mathsf{complete}(a) = 
+%\mathsf{complete}(a) =
 %\begin{array}[t]{l}
-%a \mathsf{with} (\# 
+%a \mathsf{with} (\#
 %\begin{array}[t]{l}
 %\cps := a.\cps \cup {\halted},
-%\trans := a.\trans \cup complete(a.\trans) 
+%\trans := a.\trans \cup complete(a.\trans)
 %\end{array}
 %\#)
 %\end{array}
 %\mathsf{complete}(T) =
-%\{ (\# \scp := q, 
+%\{ (\# \scp := q,
 %       \tcp := \halted,
-%       \guard := \lambda s_A s_P v. 
+%       \guard := \lambda s_A s_P v.
 %\end{array}
 %\]
 
@@ -161,7 +169,7 @@ point, and the store of automaton variables.
 Notice that the program store is not part of the automaton
 state. Given a MVA \(a\), the transition function \(\Delta_a\)
 describes how given a program store and an event, \(a\) changes its
-internal state (where \(\epsilon\) is the arbitrary choice operator,
+internal state (where \(\chooseop\) is the arbitrary choice operator,
 and \textit{apply} is a function that updates the automaton store
 according to the list of actions in the obvious way).
 \[
@@ -172,10 +180,10 @@ according to the list of actions in the obvious way).
 \Delta_a(\sigma_A, \sigma_P, e, v) = \\
 \quad
 \begin{array}[t]{l}
-\mathsf{let\ }t = \epsilon(\{t\in \trans(a)\mid
+\mathsf{let\ }t = \chooseop(\{t\in \trans(a)\mid
   \begin{array}[t]{l}
-     \scp(t) = \cp(\sigma_A) \wedge \event(t) = e \wedge \\
-     \guard(t)(\stA(\sigma_A), \st(\fvs(\sigma_P)), v)\}) \mathsf{\ in}
+     \scp(t) = \cp(s_A) \wedge \event(t) = e \wedge \\
+     \guard(t)(\stA(s_A), \st(\fvs(s_P)), v)\}) \mathsf{\ in}
   \end{array}\\
 \quad \opri \cp := \tcp(t), \stA := \mathit{apply}(\action(t),
 \stA(\sigma_A)) \clri
@@ -186,10 +194,11 @@ according to the list of actions in the obvious way).
 In a total MVA, the transition function \(\Delta_a\) is total. Notice
 that a partial automaton gets stuck on a certain input if and only if the
 complete MVA will reach the state \halted.
+% AT: See the correctness criterion for the completion function I wrote in MVA
 
 \begin{equation}\label{MVAcompletionProp}
-\Delta_a(s_A, s_P, e) = \perp \Leftrightarrow
-\cp (\Delta_{\complete(a)}(s_A, s_P, e)) = \halted
+\Delta_a(s_A, s_P, e, v) = \perp \Leftrightarrow
+\cp (\Delta_{\complete(a)}(s_A, s_P, e, v)) = \halted
 \end{equation}
 
 
@@ -197,12 +206,12 @@ complete MVA will reach the state \halted.
 Recall the example security automaton in Figure~\ref{FigExample},
 expressing that the method \texttt{sendSMS} can
 be called at most \(N\) times in between calls to a \texttt{reset}
-method. This automaton is formally described by the following
-automaton\footnote{Where \(\epsilon\) denotes an empty sequence.}.
+method. This property is formally described by the following
+automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 
 \[
 \begin{array}[t]{l}
-\opri 
+\opri
 \begin{array}[t]{l}
 \name := \textrm{LimitSMS}, \clname := \texttt{Messaging},\\
 \cps := \{s_1, s_2\},
@@ -219,39 +228,39 @@ automaton\footnote{Where \(\epsilon\) denotes an empty sequence.}.
 \vdsP := \emptyset,\\
 \trans := \{
 \begin{array}[t]{l}
-\opri 
+\opri
  \begin{array}[t]{l}
-\scp := s, \tcp := s, 
-             \event := \opri \etype := \entry, 
+\scp := s_1, \tcp := s_2,
+             \event := \opri \etype := \entry,
                              \mname := \texttt{sendSMS} \clri, \\
              \guard := \lambda(s_A, s_P, v). n(s_A) < N,
-             \action := \epsilon
+             \action := \actskip
             \clri,
 \end{array}\\
-\opri 
+\opri
  \begin{array}[t]{l}
-\scp := s, \tcp := s, 
-             \event := \opri \etype := \exit, 
+\scp := s_2, \tcp := s_1,
+             \event := \opri \etype := \exit,
                              \mname := \texttt{sendSMS} \clri, \\
              \guard := \lambda(s_A, s_P, v). \ttt,
-             \action := \opri \target := n, \expr := n + 1 \clri 
+             \action := \opri \target := n, \expr := n + 1 \clri
             \clri,
 \end{array}\\
-\opri 
+\opri
  \begin{array}[t]{l}
-\scp := s, \tcp := s, 
-             \event := \opri \etype := \excexit, 
+\scp := s_2, \tcp := s_1,
+             \event := \opri \etype := \excexit,
                              \mname := \texttt{sendSMS} \clri, \\
              \guard := \lambda(s_A, s_P, v). \ttt,
-             \action := \epsilon
+             \action := \actskip
             \clri,
 \end{array}\\
-\opri 
+\opri
 \begin{array}[t]{l}
-\scp := s, \tcp := s,
+\scp := s_1, \tcp := s_1,
              \event := \opri \etype := \exit, \mname := \texttt{reset}
 \clri, \\
-             \guard := \ttt, 
+             \guard := \lambda(s_A, s_P, v). \ttt,
              \action := \opri \target := n, \expr := 0 \clri
            \clri \}
 \end{array}
@@ -260,17 +269,21 @@ automaton\footnote{Where \(\epsilon\) denotes an empty sequence.}.
 \clri
 \end{array}
 \]
+% AT: Note that actions should be lists
 
+% TODO: This should be adapted to the new example
 Completion would add a transition from \(s\) to the new state \halted
 for the event that \texttt{sendSMS} is entered, with a guard \(n \geq
 N\). For the exit event of \texttt{reset}, the transition to halted
 would have a guard \fff. And of course, there would be an unguarded
 transition from \halted to \halted. Figure~\ref{FigCompleteMVA} shows
-the complete MVA. 
- 
+the complete MVA.
+
 \begin{figure}[t]
 \begin{center}
-\epsfig{file=completed_alt.eps, width=4cm}
+%\epsfig{file=completed_alt.eps, width=4cm}
+% This is temporary, until completed_alt.eps is commited
+\epsfig{file=limited_sms_alt.eps, width=4cm}
 \end{center}
 \label{FigCompleteMVA}
 \caption{Automaton of Figure~\ref{FigExample}, after completion}
