@@ -314,12 +314,12 @@ BEGIN
 
   % TO PROVE
   var_names_predicate : LEMMA
-    FORALL(f : [Expr -> Body], v : Expr) :
+    FORALL (f : [Expr -> Body], v : Expr) :
       subset?(var_names(f(v)), union(var_names(f(BExpr(TT))), var_names(v)))
 
   % TO PROVE
   var_names_exc_predicate : LEMMA
-    FORALL(f : [Excpt -> Body], e : Excpt) :
+    FORALL (f : [Excpt -> Body], e : Excpt) :
       var_names(f(e)) = var_names(f(Throwable))
 
 

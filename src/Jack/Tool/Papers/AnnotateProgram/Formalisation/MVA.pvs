@@ -21,6 +21,12 @@ BEGIN
 
   IMPORTING State[Name], ValOrExcpt[Name]
 
+  % A guard depends on:
+  % .the state of the automaton,
+  % .the state of the program,
+  % .if the event is of type Entry, the argument of the method, if it is of type
+  %  ExitNormal, the value returned, and if its type is ExitNormal, the 
+  %  exception with which the method returns.
   Guard : TYPE = [Store, PSt, ValOrExcpt -> boolean]
 
   OneAction : TYPE =
@@ -30,34 +36,36 @@ BEGIN
 
   Action : TYPE = list[OneAction]
 
+  % skip is an empty action
   skip : Action = null[OneAction]
 
   IMPORTING EventType
 
   Event : TYPE =
     [# etype : EventType,
-       mname : Name
+       mname : Name       % name of the method being monitored
     #]
 
   Transition : TYPE =
-    [# scp : CP,         % source control point
+    [# scp : CP,          % source control point
        event : Event,
        guard : Guard,
        action : Action,
-       tcp : CP          % target control point
+       tcp : CP           % target control point
     #]
 
   % halted represents an error state
   halted : CP
 
   % An MVA consists of:
-  % the name of the class that the automaton monitors,
-  % a finite set of control points other than halted,
+  % a name for the automaton,
+  % the name of the class that the automaton will monitor,
+  % a finite set of control points,
   % an initial control point,
   % a finite set of events,
   % a finite set of variable declarations used by the automaton,
-  % a finite set of var decls from the program used in guards and actions,
-  % a finite transition relation
+  % a finite set of var decls from the program, used in guards and actions,
+  % a finite transition relation.
   MVA : TYPE =
     [# name : Name,
        class_name : Name,
@@ -95,6 +103,10 @@ BEGIN
 
   IMPORTING MVA[CP, Name]
 
+  % A Body <b> is well formed with respect to an MVA <a> if all the variables
+  % mentioned in <b> are declared by <a> and <b> does not contain a JML set
+  % command. This last restriction is necessary to avoid "injections" in the
+  % expressions.
   wf_Body(a : MVA)(b : Body) : boolean =
     subset?(var_names(b), var_names(a)) AND
     (FORALL (b1 : Body) : subterm(b1, b) IMPLIES NOT Set?(b1))
@@ -105,27 +117,40 @@ BEGIN
   wf_Expr(a : MVA)(e : Expr) : boolean =
     wf_Body(a)(e)
 
+  % A set of variable declaration for internal use of the automaton is well
+  % formed if their names are disjoint and are not reserved words.
   wf_vdsA(vds : finite_set[MVAVarDecl]) : boolean =
     (FORALL (vd1, vd2 : MVAVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
        name(vd1) = name(vd2) IMPLIES vd1 = vd2) AND
     disjoint?(var_names(vds), reserved_words)
 
+  % A set of variable declarations taken from the program is well formed if
+  % they all have different names.
   wf_vdsP(vds : finite_set[ProgVarDecl]) : boolean =
     FORALL (vd1, vd2 : ProgVarDecl) : vds(vd1) IMPLIES vds(vd2) IMPLIES
       name(vd1) = name(vd2) IMPLIES vd1 = vd2
 
+  % A guard is well formed w.r.t. an MVA <a> if it only depends on the variables
+  % of the automaton (defined by it or read from the program).
   wf_Guard(a : MVA)(g : Guard) : boolean =
     FORALL (sA : Store, sP : PSt, arg : ValOrExcpt, n : Name, v : Val) :
       (NOT var_names(vdsA(a))(n) AND NOT var_names(vdsP(a))(n)) IMPLIES
         g(sA, sP, arg) = g(sA WITH [n |-> v], sP, arg) AND
         g(sA, sP, arg) = g(sA, sP WITH [fvs := fvs(sP) WITH [n |-> v]], arg)
 
+  % An action is well formed w.r.t. <a> if for each of its OneAction members,
+  % the target is a variable declared in <a> and the source expression is
+  % well formed w.r.t. <a>.
   wf_Action(a : MVA)(l : Action) : boolean =
     FORALL (c : OneAction) :
       member(c, l) IMPLIES 
         (var_names(vdsA(a))(target(c)) AND
          wf_Expr(a)(source(c)))
 
+  % A transition is well formed w.r.t. an MVA <a> if:
+  % Its source and target control points are in the set of control points of <a>,
+  % Its event is in the set of events of <a>,
+  % Guards and actions are well formed w.r.t. <a>.
   wf_Trans(a : MVA)(t : Transition) : boolean = 
     ts(a)(t) IMPLIES
       cps(a)(scp(t)) AND
@@ -134,19 +159,14 @@ BEGIN
       wf_Guard(a)(guard(t)) AND
       wf_Action(a)(action(t))
 
-  % Rules that every MVA must follow:
-  % The initial control point is in the set of control points of the automaton
-  % The initial control point is not halted
-  % The sets vdsA and vdsP are "well formed"
-  % The name of the variables in vdsA and vdsP are distinct
-  % The source and target of every transition is in the set of control points
-  % The event of every transition is in the set of events
-  % The target of every OneAction in every transition is in vdsA and variables
-  % appearing in the source expression are either in vdsA or in vdsP
-  % Guards and actions are well formed
+  % An MVA <a> is well formed if:
+  % The initial cp is in the set of control points of <a> and is not halted,
+  % The sets vdsA and vdsP are well formed,
+  % The name of the variables in vdsA and vdsP are different,
+  % The transitions are well formed w.r.t. <a>.
   wf_MVA(a : MVA) : boolean =
     cps(a)(init_cp(a)) AND
-    NOT init_cp(a) = halted AND  % needed to prove initial_states_are_equivalent
+    NOT init_cp(a) = halted AND % needed to prove initial_states_are_equivalent
     wf_vdsA(vdsA(a)) AND
     wf_vdsP(vdsP(a)) AND
     disjoint?(var_names(vdsA(a)), var_names(vdsP(a))) AND
@@ -161,6 +181,10 @@ BEGIN
 
   IMPORTING WellFormedMVA[CP, Name]
 
+  % An MVA is deterministic if for every source control point and event, there
+  % is at most one guard that holds. In other words, given two transitions of
+  % the automata, if they have the same scp, event and their guards hold for
+  % some state, then they are the same.
   deterministic(a : MVA) : boolean =
     FORALL (t1, t2 : Transition, stA : Store, stP : PSt, arg : ValOrExcpt) :
       ts(a)(t1) IMPLIES
@@ -171,6 +195,8 @@ BEGIN
       guard(t2)(stA, stP, arg) IMPLIES
         t1 = t2
 
+  % An MVA is total if for any source control point and event there is exactly
+  % one guard that holds.
   total(a : MVA) : boolean =
     FORALL (q : CP, e : Event, stA : Store, stP : PSt, arg : ValOrExcpt) :
       cps(a)(q) IMPLIES
@@ -180,13 +206,16 @@ BEGIN
                                   event(t) = e AND
                                   guard(t)(stA, stP, arg)
 
+  % TODO: rename to trap_cp
+  % A control point is a trap is every outgoing transition leads to itself.
   trap_state(q : CP, a : (wf_MVA)) : boolean =
     FORALL (t : Transition) :
       ts(a)(t) AND scp(t) = q IMPLIES
-        tcp(t) = halted
+        tcp(t) = q
 
+  % TODO: We should rename complete to monitor
   % A MVA does not necessarily have to pass through our completion function to
-  % be usable. These are the conditions we require to work with a MVA
+  % be usable. These are the conditions we require to work with a MVA.
   complete(a : MVA) : boolean =
     wf_MVA(a) AND
     cps(a)(halted) AND
@@ -196,7 +225,7 @@ BEGIN
 
   AUTO_REWRITE- complete, total, deterministic
 
-  % Preconditions for completeMVA
+  % Preconditions for complete_MVA
   good_for_monitoring(a : (wf_MVA)) : boolean =
     deterministic(a) AND NOT cps(a)(halted)
 
@@ -209,7 +238,7 @@ BEGIN
 
   IMPORTING WellFormedMVA[CP, Name]
 
-  % Updates a store
+  % Updates a store.
   update(st : Store)(n : Name)(v : Val) : Store =
     LAMBDA(m : Name) :
       IF m = n
@@ -220,14 +249,19 @@ BEGIN
 
   %  Well formed states
 
+  % An store <st> is well formed w.r.t. a finite set of MVA variable 
+  % declarations <vds> if for each variable <n>, <n> is in <vds> if and only 
+  % if <n> has a non-bottom value in <st>.
   wf_Store(vds : finite_set[MVAVarDecl])(st : Store) : boolean =
     FORALL (n : Name) :
       var_names(vds)(n) IFF defined?(st(n))
 
-
-  % NOTE: Recall that we assume that variables in PSt are fields.
-  % Variables in PSt are a subset of the program variables, if we require them
-  % to be equal then we can use an IFF
+  % NOTE: Recall that we assume that variables in PSt are fields, that is why
+  %       only fvs is used.
+  % A PSt <st> is well formed w.r.t. a finite set of program variable <vds>
+  % declarations if each variable that is in <vds> is not bottom in <st>.
+  % Variables in PSt can be subset of the program variables, if we require them
+  % to be equal then we can use an IFF.
   wf_PSt(vds : finite_set[ProgVarDecl])(st : PSt) : boolean =
     FORALL (n : Name) :
       var_names(vds)(n) IMPLIES defined?(fvs(st)(n))
@@ -240,13 +274,19 @@ BEGIN
         wf_Store(vdsA(a))(update(st)(n)(v))
 
   % A program event is an event that occurred in the program together with the 
-  % value of its variables at that point
+  % value of its variables at that point. It also contains the value of the
+  % argument of the method to allow it to be referenced in guards and actions.
+  % Recall that a PSt is the part of the program state that assign values to its
+  % variables, it does not include the exception field.
   PEvent : TYPE =
     [# stP : PSt,
        event : Event,
        arg : ValOrExcpt
     #]
 
+  % A PEvent is well formed w.r.t. to an MVA <a> if its event belong to the set
+  % of event <a> and its program state is well formed w.r.t. to the program 
+  % variable declarations of <a>.
   wf_PEvent(a : MVA)(pe : PEvent) : boolean =
     evs(a)(event(pe)) AND wf_PSt(vdsP(a))(stP(pe))
 
@@ -269,12 +309,13 @@ BEGIN
         defined?(eval(e)(stA, stP))
 
 
+  % An action is executed by executing each of its OneActions in order.
   execute_action(l : Action)(stA : Store, stP : PSt) : RECURSIVE Store =
     IF null?(l)
     THEN stA
     ELSE execute_action(cdr(l))(update(stA)(target(car(l)))
-                                            (eval(source(car(l)))(stA, stP)),
-                                 stP)
+                                           (eval(source(car(l)))(stA, stP)),
+                                stP)
     ENDIF
   MEASURE length(l)
 
@@ -285,14 +326,14 @@ BEGIN
       wf_Action(a)(l) IMPLIES
         wf_Store(vdsA(a))(execute_action(l)(stA, stP))
 
-  % The state of a MVA is composed by its currrent control point and values for
-  % its variables
+  % The state of an MVA is composed by its currrent control point and values
+  % for its variables.
   AState : TYPE =
     [# cp : CP,
        stA : Store
     #]
 
-  % Initial state of a MVA
+  % Initial state of a MVA.
   initial_MVA_state(a : MVA) : AState =
     (# cp := init_cp(a),
        stA := LAMBDA (n: Name) :
@@ -315,18 +356,17 @@ BEGIN
       wf_MVA(a) IMPLIES wf_AState(a)(initial_MVA_state(a))
 
 
-
 END MVACommonSemantics
 
 
-% Operational semantics for MVAs
+% Operational semantics for partial MVAs
 MVAPartialSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MVACommonSemantics[CP, Name], 
             MVAProperties[CP, Name]
 
-  % Single judgement for a MVA
+  % Single judgement for a partial MVA.
   step(a : MVA)(s : (wf_AState(a)), pe : (wf_PEvent(a))) : lift[AState] =
       IF EXISTS (t : Transition) :
                        ts(a)(t) AND 
@@ -347,7 +387,6 @@ BEGIN
 
   %  Well-formed lemmas
 
-
   step_yields_wf_state : THEOREM % :-)
     FORALL (a : MVA, s : (wf_AState(a)), pe : (wf_PEvent(a))) :
       wf_MVA(a) IMPLIES
@@ -358,14 +397,14 @@ BEGIN
 END MVAPartialSemantics
 
 
-% Operational semantics for MVAs
+% Operational semantics for total MVAs
 MVATotalSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MVACommonSemantics[CP, Name],
             MVAProperties[CP, Name]
 
-  % Single judgement for a MVA
+  % Single judgement for a total MVA.
   step(a : (total))(s : (wf_AState(a)), pe : (wf_PEvent(a))) : AState =
       LET t = choose(LAMBDA (t : Transition) : 
                        ts(a)(t) AND 
@@ -375,7 +414,6 @@ BEGIN
       (# cp := tcp(t),
          stA := execute_action(action(t))(stA(s), stP(pe))
       #)
-
 
 
   %  Well-formed lemmas
@@ -398,8 +436,6 @@ BEGIN
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.
-  % TODO: To be more precise we should ask g to be well formed wrt a
-%  guard_to_expression(a : MVA)(g : (wf_Guard(a))) : BoolExpr
   guard_to_expression(a : MVA)(g : Guard) : [ValOrExcpt -> BoolExpr]
 
   guard_to_expression_yields_wf_BoolExpr : AXIOM
@@ -418,7 +454,6 @@ BEGIN
         FORALL(v : ValOrExcpt) :
         contains_no_method_call(guard_to_expression(a)(guard(t))(v))
 
-
   action_sources_contains_no_method_calls : AXIOM
     FORALL(a : MVA, t : Transition) :
       wf_MVA(a) IMPLIES
@@ -426,6 +461,7 @@ BEGIN
         FORALL(l : OneAction) :
           member(l, action(t)) IMPLIES
             contains_no_method_call(source(l))
+
 
 END MVAMonitoring
 
@@ -436,7 +472,7 @@ BEGIN
   IMPORTING MVAProperties[CP, Name]
 
   % Returns the set of guards from transitions with cp as source control
-  % point and e as event
+  % point and e as event.
   all_guards(a : MVA)(cp : CP, e : Event) : finite_set[Guard] =
     {p : Guard | EXISTS (t : Transition) : ts(a)(t) AND scp(t) = cp AND
                                            event(t) = e AND guard(t) = p}
@@ -448,7 +484,7 @@ BEGIN
    LAMBDA (stA : Store, stP : PSt, arg : ValOrExcpt) :
      FORALL (p : Guard) : all_guards(a)(cp, e)(p) IMPLIES NOT p(stA, stP, arg)
 
-  % Makes ts(a) complete with respect cps and evs(a)
+  % Makes ts(a) complete with respect cps and evs(a).
   complete_trans(a : MVA) : finite_set[Transition] =
     union({t : Transition | cps(a)(scp(t)) AND evs(a)(event(t)) AND
                             guard(t) = build_guard(a)(scp(t), event(t)) AND
@@ -461,7 +497,7 @@ BEGIN
 
 
 
-  % Makes a deterministic MVA total
+  % Makes a deterministic MVA total.
   complete_MVA(a : (good_for_monitoring)) : MVA =
     a WITH [cps := add(halted, cps(a)),
             ts := union(ts(a), complete_trans(a))]
@@ -484,13 +520,46 @@ BEGIN
       deterministic(complete_MVA(a))
 
   complete_MVA_is_total : LEMMA % :-)
-
     FORALL (a : (good_for_monitoring)) :
       total(complete_MVA(a))
 
   complete_MVA_is_complete : THEOREM % :-)
     FORALL (a : (good_for_monitoring)) :
       complete(complete_MVA(a))
+
+
+  % Correctness requirements for a completion function:
+  % .The only changes allowed are to add halted and to modify the set of 
+  %  transitions,
+  % .The original transitions must remain unchanged,
+  % .Transitions added have halted as target control point,
+  % .The result must be a complete MVA.
+  correct_completion_function(complete_fun : [(good_for_monitoring) -> 
+                                               MVA]) : boolean =
+    FORALL (a : (good_for_monitoring)) :
+      (FORALL (ts_prime : finite_set[Transition]) :
+        a WITH [ts := ts_prime, cps := add(halted, cps(a))] = 
+        complete_fun(a) WITH [ts := ts_prime]) AND
+      subset?(ts(a), ts(complete_fun(a))) AND
+      (FORALL (t : Transition) :
+	difference(ts(complete_fun(a)), ts(a))(t) IMPLIES
+          tcp(t) = halted) AND
+      complete(complete_fun(a))
+
+  complete_MVA_correctness : THEOREM % :-)
+    correct_completion_function(complete_MVA)
+
+  IMPORTING MVAPartialSemantics[CP, Name],
+  	    MVATotalSemantics[CP, Name]
+
+  % If a partial MVA <a> gets stuck on a certain input then
+  % <complete_fun>(<a>) reaches halted for the same input.
+  complete_function_correctness_implication : THEOREM % :-)
+    FORALL (complete_fun : [MVA -> MVA], a : (good_for_monitoring), 
+            sa : (wf_AState(a)), pe : (wf_PEvent(a))) :
+      correct_completion_function(complete_fun) IMPLIES
+      step(a)(sa, pe) = bottom IMPLIES 
+        cp(step(complete_fun(a))(sa, pe)) = halted
 
 
 END MVACompletion
