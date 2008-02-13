@@ -312,15 +312,19 @@ BEGIN
       var_names(CaseJML(branches))(n)
 
 
-  % TO PROVE
-  var_names_predicate : LEMMA
-    FORALL (f : [Expr -> Body], v : Expr) :
-      subset?(var_names(f(v)), union(var_names(f(BExpr(TT))), var_names(v)))
+%  var_names(f : [Expr -> Body]) : set[Name] =
+%    {n : Name |FORALL(e : Expr) : var_names(f(e))(n)}
 
-  % TO PROVE
-  var_names_exc_predicate : LEMMA
-    FORALL (f : [Excpt -> Body], e : Excpt) :
-      var_names(f(e)) = var_names(f(Throwable))
+%  % TO PROVE
+%  % I can't prove this...
+%  var_names_predicate : LEMMA
+%    FORALL(f : [Expr -> Body], v : Expr) :
+%      subset?(var_names(f(v)), union(var_names(f), var_names(v)))
+
+%  % TO PROVE
+%  var_names_exc_predicate : LEMMA
+%    FORALL(f : [Excpt -> Body], e : Excpt) :
+%      var_names(f(e)) = var_names(f(Throwable))
 
 
   % Declared variable names

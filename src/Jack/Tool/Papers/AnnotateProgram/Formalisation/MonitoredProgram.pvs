@@ -5,7 +5,7 @@ BEGIN
             WellFormedProgram[Name]
 
   MonitoredProgramPre : TYPE =
-    [# mva : (complete[CP, Name]),
+    [# mva : (good_for_monitoring[CP, Name]),
        program : Program[Name]
     #]
 
@@ -77,11 +77,12 @@ MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING MonitoredProgram[CP, Name],
-            MVATotalSemantics[CP, Name]
+            MVAPartialSemantics[CP, Name]
 
   % Monitored Program State
   MPState : TYPE =
     [# astate : AState[CP, Name],
+       stuck : boolean,
        pstate : PState[Name],
        gvs : Store
     #]

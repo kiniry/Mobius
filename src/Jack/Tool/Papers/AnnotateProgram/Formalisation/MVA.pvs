@@ -394,6 +394,11 @@ BEGIN
       wf_AState(a)(down(step(a)(s, pe)))
 
 
+  complete_definedness : LEMMA  % :-)
+    FORALL(a : (complete), 
+           s : (wf_AState(a)), pe : (wf_PEvent(a))) :
+      up?(MVAPartialSemantics.step(a)(s, pe))
+
 END MVAPartialSemantics
 
 
@@ -528,6 +533,16 @@ BEGIN
       complete(complete_MVA(a))
 
 
+  IMPORTING MVAPartialSemantics[CP, Name], 
+            MVATotalSemantics[CP, Name]
+
+  completion_equivalence : LEMMA  % :-)
+    FORALL(a : (good_for_monitoring), 
+           s : (wf_AState(a)), pe : (wf_PEvent(a))) :
+      MVAPartialSemantics.step(a)(s, pe) = bottom IMPLIES
+        cp(MVATotalSemantics.step(complete_MVA(a))(s, pe)) = halted
+
+        
   % Correctness requirements for a completion function:
   % .The only changes allowed are to add halted and to modify the set of 
   %  transitions,

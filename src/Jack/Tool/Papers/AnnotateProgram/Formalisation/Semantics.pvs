@@ -281,10 +281,8 @@ BEGIN
           % body returns either Unit or Bottom value
           x = return_of_stmt(tau5) AND
           % evaluate the result
-          IF Void?(res_type(md))
-          THEN tau6 = tau5 AND w = Unit AND m5 = 0
-          ELSE derive(p)(res(md), tau5, w, tau6)(m5)
-          ENDIF AND
+          derive(p)(res(md), tau5, w, tau6)(m5)
+          AND
           % actions taken at the exit of the method (pos_set, inv, postcond)
           IF bottom?(ex(pstate(tau6))) 
           THEN defined?(w) AND           % condition on w needed to prove TCCs
