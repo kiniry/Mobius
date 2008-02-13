@@ -539,7 +539,7 @@ BEGIN
   completion_equivalence : LEMMA  % :-)
     FORALL(a : (good_for_monitoring), 
            s : (wf_AState(a)), pe : (wf_PEvent(a))) :
-      MVAPartialSemantics.step(a)(s, pe) = bottom IMPLIES
+      MVAPartialSemantics.step(a)(s, pe) = bottom IFF
         cp(MVATotalSemantics.step(complete_MVA(a))(s, pe)) = halted
 
         
