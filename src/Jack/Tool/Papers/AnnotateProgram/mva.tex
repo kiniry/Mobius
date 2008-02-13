@@ -161,13 +161,13 @@ labelled with declared events.
 %\end{array}
 %\]
 
-\paragraph{MVA Transitions} The state of a MVA consists of a current control
+\paragraph{MVA Transitions} The state of an MVA consists of a current control
 point, and the store of automaton variables.
 \[
 \MVAstate = \opr \cp : \CP, \stA : \Store \clr
 \]
 Notice that the program store is not part of the automaton
-state. Given a MVA \(a\), the transition function \(\Delta_a\)
+state. Given an MVA \(a\), the transition function \(\Delta_a\)
 describes how given a program store and an event, \(a\) changes its
 internal state (where \(\chooseop\) is the arbitrary choice operator,
 and \textit{apply} is a function that updates the automaton store
