@@ -1,7 +1,7 @@
 \section{Programs and Semantics}\label{SecProgram}
 
 This section first defines an abstract syntax of programs, and then it
-defines the semantics. The program syntax and semantics are fairly
+defines their semantics. The program syntax and semantics are fairly
 standard. However, an important feature is that the semantics is
 parametrised on what happens with specifications. In particular, we
 define a run-time checking and a monitoring semantics, that evaluate
@@ -105,8 +105,10 @@ that methods have only one parameter. However, we believe that our
 formalisation contains all constructs that are relevant for proving
 correctness of our approach, and that implementing the technique for
 the full language is mainly an engineering issue (see
-Section~\ref{SecImplem}).
-
+Section~\ref{SecImplem}). % AT: I guess that we won't have an implementation section
+% AT: Should we mention our lack of of formalization for object creation?
+%     It is strange to see Throw without any argument, we should consider
+%     adding as exception as a possible extension
 
 Figure~\ref{FigExprStmt} defines expressions and statements as a
 mutually recursive data type (we use the term \emph{body} to denote
@@ -116,13 +118,13 @@ ghost variables (\emph{i.e.}, specification-only variables), \CaseJML,
 to abbreviate a list of conditional ghost variable updates, and
 \Assert, to evaluate a condition on the program state. A standard
 program semantics ignores these statements, but the annotated program
-semantics does evaluates them. Therefore, the state of an annotated
-program is extended with a ghost variable store, that is updated
-according to the \Set or
-\CaseJML statement. If an \Assert statement is evaluated, and its
-condition evaluates to false, a \JMLExc is throw and the program
-stops~--~otherwise execution continues normally.
-
+semantics evaluates them. Therefore, the state of an annotated
+program is extended with a ghost variable store, which is updated
+according to the \Set or \CaseJML statement. If an \Assert statement is
+evaluated, and its condition evaluates to false, a \JMLExc is thrown and the
+program stops~--~otherwise execution continues normally.
+% AT: assert does not stop the program, it just throws and exception. The
+%     program will stop only if the exception reaches the top level.
 
 Finally, Figure~\ref{FigProgram} describes the syntax for methods,
 classes and programs. To ensure every method has an appropriate return
@@ -135,14 +137,16 @@ the updates to the ghost variables at method entry, exit and
 exceptional exit, respectively. To allow the use of the method
 parameter, the method result and the possible return exception, pre-
 and postcondition and the different specification-level set
-annotations are functions. The semantics will apply these
-appropriately.
+annotations are functions. The semantics will apply these appropriately.
+% AT: Consider rephrasing the next to last sentence by starting with the subject
+%     and then the verb: Pre- and postconditionsa in different ... are functions
+%     to allow the use of ....
 
 A program is said to be \emph{wellformed} if
 \begin{inparaenum}[(\itshape i\upshape)]
 \item names of fields, local variables and ghost variables are
 disjoint;
-\item the names used in the program are not reserved words;
+\item names used in the program are not reserved words;
 \item class names are unique;
 \item method names are unique;
 \item every variable name that is used is declared; and
@@ -173,17 +177,17 @@ value.
 \end{array}
 \]
 
-When bodies are evaluated, uncaught exceptions are
-propagated. Exceptions can only by caught explicitly within a
-\(\TryCatch\) statement. All other evaluation rules require explicitly
-that the initial state is not exceptional.
+When bodies are evaluated, uncaught exceptions are propagated.
+Exceptions can only be caught explicitly within a \(\TryCatch\) statement.
+All other evaluation rules require explicitly that the initial state is not
+exceptional.
 
 As mentioned above, we define both the semantics of an (annotated)
 program and of a monitored program. We do this by parametrising the
 semantics with functions that specify how the specification constructs
 are to be evaluated. Since annotated or monitored programs and/or
-their states contain more information than basic programs, the
-evaluation rules are defined over parametric types
+their states contain more information than programs without annotations,
+the evaluation rules are defined over parametric types
 \(\FullProgram\) and \(\FullState\). For each instantiation we give
 mappings \program and \progstate to the basic program type \Program
 and the basic program state \Pstate.
@@ -197,7 +201,7 @@ are present in the PVS formalisation). First the receiver is
 evaluated, resulting in a reference \(r\). Next, the parameter is
 evaluated, resulting in a value \act. If \(r\) is not null, the method
 definition \md can be looked up. The local variable store is updated
-with the receiver reference \(r\), assigned to \texttt{this},
+assigning the receiver reference \(r\) to \texttt{this},
 initialising the methods local variables and assigning the actual
 parameter to the formal parameter. The old local variable store is
 kept, to be restored after method termination. Next, appropriate
@@ -263,7 +267,6 @@ identity relation.
 
 \paragraph{Annotated Program Semantics}
 
-
 The program state of an annotated program is extended with a store for
 ghost variables:
 \[
@@ -283,7 +286,8 @@ ensure that the program store is not changed. The function
 and if this did not result in an exceptional state, it updates the
 value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
 abbreviate that the \(n\) entry of the \gvs entry of \(\tau\) is
-updated.} appropriately.
+updated to \(v\).} appropriately.
+% AT: What is the difference between \beta and \deltaassert?
 
 \begin{figure}[t]
 \[
@@ -316,10 +320,11 @@ v)}{\sigma_2 = \tau}\\
 \label{FigAnnotatedSem}
 \end{figure}
 
+
 \paragraph{Monitored Program Semantics}
 We also instantiate the general program semantics for monitored
-programs. This semantics is only defined when the MVA compatible with
-the program. An MVA \(a\) is said to be compatible with program \(P\),
+programs. This semantics is only defined when the MVA is compatible with
+the program. An MVA \(a\) is said to be compatible with a program \(P\),
 denoted \(a \sqsubseteq P\) if
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the program contains the class \(c\) that is being monitored,
@@ -327,7 +332,7 @@ denoted \(a \sqsubseteq P\) if
 \(a\) are fields of the class \(c\) with the correct type, and
 \item every event name corresponds to a method in the class.
 \end{inparaenum}
-A monitored program is a product of the MVA and the program. The state
+A monitored program is a product of an MVA and a program. The state
 of a monitored program consists of the states of the MVA and the
 program, and a flag \stuck. If the MVA is partial, the flag
 \stuck is set when \(\Delta_a\) is not defined for a
@@ -336,7 +341,6 @@ is violated, and the program should be stopped. If the MVA is total,
 the \stuck flag will never be set. Instead, violation of the security
 policy is modelled by the MVA reaching the error state \halted.
 
-
 \[
 \begin{array}{rcl}
 \Mprogram & =  & \opr \mva : \MVA, \program : \Program \clr\\
@@ -344,6 +348,8 @@ policy is modelled by the MVA reaching the error state \halted.
 : \mathbb{B} \clr
 \end{array}
 \]
+% AT: Did you omit the gvs on purpose?
+%     If its is an APState then then the mapping should be prog_state..program
 Thus, \FullProgram gets instantiated as \Mprogram and \FullState as
 \Mstate, with mappings \program and \progstate. Now we can give
 appropriate instantiations for the \(\gamma\)- and
@@ -352,9 +358,8 @@ for the standard or annotated program semantics (depending on whether
 we wish the monitored program to evaluate annotations that are
 possibly already there). Here we show how \gammain changes the state
 of the monitor, using \(\hat\gammain\) for the necessary checks at
-method entrance in the program itself (\emph{i.e}, the evaluation of
+method entrance in the program itself (\emph{i.e.}, the evaluation of
 the method specification).
-
 \[
 \begin{array}{c}
 \hat\gammain(P, \md, r, \act, \sigma_1, \tau) \\

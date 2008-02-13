@@ -496,39 +496,41 @@ BEGIN
       Void : Const(Unit)
     ENDCASES
 
+
 END ProgramFunctions
 
 
+% Functions to apply a predicate to each part of a program or a method
 ProgramRestriction[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING Program[Name]
 
-    method_pred(p : PreProgram)(m : Method)
-               (pred : [PreProgram -> [Body -> bool]]) : bool =
-      (FORALL (v : Expr) : pred(p)(pre(m)(v))) AND 
-      (FORALL (v : Expr) : pred(p)(post(m)(v))) AND
-      pred(p)(body(m)) AND 
-      (FORALL(v : Expr) : pred(p)(pre_set(m)(v))) AND
-      (FORALL(v : Expr) : pred(p)(post_set(m)(v))) AND 
-      (FORALL(e : Excpt) : pred(p)(exc_set(m)(e))) AND
-      pred(p)(res(m))
+  method_pred(p : PreProgram)(m : Method)
+             (pred : [PreProgram -> [Body -> bool]]) : bool =
+    (FORALL (v : Expr) : pred(p)(pre(m)(v))) AND 
+    (FORALL (v : Expr) : pred(p)(post(m)(v))) AND
+    pred(p)(body(m)) AND 
+    (FORALL (v : Expr) : pred(p)(pre_set(m)(v))) AND
+    (FORALL (v : Expr) : pred(p)(post_set(m)(v))) AND 
+    (FORALL (e : Excpt) : pred(p)(exc_set(m)(e))) AND
+    pred(p)(res(m))
 
-    program_pred(p : PreProgram)
-                (pred : [PreProgram -> [Body -> bool]]) : bool =
-      FORALL(c : Class) :
-        classes(p)(c) IMPLIES
-         pred(p)(inv(c)) 
-         AND
-         FORALL(m : Method) :
-           methods(c)(m) IMPLIES method_pred(p)(m)(pred)
+  program_pred(p : PreProgram)
+              (pred : [PreProgram -> [Body -> bool]]) : bool =
+    FORALL (c : Class) :
+      classes(p)(c) IMPLIES
+        pred(p)(inv(c)) AND
+        FORALL (m : Method) :
+          methods(c)(m) IMPLIES method_pred(p)(m)(pred)
 
-    program_method_pred(p : PreProgram)(pred : [Method -> bool]) : bool =
-      FORALL(c : Class) :
-        classes(p)(c) IMPLIES
-         FORALL(m : Method) :
-           methods(c)(m) IMPLIES pred(m)
-     
+  program_method_pred(p : PreProgram)(pred : [Method -> bool]) : bool =
+    FORALL (c : Class) :
+      classes(p)(c) IMPLIES
+        FORALL (m : Method) :
+          methods(c)(m) IMPLIES pred(m)
+
+
 END ProgramRestriction
 
 

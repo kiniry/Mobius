@@ -42,4 +42,5 @@ BEGIN
   wf_set_stmts(p : FullProgram) : bool =
     program_method_pred(program(p))(wf_set_stmts(p))
 
+
 END WfSetStmts

@@ -2,7 +2,7 @@
 
 Given a security property encoded as an MVA, the annotation generation
 procedure generates JML-annotations that capture this property,
-\emph{i.e.}, if the program does not violate the generated
+\emph{i.e.}, if the program does not violate the generated % AT: shouldn't be iff?
 JML-annotations, it respects the security property encoded by the
 MVA. As explained above, the procedure is defined in several steps:
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -73,7 +73,7 @@ monitored program with a total MVA, \(\alpha_1(P)\) is defined as:
 
 The relation that is preserved between executions of \(P\) and
 \(\alpha_1(P)\) is the following (where \(\sigma\) is a state of
-\(P\) and \(\tau\) is a state of \(\alpha_1(P)\)
+\(P\) and \(\tau\) is a state of \(\alpha_1(P)\)):
 \[R(\sigma, \tau) \hat=
  \begin{array}[t]{l}
   (\sigma.stuck \Leftrightarrow \tau.\mvastate.\cp = \halted) \:\wedge \\
@@ -89,7 +89,7 @@ Page~\pageref{MVAcompletionProp} and we observe further that
 \item if \stuck has been set, it remains set,
 \item if \halted is reached, it is never left, and
 \item if the MVA is total, \stuck is never set.
-\end{inparaenum}. Formally, where \(P\) is a monitored program, and
+\end{inparaenum} Formally, where \(P\) is a monitored program, and
 \(Q\) is a monitored program with compete MVA:
 \[
 \begin{array}[t]{rl}
@@ -162,13 +162,13 @@ Figure~\ref{FigCompleteMVA}.
 
 
 Figure~\ref{FigMVAtoAnnot} contains the formal definition of the
-second translation step: from MVA to method-level
-set-annotations. Given a monitored program \(P\) where \(\mva(P)\) is
-total. The annotation generation algorithm \(\alpha_2\) applies
-\(\alpha_{2, \mathcal{C}}\) to all
-class. This function checks whether the class is the one being
+second translation step: from MVA to method-level set-annotations.
+Given a monitored program \(P\) where \(\mva(P)\) is total,
+the annotation generation algorithm \(\alpha_2\) applies
+\(\alpha_{2, \mathcal{C}}\) to all classes.
+This function checks whether the class is the one being
 monitored. If so, appropriate ghost variables are added to the class
-using function \newgvs, that is not formally defined here. Basically
+using the function \newgvs, that is not formally defined here. Basically
 \begin{inparaenum}[(\itshape i\upshape)]
 \item for each control point of the automaton, a (final) ghost
 variable declaration is generated, initialised to a unique value
@@ -197,7 +197,7 @@ method name correspond). For these transitions, a \CaseJML
 statement is generated, where the different cases correspond to the current
 control point being equal to a control point \texttt{q}, for any
 \texttt{q} in the automaton. For each such \texttt{q}, all transitions
-with \(t.\scp\) is \texttt{q} are selected and a \CaseJML
+where \(t.\scp\) is \texttt{q} are selected and a \CaseJML
 statement is generated, testing for each of the transitions whether
 the guard holds, and if so, setting the control point \texttt{cp} to
 \(t.\tcp\), and executing the actions that correspond to this
@@ -205,9 +205,6 @@ transition.
 Notice that the order in which the different cases are generated is
 not important: since the MVA is total and deterministic there is
 always exactly one case that applies.
-
-
-
 
 For clarity of presentation, we have ignored here that \preset, \postset and
 \excset are actually functions, taking the method parameter, result or
@@ -246,12 +243,12 @@ R(\sigma, \tau) & \hat=  &
 S(\sigma, \tau) & \hat= &
 \begin{array}[t]{l}
 \unique(\sigma.\mvastate.\cp) = \tau.\pstate.\gvs(\texttt{cp}) \:\wedge\\
-(\forall q \in P.\mva.\cps. \unique(q) =
+(\forall q \in P.\mva.\cps.\ \unique(q) =
 \tau.\pstate.\gvs(\texttt{q})) \:\wedge\\
-(\forall n \in P.\mva.\vdsA. \sigma.\mvastate(n.\name) =
+(\forall n \in P.\mva.\vdsA.\ \sigma.\mvastate(n.\name) =
                              \tau.\pstate.\gvs(\texttt{n})) \:\wedge\\
 \sigma.\progstate.\pstate = \tau.\progstate.\pstate \:\wedge\\
-(\forall n \in P.\ghostvars. \sigma.\progstate.\gvs(n) =
+(\forall n \in P.\ghostvars.\ \sigma.\progstate.\gvs(n) =
 \tau.\progstate.\gvs(n))
 \end{array}
 \end{array}
@@ -260,21 +257,21 @@ This relation specifies that if the monitor has reached a \halted
 control point, then the annotated program must have thrown a
 \JMLExc. Otherwise, the state of the annotated program must correctly
 model the MVA, \emph{i.e.}\ the current control point is stored in the
-ghost variable \texttt{q}, and all the MVA control points and
-variables correspond to a ghost variables. Moreover, the values of the
+ghost variable \texttt{cp}, and all the MVA control points and
+variables correspond to ghost variables. Moreover, the values of the
 fields have to coincide, just as the values of the ghost variables
-that are declared in the original program \(P\). Notice that if an
-annotation that is already present in \(P\), both the monitored and
-the annotated program will throw a \JMLExc. Therefore, we cannot prove
-that the annotated program throws a \JMLExc if and only if \halted is
-reached.
+that are declared in the program of \(P\). Notice that if an
+annotation that is already present in \(P\) throws a \JMLExc,
+both the monitored and the annotated program will throw a \JMLExc.
+Therefore, we cannot prove that the annotated program throws
+a \JMLExc \emph{if and only if} \halted is reached.
 
 To prove that this relation is preserved, our induction hypothesis
 also includes the statement that if the control point is not \halted,
 then the derivations also produce the same value. The crucial part in
 the proof is of course what happens upon method call and
-termination. For example, when a method is called, first invariant and
-precondition are evaluated. Assuming that \halted is not yet reached,
+termination. For example, when a method is called, first the invariant and
+the precondition are evaluated. Assuming that \halted is not yet reached,
 the new conjunct of the invariant evaluates to true, and then a simple
 induction allows to conclude that after evaluation of the
 precondition, the states are still related. Then the original \preset
@@ -283,11 +280,11 @@ conclude that the resulting states are related. Next, the monitored
 program makes an MVA transition, and the annotated program executes
 the newly generated set annotations, followed by an \Assert to check
 whether \halted has been reached. Here we cannot use the induction
-hypothesis, but instead show manually that the relation is preserved.
+hypothesis, but instead we show manually that the relation is preserved.
 
 Notice that in \postset or \excset we do not have an \Assert
 statement. Since the invariant is evaluated immediately after the
-set-annotations, reaching of \halted will be detected immediately.
+set-annotations, the reaching of \halted will be detected immediately.
 
 Finally, to be able to complete the proof, we have to make a
 restriction on the behaviour of \TryCatch. We follow the Java Language
@@ -296,16 +293,14 @@ means in particular that if the \emph{finally} block in the statement
 terminates abnormally (because of an exception, or any other reason
 for abrupt completion), this overrides a possible exception thrown in
 the \emph{try} or \emph{catch} block. Thus, for example, if \halted
-is reached in the \emph{try} block, thus a \JMLExc is thrown, this
-exception might be overwritten by an exception that is thrown in the
+is reached in the \emph{try} block, and hence a \JMLExc is thrown, this
+exception might be overwritten by an exception thrown in the
 \emph{finally} block (see also~\cite{Huisman08} for a discussion of
 this problem), which would mean that the violation of the security
 policy is not signalled to the user. To avoid this, we require that
 for all \TryCatch statements in the program, if the \emph{try} or
 \emph{catch} block can throw a \JMLExc, then the whole statement
-should also terminates exceptionally because of a \JMLExc.
-
-
+should also terminate exceptionally because of a \JMLExc.
 
 
 %The exact
@@ -326,7 +321,7 @@ should also terminates exceptionally because of a \JMLExc.
 %the last branch (\texttt{cp} = \(c'\)) \texttt{cp} is always set to
 %\(c'''\) and \texttt{x} is not changed.
 
-As an example, consider the implementation of class \texttt{Messaging}
+As an example, consider the implementation of the class \texttt{Messaging}
 in Figure~\ref{FigExampleImplem} and the completed MVA, encoding the
 \emph{limited SMS} security policy, in
 Figure~\ref{FigCompleteMVA}. Figure~\ref{FigExampleStep2} shows the
@@ -334,6 +329,7 @@ generated annotations that are the result from applying translation
 \(\alpha_2\) on this program, and this MVA. Notice that for methods
 and events that are not involved in the property, an empty \CaseJML is
 generated~--~this is equivalent to a \Skip statement.
+
 
 \begin{figure}[t]
 \begin{verbatim}
@@ -371,6 +367,37 @@ class Messaging {
 
 \paragraph{Inlining the Annotations}
 
+Once the set-annotations at method specification level are generated,
+the next step is to translate these further into legal JML
+specifications. As mentioned above, this consists of two steps that
+can be swapped. Below we discuss how the \CaseJML statement is
+translated into a sequence of \Set statements, using \CondExpr;
+here we discuss how the method-level set-annotations are inlined into
+the method body. The main idea is that to ensure that the appropriate
+set-statements are executed at the end of the method body, the body is
+wrapped in a \TryCatch statement. The translation \(\alpha_3\) applies
+\(\alpha_{3, \mathcal{C}}\) to all classes, which in turn applies
+\(\alpha_{3, \mathcal{M}}\) to all methods in the class. This function
+generates two new local variables\footnote{In fact, these should be
+local \emph{ghost} variables, but as these are not supported by our
+formalisation, we decide to generate standard local variables.} \resl
+and \exl. The body of the method is changed as follows: first \preset
+is executed. Then the body of the method is wrapped in two \TryCatch
+statements, to catch \Throwable and \NullPointer
+exceptions\footnote{For simplicity, we do not model the exception
+hierarchy and thus \TryCatch can only catch a single
+exception, but in practice only one \emph{try-catch-finally} block is needed.}.
+After the body is executed (inside the \emph{try} block)
+the result expression from the original body is evaluated, and
+assigned to \resl. Last, to record that no exception occurred, true is
+assigned to \exl. In the \emph{catch} clauses, the \excset is
+executed. And then, in the \emph{finally} clause, if \resl is true,
+then the \postset is executed. The result expression of the method is
+the look up of the variable \resl. To conclude, \preset, \postset and
+\excset in the method specification are set to
+\Skip. Figure~\ref{FigInline} gives the formal definition of
+\(\alpha_{3, \mathcal{M}}\) (where \(P\) is a program, and \(m\) a method.
+
 \begin{figure}[t]
 \[
 \alpha_{3, \mathcal{M}}(P, m) = m \opri
@@ -394,45 +421,16 @@ class Messaging {
 \end{array}
 \end{array}
 \]
-\caption{Formal definition of annotation inlining for methods}
+\caption{Formal definition of annotation inlining for methods}\label{FigInline}
 \end{figure}
 
-Once the set-annotations at method specification level are generated,
-the next step is to translate these further into legal JML
-specifications. As mentioned above, this consists of two steps whose
-steps can be swapped. Below we discuss how the \CaseJML statement is
-translated into a sequence of \Set statements, using the \CondExpr,
-here we discuss how the method-level set-annotations are inlined into
-the method body. The main idea is that to ensure that the appropriate
-set-statements are executed at the end of the method body, the body is
-wrapped in a \TryCatch statement. The translation \(\alpha_3\) applies
-\(\alpha_{3, \mathcal{C}}\) to all classes, which in turn applies
-\(\alpha_{3, \mathcal{M}}\) to all methods in the class. This function
-generates two new local variables\footnote{In fact, these should be
-local \emph{ghost} variables, but as these are not supported by our
-formalisation, we decide to generate standard local variables.} \resl
-and \exl. The body of the method is changed as follows: first \preset
-is executed. Then the body of the method is wrapped in two \TryCatch
-statements, to catch \Throwable and \NullPointer
-exceptions\footnote{For simplicity, we do not model the exception
-hierarchy and thus \TryCatch can only catch a single
-exception.}. After the body is executed (inside the \emph{try} block)
-the result expression from the original body is evaluated, and
-assigned to \resl. Last, to record that no exception occurred, true is
-assigned to \exl. In the \emph{catch} clauses, the \excset is
-executed. And then, in the \emph{finally} clause, if \resl is true,
-then the \postset is executed. The result expression of the method is
-the look up of the variable \resl. To conclude, \preset, \postset and
-\excset in the method specification are set to
-\Skip. Figure~\ref{FigInline} gives the formal definition of
-\(\alpha_{3, \mathcal{M}}\) (where \(P\) is a program, and \(m\) a method.
 
 To prove correctness of this translation, we use the following
 relation: all fields and ghost variables coincide, exceptions
 coincide, and all local variables that are declared in the original
 program coincide. In the correctness proof, we use that the \postset
-and \excset annotations do not throw any exceptions, and \preset only
-throws a \JMLExc. Moreover, we use that the set-annotations do not
+and \excset annotations do not throw any exceptions, and \preset may only
+throw a \JMLExc. Moreover, we use that the set-annotations do not
 contain method calls, from which we can conclude that they do not
 modify any variables that are not explicitly mentioned in them. In
 particular, this allows to conclude that the new local variables are
