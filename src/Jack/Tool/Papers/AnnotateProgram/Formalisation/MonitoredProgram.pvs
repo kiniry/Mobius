@@ -61,6 +61,9 @@ BEGIN
     wf_MVA(mva(mp)) AND
     wf_Program(program(mp))
 
+  wf_and_complete_MP(mp : MonitoredProgram) : boolean =
+    wf_MP(mp) AND complete(mva(mp))
+
   get_monitored_class_unique_for_wf_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram) :
       wf_MP(mp) IMPLIES
@@ -140,16 +143,25 @@ BEGIN
 
   on_method_MVA(etype : EventType)
                (mp : MonitoredProgram, md : (wf_Method(program(mp))))
-               (arg : ValOrExcpt)(s : MPState) : AState =
-    IF wf_state(mp)(s) AND
+               (arg : ValOrExcpt)(s : MPState) : MPState =
+    IF wf_state(mp)(s) AND 
+       NOT stuck(s) AND
        methods(get_monitored_class(mp))(md) AND
-       evs(mva(mp))((# etype := etype, mname := name(md) #))
-    THEN step(mva(mp))(astate(s), (# stP := st(pstate(s)),
-                                     event := (# etype := etype,
-                                                 mname := name(md) #),
-                                     arg := arg 
-                                  #))
-    ELSE astate(s)
+       evs(mva(mp))((# etype := etype, mname := name(md) #)) 
+    THEN IF up?(step(mva(mp))(astate(s), (# stP := st(pstate(s)),
+                                            event := (# etype := etype,
+                                                        mname := name(md) #),
+                                                        arg := arg 
+                                                     #)))
+         THEN s WITH [astate := down(step(mva(mp))(astate(s), 
+                                         (# stP := st(pstate(s)),
+                                            event := (# etype := etype,
+                                                        mname := name(md) #),
+                                                        arg := arg 
+                                                     #)))]
+         ELSE s WITH [stuck := TRUE]
+         ENDIF
+    ELSE s
     ENDIF
 
   on_method_entry_MP : (on_method_event_type) =
@@ -160,9 +172,7 @@ BEGIN
       on_method_entry(mp, md, a, arg, s1, s_new, n, derive_rec) AND
       IF up?(ex(pstate(s_new)))
       THEN s2 = s_new
-      ELSE s2 = (# astate := on_method_MVA(Entry)(mp, md)(arg)(s_new),
-                   pstate := pstate(s_new),
-                   gvs := gvs(s_new) #)
+      ELSE s2 = on_method_MVA(Entry)(mp, md)(arg)(s_new)
       ENDIF
 
 
@@ -179,8 +189,7 @@ BEGIN
       val?(arg) AND
       derive_rec(n)(mp)(post_set(md)(v(arg)), s1, v, tau1)(m1) AND
       v = return_of_stmt(tau1) AND
-      tau2 = tau1 WITH
-             [ astate := on_method_MVA(ExitNormal)(mp, md)(arg)(tau1) ] AND
+      tau2 = on_method_MVA(ExitNormal)(mp, md)(arg)(tau1)  AND
       inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
       check_assertion(mp)(post(md)(v(arg)), tau3, s2)(m3)
@@ -201,8 +210,7 @@ BEGIN
       derive_rec(n)(mp)(exc_set(md)(e(arg)), 
                         update_PState(s1, catch), v, tau1)(m1) AND
       v = return_of_stmt(tau1) AND
-      tau2 = tau1 WITH
-             [ astate := on_method_MVA(ExitExceptional)(mp, md)(arg)(tau1)] AND
+      tau2 = on_method_MVA(ExitExceptional)(mp, md)(arg)(tau1) AND
       inv = lookup_inv(program(mp), a) AND
       check_assertion(mp)(inv, tau2, tau3)(m2)(derive_rec(m2)) AND
       s2 = (IF up?(ex(pstate(tau3)))
@@ -229,6 +237,7 @@ BEGIN
 
   initial_MP_state(mp : MonitoredProgram)(this_val : Val) : MPState =
     (# astate := initial_MVA_state(mva(mp)),
+       stuck := FALSE,
        pstate := initial_Program_state(program(mp))(this_val),
        gvs := LAMBDA (n : Name) :
          LET gd = get_GhostDecl(n, program(mp)) IN
@@ -299,7 +308,13 @@ BEGIN
     FORALL (mp : MonitoredProgram, s : MPState, m : (wf_Method(program(mp))),
             et : EventType, arg : ValOrExcpt) :
       wf_state(mp)(s) IMPLIES
-        wf_AState(mva(mp))(on_method_MVA(et)(mp, m)(arg)(s))
+        wf_AState(mva(mp))(astate(on_method_MVA(et)(mp, m)(arg)(s)))
+
+  on_method_MVA_yields_wf_state : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, s : MPState, m : (wf_Method(program(mp))),
+            et : EventType, arg : ValOrExcpt) :
+      wf_state(mp)(s) IMPLIES
+        wf_state(mp)(on_method_MVA(et)(mp, m)(arg)(s))
 
   derive_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
@@ -314,16 +329,65 @@ BEGIN
      FORALL (etype : EventType)
             (mp : MonitoredProgram, md : (wf_Method(program(mp))))
             (arg : ValOrExcpt, s : MPState) :
+       complete(mva(mp)) IMPLIES
        cp(astate(s)) = halted IMPLIES
-       cp(on_method_MVA(etype)(mp, md)(arg)(s)) = halted
+       cp(astate(on_method_MVA(etype)(mp, md)(arg)(s))) = halted
 
   derive_never_leaves_halted : LEMMA % :-)
     FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
            (sigma1, sigma2 : MPState, n : nat) :
-      wf_MP(mp) IMPLIES
+      wf_and_complete_MP(mp) IMPLIES
       cp(astate(sigma1)) = halted IMPLIES
       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
         cp(astate(sigma2)) = halted
+
+  on_method_MVA_never_leaves_stuck : LEMMA % :-)
+     FORALL (etype : EventType)
+            (mp : MonitoredProgram, md : (wf_Method(program(mp))))
+            (arg : ValOrExcpt, s : MPState) :
+       stuck(s) IMPLIES
+       stuck(on_method_MVA(etype)(mp, md)(arg)(s))
+
+  derive_never_leaves_stuck : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
+           (sigma1, sigma2 : MPState, n : nat) :
+      wf_MP(mp) IMPLIES
+      stuck(sigma1) IMPLIES
+      derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
+        stuck(sigma2)
+
+  on_method_MVA_cp_in_cps : LEMMA % :-)
+     FORALL (etype : EventType)
+            (mp : MonitoredProgram, md : (wf_Method(program(mp))))
+            (arg : ValOrExcpt, s : MPState) :
+       cps(mva(mp))(cp(astate(s))) IMPLIES
+       cps(mva(mp))(cp(astate(on_method_MVA(etype)(mp, md)(arg)(s))))
+
+  derive_cp_in_cps : LEMMA
+    FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
+           (sigma1, sigma2 : MPState, n : nat) :
+       wf_MP(mp) IMPLIES
+       cps(mva(mp))(cp(astate(sigma1))) IMPLIES
+       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
+       cps(mva(mp))(cp(astate(sigma2)))
+
+
+  complete_MVA_never_stuck_after_on_method_MVA : LEMMA % :-)
+     FORALL (etype : EventType)
+            (mp : MonitoredProgram, md : (wf_Method(program(mp))))
+            (arg : ValOrExcpt, s : MPState) :
+       NOT stuck(s) IMPLIES
+       complete(mva(mp)) IMPLIES
+       cps(mva(mp))(cp(astate(s))) IMPLIES
+       NOT stuck(on_method_MVA(etype)(mp, md)(arg)(s))
+
+  complete_MVA_never_stuck_after_derive : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
+           (sigma1, sigma2 : MPState, n : nat) :
+      wf_and_complete_MP(mp) IMPLIES
+      NOT stuck(sigma1) IMPLIES
+      derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
+        NOT stuck(sigma2)
 
   on_method_entry_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
