@@ -13,21 +13,9 @@ A.java:18: Warning: Postcondition possibly not established (Post)
 Associated declaration is "A.java", line 14, col 7:
     @  ensures \result == (i/i)*2; // no divZero warning because of pr ...
        ^
-/home/karabot/dev/workspaces/JML4/ESCJava2/specs/java/lang/CharSequence.spec:30: Warning: Possible null dereference (Null)
-    //@ public invariant charArray.owner == this;
-                                  ^
-/home/karabot/dev/workspaces/JML4/ESCJava2/specs/java/lang/CharSequence.spec:30: Warning: Possible null dereference (Null)
-    //@ public invariant charArray.owner == this;
-                                  ^
-/home/karabot/dev/workspaces/JML4/ESCJava2/specs/java/lang/CharSequence.spec:30: Warning: Possible null dereference (Null)
-    //@ public invariant charArray.owner == this;
-                                  ^
 A.java:39: Warning: Possible division by zero (ZeroDiv)
     @  signals (RuntimeException e) i/i == i/i; // divZero warning
                                      ^
-/home/karabot/dev/workspaces/JML4/ESCJava2/specs/java/lang/CharSequence.spec:30: Warning: Possible null dereference (Null)
-    //@ public invariant charArray.owner == this;
-                                  ^
 A.java:48: Warning: Possible division by zero (ZeroDiv)
     @  ensures \result == (i/i)*2; // divZero warning
                             ^
@@ -37,9 +25,6 @@ A.java:58: Warning: Postcondition possibly not established (Post)
 Associated declaration is "A.java", line 48, col 7:
     @  ensures \result == (i/i)*2; // divZero warning
        ^
-/home/karabot/dev/workspaces/JML4/ESCJava2/specs/java/lang/CharSequence.spec:30: Warning: Possible null dereference (Null)
-    //@ public invariant charArray.owner == this;
-                                  ^
 A.java:65: Warning: Possible division by zero (ZeroDiv)
     @  signals (RuntimeException e) i/i == i/i; // divZero warnings
                                      ^
@@ -100,18 +85,12 @@ C.java:47: Warning: Postcondition possibly not established (Post)
 Associated declaration is "C.java", line 43, col 7:
     @  ensures this.i == o.i; // null warning
        ^
-/home/karabot/dev/workspaces/JML4/ESCJava2/specs/java/lang/CharSequence.spec:30: Warning: Possible null dereference (Null)
-    //@ public invariant charArray.owner == this;
-                                  ^
 C.java:51: Warning: Possible null dereference (Null)
     @  signals (RuntimeException e) o.i/o.i == o.i/o.i; // null(o), di ...
                                      ^
 C.java:51: Warning: Possible division by zero (ZeroDiv)
     @  signals (RuntimeException e) o.i/o.i == o.i/o.i; // null(o), di ...
                                        ^
-/home/karabot/dev/workspaces/JML4/ESCJava2/specs/java/lang/CharSequence.spec:30: Warning: Possible null dereference (Null)
-    //@ public invariant charArray.owner == this;
-                                  ^
 C.java:69: Warning: Possible null dereference (Null)
     this.i = o.i+o1.i; // null (o), null (o1) warnings
               ^
@@ -268,9 +247,6 @@ F.jml:4: Warning: Possible division by zero (ZeroDiv)
 F.jml:21: Warning: Possible null dereference (Null)
     @  requires aa.length>0; //null(aa) warning
                   ^
-F.jml:7: Warning: Possible null dereference (Null)
-  //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
-                 ^
 F.jml:4: Warning: Possible division by zero (ZeroDiv)
   //@ invariant f/f == f/f; // divZero warning
                  ^
@@ -279,15 +255,18 @@ F.jml:7: Warning: Possible null dereference (Null)
                  ^
 F.jml:4: Warning: Possible division by zero (ZeroDiv)
   //@ invariant f/f == f/f; // divZero warning
+                 ^
+F.jml:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
                  ^
 F.jml:37: Warning: Possible null dereference (Null)
     @  requires aa.length>0; //null(aa) warning
                   ^
-F.jml:7: Warning: Possible null dereference (Null)
-  //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
-                 ^
 F.jml:4: Warning: Possible division by zero (ZeroDiv)
   //@ invariant f/f == f/f; // divZero warning
+                 ^
+F.jml:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a), spurious null(this) warnings i ...
                  ^
 H.jml:5: Warning: Possible null dereference (Null)
   /*@ requires a.length >= 0;  // null(a) warning
@@ -322,4 +301,4 @@ J.jml:16: Warning: Possible null dereference (Null)
 J.jml:16: Warning: Possible division by zero (ZeroDiv)
   /*@ ensures this.i == this.test0(o1.i, o2.i, o3.i/o3.i); //null(o1), ...
                                                    ^
-91 warnings
+84 warnings
