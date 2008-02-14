@@ -1110,25 +1110,40 @@ public class Frame {
       } else if (od instanceof ExprObjectDesignator) {
         Expr e = ((ExprObjectDesignator)od).expr;
         Type t = javafe.tc.FlowInsensitiveChecks.getType(e);
-        TypeDecl tdd = ((TypeSig)t).getTypeDecl();
-        if (TypeSig.getSig(td).isSubtypeOf((TypeSig)t)) tdd = td;
-        Iterator i = Datagroups.get(tdd,d).iterator();
-        // FIXME - need to determine what the permissible content
-        // of Datagroups.get() is
-        Hashtable h = new Hashtable();
-        h.put(Substitute.thisexpr,e);
-        while (i.hasNext()) {
-          Object o = i.next();
-          if (o instanceof FieldDecl) {
-            ErrorSet.caution("INTERNAL ERROR: Unhandled FieldDecl in ModifiesIterator.add: " + o);
-          } else if (o instanceof Expr) {
-            Expr ee = (Expr)o;
-            ee = Substitute.doSubst(h,ee);
-            others.add(ee);
-          } else {
-            ErrorSet.caution("INTERNAL ERROR: Unhandled case in ModifiesIterator.add: " + o.getClass());
-          }
+        
+        TypeDecl tdd;
+        if (t instanceof TypeSig) {
+			tdd = ((TypeSig) t).getTypeDecl();
+        
+			if (TypeSig.getSig(td).isSubtypeOf((TypeSig) t))
+				tdd = td;
+			Iterator i = Datagroups.get(tdd, d).iterator();
+			// FIXME - need to determine what the permissible content
+			// of Datagroups.get() is
+			Hashtable h = new Hashtable();
+			h.put(Substitute.thisexpr, e);
+			while (i.hasNext()) {
+				Object o = i.next();
+				if (o instanceof FieldDecl) {
+					ErrorSet
+							.caution("INTERNAL ERROR: Unhandled FieldDecl in ModifiesIterator.add: "
+									+ o);
+				} else if (o instanceof Expr) {
+					Expr ee = (Expr) o;
+					ee = Substitute.doSubst(h, ee);
+					others.add(ee);
+				} else {
+					ErrorSet
+							.caution("INTERNAL ERROR: Unhandled case in ModifiesIterator.add: "
+									+ o.getClass());
+				}
+			}
         }
+			else {
+				ErrorSet
+						.caution("INTERNAL ERROR: Unhandled type in ModifiesIterator.add: "
+								+ t.getClass());
+			}
       } else if (od instanceof SuperObjectDesignator) {
         TypeSig ts = (TypeSig)((SuperObjectDesignator)od).type;
         TypeDecl tdd = ts.getTypeDecl();
