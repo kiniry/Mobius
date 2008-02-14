@@ -28,7 +28,7 @@ where \(\mathbb{B}\) and \(\mathbb{Z}\) denote the standard sets of booleans
 and integers, respectively\footnote{We will
 use a PVS-like notation to declare abstract data types and records
 (enclosed by \(\opr\) and \(\clr\)). Further, if \(x\) is a
-record with field \textsf{y}, we use \(\mathsf{y}(x)\) to access field
+record with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 \textsf{y}, and \(x \opri\mathsf{y} := z\clri\) to denote the record
 \(x\) with the field \textsf{y} updated to \(z\).}.
 \[
@@ -39,6 +39,7 @@ record with field \textsf{y}, we use \(\mathsf{y}(x)\) to access field
 \Excpt & = & \Throwable \mid \NullPointer \mid \JMLExc
 \end{array}
 \]
+% AT: Why is \NullPointer defined as RunTimeException ?
 
 Notice that there is a special type \(\Void\), inhabited by \(\One\)
 to model methods without results. Reference values contain a number,
@@ -157,7 +158,7 @@ labelled with declared events.
 %\mathsf{complete}(T) =
 %\{ (\# \scp := q,
 %       \tcp := \halted,
-%       \guard := \lambda s_A s_P v.
+%       \guard := \lambda \sigma_A \sigma_P v.
 %\end{array}
 %\]
 
@@ -182,11 +183,11 @@ according to the list of actions in the obvious way).
 \begin{array}[t]{l}
 \mathsf{let\ }t = \chooseop(\{t\in \trans(a)\mid
   \begin{array}[t]{l}
-     \scp(t) = \cp(s_A) \wedge \event(t) = e \wedge \\
-     \guard(t)(\stA(s_A), \st(\fvs(s_P)), v)\}) \mathsf{\ in}
+     t.\scp = \sigma_A.\cp \wedge t.\event = e \wedge \\
+     t.\guard(\sigma_A.\stA, \sigma_P.\fvs.\st, v)\}) \mathsf{\ in}
   \end{array}\\
-\quad \opri \cp := \tcp(t), \stA := \mathit{apply}(\action(t),
-\stA(\sigma_A)) \clri
+\quad \opri \cp := t.\tcp, \stA := \mathit{apply}(t.\action,
+\sigma_A.\stA) \clri
 \end{array}
 
 \end{array}
@@ -197,8 +198,8 @@ complete MVA will reach the state \halted.
 % AT: See the correctness criterion for the completion function I wrote in MVA
 
 \begin{equation}\label{MVAcompletionProp}
-\Delta_a(s_A, s_P, e, v) = \perp \Leftrightarrow
-\cp (\Delta_{\complete(a)}(s_A, s_P, e, v)) = \halted
+\Delta_a(\sigma_A, \sigma_P, e, v) = \perp \Leftrightarrow
+\cp (\Delta_{\complete(a)}(\sigma_A, \sigma_P, e, v)) = \halted
 \end{equation}
 
 
@@ -230,38 +231,38 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \begin{array}[t]{l}
 \opri
  \begin{array}[t]{l}
-\scp := s_1, \tcp := s_2,
+\scp := s_1, \tcp := s_2, \\
              \event := \opri \etype := \entry,
                              \mname := \texttt{sendSMS} \clri, \\
-             \guard := \lambda(s_A, s_P, v). n(s_A) < N,
+             \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,
              \action := \actskip
             \clri,
 \end{array}\\
 \opri
  \begin{array}[t]{l}
-\scp := s_2, \tcp := s_1,
+\scp := s_2, \tcp := s_1, \\
              \event := \opri \etype := \exit,
                              \mname := \texttt{sendSMS} \clri, \\
-             \guard := \lambda(s_A, s_P, v). \ttt,
-             \action := \opri \target := n, \expr := n + 1 \clri
+             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt, \\
+             \action := [\opri \target := n, \expr := n + 1 \clri]
             \clri,
 \end{array}\\
 \opri
  \begin{array}[t]{l}
-\scp := s_2, \tcp := s_1,
+\scp := s_2, \tcp := s_1, \\
              \event := \opri \etype := \excexit,
                              \mname := \texttt{sendSMS} \clri, \\
-             \guard := \lambda(s_A, s_P, v). \ttt,
+             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
              \action := \actskip
             \clri,
 \end{array}\\
 \opri
 \begin{array}[t]{l}
-\scp := s_1, \tcp := s_1,
+\scp := s_1, \tcp := s_1, \\
              \event := \opri \etype := \exit, \mname := \texttt{reset}
 \clri, \\
-             \guard := \lambda(s_A, s_P, v). \ttt,
-             \action := \opri \target := n, \expr := 0 \clri
+             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt, \\
+             \action := [\opri \target := n, \expr := 0 \clri]
            \clri \}
 \end{array}
 \end{array}
@@ -269,7 +270,6 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \clri
 \end{array}
 \]
-% AT: Note that actions should be lists
 
 % TODO: This should be adapted to the new example
 Completion would add a transition from \(s\) to the new state \halted
@@ -281,9 +281,7 @@ the complete MVA.
 
 \begin{figure}[t]
 \begin{center}
-%\epsfig{file=completed_alt.eps, width=4cm}
-% This is temporary, until completed_alt.eps is commited
-\epsfig{file=limited_sms_alt.eps, width=4cm}
+\epsfig{file=completed_alt.eps, width=4cm}
 \end{center}
 \label{FigCompleteMVA}
 \caption{Automaton of Figure~\ref{FigExample}, after completion}

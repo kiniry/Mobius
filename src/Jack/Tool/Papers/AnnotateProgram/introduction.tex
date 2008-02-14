@@ -2,26 +2,26 @@
 
 With the emergence of a new generation of trusted personal devices
 (mobile phones, PDAs, smart cards \emph{etc.}), the need for
-techniques to ensure security of applications has become even more
-prominent. A common way to ensure security of an application is to
+techniques to ensure the security of applications has become even more
+prominent. A common way to ensure the security of an application is to
 monitor its execution with a security automaton~\cite{Schneider99}.
 Upon entry or exit of a security-critical method, the security
 automaton changes its internal state. If it reaches an ``illegal''
 state, the application will be stopped and a security violation will
 be reported. This approach is in particular suited to monitor
-properties are expressed as sequences of legal method calls, such as
+properties that are expressed as sequences of legal method calls, such as
 life cycle properties, or constraints that express how often or under
 which conditions a method can be called.
 
 However, for many applications, such a runtime monitoring approach is
-not suited. In particular, if an application installed on a
+not suited. In particular, if an application is installed on a
 stand-alone personal device that is handed out to an end-user, it is
-unacceptable that the device suddenly could be blocked, because of a
+unacceptable that the device could be suddenly blocked, because of a
 security violation, and that the end-user would have to return to the
 provider to unblock the device.  Instead, for such applications
 statical means to enforce security are necessary. A commonly advocated
 approach is to require that the application carries a correctness
-proof with it, that can be validated before installing the application
+proof with it, which can be validated before installing the application
 on the device. In such a proof carrying code scenario~\cite{Necula97},
 the application provider is required to create this proof. Traditional
 proof carrying code has focused on simple security properties that can
@@ -58,7 +58,7 @@ specifications, including advanced constructs like class invariants
 and history constraints. Several tools and techniques exist that allow
 to validate JML specifications \emph{w.r.t.}\ a Java implementation,
 \emph{e.g.},\ static verification is provided by
-\emph{e.g.}\ ESC/Java~\cite{CokK04} and
+for example, ESC/Java~\cite{CokK04} and
 JACK~\cite{BartheBCGHMPPSV06}, while runtime checking is possible
 using the \texttt{jmlc} and \texttt{jmlrac} tools. The JML runtime
 checking tools evaluate at every method entry or exit point
@@ -82,7 +82,8 @@ program respects its annotations, it also respects the security
 property expressed by the automaton.
 
 The translation described in this paper is defined in several
-steps. First we define a translation from a partial automaton,
+steps. For each step we provide a correctness proof.
+First we define a translation from a partial automaton,
 \emph{i.e.},\ an automaton that can get \emph{stuck}, because it has
 no transition enabled, to a complete automaton, \emph{i.e},\ an
 automaton that always has a transition enabled, but that contains a
@@ -92,7 +93,7 @@ specify a security property by a partial automaton, because this
 avoids that the automaton is cluttered up with transition that
 \emph{``go wrong''}. However, for many tools and algorithms, a total
 automaton is easier to handle. We show that the behaviour of a program
-that is monitored with a partial program is equivalent to the
+that is monitored with a partial automaton is equivalent to the
 behaviour of a program that is monitored with a complete
 automaton. Then we define how the complete monitor gives rise to
 annotations. We do this by adding special ghost variables to model the
@@ -101,7 +102,7 @@ monitor state. To every method specification, we add special
 and exit of a method~--~according to the updates in the automaton. To
 write  this in a convenient way, we introduce a special
 conditional construct to update ghost variables (called
-\textsf{CaseJML}). We show that the run-time monitoring of the program
+\CaseJML). We show that the run-time monitoring of the program
 only throws a (new) exception to signal an annotation violation if the
 monitor reaches the \textsf{halted} state. Next, we inline the
 \textsf{set} annotations from the method specification to the method
@@ -111,12 +112,12 @@ exception. We prove that the run-time checking behaviour of the
 program with the inlined \textsf{set} annotations is equivalent to the
 run-time checking behaviour of the program with the method
 specification-level \textsf{set} annotations. Finally, as a last step,
-we show that the special \textsf{CaseJML} construct can be transformed
+we show that the special \CaseJML construct can be transformed
 into a sequence of set instructions, and we prove again that this does
 not change the run-time checking behaviour of the program. All results
 in the paper have been established formally using the PVS theorem
 prover~\cite{OwreRRSS96}. The complete formalisation is available via
-\texttt{http://www....}. \marginnote{To be changed, if necessary}
+\texttt{http://www....}.
 
 % TODO: describe the new version of the example
 Throughout this paper, we will use a simple example property to
@@ -140,10 +141,10 @@ resource-related security properties.
 
 The remainder of this paper is organised as
 follows. Section~\ref{SecMVA} formalises the automaton format that we
-use, and defines completion of automaton. Next,
+use, and defines completion of an automaton. Next,
 Section~\ref{SecProgram} defines the semantics of monitored and
 annotated programs. Then Section~\ref{SecAnnotGen} presents the
-different translations , and proves their
+different translations, and proves their
 correctness. Section~\ref{SecRelated} discusses related work, while
 Section~\ref{SecConcl} concludes and discusses future work.
 
