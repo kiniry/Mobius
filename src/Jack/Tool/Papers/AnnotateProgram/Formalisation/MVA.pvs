@@ -542,7 +542,7 @@ BEGIN
       MVAPartialSemantics.step(a)(s, pe) = bottom IFF
         cp(MVATotalSemantics.step(complete_MVA(a))(s, pe)) = halted
 
-        
+
   % Correctness requirements for a completion function:
   % .The only changes allowed are to add halted and to modify the set of 
   %  transitions,

@@ -160,14 +160,15 @@ BEGIN
   %   }
   %   catch(Throwable){
   %     exc_set(m);
-  %    }
+  %   }
   % catch(NullPointerExc){
-  %      exc_set(m);
-  %  }
+  %   exc_set(m);
+  % }
   % finally{
   %   if (ex){
-  %    res := res(m);
-  %    post_set(m);
+  %     res := res(m);
+  %     post_set(m);
+  %   }
   % }
   inline_method_body(p)(m) : Body = 
     TryCatch(
