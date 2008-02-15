@@ -50,10 +50,10 @@ BEGIN
       f(p, branches, s1, s2, v, n, d) IMPLIES pstate(s2) = pstate(s1)
 
   execute_assert_type
-    (f : [p : FullProgram, (wf_BoolExpr(program(p))),
+    (f : [p : FullProgram, (wf_Expr(program(p))),
           FullState, FullState, n : nat,
           derive_rec_type(n) -> boolean]) : boolean =
-    FORALL (p : FullProgram, e : (wf_BoolExpr(program(p))),
+    FORALL (p : FullProgram, e : (wf_Expr(program(p))),
             s1, s2 : FullState,
             n : nat, d : derive_rec_type(n)) :
       f(p, e, s1, s2, n, d) IMPLIES
@@ -174,7 +174,6 @@ BEGIN
     ELSE % sigma1 is a normal state
     CASES b OF
       % Numerical expressions
-      Int(i) : sigma1 = sigma2 AND n = 0 AND v = Int(i),
       Plus(e1, e2) :
         EXISTS (tau : FullState, v1, v2 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
@@ -185,8 +184,6 @@ BEGIN
       NumVarEval(vn) : sigma1 = sigma2 AND n = 0 AND
                        v = Int(val2int(lookup(vn, sigma1))),
       % Boolean expressions
-      TT : sigma1 = sigma2 AND n = 0 AND v = Bool(TRUE),
-      FF : sigma1 = sigma2 AND n = 0 AND v = Bool(FALSE),
       Neg(e) : n > 0 AND
                EXISTS(v1 : Val) :
                  derive(p)(e, sigma1, v1, sigma2)(n - 1) AND
@@ -213,7 +210,6 @@ BEGIN
       BoolVarEval(vn) : sigma1 = sigma2 AND n = 0 AND
                        v = Bool(val2bool(lookup(vn, sigma1))),
       % Reference expressions
-      Null : sigma1 = sigma2 AND n = 0 AND v = Null,
       RefVarEval(vn) : sigma1 = sigma2 AND n = 0 AND
                        v = Reference(get_address(vn, sigma1),
                                  get_dynamic_type_name(vn, sigma1)),
@@ -226,9 +222,6 @@ BEGIN
                      THEN tau
                      ELSE update_PState(tau, update(vn, v))
                      ENDIF)),
-      BExpr(b) :
-        n > 0 AND
-        derive(p)(b, sigma1, v, sigma2)(n - 1),
       CondExpr(c, t, e) :
         EXISTS (tau : FullState, v1 : Val, m1, m2 : nat) :
           n = m1 + m2 + 1 AND
@@ -243,7 +236,7 @@ BEGIN
                (tau1, tau2, tau3, tau4, tau5, tau6, tau7 : FullState)
                (a, pv, w, x : Val)(old_lvs : Store)
                (md : (wf_Method(program(p))))
-               (inv : (wf_BoolExpr(program(p)))) :
+               (inv : (wf_Expr(program(p)))) :
           n = m1 + m2 + m3 + m4 + m5 + m6 + 1 AND
           % evaluate the receiver object
           derive(p)(e, sigma1, a, tau1)(m1) AND
@@ -306,12 +299,10 @@ BEGIN
                                    pstate WITH 
                                    [st := st(pstate) WITH [lvs := old_lvs]]))
           ENDIF,
-      NExpr(n) :
-        n > 0 AND
-        derive(p)(n, sigma1, v, sigma2)(n - 1),
-      RExpr(r) :
-        n > 0 AND
-        derive(p)(r, sigma1, v, sigma2)(n - 1),
+      Const(v1) : 
+        n = 0 AND
+        v = v1 AND
+        sigma1 = sigma2,
       % Program's statements
       CaseJML(l) :
         v = return_of_stmt(sigma2) AND
@@ -343,10 +334,10 @@ BEGIN
          n > 0 AND
          v = return_of_stmt(sigma2) AND
          EXISTS (v1 : Val) : derive(p)(e, sigma1, v1, sigma2)(n - 1),
-      Throw:
+      Throw(e):
         n = 0 AND
         v = return_of_stmt(sigma2) AND
-        sigma2 = update_PState(sigma1, raise(Throwable)),
+        sigma2 = update_PState(sigma1, raise(e)),
       TryCatch(c1, e, c2, c3) :
         v = return_of_stmt(sigma2) AND
         EXISTS (m1, m2, m3 : nat)(tau1, tau2, tau3 : FullState)
@@ -375,11 +366,7 @@ BEGIN
       Assert(e) :
         n > 0 AND
         v = return_of_stmt(sigma2) AND
-        execute_assert(p, e, sigma1, sigma2, n, derive_rec),
-      Const(v1) : 
-        n = 0 AND
-        v = v1 AND
-        sigma1 = sigma2
+        execute_assert(p, e, sigma1, sigma2, n, derive_rec)
     ENDCASES
     ENDIF
   MEASURE n
@@ -393,8 +380,7 @@ BEGIN
 
   run_FullProgram(p : FullProgram)(main : Name, arg : int)
                  (initial, final : FullState) : boolean =
-    LET c  = StmtExpr(MethodCall(RExpr(RefVarEval(This)),
-                                 main, NExpr(Int(arg))))
+    LET c  = StmtExpr(MethodCall(RefVarEval(This), main, Const(Int(arg))))
     IN
       derives(p)(c, initial)(final)
 
@@ -513,7 +499,7 @@ ASSUMING
         s1 = s2 AND n1 = n2
 
   execute_assert_deterministic : ASSUMPTION
-    FORALL (p : FullProgram, e : (wf_BoolExpr(program(p))),
+    FORALL (p : FullProgram, e : (wf_Expr(program(p))),
             s, s1, s2 : FullState,
             n1, n2 : nat,
             d1 : derive_rec_type(n1), d2 : derive_rec_type(n2)) :
@@ -556,7 +542,7 @@ ENDASSUMING
 
 
   derive_boolean_expr_type : LEMMA % :-)
-    FORALL (p : FullProgram)(b : (wf_BoolExpr(program(p))))
+    FORALL (p : FullProgram)(b : (wf_Expr(program(p))))
            (sigma1, sigma2 : FullState, v : Val, n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       NOT up?(ex(pstate(sigma2))) IMPLIES
@@ -641,7 +627,7 @@ BEGIN
 
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : FullProgram,
-            branches : ({l : list[[BoolExpr, Stmt]] | wf_Branches(program(p))(l)}),
+            branches : ({l : list[[Expr, Stmt]] | wf_Branches(program(p))(l)}),
             s1, s2 : FullState, v : Val,
             n : nat, derive_rec : derive_rec_type(n)) :
       CASES branches OF
@@ -655,7 +641,7 @@ BEGIN
   IMPORTING ProgramFunctions[Name]
 
 %  check_assertion(p : FullProgram)
-%                 (e : (wf_BoolExpr(program(p))), s1, s2 : FullState)(n : nat)
+%                 (e : (wf_Expr(program(p))), s1, s2 : FullState)(n : nat)
 %                 (derive : derive_type(n)) : boolean =
 %    n > 0 AND
 %    EXISTS (tau1 : FullState, v : Val) :
@@ -669,7 +655,7 @@ BEGIN
 %           ENDIF
 
   check_assertion(p : FullProgram)
-                 (e : (wf_BoolExpr(program(p))), s1, s2 : FullState)(n : nat)
+                 (e : (wf_Expr(program(p))), s1, s2 : FullState)(n : nat)
                  (derive : derive_type(n)) : boolean =
     n > 0 AND
     EXISTS (tau1 : FullState, v : Val) :
@@ -681,7 +667,7 @@ BEGIN
 
 
   execute_assert : (execute_assert_type) =
-    LAMBDA (p : FullProgram, e : (wf_BoolExpr(program(p))),
+    LAMBDA (p : FullProgram, e : (wf_Expr(program(p))),
             s1, s2 : FullState, n : nat,
             derive_rec : derive_rec_type(n)) :
     IF up?(ex(pstate(s1)))
@@ -699,7 +685,7 @@ BEGIN
     THEN s1 = s2 AND n = 0
     ELSE
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : FullState, v : Val,
-            inv : (wf_BoolExpr(program(p)))) :
+            inv : (wf_Expr(program(p)))) :
       n = m1 + m2 + m3 + 1 AND
       val?(arg) AND
       inv = lookup_inv(program(p), a) AND
@@ -719,7 +705,7 @@ BEGIN
     THEN s1 = s2 AND n = 0
     ELSE
     EXISTS (m1, m2, m3 : nat, tau1, tau2 : FullState, v : Val,
-            inv : (wf_BoolExpr(program(p)))) :
+            inv : (wf_Expr(program(p)))) :
       n = m1 + m2 + m3 + 1 AND
       val?(arg) AND
       derive_rec(n)(p)(post_set(md)(v(arg)), s1, v, tau1)(m1) AND
@@ -740,7 +726,7 @@ BEGIN
     IF up?(ex(pstate(s1))) AND NOT down(ex(pstate(s1))) = JMLExc
     THEN
     EXISTS (m1, m2 : nat, tau1, tau2 : FullState, v : Val,
-            inv : (wf_BoolExpr(program(p)))) :
+            inv : (wf_Expr(program(p)))) :
       n = m1 + m2 + 1 AND
       excpt?(arg) AND
       derive_rec(n)(p)(exc_set(md)(e(arg)),

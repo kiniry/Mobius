@@ -47,6 +47,7 @@ BEGIN
                              stA := execute_action(a)(stA(astate(sMP1)),
                                                           st(pstate(sMP1)))
                            #),
+                stuck := stuck(sMP1),    % CHECK!!
                 pstate := pstate(sMP1),
                 gvs := gvs(sMP1) #) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
@@ -65,6 +66,7 @@ BEGIN
                              stA := execute_action(action(t))(stA(astate(sMP1)),
                                                               st(pstate(sMP1)))
                            #),
+                stuck := stuck(sMP1), % CHECK!!
                 pstate := pstate(sMP1),
                 gvs := gvs(sMP1) #) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
@@ -82,9 +84,7 @@ BEGIN
       well_behaved_MVA(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       methods(get_monitored_class(mp))(m) IMPLIES
-      sMP2 = (# astate := on_method_MVA(et)(mp, m)(v)(sMP1),
-                pstate := pstate(sMP1),
-                gvs := gvs(sMP1) #) IMPLIES
+      sMP2 = on_method_MVA(et)(mp, m)(v)(sMP1) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       derive(ann_program(mp))
         (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v),

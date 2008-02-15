@@ -111,9 +111,6 @@ BEGIN
     subset?(var_names(b), var_names(a)) AND
     (FORALL (b1 : Body) : subterm(b1, b) IMPLIES NOT Set?(b1))
 
-  wf_BoolExpr(a : MVA)(b : BoolExpr) : boolean =
-    wf_Body(a)(b)
-
   wf_Expr(a : MVA)(e : Expr) : boolean =
     wf_Body(a)(e)
 
@@ -441,14 +438,14 @@ BEGIN
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.
-  guard_to_expression(a : MVA)(g : Guard) : [ValOrExcpt -> BoolExpr]
+  guard_to_expression(a : MVA)(g : Guard) : [ValOrExcpt -> Expr]
 
   guard_to_expression_yields_wf_BoolExpr : AXIOM
     FORALL(a : MVA, t : Transition) :
       wf_MVA(a) IMPLIES
       ts(a)(t) IMPLIES
         FORALL(v : ValOrExcpt) :
-          wf_BoolExpr(a)(guard_to_expression(a)(guard(t))(v))
+          wf_Expr(a)(guard_to_expression(a)(guard(t))(v))
 
   IMPORTING ContainsNoMethodCall[Name]
 
@@ -543,38 +540,38 @@ BEGIN
         cp(MVATotalSemantics.step(complete_MVA(a))(s, pe)) = halted
 
 
-  % Correctness requirements for a completion function:
-  % .The only changes allowed are to add halted and to modify the set of 
-  %  transitions,
-  % .The original transitions must remain unchanged,
-  % .Transitions added have halted as target control point,
-  % .The result must be a complete MVA.
-  correct_completion_function(complete_fun : [(good_for_monitoring) -> 
-                                               MVA]) : boolean =
-    FORALL (a : (good_for_monitoring)) :
-      (FORALL (ts_prime : finite_set[Transition]) :
-        a WITH [ts := ts_prime, cps := add(halted, cps(a))] = 
-        complete_fun(a) WITH [ts := ts_prime]) AND
-      subset?(ts(a), ts(complete_fun(a))) AND
-      (FORALL (t : Transition) :
-	difference(ts(complete_fun(a)), ts(a))(t) IMPLIES
-          tcp(t) = halted) AND
-      complete(complete_fun(a))
+%  % Correctness requirements for a completion function:
+%  % .The only changes allowed are to add halted and to modify the set of 
+%  %  transitions,
+%  % .The original transitions must remain unchanged,
+%  % .Transitions added have halted as target control point,
+%  % .The result must be a complete MVA.
+%  correct_completion_function(complete_fun : [(good_for_monitoring) -> 
+%                                               MVA]) : boolean =
+%    FORALL (a : (good_for_monitoring)) :
+%      (FORALL (ts_prime : finite_set[Transition]) :
+%        a WITH [ts := ts_prime, cps := add(halted, cps(a))] = 
+%        complete_fun(a) WITH [ts := ts_prime]) AND
+%      subset?(ts(a), ts(complete_fun(a))) AND
+%      (FORALL (t : Transition) :
+%	difference(ts(complete_fun(a)), ts(a))(t) IMPLIES
+%          tcp(t) = halted) AND
+%      complete(complete_fun(a))
 
-  complete_MVA_correctness : THEOREM % :-)
-    correct_completion_function(complete_MVA)
+%  complete_MVA_correctness : THEOREM % :-)
+%    correct_completion_function(complete_MVA)
 
-  IMPORTING MVAPartialSemantics[CP, Name],
-  	    MVATotalSemantics[CP, Name]
+%  IMPORTING MVAPartialSemantics[CP, Name],
+%  	    MVATotalSemantics[CP, Name]
 
-  % If a partial MVA <a> gets stuck on a certain input then
-  % <complete_fun>(<a>) reaches halted for the same input.
-  complete_function_correctness_implication : THEOREM % :-)
-    FORALL (complete_fun : [MVA -> MVA], a : (good_for_monitoring), 
-            sa : (wf_AState(a)), pe : (wf_PEvent(a))) :
-      correct_completion_function(complete_fun) IMPLIES
-      step(a)(sa, pe) = bottom IMPLIES 
-        cp(step(complete_fun(a))(sa, pe)) = halted
+%  % If a partial MVA <a> gets stuck on a certain input then
+%  % <complete_fun>(<a>) reaches halted for the same input.
+%  complete_function_correctness_implication : THEOREM % :-)
+%    FORALL (complete_fun : [MVA -> MVA], a : (good_for_monitoring), 
+%            sa : (wf_AState(a)), pe : (wf_PEvent(a))) :
+%      correct_completion_function(complete_fun) IMPLIES
+%      step(a)(sa, pe) = bottom IMPLIES 
+%        cp(step(complete_fun(a))(sa, pe)) = halted
 
 
 END MVACompletion

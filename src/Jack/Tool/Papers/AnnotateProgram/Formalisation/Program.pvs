@@ -34,67 +34,46 @@ END JType
 
 
 Body[Name : TYPE+] : DATATYPE
-                         WITH SUBTYPES Expr, NumExpr, BoolExpr, RefExpr, Stmt
+                         WITH SUBTYPES Expr, Stmt
 BEGIN
 
   IMPORTING Excpt, ValProp[Name]
 
-  % Numerical expressions. They are parameterized with a variable name to handle
-  %  the case of variable evaluation.
-  Int(i : int) : Int?                     : NumExpr
-  Plus(b1, b2 : NumExpr) : Plus?          : NumExpr
-%  Minus(b1, b2 : Expr) : Minus?           : NumExpr
-%  Times(b1, b2 : Expr) : Times?           : NumExpr
-%  Div(b1, b2 : Expr) : Div?               : NumExpr
-  NumVarEval(varname : Name) : NumVarEval?: NumExpr
-
+  % Numerical expressions. 
+  Plus(b1, b2 : Expr) : Plus?                       : Expr
+  NumVarEval(varname : Name) : NumVarEval?          : Expr
 
   % Boolean expressions
-  % True, False, not, and, or are reserved keywords in PVS
-  TT : TT?                                : BoolExpr
-  FF : FF?                                : BoolExpr
-  Neg(b : BoolExpr) : Neg?                : BoolExpr
-  Conj(b1, b2 : BoolExpr) : Conj?         : BoolExpr
-%  Disj(b1, b2 : Expr) : Disj?             : BoolExpr
-%  Lt (b1, b2 : Expr) : Lt?                : BoolExpr
-%  Le (b1, b2 : Expr) : Le?                : BoolExpr
-  Eq (b1, b2 : Expr) : Eq?                : BoolExpr
-%  Neq (b1, b2 : Expr) : Neq?              : BoolExpr
-%  Ge (b1, b2 : Expr) : Ge?                : BoolExpr
-%  Gt (b1, b2 : Expr) : Gt?                : BoolExpr
-  BoolVarEval(varname : Name) : BoolVarEval? : BoolExpr
-
+  Neg(b : Expr) : Neg?                              : Expr
+  Conj(b1, b2 : Expr) : Conj?                       : Expr
+  Eq (b1, b2 : Expr) : Eq?                          : Expr
+  BoolVarEval(varname : Name) : BoolVarEval?        : Expr
 
   % Reference expressions
-  Null : Null?                            : RefExpr
-  RefVarEval(varname : Name) : RefVarEval?: RefExpr
-
+  RefVarEval(varname : Name) : RefVarEval?          : Expr
 
   % Program's expressions
-  Assign(target : Name, source : Expr) : Assign? : Expr
-  BExpr(b : BoolExpr) : BExpr?                   : Expr
-  CondExpr(test : BoolExpr, then_expr : Expr, 
-           else_expr : Expr) : CondExpr?         : Expr
+  Assign(target : Name, source : Expr) : Assign?    : Expr
+  CondExpr(test : Expr, then_expr : Expr, 
+           else_expr : Expr) : CondExpr?            : Expr
   MethodCall(tgt : Expr, name : Name, 
-             arg : Expr) : MethodCall?           : Expr
-  NExpr(n : NumExpr) : NExpr?                    : Expr
-  RExpr(r : RefExpr) : RExpr?                    : Expr
+             arg : Expr) : MethodCall?              : Expr
+  Const(v : (defined?)) : Const?                    : Expr
 
 
   % Program's statements
-  CaseJML(branches : list[[BoolExpr, Stmt]]) : CaseJML? : Stmt
-  IfThenElse(test : BoolExpr, then_stmt : Stmt, 
+  CaseJML(branches : list[[Expr, Stmt]]) : CaseJML? : Stmt
+  IfThenElse(test : Expr, then_stmt : Stmt, 
              else_stmt : Stmt) : IfThenElse?        : Stmt
   Sequence(s1, s2 : Stmt) : Sequence?               : Stmt
   Set(target : Name, source : Expr) : Set?          : Stmt
   Skip : Skip?                                      : Stmt
   StmtExpr(expr : Expr) : StmtExpr?                 : Stmt
-  Throw : Throw?                                    : Stmt
+  Throw(exc : Excpt) : Throw?                       : Stmt
   TryCatch(try : Stmt, exc : Excpt, catch : Stmt, 
            finally : Stmt) : TryCatch?              : Stmt
-  While(test : BoolExpr, body : Stmt) : While?      : Stmt
-  Assert(expr : BoolExpr) : Assert?                 : Stmt
-  Const(v : (defined?)) : Const?                    : Expr
+  While(test : Expr, body : Stmt) : While?          : Stmt
+  Assert(expr : Expr) : Assert?                     : Stmt
 
 
 END Body
@@ -131,19 +110,19 @@ BEGIN
   Method : TYPE = [# name : Name,
                      classname : Name,
                      arg : LocalVarDecl,
-                     pre : [Expr -> BoolExpr[Name]],
-                     post : [Expr -> BoolExpr[Name]],
+                     pre : [Expr -> Expr],
+                     post : [Expr -> Expr],
                      lvars : finite_set[LocalVarDecl],
-                     body : Stmt[Name],
-                     pre_set : [Expr -> Stmt[Name]],
-                     post_set : [Expr -> Stmt[Name]],
-                     exc_set : [Excpt -> Stmt[Name]],
-                     res : Expr[Name],
+                     body : Stmt,
+                     pre_set : [Expr -> Stmt],
+                     post_set : [Expr -> Stmt],
+                     exc_set : [Excpt -> Stmt],
+                     res : Expr,
                      res_type : JType #]
 
   Class : TYPE = [# name : Name,
                     super_class : lift[Name],
-                    inv : BoolExpr[Name],
+                    inv : Expr,
                     ghost_vars : finite_set[FieldDecl],
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
@@ -172,33 +151,27 @@ BEGIN
 %
 %  Then it can proved that:
 %   problem_with_var_names : LEMMA
-%     FORALL(x : list[[BoolExpr, Stmt]]) :
+%     FORALL(x : list[[Expr, Stmt]]) :
 %       var_names(CaseJML(x)) = emptyset
 
   IMPORTING list_of_set_funcs[Name], 
-            listfuncs[[BoolExpr, Stmt]],
+            listfuncs[[Expr, Stmt]],
             listsum,
             list_map_funcs
 
   size(b : Body) : nat = 
     reduce_nat(
-       LAMBDA(i : int) : 1, % Int
        LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Plus
        LAMBDA(n : Name) : 1, % NumVarEval
-       1, % TT
-       1, % FF
        LAMBDA(n : nat) : n + 1, % Neg
        LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Conj
        LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Eq
        LAMBDA(n : Name) : 1, % BoolVarEval
-       1, % Null
        LAMBDA(n : Name) : 1, % RefVarEval
        LAMBDA(nm : Name, n : nat) : n + 1, % Assign
-       LAMBDA(n : nat) : n + 1, % BExpr
        LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % CondExpr
        LAMBDA(n1 : nat, nm : Name, n2 : nat) : n1 + n2 + 1, % MethodCall
-       LAMBDA(n : nat) : n + 1, % NExpr
-       LAMBDA(n : nat) : n + 1, % RExpr
+       LAMBDA(v : (defined?)) : 1, % Const
        LAMBDA(l : list[[nat, nat]]) : 
          sum(map[[nat, nat], nat](LAMBDA(n1, n2 : nat) : n1 + n2 + 1)(l)) + 1, % CaseJML
        LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % IfThenElse
@@ -206,35 +179,29 @@ BEGIN
        LAMBDA(nm : Name, n : nat) : n + 1, % Set
        1, % Skip
        LAMBDA(n : nat) : n + 1, % StmtExpr
-       1, % Throw
+       LAMBDA(e : Excpt) : 1, % Throw
        LAMBDA(n1 : nat, e : Excpt, n2, n3 : nat) : n1 + n2 + n3 + 1, % TryCatchFinally
        LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % While
-       LAMBDA(n : nat) : n + 1,
-       LAMBDA(v : Val) : 1)(b) % Assert
+       LAMBDA(n : nat) : n + 1 % Assert
+       )(b) 
 
 
   var_names(b : Body) : RECURSIVE [Name -> boolean] =
     CASES b OF    
-       Int(i) : emptyset[Name],
        Plus(b1, b2) : union(var_names(b1), var_names(b2)),
        NumVarEval(varname) : singleton(varname),
-       TT : emptyset[Name],
-       FF : emptyset[Name],
        Neg(b) : var_names(b),
        Conj(b1, b2) : union(var_names(b1), var_names(b2)),
        Eq (b1, b2) : union(var_names(b1), var_names(b2)),
        BoolVarEval(varname) : singleton(varname),
-       Null : emptyset[Name],
        RefVarEval(varname) : singleton(varname),
        Assign(target, source) : add(target, var_names(source)),
-       BExpr(b) : var_names(b),
        CondExpr(test, then_expr, else_expr) : 
          union(var_names(test), 
          union(var_names(then_expr), var_names(else_expr))),
        MethodCall(tgt, name, arg) :
          union(var_names(tgt), var_names(arg)),
-       NExpr(n) : var_names(n),
-       RExpr(r) : var_names(r),
+       Const(v) : emptyset[Name],
        CaseJML(branches) : 
         IF null?(branches)
         THEN emptyset[Name]
@@ -249,12 +216,11 @@ BEGIN
        Set(target, source) : add(target, var_names(source)),
        Skip : emptyset[Name],
        StmtExpr(expr) : var_names(expr),
-       Throw : emptyset[Name],
+       Throw(exc) : emptyset[Name],
        TryCatch(try, exc, catch, finally) : 
          union(var_names(try), union(var_names(catch), var_names(finally))),
        While(test, body) : union(var_names(test), var_names(body)),
-       Assert(expr) : var_names(expr),
-       Const(v) : emptyset[Name]
+       Assert(expr) : var_names(expr)
     ENDCASES
   MEASURE size(b)
 
@@ -267,11 +233,11 @@ BEGIN
 
   var_names(m : Method) : set[Name] =
     Union({ns : set[Name] | 
-      ns = var_names(pre(m)(BExpr(TT))) OR 
-      ns = var_names(post(m)(BExpr(TT))) OR
+      ns = var_names(pre(m)(Const(Unit))) OR 
+      ns = var_names(post(m)(Const(Unit))) OR
       ns = var_names(body(m)) OR 
-      ns = var_names(pre_set(m)(BExpr(TT))) OR 
-      ns = var_names(post_set(m)(BExpr(TT))) OR 
+      ns = var_names(pre_set(m)(Const(Unit))) OR 
+      ns = var_names(post_set(m)(Const(Unit))) OR 
       ns = var_names(exc_set(m)(Throwable)) OR 
       ns = var_names(lvars(m)) OR ns = var_names(res(m)) OR
       ns = singleton(name(arg(m)))})
@@ -295,17 +261,17 @@ BEGIN
     FORALL (ls1, ls2 : finite_set[LocalVarDecl]) :
       var_names(union(ls1, ls2)) = union(var_names(ls1), var_names(ls2))
 
-  IMPORTING WF_Card[[BoolExpr, Stmt]], set2list[[BoolExpr, Stmt]]
+  IMPORTING WF_Card[[Expr, Stmt]], set2list[[Expr, Stmt]]
 
   var_names_CaseJML_set2list : LEMMA % :-)
-    FORALL (s : finite_set[[BoolExpr, Stmt]], n : Name) :
+    FORALL (s : finite_set[[Expr, Stmt]], n : Name) :
       var_names(CaseJML(set2list(s)))(n) =
-        EXISTS(x : [BoolExpr, Stmt]) :
+        EXISTS(x : [Expr, Stmt]) :
           s(x) AND union(var_names(proj_1(x)), var_names(proj_2(x)))(n)
 
 
   var_names_CaseJML_branches : LEMMA % :-)
-    FORALL (branches : list[[BoolExpr, Stmt]], x : [BoolExpr, Stmt], 
+    FORALL (branches : list[[Expr, Stmt]], x : [Expr, Stmt], 
             n : Name) :
       member(x, branches) IMPLIES
       (var_names(proj_1(x))(n) OR var_names(proj_2(x))(n)) IMPLIES
@@ -426,17 +392,17 @@ BEGIN
   % NOTE: We assume that the invariant contains the conjunction of the 
   %       invariants of the the parent classes.
   % If it can't find the class of tgt it just returns TRUE
-  lookup_inv(p : PreProgram, tgt : Val) : BoolExpr =
+  lookup_inv(p : PreProgram, tgt : Val) : Expr =
     IF up?(get_class(p)(tgt))
     THEN inv(down(get_class(p)(tgt)))
-    ELSE TT
+    ELSE Const(Bool(True))
     ENDIF
 
 
   % Proper subtern (<<) properties
 
   proper_subterm_set_clause(s : Stmt, m : Method) : boolean =
-    s << pre_set(m)(BExpr(TT)) OR s << post_set(m)(BExpr(TT)) OR 
+    s << pre_set(m)(Const(Unit)) OR s << post_set(m)(Const(Unit)) OR 
     s << exc_set(m)(Throwable)
 
   IMPORTING listfuncs
@@ -481,18 +447,18 @@ BEGIN
           subterm(b1, b3)
 
   subterm_CaseJML_set2list : LEMMA % :-)
-    FORALL (s : finite_set[[BoolExpr, Stmt]], b : Body) :
+    FORALL (s : finite_set[[Expr, Stmt]], b : Body) :
       Set?(b) IMPLIES
       subterm(b, CaseJML(set2list(s))) =
-        (EXISTS(x : [BoolExpr, Stmt]) : 
+        (EXISTS(x : [Expr, Stmt]) : 
            s(x) AND (subterm(b, proj_1(x)) OR subterm(b, proj_2(x))))
 
 
   var_lookup(n : Name)(t : JType) : Expr =
     CASES t OF
-      IntType : NExpr(NumVarEval(n)),
-      BoolType : BExpr(BoolVarEval(n)),
-      RefType : RExpr(RefVarEval(n)),
+      IntType : NumVarEval(n),
+      BoolType : BoolVarEval(n),
+      RefType : RefVarEval(n),
       Void : Const(Unit)
     ENDCASES
 
@@ -556,27 +522,18 @@ BEGIN
       b2 << b1 IMPLIES
         wf_Body(p)(b2)
 
-  wf_BoolExpr(p : PreProgram)(b : BoolExpr) : boolean =
-     wf_Body(p)(b)
-
-  wf_NumExpr(p : PreProgram)(n : NumExpr) : boolean =
-     wf_Body(p)(n)
-
-  wf_RefExpr(p : PreProgram)(r : RefExpr) : boolean =
-     wf_Body(p)(r)
-
   wf_Expr(p : PreProgram)(e : Expr) : boolean =
      wf_Body(p)(e)
 
   wf_Stmt(p : PreProgram)(s : Stmt) : boolean =
     wf_Body(p)(s)
 
-  wf_Branches(p : PreProgram)(l : list[[BoolExpr, Stmt]]) : boolean =
-    every(LAMBDA(x : [[BoolExpr, Stmt]]) : 
+  wf_Branches(p : PreProgram)(l : list[[Expr, Stmt]]) : boolean =
+    every(LAMBDA(x : [[Expr, Stmt]]) : 
       wf_Body(p)(proj_1(x)) AND wf_Body(p)(proj_2(x)))(l)
 
   wf_Body_CaseJML : LEMMA % :-)
-    FORALL(p : PreProgram, l : list[[BoolExpr, Stmt]]) :
+    FORALL(p : PreProgram, l : list[[Expr, Stmt]]) :
       wf_Body(p)(CaseJML(l)) = wf_Branches(p)(l)
 
 
