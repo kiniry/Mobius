@@ -541,12 +541,12 @@ ENDASSUMING
         Bottom?(v) = up?(ex(pstate(sigma2)))
 
 
-  derive_boolean_expr_type : LEMMA % :-)
-    FORALL (p : FullProgram)(b : (wf_Expr(program(p))))
-           (sigma1, sigma2 : FullState, v : Val, n : nat) :
-      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
-      NOT up?(ex(pstate(sigma2))) IMPLIES
-        Bool?(v)
+%  derive_boolean_expr_type : LEMMA % :-)
+%    FORALL (p : FullProgram)(b : (wf_Expr(program(p))))
+%           (sigma1, sigma2 : FullState, v : Val, n : nat) :
+%      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
+%      NOT up?(ex(pstate(sigma2))) IMPLIES
+%        Bool?(v)
 
   derive_after_raise : LEMMA % :-)
     FORALL (p : FullProgram)(b : (wf_Body(program(p))))
