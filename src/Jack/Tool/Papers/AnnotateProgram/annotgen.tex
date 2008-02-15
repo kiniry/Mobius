@@ -68,7 +68,7 @@ completes the MVA. Suppose that \(P\) is a monitored program, where
 \(\mva(P)\) is deterministic and wellformed. Then the translation to a
 monitored program with a total MVA, \(\alpha_1(P)\) is defined as:
 \[
-\opri \mva := \complete(\mva(P)), \program(P) \clri
+\opri \mva := \complete(P.\mva), \program := P.\program \clri
 \]
 
 The relation that is preserved between executions of \(P\) and
@@ -117,26 +117,26 @@ Figure~\ref{FigCompleteMVA}.
 \[
 \begin{array}{rcl}
 \alpha_2(P) & = &\opri \classes :=
-\{\alpha_{2, \mathcal{C}}(c, \mva(P)) \mid c \in P.\classes\} \clri\\
+\{\alpha_{2, \mathcal{C}}(c, P.\mva) \mid c \in P.\program.\classes\} \clri\\
 
 \alpha_{2,\mathcal{C}}(c, a) & = &
 \mathsf{if\ }c.\name = a.\clname\\
 &&
 \mathsf{then\ }c \:\opri
  \begin{array}[t]{l}
- \gvs := \gvs(c) \cup \newgvs(a)\\
+ \gvs := c.\gvs \cup \newgvs(a)\\
  \inv := \Conj(\Not(\Eq(\texttt{cp}, \texttt{halted})), c.\inv)\\
  \methods := \{\alpha_{2,\mathcal{M}}(m, a) \mid m \in c.\methods\} \clri
 \end{array}\\
-&& \mathsf{else }c\\
+&& \mathsf{else\ }c\\
 \alpha_{2,\mathcal{M}}(m, a) & = & m \: \opri
   \begin{array}[t]{l}
   \preset := \begin{array}[t]{l}
-             \preset(m); \alpha_{2,\mathcal{E}}(\entry, m.\name, a);\\
+             m.\preset; \alpha_{2,\mathcal{E}}(\entry, m.\name, a);\\
              \Assert(\Not(\Eq(\texttt{cp}, \texttt{halted}))),
              \end{array}\\
-  \postset := \postset(m); \alpha_{2, \mathcal{E}}(\exit, m.\name, a)\\
-  \excset := \excset(m); \alpha_{2, \mathcal{E}}(\excexit, m.\name, a)
+  \postset := m.\postset; \alpha_{2, \mathcal{E}}(\exit, m.\name, a)\\
+  \excset := m.\excset; \alpha_{2, \mathcal{E}}(\excexit, m.\name, a)
   \clri
   \end{array}\\
 \alpha_{2, \mathcal{E}}(e, n, a) & = &
@@ -402,7 +402,7 @@ the look up of the variable \resl. To conclude, \preset, \postset and
 \[
 \alpha_{3, \mathcal{M}}(P, m) = m \opri
 \begin{array}[t]{l}
-\preset := \Skip, \postset := \Skip. \excset := \Skip,\\
+\preset := \Skip, \postset := \Skip, \excset := \Skip,\\
 \lvars := \{\resl, \exl\} \cup m.\lvars,
 \res := \lookup(\resl), \\
 \body :=

@@ -221,11 +221,11 @@ is called upon a null reference \emph{etc.}
 \begin{figure}[t]
 \[
 \begin{array}{c}
-\ex(\progstate(\sigma_0)) = \bot \qquad % no exception in sigma_0
+\sigma_0.\progstate.\ex = \bot \qquad        % no exception in sigma_0
 \etp{P}{o, \sigma_0}{r,\sigma_1} \qquad      % evaluate receiver
-\etp{P}{p, \sigma1}{\act, \sigma_2}\\          % evaluate argument
-%\ex(\progstate(\sigma_2)) = \bot \qquad   % no exceptions
-r \not= \Null \qquad                    % receiver not null
+\etp{P}{p, \sigma1}{\act, \sigma_2}\\        % evaluate argument
+%\sigma_2.\progstate.\ex = \bot \qquad        % no exceptions in sigma_2
+r \not= \Null \qquad                         % receiver not null
 \md = \lookupmthd(P, r, \mn) \\
 \oldlvs = \sigma_2.\progstate.\st.\lvs \qquad
 \sigma_3 = \updatelvs(\sigma_2, r, \md.\lvars, md.\param, \act) \\
@@ -287,7 +287,9 @@ and if this did not result in an exceptional state, it updates the
 value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
 abbreviate that the \(n\) entry of the \gvs entry of \(\tau\) is
 updated to \(v\).} appropriately.
-% AT: What is the difference between \beta and \deltaassert?
+\footnote{AT: What is the difference between $\beta$ and $\deltaassert$?
+In the rule for $\beta$ if $\sigma_1.pstate.exc = \Throwable$ then
+$\sigma_2.pstate.exc = \JMLExc$, is that the intention?}
 
 \begin{figure}[t]
 \[
@@ -295,8 +297,8 @@ updated to \(v\).} appropriately.
 \invar = \lookupinv(P, r) \qquad
 \beta(P, \invar, \sigma_1, \tau_1) \qquad
 \beta(P, \md.\pre(\act), \tau_1, \tau_2) \\
-\etp{P}{\preset(md)(\act), \tau_1}{v,\tau_2} \qquad v\in\{\bot,\One\} \qquad
-\st(\pstate(\sigma_1)) = \st(\pstate(\sigma_2))\\
+\etp{P}{md.\preset(\act), \tau_1}{v,\tau_2} \qquad v\in\{\bot,\One\} \qquad
+\sigma_1.\pstate.\st = \sigma_2.\pstate.\st\\
 \hline
 \gammain(P, \md, r, \act, \sigma_1, \sigma_2)
 \smallskip\\
@@ -310,10 +312,9 @@ updated to \(v\).} appropriately.
 \smallskip\\
 
 \etp{P}{e, \sigma_1}{v, \tau} \qquad
-\pif{\ex(\pstate(\tau)) = \bot}{\sigma_2 = \tau (\gvs.n :=
-v)}{\sigma_2 = \tau}\\
+\pif{\tau.\pstate.\ex = \bot}{\sigma_2 = \tau (\gvs.n := v)}{\sigma_2 = \tau}\\
 \hline
-\deltaset(P, \Set(e, n), \tau_1, \tau_2)
+\deltaset(P, \Set(e, n), \sigma_1, \sigma_2)
 \end{array}
 \]
 \caption{Instantiation of semantics for runtime annotation evaluation}
@@ -363,7 +364,7 @@ the method specification).
 \[
 \begin{array}{c}
 \hat\gammain(P, \md, r, \act, \sigma_1, \tau) \\
-\pif{\ex(\pstate(\tau)) = \bot}
+\pif{\tau.\pstate.\ex = \bot}
     {\sigma_2 = \delta(\entry)(P, \md, \act, \tau)}
     {\sigma_2 = \tau}\\
 \hline
@@ -380,7 +381,7 @@ the method specification).
 \mathsf{let\ }
 \begin{array}[t]{rcl}
   e & = & \opri \etype := \ev, \mname := \md.\name \clri\\
- \tau & = & \Delta_a(\mvastate(\sigma), \progstate(\sigma), e, \act)
+ \tau & = & \sigma.\mvastate.\Delta_a, \sigma.\progstate, e, \act)
 \end{array}
 \mathsf{in\ }\\
 \pif{\sigma.\stuck \vee \tau = \bot}
