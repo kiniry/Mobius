@@ -33,7 +33,7 @@ public class LoopTests {
 //  }
 //  
   public void test4() {
-    int j=0;
+    int j = 0;
     /*@
     @ loop_invariant j <= 3;
     @*/
@@ -43,7 +43,7 @@ public class LoopTests {
   }
   
   public void test5() {
-    int j=0;
+    int j = 0;
     /*@
     @ loop_invariant j <= 3;
     @*/
@@ -87,7 +87,7 @@ public class LoopTests {
 //  }
   
   public void test9() {
-    int j=0;
+    int j = 0;
     /*@
     @ loop_invariant j <= 3;
     @*/

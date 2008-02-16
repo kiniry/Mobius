@@ -1,8 +1,10 @@
 /*
- * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
- * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
- * and the accompanying materials are made available under the terms of the LGPL
- * licence see LICENCE.txt file"
+ * @title       "Jml2Bml"
+ * @description "JML to BML Compiler"
+ * @copyright   "(c) 2008-01-07 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
  */
 package jml2bml.bytecode;
 
@@ -33,11 +35,6 @@ import com.sun.source.tree.LineMap;
  * @version 0.0-1
  */
 public final class BytecodeUtil {
-  /**
-   * Inner classes counter. I think it should be done in another way.
-   */
-  private static int innerClassNum = 1;
-
   /**
    * Hidden constructor.
    */
@@ -74,8 +71,8 @@ public final class BytecodeUtil {
                                             final BCClass clazz) {
     final int nameIndex = clazz.getFieldIndex(name);
     if (nameIndex == -1) {
-      throw new Jml2BmlException("Field " + name +
-                                 " does not exist in given class.");
+      throw new Jml2BmlException("Field " + name
+                                 + " does not exist in given class.");
     }
     return new FieldRef(isOld, clazz.getCp(), nameIndex);
 
@@ -83,23 +80,15 @@ public final class BytecodeUtil {
 
   /**
    * Creates BCClass object for class of given name.
-   * @param name - class name
+   * Inner classes are NOT supported
+   * @param name - class name.
    * @param context - application context
    * @return BCClass corresponding to given class name
    */
   public static BCClass createClass(final Name name, final Context context) {
     //Really hacked!
     final ClassFileLocation loc = context.get(ClassFileLocation.class);
-    String qName = loc.getClassQualifiedName();
-    final String cName = qName.substring(qName.lastIndexOf(".") + 1);
-    if (!cName.equals(name.toString())) {
-      if (name.toString().length() == 0) {
-        qName += "$" + innerClassNum;
-        innerClassNum++;
-      } else {
-        qName += "$" + name.toString();
-      }
-    }
+    final String qName = loc.getClassQualifiedName();
     try {
       return new BCClass(loc.getDirectoryName(), qName);
     } catch (ClassNotFoundException e) {
@@ -109,16 +98,29 @@ public final class BytecodeUtil {
     }
   }
 
-  public static long getLineNumber(Tree tree, LineMap lineMap) {
-    return lineMap.getLineNumber(((JCTree)tree).getStartPosition());
+  /**
+   * Finds the line number for given node in given LineMap.
+   * @param node - node, for which the line number should be found
+   * @param lineMap line map containing line numbers for positions
+   * in the file
+   * @return line number of <code>node</code>
+   */
+  public static long getLineNumber(final Tree node, final LineMap lineMap) {
+    return lineMap.getLineNumber(((JCTree) node).getStartPosition());
   }
-  
-  
-  public static Map<InstructionHandle, Integer> getLineNumberMap(BCMethod method) {
-    Map<InstructionHandle, Integer> result = new HashMap<InstructionHandle, Integer>();   
+
+  /**
+   * Returns map: bytecode instruction -> line number in the source file.
+   * @param method - method, for which the map should be generated
+   * @return map: <code>Bytecode Instruction -> line in the source code</code>
+   */
+  public static Map<InstructionHandle, Integer> getLineNumberMap(
+                                                                 final BCMethod method) {
+    final Map<InstructionHandle, Integer> result = new HashMap<InstructionHandle, Integer>();
     for (LineNumberGen lng : method.getBcelMethod().getLineNumbers())
       if (result.containsKey(lng.getInstruction()))
-        throw new NotTranslatedException("One bytecode instruction has more than one line number");
+        throw new NotTranslatedException(
+                                         "One bytecode instruction has more than one line number");
       else
         result.put(lng.getInstruction(), lng.getSourceLine());
     return result;

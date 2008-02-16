@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description ""JML to BML Compiler"
- * @copyright   "(c) 2008-01-21 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description ""JML to BML Compiler" @copyright "(c)
+ * 2008-01-21 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -23,10 +21,24 @@ import com.sun.tools.javac.util.Context;
  * @author kjk (kjk@mimuw.edu.pl)
  * @version 0-0.1
  */
-public class TranslationUtil {
+public final class TranslationUtil {
+  /**
+   * Hidden constructor.
+   */
+  private TranslationUtil() {
 
-  public static AbstractFormula getFormula(JCExpression expression,
-                                           Symbols symb, Context context) {
+  }
+
+  /**
+   * Returns 
+   * @param expression
+   * @param symb symbol table
+   * @param context application context
+   * @return formula for given expression
+   */
+  public static AbstractFormula getFormula(final JCExpression expression,
+                                           final Symbols symb,
+                                           final Context context) {
     if (expression == null)
       return null;
     final BCExpression bcExpr = expression.accept(RulesFactory

@@ -53,15 +53,20 @@ import com.sun.tools.javac.util.Name;
  * Rule for translating JML expressions.
  * @author Jedrek (fulara@mimuw.edu.pl)
  * @author kjk    (kjk@mimuw.edu.pl)
+ * @version 0.0-1
  *
  */
 public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
-  private final Context context;
-
+  /**
+   * Indicates, if the currently translated expression is \old.
+   */
   private boolean isOld = false;
 
+  /**
+   * Creates new instance of the ExpressionRule.
+   * @param context application context.
+   */
   public ExpressionRule(final Context context) {
-    this.context = context;
   }
 
   // ------- visitor methods
@@ -124,7 +129,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     if (kind == Kind.NULL_LITERAL) {
       return new NULL();
     }
-    if (kind == Kind.STRING_LITERAL){
+    if (kind == Kind.STRING_LITERAL) {
       //FIXME find out how string literals are represented
     }
     throw new NotTranslatedException("Not implemented literal: " + node);

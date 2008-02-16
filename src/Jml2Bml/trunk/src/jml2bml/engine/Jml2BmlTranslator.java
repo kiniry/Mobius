@@ -12,7 +12,6 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.comp.JmlEnter;
 import com.sun.tools.javac.util.Context;
 
-
 /**
  * This visitor traverses the Tree and generates bml for jml annotations. All
  * the work is done in the preVisit method for the appropriate nodes. It tries
@@ -22,48 +21,44 @@ import com.sun.tools.javac.util.Context;
  * overwrite appropriate visitXYZ methods. If such an rule is not applicable to
  * a node type, visit method for this node type should not be overwritten.
  *
- * @author Jedrek
+ * @author Jedrek (fulara@mimuw.edu.pl)
+ * @version 0-0.1
  *
  */
-
-public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols>{
+public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> {
   private final List<TranslationRule> rules;
 
-  private final JmlEnter jmlEnter;
+  /**
+   * Application context.
+   */
   private final Context context;
-  public Jml2BmlTranslator(Context context) {
+
+  /**
+   * Creates a new instance of the Jml2BmlTranslator.
+   * @param context
+   */
+  public Jml2BmlTranslator(final Context context) {
     this.context = context;
     this.rules = new LinkedList<TranslationRule>();
-    this.jmlEnter = context.get(JmlEnter.class);
   }
 
   /**
    * This method invokes the rule - tries to apply it to the given node.
-   * 
-   * @param node -
-   *            visited node
-   * @param v -
-   *            true, if we should try to apply the rule (we shouldn't if the
-   *            scanned node is a descendant of a node that we have already
-   *            translated
-   * @return - if the children should be visited
+   * @param node visited node
+   * @param v true, if we should try to apply the rule (we shouldn't if the
+   * scanned node is a descendant of a node that we have already
+   * translated
+   * @return if the children should be visited
    */
   @Override
-  protected Symbols preVisit(Tree node, Symbols v) {
+  protected Symbols preVisit(final Tree node, final Symbols v) {
     super.preVisit(node, v);
     final Symbols symbs = node.accept(new SymbolsBuilder(context), v);
     for (Class<?> cl : JmlNodes.JML_CLASSES) {
       if (cl.equals(node.getClass())) {
         for (TranslationRule<String, Symbols> rule : rules) {
           // try to apply the rule
-          /*String annotation = */node.accept(rule, symbs);
-//          if (annotation != null) {
-//            // succeeded
-//            Location location = bytecodeUtils.findLocation(node);
-//            BmlAnnotation bml = new BmlAnnotation(annotation, location);
-//            bytecodeUtils.insertAnnotation(bml);
-//            return Boolean.FALSE;
-//          }
+          node.accept(rule, symbs);
         }
         return v;
       }
@@ -74,11 +69,9 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols>{
   /**
    * All user defined rules should be registered using this method. Not
    * registered rules will not be applied.
-   * 
-   * @param rule -
-   *            rule to register.
+   * @param rule rule to register.
    */
-  public void registerTranslationRule(TranslationRule rule) {
+  public void registerTranslationRule(final TranslationRule rule) {
     rules.add(rule);
   }
 

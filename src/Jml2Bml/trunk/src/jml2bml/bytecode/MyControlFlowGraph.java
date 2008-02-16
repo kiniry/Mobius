@@ -11,20 +11,40 @@ import org.apache.bcel.verifier.structurals.ControlFlowGraph;
 import org.apache.bcel.verifier.structurals.InstructionContext;
 
 import annot.bcclass.BCMethod;
-
+/**
+ * Control flow graph, providing access to preceding instructions,
+ * successors, instruction numbers etc.
+ * @author Jedrek (fulara@mimuw.edu.pl)
+ * @version 0-0.1
+ */
 public class MyControlFlowGraph {
 
+  /**
+   * Array of all instructions in the method.
+   */
   private InstructionContext[] contexts;
 
+  /**
+   * Map storing lists of preceding instructions.
+   */
   private Map<InstructionContext, List<InstructionContext>> prec;
 
+  /**
+   * Map storing instruction numbers.
+   */
   private Map<InstructionContext, Integer> instrNum;
-
+  /**
+   * Map storing next instruction for the given one.
+   */
   private Map<InstructionContext, InstructionContext> nextInstruction;
 
-  public MyControlFlowGraph(BCMethod method) {
+  /**
+   * Constructs the extended control flow graph for given method.
+   * @param method method, for which the control flow graph should be
+   * constructed.
+   */
+  public MyControlFlowGraph(final BCMethod method) {
     final MethodGen mgen = method.getBcelMethod();
-    System.out.println("AAAAAA DETECT LOOP POCZATEK" + mgen.getName());
     final ControlFlowGraph graph = new ControlFlowGraph(mgen);
     contexts = graph.getInstructionContexts();
     prec = getIncomingInstructions();
@@ -97,19 +117,46 @@ public class MyControlFlowGraph {
     return res;
   }
 
+  /**
+   * Returns array of all instructions in the method. They don't have to be
+   * ordered!
+   * @return array of all instructions in the method.
+   */
   public InstructionContext[] getInstructionContext() {
     return contexts;
   }
 
-  public List<InstructionContext> getPrecedingInstructions(final InstructionContext instruction){
+  /**
+   * Returns the list of preceding instructions for given instruction.
+   * <code>a</code> is a preceding instruction for <code>b</code>,
+   * if there is an edge <code>a->b</code> in the control flow graph
+   * @param instruction instruction, for which preceding instructions
+   * should be found
+   * @return list of preceding instructions
+   */
+  public List<InstructionContext> getPrecedingInstructions(
+                                                           final InstructionContext instruction) {
     return prec.get(instruction);
   }
-  
-  public int getInstructionNumber(final InstructionContext instruction){
+
+  /**
+   * Returns the number of given instruction in the method.
+   * @param instruction instruction for which the number should be found.
+   * @return the number of given instruction in the method
+   */
+  public int getInstructionNumber(final InstructionContext instruction) {
     return instrNum.get(instruction);
   }
-  
-  public InstructionContext getNextInstruction(final InstructionContext instruction){
+
+  /**
+   * Returns the next instruction (not a successor in the control flow graph,
+   * but simply the next instruction in the method).
+   * @param instruction instruction, for which the next instruction should be
+   * found
+   * @return next instruction
+   */
+  public InstructionContext getNextInstruction(
+                                               final InstructionContext instruction) {
     return nextInstruction.get(instruction);
   }
 }

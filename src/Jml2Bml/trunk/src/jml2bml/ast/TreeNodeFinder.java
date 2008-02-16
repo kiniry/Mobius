@@ -168,6 +168,11 @@ public class TreeNodeFinder {
     return nextSiblingMap.get(tree);
   }
 
+  /**
+   * Returns if the given node is in a JML comment.
+   * @param tree node to check
+   * @return if the node is in JML comment.
+   */
   public boolean isInJmlComment(final Tree tree) {
     return isJml.get(tree);
   }

@@ -8,10 +8,16 @@ package jml2bml.utils;
  *
  */
 public final class UniqueIndexGenerator {
+
   /**
    * Previous index value.
    */
   private static int index;
+  /**
+   * Hidden constructor.
+   */
+  private UniqueIndexGenerator() {
+  }
   /**
    * Generates new index.
    * @return generated index
@@ -20,9 +26,5 @@ public final class UniqueIndexGenerator {
     index++;
     return index;
   }
-  
-  /**
-   * Hidden constructor.
-   */
-  private UniqueIndexGenerator(){}
+
 }

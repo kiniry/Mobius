@@ -22,7 +22,7 @@ public class Variable {
     return isLocalVariable;
   }
   
-  public boolean isField(){
+  public boolean isField() {
     return isField;
   }
   

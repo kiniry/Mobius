@@ -9,7 +9,7 @@ public class JmlNodes {
    * all nodes that represent some JML annotations; for this nodes translation
    * rules will be fired
    */
-  public static final Class < ? > [] JML_CLASSES = {
+  public static final Class<?>[] JML_CLASSES = {
                                                 JmlTree.JmlMethodDecl.class,
                                                 JmlTree.JmlStatementLoop.class,
                                                 JmlTree.JmlSpecificationCase.class,

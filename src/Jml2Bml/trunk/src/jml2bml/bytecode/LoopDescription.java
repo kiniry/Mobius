@@ -1,3 +1,11 @@
+/*
+ * @title       "Jml2Bml"
+ * @description "JML to BML Compiler"
+ * @copyright   "(c) 2008-01-07 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package jml2bml.bytecode;
 
 import org.apache.bcel.generic.InstructionHandle;

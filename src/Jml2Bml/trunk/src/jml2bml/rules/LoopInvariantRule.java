@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jml2bml.ast.ExtendedJmlTreeScanner;
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.bytecode.LoopDescription;
@@ -22,7 +21,6 @@ import jml2bml.exceptions.NotTranslatedException;
 import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.generic.InstructionHandle;
-import org.jmlspecs.openjml.JmlTree.JmlDoWhileLoop;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlStatementLoop;
 
@@ -31,13 +29,11 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
 
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.parser.JmlParser;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
@@ -47,10 +43,19 @@ import com.sun.tools.javac.util.Context;
  * @version 0.0-1
  */
 public class LoopInvariantRule extends TranslationRule<String, Symbols> {
+  /**
+   * Application context.
+   */
   private final Context myContext;
 
+  /**
+   * Collection of loops.
+   */
   private Collection<SourceLoopDescription> loops;
 
+  /**
+   * Helps to find ancestors for given nodes.
+   */
   private TreeNodeFinder finder;
 
   //  private class LoopProcessor extends TranslationRule<String, Symbols> {
@@ -64,6 +69,10 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
   //    }
   //  }
 
+  /**
+   * Creates new instance of the LoopInvariantRule.
+   * @param context application context
+   */
   public LoopInvariantRule(final Context context) {
     super();
     this.myContext = context;

@@ -38,19 +38,19 @@ public final class BmlLibUtils {
    */
   public static boolean isBinaryOperatorPredicate2Ar(final int operator) {
     switch (operator) {
-    case Code.GRT:
-    case Code.GRTEQ:
-    case Code.LESS:
-    case Code.LESSEQ:
-    case Code.EQ:
-    case Code.NOTEQ:
-    case Code.AND:
-    case Code.OR:
-    case Code.IMPLIES:
-    case Code.EQUIV :
-      return true;
-    default:
-      return false;
+      case Code.GRT:
+      case Code.GRTEQ:
+      case Code.LESS:
+      case Code.LESSEQ:
+      case Code.EQ:
+      case Code.NOTEQ:
+      case Code.AND:
+      case Code.OR:
+      case Code.IMPLIES:
+      case Code.EQUIV:
+        return true;
+      default:
+        return false;
     }
   }
 
@@ -61,112 +61,155 @@ public final class BmlLibUtils {
    */
   public static int translateBinaryOperator(final Kind kind) {
     //TODO: check if all translated ok
-    if (kind == Kind.AND)
-      return Code.AND;
-    if (kind == Kind.DIVIDE)
-      return Code.DIV;
-    if (kind == Kind.EQUAL_TO)
-      return Code.EQ;
-    if (kind == Kind.GREATER_THAN)
-      return Code.GRT;
-    if (kind == Kind.GREATER_THAN_EQUAL)
-      return Code.GRTEQ;
-    if (kind == Kind.LEFT_SHIFT)
-      return Code.SHL;
-    if (kind == Kind.LESS_THAN)
-      return Code.LESS;
-    if (kind == Kind.LESS_THAN_EQUAL)
-      return Code.LESSEQ;
-    if (kind == Kind.MINUS)
-      return Code.MINUS;
-    if (kind == Kind.MULTIPLY)
-      return Code.MULT;
-    if (kind == Kind.NOT_EQUAL_TO)
-      return Code.NOTEQ;
-    if (kind == Kind.OR)
-      return Code.OR;
-    if (kind == Kind.PLUS)
-      return Code.PLUS;
-    if (kind == Kind.REMAINDER)
-      return Code.REM;
-    if (kind == Kind.RIGHT_SHIFT)
-      return Code.SHR;
-    if (kind == Kind.CONDITIONAL_AND)
-      return Code.AND;
-    if (kind == Kind.CONDITIONAL_OR)
-      return Code.OR;
+    int ret = booleanOperator(kind);
+    if (ret == -1) {
+      ret = arithmeticOperator(kind);
+    }
+    if (ret == -1) {
+      ret = bitOperator(kind);
+    }
+    if (ret != -1) {
+      return ret;
+    }
 
-    //    if (kind == Kind.UNSIGNED_RIGHT_SHIFT) return
-    //    if (kind == Kind.XOR) return 
-    throw new RuntimeException("Not implemented binary operator: " + kind);
+    throw new Jml2BmlException("Not implemented binary operator: " + kind);
 
   }
 
-  private static int booleanOperator(final Kind kind) {
-    if (kind == Kind.AND) {
-      return Code.AND;
+  /**
+   * Tries to recognize and translate arithmetic operator.
+   * @param kind operator to translate
+   * @return translated operator
+   */
+  private static int arithmeticOperator(final Kind kind) {
+    int ret = -1;
+    if (kind == Kind.DIVIDE) {
+      ret = Code.DIV;
     }
-    if (kind == Kind.EQUAL_TO) {
-      return Code.EQ;
+    if (kind == Kind.MINUS) {
+      ret = Code.MINUS;
     }
-    if (kind == Kind.GREATER_THAN) {
-      return Code.GRT;
+    if (kind == Kind.MULTIPLY) {
+      ret = Code.MULT;
     }
-    if (kind == Kind.GREATER_THAN_EQUAL) {
-      return Code.GRTEQ;
+    if (kind == Kind.PLUS) {
+      ret = Code.PLUS;
     }
+    if (kind == Kind.REMAINDER) {
+      ret = Code.REM;
+    }
+    return ret;
+  }
+
+  /**
+   * Tries to recognize and translate bit operator.
+   * @param kind operator to translate
+   * @return translated operator
+   */
+  private static int bitOperator(final Kind kind) {
+    int ret = -1;
     if (kind == Kind.LEFT_SHIFT) {
-      return Code.SHL;
+      ret = Code.SHL;
     }
-    if (kind == Kind.LESS_THAN) {
-      return Code.LESS;
+    if (kind == Kind.RIGHT_SHIFT) {
+      ret = Code.SHR;
     }
-    if (kind == Kind.LESS_THAN_EQUAL) {
-      return Code.LESSEQ;
+    return ret;
+  }
+
+  /**
+   * Tries to translate boolean operator.
+   * @param kind operator to translate
+   * @return translated operator
+   */
+  private static int booleanOperator(final Kind kind) {
+    int ret = relationalOperator(kind);
+    if (kind == Kind.AND) {
+      ret = Code.AND;
     }
-    if (kind == Kind.NOT_EQUAL_TO) {
-      return Code.NOTEQ;
-    }
-    if (kind == Kind.OR) {
-      return Code.OR;
+    if (kind == Kind.OR || kind == Kind.CONDITIONAL_OR) {
+      ret = Code.OR;
     }
     if (kind == Kind.CONDITIONAL_AND) {
-      return Code.AND;
+      ret = Code.AND;
     }
-    if (kind == Kind.CONDITIONAL_OR) {
-      return Code.OR;
-    }
-    return -1;
+    return ret;
   }
-
-
-  public static String mapJCTypeKindToBmlLib(TypeKind primitiveTypeKind) {
+  /**
+   * Tries to recognize and translate relational operator.
+   * @param kind operator to translate
+   * @return translated operator
+   */
+  private static int relationalOperator(final Kind kind) {
+    int ret = -1;
+    if (kind == Kind.EQUAL_TO) {
+      ret = Code.EQ;
+    }
+    if (kind == Kind.GREATER_THAN) {
+      ret = Code.GRT;
+    }
+    if (kind == Kind.GREATER_THAN_EQUAL) {
+      ret = Code.GRTEQ;
+    }
+    if (kind == Kind.LESS_THAN) {
+      ret = Code.LESS;
+    }
+    if (kind == Kind.LESS_THAN_EQUAL) {
+      ret = Code.LESSEQ;
+    }
+    if (kind == Kind.NOT_EQUAL_TO) {
+      ret = Code.NOTEQ;
+    }
+    return ret;
+  }
+  /**
+   * Translates JC primitive type to BmlLib primitive type.
+   * If the type is not recognized, throws an exception
+   * @param primitiveTypeKind type to translate
+   * @return translated type name
+   */
+  public static String mapJCTypeKindToBmlLib(final TypeKind primitiveTypeKind) {
     if (TypeKind.BOOLEAN.compareTo(primitiveTypeKind) == 0) {
       return "boolean";
     }
     if (TypeKind.INT.compareTo(primitiveTypeKind) == 0) {
       return "int";
     }
-    //FIXME
-    return null;
+    throw new Jml2BmlException("Unrecognized type " + primitiveTypeKind);
   }
 
-  public static int mapJCOperatorToBmlLib(JmlToken token) {
+  /**
+   * Translates JC operator to BmlLib operator.
+   * @param token operator to translate
+   * @return translated operator
+   */
+  public static int mapJCOperatorToBmlLib(final JmlToken token) {
+    int res = -1;
     if (JmlToken.BSFORALL.equals(token))
-      return Code.FORALL_WITH_NAME;
+      res = Code.FORALL_WITH_NAME;
     if (JmlToken.BSEXISTS.equals(token))
-      return Code.EXISTS_WITH_NAME;
+      res = Code.EXISTS_WITH_NAME;
     if (JmlToken.IMPLIES.equals(token))
-      return Code.IMPLIES;
+      res = Code.IMPLIES;
     if (JmlToken.EQUIVALENCE.equals(token))
-      return Code.EQUIV;
-
+      res = Code.EQUIV;
+    if (res != -1) {
+      return res;
+    }
     throw new Jml2BmlException("Unrecognized token " + token);
   }
-  public static FieldRef createFieldRef(boolean isOld, int index,
-                                        Symbols symbols) {
-    BCClass clazz = symbols.findClass();
+
+  /**
+   * Creates new fieldRef for given index.
+   * @param isOld indicates, if the BmlLib FieldRef should be marked as old
+   * @param index index in the constant pool, where the field ref is being kept
+   * @param symbols symbol table
+   * @return created field ref.
+   */
+  public static FieldRef createFieldRef(final boolean isOld, final int index,
+                                        final Symbols symbols) {
+    final BCClass clazz = symbols.findClass();
     return new FieldRef(isOld, clazz.getCp(), index);
   }
-  
+
 }

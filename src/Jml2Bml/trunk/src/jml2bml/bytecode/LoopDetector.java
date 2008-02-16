@@ -35,21 +35,17 @@ public final class LoopDetector {
       LoopDescription loopDescription = null;
       loopDescription = firstKindLoop(instruction, graph);
       if (loopDescription != null) {
-        System.out.println("found 1");
         res.add(loopDescription);
       } else {
         loopDescription = secondKindLoop(instruction, graph);
         if (loopDescription != null) {
           res.add(loopDescription);
-          System.out.println("found 2");
-        }
-        else {
+        } else {
           loopDescription = findDoWhileLoop(instruction, graph);
           if (loopDescription != null) {
             res.add(loopDescription);
-            System.out.println("found 3");
           }
-            
+
         }
       }
     }
@@ -131,7 +127,7 @@ public final class LoopDetector {
                                                 final MyControlFlowGraph graph) {
     final List<InstructionContext> precInstr = graph
         .getPrecedingInstructions(instruction);
-    if (precInstr.size() < 2) {
+    if (precInstr.size() <= 1) {
       return null;
     }
     final int number = graph.getInstructionNumber(instruction);
@@ -148,10 +144,7 @@ public final class LoopDetector {
       //now max is the number of the line with the longest jump;
       InstructionContext loopStart = null;
       final InstructionContext c = graph.getNextInstruction(loopEnd);
-      if (c == null) {
-        //special case, loop condition is "true" and no breakes inside
-        loopStart = instruction;
-      } else {
+      if (c != null) {
         final List<InstructionContext> prec = graph.getPrecedingInstructions(c);
         int min = max;
         for (InstructionContext p : prec) {
@@ -187,13 +180,18 @@ public final class LoopDetector {
    * @return ([1],[3],[1])
    */
   private static LoopDescription findDoWhileLoop(
-                                            final InstructionContext instruction,
-                                            final MyControlFlowGraph graph) {
+                                                 final InstructionContext instruction,
+                                                 final MyControlFlowGraph graph) {
     final int number = graph.getInstructionNumber(instruction);
     for (InstructionContext next : instruction.getSuccessors()) {
       final int n = graph.getInstructionNumber(next);
       if (n < number) {
-        return new LoopDescription(next, instruction, next);
+        for (InstructionContext instr : graph.getPrecedingInstructions(next)) {
+          if (graph.getInstructionNumber(instr) < n || n == 0) {
+            //the instruction just before the "next" is not a goto
+            return new LoopDescription(next, instruction, next);
+          }
+        }
       }
     }
     return null;
@@ -204,7 +202,7 @@ public final class LoopDetector {
    * @param instruction instruction to check
    * @return if the given instruction is conditional
    */
-  private static boolean isConditional(InstructionContext instruction) {
+  private static boolean isConditional(final InstructionContext instruction) {
     return instruction.getSuccessors().length > 1;
   }
 

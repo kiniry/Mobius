@@ -12,31 +12,64 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.FieldRef;
 import annot.bcexpression.LocalVariable;
-import annot.bcexpression.SingleOccurence;
 
 import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.util.Context;
 
+/**
+ * Builds symbol table.
+ * @author Jedrek (fulara@mimuw.edu.pl)
+ * @version 0.0-1
+ */
 public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
+  /**
+   * Collection of ancestors for all AST nodes.
+   */
   private final TreeNodeFinder ancestorFinder;
-  private Context context;
 
-  public SymbolsBuilder(Context context) {
+  /**
+   * application context.
+   */
+  private final Context context;
+
+  /**
+   * Creates new instance of the symbol builder.
+   * @param context application context
+   */
+  public SymbolsBuilder(final Context context) {
     ancestorFinder = context.get(TreeNodeFinder.class);
     this.context = context;
   }
-  public Symbols scan(Tree node, Symbols p) {
+
+  /**
+   * Scans the given node. By default does nothing.
+   * @param node node to scan
+   * @param p symbol table containing all information gathered before this node
+   * @return symbol table updated by this node
+   */
+  public Symbols scan(final Tree node, final Symbols p) {
     return p;
   };
-
-  public Symbols scan(Iterable<? extends Tree> nodes, Symbols p) {
+  /**
+   * Scans the given node. By default does nothing.
+   * @param nodes nodes to scan
+   * @param p symbol table containing all information gathered before this node
+   * @return symbol table updated by this node
+   */
+  @Override
+  public Symbols scan(final Iterable<? extends Tree> nodes, final Symbols p) {
     return p;
   };
 
   //TODO handle modifiers (static)
+  /**
+   * Visit the variable declaration (adds new entry to the symbol table).
+   * @param node visited node
+   * @param p symbol table before this node
+   * @return symbol table after this node
+   */
   @Override
   public Symbols visitJmlVariableDecl(final JmlVariableDecl node,
                                       final Symbols p) {
@@ -67,7 +100,14 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     return p;
   }
 
-  private void handleLocal(JmlVariableDecl node, Tree method, Symbols s) {
+  /**
+   * Handles the local variable declaration.
+   * @param node local variable declaration
+   * @param method method containing this declaration
+   * @param s symbol table before this declaration
+   */
+  private void handleLocal(final JmlVariableDecl node, final Tree method,
+                           final Symbols s) {
     final BCClass cl = s.findClass();
     final BCMethod m = BytecodeUtil.findMethod(((MethodTree) method).getName(),
                                                cl);
@@ -75,10 +115,17 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     s.put(node.name.toString(), new Variable(var, node));
   }
 
-  private void handleField(JmlVariableDecl node, Tree clazz, Symbols s) {
+  /**
+   * Handles field declarations.
+   * @param node field declaration
+   * @param clazz class containing the field declaration
+   * @param s symbol table before this node
+   */
+  private void handleField(final JmlVariableDecl node, final Tree clazz,
+                           final Symbols s) {
     final BCClass cl = s.findClass();
-    
-    int nameIndex = cl.getFieldIndex(node.getName().toString());
+
+    final int nameIndex = cl.getFieldIndex(node.getName().toString());
     if (nameIndex == -1) {
       //FIXME throw an exception
     }
@@ -86,20 +133,38 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
 
   }
 
+  /**
+   * Visits block node (creates new symbol table overlaping the given one).
+   * @param node visited node
+   * @param p symbol table before this node
+   * @return updated symbol table
+   */
   @Override
-  public Symbols visitBlock(BlockTree node, Symbols p) {
+  public Symbols visitBlock(final BlockTree node, final Symbols p) {
     return new Symbols(p);
   }
 
+  /**
+   * Visits class declaration (creates new symbol table).
+   * @param node visited node
+   * @param p symbol table before this node
+   * @return updated symbol table
+   */
   @Override
-  public Symbols visitJmlClassDecl(JmlClassDecl node, Symbols p) {
+  public Symbols visitJmlClassDecl(final JmlClassDecl node, final Symbols p) {
     final Symbols newSymbols = new Symbols(p);
     newSymbols.setClass(BytecodeUtil.createClass(node.name, context));
     return newSymbols;
   }
 
+  /**
+   * Visits method declaration (creates new symbol table).
+   * @param node visited node.
+   * @param p symbol table before this node
+   * @return updated symbol table
+   */
   @Override
-  public Symbols visitJmlMethodDecl(JmlMethodDecl node, Symbols p) {
+  public Symbols visitJmlMethodDecl(final JmlMethodDecl node, final Symbols p) {
     return new Symbols(p);
   }
 }

@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-10 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-10 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -51,7 +49,13 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
   private class SpecificationCaseBuilder extends
       TranslationRule<String, Symbols> {
 
-    protected String preVisit(Tree node, Symbols symb) {
+    /**
+     * Default preVisit method. Throws NotTranslatedException.
+     * @param node visited node
+     * @param symb symbol table
+     * @return never reached.
+     */
+    protected String preVisit(final Tree node, final Symbols symb) {
       //TODO: change to screaming rule or sth??
       throw new NotTranslatedException("Not implemented: " + node);
     }
@@ -59,16 +63,16 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     public String visitJmlMethodClauseExpr(final JmlMethodClauseExpr node,
                                            final Symbols symb) {
       if (node.token == JmlToken.REQUIRES) {
-        final AbstractFormula form = TranslationUtil.getFormula(node.expression,
-                                                            symb, myContext);
+        final AbstractFormula form = TranslationUtil
+            .getFormula(node.expression, symb, myContext);
         if (precondition == null) {
           precondition = form;
         } else {
           precondition = new Formula(Code.AND, precondition, form);
         }
       } else if (node.token == JmlToken.ENSURES) {
-        final AbstractFormula form = TranslationUtil.getFormula(node.expression,
-                                                            symb, myContext);
+        final AbstractFormula form = TranslationUtil
+            .getFormula(node.expression, symb, myContext);
         if (postcondition == null) {
           postcondition = form;
         } else {
@@ -96,8 +100,15 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     //    }
   }
 
+  /**
+   * application context.
+   */
   private final Context myContext;
 
+  /**
+   * Creates a new instance of the rule.
+   * @param context application context.
+   */
   public SpecificationCaseRule(final Context context) {
     super();
     this.myContext = context;
@@ -121,12 +132,12 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
 
     final BCClass bcClazz = symb.findClass();
     final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
-    Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
-    Tree nextClassMember = finder.getNextSibling(specs);
+    final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
+    final Tree nextClassMember = finder.getNextSibling(specs);
     if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
       throw new NotTranslatedException("Cannot find method for the requires: "
                                        + node);
-    JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
+    final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
     //TODO: here make Specification case for Bmllib
     System.out.println("eLLo");
     final BCMethod bcMethod = BytecodeUtil
@@ -139,9 +150,11 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     new SpecificationCaseBuilder().scan(node.clauses, symb);
 
     //FIXME: when only precondition = should go to empty spec case??
-    SpecificationCase specCase = new SpecificationCase(bcMethod, precondition,
-                                                       modifies, postcondition,
-                                                       excondition);
+    final SpecificationCase specCase = new SpecificationCase(bcMethod,
+                                                             precondition,
+                                                             modifies,
+                                                             postcondition,
+                                                             excondition);
     spec.addCase(specCase);
     return "";
   }

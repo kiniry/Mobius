@@ -75,7 +75,7 @@ public class Main {
     System.out.println("------------- PRETTY PRINT ------------");
     new PrettyPrinter(System.out).prettyPrint(tree);
     System.out.println("LINE TABLES: ");
-    for (Method m: clazz.getJC().getMethods()){
+    for (Method m : clazz.getJC().getMethods()) {
       System.out.println(m.getName());
       System.out.println(m.getLineNumberTable());
     }

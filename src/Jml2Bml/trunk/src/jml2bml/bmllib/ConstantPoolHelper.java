@@ -24,9 +24,9 @@ import annot.bcclass.BCConstantPool;
  * when necessary (<code>object.field</code> accesses
  * in JML that are not present in java code). This should be done in the BmlLib.
  * @author Jedrek (fulara@mimuw.edu.pl)
- * @version 0.01
+ * @version 0.0-1
  */
-public class ConstantPoolHelper {
+public final class ConstantPoolHelper {
 
   /**
    * Hidden constructor.
@@ -112,7 +112,7 @@ public class ConstantPoolHelper {
     final int fieldNameIndex = cp.findConstant(fieldName);
     final int classNameIndex = cp.findConstant(trimmedClassName);
     final int classIndex = getConstantClassForNameIndex(classNameIndex, cp);
-    final List<Integer> nameAndTypeIndexes = 
+    final List<Integer> nameAndTypeIndexes =
       getConstantNameAndTypeForNameIndex(fieldNameIndex, cp);
     for (Integer nameAndTypeIndex : nameAndTypeIndexes) {
       final int constantFieldrefIndex =

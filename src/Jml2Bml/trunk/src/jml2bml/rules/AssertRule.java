@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description ""JML to BML Compiler"
- * @copyright   "(c) 2008-01-06 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description ""JML to BML Compiler" @copyright "(c)
+ * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -28,7 +26,6 @@ import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -39,11 +36,18 @@ import com.sun.tools.javac.util.Context;
  * @version 0-0.1
  */
 public class AssertRule extends TranslationRule<String, Symbols> {
-  private final Context my_context;
+  /**
+   * Application context.
+   */
+  private final Context myContext;
 
+  /**
+   * Creates new instance of the AssertRule.
+   * @param context application context
+   */
   public AssertRule(final Context context) {
     super();
-    this.my_context = context;
+    this.myContext = context;
   }
 
   /**
@@ -58,7 +62,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
                                       final Symbols symb) {
 
     if (node.token == JmlToken.ASSERT) {
-      final TreeNodeFinder finder = my_context.get(TreeNodeFinder.class);
+      final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
       final BCClass clazz = symb.findClass();
 
       //Find an enclosing method
@@ -68,8 +72,8 @@ public class AssertRule extends TranslationRule<String, Symbols> {
           .findMethod(method.getName(), clazz);
 
       if (node.expression != null) {
-        final AbstractFormula form = TranslationUtil.getFormula(node.expression,
-                                                            symb, my_context);
+        final AbstractFormula form = TranslationUtil
+            .getFormula(node.expression, symb, myContext);
 
         final StatementTree targetStmt = findFirstNotEmptySibling(finder, node);
         System.out.println("Assertion: " + form
@@ -85,24 +89,37 @@ public class AssertRule extends TranslationRule<String, Symbols> {
     return null;
   }
 
+  /**
+   * Checks if given statement is instance of JmlAbstractStatement.
+   * @param stmt statement to check
+   * @return if the given statement is a Jml statement
+   */
   private static boolean isJmlStatement(final StatementTree stmt) {
     return (stmt instanceof JmlAbstractStatement);
   }
 
-  private static StatementTree findFirstNotEmptySibling(final TreeNodeFinder finder,
-                                                        StatementTree stmt) {
+  /**
+   * Finds first sibling of stmt that is not empty.
+   * @param finder util to find ancestors
+   * @param stmt statement, for which the sibling should be found
+   * @return found sibling
+   */
+  private static StatementTree findFirstNotEmptySibling(
+                                                        final TreeNodeFinder finder,
+                                                        final StatementTree stmt) {
+    StatementTree tmp = stmt;
     do {
-      stmt = (StatementTree) finder.getNextSibling(stmt);
-    } while (stmt != null && isJmlStatement(stmt));
-    return stmt;
+      tmp = (StatementTree) finder.getNextSibling(tmp);
+    } while (tmp != null && isJmlStatement(tmp));
+    return tmp;
   }
 
-  public InstructionHandle translateStatement(final StatementTree stmt,
-                                              final BCMethod method) {
+  private InstructionHandle translateStatement(final StatementTree stmt,
+                                               final BCMethod method) {
     if (stmt == null) {
       return method.getInstructions().getEnd();
     } else {
-      final LineMap lineMap = my_context.get(LineMap.class);
+      final LineMap lineMap = myContext.get(LineMap.class);
       final long sourceLine = BytecodeUtil.getLineNumber(stmt, lineMap);
       for (LineNumberGen lng : method.getBcelMethod().getLineNumbers()) {
         //FIXME: can one source line have more than one line number in output??
@@ -110,6 +127,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
           return lng.getInstruction();
       }
     }
-    throw new NotTranslatedException("Error with finding target instruction in bytecode");
+    throw new NotTranslatedException(
+                                     "Error with finding target instruction in bytecode");
   }
 }
