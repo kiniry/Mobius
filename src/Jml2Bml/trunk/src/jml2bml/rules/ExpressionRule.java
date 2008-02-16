@@ -6,6 +6,7 @@
  */
 package jml2bml.rules;
 
+import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
@@ -14,11 +15,17 @@ import jml2bml.exceptions.NotTranslatedException;
 import jml2bml.symbols.Symbols;
 import jml2bml.symbols.Variable;
 import jml2bml.utils.Constants;
+import jml2bml.utils.JCUtils;
 import jml2bml.utils.UniqueIndexGenerator;
 
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
+import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
+import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
+import org.jmlspecs.openjml.JmlTree.JmlSingleton;
 
+import annot.bcclass.BCClass;
+import annot.bcclass.BCMethod;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccess;
 import annot.bcexpression.ArrayLength;
@@ -28,6 +35,7 @@ import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
+import annot.bcexpression.RESULT;
 import annot.bcexpression.THIS;
 import annot.bcexpression.formula.Predicate0Ar;
 import annot.bcexpression.formula.Predicate2Ar;
@@ -43,8 +51,10 @@ import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -61,12 +71,16 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
    * Indicates, if the currently translated expression is \old.
    */
   private boolean isOld = false;
-
+  /**
+   * application context.
+   */
+  private Context myContext;
   /**
    * Creates new instance of the ExpressionRule.
    * @param context application context.
    */
   public ExpressionRule(final Context context) {
+    myContext = context;
   }
 
   // ------- visitor methods
@@ -256,5 +270,42 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     return new ArrayAccess(scan(node.getExpression(), p), scan(node.getIndex(),
                                                                p));
   }
-
+  
+  @Override
+  public BCExpression visitMethodInvocation(MethodInvocationTree node, Symbols p) {
+    if (JCUtils.isOld(node.getMethodSelect())){
+      final boolean tmp = isOld;
+      isOld = true;
+      final BCExpression expr = scan(node.getArguments(),p);
+      isOld = tmp;
+      return expr;
+    }
+    if (JCUtils.isOld(node.getMethodSelect())){
+      final boolean tmp = isOld;
+      isOld = false;
+      final BCExpression expr = scan(node.getArguments(),p);
+      isOld = tmp;
+      return expr;
+    }
+    throw new NotTranslatedException("Method invocation not supported!");
+  }
+  
+  @Override
+  public BCExpression visitJmlSingleton(JmlSingleton node, Symbols p) {
+    if (JCUtils.isResult(node)){
+      final BCClass bcClazz = p.findClass();
+      final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
+      final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
+      final Tree nextClassMember = finder.getNextSibling(specs);
+      if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
+        throw new NotTranslatedException("Cannot find method for the requires: "
+                                         + node);
+      final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
+      //TODO: here make Specification case for Bmllib
+      final BCMethod bcMethod = BytecodeUtil
+          .findMethod(method.getName(), bcClazz);
+      return new RESULT(bcMethod);
+    }
+    throw new NotTranslatedException("Singleton type not translated: " + node);
+  }
 }

@@ -253,5 +253,4 @@ public class LoopTests {
       } while (j < 12);
     }
   }
-
 }

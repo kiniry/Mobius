@@ -73,6 +73,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
       } else if (node.token == JmlToken.ENSURES) {
         final AbstractFormula form = TranslationUtil
             .getFormula(node.expression, symb, myContext);
+        
         if (postcondition == null) {
           postcondition = form;
         } else {
@@ -139,7 +140,6 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
                                        + node);
     final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
     //TODO: here make Specification case for Bmllib
-    System.out.println("eLLo");
     final BCMethod bcMethod = BytecodeUtil
         .findMethod(method.getName(), bcClazz);
     MethodSpecification spec = bcMethod.getMspec();
