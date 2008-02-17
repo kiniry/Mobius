@@ -334,7 +334,11 @@
 
 
   <target name="debian-release" depends="dist">
-    <taskdef name="deb" classname="org.vafer.jdeb.ant.DebAntTask"/>
+    <taskdef resource="org/vafer/jdeb/ant/antlib.xml"> 
+      <classpath>
+	<pathelement location="${lib}/jdeb-0.6.jar"/>
+      </classpath>
+    </taskdef>
 
     <copy todir="${debian}/src/usr/share/bonc"> 
       <fileset dir="." includes="bonc,bonc-debian"/>
@@ -362,9 +366,9 @@
     <!-- Create release tar file -->
     <exec executable="./build-deb-release-tar.sh" dir="."/>
 
-    <deb destfile="${release}/${release-name}-${release-version}.deb" control="${debian}/control" changesIn="${debian}/changes.txt" changesOut="${debian}/${release-name}.changes" changesSave="${debian}/changes.txt">
+    <jdeb destfile="${release}/${release-name}-${release-version}.deb" control="${debian}/control" changesIn="${debian}/changes.txt" changesOut="${debian}/${release-name}.changes" changesSave="${debian}/changes.txt">
       <data src="${debian}/src/deb-release.tgz"/>
-    </deb>        
+    </jdeb>        
     
   </target>
 
