@@ -3,8 +3,6 @@
 # See LICENCE.TXT for details.
 ###
 
-#### EDIT THE BELOW LINE ####
-
 export BON_HOME=/usr/share/bonc
 
 if [ -d /usr/lib/jvm/java-6-sun ]; then
