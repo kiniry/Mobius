@@ -30,8 +30,8 @@ public final class TranslationUtil {
   }
 
   /**
-   * Returns 
-   * @param expression
+   * Translates an expression to a BmlLib AbstractFormula.
+   * @param expression expression to translate.
    * @param symb symbol table
    * @param context application context
    * @return formula for given expression

@@ -33,8 +33,10 @@ public class TreeNodeFinder {
    *
    */
   private class ParentFinder extends ExtendedJmlTreeScanner<Tree, Tree> {
+    /** Informs if the ParentFinder is in Jml comment. */
     private boolean isInJmlComment = false;
 
+    /** Jml visitor to check if node is a Jml node. */
     private IsJml isJmlVisitor = new IsJml();
 
     /**

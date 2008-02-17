@@ -76,8 +76,8 @@ public class AssertRule extends TranslationRule<String, Symbols> {
             .getFormula(node.expression, symb, myContext);
 
         final StatementTree targetStmt = findFirstNotEmptySibling(finder, node);
-        System.out.println("Assertion: " + form
-                           + " should be added to statement: " + targetStmt);
+        System.out.println("Assertion: " + form +
+                           " should be added to statement: " + targetStmt);
         final InstructionHandle targetIH = translateStatement(targetStmt,
                                                               bcMethod);
         final int count = bcMethod.getAmap().getAllAt(targetIH).size();
@@ -104,8 +104,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
    * @param stmt statement, for which the sibling should be found
    * @return found sibling
    */
-  private static StatementTree findFirstNotEmptySibling(
-                                                        final TreeNodeFinder finder,
+  private static StatementTree findFirstNotEmptySibling(final TreeNodeFinder finder,
                                                         final StatementTree stmt) {
     StatementTree tmp = stmt;
     do {

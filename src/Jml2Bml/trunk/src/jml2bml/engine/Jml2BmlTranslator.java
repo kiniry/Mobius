@@ -9,7 +9,6 @@ import jml2bml.rules.TranslationRule;
 import jml2bml.symbols.Symbols;
 
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.comp.JmlEnter;
 import com.sun.tools.javac.util.Context;
 
 /**

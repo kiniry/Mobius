@@ -103,6 +103,8 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 
 /**
+ * This is a class that helps to ifentify if objects are Jml objects.
+ *
  * @author kjk (kjk@mimuw.edu.pl)
  */
 public class IsJml implements TreeVisitor<Boolean, Void>,

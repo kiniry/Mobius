@@ -1,8 +1,10 @@
 /*
- * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
- * 2008-01-10 University of Warsaw" @license "All rights reserved. This program
- * and the accompanying materials are made available under the terms of the LGPL
- * licence see LICENCE.txt file"
+ * @title       "Jml2Bml"
+ * @description "JML to BML Compiler"
+ * @copyright   "(c) 2008-01-10 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -15,6 +17,7 @@ import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
+import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlSpecificationCase;
@@ -26,6 +29,7 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
+import annot.bcexpression.javatype.JavaReferenceType;
 import annot.bcexpression.modifies.ModifyList;
 import annot.io.Code;
 
@@ -55,11 +59,21 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
      * @param symb symbol table
      * @return never reached.
      */
+    @Override
     protected String preVisit(final Tree node, final Symbols symb) {
-      //TODO: change to screaming rule or sth??
       throw new NotTranslatedException("Not implemented: " + node);
     }
 
+    /**
+     * Translation of JmlMethodClauseExpr node. This may be a requires node
+     * {@code node.toek = JmlToke.REQUIRES}, or a ensures node
+     * {@code node.toek = JmlToke.ENSURES}
+     *
+     * @param node node to translate.
+     * @param symb current symbol table
+     * @return empty string
+     */
+    @Override
     public String visitJmlMethodClauseExpr(final JmlMethodClauseExpr node,
                                            final Symbols symb) {
       if (node.token == JmlToken.REQUIRES) {
@@ -73,7 +87,6 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
       } else if (node.token == JmlToken.ENSURES) {
         final AbstractFormula form = TranslationUtil
             .getFormula(node.expression, symb, myContext);
-        
         if (postcondition == null) {
           postcondition = form;
         } else {
@@ -84,27 +97,53 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
       return "";
     }
 
-    //    public String visitJmlMethodClauseSignals(final JmlMethodClauseSignals node,
-    //                                              final Symbols symb) {
-    //      final AbstractFormula form = BmlLibUtils.getFormula(node.expression,
-    //                                                          symb, myContext);
-    //      final BCExpression bcExpr = node.vardef.vartype.accept(RulesFactory
-    //                                                    .getExpressionRule(myContext), symb);
-    //      JCVariableDecl decl = node.vardef;
-    //      //FIXME: add finding java type
-    //      JavaReferenceType jType = null;
-    //      Exsure exc = new Exsure(jType, null);
-    //      if (excondition == null)
-    //        excondition = new Vector<Exsure>();
-    //      excondition.add(exc);
-    //      return "";
-    //    }
+    /**
+     * Adds a new Exsure (signals) to current excondition.
+     * @param exsure exsure to add to excondition.
+     */
+    private void appendExcondition(final Exsure exsure) {
+      if (excondition == null)
+        excondition = new Vector<Exsure>();
+      excondition.add(exsure);
+    }
+
+    /**
+     * This method processes signals clause in a specification case.
+     *
+     * @param node signals node to process.
+     * @param symb current symbols table.
+     * @return empty string
+     */
+    @Override
+    public String visitJmlMethodClauseSignals(final JmlMethodClauseSignals node,
+                                              final Symbols symb) {
+      if (node.vardef.name == null) {
+        final AbstractFormula form = TranslationUtil
+            .getFormula(node.expression, symb, myContext);
+        final JavaReferenceType type = new JavaReferenceType(node.vardef.vartype
+                                                                 .toString());
+        appendExcondition(new Exsure(type, form));
+      } else
+        throw new NotTranslatedException("Not implemented signals type: " +
+                                         node.vardef);
+      return "";
+    }
   }
 
-  /**
-   * application context.
-   */
+  /** Application context. */
   private final Context myContext;
+
+  /** Precondition of the current specification case. */
+  private AbstractFormula precondition;
+
+  /** Modify list of the current specification case. */
+  private ModifyList modifies;
+
+  /** Postcondition of the current specification case. */
+  private AbstractFormula postcondition;
+
+  /** Raises list of the current specification case. */
+  private Vector<Exsure> excondition;
 
   /**
    * Creates a new instance of the rule.
@@ -115,14 +154,14 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     this.myContext = context;
   }
 
-  private AbstractFormula precondition;
-
-  private ModifyList modifies;
-
-  private AbstractFormula postcondition;
-
-  private Vector<Exsure> excondition;
-
+  /**
+   * This is a main translation method of the specification case.
+   *
+   * @param node The specification case node to translate.
+   * @param symb Current symbol table.
+   * @return empty string
+   */
+  @Override
   public String visitJmlSpecificationCase(final JmlSpecificationCase node,
                                           final Symbols symb) {
     //FIXME: should be cleaned?? one instance of rule per execution??
@@ -136,12 +175,12 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
     final Tree nextClassMember = finder.getNextSibling(specs);
     if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
-      throw new NotTranslatedException("Cannot find method for the requires: "
-                                       + node);
+      throw new NotTranslatedException("Cannot find method for the requires: " +
+                                       node);
     final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
     //TODO: here make Specification case for Bmllib
-    final BCMethod bcMethod = BytecodeUtil
-        .findMethod(method.getName(), bcClazz);
+    final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(),
+                                                      bcClazz);
     MethodSpecification spec = bcMethod.getMspec();
     if (spec == null) {
       spec = new MethodSpecification(bcMethod);
@@ -158,36 +197,4 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     spec.addCase(specCase);
     return "";
   }
-
-  //  public String visitJmlMethodClauseExpr(JmlMethodClauseExpr node, Symbols symb) {
-  //    if (node.token == JmlToken.REQUIRES) {
-  //      if (node.expression == null)
-  //        throw new NotTranslatedException("Expression is null");
-  //      final BCClass bcClazz = symb.findClass();
-  //      final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
-  //      
-  //      //Finding method in tree
-  //      Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
-  //      Tree nextClassMember = finder.getNextSibling(specs);
-  //      if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
-  //        throw new NotTranslatedException("Cannot find method for the requires: "+ node);
-  //      JmlMethodDecl method = (JmlMethodDecl)nextClassMember;
-  //      
-  //      final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), bcClazz);
-  //
-  //      final BCExpression expression = node.expression.accept(RulesFactory.getExpressionRule(myContext),
-  //                                                             symb);
-  //      if (expression.getType1() != JavaBasicType.JavaBool)
-  //        throw new NotTranslatedException("assert expression must be boolean");
-  //      final AbstractFormula form = (AbstractFormula) expression;
-  //
-  //      MethodSpecification spec = bcMethod.getMspec();
-  //      if (spec != null)
-  //        throw new NotTranslatedException("Method specification already present - joining not implemented");
-  //
-  //      spec = new MethodSpecification(bcMethod, form, new SpecificationCase[0]);
-  //      bcMethod.setMspec(spec);
-  //    }
-  //    return null;
-  //  }
 }
