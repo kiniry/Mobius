@@ -1,0 +1,94 @@
+/**
+ * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
+package ie.ucd.bon.typechecker;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
+
+public class FeatureSpecification {
+
+  private final Feature feature;
+  private boolean deferred;
+  private boolean effective;
+  private boolean redefined;
+  private Type type;
+  private Renaming renaming;
+  private final Collection<FeatureArgument> args;
+  private final Map<String,FeatureArgument> argsMap;
+  private final Collection<FeatureSpecificationInstance> instances;
+  
+  public FeatureSpecification(Feature feature) {
+    this.feature = feature;
+    
+    deferred = false;
+    effective = false;
+    redefined = false;
+    type = null;
+    renaming = null;
+    
+    args = new Vector<FeatureArgument>();
+    argsMap = new HashMap<String,FeatureArgument>();
+    instances = new Vector<FeatureSpecificationInstance>();
+  }
+
+  public void setDeferred() {
+    this.deferred = true;
+  }  
+  
+  public boolean isDeferred() {
+    return deferred;
+  }
+
+  public void setEffective() {
+    this.effective = true;
+  }
+
+  public void setRedefined() {
+    this.redefined = true;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
+  }  
+    
+  public String getClassName() {
+    return feature.getClassName();
+  }
+
+  public Type getType() {
+    return type;
+  }
+
+  public void setRenaming(String className, String featureName) {
+    renaming = new Renaming(className, featureName);
+  }
+  
+  public void addArgument(String name, Type type) {
+    FeatureArgument arg = new FeatureArgument(name, type);
+    if (name != null) {
+      argsMap.put(name, arg);
+    }
+  }
+  
+  public void addInstance(FeatureSpecificationInstance instance) {
+    instances.add(instance);
+  }
+  
+  public int getNumberOfInstances() {
+    return instances.size();
+  }
+  
+  public class Renaming {
+    private final String className;
+    private final String featureName;
+    public Renaming(String className, String featureName) {
+      this.className = className;
+      this.featureName = featureName;
+    }
+  }
+}

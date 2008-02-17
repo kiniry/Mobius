@@ -1,0 +1,20 @@
+system_chart LIBRARY
+  cluster LIB1 description ""
+end
+
+cluster_chart LIB1
+  class BOOK description ""
+end
+
+class_chart BOOK
+end
+
+class_chart BOOK
+end
+
+static_diagram SD
+component
+  class BOOK
+  cluster LIB1
+end
+

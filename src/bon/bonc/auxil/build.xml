@@ -1,0 +1,47 @@
+<project name="MyProject" default="ant-graph" basedir=".">
+  <description>
+    EBONv2 Build File
+  </description>
+
+	<property name="lib"  location="lib"/>
+	
+	<!-- Paths -->
+  <path id="libs">
+    <fileset dir="${lib}" includes="*.jar"/>
+  	<pathelement location="."/>
+  </path>
+	
+  <target name="ant-graph" depends="clean-graph,compile">
+    <echo message="Generating .dot of ant dependencies."/>
+    <java fork="yes" dir="." classname="AntGraph">
+    	<classpath refid="libs"/>
+      <arg value="../build.xml"/>
+      <arg value="antgraph.dot"/>
+    </java>
+    <echo message="Converting .dot to .ps"/>
+    <exec executable="dot">
+      <arg line="-Tps2 -Grankdir=TB antgraph.dot -o antgraph.ps"/>
+    </exec>
+    <echo message="Converting .ps to .pdf"/>
+    <exec executable="ps2pdf">
+      <arg line="antgraph.ps antgraph.pdf"/>
+    </exec>
+  </target>
+
+	<target name="compile">
+		<javac srcdir="." destdir=".">
+	  	<classpath refid="libs"/>
+	  </javac>
+	</target>
+	
+  <target name="clean-graph">
+    <delete file="antgraph.ps"/>
+    <delete file="antgraph.pdf"/>
+    <delete file="antgraph.dot"/>
+  </target>
+	
+	<target name="clean" depends="clean-graph">
+		<delete file="AntGraph.class"/>
+	</target>
+
+</project>

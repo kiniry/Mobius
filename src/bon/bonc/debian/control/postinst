@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ -a /usr/share/bonc/bonc-debian ]; then 
+  ln -f -s /usr/share/bonc/bonc-debian /usr/bin/bonc
+fi
+

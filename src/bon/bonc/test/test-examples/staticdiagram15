@@ -1,0 +1,65 @@
+static_diagram Formal_Citizen
+component
+
+  deferred class CITIZEN
+
+  feature
+    name, sex, age: VALUE
+    spouse: CITIZEN -- Husband or wife
+    children, parents: SET [CITIZEN] -- Close relatives, if any
+    single: BOOLEAN -- Is this citizen single?
+      ensure
+        Result <-> spouse = Void
+      end
+    deferred marry -- Celebrate the wedding.
+      -> sweetheart: CITIZEN
+      require
+        sweetheart /= Void and can_marry (sweetheart)
+      ensure
+        spouse = sweetheart
+      end
+    can_marry: BOOLEAN -- No legal hindrance?
+      -> other: CITIZEN
+      require
+        other /= Void
+      ensure
+        Result -> (single and other.single
+          and other not member_of children
+          and other not member_of parents
+          and sex /= other.sex)
+      end
+    divorce -- Admit mistake.
+      require
+        not single
+      ensure
+        single and (old spouse).single
+      end
+
+  invariant
+    single or spouse.spouse = Current;
+    parents.count = 2;
+    for_all c member_of children it_holds
+      (exists p member_of c.parents it_holds p = Current)
+
+  end -- class CITIZEN
+
+  effective class NOBLEPERSON
+
+  inherit
+    CITIZEN
+
+  feature
+    assets: NUMERIC -- The bare necessities of life
+    butler: CITIZEN -- Irons the morning paper
+    redefined spouse: NOBLEPERSON -- Lord or Lady
+    effective marry -- Celebrate with style.
+      -> fiancee: NOBLEPERSON
+      ensure
+        butler /= Void;
+        assets <= old assets + fiancee.assets - 50000
+      end
+
+  end -- class NOBLEPERSON
+
+end
+

@@ -1,0 +1,47 @@
+dynamic_diagram Move_group
+component
+  scenario "Scenario 2: Move example group"
+  action
+    "1" "Next outer group member requested"
+    "2" "Square asked to move"
+    "3" "Next square point requested"
+    "4" "Point asked to move"
+    "5" "Outer circle asked to move"
+    "6" "Next outer circle point requested"
+    "7" "Point asked to move"
+    "8" "Inner group asked to move"
+    "9" "Next inner group member requested"
+    "10" "Inner circle asked to move"
+    "11" "Next inner circle point requested"
+    "12" "Point asked to move"
+    "13" "Text asked to move"
+  end
+  object SQUARE
+  object CIRCLE.1
+  object CIRCLE.2
+  object TEXT
+  object GROUP.outer
+  object GROUP.inner
+  object SET.1
+  object SET.2
+  object SET.3
+  object SET.4
+  object SET.5
+  object_stack POINT.1
+  object_stack POINT.2
+  object_stack POINT.3
+  GROUP.outer calls SET.1 "1"
+  GROUP.outer calls SQUARE "2"
+  SQUARE calls SET.2 "3"
+  SQUARE calls POINT.1 "4"
+  GROUP.outer calls CIRCLE.1 "5"
+  CIRCLE.1 calls SET.3 "6"
+  CIRCLE.1 calls POINT.2 "7"
+  GROUP.outer calls GROUP.inner "8"
+  GROUP.inner calls SET.4 "9"
+  GROUP.inner calls CIRCLE.2 "10 "
+  CIRCLE.2 calls SET.5 "11 "
+  CIRCLE.2 calls POINT.3 "12 "
+  GROUP.inner calls TEXT "13"
+end
+

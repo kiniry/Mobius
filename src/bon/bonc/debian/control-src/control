@@ -1,0 +1,8 @@
+Package: [[name]]
+Version: [[version]]
+Section: misc
+Priority: optional
+Architecture: all
+Description: A parser and typechecker for Business Object Notation (BON).
+Maintainer: fintan.fairmichael@ucd.ie
+Depends: sun-java5-bin | sun-java6-bin

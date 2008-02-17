@@ -1,0 +1,94 @@
+static_diagram Conference_architecture
+        -- This diagram shows the overall architecture of the Conference Management system.
+component
+  cluster ORGANIZATION
+  component
+    cluster COMMITTEES
+    component
+      class COMMITTEE
+      class ORGANIZING_COMMITTEE persistent
+      class TECHNICAL_COMMITTEE persistent
+      class PROGRAM_COMMITTEE persistent
+      ORGANIZING_COMMITTEE inherit COMMITTEE
+      TECHNICAL_COMMITTEE inherit COMMITTEE
+      PROGRAM_COMMITTEE inherit TECHNICAL_COMMITTEE
+      PROGRAM_COMMITTEE client {tutorial_committee} :{ TECHNICAL_COMMITTEE
+    end
+    root class CONFERENCE persistent
+    class PROGRAM persistent
+    class TIMETABLE persistent
+    CONFERENCE client {scientific_board, steering_board} :{ COMMITTEES
+    CONFERENCE client {program} :{ PROGRAM
+    CONFERENCE client {reminder} TIMETABLE
+  end
+
+  cluster REGISTRATION
+  component
+    class REGISTRATION persistent
+    class PERSON persistent
+    REGISTRATION client {attendee} PERSON
+    PERSON client {registration} REGISTRATION
+  end
+
+  cluster TECHNICAL_EVENTS
+  component
+    class SESSION
+    class PAPER_SESSION persistent
+    class TUTORIAL_SESSION persistent
+    deferred class PRESENTATION
+    class PAPER persistent
+    class TUTORIAL persistent
+    class REVIEW persistent
+    class STATUS persistent
+    PAPER_SESSION inherit SESSION
+    TUTORIAL_SESSION inherit SESSION
+    PAPER inherit PRESENTATION
+    TUTORIAL inherit PRESENTATION
+    PAPER_SESSION client {presentations: SET [...]} PAPER
+    TUTORIAL_SESSION client {lecture} TUTORIAL
+    PAPER client {reviews: SET [...]} REVIEW
+    PRESENTATION client {status} STATUS
+  end
+
+  cluster OUTPUT
+  component
+    cluster TEMPLATES
+    component
+      class LETTER_FORM
+      class BADGE_FORM
+      class STICKY_FORM
+      class INVOICE_FORM
+      class POSTER_FORM
+      class LIST_FORM
+      class EVALUATION_FORM
+    end
+    cluster PRINT_OUTS
+    component
+      class MAILING
+      class ADDRESS_LABEL
+      class CONFIRMATION_LETTER
+      class INVOICE
+      class ACCEPTANCE_LETTER
+      class REJECTION_LETTER
+      class AUTHOR_GUIDELINES
+      class POSTER_SIGN
+      class BADGE
+      class EVALUATION_SHEET
+      class ATTENDEE_LIST
+      class STATISTICS
+    end
+    deferred class PRINT_OUT
+    deferred class DOCUMENT_FORM
+    TEMPLATES inherit DOCUMENT_FORM
+    PRINT_OUTS inherit PRINT_OUT
+    PRINT_OUT client {layout} DOCUMENT_FORM
+  end
+  ORGANIZATION client OUTPUT
+  ORGANIZATION client TECHNICAL_EVENTS
+  ORGANIZATION client REGISTRATION
+  REGISTRATION client OUTPUT
+  REGISTRATION client TECHNICAL_EVENTS
+  TECHNICAL_EVENTS client REGISTRATION
+  TECHNICAL_EVENTS client OUTPUT
+end
+

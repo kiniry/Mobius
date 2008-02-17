@@ -1,0 +1,9 @@
+#!/bin/bash
+
+old=`pwd`
+
+cd /home/fintan/workspace/newebon
+
+ant dist
+
+cd $old

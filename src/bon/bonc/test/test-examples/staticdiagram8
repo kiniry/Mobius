@@ -1,0 +1,13 @@
+static_diagram
+component
+  class VISITING_ALIEN
+  class LANDING_DOCUMENT
+  class APARTMENT
+  class ROOM
+  class HOUSE
+  class ARCHITECT
+  VISITING_ALIEN client {2} LANDING_DOCUMENT
+  APARTMENT client {3} :{ ROOM
+  HOUSE client {1} ARCHITECT
+  ARCHITECT client {3} HOUSE
+end

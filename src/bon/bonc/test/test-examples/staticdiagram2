@@ -1,0 +1,26 @@
+static_diagram Nested_data_structures
+component
+  cluster DATA_STRUCTURES
+  component
+    cluster SORTING reused
+    component
+      class LINEAR_SORT
+      class QUICKSORT
+      class RADIX_SORT
+      class INSERTION_SORT
+      class SHELLSORT
+      class HEAPSORT
+      class TOPOLOGICAL_SORT
+      class SORT_MERGE
+    end
+    cluster GRAPHS
+    component
+      deferred class GRAPH
+      class WEIGHTED_GRAPH
+      class DIRECTED_GRAPH
+      class UNDIRECTED_GRAPH
+      class BIPARTITE_GRAPH
+      class DENSE_GRAPH
+    end
+  end
+end
