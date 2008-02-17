@@ -16,7 +16,8 @@ import org.apache.bcel.verifier.structurals.InstructionContext;
  * It contains 3 fields: start of the loop, end of the loop
  * and instruction to annotate (instruction to which the loop invariant
  * should be added).
- * @author Jedrek
+ * @author Jedrek (fulara@mimuw.edu.pl)
+ * @version 0-0.1
  */
 public class LoopDescription {
   /** Start of the loop. */

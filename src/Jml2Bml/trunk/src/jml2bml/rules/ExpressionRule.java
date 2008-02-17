@@ -1,8 +1,10 @@
 /*
- * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
- * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
- * and the accompanying materials are made available under the terms of the LGPL
- * licence see LICENCE.txt file"
+ * @title       "Jml2Bml"
+ * @description "JML to BML Compiler"
+ * @copyright   "(c) 2008-01-06 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -23,8 +25,6 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 import org.jmlspecs.openjml.JmlTree.JmlSingleton;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;

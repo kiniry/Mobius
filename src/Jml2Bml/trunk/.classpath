@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJDK"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BCEL5.1"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BmlLib"/>
-	<classpathentry kind="lib" path="F:/mimuw/eclipse/plugins/junit-4.4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

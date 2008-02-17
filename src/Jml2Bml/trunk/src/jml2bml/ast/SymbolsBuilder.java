@@ -32,7 +32,7 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
   /**
    * application context.
    */
-  private final Context context;
+  private final Context myContext;
 
   /**
    * Creates new instance of the symbol builder.
@@ -40,7 +40,7 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
    */
   public SymbolsBuilder(final Context context) {
     ancestorFinder = context.get(TreeNodeFinder.class);
-    this.context = context;
+    this.myContext = context;
   }
 
   /**
@@ -153,7 +153,7 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
   @Override
   public Symbols visitJmlClassDecl(final JmlClassDecl node, final Symbols p) {
     final Symbols newSymbols = new Symbols(p);
-    newSymbols.setClass(BytecodeUtil.createClass(node.name, context));
+    newSymbols.setClass(BytecodeUtil.createClass(node.name, myContext));
     return newSymbols;
   }
 

@@ -48,7 +48,8 @@ public final class BytecodeUtil {
    * @return BCMethod representing method <code>name</code>,
    * or null, if the method was not found.
    */
-  public static BCMethod findMethod(final CharSequence name, final BCClass clazz) {
+  public static BCMethod findMethod(final CharSequence name,
+                                    final BCClass clazz) {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
       if (method.getBcelMethod().getName().contentEquals(name))
@@ -71,8 +72,8 @@ public final class BytecodeUtil {
                                             final BCClass clazz) {
     final int nameIndex = clazz.getFieldIndex(name);
     if (nameIndex == -1) {
-      throw new Jml2BmlException("Field " + name
-                                 + " does not exist in given class.");
+      throw new Jml2BmlException("Field " + name +
+                                 " does not exist in given class.");
     }
     return new FieldRef(isOld, clazz.getCp(), nameIndex);
 
@@ -114,13 +115,11 @@ public final class BytecodeUtil {
    * @param method - method, for which the map should be generated
    * @return map: <code>Bytecode Instruction -> line in the source code</code>
    */
-  public static Map<InstructionHandle, Integer> getLineNumberMap(
-                                                                 final BCMethod method) {
+  public static Map<InstructionHandle, Integer> getLineNumberMap(final BCMethod method) {
     final Map<InstructionHandle, Integer> result = new HashMap<InstructionHandle, Integer>();
     for (LineNumberGen lng : method.getBcelMethod().getLineNumbers())
       if (result.containsKey(lng.getInstruction()))
-        throw new NotTranslatedException(
-                                         "One bytecode instruction has more than one line number");
+        throw new NotTranslatedException("One bytecode instruction has more than one line number");
       else
         result.put(lng.getInstruction(), lng.getSourceLine());
     return result;

@@ -43,31 +43,14 @@ import com.sun.tools.javac.util.Context;
  * @version 0.0-1
  */
 public class LoopInvariantRule extends TranslationRule<String, Symbols> {
-  /**
-   * Application context.
-   */
+  /** Application context. */
   private final Context myContext;
 
-  /**
-   * Collection of loops.
-   */
+  /** Loops found in bytecode of the current method. */
   private Collection<SourceLoopDescription> loops;
 
-  /**
-   * Helps to find ancestors for given nodes.
-   */
+  /** Helps to find ancestors for given nodes. */
   private TreeNodeFinder finder;
-
-  //  private class LoopProcessor extends TranslationRule<String, Symbols> {
-  //    protected String preVisit(Tree node, Symbols symb) {
-  //      throw new NotTranslatedException("Not implemented: " + node);
-  //    }
-  //
-  //    public String visitJmlForLoop(JmlForLoop node, Symbols symb) {
-  //      long line = BytecodeUtil.getLineNumber(node, myContext.get(LineMap.class));
-  //      return "";
-  //    }
-  //  }
 
   /**
    * Creates new instance of the LoopInvariantRule.
@@ -78,19 +61,41 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     this.myContext = context;
   }
 
+  /**
+   * A class representing destription of loop joining source code with bytecode.
+   * Containst loop start position, loop end position and a bytecode loop
+   * description.
+   *
+   * @author kjk (kjk@mimuw.edu.pl)
+   */
   private class SourceLoopDescription {
+    /** The bytecode loop description. */
     private LoopDescription loopDesc;
 
+    /** A begin line of the loop in source code. */
     private int sourceBegin;
 
+    /** An end line of the loop in source code. */
     private int sourceEnd;
 
-    public SourceLoopDescription(LoopDescription loopDesc, int line) {
+    /**
+     * Constructor of the class.
+     * @param loopDesc bytecode loop description.
+     * @param line line to use in the beginning as start and end position of
+     * loop in source code.
+     */
+    public SourceLoopDescription(final LoopDescription loopDesc,
+                                 final int line) {
       this.loopDesc = loopDesc;
-      this.sourceBegin = this.sourceEnd = line;
+      this.sourceBegin = line;
+      this.sourceEnd = line;
     }
 
-    public void updateEnds(int line) {
+    /**
+     * Updates ends of the loop given new line number.
+     * @param line a line that contains the loop
+     */
+    public void updateEnds(final int line) {
       if (line < sourceBegin)
         sourceBegin = line;
       if (line > sourceEnd)
@@ -98,7 +103,17 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     }
   }
 
-  public String visitJmlMethodDecl(JmlMethodDecl node, Symbols symb) {
+  /**
+   * Preparing of the translation. All loops of the method are found in
+   * bytecode and translated to source loop descriptions according to method
+   * line table.
+   * @param node method node
+   * @param symb current symbol table
+   * @return null
+   */
+  @Override
+  public String visitJmlMethodDecl(final JmlMethodDecl node,
+                                   final Symbols symb) {
     final BCClass clazz = symb.findClass();
     final BCMethod bcMethod = BytecodeUtil.findMethod(node.getName(), clazz);
     finder = myContext.get(TreeNodeFinder.class);
@@ -129,33 +144,17 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     return super.preVisit(node, symb);
   }
 
-  public String visitJmlStatementLoop(final JmlStatementLoop node,
-                                      final Symbols symb) {
-    final BCClass clazz = symb.findClass();
-
-    //Find an enclosing method
-    final MethodTree method = (MethodTree) finder.getAncestor(node,
-                                                              Kind.METHOD);
-
-    final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
-
-    //loop pos
-    Map<JCTree, Integer> endPosTable = myContext.get(JCCompilationUnit.class).endPositions;
-
-    Tree loopNode = (JCTree) finder.getParent(node);
-    if (loopNode instanceof LabeledStatementTree)
-      //FIXME: workaround for parser bug
-      loopNode = finder.getNextSibling(loopNode);
-
-    final LineMap lineMap = myContext.get(LineMap.class);
-
-    final long beginLine =
-      lineMap.getLineNumber(((JCTree) loopNode).getStartPosition());
-    final long endLine =
-      lineMap.getLineNumber(((JCTree) loopNode).getEndPosition(endPosTable));
-
+  /**
+   * Finds a best loop in bytecode ({@code loops}) to loop in source between
+   * lines ({@code beginLine}, {@code endLine}).
+   *
+   * @param beginLine beginning of the source loop
+   * @param endLine ending of the source loop
+   * @return matched loop in bytecode
+   */
+  private SourceLoopDescription findMatchedLoop(final long beginLine,
+                                                final long endLine) {
     SourceLoopDescription matchedLoop = null;
-
     for (SourceLoopDescription loopDesc : loops)
       if (loopDesc.sourceBegin >= beginLine && loopDesc.sourceEnd <= endLine) {
         if (matchedLoop == null)
@@ -169,10 +168,39 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
         else
           throw new NotTranslatedException("Wrong loops in bytecode??");
       }
-
     if (matchedLoop == null)
       throw new NotTranslatedException("No matching loop found");
+    return matchedLoop;
+  }
 
+  /**
+   * Translation of loop statement.
+   * @param node statement loop node to translate.
+   * @param symb current symbol table.
+   * @return empty string
+   */
+  @Override
+  public String visitJmlStatementLoop(final JmlStatementLoop node,
+                                      final Symbols symb) {
+    final BCClass clazz = symb.findClass();
+    final MethodTree method = (MethodTree) finder.getAncestor(node,
+                                                              Kind.METHOD);
+    final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
+    final Map<JCTree, Integer> endPosTable =
+      myContext.get(JCCompilationUnit.class).endPositions;
+    Tree loopNode = (JCTree) finder.getParent(node);
+    if (loopNode instanceof LabeledStatementTree)
+      //FIXME: workaround for parser bug
+      loopNode = finder.getNextSibling(loopNode);
+    final LineMap lineMap = myContext.get(LineMap.class);
+
+    final long beginLine =
+      lineMap.getLineNumber(((JCTree) loopNode).getStartPosition());
+    final long endLine =
+      lineMap.getLineNumber(((JCTree) loopNode).getEndPosition(endPosTable));
+
+    final SourceLoopDescription matchedLoop = findMatchedLoop(beginLine,
+                                                              endLine);
     final AbstractFormula invariantFormula =
       TranslationUtil.getFormula(node.expression, symb, myContext);
 
@@ -192,80 +220,4 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
 
     return "";
   }
-
-  //  private class LineNumberFinder extends ExtendedJmlTreeScanner<Void, Void> {
-  //    public int lowest = Integer.MAX_VALUE;
-  //    public int highest = Integer.MIN_VALUE;
-  //    private Map<JCTree, Integer> endPosTable;
-  //    
-  //    public LineNumberFinder() {
-  //      endPosTable = myContext.get(JCCompilationUnit.class).endPositions;
-  //    }
-  //    
-  //    private void updateLowest(int value) {
-  //      if (value<lowest)
-  //        lowest = value;
-  //    }
-  //    
-  //    private void updateHighest(int value) {
-  //      if (value>highest)
-  //        highest = value;
-  //    }
-  //    
-  //    protected Void preVisit(final Tree node, final Void p) {
-  //      JmlParser parser = myContext.get(JmlParser.class);
-  //      if (! finder.isInJmlComment(node)) {
-  //        //TODO: here also only translated to bytecode nodes should be used
-  //        int pos = ((JCTree)node).getStartPosition();
-  //        int endPos = ((JCTree)node).getEndPosition(endPosTable);
-  //        if (pos>0) {
-  //          if (node instanceof BlockTree) {
-  //          } else if (node instanceof JmlDoWhileLoop) {
-  //            JmlDoWhileLoop doWhileNode = (JmlDoWhileLoop) node;
-  //            //FIXME: this is wrong!!
-  //            updateLowest(endPos);
-  //            updateHighest(pos);
-  //          } else {
-  //            updateLowest(pos);
-  //            updateHighest(pos);
-  //          }
-  //        }
-  //      }
-  //      return super.preVisit(node, p);
-  //    }
-  //  }
-
-  //  private int findLowestLineNumber(final Tree stmt) {
-  ////    int pos = ((JCTree)node).getStartPosition();
-  //    final LineNumberFinder visitor = new LineNumberFinder();
-  //    stmt.accept(visitor, null);
-  //    return visitor.lowest;
-  //  }
-  //  
-  //  public InstructionHandle getInstructionAtPos(int pos, final BCMethod method) {
-  //    final LineMap lineMap = myContext.get(LineMap.class);
-  //    final long sourceLine = lineMap.getLineNumber(pos);
-  //    for (LineNumberGen lng : method.getBcelMethod().getLineNumbers()) {
-  //      if (sourceLine == lng.getSourceLine())
-  //        return lng.getInstruction();
-  //    }
-  //    return null;
-  //  }
-
-  //  public InstructionHandle translateStatement(final Tree stmt,
-  //                                              final BCMethod method) {
-  //    if (stmt == null) {
-  //      return method.getInstructions().getEnd();
-  //    } else {
-  //      final LineMap lineMap = myContext.get(LineMap.class);
-  //      int lowestLineNum = findLowestLineNumber(stmt);
-  //      final long sourceLine = lineMap.getLineNumber(520);
-  //      for (LineNumberGen lng : method.getBcelMethod().getLineNumbers()) {
-  //        //FIXME: can one source line have more than one line number in output??
-  //        if (sourceLine == lng.getSourceLine())
-  //          return lng.getInstruction();
-  //      }
-  //    }
-  //    throw new NotTranslatedException("Error with finding target instruction in bytecode");
-  //  }
 }
