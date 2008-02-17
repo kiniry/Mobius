@@ -24,6 +24,8 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 import org.jmlspecs.openjml.JmlTree.JmlSingleton;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ArithmeticExpression;
@@ -71,10 +73,12 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
    * Indicates, if the currently translated expression is \old.
    */
   private boolean isOld = false;
+
   /**
    * application context.
    */
   private Context myContext;
+
   /**
    * Creates new instance of the ExpressionRule.
    * @param context application context.
@@ -84,7 +88,18 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   }
 
   // ------- visitor methods
+  @Override
+  protected BCExpression preVisit(Tree node, Symbols p) {
+    throw new NotTranslatedException("Node " + node + " not translated.");
+    
+  }
   // TODO probably more nodes should be visited here
+  /**
+   * Creates an BCExpression for Binary Tree node.
+   * @param node node to translate
+   * @param p symbol table
+   * @return translated node
+   */
   @Override
   public BCExpression visitBinary(final BinaryTree node, final Symbols p) {
     final BCExpression lhs = scan(node.getLeftOperand(), p);
@@ -98,6 +113,12 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     }
   }
 
+  /**
+   * Creates an BCExpression for IdentifierTree node.
+   * @param node node to translate
+   * @param p symbol table
+   * @return translated node
+   */
   @Override
   public BCExpression visitIdentifier(final IdentifierTree node, final Symbols p) {
     final String name = node.getName().toString();
@@ -197,11 +218,17 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     return formula;
   }
 
+  /**
+   * Creates an BCExpression for JmlBinary node.
+   * @param node node to translate
+   * @param p symbol table
+   * @return translated node
+   */
   @Override
   public BCExpression visitJmlBinary(final JmlBinary node, final Symbols p) {
     final BCExpression lhs = scan(node.getLeftOperand(), p);
     final BCExpression rhs = scan(node.getRightOperand(), p);
-    int operator = BmlLibUtils.mapJCOperatorToBmlLib(node.op);
+    final int operator = BmlLibUtils.mapJCOperatorToBmlLib(node.op);
     if (BmlLibUtils.isBinaryOperatorPredicate2Ar(operator)) {
       return new Predicate2Ar(operator, lhs, rhs);
     }
@@ -209,6 +236,12 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     return new ArithmeticExpression(operator, lhs, rhs);
   }
 
+  /**
+   * Creates an BCExpression for Primitive Typ node.
+   * @param node node to translate
+   * @param p symbol table
+   * @return translated node
+   */
   @Override
   public BCExpression visitPrimitiveType(final PrimitiveTypeTree node,
                                          final Symbols p) {
@@ -221,6 +254,13 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
 
   }
 
+  /**
+   * Creates an BCExpression for Member Select node (<code>a.b</code>).
+   * Method calls are not supported.
+   * @param node node to translate
+   * @param p symbol table
+   * @return translated node
+   */
   @Override
   public BCExpression visitMemberSelect(final MemberSelectTree node,
                                         final Symbols p) {
@@ -270,40 +310,55 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     return new ArrayAccess(scan(node.getExpression(), p), scan(node.getIndex(),
                                                                p));
   }
-  
+
+  /**
+   * Creates an BCExpression for Method invocation node.
+   * It can recognize only \old (no normal methods supported).
+   * @param node node to translate
+   * @param p symbol table
+   * @return translated node
+   */
   @Override
-  public BCExpression visitMethodInvocation(MethodInvocationTree node, Symbols p) {
-    if (JCUtils.isOld(node.getMethodSelect())){
+  public BCExpression visitMethodInvocation(final MethodInvocationTree node,
+                                            final Symbols p) {
+    if (JCUtils.isOld(node.getMethodSelect())) {
       final boolean tmp = isOld;
       isOld = true;
-      final BCExpression expr = scan(node.getArguments(),p);
+      final BCExpression expr = scan(node.getArguments(), p);
       isOld = tmp;
       return expr;
     }
-    if (JCUtils.isOld(node.getMethodSelect())){
+    if (JCUtils.isOld(node.getMethodSelect())) {
       final boolean tmp = isOld;
       isOld = false;
-      final BCExpression expr = scan(node.getArguments(),p);
+      final BCExpression expr = scan(node.getArguments(), p);
       isOld = tmp;
       return expr;
     }
     throw new NotTranslatedException("Method invocation not supported!");
   }
-  
+
+  /**
+   * Creates an BCExpression for JmlSingleton node.
+   * Only \result is supported.
+   * @param node node to translate
+   * @param p symbol table
+   * @return translated node
+   */
   @Override
-  public BCExpression visitJmlSingleton(JmlSingleton node, Symbols p) {
-    if (JCUtils.isResult(node)){
+  public BCExpression visitJmlSingleton(final JmlSingleton node, final Symbols p) {
+    if (JCUtils.isResult(node)) {
       final BCClass bcClazz = p.findClass();
       final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
       final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
       final Tree nextClassMember = finder.getNextSibling(specs);
       if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
-        throw new NotTranslatedException("Cannot find method for the requires: "
-                                         + node);
+        throw new NotTranslatedException(
+                                         "Cannot find method for the \result: "
+                                             + node);
       final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
-      //TODO: here make Specification case for Bmllib
-      final BCMethod bcMethod = BytecodeUtil
-          .findMethod(method.getName(), bcClazz);
+      final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(),
+                                                        bcClazz);
       return new RESULT(bcMethod);
     }
     throw new NotTranslatedException("Singleton type not translated: " + node);
