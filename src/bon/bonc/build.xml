@@ -189,6 +189,15 @@
 		<copy file="${doc-src}/RELEASE_README.txt" todir="${release}/"/>
 	</target>
 	
+	<target name="actual-release" depends="release" description="Do a final release.">
+		<!-- Do a release, move changelogs to old changelogs, and clear latest-changes -->
+	  <delete file="${doc-src}/changelog/old-changelog"/>
+		<delete file="${doc-src}/changelog/old-changelog.Debian"/>
+		<move file="${doc-src}/changelog/changelog" tofile="${doc-src}/changelog/old-changelog"/>
+		<move file="${doc-src}/changelog/changelog.Debian" tofile="${doc-src}/changelog/old-changelog.Debian"/>
+		<delete file="${doc-src}/changelog/latest-changes"/>
+		<touch file="${doc-src}/changelog/latest-changes"/>
+	</target>
 	
 	<!-- Antlr targets -->
 		
@@ -388,6 +397,8 @@
 		<concat destfile="${doc-src}/changelog/changelog" append="true" fixlastline="true">
 		  <fileset file="${doc-src}/changelog/latest-changes"/>
 		</concat>	
+		<!-- Two blank lines -->
+		<echo file="${doc-src}/changelog/changelog" append="true" message="${line.separator}${line.separator}"/>
 		<!-- Append all previous entries -->
 		<concat destfile="${doc-src}/changelog/changelog" append="true" fixlastline="true">
 		  <fileset file="${doc-src}/changelog/old-changelog"/>
