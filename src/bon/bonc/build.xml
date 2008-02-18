@@ -406,7 +406,19 @@
 		
 	</target>
 	
-  <target name="debian-release" depends="dist,changelogs">
+	<target name="manpage">
+		<delete file="${doc-src}/bonc.1"/>
+		<copy tofile="${doc-src}/bonc.1" file="${doc-src}/bonc.1.start"/>
+	  <java fork="yes" classname="ie.ucd.bon.Main" output="${doc-src}/bonc.1" append="true">
+	  	<classpath refid="dist.path"/>
+	  	<arg value="--print-man"/>
+		</java>
+		<concat destfile="${doc-src}/bonc.1" append="true">
+			<fileset file="${doc-src}/bonc.1.end"/>
+		</concat>
+	</target>
+	
+  <target name="debian-release" depends="dist,changelogs,manpage">
     <taskdef resource="org/vafer/jdeb/ant/antlib.xml"> 
       <classpath>
 	  <pathelement location="${lib}/jdeb-0.6.jar"/>
@@ -426,7 +438,9 @@
   	
   	<gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.Debian.gz" src="${doc-src}/changelog/changelog.Debian"/>
   	<gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.gz" src="${doc-src}/changelog/changelog"/>
-
+  	<gzip destfile="${debian}/src/usr/share/man/man1/bonc.1.gz" src="${doc-src}/bonc.1"/>
+    <copy tofile="${debian}/src/usr/share/doc/bonc/copyright" file="${doc-src}/copyright.Debian"/>
+  	  	
     <chmod perm="a+x">
   		<fileset dir="${debian}/src/usr/share/bonc" includes="bonc,bonc-debian"/>
   	</chmod>

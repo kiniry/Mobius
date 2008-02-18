@@ -70,7 +70,9 @@ public class Main {
         
         debug = so.isBooleanOptionByNameSelected("-d");
         
-        if (so.isBooleanOptionByNameSelected("-hh")) {
+        if (so.isBooleanOptionByNameSelected("--print-man")) {
+          cp.printOptionsInManFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false);
+        } else if (so.isBooleanOptionByNameSelected("-hh")) {
           cp.printOptions(System.out, true);
         } else if (so.isBooleanOptionByNameSelected("--help")) {
           cp.printOptions(System.out, false);
@@ -428,6 +430,14 @@ public class Main {
     stdin.addOptionName("-");
     stdin.setHelpString("Read from standard input.");    
     cp.addOption(stdin);
+    
+    BooleanDefaultOption printMan = new BooleanDefaultOption();
+    printMan.setOptionID("99999");
+    printMan.setHidden();
+    printMan.addOptionName("-pm");
+    printMan.addOptionName("--print-man");
+    printMan.setHelpString("Print available options in man-page format");
+    cp.addOption(printMan);
     
     cp.parseOptions(System.out, args);
     cp.checkConstraints(System.out);
