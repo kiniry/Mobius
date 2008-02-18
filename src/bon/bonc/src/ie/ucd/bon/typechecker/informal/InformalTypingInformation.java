@@ -108,7 +108,7 @@ public class InformalTypingInformation {
   }
   
   public void addParentClass(String className, SourceLocation loc) {
-    System.out.println("Adding informal parent class: " + className);
+    //System.out.println("Adding informal parent class: " + className);
     String currentClassName = context.getClassChartName();
     if (context.getClassChartName().equals(className)) {
       problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, currentClassName));

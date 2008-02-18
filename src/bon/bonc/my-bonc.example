@@ -1,0 +1,13 @@
+###
+# Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+# See LICENCE.TXT for details.
+###
+
+### Edit the below two lines to setup your own environment
+
+export BON_HOME=/usr/share/bonc
+export JAVA_HOME=/usr/lib/jvm/java-5-sun
+
+
+
+$BON_HOME/bonc $*

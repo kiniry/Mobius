@@ -7,10 +7,10 @@ export BON_HOME=/usr/share/bonc
 
 if [ -d /usr/lib/jvm/java-6-sun ]; then
   export JAVA_HOME=/usr/lib/jvm/java-6-sun
-  $BON_HOME/bonc
+  $BON_HOME/bonc $*
 elif [ -d /usr/lib/jvm/java-5-sun ]; then
   export JAVA_HOME=/usr/lib/jvm/java-5-sun
-  $BON_HOME/bonc
+  $BON_HOME/bonc $*
 else
   echo "Unable to find a JVM at /usr/lib/jvm/java-5-sun or /usr/lib/jvm/java-6-sun, exiting."
 fi

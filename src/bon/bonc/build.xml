@@ -14,57 +14,57 @@
   <property name="src-tests" value="${src}/ie/ucd/bon/tests"/>
 
   <property name="docs" location="docs"/>
-	<property name="doc-src" location="doc-src"/>
+  <property name="doc-src" location="doc-src"/>
   <property name="api-docs" value="${docs}/api"/>
   <property name="manual-docs" value="${docs}/manual"/>
 
   <property name="build" location="bin"/>
   <property name="dist"  location="dist"/>
-	<property name="release"  location="release"/>
+  <property name="release"  location="release"/>
   <property name="lib"  location="lib"/>
   <property name="antlr-src" value="BON"/>
   <property name="antlr-pp-src" value="BONSTTreeWalker"/>
-	<property name="antlr-tc-src" value="BONTCTreeWalker"/>
-	<property name="antlr-tester-src" value="Tester"/>
+  <property name="antlr-tc-src" value="BONTCTreeWalker"/>
+  <property name="antlr-tester-src" value="Tester"/>
 	
-	<property name="java-target-version" value="1.5"/>
+  <property name="java-target-version" value="1.5"/>
 	
-	<property name="release-name" value="bonc"/>
-	<property name="release-version" value="0.1.2"/>
+  <property name="release-name" value="bonc"/>
+  <property name="release-version" value="0.1.1"/>
 
   <property name="debian" value="debian"/>
 
-	<!-- Paths -->
+  <!-- Paths -->
   <path id="base.path">
-  	<filelist dir="${lib}">
-  	  <file name="stringtemplate-3.1b1.jar"/>
-  	  <file name="CommandlineParser.jar"/>
-  	  <file name="antlr-2.7.7.jar"/>
-  	</filelist>
+    <filelist dir="${lib}">
+      <file name="stringtemplate-3.1b1.jar"/>
+      <file name="CommandlineParser.jar"/>
+      <file name="antlr-2.7.7.jar"/>
+    </filelist>
   </path>
 	
-	<path id="antlr.path">
-	  <path refid="base.path"/>
-		<filelist dir="${lib}">
-		  <file name="antlr-3.0.1-mod.jar"/>
-	  </filelist>
-	</path>
+  <path id="antlr.path">
+    <path refid="base.path"/>
+    <filelist dir="${lib}">
+      <file name="antlr-3.0.1-mod.jar"/>
+    </filelist>
+  </path>
 	
-	<path id="compile.path">
-	  <path refid="base.path"/>
-		<filelist dir="${lib}">
-		  <file name="antlr-3.0.1.jar"/>
-	  </filelist>
-	</path>
+  <path id="compile.path">
+    <path refid="base.path"/>
+    <filelist dir="${lib}">
+      <file name="antlr-3.0.1.jar"/>
+    </filelist>
+  </path>
 	
   <path id="test.path">
-  	<path refid="compile.path"/>
+    <path refid="compile.path"/>
     <pathelement location="${build}"/>
   </path>
 	
-	<path id="dist.path">
-		<fileset dir="${dist}/lib" includes="*.jar"/>
-	</path>
+  <path id="dist.path">
+    <fileset dir="${dist}/lib" includes="*.jar"/>
+  </path>
 	
   <target name="init">
     <echo message="Creating timestamp"/>
@@ -98,12 +98,12 @@
     </java>
   </target>
 
-	<target name="test-typechecker" depends="compile">
-	    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.TypeCheckerTester">
-	      <classpath refid="test.path"/>
-	    	<arg value="timing=true"/>
-	    </java>
-	  </target>
+  <target name="test-typechecker" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.TypeCheckerTester">
+      <classpath refid="test.path"/>
+    	<arg value="timing=true"/>
+    </java>
+  </target>
 	
   <target name="test-prettyprinter" depends="compile">
     <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.PrettyPrinterTester">
@@ -113,13 +113,13 @@
     </java>
   </target>
 	
-	<target name="test-dotgen" depends="compile">
-	  <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.DotGeneratorTester">
-	    <classpath refid="test.path"/>
-	  	<arg value="timing=true"/>
-	  	<!-- TODO - use arg to build script for this? -->
-	  </java>
-	</target>
+  <target name="test-dotgen" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.DotGeneratorTester">
+      <classpath refid="test.path"/>
+  	<arg value="timing=true"/>
+  	<!-- TODO - use arg to build script for this? -->
+    </java>
+  </target>
 
   <target name="test-commandline" depends="compile">
     <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.CommandlineTester">
@@ -128,52 +128,52 @@
   </target>
 
   <target name="test-dist" depends="dist">
-  	<java fork="yes" dir="." classname="ie.ucd.bon.tests.Tester">
-  		<classpath refid="dist.path"/>
-  		<arg value="test/test-cases/"/>
-  		<arg value="test/test-cases/tests"/>
-  	</java>
+    <java fork="yes" dir="." classname="ie.ucd.bon.tests.Tester">
+      <classpath refid="dist.path"/>
+      <arg value="test/test-cases/"/>
+      <arg value="test/test-cases/tests"/>
+    </java>
   </target>
 	
-	<target name="test-cases" depends="compile">
-		<java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.Tester">
-			<classpath refid="test.path"/>
-			<arg value="../test/test-cases/"/>
-			<arg value="../test/test-cases/tests"/>
-		</java>
-	</target>
+  <target name="test-cases" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.Tester">
+      <classpath refid="test.path"/>
+      <arg value="../test/test-cases/"/>
+      <arg value="../test/test-cases/tests"/>
+    </java>
+  </target>
 
 
   <target name="dist" depends="compile,changelogs" description="Generate the distribution">
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}/lib"/>
   	
-  	<!-- Copy required files -->
-  	<mkdir dir="${build}/templates"/>
-  	<copy todir="${build}/templates">
-  		<fileset dir="templates/" includes="*"/> 
-  	</copy>
+    <!-- Copy required files -->
+    <mkdir dir="${build}/templates"/>
+    <copy todir="${build}/templates">
+      <fileset dir="templates/" includes="*"/> 
+    </copy>
   	
     <jar jarfile="${dist}/lib/BON.jar" basedir="${build}"/>
   	
-  	<mkdir dir="${dist}/lib"/>
-  	<copy todir="${dist}/lib">
-  		<fileset dir="${lib}/" includes="*.jar">
-  			<exclude name="antlr-3.0.1-mod.jar"/>
-  		</fileset>
-  	</copy>
+    <mkdir dir="${dist}/lib"/>
+    <copy todir="${dist}/lib">
+  	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,CommandlineParser.jar,stringtemplate-3.1b1.jar"/>
+    </copy>
   	
-  	<copy todir="${dist}">
-  		<fileset dir="" includes="bonc,bonc.bat"/> 
-      <fileset dir="doc-src/" includes="LICENCE.TXT"/>
-  		<fileset dir="${doc-src}/changelog/" includes="changelog"/>
-  	</copy>
+    <copy todir="${dist}">
+      <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/> 
+      <fileset dir="doc-src/" includes="LICENCE.txt"/>
+      <fileset dir="${doc-src}/changelog/" includes="changelog"/>
+    </copy>
   	
-  	<chmod perm="a+x">
-  		<fileset dir="${dist}">
-  			<include name="bonc"/>
-  		</fileset>
-  	</chmod>
+    <chmod perm="a+x">
+      <fileset dir="${dist}">
+      <include name="bonc"/>
+      <include name="my-bonc.example"/>
+      <include name="update"/>
+      </fileset>
+    </chmod>
   </target>
 
 	<target name="clean-release">
@@ -186,7 +186,8 @@
 		<exec executable="./release.sh" dir=".">
 			<arg value="${release-name}-${release-version}"/>
 		</exec>
-		<copy file="${doc-src}/RELEASE_README.txt" todir="${release}/"/>
+		<copy file="${doc-src}/README.txt" todir="${release}/"/>
+		<echo message="${release-name}-${release-version}" file="${release}/version"/>
 	</target>
 	
 	<target name="actual-release" depends="release" description="Do a final release.">
