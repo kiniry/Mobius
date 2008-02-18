@@ -14,6 +14,7 @@
   <property name="src-tests" value="${src}/ie/ucd/bon/tests"/>
 
   <property name="docs" location="docs"/>
+	<property name="doc-src" location="doc-src"/>
   <property name="api-docs" value="${docs}/api"/>
   <property name="manual-docs" value="${docs}/manual"/>
 
@@ -29,7 +30,7 @@
 	<property name="java-target-version" value="1.5"/>
 	
 	<property name="release-name" value="bonc"/>
-	<property name="release-version" value="0.0.0"/>
+	<property name="release-version" value="0.1.2"/>
 
   <property name="debian" value="debian"/>
 
@@ -333,10 +334,71 @@
   <target name="clean" depends="clean-all"/>
 
 
-  <target name="debian-release" depends="dist">
+	<target name="clean-changelogs">
+	  <delete file="${doc-src}/changelog/changelog"/>
+		<delete file="${doc-src}/changelog/changelog.Debian"/>	
+	</target>
+	
+	<target name="changelogs" depends="clean-changelogs">
+		<!-- Setup properties with the timestamps we want -->
+		<tstamp>
+			<format property="DEB_RLS_TIME" pattern="E, dd MMM yyyy HH:mm:ss Z"/>
+			<format property="STD_RLS_TIME" pattern="yyyy-MM-dd HH:mm"/>
+		</tstamp>
+		
+		<!-- ****** changelog.Debian ****** -->
+		<!-- Add new entry -->
+    <copy tofile="${doc-src}/changelog/changelog.Debian" file="${doc-src}/changelog/changelog.Debian-entryformat">
+      <filterset begintoken="[[" endtoken="]]">
+		    <filter token="version" value="${release-version}"/>
+		    <filter token="name" value="${release-name}"/>
+      	<filter token="distributions" value="unstable"/>
+		    <filter token="urgency" value="low"/>
+		  </filterset>
+		</copy>
+		<!-- Append changes for this entry -->
+		<concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/latest-changes"/>
+		</concat>
+		<!-- Add developer info and date/time -->
+		<concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/changelog.Debian-develtimeformat"/>
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+				  <param type="token" name="developer" value="Fintan Fairmichael"/>
+					<param type="token" name="email" value="fintan.fairmichael@ucd.ie"/>
+					<param type="token" name="date-time" value="${DEB_RLS_TIME}"/>
+				</filterreader>
+		  </filterchain>
+		</concat>
+		<!-- Append all previous entries -->
+		<concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/old-changelog.Debian"/>
+		</concat>		
+		
+		<!-- ****** changelog ****** -->
+		<!-- Add entry -->
+		<copy tofile="${doc-src}/changelog/changelog" file="${doc-src}/changelog/changelog-entryformat">
+			<filterset begintoken="[[" endtoken="]]">
+			  <filter token="version" value="${release-version}"/>
+				<filter token="date-time" value="${STD_RLS_TIME}"/>
+			</filterset>
+		</copy>
+		<!-- Append changes for this entry -->
+		<concat destfile="${doc-src}/changelog/changelog" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/latest-changes"/>
+		</concat>	
+		<!-- Append all previous entries -->
+		<concat destfile="${doc-src}/changelog/changelog" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/old-changelog"/>
+		</concat>
+		
+	</target>
+	
+  <target name="debian-release" depends="dist,changelogs">
     <taskdef resource="org/vafer/jdeb/ant/antlib.xml"> 
       <classpath>
-	<pathelement location="${lib}/jdeb-0.6.jar"/>
+	  <pathelement location="${lib}/jdeb-0.6.jar"/>
       </classpath>
     </taskdef>
 
@@ -350,12 +412,16 @@
   			<exclude name="CommandlineParser-src.jar"/>
   		</fileset>
   	</copy>
+  	
+  	<gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.Debian.gz" src="${doc-src}/changelog/changelog.Debian"/>
+  	<gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.gz" src="${doc-src}/changelog/changelog"/>
 
     <chmod perm="a+x">
   		<fileset dir="${debian}/src/usr/share/bonc" includes="bonc,bonc-debian"/>
   	</chmod>
 
     <!-- Copy the control file, and fill in the release version. -->
+    <delete file="${debian}/control/control"/>
     <copy todir="${debian}/control" file="${debian}/control-src/control">
       <filterset begintoken="[[" endtoken="]]">
         <filter token="version" value="${release-version}"/>
@@ -366,9 +432,10 @@
     <!-- Create release tar file -->
     <exec executable="./build-deb-release-tar.sh" dir="."/>
 
-    <jdeb destfile="${release}/${release-name}-${release-version}.deb" control="${debian}/control" changesIn="${debian}/changes.txt" changesOut="${debian}/${release-name}.changes" changesSave="${debian}/changes.txt">
+    <jdeb destfile="${release}/${release-name}_${release-version}_all.deb" control="${debian}/control" changesIn="${debian}/changes.txt" 
+changesOut="${debian}/${release-name}.changes" changesSave="${debian}/changes.txt">
       <data src="${debian}/src/deb-release.tgz"/>
-    </jdeb>        
+    </jdeb>
     
   </target>
 

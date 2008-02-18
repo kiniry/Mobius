@@ -6,5 +6,3 @@ public class Test {
 	}
 }
 
-public class B { 
-  private String s;
