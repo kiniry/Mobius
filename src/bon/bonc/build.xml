@@ -144,7 +144,7 @@
 	</target>
 
 
-  <target name="dist" depends="compile" description="Generate the distribution">
+  <target name="dist" depends="compile,changelogs" description="Generate the distribution">
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}/lib"/>
   	
@@ -166,6 +166,7 @@
   	<copy todir="${dist}">
   		<fileset dir="" includes="bonc,bonc.bat"/> 
       <fileset dir="doc-src/" includes="LICENCE.TXT"/>
+  		<fileset dir="${doc-src}/changelog/" includes="changelog"/>
   	</copy>
   	
   	<chmod perm="a+x">
@@ -181,11 +182,11 @@
 		</delete>
 	</target>
 	
-	<target name="release" depends="dist" description="Generate a release">
+	<target name="release" depends="dist,debian-release" description="Generate a release">
 		<exec executable="./release.sh" dir=".">
 			<arg value="${release-name}-${release-version}"/>
 		</exec>
-		<copy file="doc-src/RELEASE_README.txt" todir="${release}/"/>
+		<copy file="${doc-src}/RELEASE_README.txt" todir="${release}/"/>
 	</target>
 	
 	
@@ -333,7 +334,6 @@
   <target name="all" depends="clean,all-src,compile,dist,all-tests"/>
   <target name="clean" depends="clean-all"/>
 
-
 	<target name="clean-changelogs">
 	  <delete file="${doc-src}/changelog/changelog"/>
 		<delete file="${doc-src}/changelog/changelog.Debian"/>	
@@ -432,11 +432,11 @@
     <!-- Create release tar file -->
     <exec executable="./build-deb-release-tar.sh" dir="."/>
 
-    <jdeb destfile="${release}/${release-name}_${release-version}_all.deb" control="${debian}/control" changesIn="${debian}/changes.txt" 
-changesOut="${debian}/${release-name}.changes" changesSave="${debian}/changes.txt">
+    <jdeb destfile="${release}/${release-name}_${release-version}_all.deb" control="${debian}/control" changesIn="${doc-src}/changelog/latest-changes" changesOut="${debian}/${release-name}.changes">
       <data src="${debian}/src/deb-release.tgz"/>
     </jdeb>
-    
+  	
+  	<copy todir="${release}" file="${debian}/${release-name}.changes"/>
   </target>
 
 </project>
