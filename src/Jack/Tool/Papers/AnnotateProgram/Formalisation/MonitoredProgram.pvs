@@ -4,6 +4,8 @@ BEGIN
   IMPORTING MVAProperties[CP, Name],
             WellFormedProgram[Name]
 
+  good_for_monitoring(a : (wf_MVA)) : boolean = partial(a) OR complete(a)
+
   MonitoredProgramPre : TYPE =
     [# mva : (good_for_monitoring[CP, Name]),
        program : Program[Name]
@@ -64,6 +66,9 @@ BEGIN
   wf_and_complete_MP(mp : MonitoredProgram) : boolean =
     wf_MP(mp) AND complete(mva(mp))
 
+  wf_and_partial_MP(mp : MonitoredProgram) : boolean =
+    wf_MP(mp) AND partial(mva(mp))
+
   get_monitored_class_unique_for_wf_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram) :
       wf_MP(mp) IMPLIES
@@ -90,6 +95,7 @@ BEGIN
        gvs : Store
     #]
 
+  
   IMPORTING SemanticsTypes[Name, MonitoredProgram, MPState,
                            LAMBDA (mp : MonitoredProgram) : program(mp),
                            LAMBDA (s : MPState) : pstate(s)],
@@ -184,7 +190,7 @@ BEGIN
     THEN s1 = s2 AND n = 0
     ELSE
     EXISTS (m1, m2, m3 : nat, tau1, tau2, tau3 : MPState, v : Val,
-            inv : (wf_BoolExpr(program(mp)))) :
+            inv : (wf_Expr(program(mp)))) :
       n = m1 + m2 + m3 + 1 AND
       val?(arg) AND
       derive_rec(n)(mp)(post_set(md)(v(arg)), s1, v, tau1)(m1) AND
@@ -204,7 +210,7 @@ BEGIN
     IF up?(ex(pstate(s1))) AND NOT down(ex(pstate(s1))) = JMLExc
     THEN
     EXISTS (m1, m2 : nat, tau1, tau2, tau3 : MPState, v : Val,
-            inv : (wf_BoolExpr(program(mp)))) :
+            inv : (wf_Expr(program(mp)))) :
       n = m1 + m2 + 1 AND
       excpt?(arg) AND
       derive_rec(n)(mp)(exc_set(md)(e(arg)), 
@@ -356,29 +362,13 @@ BEGIN
       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
         stuck(sigma2)
 
-  on_method_MVA_cp_in_cps : LEMMA % :-)
-     FORALL (etype : EventType)
-            (mp : MonitoredProgram, md : (wf_Method(program(mp))))
-            (arg : ValOrExcpt, s : MPState) :
-       cps(mva(mp))(cp(astate(s))) IMPLIES
-       cps(mva(mp))(cp(astate(on_method_MVA(etype)(mp, md)(arg)(s))))
-
-  derive_cp_in_cps : LEMMA
-    FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v : Val)
-           (sigma1, sigma2 : MPState, n : nat) :
-       wf_MP(mp) IMPLIES
-       cps(mva(mp))(cp(astate(sigma1))) IMPLIES
-       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
-       cps(mva(mp))(cp(astate(sigma2)))
-
-
   complete_MVA_never_stuck_after_on_method_MVA : LEMMA % :-)
      FORALL (etype : EventType)
             (mp : MonitoredProgram, md : (wf_Method(program(mp))))
             (arg : ValOrExcpt, s : MPState) :
        NOT stuck(s) IMPLIES
        complete(mva(mp)) IMPLIES
-       cps(mva(mp))(cp(astate(s))) IMPLIES
+       wf_state(mp)(s) IMPLIES
        NOT stuck(on_method_MVA(etype)(mp, md)(arg)(s))
 
   complete_MVA_never_stuck_after_derive : LEMMA % :-)
@@ -386,6 +376,7 @@ BEGIN
            (sigma1, sigma2 : MPState, n : nat) :
       wf_and_complete_MP(mp) IMPLIES
       NOT stuck(sigma1) IMPLIES
+      wf_state(mp)(sigma1) IMPLIES
       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
         NOT stuck(sigma2)
 
@@ -426,3 +417,124 @@ BEGIN
         wf_state(mp)(sigma2)
 
 END MonitoredProgramSemantics
+
+
+MonitoredProgramCompletessRelation[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MonitoredProgramSemantics[CP, Name],
+            MVACompletion[CP, Name]
+
+  mp : VAR (wf_and_partial_MP)
+
+  complete_MP(mp) : MonitoredProgram =
+    (# mva := complete_MVA(mva(mp)),
+       program := program(mp) #)
+
+  complete_MP_wf_and_complete : JUDGEMENT % :-)
+    complete_MP(mp) HAS_TYPE (wf_and_complete_MP)
+  
+%  complete_MP_wf_and_complete : LEMMA % :-)
+%    wf_and_complete_MP(complete_MP(mp))
+
+
+  complete_MP_preserves_wf_body : LEMMA
+    FORALL (b : (wf_Body(program(mp)))) : % :-)
+      wf_Body(program(complete_MP(mp)))(b)
+
+  complete_MP_preserves_wf_method : LEMMA % :-)
+    FORALL (m : (wf_Method(program(mp)))) :
+      wf_Method(program(complete_MP(mp)))(m)
+
+
+  monitor_related_astates(sA1, sA2 : AState, stuck1 : boolean) : boolean =
+    (stuck1 IFF cp(sA2) = halted) AND 
+    (NOT stuck1 IMPLIES cp(sA1) = cp(sA2)) AND
+    stA(sA1) = stA(sA2)
+    
+
+  monitor_related_states(mp)(s1, s2 : MPState) : boolean =
+    monitor_related_astates(astate(s1), astate(s2), stuck(s1)) AND
+    NOT stuck(s2) AND
+    wf_state(mp)(s1) AND
+    wf_state(complete_MP(mp))(s2) AND
+    pstate(s1) = pstate(s2) AND
+    gvs(s1) = gvs(s2)
+
+
+  get_address_same_in_monitor_related_states : LEMMA % :-)
+    FORALL(vn : Name, s1, s2 : MPState) :
+      monitor_related_states(mp)(s1, s2) IMPLIES
+        get_address(vn, s1) = get_address(vn, s2)
+
+  get_dynamic_type_name_same_in_monitor_related_states : LEMMA % :-)
+    FORALL(vn : Name, s1, s2 : MPState) :
+      monitor_related_states(mp)(s1, s2) IMPLIES
+        get_dynamic_type_name(vn, s1) = get_dynamic_type_name(vn, s2)
+
+
+  monitor_related_states_implies_same_exception : LEMMA % :-)
+    FORALL (s1, s2 : MPState) :
+      monitor_related_states(mp)(s1, s2) IMPLIES 
+        ex(pstate(s1)) = ex(pstate(s2))
+
+  monitor_related_states_implies_same_lookup : LEMMA % :-)
+    FORALL (s1, s2 : MPState, n : Name) :
+      monitor_related_states(mp)(s1, s2) IMPLIES 
+        lookup(n, s1) = lookup(n, s2)
+
+  monitor_related_states_preserved_by_update_local : LEMMA % :-)
+    FORALL (s1, s2 : MPState)(vn : Name, v : (defined?)) :
+      monitor_related_states(mp)(s1, s2) IMPLIES
+      is_local(vn, pstate(s2)) IMPLIES
+        monitor_related_states(mp)(update_PState(s1, update_local(vn, v)), 
+                               update_PState(s2, update_local(vn, v)))
+
+  monitor_related_states_preserved_by_catch : LEMMA % :-)
+    FORALL (s1, s2 : MPState) :
+      monitor_related_states(mp)(s1, s2) IMPLIES
+        monitor_related_states(mp)(update_PState(s1, catch), 
+                               update_PState(s2, catch))
+
+  monitor_related_states_preserved_by_raise : LEMMA % :-)
+    FORALL (s1, s2 : MPState, e : Excpt) :
+      monitor_related_states(mp)(s1, s2) IMPLIES
+        monitor_related_states(mp)(update_PState(s1, raise(e)), 
+                               update_PState(s2, raise(e)))
+
+
+  monitor_related_astates_preserved_by_on_method_MVA : LEMMA % :-)
+    FORALL(s1, s2 : MPState, etype : EventType,
+           md : (wf_Method(program(mp))), arg : ValOrExcpt) :
+      monitor_related_astates(astate(s1), astate(s2), stuck(s1)) IMPLIES
+      wf_state(mp)(s1) IMPLIES
+      wf_state(complete_MP(mp))(s2) IMPLIES
+      pstate(s1) = pstate(s2) IMPLIES
+      NOT stuck(s2) IMPLIES
+        monitor_related_astates
+          (astate(on_method_MVA(etype)(mp, md)(arg)(s1)), 
+           astate(on_method_MVA(etype)(complete_MP(mp), md)(arg)(s2)),
+           stuck(on_method_MVA(etype)(mp, md)(arg)(s1)))
+
+  monitor_related_states_initial_MP_states : LEMMA  % :-)
+    FORALL (root_object : (defined?)) :
+    monitor_related_states(mp)(initial_MP_state(mp)(root_object), 
+                           initial_MP_state(complete_MP(mp))(root_object))
+
+  monitor_related_states_preserved_by_derive : LEMMA
+    FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
+           (s1a, s1b, s2a, s2b : MPState) 
+           (n1, n2 : nat) :
+      monitor_related_states(mp)(s1a, s1b) IMPLIES
+      derive(mp)(b, s1a, v1, s2a)(n1) IMPLIES
+      derive(complete_MP(mp))(b, s1b, v2, s2b)(n2) IMPLIES
+        monitor_related_states(mp)(s2a, s2b) AND v1 = v2 
+  
+  correctness_of_complete_MP : THEOREM % :-)
+    FORALL (main : Name, arg : int)(root_object : (defined?))
+           (s1, s2 : MPState) :
+      run_monitored_program(mp)(main, arg)(root_object)(s1) IMPLIES
+      run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s2) IMPLIES
+        monitor_related_states(mp)(s1, s2)
+
+END MonitoredProgramCompletessRelation

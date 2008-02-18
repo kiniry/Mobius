@@ -183,12 +183,12 @@ BEGIN
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       Bottom?(v) = up?(ex(pstate(sigma2)))
 
-  derive_boolean_expr_type_AP : LEMMA % :-)
-    FORALL (p : Program)(b : (wf_BoolExpr(p)))
-           (sigma1, sigma2 : APState, v : Val, n : nat) :
-      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
-      NOT up?(ex(pstate(sigma2))) IMPLIES
-      Bool?(v)
+%  derive_boolean_expr_type_AP : LEMMA % :-)
+%    FORALL (p : Program)(b : (wf_Expr(p)))
+%           (sigma1, sigma2 : APState, v : Val, n : nat) :
+%      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
+%      NOT up?(ex(pstate(sigma2))) IMPLIES
+%      Bool?(v)
 
 
 END AnnotatedProgramSemantics
@@ -221,15 +221,15 @@ BEGIN
   % resulting state and value (Unit) will be the same as the respective state and
   % value for the whole CaseJML statement.
   CaseJML_exclusive_branches_semantics : LEMMA % :-)
-    FORALL (p : Program, bs : list[[BoolExpr, Stmt]], s1, s2 : APState,
-            v : Val, n : nat, b1 : [(wf_BoolExpr(p)), (wf_Stmt(p))]) :
+    FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState,
+            v : Val, n : nat, b1 : [(wf_Expr(p)), (wf_Stmt(p))]) :
       wf_Branches(p)(bs) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       member(b1, bs) IMPLIES
       (FORALL (tau : APState, v : Val, m1 : below(n)) :
         (derive(p)(PROJ_1(b1), s1, v, tau)(m1) IMPLIES
           s1 = tau AND v = Bool(TRUE))) IMPLIES
-      (FORALL (b2 : [(wf_BoolExpr(p)), (wf_Stmt(p))], tau : APState, 
+      (FORALL (b2 : [(wf_Expr(p)), (wf_Stmt(p))], tau : APState, 
                v : Val, m2 : below(n)) :
         before(b2, b1, bs) IMPLIES
         (derive(p)(PROJ_1(b2), s1, v, tau)(m2) IMPLIES

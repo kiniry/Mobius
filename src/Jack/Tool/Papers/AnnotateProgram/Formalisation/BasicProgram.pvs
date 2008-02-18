@@ -12,7 +12,7 @@ BEGIN
       s1 = s2 AND n = 1
 
   execute_assert : (execute_assert_type) =
-    LAMBDA (p : Program, e : (wf_BoolExpr(p)), s1, s2 : PState, n : nat,
+    LAMBDA (p : Program, e : (wf_Expr(p)), s1, s2 : PState, n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 

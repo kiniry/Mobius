@@ -223,7 +223,7 @@ BEGIN
   AUTO_REWRITE- complete, total, deterministic
 
   % Preconditions for complete_MVA
-  good_for_monitoring(a : (wf_MVA)) : boolean =
+  partial(a : (wf_MVA)) : boolean =
     deterministic(a) AND NOT cps(a)(halted)
 
 
@@ -500,7 +500,7 @@ BEGIN
 
 
   % Makes a deterministic MVA total.
-  complete_MVA(a : (good_for_monitoring)) : MVA =
+  complete_MVA(a : (partial)) : MVA =
     a WITH [cps := add(halted, cps(a)),
             ts := union(ts(a), complete_trans(a))]
 
@@ -510,34 +510,44 @@ BEGIN
       wf_MVA(a) IMPLIES wf_Guard(a)(build_guard(a)(cp, e))
 
   complete_MVA_yields_wf_MVA : LEMMA % :-)
-    FORALL (a : (good_for_monitoring)) :
+    FORALL (a : (partial)) :
       wf_MVA(complete_MVA(a))
 
   complete_MVA_has_trap_state: LEMMA % :-)
-    FORALL (a : (good_for_monitoring)) :
+    FORALL (a : (partial)) :
       trap_state(halted, complete_MVA(a))
 
   complete_MVA_is_deterministic : LEMMA % :-)
-    FORALL (a : (good_for_monitoring)) :
+    FORALL (a : (partial)) :
       deterministic(complete_MVA(a))
 
   complete_MVA_is_total : LEMMA % :-)
-    FORALL (a : (good_for_monitoring)) :
+    FORALL (a : (partial)) :
       total(complete_MVA(a))
 
   complete_MVA_is_complete : THEOREM % :-)
-    FORALL (a : (good_for_monitoring)) :
+    FORALL (a : (partial)) :
       complete(complete_MVA(a))
 
-
+  evs_complete_MVA : LEMMA % :-)
+    FORALL (a : (partial)) :
+      evs(complete_MVA(a)) = evs(a)
+  
   IMPORTING MVAPartialSemantics[CP, Name], 
             MVATotalSemantics[CP, Name]
 
   completion_equivalence : LEMMA  % :-)
-    FORALL(a : (good_for_monitoring), 
+    FORALL(a : (partial), 
            s : (wf_AState(a)), pe : (wf_PEvent(a))) :
       MVAPartialSemantics.step(a)(s, pe) = bottom IFF
         cp(MVATotalSemantics.step(complete_MVA(a))(s, pe)) = halted
+
+
+  completion_equivalence2 : LEMMA  % :-)
+    FORALL(a : (partial), 
+           s : (wf_AState(a)), pe : (wf_PEvent(a))) :
+      MVAPartialSemantics.step(a)(s, pe) = bottom IFF
+        cp(down(MVAPartialSemantics.step(complete_MVA(a))(s, pe))) = halted
 
 
 %  % Correctness requirements for a completion function:
@@ -546,9 +556,9 @@ BEGIN
 %  % .The original transitions must remain unchanged,
 %  % .Transitions added have halted as target control point,
 %  % .The result must be a complete MVA.
-%  correct_completion_function(complete_fun : [(good_for_monitoring) -> 
+%  correct_completion_function(complete_fun : [(partial) -> 
 %                                               MVA]) : boolean =
-%    FORALL (a : (good_for_monitoring)) :
+%    FORALL (a : (partial)) :
 %      (FORALL (ts_prime : finite_set[Transition]) :
 %        a WITH [ts := ts_prime, cps := add(halted, cps(a))] = 
 %        complete_fun(a) WITH [ts := ts_prime]) AND
@@ -567,7 +577,7 @@ BEGIN
 %  % If a partial MVA <a> gets stuck on a certain input then
 %  % <complete_fun>(<a>) reaches halted for the same input.
 %  complete_function_correctness_implication : THEOREM % :-)
-%    FORALL (complete_fun : [MVA -> MVA], a : (good_for_monitoring), 
+%    FORALL (complete_fun : [MVA -> MVA], a : (partial), 
 %            sa : (wf_AState(a)), pe : (wf_PEvent(a))) :
 %      correct_completion_function(complete_fun) IMPLIES
 %      step(a)(sa, pe) = bottom IMPLIES 
