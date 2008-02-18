@@ -185,12 +185,39 @@ public class BytecodeTextParser {
 
   /**
    * Returns the list of all the lines in the internal representation.
+   * This method may only be called once to export fully generated
+   * list of lines.
    *
    * @return the list of the {@link BytecodeLineController} objects that
    *   represent all the lines in the currently parsed document
    */
   public LinkedList getEditorLines() {
-    return my_editor_lines;
+    final LinkedList lines = my_editor_lines;
+    my_editor_lines = null;
+    return lines;
+  }
+
+  /**
+   * This method adds the specified line cotroller at the specified position.
+   * It shifts the element currently at that position (if any) and any
+   * subsequent elements to the right (adds one to their indices).
+   *
+   * @param a_pos the position to insert the line
+   * @param a_line the line to be inserted
+   */
+  public void addEditorLine(final int a_pos,
+                            final BytecodeLineController a_line) {
+    my_editor_lines.add(a_pos, a_line);
+  }
+
+  /**
+   * This method appends the specified line cotroller at the end of the lines
+   * structure.
+   *
+   * @param a_line the line to be inserted
+   */
+  public void addEditorLine(final BytecodeLineController a_line) {
+    my_editor_lines.add(a_line);
   }
 
   /**
@@ -316,7 +343,7 @@ public class BytecodeTextParser {
           !(lc instanceof EmptyLineController)) {
         break;
       }
-      getEditorLines().add(j, lc);
+      addEditorLine(j, lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       j++;
     }

@@ -20,6 +20,7 @@ import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.instructions.ast.UnknownLineController;
 
 /**
  * This class is used to parse fragments of byte code textual documents.
@@ -136,7 +137,7 @@ public class FragmentParser extends BytecodeTextParser {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(lineName,
                                                            a_ctxt);
-      getEditorLines().add(lc);
+      addEditorLine(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       if (lc.isCommentStart()) { // ignore comments
         j = swallowComment(my_doc, j, an_end, a_ctxt);
@@ -150,7 +151,7 @@ public class FragmentParser extends BytecodeTextParser {
       }
       if (lc instanceof InstructionLineController) { //instruction line
         getInstructions().add(lc);
-      } else {
+      } else if (!(lc instanceof UnknownLineController)) { //we allow unknown
         throw new UmbraException();
       }
     }
@@ -186,7 +187,7 @@ public class FragmentParser extends BytecodeTextParser {
       if (!(lc instanceof CommentLineController)) {
         break;
       }
-      getEditorLines().add(j, lc);
+      addEditorLine(j, lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       j++;
     }

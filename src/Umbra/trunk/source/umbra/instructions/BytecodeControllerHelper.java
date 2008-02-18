@@ -18,7 +18,11 @@ import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.InstructionLineController;
 
 /**
- * @author alx
+ * This class contains various helper methods that are used in the
+ * {@link BytecodeController} class. It also keeps track of the incorrect
+ * lines and the modified lines.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
  */

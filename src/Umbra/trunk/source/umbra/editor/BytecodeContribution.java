@@ -114,6 +114,7 @@ public class BytecodeContribution extends ControlContribution {
           my_editor.getAction(BytecodeEditorContributor.REFRESH_ID).
                     setEnabled(true);
         } catch (UmbraException e) {
+          e.printStackTrace();
           MessageDialog.openInformation(new Shell(), "Bytecode",
               "Invalid edit operation");
           return;

@@ -138,19 +138,18 @@ public class InitParser extends BytecodeTextParser {
     String line = getLineFromDoc(my_doc, j, a_ctxt);
     a_ctxt.setInitial();
     BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
-    getEditorLines().add(j, lc);
+    addEditorLine(j, lc);
     lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
     j = swallowEmptyLines(my_doc, j, a_ctxt);
     line = getLineFromDoc(my_doc, j, a_ctxt);
     a_ctxt.seClassToBeRead();
     lc = Preparsing.getType(line, a_ctxt);
-    getEditorLines().add(j, lc);
+    addEditorLine(j, lc);
     lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
     return swallowEmptyLines(my_doc, j, a_ctxt);
   }
-
 
   /**
    * This method handles the parsing of these lines of a textual representation
@@ -188,7 +187,7 @@ public class InitParser extends BytecodeTextParser {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(lineName,
                                                            a_ctxt);
-      getEditorLines().add(j, lc);
+      addEditorLine(j, lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       if (lc.isCommentStart()) { // ignore comments
         j = swallowEmptyLines(my_doc, j, a_ctxt);
