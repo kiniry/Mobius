@@ -78,7 +78,7 @@ public class ParsingTracker {
     this.finalMessage = finalMessage;
   }
   
-  public Problems getErrorsAndWarnings(boolean checkFormal, boolean checkConsistency) {
+  public Problems getErrorsAndWarnings(boolean checkInformal, boolean checkFormal, boolean checkConsistency) {
     //TODO provide filter level and filter...
     
     Problems probs = new Problems();
@@ -88,7 +88,7 @@ public class ParsingTracker {
     
     probs.addProblems(typingInformation.informal().getProblems());
     
-    if (itc != null) {
+    if (checkInformal && itc != null) {
       probs.addProblems(itc.getProblems());
     }
     

@@ -154,19 +154,20 @@ public class Main {
   private static void typeCheck(ParsingTracker tracker, Options so, boolean timing) {
     if (so.isBooleanOptionByNameSelected("-tc")) {
 
-      boolean checkFormal = so.isBooleanOptionByNameSelected("-f");
-      boolean checkConsistency = so.isBooleanOptionByNameSelected("-c");
-      Main.logDebug("checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
+      boolean checkInformal = so.isBooleanOptionByNameSelected("-ci");
+      boolean checkFormal = so.isBooleanOptionByNameSelected("-cf");
+      boolean checkConsistency = so.isBooleanOptionByNameSelected("-cc");
+      Main.logDebug("checkInformal: " + checkInformal + ", checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
       
       if (tracker.continueFromParse(TC_NUM_SEVERE_ERRORS)) {
         try {
           if (timing) {
             long startTime = System.nanoTime();
-            TypeChecker.typeCheck(tracker, checkFormal, checkConsistency);
+            TypeChecker.typeCheck(tracker, checkInformal, checkFormal, checkConsistency);
             long endTime = System.nanoTime();
             System.out.println("Typechecking took: " + timeString(endTime-startTime));
           } else {
-            TypeChecker.typeCheck(tracker, checkFormal, checkConsistency);
+            TypeChecker.typeCheck(tracker, checkInformal, checkFormal, checkConsistency);
           }
 
         } catch (RecognitionException re) {
@@ -283,16 +284,17 @@ public class Main {
     //Is there at least one valid file?
     if (validFiles.size() < 1) {
       tracker.addProblem(new NoFilesError());
-      printResults(tracker, false, false);
+      printResults(tracker, false, false, false);
       return false;
     }
     
     parse(validFiles, tracker, timing);
     typeCheck(tracker, so, timing);
     
-    boolean checkFormal = so.isBooleanOptionByNameSelected("-f");
-    boolean checkConsistency = so.isBooleanOptionByNameSelected("-c");
-    printResults(tracker, checkFormal, checkConsistency);    
+    boolean checkInformal = so.isBooleanOptionByNameSelected("-ci");
+    boolean checkFormal = so.isBooleanOptionByNameSelected("-cf");
+    boolean checkConsistency = so.isBooleanOptionByNameSelected("-cc");
+    printResults(tracker, checkInformal, checkFormal, checkConsistency);    
     
     print(validFiles, tracker, so, timing);
     graph(tracker, so);
@@ -301,8 +303,8 @@ public class Main {
     return true;
   }
   
-  private static void printResults(ParsingTracker tracker, boolean checkFormal, boolean checkConsistency) {
-    problems = tracker.getErrorsAndWarnings(checkFormal, checkConsistency);
+  private static void printResults(ParsingTracker tracker, boolean checkInformal, boolean checkFormal, boolean checkConsistency) {
+    problems = tracker.getErrorsAndWarnings(checkInformal, checkFormal, checkConsistency);
     problems.printProblems(System.out);
     problems.printSummary(System.out);
     tracker.printFinalMessage(System.out);
@@ -319,13 +321,14 @@ public class Main {
     tc.addOptionName("--typecheck");
     tc.setHelpString("Typecheck the input.");
     tc.setByDefault();
+    tc.setHidden();
     cp.addOption(tc);
     
     BooleanDefaultOption ntc = new BooleanDefaultOption();
     ntc.setOptionID("1.1");
     ntc.addOptionName("-ntc");
     ntc.addOptionName("--no-typecheck");
-    ntc.setHelpString("Do not type-check the input.");
+    ntc.setHelpString("Do not typecheck the input.");
     ntc.addAction(new TriggersBoolean("1.1", "1", false));
     cp.addOption(ntc);    
     
@@ -382,31 +385,53 @@ public class Main {
     cp.addOption(ig);
     
     BooleanDefaultOption informal = new BooleanDefaultOption();
-    informal.setOptionID("10");
+    informal.setOptionID("10.0");
     informal.addOptionName("-i");
     informal.addOptionName("-informal");
     informal.addOptionName("--informal");
     informal.setHelpString("Only check informal charts.");
-    informal.addAction(new TriggersBoolean("10", "10.1", false)); //Informal means no formal
-    informal.addAction(new TriggersBoolean("10", "11", false)); //Informal also means no consistency checking
+    informal.addAction(new TriggersBoolean("10.0", "10.6", false)); //Informal means no formal
+    informal.addAction(new TriggersBoolean("10.0", "11", false)); //Informal also means no consistency checking
     cp.addOption(informal);
     
     BooleanDefaultOption formal = new BooleanDefaultOption();
-    formal.setOptionID("10.1");
+    formal.setOptionID("10.5");
     formal.addOptionName("-f");
     formal.addOptionName("-formal");
     formal.addOptionName("--formal");
-    formal.setHelpString("Check formal charts.");
-    formal.setByDefault();
-    //formal.addConstraint(new MutuallyExclusiveConstraint("10", "10.1"));
+    formal.setHelpString("Only check formal charts.");
+    //formal.setByDefault();
+    formal.addAction(new TriggersBoolean("10.5", "10.1", false)); //formal means no informal
+    formal.addAction(new TriggersBoolean("10.5", "11", false)); //Informal also means no consistency checking
+    
+    formal.addConstraint(new MutuallyExclusiveConstraint("10.5", "10.0"));
     cp.addOption(formal);
+    
+    BooleanDefaultOption checkInformal = new BooleanDefaultOption();
+    checkInformal.setOptionID("10.1");
+    checkInformal.addOptionName("-ci");
+    checkInformal.addOptionName("--check-informal");
+    checkInformal.setHelpString("Check informal charts.");
+    checkInformal.setByDefault();
+    checkInformal.setHidden();
+    cp.addOption(checkInformal);
+    
+    BooleanDefaultOption checkFormal = new BooleanDefaultOption();
+    checkFormal.setOptionID("10.6");
+    checkFormal.addOptionName("-cf");
+    checkFormal.addOptionName("--check-formal");
+    checkFormal.setHelpString("Check formal diagrams.");
+    checkFormal.setByDefault();
+    checkFormal.setHidden();
+    cp.addOption(checkFormal);
     
     BooleanDefaultOption consistency = new BooleanDefaultOption();
     consistency.setOptionID("11");
-    consistency.addOptionName("-c");
-    consistency.addOptionName("--consistency");
+    consistency.addOptionName("-cc");
+    consistency.addOptionName("--check-consistency");
     consistency.setHelpString("Check consistency between levels.");
     consistency.setByDefault();
+    consistency.setHidden();
     cp.addOption(consistency);
     
     BooleanDefaultOption noConsistency = new BooleanDefaultOption();

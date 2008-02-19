@@ -38,9 +38,6 @@ Contents:
    Add the following line to your sources.list (/etc/apt/sources.list):
      deb http://hunter.ucd.ie/bon/apt unstable contrib
 
-   You can do this by:
-     sudo echo "deb http://hunter.ucd.ie/bon/apt unstable contrib" >> /etc/apt/sources.list
-
    Then:
      sudo apt-get update
      sudo apt-get install bonc
@@ -72,6 +69,10 @@ Contents:
 --------------
 
   Firstly choose a location to install the software to.
+  
+  NB. wget does not exist on OSX as standard (although it is available via
+      MacPorts and fink). If you don't have wget, you will have to use the 
+      non-update script methods for installing and updating (2.1.2 and 2.2.2). 
 
 2.1.1 With the update script
 
@@ -80,6 +81,9 @@ Contents:
     wget http://hunter.ucd.ie/bon/update
     chmod a+x update
     ./update
+  
+  Alternatively:
+    wget -qO - http://hunter.ucd.ie/bon/update | bash
     
 2.1.2 Without the update script
 

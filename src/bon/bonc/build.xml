@@ -163,7 +163,7 @@
   	
     <copy todir="${dist}">
       <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/> 
-      <fileset dir="doc-src/" includes="LICENCE.txt"/>
+      <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,LICENCE.txt"/>
       <fileset dir="${doc-src}/changelog/" includes="changelog"/>
     </copy>
   	
@@ -188,8 +188,10 @@
     <exec executable="./release.sh" dir=".">
       <arg value="${release-name}-${release-version}"/>
     </exec>
-    <copy file="${doc-src}/README.txt" todir="${release}/"/>
-    <copy file="update" todir="${release}/"/>
+  	<copy todir="${release}">
+  		<fileset dir="${doc-src}" includes="README.txt,INSTALLATION.txt,LICENCE.txt"/>
+  		<fileset file="update"/>
+  	</copy>
     <chmod perm="a+x" file="${release}/update"/>
     <echo message="${release-name}-${release-version}" file="${release}/version"/>
   </target>
@@ -426,7 +428,7 @@
   <target name="debian-release" depends="dist,changelogs,manpage">
     <taskdef resource="org/vafer/jdeb/ant/antlib.xml"> 
       <classpath>
-	  <pathelement location="${lib}/jdeb-0.6.jar"/>
+        <pathelement location="${lib}/jdeb-0.6.jar"/>
       </classpath>
     </taskdef>
 
@@ -435,20 +437,17 @@
     </copy>
 
     <copy todir="${debian}/src/usr/share/bonc/lib">
-  		<fileset dir="${dist}/lib/" includes="*.jar">
-  			<exclude name="antlr-3.0.1-mod.jar"/>
-  			<exclude name="CommandlineParser-src.jar"/>
-  		</fileset>
-  	</copy>
+      <fileset dir="${dist}/lib/" includes="*.jar"/>
+    </copy>
   	
-  	<gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.Debian.gz" src="${doc-src}/changelog/changelog.Debian"/>
-  	<gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.gz" src="${doc-src}/changelog/changelog"/>
-  	<gzip destfile="${debian}/src/usr/share/man/man1/bonc.1.gz" src="${doc-src}/bonc.1"/>
+    <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.Debian.gz" src="${doc-src}/changelog/changelog.Debian"/>
+    <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.gz" src="${doc-src}/changelog/changelog"/>
+    <gzip destfile="${debian}/src/usr/share/man/man1/bonc.1.gz" src="${doc-src}/bonc.1"/>
     <copy tofile="${debian}/src/usr/share/doc/bonc/copyright" file="${doc-src}/copyright.Debian"/>
   	  	
     <chmod perm="a+x">
-  		<fileset dir="${debian}/src/usr/share/bonc" includes="bonc,bonc-debian"/>
-  	</chmod>
+      <fileset dir="${debian}/src/usr/share/bonc" includes="bonc,bonc-debian"/>
+    </chmod>
 
     <!-- Copy the control file, and fill in the release version. -->
     <delete file="${debian}/control/control"/>
@@ -466,7 +465,7 @@
       <data src="${debian}/src/deb-release.tgz"/>
     </jdeb>
   	
-  	<copy todir="${release}" file="${debian}/${release-name}.changes"/>
+    <copy todir="${release}" file="${debian}/${release-name}.changes"/>
   </target>
 
 </project>

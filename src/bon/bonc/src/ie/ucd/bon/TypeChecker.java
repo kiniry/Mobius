@@ -19,11 +19,14 @@ public class TypeChecker {
 
   private static final BONTCTreeWalker walker = new BONTCTreeWalker(null);
   
-  public static void typeCheck(ParsingTracker tracker, boolean checkFormal, boolean checkConsistency) throws RecognitionException {
+  public static void typeCheck(ParsingTracker tracker, boolean checkInformal, boolean checkFormal, boolean checkConsistency) throws RecognitionException {
     InformalTypeChecker itc = tracker.getInformalTypeChecker();
     FormalTypeChecker ftc = tracker.getFormalTypeChecker();
     
-    itc.performPreliminaryChecks();
+    if (checkInformal) {
+      Main.logDebug("Checking informal");
+      itc.performPreliminaryChecks();
+    }
     
     if (checkFormal) {
       Main.logDebug("Checking formal");
