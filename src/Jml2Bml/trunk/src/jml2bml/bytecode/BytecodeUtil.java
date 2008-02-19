@@ -1,32 +1,33 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-07 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-07 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.bytecode;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import jml2bml.bmllib.ConstantPoolHelper;
+import jml2bml.exceptions.Jml2BmlException;
+import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.symbols.Symbols;
+
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
 
-import jml2bml.exceptions.Jml2BmlException;
-import jml2bml.exceptions.NotTranslatedException;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.FieldRef;
 import annot.io.ReadAttributeException;
 
+import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
-import com.sun.source.tree.LineMap;
 
 /**
  * @author kjk (kjk@mimuw.edu.pl)
@@ -48,8 +49,7 @@ public final class BytecodeUtil {
    * @return BCMethod representing method <code>name</code>,
    * or null, if the method was not found.
    */
-  public static BCMethod findMethod(final CharSequence name,
-                                    final BCClass clazz) {
+  public static BCMethod findMethod(final CharSequence name, final BCClass clazz) {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
       if (method.getBcelMethod().getName().contentEquals(name))
@@ -64,16 +64,21 @@ public final class BytecodeUtil {
    * an exception will be thrown.
    * @param isOld - if the reference occurs in \old clause
    * @param name - name of the field
-   * @param clazz - class containing the field
+   * @param symbols - symbol table
    * @return FieldRef object.
    */
   public static BCExpression createFieldRef(final boolean isOld,
                                             final String name,
-                                            final BCClass clazz) {
-    final int nameIndex = clazz.getFieldIndex(name);
+                                            final Symbols symbols) {
+    final BCClass clazz = symbols.findClass();
+    String className = clazz.getJC().getClassName();
+    className = "L" + className.replace('.', '/') + ";";
+    final int nameIndex = ConstantPoolHelper.findFieldInConstantPool(className,
+                                                                     name,
+                                                                     symbols);
     if (nameIndex == -1) {
-      throw new Jml2BmlException("Field " + name +
-                                 " does not exist in given class.");
+      throw new Jml2BmlException("Field " + name
+                                 + " does not exist in given class.");
     }
     return new FieldRef(isOld, clazz.getCp(), nameIndex);
 
@@ -115,11 +120,13 @@ public final class BytecodeUtil {
    * @param method - method, for which the map should be generated
    * @return map: <code>Bytecode Instruction -> line in the source code</code>
    */
-  public static Map<InstructionHandle, Integer> getLineNumberMap(final BCMethod method) {
+  public static Map<InstructionHandle, Integer> getLineNumberMap(
+                                                                 final BCMethod method) {
     final Map<InstructionHandle, Integer> result = new HashMap<InstructionHandle, Integer>();
     for (LineNumberGen lng : method.getBcelMethod().getLineNumbers())
       if (result.containsKey(lng.getInstruction()))
-        throw new NotTranslatedException("One bytecode instruction has more than one line number");
+        throw new NotTranslatedException(
+                                         "One bytecode instruction has more than one line number");
       else
         result.put(lng.getInstruction(), lng.getSourceLine());
     return result;

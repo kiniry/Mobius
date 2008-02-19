@@ -1,8 +1,11 @@
 package jml2bml.ast;
 
+import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
+import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.symbols.Symbols;
 import jml2bml.symbols.Variable;
+import jml2bml.utils.JCUtils;
 
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
@@ -12,6 +15,7 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.FieldRef;
 import annot.bcexpression.LocalVariable;
+import annot.bcexpression.javatype.JavaType;
 
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.MethodTree;
@@ -52,6 +56,7 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
   public Symbols scan(final Tree node, final Symbols p) {
     return p;
   };
+
   /**
    * Scans the given node. By default does nothing.
    * @param nodes nodes to scan
@@ -76,25 +81,28 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     if ("this".equals(node.name.toString())) {
       return p;
     }
+    final boolean isGhost = JCUtils.isGhost(node);
+    final boolean isModal = JCUtils.isModal(node);
     final Tree block = ancestorFinder.getAncestor(node, Tree.Kind.BLOCK);
     final Tree method = ancestorFinder.getAncestor(node, Tree.Kind.METHOD);
     if (method != null && block != null) {
 
       final Tree clazz = ancestorFinder.getAncestor(node, Tree.Kind.CLASS);
-      if (method == ancestorFinder.getAncestor(clazz, Tree.Kind.METHOD)) {
+      if (method == ancestorFinder.getAncestor(clazz, Tree.Kind.METHOD)
+          || isGhost || isModal) {
         //field in an inner class
-        handleField(node, clazz, p);
+        handleField(node, clazz, p, isGhost, isModal);
       } else {
         //local variable
         handleLocal(node, method, p);
       }
-    } else if (method != null) {
+    } else if (method != null && !isGhost && !isModal) {
       //parameter
       handleLocal(node, method, p);
     } else {
       //class field
       final Tree clazz = ancestorFinder.getAncestor(node, Tree.Kind.CLASS);
-      handleField(node, clazz, p);
+      handleField(node, clazz, p, isGhost, isModal);
     }
 
     return p;
@@ -120,14 +128,26 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
    * @param node field declaration
    * @param clazz class containing the field declaration
    * @param s symbol table before this node
+   * @param isGhost indicates if the field is ghost
+   * @param isModal indicates if the field is modal
    */
   private void handleField(final JmlVariableDecl node, final Tree clazz,
-                           final Symbols s) {
+                           final Symbols s, final boolean isGhost,
+                           final boolean isModal) {
     final BCClass cl = s.findClass();
 
     final int nameIndex = cl.getFieldIndex(node.getName().toString());
     if (nameIndex == -1) {
-      //FIXME throw an exception
+      //unknown field. If it is ghost, create new constant, else throw an exc.
+      if (isGhost) {
+        final String name = node.getName().toString();
+        final String type = JavaType.getJavaType(node.getType().toString())
+            .toString();
+
+        ConstantPoolHelper.addGhostField(type, name, s);
+      } else {
+        throw new Jml2BmlException("Unknown field: " + node.getName());
+      }
     }
     s.put(node.name.toString(), new Variable((FieldRef) null, node));
 

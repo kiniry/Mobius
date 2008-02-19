@@ -88,10 +88,15 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   }
 
   // ------- visitor methods
+  /**
+   * Default preVisit - throws NotTranslatedException.
+   * @param node visited node
+   * @param p symbol table
+   * @return never reached
+   */
   @Override
-  protected BCExpression preVisit(Tree node, Symbols p) {
+  protected BCExpression preVisit(final Tree node, final Symbols p) {
     throw new NotTranslatedException("Node " + node + " not translated.");
-    
   }
   // TODO probably more nodes should be visited here
   /**
@@ -139,7 +144,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
       //field access is handled in a different way:
       //(cannot be taken from the symbol table, we have to know,
       //whether it's old or not
-      return BytecodeUtil.createFieldRef(isOld, name, p.findClass());
+      return BytecodeUtil.createFieldRef(isOld, name, p);
     }
     return null;
   };
