@@ -3,10 +3,10 @@
    <description url="http://www.mimuw.edu.pl/~alx/umbra/update/">
       This is the update site for the Umbra byte code editor. This editor allows to edit both byte code mnemonics and BML specifications.
    </description>
-   <feature url="features/mobius.BMLLib.feature_0.0.3.jar" id="mobius.BMLLib.feature" version="0.0.3">
+   <feature url="features/mobius.BMLLib.feature_0.0.4.jar" id="mobius.BMLLib.feature" version="0.0.4">
       <category name="Mobius"/>
    </feature>
-   <feature url="features/mobius.Umbra.feature_0.0.3.jar" id="mobius.Umbra.feature" version="0.0.3">
+   <feature url="features/mobius.Umbra.feature_0.0.4.jar" id="mobius.Umbra.feature" version="0.0.4">
       <category name="Mobius"/>
    </feature>
    <category-def name="Mobius" label="mobius"/>
