@@ -133,6 +133,10 @@ Contents:
      If you do the above then bonc will be set up to run and unaffected by
      updates of the software (since my-bonc will not be replaced during 
      updates)
+
+  3. Add the installation directory to your path. One way of doing this is to
+     add a line like the below to your .bash_profile file:
+       export PATH=$PATH:/path/to/install
      
 
 3. WINDOWS WITHOUT CYGWIN
@@ -181,5 +185,6 @@ Contents:
     ant dist
 
   This will create and place all the required files inside the dist/ subdirectory.
-  Executing the bonc script in the dist/ directory will run the built version.
+  Executing the bonc script located in the dist/ directory will run the built
+  version.
 
