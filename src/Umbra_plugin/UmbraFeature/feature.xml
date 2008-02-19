@@ -2,7 +2,7 @@
 <feature
       id="mobius.Umbra.feature"
       label="Umbra"
-      version="0.0.3"
+      version="0.0.4"
       provider-name="EU MOBIUS IST-15905 Project">
 
    <description>
@@ -210,7 +210,7 @@ Library.
          id="mobius.umbra"
          download-size="0"
          install-size="0"
-         version="1.0.1"
+         version="1.0.2"
          unpack="false"/>
 
 </feature>
