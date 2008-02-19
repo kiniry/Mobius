@@ -378,7 +378,7 @@ public final class BytecodeController extends BytecodeControllerHelper {
         iolc.dispose();
       }
       my_editor_lines.remove(i);
-      my_editor_lines.add(newlc);
+      my_editor_lines.add(i, newlc);
     }
     return j;
   }

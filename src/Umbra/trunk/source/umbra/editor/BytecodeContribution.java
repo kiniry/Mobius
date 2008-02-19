@@ -68,9 +68,18 @@ public class BytecodeContribution extends ControlContribution {
 
   /**
    * This is a listener class that receives all the events that
-   * change the content of the current bytecode document.
+   * change the content of the current byte code document. This
+   * covers all the editing operations.
    */
   public class BytecodeListener implements IDocumentListener {
+
+    /**
+     * The number of the final line which is removed from the document by
+     * the current edit operation. Note that this field must be calculated
+     * in the {@link #documentAboutToBeChanged(DocumentEvent)} method
+     * as at that point the content to be removed is not removed yet.
+     */
+    private int my_stop_rem;
 
     /**
      * The current constructor does nothing.
@@ -78,6 +87,23 @@ public class BytecodeContribution extends ControlContribution {
     public BytecodeListener() {
     }
 
+    /**
+     * Tries to cast the given document to {@link BytecodeDocument} with
+     * appropriate message if it fails.
+     *
+     * @param a_doc a document to be cast
+     * @return the {@link BytecodeDocument} or null in case the cast is
+     *   impossible
+     */
+    private BytecodeDocument transformDocWithMessage(final IDocument a_doc) {
+      try {
+        return (BytecodeDocument) a_doc;
+      } catch (ClassCastException e) {
+        //This should not happen as we operate in a byte code editor
+        UmbraPlugin.messagelog("You are not editing a byte code document");
+        return null;
+      }
+    }
 
     /**
      * This method handles the event of the change in the current
@@ -91,6 +117,17 @@ public class BytecodeContribution extends ControlContribution {
      * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
+      final BytecodeDocument doc = transformDocWithMessage(an_event.fDocument);
+      if (doc == null) return;
+      if (!doc.isReady()) {
+        doc.init(); //this marks the document as ready
+      }
+      try {
+        my_stop_rem = doc.getLineOfOffset(an_event.getOffset() +
+                                       an_event.getLength());
+      } catch (BadLocationException e) {
+        messageForBadLocation();
+      }
     }
 
 
@@ -140,37 +177,33 @@ public class BytecodeContribution extends ControlContribution {
      * @see IDocumentListener#documentChanged(DocumentEvent)
      */
     public final void documentChanged(final DocumentEvent an_event) {
-      BytecodeDocument doc;
-      try {
-        doc = (BytecodeDocument) an_event.fDocument;
-      } catch (ClassCastException e) {
-        //This should not happen as we operate in a byte code editor
-        UmbraPlugin.messagelog("You are not editing a byte code document");
-        return;
-      }
-      if (!doc.isReady()) {
-        doc.init(); //this marks the document as ready
-        if (an_event.fOffset == 0) return; //first initialisation
-      }
+      final BytecodeDocument doc = transformDocWithMessage(an_event.fDocument);
+      if (doc == null) return;
+
       int stop = 0;
       int start_rem = 0;
-      int stop_rem = 0;
+
       try {
         start_rem = doc.getLineOfOffset(an_event.getOffset());
-        stop_rem = doc.getLineOfOffset(
-                                   an_event.getOffset() + an_event.getLength());
         final int insertedLen = an_event.getText().length();
         stop = doc.getLineOfOffset(an_event.getOffset() +
             insertedLen);
       } catch (BadLocationException e) {
         //This should not happen as the offsets from the event are generated
         //based on the current document
-        UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
-                               "differ from the ones in the event");
+        messageForBadLocation();
       }
 
-      updateFragment(doc, start_rem, stop_rem, stop);
+      updateFragment(doc, start_rem, my_stop_rem, stop);
       ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
+    }
+
+    /**
+     * Shows a pop-up with the message that the document offset is wrong.
+     */
+    private void messageForBadLocation() {
+      UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
+                             "differ from the ones in the event");
     }
 
   }

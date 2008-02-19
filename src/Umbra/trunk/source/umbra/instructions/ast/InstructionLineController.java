@@ -298,7 +298,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
     a_newlc.addHandle(newIh, il, mg);
     if (my_instr_handle.hasTargeters()) {
       addTargeters(newIh, my_instr_handle.getTargeters());
-      my_instr_handle.removeAllTargeters();
+      my_instr_handle.removeAllTargeters(); //il.delete does not perform this
     }
     try {
       il.delete(my_instr_handle);
@@ -346,7 +346,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
         my_instr_list.getInstructionHandles()[an_ino - 1];
       this.my_instr_handle = my_instr_list.insert(prevInstr, ins);
     } else {
-      my_instr_list.insert(ins);
+      this.my_instr_handle =  my_instr_list.insert(ins);
     }
   }
 
@@ -369,6 +369,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
         candidate = my_instr_handle.getPrev();
       }
       addTargeters(candidate, targeters);
+      my_instr_handle.removeAllTargeters();
     }
     try {
       my_instr_list.delete(getHandle());
