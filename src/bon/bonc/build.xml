@@ -37,7 +37,7 @@
   <!-- Paths -->
   <path id="base.path">
     <filelist dir="${lib}">
-      <file name="stringtemplate-3.1b1.jar"/>
+      <file name="stringtemplate.jar"/>
       <file name="CommandlineParser.jar"/>
       <file name="antlr-2.7.7.jar"/>
     </filelist>
@@ -158,12 +158,12 @@
   	
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">
-  	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,CommandlineParser.jar,stringtemplate-3.1b1.jar"/>
+  	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,CommandlineParser.jar,stringtemplate.jar"/>
     </copy>
   	
     <copy todir="${dist}">
       <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/> 
-      <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,LICENCE.txt"/>
+      <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,FAQ.txt,LICENCE.txt"/>
       <fileset dir="${doc-src}/changelog/" includes="changelog"/>
     </copy>
   	
@@ -189,7 +189,7 @@
       <arg value="${release-name}-${release-version}"/>
     </exec>
   	<copy todir="${release}">
-  		<fileset dir="${doc-src}" includes="README.txt,INSTALLATION.txt,LICENCE.txt"/>
+  		<fileset dir="${doc-src}" includes="README.txt,FAQ.txt,INSTALLATION.txt,LICENCE.txt"/>
   		<fileset file="update"/>
   	</copy>
     <chmod perm="a+x" file="${release}/update"/>
@@ -335,7 +335,7 @@
 		
 	<target name="clean-antlr" depends="clean-antlr-parser,clean-antlr-printer,clean-antlr-type-checker,clean-antlr-tester"/>
 	
-  <target name="clean-all" depends="clean-build,clean-antlr,clean-release" description="clean up"/>
+  <target name="clean-all" depends="clean-build,clean-antlr,clean-release,clean-debian-release" description="clean up"/>
 	
 	<target name="clean-build" description="Clean up the build">
 		<delete dir="${build}"/>
@@ -424,6 +424,15 @@
 			<fileset file="${doc-src}/bonc.1.end"/>
 		</concat>
 	</target>
+
+  <target name="clean-debian-release">
+    <delete>
+      <fileset dir="${debian}/src/usr/share/bonc" includes="bonc,bonc-debian"/>
+      <fileset dir="${debian}/src/usr/share/bonc/lib" includes="*.jar"/>
+      <fileset dir="${debian}/src/usr/share/doc/bonc" includes="changelog.*,copyright"/>
+      <fileset dir="${debian}/src/usr/share/man/man1" includes="bonc.*"/>
+    </delete>
+  </target>
 	
   <target name="debian-release" depends="dist,changelogs,manpage">
     <taskdef resource="org/vafer/jdeb/ant/antlib.xml"> 

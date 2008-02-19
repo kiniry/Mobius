@@ -12,10 +12,19 @@
 
 ### DO NOT EDIT BELOW THIS LINE ###
 
-if [ -d "$JAVA_HOME" ]; then
-	JAVA=$JAVA_HOME/bin/java
+if [ $JAVA_HOME ]; then
+  if [ -d "$JAVA_HOME" ]; then
+    JAVA=$JAVA_HOME/bin/java
+    if [ ! -e "$JAVA" ]; then
+      echo "JAVA_HOME appears to be incorrectly set. $JAVA does not exist."
+      exit 1
+    fi
+  else
+	  echo "JAVA_HOME appears to be incorrectly set. $JAVA_HOME is not a valid directory."
+    exit 1
+  fi
 else
-	JAVA=java
+  JAVA=java
 fi
 
 #Get BON_HOME location from location of script
@@ -30,14 +39,14 @@ if [ ! -d $BON_HOME ]; then
 fi
 
 #Lib files
-LIB_ARRAY=(BON.jar antlr-runtime-3.0.1.jar CommandlineParser.jar stringtemplate-3.1b1.jar)
+LIB_ARRAY=(BON.jar antlr-runtime-3.0.1.jar CommandlineParser.jar stringtemplate.jar)
 
 #Check each lib file exists
 for lib in ${LIB_ARRAY[@]}
 do
   f="$BON_HOME/lib/$lib"
   if [ ! -f $f ]; then
-    echo "Missing library $f. Check that you have set BON_HOME correctly. Exiting"
+    echo "Missing library $f. Check that you have set BON_HOME correctly."
     exit 1
   else 
     cp=$cp$f:
