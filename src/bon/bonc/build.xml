@@ -174,21 +174,25 @@
       <include name="update"/>
       </fileset>
     </chmod>
+
+    <echo message="${release-name}-${release-version}" file="${dist}/version"/>
   </target>
 
-	<target name="clean-release">
-		<delete>
-			<fileset dir="${release}/" includes="${release-name}-${release-version}.*"/>
-		</delete>
-	</target>
+  <target name="clean-release">
+    <delete>
+      <fileset dir="${release}/" includes="${release-name}-${release-version}.*"/>
+    </delete>
+  </target>
 	
-	<target name="release" depends="dist,debian-release" description="Generate a release">
-		<exec executable="./release.sh" dir=".">
-			<arg value="${release-name}-${release-version}"/>
-		</exec>
-		<copy file="${doc-src}/README.txt" todir="${release}/"/>
-		<echo message="${release-name}-${release-version}" file="${release}/version"/>
-	</target>
+  <target name="release" depends="dist,debian-release" description="Generate a release">
+    <exec executable="./release.sh" dir=".">
+      <arg value="${release-name}-${release-version}"/>
+    </exec>
+    <copy file="${doc-src}/README.txt" todir="${release}/"/>
+    <copy file="update" todir="${release}/"/>
+    <chmod perm="a+x" file="${release}/update"/>
+    <echo message="${release-name}-${release-version}" file="${release}/version"/>
+  </target>
 	
 	<target name="actual-release" depends="release" description="Do a final release.">
 		<!-- Do a release, move changelogs to old changelogs, and clear latest-changes -->
