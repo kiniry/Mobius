@@ -19,7 +19,8 @@ package umbra.editor;
 public final class Composition {
 
   /**
-   * The current value of the colouring style.
+   * The current value of the colouring style. The default colouring style
+   * number is 1.
    */
   private static int mod = 1;
 

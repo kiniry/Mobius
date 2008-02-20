@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import umbra.editor.parsing.BytecodeStrings;
-import umbra.instructions.ast.FieldInstruction;
 import umbra.instructions.ast.IConstInstruction;
 
 /**

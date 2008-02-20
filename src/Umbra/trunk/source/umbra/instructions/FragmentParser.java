@@ -15,6 +15,7 @@ import umbra.UmbraException;
 import umbra.UmbraRuntimeException;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.UmbraLocationException;
+import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
@@ -35,17 +36,17 @@ public class FragmentParser extends BytecodeTextParser {
   /**
    * The document which contains the fragment to be parsed.
    */
-  private BytecodeDocument my_doc;
+  private final BytecodeDocument my_doc;
 
   /**
    * The first line to be parsed. The parsing includes this line.
    */
-  private int my_start;
+  private final int my_start;
 
   /**
    * The last line to be parsed. The parsing includes this line.
    */
-  private int my_end;
+  private final int my_end;
   //@ invariant my_end < my_doc.getNumberOfLines();
 
   /**
@@ -53,7 +54,7 @@ public class FragmentParser extends BytecodeTextParser {
    * We currently assume that all the modifications are included in a single
    * method.
    */
-  private int my_methodno;
+  private final int my_methodno;
   //@ invariant my_methodno >= 0;
 
   /**
@@ -93,14 +94,17 @@ public class FragmentParser extends BytecodeTextParser {
    * This method initialises the parsing context so that the parsing is
    * inside of a method, then it parses the lines in the related document
    * area.
+   *
+   * @param a_ctxt the parsing context for the given fragment
    */
-  public final void runParsing() {
-    final LineContext ctxt = new LineContext();
-    ctxt.seClassToBeRead();
-    ctxt.setMethodNo(my_methodno);
+  public final void runParsing(final LineContext a_ctxt) {
     int a_line_no = my_start;
     try {
-      a_line_no = swallowMethodBodyFragment(a_line_no, my_end, ctxt);
+      if (a_ctxt.isInsideAnnotation()) {
+        a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
+      } else {
+        a_line_no = swallowMethodBodyFragment(a_line_no, a_ctxt);
+      }
     } catch (UmbraLocationException e) {
       MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
                       "The current document has no positions for a line " +
@@ -115,13 +119,44 @@ public class FragmentParser extends BytecodeTextParser {
   }
 
   /**
+   * This method parses a fragment of an annotation. The fragment is delimited
+   * with {@code a_start} and {@code my_end} (inclusively). The line context
+   * gives the number of the current method and should be set in the
+   * state that corresponds to parsing of a method.
+   *
+   * @param a_start the first parsed line
+   * @param a_ctxt the parsing context
+   * @return the first line to be parsed by the further parsing procedure
+   * @throws UmbraLocationException in case the method reaches a line number
+   *   which is not within the given document
+   * @throws UmbraException in case parsing reached an unexpected line
+   *   controller
+   */
+  private int swallowAnnotationFragment(final int a_start,
+                                        final LineContext a_ctxt)
+    throws UmbraLocationException, UmbraException {
+    int j = a_start;
+    for (; j <= my_end; j++) {
+      final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
+      final BytecodeLineController lc = Preparsing.getType(lineName,
+                                                           a_ctxt);
+      addEditorLine(lc);
+      lc.setMethodNo(a_ctxt.getMethodNo());
+      if (!(lc instanceof AnnotationLineController)) { //we allow only
+                                                       //annotation lines
+        throw new UmbraException();
+      }
+    }
+    return j;
+  }
+
+  /**
    * This method parses a fragment of a single method. The fragment is delimited
    * with {@code a_start} and {@code an_end} (inclusively). The line context
    * gives the number of the current method and should be set in the
    * state that corresponds to parsing of a method.
    *
    * @param a_start the first parsed line
-   * @param an_end the last parsed line
    * @param a_ctxt the parsing context
    * @return the first line to be parsed by the further parsing procedure
    * @throws UmbraLocationException in case the method reaches a line number
@@ -129,18 +164,17 @@ public class FragmentParser extends BytecodeTextParser {
    * @throws UmbraException in case parsing reached an unexpected line
    */
   private int swallowMethodBodyFragment(final int a_start,
-                                        final int an_end,
                                         final LineContext a_ctxt)
     throws UmbraLocationException, UmbraException {
     int j = a_start;
-    for (; j <= an_end; j++) {
+    for (; j <= my_end; j++) {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(lineName,
                                                            a_ctxt);
       addEditorLine(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       if (lc.isCommentStart()) { // ignore comments
-        j = swallowComment(my_doc, j, an_end, a_ctxt);
+        j = swallowComment(my_doc, j, my_end, a_ctxt);
         continue;
       }
       if (lc instanceof HeaderLineController) { // method header

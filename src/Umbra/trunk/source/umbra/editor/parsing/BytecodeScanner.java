@@ -11,6 +11,7 @@ package umbra.editor.parsing;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.NumberRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
@@ -22,10 +23,11 @@ import umbra.editor.ColorValues;
 
 
 /**
- * This class is responsible for coloring all text in a bytecode
- * editor window according to some special 9 rules.
- * Colors are chosen as a token array with a particular colouring style
- * given in the constructor.
+ * This class is responsible for colouring these texts in a byte code
+ * editor window which are outside BML annotations areas. This class uses
+ * special 9 rules which describe the way the different areas are
+ * coloured. Colors are chosen as a token array with a particular colouring
+ * style given in the constructor.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -78,11 +80,15 @@ public class BytecodeScanner extends RuleBasedScanner {
    * TODO.
    */
   private static final int RULE_COMMENT = 10;
-
   /**
    * TODO.
    */
-  private static final int NUMBER_OF_RULES = 11;
+  private static final int RULE_ANNOT = 11;
+
+  /**
+   * The number of colouring rules used in this class.
+   */
+  private static final int NUMBER_OF_RULES = 12;
 
 
   /**
@@ -130,8 +136,6 @@ public class BytecodeScanner extends RuleBasedScanner {
    * @return the array with the rules
    */
   private IRule[] createRulesArray(final IToken[] the_tokens) {
-    //WordRule keyrule = new WordRule(new SpecialWordDetector(),
-    //                                tokens[ColorValues.KEY]);
     final IRule[] rules = new IRule[NUMBER_OF_RULES];
     rules[RULE_EOL] = new EndOfLineRule("//", the_tokens[ColorValues.COMMENT]);
     rules[RULE_INSTRUCTION] = createInstructionRule(the_tokens);
@@ -143,14 +147,16 @@ public class BytecodeScanner extends RuleBasedScanner {
                                                 the_tokens[ColorValues.ATTR]);
     rules[RULE_PARENTHESES] = new SpecialNumberRule('(', ')',
                                            the_tokens[ColorValues.SQUARE]);
-    //rules[6] = keyrule;
     rules[RULE_BRACES] = new SingleLineRule("{", "}",
                                             the_tokens[ColorValues.SQUARE]);
     rules[RULE_NUMBER] = new NumberRule(the_tokens[ColorValues.NUMBER]);
     rules[RULE_WHITESPACE] = new WhitespaceRule(
                                       new BytecodeWhitespaceDetector());
-    rules[RULE_STAR] = new EndOfLineRule("*", the_tokens[ColorValues.ANNOT]);
-    rules[RULE_COMMENT] = new EndOfLineRule("/*",
+    rules[RULE_STAR] = new EndOfLineRule("*", the_tokens[ColorValues.COMMENT]);
+    rules[RULE_COMMENT] = new MultiLineRule("/*", "*/",
+                                            the_tokens[ColorValues.COMMENT]);
+
+    rules[RULE_ANNOT] = new MultiLineRule("/*@", "@*/",
                                             the_tokens[ColorValues.ANNOT]);
     return rules;
   }

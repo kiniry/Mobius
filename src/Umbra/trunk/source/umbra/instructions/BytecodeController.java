@@ -19,12 +19,14 @@ import umbra.UmbraException;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.BytecodeContribution.BytecodeListener;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.instructions.ast.UnclassifiedInstruction;
 
 /**
  * This class defines some structures related to BCEL as well
@@ -94,6 +96,35 @@ public final class BytecodeController extends BytecodeControllerHelper {
   }
 
   /**
+   * The method finds out which parsing context is appropriate for the given
+   * position. It walks back through the structure of the editor lines until
+   * a method header is found (and in this case the context is the one
+   * appropriate for method body) or an annotation line (and in this case
+   * the context is the one appropriate for annotation).
+   *
+   * @param a_pos a position to check the context for
+   * @return the context for the given position
+   */
+  private LineContext establishCurrentContext(final int a_pos) {
+    final LineContext ctxt = new LineContext();
+    for (int i = a_pos; i >= 0; i--) {
+      final BytecodeLineController blc =
+        (BytecodeLineController)my_editor_lines.get(i);
+      if (blc instanceof HeaderLineController) {
+        ctxt.seClassToBeRead();
+        ctxt.setMethodNo(blc.getMethodNo());
+        break;
+      }
+      if (blc instanceof AnnotationLineController) {
+        ctxt.setInsideAnnotation();
+        ctxt.setMethodNo(blc.getMethodNo());
+        break;
+      }
+    }
+    return ctxt;
+  }
+
+  /**
    * The method rearranges the internal representation of the byte code
    * document to take into account the given change in the document.
    *
@@ -122,7 +153,8 @@ public final class BytecodeController extends BytecodeControllerHelper {
     final int methodno = getMethodForLine(a_start_rem);
     final FragmentParser fgmparser = new FragmentParser(
       (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno);
-    fgmparser.runParsing(); // after that I must know all the instructions are
+    fgmparser.runParsing(establishCurrentContext(a_start_rem));
+                            // after that I must know all the instructions are
                             //correct
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
     markModified(methodno);
@@ -363,16 +395,19 @@ public final class BytecodeController extends BytecodeControllerHelper {
       final BytecodeLineController newlc =
         (BytecodeLineController)the_lines.get(j);
       if (newlc instanceof InstructionLineController &&
+          !(newlc instanceof UnclassifiedInstruction) &&
           oldlc instanceof InstructionLineController) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;
         final InstructionLineController ilc = (InstructionLineController) newlc;
         iolc.replace(ilc);
-      } else if (newlc instanceof InstructionLineController) {
+      } else if (newlc instanceof InstructionLineController &&
+                 !(newlc instanceof UnclassifiedInstruction)) {
         final InstructionLineController ilc = (InstructionLineController) newlc;
         final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
         ilc.makeHandleForPosition(mg, getCurrentPositionInMethod(i));
-      } else if (oldlc instanceof InstructionLineController) {
+      } else if (oldlc instanceof InstructionLineController &&
+                 !(oldlc instanceof UnclassifiedInstruction)) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;
         iolc.dispose();

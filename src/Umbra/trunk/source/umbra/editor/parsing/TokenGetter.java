@@ -33,8 +33,12 @@ public final class TokenGetter {
    */
   private TokenGetter() {
   }
+
   /**
-   * TODO
+   * Returns a fresh token with associated colour. The colour is retrieved
+   * from the given colour manager and is computed based on the given colouring
+   * mode and the colour number within the mode.
+   *
    * @param the_colour_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
@@ -88,14 +92,19 @@ public final class TokenGetter {
   }
 
   /**
-   * TODO.
+   * Creates a text attribute for the given colour manager, colouring mode
+   * and the colour number. The returned {@link TextAttribute} has the
+   * foreground colour set according to the {@link ColorValues#MODELS}
+   * array, the background colour set to be the default and the style
+   * again set according to the {@link ColorValues#MODELS}.
    *
-   * @param the_manager the color manager related to the current bytecode
+   * @param the_manager the color manager related to the current byte code
    *    editor, it must be the same as in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
    * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
-   * @param a_col a colour value with fixed meaning across the colouring styles
+   * @param a_col a colour value with fixed meaning across all the colouring
+   *    styles
    * @return the given colour as an attribute
    */
   private static TextAttribute getTextAttribute(final ColorManager the_manager,

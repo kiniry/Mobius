@@ -47,27 +47,32 @@ public final class ColorValues {
    * The color of strings.
    */
   public static final int STRING = 0;
+
   /**
    * The color of comments (starting with //).
    */
   public static final int COMMENT = 1;
+
   /**
    * The color of unparsed text in byte code (e.g. names of called methods).
    */
   public static final int DEFAULT = 2;
+
   /**
    * The color of piece of byte code recognized to be an error (not used).
    */
   public static final int ERROR = 3;
+
   /**
    * The color of the method headers (e.g. public int a(int b)).
    */
   public static final int HEADER = 4;
 
   /**
-   * TODO.
+   * The colour of BML annotations.
    */
   public static final int TAG = 5;
+
   /**
    * The color of bytecode instructions.
    */
@@ -148,8 +153,8 @@ public final class ColorValues {
                94, 71, 58, 1,
                13, 68, 189, 0,
                13, 68, 189, 0,
-               10, 94, 13, 1, //default BML annotation colour
-               153, 255, 153, 1},
+               10, 94, 13, 0, //default BML annotation colour
+               10, 94, 13, 3}, //default BML kyeword annotation colour
     new int[] {0, 255, 0, 0,
                128, 128, 128, 2,
                0, 0, 0, 0,
@@ -167,7 +172,7 @@ public final class ColorValues {
                224, 255, 0, 3,
                224, 0, 255, 3,
                255, 153, 204, 0,
-               153, 255, 153, 1},
+               255, 153, 204, 3},
     new int[] {0, 0, 255, 0,
                255, 128, 255, 2,
                64, 0, 64, 0,

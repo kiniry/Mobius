@@ -18,6 +18,7 @@ import umbra.UmbraException;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.BytecodeStrings;
 import umbra.editor.parsing.UmbraLocationException;
+import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
@@ -320,7 +321,9 @@ public class BytecodeTextParser {
    * contains white spaces only or is one of the possible kinds of
    * comment lines. The parsing stops at the first line which cannot
    * be considered empty. This line will be parsed once more by the subsequent
-   * parsing procedure.
+   * parsing procedure. We ensure here that the {@link AnnotationLineController}
+   * has the method number of either the current method or the method right
+   * after the annotation.
    *
    * @param a_doc a document to extract empty lines from
    * @param the_current_lno the first line to be analysed
@@ -343,11 +346,12 @@ public class BytecodeTextParser {
           !(lc instanceof EmptyLineController)) {
         break;
       }
-      addEditorLine(j, lc);
+      if (lc instanceof AnnotationLineController)
+        ((AnnotationLineController)lc).setMethodNo(a_ctxt.getMethodNo());
+      addEditorLine(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       j++;
     }
     return j;
   }
-
 }

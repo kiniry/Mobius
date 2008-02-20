@@ -12,7 +12,9 @@ package umbra.instructions.ast;
 
 /**
  * This class handles the creation and correctness of line controllers that
- * contain BML annotations.
+ * contain BML annotations. The method number associated with the
+ * <code>AnnotationLineController</code> that contains the specs of a
+ * method is this method number.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)

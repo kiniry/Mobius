@@ -1,3 +1,4 @@
-#Wed Jan 30 14:13:53 CET 2008
+#Tue Feb 19 14:50:22 CET 2008
+file_filter=in\:\\.java$\nin\:\\.properties$\nex\:tests-src//tests/*\n
 enabled=false
 projectclassloader=false

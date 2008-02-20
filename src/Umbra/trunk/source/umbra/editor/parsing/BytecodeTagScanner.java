@@ -19,42 +19,50 @@ import umbra.editor.ColorManager;
 import umbra.editor.ColorValues;
 
 /**
- * This method defines coloring rules in tags.
- * It has been generated automatically except obtaing
- * color values from the array in {@ref ColorValues}.
+ * This class is responsible for coloring these texts in a byte code
+ * editor window which are inside BML annotations areas. This class uses
+ * special 4 rules which describe the way the different sequences are coloured.
+ * Colors are chosen as a token array with a particular colouring
+ * style given in the constructor.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeTagScanner extends RuleBasedScanner {
 
   /**
-   * TODO.
+   * The number of the rule that handles the recognition of the areas between
+   * the double quote characters.
    */
   private static final int DOUBLE_QUOTE_RULE = 0;
 
   /**
-   * TODO.
+   * The number of the rule that handles the recognition of the areas between
+   * the single quote characters.
    */
   private static final int SINGLE_QUOTE_RULE = 1;
 
   /**
-   * TODO.
+   * The number of the rule that handles the recognition of the whitespace
+   * areas.
    */
-  private static final int LINE_RULE = 2;
+  private static final int WHITESPACE_RULE = 2;
 
   /**
-   * TODO.
+   * The number of the rule that handles the colouring of the BML keywords.
    */
-  private static final int WHITESPACE_RULE = 3;
+  private static final int KEYWORD_RULE = 3;
 
   /**
-   * TODO.
+   * The number of colouring rules used in this class.
    */
   private static final int NUMBER_OF_RULES = 4;
 
   /**
-   * TODO.
+   * The constructor initialises the scanning rules for the current scaner.
+   * It associates the given colour managere and colouring mode with the
+   * 
    *
    * @param a_manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
@@ -66,9 +74,6 @@ public class BytecodeTagScanner extends RuleBasedScanner {
 
     final IToken[] tokens = TokenGetter.getTokenTab(a_manager, a_mode);
 
-    final WordRule linerule = new WordRule(new SpecialWordDetector());
-    linerule.addWord("<init>", tokens[ColorValues.KEY]);
-
     final IRule[] rules = new IRule[NUMBER_OF_RULES];
 
     // Add rule for double quotes
@@ -79,11 +84,20 @@ public class BytecodeTagScanner extends RuleBasedScanner {
     rules[SINGLE_QUOTE_RULE] = new SingleLineRule("'", "'",
                                                   tokens[ColorValues.STRING],
                                                   '\\');
-    // Add generic whitespace rule.
-    rules[LINE_RULE] = linerule;
     rules[WHITESPACE_RULE] = new WhitespaceRule(
                                               new BytecodeWhitespaceDetector());
+    rules[KEYWORD_RULE] = createKeywordRule(tokens);
 
     setRules(rules);
+  }
+
+  private IRule createKeywordRule(IToken[] tokens) {
+    final WordRule insrule = new WordRule(new BytecodeWordDetector(),
+                                          tokens[ColorValues.ANNOT]);
+    for (int i = 0; i < BytecodeStrings.BML_KEYWORDS.length; i++) {
+      insrule.addWord(BytecodeStrings.BML_KEYWORDS[i],
+              tokens[ColorValues.ANNOTKEY]);
+    }
+    return insrule;
   }
 }

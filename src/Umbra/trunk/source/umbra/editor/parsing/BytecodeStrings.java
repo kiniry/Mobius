@@ -20,11 +20,26 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
 
 
   /**
-   * TODO.
+   * This constant contains an array with all the BML keywords.
+   * The BML lines are handled by
+   * {@link umbra.instructions.ast.AnnotationLineController} class.
+   * FIXME: this should be retrieved from BMLlib
    */
-  public static final String[] BML_KEYWORDS = new String[] {"requires",
-                                                            "ensures",
-                                                            "exsures" };
+  public static final String[] BML_KEYWORDS = new String[] {
+    "invariant",
+    "assert",
+    "requires",
+    "{|",
+    "|}",
+    "precondition",
+    "modifies",
+    "ensures",
+    "exsures",
+    "\\result",
+    "loop_specification",
+    "modifies",
+    "loop_inv",
+    "decreases"};
 
   /**
    * TODO.
