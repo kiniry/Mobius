@@ -231,23 +231,6 @@ public class Main {
           } else {
             fileName = file.getPath();
           }
-          ParseResult parse = tracker.getParseResult(fileName);
-          if (parse.continueFromParse(PP_NUM_SEVERE_ERRORS)) {
-            try {
-              if (timing) {
-                long startTime = System.nanoTime();
-                Printer.prettyPrintToStream(parse, System.out);
-                long endTime = System.nanoTime();
-                System.out.println("Pretty-printing to System.out took: " + timeString(endTime-startTime));
-              } else {
-                Printer.prettyPrintToStream(parse, System.out);
-              }
-            } catch (RecognitionException re) {
-              System.out.println("Something went wrong when printing...");
-            }
-          } else {
-            System.out.println("Not printing " + fileName + " due to parse errors.");
-          }
         }
       }
     }
