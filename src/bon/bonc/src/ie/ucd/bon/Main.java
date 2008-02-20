@@ -10,17 +10,14 @@ import ie.ucd.bon.errorreporting.NoFilesError;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.commandline.actions.TriggersBoolean;
-import ie.ucd.commandline.constraints.MutuallyExclusiveConstraint;
-import ie.ucd.commandline.constraints.RequiresConstraint;
-import ie.ucd.commandline.options.BooleanDefaultOption;
 import ie.ucd.commandline.options.InvalidOptionsSetException;
 import ie.ucd.commandline.options.Options;
-import ie.ucd.commandline.options.StringDefaultOption;
 import ie.ucd.commandline.parser.CommandlineParser;
-import ie.ucd.commandline.parser.CommandlineParser.SortingOption;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -185,71 +182,71 @@ public class Main {
   
   private static void print(Collection<File> files, ParsingTracker tracker, Options so, boolean timing) {
 
-    if(so.isStringOptionByNameSelected("-pp")) {
-      if (so.isStringOptionByNameSelected("-ppo")) {
-        String outputDirPath = so.getStringOptionByNameArgument("-ppo");
-        File outputDirectory = new File(outputDirPath);
+    if(!so.isStringOptionByNameSelected("-p")) {
+      return;
+    }
 
-        String printTypes = so.getStringOptionByNameArgument("-pp");
-        Collection<PrintingOption> printingOptions = Printer.getPrintingOptionsList(printTypes, ";");
-
-        for (PrintingOption po : printingOptions) {
-          
-          for (File file : files) {
-            String fileName;
-            if (file == null) {
-              fileName = "stdin";
-            } else {
-              fileName = file.getPath();
-            }
-            ParseResult parse = tracker.getParseResult(fileName);
-            if (parse.continueFromParse(PP_NUM_SEVERE_ERRORS)) {
-              try {
-                if (timing) {
-                  long startTime = System.nanoTime();
-                  Printer.printToFile(parse, outputDirectory, po);
-                  long endTime = System.nanoTime();
-                  System.out.println("Printing " + Printer.getPrintingOptionName(po) + " took: " + timeString(endTime-startTime));
-                } else {
-                  Printer.printToFile(parse, outputDirectory, po);
-                }
-              } catch (RecognitionException re) {
-                System.out.println("Something went wrong when printing...");
-              }
-              
-            } else {
-              System.out.println("Not printing " + fileName + " due to parse errors.");
-            }
-          }
-        }
-      } else {
-        System.out.println("Pretty printing to System.out:");
-        for (File file : files) {
-          String fileName;
-          if (file == null) {
-            fileName = "stdin";
-          } else {
-            fileName = file.getPath();
-          }
-          ParseResult parse = tracker.getParseResult(fileName);
-          if (parse.continueFromParse(PP_NUM_SEVERE_ERRORS)) {
-            try {
-              if (timing) {
-                long startTime = System.nanoTime();
-                Printer.prettyPrintToStream(parse, System.out);
-                long endTime = System.nanoTime();
-                System.out.println("Pretty-printing to System.out took: " + timeString(endTime-startTime));
-              } else {
-                Printer.prettyPrintToStream(parse, System.out);
-              }
-            } catch (RecognitionException re) {
-              System.out.println("Something went wrong when printing...");
-            }
-          } else {
-            System.out.println("Not printing " + fileName + " due to parse errors.");
-          }
-        }
+    String printType = so.getStringOptionByNameArgument("-p");
+    PrintingOption printingOption = Printer.getPrintingOption(printType);
+    if (printingOption == Printer.PrintingOption.NONE) {
+      System.out.println("Unknown print type \"" + printType + "\"");
+      return;
+    }
+    
+    boolean printToFile = so.isStringOptionByNameSelected("-po");
+    
+    PrintStream outputStream;
+    String outputFilePath = null;
+    if (printToFile) {
+      outputFilePath = so.getStringOptionByNameArgument("-po");
+      File outputFile = new File(outputFilePath);
+      
+      try {
+        FileOutputStream outputFileStream = new FileOutputStream(outputFile);
+        outputStream = new PrintStream(outputFileStream);
+        
+        Main.logDebug("printing: " + printType + ", to: " + outputFilePath);
+      } catch (FileNotFoundException fnfe) {
+        System.out.println("Error writing to file " + outputFilePath);
+        return;
       }
+    } else {
+      outputStream = System.out;
+      Main.logDebug("printing: " + printType + ", to: stdout");
+    }  
+
+
+    for (File file : files) {
+      String fileName;
+      if (file == null) {
+        fileName = "stdin";
+      } else {
+        fileName = file.getPath();
+      }
+
+      ParseResult parse = tracker.getParseResult(fileName);
+      if (parse.continueFromParse(PP_NUM_SEVERE_ERRORS)) {
+        try {
+          if (timing) {
+            long startTime = System.nanoTime();
+            Printer.printToStream(parse, printingOption, outputStream);
+            long endTime = System.nanoTime();
+            System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + timeString(endTime-startTime));
+          } else {
+            Printer.printToStream(parse, printingOption, outputStream);
+          }
+        } catch (RecognitionException re) {
+          System.out.println("Something went wrong when printing...");
+        }
+
+      } else {
+        System.out.println("Not printing " + fileName + " due to parse errors.");
+      }
+    }
+    
+    if (printToFile) {
+      outputStream.close();
+      System.out.println("Succesfully created: " + outputFilePath);
     }
   }
   
@@ -311,166 +308,13 @@ public class Main {
   }
 
   private static CommandlineParser processArguments(String[] args) throws InvalidOptionsSetException {
-    CommandlineParser cp = new CommandlineParser("bonc", SortingOption.ALPHABETICAL_OPTION, 1);
-    cp.setStartHelpString("BON Parser and Typechecker.");
-    cp.setDefaultUsageString("bonc [options] file1 [file2 ...]");
+    CommandlineParser clp = CLP.commandlineParser();
+    
+    clp.parseOptions(System.out, args);
+    clp.checkConstraints(System.out);
+    clp.triggerActions();
 
-    BooleanDefaultOption tc = new BooleanDefaultOption();
-    tc.setOptionID("1");
-    tc.addOptionName("-tc");
-    tc.addOptionName("--typecheck");
-    tc.setHelpString("Typecheck the input.");
-    tc.setByDefault();
-    tc.setHidden();
-    cp.addOption(tc);
-    
-    BooleanDefaultOption ntc = new BooleanDefaultOption();
-    ntc.setOptionID("1.1");
-    ntc.addOptionName("-ntc");
-    ntc.addOptionName("--no-typecheck");
-    ntc.setHelpString("Do not typecheck the input.");
-    ntc.addAction(new TriggersBoolean("1.1", "1", false));
-    cp.addOption(ntc);    
-    
-    StringDefaultOption pp = new StringDefaultOption();
-    pp.setOptionID("2");
-    pp.addOptionName("-pp");
-    pp.addOptionName("--pretty-print");
-    pp.setArgName("TYPE");
-    pp.setHelpString("Pretty-print the parsed input");
-    cp.addOption(pp);
-    
-    StringDefaultOption ppo = new StringDefaultOption();
-    ppo.setOptionID("2.1");
-    ppo.addOptionName("-ppo");
-    ppo.addOptionName("--pretty-print-output");
-    ppo.setArgName("FILE");
-    ppo.setHelpString("Output directory for printed output.");
-    ppo.addConstraint(new RequiresConstraint("2.1", "2"));
-    cp.addOption(ppo);
-    
-    BooleanDefaultOption help = new BooleanDefaultOption();
-    help.setOptionID("3");
-    help.addOptionName("-h");
-    help.addOptionName("--help");
-    help.setHelpString("Print this help message");
-    cp.addOption(help);
-    
-    BooleanDefaultOption hiddenhelp = new BooleanDefaultOption();
-    hiddenhelp.setOptionID("3.1");
-    hiddenhelp.addOptionName("-hh");
-    hiddenhelp.addOptionName("--hidden-help");
-    hiddenhelp.setHelpString("Print help with hidden options shown");
-    hiddenhelp.setHidden();
-    cp.addOption(hiddenhelp);
-    
-    BooleanDefaultOption time = new BooleanDefaultOption();
-    time.setOptionID("4");
-    time.addOptionName("-t");
-    time.addOptionName("-time");
-    time.addOptionName("--time");
-    time.setHelpString("Print timing information.");
-    cp.addOption(time);
-    
-    StringDefaultOption cg = new StringDefaultOption();
-    cg.setOptionID("5");
-    cg.addOptionName("-cg");
-    cg.setHelpString("Print class and cluster graph in the .dot file format.");
-    cg.setHidden(); //Hidden until revisiting
-    cp.addOption(cg);
-    
-    StringDefaultOption ig = new StringDefaultOption();
-    ig.setOptionID("6");
-    ig.addOptionName("-ig");
-    ig.setHelpString("Print class inheritence graph in the .dot file format.");
-    ig.setHidden(); //Hidden until revisiting
-    cp.addOption(ig);
-    
-    BooleanDefaultOption informal = new BooleanDefaultOption();
-    informal.setOptionID("10.0");
-    informal.addOptionName("-i");
-    informal.addOptionName("-informal");
-    informal.addOptionName("--informal");
-    informal.setHelpString("Only check informal charts.");
-    informal.addAction(new TriggersBoolean("10.0", "10.6", false)); //Informal means no formal
-    informal.addAction(new TriggersBoolean("10.0", "11", false)); //Informal also means no consistency checking
-    cp.addOption(informal);
-    
-    BooleanDefaultOption formal = new BooleanDefaultOption();
-    formal.setOptionID("10.5");
-    formal.addOptionName("-f");
-    formal.addOptionName("-formal");
-    formal.addOptionName("--formal");
-    formal.setHelpString("Only check formal charts.");
-    //formal.setByDefault();
-    formal.addAction(new TriggersBoolean("10.5", "10.1", false)); //formal means no informal
-    formal.addAction(new TriggersBoolean("10.5", "11", false)); //Informal also means no consistency checking
-    
-    formal.addConstraint(new MutuallyExclusiveConstraint("10.5", "10.0"));
-    cp.addOption(formal);
-    
-    BooleanDefaultOption checkInformal = new BooleanDefaultOption();
-    checkInformal.setOptionID("10.1");
-    checkInformal.addOptionName("-ci");
-    checkInformal.addOptionName("--check-informal");
-    checkInformal.setHelpString("Check informal charts.");
-    checkInformal.setByDefault();
-    checkInformal.setHidden();
-    cp.addOption(checkInformal);
-    
-    BooleanDefaultOption checkFormal = new BooleanDefaultOption();
-    checkFormal.setOptionID("10.6");
-    checkFormal.addOptionName("-cf");
-    checkFormal.addOptionName("--check-formal");
-    checkFormal.setHelpString("Check formal diagrams.");
-    checkFormal.setByDefault();
-    checkFormal.setHidden();
-    cp.addOption(checkFormal);
-    
-    BooleanDefaultOption consistency = new BooleanDefaultOption();
-    consistency.setOptionID("11");
-    consistency.addOptionName("-cc");
-    consistency.addOptionName("--check-consistency");
-    consistency.setHelpString("Check consistency between levels.");
-    consistency.setByDefault();
-    consistency.setHidden();
-    cp.addOption(consistency);
-    
-    BooleanDefaultOption noConsistency = new BooleanDefaultOption();
-    noConsistency.setOptionID("11.1");
-    noConsistency.addOptionName("-nc");
-    noConsistency.addOptionName("--no-consistency");
-    noConsistency.setHelpString("Do not check consistency between levels.");
-    noConsistency.addAction(new TriggersBoolean("11.1", "11", false));
-    //noConsistency.addConstraint(new MutuallyExclusiveConstraint("11", "11.1"));
-    cp.addOption(noConsistency);
-    
-    BooleanDefaultOption debug = new BooleanDefaultOption();
-    debug.setOptionID("99");
-    debug.addOptionName("-d");
-    debug.addOptionName("--debug");
-    debug.setHelpString("Print debugging output.");
-    cp.addOption(debug);
-    
-    BooleanDefaultOption stdin = new BooleanDefaultOption();
-    stdin.setOptionID("9");
-    stdin.addOptionName("-");
-    stdin.setHelpString("Read from standard input.");    
-    cp.addOption(stdin);
-    
-    BooleanDefaultOption printMan = new BooleanDefaultOption();
-    printMan.setOptionID("99999");
-    printMan.setHidden();
-    printMan.addOptionName("-pm");
-    printMan.addOptionName("--print-man");
-    printMan.setHelpString("Print available options in man-page format");
-    cp.addOption(printMan);
-    
-    cp.parseOptions(System.out, args);
-    cp.checkConstraints(System.out);
-    cp.triggerActions();
-
-    return cp;
+    return clp;
   }
   
   private static String timeString(long timeInNano) {

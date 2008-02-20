@@ -13,8 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
-import java.util.Collection;
-import java.util.HashSet;
 
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
@@ -36,13 +34,13 @@ public class Printer {
   private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
   public static PrintingOption getPrintingOption(String optionString) {   
-    if (optionString.equals("syso")) {
+    if (optionString.equalsIgnoreCase("syso")) {
       return PrintingOption.SYSO;
-    } else if (optionString.equals("txt")) {
+    } else if (optionString.equalsIgnoreCase("txt")) {
       return PrintingOption.PLAIN_TEXT;
-    } else if (optionString.equals("html")) {
+    } else if (optionString.equalsIgnoreCase("html")) {
       return PrintingOption.HTML;
-    } else if (optionString.equals("dot")) {
+    } else if (optionString.equalsIgnoreCase("dot")) {
       return PrintingOption.DOT;
     } else {
       return PrintingOption.NONE;
@@ -92,21 +90,7 @@ public class Printer {
     return outputDirectory.getAbsolutePath() + File.separatorChar + getPrintingOptionFileName(originalFileName, po);    
   }
 
-  public static Collection<PrintingOption> getPrintingOptionsList(String optionListString, String separator) {
-    String[] parts = optionListString.split(separator);
-    HashSet<PrintingOption> printingOptionsSet = new HashSet<PrintingOption>();
-    for (String p : parts) {
-      PrintingOption po = getPrintingOption(p);
-      if (po != PrintingOption.NONE) {
-        printingOptionsSet.add(po);
-      } else {
-        //Print error - unknown printing option?
-      }
-    }
-    return printingOptionsSet;
-  }
-
-  public static String printToString(ParseResult parseResult, Reader stFile) throws RecognitionException {
+  private static String printUsingTemplateToString(ParseResult parseResult, Reader stFile) throws RecognitionException {
     try {
       //FileReader groupFileR = new FileReader(stFile); //Read the string-template file
       StringTemplateGroup templates = new StringTemplateGroup(stFile);
@@ -135,10 +119,15 @@ public class Printer {
     return st.toString();
   }
 
-  public static void printToFile(ParseResult parseResult, File outputDirectory, PrintingOption printingOption) 
+ public static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintStream outputStream) 
   throws RecognitionException {
-    
-    String outputFilename = outputDirectory.getAbsolutePath() + File.separatorChar + parseResult.getFileName() + getPrintingOptionFileSuffix(printingOption);
+    String text = printToString(parseResult, printOption);
+    if (text != null) {
+      outputStream.println(text);
+    }
+  }
+  
+  public static String printToString(ParseResult parseResult, PrintingOption printingOption) throws RecognitionException {
     String outputText = null;
     
     if (printingOption == PrintingOption.DOT) {
@@ -146,29 +135,12 @@ public class Printer {
     } else {
       Reader templateFile = getPrintingOptionTemplateFileReader(printingOption);
       if (templateFile != null) {
-        outputText = printToString(parseResult, templateFile);
+        outputText = printUsingTemplateToString(parseResult, templateFile);
       } else {
         System.out.println("Sorry, printing option  " + printingOption + " not yet implemented");
       }
-    }
-    
-    try {
-      if (outputText != null) {
-        PrintStream out = new PrintStream(outputFilename);
-        out.print(outputText);
-        out.close();
-        System.out.println("Succesfully created: " + outputFilename);
-      }
-    } catch (IOException ioe) {
-      System.out.println("Error writing to file " + outputFilename);
-    }
-
-  }
-
-  public static void prettyPrintToStream(ParseResult parseResult, PrintStream outputStream) 
-  throws RecognitionException {
-    String text = printToString(parseResult, getPrintingOptionTemplateFileReader(PrintingOption.PLAIN_TEXT));
-    System.out.println(text);
+    }    
+    return outputText;
   }
 
 }

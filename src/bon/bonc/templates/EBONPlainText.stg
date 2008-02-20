@@ -4,6 +4,7 @@ prog(p,i) ::= <<
 <if(i)><i>
 
 <endif><p>
+
 >>
 
 bonSpecification(bs) ::= <<

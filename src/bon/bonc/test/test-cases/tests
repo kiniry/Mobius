@@ -131,7 +131,7 @@
 @Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1, 10, 10, C > }
 
 @Test-name: "Class has self as parent (formal)."
-@Prog-args: -nc
+@Prog-args: -formal
 @Location { test22/ }
 @Input { self_as_super2 }
 @Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super2, 8, 6, X > }
