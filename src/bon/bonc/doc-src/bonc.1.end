@@ -1,20 +1,34 @@
 .SH BUG REPORTS
 Bug tracking is handled on the Mobius Trac (https://mobius.ucd.ie/). 
 
-To create a new ticket either complete the form at 
+To create a new ticket either complete the form at:
+.PD 0
+.P
+.RS 4
 https://mobius.ucd.ie/newticket?owner=fintan&component=BON
-or send an email to 
-bon-ticket@mobius.ucd.ie. 
+.P
+.RE
+or send an email to:
+.P
+.RS 4
+bon-ticket@mobius.ucd.ie
+.RE
+.PD 1
+
 
 Please include the following details (where possible):
-.IP \(bu 4 
+.RS 2
+.PD 0
+.IP \(bu 2
 The commandline arguments with which you invoked the tool (e.g. "bonc -i test.bon").
-.IP \(bu 4
+.IP \(bu 2
 The operating system and java version you are using.
-.IP \(bu 4 
+.IP \(bu 2 
 Any input files used to recreate the bug.  
-.IP \(bu 4 
+.IP \(bu 2 
 The output generated when you detected the bug.
+.PD 1
+.RE
 .LP
 Filing bugs will help to improve this software, so if you notice something amiss please do report it!
 

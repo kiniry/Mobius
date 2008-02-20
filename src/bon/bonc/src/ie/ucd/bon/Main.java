@@ -336,6 +336,7 @@ public class Main {
     pp.setOptionID("2");
     pp.addOptionName("-pp");
     pp.addOptionName("--pretty-print");
+    pp.setArgName("TYPE");
     pp.setHelpString("Pretty-print the parsed input");
     cp.addOption(pp);
     
@@ -343,6 +344,7 @@ public class Main {
     ppo.setOptionID("2.1");
     ppo.addOptionName("-ppo");
     ppo.addOptionName("--pretty-print-output");
+    ppo.setArgName("FILE");
     ppo.setHelpString("Output directory for printed output.");
     ppo.addConstraint(new RequiresConstraint("2.1", "2"));
     cp.addOption(ppo);
