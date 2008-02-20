@@ -20,9 +20,14 @@ public class FileUtil {
     }
   }
 
+  /**
+   * Checks if the File represented by the given String actually exists,
+   * and creates any necessary subdirectories
+   * @param dirPath The path of the file to check
+   * @return A boolean indicating if the file exists.
+   */
   public static boolean checkDirExists(String dirPath) {
     return checkDirExists(new File(dirPath));
-
   }
 
   public static Reader getResourceReader(String filePath) {
