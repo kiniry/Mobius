@@ -879,8 +879,8 @@ public class CodeFragment {
 		shortCode = shortCode.replaceAll(
 				Parsing.escape(IDisplayStyle.comment_end)
 				+ " *\n", "\n");
-		shortCode = shortCode.replaceAll("\n */\\*", "\n");//!
-		shortCode = shortCode.replaceAll("\\*/ *\n", "\n");//!
+		shortCode = shortCode.replaceAll("\n */\\*@", "\n");//!
+		shortCode = shortCode.replaceAll("@\\*/ *\n", "\n");//!
 		if (isCommentStart(shortCode))
 			shortCode = shortCode.substring(IDisplayStyle.comment_length);
 		while (shortCode.indexOf("\n\n") >= 0)
