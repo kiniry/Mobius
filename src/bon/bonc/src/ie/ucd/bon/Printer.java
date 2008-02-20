@@ -10,12 +10,9 @@ import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.util.FileUtil;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashSet;
 

@@ -43,23 +43,24 @@
     </filelist>
   </path>
 	
-  <path id="antlr.path">
+  <path id="antlr-mod.path">
     <path refid="base.path"/>
-    <filelist dir="${lib}">
-      <file name="antlr-3.0.1-mod.jar"/>
-    </filelist>
+    <filelist dir="${lib}" files="antlr-3.0.1-mod.jar"/>
   </path>
 	
-  <path id="compile.path">
-    <path refid="base.path"/>
-    <filelist dir="${lib}">
-      <file name="antlr-3.0.1.jar"/>
-    </filelist>
+  <path id="antlr.path">
+  	<path refid="base.path"/>
+    <filelist dir="${lib}" files="antlr-3.0.1.jar"/>
   </path>
 	
   <path id="test.path">
-    <path refid="compile.path"/>
+    <path refid="base.path"/>
+    <filelist dir="${lib}" files="antlr-runtime-3.0.1.jar"/>
     <pathelement location="${build}"/>
+  </path>
+	
+	<path id="compile.path">
+		<path refid="test.path"/>
   </path>
 	
   <path id="dist.path">
@@ -158,7 +159,7 @@
   	
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">
-  	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,CommandlineParser.jar,stringtemplate.jar"/>
+    	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,antlr-2.7.7.jar,CommandlineParser.jar,stringtemplate.jar"/>
     </copy>
   	
     <copy todir="${dist}">
@@ -256,7 +257,7 @@
 		<antcall target="clean-antlr-parser"/>
 		<echo message="Building Parser"/>
   	<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
-		  <classpath refid="antlr.path" />
+		  <classpath refid="antlr-mod.path" />
 			<arg value="-o"/>
 			<arg value="${src}/ie/ucd/bon/parser"/>
 			<arg value="${antlr-src}.g"/>
@@ -293,7 +294,7 @@
 	  <antcall target="clean-antlr-tester"/>
 	  <echo message="Building Tester"/>
 		<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
-		  <classpath refid="test.path" />
+		  <classpath refid="antlr.path" />
 			<arg value="-lib"/>
 			<arg value="${src-parser}"/>
 			<arg value="-o"/>
