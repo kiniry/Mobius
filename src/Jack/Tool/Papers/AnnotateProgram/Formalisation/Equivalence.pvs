@@ -110,6 +110,7 @@ BEGIN
   related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
     wf_state(mp)(sMP) AND
     wf_state(ann_program(mp))(sAP) AND
+    NOT stuck(sMP) AND
     IF cp(astate(sMP)) = halted
     THEN up?(ex(pstate(sAP))) AND down(ex(pstate(sAP))) = JMLExc
     ELSE MP_modeled?(mp)(sMP, sAP)
