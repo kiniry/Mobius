@@ -46,7 +46,7 @@ public class CLP {
     pp.addOptionName("-print");
     pp.addOptionName("--print");
     pp.setArgName("TYPE");
-    pp.setHelpString("Print the parsed input in the given format (currently just TXT for plain-text) to the output file given by the print output option, or stdout if this is not given.");
+    pp.setHelpString("Print the parsed input in the given format (currently just TXT for plain-text).");
     cp.addOption(pp);
     
     StringDefaultOption ppo = new StringDefaultOption();
@@ -54,7 +54,7 @@ public class CLP {
     ppo.addOptionName("-po");
     ppo.addOptionName("--print-output");
     ppo.setArgName("FILE");
-    ppo.setHelpString("Output file for printed output.");
+    ppo.setHelpString("Print output to the given file instead of to stdout.");
     ppo.addConstraint(new ORConstraint(new RequiresConstraint("2.1", "2"), new RequiresConstraint("2.1", "2.2")));
     cp.addOption(ppo);
     
@@ -181,6 +181,14 @@ public class CLP {
     printMan.addOptionName("--print-man");
     printMan.setHelpString("Print available options in man-page format");
     cp.addOption(printMan);
+    
+    BooleanDefaultOption printReadme = new BooleanDefaultOption();
+    printReadme.setOptionID("99999.1");
+    printReadme.setHidden();
+    printReadme.addOptionName("-pr");
+    printReadme.addOptionName("--print-readme");
+    printReadme.setHelpString("Print available options in readme format");
+    cp.addOption(printReadme);
     
     return cp;
   }

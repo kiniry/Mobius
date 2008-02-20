@@ -8,6 +8,7 @@ Contents:
   1. Description
   2. Requirements
   3. Using the tool
+     3.1 Commandline Options
   4. Source
 
 
@@ -35,7 +36,7 @@ Contents:
   The tool utilises the ANTLR parser generator, and releases of the tool
   include the appropriate ANTLR runtime as well as 
 
-3. RUNNING THE TOOL
+3. USING THE TOOL
 ===================
 
   Note that in this section we assume that you have successfully completed an 
@@ -61,18 +62,9 @@ Contents:
     bonc - file1 file2
     bonc file1 - file2
     bonc file1 file2 -
+    
+3.1 Commandline Options
+-----------------------
 
-
-4. SOURCE
-=========
-
-  All source for this tool is available from the subversion repository. The
-  repository is located at: 
-    https://mobius.ucd.ie/repos/src/bon/bonc
-
-  You can browse the source in your web browser:
-    https://mobius.ucd.ie/browser/src/bon
-
-   For more information on how to download and build this software, please read
-   INSTALLATION.txt.
+  The tool recognises the following options:
 

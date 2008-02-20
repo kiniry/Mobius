@@ -69,6 +69,8 @@ public class Main {
         
         if (so.isBooleanOptionByNameSelected("--print-man")) {
           cp.printOptionsInManFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false);
+        } else if (so.isBooleanOptionByNameSelected("--print-readme")) {
+          cp.printOptionsInReadmeFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false, 80, 2);
         } else if (so.isBooleanOptionByNameSelected("-hh")) {
           cp.printOptions(System.out, true);
         } else if (so.isBooleanOptionByNameSelected("--help")) {
