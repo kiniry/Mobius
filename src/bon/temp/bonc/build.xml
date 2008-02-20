@@ -1,0 +1,482 @@
+<!-- 
+###
+# Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+# See LICENCE.TXT for details.
+###
+-->
+
+
+<project name="BON" default="compile" basedir=".">
+  <description>BON Build File</description>
+
+  <property name="src" location="src"/>
+  <property name="src-parser" value="${src}/ie/ucd/bon/parser"/>
+  <property name="src-tests" value="${src}/ie/ucd/bon/tests"/>
+
+  <property name="docs" location="docs"/>
+  <property name="doc-src" location="doc-src"/>
+  <property name="api-docs" value="${docs}/api"/>
+  <property name="manual-docs" value="${docs}/manual"/>
+
+  <property name="build" location="bin"/>
+  <property name="dist"  location="dist"/>
+  <property name="release"  location="release"/>
+  <property name="lib"  location="lib"/>
+  <property name="antlr-src" value="BON"/>
+  <property name="antlr-pp-src" value="BONSTTreeWalker"/>
+  <property name="antlr-tc-src" value="BONTCTreeWalker"/>
+  <property name="antlr-tester-src" value="Tester"/>
+	
+  <property name="java-target-version" value="1.5"/>
+	
+  <property name="release-name" value="bonc"/>
+  <property name="release-version" value="0.1.1"/>
+
+  <property name="debian" value="debian"/>
+
+  <!-- Paths -->
+  <path id="base.path">
+    <filelist dir="${lib}">
+      <file name="stringtemplate.jar"/>
+      <file name="CommandlineParser.jar"/>
+      <file name="antlr-2.7.7.jar"/>
+    </filelist>
+  </path>
+	
+  <path id="antlr-mod.path">
+    <path refid="base.path"/>
+    <filelist dir="${lib}" files="antlr-3.0.1-mod.jar"/>
+  </path>
+	
+  <path id="antlr.path">
+  	<path refid="base.path"/>
+    <filelist dir="${lib}" files="antlr-3.0.1.jar"/>
+  </path>
+	
+  <path id="test.path">
+    <path refid="base.path"/>
+    <filelist dir="${lib}" files="antlr-runtime-3.0.1.jar"/>
+    <pathelement location="${build}"/>
+  </path>
+	
+	<path id="compile.path">
+		<path refid="test.path"/>
+  </path>
+	
+  <path id="dist.path">
+    <fileset dir="${dist}/lib" includes="*.jar"/>
+  </path>
+	
+  <target name="init">
+    <echo message="Creating timestamp"/>
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+
+	
+	<!-- Build targets -->
+
+  <target name="compile" depends="all-src" description="compile the source">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}" target="${java-target-version}">
+      <classpath refid="compile.path"/>
+    </javac>
+  </target>
+
+  <target name="javadocs" depends="all-src" description="Generate javadocs">
+    <javadoc packagenames="*" sourcepath="src" defaultexcludes="yes" destdir="docs/api"
+             author="true" version="true" use="true" windowtitle="BON API" classpathref="libs">
+    </javadoc>
+  </target>
+
+  <target name="manual" description="Generate the manual">
+    <echo message="Manual not yet completed"/>
+  </target>
+
+  <target name="test-parser" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.ParsingTester">
+      <classpath refid="test.path"/>
+    </java>
+  </target>
+
+  <target name="test-typechecker" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.TypeCheckerTester">
+      <classpath refid="test.path"/>
+    	<arg value="timing=true"/>
+    </java>
+  </target>
+	
+  <target name="test-prettyprinter" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.PrettyPrinterTester">
+      <classpath refid="test.path"/>
+    	<arg value="timing=true"/>
+    	<!-- TODO - use arg to build script for this? -->
+    </java>
+  </target>
+	
+  <target name="test-dotgen" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.DotGeneratorTester">
+      <classpath refid="test.path"/>
+  	<arg value="timing=true"/>
+  	<!-- TODO - use arg to build script for this? -->
+    </java>
+  </target>
+
+  <target name="test-commandline" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.CommandlineTester">
+      <classpath refid="test.path"/>
+    </java>
+  </target>
+
+  <target name="test-dist" depends="dist">
+    <java fork="yes" dir="." classname="ie.ucd.bon.tests.Tester">
+      <classpath refid="dist.path"/>
+      <arg value="test/test-cases/"/>
+      <arg value="test/test-cases/tests"/>
+    </java>
+  </target>
+	
+  <target name="test-cases" depends="compile">
+    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.Tester">
+      <classpath refid="test.path"/>
+      <arg value="../test/test-cases/"/>
+      <arg value="../test/test-cases/tests"/>
+    </java>
+  </target>
+
+
+  <target name="dist" depends="compile,changelogs" description="Generate the distribution">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/lib"/>
+  	
+    <!-- Copy required files -->
+    <mkdir dir="${build}/templates"/>
+    <copy todir="${build}/templates">
+      <fileset dir="templates/" includes="*"/> 
+    </copy>
+  	
+    <jar jarfile="${dist}/lib/BON.jar" basedir="${build}"/>
+  	
+    <mkdir dir="${dist}/lib"/>
+    <copy todir="${dist}/lib">
+    	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,antlr-2.7.7.jar,CommandlineParser.jar,stringtemplate.jar"/>
+    </copy>
+  	
+    <copy todir="${dist}">
+      <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/> 
+      <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,FAQ.txt,LICENCE.txt"/>
+      <fileset dir="${doc-src}/changelog/" includes="changelog"/>
+    </copy>
+  	
+    <chmod perm="a+x">
+      <fileset dir="${dist}">
+      <include name="bonc"/>
+      <include name="my-bonc.example"/>
+      <include name="update"/>
+      </fileset>
+    </chmod>
+
+    <echo message="${release-name}-${release-version}" file="${dist}/version"/>
+  </target>
+
+  <target name="clean-release">
+    <delete>
+      <fileset dir="${release}/" includes="${release-name}-${release-version}.*"/>
+    </delete>
+  </target>
+	
+  <target name="release" depends="dist,debian-release" description="Generate a release">
+    <exec executable="./release.sh" dir=".">
+      <arg value="${release-name}-${release-version}"/>
+    </exec>
+  	<copy todir="${release}">
+  		<fileset dir="${doc-src}" includes="README.txt,FAQ.txt,INSTALLATION.txt,LICENCE.txt"/>
+  		<fileset file="update"/>
+  	</copy>
+    <chmod perm="a+x" file="${release}/update"/>
+    <echo message="${release-name}-${release-version}" file="${release}/version"/>
+  </target>
+	
+	<target name="actual-release" depends="release" description="Do a final release.">
+		<!-- Do a release, move changelogs to old changelogs, and clear latest-changes -->
+	  <delete file="${doc-src}/changelog/old-changelog"/>
+		<delete file="${doc-src}/changelog/old-changelog.Debian"/>
+		<move file="${doc-src}/changelog/changelog" tofile="${doc-src}/changelog/old-changelog"/>
+		<move file="${doc-src}/changelog/changelog.Debian" tofile="${doc-src}/changelog/old-changelog.Debian"/>
+		<delete file="${doc-src}/changelog/latest-changes"/>
+		<touch file="${doc-src}/changelog/latest-changes"/>
+	</target>
+	
+	<!-- Antlr targets -->
+		
+  <target name="checkAntlrParserBuildUpToDate">
+ 	  <echo message="Checking if the ANTLR parser generated files are up to date"/>
+  	<condition property="antlrParserBuild.required">
+		  <not>
+  		  <uptodate srcfile="${src}/${antlr-src}.g" targetfile="${src-parser}/${antlr-src}Lexer.java"/>
+ 		  </not>
+  	</condition>
+	</target>
+	
+	<target name="checkAntlrPrinterBuildUpToDate">
+	 	<echo message="Checking if the ANTLR printer generated files are up to date"/>
+		<condition property="antlrPrinterBuild.required">
+			<or>
+				<isset property="antlrParserBuild.required"/>
+				<not>
+					<uptodate srcfile="${src}/${antlr-pp-src}.g" targetfile="${src-parser}/${antlr-pp-src}.java"/>
+				</not>
+			</or>
+		</condition>
+  </target>
+	
+	<target name="checkAntlrTypeCheckerBuildUpToDate">
+		<echo message="Checking if the ANTLR printer generated files are up to date"/>
+		<condition property="antlrTypeCheckerBuild.required">
+			<or>
+				<isset property="antlrParserBuild.required"/>
+				<not>
+					<uptodate srcfile="${src}/${antlr-tc-src}.g" targetfile="${src-parser}/${antlr-tc-src}.java"/>
+				</not>
+			</or>
+		</condition>
+  </target>
+	
+	<target name="checkAntlrTesterBuildUpToDate">
+		<echo message="Checking if the ANTLR printer generated files are up to date"/>
+		<condition property="antlrTesterBuild.required">
+			<not>
+		    <uptodate srcfile="${src}/${antlr-tester-src}.g" targetfile="${src-tests}/${antlr-tester-src}Lexer.java"/>
+			</not>
+		</condition>
+  </target>
+	
+	<target name="checkAntlrBuildUpToDate" depends="checkAntlrParserBuildUpToDate,checkAntlrPrinterBuildUpToDate,checkAntlrTypeCheckerBuildUpToDate,checkAntlrTesterBuildUpToDate"/>
+	
+	<target name="buildAntlrParser" depends="checkAntlrBuildUpToDate" if="antlrParserBuild.required">
+		<antcall target="clean-antlr-parser"/>
+		<echo message="Building Parser"/>
+  	<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
+		  <classpath refid="antlr-mod.path" />
+			<arg value="-o"/>
+			<arg value="${src}/ie/ucd/bon/parser"/>
+			<arg value="${antlr-src}.g"/>
+	  </java>
+	</target>
+
+	<target name="buildAntlrPrinter" depends="buildAntlrParser" if="antlrPrinterBuild.required">
+		<antcall target="clean-antlr-printer"/>
+		<echo message="Building Printer"/>
+		<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
+	    <classpath refid="antlr.path" />
+	    <arg value="-lib"/>
+	    <arg value="${src-parser}"/>
+	    <arg value="-o"/>
+	    <arg value="${src}/ie/ucd/bon/parser"/>
+	    <arg value="${antlr-pp-src}.g"/>
+	  </java>
+	</target>
+	
+	<target name="buildAntlrTypeChecker" depends="buildAntlrParser" if="antlrTypeCheckerBuild.required">
+			<antcall target="clean-antlr-type-checker"/>
+			<echo message="Building Type Checker"/>
+			<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
+		    <classpath refid="antlr.path" />
+		    <arg value="-lib"/>
+		    <arg value="${src-parser}"/>
+		    <arg value="-o"/>
+		    <arg value="${src}/ie/ucd/bon/parser"/>
+		    <arg value="${antlr-tc-src}.g"/>
+		  </java>
+	</target>
+	
+	<target name="buildAntlrTester" depends="checkAntlrBuildUpToDate" if="antlrTesterBuild.required">
+	  <antcall target="clean-antlr-tester"/>
+	  <echo message="Building Tester"/>
+		<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
+		  <classpath refid="antlr.path" />
+			<arg value="-lib"/>
+			<arg value="${src-parser}"/>
+			<arg value="-o"/>
+			<arg value="${src-tests}"/>
+			<arg value="${antlr-tester-src}.g"/>
+	  </java>
+  </target>
+		
+	
+	<target name="clean-antlr-type-checker" description="Clean up antlr printer generated files">
+		<echo message="Deleting printer generated files"/>
+		<delete file="${src-parser}/${antlr-tc-src}.java"/>
+		<delete file="${src-parser}/${antlr-tc-src}.tokens"/>
+	</target>	
+	
+	<target name="clean-antlr-printer" description="Clean up antlr printer generated files">
+		<echo message="Deleting printer generated files"/>
+		<delete file="${src-parser}/${antlr-pp-src}.java"/>
+		<delete file="${src-parser}/${antlr-pp-src}.tokens"/>
+	</target>	
+		
+	<target name="clean-antlr-parser" description="Clean up antlr parser generated files">
+		<echo message="Deleting parser generated files"/>
+		<delete file="${src-parser}/${antlr-src}.tokens"/>
+		<delete file="${src-parser}/${antlr-src}__.g"/>
+		<delete file="${src-parser}/${antlr-src}Parser.java"/>
+		<delete file="${src-parser}/${antlr-src}Lexer.java"/>
+	</target>
+	
+	<target name="clean-antlr-tester" description="Clean up antlr tester generated files">
+			<echo message="Deleting parser generated files"/>
+			<delete file="${src-tests}/${antlr-tester-src}.tokens"/>
+			<delete file="${src-tests}/${antlr-tester-src}__.g"/>
+			<delete file="${src-tests}/${antlr-tester-src}Parser.java"/>
+			<delete file="${src-tests}/${antlr-tester-src}Lexer.java"/>
+		</target>
+	
+	<target name="antlr" depends="buildAntlrParser,buildAntlrPrinter,buildAntlrTypeChecker,buildAntlrTester"/>
+		
+	<target name="clean-antlr" depends="clean-antlr-parser,clean-antlr-printer,clean-antlr-type-checker,clean-antlr-tester"/>
+	
+  <target name="clean-all" depends="clean-build,clean-antlr,clean-release,clean-debian-release" description="clean up"/>
+	
+	<target name="clean-build" description="Clean up the build">
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+		<delete dir="${docs}"/>
+	</target>
+	
+	<!-- High-level targets -->
+  <target name="all-tests" depends="test-parser,test-typechecker,test-prettyprinter,test-commandline,test-dist" description="Run all tests"/>
+  <target name="all-src" depends="init,antlr" description="Create all source files"/>
+  <target name="docs" depends="javadocs,manual" description="Generate all documentation"/>
+  <target name="all" depends="clean,all-src,compile,dist,all-tests"/>
+  <target name="clean" depends="clean-all"/>
+
+	<target name="clean-changelogs">
+	  <delete file="${doc-src}/changelog/changelog"/>
+		<delete file="${doc-src}/changelog/changelog.Debian"/>	
+	</target>
+	
+	<target name="changelogs" depends="clean-changelogs">
+		<!-- Setup properties with the timestamps we want -->
+		<tstamp>
+			<format property="DEB_RLS_TIME" pattern="E, dd MMM yyyy HH:mm:ss Z"/>
+			<format property="STD_RLS_TIME" pattern="yyyy-MM-dd HH:mm"/>
+		</tstamp>
+		
+		<!-- ****** changelog.Debian ****** -->
+		<!-- Add new entry -->
+    <copy tofile="${doc-src}/changelog/changelog.Debian" file="${doc-src}/changelog/changelog.Debian-entryformat">
+      <filterset begintoken="[[" endtoken="]]">
+		    <filter token="version" value="${release-version}"/>
+		    <filter token="name" value="${release-name}"/>
+      	<filter token="distributions" value="unstable"/>
+		    <filter token="urgency" value="low"/>
+		  </filterset>
+		</copy>
+		<!-- Append changes for this entry -->
+		<concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/latest-changes"/>
+		</concat>
+		<!-- Add developer info and date/time -->
+		<concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/changelog.Debian-develtimeformat"/>
+			<filterchain>
+				<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+				  <param type="token" name="developer" value="Fintan Fairmichael"/>
+					<param type="token" name="email" value="fintan.fairmichael@ucd.ie"/>
+					<param type="token" name="date-time" value="${DEB_RLS_TIME}"/>
+				</filterreader>
+		  </filterchain>
+		</concat>
+		<!-- Append all previous entries -->
+		<concat destfile="${doc-src}/changelog/changelog.Debian" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/old-changelog.Debian"/>
+		</concat>		
+		
+		<!-- ****** changelog ****** -->
+		<!-- Add entry -->
+		<copy tofile="${doc-src}/changelog/changelog" file="${doc-src}/changelog/changelog-entryformat">
+			<filterset begintoken="[[" endtoken="]]">
+			  <filter token="version" value="${release-version}"/>
+				<filter token="date-time" value="${STD_RLS_TIME}"/>
+			</filterset>
+		</copy>
+		<!-- Append changes for this entry -->
+		<concat destfile="${doc-src}/changelog/changelog" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/latest-changes"/>
+		</concat>	
+		<!-- Two blank lines -->
+		<echo file="${doc-src}/changelog/changelog" append="true" message="${line.separator}${line.separator}"/>
+		<!-- Append all previous entries -->
+		<concat destfile="${doc-src}/changelog/changelog" append="true" fixlastline="true">
+		  <fileset file="${doc-src}/changelog/old-changelog"/>
+		</concat>
+		
+	</target>
+	
+	<target name="manpage">
+		<delete file="${doc-src}/bonc.1"/>
+		<copy tofile="${doc-src}/bonc.1" file="${doc-src}/bonc.1.start"/>
+	  <java fork="yes" classname="ie.ucd.bon.Main" output="${doc-src}/bonc.1" append="true">
+	  	<classpath refid="dist.path"/>
+	  	<arg value="--print-man"/>
+		</java>
+		<concat destfile="${doc-src}/bonc.1" append="true">
+			<fileset file="${doc-src}/bonc.1.end"/>
+		</concat>
+	</target>
+
+  <target name="clean-debian-release">
+    <delete>
+      <fileset dir="${debian}/src/usr/share/bonc" includes="bonc,bonc-debian"/>
+      <fileset dir="${debian}/src/usr/share/bonc/lib" includes="*.jar"/>
+      <fileset dir="${debian}/src/usr/share/doc/bonc" includes="changelog.*,copyright"/>
+      <fileset dir="${debian}/src/usr/share/man/man1" includes="bonc.*"/>
+    </delete>
+  </target>
+	
+  <target name="debian-release" depends="dist,changelogs,manpage">
+    <taskdef resource="org/vafer/jdeb/ant/antlib.xml"> 
+      <classpath>
+        <pathelement location="${lib}/jdeb-0.6.jar"/>
+      </classpath>
+    </taskdef>
+
+    <copy todir="${debian}/src/usr/share/bonc"> 
+      <fileset dir="." includes="bonc,bonc-debian"/>
+    </copy>
+
+    <copy todir="${debian}/src/usr/share/bonc/lib">
+      <fileset dir="${dist}/lib/" includes="*.jar"/>
+    </copy>
+  	
+    <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.Debian.gz" src="${doc-src}/changelog/changelog.Debian"/>
+    <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.gz" src="${doc-src}/changelog/changelog"/>
+    <gzip destfile="${debian}/src/usr/share/man/man1/bonc.1.gz" src="${doc-src}/bonc.1"/>
+    <copy tofile="${debian}/src/usr/share/doc/bonc/copyright" file="${doc-src}/copyright.Debian"/>
+  	  	
+    <chmod perm="a+x">
+      <fileset dir="${debian}/src/usr/share/bonc" includes="bonc,bonc-debian"/>
+    </chmod>
+
+    <!-- Copy the control file, and fill in the release version. -->
+    <delete file="${debian}/control/control"/>
+    <copy todir="${debian}/control" file="${debian}/control-src/control">
+      <filterset begintoken="[[" endtoken="]]">
+        <filter token="version" value="${release-version}"/>
+        <filter token="name" value="${release-name}"/>
+      </filterset>
+    </copy>
+
+    <!-- Create release tar file -->
+    <exec executable="./build-deb-release-tar.sh" dir="."/>
+
+    <jdeb destfile="${release}/${release-name}_${release-version}_all.deb" control="${debian}/control" changesIn="${doc-src}/changelog/latest-changes" changesOut="${debian}/${release-name}.changes">
+      <data src="${debian}/src/deb-release.tgz"/>
+    </jdeb>
+  	
+    <copy todir="${release}" file="${debian}/${release-name}.changes"/>
+  </target>
+
+</project>
+

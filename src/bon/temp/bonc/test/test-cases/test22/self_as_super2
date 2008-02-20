@@ -1,0 +1,12 @@
+system_chart SYS
+end
+
+static_diagram 
+component
+  class X 
+    inherit
+      X
+    feature
+      b
+  end
+end

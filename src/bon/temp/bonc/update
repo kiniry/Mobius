@@ -1,0 +1,18 @@
+#!/bin/bash
+
+###
+# Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+# See LICENCE.TXT for details.
+###
+
+LATEST=`wget -qO - http://hunter.ucd.ie/bon/version`
+CURRENT=`cat version`
+
+if [[ "$LATEST" != "$CURRENT" ]]; then
+  echo "New version $LATEST detected."
+  echo "Downloading $LATEST.tar.gz"
+  wget http://hunter.ucd.ie/bon/$LATEST.tar.gz && tar xzf $LATEST.tar.gz && rm $LATEST.tar.gz
+  echo "Success!"  
+else
+  echo "Already at latest version."
+fi

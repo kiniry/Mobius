@@ -1,0 +1,11 @@
+system_chart SYS
+  cluster X description ""
+end
+
+cluster_chart X
+  class C description ""
+end
+
+class_chart C
+  inherit C
+end

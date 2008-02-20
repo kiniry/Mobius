@@ -1,0 +1,17 @@
+system_chart A
+  cluster B description ""
+end
+
+cluster_chart B
+  cluster C description ""
+end
+
+cluster_chart C
+  cluster D description ""
+end
+
+cluster_chart D
+  cluster B description ""
+end
+
+

@@ -1,0 +1,30 @@
+system_chart A
+  cluster B description ""
+end
+
+cluster_chart B
+  class W description ""
+  class X description ""
+  class Y description ""
+  class Z description ""
+end
+
+class_chart W
+  inherit
+    X
+end
+
+class_chart X
+  inherit
+    Y
+end
+
+class_chart Y
+  inherit
+    Z
+end
+
+class_chart Z
+  inherit
+    W
+end

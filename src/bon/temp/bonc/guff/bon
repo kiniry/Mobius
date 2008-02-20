@@ -1,0 +1,35 @@
+system_chart C
+  cluster X description 
+  "ass \ 
+  \    "
+end
+
+class_chart A
+  inherit X
+end
+
+class_chart E
+end
+
+static_diagram
+component 
+  class B
+    inherit
+      E
+    feature { W }
+      x, y, z { ^E.p }
+  end
+  class E
+end
+
+event_chart CA
+  event "spoof" involves A, K, Z
+end
+
+scenario_chart SPOOF
+end
+
+creation_chart AB
+  creator G creates J, H
+end
+

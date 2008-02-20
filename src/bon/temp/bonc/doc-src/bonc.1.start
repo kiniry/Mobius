@@ -1,0 +1,8 @@
+.TH "bonc" 1
+.SH NAME
+bonc \- Parser and typechecker for Business Object Notation (BON).
+.SH SYNOPSIS
+.B bonc
+[options] file1 [file2 ...]
+.SH DESCRIPTION
+TBC

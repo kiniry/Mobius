@@ -1,0 +1,45 @@
+static_diagram 1
+component
+  class BASEBALL_CARD
+  class SON
+  class LIST [T] reused
+  class PARENT
+  class ACCOUNT
+  SON client {expenses} LIST
+  PARENT client {assets} LIST
+  LIST client {(first, last): T} BASEBALL_CARD
+  LIST client {(first, last): T} ACCOUNT
+end
+
+static_diagram 2
+component
+  class NURSE
+  class PATIENT
+  class SURGEON
+  class OPERATION
+  class TABLE [U, V->KEY] reused
+  class PATIENT_ID
+  class DATE
+  NURSE client {patients} TABLE
+  SURGEON client {duties} TABLE
+  TABLE client {item: U} PATIENT
+  TABLE client {item: U} OPERATION
+  TABLE client {key: V} PATIENT_ID
+  TABLE client {key: V} DATE
+end
+
+static_diagram 3
+component
+  class SON
+  class BASEBALL_CARD
+  class PARENT
+  class ACCOUNT
+  class NURSE
+  class PATIENT
+  class SURGEON
+  class OPERATION
+  SON client {expenses: LIST [...]} BASEBALL_CARD
+  PARENT client {assets: LIST [...]} ACCOUNT
+  NURSE client {patients: LIST [..., PATIENT_ID]} PATIENT
+  SURGEON client {duties: LIST [..., DATE]} OPERATION
+end

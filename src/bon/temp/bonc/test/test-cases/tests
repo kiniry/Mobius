@@ -1,0 +1,138 @@
+
+@Test-Location: ./
+
+--Parsing tests
+
+@Test-name: "Parsing error 1"
+@Location { test1/ }
+@Input { parseerror }
+@Output { <AntlrParsingError, #File:parseerror, 2, 0, aaa, true> }
+
+--File problem tests
+
+@Test-name: "No files error"
+@Location { doesnotmatter/ }
+@Input { }                    --No input files!
+@Output { < NoFilesError > }
+
+@Test-name: "FileNotFoundError and NoFilesError"
+@Location { test3/ }
+@Input { invalidfile }
+@Output { < FileNotFoundError, #File:invalidfile >,  
+         < NoFilesError >
+       }
+
+--Missing a test for FileReadError, but it's difficult to fake this!
+
+@Test-name: "System not defined."
+@Location { test2/ }
+@Input { no_sys }
+@Output { < SystemNotDefinedError > }
+
+@Test-name: "Duplicate class chart."
+@Location { test4/ }
+@Input { dup_class_chart }
+@Output { < DuplicateClassChartError, #File:dup_class_chart, 12, 0, BOOK, #File:dup_class_chart, 4 > }
+
+@Test-name: "Duplicate cluster chart."
+@Location { test5/ }
+@Input { dup_cluster_chart }
+@Output { < DuplicateClusterChartError, #File:dup_cluster_chart, 8, 0, A, #File:dup_cluster_chart, 4 > }
+
+@Test-name: "Duplicate class definition."
+@Location { test6/ }
+@Input { dup_class }
+@Output { < DuplicateClassDefinitionError, #File:dup_class, 16, 4, A, #File:dup_class, 11 > }
+
+@Test-name: "Duplicate cluster definition."
+@Location { test7/ }
+@Input { dup_cluster }
+@Output { < DuplicateClusterDefinitionError, #File:dup_cluster, 15, 2, CLUSTER_A, #File:dup_cluster, 10 > }
+
+@Test-name: "Duplicate feature definition."
+@Location { test8/ }
+@Input { dup_feature }
+@Output { < DuplicateFeatureDefinitionError, #File:dup_feature, 16, 8, x, A, #File:dup_feature, 13 > }
+
+@Test-name: "Duplicate formal generic name."
+@Location { test9/ }
+@Input { dup_formal }
+@Output { < DuplicateFormalGenericNameError, #File:dup_formal, 11, 19, A > }
+
+@Test-name: "Duplicate system definition."
+@Location { test10/ }
+@Input { dup_system }
+@Output { < DuplicateSystemDefinitionError, #File:dup_system, 4, 0, LIB, #File:dup_system, 1 > }
+
+@Test-name: "Deferred feature not defined in effective class."
+@Location { test11/ }
+@Input { effective_deferred }
+@Output { < EffectiveClassDoesNotDefineDeferredFeatureError, #File:effective_deferred, 19, 14, x, B, A > }
+
+@Test-name: "Invalid class type."
+@Location { test12/ }
+@Input { invalid_class }
+@Output { < InvalidClassTypeError, #File:invalid_class, 17, 8, BOOK >,
+          < InvalidClassTypeError, #File:invalid_class, 26, 4, BOOK > }
+
+@Test-name: "Invalid cluster type."
+@Location { test13/ }
+@Input { invalid_cluster }
+@Output { < InvalidClusterTypeError, #File:invalid_cluster, 12, 2, Z > }
+
+@Test-name: "Invalid static component."
+@Location { test14/ }
+@Input { invalid_static_component }
+@Output { < InvalidStaticComponentTypeError, #File:invalid_static_component, 12, 2, K > }
+
+@Test-name: "Static component is not contained in cluster."
+@Location { test15/ }
+@Input { static_component_not_contained }
+@Output { < NotContainedInClusterError, #File:static_component_not_contained, 12, 4, B, true, X > }
+
+@Test-name: "Duplicate superclass."
+@Location { test16/ }
+@Input { dup_super }
+@Output { < DuplicateSuperclassWarning, #File:dup_super, 15, 10, B, Z > }
+
+@Test-name: "Cluster containment cycle."
+@Prog-args: -informal
+@Location { test18/ }
+@Input { clus_hier_cycle }
+@Output { < CycleInRelationsError, #File:clus_hier_cycle, 5, 0, Cluster, B, "B->D->C->B", "clustering hierarchy" >,
+          < CycleInRelationsError, #File:clus_hier_cycle, 9, 0, Cluster, C, "C->B->D->C", "clustering hierarchy" >,
+          < CycleInRelationsError, #File:clus_hier_cycle, 13, 0, Cluster, D, "D->C->B->D", "clustering hierarchy" > }
+
+@Test-name: "Informal class hierarchy cycle."
+@Prog-args: -informal
+@Location { test20/ }
+@Input { class_hier_cycle }
+@Output { < CycleInRelationsError, #File:class_hier_cycle, 12, 0, Class, W, "W->X->Y->Z->W", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle, 17, 0, Class, X, "X->Y->Z->W->X", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle, 22, 0, Class, Y, "Y->Z->W->X->Y", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle, 27, 0, Class, Z, "Z->W->X->Y->Z", "class hierarchy" > }
+
+@Test-name: "Class not in any cluster."
+@Prog-args: -informal
+@Location { test19/ }
+@Input { class_not_in_cluster }
+@Output { < ClassNotInAnyClusterError, #File:class_not_in_cluster, 4, 0, X > }
+
+@Test-name: "Cluster not in any cluster or system."
+@Prog-args: -informal
+@Location { test21/ }
+@Input { clus_not_in_clus_or_sys }
+@Output { < ClusterNotInAnyClusterOrSystemError, #File:clus_not_in_clus_or_sys, 12, 0, Z > }
+
+@Test-name: "Class has self as parent (informal)."
+@Prog-args: -informal
+@Location { test22/ }
+@Input { self_as_super1 }
+@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1, 10, 10, C > }
+
+@Test-name: "Class has self as parent (formal)."
+@Prog-args: -nc
+@Location { test22/ }
+@Input { self_as_super2 }
+@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super2, 8, 6, X > }
+
