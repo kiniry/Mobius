@@ -362,6 +362,12 @@ BEGIN
       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
         stuck(sigma2)
 
+  partial_MVA_never_in_halted_in_wf_state : LEMMA % :-)
+     FORALL (mp : MonitoredProgram, s : MPState) :
+       partial(mva(mp)) IMPLIES
+       wf_state(mp)(s) IMPLIES
+       NOT cp(astate(s)) = halted
+
   complete_MVA_never_stuck_after_on_method_MVA : LEMMA % :-)
      FORALL (etype : EventType)
             (mp : MonitoredProgram, md : (wf_Method(program(mp))))
@@ -434,9 +440,6 @@ BEGIN
   complete_MP_wf_and_complete : JUDGEMENT % :-)
     complete_MP(mp) HAS_TYPE (wf_and_complete_MP)
   
-%  complete_MP_wf_and_complete : LEMMA % :-)
-%    wf_and_complete_MP(complete_MP(mp))
-
 
   complete_MP_preserves_wf_body : LEMMA
     FORALL (b : (wf_Body(program(mp)))) : % :-)
@@ -448,10 +451,9 @@ BEGIN
 
 
   monitor_related_astates(sA1, sA2 : AState, stuck1 : boolean) : boolean =
-    (stuck1 IFF cp(sA2) = halted) AND 
-    (NOT stuck1 IMPLIES cp(sA1) = cp(sA2)) AND
+    IF stuck1 THEN cp(sA2) = halted ELSE cp(sA1) = cp(sA2) ENDIF AND
     stA(sA1) = stA(sA2)
-    
+
 
   monitor_related_states(mp)(s1, s2 : MPState) : boolean =
     monitor_related_astates(astate(s1), astate(s2), stuck(s1)) AND
@@ -461,6 +463,11 @@ BEGIN
     pstate(s1) = pstate(s2) AND
     gvs(s1) = gvs(s2)
 
+  monitor_related_astates_consequence : LEMMA % :-)
+    FORALL(s1, s2 : MPState) :
+    monitor_related_states(mp)(s1, s2) IMPLIES
+      (stuck(s1) IFF cp(astate(s2)) = halted)
+      
 
   get_address_same_in_monitor_related_states : LEMMA % :-)
     FORALL(vn : Name, s1, s2 : MPState) :

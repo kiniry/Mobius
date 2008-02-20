@@ -12,8 +12,8 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
-        FORALL(mp : (wf_MP)) : 
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_and_complete_MP)) : 
           injective?(f(mp))
 
   ENDASSUMING
@@ -24,7 +24,7 @@ BEGIN
             AnnotateProgram[CP, Name],
             AnnotateProgramProperties[CP, Name]
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
 
   MVA_cp_modeled?(mp)(sA : AState, sAP : APState) : boolean =
@@ -72,10 +72,10 @@ BEGIN
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_modeled?(mp)(sMVA, sAP) IMPLIES
       ts(mva(mp))(t) IMPLIES scp(t) = cp(sMVA) IMPLIES
-        EXISTS (e : [ValOrExcpt -> BoolExpr], v : Val, n : nat) : 
+        EXISTS (e : [ValOrExcpt -> Expr], v : Val, n : nat) : 
           guard_to_expression(mva(mp))(guard(t)) = e AND
           FORALL(arg : ValOrExcpt) :
-          wf_BoolExpr(ann_program(mp))(e(arg)) AND
+          wf_Expr(ann_program(mp))(e(arg)) AND
           derive(ann_program(mp))(e(arg), sAP, v, sAP)(n) AND
           (guard(t)(stA(sMVA), st(pstate(sAP)), arg) = (v = Bool(TRUE)))
 
@@ -134,15 +134,15 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
-        FORALL(mp : (wf_MP)) : 
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_and_complete_MP)) : 
           injective?(f(mp))
 
   ENDASSUMING
 
   IMPORTING Equivalence[CP, Name]
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
 
   get_address_same_in_related_states : LEMMA % :-)

@@ -440,7 +440,7 @@ BEGIN
   % in Equivalence.
   guard_to_expression(a : MVA)(g : Guard) : [ValOrExcpt -> Expr]
 
-  guard_to_expression_yields_wf_BoolExpr : AXIOM
+  guard_to_expression_yields_wf_Expr : AXIOM
     FORALL(a : MVA, t : Transition) :
       wf_MVA(a) IMPLIES
       ts(a)(t) IMPLIES

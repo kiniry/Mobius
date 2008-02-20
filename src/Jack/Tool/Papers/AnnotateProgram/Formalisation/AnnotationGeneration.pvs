@@ -39,8 +39,8 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) :
-        FORALL(mp : (wf_MP)) :
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) :
+        FORALL(mp : (wf_and_complete_MP)) :
           injective?(f(mp))
 
   ENDASSUMING
@@ -48,7 +48,7 @@ BEGIN
   IMPORTING MonitoredProgramSemantics[CP, Name],
             set2list
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
   name_of(mp) : (injective?[CP, (legal_names(mp))])
 
@@ -154,15 +154,15 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) :
-        FORALL(mp : (wf_MP)) :
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) :
+        FORALL(mp : (wf_and_complete_MP)) :
           injective?(f(mp))
 
   ENDASSUMING
 
   IMPORTING NewVariableDeclarations[CP, Name]
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
   a : VAR (wf_MVA)
 
@@ -192,30 +192,30 @@ BEGIN
 
 
   update_vars(mp)(t : Transition) : Stmt =
-    Sequence(Set(cp(mp), NExpr(NumVarEval(name_of(mp)(tcp(t))))),
+    Sequence(Set(cp(mp), NumVarEval(name_of(mp)(tcp(t)))),
              ann_action(action(t)))
 
   ann_guard_actions_set(mp)(ts : finite_set[Transition])(v : ValOrExcpt) :
-                            finite_set[[BoolExpr, Stmt]] =
-     {x : [BoolExpr, Stmt] | EXISTS (t : Transition) :
+                            finite_set[[Expr, Stmt]] =
+     {x : [Expr, Stmt] | EXISTS (t : Transition) :
           ts(t) AND x = (guard_to_expression(mva(mp))(guard(t))(v),
           update_vars(mp)(t))}
 
 
   ann_guard_actions(mp)(ts : finite_set[Transition])
-                   (v : ValOrExcpt) : list[[BoolExpr, Stmt]] =
+                   (v : ValOrExcpt) : list[[Expr, Stmt]] =
     set2list(ann_guard_actions_set(mp)(ts)(v))
 
   ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) 
-              (v : ValOrExcpt) : [BoolExpr, Stmt] =
-    (Eq(NExpr(NumVarEval(cp(mp))),
-        NExpr(NumVarEval(name_of(mp)(q)))),
+              (v : ValOrExcpt) : [Expr, Stmt] =
+    (Eq(NumVarEval(cp(mp)),
+        NumVarEval(name_of(mp)(q))),
      CaseJML(ann_guard_actions(mp)(ts)(v)))
 
 
   ann_event_set(mp)(ts : finite_set[Transition])(v : ValOrExcpt) :
-                         finite_set[[BoolExpr, Stmt]] =
-    {c : [BoolExpr, Stmt] | EXISTS (q : CP) :
+                         finite_set[[Expr, Stmt]] =
+    {c : [Expr, Stmt] | EXISTS (q : CP) :
          cps(mva(mp))(q) AND
          nonempty?({t: Transition | ts(t) AND scp(t) = q}) AND
          c = ann_trans_cp(mp)(q, {t: Transition | ts(t) AND scp(t) = q})(v)}
@@ -228,7 +228,7 @@ BEGIN
   var_names_ann_event_set : LEMMA % :-)
     FORALL (ts : finite_set[Transition], v : ValOrExcpt) :
       subset?(ts, ts(mva(mp))) IMPLIES
-        subset?({n : Name | EXISTS (x : [BoolExpr, Stmt]) :
+        subset?({n : Name | EXISTS (x : [Expr, Stmt]) :
                               ann_event_set(mp)(ts)(v)(x) AND 
                               (var_names(proj_1(x))(n) OR 
                                var_names(proj_2(x))(n))},
@@ -248,7 +248,7 @@ BEGIN
         var_names(new_gvds(mp))(v)
 
   ann_event_set_set_ghostvar : LEMMA % :-)
-    FORALL (ts : finite_set[Transition], b: Body, x : [BoolExpr, Stmt],
+    FORALL (ts : finite_set[Transition], b: Body, x : [Expr, Stmt],
             v : ValOrExcpt):
       subset?(ts, ts(mva(mp))) IMPLIES
       Set?(b) IMPLIES
@@ -280,15 +280,15 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) :
-        FORALL(mp : (wf_MP)) :
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) :
+        FORALL(mp : (wf_and_complete_MP)) :
           injective?(f(mp))
 
   ENDASSUMING
 
   IMPORTING AnnotateEvent[CP, Name]
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
   a : VAR (wf_MVA)
 
@@ -311,8 +311,8 @@ BEGIN
     m WITH [pre_set  := LAMBDA(v : Expr) :
                         Sequence(pre_set(m)(v),
                         Sequence(ann_event_type(Entry)(val(v)),
-                        Assert(Neg(Eq(NExpr(NumVarEval(cp(mp))),
-                                      NExpr(NumVarEval(halted(mp)))))))),
+                        Assert(Neg(Eq(NumVarEval(cp(mp)),
+                                      NumVarEval(halted(mp))))))),
             post_set := LAMBDA(v : Expr) : 
                         Sequence(post_set(m)(v), 
                         ann_event_type(ExitNormal)(val(v))),
@@ -453,23 +453,23 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) :
-        FORALL(mp : (wf_MP)) :
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) :
+        FORALL(mp : (wf_and_complete_MP)) :
           injective?(f(mp))
 
   ENDASSUMING
 
   IMPORTING AnnotateMethod[CP, Name]
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
   a : VAR (wf_MVA)
 
 
   ann_class(mp)(c : Class) : Class =
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
-    THEN c WITH [inv := Conj(Neg(Eq(NExpr(NumVarEval(cp(mp))),
-                                    NExpr(NumVarEval(halted(mp))))), inv(c)),
+    THEN c WITH [inv := Conj(Neg(Eq(NumVarEval(cp(mp)),
+                                    NumVarEval(halted(mp)))), inv(c)),
                  ghost_vars := union(ghost_vars(c),
                                      new_gvds(mp)),
                  methods := ann_methods(mp)(methods(c))]
@@ -545,15 +545,15 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) :
-        FORALL(mp : (wf_MP)) :
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) :
+        FORALL(mp : (wf_and_complete_MP)) :
           injective?(f(mp))
 
   ENDASSUMING
 
   IMPORTING AnnotateClass[CP, Name]
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
   a : VAR (wf_MVA)
 
@@ -584,8 +584,8 @@ BEGIN
 
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) :
-        FORALL(mp : (wf_MP)) :
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) :
+        FORALL(mp : (wf_and_complete_MP)) :
           injective?(f(mp))
 
   ENDASSUMING
@@ -594,7 +594,7 @@ BEGIN
             AnnotatedProgramSemantics[Name],
             MonitoredProgramSemantics[CP, Name]
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
   ann_program_class_correspondence : LEMMA % :-)
     FORALL(c : Class) : classes(ann_program(mp))(c) IMPLIES
@@ -704,17 +704,17 @@ BEGIN
       ts(mva(mp))(t) IMPLIES
         wf_Stmt(ann_program(mp))(update_vars(mp)(t))
 
-  guard_to_expression_wf_BoolExpr : LEMMA % :-)
+  guard_to_expression_wf_Expr : LEMMA % :-)
     FORALL (t : Transition, v : ValOrExcpt) :
       ts(mva(mp))(t) IMPLIES
-        wf_BoolExpr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t))(v))
+        wf_Expr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t))(v))
 
  ann_trans_cp_wf : LEMMA % :-)
    FORALL (q : CP, ts : finite_set[Transition], v : ValOrExcpt) :
      LET p = ann_trans_cp(mp)(q, ts)(v) IN
      cps(mva(mp))(q) IMPLIES
      subset?(ts, ts(mva(mp))) IMPLIES
-       (wf_BoolExpr(ann_program(mp))(p`1) AND
+       (wf_Expr(ann_program(mp))(p`1) AND
         wf_Stmt(ann_program(mp))(p`2))
 
   ann_event_wf_Body : LEMMA % :-)

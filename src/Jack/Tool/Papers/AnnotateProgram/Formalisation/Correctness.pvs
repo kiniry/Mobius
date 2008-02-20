@@ -12,8 +12,8 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
-        FORALL(mp : (wf_MP)) : 
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_and_complete_MP)) : 
           injective?(f(mp))
 
   ENDASSUMING
@@ -23,7 +23,7 @@ BEGIN
             APSemanticsProperties,
             listfuncs
 
-  mp : VAR (wf_MP)
+  mp : VAR (wf_and_complete_MP)
 
 
   % Eexecuting an action on a MVA modifies its variables in the same way that
@@ -121,8 +121,8 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
-        FORALL(mp : (wf_MP)) : 
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_and_complete_MP)) : 
           injective?(f(mp))
 
   ENDASSUMING
@@ -152,7 +152,7 @@ BEGIN
                       on_method_exit_exceptional_MP]
 
 
-  mp : VAR ({mp : MonitoredProgram | wf_MP(mp) AND 
+  mp : VAR ({mp : MonitoredProgram | wf_and_complete_MP(mp) AND 
                                      wf_set_stmts(mp)})
 
   on_method_entry_preserves_related_states_annotated : LEMMA % :-))
@@ -604,8 +604,8 @@ BEGIN
     IMPORTING VariableNames[CP, Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [mp : (wf_MP) -> [CP -> (legal_names(mp))]]) : 
-        FORALL(mp : (wf_MP)) : 
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_and_complete_MP)) : 
           injective?(f(mp))
 
   ENDASSUMING
@@ -613,7 +613,7 @@ BEGIN
 
   IMPORTING MethodCallsPreserveRelatedState[CP, Name]
 
-  mp : VAR ({mp : MonitoredProgram | wf_MP(mp) AND 
+  mp : VAR ({mp : MonitoredProgram | wf_and_complete_MP(mp) AND 
                                      wf_set_stmts(mp)})
 
 

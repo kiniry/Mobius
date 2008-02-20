@@ -178,7 +178,7 @@ BEGIN
           Sequence(
             body(m),
             Sequence(StmtExpr(Assign(res(p)(m), res(m))),
-                     StmtExpr(Assign(ex(p)(m), BExpr(TT)))))),
+                     StmtExpr(Assign(ex(p)(m), Const(Bool(TRUE))))))),
                              % this is only executed if body terminates
                              % normally
          Throwable,
