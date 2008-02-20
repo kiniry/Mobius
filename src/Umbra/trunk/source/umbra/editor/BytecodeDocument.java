@@ -160,7 +160,7 @@ public class BytecodeDocument extends Document {
    * associated with subsequent lines of the byte code file associated with
    * the current editor
    */
-  public final String[] getCommentTab() {
+  public final String[] getEOLComments() {
     return my_bcc.getEOLComments();
   }
 
@@ -171,7 +171,7 @@ public class BytecodeDocument extends Document {
    *
    * @return array with multi-line comment strings
    */
-  public final String[] getInterlineTab() {
+  public final String[] getInterlineComments() {
     return my_bcc.getInterlineComments();
   }
 

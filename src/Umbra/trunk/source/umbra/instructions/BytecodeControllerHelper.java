@@ -45,8 +45,9 @@ public abstract class BytecodeControllerHelper {
   private boolean[] my_modified;
 
   /**
-   * This method initialises the internal container of the incorrect lines
-   * to be empty.
+   * This constructor initialises the internal container of the incorrect lines
+   * to be empty. The  structures to keep track of the modified lines are
+   * left uninitialised.
    */
   protected BytecodeControllerHelper() {
     my_incorrect = new LinkedList();

@@ -8,8 +8,6 @@
  */
 package umbra.instructions;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.LinkedList;
 
 import org.apache.bcel.generic.MethodGen;
@@ -19,7 +17,6 @@ import umbra.UmbraException;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
-import umbra.editor.BytecodeContribution.BytecodeListener;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
@@ -45,7 +42,7 @@ import umbra.instructions.ast.UnclassifiedInstruction;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public final class BytecodeController extends BytecodeControllerHelper {
+public final class BytecodeController extends BytecodeControllerComments {
 
   /**
    * The list of all the lines in the current byte code editor. These lines
@@ -66,33 +63,12 @@ public final class BytecodeController extends BytecodeControllerHelper {
   private LinkedList my_instructions;
 
   /**
-   * The container of all the multi-line comments. Each element of the table is
-   * an association between an instruction line and a string with comments.
-   * The string may contain several lines of text. For a given instruction,
-   * the string contains the comment that is located after it.
-   * FIXME: this functionality is not realised in the current version.
-   *
-   * @see #getInterlineComments()
-   */
-  private Hashtable my_interline;
-
-  /**
-   * The container of associations between the Umbra representation of lines
-   * in the byte code editor and the end-of-line comments in these lines.
-   * The comments must be absent from the line representation for their
-   * correct parsing so they are held in this additional structure.
-   *
-   * @see #getEOLComments()
-   */
-  private Hashtable my_eolcomments;
-
-  /**
    * The constructor which initialises all the internal containers to be
    * empty.
    */
   public BytecodeController() {
     super();
-    my_interline = new Hashtable();
+
   }
 
   /**
@@ -177,35 +153,6 @@ public final class BytecodeController extends BytecodeControllerHelper {
   public int getMethodForLine(final int a_lineno) {
     return ((BytecodeLineController)my_editor_lines.
         get(a_lineno)).getMethodNo();
-  }
-
-  /**
-   * This method updates the local representation of end-of-line comments
-   * within the given range with the given new comment content.
-   * The range of the old lines from {@code the_first} to {@code the_oldlast}
-   * is removed from the current representation and in that range the
-   * information for the lines from {@code the_first} to {@code the_newlast}
-   * is inserted as indicated in the {@code comments} parameter.
-   *
-   * @param the_first the first line of the edited region
-   * @param the_oldlast the last line of the old document
-   * @param the_newlast the last line of the new document
-   * @param the_comments te comments to add to the internal representation
-   */
-  private void updateComments(final int the_first,
-                              final int the_oldlast,
-                              final int the_newlast,
-                              final Hashtable the_comments) {
-    for (int i = the_first; i <= the_oldlast; i++) {
-      final Object o = my_editor_lines.get(i);
-      my_eolcomments.remove(o);
-    }
-    for (final Enumeration enumer = the_comments.keys();
-         enumer.hasMoreElements();) {
-      final Object key = enumer.nextElement();
-      final Object value = the_comments.get(key);
-      my_eolcomments.put(key, value);
-    }
   }
 
   /*@ requires 0 <= the_first <= the_last <= my_editor_lines.size();
@@ -537,42 +484,6 @@ public final class BytecodeController extends BytecodeControllerHelper {
   }
 
   /**
-   * This method returns the interoperable representation of the end-of-line
-   * comments. The i-th entry in the returned array gives the end-of-line
-   * comment that is located <i>after</i> the i-th instruction in the file.
-   * Each entry contains at most one line of text.
-   *
-   * @return array with end-of-line comments
-   */
-  public String[] getEOLComments() {
-    final String[] commentTab = new String[my_instructions.size()];
-    for (int i = 0; i < my_instructions.size(); i++) {
-      final Object lc = my_instructions.get(i);
-      final String com = (String)my_eolcomments.get(lc);
-      commentTab[i] = com;
-    }
-    return commentTab;
-  }
-
-  /**
-   * This method returns the interoperable representation of the multi-line
-   * comments. The i-th entry in the returned array gives the multi-line comment
-   * that is located <i>after</i> the i-th instruction in the file. Each entry
-   * may contain several lines of text.
-   *
-   * @return array with multi-line comment strings
-   */
-  public String[] getInterlineComments() {
-    final String[] commentTab = new String[my_instructions.size()];
-    for (int i = 0; i < my_instructions.size(); i++) {
-      final Object lc = my_instructions.get(i);
-      final String com = (String)my_interline.get(lc);
-      commentTab[i] = com;
-    }
-    return commentTab;
-  }
-
-  /**
    * This method handles the initial parsing of a byte code textual document.
    * It creates a parser {@link InitParser} and runs it with the given
    * document and array with comments pertinent to the instruction lines.
@@ -596,7 +507,7 @@ public final class BytecodeController extends BytecodeControllerHelper {
     initParser.runParsing();
     my_editor_lines = initParser.getEditorLines();
     my_instructions = initParser.getInstructions();
-    my_eolcomments = initParser.getComments();
+    initComments(initParser);
     int a_methodnum = 0;
     if (!my_instructions.isEmpty()) {
       a_methodnum = ((BytecodeLineController)my_instructions.getLast()).
@@ -627,4 +538,24 @@ public final class BytecodeController extends BytecodeControllerHelper {
     return my_editor_lines.indexOf(a_line);
   }
 
+  /**
+   * Returns the line controller for the given instruction number.
+   * The instruction number is the sequence number of the instruction in
+   * the textual file.
+   *
+   * @param an_insno the number of the retrieved instruction
+   * @return the controller line for the given instruction number
+   */
+  protected InstructionLineController getInstruction(final int an_insno) {
+    return (InstructionLineController)my_instructions.get(an_insno);
+  }
+
+  /**
+   * Returns the total number of the instructions in the current document.
+   *
+   * @return the number of instructions in the current document
+   */
+  protected int getNoOfInstructions() {
+    return my_instructions.size();
+  }
 }

@@ -239,5 +239,4 @@ public class InitParser extends BytecodeTextParser {
     handleComments(a_lctrl);
     incInstructionNo();
   }
-
 }

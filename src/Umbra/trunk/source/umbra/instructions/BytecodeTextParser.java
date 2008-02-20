@@ -48,15 +48,22 @@ public class BytecodeTextParser {
    * The comments must be absent from the line representation for their
    * correct parsing so they are held in this additional structure.
    */
-  private Hashtable my_comments;
+  private Hashtable my_eolcomments;
 
+  /**
+   * The container of associations between the Umbra representation of lines
+   * in the byte code editor and the multi-line comments in these lines.
+   * The comments must be absent from the line representation for their
+   * correct parsing so they are held in this additional structure.
+   * FIXME: this is not handled properly
+   */
+  private Hashtable my_interline_comments;
 
   /**
    * This field contains the value of the end-of-line comment from the currently
    * parsed line.
    */
   private String my_current_comment;
-
 
   /**
    * The list of all the lines in the current byte code editor. These lines
@@ -94,7 +101,7 @@ public class BytecodeTextParser {
     my_editor_lines = new LinkedList();
     my_instructions = new LinkedList();
     my_comment_array = a_comment_array;
-    my_comments = new Hashtable();
+    my_eolcomments = new Hashtable();
   }
 
   /**
@@ -106,7 +113,7 @@ public class BytecodeTextParser {
    * Additionally, this method removes the end-of-line char from the
    * string.
    *
-   * @param a_line_text the line to check for my_comments
+   * @param a_line_text the line to check for my_eolcomments
    * @param a_ctxt the parsing context for the line
    * @return comment or <code>null</code> in case there is no comment in the
    *         line
@@ -174,7 +181,19 @@ public class BytecodeTextParser {
    *   represent the lines with instructions in the currently parsed document
    */
   public Hashtable getComments() {
-    return my_comments;
+    return my_eolcomments;
+  }
+
+  /**
+   * Returns the association between the lines in the internal Umbra
+   * representation and the multi-line comments present in the textual
+   * representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent the lines with instructions in the currently parsed document
+   */
+  public Hashtable getInterlineComments() {
+    return my_interline_comments;
   }
 
   /**
@@ -280,12 +299,12 @@ public class BytecodeTextParser {
    */
   protected void handleComments(final BytecodeLineController a_lc) {
     if (my_current_comment != null) {
-      my_comments.put(a_lc, my_current_comment);
+      my_eolcomments.put(a_lc, my_current_comment);
       my_current_comment = null;
     }
     if (my_comment_array != null) {
       if (my_comment_array[my_instruction_no] != null) {
-        my_comments.put(a_lc, my_comment_array[my_instruction_no]);
+        my_eolcomments.put(a_lc, my_comment_array[my_instruction_no]);
       }
     }
   }
