@@ -1,6 +1,0 @@
-#!/bin/bash
-
-if [ -a /usr/bin/bonc ]; then
-  rm /usr/bin/bonc
-fi
-
