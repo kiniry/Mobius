@@ -450,7 +450,7 @@
   <target name="debian-release" depends="dist,changelogs,manpage">
     <taskdef resource="org/vafer/jdeb/ant/antlib.xml"> 
       <classpath>
-        <pathelement location="${lib}/jdeb-0.6.jar"/>
+        <pathelement location="${lib}/jdeb-0.6-mod.jar"/>
       </classpath>
     </taskdef>
 

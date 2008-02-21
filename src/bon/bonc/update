@@ -11,7 +11,7 @@ CURRENT=`cat version`
 if [[ "$LATEST" != "$CURRENT" ]]; then
   echo "New version $LATEST detected."
   echo "Downloading $LATEST.tar.gz"
-  wget http://hunter.ucd.ie/bon/$LATEST.tar.gz && tar xzf $LATEST.tar.gz && rm $LATEST.tar.gz
+  wget -q http://hunter.ucd.ie/bon/$LATEST.tar.gz && tar xzf $LATEST.tar.gz && rm $LATEST.tar.gz
   echo "Success!"  
 else
   echo "Already at latest version."
