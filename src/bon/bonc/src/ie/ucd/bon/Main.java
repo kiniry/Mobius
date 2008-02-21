@@ -31,7 +31,7 @@ import org.antlr.runtime.RecognitionException;
 public class Main {
 
   private static final int TC_NUM_SEVERE_ERRORS = 2; //NB for all files
-  private static final int PP_NUM_SEVERE_ERRORS = 1; //NB for one file
+  private static final int PP_NUM_SEVERE_ERRORS = 0; //NB for one file
   private static final int CCG_NUM_SEVERE_ERRORS = 10; //NB for all files
   private static final int IG_NUM_SEVERE_ERRORS = 10; //NB for all files
   
