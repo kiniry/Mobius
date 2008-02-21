@@ -42,25 +42,7 @@ import umbra.instructions.ast.UnclassifiedInstruction;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public final class BytecodeController extends BytecodeControllerComments {
-
-  /**
-   * The list of all the lines in the current byte code editor. These lines
-   * are stored as objects the classes of which are subclasses of
-   * {@link BytecodeLineController}.
-   */
-  private LinkedList my_editor_lines;
-  //@ invariant !my_editor_lines.containsNull;
-  /*@ invariant (\forall int i; 0 <= i && i < my_editor_lines.size();
-    @            my_editor_lines.get(i) instanceof BytecodeLineController);
-    @*/
-
-  /**
-   * The list of all the lines in the editor which contain codes of
-   * instructions. These are represented as objects the classes of which
-   * are subclasses of {@link InstructionLineController}.
-   */
-  private LinkedList my_instructions;
+public final class BytecodeController extends BytecodeControllerContainer {
 
   /**
    * The constructor which initialises all the internal containers to be
@@ -84,8 +66,7 @@ public final class BytecodeController extends BytecodeControllerComments {
   private LineContext establishCurrentContext(final int a_pos) {
     final LineContext ctxt = new LineContext();
     for (int i = a_pos; i >= 0; i--) {
-      final BytecodeLineController blc =
-        (BytecodeLineController)my_editor_lines.get(i);
+      final BytecodeLineController blc = getLineController(i);
       if (blc instanceof HeaderLineController) {
         ctxt.seClassToBeRead();
         ctxt.setMethodNo(blc.getMethodNo());
@@ -139,7 +120,7 @@ public final class BytecodeController extends BytecodeControllerComments {
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
                         fgmparser.getEditorLines());
-    if (UmbraHelper.DEBUG_MODE) controlPrint(my_instructions, 1);
+    if (UmbraHelper.DEBUG_MODE) controlPrint(1);
     mg.getInstructionList().setPositions();
     return mg;
   }
@@ -151,8 +132,7 @@ public final class BytecodeController extends BytecodeControllerComments {
    * @return the number of the method in which the line is located
    */
   public int getMethodForLine(final int a_lineno) {
-    return ((BytecodeLineController)my_editor_lines.
-        get(a_lineno)).getMethodNo();
+    return (getLineController(a_lineno)).getMethodNo();
   }
 
   /*@ requires 0 <= the_first <= the_last <= my_editor_lines.size();
@@ -175,29 +155,22 @@ public final class BytecodeController extends BytecodeControllerComments {
   private void replaceInstructions(final int the_first,
                                   final int the_last,
                                   final LinkedList the_instructions) {
-    int first = -1;
-    for (int i = the_first; i <= the_last; i++) {
-      final Object o = my_editor_lines.get(i);
-      if (first < 0) {
-        first = my_instructions.indexOf(o);
-      }
-      my_instructions.remove(o);
-    }
+    int first = getFirstInstructionInRegion(the_first, the_last);
     if (first < 0) { //there is not instruction in the given range
-      //we try to find the first instruction after the region
-      for (int i = the_last + 1; i < my_editor_lines.size(); i++) {
-        final Object o = my_editor_lines.get(i);
-        if (first < 0) {
-          first = my_instructions.indexOf(o);
-          if (first >= 0) break;
-        }
-      }
+      first = getFirstInstructionAfter(the_last);
       if (first < 0) {
-        my_instructions.addAll(the_instructions);
+        appendInstructions(the_instructions);
+        return;
+      }
+    } else {
+      removeInstructionsInRegion(first, the_last);
+      first = getFirstInstructionAfter(first);
+      if (first < 0) {
+        appendInstructions(the_instructions);
         return;
       }
     }
-    my_instructions.addAll(first, the_instructions);
+    insertInstructions(first, the_instructions);
   }
 
   /**
@@ -259,8 +232,7 @@ public final class BytecodeController extends BytecodeControllerComments {
     throws UmbraException {
     for (int i = a_stop + 1; i <= a_start; i++) {
       try {
-        final BytecodeLineController oldlc =
-          (BytecodeLineController)my_editor_lines.get(i);
+        final BytecodeLineController oldlc = getLineController(i);
         if (oldlc instanceof InstructionLineController) {
           ((InstructionLineController)oldlc).dispose();
         }
@@ -303,9 +275,9 @@ public final class BytecodeController extends BytecodeControllerComments {
         final InstructionLineController newlc =
           (InstructionLineController)the_lines.get(j);
         newlc.makeHandleForPosition(a_methgen, pos);
-        my_editor_lines.add(i, newlc);
+        insertEditorLine(i, newlc);
       } catch (ClassCastException e) { //we crossed the method boundary
-        my_editor_lines.add(i, the_lines.get(j));
+        insertEditorLine(i, (BytecodeLineController)the_lines.get(j));
       }
     }
   }
@@ -337,8 +309,7 @@ public final class BytecodeController extends BytecodeControllerComments {
     int j = 0;
     for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++, j++) {
       //we replace for the common part
-      final BytecodeLineController oldlc =
-        (BytecodeLineController)my_editor_lines.get(i);
+      final BytecodeLineController oldlc = getLineController(i);
       final BytecodeLineController newlc =
         (BytecodeLineController)the_lines.get(j);
       if (newlc instanceof InstructionLineController &&
@@ -359,8 +330,7 @@ public final class BytecodeController extends BytecodeControllerComments {
           (InstructionLineController) oldlc;
         iolc.dispose();
       }
-      my_editor_lines.remove(i);
-      my_editor_lines.add(i, newlc);
+      replaceLineController(i, newlc);
     }
     return j;
   }
@@ -380,8 +350,7 @@ public final class BytecodeController extends BytecodeControllerComments {
    */
   private int getCurrentPositionInMethod(final int a_pos) {
     for (int j = a_pos; j >= 0; j--) {
-      final BytecodeLineController bcl =
-        (BytecodeLineController)my_editor_lines.get(j);
+      final BytecodeLineController bcl = getLineController(j);
       if (bcl instanceof InstructionLineController) {
         return bcl.getNoInMethod();
       } else if (bcl instanceof HeaderLineController) {
@@ -410,8 +379,7 @@ public final class BytecodeController extends BytecodeControllerComments {
     throws UmbraException {
     MethodGen mg = null;
     for (int i = a_start_rem; i >= 0; i--) {
-      final BytecodeLineController bcl =
-        (BytecodeLineController)my_editor_lines.get(i);
+      final BytecodeLineController bcl = getLineController(i);
       if (bcl instanceof HeaderLineController) {
         mg = ((HeaderLineController)bcl).getMethod();
         break;
@@ -469,93 +437,17 @@ public final class BytecodeController extends BytecodeControllerComments {
   {
     boolean ok = true;
     for (int i = a_start; i <= an_end; i++) {
-      final BytecodeLineController line =
-                               (BytecodeLineController)(my_editor_lines.get(i));
+      final BytecodeLineController line = getLineController(i);
       if (!line.correct()) {
         if (UmbraHelper.DEBUG_MODE) {
           UmbraPlugin.messagelog("checkAllLines:incorrect line=" +
                                  line.getLineContent());
         }
         ok = false;
-        addIncorrect((BytecodeLineController)my_editor_lines.get(i));
+        addIncorrect(getLineController(i));
       }
     }
     return ok;
   }
 
-  /**
-   * This method handles the initial parsing of a byte code textual document.
-   * It creates a parser {@link InitParser} and runs it with the given
-   * document and array with comments pertinent to the instruction lines.
-   * Subsequently, it initialises the internal structures to handle editor
-   * lines, instructions, comments, and modifications.
-   *
-   * @param a_doc the byte code document with the corresponding BCEL
-   *   structures linked into it
-   * @param a_comment_array contains the texts of end-of-line comments, the
-   *   i-th entry contains the comment for the i-th instruction in the document,
-   *   if this parameter is null then the array is not taken into account
-   * @param a_interline contains the texts of interline comments, the
-   *   i-th entry contains the comment for the i-th line in the document,
-   *   if this parameter is null then the array is not taken into account
-   *   FIXME: currently ignored
-   */
-  public void init(final BytecodeDocument a_doc,
-                   final String[] a_comment_array,
-                   final String[] a_interline) {
-    final InitParser initParser = new InitParser(a_doc, a_comment_array);
-    initParser.runParsing();
-    my_editor_lines = initParser.getEditorLines();
-    my_instructions = initParser.getInstructions();
-    initComments(initParser);
-    int a_methodnum = 0;
-    if (!my_instructions.isEmpty()) {
-      a_methodnum = ((BytecodeLineController)my_instructions.getLast()).
-                  getMethodNo() + 1;
-    }
-    fillModTable(a_methodnum);
-    if (UmbraHelper.DEBUG_MODE) controlPrint(my_instructions, 0);
-  }
-
-  /**
-   * Returns the line controller for the given line.
-   *
-   * @param a_lineno the line number of the retrieved controller line
-   * @return the controller line for the given line number
-   */
-  protected BytecodeLineController getLineController(final int a_lineno) {
-    return (BytecodeLineController)my_editor_lines.get(a_lineno);
-  }
-
-  /**
-   * Returns the line number for the given line.
-   *
-   * @param a_line the line controller for which we obtain the number of line
-   * @return the number of line for the given controller or -1 if there is no
-   *   such a line
-   */
-  protected int getLineControllerNo(final BytecodeLineController a_line) {
-    return my_editor_lines.indexOf(a_line);
-  }
-
-  /**
-   * Returns the line controller for the given instruction number.
-   * The instruction number is the sequence number of the instruction in
-   * the textual file.
-   *
-   * @param an_insno the number of the retrieved instruction
-   * @return the controller line for the given instruction number
-   */
-  protected InstructionLineController getInstruction(final int an_insno) {
-    return (InstructionLineController)my_instructions.get(an_insno);
-  }
-
-  /**
-   * Returns the total number of the instructions in the current document.
-   *
-   * @return the number of instructions in the current document
-   */
-  protected int getNoOfInstructions() {
-    return my_instructions.size();
-  }
 }

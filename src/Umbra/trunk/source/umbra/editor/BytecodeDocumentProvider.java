@@ -115,7 +115,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
   public final void setRelation(final CompilationUnitEditor an_editor,
               final BytecodeEditor a_bcode_editor,
               final IEditorInput an_input,
-              final JavaClass a_javaclass,//FIXME: this is not used
+              final JavaClass a_javaclass, //FIXME: this is not used
               final BMLParsing a_bmlp) {
     final BytecodeDocument document = (BytecodeDocument)getDocument(an_input);
     document.setEditor(a_bcode_editor, a_bmlp);

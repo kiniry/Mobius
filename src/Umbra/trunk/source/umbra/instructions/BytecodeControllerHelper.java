@@ -10,12 +10,8 @@ package umbra.instructions;
 
 import java.util.LinkedList;
 
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionHandle;
-
 import umbra.UmbraPlugin;
 import umbra.instructions.ast.BytecodeLineController;
-import umbra.instructions.ast.InstructionLineController;
 
 /**
  * This class contains various helper methods that are used in the
@@ -38,7 +34,7 @@ public abstract class BytecodeControllerHelper {
    * an entry with the method number is marked <code>true</code> in the array.
    * The field is first intialised to be <code>null</code>. It is first
    * filled with values by the
-   * {@link #init(BytecodeDocument, String[], String[])} method.
+   * {@link #init(umbra.editor.BytecodeDocument, String[], String[])} method.
    * This field is initialised by a separate method - not within the
    * constructor.
    */
@@ -86,46 +82,6 @@ public abstract class BytecodeControllerHelper {
            ((BytecodeLineController)(the_list.get(i))).getMy_line_text());
     }
   }
-
-
-  /**
-   * This is a helper method used for debugging purposes. It prints out
-   * all the instructions in the internal Umbra representation of a class
-   * file.
-   *
-   * @param the_instructions the instructions which are printed out
-   * @param an_index the number which allows to make different printouts
-   */
-  public static void controlPrint(final LinkedList the_instructions,
-                                  final int an_index) {
-    UmbraPlugin.messagelog("");
-    UmbraPlugin.messagelog("Control print of bytecode modification (" +
-                           an_index + "):");
-    for (int i = 0; i < the_instructions.size(); i++) {
-      final InstructionLineController line =
-                            (InstructionLineController)the_instructions.get(i);
-      if (line == null) {
-        UmbraPlugin.messagelog("" + i + ". null");
-        return;
-      }
-      //if (line.index == index) {
-      UmbraPlugin.messagelog("" + i + ". " + line.getName());
-      final InstructionHandle ih = line.getHandle();
-      if (ih == null) UmbraPlugin.messagelog("  handle - null");
-      else {
-        UmbraPlugin.LOG.print("  handle(" + ih.getPosition() + ") ");
-        final Instruction ins = ih.getInstruction();
-        if (ins == null) UmbraPlugin.LOG.print("null instruction");
-        else UmbraPlugin.LOG.print(ins.getName());
-        if (ih.getNext() == null) UmbraPlugin.LOG.print(" next: null");
-        else UmbraPlugin.LOG.print(" next: " + ih.getNext().getPosition());
-        if (ih.getPrev() == null) UmbraPlugin.messagelog(" prev: null");
-        else UmbraPlugin.messagelog(" prev: " + ih.getPrev().getPosition());
-      }
-      //}
-    }
-  }
-
 
   /**
    * The method removes from the collection of the incorrect lines

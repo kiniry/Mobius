@@ -9,7 +9,6 @@
 package umbra.editor;
 
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
@@ -83,6 +82,12 @@ public class BytecodeDocument extends Document {
   private BMLParsing my_bmlp;
 
   private DocumentSynchroniser my_synchroniser;
+
+
+  public BytecodeDocument() {
+    super();
+    this.my_bcc = new BytecodeController();
+  }
 
   /**
    * The Java source code editor of the source code file associated
@@ -347,8 +352,4 @@ public class BytecodeDocument extends Document {
     return my_bmlp.getBcc().getMethod(a_method_no).getBcelMethod();
   }
 
-  public BytecodeDocument() {
-    super();
-    this.my_bcc = new BytecodeController();
-  }
 }

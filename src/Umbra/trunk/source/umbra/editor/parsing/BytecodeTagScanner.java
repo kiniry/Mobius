@@ -91,12 +91,12 @@ public class BytecodeTagScanner extends RuleBasedScanner {
     setRules(rules);
   }
 
-  private IRule createKeywordRule(IToken[] tokens) {
+  private IRule createKeywordRule(final IToken[] the_tokens) {
     final WordRule insrule = new WordRule(new BytecodeWordDetector(),
-                                          tokens[ColorValues.ANNOT]);
+                                          the_tokens[ColorValues.ANNOT]);
     for (int i = 0; i < BytecodeStrings.BML_KEYWORDS.length; i++) {
       insrule.addWord(BytecodeStrings.BML_KEYWORDS[i],
-              tokens[ColorValues.ANNOTKEY]);
+              the_tokens[ColorValues.ANNOTKEY]);
     }
     return insrule;
   }
