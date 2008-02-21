@@ -151,6 +151,10 @@
       <fileset dir="templates/" includes="*"/> 
     </copy>
   	
+  	<copy todir="${dist}">
+  	  <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/>
+  	</copy>
+  	
     <jar jarfile="${dist}/lib/BON.jar" basedir="${build}"/>
   	
     <mkdir dir="${dist}/lib"/>

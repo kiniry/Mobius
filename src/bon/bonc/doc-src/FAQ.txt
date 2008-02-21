@@ -5,7 +5,7 @@ FREQUENTLY ASKED QUESTIONS
 
 If you have a question that is not answered here, please contact the developer
 via email:
-  fintan.fairmichael.ucd.ie
+  Fintan Fairmichael <fintan dot fairmichael at ucd dot ie>
 
 Contents:
 
