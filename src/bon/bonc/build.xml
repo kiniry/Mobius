@@ -160,7 +160,7 @@
   	
     <copy todir="${dist}">
       <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/> 
-      <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,FAQ.txt,LICENCE.txt"/>
+      <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,FAQ.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
       <fileset dir="${doc-src}/changelog/" includes="changelog"/>
     </copy>
   	
@@ -186,7 +186,7 @@
       <arg value="${release-name}-${release-version}"/>
     </exec>
   	<copy todir="${release}">
-  		<fileset dir="${doc-src}" includes="README.txt,FAQ.txt,INSTALLATION.txt,LICENCE.txt"/>
+  		<fileset dir="${doc-src}" includes="README.txt,FAQ.txt,INSTALLATION.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
   		<fileset file="update"/>
   	</copy>
     <chmod perm="a+x" file="${release}/update"/>

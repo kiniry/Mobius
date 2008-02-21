@@ -16,6 +16,11 @@ Contents:
 ==============
 
   Bonc is a parser and typechecker for the Business Object Notation (BON).
+  
+  This tool reads one or more files and/or input from standard input in the BON
+  textual format, parses all this input and typechecks it. A number of options
+  are available to modify the typechecking that is performed. Pretty-printing
+  input is also available, with (x)html output planned for a future release.
 
   More information can be found on BON at the website 
   http://www.bon-method.com/, and by reading the book "Seamless object-oriented
@@ -34,7 +39,9 @@ Contents:
   code, it has not been tested on these at all.
 
   The tool utilises the ANTLR parser generator, and releases of the tool
-  include the appropriate ANTLR runtime as well as 
+  include the appropriate ANTLR runtime as well as the StringTemplate library.
+  ANTLR and StringTemplate are Copyright (c) 2003-2007, Terence Parr, under the
+  BSD licence.
 
 3. USING THE TOOL
 ===================

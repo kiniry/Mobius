@@ -1,0 +1,7 @@
+Copyright (c) 2007, Fintan Fairmichael, University College Dublin
+All rights reserved.
+
+Bonc release 0.1.1:
+
+ * This is the first release!
+ * Typechecking of formal diagrams is not 100%. This will be fixed very soon in a new release.

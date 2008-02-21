@@ -5,6 +5,10 @@ bonc \- Parser and typechecker for Business Object Notation (BON).
 .B bonc
 [options] file1 [file2 ...]
 .SH DESCRIPTION
-TBC
+
+This tool reads one or more files and/or input from standard input in the BON
+textual format, parses all this input and typechecks it. A number of options
+are available to modify the typechecking that is performed. Pretty-printing
+input is also available, with (x)html output planned for a future release.
 
 .SH OPTIONS

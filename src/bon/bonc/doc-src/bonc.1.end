@@ -1,3 +1,22 @@
+.SH USAGE
+The tool parse and typecheck the input, and report any errors. If
+the tool does not output any messages, then no errors were found.
+
+You can read from standard input by adding the option "-" (single-dash). This
+can be given as a file, or an option. For example, the following three
+commands will all produce the same result:
+.PD 0
+.P
+.RS 4
+bonc - file1 file2
+.P
+bonc file1 - file2
+.P
+bonc file1 file2 -
+.P
+.RE
+.PD 1
+
 .SH BUG REPORTS
 Bug tracking is handled on the Mobius Trac (https://mobius.ucd.ie/). 
 
