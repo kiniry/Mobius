@@ -13,3 +13,13 @@
    For more information on how to download and build this software, please read
    INSTALLATION.txt.
 
+
+5. BUG REPORTS
+==============
+
+  Bug tracking is handled on the Mobius Trac (https://mobius.ucd.ie/). 
+
+  To create a new ticket either complete the form at:
+    https://mobius.ucd.ie/newticket?owner=fintan&component=BON
+  or send an email to:
+    bon-ticket@mobius.ucd.ie

@@ -141,7 +141,7 @@
   </target>
 
 
-  <target name="dist" depends="compile,changelogs" description="Generate the distribution">
+  <target name="dist" depends="compile" description="Generate the distribution">
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}/lib"/>
   	
@@ -156,12 +156,6 @@
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">
     	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,antlr-2.7.7.jar,CommandlineParser.jar,stringtemplate.jar"/>
-    </copy>
-  	
-    <copy todir="${dist}">
-      <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/> 
-      <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,FAQ.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
-      <fileset dir="${doc-src}/changelog/" includes="changelog"/>
     </copy>
   	
     <chmod perm="a+x">
@@ -181,7 +175,13 @@
     </delete>
   </target>
 	
-  <target name="release" depends="dist,debian-release" description="Generate a release">
+  <target name="release" depends="dist,docs,debian-release" description="Generate a release">
+  	<copy todir="${dist}">
+  	  <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/> 
+  	  <fileset dir="doc-src/" includes="README.txt,INSTALLATION.txt,FAQ.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
+  	  <fileset dir="${doc-src}/changelog/" includes="changelog"/>
+  	</copy>
+  	
     <exec executable="./release.sh" dir=".">
       <arg value="${release-name}-${release-version}"/>
     </exec>
@@ -340,7 +340,7 @@
 		<delete dir="${docs}"/>
 	</target>
 	
-	<target name="docs" depends="manpage" description="Generate all documentation">
+	<target name="docs" depends="manpage,changelogs" description="Generate all documentation">
 		<delete file="${doc-src}/README.txt"/>
 		<copy tofile="${doc-src}/README.txt" file="${doc-src}/README.txt.start"/>
 		<java fork="yes" classname="ie.ucd.bon.Main" output="${doc-src}/README.txt" append="true">
@@ -405,6 +405,7 @@
 		<copy tofile="${doc-src}/changelog/changelog" file="${doc-src}/changelog/changelog-entryformat">
 			<filterset begintoken="[[" endtoken="]]">
 			  <filter token="version" value="${release-version}"/>
+				<filter token="name" value="${release-name}"/>
 				<filter token="date-time" value="${STD_RLS_TIME}"/>
 			</filterset>
 		</copy>
@@ -421,7 +422,7 @@
 		
 	</target>
 	
-	<target name="manpage">
+	<target name="manpage" depends="dist">
 		<delete file="${doc-src}/bonc.1"/>
 		<copy tofile="${doc-src}/bonc.1" file="${doc-src}/bonc.1.start"/>
 	  <java fork="yes" classname="ie.ucd.bon.Main" output="${doc-src}/bonc.1" append="true">
