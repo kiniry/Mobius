@@ -192,6 +192,12 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
 
   }
 
+  /**
+   * Visits parenthised expression.
+   * @param node node to visit
+   * @param p symbol table
+   * @return translated node
+   */
   @Override
   public BCExpression visitParenthesized(final ParenthesizedTree node,
                                          final Symbols p) {

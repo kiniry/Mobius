@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package experiments;
+package oldTests;
 
 import java.io.File;
 import java.io.IOException;

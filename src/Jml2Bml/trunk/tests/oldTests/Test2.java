@@ -1,4 +1,4 @@
-package experiments;
+package oldTests;
 
 public class Test2 {
   public Test2 parent = new Test2();

@@ -10,6 +10,8 @@ package jml2bml.ast;
 
 import java.io.PrintStream;
 
+import jml2bml.utils.Logger;
+
 import com.sun.source.tree.Tree;
 
 /**
@@ -19,7 +21,6 @@ import com.sun.source.tree.Tree;
  * @version 0-0.1
  */
 public class PrettyPrinter {
-
   /**
    * JMLTree pretty printer visitor(modified version of
    * com.sun.tools.javac.parser.TreePrinter).

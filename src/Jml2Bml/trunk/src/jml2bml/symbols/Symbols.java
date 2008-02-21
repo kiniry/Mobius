@@ -73,8 +73,11 @@ public class Symbols {
     return null;
   }
 
-  public void setClass(BCClass clazz) {
+  /**
+   * Sets the class for this symbols.
+   * @param clazz new class value
+   */
+  public void setClass(final BCClass clazz) {
     this.clazz = clazz;
-    
   }
 }
