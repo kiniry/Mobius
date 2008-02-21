@@ -1,13 +1,3 @@
-NewVar[Name : TYPE] : DATATYPE
-BEGIN
-
-  IMPORTING Program[Name]
-
-  res(m : Method) : res?
-  ex(m : Method) : ex?
-
-END NewVar
-
 InlineVariableNames[Name : TYPE+] : THEORY
 BEGIN
 
@@ -39,27 +29,24 @@ BEGIN
 
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+      EXISTS (f : [p : Program -> [Method -> (legal_names(p))]]) :
         FORALL(p : Program) :
           injective?(f(p))
 
   ENDASSUMING
 
-  res_ex(p : Program): (injective?[NewVar[Name], (legal_names(p))])
+  res(p : Program) : (injective?[Method, (legal_names(p))])
 
-  res(p : Program)(m : Method) : Name = res_ex(p)(res(m))
-
-  ex(p : Program)(m : Method) : Name = res_ex(p)(ex(m))
 
   p : VAR Program
   m : VAR Method
 
-  res_ex_disjoint : LEMMA % :-)
-    FORALL(m1, m2 : Method) :
-     (NOT res(p)(m1) = ex(p)(m2)) AND
-     (NOT m1 = m2 IMPLIES
-         (NOT res(p)(m1) = res(p)(m2)) AND
-         (NOT ex(p)(m1) = ex(p)(m2)))
+%  res_ex_disjoint : LEMMA % :-)
+%    FORALL(m1, m2 : Method) :
+%     (NOT res(p)(m1) = ex(p)(m2)) AND
+%     (NOT m1 = m2 IMPLIES
+%         (NOT res(p)(m1) = res(p)(m2)) AND
+%         (NOT ex(p)(m1) = ex(p)(m2)))
 
 
   % Variables that will be added for the inline process
@@ -68,29 +55,29 @@ BEGIN
     (# name := res(p)(m),
        jtype := res_type(m) #)
 
-  new_ex_lvar(p, m) : LocalVarDecl =
-    (# name := ex(p)(m),
-       jtype := BoolType #)
+%  new_ex_lvar(p, m) : LocalVarDecl =
+%    (# name := ex(p)(m),
+%       jtype := BoolType #)
 
-  new_res_lvars(p) : finite_set[LocalVarDecl] =
+  new_lvars(p) : finite_set[LocalVarDecl] =
     {lv : LocalVarDecl | EXISTS (m : Method) : 
                         methods(p)(m) AND lv = new_res_lvar(p, m) }
 
 
-  new_ex_lvars(p) : finite_set[LocalVarDecl] =
-    {lv : LocalVarDecl | EXISTS (m : Method) : 
-                        methods(p)(m) AND lv = new_ex_lvar(p, m) }
+%  new_ex_lvars(p) : finite_set[LocalVarDecl] =
+%    {lv : LocalVarDecl | EXISTS (m : Method) : 
+%                        methods(p)(m) AND lv = new_ex_lvar(p, m) }
 
-  new_lvars(p) : finite_set[LocalVarDecl] =
-    union(new_res_lvars(p), new_ex_lvars(p))
+%  new_lvars(p) : finite_set[LocalVarDecl] =
+%    union(new_res_lvars(p), new_ex_lvars(p))
 
   new_res_lvar_new_lvar : LEMMA % :-)
      methods(p)(m) IMPLIES
      new_lvars(p)(new_res_lvar(p, m))
 
-  new_ex_lvar_new_lvar : LEMMA % :-)
-     methods(p)(m) IMPLIES
-     new_lvars(p)(new_ex_lvar(p, m))
+%  new_ex_lvar_new_lvar : LEMMA % :-)
+%     methods(p)(m) IMPLIES
+%     new_lvars(p)(new_ex_lvar(p, m))
 
   IMPORTING ProgramFunctions[Name], SetProp[Name]
 
@@ -129,7 +116,7 @@ BEGIN
   IMPORTING NewVar[Name], InlineVariableNames[Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+      EXISTS (f : [p : Program -> [Method -> (legal_names(p))]]) :
         FORALL(p : Program) :
           injective?(f(p))
 
@@ -157,6 +144,7 @@ BEGIN
   %     pre_set(m);
   %     body(m);
   %     ex := true;
+  %     post_set(m);
   %   }
   %   catch(Throwable){
   %     exc_set(m);
@@ -173,14 +161,12 @@ BEGIN
   inline_method_body(p)(m) : Body = 
     TryCatch(
        TryCatch(
-        Sequence(
-          pre_set(m)(var_lookup(name(arg(m)))(jtype(arg(m)))),
-          Sequence(
-            body(m),
-            Sequence(StmtExpr(Assign(res(p)(m), res(m))),
-                     StmtExpr(Assign(ex(p)(m), Const(Bool(TRUE))))))),
-                             % this is only executed if body terminates
-                             % normally
+        Sequence(pre_set(m)(var_lookup(name(arg(m)))(jtype(arg(m)))),
+        Sequence(body(m),
+        Sequence(StmtExpr(Assign(res(p)(m), res(m))),
+                 % assignment and post_set are only evaluated if
+                 % body + res terminate normally
+                 post_set(m)(var_lookup(res(p)(m))(res_type(m)))))),
          Throwable,
          exc_set(m)(Throwable),
          Skip),
@@ -188,7 +174,7 @@ BEGIN
        exc_set(m)(NullPointer),
        IfThenElse(
          BoolVarEval(ex(p)(m)),
-         post_set(m)(var_lookup(res(p)(m))(res_type(m))),
+         post_set(m)
          Skip))
          
 

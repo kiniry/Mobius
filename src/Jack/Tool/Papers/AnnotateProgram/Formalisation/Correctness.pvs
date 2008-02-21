@@ -450,10 +450,7 @@ BEGIN
                                      derive(p)(b, sigma1, v, sigma2)(m))
             AND derive(mp)(body(md1), tauMP4, x1, tauMP5)(m41)
             AND x1 = Semantics.return_of_stmt(tauMP5)
-            AND IF Void?(res_type(md1))
-                THEN tauMP6 = tauMP5 AND w1 = Unit AND m51 = 0
-                ELSE derive(mp)(res(md1), tauMP5, w1, tauMP6)(m51)
-                ENDIF
+            AND derive(mp)(res(md1), tauMP5, w1, tauMP6)(m51)
             AND IF bottom?(ex(pstate(tauMP6))) 
                   THEN defined?(w1) AND
                        on_method_exit_normal_MP(mp, md1, a1, val(Const(w1)), 
@@ -541,10 +538,7 @@ BEGIN
                                   derive(p)(b, sigma1, v, sigma2)(m))
             AND derive(ann_program(mp))(body(md2), tauAP4, x2, tauAP5)(m42)
             AND x2 = Semantics.return_of_stmt(tauAP5)
-            AND IF Void?(res_type(md2))
-                THEN tauAP6 = tauAP5 AND w2 = Unit AND m52 = 0
-                ELSE derive(ann_program(mp))(res(md2), tauAP5, w2, tauAP6)(m52)
-                ENDIF
+            AND derive(ann_program(mp))(res(md2), tauAP5, w2, tauAP6)(m52)
             AND IF bottom?(ex(pstate(tauAP6))) 
                   THEN defined?(w2) AND
                        on_method_exit_normal(ann_program(mp), md2, a2, 

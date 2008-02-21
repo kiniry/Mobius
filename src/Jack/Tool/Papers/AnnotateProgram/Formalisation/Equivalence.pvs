@@ -72,7 +72,7 @@ BEGIN
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_modeled?(mp)(sMVA, sAP) IMPLIES
       ts(mva(mp))(t) IMPLIES scp(t) = cp(sMVA) IMPLIES
-        EXISTS (e : [ValOrExcpt -> Expr], v : Val, n : nat) : 
+        EXISTS (e : [ValOrExcpt -> Expr], v : (Bool?), n : nat) : 
           guard_to_expression(mva(mp))(guard(t)) = e AND
           FORALL(arg : ValOrExcpt) :
           wf_Expr(ann_program(mp))(e(arg)) AND
