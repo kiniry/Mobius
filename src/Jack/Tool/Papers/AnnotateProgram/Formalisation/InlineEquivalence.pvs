@@ -6,10 +6,10 @@ BEGIN
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
 
-    IMPORTING NewVar[Name], InlineVariableNames[Name]
+    IMPORTING InlineVariableNames[Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+      EXISTS (f : [p : Program -> [Method -> (legal_names(p))]]) :
         FORALL(p : Program) :
           injective?(f(p))
 
@@ -48,10 +48,10 @@ BEGIN
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
 
-    IMPORTING NewVar[Name], InlineVariableNames[Name]
+    IMPORTING InlineVariableNames[Name]
 
     name_of_exists : ASSUMPTION
-      EXISTS (f : [p : Program -> [NewVar[Name] -> (legal_names(p))]]) :
+      EXISTS (f : [p : Program -> [Method -> (legal_names(p))]]) :
         FORALL(p : Program) :
           injective?(f(p))
 
@@ -105,11 +105,12 @@ BEGIN
 
   % needs reformulation?
   inline_related_states_preserved_by_update : LEMMA % :-)
-    FORALL (sAP1, sAP2 : APState)(vn : Name, v : (defined?)) :
+    FORALL (sAP1, sAP2 : APState)(upd : [PState -> PState]) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
-      ext_declared_var_names(p)(vn) IMPLIES
-        inline_related_states(p)(update_PState(sAP1, update(vn, v)), 
-                                 update_PState(sAP2, update(vn, v)))
+        wf_state(p)(upd(pstate(sAP1))) IMPLIES
+        wf_state(inline_program(p))(upd(pstate(sAP2))) IMPLIES
+        inline_related_states(p)(update_PState(sAP1, upd), 
+                                 update_PState(sAP2, upd))
 
   inline_related_states_preserved_by_catch : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState) :
