@@ -68,12 +68,12 @@ public final class BytecodeController extends BytecodeControllerContainer {
     for (int i = a_pos; i >= 0; i--) {
       final BytecodeLineController blc = getLineController(i);
       if (blc instanceof HeaderLineController) {
-        ctxt.seClassToBeRead();
+        ctxt.setClassToBeRead();
         ctxt.setMethodNo(blc.getMethodNo());
         break;
       }
       if (blc instanceof AnnotationLineController) {
-        ctxt.setInsideAnnotation();
+        ctxt.setInsideAnnotation(getAnnotationEnd(i));
         ctxt.setMethodNo(blc.getMethodNo());
         break;
       }

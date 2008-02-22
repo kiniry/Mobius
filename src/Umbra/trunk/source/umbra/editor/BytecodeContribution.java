@@ -82,6 +82,12 @@ public class BytecodeContribution extends ControlContribution {
     private int my_stop_rem;
 
     /**
+     * This field contains the string representation of the document before
+     * the current change is applied.
+     */
+    private String my_oldcontent;
+
+    /**
      * The current constructor does nothing.
      */
     public BytecodeListener() {
@@ -128,6 +134,7 @@ public class BytecodeContribution extends ControlContribution {
       } catch (BadLocationException e) {
         messageForBadLocation();
       }
+      my_oldcontent = doc.get();
     }
 
 
@@ -154,6 +161,7 @@ public class BytecodeContribution extends ControlContribution {
           e.printStackTrace();
           MessageDialog.openInformation(new Shell(), "Bytecode",
               "Invalid edit operation");
+          a_doc.set(my_oldcontent);
           return;
         }
         if (!a_doc.allCorrect())

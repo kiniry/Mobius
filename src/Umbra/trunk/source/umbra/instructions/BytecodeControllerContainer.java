@@ -16,6 +16,7 @@ import org.apache.bcel.generic.InstructionHandle;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
+import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.InstructionLineController;
 
@@ -240,6 +241,24 @@ public abstract class BytecodeControllerContainer extends
   protected final void insertEditorLine(final int a_pos,
                                         final BytecodeLineController a_lc) {
     my_editor_lines.add(a_pos, a_lc);
+  }
+
+  /**
+   * Returns the last annotation line for the annotation lines block
+   * starting with the given postion. We assume the given postion
+   * points to an {@link AnnotationLineController}.
+   *
+   * @param a_pos a postion with an annotation line controller
+   * @return the postion of the last annotation line controller in the current
+   *   block
+   */
+  protected final int getAnnotationEnd(final int a_pos) {
+    for (int i = a_pos; i < my_editor_lines.size(); i++) {
+      if (!(getLineController(i) instanceof AnnotationLineController)) {
+        return i - 1;
+      }
+    }
+    return my_editor_lines.size() - 1;
   }
 
   /**

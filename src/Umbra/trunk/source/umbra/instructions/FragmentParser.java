@@ -89,7 +89,10 @@ public class FragmentParser extends BytecodeTextParser {
    * It uses BCEL objects associated with the
    * document and based on them it generates the Umbra line
    * structures (subclasses of the {@link BytecodeLineController})
-   * together with the links to the BCEL objects.
+   * together with the links to the BCEL objects. It checks if the
+   * edit operation is appropriate. Currently, it means that the
+   * operation does not cross or destroy the boundaries of the existing
+   * regions.
    *
    * This method initialises the parsing context so that the parsing is
    * inside of a method, then it parses the lines in the related document
@@ -129,23 +132,27 @@ public class FragmentParser extends BytecodeTextParser {
    * @return the first line to be parsed by the further parsing procedure
    * @throws UmbraLocationException in case the method reaches a line number
    *   which is not within the given document
-   * @throws UmbraException in case parsing reached an unexpected line
-   *   controller
+   * @throws UmbraException in case parsing reached a boundary of the
+   *   recognised regions
    */
   private int swallowAnnotationFragment(final int a_start,
                                         final LineContext a_ctxt)
     throws UmbraLocationException, UmbraException {
     int j = a_start;
+    BytecodeLineController lc = null;
     for (; j <= my_end; j++) {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
-      final BytecodeLineController lc = Preparsing.getType(lineName,
-                                                           a_ctxt);
+      lc = Preparsing.getType(lineName, a_ctxt);
       addEditorLine(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       if (!(lc instanceof AnnotationLineController)) { //we allow only
                                                        //annotation lines
         throw new UmbraException();
       }
+    }
+    final AnnotationLineController alc = (AnnotationLineController)lc;
+    if (j >= a_ctxt.getAnnotationEnd() && !alc.isCommentEnd()) {
+      throw new UmbraException();
     }
     return j;
   }

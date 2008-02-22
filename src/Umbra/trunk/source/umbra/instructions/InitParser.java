@@ -143,7 +143,7 @@ public class InitParser extends BytecodeTextParser {
     j++;
     j = swallowEmptyLines(my_doc, j, a_ctxt);
     line = getLineFromDoc(my_doc, j, a_ctxt);
-    a_ctxt.seClassToBeRead();
+    a_ctxt.setClassToBeRead();
     lc = Preparsing.getType(line, a_ctxt);
     addEditorLine(j, lc);
     lc.setMethodNo(a_ctxt.getMethodNo());

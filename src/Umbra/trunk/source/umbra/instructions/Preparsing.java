@@ -87,7 +87,7 @@ public final class Preparsing {
     }
     if (blc instanceof CommentLineController) {
       if (blc instanceof AnnotationLineController) {
-        a_context.setInsideAnnotation();
+        a_context.setInsideAnnotation(-1);
       } else {
         a_context.setInsideComment();
       }

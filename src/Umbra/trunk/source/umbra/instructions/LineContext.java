@@ -75,6 +75,11 @@ public class LineContext {
    */
   private int my_method;
 
+  /**
+   * The last line in the annotation.
+   */
+  private int my_annotation_end;
+
 
   /**
    * The constructor initialises the internal state of the object so that it
@@ -98,7 +103,7 @@ public class LineContext {
    * The method sets the internal state of the object to the state in which
    * we are about to parse the class.
    */
-  public void seClassToBeRead() {
+  public void setClassToBeRead() {
     my_state = STATE_CLASS_TO_BE_READ;
   }
 
@@ -162,9 +167,12 @@ public class LineContext {
    * Sets the current state to be the state inside an annotation. Additionally,
    * this method remembers the current state so that it can be restored
    * by {@link #revertState()}.
+   *
+   * @param a_pos the last editor line of the annotation to be parsed or -1
    */
-  public void setInsideAnnotation() {
+  public void setInsideAnnotation(final int a_pos) {
     rememberState();
+    my_annotation_end = a_pos;
     my_state = STATE_INSIDE_ANNOTATION;
   }
 
@@ -192,5 +200,14 @@ public class LineContext {
    */
   public void setMethodNo(final int a_methodno) {
     my_method = a_methodno;
+  }
+
+  /**
+   * Returns the value of the remembered annotation end position.
+   *
+   * @return the annotation end position
+   */
+  public int getAnnotationEnd() {
+    return my_annotation_end;
   }
 }
