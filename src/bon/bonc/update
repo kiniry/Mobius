@@ -6,7 +6,12 @@
 ###
 
 LATEST=`wget -qO - http://hunter.ucd.ie/bon/version`
-CURRENT=`cat version`
+
+if [ -e "version" ]; then
+  CURRENT=`cat version`
+else
+  CURRENT="ZZZZ"
+fi
 
 if [[ "$LATEST" != "$CURRENT" ]]; then
   echo "New version $LATEST detected."
