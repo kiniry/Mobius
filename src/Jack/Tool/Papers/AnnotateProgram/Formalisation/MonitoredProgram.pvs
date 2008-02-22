@@ -422,6 +422,46 @@ BEGIN
                derive(mp)(b, sigma1, v, sigma2)(m)) IMPLIES
         wf_state(mp)(sigma2)
 
+  complete_MVA_never_stuck_after_on_method_entry_MP : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
+           (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) :
+      wf_and_complete_MP(mp) IMPLIES
+      wf_state(mp)(sigma1) IMPLIES
+        on_method_entry_MP(mp, m, a, arg, sigma1, sigma2, n, 
+        LAMBDA (k : upto(n))(mp : MonitoredProgram)
+               (b : (wf_Body(program(mp))), sigma1 : MPState, v : Val, 
+                sigma2 : MPState)(m : below(k)) :
+               derive(mp)(b, sigma1, v, sigma2)(m)) IMPLIES
+       NOT stuck(sigma1) IMPLIES
+       NOT stuck(sigma2)
+
+  complete_MVA_never_stuck_after_on_method_exit_normal_MP : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
+           (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) :
+      wf_and_complete_MP(mp) IMPLIES
+      wf_state(mp)(sigma1) IMPLIES
+        on_method_exit_normal_MP(mp, m, a, arg, sigma1, sigma2, n, 
+        LAMBDA (k : upto(n))(mp : MonitoredProgram)
+               (b : (wf_Body(program(mp))), sigma1 : MPState, v : Val, 
+                sigma2 : MPState)(m : below(k)) :
+               derive(mp)(b, sigma1, v, sigma2)(m)) IMPLIES
+       NOT stuck(sigma1) IMPLIES
+       NOT stuck(sigma2)
+
+  complete_MVA_never_stuck_after_on_method_exit_exceptional_MP : LEMMA % :-)
+    FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
+           (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) :
+      wf_and_complete_MP(mp) IMPLIES
+      wf_state(mp)(sigma1) IMPLIES
+        on_method_exit_exceptional_MP(mp, m, a, arg, sigma1, sigma2, n, 
+        LAMBDA (k : upto(n))(mp : MonitoredProgram)
+               (b : (wf_Body(program(mp))), sigma1 : MPState, v : Val, 
+                sigma2 : MPState)(m : below(k)) :
+               derive(mp)(b, sigma1, v, sigma2)(m)) IMPLIES
+       NOT stuck(sigma1) IMPLIES
+       NOT stuck(sigma2)
+
+
 END MonitoredProgramSemantics
 
 
