@@ -17,8 +17,7 @@ if [[ "$LATEST" != "$CURRENT" ]]; then
   echo "New version $LATEST detected."
   echo "Downloading $LATEST.tar.gz"
   wget -q 
-http://kind.ucd.ie/products/opensource/BONc/releases/$LATEST.tar.gz 
-&& tar xzf $LATEST.tar.gz && rm $LATEST.tar.gz
+http://kind.ucd.ie/products/opensource/BONc/releases/$LATEST.tar.gz && tar xzf $LATEST.tar.gz && rm $LATEST.tar.gz
   echo "Success!"  
 else
   echo "Already at latest version."
