@@ -64,7 +64,7 @@ Contents:
 2. SYSTEMS WITH BASH
 ====================
 
-   Bonc releases are available from http://hunter.ucd.ie/bon/
+   Bonc releases are available from http://kind.ucd.ie/products/opensource/BONc/releases/
 
 2.1 Installing
 --------------
@@ -79,16 +79,16 @@ Contents:
 
   From the commandline navigate to the desired directory and issue the
   following commands:
-    wget http://hunter.ucd.ie/bon/update
+    wget http://kind.ucd.ie/products/opensource/BONc/releases/update
     chmod a+x update
     ./update
   
   Alternatively:
-    wget -qO - http://hunter.ucd.ie/bon/update | bash
+    wget -qO - http://kind.ucd.ie/products/opensource/BONc/releases/update | bash
     
 2.1.2 Without the update script
 
-  - Visit http://hunter.ucd.ie/bon/ and identify the latest version.
+  - Visit http://kind.ucd.ie/products/opensource/BONc/releases/
   - Download a package of the latest version (e.g., bonc-XXX.tar.gz).
   - Extract the files to the desired location (e.g. tar xzf bonc-XXX.tar.gz)
 
@@ -171,7 +171,7 @@ Contents:
 3. WINDOWS WITHOUT CYGWIN
 =========================
 
-  Bonc releases are available from http://hunter.ucd.ie/bon/
+  Bonc releases are available from http://kind.ucd.ie/products/opensource/BONc/releases/
 
   1. Download the zip of the latest build.
   2. Unzip the package to a location of your choice.
