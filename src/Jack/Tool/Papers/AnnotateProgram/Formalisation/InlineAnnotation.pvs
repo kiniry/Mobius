@@ -478,12 +478,11 @@ BEGIN
 %      wf_state(inline_program(p))(sAP) IMPLIES
 %        (is_local(vn, sMP) IMPLIES is_local(vn, sAP))
 
-  var_names_inline_program : LEMMA % :-)
-    subset?(var_names(inline_program(p)),
-            union(var_names(p), var_names(new_lvars(p))))
+%  var_names_inline_program : LEMMA % :-)
+%    subset?(var_names(inline_program(p)),
+%            union(var_names(p), var_names(new_lvars(p))))
 
 
-  % not directly: needs methods(p)(m)
   inline_program_preserves_wf_method : LEMMA % :-)
     FORALL (m : Method) :
       methods(p)(m) IMPLIES

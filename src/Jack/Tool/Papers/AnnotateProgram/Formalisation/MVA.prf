@@ -2,12 +2,60 @@
 (MVA
  (get_MVAVarDecl_TCC1 0
   (get_MVAVarDecl_TCC1-1 nil 3411366436 3412328749
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
     (nonempty? const-decl "bool" sets nil))
    75 70 nil nil)))
-(WellFormedMVA)
+(WellFormedMVA
+ (empty_TCC1 0
+  (empty_TCC1-1 nil 3412944985 3412945007 ("" (subtype-tcc) nil nil)
+   proved
+   ((member const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (nonempty? const-decl "bool" sets nil))
+   41 40 nil nil))
+ (empty_TCC2 0
+  (empty_TCC2-1 nil 3412944985 3412945007 ("" (subtype-tcc) nil nil)
+   proved
+   ((choose const-decl "(p)" sets nil)
+    (member const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (nonempty? const-decl "bool" sets nil))
+   28 30 nil nil))
+ (empty_TCC3 0
+  (empty_TCC3-1 nil 3412944985 3412945140
+   ("" (skosimp*)
+    (("" (expand "wf_MVA")
+      (("" (auto-rewrite "emptyset" "singleton")
+        (("" (assert)
+          (("" (expand "wf_vdsA")
+            ((""
+              (auto-rewrite "emptyset" "singleton" "disjoint?"
+                            "intersection" "member" "empty?")
+              (("" (assert)
+                (("" (expand "wf_vdsP")
+                  (("" (assert)
+                    (("" (expand "var_names")
+                      (("" (assert)
+                        (("" (expand "wf_Trans")
+                          (("" (assert) (("" (postpone) nil nil)) nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 121748 140 t nil))
+ (empty_TCC4 0
+  (empty_TCC4-1 nil 3412944985 3412945007 ("" (subtype-tcc) nil nil)
+   unfinished nil 204 150 nil nil)))
 (MVAProperties)
 (MVACommonSemantics
  (update_yields_wf_Store 0
@@ -33,19 +81,18 @@
                    ("2" (skosimp*)
                     (("2" (inst -1 "n!2") nil))))))))))))))))))
     "")
-   proved
+   unfinished
    ((update const-decl "Store" MVACommonSemantics nil)
     (wf_Store const-decl "boolean" MVACommonSemantics nil)
     (defined? const-decl "boolean" ValProp nil)
-    (Name formal-nonempty-type-decl nil MVACommonSemantics nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil))
+    (Name formal-nonempty-type-decl nil MVACommonSemantics nil) nil)
    333 310 nil nil))
  (execute_action_TCC1 0
   (execute_action_TCC1-1 nil 3411366856 3412328749
-   ("" (subtype-tcc) nil nil) proved nil 97 60 nil nil))
+   ("" (subtype-tcc) nil nil) unchecked nil 97 60 nil nil))
  (execute_action_TCC2 0
   (execute_action_TCC2-1 nil 3411366856 3412328749
-   ("" (termination-tcc) nil nil) proved
+   ("" (termination-tcc) nil nil) unchecked
    ((length def-decl "nat" list_props nil)
     (nnint_plus_posint_is_posint application-judgement "posint"
      integers nil)
@@ -86,7 +133,7 @@
                                   (assert)
                                   nil))))))))))))))))))))))))))))))
     "")
-   proved
+   unfinished
    ((update const-decl "Store" MVACommonSemantics nil)
     (Body type-decl nil Body_adt nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
@@ -134,7 +181,7 @@
    409 380 nil nil))
  (initial_MVA_state_TCC1 0
   (initial_MVA_state_TCC1-1 nil 3411367276 3412328750
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil))
    125 90 nil nil))
@@ -190,7 +237,7 @@
                                                   (assert)
                                                   nil))))))))))))))))))))))))))))))))))))))))))))))
     "")
-   proved
+   unfinished
    ((initial_MVA_state const-decl "AState" MVACommonSemantics nil)
     (wf_MVA const-decl "boolean" WellFormedMVA nil)
     (wf_AState const-decl "boolean" MVACommonSemantics nil)
@@ -204,14 +251,12 @@
     (subset? const-decl "bool" sets nil)
     (union const-decl "set" sets nil)
     (var_names const-decl "finite_set[Name]" MVA nil)
-    (wf_Guard const-decl "boolean" WellFormedMVA nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (wf_Guard const-decl "boolean" WellFormedMVA nil) nil
     (wf_vdsP const-decl "boolean" WellFormedMVA nil)
     (wf_vdsA const-decl "boolean" WellFormedMVA nil)
     (disjoint? const-decl "bool" sets nil)
     (intersection const-decl "set" sets nil)
-    (reserved_words const-decl "finite_set[Name]" Program nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (reserved_words const-decl "finite_set[Name]" Program nil) nil
     (get_MVAVarDecl const-decl "lift[MVAVarDecl]" MVA nil)
     (CP formal-nonempty-type-decl nil MVACommonSemantics nil)
     (Name formal-nonempty-type-decl nil MVACommonSemantics nil)
@@ -246,7 +291,7 @@
 (MVAPartialSemantics
  (step_TCC1 0
   (step_TCC1-1 nil 3411367277 3412328752 ("" (subtype-tcc) nil nil)
-   proved
+   unchecked
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -269,10 +314,8 @@
     (PSt type-eq-decl nil State nil)
     (PEvent type-eq-decl nil MVACommonSemantics nil)
     (wf_PEvent const-decl "boolean" MVACommonSemantics nil)
-    (wf_PSt const-decl "boolean" MVACommonSemantics nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (wf_Store const-decl "boolean" MVACommonSemantics nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (wf_PSt const-decl "boolean" MVACommonSemantics nil) nil
+    (wf_Store const-decl "boolean" MVACommonSemantics nil) nil
     (member const-decl "bool" sets nil)
     (empty? const-decl "bool" sets nil)
     (nonempty? const-decl "bool" sets nil))
@@ -342,13 +385,8 @@
         nil))
       nil))
     nil)
-   proved
-   ((nonempty_exists formula-decl nil sets_lemmas nil)
-    (a!1 skolem-const-decl "MVA[CP, Name]" MVAPartialSemantics nil)
-    (t!1 skolem-const-decl "Transition[CP, Name]" MVAPartialSemantics
-     nil)
-    (s!1 skolem-const-decl "(wf_AState(a!1))" MVAPartialSemantics nil)
-    (pe!1 skolem-const-decl "(wf_PEvent(a!1))" MVAPartialSemantics nil)
+   unfinished
+   ((nonempty_exists formula-decl nil sets_lemmas nil) nil nil nil nil
     (execute_action_yields_wf_state formula-decl nil MVACommonSemantics
      nil)
     (Expr type-eq-decl nil Body_adt nil)
@@ -416,7 +454,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((step const-decl "lift[AState]" MVAPartialSemantics nil)
     (complete const-decl "boolean" MVAProperties nil)
     (MVA type-eq-decl nil MVA nil)
@@ -478,7 +516,7 @@
                                   (assert)
                                   nil))))))))))))))))))))))))))))))
     "")
-   proved
+   unchecked
    ((total const-decl "boolean" MVAProperties nil)
     (MVA type-eq-decl nil MVA nil)
     (ProgVarDecl type-eq-decl nil MVA nil)
@@ -502,14 +540,7 @@
     (nonempty_exists formula-decl nil sets_lemmas nil)
     (set type-eq-decl nil sets nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (a!1 skolem-const-decl "(total[CP, Name])" MVATotalSemantics nil)
-    (t!1 skolem-const-decl "Transition[CP, Name]" MVATotalSemantics
-     nil)
-    (s!1 skolem-const-decl "(wf_AState[CP, Name](a!1))"
-     MVATotalSemantics nil)
-    (pe!1 skolem-const-decl "(wf_PEvent[CP, Name](a!1))"
-     MVATotalSemantics nil)
+    (= const-decl "[T, T -> boolean]" equalities nil) nil nil nil nil
     (wf_PEvent const-decl "boolean" MVACommonSemantics nil)
     (PEvent type-eq-decl nil MVACommonSemantics nil)
     (PSt type-eq-decl nil State nil)
@@ -544,7 +575,7 @@
                               (("1" (assert) nil)))))))))))))))))))))))
          ("2" (use "step_TCC1") nil))))))
     "")
-   proved
+   unfinished
    ((step const-decl "AState" MVATotalSemantics nil)
     (step_TCC1 subtype-tcc nil MVATotalSemantics nil)
     (execute_action_yields_wf_state formula-decl nil MVACommonSemantics
@@ -590,7 +621,7 @@
    (""
     (inst 1 "LAMBDA(m : MVA)(g : Guard)(v : ValOrExcpt) : Const(Unit)")
     (("" (expand "defined?") (("" (propax) nil nil)) nil)) nil)
-   proved
+   unchecked
    ((Unit adt-constructor-decl "(Unit?)" Val_adt nil)
     (Unit? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
     (Const adt-constructor-decl "[(defined?) -> (Const?)]" Body_adt
@@ -919,7 +950,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((wf_MVA const-decl "boolean" WellFormedMVA nil)
     (all_guards const-decl "finite_set[Guard]" MVACompletion nil)
     (build_guard const-decl "Guard" MVACompletion nil)
@@ -994,7 +1025,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((wf_Trans const-decl "boolean" WellFormedMVA nil)
     (union const-decl "set" sets nil)
     (build_guard_yields_wf_guard formula-decl nil MVACompletion nil)
@@ -1067,7 +1098,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((complete_MVA const-decl "MVA" MVACompletion nil)
     (trap_state const-decl "boolean" MVAProperties nil)
     (union const-decl "set" sets nil)
@@ -1258,7 +1289,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
@@ -1570,7 +1601,7 @@
                    "(# scp := q!1, event := e!1, guard := build_guard(a!1)(q!1, e!1), action := skip, tcp := halted #)")
                   (("2" (grind) nil))))))))))))))))
     ";;; developed with shostak decision procedures")
-   unchecked
+   unfinished
    ((complete_MVA const-decl "MVA" MVACompletion nil)
     (total const-decl "boolean" MVAProperties nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
@@ -1770,7 +1801,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((complete const-decl "boolean" MVAProperties nil)
     (complete_MVA_is_total formula-decl nil MVACompletion nil)
     (complete_MVA_is_deterministic formula-decl nil MVACompletion nil)
@@ -1801,8 +1832,8 @@
   (evs_complete_MVA-1 nil 3412338923 3412338925
    ("" (skosimp*)
     (("" (expand "complete_MVA") (("" (propax) nil nil)) nil)) nil)
-   proved ((complete_MVA const-decl "MVA" MVACompletion nil)) 2237 10 t
-   shostak))
+   unfinished ((complete_MVA const-decl "MVA" MVACompletion nil)) 2237
+   10 t shostak))
  (completion_equivalence_TCC1 0
   (completion_equivalence_TCC1-1 nil 3411913637 3412328769
    ("" (subtype-tcc) nil nil) unchecked
@@ -2108,7 +2139,7 @@
                                                       (assert)
                                                       nil))))))))))))))))))))))))))))))))))))))))))))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil)
+   unfinished nil nil nil nil nil)
   (completion_equivalence-1 nil 3411913637 3412328771
    ("" (skosimp*)
     (("" (split 1)
@@ -2428,7 +2459,7 @@
    unchecked
    ((complete_definedness formula-decl nil MVAPartialSemantics nil)
     (CP formal-nonempty-type-decl nil MVACompletion nil)
-    (Name formal-nonempty-type-decl nil MVACompletion nil) nil
+    (Name formal-nonempty-type-decl nil MVACompletion nil)
     (wf_PEvent const-decl "boolean" MVACommonSemantics nil)
     (PEvent type-eq-decl nil MVACommonSemantics nil)
     (PSt type-eq-decl nil State nil)
@@ -2753,7 +2784,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((step const-decl "lift[AState]" MVAPartialSemantics nil)
     (complete_MVA_is_total formula-decl nil MVACompletion nil)
     (partial const-decl "boolean" MVAProperties nil)
@@ -2775,7 +2806,7 @@
     (total const-decl "boolean" MVAProperties nil)
     (nonempty_add_finite application-judgement "non_empty_finite_set"
      finite_sets nil)
-    (add const-decl "(nonempty?)" sets nil) nil nil nil nil
+    (add const-decl "(nonempty?)" sets nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (wf_PEvent const-decl "boolean" MVACommonSemantics nil)
@@ -2800,6 +2831,6 @@
     (complete_MVA const-decl "MVA" MVACompletion nil)
     (wf_Trans const-decl "boolean" WellFormedMVA nil)
     (build_guard const-decl "Guard" MVACompletion nil)
-    (all_guards const-decl "finite_set[Guard]" MVACompletion nil) nil)
+    (all_guards const-decl "finite_set[Guard]" MVACompletion nil))
    434016 2270 t shostak)))
 

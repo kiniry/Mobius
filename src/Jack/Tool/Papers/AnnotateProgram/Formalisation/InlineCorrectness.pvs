@@ -60,7 +60,7 @@ BEGIN
 
   % Inductive case
   derive_maintains_inline_related_states_for_unchanged_program : THEOREM
-    FORALL (p : (wf_set_stmts), b : (wf_Body(p)), v1, v2 : Val)
+    FORALL (b : (wf_Body(p)), v1, v2 : Val)
            (sAP1a, sAP1b, sAP2a, sAP2b : APState)
            (n1, n2 : nat) :
       subset?(var_names(b), ext_declared_var_names(p)) IMPLIES

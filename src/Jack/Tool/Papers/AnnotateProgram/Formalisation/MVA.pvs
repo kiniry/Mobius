@@ -169,6 +169,17 @@ BEGIN
     disjoint?(var_names(vdsA(a)), var_names(vdsP(a))) AND
     FORALL (t : Transition) : wf_Trans(a)(t)
 
+  empty(cp : (LAMBDA(cp : CP) : NOT cp = halted)) : (wf_MVA) =
+   (# name := choose({n : Name | TRUE}),
+       class_name := choose({n : Name | TRUE}),
+       cps := singleton(cp),
+       init_cp := cp,
+       evs := emptyset[Event],
+       vdsA := emptyset[MVAVarDecl],
+       vdsP := emptyset[ProgVarDecl],
+       ts := emptyset[Transition]
+   #)
+
 
 END WellFormedMVA
 
