@@ -1,3 +1,12 @@
+system_chart THE_WORLD
+  cluster EARTH description "A small, insignificant planet."
+end
+
+cluster_chart EARTH
+  class CITIZEN description "A humanoid."
+  class NOBLEPERSON description "A rich humanoid."
+end
+
 class_chart CITIZEN
 
 indexing
