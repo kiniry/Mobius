@@ -7,7 +7,6 @@
 
 if [ $1 ]; then
 	cd dist
-	tar -cf ../release/$1.tar *
 	tar -czf ../release/$1.tar.gz *
 	tar -cjf ../release/$1.tar.bz2 *
 	zip -r ../release/$1.zip *

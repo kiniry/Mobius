@@ -2,27 +2,27 @@ class_chart CITIZEN
 
 indexing
   clauster: "CIVIL_STATUS " ;
-	created: "1993-03-15 jmn";
-	revised: "1993-05-12 kw";
+  created: "1993-03-15 jmn";
+  revised: "1993-05-12 kw";
 
 explanation
-	"Person born or living in a country"
+  "Person born or living in a country"
 
 part "1/1 "
 
 query
-	"Name " , "Sex " , "Age " , "Single " , "Spouse " , "Children " , "Parents " ,
-	"Impediment to marriage"
+  "Name " , "Sex " , "Age " , "Single " , "Spouse " , "Children " , "Parents " ,
+  "Impediment to marriage"
 
 command
-	"Marry " , "Divorce "
+  "Marry " , "Divorce "
 
 constraint
-	"Each citizen has two parents.",
-	"At most one spouse allowed.",
-	"May not marry children or parents or person of same sex.",
-	"Spouse’s spouse must be this person.",
-	"All children, if any, must have this person among their parents."
+  "Each citizen has two parents.",
+  "At most one spouse allowed.",
+  "May not marry children or parents or person of same sex.",
+  "Spouse’s spouse must be this person.",
+  "All children, if any, must have this person among their parents."
 end
 
 class_chart NOBLEPERSON

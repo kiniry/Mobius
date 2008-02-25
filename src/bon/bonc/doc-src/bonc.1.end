@@ -39,9 +39,9 @@ Please include the following details (where possible):
 .RS 2
 .PD 0
 .IP \(bu 2
-The commandline arguments with which you invoked the tool (e.g. "bonc -i test.bon").
+The command-line arguments with which you invoked the tool (e.g. "bonc -i test.bon").
 .IP \(bu 2
-The operating system and java version you are using.
+The operating system and Java VM version you are using.
 .IP \(bu 2 
 Any input files used to recreate the bug.  
 .IP \(bu 2 
