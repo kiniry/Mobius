@@ -1,0 +1,13 @@
+bonc (0.1.2) unstable; urgency=low
+
+ * Now allowing parenthesized cluster names in involves and creates clauses.
+
+ -- Fintan Fairmichael <fintan.fairmichael@ucd.ie> Tue, 26 Feb 2008 16:06:17 +0000
+
+bonc (0.1.1) unstable; urgency=low
+
+ * Initial release.
+
+ -- Fintan Fairmichael <fintan.fairmichael@ucd.ie> Tue, 26 Feb 2008 16:01:06 +0000
+
+

@@ -1,0 +1,11 @@
+bonc-0.1.2   2008-02-26 16:06
+
+ * Now allowing parenthesized cluster names in involves and creates clauses.
+
+
+bonc-0.1.1   2008-02-26 16:01
+
+ * Initial release.
+
+
+

@@ -30,7 +30,7 @@
   <property name="java-target-version" value="1.5"/>
 	
   <property name="release-name" value="bonc"/>
-  <property name="release-version" value="0.1.1"/>
+  <property name="release-version" value="0.1.3"/>
 
   <property name="debian" value="debian"/>
 
@@ -191,6 +191,7 @@
     </exec>
   	<copy todir="${release}">
   		<fileset dir="${doc-src}" includes="README.txt,FAQ.txt,INSTALLATION.txt,LICENCE.txt,RELEASE_NOTES.txt"/>
+  		<fileset dir="${doc-src}/changelog/" includes="changelog"/>
   		<fileset file="update"/>
   	</copy>
     <chmod perm="a+x" file="${release}/update"/>
