@@ -34,6 +34,7 @@ tokens {
   COMMAND_LIST;
   CONSTRAINT_LIST;
   CLASS_NAME_LIST;
+  CLASS_OR_CLUSTER_NAME_LIST;
   CLASS_NAME;
   EVENT_CHART;
   EVENT_ENTRIES;
@@ -522,6 +523,16 @@ class_name_list  :  c1=class_name { getTI().classNameListEntry($c1.text, getSLoc
                    )
                  ;
                  
+class_or_cluster_name_list  :  (class_name ',' )* '(' cluster_name ')' ( ',' ( class_name | '(' cluster_name ')' ) )*
+                             ->
+                               ^( CLASS_OR_CLUSTER_NAME_LIST (class_name)* (cluster_name)+ )
+                             |
+                               class_name_list
+                             ->
+                               ^( CLASS_OR_CLUSTER_NAME_LIST class_name_list ) 
+                            ;
+
+                 
 class_name  :  i=IDENTIFIER 
              ->
              ^(
@@ -563,7 +574,7 @@ event_entry
              :  ( (e='event' manifest_textblock {mok=true;} )
                  | e='event' { addParseProblem(new MissingElementParseError(getSourceLocation($e), "event name", "in event entry clause", true)); }
                 ) 
-                ( ('involves' class_name_list {cok=true;} )
+                ( ('involves' class_or_cluster_name_list {cok=true;} )
                  | i='involves' { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name list", "in involves clause of event entry", true)); }
                 )
               ->
@@ -574,7 +585,7 @@ event_entry
               ^(
                 EVENT_ENTRY[$e]
                 manifest_textblock
-                class_name_list
+                class_or_cluster_name_list
                )
              ;
 
@@ -641,12 +652,12 @@ creation_entries  :  (creation_entry)+
                   ;
                   
 creation_entry  :  c='creator' class_name 
-                   'creates' class_name_list 
+                   'creates' class_or_cluster_name_list 
                  ->
                  ^(
                    CREATION_ENTRY[$c]
                    class_name 
-                   class_name_list 
+                   class_or_cluster_name_list 
                   )
                 ;
 

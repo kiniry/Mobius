@@ -43,9 +43,6 @@ public class FormalTypeChecker {
   private final Map<String,ClassDefinition> classes;
   private final Map<String,Type> types;
   
-  //private final Map<String,ClusterDefinition> clusterClusterContainsLink;
-  //private final Map<String,ClusterDefinition> classClusterContainsLink;
-  
   private final Graph<String,Type> classInheritanceGraph;
   private final Graph<String,String> simpleClassInheritanceGraph; //Non-generic 
   
@@ -55,8 +52,6 @@ public class FormalTypeChecker {
   public FormalTypeChecker(Map<String, ClusterDefinition> clusters,
       Map<String, ClassDefinition> classes, 
       Map<String, Type> types,
-//      Map<String, ClusterDefinition> clusterClusterContainsLink,
-//      Map<String, ClusterDefinition> classClusterContainsLink,
       Graph<String,Type> classInheritanceGraph,
       Graph<String,String> simpleClassInheritanceGraph,
       Graph<String,ClusterDefinition> classClusterGraph,
@@ -64,8 +59,6 @@ public class FormalTypeChecker {
     this.clusters = clusters;
     this.classes = classes;
     this.types = types;
-//    this.clusterClusterContainsLink = clusterClusterContainsLink;
-//    this.classClusterContainsLink = classClusterContainsLink;
     
     this.classInheritanceGraph = classInheritanceGraph;
     this.simpleClassInheritanceGraph = simpleClassInheritanceGraph;

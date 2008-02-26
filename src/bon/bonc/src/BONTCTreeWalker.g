@@ -237,6 +237,20 @@ class_name_list  :^(
                    )
                  ;
                  
+class_or_cluster_name_list  :  ^( CLASS_OR_CLUSTER_NAME_LIST 
+                                  ( class_name
+                                    { getITC().checkValidClassTypeByContext($class_name.text, getSLoc($class_name.start.token));
+                                      //Only can be in informal here, so leave FTC alone 
+                                    }
+                                  )* 
+                                  ( cluster_name
+                                    { getITC().checkValidClusterType($cluster_name.text, getSLoc($cluster_name.start.token));  }
+                                  )+ 
+                                )
+                             |
+                               ^( CLASS_OR_CLUSTER_NAME_LIST class_name_list ) 
+                            ;
+                 
 class_name  :^(
                CLASS_NAME IDENTIFIER
               )
@@ -266,7 +280,7 @@ event_entry  :^(
                 EVENT_ENTRY
                 { getContext().enterEventEntry(); }
                 manifest_textblock
-                class_name_list
+                class_or_cluster_name_list
                 { getContext().leaveEventEntry(); }
                )
               |
@@ -322,7 +336,7 @@ creation_entry  :^(
                    class_name 
                    { getITC().checkValidClassType($class_name.text,getSLoc($class_name.start.token)); 
                      getContext().enterCreationEntry(); }
-                   class_name_list
+                   class_or_cluster_name_list
                    { getContext().leaveCreationEntry(); } 
                   )
                 ;

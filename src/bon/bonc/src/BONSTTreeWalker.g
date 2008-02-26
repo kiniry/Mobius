@@ -268,6 +268,15 @@ class_name_list  :^(
                     classNameList(cs={$c})
                  ;
                  
+class_or_cluster_name_list  :  ^( CLASS_OR_CLUSTER_NAME_LIST (classes+=class_name)* (clusters+=cluster_name)+ )
+                              ->
+                                classOrClusterNameList(classes={$classes},clusters={$clusters})
+                             |
+                               ^( CLASS_OR_CLUSTER_NAME_LIST class_name_list )
+                              ->
+                                asIs(x={$class_name_list.st}) 
+                             ;
+                             
 class_name  :^(
                CLASS_NAME IDENTIFIER
               )
@@ -301,10 +310,10 @@ event_entries  :^(
 event_entry  :^(
                 EVENT_ENTRY
                 manifest_textblock
-                class_name_list
+                class_or_cluster_name_list
                )
               ->
-                eventEntry(name={$manifest_textblock.text},cnl={$class_name_list.st})
+                eventEntry(name={$manifest_textblock.text},cnl={$class_or_cluster_name_list.st})
               |
               ^(EVENT_ENTRY PARSE_ERROR) 
              ;
@@ -364,10 +373,10 @@ creation_entries  :^(
 creation_entry  :^(
                    CREATION_ENTRY
                    class_name 
-                   class_name_list 
+                   class_or_cluster_name_list 
                   )
                  -> 
-                   creationEntry(name={$class_name.st},cnl={$class_name_list.st})
+                   creationEntry(name={$class_name.st},cnl={$class_or_cluster_name_list.st})
                 ;
 
 /**********************************************  

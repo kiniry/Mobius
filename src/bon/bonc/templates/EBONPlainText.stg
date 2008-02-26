@@ -154,6 +154,10 @@ classNameList(cs) ::= <<
 <cs; separator=", ">
 >>
 
+classOrClusterNameList(classes,clusters) ::= <<
+<if(first(classes))><classes; separator=", ">, <endif>(<clusters; separator="), (">)
+>>
+
 className(name) ::= <<
 <name>
 >>
