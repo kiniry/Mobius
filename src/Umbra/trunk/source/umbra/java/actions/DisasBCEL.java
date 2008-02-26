@@ -21,10 +21,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.editors.text.StorageDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.BytecodeDocumentProvider;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
 import umbra.editor.parsing.BytecodePartitionScanner;
@@ -66,13 +68,15 @@ public class DisasBCEL implements IEditorActionDelegate {
       final BytecodeEditor bc_editor = (BytecodeEditor) (page.openEditor(input,
                            UmbraHelper.BYTECODE_EDITOR_CLASS, false));
       bc_editor.setRelatedEditor(my_editor);
-      final BytecodeDocument doc = (BytecodeDocument)bc_editor.
-                                   getDocumentProvider().getDocument(input);
+      final BytecodeDocumentProvider bdp = (BytecodeDocumentProvider)bc_editor.
+        getDocumentProvider();
+      final BytecodeDocument doc = (BytecodeDocument)bdp.getDocument(input);
       cpath = UmbraHelper.getClassFileFile(jFile, my_editor).getFullPath();
       bc_editor.refreshBytecode(cpath, doc,
                                 null, null); //this works on the doc
       doc.initModTable();
       openEditorAndDisassemble(page, bc_editor, input, doc);
+      bdp.changedByHand(input);
     } catch (CoreException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
@@ -162,6 +166,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     partitioner.connect(a_doc);
     a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
                                  partitioner);
+    a_doc.init();
     an_editor.renewConfiguration(a_doc);
     an_editor.setRelation(my_editor);
     a_page.bringToTop(an_editor);

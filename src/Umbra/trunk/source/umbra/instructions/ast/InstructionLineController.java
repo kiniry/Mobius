@@ -395,4 +395,11 @@ public abstract class InstructionLineController extends BytecodeLineController {
     return -1;
   }
 
+  public boolean needsMg() {
+    return correct();
+  }
+
+  public boolean hasMg() {
+    return my_methodgen != null;
+  }
 }

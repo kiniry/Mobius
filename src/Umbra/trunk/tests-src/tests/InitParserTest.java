@@ -20,6 +20,8 @@ import org.junit.After;
 import org.junit.Before;
 
 import umbra.editor.BytecodeDocument;
+import umbra.editor.UmbraMethodException;
+import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.InitParser;
 import umbra.instructions.LineContext;
 
@@ -86,7 +88,7 @@ public class InitParserTest {
      new ClassPath("tests-src/tests");
     final SyntheticRepository repo = SyntheticRepository.getInstance(cp);
     final JavaClass jc = repo.loadClass("List");
-    my_parser = new InitParser(my_doc, null);
+    //my_parser = new InitParser(my_doc, null);
   }
 
   /**
@@ -103,7 +105,7 @@ public class InitParserTest {
    */
   @Test
   public void testInitParser() {
-    InitParser a_parser = new InitParser(my_doc, null);
+    InitParser a_parser = new InitParser(my_doc, null, null);
     assertTrue("wrong comments table", a_parser.getComments().isEmpty());
     assertTrue("wrong lines table", a_parser.getEditorLines().isEmpty());
     assertTrue("wrong instructions table",
@@ -115,7 +117,15 @@ public class InitParserTest {
    */
   @Test
   public void testRunParsing() {
-    my_parser.runParsing();
+    try {
+      my_parser.runParsing();
+    } catch (UmbraLocationException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (UmbraMethodException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     assertTrue(my_parser.getEditorLines() != null);
     assertTrue(my_parser.getInstructions() != null);
   }

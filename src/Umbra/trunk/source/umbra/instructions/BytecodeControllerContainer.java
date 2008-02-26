@@ -16,6 +16,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.UmbraMethodException;
+import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.InstructionLineController;
@@ -73,15 +75,22 @@ public abstract class BytecodeControllerContainer extends
    *   i-th entry contains the comment for the i-th line in the document,
    *   if this parameter is null then the array is not taken into account
    *   FIXME: currently ignored
+   * @return 
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
+   * @throws UmbraMethodException thrown in case a method number has been
+   *   reached which is outside the number of available methods in the document
    */
-  public void init(final BytecodeDocument a_doc,
+  public String init(final BytecodeDocument a_doc,
                    final String[] a_comment_array,
-                   final String[] a_interline) {
-    final InitParser initParser = new InitParser(a_doc, a_comment_array);
-    initParser.runParsing();
+                   final String[] a_interline)
+    throws UmbraLocationException, UmbraMethodException {
+    final InitParser initParser = new InitParser(a_doc, a_comment_array,
+                                                 a_interline);
+    String res = initParser.runParsing();
     my_editor_lines = initParser.getEditorLines();
     my_instructions = initParser.getInstructions();
-    initComments(initParser);
+    initComments(initParser, a_comment_array, a_interline);
     int a_methodnum = 0;
     if (!my_instructions.isEmpty()) {
       a_methodnum = ((BytecodeLineController)my_instructions.getLast()).
@@ -89,6 +98,7 @@ public abstract class BytecodeControllerContainer extends
     }
     fillModTable(a_methodnum);
     if (UmbraHelper.DEBUG_MODE) controlPrint(0);
+    return res;
   }
 
   /**

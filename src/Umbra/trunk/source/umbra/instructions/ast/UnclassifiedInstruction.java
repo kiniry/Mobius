@@ -57,4 +57,12 @@ public class UnclassifiedInstruction extends InstructionLineController {
   public final boolean correct() {
     return false;
   }
+  
+  public boolean needsMg() {
+    return false;
+  }
+
+  public boolean hasMg() {
+    return false;
+  }
 }

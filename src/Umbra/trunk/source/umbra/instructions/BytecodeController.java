@@ -11,12 +11,12 @@ package umbra.instructions;
 import java.util.LinkedList;
 
 import org.apache.bcel.generic.MethodGen;
-import org.eclipse.jface.text.IDocument;
 
 import umbra.UmbraException;
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
@@ -99,30 +99,33 @@ public final class BytecodeController extends BytecodeControllerContainer {
    *   old version of the document
    * @param a_stop a number of the last modified line as counted in the new
    *   version of the document
-   * @return the {@link MethodGen} structure which contains the updated
-   *   information about the content of the method body
    * @throws UmbraException in case the change cannot be incorporated
    *   into the internal structures
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
    */
-  public MethodGen addAllLines(final IDocument a_doc,
+  public void addAllLines(final BytecodeDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
-    throws UmbraException {
+    throws UmbraException, UmbraLocationException {
     final int methodno = getMethodForLine(a_start_rem);
     final FragmentParser fgmparser = new FragmentParser(
       (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno);
-    fgmparser.runParsing(establishCurrentContext(a_start_rem));
+    final LineContext ctxt = establishCurrentContext(a_start_rem);
+    fgmparser.runParsing(ctxt);
                             // after that I must know all the instructions are
                             //correct
-    final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
-    markModified(methodno);
-    mg.removeLineNumbers();
-    replaceInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
+    final LineContext ctxtold = establishCurrentContext(a_start_rem);
+    if (!ctxtold.isInsideAnnotation()) {
+      final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+      markModified(methodno);
+      mg.removeLineNumbers();
+      replaceInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
+      mg.getInstructionList().setPositions();
+    }
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
-                        fgmparser.getEditorLines());
+                      fgmparser.getEditorLines(), ctxtold);
     if (UmbraHelper.DEBUG_MODE) controlPrint(1);
-    mg.getInstructionList().setPositions();
-    return mg;
   }
 
   /**
@@ -192,6 +195,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
    * @param an_end_rem the last line in the old structure to be updated
    * @param a_stop the last line in the new structure
    * @param the_lines the list with the lines to incorporate
+   * @param a_ctxt a line context for the updated region
    * @throws UmbraException in case the BCEL structure that represents
    *   the current method cannot be retrieved or the association between
    *   the BCEL structures and editor lines cannot be removed or the
@@ -200,7 +204,8 @@ public final class BytecodeController extends BytecodeControllerContainer {
   private void updateEditorLines(final int a_start_rem,
                                  final int an_end_rem,
                                  final int a_stop,
-                                 final LinkedList the_lines)
+                                 final LinkedList the_lines,
+                                 final LineContext a_ctxt)
     throws UmbraException {
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
     final int j = replaceEditorLines(a_start_rem, an_end_rem, a_stop,
@@ -211,9 +216,11 @@ public final class BytecodeController extends BytecodeControllerContainer {
       removeEditorLines(an_end_rem, a_stop);
     }
     //my_editor_lines.addAll(a_start_rem, the_lines);
-    mg.getInstructionList().update();
-    mg.update();
-    mg.getInstructionList().setPositions();
+    if (!a_ctxt.isInsideAnnotation()) {
+      mg.getInstructionList().update();
+      mg.update();
+      mg.getInstructionList().setPositions();
+    }
   }
 
   /**
@@ -312,20 +319,16 @@ public final class BytecodeController extends BytecodeControllerContainer {
       final BytecodeLineController oldlc = getLineController(i);
       final BytecodeLineController newlc =
         (BytecodeLineController)the_lines.get(j);
-      if (newlc instanceof InstructionLineController &&
-          !(newlc instanceof UnclassifiedInstruction) &&
-          oldlc instanceof InstructionLineController) {
+      if (newlc.needsMg() && oldlc.hasMg()) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;
         final InstructionLineController ilc = (InstructionLineController) newlc;
         iolc.replace(ilc);
-      } else if (newlc instanceof InstructionLineController &&
-                 !(newlc instanceof UnclassifiedInstruction)) {
+      } else if (newlc.needsMg()) {
         final InstructionLineController ilc = (InstructionLineController) newlc;
         final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
         ilc.makeHandleForPosition(mg, getCurrentPositionInMethod(i));
-      } else if (oldlc instanceof InstructionLineController &&
-                 !(oldlc instanceof UnclassifiedInstruction)) {
+      } else if (oldlc.hasMg()) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;
         iolc.dispose();
@@ -351,7 +354,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
   private int getCurrentPositionInMethod(final int a_pos) {
     for (int j = a_pos; j >= 0; j--) {
       final BytecodeLineController bcl = getLineController(j);
-      if (bcl instanceof InstructionLineController) {
+      if (bcl.hasMg()) {
         return bcl.getNoInMethod();
       } else if (bcl instanceof HeaderLineController) {
         return 0;

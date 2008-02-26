@@ -33,6 +33,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
@@ -146,7 +147,35 @@ public class BytecodeEditor extends TextEditor {
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
-    super.doSave(a_progress_monitor);
+    IDocumentProvider p= getDocumentProvider();
+    if (p == null)
+      return;
+
+    if (p.isDeleted(getEditorInput())) {
+
+      if (isSaveAsAllowed()) {
+
+        /*
+         * 1GEUSSR: ITPUI:ALL - User should never loose changes made in the editors.
+         * Changed Behavior to make sure that if called inside a regular save (because
+         * of deletion of input element) there is a way to report back to the caller.
+         */
+        performSaveAs(a_progress_monitor);
+
+      } else {
+
+        Shell shell= getSite().getShell();
+        String title= "BytecodeEditor";
+        String msg= "saving error";
+        MessageDialog.openError(shell, title, msg);
+      }
+
+    } else {
+      updateState(getEditorInput());
+      validateState(getEditorInput());
+      performSave(true, a_progress_monitor);
+    }
+    
     final IFile a_file_from = makeSpareCopy();
     if (a_file_from == null) return;
     try {

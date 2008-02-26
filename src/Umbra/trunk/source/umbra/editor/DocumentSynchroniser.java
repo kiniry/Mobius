@@ -29,7 +29,7 @@ import annot.textio.CodeFragment;
  * line the corresponding source code line range. It uses the class file line
  * number table to perform these operations.
  *
- * FIXME: more documentation is needed
+ * TODO: more documentation is needed
  * FIXME: this does not take into account the modification of the byte code
  *        files
  * FIXME: the implementation is too horrible to be usable, it must be rewritten

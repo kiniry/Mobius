@@ -247,4 +247,12 @@ public abstract class BytecodeLineController {
   public int getNoInMethod() {
     return -1;
   }
+
+  public boolean needsMg() {
+    return false;
+  }
+
+  public boolean hasMg() {
+    return false;
+  }
 }

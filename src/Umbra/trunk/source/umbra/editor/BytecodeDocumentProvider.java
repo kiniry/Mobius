@@ -122,4 +122,8 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
     document.setRelatedEditor(an_editor);
     BytecodeContribution.inUse().addListener(document);
   }
+
+  public void changedByHand(IFileEditorInput fileEditorInput) {
+    
+  }
 }

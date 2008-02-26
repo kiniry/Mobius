@@ -13,11 +13,9 @@ import java.util.Iterator;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
 
-import umbra.UmbraException;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.UmbraMethodException;
 import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.EmptyLineController;
@@ -60,10 +58,14 @@ public class InitParser extends BytecodeTextParser {
    * @param a_comment_array contains the texts of end-of-line comments, the
    *   i-th entry contains the comment for the i-th instruction in the document,
    *   if this parameter is null then the array is not taken into account
+   * @param a_interline contains the texts of interline comments, the
+   *   i-th entry contains the comment for the i-th instruction in the document,
+   *   if this parameter is null then the array is not taken into account
    */
   public InitParser(final BytecodeDocument a_doc,
-                    final String[] a_comment_array) {
-    super(a_comment_array);
+                    final String[] a_comment_array,
+                    final String[] a_interline) {
+    super(a_comment_array, a_interline);
     my_doc = a_doc;
   }
 
@@ -78,38 +80,27 @@ public class InitParser extends BytecodeTextParser {
    * of the class and then one by one parses the methods. At the end
    * the method initialises the structures to keep track of the modified
    * methods.
-   *
+   * @return 
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
+   * @throws UmbraMethodException thrown in case a method number has been
+   *   reached which is outside the number of available methods in the document
    */
-  public final void runParsing() {
+  public final String runParsing()
+    throws UmbraLocationException, UmbraMethodException {
     initInstructionNo();
     int a_line_no = 0;
     int a_method_count = 0;
     final LineContext ctxt = new LineContext();
-    try {
-      a_line_no = swallowClassHeader(a_line_no, ctxt);
-    }  catch (UmbraLocationException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode",
-                         "The current document has no positions for line " +
-                         e.getWrongLocation());
-      return;
-    }
+    a_line_no = swallowClassHeader(a_line_no, ctxt);
     while (a_line_no < my_doc.getNumberOfLines()) {
-      try {
-        ctxt.incMethodNo();
-        a_line_no = swallowMethod(a_line_no, a_method_count, ctxt);
-      } catch (UmbraLocationException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                      "The current document has no positions for line " +
-                      e.getWrongLocation());
-        break;
-      } catch (UmbraException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                      "The current document has too many methods (" +
-                      a_method_count + ")");
-        break;
-      }
+      ctxt.incMethodNo();
+      updateAnnotations(ctxt);
+      a_line_no = swallowMethod(a_line_no, a_method_count, ctxt);
       a_method_count++;
     }
+    String str = getNewContent().toString();
+    return str;
   }
 
   /**
@@ -135,14 +126,14 @@ public class InitParser extends BytecodeTextParser {
                                  final LineContext a_ctxt)
     throws UmbraLocationException {
     int j = the_current_line;
-    String line = getLineFromDoc(my_doc, j, a_ctxt);
+    String line = getLineFromDoc(my_doc, j, a_ctxt); //package
     a_ctxt.setInitial();
     BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
     addEditorLine(j, lc);
     lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
-    j = swallowEmptyLines(my_doc, j, a_ctxt);
-    line = getLineFromDoc(my_doc, j, a_ctxt);
+    j = swallowEmptyLines(my_doc, j, a_ctxt); //empty lines
+    line = getLineFromDoc(my_doc, j, a_ctxt); //class
     a_ctxt.setClassToBeRead();
     lc = Preparsing.getType(line, a_ctxt);
     addEditorLine(j, lc);
@@ -170,13 +161,13 @@ public class InitParser extends BytecodeTextParser {
    *   document in case the end of document is met
    * @throws UmbraLocationException in case a line number is reached which is
    *   not within the given document
-   * @throws UmbraException the given method number exceeds the number of
+   * @throws UmbraMethodException the given method number exceeds the range of
    *   available methods in the BCEL structure
    */
   private int swallowMethod(final int the_line_no,
                             final int a_method_no,
                             final LineContext a_ctxt)
-    throws UmbraLocationException, UmbraException {
+    throws UmbraLocationException, UmbraMethodException {
     int j = swallowEmptyLines(my_doc, the_line_no, a_ctxt);
     final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
     final InstructionList il = mg.getInstructionList();
@@ -201,7 +192,7 @@ public class InitParser extends BytecodeTextParser {
         return swallowEmptyLines(my_doc, j, a_ctxt);
       }
       if (lc instanceof InstructionLineController) { //instruction line
-        handleleInstructionLine(lc, mg, il, iter);
+        handleleInstructionLine((InstructionLineController)lc, mg, il, iter);
       }
     }
     return j;
@@ -227,7 +218,7 @@ public class InitParser extends BytecodeTextParser {
    * @param an_ilist an instruction list from the method above
    * @param an_iter the iterator in the instruction list above
    */
-  private void handleleInstructionLine(final BytecodeLineController a_lctrl,
+  private void handleleInstructionLine(final InstructionLineController a_lctrl,
                                        final MethodGen a_methgen,
                                        final InstructionList an_ilist,
                                        final Iterator an_iter) {
@@ -235,7 +226,7 @@ public class InitParser extends BytecodeTextParser {
     if (an_iter.hasNext())
       ih = (InstructionHandle)(an_iter.next());
     a_lctrl.addHandle(ih, an_ilist, a_methgen);
-    getInstructions().add(a_lctrl);
+    addInstruction(a_lctrl);
     handleComments(a_lctrl);
     incInstructionNo();
   }

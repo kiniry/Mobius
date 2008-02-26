@@ -14,14 +14,15 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.text.BadLocationException;
 
-import umbra.UmbraException;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.UmbraMethodException;
 import umbra.editor.parsing.BytecodeStrings;
 import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
+import umbra.instructions.ast.InstructionLineController;
 
 /**
  * This class handles the operations which are common to all the document
@@ -40,7 +41,15 @@ public class BytecodeTextParser {
    * the comment for the i-th instruction in the document, if this array
    * is null then the array is not taken into account.
    */
-  private String[] my_comment_array;
+  private String[] my_eolcomment_array;
+
+  /**
+   * This field contains the texts of interline comments which were introduced
+   * in the previous session with, the current document. The i-th entry contains
+   * the comment for the i-th instruction in the document, if this array
+   * is null then the array is not taken into account.
+   */
+  private String[] my_interline_array;
 
   /**
    * The container of associations between the Umbra representation of lines
@@ -66,6 +75,12 @@ public class BytecodeTextParser {
   private String my_current_comment;
 
   /**
+   * This field contains the value of the interline comment from the currently
+   * parsed code fragment.
+   */
+  private StringBuffer my_current_icomment;
+
+  /**
    * The list of all the lines in the current byte code editor. These lines
    * are stored as objects the classes of which are subclasses of
    * {@link BytecodeLineController}.
@@ -87,6 +102,8 @@ public class BytecodeTextParser {
    */
   private LinkedList my_instructions;
 
+  private StringBuffer my_combined_text;
+
   /**
    * This constructor initialises internal structure to represent
    * editor lines, instructions, and comments. The given parameter is the
@@ -94,14 +111,19 @@ public class BytecodeTextParser {
    * with the current document.
    *
    * TODO link to the protocol for a_comment_array
-   * @param a_comment_array the comments from the previous session
+   * @param a_comment_array the end-of-line comments from the previous session
+   * @param a_interline the interline comments from the previous session
    */
-  protected BytecodeTextParser(final String[] a_comment_array) {
+  protected BytecodeTextParser(final String[] a_comment_array,
+                               final String[] a_interline) {
     super();
     my_editor_lines = new LinkedList();
     my_instructions = new LinkedList();
-    my_comment_array = a_comment_array;
+    my_eolcomment_array = a_comment_array;
+    my_interline_array = a_interline;
     my_eolcomments = new Hashtable();
+    my_interline_comments = new Hashtable();
+    my_combined_text = new StringBuffer("");
   }
 
   /**
@@ -144,11 +166,11 @@ public class BytecodeTextParser {
    * @param a_method_no the method number of the method to retrieve the
    *    structure for
    * @return the BCEL structure which describes the method
-   * @throws UmbraException in case the given method number is wrong
+   * @throws UmbraMethodException in case the given method number is wrong
    */
   protected static MethodGen getMethodGenFromDoc(final BytecodeDocument a_doc,
                                                  final int a_method_no)
-    throws UmbraException {
+    throws UmbraMethodException {
     return a_doc.getMethodGen(a_method_no);
   }
 
@@ -218,7 +240,7 @@ public class BytecodeTextParser {
   }
 
   /**
-   * This method adds the specified line cotroller at the specified position.
+   * This method adds the specified line controller at the specified position.
    * It shifts the element currently at that position (if any) and any
    * subsequent elements to the right (adds one to their indices).
    *
@@ -227,7 +249,35 @@ public class BytecodeTextParser {
    */
   public void addEditorLine(final int a_pos,
                             final BytecodeLineController a_line) {
+    int pos_in_combined = getPosOfLine(a_pos);
+    String instr = a_line.getLineContent();
+    insertAfter(pos_in_combined, instr);
+    if (a_line instanceof InstructionLineController &&
+        my_current_comment != null) {
+      String comm = "//" + my_current_comment;
+      pos_in_combined += instr.length();
+      insertAfter(pos_in_combined, comm);
+      pos_in_combined += comm.length();
+    }
     my_editor_lines.add(a_pos, a_line);
+  }
+
+  private void insertAfter(int pos_in_combined, String instr) {
+    if (pos_in_combined == my_combined_text.length())
+      my_combined_text.append(instr);
+    else
+      my_combined_text.insert(pos_in_combined + 1, instr);
+  }
+
+  private int getPosOfLine(int a_pos) {
+    int start = -1;
+    for (int i = 0; i < a_pos; i++) {
+      start = my_combined_text.indexOf("\n", start + 1);
+      if (start == -1) {
+        return -1;
+      }
+    }
+    return start;
   }
 
   /**
@@ -238,17 +288,48 @@ public class BytecodeTextParser {
    */
   public void addEditorLine(final BytecodeLineController a_line) {
     my_editor_lines.add(a_line);
+    my_combined_text.append(a_line.getLineContent());
+    if (a_line instanceof InstructionLineController &&
+        my_current_comment != null) {
+      my_combined_text.append("//" + my_current_comment);
+    }
   }
 
   /**
    * Returns the list of all the lines with instructions in the internal
-   * representation.
+   * representation. This method may only be called once to export fully
+   * generate list of lines.
    *
    * @return the list of the {@link BytecodeLineController} objects that
    *   represent the lines with instructions in the currently parsed document
    */
   public LinkedList getInstructions() {
-    return my_instructions;
+    final LinkedList lines = my_instructions;
+    my_instructions = null;
+    return lines;
+  }
+
+  /**
+   * This also handles the comments TODO
+   * @param lc
+   */
+  protected void addInstruction(InstructionLineController lc) {
+    if (my_eolcomment_array != null && my_current_comment == null) {
+      my_current_comment = my_eolcomment_array[my_instruction_no];
+    }
+    if (my_interline_array != null && my_current_icomment == null &&
+        my_interline_array[my_instruction_no] != null) {
+      my_current_icomment = new StringBuffer(
+                                     my_interline_array[my_instruction_no]);
+    }
+    if (my_current_icomment != null) {
+      my_interline_comments.put(lc, my_current_icomment.toString());
+    }
+    my_current_icomment = null;
+    if (my_current_comment != null)
+      my_eolcomments.put(lc, my_current_comment);
+    my_current_comment = null;
+    my_instructions.add(lc);
   }
 
   /**
@@ -278,7 +359,7 @@ public class BytecodeTextParser {
       throw new UmbraLocationException(a_line);
     }
     final String lineName;
-    if (a_ctxt.isInsideComment() || a_ctxt.isInsideAnnotation()) {
+    if (!a_ctxt.isInsideComment() || !a_ctxt.isInsideAnnotation()) {
       lineName = removeCommentFromLine(line);
       my_current_comment = extractCommentFromLine(line, a_ctxt);
     } else {
@@ -302,9 +383,10 @@ public class BytecodeTextParser {
       my_eolcomments.put(a_lc, my_current_comment);
       my_current_comment = null;
     }
-    if (my_comment_array != null) {
-      if (my_comment_array[my_instruction_no] != null) {
-        my_eolcomments.put(a_lc, my_comment_array[my_instruction_no]);
+    if (my_eolcomment_array != null) {
+      if (my_eolcomment_array[my_instruction_no] != null) {
+        if (my_eolcomments.contains(a_lc)) my_eolcomments.remove(a_lc);
+        my_eolcomments.put(a_lc, my_eolcomment_array[my_instruction_no]);
       }
     }
   }
@@ -318,7 +400,6 @@ public class BytecodeTextParser {
 
   /**
    * Initialises the instruction counter to the first value.
-   *
    */
   protected void initInstructionNo() {
     my_instruction_no = 0;
@@ -373,4 +454,47 @@ public class BytecodeTextParser {
     }
     return j;
   }
+
+  /**
+   * Assigns the method number included in the given line context to the
+   * annotation lines block at the end of the current collection of the
+   * editor lines.
+   *
+   * @param a_ctxt a context with the method number to assign
+   */
+  protected void updateAnnotations(final LineContext a_ctxt) {
+    for (int i = my_editor_lines.size() - 1; i >= 0; i--) {
+      final BytecodeLineController blc =
+        (BytecodeLineController)my_editor_lines.get(i);
+      if (blc instanceof AnnotationLineController) {
+        final AnnotationLineController alc = (AnnotationLineController) blc;
+        alc.setMethodNo(a_ctxt.getMethodNo());
+      } else {
+        return;
+      }
+    }
+  }
+
+  protected void markReadyToConsumeComments() {
+    // TODO Auto-generated method stub
+    
+  }
+  
+  protected void clearCurrentComment() {
+    my_current_icomment = new StringBuffer("");
+  }
+  
+  protected void addToCurrentComment(String line) {
+   my_current_icomment.append(line); 
+  }
+  
+  private void commitCurrentComment() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  protected String getNewContent() {
+    return my_combined_text.toString();
+  }
+
 }

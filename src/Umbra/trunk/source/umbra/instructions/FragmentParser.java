@@ -50,14 +50,6 @@ public class FragmentParser extends BytecodeTextParser {
   //@ invariant my_end < my_doc.getNumberOfLines();
 
   /**
-   * The method number of the method in which the fragment is located.
-   * We currently assume that all the modifications are included in a single
-   * method.
-   */
-  private final int my_methodno;
-  //@ invariant my_methodno >= 0;
-
-  /**
    * This constructor creates the fragment parser for the given fragment.
    * The parser will parse the content of {@code a_doc} parameter within the
    * range starting with the line {@code the_firstline} and ending
@@ -77,11 +69,10 @@ public class FragmentParser extends BytecodeTextParser {
                         final int the_firstline,
                         final int the_lastline,
                         final int a_methodno) {
-    super(null);
+    super(null, null);
     my_doc = a_doc;
     my_start = the_firstline;
     my_end = the_lastline;
-    my_methodno = a_methodno;
   }
 
   /**
@@ -99,8 +90,11 @@ public class FragmentParser extends BytecodeTextParser {
    * area.
    *
    * @param a_ctxt the parsing context for the given fragment
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
    */
-  public final void runParsing(final LineContext a_ctxt) {
+  public final void runParsing(final LineContext a_ctxt)
+    throws UmbraLocationException {
     int a_line_no = my_start;
     try {
       if (a_ctxt.isInsideAnnotation()) {
@@ -108,14 +102,10 @@ public class FragmentParser extends BytecodeTextParser {
       } else {
         a_line_no = swallowMethodBodyFragment(a_line_no, a_ctxt);
       }
-    } catch (UmbraLocationException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
-                      "The current document has no positions for a line " +
-                      "after " + e.getWrongLocation());
     } catch (UmbraException e) {
       MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
-                         "The current document has too many methods (" +
-                         my_methodno + ")");
+                         "The current document reached a strange line (" +
+                         a_line_no + ")");
     }
     if (a_line_no > my_end + 1)
       throw new UmbraRuntimeException();
@@ -151,7 +141,7 @@ public class FragmentParser extends BytecodeTextParser {
       }
     }
     final AnnotationLineController alc = (AnnotationLineController)lc;
-    if (j >= a_ctxt.getAnnotationEnd() && !alc.isCommentEnd()) {
+    if (j > a_ctxt.getAnnotationEnd() && !alc.isCommentEnd()) {
       throw new UmbraException();
     }
     return j;
@@ -191,7 +181,7 @@ public class FragmentParser extends BytecodeTextParser {
         return swallowEmptyLines(my_doc, j, a_ctxt);
       }
       if (lc instanceof InstructionLineController) { //instruction line
-        getInstructions().add(lc);
+        addInstruction((InstructionLineController)lc);
       } else if (!(lc instanceof UnknownLineController)) { //we allow unknown
         throw new UmbraException();
       }
@@ -222,16 +212,21 @@ public class FragmentParser extends BytecodeTextParser {
                                 final LineContext a_ctxt)
     throws UmbraLocationException {
     int j = the_current_lno;
+    clearCurrentComment();
     while (j <= the_last_lno) {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
       if (!(lc instanceof CommentLineController)) {
+        markReadyToConsumeComments();
         break;
       }
       addEditorLine(j, lc);
+      addToCurrentComment(line);
       lc.setMethodNo(a_ctxt.getMethodNo());
       j++;
     }
     return j;
   }
+
+
 }

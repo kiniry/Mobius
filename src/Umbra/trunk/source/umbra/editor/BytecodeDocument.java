@@ -12,10 +12,14 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.UmbraException;
+import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.BytecodeController;
 import annot.bcclass.BCClass;
 
@@ -82,6 +86,9 @@ public class BytecodeDocument extends Document {
   private BMLParsing my_bmlp;
 
   private DocumentSynchroniser my_synchroniser;
+
+
+  private boolean my_dirty;
 
 
   public BytecodeDocument() {
@@ -209,7 +216,23 @@ public class BytecodeDocument extends Document {
    * TODO what's my_mod_table_flag
    */
   public void init() {
-    my_bcc.init(this, my_comment_array, my_interline);
+    try {
+      String str = my_bcc.init(this, my_comment_array, my_interline);
+      replace(0, this.getLength(), str);
+    } catch (UmbraLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                    "The current document has no positions" +
+                                    " for line " +
+                                    e.getWrongLocation());
+    } catch (UmbraMethodException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                    "The current document has too many" +
+                                    " methods (" +
+                                    e.getWrongMethodNumber() + ")");
+    } catch (BadLocationException e) {
+       //TODO Auto-generated catch block
+       e.printStackTrace();
+    }
     //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
     my_bcc.checkAllLines(0, getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
     my_ready_flag = true;
@@ -237,7 +260,13 @@ public class BytecodeDocument extends Document {
                              final int a_newend)
     throws UmbraException {
     my_bcc.removeIncorrects(a_start, an_oldend);
-    final MethodGen mg = my_bcc.addAllLines(this, a_start, an_oldend, a_newend);
+    try {
+      my_bcc.addAllLines(this, a_start, an_oldend, a_newend);
+    } catch (UmbraLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
+                        "The current document has no positions for a line " +
+                        "after " + e.getWrongLocation());
+    }
     my_bcc.checkAllLines(a_start, a_newend);
   }
 
@@ -264,6 +293,7 @@ public class BytecodeDocument extends Document {
     my_ready_flag = false;
     my_comment_array = a_comment_array;
     my_interline = an_interline;
+    init();
   }
 
   /**
@@ -347,9 +377,16 @@ public class BytecodeDocument extends Document {
    *
    * @param a_method_no the number of the method to be returned
    * @return the BCEL structure which handles the editing of the given method
+   * @throws UmbraMethodException thrown in case the given method number
+   *   is outside the range of available methods
    */
-  public MethodGen getMethodGen(final int a_method_no) {
-    return my_bmlp.getBcc().getMethod(a_method_no).getBcelMethod();
+  public MethodGen getMethodGen(final int a_method_no)
+    throws UmbraMethodException {
+    try {
+      return my_bmlp.getBcc().getMethod(a_method_no).getBcelMethod();
+    } catch (IndexOutOfBoundsException e) {
+      throw new UmbraMethodException(a_method_no);
+    }
   }
 
 }

@@ -126,8 +126,14 @@ public abstract class BytecodeControllerComments
    * the given initial parser.
    *
    * @param the_parser the parser with the initial information on the comments
+   * @param a_comment_array the array with the interoperable representation
+   *   of end-of-line comments from the previous session
+   * @param a_interline the array with the interoperable representation
+   *   of interline comments from the previous session
    */
-  protected void initComments(final InitParser the_parser) {
+  protected void initComments(final InitParser the_parser,
+                              final String[] a_comment_array,
+                              final String[] a_interline) {
     my_eolcomments = the_parser.getComments();
     my_interline = the_parser.getInterlineComments();
   }
