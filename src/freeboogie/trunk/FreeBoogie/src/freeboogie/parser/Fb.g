@@ -5,6 +5,7 @@ grammar Fb;
   import freeboogie.ast.*; 
   import freeboogie.tc.TypeUtils;
   import java.math.BigInteger;
+
 }
 @lexer::header {
   package freeboogie.parser;

@@ -28,7 +28,6 @@ import freeboogie.util.Err;
  *  (3) Interact with the Simplify process via streams; and
  *  (4) Restart the prover if it crashes or if it says
  *      incomprehensible things;
- *  (5) Manage a stack of assumption frames.
  *
  * NOTE: The list of responsibilities is a bit long and this code
  * may benefit from being split in a few distinct classes.
@@ -40,33 +39,15 @@ import freeboogie.util.Err;
  * @author reviewed by TODO
  */
 public class SimplifyProver extends Prover {
-  /*
-   * IMPLEMENTATION NOTE. The important functions that deal with the
-   * four mentioned responsibilities are:
-   * (1) prepareTermBuilder
-   * (2) termToString
-   * (3) TODO
-   * (4) restartProver, terminate
-   * (5) push, pop
-   *
+  /* IMPLEMENTATION NOTE:
    * The reason why strings are built, instead of sending pieces
    * to the output stream is that it is easier to debug. The downside
    * is that we use O(n) memory instead of O(1) just for printing,
    * where n is the size of the formula.
    */
   
-  private static final Logger log = Logger.getLogger("freeboogie.backend");
-  
   private ProcessBuilder starter;
-  private Process simplify;   // nonnull iff prover is alive
-  private List<String> cmd;
-  
-  private BufferedReader in;  // used to read data from simplify
-  private PrintStream out;    // used to write data to simplify
-  
-  // a |marker| is used to mark the beginning of an assumption frame
-  private Deque<Term> assumptions;
-  private Term marker; 
+  private Process simplify;
   
   /**
    * Creates new {@code SimplifyProver}. It also tries to start the prover.
@@ -75,13 +56,13 @@ public class SimplifyProver extends Prover {
    * @throws ProverException if the prover cannot be started
    */
   public SimplifyProver(String[] cmd) throws ProverException {
-    this.cmd = Arrays.asList(cmd);
-    assumptions = new ArrayDeque<Term>();
-    marker = new Term(null);
-    assumptions.add(marker);
     starter = new ProcessBuilder(cmd);
     restartProver();
     prepareTermBuilder();
+  }
+
+  private void restartProver() {
+    // TODO
   }
 
   /**
@@ -151,37 +132,9 @@ public class SimplifyProver extends Prover {
     }
   }
 
-  /** 
-   * Restarts the prover. This method should be used only for
-   * initially starting the prover, and then only to recover
-   * after something really bad happens.
-   */
-  private void restartProver() throws ProverException {
-    try {
-      assert simplify == null;
-      simplify = starter.start();
-      in = new BufferedReader(
-        new InputStreamReader(simplify.getInputStream()));
-      out = new PrintStream(simplify.getOutputStream());
-    } catch (Exception e) {
-      if (simplify != null) terminate();
-      throw new ProverException("I can't start the prover.", e);
-    }
-  }
-  
-  private void sendTerm(Term t) {
-    StringBuilder sb = new StringBuilder();
-    printTerm(t, sb);
-    log.info("backend> " + sb);
-    out.print(sb);
-  }
-  
   @Override
   protected void sendAssume(Term t) {
-    out.print("(BG_PUSH ");
-    sendTerm(t);
-    out.print(")\n");
-    out.flush();
+    // TODO
   }
 
   @Override
@@ -189,101 +142,15 @@ public class SimplifyProver extends Prover {
     // TODO
   }
   
-  private void checkIfDead() throws ProverException {
-    try {
-      int ev = simplify.exitValue();
-      throw new ProverException("Prover exit code: " + ev);
-    } catch (IllegalThreadStateException e) {
-      // the prover is still alive
-    }
-  }
-  
-  private void waitPrompt() throws ProverException {
-    try {
-      int c;
-      boolean firstonline = true;
-      while ((c = in.read()) != -1) {
-        if (firstonline && c == '>') return;
-        firstonline = c == '\n' || c == '\r';
-      }
-    } catch (IOException e) {
-      throw new ProverException("Can't read what Simplify says.");
-    }
-  }
- 
-  @Override
-  public void assume(Term t) throws ProverException {
-    sendAssume(t);
-    assumptions.add(t);
-    checkIfDead();
-  }
-
-  @Override
-  public TermBuilder getBuilder() {
-    return builder;
-  }
-
-  @Override
-  public ProverAnswer getDetailedAnswer() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
   @Override
   public boolean isValid(Term t) throws ProverException {
-    waitPrompt();
-    log.fine("Got prompt, sending query.");
-    sendTerm(builder.mk("not", t));
-    out.println();
-    out.flush();
-    
-    // wait for prompt or for Valid, Invalid, Unknown
-    try {
-      StringBuilder sb = new StringBuilder();
-      while (true) {
-        int c = in.read();
-        if (c == '\n' || c == '\r') {
-          String line = sb.toString();
-          log.info("simplify> " + line);
-          if (line.contains("Valid")) return false;
-          if (line.contains("Invalid") || line.contains("Unknown"))
-            return true;
-          sb.setLength(0);
-          continue;
-        }
-        if (c == '>' && sb.length() == 0)
-          throw new ProverException("The prover seems a bit confused.");
-        if (c == -1)
-          throw new ProverException("Prover died.");
-        sb.append((char)c);
-      }
-    } catch (IOException e) {
-      throw new ProverException("Failed to read prover answer.");
-    }
-  }
-
-  @Override
-  public void pop() throws ProverException {
-    while (assumptions.getLast() != marker) retract();
-    assumptions.removeLast();
-  }
-
-  @Override
-  public void push() {
-    assumptions.push(marker);
+    // TODO
+      return false;
   }
 
   @Override
   public void terminate() {
     // TODO
-  }
-
-  @Override
-  public void retract() {
-    Term last;
-    do last = assumptions.getLast(); while (last == marker);
-    out.print("(BG_POP)");
-    out.flush();
   }
   
   /**

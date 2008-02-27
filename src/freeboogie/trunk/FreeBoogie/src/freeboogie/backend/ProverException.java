@@ -7,6 +7,7 @@ package freeboogie.backend;
  * @author rgrig 
  * @author reviewed by TODO
  */
+@SuppressWarnings("serial")
 public class ProverException extends Exception {
 
   /**

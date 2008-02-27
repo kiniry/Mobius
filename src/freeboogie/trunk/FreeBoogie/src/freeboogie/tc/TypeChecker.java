@@ -598,6 +598,7 @@ public class TypeChecker extends Evaluator<Type> {
     case ENSURES:
       t = expr.eval(this);
       check(t, boolType, expr.loc());
+      break;
     case MODIFIES:
       break;
     default:

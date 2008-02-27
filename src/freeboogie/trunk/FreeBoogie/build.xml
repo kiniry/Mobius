@@ -54,11 +54,20 @@
   </target>
 
   <!-- Compile and distribution targets -->
-  <target name="compile" depends="generate_ast,generate_parser"
+  <target name="compile_parser" depends="generate_ast,generate_parser"
+          description="compiles the parser with warnings turned off">
+    <javac srcdir="${parser}" destdir="${build}" 
+           optimize="yes" debug="no">
+      <classpath refid="classpath" /> 
+    </javac>
+  </target>
+
+  <target name="compile" depends="compile_parser"
     description="compile the source ">
     <javac srcdir="${src}" destdir="${build}" 
-           deprecation="yes" optimize="yes" debug="${debug}">
+           optimize="yes" debug="${debug}">
       <classpath refid="classpath" /> 
+      <compilerarg value="-Xlint:all" />
     </javac>
   </target>
   

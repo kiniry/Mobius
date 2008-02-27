@@ -1,6 +1,7 @@
 package freeboogie.backend;
 
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * A prover can be used to check if a formula is valid.
@@ -32,8 +33,12 @@ import java.util.*;
  */
 public abstract class Prover {
   protected Deque<Term> assumptions;
+  protected static final Term marker = new Term(null);
+    // marks the end of an assumption frame in |assumptions|
+
   protected TermBuilder builder;
   protected ProverAnswer detailedAnswer;
+  protected static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public Prover() {
     this.builder = builder;
@@ -74,7 +79,12 @@ public abstract class Prover {
    * @throws ProverException if something goes wrong
    */
   public void retract() throws ProverException {
-    // TODO
+    int i, j;
+    while (!assumptions.isEmpty() && assumptions.peekFirst() == marker)
+      assumptions.removeFirst();
+    assert !assumptions.isEmpty();
+    sendRetract();
+    assumptions.removeFirst();
   }
 
   /**
@@ -87,7 +97,7 @@ public abstract class Prover {
    * @throws ProverException if something goes wrong
    */
   public void push() throws ProverException {
-    // TODO
+    assumptions.addFirst(marker);
   }
   
   /**
@@ -95,7 +105,9 @@ public abstract class Prover {
    * @throws ProverException if something goes wrong
    */
   public void pop() throws ProverException {
-    // TODO
+    Term t;
+    do t = assumptions.removeFirst();
+    while (t != marker);
   }
 
   /**
@@ -109,7 +121,7 @@ public abstract class Prover {
   abstract public boolean isValid(Term t) throws ProverException;
   
   /**
-   * Returns a detailed answer to the last {@code isSat}
+   * Returns a detailed answer to the last {@code isValid}
    * query. This can be either a proof of unsatisfiability,
    * or a probable model. It can also be "sorry, no more info".
    * 
