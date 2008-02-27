@@ -41,7 +41,6 @@ public abstract class Prover {
   protected static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public Prover() {
-    this.builder = builder;
     assumptions = new ArrayDeque<Term>();
   }
 

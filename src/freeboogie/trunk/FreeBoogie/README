@@ -1,7 +1,16 @@
-The tests use a bash script, so they are rather linux-dependent.
-They also depend on the existence of a fbrun command in the path.
-Look at the fbrun script in this directory to see what it is supposed
-to do.
+This version is for developers & researchers on program verifiers.
+It is not yet ready for prime-time. FreeBoogie is developed in Java
+so it should work on many platforms. The tests and some other
+development helpers, however, are Linux (or UNIX?) specific.
+The rest assumes that you are on Linux.
+
+Try this:
+  source setenv
+  ant test
+  fbrun freeboogie.Main --help
+  fbrun freeboogie.Main -pfg boogie_Bag2.bpl
+
+Enjoy.
 
 Note: Now working on VC generation.
 

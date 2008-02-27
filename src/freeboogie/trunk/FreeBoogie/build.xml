@@ -53,10 +53,10 @@
     </java>
   </target>
 
-  <!-- Compile and distribution targets -->
+  <!-- Compilation and distribution targets -->
   <target name="compile_parser" depends="generate_ast,generate_parser"
           description="compiles the parser with warnings turned off">
-    <javac srcdir="${parser}" destdir="${build}" 
+    <javac srcdir="${parser}" sourcepath="${src}" destdir="${build}" 
            optimize="yes" debug="no">
       <classpath refid="classpath" /> 
     </javac>
