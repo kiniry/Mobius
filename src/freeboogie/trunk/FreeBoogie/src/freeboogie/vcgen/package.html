@@ -7,8 +7,22 @@
 from an AST and type information obtained by the package 
 {@code freeboogie.tc}.</p>
 
-<p>
-</p>
+<p>Phase:</p>
+
+<ul>
+<li>make flow graph reducible (rely on Spec#)</li>
+<li>desugar loops: get rid of loops (rely on Spec#)</li>
+<li>desugar function calls: get rid of calls</li>
+<li>desugar pre- and postconditions and modifies?? (
+    recursive calls?
+    argument in postconditions?)</li>
+<li>passivate program: get rid of havoc and assignments and old</li>
+<li>strongest postcondition (build query term)
+  &mdash; the input is a DAG with ASSERT/ASSUME in nodes, conceptually</li>
+</ul>
+
+<p>How to deal with arrays? Perhaps let the prover interface take
+care of it.</p>
 
 </body>
 </html>
