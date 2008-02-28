@@ -1,0 +1,517 @@
+-- IDebug is an advanced debugging framework for Java.  This framework
+-- provides the standard core debugging and specification constructs such
+-- as assertions, debug levels and categories, stack traces, and
+-- specialized exceptions.  Debugging functionality can be fine-tuned to a
+-- per-thread and/or a per-class basis, debugging contexts can be stored
+-- and recovered from persistent store, and several aspects of the
+-- debugging run-time are configurable at the meta-level.  Additionally,
+-- the framework is designed for extensibility.  Planned improvements
+-- include support for debugging distributed object systems via currying
+-- call stacks across virtual machine contexts and debug information
+-- logging with a variety of networking mediums including unicast,
+-- multicast, RMI, distributed events, and JavaSpaces. Finally, we are
+-- adding support for debugging mobile agent systems by providing mobile
+-- debug logs.
+
+
+-- Informal Charts
+
+system_chart MONITORING_SYSTEM
+indexing
+  author: "Joseph Kiniry";
+  keywords: "statistics", "performance", "monitoring", "report";
+explanation
+  "This system facilitates the collection, archival, and reporting of \
+  \system statistics within the system framework. Additionally, it can be \
+  \leveraged by applications built on top of the system, or any other \
+  \extension of the framework."
+cluster EVENTS
+description
+  "Facilities for registering an interest in and recording important \
+  \events (errors, warnings, or just informational) that occur during the \
+  \operation of the system/framework or overlying applications."
+cluster PROCESSING
+description
+  "Facilities for processing and recording events."
+end
+
+
+cluster_chart EVENTS
+indexing
+  author: "Joseph Kiniry";
+  keywords: "events", "messages", "statistics", "assertions"
+explanation
+  "Events are the notion of generic important information that need be \
+  \reported or recorded. This cluster collects all the different kinds of \
+  \events that are used in the system."
+class ASSERTION
+description
+  "Represents a single type of important predicate that the system should \
+  \validate. Assertion failures result in everything from messages or \
+  \statistics being logged to system failure."
+class EVENT
+description
+  "Represents a single event to be recorded (or that has been recorded) in \
+  \the event-log. The event includes a source, description, importance, \
+  \and time, among other things."
+class LEVEL
+description
+  "Represents the importance level of a particular event."
+class LOG
+description
+  "Manages the storage and retrieval of events that are reported by \
+  \various parts of the system framework and/or the application built on \
+  \top of it."
+class MESSAGE
+description
+  "Represents a single textual message that needs to be displayed or \
+  \recorded."
+class STATISTIC
+description
+  "This class represents a statistic that can be monitored in the \
+  \monitoring system. Each statistic has its own unique ID (node-unique, \
+  \not necessarily globally unique), a description, units, and other \
+  \useful information that is represented in this class."
+class TYPE
+description
+  "Represents the type of a particular event. The set of core event types \
+  \each have such a name and a description."
+end
+
+
+cluster_chart PROCESSING
+indexing
+  author: "Joseph Kiniry";
+  keywords: "statistics", "performance", "monitoring", "counters"
+explanation
+  "Facilities for recording statistics (performance, counters, etc.) on \
+  \the various operations being performed within the system/framework or \
+  \overlying applications."
+class CHECKER
+description
+  "Checks the state of the system for validity against particular \
+  \assertions."
+class COLLECTOR
+description
+  "Performs the collection of particular statistics during the operation \
+  \of a program."
+class LOGGER
+description
+  "Logs particular messages during the operation of a program."
+class TUNER
+description
+  "'Tune' the monitoring system to collect different information."
+end
+
+
+class_chart ASSERTION
+indexing
+  in_cluster: "EVENTS";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Represents a single type of important predicate that the system should \
+  \validate. Assertion failures result in everything from messages or \
+  \statistics being logged to system failure."
+end
+
+
+class_chart EVENT
+indexing
+  in_cluster: "EVENTS";
+  created: "2000-07-06 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Represents a single important event of any kind. The event includes a \
+  \source, description, importance, and time, among other things."
+query
+  "What is the source system of this event?",
+  "What is the source component of this event?",
+  "What type of event is this?",
+  "When was this event generated?",
+  "What is the description of this event?",
+  "How important is this event?",
+  "What is a printable representation of this event?",
+  "Is this event equal to another one?",
+command
+  "Create a new event with the following specification."
+constraint
+  "All fields of event are set only once, at construction time.",
+  "All fields of event must be specified; none may be left blank.",
+  "Two events are considered to be identical if all fields of both events \
+  \have identical values.",
+  "Events cannot be cloned."
+end
+
+
+class_chart LEVEL
+indexing
+  in_cluster: "EVENTS";
+  created: "2000-09-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Represents the importance level of a particular event."
+query
+  "What is the level set to?",
+  "What is the minimum/maximum level?",
+  "How does this level compare with another?"
+command
+  "Set the level to a value."
+constraint
+  "Levels have upper and lower bounds, thus all level assignments must be \
+  \bounded appropriately."
+end
+
+
+class_chart LOG
+indexing
+  in_cluster: "EVENTS";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Manages the storage and retrieval of events that are reported by various \
+  \parts of the system framework and/or the application built on top of it."
+query
+  "Which events meet a specified criteria?",
+  "What is the list of all event sources?"
+command
+  "Create event.",
+  "Store event.",
+  "Delete event.",
+  "Clear event log.",
+  "Delete events meeting specified criteria.",
+  "Export event log to a file.",
+  "Import event log from a file."
+constraint
+  "No event appears twice in a given event log; each event must be \
+  \unique.", 
+  "The event-log must be able to import a log-file exported by any \
+  \event-log.",
+  "The event-log must be able to export a log-file that can be imported by \
+  \any event-log."
+end
+
+
+class_chart MESSAGE
+indexing
+  in_cluster: "EVENTS";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Represents a single textual message that needs to be displayed or \
+  \recorded."
+query
+  "What textual message does this message contain?"
+command
+  "Set textual message."
+constraint
+  "Textual message must be valid."
+end
+
+
+class_chart STATISTIC 
+indexing
+  in_cluster: "EVENTS";
+  created: "2000-07-06 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "This class represents a statistic that can be monitored in the \
+  \monitoring system. Each statistic has its own unique ID (node-unique, \
+  \not necessarily globally unique), a description, units, and other \
+  \useful information that is represented in this class."
+query
+  "What is the unique ID of this statistic?",
+  "What are its units?",
+  "What is its default scaling factor?",
+  "What is its default start value?",
+  "What is its default increment?",
+  "What is its default decrement?"
+command
+  "Create a new statistic by specifying its units, scaling factor, default \
+  \start value, default increment and default decrement.", 
+constraint
+  "Unique ID must be unique across all statistics on a node.",
+  "All static properties must be specified at, and cannot be changed \
+  \after, construction time."
+end
+
+
+class_chart TYPE
+indexing
+  in_cluster: "EVENTS";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Represents the type of a particular event. The set of core event types \
+  \each have such a name and a description."
+query
+  "What is this types current value?",
+  "Is this type equivalent to another one?"
+command
+  "Set the value of this type."
+constraint
+  "Types must have some legal value."
+end
+
+
+class_chart CHECKER
+indexing
+  in_cluster: "PROCESSING";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Checks the state of the system for validity against particular \
+  \assertions."
+query
+  "Is specified assertion valid?"
+command
+  "Make an assertion."
+end
+
+
+class_chart COLLECTOR
+indexing
+  in_cluster: "PROCESSING";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Performs the collection of particular statistics during the operation \
+  \of a program. Individual statistics can be registered for collection, \
+  \and may be activated or deactivated. The collector can cache statistic \
+  \collection in memory, and can also write statistics and logging \
+  \information to a long-term storage device for subsequent analysis."
+query
+  "What is the current value for specific statistic?"
+command
+  "Report on a particular statistic.",
+  "Report on all statistics.",
+  "Increment a statistic by a specified value.",
+  "Increment a statistic by the default value.",
+  "Decrement a statistic by a specified value.",
+  "Decrement a statistic by the default value.",
+  "Reset a statistic to the default start value.",
+  "Set a statistic to a specific value."
+constraint
+  "A newly registered statistic is deactivated by default.",
+  "No two statistics can be registered with the same unique ID."
+end
+
+
+class_chart LOGGER
+indexing
+  in_cluster: "PROCESSING";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Performs the collection of particular statistics during the operation \
+  \of a program. Individual statistics can be registered for collection, \
+  \and may be activated or deactivated. The collector can cache statistic \
+  \collection in memory, and can also write statistics and logging \
+  \information to a long-term storage device for subsequent analysis."
+query
+  "What is the complete current log?",
+  "What was the last message logged?"
+command
+  "Clear the log.",
+  "Save the log.",
+  "Close the log."
+end
+
+
+class_chart TUNER
+indexing
+  in_cluster: "PROCESSING";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "'Tune' the monitoring system to collect specific types and levels of \
+  \system statistics, messages, and assertions."
+query
+  "Is a certain level enabled/disabled?",
+  "Is a certain type enabled/disabled?",
+  "What types are currently registered?"
+command
+  "Turn on/off assertions of a particular type.",
+  "Turn on/off assertions above/below a particular level."
+constraint
+  "Levels have a specified range.",
+  "All level assignments must be within the specified range.",
+  "Event types must be well-defined strings."
+end
+
+event_chart MONITORING_SYSTEM
+outgoing
+indexing
+  author: "Joseph Kiniry";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Selected internal events triggering system responses leaving the \
+  \system."
+part
+  "1/2"
+event 
+  "Does the current context warrent evaluating a particular event?"
+involves
+  EVENT, (PROCESSING)
+event 
+  "Store a statistic."
+involves
+  STATISTIC, COLLECTOR
+event 
+  "Log a message."
+involves
+  MESSAGE, LOGGER, LOG
+event 
+  "Evaluate an assertion."
+involves
+  ASSERTION, CHECKER
+event 
+  "Startup system."
+involves
+  (PROCESSING)
+event 
+  "Shutdown system."
+involves
+  (PROCESSING)
+end
+
+
+event_chart MONITORING_SYSTEM
+incoming
+indexing
+  author: "Joseph Kiniry";
+  created: "2000-07-19 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "Selected external events triggering representative types of behavior."
+part
+  "2/2"
+event
+  "Initialize monitoring system."
+involves
+  (PROCESSING)
+event
+  "Shut down monitoring system."
+involves
+  (PROCESSING)
+event
+  "Tune the monitoring systems behavior."
+involves
+  (PROCESSING)
+event
+  "Query the state of the monitoring system."
+involves
+  (PROCESSING)
+event
+  "Send a statistic to the monitoring system."
+involves
+  STATISTIC, COLLECTOR
+event
+  "Make an assertion on the system state."
+involves
+  ASSERTION, CHECKER
+event
+  "Send a message to the monitoring system."
+involves
+  MESSAGE, LOGGER
+event
+  "Ask for the current log or last message."
+involves
+  LOGGER, LOG
+event
+  "Ask for the report on a particular statistic or all statistics in the \
+  \system."
+involves
+  COLLECTOR
+end
+
+
+scenario_chart MONITORING_SYSTEM
+indexing
+  author: "Joseph Kiniry";
+  created: "2000-07-11 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "A set of representative scenarios that describe the important types of \
+  \behaviour of the monitoring system."
+scenario
+  "Turn on/off monitoring."
+description
+  "Turn on/off system monitoring."
+scenario
+  "Turn on/off logging."
+description
+  "Turn on/off system logging."
+scenario
+  "Turn on/off debugging."
+description
+  "Turn on/off system debugging."
+scenario
+  "Tune monitoring, logging, and/or debugging."
+description
+  "Tune the monitoring system so that specific kinds of monitoring, \
+  \logging, and debugging are enabled disabled."
+scenario
+  "Log a monitoring event."
+description
+  "Report and record particular monitoring event."
+scenario
+  "Send a logging message."
+description
+  "Report and record a logging message."
+scenario
+  "Make an assertion."
+description
+  "Make an assertion or claim that either causes a monitoring event or \
+  \logging message to be recorded or halts some part of the system because \
+  \of failure."
+scenario
+  "Generate statistics."
+description
+  "Request that an instance of the monitoring system report on the system \
+  \component with which it is associated."
+scenario
+  "Define an event (statistic/message type/assertion type)."
+description
+  "Define a particular event type and add it to the system as appropriate \
+  \(at compile/design-time, not runtime)."
+end
+
+
+creation_chart MONITORING_SYSTEM
+indexing
+  author: "Joseph Kiniry";
+  created: "2000-06-06 Joseph Kiniry";
+  revised: "$Id: monitoring.bon,v 1.5 2001/12/28 00:44:43 kiniry Exp $"
+explanation
+  "List of classes creating objects in the system."
+creator EVENT creates LEVEL, MESSAGE, TYPE
+creator LOG creates EVENT
+creator LOGGER creates LOG
+end
+
+
+-- This chart provides a mapping between the MONITORING_SYSTEM's BON 
+-- classes and IDebug's classes. 
+
+-- BON Class       IDebug Class
+-- ---------------------------------------------------------------------------
+-- ASSERTION	Assert
+-- CHECKER	Utilities and Debug via the Assert class
+-- COLLECTOR	Collect and SimpleCollect
+-- EVENT	Event
+-- LEVEL	notion of level in IDebug
+-- LOG		provided in the various implementations of DebugOutput
+-- LOGGER	DebugOutput
+-- MESSAGE	use of Strings in DebugOutput or use of Events
+-- STATISTIC	Statistic
+-- TUNER	Debug
+-- TYPE		notion of type in IDebug
+
+
+-- Static Diagrams
+
+-- Class Interface Description
+
+-- Dynamic Diagrams

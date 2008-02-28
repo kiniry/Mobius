@@ -136,3 +136,17 @@
 @Input { self_as_super2 }
 @Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super2, 8, 6, X > }
 
+@Test-name: "Connector system."
+@Prog-args: -informal
+@Location { test23/ }
+@Input { connector.bon }
+
+@Test-name: "Monitoring system."
+@Prog-args: -informal
+@Location { test23/ }
+@Input { monitoring.bon }
+
+@Test-name: "Class chart mini-system from book."
+@Prog-args: -informal
+@Location { test23/ }
+@Input { classchart.bon }

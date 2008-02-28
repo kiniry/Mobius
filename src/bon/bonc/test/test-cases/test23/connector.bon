@@ -1,0 +1,693 @@
+-- The component architecture is broken down into a number of independent
+-- components that need not communicate directly via method calls.  These
+-- parts are potentially written in different languages, might be running
+-- on different platforms, and might have alternate implementations
+-- (i.e. 2D and 3D renderers).  The connector architecture realizes the
+-- connections between these components as first-class entities and
+-- provides a single "plug-in/snap-on/strap-on" architecture for
+-- high-speed, reliable inter-component communication.
+
+
+-- Informal Charts
+
+system_chart CONNECTOR_SYSTEM
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector", "components", "data stream"
+explanation
+  "The connector architecture realizes the connections between the major \
+  \components that make up the system. The connectors are first-class \
+  \entities and provide a single 'plug-in/snap-on/strap-on' architecture \
+  \for high-speed, lightweight, reliable inter-component communication."
+cluster SPECIFICATION
+description
+  "This cluster holds the set of core interfaces and classes used to define \
+  \a new component and complementary connector. No implementation-specific \
+  \classes are in this cluster."
+cluster IMPLEMENTATIONS
+description
+  "This cluster contains a set of subclusters, each of which is an \
+  \implementation of the connector architecture for a different \
+  \communication mechanism."
+cluster UTILITY
+description
+  "This cluster contains a set of utility classes that are shared by the \
+  \connector implementations."
+end
+
+
+cluster_chart SPECIFICATION
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector"
+explanation
+  "This cluster holds the set of core interfaces and classes used to \
+  \define a new component and complementary connector. No \
+  \implementation-specific classes are in this cluster."
+class SDO
+description
+  "Semantic Data Object; the primary communication mechanism for the \
+  \Connector architecture."
+class CONNECTOR
+description
+  "The connection between two or more components."
+class COMPONENT
+description
+  "A part of the system that is compositional and will be connected to \
+  \other components with connectors."
+class CHANNEL
+description
+  "A potential communication medium for connectors."
+class CHANNEL_INFORMATION
+description
+  "Describes the capabilities of a channel."
+class NEGOTIATOR
+description
+  "Negotiates the channel properties between components and instantiates \
+  \the appropriate connector."
+class MANAGER
+description
+  "Manages the set of all connectors in a process."
+class LEVEL
+description
+  "An ordered set associated with the multi-resolution nature of connector \
+  \data."
+class TYPE
+description
+  "The basic and extended types applied to data in SDOs."
+end
+
+
+cluster_chart IMPLEMENTATIONS
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "This cluster contains a set of subclusters, each of which is an \
+  \implementation of the connector architecture for a different \
+  \communication mechanism."
+cluster MESSAGING
+description
+  "Communication between a set of components via a messaging \
+  \architecture."
+cluster LOCAL_METHOD_INVOCATION
+description
+  "Communication between a set of components via local method invocation."
+cluster SHARED_MEMORY
+description
+  "Communication between a set of components via shared memory."
+cluster LOCAL_FILES
+description
+  "Communication between a set of components via shared files in a \
+  \filesystem."
+cluster PIPES
+description
+  "Communication between a set of components via anonymous or named pipes."
+cluster LOOPBACK
+description
+  "Communication between a set of components via a loopback network \
+  \device." 
+cluster REMOTE_METHOD_INVOCATION
+description
+  "Communication between a set of components via remote method invocation \
+  \(RMI)."
+cluster DATABASE
+description
+  "Communication between a set of components via shared database records \
+  \and/or tables."
+cluster TUPLE_SPACE
+description
+  "Communication between a set of components via a tuple space \
+  \(JavaSpace)."
+end
+
+cluster_chart MESSAGING
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via a messaging \
+  \architecture."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+cluster_chart LOCAL_METHOD_INVOCATION
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via local method invocation."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+cluster_chart SHARED_MEMORY
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via shared memory."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+cluster_chart LOCAL_FILES
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via shared files in a \
+  \filesystem."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+cluster_chart PIPES
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via anonymous or named pipes."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+cluster_chart LOOPBACK
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via a loopback network \
+  \device."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+cluster_chart REMOTE_METHOD_INVOCATION
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via remote method invocation \
+  \(RMI)."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+cluster_chart DATABASE
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via shared database records \
+  \and/or tables."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+cluster_chart TUPLE_SPACE
+indexing
+  author: "Joseph Kiniry";
+  keywords: "connector implementations";
+  note: "These clusters have not yet been specified."
+explanation
+  "Communication between a set of components via a tuple space \
+  \(JavaSpace)."
+class NONE
+description
+  "A placeholder for refinement of this cluster."
+end
+
+
+class_chart NONE
+explanation
+  "The 'bottom' class of all classes.  NONE inherits from all classes \
+  \ and has no features."
+end
+
+cluster_chart UTILITY
+indexing
+  author: "Joseph Kiniry";
+  keywords: "utility functions", "bandwidth", "latency"
+explanation
+  "This cluster contains a set of utility classes that are shared by the \
+  \connector implementations."
+class CHANNEL_ANALYST
+description
+  "Aggregate data and associated analysis of channel availability and \
+  \conditions."
+class DEBUGGING
+description
+  "Enable, disable, and fine-tune debugging information within the \
+  \Connector architecture."
+end
+
+
+class_chart SDO
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "A Semantic Data Object."
+query
+  "What data/SDO is associated with a given Tag?",
+  "Is a given tag valid?",
+  "Is a given level valid?",
+  "Is a given tag used?",
+  "Does this SDO contain at least one tag of a specified level?",
+  "What is the current size?",
+  "What is the current tag set?",
+  "What is the current value set?",
+  "How many entries (triples) exist?",
+  "What is the type of the data associated with a Tag?"
+command
+  "Add/replace (Tag,Level,Data) triple.",
+  "Add/replace (Tag,Level,SDO) triple.",
+  "Delete a triple based upon a Tag.",
+  "Delete all triples above a certain level.",
+  "Delete all triples below a certain level."
+constraint
+  "All tags must be valid.",
+  "All used tags has been added but not deleted.",
+  "No two tags can be the same.",
+  "A valid tag is a non-null String.",
+  "The size of an SDO is exactly the sum of the sizes of its (Tag,Level,Data) triples.",
+  "The number of entries in an SDO is exactly the number of tags in its tag set."
+end
+
+
+class_chart CONNECTOR
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "A connector between two or more components."
+query
+  "What is the current level of this connector?",
+  "What is the current network utilization?",
+  "What is the name of this connector?",
+  "Which channel is used by this connector?",
+  "Which components are attached to this connector?"
+command
+  "Send SDO.",
+  "Receive SDO.",
+  "Close this connector.",
+  "Set the name of this connector."
+constraint
+  "All connectors have legal levels.",
+  "All connectors have a legal name.",
+  "The components associated with a connector are exactly the connector associated with the components."
+end
+
+class_chart COMPONENT
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "A major part of the system that will be used compositionally and \
+  \composed via connectors."
+query
+  "What connectors are associated with this component?",
+  "What levels are associated with the connectors of this component?",
+  "What is the maximum level associated with any connector of this component?",
+  "What is the maximum level associated with a connector of this component?",
+  "What bandwidth communication demands does this component make on a connector at each level?",
+  "What latency communication demands does this component make on a connector at each level?",
+  "Is this component ready to be queried and have its connectors manipulated?",
+  "What interfaces does this component need?",
+  "What are the interfaces that this component provides?"
+command
+  "Add a connector to the set of connectors through which this component communicates.",
+  "Remove a connector from the set of connectors through which this component communicates.",
+  "Initialize this component so that it is prepared for being queried and having connectors manipulated."
+constraint
+  "The components associated with a connector are exactly the connector associated with the components."
+end
+
+class_chart CHANNEL 
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "A potential communication medium for connectors."
+query
+  "Is this channel being used?",
+  "What are the current legal channels?",
+  "What are the potential communication properties of this channel?",
+  "What is the current state of this communication channel?",
+  "Which connectors are using this channel?",
+  "What is the identifier for a channel type?"
+command
+  "Build and return a new Channel for a particular channel type.",
+  "Make this channel available for future connectors.",
+  "Make this channel unavailable for future connectors.",
+  "Register a new channel.",
+  "Unregister a channel."
+constraint
+  "All types mentioned are elements of the legal channel types set."
+end
+
+class_chart CHANNEL_INFORMATION
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-08-15 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Describes the capabilities of a channel."
+query
+  "What is the maximal data rate of the channel (in kilobytes per second)?",
+  "What is the average data rate of the channel (in kilobytes per second)?",
+  "What is the minimal latency of the channel (in milliseconds)?",
+  "What is the average latency of the channel (in milliseconds)?",
+  "What is the identifier for this channel type?",
+  "What is a printable string form for this data?",
+  "Is this object equal to another?"
+constraint
+  "Maximum data rate is non-negative.",
+  "Average data rate is non-negative.",
+  "Minimum latency is non-negative.",
+  "Average latency is non-negative.",
+  "Maximum data rate is at least average data rate.",
+  "Minimum latency is at most average latency.",
+  "Channel identifier is a valid and unique per channel-type string."
+end
+
+class_chart NEGOTIATOR 
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Negotiates the channel properties between components and instantiates \
+  \the appropriate connector."
+command
+  "Bind a set of components together into a specified topology."
+end
+
+class_chart MANAGER
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Manages the set of all connectors in a process."
+query
+  "What are the connectors currently in use?",
+  "What components are available?",
+  "What channel types are available?",
+  "How many channel types are available?",
+  "Is a particular channel type currently available?"
+command
+  "Initialize the Connector system.",
+  "Perform an orderly/immediate shutdown all connectors.",
+  "Perform an orderly/immediate shutdown of a specific connector.",
+  "Register/unregister a component with the manager.",
+  "Compose a set of components."
+end
+
+class_chart LEVEL
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Levels associated with components, connectors, and data in SDOs."
+query
+  "Is this level bigger/smaller than/equal to another?",
+  "What is the value of this level?"
+command
+  "Set the level to a particular value."
+constraint
+  "Level values are non-negative floats."
+end
+
+class_chart TYPE
+indexing
+  in_cluster: "SPECIFICATION";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "The type of a data value in an SDO."
+query
+  "What are the valid basic types?",
+  "Is a given type a valid/basic/user type?"
+command
+  "Add a new type to the set of user types.",
+  "Remove a type from the set of user types."
+constraint
+  "The set of basic types is invariant."
+end
+
+
+class_chart CHANNEL_ANALYST 
+indexing
+  in_cluster: "UTILITY";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Aggregate data and associated analysis of channel availability and conditions."
+query
+  "What is the current information available for a particular channel type?"
+command
+  "Start/stop gathering data on a particular channel type.",
+  "Start/stop gathering data on all channel types."
+constraint
+  "All channel types are exactly one of the set of types specified in the CHANNEL class."
+end
+
+
+class_chart DEBUGGING 
+indexing
+  in_cluster: "UTILITY";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Enable, disable, and fine-tune debugging information within the Connector architecture."
+query
+  "Is debugging enabled?",
+  "Is debugging enabled on a particular channel type?",
+  "Is debugging enabled on a particular connector?"
+command
+  "Enable/disable debugging on a particular channel type.",
+  "Enable/disable debugging on a particular connector."
+end
+
+
+event_chart CONNECTOR_SYSTEM
+incoming
+indexing
+  author: "Joseph Kiniry";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Selected external events triggering representative types of behavior."
+part
+  "1/2"
+event
+  "Request to initialize Connecter system."
+involves 
+  MANAGER, NEGOTIATOR, DEBUGGING, CHANNEL_ANALYST, (IMPLEMENTATIONS)
+event
+  "Register/unregister a component."
+involves
+  MANAGER, COMPONENT, LEVEL, TYPE
+event
+  "Shutdown all connectors."
+involves
+  MANAGER, CONNECTOR, (IMPLEMENTATIONS)
+event
+  "Shutdown a specific connector."
+involves
+  MANAGER, CONNECTOR, CHANNEL
+event
+  "Compose a set of components by type."
+involves
+  MANAGER, NEGOTIATOR, COMPONENT, CHANNEL, CONNECTOR, LEVEL, TYPE
+event
+  "Compose a set of components by name."
+involves
+  MANAGER, COMPONENT, CHANNEL, CONNECTOR, LEVEL, TYPE
+event
+  "Request for the list of components available."
+involves
+  MANAGER
+event
+  "Request for the list of connector types available."
+involves
+  MANAGER
+event
+  "Request for the list of components in use."
+involves
+  MANAGER
+event
+  "Manipulate debugging system (turn on, turn off, enable specific channel types or connectors, etc.)." 
+involves
+  DEBUGGING
+event
+  "Query the types of channels available."
+involves
+  MANAGER, CHANNEL
+event
+  "Query the information available for a particular channel type."
+involves
+  CHANNEL_ANALYST, CHANNEL_INFORMATION, CHANNEL
+event
+  "Start/stop channel information collection for a particular channel type/all channel types." 
+involves
+  CHANNEL_ANALYST, CHANNEL
+event
+  "Receive an SDO on a channel."
+involves
+  CHANNEL, CONNECTOR, CHANNEL_ANALYST
+end
+
+
+event_chart CONNECTOR_SYSTEM
+outgoing
+indexing
+  author: "Joseph Kiniry";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Selected internal events triggering system responses leaving the system."
+part
+  "2/2"
+event
+  "Send an SDO on a connector."
+involves
+  CHANNEL, CONNECTOR, (IMPLEMENTATIONS), CHANNEL_ANALYST
+event
+  "Query the properties of a channel."
+involves
+  CHANNEL, (IMPLEMENTATIONS)
+event
+  "Query the state of a channel."
+involves
+  CHANNEL, (IMPLEMENTATIONS)
+event
+  "Query the legal channel types."
+involves
+  CHANNEL, (IMPLEMENTATIONS)
+event
+  "Make a channel type available/unavailable for connectors."
+involves
+  CHANNEL, (IMPLEMENTATIONS)
+event
+  "Manipulate an SDO."
+involves
+  SDO, LEVEL, TYPE
+event
+  "Compose a set of components to build a connector."
+involves
+  MANAGER, NEGOTIATOR, COMPONENT, CHANNEL, CONNECTOR, LEVEL, TYPE
+event
+  "Create a new connector on a channel."
+involves
+  CONNECTOR, CHANNEL
+end
+
+
+scenario_chart CONNECTOR_SYSTEM
+indexing
+  author: "Joseph Kiniry";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "Set of representative scenarios to show important types of system \
+  \behavior."
+scenario
+  "Initialize the Connector system."
+description
+  "When a system starts up the connector system needs to be \
+  \initialized. This is a potentially lengthy operation in that it must \
+  \query the system to determine which channel types are available."
+scenario
+  "Shutdown the Connector system."
+description
+  "When a system shuts down, all of the components, connectors, and \
+  \channels need be shut down in an orderly fashion."
+scenario
+  "Manipulate debugging subsystem."
+description
+  "Turn on, turn off, enable specific channel types or connectors, etc."
+scenario
+  "Manipulate the analysis subsystem."
+description
+  "Query information for a particular channel type, start/stop channel \
+  \information collection, etc."
+scenario
+  "Send an SDO."
+description
+  "A component sends an SDO on a connector, that connector appends the \
+  \proper metadata for delivery and sends the SDO on its associated \
+  \channel." 
+scenario
+  "Receive an SDO."
+description
+  "The implementation of a channel delivers an SDO on a connector where it \
+  \is inspected and queued by the connector for the proper component."
+scenario
+  "Manipulate the components of a system."
+description
+  "Register/unregister components with the system."
+scenario
+  "Compose a set of components."
+description
+  "A set of components are chosen and they are composed by the manager. \
+  \The manager asks the negotiator to analyze the components, their needs, \
+  \and the current channel availability, and determine which channel type \
+  \and level is appropriate for this composition. The negotiator creates \
+  \the new connector(s), registers them with the correct components, and \
+  \turns on analysis and debugging as appropriate."
+scenario
+  "Tear down a connection thus disconnecting two or more components."
+description
+  "A connection is chosen to be disconnected. The manager disconnects it \
+  \from its components, shuts analysis down for it, and finally shuts it \
+  \down."
+scenario
+  "Reconfigure a composition."
+description
+  "Some change in communication or component conditions necessitates a \
+  \change in component topology. Some external entity performs this \
+  \analysis, tears down the appropriate connectors, and builds new \
+  \connectors as appropriate."
+end
+
+
+creation_chart CONNECTOR_SYSTEM
+indexing
+  author: "Joseph Kiniry";
+  created: "2000-07-12 Joseph Kiniry";
+  revised: "$Id: connector.bon,v 1.5 2002/04/26 02:01:09 kiniry Exp $"
+explanation
+  "List of classes creating objects in the system."
+creator CHANNEL creates (IMPLEMENTATIONS)
+creator CHANNEL_ANALYST creates CHANNEL_INFORMATION
+creator MANAGER creates CHANNEL, CONNECTOR, DEBUGGING, NEGOTIATOR
+creator CHANNEL creates SDO
+creator CONNECTOR creates SDO, CHANNEL, (IMPLEMENTATIONS)
+creator COMPONENT creates CHANNEL, SDO
+end

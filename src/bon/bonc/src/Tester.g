@@ -49,15 +49,15 @@ testLocation : '@Test-Location:' directory { testLocation = $directory.text; }
             
 test : { currentTestCase = new TestCase(testNumber++); }
        ('@Test-name:' TESTNAME { currentTestCase.setTestName($TESTNAME.text); } )?
-       ('@Prog-args:' f1=filestring { currentTestCase.addProgramArgument($f1.text); } 
-                      (',' f=filestring { currentTestCase.addProgramArgument($f.text); } )* )?
+       ('@Prog-args:' a1=progArg { currentTestCase.addProgramArgument($a1.text); } 
+                      (',' a=progArg { currentTestCase.addProgramArgument($a.text); } )* )?
        '@Location'			 
        '{' directory '}'
        { currentTestCase.setLocation(testsDir + testLocation + $directory.text); }
        '@Input'  
        '{' inputs '}' 
-       '@Output' 
-       '{' outputs? '}'
+       ( '@Output' 
+         '{' outputs? '}' )?
        { addTestCase(currentTestCase); }
      ;
       
@@ -111,7 +111,10 @@ javastring  : string ('.' string)*
 string  : ALPHANUMERIC+
         ;
         
-filestring  :   ( ALPHANUMERIC | '-' | '_' )+
+progArg  :  '-' filestring
+         ;
+
+filestring  :   ALPHANUMERIC ( ALPHANUMERIC | '-' | '_' | '.' )*
               | '.'
               | '..'
             ;

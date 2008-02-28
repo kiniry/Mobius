@@ -1,0 +1,47 @@
+system_chart THE_WORLD
+  cluster EARTH description "A small, insignificant planet."
+end
+
+cluster_chart EARTH
+  class CITIZEN description "A humanoid."
+  class NOBLEPERSON description "A rich humanoid."
+end
+
+class_chart CITIZEN
+indexing
+  clauster: "CIVIL_STATUS " ;
+  created: "1993-03-15 jmn";
+  revised: "1993-05-12 kw";
+explanation
+  "Person born or living in a country"
+part "1/1 "
+query
+  "Name", "Sex", "Age", "Single", "Spouse", "Children", "Parents",
+  "Impediment to marriage"
+command
+  "Marry", "Divorce"
+constraint
+  "Each citizen has two parents.",
+  "At most one spouse allowed.",
+  "May not marry children or parents or person of same sex.",
+  "Spouse's spouse must be this person.",
+  "All children, if any, must have this person among their parents."
+end
+
+class_chart NOBLEPERSON
+indexing
+  cluaster: "CIVIL_STATUS" ;
+  created: "1993-03-15 jmn";
+  revised: "1993-05-12 kw", "1993-12-10 kw"
+explanation
+  "Person of noble rank"
+part "1/1 "
+inherit CITIZEN
+query
+  "Assets", "Butler"
+constraint
+  "Enough property for independence.",
+  "Can only marry other noble person.",
+  "Wedding celebrated with style.",
+  "Married nobility share their assets and must have a butler."
+end
