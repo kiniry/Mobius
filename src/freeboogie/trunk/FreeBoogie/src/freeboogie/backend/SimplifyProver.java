@@ -25,16 +25,7 @@ import freeboogie.util.Err;
  *      appropriate symbols recognized by Simplify;
  *  (2) Transform {@code SmtTerm} objects into the string
  *      representation;
- *  (3) Interact with the Simplify process via streams; and
- *  (4) Restart the prover if it crashes or if it says
- *      incomprehensible things;
  *
- * NOTE: The list of responsibilities is a bit long and this code
- * may benefit from being split in a few distinct classes.
- *
- * TODO: too many responsibilities. move (3) and (4) to a separate
- * class (SimplifyProcess?) and (5) to Prover
- * 
  * @author rgrig 
  * @author reviewed by TODO
  */
@@ -45,9 +36,8 @@ public class SimplifyProver extends Prover {
    * is that we use O(n) memory instead of O(1) just for printing,
    * where n is the size of the formula.
    */
-  
-  private ProcessBuilder starter;
-  private Process simplify;
+  private SimplifyProcess simplify;
+  private StringBuilder strBuilder;
   
   /**
    * Creates new {@code SimplifyProver}. It also tries to start the prover.
@@ -56,13 +46,9 @@ public class SimplifyProver extends Prover {
    * @throws ProverException if the prover cannot be started
    */
   public SimplifyProver(String[] cmd) throws ProverException {
-    starter = new ProcessBuilder(cmd);
-    restartProver();
+    simplify = new SimplifyProcess(cmd);
+    strBuilder = new StringBuilder();
     prepareTermBuilder();
-  }
-
-  private void restartProver() {
-    // TODO
   }
 
   /**
@@ -95,6 +81,7 @@ public class SimplifyProver extends Prover {
     //      excluded middle for boolean variables? i think that's in the
     //      escjava background predicate anyway
     builder.pushDef(); // mark the end of the prover builtin definitions
+    log.info("prepared term builder for simplify");
   }
   
   // TODO This is quite incomplete now
@@ -133,24 +120,40 @@ public class SimplifyProver extends Prover {
   }
 
   @Override
-  protected void sendAssume(Term t) {
-    // TODO
+  protected void sendAssume(Term t) throws ProverException {
+    strBuilder.setLength(0);
+    strBuilder.append("(BG_PUSH ");
+    printTerm(t, strBuilder);
+    strBuilder.append(")");
+    simplify.sendCommand(strBuilder.toString());
+    log.fine("simplify BG_PUSH: " + strBuilder);
   }
 
   @Override
-  protected void sendRetract() {
-    // TODO
+  protected void sendRetract() throws ProverException {
+    simplify.sendCommand("(BG_POP)");
+    log.fine("simplify BG_POP");
   }
   
   @Override
   public boolean isValid(Term t) throws ProverException {
-    // TODO
-      return false;
+    strBuilder.setLength(0);
+    printTerm(t, strBuilder);
+    log.fine("ask simplify: " + strBuilder);
+    boolean r = simplify.isValid(strBuilder.toString());
+    log.fine("simplify says: " + r);
+    return r;
+  }
+
+  @Override
+  public String[][] getLabels() {
+    return simplify.getLabels();
   }
 
   @Override
   public void terminate() {
-    // TODO
+    simplify.stopProver();
+    log.info("I tried to kill the prover. Hope it's dead.");
   }
   
   /**

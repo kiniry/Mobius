@@ -37,7 +37,6 @@ public abstract class Prover {
     // marks the end of an assumption frame in |assumptions|
 
   protected TermBuilder builder;
-  protected ProverAnswer detailedAnswer;
   protected static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public Prover() {
@@ -120,15 +119,13 @@ public abstract class Prover {
   abstract public boolean isValid(Term t) throws ProverException;
   
   /**
-   * Returns a detailed answer to the last {@code isValid}
-   * query. This can be either a proof of unsatisfiability,
-   * or a probable model. It can also be "sorry, no more info".
-   * 
-   * @return details of the last prover answer
+   * If the last call to {@code isValid} returned false then
+   * return an array with counterexamples. Each counterexample
+   * is an array of labels. The result is always nonnull, but
+   * may be empty. The result is empty if the last call to
+   * {code isValid} returned true.
    */
-  public ProverAnswer getDetailedAnswer() {
-    return detailedAnswer;
-  }
+  abstract public String[][] getLabels();
 
   /**
    * Terminates the prover. This should release memory, free CPU,

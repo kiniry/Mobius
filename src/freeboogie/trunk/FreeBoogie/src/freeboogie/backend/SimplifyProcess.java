@@ -22,7 +22,7 @@ public class SimplifyProcess {
   private PrintStream out; // this is how we tell stuff to the prover
 
   private boolean alive; // is the prover alive?
-  private ArrayList<String> labels;
+  private ArrayList<String[]> labels;
 
   /**
    * The typical values for {@code cmd} are {@code {"simplify"}}
@@ -42,7 +42,7 @@ public class SimplifyProcess {
       throw new ProverException("I can't run the prover.", e);
     }
     alive = true;
-    labels = new ArrayList<String>();
+    labels = new ArrayList<String[]>();
   }
 
   /**
@@ -89,11 +89,8 @@ public class SimplifyProcess {
    *  Returns the labels given by the last prover response.
    *  (An empty array is returned if the last query was valid.)
    */
-  public String[] getLabels() {
-    String[] r = new String[labels.size()];
-    for (int i = 0; i < labels.size(); ++i)
-      r[i] = labels.get(i);
-    return r;
+  public String[][] getLabels() {
+    return labels.toArray(new String[0][]);
   }
 
   private void checkAlive() throws ProverException {
@@ -168,28 +165,31 @@ public class SimplifyProcess {
   // NOTE: this assumes at least one char between "labels" and "("
   private void parseLabels() throws ParseError {
     char c;
+    ArrayList<String> counterexample = new ArrayList<String>();
     while (simpleReadChar() != '(');
 
-    StringBuffer sb = new StringBuffer(); // should be StringBuilder in newer Java
+    StringBuilder sb = new StringBuilder();
     ParseState ps = ParseState.OUTSIDE;
+loop:
     while (true) {
       switch (ps) {
       case OUTSIDE:
         while (Character.isWhitespace(c = simpleReadChar())||c=='|');
-        if (c == ')') return;
+        if (c == ')') break loop;
         sb.append(c);
         ps = ParseState.INSIDE;
         break;
       case INSIDE:
         while (!Character.isWhitespace(c = simpleReadChar())&&c!=')'&&c!='|')
           sb.append(c);
-        labels.add(sb.toString());
-        if (c == ')') return;
+        counterexample.add(sb.toString());
+        if (c == ')') break loop;
         sb.setLength(0);
         ps = ParseState.OUTSIDE;
         break;
       }
     }
+    labels.add(counterexample.toArray(new String[0]));
   }
 
   private boolean result(int r) throws ProverException {
@@ -205,6 +205,9 @@ public class SimplifyProcess {
    *  Wait for "Invalid"/"Valid"/"Bad input" followed by a dot 
    *  outside parantheses. Also, capture labels that are signaled 
    *  by "labels" followed by "(...)".
+   *
+   *  TODO: This hangs for any other input. There should be
+   *        some mechanism to recover from such a situation.
    */
   private boolean parseResponse() throws ProverException {
     char c = ' ', cl; // last read character, and its lowercase version
