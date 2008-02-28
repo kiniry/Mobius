@@ -1,0 +1,893 @@
+group ByteCode;
+
+prog(p,i) ::= <<
+\<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"\>
+\<html xmlns="http://www.w3.org/1999/xhtml"\>
+<if(i)><i>
+
+<endif><p>
+
+>>
+
+bonSpecification(bs) ::= <<
+<bs; separator="\n\n">
+>>
+
+specificationElement(s) ::= <<
+<s>
+>>
+
+informalChart(i) ::= <<
+<i>
+>>
+
+classDictionary(name,dicEntries) ::= <<
+dictionary <name>
+
+  <dicEntries; separator="\n">
+
+end
+>>
+
+dictionaryEntry(name,clusterName,desc) ::= <<
+class <name> cluster <clusterName>
+<desc>
+>>
+
+systemChart(name,other) ::= <<
+system_chart <name>
+
+  <other; separator="\n\n">
+  
+end
+>>
+
+explanation(s) ::= <<
+explanation
+  <s>
+>>
+
+indexing(i) ::= <<
+indexing
+  <i>
+>>
+
+part(s) ::= <<
+part
+  <s>
+>>
+
+description(s) ::= <<
+description
+  <s>
+>>
+
+clusterEntries(cs) ::= <<
+<cs; separator="\n">
+>>
+
+clusterEntry(name,d) ::= <<
+cluster <name>
+<desc>
+>>
+
+systemName(name) ::= <<
+<name>
+>>
+
+indexList(i) ::= <<
+<i; separator="\n">
+>>
+
+indexClause(id,i) ::= <<
+<id>: <i>;
+>>
+
+indexTermList(i) ::= <<
+<i; separator=", ">
+>>
+
+indexString(s) ::= <<
+<s>
+>>
+
+clusterChart(name,other) ::= <<
+cluster_chart <name>
+
+  <other; separator="\n\n">
+  
+end
+>>
+
+classEntries(cs) ::= <<
+<cs; separator="\n\n">
+>>
+
+classEntry(name,desc) ::= <<
+class <name>
+<desc>
+>>
+
+clusterName(name) ::= <<
+<name>
+>>
+
+classChart(name,other) ::=	<<
+class_chart <name>
+
+  <other; separator="\n\n">
+
+end
+>>
+
+inherits(l) ::= <<
+inherit 
+  <l>
+>>
+
+queries(l) ::= <<
+query
+  <l>
+>>
+
+commands(l) ::= <<
+command
+  <l>
+>>
+
+constraints(l) ::= <<
+constraint
+  <l>
+>>
+
+queryList(qs) ::= <<
+<qs; separator=",\n">
+>>
+
+commandList(cs) ::= <<
+<cs; separator=",\n">
+>>
+
+constraintList(cs) ::= <<
+<cs; separator=",\n">
+>>
+
+classNameList(cs) ::= <<
+<cs; separator=", ">
+>>
+
+classOrClusterNameList(classes,clusters) ::= <<
+<if(first(classes))><classes; separator=", ">, <endif>(<clusters; separator="), (">)
+>>
+
+className(name) ::= <<
+<name>
+>>
+
+eventChart(name,k,other) ::= <<
+event_chart <name> <k>
+
+  <other; separator="\n\n">
+
+end
+>>
+
+eventEntries(e) ::= <<
+<e; separator="\n">
+>>
+
+eventEntry(name,cnl) ::= <<
+event <name> involves <cnl>
+>>
+
+scenarioChart(name,other) ::= <<
+scenario_chart <name>
+>>
+
+scenarioEntries(e) ::= <<
+<e; separator="\n">
+>>
+
+scenarioEntry(s,d) ::= <<
+scenario <s> <d>
+>>
+
+creationChart(name,other) ::= <<
+creationChart <name>
+
+  <other; separator="\n\n">
+
+end
+>>
+
+creationEntries(l) ::= <<
+<l; separator="\n">
+>>
+
+creationEntry(name,cnl) ::= <<
+creator <name> creates <if(cnl)><cnl><else>--missing<endif>
+>>
+
+staticDiagram(ps,sb) ::= <<
+static_diagram<if(first(ps))> <ps><endif>
+component
+<if(first(sb))>
+  <sb>
+
+<endif>
+end
+>>
+
+extendedID(s) ::= <<
+<s>
+>>
+
+staticBlock(cs) ::= <<
+<cs; separator="\n">
+>>
+
+staticComponent(sc) ::= <<
+<sc>
+>>
+
+cluster(name,key,components) ::= <<
+<if(first(components))>
+cluster <name> <key>
+  <components>
+
+<else>
+cluster <name> <key>
+<endif>
+>>
+
+clusterComponents(block) ::= <<
+component
+<if(first(block))>
+  <block; separator="\n">
+end
+<else>
+end
+<endif>
+>>
+
+classX(keywords1,name,fgen,keywords2,interface) ::= <<
+<if(first(interface))>
+<if(first(keywords1))><keywords1; separator=" "> <endif>class <name><if(first(fgen))> <fgen><endif><if(first(keywords2))> <keywords2; separator=" "><endif>
+  <interface>
+<else>
+<if(first(keywords1))><keywords1; separator=" "> <endif>class <name><if(first(fgen))> <fgen><endif><if(first(keywords2))> <keywords2; separator=" "><endif>
+<endif>
+>>
+
+staticRelation(r) ::= <<
+<r>
+>>
+
+inheritenceRelation(child,mult,parent,sem) ::= <<
+<child> inherit <if(first(mult))>{<mult>} <endif><parent><if(first(sem))> <sem><endif>
+>>
+
+clientRelation(client,ce,tm,supplier,sem) ::= <<
+<client> client <if(first(ce))><ce> <endif><if(first(tm))><tm> <endif><supplier><if(first(sem))> <sem><endif>
+>>
+
+clientEntities(cee) ::= <<
+{<cee>}
+>>
+
+clientEntityExpression(e) ::= <<
+<e>
+>>
+
+clientEntityList(l) ::= <<
+<l; separator=", ">
+>>
+
+clientEntity(e) ::= <<
+<e>
+>>
+
+supplierIndirection(ifp,gi) ::= <<
+<if(first(ifp))><ifp>: <endif><gi>
+>>
+
+indirectionFeaturePart(ifp) ::= <<
+<ifp>
+>>
+
+indirectionFeatureList(ifl) ::= <<
+(<ifl>)
+>>
+
+parentIndirection(pi) ::= <<
+-> <pi>
+>>
+
+genericIndirection(gi) ::= <<
+<gi>
+>>
+
+namedIndirection(name,il) ::= <<
+<name>[<il>]
+>>
+
+indirectionList(il) ::= <<
+<il; separator=", ">
+>>
+
+indirectionElement(ie) ::= <<
+<ie>
+>>
+
+typeMark(tm) ::= <<
+<tm>
+>>
+
+sharedMark(mult) ::= <<
+: (<mult>)
+>>
+
+child(c) ::= <<
+<c>
+>>
+
+parent(p) ::= <<
+<p>
+>>
+
+client(c) ::= <<
+<c>
+>>
+
+supplier(s) ::= <<
+<s>
+>>
+
+staticRef(cp,name) ::= <<
+<cp><name>
+>>
+
+clusterPrefix(cns) ::= <<
+<cns:{<it>.}>
+>>
+
+staticComponentName(name) ::= <<
+<name>
+>>
+
+multiplicity(i) ::= <<
+<i>
+>>
+
+semanticLabel(l) ::= <<
+<l>
+>>
+
+classInterface(other,features,inv) ::= <<
+<if(first(other))>
+<other; separator="\n\n">
+
+<endif>
+<features>
+<if(first(inv))>
+<inv>
+<endif>
+
+end
+
+>>
+
+classInvariant(ass) ::= <<
+invariant
+  <ass>
+>>
+
+parentClassList(pcl) ::= <<
+inherit
+  <pcl; separator=", ">
+>>
+
+features(fcl) ::= <<
+<fcl; separator="\n">
+>>
+
+featureClause(se,fspecs) ::= <<
+feature<if(first(se))> <se> <endif>
+  <fspecs>
+>>
+
+featureSpecifications(fcl) ::= <<
+<fcl; separator="\n">
+>>
+
+featureSpecification(key,fnl,hastype,aft,other) ::= <<
+<if(first(key))><key> <endif><fnl><if(first(aft))><aft><endif><if(first(other))>
+
+  <other; separator="\n">
+<endif>
+>>
+
+hasType(tm,type) ::= <<
+<tm> <type>
+>>
+
+contractClause(cc) ::= <<
+<cc>
+>>
+
+contractingConditions(cc) ::= <<
+<cc; separator="\n">
+end
+>>
+
+precondition(ass) ::= <<
+require
+  <ass>
+>>
+
+postcondition(ass) ::= <<
+ensure
+  <ass>
+>>
+
+selectiveExport(cnl) ::= <<
+{<cnl>}
+>>
+
+featureNameList(fnl) ::= <<
+<fnl; separator=", ">
+>>
+
+featureName(name) ::= <<
+<name>
+>>
+
+renameClause(re) ::= <<
+{<re>}
+>>
+
+renaming(cname,fname) ::= <<
+^<cname>.<fname>
+>>
+
+featureArguments(fal) ::= <<
+<fal; separator="\n">
+>>
+
+featureArgument(il,type) ::= <<
+-> <if(first(il))><il>: <endif><type>
+>>
+
+identifierList(il) ::= <<
+<il; separator=", ">
+>>
+
+prefix(op) ::= <<
+prefix "<op>"
+>>
+
+infix(op) ::= <<
+infix "<op>"
+>>
+
+prefixOperator(un) ::= <<
+<un>
+>>
+
+infixOperator(bin) ::= <<
+<bin>
+>>
+
+formalGenerics(fgl) ::= <<
+[<fgl>]
+>>
+
+formalGenericList(fgl) ::= <<
+<fgl; separator=", ">
+>>
+
+formalGeneric(name,type) ::= <<
+<name><if(first(type))> -> <type><endif>
+>>
+
+formalGenericName(name) ::= <<
+<name>
+>>
+
+classType(name,gen) ::= <<
+<name><gen>
+>>
+
+actualGenerics(tl) ::= <<
+[<tl>]
+>>
+
+typeList(tl) ::= <<
+<tl; separator=", ">
+>>
+
+type(id,gen) ::= <<
+<id><gen>
+>>
+
+assertion(acl) ::= <<
+<acl; separator=";\n">;
+>>
+
+assertionClause(exp) ::= <<
+<exp>
+>>
+
+booleanExpression(exp) ::= <<
+<exp>
+>>
+
+quantification(q,re,restr,prop) ::= <<
+<q> <re> <if(first(restr))><restr> <endif><prop>
+>>
+
+quantifier(t) ::= <<
+<t>
+>>
+
+rangeExpression(vrl) ::= <<
+<vrl; separator="; ">;
+>>
+
+restriction(exp) ::= <<
+such_that <exp>
+>>
+
+poposition(exp) ::= <<
+it_holds <exp>
+>>
+
+variableRange(r) ::= <<
+<r>
+>>
+
+memberRange(il,exp) ::= <<
+<il> member_of <exp>
+>>
+
+typeRange(il,type) ::= <<
+<il> : <type>
+>>
+
+call(exp,cc) ::= <<
+<if(first(exp))>(<exp>).<endif><cc>
+>>
+
+callChain(ucl) ::= <<
+<ucl; separator=".">
+>>
+
+unqualifiedCall(id,aa) ::= <<
+<id><aa>
+>>
+
+actualArguments(el) ::= <<
+(<el>)
+>>
+
+expressionList(el) ::= <<
+<el; separator=", ">
+>>
+
+enumeratedSet(el) ::= <<
+{<el>}
+>>
+
+enumerationList(el) ::= <<
+<el; separator=", ">
+>>
+
+enumeration_element(ee) ::= <<
+<ee>
+>>
+
+interval(i) ::= <<
+<i>
+>>
+
+integerInterval(i1,i2) ::= <<
+<i1>..<i2>
+>>
+
+character_interval(c1,c2) ::= <<
+<c1>..<c2>
+>>
+
+constant(c) ::= <<
+<c>
+>>
+
+manifest_constant(mc) ::= <<
+<mc>
+>>
+
+sign(s) ::= <<
+<s>
+>>
+
+booleanConstant(bc) ::= <<
+<bc>
+>>
+
+integerConstant(sign,i) ::= <<
+<sign><i>
+>>
+
+realConstant(sign,r) ::= <<
+<sign><r>
+>>
+
+dynamicDiagram(exid,dynblock) ::= <<
+dynamic_diagram<if(first(exid))> <exid><endif>
+  component
+<if(first(dynblock))>
+    <dynblock>
+  end
+<else>
+  end
+<endif>
+>>
+
+dynamicBlock(dcl) ::= <<
+<dcl; separator="\n">
+>>
+
+dynamicComponent(dc) ::= <<
+<dc>
+>>
+
+scenarioDescription(name,la) ::= <<
+scenario <name>
+  action
+    <la>
+  end
+>>
+
+labelledActions(lal) ::= <<
+<lal; separator="\n">
+>>
+
+labelledAction(l,ad) ::= <<
+<l> <ad>
+>>
+
+actionLabel(al) ::= <<
+<al>
+>>
+
+actionDescription(ad) ::= <<
+<ad>
+>>
+
+scenarioName(name) ::= <<
+<name>
+>>
+
+objectGroup(n,name,gc) ::= <<
+<if(first(n))><n> object_group <name><else>object_group <name><endif>
+<if(first(gc))>
+  <gc>
+<endif>
+>>
+
+groupComponents(db) ::= <<
+component
+  <db>
+end
+>>
+
+objectStack(name) ::= <<
+object_stack <name>
+>>
+
+object(name) ::= <<
+object <name>
+>>
+
+messageRelation(caller,receiver,label) ::= <<
+<caller> calls <receiver><if(first(label))> <label><endif>
+>>
+
+caller(c) ::= <<
+<c>
+>>
+
+receiver(r) ::= <<
+<r>
+>>
+
+dynamicRef(eil) ::= <<
+<eil; separator=".">
+>>
+
+dynamicComponentName(a,b) ::= <<
+<a><if(first(b))>.<b><endif>
+>>
+
+objectName(a,b) ::= <<
+<a><if(first(b))>.<b><endif>
+>>
+
+groupName(name) ::= <<
+<name>
+>>
+
+messageLabel(l) ::= <<
+<l>
+>>
+
+notationalTuning(nt) ::= <<
+<nt>
+>>
+
+changeStringMarks(m1,m2) ::= <<
+string_marks <m1> <m2>
+>>
+
+changeConcatenator(cc) ::= <<
+concatenator <cc>
+>>
+
+changePrefix(cp) ::= <<
+change_prefix <cp>
+>>
+
+expressionAsIs(exp) ::= <<
+<exp>
+>>
+
+equivalence_expression(e1,e2) ::= <<
+<e1> \<-> <e2>
+>>
+
+impliesExpression(e1,e2) ::= <<
+<e1> -> <e2>
+>>
+
+andOrXorExpression(op,e1,e2) ::= <<
+<e1> <op> <e2>
+>>
+
+comparisonExpression(op,e1,e2) ::= <<
+<e1> <op> <e2>
+>>
+
+addSubExpression(op,e1,e2) ::= <<
+<e1> <op> <e2>
+>>
+
+mulDivExpression(op,e1,e2) ::= <<
+<e1> <op> <e2>
+>>
+
+mod_pow_expression(op,e1,e2) ::= <<
+<e1> <op> <e2>
+>>
+
+unaryExpression(unary,exp) ::= <<
+<unary> <exp>
+>>
+
+parenthesisExpression(exp,cc) ::= <<
+(<exp>)<if(first(cc))>.<cc><endif>
+>>
+
+unary(u) ::= <<
+<u>
+>>
+
+asIs(x) ::= <<
+<x>
+>>
+
+plus() ::= <<
++
+>>
+
+minus() ::= <<
+-
+>>
+
+and() ::= <<
+and
+>>
+
+or() ::= <<
+or
+>>
+
+xor() ::= <<
+xor
+>>
+
+delta() ::= <<
+delta
+>>
+
+old() ::= <<
+old
+>>
+
+not() ::= <<
+not
+>>
+
+implies() ::= <<
+->
+>>
+
+equivalent() ::= <<
+\<->
+>>
+
+lessThan() ::= <<
+\<
+>>
+ 
+greaterThan() ::= <<
+>
+>>
+
+lessThanOrEqualTo() ::= <<
+\<=
+>>
+
+greaterThanOrEqualTo() ::= <<
+>=
+>>
+
+equals() ::= <<
+=
+>>
+
+notEquals() ::= <<
+/=
+>>
+
+memberOf() ::= <<
+member_of
+>>
+
+notMemberOf() ::= <<
+not member_of
+>>
+
+typeChar() ::= <<
+:
+>>
+
+multiply() ::= <<
+*
+>>
+
+divide() ::= <<
+/
+>>
+
+integerDivide() ::= <<
+//
+>>
+
+modulo()  ::= <<
+\\\\
+>>
+
+power() ::= <<
+^
+>>
+
+
+
+manifestTextBlock(s) ::= <<
+<s>
+>>
+
+
+lowestCallChain(lcc) ::= <<
+<lcc>
+>>

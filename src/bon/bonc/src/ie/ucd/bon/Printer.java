@@ -34,11 +34,11 @@ public class Printer {
   private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
   public static PrintingOption getPrintingOption(String optionString) {   
-    if (optionString.equalsIgnoreCase("syso")) {
+    if (optionString.equalsIgnoreCase("syso") || optionString.equalsIgnoreCase("stdo")) {
       return PrintingOption.SYSO;
     } else if (optionString.equalsIgnoreCase("txt")) {
       return PrintingOption.PLAIN_TEXT;
-    } else if (optionString.equalsIgnoreCase("html")) {
+    } else if (optionString.equalsIgnoreCase("html") || optionString.equalsIgnoreCase("xhtml")) {
       return PrintingOption.HTML;
     } else if (optionString.equalsIgnoreCase("dot")) {
       return PrintingOption.DOT;
@@ -51,6 +51,8 @@ public class Printer {
     switch(po) {
     case PLAIN_TEXT:
       return "plain-text";
+    case HTML:
+      return "web-page format";
     case DOT:
       return ".dot graph format";
     default:
@@ -58,7 +60,7 @@ public class Printer {
     }
   }
 
-  public static String getPrintingOptionFileSuffix(PrintingOption po) {
+  /*public static String getPrintingOptionFileSuffix(PrintingOption po) {
     switch(po) {
     case PLAIN_TEXT:
       return ".bon";
@@ -69,26 +71,28 @@ public class Printer {
     default:
       return ".unknown"; //Shouldn't happen
     }
-  }
+  }*/
 
   public static Reader getPrintingOptionTemplateFileReader(PrintingOption po) {
 
     switch(po) {
     case PLAIN_TEXT:
-      return FileUtil.getResourceReader("templates/EBONPlainText.stg");
+      return FileUtil.getResourceReader("templates/BONPlainText.stg");
+    case HTML:
+      return FileUtil.getResourceReader("templates/BONXHTML.stg"); 
     default:
       return null; //Shouldn't happen
     }
 
   }
 
-  public static String getPrintingOptionFileName(String originalFileName, PrintingOption po) { 
+  /*public static String getPrintingOptionFileName(String originalFileName, PrintingOption po) { 
     return originalFileName + getPrintingOptionFileSuffix(po);
-  }
+  }*/
 
-  public static String getPrintingOptionFileName(String originalFileName, PrintingOption po, File outputDirectory) {
+  /*public static String getPrintingOptionFileName(String originalFileName, PrintingOption po, File outputDirectory) {
     return outputDirectory.getAbsolutePath() + File.separatorChar + getPrintingOptionFileName(originalFileName, po);    
-  }
+  }*/
 
   private static String printUsingTemplateToString(ParseResult parseResult, Reader stFile) throws RecognitionException {
     try {
