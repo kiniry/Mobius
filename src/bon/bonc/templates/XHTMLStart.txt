@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>BON Documentation: The %2$2s System</title>
+
+<style type="text/css">
+  #system_chart, .cluster_chart, .class_chart { padding-bottom: 25px; }
+  .event_chart, .scenario_chart { padding-bottom: 25px; }
+
+  .indexing, .index_list { position:relative; left:20px; }
+
+  .explanation { position:relative; left:20px; }
+  .part { position:relative; left:20px; }
+
+  .queries, .commands, .constraints { position:relative; left:20px; }
+  .query_list, .command_list, .constraint_list { position:relative; left:20px; }
+
+  .class_entries, .cluster_entries { position:relative; left:20px; }
+  .creation_entries, .event_entries { position:relative; left:20px; }
+
+</style>
+
+</head>
+<body>
+
+<h1>The %2$2s System</h1>

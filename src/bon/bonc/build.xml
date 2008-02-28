@@ -151,6 +151,8 @@
       <fileset dir="templates/" includes="*"/> 
     </copy>
   	
+  	<echo message="${release-name}-${release-version}" file="${build}/version"/>
+  	
   	<copy todir="${dist}">
   	  <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/>
   	</copy>

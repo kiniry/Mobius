@@ -64,7 +64,7 @@ clusterEntries(cs) ::= <<
 <cs; separator="\n">
 >>
 
-clusterEntry(name,d) ::= <<
+clusterEntry(name,desc) ::= <<
 cluster <name>
 <desc>
 >>

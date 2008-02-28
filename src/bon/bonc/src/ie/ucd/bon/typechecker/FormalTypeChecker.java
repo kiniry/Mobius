@@ -84,17 +84,6 @@ public class FormalTypeChecker {
     checkClusterContainmentForCycles();
   }
   
-  /*public void performClassInheritanceCycleCheck() {
-    for (ClassDefinition classDef : classes.values()) {
-      classDef.getClassAncestors(this);      
-      if (classDef.hasInfiniteCycle()) {
-        String cycleString = computeClassInheritenceCycleString(classDef.getClassName());
-        typingProblems.addProblem(new CycleInRelationsError(classDef.getSourceLocation(), "Class", classDef.getClassName(), cycleString, " inheritance hierarchy"));
-      }
-    }
-
-  }*/
-  
   public void checkClassInheritanceForCycles() {
     for (String className : classes.keySet()) {
       Collection<String> cycle = simpleClassInheritanceGraph.findCycle(className, Converter.stringIdentityConverter);

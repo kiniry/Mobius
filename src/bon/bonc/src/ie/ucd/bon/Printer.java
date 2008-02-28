@@ -4,12 +4,11 @@
  */
 package ie.ucd.bon;
 
-//import ie.ucd.ebon.parser.EBONPrinterTreeWalker;
 import ie.ucd.bon.parser.BONSTTreeWalker;
 import ie.ucd.bon.parser.tracker.ParseResult;
+import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 import ie.ucd.bon.util.FileUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -60,21 +59,39 @@ public class Printer {
     }
   }
 
-  /*public static String getPrintingOptionFileSuffix(PrintingOption po) {
-    switch(po) {
-    case PLAIN_TEXT:
-      return ".bon";
-    case DOT:
-      return ".dot";
-    case HTML:
-      return ".html";
-    default:
-      return ".unknown"; //Shouldn't happen
+  public static String getPrintingOptionStartString(PrintingOption po) {
+    try {
+      switch(po) {
+      case PLAIN_TEXT:
+        return FileUtil.readToString("templates/PlainTextStart.txt");
+      case HTML:
+        return FileUtil.readToString("templates/XHTMLStart.txt"); 
+      default:
+        return ""; //Shouldn't happen
+      }
+    } catch (IOException ioe) {
+      Main.logDebug("IOException thrown whilst reading printing option start string");
+      return "";
     }
-  }*/
-
+  }
+  
+  public static String getPrintingOptionEndString(PrintingOption po) {
+    try {
+      switch(po) {
+      case PLAIN_TEXT:
+        return FileUtil.readToString("templates/PlainTextEnd.txt");
+      case HTML:
+        return FileUtil.readToString("templates/XHTMLEnd.txt"); 
+      default:
+        return ""; //Shouldn't happen
+      }
+    } catch (IOException ioe) {
+      Main.logDebug("IOException thrown whilst reading printing option start string");
+      return "";
+    }
+  }
+  
   public static Reader getPrintingOptionTemplateFileReader(PrintingOption po) {
-
     switch(po) {
     case PLAIN_TEXT:
       return FileUtil.getResourceReader("templates/BONPlainText.stg");
@@ -83,22 +100,11 @@ public class Printer {
     default:
       return null; //Shouldn't happen
     }
-
   }
-
-  /*public static String getPrintingOptionFileName(String originalFileName, PrintingOption po) { 
-    return originalFileName + getPrintingOptionFileSuffix(po);
-  }*/
-
-  /*public static String getPrintingOptionFileName(String originalFileName, PrintingOption po, File outputDirectory) {
-    return outputDirectory.getAbsolutePath() + File.separatorChar + getPrintingOptionFileName(originalFileName, po);    
-  }*/
 
   private static String printUsingTemplateToString(ParseResult parseResult, Reader stFile) throws RecognitionException {
     try {
-      //FileReader groupFileR = new FileReader(stFile); //Read the string-template file
       StringTemplateGroup templates = new StringTemplateGroup(stFile);
-      //groupFileR.close();
       stFile.close();
       
       CommonTree t = (CommonTree)parseResult.getParse().getTree(); //Get input tree
@@ -123,7 +129,21 @@ public class Printer {
     return st.toString();
   }
 
- public static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintStream outputStream) 
+  public static void printStartToStream(PrintingOption printOption, PrintStream outputStream, InformalTypingInformation iti) {
+    String startString = formatString(getPrintingOptionStartString(printOption), iti);
+    outputStream.print(startString);
+  }
+  
+  public static void printEndToStream(PrintingOption printOption, PrintStream outputStream, InformalTypingInformation iti) {
+    String endString = formatString(getPrintingOptionEndString(printOption), iti);
+    outputStream.print(endString);
+  }
+  
+  private static String formatString(String toFormat, InformalTypingInformation iti) {
+    return String.format(toFormat, Main.getVersion(), iti.getSystem().getSystemName());
+  }
+
+  public static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintStream outputStream) 
   throws RecognitionException {
     String text = printToString(parseResult, printOption);
     if (text != null) {

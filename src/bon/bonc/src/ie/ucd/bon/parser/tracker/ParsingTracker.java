@@ -9,6 +9,7 @@ import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.typechecker.FormalTypeChecker;
 import ie.ucd.bon.typechecker.TypingInformation;
 import ie.ucd.bon.typechecker.informal.InformalTypeChecker;
+import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
 import java.io.PrintStream;
 import java.util.Collection;
@@ -68,6 +69,10 @@ public class ParsingTracker {
 
   public TypingInformation getTypingInformation() {
     return typingInformation;
+  }
+  
+  public InformalTypingInformation getInformalTypingInformation() {
+    return typingInformation.informal();
   }
 
   public void addProblem(BONProblem problem) {

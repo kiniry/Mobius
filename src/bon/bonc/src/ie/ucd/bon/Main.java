@@ -10,6 +10,7 @@ import ie.ucd.bon.errorreporting.NoFilesError;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
+import ie.ucd.bon.util.FileUtil;
 import ie.ucd.commandline.options.InvalidOptionsSetException;
 import ie.ucd.commandline.options.Options;
 import ie.ucd.commandline.parser.CommandlineParser;
@@ -17,6 +18,7 @@ import ie.ucd.commandline.parser.CommandlineParser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Vector;
@@ -47,6 +49,18 @@ public class Main {
     }
   }
   
+  private static String version;
+  public static String getVersion() {
+    if (version == null) {
+      try {
+        version = FileUtil.readToString("version");
+      } catch (IOException ioe) {
+        version = "An error occurred when reading the version.";
+      }
+    }
+    return version;
+  }
+  
   private static Problems problems; 
   
   public static void main(final String[] args) {
@@ -75,6 +89,8 @@ public class Main {
           cp.printOptions(System.out, true);
         } else if (so.isBooleanOptionByNameSelected("--help")) {
           cp.printOptions(System.out, false);
+        } else if (so.isBooleanOptionByNameSelected("--version")) {
+          System.out.println(getVersion());
         } else {
           Collection<String> files = cp.getActualArgs();
           Main.logDebug(files.size() + " files:");
@@ -231,11 +247,15 @@ public class Main {
         try {
           if (timing) {
             long startTime = System.nanoTime();
+            Printer.printStartToStream(printingOption, outputStream, tracker.getInformalTypingInformation());
             Printer.printToStream(parse, printingOption, outputStream);
+            Printer.printEndToStream(printingOption, outputStream, tracker.getInformalTypingInformation());
             long endTime = System.nanoTime();
             System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + timeString(endTime-startTime));
           } else {
+            Printer.printStartToStream(printingOption, outputStream, tracker.getInformalTypingInformation());
             Printer.printToStream(parse, printingOption, outputStream);
+            Printer.printEndToStream(printingOption, outputStream, tracker.getInformalTypingInformation());
           }
         } catch (RecognitionException re) {
           System.out.println("Something went wrong when printing...");

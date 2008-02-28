@@ -190,6 +190,13 @@ public class CLP {
     printReadme.setHelpString("Print available options in readme format");
     cp.addOption(printReadme);
     
+    BooleanDefaultOption version = new BooleanDefaultOption();
+    version.setOptionID("999v");
+    version.addOptionName("-v");
+    version.addOptionName("--version");
+    version.setHelpString("Print BONc version and exit.");
+    cp.addOption(version);
+    
     return cp;
   }
   

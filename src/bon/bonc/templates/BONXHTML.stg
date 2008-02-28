@@ -1,12 +1,8 @@
 group ByteCode;
 
 prog(p,i) ::= <<
-\<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"\>
-\<html xmlns="http://www.w3.org/1999/xhtml"\>
-<if(i)><i>
-
-<endif><p>
-
+<i>
+<p>
 >>
 
 bonSpecification(bs) ::= <<
@@ -23,9 +19,7 @@ informalChart(i) ::= <<
 
 classDictionary(name,dicEntries) ::= <<
 dictionary <name>
-
   <dicEntries; separator="\n">
-
 end
 >>
 
@@ -35,48 +29,53 @@ class <name> cluster <clusterName>
 >>
 
 systemChart(name,other) ::= <<
-system_chart <name>
-
-  <other; separator="\n\n">
-  
-end
+\<div id="system_chart">
+\<strong>system_chart\</strong> <name>
+<other; separator="\n\n">
+\<strong>end\</strong>
+\</div>
 >>
 
 explanation(s) ::= <<
-explanation
+\<div class="explanation">
+\<strong>explanation\</strong>
   <s>
+\</div>
 >>
 
 indexing(i) ::= <<
-indexing
+\<div class="indexing">
+\<strong>indexing\</strong>
   <i>
+\</div>
 >>
 
 part(s) ::= <<
-part
-  <s>
+\<div class="part">
+\<strong>part\</strong> \<em><s>\</em>
+\</div>
 >>
 
 description(s) ::= <<
-description
-  <s>
+\<strong>description\</strong> \<em><s>\</em>
 >>
 
 clusterEntries(cs) ::= <<
-<cs; separator="\n">
+\<div class="cluster_entries">
+<cs; separator="<br/>">
+\</div>
 >>
 
-clusterEntry(name,d) ::= <<
-cluster <name>
-<desc>
+clusterEntry(name,desc) ::= <<
+\<strong>cluster\</strong> <name> <desc>
 >>
 
 systemName(name) ::= <<
-<name>
+\<em><name>\</em>
 >>
 
 indexList(i) ::= <<
-<i; separator="\n">
+\<div class="index_list"><i; separator="<br/>">\</div>
 >>
 
 indexClause(id,i) ::= <<
@@ -92,64 +91,77 @@ indexString(s) ::= <<
 >>
 
 clusterChart(name,other) ::= <<
-cluster_chart <name>
-
+\<div class="cluster_chart" id="cluster_chart:<name>">
+\<strong>cluster_chart\</strong> <name>
   <other; separator="\n\n">
-  
-end
+\<strong>end\</strong>
+\</div>
 >>
 
 classEntries(cs) ::= <<
-<cs; separator="\n\n">
+\<div class="class_entries">
+<cs; separator="<br/>">
+\</div>
 >>
 
 classEntry(name,desc) ::= <<
-class <name>
-<desc>
+\<strong>class\</strong> <name> <desc>
 >>
 
 clusterName(name) ::= <<
-<name>
+\<a href="#cluster_chart:<name>"><name>\</a>
 >>
 
 classChart(name,other) ::=	<<
-class_chart <name>
-
+\<div class="class_chart" id="class_chart:<name>">
+\<strong>class_chart\</strong> <name>
   <other; separator="\n\n">
-
-end
+\<strong>end\</strong>
+\</div>
 >>
 
 inherits(l) ::= <<
-inherit 
+\<strong>inherit\</strong> 
   <l>
 >>
 
 queries(l) ::= <<
-query
+\<div class="queries">
+\<strong>query\</strong>
   <l>
+\</div>
 >>
 
 commands(l) ::= <<
-command
+\<div class="commands">
+\<strong>command\</strong>
   <l>
+\</div>
 >>
 
 constraints(l) ::= <<
-constraint
+\<div class="constraints">
+\<strong>constraint\</strong>
   <l>
+\</div>
 >>
 
 queryList(qs) ::= <<
-<qs; separator=",\n">
+\<div class="query_list">
+<qs; separator=",<br/>">
+\</div>
 >>
 
 commandList(cs) ::= <<
-<cs; separator=",\n">
+\<div class="command_list">
+<cs; separator=",<br/>">
+\</div>
 >>
 
 constraintList(cs) ::= <<
-<cs; separator=",\n">
+\<div class="constraint_list">
+<cs; separator=",<br/>">
+\</div>
 >>
 
 classNameList(cs) ::= <<
@@ -161,51 +173,57 @@ classOrClusterNameList(classes,clusters) ::= <<
 >>
 
 className(name) ::= <<
-<name>
+\<a href="#class_chart:<name>"><name>\</a>
 >>
 
 eventChart(name,k,other) ::= <<
-event_chart <name> <k>
-
-  <other; separator="\n\n">
-
-end
+\<div class="event_chart">
+\<strong>event_chart\</strong> <name> <k>
+  <other; separator="\n">
+\<strong>end\</strong>
+\</div>
 >>
 
 eventEntries(e) ::= <<
-<e; separator="\n">
+\<div class="event_entries">
+<e; separator="<br/>">
+\</div>
 >>
 
 eventEntry(name,cnl) ::= <<
-event <name> involves <cnl>
+\<strong>event\</strong> <name> \<strong>involves\</strong> <cnl>
 >>
 
 scenarioChart(name,other) ::= <<
-scenario_chart <name>
+\<div class="scenario_chart">
+\<strong>scenario_chart\</strong> <name>
+\</div>
 >>
 
 scenarioEntries(e) ::= <<
-<e; separator="\n">
+\<div class="scenario_entries">
+<e; separator="<br/>">
+\<div>
 >>
 
 scenarioEntry(s,d) ::= <<
-scenario <s> <d>
+\<strong>scenario\</strong> <s> <d>
 >>
 
 creationChart(name,other) ::= <<
-creationChart <name>
-
-  <other; separator="\n\n">
-
-end
+\<strong>creation_chart\</strong> <name>
+  <other; separator="\n">
+\<strong>end\</strong>
 >>
 
 creationEntries(l) ::= <<
-<l; separator="\n">
+\<div class="creation_entries">
+<l; separator="<br/>">
+\</div>
 >>
 
 creationEntry(name,cnl) ::= <<
-creator <name> creates <if(cnl)><cnl><else>--missing<endif>
+\<strong>creator\</strong> <name> \<strong>creates\</strong> <if(cnl)><cnl><else>--missing<endif>
 >>
 
 staticDiagram(ps,sb) ::= <<

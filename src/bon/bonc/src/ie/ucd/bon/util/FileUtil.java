@@ -6,6 +6,7 @@ package ie.ucd.bon.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -33,6 +34,19 @@ public class FileUtil {
     } else {
       return null;
     }
+  }
+  
+  public static String readToString(Reader r) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    int c;
+    while((c = r.read()) != -1) {
+      sb.append((char)c);
+    }
+    return sb.toString();
+  }
+  
+  public static String readToString(String filePath) throws IOException {
+    return readToString(getResourceReader(filePath));
   }
 
 }

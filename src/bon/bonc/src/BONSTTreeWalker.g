@@ -16,6 +16,8 @@ options {
   package ie.ucd.bon.parser; 
   
   import java.util.LinkedList;
+  
+  import ie.ucd.bon.util.StringUtil;
 }
 
 /**********************************************  
@@ -186,7 +188,7 @@ cluster_chart  :^(
                   (o+=cluster_entries)? 
                  )
                 ->
-                  clusterChart(name={$cluster_name.st},other={$o})
+                  clusterChart(name={$cluster_name.text},other={$o})
                ;
                
 class_entries  :^(
@@ -1574,7 +1576,7 @@ manifest_textblock  :   MANIFEST_STRING -> manifestTextBlock(s={$MANIFEST_STRING
 												me=MANIFEST_TEXTBLOCK_END 
 												{ t+=$me.text; }
 											->
-											  manifestTextBlock(s={t})
+											  manifestTextBlock(s={StringUtil.strip(t)})
                     ;
 
 
