@@ -290,23 +290,6 @@ public class BCClass {
 	}
 
 	/**
-	 * Adds an BML class annotation to this class.
-	 * If given annotation is a method annotation,
-	 * nothing happens.
-	 * 
-	 * @param pa - annotation to be added.
-	 * @return if <code>pa</code> is an BML class attribute.
-	 */
-	public boolean addAttribute(BCPrintableAttribute pa) {
-		MLog.putMsg(MLog.PProgress, "adding class attribute: " + pa.toString());
-		if (pa instanceof ClassInvariant) {
-			invariant = (ClassInvariant) pa;
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Adds Unknown class attribute to BCEL's Attribute array,
 	 * or replaces one from array if it has the same name.
 	 * 
@@ -331,6 +314,24 @@ public class BCClass {
 		return a2;
 	}
 
+
+  /**
+   * Adds an BML class annotation to this class.
+   * If given annotation is a method annotation,
+   * nothing happens.
+   * 
+   * @param pa - annotation to be added.
+   * @return if <code>pa</code> is an BML class attribute.
+   */
+  public boolean addAttribute(BCPrintableAttribute pa) {
+    MLog.putMsg(MLog.PProgress, "adding class attribute: " + pa.toString());
+    if (pa instanceof ClassInvariant) {
+      invariant = (ClassInvariant) pa;
+      return true;
+    }
+    return false;
+  }
+  
 	/**
 	 * Removes all Attributes used by this library from
 	 * given array.
