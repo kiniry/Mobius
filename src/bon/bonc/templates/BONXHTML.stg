@@ -28,32 +28,48 @@ class <name> cluster <clusterName>
 <desc>
 >>
 
-systemChart(name,other) ::= <<
+systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
 \<div id="system_chart">
-\<strong>system_chart\</strong> <name>
-<other; separator="\n\n">
-\<strong>end\</strong>
+  \<div class="top">
+    \<div class="quarter">
+      \<div class="system">SYSTEM\</div>
+    \</div>
+    \<div class="half">
+      \<div class="system_name"><name>\</div>
+    \</div>
+    \<div class="quarter">
+      \<div class="part">\<strong>Part:\</strong> <part>\</div>
+    \</div>
+  \</div>
+
+  \<div class="middle">
+    \<div class="two_thirds">
+      \<div class="explanation">
+        \<strong>EXPLANATION\</strong>
+        <explanation>
+      \</div>
+    \</div>
+
+    \<div class="third">
+      \<div class="indexing">
+        \<strong>INDEXING\</strong>
+        <indexing>
+      \</div>
+    \</div>
+  \</div>
 \</div>
 >>
 
 explanation(s) ::= <<
-\<div class="explanation">
-\<strong>explanation\</strong>
-  <s>
-\</div>
+\<div class="explanation_text"><s>\</div>
 >>
 
 indexing(i) ::= <<
-\<div class="indexing">
-\<strong>indexing\</strong>
-  <i>
-\</div>
+<i>
 >>
 
 part(s) ::= <<
-\<div class="part">
-\<strong>part\</strong> \<em><s>\</em>
-\</div>
+\<em><s>\</em>
 >>
 
 description(s) ::= <<

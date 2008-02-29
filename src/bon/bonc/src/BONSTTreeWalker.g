@@ -81,13 +81,13 @@ dictionary_entry  :^(
 
 system_chart  :^(
                  SYSTEM_CHART system_name
-                 (o+=indexing)?
-                 (o+=explanation)? 
-                 (o+=part)? 
-                 (o+=cluster_entries)? 
+                 (i+=indexing)?
+                 (e+=explanation)? 
+                 (p+=part)? 
+                 (c+=cluster_entries)? 
                 )
                -> 
-               	 systemChart(name={$system_name.st},other={$o})
+               	 systemChart(name={$system_name.st},indexing={$i},explanation={$e},part={$p},cluster_entries={$c})
               ;
 
 explanation  :^(

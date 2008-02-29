@@ -12,6 +12,7 @@ import ie.ucd.bon.util.FileUtil;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.util.Calendar;
 
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
@@ -129,18 +130,18 @@ public class Printer {
     return st.toString();
   }
 
-  public static void printStartToStream(PrintingOption printOption, PrintStream outputStream, InformalTypingInformation iti) {
-    String startString = formatString(getPrintingOptionStartString(printOption), iti);
+  public static void printStartToStream(PrintingOption printOption, PrintStream outputStream, Calendar printTime, InformalTypingInformation iti) {
+    String startString = formatString(getPrintingOptionStartString(printOption), printTime, iti);
     outputStream.print(startString);
   }
   
-  public static void printEndToStream(PrintingOption printOption, PrintStream outputStream, InformalTypingInformation iti) {
-    String endString = formatString(getPrintingOptionEndString(printOption), iti);
+  public static void printEndToStream(PrintingOption printOption, PrintStream outputStream, Calendar printTime, InformalTypingInformation iti) {
+    String endString = formatString(getPrintingOptionEndString(printOption), printTime, iti);
     outputStream.print(endString);
   }
   
-  private static String formatString(String toFormat, InformalTypingInformation iti) {
-    return String.format(toFormat, Main.getVersion(), iti.getSystem().getSystemName());
+  private static String formatString(String toFormat, Calendar printTime, InformalTypingInformation iti) {
+    return String.format(toFormat, printTime, Main.getVersion(), iti.getSystem().getSystemName());
   }
 
   public static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintStream outputStream) 

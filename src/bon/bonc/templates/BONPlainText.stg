@@ -32,11 +32,12 @@ class <name> cluster <clusterName>
 <desc>
 >>
 
-systemChart(name,other) ::= <<
+systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
 system_chart <name>
-
-  <other; separator="\n\n">
-  
+  <if(first(indexing)><indexing>
+  <endif><if(first(explanation))><explanation>
+  <endif><if(first(part))><part>
+  <endif><if(first(cluster_entries))><cluster_entries>
 end
 >>
 

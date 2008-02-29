@@ -1,26 +1,108 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>BON Documentation: The %2$2s System</title>
+<title>BON Documentation: The %3$2s System</title>
 
 <style type="text/css">
-  #system_chart, .cluster_chart, .class_chart { padding-bottom: 25px; }
-  .event_chart, .scenario_chart { padding-bottom: 25px; }
+#system_chart, .cluster_chart, .class_chart { 
+  margin-bottom: 25px; 
+}
 
-  .indexing, .index_list { position:relative; left:20px; }
+.index_list, .explanation_text { 
+  position:relative; left:20px; 
+}
 
-  .explanation { position:relative; left:20px; }
-  .part { position:relative; left:20px; }
+.quarter, .half, .third, .two_thirds {
+  float: left; 
+}
 
-  .queries, .commands, .constraints { position:relative; left:20px; }
-  .query_list, .command_list, .constraint_list { position:relative; left:20px; }
+.quarter {
+  width: 25%%;
+}
 
-  .class_entries, .cluster_entries { position:relative; left:20px; }
-  .creation_entries, .event_entries { position:relative; left:20px; }
+.half {
+  width: 50%%;
+}
 
+.third {
+  width: 33%%;
+}
+
+.two_thirds {
+  width: 67%%;
+}
+
+#system_chart {
+  width: 100%%;
+  background-color: #cccccc;
+  border: 2px solid #000000;
+}
+
+.top {
+  width: 100%%;
+  text-align: center;
+}
+
+.system, .system_name, .part {
+  border: 6px groove #c0c0c0;
+  padding: 5px 0px 5px 0px;
+}
+
+.system {
+  background-colour: #cccccc;
+}
+
+.system_name {
+  background-color: #ffff99;
+}
+
+.part {
+  background-color: #ffff99;
+}
+
+.middle {
+  border-top: 2px solid #000000;
+  width: 100%%;
+  clear: left;
+}
+
+.explanation, .indexing {
+  background-color: #ffffff;
+  border: 6px groove  #c0c0c0;
+  padding: 10px 0px 10px 0px;
+}
+
+.bottom {
+  border-top: 2px solid #000000;
+  width: 100%%;
+  clear: left;
+}
+
+.cluster_entries table {
+  width: 100%%;
+}
+
+.top_left_col, .top_right_col {
+  background-color: #ffffff;
+  border: 1px inset #c0c0c0;
+  padding: 6px 0px 6px 0px;
+}
+
+.left_col, .right_col {
+  border: 1px inset #c0c0c0;
+  padding: 4px 0px 4px 0px;
+}
+
+.left_col {
+  background-color: #ffff99;
+}
+
+.right_col {
+  background-color: #ffffff;
+}
 </style>
 
 </head>
 <body>
 
-<h1>The %2$2s System</h1>
+<h1>The %3$2s System</h1>

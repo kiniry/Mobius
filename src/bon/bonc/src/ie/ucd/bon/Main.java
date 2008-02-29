@@ -20,7 +20,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import org.antlr.runtime.RecognitionException;
@@ -245,17 +247,18 @@ public class Main {
       ParseResult parse = tracker.getParseResult(fileName);
       if (parse.continueFromParse(PP_NUM_SEVERE_ERRORS)) {
         try {
+          Calendar printTime = new GregorianCalendar();
           if (timing) {
             long startTime = System.nanoTime();
-            Printer.printStartToStream(printingOption, outputStream, tracker.getInformalTypingInformation());
+            Printer.printStartToStream(printingOption, outputStream, printTime, tracker.getInformalTypingInformation());
             Printer.printToStream(parse, printingOption, outputStream);
-            Printer.printEndToStream(printingOption, outputStream, tracker.getInformalTypingInformation());
+            Printer.printEndToStream(printingOption, outputStream, printTime, tracker.getInformalTypingInformation());
             long endTime = System.nanoTime();
             System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + timeString(endTime-startTime));
           } else {
-            Printer.printStartToStream(printingOption, outputStream, tracker.getInformalTypingInformation());
+            Printer.printStartToStream(printingOption, outputStream, printTime, tracker.getInformalTypingInformation());
             Printer.printToStream(parse, printingOption, outputStream);
-            Printer.printEndToStream(printingOption, outputStream, tracker.getInformalTypingInformation());
+            Printer.printEndToStream(printingOption, outputStream, printTime, tracker.getInformalTypingInformation());
           }
         } catch (RecognitionException re) {
           System.out.println("Something went wrong when printing...");
