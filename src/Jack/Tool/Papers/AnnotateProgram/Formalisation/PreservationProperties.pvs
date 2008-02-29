@@ -10,6 +10,8 @@ ASSUMING
 
 ENDASSUMING
 
+
+
   IMPORTING MonitoredProgramCompletessRelation[CP, Name],
             ContainsNoMethodCall[Name],
             WfSetStmts[Name, MonitoredProgram, MPState,
@@ -18,15 +20,35 @@ ENDASSUMING
                              lookup, update_PState, execute_set,
                              execute_assert, execute_CaseJML, 
                              on_method_entry_MP, on_method_exit_normal_MP,
-                             on_method_exit_exceptional_MP]
+                             on_method_exit_exceptional_MP],
+            LegalPartialMonitoredProgramRestriction[CP, Name],
+            LegalCompleteMonitoredProgramRestriction[CP, Name],
+            WellBehavedMVA[CP, Name]
+
+  derive_equivalence_if : LEMMA % :-)
+    FORALL(mp : (wf_and_partial_MP), b : (wf_Body(program(mp))),
+           sMP1, sMP2 : MPState, v : Val, n : nat) :
+      contains_no_method_call(b) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+      derive(complete_MP(mp))(b, sMP1, v, sMP2)(n) IMPLIES
+         derive(mp)(b, sMP1, v, sMP2)(n)
+
+
+  derive_equivalence_only_if : LEMMA % :-)
+    FORALL(mp : (wf_and_partial_MP), b : (wf_Body(program(mp))),
+           sMP1, sMP2 : MPState, v : Val, n : nat) :
+      contains_no_method_call(b) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+      derive(mp)(b, sMP1, v, sMP2)(n) IMPLIES
+      derive(complete_MP(mp))(b, sMP1, v, sMP2)(n)
 
   derive_equivalence : LEMMA % :-)
     FORALL(mp : (wf_and_partial_MP), b : (wf_Body(program(mp))),
            sMP1, sMP2 : MPState, v : Val, n : nat) :
       contains_no_method_call(b) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
-      derive(complete_MP(mp))(b, sMP1, v, sMP2)(n) IMPLIES
-        derive(mp)(b, sMP1, v, sMP2)(n)
+      (derive(complete_MP(mp))(b, sMP1, v, sMP2)(n) IFF
+         derive(mp)(b, sMP1, v, sMP2)(n))
 
   contains_no_method_call_preserved_by_complete_MP : LEMMA % :-)
      FORALL(mp : (wf_and_partial_MP)) :
@@ -39,35 +61,19 @@ ENDASSUMING
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
         wf_set_stmts(complete_MP(mp))
 
-  unit : (LAMBDA(cp : CP) : NOT cp = halted)
+  full_complete_MP_characterisation : LEMMA % :-)
+    FORALL(p : Program) :
+      full_complete_MP(p) = complete_MP(full_partial_MP(p))
 
-  full_partial_MP(p : Program) : (wf_and_partial_MP) =
-    (# mva := empty(unit),
-       program := p #)
+  legal_Program_preserved_by_complete_MP : LEMMA
+    FORALL(mp : (wf_and_partial_MP)) :
+      legal_Program_partial_MP(mp) IMPLIES
+        legal_Program_complete_MP(complete_MP(mp))
 
-  full_total_MP(p : Program) : (wf_and_complete_MP) =
-    complete_MP(full_partial_MP(p))
-
-%  IMPORTING LegalProgramRestriction[Name, MonitoredProgram, MPState,
-%                             LAMBDA(mp : MonitoredProgram) : program(mp),
-%                             LAMBDA(s : MPState) : pstate(s),
-%                             lookup, update_PState, execute_set,
-%                             execute_assert, execute_CaseJML, 
-%                             on_method_entry_MP, on_method_exit_normal_MP,
-%                             on_method_exit_exceptional_MP, full_partial_MP]
-
-%  IMPORTING LegalProgramRestriction[Name, MonitoredProgram, MPState,
-%                             LAMBDA(mp : MonitoredProgram) : program(mp),
-%                             LAMBDA(s : MPState) : pstate(s),
-%                             lookup, update_PState, execute_set,
-%                             execute_assert, execute_CaseJML, 
-%                             on_method_entry_MP, on_method_exit_normal_MP,
-%                             on_method_exit_exceptional_MP, full_total_MP]
-
-%  legal_Program_preserved_by_complete_MP : LEMMA
-%    FORALL(mp : (wf_and_partial_MP)) :
-%      legal_Program(program(mp)) IMPLIES
-%        legal_Program(program(complete_MP(mp)))
+  well_behaved_MVA_preserved_by_complete_MP : LEMMA
+    FORALL(mp : (wf_and_partial_MP)) :
+      well_behaved_MVA(mp) IMPLIES
+        well_behaved_MVA(complete_MP(mp))
 
 END CompleteMonitorProgramPropertiesPreservation
 
@@ -90,6 +96,7 @@ BEGIN
       EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) : 
         FORALL(mp : (wf_and_complete_MP)) : 
           injective?(f(mp))
+
     IMPORTING MVA[CP, Name]
 
     CP_not_only_halted : ASSUMPTION
@@ -98,7 +105,26 @@ BEGIN
 
   ENDASSUMING
 
-  IMPORTING Equivalence[CP, Name]
+  IMPORTING Equivalence[CP, Name],
+            ContainsNoMethodCall[Name],
+            WfSetStmts[Name, Program, APState, id, 
+                             LAMBDA(s : APState) : pstate(s), lookup,
+                             update_PState, execute_set, execute_assert,
+                             execute_CaseJML, on_method_entry,
+                             on_method_exit_normal, 
+                             on_method_exit_exceptional],
+            WfSetStmts[Name, MonitoredProgram, MPState,
+                             LAMBDA(mp : MonitoredProgram) : program(mp),
+                             LAMBDA(s : MPState) : pstate(s),
+                             lookup, update_PState, execute_set,
+                             execute_assert, execute_CaseJML, 
+                             on_method_entry_MP, on_method_exit_normal_MP,
+                             on_method_exit_exceptional_MP],
+            CompleteMonitorProgramPropertiesPreservation[CP, Name],
+            LegalCompleteMonitoredProgramRestriction[CP, Name],
+            LegalAnnotatedProgramRestriction[Name],
+            WellBehavedMVA[CP, Name]
+
 
   make_MPState(mp : (wf_and_complete_MP))(s : APState) : MPState =
     (# astate := initial_MVA_state(mva(mp)),
@@ -106,10 +132,14 @@ BEGIN
        pstate := pstate(s),
        gvs := gvs(s) #)
 
+  make_APState(s : MPState) : APState =
+    (# pstate := pstate(s), gvs := gvs(s) #)
+  
+  make_APState_MPState_inverse : LEMMA % :-)
+    FORALL(s : APState, mp : (wf_and_complete_MP)) :
+      make_APState(make_MPState(mp)(s)) = s
 
-  IMPORTING ContainsNoMethodCall[Name]
-
-  derive_equivalence : LEMMA % :-)
+  derive_equivalence_if : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP), b : (wf_Body(program(mp))),
            sAP1, sAP2 : APState, v : Val, n : nat) :
       contains_no_method_call(b) IMPLIES
@@ -117,6 +147,13 @@ BEGIN
       derive(ann_program(mp))(b, sAP1, v, sAP2)(n) IMPLIES
         derive(mp)(b, make_MPState(mp)(sAP1), v, make_MPState(mp)(sAP2))(n)
 
+  derive_equivalence_only_if : LEMMA % :-)
+    FORALL(mp : (wf_and_complete_MP), b : (wf_Body(program(mp))),
+           sMP1, sMP2 : MPState, v : Val, n : nat) :
+      contains_no_method_call(b) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+      derive(mp)(b, sMP1, v, sMP2)(n) IMPLIES
+       derive(ann_program(mp))(b, make_APState(sMP1), v, make_APState(sMP2))(n) 
   ann_actions_contains_no_method_calls : LEMMA % :-)
     FORALL(l : Action) :
       (FORALL (oa : OneAction) : 
@@ -130,19 +167,10 @@ BEGIN
       contains_no_method_call_in_sets_in_program(ann_program(mp))
 
 
-  IMPORTING WfSetStmts[Name, Program, APState, id, 
-                             LAMBDA(s : APState) : pstate(s), lookup,
-                             update_PState, execute_set, execute_assert,
-                             execute_CaseJML, on_method_entry,
-                             on_method_exit_normal, 
-                             on_method_exit_exceptional],
-            WfSetStmts[Name, MonitoredProgram, MPState,
-                             LAMBDA(mp : MonitoredProgram) : program(mp),
-                             LAMBDA(s : MPState) : pstate(s),
-                             lookup, update_PState, execute_set,
-                             execute_assert, execute_CaseJML, 
-                             on_method_entry_MP, on_method_exit_normal_MP,
-                             on_method_exit_exceptional_MP]
+  well_behaved_MVA_appropriate_for_annot_gen : LEMMA
+    FORALL(mp : (wf_and_complete_MP)) :
+    well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp)
 
   IMPORTING AnnEventPreservesMPModeled[CP, Name]
 
@@ -153,32 +181,11 @@ BEGIN
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
       wf_set_stmts(ann_program(mp))
 
-  IMPORTING CompleteMonitorProgramPropertiesPreservation[CP, Name]
-
-  IMPORTING LegalProgramRestriction[Name, Program, APState, id,
-                      LAMBDA (s : APState) : pstate(s),
-                      lookup,
-                      update_PState,
-                      execute_set,
-                      execute_assert,
-                      execute_CaseJML,
-                      on_method_entry,
-                      on_method_exit_normal,
-                      on_method_exit_exceptional, id],
-            LegalProgramRestriction[Name, MonitoredProgram, MPState,
-                             LAMBDA(mp : MonitoredProgram) : program(mp),
-                             LAMBDA(s : MPState) : pstate(s),
-                             lookup, update_PState, execute_set,
-                             execute_assert, execute_CaseJML, 
-                             on_method_entry_MP, on_method_exit_normal_MP,
-                             on_method_exit_exceptional_MP, full_total_MP]
-
-
 
   legal_Program_preserved_by_ann_program : LEMMA
     FORALL(mp : (wf_and_complete_MP)) :
-      legal_Program(mp) IMPLIES
-        legal_Program(ann_program(mp))
+      legal_Program_complete_MP(mp) IMPLIES
+        legal_Program_AP(ann_program(mp))
 
 END AnnotateProgramPropertiesPreservation
 
@@ -186,6 +193,23 @@ END AnnotateProgramPropertiesPreservation
 
 InlineAnnotationsPropertiesPreservation[Name : TYPE+] : THEORY
 BEGIN
+
+  ASSUMING
+
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+
+  IMPORTING InlineVariableNames[Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [p : Program -> [Method -> (legal_names(p))]]) :
+        FORALL(p : Program) :
+          injective?(f(p))
+
+
+  ENDASSUMING
 
   IMPORTING InlineProgramAnnotation[Name],
             AnnotatedProgramSemantics[Name],
@@ -195,7 +219,8 @@ BEGIN
                              update_PState, execute_set, execute_assert,
                              execute_CaseJML, on_method_entry,
                              on_method_exit_normal, 
-                             on_method_exit_exceptional]
+                             on_method_exit_exceptional],
+            LegalAnnotatedProgramRestriction[Name]
 
 
   contains_no_method_call_preserved_by_inline_program : LEMMA % :-)
@@ -206,20 +231,9 @@ BEGIN
     FORALL(p : Program) : 
       wf_set_stmts(inline_program(p))
 
-  IMPORTING LegalProgramRestriction[Name, Program, APState, id,
-                      LAMBDA (s : APState) : pstate(s),
-                      lookup,
-                      update_PState,
-                      execute_set,
-                      execute_assert,
-                      execute_CaseJML,
-                      on_method_entry,
-                      on_method_exit_normal,
-                      on_method_exit_exceptional, id]
-
   legal_Program_preserved_by_inline_program : LEMMA
     FORALL(p : Program) :
-      legal_Program(p) IMPLIES
-        legal_Program(inline_program(p))
+      legal_Program_AP(p) IMPLIES
+        legal_Program_AP(inline_program(p))
 
 END InlineAnnotationsPropertiesPreservation

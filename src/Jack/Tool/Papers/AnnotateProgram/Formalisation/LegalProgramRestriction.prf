@@ -1,6 +1,6 @@
 (LegalProgramRestriction
  (legal_Body_TCC1 0
-  (legal_Body_TCC1-1 nil 3405949666 3412919252
+  (legal_Body_TCC1-1 nil 3405949666 3413180264
    ("" (skosimp*)
     (("" (typepred "b1!1")
       (("" (rewrite "program_full_program_inverse") nil nil)) nil))
@@ -22,12 +22,13 @@
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil))
-   525 470 t nil))
+   3423 3340 t nil))
  (legal_Body_TCC2 0
-  (legal_Body_TCC2-1 nil 3405949666 3412919253
+  (legal_Body_TCC2-1 nil 3405949666 3413180267
    ("" (skosimp*)
     (("" (typepred "b1!1")
       (("" (lemma "wf_Body_preserved_by_proper_subterm")
@@ -66,6 +67,7 @@
     (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Body type-decl nil Body_adt nil)
     (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
@@ -79,9 +81,9 @@
     (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil))
-   694 640 t nil))
+   3605 3500 t nil))
  (legal_Body_TCC3 0
-  (legal_Body_TCC3-2 nil 3405949769 3412919254
+  (legal_Body_TCC3-2 nil 3405949769 3413180271
    (";;; Proof legal_Body_TCC2-1 for formula LegalProgramRestriction.legal_Body_TCC2"
     (skosimp*)
     ((";;; Proof legal_Body_TCC2-1 for formula LegalProgramRestriction.legal_Body_TCC2"
@@ -101,11 +103,11 @@
                   ((";;; Proof legal_Body_TCC2-1 for formula LegalProgramRestriction.legal_Body_TCC2"
                     (propax) nil))))))))))))))))
     ";;; developed with shostak decision procedures")
-   proved nil 517 450 nil nil)
+   proved nil 3369 3250 nil nil)
   (legal_Body_TCC3-1 nil 3405949666 nil ("" (subtype-tcc) nil nil) nil
    nil nil nil nil nil))
  (legal_Body_TCC4 0
-  (legal_Body_TCC4-1 nil 3412658016 3412919413
+  (legal_Body_TCC4-1 nil 3412658016 3413180275
    ("" (skosimp*)
     (("" (rewrite "program_full_program_inverse")
       ((""
@@ -133,29 +135,30 @@
     (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (<< adt-def-decl "(well_founded?[Body])" Body_adt nil)
-    (catch adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
-    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (OR const-decl "[bool, bool -> bool]" booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Body type-decl nil Body_adt nil)
     (wf_Body_preserved_by_proper_subterm formula-decl nil
-     WellFormedProgram nil))
-   99090 1180 t nil))
+     WellFormedProgram nil)
+    (Body type-decl nil Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (catch adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil))
+   3786 3700 t nil))
  (legal_Body_preserved_by_proper_subterm 0
-  (legal_Body_preserved_by_proper_subterm-1 nil 3405950300 3412919258
+  (legal_Body_preserved_by_proper_subterm-1 nil 3405950300 3413180278
    ("" (skosimp*)
     (("" (expand "legal_Body")
       (("" (skosimp*)
@@ -208,5 +211,536 @@
     (subterm_transitive formula-decl nil ProgramFunctions nil)
     (proper_subterm_implies_subterm formula-decl nil ProgramFunctions
      nil))
-   677 620 t shostak)))
+   3503 3380 t shostak)))
+(LegalPartialMonitoredProgramRestriction
+ (IMP_EmptyMVA_TCC1 0
+  (IMP_EmptyMVA_TCC1-1 nil 3413192134 3413192414
+   ("" (use "CP_not_only_halted") nil nil) proved
+   ((CP_not_only_halted formula-decl nil
+     LegalPartialMonitoredProgramRestriction nil))
+   6183 330 t nil))
+ (full_partial_MP_TCC1 0
+  (full_partial_MP_TCC1-1 nil 3413110778 3413192157
+   ("" (skosimp*)
+    (("" (typepred "classes(p!1)")
+      (("" (expand "nonempty?")
+        (("" (assert)
+          (("" (expand "empty?")
+            (("" (skosimp*)
+              (("" (inst?)
+                (("" (assert)
+                  (("" (expand "member") (("" (propax) nil nil)) nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((empty? const-decl "bool" sets nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil
+     LegalPartialMonitoredProgramRestriction nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (member const-decl "bool" sets nil)
+    (nonempty? const-decl "bool" sets nil))
+   546 520 t nil))
+ (full_partial_MP_TCC2 0
+  (full_partial_MP_TCC2-1 nil 3413110778 3413192157
+   ("" (skosimp*)
+    (("" (expand "good_for_monitoring")
+      (("" (flatten)
+        (("" (hide 2)
+          (("" (expand "partial")
+            (("" (expand "empty")
+              (("" (expand "extend")
+                (("" (expand "deterministic")
+                  (("" (expand "emptyset") (("" (propax) nil nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((good_for_monitoring const-decl "boolean" MonitoredProgram nil)
+    (empty const-decl "(wf_MVA)" EmptyMVA nil)
+    (deterministic const-decl "boolean" MVAProperties nil)
+    (emptyset const-decl "set" sets nil)
+    (extend const-decl "R" extend nil)
+    (partial const-decl "boolean" MVAProperties nil))
+   411 410 t nil))
+ (full_partial_MP_TCC3 0
+  (full_partial_MP_TCC3-1 nil 3413116178 3413192439
+   ("" (skosimp*)
+    ((""
+      (typepred "(empty[CP, Name]
+                
+                 (name
+                    (choose[Class[Name]]
+                         ({c: Class[Name] | classes(p!1)(c)}))))")
+      (("1" (expand "wf_and_partial_MP")
+        (("1" (expand "wf_MP")
+          (("1" (hide -1)
+            (("1" (expand "compatible")
+              (("1" (expand "MVA_aut_vars_are_not_prog_vars")
+                (("1" (expand "MVA_prog_vars_are_fields")
+                  (("1" (expand "MVA_events_correspond_to_methods")
+                    (("1" (expand "partial")
+                      (("1" (expand "deterministic")
+                        (("1" (auto-rewrite "emptyset")
+                          (("1" (expand "empty")
+                            (("1" (assert)
+                              (("1"
+                                (expand "extend")
+                                (("1"
+                                  (typepred "classes(p!1)")
+                                  (("1"
+                                    (inst?)
+                                    (("1" (assert) nil nil)
+                                     ("2"
+                                      (expand "nonempty?")
+                                      (("2"
+                                        (expand* "empty?" "member")
+                                        nil
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil)
+       ("2" (typepred "classes(p!1)")
+        (("2" (expand* "nonempty?" "empty?" "member") nil nil)) nil))
+      nil))
+    nil)
+   proved
+   ((Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (choose const-decl "(p)" sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (set type-eq-decl nil sets nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (empty const-decl "(wf_MVA)" EmptyMVA nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (CP formal-nonempty-type-decl nil
+     LegalPartialMonitoredProgramRestriction nil)
+    (Name formal-nonempty-type-decl nil
+     LegalPartialMonitoredProgramRestriction nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MVA_prog_vars_are_fields const-decl "boolean" MonitoredProgram
+     nil)
+    (partial const-decl "boolean" MVAProperties nil)
+    (emptyset const-decl "set" sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (empty? const-decl "bool" sets nil)
+    (member const-decl "bool" sets nil)
+    (p!1 skolem-const-decl "Program[Name]"
+     LegalPartialMonitoredProgramRestriction nil)
+    (extend const-decl "R" extend nil)
+    (deterministic const-decl "boolean" MVAProperties nil)
+    (MVA_events_correspond_to_methods const-decl "boolean"
+     MonitoredProgram nil)
+    (MVA_aut_vars_are_not_prog_vars const-decl "boolean"
+     MonitoredProgram nil)
+    (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil))
+   18558 940 t nil))
+ (IMP_LegalProgramRestriction_TCC1 0
+  (IMP_LegalProgramRestriction_TCC1-1 nil 3413110778 3413192158
+   ("" (assuming-tcc) nil nil) proved
+   ((choose const-decl "(p)" sets nil)
+    (Name formal-nonempty-type-decl nil
+     LegalPartialMonitoredProgramRestriction nil)
+    (CP formal-nonempty-type-decl nil
+     LegalPartialMonitoredProgramRestriction nil)
+    (empty const-decl "(wf_MVA)" EmptyMVA nil)
+    (full_partial_MP const-decl "(wf_and_partial_MP)"
+     LegalPartialMonitoredProgramRestriction nil))
+   805 760 nil nil)))
+(LegalCompleteMonitoredProgramRestriction
+ (IMP_EmptyMVA_TCC1 0
+  (IMP_EmptyMVA_TCC1-1 nil 3413192155 3413192457
+   ("" (use "CP_not_only_halted") nil nil) proved
+   ((CP_not_only_halted formula-decl nil
+     LegalCompleteMonitoredProgramRestriction nil))
+   2857 320 t nil))
+ (full_complete_MP_TCC1 0
+  (full_complete_MP_TCC1-1 nil 3413112923 3413192159
+   ("" (skosimp*)
+    (("" (typepred "classes(p!1)")
+      (("" (expand* "nonempty?" "empty?" "member") nil nil)) nil))
+    nil)
+   proved
+   ((empty? const-decl "bool" sets nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (member const-decl "bool" sets nil)
+    (nonempty? const-decl "bool" sets nil))
+   358 350 t nil))
+ (full_complete_MP_TCC2 0
+  (full_complete_MP_TCC2-1 nil 3413112923 3413192159
+   ("" (skosimp*)
+    (("" (expand "partial")
+      (("" (auto-rewrite "extend" "emptyset")
+        (("" (expand "empty")
+          (("" (assert)
+            (("" (expand "deterministic") (("" (assert) nil nil)) nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((partial const-decl "boolean" MVAProperties nil)
+    (empty const-decl "(wf_MVA)" EmptyMVA nil)
+    (deterministic const-decl "boolean" MVAProperties nil)
+    (emptyset const-decl "set" sets nil)
+    (extend const-decl "R" extend nil)
+    (nonempty_extend application-judgement "(nonempty?[T])"
+     extend_set_props nil)
+    (finite_extend application-judgement "finite_set[T]"
+     extend_set_props nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil))
+   454 420 t nil))
+ (full_complete_MP_TCC3 0
+  (full_complete_MP_TCC3-1 nil 3413112923 3413192160
+   ("" (subtype-tcc) nil nil) proved
+   ((Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (extend const-decl "R" extend nil)
+    (singleton const-decl "(singleton?)" sets nil)
+    (nonempty_extend application-judgement "(nonempty?[T])"
+     extend_set_props nil)
+    (finite_extend application-judgement "finite_set[T]"
+     extend_set_props nil)
+    (nonempty_singleton_finite application-judgement
+     "non_empty_finite_set" finite_sets nil)
+    (choose const-decl "(p)" sets nil)
+    (Name formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (CP formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (empty const-decl "(wf_MVA)" EmptyMVA nil)
+    (emptyset const-decl "set" sets nil)
+    (skip const-decl "Action" MVA nil)
+    (complete_trans const-decl "finite_set[Transition]" MVACompletion
+     nil)
+    (complete_MVA const-decl "MVA" MVACompletion nil)
+    (member const-decl "bool" sets nil)
+    (add const-decl "(nonempty?)" sets nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (reserved_words const-decl "finite_set[Name]" Program nil)
+    (intersection const-decl "set" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil)
+    (wf_vdsA const-decl "boolean" WellFormedMVA nil)
+    (wf_vdsP const-decl "boolean" WellFormedMVA nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (union const-decl "set" sets nil)
+    (wf_Guard const-decl "boolean" WellFormedMVA nil)
+    (var_names const-decl "finite_set[Name]" MVA nil)
+    (subset? const-decl "bool" sets nil)
+    (wf_Body const-decl "boolean" WellFormedMVA nil)
+    (wf_Expr const-decl "boolean" WellFormedMVA nil)
+    (wf_Action const-decl "boolean" WellFormedMVA nil)
+    (wf_Trans const-decl "boolean" WellFormedMVA nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (finite_intersection1 application-judgement "finite_set"
+     finite_sets nil))
+   810 770 nil nil))
+ (full_complete_MP_TCC4 0
+  (full_complete_MP_TCC4-1 nil 3413112923 3413192161
+   ("" (skosimp*)
+    (("" (use "full_complete_MP_TCC3")
+      (("" (assert)
+        (("" (hide -1)
+          (("" (expand "good_for_monitoring")
+            (("" (flatten)
+              (("" (use "complete_MVA_is_complete")
+                (("" (typepred "classes(p!1)")
+                  (("" (expand* "nonempty?" "empty?" "member") nil
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((full_complete_MP_TCC3 subtype-tcc nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (empty? const-decl "bool" sets nil)
+    (member const-decl "bool" sets nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (partial const-decl "boolean" MVAProperties nil)
+    (empty const-decl "(wf_MVA)" EmptyMVA nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (nonempty? const-decl "bool" sets nil)
+    (choose const-decl "(p)" sets nil)
+    (p!1 skolem-const-decl "Program[Name]"
+     LegalCompleteMonitoredProgramRestriction nil)
+    (complete_MVA_is_complete formula-decl nil MVACompletion nil)
+    (CP formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (good_for_monitoring const-decl "boolean" MonitoredProgram nil))
+   768 720 t nil))
+ (full_complete_MP_TCC5 0
+  (full_complete_MP_TCC5-1 nil 3413116463 3413192162
+   ("" (skosimp*)
+    (("" (use "full_complete_MP_TCC3")
+      (("" (use "complete_MVA_is_complete")
+        (("1" (expand "wf_and_complete_MP")
+          (("1" (expand "wf_MP")
+            (("1" (assert)
+              (("1" (hide -1 -2)
+                (("1" (expand "compatible")
+                  (("1" (expand "MVA_aut_vars_are_not_prog_vars")
+                    (("1" (expand "MVA_prog_vars_are_fields")
+                      (("1" (expand "MVA_events_correspond_to_methods")
+                        (("1" (auto-rewrite "extend" "emptyset")
+                          (("1" (expand "empty")
+                            (("1" (expand "complete_MVA")
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (inst?)
+                                  (("1" (assert) nil nil)
+                                   ("2"
+                                    (typepred "classes(p!1)")
+                                    (("2"
+                                      (expand*
+                                       "nonempty?"
+                                       "empty?"
+                                       "member")
+                                      nil
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil)
+         ("2" (typepred "classes(p!1)")
+          (("2" (expand* "nonempty?" "empty?" "member") nil nil)) nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((full_complete_MP_TCC3 subtype-tcc nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (LocalVarDecl type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MVA_prog_vars_are_fields const-decl "boolean" MonitoredProgram
+     nil)
+    (complete_MVA const-decl "MVA" MVACompletion nil)
+    (member const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (emptyset const-decl "set" sets nil)
+    (MVA_events_correspond_to_methods const-decl "boolean"
+     MonitoredProgram nil)
+    (MVA_aut_vars_are_not_prog_vars const-decl "boolean"
+     MonitoredProgram nil)
+    (wf_MP const-decl "boolean" MonitoredProgram nil)
+    (p!1 skolem-const-decl "Program[Name]"
+     LegalCompleteMonitoredProgramRestriction nil)
+    (nonempty? const-decl "bool" sets nil)
+    (set type-eq-decl nil sets nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (partial const-decl "boolean" MVAProperties nil)
+    (empty const-decl "(wf_MVA)" EmptyMVA nil)
+    (choose const-decl "(p)" sets nil)
+    (complete_MVA_is_complete formula-decl nil MVACompletion nil)
+    (CP formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil))
+   1190 1150 t nil))
+ (IMP_LegalProgramRestriction_TCC1 0
+  (IMP_LegalProgramRestriction_TCC1-1 nil 3413112923 3413192163
+   ("" (assuming-tcc) nil nil) proved
+   ((choose const-decl "(p)" sets nil)
+    (Name formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (CP formal-nonempty-type-decl nil
+     LegalCompleteMonitoredProgramRestriction nil)
+    (empty const-decl "(wf_MVA)" EmptyMVA nil)
+    (emptyset const-decl "set" sets nil)
+    (skip const-decl "Action" MVA nil)
+    (complete_trans const-decl "finite_set[Transition]" MVACompletion
+     nil)
+    (complete_MVA const-decl "MVA" MVACompletion nil)
+    (full_complete_MP const-decl "(wf_and_complete_MP)"
+     LegalCompleteMonitoredProgramRestriction nil))
+   911 850 nil nil)))
+(LegalAnnotatedProgramRestriction
+ (IMP_LegalProgramRestriction_TCC1 0
+  (IMP_LegalProgramRestriction_TCC1-1 nil 3413110940 3413180260
+   ("" (assuming-tcc) nil nil) proved
+   ((id const-decl "(bijective?[T, T])" identity nil)) 3363 3260 nil
+   nil)))
 

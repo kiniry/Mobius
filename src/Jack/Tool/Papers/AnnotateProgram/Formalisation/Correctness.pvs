@@ -33,7 +33,7 @@ BEGIN
   ann_action_preserves_MP_modeled : LEMMA % :-)
     FORALL (t : Transition, a : Action, n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       wf_state(mp)(sMP1) IMPLIES
       wf_state(ann_program(mp))(sAP1) IMPLIES
       MP_modeled?(mp)(sMP1, sAP1) IMPLIES
@@ -59,7 +59,7 @@ BEGIN
   update_vars_preserves_MP_modeled : LEMMA % :-)
     FORALL (t : Transition, n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       ts(mva(mp))(t) IMPLIES
       sMP2 = (# astate := (# cp := tcp(t),
@@ -81,7 +81,7 @@ BEGIN
   ann_event_preserves_MP_modeled : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp))), et : EventType,  n : nat)
            (v : ValOrExcpt, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       methods(get_monitored_class(mp))(m) IMPLIES
       sMP2 = on_method_MVA(et)(mp, m)(v)(sMP1) IMPLIES
@@ -95,7 +95,7 @@ BEGIN
   ann_event_does_not_throw_exception : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp))), et : EventType,  v : Val, n : nat)
            (arg : ValOrExcpt, sAP1, sAP2 : APState) :
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       derive(ann_program(mp))
             (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(arg),
@@ -129,16 +129,7 @@ BEGIN
 
 
   IMPORTING AnnEventPreservesMPModeled[CP, Name],
-            LegalProgramRestriction[Name, Program, APState, id,
-                      LAMBDA (s : APState) : pstate(s),
-                      lookup,
-                      update_PState,
-                      execute_set,
-                      execute_assert,
-                      execute_CaseJML,
-                      on_method_entry,
-                      on_method_exit_normal,
-                      on_method_exit_exceptional, id],
+            LegalAnnotatedProgramRestriction[Name],
             WfSetStmts[Name, MonitoredProgram, MPState, 
                       LAMBDA (mp : MonitoredProgram) : program(mp),
                       LAMBDA(s : MPState) : pstate(s),
@@ -159,7 +150,7 @@ BEGIN
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            v : ValOrExcpt, 
            m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT cp(astate(sMP1)) = halted IMPLIES
@@ -243,7 +234,7 @@ BEGIN
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            v : ValOrExcpt, m1, m2 : nat,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT cp(astate(sMP1)) = halted IMPLIES
@@ -329,7 +320,7 @@ BEGIN
     FORALL(mn : Name, md : (wf_Method(program(mp))), 
            a : (defined?), m1, m2 : nat, v : ValOrExcpt,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT cp(astate(sMP1)) = halted IMPLIES
@@ -505,7 +496,7 @@ BEGIN
                 legal_Body(ann_program(mp))(b) IMPLIES
                  related_states(mp)(sMP2, sAP2) AND
                   (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2))) IMPLIES
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       x`2 = 1 + m12 + m22 + m32 + m42 + m52 + m62 IMPLIES
@@ -623,7 +614,7 @@ BEGIN
     FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n1, n2 : nat) :
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
@@ -637,7 +628,7 @@ BEGIN
   correctness_of_ann_program : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))
            (sMP : MPState, sAP : APState) :
-      well_behaved_MVA(mp) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
       run_monitored_program(mp)(main, arg)(root_object)(sMP) IMPLIES
       run_annotated_program(ann_program(mp))

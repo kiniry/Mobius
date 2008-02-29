@@ -566,7 +566,7 @@ ENDASSUMING
       contains_no_method_call(b) IMPLIES
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       lookup(x, pstate(sigma1)) = lookup(x, pstate(sigma2))
-     
+
 END SemanticsProofs
 
 

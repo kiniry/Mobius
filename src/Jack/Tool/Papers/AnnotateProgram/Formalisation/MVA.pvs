@@ -169,17 +169,6 @@ BEGIN
     disjoint?(var_names(vdsA(a)), var_names(vdsP(a))) AND
     FORALL (t : Transition) : wf_Trans(a)(t)
 
-  empty(cp : (LAMBDA(cp : CP) : NOT cp = halted)) : (wf_MVA) =
-   (# name := choose({n : Name | TRUE}),
-       class_name := choose({n : Name | TRUE}),
-       cps := singleton(cp),
-       init_cp := cp,
-       evs := emptyset[Event],
-       vdsA := emptyset[MVAVarDecl],
-       vdsP := emptyset[ProgVarDecl],
-       ts := emptyset[Transition]
-   #)
-
 
 END WellFormedMVA
 
@@ -596,3 +585,33 @@ BEGIN
 
 
 END MVACompletion
+
+
+EmptyMVA[CP, Name : TYPE+] : THEORY
+BEGIN
+
+ASSUMING 
+
+    IMPORTING MVA[CP, Name]
+
+    CP_not_only_halted : ASSUMPTION
+      EXISTS(cp : CP) : NOT cp = halted
+
+ENDASSUMING
+
+  unit : (LAMBDA(cp : CP) : NOT cp = halted)
+
+  IMPORTING WellFormedMVA[CP, Name]
+
+  empty(cln : Name) : (wf_MVA) =
+   (# name := choose({n : Name | TRUE}),
+       class_name := cln,
+       cps := singleton(unit),
+       init_cp := unit,
+       evs := emptyset[Event],
+       vdsA := emptyset[MVAVarDecl],
+       vdsP := emptyset[ProgVarDecl],
+       ts := emptyset[Transition]
+   #)
+
+END EmptyMVA

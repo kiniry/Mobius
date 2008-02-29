@@ -127,7 +127,7 @@ BEGIN
                     fields : finite_set[FieldDecl],
                     methods : finite_set[Method] #]
 
-  PreProgram : TYPE = [# classes : finite_set[Class] #]
+  PreProgram : TYPE = [# classes : non_empty_finite_set[Class] #]
 
 
 END Program

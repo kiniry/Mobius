@@ -461,7 +461,6 @@ BEGIN
        NOT stuck(sigma1) IMPLIES
        NOT stuck(sigma2)
 
-
 END MonitoredProgramSemantics
 
 

@@ -102,7 +102,7 @@ BEGIN
           derive(ann_program(mp))(source(oa), s1, v, s2)(n) IMPLIES
             s1 = s2
 
-  well_behaved_MVA(mp) : boolean =
+  well_behaved_MVA_for_annot_gen(mp) : boolean =
     guard_to_expression_behavior(mp) AND
     eval_action_behavior(mp) AND
     actions_have_no_side_effects(mp)

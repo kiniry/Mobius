@@ -63,3 +63,98 @@ BEGIN
     program_pred(p)(legal_Body)
 
 END LegalProgramRestriction
+
+
+LegalPartialMonitoredProgramRestriction[CP, Name : TYPE+] : THEORY
+BEGIN
+
+ASSUMING 
+
+    IMPORTING MVA[CP, Name]
+
+    CP_not_only_halted : ASSUMPTION
+      EXISTS(cp : CP) : NOT cp = halted
+
+ENDASSUMING
+
+  IMPORTING MonitoredProgramSemantics[CP, Name],
+            EmptyMVA[CP, Name]
+
+  full_partial_MP(p : Program) : (wf_and_partial_MP) =
+    (# mva := empty(name(choose({c : Class |classes(p)(c)}))),
+       program := p #)
+
+  IMPORTING LegalProgramRestriction[Name, MonitoredProgram, MPState,
+                             LAMBDA(mp : MonitoredProgram) : program(mp),
+                             LAMBDA(s : MPState) : pstate(s),
+                             lookup, update_PState, execute_set,
+                             execute_assert, execute_CaseJML, 
+                             on_method_entry_MP, on_method_exit_normal_MP,
+                             on_method_exit_exceptional_MP, full_partial_MP]
+
+  legal_Program_partial_MP(mp : (wf_and_partial_MP)) : boolean =
+    legal_Program(program(mp))
+
+
+END LegalPartialMonitoredProgramRestriction
+
+
+LegalCompleteMonitoredProgramRestriction[CP, Name : TYPE+] : THEORY
+BEGIN
+
+ASSUMING 
+
+    IMPORTING MVA[CP, Name]
+
+    CP_not_only_halted : ASSUMPTION
+      EXISTS(cp : CP) : NOT cp = halted
+
+ENDASSUMING
+
+
+  IMPORTING MonitoredProgramSemantics[CP, Name],
+            MVACompletion[CP, Name],
+            EmptyMVA[CP, Name]
+
+  full_complete_MP(p : Program) : (wf_and_complete_MP) =
+    (# mva := complete_MVA(empty(name(choose({c : Class |classes(p)(c)})))),
+       program := p #)
+
+  IMPORTING LegalProgramRestriction[Name, MonitoredProgram, MPState,
+                             LAMBDA(mp : MonitoredProgram) : program(mp),
+                             LAMBDA(s : MPState) : pstate(s),
+                             lookup, update_PState, execute_set,
+                             execute_assert, execute_CaseJML, 
+                             on_method_entry_MP, on_method_exit_normal_MP,
+                             on_method_exit_exceptional_MP, full_complete_MP]
+
+  legal_Program_complete_MP(mp : (wf_and_complete_MP)) : boolean =
+    legal_Program(program(mp))
+
+
+END LegalCompleteMonitoredProgramRestriction
+
+
+LegalAnnotatedProgramRestriction[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING AnnotatedProgramSemantics[Name],
+            LegalProgramRestriction[Name, Program, APState, id,
+                      LAMBDA (s : APState) : pstate(s),
+                      lookup,
+                      update_PState,
+                      execute_set,
+                      execute_assert,
+                      execute_CaseJML,
+                      on_method_entry,
+                      on_method_exit_normal,
+                      on_method_exit_exceptional, id]
+
+
+  legal_Program_AP(p : Program) : boolean =
+    legal_Program(p)
+
+
+END LegalAnnotatedProgramRestriction
+
+
