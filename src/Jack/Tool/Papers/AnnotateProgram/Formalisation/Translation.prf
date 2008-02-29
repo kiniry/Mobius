@@ -1,0 +1,152 @@
+(Translation
+ (IMP_VariableNames_TCC1 0
+  (IMP_VariableNames_TCC1-1 nil 3413198112 3413198820
+   ("" (use "infinite_namespace") nil nil) proved
+   ((infinite_namespace formula-decl nil Translation nil)) 2945 2860 t
+   nil))
+ (IMP_CompleteMonitorProgramPropertiesPreservation_TCC1 0
+  (IMP_CompleteMonitorProgramPropertiesPreservation_TCC1-1 nil
+   3413198112 3413198823 ("" (use "CP_not_only_halted") nil nil) proved
+   ((CP_not_only_halted formula-decl nil Translation nil)) 2901 2840 t
+   nil))
+ (IMP_AnnotateProgramPropertiesPreservation_TCC1 0
+  (IMP_AnnotateProgramPropertiesPreservation_TCC1-1 nil 3413198112
+   3413198826 ("" (use "CP_is_enumerable") nil nil) proved
+   ((CP_is_enumerable formula-decl nil Translation nil)) 2871 2830 t
+   nil))
+ (IMP_AnnotateProgramPropertiesPreservation_TCC2 0
+  (IMP_AnnotateProgramPropertiesPreservation_TCC2-1 nil 3413198112
+   3413198829 ("" (use "name_of_exists_annot_gen") nil nil) proved
+   ((name_of_exists_annot_gen formula-decl nil Translation nil)) 2955
+   2840 t nil))
+ (IMP_InlineAnnotationsPropertiesPreservation_TCC1 0
+  (IMP_InlineAnnotationsPropertiesPreservation_TCC1-1 nil 3413198112
+   3413198832 ("" (use "name_of_exists_inline") nil nil) proved
+   ((name_of_exists_inline formula-decl nil Translation nil)) 2930 2840
+   t nil))
+ (main_TCC1 0
+  (main_TCC1-1 nil 3413198112 3413198835
+   ("" (skosimp*)
+    (("" (typepred "mp!1")
+      (("" (expand "wf_and_partial_MP") (("" (flatten) nil nil)) nil))
+      nil))
+    nil)
+   proved
+   ((wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (good_for_monitoring const-decl "boolean" MonitoredProgram nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (ProgVarDecl type-eq-decl nil MVA nil)
+    (MVAVarDecl type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (CP formal-nonempty-type-decl nil Translation nil)
+    (Name formal-nonempty-type-decl nil Translation nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil))
+   2868 2830 t nil))
+ (main 0
+  (main-1 nil 3413200060 3413203506
+   ("" (skosimp*)
+    ((""
+      (case "EXISTS (s2 : MPState) : run_monitored_program(complete_MP(mp!1))(main!1, arg!1)
+                                    (root_object!1)(s2)")
+      (("1" (skosimp*)
+        (("1" (use "correctness_of_complete_MP")
+          (("1" (assert)
+            (("1"
+              (case "EXISTS (s : APState) : run_annotated_program(ann_program(complete_MP(mp!1)))(main!1, arg!1)(root_object!1)(s)")
+              (("1" (skosimp*)
+                (("1" (use "correctness_of_ann_program")
+                  (("1" (assert)
+                    (("1" (split -1)
+                      (("1" (expand "translate")
+                        (("1" (use "correctness_of_inline_program")
+                          (("1" (assert)
+                            (("1"
+                              (inst 1
+                               "LAMBDA(s1 : MPState, s2 : APState) : EXISTS (s3 : MPState, s4 : APState) : monitor_related_states(mp!1)(s1, s3) AND related_states(complete_MP(mp!1))(s3, s4) AND inline_related_states(ann_program(complete_MP(mp!1)))(s4, s2)")
+                              (("1"
+                                (inst?)
+                                (("1" (assert) nil nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2"
+                            (use "contains_no_method_call_preserved_by_ann_program")
+                            (("2"
+                              (use "contains_no_method_call_preserved_by_complete_MP")
+                              (("2"
+                                (assert)
+                                (("2"
+                                  (use
+                                   "wf_set_stmts_preserved_by_ann_program")
+                                  (("2"
+                                    (use
+                                     "wf_set_stmts_preserved_by_complete_MP")
+                                    (("2"
+                                      (assert)
+                                      (("2"
+                                        (use
+                                         "well_behaved_MVA_preserved_by_complete_MP")
+                                        (("2" (assert) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil)
+                       ("2"
+                        (use "legal_Program_preserved_by_ann_program")
+                        (("2" (assert)
+                          (("2"
+                            (use "legal_Program_preserved_by_complete_MP")
+                            (("2" (assert)
+                              (("2"
+                                (expand "legal_Program_AP")
+                                (("2" (propax) nil nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil)
+                       ("3"
+                        (use "well_behaved_MVA_appropriate_for_annot_gen")
+                        (("3"
+                          (use "well_behaved_MVA_preserved_by_complete_MP")
+                          (("3" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (use "wf_set_stmts_preserved_by_complete_MP")
+                    (("2" (assert) nil nil)) nil))
+                  nil))
+                nil)
+               ("2"
+                (expand* "run_annotated_program" "run_FullProgram"
+                 "derives")
+                (("2" (hide-all-but 1) (("2" (postpone) nil nil)) nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil)
+       ("2" (postpone) nil nil))
+      nil))
+    nil)
+   unfinished nil 413462 32730 t shostak)))
+

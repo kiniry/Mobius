@@ -1,0 +1,52 @@
+WellBehavedMVA [CP, Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING MonitoredProgramSemantics[CP, Name],
+            MVAMonitoring[CP, Name]
+
+  mp : VAR (wf_MP)
+
+  % It is possible to translate every guard of the MVA into an expression that
+  % evaluates to the same result. Note that if the guard holds then evaluation
+  % of the expression can not result in an exception (v would be Bottom).
+  % Furthermore, the evaluation must have no side-effects.
+  guard_to_expression_behavior(mp) : boolean =
+    FORALL (t : Transition, sMP : MPState) :
+      wf_state(mp)(sMP) IMPLIES
+      NOT up?(ex(pstate(sMP))) IMPLIES
+      ts(mva(mp))(t) IMPLIES scp(t) = cp(astate(sMP)) IMPLIES
+        EXISTS (e : [ValOrExcpt -> Expr], v : (Bool?), n : nat) : 
+          guard_to_expression(mva(mp))(guard(t)) = e AND
+          FORALL(arg : ValOrExcpt) :
+          wf_Expr(program(mp))(e(arg)) AND
+          derive(mp)(e(arg), sMP, v, sMP)(n) AND
+          (guard(t)(stA(astate(sMP)), st(pstate(sMP)), arg) = (v = Bool(TRUE)))
+
+  % It is possible to evaluate expressions appearing in actions (they 
+  % terminate) and they are side-effect-free. Note that the evaluation 
+  % of the expresion can not throw an exception (provided it starts in 
+  % a non-exceptional state).
+  eval_action_behavior(mp) : boolean =
+    FORALL (e : Expr, v : Val, sMP : MPState) :
+      wf_Expr(program(mp))(e) IMPLIES
+      wf_state(mp)(sMP) IMPLIES
+      NOT up?(ex(pstate(sMP))) IMPLIES
+        (eval(e)(stA(astate(sMP)), st(pstate(sMP))) = v) =
+        EXISTS (n : nat) : derive(mp)(e, sMP, v, sMP)(n)
+
+  actions_have_no_side_effects(mp) : boolean =
+    FORALL (t : Transition, oa : OneAction) :
+      ts(mva(mp))(t) IMPLIES
+      member(oa, action(t)) IMPLIES
+      wf_Body(program(mp))(source(oa)) IMPLIES
+        FORALL (s1, s2 : MPState, v : Val, n : nat) :
+          wf_state(mp)(s1) IMPLIES
+          derive(mp)(source(oa), s1, v, s2)(n) IMPLIES
+            s1 = s2
+
+  well_behaved_MVA(mp) : boolean =
+    guard_to_expression_behavior(mp) AND
+    eval_action_behavior(mp) AND
+    actions_have_no_side_effects(mp)
+
+END WellBehavedMVA

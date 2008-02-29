@@ -1,0 +1,17 @@
+(WellBehavedMVA
+ (guard_to_expression_behavior_TCC1 0
+  (guard_to_expression_behavior_TCC1-1 nil 3413185312 3413188939
+   ("" (skosimp*) (("" (expand "wf_Expr") (("" (propax) nil nil)) nil))
+    nil)
+   proved ((wf_Expr const-decl "boolean" WellFormedProgram nil)) 78 80
+   t nil))
+ (eval_action_behavior_TCC1 0
+  (eval_action_behavior_TCC1-1 nil 3413185312 3413188989
+   ("" (skosimp*) (("" (expand "wf_Expr") (("" (propax) nil nil)) nil))
+    nil)
+   proved ((wf_Expr const-decl "boolean" WellFormedProgram nil)) 4280
+   70 t nil))
+ (actions_have_no_side_effects_TCC1 0
+  (actions_have_no_side_effects_TCC1-1 nil 3413185312 3413188960
+   ("" (subtype-tcc) nil nil) unfinished nil 16576 16090 nil nil)))
+
