@@ -7,6 +7,7 @@ package ie.ucd.bon.graph;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
@@ -44,8 +45,44 @@ public class Graph<A,B> {
   public final Set<A> getStartingNodes() {
     return edges.keySet();
   }
-  
+
+  /**
+   * Returns one of the shortest cycles containing {@code startNode}
+   * or {@code null} if no such cycle exists. Algorithm: BFS (so
+   * the complexity is O(V+E)).
+   *
+   * NOTE: It is asymptotcally faster to find cycles in one go rather
+   *       than repeatedly calling this function for each node.
+   */
   public final Collection<A> findCycle(A startNode, Converter<B,A> converter) {
+    HashMap<A,A> pred = new HashMap<A,A>();
+    LinkedList<A> todo = new LinkedList<A>(); // should be ArrayDeque in Java 6
+    todo.addLast(startNode);
+    while (!todo.isEmpty()) {
+      A a = todo.removeFirst();
+      Set<B> nbs = edges.get(a);
+      if (nbs == null) continue;
+      Set<A> nas = converter.convert(nbs);
+      for (A na : nas) if (pred.get(na) == null) {
+        if (na.equals(startNode)) {
+          // build and return cycle
+          LinkedList<A> result = new LinkedList<A>();
+          result.addFirst(na); 
+          result.addFirst(a);
+          while (a != startNode) {
+            a = pred.get(a);
+            result.addFirst(a);
+          }
+          return result;
+        }
+        pred.put(na, a);
+        todo.addLast(na);
+      }
+    }
+    return null;
+  }
+  
+/*  public final Collection<A> findCycle(A startNode, Converter<B,A> converter) {
     Stack<A> currentPath = new Stack<A>(); //Stores the path we are currently exploring
     Stack<SortedSet<A>> waitingPaths = new Stack<SortedSet<A>>(); //Stores the alternative choices at each step
     
@@ -116,5 +153,5 @@ public class Graph<A,B> {
     }
     
     return null;
-  }
+  }*/
 }
