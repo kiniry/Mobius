@@ -75,19 +75,19 @@ public abstract class BytecodeControllerContainer extends
    *   i-th entry contains the comment for the i-th line in the document,
    *   if this parameter is null then the array is not taken into account
    *   FIXME: currently ignored
-   * @return 
+   * @return the string with the text of the document combined with the comments
    * @throws UmbraLocationException thrown in case a position has been reached
    *   which is outside the current document
    * @throws UmbraMethodException thrown in case a method number has been
    *   reached which is outside the number of available methods in the document
    */
   public String init(final BytecodeDocument a_doc,
-                   final String[] a_comment_array,
-                   final String[] a_interline)
+                     final String[] a_comment_array,
+                     final String[] a_interline)
     throws UmbraLocationException, UmbraMethodException {
     final InitParser initParser = new InitParser(a_doc, a_comment_array,
                                                  a_interline);
-    String res = initParser.runParsing();
+    final String res = initParser.runParsing();
     my_editor_lines = initParser.getEditorLines();
     my_instructions = initParser.getInstructions();
     initComments(initParser, a_comment_array, a_interline);

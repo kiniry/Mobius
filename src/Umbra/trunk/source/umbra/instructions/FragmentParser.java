@@ -217,7 +217,6 @@ public class FragmentParser extends BytecodeTextParser {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
       if (!(lc instanceof CommentLineController)) {
-        markReadyToConsumeComments();
         break;
       }
       addEditorLine(j, lc);

@@ -248,10 +248,27 @@ public abstract class BytecodeLineController {
     return -1;
   }
 
+  /**
+   * Returns <code>true</code> when a BCEL method representation must be
+   * associated with the current line controller. The default result
+   * is <code>false</code>.
+   *
+   * @return <code>true</code> when a BCEL method representation must be
+   *   associated with the current line controller, otherwise
+   *   <code>false</code>
+   */
   public boolean needsMg() {
     return false;
   }
 
+  /**
+   * Returns <code>true</code> when a BCEL method representation is
+   * associated with the current line controller. The default result
+   * is <code>false</code>.
+   *
+   * @return <code>true</code> when a BCEL method representation is
+   *   associated with the current line controller, otherwise <code>false</code>
+   */
   public boolean hasMg() {
     return false;
   }

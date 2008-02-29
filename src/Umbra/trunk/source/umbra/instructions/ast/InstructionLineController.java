@@ -395,10 +395,29 @@ public abstract class InstructionLineController extends BytecodeLineController {
     return -1;
   }
 
+  /**
+   * Returns <code>true</code> when a BCEL method representation must be
+   * associated with the current line controller. In case of the
+   * {@link InstructionLineController} objects this holds when the current
+   * instruction is correct.
+   *
+   * @return <code>true</code> when a BCEL method representation must be
+   *   associated with the current line controller, otherwise
+   *   <code>false</code>
+   */
   public boolean needsMg() {
     return correct();
   }
 
+  /**
+   * Returns <code>true</code> when a BCEL method representation is
+   * associated with the current line controller. As the instruction line
+   * controllers may be associated with methods, this method returns the
+   * information if the method is actually associated.
+   *
+   * @return <code>true</code> when a BCEL method representation is
+   *   associated with the current line controller, otherwise <code>false</code>
+   */
   public boolean hasMg() {
     return my_methodgen != null;
   }

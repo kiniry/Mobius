@@ -102,6 +102,12 @@ public class BytecodeTextParser {
    */
   private LinkedList my_instructions;
 
+  /**
+   * The combination of the currently parsed text and the information from
+   * the comment structures. The process of parsing results in a combined
+   * version which includes both the original text and the textual
+   * representation of comments.
+   */
   private StringBuffer my_combined_text;
 
   /**
@@ -250,28 +256,46 @@ public class BytecodeTextParser {
   public void addEditorLine(final int a_pos,
                             final BytecodeLineController a_line) {
     int pos_in_combined = getPosOfLine(a_pos);
-    String instr = a_line.getLineContent();
-    insertAfter(pos_in_combined, instr);
+    final String instr = a_line.getLineContent();
+    insertAt(pos_in_combined, instr);
     if (a_line instanceof InstructionLineController &&
         my_current_comment != null) {
-      String comm = "//" + my_current_comment;
+      final String comm = "//" + my_current_comment;
       pos_in_combined += instr.length();
-      insertAfter(pos_in_combined, comm);
+      insertAt(pos_in_combined, comm);
       pos_in_combined += comm.length();
     }
     my_editor_lines.add(a_pos, a_line);
   }
 
-  private void insertAfter(int pos_in_combined, String instr) {
-    if (pos_in_combined == my_combined_text.length())
-      my_combined_text.append(instr);
+  /**
+   * Inserts the given string in the current representation of the combined
+   * text (class+comments) at the indicated position. The first character of
+   * the given string becomes the character at the given position and all the
+   * further characters follow. The characters of the original document
+   * starting at the given position are moved so that they start right after
+   * the inserted text.
+   *
+   * @param a_pos the position to insert the string at
+   * @param a_string the string to insert
+   */
+  private void insertAt(final int a_pos, final String a_string) {
+    if (a_pos == my_combined_text.length())
+      my_combined_text.append(a_string);
     else
-      my_combined_text.insert(pos_in_combined + 1, instr);
+      my_combined_text.insert(a_pos, a_string);
   }
 
-  private int getPosOfLine(int a_pos) {
+  /**
+   * Returns the position of the first character in the line of the given
+   * number.
+   *
+   * @param a_lineno the number of the line to find the position for
+   * @return the position of the first character in the line
+   */
+  private int getPosOfLine(final int a_lineno) {
     int start = -1;
-    for (int i = 0; i < a_pos; i++) {
+    for (int i = 0; i < a_lineno; i++) {
       start = my_combined_text.indexOf("\n", start + 1);
       if (start == -1) {
         return -1;
@@ -310,10 +334,15 @@ public class BytecodeTextParser {
   }
 
   /**
-   * This also handles the comments TODO
-   * @param lc
+   * Adds the given instruction line controller to the collection of the
+   * instruction lines. Additionally, this method handles the adding of the
+   * comments from the currently parsed document to the structures which
+   * represent the comments internally. It is done here as all the
+   * comments are associated with the instruction lines.
+   *
+   * @param a_lc the line controller to add
    */
-  protected void addInstruction(InstructionLineController lc) {
+  protected void addInstruction(final InstructionLineController a_lc) {
     if (my_eolcomment_array != null && my_current_comment == null) {
       my_current_comment = my_eolcomment_array[my_instruction_no];
     }
@@ -323,13 +352,13 @@ public class BytecodeTextParser {
                                      my_interline_array[my_instruction_no]);
     }
     if (my_current_icomment != null) {
-      my_interline_comments.put(lc, my_current_icomment.toString());
+      my_interline_comments.put(a_lc, my_current_icomment.toString());
     }
     my_current_icomment = null;
     if (my_current_comment != null)
-      my_eolcomments.put(lc, my_current_comment);
+      my_eolcomments.put(a_lc, my_current_comment);
     my_current_comment = null;
-    my_instructions.add(lc);
+    my_instructions.add(a_lc);
   }
 
   /**
@@ -475,24 +504,28 @@ public class BytecodeTextParser {
     }
   }
 
-  protected void markReadyToConsumeComments() {
-    // TODO Auto-generated method stub
-    
-  }
-  
+  /**
+   * Clears the current representation of the multi-line comment.
+   */
   protected void clearCurrentComment() {
     my_current_icomment = new StringBuffer("");
   }
-  
-  protected void addToCurrentComment(String line) {
-   my_current_icomment.append(line); 
-  }
-  
-  private void commitCurrentComment() {
-    // TODO Auto-generated method stub
-    
+
+  /**
+   * Appends the given string at the end of the current multi-line comment.
+   *
+   * @param a_line the string to append
+   */
+  protected void addToCurrentComment(final String a_line) {
+    my_current_icomment.append(a_line);
   }
 
+  /**
+   * Returns the current content of the string which contains the text of the
+   * class file combined with the comments.
+   *
+   * @return the class text with comments
+   */
   protected String getNewContent() {
     return my_combined_text.toString();
   }

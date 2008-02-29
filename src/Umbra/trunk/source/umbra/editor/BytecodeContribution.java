@@ -67,6 +67,20 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
+   * TODO.
+   * @return TODO
+   */
+  public static BytecodeContribution newItem() {
+    if (inUse != null) {
+      if (!inUse.my_need_new_flag) {
+        inUse.my_need_new_flag = true;
+        return inUse;
+      }
+    }
+    return new BytecodeContribution();
+  }
+
+  /**
    * This is a listener class that receives all the events that
    * change the content of the current byte code document. This
    * covers all the editing operations.
@@ -223,20 +237,6 @@ public class BytecodeContribution extends ControlContribution {
    */
   public static BytecodeContribution inUse() {
     return inUse;
-  }
-
-  /**
-   * TODO.
-   * @return TODO
-   */
-  public static BytecodeContribution newItem() {
-    if (inUse != null) {
-      if (!inUse.my_need_new_flag) {
-        inUse.my_need_new_flag = true;
-        return inUse;
-      }
-    }
-    return new BytecodeContribution();
   }
 
   /**

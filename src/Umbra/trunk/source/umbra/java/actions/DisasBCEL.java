@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.editors.text.StorageDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;

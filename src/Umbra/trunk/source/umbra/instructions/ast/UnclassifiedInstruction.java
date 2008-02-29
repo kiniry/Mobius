@@ -57,12 +57,21 @@ public class UnclassifiedInstruction extends InstructionLineController {
   public final boolean correct() {
     return false;
   }
-  
+
+  /**
+   * Returns <code>true</code> when a BCEL method representation must be
+   * associated with the current line controller. In case of
+   * {@link UnclassifiedInstruction}, this method returns always
+   * <code>false</code> as we do not know how to interpret these instructions.
+   * Note that this means that {@link #hasMg()} results always in
+   * <code>false</code> as the method structure will never be assigned.
+   *
+   * @return <code>true</code> when a BCEL method representation must be
+   *   associated with the current line controller, otherwise
+   *   <code>false</code>
+   */
   public boolean needsMg() {
     return false;
   }
 
-  public boolean hasMg() {
-    return false;
-  }
 }

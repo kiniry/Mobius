@@ -74,13 +74,16 @@ public class InitParser extends BytecodeTextParser {
    * the document; it uses BCEL objects associated with the
    * document and based on them it generates the Umbra line
    * structures (subclasses of the {@link BytecodeLineController})
-   * together with the links to the BCEL objects.
+   * together with the links to the BCEL objects. The comment
+   * structures that might have come from previous sessions may cause changes
+   * in the original textual representation. The method returns the changed
+   * representation.
    *
    * This method initialises the parsing context, then it parses the header
    * of the class and then one by one parses the methods. At the end
    * the method initialises the structures to keep track of the modified
    * methods.
-   * @return 
+   * @return changed textual representation of the parsed class
    * @throws UmbraLocationException thrown in case a position has been reached
    *   which is outside the current document
    * @throws UmbraMethodException thrown in case a method number has been
@@ -99,7 +102,7 @@ public class InitParser extends BytecodeTextParser {
       a_line_no = swallowMethod(a_line_no, a_method_count, ctxt);
       a_method_count++;
     }
-    String str = getNewContent().toString();
+    final String str = getNewContent();
     return str;
   }
 
