@@ -1,5 +1,7 @@
 package freeboogie.backend;
 
+import java.util.Arrays;
+
 /**
  * S-expressions.
  *
@@ -33,7 +35,7 @@ public class SmtTerm extends Term {
     super(sort); 
     this.id = id;
     this.data = null;
-    this.children = children;
+    this.children = Arrays.copyOf(children, children.length);
     //System.out.println("mk> " + id + " " + children.length);
     assert this.children.length > 0;
   }

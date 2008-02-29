@@ -61,11 +61,10 @@ public class AstLocation implements Comparable<AstLocation> {
   public int compareTo(AstLocation o) {
     if (this == unknown ^ o == unknown)
       if (this == unknown) return -1; else return +1;
-    if (file != o.file) {
-      if (file == null) return -1;
-      if (o.file == null) return +1;
+    if (file == null ^ o.file == null)
+      if (file == null) return -1; else return +1;
+    if (file != null && !file.equals(o.file))
       return file.compareTo(o.file);
-    }
     if (line != o.line) return line - o.line;
     return column - o.column;
   }
@@ -74,5 +73,10 @@ public class AstLocation implements Comparable<AstLocation> {
   public boolean equals(Object o) {
     if (!(o instanceof AstLocation)) return false;
     return compareTo((AstLocation)o) == 0;
+  }
+
+  @Override
+  public int hashCode() {
+    return line + column + (file != null? file.hashCode() : 0);
   }
 }

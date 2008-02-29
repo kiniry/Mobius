@@ -24,5 +24,10 @@ from an AST and type information obtained by the package
 <p>How to deal with arrays? Perhaps let the prover interface take
 care of it.</p>
 
+<p>TODO: The backend also needs to deal with eliminating sharing
+in case the formula DAG gets translated into a string. For example,
+Z3 would use FLET to introduce some temporaries and Simplify would
+use IFF.</p>
+
 </body>
 </html>

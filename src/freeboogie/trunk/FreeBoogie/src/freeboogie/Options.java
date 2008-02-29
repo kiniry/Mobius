@@ -21,7 +21,7 @@ import freeboogie.util.Err;
  */
 public class Options {
   
-  private class Opt<T> {
+  static private class Opt<T> {
     /** Make a structure
      * @param n name
      * @param h help

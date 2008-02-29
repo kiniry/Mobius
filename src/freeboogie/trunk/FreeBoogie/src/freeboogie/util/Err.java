@@ -38,7 +38,7 @@ public class Err {
   };
   
   /** The current verbosity level. */ 
-  public static Level verboseLevel = Level.HELP;
+  private static Level verboseLevel = Level.HELP;
   
   /**
    * Set the verbosity using a number.

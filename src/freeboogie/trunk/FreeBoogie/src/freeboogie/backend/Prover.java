@@ -37,6 +37,7 @@ public abstract class Prover {
     // marks the end of an assumption frame in |assumptions|
 
   protected TermBuilder builder;
+  protected TermOfExpr termOfExpr;
   protected static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public Prover() {
@@ -49,6 +50,10 @@ public abstract class Prover {
    */
   public TermBuilder getBuilder() {
     return builder;
+  }
+
+  public TermOfExpr getTermOfExpr() {
+    return termOfExpr;
   }
   
   /**
@@ -72,7 +77,7 @@ public abstract class Prover {
   /**
    * Retract the last assumption. This discards all the empty 
    * assumption frames created after the last assumption. Should
-   * remove any successfully removed assumption from {@cdode assumptions}.
+   * remove any successfully removed assumption from {@code assumptions}.
    *
    * @throws ProverException if something goes wrong
    */

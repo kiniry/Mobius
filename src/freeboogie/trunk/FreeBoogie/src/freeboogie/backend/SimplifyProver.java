@@ -23,7 +23,10 @@ import freeboogie.util.Err;
  * The responsibilities of this class are:
  *  (1) Prepare the {@code TermBuilder} by registering the
  *      appropriate symbols recognized by Simplify;
- *  (2) Transform {@code SmtTerm} objects into the string
+ *  (2) Unfold shared {@code SmtTerm}s by introducing temporary
+ *      variables; (NOTE: the definitions should use FLET for Z3
+ *      and IFF for simplify; TODO perhaps have two classes?)
+ *  (3) Transform {@code SmtTerm} objects into the string
  *      representation;
  *
  * @author rgrig 

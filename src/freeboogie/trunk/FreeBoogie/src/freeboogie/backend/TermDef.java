@@ -1,5 +1,7 @@
 package freeboogie.backend;
 
+import java.util.Arrays;
+
 /**
  * Represents a term definition.
  * 
@@ -59,7 +61,7 @@ public class TermDef {
    */
   public TermDef(Sort[] argSorts, Sort retSort) {
     this.cls = null;
-    this.argSorts = argSorts;
+    this.argSorts = Arrays.copyOf(argSorts, argSorts.length);
     this.naryArgSort = null;
     this.retSort = retSort;
   }

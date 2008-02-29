@@ -58,8 +58,19 @@ public class AgClass implements Comparable<AgClass> {
     return r;
   }
 
-  /* @see java.lang.Comparable#compareTo(java.lang.Object) */
+  @Override
   public int compareTo(AgClass o) {
     return name.compareTo(o.name);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof AgClass)) return false;
+    return compareTo((AgClass)o) == 0;
+  }
+
+  @Override
+  public int hashCode() {
+    return name.hashCode();
   }
 }
