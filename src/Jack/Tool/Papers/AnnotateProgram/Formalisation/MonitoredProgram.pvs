@@ -567,7 +567,7 @@ BEGIN
     monitor_related_states(mp)(initial_MP_state(mp)(root_object), 
                            initial_MP_state(complete_MP(mp))(root_object))
 
-  monitor_related_states_preserved_by_derive : LEMMA
+  monitor_related_states_preserved_by_derive : LEMMA % :-)
     FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
            (s1a, s1b, s2a, s2b : MPState) 
            (n1, n2 : nat) :
@@ -575,12 +575,23 @@ BEGIN
       derive(mp)(b, s1a, v1, s2a)(n1) IMPLIES
       derive(complete_MP(mp))(b, s1b, v2, s2b)(n2) IMPLIES
         monitor_related_states(mp)(s2a, s2b) AND v1 = v2 
+
+  % in method call case
+  monitor_related_states_implies_derive : LEMMA
+    FORALL (b : (wf_Body(program(mp))), v : Val)
+           (s1a, s1b, s2a : MPState) 
+           (n1 : nat) :
+      monitor_related_states(mp)(s1a, s1b) IMPLIES
+      derive(mp)(b, s1a, v, s2a)(n1) IMPLIES
+      EXISTS (s2b : MPState, n2 : nat) : 
+      derive(complete_MP(mp))(b, s1b, v, s2b)(n2) 
   
   correctness_of_complete_MP : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))
            (s1, s2 : MPState) :
       run_monitored_program(mp)(main, arg)(root_object)(s1) IMPLIES
-      run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s2) IMPLIES
+      EXISTS (s2 : MPState) : 
+        run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s2) AND
         monitor_related_states(mp)(s1, s2)
 
 END MonitoredProgramCompletessRelation

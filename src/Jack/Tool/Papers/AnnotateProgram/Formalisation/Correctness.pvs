@@ -624,15 +624,30 @@ BEGIN
         related_states(mp)(sMP2, sAP2) AND 
         (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
 
+  % copied proof for monitored program
+  related_states_implies_derive_for_unchanged_program : THEOREM %
+    FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
+           (sMP1, sMP2 : MPState, sAP1 : APState)
+           (n1 : nat) :
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+      legal_Program(ann_program(mp)) IMPLIES
+      legal_Body(ann_program(mp))(b) IMPLIES
+        EXISTS (sAP2 : APState, n2 : nat) : 
+          derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2)
+
   % Correctness of the first step of the translation
   correctness_of_ann_program : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))
-           (sMP : MPState, sAP : APState) :
+           (sMP : MPState) :
       well_behaved_MVA_for_annot_gen(mp) IMPLIES
       legal_Program(ann_program(mp)) IMPLIES
       run_monitored_program(mp)(main, arg)(root_object)(sMP) IMPLIES
+      EXISTS(sAP : APState) :
       run_annotated_program(ann_program(mp))
-                               (main, arg)(root_object)(sAP) IMPLIES
+                               (main, arg)(root_object)(sAP) AND
         related_states(mp)(sMP, sAP)
 
 
