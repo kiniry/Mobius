@@ -52,6 +52,10 @@ public abstract class Prover {
     return builder;
   }
 
+  /**
+   * Returns an object that builds terms recognized by this prover
+   * out of BoogiePL expressions ({@see freeboogie.ast.Expr}).
+   */
   public TermOfExpr getTermOfExpr() {
     return termOfExpr;
   }

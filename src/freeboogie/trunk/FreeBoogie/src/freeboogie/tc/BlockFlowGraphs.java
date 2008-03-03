@@ -30,7 +30,7 @@ public class BlockFlowGraphs extends Transformer {
   // whether inexistent block names were detected
   private boolean errors;
   
-  // used fror reachability (DFS)
+  // used for reachability (DFS)
   private HashSet<Block> seenBlocks;
   
   // === public interface ===

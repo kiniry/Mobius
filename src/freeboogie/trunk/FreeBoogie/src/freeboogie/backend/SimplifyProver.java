@@ -28,6 +28,8 @@ import freeboogie.util.Err;
  *      and IFF for simplify; TODO perhaps have two classes?)
  *  (3) Transform {@code SmtTerm} objects into the string
  *      representation;
+ *  (4) TODO Take care of array axiomatization. Later on we should
+ *      change this to take advantage of the built in arrays in Z3.
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -52,6 +54,7 @@ public class SimplifyProver extends Prover {
     simplify = new SimplifyProcess(cmd);
     strBuilder = new StringBuilder();
     prepareTermBuilder();
+    prepareTermOfExpr();
   }
 
   /**
@@ -85,6 +88,16 @@ public class SimplifyProver extends Prover {
     //      escjava background predicate anyway
     builder.pushDef(); // mark the end of the prover builtin definitions
     log.info("prepared term builder for simplify");
+  }
+
+  /**
+   * Prepares an appropriate value for {@code TermOfExpr}.
+   * It should be able to construct {@code SmtTerm}s out of
+   * {@code freeboogie.ast.Expr} (BoogiePL expressions).
+   */
+  private void prepareTermOfExpr() {
+    assert false;
+    // TODO
   }
   
   // TODO This is quite incomplete now

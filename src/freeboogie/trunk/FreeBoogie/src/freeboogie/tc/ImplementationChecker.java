@@ -6,13 +6,14 @@ import freeboogie.ast.*;
 import freeboogie.util.Err;
 
 /**
- * Checks whether the implementations' signatures correspond to the
- * procedure signatures. It also connects in/out {@code VariableDecl}
- * arguments of the implementation with the one in the procedure.
- * (This link is needed later when verifying that the implementation
- * satisfies the spec that accompanies the procedure.) It produces
- * errors if an implementation does not have a corresponding procedure
- * or if there is a type mismatch in the signature.
+ * Checks whether the implementations' signatures correspond
+ * to the procedure signatures. It also connects in/out {@code
+ * VariableDecl} arguments of the implementation with the one in
+ * the procedure. (This link is needed later when verifying that
+ * the implementation satisfies the spec that accompanies the
+ * procedure.) It produces errors if an implementation does not
+ * have a corresponding procedure or if there is a type mismatch
+ * in the signature.
  *
  * @author rgrig 
  * @author reviewed by TODO
