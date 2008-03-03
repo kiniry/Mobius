@@ -3,106 +3,233 @@
 <head>
 <title>BON Documentation: The %3$2s System</title>
 
+<script type="text/javascript">
+<!--
+
+%4$2s
+
+var showAll = false;
+
+function setElText(id,text) {
+  var elem = document.getElementById(id);
+  if (elem) {
+    elem.innerHTML = text;
+  }
+}
+
+function toggleShowAll() {
+  showAll = !showAll;
+  if (showAll) {
+    displayAll();
+    setElText('showlink', 'Hide All');
+  } else {
+    hideAll();
+    setElText('showlink', 'Show All');
+  }
+  showSelected();
+  return false;
+}
+
+function select(id) {
+  if (showAll) {
+    window.location.hash = id;
+    return true;
+  } else {
+    showOnly(id);
+    return false;
+  }
+}
+
+function showOnly(id) {
+  var elem = document.getElementById(id);
+  if (elem) {
+    hideAll();
+    elem.style.display = "block";
+  }
+}
+
+function hideAll() {
+  for (var i=0; i<items.length; i++) {
+    var elem = document.getElementById(items[i]);
+    if (elem) {
+      elem.style.display = "none";
+    }
+  }
+}
+
+function displayAll() {
+  for (var i=0; i<items.length; i++) {
+    var elem = document.getElementById(items[i]);
+    if (elem) {
+      elem.style.display = "block";
+    }
+  }
+}
+
+function setBack(id) {
+//Not yet...
+}
+
+function initialPopulate() {
+  var topSelect = document.getElementById('top');
+  if (topSelect) {
+    topSelect.options.length = 0;
+    for (var i=0; i < topOptions.length; i+=2) {
+      topSelect.options[i/2] = new Option(topOptions[i],topOptions[i+1]);
+    }
+  }
+  if (window.location.hash) {
+    hashSelect(window.location.hash.substr(1));    
+  } else {
+    populate();
+  }
+  showSelected();
+}
+
+function hashSelect(hash) {
+  var parts = hash.split(':');
+  if (parts.length == 2) {
+    linkSelect(parts[0],hash);
+  } else {
+    populate();
+  }
+}
+
+function populate() {
+
+  var subSelect = document.getElementById('sub');
+  var topSelect = document.getElementById('top');
+
+  if (subSelect && topSelect) {
+    var selected = topSelect.options[topSelect.selectedIndex].value;
+    if (selected) {
+      var chosenSubOptions = subOptions[selected];
+      subSelect.options.length = 0;
+      for (var i=0; i < chosenSubOptions.length; i+=2) {
+        subSelect.options[i/2] = new Option(chosenSubOptions[i],chosenSubOptions[i+1]);
+      }
+    }
+  }
+}
+
+function showSelected() {
+  var subSelect = document.getElementById('sub');
+  if (subSelect) {
+    var selected = subSelect.options[subSelect.selectedIndex].value;
+    if (selected) {
+      select(selected);
+      window.location.hash = selected;
+    }
+  }
+}
+
+function linkSelect(top, sub) {
+  var topSelect = document.getElementById('top');
+  if (topSelect) {
+    for (var i=0; i < topSelect.options.length; i++) {
+      if (topSelect.options[i].value == top) {
+        topSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }  
+  populate();
+  var subSelect = document.getElementById('sub');
+  if (subSelect) {
+    for (var i=0; i < subSelect.options.length; i++) {
+      if (subSelect.options[i].value == sub) {
+        subSelect.selectedIndex = i;
+        showSelected();
+        return false;
+      }
+    }
+    showSelected();
+  }
+}
+
+
+//-->
+</script>
+
 <style type="text/css">
-#system_chart, .cluster_chart, .class_chart { 
-  margin-bottom: 25px; 
+.index_list, .explanation_text, .scenario_description { 
+  position:relative; 
+  left:20px; 
+  padding-right: 20px;
 }
 
-.index_list, .explanation_text { 
-  position:relative; left:20px; 
-}
-
-.quarter, .half, .third, .two_thirds {
-  float: left; 
-}
-
-.quarter {
-  width: 25%%;
-}
-
-.half {
-  width: 50%%;
-}
-
-.third {
-  width: 33%%;
-}
-
-.two_thirds {
-  width: 67%%;
-}
-
-#system_chart {
-  width: 100%%;
-  background-color: #cccccc;
+.system_chart_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .scenario_chart_table, .creation_chart_table {
   border: 2px solid #000000;
 }
 
-.top {
-  width: 100%%;
-  text-align: center;
+.system, .system_name, .cluster, .cluster_name, .class, .class_name, .scenario, .part, .explanation, .indexing, .bottom table, .event, .creation {
+  border: 6px groove #c0c0c0;
 }
 
-.system, .system_name, .part {
-  border: 6px groove #c0c0c0;
+.left_col, .right_col, .cluster_col, .class_col, .description_col, .inorout_col, .involved_col, .scenario_entry, .creates_col {
+  border: 1px inset #c0c0c0;
+}
+
+.system, .system_name, .cluster, .cluster_name, .class, .class_name, .event, .creation, .part {
   padding: 5px 0px 5px 0px;
 }
 
-.system {
-  background-colour: #cccccc;
-}
-
-.system_name {
-  background-color: #ffff99;
-}
-
-.part {
-  background-color: #ffff99;
-}
-
-.middle {
-  border-top: 2px solid #000000;
-  width: 100%%;
-  clear: left;
+.left_col, .right_col, .cluster_col, .class_col, .description_col, .queries_col, .commands_col, .constraints_col, .inorout_col, .involves_col, .scenario_entry, .creates_col {
+  padding: 5px 20px 5px 20px;
 }
 
 .explanation, .indexing {
-  background-color: #ffffff;
-  border: 6px groove  #c0c0c0;
-  padding: 10px 0px 10px 0px;
+  padding: 5px 5px 5px 10px;
 }
 
-.bottom {
-  border-top: 2px solid #000000;
-  width: 100%%;
-  clear: left;
+#system_chart, .cluster_chart, .class_chart, .event_chart, .scenario_chart, .creation_chart, #header {
+  margin-bottom: 20px;
 }
 
-.cluster_entries table {
-  width: 100%%;
+.system_chart_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .scenario_chart_table, .creation_chart_table {
+  background-color: #cccccc;
 }
 
-.top_left_col, .top_right_col {
-  background-color: #ffffff;
-  border: 1px inset #c0c0c0;
-  padding: 6px 0px 6px 0px;
-}
-
-.left_col, .right_col {
-  border: 1px inset #c0c0c0;
-  padding: 4px 0px 4px 0px;
-}
-
-.left_col {
+.system_name, .cluster_name, .class_name, .part, .left_col {
   background-color: #ffff99;
 }
 
-.right_col {
+.explanation, .indexing, .right_col, .scenario_entry {
   background-color: #ffffff;
+}
+
+.system, .system_name, .cluster, .cluster_name, .class, .class_name, .part, .cluster_col, .description_col {
+  text-align: center;
+}
+
+.explanation, .indexing {
+  vertical-align: top;
+}
+
+.system_chart_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .bottom table, .scenario_chart_table, .creation_chart_table {
+  width: 100%%;
+}
+
+.system_name, .cluster_name, .class_name {
+  width: 50%%;
+}
+
+.part {
+  width: 25%%;
 }
 </style>
 
 </head>
-<body>
+<body onload="hideAll(); initialPopulate();">
 
 <h1>The %3$2s System</h1>
+
+<div id="header">
+  <a href="#" id="showlink" onclick="return toggleShowAll();">Show All</a>
+  <form action="#">
+    Chart type:
+    <select id="top" onchange="populate(); showSelected();"><option>processing...</option></select>
+    Chart:
+    <select id="sub" onchange="showSelected();"><option>processing...</option></select>
+  </form>
+</div>

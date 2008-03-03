@@ -189,14 +189,6 @@ tokens {
 //Currently nothing, everything in BONAbstractParser	
 }
 
-// Alter code generation so catch-clauses get replaced with
-// this action.
-//@rulecatch {
-//	catch (RecognitionException e) {
-//		throw e;
-//	}
-//}
-
 /**********************************************  
  ##############################################
  ###   Parser...                            ###

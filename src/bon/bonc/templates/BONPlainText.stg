@@ -34,11 +34,11 @@ class <name> cluster <clusterName>
 
 systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
 system_chart <name>
-  <if(first(indexing)><indexing>
-  <endif><if(first(explanation))><explanation>
-  <endif><if(first(part))><part>
-  <endif><if(first(cluster_entries))><cluster_entries>
-end
+  <if(first(indexing))><indexing><\n>
+  <endif><if(first(explanation))><explanation><\n>
+  <endif><if(first(part))><part><\n>
+  <endif><if(first(cluster_entries))><cluster_entries><\n>
+<endif>end
 >>
 
 explanation(s) ::= <<
@@ -90,12 +90,14 @@ indexString(s) ::= <<
 <s>
 >>
 
-clusterChart(name,other) ::= <<
+clusterChart(name,indexing,explanation,part,class_entries,cluster_entries) ::= <<
 cluster_chart <name>
-
-  <other; separator="\n\n">
-  
-end
+  <if(first(indexing))><indexing>
+  <endif><if(first(explanation))><explanation>
+  <endif><if(first(part))><part>
+  <endif><if(first(class_entries))><class_entries>
+  <endif><if(first(cluster_entries))><cluster_entries>
+<endif>end
 >>
 
 classEntries(cs) ::= <<
@@ -111,12 +113,16 @@ clusterName(name) ::= <<
 <name>
 >>
 
-classChart(name,other) ::=	<<
+classChart(name,indexing,explanation,part,inherits,queries,commands,constraints) ::=	<<
 class_chart <name>
-
-  <other; separator="\n\n">
-
-end
+  <if(first(indexing))><indexing><\n>
+  <endif><if(first(explanation))><explanation><\n>
+  <endif><if(first(part))><part><\n>
+  <endif><if(first(inherits))><inherits><\n>
+  <endif><if(first(queries))><queries><\n>
+  <endif><if(first(commands))><commands><\n>
+  <endif><if(first(constraints))><constraints><\n>
+<endif>end
 >>
 
 inherits(l) ::= <<
@@ -163,24 +169,38 @@ className(name) ::= <<
 <name>
 >>
 
-eventChart(name,k,other) ::= <<
-event_chart <name> <k>
+incomingEventChart(name,indexing,explanation,part,event_entries) ::= <<
+<eventChart(name=name,inorout="incoming",indexing=indexing,explanation=explanation,part=part,event_entries=event_entries)>
+>>
 
-  <other; separator="\n\n">
+outgoingEventChart(name,indexing,explanation,part,event_entries) ::= <<
+<eventChart(name=name,inorout="outgoing",indexing=indexing,explanation=explanation,part=part,event_entries=event_entries)>
+>>
 
-end
+eventChart(name,inorout,indexing,explanation,part,event_entries) ::= <<
+event_chart <name> <inorout>
+  <if(first(indexing))><indexing><\n>
+  <endif><if(first(explanation))><explanation><\n>
+  <endif><if(first(part))><part><\n>
+  <endif><if(first(event_entries))><event_entries><\n>
+  <endif>end
 >>
 
 eventEntries(e) ::= <<
 <e; separator="\n">
 >>
 
-eventEntry(name,cnl) ::= <<
-event <name> involves <cnl>
+eventEntry(text,cnl) ::= <<
+event <text> involves <cnl>
 >>
 
-scenarioChart(name,other) ::= <<
+scenarioChart(name,indexing,explanation,part,scenario_entries) ::= <<
 scenario_chart <name>
+  <if(first(indexing))><indexing><\n>
+  <endif><if(first(explanation))><explanation><\n>
+  <endif><if(first(part))><part><\n>
+  <endif><if(first(scenario_entries))><scenario_entries><\n>
+  <endif>end
 >>
 
 scenarioEntries(e) ::= <<
@@ -191,12 +211,13 @@ scenarioEntry(s,d) ::= <<
 scenario <s> <d>
 >>
 
-creationChart(name,other) ::= <<
-creationChart <name>
-
-  <other; separator="\n\n">
-
-end
+creationChart(name,indexing,explanation,part,creation_entries) ::= <<
+creation_chart <name>
+  <if(first(indexing))><indexing><\n>
+  <endif><if(first(explanation))><explanation><\n>
+  <endif><if(first(part))><part><\n>
+  <endif><if(first(creation_entries))><creation_entries><\n>
+  <endif>end
 >>
 
 creationEntries(l) ::= <<

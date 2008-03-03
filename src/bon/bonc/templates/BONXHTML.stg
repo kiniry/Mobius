@@ -29,39 +29,42 @@ class <name> cluster <clusterName>
 >>
 
 systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
-\<div id="system_chart">
-  \<div class="top">
-    \<div class="quarter">
-      \<div class="system">SYSTEM\</div>
-    \</div>
-    \<div class="half">
-      \<div class="system_name"><name>\</div>
-    \</div>
-    \<div class="quarter">
-      \<div class="part">\<strong>Part:\</strong> <part>\</div>
-    \</div>
-  \</div>
-
-  \<div class="middle">
-    \<div class="two_thirds">
-      \<div class="explanation">
-        \<strong>EXPLANATION\</strong>
+\<div id="system_chart:<name>">
+  \<table class="system_chart_table">
+    \<tr class="top">
+      \<th class="system">SYSTEM\</th>
+      \<td class="system_name" colspan="2"><name>\</td>
+      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+    \</tr>
+    \<tr class="middle">
+      \<td class="explanation" colspan="2">
+        \<strong>PURPOSE\</strong>\<br/>
         <explanation>
-      \</div>
-    \</div>
-
-    \<div class="third">
-      \<div class="indexing">
-        \<strong>INDEXING\</strong>
+      \</td>
+      \<td class="indexing" colspan="2">
+        \<strong>INDEXING \</strong>\<br/>
         <indexing>
-      \</div>
-    \</div>
-  \</div>
+      \</td>
+    \</tr>
+    \<tr class="bottom">
+      \<td colspan="4">
+        \<table>
+          \<tr>
+            \<th class="cluster_col">Cluster\</th>
+            \<th class="description_col">Description\</th>
+          \</tr>
+          <cluster_entries>
+        \</table>
+      \</td>
+    \</tr>
+  \</table>
 \</div>
 >>
 
 explanation(s) ::= <<
-\<div class="explanation_text"><s>\</div>
+\<span class="explanation_text">
+  <s>
+\</span>
 >>
 
 indexing(i) ::= <<
@@ -69,29 +72,32 @@ indexing(i) ::= <<
 >>
 
 part(s) ::= <<
-\<em><s>\</em>
+<s>
 >>
 
 description(s) ::= <<
-\<strong>description\</strong> \<em><s>\</em>
+<s>
 >>
 
 clusterEntries(cs) ::= <<
-\<div class="cluster_entries">
-<cs; separator="<br/>">
-\</div>
+<cs; separator="\n">
 >>
 
 clusterEntry(name,desc) ::= <<
-\<strong>cluster\</strong> <name> <desc>
+\<tr>
+  \<td class="left_col"><name>\</td>
+  \<td class="right_col"><desc>\</td>
+\</tr>
 >>
 
 systemName(name) ::= <<
-\<em><name>\</em>
+\<a href="#system_chart:<name>" onclick="return linkSelect('system_chart','system_chart');"><name>\</a>
 >>
 
 indexList(i) ::= <<
-\<div class="index_list"><i; separator="<br/>">\</div>
+\<span class="index_list">
+  <i; separator="<br/>">
+\</span>
 >>
 
 indexClause(id,i) ::= <<
@@ -106,33 +112,99 @@ indexString(s) ::= <<
 <s>
 >>
 
-clusterChart(name,other) ::= <<
+clusterChart(name,indexing,explanation,part,class_entries,cluster_entries) ::= <<
 \<div class="cluster_chart" id="cluster_chart:<name>">
-\<strong>cluster_chart\</strong> <name>
-  <other; separator="\n\n">
-\<strong>end\</strong>
+  \<table class="cluster_chart_table">
+    \<tr class="top">
+      \<th class="cluster">CLUSTER\</th>
+      \<td class="cluster_name" colspan="2"><name>\</td>
+      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+    \</tr>
+    \<tr class="middle">
+      \<td class="explanation" colspan="2">
+        \<strong>PURPOSE\</strong>\<br/>
+        <explanation>
+      \</td>
+      \<td class="indexing" colspan="2">
+        \<strong>INDEXING \</strong>\<br/>
+        <indexing>
+      \</td>
+    \</tr>
+    \<tr class="bottom">
+      \<td colspan="4">
+        <if(class_entries)>\<table>
+          \<tr>
+            \<th class="class_col">Class\</th>
+            \<th class="description_col">Description\</th>
+          \</tr>
+          <class_entries>
+        \</table>
+        <endif><if(cluster_entries)>\<table>
+          \<tr>
+            \<th class="cluster_col">Cluster\</th>
+            \<th class="description_col">Description\</th>
+          \</tr>
+          <cluster_entries>
+        \</table>
+        <endif>
+      \</td>
+    \</tr>
+  \</table>
 \</div>
 >>
 
 classEntries(cs) ::= <<
-\<div class="class_entries">
-<cs; separator="<br/>">
-\</div>
+<cs; separator="\n">
 >>
 
 classEntry(name,desc) ::= <<
-\<strong>class\</strong> <name> <desc>
+\<tr>
+  \<td class="left_col"><name>\</td>
+  \<td class="right_col"><desc>\</td>
+\</tr>
 >>
 
 clusterName(name) ::= <<
-\<a href="#cluster_chart:<name>"><name>\</a>
+\<a href="#cluster_chart:<name>" onclick="return linkSelect('cluster_charts','cluster_chart:<name>');"><name>\</a>
 >>
 
-classChart(name,other) ::=	<<
+classChart(name,indexing,explanation,part,inherits,queries,commands,constraints) ::=	<<
 \<div class="class_chart" id="class_chart:<name>">
-\<strong>class_chart\</strong> <name>
-  <other; separator="\n\n">
-\<strong>end\</strong>
+  \<table class="class_chart_table">
+    \<tr class="top">
+      \<th class="class">CLASS\</th>
+      \<td class="class_name" colspan="2"><name>\</td>
+      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+    \</tr>
+    \<tr class="middle">
+      \<td class="explanation" colspan="2">
+        \<strong>TYPE OF OBJECT\</strong>\<br/>
+        <explanation>
+      \</td>
+      \<td class="indexing" colspan="2">
+        \<strong>INDEXING \</strong>\<br/>
+        <indexing>
+      \</td>
+    \</tr>
+    \<tr class="bottom">
+      \<td colspan="4">
+        \<table>
+          \<tr>
+            \<th class="left_col">Queries\</th>
+            \<td class="right_col"><queries>\</td>
+          \</tr>
+          \<tr>
+            \<th class="left_col">Commands\</th>
+            \<td class="right_col"><commands>\</td>
+          \</tr>
+          \<tr>
+            \<th class="left_col">Constraints\</th>
+            \<td class="right_col"><constraints>\</td>
+          \</tr>
+        \</table>
+      \</td>
+    \</tr>
+  \</table>
 \</div>
 >>
 
@@ -142,42 +214,27 @@ inherits(l) ::= <<
 >>
 
 queries(l) ::= <<
-\<div class="queries">
-\<strong>query\</strong>
-  <l>
-\</div>
+<l>
 >>
 
 commands(l) ::= <<
-\<div class="commands">
-\<strong>command\</strong>
-  <l>
-\</div>
+<l>
 >>
 
 constraints(l) ::= <<
-\<div class="constraints">
-\<strong>constraint\</strong>
-  <l>
-\</div>
+<l>
 >>
 
 queryList(qs) ::= <<
-\<div class="query_list">
 <qs; separator=",<br/>">
-\</div>
 >>
 
 commandList(cs) ::= <<
-\<div class="command_list">
 <cs; separator=",<br/>">
-\</div>
 >>
 
 constraintList(cs) ::= <<
-\<div class="constraint_list">
 <cs; separator=",<br/>">
-\</div>
 >>
 
 classNameList(cs) ::= <<
@@ -189,57 +246,143 @@ classOrClusterNameList(classes,clusters) ::= <<
 >>
 
 className(name) ::= <<
-\<a href="#class_chart:<name>"><name>\</a>
+\<a href="#class_chart:<name>" onclick="return linkSelect('class_charts','class_chart:<name>');"><name>\</a>
 >>
 
-eventChart(name,k,other) ::= <<
-\<div class="event_chart">
-\<strong>event_chart\</strong> <name> <k>
-  <other; separator="\n">
-\<strong>end\</strong>
+incomingEventChart(name,indexing,explanation,part,event_entries,event_id) ::= <<
+<eventChart(name=name,inorout="External (incoming)",indexing=indexing,explanation=explanation,part=part,event_entries=event_entries,event_id=event_id)>
+>>
+
+outgoingEventChart(name,indexing,explanation,part,event_entries) ::= <<
+<eventChart(name=name,inorout="Internal (outgoing)",indexing=indexing,explanation=explanation,part=part,event_entries=event_entries,event_id=event_id)>
+>>
+
+eventChart(name,inorout,indexing,explanation,part,event_entries,event_id) ::= <<
+\<div class="event_chart" id="event_chart:<event_id>">
+  \<table class="event_chart_table">
+    \<tr class="top">
+      \<th class="event">EVENT\</th>
+      \<td class="system_name" colspan="2"><name>\</td>
+      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+    \</tr>
+    \<tr class="middle">
+      \<td class="explanation" colspan="2">
+        \<strong>COMMENT\</strong>\<br/>
+        <explanation>
+      \</td>
+      \<td class="indexing" colspan="2">
+        \<strong>INDEXING \</strong>\<br/>
+        <indexing>
+      \</td>
+    \</tr>
+    \<tr class="bottom">
+      \<td colspan="4">
+        \<table>
+          \<tr>
+            \<th class="inorout_col"><inorout>\</th>
+            \<th class="involved_col">Involved object types\</th>
+          \</tr>
+          <event_entries>
+        \</table>
+      \</td>
+    \</tr>
+  \</table>
 \</div>
 >>
+
 
 eventEntries(e) ::= <<
-\<div class="event_entries">
-<e; separator="<br/>">
-\</div>
+<e; separator="\n">
 >>
 
-eventEntry(name,cnl) ::= <<
-\<strong>event\</strong> <name> \<strong>involves\</strong> <cnl>
+eventEntry(text,cnl) ::= <<
+\<tr>
+  \<td class="left_col"><text>\</td>
+  \<td class="right_col"><cnl>\</td>
+\</tr>
 >>
 
-scenarioChart(name,other) ::= <<
-\<div class="scenario_chart">
-\<strong>scenario_chart\</strong> <name>
+scenarioChart(name,indexing,explanation,part,scenario_entries,scenario_chart_id) ::= <<
+\<div class="scenario_chart" id="scenario_chart:<scenario_chart_id>">
+  \<table class="scenario_chart_table">
+    \<tr class="top">
+      \<th class="creation">SCENARIOS\</th>
+      \<td class="system_name" colspan="2"><name>\</td>
+      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+    \</tr>
+    \<tr class="middle">
+      \<td class="explanation" colspan="2">
+        \<strong>COMMENT\</strong>\<br/>
+        <explanation>
+      \</td>
+      \<td class="indexing" colspan="2">
+        \<strong>INDEXING \</strong>\<br/>
+        <indexing>
+      \</td>
+    \</tr>
+    \<tr class="bottom">
+      \<td colspan="4">
+        <if(scenario_entries)>\<table>
+          <scenario_entries>
+        \</table><endif>
+      \</td>
+    \</tr>
+  \</table>
 \</div>
 >>
 
 scenarioEntries(e) ::= <<
-\<div class="scenario_entries">
-<e; separator="<br/>">
-\<div>
+<e; separator="\n">
 >>
 
 scenarioEntry(s,d) ::= <<
-\<strong>scenario\</strong> <s> <d>
+\<tr>
+  \<td class="scenario_entry">\<strong><s>\</strong>\<br/>\<span class="scenario_description"><d>\</span>\</td>
+\</tr>
 >>
 
-creationChart(name,other) ::= <<
-\<strong>creation_chart\</strong> <name>
-  <other; separator="\n">
-\<strong>end\</strong>
->>
-
-creationEntries(l) ::= <<
-\<div class="creation_entries">
-<l; separator="<br/>">
+creationChart(name,indexing,explanation,part,creation_entries,creation_chart_id) ::= <<
+\<div class="creation_chart" id="creation_chart:<creation_chart_id>">
+  \<table class="creation_chart_table">
+    \<tr class="top">
+      \<th class="creation">CREATION\</th>
+      \<td class="system_name" colspan="2"><name>\</td>
+      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+    \</tr>
+    \<tr class="middle">
+      \<td class="explanation" colspan="2">
+        \<strong>COMMENT\</strong>\<br/>
+        <explanation>
+      \</td>
+      \<td class="indexing" colspan="2">
+        \<strong>INDEXING \</strong>\<br/>
+        <indexing>
+      \</td>
+    \</tr>
+    \<tr class="bottom">
+      \<td colspan="4">
+        <if(creation_entries)>\<table>
+          \<tr>
+            \<th class="class_col">Class\</th>
+            \<th class="creates_col">Creates instances of\</th>
+          \</tr>
+          <creation_entries>
+        \</table><endif>
+      \</td>
+    \</tr>
+  \</table>
 \</div>
 >>
 
+creationEntries(l) ::= <<
+<l; separator="\n">
+>>
+
 creationEntry(name,cnl) ::= <<
-\<strong>creator\</strong> <name> \<strong>creates\</strong> <if(cnl)><cnl><else>--missing<endif>
+\<tr>
+  \<td class="left_col"><name>\</td>
+  \<td class="right_col"><cnl>\</td>
+\</tr>
 >>
 
 staticDiagram(ps,sb) ::= <<

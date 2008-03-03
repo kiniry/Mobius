@@ -87,7 +87,7 @@ system_chart  :^(
                  (c+=cluster_entries)? 
                 )
                -> 
-               	 systemChart(name={$system_name.st},indexing={$i},explanation={$e},part={$p},cluster_entries={$c})
+               	 systemChart(name={$system_name.text},indexing={$i},explanation={$e},part={$p},cluster_entries={$c})
               ;
 
 explanation  :^(
@@ -181,14 +181,14 @@ index_string  :^(
 
 cluster_chart  :^(
                   CLUSTER_CHART cluster_name 
-                  (o+=indexing)? 
-                  (o+=explanation)? 
-                  (o+=part)? 
-                  (o+=class_entries)? 
-                  (o+=cluster_entries)? 
+                  (i+=indexing)? 
+                  (e+=explanation)? 
+                  (p+=part)? 
+                  (cl+=class_entries)? 
+                  (clu+=cluster_entries)? 
                  )
                 ->
-                  clusterChart(name={$cluster_name.text},other={$o})
+                  clusterChart(name={$cluster_name.text},indexing={$i},explanation={$e},part={$p},class_entries={$cl},cluster_entries={$clu})
                ;
                
 class_entries  :^(
@@ -216,16 +216,16 @@ cluster_name  :^(
 
 class_chart  :^( 
                 CLASS_CHART class_name
-                (o+=indexing)? 
-                (o+=explanation)? 
-                (o+=part)? 
-                (o+=inherits)?
-                (o+=queries)? 
-                (o+=commands)? 
-                (o+=constraints)?
+                (i+=indexing)? 
+                (e+=explanation)? 
+                (p+=part)? 
+                (in+=inherits)?
+                (q+=queries)? 
+                (com+=commands)? 
+                (con+=constraints)?
                )
               ->
-               classChart(name={$class_name.text},other={$o})
+               classChart(name={$class_name.text},indexing={$i},explanation={$e},part={$p},inherits={$in},queries={$q},commands={$com},constraints={$con})
              ;
 
 inherits  :  ^(INHERITS class_name_list) -> inherits(l={$class_name_list.st})
@@ -291,14 +291,26 @@ class_name  :^(
 event_chart  :^(
                 EVENT_CHART
                 system_name 
-                (k+='incoming')? (k+='outgoing')?
-                (o+=indexing)?
-                (o+=explanation)?
-                (o+=part)?
-                (o+=event_entries)?
+                'incoming'
+                (i+=indexing)?
+                (e+=explanation)?
+                (p+=part)?
+                (ee+=event_entries)?
                )
               ->
-                eventChart(name={$system_name.st},k={$k},other={$o})
+                incomingEventChart(name={$system_name.st},indexing={$i},explanation={$e},part={$p},event_entries={$ee},event_id={getPT().addEventChart()})
+             | 
+              ^(
+                EVENT_CHART
+                system_name 
+                'outgoing'
+                (i+=indexing)?
+                (e+=explanation)?
+                (p+=part)?
+                (ee+=event_entries)?
+               )
+              ->
+                outgoingEventChart(name={$system_name.st},indexing={$i},explanation={$e},part={$p},event_entries={$ee},event_id={getPT().addEventChart()})
              ;
              
 event_entries  :^(
@@ -315,7 +327,7 @@ event_entry  :^(
                 class_or_cluster_name_list
                )
               ->
-                eventEntry(name={$manifest_textblock.text},cnl={$class_or_cluster_name_list.st})
+                eventEntry(text={$manifest_textblock.text},cnl={$class_or_cluster_name_list.st})
               |
               ^(EVENT_ENTRY PARSE_ERROR) 
              ;
@@ -325,13 +337,13 @@ event_entry  :^(
 scenario_chart  :^(
                    SCENARIO_CHART
                    system_name
-                   (o+=indexing)?
-                   (o+=explanation)?
-                   (o+=part)?
-                   (o+=scenario_entries)?
+                   (i+=indexing)?
+                   (e+=explanation)?
+                   (p+=part)?
+                   (se+=scenario_entries)?
                   )
                  ->
-                   scenarioChart(name={$system_name.st},other={$o})
+                   scenarioChart(name={$system_name.st},indexing={$i},explanation={$e},part={$p},scenario_entries={$se},scenario_chart_id={getPT().addScenarioChart()})
                 ;
                 
 scenario_entries  :^(
@@ -355,13 +367,13 @@ scenario_entry  :^(
 creation_chart  :^(
                    CREATION_CHART
                    system_name
-                   (o+=indexing)?
-                   (o+=explanation)?
-                   (o+=part)?
-                   (o+=creation_entries)?
+                   (i+=indexing)?
+                   (e+=explanation)?
+                   (p+=part)?
+                   (ce+=creation_entries)?
                   )
                  ->
-                   creationChart(name={$system_name.st},other={$o})
+                   creationChart(name={$system_name.st},indexing={$i},explanation={$e},part={$p},creation_entries={$ce},creation_chart_id={getPT().addCreationChart()})
                 ;
                 
 creation_entries  :^(

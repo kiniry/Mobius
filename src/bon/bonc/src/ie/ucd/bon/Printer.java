@@ -6,13 +6,16 @@ package ie.ucd.bon;
 
 import ie.ucd.bon.parser.BONSTTreeWalker;
 import ie.ucd.bon.parser.tracker.ParseResult;
-import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
+import ie.ucd.bon.parser.tracker.ParsingTracker;
+import ie.ucd.bon.printer.HTMLLinkGenerator;
+import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.util.FileUtil;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
@@ -102,8 +105,17 @@ public class Printer {
       return null; //Shouldn't happen
     }
   }
+  
+  public static String getExtraPartsForPrintingOption(PrintingOption po, PrintingTracker printingTracker, ParsingTracker parsingTracker) {
+    switch(po) {
+    case HTML:
+      return HTMLLinkGenerator.generateLinks(printingTracker, parsingTracker);
+    default:
+      return "";
+    }
+  }
 
-  private static String printUsingTemplateToString(ParseResult parseResult, Reader stFile) throws RecognitionException {
+  private static String printUsingTemplateToString(ParseResult parseResult, Reader stFile, PrintingTracker printingTracker) throws RecognitionException {
     try {
       StringTemplateGroup templates = new StringTemplateGroup(stFile);
       stFile.close();
@@ -112,7 +124,7 @@ public class Printer {
       CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);  //Get stream of nodes from tree
       nodes.setTokenStream(parseResult.getTokens());
 
-      walker.initialise(nodes, templates); //Reset walker, provide inputs
+      walker.initialise(nodes, templates, printingTracker); //Reset walker, provide inputs
 
       BONSTTreeWalker.prog_return r2 = walker.prog();  //Walk
       StringTemplate output = (StringTemplate)r2.getTemplate();  //Get output
@@ -130,29 +142,41 @@ public class Printer {
     return st.toString();
   }
 
-  public static void printStartToStream(PrintingOption printOption, PrintStream outputStream, Calendar printTime, InformalTypingInformation iti) {
-    String startString = formatString(getPrintingOptionStartString(printOption), printTime, iti);
+  private static void printStartToStream(PrintingOption printOption, PrintStream outputStream, Calendar printTime, String extraParts, ParsingTracker parsingTracker) {
+    String startString = formatString(getPrintingOptionStartString(printOption), printTime, extraParts, parsingTracker);
     outputStream.print(startString);
   }
   
-  public static void printEndToStream(PrintingOption printOption, PrintStream outputStream, Calendar printTime, InformalTypingInformation iti) {
-    String endString = formatString(getPrintingOptionEndString(printOption), printTime, iti);
+  private static void printEndToStream(PrintingOption printOption, PrintStream outputStream, Calendar printTime, String extraParts, ParsingTracker parsingTracker) {
+    String endString = formatString(getPrintingOptionEndString(printOption), printTime, extraParts, parsingTracker);
     outputStream.print(endString);
   }
   
-  private static String formatString(String toFormat, Calendar printTime, InformalTypingInformation iti) {
-    return String.format(toFormat, printTime, Main.getVersion(), iti.getSystem().getSystemName());
+  private static String formatString(String toFormat, Calendar printTime, String extraParts, ParsingTracker parsingTracker) {
+    return String.format(toFormat, 
+        printTime, 
+        Main.getVersion(), 
+        parsingTracker.getInformalTypingInformation().getSystem().getSystemName(),
+        extraParts
+        );
   }
 
-  public static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintStream outputStream) 
+  public static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintingTracker printingTracker, ParsingTracker parsingTracker, PrintStream outputStream) 
   throws RecognitionException {
-    String text = printToString(parseResult, printOption);
+    String text = printToString(parseResult, printOption, printingTracker);
     if (text != null) {
+      Calendar printTime = new GregorianCalendar();
+      
+      String extraParts = getExtraPartsForPrintingOption(printOption, printingTracker, parsingTracker);
+      
+      printStartToStream(printOption, outputStream, printTime, extraParts, parsingTracker);
       outputStream.println(text);
+      printEndToStream(printOption, outputStream, printTime, extraParts, parsingTracker);
+      
     }
   }
   
-  public static String printToString(ParseResult parseResult, PrintingOption printingOption) throws RecognitionException {
+  public static String printToString(ParseResult parseResult, PrintingOption printingOption, PrintingTracker printingTracker) throws RecognitionException {
     String outputText = null;
     
     if (printingOption == PrintingOption.DOT) {
@@ -160,7 +184,7 @@ public class Printer {
     } else {
       Reader templateFile = getPrintingOptionTemplateFileReader(printingOption);
       if (templateFile != null) {
-        outputText = printUsingTemplateToString(parseResult, templateFile);
+        outputText = printUsingTemplateToString(parseResult, templateFile, printingTracker);
       } else {
         System.out.println("Sorry, printing option  " + printingOption + " not yet implemented");
       }
