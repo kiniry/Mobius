@@ -2,12 +2,18 @@ package freeboogie.backend;
 
 import java.util.logging.Logger;
 
+import freeboogie.ast.Expr;
 import freeboogie.util.StackedHashMap;
 
 /**
  * This class is responsible for sort-checking. The subclasses
  * are responsible for actually building a data structure (or calling
  * the prover to construct such a data structure inside it).
+ *
+ * Terms can be built by specifying a name and arguments, or by
+ * giving a BoogiePL expression to be converted into a Term.
+ * (TODO: Specify exactly what is allowed in the BoogiePL
+ * expression.)
  *
  * @author rgrig 
  * @author reviewed by TODO
@@ -139,6 +145,11 @@ public abstract class TermBuilder {
       return reallyMk(def.retSort, termId, a);
     }
   }
+
+  /**
+   * Constructs a prover term out of a BoogiePL expression.
+   */
+  public abstract Term of(Expr e);
   
   /**
    * Subclasses should either construct a tree ar communicate with

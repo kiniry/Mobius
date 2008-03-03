@@ -54,7 +54,6 @@ public class SimplifyProver extends Prover {
     simplify = new SimplifyProcess(cmd);
     strBuilder = new StringBuilder();
     prepareTermBuilder();
-    prepareTermOfExpr();
   }
 
   /**
@@ -90,16 +89,6 @@ public class SimplifyProver extends Prover {
     log.info("prepared term builder for simplify");
   }
 
-  /**
-   * Prepares an appropriate value for {@code TermOfExpr}.
-   * It should be able to construct {@code SmtTerm}s out of
-   * {@code freeboogie.ast.Expr} (BoogiePL expressions).
-   */
-  private void prepareTermOfExpr() {
-    assert false;
-    // TODO
-  }
-  
   // TODO This is quite incomplete now
   private void printTerm(Term t, StringBuilder sb) {
     SmtTerm st = (SmtTerm)t;

@@ -37,7 +37,6 @@ public abstract class Prover {
     // marks the end of an assumption frame in |assumptions|
 
   protected TermBuilder builder;
-  protected TermOfExpr termOfExpr;
   protected static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public Prover() {
@@ -52,14 +51,6 @@ public abstract class Prover {
     return builder;
   }
 
-  /**
-   * Returns an object that builds terms recognized by this prover
-   * out of BoogiePL expressions ({@see freeboogie.ast.Expr}).
-   */
-  public TermOfExpr getTermOfExpr() {
-    return termOfExpr;
-  }
-  
   /**
    * Adds {@code t} as an assumption. Should add successfully sent
    * assumptions to {@code assumptions}.
