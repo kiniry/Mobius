@@ -96,6 +96,7 @@ test201 Good
 test202 FIX	Tests error messages with a bad sourcepath - fails, mjm
 test203 Drop    See https://mobius.ucd.ie/ticket/34 - dcochran
 test204 Good    See https://mobius.ucd.ie/ticket/437 - dcochran
+test262 Good	See https://mobius.ucd.ie/ticket/262 - dcochran
 
 test300 Good 	IDC tests - covers null, divZero spec errors for ctors, methods w/ and w/o bodies - g_karab
 
