@@ -29,7 +29,7 @@ class <name> cluster <clusterName>
 >>
 
 systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
-\<div id="system_chart:<name>">
+\<div id="system_chart:<name>" class="system_chart">
   \<table class="system_chart_table">
     \<tr class="top">
       \<th class="system">SYSTEM\</th>
@@ -91,7 +91,7 @@ clusterEntry(name,desc) ::= <<
 >>
 
 systemName(name) ::= <<
-\<a href="#system_chart:<name>" onclick="return linkSelect('system_chart','system_chart');"><name>\</a>
+\<a href="#system_chart:<name>" onclick="return linkSelect('system_chart','system_chart:<name>');"><name>\</a>
 >>
 
 indexList(i) ::= <<
@@ -165,7 +165,7 @@ classEntry(name,desc) ::= <<
 >>
 
 clusterName(name) ::= <<
-\<a href="#cluster_chart:<name>" onclick="return linkSelect('cluster_charts','cluster_chart:<name>');"><name>\</a>
+\<a href="#cluster_chart:<name>" onclick="return linkSelect('cluster_chart','cluster_chart:<name>');"><name>\</a>
 >>
 
 classChart(name,indexing,explanation,part,inherits,queries,commands,constraints) ::=	<<
@@ -246,7 +246,7 @@ classOrClusterNameList(classes,clusters) ::= <<
 >>
 
 className(name) ::= <<
-\<a href="#class_chart:<name>" onclick="return linkSelect('class_charts','class_chart:<name>');"><name>\</a>
+\<a href="#class_chart:<name>" onclick="return linkSelect('class_chart','class_chart:<name>');"><name>\</a>
 >>
 
 incomingEventChart(name,indexing,explanation,part,event_entries,event_id) ::= <<

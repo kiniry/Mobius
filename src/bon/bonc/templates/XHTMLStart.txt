@@ -1,6 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1" />
+
 <title>BON Documentation: The %3$2s System</title>
 
 <script type="text/javascript">
@@ -9,6 +11,8 @@
 %4$2s
 
 var showAll = false;
+
+var sysTitle = 'system_title';
 
 function setElText(id,text) {
   var elem = document.getElementById(id);
@@ -44,27 +48,49 @@ function showOnly(id) {
   var elem = document.getElementById(id);
   if (elem) {
     hideAll();
-    elem.style.display = "block";
+    showElem(id);
+    if (id.indexOf('system_chart') == 0) {
+      showSysTitle();
+    }
   }
 }
 
 function hideAll() {
   for (var i=0; i<items.length; i++) {
-    var elem = document.getElementById(items[i]);
-    if (elem) {
-      elem.style.display = "none";
-    }
+    hideElem(items[i]);
   }
+  hideSysTitle();
 }
 
 function displayAll() {
   for (var i=0; i<items.length; i++) {
-    var elem = document.getElementById(items[i]);
-    if (elem) {
-      elem.style.display = "block";
-    }
+    showElem(items[i]);
+  }
+  showSysTitle();
+}
+
+function showElem(id) {
+  var elem = document.getElementById(id);
+  if (elem) {
+    elem.style.display = 'block';
   }
 }
+
+function hideElem(id) {
+  var elem = document.getElementById(id);
+  if (elem) {
+    elem.style.display = 'none';
+  }
+}
+
+function showSysTitle() {
+  showElem(sysTitle);
+}
+
+function hideSysTitle() {
+  hideElem(sysTitle);
+}
+
 
 function setBack(id) {
 //Not yet...
@@ -152,6 +178,16 @@ function linkSelect(top, sub) {
 </script>
 
 <style type="text/css">
+
+#footer {
+  z-index: 1;
+  position: fixed; 
+  bottom: 0px; 
+  right: 0px;
+  width: 100%%;
+  height: 50px;
+}
+
 .index_list, .explanation_text, .scenario_description { 
   position:relative; 
   left:20px; 
@@ -170,6 +206,14 @@ function linkSelect(top, sub) {
   border: 1px inset #c0c0c0;
 }
 
+#footer img {
+  border: none;
+}
+
+#main {
+  padding-bottom: 100px;
+}
+
 .system, .system_name, .cluster, .cluster_name, .class, .class_name, .event, .creation, .part {
   padding: 5px 0px 5px 0px;
 }
@@ -182,8 +226,12 @@ function linkSelect(top, sub) {
   padding: 5px 5px 5px 10px;
 }
 
-#system_chart, .cluster_chart, .class_chart, .event_chart, .scenario_chart, .creation_chart, #header {
+.system_chart, .cluster_chart, .class_chart, .event_chart, .scenario_chart, .creation_chart, #header {
   margin-bottom: 20px;
+}
+
+#footer {
+  background-color: #cccccc;
 }
 
 .system_chart_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .scenario_chart_table, .creation_chart_table {
@@ -222,14 +270,6 @@ function linkSelect(top, sub) {
 </head>
 <body onload="hideAll(); initialPopulate();">
 
-<h1>The %3$2s System</h1>
+<div id="main">
 
-<div id="header">
-  <a href="#" id="showlink" onclick="return toggleShowAll();">Show All</a>
-  <form action="#">
-    Chart type:
-    <select id="top" onchange="populate(); showSelected();"><option>processing...</option></select>
-    Chart:
-    <select id="sub" onchange="showSelected();"><option>processing...</option></select>
-  </form>
-</div>
+<h1 id="system_title">%3$2s</h1>
