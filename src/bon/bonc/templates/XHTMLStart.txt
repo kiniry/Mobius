@@ -188,6 +188,11 @@ function linkSelect(top, sub) {
   height: 50px;
 }
 
+#footer p {
+  text-align: right;
+}
+
+
 .index_list, .explanation_text, .scenario_description { 
   position:relative; 
   left:20px; 
@@ -254,7 +259,12 @@ function linkSelect(top, sub) {
   vertical-align: top;
 }
 
-.system_chart_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .bottom table, .scenario_chart_table, .creation_chart_table {
+.system_chart_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .scenario_chart_table, .creation_chart_table {
+  width: 98%%;
+  margin: auto;
+}
+
+.bottom table {
   width: 100%%;
 }
 

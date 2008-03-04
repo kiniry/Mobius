@@ -34,7 +34,7 @@ systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
     \<tr class="top">
       \<th class="system">SYSTEM\</th>
       \<td class="system_name" colspan="2"><name>\</td>
-      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+      \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
@@ -118,7 +118,7 @@ clusterChart(name,indexing,explanation,part,class_entries,cluster_entries) ::= <
     \<tr class="top">
       \<th class="cluster">CLUSTER\</th>
       \<td class="cluster_name" colspan="2"><name>\</td>
-      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+      \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
@@ -174,7 +174,7 @@ classChart(name,indexing,explanation,part,inherits,queries,commands,constraints)
     \<tr class="top">
       \<th class="class">CLASS\</th>
       \<td class="class_name" colspan="2"><name>\</td>
-      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+      \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
@@ -263,7 +263,7 @@ eventChart(name,inorout,indexing,explanation,part,event_entries,event_id) ::= <<
     \<tr class="top">
       \<th class="event">EVENT\</th>
       \<td class="system_name" colspan="2"><name>\</td>
-      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+      \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
@@ -308,7 +308,7 @@ scenarioChart(name,indexing,explanation,part,scenario_entries,scenario_chart_id)
     \<tr class="top">
       \<th class="creation">SCENARIOS\</th>
       \<td class="system_name" colspan="2"><name>\</td>
-      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+      \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
@@ -347,7 +347,7 @@ creationChart(name,indexing,explanation,part,creation_entries,creation_chart_id)
     \<tr class="top">
       \<th class="creation">CREATION\</th>
       \<td class="system_name" colspan="2"><name>\</td>
-      \<td class="part">\<strong>Part:\</strong> <part>\</td>
+      \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">

@@ -243,24 +243,24 @@ constraints  : ^(CONSTRAINTS constraint_list) -> constraints(l={$constraint_list
              ;
 
 query_list  :^(
-               QUERY_LIST { LinkedList<String> l = new LinkedList<String>(); } (m=manifest_textblock { l.add($m.text); } )+
+               QUERY_LIST (l+=manifest_textblock )+
               )
              ->
-               queryList(qs={l})
+               queryList(qs={$l})
             ;
             
 command_list  :^(
-                 COMMAND_LIST { LinkedList<String> l = new LinkedList<String>(); } (m=manifest_textblock { l.add($m.text); } )+
+                 COMMAND_LIST (l+=manifest_textblock )+
                 )
                ->
-                 commandList(cs={l})
+                 commandList(cs={$l})
               ;
               
 constraint_list  :^(
-                    CONSTRAINT_LIST { LinkedList<String> l = new LinkedList<String>(); } (m=manifest_textblock { l.add($m.text); } )+
+                    CONSTRAINT_LIST (l+=manifest_textblock )+
                    )
                   ->
-                    constraintList(cs={l})
+                    constraintList(cs={$l})
                  ;
 
 class_name_list  :^(
@@ -327,7 +327,7 @@ event_entry  :^(
                 class_or_cluster_name_list
                )
               ->
-                eventEntry(text={$manifest_textblock.text},cnl={$class_or_cluster_name_list.st})
+                eventEntry(text={$manifest_textblock.st},cnl={$class_or_cluster_name_list.st})
               |
               ^(EVENT_ENTRY PARSE_ERROR) 
              ;
@@ -1381,7 +1381,7 @@ scenario_name  :^(
                   SCENARIO_NAME manifest_textblock
                  )
                 ->
-                  scenarioName(name={$manifest_textblock.text})
+                  scenarioName(name={$manifest_textblock.st})
                ;
 
 /**********************************************/
@@ -1588,7 +1588,7 @@ manifest_textblock  :   MANIFEST_STRING -> manifestTextBlock(s={$MANIFEST_STRING
 												me=MANIFEST_TEXTBLOCK_END 
 												{ t+=$me.text; }
 											->
-											  manifestTextBlock(s={StringUtil.strip(t)})
+											  manifestTextBlock(s={StringUtil.stripForHTML(t)})
                     ;
 
 
