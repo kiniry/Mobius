@@ -9,6 +9,7 @@ import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.HTMLLinkGenerator;
 import ie.ucd.bon.printer.PrintingTracker;
+import ie.ucd.bon.typechecker.informal.SystemChartDefinition;
 import ie.ucd.bon.util.FileUtil;
 
 import java.io.IOException;
@@ -153,10 +154,12 @@ public class Printer {
   }
   
   private static String formatString(String toFormat, Calendar printTime, String extraParts, ParsingTracker parsingTracker) {
+    SystemChartDefinition sysDef = parsingTracker.getInformalTypingInformation().getSystem();
+    String systemName = sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getSystemName(); 
     return String.format(toFormat, 
         printTime, 
         Main.getVersion(), 
-        parsingTracker.getInformalTypingInformation().getSystem().getSystemName(),
+        systemName,
         extraParts
         );
   }

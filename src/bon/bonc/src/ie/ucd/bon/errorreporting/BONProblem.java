@@ -158,9 +158,11 @@ public abstract class BONProblem implements Comparable<BONProblem> {
     if (sourceFile == null) {
       if (lineNumber > 0) {
         ps.print("<stdin>:");
-      }
+      } else {
+        return;
+      }        
     } else {
-      ps.print(sourceFile.getName());
+      ps.print(sourceFile.getPath());
       ps.print(':');
     }
     if (lineNumber > 0) {
