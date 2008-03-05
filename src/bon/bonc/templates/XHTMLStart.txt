@@ -11,8 +11,9 @@
 %4$2s
 
 var showAll = false;
-
 var sysTitle = 'system_title';
+var topMenu = 'top-menu';
+var subMenu = 'sub-menu';
 
 function setElText(id,text) {
   var elem = document.getElementById(id);
@@ -83,7 +84,7 @@ function setBack(id) {
 }
 
 function initialPopulate() {
-  var topSelect = document.getElementById('top');
+  var topSelect = document.getElementById(topMenu);
   if (topSelect) {
     topSelect.options.length = 0;
     for (var i=0; i < topOptions.length; i+=2) {
@@ -109,8 +110,8 @@ function hashSelect(hash) {
 
 function populate() {
 
-  var subSelect = document.getElementById('sub');
-  var topSelect = document.getElementById('top');
+  var subSelect = document.getElementById(subMenu);
+  var topSelect = document.getElementById(topMenu);
 
   if (subSelect && topSelect) {
     var selected = topSelect.options[topSelect.selectedIndex].value;
@@ -125,7 +126,7 @@ function populate() {
 }
 
 function showSelected() {
-  var subSelect = document.getElementById('sub');
+  var subSelect = document.getElementById(subMenu);
   if (subSelect) {
     var selected = subSelect.options[subSelect.selectedIndex].value;
     if (selected) {
@@ -136,7 +137,7 @@ function showSelected() {
 }
 
 function linkSelect(top, sub) {
-  var topSelect = document.getElementById('top');
+  var topSelect = document.getElementById(topMenu);
   if (topSelect) {
     for (var i=0; i < topSelect.options.length; i++) {
       if (topSelect.options[i].value == top) {
@@ -146,7 +147,7 @@ function linkSelect(top, sub) {
     }
   }  
   populate();
-  var subSelect = document.getElementById('sub');
+  var subSelect = document.getElementById(subMenu);
   if (subSelect) {
     for (var i=0; i < subSelect.options.length; i++) {
       if (subSelect.options[i].value == sub) {
@@ -169,46 +170,35 @@ body {
   font-family: Optima, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Helvetica, Arial, sans-serif;
 }
 
-#main a {
+.list-entry {
   margin-left: 5px;
+}
+
+a {
+  text-decoration: none;
+  color: blue;
+}
+
+a:hover {
   text-decoration: underline;
-  font-weight: bold;
 }
 
-dl {
-  margin: 0 0 0 0;
-} 
-
-.scenario_chart .bottom dt {
-  font-weight: bold;
+a:active {
+  text-decoration: none;
 }
 
-.indexing dt, .explanation dt {
-  font-variant: small-caps;
-}
-
-dd {
-  margin-left: 20px;
+#main {
+  padding-bottom: 100px;
 }
 
 #footer {
   z-index: 1;
   position: fixed; 
-  bottom: 0px; 
-  right: 0px;
+  bottom: 0px;
+  right: 0px; 
   width: 100%%;
   border-top: 2px solid #000000;
-}
-
-#right-footer {
-  margin: 5px 5px 0px 0px;
-  padding: 0;
-  text-align: right;
-}
-
-#footer a {
-  text-decoration: none;
-  font-weight: bold;
+  background-color: #cccccc;
 }
 
 #left-footer {
@@ -227,100 +217,124 @@ dd {
   margin-right: 10px;
   font-weight: bold;
   font-size: 1.1em;
+}
+
+#top-menu {
   min-width: 125px;
 }
 
-.system_chart_table, .class_dictionary_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .scenario_chart_table, .creation_chart_table {
-  border: 2px solid #000000;
-}
-
-.system, .class_dic, .system_name, .cluster, .cluster_name, .class, .class_name, .scenario, .part, .explanation, .indexing, .bottom table, .event, .creation {
-  border: 4px groove #c0c0c0;
-}
-
-.left_col, .right_col, .cluster_col, .class_col, .description_col, .inorout_col, .involved_col, .scenario_entry, .creates_col {
-  border: 1px inset #c0c0c0;
-  vertical-align: top;
-}
-
-.right_col {
-  line-height: 1.5em;
-}
-
-#main {
-  padding-bottom: 100px;
-}
-
-#top {
-  min-width: 125px;
-}
-
-#sub {
+#sub-menu {
   min-width: 250px;
 }
 
-
-.system, .system_name, .cluster, .cluster_name, .class, .class_name, .event, .creation, .part {
-  padding: 5px 0px 5px 0px;
+#right-footer {
+  margin: 5px 5px 0px 0px;
+  padding: 0;
+  text-align: right;
 }
 
-.left_col, .right_col, .cluster_col, .class_col, .description_col, .queries_col, .commands_col, .constraints_col, .inorout_col, .involved_col, .scenario_entry, .creates_col {
-  padding: 5px 20px 5px 20px;
+#footer a {
+  text-decoration: none;
+  font-weight: bold;
 }
 
-.explanation, .indexing {
-  padding: 5px 5px 5px 10px;
+dl {
+  margin: 0 0 0 10px;
 }
 
-.system_chart, .class_dictionary, .cluster_chart, .class_chart, .event_chart, .scenario_chart, .creation_chart, #header {
+dd {
+  margin-left: 20px;
+} 
+
+.scenario_entry dt {
+  font-weight: bold;
+}
+
+.indexing dt, .explanation dt {
+  font-variant: small-caps;
+}
+
+.top-level {
   margin-bottom: 20px;
-}
-
-#footer {
-  background-color: #cccccc;
-}
-
-.system_chart_table, .class_dictionary_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .scenario_chart_table, .creation_chart_table {
-  background-color: #cccccc;
-}
-
-.system_name, .cluster_name, .class_name, .part, .left_col {
-  background-color: #ffff99;
-}
-
-.explanation, .indexing, .right_col, .scenario_entry {
-  background-color: #ffffff;
-}
-
-.system, .system_name, .cluster, .cluster_name, .class, .class_name, .part, .cluster_col, .description_col {
-  text-align: center;
-}
-
-.explanation, .indexing {
-  vertical-align: top;
-}
-
-.system_chart_table, .class_dictionary_table, .cluster_chart_table, .class_chart_table, .event_chart_table, .scenario_chart_table, .creation_chart_table {
   width: 98%%;
   margin: auto;
 }
 
-.bottom table {
+.outer {
   width: 100%%;
+  background-color: #7d7d7d;
+  border: 2px solid #000000;
 }
 
-.system_name, .cluster_name, .class_name, .explanation, .indexing {
-  width: 50%%;
+.type, .name, .part {
+  border: 4px groove #c0c0c0;
+  padding: 5px 0px 5px 0px;
+  text-align: center;
 }
 
-.class, .cluster, .system, .part, .class_dic {
+.explanation, .indexing {
+  padding: 5px 5px 5px 10px;
+  background-color: #ffffff;
+  vertical-align: top;
+  border: 4px groove #c0c0c0;
+  padding: 5px 0px 5px 0px;
+}
+
+.name {
+  background-color: #f3f0f0;
+  font-size: 1.1em;
+}
+
+.part {
+  background-color: #cccccc;
+}
+
+.type, .part {
   width: 25%%;
 }
 
-.class_dictionary .right_col {
+.type {
+  background-color: #bcbcbc;
+}
+
+.name, .indexing, .explanation {
   width: 50%%;
 }
 
+.top, .middle, .bottom {
+  width: 100%%;
+}
+
+.bottom table {
+  border: 4px groove #c0c0c0;
+  width: 100%%;
+}
+
+.bottom tr {
+  width: 100%%;
+}
+
+.bottom td, .bottom th {
+  border: 1px inset #c0c0c0;
+  vertical-align: top;
+  padding: 8px 20px 8px 20px;
+}
+
+.spaced-lines {
+  line-height: 1.5em;
+}
+
+.white {
+  background-color: #ffffff;
+}
+
+.light-grey {
+  background-color: #f3f0f0;
+}
+
+.grey {
+  background-color: #cccccc;
+}
 </style>
 
 </head>

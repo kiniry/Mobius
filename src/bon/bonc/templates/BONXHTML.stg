@@ -18,11 +18,11 @@ informalChart(i) ::= <<
 >>
 
 classDictionary(name,dicEntries,indexing,explanation,part,dic_id) ::= <<
-\<div class="class_dictionary" id="class_dictionary:<dic_id>">
-  \<table class="class_dictionary_table">
+\<div class="top-level" id="class_dictionary:<dic_id>">
+  \<table class="outer">
     \<tr class="top">
-      \<th class="class_dic">CLASS DICTIONARY\</th>
-      \<td class="system_name" colspan="2"><name>\</td>
+      \<th class="type">CLASS DICTIONARY\</th>
+      \<td class="name" colspan="2"><name>\</td>
       \<td class="part">\<strong>Part:\</strong> 1/1\</td>
     \</tr>
     \<tr class="middle">
@@ -39,13 +39,13 @@ classDictionary(name,dicEntries,indexing,explanation,part,dic_id) ::= <<
         \</dl>
       \</td>
     \</tr>
-    \<tr class="bottom">
-      \<td colspan="4">
+    \<tr>
+      \<td colspan="4" class="bottom">
         \<table>
           \<tr>
-            \<th class="class_col">Class\</th>
-            \<th class="cluster_col">Cluster\</th>
-            \<th class="description_col">Description\</th>
+            \<th class="grey">Class\</th>
+            \<th class="grey">Cluster\</th>
+            \<th class="grey">Description\</th>
           \</tr>
           <dicEntries; separator="\n">
         \</table>
@@ -57,18 +57,18 @@ classDictionary(name,dicEntries,indexing,explanation,part,dic_id) ::= <<
 
 dictionaryEntry(name,clusterNameList,desc) ::= <<
 \<tr>
-  \<td class="left_col"><name>\</td>
-  \<td class="left_col"><clusterNameList>\</td>
-  \<td class="right_col"><desc>\</td>
+  \<td class="light-grey"><name>\</td>
+  \<td class="light-grey"><clusterNameList>\</td>
+  \<td class="white"><desc>\</td>
 \</tr>
 >>
 
 systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
-\<div id="system_chart:<name>" class="system_chart">
-  \<table class="system_chart_table">
+\<div class="top-level" id="system_chart:<name>">
+  \<table class="outer">
     \<tr class="top">
-      \<th class="system">SYSTEM\</th>
-      \<td class="system_name" colspan="2"><name>\</td>
+      \<th class="type">SYSTEM\</th>
+      \<td class="name" colspan="2"><name>\</td>
       \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
@@ -85,12 +85,12 @@ systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
         \</dl>
       \</td>
     \</tr>
-    \<tr class="bottom">
-      \<td colspan="4">
+    \<tr>
+      \<td colspan="4" class="bottom">
         \<table>
           \<tr>
-            \<th class="cluster_col">Cluster\</th>
-            \<th class="description_col">Description\</th>
+            \<th class="grey">Cluster\</th>
+            \<th class="grey">Description\</th>
           \</tr>
           <cluster_entries>
         \</table>
@@ -122,8 +122,8 @@ clusterEntries(cs) ::= <<
 
 clusterEntry(name,desc) ::= <<
 \<tr>
-  \<td class="left_col"><name>\</td>
-  \<td class="right_col"><desc>\</td>
+  \<td class="light-grey"><name>\</td>
+  \<td class="white"><desc>\</td>
 \</tr>
 >>
 
@@ -150,11 +150,11 @@ indexString(s) ::= <<
 >>
 
 clusterChart(name,indexing,explanation,part,class_entries,cluster_entries) ::= <<
-\<div class="cluster_chart" id="cluster_chart:<name>">
-  \<table class="cluster_chart_table">
+\<div class="top-level" id="cluster_chart:<name>">
+  \<table class="outer">
     \<tr class="top">
-      \<th class="cluster">CLUSTER\</th>
-      \<td class="cluster_name" colspan="2"><name>\</td>
+      \<th class="type">CLUSTER\</th>
+      \<td class="name" colspan="2"><name>\</td>
       \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
@@ -171,19 +171,19 @@ clusterChart(name,indexing,explanation,part,class_entries,cluster_entries) ::= <
         \</dl>
       \</td>
     \</tr>
-    \<tr class="bottom">
-      \<td colspan="4">
+    \<tr>
+      \<td colspan="4" class="bottom">
         <if(class_entries)>\<table>
           \<tr>
-            \<th class="class_col">Class\</th>
-            \<th class="description_col">Description\</th>
+            \<th class="grey">Class\</th>
+            \<th class="grey">Description\</th>
           \</tr>
           <class_entries>
         \</table>
         <endif><if(cluster_entries)>\<table>
           \<tr>
-            \<th class="cluster_col">Cluster\</th>
-            \<th class="description_col">Description\</th>
+            \<th>Cluster\</th>
+            \<th>Description\</th>
           \</tr>
           <cluster_entries>
         \</table>
@@ -200,8 +200,8 @@ classEntries(cs) ::= <<
 
 classEntry(name,desc) ::= <<
 \<tr>
-  \<td class="left_col"><name>\</td>
-  \<td class="right_col"><desc>\</td>
+  \<td class="light-grey"><name>\</td>
+  \<td class="white"><desc>\</td>
 \</tr>
 >>
 
@@ -210,11 +210,11 @@ clusterName(name) ::= <<
 >>
 
 classChart(name,indexing,explanation,part,inherits,queries,commands,constraints) ::=	<<
-\<div class="class_chart" id="class_chart:<name>">
-  \<table class="class_chart_table">
+\<div class="top-level" id="class_chart:<name>">
+  \<table class="outer">
     \<tr class="top">
-      \<th class="class">CLASS\</th>
-      \<td class="class_name" colspan="2"><name>\</td>
+      \<th class="type">CLASS\</th>
+      \<td class="name" colspan="2"><name>\</td>
       \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
@@ -231,24 +231,24 @@ classChart(name,indexing,explanation,part,inherits,queries,commands,constraints)
         \</dl>
       \</td>
     \</tr>
-    \<tr class="bottom">
-      \<td colspan="4">
+    \<tr>
+      \<td colspan="4" class="bottom">
         \<table>
           <if(first(inherits))>\<tr>
-            \<th class="left_col">Inherits from\</th>
-            \<td class="right_col"><inherits>\</td>
+            \<th class="light-grey">Inherits from\</th>
+            \<td class="white spaced-lines"><inherits>\</td>
           \</tr><endif>
           \<tr>
-            \<th class="left_col">Queries\</th>
-            \<td class="right_col"><queries>\</td>
+            \<th class="light-grey">Queries\</th>
+            \<td class="white spaced-lines"><queries>\</td>
           \</tr>
           \<tr>
-            \<th class="left_col">Commands\</th>
-            \<td class="right_col"><commands>\</td>
+            \<th class="light-grey">Commands\</th>
+            \<td class="white spaced-lines"><commands>\</td>
           \</tr>
           \<tr>
-            \<th class="left_col">Constraints\</th>
-            \<td class="right_col"><constraints>\</td>
+            \<th class="light-grey">Constraints\</th>
+            \<td class="white spaced-lines"><constraints>\</td>
           \</tr>
         \</table>
       \</td>
@@ -286,15 +286,15 @@ constraintList(cs) ::= <<
 >>
 
 classNameList(cs) ::= <<
-<cs; separator=", ">
+\<span class="list-entry"><cs; separator="</span>, <span class=\"list-entry\">">\</span>
 >>
 
 clusterNameList(cs) ::= <<
-<cs; separator=", ">
+\<span class="list-entry"><cs; separator="</span>, <span class=\"list-entry\">">\</span>
 >>
 
 classOrClusterNameList(classes,clusters) ::= <<
-<if(first(classes))><classes; separator=", ">, <endif>(<clusters; separator="), (">)
+<if(first(classes))>\<span class="list-entry"><classes; separator="</span>, <span class=\"list-entry\">">\</span>, <endif>\<span class="list-entry">(<clusters; separator=")</span>, <span class=\"list-entry\">(">)\</span>
 >>
 
 className(name) ::= <<
@@ -310,11 +310,11 @@ outgoingEventChart(name,indexing,explanation,part,event_entries) ::= <<
 >>
 
 eventChart(name,inorout,indexing,explanation,part,event_entries,event_id) ::= <<
-\<div class="event_chart" id="event_chart:<event_id>">
-  \<table class="event_chart_table">
+\<div class="top-level" id="event_chart:<event_id>">
+  \<table class="outer">
     \<tr class="top">
-      \<th class="event">EVENT\</th>
-      \<td class="system_name" colspan="2"><name>\</td>
+      \<th class="type">EVENT\</th>
+      \<td class="name" colspan="2"><name>\</td>
       \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
@@ -331,12 +331,12 @@ eventChart(name,inorout,indexing,explanation,part,event_entries,event_id) ::= <<
         \</dl>
       \</td>
     \</tr>
-    \<tr class="bottom">
-      \<td colspan="4">
+    \<tr>
+      \<td colspan="4" class="bottom">
         \<table>
           \<tr>
-            \<th class="inorout_col"><inorout>\</th>
-            \<th class="involved_col">Involved object types\</th>
+            \<th class="grey"><inorout>\</th>
+            \<th class="grey">Involved object types\</th>
           \</tr>
           <event_entries>
         \</table>
@@ -353,17 +353,17 @@ eventEntries(e) ::= <<
 
 eventEntry(text,cnl) ::= <<
 \<tr>
-  \<td class="left_col"><text>\</td>
-  \<td class="right_col"><cnl>\</td>
+  \<td class="light-grey"><text>\</td>
+  \<td class="white spaced-lines"><cnl>\</td>
 \</tr>
 >>
 
 scenarioChart(name,indexing,explanation,part,scenario_entries,scenario_chart_id) ::= <<
-\<div class="scenario_chart" id="scenario_chart:<scenario_chart_id>">
-  \<table class="scenario_chart_table">
+\<div class="top-level" id="scenario_chart:<scenario_chart_id>">
+  \<table class="outer">
     \<tr class="top">
-      \<th class="creation">SCENARIOS\</th>
-      \<td class="system_name" colspan="2"><name>\</td>
+      \<th class="type">SCENARIOS\</th>
+      \<td class="name" colspan="2"><name>\</td>
       \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
@@ -380,11 +380,9 @@ scenarioChart(name,indexing,explanation,part,scenario_entries,scenario_chart_id)
         \</dl>
       \</td>
     \</tr>
-    \<tr class="bottom">
-      \<td colspan="4">
-        <if(scenario_entries)>\<table>
-          <scenario_entries>
-        \</table><endif>
+    \<tr>
+      \<td colspan="4" class="bottom">
+        <scenario_entries>
       \</td>
     \</tr>
   \</table>
@@ -392,13 +390,15 @@ scenarioChart(name,indexing,explanation,part,scenario_entries,scenario_chart_id)
 >>
 
 scenarioEntries(e) ::= <<
-<e; separator="\n">
+\<table>
+  <e; separator="\n">
+\</table>
 >>
 
 scenarioEntry(s,d) ::= <<
 \<tr>
-  \<td class="scenario_entry">
-    \<dl>
+  \<td class="white">
+    \<dl class="scenario_entry">
       \<dt><s>\</dt>
       \<dd><d>\</dd>
     \</dl>
@@ -407,11 +407,11 @@ scenarioEntry(s,d) ::= <<
 >>
 
 creationChart(name,indexing,explanation,part,creation_entries,creation_chart_id) ::= <<
-\<div class="creation_chart" id="creation_chart:<creation_chart_id>">
-  \<table class="creation_chart_table">
+\<div class="top-level" id="creation_chart:<creation_chart_id>">
+  \<table class="outer">
     \<tr class="top">
-      \<th class="creation">CREATION\</th>
-      \<td class="system_name" colspan="2"><name>\</td>
+      \<th class="type">CREATION\</th>
+      \<td class="name" colspan="2"><name>\</td>
       \<td class="part">\<strong>Part:\</strong> <if(first(part))><part><else>1/1<endif>\</td>
     \</tr>
     \<tr class="middle">
@@ -428,15 +428,9 @@ creationChart(name,indexing,explanation,part,creation_entries,creation_chart_id)
         \</dl>
       \</td>
     \</tr>
-    \<tr class="bottom">
-      \<td colspan="4">
-        <if(creation_entries)>\<table>
-          \<tr>
-            \<th class="class_col">Class\</th>
-            \<th class="creates_col">Creates instances of\</th>
-          \</tr>
-          <creation_entries>
-        \</table><endif>
+    \<tr>
+      \<td colspan="4" class="bottom">
+        <creation_entries>
       \</td>
     \</tr>
   \</table>
@@ -444,13 +438,19 @@ creationChart(name,indexing,explanation,part,creation_entries,creation_chart_id)
 >>
 
 creationEntries(l) ::= <<
-<l; separator="\n">
+\<table>
+  \<tr>
+    \<th class="grey">Class\</th>
+    \<th class="grey">Creates instances of\</th>
+  \</tr>
+  <l; separator="\n">
+\</table>
 >>
 
 creationEntry(name,cnl) ::= <<
 \<tr>
-  \<td class="left_col"><name>\</td>
-  \<td class="right_col"><cnl>\</td>
+  \<td class="light-grey"><name>\</td>
+  \<td class="white"><cnl>\</td>
 \</tr>
 >>
 
