@@ -4,6 +4,7 @@ import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 public class HTMLLinkGenerator {
 
@@ -66,7 +67,7 @@ public class HTMLLinkGenerator {
     
     if (iti.getClusters().size() > 0) {
       sb.append("subOptions['cluster_chart'] = [ ");
-      Set<String> clusterNames = parsingTracker.getInformalTypingInformation().getClusters().keySet();
+      Set<String> clusterNames = new TreeSet<String>(parsingTracker.getInformalTypingInformation().getClusters().keySet());
       for (String clusterName : clusterNames) {
         sb.append("'" + clusterName + "',");
         sb.append("'" + CLUSTER_CHART + clusterName + "',");
@@ -80,7 +81,7 @@ public class HTMLLinkGenerator {
     
     if (iti.getClasses().size() > 0) {
       sb.append("subOptions['class_chart'] = [ ");
-      Set<String> classNames = parsingTracker.getInformalTypingInformation().getClasses().keySet();
+      Set<String> classNames = new TreeSet<String>(parsingTracker.getInformalTypingInformation().getClasses().keySet());
       for (String className : classNames) {
         sb.append("'" + className + "',");
         sb.append("'" + CLASS_CHART + className + "',");
