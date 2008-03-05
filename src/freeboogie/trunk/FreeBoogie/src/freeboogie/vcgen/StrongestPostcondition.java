@@ -5,10 +5,9 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
-import freeboogie.backend.Prover;
-import freeboogie.backend.Term;
-import freeboogie.backend.TermBuilder;
+import freeboogie.backend.*;
 import freeboogie.tc.*;
+import freeboogie.util.Closure;
 
 /**
  * Computes strongest postcondition for one {@code
@@ -156,19 +155,17 @@ public class StrongestPostcondition {
    * Returns a verification condition for the whole flow graph.
    */
   public Term vc() {
-    assert false;
-    return null;
-    // TODO
-  }
-
-  /**
-   * Returns the postcondition for {@code impl}.
-   */
-  public Term getVc(Implementation impl) {
-    Block entry = impl.getBody().getBlocks();
-    assert false;
-    // TODO Continue here
-    return null;
+    final ArrayList<Term> vcs = new ArrayList<Term>();
+    flow.iterNode(new Closure<AssertAssumeCmd>() {
+      @Override
+      public void go(AssertAssumeCmd cmd) {
+        switch (cmd.getType()) {
+        case ASSERT:
+          vcs.add(term.of(cmd.getExpr()));
+        }
+      }
+    });
+    return term.mk("and", vcs.toArray(new Term[0]));
   }
 
 }
