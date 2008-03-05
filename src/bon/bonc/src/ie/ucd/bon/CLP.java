@@ -46,7 +46,7 @@ public class CLP {
     pp.addOptionName("-print");
     pp.addOptionName("--print");
     pp.setArgName("TYPE");
-    pp.setHelpString("Print the parsed input in the given format (currently just TXT for plain-text).");
+    pp.setHelpString("Print the parsed input in the given format (TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary).");
     cp.addOption(pp);
     
     StringDefaultOption ppo = new StringDefaultOption();
@@ -173,6 +173,23 @@ public class CLP {
     stdin.addOptionName("-");
     stdin.setHelpString("Read from standard input.");    
     cp.addOption(stdin);
+    
+    BooleanDefaultOption genClassDicWhenPrinting = new BooleanDefaultOption();
+    genClassDicWhenPrinting.setOptionID("77");
+    genClassDicWhenPrinting.addOptionName("-gcd");
+    genClassDicWhenPrinting.addOptionName("--gen-class-dic");
+    genClassDicWhenPrinting.setHelpString("Generate the class dictionary when printing.");
+    genClassDicWhenPrinting.setByDefault();
+    genClassDicWhenPrinting.setHidden();
+    cp.addOption(genClassDicWhenPrinting);
+    
+    BooleanDefaultOption noGenClassDicWhenPrinting = new BooleanDefaultOption();
+    noGenClassDicWhenPrinting.setOptionID("77.1");
+    noGenClassDicWhenPrinting.addOptionName("-ngcd");
+    noGenClassDicWhenPrinting.addOptionName("--no-gen-class-dic");
+    noGenClassDicWhenPrinting.setHelpString("Do not generate the class dictionary when printing.");
+    noGenClassDicWhenPrinting.addAction(new TriggersBoolean("77.1", "77", false));
+    cp.addOption(noGenClassDicWhenPrinting);
     
     BooleanDefaultOption printMan = new BooleanDefaultOption();
     printMan.setOptionID("99999");

@@ -125,6 +125,13 @@ public class InformalTypingInformation {
     }   
   }
   
+  public void setExplanation(String explanation) {
+    if (context.isInClassChart()) {
+      String name = context.getClassChartName();
+      classes.get(name).setExplanation(explanation);
+    }
+  }
+  
   public SystemChartDefinition getSystem() {
     return system;
   }
@@ -144,5 +151,9 @@ public class InformalTypingInformation {
   public InformalTypeChecker getInformalTypeChecker() {
     return new InformalTypeChecker(system, clusters, classes, clustersInSystem, clusterClusterGraph, classClusterGraph, classInheritanceGraph);
   }
-  
+
+  public Graph<String, ClusterChartDefinition> getClassClusterGraph() {
+    return classClusterGraph;
+  }
+
 }

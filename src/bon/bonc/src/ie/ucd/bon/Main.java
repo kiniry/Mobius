@@ -8,18 +8,21 @@ import ie.ucd.bon.Printer.PrintingOption;
 import ie.ucd.bon.errorreporting.FileNotFoundError;
 import ie.ucd.bon.errorreporting.NoFilesError;
 import ie.ucd.bon.errorreporting.Problems;
+import ie.ucd.bon.parser.SourceReader;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.util.FileUtil;
 import ie.ucd.commandline.options.InvalidOptionsSetException;
 import ie.ucd.commandline.options.Options;
 import ie.ucd.commandline.parser.CommandlineParser;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Vector;
@@ -33,10 +36,10 @@ import org.antlr.runtime.RecognitionException;
  */
 public class Main {
 
-  private static final int TC_NUM_SEVERE_ERRORS = 2; //NB for all files
-  private static final int PP_NUM_SEVERE_ERRORS = 0; //NB for one file
-  private static final int CCG_NUM_SEVERE_ERRORS = 10; //NB for all files
-  private static final int IG_NUM_SEVERE_ERRORS = 10; //NB for all files
+  public static final int TC_NUM_SEVERE_ERRORS = 2; //NB for all files
+  public static final int PP_NUM_SEVERE_ERRORS = 0; //NB for one file
+  public static final int CCG_NUM_SEVERE_ERRORS = 10; //NB for all files
+  public static final int IG_NUM_SEVERE_ERRORS = 10; //NB for all files
   
   private static boolean debug = false;
   
@@ -145,14 +148,26 @@ public class Main {
  
     for (File file : files) {
       ParseResult parseResult;
+      
+      InputStream is;
+      if (file == null) {
+        is = SourceReader.getInstance().readStandardInput();
+      } else {
+        try {
+          is = new FileInputStream(file);
+        } catch (FileNotFoundException fnfe) {
+          is = null;
+        }
+      }
+      
       try {
         if (timing) {
           long startTime = System.nanoTime();
-          parseResult = Parser.parse(file, tracker);
+          parseResult = Parser.parse(file, is, tracker);
           long endTime = System.nanoTime();
           System.out.println("Parsing took: " + timeString(endTime-startTime));
         } else {
-          parseResult = Parser.parse(file, tracker);
+          parseResult = Parser.parse(file, is, tracker);
         }
         
         if (file == null) {
@@ -212,6 +227,19 @@ public class Main {
       return;
     }
     
+    if (so.isBooleanOptionByNameSelected("-gcd") && printingOption != Printer.PrintingOption.DIC) {
+      try {
+        String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
+        File classDicAutoFile = new File("class-dic-auto");
+        if (!classDic.equals("")) {
+          tracker.addParse(classDicAutoFile.getName(), Parser.parse(classDicAutoFile, new ByteArrayInputStream(classDic.getBytes()), tracker));
+          files.add(classDicAutoFile);
+        }
+      } catch (RecognitionException re) {
+        //Can't actually be thrown for this.
+      }
+    }
+    
     boolean printToFile = so.isStringOptionByNameSelected("-po");
     
     PrintStream outputStream;
@@ -235,34 +263,7 @@ public class Main {
     }  
 
 
-    for (File file : files) {
-      String fileName;
-      if (file == null) {
-        fileName = "stdin";
-      } else {
-        fileName = file.getPath();
-      }
-
-      ParseResult parse = tracker.getParseResult(fileName);
-      if (parse.continueFromParse(PP_NUM_SEVERE_ERRORS)) {
-        try {
-          PrintingTracker printTracker = new PrintingTracker();
-          if (timing) {
-            long startTime = System.nanoTime();
-            Printer.printToStream(parse, printingOption, printTracker, tracker, outputStream);
-            long endTime = System.nanoTime();
-            System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + timeString(endTime-startTime));
-          } else {
-            Printer.printToStream(parse, printingOption, printTracker, tracker, outputStream);
-          }
-        } catch (RecognitionException re) {
-          System.out.println("Something went wrong when printing...");
-        }
-
-      } else {
-        System.out.println("Not printing " + fileName + " due to parse errors.");
-      }
-    }
+    Printer.printToStream(files, tracker, outputStream, printingOption, printToFile, timing);
     
     if (printToFile) {
       outputStream.close();
@@ -337,7 +338,7 @@ public class Main {
     return clp;
   }
   
-  private static String timeString(long timeInNano) {
+  public static String timeString(long timeInNano) {
     return timeInNano + "ns (" + (timeInNano / 1000000d) + "ms or " + (timeInNano / 1000000000d) + "s)";
   }
   

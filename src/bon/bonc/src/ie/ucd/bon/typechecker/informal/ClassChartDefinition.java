@@ -15,6 +15,8 @@ public class ClassChartDefinition {
     private final String className;
     private final SourceLocation loc;
     
+    private String explanation;
+    
     private final Set<String> superClasses;
     
     private boolean hasClassHierarchyCycle;
@@ -65,6 +67,14 @@ public class ClassChartDefinition {
 
     public void setHasClassHierarchyCycle() {
       this.hasClassHierarchyCycle = true;
+    }
+
+    public String getExplanation() {
+      return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+      this.explanation = explanation;
     }
     
     

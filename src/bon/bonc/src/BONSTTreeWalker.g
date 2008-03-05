@@ -61,20 +61,23 @@ informal_chart  :    system_chart    -> informalChart(i={$system_chart.st})
 			
 class_dictionary  :^(
                      CLASS_DICTIONARY system_name 
+                     (i+=indexing)?
+                     (e+=explanation)? 
+                     (p+=part)? 
                      (ds += dictionary_entry)+ 
                     )
                    ->
-                     classDictionary(name={$system_name.st}, dicEntries={$ds})
+                     classDictionary(name={$system_name.st}, dicEntries={$ds},indexing={$i},explanation={$e},part={$p},dic_id={getPT().addClassDictionary()})
                    |
                    ^( CLASS_DICTIONARY PARSE_ERROR )
                   ;
 			
 dictionary_entry  :^(
                      DICTIONARY_ENTRY class_name
-                     cluster_name description 
+                     cluster_name_list description 
                     )
                    ->
-                   	 dictionaryEntry(name={$class_name.st},clusterName={$cluster_name.st},desc={$description.st})
+                   	 dictionaryEntry(name={$class_name.st},clusterNameList={$cluster_name_list.st},desc={$description.st})
                   ;
 
 /**********************************************/
@@ -269,6 +272,14 @@ class_name_list  :^(
                   ->
                     classNameList(cs={$c})
                  ;
+
+cluster_name_list  :^(
+                      CLUSTER_NAME_LIST ( c+=cluster_name )+
+                     )
+                    ->
+                      clusterNameList(cs={$c})
+                   ;
+
                  
 class_or_cluster_name_list  :  ^( CLASS_OR_CLUSTER_NAME_LIST (classes+=class_name)* (clusters+=cluster_name)+ )
                               ->

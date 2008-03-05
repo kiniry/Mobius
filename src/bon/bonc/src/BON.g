@@ -173,6 +173,7 @@ tokens {
   CONSTRAINTS;
   HAS_TYPE;
   PARSE_ERROR;
+  CLUSTER_NAME_LIST;
 }
 
 @header {
@@ -182,7 +183,11 @@ tokens {
 }
 
 @lexer::header {
-  package ie.ucd.bon.parser;
+/**
+ * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
+package ie.ucd.bon.parser;
 }
 
 @members {
@@ -233,27 +238,37 @@ informal_chart  :    system_chart
                 ;
 			
 class_dictionary  :  d='dictionary' system_name 
+                     (indexing)?
+                     (explanation)? 
+                     (part)? 
                      (dictionary_entry)+ 
                      'end'
                    ->
                    ^(
                      CLASS_DICTIONARY[$d] system_name 
+                     (indexing)?
+                     (explanation)? 
+                     (part)? 
                      (dictionary_entry)+ 
                     )
                    |
-                     d='dictionary' system_name 'end'
+                     d='dictionary' system_name 
+                     (indexing)?
+                     (explanation)? 
+                     (part)? 
+                     'end'
                      { addParseProblem(new MissingElementParseError(getSourceLocation($d), "dictionary entries", "in system dictionary", false)); }
                    -> 
                    ^( CLASS_DICTIONARY  PARSE_ERROR )
                   ;
 			
 dictionary_entry  :  c='class' class_name 
-                     'cluster' cluster_name 
+                     'cluster' cluster_name_list 
                      description 
                    ->
                    ^(
                      DICTIONARY_ENTRY[$c] class_name
-                     cluster_name description 
+                     cluster_name_list description 
                     )
                   ;
 
@@ -279,6 +294,7 @@ system_chart  :  s='system_chart' system_name
               ;
 
 explanation  :  e='explanation' manifest_textblock
+                { getITI().setExplanation($manifest_textblock.text); }
               ->
               ^(
                 EXPLANATION[$e] manifest_textblock
@@ -512,6 +528,18 @@ class_name_list  :  c1=class_name { getTI().classNameListEntry($c1.text, getSLoc
                   ->
                   ^(
                     CLASS_NAME_LIST[$c1.start] class_name+
+                   )
+                 ;
+                 
+cluster_name_list  :  c1=cluster_name
+                    (  ( ',' c=cluster_name )
+                     | ( c=cluster_name 
+                         { addParseProblem(new MissingElementParseError(getSourceLocation($c.start), "comma", "before additional class name", false)); }                           
+                       )
+                    )*                  
+                  ->
+                  ^(
+                    CLUSTER_NAME_LIST[$c1.start] cluster_name+
                    )
                  ;
                  

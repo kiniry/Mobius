@@ -59,6 +59,9 @@ informal_chart  :    system_chart
 class_dictionary  :^(
                      CLASS_DICTIONARY system_name 
                      { getITC().checkSystemName($system_name.text,getSLoc($system_name.start.token)); }
+                     (indexing)?
+                     (explanation)? 
+                     (part)? 
                      (dictionary_entry)+ 
                     )
                    |
@@ -67,11 +70,12 @@ class_dictionary  :^(
 			
 dictionary_entry  :^(
                      DICTIONARY_ENTRY class_name
-                     { getITC().checkValidClassType($class_name.text, getSLoc($class_name.start.token)); }
-                     cluster_name 
-                     { getITC().checkValidClusterType($cluster_name.text, getSLoc($cluster_name.start.token)); }
-                     { getITC().checkClassIsInCluster($class_name.text, $cluster_name.text, getSLoc($class_name.start.token)); }                     
+                     { getITC().checkValidClassType($class_name.text, getSLoc($class_name.start.token));
+                       getContext().enterDictionaryEntry($class_name.text); 
+                     }
+                     cluster_name_list                      
                      description 
+                     { getContext().leaveDictionaryEntry(); }
                     )
                   ;
 
@@ -236,6 +240,11 @@ class_name_list  :^(
                       } )+
                    )
                  ;
+     
+cluster_name_list  :^(
+                      CLUSTER_NAME_LIST ( cluster_name { getITC().checkValidClusterTypeByContext($cluster_name.text, getSLoc($cluster_name.start.token)); } )+
+                     )
+                   ;
                  
 class_or_cluster_name_list  :  ^( CLASS_OR_CLUSTER_NAME_LIST 
                                   ( class_name

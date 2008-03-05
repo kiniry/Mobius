@@ -17,15 +17,50 @@ informalChart(i) ::= <<
 <i>
 >>
 
-classDictionary(name,dicEntries) ::= <<
-dictionary <name>
-  <dicEntries; separator="\n">
-end
+classDictionary(name,dicEntries,indexing,explanation,part,dic_id) ::= <<
+\<div class="class_dictionary" id="class_dictionary:<dic_id>">
+  \<table class="class_dictionary_table">
+    \<tr class="top">
+      \<th class="class_dic">CLASS DICTIONARY\</th>
+      \<td class="system_name" colspan="2"><name>\</td>
+      \<td class="part">\<strong>Part:\</strong> 1/1\</td>
+    \</tr>
+    \<tr class="middle">
+      \<td class="explanation" colspan="2">
+        \<dl>
+          \<dt>Comment\</dt>
+          \<dd><explanation>\</dd>
+        \</dl>
+      \</td>
+      \<td class="indexing" colspan="2">
+        \<dl>
+          \<dt>Indexing\</dt>
+          <indexing>
+        \</dl>
+      \</td>
+    \</tr>
+    \<tr class="bottom">
+      \<td colspan="4">
+        \<table>
+          \<tr>
+            \<th class="class_col">Class\</th>
+            \<th class="cluster_col">Cluster\</th>
+            \<th class="description_col">Description\</th>
+          \</tr>
+          <dicEntries; separator="\n">
+        \</table>
+      \</td>
+    \</tr>
+  \</table>
+\</div>
 >>
 
-dictionaryEntry(name,clusterName,desc) ::= <<
-class <name> cluster <clusterName>
-<desc>
+dictionaryEntry(name,clusterNameList,desc) ::= <<
+\<tr>
+  \<td class="left_col"><name>\</td>
+  \<td class="left_col"><clusterNameList>\</td>
+  \<td class="right_col"><desc>\</td>
+\</tr>
 >>
 
 systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
@@ -40,13 +75,13 @@ systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
       \<td class="explanation" colspan="2">
         \<dl>
           \<dt>Purpose\</dt>
-          \<dd><explanation>\<dd>
+          \<dd><explanation>\</dd>
         \</dl>
       \</td>
       \<td class="indexing" colspan="2">
         \<dl>
           \<dt>Indexing\</dt>
-          \<dd><indexing>\<dd>
+          <indexing>
         \</dl>
       \</td>
     \</tr>
@@ -66,9 +101,7 @@ systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
 >>
 
 explanation(s) ::= <<
-\<span class="explanation_text">
-  <s>
-\</span>
+<s>
 >>
 
 indexing(i) ::= <<
@@ -99,13 +132,13 @@ systemName(name) ::= <<
 >>
 
 indexList(i) ::= <<
-\<span class="index_list">
-  <i; separator="<br/>">
-\</span>
+<i; separator="\n">
 >>
 
 indexClause(id,i) ::= <<
-<id>: <i>;
+\<dd>
+  <id>: <i>;
+\</dd>
 >>
 
 indexTermList(i) ::= <<
@@ -128,13 +161,13 @@ clusterChart(name,indexing,explanation,part,class_entries,cluster_entries) ::= <
       \<td class="explanation" colspan="2">
         \<dl>
           \<dt>Purpose\</dt>
-          \<dd><explanation>\<dd>
+          \<dd><explanation>\</dd>
         \</dl>
       \</td>
       \<td class="indexing" colspan="2">
         \<dl>
           \<dt>Indexing\</dt>
-          \<dd><indexing>\<dd>
+          <indexing>
         \</dl>
       \</td>
     \</tr>
@@ -188,13 +221,13 @@ classChart(name,indexing,explanation,part,inherits,queries,commands,constraints)
       \<td class="explanation" colspan="2">
         \<dl>
           \<dt>Type Of Object\</dt>
-          \<dd><explanation>\<dd>
+          \<dd><explanation>\</dd>
         \</dl>
       \</td>
       \<td class="indexing" colspan="2">
         \<dl>
           \<dt>Indexing\</dt>
-          \<dd><indexing>\<dd>
+          <indexing>
         \</dl>
       \</td>
     \</tr>
@@ -256,6 +289,10 @@ classNameList(cs) ::= <<
 <cs; separator=", ">
 >>
 
+clusterNameList(cs) ::= <<
+<cs; separator=", ">
+>>
+
 classOrClusterNameList(classes,clusters) ::= <<
 <if(first(classes))><classes; separator=", ">, <endif>(<clusters; separator="), (">)
 >>
@@ -284,13 +321,13 @@ eventChart(name,inorout,indexing,explanation,part,event_entries,event_id) ::= <<
       \<td class="explanation" colspan="2">
         \<dl>
           \<dt>Comment\</dt>
-          \<dd><explanation>\<dd>
+          \<dd><explanation>\</dd>
         \</dl>
       \</td>
       \<td class="indexing" colspan="2">
         \<dl>
           \<dt>Indexing\</dt>
-          \<dd><indexing>\<dd>
+          <indexing>
         \</dl>
       \</td>
     \</tr>
@@ -333,13 +370,13 @@ scenarioChart(name,indexing,explanation,part,scenario_entries,scenario_chart_id)
       \<td class="explanation" colspan="2">
         \<dl>
           \<dt>Comment\</dt>
-          \<dd><explanation>\<dd>
+          \<dd><explanation>\</dd>
         \</dl>
       \</td>
       \<td class="indexing" colspan="2">
         \<dl>
           \<dt>Indexing\</dt>
-          \<dd><indexing>\<dd>
+          <indexing>
         \</dl>
       \</td>
     \</tr>
@@ -364,7 +401,8 @@ scenarioEntry(s,d) ::= <<
     \<dl>
       \<dt><s>\</dt>
       \<dd><d>\</dd>
-    \<dl>
+    \</dl>
+  \</td>
 \</tr>
 >>
 
@@ -380,13 +418,13 @@ creationChart(name,indexing,explanation,part,creation_entries,creation_chart_id)
       \<td class="explanation" colspan="2">
         \<dl>
           \<dt>Comment\</dt>
-          \<dd><explanation>\<dd>
+          \<dd><explanation>\</dd>
         \</dl>
       \</td>
       \<td class="indexing" colspan="2">
         \<dl>
           \<dt>Indexing\</dt>
-          \<dd><indexing>\<dd>
+          <indexing>
         \</dl>
       \</td>
     \</tr>

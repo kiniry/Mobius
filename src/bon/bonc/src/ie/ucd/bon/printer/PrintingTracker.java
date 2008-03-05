@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
 package ie.ucd.bon.printer;
 
 public class PrintingTracker {
@@ -5,11 +9,13 @@ public class PrintingTracker {
   private int numberOfEventCharts;
   private int numberOfScenarioCharts;
   private int numberOfCreationCharts;
+  private int numberOfClassDictionaries;
   
   public PrintingTracker() {
     this.numberOfEventCharts = 0;
     this.numberOfScenarioCharts = 0;
     this.numberOfCreationCharts = 0;
+    this.numberOfClassDictionaries = 0;
   }
   
   public String addEventChart() {
@@ -23,6 +29,10 @@ public class PrintingTracker {
   public String addCreationChart() {
     return "" + (++numberOfCreationCharts);
   }
+
+  public String addClassDictionary() {
+    return "" + (++numberOfClassDictionaries);
+  }
   
   public int getNumberOfEventCharts() {
     return numberOfEventCharts;
@@ -34,6 +44,10 @@ public class PrintingTracker {
   
   public int getNumberOfCreationCharts() {
     return numberOfCreationCharts;
+  }
+
+  public int getNumberOfClassDictionaries() {
+    return numberOfClassDictionaries;
   }
 }
 

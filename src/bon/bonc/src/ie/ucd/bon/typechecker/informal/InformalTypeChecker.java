@@ -159,8 +159,6 @@ public class InformalTypeChecker {
   }
   
   
-  
-  
   public void checkValidClassTypeByContext(String className, SourceLocation loc) {
     if (context.isInInheritsClause()) {
       checkValidClassType(className, loc);
@@ -169,6 +167,14 @@ public class InformalTypeChecker {
     } else if (context.isInCreationEntry()) {
       checkValidClassType(className, loc);
     } 
+  }
+  
+  public void checkValidClusterTypeByContext(String clusterName, SourceLocation loc) {
+    if (context.isInDictionaryEntry()) {
+      checkValidClusterType(clusterName, loc);
+      String className = context.getDictionaryEntryClassName();
+      checkClassIsInCluster(className, clusterName, loc);
+    }
   }
   
 }

@@ -12,6 +12,7 @@ import ie.ucd.bon.parser.errors.ParsingError;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.TypingInformation;
+import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 import ie.ucd.bon.util.NullOutputStream;
 
 import java.io.File;
@@ -269,6 +270,10 @@ public abstract class AbstractBONParser extends Parser {
    */
   public final TypingInformation getTI() {
     return typingInformation;
+  }
+  
+  public final InformalTypingInformation getITI() {
+    return typingInformation.informal();
   }
 
   public Problems getProblems() {

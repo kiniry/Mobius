@@ -19,16 +19,17 @@ informalChart(i) ::= <<
 <i>
 >>
 
-classDictionary(name,dicEntries) ::= <<
+classDictionary(name,dicEntries,indexing,explanation,part,dic_id) ::= <<
 dictionary <name>
-
-  <dicEntries; separator="\n">
-
+  <if(first(indexing))><indexing><\n>
+  <endif><if(first(explanation))><explanation><\n>
+  <endif><if(first(part))><part><\n>
+  <endif><dicEntries; separator="\n">
 end
 >>
 
-dictionaryEntry(name,clusterName,desc) ::= <<
-class <name> cluster <clusterName>
+dictionaryEntry(name,clusterNameList,desc) ::= <<
+class <name> cluster <clusterNameList>
 <desc>
 >>
 
@@ -158,6 +159,10 @@ constraintList(cs) ::= <<
 >>
 
 classNameList(cs) ::= <<
+<cs; separator=", ">
+>>
+
+clusterNameList(cs) ::= <<
 <cs; separator=", ">
 >>
 

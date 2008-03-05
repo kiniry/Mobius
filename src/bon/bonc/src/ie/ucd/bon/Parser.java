@@ -18,10 +18,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.Lexer;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.RewriteEarlyExitException;
 import org.antlr.runtime.tree.RewriteEmptyStreamException;
@@ -36,8 +36,13 @@ public class Parser {
   private static BONParser parser = new BONParser(null);
   private static BONLexer lexer = new BONLexer(null);
   
-  public static ParseResult parse(File inputFile, ParsingTracker tracker) 
+  public static ParseResult parse(File inputFile, InputStream is, ParsingTracker tracker) 
   throws RecognitionException {
+    if (is == null) {
+      Problems problems = new Problems();
+      problems.addProblem(new FileNotFoundError(inputFile));
+      return new ParseResult(false, null, null, inputFile, problems, null);
+    }
     if (inputFile != null) {
       Main.logDebug("Parsing " + inputFile.getPath());
     }
@@ -45,33 +50,15 @@ public class Parser {
     BONParser.prog_return result = null;
 
     try {
-      ANTLRInputStream input;
-      if (inputFile != null) {
-        FileInputStream fis = new FileInputStream(inputFile);
-        input = new ANTLRInputStream(fis);
-        //EBONLexer lexer = new EBONLexer(input);
-        lexer.initialise(input, inputFile);
-        tokens = new CommonTokenStream(lexer);
-        parser.initialise(tracker, tokens, inputFile);
-        result = parser.prog();
-        fis.close();
-        Main.logDebug("Valid parse: " + parser.isValidParse());
-        return new ParseResult(parser.isValidParse(), result, tokens, inputFile, parser.getProblems(), lexer.getProblems());
-      } else {
-        input = new ANTLRInputStream(SourceReader.getInstance().readStandardInput());
-        //EBONLexer lexer = new EBONLexer(input);
-        lexer.initialise(input, null);
-        tokens = new CommonTokenStream(lexer);
-        parser.initialise(tracker, tokens, null);
-        result = parser.prog();
-        Main.logDebug("Valid parse: " + parser.isValidParse());
-        return new ParseResult(parser.isValidParse(), result, tokens, null, parser.getProblems(), lexer.getProblems());
-      }
+      ANTLRInputStream input = new ANTLRInputStream(is);
+      lexer.initialise(input, inputFile);
+      tokens = new CommonTokenStream(lexer);
+      parser.initialise(tracker, tokens, inputFile);
+      result = parser.prog();
+      is.close();
+      Main.logDebug("Valid parse: " + parser.isValidParse());
+      return new ParseResult(parser.isValidParse(), result, tokens, inputFile, parser.getProblems(), lexer.getProblems());
       
-    } catch (FileNotFoundException fnfe) {
-      Problems problems = new Problems();
-      problems.addProblem(new FileNotFoundError(inputFile));
-      return new ParseResult(false, null, null, inputFile, problems, null);
     } catch (IOException ioe) {
       BONProblem problem = new FileReadError(inputFile, ioe.getMessage());
       boolean valid = result != null; //Theoretically the IOException could be thrown closing the stream

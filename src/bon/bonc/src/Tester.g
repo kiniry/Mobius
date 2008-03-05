@@ -37,7 +37,11 @@ options {
 }
 
 @lexer::header {
-  package ie.ucd.bon.tests;
+/**
+ * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
+package ie.ucd.bon.tests;
 }
 
 testGrammar : testLocation

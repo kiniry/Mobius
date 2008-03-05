@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
 package ie.ucd.bon.printer;
 
 import ie.ucd.bon.parser.tracker.ParsingTracker;
@@ -14,6 +18,7 @@ public class HTMLLinkGenerator {
   private static final String EVENT_CHART = "event_chart:";
   private static final String SCENARIO_CHART = "scenario_chart:";
   private static final String CREATION_CHART = "creation_chart:";
+  private static final String CLASS_DICTIONARY = "class_dictionary:";
   
   public static String generateLinks(PrintingTracker printingTracker, ParsingTracker parsingTracker) {
     StringBuilder sb = new StringBuilder();
@@ -31,24 +36,31 @@ public class HTMLLinkGenerator {
     sb.append("var topOptions = [ ");
     
     if (iti.getSystem() != null) {
-      sb.append("'System Chart', 'system_chart',");
+      sb.append("'System Chart', 'system_chart', ");
     }
     
+    if (printingTracker.getNumberOfClassDictionaries() > 0) {
+      sb.append("'Class Dictionaries', 'class_dictionary', ");
+    }    
     if (iti.getClusters().size() > 0) {
-      sb.append("'Cluster Charts', 'cluster_chart',");
+      sb.append("'Cluster Charts', 'cluster_chart', ");
     }
     if (iti.getClasses().size() > 0) {
-      sb.append("'Class Charts', 'class_chart',");
+      sb.append("'Class Charts', 'class_chart', ");
     }
     if (printingTracker.getNumberOfEventCharts() > 0) {
-      sb.append("'Event Charts', 'event_chart',");
+      sb.append("'Event Charts', 'event_chart', ");
     }
     if (printingTracker.getNumberOfScenarioCharts() > 0) {
-      sb.append("'Scenario Charts', 'scenario_chart',");
+      sb.append("'Scenario Charts', 'scenario_chart', ");
     }
     if (printingTracker.getNumberOfCreationCharts() > 0) {
-      sb.append("'Creation Charts', 'creation_chart'");
+      sb.append("'Creation Charts', 'creation_chart', ");
     }
+    
+    sb.deleteCharAt(sb.length()-1);
+    sb.deleteCharAt(sb.length()-1);
+    
     sb.append(" ];");
     sb.append('\n');
     
@@ -131,6 +143,19 @@ public class HTMLLinkGenerator {
       sb.append(" ];");
       sb.append('\n');
     }
+
+    if (printingTracker.getNumberOfClassDictionaries() > 0) {
+      sb.append("subOptions['class_dictionary'] = [ ");
+      for (int i=1; i <= printingTracker.getNumberOfClassDictionaries(); i++) {
+        sb.append("'Class Dictionary " + i + "',");
+        sb.append("'" + CLASS_DICTIONARY + i + "',");
+      } 
+      if (printingTracker.getNumberOfClassDictionaries() > 0) {
+        sb.deleteCharAt(sb.length()-1);
+      }
+      sb.append(" ];");
+      sb.append('\n');
+    }
     
     return sb.toString();
   }
@@ -160,6 +185,9 @@ public class HTMLLinkGenerator {
     }
     for (int i=1; i <= printingTracker.getNumberOfScenarioCharts(); i++) {
       appendItem(sb, SCENARIO_CHART + i);
+    }
+    for (int i=1; i <= printingTracker.getNumberOfClassDictionaries(); i++) {
+      appendItem(sb, CLASS_DICTIONARY + i);
     }
     
     if (sb.length() == 0) {

@@ -24,6 +24,9 @@ public class Context {
   private boolean inEventEntry;
   private boolean inCreationEntry;
   
+  private boolean inDictionaryEntry;
+  private String dictionaryEntryClassName;
+  
   //Static diagrams
   private boolean inClass;
   private boolean inCluster;
@@ -63,6 +66,9 @@ public class Context {
     inEventEntry = false;
     inCreationEntry = false;
     
+    inDictionaryEntry = false;
+    dictionaryEntryClassName = null;
+    
     inClass = false;
     inCluster = false;
     className = null;
@@ -90,6 +96,24 @@ public class Context {
    
   public boolean isInSystemChart() {
     return inSystemChart;
+  }
+  
+  public void enterDictionaryEntry(String className) {
+    inDictionaryEntry = true;
+    dictionaryEntryClassName = className;
+  }
+  
+  public void leaveDictionaryEntry() {
+    inDictionaryEntry = false;
+    dictionaryEntryClassName = null;
+  }
+  
+  public boolean isInDictionaryEntry() {
+    return inDictionaryEntry;
+  }
+  
+  public String getDictionaryEntryClassName() {
+    return dictionaryEntryClassName;
   }
 
   public void enterClusterChart(String clusterName) {
@@ -165,6 +189,12 @@ public class Context {
 
   public boolean isInClass() {
     return inClass;
+  }
+  
+  
+
+  public boolean isInClassChart() {
+    return inClassChart;
   }
 
   public String getClassName() {
