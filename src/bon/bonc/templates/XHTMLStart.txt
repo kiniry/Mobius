@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=iso-8859-1" />
 
-<title>BON Documentation: The %3$2s System</title>
+<title>BON Documentation: %3$2s</title>
 
 <script type="text/javascript">
 <!--
@@ -25,7 +25,7 @@ function toggleShowAll() {
   showAll = !showAll;
   if (showAll) {
     displayAll();
-    setElText('showlink', 'Hide All');
+    setElText('showlink', 'Show One');
   } else {
     hideAll();
     setElText('showlink', 'Show All');
@@ -49,9 +49,6 @@ function showOnly(id) {
   if (elem) {
     hideAll();
     showElem(id);
-    if (id.indexOf('system_chart') == 0) {
-      showSysTitle();
-    }
   }
 }
 
@@ -59,14 +56,12 @@ function hideAll() {
   for (var i=0; i<items.length; i++) {
     hideElem(items[i]);
   }
-  hideSysTitle();
 }
 
 function displayAll() {
   for (var i=0; i<items.length; i++) {
     showElem(items[i]);
   }
-  showSysTitle();
 }
 
 function showElem(id) {
@@ -82,15 +77,6 @@ function hideElem(id) {
     elem.style.display = 'none';
   }
 }
-
-function showSysTitle() {
-  showElem(sysTitle);
-}
-
-function hideSysTitle() {
-  hideElem(sysTitle);
-}
-
 
 function setBack(id) {
 //Not yet...
@@ -179,19 +165,63 @@ function linkSelect(top, sub) {
 
 <style type="text/css">
 
+body {
+  font-family: Optima, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Helvetica, Arial, sans-serif;
+}
+
+#main a {
+  margin-left: 5px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.indexing dl, .explanation dl {
+  margin: 0 0 0 0;
+}
+
+.indexing dt, .explanation dt {
+  font-variant: small-caps;
+}
+
+.indexing dd, .explanation dd {
+  margin-left: 0;
+}
+
 #footer {
   z-index: 1;
   position: fixed; 
   bottom: 0px; 
   right: 0px;
   width: 100%%;
-  height: 50px;
+  border-top: 2px solid #000000;
 }
 
 #footer p {
+  margin: 5px 5px 0px 0px;
+  padding: 0;
   text-align: right;
 }
 
+#footer a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#footer form {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+#footer form select {
+  margin-right: 10px;
+}
+
+#footer form button {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-weight: bold;
+  min-width: 100px;
+}
 
 .index_list, .explanation_text, .scenario_description { 
   position:relative; 
@@ -204,26 +234,36 @@ function linkSelect(top, sub) {
 }
 
 .system, .system_name, .cluster, .cluster_name, .class, .class_name, .scenario, .part, .explanation, .indexing, .bottom table, .event, .creation {
-  border: 6px groove #c0c0c0;
+  border: 4px groove #c0c0c0;
 }
 
 .left_col, .right_col, .cluster_col, .class_col, .description_col, .inorout_col, .involved_col, .scenario_entry, .creates_col {
   border: 1px inset #c0c0c0;
+  vertical-align: top;
 }
 
-#footer img {
-  border: none;
+.right_col {
+  line-height: 1.5em;
 }
 
 #main {
   padding-bottom: 100px;
 }
 
+#top {
+  min-width: 125px;
+}
+
+#sub {
+  min-width: 250px;
+}
+
+
 .system, .system_name, .cluster, .cluster_name, .class, .class_name, .event, .creation, .part {
   padding: 5px 0px 5px 0px;
 }
 
-.left_col, .right_col, .cluster_col, .class_col, .description_col, .queries_col, .commands_col, .constraints_col, .inorout_col, .involves_col, .scenario_entry, .creates_col {
+.left_col, .right_col, .cluster_col, .class_col, .description_col, .queries_col, .commands_col, .constraints_col, .inorout_col, .involved_col, .scenario_entry, .creates_col {
   padding: 5px 20px 5px 20px;
 }
 
@@ -268,11 +308,11 @@ function linkSelect(top, sub) {
   width: 100%%;
 }
 
-.system_name, .cluster_name, .class_name {
+.system_name, .cluster_name, .class_name, .explanation, .indexing {
   width: 50%%;
 }
 
-.part {
+.class, .cluster, .system, .part {
   width: 25%%;
 }
 </style>
@@ -282,4 +322,3 @@ function linkSelect(top, sub) {
 
 <div id="main">
 
-<h1 id="system_title">%3$2s</h1>

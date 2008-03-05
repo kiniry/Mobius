@@ -208,7 +208,8 @@ scenarioEntries(e) ::= <<
 >>
 
 scenarioEntry(s,d) ::= <<
-scenario <s> <d>
+scenario <s> 
+<d>
 >>
 
 creationChart(name,indexing,explanation,part,creation_entries) ::= <<

@@ -1,6 +1,7 @@
 package ie.ucd.bon.printer;
 
 import ie.ucd.bon.parser.tracker.ParsingTracker;
+import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
 import java.util.Set;
 
@@ -24,84 +25,111 @@ public class HTMLLinkGenerator {
   private static String generateFormJS(PrintingTracker printingTracker, ParsingTracker parsingTracker) {
     StringBuilder sb = new StringBuilder();
     
+    InformalTypingInformation iti = parsingTracker.getInformalTypingInformation();
+    
     sb.append("var topOptions = [ ");
-    sb.append("'System Chart', 'system_chart',");
-    sb.append("'Cluster Charts', 'cluster_chart',");
-    sb.append("'Class Charts', 'class_chart',");
-    sb.append("'Event Charts', 'event_chart',");
-    sb.append("'Scenario Charts', 'scenario_chart',");
-    sb.append("'Creation Charts', 'creation_chart'");
+    
+    if (iti.getSystem() != null) {
+      sb.append("'System Chart', 'system_chart',");
+    }
+    
+    if (iti.getClusters().size() > 0) {
+      sb.append("'Cluster Charts', 'cluster_chart',");
+    }
+    if (iti.getClasses().size() > 0) {
+      sb.append("'Class Charts', 'class_chart',");
+    }
+    if (printingTracker.getNumberOfEventCharts() > 0) {
+      sb.append("'Event Charts', 'event_chart',");
+    }
+    if (printingTracker.getNumberOfScenarioCharts() > 0) {
+      sb.append("'Scenario Charts', 'scenario_chart',");
+    }
+    if (printingTracker.getNumberOfCreationCharts() > 0) {
+      sb.append("'Creation Charts', 'creation_chart'");
+    }
     sb.append(" ];");
     sb.append('\n');
     
     sb.append("var subOptions = [];");
     sb.append('\n');
     
-    sb.append("subOptions['system_chart'] = [ '");
-    String systemName = parsingTracker.getInformalTypingInformation().getSystem().getSystemName();
-    sb.append(systemName);
-    sb.append("', '");
-    sb.append(SYSTEM_CHART + systemName);
-    sb.append("' ];");
-    sb.append('\n');
-    
-    sb.append("subOptions['cluster_chart'] = [ ");
-    Set<String> clusterNames = parsingTracker.getInformalTypingInformation().getClusters().keySet();
-    for (String clusterName : clusterNames) {
-      sb.append("'" + clusterName + "',");
-      sb.append("'" + CLUSTER_CHART + clusterName + "',");
-    } 
-    if (clusterNames.size() > 0) {
-      sb.deleteCharAt(sb.length()-1);
+    if (iti.getSystem() != null) {
+      sb.append("subOptions['system_chart'] = [ '");
+      String systemName = parsingTracker.getInformalTypingInformation().getSystem().getSystemName();
+      sb.append(systemName);
+      sb.append("', '");
+      sb.append(SYSTEM_CHART + systemName);
+      sb.append("' ];");
+      sb.append('\n');
     }
-    sb.append(" ];");
-    sb.append('\n');
     
-    sb.append("subOptions['class_chart'] = [ ");
-    Set<String> classNames = parsingTracker.getInformalTypingInformation().getClasses().keySet();
-    for (String className : classNames) {
-      sb.append("'" + className + "',");
-      sb.append("'" + CLASS_CHART + className + "',");
-    } 
-    if (clusterNames.size() > 0) {
-      sb.deleteCharAt(sb.length()-1);
+    if (iti.getClusters().size() > 0) {
+      sb.append("subOptions['cluster_chart'] = [ ");
+      Set<String> clusterNames = parsingTracker.getInformalTypingInformation().getClusters().keySet();
+      for (String clusterName : clusterNames) {
+        sb.append("'" + clusterName + "',");
+        sb.append("'" + CLUSTER_CHART + clusterName + "',");
+      } 
+      if (clusterNames.size() > 0) {
+        sb.deleteCharAt(sb.length()-1);
+      }
+      sb.append(" ];");
+      sb.append('\n');
     }
-    sb.append(" ];");
-    sb.append('\n');
     
+    if (iti.getClasses().size() > 0) {
+      sb.append("subOptions['class_chart'] = [ ");
+      Set<String> classNames = parsingTracker.getInformalTypingInformation().getClasses().keySet();
+      for (String className : classNames) {
+        sb.append("'" + className + "',");
+        sb.append("'" + CLASS_CHART + className + "',");
+      } 
+      if (classNames.size() > 0) {
+        sb.deleteCharAt(sb.length()-1);
+      }
+      sb.append(" ];");
+      sb.append('\n');
+    }
     
-    sb.append("subOptions['event_chart'] = [ ");
-    for (int i=1; i <= printingTracker.getNumberOfEventCharts(); i++) {
-      sb.append("'Event Chart " + i + "',");
-      sb.append("'" + EVENT_CHART + i + "',");
-    } 
     if (printingTracker.getNumberOfEventCharts() > 0) {
-      sb.deleteCharAt(sb.length()-1);
+      sb.append("subOptions['event_chart'] = [ ");
+      for (int i=1; i <= printingTracker.getNumberOfEventCharts(); i++) {
+        sb.append("'Event Chart " + i + "',");
+        sb.append("'" + EVENT_CHART + i + "',");
+      } 
+      if (printingTracker.getNumberOfEventCharts() > 0) {
+        sb.deleteCharAt(sb.length()-1);
+      }
+      sb.append(" ];");
+      sb.append('\n');
     }
-    sb.append(" ];");
-    sb.append('\n');
     
-    sb.append("subOptions['creation_chart'] = [ ");
-    for (int i=1; i <= printingTracker.getNumberOfCreationCharts(); i++) {
-      sb.append("'Creation Chart " + i + "',");
-      sb.append("'" + CREATION_CHART + i + "',");
-    } 
     if (printingTracker.getNumberOfCreationCharts() > 0) {
-      sb.deleteCharAt(sb.length()-1);
+      sb.append("subOptions['creation_chart'] = [ ");
+      for (int i=1; i <= printingTracker.getNumberOfCreationCharts(); i++) {
+        sb.append("'Creation Chart " + i + "',");
+        sb.append("'" + CREATION_CHART + i + "',");
+      } 
+      if (printingTracker.getNumberOfCreationCharts() > 0) {
+        sb.deleteCharAt(sb.length()-1);
+      }
+      sb.append(" ];");
+      sb.append('\n');
     }
-    sb.append(" ];");
-    sb.append('\n');
     
-    sb.append("subOptions['scenario_chart'] = [ ");
-    for (int i=1; i <= printingTracker.getNumberOfScenarioCharts(); i++) {
-      sb.append("'Scenario Chart " + i + "',");
-      sb.append("'" + SCENARIO_CHART + i + "',");
-    } 
     if (printingTracker.getNumberOfScenarioCharts() > 0) {
-      sb.deleteCharAt(sb.length()-1);
+      sb.append("subOptions['scenario_chart'] = [ ");
+      for (int i=1; i <= printingTracker.getNumberOfScenarioCharts(); i++) {
+        sb.append("'Scenario Chart " + i + "',");
+        sb.append("'" + SCENARIO_CHART + i + "',");
+      } 
+      if (printingTracker.getNumberOfScenarioCharts() > 0) {
+        sb.deleteCharAt(sb.length()-1);
+      }
+      sb.append(" ];");
+      sb.append('\n');
     }
-    sb.append(" ];");
-    sb.append('\n');
     
     return sb.toString();
   }

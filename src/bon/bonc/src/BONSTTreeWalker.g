@@ -112,7 +112,7 @@ part  :^(
          PART MANIFEST_STRING
         )
        ->
-         part(s={$MANIFEST_STRING.text})
+         part(s={stripRemovingSpeechMarksIfNecessary($MANIFEST_STRING.text)})
        |
         ^( PART PARSE_ERROR )
       ;
@@ -359,7 +359,7 @@ scenario_entry  :^(
                    MANIFEST_STRING description 
                   )
                  ->
-                   scenarioEntry(s={$MANIFEST_STRING.text},d={$description.st})
+                   scenarioEntry(s={stripRemovingSpeechMarksIfNecessary($MANIFEST_STRING.text)},d={$description.st})
                 ;
 
 /**********************************************/
@@ -1581,14 +1581,14 @@ lowest_expression  :  constant -> expressionAsIs(exp={$constant.st})
  *############################################*/
 
 
-manifest_textblock  :   MANIFEST_STRING -> manifestTextBlock(s={$MANIFEST_STRING.text})
+manifest_textblock  :   MANIFEST_STRING -> manifestTextBlock(s={stripIfNecessary($MANIFEST_STRING.text)})
 											|	ms=MANIFEST_TEXTBLOCK_START
 												{ String t = $ms.text; }  
 												(m=MANIFEST_TEXTBLOCK_MIDDLE { t+=$m.text; } )*
 												me=MANIFEST_TEXTBLOCK_END 
 												{ t+=$me.text; }
 											->
-											  manifestTextBlock(s={StringUtil.stripForHTML(t)})
+											  manifestTextBlock(s={stripIfNecessary(t)})
                     ;
 
 

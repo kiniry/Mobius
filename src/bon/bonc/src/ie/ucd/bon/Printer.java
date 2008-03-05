@@ -116,7 +116,7 @@ public class Printer {
     }
   }
 
-  private static String printUsingTemplateToString(ParseResult parseResult, Reader stFile, PrintingTracker printingTracker) throws RecognitionException {
+  private static String printUsingTemplateToString(ParseResult parseResult, Reader stFile, PrintingOption printingOption, PrintingTracker printingTracker) throws RecognitionException {
     try {
       StringTemplateGroup templates = new StringTemplateGroup(stFile);
       stFile.close();
@@ -125,7 +125,7 @@ public class Printer {
       CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);  //Get stream of nodes from tree
       nodes.setTokenStream(parseResult.getTokens());
 
-      walker.initialise(nodes, templates, printingTracker); //Reset walker, provide inputs
+      walker.initialise(nodes, templates, printingTracker, printingOption); //Reset walker, provide inputs
 
       BONSTTreeWalker.prog_return r2 = walker.prog();  //Walk
       StringTemplate output = (StringTemplate)r2.getTemplate();  //Get output
@@ -187,7 +187,7 @@ public class Printer {
     } else {
       Reader templateFile = getPrintingOptionTemplateFileReader(printingOption);
       if (templateFile != null) {
-        outputText = printUsingTemplateToString(parseResult, templateFile, printingTracker);
+        outputText = printUsingTemplateToString(parseResult, templateFile, printingOption, printingTracker);
       } else {
         System.out.println("Sorry, printing option  " + printingOption + " not yet implemented");
       }

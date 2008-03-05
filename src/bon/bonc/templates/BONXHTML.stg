@@ -38,12 +38,16 @@ systemChart(name,indexing,explanation,part,cluster_entries) ::= <<
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
-        \<strong>PURPOSE\</strong>\<br/>
-        <explanation>
+        \<dl>
+          \<dt>Purpose\</dt>
+          \<dd><explanation>\<dd>
+        \</dl>
       \</td>
       \<td class="indexing" colspan="2">
-        \<strong>INDEXING \</strong>\<br/>
-        <indexing>
+        \<dl>
+          \<dt>Indexing\</dt>
+          \<dd><indexing>\<dd>
+        \</dl>
       \</td>
     \</tr>
     \<tr class="bottom">
@@ -122,12 +126,16 @@ clusterChart(name,indexing,explanation,part,class_entries,cluster_entries) ::= <
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
-        \<strong>PURPOSE\</strong>\<br/>
-        <explanation>
+        \<dl>
+          \<dt>Purpose\</dt>
+          \<dd><explanation>\<dd>
+        \</dl>
       \</td>
       \<td class="indexing" colspan="2">
-        \<strong>INDEXING \</strong>\<br/>
-        <indexing>
+        \<dl>
+          \<dt>Indexing\</dt>
+          \<dd><indexing>\<dd>
+        \</dl>
       \</td>
     \</tr>
     \<tr class="bottom">
@@ -178,17 +186,25 @@ classChart(name,indexing,explanation,part,inherits,queries,commands,constraints)
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
-        \<strong>TYPE OF OBJECT\</strong>\<br/>
-        <explanation>
+        \<dl>
+          \<dt>Type Of Object\</dt>
+          \<dd><explanation>\<dd>
+        \</dl>
       \</td>
       \<td class="indexing" colspan="2">
-        \<strong>INDEXING \</strong>\<br/>
-        <indexing>
+        \<dl>
+          \<dt>Indexing\</dt>
+          \<dd><indexing>\<dd>
+        \</dl>
       \</td>
     \</tr>
     \<tr class="bottom">
       \<td colspan="4">
         \<table>
+          <if(first(inherits))>\<tr>
+            \<th class="left_col">Inherits from\</th>
+            \<td class="right_col"><inherits>\</td>
+          \</tr><endif>
           \<tr>
             \<th class="left_col">Queries\</th>
             \<td class="right_col"><queries>\</td>
@@ -209,8 +225,7 @@ classChart(name,indexing,explanation,part,inherits,queries,commands,constraints)
 >>
 
 inherits(l) ::= <<
-\<strong>inherit\</strong> 
-  <l>
+<l>
 >>
 
 queries(l) ::= <<
@@ -226,15 +241,15 @@ constraints(l) ::= <<
 >>
 
 queryList(qs) ::= <<
-<qs; separator=",<br/>">
+<qs; separator="<br/>">
 >>
 
 commandList(cs) ::= <<
-<cs; separator=",<br/>">
+<cs; separator="<br/>">
 >>
 
 constraintList(cs) ::= <<
-<cs; separator=",<br/>">
+<cs; separator="<br/>">
 >>
 
 classNameList(cs) ::= <<
@@ -267,12 +282,16 @@ eventChart(name,inorout,indexing,explanation,part,event_entries,event_id) ::= <<
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
-        \<strong>COMMENT\</strong>\<br/>
-        <explanation>
+        \<dl>
+          \<dt>Comment\</dt>
+          \<dd><explanation>\<dd>
+        \</dl>
       \</td>
       \<td class="indexing" colspan="2">
-        \<strong>INDEXING \</strong>\<br/>
-        <indexing>
+        \<dl>
+          \<dt>Indexing\</dt>
+          \<dd><indexing>\<dd>
+        \</dl>
       \</td>
     \</tr>
     \<tr class="bottom">
@@ -312,12 +331,16 @@ scenarioChart(name,indexing,explanation,part,scenario_entries,scenario_chart_id)
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
-        \<strong>COMMENT\</strong>\<br/>
-        <explanation>
+        \<dl>
+          \<dt>Comment\</dt>
+          \<dd><explanation>\<dd>
+        \</dl>
       \</td>
       \<td class="indexing" colspan="2">
-        \<strong>INDEXING \</strong>\<br/>
-        <indexing>
+        \<dl>
+          \<dt>Indexing\</dt>
+          \<dd><indexing>\<dd>
+        \</dl>
       \</td>
     \</tr>
     \<tr class="bottom">
@@ -337,7 +360,11 @@ scenarioEntries(e) ::= <<
 
 scenarioEntry(s,d) ::= <<
 \<tr>
-  \<td class="scenario_entry">\<strong><s>\</strong>\<br/>\<span class="scenario_description"><d>\</span>\</td>
+  \<td class="scenario_entry">
+    \<dl>
+      \<dt><s>\</dt>
+      \<dd><d>\</dd>
+    \<dl>
 \</tr>
 >>
 
@@ -351,12 +378,16 @@ creationChart(name,indexing,explanation,part,creation_entries,creation_chart_id)
     \</tr>
     \<tr class="middle">
       \<td class="explanation" colspan="2">
-        \<strong>COMMENT\</strong>\<br/>
-        <explanation>
+        \<dl>
+          \<dt>Comment\</dt>
+          \<dd><explanation>\<dd>
+        \</dl>
       \</td>
       \<td class="indexing" colspan="2">
-        \<strong>INDEXING \</strong>\<br/>
-        <indexing>
+        \<dl>
+          \<dt>Indexing\</dt>
+          \<dd><indexing>\<dd>
+        \</dl>
       \</td>
     \</tr>
     \<tr class="bottom">

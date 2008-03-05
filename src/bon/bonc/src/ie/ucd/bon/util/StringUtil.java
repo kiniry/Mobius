@@ -6,16 +6,20 @@ package ie.ucd.bon.util;
 
 public class StringUtil {
 
-  public static String stripForHTML(final String mtb) {
+  public static String stripForHTML(final String mtb, boolean withSpeechMarks) {
     String stripped = strip(mtb);
     stripped = stripped.replace("<", "&lt;");
     stripped = stripped.replace(">", "&gt;");
     stripped = stripped.replace("&", "&amp;");
     
     StringBuilder sb = new StringBuilder();
-    sb.append("&#8220;");
+    if (withSpeechMarks) {
+      sb.append("&#8220;");
+    }
     sb.append(stripped.substring(1, stripped.length()-1));
-    sb.append("&#8221;");
+    if (withSpeechMarks) {
+      sb.append("&#8221;");
+    }
     return sb.toString();
   }
   
