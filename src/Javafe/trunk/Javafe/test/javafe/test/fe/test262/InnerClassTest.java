@@ -1,4 +1,6 @@
-public class InnerClass {
+// Test parsing of binary inner class within String class
+
+public class InnerClassTest {
 	private char blankChar = ' ';
 	private boolean isTrue = true;
 	
