@@ -57,8 +57,9 @@ public class Main extends escjava.Main {
   public static void main(final /*@ non_null @*/String[] args) {
     // the first argument is the output dir
     if (args.length < 2) {
-      fOut.println("I need at least 2 arguments the output directory, " + 
-                  "and the path to the file bicolano.jar");
+      fOut.println("I need at least 2 arguments:\n"+
+                   " - the output directory and\n+" +
+                   " - the path to the file bicolano.jar");
       return;
     }
 
