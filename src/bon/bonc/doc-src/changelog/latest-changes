@@ -1,2 +1,0 @@
- * Added support for HTML printing of formal charts.
- * Class charts can now be generated as a printing option, or automatically as part of normal printing.

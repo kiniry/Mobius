@@ -1,5 +1,5 @@
 .SH USAGE
-The tool parse and typecheck the input, and report any errors. If
+The tool parses and typechecks the input, and reports any errors. If
 the tool does not output any messages, then no errors were found.
 
 You can read from standard input by adding the option "-" (single-dash). This
@@ -17,6 +17,49 @@ bonc file1 file2 -
 .RE
 .PD 1
 
+.SH CLASS DICTIONARY GENERATION 
+
+It is possible to automatically generate a class dictionary for the given input. 
+In order to print the generated textual BON to stdout(1), or to a file(2)
+use the following:
+.PD 0
+.P
+.RS 4
+(1) bonc -p dic file1 [file2 ...]
+.P
+(2) bonc -p dic -po <output-file> file1 [file2 ...]
+.P
+.RE
+.PD 1
+
+Class dictionaries can also be computed on the fly and included when 
+performing other printing operations. In fact, this is the default behaviour.
+To prevent automatic class dictionary generation, provide the option
+"-ngcd"/"--no-gen-class-dic". For example:
+.PD 0
+.P
+.RS 4
+bonc -ngcd -p <print-type> [-po <output-file>] file1 [file2 ...]
+.P
+.RE
+.PD 1
+
+.SH HTML PRINTING
+
+This printing option generates a fancy XHTML version of the informal charts
+included in the input. It will generate a single HTML page, with the charts
+styled to emulate those given in the BON book. To generate the HTML to 
+stdout(1), or to a file(2) use the following:
+.PD 0
+.P
+.RS 4
+(1) bonc -p html file1 [file2 ...]
+.P
+(2) bonc -p html -po <output-file> file1 [file2 ...]
+.P
+.RE
+.PD 1
+
 .SH BUG REPORTS
 Bug tracking is handled on the Mobius Trac (https://mobius.ucd.ie/). 
 
@@ -24,7 +67,7 @@ To create a new ticket either complete the form at:
 .PD 0
 .P
 .RS 4
-https://mobius.ucd.ie/newticket?owner=fintan&component=BON
+https://mobius.ucd.ie/newticket?component=BON
 .P
 .RE
 or send an email to:
@@ -53,3 +96,4 @@ Filing bugs will help to improve this software, so if you notice something amiss
 
 .SH AUTHOR
 Fintan Fairmichael <fintan dot fairmichael at ucd dot ie> 
+

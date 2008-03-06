@@ -1,4 +1,56 @@
 
+3.2 Printing
+------------
+
+  The printing framework allows parsed source to be printed to a variety of 
+  formats. The general syntax for printing to standard out is:
+    bonc -p <print-type> file1 [file2 ...]
+
+  In the above "<print-type>" is one of the allowed printing types. These are
+  detailed below.
+
+  Alternatively, to print the output to a file, use this syntax:
+    bonc -p <print-type> -po <output-file> file1 [file2 ...]
+
+  "<output-file>" should be the path to the file you wish to print to. Note
+  that if the path is to an existing file, it will be overwritten.
+
+3.2.1 Class dictionary generation
+
+  It is possible to automatically generate a class dictionary for the given 
+  input. In order to print the generated textual BON to stdout(1), or to a 
+  file(2) use the following:
+    (1) bonc -p dic file1 [file2 ...]
+    (2) bonc -p dic -po <output-file> file1 [file2 ...]
+
+  Class dictionaries can also be computed on the fly and included when 
+  performing other printing operations. In fact, this is the default behaviour.
+  To prevent automatic class dictionary generation, provide the option
+  "-ngcd"/"--no-gen-class-dic". For example:
+    bonc -ngcd -p <print-type> [-po <output-file>] file1 [file2 ...]
+
+3.2.2 Pretty-printing
+
+  This is the most basic printing type. The parsed text will be pretty-printed
+  in plain text. In order to pretty-print to stdout(1), or to a file(2) use the
+  following:
+    (1) bonc -p txt file1 [file2 ...]
+    (2) bonc -p txt -po <output-file> file1 [file2 ...]
+
+  The option "-pp"/"--pretty-print" is a synonym for "-p txt", thus the below 
+  is equivalent to the above, and will pretty-print to stdout(1), or to a 
+  file(2):
+    (1) bonc -pp file1 [file2 ...]
+    (2) bonc -pp -po <output-file> file1 [file2 ...]
+
+3.2.3 HTML printing
+
+  This printing option generates a fancy XHTML version of the informal charts
+  included in the input. It will generate a single HTML page, with the charts
+  styled to emulate those given in the BON book. To generate the HTML to 
+  stdout(1), or to a file(2) use the following:
+    (1) bonc -p html file1 [file2 ...]
+    (2) bonc -p html -po <output-file> file1 [file2 ...]
 
 4. SOURCE
 =========
@@ -33,3 +85,4 @@
 
   Filing bugs will help to improve this software, so if you notice something
   amiss please do report it!
+

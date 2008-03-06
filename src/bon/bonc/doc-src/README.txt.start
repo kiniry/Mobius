@@ -8,7 +8,11 @@ Contents:
   1. Description
   2. Requirements
   3. Using the tool
-     3.1 Commandline Options
+     3.1 Commandline options
+     3.2 Printing
+         3.2.1 Class dictionary generation
+         3.2.2 Pretty-printing
+         3.2.3 HTML printing
   4. Source
   5. Bug Reports
 
@@ -21,7 +25,8 @@ Contents:
   This tool reads one or more files and/or input from standard input in the BON
   textual format, parses all this input and typechecks it. A number of options
   are available to modify the typechecking that is performed. Pretty-printing
-  input is also available, with (x)html output planned for a future release.
+  input is also available, as well as creating fancy html pages for informal 
+  charts.
 
   More information can be found on BON at the website 
   http://www.bon-method.com/, and by reading the book "Seamless object-oriented
