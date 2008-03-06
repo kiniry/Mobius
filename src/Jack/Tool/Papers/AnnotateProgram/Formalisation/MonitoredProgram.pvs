@@ -548,6 +548,17 @@ BEGIN
         monitor_related_states(mp)(update_PState(s1, raise(e)), 
                                update_PState(s2, raise(e)))
 
+  monitor_related_states_preserved_by_update_stack : LEMMA % :-)
+    FORALL (sMP1, sMP2 : MPState,
+            this_val : Val, arg :  (getLocalDecls(program(mp))), 
+            param_val : Val, lvds : finite_set[LocalVarDecl]) :
+      monitor_related_states(mp)(sMP1, sMP2) IMPLIES
+      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
+                                   getLocalDecls(program(mp))(l)) IMPLIES
+        monitor_related_states(mp)(update_stack(this_val, arg, param_val,
+                                                lvds, sMP1),
+                                   update_stack(this_val, arg, param_val,
+                                                lvds, sMP2))
 
   monitor_related_astates_preserved_by_on_method_MVA : LEMMA % :-)
     FORALL(s1, s2 : MPState, etype : EventType,
@@ -577,7 +588,7 @@ BEGIN
         monitor_related_states(mp)(s2a, s2b) AND v1 = v2 
 
   % in method call case
-  monitor_related_states_implies_derive : LEMMA
+ monitor_related_states_implies_derive : LEMMA % :-)
     FORALL (b : (wf_Body(program(mp))), v : Val)
            (s1a, s1b, s2a : MPState) 
            (n1 : nat) :
@@ -585,6 +596,15 @@ BEGIN
       derive(mp)(b, s1a, v, s2a)(n1) IMPLIES
       EXISTS (s2b : MPState, n2 : nat) : 
       derive(complete_MP(mp))(b, s1b, v, s2b)(n2) 
+
+ monitor_related_states_implies_derive_converse : LEMMA % :-)
+    FORALL (b : (wf_Body(program(mp))), v : Val)
+           (s1a, s1b, s2a : MPState) 
+           (n1 : nat) :
+      monitor_related_states(mp)(s1b, s1a) IMPLIES
+      derive(complete_MP(mp))(b, s1a, v, s2a)(n1) IMPLIES
+      EXISTS (s2b : MPState, n2 : nat) : 
+      derive(mp)(b, s1b, v, s2b)(n2)
   
   correctness_of_complete_MP : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))

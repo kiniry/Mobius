@@ -31,7 +31,8 @@ BEGIN
   p : VAR ({p : Program | wf_set_stmts(p) AND 
                           contains_no_method_call_in_sets_in_program(p)})
 
-
+  % missing pre_set and post_set preserve inline_related_states
+  % post_set does not change res(p)(m)
   derive_maintains_inline_related_states_for_method_call : LEMMA
     FORALL (b : (wf_Body(p)), v1, v2 : Val)
            (sAP1a, sAP1b, sAP2a, sAP2b : APState)

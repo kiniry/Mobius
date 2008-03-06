@@ -1,23 +1,18 @@
 (CompleteMonitorProgramPropertiesPreservation
  (IMP_LegalPartialMonitoredProgramRestriction_TCC1 0
   (IMP_LegalPartialMonitoredProgramRestriction_TCC1-1 nil 3413112202
-   3413193138 ("" (use "CP_not_only_halted") nil nil) proved
+   3413193138 ("" (use "CP_not_only_halted") nil nil) unchecked
    ((CP_not_only_halted formula-decl nil
      CompleteMonitorProgramPropertiesPreservation nil))
    4121 3970 t nil))
  (derive_equivalence_if_TCC1 0
   (derive_equivalence_if_TCC1-1 nil 3413112202 3413193144
-   ("" (subtype-tcc) nil nil) proved
+   ("" (subtype-tcc) nil nil) unchecked
    ((Name formal-nonempty-type-decl nil
      CompleteMonitorProgramPropertiesPreservation nil)
     (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    nil nil nil nil
     (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
      nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
@@ -2130,7 +2125,7 @@
           (("2" (expand "complete_MP") (("2" (propax) nil)))))))
        ("2" (use "wf_nat") nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unchecked
    ((< const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
@@ -2191,12 +2186,8 @@
      nil)
     (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
      nil)
-    (v1!1 skolem-const-decl "Val[Name]"
-     CompleteMonitorProgramPropertiesPreservation nil)
-    (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
-    (v1!1 skolem-const-decl "Val[Name]"
-     CompleteMonitorProgramPropertiesPreservation nil)
+    nil (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil) nil
     (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
@@ -2212,8 +2203,7 @@
      real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
-    (b!1 skolem-const-decl "(wf_Body(program(mp!1)))"
-     CompleteMonitorProgramPropertiesPreservation nil)
+    nil
     (b1 shared-adt-accessor-decl
      "[{x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} -> Expr]" Body_adt
      nil)
@@ -2325,9 +2315,7 @@
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
-    (mp!1 skolem-const-decl "(wf_and_partial_MP)"
-     CompleteMonitorProgramPropertiesPreservation nil)
+    (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil) nil
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (set type-eq-decl nil sets nil)
@@ -4563,7 +4551,7 @@
        ("2" (use "wf_nat") nil nil))
       nil))
     nil)
-   proved
+   unchecked
    ((< const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
@@ -4624,18 +4612,13 @@
      nil)
     (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
      nil)
-    (v1!1 skolem-const-decl "Val[Name]"
-     CompleteMonitorProgramPropertiesPreservation nil)
+    nil
     (wf_Body_preserved_by_proper_subterm formula-decl nil
      WellFormedProgram nil)
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
-    (v1!1 skolem-const-decl "Val[Name]"
-     CompleteMonitorProgramPropertiesPreservation nil)
+    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil) nil
     (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
-    (b!1 skolem-const-decl "(wf_Body(program(mp!1)))"
-     CompleteMonitorProgramPropertiesPreservation nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
+    nil (NOT const-decl "[bool -> bool]" booleans nil)
     (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
     (IF const-decl "[boolean, T, T -> T]" if_def nil)
     (test shared-adt-accessor-decl
@@ -4698,9 +4681,7 @@
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
-    (mp!1 skolem-const-decl "(wf_and_partial_MP)"
-     CompleteMonitorProgramPropertiesPreservation nil)
+    (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil) nil
     (AState type-eq-decl nil MVACommonSemantics nil)
     (Store type-eq-decl nil State nil)
     (PState type-eq-decl nil State nil)
@@ -4786,7 +4767,7 @@
         (("" (assert) (("" (prop) nil nil)) nil)) nil))
       nil))
     nil)
-   proved
+   unchecked
    ((derive_equivalence_only_if formula-decl nil
      CompleteMonitorProgramPropertiesPreservation nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
@@ -4854,7 +4835,7 @@
    3413193226
    ("" (skosimp*)
     (("" (expand "complete_MP") (("" (propax) nil nil)) nil)) nil)
-   proved
+   unchecked
    ((complete_MP const-decl "MonitoredProgram"
      MonitoredProgramCompletessRelation nil))
    4353 4200 t shostak))
@@ -5167,9 +5148,8 @@
         nil))
       nil))
     nil)
-   proved
-   ((wf_set_stmts const-decl "bool" WfSetStmts nil)
-    (program_pred const-decl "bool" ProgramRestriction nil)
+   unchecked
+   (nil (program_pred const-decl "bool" ProgramRestriction nil)
     (program_method_pred const-decl "bool" ProgramRestriction nil)
     (complete_MP const-decl "MonitoredProgram"
      MonitoredProgramCompletessRelation nil)
@@ -5194,13 +5174,7 @@
     (method_pred const-decl "bool" ProgramRestriction nil)
     (member const-decl "bool" sets nil)
     (subset? const-decl "bool" sets nil)
-    (wf_Body const-decl "boolean" WellFormedProgram nil)
-    (mp!1 skolem-const-decl "(wf_and_partial_MP)"
-     CompleteMonitorProgramPropertiesPreservation nil)
-    (m!1 skolem-const-decl "Method[Name]"
-     CompleteMonitorProgramPropertiesPreservation nil)
-    (v!1 skolem-const-decl "Expr[Name]"
-     CompleteMonitorProgramPropertiesPreservation nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil) nil nil nil
     (AState type-eq-decl nil MVACommonSemantics nil)
     (Store type-eq-decl nil State nil)
     (PState type-eq-decl nil State nil)
@@ -5223,11 +5197,7 @@
     (no_exc const-decl "bool" WfSetStmts nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
-    (v!1 skolem-const-decl "Expr[Name]"
-     CompleteMonitorProgramPropertiesPreservation nil)
-    (e!1 skolem-const-decl "Excpt"
-     CompleteMonitorProgramPropertiesPreservation nil)
-    (wf_set_stmts const-decl "bool" WfSetStmts nil)
+    nil nil nil
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -5273,7 +5243,7 @@
     (("" (expand* "complete_MP" "full_partial_MP" "full_complete_MP")
       nil nil))
     nil)
-   proved
+   unchecked
    ((full_complete_MP const-decl "(wf_and_complete_MP)"
      LegalCompleteMonitoredProgramRestriction nil)
     (full_partial_MP const-decl "(wf_and_partial_MP)"
@@ -5282,7 +5252,7 @@
      MonitoredProgramCompletessRelation nil))
    29976 5610 t shostak))
  (legal_Program_preserved_by_complete_MP 0
-  (legal_Program_preserved_by_complete_MP-1 nil 3413190727 3413195203
+  (legal_Program_preserved_by_complete_MP-1 nil 3413190727 3413723064
    ("" (skosimp*)
     (("" (expand "legal_Program_complete_MP")
       (("" (expand "complete_MP")
@@ -5295,31 +5265,357 @@
                     (("" (assert)
                       (("" (flatten)
                         (("" (assert)
-                          (("" (split 1)
-                            (("1" (hide -2)
+                          ((""
+                            (auto-rewrite "full_complete_MP_characterisation")
+                            (("" (split 1)
                               (("1"
-                                (expand "legal_Body")
+                                (hide -2)
                                 (("1"
-                                  (skosimp*)
+                                  (expand "legal_Body")
                                   (("1"
-                                    (inst?)
+                                    (skosimp*)
                                     (("1"
-                                      (assert)
+                                      (inst?)
                                       (("1"
-                                        (apply
-                                         (repeat
-                                          (inst? -8 :where (-4 -5))))
+                                        (assert)
                                         (("1"
-                                          (assert)
-                                          (("1" (postpone) nil nil))
+                                          (case
+                                           "EXISTS (t : MPState) : monitor_related_states(full_partial_MP(program(mp!1)))(t, s1!1)")
+                                          (("1"
+                                            (skosimp*)
+                                            (("1"
+                                              (lemma
+                                               "monitor_related_states_implies_derive_converse")
+                                              (("1"
+                                                (copy -1)
+                                                (("1"
+                                                  (apply
+                                                   (repeat
+                                                    (inst?
+                                                     -1
+                                                     :where
+                                                     (-7 -3))))
+                                                  (("1"
+                                                    (assert)
+                                                    (("1"
+                                                      (skosimp*)
+                                                      (("1"
+                                                        (use
+                                                         "monitor_related_states_preserved_by_derive")
+                                                        (("1"
+                                                          (assert)
+                                                          (("1"
+                                                            (use
+                                                             "monitor_related_states_implies_same_exception")
+                                                            (("1"
+                                                              (assert)
+                                                              (("1"
+                                                                (apply
+                                                                 (repeat
+                                                                  (inst?
+                                                                   -4
+                                                                   :where
+                                                                   (-5
+                                                                    -10))))
+                                                                (("1"
+                                                                  (assert)
+                                                                  (("1"
+                                                                    (skosimp*)
+                                                                    (("1"
+                                                                      (use
+                                                                       "monitor_related_states_preserved_by_derive"
+                                                                       ("mp"
+                                                                        "full_partial_MP(program(mp!1))"
+                                                                        "b"
+                                                                        "try(b1!1)"))
+                                                                      (("1"
+                                                                        (assert)
+                                                                        (("1"
+                                                                          (use
+                                                                           "monitor_related_states_implies_same_exception")
+                                                                          (("1"
+                                                                            (assert)
+                                                                            (("1"
+                                                                              (inst
+                                                                               -15
+                                                                               "t!1"
+                                                                               "s2b!1"
+                                                                               "s2b!2"
+                                                                               _)
+                                                                              (("1"
+                                                                                (case
+                                                                                 "FORALL (tau2: MPState[CP, Name], v, v1, v2: Val[Name],
+             n, m1, m2: nat):
+        derive(full_partial_MP(program(mp!1)))(b1!1, t!1, v, s2b!1)(n)
+         IMPLIES
+         derive(full_partial_MP(program(mp!1)))(try(b1!1), t!1, v1, s2b!2)
+               (m1)
+          IMPLIES
+          up?(ex(pstate(s2b!2))) IMPLIES
+           (down(ex(pstate(s2b!2))) = JMLExc OR
+             (down(ex(pstate(s2b!2))) = exc(b1!1) AND
+               derive(full_partial_MP(program(mp!1)))
+                     (catch(b1!1), update_PState(s2b!2, catch), v2, tau2)
+                     (m2)
+                AND
+                up?(ex(pstate(tau2))) AND down(ex(pstate(tau2))) = JMLExc))
+            IMPLIES
+            up?(ex(pstate(s2b!1))) AND down(ex(pstate(s2b!1))) = JMLExc")
+                                                                                (("1"
+                                                                                  (hide
+                                                                                   -16)
+                                                                                  (("1"
+                                                                                    (inst
+                                                                                     -1
+                                                                                     _
+                                                                                     "v!1"
+                                                                                     "v1!1"
+                                                                                     _
+                                                                                     "n2!1"
+                                                                                     "n2!2"
+                                                                                     _)
+                                                                                    (("1"
+                                                                                      (assert)
+                                                                                      (("1"
+                                                                                        (split
+                                                                                         -15)
+                                                                                        (("1"
+                                                                                          (replace
+                                                                                           -3)
+                                                                                          (("1"
+                                                                                            (assert)
+                                                                                            (("1"
+                                                                                              (replace
+                                                                                               -5)
+                                                                                              (("1"
+                                                                                                (assert)
+                                                                                                (("1"
+                                                                                                  (inst?)
+                                                                                                  (("1"
+                                                                                                    (inst?)
+                                                                                                    (("1"
+                                                                                                      (inst?)
+                                                                                                      nil
+                                                                                                      nil))
+                                                                                                    nil))
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil)
+                                                                                         ("2"
+                                                                                          (flatten)
+                                                                                          (("2"
+                                                                                            (use
+                                                                                             "monitor_related_states_preserved_by_catch"
+                                                                                             ("s1"
+                                                                                              "s2b!2"
+                                                                                              "s2"
+                                                                                              "tau1!1"))
+                                                                                            (("2"
+                                                                                              (assert)
+                                                                                              (("2"
+                                                                                                (use
+                                                                                                 "monitor_related_states_implies_derive_converse"
+                                                                                                 ("mp"
+                                                                                                  "full_partial_MP(program(mp!1))"
+                                                                                                  "b"
+                                                                                                  "catch(b1!1)"))
+                                                                                                (("1"
+                                                                                                  (assert)
+                                                                                                  (("1"
+                                                                                                    (skosimp*)
+                                                                                                    (("1"
+                                                                                                      (inst
+                                                                                                       -7
+                                                                                                       "s2b!3"
+                                                                                                       "v2!1"
+                                                                                                       "n2!3")
+                                                                                                      (("1"
+                                                                                                        (use
+                                                                                                         "monitor_related_states_preserved_by_derive")
+                                                                                                        (("1"
+                                                                                                          (assert)
+                                                                                                          (("1"
+                                                                                                            (use
+                                                                                                             "monitor_related_states_implies_same_exception")
+                                                                                                            (("1"
+                                                                                                              (assert)
+                                                                                                              (("1"
+                                                                                                                (replace
+                                                                                                                 -12)
+                                                                                                                (("1"
+                                                                                                                  (propax)
+                                                                                                                  nil
+                                                                                                                  nil))
+                                                                                                                nil))
+                                                                                                              nil))
+                                                                                                            nil))
+                                                                                                          nil))
+                                                                                                        nil))
+                                                                                                      nil))
+                                                                                                    nil))
+                                                                                                  nil)
+                                                                                                 ("2"
+                                                                                                  (apply
+                                                                                                   (then
+                                                                                                    (use
+                                                                                                     "wf_Body_preserved_by_proper_subterm"
+                                                                                                     ("b2"
+                                                                                                      "catch(b1!1)"
+                                                                                                      "b1"
+                                                                                                      "b1!1"))
+                                                                                                    (expand
+                                                                                                     "<<")
+                                                                                                    (assert)))
+                                                                                                  (("2"
+                                                                                                    (expand
+                                                                                                     "full_partial_MP")
+                                                                                                    (("2"
+                                                                                                      (propax)
+                                                                                                      nil
+                                                                                                      nil))
+                                                                                                    nil))
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil)
+                                                                                 ("2"
+                                                                                  (hide-all-but
+                                                                                   (1
+                                                                                    -15))
+                                                                                  (("2"
+                                                                                    (skosimp*)
+                                                                                    (("2"
+                                                                                      (apply
+                                                                                       (repeat
+                                                                                        (inst?
+                                                                                         -5)))
+                                                                                      (("2"
+                                                                                        (assert)
+                                                                                        (("2"
+                                                                                          (apply
+                                                                                           (branch
+                                                                                            (split
+                                                                                             -4)
+                                                                                            ((then
+                                                                                              (flatten)
+                                                                                              (assert)
+                                                                                              (flatten)
+                                                                                              (assert)))))
+                                                                                          nil
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil)
+                                                                                 ("3"
+                                                                                  (skosimp*)
+                                                                                  (("3"
+                                                                                    (apply
+                                                                                     (then
+                                                                                      (use
+                                                                                       "wf_Body_preserved_by_proper_subterm"
+                                                                                       ("b2"
+                                                                                        "catch(b1!1)"
+                                                                                        "b1"
+                                                                                        "b1!1"))
+                                                                                      (expand
+                                                                                       "<<")
+                                                                                      (assert)))
+                                                                                    (("3"
+                                                                                      (expand
+                                                                                       "full_partial_MP")
+                                                                                      (("3"
+                                                                                        (propax)
+                                                                                        nil
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil)
+                                                                 ("2"
+                                                                  (apply
+                                                                   (then
+                                                                    (use
+                                                                     "wf_Body_preserved_by_proper_subterm"
+                                                                     ("b2"
+                                                                      "try(b1!1)"
+                                                                      "b1"
+                                                                      "b1!1"))
+                                                                    (expand
+                                                                     "<<")
+                                                                    (assert)))
+                                                                  (("2"
+                                                                    (expand
+                                                                     "full_partial_MP")
+                                                                    (("2"
+                                                                      (propax)
+                                                                      nil
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil)
+                                                   ("2"
+                                                    (expand
+                                                     "full_partial_MP")
+                                                    (("2"
+                                                      (propax)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil)
+                                                 ("2"
+                                                  (skosimp*)
+                                                  (("2"
+                                                    (expand
+                                                     "complete_MP")
+                                                    (("2"
+                                                      (propax)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil)
+                                           ("2"
+                                            (hide-all-but 1)
+                                            (("2"
+                                              (expand
+                                               "monitor_related_states")
+                                              (("2"
+                                                (postpone)
+                                                nil
+                                                nil))
+                                              nil))
+                                            nil))
                                           nil))
                                         nil))
                                       nil))
                                     nil))
                                   nil))
-                                nil))
-                              nil)
-                             ("2" (postpone) nil nil))
+                                nil)
+                               ("2" (postpone) nil nil))
+                              nil))
                             nil))
                           nil))
                         nil))
@@ -5333,10 +5629,10 @@
         nil))
       nil))
     nil)
-   unfinished nil 8024 1360 t shostak))
+   unfinished nil 1291064 45090 t shostak))
  (well_behaved_MVA_preserved_by_complete_MP_TCC1 0
   (well_behaved_MVA_preserved_by_complete_MP_TCC1-1 nil 3413189750
-   3413193261 ("" (subtype-tcc) nil nil) proved
+   3413193261 ("" (subtype-tcc) nil nil) unchecked
    ((Name formal-nonempty-type-decl nil
      CompleteMonitorProgramPropertiesPreservation nil)
     (CP formal-nonempty-type-decl nil
@@ -5351,7 +5647,7 @@
       (("" (expand "wf_and_complete_MP") (("" (flatten) nil nil)) nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (complete_MP const-decl "MonitoredProgram"
      MonitoredProgramCompletessRelation nil)
@@ -5387,25 +5683,26 @@
 (AnnotateProgramPropertiesPreservation
  (IMP_VariableNames_TCC1 0
   (IMP_VariableNames_TCC1-1 nil 3410161121 3413195209
-   ("" (use "infinite_namespace") nil nil) proved
+   ("" (use "infinite_namespace") nil nil) unchecked
    ((infinite_namespace formula-decl nil
      AnnotateProgramPropertiesPreservation nil))
    1289 1290 t nil))
  (IMP_Equivalence_TCC1 0
   (IMP_Equivalence_TCC1-1 nil 3410161121 3413195210
-   ("" (use "CP_is_enumerable") nil nil) proved
+   ("" (use "CP_is_enumerable") nil nil) unchecked
    ((CP_is_enumerable formula-decl nil
      AnnotateProgramPropertiesPreservation nil))
    1329 1280 t nil))
  (IMP_Equivalence_TCC2 0
   (IMP_Equivalence_TCC2-1 nil 3410161121 3413195211
-   ("" (use "name_of_exists") nil nil) proved
+   ("" (use "name_of_exists") nil nil) unchecked
    ((name_of_exists formula-decl nil
      AnnotateProgramPropertiesPreservation nil))
    1308 1310 t nil))
  (IMP_CompleteMonitorProgramPropertiesPreservation_TCC1 0
   (IMP_CompleteMonitorProgramPropertiesPreservation_TCC1-1 nil
-   3413189842 3413195140 ("" (use "CP_not_only_halted") nil nil) proved
+   3413189842 3413195140 ("" (use "CP_not_only_halted") nil nil)
+   unchecked
    ((CP_not_only_halted formula-decl nil
      AnnotateProgramPropertiesPreservation nil))
    5701 1290 t nil))
@@ -5417,7 +5714,7 @@
         (("" (apply-extensionality :hide? t) nil nil)) nil))
       nil))
     nil)
-   proved
+   unchecked
    ((make_MPState const-decl "MPState"
      AnnotateProgramPropertiesPreservation nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
@@ -5436,7 +5733,7 @@
     (("" (expand "id")
       (("" (use "ann_program_preserves_wf_body") nil nil)) nil))
     nil)
-   proved
+   unchecked
    ((id const-decl "(bijective?[T, T])" identity nil)
     (Name formal-nonempty-type-decl nil
      AnnotateProgramPropertiesPreservation nil)
@@ -8231,7 +8528,7 @@
             (("2" (use "ann_program_preserves_wf_body") nil)))))))
        ("2" (use "wf_nat") nil))))
     ";;; developed with shostak decision procedures")
-   proved
+   unchecked
    ((< const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
@@ -8270,8 +8567,7 @@
     (var_names_union formula-decl nil ProgramFunctions nil)
     (target shared-adt-accessor-decl
             "[{x: Body | Set?(x) OR Assign?(x)} -> Name]" Body_adt nil)
-    (add const-decl "(nonempty?)" sets nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (add const-decl "(nonempty?)" sets nil) nil
     (subterm_subset_varnames2 formula-decl nil ProgramFunctions nil)
     (subterm_transitive formula-decl nil ProgramFunctions nil)
     (wf_new_vars formula-decl nil NewVariableDeclarations nil)
@@ -8316,17 +8612,13 @@
     (expr shared-adt-accessor-decl
           "[{x: Body | Assert?(x) OR StmtExpr?(x)} -> Expr]" Body_adt
           nil)
-    (update_store const-decl "Store" State nil)
-    (v1!1 skolem-const-decl "Val[Name]"
-     AnnotateProgramPropertiesPreservation nil)
+    (update_store const-decl "Store" State nil) nil
     (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
      nil)
     (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
      nil)
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
-    (v1!1 skolem-const-decl "Val[Name]"
-     AnnotateProgramPropertiesPreservation nil)
+    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil) nil
     (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
@@ -8343,8 +8635,7 @@
      real_props nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
-    (b!1 skolem-const-decl "(wf_Body(program(mp!1)))"
-     AnnotateProgramPropertiesPreservation nil)
+    nil
     (b1 shared-adt-accessor-decl
      "[{x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} -> Expr]" Body_adt
      nil)
@@ -8472,9 +8763,7 @@
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
-    (mp!1 skolem-const-decl "(wf_and_complete_MP)"
-     AnnotateProgramPropertiesPreservation nil)
+    (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil) nil
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (set type-eq-decl nil sets nil)
@@ -10931,7 +11220,7 @@
        ("2" (use "wf_nat") nil nil))
       nil))
     nil)
-   proved
+   unchecked
    ((< const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
@@ -10992,9 +11281,7 @@
     (expr shared-adt-accessor-decl
           "[{x: Body | Assert?(x) OR StmtExpr?(x)} -> Expr]" Body_adt
           nil)
-    (update_store const-decl "Store" State nil)
-    (v1!1 skolem-const-decl "Val[Name]"
-     AnnotateProgramPropertiesPreservation nil)
+    (update_store const-decl "Store" State nil) nil
     (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
      nil)
     (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
@@ -11002,13 +11289,9 @@
     (wf_Body_preserved_by_proper_subterm formula-decl nil
      WellFormedProgram nil)
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
-    (v1!1 skolem-const-decl "Val[Name]"
-     AnnotateProgramPropertiesPreservation nil)
+    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil) nil
     (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
-    (b!1 skolem-const-decl "(wf_Body(program(mp!1)))"
-     AnnotateProgramPropertiesPreservation nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
+    nil (NOT const-decl "[bool -> bool]" booleans nil)
     (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
     (IF const-decl "[boolean, T, T -> T]" if_def nil)
     (test shared-adt-accessor-decl
@@ -11086,9 +11369,7 @@
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
-    (mp!1 skolem-const-decl "(wf_and_complete_MP)"
-     AnnotateProgramPropertiesPreservation nil)
+    (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil) nil
     (AState type-eq-decl nil MVACommonSemantics nil)
     (Store type-eq-decl nil State nil)
     (PState type-eq-decl nil State nil)
@@ -11212,7 +11493,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((Sequence adt-constructor-decl "[[Stmt, Stmt] -> (Sequence?)]"
      Body_adt nil)
     (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -12105,7 +12386,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
     (ann_class const-decl "Class" AnnotateClass nil)
@@ -12127,8 +12408,7 @@
     (EventType type-decl nil EventType_adt nil)
     (CP formal-nonempty-type-decl nil
      AnnotateProgramPropertiesPreservation nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgramPropertiesPreservation
-     nil)
+    nil
     (excpt adt-constructor-decl "[Excpt -> (excpt?)]" ValOrExcpt_adt
      nil)
     (excpt? adt-recognizer-decl "[ValOrExcpt -> boolean]"
@@ -12137,8 +12417,7 @@
      EventType_adt nil)
     (ExitExceptional? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgramPropertiesPreservation
-     nil)
+    nil
     (ExitNormal adt-constructor-decl "(ExitNormal?)" EventType_adt nil)
     (ExitNormal? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
@@ -12189,12 +12468,7 @@
     (ann_action def-decl "Stmt" AnnotateEvent nil)
     (guard_to_expression_contains_no_method_calls formula-decl nil
      MVAMonitoring nil)
-    (mp!1 skolem-const-decl "(wf_and_complete_MP)"
-     AnnotateProgramPropertiesPreservation nil)
-    (n!1 skolem-const-decl "Method[Name]"
-     AnnotateProgramPropertiesPreservation nil)
-    (q!1 skolem-const-decl "CP" AnnotateProgramPropertiesPreservation
-     nil)
+    nil nil nil
     (ann_guard_actions_set const-decl "finite_set[[Expr, Stmt]]"
      AnnotateEvent nil)
     (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
@@ -12258,7 +12532,7 @@
       (("" (expand "wf_and_complete_MP") (("" (flatten) nil nil)) nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -13350,7 +13624,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((well_behaved_MVA_appropriate_for_annot_gen formula-decl nil
      AnnotateProgramPropertiesPreservation nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
@@ -13380,15 +13654,7 @@
     (ann_class const-decl "Class" AnnotateClass nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
-    (e!1 skolem-const-decl "Excpt"
-     AnnotateProgramPropertiesPreservation nil)
-    (v!1 skolem-const-decl "Expr[Name]"
-     AnnotateProgramPropertiesPreservation nil)
-    (v!1 skolem-const-decl "Expr[Name]"
-     AnnotateProgramPropertiesPreservation nil)
-    (m!1 skolem-const-decl "Method[Name]"
-     AnnotateProgramPropertiesPreservation nil)
-    (only_JMLExc const-decl "bool" WfSetStmts nil)
+    nil nil nil nil (only_JMLExc const-decl "bool" WfSetStmts nil)
     (ann_methods const-decl "finite_set[Method]" AnnotateMethod nil)
     (derive def-decl "bool" Semantics nil)
     (Sequence adt-constructor-decl "[[Stmt, Stmt] -> (Sequence?)]"
@@ -13509,22 +13775,14 @@
      "(strict_total_order?[real])" real_props nil)
     (ann_event_does_not_throw_exception formula-decl nil
      AnnEventPreservesMPModeled nil)
-    (mp!1 skolem-const-decl "(wf_and_complete_MP)"
-     AnnotateProgramPropertiesPreservation nil)
-    (n!1 skolem-const-decl "Method[Name]"
-     AnnotateProgramPropertiesPreservation nil)
-    (v!1 skolem-const-decl "Expr[Name]"
-     AnnotateProgramPropertiesPreservation nil)
+    nil nil nil
     (derive_equivalence_if formula-decl nil
      AnnotateProgramPropertiesPreservation nil)
     (ann_method const-decl "Method" AnnotateMethod nil)
     (ExitNormal? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
     (ExitNormal adt-constructor-decl "(ExitNormal?)" EventType_adt nil)
-    (v!1 skolem-const-decl "Expr[Name]"
-     AnnotateProgramPropertiesPreservation nil)
-    (e!1 skolem-const-decl "Excpt"
-     AnnotateProgramPropertiesPreservation nil)
+    nil nil
     (excpt adt-constructor-decl "[Excpt -> (excpt?)]" ValOrExcpt_adt
      nil)
     (excpt? adt-recognizer-decl "[ValOrExcpt -> boolean]"
@@ -13540,8 +13798,7 @@
     (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
-    (no_exc const-decl "bool" WfSetStmts nil)
-    (wf_set_stmts const-decl "bool" WfSetStmts nil)
+    (no_exc const-decl "bool" WfSetStmts nil) nil
     (FieldDecl type-eq-decl nil Program nil)
     (Expr type-eq-decl nil Body_adt nil)
     (LocalVarDecl type-eq-decl nil Program nil)
@@ -13551,8 +13808,7 @@
     (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
     (ann_program const-decl "Program" AnnotateProgram nil)
-    (program_method_pred const-decl "bool" ProgramRestriction nil)
-    (wf_set_stmts const-decl "bool" WfSetStmts nil))
+    (program_method_pred const-decl "bool" ProgramRestriction nil) nil)
    347675 19920 t nil)
   (wf_set_stmts_preserved_by_ann_program-1 nil 3410541769 3413195356
    ("" (skosimp*)
@@ -14691,7 +14947,7 @@
     (ExitNormal adt-constructor-decl "(ExitNormal?)" EventType_adt nil)
     (ExitNormal? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
-    (ann_method const-decl "Method" AnnotateMethod nil) nil
+    (ann_method const-decl "Method" AnnotateMethod nil)
     (ann_event_does_not_throw_exception formula-decl nil
      AnnEventPreservesMPModeled nil)
     (real_gt_is_strict_total_order name-judgement
@@ -14821,13 +15077,13 @@
 (InlineAnnotationsPropertiesPreservation
  (IMP_InlineVariableNames_TCC1 0
   (IMP_InlineVariableNames_TCC1-1 nil 3413197054 3413197095
-   ("" (use "infinite_namespace") nil nil) proved
+   ("" (use "infinite_namespace") nil nil) unchecked
    ((infinite_namespace formula-decl nil
      InlineAnnotationsPropertiesPreservation nil))
    12616 190 t nil))
  (IMP_InlineProgramAnnotation_TCC1 0
   (IMP_InlineProgramAnnotation_TCC1-1 nil 3412508332 3413197107
-   ("" (use "name_of_exists") nil nil) proved
+   ("" (use "name_of_exists") nil nil) unchecked
    ((name_of_exists formula-decl nil
      InlineAnnotationsPropertiesPreservation nil))
    5607 210 t nil))
@@ -14873,7 +15129,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
     (contains_no_method_call const-decl "bool" ContainsNoMethodCall
@@ -14964,9 +15220,8 @@
         nil))
       nil))
     nil)
-   proved
-   ((program_method_pred const-decl "bool" ProgramRestriction nil)
-    (wf_set_stmts const-decl "bool" WfSetStmts nil)
+   unchecked
+   ((program_method_pred const-decl "bool" ProgramRestriction nil) nil
     (id_preserves application-judgement "S" identity_props nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (no_exc const-decl "bool" WfSetStmts nil)
@@ -15075,7 +15330,6 @@
     (inline_methods const-decl "finite_set[Method]"
      InlineMethodAnnotation nil)
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
-    (only_JMLExc const-decl "bool" WfSetStmts nil)
-    (wf_set_stmts const-decl "bool" WfSetStmts nil))
+    (only_JMLExc const-decl "bool" WfSetStmts nil) nil)
    7391 6910 t shostak)))
 

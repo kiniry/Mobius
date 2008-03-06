@@ -536,6 +536,19 @@ BEGIN
     FORALL(p : PreProgram, l : list[[Expr, Stmt]]) :
       wf_Body(p)(CaseJML(l)) = wf_Branches(p)(l)
 
+  wf_Body_While : LEMMA % :-)
+    FORALL(p : PreProgram, b : (wf_Body(p))) :
+      While?(b) IMPLIES
+        wf_Body(p)(IfThenElse(test(b), b, Skip))
+
+  wf_Body_CaseJML_branches : LEMMA
+    FORALL(p : PreProgram, b : (wf_Body(p))) :
+      CaseJML?(b) IMPLIES
+        NOT null?(branches(b)) IMPLIES
+        wf_Body(p)(IfThenElse
+               (PROJ_1(car(branches(b))),
+                PROJ_2(car(branches(b))),
+                CaseJML(cdr(branches(b)))))
 
   wf_Method(p : PreProgram)(m : Method) : boolean =
     method_pred(p)(m)(wf_Body)

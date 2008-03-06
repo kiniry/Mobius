@@ -1,7 +1,8 @@
 \section{Introduction}\label{SecIntro}
 
+\marginnote{MH: I don't really like first sentence}
 With the emergence of a new generation of trusted personal devices
-(mobile phones, PDAs, smart cards \emph{etc.}), the need for
+(mobile phones, PDAs, smart cards \emph{etc.}), the demand for
 techniques to ensure the security of applications has become even more
 prominent. A common way to ensure the security of an application is to
 monitor its execution with a security automaton~\cite{Schneider99}.
@@ -9,9 +10,9 @@ Upon entry or exit of a security-critical method, the security
 automaton changes its internal state. If it reaches an ``illegal''
 state, the application will be stopped and a security violation will
 be reported. This approach is in particular suited to monitor
-properties that are expressed as sequences of legal method calls, such as
-life cycle properties, or constraints that express how often or under
-which conditions a method can be called.
+properties that are expressed as sequences of legal method calls, such
+as life cycle properties, or constraints that express how often or
+under which conditions a method can be called.
 
 However, for many applications, such a runtime monitoring approach is
 not suited. In particular, if an application is installed on a
