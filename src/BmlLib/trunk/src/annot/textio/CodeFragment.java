@@ -350,6 +350,8 @@ public class CodeFragment {
 			return "class";
 		if (line.matches("^package .*$"))
 			return "package";
+    if (line.matches("^.*( |\t)throws .*$")) //?
+      return "throws";    
 		if ((line.indexOf(":") < 0)
 			&& (line.indexOf("*") < 0)
 			&& (line.charAt(0) != ' ')
@@ -412,7 +414,7 @@ public class CodeFragment {
 				last_eoa = l;
 			}
 			if (met) {
-				if (isNumber(kw)) {
+				if (isNumber(kw) || "throws".equals(kw)) {
 					lines[l] += "\nEOM";
 					met = false;
 				} else if (!decl) {
@@ -748,10 +750,11 @@ public class CodeFragment {
 				continue;
 			}
 			String kw = getKeyword(line);
-			if (("class".equals(kw)) || ("package".equals(kw))) {
+			if (("class".equals(kw)) || ("package".equals(kw)) ||
+          ("throws".equals(kw))) {
 				lines[l] = "[[" + kw + "]]";
 				continue;
-			}
+			}      
 			// class attributes
 			if ("EOD".equals(kw)) {
 				if (!affd)

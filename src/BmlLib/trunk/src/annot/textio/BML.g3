@@ -183,6 +183,7 @@ method :
 			syso("method header");
 			inr = 0;
 		}
+		(MTHROWS {syso("handling of throws");} )*
 		| (met=methodAttribute {
 			if ($met.ast != null) {
 				syso("method attribute");
@@ -205,11 +206,13 @@ method :
 				}
 				syso("method header");
 				inr = 0;
-			})
-		(instruction {inr++;})+
+			}
+		(MTHROWS {syso("handling of throws");})*)
+		(instruction {inr++;})*
 		EOM {
 			syso("end of method");
-			if (inr != m.getInstructions().getInstructionHandles().length) {
+			if (m.getInstructions() != null &&
+			    inr != m.getInstructions().getInstructionHandles().length) {
 				syso("instruction count changed!");
 				reportError(null);
 			}
@@ -559,6 +562,7 @@ NO_METHOD: '\\method unaffected';
 MHEAD: '[[method header]]';
 NO_INSTRUCTION: '\\instruction unaffected';
 INSTRUCTION: '[[instruction]]';
+MTHROWS: '[[throws]]';
 NO_MSPEC: '\\method specification unaffected';
 NO_ANNOTATION: '\\annotation unaffected';
 EOD: 'EOD';

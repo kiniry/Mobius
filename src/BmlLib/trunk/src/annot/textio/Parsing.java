@@ -246,7 +246,10 @@ public class Parsing {
 			if (lex.lastE != null)
 				throw lex.lastE;
 			if (parser.lastE != null)
+      {
+        System.out.println(parser.lastE.line);
 				throw parser.lastE;
+      }
 		} catch (RecognitionException e) {
 			if (affectBcc)
 				throw new RuntimeException("parsing failed while updating BCClass");
