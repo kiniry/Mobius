@@ -21,6 +21,7 @@ import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.instructions.ast.ThrowsLineController;
 
 /**
  * This class handles the initial parsing of a byte code textual document.
@@ -173,29 +174,45 @@ public class InitParser extends BytecodeTextParser {
     throws UmbraLocationException, UmbraMethodException {
     int j = swallowEmptyLines(my_doc, the_line_no, a_ctxt);
     final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
-    final InstructionList il = mg.getInstructionList();
-    il.setPositions();
-    final Iterator iter = il.iterator();
 
-    for (; j < my_doc.getNumberOfLines(); j++) {
-      final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
-      final BytecodeLineController lc = Preparsing.getType(lineName,
-                                                           a_ctxt);
+    //swallow method header
+    String a_linename = getLineFromDoc(my_doc, j, a_ctxt);
+    BytecodeLineController lc = Preparsing.getType(a_linename, a_ctxt);
+    addEditorLine(j, lc);
+    lc.setMethodNo(a_ctxt.getMethodNo());
+    if (lc instanceof HeaderLineController) { // method header
+      ((HeaderLineController)lc).setMethod(mg);
+    }
+    j++;
+    a_linename = getLineFromDoc(my_doc, j, a_ctxt);
+    lc = Preparsing.getType(a_linename, a_ctxt);
+    if (lc instanceof ThrowsLineController) { // method header
       addEditorLine(j, lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
-      if (lc.isCommentStart()) { // ignore comments
-        j = swallowEmptyLines(my_doc, j, a_ctxt);
-        continue;
-      }
-      if (lc instanceof HeaderLineController) { // method header
-        ((HeaderLineController)lc).setMethod(mg);
-        continue;
-      }
-      if (lc instanceof EmptyLineController) { //method end
-        return swallowEmptyLines(my_doc, j, a_ctxt);
-      }
-      if (lc instanceof InstructionLineController) { //instruction line
-        handleleInstructionLine((InstructionLineController)lc, mg, il, iter);
+      j++;
+    }
+
+
+    final InstructionList il = mg.getInstructionList();
+    if (il != null) {
+      il.setPositions();
+      final Iterator iter = il.iterator();
+
+      for (; j < my_doc.getNumberOfLines(); j++) {
+        a_linename = getLineFromDoc(my_doc, j, a_ctxt);
+        lc = Preparsing.getType(a_linename, a_ctxt);
+        addEditorLine(j, lc);
+        lc.setMethodNo(a_ctxt.getMethodNo());
+        if (lc.isCommentStart()) { // ignore comments
+          j = swallowEmptyLines(my_doc, ++j, a_ctxt);
+          continue;
+        }
+        if (lc instanceof EmptyLineController) { //method end
+          return swallowEmptyLines(my_doc, ++j, a_ctxt);
+        }
+        if (lc instanceof InstructionLineController) { //instruction line
+          handleleInstructionLine((InstructionLineController)lc, mg, il, iter);
+        }
       }
     }
     return j;

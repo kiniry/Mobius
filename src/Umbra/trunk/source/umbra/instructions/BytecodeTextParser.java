@@ -286,6 +286,7 @@ public class BytecodeTextParser {
       my_combined_text.insert(a_pos, a_string);
   }
 
+  //@ requires a_lineno >= 0;
   /**
    * Returns the position of the first character in the line of the given
    * number.
@@ -294,7 +295,7 @@ public class BytecodeTextParser {
    * @return the position of the first character in the line
    */
   private int getPosOfLine(final int a_lineno) {
-    int start = -1;
+    int start = 0;
     for (int i = 0; i < a_lineno; i++) {
       start = my_combined_text.indexOf("\n", start + 1);
       if (start == -1) {

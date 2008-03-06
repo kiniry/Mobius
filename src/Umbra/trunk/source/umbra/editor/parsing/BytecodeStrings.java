@@ -92,6 +92,7 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
    * {@link umbra.instructions.ast.HeaderLineController} class.
    */
   public static final String[] HEADER_PREFIX = new String[] {"public",
+                                                             "abstract",
                                                              "static", "void",
                                                              "private",
                                                              "int", "char",

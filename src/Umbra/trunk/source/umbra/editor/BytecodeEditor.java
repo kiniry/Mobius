@@ -175,7 +175,7 @@ public class BytecodeEditor extends TextEditor {
       validateState(getEditorInput());
       performSave(true, a_progress_monitor);
     }
-    
+
     final IFile a_file_from = makeSpareCopy();
     if (a_file_from == null) return;
     try {
