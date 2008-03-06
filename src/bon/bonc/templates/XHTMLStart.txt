@@ -212,19 +212,20 @@ a:active {
   font-size: 1.1em;
 }
 
-#left-footer button {
+#showlink {
   margin-left: 10px;
   margin-right: 10px;
   font-weight: bold;
   font-size: 1.1em;
-}
-
-#top-menu {
   min-width: 125px;
 }
 
+#top-menu {
+  min-width: 160px;
+}
+
 #sub-menu {
-  min-width: 250px;
+  min-width: 220px;
 }
 
 #right-footer {
@@ -252,18 +253,19 @@ dd {
 
 .indexing dt, .explanation dt {
   font-variant: small-caps;
+  letter-spacing: 1px;
 }
 
 .top-level {
-  margin-bottom: 20px;
   width: 98%%;
   margin: auto;
 }
 
 .outer {
   width: 100%%;
-  background-color: #7d7d7d;
+  background-color: #a2a2a2;
   border: 2px solid #000000;
+  margin-bottom: 30px;
 }
 
 .type, .name, .part {

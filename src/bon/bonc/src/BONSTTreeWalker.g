@@ -177,7 +177,7 @@ index_string  :^(
                  INDEX_STRING MANIFEST_STRING
                 )
                ->
-                 indexString(s={$MANIFEST_STRING.text})
+                 indexString(s={stripIfNecessary($MANIFEST_STRING.text)})
               ;
 
 /**********************************************/
