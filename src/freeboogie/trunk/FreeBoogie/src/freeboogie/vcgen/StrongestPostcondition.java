@@ -26,12 +26,14 @@ import freeboogie.util.Closure;
  * flow graph, (d) make that reducible, (e) eliminate loops, and
  * (f) passivate.)
  *
- * The formulas are built using a {@code TermBuilder} that
- * is handed to us by the user. That {@code TermBuilder}
- * must know about the terms "const_pred", "and", "or", and "implies".
+ * The formulas are built using a {@code TermBuilder} that is
+ * handed to us by the user. That {@code TermBuilder} must know
+ * about the terms "const_pred", "and", "or", and "implies".
  *
- * TODO Explain which nodes are considered initial and which are
- * cosidered final.
+ * The nodes with no predecessors are considered
+ * initial; the nodes with no successors are considered
+ * final. (So unreachable code blocks must be removed in
+ * a previous phase.)
  *
  * TODO Give some guides in a document somewhere how to name terms.
  *
@@ -90,9 +92,9 @@ public class StrongestPostcondition {
   public void setFlowGraph(SimpleGraph<AssertAssumeCmd> flow) {
     log.info("prepare to compute sp on a new flow graph");
     this.flow = flow;
+    assert !flow.hasCycle(); // please cut loops first
     preCache = new HashMap<AssertAssumeCmd, Term>();
     postCache = new HashMap<AssertAssumeCmd, Term>();
-    // TODO check for cycles and abort if any
   }
 
   /**
@@ -118,7 +120,6 @@ public class StrongestPostcondition {
     for (AssertAssumeCmd p : flow.from(cmd)) 
       toOr.add(post(p));
     if (toOr.isEmpty())
-      // assume it's initial 
       r = term.mk("const_pred", Boolean.valueOf(true));
     else
       r = term.mk("or", toOr.toArray(new Term[0]));
@@ -167,5 +168,4 @@ public class StrongestPostcondition {
     });
     return term.mk("and", vcs.toArray(new Term[0]));
   }
-
 }

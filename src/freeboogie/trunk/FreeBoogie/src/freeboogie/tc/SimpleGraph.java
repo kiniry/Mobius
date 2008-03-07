@@ -68,6 +68,31 @@ public class SimpleGraph<N> {
   public Set<N> from(N to) {
     return parents.get(to);
   }
+
+  // used for cycle detection
+  private HashSet<N> seen;
+  private HashSet<N> done;
+
+  private boolean recHasCycle(N n) {
+    if (done.contains(n)) return false;
+    if (seen.contains(n)) return true;
+    seen.add(n);
+    for (N np : parents.get(n))
+      if (recHasCycle(np)) return true;
+    done.add(n);
+    return false;
+  }
+ 
+  /**
+   * Returns whether this graph contains any cycle.
+   */
+  public boolean hasCycle() {
+    seen = new HashSet<N>();
+    done = new HashSet<N>();
+    for (N n : parents.keySet()) 
+      if (recHasCycle(n)) retrun true;
+    return false;
+  }
   
   /**
    * Execute {@code f} on all nodes, in a random order.
