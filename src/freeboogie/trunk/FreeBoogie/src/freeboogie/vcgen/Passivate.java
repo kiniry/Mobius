@@ -43,7 +43,11 @@ import freeboogie.util.Closure;
  * operations.
  *
  * TODO How to make sure that the variables I create here are
- *      unique?
+ *      unique? (make AST utility for that)
+ *
+ * TODO This implementation is on hold while I write a couple
+ *      of helper visitors: (1) to collect read/write identifiers,
+ *      and (2) to operate a substitution an an AST.
  */
 public class Passivate {
   private HashMap<String, HashMap<Command, Integer>> readIdx;
