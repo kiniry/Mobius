@@ -3,6 +3,8 @@ package freeboogie.tc;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import freeboogie.util.Closure;
@@ -23,8 +25,8 @@ public class SimpleGraph<N> {
   
   /** Construct an empty graph. */
   public SimpleGraph() {
-    parents = new HashMap<N,HashSet<N>>();
-    children = new HashMap<N,HashSet<N>>();
+    parents = new LinkedHashMap<N,HashSet<N>>();
+    children = new LinkedHashMap<N,HashSet<N>>();
     frozen = false;
   }
   
@@ -37,8 +39,8 @@ public class SimpleGraph<N> {
     assert !frozen;
     assert parents.size() == children.size();
     if (parents.containsKey(n)) return;
-    parents.put(n, new HashSet<N>());
-    children.put(n, new HashSet<N>());
+    parents.put(n, new LinkedHashSet<N>());
+    children.put(n, new LinkedHashSet<N>());
   }
   
   /**

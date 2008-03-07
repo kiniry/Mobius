@@ -14,7 +14,7 @@ import java.util.Set;
  * all the bindings added since the last push; bindings
  * that existed before the push but were overriden after
  * will return to their previous state. The {@code Map}
- * intefrace is not exactly followed. The methods {@code keySet},
+ * interface is not exactly followed. The methods {@code keySet},
  * {@code values}, and {@code entrySet} are just copies and changes
  * in them do not reflect in the map, or viceversa.
  * 
