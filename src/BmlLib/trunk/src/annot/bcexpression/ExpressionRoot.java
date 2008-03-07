@@ -16,7 +16,7 @@ import annot.bcexpression.formula.AbstractFormula;
  * <b>wrong:</b><br>
  * 		Assert.formula = Predicate2Ar(Code.LESS, expr1, expr2);
  * <br><b>correct:</b><br>
- * 		Assert.formula = ExpressinoRoot(Predicate2Ar(
+ * 		Assert.formula = ExpressionRoot(Predicate2Ar(
  * 			Code.LESS, expr1, expr2));
  * 
  * @author tomekb
