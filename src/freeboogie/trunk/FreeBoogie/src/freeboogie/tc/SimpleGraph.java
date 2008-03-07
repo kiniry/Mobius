@@ -19,11 +19,13 @@ import freeboogie.util.Pair;
 public class SimpleGraph<N> {
   private HashMap<N,HashSet<N>> parents;
   private HashMap<N,HashSet<N>> children;
+  private boolean frozen;
   
   /** Construct an empty graph. */
   public SimpleGraph() {
     parents = new HashMap<N,HashSet<N>>();
     children = new HashMap<N,HashSet<N>>();
+    frozen = false;
   }
   
   /**
@@ -32,6 +34,7 @@ public class SimpleGraph<N> {
    * @param n the node to add to the graph
    */
   public void node(N n) {
+    assert !frozen;
     assert parents.size() == children.size();
     if (parents.containsKey(n)) return;
     parents.put(n, new HashSet<N>());
@@ -44,9 +47,24 @@ public class SimpleGraph<N> {
    * @param to the target
    */
   public void edge(N from, N to) {
+    assert !frozen;
     node(from); node(to);
     parents.get(to).add(from);
     children.get(from).add(to);
+  }
+
+  /**
+   * Disallow future changes to the graph.
+   */
+  public void freeze() {
+    frozen = true;
+  }
+
+  /**
+   * Returns whether this graph is imutable.
+   */
+  public boolean isFrozen() {
+    return frozen;
   }
   
   /**
@@ -90,7 +108,7 @@ public class SimpleGraph<N> {
     seen = new HashSet<N>();
     done = new HashSet<N>();
     for (N n : parents.keySet()) 
-      if (recHasCycle(n)) retrun true;
+      if (recHasCycle(n)) return true;
     return false;
   }
   

@@ -17,7 +17,8 @@ import freeboogie.util.Closure;
  * SimpleGraph<AssertAssumeCmd>}) and computes preconditions and
  * postconditions for all nodes, verification conditions for
  * individual assertions, and a verification condition for all
- * assertion.
+ * assertion. (The implementation is inspired by strongest
+ * postcondition calculus.)
  *
  * The graph must be acyclic.
  *
@@ -86,12 +87,11 @@ public class StrongestPostcondition {
    * Sets the flow graph to be processed by the next calls to
    * {@code pre}, {@code post}, and {@code vc}. This class
    * assumes that {@code flow} won't be changed.
-   * (TODO: add a freeze method and a frozen property to
-   * {@code SimpleGraph}).
    */
   public void setFlowGraph(SimpleGraph<AssertAssumeCmd> flow) {
     log.info("prepare to compute sp on a new flow graph");
     this.flow = flow;
+    assert flow.isFrozen();
     assert !flow.hasCycle(); // please cut loops first
     preCache = new HashMap<AssertAssumeCmd, Term>();
     postCache = new HashMap<AssertAssumeCmd, Term>();
