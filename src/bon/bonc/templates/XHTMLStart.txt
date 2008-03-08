@@ -37,7 +37,7 @@ function toggleShowAll() {
 
 function select(id) {
   if (showAll) {
-    window.location.hash = id;
+    setHash(id);
     return true;
   } else {
     showOnly(id);
@@ -97,6 +97,9 @@ function initialPopulate() {
     populate();
   }
   showSelected();
+  lastHash = window.location.hash
+  //Trigger checkHash
+  setTimeout(checkHash,100)
 }
 
 function hashSelect(hash) {
@@ -106,6 +109,23 @@ function hashSelect(hash) {
   } else {
     populate();
   }
+}
+
+var lastHash = ''
+
+function checkHash() {
+  if (window.location.hash) {
+    if (window.location.hash != lastHash) {
+      hashSelect(window.location.hash.substr(1))
+      lastHash = window.location.hash
+    }
+  }
+  setTimeout(checkHash,100)
+}
+
+function setHash(hash) {
+  lastHash = '#' + hash
+  window.location.hash = hash
 }
 
 function populate() {
@@ -131,7 +151,7 @@ function showSelected() {
     var selected = subSelect.options[subSelect.selectedIndex].value;
     if (selected) {
       select(selected);
-      window.location.hash = selected;
+      setHash(selected);
     }
   }
 }
