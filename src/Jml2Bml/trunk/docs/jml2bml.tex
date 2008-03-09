@@ -1,0 +1,63 @@
+\documentclass{article}
+
+\RequirePackage[T1]{fontenc}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\author{Jedrzej Fulara, Krzysztof Jakubczyk}
+\title{On Compiling JML Specifications into Bytecode}
+\begin{document}
+\maketitle
+\section{Detecting Loops in Bytecode}
+To be able to compile the JML loop invariants, one should detect in the bytecode the corresponding loop. The created BML annotation should be associated with the bytecode instruction that represents the loop condition. Note that the loop condition is translated into multiple bytecode instructions. We are interested in the last one (comparison). A loop can be translated in one of the following ways:
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt,->]
+\tikzstyle{vertex}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+\foreach \name/\text/\y in {s/.../1, a/a/2, b/b/3, body/.../4, c/c/5, d/d/6, e/.../7}
+\node[vertex] (G-\name) at (0,-\y) {$\text$};
+\foreach \from/\to in {s/a,b/body,body/c,c/d,d/e}
+\draw (G-\from) -- (G-\to);
+\draw (G-a) .. controls +(-30:2cm) and +(30:1cm) .. (G-c);
+\draw (G-d) .. controls +(150:2cm) and +(-120:1cm) .. (G-b);
+
+\foreach \name/\text/\y in {s/.../1, a/a/2, b/b/3, body/.../4, c/c/5, d/d/6, e/.../7}
+\node[vertex] (Q-\name) at (4,-\y) {$\text$};
+\foreach \from/\to in {s/a,a/b,b/body, body/c, d/e}
+\draw (Q-\from) -- (Q-\to);
+\draw (Q-b) .. controls +(-30:2cm) and +(30:1cm) .. (Q-d);
+\draw (Q-c) .. controls +(150:1cm) and +(-120:2cm) .. (Q-a);
+\end{tikzpicture}
+\end{center}
+In the first scenario, in the vertex \textit{a}, an unconditional jump (goto) to the vertex \textit{c} is done (vertex \textit{c} denotes loading the condition). In \textit{d} the condition is checked, and if it is fulfilled, we jump back to \textit{b}. Between \textit{b} and \textit{c} is the loop body. The annotation should be added to the vertex \textit{d}. In the second approach, the condition is tested at the beginning (\textit{a} puts the condition on the stack and \textit{b} checks it. If it is fulfilled, we enter the loop, otherwise we jump out). In \textit{c} an unconditional jump back to \textit{a} is done. The BML annotation should be associated with the instruction in the vertex \textit{a}.
+
+If the loop condition is always true (i.e. \texttt{while(true)\{...\}} or \texttt{for(;;)\{...\}}, then the control flow graph is degenerated:
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt,->]
+\tikzstyle{vertex}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+\foreach \name/\text/\x in {s/.../1, a/a/2, body1/.../3, b/b/4, body2/.../5, c/c/6, d/.../7}
+\node[vertex] (G-\name) at (\x,0) {$\text$};
+\foreach \from/\to in {s/a,a/body1, body1/b, b/body2, body2/c}
+\draw (G-\from) -- (G-\to);
+\draw (G-b) .. controls +(-30:2cm) and +(-150:1cm) .. (G-d);
+\draw (G-c) .. controls +(150:2cm) and +(30:1cm) .. (G-a);
+\end{tikzpicture}
+\end{center}
+In this variant, there is no condition testing. Vertex \textit{a} denotes the first instruction in the loop, vertex \textit{c} - the last one. The jump from \textit{b} can be caused by a break. In this case, the annotation should be added to \textit{a}. The Jml2Bml compiler covers all the cases described above. It tries to detect the first kind of loop. If it fails, tries to detect the second one. In the first case:
+\begin{itemize}
+\item{assume that the tested instruction is in vertex \textit{c}. Consider all incoming edges that start in a vertex \textit{v}, which is before \textit{c}}
+\item{if there are no such vertices, return null (tested instruction is not the \textit{c} vertex in the first kind loop)}
+\item{else take this \textit{v} that has the longest jump to \textit{c} (other jumps come from some continue instructions inside the loop). This is \textit{a} from our graph,}
+\item{look at the next instruction. This is our \textit{b}. Find the longest forward jump. It is our vertex \textit{d}}
+\item{return d}
+\end{itemize}
+If no loop of the first kind was detected for an instruction, try to detect the second kind:
+\begin{itemize}
+\item{assume that the tested instruction is \textit{a}.}
+\item{if the instruction has less than two incomming edges - return null}
+\item{find \textit{v} that is after \textit{a} and has the longest jump to it. This is \textit{c} from our graph.}
+\item{look at the next instruction \textit{d}. If there is no such \textit{d} - return \textit{a}. This is the case of loop with always true condition and without any break inside the loop}
+\item{find such \textit{u} that there exist an edge (\textit{u},\textit{d}) and \textit{u} is between \textit{a} and \textit{d} and there is no such \textit{u'} that \textit{u'} is between \textit{a} and \textit{u} and there is an edge (\textit{u'},\textit{d}). This is candidate for \textit{b}}
+\item{if at \textit{u} is an unconditional jump (goto), then this is a break - this is the case of loop with always true condition. Return \textit{a}}
+\item{else (at \textit{u} is a conditional jump) - \textit{u} is really our \textit{b}. Return it.}
+\end{itemize}
+\end{document}
