@@ -3,6 +3,8 @@ package mobius.cct.certificates;
 import java.util.Iterator;
 import java.util.Set;
 
+import mobius.cct.util.Version;
+
 /**
  * Default implementation of Certificate interface.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
@@ -12,12 +14,10 @@ public class DefaultCertificate implements Certificate {
   /**
    * Constructor. Create empty certificate of given type.
    * @param type Certificate type.
-   * @param major Major version number.
-   * @param minor Minor version number.
+   * @param version Version number.
    */
   public DefaultCertificate(final String type, 
-                            final byte major,
-                            final byte minor) {
+                            final Version version) {
   }
   
   /** Return class certificate. 
@@ -45,24 +45,15 @@ public class DefaultCertificate implements Certificate {
   }
   
   /** 
-   * Return major version.
-   * @return Major version number.
+   * Return version.
+   * @return Version number.
    */
   @Override
-  public byte getMajorVersion() {
+  public Version getVersion() {
     // TODO Auto-generated method stub
-    return 0;
+    return new Version(0, 0);
   }
-  
-  /** 
-   * Return minor version.
-   * @return Minor version number.
-   */
-  @Override
-  public byte getMinorVersion() {
-    // TODO Auto-generated method stub
-    return 0;
-  }
+
 
   /**
    * Return certificate type.

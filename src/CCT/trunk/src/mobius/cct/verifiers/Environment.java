@@ -1,6 +1,7 @@
 package mobius.cct.verifiers;
 
 import mobius.cct.repositories.ClassFile;
+import mobius.cct.verifiers.logging.Logger;
 
 /**
  * Interface of verification environments - objects used
@@ -49,4 +50,10 @@ public interface Environment {
    */
   boolean verify(String[] name, String[] spec)
     throws CyclicDependyException;
+  
+  /**
+   * Get object used to log messages.
+   * @return Logger.
+   */
+  Logger getLogger();
 }

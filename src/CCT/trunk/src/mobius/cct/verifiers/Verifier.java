@@ -1,5 +1,8 @@
 package mobius.cct.verifiers;
 
+import mobius.cct.certificates.Certificate;
+import mobius.cct.util.Version;
+
 /**
  * Interface of certificate verifiers. 
  * @author Tadeusz Sznuk (ts209501@gmail.com)
@@ -12,20 +15,40 @@ public interface Verifier {
   String getCertificateType();
   
   /**
-   * Type of specifications associated with certificates
-   * verified by this object.
-   * @return Specification type.
+   * Lowest version number supported by this verifier.
+   * @return Version number.
    */
-  String getSpecificationType();
+  Version getMinVersion();
+
+  /**
+   * Highest version number supported by this verifier.
+   * @return Version number.
+   */
+  Version getMaxVersion();
+  
+  /**
+   * Type of specifications associated with given certificate.
+   * @param cert Certificate. 
+   * @return Types of specifications. 
+   * If type or version of the certificate is not valid 
+   * for this plugin, empty array should be returned.
+   */
+  String[] getSpecificationTypes(Certificate cert);
   
   /**
    * Verify certificate of a class in given environment.
    * If specifications of other classes are used they must also
    * be verified.
    * @param name Class to be verified (FQN).
+   * @param spec Type of specification.
+   * @param cert Certificate to be verified.
    * @param env Verification environment.
-   * @return {@code true} iff given class contains a certificate
-   * verifiable by this object and the certificate is valid.
+   * @return {@code true} if the certificate is valid. If type
+   * or version of this certificate are not acceptable for
+   * this plugin, {@code false} is returned.
    */
-  boolean verify(String name, Environment env);
+  boolean verify(String name, 
+                 String spec,
+                 Certificate cert, 
+                 Environment env);
 }

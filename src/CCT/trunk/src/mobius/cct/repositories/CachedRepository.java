@@ -36,8 +36,7 @@ public class CachedRepository<C extends ClassFile>
    * @param name Fully qualified class name.
    * @return ClassFile object.
    * @throws NotFoundException if the class cannot be found.
-   * @throws InvalidCertificateException if the class or certificate 
-   * are in invalid format.
+   * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
   @Override
@@ -46,4 +45,17 @@ public class CachedRepository<C extends ClassFile>
     return null;
   }
   
+  /**
+   * Locate and read certificate file.
+   * @param name Fully qualified class name.
+   * @return ClassFile object or null (if certificate cannot be found).
+   * @throws InvalidCertificateException if file format is invalid.
+   * @throws IOException if it is thrown during class reading.
+   */
+  @Override
+  public C getCertFile(String name) 
+    throws IOException, 
+           InvalidCertificateException {
+    return null; 
+  }
 }

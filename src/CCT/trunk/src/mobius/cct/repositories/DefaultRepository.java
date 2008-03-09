@@ -7,13 +7,12 @@ package mobius.cct.repositories;
  * @param <C> Type of class files.
  */
 public class DefaultRepository<C extends ClassFile> 
-  extends SCRepository<C> {
+  extends CachedRepository<C> {
   /**
    * Constructor.
    * @param reader Object used to read classes from streams.
    */
   public DefaultRepository(final ClassReader<C> reader) {
-    super(new ClasspathRepository<C>(reader), 
-          new ClasspathRepository<C>(reader));
+    super(new ClasspathRepository<C>(reader));
   }
 }

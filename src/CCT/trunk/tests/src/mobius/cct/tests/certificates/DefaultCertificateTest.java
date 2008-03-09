@@ -7,6 +7,7 @@ import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 import mobius.cct.certificates.DefaultCertificate;
+import mobius.cct.util.Version;
 
 /**
  * Tests for class mobius.cct.certificates.DefaultCertificate.
@@ -48,7 +49,7 @@ public class DefaultCertificateTest {
    */
   @Before
   public void setUp() {
-    fCert = new DefaultCertificate(TYPE, MAJOR, MINOR);
+    fCert = new DefaultCertificate(TYPE, new Version(MAJOR, MINOR));
   }
   
   /**
@@ -58,8 +59,8 @@ public class DefaultCertificateTest {
   @Test
   public void testConstructor() {
     assertEquals(TYPE, fCert.getType());
-    assertEquals(MAJOR, fCert.getMajorVersion());
-    assertEquals(MINOR, fCert.getMinorVersion());
+    assertEquals(MAJOR, fCert.getVersion().getMajor());
+    assertEquals(MINOR, fCert.getVersion().getMinor());
     assertNotNull(fCert.getCertifiedMethods());
     assertFalse(fCert.getCertifiedMethods().hasNext());
     assertNotNull(fCert.getImportedCerts());

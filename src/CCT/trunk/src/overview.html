@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>CCT API docs</title>
+</head>
+<body>
+<p>
+This library implements a verification framework for proof-carrying code.
+It can be used to process class files which contain certificates encoded
+as attributes. Certificates can also be stored in separate files. CCT API, 
+which is documented here, contains classes which can be used to read and 
+write class files with certificates, define methods of verification and
+control the verification process.
+</p>
+<h2>Locating classes</h2>
+<p>
+Class files can be read from various sources (filesystem, network, ...).
+An object that can locate and read them is called a repository.
+Repositories are implemented in package {@link mobius.cct.repositories}. 
+</p>
+
+<h2>Verification</h2>
+<p>
+Verification process is managed by an object called environment.
+An object which performs the actual verification of a certificate is
+called a plugin or verifier. Environments, plugins and methods of 
+verification are discussed in documentation of 
+{@link mobius.cct.verifiers} package.
+</p>
+
+</body>
+</html>

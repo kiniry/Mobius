@@ -105,12 +105,25 @@
 			  style="${tools.dir}/${checkstyle.xsl}" />
 	</target>
 
+	<target name="doc">
+		<mkdir dir="${doc.dir}" />
+		<javadoc sourcepath="${src.dir}"
+			     overview="${src.dir}/overview.html"
+			     classpathref="CCT.classpath"
+			     defaultexcludes="yes" 
+		         destdir="${doc.dir}"
+			     author="true"
+			     use="true"
+		/>
+	</target>
+	
 	<target name="clean">
 		<delete dir="${build.dir}"/>
 		<delete dir="${dist.dir}"/>
 		<delete dir="${tests.build.dir}"/>
 		<delete dir="${tests.output}"/>
 		<delete dir="${tests.report}"/>
+		<delete dir="${doc.dir}"/>
         <delete dir="${checkstyle.report}"/>
 	</target>
 

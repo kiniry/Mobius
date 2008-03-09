@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import mobius.cct.cache.Cache;
-import mobius.cct.cache.InfiniteCache;
 
 /**
  * Tests applicable to all cache implementations.

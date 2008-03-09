@@ -3,6 +3,8 @@ package mobius.cct.certificates;
 import java.util.Iterator;
 import java.util.Set;
 
+import mobius.cct.util.Version;
+
 /**
  * Interface of certificates.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
@@ -15,17 +17,11 @@ public interface Certificate {
   String getType();
   
   /**
-   * Get major version number.
-   * @return major version number.
+   * Get version number.
+   * @return version number.
    */
-  byte getMajorVersion();
-  
-  /**
-   * Get minor version number.
-   * @return minor version number.
-   */
-  byte getMinorVersion();
-  
+  Version getVersion();
+
   /**
    * Get names of imported certificates.
    * @return Iterator over certificate names.

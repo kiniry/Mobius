@@ -5,11 +5,18 @@ import java.util.Iterator;
 import mobius.cct.repositories.ClassFile;
 import mobius.cct.repositories.ClassReader;
 import mobius.cct.repositories.Repository;
+import mobius.cct.verifiers.logging.Logger;
 
 /**
  * Default implementation of verification environment.
  * Uses repository to load classes and list of verifiers
- * to check certificates.
+ * to check certificates. It also maintains a list of
+ * trusted classes. Verifications of such classes always
+ * succeeds, even if the class is not in the repository
+ * or does not contain requested certificate. This feature
+ * can be used to avoid unnecessary parsing of system 
+ * classes and classes which were verified earlier.
+ * 
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  *
  * @param <C> Type of class files.
@@ -46,9 +53,7 @@ public class DefaultEnvironment<C extends ClassFile>
   }
   
   /**
-   * Add or update verifier. There can be at most one
-   * verifier for each certificate type. If a verifier
-   * of the same type as given is present, it is replaced.
+   * Add verifier to the environment. 
    * @param v Verifier object.
    */
   public void addVerifier(final Verifier v) {
@@ -68,6 +73,30 @@ public class DefaultEnvironment<C extends ClassFile>
    *  or {@code null}, if there is no such verifier in this env.
    **/
   public Verifier getVerifier(final String certType) {
+    return null;
+  }
+  
+  /**
+   * Add class to list of trusted classes.
+   * @param name Class name (FQN).
+   */
+  void addTrustedClass(final String name) {
+  }
+  
+  /**
+   * Remove class from list of trusted classes.
+   * If the class was not on the list, nothing is done.
+   * @param name Class name (FQN). 
+   */
+  void removeTrustedClass(final String name) {
+
+  }
+  
+  /**
+   * Iterate over all trusted classes.
+   * @return Iterator.
+   */
+  Iterator<String> getTrustedClasses() {
     return null;
   }
   
@@ -94,9 +123,10 @@ public class DefaultEnvironment<C extends ClassFile>
   /**
    * Verify specification of given ClassFile. 
    * If there are multiple certificates for the desired specification
-   * verifiers are tried in oreder in which they were added to the
+   * verifiers are tried in order in which they were added to the
    * environment. If a specification was already checked in
-   * this environment it is not checked again.
+   * this environment it is not checked again. A class is not checked
+   * (or even loaded) if its name is on the list of trusted classes.
    * @param name Class name.
    * @param spec Specification type to be verified.
    * @return (@code true} iff given class file contains a
@@ -123,8 +153,25 @@ public class DefaultEnvironment<C extends ClassFile>
    * {@link mobius.cct.verifiers.CyclicDependyException 
    * CyclicDependyException}.
    */
+  @Override
   public boolean verify(final String[] name, final String[] spec)  
     throws CyclicDependyException {
     return false;
-  }  
+  }
+  
+  /**
+   * Get logger used by this environemnt.
+   * @return Logger.
+   */
+  @Override
+  public Logger getLogger() {
+    return null;
+  }
+  
+  /**
+   * Set logger used by this environemnt.
+   * @param logger Logger.
+   */
+  public void setLogger(final Logger logger) {
+  }
 }

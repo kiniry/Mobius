@@ -1,0 +1,94 @@
+package mobius.cct.repositories.cp.readers;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import mobius.cct.repositories.cp.UnknownConstantException;
+import mobius.cct.repositories.cp.entries.ClassEntry;
+import mobius.cct.repositories.cp.entries.DoubleEntry;
+import mobius.cct.repositories.cp.entries.Entry;
+import mobius.cct.repositories.cp.entries.FieldrefEntry;
+import mobius.cct.repositories.cp.entries.FloatEntry;
+import mobius.cct.repositories.cp.entries.IntegerEntry;
+import mobius.cct.repositories.cp.entries.InterfaceMethodrefEntry;
+import mobius.cct.repositories.cp.entries.LongEntry;
+import mobius.cct.repositories.cp.entries.MethodrefEntry;
+import mobius.cct.repositories.cp.entries.NameAndTypeEntry;
+import mobius.cct.repositories.cp.entries.StringEntry;
+import mobius.cct.repositories.cp.entries.Utf8Entry;
+
+/**
+ * EntryReader capable of reading all constants
+ * defined in JSR-202.
+ * @author Tadeusz Sznuk (ts209501@gmail.com)
+ */
+public class DefaultEntryReader implements EntryReader {
+
+  /**
+   * Read entry.
+   * @param is Input stream.
+   * @param t Constant type.
+   * @throws UnknownConstantException If constants of type t are
+   * not supported.
+   * @throws IOException .
+   */
+  @Override
+  public Entry read(InputStream is, int t) throws IOException,
+      UnknownConstantException {
+    DataInputStream ds = new DataInputStream(is);
+    switch (t) {
+    case Entry.CONSTANT_Class: {
+      final int name = ds.readShort();
+      return new ClassEntry(name);
+    }
+    case Entry.CONSTANT_Fieldref: {
+      final int className = ds.readShort();
+      final int sig = ds.readShort();
+      return new FieldrefEntry(className, sig);
+    }            
+    case Entry.CONSTANT_Methodref: {
+      final int className = ds.readShort();
+      final int sig = ds.readShort();
+      return new MethodrefEntry(className, sig);
+    }         
+    case Entry.CONSTANT_InterfaceMethodref: {
+      final int className = ds.readShort();
+      final int sig = ds.readShort();
+      return new InterfaceMethodrefEntry(className, sig);
+    }
+    case Entry.CONSTANT_String: {
+      final int valueIndex = ds.readShort();
+      return new StringEntry(valueIndex);
+    }           
+    case Entry.CONSTANT_Integer: {
+      final int value = ds.readInt();
+      return new IntegerEntry(value);
+    }          
+    case Entry.CONSTANT_Float: {
+      final float value = ds.readFloat();
+      return new FloatEntry(value);
+    }           
+    case Entry.CONSTANT_Long: {
+      final long value = ds.readLong();
+      return new LongEntry(value);
+    }           
+    case Entry.CONSTANT_Double: {
+      final double value = ds.readDouble();
+      return new DoubleEntry(value);
+    }            
+    case Entry.CONSTANT_NameAndType: {
+      final int name = ds.readShort();
+      final int type = ds.readShort();
+      return new NameAndTypeEntry(name, type);
+    }      
+    case Entry.CONSTANT_Utf8: {
+      final String value = ds.readUTF();
+      return new Utf8Entry(value);
+    }
+    default:
+      throw new UnknownConstantException(t);
+    }
+  }
+
+}
