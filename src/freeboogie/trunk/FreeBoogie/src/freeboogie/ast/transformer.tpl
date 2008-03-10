@@ -3,7 +3,10 @@
   This file was generated from transformer.tpl. Do not edit.
  */
 package freeboogie.ast;
+
 import java.math.BigInteger;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
   Intended to be used as a base class by visitors that either only inspect
@@ -17,8 +20,8 @@ import java.math.BigInteger;
   @see freeboogie.ast.Evaluator
  */
 public class Transformer extends Evaluator<Ast> {
-\normal_classes{  private \ClassName result\ClassName;
-}
+  private final Ast NULL = AtomId.mk("<NULL>");
+  private Deque<Ast> result = new ArrayDeque<Ast>();
 \normal_classes{
 
   public void see(
@@ -28,6 +31,7 @@ public class Transformer extends Evaluator<Ast> {
       \memberName
     }
   ) {
+    assert \className != null;
     boolean sameChildren = true;
     \members{
       \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}
@@ -38,22 +42,25 @@ public class Transformer extends Evaluator<Ast> {
       \if_primitive{}{sameChildren &= new\MemberName == \memberName;}
     }
 
-    // TODO: explain why this works and a stack is not needed, in case it works :)
-    result\ClassName = sameChildren? 
-      \className : \ClassName.mk(\members[,]{new\MemberName});
+    if (!sameChildren) {
+      result.removeFirst();
+      result.addFirst(\ClassName.mk(\members[,]{new\MemberName}));
+    }
   }
   
   @Override
-  public \ClassName eval(
+  public Ast eval(
     \ClassName \className,
     \members[,]{
       \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} 
       \memberName
     }
   ) {
-    result\ClassName = \className;
+    // Deque<> doesn't support null elements
+    result.addFirst(\className == null ? NULL : \className);
     see(\className,\members[,]{\memberName});
-    return result\ClassName;
+    Ast r = result.removeFirst();
+    return r == NULL ? null : r;
   }
 }
 }

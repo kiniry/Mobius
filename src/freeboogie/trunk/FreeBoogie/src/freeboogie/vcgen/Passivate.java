@@ -35,8 +35,8 @@ import freeboogie.util.Closure;
  * written by a node is not the same as the one read by one of
  * its successors (according the the scheme above).
  *
- * "Old" expressions are simply removed and all variables X, Y, ...
- * are replaced by X_0, Y_0, ...
+ * All variables X, Y, ... inside old() are replaced 
+ * by X_0, Y_0, ... and the old() is removed.
  *
  * This algorithm minimizes the number of variables (think
  * coloring of comparison graphs) but not the number of copy
@@ -44,10 +44,6 @@ import freeboogie.util.Closure;
  *
  * TODO How to make sure that the variables I create here are
  *      unique? (make AST utility for that)
- *
- * TODO This implementation is on hold while I write a couple
- *      of helper visitors: (1) to collect read/write identifiers,
- *      and (2) to operate a substitution an an AST.
  */
 public class Passivate {
   private HashMap<String, HashMap<Command, Integer>> readIdx;
