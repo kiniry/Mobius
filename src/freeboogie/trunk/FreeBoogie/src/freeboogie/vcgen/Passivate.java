@@ -1,6 +1,7 @@
 package freeboogie.vcgen;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 import freeboogie.ast.*;
 import freeboogie.tc.SimpleGraph;
