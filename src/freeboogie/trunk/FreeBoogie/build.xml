@@ -34,6 +34,7 @@
       <arg value="normal_classes.tpl" />
       <arg value="evaluator.tpl" />
       <arg value="transformer.tpl" />
+      <arg value="substitutor.tpl" />
       <arg value="html.tpl" />
       <arg value="list.tpl" />
     </java>

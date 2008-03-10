@@ -10,6 +10,7 @@ hierarchy.dot
 hierarchy.gif
 Evaluator.java
 Transformer.java
+Substitutor.java
 visitor.skeleton
 \classes{\ClassName.java
 }

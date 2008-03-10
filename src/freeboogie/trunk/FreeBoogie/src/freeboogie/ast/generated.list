@@ -4,6 +4,7 @@ hierarchy.dot
 hierarchy.gif
 Evaluator.java
 Transformer.java
+Substitutor.java
 visitor.skeleton
 ArrayType.java
 AssertAssumeCmd.java

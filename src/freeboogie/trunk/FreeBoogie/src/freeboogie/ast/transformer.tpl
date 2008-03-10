@@ -12,7 +12,7 @@ import java.math.BigInteger;
   the time you also need to code visiting of the children.) If you want to
   replace (some) nodes of type X by something you should override
   {@code eval(X x, ...)} and return the substitution. This class will take
-  care of path compression.
+  care of path copying.
   
   @see freeboogie.ast.Evaluator
  */
