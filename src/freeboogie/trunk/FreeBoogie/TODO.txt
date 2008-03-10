@@ -2,3 +2,12 @@
 24 VC generation implementation
  6 simple interface to parse from strings
 
+
+ . Make flowgraphs of commands (rather than blocks)
+ . Rebuild AST out of a flow graph of AssertAssumeCmd
+ . Transform BoogiePL expressions into SmtTerms (SmtTermBuilder)
+   Take care of arrays
+ . extract sharing in SimplifyProver, or use `flet' for z3
+ . when making SmtTerms do small simplifications for "and", "or"
+   (such as skip "TRUE", respectivelly "FALSE"; and return
+   neutral element when there are no operands)

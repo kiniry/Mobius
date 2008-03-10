@@ -60,7 +60,6 @@ import freeboogie.util.Closure;
  * @author reviewed by TODO
  */
 public class StrongestPostcondition {
-
   // used mainly for debugging
   static private final Logger log = Logger.getLogger("freeboogie.vcgen");
 
@@ -160,10 +159,7 @@ public class StrongestPostcondition {
     flow.iterNode(new Closure<AssertAssumeCmd>() {
       @Override
       public void go(AssertAssumeCmd cmd) {
-        switch (cmd.getType()) {
-        case ASSERT:
-          vcs.add(term.of(cmd.getExpr()));
-        }
+        vcs.add(vc(cmd));
       }
     });
     return term.mk("and", vcs.toArray(new Term[0]));

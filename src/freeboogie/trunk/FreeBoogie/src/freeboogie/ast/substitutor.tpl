@@ -23,7 +23,8 @@ public class Substitutor extends Transformer {
       \members[, ]{\if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}
         \memberName}
     ) {
-      return subst.get(\className);
+      Ast r = subst.get(\className);
+      return r == null ? \className : r;
     }
   }
 }

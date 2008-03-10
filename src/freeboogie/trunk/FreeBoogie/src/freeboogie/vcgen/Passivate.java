@@ -15,7 +15,7 @@ import freeboogie.util.Closure;
  * assignments.
  *
  * Each `havoc' command is replaced by an assignment from a fresh
- * variable (havoc0, havoc1, ...)
+ * variable. 
  *
  * Each variable X is transformed into a sequence of variables
  * X_0, X_1, ... Each command has a read index r and a write
@@ -23,11 +23,8 @@ import freeboogie.util.Closure;
  * replaced by reads from X_r and a write to X is replaced by a
  * write to X_w.
  *
- * TODO Check that a variable appers only once on the lhs of
- *      a parallel assignment.
- *
  * We have:
- *   r(n) = max_{m precedes n} w(m)
+ *   r(n) = max_{m BEFORE n} w(m)
  *   w(n) = 1 + r(n)   if n writes to X
  *   w(n) = r(n)       otherwise
  *
@@ -41,11 +38,11 @@ import freeboogie.util.Closure;
  * This algorithm minimizes the number of variables (think
  * coloring of comparison graphs) but not the number of copy
  * operations.
- *
- * TODO How to make sure that the variables I create here are
- *      unique? (make AST utility for that)
  */
 public class Passivate {
+  // used mainly for debugging
+  static private final Logger log = Logger.getLogger("freeboogie.vcgen");
+
   private HashMap<String, HashMap<Command, Integer>> readIdx;
   private HashMap<String, HashMap<Command, Integer>> writeIdx;
 

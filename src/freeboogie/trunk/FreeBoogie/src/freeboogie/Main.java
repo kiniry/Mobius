@@ -65,7 +65,6 @@ class Printer<U extends Ast, D extends Ast> extends Closure<D> {
  * @author reviewed by TODO
  */
 public class Main {
-  
   private static Logger log = Logger.getLogger("freeboogie"); 
   
   /**
@@ -88,8 +87,6 @@ public class Main {
     opt.regBool("-pp", "pretty print");
     opt.regBool("-pst", "print symbol table");
     opt.regBool("-pfg", "print flow graphs");
-    //opt.regBool("-ppi", "print implementations per procedure");
-    
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     opt.parse(args);
     Err.setVerbosity(opt.intVal("-v"));
@@ -149,8 +146,6 @@ public class Main {
         
         // print flow graph?
         if (opt.boolVal("-pfg")) fgd.process(d, tc);
-        
-        // print implementations per proc?
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
       } catch (Exception e) {
@@ -158,5 +153,4 @@ public class Main {
       }
     }
   }
-
 }
