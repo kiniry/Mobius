@@ -32,7 +32,6 @@ ENDASSUMING
 
   IMPORTING CompleteMonitorProgramPropertiesPreservation[CP, Name],
             AnnotateProgramPropertiesPreservation[CP, Name],
-            InlineAnnotationsPropertiesPreservation[Name],
             MonitoredProgramCompletessRelation[CP, Name],
             CorrectnessAnnProgram[CP, Name],
             CorrectnessInlineProgram[Name]
@@ -41,7 +40,7 @@ ENDASSUMING
 
   translate(mp) : Program = inline_program(ann_program(complete_MP(mp)))
 
-  main : THEOREM
+  main : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))
            (sMP : MPState) :
     well_behaved_MVA(mp) IMPLIES
@@ -51,6 +50,18 @@ ENDASSUMING
       run_monitored_program(mp)(main, arg)(root_object)(sMP) IMPLIES
         EXISTS(sAP : APState) :
           run_annotated_program(translate(mp))(main, arg)(root_object)(sAP) AND
+            EXISTS (R : [MPState, APState -> boolean]) : R(sMP, sAP)   
+
+  main_converse : THEOREM % :-)
+    FORALL (main : Name, arg : int)(root_object : (defined?))
+           (sAP : APState) :
+    well_behaved_MVA(mp) IMPLIES
+    legal_Program_partial_MP(mp) IMPLIES
+    contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
+    wf_set_stmts(mp) IMPLIES
+      run_annotated_program(translate(mp))(main, arg)(root_object)(sAP) IMPLIES
+        EXISTS(sMP : MPState) :
+          run_monitored_program(mp)(main, arg)(root_object)(sMP) IMPLIES
             EXISTS (R : [MPState, APState -> boolean]) : R(sMP, sAP)   
     
 END Translation

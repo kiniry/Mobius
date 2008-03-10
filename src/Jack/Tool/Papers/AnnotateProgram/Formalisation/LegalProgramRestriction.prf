@@ -1,6 +1,6 @@
 (LegalProgramRestriction
  (legal_Body_TCC1 0
-  (legal_Body_TCC1-1 nil 3405949666 3413180264
+  (legal_Body_TCC1-1 nil 3405949666 3414135259
    ("" (skosimp*)
     (("" (typepred "b1!1")
       (("" (rewrite "program_full_program_inverse") nil nil)) nil))
@@ -26,9 +26,9 @@
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil))
-   3423 3340 t nil))
+   665 620 t nil))
  (legal_Body_TCC2 0
-  (legal_Body_TCC2-1 nil 3405949666 3413180267
+  (legal_Body_TCC2-1 nil 3405949666 3414135260
    ("" (skosimp*)
     (("" (typepred "b1!1")
       (("" (lemma "wf_Body_preserved_by_proper_subterm")
@@ -81,9 +81,9 @@
     (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil))
-   3605 3500 t nil))
+   796 740 t nil))
  (legal_Body_TCC3 0
-  (legal_Body_TCC3-2 nil 3405949769 3413180271
+  (legal_Body_TCC3-2 nil 3405949769 3414135260
    (";;; Proof legal_Body_TCC2-1 for formula LegalProgramRestriction.legal_Body_TCC2"
     (skosimp*)
     ((";;; Proof legal_Body_TCC2-1 for formula LegalProgramRestriction.legal_Body_TCC2"
@@ -103,11 +103,11 @@
                   ((";;; Proof legal_Body_TCC2-1 for formula LegalProgramRestriction.legal_Body_TCC2"
                     (propax) nil))))))))))))))))
     ";;; developed with shostak decision procedures")
-   proved nil 3369 3250 nil nil)
+   proved nil 577 550 nil nil)
   (legal_Body_TCC3-1 nil 3405949666 nil ("" (subtype-tcc) nil nil) nil
    nil nil nil nil nil))
  (legal_Body_TCC4 0
-  (legal_Body_TCC4-1 nil 3412658016 3413180275
+  (legal_Body_TCC4-1 nil 3412658016 3414135261
    ("" (skosimp*)
     (("" (rewrite "program_full_program_inverse")
       ((""
@@ -156,16 +156,16 @@
     (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (catch adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil))
-   3786 3700 t nil))
+   1012 980 t nil))
  (legal_Body_preserved_by_proper_subterm 0
-  (legal_Body_preserved_by_proper_subterm-1 nil 3405950300 3413180278
+  (legal_Body_preserved_by_proper_subterm-1 nil 3405950300 3414135336
    ("" (skosimp*)
     (("" (expand "legal_Body")
       (("" (skosimp*)
         (("" (inst?)
           (("" (assert)
             (("" (split -1)
-              (("1" (apply (repeat (inst? -1 :where (-7 -8 -10))))
+              (("1" (apply (repeat (inst? -1 :where (-9 -8 -11))))
                 (("1" (assert)
                   (("1" (split -1)
                     (("1" (propax) nil nil) ("2" (propax) nil nil))
@@ -211,16 +211,16 @@
     (subterm_transitive formula-decl nil ProgramFunctions nil)
     (proper_subterm_implies_subterm formula-decl nil ProgramFunctions
      nil))
-   3503 3380 t shostak)))
+   51509 830 t shostak)))
 (LegalPartialMonitoredProgramRestriction
  (IMP_EmptyMVA_TCC1 0
-  (IMP_EmptyMVA_TCC1-1 nil 3413192134 3413192414
+  (IMP_EmptyMVA_TCC1-1 nil 3413192134 3414135265
    ("" (use "CP_not_only_halted") nil nil) proved
    ((CP_not_only_halted formula-decl nil
      LegalPartialMonitoredProgramRestriction nil))
-   6183 330 t nil))
+   522 520 t nil))
  (full_partial_MP_TCC1 0
-  (full_partial_MP_TCC1-1 nil 3413110778 3413192157
+  (full_partial_MP_TCC1-1 nil 3413110778 3414135266
    ("" (skosimp*)
     (("" (typepred "classes(p!1)")
       (("" (expand "nonempty?")
@@ -265,9 +265,9 @@
     (boolean nonempty-type-decl nil booleans nil)
     (member const-decl "bool" sets nil)
     (nonempty? const-decl "bool" sets nil))
-   546 520 t nil))
+   724 710 t nil))
  (full_partial_MP_TCC2 0
-  (full_partial_MP_TCC2-1 nil 3413110778 3413192157
+  (full_partial_MP_TCC2-1 nil 3413110778 3414135266
    ("" (skosimp*)
     (("" (expand "good_for_monitoring")
       (("" (flatten)
@@ -293,9 +293,9 @@
     (emptyset const-decl "set" sets nil)
     (extend const-decl "R" extend nil)
     (partial const-decl "boolean" MVAProperties nil))
-   411 410 t nil))
+   604 610 t nil))
  (full_partial_MP_TCC3 0
-  (full_partial_MP_TCC3-1 nil 3413116178 3413192439
+  (full_partial_MP_TCC3-1 nil 3413116178 3414135267
    ("" (skosimp*)
     ((""
       (typepred "(empty[CP, Name]
@@ -402,9 +402,9 @@
     (MVA_aut_vars_are_not_prog_vars const-decl "boolean"
      MonitoredProgram nil)
     (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil))
-   18558 940 t nil))
+   1104 1060 t nil))
  (IMP_LegalProgramRestriction_TCC1 0
-  (IMP_LegalProgramRestriction_TCC1-1 nil 3413110778 3413192158
+  (IMP_LegalProgramRestriction_TCC1-1 nil 3413110778 3414135268
    ("" (assuming-tcc) nil nil) proved
    ((choose const-decl "(p)" sets nil)
     (Name formal-nonempty-type-decl nil
@@ -414,16 +414,16 @@
     (empty const-decl "(wf_MVA)" EmptyMVA nil)
     (full_partial_MP const-decl "(wf_and_partial_MP)"
      LegalPartialMonitoredProgramRestriction nil))
-   805 760 nil nil)))
+   1012 970 nil nil)))
 (LegalCompleteMonitoredProgramRestriction
  (IMP_EmptyMVA_TCC1 0
-  (IMP_EmptyMVA_TCC1-1 nil 3413192155 3413192457
+  (IMP_EmptyMVA_TCC1-1 nil 3413192155 3414135269
    ("" (use "CP_not_only_halted") nil nil) proved
    ((CP_not_only_halted formula-decl nil
      LegalCompleteMonitoredProgramRestriction nil))
-   2857 320 t nil))
+   518 520 t nil))
  (full_complete_MP_TCC1 0
-  (full_complete_MP_TCC1-1 nil 3413112923 3413192159
+  (full_complete_MP_TCC1-1 nil 3413112923 3414135269
    ("" (skosimp*)
     (("" (typepred "classes(p!1)")
       (("" (expand* "nonempty?" "empty?" "member") nil nil)) nil))
@@ -455,9 +455,9 @@
     (boolean nonempty-type-decl nil booleans nil)
     (member const-decl "bool" sets nil)
     (nonempty? const-decl "bool" sets nil))
-   358 350 t nil))
+   584 550 t nil))
  (full_complete_MP_TCC2 0
-  (full_complete_MP_TCC2-1 nil 3413112923 3413192159
+  (full_complete_MP_TCC2-1 nil 3413112923 3414135270
    ("" (skosimp*)
     (("" (expand "partial")
       (("" (auto-rewrite "extend" "emptyset")
@@ -482,9 +482,9 @@
     (nonempty_singleton_finite application-judgement
      "non_empty_finite_set" finite_sets nil)
     (finite_emptyset name-judgement "finite_set" finite_sets nil))
-   454 420 t nil))
+   621 620 t nil))
  (full_complete_MP_TCC3 0
-  (full_complete_MP_TCC3-1 nil 3413112923 3413192160
+  (full_complete_MP_TCC3-1 nil 3413112923 3414135271
    ("" (subtype-tcc) nil nil) proved
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
@@ -546,9 +546,9 @@
     (finite_emptyset name-judgement "finite_set" finite_sets nil)
     (finite_intersection1 application-judgement "finite_set"
      finite_sets nil))
-   810 770 nil nil))
+   1042 960 nil nil))
  (full_complete_MP_TCC4 0
-  (full_complete_MP_TCC4-1 nil 3413112923 3413192161
+  (full_complete_MP_TCC4-1 nil 3413112923 3414135272
    ("" (skosimp*)
     (("" (use "full_complete_MP_TCC3")
       (("" (assert)
@@ -613,9 +613,9 @@
     (CP formal-nonempty-type-decl nil
      LegalCompleteMonitoredProgramRestriction nil)
     (good_for_monitoring const-decl "boolean" MonitoredProgram nil))
-   768 720 t nil))
+   913 890 t nil))
  (full_complete_MP_TCC5 0
-  (full_complete_MP_TCC5-1 nil 3413116463 3413192162
+  (full_complete_MP_TCC5-1 nil 3413116463 3414135273
    ("" (skosimp*)
     (("" (use "full_complete_MP_TCC3")
       (("" (use "complete_MVA_is_complete")
@@ -719,9 +719,9 @@
     (complete_MVA_is_complete formula-decl nil MVACompletion nil)
     (CP formal-nonempty-type-decl nil
      LegalCompleteMonitoredProgramRestriction nil))
-   1190 1150 t nil))
+   1285 1250 t nil))
  (IMP_LegalProgramRestriction_TCC1 0
-  (IMP_LegalProgramRestriction_TCC1-1 nil 3413112923 3413192163
+  (IMP_LegalProgramRestriction_TCC1-1 nil 3413112923 3414135274
    ("" (assuming-tcc) nil nil) proved
    ((choose const-decl "(p)" sets nil)
     (Name formal-nonempty-type-decl nil
@@ -736,11 +736,11 @@
     (complete_MVA const-decl "MVA" MVACompletion nil)
     (full_complete_MP const-decl "(wf_and_complete_MP)"
      LegalCompleteMonitoredProgramRestriction nil))
-   911 850 nil nil)))
+   1049 1020 nil nil)))
 (LegalAnnotatedProgramRestriction
  (IMP_LegalProgramRestriction_TCC1 0
-  (IMP_LegalProgramRestriction_TCC1-1 nil 3413110940 3413180260
+  (IMP_LegalProgramRestriction_TCC1-1 nil 3413110940 3414135275
    ("" (assuming-tcc) nil nil) proved
-   ((id const-decl "(bijective?[T, T])" identity nil)) 3363 3260 nil
+   ((id const-decl "(bijective?[T, T])" identity nil)) 566 530 nil
    nil)))
 

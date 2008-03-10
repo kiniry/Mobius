@@ -33,11 +33,18 @@ BEGIN
       derive(p)(b, s1, v, s2)(n) IMPLIES
         NOT up?(ex(pstate(s2)))
 
+  no_change(p : FullProgram)(b : (wf_Body(program(p)))) : bool =
+    FORALL(s1, s2 : FullState, v : Val, n : nat) :
+      NOT up?(ex(pstate(s1))) IMPLIES
+      derive(p)(b, s1, v, s2)(n) IMPLIES
+        NOT pstate(s1) = pstate(s2)
+
   wf_set_stmts(p : FullProgram)(m : Method) : bool =
     methods(program(p))(m) IMPLIES
       (FORALL (v : Expr) : only_JMLExc(p)(pre_set(m)(v))) AND
       (FORALL (v : Expr) : no_exc(p)(post_set(m)(v))) AND
-      (FORALL (e : Excpt) : no_exc(p)(exc_set(m)(e)))
+      (FORALL (e : Excpt) : no_exc(p)(exc_set(m)(e))) AND
+      (FORALL (v : Expr) : no_change(p)(post_set(m)(v))) 
 
   wf_set_stmts(p : FullProgram) : bool =
     program_method_pred(program(p))(wf_set_stmts(p))

@@ -386,6 +386,26 @@ BEGIN
       derive(mp)(b, sigma1, v, sigma2)(n) IMPLIES
         NOT stuck(sigma2)
 
+  on_method_MVA_pstate_independent_of_MVA : LEMMA % :-)
+     FORALL (etype : EventType)
+            (mp : MonitoredProgram, md : (wf_Method(program(mp))))
+            (arg : ValOrExcpt, s : MPState) :
+       pstate(on_method_MVA(etype)(mp, md)(arg)(s)) = pstate(s) AND
+       gvs(on_method_MVA(etype)(mp, md)(arg)(s)) = gvs(s)
+
+  % could be generalised to mp1 and mp2 that differ in MVA
+  derive_pstate_independent_of_MVA : LEMMA
+    FORALL (mp : MonitoredProgram, b : (wf_Body(program(mp))), v1, v2 : Val)
+           (sigma1, sigma2, tau1, tau2 : MPState, n1, n2 : nat) :
+      wf_MP(mp) IMPLIES
+      wf_state(mp)(sigma1) IMPLIES
+      wf_state(mp)(tau1) IMPLIES
+      pstate(sigma1) = pstate(tau1) IMPLIES
+      gvs(sigma1) = gvs(tau1) IMPLIES
+      derive(mp)(b, sigma1, v1, sigma2)(n1) IMPLIES
+      derive(mp)(b, tau1, v2, tau2)(n2) IMPLIES
+        pstate(sigma2) = pstate(tau2) AND gvs(sigma2) = gvs(tau2) AND v1 = v2
+
   on_method_entry_yields_wf_state_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
            (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) :
@@ -506,7 +526,12 @@ BEGIN
     FORALL(s1, s2 : MPState) :
     monitor_related_states(mp)(s1, s2) IMPLIES
       (stuck(s1) IFF cp(astate(s2)) = halted)
-      
+
+  existence_state_partial_monitor : LEMMA % :-)
+    FORALL(s : MPState) :
+      wf_state(complete_MP(mp))(s) IMPLIES
+      NOT stuck(s) IMPLIES
+      EXISTS (s1 : MPState) : monitor_related_states(mp)(s1, s)
 
   get_address_same_in_monitor_related_states : LEMMA % :-)
     FORALL(vn : Name, s1, s2 : MPState) :
@@ -587,7 +612,7 @@ BEGIN
       derive(complete_MP(mp))(b, s1b, v2, s2b)(n2) IMPLIES
         monitor_related_states(mp)(s2a, s2b) AND v1 = v2 
 
-  % in method call case
+
  monitor_related_states_implies_derive : LEMMA % :-)
     FORALL (b : (wf_Body(program(mp))), v : Val)
            (s1a, s1b, s2a : MPState) 
@@ -613,5 +638,15 @@ BEGIN
       EXISTS (s2 : MPState) : 
         run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s2) AND
         monitor_related_states(mp)(s1, s2)
+
+  correctness_of_complete_MP_converse : THEOREM % :-)
+    FORALL (main : Name, arg : int)(root_object : (defined?))
+           (s1, s2 : MPState) :
+      run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s1) 
+      IMPLIES
+      EXISTS (s2 : MPState) : 
+        run_monitored_program(mp)(main, arg)(root_object)(s2) AND
+        monitor_related_states(mp)(s2, s1)
+
 
 END MonitoredProgramCompletessRelation
