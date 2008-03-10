@@ -12,7 +12,7 @@ import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 
 import freeboogie.ast.*;
-import freeboogie.ast.utils.PrettyPrinter;
+import freeboogie.astutil.PrettyPrinter;
 import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;

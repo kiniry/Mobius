@@ -1,4 +1,4 @@
-package freeboogie.ast.utils;
+package freeboogie.astutil;
 
 import java.io.IOException;
 import java.io.PrintWriter;

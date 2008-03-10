@@ -9,7 +9,7 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
 import freeboogie.ast.Declaration;
-import freeboogie.ast.utils.PrettyPrinter;
+import freeboogie.astutil.PrettyPrinter;
 import freeboogie.util.Err;
 
 /**

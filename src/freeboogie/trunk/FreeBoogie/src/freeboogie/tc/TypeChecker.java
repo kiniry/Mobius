@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 import freeboogie.ast.*;
-import freeboogie.ast.utils.PrettyPrinter;
+import freeboogie.astutil.PrettyPrinter;
 import freeboogie.util.Closure;
 import freeboogie.util.Err;
 

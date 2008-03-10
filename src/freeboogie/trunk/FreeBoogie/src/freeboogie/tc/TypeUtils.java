@@ -3,7 +3,7 @@ package freeboogie.tc;
 import java.io.StringWriter;
 
 import freeboogie.ast.*;
-import freeboogie.ast.utils.PrettyPrinter;
+import freeboogie.astutil.PrettyPrinter;
 
 /**
  * Various utilities for handling {@code Type}. For the moment, it contains
