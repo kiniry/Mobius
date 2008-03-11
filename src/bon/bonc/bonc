@@ -53,11 +53,13 @@ do
   fi
 done
 
+
 if [[ "$TERM" == "cygwin" ]]; then
-  $JAVA -cp `cygpath -wp $cp` ie.ucd.bon.Main $*
-else
-  #$JAVA -Xloggc:bon.log -cp $cp ie.ucd.bon.Main $*
-  $JAVA -cp $cp ie.ucd.bon.Main $*
+  cp=`cygpath -wp $cp`
 fi
+
+#"$JAVA" -Xloggc:bon.log -cp $cp ie.ucd.bon.Main $*
+"$JAVA" -cp $cp ie.ucd.bon.Main $*
+
 
 
