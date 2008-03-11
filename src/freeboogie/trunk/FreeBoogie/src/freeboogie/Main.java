@@ -22,6 +22,7 @@ import freeboogie.tc.UsageToDefMap;
 import freeboogie.util.Closure;
 import freeboogie.util.ClosureR;
 import freeboogie.util.Err;
+import freeboogie.vcgen.BlockSplitter;
 
 /**
  * Used to print information in the symbol table.
@@ -74,17 +75,22 @@ public class Main {
   public static void main(String[] args) { new Main().run(args); }
 
   private Options opt;
+  private PrintWriter pwriter;
   private PrettyPrinter pp;
   private FlowGraphDumper fgd;
   private TypeChecker tc;
+  private Declaration ast;
 
   public Main() {
     opt = new Options();
     opt.regBool("-pp", "pretty print");
     opt.regBool("-pst", "print symbol table");
     opt.regBool("-pfg", "print flow graphs");
+    opt.regBool("-sb", "split blocks so they contain one command");
+    opt.regBool("-pvc", "print verification condition");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
-    pp = new PrettyPrinter(new PrintWriter(System.out));
+    pwriter = new PrintWriter(System.out);
+    pp = new PrettyPrinter(pwriter);
     fgd = new FlowGraphDumper();
     tc = new TypeChecker();
   }
@@ -118,6 +124,11 @@ public class Main {
       }}));
   }
 
+  private void chopBlocks() {
+    BlockSplitter bs = new BlockSplitter();
+    ast = (Declaration)ast.eval(bs);
+    tc.process(ast);
+  }
 
   public void run(String[] args) {
     // prepare logging
@@ -143,18 +154,24 @@ public class Main {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FbParser parser = new FbParser(tokens);
         parser.fileName = file;
-        Declaration d = parser.program();
-        if (d == null) continue; // errors while parsing or empty file
+        ast = parser.program();
+        if (ast == null) continue; // errors while parsing or empty file
         
         // do what we are asked to do with this file
-        if (opt.boolVal("-pp")) d.eval(pp);
-        tc.process(d);
+        if (opt.boolVal("-pp")) ast.eval(pp);
+        tc.process(ast);
         if (opt.boolVal("-pst")) printSymbolTable();
-        if (opt.boolVal("-pfg")) fgd.process(d, tc);
+        if (opt.boolVal("-pfg")) fgd.process(ast, tc);
+        if (opt.boolVal("-sb")) {
+          chopBlocks();
+          if (opt.boolVal("-pp")) ast.eval(pp);
+        }
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
       } catch (Exception e) {
         Err.error("Unexpected error while processing " + file);
+      } finally {
+        pwriter.flush();
       }
     }
   }

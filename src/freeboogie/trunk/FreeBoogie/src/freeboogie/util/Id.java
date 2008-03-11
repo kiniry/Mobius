@@ -7,7 +7,7 @@ public class Id {
   static private Map<String, Integer> counter =
     new HashMap<String, Integer>();
 
-  static private String get(String categ) {
+  static public String get(String categ) {
     Integer x = counter.get(categ);
     if (x == null) x = -1;
     counter.put(categ, ++x);
