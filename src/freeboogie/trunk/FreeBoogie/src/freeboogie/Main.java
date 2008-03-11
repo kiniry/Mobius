@@ -66,12 +66,61 @@ class Printer<U extends Ast, D extends Ast> extends Closure<D> {
  */
 public class Main {
   private static Logger log = Logger.getLogger("freeboogie"); 
-  
+
   /**
    * The main entry point of the application.
    * @param args the command line arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) { new Main().run(args); }
+
+  private Options opt;
+  private PrettyPrinter pp;
+  private FlowGraphDumper fgd;
+  private TypeChecker tc;
+
+  public Main() {
+    opt = new Options();
+    opt.regBool("-pp", "pretty print");
+    opt.regBool("-pst", "print symbol table");
+    opt.regBool("-pfg", "print flow graphs");
+    opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
+    pp = new PrettyPrinter(new PrintWriter(System.out));
+    fgd = new FlowGraphDumper();
+    tc = new TypeChecker();
+  }
+
+  public void printSymbolTable() {
+    SymbolTable st = tc.getST();
+    st.funcs.iterDef(new Printer<AtomFun, Function>("function", st.funcs,
+      new ClosureR<Function, String>() {
+        @Override public String go(Function p) {
+          return p.getSig().getName();
+        }}));
+    st.ids.iterDef(new Printer<AtomId, Declaration>("identifier", st.ids,
+      new ClosureR<Declaration, String>() {
+        @Override public String go(Declaration p) {
+          if (p instanceof VariableDecl) 
+            return ((VariableDecl)p).getName();
+          else if (p instanceof ConstDecl)
+            return ((ConstDecl)p).getId();
+          assert false;
+          return null; // dumb compiler
+        }}));
+    st.procs.iterDef(new Printer<CallCmd, Procedure>("procedure", st.procs,
+      new ClosureR<Procedure, String>() {
+        @Override public String go(Procedure p) {
+          return p.getSig().getName();
+        }}));
+    st.types.iterDef(new Printer<UserType, TypeDecl>("type", st.types,
+      new ClosureR<TypeDecl, String>() {
+        @Override public String go(TypeDecl p) {
+          return p.getName();
+      }}));
+  }
+
+
+  public void run(String[] args) {
+    // prepare logging
     try {
       FileHandler logh = new FileHandler("freeboogie.log");
       logh.setFormatter(new SimpleFormatter());
@@ -83,21 +132,13 @@ public class Main {
     }
     
     // parse command line arguments
-    Options opt = new Options();
-    opt.regBool("-pp", "pretty print");
-    opt.regBool("-pst", "print symbol table");
-    opt.regBool("-pfg", "print flow graphs");
-    opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     opt.parse(args);
     Err.setVerbosity(opt.intVal("-v"));
     
     // process files one by one
-    PrintWriter pw = new PrintWriter(System.out);
-    PrettyPrinter pp = new PrettyPrinter(pw);
-    FlowGraphDumper fgd = new FlowGraphDumper();
-    TypeChecker tc = new TypeChecker();
     for (String file : opt.otherArgs()) {
       try {
+        // parse an input file
         FbLexer lexer = new FbLexer(new ANTLRFileStream(file));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FbParser parser = new FbParser(tokens);
@@ -105,46 +146,10 @@ public class Main {
         Declaration d = parser.program();
         if (d == null) continue; // errors while parsing or empty file
         
-        // pretty print?
-        if (opt.boolVal("-pp")) {
-          d.eval(pp);
-          pw.flush();
-        }
-        
-        // typecheck
+        // do what we are asked to do with this file
+        if (opt.boolVal("-pp")) d.eval(pp);
         tc.process(d);
-        
-        // print symbol table?
-        if (opt.boolVal("-pst")) {
-          SymbolTable st = tc.getST();
-          st.funcs.iterDef(new Printer<AtomFun, Function>("function", st.funcs,
-            new ClosureR<Function, String>() {
-              @Override public String go(Function p) {
-                return p.getSig().getName();
-              }}));
-          st.ids.iterDef(new Printer<AtomId, Declaration>("identifier", st.ids,
-            new ClosureR<Declaration, String>() {
-              @Override public String go(Declaration p) {
-                if (p instanceof VariableDecl) 
-                  return ((VariableDecl)p).getName();
-                else if (p instanceof ConstDecl)
-                  return ((ConstDecl)p).getId();
-                assert false;
-                return null; // dumb compiler
-              }}));
-          st.procs.iterDef(new Printer<CallCmd, Procedure>("procedure", st.procs,
-            new ClosureR<Procedure, String>() {
-              @Override public String go(Procedure p) {
-                return p.getSig().getName();
-              }}));
-          st.types.iterDef(new Printer<UserType, TypeDecl>("type", st.types,
-            new ClosureR<TypeDecl, String>() {
-              @Override public String go(TypeDecl p) {
-                return p.getName();
-            }}));
-        }
-        
-        // print flow graph?
+        if (opt.boolVal("-pst")) printSymbolTable();
         if (opt.boolVal("-pfg")) fgd.process(d, tc);
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
