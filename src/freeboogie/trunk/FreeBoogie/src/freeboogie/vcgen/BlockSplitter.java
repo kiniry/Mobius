@@ -4,8 +4,11 @@ import freeboogie.ast.*;
 import freeboogie.util.Id;
 
 /**
- * Chops blocks so that each contains exactly one command.
+ * Chops blocks so that each contains at most one command.
  * Use it using the eval function (see {@code Transfomer}).
+ *
+ * @author rgrig
+ * @author miko
  */
 public class BlockSplitter extends Transformer {
   private String origName;

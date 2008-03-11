@@ -17,6 +17,7 @@
 === missing-block.bpl ===
 === modifes-local.bpl ===
 === modifes-undef.bpl ===
+=== pass_outref.bpl ===
 === plus-on-bool.bpl ===
 === requires-bool.bpl ===
 === requires-local.bpl ===

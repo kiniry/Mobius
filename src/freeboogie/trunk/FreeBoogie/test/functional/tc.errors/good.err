@@ -17,6 +17,25 @@ int-any-thing.bpl:5:8: Found type any instead of int.
 missing-block.bpl:9:10: Inexistent block imaginary.
 modifes-local.bpl:6:21: Undeclared identifier x.
 modifes-undef.bpl:6:21: Undeclared identifier trabka.
+pass_outref.bpl:7:10: Undeclared identifier yy_1.
+pass_outref.bpl:8:10: Undeclared identifier xx_1.
+pass_outref.bpl:12:15: Undeclared identifier yy_1.
+pass_outref.bpl:13:15: Undeclared identifier xx_1.
+pass_outref.bpl:24:10: Undeclared identifier y_1.
+pass_outref.bpl:31:10: Undeclared identifier y_2.
+pass_outref.bpl:31:17: Undeclared identifier y_1.
+pass_outref.bpl:36:10: Undeclared identifier y_2.
+pass_outref.bpl:36:17: Undeclared identifier y_1.
+pass_outref.bpl:40:19: Undeclared identifier y_2.
+pass_outref.bpl:41:10: Undeclared identifier y_2.
+pass_outref.bpl:54:10: Undeclared identifier tmp_1.
+pass_outref.bpl:55:10: Undeclared identifier mem_1.
+pass_outref.bpl:55:19: Undeclared identifier store.
+pass_outref.bpl:56:10: Undeclared identifier mem_2.
+pass_outref.bpl:56:19: Undeclared identifier store.
+pass_outref.bpl:56:25: Undeclared identifier mem_1.
+pass_outref.bpl:60:10: Undeclared identifier mem_2.
+pass_outref.bpl:61:10: Undeclared identifier mem_2.
 plus-on-bool.bpl:5:7: Found type bool instead of int.
 requires-bool.bpl:7:16: Found type int instead of bool.
 requires-local.bpl:6:12: Undeclared identifier a.
@@ -39,6 +58,8 @@ small.bpl:6:9: Found type any instead of int.
 small.bpl:6:22: Unrelated types: bool and int.
 line 12:0 no viable alternative at input '}'
 line 5:0 no viable alternative at input '{'
+BR.recoverFromMismatchedToken
 line 12:0 mismatched input 'procedure' expecting '}'
 line 19:0 no viable alternative at input '}'
+BR.recoverFromMismatchedToken
 line 12:0 mismatched input 'procedure' expecting '}'

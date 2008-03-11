@@ -35,11 +35,12 @@ public class FlowGraphDumper extends Transformer {
       System.out.println("  " + body.getBlocks().getName() + " [style=bold];");
     fg.iterNode(new Closure<Block>() {
       @Override public void go(Block t) {
-        System.out.println("  " + t.getName() + " [shape=box];");
+        System.out.println("  \"" + t.getName() + "\" [shape=box];");
       }});
     fg.iterEdge(new Closure<Pair<Block,Block>>() {
       @Override public void go(Pair<Block,Block> t) {
-        System.out.println("  " + t.first.getName() + " -> " + t.second.getName() + ";");
+        System.out.println("  \"" + t.first.getName() + "\" -> \"" 
+          + t.second.getName() + "\";");
       }});
     System.out.println("}");
     if (tail != null) tail.eval(this);
