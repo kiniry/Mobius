@@ -37,11 +37,11 @@ function toggleShowAll() {
 
 function select(id) {
   if (showAll) {
-    setHash(id);
+//    setHash(id);
     return true;
   } else {
     showOnly(id);
-    return false;
+    return true;
   }
 }
 
@@ -68,14 +68,37 @@ function displayAll() {
 function showElem(id) {
   var elem = document.getElementById(id);
   if (elem) {
-    elem.style.display = 'block';
+    show(elem);
   }
 }
 
 function hideElem(id) {
   var elem = document.getElementById(id);
   if (elem) {
-    elem.style.display = 'none';
+    hide(elem);
+  }
+}
+
+function hide(elem) {
+  addClass(elem,'hidden');
+}
+
+function show(elem) {
+  removeClass(elem,'hidden');
+}
+
+function addClass(elem,cName) {
+  if (!elem.className) {
+    elem.className = cName;
+  } else if (elem.className.indexOf(cName) == -1) {
+    elem.className += ' ' + cName;
+  }
+}
+
+function removeClass(elem,cName) {
+  if (elem.className) {
+    var toReplace = elem.className.match(' ' + cName);
+    elem.className = elem.className.replace(toReplace, '');
   }
 }
 
@@ -95,11 +118,11 @@ function initialPopulate() {
     hashSelect(window.location.hash.substr(1));    
   } else {
     populate();
+    showSelected();
   }
-  showSelected();
-  lastHash = window.location.hash
+  lastHash = window.location.hash;
   //Trigger checkHash
-  setTimeout(checkHash,100)
+  setInterval(checkHash,100);
 }
 
 function hashSelect(hash) {
@@ -111,21 +134,21 @@ function hashSelect(hash) {
   }
 }
 
-var lastHash = ''
+var lastHash = '';
 
 function checkHash() {
+
   if (window.location.hash) {
     if (window.location.hash != lastHash) {
-      hashSelect(window.location.hash.substr(1))
-      lastHash = window.location.hash
+      hashSelect(window.location.hash.substr(1));
+      lastHash = window.location.hash;
     }
   }
-  setTimeout(checkHash,100)
 }
 
 function setHash(hash) {
-  lastHash = '#' + hash
-  window.location.hash = hash
+  lastHash = '#' + hash;
+  window.location.hash = hash;
 }
 
 function populate() {
@@ -178,6 +201,7 @@ function linkSelect(top, sub) {
     }
     showSelected();
   }
+  return true;
 }
 
 
@@ -185,6 +209,15 @@ function linkSelect(top, sub) {
 </script>
 
 <style type="text/css">
+
+.hidden {
+  position:absolute;
+  left:0px;
+  top:-500px;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
 
 body {
   font-family: Optima, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Helvetica, Arial, sans-serif;
@@ -360,7 +393,7 @@ dd {
 </style>
 
 </head>
-<body onload="hideAll(); initialPopulate();">
+<body onload="initialPopulate();">
 
 <div id="main">
 

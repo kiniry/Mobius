@@ -7,7 +7,7 @@
 
 LATEST=`wget -qO - http://kind.ucd.ie/products/opensource/BONc/releases/version`
 
-if [ -e "version" ]; then
+if [[ -e "version" ]]; then
   CURRENT=`cat version`
 else
   CURRENT="ZZZZ"

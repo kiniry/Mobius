@@ -12,10 +12,10 @@
 
 ### DO NOT EDIT BELOW THIS LINE ###
 
-if [ $JAVA_HOME ]; then
-  if [ -d "$JAVA_HOME" ]; then
+if [[ "$JAVA_HOME" != "" ]]; then
+  if [[ -d "$JAVA_HOME" ]]; then
     JAVA=$JAVA_HOME/bin/java
-    if [ ! -e "$JAVA" ]; then
+    if [[ ! -e "$JAVA" ]]; then
       echo "JAVA_HOME appears to be incorrectly set. $JAVA does not exist."
       exit 1
     fi
@@ -28,12 +28,12 @@ else
 fi
 
 #Get BON_HOME location from location of script
-if [ ! -d "$BON_HOME" ]; then
+if [[ ! -d "$BON_HOME" ]]; then
   BON_HOME=`expr "$0" : '\(.*\)/'`
 fi
 
 #Exit if we still don't have a valid dir
-if [ ! -d $BON_HOME ]; then
+if [[ ! -d $BON_HOME ]]; then
   echo "Please set BON_HOME to be a valid directory. Edit the line in "bonc" that sets the variable BON_HOME=<location>"
   exit 1
 fi
@@ -45,7 +45,7 @@ LIB_ARRAY=(BON.jar antlr-runtime-3.0.1.jar antlr-2.7.7.jar CommandlineParser.jar
 for lib in ${LIB_ARRAY[@]}
 do
   f="$BON_HOME/lib/$lib"
-  if [ ! -f $f ]; then
+  if [[ ! -f $f ]]; then
     echo "Missing library $f. Check that you have set BON_HOME correctly."
     exit 1
   else 
@@ -53,7 +53,7 @@ do
   fi
 done
 
-if [ "$TERM" == "cygwin" ]; then
+if [[ "$TERM" == "cygwin" ]]; then
   $JAVA -cp `cygpath -wp $cp` ie.ucd.bon.Main $*
 else
   #$JAVA -Xloggc:bon.log -cp $cp ie.ucd.bon.Main $*

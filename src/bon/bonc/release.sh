@@ -5,7 +5,7 @@
 # See LICENCE.TXT for details.
 ###
 
-if [ $1 ]; then
+if [[ $1 ]]; then
 	cd dist
 	tar -czf ../release/$1.tar.gz *
 	tar -cjf ../release/$1.tar.bz2 *
