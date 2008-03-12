@@ -80,12 +80,12 @@ public abstract class IntSet {
 
     /** post(this) = union(pre(this), pre(peer)).
 	Returns true iff post(this) != pre(this). */
-    public boolean union(IntSet peer) {
+    public boolean union(IntSet intSetPeer) {
 	boolean changed = false;
-	if (this != peer) {
+	if (this != intSetPeer) {
 	    int iter = -1;
-	    while ((iter = peer.next(iter)) >= 0) {
-		changed |= insert(peer.get(iter));
+	    while ((iter = intSetPeer.next(iter)) >= 0) {
+		changed |= insert(intSetPeer.get(iter));
 	    }
 	}
 	return changed;
