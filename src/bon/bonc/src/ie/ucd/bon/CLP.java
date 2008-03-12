@@ -207,6 +207,14 @@ public class CLP {
     printReadme.setHelpString("Print available options in readme format");
     cp.addOption(printReadme);
     
+    BooleanDefaultOption printBashCompletion = new BooleanDefaultOption();
+    printBashCompletion.setOptionID("99999.2");
+    printBashCompletion.setHidden();
+    printBashCompletion.addOptionName("-pbc");
+    printBashCompletion.addOptionName("--print-bash-completion");
+    printBashCompletion.setHelpString("Print bash completion script for available options.");
+    cp.addOption(printBashCompletion);
+    
     BooleanDefaultOption version = new BooleanDefaultOption();
     version.setOptionID("999v");
     version.addOptionName("-v");

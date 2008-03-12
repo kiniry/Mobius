@@ -9,6 +9,6 @@ cd debian/src
 if [ -a deb-release.tgz ]; then
   rm deb-release.tgz
 fi
-fakeroot tar --exclude=".svn" -czf deb-release.tgz usr/
+fakeroot tar --exclude=".svn" -czf deb-release.tgz usr/ etc/
 cd ../..
 

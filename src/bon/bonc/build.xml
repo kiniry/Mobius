@@ -457,6 +457,11 @@
       </classpath>
     </taskdef>
 
+  	<java fork="yes" classname="ie.ucd.bon.Main" output="${debian}/src/etc/bash_completion.d/bonc_completion" append="false">
+  	  <classpath refid="dist.path"/>
+  	  <arg value="--print-bash-completion"/>
+  	</java>
+  	
     <copy todir="${debian}/src/usr/share/bonc"> 
       <fileset dir="." includes="bonc,bonc-debian"/>
     </copy>
