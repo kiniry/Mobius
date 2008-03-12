@@ -309,7 +309,7 @@ class BCELReader extends Reader {
 		}
 		typeDecl.specOnly = true;
 		
-		// Remove extra constructor used for inner classes
+		// Remove extra constructor used for binary inner classes
 		removeExtraArg(typeDecl);
 
 		return typeDecl;
@@ -587,9 +587,12 @@ class BCELReader extends Reader {
 				int innerAccessFlags = innerClass.getInnerAccessFlags();
 				innerClassTypeDecl.modifiers = filterAccessFlags(innerAccessFlags);
 				
-				// Only add inner classes that are not synthetic
+				// Only add inner classes that are not synthetic and are not anonymous inner classes,
+				// which are identified by names that start with a number
 				if (!innerClassReader.isSyntheticClass()) {
+				    if (!Character.isDigit(innerClassTypeDecl.id.toString().charAt(0))) {
 					classMembers.addElement(innerClassTypeDecl);
+					}
 				}
 			}
 		}
