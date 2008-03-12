@@ -40,7 +40,7 @@ import umbra.instructions.ast.ThrowsLineController;
  * @version a-01
  *
  */
-public class InitParser extends BytecodeTextParser {
+public class InitParser extends BytecodeCommentParser {
 
 
   /**
@@ -153,8 +153,9 @@ public class InitParser extends BytecodeTextParser {
    * be parsed can fit into the structures within the BCEL representation.
    * Subsequently it parses line by line the given document starting with the
    * given line and tries to parse the lines and associate with them the
-   * instructions from the BCEL structures. The current method ends when
-   * an empty line is met or when the end of the document is reached.
+   * instructions from the BCEL structures. It assumes that the method starts
+   * with a method header. The current method ends when an empty line is met or
+   * when the end of the document is reached.
    *
    * @param the_line_no the line in the document starting with which the method
    *   parsing begins
@@ -176,22 +177,7 @@ public class InitParser extends BytecodeTextParser {
     final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
 
     //swallow method header
-    String a_linename = getLineFromDoc(my_doc, j, a_ctxt);
-    BytecodeLineController lc = Preparsing.getType(a_linename, a_ctxt);
-    addEditorLine(j, lc);
-    lc.setMethodNo(a_ctxt.getMethodNo());
-    if (lc instanceof HeaderLineController) { // method header
-      ((HeaderLineController)lc).setMethod(mg);
-    }
-    j++;
-    a_linename = getLineFromDoc(my_doc, j, a_ctxt);
-    lc = Preparsing.getType(a_linename, a_ctxt);
-    if (lc instanceof ThrowsLineController) { // method header
-      addEditorLine(j, lc);
-      lc.setMethodNo(a_ctxt.getMethodNo());
-      j++;
-    }
-
+    j = swallowMethodHeader(a_ctxt, j, mg);
 
     final InstructionList il = mg.getInstructionList();
     if (il != null) {
@@ -199,8 +185,9 @@ public class InitParser extends BytecodeTextParser {
       final Iterator iter = il.iterator();
 
       for (; j < my_doc.getNumberOfLines(); j++) {
-        a_linename = getLineFromDoc(my_doc, j, a_ctxt);
-        lc = Preparsing.getType(a_linename, a_ctxt);
+        final String  a_linename = getLineFromDoc(my_doc, j, a_ctxt);
+        final BytecodeLineController lc =
+          Preparsing.getType(a_linename, a_ctxt);
         addEditorLine(j, lc);
         lc.setMethodNo(a_ctxt.getMethodNo());
         if (lc.isCommentStart()) { // ignore comments
@@ -216,6 +203,45 @@ public class InitParser extends BytecodeTextParser {
       }
     }
     return j;
+  }
+
+  /**
+   * This method handles the parsing of the method header lines. It assumes that
+   * the header contains the method signature and possibly the throws
+   * declarations. The method finishes its work on the first non-throws
+   * line of the document.
+   *
+   * @param a_ctxt the parsing context with which the parsing is done
+   * @param a_lineno the line number of the first line to be parsed
+   * @param a_methodgen the BCEL method representation
+   * @return the number of the first line that could not be parsed by this
+   *   method
+   * @throws UmbraLocationException in case a line number has been reached
+   *   such that there is no such a line in the current document
+   */
+  private int swallowMethodHeader(final LineContext a_ctxt,
+                                  final int a_lineno,
+                                  final MethodGen a_methodgen)
+    throws UmbraLocationException {
+    int res = a_lineno;
+    String a_linename = getLineFromDoc(my_doc, res, a_ctxt);
+    BytecodeLineController lc = Preparsing.getType(a_linename, a_ctxt);
+    addEditorLine(res, lc);
+    lc.setMethodNo(a_ctxt.getMethodNo());
+    if (lc instanceof HeaderLineController) { // method header
+      ((HeaderLineController)lc).setMethod(a_methodgen);
+    }
+    res++;
+    for (a_linename = getLineFromDoc(my_doc, res, a_ctxt); true; res++) {
+      lc = Preparsing.getType(a_linename, a_ctxt);
+      if (lc instanceof ThrowsLineController) { // method header
+        addEditorLine(res, lc);
+        lc.setMethodNo(a_ctxt.getMethodNo());
+      } else {
+        break;
+      }
+    }
+    return res;
   }
 
   /*@
@@ -246,8 +272,8 @@ public class InitParser extends BytecodeTextParser {
     if (an_iter.hasNext())
       ih = (InstructionHandle)(an_iter.next());
     a_lctrl.addHandle(ih, an_ilist, a_methgen);
-    addInstruction(a_lctrl);
-    handleComments(a_lctrl);
+    final int ino = addInstruction(a_lctrl);
+    handleComments(a_lctrl, ino);
     incInstructionNo();
   }
 }

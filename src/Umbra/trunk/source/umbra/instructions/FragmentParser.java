@@ -31,7 +31,7 @@ import umbra.instructions.ast.UnknownLineController;
  * @version a-01
  *
  */
-public class FragmentParser extends BytecodeTextParser {
+public class FragmentParser extends BytecodeCommentParser {
 
   /**
    * The document which contains the fragment to be parsed.

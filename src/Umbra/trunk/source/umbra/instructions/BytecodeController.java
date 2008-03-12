@@ -23,7 +23,6 @@ import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
-import umbra.instructions.ast.UnclassifiedInstruction;
 
 /**
  * This class defines some structures related to BCEL as well

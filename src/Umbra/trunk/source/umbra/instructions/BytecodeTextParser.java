@@ -8,20 +8,15 @@
  */
 package umbra.instructions;
 
-import java.util.Hashtable;
 import java.util.LinkedList;
 
 import org.apache.bcel.generic.MethodGen;
-import org.eclipse.jface.text.BadLocationException;
 
 import umbra.editor.BytecodeDocument;
 import umbra.editor.UmbraMethodException;
 import umbra.editor.parsing.BytecodeStrings;
-import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
-import umbra.instructions.ast.CommentLineController;
-import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.InstructionLineController;
 
 /**
@@ -32,53 +27,7 @@ import umbra.instructions.ast.InstructionLineController;
  * @version a-01
  *
  */
-public class BytecodeTextParser {
-
-
-  /**
-   * This field contains the texts of end-of-line comments which were introduced
-   * in the previous session with, the current document. The i-th entry contains
-   * the comment for the i-th instruction in the document, if this array
-   * is null then the array is not taken into account.
-   */
-  private String[] my_eolcomment_array;
-
-  /**
-   * This field contains the texts of interline comments which were introduced
-   * in the previous session with, the current document. The i-th entry contains
-   * the comment for the i-th instruction in the document, if this array
-   * is null then the array is not taken into account.
-   */
-  private String[] my_interline_array;
-
-  /**
-   * The container of associations between the Umbra representation of lines
-   * in the byte code editor and the end-of-line comments in these lines.
-   * The comments must be absent from the line representation for their
-   * correct parsing so they are held in this additional structure.
-   */
-  private Hashtable my_eolcomments;
-
-  /**
-   * The container of associations between the Umbra representation of lines
-   * in the byte code editor and the multi-line comments in these lines.
-   * The comments must be absent from the line representation for their
-   * correct parsing so they are held in this additional structure.
-   * FIXME: this is not handled properly
-   */
-  private Hashtable my_interline_comments;
-
-  /**
-   * This field contains the value of the end-of-line comment from the currently
-   * parsed line.
-   */
-  private String my_current_comment;
-
-  /**
-   * This field contains the value of the interline comment from the currently
-   * parsed code fragment.
-   */
-  private StringBuffer my_current_icomment;
+public abstract class BytecodeTextParser {
 
   /**
    * The list of all the lines in the current byte code editor. These lines
@@ -103,33 +52,13 @@ public class BytecodeTextParser {
   private LinkedList my_instructions;
 
   /**
-   * The combination of the currently parsed text and the information from
-   * the comment structures. The process of parsing results in a combined
-   * version which includes both the original text and the textual
-   * representation of comments.
-   */
-  private StringBuffer my_combined_text;
-
-  /**
    * This constructor initialises internal structure to represent
-   * editor lines, instructions, and comments. The given parameter is the
-   * value of the array which contains the comments from the previous session
-   * with the current document.
-   *
-   * TODO link to the protocol for a_comment_array
-   * @param a_comment_array the end-of-line comments from the previous session
-   * @param a_interline the interline comments from the previous session
+   * editor lines and instructions.
    */
-  protected BytecodeTextParser(final String[] a_comment_array,
-                               final String[] a_interline) {
+  protected BytecodeTextParser() {
     super();
     my_editor_lines = new LinkedList();
     my_instructions = new LinkedList();
-    my_eolcomment_array = a_comment_array;
-    my_interline_array = a_interline;
-    my_eolcomments = new Hashtable();
-    my_interline_comments = new Hashtable();
-    my_combined_text = new StringBuffer("");
   }
 
   /**
@@ -201,37 +130,6 @@ public class BytecodeTextParser {
   }
 
   /**
-   * Returns the association between the lines in the internal Umbra
-   * representation and the end-of-line comments present in the textual
-   * representation.
-   *
-   * @return the list of the {@link BytecodeLineController} objects that
-   *   represent the lines with instructions in the currently parsed document
-   */
-  public Hashtable getComments() {
-    return my_eolcomments;
-  }
-
-  /**
-   * Returns the association between the lines in the internal Umbra
-   * representation and the multi-line comments present in the textual
-   * representation.
-   *
-   * @return the list of the {@link BytecodeLineController} objects that
-   *   represent the lines with instructions in the currently parsed document
-   */
-  public Hashtable getInterlineComments() {
-    return my_interline_comments;
-  }
-
-  /**
-   * @return the value of the current comment
-   */
-  public String getCurrentComment() {
-    return my_current_comment;
-  }
-
-  /**
    * Returns the list of all the lines in the internal representation.
    * This method may only be called once to export fully generated
    * list of lines.
@@ -255,35 +153,11 @@ public class BytecodeTextParser {
    */
   public void addEditorLine(final int a_pos,
                             final BytecodeLineController a_line) {
-    int pos_in_combined = getPosOfLine(a_pos);
+    final int pos_in_combined = getPosOfLine(a_pos);
     final String instr = a_line.getLineContent();
     insertAt(pos_in_combined, instr);
-    if (a_line instanceof InstructionLineController &&
-        my_current_comment != null) {
-      final String comm = "//" + my_current_comment;
-      pos_in_combined += instr.length();
-      insertAt(pos_in_combined, comm);
-      pos_in_combined += comm.length();
-    }
+    enrichWithComment(a_line, pos_in_combined);
     my_editor_lines.add(a_pos, a_line);
-  }
-
-  /**
-   * Inserts the given string in the current representation of the combined
-   * text (class+comments) at the indicated position. The first character of
-   * the given string becomes the character at the given position and all the
-   * further characters follow. The characters of the original document
-   * starting at the given position are moved so that they start right after
-   * the inserted text.
-   *
-   * @param a_pos the position to insert the string at
-   * @param a_string the string to insert
-   */
-  private void insertAt(final int a_pos, final String a_string) {
-    if (a_pos == my_combined_text.length())
-      my_combined_text.append(a_string);
-    else
-      my_combined_text.insert(a_pos, a_string);
   }
 
   //@ requires a_lineno >= 0;
@@ -294,16 +168,44 @@ public class BytecodeTextParser {
    * @param a_lineno the number of the line to find the position for
    * @return the position of the first character in the line
    */
-  private int getPosOfLine(final int a_lineno) {
-    int start = 0;
-    for (int i = 0; i < a_lineno; i++) {
-      start = my_combined_text.indexOf("\n", start + 1);
-      if (start == -1) {
-        return -1;
-      }
-    }
-    return start;
-  }
+  protected abstract int getPosOfLine(final int a_lineno);
+
+  /**
+   * Inserts the given string in the current representation of the combined
+   * text (class+comments) at the indicated position.
+   *
+   * @param a_pos the position to insert the string at
+   * @param a_string the string to insert
+   */
+  protected abstract void insertAt(int a_pos, String a_string);
+
+  /**
+   * This method adds to the combination of the currently parsed text and the
+   * information from the comment structures the comment associated with the
+   * given line.
+   *
+   * If the given line controller is not an {@link InstructionLineController}
+   * then the method does nothing.
+   *
+   * @param a_line a line controller to associate comments with
+   * @param a_pos the position in the combined text where the comment
+   *   is to be added
+   */
+  protected abstract void enrichWithComment(final BytecodeLineController a_line,
+                                            final int a_pos);
+
+  /**
+   * This method adds to the combination of the currently parsed text and the
+   * information from the comment structures the text of the given instruction
+   * together with the comment associated with the line. We assume that the text
+   * of the line controller is not already in the combined text string.
+   * If the given line controller is not an {@link InstructionLineController}
+   * then the method only appends the content of the given line controller
+   *
+   * @param a_line a line controller to associate comments with
+   */
+  protected abstract void enrichWithComment(
+     final BytecodeLineController a_line);
 
   /**
    * This method appends the specified line cotroller at the end of the lines
@@ -313,11 +215,7 @@ public class BytecodeTextParser {
    */
   public void addEditorLine(final BytecodeLineController a_line) {
     my_editor_lines.add(a_line);
-    my_combined_text.append(a_line.getLineContent());
-    if (a_line instanceof InstructionLineController &&
-        my_current_comment != null) {
-      my_combined_text.append("//" + my_current_comment);
-    }
+    enrichWithComment(a_line);
   }
 
   /**
@@ -342,84 +240,23 @@ public class BytecodeTextParser {
    * comments are associated with the instruction lines.
    *
    * @param a_lc the line controller to add
+   * @return the number of the currently added instruction
    */
-  protected void addInstruction(final InstructionLineController a_lc) {
-    if (my_eolcomment_array != null && my_current_comment == null) {
-      my_current_comment = my_eolcomment_array[my_instruction_no];
-    }
-    if (my_interline_array != null && my_current_icomment == null &&
-        my_interline_array[my_instruction_no] != null) {
-      my_current_icomment = new StringBuffer(
-                                     my_interline_array[my_instruction_no]);
-    }
-    if (my_current_icomment != null) {
-      my_interline_comments.put(a_lc, my_current_icomment.toString());
-    }
-    my_current_icomment = null;
-    if (my_current_comment != null)
-      my_eolcomments.put(a_lc, my_current_comment);
-    my_current_comment = null;
+  protected int addInstruction(final InstructionLineController a_lc) {
+    adjustCommentsForInstruction(a_lc, my_instruction_no);
     my_instructions.add(a_lc);
+    return my_instruction_no;
   }
 
   /**
-   * This method returns the {@link String} with the given line of the given
-   * document. Additionally, the method extracts the end-of-line comment and
-   * stores it in the internal state of the current object. The method needs
-   * the parsing context in case the line is a part of a multi-line context.
-   * In that case, the end-of-line comment should not be extracted.
+   * The method updates the comments structures.
    *
-   * @param a_doc a document to extract the line from
-   * @param a_line the line number of the line to be extracted
-   * @param a_ctxt a context which indicates if we are inside a comment
-   * @return the string with the line content (with the end-of-line comment
-   *   stripped off)
-   * @throws UmbraLocationException in case the given line number is not within
-   *   the given document
+   * @param a_lc the line controller to associate the comments with
+   * @param an_instrno the instruction number of the given controller
    */
-  protected String getLineFromDoc(final BytecodeDocument a_doc,
-                                  final int a_line,
-                                  final LineContext a_ctxt)
-    throws UmbraLocationException {
-    String line;
-    try {
-      line = a_doc.get(a_doc.getLineOffset(a_line),
-                                    a_doc.getLineLength(a_line));
-    } catch (BadLocationException e) {
-      throw new UmbraLocationException(a_line);
-    }
-    final String lineName;
-    if (!a_ctxt.isInsideComment() || !a_ctxt.isInsideAnnotation()) {
-      lineName = removeCommentFromLine(line);
-      my_current_comment = extractCommentFromLine(line, a_ctxt);
-    } else {
-      lineName = line;
-      my_current_comment = null;
-    }
-    return lineName;
-  }
-
-
-  /**
-   * This method stores in the local comments structure the information about
-   * the currently extracted comment. It also handles the enriching of the
-   * comments in the current version of the document with the information
-   * from the previous one the content of which was refreshed.
-   *
-   * @param a_lc the line controller to associate the comment to
-   */
-  protected void handleComments(final BytecodeLineController a_lc) {
-    if (my_current_comment != null) {
-      my_eolcomments.put(a_lc, my_current_comment);
-      my_current_comment = null;
-    }
-    if (my_eolcomment_array != null) {
-      if (my_eolcomment_array[my_instruction_no] != null) {
-        if (my_eolcomments.contains(a_lc)) my_eolcomments.remove(a_lc);
-        my_eolcomments.put(a_lc, my_eolcomment_array[my_instruction_no]);
-      }
-    }
-  }
+  protected abstract void adjustCommentsForInstruction(
+                               final InstructionLineController a_lc,
+                               final int an_instrno);
 
   /**
    * Increases by one the current instruction number.
@@ -433,56 +270,6 @@ public class BytecodeTextParser {
    */
   protected void initInstructionNo() {
     my_instruction_no = 0;
-  }
-
-  /**
-   * This method sets the value of the end-of-line comment from the currently
-   * parsed line.
-   *
-   * @param a_comment the current comment value to set
-   */
-  public void setCurrentComment(final String a_comment) {
-    my_current_comment = a_comment;
-  }
-
-  /**
-   * This method parses from the given document lines which are considered
-   * to be empty lines in the given context. A line is empty when it
-   * contains white spaces only or is one of the possible kinds of
-   * comment lines. The parsing stops at the first line which cannot
-   * be considered empty. This line will be parsed once more by the subsequent
-   * parsing procedure. We ensure here that the {@link AnnotationLineController}
-   * has the method number of either the current method or the method right
-   * after the annotation.
-   *
-   * @param a_doc a document to extract empty lines from
-   * @param the_current_lno the first line to be analysed
-   * @param a_ctxt a parsing context in which the document is analysed
-   * @return the first line which is not an empty line; in case the end
-   *   of the document is reached this is the number of lines in the
-   *   document
-   * @throws UmbraLocationException in case the method reaches a line number
-   *   which is not within the given document
-   */
-  protected int swallowEmptyLines(final BytecodeDocument a_doc,
-                                  final int the_current_lno,
-                                  final LineContext a_ctxt)
-    throws UmbraLocationException {
-    int j = the_current_lno;
-    while (j < a_doc.getNumberOfLines()) {
-      final String line = getLineFromDoc(a_doc, j, a_ctxt);
-      final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
-      if (!(lc instanceof CommentLineController)  &&
-          !(lc instanceof EmptyLineController)) {
-        break;
-      }
-      if (lc instanceof AnnotationLineController)
-        ((AnnotationLineController)lc).setMethodNo(a_ctxt.getMethodNo());
-      addEditorLine(lc);
-      lc.setMethodNo(a_ctxt.getMethodNo());
-      j++;
-    }
-    return j;
   }
 
   /**
@@ -504,31 +291,4 @@ public class BytecodeTextParser {
       }
     }
   }
-
-  /**
-   * Clears the current representation of the multi-line comment.
-   */
-  protected void clearCurrentComment() {
-    my_current_icomment = new StringBuffer("");
-  }
-
-  /**
-   * Appends the given string at the end of the current multi-line comment.
-   *
-   * @param a_line the string to append
-   */
-  protected void addToCurrentComment(final String a_line) {
-    my_current_icomment.append(a_line);
-  }
-
-  /**
-   * Returns the current content of the string which contains the text of the
-   * class file combined with the comments.
-   *
-   * @return the class text with comments
-   */
-  protected String getNewContent() {
-    return my_combined_text.toString();
-  }
-
 }
