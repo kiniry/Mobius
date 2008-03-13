@@ -19,11 +19,17 @@
    3413198829 ("" (use "name_of_exists_annot_gen") nil nil) unchecked
    ((name_of_exists_annot_gen formula-decl nil Translation nil)) 2955
    2840 t nil))
- (IMP_InlineAnnotationsPropertiesPreservation_TCC1 0
-  (IMP_InlineAnnotationsPropertiesPreservation_TCC1-1 nil 3413198112
-   3413198832 ("" (use "name_of_exists_inline") nil nil) unchecked
-   ((name_of_exists_inline formula-decl nil Translation nil)) 2930 2840
-   t nil))
+ (IMP_AnnotateProgramPropertiesPreservation_TCC3 0
+  (IMP_AnnotateProgramPropertiesPreservation_TCC3-1 nil 3414403849 nil
+   ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
+ (IMP_AnnotateProgramPropertiesPreservation_TCC4 0
+  (IMP_AnnotateProgramPropertiesPreservation_TCC4-1 nil 3414403849 nil
+   ("" (assuming-tcc) nil nil) nil nil nil nil nil nil))
+ (IMP_CorrectnessInlineProgram_TCC1 0
+  (IMP_CorrectnessInlineProgram_TCC1-1 nil 3414403849 3414403895
+   ("" (use "name_of_exists_inline") nil nil) proved
+   ((name_of_exists_inline formula-decl nil Translation nil)) 28311
+   4310 t nil))
  (main_TCC1 0
   (main_TCC1-1 nil 3413198112 3413198835
    ("" (skosimp*)
@@ -216,13 +222,9 @@
      CompleteMonitorProgramPropertiesPreservation nil)
     (contains_no_method_call_preserved_by_ann_program formula-decl nil
      AnnotateProgramPropertiesPreservation nil)
-    (translate const-decl "Program" Translation nil)
-    (complete_MP_wf_and_complete application-judgement
-     "(wf_and_complete_MP)" Translation nil)
-    nil
+    (translate const-decl "Program" Translation nil) nil
     (complete_MP const-decl "MonitoredProgram"
      MonitoredProgramCompletessRelation nil)
-    nil
     (on_method_exit_exceptional_MP const-decl "(on_method_event_type)"
      MonitoredProgramSemantics nil)
     (on_method_exit_normal_MP const-decl "(on_method_event_type)"
@@ -367,7 +369,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((translate const-decl "Program" Translation nil)
     (contains_no_method_call_preserved_by_ann_program formula-decl nil
      AnnotateProgramPropertiesPreservation nil)
@@ -405,11 +407,10 @@
      AnnotateProgramPropertiesPreservation nil)
     (wf_set_stmts_preserved_by_complete_MP formula-decl nil
      CompleteMonitorProgramPropertiesPreservation nil)
-    (complete_MP_wf_and_complete application-judgement
-     "(wf_and_complete_MP)" Translation nil)
+    nil
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
-    (mp!1 skolem-const-decl "(wf_and_partial_MP)" Translation nil)
+    nil
     (complete_MP const-decl "MonitoredProgram"
      MonitoredProgramCompletessRelation nil)
     (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
@@ -427,8 +428,7 @@
     (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
     (Event type-eq-decl nil MVA nil)
     (EventType type-decl nil EventType_adt nil)
-    (CP formal-nonempty-type-decl nil Translation nil)
-    (wf_set_stmts const-decl "bool" WfSetStmts nil)
+    (CP formal-nonempty-type-decl nil Translation nil) nil
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
     (on_method_exit_normal const-decl "(on_method_event_type)"

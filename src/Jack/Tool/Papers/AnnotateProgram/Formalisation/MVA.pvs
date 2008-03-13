@@ -447,6 +447,14 @@ BEGIN
         FORALL(v : ValOrExcpt) :
           wf_Expr(a)(guard_to_expression(a)(guard(t))(v))
 
+  guard_to_expression_contains_no_TryCatch : AXIOM
+    FORALL(a : MVA, t : Transition) :
+      wf_MVA(a) IMPLIES
+      ts(a)(t) IMPLIES
+        FORALL(v : ValOrExcpt, b : Body) :
+          subterm(b, guard_to_expression(a)(guard(t))(v)) IMPLIES
+            NOT TryCatch?(b)
+
   IMPORTING ContainsNoMethodCall[Name]
 
   guard_to_expression_contains_no_method_calls : AXIOM
@@ -463,6 +471,15 @@ BEGIN
         FORALL(l : OneAction) :
           member(l, action(t)) IMPLIES
             contains_no_method_call(source(l))
+
+  action_sources_contains_no_TryCatch : AXIOM
+    FORALL(a : MVA, t : Transition) :
+      wf_MVA(a) IMPLIES
+      ts(a)(t) IMPLIES
+        FORALL(l : OneAction, b : Body) :
+          member(l, action(t)) IMPLIES
+          subterm(b, source(l)) IMPLIES
+            NOT TryCatch?(b)
 
 
 END MVAMonitoring
