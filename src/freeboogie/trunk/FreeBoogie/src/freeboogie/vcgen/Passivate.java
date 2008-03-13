@@ -15,7 +15,7 @@ import freeboogie.util.Closure;
  *   (3) havocs are desugared.
  *
  * Each variable X is transformed into a sequence of variables
- * X_0, X_1, ... Each command has a read index r and a write
+ * X, X_1, X_2, ... Each command has a read index r and a write
  * index w (for each variable), meaning that reads from X will be
  * replaced by reads from X_r and a write to X is replaced by a
  * write to X_w.
@@ -29,8 +29,7 @@ import freeboogie.util.Closure;
  * written by a node is not the same as the one read by one of
  * its successors (according the the scheme above).
  *
- * All variables X, Y, ... inside old() are replaced 
- * by X_0, Y_0, ... and the old() is removed.
+ * The "old()" is simply stripped.
  *
  * This algorithm minimizes the number of variables (think
  * coloring of comparison graphs) but not the number of copy

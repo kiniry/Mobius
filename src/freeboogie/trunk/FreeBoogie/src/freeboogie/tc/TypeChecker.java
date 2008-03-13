@@ -480,7 +480,7 @@ public class TypeChecker extends Evaluator<Type> {
     if (!(t instanceof ArrayType)) {
       Err.error("" + atom.loc() + ": Must be an array.");
       errors = true;
-      return null;
+      return errType;
     }
     ArrayType at = (ArrayType)t;
     Type et = at.getElemType();
