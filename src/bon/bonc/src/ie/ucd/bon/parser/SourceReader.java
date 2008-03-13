@@ -83,7 +83,6 @@ public final class SourceReader {
         String line;
         while ((line = br.readLine()) != null) {
           sb.append(line);
-          stdInLines.add(line);
           sb.append('\n');
         }      
         return new ByteArrayInputStream(sb.toString().getBytes());

@@ -139,9 +139,9 @@ public abstract class BONProblem implements Comparable<BONProblem> {
    * @param re The RecognitionException representing the error.
    * @return A String to indicate the position of the error.
    */
-  private String getErrorPosition() {
+  private String getErrorPosition(int caretPosition) {
     StringBuilder sb = new StringBuilder();
-    for (int i=0; i < charPosition; i++) {
+    for (int i=0; i < caretPosition; i++) {
       sb.append(' ');
     }
     sb.append('^');
@@ -179,8 +179,24 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   
   protected void printSourcePosition(PrintStream ps) {
     if (charPosition >= 0 && sourceLine != null) {
-      ps.println(sourceLine);
-      ps.println(getErrorPosition());
+      
+      int tabCount = 0;
+      StringBuilder sb = new StringBuilder();
+      for (int i=0; i < sourceLine.length(); i++) {
+        char c = sourceLine.charAt(i);
+        if (c == '\t') {
+          sb.append("  ");
+          if (i < charPosition) {
+            tabCount++;
+          }
+        } else {
+          sb.append(c);
+        }
+      }
+      
+      ps.println(sb.toString());
+      
+      ps.println(getErrorPosition(charPosition + tabCount));
     }
   }
 
