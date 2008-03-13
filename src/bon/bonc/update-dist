@@ -2,7 +2,7 @@
 
 old=`pwd`
 
-cd /home/fintan/workspace/newebon
+cd /home/fintan/workspace/bonc
 
 ant dist
 

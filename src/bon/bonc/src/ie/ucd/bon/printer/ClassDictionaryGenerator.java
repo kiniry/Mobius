@@ -41,7 +41,9 @@ public class ClassDictionaryGenerator {
     sb.append(newLine);
     
     sb.append("  explanation");
+    sb.append(newLine);
     sb.append("    \"BONc automatically generated class dictionary.\"");
+    sb.append(newLine);
 
     for (String className : classNames) {
       ClassChartDefinition classDef = classes.get(className);
