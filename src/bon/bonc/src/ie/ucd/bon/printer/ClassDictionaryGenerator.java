@@ -13,6 +13,7 @@ import ie.ucd.bon.typechecker.informal.SystemChartDefinition;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class ClassDictionaryGenerator {
 
@@ -24,7 +25,7 @@ public class ClassDictionaryGenerator {
     InformalTypingInformation iti = tracker.getInformalTypingInformation();
     SystemChartDefinition sysDef = iti.getSystem();
     Map<String,ClassChartDefinition> classes = iti.getClasses(); 
-    Set<String> classNames = classes.keySet();
+    Set<String> classNames = new TreeSet<String>(classes.keySet());
     Graph<String,ClusterChartDefinition> classClusterGraph = iti.getClassClusterGraph();
     
     
