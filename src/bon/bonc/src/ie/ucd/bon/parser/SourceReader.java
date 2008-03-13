@@ -7,6 +7,8 @@ package ie.ucd.bon.parser;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -73,5 +75,17 @@ public final class SourceReader {
       System.out.println("Something went wrong when reading from stdin");
       return null;
     }
+  }
+  
+  public InputStream readFile(File f) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(f));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+          sb.append(line);
+          stdInLines.add(line);
+          sb.append('\n');
+        }      
+        return new ByteArrayInputStream(sb.toString().getBytes());
   }
 }
