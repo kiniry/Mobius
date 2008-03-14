@@ -56,27 +56,32 @@ public class StackedHashMap<K, V> implements Map<K, V> {
     else clear();
   }
 
-  /* @see java.util.Map#clear() */
+  /**
+   * Let the user access directly the last stack frame.
+   * All modifications of the returned map will affect the content
+   * of {@code this}.
+   */
+  public Map<K, V> peek() {
+    return data.peekFirst();
+  }
+
   public void clear() {
     data = new LinkedList<LinkedHashMap<K, V>>();
     data.addFirst(new LinkedHashMap<K, V>());
   }
 
-  /* @see java.util.Map#containsKey(java.lang.Object) */
   public boolean containsKey(Object key) {
     for (LinkedHashMap<K, V> h : data)
       if (h.containsKey(key)) return true;
     return false;
   }
 
-  /* @see java.util.Map#containsValue(java.lang.Object) */
   public boolean containsValue(Object value) {
     for (LinkedHashMap<K, V> h : data)
       if (h.containsValue(value)) return true;
     return false;
   }
 
-  /* @see java.util.Map#entrySet() */
   public Set<java.util.Map.Entry<K, V>> entrySet() {
     HashSet<K> seen = new HashSet<K>();
     Set<Map.Entry<K, V>> s = new HashSet<Map.Entry<K, V>>();
@@ -89,7 +94,6 @@ public class StackedHashMap<K, V> implements Map<K, V> {
     return s;
   }
 
-  /* @see java.util.Map#get(java.lang.Object) */
   public V get(Object key) {
     for (LinkedHashMap<K, V> h : data) {
       V v = h.get(key);
@@ -98,12 +102,10 @@ public class StackedHashMap<K, V> implements Map<K, V> {
     return null;
   }
 
-  /* @see java.util.Map#isEmpty() */
   public boolean isEmpty() {
     return size() == 0;
   }
 
-  /* @see java.util.Map#keySet() */
   public Set<K> keySet() {
     Set<K> s = new HashSet<K>();
     for (LinkedHashMap<K, V> h : data)
@@ -111,17 +113,14 @@ public class StackedHashMap<K, V> implements Map<K, V> {
     return s;
   }
 
-  /* @see java.util.Map#put(java.lang.Object, java.lang.Object) */
   public V put(K key, V value) {
     return data.getFirst().put(key, value);
   }
 
-  /* @see java.util.Map#putAll(java.util.Map) */
   public void putAll(Map<? extends K, ? extends V> map) {
     data.getFirst().putAll(map);
   }
 
-  /* @see java.util.Map#remove(java.lang.Object) */
   public V remove(Object key) {
     V r = null;
     for (LinkedHashMap<K, V> h : data) {
@@ -131,14 +130,12 @@ public class StackedHashMap<K, V> implements Map<K, V> {
     return r;
   }
 
-  /* @see java.util.Map#size() */
   public int size() {
     int sz = 0;
     for (LinkedHashMap<K, V> h : data) sz += h.size();
     return sz;
   }
 
-  /* @see java.util.Map#values() */
   public Collection<V> values() {
     ArrayList<V> v = new ArrayList<V>();
     for (LinkedHashMap<K, V> h : data) v.addAll(h.values());
@@ -182,5 +179,4 @@ public class StackedHashMap<K, V> implements Map<K, V> {
     test.put('a', 5);
     print(test); // a->5
   }
-
 }

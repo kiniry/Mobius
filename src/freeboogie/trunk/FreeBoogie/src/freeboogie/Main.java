@@ -122,6 +122,11 @@ public class Main {
         @Override public String go(TypeDecl p) {
           return p.getName();
       }}));
+    st.typeVars.iterDef(new Printer<UserType, AtomId>("type variable", st.typeVars,
+      new ClosureR<AtomId, String>() {
+        @Override public String go(AtomId a) {
+          return a.getId();
+      }}));
   }
 
   private void chopBlocks() {
@@ -158,17 +163,16 @@ public class Main {
         if (ast == null) continue; // errors while parsing or empty file
         
         // do what we are asked to do with this file
+        if (opt.boolVal("-sb")) chopBlocks();
         if (opt.boolVal("-pp")) ast.eval(pp);
         tc.process(ast);
         if (opt.boolVal("-pst")) printSymbolTable();
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
-        if (opt.boolVal("-sb")) {
-          chopBlocks();
-          if (opt.boolVal("-pp")) ast.eval(pp);
-        }
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
       } catch (Exception e) {
+        Err.error(e.getMessage());
+        e.printStackTrace();
         Err.error("Unexpected error while processing " + file);
       } finally {
         pwriter.flush();

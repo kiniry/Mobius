@@ -1,39 +1,31 @@
 package freeboogie.tc;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map;
 
 import freeboogie.ast.*;
 import freeboogie.util.Err;
+import freeboogie.util.StackedHashMap;
 
 /**
  * Constructs a {@code SymbolTable} from an AST.
  * 
- * NOTE: generic types in boogie are a hack so I'll treat them as such.
- *
  * @author rgrig 
- * @author reviewed by TODO
+ * @author miko
  */
 @SuppressWarnings("unused") // lots of unused parameters
 public class SymbolTableBuilder extends Transformer {
-  private LinkedList<HashMap<String, VariableDecl>> localScopes;
-  
+  private StackedHashMap<String, VariableDecl> localVarDecl;
+  private StackedHashMap<String, AtomId> typeVarDecl;
+
   private SymbolTable symbolTable;
-  
   private GlobalsCollector gc;
   
+  // where there undeclared identifiers?
   private boolean errors;
   
   // for modifies spec we ignore the arguments
   private boolean lookInLocalScopes;
-  
-  /*
-   * HACK to support `generic' types: Do not warn if we are under
-   * an array because it might be a `type variable'. The typechecker
-   * should enforce that things make sense a bit later on. 
-   */
-  // the number of ArrayType nodes above the current node 
-  private int arrayCnt;
   
   /**
    * Builds a symbol table. Reports name clashes (because it
@@ -43,10 +35,10 @@ public class SymbolTableBuilder extends Transformer {
    */
   public boolean process(Declaration ast) {
     errors = false;
-    localScopes = new LinkedList<HashMap<String, VariableDecl>>();
+    localVarDecl = new StackedHashMap<String, VariableDecl>();
+    typeVarDecl = new StackedHashMap<String, AtomId>();
     symbolTable = new SymbolTable();
     gc = new GlobalsCollector();
-    arrayCnt = 0;
     lookInLocalScopes = true;
     boolean e = gc.process(ast);
     ast.eval(this);
@@ -73,7 +65,7 @@ public class SymbolTableBuilder extends Transformer {
   
   // reports an error at location l if d s null
   private <T> T check(T d, String s, AstLocation l) {
-    if (d != null || arrayCnt > 0) return d;
+    if (d != null) return d;
     Err.error("" + l + ": Undeclared identifier " + s + ".");
     errors = true;
     return null;
@@ -81,13 +73,16 @@ public class SymbolTableBuilder extends Transformer {
   
   // the return might by ConstDecl or VariableDecl
   private Declaration lookup(String s, AstLocation l) {
-    if (lookInLocalScopes) {
-      for (HashMap<String, VariableDecl> scope : localScopes) {
-        VariableDecl d = scope.get(s);
-        if (d != null) return d;
-      }
-    }
-    return check(gc.idDef(s), s, l);
+    Declaration r = localVarDecl.get(s);
+    if (r == null) r = gc.idDef(s);
+    return check(r, s, l);
+  }
+
+  private void collectTypeVars(Identifiers ids) {
+    if (ids == null) return;
+    symbolTable.typeVars.seenDef(ids.getId());
+    typeVarDecl.put(ids.getId().getId(), ids.getId());
+    collectTypeVars(ids.getTail());
   }
   
   // === visit methods ===
@@ -96,7 +91,11 @@ public class SymbolTableBuilder extends Transformer {
   
   @Override
   public void see(UserType userType, String name) {
-    symbolTable.types.put(userType, check(gc.typeDef(name), name, userType.loc()));
+    AtomId tv = typeVarDecl.get(name);
+    if (tv != null)
+      symbolTable.typeVars.put(userType, tv);
+    else
+      symbolTable.types.put(userType, check(gc.typeDef(name), name, userType.loc()));
   }
 
   @Override
@@ -120,8 +119,10 @@ public class SymbolTableBuilder extends Transformer {
   // === collect info from local scopes ===
   @Override
   public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
-    HashMap<String, VariableDecl> scope = localScopes.peekFirst();
-    assert typeVars == null; // TODO: treat type variables
+    symbolTable.ids.seenDef(variableDecl);
+    typeVarDecl.push();
+    collectTypeVars(typeVars);
+    Map<String, VariableDecl> scope = localVarDecl.peek();
     if (scope != null && name != null) {
       // we are in a local scope
       VariableDecl old = scope.get(name);
@@ -132,39 +133,65 @@ public class SymbolTableBuilder extends Transformer {
         scope.put(name, variableDecl);
     }
     type.eval(this);
+    typeVarDecl.pop();
     if (tail != null) tail.eval(this);
   }
+
+  @Override
+  public void see(ConstDecl constDecl, String id, Type type, Declaration tail) {
+    symbolTable.ids.seenDef(constDecl);
+    type.eval(this);
+    if (tail != null) tail.eval(this);
+  }
+  
+  @Override
+  public void see(Signature signature, String name, Declaration args, Declaration results, Identifiers typeVars) {
+    collectTypeVars(typeVars);
+    if (args != null) args.eval(this);
+    if (results != null) results.eval(this);
+  }
+
   
   // === keep track of local scopes ===
   @Override
   public void see(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
     symbolTable.procs.seenDef(procedure);
-    HashMap<String, VariableDecl> newScope = new HashMap<String, VariableDecl>();
-    localScopes.addFirst(newScope);
+    localVarDecl.push();
+    typeVarDecl.push();
     sig.eval(this);
     if (spec != null) spec.eval(this);
-    localScopes.removeFirst();
+    typeVarDecl.pop();
+    localVarDecl.pop();
     if (tail != null) tail.eval(this);
   }
 
   @Override
   public void see(Implementation implementation, Signature sig, Body body, Declaration tail) {
-    HashMap<String, VariableDecl> newScope = new HashMap<String, VariableDecl>();
-    localScopes.addFirst(newScope);
+    localVarDecl.push();
+    typeVarDecl.push();
     sig.eval(this);
     body.eval(this);
-    localScopes.removeFirst();
+    typeVarDecl.pop();
+    localVarDecl.pop();
     if (tail != null) tail.eval(this);
   }
 
   @Override
+  public void see(Function function, Signature sig, Declaration tail) {
+    symbolTable.funcs.seenDef(function);
+    typeVarDecl.push();
+    sig.eval(this);
+    typeVarDecl.pop();
+    if (tail != null) tail.eval(this);
+  }
+  
+  @Override
   public void see(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
-    HashMap<String, VariableDecl> newScope = new HashMap<String, VariableDecl>();
-    localScopes.addFirst(newScope);
+    localVarDecl.push();
     vars.eval(this);
     if (trig != null) trig.eval(this);
     e.eval(this);
-    localScopes.removeFirst();
+    localVarDecl.pop();
   }
   
   // === remember if we are below a modifies spec ===
@@ -181,20 +208,10 @@ public class SymbolTableBuilder extends Transformer {
   }
   
   
-  // === remember if we are below an ArrayType ===
-  @Override
-  public void see(ArrayType arrayType, Type rowType, Type colType, Type elemType) {
-    ++arrayCnt;
-    super.see(arrayType, rowType, colType, elemType);
-    --arrayCnt;
-  }
-
-  // === do not lok at goto-s ===
+  // === do not look at goto-s ===
   @Override
   public void see(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
     if (cmds != null) cmds.eval(this);
     if (tail != null) tail.eval(this);
   }
-  
-  
 }

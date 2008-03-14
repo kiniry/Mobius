@@ -27,4 +27,8 @@ public class SymbolTable {
    */
   public UsageToDefMap<AtomId, Declaration> ids
     = new UsageToDefMap<AtomId, Declaration>();
+
+  /** Type variables. */
+  public UsageToDefMap<UserType, AtomId> typeVars
+    = new UsageToDefMap<UserType, AtomId>();
 }
