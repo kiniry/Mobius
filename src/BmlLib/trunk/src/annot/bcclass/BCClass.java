@@ -16,6 +16,8 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
+import com.sun.org.apache.bcel.internal.generic.InstructionList;
+
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
@@ -44,6 +46,7 @@ import annot.textio.Parsing;
  * (getMethod(index).getBCELMethod()).
  * 
  * @author tomekb
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  */
 public class BCClass {
 
@@ -76,11 +79,11 @@ public class BCClass {
 
 	/**
 	 * A constructor from already existing JavaClass. That
-	 * JavaClass should be used for operations on bytecode
-	 * via BCEL library.
+	 * JavaClass should be used for operations on byte code
+	 * using the BCEL library.
 	 * 
-	 * @param jc - JavaClass representing bytecode class
-	 * 		this class ahould operate on.
+	 * @param jc - JavaClass representing byte code class
+	 * 		this class should operate on.
 	 * @throws ReadAttributeException - if any of BML
 	 * 		attributes wasn't correctly parsed
 	 * 		by this library.
