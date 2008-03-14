@@ -130,8 +130,8 @@ public class Parsing {
 	public static String addComment(String code) {
 		if (code.length() < 1)
 			return "";
-		if (code.lastIndexOf("\n") == code.length() - 1)
-			code = code.substring(0, code.length() - 1);
+//		if (code.lastIndexOf("\n") == code.length() - 1)
+//			code = code.substring(0, code.length() - 1);
 		if ((code.lastIndexOf("\n") >= 0)
 				|| (code.length() > IDisplayStyle.max_total_line_width
 						- IDisplayStyle.comment_start.length()
