@@ -601,7 +601,7 @@ object to a non-@code{null} value.
 We now consider the third warning:
 <blockquote>@t{Bag.java:15: Warning: Array index possibly too large (IndexTooBig)}
 
-@t{      if (a[i] < m) {}
+@t{      if (a[i] < m) @{}
 
 @t{           ^}</blockquote>
 Examining the program, we now find a genuine bug.  The @t{for}
@@ -611,7 +611,7 @@ through
 @t{a[n]}, but array indexing in Java is zero based. 
 We correct the line to read
 <blockquote>@t{       
-for (int i = 0; i < n; i++) {}</blockquote>
+for (int i = 0; i < n; i++) @{}</blockquote>
 
 @node Scene 5: We take no action for a redundant warning., Scene 6: We supply a precondition for Bag.extractMin., Scene 4: We correct a bug in Bag.extractMin., An illustrative example of using ESC/Java2
 @subsection Scene 5: We take no action for a redundant warning.
@@ -656,13 +656,13 @@ the latter course:
 <blockquote>@t{12:    //@ requires
 n >= 1;}
 
-@t{13:    int extractMin() {}</blockquote>
+@t{13:    int extractMin() @{}</blockquote>
 
 @node Scene 7: We run ESC/Java again and it still issues a warn, Scene 8: We supply an invariant pragma relating n to a.le, Scene 6: We supply a precondition for Bag.extractMin., An illustrative example of using ESC/Java2
 @subsection Scene 7: We run ESC/Java again and it still issues a warn
 
 With all the changes described above, our example program now reads:
-<blockquote>@t{ 1:  class Bag {}
+<blockquote>@t{ 1:  class Bag @{}
 
 @t{ 2:    /*@ non_null */
 int[] a;}
@@ -675,7 +675,7 @@ int[] a;}
 != null;}
 
 @t{ 6:    Bag(int[] input)
-{}
+@{}
 
 @t{ 7:      n =
 input.length;}
@@ -686,13 +686,13 @@ new int[n];}
 @t{ 9:      System.arraycopy(input,
 0, a, 0, n);}
 
-@t{10     }}
+@t{10     @}}
 
 @t{11:}
 
 @t{12:    //@ requires n >= 1;}
 
-@t{12:    int extractMin() {}
+@t{12:    int extractMin() @{}
 
 @t{13:      int m =
 Integer.MAX_VALUE;}
@@ -701,10 +701,10 @@ Integer.MAX_VALUE;}
 = 0;}
 
 @t{15:      for (int
-i = 0; i < n; i++) {}
+i = 0; i < n; i++) @{}
 
 @t{16:       
-if (a[i] < m) {}
+if (a[i] < m) @{}
 
 @t{17:         
 mindex = i;}
@@ -713,9 +713,9 @@ mindex = i;}
 m = a[i];}
 
 @t{19:       
-}}
+@}}
 
-@t{20:      }}
+@t{20:      @}}
 
 @t{21:      n--;}
 
@@ -724,13 +724,13 @@ m = a[i];}
 
 @t{23:      return m;}
 
-@t{24:    }}
+@t{24:    @}}
 
-@t{25:  }}</blockquote>
+@t{25:  @}}</blockquote>
 We now run ESC/Java again and it produces the following warning:
 <blockquote>@t{Bag.java:17: Warning: Array index possibly too large (IndexTooBig)}
 
-@t{      if (a[i] < m) {}
+@t{      if (a[i] < m) @{}
 
 @t{           ^}</blockquote>
 
@@ -743,7 +743,7 @@ ESC/Java has no reason to expect that @t{n}, which we intend to be
 the length of the meaningful prefix of @t{a}, will in fact be at most
 @t{a.length}.  
 We can express this intention with an @t{invariant} pragma:
-<blockquote>@t{ 1:  class Bag {}
+<blockquote>@t{ 1:  class Bag @{}
 
 @t{ 2:    /*@ non_null */
 int[] a;}
@@ -1140,7 +1140,7 @@ ESC/Java looks for pragmas within certain specially formatted comments.
 Specifically:
 @itemize
 @item
-When the character @t{@} is the first character after the initial
+When the character @t{@@} is the first character after the initial
 @t{//}
 or @t{/*} of a Java comment, ESC/Java expects the rest of the comment's
 body to consist entirely of a sequence of (zero or more) ESC/Java pragmas.
@@ -1476,7 +1476,7 @@ pragmas:
 @t{    requires c > 0;                
 // comment 3 */}
 
-@t{  void m(int a, int b, int c) { }...@end itemize
+@t{  void m(int a, int b, int c) @{ }...@end itemize
 </blockquote>
 Here are some examples of illegal nesting:
 <blockquote>
@@ -1485,7 +1485,7 @@ Here are some examples of illegal nesting:
 @t{/*@ ghost public /*@ non_null */ Object o; */}
 
 @item
-@t{//@ requires a > 0;  /* multi-line "nested"}
+@t{//@@ requires a > 0;  /* multi-line "nested"}
 
 
 @t{                       
@@ -1517,12 +1517,12 @@ are simply more elaborate forms (see <a href="#2.2.1  Most ESC/Java pragmas are 
 
 @menu
 * nowarn pragma::               
-* @t{assert} pragma::           
+* assert pragma::           
 * assume pragma::               
 * unreachable pragma::          
 @end menu
 
-@node nowarn pragma, @t{assert} pragma, The most basic pragmas, The most basic pragmas
+@node nowarn pragma, assert pragma, The most basic pragmas, The most basic pragmas
 @subsubsection @t{nowarn} pragma
 
 A @t{nowarn} pragma is a lexical pragma.  It has the form:
@@ -1597,8 +1597,8 @@ Since the only lexical pragma in the current ESC/Java is @t{nowarn},
 and since you can say with one @t{nowarn} pragma anything that you
 can say with two, this should not cause problems in practice.
 
-@node @t{assert} pragma, assume pragma, nowarn pragma, The most basic pragmas
-@subsubsection @t{assert} pragma
+@node assert pragma, assume pragma, nowarn pragma, The most basic pragmas
+@subsubsection assert pragma
 
 An @t{assert} pragma is a statement pragma.  It has the form
 <blockquote>@t{assert @emph{E} ;}@emph{<sub>opt</sub>}</blockquote>
@@ -1606,8 +1606,8 @@ where @emph{@t{E}} is boolean specification expression.  The
 pragma causes ESC/Java to issue a warning if it cannot establish that @emph{@t{E}}
 is true whenever control reaches the pragma.
 
-@node assume pragma, unreachable pragma, @t{assert} pragma, The most basic pragmas
-@subsubsection @t{assume} pragma
+@node assume pragma, unreachable pragma, assert pragma, The most basic pragmas
+@subsubsection assume pragma
  
 An @t{assume} pragma is a statement pragma.  It has the form
 <blockquote>@t{assume @emph{E} ;}@emph{<sub>opt</sub>}</blockquote>
@@ -1635,7 +1635,7 @@ end of complicated computation}
 assume i != 0;}
 
 @t{148:       if
-(b) {}
+(b) @{}
 
 @t{149:        
 g = h/i;}
@@ -1646,7 +1646,7 @@ else {}
 @t{151:        
 h = g/i + g/j;}
 
-@t{152:       }}</blockquote>
+@t{152:       @}}</blockquote>
 the @t{assume} pragma at line 147 prevents ESC/Java from warning that
 the division by @t{i} in lines 149 and 151 may give rise to an @t{ArithmeticException},
 but ESC/Java will still generate a warning about the division by @t{j}
@@ -1672,7 +1672,7 @@ examples of its meaning, consider the following code fragment:
 if (u != null | v != null) e = 10;}
 
 @t{32:      if (v ==
-null) {}
+null) @{}
 
 @t{33:       
 w = a.f;}
@@ -1698,7 +1698,7 @@ c = new }...@t{;}
 @t{40:       
 d = v;}
 
-@t{41:      }}
+@t{41:      @}}
 
 @t{42:      y = a.g;}
 
@@ -1714,6 +1714,7 @@ d != null;}
 e > 0;}</blockquote>
 When ESC/Java checks this code:
 <blockquote>
+@itemize
 @item
 ESC/Java will not warn of a possible dereference of @t{null} at line
 36 or of a possible assertion failure at line 37, because the only way
@@ -1741,6 +1742,7 @@ reaches lines 39 and 40 (in which case the @t{c} and @t{d} are assigned
 non-null values, and @t{e} must already have been assigned a nonnegative
 value at line 31).  </blockquote> For a concise formal description of
 the semantics of @t{assume}, @xref{[LSS99], [LSS99]}.
+@end itemize
 
 @node unreachable pragma,  , assume pragma, The most basic pragmas
 @subsubsection @t{unreachable} pragma
@@ -1822,6 +1824,7 @@ of assertions through the use of @t{assert} pragmas and their implicit
 introduction through other ESC/Java pragmas and through built-in checking
 rules:
 <blockquote>
+@itemize
 @item
 Warnings arising from @t{assert} pragmas all produce the same kind
 of warning message:
@@ -1859,6 +1862,7 @@ In short, the various pragmas (and built-in checking rules) provided by
 ESC/Java enable the introduction of collections of assertions and assumptions
 in a manner that would be quite tedious, awkward, and error-prone to accomplish
 with explicit @t{assert} and @t{assume} pragmas alone.
+@end itemize
 
 @node A nowarn pragma suppresses warnings by turning assertions into assumptions, A helpful tip, Most ESC/Java pragmas are just fancy forms of assert and assume, Some remarks concerning assert and assume
 @subsubsection A @t{nowarn} pragma suppresses warnings by turning assertions into assumptions
@@ -1930,10 +1934,10 @@ error even after we fixed the bug in the surrounding @t{for} loop:
 @t{       }...
 
 @t{16:      for (int
-i = 0; i < n; i++) {}
+i = 0; i < n; i++) @{}
 
 @t{17:       
-if (a[i] < m) {}
+if (a[i] < m) @{}
 
 @t{       }...
 
@@ -1941,7 +1945,7 @@ if (a[i] < m) {}
 
 @t{Bag.java:17: Warning: Possible array index too large (IndexTooBig)}
 
-@t{      if (a[i] < m) {}
+@t{      if (a[i] < m) @{}
 
 @t{           ^}
 
@@ -1999,7 +2003,8 @@ and <a href="#2.4.1  invariant pragma">2.4.1</a>, as well as to the description
 of the @t{axiom} pragma in section <a href="#2.4.2  axiom pragma">2.4.2</a>.
 
 All routine modifier pragmas have a number of properties in common:
-@itemizeESC/Java allows modifiers for a routine declaration to appear not only
+@itemize 
+@item ESC/Java allows modifiers for a routine declaration to appear not only
 in the usual place for modifiers near the beginning of the declaration,
 but also just before the opening left brace of the routine's body, or before
 the final semicolon if there is no body (as in an interface, @t{abstract}
@@ -2012,7 +2017,7 @@ for the @t{Bag} constructor in <a href="#0.2  Scene 2:  We write a requires (pre
 input != null;}
 
 @t{       Bag(int[]
-input) {}
+input) @{}
 
 @t{       }...
 
@@ -2022,7 +2027,7 @@ might equally well have been written after the signature of the constructor
 input)}
 
 @t{        
-/*@ requires input != null; */ {}
+/*@ requires input != null; */ @{}
 
 @t{       }...
 
@@ -2328,11 +2333,11 @@ Consider, for example a class with an integer field @t{f} and a
 method @t{incf} declared as follows, with no @t{modifies} pragma:
 <blockquote>@t{//@ ensures f == \old(f) + 1;}
 
-@t{void incf() {}
+@t{void incf() @{}
 
 @t{  this.f++;}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 Since @t{f} is not specified as a modification target of @t{incf},
 ESC/Java will interpret both occurrences of @t{f} in the ensures pragma
 as referring to the post-state value of @t{this.f}.  Consequently
@@ -2371,11 +2376,11 @@ someOtherObject.f; //instead of this.f}
 
 @t{//@ ensures f == \old(f) + 1;}
 
-@t{void incf() {}
+@t{void incf() @{}
 
 @t{  this.f++;}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 can still effectively disable checking
 of code following calls to @t{incf}.
 
@@ -2629,18 +2634,18 @@ pragma in <a href="#0.2  Scene 2:  We write a requires (precondition) pragma for
 //@ requires input != null;}
 
 @t{       Bag(int[]
-input) {}
+input) @{}
 
 @t{       }...
 
-@t{       }}</blockquote>
+@t{       @}}</blockquote>
 we might have written
 <blockquote>@t{      
 Bag(/*@ non_null */ int[] input) }...</blockquote>
 and instead of using a @t{non_null} pragma in <a href="#0.3  Scene 3:  We add a non_null pragma for the field a.">section
 0.3</a>
 <blockquote>@t{     class Bag
-{}
+@{}
 
 @t{       /*@ non_null
 */ int[] a;}
@@ -2648,7 +2653,7 @@ and instead of using a @t{non_null} pragma in <a href="#0.3  Scene 3:  We add a 
 @t{       }...</blockquote>
 we might have written
 <blockquote>@t{     class Bag
-{}
+@{}
 
 @t{       int[]
 a;}
@@ -2881,13 +2886,13 @@ An ``iteration of a loop'' includes the termination test, and also includes
 the update code in a @t{for} loop.  Thus
 <blockquote>@t{//@ loop_invariant @emph{E};}
 
-@t{while (@emph{B}) {}
+@t{while (@emph{B}) @{}
 
 @t{  @emph{S}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 intuitively means
-<blockquote>@t{while (true) {}
+<blockquote>@t{while (true) @{}
 
 @t{  //@ assert @emph{E};    // but giving a LoopInv
 warning}
@@ -2896,20 +2901,20 @@ warning}
 
 @t{  S}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 (however, see the comments below about loop unrolling).  Note that
 the checking of the loop invariant @emph{@t{E}} applies to the state
 before the test of @emph{@t{B}} (and before any side effects in the
 evaluation of @emph{@t{B}}).  Likewise,
 <blockquote>@t{//@ loop_invariant }@emph{E}@t{;}
 
-@t{do {}
+@t{do @{}
 
 @t{  @emph{S}}
 
-@t{} while (B);}</blockquote>
+@t{@} while (B);}</blockquote>
 intuitively means
-<blockquote>@t{while (true) do}
+<blockquote>@t{while (true) @{}
 
 @t{ //@ assert @emph{E};    // but giving a LoopInv
 warning}
@@ -2918,22 +2923,22 @@ warning}
 
 @t{ if (!(@emph{B})) break;}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 and
 <blockquote>@t{//@ loop_invariant @emph{E;}}
 
 @t{@emph{L}: for(@emph{I1}, }...@t{, @emph{Im}; @emph{B};
 @emph{U1,
 }}...@t{@emph{,
-Un}) {}
+Un}) @{}
 
 @t{     @emph{S}}
 
-@t{   }}</blockquote>
+@t{   @}}</blockquote>
 intuitively means
-<blockquote>@t{{ @emph{I1}, }...@t{, @emph{Im};}
+<blockquote>@t{@{ @emph{I1}, }...@t{, @emph{Im};}
 
-@t{  @emph{L}: while (true) {}
+@t{  @emph{L}: while (true) @{}
 
 @t{    //@ assert @emph{E};    // but
 giving a LoopInv warning}
@@ -2944,9 +2949,9 @@ giving a LoopInv warning}
 
 @t{    @emph{U1}, }...@t{, @emph{Un};}
 
-@t{   }}
+@t{   @}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 but with any occurrence within @emph{@t{S}} of
 <blockquote>@t{continue @emph{L};}</blockquote>
 (or simply of @t{continue;} appearing outside of any nested loop and
@@ -2964,16 +2969,16 @@ both initially and after the single loop iteration that the current checker
 considers.  Consequently, the checking performed on
 <blockquote>@t{//@ loop_invariant @emph{E};}
 
-@t{while (@emph{B}) {}
+@t{while (@emph{B}) @{}
 
 @t{  @emph{S}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 is actually the same as would be done for
 <blockquote>@t{//@ assert @emph{E};    // but giving a
 LoopInv warning}
 
-@t{if (@emph{B}) {}
+@t{if (@emph{B}) @{}
 
 @t{  S}
 
@@ -2982,7 +2987,7 @@ LoopInv warning}
 @t{  //@ assume !B; // (don't check later code for case @emph{B}
 == true)}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 (where execution of a @t{continue} in @emph{@t{S}} results in
 normal termination of @emph{@t{S}} and execution of a @t{break}
 in @emph{@t{S}} results in normal termination of the entire code fragment
@@ -3033,7 +3038,7 @@ If we simply declare the routines, but not the fields of@t{ Bag}
 to be @t{public}, ESC/Java will complain:
 <blockquote>@b{ESC/Java input from Bag.java}
 
-@t{ 1:  class Bag {}
+@t{ 1:  class Bag @{}
 
 @t{ 2:    /*@ non_null */
 int[] a;}
@@ -3045,7 +3050,7 @@ int[] a;}
 @t{13:    //@ requires n >= 1;}
 
 @t{14:    public int extractMin()
-{}
+@{}
 
  ...@t{   }@t{ }...</blockquote>
 
@@ -3122,11 +3127,11 @@ If the pragma modifies a local variable declaration then the variables
 declared by the declaration are not in scope in @emph{@t{E}}, even
 if the pragma occurs just before the final semi-colon instead of before
 the type.
-<blockquote>@t{class C {}
+<blockquote>@t{class C @{}
 
 @t{  boolean b;}
 
-@t{  void m() {}
+@t{  void m() @{}
 
 @t{    boolean b /*@ readable_if b */;}
 
@@ -3139,13 +3144,13 @@ the local b}
 
 @t{    }...
 
-@t{  }}
+@t{  @}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 If the pragma modifies a field declaration, then all fields of the containing
 class are in scope in @emph{@t{E}}, even those that are declared in
 textually later declarations.
-<blockquote>@t{class C extends B {}
+<blockquote>@t{class C extends B @{}
 
 @t{  /*@ readable_if b */ int a;}
 
@@ -3155,7 +3160,7 @@ textually later declarations.
 
 @t{  }...
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 If the pragma modifies a field declaration, then the free variables of
 @emph{@t{E}}
 must be spec-accessible wherever fields declared by the declaration are
@@ -3335,7 +3340,7 @@ class, we would use a boolean ghost field @t{empty}, that would be
 precisely for those @t{Bag}'s that contain no elements.  Here's
 how that annotated implementation of @t{Bag} might look like under
 this approach:
-<blockquote>@t{ 1:  class Bag {}
+<blockquote>@t{ 1:  class Bag @{}
 
 @t{ 2:     /*@ non_null
 */ int[] a;}
@@ -3360,7 +3365,7 @@ input != null;}
 this.empty == (input.length == 0);}
 
 @t{10:     public Bag(int[]
-input) {}
+input) @{}
 
 @t{11:       n
 = input.length;}
@@ -3374,7 +3379,7 @@ input) {}
 @t{14:       //@
 set empty = n == 0;}
 
-@t{15:     }}
+@t{15:     @}}
 
 @t{16:}
 
@@ -3382,12 +3387,12 @@ set empty = n == 0;}
 == empty;}
 
 @t{18:     public boolean
-isEmpty() {}
+isEmpty() @{}
 
 @t{19:       return
 n == 0;}
 
-@t{20:     }}
+@t{20:     @}}
 
 @t{21:}
 
@@ -3399,7 +3404,7 @@ n == 0;}
 a[*];}
 
 @t{25:     public int extractMin()
-{}
+@{}
 
 @t{26:       int
 m = Integer.MAX_VALUE;}
@@ -3408,10 +3413,10 @@ m = Integer.MAX_VALUE;}
 mindex = 0;}
 
 @t{28:       for
-(int i = 0; i < n; i++) {}
+(int i = 0; i < n; i++) @{}
 
 @t{29:        
-if (a[i] < m) {}
+if (a[i] < m) @{}
 
 @t{30:          
 mindex = i;}
@@ -3420,9 +3425,9 @@ mindex = i;}
 m = a[i];}
 
 @t{32:        
-}}
+@}}
 
-@t{33:       }}
+@t{33:       @}}
 
 @t{34:       n--;}
 
@@ -3438,9 +3443,9 @@ assert empty == (n == 0);}
 @t{38:       return
 m;}
 
-@t{39:     }}
+@t{39:     @}}
 
-@t{40:   }}</blockquote>
+@t{40:   @}}</blockquote>
 The precondition for @t{extractMin} on line 22 specifies that it is
 incorrect to invoke the @t{extractMin} method of an empty @t{Bag}. 
 The postcondition for @t{isEmpty} on line 17 allows clients (and ESC/Java)
@@ -3464,19 +3469,19 @@ Consider a class that implements queues of @t{Object}'s.
 There is a constructor that creates an empty queue, and there are instance
 methods for enqueueing and dequeueing elements and for testing whether
 a queue is empty:
-<blockquote>@t{public class Queue {}
+<blockquote>@t{public class Queue @{}
 
 @t{  }...
 
-@t{  public class Queue() {}...@t{}}
+@t{  public class Queue() @{}...@t{@}}
 
-@t{  public enqueue(Object e) {}...@t{}}
+@t{  public enqueue(Object e) @{}...@t{@}}
 
-@t{  public boolean isEmpty() {}...@t{}}
+@t{  public boolean isEmpty() @{}...@t{@}}
 
-@t{  public Object dequeue() throws {}...@t{}}
+@t{  public Object dequeue() throws @{}...@t{@}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 In the absence of any annotations, a number of problems come up when checking
 clients of the @t{Queue} class.
 
@@ -3510,7 +3515,7 @@ warnings about potential null dereferences on dequeued objects.
 Here is a @t{.spec} file (see <a href="#5.1.2  Specification (.spec) files">section
 5.1.2</a>) for the @t{Queue} class with annotations addressing the
 issues described above.
-<blockquote>@t{public class Queue {}
+<blockquote>@t{public class Queue @{}
 
 @t{  //@ ghost public int size;}
 
@@ -3558,7 +3563,7 @@ issues described above.
 
 @t{  public Object dequeue();}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 (The specification expression constructs @t{\TYPE}, @t{\type},
 @t{\typeof},
 and @t{<: }are explained in sections <a href="#3.0  Specification types">3.0</a>,
@@ -3650,7 +3655,7 @@ see <a href="#C.0.8  Constructor leaking">section C.0.8</a>.)
 
 All fields of the class containing the pragma are in scope in @emph{@t{E}},
 even those that are declared in textually later declarations.
-<blockquote>@t{class C extends B {}
+<blockquote>@t{class C extends B @{}
 
 @t{  /*@ monitored_by g */ S f;}
 
@@ -3660,7 +3665,7 @@ even those that are declared in textually later declarations.
 
 @t{  }...
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 The variables mentioned in @emph{@t{L}} must be spec-accessible (<a href="#3.3  Scoping, name resolution, and access control in specificat">section
 3.3</a>) anywhere the field itself is accessible [@emph{JLS}, 6.6]. 
 For example, a @t{public} field may not be monitored by a @t{private}
@@ -3743,19 +3748,19 @@ The necessary conditions to establish such locking assertions can be established
 explicitly, for example by a @t{requires} pragma as in
 <blockquote>@t{//@ requires f != null && \lockset[f];}
 
-@t{void m() {}
+@t{void m() @{}
 
 @t{  }...@t{ h }...      @t{//
 read access produces no Race warning}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 Also, a @t{synchronized} routine body and a @t{synchronized}
 statement always begin by adding a lock to the lock set.
-<blockquote>@t{class C {}
+<blockquote>@t{class C @{}
 
 @t{  monitored T t;}
 
-@t{  synchronized void m() {}
+@t{  synchronized void m() @{}
 
 @t{    T x = t; /* no race because starting a synchronized}
 
@@ -3764,21 +3769,21 @@ method establishes \lockset[this] */}
 
 @t{    }...
 
-@t{  }}
+@t{  @}}
 
-@t{  void n() {}
+@t{  void n() @{}
 
-@t{    synchronized (this) {}
+@t{    synchronized (this) @{}
 
 @t{      T x = t;  // no race}
 
 @t{      }...
 
-@t{    }}
+@t{    @}}
 
-@t{  }}
+@t{  @}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 The preceding examples deal only with race detection.  We now turn
 to the issue of deadlock detection.
 
@@ -3798,7 +3803,7 @@ statements and @t{synchronized} methods and issues warnings if they
 might acquire locks out of order.
 
 A @t{synchronized} statement
-<blockquote>@t{synchronized (E) {}...@t{}}</blockquote>
+<blockquote>@t{synchronized (E) @{}...@t{@}}</blockquote>
 is treated roughly like
 <blockquote>@t{Object e = E; // where e is a variable name not already
 used}
@@ -3812,7 +3817,7 @@ Deadlock warning}
 
 @t{try}
 
-@t{  {}...@t{}}
+@t{  @{}...@t{@}}
 
 @t{finally}
 
@@ -3838,7 +3843,7 @@ needs some way of knowing that the first lock precedes the second in the
 lock order.  One way to give ESC the needed information is by supplying
 an @t{axiom} pragma (see <a href="#2.4.2  axiom pragma">section 2.4.2</a>)
 about the lock order, as in the following example:
-<blockquote>@t{public class Tree {}
+<blockquote>@t{public class Tree @{}
 
 @t{  public /*@ monitored */ Tree left, right;}
 
@@ -3848,15 +3853,15 @@ about the lock order, as in the following example:
 
 @t{  //@ axiom (\forall Tree t; t.right != null ==> t < t.right);}
 
-@t{  Tree(/*@ non_null */ Thing c) {}
+@t{  Tree(/*@ non_null */ Thing c) @{}
 
 @t{    contents = c;}
 
-@t{  }}
+@t{  @}}
 
 @t{  //@ requires \max(\lockset) <= this;}
 
-@t{  public synchronized void visit() {}
+@t{  public synchronized void visit() @{}
 
 @t{     contents.mungle();}
 
@@ -3864,9 +3869,9 @@ about the lock order, as in the following example:
 
 @t{     if (right != null) right.visit();}
 
-@t{  }}
+@t{  @}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 @b{Fine points}
 
 Note that the axioms above are inconsistent if a (so-called) @t{Tree}
@@ -3879,7 +3884,7 @@ given the axioms above, ESC/Java will generate a spurious
 warning for the following method:
 <blockquote>@t{  //@ requires \max(\lockset) <= this;}
 
-@t{  public synchronized void wiggleWoggle() {}
+@t{  public synchronized void wiggleWoggle() @{}
 
 @t{    // Perform a rotation on this.right (but give
 up and just}
@@ -3912,17 +3917,17 @@ w   y}
 
 @t{    //}
 
-@t{    { Tree x = this.right;}
+@t{    @{ Tree x = this.right;}
 
 @t{      if (x == null) return;}
 
-@t{      synchronized (x) {}
+@t{      synchronized (x) @{}
 
 @t{        Tree v = x.left;}
 
 @t{        if (v == null) return;}
 
-@t{        synchronized (v) {}
+@t{        synchronized (v) @{}
 
 @t{          x.left =
 v.right;}
@@ -3933,27 +3938,27 @@ v.right;}
 @t{          this.right
 = v;}
 
-@t{        }                      
+@t{        @}                      
 // line (a)}
 
-@t{      }}
+@t{      @}}
 
-@t{    }}
+@t{    @}}
 
 @t{    // Undo the rotation:}
 
-@t{    { Tree v = this.right;}
+@t{    @{ Tree v = this.right;}
 
-@t{      synchronized (v) {           
+@t{      synchronized (v) @{           
 // line (b)}
 
 @t{        Tree x = v.right;}
 
-@t{        if (x != null) {           
+@t{        if (x != null) @{           
 // line (c)}
 
 @t{          synchronized
-(x) {        // line (d)}
+(x) @{        // line (d)}
 
 @t{           
 v.right = x.left;}
@@ -3964,16 +3969,16 @@ x.left = v;}
 @t{           
 this.right = x;}
 
-@t{          }}
+@t{          @}}
 
-@t{        }                          
+@t{        @}                          
 // line (e)}
 
-@t{      }}
+@t{      @}}
 
-@t{    }}
+@t{    @}}
 
-@t{  }}</blockquote>
+@t{  @}}</blockquote>
 The problem is that the axiom is assumed to apply at the start of the routine,
 and thus to apply to the values of @t{.left} and @t{.right} at
 the start of the routine.  According to the lock order thus defined,
@@ -4142,16 +4147,16 @@ and
 @subsubsection Examples involving @t{\TYPE}, @t{\type}, @t{\typeof}, @t{\elemtype}, and @t{<:}
 
 Suppose file @t{T.java} contains the following declaration
-<blockquote>@t{class T {}
+<blockquote>@t{class T @{}
 
 @t{  //@ requires a != null && 0 <= i & i <
 a.length;}
 
-@t{  static void storeObject(T[] a, int i, T x) {}
+@t{  static void storeObject(T[] a, int i, T x) @{}
 
 @t{    a[i] = x;}
 
-@t{  }}
+@t{  @}}
 
 @t{  }...</blockquote>
 When checking the body of the @t{storeObject }method, ESC/Java will
@@ -4377,7 +4382,7 @@ the introduction of a special notation.
 @b{Example}
 
 Consider the @t{main} method of a program:
-<blockquote>@t{static public void main (String[] args) {}...@t{}}</blockquote>
+<blockquote>@t{static public void main (String[] args) @{}...@t{@}}</blockquote>
 The usual way for @t{main} to be invoked is with the value of @t{args
 }derived
 from the command line by the Java interpreter, in which case
@@ -4391,7 +4396,7 @@ be either @t{null} or an array containing
 It is often helpful to annotate @t{main} as follows:
 <blockquote>@t{//@ requires \nonnullelements(args);}
 
-@t{static public void main (String[] args) {}...@t{}}</blockquote>
+@t{static public void main (String[] args) @{}...@t{@}}</blockquote>
 Given this annotation, (1) ESC/Java will assume, when checking the body
 of @t{main}, that @t{args} and all its elements are non-null,
 and (2)  ESC/Java will check that any explicit calls to @t{main}
@@ -4479,7 +4484,7 @@ of @t{\old}.
 
 The following (correctly annotated) code example illustrates the semantics
 of @t{\old}.
-<blockquote>@t{class C {}
+<blockquote>@t{class C @{}
 
 @t{  static C x, oldx, y;}
 
@@ -4513,7 +4518,7 @@ i;}
 
 @t{  //@ ensures \old(a)[\old(i)] == \old(a[i]) + 1;}
 
-@t{  static void m() {}
+@t{  static void m() @{}
 
 @t{    oldx = x;}
 
@@ -4533,9 +4538,9 @@ i;}
 
 @t{    i++;}
 
-@t{  }}
+@t{  @}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 Note the distinctions between @t{\old(x.f)} and @t{\old(x).f}
 and between @t{\old(a)[\old(i)]} and @t{\old(a[i])}.  Note
 also that while ESC/Java does not allow the notation @t{x.\old(f)}
@@ -4577,26 +4582,26 @@ are beyond the scope of this manual and are subject to change.
 @b{Example}
 
 Suppose file @t{C.java} contains the following code:
-<blockquote>@t{class C {}
+<blockquote>@t{class C @{}
 
 @t{  //@ requires (\lblpos fee i < 5) || (\lblpos fie i > 10);}
 
 @t{  //@ ensures (\lblneg foe \result != 5) && (\lblneg
 fum \result > 0);}
 
-@t{  int m(int i) {}
+@t{  int m(int i) @{}
 
 @t{      return i+1;}
 
-@t{  }}
+@t{  @}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 Then output from the command @t{escjava C.java} includes the following
 warning:
 <blockquote>@t{C.java:7: Warning: Postcondition possibly not established
 (Post)}
 
-@t{  }}
+@t{  @}}
 
 @t{  ^}
 
@@ -4636,7 +4641,7 @@ expressions are allowed (see <a href="#3.2.10  \forall">section 3.2.10</a>).
 @b{Limitation:}  There are many situations in which labels are
 ambiguous.  For example, suppose file @t{D.java} contains the
 code:
-<blockquote>@t{class D {}
+<blockquote>@t{class D @{}
 
 @t{  int a, b;}
 
@@ -4645,20 +4650,20 @@ bar a < 0 & b <0);}
 
 @t{  //@ requires x != null && y != null;}
 
-@t{  D(D x, D y) {}
+@t{  D(D x, D y) @{}
 
 @t{    a = x.a;}
 
 @t{    b = y.b;}
 
-@t{  }}
+@t{  @}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 Then the command @t{escjava D.java} yields the warning:
 <blockquote>@t{D.java:10: Warning: Possible violation of object invariant
 (Invariant)}
 
-@t{  }}
+@t{  @}}
 
 @t{  ^}
 
@@ -4727,7 +4732,7 @@ Consider the following class, whose instances represent stacks of objects
 a stack):
 <blockquote>@b{Input from file ObjStack.java:}
 
-@t{  1:  class ObjStack {}
+@t{  1:  class ObjStack @{}
 
 @t{  2:    /*@ non_null */
 Object [] a;}
@@ -4746,7 +4751,7 @@ invariant 0 <= n & n <= 10;}
 
 @t{  7:}
 
-@t{  8:    ObjStack() {}
+@t{  8:    ObjStack() @{}
 
 @t{  9:      n
 = 0;}
@@ -4754,7 +4759,7 @@ invariant 0 <= n & n <= 10;}
 @t{ 10:      a
 = new Object[10];}
 
-@t{ 11:    }}
+@t{ 11:    @}}
 
 @t{ 12:}
 
@@ -4762,19 +4767,19 @@ invariant 0 <= n & n <= 10;}
 < 10;}
 
 @t{ 14:    void Push(Object
-o) {}
+o) @{}
 
 @t{ 15:      a[n++]
 = o;}
 
-@t{ 16:    }}
+@t{ 16:    @}}
 
 @t{ 17:}
 
 @t{ 18:    //@ requires n
 > 0;}
 
-@t{ 19:    Object Pop() {}
+@t{ 19:    Object Pop() @{}
 
 @t{ 20:      Object
 o = a[--n];}
@@ -4785,11 +4790,11 @@ o = a[--n];}
 @t{ 22:      return
 o;}
 
-@t{ 23:    }}
+@t{ 23:    @}}
 
 @t{ 24:}
 
-@t{ 25:  }}</blockquote>
+@t{ 25:  @}}</blockquote>
 The elements of a stack @t{x} are the first @t{x.n} elements
 of the array @t{x.a}.  To avoid retaining pointers to garbage,
 we insure that the  remaining elements of @t{x.a} are @t{null},
@@ -4801,7 +4806,7 @@ If we run ESC/Java on the source above, it produces the following complaint:
 @t{ObjStack.java:16: Warning: Possible violation of object invariant
 (Invariant)}
 
-@t{  }}
+@t{  @}}
 
 @t{  ^}
 
@@ -4881,7 +4886,7 @@ both hold.)  Having added this invariant, the user must also supply
 a @t{set} pragma in order to guarantee that the constructor for @t{ObjStack}
 establishes the invariant:
 <blockquote>@t{ 9:    ObjStack()
-{}
+@{}
 
 @t{10:      n = 0;}
 
@@ -4891,7 +4896,7 @@ Object[10];}
 @t{12:      //@ set
 a.owner = this;}
 
-@t{13:    }}</blockquote>
+@t{13:    @}}</blockquote>
 Without the @t{set} pragma, ESC/Java will generate a warning that
 the constructor fails to establish the invariant @t{a.owner == this}.
 
@@ -5032,7 +5037,7 @@ is accessible.  Ghost variables, on the other hand, hide neither Java
 variables nor other ghost variables.  For example, given the declarations
 <blockquote>@b{Input form file I.java:}
 
-@t{interface I {}
+@t{interface I @{}
 
 @t{  //@ ghost public int i;}
 
@@ -5040,11 +5045,11 @@ variables nor other ghost variables.  For example, given the declarations
 
 @t{  }@emph{...}
 
-@t{}}
+@t{@}}
 
 @b{Input from file C.java:}
 
-@t{class C {}
+@t{class C @{}
 
 @t{ private int i;}
 
@@ -5052,11 +5057,11 @@ variables nor other ghost variables.  For example, given the declarations
 
 @t{ }...
 
-@t{}}
+@t{@}}
 
 @b{Input from file D.java:}
 
-@t{class D extends C implements I {}...@t{}}</blockquote>
+@t{class D extends C implements I @{}...@t{@}}</blockquote>
 a reference to @t{i} in a pragma in @t{D.java} would resolve
 to the real field of @t{C} rather than the ghost field of @t{I}
 (and would then generate an error because that field is not accessible
@@ -5203,7 +5208,7 @@ are relevant to the scenario being warned about.  (See <a href="#3.2.16  \lblneg
 @b{Example}
 
 Suppose the file @t{C.java} contains the following class declaration.
-<blockquote>@t{ 1:  class C {}
+<blockquote>@t{ 1:  class C @{}
 
 @t{ 2:}
 
@@ -5222,30 +5227,30 @@ Suppose the file @t{C.java} contains the following class declaration.
 @t{ 8:}
 
 @t{ 9:    void m (int[] p,
-int[] q) {}
+int[] q) @{}
 
 @t{10:      i = 10;}
 
 @t{11:      int[] t;}
 
 @t{12:      if (p !=
-null) {}
+null) @{}
 
 @t{13:       
 t = p;}
 
-@t{14:      } else {}
+@t{14:      @} else @{}
 
 @t{15:       
 t = q;}
 
-@t{16:      }}
+@t{16:      @}}
 
 @t{17:      x = t;}
 
-@t{18:    }}
+@t{18:    @}}
 
-@t{19:  }}</blockquote>
+@t{19:  @}}</blockquote>
 Then the output from the command
 <blockquote>@t{escjava C.java}</blockquote>
 includes one warning message.
@@ -5255,7 +5260,7 @@ might not hold when control reaches the end of the method @t{m}:
 <blockquote>@t{CC.java:18: Warning: Possible violation of object invariant
 (Invariant)}
 
-@t{  }}
+@t{  @}}
 
 @t{  ^}</blockquote>
 The next part of the warning message gives the associated pragma, an @t{invariant}
@@ -5500,9 +5505,9 @@ if a and b are}
 
 @t{    throws NullPointerException, IndexOutOfBoundsException}
 
-@t{  { }...
+@t{  @{ }...
 
-@t{  }}</blockquote>
+@t{  @}}</blockquote>
 and that it is your intention never to supply arguments that give rise
 to exceptions (and therefore not to bother with code to detect and handle
 the exceptions at runtime).  In this case, you might get some useful
@@ -5616,7 +5621,7 @@ The warning might be something like:
 <blockquote>@t{ObjStack.java:12: Warning: Possible violation of object
 invariant (Invariant)}
 
-@t{  }}
+@t{  @}}
 
 @t{  ^}
 
@@ -5858,7 +5863,7 @@ warning and suggestion:
 <blockquote>@t{ObjStack.java:16: Warning: Possible violation of object
 invariant (Invariant)}
 
-@t{  }}
+@t{  @}}
 
 @t{  ^}
 
@@ -5885,7 +5890,7 @@ this.a.owner == this;' in class ObjStack (near associated declaration at
 ESC/Java does not supply suggestions for all warnings, and the suggestions
 that it does supply are heuristically chosen and may be incorrect. 
 For example, if the contents of file @t{C.java} are
-<blockquote>@t{ 1:  class C {}
+<blockquote>@t{ 1:  class C @{}
 
 @t{ 2:}
 
@@ -5894,25 +5899,25 @@ For example, if the contents of file @t{C.java} are
 @t{ 4:}
 
 @t{ 5:    static int m(C
-a, C b) {}
+a, C b) @{}
 
 @t{ 6:      if
-(a != null) {}
+(a != null) @{}
 
 @t{ 7:       
 return a.n;}
 
-@t{ 8:      } else
-{}
+@t{ 8:      @} else
+@{}
 
 @t{ 9:       
 return b.n;}
 
-@t{10:      }}
+@t{10:      @}}
 
-@t{11:    }}
+@t{11:    @}}
 
-@t{12:  }}</blockquote>
+@t{12:  @}}</blockquote>
 then the command @t{escjava -suggest C.java} will give a warning about
 and possible null dereference on line 9, accompanied by the suggestion:
 <blockquote>@t{Suggestion [9,14]: perhaps declare parameter 'b' at 5,22
@@ -5979,7 +5984,7 @@ the following when reading a source file in spec-only mode:
 <blockquote>a semicolon  @t{;}  (as in the Java syntax for
 an @t{abstract} method declaration).
 
-an empty body  @t{{ }}  (note that no @t{return}
+an empty body  @t{@{ @}}  (note that no @t{return}
 statement is required, even for a non-@t{void} method).
 
 a method body consisting of legal Java code legally annotated by ESC/Java
@@ -6242,7 +6247,7 @@ While ESC/Java2 accepts all of the language constructs described in
 differs in numerous small details---including, but not limited to, those
 mentioned in Appendix C (@pxref{Appendix C: Sources of unsoundness and
 incompleteness}) and other parts of this manual---from the semantics
-specified in @ref{[JLS2]}}.
+specified in @ref{[JLS2]}.
 
 Likewise, the annotations in the @file{.spec} files available in the
 ESC/Java2 release may fail for various reasons to capture the semantics
@@ -6330,7 +6335,7 @@ option, the output would include something like:
 
 ...
 
-@t{    ((y:7.11).(a@pre:3.6) < 0)}
+@t{    ((y:7.11).(a@@pre:3.6) < 0)}
 
 @t{    (0 <= (x:7.6).(b:3.9))}
 
@@ -6343,7 +6348,7 @@ from which one can infer that ESC/Java happens to be reporting the former
 case.  As you may also infer from the excerpt above, the @t{-counterexample}
 option is intended mainly for expert users; to give further details about
 deciphering counterexample contexts (for example, the meanings of the inflections
-@t{@pre:3.6}
+@t{@@pre:3.6}
 and @t{:3.6<1>} on the field name @t{a}) is beyond the scope
 of this manual.
 
@@ -6397,7 +6402,7 @@ C.0.10.</a>)
 If you have a question, comment, or bug report concerning ESC/Java or this
 manual, you should start by checking the FAQ on the ESC/Java web site. 
 If the FAQ does not address the issue adequately, you can email the ESC/Java
-group at @t{<escjava@research.compaq.com>}.  You can also
+group at @t{<escjava@@research.compaq.com>}.  You can also
 use this address to let us know if you have produced @t{.spec} files
 for additional JDK library files and would like to share them.  (@b{Note:
 }Restrictions
@@ -6461,6 +6466,7 @@ trusts them. If the assumptions are invalid, the checking can miss errors.
 Besides the possibility of an @t{assume}, @t{axiom}, or @t{nowarn}
 pragma being outright ``wrong,'' there are the following subtleties:
 <blockquote>
+@itemize
 @item
 As mentioned in the description of the @t{axiom} pragma (<a href="#2.4.2  axiom pragma">section
 2.4.2</a>) and illustrated in an example in <a href="#2.7.2  Examples illustrating race and deadlock checking">section
@@ -6480,6 +6486,7 @@ any errors that might occur in the handler, or dynamically after execution
 of the handler.
 </blockquote>
 
+@end itemize
 
 @node Loops, Object invariants, Trusting pragmas, Known sources of unsoundness
 @subsubsection Loops
@@ -6498,11 +6505,11 @@ specifies the number of loop iterations ESC/Java should consider.
 Suppose, for example, that the program being checked includes the fragment
 <blockquote>@t{//@ loop_invariant @emph{E};}
 
-@t{while (@emph{B}) {}
+@t{while (@emph{B}) @{}
 
 @t{  @emph{S}}
 
-@t{}}</blockquote>
+@t{@}}</blockquote>
 If you run ESC/Java with the
 @t{-loop
 @emph{n}} (or, equivalently,
@@ -6837,31 +6844,31 @@ in the interim.
 There is an unsoundness in ESC/Java's checking that constructors assign
 non-null values to fields declared @t{non_null}.  Consider the
 following program:
-<blockquote>@t{ 1:  class C {}
+<blockquote>@t{ 1:  class C @{}
 
 @t{ 2:   /*@ non_null */ Object
 f;}
 
 @t{ 3:}
 
-@t{ 4:    C() {}
+@t{ 4:    C() @{}
 
 @t{ 5:      
 m();}
 
-@t{ 6:    }}
+@t{ 6:    @}}
 
 @t{ 7:}
 
 @t{ 8:   //@ modifies this.f;}
 
-@t{ 9:    void m() {}
+@t{ 9:    void m() @{}
 
 @t{       }...
 
-@t{       }}
+@t{       @}}
 
-@t{     }}</blockquote>
+@t{     @}}</blockquote>
 When checking the implementation of the constructor for @t{C}, ESC/Java
 will assume (based solely on the pragmas on lines 2 and 8) that the method
 @t{m}
