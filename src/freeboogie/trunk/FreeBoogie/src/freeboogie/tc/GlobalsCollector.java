@@ -172,7 +172,7 @@ public class GlobalsCollector extends Transformer {
   }
 
   @Override
-  public void see(VariableDecl variableDecl, String name, Type type, Declaration tail) {
+  public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     addVarDef(name, variableDecl);
     if (tail != null) tail.eval(this);
   }

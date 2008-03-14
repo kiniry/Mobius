@@ -2,16 +2,21 @@
 // the AST. See also the template (*.tpl) files.
 
 // The program is a (functional) list of (global) declarations
-Declaration :> TypeDecl, ConstDecl, Function, Axiom, 
-               VariableDecl, Procedure, Implementation;
+Declaration :> TypeDecl, ConstDecl, Axiom,
+               Function, VariableDecl, Procedure, Implementation;
 
 TypeDecl =     String! name, Declaration tail;
 ConstDecl=     String! id, Type! type, Declaration tail;
-Function =     Signature! sig, Declaration tail;
 Axiom =        Expr! expr, Declaration tail;
-VariableDecl = String name, Type! type, Declaration tail;
-Procedure =    Signature! sig, Specification spec, Declaration tail;
-Implementation = Signature! sig, Body! body, Declaration tail;
+
+// These are declarations that may have foralltypes on them
+Function =     Signature! sig, Declaration tail;
+VariableDecl = String name, Type! type, 
+               Identifiers typeVars, Declaration tail;
+Procedure =    Signature! sig, Specification spec, 
+               Declaration tail;
+Implementation = Signature! sig, Body! body, 
+               Declaration tail;
 
 
 // Types and constants
@@ -30,7 +35,8 @@ TupleType = Type! type, TupleType tail;
   
 
 // Signatures are used to represent uninterpreted functions
-Signature = String! name, Declaration args, Declaration results;
+Signature = String! name, Declaration args, Declaration results,
+            Identifiers typeVars;
 
 // Procedures and implementations
 Specification = enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,

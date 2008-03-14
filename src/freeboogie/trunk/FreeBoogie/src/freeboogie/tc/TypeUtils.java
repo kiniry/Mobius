@@ -64,7 +64,12 @@ public class TypeUtils {
   private static Declaration stripDep(Declaration a) {
     if (!(a instanceof VariableDecl)) return a;
     VariableDecl va = (VariableDecl)a;
-    return VariableDecl.mk(va.getName(), stripDep(va.getType()), stripDep(va.getTail()), va.loc());
+    return VariableDecl.mk(
+        va.getName(), 
+        stripDep(va.getType()),
+        va.getTypeVars(),
+        stripDep(va.getTail()), 
+        va.loc());
   }
 
   /**
@@ -74,7 +79,12 @@ public class TypeUtils {
    * @return the signature {@code s} without dependent types
    */
   public static Signature stripDep(Signature s) {
-    return Signature.mk(s.getName(), stripDep(s.getArgs()), stripDep(s.getResults()), s.loc());
+    return Signature.mk(
+        s.getName(),
+        stripDep(s.getArgs()), 
+        stripDep(s.getResults()),
+        s.getTypeVars(),
+        s.loc());
   }
   
   /**

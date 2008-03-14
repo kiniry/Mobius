@@ -362,9 +362,14 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Signature signature, String name, Declaration args, Declaration results) {
+  public void see(Signature signature, String name, Declaration args, Declaration results, Identifiers typeVars) {
     ++skipVar;
     say(name);
+    if (typeVars != null) {
+      say("<");
+      typeVars.eval(this);
+      say(">");
+    }
     say("(");
     if (args != null) args.eval(this);
     say(")");
@@ -414,10 +419,15 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(VariableDecl variableDecl, String name, Type type, Declaration tail) {
+  public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     if (skipVar==0) say("var ");
     if (name != null) {
       say(name);
+      if (typeVars != null) {
+        say("<");
+        typeVars.eval(this);
+        say(">");
+      }
       say(" : ");
     }
     type.eval(this);

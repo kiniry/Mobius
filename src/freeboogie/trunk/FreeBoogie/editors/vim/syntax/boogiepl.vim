@@ -25,6 +25,7 @@ syn match boogieplComment /\/\/.*/ contains=boogieplAttention
 syn match boogieplLabel /^\s*[a-zA-Z0-9_]\+\s*:\s*$/ 
 
 syn region boogieplBlock start=/{/ end=/}/ contains=ALL
+syn region boogieplBlockComment start=/\/\*/ end=/\*\// contains=boogieplAttention
 
 hi def link boogieplDeclaration Type
 hi def link boogieplSpecification Keyword
@@ -36,5 +37,6 @@ hi def link boogieplType Type
 hi def link boogieplFlow Keyword
 hi def link boogieplAttention Todo
 hi def link boogieplComment Comment
+hi def link boogieplBlockComment Comment
 hi def link boogieplLabel Identifier
 

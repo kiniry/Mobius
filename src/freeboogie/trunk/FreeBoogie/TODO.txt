@@ -2,7 +2,9 @@
 24 VC generation implementation
  6 simple interface to parse from strings
 
-
+ . update symbol table
+ . add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
+ . update type checker for sane type variables
  . Make flowgraphs of commands (rather than blocks)
  . Rebuild AST out of a flow graph of AssertAssumeCmd
  . Transform BoogiePL expressions into SmtTerms (SmtTermBuilder)

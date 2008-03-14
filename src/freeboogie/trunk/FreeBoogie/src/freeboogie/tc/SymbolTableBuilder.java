@@ -119,8 +119,9 @@ public class SymbolTableBuilder extends Transformer {
 
   // === collect info from local scopes ===
   @Override
-  public void see(VariableDecl variableDecl, String name, Type type, Declaration tail) {
+  public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     HashMap<String, VariableDecl> scope = localScopes.peekFirst();
+    assert typeVars == null; // TODO: treat type variables
     if (scope != null && name != null) {
       // we are in a local scope
       VariableDecl old = scope.get(name);

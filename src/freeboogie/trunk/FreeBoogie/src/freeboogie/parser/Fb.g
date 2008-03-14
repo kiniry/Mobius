@@ -37,8 +37,8 @@ declarations returns [Declaration v]:
                                                 { $v=null; }
   | 'type' d=type_decl_tail                     { $v=$d.v; }
   | 'const' d=const_decl_tail                   { $v=$d.v; }
-  | 'function' d=function_decl_tail             { $v=$d.v; }
   | 'axiom' d=axiom_tail                        { $v=$d.v; }
+  | 'function' d=function_decl_tail             { $v=$d.v; }
   | 'var' d=global_decl_tail                    { $v=$d.v; }
   | 'procedure' d=procedure_decl_tail           { $v=$d.v; }
   | 'implementation' d=implementation_decl_tail { $v=$d.v; }
@@ -66,9 +66,9 @@ axiom_tail returns [Declaration v]:
 ;
 
 global_decl_tail returns [Declaration v]:
-    ID ':' type (
-    (';' t1=declarations     { if(ok) $v=VariableDecl.mk($ID.text,$type.v,$t1.v,tokLoc($ID)); })
-  | (',' t2=global_decl_tail { if(ok) $v=VariableDecl.mk($ID.text,$type.v,$t2.v,tokLoc($ID)); }))
+    ID ('<' tv=id_list '>')? ':' type (
+    (';' t1=declarations     { if(ok) $v=VariableDecl.mk($ID.text,$type.v,$tv.v,$t1.v,tokLoc($ID)); })
+  | (',' t2=global_decl_tail { if(ok) $v=VariableDecl.mk($ID.text,$type.v,$tv.v,$t2.v,tokLoc($ID)); }))
 ;
 
 procedure_decl_tail returns [Declaration v]:
@@ -87,8 +87,9 @@ implementation_decl_tail returns [Declaration v]:
 ;
 
 signature returns [Signature v]:
-  ID '(' (a=opt_id_type_list)? ')' ('returns' '(' (b=opt_id_type_list)? ')')?
-    { if(ok) $v = Signature.mk($ID.text,$a.v,$b.v,tokLoc($ID)); }
+  ID ('<' tv=id_list '>')? '(' (a=opt_id_type_list)? ')' 
+  ('returns' '(' (b=opt_id_type_list)? ')')?
+    { if(ok) $v = Signature.mk($ID.text,$a.v,$b.v,$tv.v,tokLoc($ID)); }
 ;
 
 spec_list returns [Specification v]:
@@ -281,18 +282,18 @@ id_list	returns [Identifiers v]:
 
 opt_id_type_list returns [Declaration v]:
   (hi=ID ':')? ht=type (',' t=opt_id_type_list)? 
-    { if(ok) $v = VariableDecl.mk(($hi==null)?null:$hi.text, $ht.v, $t.v,astLoc($ht.v)); }
+    { if(ok) $v = VariableDecl.mk(($hi==null)?null:$hi.text, $ht.v, null,$t.v,astLoc($ht.v)); }
 ;
 
 id_type_list returns [Declaration v]:
   hi=ID ':' ht=type (',' t=id_type_list)? 
-    { if(ok) $v = VariableDecl.mk($hi.text, $ht.v, $t.v,tokLoc($ID)); }
+    { if(ok) $v = VariableDecl.mk($hi.text, $ht.v,null,$t.v,tokLoc($ID)); }
 ;
 
 var_id_type_list returns [Declaration v]:
     ';' { $v = null; }
-  | hi=ID ':' ht=type (','|';' 'var')? t=var_id_type_list
-      { if(ok) $v = VariableDecl.mk($hi.text, $ht.v, $t.v,tokLoc($ID)); }
+  | hi=ID ('<' tv=id_list '>')? ':' ht=type (','|';' 'var')? t=var_id_type_list
+      { if(ok) $v = VariableDecl.mk($hi.text, $ht.v,$tv.v,$t.v,tokLoc($ID)); }
 ;
 
 command_list returns [Commands v]:
