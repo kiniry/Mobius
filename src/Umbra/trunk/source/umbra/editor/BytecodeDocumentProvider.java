@@ -9,6 +9,7 @@
 package umbra.editor;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.runtime.CoreException;
@@ -124,6 +125,15 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
   }
 
   public void changedByHand(IFileEditorInput fileEditorInput) {
-    
+    BytecodeDocument doc = (BytecodeDocument)getDocument(fileEditorInput);
+    String content = doc.get();
+    doc.getBmlp().setCodeString(content);
+    InputStream source = new ByteArrayInputStream(content.getBytes());
+    try {
+      fileEditorInput.getFile().setContents(source, true, false, getProgressMonitor());
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }

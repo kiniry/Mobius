@@ -217,8 +217,9 @@ public class BytecodeDocument extends Document {
    */
   public void init() {
     try {
-      String str = my_bcc.init(this, my_comment_array, my_interline);
+      final String str = my_bcc.init(this, my_comment_array, my_interline);
       replace(0, this.getLength(), str);
+      my_bmlp.setCodeString(str);
     } catch (UmbraLocationException e) {
       MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
                                     "The current document has no positions" +
@@ -230,8 +231,8 @@ public class BytecodeDocument extends Document {
                                     " methods (" +
                                     e.getWrongMethodNumber() + ")");
     } catch (BadLocationException e) {
-       //TODO Auto-generated catch block
-       e.printStackTrace();
+      //TODO Auto-generated catch block
+      e.printStackTrace();
     }
     //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
     my_bcc.checkAllLines(0, getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);

@@ -320,7 +320,7 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    * @param a_string the string to insert
    */
   protected void insertAt(final int a_pos, final String a_string) {
-    if (a_pos == my_combined_text.length())
+    if (a_pos >= my_combined_text.length())
       my_combined_text.append(a_string);
     else
       my_combined_text.insert(a_pos, a_string);
@@ -331,7 +331,8 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    * Returns the position of the first character in the line of the given
    * number.
    *
-   * @param a_lineno the number of the line to find the position for
+   * @param a_lineno the number of the line to find the position for (the
+   *   numbers start with 0)
    * @return the position of the first character in the line
    */
   protected final int getPosOfLine(final int a_lineno) {
@@ -342,7 +343,7 @@ public class BytecodeCommentParser extends BytecodeTextParser {
         return -1;
       }
     }
-    return start;
+    return start + 1;
   }
 
   /**

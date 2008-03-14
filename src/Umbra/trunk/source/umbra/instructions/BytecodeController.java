@@ -67,8 +67,13 @@ public final class BytecodeController extends BytecodeControllerContainer {
     for (int i = a_pos; i >= 0; i--) {
       final BytecodeLineController blc = getLineController(i);
       if (blc instanceof HeaderLineController) {
-        ctxt.setClassToBeRead();
-        ctxt.setMethodNo(blc.getMethodNo());
+        final int mno = blc.getMethodNo();
+        if (mno >= 0) {
+          ctxt.setInsideMethod();
+          ctxt.setMethodNo(blc.getMethodNo());
+        } else {
+          ctxt.setInvariantArea();
+        }
         break;
       }
       if (blc instanceof AnnotationLineController) {
@@ -114,7 +119,13 @@ public final class BytecodeController extends BytecodeControllerContainer {
                             // after that I must know all the instructions are
                             //correct
     final LineContext ctxtold = establishCurrentContext(a_start_rem);
-    if (!ctxtold.isInsideAnnotation()) {
+    if (ctxtold.isInInvariantArea()) {
+      
+    }
+    if (ctxtold.isInsideAnnotation()) {
+      
+    }
+    if (ctxtold.isInsideMethod()) {
       final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
       markModified(methodno);
       mg.removeLineNumbers();
@@ -258,7 +269,8 @@ public final class BytecodeController extends BytecodeControllerContainer {
    * which should be added is located at the index {@code an_index}. The method
    * generation object {@link MethodGen} which is responsible for handling
    * the edition operations on the byte code file is located in
-   * {@code a_methgen}.
+   * {@code a_methgen}. The lines may be added outside of any method. This
+   * situation holds when <code>a_methgen</code> parameter is <code>null</code>.
    *
    * @param a_start the first line in the document to be added
    * @param a_stop the last line in the document to be added
@@ -275,11 +287,15 @@ public final class BytecodeController extends BytecodeControllerContainer {
                               final int an_index,
                               final MethodGen a_methgen) {
     int j = an_index;
-    int pos = getCurrentPositionInMethod(a_start);
+    int pos = 0;
+    if (a_methgen != null) {
+      pos = getCurrentPositionInMethod(a_start);
+    }
     for (int i = a_start; i <= a_stop; i++, j++, pos++) {
       try {
         final InstructionLineController newlc =
           (InstructionLineController)the_lines.get(j);
+        if (a_methgen == null) throw new ClassCastException();
         newlc.makeHandleForPosition(a_methgen, pos);
         insertEditorLine(i, newlc);
       } catch (ClassCastException e) { //we crossed the method boundary

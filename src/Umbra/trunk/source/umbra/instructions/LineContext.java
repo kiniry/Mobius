@@ -54,10 +54,22 @@ public class LineContext {
   private static final int STATE_INSIDE_COMMENT = 3;
 
   /**
-   * The context state which is uset in case the parsing is inside of a
+   * The context state which is used in case the parsing is inside of a
    * BML annotation comment.
    */
   private static final int STATE_INSIDE_ANNOTATION = 4;
+
+  /**
+   * The context state which is used in case the parsing is inside of a
+   * method.
+   */
+  private static final int STATE_INSIDE_METHOD = 5;
+
+  /**
+   * The context state which is used in case the parsing is inside of a
+   * method.
+   */
+  private static final int STATE_INVARIANT_AREA = 6;
 
   /**
    * The current state of the context.
@@ -209,5 +221,41 @@ public class LineContext {
    */
   public int getAnnotationEnd() {
     return my_annotation_end;
+  }
+
+  /**
+   * Sets the current state to be the state inside method.
+   */
+  public void setInsideMethod() {
+    my_state = STATE_INSIDE_METHOD;
+  }
+
+  /**
+   * Sets the current state to be the state inside the invariant area.
+   */
+  public void setInvariantArea() {
+    my_state = STATE_INVARIANT_AREA;
+  }
+
+  /**
+   * Returns <code>true</code> when the object is in the state inside the
+   * invariant area.
+   *
+   * @return <code>true</code> when the object is in the state inside the
+   *   invariant ares, <code>false</code> otherwise
+   */
+  public boolean isInInvariantArea() {
+    return my_state == STATE_INVARIANT_AREA;
+  }
+
+  /**
+   * Returns <code>true</code> when the object is in the state inside the
+   * method.
+   *
+   * @return <code>true</code> when the object is in the state inside a
+   *   method, <code>false</code> otherwise
+   */
+  public boolean isInsideMethod() {
+    return my_state == STATE_INSIDE_METHOD;
   }
 }

@@ -147,7 +147,7 @@ public class BytecodeEditor extends TextEditor {
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
-    IDocumentProvider p= getDocumentProvider();
+    IDocumentProvider p = getDocumentProvider();
     if (p == null)
       return;
 

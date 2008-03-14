@@ -106,4 +106,13 @@ public class BMLParsing {
     return my_bcc;
   }
 
+  /**
+   * This method changes the textual representation of the byte code
+   * source.
+   *
+   * @param a_code the new code to associate
+   */
+  public void setCodeString(final String a_code) {
+    my_cFgmt = new CodeFragment(my_bcc, a_code);
+  }
 }

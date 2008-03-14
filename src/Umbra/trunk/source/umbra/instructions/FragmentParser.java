@@ -99,8 +99,15 @@ public class FragmentParser extends BytecodeCommentParser {
     try {
       if (a_ctxt.isInsideAnnotation()) {
         a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
-      } else {
+      } else if (a_ctxt.isInsideMethod()) {
         a_line_no = swallowMethodBodyFragment(a_line_no, a_ctxt);
+      } else if (a_ctxt.isInInvariantArea()) {
+        a_line_no = swallowEmptyLines(my_doc, a_line_no, a_ctxt);
+        if (a_line_no <= my_end) {
+          a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
+        }
+      } else {
+        throw new UmbraException();
       }
     } catch (UmbraException e) {
       MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
@@ -139,10 +146,6 @@ public class FragmentParser extends BytecodeCommentParser {
                                                        //annotation lines
         throw new UmbraException();
       }
-    }
-    final AnnotationLineController alc = (AnnotationLineController)lc;
-    if (j > a_ctxt.getAnnotationEnd() && !alc.isCommentEnd()) {
-      throw new UmbraException();
     }
     return j;
   }
