@@ -278,7 +278,8 @@ public class BytecodeEditor extends TextEditor {
       bcc = new BCClass(jc);
       final BMLParsing bmlp = new BMLParsing(bcc);
       a_doc.setEditor(this, bmlp); //refresh BCEL structures
-      //this is where the textual representation is generated
+      a_doc.set(a_doc.printCode()); //this is where the textual representation
+                                    //is generated
       final InputStream stream = getDocumentStream(a_doc);
       final FileEditorInput input = (FileEditorInput)getEditorInput();
       final IFile file = input.getFile();
@@ -325,13 +326,7 @@ public class BytecodeEditor extends TextEditor {
    */
   private static InputStream getDocumentStream(
                              final /*@ non_null @*/ BytecodeDocument a_doc) {
-    final String bcode = a_doc.printCode();
-    final char[] bccode = bcode.toCharArray();
-    final byte[] contents = new byte[bccode.length];
-    for (int i = 0; i < bccode.length; i++) {
-      contents[i] = (byte) bccode[i];
-    }
-    final InputStream stream = new ByteArrayInputStream(contents);
+    final InputStream stream = new ByteArrayInputStream(a_doc.get().getBytes());
     return stream;
   }
 

@@ -130,7 +130,8 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
     doc.getBmlp().setCodeString(content);
     InputStream source = new ByteArrayInputStream(content.getBytes());
     try {
-      fileEditorInput.getFile().setContents(source, true, false, getProgressMonitor());
+      //fileEditorInput.getFile().setContents(source, true, false, getProgressMonitor());
+      saveDocument(null, fileEditorInput, doc, true);
     } catch (CoreException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
