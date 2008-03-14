@@ -84,7 +84,8 @@ public final class UmbraHelper {
   public static final String CLASS_EXTENSION    = ".class";
 
   /**
-   * The file extension for the files with the Umbra bytecode representation.
+   * The file extension for the files with the Umbra bytecode representation
+   * (i.e. .btc).
    */
   public static final String BYTECODE_EXTENSION   = ".btc";
 
@@ -121,10 +122,31 @@ public final class UmbraHelper {
     "You must save the source code before you can show its bytecode.";
 
   /**
+   * The message which informs the user that the file cannot be saved under
+   * the given location.
+   */
+  public static final String DISAS_SAVING_PROBLEMS =
+    "Problems with saving the file under the given location";
+
+  /**
+   * The message which informs that the current project has no class file output
+   * location set.
+   */
+  public static final String DISAS_CLASSFILEOUTPUT_PROBLEMS =
+    "The current project has no class file output location set";
+
+  /**
    * The message which informs the user that a path does not exists.
    */
   public static final String DISAS_PATH_DOES_NOT_EXIST =
     "The path does not exist";
+
+  /**
+   * The message which informs the user that the editor cannot be created
+   * or initialised.
+   */
+  public static final String DISAS_EDITOR_PROBLEMS =
+    "The byte code editor cannot be opended or initialised";
 
   /**
    * The message which requires the user to save the bytecode before it is

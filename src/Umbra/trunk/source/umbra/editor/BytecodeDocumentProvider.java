@@ -125,16 +125,14 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
   }
 
   public void changedByHand(IFileEditorInput fileEditorInput) {
-    BytecodeDocument doc = (BytecodeDocument)getDocument(fileEditorInput);
-    String content = doc.get();
+    final BytecodeDocument doc = (BytecodeDocument)getDocument(fileEditorInput);
+    final String content = doc.get();
     doc.getBmlp().setCodeString(content);
-    InputStream source = new ByteArrayInputStream(content.getBytes());
     try {
-      //fileEditorInput.getFile().setContents(source, true, false, getProgressMonitor());
       saveDocument(null, fileEditorInput, doc, true);
     } catch (CoreException e) {
       // TODO Auto-generated catch block
-      e.printStackTrace();
+      //e.printStackTrace();
     }
   }
 }

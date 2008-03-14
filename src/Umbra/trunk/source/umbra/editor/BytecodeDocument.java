@@ -91,6 +91,13 @@ public class BytecodeDocument extends Document {
   private boolean my_dirty;
 
 
+  /**
+   * It is true when the processing is inside the initialisation of the
+   * document. This is to forbid double initialisation inside the init method.
+   */
+  private boolean my_is_in_init;
+
+
   public BytecodeDocument() {
     super();
     this.my_bcc = new BytecodeController();
@@ -218,7 +225,10 @@ public class BytecodeDocument extends Document {
   public void init() {
     try {
       final String str = my_bcc.init(this, my_comment_array, my_interline);
+      my_ready_flag = true; //this causes the following line not to loop
+      my_is_in_init = true;
       replace(0, this.getLength(), str);
+      my_is_in_init = false;
       my_bmlp.setCodeString(str);
     } catch (UmbraLocationException e) {
       MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
@@ -236,7 +246,6 @@ public class BytecodeDocument extends Document {
     }
     //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
     my_bcc.checkAllLines(0, getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
-    my_ready_flag = true;
   }
 
   public void setModTable(final boolean[] the_modified) {
@@ -388,6 +397,10 @@ public class BytecodeDocument extends Document {
     } catch (IndexOutOfBoundsException e) {
       throw new UmbraMethodException(a_method_no);
     }
+  }
+
+  public boolean isInInit() {
+    return my_is_in_init;
   }
 
 }

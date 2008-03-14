@@ -8,9 +8,7 @@
  */
 package umbra.editor;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.ClassPath;
@@ -147,26 +145,23 @@ public class BytecodeEditor extends TextEditor {
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
-    IDocumentProvider p = getDocumentProvider();
+    final IDocumentProvider p = getDocumentProvider();
     if (p == null)
       return;
-
     if (p.isDeleted(getEditorInput())) {
-
       if (isSaveAsAllowed()) {
-
         /*
-         * 1GEUSSR: ITPUI:ALL - User should never loose changes made in the editors.
-         * Changed Behavior to make sure that if called inside a regular save (because
-         * of deletion of input element) there is a way to report back to the caller.
+         * 1GEUSSR: ITPUI:ALL - User should never loose changes made in the
+         *                editors.
+         * Changed Behavior to make sure that if called inside a regular save
+         * (because of deletion of input element) there is a way to report back
+         * to the caller.
          */
         performSaveAs(a_progress_monitor);
-
       } else {
-
-        Shell shell= getSite().getShell();
-        String title= "BytecodeEditor";
-        String msg= "saving error";
+        final Shell shell = getSite().getShell();
+        final String title = "Bytecode Editor";
+        final String msg = "Save As action is not allowed";
         MessageDialog.openError(shell, title, msg);
       }
 
@@ -236,7 +231,7 @@ public class BytecodeEditor extends TextEditor {
    * associated with the given document. Additionally, the comment information
    * from the previous session is connected to the document.
    *
-   * @param a_path a workspace relative path to a Java source code file
+   * @param a_path a workspace relative path to a Java class file
    * @param a_doc the byte code document for which the refresh operation is
    *   taken
    * @param the_comments  a table of end-of-line comments to be inserted
@@ -280,54 +275,13 @@ public class BytecodeEditor extends TextEditor {
       a_doc.setEditor(this, bmlp); //refresh BCEL structures
       a_doc.set(a_doc.printCode()); //this is where the textual representation
                                     //is generated
-      final InputStream stream = getDocumentStream(a_doc);
       final FileEditorInput input = (FileEditorInput)getEditorInput();
-      final IFile file = input.getFile();
-      writeDocToFile(stream, file);
+      getDocumentProvider().saveDocument(null, input, a_doc, true);
     } catch (ReadAttributeException e1) {
       MessageDialog.openError(new Shell(), "Bytecode",
                               "Cannot load the byte code from the file " +
                               jc.getFileName());
     }
-  }
-
-  /**
-   * This method saves the content of the given stream to the given file. The
-   * method checks if the resource pointed out by the file exists and in case
-   * it doesn't it creates the file.
-   *
-   * @param a_stream a stream which is written
-   * @param a_file a file into which the stream will be written
-   * @throws CoreException when the resource cannot be saved or created
-   */
-  private void writeDocToFile(final InputStream a_stream,
-                              final IFile a_file)
-    throws CoreException {
-    if (a_file.exists()) {
-      a_file.setContents(a_stream, true, true, null);
-    } else {
-      a_file.create(a_stream, true, null);
-    }
-    try {
-      a_stream.close();
-    } catch (IOException e) {
-      //This should not happen.
-      UmbraPlugin.messagelog("IMPOSSIBLE: Stream close generated exception " +
-                             "in BytecodeEditor.refreshBytecode");
-    }
-  }
-
-  /**
-   * Returns the stream which contains the textual representation of the given
-   * document.
-   *
-   * @param a_doc the document to retrieve the stream for
-   * @return the stream with the textual content
-   */
-  private static InputStream getDocumentStream(
-                             final /*@ non_null @*/ BytecodeDocument a_doc) {
-    final InputStream stream = new ByteArrayInputStream(a_doc.get().getBytes());
-    return stream;
   }
 
   /**

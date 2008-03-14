@@ -200,7 +200,7 @@ public class BytecodeContribution extends ControlContribution {
      */
     public final void documentChanged(final DocumentEvent an_event) {
       final BytecodeDocument doc = transformDocWithMessage(an_event.fDocument);
-      if (doc == null) return;
+      if (doc == null || doc.isInInit()) return;
 
       int stop = 0;
       int start_rem = 0;

@@ -11,6 +11,7 @@ package umbra.java.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -21,6 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
@@ -59,28 +61,55 @@ public class DisasBCEL implements IEditorActionDelegate {
     if (checkIfSaveNeeded()) return;
     if (checkJavaExtension()) return;
     final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
-    final IWorkbenchPage page = my_editor.getEditorSite().getPage();
     IPath cpath = null;
     try {
-      final IFile btcFile = UmbraHelper.getBTCFileName(jFile, my_editor);
-      final FileEditorInput input = new FileEditorInput(btcFile);
-      final BytecodeEditor bc_editor = (BytecodeEditor) (page.openEditor(input,
-                           UmbraHelper.BYTECODE_EDITOR_CLASS, false));
-      bc_editor.setRelatedEditor(my_editor);
-      final BytecodeDocumentProvider bdp = (BytecodeDocumentProvider)bc_editor.
-        getDocumentProvider();
-      final BytecodeDocument doc = (BytecodeDocument)bdp.getDocument(input);
-      cpath = UmbraHelper.getClassFileFile(jFile, my_editor).getFullPath();
-      bc_editor.refreshBytecode(cpath, doc,
-                                null, null); //this works on the doc
-      doc.initModTable();
-      openEditorAndDisassemble(page, bc_editor, input, doc);
-      bdp.changedByHand(input);
-    } catch (CoreException e) {
-      e.printStackTrace();
+      cpath = openBCodeEditorForJavaFile(jFile);
+    } catch (JavaModelException e) {
+      MessageDialog.openWarning(my_editor.getSite().getShell(),
+                                UmbraHelper.DISAS_MESSAGE_TITLE,
+                                UmbraHelper.DISAS_CLASSFILEOUTPUT_PROBLEMS);
+    } catch (PartInitException e) {
+      MessageDialog.openWarning(my_editor.getSite().getShell(),
+                                UmbraHelper.DISAS_MESSAGE_TITLE,
+                                UmbraHelper.DISAS_EDITOR_PROBLEMS);
     } catch (ClassNotFoundException e) {
       messageClassNotFound(cpath);
+    } catch (CoreException e) {
+      MessageDialog.openWarning(my_editor.getSite().getShell(),
+                                UmbraHelper.DISAS_MESSAGE_TITLE,
+                                UmbraHelper.DISAS_SAVING_PROBLEMS);
     }
+  }
+
+  /**
+   * @param jFile
+   * @return
+   * @throws PartInitException
+   * @throws JavaModelException
+   * @throws ClassNotFoundException
+   * @throws CoreException
+   */
+  private IPath openBCodeEditorForJavaFile(final IFile jFile)
+    throws PartInitException,
+           JavaModelException, ClassNotFoundException, CoreException {
+    IPath cpath;
+    final IWorkbenchPage page = my_editor.getEditorSite().getPage();
+    final IFile btcFile = UmbraHelper.getBTCFileName(jFile, my_editor);
+    final FileEditorInput input = new FileEditorInput(btcFile);
+    BytecodeEditor bc_editor;
+    bc_editor = (BytecodeEditor) (page.openEditor(input,
+                           UmbraHelper.BYTECODE_EDITOR_CLASS, false));
+    bc_editor.setRelatedEditor(my_editor);
+    final BytecodeDocumentProvider bdp = (BytecodeDocumentProvider)bc_editor.
+      getDocumentProvider();
+    final BytecodeDocument doc = (BytecodeDocument)bdp.getDocument(input);
+    cpath = UmbraHelper.getClassFileFile(jFile, my_editor).getFullPath();
+    bc_editor.refreshBytecode(cpath, doc,
+                                null, null); //this works on the doc
+    doc.initModTable();
+    openEditorAndDisassemble(page, bc_editor, input, doc);
+    bdp.saveDocument(null, input, doc, true);
+    return cpath;
   }
 
   /**
