@@ -40,7 +40,7 @@ public class BCMethod {
 
 	/**
 	 * Original (BCEL) method. Do not use any other methodGen's
-	 * 		to manipulate bytecode.
+	 * 		to manipulate byte code.
 	 */
 	private MethodGen bcelMethod;
 
