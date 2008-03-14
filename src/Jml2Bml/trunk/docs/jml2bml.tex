@@ -8,6 +8,23 @@
 \title{On Compiling JML Specifications into Bytecode}
 \begin{document}
 \maketitle
+
+
+%\section{What should be in paper}
+%\begin{itemize}
+%	\item What is JML
+%	\item What is BML
+%	\item Why is translation needed??
+% \item Why the tool needed?? (JVM -> VM) BML can be used to different languages, JML to one??
+%	\item The tool isn't built on any existing comipler.
+%	\item As input we get source file with JML annotations and compiled class file.
+%	\item Therefore we can't used optimised bytecode (problem with loops, assertions etc.)
+%	\item Optimized bytecode may be used for more general annotations eg. method invariants.
+%	\item Detecting loops in bytecode
+%	\item Description of matching source code with bytecode loops
+%	\item Non-trivial example
+%\end{itemize}
+
 \section{Detecting Loops in Bytecode}
 To be able to compile the JML loop invariants, one should detect in the bytecode the corresponding loop. The created BML annotation should be associated with the bytecode instruction that represents the loop condition. Note that the loop condition is translated into multiple bytecode instructions. We are interested in the last one (comparison). A loop can be translated in one of the following ways:
 \begin{center}
@@ -67,4 +84,27 @@ If both cases described above fail, the algorithm tries to detect the \texttt{do
 \item{there is a backward jump from the tested instruction to some \textit{a}}
 \item{if yes, assuming that cases 1 and 2 failed, return \textit{a} as the beginning of the loop}
 \end{itemize}
+
+\section{Conclusion/Introduction??}
+Java Virtual Machine can be used with languages different than Java. Few examples:
+\begin{itemize}
+	\item Jython - the Python Java implementation
+	\item JRuby - the Ruby Java implementation
+	\item Jacl - the Tcl Java implementation
+	\item Rhino - the JavaScript Java implementation
+\end{itemize}
+At SugarCon 2008, Sun Microsystems CEO Jonathan Schwartz said that "we're just going to take the 'J' off the 'JVM' and just make it a 'VM'.". Therefore there will be a global trend with support of companies to use JVM with other languages. Java language has JML with proper tools that can be used to verify programs - check their correctness or find errors. Most of them operates on source code. Bytecode itself has a verification algorithm but the verification is done only to ensure that the loaded bytecode will not cause the crash of the JVM. Verification algorithm includes:
+\begin{itemize}
+	\item checking that all arguments on the operand stack are legal
+	\item ensuring that all types of variables passed to methods are correct
+	\item checking that all load and store operations have correct types
+\end{itemize}
+Unfortunatelly programming errors aren't checked. The BML language with proper verification tools can take over all qualities of source code verification using JML. The main advantage of such approach is that the verification itself won't be limited only to Java language - but can be used with any language that is compilled to JVM. There are mainly three sets of tools needed:
+\begin{itemize}
+	\item bytecode verification tools that use BML annotations
+	\item modelling languages (such as JML for Java) for other programming languages
+	\item compilers that compile programs to JVM bytecode along with annotation compilers
+\end{itemize}
+Our Jml2Bml fits in this scheme.
+
 \end{document}
