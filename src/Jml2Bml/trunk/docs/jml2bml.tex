@@ -85,6 +85,22 @@ If both cases described above fail, the algorithm tries to detect the \texttt{do
 \item{if yes, assuming that cases 1 and 2 failed, return \textit{a} as the beginning of the loop}
 \end{itemize}
 
+\section{Matching bytecode loops with source loops}
+Let's take any source method that has loop with JML invariant and bytecode corresponding to the method. The compiler used to generate the bytecode may have used some optimizations. Unfortunatelly this causes some problems. Here are some example loop optimizations:
+\begin{itemize}
+	\item loop unwinding (loop unrolling)\\
+In this case invariant should be put in every copy of the loop. But the invariant may need a change.
+	\item loop interchange\\
+If internal loop invariant depended on external loop variables - this invariant must also be translated.
+	\item code-motion\\
+Some part of code may be moved before the loop. What if invariant depended on it?
+\end{itemize}
+When we want to add BML specifications to optimized bytecode we have to know the optimizations that were used. There are two solutions to the problem:
+\begin{itemize}
+	\item Include the JML to BML compiler in existing Java compiler application.
+	\item Use non optimizing compiler.
+\end{itemize}
+
 \section{Conclusion/Introduction??}
 Java Virtual Machine can be used with languages different than Java. Few examples:
 \begin{itemize}
