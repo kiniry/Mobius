@@ -395,30 +395,30 @@ is found in a file with a correspondinging incremented suffix, e.g.,
 @file{Bag1.java}, @file{Bag2.java}, etc.
 
 @example
-1:  class Bag {
+1:  class Bag @{
 2:    int[] a;
 3:    int n;
 4:
-5:    Bag(int[] input) {
+5:    Bag(int[] input) @{
 6:      n = input.length;
 7:      a = new int[n];
 8:      System.arraycopy(input, 0, a, 0, n);
-9:    }
+9:    @}
 10:
-11:    int extractMin() {
+11:    int extractMin() @{
 12:      int m = Integer.MAX_VALUE;
 13:      int mindex = 0;
-14:      for (int i = 1; i <= n; i++) {
-15:        if (a[i] < m) {
+14:      for (int i = 1; i <= n; i++) @{
+15:        if (a[i] < m) @{
 16:          mindex = i;
 17:          m = a[i];
-18:        }
-19:      }
+18:        @}
+19:      @}
 20:      n--;
 21:      a[mindex] = a[n];
 22:      return m;
-23:    }
-24:  }
+23:    @}
+24:  @}
 @end example
 
 A copy of this program is in
@@ -504,16 +504,16 @@ One approach is to decide that the implementation of the constructor
 is incorrect.  Following this approach, we would modify the constructor
 to test for a null argument and, for example, construct an empty multiset:
 @example
-  Bag(int[] input) {
-    if (input == null) {
+  Bag(int[] input) @{
+    if (input == null) @{
       n = 0;
       a = new int[0];
-    } else {
+    @} else @{
       n = input.length;
       a = new int[n];
       System.arraycopy(input, 0, a, 0, n);
-    }
-  }
+    @}
+  @}
 @end example
 
 This change does indeed eliminate the first warning.  
