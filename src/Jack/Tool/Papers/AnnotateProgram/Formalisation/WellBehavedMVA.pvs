@@ -26,13 +26,22 @@ BEGIN
   % terminate) and they are side-effect-free. Note that the evaluation 
   % of the expresion can not throw an exception (provided it starts in 
   % a non-exceptional state).
+%   eval_action_behavior(mp) : boolean =
+%     FORALL (e : Expr, v : Val, sMP : MPState) :
+%       wf_Expr(program(mp))(e) IMPLIES
+%       wf_state(mp)(sMP) IMPLIES
+%       NOT up?(ex(pstate(sMP))) IMPLIES
+%         (eval(e)(stA(astate(sMP)), st(pstate(sMP))) = v) =
+%         EXISTS (n : nat) : derive(mp)(e, sMP, v, sMP)(n)
+
   eval_action_behavior(mp) : boolean =
-    FORALL (e : Expr, v : Val, sMP : MPState) :
-      wf_Expr(program(mp))(e) IMPLIES
+    FORALL (t : Transition, oa : OneAction, v : Val, sMP : MPState) :
+      ts(mva(mp))(t) IMPLIES
+      member(oa, action(t)) IMPLIES
       wf_state(mp)(sMP) IMPLIES
       NOT up?(ex(pstate(sMP))) IMPLIES
-        (eval(e)(stA(astate(sMP)), st(pstate(sMP))) = v) =
-        EXISTS (n : nat) : derive(mp)(e, sMP, v, sMP)(n)
+        (eval(source(oa))(stA(astate(sMP)), st(pstate(sMP))) = v) =
+        EXISTS (n : nat) : derive(mp)(source(oa), sMP, v, sMP)(n)
 
   actions_have_no_side_effects(mp) : boolean =
     FORALL (t : Transition, oa : OneAction) :
@@ -48,5 +57,6 @@ BEGIN
     guard_to_expression_behavior(mp) AND
     eval_action_behavior(mp) AND
     actions_have_no_side_effects(mp)
+
 
 END WellBehavedMVA
