@@ -5,7 +5,7 @@
 \usepackage{tikz}
 \usepackage{algorithm}
 \usepackage{algorithmic}
-\author{Jedrzej Fulara, Krzysztof Jakubczyk}
+\author{Jedrzej Fulara\\fulara@mimuw.edu.pl\and Krzysztof Jakubczyk\\jakubczyk@mimuw.edu.pl\and Aleksy Schubert\\alx@mimuw.edu.pl}
 \title{On Compiling JML Specifications into Bytecode}
 \begin{document}
 \maketitle
@@ -28,39 +28,45 @@
 
 \section{Detecting Loops in Bytecode}
 To be able to compile the JML loop invariants, one should detect in the bytecode the corresponding loop. The created BML annotation should be associated with the bytecode instruction that represents the loop condition. Note that the loop condition is translated into multiple bytecode instructions. We are interested in the last one (comparison). A loop can be translated in one of the following ways:
-\begin{center}
+
+\begin{figure}[h]
+\centering{
 \begin{tikzpicture}[shorten >=1pt,->]
-\tikzstyle{vertex}=[circle,fill=blue!25,minimum size=17pt,inner sep=0pt]
+\tikzstyle{vertex}=[circle,draw=blue!50,fill=blue!20,thick,minimum size=17pt,inner sep=0pt]
 \foreach \name/\text/\y in {s/.../1, a/a/2, b/b/3, body/.../4, c/c/5, d/d/6, e/.../7}
 \node[vertex] (G-\name) at (0,-\y) {$\text$};
 \foreach \from/\to in {s/a,b/body,body/c,c/d,d/e}
 \draw (G-\from) -- (G-\to);
-\draw (G-a) .. controls +(-30:2cm) and +(30:1cm) .. (G-c);
-\draw (G-d) .. controls +(150:2cm) and +(-120:1cm) .. (G-b);
+\draw (G-a) to[out=315,in=45] (G-c);
+\draw (G-d) to[out=135,in=225] (G-b);
 
 \foreach \name/\text/\y in {s/.../1, a/a/2, b/b/3, body/.../4, c/c/5, d/d/6, e/.../7}
 \node[vertex] (Q-\name) at (4,-\y) {$\text$};
 \foreach \from/\to in {s/a,a/b,b/body, body/c, d/e}
 \draw (Q-\from) -- (Q-\to);
-\draw (Q-b) .. controls +(-30:2cm) and +(30:1cm) .. (Q-d);
-\draw (Q-c) .. controls +(150:1cm) and +(-120:2cm) .. (Q-a);
+\draw (Q-b) to[out=315,in=45] (Q-d);
+\draw (Q-c) to[out=135,in=225](Q-a);
 \end{tikzpicture}
-\end{center}
+\caption{Two ways of compiling loops.}
+}
+\end{figure}
 In the first scenario, in the vertex \textit{a}, an unconditional jump (goto) to the vertex \textit{c} is done (vertex \textit{c} denotes loading the condition). In \textit{d} the condition is checked, and if it is fulfilled, we jump back to \textit{b}. Between \textit{b} and \textit{c} is the loop body. The annotation should be added to the vertex \textit{d}. In the second approach, the condition is tested at the beginning (\textit{a} puts the condition on the stack and \textit{b} checks it. If it is fulfilled, we enter the loop, otherwise we jump out). In \textit{c} an unconditional jump back to \textit{a} is done. The BML annotation should be associated with the instruction in the vertex \textit{a}.
 
 \texttt{Do-while} loops and loops with always true condition (i.e. \texttt{while(true)\{...\}} or \texttt{for(;;)\{...\}} are usually compiled in another way:
 
-\begin{center}
+\begin{figure}[h]
+\centering{
 \begin{tikzpicture}[shorten >=1pt,->]
-\tikzstyle{vertex}=[circle,fill=blue!25,minimum size=17pt,inner sep=0pt]
+\tikzstyle{vertex}=[circle,draw=blue!50,fill=blue!20,thick,minimum size=17pt,inner sep=0pt]
 \foreach \name/\text/\x in {s/.../1, a/a/2, body1/.../3, b/b/4, body2/.../5, c/c/6, d/.../7}
 \node[vertex] (G-\name) at (\x,0) {$\text$};
 \foreach \from/\to in {s/a,a/body1, body1/b, b/body2, body2/c}
 \draw (G-\from) -- (G-\to);
-\draw (G-b) .. controls +(-30:2cm) and +(-150:1cm) .. (G-d);
-\draw (G-c) .. controls +(150:2cm) and +(30:1cm) .. (G-a);
+\draw (G-b) to[out=315,in=225] (G-d);
+\draw (G-c) to[out=135,in=45] (G-a);
 \end{tikzpicture}
-\end{center}
+\caption{Compiling \texttt{do-while} loop.}}
+\end{figure}
 Before entering the loop (between \textit{a} and \textit{c}), no condition is checked. There might be some \texttt{break} inside (vertex \textit{b}).
 In this cases, the annotation should be added to \textit{a} (start of the loop). The Jml2Bml compiler covers all the cases described above. It tries to detect the first kind of loop. If it fails, tries to detect the second one. At the end checks the \texttt{do - while} case. In the first case:
 \begin{itemize}
@@ -124,4 +130,69 @@ Unfortunatelly programming errors aren't checked. The BML language with proper v
 \end{itemize}
 Our Jml2Bml fits in this scheme.
 
+\section{Architecture Description}
+In this section we present the overview of the architecture of Jml2Bml compiler. The \textit{Jml2Bml} compiler uses \textit{OpenJml} to parse the Java source code together with the JML annotations. To insert generated BML annotations, the \textit{BMLLib} library is used. The dependencies between internal packages and \textit{Jml2Bml} and \textit{BMLlib} are presented in figure \ref{packages}.
+
+The \texttt{jml2bml.main} package provides the entry point to the application. JML annotations from given source file will be translated and inserted into corresponding \texttt{class} file. Functions to access some bytecode information are located in \texttt{jml2bml.bytecode} and helpers to \textit{BMLlib} are collected in \texttt{jml2bml.bmllib}. The \texttt{jml2bml.rules} package contains translation rules for different aspects of JML. It should be easy to add new rules in the future. Classes for traversing the Java abstract syntax tree can be found in \texttt{jml2bml.ast}. In \texttt{jml2bml.symbols} implementation of symbol table can be found. The \texttt{jml2bml.engine} package contains the core translating mechanism. The whole tree is traversed and in each node all defined translation rules are applied. It allows also to register new rules in a very simply way, what is an important issue in case of implementing new features in the future.
+\begin{figure}[h]
+\centering{
+\begin{tikzpicture}[shorten >=1pt,->]
+\
+\tikzstyle{vertex}=[rectangle,draw=blue!50,fill=blue!20,thick,rounded corners = 2pt]
+\filldraw[draw=black!30,fill=black!3] (-1,7.5) rectangle (7,-1.5);
+%\draw (-0.9,7.2) node[right]{\textbf{\texttt{jml2bml}}};
+\node (label) at (-0.3,7.2){\textbf{\texttt{jml2bml}}};
+\node[vertex] (main) at (3,7) {\texttt{main}};
+\node[vertex] (engine) at (3,5.9) {\texttt{engine}}  ;
+\node[vertex] (rules) at (3,4.8) {\texttt{rules}}  ;
+\node[vertex] (ast) at (4.5,3.5) {\texttt{ast}}  ;
+\node[vertex] (utils) at (6,2.5) {\texttt{utils}};
+\node[vertex] (bytecode) at (3,1.5) {\texttt{bytecode}};
+\node[vertex] (bmllib) at (3, 0) {\texttt{bmllib}};
+\node[vertex] (exceptions) at (4.5, -1) {\texttt{exceptions}};
+\node[vertex] (symbols) at (1.5, -1) {\texttt{symbols}};
+\draw (main) -- (engine);
+\draw (engine) -- (rules);
+\draw (rules) --(ast);
+\draw (engine) -- (ast) ;
+\draw(ast) -- (utils) ;
+\draw(ast) -- (bytecode);
+\draw (ast) to[out=270,in=45] (bmllib);
+\draw (ast) -- (exceptions);
+\draw (main) to[out=0,in=90] (ast);
+\draw (rules) to[out=0,in=90] (utils);
+\draw (rules) -- (symbols);
+\draw (rules) -- (exceptions);
+\draw (rules) to[out=225,in=135] (bmllib);
+\draw (main) to[out=0,in=90] (utils);
+\draw (main) to[out=225,in=135] (bytecode);
+\draw (main) to[out=180,in=135] (symbols);
+\draw (engine) to[out=225,in=90] (symbols);
+\draw (ast) to[out=270,in=0] (symbols) ;
+\draw (rules) -- (bytecode);
+\draw (bytecode) -- (bmllib) ;
+\draw (bytecode) -- (exceptions) ;
+\draw (bytecode) -- (symbols) ;
+\draw (bmllib) -- (exceptions) ;
+\draw (bmllib) -- (symbols) ;
+\tikzstyle{external}=[rectangle,draw=black!50,fill=black!15,thick]
+\node[external] (BmlLib1) at  (6, -2.5) {\textbf{\texttt{BMLlib}}};
+\node[external] (openJml) at  (0, -2.5) {\textbf{\texttt{OpenJml}}};
+\draw[dotted] (main) to[out=180,in=90] (openJml);
+\draw[dotted] (engine) to[out=180,in=90] (openJml);
+\draw[dotted] (rules) to[out=180,in=90] (openJml);
+\draw[dotted] (rules) to[out=270,in=90] (BmlLib1);
+\draw[dotted] (ast) to[out=270,in=90] (BmlLib1);
+\draw[dotted] (ast) to[out=180,in=90] (openJml);
+\draw[dotted] (bytecode) to[out=0,in=90] (BmlLib1);
+\draw[dotted] (bmllib) to[out=270,in=0] (openJml);
+\draw[dotted] (bmllib)  to[out=270,in=180] (BmlLib1);
+\draw[dotted] (symbols) to[out=180,in=90] (openJml);
+\draw[dotted] (symbols) to[out=270,in=180] (BmlLib1);
+\end{tikzpicture}
+\caption{The dependency graph of the Jml2Bml packages. Dotted lines denote access to external libraries.}}
+\label{packages}
+\end{figure}
+\section{Translation Principles}
+Tutaj bedziemy opisywac,ze nie uzywamy tablicy linii, bierzemy kod bez optymalizacji itp.
 \end{document}
