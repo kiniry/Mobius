@@ -10,6 +10,7 @@ package jml2bml.rules;
 
 import java.util.Vector;
 
+import jml2bml.ast.SymbolsBuilder;
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.exceptions.NotTranslatedException;
@@ -21,6 +22,7 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlSpecificationCase;
+import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
 
 import annot.attributes.Exsure;
 import annot.attributes.MethodSpecification;
@@ -35,6 +37,7 @@ import annot.io.Code;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -155,6 +158,22 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
   }
 
   /**
+   * Creates symbols table with method parameters.
+   * @param symb symbol table
+   * @param method the method which parameters will be added
+   * @return new symbols table with method parameters added
+   */
+  private Symbols createSymbolsWithParams(final Symbols symb,
+                                          final JmlMethodDecl method) {
+    Symbols withParams = new Symbols(symb);
+    final SymbolsBuilder sb = new SymbolsBuilder(myContext);
+    for (JCVariableDecl varDecl : method.params)
+      withParams = sb.visitJmlVariableDecl((JmlVariableDecl)varDecl,
+                                           withParams);
+    return withParams;
+  }
+
+  /**
    * This is a main translation method of the specification case.
    *
    * @param node The specification case node to translate.
@@ -178,6 +197,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
       throw new NotTranslatedException("Cannot find method for the requires: " +
                                        node);
     final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
+    final Symbols withParams = createSymbolsWithParams(symb, method);
     //TODO: here make Specification case for Bmllib
     final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(),
                                                       bcClazz);
@@ -186,7 +206,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
       spec = new MethodSpecification(bcMethod);
       bcMethod.setMspec(spec);
     }
-    new SpecificationCaseBuilder().scan(node.clauses, symb);
+    new SpecificationCaseBuilder().scan(node.clauses, withParams);
 
     //FIXME: when only precondition = should go to empty spec case??
     final SpecificationCase specCase = new SpecificationCase(bcMethod,

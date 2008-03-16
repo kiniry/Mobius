@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jml2bml.ast.SymbolsBuilder;
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.bytecode.LoopDescription;
@@ -21,6 +22,7 @@ import jml2bml.exceptions.NotTranslatedException;
 import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.generic.InstructionHandle;
+import org.jmlspecs.openjml.JmlTree.JmlForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlStatementLoop;
 
@@ -36,6 +38,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -43,6 +46,44 @@ import com.sun.tools.javac.util.Context;
  * @version 0.0-1
  */
 public class LoopInvariantRule extends TranslationRule<String, Symbols> {
+
+  /**
+   * Class for updating symbol table - we need to add loop condition to symbols.
+   * @author kjk (kjk@mimuw.edu.pl)
+   * @version 0.0-1
+   */
+  private class SymbolTableUpdater extends TranslationRule<Symbols, Symbols> {
+    /**
+     * Default preVisit method. Throws NotTranslatedException.
+     * @param node visited node
+     * @param symb symbol table
+     * @return never reached.
+     */
+    @Override
+    protected Symbols preVisit(final Tree node, final Symbols symb) {
+      throw new NotTranslatedException("Not implemented: " + node.getClass() +
+                                       " " + node);
+    }
+
+    /**
+     * Updates symbol table for 'for' loop.
+     *
+     * @param node visited node
+     * @param p symbol table
+     * @return updated symbol table
+     */
+    @Override
+    public Symbols visitJmlForLoop(final JmlForLoop node, final Symbols p) {
+      final SymbolsBuilder builder = new SymbolsBuilder(myContext);
+      Symbols newSymbols = new Symbols(p);
+      for (JCStatement stmtNode : node.init)
+        newSymbols = stmtNode.accept(builder, newSymbols);
+      for (JCStatement stmtNode : node.step)
+        newSymbols = stmtNode.accept(builder, newSymbols);
+      newSymbols = node.cond.accept(builder, newSymbols);
+      return newSymbols;
+    }
+  }
   /** Application context. */
   private final Context myContext;
 
@@ -201,8 +242,9 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
 
     final SourceLoopDescription matchedLoop = findMatchedLoop(beginLine,
                                                               endLine);
+    final Symbols newSymbols = loopNode.accept(new SymbolTableUpdater(), symb);
     final AbstractFormula invariantFormula =
-      TranslationUtil.getFormula(node.expression, symb, myContext);
+      TranslationUtil.getFormula(node.expression, newSymbols, myContext);
 
     //FIXME: there can be many exactly equal loops
     for (SourceLoopDescription loop : loops)

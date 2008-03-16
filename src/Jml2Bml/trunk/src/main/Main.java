@@ -56,7 +56,7 @@ public class Main {
    * Main method of the Jml2Bml compiler. For given class and source,
    * inserts into bytecode the translated Jml annotations from the source code.
    * @param args <code>args[0]</code> directory containing compiled classes<br>
-   * <code>args[1]</code> class file name</br>
+   * <code>args[1]</code> class file name<br>
    * <code>args[2]</code> source file (whole path)
    * @throws ClassNotFoundException
    * @throws ReadAttributeException
