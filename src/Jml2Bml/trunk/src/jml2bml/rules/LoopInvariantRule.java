@@ -22,9 +22,12 @@ import jml2bml.exceptions.NotTranslatedException;
 import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.generic.InstructionHandle;
+import org.jmlspecs.openjml.JmlTree.JmlDoWhileLoop;
+import org.jmlspecs.openjml.JmlTree.JmlEnhancedForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlStatementLoop;
+import org.jmlspecs.openjml.JmlTree.JmlWhileLoop;
 
 import annot.attributes.SingleLoopSpecification;
 import annot.bcclass.BCClass;
@@ -53,6 +56,13 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
    * @version 0.0-1
    */
   private class SymbolTableUpdater extends TranslationRule<Symbols, Symbols> {
+    /** A SymbolsBuilder field */
+    private SymbolsBuilder builder;
+
+    public SymbolTableUpdater() {
+      this.builder = new SymbolsBuilder(myContext);
+    }
+    
     /**
      * Default preVisit method. Throws NotTranslatedException.
      * @param node visited node
@@ -74,7 +84,6 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
      */
     @Override
     public Symbols visitJmlForLoop(final JmlForLoop node, final Symbols p) {
-      final SymbolsBuilder builder = new SymbolsBuilder(myContext);
       Symbols newSymbols = new Symbols(p);
       for (JCStatement stmtNode : node.init)
         newSymbols = stmtNode.accept(builder, newSymbols);
@@ -82,6 +91,43 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
         newSymbols = stmtNode.accept(builder, newSymbols);
       newSymbols = node.cond.accept(builder, newSymbols);
       return newSymbols;
+    }
+
+    /**
+     * Updates symbol table for 'while' loop.
+     *
+     * @param node visited node
+     * @param p symbol table
+     * @return updated symbol table
+     */
+    @Override
+    public Symbols visitJmlWhileLoop(final JmlWhileLoop node, final Symbols p) {
+      return node.cond.accept(builder, new Symbols(p));
+    }
+
+    /**
+     * Updates symbol table for 'do-while' loop.
+     *
+     * @param node visited node
+     * @param p symbol table
+     * @return updated symbol table
+     */
+    @Override
+    public Symbols visitJmlDoWhileLoop(final JmlDoWhileLoop node, final Symbols p) {
+      return node.cond.accept(builder, new Symbols(p));
+    }
+
+    /**
+     * Updates symbol table for enhanced 'for' loop.
+     *
+     * @param node visited node
+     * @param p symbol table
+     * @return updated symbol table
+     */
+    @Override
+    public Symbols visitJmlEnhancedForLoop(final JmlEnhancedForLoop node,
+                                           final Symbols p) {
+      return node.var.accept(builder, new Symbols(p));
     }
   }
   /** Application context. */
