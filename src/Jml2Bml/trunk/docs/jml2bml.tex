@@ -3,9 +3,31 @@
 \RequirePackage[T1]{fontenc}
 \usepackage{pgf}
 \usepackage{tikz}
-\usepackage{algorithm}
-\usepackage{algorithmic}
-\author{Jedrzej Fulara\\fulara@mimuw.edu.pl\and Krzysztof Jakubczyk\\kjk@mimuw.edu.pl\and Aleksy Schubert\\alx@mimuw.edu.pl}
+\usepackage{listings}
+\numberofauthors{3}
+\author{
+\alignauthor
+Jedrzej Fulara\\
+\affaddr{Institute of Informatics}\\
+\affaddr{University of Warsaw}\\
+\affaddr{ul. Banacha 2}\\
+\affaddr{02-097 Warsaw, Poland}\\
+\email{fulara@mimuw.edu.pl}
+\alignauthor
+Krzysztof Jakubczyk\\
+\affaddr{Institute of Informatics}\\
+\affaddr{University of Warsaw}\\
+\affaddr{ul. Banacha 2}\\
+\affaddr{02-097 Warsaw, Poland}\\
+\email{jakubczyk@mimuw.edu.pl}
+\alignauthor
+Aleksy Schubert\\
+\affaddr{Institute of Informatics}\\
+\affaddr{University of Warsaw}\\
+\affaddr{ul. Banacha 2}\\
+\affaddr{02-097 Warsaw, Poland}\\
+\email{alx@mimuw.edu.pl}
+}
 \title{On Compiling JML Specifications into Bytecode}
 \begin{document}
 \maketitle
@@ -26,7 +48,7 @@
 %	\item Non-trivial example
 %\end{itemize}
 
-\section{Detecting Loops in Bytecode}
+\section{Detecting Loops in Bytecode}\label{loopDetection}
 To be able to compile the JML loop invariants, one should detect in the bytecode the corresponding loop. The created BML annotation should be associated with the bytecode instruction that represents the loop condition. Note that the loop condition is translated into multiple bytecode instructions. We are interested in the last one (comparison). A loop can be translated in one of the following ways:
 
 \begin{figure}[h]
@@ -92,8 +114,8 @@ If both cases described above fail, the algorithm tries to detect the \texttt{do
 \item{if yes, assuming that cases 1 and 2 failed, return \textit{a} as the beginning of the loop}
 \end{itemize}
 
-\section{Matching bytecode loops with source loops}
-Let's take any source method that has loop with JML invariant and bytecode corresponding to the method. The compiler used to generate the bytecode may have used some optimizations. Unfortunatelly this causes some problems. Here are some example loop optimizations:
+\section{Matching Bytecode Loops with Source Loops}
+Let us take any source method that has loop with JML invariant and bytecode corresponding to this method. The compiler used to generate the bytecode may have used some optimizations. Unfortunately this causes some problems. Here are some exemplary loop optimizations:
 \begin{itemize}
 	\item loop unwinding (loop unrolling)\\
 In this case invariant should be put in every copy of the loop. But the invariant may need a change.
@@ -102,10 +124,10 @@ If internal loop invariant depended on external loop variables - this invariant 
 	\item code-motion\\
 Some part of code may be moved before the loop. What if invariant depended on it?
 \end{itemize}
-When we want to add BML specifications to optimized bytecode we have to know the optimizations that were used. There are two solutions to the problem:
+When we want to add BML specifications to optimized bytecode, we have to know the optimizations that were used. There are two solutions of this problem:
 \begin{itemize}
 	\item Include the JML to BML compiler in existing Java compiler application.
-	\item Use non optimizing compiler.
+	\item Use non-optimizing compiler.
 \end{itemize}
 
 \section{Conclusion/Introduction??}
@@ -116,19 +138,19 @@ Java Virtual Machine can be used with languages different than Java. Few example
 	\item Jacl - the Tcl Java implementation
 	\item Rhino - the JavaScript Java implementation
 \end{itemize}
-At SugarCon 2008, Sun Microsystems CEO Jonathan Schwartz said that "we're just going to take the 'J' off the 'JVM' and just make it a 'VM'.". Therefore there will be a global trend with support of companies to use JVM with other languages. Java language has JML with proper tools that can be used to verify programs - check their correctness or find errors. Most of them operates on source code. Bytecode itself has a verification algorithm but the verification is done only to ensure that the loaded bytecode will not cause the crash of the JVM. Verification algorithm includes:
+At SugarCon 2008, Sun Microsystems CEO Jonathan Schwartz said that "we are just going to take the 'J' off the 'JVM' and just make it a 'VM'.". Therefore there will be a global trend with support of companies to use JVM with other languages. Java language has JML with proper tools that can be used to verify programs - check their correctness or find errors. Most of them operates on source code. Bytecode itself has a verification algorithm but the verification is done only to ensure that the loaded bytecode will not cause the crash of the JVM. Verification algorithm includes:
 \begin{itemize}
 	\item checking that all arguments on the operand stack are legal
 	\item ensuring that all types of variables passed to methods are correct
 	\item checking that all load and store operations have correct types
 \end{itemize}
-Unfortunatelly programming errors aren't checked. The BML language with proper verification tools can take over all qualities of source code verification using JML. The main advantage of such approach is that the verification itself won't be limited only to Java language - but can be used with any language that is compilled to JVM. There are mainly three sets of tools needed:
+Unfortunately programming errors are not checked. The BML language with proper verification tools can take over all qualities of source code verification using JML. The main advantage of such approach is that the verification itself will not be limited only to Java language - but can be used with any language that is compilled to JVM bytecode. There are mainly three sets of tools needed:
 \begin{itemize}
 	\item bytecode verification tools that use BML annotations
 	\item modelling languages (such as JML for Java) for other programming languages
 	\item compilers that compile programs to JVM bytecode along with annotation compilers
 \end{itemize}
-Our Jml2Bml fits in this scheme.
+Our Jml2Bml is designed to be a part of this scheme.
 
 \section{Architecture Description}
 In this section we present the overview of the architecture of Jml2Bml compiler. The \textit{Jml2Bml} compiler uses \textit{OpenJml} to parse the Java source code together with the JML annotations. To insert generated BML annotations, the \textit{BMLLib} library is used. The dependencies between internal packages and \textit{Jml2Bml} and \textit{BMLlib} are presented in figure \ref{packages}.
@@ -190,9 +212,108 @@ The \texttt{jml2bml.main} package provides the entry point to the application. J
 \draw[dotted] (symbols) to[out=180,in=90] (openJml);
 \draw[dotted] (symbols) to[out=270,in=180] (BmlLib1);
 \end{tikzpicture}
-\caption{The dependency graph of the Jml2Bml packages. Dotted lines denote access to external libraries.}}
+\caption{The dependency graph of the \textit{Jml2Bml} packages. Dotted lines denote access to external libraries.}}
 \label{packages}
 \end{figure}
 \section{Translation Principles}
 Tutaj bedziemy opisywac,ze nie uzywamy tablicy linii, bierzemy kod bez optymalizacji itp.
+\section{An Example of Using The\\Compiler}
+This section provides an example demonstrating the result of launching the \textit{Jml2Bml}.
+\subsection{Source Code}
+Consider the class presented in figure \ref{source}. This is an excerpt of a class which implements a sequence of objects. We present here only one method that replaces in the \texttt{list} array all occurences of its first parameter with the second one.
+
+The presented code, apart from standard Java statements, contains also specifications in the JML. There is a precondition (\texttt{requires ...}) for the method \texttt{replace} defined. It requests that every time the method is invoked, the field \texttt{list} it not \texttt{null}. The next three lines (starting with \texttt{ensures} constitute the method postcondition. It states that, if the precondition was fullfiled, then the method result is true if and only if there was an element in the \texttt{list} which value has been updated from \texttt{o1} to \texttt{o2}. Note that the postcondition makes use of some JML features, like \texttt{$\backslash$result}, \texttt{$\backslash$old} or \texttt{$\backslash$exists}. This postcondition does not describe all properties of this method. For example an implementation that replaces all elements in the \texttt{list} up to the first occurence of \texttt{o1}with \texttt{o2} will fulfill this specification.
+
+In additition to specification describing input - output behaviour of the method, also the loop implementing the \texttt{replace} method is annotated. The \texttt{loop\_invariant} clause contains the invariant: a formula that should hold at the beginning of the loop body at each loop iteration. In this example it states that in iteration \texttt{i} there are no occurences of \texttt{o1} in \texttt{list} on positions before \texttt{i}. The annotation \texttt{decreases} describes the loop variant. It specifies an expression (in this case \texttt{list.length - i}) which value is decreased in each loop iteration by at least one.
+
+
+\lstset{language=java, morekeywords={requires,ensures,\result,\exists,\old,loop_invariant,\forall,==>, decreases},
+        basicstyle=\small,commentstyle=\small,moredelim=*[s][\small]{/*@}{*/}}
+\begin{figure}
+\centering{
+\begin{lstlisting}
+public class List {
+
+  private Object[] list;
+
+  /*@ requires list != null;
+    @ ensures \result ==(\exists int i;
+    @ 0 <= i && i < list.length &&
+    @ \old(list[i]) == o1 && list[i] == o2);
+    @*/
+  public boolean replace(Object o1, Object o2){
+    /*@
+      @ loop_invariant i <= list.length
+      @ && i >=0 && (\forall int k;0 <= k
+      @ && k < i ==> list[k] != o1);
+      @ decreases list.length - i;
+      @*/
+    for (int i = 0; i < list.length; i++) {
+      if (list[i] == o1) {
+        list[i] = o2;
+        return true;
+      }
+    }
+    return false;
+  }
+}
+\end{lstlisting}
+}
+\caption{An example class \texttt{List.java} containing single method \texttt{replace}.}
+\label{source}
+\end{figure}
+\subsection{Bytecode}
+In this section we describe the result of translating the source code from Figure \ref{source}. Since the binary class files are not human readable, we rely on its textual representation obtained from the BMLlib. The Figure \ref{bytecode} shows the translated \texttt{replace} method together with BML annotations inserted by our Jml2Bml compiler. The \texttt{requires-enusers} pair is translated into input-output behaviour BML specifications located just before the method code. Loops specifications are located after line 32 in the presented listing. The Jml2Bml compiler detects loops in the bytecode and inserts the annotation before the statement representing the loop condition. In this case it is the \texttt{if\_icmplt} instruction comparing \texttt{i} and \texttt{list.length}. For more details about detecting loops refer to section \ref{loopDetection}. The modifies clause describes set of variables modified by the loop. Currently, because of \textit{OpenJML} limitations it is not supported by our compiler (\texttt{everything} will be inserted).
+\begin{figure}
+\lstset{basicstyle=\small}
+
+\begin{lstlisting}
+/*
+ * \requires true
+ *  {|
+ *   \precondition list != null
+ *   \ensures \result ==
+ *     (exists int i; 0 <= i && i < list.length
+ *       && old_list[i] == o1 && list[i] == o2)
+ *  |}
+ */
+public boolean replace(Object o1, Object o2)
+0:    iconst_1
+1:    istore_3
+2:    goto	   #27
+5:    aload_0
+6:    getfield	   main.List.list
+9:    iload_3
+10:   aaload
+11:   aload_1
+12:   if_acmpne	   #24
+15:   aload_0
+16:   getfield	   main.List.list
+19:   iload_3
+20:   aload_2
+21:   aastore
+22:   iconst_1
+23:   ireturn
+24:   iinc	   %3	1
+27:   iload_3
+28:   aload_0
+29:   getfield	   main.List.list
+32:   arraylength
+/*
+ * \loop specification
+ *   \modifies everything
+ *   \invariant i <= list.length &&
+ *      i >= 0 &&
+ *      (forall int k; 0 <= k &&
+ *          k < i==>list[k] != o1)
+ *   \decreases list.length - i
+ */
+33:   if_icmplt	   #5
+36:   iconst_0
+37:   ireturn
+
+\end{lstlisting}
+\label{bytecode}
+\caption{The method \texttt{replace} in the \texttt{List.class}}
+\end{figure}
 \end{document}
