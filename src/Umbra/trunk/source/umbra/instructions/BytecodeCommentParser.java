@@ -273,16 +273,33 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    *   is to be added
    */
   protected final void enrichWithComment(final BytecodeLineController a_line,
-                                         final int a_pos) {
+                                         final int a_pos,
+                                         final int a_instno) {
     int pos = a_pos;
+    String commi = getCommentForInstr(a_instno);
     if (a_line instanceof InstructionLineController &&
-        my_current_comment != null) {
+        commi != null) {
       final String instr = a_line.getLineContent();
-      final String comm = "//" + my_current_comment;
-      pos += instr.length();
+      final String comm = "//" + commi;
+      pos += instr.length() - 1; // -1 for eol
       insertAt(pos, comm);
       pos += comm.length();
     }
+  }
+
+  /**
+   * @param a_instno
+   * @return
+   */
+  private String getCommentForInstr(final int a_instno) {
+    String commi = null;
+    if (my_current_comment != null) {
+      commi = my_current_comment;
+    } else if (my_eolcomment_array != null &&
+               my_eolcomment_array.length > a_instno) {
+      commi = my_eolcomment_array[a_instno];
+    }
+    return commi;
   }
 
   /**
@@ -300,11 +317,13 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    *
    * @param a_line a line controller to associate comments with
    */
-  protected void enrichWithComment(final BytecodeLineController a_line) {
+  protected void enrichWithComment(final BytecodeLineController a_line,
+                                   final int a_instno) {
     my_combined_text.append(a_line.getLineContent());
+    String commi = getCommentForInstr(a_instno);
     if (a_line instanceof InstructionLineController &&
-        my_current_comment != null) {
-      my_combined_text.append("//" + my_current_comment);
+        commi != null) {
+      insertAt(my_combined_text.length() - 1, "//" + commi);
     }
   }
 

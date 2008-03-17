@@ -176,8 +176,8 @@ public final class BytecodeController extends BytecodeControllerContainer {
         return;
       }
     } else {
-      removeInstructionsInRegion(first, the_last);
-      first = getFirstInstructionAfter(first);
+      removeInstructionsInRegion(the_first, the_last);
+      first = getFirstInstructionAfter(the_first);
       if (first < 0) {
         appendInstructions(the_instructions);
         return;

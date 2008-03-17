@@ -103,10 +103,12 @@ public class DisasBCEL implements IEditorActionDelegate {
     final BytecodeDocumentProvider bdp = (BytecodeDocumentProvider)bc_editor.
       getDocumentProvider();
     final BytecodeDocument doc = (BytecodeDocument)bdp.getDocument(input);
+                                   // this doc is empty when there is no .btc
+                                   // file or contains the content of the file
     cpath = UmbraHelper.getClassFileFile(jFile, my_editor).getFullPath();
+    doc.initModTable();
     bc_editor.refreshBytecode(cpath, doc,
                                 null, null); //this works on the doc
-    doc.initModTable();
     openEditorAndDisassemble(page, bc_editor, input, doc);
     bdp.saveDocument(null, input, doc, true);
     return cpath;
@@ -194,7 +196,6 @@ public class DisasBCEL implements IEditorActionDelegate {
     partitioner.connect(a_doc);
     a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
                                  partitioner);
-    a_doc.init();
     an_editor.renewConfiguration(a_doc);
     an_editor.setRelation(my_editor);
     a_page.bringToTop(an_editor);

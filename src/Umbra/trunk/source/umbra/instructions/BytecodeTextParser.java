@@ -156,7 +156,7 @@ public abstract class BytecodeTextParser {
     final int pos_in_combined = getPosOfLine(a_pos);
     final String instr = a_line.getLineContent();
     insertAt(pos_in_combined, instr);
-    enrichWithComment(a_line, pos_in_combined);
+    enrichWithComment(a_line, pos_in_combined, my_instruction_no);
     my_editor_lines.add(a_pos, a_line);
   }
 
@@ -192,7 +192,8 @@ public abstract class BytecodeTextParser {
    *   is to be added
    */
   protected abstract void enrichWithComment(final BytecodeLineController a_line,
-                                            final int a_pos);
+                                            final int a_pos,
+                                            final int a_instno);
 
   /**
    * This method adds to the combination of the currently parsed text and the
@@ -205,7 +206,8 @@ public abstract class BytecodeTextParser {
    * @param a_line a line controller to associate comments with
    */
   protected abstract void enrichWithComment(
-     final BytecodeLineController a_line);
+     final BytecodeLineController a_line,
+     final int a_instno);
 
   /**
    * This method appends the specified line cotroller at the end of the lines
@@ -215,7 +217,7 @@ public abstract class BytecodeTextParser {
    */
   public void addEditorLine(final BytecodeLineController a_line) {
     my_editor_lines.add(a_line);
-    enrichWithComment(a_line);
+    enrichWithComment(a_line, my_instruction_no);
   }
 
   /**
@@ -290,5 +292,16 @@ public abstract class BytecodeTextParser {
         return;
       }
     }
+  }
+  
+  protected int getInstructionNoForLine(int lineno) {
+    if (my_instructions == null || my_editor_lines.size() <= lineno) return -1;
+    BytecodeLineController blc = (BytecodeLineController) my_editor_lines.get(lineno);
+    for (int i =0; i < my_instructions.size(); i++) {
+      if (blc == my_instructions.get(i)) {
+        return i;
+      }
+    }
+    return -1;
   }
 }

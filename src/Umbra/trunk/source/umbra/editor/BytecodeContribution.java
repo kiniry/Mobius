@@ -138,7 +138,7 @@ public class BytecodeContribution extends ControlContribution {
      */
     public final void documentAboutToBeChanged(final DocumentEvent an_event) {
       final BytecodeDocument doc = transformDocWithMessage(an_event.fDocument);
-      if (doc == null) return;
+      if (doc == null || doc.isInInit()) return;
       if (!doc.isReady()) {
         doc.init(); //this marks the document as ready
       }

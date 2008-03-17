@@ -226,9 +226,7 @@ public class BytecodeDocument extends Document {
     try {
       final String str = my_bcc.init(this, my_comment_array, my_interline);
       my_ready_flag = true; //this causes the following line not to loop
-      my_is_in_init = true;
-      replace(0, this.getLength(), str);
-      my_is_in_init = false;
+      setTextWithDeadUpdate(str);
       my_bmlp.setCodeString(str);
     } catch (UmbraLocationException e) {
       MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
@@ -240,9 +238,6 @@ public class BytecodeDocument extends Document {
                                     "The current document has too many" +
                                     " methods (" +
                                     e.getWrongMethodNumber() + ")");
-    } catch (BadLocationException e) {
-      //TODO Auto-generated catch block
-      e.printStackTrace();
     }
     //TODO why we decrease here by CHECK_ALL_LINES_DECREMENT?
     my_bcc.checkAllLines(0, getNumberOfLines() - CHECK_ALL_LINES_DECREMENT);
@@ -399,8 +394,28 @@ public class BytecodeDocument extends Document {
     }
   }
 
+  /**
+   * This method checks if the current document is in the initialisation process
+   * so that the changes of its content should not be processed.
+   *
+   * @return <code>true</code> when the document is in the initialisation
+   *   process, <code>false</code> otherwise
+   */
   public boolean isInInit() {
     return my_is_in_init;
+  }
+
+  /**
+   * This method changes the content of this document in such a way that
+   * the update of the internal structures is not done. This is used when
+   * the initial structure is generated.
+   *
+   * @param a_string the text of the document
+   */
+  public void setTextWithDeadUpdate(final String a_string) {
+    my_is_in_init = true;
+    set(a_string);
+    my_is_in_init = false;
   }
 
 }

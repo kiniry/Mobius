@@ -273,8 +273,9 @@ public class BytecodeEditor extends TextEditor {
       bcc = new BCClass(jc);
       final BMLParsing bmlp = new BMLParsing(bcc);
       a_doc.setEditor(this, bmlp); //refresh BCEL structures
-      a_doc.set(a_doc.printCode()); //this is where the textual representation
-                                    //is generated
+      a_doc.setTextWithDeadUpdate(a_doc.printCode()); //this is where the
+                                    //textual representation is generated
+      a_doc.reinit(the_comments, the_interline_comments);
       final FileEditorInput input = (FileEditorInput)getEditorInput();
       getDocumentProvider().saveDocument(null, input, a_doc, true);
     } catch (ReadAttributeException e1) {
