@@ -238,5 +238,22 @@ BEGIN
           EXISTS (n1 : nat) :
             derive(p)(PROJ_2(b1), s1, v, s2)(n1)
 
+  % together with derive_determ this should be sufficient!!
+
+  % CHECK: in what form exactly can we use it
+  % and then: can we actually prove it!!
+  equal_derivation_set_annotations_with_equal_arguments : LEMMA
+    FORALL(p : Program, e1, e2 : (wf_Expr(p)), 
+           set : ({s : FunType|FORALL(e : Expr) : wf_Body(p)(s(e))}), 
+           v, v1 : Val, 
+           sigma, sigma1, sigma2 : APState, n1, n2, n3 : nat) :
+      (FORALL (tau : APState) :
+         pstate(tau) = pstate(sigma) IMPLIES
+         derive(p)(e1, tau, v, tau)(n1) AND
+         derive(p)(e2, tau, v, tau)(n2)) IMPLIES
+      derive(p)(set(e1), sigma, v1, sigma1)(n3) IMPLIES
+      pstate(sigma) = pstate(sigma1) IMPLIES
+        EXISTS (n4 : nat) : 
+          derive(p)(set(e2), sigma, v1, sigma1)(n4)
 
 END APSemanticsProperties

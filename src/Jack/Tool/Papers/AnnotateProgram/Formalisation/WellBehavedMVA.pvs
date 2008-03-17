@@ -53,7 +53,22 @@ BEGIN
           derive(mp)(source(oa), s1, v, s2)(n) IMPLIES
             s1 = s2
 
-  well_behaved_MVA(mp) : boolean =
+%  eval_actions_without_side_effects(mp) : boolean =
+%    FORALL (t : Transition, oa : OneAction, v : Val, sMP1 : MPState) :
+%      ts(mva(mp))(t) IMPLIES
+%      member(oa, action(t)) IMPLIES
+%      wf_state(mp)(sMP1) IMPLIES
+%      wf_Body(program(mp))(source(oa)) IMPLIES
+%      NOT up?(ex(pstate(sMP1))) IMPLIES
+%        (eval(source(oa))(stA(astate(sMP1)), st(pstate(sMP1))) = v) =
+%      EXISTS (sMP2 : MPState, n : nat) :
+%        derive(mp)(source(oa), sMP1, v, sMP2)(n) AND sMP1 = sMP2
+
+%  equiv : LEMMA
+%    (eval_action_behavior(mp) AND actions_have_no_side_effects(mp)) IFF
+%    eval_actions_without_side_effects(mp)
+
+  Well_behaved_mva(mp) : boolean =
     guard_to_expression_behavior(mp) AND
     eval_action_behavior(mp) AND
     actions_have_no_side_effects(mp)

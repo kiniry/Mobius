@@ -79,15 +79,128 @@ BEGIN
 END Body
 
 
+BodyFunctions[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING Body[Name]
+  IMPORTING list_of_set_funcs[Name], 
+            listfuncs[[Expr, Stmt]],
+            listsum,
+            list_map_funcs
+
+  size(b : Body) : nat = 
+    reduce_nat(
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Plus
+       LAMBDA(n : Name) : 1, % NumVarEval
+       LAMBDA(n : nat) : n + 1, % Neg
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Conj
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Eq
+       LAMBDA(n : Name) : 1, % BoolVarEval
+       LAMBDA(n : Name) : 1, % RefVarEval
+       LAMBDA(nm : Name, n : nat) : n + 1, % Assign
+       LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % CondExpr
+       LAMBDA(n1 : nat, nm : Name, n2 : nat) : n1 + n2 + 1, % MethodCall
+       LAMBDA(v : (defined?)) : 1, % Const
+       LAMBDA(l : list[[nat, nat]]) : 
+         sum(map[[nat, nat], nat](LAMBDA(n1, n2 : nat) : n1 + n2 + 1)(l)) + 1, % CaseJML
+       LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % IfThenElse
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Sequence
+       LAMBDA(nm : Name, n : nat) : n + 1, % Set
+       1, % Skip
+       LAMBDA(n : nat) : n + 1, % StmtExpr
+       LAMBDA(e : Excpt) : 1, % Throw
+       LAMBDA(n1 : nat, e : Excpt, n2, n3 : nat) : n1 + n2 + n3 + 1, % TryCatchFinally
+       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % While
+       LAMBDA(n : nat) : n + 1 % Assert
+       )(b) 
+
+
+  equal_except_for(T1, x, T2, y : Body) : RECURSIVE boolean =
+    (T1 = x AND T2 = y) OR
+    CASES T1 OF
+      Plus(b1, b2) : Plus?(T2) AND
+                     equal_except_for(b1, x, b1(T2), y) AND
+                     equal_except_for(b2, x, b2(T2), y),
+      NumVarEval(v) : NumVarEval?(T2) AND varname(T2) = v,
+      Neg(b) : Neg?(T2) AND equal_except_for(b, x, b(T2), y),
+      Conj(b1, b2) : Conj?(T2) AND
+                     equal_except_for(b1, x, b1(T2), y) AND
+                     equal_except_for(b2, x, b2(T2), y),
+      Eq(b1, b2) : Eq?(T2) AND
+                     equal_except_for(b1, x, b1(T2), y) AND
+                     equal_except_for(b2, x, b2(T2), y),
+     BoolVarEval(v) : BoolVarEval?(T2) AND varname(T2) = v,
+     RefVarEval(v) : RefVarEval?(T2) AND varname(T2) = v,
+     Assign(v, e) : Assign?(T2) AND target(T2) = v AND
+                    equal_except_for(e, x, source(T2), y),
+     CondExpr(t, then_expr, else_expr) :
+                    CondExpr?(T2) AND
+                    equal_except_for(t, x, test(T2), y) AND
+                    equal_except_for(then_expr, x, then_expr(T2), y) AND
+                    equal_except_for(else_expr, x, else_expr(T2), y),
+     MethodCall(tgt, n, arg) : MethodCall?(T2) AND
+                               equal_except_for(tgt, x, tgt(T2), y) AND
+                               name(T2) = n AND
+                               equal_except_for(arg, x, arg(T2), y),
+     Const(v) : Const?(T2) AND v(T2) = v,
+     CaseJML(br) : CaseJML?(T2) AND
+                   length(br) = length(branches(T2)) AND
+                   (null?(br) OR
+                    equal_except_for(proj_1(car(br)), x, 
+                                     proj_1(car(branches(T2))), y) AND
+                    equal_except_for(proj_2(car(br)), x, 
+                                     proj_2(car(branches(T2))), y) AND
+                    equal_except_for(CaseJML(cdr(br)), x,
+                                     CaseJML(cdr(branches(T2))), y)),
+     IfThenElse(t, then_stmt, else_stmt) :
+                    IfThenElse?(T2) AND
+                    equal_except_for(t, x, test(T2), y) AND
+                    equal_except_for(then_stmt, x, then_stmt(T2), y) AND
+                    equal_except_for(else_stmt, x, else_stmt(T2), y),
+     Sequence(s1, s2) : Sequence?(T2) AND
+                        equal_except_for(s1, x, s1(T2), y) AND
+                        equal_except_for(s2, x, s2(T2), y),
+     Set(v, e) : Set?(T2) AND target(T2) = v AND
+                 equal_except_for(e, x, source(T2), y),
+     Skip : Skip?(T2), 
+     StmtExpr(expr) : StmtExpr?(T2) AND equal_except_for(expr, x, expr(T2), y),
+     Throw(exc) : Throw?(T2) AND exc(T2) = exc,
+     TryCatch(try, exc, catch, finally) : TryCatch?(T2) AND
+        exc(T2) = exc AND
+        equal_except_for(try, x, try(T2), y) AND
+        equal_except_for(catch, x, catch(T2), y) AND
+        equal_except_for(finally, x, finally(T2), y),
+     While(test, body) : While?(T2) AND
+        equal_except_for(test, x, test(T2), y) AND
+        equal_except_for(body, x, body(T2), y),
+     Assert(expr) : Assert?(T2) AND equal_except_for(expr, x, expr(T2), y)
+    ENDCASES
+  MEASURE size(T1)
+
+  FunType : TYPE =  ({f : [Body -> Body] | 
+      FORALL(v1, v2 : Body) : equal_except_for(f(v1), v1, f(v2), v2)})
+
+  CondType : TYPE = 
+    ({f : [Expr -> Expr] | 
+      FORALL(v1, v2 : Expr) : equal_except_for(f(v1), v1, f(v2), v2)})
+
+  SetType : TYPE = 
+    ({f : [Expr -> Stmt] | 
+      FORALL(v1, v2 : Expr) : equal_except_for(f(v1), v1, f(v2), v2)})
+
+END BodyFunctions
+
+
 % Syntax of programs
 Program[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING ValProp[Name],
             Body[Name],
-            ValOrExcpt[Name]
+            ValOrExcpt[Name], 
+            BodyFunctions[Name]
 
-  This : Name
+  This : Name 
 
   % Other reserved words given as examples
   Super, rsIf, rsThen, rsElse : Name
@@ -110,12 +223,12 @@ BEGIN
   Method : TYPE = [# name : Name,
                      classname : Name,
                      arg : LocalVarDecl,
-                     pre : [Expr -> Expr],
-                     post : [Expr -> Expr],
+                     pre : CondType,
+                     post : CondType,
                      lvars : finite_set[LocalVarDecl],
                      body : Stmt,
-                     pre_set : [Expr -> Stmt],
-                     post_set : [Expr -> Stmt],
+                     pre_set : SetType,
+                     post_set : SetType,
                      exc_set : [Excpt -> Stmt],
                      res : Expr,
                      res_type : JType #]
@@ -157,33 +270,8 @@ BEGIN
   IMPORTING list_of_set_funcs[Name], 
             listfuncs[[Expr, Stmt]],
             listsum,
-            list_map_funcs
-
-  size(b : Body) : nat = 
-    reduce_nat(
-       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Plus
-       LAMBDA(n : Name) : 1, % NumVarEval
-       LAMBDA(n : nat) : n + 1, % Neg
-       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Conj
-       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Eq
-       LAMBDA(n : Name) : 1, % BoolVarEval
-       LAMBDA(n : Name) : 1, % RefVarEval
-       LAMBDA(nm : Name, n : nat) : n + 1, % Assign
-       LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % CondExpr
-       LAMBDA(n1 : nat, nm : Name, n2 : nat) : n1 + n2 + 1, % MethodCall
-       LAMBDA(v : (defined?)) : 1, % Const
-       LAMBDA(l : list[[nat, nat]]) : 
-         sum(map[[nat, nat], nat](LAMBDA(n1, n2 : nat) : n1 + n2 + 1)(l)) + 1, % CaseJML
-       LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1, % IfThenElse
-       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Sequence
-       LAMBDA(nm : Name, n : nat) : n + 1, % Set
-       1, % Skip
-       LAMBDA(n : nat) : n + 1, % StmtExpr
-       LAMBDA(e : Excpt) : 1, % Throw
-       LAMBDA(n1 : nat, e : Excpt, n2, n3 : nat) : n1 + n2 + n3 + 1, % TryCatchFinally
-       LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % While
-       LAMBDA(n : nat) : n + 1 % Assert
-       )(b) 
+            list_map_funcs, 
+            BodyFunctions[Name]
 
 
   var_names(b : Body) : RECURSIVE [Name -> boolean] =

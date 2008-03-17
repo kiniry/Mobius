@@ -3,15 +3,136 @@
   (guard_to_expression_behavior_TCC1-1 nil 3413185312 3413188939
    ("" (skosimp*) (("" (expand "wf_Expr") (("" (propax) nil nil)) nil))
     nil)
-   proved ((wf_Expr const-decl "boolean" WellFormedProgram nil)) 78 80
-   t nil))
+   unchecked ((wf_Expr const-decl "boolean" WellFormedProgram nil)) 78
+   80 t nil))
  (eval_action_behavior_TCC1 0
   (eval_action_behavior_TCC1-1 nil 3413185312 3413188989
    ("" (skosimp*) (("" (expand "wf_Expr") (("" (propax) nil nil)) nil))
     nil)
-   proved ((wf_Expr const-decl "boolean" WellFormedProgram nil)) 4280
-   70 t nil))
- (actions_have_no_side_effects_TCC1 0
-  (actions_have_no_side_effects_TCC1-1 nil 3413185312 3413188960
-   ("" (subtype-tcc) nil nil) unfinished nil 16576 16090 nil nil)))
+   unchecked ((wf_Expr const-decl "boolean" WellFormedProgram nil))
+   4280 70 t nil))
+ (equiv 0
+  (equiv-1 nil 3414732853 3414733167
+   ("" (skosimp*)
+    (("" (expand "eval_action_behavior")
+      (("" (expand "actions_have_no_side_effects")
+        (("" (expand "eval_actions_without_side_effects")
+          (("" (split 1)
+            (("1" (skosimp*)
+              (("1" (inst?)
+                (("1" (inst?)
+                  (("1" (assert)
+                    (("1" (inst?)
+                      (("1" (assert)
+                        (("1" (replace -1)
+                          (("1" (iff)
+                            (("1" (split 2)
+                              (("1"
+                                (skosimp*)
+                                (("1" (inst?) nil nil))
+                                nil)
+                               ("2"
+                                (skosimp*)
+                                (("2"
+                                  (inst?)
+                                  (("2" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (skosimp*)
+              (("2" (split 1)
+                (("1" (skosimp*)
+                  (("1" (inst?)
+                    (("1" (inst?)
+                      (("1" (assert)
+                        (("1" (split -4)
+                          (("1" (replace -1 :hide? t)
+                            (("1" (iff)
+                              (("1"
+                                (split 2)
+                                (("1"
+                                  (skosimp*)
+                                  (("1"
+                                    (inst?)
+                                    (("1" (assert) nil nil))
+                                    nil))
+                                  nil)
+                                 ("2"
+                                  (skosimp*)
+                                  (("2" (inst?) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (typepred "mva(mp!1)")
+                            (("2" (expand "wf_MVA")
+                              (("2"
+                                (flatten)
+                                (("2"
+                                  (inst?)
+                                  (("2"
+                                    (expand "wf_Trans")
+                                    (("2"
+                                      (flatten)
+                                      (("2"
+                                        (expand "wf_Action")
+                                        (("2"
+                                          (inst?)
+                                          (("2"
+                                            (assert)
+                                            (("2"
+                                              (flatten)
+                                              (("2"
+                                                (expand "wf_Expr")
+                                                (("2"
+                                                  (postpone)
+                                                  nil
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil)
+                 ("2" (skosimp*)
+                  (("2" (inst?)
+                    (("2" (inst?)
+                      (("2" (inst?)
+                        (("2" (assert)
+                          (("2" (split -6)
+                            (("1" (assert) (("1" (postpone) nil nil))
+                              nil)
+                             ("2" (postpone) nil nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   unfinished nil 313850 2020 t shostak)))
 

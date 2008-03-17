@@ -72,9 +72,19 @@ BEGIN
     FORALL (xs : list[T]) :
       xs = null OR EXISTS (y : T, ys : list[T]) : xs = cons(y, ys)
 
-    
 END listfuncs
 
+%morelistfuncs[A, B: TYPE] : THEORY
+%BEGIN
+
+%  zip(l1 : list[A], l2 : list[B]) : RECURSIVE list[[A, B]] =
+%    IF null?(l1) OR null?(l2)
+%    THEN null
+%    ELSE cons((car(l1), car(l2)), zip(cdr(l1), cdr(l2)))
+%    ENDIF
+%  MEASURE length(l1)
+
+%END morelistfuncs
 
 listsum : THEORY
 BEGIN
