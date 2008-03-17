@@ -12,6 +12,7 @@ public  class List {
            /*@
              @ loop_invariant i <= list.length && i >=0 && (\forall int k;0 <= k && k < i ==>
              @     list[k] != obj1);
+             @ decreases list.length - i;
              @*/
            for (int i = 5;
                 i < list.length; 

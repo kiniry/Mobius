@@ -22,6 +22,7 @@ import jml2bml.exceptions.NotTranslatedException;
 import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.generic.InstructionHandle;
+import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlDoWhileLoop;
 import org.jmlspecs.openjml.JmlTree.JmlEnhancedForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlForLoop;
@@ -29,10 +30,17 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlStatementLoop;
 import org.jmlspecs.openjml.JmlTree.JmlWhileLoop;
 
+import annot.attributes.InCodeAttribute;
+import annot.attributes.SingleList;
 import annot.attributes.SingleLoopSpecification;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
+import annot.bcexpression.BCExpression;
+import annot.bcexpression.ExpressionRoot;
+import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.formula.AbstractFormula;
+import annot.bcexpression.formula.Predicate0Ar;
+import annot.bcexpression.modifies.ModifyList;
 
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.LineMap;
@@ -56,13 +64,14 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
    * @version 0.0-1
    */
   private class SymbolTableUpdater extends TranslationRule<Symbols, Symbols> {
-    /** A SymbolsBuilder field */
+    /** A SymbolsBuilder field. */
     private SymbolsBuilder builder;
 
+    /** Default constructor. */
     public SymbolTableUpdater() {
       this.builder = new SymbolsBuilder(myContext);
     }
-    
+
     /**
      * Default preVisit method. Throws NotTranslatedException.
      * @param node visited node
@@ -113,7 +122,8 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
      * @return updated symbol table
      */
     @Override
-    public Symbols visitJmlDoWhileLoop(final JmlDoWhileLoop node, final Symbols p) {
+    public Symbols visitJmlDoWhileLoop(final JmlDoWhileLoop node,
+                                       final Symbols p) {
       return node.cond.accept(builder, new Symbols(p));
     }
 
@@ -261,6 +271,131 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
   }
 
   /**
+   * Inserts loop specifications to correct instructions in bytecode.
+   * @param loopNode loop node which has specification
+   * @param symb symbol table
+   * @param modifies modify list to insert
+   * @param invariant loop invariant to insert
+   * @param decreases decreases to insert
+   */
+  private void insertSpecs(final Tree loopNode, final Symbols symb,
+                           final ModifyList modifies,
+                           final AbstractFormula invariant,
+                           final BCExpression decreases) {
+    final BCClass clazz = symb.findClass();
+    final MethodTree method = (MethodTree) finder.getAncestor(loopNode,
+                                                              Kind.METHOD);
+    final Map<JCTree, Integer> endPosTable =
+      myContext.get(JCCompilationUnit.class).endPositions;
+
+    final LineMap lineMap = myContext.get(LineMap.class);
+    final long beginLine =
+      lineMap.getLineNumber(((JCTree) loopNode).getStartPosition());
+    final long endLine =
+      lineMap.getLineNumber(((JCTree) loopNode).getEndPosition(endPosTable));
+
+    final SourceLoopDescription matchedLoop = findMatchedLoop(beginLine,
+                                                              endLine);
+
+    //FIXME: there can be many exactly equal loops
+    for (SourceLoopDescription loop : loops)
+      if (loop.sourceBegin == matchedLoop.sourceBegin &&
+          loop.sourceEnd == matchedLoop.sourceEnd) {
+        final InstructionHandle loopAdd =
+          loop.loopDesc.getInstructionToAnnotate().getInstruction();
+        addLoopSpecs(BytecodeUtil.findMethod(method.getName(), clazz), loopAdd,
+                     modifies, invariant, decreases);
+      }
+  }
+
+  /**
+   * Checks if invariant is an empty one.
+   * @param expr invariant expression to check
+   * @return if expr is empty or not
+   */
+  private boolean isEmptyInvariant(final BCExpression expr) {
+    return (expr instanceof Predicate0Ar);
+  }
+
+  /**
+   * Checks if decreases is an empty one.
+   * @param expr decreases expression to check
+   * @return if expr is empty or not
+   */
+  private boolean isEmptyDecreases(final BCExpression expr) {
+    return (expr instanceof NumberLiteral);
+  }
+
+  /**
+   * Adds loops specification to instruction handle of specific method. Gets
+   * last inserted SingleLoopSpecification and checks if new modifiers,
+   * invariant or decreases collide (existed ands needs to be added) with
+   * previous one. If not - it updates the specification attribute. Otherwise
+   * it adds a new one.
+   * @param bcMethod method where attribute should be added
+   * @param ih the instruction handle to add attribute to
+   * @param modifies modifies parameter of the attribute
+   * @param invariant invariant of the attribute
+   * @param decreases decreases of the attribute
+   */
+  private void addLoopSpecs(final BCMethod bcMethod, final InstructionHandle ih,
+                            final ModifyList modifies,
+                            final BCExpression invariant,
+                            final BCExpression decreases) {
+    final SingleList ihs = bcMethod.getAmap().getAllAt(ih);
+    SingleLoopSpecification specs = null;
+    //Find last SingleLoopSpecification annotation in this place
+    for (int i = ihs.size() - 1; i >= 0; i--) {
+      final InCodeAttribute annot = ihs.get(i);
+      if (annot instanceof SingleLoopSpecification) {
+        specs = (SingleLoopSpecification) annot;
+        break;
+      }
+    }
+    ModifyList oldModifies = null;
+    BCExpression oldInvariant = null;
+    BCExpression oldDecreases = null;
+
+    boolean addNew = false;
+    if (specs == null)
+      addNew = true;
+    else {
+      final ExpressionRoot[] allExprs = specs.getAllExpressions();
+      oldModifies = (ModifyList) allExprs[0].getSubExpr(0);
+      if (modifies != null) {
+        if (!oldModifies.isEmpty())
+          addNew = true;
+        else
+          oldModifies = modifies;
+      }
+      oldInvariant = allExprs[1].getSubExpr(0);
+      if (invariant != null) {
+        if (!isEmptyInvariant(oldInvariant))
+          addNew = true;
+        else
+          oldInvariant = invariant;
+      }
+      oldDecreases = allExprs[2].getSubExpr(0);
+      if (decreases != null) {
+        if (!isEmptyDecreases(oldDecreases))
+          addNew = true;
+        else
+          oldDecreases = decreases;
+      }
+    }
+    final int count = addNew ? ihs.size() : specs.getMinor();
+    final SingleLoopSpecification attr = addNew ?
+        new SingleLoopSpecification(bcMethod, ih, count, modifies,
+                                    invariant, decreases) :
+          new SingleLoopSpecification(bcMethod, ih, count, oldModifies,
+                                      oldInvariant, oldDecreases);
+    if (addNew)
+      bcMethod.addAttribute(attr);
+    else
+      bcMethod.getAmap().replaceAttribute(specs, attr);
+  }
+
+  /**
    * Translation of loop statement.
    * @param node statement loop node to translate.
    * @param symb current symbol table.
@@ -269,43 +404,25 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
   @Override
   public String visitJmlStatementLoop(final JmlStatementLoop node,
                                       final Symbols symb) {
-    final BCClass clazz = symb.findClass();
-    final MethodTree method = (MethodTree) finder.getAncestor(node,
-                                                              Kind.METHOD);
-    final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(), clazz);
-    final Map<JCTree, Integer> endPosTable =
-      myContext.get(JCCompilationUnit.class).endPositions;
     Tree loopNode = (JCTree) finder.getParent(node);
     if (loopNode instanceof LabeledStatementTree)
       //FIXME: workaround for parser bug
       loopNode = finder.getNextSibling(loopNode);
-    final LineMap lineMap = myContext.get(LineMap.class);
-
-    final long beginLine =
-      lineMap.getLineNumber(((JCTree) loopNode).getStartPosition());
-    final long endLine =
-      lineMap.getLineNumber(((JCTree) loopNode).getEndPosition(endPosTable));
-
-    final SourceLoopDescription matchedLoop = findMatchedLoop(beginLine,
-                                                              endLine);
     final Symbols newSymbols = loopNode.accept(new SymbolTableUpdater(), symb);
-    final AbstractFormula invariantFormula =
-      TranslationUtil.getFormula(node.expression, newSymbols, myContext);
 
-    //FIXME: there can be many exactly equal loops
-    for (SourceLoopDescription loop : loops)
-      if (loop.sourceBegin == matchedLoop.sourceBegin &&
-          loop.sourceEnd == matchedLoop.sourceEnd) {
-        final InstructionHandle loopAdd =
-          loop.loopDesc.getInstructionToAnnotate().getInstruction();
-
-        final int count = bcMethod.getAmap().getAllAt(loopAdd).size();
-        final SingleLoopSpecification loopSpecs =
-          new SingleLoopSpecification(bcMethod, loopAdd, count, null,
-                                      invariantFormula, null);
-        bcMethod.addAttribute(loopSpecs);
-      }
-
+    final ModifyList modifies = null;
+    AbstractFormula invariant = null;
+    BCExpression decreases = null;
+    if (node.token == JmlToken.LOOP_INVARIANT)
+      invariant = TranslationUtil.getFormula(node.expression,
+                                             newSymbols, myContext);
+    else if (node.token == JmlToken.DECREASES)
+      decreases = node.expression.accept(RulesFactory
+          .getExpressionRule(myContext), newSymbols);
+    else
+      throw new NotTranslatedException("Not translating JmlStatementLoop of " +
+                                       "type: " + node.token);
+    insertSpecs(loopNode, newSymbols, modifies, invariant, decreases);
     return "";
   }
 }
