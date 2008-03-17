@@ -383,6 +383,12 @@ BEGIN
     IN
       derives(p)(c, initial)(final)
 
+  no_change_in_pstate(p : FullProgram)(b : (wf_Body(program(p)))) : boolean =
+    FORALL(b1 : (wf_Body(program(p)))) :
+      subterm(b1, b) IMPLIES
+        FORALL(sigma1, sigma2 : FullState, v : Val, n : nat) :
+          derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
+            pstate(sigma1) = pstate(sigma2)
 
 END Semantics
 
