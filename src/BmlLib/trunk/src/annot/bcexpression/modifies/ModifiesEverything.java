@@ -11,7 +11,12 @@ import annot.textio.BMLConfig;
  */
 public class ModifiesEverything extends ModifyExpression {
 
-	/**
+  /**
+   * The text of the \everything modify expression.
+   */
+  private static final String EVERYTHING_KEYWORD_TEXT = "\\everything";
+
+  /**
 	 * A constructor for superclass only. Use
 	 * {@link ModifyExpression#Everything} instead.
 	 */
@@ -21,12 +26,12 @@ public class ModifiesEverything extends ModifyExpression {
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
-		return "everything";
+		return EVERYTHING_KEYWORD_TEXT;
 	}
 
 	@Override
 	public String toString() {
-		return "everything";
+		return EVERYTHING_KEYWORD_TEXT;
 	}
 
 }

@@ -10,7 +10,12 @@ import annot.textio.BMLConfig;
  */
 public class ModifiesNothing extends ModifyExpression {
 
-	/**
+  /**
+   * The text of the \nothing modify expression.
+   */
+	private static final String NOTHING_KEYWORD_TEXT = "\\nothing";
+
+  /**
 	 * A constructor for superclass only. Use
 	 * {@link ModifyExpression#Nothing} instead.
 	 */
@@ -20,12 +25,12 @@ public class ModifiesNothing extends ModifyExpression {
 
 	@Override
 	protected String printCode1(BMLConfig conf) {
-		return "nothing";
+		return NOTHING_KEYWORD_TEXT;
 	}
 
 	@Override
 	public String toString() {
-		return "nothing";
+		return NOTHING_KEYWORD_TEXT;
 	}
 
 }
