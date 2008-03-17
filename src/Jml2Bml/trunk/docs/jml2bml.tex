@@ -47,6 +47,43 @@ Aleksy Schubert\\
 %	\item Description of matching source code with bytecode loops
 %	\item Non-trivial example
 %\end{itemize}
+\maketitle
+\begin{abstract}
+Idea of compiling different languages to the Java bytecode becomes popular. This forces us to build one common verification platform for the bytecode level. BML (Bytecode Modelling Language), a specification language based on JML (Java Modelling Language), is designed to be the core of such platform. There is a need to automatically translate source code level specifications into bytecode, to be able to use them later in the verification. 
+
+In this paper we describe the \textit{Jml2Bml} compiler, a tool that for given java source file with JML annotations and corresponding class file, generates BML annotations and inserts them into the bytecode.
+\end{abstract}
+\section{Introduction}
+Modern, high level programming languages support creating software in a modular way. Applications can be divided into smaller parts that can be developed independently. In large systems, it is a common practice to outsource some well defined subsystems to external companies. In this approach, to avoid uncompatible and useless code,  there is a need to specify precisely the desired behaviour of the components, what they require and what can we expect from them. The solution is to define formally implementation contracts that could be then automatically verified.
+
+Specification languages can be useful in descirbing the system components behaviour. They are not only helpful in dividin g the problem in smaller pieces, but also allow to write \textit{what} is expected from each part, without saying anything about \textit{how} should it be done. The specification languages are designed to be simple enought to be understood by programmers, so they can play role of code documentation. Providing documentation in a specification language has also this advantage that it is possible to automatically verify that the source code really implements the documented features.
+
+The specification can be also used to describe some recquired security policy. In this case the verification stands for ensuring that the policy holds. In this case not only the developers are interested in checking the described code property. The end user may also want to verify if the code he is running is secure. However, applications are usually distributed only in some executable form, so the specifications have also to be translated into the lower (in our case: bytecode) level. The compiled specifications are very useful in developing the Proof-Carrying Code (PCC) infrastructure.
+
+The other reason, why it is important to be able to translate the source code specification into lower level language specifications, is the fact that more and more languages will be compiled to the same bytecode. Java Virtual Machine can be used with languages different than Java. Few examples:
+\begin{itemize}
+	\item Jython - the Python Java implementation
+	\item JRuby - the Ruby Java implementation
+	\item Jacl - the Tcl Java implementation
+	\item Rhino - the JavaScript Java implementation
+\end{itemize}
+At SugarCon 2008, Sun Microsystems CEO Jonathan Schwartz said that "we are just going to take the 'J' off the 'JVM' and just make it a 'VM'.". Therefore there will be a global trend with support of companies to use JVM with other languages.
+Bytecode itself has a verification algorithm but the verification is done only to ensure that the loaded bytecode will not cause the crash of the JVM. Verification algorithm includes:
+\begin{itemize}
+	\item checking that all arguments on the operand stack are legal
+	\item ensuring that all types of variables passed to methods are correct
+	\item checking that all load and store operations have correct types
+\end{itemize}
+Unfortunately programming errors are not checked. Now, the Java language has JML with proper tools that can be used to verify programs - check their correctness or find errors. Most of them operates on source code. But it seems to be a better idea to develop one common verification platform at the bytecode level, then to create multiple, different for each language platforms working at the source code level. However, it would be to difficult, to add annotations to the compiled programs manually, so we have to provide tools translating source code level specification languages into one common bytecode specification language. The BML, proposed in ????? is a good choice for the target language. There are mainly three sets of tools needed to build the platform:
+\begin{itemize}
+	\item bytecode verification tools that use BML annotations
+	\item modelling languages (such as JML for Java) for other programming languages
+	\item compilers that compile programs to JVM bytecode along with annotation compilers
+\end{itemize}
+The \textit{Jml2Bml} described in this paper is designed to be a part of this scheme.
+
+\subsection{JML}
+\subsection{BML}
 
 \section{Detecting Loops in Bytecode}\label{loopDetection}
 To be able to compile the JML loop invariants, one should detect in the bytecode the corresponding loop. The created BML annotation should be associated with the bytecode instruction that represents the loop condition. Note that the loop condition is translated into multiple bytecode instructions. We are interested in the last one (comparison). A loop can be translated in one of the following ways:
@@ -129,28 +166,6 @@ When we want to add BML specifications to optimized bytecode, we have to know th
 	\item Include the JML to BML compiler in existing Java compiler application.
 	\item Use non-optimizing compiler.
 \end{itemize}
-
-\section{Conclusion/Introduction??}
-Java Virtual Machine can be used with languages different than Java. Few examples:
-\begin{itemize}
-	\item Jython - the Python Java implementation
-	\item JRuby - the Ruby Java implementation
-	\item Jacl - the Tcl Java implementation
-	\item Rhino - the JavaScript Java implementation
-\end{itemize}
-At SugarCon 2008, Sun Microsystems CEO Jonathan Schwartz said that "we are just going to take the 'J' off the 'JVM' and just make it a 'VM'.". Therefore there will be a global trend with support of companies to use JVM with other languages. Java language has JML with proper tools that can be used to verify programs - check their correctness or find errors. Most of them operates on source code. Bytecode itself has a verification algorithm but the verification is done only to ensure that the loaded bytecode will not cause the crash of the JVM. Verification algorithm includes:
-\begin{itemize}
-	\item checking that all arguments on the operand stack are legal
-	\item ensuring that all types of variables passed to methods are correct
-	\item checking that all load and store operations have correct types
-\end{itemize}
-Unfortunately programming errors are not checked. The BML language with proper verification tools can take over all qualities of source code verification using JML. The main advantage of such approach is that the verification itself will not be limited only to Java language - but can be used with any language that is compilled to JVM bytecode. There are mainly three sets of tools needed:
-\begin{itemize}
-	\item bytecode verification tools that use BML annotations
-	\item modelling languages (such as JML for Java) for other programming languages
-	\item compilers that compile programs to JVM bytecode along with annotation compilers
-\end{itemize}
-Our Jml2Bml is designed to be a part of this scheme.
 
 \section{Architecture Description}
 In this section we present the overview of the architecture of Jml2Bml compiler. The \textit{Jml2Bml} compiler uses \textit{OpenJml} to parse the Java source code together with the JML annotations. To insert generated BML annotations, the \textit{BMLLib} library is used. The dependencies between internal packages and \textit{Jml2Bml} and \textit{BMLlib} are presented in figure \ref{packages}.
