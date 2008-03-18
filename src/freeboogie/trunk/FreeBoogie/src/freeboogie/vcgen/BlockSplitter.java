@@ -19,7 +19,7 @@ public class BlockSplitter extends Transformer {
     if (cmds.getTail() != null) {
       String nname = Id.get(origName);
       tail = blockFromCmds(nname, cmds.getTail(), succ, tail);
-      succ = Identifiers.mk(AtomId.mk(nname), null);
+      succ = Identifiers.mk(AtomId.mk(nname,null), null);
     }
     cmds = Commands.mk(cmds.getCmd(), null);
     return Block.mk(name, cmds, succ, tail);

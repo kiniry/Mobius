@@ -151,16 +151,26 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AtomFun atomFun, String function, Exprs args) {
+  public void see(AtomFun atomFun, String function, TupleType types, Exprs args) {
     say(function);
+    if (types != null) {
+      say(".<");
+      types.eval(this);
+      say(">");
+    }
     say("(");
     if (args != null) args.eval(this);
     say(")");
   }
 
   @Override
-  public void see(AtomId atomId, String id) {
+  public void see(AtomId atomId, String id, TupleType types) {
     say(id);
+    if (types != null) {
+      say(".<");
+      types.eval(this);
+      say(">");
+    }
   }
 
   @Override
@@ -245,13 +255,20 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(CallCmd callCmd, String function, Identifiers results, Exprs args) {
+  public void see(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
     say("call ");
     if (results != null) {
+      say("(");
       results.eval(this);
+      say(")");
       say(" := ");
     }
-    say(function);
+    say(procedure);
+    if (types != null) {
+      say(".<");
+      types.eval(this);
+      say(">");
+    }
     say("(");
     if (args != null) args.eval(this);
     say(");");

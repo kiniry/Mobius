@@ -1,5 +1,9 @@
 grammar Fb;
 
+options {
+  backtrack=true;
+}
+
 @header {
   package freeboogie.parser; 
   import freeboogie.ast.*; 
@@ -138,8 +142,9 @@ command	returns [Command v]:
       { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME,$expr.v,tokLoc($t)); }
   | t='havoc' atom_id ';'
       { if(ok) $v=HavocCmd.mk($atom_id.v,tokLoc($t));}
-  | t='call' (l=id_list ':=')? ID '(' (r=expr_list)? ')' ';'
-      { if(ok) $v=CallCmd.mk($ID.text,$l.v,$r.v,tokLoc($t));}
+  | t='call' ((l=ID | '(' ll=id_list ')') ':=')? n=ID ('.<' st=simple_type_list '>')? 
+    '(' (r=expr_list)? ')' ';'
+      { if(ok) $v=CallCmd.mk($n.text,$st.v,$ll.v,$r.v,tokLoc($t));}
 ;
 	
 index returns [Index v]:
@@ -241,9 +246,11 @@ atom returns [Atom v]:
   | t='true'  { if(ok) $v = AtomLit.mk(AtomLit.AtomType.TRUE,tokLoc($t)); }
   | t='null'  { if(ok) $v = AtomLit.mk(AtomLit.AtomType.NULL,tokLoc($t)); }
   | t=INT     { if(ok) $v = AtomNum.mk(new BigInteger($INT.text),tokLoc($t)); }
-  | atom_id   { $v = $atom_id.v; }
-  |	t=ID '(' (expr_list?) ')'
-              { if(ok) $v = AtomFun.mk($ID.text, $expr_list.v,tokLoc($t)); }
+  |	t=ID ('.<' st=simple_type_list '>')? 
+              { if(ok) $v = AtomId.mk($t.text,$st.v,tokLoc($t)); }
+    ('(' (p=expr_list?) ')'
+              { if(ok) $v = AtomFun.mk($t.text,$st.v,$p.v,tokLoc($t)); }
+    )?
   | t='old' '(' expr ')'
               { if(ok) $v = AtomOld.mk($expr.v,tokLoc($t)); }
   | t='cast' '(' expr ',' type ')'
@@ -253,7 +260,8 @@ atom returns [Atom v]:
 ;
 
 atom_id returns [AtomId v]:
-    ID      { if(ok) $v = AtomId.mk($ID.text,tokLoc($ID)); }
+    ID ('.<' st=simple_type_list '>')?
+      { if(ok) $v = AtomId.mk($ID.text,$st.v,tokLoc($ID)); }
 ;
 
 // END of the expression grammar 
@@ -278,6 +286,11 @@ expr_list returns [Exprs v]:
 
 id_list	returns [Identifiers v]:	
     a=atom_id (',' r=id_list)? { if(ok) $v=Identifiers.mk($a.v,$r.v,astLoc($a.v)); }
+;
+
+simple_type_list returns [TupleType v]:
+    h=simple_type (',' t=simple_type_list)?
+  { if (ok) $v=TupleType.mk($h.v,$t.v,astLoc($h.v)); }
 ;
 
 opt_id_type_list returns [Declaration v]:
@@ -336,5 +349,5 @@ COMMENT
     ;
 
 LINE_COMMENT
-    : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
+    : '//' ~('\n'|'\r')* ('\r'|'\n') {$channel=HIDDEN;}
     ;

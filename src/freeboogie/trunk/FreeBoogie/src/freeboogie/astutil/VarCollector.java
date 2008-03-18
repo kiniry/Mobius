@@ -29,7 +29,8 @@ public class VarCollector extends Transformer {
 
 
   @Override
-  public void see(AtomId atomId, String id) { 
+  public void see(AtomId atomId, String id, TupleType types) { 
+    assert types == null; // TODO
     rv.add(st.ids.def(atomId)); 
   }
 

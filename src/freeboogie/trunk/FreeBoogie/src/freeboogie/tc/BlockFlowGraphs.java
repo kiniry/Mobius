@@ -110,7 +110,8 @@ public class BlockFlowGraphs extends Transformer {
   }
   
   @Override
-  public void see(AtomId atomId, String id) {
+  public void see(AtomId atomId, String id, TupleType types) {
+    assert types == null; //TODO
     if (currentBlock == null) return;
     Block target = blocksByName.get(id);
     if (target == null) {

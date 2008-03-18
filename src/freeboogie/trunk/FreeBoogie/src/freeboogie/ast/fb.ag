@@ -9,7 +9,7 @@ TypeDecl =     String! name, Declaration tail;
 ConstDecl=     String! id, Type! type, Declaration tail;
 Axiom =        Expr! expr, Declaration tail;
 
-// These are declarations that may have foralltypes on them
+// These are declarations that may introduce type variables
 Function =     Signature! sig, Declaration tail;
 VariableDecl = String name, Type! type, 
                Identifiers typeVars, Declaration tail;
@@ -51,7 +51,7 @@ Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
 AssignmentCmd = Expr! lhs, Expr! rhs; // TODO: define exactly what lhs can be
 AssertAssumeCmd = enum(CmdType: ASSERT, ASSUME) type, Expr! expr;
 HavocCmd = AtomId! id;
-CallCmd = String! procedure, Identifiers results, Exprs args;
+CallCmd = String! procedure, TupleType types, Identifiers results, Exprs args;
 
 // Expressions
 Expr :> BinaryOp, UnaryOp, Atom, Exprs;
@@ -62,8 +62,8 @@ UnaryOp = enum(Op: MINUS, NOT) op, Expr! e;
 Atom :> AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant, AtomIdx;
 AtomLit = enum(AtomType: FALSE, TRUE, NULL) val;
 AtomNum = BigInteger val;
-AtomId = String! id;
-AtomFun = String! function, Exprs args;
+AtomId = String! id, TupleType types;
+AtomFun = String! function, TupleType types, Exprs args;
 AtomOld = Expr! e;
 AtomCast = Expr! e, Type! type;
 AtomQuant = enum(QuantType: EXISTS, FORALL) quant, Declaration! vars,

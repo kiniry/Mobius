@@ -3,11 +3,13 @@ package freeboogie.tc;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.Map;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.util.Closure;
 import freeboogie.util.Err;
+import freeboogie.util.StackedHashMap;
 
 /**
  * Typechecks an AST. Errors are reported using the class {@code Err}.
@@ -20,13 +22,11 @@ import freeboogie.util.Err;
  */
 @SuppressWarnings("unused") // many unused parameters
 public class TypeChecker extends Evaluator<Type> {
-  
   // used for primitive types
   private PrimitiveType boolType, intType, refType, nameType, anyType;
   
-  // used to signal an error in a subexpression.
-  // the content is the same as for anyType but it's a different reference
-  //  (unique while typechecking)
+  // used to signal an error in a subexpression and to limit
+  // errors caused by other errors
   private PrimitiveType errType;
   
   private SymbolTable st;
@@ -35,11 +35,11 @@ public class TypeChecker extends Evaluator<Type> {
   
   private BlockFlowGraphs flowGraphs;
   
-  // where there any type errors?
+  // were there any type errors?
   private boolean errors;
   
   // maps expressions to their types
-  private HashMap<Expr, Type> typeOf;
+  private StackedHashMap<Expr, Type> typeOf;
   
   // maps implementations to procedures
   private UsageToDefMap<Implementation, Procedure> implProc;
@@ -47,9 +47,9 @@ public class TypeChecker extends Evaluator<Type> {
   // maps implementation params to procedure params
   private UsageToDefMap<VariableDecl, VariableDecl> paramMap;
 
-  // Maps type variables to the real types.
+  // Maps type variables to the real types. 
   // Gets set by the |check| functions.
-  private HashMap<String, Type> typeVar;
+  private StackedHashMap<String, Type> typeVar;
   
   // to get unique names for the type variables
   private int typeVarCnt;
@@ -71,8 +71,8 @@ public class TypeChecker extends Evaluator<Type> {
     anyType = PrimitiveType.mk(PrimitiveType.Ptype.ANY);
     errType = PrimitiveType.mk(PrimitiveType.Ptype.ERROR);
     
-    typeOf = new HashMap<Expr, Type>();
-    typeVar = new HashMap<String, Type>();
+    typeOf = new StackedHashMap<Expr, Type>();
+    typeVar = new StackedHashMap<String, Type>();
     
     errors = false;
     typeVarCnt = 0;
@@ -111,7 +111,7 @@ public class TypeChecker extends Evaluator<Type> {
    * Returns the map of expressions to types.
    * @return the map of expressions to types.
    */
-  public HashMap<Expr, Type> getTypes() {
+  public Map<Expr, Type> getTypes() {
     return typeOf;
   }
   
@@ -142,7 +142,6 @@ public class TypeChecker extends Evaluator<Type> {
   // === helper methods ===
   
   // report an error and set the errors flag
-  // TODO: perhaps do some smarter formating
   private void report(AstLocation l, String s) {
     Err.error("" + l + ": " + s + ".");
     errors = true;
@@ -157,7 +156,6 @@ public class TypeChecker extends Evaluator<Type> {
     return TupleType.mk(vd.getType(), tupleTypeOfDecl(vd.getTail()));
   }
   
-  // TODO: don't forget to check that the where expressions are booleans
   // strip DepType since only the prover can handle the where clauses
   // transform one element tuples into the types they contain
   private Type strip(Type t) {
@@ -236,7 +234,6 @@ public class TypeChecker extends Evaluator<Type> {
     return sub(a.getElemType(), b.getElemType());
   }
   
-  // TODO: Is this OK?
   private boolean sub(UserType a, UserType b) {
     return a.getName().equals(b.getName());
   }
@@ -284,7 +281,7 @@ public class TypeChecker extends Evaluator<Type> {
         return unify(sb.getParam(), anyType);
     }
     
-    // allow <x>T to be used where T is expected
+    // allow <x>T to be used where T is expected (TODO: not?)
     if (a instanceof GenericType && !(b instanceof GenericType)) {
       GenericType sa = (GenericType)a;
       if (sub(sa.getType(), b)) return true;
@@ -396,7 +393,8 @@ public class TypeChecker extends Evaluator<Type> {
   
   // === visiting atoms, including arrays with that `generic' hack ===
   @Override
-  public Type eval(AtomId atomId, String id) {
+  public Type eval(AtomId atomId, String id, TupleType types) {
+    assert types == null; // TODO
     Declaration d = st.ids.def(atomId);
     Type t = errType;
     if (d == null)
@@ -452,7 +450,8 @@ public class TypeChecker extends Evaluator<Type> {
   }
 
   @Override
-  public Type eval(AtomFun atomFun, String function, Exprs args) {
+  public Type eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
+    assert types == null;
     Function d = st.funcs.def(atomFun);
     Signature sig = d.getSig();
     Declaration fargs = sig.getArgs();
@@ -535,7 +534,8 @@ public class TypeChecker extends Evaluator<Type> {
   }
 
   @Override
-  public Type eval(CallCmd callCmd, String procedure, Identifiers results, Exprs args) {
+  public Type eval(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
+    assert types == null; // TODO
     Procedure p = st.procs.def(callCmd);
     Signature sig = p.getSig();
     Declaration fargs = sig.getArgs();
@@ -616,6 +616,4 @@ public class TypeChecker extends Evaluator<Type> {
     if (tail != null) tail.eval(this);
     return null;
   }
-
-  
 }

@@ -20,7 +20,7 @@ import java.util.Deque;
   @see freeboogie.ast.Evaluator
  */
 public class Transformer extends Evaluator<Ast> {
-  private final Ast NULL = AtomId.mk("<NULL>");
+  private final Ast NULL = AtomId.mk("<NULL>",null);
   private Deque<Ast> result = new ArrayDeque<Ast>();
 \normal_classes{
 
