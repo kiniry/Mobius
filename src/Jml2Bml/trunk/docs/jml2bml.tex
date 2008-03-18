@@ -83,7 +83,118 @@ Unfortunately programming errors are not checked. Now, the Java language has JML
 The \textit{Jml2Bml} described in this paper is designed to be a part of this scheme.
 
 \subsection{JML}
+The Java Modelling Language (JML) is a behavioural specification language for Java modules. It allows to write specifications according to \textit{design-by-contract} principles. Data types and method behaviour can pre precisely commented using JML annotations. They descirbe the input requirements (preconditions), what we can expect at the output (postconditions) and also some lower level properties of the code (i.e. loop invariants, loop variants etc). JML annotations are written in standard Java comments, so they does not affect the normal work of any Java compiler.
+
+An important goal in the design of JML is that it should be easily understandable by Java programmers. It is achieved by staying as close as possible to the Java syntax and semantics. The tool support for JML is rich (see \cite{overviewOfJML} for an overview). In particular, there are tools that check JML specification at runtime \cite{runtime}, in extended static checking fashion \cite{escJava}, and allow to perform software certification \cite{krakatoa}. There are also tools that support annotation generation \cite{canapa},\cite{daikon}.
 \subsection{BML}
+The Bytecode Modelling Language (BML) is a specification language for the bytecode. It was proposed by Burdy et al. \cite{bmlBurdy} The design of BML directly follows the fundamental concepts of JML. It inherits most constructions and keywords from the JML. As the BML is developed within the MOBIUS \cite{mobius} project and the main target of the project are Java-enabled mobile devices such as mobile phones, the current version of BML assumes some simplifications of the Java bytecode which are present in the J2ME platform -- the Java platform for mobile devices with restricted resources.
+\section{Annotation Language}
+The structure of annotations in BML and JML is very similar. We have two main types of annotations: method annotations and data type (class and interfaces) annotations.
+\subsection{Method Annotations}
+
+\subsection{Data Type Annotations}
+\section{An Example of Using The\\Compiler}
+This section provides an example demonstrating the result of launching the \textit{Jml2Bml}.
+\subsection{Source Code}
+Consider the class presented in figure \ref{source}. This is an excerpt of a class which implements a sequence of objects. We present here only one method that replaces in the \texttt{list} array all occurences of its first parameter with the second one.
+
+The presented code, apart from standard Java statements, contains also specifications in the JML. There is a precondition (\texttt{requires ...}) for the method \texttt{replace} defined. It requests that every time the method is invoked, the field \texttt{list} it not \texttt{null}. The next three lines (starting with \texttt{ensures} constitute the method postcondition. It states that, if the precondition was fullfiled, then the method result is true if and only if there was an element in the \texttt{list} which value has been updated from \texttt{o1} to \texttt{o2}. Note that the postcondition makes use of some JML features, like \texttt{$\backslash$result}, \texttt{$\backslash$old} or \texttt{$\backslash$exists}. This postcondition does not describe all properties of this method. For example an implementation that replaces all elements in the \texttt{list} up to the first occurence of \texttt{o1} with \texttt{o2} will fulfill this specification.
+
+In additition to specification describing input - output behaviour of the method, also the loop implementing the \texttt{replace} method is annotated. The \texttt{loop\_invariant} clause contains the invariant: a formula that should hold at the beginning of the loop body at each loop iteration. In this example it states that in iteration \texttt{i} there are no occurences of \texttt{o1} in \texttt{list} on positions before \texttt{i}. The annotation \texttt{decreases} describes the loop variant. It specifies an expression (in this case \texttt{list.length - i}) which value is decreased in each loop iteration by at least one.
+
+
+\lstset{language=java, morekeywords={requires,ensures,\result,\exists,\old,loop_invariant,\forall,==>, decreases},
+        basicstyle=\small,commentstyle=\small,moredelim=*[s][\small]{/*@}{*/}}
+\begin{figure}
+\centering{
+\begin{lstlisting}
+public class List {
+
+  private Object[] list;
+
+  /*@ requires list != null;
+    @ ensures \result ==(\exists int i;
+    @ 0 <= i && i < list.length &&
+    @ \old(list[i]) == o1 && list[i] == o2);
+    @*/
+  public boolean replace(Object o1, Object o2){
+    /*@
+      @ loop_invariant i <= list.length
+      @ && i >=0 && (\forall int k;0 <= k
+      @ && k < i ==> list[k] != o1);
+      @ decreases list.length - i;
+      @*/
+    for (int i = 0; i < list.length; i++) {
+      if (list[i] == o1) {
+        list[i] = o2;
+        return true;
+      }
+    }
+    return false;
+  }
+}
+\end{lstlisting}
+}
+\caption{An example class \texttt{List.java} containing single method \texttt{replace}.}
+\label{source}
+\end{figure}
+\subsection{Bytecode}
+In this section we describe the result of translating the source code from Figure \ref{source}. Since the binary class files are not human readable, we rely on its textual representation obtained from the BMLlib. The Figure \ref{bytecode} shows the translated \texttt{replace} method together with BML annotations inserted by our Jml2Bml compiler. Lines 0 and 1 correspond to initialization the \texttt{i = 0}. The loop is located between lines 2 and 33. Lines 5 - 12 represent the \texttt{if} statement, 15 - 23 correspond to lines ??? from the source code. Loading loop condition parameters is located in lines 27 - 32 and 33 performs the loop condition comparison. 
+
+The \texttt{requires-enusers} pair is translated into input-output behaviour BML specifications located just before the method code. Loops specifications are located after line 32 in the presented listing. The Jml2Bml compiler detects loops in the bytecode and inserts the annotation before the statement representing the loop condition. In this case it is the \texttt{if\_icmplt} instruction comparing \texttt{i} and \texttt{list.length}. For more details about detecting loops refer to section \ref{loopDetection}. The modifies clause describes set of variables modified by the loop. Currently, because of \textit{OpenJML} limitations it is not supported by our compiler (the default value \texttt{everything} will be inserted).
+\begin{figure}
+\lstset{basicstyle=\small}
+
+\begin{lstlisting}
+/*
+ * \requires true
+ *  {|
+ *   \precondition list != null
+ *   \ensures \result ==
+ *     (exists int i; 0 <= i && i < list.length
+ *       && old_list[i] == o1 && list[i] == o2)
+ *  |}
+ */
+public boolean replace(Object o1, Object o2)
+0:    iconst_0
+1:    istore_3
+2:    goto	   #27
+5:    aload_0
+6:    getfield	   main.List.list
+9:    iload_3
+10:   aaload
+11:   aload_1
+12:   if_acmpne	   #24
+15:   aload_0
+16:   getfield	   main.List.list
+19:   iload_3
+20:   aload_2
+21:   aastore
+22:   iconst_1
+23:   ireturn
+24:   iinc	   %3	1
+27:   iload_3
+28:   aload_0
+29:   getfield	   main.List.list
+32:   arraylength
+/*
+ * \loop specification
+ *   \modifies everything
+ *   \invariant i <= list.length &&
+ *      i >= 0 &&
+ *      (forall int k; 0 <= k &&
+ *          k < i==>list[k] != o1)
+ *   \decreases list.length - i
+ */
+33:   if_icmplt	   #5
+36:   iconst_0
+37:   ireturn
+
+\end{lstlisting}
+\label{bytecode}
+\caption{The method \texttt{replace} in the \texttt{List.class}}
+\end{figure}
+
 
 \section{Detecting Loops in Bytecode}\label{loopDetection}
 To be able to compile the JML loop invariants, one should detect in the bytecode the corresponding loop. The created BML annotation should be associated with the bytecode instruction that represents the loop condition. Note that the loop condition is translated into multiple bytecode instructions. We are interested in the last one (comparison). A loop can be translated in one of the following ways:
@@ -232,105 +343,4 @@ The \texttt{jml2bml.main} package provides the entry point to the application. J
 \end{figure}
 \section{Translation Principles}
 Tutaj bedziemy opisywac,ze nie uzywamy tablicy linii, bierzemy kod bez optymalizacji itp.
-\section{An Example of Using The\\Compiler}
-This section provides an example demonstrating the result of launching the \textit{Jml2Bml}.
-\subsection{Source Code}
-Consider the class presented in figure \ref{source}. This is an excerpt of a class which implements a sequence of objects. We present here only one method that replaces in the \texttt{list} array all occurences of its first parameter with the second one.
-
-The presented code, apart from standard Java statements, contains also specifications in the JML. There is a precondition (\texttt{requires ...}) for the method \texttt{replace} defined. It requests that every time the method is invoked, the field \texttt{list} it not \texttt{null}. The next three lines (starting with \texttt{ensures} constitute the method postcondition. It states that, if the precondition was fullfiled, then the method result is true if and only if there was an element in the \texttt{list} which value has been updated from \texttt{o1} to \texttt{o2}. Note that the postcondition makes use of some JML features, like \texttt{$\backslash$result}, \texttt{$\backslash$old} or \texttt{$\backslash$exists}. This postcondition does not describe all properties of this method. For example an implementation that replaces all elements in the \texttt{list} up to the first occurence of \texttt{o1} with \texttt{o2} will fulfill this specification.
-
-In additition to specification describing input - output behaviour of the method, also the loop implementing the \texttt{replace} method is annotated. The \texttt{loop\_invariant} clause contains the invariant: a formula that should hold at the beginning of the loop body at each loop iteration. In this example it states that in iteration \texttt{i} there are no occurences of \texttt{o1} in \texttt{list} on positions before \texttt{i}. The annotation \texttt{decreases} describes the loop variant. It specifies an expression (in this case \texttt{list.length - i}) which value is decreased in each loop iteration by at least one.
-
-
-\lstset{language=java, morekeywords={requires,ensures,\result,\exists,\old,loop_invariant,\forall,==>, decreases},
-        basicstyle=\small,commentstyle=\small,moredelim=*[s][\small]{/*@}{*/}}
-\begin{figure}
-\centering{
-\begin{lstlisting}
-public class List {
-
-  private Object[] list;
-
-  /*@ requires list != null;
-    @ ensures \result ==(\exists int i;
-    @ 0 <= i && i < list.length &&
-    @ \old(list[i]) == o1 && list[i] == o2);
-    @*/
-  public boolean replace(Object o1, Object o2){
-    /*@
-      @ loop_invariant i <= list.length
-      @ && i >=0 && (\forall int k;0 <= k
-      @ && k < i ==> list[k] != o1);
-      @ decreases list.length - i;
-      @*/
-    for (int i = 0; i < list.length; i++) {
-      if (list[i] == o1) {
-        list[i] = o2;
-        return true;
-      }
-    }
-    return false;
-  }
-}
-\end{lstlisting}
-}
-\caption{An example class \texttt{List.java} containing single method \texttt{replace}.}
-\label{source}
-\end{figure}
-\subsection{Bytecode}
-In this section we describe the result of translating the source code from Figure \ref{source}. Since the binary class files are not human readable, we rely on its textual representation obtained from the BMLlib. The Figure \ref{bytecode} shows the translated \texttt{replace} method together with BML annotations inserted by our Jml2Bml compiler. Lines 0 and 1 correspond to initialization the \texttt{i = 0}. The loop is located between lines 2 and 33. Lines 5 - 12 represent the \texttt{if} statement, 15 - 23 correspond to lines ??? from the source code. Loading loop condition parameters is located in lines 27 - 32 and 33 performs the loop condition comparison. 
-
-The \texttt{requires-enusers} pair is translated into input-output behaviour BML specifications located just before the method code. Loops specifications are located after line 32 in the presented listing. The Jml2Bml compiler detects loops in the bytecode and inserts the annotation before the statement representing the loop condition. In this case it is the \texttt{if\_icmplt} instruction comparing \texttt{i} and \texttt{list.length}. For more details about detecting loops refer to section \ref{loopDetection}. The modifies clause describes set of variables modified by the loop. Currently, because of \textit{OpenJML} limitations it is not supported by our compiler (the default value \texttt{everything} will be inserted).
-\begin{figure}
-\lstset{basicstyle=\small}
-
-\begin{lstlisting}
-/*
- * \requires true
- *  {|
- *   \precondition list != null
- *   \ensures \result ==
- *     (exists int i; 0 <= i && i < list.length
- *       && old_list[i] == o1 && list[i] == o2)
- *  |}
- */
-public boolean replace(Object o1, Object o2)
-0:    iconst_0
-1:    istore_3
-2:    goto	   #27
-5:    aload_0
-6:    getfield	   main.List.list
-9:    iload_3
-10:   aaload
-11:   aload_1
-12:   if_acmpne	   #24
-15:   aload_0
-16:   getfield	   main.List.list
-19:   iload_3
-20:   aload_2
-21:   aastore
-22:   iconst_1
-23:   ireturn
-24:   iinc	   %3	1
-27:   iload_3
-28:   aload_0
-29:   getfield	   main.List.list
-32:   arraylength
-/*
- * \loop specification
- *   \modifies everything
- *   \invariant i <= list.length &&
- *      i >= 0 &&
- *      (forall int k; 0 <= k &&
- *          k < i==>list[k] != o1)
- *   \decreases list.length - i
- */
-33:   if_icmplt	   #5
-36:   iconst_0
-37:   ireturn
-
-\end{lstlisting}
-\label{bytecode}
-\caption{The method \texttt{replace} in the \texttt{List.class}}
-\end{figure}
 \end{document}
