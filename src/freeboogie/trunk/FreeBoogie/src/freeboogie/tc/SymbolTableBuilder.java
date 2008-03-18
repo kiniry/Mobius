@@ -78,11 +78,17 @@ public class SymbolTableBuilder extends Transformer {
     return check(r, s, l);
   }
 
-  private void collectTypeVars(Identifiers ids) {
+  private void collectTypeVars(Map<String, AtomId> tv, Identifiers ids) {
     if (ids == null) return;
+    AtomId a = ids.getId();
+    String n = a.getId();
+    if (tv.get(n) != null) {
+      Err.error("" + a.loc() + ": Type variable already defined.");
+      errors = true;
+    }
     symbolTable.typeVars.seenDef(ids.getId());
-    typeVarDecl.put(ids.getId().getId(), ids.getId());
-    collectTypeVars(ids.getTail());
+    typeVarDecl.put(n, a);
+    collectTypeVars(tv, ids.getTail());
   }
   
   // === visit methods ===
@@ -124,7 +130,7 @@ public class SymbolTableBuilder extends Transformer {
   public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     symbolTable.ids.seenDef(variableDecl);
     typeVarDecl.push();
-    collectTypeVars(typeVars);
+    collectTypeVars(typeVarDecl.peek(), typeVars);
     Map<String, VariableDecl> scope = localVarDecl.peek();
     if (scope != null && name != null) {
       // we are in a local scope
@@ -149,7 +155,7 @@ public class SymbolTableBuilder extends Transformer {
   
   @Override
   public void see(Signature signature, String name, Declaration args, Declaration results, Identifiers typeVars) {
-    collectTypeVars(typeVars);
+    collectTypeVars(typeVarDecl.peek(), typeVars);
     if (args != null) args.eval(this);
     if (results != null) results.eval(this);
   }

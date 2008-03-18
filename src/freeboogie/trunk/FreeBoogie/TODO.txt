@@ -2,8 +2,8 @@
 24 VC generation implementation
  6 simple interface to parse from strings
 
+ . should arrays be allowed as indices in arrays?
  . update type checker for sane type variables
- . force type variable introductions to be distinct (stop on var V<x,x>:...)
  . does ImplementationChecker treat type vars correctly?
  . add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
  . desugar dependent types in assumes/asserts
