@@ -1,0 +1,30 @@
+This file contains a history of the design decisions that were
+taken and their motivation.
+
+Principle: Treat arrays as functions as much as possible.
+
+We introduced generics in BoogiePL so that we can write
+  var heap<x> : [ref,<x>name]x;
+  procedure store<x,y,z>([x,y]z,x,y,z) returns ([x,y]z);
+To specialize we write
+  heap' := store.<ref,<int>name,int>(heap.<int>,obj,int_field,3);
+Specialization is completely optional. The '.' is used to keep
+the parser simple. If the '.' would be omitted, then in
+  call p(a<b,c<d,e<f,g<h)
+the parser could figure out only at the very end that the '<'
+signe mean less than and not specialization. The dot is unusual
+but the user should seldom need to explicitely specialize a
+procedure or a variable. For a similar reason we now force
+parentheses around tuples of IDs in calls:
+  call (a, b, c) := procThatReturnsTriple();
+but only if there is more than one identifier, to maintain
+compatibility with the stuff produced by Boogie.
+
+Now that I mention compatibility
+  var heap : [ref,<x>name]x;
+is not legal anymore, but I plan to make it so in a 'compatibility'
+mode. In 'compatibility mode' FB is supposed to do some extra
+preprocessing of the source produced by Boogie to make it
+legal FB code.
+
+
