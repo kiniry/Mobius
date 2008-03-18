@@ -87,16 +87,100 @@ The Java Modelling Language (JML) is a behavioural specification language for Ja
 
 An important goal in the design of JML is that it should be easily understandable by Java programmers. It is achieved by staying as close as possible to the Java syntax and semantics. The tool support for JML is rich (see \cite{overviewOfJML} for an overview). In particular, there are tools that check JML specification at runtime \cite{runtime}, in extended static checking fashion \cite{escJava}, and allow to perform software certification \cite{krakatoa}. There are also tools that support annotation generation \cite{canapa},\cite{daikon}.
 \subsection{BML}
-The Bytecode Modelling Language (BML) is a specification language for the bytecode. It was proposed by Burdy et al. \cite{bmlBurdy} The design of BML directly follows the fundamental concepts of JML. It inherits most constructions and keywords from the JML. As the BML is developed within the MOBIUS \cite{mobius} project and the main target of the project are Java-enabled mobile devices such as mobile phones, the current version of BML assumes some simplifications of the Java bytecode which are present in the J2ME platform -- the Java platform for mobile devices with restricted resources.
+The Bytecode Modelling Language (BML) is a specification language for the bytecode. It was proposed by Burdy et al. \cite{bmlBurdy} The design of BML directly follows the fundamental concepts of JML. It inherits most constructions and keywords from the JML. As the BML is developed within the MOBIUS \cite{mobius} project and the main target of the project are Java-enabled mobile devices such as mobile phones, the current version of BML assumes some simplifications of the Java bytecode which are present in the J2ME platform -- the Java platform for mobile devices with restricted resources. BML annotations are stored in binary format as bytecode attributes in the class files.
 \section{Annotation Language}
 The structure of annotations in BML and JML is very similar. We have two main types of annotations: method annotations and data type (class and interfaces) annotations.
 \subsection{Method Annotations}
+The most important type of method annotations are \textit{method specifications} describing the input-output behaviour of the method. This are preconditions (\texttt{requires}), defining conditions that should be fulfilled before entering the method and postconditions (\texttt{ensures}) telling what we can expect after the method finishes. One can define also which fields are modified (clause \texttt{modifies}) and which exceptions might be thrown (clause \texttt{signal}).
 
+The other type of method annotations are specifications element appearing in the code, like:
+\begin{itemize}
+\item {Assert instructions that state some facts about fields, variables etc. that should hold at this point of program execution.}
+\item {Loop specifications that describe the loop invariants (\texttt{loop\_invariant}), loop variants, like  \texttt{decreases} to prove the loop's termination or \texttt{modifies} that tells which fields or variables can be changed in this loop.}
+\item{Declarations of local \texttt{ghost} variables - variables that exist only in the specification. Their values can be modified only using special \texttt{set} instructions.}
+\item{\texttt{Set} instructions are similar to Java assingments, but they operate on ghost fields and variables.}
+\end{itemize}
 \subsection{Data Type Annotations}
+Class (and interface) specifications describe the behaviour of a class as a whole (in the \texttt{static} version) or of objects of that class (\texttt{instance}). The most important type of \textit{class specifications} are class invariants. They describe the property that should hold for all objects of this class in all \textit{visible} states, i.e. after all constructors and before and after all methods. For example, having a field \texttt{Object[] list}, one can write an invariant that the list is never null and its length is 10. Class invariants can be seen as additional, implicit preconditions and postcondtitions for all methods in the class.
+
+Other important class specifications are:
+\begin{itemize}
+\item {Declarations of \texttt{ghost} fields. They are similar to local ghost variables, but are visible in the whole class scope.}
+\item {Model fields -- fields present only in the specifications, representing some more complicated formulas. For example one can create a model field representing the property that a collection does not contain nulls.}
+\end{itemize}
+More details can be found in \cite{jmlrefman} and \cite{bmlrefman}.
+\section{Jml2Bml Compiler}
+In our work we have designed and implemented a tool called \textit{Jml2Bml} that compiles JML specifications into BML. It takes as input a Java source file with JML annotations and the corresponding class file and outputs the class file with inserted proper BML annotations. Our compiler uses an enhanced Abstract Syntax Tree for the Java source code, taken from the \textit{OpenJml} compiler. For different types of JML clauses, there are separate translation rules defined. At each node of the AST, all translation rules are applied. If some rule succeeds to translate this node, the result is stored in to the class file, using the \textit {BMLlib} library \cite{bmllib}. This approach makes the compiler easily extensible. One can simply write new translation rule to support additional feature of the JML language.
+
+Currently the \textit{Jml2Bml} compiler focuses on subset of the JML called JML Level 0. Due to external libraries limitations not all desired features are translated, for example the \texttt{loop\_modifies} clause is not supported by the \textit{OpenJml}.
+\subsection{Architecture Description}
+In this section we present the overview of the architecture of Jml2Bml compiler. The \textit{Jml2Bml} compiler uses \textit{OpenJml} to parse the Java source code together with the JML annotations. To insert generated BML annotations, the \textit{BMLLib} library is used. The dependencies between internal packages of \textit{Jml2Bml} and \textit{OpenJml} and \textit{BMLlib} are presented in figure \ref{packages}.
+
+The \texttt{jml2bml.main} package provides the entry point to the application. JML annotations from given source file will be translated and inserted into corresponding \texttt{class} file. Functions to access some bytecode information are located in \texttt{jml2bml.bytecode} and helpers to \textit{BMLlib} are collected in \texttt{jml2bml.bmllib}. The \texttt{jml2bml.rules} package contains translation rules for different aspects of JML. It should be easy to add new rules in the future. Classes for traversing the Java abstract syntax tree can be found in \texttt{jml2bml.ast}. In \texttt{jml2bml.symbols} implementation of symbol table can be found. The \texttt{jml2bml.engine} package contains the core translating mechanism. The whole tree is traversed and in each node all defined translation rules are applied. It allows also to register new rules in a very simply way, what is an important issue in case of implementing new features in the future.
+\begin{figure}[h]
+\centering{
+\begin{tikzpicture}[shorten >=1pt,->]
+\
+\tikzstyle{vertex}=[rectangle,draw=blue!50,fill=blue!20,thick,rounded corners = 2pt]
+\filldraw[draw=black!30,fill=black!3] (-1,7.5) rectangle (7,-1.5);
+%\draw (-0.9,7.2) node[right]{\textbf{\texttt{jml2bml}}};
+\node (label) at (-0.3,7.2){\textbf{\texttt{jml2bml}}};
+\node[vertex] (main) at (3,7) {\texttt{main}};
+\node[vertex] (engine) at (3,5.9) {\texttt{engine}}  ;
+\node[vertex] (rules) at (3,4.8) {\texttt{rules}}  ;
+\node[vertex] (ast) at (4.5,3.5) {\texttt{ast}}  ;
+\node[vertex] (utils) at (6,2.5) {\texttt{utils}};
+\node[vertex] (bytecode) at (3,1.5) {\texttt{bytecode}};
+\node[vertex] (bmllib) at (3, 0) {\texttt{bmllib}};
+\node[vertex] (exceptions) at (4.5, -1) {\texttt{exceptions}};
+\node[vertex] (symbols) at (1.5, -1) {\texttt{symbols}};
+\draw (main) -- (engine);
+\draw (engine) -- (rules);
+\draw (rules) --(ast);
+\draw (engine) -- (ast) ;
+\draw(ast) -- (utils) ;
+\draw(ast) -- (bytecode);
+\draw (ast) to[out=270,in=45] (bmllib);
+\draw (ast) -- (exceptions);
+\draw (main) to[out=0,in=90] (ast);
+\draw (rules) to[out=0,in=90] (utils);
+\draw (rules) -- (symbols);
+\draw (rules) -- (exceptions);
+\draw (rules) to[out=225,in=135] (bmllib);
+\draw (main) to[out=0,in=90] (utils);
+\draw (main) to[out=225,in=135] (bytecode);
+\draw (main) to[out=180,in=135] (symbols);
+\draw (engine) to[out=225,in=90] (symbols);
+\draw (ast) to[out=270,in=0] (symbols) ;
+\draw (rules) -- (bytecode);
+\draw (bytecode) -- (bmllib) ;
+\draw (bytecode) -- (exceptions) ;
+\draw (bytecode) -- (symbols) ;
+\draw (bmllib) -- (exceptions) ;
+\draw (bmllib) -- (symbols) ;
+\tikzstyle{external}=[rectangle,draw=black!50,fill=black!15,thick]
+\node[external] (BmlLib1) at  (6, -2.5) {\textbf{\texttt{BMLlib}}};
+\node[external] (openJml) at  (0, -2.5) {\textbf{\texttt{OpenJml}}};
+\draw[dotted] (main) to[out=180,in=90] (openJml);
+\draw[dotted] (engine) to[out=180,in=90] (openJml);
+\draw[dotted] (rules) to[out=180,in=90] (openJml);
+\draw[dotted] (rules) to[out=270,in=90] (BmlLib1);
+\draw[dotted] (ast) to[out=270,in=90] (BmlLib1);
+\draw[dotted] (ast) to[out=180,in=90] (openJml);
+\draw[dotted] (bytecode) to[out=0,in=90] (BmlLib1);
+\draw[dotted] (bmllib) to[out=270,in=0] (openJml);
+\draw[dotted] (bmllib)  to[out=270,in=180] (BmlLib1);
+\draw[dotted] (symbols) to[out=180,in=90] (openJml);
+\draw[dotted] (symbols) to[out=270,in=180] (BmlLib1);
+\end{tikzpicture}
+\caption{The dependency graph of the \textit{Jml2Bml} packages. Dotted lines denote access to external libraries.}}
+\label{packages}
+\end{figure}
+
 \section{An Example of Using The\\Compiler}
 This section provides an example demonstrating the result of launching the \textit{Jml2Bml}.
 \subsection{Source Code}
-Consider the class presented in figure \ref{source}. This is an excerpt of a class which implements a sequence of objects. We present here only one method that replaces in the \texttt{list} array all occurences of its first parameter with the second one.
+Consider the class presented in figure \ref{source}. This is an excerpt of a class which implements a sequence of objects. We present here only one method that replaces in the \texttt{list} array the first occurence of its first parameter with the second one. True will be returned, if and only if such an element was found.
 
 The presented code, apart from standard Java statements, contains also specifications in the JML. There is a precondition (\texttt{requires ...}) for the method \texttt{replace} defined. It requests that every time the method is invoked, the field \texttt{list} it not \texttt{null}. The next three lines (starting with \texttt{ensures} constitute the method postcondition. It states that, if the precondition was fullfiled, then the method result is true if and only if there was an element in the \texttt{list} which value has been updated from \texttt{o1} to \texttt{o2}. Note that the postcondition makes use of some JML features, like \texttt{$\backslash$result}, \texttt{$\backslash$old} or \texttt{$\backslash$exists}. This postcondition does not describe all properties of this method. For example an implementation that replaces all elements in the \texttt{list} up to the first occurence of \texttt{o1} with \texttt{o2} will fulfill this specification.
 
@@ -278,69 +362,6 @@ When we want to add BML specifications to optimized bytecode, we have to know th
 	\item Use non-optimizing compiler.
 \end{itemize}
 
-\section{Architecture Description}
-In this section we present the overview of the architecture of Jml2Bml compiler. The \textit{Jml2Bml} compiler uses \textit{OpenJml} to parse the Java source code together with the JML annotations. To insert generated BML annotations, the \textit{BMLLib} library is used. The dependencies between internal packages and \textit{Jml2Bml} and \textit{BMLlib} are presented in figure \ref{packages}.
-
-The \texttt{jml2bml.main} package provides the entry point to the application. JML annotations from given source file will be translated and inserted into corresponding \texttt{class} file. Functions to access some bytecode information are located in \texttt{jml2bml.bytecode} and helpers to \textit{BMLlib} are collected in \texttt{jml2bml.bmllib}. The \texttt{jml2bml.rules} package contains translation rules for different aspects of JML. It should be easy to add new rules in the future. Classes for traversing the Java abstract syntax tree can be found in \texttt{jml2bml.ast}. In \texttt{jml2bml.symbols} implementation of symbol table can be found. The \texttt{jml2bml.engine} package contains the core translating mechanism. The whole tree is traversed and in each node all defined translation rules are applied. It allows also to register new rules in a very simply way, what is an important issue in case of implementing new features in the future.
-\begin{figure}[h]
-\centering{
-\begin{tikzpicture}[shorten >=1pt,->]
-\
-\tikzstyle{vertex}=[rectangle,draw=blue!50,fill=blue!20,thick,rounded corners = 2pt]
-\filldraw[draw=black!30,fill=black!3] (-1,7.5) rectangle (7,-1.5);
-%\draw (-0.9,7.2) node[right]{\textbf{\texttt{jml2bml}}};
-\node (label) at (-0.3,7.2){\textbf{\texttt{jml2bml}}};
-\node[vertex] (main) at (3,7) {\texttt{main}};
-\node[vertex] (engine) at (3,5.9) {\texttt{engine}}  ;
-\node[vertex] (rules) at (3,4.8) {\texttt{rules}}  ;
-\node[vertex] (ast) at (4.5,3.5) {\texttt{ast}}  ;
-\node[vertex] (utils) at (6,2.5) {\texttt{utils}};
-\node[vertex] (bytecode) at (3,1.5) {\texttt{bytecode}};
-\node[vertex] (bmllib) at (3, 0) {\texttt{bmllib}};
-\node[vertex] (exceptions) at (4.5, -1) {\texttt{exceptions}};
-\node[vertex] (symbols) at (1.5, -1) {\texttt{symbols}};
-\draw (main) -- (engine);
-\draw (engine) -- (rules);
-\draw (rules) --(ast);
-\draw (engine) -- (ast) ;
-\draw(ast) -- (utils) ;
-\draw(ast) -- (bytecode);
-\draw (ast) to[out=270,in=45] (bmllib);
-\draw (ast) -- (exceptions);
-\draw (main) to[out=0,in=90] (ast);
-\draw (rules) to[out=0,in=90] (utils);
-\draw (rules) -- (symbols);
-\draw (rules) -- (exceptions);
-\draw (rules) to[out=225,in=135] (bmllib);
-\draw (main) to[out=0,in=90] (utils);
-\draw (main) to[out=225,in=135] (bytecode);
-\draw (main) to[out=180,in=135] (symbols);
-\draw (engine) to[out=225,in=90] (symbols);
-\draw (ast) to[out=270,in=0] (symbols) ;
-\draw (rules) -- (bytecode);
-\draw (bytecode) -- (bmllib) ;
-\draw (bytecode) -- (exceptions) ;
-\draw (bytecode) -- (symbols) ;
-\draw (bmllib) -- (exceptions) ;
-\draw (bmllib) -- (symbols) ;
-\tikzstyle{external}=[rectangle,draw=black!50,fill=black!15,thick]
-\node[external] (BmlLib1) at  (6, -2.5) {\textbf{\texttt{BMLlib}}};
-\node[external] (openJml) at  (0, -2.5) {\textbf{\texttt{OpenJml}}};
-\draw[dotted] (main) to[out=180,in=90] (openJml);
-\draw[dotted] (engine) to[out=180,in=90] (openJml);
-\draw[dotted] (rules) to[out=180,in=90] (openJml);
-\draw[dotted] (rules) to[out=270,in=90] (BmlLib1);
-\draw[dotted] (ast) to[out=270,in=90] (BmlLib1);
-\draw[dotted] (ast) to[out=180,in=90] (openJml);
-\draw[dotted] (bytecode) to[out=0,in=90] (BmlLib1);
-\draw[dotted] (bmllib) to[out=270,in=0] (openJml);
-\draw[dotted] (bmllib)  to[out=270,in=180] (BmlLib1);
-\draw[dotted] (symbols) to[out=180,in=90] (openJml);
-\draw[dotted] (symbols) to[out=270,in=180] (BmlLib1);
-\end{tikzpicture}
-\caption{The dependency graph of the \textit{Jml2Bml} packages. Dotted lines denote access to external libraries.}}
-\label{packages}
-\end{figure}
 \section{Translation Principles}
 Tutaj bedziemy opisywac,ze nie uzywamy tablicy linii, bierzemy kod bez optymalizacji itp.
 \end{document}
