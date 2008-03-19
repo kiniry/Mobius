@@ -39,6 +39,7 @@ import annot.bcexpression.modifies.ModifiesArray;
 import annot.bcexpression.modifies.ModifiesDot;
 import annot.bcexpression.modifies.ModifiesIdent;
 import annot.bcexpression.modifies.ModifiesInterval;
+import annot.bcexpression.modifies.ModifiesLocalVar;
 import annot.bcexpression.modifies.ModifiesSingleIndex;
 import annot.bcexpression.modifies.ModifiesStar;
 import annot.bcexpression.modifies.ModifyExpression;
@@ -323,6 +324,8 @@ public class AttributeReader {
 			return new ModifiesDot(this, b);
 		case Code.MODIFIES_ARRAY:
 			return new ModifiesArray(this, b);
+    case Code.MODIFIES_LOCAL_VARIABLE:
+      return new ModifiesLocalVar(this, b);
 		default:
 			throw new ReadAttributeException("invalid modify opcode: " + b);
 		}

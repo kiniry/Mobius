@@ -24,7 +24,7 @@ import annot.textio.Priorities;
 public abstract class BCExpression {
 
 	/**
-	 * Type of expression, from annot.io.Code interface,
+	 * Type of expression, from {@link annot.io.Code} interface,
 	 * used also for .class file i/o operations.
 	 */
 	private int connector = -1;

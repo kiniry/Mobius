@@ -60,6 +60,7 @@ public interface Code {
 	public static final int MODIFIES_INTERVAL = 0xD5;
 	public static final int MODIFIES_SINGLE_INDEX = 0xD6;
 	public static final int MODIFIES_STAR = 0xD7;
+  public static final int MODIFIES_LOCAL_VARIABLE = 0xD8;
 	public static final int BOUND_VAR = 0xE0;
 
 	// new opcodes:

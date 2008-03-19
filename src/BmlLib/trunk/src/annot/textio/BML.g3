@@ -343,6 +343,7 @@ modifyExpression returns [ModifyExpression ast] :
 	{initExpression();}
 	(NOTHING {$ast = ModifyExpression.Nothing;}
 		| EVERYTHING {$ast = ModifyExpression.Everything;}
+        | l=localVar {$ast = new ModifiesLocalVar(l.lv);}
 		| i=modifySubExpr {$ast = new ModifiesIdent($i.ast);}
 			(DOT j=modifySubExpr {$ast = new ModifiesDot($ast, $j.ast);})*
 			(BR_LEFT a=specArray BR_RIGHT {$ast = new ModifiesArray($ast, $a.ast);})*
