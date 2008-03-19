@@ -138,7 +138,7 @@ command	returns [Command v]:
       { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME,$expr.v,tokLoc($t)); }
   | t='havoc' atom_id ';'
       { if(ok) $v=HavocCmd.mk($atom_id.v,tokLoc($t));}
-  | t='call' ((l=ID | '(' ll=id_list ')') ':=')? n=ID ('.<' st=simple_type_list '>')? 
+  | t='call' ((l=ID | '(' ll=id_list ')') ':=')? n=ID ('<' st=simple_type_list '>')? 
     '(' (r=expr_list)? ')' ';'
       { if(ok) $v=CallCmd.mk($n.text,$st.v,$ll.v,$r.v,tokLoc($t));}
 ;
@@ -242,7 +242,7 @@ atom returns [Atom v]:
   | t='true'  { if(ok) $v = AtomLit.mk(AtomLit.AtomType.TRUE,tokLoc($t)); }
   | t='null'  { if(ok) $v = AtomLit.mk(AtomLit.AtomType.NULL,tokLoc($t)); }
   | t=INT     { if(ok) $v = AtomNum.mk(new BigInteger($INT.text),tokLoc($t)); }
-  |	t=ID ('.<' st=simple_type_list '>')? 
+  |	t=ID ('<' st=simple_type_list '>')? 
               { if(ok) $v = AtomId.mk($t.text,$st.v,tokLoc($t)); }
     ('(' (p=expr_list?) ')'
               { if(ok) $v = AtomFun.mk($t.text,$st.v,$p.v,tokLoc($t)); }
@@ -256,7 +256,7 @@ atom returns [Atom v]:
 ;
 
 atom_id returns [AtomId v]:
-    ID ('.<' st=simple_type_list '>')?
+    ID ('<' st=simple_type_list '>')?
       { if(ok) $v = AtomId.mk($ID.text,$st.v,tokLoc($ID)); }
 ;
 
@@ -285,7 +285,7 @@ id_list	returns [Identifiers v]:
 ;
 
 simple_type_list returns [TupleType v]:
-    h=simple_type (',' t=simple_type_list)?
+    '`' h=simple_type (',' t=simple_type_list)?
   { if (ok) $v=TupleType.mk($h.v,$t.v,astLoc($h.v)); }
 ;
 
@@ -347,3 +347,4 @@ COMMENT
 LINE_COMMENT
     : '//' ~('\n'|'\r')* ('\r'|'\n') {$channel=HIDDEN;}
     ;
+
