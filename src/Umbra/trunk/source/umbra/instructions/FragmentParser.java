@@ -173,8 +173,8 @@ public class FragmentParser extends BytecodeCommentParser {
                                                            a_ctxt);
       addEditorLine(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
-      if (lc.isCommentStart()) { // ignore comments
-        j = swallowComment(my_doc, j, my_end, a_ctxt);
+      if (lc.isCommentStart()) { // process comments
+        j = swallowComment(my_doc, j + 1, my_end, a_ctxt) - 1;
         continue;
       }
       if (lc instanceof HeaderLineController) { // method header
@@ -222,7 +222,7 @@ public class FragmentParser extends BytecodeCommentParser {
       if (!(lc instanceof CommentLineController)) {
         break;
       }
-      addEditorLine(j, lc);
+      addEditorLine(lc);
       addToCurrentComment(line);
       lc.setMethodNo(a_ctxt.getMethodNo());
       j++;

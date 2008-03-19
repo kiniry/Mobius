@@ -148,7 +148,7 @@ public abstract class BytecodeTextParser {
    * It shifts the element currently at that position (if any) and any
    * subsequent elements to the right (adds one to their indices).
    *
-   * @param a_pos the position to insert the line
+   * @param a_pos the position in the document where to insert the line
    * @param a_line the line to be inserted
    */
   public void addEditorLine(final int a_pos,

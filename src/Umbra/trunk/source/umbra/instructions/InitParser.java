@@ -191,7 +191,7 @@ public class InitParser extends BytecodeCommentParser {
         addEditorLine(j, lc);
         lc.setMethodNo(a_ctxt.getMethodNo());
         if (lc.isCommentStart()) { // ignore comments
-          j = swallowEmptyLines(my_doc, ++j, a_ctxt);
+          j = swallowEmptyLines(my_doc, ++j, a_ctxt) - 1;
           continue;
         }
         if (lc instanceof EmptyLineController) { //method end

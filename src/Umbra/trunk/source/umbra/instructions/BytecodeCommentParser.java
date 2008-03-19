@@ -320,7 +320,7 @@ public class BytecodeCommentParser extends BytecodeTextParser {
   protected void enrichWithComment(final BytecodeLineController a_line,
                                    final int a_instno) {
     my_combined_text.append(a_line.getLineContent());
-    String commi = getCommentForInstr(a_instno);
+    final String commi = getCommentForInstr(a_instno);
     if (a_line instanceof InstructionLineController &&
         commi != null) {
       insertAt(my_combined_text.length() - 1, "//" + commi);

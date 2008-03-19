@@ -282,6 +282,7 @@ public class BytecodeEditor extends TextEditor {
       MessageDialog.openError(new Shell(), "Bytecode",
                               "Cannot load the byte code from the file " +
                               jc.getFileName());
+      e1.printStackTrace();
     }
   }
 
