@@ -1,9 +1,5 @@
 grammar Fb;
 
-options {
-  backtrack=true;
-}
-
 @header {
   package freeboogie.parser; 
   import freeboogie.ast.*; 
