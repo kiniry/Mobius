@@ -10,8 +10,6 @@ package jml2bml.ast;
 
 import java.io.PrintStream;
 
-import jml2bml.utils.Logger;
-
 import com.sun.source.tree.Tree;
 
 /**

@@ -110,9 +110,11 @@ Other important class specifications are:
 \end{itemize}
 More details can be found in \cite{jmlrefman} and \cite{bmlrefman}.
 \section{Jml2Bml Compiler}
-In our work we have designed and implemented a tool called \textit{Jml2Bml} that compiles JML specifications into BML. It takes as input a Java source file with JML annotations and the corresponding class file and outputs the class file with inserted proper BML annotations. Our compiler uses an enhanced Abstract Syntax Tree for the Java source code, taken from the \textit{OpenJml} compiler. For different types of JML clauses, there are separate translation rules defined. At each node of the AST, all translation rules are applied. If some rule succeeds to translate this node, the result is stored in to the class file, using the \textit {BMLlib} library \cite{bmllib}. This approach makes the compiler easily extensible. One can simply write new translation rule to support additional feature of the JML language.
+In our work we have designed and implemented a tool called \textit{Jml2Bml} that compiles JML specifications into BML. It takes as input a Java source file with JML annotations and the corresponding class file and outputs the class file with inserted proper BML annotations. Our compiler uses an enhanced Abstract Syntax Tree for the Java source code, taken from the \textit{OpenJml} compiler. For different types of JML clauses, there are separate translation rules defined. At each node of the AST, all translation rules are applied. If some rule succeeds to translate this node, the result is stored in to the class file, using the \textit {BMLlib} library \cite{bmllib}. This approach makes the compiler easily extensible. One can simply write new translation rule to support additional features of the JML language.
 
 Currently the \textit{Jml2Bml} compiler focuses on subset of the JML called JML Level 0. Due to external libraries limitations not all desired features are translated, for example the \texttt{loop\_modifies} clause is not supported by the \textit{OpenJml}.
+
+The \textit{Jml2Bml} is designed to be compatible with other bytecode level tools, such as the bytecode editor \textit{Umbra}.
 \subsection{Architecture Description}
 In this section we present the overview of the architecture of Jml2Bml compiler. The \textit{Jml2Bml} compiler uses \textit{OpenJml} to parse the Java source code together with the JML annotations. To insert generated BML annotations, the \textit{BMLLib} library is used. The dependencies between internal packages of \textit{Jml2Bml} and \textit{OpenJml} and \textit{BMLlib} are presented in figure \ref{packages}.
 
@@ -176,6 +178,21 @@ The \texttt{jml2bml.main} package provides the entry point to the application. J
 \caption{The dependency graph of the \textit{Jml2Bml} packages. Dotted lines denote access to external libraries.}}
 \label{packages}
 \end{figure}
+\subsection{Translation Principles}
+To be able to translate any JML specification, one needs to translate JML expressions, so the fundamental task in writing the compiler was to write a translation rule for expressions. As BML is based on JML, the syntax of expressions is similar in both languages and includes:
+\begin{itemize}
+\item{Binary arithmetic operations (+,-,*,/)}
+\item{Boolean operations}
+\item{Relational operators ($<$, $\le$, $\ge$, $!=$, etc)}
+\item{Logical formulae containing 
+\begin{itemize}
+\item implications
+\item quantifiers (with bound variables)
+\end{itemize}}
+\end{itemize}
+As in standard java, also in JML and BML the expressions can contain local variables, references to fields (both standard and ghost), method invocations, array accesses etc. There can also appear constructions specific for JML and BML, like \texttt{$\backslash$old} clause. The translation of expressions is in many cases straightforward. Translation of identifiers is more complicated, because one has to distinguish between fields, ghost fields, local variables and bound variables and resolve them properly at the bytecode level.
+
+
 
 \section{An Example of Using The\\Compiler}
 This section provides an example demonstrating the result of launching the \textit{Jml2Bml}.
@@ -223,7 +240,7 @@ public class List {
 \label{source}
 \end{figure}
 \subsection{Bytecode}
-In this section we describe the result of translating the source code from Figure \ref{source}. Since the binary class files are not human readable, we rely on its textual representation obtained from the BMLlib. The Figure \ref{bytecode} shows the translated \texttt{replace} method together with BML annotations inserted by our Jml2Bml compiler. Lines 0 and 1 correspond to initialization the \texttt{i = 0}. The loop is located between lines 2 and 33. Lines 5 - 12 represent the \texttt{if} statement, 15 - 23 correspond to lines ??? from the source code. Loading loop condition parameters is located in lines 27 - 32 and 33 performs the loop condition comparison. 
+In this section we describe the result of translating the source code from Figure \ref{source}. Since the binary class files are not human readable, we rely on its textual representation obtained from the BMLlib. The Figure \ref{bytecode} shows the translated \texttt{replace} method together with BML annotations inserted by our Jml2Bml compiler. Lines 0 and 1 correspond to initialization the \texttt{i = 0}. The loop is located between lines 2 and 33. Lines 5 - 12 represent the \texttt{if} statement, 15 - 23 correspond to lines ??? from the source code. Loading loop condition parameters is located in lines 27 - 32 and 33 performs the loop condition comparison.
 
 The \texttt{requires-enusers} pair is translated into input-output behaviour BML specifications located just before the method code. Loops specifications are located after line 32 in the presented listing. The Jml2Bml compiler detects loops in the bytecode and inserts the annotation before the statement representing the loop condition. In this case it is the \texttt{if\_icmplt} instruction comparing \texttt{i} and \texttt{list.length}. For more details about detecting loops refer to section \ref{loopDetection}. The modifies clause describes set of variables modified by the loop. Currently, because of \textit{OpenJML} limitations it is not supported by our compiler (the default value \texttt{everything} will be inserted).
 \begin{figure}
@@ -362,6 +379,4 @@ When we want to add BML specifications to optimized bytecode, we have to know th
 	\item Use non-optimizing compiler.
 \end{itemize}
 
-\section{Translation Principles}
-Tutaj bedziemy opisywac,ze nie uzywamy tablicy linii, bierzemy kod bez optymalizacji itp.
 \end{document}
