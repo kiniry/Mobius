@@ -106,23 +106,23 @@ public class SymbolTableBuilder extends Transformer {
 
   @Override
   public void see(CallCmd callCmd, String p, TupleType types, Identifiers results, Exprs args) {
-    assert types == null; //TODO
     symbolTable.procs.put(callCmd, check(gc.procDef(p), p, callCmd.loc()));
+    if (types != null) types.eval(this);
     if (results != null) results.eval(this);
     if (args != null) args.eval(this);
   }
 
   @Override
   public void see(AtomFun atomFun, String f, TupleType types, Exprs args) {
-    assert types == null; //TODO
     symbolTable.funcs.put(atomFun, check(gc.funDef(f), f, atomFun.loc()));
+    if (types != null) types.eval(this);
     if (args != null) args.eval(this);
   }
 
   @Override
   public void see(AtomId atomId, String id, TupleType types) {
-    assert types == null; //TODO
     symbolTable.ids.put(atomId, lookup(id, atomId.loc()));
+    if (types != null) types.eval(this);
   }
 
   // === collect info from local scopes ===

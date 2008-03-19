@@ -391,23 +391,18 @@ public class TypeChecker extends Evaluator<Type> {
     }
   }
   
-  // === visiting atoms, including arrays with that `generic' hack ===
+  // === visiting atoms ===
   @Override
   public Type eval(AtomId atomId, String id, TupleType types) {
     assert types == null; // TODO
     Declaration d = st.ids.def(atomId);
     Type t = errType;
-    if (d == null)
-      // HACK for `generics'
-      t = UserType.mk(id);
-    else {
-      if (d instanceof VariableDecl)
-        t = ((VariableDecl)d).getType();
-      else if (d instanceof ConstDecl)
-        t = ((ConstDecl)d).getType();
-      else
-        assert false;
-    }
+    if (d instanceof VariableDecl)
+      t = ((VariableDecl)d).getType();
+    else if (d instanceof ConstDecl)
+      t = ((ConstDecl)d).getType();
+    else 
+      assert false;
     typeOf.put(atomId, t);
     return t;
   }
@@ -535,7 +530,7 @@ public class TypeChecker extends Evaluator<Type> {
 
   @Override
   public Type eval(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
-    assert types == null; // TODO
+    //assert types == null; // TODO
     Procedure p = st.procs.def(callCmd);
     Signature sig = p.getSig();
     Declaration fargs = sig.getArgs();
@@ -613,6 +608,18 @@ public class TypeChecker extends Evaluator<Type> {
   @Override
   public Type eval(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
     if (cmds != null) cmds.eval(this);
+    if (tail != null) tail.eval(this);
+    return null;
+  }
+
+  // === do not look at type variable introductions ===
+  @Override
+  public Type eval(Signature signature, String name, Declaration args, Declaration results, Identifiers typeVars) {
+    return null;
+  }
+
+  @Override
+  public Type eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     if (tail != null) tail.eval(this);
     return null;
   }

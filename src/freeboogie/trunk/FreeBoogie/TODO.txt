@@ -2,7 +2,8 @@
 24 VC generation implementation
  6 simple interface to parse from strings
 
- . should arrays be allowed as indices in arrays?
+ . add type variables to axioms so that the following is possible:
+     axiom<x,y> (forall a:[x]y,i:x,v:y:: select1d(update1d(a,i,v),i)==v);
  . update type checker for sane type variables
  . does ImplementationChecker treat type vars correctly?
  . add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
