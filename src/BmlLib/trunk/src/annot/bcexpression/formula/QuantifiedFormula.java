@@ -24,6 +24,16 @@ import annot.bcexpression.formula.AbstractFormula;
  */
 public class QuantifiedFormula extends AbstractFormula {
 
+  /**
+   * The text of the \forall quantifier keyword.
+   */
+  private static final String FORALL_KEYWORD_TEXT = "\\forall";
+
+  /**
+   * The text of the \exists quantifier keyword.
+   */
+  private static final String EXISTS_KEYWORD_TEXT = "\\exists";
+
 	/**
 	 * Vector of bound variables
 	 */
@@ -65,10 +75,10 @@ public class QuantifiedFormula extends AbstractFormula {
 		switch (getConnector()) {
 		case Code.FORALL:
 		case Code.FORALL_WITH_NAME:
-			return "forall";
+			return FORALL_KEYWORD_TEXT;
 		case Code.EXISTS:
 		case Code.EXISTS_WITH_NAME:
-			return "exists";
+			return EXISTS_KEYWORD_TEXT;
 		default:
 			return "?";
 		}
