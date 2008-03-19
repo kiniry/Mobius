@@ -1,4 +1,5 @@
  . Update type checker for generics.
+ . The comments and code disagreee for TypeChecker.checkExact
  . Does ImplementationChecker treat type vars correctly?
  . Add the "-old" flag to make freeboogie accept constructs that
    I intend to deprecate.

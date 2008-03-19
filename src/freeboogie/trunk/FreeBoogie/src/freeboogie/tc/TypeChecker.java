@@ -222,7 +222,7 @@ public class TypeChecker extends Evaluator<Type> {
 
   // returns (a <: b)
   private boolean sub(Type a, Type b) {
-    // get rid of where clauses and make tuples with one element non-tuples
+    // get rid of where clauses strip () if only one type inside
     a = strip(a); b = strip(b);
     
     if (a == b) return true; // the common case
@@ -230,7 +230,6 @@ public class TypeChecker extends Evaluator<Type> {
     
     // an empty tuple is only the same with an empty tuple
     if (a == null ^ b == null) return false;
-    
     
     // check if b is ANY
     if (b instanceof PrimitiveType) {
@@ -457,7 +456,6 @@ public class TypeChecker extends Evaluator<Type> {
 
   @Override
   public Type eval(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
-    //assert types == null; // TODO
     Procedure p = st.procs.def(callCmd);
     Signature sig = p.getSig();
     Declaration fargs = sig.getArgs();
