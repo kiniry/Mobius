@@ -165,7 +165,7 @@ public class Main {
         // do what we are asked to do with this file
         if (opt.boolVal("-sb")) chopBlocks();
         if (opt.boolVal("-pp")) ast.eval(pp);
-        tc.process(ast);
+        if (tc.process(ast)) continue;
         if (opt.boolVal("-pst")) printSymbolTable();
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
       } catch (FileNotFoundException e) {

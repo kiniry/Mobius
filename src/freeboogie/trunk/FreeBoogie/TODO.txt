@@ -1,16 +1,24 @@
-34 VC generation design
-24 VC generation implementation
- 6 simple interface to parse from strings
-
- . add type variables to axioms so that the following is possible:
-     axiom<x,y> (forall a:[x]y,i:x,v:y:: select1d(update1d(a,i,v),i)==v);
- . update type checker for sane type variables
- . does ImplementationChecker treat type vars correctly?
- . add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
- . desugar dependent types in assumes/asserts
+ . Update type checker for generics.
+ . Does ImplementationChecker treat type vars correctly?
+ . Add the "-old" flag to make freeboogie accept constructs that
+   I intend to deprecate.
+ . Add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
+ . Boogie generates code like "call a,b:=f()" and I don't parse it
+   because parenthesis are missing
+ . Check that everything in the funcional/parser test typechecks
+   in "compatibility mode"
+ . Finish passivate; now you can use fancy generics to deal with arrays
+ . Desugar dependent types in assumes/asserts
+ . Desugar function calls into assumes/asserts (remember that free is special)
+ . Desugar specs intos assumes/asserts (introduces two? new blocks)
  . Transform BoogiePL expressions into SmtTerms (SmtTermBuilder)
-   Take care of arrays
- . extract sharing in SimplifyProver, or use `flet' for z3
- . when making SmtTerms do small simplifications for "and", "or"
-   (such as skip "TRUE", respectivelly "FALSE"; and return
+   Take care of arrays (does the prover know about arrays?)
+ . Extract sharing in SimplifyProver, or use `flet' for z3
+ . When making SmtTerms do small simplifications for "and", "or"
+   (such as skip "TRUE", respectively "FALSE"; and return
    neutral element when there are no operands)
+ . Cut out loops
+ . Make flowgraph reducible
+ . Simple interface to parse from strings
+
+vim:spell:ts=3:sw=3:fdm=manual:

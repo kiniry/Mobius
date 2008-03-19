@@ -186,7 +186,7 @@ public class GlobalsCollector extends Transformer {
   // === visit methods that skip places that might contain local variable decls ===
 
   @Override
-  public void see(Axiom axiom, Expr expr, Declaration tail) {
+  public void see(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
     if (tail != null) tail.eval(this);
   }
 

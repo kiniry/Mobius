@@ -203,6 +203,15 @@ public class SymbolTableBuilder extends Transformer {
     localVarDecl.pop();
   }
   
+  @Override
+  public void see(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
+    typeVarDecl.push();
+    collectTypeVars(typeVarDecl.peek(), typeVars);
+    expr.eval(this);
+    typeVarDecl.pop();
+    if (tail != null) tail.eval(this);
+  }
+  
   // === remember if we are below a modifies spec ===
   
   @Override

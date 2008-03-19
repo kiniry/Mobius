@@ -62,7 +62,8 @@ function_decl_tail returns [Declaration v]:
 ;
 
 axiom_tail returns [Declaration v]:
-  e=expr ';' declarations { if(ok) $v=Axiom.mk($e.v,$declarations.v,astLoc($e.v)); }
+  ('<' tv=id_list '>')? e=expr ';' declarations 
+    { if(ok) $v=Axiom.mk($tv.v,$e.v,$declarations.v,astLoc($e.v)); }
 ;
 
 global_decl_tail returns [Declaration v]:
@@ -327,7 +328,7 @@ simple_type returns [Type v]:
   | t='[' r=simple_type (',' c=simple_type)? ']' e=simple_type
              { if(ok) $v = ArrayType.mk($r.v,$c.v,$e.v,tokLoc($t)); }
   | t='<' p=simple_type '>' st=simple_type
-             { if(ok) $v = GenericType.mk($p.v,$st.v,tokLoc($t)); }
+             { if(ok) $v = IndexedType.mk($p.v,$st.v,tokLoc($t)); }
 ;
 
 type returns [Type v]:

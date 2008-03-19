@@ -31,11 +31,11 @@ DepType.java
 Expr.java
 Exprs.java
 Function.java
-GenericType.java
 HavocCmd.java
 Identifiers.java
 Implementation.java
 Index.java
+IndexedType.java
 PrimitiveType.java
 Procedure.java
 Signature.java

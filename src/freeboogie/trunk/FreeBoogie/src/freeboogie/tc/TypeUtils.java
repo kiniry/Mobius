@@ -27,7 +27,7 @@ public class TypeUtils {
     return a.getPtype() == b.getPtype();
   }
   
-  private static boolean eq(GenericType a, GenericType b) {
+  private static boolean eq(IndexedType a, IndexedType b) {
     return eq(a.getParam(), b.getParam()) && eq(a.getType(), b.getType());
   }
   
@@ -51,9 +51,9 @@ public class TypeUtils {
       ArrayType sa = (ArrayType)a;
       return ArrayType.mk(stripDep(sa.getRowType()), 
         stripDep(sa.getColType()), stripDep(sa.getElemType()));
-    } else if (a instanceof GenericType) {
-      GenericType sa = (GenericType)a;
-      return GenericType.mk(stripDep(sa.getParam()), stripDep(sa.getType()));
+    } else if (a instanceof IndexedType) {
+      IndexedType sa = (IndexedType)a;
+      return IndexedType.mk(stripDep(sa.getParam()), stripDep(sa.getType()));
     } else if (a instanceof TupleType) {
       TupleType sa = (TupleType)a;
       return TupleType.mk(stripDep(sa.getType()), (TupleType)stripDep(sa.getTail()));
@@ -101,8 +101,8 @@ public class TypeUtils {
       return eq((ArrayType)a, (ArrayType)b);
     else if (a instanceof PrimitiveType && b instanceof PrimitiveType)
       return eq((PrimitiveType)a, (PrimitiveType)b);
-    else if (a instanceof GenericType && b instanceof GenericType)
-      return eq((GenericType)a, (GenericType)b);
+    else if (a instanceof IndexedType && b instanceof IndexedType)
+      return eq((IndexedType)a, (IndexedType)b);
     else if (a instanceof UserType && b instanceof UserType)
       return eq((UserType)a, (UserType)b);
     else if (a instanceof TupleType && b instanceof TupleType)
@@ -124,8 +124,8 @@ public class TypeUtils {
         hasDep(st.getElemType()) || 
         hasDep(st.getRowType()) || 
         hasDep(st.getRowType()); 
-    } else if (t instanceof GenericType) {
-      GenericType st = (GenericType)t;
+    } else if (t instanceof IndexedType) {
+      IndexedType st = (IndexedType)t;
       return hasDep(st.getParam()) || hasDep(st.getType());
     } else if (t instanceof TupleType) {
       TupleType st = (TupleType)t;

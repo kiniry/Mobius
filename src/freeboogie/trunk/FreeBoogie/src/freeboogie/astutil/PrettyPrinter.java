@@ -210,8 +210,14 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Axiom axiom, Expr expr, Declaration tail) {
-    say("axiom ");
+  public void see(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
+    say("axiom");
+    if (typeVars != null) {
+      say("<");
+      typeVars.eval(this);
+      say(">");
+    }
+    say(" ");
     expr.eval(this);
     semi();
     if (tail != null) tail.eval(this);
@@ -316,7 +322,7 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(GenericType genericType, Type param, Type type) {
+  public void see(IndexedType genericType, Type param, Type type) {
     say("<");
     param.eval(this);
     say(">");

@@ -17,12 +17,15 @@ import freeboogie.util.StackedHashMap;
  * 
  * It also acts more-or-less as a Facade for the whole package.
  *
+ * NOTE subtyping is necessary only because of the special type
+ * "any" which is likely to be ditched in the future.
+ *
  * @author rgrig 
  * @author reviewed by TODO
  */
 @SuppressWarnings("unused") // many unused parameters
 public class TypeChecker extends Evaluator<Type> {
-  // used for primitive types
+  // used for primitive types (so reference equality is used below)
   private PrimitiveType boolType, intType, refType, nameType, anyType;
   
   // used to signal an error in a subexpression and to limit
@@ -38,8 +41,9 @@ public class TypeChecker extends Evaluator<Type> {
   // were there any type errors?
   private boolean errors;
   
-  // maps expressions to their types
-  private StackedHashMap<Expr, Type> typeOf;
+  // maps expressions to their types (caches the results of the
+  // typechecker)
+  private HashMap<Expr, Type> typeOf;
   
   // maps implementations to procedures
   private UsageToDefMap<Implementation, Procedure> implProc;
@@ -47,21 +51,13 @@ public class TypeChecker extends Evaluator<Type> {
   // maps implementation params to procedure params
   private UsageToDefMap<VariableDecl, VariableDecl> paramMap;
 
-  // Maps type variables to the real types. 
-  // Gets set by the |check| functions.
-  private StackedHashMap<String, Type> typeVar;
-  
-  // to get unique names for the type variables
-  private int typeVarCnt;
-  private static final String TYPE_VAR_PREFIX = " tv";
-    // contains space so that it can't come from parsing
   
   // === public interface ===
 
   /**
    * Typechecks an AST.
    * @param ast the AST to check
-   * @return whether there were any errors while typechecking (or in earlier phases) 
+   * @return whether there were errors
    */
   public boolean process(Declaration ast) {
     boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
@@ -71,11 +67,9 @@ public class TypeChecker extends Evaluator<Type> {
     anyType = PrimitiveType.mk(PrimitiveType.Ptype.ANY);
     errType = PrimitiveType.mk(PrimitiveType.Ptype.ERROR);
     
-    typeOf = new StackedHashMap<Expr, Type>();
-    typeVar = new StackedHashMap<String, Type>();
+    typeOf = new HashMap<Expr, Type>();
     
     errors = false;
-    typeVarCnt = 0;
 
     // build symbol table
     SymbolTableBuilder stb = new SymbolTableBuilder();
@@ -181,9 +175,9 @@ public class TypeChecker extends Evaluator<Type> {
         subst(tt.getColType(), a, b),
         subst(tt.getElemType(), a, b),
         tt.loc());
-    } else if (t instanceof GenericType) {
-      GenericType tt = (GenericType)t;
-      return GenericType.mk(
+    } else if (t instanceof IndexedType) {
+      IndexedType tt = (IndexedType)t;
+      return IndexedType.mk(
         subst(tt.getParam(), a, b),
         subst(tt.getType(), a, b),
         tt.loc());
@@ -193,33 +187,6 @@ public class TypeChecker extends Evaluator<Type> {
     }
     assert t == null || t instanceof PrimitiveType;
     return t;
-  }
-  
-  // returns the name of the type variable or null if |t| is not a type variable
-  private String typeVarName(Type t) {
-    if (t instanceof UserType) {
-      UserType s = (UserType)t;
-      if (typeVar.containsKey(s.getName()))
-        return s.getName();
-    }
-    return null;
-  }
-  
-  // If |a| is a type variable, then unify it with b.
-  // Returns whether a unification was performed.
-  private boolean unify(Type a, Type b) {
-    String an = typeVarName(a);
-    if (an == null) return false;
-    
-    String bn;
-    while ((bn = typeVarName(b)) != null && typeVar.get(bn) != null) 
-      b = typeVar.get(bn);
-    
-    Type c = typeVar.get(an);
-    sub(c, b); sub(b, c);
-    
-    typeVar.put(an, b);
-    return true;
   }
   
   private boolean sub(PrimitiveType a, PrimitiveType b) {
@@ -238,7 +205,7 @@ public class TypeChecker extends Evaluator<Type> {
     return a.getName().equals(b.getName());
   }
   
-  private boolean sub(GenericType a, GenericType b) {
+  private boolean sub(IndexedType a, IndexedType b) {
     if (!sub(a.getParam(), b.getParam()) || !sub(b.getParam(), a.getParam()))
       return false;
     return sub(a.getType(), b.getType());
@@ -271,22 +238,6 @@ public class TypeChecker extends Evaluator<Type> {
       if (sb.getPtype() == PrimitiveType.Ptype.ANY) return true;
     }
     
-    // the `generics' hack
-    if (unify(a, b) || unify(b, a)) return true;
-    
-    // allow T to be used when <tv>T is needed and tv is a type variable
-    if (b instanceof GenericType && !(a instanceof GenericType)) {
-      GenericType sb = (GenericType)b;
-      if (typeVarName(sb.getParam()) != null && sub(a, sb.getType()))
-        return unify(sb.getParam(), anyType);
-    }
-    
-    // allow <x>T to be used where T is expected (TODO: not?)
-    if (a instanceof GenericType && !(b instanceof GenericType)) {
-      GenericType sa = (GenericType)a;
-      if (sub(sa.getType(), b)) return true;
-    }
-    
     // the main check
     if (a instanceof PrimitiveType && b instanceof PrimitiveType)
       return sub((PrimitiveType)a, (PrimitiveType)b);
@@ -294,8 +245,8 @@ public class TypeChecker extends Evaluator<Type> {
       return sub((ArrayType)a, (ArrayType)b);
     else if (a instanceof UserType && b instanceof UserType) 
       return sub((UserType)a, (UserType)b);
-    else if (a instanceof GenericType && b instanceof GenericType)
-      return sub((GenericType)a, (GenericType)b);
+    else if (a instanceof IndexedType && b instanceof IndexedType)
+      return sub((IndexedType)a, (IndexedType)b);
     else if (a instanceof TupleType && b instanceof TupleType)
       return sub((TupleType)a, (TupleType)b);
     else
@@ -479,35 +430,11 @@ public class TypeChecker extends Evaluator<Type> {
     ArrayType at = (ArrayType)t;
     Type et = at.getElemType();
 
-    // the bulk of the `generic' hack
-    String resultTypeVar = null;
-    String freshTypeVar = null;
-    if (et instanceof UserType) {
-      UserType uet = (UserType)et;
-      if (st.types.def(uet) == null) {
-        // make uet a type variable
-        resultTypeVar = uet.getName();
-        freshTypeVar = TYPE_VAR_PREFIX + typeVarCnt++;
-        at = (ArrayType)subst(at, resultTypeVar, freshTypeVar);
-        typeVar.put(freshTypeVar, null);
-      }
-    }
-    
     // look at indexing types
     check(idx.getA().eval(this), at.getRowType(), idx.getA().loc());
     if (idx.getB() != null)
       check(idx.getB().eval(this), at.getColType(), idx.getB().loc());
 
-    // get the result type in case it was a type variable
-    if (resultTypeVar != null) {
-      et = typeVar.get(freshTypeVar);
-      if (et == null) {
-        report(atomIdx.loc(), "Can't deduce array type");
-        et = errType;
-      }
-      typeVar.remove(freshTypeVar);
-    }
-    
     typeOf.put(atomIdx, et);
     return et;
   }
@@ -578,7 +505,7 @@ public class TypeChecker extends Evaluator<Type> {
   
   // === visit various things that must have boolean params ===
   @Override
-  public Type eval(Axiom axiom, Expr expr, Declaration tail) {
+  public Type eval(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
     Type t = expr.eval(this);
     check(t, boolType, expr.loc());
     if (tail != null) tail.eval(this);

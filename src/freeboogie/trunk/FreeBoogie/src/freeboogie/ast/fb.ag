@@ -7,9 +7,9 @@ Declaration :> TypeDecl, ConstDecl, Axiom,
 
 TypeDecl =     String! name, Declaration tail;
 ConstDecl=     String! id, Type! type, Declaration tail;
-Axiom =        Expr! expr, Declaration tail;
 
 // These are declarations that may introduce type variables
+Axiom =        Identifiers typeVars, Expr! expr, Declaration tail;
 Function =     Signature! sig, Declaration tail;
 VariableDecl = String name, Type! type, 
                Identifiers typeVars, Declaration tail;
@@ -20,10 +20,10 @@ Implementation = Signature! sig, Body! body,
 
 
 // Types and constants
-Type :> PrimitiveType, UserType, ArrayType, GenericType, DepType, TupleType;
+Type :> PrimitiveType, UserType, ArrayType, IndexedType, DepType, TupleType;
 ArrayType = Type! rowType, Type colType, Type! elemType;
 PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY, ERROR) ptype;
-GenericType = Type! param, Type! type;
+IndexedType = Type! param, Type! type;
 DepType = Type! type, Expr! pred;
 UserType = String! name;
 TupleType = Type! type, TupleType tail;
