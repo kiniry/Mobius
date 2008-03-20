@@ -102,7 +102,7 @@ public class FragmentParser extends BytecodeCommentParser {
       } else if (a_ctxt.isInsideMethod()) {
         a_line_no = swallowMethodBodyFragment(a_line_no, a_ctxt);
       } else if (a_ctxt.isInInvariantArea()) {
-        a_line_no = swallowEmptyLines(my_doc, a_line_no, a_ctxt);
+        a_line_no = swallowEmptyLines(my_doc, a_line_no, my_end, a_ctxt);
         if (a_line_no <= my_end) {
           a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
         }
@@ -181,7 +181,7 @@ public class FragmentParser extends BytecodeCommentParser {
         throw new UmbraException();
       }
       if (lc instanceof EmptyLineController) { //method end
-        return swallowEmptyLines(my_doc, j, a_ctxt);
+        return swallowEmptyLines(my_doc, j, my_end, a_ctxt);
       }
       if (lc instanceof InstructionLineController) { //instruction line
         addInstruction((InstructionLineController)lc);

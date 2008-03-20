@@ -212,6 +212,8 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    *
    * @param a_doc a document to extract empty lines from
    * @param the_current_lno the first line to be analysed
+   * @param the_last_lno the line after which the document should not be
+   *   analysed
    * @param a_ctxt a parsing context in which the document is analysed
    * @return the first line which is not an empty line; in case the end
    *   of the document is reached this is the number of lines in the
@@ -221,10 +223,11 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    */
   protected int swallowEmptyLines(final BytecodeDocument a_doc,
                                   final int the_current_lno,
+                                  final int the_last_lno,
                                   final LineContext a_ctxt)
     throws UmbraLocationException {
     int j = the_current_lno;
-    while (j < a_doc.getNumberOfLines()) {
+    while (j <= the_last_lno) {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
       if (!(lc instanceof CommentLineController)  &&

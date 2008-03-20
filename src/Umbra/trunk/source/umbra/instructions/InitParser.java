@@ -136,14 +136,15 @@ public class InitParser extends BytecodeCommentParser {
     addEditorLine(j, lc);
     lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
-    j = swallowEmptyLines(my_doc, j, a_ctxt); //empty lines
+    j = swallowEmptyLines(my_doc, j, my_doc.getNumberOfLines() - 1, a_ctxt);
+                                                                  //empty lines
     line = getLineFromDoc(my_doc, j, a_ctxt); //class
     a_ctxt.setClassToBeRead();
     lc = Preparsing.getType(line, a_ctxt);
     addEditorLine(j, lc);
     lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
-    return swallowEmptyLines(my_doc, j, a_ctxt);
+    return swallowEmptyLines(my_doc, j, my_doc.getNumberOfLines() - 1, a_ctxt);
   }
 
   /**
@@ -173,7 +174,8 @@ public class InitParser extends BytecodeCommentParser {
                             final int a_method_no,
                             final LineContext a_ctxt)
     throws UmbraLocationException, UmbraMethodException {
-    int j = swallowEmptyLines(my_doc, the_line_no, a_ctxt);
+    int j = swallowEmptyLines(my_doc, the_line_no,
+                              my_doc.getNumberOfLines() - 1, a_ctxt);
     final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
 
     //swallow method header
@@ -191,11 +193,13 @@ public class InitParser extends BytecodeCommentParser {
         addEditorLine(j, lc);
         lc.setMethodNo(a_ctxt.getMethodNo());
         if (lc.isCommentStart()) { // ignore comments
-          j = swallowEmptyLines(my_doc, ++j, a_ctxt) - 1;
+          j = swallowEmptyLines(my_doc, ++j, my_doc.getNumberOfLines() - 1,
+                                a_ctxt) - 1;
           continue;
         }
         if (lc instanceof EmptyLineController) { //method end
-          return swallowEmptyLines(my_doc, ++j, a_ctxt);
+          return swallowEmptyLines(my_doc, ++j, my_doc.getNumberOfLines() - 1,
+                                   a_ctxt);
         }
         if (lc instanceof InstructionLineController) { //instruction line
           handleleInstructionLine((InstructionLineController)lc, mg, il, iter);
