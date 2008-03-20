@@ -274,16 +274,18 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    * @param a_line a line controller to associate comments with
    * @param a_pos the position in the combined text where the comment
    *   is to be added
+   * @param a_instno the number of a instruction with which the comment
+   *   should be associated
    */
   protected final void enrichWithComment(final BytecodeLineController a_line,
                                          final int a_pos,
                                          final int a_instno) {
     int pos = a_pos;
-    String commi = getCommentForInstr(a_instno);
+    final String commi = getCommentForInstr(a_instno);
     if (a_line instanceof InstructionLineController &&
         commi != null) {
       final String instr = a_line.getLineContent();
-      final String comm = "//" + commi;
+      final String comm = " //" + commi;
       pos += instr.length() - 1; // -1 for eol
       insertAt(pos, comm);
       pos += comm.length();
@@ -319,6 +321,8 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    * then the method only appends the content of the given line controller
    *
    * @param a_line a line controller to associate comments with
+   * @param a_instno the number of a instruction with which the comment
+   *   should be associated
    */
   protected void enrichWithComment(final BytecodeLineController a_line,
                                    final int a_instno) {

@@ -74,27 +74,34 @@ public class DisasBCEL implements IEditorActionDelegate {
                                 UmbraHelper.DISAS_EDITOR_PROBLEMS);
     } catch (ClassNotFoundException e) {
       messageClassNotFound(cpath);
-    } catch (CoreException e) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
-                                UmbraHelper.DISAS_MESSAGE_TITLE,
-                                UmbraHelper.DISAS_SAVING_PROBLEMS);
     }
   }
 
   /**
-   * @param jFile
-   * @return
-   * @throws PartInitException
-   * @throws JavaModelException
-   * @throws ClassNotFoundException
-   * @throws CoreException
+   * This method opens a byte code editor for the given file that corresponds
+   * to a Java resource. It figures out the name of the .btc file and opens
+   * a byte code editor for this file. Subsequently it retrieves the
+   * corresponding document and does the refresh of the byte code contained
+   * in the document. This operation generates the textual content of the
+   * document. Next the current method regenerates the colouring of the document
+   * so that the document is not gray. At last the fresh content of the
+   * document is saved to the .btc file on disc
+   *
+   * @param a_jfile the file with a path to the Java resource
+   * @return the path of the class file from which the textual representation
+   *   was generated
+   * @throws PartInitException in case the byte code editor cannot be open
+   * @throws JavaModelException in case the current project has no class file
+   *   output location set
+   * @throws ClassNotFoundException in case the class file for the given
+   *   Java file cannot be found
    */
-  private IPath openBCodeEditorForJavaFile(final IFile jFile)
+  private IPath openBCodeEditorForJavaFile(final IFile a_jfile)
     throws PartInitException,
-           JavaModelException, ClassNotFoundException, CoreException {
+           JavaModelException, ClassNotFoundException {
     IPath cpath;
     final IWorkbenchPage page = my_editor.getEditorSite().getPage();
-    final IFile btcFile = UmbraHelper.getBTCFileName(jFile, my_editor);
+    final IFile btcFile = UmbraHelper.getBTCFileName(a_jfile, my_editor);
     final FileEditorInput input = new FileEditorInput(btcFile);
     BytecodeEditor bc_editor;
     bc_editor = (BytecodeEditor) (page.openEditor(input,
@@ -105,12 +112,18 @@ public class DisasBCEL implements IEditorActionDelegate {
     final BytecodeDocument doc = (BytecodeDocument)bdp.getDocument(input);
                                    // this doc is empty when there is no .btc
                                    // file or contains the content of the file
-    cpath = UmbraHelper.getClassFileFile(jFile, my_editor).getFullPath();
+    cpath = UmbraHelper.getClassFileFile(a_jfile, my_editor).getFullPath();
     doc.initModTable();
-    bc_editor.refreshBytecode(cpath, doc,
+    try {
+      bc_editor.refreshBytecode(cpath, doc,
                                 null, null); //this works on the doc
-    openEditorAndDisassemble(page, bc_editor, input, doc);
-    bdp.saveDocument(null, input, doc, true);
+      openEditorAndDisassemble(page, bc_editor, input, doc);
+      bdp.saveDocument(null, input, doc, true);
+    } catch (CoreException e) {
+      MessageDialog.openWarning(my_editor.getSite().getShell(),
+                                  UmbraHelper.DISAS_MESSAGE_TITLE,
+                                  UmbraHelper.DISAS_SAVING_PROBLEMS);
+    }
     return cpath;
   }
 

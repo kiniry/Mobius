@@ -190,6 +190,8 @@ public abstract class BytecodeTextParser {
    * @param a_line a line controller to associate comments with
    * @param a_pos the position in the combined text where the comment
    *   is to be added
+   * @param a_instno the number of a instruction with which the comment
+   *   should be associated
    */
   protected abstract void enrichWithComment(final BytecodeLineController a_line,
                                             final int a_pos,
@@ -204,6 +206,8 @@ public abstract class BytecodeTextParser {
    * then the method only appends the content of the given line controller
    *
    * @param a_line a line controller to associate comments with
+   * @param a_instno the number of a instruction with which the comment
+   *   should be associated
    */
   protected abstract void enrichWithComment(
      final BytecodeLineController a_line,

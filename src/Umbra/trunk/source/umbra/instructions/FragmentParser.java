@@ -15,7 +15,6 @@ import umbra.UmbraException;
 import umbra.UmbraRuntimeException;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.parsing.UmbraLocationException;
-import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
@@ -142,8 +141,10 @@ public class FragmentParser extends BytecodeCommentParser {
       lc = Preparsing.getType(lineName, a_ctxt);
       addEditorLine(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
-      if (!(lc instanceof AnnotationLineController)) { //we allow only
-                                                       //annotation lines
+      if (!(lc instanceof CommentLineController) &&
+          !(lc instanceof UnknownLineController) &&
+          !(lc instanceof EmptyLineController)) { //we allow only unknown,
+                                                  //empty & annotation lines
         throw new UmbraException();
       }
     }

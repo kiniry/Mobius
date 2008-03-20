@@ -115,4 +115,23 @@ public class BMLParsing {
   public void setCodeString(final String a_code) {
     my_cFgmt = new CodeFragment(my_bcc, a_code);
   }
+
+  /**
+   * This method checks if the last parsed fragment is correct.
+   *
+   * @return <code>true</code> in case the fragment is correct,
+   *   <code>false</code> otherwise
+   */
+  public boolean isCorrect() {
+    return my_cFgmt.isCorrect();
+  }
+
+  /**
+   * This method return the error message for the last parsed fragment.
+   *
+   * @return the error message for the last parsed fragment
+   */
+  public String getErrorMsg() {
+    return my_cFgmt.getErrMsg();
+  }
 }

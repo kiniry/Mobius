@@ -275,10 +275,22 @@ public class BytecodeDocument extends Document {
     my_bcc.checkAllLines(a_start, a_newend);
   }
 
+  /**
+   * Returns the information about the correctness of the current document.
+   * It takes into account both the byte code mnemonics and the annotations.
+   *
+   * @return <code>true</code> when the document is syntactically correct, and
+   *   <code>false</code> otherwise
+   */
   public boolean allCorrect() {
-    return my_bcc.allCorrect();
+    return my_bcc.allCorrect() && my_bmlp.isCorrect();
   }
 
+  /**
+   * Retruns the line number of the first instruction which contains error.
+   *
+   * @return the line number with the first error
+   */
   public int getFirstError() {
     return my_bcc.getFirstError();
   }
@@ -372,6 +384,10 @@ public class BytecodeDocument extends Document {
     synch.synchronizeBS(a_pos);
   }
 
+  /**
+   * This method causes the initialisation of the structures which keep track
+   * of the modified methods.
+   */
   public void initModTable() {
     my_bcc.initModTable();
   }
@@ -416,6 +432,39 @@ public class BytecodeDocument extends Document {
     my_is_in_init = true;
     set(a_string);
     my_is_in_init = false;
+  }
+
+  /**
+   * Returns the information about the correctness of the method bodies in
+   * the current document.
+   *
+   * @return <code>true</code> when the method bodies are syntactically correct
+   *   and <code>false</code> otherwise
+   */
+  public boolean bodyCorrect() {
+    return my_bcc.allCorrect();
+  }
+
+  /**
+   * Returns the information about the correctness of the last edited annotation
+   * in the current document.
+   *
+   * @return <code>true</code> when the last annotation is syntactically correct
+   *   and <code>false</code> otherwise
+   */
+  public boolean annotCorrect() {
+    return my_bmlp.isCorrect();
+  }
+
+  /**
+   * Returns the error message for the last edited annotation in the current
+   * document.
+   *
+   * @return <code>true</code> when the last annotation is syntactically correct
+   *   and <code>false</code> otherwise
+   */
+  public String getAnnotError() {
+    return my_bmlp.getErrorMsg();
   }
 
 }

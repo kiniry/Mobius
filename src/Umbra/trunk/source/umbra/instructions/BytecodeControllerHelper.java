@@ -182,7 +182,6 @@ public abstract class BytecodeControllerHelper {
   /**
    * This method causes the initialisation of the table which keeps track
    * of the modified methods.
-   *
    */
   public void initModTable() {
     my_modified = null;

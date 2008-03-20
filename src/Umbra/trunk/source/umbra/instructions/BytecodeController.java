@@ -120,22 +120,42 @@ public final class BytecodeController extends BytecodeControllerContainer {
                             //correct
     final LineContext ctxtold = establishCurrentContext(a_start_rem);
     if (ctxtold.isInInvariantArea()) {
-      
-    }
-    if (ctxtold.isInsideAnnotation()) {
-      
-    }
-    if (ctxtold.isInsideMethod()) {
-      final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
-      markModified(methodno);
-      mg.removeLineNumbers();
-      replaceInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
-      mg.getInstructionList().setPositions();
+      doSpecialHandlingForInvariants();
+    } else if (ctxtold.isInsideAnnotation()) {
+      doSpecialHandlingForAnnotations();
+    } else if (ctxtold.isInsideMethod()) {
+      doSpecialHandlingForMethodBody(a_start_rem, an_end_rem, methodno,
+                                     fgmparser);
     }
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
                       fgmparser.getEditorLines(), ctxtold);
     if (UmbraHelper.DEBUG_MODE) controlPrint(1);
+  }
+
+  /**
+   * @param a_start_rem
+   * @param an_end_rem
+   * @param methodno
+   * @param fgmparser
+   * @throws UmbraException
+   */
+  private void doSpecialHandlingForMethodBody(final int a_start_rem, final int an_end_rem, final int methodno, final FragmentParser fgmparser) throws UmbraException {
+    final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+    markModified(methodno);
+    mg.removeLineNumbers();
+    replaceInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
+    mg.getInstructionList().setPositions();
+  }
+
+  private void doSpecialHandlingForAnnotations() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  private void doSpecialHandlingForInvariants() {
+    // TODO Auto-generated method stub
+    
   }
 
   /**
@@ -226,7 +246,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
       removeEditorLines(an_end_rem, a_stop);
     }
     //my_editor_lines.addAll(a_start_rem, the_lines);
-    if (!a_ctxt.isInsideAnnotation()) {
+    if (!a_ctxt.isInsideAnnotation() && !a_ctxt.isInInvariantArea()) {
       mg.getInstructionList().update();
       mg.update();
       mg.getInstructionList().setPositions();

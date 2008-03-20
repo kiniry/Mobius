@@ -45,7 +45,7 @@ public class BytecodeContribution extends ControlContribution {
   private static BytecodeContribution inUse;
 
   /**
-   * TODO.
+   * 
    */
   private boolean my_need_new_flag = true;
 
@@ -178,9 +178,6 @@ public class BytecodeContribution extends ControlContribution {
           a_doc.set(my_oldcontent);
           return;
         }
-        if (!a_doc.allCorrect())
-          displayError(a_doc.getFirstError());
-        else displayCorrect();
       }
     }
 
@@ -218,6 +215,13 @@ public class BytecodeContribution extends ControlContribution {
 
       updateFragment(doc, start_rem, my_stop_rem, stop);
       ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
+      if (!doc.bodyCorrect()) {
+        displayError(Integer.toString(doc.getFirstError()));
+      } else if (!doc.annotCorrect()) {
+        displayError(doc.getAnnotError());
+      } else {
+        displayCorrect();
+      }
     }
 
     /**
@@ -278,11 +282,11 @@ public class BytecodeContribution extends ControlContribution {
    * This method displays in the status line the information
    * about an error in the indicated line.
    *
-   * @param a_line the number of the line with the error
+   * @param a_msg the error message
    */
-  private void displayError(final int a_line) {
+  private void displayError(final String a_msg) {
     final IActionBars bars = my_editor.getEditorSite().getActionBars();
-    bars.getStatusLineManager().setMessage("Error detected: " + a_line);
+    bars.getStatusLineManager().setMessage("Error detected: " + a_msg);
   }
 
   /**
