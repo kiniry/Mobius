@@ -31,6 +31,11 @@ public class Parsing {
 	 */
 	private BCClass bcc;
 
+  /**
+   * The content of the last error message.
+   */
+  private String my_errmsg = "";
+
 	/**
 	 * A standard constructor.
 	 * 
@@ -253,8 +258,19 @@ public class Parsing {
 		} catch (RecognitionException e) {
 			if (affectBcc)
 				throw new RuntimeException("parsing failed while updating BCClass");
+      my_errmsg = "error in char " + e.charPositionInLine + 3;
 			return false;
 		}
+    my_errmsg = "";
 		return true;
 	}
+  
+  /**
+   * Returns the error message for the last parsing.
+   *
+   * @return the error message
+   */
+  public String getErrMsg() {
+    return my_errmsg;
+  }
 }

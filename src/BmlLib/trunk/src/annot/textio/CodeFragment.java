@@ -702,7 +702,7 @@ public class CodeFragment {
 			if (!checkParenthness(decorate(oldCode)))
 				if (cp_start != null) {
 					MLog.putMsg(MLog.PNotice,
-						"code has just became correct enought"
+						"code has just became correct enough"
 						+ " to attempt to parse it.");
 					cp_old = cp_new;
 				}
@@ -900,6 +900,7 @@ public class CodeFragment {
 		//DONE and parse it into bcc.
 		if (correct)
 			bcc.getParser().parseClass(shortCode, true);
+    errMsg = bcc.getParser().getErrMsg();
 	}
 	
 	/**
