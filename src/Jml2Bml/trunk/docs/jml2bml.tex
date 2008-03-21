@@ -72,7 +72,7 @@ The other reason, why it is important to be able to translate the source code sp
 	\item Rhino - the JavaScript Java implementation
 \end{itemize}
 At SugarCon 2008, Sun Microsystems CEO Jonathan Schwartz said that "we are just going to take the 'J' off the 'JVM' and just make it a 'VM'.". Therefore there will be a global trend with support of companies to use JVM with other languages.
-Bytecode itself has a verification algorithm but the verification is done only to ensure that the loaded bytecode will not cause the crash of the JVM. Verification algorithm includes:
+Bytecode itself has a verification algorithm \cite{verification} but the verification is done only to ensure that the loaded bytecode will not cause the crash of the JVM. Verification algorithm includes:
 \begin{itemize}
 	\item checking that all arguments on the operand stack are legal
 	\item ensuring that all types of variables passed to methods are correct
@@ -386,5 +386,9 @@ When we want to add BML specifications to optimized bytecode, we have to know th
 	\item Include the JML to BML compiler in existing Java compiler application.
 	\item Use non-optimizing compiler.
 \end{itemize}
+\section{Related Work}
+\textit{Jml2Bml} compiler uses external libraries that are still in developement (\textit{BMLlib}, \textit{OpenJML}). They do not provide whole functionality needed to compile the JML Level 0. When they get more powerful, also our compiler should be enhanced to support more sophisticated specifications (and therefore get more adequate for the end user). The most urgent are the \texttt{modifies} clauses and \texttt{set} instructions.
+\section{Conclusion}
+We have presented \textit{Jml2Bml} compiler that deals with JML annotations and translates them into BML. The resulting annotations are inserted in binary format into the class file (using the \textit{BMLlib} library). The compiler is an important step in building a common verification platform for all languages compiled to the Java bytecode.
 \bibliography{jml2bml}
 \end{document}
