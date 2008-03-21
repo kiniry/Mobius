@@ -11,7 +11,7 @@
  . Finish passivate; now you can use fancy generics to deal with arrays
  . Desugar dependent types in assumes/asserts
  . Desugar function calls into assumes/asserts (remember that free is special)
- . Desugar specs intos assumes/asserts (introduces two? new blocks)
+ . Desugar specs into assumes/asserts (introduces two? new blocks)
  . Transform BoogiePL expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
  . Extract sharing in SimplifyProver, or use `flet' for z3

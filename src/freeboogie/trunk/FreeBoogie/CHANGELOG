@@ -11,15 +11,17 @@ To specialize we write
 Specialization is completely optional. The ` is used to keep
 the parser simple. If omitted, then in
   call p(a<b,c<d,e<f,g<h)
-the parser could figure out only at the very end that
-the '<' signs mean "less than", not specialization. For
-a similar reason we now force parentheses around tuples
-of IDs in calls:
-  call (a, b, c) := procThatReturnsTriple();
-but only if there is more than one identifier, to maintain
-compatibility with the stuff produced by Boogie.
+the parser could figure out only at the very end that the '<'
+signs mean "less than", not specialization. Even so, the grammar
+uses an syntactic predicate for stuff like
+  call a<`[[[int]int]int]int>, b, c := procThatReturnsTriple();
+to look and see if there is an ':=' or not. The problem is that
+you can have arbitrary long types before you see whether you are
+calling a specialized function or simply specialize an ID. (The
+existence of _any_ type constructor makes types arbitrary long.)
 
-Now that I mention compatibility
+
+The construct
   var heap : [ref,<x>name]x;
 is not legal anymore, but I plan to make it so in a 'compatibility'
 mode. In 'compatibility mode' FB is supposed to do some extra
@@ -32,8 +34,13 @@ to use such a construct but I blame it on not having any
 concrete use in mind.)
 
 
-I will add type variables to axioms so that it's possible to
-write
+I allow type variables in axioms so that it's possible to write
   function select<x,y>([x]y,x) returns (y);
   function update<x,y>([x]y,x,y) returns ([x]y);
   axiom<x,y> (forall a:[x]y,i:x,v:y:: select(update(a,i,v),i)==v);
+The placement of the type variable introduction is consistent
+if you imagine that axioms have an empty name. In fact I may
+consider naming them in the future.
+
+
+vim:spell:fdm=manual:
