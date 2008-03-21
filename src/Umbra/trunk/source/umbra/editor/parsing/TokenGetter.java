@@ -20,7 +20,7 @@ import umbra.editor.NonRuleBasedDamagerRepairer;
 /**
  * This method collects array of colors from {@link ColorValues} class
  * and returns them as a token array.
- * TODO ???
+ * TODO ??? 
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -54,14 +54,15 @@ public final class TokenGetter {
   }
 
   /**
+   * Returns the array with tokens for all the possible areas in the BML
+   * documents.
+   *
    * @param the_manager the color manager related to the current bytecode
    *    editor, it must be the same as the one in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
    * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
-   * @return Array of tokens for each color value
-   *           (for each window element to be coloured)
-   *  TODO what the window element is?
+   * @return array of tokens - one for each area
    */
   public static IToken[] getTokenTab(final ColorManager the_manager,
                                      final int a_mode) {
@@ -73,14 +74,16 @@ public final class TokenGetter {
   }
 
   /**
-   * TODO.
+   * Returns a fresh damager-repairer that determines the damaged region and
+   * creates the presentation using the given colour in the given colouring
+   * mode with the given colour manager.
    *
    * @param a_manager manager the color manager related to the current bytecode
    *    editor, it must be the same as in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
    * @param a_mode the number of the current coloring style, it must be the
    *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
-   * @param a_col particular color as an attribute
+   * @param a_col particular abstract color as an attribute
    * @return each time a new damage repairer with the given colour parameters
    */
   public static NonRuleBasedDamagerRepairer getRepairer(

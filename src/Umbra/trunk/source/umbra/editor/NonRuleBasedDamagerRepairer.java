@@ -35,7 +35,7 @@ public class NonRuleBasedDamagerRepairer
   implements IPresentationDamager, IPresentationRepairer {
 
   /**
-   * The document this object works on TODO???
+   * The document this object works on.
    */
   private IDocument my_doc;
 
@@ -56,8 +56,9 @@ public class NonRuleBasedDamagerRepairer
   }
 
   /**
-   * TODO.
-   * @param a_doc TODO
+   * Associated the given document with the current damager-repairer.
+   *
+   * @param a_doc a document to associate with the current damager-repairer.
    * @see IPresentationRepairer#setDocument(IDocument)
    */
   public final void setDocument(final IDocument a_doc) {
@@ -127,7 +128,6 @@ public class NonRuleBasedDamagerRepairer
         return new Region(start, end - start);
 
       } catch (BadLocationException x) {
-        //TODO what should really be here?
         UmbraPlugin.messagelog("BadLocationException in getDamageRegion");
       }
     }

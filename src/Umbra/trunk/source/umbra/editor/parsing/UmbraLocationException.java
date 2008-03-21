@@ -9,9 +9,11 @@
 package umbra.editor.parsing;
 
 /**
- * @author alx
- * @version a-01
+ * This is an exception used to trace situations when the parsing exceeded
+ * the content of a document.
  *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
  */
 public class UmbraLocationException extends Exception {
 
@@ -25,10 +27,21 @@ public class UmbraLocationException extends Exception {
    */
   private final int my_wrong_location;
 
+  /**
+   * Creates exception with the information that the number of the line outside
+   * the document.
+   *
+   * @param a_line the line location outside the document
+   */
   public UmbraLocationException(final int a_line) {
     my_wrong_location = a_line;
   }
 
+  /**
+   * Returns the number of the wrong line.
+   *
+   * @return the number of the wrong line
+   */
   public int getWrongLocation() {
     return my_wrong_location;
   }

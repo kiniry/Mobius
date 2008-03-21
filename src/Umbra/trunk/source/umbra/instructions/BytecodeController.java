@@ -134,28 +134,43 @@ public final class BytecodeController extends BytecodeControllerContainer {
   }
 
   /**
-   * @param a_start_rem
-   * @param an_end_rem
-   * @param methodno
-   * @param fgmparser
-   * @throws UmbraException
+   * The method performs the special handling for areas which contain method
+   * bodies. It marks the method as edited, removes the LineNumberTable
+   * attribute for the method, replaces the instructions in the range
+   * <code>a_start_rem</code>-<code>an_end_rem</code> with the instructions
+   * from the parser. At last, it updates the labels of the instruction
+   * positions in the BCEL byte code representation.
+   *
+   * @param a_start_rem the first instruction to replace
+   * @param an_end_rem the last instruction to replace
+   * @param a_methodno the number of the handled method
+   * @param a_parser the parser with parsed new content
+   * @throws UmbraException the BCEL method representation cannot be retrieved
    */
-  private void doSpecialHandlingForMethodBody(final int a_start_rem, final int an_end_rem, final int methodno, final FragmentParser fgmparser) throws UmbraException {
+  private void doSpecialHandlingForMethodBody(final int a_start_rem,
+                                              final int an_end_rem,
+                                              final int a_methodno,
+                                              final FragmentParser a_parser)
+    throws UmbraException {
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
-    markModified(methodno);
+    markModified(a_methodno);
     mg.removeLineNumbers();
-    replaceInstructions(a_start_rem, an_end_rem, fgmparser.getInstructions());
+    replaceInstructions(a_start_rem, an_end_rem, a_parser.getInstructions());
     mg.getInstructionList().setPositions();
   }
 
+  /**
+   * The method performs the special handling for areas which contain BML
+   * annotations. Currently, it does nothing.
+   */
   private void doSpecialHandlingForAnnotations() {
-    // TODO Auto-generated method stub
-    
   }
 
+  /**
+   * The method performs the special handling for areas which contain BML
+   * invarinats. Currently, it does nothing.
+   */
   private void doSpecialHandlingForInvariants() {
-    // TODO Auto-generated method stub
-    
   }
 
   /**
@@ -166,44 +181,6 @@ public final class BytecodeController extends BytecodeControllerContainer {
    */
   public int getMethodForLine(final int a_lineno) {
     return (getLineController(a_lineno)).getMethodNo();
-  }
-
-  /*@ requires 0 <= the_first <= the_last <= my_editor_lines.size();
-    @ requires (\forall int i; 0 <= i && i <= the_instructions.size();
-    @           the_instructions.get(i) instanceof InstructionLineController);
-    @ requires !the_instructions.constainsNull;
-    @*/
-  /**
-   * This method replaces the instructions on the local instruction list
-   * within the given range with the given new instructions.
-   * The instructions that reside in the lines between {@code the_first}
-   * and {@code the_last} inclusively are removed. Next all the instructions
-   * in the {@code the_instructions} table are inserted in place corresponding
-   * to the indicated range.
-   *
-   * @param the_first the first line to be replaced
-   * @param the_last the last line to be replaced
-   * @param the_instructions te instructions to be added to the representation
-   */
-  private void replaceInstructions(final int the_first,
-                                  final int the_last,
-                                  final LinkedList the_instructions) {
-    int first = getFirstInstructionInRegion(the_first, the_last);
-    if (first < 0) { //there is not instruction in the given range
-      first = getFirstInstructionAfter(the_last);
-      if (first < 0) {
-        appendInstructions(the_instructions);
-        return;
-      }
-    } else {
-      removeInstructionsInRegion(the_first, the_last);
-      first = getFirstInstructionAfter(the_first);
-      if (first < 0) {
-        appendInstructions(the_instructions);
-        return;
-      }
-    }
-    insertInstructions(first, the_instructions);
   }
 
   /**

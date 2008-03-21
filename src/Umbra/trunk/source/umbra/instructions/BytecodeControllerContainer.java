@@ -306,4 +306,43 @@ public abstract class BytecodeControllerContainer extends
       //}
     }
   }
+
+  /*@ requires 0 <= the_first <= the_last <= my_editor_lines.size();
+    @ requires (\forall int i; 0 <= i && i <= the_instructions.size();
+    @           the_instructions.get(i) instanceof InstructionLineController);
+    @ requires !the_instructions.constainsNull;
+    @*/
+  /**
+   * This method replaces the instructions on the local instruction list
+   * within the given range with the given new instructions.
+   * The instructions that reside in the lines between {@code the_first}
+   * and {@code the_last} inclusively are removed. Next all the instructions
+   * in the {@code the_instructions} table are inserted in place corresponding
+   * to the indicated range.
+   *
+   * @param the_first the first line to be replaced
+   * @param the_last the last line to be replaced
+   * @param the_instructions te instructions to be added to the representation
+   */
+  protected void replaceInstructions(final int the_first,
+                                     final int the_last,
+                                     final LinkedList the_instructions) {
+    int first = getFirstInstructionInRegion(the_first, the_last);
+    if (first < 0) { //there is not instruction in the given range
+      first = getFirstInstructionAfter(the_last);
+      if (first < 0) {
+        appendInstructions(the_instructions);
+        return;
+      }
+    } else {
+      removeInstructionsInRegion(the_first, the_last);
+      first = getFirstInstructionAfter(the_first);
+      if (first < 0) {
+        appendInstructions(the_instructions);
+        return;
+      }
+    }
+    insertInstructions(first, the_instructions);
+  }
+
 }

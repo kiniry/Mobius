@@ -124,7 +124,7 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
     BytecodeContribution.inUse().addListener(document);
   }
 
-  public void changedByHand(IFileEditorInput fileEditorInput) {
+  public void changedByHand(final IFileEditorInput fileEditorInput) {
     final BytecodeDocument doc = (BytecodeDocument)getDocument(fileEditorInput);
     final String content = doc.get();
     doc.getBmlp().setCodeString(content);

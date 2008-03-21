@@ -85,6 +85,7 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    * with the current document.
    *
    * TODO link to the protocol for a_comment_array
+   *
    * @param a_comment_array the end-of-line comments from the previous session
    * @param a_interline the interline comments from the previous session
    */
@@ -293,8 +294,15 @@ public class BytecodeCommentParser extends BytecodeTextParser {
   }
 
   /**
-   * @param a_instno
-   * @return
+   * Retrieves the comment associated with the given instruction number. It
+   * checks if a comment is associated with the currently parsed line. In that
+   * case this comment is returned. In case there is no comment in the parsed
+   * text, the structure of the comments from the previous session
+   * {@link my_eolcomment_array} is consulted.
+   *
+   * @param a_instno the instruction number with which the comment is associated
+   * @return the string of the comment or <code>null</code> in case there is
+   *   no comment
    */
   private String getCommentForInstr(final int a_instno) {
     String commi = null;

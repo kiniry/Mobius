@@ -297,11 +297,23 @@ public abstract class BytecodeTextParser {
       }
     }
   }
-  
-  protected int getInstructionNoForLine(int lineno) {
-    if (my_instructions == null || my_editor_lines.size() <= lineno) return -1;
-    BytecodeLineController blc = (BytecodeLineController) my_editor_lines.get(lineno);
-    for (int i =0; i < my_instructions.size(); i++) {
+
+  /**
+   * Converts the given line number to the corresponding instruction number.
+   * This method returns the instruction number only for lines that contain
+   * instructions. For other lines the method returns -1.
+   *
+   * @param a_lineno the line number for which the instruction number is
+   *   retrieved
+   * @return the number of instruction or -1 in case the given line number
+   *   does not contain an instruction
+   */
+  protected int getInstructionNoForLine(final int a_lineno) {
+    if (my_instructions == null || my_editor_lines.size() <= a_lineno)
+      return -1;
+    final BytecodeLineController blc =
+                   (BytecodeLineController) my_editor_lines.get(a_lineno);
+    for (int i = 0; i < my_instructions.size(); i++) {
       if (blc == my_instructions.get(i)) {
         return i;
       }
