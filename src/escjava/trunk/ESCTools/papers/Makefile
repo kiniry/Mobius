@@ -28,10 +28,13 @@ HOMEWORK =	jml_homework.dvi jml_homework.ps jml_homework.pdf jml_homework.txt
 PERL=perl
 CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
 
-.PHONY: all build
+.PHONY: all build view
 all:	build
 
 build:	$(PAPERS) $(HOMEWORK)
+
+view:	$(HOMEWORK)
+	open -a Skim.app jml_homework.pdf
 
 $(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
 	@$(CODE2TEXI) $< > $@
@@ -74,19 +77,22 @@ $(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
 
 # texinfo
 
-%.info:	%.texinfo
+.svnversion:
+	svnversion > .svnversion
+
+%.info:	%.texinfo .svnversion
 	makeinfo $<
 
-%.txt:	%.texinfo
+%.txt:	%.texinfo .svnversion
 	makeinfo --no-headers $< -o $@
 
-%.html:	%.texinfo
+%.html:	%.texinfo .svnversion
 	makeinfo --html	$<
 
-%.dvi:	%.texinfo
+%.dvi:	%.texinfo .svnversion
 	texi2dvi $<
 
-%.pdf:	%.texinfo
+%.pdf:	%.texinfo .svnversion
 	texi2pdf $<
 
 jml_homework.dvi:	jml_homework.texinfo $(javatexinfofiles)

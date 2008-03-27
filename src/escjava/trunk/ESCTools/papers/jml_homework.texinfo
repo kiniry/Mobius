@@ -18,8 +18,12 @@ This document contains a set of homework exercises for those that wish
 to learn JML and ESC/Java2.  It was begun by Joseph R. Kiniry
 <kiniry@@acm.org> in May 2004 for the tutorial ``Design by Contract
 and Automatic Verification for Java with JML and ESC/Java2'' presented
-at ECOOP 2004 in Oslo, Norway in June 2004.  This is edition
-$Revision$.
+at ECOOP 2004 in Oslo, Norway in June 2004.  It was updated again in
+March 2008 for the ETAPS tutorial ``Verification-centric Development in
+Java with JML and ESC/Java2'' in Budapest, Hungary in April 2008.
+
+Edition:
+@include .svnversion
 
 This document is still very much a work in progress.  Suggestions and input 
 are welcome.
@@ -27,9 +31,9 @@ are welcome.
 @copying
 The JML and ESC/Java2 Homework Exercises are licensed under the Creative
 Commons Attribution-NonCommercial-ShareAlike 2.0 license.  See
-http://creativecommons.org/licenses/by-nc-sa/2.0/
+@uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
 
-Copyright @copyright{} 2004 Joseph R. Kiniry
+Copyright @copyright{} 2004,2008 Joseph R. Kiniry
 
 @quotation
 You are free:
@@ -62,7 +66,7 @@ Your fair use and other rights are in no way affected by the above.
 
 This is a human-readable summary of the Legal Code.
 
-See http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode
+See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 @end quotation
 
 @end copying
@@ -76,8 +80,8 @@ See http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode
 @titlepage
 @title JML and ESC/Java2 Homework Exercises
 @subtitle Learning JML and ESC/Java2 Through Example
-@subtitle Edition $Revision$, May 2004
-@subtitle These exercises use at least JML version 5.0rc1 and ESC/Java2 version 2.0a7.
+@subtitle March 2008
+@subtitle These exercises use at least JML version 5.5 and ESC/Java2 version 2.0b4.
 @author Joseph R. Kiniry <kiniry@@acm.org>
 
 @c The following two commands start the copyright page.
@@ -159,27 +163,31 @@ Several other tools understand (often subsets of) JML:
 @itemize
 @item
 The Extended Static Checker for Java (ESC/Java version 1).
-http://research.compaq.com/SRC/esc/
+@uref{http://research.compaq.com/SRC/esc/}
 @item
 The Open Source Extended Static Checker for Java (ESC/Java version 2, or
-ESC/Java2 for short) from the SoS Group at the University of Nijmegen
-and David Cok.
-http://www.cs.kun.nl/sos/research/escjava/
+ESC/Java2 for short) from the KindSoftware Group at the University
+College Dublin.
+@uref{http://kind.ucd.ie/products/opensource/ESCJava2/}
 @item
 The LOOP compiler from the SoS Group at the University of Nijmegen.
-http://www.cs.kun.nl/sos/
+@uref{http://www.cs.kun.nl/sos/}
 @item
 The Daikon invariant detector from the Program Analysis Group at MIT.
-http://pag.lcs.mit.edu/daikon/
+@uref{http://pag.lcs.mit.edu/daikon/}
 @item
 The ChAsE frame axiom checker from Lemme project at INRIA Sophia-Antipolis.
-http://www-sop.inria.fr/lemme/verificard/modifSpec/index.html
+@uref{http://www-sop.inria.fr/lemme/verificard/modifSpec/index.html}
 @item
 The JACK tool from Gemplus.
-http://www.gemplus.com/smart/r_d/trends/jack.html
+@uref{http://www.gemplus.com/smart/r_d/trends/jack.html}
 @item
 The Bogor tool from the SpEx project at Kansas State University.
-http://spex.projects.cis.ksu.edu/
+@uref{http://spex.projects.cis.ksu.edu/}
+@item
+The Mobius Program Verification Environment (PVE) from the Mobius
+Consortium, which integrates several of these tools with Eclipse.
+@uref{http://mobius.inria.fr/} and @uref{http://mobius.ucd.ie/}
 @end itemize
 
 This set of homework problems focus on the use of JML in runtime
@@ -237,7 +245,7 @@ document.
 @end menu
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Assertions, Assumptions, Core, Core
+@node Assertions, Logging, Core, Core
 @unnumberedsec Assertions
 
 @cindex Assertions
@@ -327,7 +335,33 @@ your answers, then attempt to verify your answers using
 @end example
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Assumptions, Ghost Variables, Assertions, Core
+@node Logging, Assumptions, Assertions, Core
+@comment  node-name,  next,  previous,  up
+@unnumberedsec An Aside: Logging Messages
+
+@cindex Logging
+
+Most programmers never use assertions.  Instead, they insert
+@emph{logging statements}, usually using a function like
+@code{System.out.println()}.  A very important skill for software
+developers is understanding when to use an assertion verses when to use
+a logging statement.  The following section discusses logging messages
+in the context of assertions and verification-centric software
+development.  A small set of exercises follows to help make these
+concepts concrete.
+
+Deciding to log a message is not inherently a bad thing.  There are many
+legitimate reasons to log information about a program run.  When an
+assertion fails, for example, typically a log message is emitted and the
+program (or thread of control) is halted.
+
+The main problematic use of logging messages is when they are used to
+indicate something is seriously wrong with the system @emph{and yet the
+programmer does not try to correct the problem and the system continues
+running}.
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Assumptions, Ghost Variables, Logging, Core
 @unnumberedsec Assumptions
 
 @cindex Assumptions
@@ -884,6 +918,131 @@ the class you are specifying.  Check your frame axioms with ESC/Java2.
 @cindex Code Annotation
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Taxpayer Example,  , Annotating Code, Annotating Code
+@unnumberedsubsec The Taxpayer Example
+
+@cindex Taxpayer Example
+
+@c From Erik Poll on 27 March 2008.
+
+@c The assignment, part 1
+
+@c For the assignment, download the file Taxpayer.java. This class is used in an information system at the tax office to record information about persons. The tax office want to ensure that the following properties hold:
+
+@c    1. Persons are either male or female.
+@c    2. Persons can marry to people of the opposite sex. (A bit outdated maybe, but makes for interesting properties to specify).
+@c    3. A very obvious constraint, but easy to overlook: if person x is married to person y, then person should of course also be married, and to person x. 
+
+@c Your assignment is to
+
+@c    1. add invariants to the code below to express the constraints mentioned above, in JML syntax, plus any other sensible constraints you can think of;
+@c    2. use ESC/Java2 to detect possible violations, which are reported as warnings
+@c    3. for the Java methods that ESC/Java2 complains about fix this, by
+@c          1. correcting the code, or
+@c          2. adding a (sensible) precondition for the method, using a JML requires clause, or
+@c          3. sometimes, adding an invariant to record another constraint can help in verification. 
+
+@c Hints
+
+@c     * Only look at the first warning that ESC/Java2 produces, and ignore the others, until you've managed to get rid of this first one.
+@c     * The code of the methods marry and divorce in the class Taxpayer is not correct. ESC/Java2 should detect this and complain about these methods once you've added your invariants, and you will have to add a few lines of code to fix these methods, and possibly also add a precondition by means of a requires clause.
+@c     * It is easiest to introduce one constraint at a time, then fix the errors this brings to light, and only then move on to the next constraint.
+@c     * If the tool produces some warnings, ie. if the tool thinks that some formal constraint is not satisfied by the code, this can have several causes:
+@c           o There is an error in the code, which results in a violation in the Java code. For example, an assignment to some field may be missing.
+@c           o There is an error in the JML specification. For example, maybe you have written "and" in a specifcation where you meant "or", maybe you have written age > 18 when you meant age >= 18 in some constraint
+@c           o There may be some contraints missing, which are needed by the tool for the verification. Note that the tool does not know any of the things that may be obvious to you -- for example, that if some person x is married to y then y is also married to x -- and such properties may be needed for verification.
+@c           o In general, a warning might be caused by the fact that some property is too difficult for the theorem prover to proof: an automated theorem prover can only ever prove properties of a certain, limited complexity. However, for the exercises here you should not run into this problem. 
+@c       To stop the tool from complaining, you can
+@c           o correct the Java program; for the exercise here this should only involve adding some simple assignments to the offending method;
+@c           o correct the JML specification;
+@c           o add some additional constraints, either as a JML invariant or as JML precondition aka requires clause. 
+
+@c In the end, ESC/Java2 should run without any complaints on the annotated code, meaning that it has succeeded in verifying that the code meets the formal specification.
+@c JML syntax
+@c Below the syntax for Java and JML logical connectives, in order of decreasing precedence:
+
+@c logical connective    	Java/JML syntax
+@c not 	!
+@c equality 	==
+@c inquality 	!=
+@c conjunction (and) 	&&
+@c disjunction (or) 	||
+@c implication 	==> , <==
+@c (in)equivalence 	<==> , <=!=>
+@c In addition to this, you can use standard Java syntax, so you can say things such as
+
+@c   this.spouse != null ==>
+@c     (this.spouse.spouse.isFemale ==> this.isFemale)
+
+@c Of course, you can write spouse instead of this.spouse, leaving this implicit. Note that in Java, as in most programming languages, references such as the spouse field, can be null. Often fields should not be null under certain circumstances, which can be expressed by an invariant of the form
+
+@c  //@ invariant  .... ==> spouse !=null;
+
+@c Often arguments of method should not be null, which can be expressed by a precondition of the form
+
+@c  //@ requires new_spouse != null;
+@c  void marry (Taxpayer new_spouse) {
+
+@c The assignment, part 2
+@c The tax system uses a income tax allowance (belastingvrije voet):
+
+@c    1. Every person has an income tax allowance, over which means they do not have to pay tax over the first part of their income. There is a default tax allowance of 5000.
+@c    2. Married persons can pool their tax allowance, as long as the sum of their tax allowances remains the same. For example, the wife could have a tax allowance of 10000, and the husband a tax allowance of 0. 
+
+@c Add invariants that express these constraints, and if necessary fix/improve the code to ensure that they are not violated.
+@c The assignment, part 3
+@c The new government introduces a measure that people aged 65 and over have a higher tax allowance, of 7000. The rules for pooling tax allowances remain the same.
+
+@c Add invariants that express these constraints, and if necessary fix/improve the code to ensure that they are not violated.
+@c The assignment, part 4
+@c WARNING: things may get a bit hairy here, so don't be too depressed if you don't manage to finish this.
+
+@c The minister for Jeugd en Gezin, André Rouvoet, introduces a new tax measure giving anyone with underage children an additional tax allowance of 1000 euro.
+
+@c The taxpayer class is extended with an additional field to keep track of the youngest child
+
+@c    Taxpayer youngestChild;    // youngest child of this person
+
+@c and the two following lines are added to the constructor
+
+@c    Taxpayer(boolean jongetje, Taxpayer ma, Taxpayer pa) {
+@c       ...
+@c       youngestChild = null;           // NEW
+@c       ma.youngestChild = this;    // NEW
+@c       pa.youngestChild = this;    // NEW
+@c    }
+
+@c Add the three lines above to your code, add invariant(s) to express the new government policy above, and re-run ESC/Java2 and fix the code to ensure that it is not violated.
+@c General hints
+@c Some hints to keep you out of trouble with the tool:
+
+@c     * Don't use method invocations inside methods;
+@c     * Don't use the Java shorthand x+=10 for x = x+10.
+@c     * Whenever possible, split invariants than contain conjunctions into several smaller invariants. This improves feedback of the tool. So instead of
+
+@c          //@ invariant   A && B;
+
+@c       write
+
+@c          //@ invariant   A;
+@c          //@ invariant   B;
+
+@c       The same goes for preconditions (aka requires clauses).
+@c     * If the tool complains of invariant violations, it produces a lot of feedback that is hard to interpret. The crucial information to look at are the line number saying which invariant is violated and the line number saying where this invariant is violated. NB beware that calling a method may break on some object may break the invariant of another object; e.g. calling a method on a TaxPayer may break the invariant of his or her spouse. 
+
+@c Reflection
+@c Some questions to consider
+
+@c    1. In the end, do you think that you found all problems? Are you certain now that the code is correct?
+@c    2. Can you think of ways in which the tool or the specification language could be improved?
+@c    3. Can you think of other situations where a similar kind of tool support could be useful?
+@c    4. Instead of the tool we used, can you think of other ways (formal or informal, tool-supported or not) to find the problems that the tool found? If so, would these alternatives
+@c           * find fewer of the problems, the same, or more?
+@c           * find problems sooner or later than the current approach?
+@c           * require more work or less work?
+@c           * provide you with more confidence or less confidence that the code is correct? 
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Annotating APIs, Designing by Contract, Annotating Code, Using
 @unnumberedsec Annotating Preexisting APIs
 
@@ -896,6 +1055,12 @@ the class you are specifying.  Check your frame axioms with ESC/Java2.
 
 @cindex Designing by Contract
 @cindex Design by Contract
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Citizen Example,  , Designing by Contract, Designing by Contract
+@unnumberedsubsec The Citizen Example
+
+@cindex Citizen Example
 
 @c =============================================================================
 @node Copying, Index, Using, Top
