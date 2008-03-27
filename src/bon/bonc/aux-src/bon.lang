@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Author: Fintan Fairmichael
+ Copyright (C) 2008 Fintan Fairmichael
+-->
+
+<language id="bon" _name="BON" version="2.0" _section="Sources">
+  <metadata>
+    <property name="mimetypes">text/x-bon</property>
+    <property name="globs">*.bon</property>
+  </metadata>
+
+  <styles>
+    <style id="comment" _name="Comment" map-to="def:comment"/>
+    <style id="string" _name="String" map-to="def:string"/>
+    <style id="type" _name="Data Type" map-to="def:type"/>
+    <style id="keyword" _name="Keyword" map-to="def:keyword"/>
+    <style id="boolean" _name="Boolean value" map-to="def:boolean"/>
+  </styles>
+
+  <definitions>
+
+    <context id="bon-string" style-ref="string" end-at-line-end="false">
+      <start>"</start>
+      <end>"</end>
+    </context>
+
+    <context id="bon-line-comment" style-ref="comment" end-at-line-end="true">
+      <start>--</start>
+    </context>
+
+    <context id="bon-boolean" style-ref="boolean">
+      <keyword>true</keyword>
+      <keyword>false</keyword>
+    </context>
+
+    <context id="bon-toplevel" style-ref="keyword">
+      <keyword>class_chart</keyword>
+      <keyword>cluster_chart</keyword>
+      <keyword>creation_chart</keyword>
+      <keyword>dynamic_diagram</keyword>
+      <keyword>dictionary</keyword>
+      <keyword>event_chart</keyword>
+      <keyword>scenario_chart</keyword>
+      <keyword>static_diagram</keyword>
+      <keyword>system_chart</keyword>
+      <keyword>end</keyword>
+    </context>
+
+    <context id="bon-secondlevel" style-ref="keyword">
+      <keyword>indexing</keyword>
+      <keyword>description</keyword>
+      <keyword>inherit</keyword>
+      <keyword>part</keyword>
+      <keyword>explanation</keyword>
+      <keyword>class</keyword>
+      <keyword>cluster</keyword>
+      <keyword>component</keyword>
+      <keyword>feature</keyword>
+      <keyword>scenario</keyword>
+      <keyword>event</keyword>
+      <keyword>query</keyword>
+      <keyword>command</keyword>
+      <keyword>constraint</keyword>
+    </context>
+
+    <context id="bon">
+      <include>
+        <context ref="bon-string"/>
+        <context ref="bon-line-comment"/>
+        <context ref="bon-boolean"/>
+        <context ref="bon-toplevel"/>
+        <context ref="bon-secondlevel"/>
+      </include>
+    </context>
+
+  </definitions>
+</language>

@@ -15,6 +15,7 @@
 
   <property name="docs" location="docs"/>
   <property name="doc-src" location="doc-src"/>
+  <property name="aux-src" location="aux-src"/>
   <property name="api-docs" value="${docs}/api"/>
   <property name="manual-docs" value="${docs}/manual"/>
 
@@ -474,7 +475,10 @@
     <gzip destfile="${debian}/src/usr/share/doc/bonc/changelog.gz" src="${doc-src}/changelog/changelog"/>
     <gzip destfile="${debian}/src/usr/share/man/man1/bonc.1.gz" src="${doc-src}/bonc.1"/>
     <copy tofile="${debian}/src/usr/share/doc/bonc/copyright" file="${doc-src}/copyright.Debian"/>
-  	  	
+  	
+		<copy tofile="${debian}/src/usr/share/mime/packages/bon.xml" file="${aux-src}/bon.xml"/>
+		<copy tofile="${debian}/src/usr/share/gtksourceview-2.0/language-specs/bon.lang" file="${aux-src}/bon.lang"/>
+  	
     <chmod perm="a+x">
       <fileset dir="${debian}/src/usr/share/bonc" includes="bonc,bonc-debian"/>
     </chmod>
