@@ -123,8 +123,8 @@ Please see the SRG Mailman web pages at
   <http://topos.ucd.ie/mailman/listinfo>
 for more information.
 
-To make a new bug report: 
-  <mailto:mobius-ticket@mobius.ucd.ie?subject=component=ESCJava2> 
+You can make a new bug/feature request by sending an e-mail to: 
+  mobius DASH ticket AT mobius DOT ucd DOT ie 
 
 ----------------------------------------------------------------------------
 
@@ -159,10 +159,6 @@ To obtain access to the subversion distribution, you will need:
 - To (optionally) build the Simplify tool you will need a Modula-3
   compiler
 
-To get read-only access to the source code:
-
-  svn co https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools
-
 To obtain access to the Subversion distribution, follow these steps:
 
 a) Provide evidence to Joe that you have obtained the original sources
@@ -170,11 +166,9 @@ a) Provide evidence to Joe that you have obtained the original sources
    Sufficient evidence is the size (in bytes) of the Javafe and
    ESC/Java archives you have downloaded from SRC.
 
-b) Create an account on the UCD Trac server located at
-   http://mobius.ucd.ie/
+b) Register your username on the UCD Trac server located at
 
-   Notify Joe that you wish to have access to our Subversion repository via
-   the Trac.  Make sure you tell him your Trac username.
+   http://mobius.ucd.ie/
 
 c) The module name of ESC/Java2 is "ESCTools."
 
@@ -186,27 +180,7 @@ c) The module name of ESC/Java2 is "ESCTools."
 d) Execute a subversion checkout on the server (replacing the characters
    'username' in the command below with your Trac username):
  
-   svn co svn+ssh://username@mobius.ucd.ie/Volumes/Data/subversion/svn_mobius/src/escjava/trunk/ESCTools
-
-e) If you want to avoid using your password on every subversion transaction,
-  you will need to generate a public key/private key pair and copy the
-  public key to your account on mobius.ucd.ie.  Login to this
-  computer is only allowed via SSH:
-
-	i) On your own computer, create (if necessary) and cd into ~/.ssh
-	ii) If there are no files id_dsa and id_dsa.pub, create them
-           by running
-		ssh-keygen -t dsa
-	iii) Be sure id_dsa is readable only by you
-		(chmod go-rwx ~/.ssh/id_dsa)
-        iv) type out the id_dsa.pub file (cat id_dsa.pub)
-	v) Login in to the subversion server:  ssh username@mobius.ucd.ie
-		(replace 'username' by your username on mobius.ucd.ie)
-	vi) On mobius.ucd.ie, edit the file ~/.ssh/authorized_keys,
-		pasting in the contents of id_dsa.pub on a line of its own
-		(being careful not to introduce any spurious line breaks)
-	vii) Be sure that ~/.ssh/authorized_keys is readable only by you
-		(chmod go-rwx ~/.ssh/authorized_keys)
+   svn co https://username@mobius.ucd.ie/repos/src/escjava/trunk/ESCTools
 
 ----------------------------------------------------------------------------
 
