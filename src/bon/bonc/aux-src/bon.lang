@@ -15,6 +15,7 @@
     <style id="string" _name="String" map-to="def:string"/>
     <style id="type" _name="Data Type" map-to="def:type"/>
     <style id="keyword" _name="Keyword" map-to="def:keyword"/>
+    <style id="modifier" _name="Modifier" map-to="def:type"/>
     <style id="boolean" _name="Boolean value" map-to="def:boolean"/>
   </styles>
 
@@ -59,10 +60,18 @@
       <keyword>feature</keyword>
       <keyword>scenario</keyword>
       <keyword>event</keyword>
+      <keyword>involves</keyword>
+      <keyword>creator</keyword>
+      <keyword>creates</keyword>
       <keyword>query</keyword>
       <keyword>command</keyword>
       <keyword>constraint</keyword>
     </context>
+
+   <context id="bon-modifiers" style-ref="modifier">
+      <keyword>incoming</keyword>
+      <keyword>outgoing</keyword>
+   </context>
 
     <context id="bon">
       <include>
@@ -71,6 +80,7 @@
         <context ref="bon-boolean"/>
         <context ref="bon-toplevel"/>
         <context ref="bon-secondlevel"/>
+        <context ref="bon-modifiers"/>
       </include>
     </context>
 
