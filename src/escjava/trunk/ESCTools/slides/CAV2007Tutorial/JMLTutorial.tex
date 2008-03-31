@@ -25,11 +25,12 @@
 % fonts
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
+\usepackage{textcomp}
 \usepackage{times}
 %avant, bookman, chancery, charter, euler, helvet, mathtime, mathptm,
 %mathptmx, newcent, palatino, pifont, utopia.
 % Use the luximono package to get a better look for bolded keywords
-\usepackage[scaled=0.95]{luximono}
+%\usepackage[scaled=0.95]{luximono}
 
 % listings
 \usepackage{listings}
@@ -118,7 +119,7 @@ of Functional Behavior for Java}
   \href{http://www.cs.ru.nl/}{Radboud University Nijmegen}
 }
 
-\date[Fall 2007]{Aug 27, 2007 / \href{http://www.jmlspecs.org/}{JML} Tutorial / \href{http://www.jmlspecs.org}{jmlspecs.org}}
+\date[Spring 2008]{March 27, 2008 / \href{http://www.jmlspecs.org/}{JML} Tutorial / \href{http://www.jmlspecs.org}{jmlspecs.org}}
 
 \subject{JML} % optional insertion into the PDF information catalog.
 
@@ -1022,8 +1023,12 @@ Common JML tools \\
 \href{http://sourceforge.net/projects/jmlspecs/}{sourceforge.net/projects/jmlspecs/}
 
 \item
-ESC/Java2 Eclipse plugin update site \\
-\href{http://sort.ucd.ie/www/escjava-eclipse/updates}{http://sort.ucd.ie/www/escjava-eclipse/updates}
+ESC/Java2 \\
+\href{http://kind.ucd.ie/products/opensource/ESCJava2/}{http://kind.ucd.ie/products/opensource/ESCJava2/}
+
+\item
+The Mobius Program Verification Environment (PVE) \\
+\href{http://kind.ucd.ie/products/opensource/Mobius/}{http://kind.ucd.ie/products/opensource/Mobius/}
 \end{itemize}
 \end{frame}
 
@@ -1490,7 +1495,7 @@ Used with specification inheritance.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Meaning of 'also'}
+\frametitle{Meaning of `also'}
 \begin{lstlisting}
   requires 0 <= a && a <= 150;
   assignable age;
@@ -3059,7 +3064,7 @@ Eclipse integration.
 \end{frame}
 
 \begin{frame}
-\frametitle{Stengths of Extended Static Checking}
+\frametitle{Strengths of Extended Static Checking}
 \begin{itemize}
 \item
 Push-button automation.
