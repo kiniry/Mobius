@@ -10,8 +10,8 @@ import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.parser.SourceLocation;
 import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.errors.CycleInRelationsError;
-import ie.ucd.bon.typechecker.errors.InvalidClassTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidClusterTypeError;
+import ie.ucd.bon.typechecker.errors.InvalidInformalClassTypeError;
 import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
 import ie.ucd.bon.typechecker.errors.SystemNotDefinedError;
 import ie.ucd.bon.typechecker.informal.errors.ClassNotInAnyClusterError;
@@ -19,7 +19,6 @@ import ie.ucd.bon.typechecker.informal.errors.ClusterNotInAnyClusterOrSystemErro
 import ie.ucd.bon.typechecker.informal.errors.IncorrectSystemNameError;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -131,7 +130,7 @@ public class InformalTypeChecker {
   
   public void checkValidClassType(String className, SourceLocation loc) {
     if (!classes.containsKey(className)) {
-      problems.addProblem(new InvalidClassTypeError(loc, className));
+      problems.addProblem(new InvalidInformalClassTypeError(loc, className));
     }
   }
   

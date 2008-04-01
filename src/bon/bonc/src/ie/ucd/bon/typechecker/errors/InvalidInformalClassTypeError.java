@@ -7,13 +7,13 @@ package ie.ucd.bon.typechecker.errors;
 import ie.ucd.bon.parser.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
-public class InvalidClassTypeError extends TypeCheckingError {
+public class InvalidInformalClassTypeError extends TypeCheckingError {
 
-  private static final String message = "Invalid class type %s";
+  private static final String message = "Invalid class type %s. Are you missing a class chart for %s?";
   
   private final String classType;
   
-  public InvalidClassTypeError(SourceLocation loc, String classType) {
+  public InvalidInformalClassTypeError(SourceLocation loc, String classType) {
     super(loc);
     this.classType = classType;
   }

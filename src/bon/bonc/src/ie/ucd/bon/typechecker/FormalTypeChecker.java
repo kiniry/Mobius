@@ -13,7 +13,7 @@ import ie.ucd.bon.typechecker.errors.ClassDoesNotDeclareFeatureError;
 import ie.ucd.bon.typechecker.errors.ClassIsNotGenericError;
 import ie.ucd.bon.typechecker.errors.CycleInRelationsError;
 import ie.ucd.bon.typechecker.errors.EffectiveClassDoesNotDefineDeferredFeatureError;
-import ie.ucd.bon.typechecker.errors.InvalidClassTypeError;
+import ie.ucd.bon.typechecker.errors.InvalidFormalClassTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidClusterTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidStaticComponentTypeError;
 import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
@@ -297,7 +297,7 @@ public class FormalTypeChecker {
       String actualClassPart = type.getNonGenericType();
       ClassDefinition def = classes.get(actualClassPart);
       if (def == null) {
-        problems.addProblem(new InvalidClassTypeError(loc, actualClassPart));
+        problems.addProblem(new InvalidFormalClassTypeError(loc, actualClassPart));
       } else {
         if (type.hasGenerics() && !def.hasFormalGenerics()) {
           problems.addProblem(new ClassIsNotGenericError(loc, def.getClassName()));
@@ -308,7 +308,7 @@ public class FormalTypeChecker {
 
     } else {
       if (!classes.containsKey(className)) {
-        problems.addProblem(new InvalidClassTypeError(loc, className));
+        problems.addProblem(new InvalidFormalClassTypeError(loc, className));
       }
     }
 

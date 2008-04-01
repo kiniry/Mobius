@@ -8,9 +8,9 @@ public class StringUtil {
 
   public static String stripForHTML(final String mtb, boolean withSpeechMarks) {
     String stripped = strip(mtb);
+    stripped = stripped.replace("&", "&amp;");
     stripped = stripped.replace("<", "&lt;");
     stripped = stripped.replace(">", "&gt;");
-    stripped = stripped.replace("&", "&amp;");
     
     StringBuilder sb = new StringBuilder();
     if (withSpeechMarks) {

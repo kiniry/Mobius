@@ -1,2 +1,3 @@
  * Fixed bug that caused incorrect line-numbers to be reported for certain inputs.
  * Added initial version of bash auto-complete script for debian build (should also work for other bash systems).
+ * Fixed a small problem with escaping characters for HTML generation.
