@@ -2,7 +2,7 @@
  * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  */
-package ie.ucd.bon.typechecker.errors;
+package ie.ucd.bon.typechecker.informal.errors;
 
 import ie.ucd.bon.parser.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
@@ -20,7 +20,7 @@ public class InvalidInformalClassTypeError extends TypeCheckingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, classType);
+    return String.format(message, classType, classType);
   }
   
 }

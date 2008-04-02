@@ -161,11 +161,14 @@ public class HTMLLinkGenerator {
   }
   
   private static String generateJSIDs(PrintingTracker printingTracker, ParsingTracker parsingTracker) {
+    InformalTypingInformation iti = parsingTracker.getInformalTypingInformation();
     
     StringBuilder sb = new StringBuilder();
     sb.append("var items = [");
     
-    appendItem(sb, SYSTEM_CHART + parsingTracker.getInformalTypingInformation().getSystem().getSystemName());
+    if (iti.getSystem() != null) {
+      appendItem(sb, SYSTEM_CHART + parsingTracker.getInformalTypingInformation().getSystem().getSystemName());
+    }
     
     Set<String> classNames = parsingTracker.getInformalTypingInformation().getClasses().keySet();
     for (String className : classNames) {

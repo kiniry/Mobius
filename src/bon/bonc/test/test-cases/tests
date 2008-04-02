@@ -72,8 +72,8 @@
 @Test-name: "Invalid class type."
 @Location { test12/ }
 @Input { invalid_class }
-@Output { < InvalidClassTypeError, #File:invalid_class, 17, 8, BOOK >,
-          < InvalidClassTypeError, #File:invalid_class, 26, 4, BOOK > }
+@Output { < InvalidFormalClassTypeError, #File:invalid_class, 17, 8, BOOK >,
+          < InvalidInformalClassTypeError, #File:invalid_class, 26, 4, BOOK > }
 
 @Test-name: "Invalid cluster type."
 @Location { test13/ }
