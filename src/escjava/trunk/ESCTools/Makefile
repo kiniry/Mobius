@@ -716,11 +716,13 @@ endif
 ################################################################################
 ## Continuous Integration Testing
 
-.PHONY: update-test self-update
+.PHONY: update-test self-update pre-smoke-test
 
 self-update: clean
 	svn update
+	
+pre-smoke-test: self-update build
  	
-update-test: self-update build jars docs alltests
+update-test: pre-smoke-test jars docs alltests
 
 # End of Makefile
