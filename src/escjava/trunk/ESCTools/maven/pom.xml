@@ -6,7 +6,22 @@
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>ESCJava2</name>
-  <url>http://maven.apache.org</url>
+  <url>http://mobius.ucd.ie</url>
+  <repositories>
+    <repository>
+      <id>MOBIUS</id>
+      <name>MOBIUS Repository</name>
+      <layout>default</layout>
+      <url>http://mobius.ucd.ie/repos/escjava/trunk/ESCTools</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  <build>
+    <sourceDirectory>../Escjava/java/escjava</sourceDirectory>
+    <testSourceDirectory>../Escjava/test</testSourceDirectory>
+  </build>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
