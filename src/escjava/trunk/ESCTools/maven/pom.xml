@@ -12,7 +12,7 @@
       <id>MOBIUS</id>
       <name>MOBIUS Repository</name>
       <layout>default</layout>
-      <url>http://mobius.ucd.ie/repos/escjava/trunk/ESCTools</url>
+      <url>http://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
