@@ -21,6 +21,11 @@
   <build>
     <sourceDirectory>../Escjava/java/escjava</sourceDirectory>
     <testSourceDirectory>../Escjava/test</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>../Utils/Javafe</directory>
+      </resource>
+    </resources>
   </build>
   <dependencies>
     <dependency>
