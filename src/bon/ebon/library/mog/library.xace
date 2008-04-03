@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<library name="mog" prefix="ebon_">
+  <description>
+    description: "Meta-Object Graph library for EBON"
+    copyright: "Copyright (c) 2001-2005 Joseph R. Kiniry"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/12/21 14:10:39 $"
+    revision: "$Revision: 1.2 $"
+  </description>
+
+  <cluster name="mog" location="${BON}/library/mog">
+    <option name="abstract" value="true"/>
+    <cluster name="charts"/>
+    <cluster name="components"/>
+    <cluster name="diagrams"/>
+    <cluster name="dictionary"/>
+    <cluster name="entries"/>
+    <cluster name="expressions"/>
+    <cluster name="indexing"/>
+    <cluster name="interfaces"/>
+    <cluster name="lists"/>
+    <cluster name="names"/>
+    <cluster name="properties"/>
+    <cluster name="relations"/>
+    <cluster name="sets"/>
+    <cluster name="specification"/>
+  </cluster>
+</library>

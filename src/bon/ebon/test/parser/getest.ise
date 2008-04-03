@@ -1,0 +1,22 @@
+-- Getest configuration file for testing EBON parser.
+-- Joseph Kiniry
+-- $Id: getest.ise,v 1.1 2005/05/02 23:17:00 kiniry Exp $
+
+test
+
+	test_parser
+
+default
+
+	class ("TEST_[A-Z0-9_]*")
+	feature ("test_[a-z0-9_]*")
+	prefix ("GEN_")
+	testgen ("../build/test_parser")
+        compile ("(cd ../build/test_parser; ec -project test_parser.epr -ace ../../test_parser/Ace.ace)")
+	execute ("(cd ../build/test_parser/EIFGEN/W_code; ./test_parser)")
+
+cluster
+
+	test_dir: "."
+
+end

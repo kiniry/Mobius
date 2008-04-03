@@ -1,0 +1,6 @@
+Make MOG_SET and MOG_LIST inherit from HASHABLE?
+
+Design COTUPLE class and submit to NICE.
+
+Preconditions of the form "foo /= Void implies not foo.is_empty" are
+or are not equivalent to "foo /= Void and then not foo.is_empty"?

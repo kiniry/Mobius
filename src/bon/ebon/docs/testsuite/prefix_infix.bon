@@ -1,0 +1,88 @@
+-- Test specification for use of the "infix" and "prefix" tokens.
+
+static_diagram
+component
+
+  deferred class MATH_OPS[T] reused interfaced
+    -- A set of type definitions for mixin operations applied to a generic 
+    -- type T.
+    indexing
+      author: "Joseph Kiniry";
+      date: "Sept 15, 2001"
+    inherit CORE_OPS; BASIC_MATH
+
+    feature {MATRIX}
+      -- features for matrix-like types
+
+      deferred prefix "invert": MATRIX
+        -- invert a matrix
+        -> matrix: MATRIX
+        require (matrix /= Void) and (determinant matrix /= 0)
+        ensure ((matrix * Result) = identity) and
+               ((Result * matrix) = identity)
+      end
+
+      redefined prefix "kernel": NUMERIC
+        { ^NUMERIC.kernel }
+        -- kernel of a matrix
+        -> matrix: MATRIX
+        require (matrix /= Void)
+        ensure (Result >= 0)
+      end
+
+      effective prefix "transpose": MATRIX
+         -- transpose of a matrix
+         -> matrix: MATRIX
+         require (matrix /= Void)
+         ensure (transpose Result = Current)
+      end
+
+    feature {LOGIC}
+      -- features for logics
+
+      infix "/\": BOOLEAN
+        -- logical and
+        -> BOOLEAN
+      end
+
+      infix "\/": BOOLEAN
+        -- logical or
+        -> BOOLEAN
+      end
+
+    feature {CATEGORY}
+      -- features for categories
+
+      infix "co": OBJECT
+        -- coproduct
+        -> OBJECT
+      end
+
+      infix "pr": OBJECT
+        -- product
+        -> OBJECT
+      end
+
+      infix "==>": OBJECT
+        -- a morphism definition
+        -> OBJECT
+      end
+
+    feature
+      -- Other miscellaneous features for all structures.
+
+      deferred prefix "@": TAG
+        -- denotes a tag
+        -> STRING
+      end
+
+      deferred infix "@": ANY
+        -- an indexer
+        -> ANY
+      end
+
+    invariant
+  
+  end
+
+end

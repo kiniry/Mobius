@@ -1,0 +1,10 @@
+static_diagram TEST
+component
+        A client {a: C[..., ...]} D
+        E client {b: F[G, ...]} H
+        I client {c: J[..., K]} L
+        M client {e: N[O, P]} Q
+        R client {f: S[T, U, ...]} V
+        W client {g: X[Y, ..., Z]} AA
+        BB client {h: CC[..., DD, ..., EE]} FF
+end

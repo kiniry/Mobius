@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<system name="scanner">
+  <description>
+    system: "EBON tool suite"
+    copyright: "Copyright (c) 2001-2005 Joseph R. Kiniry and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/12/21 14:08:49 $"
+    revision: "$Revision: 1.2 $"
+  </description>
+
+  <root class="BON_SCANNER" creation="scan_file"/>
+  <option name="console_application" value="true"/>
+  <option unless="${DEBUG}">
+    <option name="assertion" value="none"/>
+    <option name="garbage_collector" value="none"/>
+    <option name="finalize" value="true" unless="${BON_EIFFEL}=ve"/>
+  </option>
+  <option if="${DEBUG}">
+    <option name="assertion" value="all"/>
+    <option name="garbage_collector" value="internal"/>
+    <option name="finalize" value="false"/>
+    <option name="debug_tag" value="ebon scanner task"/>
+  </option>
+  <option if="${BON_DOTNET}">
+    <option name="msil_generation" value="true"/>
+    <option name="line_generation" value="true"/>
+  </option>
+  <option if="${BON_EIFFEL}=se">
+    <option name="warning" value="none"/>
+  </option>
+
+  <cluster name="scanner_ve" location="." if="${GOBO_EIFFEL}=ve"/>
+  <mount location="${BON}/library/mog/library.xace"/>
+  <mount location="${BON}/src/parser/library.xace"/>
+  <mount location="${GOBO}/library/library.xace"/>
+  <mount location="${GOBO}/library/kernel.xace"/>
+
+</system>

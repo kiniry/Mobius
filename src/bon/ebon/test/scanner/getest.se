@@ -1,0 +1,24 @@
+-- Getest configuration file for testing EBON scanner.
+-- Joseph Kiniry
+-- $Id: getest.se,v 1.1 2005/05/02 23:17:08 kiniry Exp $
+
+test
+
+	test_scanner
+
+default
+
+	class ("TEST_[A-Z0-9_]*")
+	feature ("test_[a-z0-9_]*")
+	prefix ("GEN_")
+	testgen ("../build/test_scanner")
+
+--	compile ("(cd ../build/test_scanner; compile -no_style_warning -debug_check -o test_scanner TEST_SCANNER)")
+	compile ("(cd ../build/test_scanner; compile -no_style_warning -o test_scanner TEST_SCANNER)")
+	execute ("(cd ../build/test_scanner; ./test_scanner)")
+
+cluster
+
+	test_dir: "."
+
+end

@@ -1,0 +1,861 @@
+The Extended BON Tool Suite 
+
+Authors: Joseph Kiniry
+
+Version $Revision: 1.6 $
+
+Related Documents:
+  BON.pdf - PDF of text _Seamless Object-Oriented Software Architecture_ by
+            Kim Walden and Jean-Marc Nerson.  Request a copy from Joe
+            Kiniry (kiniry@users.sourceforget.net) until Kim puts the PDF
+            up on the web. 
+
+1. Introduction
+===============
+
+BON is the Business Object Notation, a clear and concise graphical and
+textual specification language for software[WaldenNerson94].  BON is unique
+in that every construct specified in BON is checkable and reversible.  That
+is to say, we can consistently and completely check the conformance of a
+piece of software according to a BON specification and any changes to the
+software can be reflected back into the specification.  The specification
+is obviously an abstraction of the software, but a bijection (equivalence
+relation) exists between the specification an a subset of the software it
+specifies.  
+
+BON is useful for much more than "business" objects --- don't let the name
+fool you.  BON is easy to learn, has a grammar and style that are
+influenced by the Eiffel programming language, and doesn't require a math
+degree, dozens of immense tomes to explain, nor multi-thousand dollar
+pieces of software to use.
+
+This document describes a suite of tools called "Extended BON" or "Extended
+BON", the core of which is a Extended BON scanner, parser, documentation
+generator, and design model checker.  This set of tools is meant to help
+software developers keep their documentation, design, and implementation in
+sync as well as help find and correct errors as early as possible in the
+process of creating software artifacts.
+
+Extended BON is an extension of BON by Joseph Kiniry that incorporates
+additional formal specification from [KiniryZimmerman97] and [Kiniry01]
+into the BON standard.  Since Extended BON is a proper superset of BON,
+this suite of tools will work with BON or Extended BON specifications.
+
+2. Requirements
+===============
+
+The phrase "*must*" means that the design and implementation of the
+discussed component is not considered completely unless the indicated
+capability is present and correct.  The phrase "may" means that the
+capability is optional; it is a secondary requirement.
+
+The Extended BON parser *must*:
+
+o parse the full BON textual specification language and represent 
+  specifications written in this language unambiguously,
+
+o parse the full Extended BON textual specification language and represent 
+  specifications written in this language unambiguously,
+
+o flag syntax and usage errors in a clear, concise, and correct fashion,
+
+o include and parse a Extended BON specification of itself
+
+The Extended BON parser may:
+
+o cache parse trees between invocations,
+
+o detect and parse only those documents which have changed since the last
+  parse.
+
+The Extended BON serializer *must*:
+
+o serialize and unserialize an in-memory representation to a time-efficient
+  format,
+
+The Extended BON serializer may:
+
+o serialize and unserialize in a space-efficient format.
+
+
+All tools *must*:
+
+o compile correctly in the SmallEiffel and ISE compilers,
+
+All tools may:
+
+o compilation in Object Tools's Visual Eiffel compiler and ISS
+  (Halstenbach) compiler.
+
+3. Overview
+===========
+
+The Extended BON tool suite consists of the following tools:
+
+ o A Extended BON parser that reads textual Extended BON and generates a
+   faithful, in-memory representation of its content.  We call this
+   representation the Extended BON Meta Object Graph, or MOG for short.
+ o A serializer that can read and write Extended BON MOGs to and from
+   permanent storage.
+ o A documentation generator that can convert an MOG into a set of
+   documents in a variety of formats according to a "pluggable" set of
+   rules.
+ o An MOG differencing tool that can determine the minimal rewrites 
+   necessary to convert from a source MOG to a target MOG.
+ o A Extended BON2Eiffel tool that generates Eiffel skeleton code from a
+   Extended BON specification.
+ o A Extended BON<->Eiffel refinement mapping tool.
+ o A Extended BON Eiffel design model checker that compares an Eiffel
+   implementation against a Extended BON specification.
+
+This project was started with the intent of entering it into Eiffel
+Struggle 2001.  Only the first three tools (parser, serializer, and
+documentation generator) are meant to be designed and written for this
+contest.
+
+4. Dictionary
+=============
+
+AST - an Abstract Symbol Tree; a set of data structures used to represent
+hierachical, structured information, typically the results of a parse.
+
+BON - the Business Object Notation; a software specification language
+documented in [WaldenNerson94] and primarily used with the Eiffel
+programming language.
+
+Extended BON - an extension of the BON specification language.  Extended
+BON is described in Extended BON.txt and primarily consists of the addition
+of higher-level specification constructs and operators from the
+KindSoftware code standard[Kiniry01] to BON.
+
+Extended BON<=>Eiffel - a specification language that describes a
+isomorphism between a Extended BON specification and an Eiffel
+implementation.
+
+Eiffel - an object-oriented programming language created by Bertrand Meyer
+and supported by four major compilers: GNU SmallEiffel, ISE Eiffel, Object
+Tools Visual Eiffel, and Halstenbach Eiffel.
+
+Isomorphism - a (full) equivalence function that is both one-to-one and
+onto, a bijection, a generalized homomorphism.
+
+Lexer - a software component that reads a formal notation and breaks input
+up into distinct, indentified tokens for parsing.
+
+MOG - a Meta Object Graph; a set of data structures used to represent
+networks of objects that reflectively describe some structure at the
+metalevel.
+
+Parser - a software tool that converts a tokenized input into a
+data structure-based representation, typically either an abstract symbol
+table (AST) or a metaobject-based data structure like our MOG.
+
+Token - a basic construct of lexing and parsing that represents a
+fundamental atom, or idea, and typically one which has a textual or
+graphical representation that is more complex than that which the token
+itself has.
+
+5. Example
+==========
+
+Bibliography
+============
+
+@Book{WaldenNerson94,
+  author =       { Kim Wald\'en and Jean-Marc Nerson },
+  title =        { Seamless Object-Oriented Software Architecture -
+                  Analysis and Design of Reliable Systems },
+  publisher =    pub-ph,
+  address =      pub-ph:adr,
+  series =       { The Object-Oriented Series },
+  year =         1994
+}
+
+@TechReport{KiniryZimmerman97,
+  editor =       { Joseph R. Kiniry and Daniel M. Zimmerman },
+  title =        { The Infospheres Java Coding Standard },
+  institution =  { Department of Computer Science, California Institute of
+                  Technology },
+  year =         { 1997 },
+  note =         { Available at http://www.infospheres.caltech.edu/ }
+}
+
+@TechReport{Kiniry01,
+  author =       { Joseph R. Kiniry },
+  title =        { The KindSoftware Coding Standard },
+  institution =  { KindSoftware, LLC },
+  year =         { 2001 },
+  note =         { Available at http://www.kindsoftware.com/.  Directly
+                  evolved from Kiniry97. }
+}
+
+======================================================================
+
+APPENDIX A: BON textual grammar (from BON text and included for easy
+reference).
+
+A.1 INTRODUCTION
+
+This appendix presents a formal syntax specification of the BON textual
+notation, which is useful for automatic processing and for maintenance of
+BON designs where no case tool is available. The specification gives a
+comprehensive overview of all notational concepts in BON, facilitating the
+construction of parsers for translating BON charts and diagrams into other
+desired formats. 
+
+Communicating BON designs from either case tools or text files to other
+tools with well-defined interfaces is thus straightforward. Interesting
+possibilities in this respect include configuration management tools,
+commercial DBMS environments, and widely available document processors and
+desktop publishing tools. For example, it is not very difficult to create
+templates for the informal BON charts, using some of the more advanced word
+processors. With textual BON it is then possible to mix the interactive
+input of charts with automatic generation from information stored
+elsewhere.
+
+The formal description also gives the reader a second chance to resolve
+possible unclarities that always lurk in natural language
+descriptions. Nothing can compensate for the precision of a formal notation
+when it comes to communicating the difficult cases unambiguously. 
+
+On the other hand, a language grammar is much harder to read to get a
+general overview of a notation than are typical examples of language
+usage. For this reason, and since a fair portion of the BON textual
+notation has not been shown elsewhere in the book, the next appendix will
+provide the interested reader with textual equivalents to some of the
+graphical BON diagrams presented earlier. 
+
+The textual version of BON does not include any means for describing the
+layout of diagrams. This would require an independent set of concepts
+largely orthogonal to the BON structural elements. Such a language may
+emerge later as a result of experience with case tools supporting BON.
+
+A.2 THE SYNTAX NOTATION
+
+We will present the BON textual grammar in an extended BNF (Backus Naur
+Form), where the extensions are very close to the ones used in [Meyer
+1992a]. The syntax notation is based on the following concepts. 
+
+Any syntactically meaningful part of a BON textual specification, such as a
+cluster, a class, or an assertion, is called a component. The structure of
+all components of a certain category is described by a construct, and an
+individual component conforming to this description is called a specimen of
+the construct. 
+
+Each construct has a unique construct name, which is a single word in roman
+font starting with a capital letter. For example, Class_chart,
+Feature_clause, and Object_group are construct names, and the corresponding
+specimens are any individual class chart, feature clause, etc., that may be
+built according to the rules specified by the grammar. 
+
+Every construct is either terminal or non-terminal. A specimen of a
+terminal construct is called a lexical element or a token. The set of
+tokens make up the basic vocabulary which may be used to construct
+sentences in the language, and their internal structure is not described by
+the grammar. The set of tokens are either considered known a priori, or
+else described separately (usually through regular expressions applied to
+sequences of individual characters, or by informal language). 
+
+Non-terminals, on the other hand, are described in terms of other
+constructs, either terminal or non-terminal. Such a description is called a
+production for the construct, and has the following form:
+
+ Construct =   right-hand-side 
+
+By convention, every non-terminal construct appears (through its construct
+name) as the left-hand side of exactly one production. Terminal constructs,
+on the other hand, may only appear on the right-hand side (by definition). 
+The symbol = means "is defined as". 
+
+The right-hand side of a production specifies the structure of the
+left-hand construct, and since every non-terminal construct has a
+production attached, the corresponding specimen can always be recursively
+decomposed into sequences of tokens.
+
+It is not always possible to tell whether a construct is terminal or
+non-terminal without checking if it occurs as the left-hand side of a
+production or not. However, two common token types are written using
+different typography for easy identification: keywords (in lower case
+boldface) and fixed operators (enclosed in double quotes). There are three
+basic types of production, which have the following forms.
+
+Aggregate 
+
+Defines the construct as a fixed sequence of construct parts. One or more
+elements in the sequence may be marked as optional by enclosing them in
+square brackets. For example: 
+
+Parenthesized =   "(" Expression ")" 
+Inheritance_relation =   Child inherit [ "{" Multiplicity "}" ] 
+                         Parent [ Semantic_label ] 
+
+defines Parenthesized as a left parenthesis followed by an Expression
+followed by a right parenthesis, and Inheritance_relation as a Child
+construct followed by the keyword inherit, then an optional multiplicity
+part (Multiplicity enclosed in braces), then a Parent construct, then an
+optional Semantic_label. 
+
+Choice 
+
+Defines the construct as one of a fixed number of alternative
+constructs. It is written as a non-empty sequence of constructs separated
+by vertical bar. The production 
+
+Expression =   Quantification | Call | Operator_expression | Constant 
+
+therefore means that an Expression is a Quantification, or a Call, or an
+Operator_expression, or a Constant.
+
+Repetition 
+
+Defines the construct as a variable length sequence of specimens of another
+construct, possibly separated (if more than one element) by a given
+separator. The separator (if any) may be either terminal or non-terminal. A
+repetition right-hand side is written in one of the two forms below: 
+
+{ Element_construct Separator_construct ...} 
+{ Element_construct Separator_construct ...} + 
+
+The first form signals that the sequence may be empty, while the second
+requires at least one element. Omitting the separator construct means that
+multiple elements are concatenated without separators in this type of
+sequence. Below are some examples. The first production defines an
+Index_list as a sequence of one or more Index_clause, separated by a
+semicolon. The second defines
+
+Features as a sequence of one or more Feature_clause without any
+separator. The third production defines a Dynamic_ref as zero or more
+Group_prefix followed by a Dynamic_component_name. 
+
+Index_list =   { Index_clause ";" ...} + 
+Features =   { Feature_clause ...} + 
+Dynamic_ref =   { Group_prefix ...} Dynamic_component_name 
+
+With these preliminaries, we are now ready to give the full syntax
+specification of the BON textual notation. The grammar is defined in the
+following sections and then concluded by a discussion of the lexical
+components, summing up the keywords and operators used.
+
+A.3 BON SPECIFICATION 
+
+Bon_specification = { Specification_element ...} + 
+
+Specification_element = Informal_chart | Class_dictionary | 
+                        Static_diagram | Dynamic_diagram | 
+                        Notational_tuning
+
+A.4 INFORMAL CHARTS 
+
+Informal_chart = System_chart | Cluster_chart | Class_chart | 
+                 Event_chart | Scenario_chart | Creation_chart 
+
+Class_dictionary = dictionary System_name 
+                   { Dictionary_entry ...} + 
+                   end 
+
+Dictionary_entry = class Class_name cluster Cluster_name 
+                   description Manifest_textblock 
+
+System_chart =    system_chart System_name 
+                  [ indexing Index_list ] 
+                  [ explanation Manifest_string ] 
+                  [ part Manifest_string ] 
+                  [ Cluster_entries ] 
+                  end 
+Cluster_entries = { Cluster_entry ...} + 
+Cluster_entry =   cluster Cluster_name description Manifest_textblock 
+System_name =     Identifier
+
+Index_list =      { Index_clause ";" ...} + 
+Index_clause =    Identifier ":" Index_term_list 
+Index_term_list = { Index_string "," ...} + 
+Index_string =    Manifest_string 
+
+Cluster_chart = cluster_chart Cluster_name 
+                [ indexing Index_list ] 
+                [ explanation Manifest_string ] 
+                [ part Manifest_string ] 
+                [ Class_entries ] 
+                [ Cluster_entries ] 
+                end 
+Class_entries = { Class_entry ...} + 
+Class_entry =   class Class_name description Manifest_textblock
+Cluster_name =  Identifier 
+
+Class_chart =     class_chart Class_name 
+                  [ indexing Index_list ] 
+                  [ explanation Manifest_string ] 
+                  [ part Manifest_string ] 
+                  [ inherit Class_name_list ] 
+                  [ query Query_list ] 
+                  [ command Command_list ] 
+                  [ constraint Constraint_list ] 
+                  end 
+Query_list =      { Manifest_string "," ...} + 
+Command_list =    { Manifest_string "," ...} + 
+Constraint_list = { Manifest_string "," ...} + 
+Class_name_list = { Class_name "," ...} + 
+  -- Class_name_list likely has to be extended for referral to clusters
+  -- (e.g. "(CLUSTER_NAME)") as a shortcut for referring to all classes of
+  -- the cluster.  See MONITORING_SYSTEM event charts for an example.
+Class_name =      Identifier 
+
+Event_chart =   event_chart System_name 
+                [ incoming | outgoing ] 
+                [ indexing Index_list ] 
+                [ explanation Manifest_string ] 
+                [ part Manifest_string ] 
+                [ Event_entries ] 
+                end 
+Event_entries = { Event_entry ...} + 
+Event_entry =   event Manifest_string involves Class_name_list
+
+Scenario_chart =   scenario_chart System_name 
+                   [ indexing Index_list ] 
+                   [ explanation Manifest_string ] 
+                   [ part Manifest_string ] 
+                   [ Scenario_entries ] 
+                   end 
+Scenario_entries = { Scenario_entry ...} + 
+Scenario_entry =   scenario Manifest_string description Manifest_textblock 
+
+Creation_chart =   creation_chart System_name 
+                   [ indexing Index_list ] 
+                   [ explanation Manifest_string ] 
+                   [ part Manifest_string ] 
+                   [ Creation_entries ] 
+                   end 
+Creation_entries = { Creation_entry ...} + 
+Creation_entry =   creator Class_name creates Class_name_list
+
+A.5 STATIC DIAGRAMS 
+
+Static_diagram =   static_diagram [ Extended_id ] [ Comment ] 
+                   component Static_block end 
+Extended_id =      Identifier | Integer 
+Comment =          { Line_comment New_line ...} + 
+Line_comment =     "--" Simple_string 
+Static_block =     { Static_component ...} 
+Static_component = Cluster | Class | Static_relation 
+
+Cluster =            cluster Cluster_name 
+                     [ reused ] [ Comment ] 
+                     [ Cluster_components ] 
+Cluster_components = component Static_block end 
+Class =              [ root | deferred | effective ] 
+                     class Class_name [ Formal_generics ] 
+                     [ reused ][ persistent ][ interfaced ] [ Comment ] 
+                     [ Class_interface ] 
+Static_relation =    Inheritance_relation | Client_relation
+
+Inheritance_relation =     Child inherit [ "{" Multiplicity "}" ] 
+                           Parent [ Semantic_label ] 
+Client_relation =          Client client [ Client_entities ] [ Type_mark ] 
+                           Supplier [ Semantic_label ] 
+Client_entities =          "{" Client_entity_expression "}" 
+Client_entity_expression = Client_entity_list | Multiplicity 
+Client_entity_list =       { Client_entity "," ...} + 
+Client_entity =            Feature_name | Supplier_indirection | 
+                           Parent_indirection 
+Supplier_indirection =     [ Indirection_feature_part ":" ] 
+                           Generic_indirection 
+Indirection_feature_part = Feature_name | Indirection_feature_list 
+Indirection_feature_list = "(" Feature_name_list ")" 
+Parent_indirection =       "->" Generic_indirection 
+
+Generic_indirection = Formal_generic_name | Named_indirection 
+Named_indirection =   Class_name "[" Indirection_list "]" 
+Indirection_list =    { Indirection_element "," ...} + 
+Indirection_element = "..." | Named_indirection 
+Type_mark =           ":" | ":{" | Shared_mark 
+Shared_mark =         ":" "(" Multiplicity ")" 
+
+Child =                 Static_ref 
+Parent =                Static_ref 
+Client =                Static_ref 
+Supplier =              Static_ref 
+Static_ref =            { Cluster_prefix ...} Static_component_name 
+Cluster_prefix =        Cluster_name "." 
+Static_component_name = Class_name | Cluster_name 
+Multiplicity =          Integer 
+Semantic_label =        Manifest_string
+
+A.6 CLASS INTERFACE DESCRIPTION 
+
+Class_interface =   [ indexing Index_list ] 
+                    [ inherit Parent_class_list ] 
+                    Features 
+                    [ invariant Class_invariant ] 
+                    end 
+Class_invariant =   Assertion 
+Parent_class_list = { Class_type ";" ...} + 
+Features =          { Feature_clause ...} +
+
+Feature_clause =         feature [ Selective_export ] 
+                         [ Comment ] 
+                         Feature_specifications 
+Feature_specifications = { Feature_specification ...} + 
+Feature_specification =  [ deferred | effective | redefined ] 
+                         Feature_name_list [ Type_mark Type ] 
+                         [ Rename_clause ] 
+                         [ Comment ] 
+                         [ Feature_arguments ] 
+                         [ Contract_clause ] 
+
+Contract_clause =        Contracting_conditions end 
+Contracting_conditions = Precondition | Postcondition | Pre_and_post 
+Precondition =           require Assertion 
+Postcondition =          ensure Assertion 
+Pre_and_post =           Precondition Postcondition 
+
+Selective_export =  "{" Class_name_list "}" 
+Feature_name_list = { Feature_name "," ...} + 
+Feature_name =      Identifier | Prefix | Infix 
+Rename_clause =     "{" Renaming "}" 
+Renaming =          "^" Class_name "." Feature_name 
+Feature_arguments = { Feature_argument ...} + 
+Feature_argument =  "->" [ Identifier_list ":" ] Type 
+Identifier_list =   { Identifier "," ...} + 
+Prefix =            prefix '"'  Prefix_operator '"'  
+Infix =             infix '"' Infix_operator '"' 
+Prefix_operator =   Unary | Free_operator 
+Infix_operator =    Binary | Free_operator 
+
+Formal_generics =     "[" Formal_generic_list "]" 
+Formal_generic_list = { Formal_generic "," ...} + 
+Formal_generic =      Formal_generic_name [ "->" Class_type ] 
+Formal_generic_name = Identifier 
+Class_type =          Class_name [ Actual_generics ] 
+Actual_generics =     "[" Type_list "]" 
+Type_list =           { Type "," ...} + 
+Type =                Class_type | Formal_generic_name
+
+Unary =  delta | old | not | "+" | "-" 
+Binary = "+" | "-" | "*" | "/" | 
+         "<" | ">" | "<=" | ">=" | 
+         "=" | "/=" | "//" | "\\" | "^" | 
+         or | xor | and | "->" | "<->" | member_of | ":" 
+
+A.7 FORMAL ASSERTIONS 
+
+Assertion =          { Assertion_clause ";" ...} + 
+Assertion_clause =   Boolean_expression | Comment 
+Boolean_expression = Expression 
+Expression =         Quantification | Call | Operator_expression | Constant 
+Quantification =     Quantifier Range_expression [ Restriction ] Proposition 
+Quantifier =         for_all | exists 
+Range_expression =   { Variable_range ";" ...} + 
+Restriction =        such_that Boolean_expression 
+Proposition =        it_holds Boolean_expression 
+Variable_range =     Member_range | Type_range 
+Member_range =       Identifier_list member_of Set_expression 
+Type_range =         Identifier_list ":" Type 
+
+Call =                    [ Parenthesized_qualifier ] Call_chain 
+Parenthesized_qualifier = Parenthesized "." 
+Call_chain =              { Unqualified_call "." ...} + 
+Unqualified_call =        Identifier [ Actual_arguments ] 
+Actual_arguments =        "(" Expression_list ")" 
+Expression_list =         { Expression "," ...} + 
+Operator_expression =     Parenthesized | Unary_expression |
+                          Binary_expression 
+Parenthesized =           "(" Expression ")" 
+
+Unary_expression =    Prefix_operator Expression 
+Binary_expression =   Expression Infix_operator Expression 
+Set_expression =      Enumerated_set | Call | Operator_expression 
+Enumerated_set =      "{" Enumeration_list "}" 
+Enumeration_list =    { Enumeration_element "," ...} + 
+Enumeration_element = Expression | Interval 
+Interval =            Integer_interval | Character_interval 
+Integer_interval =    Integer_constant ".." Integer_constant 
+Character_interval =  Character_constant ".." Character_constant
+
+Constant =           Manifest_constant | Current | Void 
+Manifest_constant =  Boolean_constant | Character_constant | 
+                     Integer_constant | Real_constant | 
+                     Manifest_string 
+Sign =               "+" | "-" 
+Boolean_constant =   true | false 
+Character_constant = "'" Character "'" 
+Integer_constant =   [ Sign ] Integer 
+Real_constant =      [ Sign ] Real 
+Manifest_textblock = String_begin String String_end 
+String =             { Simple_string New_line ...} + 
+Manifest_string =    String_begin Simple_string String_end 
+
+A.8 DYNAMIC DIAGRAMS 
+
+Dynamic_diagram =   dynamic_diagram [ Extended_id ] [ Comment ] 
+                    component Dynamic_block end 
+Dynamic_block =     { Dynamic_component ...} 
+Dynamic_component = Scenario_description | 
+                    Object_group | 
+                    Object_stack | 
+                    Object | 
+                    Message_relation 
+
+Scenario_description = scenario Scenario_name [ Comment ] 
+                       action Labeled_actions end 
+Labeled_actions =      { Labeled_action ...} + 
+Labeled_action =       Action_label Action_description 
+Action_label =         Manifest_string 
+Action_description =   Manifest_textblock 
+Scenario_name =        Manifest_string 
+
+Object_group =     [ nameless ] object_group Group_name [ Comment ] 
+                   [ Group_components ] 
+Group_components = component Dynamic_block end 
+Object_stack =     object_stack Object_name [ Comment ] 
+Object =           object Object_name [ Comment ]
+
+Message_relation =       Caller calls Receiver [ Message_label ] 
+Caller =                 Dynamic_ref 
+Receiver =               Dynamic_ref 
+Dynamic_ref =            { Group_prefix ...} Dynamic_component_name 
+Group_prefix =           Group_name "." 
+Dynamic_component_name = Object_name | Group_name 
+Object_name =            Class_name [ "." Extended_id ] 
+Group_name =             Extended_id 
+Message_label =          Manifest_string 
+
+A.9 NOTATIONAL TUNING 
+
+This will be explained in the next section. 
+
+Notational_tuning =   Change_string_marks | 
+                      Change_concatenator | 
+                      Change_prefix 
+Change_string_marks = string_marks Manifest_string Manifest_string 
+Change_concatenator = concatenator Manifest_string 
+Change_prefix =       keyword_prefix Manifest_string
+
+A.10 LEXICAL COMPONENTS 
+
+We conclude this chapter with a discussion of the lexical components, which
+are used to form BON textual descriptions in accordance with the grammar
+defined in the preceding sections. These components are the terminal
+constructs that do not appear as the left-hand side of any production in
+the grammar, and therefore need to be described separately. 
+
+Identifiers 
+
+The Identifier construct is defined as a sequence of alphanumeric
+characters including underscore. An identifier must begin with an
+alphanumeric character and must not end with an underscore (whose purpose
+really is to mimic word separation). Letter case is not significant, but
+using consistent style rules is important. 
+
+The recommended BON standard is to use all upper case names for class and
+cluster names, all lower case for feature names, and lower case beginning
+with a capital for object groups and constants values. We also strongly
+recommend using underscore for word separation rather than, for example,
+in-word capitalization, since this greatly enhances readability.
+
+Free operators 
+
+The Free_operator construct represents feature names used as infix and
+prefix operations. Such operations may be textual keywords, such as the
+boolean "and" and "or", but are more often composed of special characters,
+like "+", "**", "=>", etc.
+
+The purpose is usually to make object-oriented expressions (which are
+always feature calls in the end) look very similar to the formalisms used
+in some discipline thus providing a more compact and readable notation for
+the problem at hand. Since it is difficult to foresee exactly what operator
+combinations may be needed, BON only defines the Free_operator construct as
+a sequence of non-spacing printable characters that does not conflict with
+any of the predefined ones. However, in practice, more restrictions are
+added by each development environment. 
+
+Comments 
+
+Major analysis and design elements, such as static diagrams, clusters,
+classes, object groups, etc., often need to have comments attached to them
+in order to explain overall modeling aspects that have no natural place
+among the constituent parts at lower levels. 
+
+Therefore, the BON textual notation recognizes comments to major
+specification elements as part of the grammar, thereby encouraging the
+standard placement of them. This also provides a parser with the
+possibility to check and possibly enforce certain strategic
+descriptions. However, besides the places recognized by the grammar,
+comments may be inserted anywhere in a BON textual description, except
+inside strings.
+
+Strings 
+
+The construct Simple_string is defined as any string of characters not
+containing a New_line character. The non-terminal construct Manifest_string
+is a Simple_string enclosed in the pair of terminals String_begin and
+String_end. Similarly, the non-terminal Manifest_textblock is a sequence of
+Simple_string separated by New_line and enclosed by the same pair of
+terminal constructs (see the grammar above). 
+
+These delimiters are defined by default as a string containing one double
+quote character. The character sequence "show some class, don't treat me
+like an object" is then interpreted as a Manifest_string. However, to
+facilitate the accommodation of double quotes inside strings without having
+to insert escape characters, the delimiting strings may be changed (often
+to some control characters in connection with automatic processing).
+
+BON also defines a lexical Concatenator construct. If a Concatenator is
+found inside a Simple_string, it is removed along with all characters
+(including New_line) up to and including the next Concatenator
+construct. This makes it possible to embed formatting white space into
+strings for readability, without making the formatting characters part of
+the strings. 
+
+The Concatenator construct is defined as a single backslash by default, but
+may be changed by the user. It must not conflict with the string
+delimiters. An example of its use is shown below. 
+
+  "This is a long simple string, which has been broken into\
+  \ two lines for readability" 
+
+The basic constructs Integer, New_line, Character, and Real are not further
+specified, since they may need different definitions depending on the
+development environment. 
+
+Reserved words 
+
+Reserved words are terminal constructs which are predefined sequences of
+letters only, and which cannot be used as identifiers by the user, since
+this might lead to language ambiguities. The reserved words in BON consist
+of keywords and predefined names. There are only three of the latter type:
+Current, Result,and Void. The full list is shown in figure A.1. 
+
+Figure A.1 BON reserved words
+
+action         creator         false          not          reused 
+and            Current         feature        object       root 
+calls          deferred        for_all        object_group scenario 
+class          delta           incoming       object_stack scenario_chart 
+class_chart    description     indexing       old          static_diagram 
+client         dictionary      infix          or           string_marks 
+cluster        dynamic_diagram inherit        outgoing     such_that 
+cluster_chart  effective       interfaced     part         system_chart 
+command        end             invariant      persistent   true 
+component      ensure          involves       prefix       Void 
+concatenator   event           it_holds       query        xor 
+constraint     event_chart     keyword_prefix redefined 
+creates        exists          member_of      require 
+creation_chart explanation     nameless       Result
+
+In a sizable language, there is always the risk that some keywords steal
+valuable name space from the user, and textual BON, being fairly
+expressive, is no exception. To counter this disadvantage, BON defines a
+terminal construct Keyword_prefix, which is empty by default. 
+
+By defining Keyword_prefix as the string "$", for example, we may change
+the syntax of BON so all keywords now need to be prefixed by a dollar sign,
+thus freeing all the corresponding normal words for use in specification of
+the system under development.
+
+Special symbols 
+
+Finally, we collect the complete set of special symbols used in BON with an
+overview of their meaning (figure A.2). Each of them has been described
+earlier in the book. The ones marked as operators (except for the type
+operator ":") can be viewed as class features of infix form that may be
+redefined by descendant classes. 
+
+Conclusion 
+
+The BON textual notation is a full specification language for
+object-oriented system designs, whose purpose is threefold:
+
+ o It can be used to communicate exact specifications between various tools
+and environments, thus taking advantage of the advances in many independent
+areas of presentation. " 
+
+ o It can be used for better understanding of the concepts underlying the
+graphical notation and for settling ambiguities. With today s widely
+available parser generator utilities, the task of writing a parser for the
+language becomes easy. " 
+
+ o It provides a means of storing and updating a specification in a simple
+way, using standard text editors, which can serve as an alternative to a
+dedicated case tool. It may be feasible to copy small whiteboard diagrams
+with pencil on paper in connection with design sessions, but maintaining
+larger specifications requires more. Anybody who has experienced the pain
+of trying to keep evolving graphical figures up to date without strong
+automatic support knows only too well what we are talking about. 
+
+Finally, regarding the different presentations that may be generated from a
+BON textual description, we have not tried to cover graphical layout in the
+textual language. The basic graphical appearance of each textual concept
+has been defined earlier in this book, along with validity constraints and
+rules for how relational arrows may be combined, labels be positioned,
+etc. But what valid alternative to choose is left to the strategies of the
+individual case tool.
+
+Figure A.2 BON special symbols
+
+SYMBOL  NAME                  USE
+======================================================================
+--      double dash           Introduces comments   
+'       single quote          Encloses character constants
+"       double quote          Encloses prefix and infix operator names 
+,       comma                 General element separator
+;       semicolon             Separator for parent lists, assertion
+                              clauses, and indexing clauses 
+( )     parentheses           Grouping of expressions, multiplicity 
+[ ]     square brackets       Encloses generic parameters 
+{ }     braces                Encloses restricted export lists, renaming,
+                              enumerated sets  
++ - * / plus, minus,          Arithmetic operators 
+        times, division       
+// \\   double slash,         Integer division, modulo operators
+        double backslash 
+^       up arrow              Power operator, renaming 
+< >     less than,            Relational operators 
+        greater than 
+<>      less than or equal,   Relational operators 
+        greater than or equal 
+= =/    equal, not equal      Equality and non-equality  
+->      right arrow, implies  Feature arguments, constrained genericity,
+                              logical implication 
+<->     equivalence           Logical equivalence 
+.       dot                   Feature calls, renaming, relational
+                              references, object_id  
+..      double dot            Interval marker 
+:       colon                 Type mark, type operator, index separator 
+:{      aggregate mark        Indicates aggregate supplier
+
+The following assertion elements must be supported (from figure 3.13, page
+46, of WaldenNerson94):
+
+Graphical BON (TeX)     Textual BON      Explanation  
+======================================================================
+\Delta name             delta name       Attribute changed
+old expr                old expr         Old return value 
+----------------------------------------------------------------------
+Result                  Result           Current query result 
+@                       Current          Current object  
+\emptyset               Void             Void reference 
++ - * /                 + - * /          Basic numeric operators 
+^                       ^                Power operator 
+//                      //               Integer division 
+\\                      \\               Modulo 
+=                       =                Equal 
+\neq                    /=               Not equal 
+<                       <                Less than
+\leq                    <=               Less than or equal 
+>                       >                Greater than
+\geq                    >=               Greater than or equal   
+\arrow                  ->               Implies (semi-strict)  
+\                       <->              Equivalent to 
+\neg                    not              Not 
+and                     and              And (semi-strict) 
+or                      or               Or (semi-strict) 
+xor                     xor              Exclusive or  
+\exists                 exists           There exists 
+\forall                 for_all          For all 
+|                       such_that        Such that 
+\dot                    it_holds         It holds  
+\in                     member_of        Is in set  
+\nin                    not member_of    Is not in set 
+: type                  : type           Is of type 
+{}                      {}               Enumerated set 
+..                      ..               Closed range

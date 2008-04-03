@@ -1,0 +1,24 @@
+-- Test specifications for parsing logical expressions.
+
+static_diagram
+component
+
+  deferred class LOGIC[N] 
+    reused 
+    persistent 
+    interfaced
+
+    -- A logic of N truth values.
+
+    indexing
+      author: "Joseph Kiniry";
+      date: "Sept 15, 2001"
+
+    {Features}
+
+    invariant
+
+  end
+
+end
+

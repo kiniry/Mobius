@@ -1,0 +1,184 @@
+body {
+  font-family: Georgia, Verdana, serif;
+  background-color: #336666; 
+  font-size: 100%;
+  color: #336666;
+  padding: 5% 5%;
+}
+
+table {
+  background-color: #CCCCCC;
+  color: #336666;
+}
+
+p {
+  color: #FFFFCC;
+  font-family: Georgia, Verdana, serif;
+}
+
+ul {
+  color: #FFFFCC;
+  background-color: transparent;
+}
+
+ol {  
+  color: #FFFFCC;  
+  background-color: transparent;
+}
+
+td {
+  color: #FFFFCC;
+  vertical-align: top;
+  font-family: Georgia, Verdana, serif;
+  font-size: 100% 
+}
+
+th {
+  background-color: #CCCCCC;
+  color: #003333;
+  font-weight: bold;
+  text-align: center;
+  font-family: Georgia, Verdana, serif;
+  font-size: 100%
+}
+
+pre {  
+  color: #FFFFCC;
+  background-color: transparent;
+  font-family: monospace
+}
+
+a {
+  font-weight: bold;
+  text-decoration: underline
+}
+
+a:link {
+  color: #FFFFFF;
+}
+
+a:active {
+  color: #FF0066;
+}
+
+a:visited {
+  color: #3399FF;
+}
+
+a:hover {
+  color: #FFFFFF;
+}
+
+dd {
+  font-family: Georgia, Verdana, serif;
+  color: #FFFFCC;
+} 
+ 
+dt {
+  font-family: Georgia, Verdana, serif;
+  color: #FFFFCC;
+} 
+
+h1 {
+  color: #FFFF99; 
+  font-size: 200%;
+  font-family: Georgia, Verdana, serif;
+}
+
+h2 {
+  color: #FFFF99; 
+  font-size: 150%;
+  font-family: Georgia, Verdana, serif;
+}
+
+h3 {
+  color: #FFFF99; 
+  font-size: 133%;
+  font-family: Georgia, Verdana, serif;
+}
+
+h4 {
+  color: #FFFF99; 
+  font-size: 100%;
+  font-family: Georgia, Verdana, serif;
+}
+
+.white {
+  background-color: #FFFFFF;
+  color: #003333;
+}
+
+.yellow {
+  background-color: #FFFF99;
+  color: #003333;
+  text-align: center;
+}
+
+.sysname {
+  background-color: #FFFF99;
+  color: #003333;
+  text-align: center;  
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.whiteclass {
+  background-color: #FFFFFF;
+  color: #003333;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.italic-caps {
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.jrk {
+  color: #FF9999;
+}
+
+.caw {
+  color: #FFCC00;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.emphasize {
+  font-style: italic;
+  font-weight: bold;
+}
+  
+.monospace {
+  font-family: monospace
+}
+
+.grey {
+  background-color: #FFFF99;
+  color: #336666;
+  vertical-align: middle;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.greyfoot {
+  background-color: #CCCCCC;
+  color: #336666;
+  vertical-align: middle;
+  font-size: 90%;
+  text-align: center
+}
+  
+.whitefoot {
+  background-color: #FFFFFF;
+  color: #003333;
+  font-size: 90%;
+  text-align: center
+}
+

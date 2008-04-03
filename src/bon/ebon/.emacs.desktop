@@ -1,0 +1,1799 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Thu Dec 22 09:02:42 2005
+;; Desktop file format version 206
+;; Emacs version 22.0.50.1
+
+;; Global section:
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring '("KindSo" "ESCToo" "JML/" ".muse" "muse" "bea" "Plans/" ", " "xac" ".e" "ace" ")" "clone (" ")" "clone (" ")"))
+(setq regexp-search-ring '("[0-9]-[0-9]" "^<\\s-+"))
+(setq register-alist (list (list 100 '(frame-configuration ("Unprintable entity" ((top . 10) (left . 1608) (buffer-list "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity" "Unprintable entity") (width . 220) (height . 96) (parent-id) (display . "Mac") (visibility . t) (icon-name) (window-id . "8753632") (unsplittable) (modeline . t) (name . "Emacs@category.ucd.ie") (background-mode . light) (display-type . color) (scroll-bar-width . 16) (cursor-type . box) (auto-lower) (auto-raise) (icon-type) (title) (buffer-predicate) (tool-bar-lines . 0) (menu-bar-lines . 1) (right-fringe . 11) (left-fringe . 10) (line-spacing) (screen-gamma) (border-color . "black") (cursor-color . "black") (mouse-color . "black") (background-color . "grey70") (foreground-color . "black") (vertical-scroll-bars . right) (internal-border-width . 0) (border-width . 0) (font . "-apple-courier-medium-r-normal--12-120-75-75-m-120-mac-roman")) "Unprintable entity")) (let ((mk (make-marker))) (add-hook 'desktop-delay-hook (list 'lambda '() (list 'set-marker mk nil (get-buffer "*desktop*")))) mk))))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 206
+  nil
+  "muse-3.02.5|local"
+  'dired-mode
+  nil
+  818
+  '(nil nil)
+  t
+  '("/usr/local/site-lisp/muse-3.02.5/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "lisp|muse-3.02.5"
+  'dired-mode
+  nil
+  198
+  '(nil nil)
+  t
+  '("/usr/local/site-lisp/muse-3.02.5/lisp/")
+  nil)
+
+(desktop-create-buffer 206
+  "/usr/local/site-lisp/muse-3.02.5/ChangeLog"
+  "ChangeLog|muse-3.02.5"
+  'change-log-mode
+  '(auto-fill-mode)
+  20608
+  '(1 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix) (fill-column . 74)))
+
+(desktop-create-buffer 206
+  nil
+  "muse-3.02.5|emacs"
+  'dired-mode
+  nil
+  323
+  '(nil nil)
+  t
+  '("/usr/local/share/emacs/site-lisp/muse-3.02.5/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "site-lisp"
+  'dired-mode
+  nil
+  3172
+  '(247 nil)
+  t
+  '("/usr/local/share/emacs/site-lisp/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/Plans/2005.12.22"
+  "2005.12.22"
+  'planner-mode
+  nil
+  780
+  '(33 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/System_Files/diary"
+  "diary"
+  'fundamental-mode
+  nil
+  143075
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-mac)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/ChangeLog"
+  "ChangeLog|ebon"
+  'change-log-mode
+  '(auto-fill-mode)
+  1
+  '(12962 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix) (change-log-default-name . "/Users/kiniry/Sandboxes/ebon/ChangeLog") (fill-column . 74)))
+
+(desktop-create-buffer 206
+  nil
+  "test|ebon"
+  'dired-mode
+  nil
+  192
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/test/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "parser|test"
+  'dired-mode
+  nil
+  200
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/test/parser/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/parser/getest.ise"
+  "getest.ise|parser"
+  'fundamental-mode
+  nil
+  232
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/parser/getest.se"
+  "getest.se"
+  'fundamental-mode
+  nil
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/parser/getest.cfg"
+  "getest.cfg|parser"
+  'conf-mode
+  nil
+  379
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/components/formal_generic.e"
+  "formal_generic.e"
+  'eiffel-mode
+  nil
+  923
+  '(1076 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/scanner/bon_scanner.l"
+  "bon_scanner.l"
+  'eiffel-mode
+  nil
+  16094
+  '(16079 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/scanner/bon_scanner.e"
+  "bon_scanner.e"
+  'eiffel-mode
+  nil
+  41984
+  '(41969 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/specification/bon_specification.e"
+  "bon_specification.e"
+  'eiffel-mode
+  nil
+  2101
+  '(2086 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/relations/inheritance_relation.e"
+  "inheritance_relation.e"
+  'eiffel-mode
+  nil
+  1330
+  '(1317 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/relations/client_relation.e"
+  "client_relation.e"
+  'eiffel-mode
+  nil
+  2015
+  '(1993 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/supplier_indirection.e"
+  "supplier_indirection.e"
+  'eiffel-mode
+  nil
+  1171
+  '(1144 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/static_ref.e"
+  "static_ref.e"
+  'eiffel-mode
+  nil
+  4010
+  '(3998 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/named_indirection.e"
+  "named_indirection.e"
+  'eiffel-mode
+  nil
+  1213
+  '(1195 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/indirection_element.e"
+  "indirection_element.e"
+  'eiffel-mode
+  nil
+  655
+  '(630 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/generic_indirection.e"
+  "generic_indirection.e"
+  'eiffel-mode
+  nil
+  1218
+  '(1193 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/client_entity.e"
+  "client_entity.e"
+  'eiffel-mode
+  nil
+  1765
+  '(1739 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/class_type.e"
+  "class_type.e"
+  'eiffel-mode
+  nil
+  1841
+  '(1816 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/bon_type.e"
+  "bon_type.e"
+  'eiffel-mode
+  nil
+  1853
+  '(1827 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/interfaces/class_interface.e"
+  "class_interface.e|library"
+  'eiffel-mode
+  nil
+  5695
+  '(5670 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/indexing/index_clause.e"
+  "index_clause.e"
+  'eiffel-mode
+  nil
+  1249
+  '(1237 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/entries/scenario_entry.e"
+  "scenario_entry.e"
+  'eiffel-mode
+  nil
+  1115
+  '(1097 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/entries/event_entry.e"
+  "event_entry.e"
+  'eiffel-mode
+  nil
+  1025
+  '(1014 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/entries/creation_entry.e"
+  "creation_entry.e"
+  'eiffel-mode
+  nil
+  1186
+  '(1169 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/entries/cluster_entry.e"
+  "cluster_entry.e"
+  'eiffel-mode
+  nil
+  1109
+  '(1091 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/entries/class_entry.e"
+  "class_entry.e"
+  'eiffel-mode
+  nil
+  1105
+  '(1087 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/dictionary/dictionary_entry.e"
+  "dictionary_entry.e"
+  'eiffel-mode
+  nil
+  1597
+  '(1579 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/dictionary/class_dictionary.e"
+  "class_dictionary.e"
+  'eiffel-mode
+  nil
+  1439
+  '(1422 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/diagrams/static_diagram.e"
+  "static_diagram.e"
+  'eiffel-mode
+  nil
+  1916
+  '(1912 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/components/unspecified_static_component.e"
+  "unspecified_static_component.e"
+  'eiffel-mode
+  nil
+  1425
+  '(1413 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/components/class_specification.e"
+  "class_specification.e"
+  'eiffel-mode
+  nil
+  3561
+  '(3539 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/charts/system_chart.e"
+  "system_chart.e"
+  'eiffel-mode
+  nil
+  2129
+  '(2111 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/charts/scenario_chart.e"
+  "scenario_chart.e"
+  'eiffel-mode
+  nil
+  2299
+  '(2286 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/charts/informal_chart.e"
+  "informal_chart.e"
+  'eiffel-mode
+  nil
+  5291
+  '(5272 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/charts/event_chart.e"
+  "event_chart.e"
+  'eiffel-mode
+  nil
+  3240
+  '(3223 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/charts/creation_chart.e"
+  "creation_chart.e"
+  'eiffel-mode
+  nil
+  2070
+  '(2053 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/charts/cluster_chart.e"
+  "cluster_chart.e"
+  'eiffel-mode
+  nil
+  3615
+  '(3601 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/charts/class_chart.e"
+  "class_chart.e"
+  'eiffel-mode
+  nil
+  6578
+  '(6561 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "ebon|Sandboxes"
+  'dired-mode
+  nil
+  991
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/")
+  '((change-log-default-name . "/Users/kiniry/Sandboxes/ebon/ChangeLog")))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/scanner/build.eant"
+  "build.eant|src/scanner"
+  'sgml-mode
+  '(auto-fill-mode)
+  1612
+  '(849 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/parser/bon_parser.y"
+  "bon_parser.y"
+  'eiffel-mode
+  nil
+  10692
+  '(1 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/parser/build.eant"
+  "build.eant|src/parser"
+  'sgml-mode
+  '(auto-fill-mode)
+  1125
+  '(1125 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/build.eant"
+  "build.eant|ebon"
+  'sgml-mode
+  nil
+  7590
+  '(7590 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/scanner/system.xace"
+  "system.xace|src/scanner"
+  'sgml-mode
+  '(auto-fill-mode)
+  1361
+  '(1361 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "parser|src"
+  'dired-mode
+  nil
+  597
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/src/parser/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/parser/system.xace"
+  "system.xace|src/parser"
+  'sgml-mode
+  '(auto-fill-mode)
+  1110
+  '(1149 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/scanner/system.xace"
+  "system.xace|test/scanner"
+  'sgml-mode
+  '(auto-fill-mode)
+  1092
+  '(320 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/names/actual_generics.e"
+  "actual_generics.e"
+  'eiffel-mode
+  nil
+  210
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "scanner|src"
+  'dired-mode
+  nil
+  513
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/src/scanner/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "src|ebon"
+  'dired-mode
+  nil
+  552
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/src/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/parser/bon_parser.e"
+  "bon_parser.e"
+  'eiffel-mode
+  nil
+  317938
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/expressions/bon_interval.e"
+  "bon_interval.e"
+  'eiffel-mode
+  nil
+  145
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "expressions"
+  'dired-mode
+  nil
+  1322
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/expressions/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/expressions/enumeration_element.e"
+  "enumeration_element.e"
+  'eiffel-mode
+  nil
+  156
+  '(161 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/expressions/character_interval.e"
+  "character_interval.e"
+  'eiffel-mode
+  nil
+  99
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "mog|library"
+  'dired-mode
+  nil
+  679
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "names"
+  'dired-mode
+  nil
+  207
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/names/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "parser|Sandboxes/ebon/build"
+  'dired-mode
+  nil
+  252
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/build/parser/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/parser/library.xace"
+  "library.xace|src/parser"
+  'sgml-mode
+  '(auto-fill-mode)
+  414
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/scanner/library.xace"
+  "library.xace|scanner"
+  'sgml-mode
+  '(auto-fill-mode)
+  361
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "ebon|src"
+  'dired-mode
+  nil
+  193
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/src/ebon/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "build|src"
+  'dired-mode
+  nil
+  197
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/src/ebon/build/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "scanner|build"
+  'dired-mode
+  nil
+  205
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/src/ebon/build/scanner/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "parser|src/ebon/build"
+  'dired-mode
+  nil
+  204
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/src/ebon/build/parser/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/parser/build.eant"
+  "build.eant|test/parser"
+  'sgml-mode
+  '(auto-fill-mode)
+  411
+  '(419 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-latin-1-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "build|Sandboxes"
+  'dired-mode
+  nil
+  190
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/build/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/build.eant"
+  "build.eant|src"
+  'sgml-mode
+  '(auto-fill-mode)
+  1138
+  '(1188 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/src/library.xace"
+  "library.xace|src"
+  'sgml-mode
+  '(auto-fill-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/scanner/build.eant"
+  "build.eant|test/scanner"
+  'sgml-mode
+  '(auto-fill-mode)
+  51
+  '(512 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-latin-1-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/example/build.eant"
+  "build.eant|example"
+  'sgml-mode
+  '(auto-fill-mode)
+  46
+  '(646 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/build.eant"
+  "build.eant|library"
+  'sgml-mode
+  '(auto-fill-mode)
+  1183
+  '(1159 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "example|ebon"
+  'dired-mode
+  nil
+  246
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/example/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/docs/build.eant"
+  "build.eant|docs"
+  'sgml-mode
+  '(auto-fill-mode)
+  43
+  '(470 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-latin-1-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "docs"
+  'dired-mode
+  nil
+  762
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/docs/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "doc"
+  'dired-mode
+  nil
+  990
+  '(314 nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/doc/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "gobo"
+  'dired-mode
+  nil
+  760
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "library|ebon"
+  'dired-mode
+  nil
+  306
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "specification"
+  'dired-mode
+  nil
+  213
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/specification/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "sets|library"
+  'dired-mode
+  nil
+  204
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/sets/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "relations"
+  'dired-mode
+  nil
+  209
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/relations/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "properties|library"
+  'dired-mode
+  nil
+  210
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/properties/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "lists"
+  'dired-mode
+  nil
+  206
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/lists/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "interfaces|library"
+  'dired-mode
+  nil
+  210
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/interfaces/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "indexing"
+  'dired-mode
+  nil
+  207
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/indexing/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "entries"
+  'dired-mode
+  nil
+  207
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/entries/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "dictionary"
+  'dired-mode
+  nil
+  210
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/dictionary/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "diagrams"
+  'dired-mode
+  nil
+  208
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/diagrams/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "components"
+  'dired-mode
+  nil
+  211
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/components/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "charts"
+  'dired-mode
+  nil
+  209
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/library/mog/charts/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/build.eant"
+  "build.eant|mog"
+  'sgml-mode
+  '(auto-fill-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/mog/library.xace"
+  "library.xace|mog"
+  'sgml-mode
+  '(auto-fill-mode)
+  381
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/library/library.xace"
+  "library.xace|library"
+  'sgml-mode
+  '(auto-fill-mode)
+  379
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/Eiffel/gobo/build.eant"
+  "build.eant|gobo"
+  'sgml-mode
+  '(auto-fill-mode)
+  654
+  '(22 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "Reynolds"
+  'dired-mode
+  nil
+  89
+  '(27 nil)
+  t
+  '("/Users/kiniry/Sandboxes/Mobius/WP3/Task_3.3_Multi-threading/prior_work/papers/Reynolds/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "papers"
+  'dired-mode
+  nil
+  1034
+  '(410 nil)
+  t
+  '("/Users/kiniry/Sandboxes/Mobius/WP3/Task_3.3_Multi-threading/prior_work/papers/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "prior_work"
+  'dired-mode
+  nil
+  336
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Mobius/WP3/Task_3.3_Multi-threading/prior_work/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/System_Files/bash_functions"
+  "bash_functions"
+  'sh-mode
+  nil
+  11270
+  '(9726 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/build.eant"
+  "build.eant|test"
+  'sgml-mode
+  '(auto-fill-mode)
+  2512
+  '(879 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "scanner|test"
+  'dired-mode
+  nil
+  380
+  '(1 nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/test/scanner/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/scanner/getest.cfg"
+  "getest.cfg|scanner"
+  'conf-mode
+  nil
+  244
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/parser/system.xace"
+  "system.xace|test/parser"
+  'sgml-mode
+  '(auto-fill-mode)
+  345
+  '(1089 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "lexical"
+  'dired-mode
+  nil
+  634
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/library/lexical/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "scanner|lexical"
+  'dired-mode
+  nil
+  218
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/library/lexical/scanner/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "library|gobo"
+  'dired-mode
+  nil
+  561
+  '(859 nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/library/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "test|gobo"
+  'dired-mode
+  nil
+  1324
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/test/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "math"
+  'dired-mode
+  nil
+  203
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/test/math/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "src|test"
+  'dired-mode
+  nil
+  203
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/test/src/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "common"
+  'dired-mode
+  nil
+  206
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/test/common/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "data"
+  'dired-mode
+  nil
+  206
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/test/common/data/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "example|test"
+  'dired-mode
+  nil
+  207
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/test/example/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "gelint"
+  'dired-mode
+  nil
+  208
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/test/gelint/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/Eiffel/gobo/test/gelint/system.xace"
+  "system.xace|gelint"
+  'sgml-mode
+  '(auto-fill-mode)
+  24
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/Eiffel/gobo/test/gelint/build.eant"
+  "build.eant|gelint"
+  'sgml-mode
+  '(auto-fill-mode)
+  722
+  '(729 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/scanner/getest.ise"
+  "getest.ise|scanner"
+  'fundamental-mode
+  nil
+  218
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/test/parser/library.xace"
+  "library.xace|test/parser"
+  'sgml-mode
+  '(auto-fill-mode)
+  360
+  '(355 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "source"
+  'dired-mode
+  nil
+  196
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/source/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "mog|source"
+  'dired-mode
+  nil
+  193
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/source/mog/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "sets|source"
+  'dired-mode
+  nil
+  198
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/source/mog/sets/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "interfaces|source"
+  'dired-mode
+  nil
+  207
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/source/mog/interfaces/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "properties|source"
+  'dired-mode
+  nil
+  204
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/source/mog/properties/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "parser|source"
+  'dired-mode
+  nil
+  209
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/source/parser/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "scanner|source"
+  'dired-mode
+  nil
+  197
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/source/scanner/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "CVS"
+  'dired-mode
+  nil
+  204
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/source/scanner/CVS/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/Eiffel/gobo/src/geant/build.eant"
+  "build.eant|geant"
+  'sgml-mode
+  '(auto-fill-mode)
+  24
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . mule-utf-8-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "geant"
+  'dired-mode
+  nil
+  448
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/src/geant/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "src|gobo"
+  'dired-mode
+  nil
+  371
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/gobo/src/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "point_experiments"
+  'dired-mode
+  nil
+  271
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/ebon/src/parser/point_experiments/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/Eiffel/gobo/Release_notes.txt"
+  "Release_notes.txt"
+  'text-mode
+  '(auto-fill-mode)
+  3877
+  '(1 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/TODO.txt"
+  "TODO.txt"
+  'text-mode
+  '(auto-fill-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/Eiffel/gobo/work/bootstrap/Readme.txt"
+  "Readme.txt|bootstrap"
+  'text-mode
+  '(auto-fill-mode)
+  112
+  '(2331 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/Eiffel/gobo/Readme.txt"
+  "Readme.txt|gobo"
+  'text-mode
+  '(auto-fill-mode)
+  4124
+  '(4076 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "Eiffel"
+  'dired-mode
+  nil
+  504
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Eiffel/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "Sandboxes"
+  'dired-mode
+  nil
+  703
+  '(831 nil)
+  t
+  '("/Users/kiniry/Sandboxes/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/ebon/source/mog/interfaces/class_interface.e"
+  "class_interface.e|source"
+  'eiffel-mode
+  nil
+  3128
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/System_Files/diary.cyclic-tasks"
+  "diary.cyclic-tasks"
+  'fundamental-mode
+  nil
+  467
+  '(180 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "Recommendations"
+  'dired-mode
+  nil
+  1717
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Writing/Misc/Recommendations/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/planner-merge/planner.el"
+  "planner.el|planner-merge"
+  'emacs-lisp-mode
+  '(semantic-idle-scheduler-mode semantic-idle-summary-mode semantic-idle-completions-mode semantic-decoration-mode senator-minor-mode eldoc-mode checkdoc-minor-mode)
+  105647
+  '(104684 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-latin-1-unix)))
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Sandboxes/planner-duo/planner.el"
+  "planner.el|planner-duo"
+  'emacs-lisp-mode
+  '(semantic-idle-scheduler-mode semantic-idle-summary-mode semantic-idle-completions-mode semantic-decoration-mode senator-minor-mode eldoc-mode checkdoc-minor-mode)
+  3695
+  '(3695 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-latin-1-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "planner-duo"
+  'dired-mode
+  nil
+  255
+  '(nil nil)
+  t
+  '("/usr/local/site-lisp/planner-duo/")
+  nil)
+
+(desktop-create-buffer 206
+  "/usr/local/site-lisp/planner-muse/planner.el"
+  "planner.el|planner-muse"
+  'emacs-lisp-mode
+  '(semantic-idle-scheduler-mode semantic-idle-summary-mode semantic-idle-completions-mode semantic-decoration-mode senator-minor-mode eldoc-mode checkdoc-minor-mode)
+  43162
+  '(15235 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-latin-1-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "planner-muse"
+  'dired-mode
+  nil
+  268
+  '(nil nil)
+  t
+  '("/usr/local/share/emacs/site-lisp/planner-muse/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "muse-3.02.02"
+  'dired-mode
+  nil
+  653
+  '(nil nil)
+  t
+  '("/usr/local/share/emacs/site-lisp/muse-3.02.02/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "lisp|muse-3.02.02"
+  'dired-mode
+  nil
+  211
+  '(nil nil)
+  t
+  '("/usr/local/share/emacs/site-lisp/muse-3.02.02/lisp/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "Reviews"
+  'dired-mode
+  nil
+  263
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Writing/Professional/Reviews/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "Professional"
+  'dired-mode
+  nil
+  858
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Writing/Professional/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "Writing"
+  'dired-mode
+  nil
+  1081
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Writing/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "Misc"
+  'dired-mode
+  nil
+  196
+  '(251 nil)
+  t
+  '("/Users/kiniry/Sandboxes/Writing/Misc/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "Plans"
+  'dired-mode
+  nil
+  256
+  '(nil nil)
+  t
+  '("/Users/kiniry/Sandboxes/Plans/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "kiniry"
+  'dired-mode
+  nil
+  2384
+  '(nil nil)
+  t
+  '("/Users/kiniry/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/Desktop/civil_status/bon/Citizen.java"
+  "Citizen.java"
+  'jde-mode
+  '(abbrev-mode semantic-idle-scheduler-mode semantic-idle-summary-mode semantic-idle-completions-mode semantic-decoration-mode senator-minor-mode jde-bug-minor-mode jde-plugin-minor-mode)
+  146
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  nil
+  "bon"
+  'dired-mode
+  nil
+  250
+  '(nil nil)
+  t
+  '("/Users/kiniry/Desktop/civil_status/bon/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "civil_status"
+  'dired-mode
+  nil
+  661
+  '(nil nil)
+  t
+  '("/Users/kiniry/Desktop/civil_status/")
+  nil)
+
+(desktop-create-buffer 206
+  nil
+  "Desktop"
+  'dired-mode
+  nil
+  3284
+  '(1 nil)
+  t
+  '("/Users/kiniry/Desktop/")
+  nil)
+
+(desktop-create-buffer 206
+  "/Users/kiniry/System_Files/bbdb"
+  "bbdb"
+  'planner-mode
+  nil
+  116821
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-2022-7bit-unix)))
+

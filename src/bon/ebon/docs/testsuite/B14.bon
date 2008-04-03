@@ -1,0 +1,101 @@
+-- Example 14
+
+static_diagram Technical_events 
+component
+        class REVIEW persistent 
+        feature 
+                reviewer: PERSON 
+                score: VALUE 
+                comments: TEXT 
+        invariant score member_of { 'A' .. 'D' } 
+        end
+        class STATUS persistent 
+        feature 
+                received: DATE 
+                review_started: DATE 
+                accepted: DATE 
+                rejected: DATE 
+                final_received: DATE 
+        invariant 
+                received <= review_started; 
+                review_started <= final_received; 
+                accepted = Void or rejected = Void 
+        end
+        class PAPER persistent 
+        inherit 
+                PRESENTATION 
+        feature 
+                copyright_transferred: BOOLEAN 
+                reviews: SET[REVIEW] 
+                final_score: VALUE 
+                award_best_paper 
+                transfer_copyright 
+                        require 
+                                status.accepted /= Void 
+                        ensure 
+                                copyright_transferred 
+                        end 
+                effective accept 
+                effective reject 
+        end 
+        deferred class PRESENTATION 
+        feature 
+                code: VALUE 
+                title : VALUE 
+                authors: SET[PERSON] 
+                status: STATUS 
+                speakers: SET[PERSON] 
+                deferred accept 
+                        ensure status.accepted /= Void end 
+                deferred reject 
+                        ensure status.rejected /= Void end 
+                invariant 
+                        for_all p, q: PRESENTATION such_that 
+                                p /= q it_holds p.code /= q.code and 
+                                p.title /= q.title 
+                end
+        class TUTORIAL persistent 
+        inherit PRESENTATION 
+        feature 
+                capacity: VALUE 
+                attendee_count: VALUE 
+                prerequisite_level: VALUE 
+                track: VALUE 
+                duration: DURATION 
+                effective accept 
+                effective reject 
+        end
+        class PAPER_SESSION persistent 
+        inherit SESSION 
+        feature 
+                presentations: SET[PAPER] 
+        invariant 
+                for_all p member_of presentations it_holds 
+                        p.status.accepted /= Void 
+        end
+        class SESSION 
+        feature 
+                chair: PERSON 
+                code: VALUE 
+                track: VALUE 
+                start, the_end: DATE 
+                conference_room: VALUE 
+        invariant start < the_end 
+        end
+        class TUTORIAL_SESSION persistent 
+        inherit 
+                SESSION 
+        feature 
+                lecture: TUTORIAL 
+        invariant 
+                lecture.status.accepted /= Void 
+        end 
+        PAPER inherit PRESENTATION 
+        TUTORIAL inherit PRESENTATION 
+        PAPER_SESSION inherit SESSION 
+        TUTORIAL_SESSION inherit SESSION 
+        PAPER client REVIEW 
+        PRESENTATION client STATUS 
+        PAPER_SESSION client PAPER 
+        TUTORIAL_SESSION client TUTORIAL 
+end

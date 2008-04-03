@@ -1,0 +1,14 @@
+ge.ace
+gen_test_notational_tuning.e
+ise.ace
+loadpath.se
+se.ace
+test_parser
+test_parser.e
+test_parser.h
+test_parser.id
+test_parser.make
+test_parser1.c
+test_parser2.c
+test_scanner
+ve.xace

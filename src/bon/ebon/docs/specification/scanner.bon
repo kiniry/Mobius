@@ -1,0 +1,213 @@
+-- The Extended BON scanner is constructed with Gobo gelex, thus relies
+-- upon numerous classes in the Gobo library.
+
+
+-- Informal Charts
+
+system_chart EBON_SCANNER_SYSTEM
+indexing
+  author: "Joseph Kiniry";
+  keywords: "scanner", "Extended BON", "EBON", "BON"
+explanation
+  "The Extended BON scanner."
+cluster SCANNER
+description
+  "The Extended BON scanner."
+cluster TEST_SCANNER
+description
+  "The Extended BON scanner unit test suite."
+cluster TEST_SCANNER_BUILD
+description
+  "The automatically generated Extended BON scanner unit test suite top-level."
+end
+
+
+cluster_chart SCANNER
+indexing
+  author: "Joseph Kiniry";
+  keywords: "scanner", "Extended BON", "EBON", "BON"
+explanation
+  "The Extended BON scanner."
+class EBON_SCANNER
+description
+  "A scanner for the Extended BON specification language."
+class EBON_SCANNER_SKELETON
+description
+  "A scanner skeleton for the Extended BON specification language."
+end
+
+
+cluster_chart TEST_SCANNER
+indexing
+  author: "Joseph Kiniry";
+  keywords: "scanner", "Extended BON", "EBON", "BON", "unit test"
+explanation
+  "A set of unit tests for the EBON scanner."
+class TEST_CHARACTERS
+description
+  "A set of unit tests for the EBON scanner focusing on scanning characters."
+class TEST_COMMENTS
+description
+  "A set of unit tests for the EBON scanner focusing on scanning comments."
+class TEST_FREE_OPERATORS
+description
+  "A set of unit tests for the EBON scanner focusing on scanning free %
+   %operators."
+class TEST_IDENTIFIERS
+description
+  "A set of unit tests for the EBON scanner focusing on scanning identifiers."
+class TEST_KEYWORDS
+description
+  "A set of unit tests for the EBON scanner focusing on scanning keywords."
+class TEST_MISC
+description
+  "A set of unit tests for the EBON scanner."
+class TEST_NUMBERS
+description
+  "A set of unit tests for the EBON scanner focusing on scanning numbers."
+class TEST_SPECIAL_SYMBOLS
+description
+  "A set of unit tests for the EBON scanner focusing on scanning special %
+   %symbols."
+class TEST_STRINGS
+description
+  "A set of unit tests for the EBON scanner focusing on scanning strings."
+end
+
+
+cluster_chart TEST_SCANNER_BUILD
+indexing
+  author: "Joseph Kiniry";
+  keywords: "scanner", "Extended BON", "EBON", "BON", "unit test"
+explanation
+  "The automatically generated Extended BON scanner unit test suite top-level."
+class TEST_SCANNER
+description
+  "The top-most, automatically generated, unit test suite harness."
+end
+
+
+class_chart EBON_SCANNER
+indexing
+  author: "Joseph Kiniry";
+  in_cluster: "SCANNER";
+  created: "2002-04-15 Joseph Kiniry";
+  revised: "$Id: scanner.bon,v 1.1 2002/04/16 01:04:19 kiniry Exp $"
+explanation
+  "A scanner for the Extended BON specification language."
+end
+
+
+class_chart EBON_SCANNER_SKELETON
+indexing
+  author: "Joseph Kiniry";
+  in_cluster: "SCANNER";
+  created: "2002-04-15 Joseph Kiniry";
+  revised: "$Id: scanner.bon,v 1.1 2002/04/16 01:04:19 kiniry Exp $"
+explanation
+  "A scanner skeleton for the Extended BON specification language."
+query
+  "What is the last string constant scanned?"
+  "What is the last character constant scanned?"
+  "What is the last identifier scanned?"
+  "What is the last free operator scanned?"
+  "What is the last integer scanned?"
+  "What is the last real scanned?"
+
+  "What is the buffer for lexical tokens?"
+  "What is the current line number for error messages?"
+  "What is the error message?"
+
+  "What is the current simple string begin character?"
+  "What is the current simple string end character?"
+command
+  "Build a new scanner."
+  "Take the default action."
+  "Scan a file whose name is given as an argument."
+  "Scan a string."  
+end
+
+
+-- Static Structure
+
+static_diagram EBON_SCANNER_STRUCTURE
+component
+  root class EBON_SCANNER
+  deferred class EBON_SCANNER_SKELETON
+  effective class EBON_SCANNER interfaced
+  class EBON_TOKENS
+end
+
+
+static_diagram EBON_SCANNER_REUSED
+component
+  class KL_SHARED_ARGUMENTS reused
+  class KL_STANDARD_FILES reused
+  class KL_SHARED_EXCEPTIONS reused
+  class YY_COMPRESSED_SCANNER_SKELETON reused
+  class UT_CHARACTER_CODES reused
+end
+
+
+static_diagram EBON_SCANNER_INHERITANCE
+component
+  cluster SCANNER component ... end
+
+  EBON_SCANNER inherit EBON_SCANNER_SKELETON
+
+  EBON_SCANNER_SKELETON inherit KL_SHARED_ARGUMENTS, KL_STANDARD_FILES,
+    KL_SHARED_EXCEPTIONS, YY_COMPRESSED_SCANNER_SKELETON, UT_CHARACTER_CODES,
+    EBON_TOKENS
+end
+
+
+-- Class Interface Description
+
+static_diagram
+  class EBON_SCANNER_SKELETON
+  feature
+    reset_scanner
+    last_token: INTEGER
+      -- Code of last token read.
+    text: STRING
+      -- Text of last token read.
+
+    last_string_constant: STRING
+    last_character_constant: CHARACTER
+    last_identifier: STRING
+    last_free_operator: STRING
+    last_integer: INTEGER
+    last_real: REAL
+
+    ebon_buffer: STRING
+    ebon_lineno: INTEGER
+    ebon_error_message: STRING
+
+    String_begin: CHARACTER
+    String_end: CHARACTER
+
+    make_scanner
+    default_action
+    scan_file
+    scan_string
+      -> s : STRING
+    require 
+      s /= Void
+    end
+  end
+
+  class EBON_SCANNER
+  feature
+    make_scanner
+    scan_file
+  end
+end
+
+
+
+
+
+
+
+
+

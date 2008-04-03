@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<project name="mog" default="help">
+
+  <description>
+    description: "Eiffel Ant file for the EBON MOG Library"
+    library: "EBON Meta-Object Graph Library"
+    copyright: "Copyright (c) 2001-2005, Joseph Kiniry"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/05/02 22:58:43 $"
+    revision: "$Revision: 1.1 $"
+  </description>
+
+  <target name="help">
+    <echo message="usage:"/>
+    <echo message="   geant install"/>
+    <echo message="   geant clean"/>
+    <echo message="   geant clobber"/>
+  </target>
+
+  <target name="install">
+    <description>
+      Install the EBON MOG library.
+    </description>
+    <!-- do nothing -->
+  </target>
+
+  <target name="clean">
+    <description>
+      Remove intermediary generated files.
+    </description>
+    <ve clean="structure" recursive="true"/>
+  </target>
+
+  <target name="clobber">
+    <description>
+      Remove all generated files.
+    </description>
+    <geant target="clean"/>
+  </target>
+
+</project>

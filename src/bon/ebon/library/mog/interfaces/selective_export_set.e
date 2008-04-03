@@ -1,0 +1,7 @@
+class
+	SELECTIVE_EXPORT_SET
+
+inherit
+	CLASS_NAME_SET
+
+end -- class SELECTIVE_EXPORT_SET

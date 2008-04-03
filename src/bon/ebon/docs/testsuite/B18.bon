@@ -1,0 +1,51 @@
+-- Example 18
+
+dynamic_diagram Claim_settlement
+        -- This dynamic diagram groups typical sequential subtasks. 
+component 
+        scenario "Scenario 5: Settlement of claims for damages resulting\
+                 \ from car accident"
+        action 
+                "1-3"   "Owner obtains necessary statements and certificates\ 
+                        \ from involved parties, fills in damage report, and\ 
+                        \ sends it to insurance company." 
+                "4-7"   "Insurance adjuster evaluates damage claims and sends\
+                        \ settlement statement back to owner." 
+                "8-9"   "Owner agrees on car rental and repair details based\
+                        \ on settlement." 
+        end
+
+        object_group Accident_report 
+        component 
+                object WITNESS 
+                object POLICE 
+                object INSURANCE_INSPECTOR 
+        end 
+
+        object_group Evaluation 
+        component 
+                object INSURANCE 
+                object STANDARD_PRICE_LIST 
+                object APPROVED_GARAGES 
+        end 
+
+        object_group Repair 
+        component 
+                object RENTAL_COMPANY 
+                object GARAGE 
+        end 
+
+        object OWNER 
+        object INSURANCE_ADJUSTER 
+        object DAMAGE_REPORT 
+        object SETTLEMENT 
+        OWNER calls Accident_report "1" 
+        OWNER calls DAMAGE_REPORT "2" 
+        OWNER calls INSURANCE_ADJUSTER "3" 
+        OWNER calls SETTLEMENT "8" 
+        OWNER calls Repair "9" 
+        INSURANCE_ADJUSTER calls DAMAGE_REPORT "4" 
+        INSURANCE_ADJUSTER calls Evaluation "5" 
+        INSURANCE_ADJUSTER calls SETTLEMENT "6" 
+        INSURANCE_ADJUSTER calls OWNER "7" 
+end

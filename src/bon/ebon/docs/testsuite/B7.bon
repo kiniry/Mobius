@@ -1,0 +1,46 @@
+-- Example 7
+
+static_diagram 1 
+component 
+        cluster PARENTS 
+        component 
+                class A 
+                class B 
+        end 
+        cluster CHILDREN 
+        component 
+                class C 
+                class D 
+                class E 
+        end 
+        CHILDREN.C inherit PARENTS.A 
+        CHILDREN.C inherit PARENTS.B 
+        CHILDREN.D inherit PARENTS.A 
+        CHILDREN.D inherit PARENTS.B 
+        CHILDREN.E inherit PARENTS.A 
+        CHILDREN.E inherit PARENTS.B 
+end 
+
+static_diagram 2 
+component 
+        cluster PARENTS component ... end 
+        cluster CHILDREN component ... end 
+        CHILDREN inherit PARENTS.A 
+        CHILDREN inherit PARENTS.B 
+end 
+
+static_diagram 3 
+component 
+        cluster PARENTS component ... end 
+        cluster CHILDREN component ... end 
+        CHILDREN.C inherit PARENTS 
+        CHILDREN.D inherit PARENTS 
+        CHILDREN.E inherit PARENTS 
+end 
+
+static_diagram 4 
+component 
+        cluster PARENTS component ... end 
+        cluster CHILDREN component ... end 
+        CHILDREN inherit PARENTS 
+end

@@ -1,0 +1,15 @@
+-- Example 11
+
+static_diagram 
+component
+        class VISITING_ALIEN
+        class LANDING_DOCUMENT
+        class APARTMENT
+        class ROOM
+        class HOUSE
+        class ARCHITECT 
+        VISITING_ALIEN client {immigration_form, customs_form} LANDING_DOCUMENT 
+        APARTMENT client {kitchen, bedroom: SET[...], living_room: SET[...]} :{ ROOM 
+        HOUSE client {designer} ARCHITECT 
+        ARCHITECT client {summer_house, winter_cottage, main_residence} HOUSE 
+end

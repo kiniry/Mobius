@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<project name="scanner" default="help">
+
+  <description>
+    description: "Eiffel Ant file for BON scanner"
+    system: "BON scanner"
+    copyright: "Copyright (c) 2001-2005, Joseph R. Kiniry"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/12/21 14:18:59 $"
+    revision: "$Revision: 1.3 $"
+  </description>
+
+  <inherit>
+    <parent location="${BON}/build.eant">
+      <redefine target="help"/>
+      <redefine target="install"/>
+      <redefine target="clean"/>
+      <redefine target="clobber"/>
+    </parent>
+  </inherit>
+
+  <target name="help">
+    <echo message="usage:"/>
+    <echo message="   geant install"/>
+    <echo message="   geant compile"/>
+    <echo message="   geant  compile_scanners"/>
+    <echo message="   geant clean"/>
+    <echo message="   geant clobber"/>
+  </target>
+
+  <target name="install">
+    <description>Build all scanners.</description>
+    <geant target="compile"/>
+    <geant target="bon_scanner_system"/>
+  </target>
+
+  <target name="compile">
+    <description>Build all scanners.</description>
+    <geant target="compile_scanners"/>
+    <geant target="bon_scanner_system"/>
+  </target>
+
+  <target name="compile_scanners">
+    <!-- add back in ebon_scanner depend when it is ready -->
+    <description>Build BON and EBON scanners.</description>
+    <geant target="bon_scanner"/>
+  </target>
+
+  <target name="bon_scanner" depend="init_system">
+    <description>Build BON scanner.</description>
+    <gelex input="${scanner_dir}/${bon_scanner_root}.l"
+           output="${scanner_dir}/${bon_scanner_root}.e"/>
+  </target>
+
+  <target name="ebon_scanner" depend="init_system">
+    <description>Build EBON scanner.</description>
+    <gelex input="${scanner_dir}/${ebon_scanner_root}.l"
+           output="${scanner_dir}/${ebon_scanner_root}.e"/>
+  </target>
+
+  <target name="bon_scanner_system" depend="init_system,prepare_compile,compile">
+    <description>Build independent scanner.</description>
+    <ise ace="${scanner_build_dir}/ise.ace"/>
+    <se ace="${scanner_build_dir}/se.ace"/>
+    <ve ace="${scanner_build_dir}/ve.esd"/>
+  </target>
+
+  <target name="clean" depend="clean_scanner">
+    <description>Clean intermediate results.</description>
+  </target>
+
+  <target name="clean_scanner">
+    <description>Clean intermediate results from all scanner builds.</description>
+    <se clean="bon_scanner"/>
+    <se clean="ebon_scanner"/>
+    <ise clean="bon_scanner"/>
+    <ise clean="ebon_scanner"/>
+    <ve clean="bon_scanner"/>
+    <ve clean="ebon_scanner"/>
+  </target>
+
+  <target name="clobber" depend="realclean_scanner">
+    <description>Remove all generated files.</description>
+  </target>
+
+  <target name="realclean_scanner" depend="init_system">
+    <description>Clean derived Eiffel build files for scanners.</description>
+    <delete file="${bon_scanner_root}.e"/>
+    <delete file="${bon_scanner}"/>
+    <delete file="${ebon_scanner_root}.e"/>
+    <delete file="${ebon_scanner}"/>
+  </target>    
+
+</project>

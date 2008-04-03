@@ -1,0 +1,930 @@
+-- Abstract for system.
+
+-- Informal Charts
+
+-- System Chart
+
+system_chart MESH_SYSTEM
+indexing
+  author: ;
+  keywords: ;
+explanation
+
+cluster CORE
+description
+  ""
+cluster CURSORS
+description
+  ""
+cluster IMPLEMENTATIONS
+description
+  ""
+cluster ROOT
+description
+  ""
+end
+
+-- Cluster Charts
+
+cluster_chart ROOT
+indexing
+  author: ;
+  keywords: ;
+explanation
+  ""
+class ROOT
+description
+  ""
+class ASSEMBLER
+description
+  ""
+end
+
+
+cluster_chart CORE
+indexing
+  author: ;
+  keywords: ;
+explanation
+  ""
+class VERTEX
+description
+  ""
+class EDGE
+description
+  ""
+class FACE
+description
+  ""
+class MESH
+description
+  ""
+class NORMAL
+description
+  ""
+  -- Data mixins for core constructs.
+class POSITION_MIXIN
+description
+  ""
+class NORMAL_MIXIN
+description
+  ""
+class COLOR_MIXIN
+description
+  ""
+class CREASE_MIXIN
+description
+  ""
+end
+
+
+cluster_chart ITERATORS
+indexing
+  author: ;
+  keywords: ;
+explanation
+  ""
+class VERTEX_ITERATOR
+description
+  ""
+class EDGE_ITERATOR
+description
+  ""
+class FACE_ITERATOR
+description
+  ""
+end
+
+
+cluster_chart CURSORS
+indexing
+  author: ;
+  keywords: ;
+explanation
+  ""
+class VERTEX_CURSOR
+description
+  ""
+class EDGE_CURSOR
+description
+  ""
+class FACE_CURSOR
+description
+  ""
+end
+
+
+cluster_chart IMPLEMENTATIONS
+indexing
+  author: ;
+  keywords: ;
+explanation
+
+class VERTEX_3D
+description
+  ""
+class QUARTERION_VERTEX
+description
+  ""
+class EDGE_3D
+description
+  ""
+class FACE_3D
+description
+  ""
+class MESH_3D
+description
+  ""
+end
+
+
+cluster_chart DATA_REPRESENTATION
+indexing
+  author: ;
+  keywords: ;
+explanation
+  ""
+class VERTEX_DS
+description
+  ""
+class EDGE_DS
+description
+  ""
+class FACE_DS
+description
+  ""
+end
+
+-- Class charts
+
+class_chart VERTEX
+indexing
+  in_cluster: "CORE";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $"
+explanation
+  ""
+query
+  "Is this vertex equal to some other vertex?",
+  "What is a representation of this vertex's data?",
+  "What is a string representation of this vertex?"
+command
+  "Set the representation of this vertex to some data."
+constraint
+  -- empty
+end
+
+
+class_chart EDGE
+indexing
+  in_cluster: "CORE";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $"
+explanation
+  ""
+query
+  "Is this edge equal to some other edge?",
+  "What is a representation of this edge's data?",
+  "What is a string representation of this edge?",
+  "What are the two vertices that define this edge?"
+  "Given a vertex, what is the opposite vertex?"
+command
+  "Set the representation of this edge to some data."
+constraint
+  "An edge is defined by exactly two vertices which are distinct."
+end
+
+
+class_chart FACE
+indexing
+  in_cluster: "CORE";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $"
+explanation
+  ""
+query
+  "Is this face equal to some other face?",
+  "What is a representation of this face's data?",
+  "What is a string representation of this face?",
+  "What are the vertices that define this face?",
+  "What are the edges that define this face?",
+command
+  "Set the representation of this face to some data."
+constraint
+  "At least three edges are required to define a face.",
+  "At least three vertices are required to define a face.",
+  "The set of edges must form a connected cycle."
+end
+
+class_chart MESH
+indexing
+  in_cluster: "CORE";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $"
+explanation
+  ""
+  -- [entity] = [face | vertex | edge]
+query
+  "Is this mesh equal to some other mesh?",
+  "What is a representation of this mesh's data?",
+  "What is a string representation of this face?",
+  "What are the vertices that are part of this mesh?",
+  "What are the edges that are part of this mesh?",
+  "What are the faces that are part of this mesh?",
+  "How many faces/edges/vertices are part of this mesh?"
+  -- Mesh connectivity properties.
+  "Are two given entities incedent"
+  "What vertices are in the one ring of a vertex"
+  
+  "what are all incident entities of a sort to an entity?"
+  "Is the mesh a manifold?"
+  "Is the mesh connected?"
+  "Given a face and an edge, what is the opposite face?"
+  "Given a boundary edge and a vertex, give the other boundary edge?"
+  "Given an entity, is it a boundary entity?"
+  "How much memory is the mesh using?"
+  "does an entity belong to the mesh?"
+command
+  "Set the representation of this mesh to some data.",
+  -- Manipulating our mesh.
+  "Add a face to the mesh.",
+  "Remove a face from the mesh.",
+  "Add a mesh."
+constraint
+  -- Universal constraints.
+  "All vertices belong to an edge.",
+  "All edges belong to at least one face.",
+  "All edges belong to at most two faces.",
+  "A vertex cannot belong to more than two boundary edges.",
+  "A mesh is alwayts connected."
+  -- Transient contraints.
+end
+
+class_chart NORMAL
+indexing
+  in_cluster: "CORE";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $"
+explanation
+  ""
+query
+  "Is this normal equal to some other normal?",
+  "What is a representation of this normal's data?",
+  "What is a string representation of this normal?",
+  "What is the Euclidian length of this normal?",
+  "Is this normal degenerate?"
+command
+  "Set the representation of this normal to some data.",
+  "Normalize this normal."
+constraint
+  -- empty
+end
+
+
+-- Event charts.
+
+event_chart CONNECTOR_SYSTEM
+incoming
+indexing
+  author: "";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $";
+explanation
+  "Selected external events triggering representative types of behavior."
+part
+  "1/2"
+event
+
+involves 
+
+end
+
+
+event_chart CONNECTOR_SYSTEM
+outgoing
+indexing
+  author: "";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $";
+explanation
+  "Selected internal events triggering system responses leaving the system."
+part
+  "2/2"
+event
+
+involves
+
+end
+
+
+scenario_chart MESH_SYSTEM
+indexing
+  author: "";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $";
+explanation
+  "Set of representative scenarios to show important types of system \
+  \behavior."
+scenario
+  "Initialize the mesh system."
+description
+  ""
+scenario
+  "Get a vertex of a face of a mesh."
+description
+  ""
+end
+
+
+creation_chart MESH_SYSTEM
+indexing
+  author: "";
+  created: "2001-08-30 Joseph Kiniry";
+  revised: "$Id: mesh.bon,v 1.1 2001/12/28 00:44:08 kiniry Exp $";
+explanation
+  "List of classes creating objects in the system."
+creator CHANNEL creates IMPLEMENTATIONS
+end
+
+
+-- Static Diagrams
+
+static_diagram First_system_breakdown 
+component 
+          cluster CONFERENCE_MANAGEMENT_SYSTEM 
+          component 
+                    cluster ORGANIZATION 
+                    cluster TECHNICAL_EVENTS 
+                    cluster PRINT_OUTS 
+                    cluster REGISTRATION 
+          end 
+end
+
+static_diagram Nested_data_structures 
+component 
+        cluster DATA_STRUCTURES 
+        component 
+                cluster SORTING reused 
+                component 
+                        class LINEAR_SORT 
+                        class QUICKSORT 
+                        class RADIX_SORT 
+                        class INSERTION_SORT 
+                        class SHELLSORT 
+                        class HEAPSORT 
+                        class TOPOLOGICAL_SORT 
+                        class SORT_MERGE 
+                end 
+                cluster GRAPHS 
+                component 
+                        deferred class GRAPH 
+                        class WEIGHTED_GRAPH 
+                        class DIRECTED_GRAPH 
+                        class UNDIRECTED_GRAPH 
+                        class BIPARTITE_GRAPH 
+                        class DENSE_GRAPH 
+                end 
+        end 
+end
+
+static_diagram 
+component 
+        root class CONTROL_PANEL 
+        class TRANSACTION persistent 
+        class MAILER interfaced 
+        class HASH_TABLE[T, U] 
+        deferred class FLYING_OBJECT 
+        effective class HELICOPTER 
+        class INPUT reused interfaced 
+        class VECTOR[G] reused 
+        deferred class SESSION interfaced 
+end
+
+static_diagram 
+component 
+        class COLD_STORE 
+        class FREEZER 
+        class REFRIGERATOR 
+        class INDEX 
+        class TRIPLE_INDEX      
+        deferred class FLYING_OBJECT 
+        effective class AIRCRAFT 
+        effective class ROCKET 
+        class SPACE_SHUTTLE 
+        deferred class VEHICLE 
+        effective class BICYCE 
+        effective class BOAT 
+        effective class CAR 
+        REFRIGERATOR inherit COLD_STORE 
+        FREEZER inherit COLD_STORE 
+        TRIPLE_INDEX inherit {3} INDEX 
+        AIRCRAFT inherit FLYING_OBJECT 
+        ROCKET inherit FLYING_OBJECT 
+        SPACE_SHUTTLE inherit AIRCRAFT 
+        SPACE_SHUTTLE inherit ROCKET 
+        BICYCLE inherit VEHICLE 
+        BOAT inherit VEHICLE 
+        CAR inherit VEHICLE 
+end
+
+static_diagram 1 
+component 
+        cluster PARENTS 
+        component 
+                class A 
+                class B 
+        end 
+        cluster CHILDREN 
+        component 
+                class C 
+                class D 
+                class E 
+        end 
+        CHILDREN.C inherit PARENTS.A 
+        CHILDREN.C inherit PARENTS.B 
+        CHILDREN.D inherit PARENTS.A 
+        CHILDREN.D inherit PARENTS.B 
+        CHILDREN.E inherit PARENTS.A 
+        CHILDREN.E inherit PARENTS.B 
+end 
+
+static_diagram 2 
+component 
+        cluster PARENTS component ... end 
+        cluster CHILDREN component ... end 
+        CHILDREN inherit PARENTS.A 
+        CHILDREN inherit PARENTS.B 
+end 
+
+static_diagram 3 
+component 
+        cluster PARENTS component ... end 
+        cluster CHILDREN component ... end 
+        CHILDREN.C inherit PARENTS 
+        CHILDREN.D inherit PARENTS 
+        CHILDREN.E inherit PARENTS 
+end 
+
+static_diagram 4 
+component 
+        cluster PARENTS component ... end 
+        cluster CHILDREN component ... end 
+        CHILDREN inherit PARENTS 
+end
+
+static_diagram 1 
+component
+        class BASEBALL_CARD
+        class SON
+        class LIST[T] reused
+        class PARENT
+        class ACCOUNT 
+        SON client {expenses} LIST 
+        PARENT client {assets} LIST 
+        LIST client {(first , last): T} BASEBALL_CARD 
+        LIST client {(first , last): T} ACCOUNT 
+end 
+
+static_diagram 2 
+component
+        class NURSE
+        class PATIENT
+        class SURGEON
+        class OPERATION
+        class TABLE[U, V->KEY] reused
+        class PATIENT_ID
+        class DATE 
+        NURSE client {patients} TABLE 
+        SURGEON client {duties} TABLE 
+        TABLE client {item: U} PATIENT 
+        TABLE client {item: U} OPERATION 
+        TABLE client {key: V} PATIENT_ID 
+        TABLE client {key: V} DATE 
+end 
+
+static_diagram 3 
+component
+        class SON
+        class BASEBALL_CARD
+        class PARENT
+        class ACCOUNT
+        class NURSE
+        class PATIENT
+        class SURGEON
+        class OPERATION 
+        SON client {expenses: LIST[...]} BASEBALL_CARD 
+        PARENT client {assets: LIST[...]} ACCOUNT 
+        NURSE client {patients: LIST[..., PATIENT_ID]} PATIENT 
+        SURGEON client {duties: LIST[..., DATE]} OPERATION 
+end
+
+static_diagram 1 
+component
+        class SEQUENCE[T] reused
+        class BYTE
+        class FILE 
+        FILE inherit SEQUENCE 
+        SEQUENCE client {->[...]} BYTE 
+end 
+
+static_diagram 2 
+component
+        class FILE
+        class BYTE 
+        FILE client {-> SEQUENCE[...]} BYTE 
+end
+
+static_diagram 
+component 
+        class VISITING_ALIEN
+        class LANDING_DOCUMENT
+        class APARTMENT
+        class ROOM
+        class HOUSE
+        class ARCHITECT 
+        VISITING_ALIEN client {2} LANDING_DOCUMENT 
+        APARTMENT client {3} :{ ROOM 
+        HOUSE client {1} ARCHITECT 
+        ARCHITECT client {3} HOUSE 
+end
+
+static_diagram 
+component
+        class VISITING_ALIEN
+        class LANDING_DOCUMENT
+        class APARTMENT
+        class ROOM
+        class HOUSE
+        class ARCHITECT 
+        VISITING_ALIEN client {immigration_form, customs_form} LANDING_DOCUMENT 
+        APARTMENT client {kitchen, bedroom: SET[...], living_room: SET[...]} :{ ROOM 
+        HOUSE client {designer} ARCHITECT 
+        ARCHITECT client {summer_house, winter_cottage, main_residence} HOUSE 
+end
+
+static_diagram 1 
+component 
+        class PC
+        class FILE_SERVER 
+        PC client {2} : (1) FILE_SERVER 
+end 
+
+static_diagram 2 
+component
+        class PC
+        class FILE_SERVER 
+        PC client {server1} : (1) FILE_SERVER 
+        PC client {server2} : (1) FILE_SERVER 
+end 
+
+static_diagram 3 
+component
+        class PC
+        class FILE_SERVER 
+        PC client {server1, server2} : (1) FILE_SERVER 
+end 
+
+static_diagram 4 
+component
+        class PC
+        class FILE_SERVER 
+        PC client : (2) FILE_SERVER 
+end 
+
+static_diagram 5 component
+        class PC
+        class FILE_SERVER 
+        PC client {server} : (2) FILE_SERVER 
+end 
+
+static_diagram 6 component
+        class PC
+        class FILE_SERVER 
+        PC client {2} : (3) FILE_SERVER 
+end
+
+static_diagram Graphical_editor
+        -- This diagram shows the basic design of a graphical editor 
+        -- with grouping facilities. 
+component 
+        cluster DISPLAY_ELEMENTS -- Contains different display objects 
+        component 
+                cluster GEOMETRIC_FIGURES -- Subcluster with geometric figures 
+                component 
+                        class LINE 
+                        class ELLIPSE 
+                        class CIRCLE 
+                        class RECTANGLE 
+                        class SQUARE 
+                        CIRCLE inherit ELLIPSE 
+                        SQUARE inherit RECTANGLE 
+                end 
+                deferred class FIGURE 
+                class PIXEL_MAP 
+                class TEXT 
+                class GROUP 
+                GEOMETRIC_FIGURES inherit FIGURE 
+        end 
+        deferred class DISPLAY_OBJECT 
+        class POINT DISPLAY_ELEMENTS inherit DISPLAY_OBJECT 
+        DISPLAY_ELEMENTS.GROUP client {members: SET[...]} :{ DISPLAY_OBJECT 
+        DISPLAY_ELEMENTS.FIGURE client {points: SET[...]} POINT 
+end
+
+
+static_diagram Conference_architecture
+        -- This diagram shows the overall architecture of the Conference 
+        -- Management system. 
+component 
+        cluster ORGANIZATION 
+        component 
+                cluster COMMITTEES 
+                component 
+                        class COMMITTEE 
+                        class ORGANIZING_COMMITTEE persistent 
+                        class TECHNICAL_COMMITTEE persistent 
+                        class PROGRAM_COMMITTEE persistent 
+                        ORGANIZING_COMMITTEE inherit COMMITTEE 
+                        TECHNICAL_COMMITTEE inherit COMMITTEE 
+                        PROGRAM_COMMITTEE inherit TECHNICAL_COMMITTEE 
+                        PROGRAM_COMMITTEE client {tutorial_committee} :{ 
+                                TECHNICAL_COMMITTEE 
+                end 
+                root class CONFERENCE persistent 
+                class PROGRAM persistent 
+                class TIMETABLE persistent 
+                CONFERENCE client {scientific_board, steering_board} :{ 
+                        COMMITTEES 
+                CONFERENCE client {program} :{ PROGRAM 
+                CONFERENCE client {reminder} TIMETABLE 
+        end 
+        cluster REGISTRATION 
+        component 
+                class REGISTRATION persistent 
+                class PERSON persistent 
+                REGISTRATION client {attendee} PERSON 
+                PERSON client {registration} REGISTRATION 
+        end 
+        cluster TECHNICAL_EVENTS 
+        component 
+                class SESSION 
+                class PAPER_SESSION persistent 
+                class TUTORIAL_SESSION persistent 
+                deferred class PRESENTATION 
+                class PAPER persistent 
+                class TUTORIAL persistent 
+                class REVIEW persistent 
+                class STATUS persistent 
+                PAPER_SESSION inherit SESSION 
+                TUTORIAL_SESSION inherit SESSION 
+                PAPER inherit PRESENTATION 
+                TUTORIAL inherit PRESENTATION 
+                PAPER_SESSION client {presentations: SET[...]} PAPER 
+                TUTORIAL_SESSION client {lecture} TUTORIAL 
+                PAPER client {reviews: SET[...]} REVIEW 
+                PRESENTATION client {status} STATUS 
+        end
+        cluster OUTPUT 
+        component 
+                cluster TEMPLATES 
+                        class LETTER_FORM 
+                        class BADGE_FORM 
+                        class STICKY_FORM 
+                        class INVOICE_FORM 
+                        class POSTER_FORM 
+                        class LIST_FORM 
+                        class EVALUATION_FORM 
+                end 
+                cluster PRINT_OUTS      
+                component 
+                        class MAILING 
+                        class ADDRESS_LABEL 
+                        class CONFIRMATION_LETTER 
+                        class INVOICE 
+                        class ACCEPTANCE_LETTER 
+                        class REJECTION_LETTER 
+                        class AUTHOR_GUIDELINES 
+                        class POSTER_SIGN 
+                        class BADGE 
+                        class EVALUATION_SHEET 
+                        class ATTENDEE_LIST 
+                        class STATISTICS 
+                end 
+                deferred class PRINT_OUT 
+                deferred class DOCUMENT_FORM 
+                TEMPLATES inherit DOCUMENT_FORM 
+                PRINT_OUTS inherit PRINT_OUT 
+                PRINT_OUT client {layout} DOCUMENT_FORM 
+        end 
+        ORGANIZATION client OUTPUT 
+        ORGANIZATION client TECHNICAL_EVENTS 
+        ORGANIZATION client REGISTRATION 
+        REGISTRATION client OUTPUT 
+        REGISTRATION client TECHNICAL_EVENTS 
+        TECHNICAL_EVENTS client REGISTRATION 
+        TECHNICAL_EVENTS client OUTPUT 
+end
+
+-- Class Interface Description
+
+static_diagram Technical_events 
+component
+        class REVIEW persistent 
+        feature 
+                reviewer: PERSON 
+                score: VALUE 
+                comments: TEXT 
+        invariant score member_of { 'A' .. 'D' } 
+        end
+        class STATUS persistent 
+        feature 
+                received: DATE 
+                review_started: DATE 
+                accepted: DATE 
+                rejected: DATE 
+                final_received: DATE 
+        invariant 
+                received <= review_started; 
+                review_started <= final_received; 
+                accepted = Void or rejected = Void 
+        end
+        class PAPER persistent 
+        inherit 
+                PRESENTATION 
+        feature 
+                copyright_transferred: BOOLEAN 
+                reviews: SET[REVIEW] 
+                final_score: VALUE 
+                award_best_paper 
+                transfer_copyright 
+                        require 
+                                status.accepted /= Void 
+                        ensure 
+                                copyright_transferred 
+                        end 
+                effective accept 
+                effective reject 
+        end 
+        deferred class PRESENTATION 
+        feature 
+                code: VALUE 
+                title : VALUE 
+                authors: SET[PERSON] 
+                status: STATUS 
+                speakers: SET[PERSON] 
+                deferred accept 
+                        ensure status.accepted /= Void end 
+                deferred reject 
+                        ensure status.rejected /= Void end 
+                invariant 
+                        for_all p, q: PRESENTATION such_that 
+                                p /= q it_holds p.code /= q.code and 
+                                p.title /= q.title 
+                end
+        class TUTORIAL persistent 
+        inherit PRESENTATION 
+        feature 
+                capacity: VALUE 
+                attendee_count: VALUE 
+                prerequisite_level: VALUE 
+                track: VALUE 
+                duration: DURATION 
+                effective accept 
+                effective reject 
+        end
+        class PAPER_SESSION persistent 
+        inherit SESSION 
+        feature 
+                presentations: SET[PAPER] 
+        invariant 
+                for_all p member_of presentations it_holds 
+                        p.status.accepted /= Void 
+        end
+        class SESSION 
+        feature 
+                chair: PERSON 
+                code: VALUE 
+                track: VALUE 
+                start, end: DATE 
+                conference_room: VALUE 
+        invariant start < end 
+        end
+        class TUTORIAL_SESSION persistent 
+        inherit 
+                SESSION 
+        feature 
+                lecture: TUTORIAL 
+        invariant 
+                lecture.status.accepted /= Void 
+        end 
+        PAPER inherit PRESENTATION 
+        TUTORIAL inherit PRESENTATION 
+        PAPER_SESSION inherit SESSION 
+        TUTORIAL_SESSION inherit SESSION 
+        PAPER client REVIEW 
+        PRESENTATION client STATUS 
+        PAPER_SESSION client PAPER 
+        TUTORIAL_SESSION client TUTORIAL 
+end
+
+-- Dynamic Diagrams
+
+dynamic_diagram Move_group 
+component 
+        scenario "Scenario 2: Move example group" 
+        action 
+                "1" "Next outer group member requested" 
+                "2" "Square asked to move" 
+                "3" "Next square point requested" 
+                "4" "Point asked to move" 
+                "5" "Outer circle asked to move" 
+                "6" "Next outer circle point requested" 
+                "7" "Point asked to move" 
+                "8" "Inner group asked to move" 
+                "9" "Next inner group member requested" 
+                "10" "Inner circle asked to move" 
+                "11" "Next inner circle point requested" 
+                "12" "Point asked to move" 
+                "13" "Text asked to move" 
+        end 
+        object SQUARE 
+        object CIRCLE.1 
+        object CIRCLE.2 
+        object TEXT 
+        object GROUP.outer 
+        object GROUP.inner 
+        object SET.1 
+        object SET.2 
+        object SET.3 
+        object SET.4 
+        object SET.5 
+        object_stack POINT.1 
+        object_stack POINT.2 
+        object_stack POINT.3 
+        GROUP.outer calls SET.1 "1" 
+        GROUP.outer calls SQUARE "2" 
+        SQUARE calls SET.2 "3" 
+        SQUARE calls POINT.1 "4" 
+        GROUP.outer calls CIRCLE.1 "5" 
+        CIRCLE.1 calls SET.3 "6" 
+        CIRCLE.1 calls POINT.2 "7" 
+        GROUP.outer calls GROUP.inner "8" 
+        GROUP.inner calls SET.4 "9" 
+        GROUP.inner calls CIRCLE.2 "10" 
+        CIRCLE.2 calls SET.5 "11" 
+        CIRCLE.2 calls POINT.3 "12" 
+        GROUP.inner calls TEXT "13" 
+end
+
+
+dynamic_diagram Claim_settlement
+        -- This dynamic diagram groups typical sequential subtasks. 
+component 
+        scenario "Scenario 5: Settlement of claims for damages resulting\
+                 \ from car accident"
+        action 
+                "1-3"   "Owner obtains necessary statements and certificates\ 
+                        \ from involved parties, fills in damage report, and\ 
+                        \ sends it to insurance company." 
+                "4-7"   "Insurance adjuster evaluates damage claims and sends\
+                        \ settlement statement back to owner." 
+                "8-9"   "Owner agrees on car rental and repair details based\
+                        \ on settlement." 
+        end
+
+        object_group Accident_report 
+        component 
+                object WITNESS 
+                object POLICE 
+                object INSURANCE_INSPECTOR 
+        end 
+
+        object_group Evaluation 
+        component 
+                object INSURANCE 
+                object STANDARD_PRICE_LIST 
+                object APPROVED_GARAGES 
+        end 
+
+        object_group Repair 
+        component 
+                object RENTAL_COMPANY 
+                object GARAGE 
+        end 
+
+        object OWNER 
+        object INSURANCE_ADJUSTER 
+        object DAMAGE_REPORT 
+        object SETTLEMENT 
+        OWNER calls Accident_report "1" 
+        OWNER calls DAMAGE_REPORT "2" 
+        OWNER calls INSURANCE_ADJUSTER "3" 
+        OWNER calls SETTLEMENT "8" 
+        OWNER calls Repair "9" 
+        INSURANCE_ADJUSTER calls DAMAGE_REPORT "4" 
+        INSURANCE_ADJUSTER calls Evaluation "5" 
+        INSURANCE_ADJUSTER calls SETTLEMENT "6" 
+        INSURANCE_ADJUSTER calls OWNER "7" 
+end
+
+

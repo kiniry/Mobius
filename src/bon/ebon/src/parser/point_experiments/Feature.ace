@@ -1,0 +1,128 @@
+system
+	"parser"
+
+root
+	BON_PARSER: benchmark
+
+default
+	document ("$BON/docs/eiffel")
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	assertion (loop)
+	assertion (invariant)
+	arguments ("1 ../docs/testsuite/B8.bon")
+	arguments (" ")
+	debug (yes)
+	debug ("gelex")
+	debug ("geyacc")
+	line_generation (no)
+	profile (no)
+	trace (no)
+	working_directory ("/home/kiniry/ebon/source/")
+	check_vape (yes)
+	console_application (yes)
+	address_expression (no)
+	array_optimization (yes)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (yes)
+	inlining_size ("4")
+	multithreaded (no)
+
+cluster
+	ebon:		"$BON/source"
+
+	scanner (ebon):		"$/scanner"
+
+	parser (ebon):		"$/parser"
+
+	gobo:		"$GOBO/library"
+
+	lx_skeleton (gobo):		"$/lexical/skeleton"
+
+	pr_skeleton (gobo):		"$/parse/skeleton"
+
+	kl_kernel (gobo):		"$/kernel"
+
+	kl_kernel_spec (gobo):		"$/kernel/spec/ise"
+
+	ds (gobo):		"$/structure"
+
+	ds_container (ds):		"$/container"
+
+	ds_dispenser (ds):		"$/dispenser"
+
+	ds_list (ds):		"$/list"
+
+	ds_set (ds):		"$/set"
+
+	ds_sort (ds):		"$/sort"
+
+	ds_support (ds):		"$/support"
+
+	ds_table (ds):		"$/table"
+
+	ts_harness (gobo):		"$/test/harness"
+
+	dt (gobo):		"$/time"
+
+	dt_clock (dt):		"$/clock"
+
+	dt_date (dt):		"$/date"
+
+	dt_time_zone (dt):		"$/time_zone"
+
+	dt_spec (dt):		"$/spec/ise"
+
+	et (gobo):		"$/tools"
+
+	ast (et):		"$/ast"
+
+	et_ast_assertion (ast):		"$/assertion"
+
+	et_ast_class (ast):		"$/class"
+
+	et_ast_constant (ast):		"$/constant"
+
+	et_ast_expression (ast):		"$/expression"
+
+	et_ast_feature (ast):		"$/feature"
+
+	et_ast_instruction (ast):		"$/instruction"
+
+	et_ast_name (ast):		"$/name"
+
+	et_ast_type (ast):		"$/type"
+
+	et_error (et):		"$/error"
+
+	et_parser (et):		"$/parser"
+
+	utility (gobo):		"$/utility"
+
+	ut_command (utility):		"$/command"
+
+	ut_error (utility):		"$/error"
+
+	ut_formatter (utility):		"$/formatter"
+
+	ut_support (utility):		"$/support"
+
+	ut_spec (utility):		"$/spec/ise"
+
+	ge_eiffelbase (gobo):		"$/other/EiffelBase"
+
+	base:		"$ISE_EIFFEL/library/base"
+
+	kernel (base):		"$/kernel"
+
+	support (base):		"$/support"
+
+external
+
+	include_path:
+		"${GOBO}/library/kernel/include"
+
+end

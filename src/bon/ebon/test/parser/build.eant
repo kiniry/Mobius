@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<project name="test_parser" default="help">
+
+  <description>
+    system: "EBON tool suite parser tester"
+    copyright: "Copyright (c) 2001-2005 Joseph R. Kiniry and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/12/21 14:18:59 $"
+    revision: "$Revision: 1.1 $"
+  </description>
+
+  <inherit>
+    <parent location="${GOBO}/misc/test.eant">
+      <redefine target="other_clean"/>
+      <redefine target="init_system"/>
+    </parent>
+  </inherit>
+
+  <!-- Implementation -->
+  
+  <target name="other_clean" depend="init">
+    <description>
+      Remove other intermediary generated files.
+    </description>
+    
+    <delete directory="Tparser"/>
+  </target>
+
+  <target name="init_system">
+    <set name="system" value="test_ebon_parser"/>
+    <set name="tool" value="parser"/>
+    <set name="system_dir" value="${BON}/test/${tool}"/>
+  </target>
+
+  <getest
+     compile="geant compile${debug_suffix}_${eiffel} &gt; compilation_log.txt 2&gt;&amp;1">
+    <define name="debug" value="true" if="${debug}"/>
+  </getest>
+
+</project>

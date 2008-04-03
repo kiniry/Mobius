@@ -1,0 +1,42 @@
+-- Example 12
+
+static_diagram 1 
+component 
+        class PC
+        class FILE_SERVER 
+        PC client {2} : (1) FILE_SERVER 
+end 
+
+static_diagram 2 
+component
+        class PC
+        class FILE_SERVER 
+        PC client {server1} : (1) FILE_SERVER 
+        PC client {server2} : (1) FILE_SERVER 
+end 
+
+static_diagram 3 
+component
+        class PC
+        class FILE_SERVER 
+        PC client {server1, server2} : (1) FILE_SERVER 
+end 
+
+static_diagram 4 
+component
+        class PC
+        class FILE_SERVER 
+        PC client : (2) FILE_SERVER 
+end 
+
+static_diagram 5 component
+        class PC
+        class FILE_SERVER 
+        PC client {server} : (2) FILE_SERVER 
+end 
+
+static_diagram 6 component
+        class PC
+        class FILE_SERVER 
+        PC client {2} : (3) FILE_SERVER 
+end

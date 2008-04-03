@@ -1,0 +1,900 @@
+2005-12-21  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* build.eant:
+	* docs/build.eant:
+	* example/build.eant:
+	* library/build.eant:
+	* src/build.eant:
+	* src/parser/build.eant:
+	* src/scanner/build.eant:
+	* test/parser/build.eant:
+	* test/scanner/build.eant:
+	Reworked all build.eant files for new Gobo hierarchy.  Added many new
+	targets to (a) separate generation of scanner and parser source from
+	compilation, (b) cleanup intermediate files better, etc.  Introduced
+	new placeholder build.eant files for example and docs directories.
+
+	* test/parser/getest.cfg:
+	* test/scanner/getest.cfg:
+	Added generic getest configuration files to mirror Gobo's use.
+
+	* src/parser/bon_parser.y:
+	* src/scanner/bon_scanner.l:
+	Renamed INTERVAL to BON_INTERVAL and TYPE to BON_TYPE to avoid
+	classname collision for ISE's compiler.
+
+	* library/library.xace:
+	* library/mog/library.xace:
+	* src/parser/library.xace:
+	* src/parser/system.xace:
+	* src/scanner/library.xace:
+	* src/scanner/system.xace:
+	* test/parser/library.xace:
+	* test/parser/system.xace:
+	* test/scanner/library.xace:
+	* test/scanner/system.xace:
+	Corrected all paths for new Gobo-style hierarchy, standardised
+	indentation and formatting, removed mention of BOOTSTRAP environment
+	variable dependency in garbage_collector options.
+
+	* library/mog/charts/class_chart.e:
+	* library/mog/charts/cluster_chart.e:
+	* library/mog/charts/creation_chart.e:
+	* library/mog/charts/event_chart.e:
+	* library/mog/charts/informal_chart.e:
+	* library/mog/charts/scenario_chart.e:
+	* library/mog/charts/system_chart.e:
+	* library/mog/components/class_specification.e:
+	* library/mog/components/formal_generic.e:
+	* library/mog/components/unspecified_static_component.e:
+	* library/mog/diagrams/static_diagram.e:
+	* library/mog/dictionary/class_dictionary.e:
+	* library/mog/dictionary/dictionary_entry.e:
+	* library/mog/entries/class_entry.e:
+	* library/mog/entries/cluster_entry.e:
+	* library/mog/entries/creation_entry.e:
+	* library/mog/entries/event_entry.e:
+	* library/mog/entries/scenario_entry.e:
+	* library/mog/expressions/enumeration_element.e:
+	* library/mog/indexing/index_clause.e:
+	* library/mog/interfaces/class_interface.e:
+	* library/mog/names/actual_generics.e:
+	* library/mog/names/class_type.e:
+	* library/mog/names/client_entity.e:
+	* library/mog/names/generic_indirection.e:
+	* library/mog/names/indirection_element.e:
+	* library/mog/names/named_indirection.e:
+	* library/mog/names/static_ref.e:
+	* library/mog/names/supplier_indirection.e:
+	* library/mog/relations/client_relation.e:
+	* library/mog/relations/inheritance_relation.e:
+	* library/mog/specification/bon_specification.e:
+	Replaced all use of feature clone with twin.
+
+	* library/mog/expressions/bon_interval.e:
+	* library/mog/expressions/interval.e:
+	* library/mog/names/bon_type.e:
+	* library/mog/names/type.e:
+	Renamed INTERVAL to BON_INTERVAL and TYPE to BON_TYPE to avoid
+	classname collision for ISE's compiler.
+
+2005-12-19  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* .cvsignore:
+	* src/parser/.cvsignore:
+	* src/scanner/.cvsignore:
+	* test/parser/.cvsignore:
+	* test/scanner/.cvsignore:
+	Ignoring generated compiler-specific build files.
+
+2005-05-02  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* build.eant:
+	* src/parser/build.eant:
+	* src/scanner/build.eant:
+	Reincorporates targets written yesterday, but everything is not
+	integrated yet into the Gobo build structures.
+
+	* test/build.eant:
+	* test/parser/.cvsignore:
+	* test/scanner/.cvsignore:
+	* test/scanner/getest.ise:
+	* test/scanner/getest.se:
+	* test/scanner/library.xace:
+	* test/scanner/system.xace:
+	* test/scanner/test_characters.e:
+	* test/scanner/test_comments.e:
+	* test/scanner/test_free_operators.e:
+	* test/scanner/test_identifiers.e:
+	* test/scanner/test_keywords.e:
+	* test/scanner/test_misc.e:
+	* test/scanner/test_numbers.e:
+	* test/scanner/test_special_symbols.e:
+	* test/scanner/test_strings.e:
+	* test/parser/getest.ise:
+	* test/parser/getest.se:
+	* test/parser/library.xace:
+	* test/parser/system.xace:
+	* test/parser/test_class_chart.e:
+	* test/parser/test_class_dictionary.e:
+	* test/parser/test_cluster_chart.e:
+	* test/parser/test_creation_chart.e:
+	* test/parser/test_dynamic_diagrams.e:
+	* test/parser/test_event_chart.e:
+	* test/parser/test_informal_charts.e:
+	* test/parser/test_notational_tuning.e:
+	* test/parser/test_scenario_chart.e:
+	* test/parser/test_static_diagrams.e:
+	* test/parser/test_system_chart.e:
+	* source/parser/.cvsignore:
+	* source/scanner/.cvsignore:
+	* source/.cvsignore:
+	* source/scanner/bon_scanner.l:
+	* source/scanner/bon_scanner_skeleton.e:
+	* source/scanner/library.xace:
+	* source/scanner/system.xace:
+	* source/parser/ebon_parser.y:
+	* source/parser/library.xace:
+	* source/parser/system.xace:
+	* source/parser/bon_parser.y:
+	* source/parser/bon_parser_skeleton.e:
+	* source/mog/sets/mog_set.e:
+	* source/mog/sets/query_set.e:
+	* source/mog/sets/string_set.e:
+	* source/mog/sets/class_name_set.e:
+	* source/mog/sets/command_set.e:
+	* source/mog/sets/constraint_set.e:
+	* source/mog/sets/feature_set.e:
+	* source/mog/sets/index_set.e:
+	* source/mog/sets/invariant_set.e:
+	* source/mog/properties/bon_text.e:
+	* source/mog/properties/canonicalizable.e:
+	* source/mog/properties/cotuple.e:
+	* source/mog/properties/elided.e:
+	* source/mog/properties/part_semantics.e:
+	* source/mog/properties/set_semantics.e:
+	* source/mog/interfaces/class_invariant.e:
+	* source/mog/interfaces/feature_clause.e:
+	* source/mog/interfaces/feature_specification.e:
+	* source/mog/interfaces/feature_specification_list.e:
+	* source/mog/interfaces/selective_export_set.e:
+	* source/mog/interfaces/class_interface.e:
+	* source/mog/library.xace:
+	* source/Makefile:
+	* source/build.eant:
+	* source/library.xace:
+	* .cvsignore:
+	* License.txt:
+	* TODO.txt:
+	* build.eant:
+	* forum.txt:
+	* library/build.eant:
+	* library/library.xace:
+	* library/mog/build.eant:
+	* library/mog/library.xace:
+	* library/mog/charts/class_chart.e:
+	* library/mog/charts/cluster_chart.e:
+	* library/mog/charts/creation_chart.e:
+	* library/mog/charts/event_chart.e:
+	* library/mog/charts/informal_chart.e:
+	* library/mog/charts/scenario_chart.e:
+	* library/mog/charts/system_chart.e:
+	* library/mog/components/class_specification.e:
+	* library/mog/components/cluster_specification.e:
+	* library/mog/components/component.e:
+	* library/mog/components/dynamic_component.e:
+	* library/mog/components/formal_generic.e:
+	* library/mog/components/formal_generic_list.e:
+	* library/mog/components/message_relation.e:
+	* library/mog/components/object.e:
+	* library/mog/components/object_group.e:
+	* library/mog/components/object_stack.e:
+	* library/mog/components/scenario_description.e:
+	* library/mog/components/static_component.e:
+	* library/mog/components/static_components.e:
+	* library/mog/components/unspecified_static_component.e:
+	* library/mog/diagrams/diagram.e:
+	* library/mog/diagrams/dynamic_diagram.e:
+	* library/mog/diagrams/static_diagram.e:
+	* library/mog/dictionary/class_dictionary.e:
+	* library/mog/dictionary/dictionary_entries.e:
+	* library/mog/dictionary/dictionary_entry.e:
+	* library/mog/entries/class_entries.e:
+	* library/mog/entries/class_entry.e:
+	* library/mog/entries/cluster_entries.e:
+	* library/mog/entries/cluster_entry.e:
+	* library/mog/entries/creation_entries.e:
+	* library/mog/entries/creation_entry.e:
+	* library/mog/entries/entry.e:
+	* library/mog/entries/event_entries.e:
+	* library/mog/entries/event_entry.e:
+	* library/mog/entries/scenario_entries.e:
+	* library/mog/entries/scenario_entry.e:
+	* library/mog/expressions/assertion.e:
+	* library/mog/expressions/assertion_clause.e:
+	* library/mog/expressions/binary_expression.e:
+	* library/mog/expressions/boolean_expression.e:
+	* library/mog/expressions/call.e:
+	* library/mog/expressions/character_interval.e:
+	* library/mog/expressions/comment.e:
+	* library/mog/expressions/constant.e:
+	* library/mog/expressions/enumerated_set.e:
+	* library/mog/expressions/enumeration_element.e:
+	* library/mog/expressions/expression.e:
+	* library/mog/expressions/interval.e:
+	* library/mog/expressions/manifest_constant.e:
+	* library/mog/expressions/member_range.e:
+	* library/mog/expressions/operator_expression.e:
+	* library/mog/expressions/parenthesized.e:
+	* library/mog/expressions/proposition.e:
+	* library/mog/expressions/quantification.e:
+	* library/mog/expressions/restriction.e:
+	* library/mog/expressions/set_expression.e:
+	* library/mog/expressions/type_range.e:
+	* library/mog/expressions/unary_expression.e:
+	* library/mog/expressions/unqualified_call.e:
+	* library/mog/expressions/unqualified_calls.e:
+	* library/mog/expressions/variable_range.e:
+	* library/mog/expressions/variable_range_list.e:
+	* library/mog/indexing/index_clause.e:
+	* library/mog/interfaces/class_interface.e:
+	* library/mog/interfaces/class_invariant.e:
+	* library/mog/interfaces/feature_clause.e:
+	* library/mog/interfaces/feature_specification.e:
+	* library/mog/interfaces/feature_specification_list.e:
+	* library/mog/interfaces/selective_export_set.e:
+	* library/mog/lists/actual_arguments.e:
+	* library/mog/lists/assertion_clause_list.e:
+	* library/mog/lists/class_name_list.e:
+	* library/mog/lists/class_type_list.e:
+	* library/mog/lists/command_list.e:
+	* library/mog/lists/constraint_list.e:
+	* library/mog/lists/enumeration_list.e:
+	* library/mog/lists/expression_list.e:
+	* library/mog/lists/feature_clause_list.e:
+	* library/mog/lists/feature_name_list.e:
+	* library/mog/lists/index_list.e:
+	* library/mog/lists/indirection_list.e:
+	* library/mog/lists/invariant_list.e:
+	* library/mog/lists/mog_list.e:
+	* library/mog/lists/query_list.e:
+	* library/mog/lists/string_list.e:
+	* library/mog/lists/type_list.e:
+	* library/mog/names/actual_generics.e:
+	* library/mog/names/class_type.e:
+	* library/mog/names/client_entities.e:
+	* library/mog/names/client_entity.e:
+	* library/mog/names/generic_indirection.e:
+	* library/mog/names/indirection_element.e:
+	* library/mog/names/named_indirection.e:
+	* library/mog/names/parent_indirection.e:
+	* library/mog/names/static_ref.e:
+	* library/mog/names/supplier_indirection.e:
+	* library/mog/names/type.e:
+	* library/mog/names/type_mark.e:
+	* library/mog/properties/bon_text.e:
+	* library/mog/properties/canonicalizable.e:
+	* library/mog/properties/cotuple.e:
+	* library/mog/properties/elided.e:
+	* library/mog/properties/part_semantics.e:
+	* library/mog/properties/set_semantics.e:
+	* library/mog/relations/client_relation.e:
+	* library/mog/relations/inheritance_relation.e:
+	* library/mog/relations/static_relation.e:
+	* library/mog/sets/class_name_set.e:
+	* library/mog/sets/command_set.e:
+	* library/mog/sets/constraint_set.e:
+	* library/mog/sets/feature_set.e:
+	* library/mog/sets/index_set.e:
+	* library/mog/sets/invariant_set.e:
+	* library/mog/sets/mog_set.e:
+	* library/mog/sets/query_set.e:
+	* library/mog/sets/string_set.e:
+	* library/mog/specification/bon_specification.e:
+	* library/mog/specification/specification_element.e:
+	* library/mog/specification/specification_elements.e:
+	* src/.cvsignore:
+	* src/build.eant:
+	* src/library.xace:
+	* src/parser/.cvsignore:
+	* src/parser/bon_parser.y:
+	* src/parser/bon_parser_skeleton.e:
+	* src/parser/build.eant:
+	* src/parser/ebon_parser.y:
+	* src/parser/library.xace:
+	* src/parser/point_experiments/.cvsignore:
+	* src/parser/point_experiments/Comments.ace:
+	* src/parser/point_experiments/Feature.ace:
+	* src/parser/point_experiments/comments.y:
+	* src/parser/point_experiments/feature_arguments.y:
+	* src/parser/system.xace:
+	* src/scanner/.cvsignore:
+	* src/scanner/bon_scanner.l:
+	* src/scanner/bon_scanner_skeleton.e:
+	* src/scanner/build.eant:
+	* src/scanner/library.xace:
+	* src/scanner/system.xace:
+	Reorganisation of source to conform to Gobo conventions.
+
+	* build.eant:
+	Reindented everything to conform to coding conventions.  Moved init,
+	which is the renamed define_build_variables target, and build_context
+	targets to end of file.  Corrected geyacc task use to properly
+	generate tokens and move resulting Eiffel file to proper location.
+	Wrote initial prepare_build_files target which uses gexace to generate
+	Ace files for all compilers.  Added help target.
+
+	* source/parser/library.xace:
+	* source/parser/system.xace:
+	* source/scanner/library.xace:
+	* source/scanner/system.xace:
+	Reindented everything to conform to coding conventions.  Renamed
+	clusters that had underscores and properly named all remaining
+	clusters with new (post-Gobo 3.3) subcluster conventions.
+
+	* source/scanner/.cvsignore: Ignoring generated tokens.
+
+2005-05-01  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/library.xace: Added description information.
+
+	* source/mog/build.eant:
+	* source/parser/build.eant:
+	* source/scanner/build.eant:
+	* source/se.ace:
+	Removed all old ace and eant files.
+
+	* source/parser/bon_parser_skeleton.e:
+	Eliminated deprecated YY_NEW_PARSER_SKELETON per Gobo ChangeLog.
+
+	* source/Makefile:
+	Added verbose switches and pragmas to scanner/parser rules.
+
+	* build.eant: Finished all clean:
+	* dist, and scanner/parser rules.
+
+	* build.eant:
+	Work has commenced on new geant build spec for full project.
+
+2005-04-30  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/.cvsignore:
+	* source/Makefile:
+	* source/build.eant:
+	* source/library.xace:
+	* source/mog/build.eant:
+	* source/mog/interfaces/class_interface.e:
+	* source/parser/bon_parser_skeleton.e:
+	* source/parser/build.eant:
+	* source/parser/library.xace:
+	* source/parser/system.xace:
+	* source/scanner/bon_scanner_skeleton.e:
+	* source/scanner/build.eant:
+	* source/scanner/library.xace:
+	* source/scanner/system.xace:
+	* source/se.ace:
+	Updated Copyright dates.
+
+2004-01-31  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/interfaces/class_interface.e:
+	* source/mog/interfaces/class_invariant.e:
+	* source/mog/sets/invariant_set.e:
+	* source/parser/bon_parser.y:
+	ASSERTION now inherits from CANONICALIZABLE and BON_TEXT.
+	CLASS_INTERFACE has been revamped to use lists, but I am still not
+	settled on its contracts and design.  INVARIANT_LIST now inherits from
+	MOG_LIST [CLASS_INVARIANT]; likewise for INVARIANT_SET.
+
+2004-01-29  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/interfaces/class_invariant.e:
+	* source/mog/sets/invariant_set.e:
+	* source/parser/bon_parser.y:
+	Added many new expressions and complementary type declarations to
+	bon_parser.y.  Cleaned up many old classes with default feature
+	blocks.
+
+2004-01-26  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/interfaces/class_interface.e:
+	* source/mog/interfaces/class_invariant.e:
+	* source/mog/interfaces/feature_specification_list.e:
+	* source/parser/bon_parser.y:
+	Corrected creation feature of CLASS_SPECIFICATION and added feature
+	set_class_interface.  Effected STATIC_COMPONENTS and added a creation
+	clause.  Uncommented the precondition on CLASS_INTERFACE's creation
+	feature.  Made CLASS_INVARIANT inherit from ASSERTION (even though the
+	latter does not yet exist).  Added creation features to
+	FEATURE_SPECIFICATION_LIST.  Defined type and creation clause for
+	FEATURE_CLAUSE_LIST.  Added type specifications for several more rules
+	in BON grammar and uncommented several more actions.  Also annotated
+	types on related rules.
+
+2004-01-19  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/interfaces/class_interface.e:
+	* source/mog/interfaces/feature_clause.e:
+	* source/mog/properties/elided.e:
+	* source/mog/sets/mog_set.e:
+	* source/mog/sets/string_set.e:
+	* source/parser/bon_parser.y:
+	Converted the use of several MOG_SET children into children of
+	MOG_LIST in various children of INFORMAL_CHART.  Implemented support
+	for CLASS_INTERFACE in CLASS_SPECIFICATION.  Fixed all documentation
+	references to `Current'.  Added UNSPECIFIED_STATIC_COMPONENT.  Removed
+	all use of Javadoc-like @param and @return documentation strings.
+	Added make_from_string_list to STRING_LIST for immediate children.
+	Uncommented and corrected the last of the commented-out actions in the
+	BON grammar---everything compiles now and we are breaking new ground!
+
+2004-01-18  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/sets/class_name_set.e:
+	* source/mog/sets/command_set.e:
+	* source/mog/sets/constraint_set.e:
+	* source/mog/sets/index_set.e:
+	* source/mog/sets/invariant_set.e:
+	* source/mog/sets/query_set.e:
+	* source/mog/sets/string_set.e:
+	* source/parser/bon_parser.y:
+	Introduced actions for numerous rules in the static components part of
+	BON.  Revised numerous related classes to support these new rules.
+	Added dual versions of some missing set and list classes.  Revised
+	creation routines on several charts to use lists rather than sets;
+	still more to do on this front though.  Revised STATIC_COMPONENT
+	significantly; it is now deferred (again).
+
+2004-01-07  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/parser/bon_parser.y:
+	Uncommented dozens of production rules in grammar and finished off
+	implementations of several more classes.
+
+2003-12-25  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/interfaces/class_interface.e:
+	* source/parser/bon_parser.y:
+	Designed and implemented another dozen classes, primarily in the
+	ebon.names cluster.  Grammar actions are starting to be uncommented.
+
+2003-12-14  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/properties/elided.e:
+	Implemented several classes in the mod.names cluster.
+
+2003-11-24  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/parser/bon_parser.y:
+	Removed CLUSTER_PREFIXES class, as it was not necessary.  Made
+	STATIC_REF a HASHABLE and finished its initial implementation.
+	Finished TYPE_MARK as well.  CLIENT_RELATION is fully commented out
+	and waiting for another pass, but is essentially done; it was waiting
+	for STATIC_REF and is waiting for CLIENT_ENTITIES and related classes.
+	Finished INHERITANCE_RELATION.  Uncommented a dozen production rules
+	in BON grammar.
+
+2003-11-11  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/interfaces/class_interface.e:
+	Implemented a couple of is_equal features.
+
+	* source/mog/interfaces/class_interface.e:
+	* source/mog/properties/bon_text.e:
+	* source/mog/properties/part_semantics.e:
+	* source/mog/sets/mog_set.e:
+	* source/mog/sets/string_set.e:
+	Major revision which compiles cleanly.  Many features have
+	implementations of false, but inheritance hierarchy is complete, all
+	inherit clauses are minimal, all contracts are pretty solid, all core
+	classes and most large classes in MOG are done, and grammar type set
+	is complete.
+
+2003-10-09  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/properties/part_semantics.e:
+	Refined the semantics of PART_SEMANTICS.  Finished new pass on
+	INFORMAL_CHART and two heirs.
+
+2003-10-07  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/interfaces/class_interface.e:
+	* source/mog/interfaces/class_invariant.e:
+	* source/mog/interfaces/feature_clause.e:
+	* source/mog/interfaces/feature_specification.e:
+	* source/mog/interfaces/feature_specification_list.e:
+	* source/mog/interfaces/selective_export_set.e:
+	* source/mog/library.xace:
+	* source/mog/properties/bon_text.e:
+	* source/mog/properties/canonicalizable.e:
+	* source/mog/properties/part_semantics.e:
+	* source/mog/properties/set_semantics.e:
+	* source/mog/sets/class_name_set.e:
+	* source/mog/sets/command_set.e:
+	* source/mog/sets/constraint_set.e:
+	* source/mog/sets/feature_set.e:
+	* source/mog/sets/index_set.e:
+	* source/mog/sets/invariant_set.e:
+	* source/mog/sets/mog_set.e:
+	* source/mog/sets/query_set.e:
+	* source/mog/sets/string_set.e:
+	* source/parser/BON_Parser.ace:
+	* source/parser/EBON_Parser.ace:
+	* source/parser/bon_parser.y:
+	* source/parser/bon_parser_skeleton.e:
+	* source/parser/build.eant:
+	* source/parser/system.xace:
+	* source/scanner/BON_Scanner.ace:
+	* source/scanner/EBON_Scanner.ace:
+	Major revisions incorporating new functional part semantics from kind
+	theory, MOG_SET and MOG_LIST revisions, BON_TEXT and CANONICALIZABLE
+	revisions, and the introduction of Gobo Eiffel Ant (geant) support.
+	This commit typechecks but still need a great deal of work before
+	parsing will be possible again.
+
+2003-08-14  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/parser/BON_Parser.ace:
+	* source/parser/EBON_Parser.ace:
+	* source/scanner/BON.ace:
+	* source/scanner/BON_Scanner.ace:
+	* source/scanner/EBON_Scanner.ace:
+	* source/se.ace:
+	Last version of hand-written ACE files before switching over
+	completely to geant.
+
+	* source/Makefile:
+	* source/build.eant:
+	* source/library.xace:
+	* source/loadpath-2.0.se:
+	* source/loadpath-3.1.se:
+	* source/mog/build.eant:
+	* source/mog/library.xace:
+	* source/parser/BON.ace:
+	* source/parser/build.eant:
+	* source/parser/library.xace:
+	* source/parser/system.xace:
+	* source/scanner/build.eant:
+	* source/scanner/library.xace:
+	* source/scanner/system.xace:
+	Full geant support is now included.  All targets have been tested and
+	seem to work well with both SmartEiffel and EiffelStudio on OS X.
+
+2003-03-09  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/mog/interfaces/class_interface.e:
+	* source/mog/interfaces/feature_clause.e:
+	* source/mog/interfaces/feature_specification.e:
+	* source/mog/interfaces/feature_specification_list.e:
+	* source/parser/bon_parser.y:
+	Beginning to work on interface classes.
+
+	* source/scanner/bon_scanner_skeleton.e:
+	Continued tweaks to get everything compiling with new versions of
+	compilers and libraries.  Note change to class INDEX_CLAUSE is due to
+	the fact that we cannot inherit from TUPLE.
+
+2003-03-08  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/parser/BON.ace:
+	* source/parser/bon_parser_skeleton.e:
+	* source/scanner/BON.ace:
+	* source/scanner/bon_scanner_skeleton.e:
+	* source/loadpath-3.1.se:
+	* source/loadpath.se:
+	* source/Makefile:
+	* source/loadpath-2.0.se:
+	More work getting everything to work with Gobo 3.1, SmartEiffel
+	1.0, and EiffelStudio 5.2.
+
+2002-12-10  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* docs/index.html:
+	Updated link to SF web site and removed details about Struggle.
+
+2002-06-20  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* docs/BON.txt:
+	* docs/BON_grammar.html:
+	* docs/Makefile:
+	* docs/index.html:
+	* source/scanner/bon_scanner_skeleton.e:
+	toolsuite -> tool suite
+
+2002-04-26  Joseph Kiniry  <kiniry@category.ucd.ie>
+
+	* source/parser/bon_parser.y:
+	Continued design revisions - all the core stuff compiles again and now I'm
+	incrementally adding new constructs.  I'm dealing with static diagrams and
+	formal generics now.
+
+	* source/mog/properties/bon_text.e:
+	* source/mog/properties/canonicalizable.e:
+	* source/mog/properties/set_semantics.e:
+	* source/mog/sets/class_name_set.e:
+	* source/mog/sets/command_set.e:
+	* source/mog/sets/constraint_set.e:
+	* source/mog/sets/mog_set.e:
+	* source/mog/sets/query_set.e:
+	* source/mog/sets/string_set.e:
+	* source/parser/bon_parser.y:
+	More revisions and trying to get everything to compile now.  The basic
+	design is nearly done.
+
+	* source/loadpath.se:
+	* source/parser/BON.ace:
+	Added new properties cluster.
+
+	* docs/examples/connector.bon: Syntax fix.
+
+2002-04-26  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source:
+	Continued design revisions - all the core stuff compiles again and
+	now I'm incrementally adding new constructs.  I'm dealing with
+	static diagrams and formal generics now.
+
+2002-04-24  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/mog/charts:
+	Full refactor for (a) interface cleanup and better conventions,
+	(b) use of new set-based, rather than list-based, classes, and (c)
+	full documentation and contracts for every class.
+
+	* source/mog/indexing:
+	Refactored indexing cluster because we (a) had too many classes
+	that were useless, and (b) were not yet recognizing the fact that
+	within any indexing block all properties must be unique (i.e. it
+	is a set not a list). 
+
+	* source/mog/misc_list:
+	* source/mog/list:
+	* source/mog/set:
+	Refactored misc_list cluster into two new clusters "list" and
+	"set" because we needed set-based functionality for so many
+	specification constructs.
+
+2002-04-22  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* docs/examples: 
+	Several more skeleton/initial BON specifications have been added
+	for testing and examples, including connector.bon, mesh.bon, and
+	monitoring.bon.
+
+	* source/mog:
+	Continued design refinements of MOG throughout the day.
+	
+2002-04-21  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* docs/specification/mog.bon:
+	First cut at top-level MOG specification.
+
+	* source/mog:
+	Skeletons for all MOG classes (at first pass). Continued revisions
+	of MOG design throughout the day.
+
+	* source/parser/bon_parser.y:
+	All rules for informal charts now have semantic actions and all
+	associated MOG class skeletons are constructed and everything
+	compiles.
+	
+2002-04-20  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* docs/testsuite/B14.bon:
+	* docs/testsuite/B15-16.bon:
+	* docs/testsuite/all.bon:
+	Fixes due to erroneous test code (keyword use and missing
+	component keyword).
+
+	* docs/testsuite/client.bon:
+	Point test case for client usage.
+
+	* source/Makefile:
+	Numerous tweaks: Starting to add skeletons to handle all core code
+	for parser and scanner; added phony rules and refined some
+	dependencies; reorganization to split BON and EBON tools; added
+	generate rule to Makefile; added multiple calls to geyacc to take
+	advantage of my new version that outputs html; fixed to clean
+	rules.
+
+	* source/bon_scanner.l:
+	* source/bon_parser.y:
+	Started typing non-terminals to build mini-symbol table in
+	scanner. Beginning to handle feature names, object groups, and
+	constants. Put returning string message in debug instruction
+	(gelex). New mini-symbol table to start collecting names. Final
+	(?) tweaks to grammar.  All text examples now parse.  Still need
+	to test with my own specifications.
+	
+2002-04-20  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/bon_scanner.l:
+	* source/bon_parser.y:
+	Starting to add semantic actions for declarations.  Refining
+	identifier usage rules. 
+
+	* source/parser/point_experiments:
+	Occasionally, when I am stuck on some small, particular problem, I
+	generate a "point experiment" to isolate the trouble-spot and
+	figure the problem out.  Two examples of such experiments were
+	added this week: comments.y and feature_arguments.y.
+	
+2002-04-17  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/scanner:
+	* source/parser:
+	Reorganization to split BON and EBON tools.  We now have a
+	bon_scanner.l and an ebon_scanner.l, likewise for bon_parser.y and
+	ebon_parser.y.
+
+2002-04-16  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* docs/specification/scanner.bon:
+	* docs/specification/parser.bon:
+	First cut at top-level scanner and parser specifications.
+
+2002-04-20  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source:
+	Starting to add skeletons to handle all core code for parser and
+	scanner. 
+
+2002-01-03  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/test_scanner/test_characters.e: 
+	Finished first-pass character scanning unit tests.
+
+2002-01-03  Joseph R. Kiniry  <kiniry@kindsoftware.com>
+
+	* (build):
+	Full support for SmallEiffel and ISE 5.1 is now included.
+
+	* source/Makefile (unit_test_scanner): 
+	Cleaned up formatting of makefile variables; removed useless lint
+	and test targets; made unit_test_* rules properly depend upon
+	source rather than build of corresponding tool (faster builds);
+	added comments on various sections; finished support for SE and
+	ISE.
+
+	* source/scanner/ebon_scanner.l: 
+	Added SPACETAB class; fixed docs on STRING_CONDITION; added
+	setting of last_free_operator on all free operator scanning rules
+	for pre-defined operators; added rule to ignore whitespace
+	preceeding a free operator declaration; tweaking end condition for
+	free operator identifier matching.
+
+	* source/test_scanner/test_free_operators.e: 
+	Finished first-pass on free operator testing.
+
+	* docs/Scanner.txt: 
+	* docs/Optimizations.txt: 
+	Beginning of documentation on scanner error-handling possibilities
+	and possible optimization suggestions.
+
+2002-01-02  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/parser/ebon_parser.y: 
+	DOUBLE->REAL in real parsing; removal of parse_string as creation
+	clause because it is illegal if I'm going to use this class as a
+	top-level for unit testing; realized that Manifest_textblock is
+	incorrect and documented it.
+
+2002-01-02  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/Makefile: 
+	Added numerous makefile variables and targets to start supporting
+	SmallEiffel and ISE compilers.
+
+	* source/test_parser/getest.ise:
+	* source/test_parser/getest.se:
+	* source/test_scanner/getest.ise:
+	* source/test_scanner/getest.se:
+	Wrote getest configuration files for ISE 5.1 compiler.  Also,
+	changed getest.se so that builds go to build subdirectories for
+	cleaning build process.
+
+	* source/scanner/ebon_scanner.l: 
+	Added several more last_* attributes for client interaction
+	(mainly unit testing right now).
+
+2001-12-31  Joseph R. Kiniry  <kiniry@kindsoftware.com>
+
+	* source/scanner/ebon_scanner.l: 
+	Fixed escaped backslashes in DOUBLE_BACKSLASH_TOKEN match.  Added
+	rule to match a comment ("--") at the EOL.
+
+	* source/test_scanner/test_numbers.e:
+	* source/test_scanner/test_keywords.e:
+	* source/test_scanner/test_comments.e:
+	* source/test_scanner/test_special_symbols.e:
+	Testing of numbers, keywords, comments, and special symbols all
+	work properly now.  I had to remove testing of special characters
+	and keywords like ', ", --, infix, and prefix because they
+	initiate special actions in the scanner.  These entities will be
+	tested with test_characters, test_strings, and test_free_operators.
+
+2001-12-28  Joseph R. Kiniry  <kiniry@kindsoftware.com>
+
+	* source/loadpath.se: 
+	$BON now refers to top-level of project.  loadpath.se is now here
+	because Makefile takes care of distribution with initialize target.
+
+	* source/Makefile: 
+	$BON now refers to top-level of project.  Added a number of
+	makefile variables (top, project, version, release, etc.), added
+	initialize target to distribute single loadpath (for now),
+	added/refined unit_test and clean targets.
+
+2001-08-28  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* docs/testsuite: Changed all properties in indexing sections to
+	not collide with BON keywords.  For these examples it means
+	changing "cluster" to "in_cluster". This simplifies the lexer as
+	we don't have to have special parse states for indexing
+	property/value pair lists.
+
+2001-08-26  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/parser/ebon_parser.y: All tokens now have _TOKEN postfix
+	to clarify grammar.  All operator tokens now have associativity
+	and precedence rules.  Standard mechanism for EBNF rewrites has
+	been changed to avoid reduce/reduce errors.  Grammar graph is now
+	fully connected; there were major rule typos in
+	Specification_element rule.  Some miscellaneous cleanup and
+	correction throughout by double-checking this grammar against the
+	original one.  Added tentative use of CURRENT_TOKEN to Constant
+	rule.  Eliminated a couple of dozen reduce/reduce conflicts using
+	new EBNF rewrites mentioned above.
+
+	* source/scanner/ebon_scanner.l: Commented out declarations and
+	conditions that are not currently being used so that they don't
+	possibly conflict with or muck up anything.  Made sure every token
+	was named with a _TOKEN postfix for consistency.  I was finding
+	errors in the grammar that amounted to typos and accidental naming
+	conflicts due to geyacc not being case sensitive.  Put in
+	commented-out rules for supporting IDENTIFIER subtype lexing in
+	the future (e.g. CLASS_NAME_TOKEN).
+
+2001-08-24  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/parser/ebon_parser.y: Renamed make to make_parser -- only
+	ISE's compiler caught this bug (creation clause didn't match
+	constructors).  Added STRING type to SIMPLE_STRING token.  Removed
+	unused NEW_LINE token.  
+
+	Documented problems with blind rewrite of EBNF->Geyacc rules wrt
+	shift/reduce and, particularly, reduce/reduce conflicts in the
+	grammar.  Fixed all such conflicts.
+
+	Changed all uses of UT_CHARACTER_CODES in grammar back into direct
+	character references since they were illegal -- character codes in
+	geyacc grammar are *not* Eiffel characters - they're C chars!
+
+2001-08-12  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* source/parser/ebon_parser.y: Documented parent class usage.
+	Fixed a few Eiffel keyword collisions. Started on String support.
+	Documented Concatenator support information. Fixed
+	String_begin/end as STRING_DELIMITER.  Removed features make and
+	report_error for now.  Primary constructor is make_parser.
+
+	* source/scanner/ebon_scanner.l: Continued integrating support for
+	tokens generated from parser.  Documented parent class usage.
+	Reordered rules a bit.  Fixed a few Eiffel keyword collisions.
+	Started on String support.  Rewrite scan_file to be
+	compiler-independent.
+
+	* docs/index.html: Rewrote original textfile containing intro,
+	requirements, etc. into an XHTML file from which we can generate a
+	textfile.  This will help out the web presence but keep things
+	readable and usable during development.
+
+2001-08-10  Joseph R. Kiniry  <kiniry@acm.org>
+
+	* docs/index.html: Wrote first draft of home page for project.
+
+	* source/parser/parser.y: Parser review complete.  Fixed a few
+	syntax errors but now parser passes through geyacc and generates a
+	class that we can test.  The associated datafile, parser.out,
+	generated by geyacc is very revealing and useful as well.
+

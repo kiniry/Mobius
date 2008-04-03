@@ -1,0 +1,253 @@
+system_chart MOG
+indexing
+  author: "Joseph Kiniry";
+  keywords: "Extended BON", "EBON", "BON", "MOG", "meta-object graph", 
+            "abstract symbol tree", "AST"
+explanation
+  "The Extended BON Meta-Object Graph."
+cluster CHARTS
+cluster COMPONENTS
+cluster DIAGRAMS
+cluster DICTIONARY
+cluster ENTRIES
+cluster EXPRESSIONS
+cluster INTERFACES
+cluster RELATIONS
+cluster SPECIFICATION
+end
+
+cluster_chart SPECIFICATION
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class BON_SPECIFICATION
+class SPECIFICATION_ELEMENT
+end
+
+cluster_chart CHARTS
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class INFORMAL_CHART
+class CLUSTER_CHART
+class CLASS_CHART
+class EVENT_CHART
+class SCENARIO_CHART
+class CREATION_CHART
+end
+
+cluster_chart DICTIONARY
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class CLASS_DICTIONARY
+class DICTIONARY_ENTRY
+end
+
+cluster_chart DIAGRAMS
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class STATIC_DIAGRAM
+class DYNAMIC_DIAGRAM
+end
+
+cluster_chart ENTRIES
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class ENTRY
+class CLUSTER_ENTRY
+class CLASS_ENTRY
+class EVENT_ENTRY
+class SCENARIO_ENTRY
+class CREATION_ENTRY
+end
+
+cluster_chart COMPONENTS
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class CLASS
+class CLUSTER
+class COMPONENT
+class DYNAMIC_COMPONENT
+class MESSAGE_RELATION
+class OBJECT
+class OBJECT_GROUP
+class OBJECT_STACK
+class SCENARIO_DESCRIPTION
+class STATIC_COMPONENT
+end
+
+cluster_chart RELATIONS
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class STATIC_RELATION
+class INHERITANCE_RELATION
+class CLIENT_RELATION
+end
+
+cluster_chart INTERFACES
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class CLASS_INTERFACE
+class FEATURE_CLAUSE
+class FEATURE_SPECIFICATION
+end
+
+cluster_chart EXPRESSIONS
+indexing
+  author: "Joseph Kiniry";
+  keywords: ""
+class ASSERTION
+class EXPRESSION
+class QUANTIFICATION
+class CALL
+class OPERATOR_EXPRESSION
+class CONSTANT
+class VARIABLE_RANGE
+class MEMBER_RANGE
+class TYPE_RANGE
+class PARENTHESIZED
+class UNARY_EXPRESSION
+class BINARY_EXPRESSION
+class ENUMERATRED_SET
+class INTEGER_INTERVAL
+class CHARACTER_INTERVAL
+class MANIFEST_CONSTANT
+end
+
+-- ===================================================================
+
+static_diagram INHERITANCE_RELATIONSHIPS
+component
+  -- A.3 BON Specification
+
+  deferred class SPECIFICATION_ELEMENT
+  deferred class INFORMAL_CHART
+  effective class CLASS_DICTIONARY persistent interfaced
+  effective class STATIC_DIAGRAM persistent interfaced
+  effective class DYNAMIC_DIAGRAM persistent interfaced
+
+  -- A.4 Informal Charts
+
+  INFORMAL_CHART inherit SPECIFICATION_ELEMENT
+  CLASS_DICTIONARY inherit SPECIFICATION_ELEMENT
+  STATIC_DIAGRAM inherit SPECIFICATION_ELEMENT
+  DYNAMIC_DIAGRAM inherit SPECIFICATION_ELEMENT
+
+  effective class SYSTEM_CHART persistent interfaced
+  effective class CLUSTER_CHART persistent interfaced
+  effective class CLASS_CHART persistent interfaced
+  effective class EVENT_CHART persistent interfaced
+  effective class SCENARIO_CHART persistent interfaced
+  effective class CREATION_CHART persistent interfaced
+
+  SYSTEM_CHART inherit INFORMAL_CHART
+  CLUSTER_CHART inherit INFORMAL_CHART
+  CLASS_CHART inherit INFORMAL_CHART
+  EVENT_CHART inherit INFORMAL_CHART
+  SCENARIO_CHART inherit INFORMAL_CHART
+  CREATION_CHART inherit INFORMAL_CHART
+
+  deferred class ENTRY
+  effective class DICTIONARY_ENTRY persistent interfaced
+  effective class CLUSTER_ENTRY persistent interfaced
+  effective class CLASS_ENTRY persistent interfaced
+  effective class EVENT_ENTRY persistent interfaced
+  effective class SCENARIO_ENTRY persistent interfaced
+  effective class CREATION_ENTRY persistent interfaced
+
+  DICTIONARY_ENTRY inherit ENTRY
+  CLUSTER_ENTRY inherit ENTRY
+  CLASS_ENTRY inherit ENTRY
+  EVENT_ENTRY inherit ENTRY
+  SCENARIO_ENTRY inherit ENTRY
+  CREATION_ENTRY inherit ENTRY
+
+  -- A.5 Static Diagrams
+
+  deferred class STATIC_COMPONENT
+  effective class CLUSTER persistent interfaced
+  effective class CLASS persistent interfaced
+  deferred class STATIC_RELATION
+
+  STATIC_COMPONENT inherit COMPONENT
+  CLUSTER inherit STATIC_COMPONENT
+  CLASS inherit STATIC_COMPONENT
+  STATIC_RELATION inherit STATIC_COMPONENT
+
+  effective class INHERITANCE_RELATION
+  effective class CLIENT_RELATION
+  
+  INHERITANCE_RELATION inherit STATIC_RELATION
+  CLIENT_RELATION inherit STATIC_RELATION
+
+  -- A.6 Class Interface Description
+
+  class CLASS_INTERFACE persistent interfaced
+  class FEATURE_CLAUSE persistent interfaced
+  class FEATURE_SPECIFICATION persistent interfaced
+
+  effective class ASSERTION
+  class ASSERTION_CLAUSE
+  deferred class BOOLEAN_EXPRESSION
+  effective class COMMENT
+  deferred class EXPRESSION
+  effective class QUANTIFICATION
+  effective class CALL
+  deferred class OPERATOR_EXPRESSION
+  effective class CONSTANT
+  deferred class VARIABLE_RANGE
+  effective class MEMBER_RANGE
+  effective class TYPE_RANGE
+  effective class PARENTHESIZED
+  effective class UNARY_EXPRESSION
+  effective class BINARY_EXPRESSION
+  deferred class SET_EXPRESSION
+  effective class ENUMERATRED_SET
+  deferred class ENUMERATION_ELEMENT
+  effective class INTEGER_INTERVAL
+  effective class CHARACTER_INTERVAL
+  class MANIFEST_CONSTANT
+
+  ASSERTION inherit LIST[ASSERTION_CLAUSE]
+  QUANTIFICATION inherit BOOLEAN_EXPRESSION
+  CALL inherit EXPRESSION, SET_EXPRESSION
+  OPERATOR_EXPRESSION inherit EXPRESSION, SET_EXPRESSION
+  CONSTANT inherit EXPRESSION
+  MEMBER_RANGE inherit VARIABLE_RANGE
+  TYPE_RANGE inherit VARIABLE_RANGE
+  PARENTHESIZED inherit OPERATOR_EXPRESSION
+  UNARY_EXPRESSION inherit OPERATOR_EXPRESSION
+  BINARY_EXPRESSION inherit OPERATOR_EXPRESSION
+  ENUMERATRED_SET inherit SET_EXPRESSION
+
+  -- A.7 Dynamic Diagrams
+
+  deferred class DYNAMIC_COMPONENT
+  effective class SCENARIO_DESCRIPTION persistent interfaced
+  effective class OBJECT_GROUP persistent interfaced
+  effective class OBJECT_STACK persistent interfaced
+  effective class OBJECT persistent interfaced
+  effective class MESSAGE_RELATION persistent interfaced
+
+  DYNAMIC_COMPONENT inherit COMPONENT
+  SCENARIO_DESCRIPTION inherit DYNAMIC_COMPONENT
+  OBJECT_GROUP inherit DYNAMIC_COMPONENT
+  OBJECT_STACK inherit DYNAMIC_COMPONENT
+  OBJECT inherit DYNAMIC_COMPONENT
+  MESSAGE_RELATION inherit DYNAMIC_COMPONENT
+end
+
+
+class_chart BON_SPECIFICATION
+indexing
+  author: "Joseph Kiniry";
+  in_cluster: "MOG";
+  created: "2002-04-20 Joseph Kiniry";
+  revised: "$Id: mog.bon,v 1.1 2002/04/21 04:09:45 kiniry Exp $"
+end

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<library name="ebon">
+
+  <description>
+    description: "Xace file for the EBON libraries"
+    copyright: "Copyright (c) 2001-2005, Joseph Kiniry"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/12/21 14:10:39 $"
+    revision: "$Revision: 1.2 $"
+  </description>
+  
+  <mount location="${BON}/library/mog/library.xace"/>
+  
+</library>

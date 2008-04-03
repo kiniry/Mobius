@@ -1,0 +1,175 @@
+-- The Extended BON parser is constructed with Gobo geyacc, thus relies
+-- upon numerous classes in the Gobo library.
+
+
+-- Informal Charts
+
+system_chart EBON_PARSER_SYSTEM
+indexing
+  author: "Joseph Kiniry";
+  keywords: "parser", "Extended BON", "EBON", "BON"
+explanation
+  "The Extended BON parser."
+cluster PARSER
+description
+  "The Extended BON parser."
+cluster TEST_PARSER
+description
+  "The Extended BON parser unit test suite."
+cluster TEST_PARSER_BUILD
+description
+  "The automatically generated Extended BON parser unit test suite top-level."
+end
+
+
+cluster_chart PARSER
+indexing
+  author: "Joseph Kiniry";
+  keywords: "parser", "Extended BON", "EBON", "BON"
+explanation
+  "The Extended BON parser."
+class EBON_PARSER
+description
+  "A parser for the Extended BON specification language."
+class EBON_PARSER_SKELETON
+description
+  "A parser skeleton for the Extended BON specification language."
+class EBON_TOKENS
+description
+  "The automatically generated list of tokens in the EBON grammar."
+end
+
+
+cluster_chart TEST_PARSER
+indexing
+  author: "Joseph Kiniry";
+  keywords: "parser", "Extended BON", "EBON", "BON", "unit test"
+explanation
+  "A set of unit tests for the EBON parser."
+class TEST_
+description
+  ""
+end
+
+
+cluster_chart TEST_PARSER_BUILD
+indexing
+  author: "Joseph Kiniry";
+  keywords: "parser", "Extended BON", "EBON", "BON", "unit test"
+explanation
+  "The automatically generated Extended BON parser unit test suite top-level."
+class TEST_PARSER
+description
+  "The top-most, automatically generated, unit test suite harness."
+end
+
+
+class_chart EBON_PARSER
+indexing
+  author: "Joseph Kiniry";
+  in_cluster: "PARSER";
+  created: "2002-04-15 Joseph Kiniry";
+  revised: "$Id: parser.bon,v 1.1 2002/04/16 22:07:23 kiniry Exp $"
+explanation
+  "A parser for the Extended BON specification language."
+end
+
+
+class_chart EBON_PARSER_SKELETON
+indexing
+  author: "Joseph Kiniry";
+  in_cluster: "PARSER";
+  created: "2002-04-15 Joseph Kiniry";
+  revised: "$Id: parser.bon,v 1.1 2002/04/16 22:07:23 kiniry Exp $"
+explanation
+  "A parser skeleton for the Extended BON specification language."
+query
+
+command
+
+end
+
+
+-- Static Structure
+
+static_diagram EBON_PARSER_STRUCTURE
+component
+  root class EBON_PARSER
+  deferred class EBON_PARSER_SKELETON
+  effective class EBON_PARSER interfaced
+  class EBON_TOKENS
+end
+
+
+static_diagram EBON_PARSER_REUSED
+component
+  class KL_SHARED_ARGUMENTS reused
+  class KL_STANDARD_FILES reused
+  class KL_SHARED_EXCEPTIONS reused
+  class YY_COMPRESSED_PARSER_SKELETON reused
+  class UT_CHARACTER_CODES reused
+end
+
+
+static_diagram EBON_PARSER_INHERITANCE
+component
+  cluster PARSER component ... end
+
+  EBON_PARSER inherit EBON_PARSER_SKELETON
+
+  EBON_PARSER_SKELETON inherit KL_SHARED_ARGUMENTS, KL_STANDARD_FILES,
+    KL_SHARED_EXCEPTIONS, YY_COMPRESSED_PARSER_SKELETON, UT_CHARACTER_CODES,
+    EBON_TOKENS
+end
+
+
+-- Class Interface Description
+
+static_diagram
+  class EBON_PARSER_SKELETON
+  feature
+    reset_parser
+    last_token: INTEGER
+      -- Code of last token read.
+    text: STRING
+      -- Text of last token read.
+
+    last_string_constant: STRING
+    last_character_constant: CHARACTER
+    last_identifier: STRING
+    last_free_operator: STRING
+    last_integer: INTEGER
+    last_real: REAL
+
+    ebon_buffer: STRING
+    ebon_lineno: INTEGER
+    ebon_error_message: STRING
+
+    String_begin: CHARACTER
+    String_end: CHARACTER
+
+    make_parser
+    default_action
+    scan_file
+    scan_string
+      -> s : STRING
+    require 
+      s /= Void
+    end
+  end
+
+  class EBON_PARSER
+  feature
+    make_parser
+    scan_file
+  end
+end
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,244 @@
+I am using ISE EiffelStudio 5 (5.1.11).  All of these comments are on the
+Linux version of the tool.  
+
+I am running on two machines: 
+ (1) My home dev box, "kind", a Pentium II 350MHz with 256MB of physical
+     and 256MB virtual memory, running kernel 2.4.9-21 (RedHat Q/Aed),
+     X11R6 4.1.0 via a Voodoo3, with Sawfish 1.0-ximian.4.
+ (2) My work dev box, "socrates", a Pentium III 550MHz with ~220MB of
+     physical and ~650MB of virtual memory, running kernel 2.4.9-21 (RedHat
+     Q/Aed), X11R6 4.1.0 via dual Matrox IIs, with Sawfish 1.0-ximian.4.
+
+---
+
+1. After some actions, even though the estudio window has focus, it will
+not accept any user input (mouse or keyboard).  The mouse has to move out
+of the window and re-enter for input to be re-enabled.
+
+2. The cluster tree within the clusters pane is reinitialized and fully
+closed anytime a compile takes place.
+
+3. Some of my long files trigger a bug when using the flat or clickable
+views.  The result is that the Editor pane is completely blacked out and no
+interaction or refreshing is possible.  One can see the contents as the
+editor initially renders but everything is quickly and permanently blacked
+out after that.
+
+4. Some of my long files (e.g., a geyacc-generated parser class), when
+viewed in clickable mode, cause my entire machine to lock up for 15-60
+seconds.  No interactivity is possible, X is effectively hung, the drive
+light just goes on for the time period, any tops I have running stop
+refreshing, etc.  This is completely repeatable.
+
+5. I cannot interoperate at all with the challenge dialog that pops up when
+I attempt to change the view to a new class but I have modified the current
+class ("Class X has been modified.  Do you want to save changes?").  I
+cannot select the (modal) dialog, I cannot move it, resize it, or click on
+any buttons in it.  All I can do is use window manager keyboard shortcuts
+to change the focus to the estudio main window then press escape or return,
+which I presume are shortcuts for the dialog.  
+
+6. Also, if I leave the mouse inside the estudio window's borders, after
+this dialog is answered via a keypress, my window manager's focus behavior
+(Sawfish with enter-exit behavior) no longer works until I click inside the
+estudio window.  To be clear, in this state I cannot activate any other
+windows, move to a new workspace, etc.
+
+7. I cannot select more than one precompiled library in the Project
+Configuration dialog.  I presume this is intentional, given the GUI design,
+but I'm curious as to this restriction.
+
+8. Launching an application causes a partial estudio interface refresh
+(everything below the project toolbar).  This isn't terribly problematic,
+but it seems that my panes (e.g., features, clusters, search) do not always
+remember their placement and size.  For example, my clusters pane
+(sometimes? always?) becomes a few pixels tall.
+
+9. I am often surprised at where estudio decides to render an option
+subwindow for the various items within the Preferences pane (e.g. Global
+preferences).  For example, currently I'm trying to twiddle the "Text files
+format" short name from True to False and the pull-down appeared about 1000
+pixels left and a few hundred pixels up from their proper location.
+Regardless of rendering location, choosing the option doesn't make the
+option popup disappear, it just sits in my way, not refreshing even if I
+move the Preferences window, until I select another option, tree node, or
+click the close button.
+
+10. Disabling either of the toolbars or the address bar makes the component
+disappear, but the estudio window does not properly re-layout the window to
+take advantage of the newly available space.  Adding these elements works
+fine, and removing all of them triggers a new layout.
+
+11. Is there any way I can ask estudio to edit a source file rather than a
+generated Eiffel file (e.g., foo.y rather than foo.e)?
+
+12. Your copyright notice in the Help->"About ISE EiffelStudio" popup only
+covers through the year 2000.
+
+13. I set my "Internet browser command" global preference got set to the
+following: "gnome-moz-remote $url".  When I looked at the setting later it
+(explicitly) included all of the following URLs as well:
+/usr/local/Eiffel51/docs//tools/eiffelstudio/how_to_s/index.html
+/usr/local/Eiffel51/docs//tools/eiffelstudio/how_to_s/index.html
+/usr/local/Eiffel51/docs//tools/eiffelstudio/reference/index.html
+/usr/local/Eiffel51/docs//general/guided_tour/environment/index.html
+/usr/local/Eiffel51/docs//general/guided_tour/environment/index.html
+/usr/local/Eiffel51/docs//tools/eiffelstudio/reference/index.html
+/usr/local/Eiffel51/docs//tools/eiffelstudio/how_to_s/index.html
+/usr/local/Eiffel51/docs//general/guided_tour/language/index.html
+/usr/local/Eiffel51/docs//tools/eiffelstudio/reference/index.html
+
+Note the duplication.  Manually removing the double slashes does not help.
+
+Resetting the value and then trying the various Help menus causes the same
+problem to happen again.  I presume this is intentional, and the intent is
+to have the remote browser automatically open all the help top-level
+indices?  The standard gnome-moz-remote command doesn't seem to agree with
+this usage.
+
+Note that I do have full permissions on the core install location in case
+estudio is attempting to write some global preferences there.
+
+14. A piece of feedback on BASE.KERNEL.FILE: I think that that
+documentation for read_line is misleading given that each new read string
+is put into the same STRING available via last_string.  I understand the
+reason for this choice, but the documentation isn't clear.  Also, shouldn't
+you have an invariant "last_string = (old last_string)" on the class?
+
+15. I'd love for all windows and dialogs to remember their locations and
+for those locations to be *either* absolute or relative coordinates
+(this being a preference setting).  I work on a two monitor system and to
+consistently have popups appear in the middle of the virtual display, split
+across two monitors, and I have to move them to use them every time, is
+really irritating.  Remembering size would be great as well.
+
+16. Some windows have very strange default sizes.  For example, the "Create
+Directory" window on my system defaults to 637x487 (-ish) and is not
+actually centered.
+
+17. What is the relationship between the clusters listed inthe Project
+configuration and those added via the Add Cluster tool?  Adding a cluster
+in the tool automatically adds it to the project, but not vice-versa?  Why
+don't clusters added via the project configuration appear in the clusters
+tool?  Do they only appear when they contain classes?  It looks like
+clusters automatically added to the project don't take relative clusters
+into account (the use of the "$" symbol in ISE Ace files).
+
+18. It would be lovely if the file requestors remembered the last path that
+we were in or added such paths to its pulldown menu.  "Surfing" through the
+filesystem over and over is one of the primary reasons I cannot stand GUIs.
+
+19. Actually, I just noticed that the Create Cluster tool does remember the
+last parent cluster chosen---thanks!
+
+20. Can I control the order of the cluster listing in the cluster tool?  At
+the top-level, they are alphabetical.  But I have a subsubcluster set that
+is not listed in any order in particular.  Oh, I just compiled and
+re-opened the tree and now it is alphabetized.  Hrm.
+
+21. While clicking on clusters one by one in rapid succession in the
+project panel estudio crashed with an "operating systems signal".  The
+console (my shell that started estudio) didn't print anything, and because
+the alert requestor locked up my whole UI (all I could do is use my window
+manager's control keys to switch windows, bring them front/back, etc.) I
+could not save the error message.
+
+22. I was told that I had two clusters of the same name, and I verified
+this in the project configuration->clusters panel.  I deleted one of the
+clusters just prior to the crash in #21.  On restarting and reopening the
+panel I find that both instances of the cluster are now missing.  Perhaps
+this is related to the crash?
+
+23. The clusters listed in the project configuration->clusters panel are
+not alphabetized either.
+
+24. I'd love to all tree widgets to always remember their state from use to
+use.  Reopening nodes to get to deep leaves all of the time gets really
+old.
+
+25. I'd like to be able to bookmark clusters as well as classes.
+
+26. The performance of the diagram window, especially when moving classes
+or clusters, is unsatisfactor.  On my home box, for example, I tried to
+drag-select a set of classes.  This didn't work, of course, but it did drag
+a cluster out of its parents across the screen.  Rendering each step of the
+drag took about 4-5 seconds, so the entire app hung basically for the next
+two minutes as it rendered this (incorrect) action.  This means that any
+interaction via the diagram window is effectively read-only on my
+development machine.
+
+27. When I have estudio maximized (the normal way in which I work in it)
+all dialogs seem to initially be layed out in maximized mode (e.g.,
+preferences, project settings, etc.).
+
+28. When creating a new class I got the impression that I had to type in
+the classname as all caps (because the default was all caps), (but of course
+this doesn't actually matter), but I found that when I typed it in lower
+case, estudio automatically named it in uppercase (as I wished).  This did
+not seem obvious to me.
+
+29. I accidentally initiated a drag-region action (drag-select a region in
+the editor then drag the selected region) and was unable to finish the
+drag.  My entire UI locked up, no keyboard shortcuts would cancel the drag
+action, etc.  I had to log into my machine from another host and kill the
+estudio process to get my machine back.
+
+30. While experimenting with the charts, class, and cluster pulldown menus
+in the diagram window I saw the following bugs: (1) the first time I tried
+any of the menus, instead of opening the triple-pulldown in-frame I got
+borderless window that was as wide as my display and about 2/3rd of its
+height.  (2) When switching to an old chart I got into an (infinite?)
+sequence of rapid-fire flashing diagram progress bars and I had to C-c
+estudio.  The focus kept rapidly switching between the main estudio window
+and the progress bar, the latter of which would not have time to fully
+render before it was torn down.
+
+31. When using the "organize favorites" requestor, after removing a
+selected favorite, the textlist has some other favorite highlighted, but it
+isn't actually *selected* because the "move to folder..." and "remove"
+buttons are ghosted.  I suggest that this is improper UI semantics; either
+remove the highlight post-remove or have the highlighted item selected.
+Also, to select the highlighted item I must select a different item, then
+reselect the previous item.
+
+32. Your HTML documentation that comes with estudio has decent coverage,
+but the HTML itself is quite poor.  It does not render properly at all in
+several of my web browsers.  Might I suggest passing the lot through
+HTMLTidy is a quick-fire way to fix this and still be left with
+maintainable HTML?
+
+33. Some of the permissions in your install are not consistent.  This has
+no impact on estudio as far as I can see.  See
+$ISE_EIFFEL/studio/spec/linux-glibc2.1/include/[eif_cond_var.h|eif_size.h}
+
+34. The calculator time example does not build.  Attempting to build it
+results in a VUEX(2) error:
+
+Error code: VUEX(2)
+Error: feature of qualified call is not available to client class.
+What to do: make sure feature after dot is exported to caller.
+
+Class: SET_DATE
+Feature: execute
+Feature: make Class: DATE Version from: DATE
+Not exported to class SET_DATE
+Line: 25
+        day:= io.lastint;
+->      Result.make (year, month, day);
+          end;
+
+Additionally, any application using the time library does not compile
+because the generated C code include the line
+#include "datetime.h"
+rather than
+#include <datetime.h>
+
+There also seems to be problems with the example's external clauses.  Some
+uses of environmental variables use parentheses, others use curly braces,
+and others use nothing at all.
+
+35. I believe that compiler error messages in the context window should
+line wrap.  I typically keep my estudio windows open just wide enough for
+an 80-85 column editor, so often long messages are hidden off the right
+side of the context window and I have to manually scroll right to read them
+in full.

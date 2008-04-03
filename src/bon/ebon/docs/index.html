@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <meta name="description" content="Extended BON is a superset of BON, a
+          clear and concise graphical and textual specification language
+          for software systems. This tool suite consists of a scanner,
+          parser, documentation generator, and design model checker for
+          Extended BON."/> 
+    <title>The Extended BON Tool Suite</title>
+    <link href="bon.css" rel="stylesheet"/>
+  </head>
+
+  <body>
+    <h1 align="center">The Extended BON Tool Suite</h1>
+
+    <h4 align="center">Authors: Joseph Kiniry 
+      (<a href="mailto:kiniry@users.sourceforge.net">kiniry@users.sourceforge.net</a>)
+    </h4>
+
+    <h4 align="center">$Id: index.html,v 1.9 2002/12/10 12:01:09 kiniry Exp $</h4>
+
+    <h2>Introduction</h2>
+
+    <p> BON is the Business Object Notation, a clear and concise graphical
+    and textual specification language for software[<a
+    href="#WaldenNerson95">WaldenNerson95</a>].  BON is unique in that
+    every construct specified in BON is checkable and reversible.  That is
+    to say, we can consistently and completely check the conformance of a
+    piece of software according to a BON specification and any changes to
+    the software can be reflected back into the specification.  The
+    specification is obviously an abstraction of the software, but a
+    bijection (equivalence relation) exists between the specification an a
+    subset of the software it specifies. </p>
+
+    <p> BON is useful for much more than "business" objects --- don't let
+    the name fool you.  BON is easy to learn, has a <a
+    href="BON_grammar.html">grammar</a> and style that are influenced by
+    the Eiffel programming language, and doesn't require a math degree,
+    dozens of immense tomes to explain, nor multi-thousand dollar pieces of
+    software to use. </p>
+
+    <p> This document describes a suite of tools called "Extended BON" or
+    "Extended BON", the core of which is a Extended BON scanner, parser,
+    documentation generator, and design model checker.  This set of tools
+    is meant to help software developers keep their documentation, design,
+    and implementation in sync as well as help find and correct errors as
+    early as possible in the process of creating software artifacts. </p>
+
+    <p> Extended BON is an extension of BON by Joseph Kiniry that
+    incorporates additional formal specification from [<a
+    href="#KiniryZimmerman97">KiniryZimmerman97</a>] and [<a
+    href="#Kiniry01">Kiniry01</a>] via the use of <em>semantic
+    properties</em> [<a href="#Kiniry02-SP">Kiniry02-SP</a>] into the BON
+    standard.  Since Extended BON is a proper superset of BON, this suite
+    of tools will work with BON or Extended BON specifications. </p>
+
+    <h2>Overview</h2>
+
+    <p> The Extended BON tool suite consists of the following tools: </p>
+    <ul>
+      <li> A <span class="italic">Extended BON parser</span> that reads
+        textual Extended BON and generates a faithful, in-memory
+        representation of its content.  We call this representation the
+        Extended BON Meta Object Graph, or MOG for short. </li>
+      <li> A <span class="italic">serializer</span> that can read and write
+        Extended BON MOGs to and from permanent storage. </li>
+      <li> A <span class="italic">documentation generator</span> that can
+        convert an MOG into a set of documents in a variety of formats
+        according to a "pluggable" set of rules. </li>
+      <li> A <span class="italic">MOG differencing tool</span> that can
+        determine the minimal rewrites necessary to convert from a source
+        MOG to a target MOG. </li>
+      <li> A <span class="italic">EBON2Eiffel tool</span> that
+        generates Eiffel skeleton code from a Extended BON
+        specification. </li>
+      <li> A <span class="italic">EBON<->Eiffel refinement mapping
+          tool</span> that helps a user map a specification to code. </li>
+      <li> A <span class="italic">Extended BON Eiffel design model
+          checker</span> that compares an Eiffel implementation against a
+        Extended BON specification. </li>
+    </ul>
+
+    <h2>Requirements</h2>
+
+    <p> The phrase "<span class="bold">must</span>" means that the design
+    and implementation of the discussed component is not considered
+    completely unless the indicated capability is present and correct.  The
+    phrase "may" means that the capability is optional; it is a secondary
+    requirement. </p>
+
+    <p> The Extended BON parser <span class="bold">must</span>: </p>
+    <ul>
+      <li> parse the full BON textual specification language and represent
+        specifications written in this language unambiguously, </li>
+
+      <li> parse the full Extended BON textual specification language and
+        represent specifications written in this language unambiguously,
+      </li>
+
+      <li> flag syntax and usage errors in a clear, concise, and correct
+        fashion, </li>
+
+      <li> include and parse a Extended BON specification of itself. </li>
+    </ul>
+
+    <p> The Extended BON parser may: </p>
+    <ul>
+      <li> cache parse trees between invocations, </li>
+
+      <li> detect and parse only those documents which have changed since the
+        last parse, </li>
+
+      <li> Support redefinition of string delimiters (String_begin and
+        String_end). </li>
+    </ul>
+
+    <p> The Extended BON serializer <span class="bold">must</span>: </p>
+    <ul>
+      <li> serialize and unserialize an in-memory representation to a
+        time-efficient format, </li>
+    </ul>
+
+    <p> The Extended BON serializer may: </p>
+    <ul>
+      <li> serialize and unserialize in a space-efficient format. </li>
+    </ul>
+
+    <p> All tools <span class="bold">must</span>: </p>
+    <ul>
+      <li> compile correctly in the SmallEiffel and ISE compilers. </li>
+    </ul>
+
+    <p> All tools may: </p>
+    <ul>
+      <li> compilation in Object Tools's Visual Eiffel compiler and ISS
+        (Halstenbach) compiler. </li>
+    </ul>
+
+    <h2>Dictionary</h2>
+
+    <dl>
+      <dt> AST </dt>
+      <dd> an Abstract Symbol Tree; a set of data structures used to represent
+        hierachical, structured information, typically the results of a
+        parse. </dd>
+
+      <dt> BON </dt>
+      <dd> the Business Object Notation; a software specification language
+        documented in [WaldenNerson95] and primarily used with the Eiffel
+        programming language. </dd>
+
+      <dt> Extended BON </dt>
+      <dd> an extension of the BON specification language.  Extended
+        BON is described in Extended BON.txt and primarily consists of the
+        addition of higher-level specification constructs and operators from
+        the KindSoftware code standard[Kiniry01] to BON. </dd>
+
+      <dt> Extended BON<=>Eiffel </dt>
+      <dd> a specification language that describes a isomorphism between a
+        Extended BON specification and an Eiffel implementation. </dd>
+
+      <dt> Eiffel </dt>
+      <dd> an object-oriented programming language created by Bertrand Meyer
+        and supported by four major compilers: GNU SmallEiffel, ISE Eiffel,
+        Object Tools Visual Eiffel, and Halstenbach Eiffel. </dd>
+
+      <dt> Isomorphism </dt>
+      <dd> a (full) equivalence function that is both one-to-one and onto, a
+        bijection, a generalized homomorphism. </dd>
+
+      <dt> Lexer </dt>
+      <dd> a software component that reads a formal notation and breaks input
+        up into distinct, indentified tokens for parsing. </dd>
+
+      <dt> MOG </dt>
+      <dd> a Meta Object Graph; a set of data structures used to represent
+        networks of objects that reflectively describe some structure at the
+        metalevel. </dd>
+
+      <dt> Parser </dt>
+      <dd> a software tool that converts a tokenized input into a data
+        structure-based representation, typically either an abstract symbol
+        table (AST) or a metaobject-based data structure like our MOG. </dd>
+
+      <dt> Semantic Property </dt>
+
+      <dd> domain-specific specification constructs used to augment an
+        existing language with richer semantics. </dd>
+
+      <dt> Token </dt>
+      <dd> a basic construct of lexing and parsing that represents a
+        fundamental atom, or idea, and typically one which has a textual or
+        graphical representation that is more complex than that which the
+        token itself has. </dd>
+    </dl>
+
+    <h2>Example</h2>
+
+    <p> Pending... </p>
+
+    <h2>Bibliography</h2>
+
+    <a name="WaldenNerson95"> </a>
+    <pre>
+      @Book{WaldenNerson95,
+      author =       { Kim Wald\'en and Jean-Marc Nerson },
+      title =        { Seamless Object-Oriented Software Architecture -
+      Analysis and Design of Reliable Systems },
+      publisher =    pub-ph,
+      address =      pub-ph:adr,
+      series =       { The Object-Oriented Series },
+      year =         1995
+      }
+    </pre>
+
+    <p> A PDF of this text will soon be available online.  If you are
+    working on the EBON project, request a copy from Joe Kiniry
+    (kiniry@users.sourceforge.net) until Kim Walden puts the PDF up on the
+    web. </p>
+
+    <a name="#KiniryZimmerman97"> </a>
+    <pre>
+      @TechReport{KiniryZimmerman97,
+      editor =       { Joseph R. Kiniry and Daniel M. Zimmerman },
+      title =        { The Infospheres Java Coding Standard },
+      institution =  { Department of Computer Science, California Institute of
+      Technology },
+      year =         { 1997 },
+      note =         { Available at http://www.infospheres.caltech.edu/ }
+      }
+    </pre>
+
+    <a name="#Kiniry01"> </a>
+    <pre>
+      @TechReport{Kiniry01,
+      author =       { Joseph R. Kiniry },
+      title =        { The KindSoftware Coding Standard },
+      institution =  { KindSoftware, LLC },
+      year =         { 2001 },
+      note =         { Available at http://www.kindsoftware.com/.  Directly
+      evolved from Kiniry97. }
+      }
+    </pre>
+
+    <a name="#Kiniry02-SP"> </a>
+    <pre>
+      @Unpublished{Kiniry02-SP,
+      author =       { Joseph R. Kiniry },
+      title =        { Semantic Properties for Lightweight Specification in
+                       Knowledgeable Development Environments },
+      year =         { 2002 },
+      url =          { <a href="http://arxiv.org/abs/cs.SE/0204035">arxiv.org</a> },
+      note =         { Submitted to the 10th International Symposium on the
+                       Foundations of Software Engineering
+                       (<a href="http://www.cs.pitt.edu/FSE-10/">FSE-10</a>). }
+      }
+    </pre>
+
+    <h2>Scheduling Goal</h2>
+
+    <p> This project was started with the intent of entering it into Eiffel
+      Struggle 2001.  Only the first three tools (parser, serializer, and
+      documentation generator) are meant to be designed and written for
+      this contest.  Since the Stuggle did not happen for 2001, we will
+      enter this tool into the next contest. </p>
+
+    <hr/>
+
+    <p> This document was last committed: $Date: 2002/12/10 12:01:09 $ </p>
+
+    <p> The Extended BON Tool Suite project is hosted by 
+      <a href="http://sourceforge.net/projects/ebon/"> 
+        <img src="http://sourceforge.net/sflogo.php?group_id=33004&type=1"
+             alt="SourceForge Logo" height="31" width="88" border="0"/>
+      </a> 
+    </p>
+
+  </body>
+</html>
+
+<!--
+Local Variables:
+mode: xml
+sgml-omittag:nil
+sgml-shorttag:nil
+sgml-namecase-general:nil
+sgml-general-insert-case:lower
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->

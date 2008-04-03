@@ -1,0 +1,89 @@
+Scanner Error Handling
+Joseph Kiniry
+December 31, 2001
+$Id: Scanner.txt,v 1.1 2002/01/03 08:10:31 kiniry Exp $
+
+  @todo: Look up keyword prefix information.
+  @todo: Is capitalization of keywords an issue?
+
+
+Introduction
+
+We wish to catch specification errors as early as possible during data
+input.
+
+Early handling helps the robustness of all tools using these components
+because, if simple faults such as typographic errors are correctly caught,
+identified, and handled, then incorrect specifications can still be read
+(scanned and parsed) in full.  Users appreciate this feature because more
+than a single syntax error can be identified during a single execution of
+the tools, decreasing development turn-around time.
+
+
+Summary of Scanner Errors
+
+The errors that we will catch, identify, and attempt to correct during
+scanning (collectively, the "scanner errors") include the following:
+
+ o A missing opening or closing single quote for character constants.
+   E.g.,       'a      =>      'a'    or    b'      =>      'b'
+
+ o A missing opening or closing double quote for string constants.
+   E.g.,    "this is a test           =>        "this is a test"       or
+            a constant string"        =>       "a constant string"
+
+The challenge in both of these scenarios is determining if the missing
+delimiter opens or closes the constant.
+
+
+Lexical concatenation is similar to constant delimiter handling, though it
+crosses multiple input lines.
+
+ o A missing lexical concatenator construct.
+
+ o An extra lexical concatenator construct.
+
+
+Because BON includes notational tuning, three characters can be changed:
+the string mark (defaults to '"'), the lexical concatenator (defaults to
+"\"), and the keyword prefix (defaults to "").
+
+ o An incorrect string mark construct.  
+
+ o An incorrect lexical concatenator construct.
+
+ o An incorrect keyword prefix construct.
+
+
+Free operators require special handling as well.  They are declared with
+the "prefix" and "infix" keywords, but we want to handle situations where
+their declarations are missing or forgotten or their definitions have
+changed but their use has not.
+
+ @todo kiniry - Note that free operator handling is currently in that fuzzy
+ domain between that which is handled by the scanner and that which is
+ handled by the parser.  Dec 31, 2001
+
+ o Missing prefix declaration for a used prefix operator.
+
+ o Missing infix declaration for a used infix operator.
+
+ @todo Consider whether leading or trailing whitespace in free operator
+ declarations should be illegal, flagged, ignored, etc.
+
+
+If we extend the scanner and parser to deal with specification standards,
+like those proposed for class names, cluster names, etc. in the BON book,
+OOSC2, or ETL2/3, then we'll need to deal with capitalization
+problems [WaldenNerson94, OOSC2, ETL2, ETL3].
+
+ o A capitalized identifier including some lowercase characters.
+
+ o A lowercase identifier including some uppercase characters.
+
+ o A first-capitalized identifier with a lowercase first character.
+
+ o The use of MixedCapsIdentifiers rather than Underscore_Separated_Ones
+   and vice-versa.
+
+

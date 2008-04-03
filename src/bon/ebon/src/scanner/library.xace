@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<library name="scanner">
+
+  <description>
+    system: "EBON tool suite"
+    copyright: "Copyright (c) 2001-2005 Joseph R. Kiniry"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/12/21 14:08:49 $"
+    revision: "$Revision: 1.2 $"
+  </description>
+  
+  <cluster name="scanner" location="${BON}/src/scanner"/>
+
+</library>

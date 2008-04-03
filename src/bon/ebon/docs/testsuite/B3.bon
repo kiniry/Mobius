@@ -1,0 +1,12 @@
+-- Example 3
+
+static_diagram First_system_breakdown 
+component 
+          cluster CONFERENCE_MANAGEMENT_SYSTEM 
+          component 
+                    cluster ORGANIZATION 
+                    cluster TECHNICAL_EVENTS 
+                    cluster PRINT_OUTS 
+                    cluster REGISTRATION 
+          end 
+end

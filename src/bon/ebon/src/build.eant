@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+
+<project name="src" default="help">
+
+  <description>
+    description: "Eiffel Ant file for EBON tools"
+    copyright: "Copyright (c) 2001-2005, Joseph Kiniry"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/12/21 14:18:59 $"
+    revision: "$Revision: 1.2 $"
+  </description>
+
+  <target name="help">
+    <echo message="usage:"/>
+    <echo message="   geant install"/>
+    <echo message="   geant compile"/>
+    <echo message="   geant  compile_parsers"/>
+    <echo message="   geant  compile_scanners"/>
+<!--     <echo message="   geant compile"/> -->
+<!--     <echo message="    geant compile_ise"/> -->
+<!--     <echo message="    geant compile_se"/> -->
+<!--     <echo message="    geant compile_ve"/> -->
+<!--     <echo message="   geant compile_debug"/> -->
+<!--     <echo message="    geant compile_debug_ise"/> -->
+<!--     <echo message="    geant compile_debug_se"/> -->
+<!--     <echo message="    geant compile_debug_ve"/> -->
+    <echo message="   geant clean"/>
+    <echo message="   geant clobber"/>
+  </target>
+
+  <target name="install" depend="init">
+    <description>
+      Install the EBON tools.
+    </description>
+
+    <set name="target" value="install"/>
+    <geant target="do_all"/>
+  </target>
+
+
+  <target name="compile" depend="init">
+    <description>
+      Compile EBON tools.  Use Eiffel compiler set in ${GOBO_EIFFEL}
+      or 'se' if this variable is not defined.
+    </description>
+
+    <set name="target" value="compile"/>
+    <geant target="do_all"/>
+  </target>
+
+<!--   <target name="compile_ise" depend="init"> -->
+<!--     <description> -->
+<!--       Compile EBON tools with ISE Eiffel. -->
+<!--     </description> -->
+
+<!--     <set name="target" value="compile_ise"/> -->
+<!--     <geant target="do_all"/> -->
+<!--   </target> -->
+
+<!--   <target name="compile_ve" depend="init"> -->
+<!--     <description> -->
+<!--       Compile EBON tools with Visual Eiffel. -->
+<!--     </description> -->
+
+<!--     <set name="target" value="compile_ve"/> -->
+<!--     <geant target="do_all"/> -->
+<!--   </target> -->
+
+<!--   <target name="compile_se" depend="init"> -->
+<!--     <description> -->
+<!--       Compile EBON tools with SmartEiffel. -->
+<!--     </description> -->
+
+<!--     <set name="target" value="compile_se"/> -->
+<!--     <geant target="do_all"/> -->
+<!--   </target> -->
+
+
+<!--   <target name="compile_debug" depend="init"> -->
+<!--     <description> -->
+<!--       Compile EBON tools in debug mode.  Use Eiffel compiler set in -->
+<!--       ${GOBO_EIFFEL} or 'se' if this variable is not defined. -->
+<!--     </description> -->
+
+<!--     <set name="target" value="compile_debug"/> -->
+<!--     <geant target="do_all"/> -->
+<!--   </target> -->
+
+<!--   <target name="compile_debug_ise" depend="init"> -->
+<!--     <description> -->
+<!--       Compile EBON tools with ISE Eiffel in debug mode. -->
+<!--     </description> -->
+
+<!--     <set name="target" value="compile_debug_ise"/> -->
+<!--     <geant target="do_all"/> -->
+<!--   </target> -->
+
+<!--   <target name="compile_debug_ve" depend="init"> -->
+<!--     <description> -->
+<!--       Compile EBON tools with Visual Eiffel in debug mode. -->
+<!--     </description> -->
+
+<!--     <set name="target" value="compile_debug_ve"/> -->
+<!--     <geant target="do_all"/> -->
+<!--   </target> -->
+
+<!--   <target name="compile_debug_se" depend="init"> -->
+<!--     <description> -->
+<!--       Compile EBON tools with SmartEiffel in debug mode. -->
+<!--     </description> -->
+
+<!--     <set name="target" value="compile_debug_se"/> -->
+<!--     <geant target="do_all"/> -->
+<!--   </target> -->
+
+  <target name="clean" depend="init">
+    <description>
+      Remove intermediary generated files.
+    </description>
+
+    <set name="target" value="clean"/>
+    <geant target="do_all"/>
+  </target>
+
+  <target name="clobber" depend="init">
+    <description>
+      Remove all generated files.
+    </description>
+
+    <set name="target" value="clobber"/>
+    <geant target="do_all"/>
+  </target>
+
+
+  <!-- Implementation -->
+
+  <target name="init">
+    <!-- do nothing -->
+  </target>
+
+  <target name="do_all" depend="init">
+    <description>
+      Call 'geant' with the same target ${target} in all
+      subdirectories.
+    </description>
+
+    <geant file="build.eant" target="${target}" dir="scanner"/>
+    <geant file="build.eant" target="${target}" dir="parser"/>
+  </target>
+
+</project>

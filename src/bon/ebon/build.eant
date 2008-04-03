@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+
+<project name="ebon" default="help">
+  <description>
+    system: "EBON tool suite"
+    copyright: "Copyright (c) 2001-2005 Joseph R. Kiniry and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2005/12/21 14:18:59 $"
+    revision: "$Revision: 1.6 $"
+  </description>
+
+  <!-- HELP -->  
+  <target name="help">
+    <echo message="usage:"/>
+    <echo message="   geant all"/>
+    <echo message="     - build everything"/>
+    <echo message="   geant install"/>
+    <echo message="     - build and install everything"/>
+    <echo message="   geant prepare_compile"/>
+    <echo message="     - generate Ace files for all compilers from systems.xace specifications"/>
+    <echo message="   geant generate"/>
+    <echo message="     - generate the scanner and the parser"/>
+    <echo message="   geant docs"/>
+    <echo message="     - generate documentation"/>
+<!--     <echo message="   geant compile"/> -->
+<!--     <echo message="     - build all tools with all Eiffel compilers available"/> -->
+<!--     <echo message="    geant compile_ise"/> -->
+<!--     <echo message="    geant compile_se"/> -->
+<!--     <echo message="    geant compile_ve"/> -->
+<!--     <echo message="   geant compile_debug"/> -->
+<!--     <echo message="     - build all tools with all Eiffel compilers available in debug mode"/> -->
+<!--     <echo message="    geant compile_debug_ise"/> -->
+<!--     <echo message="    geant compile_debug_se"/> -->
+<!--     <echo message="    geant compile_debug_ve"/> -->
+    <echo message="   geant bootstrap"/>
+    <echo message="     - build all tools from bootstrap C source"/>
+    <echo message="   geant test"/>
+    <echo message="     build and unit test all tools"/>
+    <echo message="   geant clean"/>
+    <echo message="     clean up all intermediate files and tools"/>
+    <echo message="   geant clobber"/>
+    <echo message="     return sandbox to pristine condition"/>
+  </target>
+  
+  <!-- TOP-LEVEL TARGETS -->
+  <target name="install" depend="init">
+    <description>
+      Install the EBON package.
+    </description>
+
+    <geant file="build.eant" target="install" dir="library"/>
+    <geant file="build.eant" target="install" dir="src"/>
+    <geant file="build.eant" target="install" dir="example"/>
+    <geant file="build.eant" target="install" dir="test"/>
+    <geant file="build.eant" target="install" dir="docs"/>
+  </target>
+
+  <target name="clean" depend="init">
+    <description>
+      Remove intermediary generated files.
+    </description>
+
+    <geant file="build.eant" target="clean" dir="library"/>
+    <geant file="build.eant" target="clean" dir="src"/>
+    <geant file="build.eant" target="clean" dir="example"/>
+    <geant file="build.eant" target="clean" dir="test"/>
+    <geant file="build.eant" target="clean" dir="docs"/>
+  </target>
+
+  <target name="clobber" depend="init,old_clobber">
+    <description>
+      Remove all generated files.
+    </description>
+
+    <geant file="build.eant" target="clobber" dir="library"/>
+    <geant file="build.eant" target="clobber" dir="src"/>
+    <geant file="build.eant" target="clobber" dir="example"/>
+    <geant file="build.eant" target="clobber" dir="test"/>
+    <geant file="build.eant" target="clobber" dir="docs"/>
+  </target>
+
+  <target name="develop" depend="init">
+    <description>
+      Install developer package.
+      The bootstrap should be run first.
+    </description>
+
+    <geant target="clobber"/>
+    <geant target="install"/>
+    <geant target="clean"/>
+  </target>
+
+  <target name="delivery" depend="init">
+    <description>
+      Build delivery package.
+      The bootstrap should be run first.
+    </description>
+
+    <geant target="clobber"/>
+    <geant target="install"/>
+    <geant target="clean"/>
+    <delete directory="work"/>
+    <delete>
+      <fileset include="@(**/.cvsignore)"/>
+    </delete>
+    <delete>
+      <directoryset directory="." include="@(**/CVS)"/>
+    </delete>
+  </target>
+
+  <!-- Implementation -->
+
+  <!-- DEFINING VARIABLES FOR BUILD SYSTEM -->
+  <target name="init_system">
+    <description>Define all variables for build system.</description>
+    <set name="SE_FLAGS" value="-boost -no_split -no_style_warning -no_gc"/>
+    <set name="SE_FLAGS_DEBUG" value="-all_check -no_split -no_style_warning -no_gc"/>
+    <set name="CFLAGS" value=""/>
+
+    <set name="top" value="/Users/kiniry/Sandboxes"/>
+    <set name="project" value="ebon"/>
+    <!-- 'system' is defined per eiffel.eant -->
+    <set name="system" value="ebon"/>
+    <set name="version" value="v1-2005"/>
+    <set name="release" value="${project}-${version}"/>
+
+    <!-- DIRECTORIES -->
+    <set name="project_dir" value="${top}/${project}"/>
+    <set name="docs_dir" value="${project_dir}/docs"/>
+    <set name="source_dir" value="${project_dir}/src"/>
+    <set name="test_dir" value="${project_dir}/test"/>
+    <set name="example_dir" value="${project_dir}/example"/>
+    <set name="build_dir" value="${project_dir}/build"/>
+    <set name="parser_build_dir" value="${build_dir}/parser"/>
+    <set name="parser_dir" value="${source_dir}/parser"/>
+    <set name="scanner_build_dir" value="${build_dir}/scanner"/>
+    <set name="scanner_dir" value="${source_dir}/scanner"/>
+    <set name="test_parser_dir" value="${test_dir}/parser"/>
+    <set name="test_scanner_dir" value="${test_dir}/scanner"/>
+    <set name="test_parser_build_dir" value="${build_dir}/test/parser"/>
+    <set name="test_scanner_build_dir" value="${build_dir}/test/scanner"/>
+
+    <!-- ROOT CLASSES -->
+    <set name="bon_parser_root" value="bon_parser"/>
+    <set name="bon_scanner_root" value="bon_scanner"/>
+    <set name="ebon_parser_root" value="ebon_parser"/>
+    <set name="ebon_scanner_root" value="ebon_scanner"/>
+    <set name="test_parser_root" value="test_parser"/>
+    <set name="test_scanner_root" value="test_scanner"/>
+
+    <!-- SKELETON CLASSES -->
+    <set name="bon_parser_skeleton" value="${parser_dir}/${bon_parser_root}_skeleton"/>
+    <set name="bon_scanner_skeleton" value="${scanner_dir}/${bon_scanner_root}_skeleton"/>
+    <set name="ebon_parser_skeleton" value="${parser_dir}/${ebon_parser_root}_skeleton"/>
+    <set name="ebon_scanner_skeleton" value="${scanner_dir}/${ebon_scanner_root}_skeleton"/>
+
+    <!-- COMPILED EXECUTABLES -->
+    <set name="bon_parser" value="${parser_build_dir}/${bon_parser_root}"/>
+    <set name="bon_scanner" value="${scanner_build_dir}/${bon_scanner_root}"/>
+    <set name="ebon_parser" value="${parser_build_dir}/${ebon_parser_root}"/>
+    <set name="ebon_scanner" value="${scanner_build_dir}/${ebon_scanner_root}"/>
+
+    <!-- BUILD FILES -->
+    <set name="docs_eant_file" value="${docs_dir}/build.eant"/>
+    <set name="example_eant_file" value="${example_dir}/build.eant"/>
+    <set name="source_eant_file" value="${source_dir}/build.eant"/>
+  </target>
+
+  <target name="dist" depend="cleanup,clobber,clean_archives">
+    <description>Build distribution archives.</description>
+    <!-- @TODO kiniry - need to rewrite to copy all files but for CVS
+         directories into temporary directory of proper name before
+         creating archives -->
+    <exec executable="(cd ${top}; tar czf ${release}.tgz ${project})"/>
+    <exec executable="(cd ${top}; tar cjf ${release}.tbz ${project})"/>
+    <exec executable="(cd ${top}; zip -uro ${release}.zip ${project})"/>
+  </target>
+
+  <!-- GENERATE SCANNERS AND PARSERS -->
+  <target name="generate" depend="init_system">
+    <description>Generate scanners and parsers.</description>
+    <geant file="build.eant" target="compile_scanners" dir="src/scanner"/>
+    <geant file="build.eant" target="compile_parsers" dir="src/parser"/>
+  </target>
+
+  <!-- GENERATE BUILD FILES -->
+  <target name="prepare_compile" depend="init_system">
+    <description>Generate build files for all available compilers.</description>
+    <!-- create build directories -->
+    <mkdir directory="${build_dir}"/>
+    <mkdir directory="${parser_build_dir}"/>
+    <mkdir directory="${scanner_build_dir}"/>
+    <mkdir directory="${test_parser_build_dir}"/>
+    <mkdir directory="${test_scanner_build_dir}"/>
+    <!-- scanner build files -->
+    <gexace system="se"
+            output="${scanner_build_dir}/se.ace"
+            xace="${scanner_dir}/system.xace"/>
+    <gexace system="ise"
+            output="${scanner_build_dir}/ise.ace"
+            xace="${scanner_dir}/system.xace"/>
+    <gexace system="ve"
+            output="${scanner_build_dir}/ve.esd"
+            xace="${scanner_dir}/system.xace"/>
+    <!-- parser build files -->
+    <gexace system="se"
+            output="${parser_build_dir}/se.ace"
+            xace="${parser_dir}/system.xace"/>
+    <gexace system="ise"
+            output="${parser_build_dir}/ise.ace"
+            xace="${parser_dir}/system.xace"/>
+    <gexace system="ve"
+            output="${parser_build_dir}/ve.esd"
+            xace="${parser_dir}/system.xace"/>
+    <!-- scanner build files -->
+    <gexace system="se"
+            output="${test_scanner_build_dir}/se.ace"
+            xace="${test_scanner_dir}/system.xace"/>
+    <gexace system="ise"
+            output="${test_scanner_build_dir}/ise.ace"
+            xace="${test_scanner_dir}/system.xace"/>
+    <gexace system="ve"
+            output="${test_scanner_build_dir}/ve.esd"
+            xace="${test_scanner_dir}/system.xace"/>
+    <!-- parser test build files -->
+    <gexace system="se"
+            output="${test_parser_build_dir}/se.ace"
+            xace="${test_parser_dir}/system.xace"/>
+    <gexace system="ise"
+            output="${test_parser_build_dir}/ise.ace"
+            xace="${test_parser_dir}/system.xace"/>
+    <gexace system="ve"
+            output="${test_parser_build_dir}/ve.esd"
+            xace="${test_parser_dir}/system.xace"/>
+  </target>
+
+  <target name="cleanup" depend="init_system">
+    <description>Clean all editor temporary and backup files, class files, 
+      LaTeX intermediate files, etc.</description>
+    <delete>
+      <fileset include="@(**/.#*|**/.??*~|**/*~|**/*#|**/core|**/.auto)"/>
+      <fileset include="@(**/*.class|**/config.sh)"/>
+      <fileset include="@(**/*.aux|**/*.log|**/*.bbl|**/*.blg)"/>
+    </delete>
+  </target>
+
+  <target name="clean_archives" depend="init_system">
+    <description>Delete archive files for distribution.</description>
+    <delete file="${top}/${release}.tgz"/>
+    <delete file="${top}/${release}.tbz"/>
+    <delete file="${top}/${release}.zip"/>
+  </target>
+
+  <target name="old_clobber" depend="init_system,cleanup">
+    <description>Return sandbox to pristine state by deleting all possible 
+      intermediate files and re-create empty build directories.</description>
+    <delete>
+      <fileset include="@(**/*.epr|**/semantic.cache)"/>
+      <directoryset directory="${project_dir}" include="@(**/EP Data|**/Metrics|**/Eiffel report)"/>
+      <directoryset directory="${project_dir}" include="${scanner_build_dir}"/>
+      <directoryset directory="${project_dir}" include="${parser_build_dir}"/>
+      <directoryset directory="${project_dir}" include="${test_scanner_build_dir}"/>
+      <directoryset directory="${project_dir}" include="${test_parser_build_dir}"/>
+    </delete>
+  </target>
+
+  <target name="init">
+    <geant target="init_os"/>
+  </target>
+
+  <target name="init_os">
+    <geant target="init_windows"/>
+    <geant target="init_unix"/>
+  </target>
+
+  <target name="init_windows" if="${GOBO_OS}=windows">
+    <set name="exe" value=".exe"/>
+  </target>
+
+  <target name="init_unix" unless="${GOBO_OS}=windows">
+    <set name="exe" value=""/>
+  </target>
+
+</project>
