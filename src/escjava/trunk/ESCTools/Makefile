@@ -713,4 +713,14 @@ ifdef COMSPEC
 	@echo ${foo}
 endif
 
+################################################################################
+## Continuous Integration Testing
+
+.PHONY: update-test self-update
+
+self-update: clean
+	svn update
+ 	
+update-test: self-update build jars docs alltests
+
 # End of Makefile
