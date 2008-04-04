@@ -1,6 +1,6 @@
 bonc (0.1.3) unstable; urgency=low
 
- * Added support for HTML printing of formal charts (see the usage section of the README.txt).
+ * Added support for HTML printing of informal charts (see the usage section of the README.txt).
  * Class charts can now be generated as a printing option, or automatically as part of normal printing.
  * Now allowing explanation, indexing and part terms inside of class dictionaries.
 
