@@ -19,22 +19,17 @@
     </repository>
   </repositories>
   <build>
-    <sourceDirectory>../Escjava/java/escjava</sourceDirectory>
-    <testSourceDirectory>../Escjava/test</testSourceDirectory>
     <resources>
       <resource>
-        <directory>../Utils/Javafe</directory>
+        <directory>Utils</directory>
+        <includes>
+          <include>**/*.jar</include>
+        </includes>
       </resource>
     </resources>
+    <sourceDirectory>Escjava/java/Escjava</sourceDirectory>
+    <testSourceDirectory>Escjava/test</testSourceDirectory>
   </build>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
   <ciManagement>
     <system>MOBIUS</system>
     <url>http://mobius.ucd.ie</url>
@@ -50,7 +45,7 @@
     </notifiers>
   </ciManagement>
   <scm>
-    <connection>scm:svn:http://mobius.ucd.ie/repos</connection>
+    <connection>scm:svn:https://mobius.ucd.ie/repos</connection>
     <developerConnection>scm:svn:https://mobius.ucd.ie/repos/</developerConnection>
     <tag>HEAD</tag>
     <url>http://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools</url>

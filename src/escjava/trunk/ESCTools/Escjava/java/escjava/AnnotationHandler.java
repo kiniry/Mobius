@@ -1400,7 +1400,7 @@ public class AnnotationHandler {
       super(op, left, right, locOp);
     }
     static NullableExpr make(FormalParaDecl arg, int locNN) {
-      assert false;
+      //@ assert false;
       return null;
     }
   }

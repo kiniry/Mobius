@@ -748,7 +748,7 @@ public class Options extends javafe.SrcToolOptions {
      * @param o an option previously registered with <code>Option.registerOption</code>
      */
     public boolean isOptionOn(/*@non_null*/Option o) {
-        assert Option.isRegistered(o);
+        //@ assert Option.isRegistered(o);
         return consistency.isOn(o);
     }
 
