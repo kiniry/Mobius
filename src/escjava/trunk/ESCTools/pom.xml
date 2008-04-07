@@ -27,8 +27,6 @@
         </includes>
       </resource>
     </resources>
-    <sourceDirectory>Escjava/java/Escjava</sourceDirectory>
-    <testSourceDirectory>Escjava/test</testSourceDirectory>
   </build>
   <ciManagement>
     <system>MOBIUS</system>
