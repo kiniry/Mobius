@@ -11,7 +11,7 @@ package umbra.editor.parsing;
 import org.eclipse.jface.text.rules.IWordDetector;
 
 /**
- * TODO.
+ * TODO. 
  *
  * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
  * @version a-01

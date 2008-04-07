@@ -19,10 +19,10 @@ import umbra.editor.ColorManager;
 import umbra.editor.ColorValues;
 
 /**
- * This class is responsible for coloring these texts in a byte code
+ * This class is responsible for colouring these texts in a byte code
  * editor window which are inside BML annotations areas. This class uses
  * special 4 rules which describe the way the different sequences are coloured.
- * Colors are chosen as a token array with a particular colouring
+ * Colours are chosen as a token array with a particular colouring
  * style given in the constructor.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -60,15 +60,15 @@ public class BytecodeTagScanner extends RuleBasedScanner {
   private static final int NUMBER_OF_RULES = 4;
 
   /**
-   * The constructor initialises the scanning rules for the current scaner.
-   * It associates the given colour managere and colouring mode with the
+   * The constructor initialises the scanning rules for the current scanner.
+   * It associates the given colour manager and colouring mode with the
    * 
    *
-   * @param a_manager the color manager related to the current bytecode
+   * @param a_manager the colour manager related to the current byte code
    *    editor, it must be the same as in the current
-   *    {@ref BytecodeConfiguration} object
-   * @param a_mode the number of the current coloring style, it must be the
-   *    same as in the current {@ref BytecodeConfiguration} object
+   *    {@link umbra.editor.BytecodeConfiguration} object
+   * @param a_mode the number of the current colouring style, it must be the
+   *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    */
   public BytecodeTagScanner(final ColorManager a_manager, final int a_mode) {
 

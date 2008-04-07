@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) ${date} University of Warsaw"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -18,9 +18,9 @@ import umbra.editor.ColorValues;
 import umbra.editor.NonRuleBasedDamagerRepairer;
 
 /**
- * This method collects array of colors from {@link ColorValues} class
- * and returns them as a token array.
- * TODO ??? 
+ * This is an intermediary class which creates the Eclipse parsing and text
+ * partitioning classes with the properties established using the Umbra
+ * colouring modes.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -39,10 +39,10 @@ public final class TokenGetter {
    * from the given colour manager and is computed based on the given colouring
    * mode and the colour number within the mode.
    *
-   * @param the_colour_manager the color manager related to the current bytecode
-   *    editor, it must be the same as in the current
+   * @param the_colour_manager the colour manager related to the current byte
+   *    code editor, it must be the same as in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
-   * @param a_mode the number of the current coloring style, it must be the
+   * @param a_mode the number of the current colouring style, it must be the
    *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    * @param a_col a colour value with fixed meaning across the colouring styles
    * @return the colour value as a token
@@ -57,10 +57,10 @@ public final class TokenGetter {
    * Returns the array with tokens for all the possible areas in the BML
    * documents.
    *
-   * @param the_manager the color manager related to the current bytecode
+   * @param the_manager the colour manager related to the current byte code
    *    editor, it must be the same as the one in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
-   * @param a_mode the number of the current coloring style, it must be the
+   * @param a_mode the number of the current colouring style, it must be the
    *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    * @return array of tokens - one for each area
    */
@@ -78,12 +78,12 @@ public final class TokenGetter {
    * creates the presentation using the given colour in the given colouring
    * mode with the given colour manager.
    *
-   * @param a_manager manager the color manager related to the current bytecode
-   *    editor, it must be the same as in the current
+   * @param a_manager manager the colour manager related to the current byte
+   *    code editor, it must be the same as in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
-   * @param a_mode the number of the current coloring style, it must be the
+   * @param a_mode the number of the current colouring style, it must be the
    *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
-   * @param a_col particular abstract color as an attribute
+   * @param a_col particular abstract colour as an attribute
    * @return each time a new damage repairer with the given colour parameters
    */
   public static NonRuleBasedDamagerRepairer getRepairer(
@@ -101,10 +101,10 @@ public final class TokenGetter {
    * array, the background colour set to be the default and the style
    * again set according to the {@link ColorValues#MODELS}.
    *
-   * @param the_manager the color manager related to the current byte code
+   * @param the_manager the colour manager related to the current byte code
    *    editor, it must be the same as in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
-   * @param a_mode the number of the current coloring style, it must be the
+   * @param a_mode the number of the current colouring style, it must be the
    *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    * @param a_col a colour value with fixed meaning across all the colouring
    *    styles

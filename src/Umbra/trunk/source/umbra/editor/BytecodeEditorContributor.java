@@ -17,6 +17,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -224,12 +225,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * New buttons for the actions are added to the toolbar. We call the
    * superclass method and add:
    * <ul>
-   *   <li>the widget of the byte code contribution</li>
-   *   <li>two icons for changing the colouring style</li>
    *   <li>the refresh action icon</li>
-   *   <li>the rebuild action icon</li>
-   *   <li>the combine action icon</li>
-   *   <li>the restore action icon</li>
    *   <li>the synchronisation icon</li>
    * </ul>
    * @param a_tbar_mngr the toolbar into which the widgets are added
@@ -238,14 +234,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   public final void contributeToToolBar(final IToolBarManager a_tbar_mngr) {
     // Run super.
     super.contributeToToolBar(a_tbar_mngr);
-    // Test status line.
-    a_tbar_mngr.add(my_bcode_cntrbtn);
-    a_tbar_mngr.add(my_action_plus);
-    a_tbar_mngr.add(my_action_minus);
     a_tbar_mngr.add(my_refresh_action);
-    a_tbar_mngr.add(my_rebuild_action);
-    a_tbar_mngr.add(my_combine_action);
-    a_tbar_mngr.add(my_restore_action);
     a_tbar_mngr.add(my_synchr_action);
   }
 
@@ -257,7 +246,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   public final void contributeToMenu(final IMenuManager a_menu_mngr) {
     // Run super.
     super.contributeToMenu(a_menu_mngr);
-    final MenuManager bytecodeMenu = new MenuManager("Editor"); //$NON-NLS-1$
+    final MenuManager bytecodeMenu =
+      new MenuManager("Byte code", "umbra.bytecodeMenu"); //$NON-NLS-1$
     a_menu_mngr.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
     bytecodeMenu.add(my_action_plus);
     bytecodeMenu.add(my_action_minus);
@@ -266,6 +256,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     bytecodeMenu.add(my_combine_action);
     bytecodeMenu.add(my_restore_action);
     bytecodeMenu.add(my_synchr_action);
+    getActionBars().updateActionBars();
   }
 
   /**
@@ -300,13 +291,13 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *   initialised
    * @see #refreshEditor(BytecodeEditor, IEditorInput)
    */
-  public final void refreshEditor(final BytecodeEditor an_editor,
+  public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final FileEditorInput the_input,
                                   final String[] the_comments,
                                   final String[] the_interline)
     throws PartInitException {
     final IEditorInput input = an_editor.getEditorInput();
-    refreshEditor(an_editor, input, the_comments, the_interline);
+    return refreshEditor(an_editor, input, the_comments, the_interline);
   }
 
   /**
@@ -323,16 +314,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @throws PartInitException if the new editor could not be created or
    *    initialised
    */
-  public final void refreshEditor(final BytecodeEditor an_editor,
+  public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final IEditorInput an_input,
                                   final String[] a_comment_array,
                                   final String[] an_interline)
     throws PartInitException {
     final IWorkbenchPage page = an_editor.getEditorSite().getPage();
-    final ITextSelection selection = (ITextSelection)an_editor.
-                                         getSelectionProvider().getSelection();
-    final int off = selection.getOffset();
-    final int len = selection.getLength();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();
     final boolean proper = (related != null);
@@ -349,11 +336,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     ndoc.setEditor((BytecodeEditor)newEditor, bmlp);
     ndoc.reinit(a_comment_array, an_interline);
     ((BytecodeEditor) newEditor).setRelation(related);
-    final ISelection ns = new TextSelection(off, len);
-    final ISelectionProvider sp = ((AbstractTextEditor)newEditor).
-                          getSelectionProvider();
-    sp.setSelection(ns);
     if (proper) Composition.stopDisas();
+    return newEditor;
   }
 
   /**

@@ -21,7 +21,7 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
 
   /**
    * This constant contains an array with all the BML keywords.
-   * The BML lines are handled by
+   * The BML lines are handled by 
    * {@link umbra.instructions.ast.AnnotationLineController} class.
    * FIXME: this should be retrieved from BMLlib
    */

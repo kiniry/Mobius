@@ -13,6 +13,7 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InstructionTargeter;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.NOP;
 import org.apache.bcel.generic.TargetLostException;
 
 import umbra.UmbraException;
@@ -285,8 +286,10 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *   <code>false</code> otherwise
    */
   public boolean replace(final InstructionLineController a_newlc) {
-    final Instruction ins = a_newlc.getInstruction();
-    if (ins == null) return false;
+    Instruction ins = a_newlc.getInstruction();
+    if (ins == null) {
+      ins = new NOP();
+    }
     final MethodGen mg = getMethod();
     final InstructionList il = mg.getInstructionList();
     final InstructionHandle prevIh = my_instr_handle.getPrev();
@@ -297,7 +300,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
       newIh = il.insert(ins);
     a_newlc.addHandle(newIh, il, mg);
     if (my_instr_handle.hasTargeters()) {
-      addTargeters(newIh, my_instr_handle.getTargeters());
+      addTargeters(newIh, my_instr_handle, my_instr_handle.getTargeters());
       my_instr_handle.removeAllTargeters(); //il.delete does not perform this
     }
     try {
@@ -312,14 +315,18 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * This method adds given {@link InstructionTargeter} objects to the
    * given instruction.
    *
-   * @param an_ins the {@link InstructionHandle} to add the targeters to
+   * @param an_nins the {@link InstructionHandle} to add the targeters to
+   * @param an_oins the {@link InstructionHandle} to be replaced in targeters
+   *   with the new one
    * @param the_trgtrs the array with targeters to add to the instruction
    */
   private static void addTargeters(
-                   final /*@ non_null @*/ InstructionHandle an_ins,
+                   final /*@ non_null @*/ InstructionHandle an_nins,
+                   final /*@ non_null @*/ InstructionHandle an_oins,
                    final /*@ non_null @*/ InstructionTargeter[] the_trgtrs) {
     for (int i = 0; i < the_trgtrs.length; i++) {
-      an_ins.addTargeter(the_trgtrs[i]);
+      an_nins.addTargeter(the_trgtrs[i]);
+      the_trgtrs[i].updateTarget(an_oins, an_nins);
     }
   }
 
@@ -334,19 +341,20 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * shifted one position further.
    *
    * @param a_methodgen the method generation structure to add to the controller
-   * @param an_ino the instruction number in the instruction list
+   * @param an_ino the instruction number in the instruction list starting with
+   *   1 (TODO: this is not implemented now) 
    */
   public final void makeHandleForPosition(final MethodGen a_methodgen,
                         final int an_ino) {
     this.my_methodgen = a_methodgen;
     this.my_instr_list = a_methodgen.getInstructionList();
     final Instruction ins = getInstruction();
-    if (an_ino > 0) {
+    if (an_ino < my_instr_list.getInstructionHandles().length) {
       final InstructionHandle prevInstr =
-        my_instr_list.getInstructionHandles()[an_ino - 1];
+        my_instr_list.getInstructionHandles()[an_ino];
       this.my_instr_handle = my_instr_list.insert(prevInstr, ins);
     } else {
-      this.my_instr_handle =  my_instr_list.insert(ins);
+      this.my_instr_handle =  my_instr_list.append(ins);
     }
   }
 
@@ -368,7 +376,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
       if (candidate == null) {
         candidate = my_instr_handle.getPrev();
       }
-      addTargeters(candidate, targeters);
+      addTargeters(candidate, my_instr_handle, targeters);
       my_instr_handle.removeAllTargeters();
     }
     try {
@@ -398,15 +406,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
   /**
    * Returns <code>true</code> when a BCEL method representation must be
    * associated with the current line controller. In case of the
-   * {@link InstructionLineController} objects this holds when the current
-   * instruction is correct.
+   * {@link InstructionLineController} objects this always holds.
    *
    * @return <code>true</code> when a BCEL method representation must be
    *   associated with the current line controller, otherwise
    *   <code>false</code>
    */
   public boolean needsMg() {
-    return correct();
+    return true;
   }
 
   /**

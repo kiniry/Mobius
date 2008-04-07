@@ -121,10 +121,10 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * This method is a lazy getter for the scanner object. It checks if the
    * corresponding field is <code>null</code>. If so it generates a new
-   * {@ref BytecodeScanner} object and registers in it a default return
-   * token. This is {@ref ColorValues#DEFAULT}.
+   * {@link BytecodeScanner} object and registers in it a default return
+   * token. This is {@link ColorValues#DEFAULT}.
    *
-   * @return the bytecode scanner object
+   * @return the byte code scanner object
    */
   protected final BytecodeScanner getBytecodeScanner() {
     if (my_scanner == null) {

@@ -218,11 +218,13 @@ public class DocumentSynchroniser {
       final int[] syncLine = syncSB(my_bcode_doc.getJavaClass(), line);
       final int syncPos = my_bcode_doc.getLineOffset(syncLine[0]);
       final int syncLen = my_bcode_doc.getLineOffset(syncLine[1] + 1) - syncPos;
-      an_editor.getEditorSite().getPage().activate(an_editor);
+
+      final BytecodeEditor be = my_bcode_doc.getEditor();
+      an_editor.getEditorSite().getPage().activate(be);
       if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode",
                                                "Synchronisation failed");
-      else ((AbstractDecoratedTextEditor)an_editor).getSelectionProvider().
-                             setSelection(new TextSelection(syncPos, syncLen));
+      else ((AbstractDecoratedTextEditor)be).getSelectionProvider().
+                            setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
       e.printStackTrace();
     }

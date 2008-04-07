@@ -339,7 +339,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
       } else if (newlc.needsMg()) {
         final InstructionLineController ilc = (InstructionLineController) newlc;
         final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
-        ilc.makeHandleForPosition(mg, getCurrentPositionInMethod(i));
+        ilc.makeHandleForPosition(mg, getCurrentPositionInMethod(i) + 1);
       } else if (oldlc.hasMg()) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;

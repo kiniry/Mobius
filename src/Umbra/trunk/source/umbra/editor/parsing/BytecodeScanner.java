@@ -26,7 +26,7 @@ import umbra.editor.ColorValues;
  * This class is responsible for colouring these texts in a byte code
  * editor window which are outside BML annotations areas. This class uses
  * special 9 rules which describe the way the different areas are
- * coloured. Colors are chosen as a token array with a particular colouring
+ * coloured. Colours are chosen as a token array with a particular colouring
  * style given in the constructor.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -35,7 +35,7 @@ import umbra.editor.ColorValues;
 public class BytecodeScanner extends RuleBasedScanner {
 
   /**
-   * TODO.
+   * TODO. 
    */
   private static final int RULE_EOL = 0;
 
@@ -242,7 +242,7 @@ public class BytecodeScanner extends RuleBasedScanner {
 
   /**
    * This method associates in <code>the_insrule</code> the words of the
-   * bytecode instructions with the token in <code>the_tokens</code> under
+   * byte code instructions with the token in <code>the_tokens</code> under
    * {@link ColorValues#BTC_INSTR}.
    * TODO - better description needed
    *

@@ -15,8 +15,7 @@ Require-Bundle: org.apache.bcel_5.1,
  org.eclipse.ui.ide,
  org.eclipse.ui.workbench.texteditor,
  mobius.bmllib
-Bundle-ClassPath: libs/asm.jar,
- .
+Bundle-ClassPath: .
 Eclipse-LazyStart: true
 Bundle-Activator: umbra.UmbraPlugin
 Bundle-Vendor: Mobius

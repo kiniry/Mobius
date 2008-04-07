@@ -26,7 +26,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextEditor;
@@ -412,4 +414,16 @@ public class BytecodeEditor extends TextEditor {
     if (am != null) am.connect(a_doc);
     sv.refresh();
   }
+
+  public int getVisibleRegion() {
+    ISourceViewer isv = getSourceViewer();
+    return isv.getTextWidget().getTopIndex();
+  }
+
+  public void setVisibleRegion(int firstVisible) {
+    setFocus(); //to make sure source viewer exists
+    ISourceViewer isv = getSourceViewer();
+    isv.getTextWidget().setTopIndex(firstVisible);
+  }
+
 }

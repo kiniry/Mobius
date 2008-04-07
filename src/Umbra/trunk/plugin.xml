@@ -57,7 +57,6 @@
                <separator name="helpGroup"/>
          </menu>
          <action
-               toolbarPath="historyGroup"
                label="&amp;Add to history"
                tooltip="Add to history"
                class="umbra.editor.actions.history.HistoryAction"
@@ -65,7 +64,6 @@
                menubarPath="umbra.bytecodeMenu/historyGroup"
                id="umbra.history"/>
          <action
-               toolbarPath="historyGroup"
                label="&amp;Clear history"
                tooltip="Clear history"
                class="umbra.editor.actions.history.ClearHistoryAction"
@@ -73,7 +71,6 @@
                menubarPath="umbra.bytecodeMenu/historyGroup"
                id="umbra.clearHistory"/>
          <action
-               toolbarPath="helpGroup"
                label="&amp;Installation info"
                tooltip="Installation info"
                class="umbra.editor.actions.info.InstalInfoAction"
@@ -81,7 +78,6 @@
                menubarPath="umbra.bytecodeMenu/helpGroup"
                id="umbra.instalInfo"/>
          <action
-               toolbarPath="helpGroup"
                label="&amp;User guide"
                tooltip="User guide"
                class="umbra.editor.actions.info.UserGuideAction"

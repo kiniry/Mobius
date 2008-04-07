@@ -68,7 +68,7 @@ public class BytecodeDocument extends Document {
   private boolean my_ready_flag; //@ initially false;
 
   /**
-   * TODO
+   * TODO.
    * Contains the texts of end-of-line comments, the
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account

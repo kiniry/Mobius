@@ -76,7 +76,7 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
 
 
   /**
-   * TODO.
+   * TODO. 
    */
   public BytecodePartitionScanner() {
 

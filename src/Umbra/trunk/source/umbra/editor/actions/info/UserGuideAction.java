@@ -17,7 +17,7 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 
 /**
  * The class implements the behaviour in case the User Guide button
- * in the bytecode editor is pressed.
+ * in the byte code editor is pressed.
  *
  * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -52,7 +52,7 @@ public class UserGuideAction implements IEditorActionDelegate {
 
 
   /**
-   * The method reacts when the selected area changes in the bytecode
+   * The method reacts when the selected area changes in the byte code
    * editor. Currently, it does nothing.
    *
    * @param an_action the action which triggered the selection change
