@@ -17,10 +17,10 @@ import escjava.sortedProver.simplify.SimplifyNodeBuilder.Sx;
 import escjava.sortedProver.NodeBuilder;
 import escjava.translate.VcToString;
 
-import escjava.sortedProver.simplify.SimplifyProver;
+import escjava.sortedProver.simplify.SimplifySortedProver;
 
 /*@ non_null_by_default @*/
-public class Z3Prover extends SimplifyProver
+public class Z3Prover extends SimplifySortedProver
 {
   public Z3Prover() {
     super(new String[]{System.getProperty("z3", "z3"), "/si"});

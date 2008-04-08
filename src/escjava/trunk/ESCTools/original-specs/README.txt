@@ -1,4 +1,4 @@
-These specs are close to the original specs shipeed with Esc/Java.
+These specs are close to the original specs shipped with Esc/Java.
 They are modified where necessary to be consistent with current syntax
 and typechecking of Esc/Java2.  These are used as a stable set of specs to
 use when running many of the original tests that are part of the Esc/Java2

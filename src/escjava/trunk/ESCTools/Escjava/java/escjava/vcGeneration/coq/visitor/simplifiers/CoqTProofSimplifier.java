@@ -82,7 +82,7 @@ import escjava.vcGeneration.TUnset;
  * @author C. Hurlin
  * @version 14/11/2005
  */
-public class TProofSimplifier extends ATSimplifier {
+public class CoqTProofSimplifier extends ATSimplifier {
 
 
     /*

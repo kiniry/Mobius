@@ -28,7 +28,7 @@ import escjava.vcGeneration.TypeInfo;
 import escjava.vcGeneration.VariableInfo;
 import escjava.vcGeneration.coq.visitor.simplifiers.TAndRemover;
 import escjava.vcGeneration.coq.visitor.simplifiers.TNotRemover;
-import escjava.vcGeneration.coq.visitor.simplifiers.TProofSimplifier;
+import escjava.vcGeneration.coq.visitor.simplifiers.CoqTProofSimplifier;
 import escjava.vcGeneration.coq.visitor.simplifiers.TProofSplitter;
 import escjava.vcGeneration.coq.visitor.simplifiers.TProofTyperVisitor;
 
@@ -175,7 +175,7 @@ public class CoqProver extends ProverType {
 	private TRoot simplifyProofObligation(TRoot term) {
         TProofTyperVisitor tptv = new TProofTyperVisitor();
         term.accept(tptv);
-		TProofSimplifier tps = new TProofSimplifier();
+		CoqTProofSimplifier tps = new CoqTProofSimplifier();
     	term.accept(tps);
     	TNotRemover tfr = new TNotRemover();
     	term.accept(tfr);

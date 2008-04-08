@@ -18,7 +18,7 @@ import escjava.sortedProver.NodeBuilder;
 import escjava.translate.VcToString;
 
 /*@ non_null_by_default @*/
-public class SimplifyProver extends SortedProver
+public class SimplifySortedProver extends SortedProver
 {
 	private SimplifyNodeBuilder nodeBuilder;
 	private SimplifyProcess simpl;
@@ -30,11 +30,11 @@ public class SimplifyProver extends SortedProver
   private SortedProverResponse no;
   private SortedProverResponse fail;
 
-  public SimplifyProver() {
+  public SimplifySortedProver() {
     this(new String[] {System.getProperty("simplify", "simplify")});
   }
 
-  public SimplifyProver(String[] cmd) {
+  public SimplifySortedProver(String[] cmd) {
     nodeBuilder = new SimplifyNodeBuilder();
     backPred = new BackPred();
     ok = new SortedProverResponse(SortedProverResponse.OK);

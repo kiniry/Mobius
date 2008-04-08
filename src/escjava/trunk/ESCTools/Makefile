@@ -171,7 +171,7 @@ fix-perms:	.perms-fixed
 
 # To really clean, we need to clean Javafe last since some of its
 # tools are used in cleaning.
-clean: clean-norel clean-release clean-release-test clean-norel-noreltemp cleanup
+clean: clean-norel clean-release clean-release-test clean-norel-noreltemp cleanup clean-maven
 
 # Cleans out the release directory
 clean-release:
@@ -714,15 +714,27 @@ ifdef COMSPEC
 endif
 
 ################################################################################
-## Continuous Integration Testing
+## Maven pre-configuration
 
-.PHONY: pre-maven
+.PHONY: pre-maven clean-maven pre-maven-compile pre-maven-test
  	
-## Copy files to default locations expected by maven
-pre-maven:
+## Copy all Java files to default locations expected by Maven
+pre-maven: clean-maven pre-maven-compile pre-maven-test
+
+pre-maven-compile:
 	mkdir -p src/main/java
+	find ${ESCTOOLS_ROOT}/Escjava/java/escjava -name "*.java" -exec cp -f {} src/main/java \;
+	find ${ESCTOOLS_ROOT}/Escjava/mochalib/java -name "*.java" -exec cp -f {} src/main/java \;
+	
+pre-maven-test:
 	mkdir -p src/test/java
-	find ${ESCTOOLS_ROOT}/Escjava/java -name "*.java" -exec cp -f {} src/main/java \;
-	find ${ESCTOOLS_ROOT}/Escjava/test -name "*.java" -exec cp -f {} src/test/java \;
+	find ${ESCTOOLS_ROOT}/Utils/junitutils -name "*.java" -exec cp -f {} src/test/java \;
+	find ${ESCTOOLS_ROOT}/Escjava/test/escjava/test -name "*.java" -exec cp -f {} src/test/java \;
+	find ${ESCTOOLS_ROOT}/Escjava/test/jdktests -name "*.java" -exec cp -f {} src/test/java \;
+	find ${ESCTOOLS_ROOT}/Escjava/test/junittests -name "*.java" -exec cp -f {} src/test/java \;
+	
+clean-maven:
+	-rm -rf ${ESCTOOLS_ROOT}/src/main/java/*.java
+	-rm -rf ${ESCTOOLS_ROOT}/src/test/java/*.java 
 
 # End of Makefile
