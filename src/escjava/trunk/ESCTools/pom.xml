@@ -1,51 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>ie.ucd.mobius</groupId>
+  <groupId>mobius</groupId>
   <artifactId>ESCJava2</artifactId>
   <packaging>jar</packaging>
   <version>2.0b5</version>
   <name>ESCJava2</name>
   <url>http://mobius.ucd.ie</url>
-  <repositories>
-    <repository>
-      <id>MOBIUS</id>
-      <name>MOBIUS Repository</name>
-      <layout>default</layout>
-      <url>http://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-  <build>
-    <resources>
-      <resource>
-        <directory>Utils</directory>
-        <includes>
-          <include>**/*.jar</include>
-        </includes>
-      </resource>
-    </resources>
-  </build>
-  <ciManagement>
-    <system>MOBIUS</system>
-    <url>http://mobius.ucd.ie</url>
-    <notifiers>
-      <notifier>
-        <type>mail</type>
-        <sendOnError>true</sendOnError>
-        <sendOnFailure>true</sendOnFailure>
-        <sendOnSuccess>false</sendOnSuccess>
-        <sendOnWarning>false</sendOnWarning>
-        <configuration><address>mobius-ticket@mobius.ucd.ie</address></configuration>
-      </notifier>
-    </notifiers>
-  </ciManagement>
-  <scm>
-    <connection>scm:svn:https://mobius.ucd.ie/repos</connection>
-    <developerConnection>scm:svn:https://mobius.ucd.ie/repos/</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools</url>
-  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>mobius</groupId>
+      <artifactId>javafe</artifactId>
+      <version>2.0.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tools</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.6.5</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>

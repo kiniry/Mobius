@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ESCTools
-Bundle-SymbolicName: ESCTools
-Bundle-Version: 1.0.0
+Bundle-Name: ESCJava2
+Bundle-SymbolicName: ESCJava2
+Bundle-Version: 2.0.5
 Bundle-ClassPath: ESCTools.jar,
  Utils/junit.jar,
  Utils/ant.jar,
@@ -14,6 +14,7 @@ Export-Package:
  escjava.ant,
  escjava.ast,
  escjava.backpred,
+ escjava.completeness,
  escjava.dfa.buildcfd,
  escjava.dfa.cfd,
  escjava.dfa.daganalysis,
@@ -31,6 +32,7 @@ Export-Package:
  escjava.sortedProver.fx7pg,
  escjava.sortedProver.simplify,
  escjava.sortedProver.trew,
+ escjava.sortedProver.z3,
  escjava.soundness,
  escjava.sp,
  escjava.tc,
@@ -46,18 +48,13 @@ Export-Package:
  escjava.vcGeneration.simplify,
  escjava.vcGeneration.xml,
  images,
- javafe,
- javafe.ast,
- javafe.decsrc,
- javafe.filespace,
- javafe.genericfile,
- javafe.parser,
- javafe.parser.test,
- javafe.reader,
- javafe.tc,
- javafe.test,
- javafe.test.lex,
- javafe.util,
+ java.io,
+ java.lang,
+ java.lang.reflect,
+ java.math,
+ java.net,
+ java.util,
+ java.util.regex,
  junit.awtui,
  junit.extensions,
  junit.framework,
@@ -103,6 +100,7 @@ Export-Package:
  org.apache.xmlrpc.secure,
  org.apache.xmlrpc.util,
  org.xml.sax,
- tohtml,
  uk.co.wilson.xml,
  uk.org.xml.sax
+Eclipse-JREBundle: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

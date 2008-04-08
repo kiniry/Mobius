@@ -716,20 +716,13 @@ endif
 ################################################################################
 ## Continuous Integration Testing
 
-.PHONY: update-test self-update pre-maven maven
-
-self-update: clean
-	svn update
-	
-pre-smoke-test: self-update build
+.PHONY: pre-maven
  	
-## Copy all source to a location expected by maven
-pre-maven: pre-smoke-test
+## Copy files to default locations expected by maven
+pre-maven:
 	mkdir -p src/main/java
 	mkdir -p src/test/java
-	find $(ESCTOOLS_ROOT)/Escjava/java -name "*.java" -exec cp -f {} src/main/java \;
-	find $(ESCTOOLS_ROOT)/Escjava/test -name "*.java" -exec cp -f {} src/test/java \;
+	find ${ESCTOOLS_ROOT}/Escjava/java -name "*.java" -exec cp -f {} src/main/java \;
+	find ${ESCTOOLS_ROOT}/Escjava/test -name "*.java" -exec cp -f {} src/test/java \;
 
-maven: pre-maven
-	/usr/local/apache-maven/apache-maven-2.0.8/bin/mvn test
 # End of Makefile
