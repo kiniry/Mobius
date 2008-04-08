@@ -32,7 +32,7 @@ public abstract class BytecodeControllerComments
    * The string may contain several lines of text. For a given instruction,
    * the string contains the comment that is located after it.
    * FIXME: this functionality is not realised in the current version.
-   *
+   *        https://mobius.ucd.ie/ticket/555
    * @see #getInterlineComments()
    */
   private Hashtable my_interline;

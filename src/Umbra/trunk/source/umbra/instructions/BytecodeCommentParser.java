@@ -54,7 +54,7 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    * in the byte code editor and the multi-line comments in these lines.
    * The comments must be absent from the line representation for their
    * correct parsing so they are held in this additional structure.
-   * FIXME: this is not handled properly
+   * FIXME: this is not handled properly; https://mobius.ucd.ie/ticket/555
    */
   private Hashtable my_interline_comments;
 

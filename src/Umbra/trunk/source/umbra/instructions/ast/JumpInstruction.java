@@ -50,6 +50,7 @@ import umbra.instructions.InstructionParser;
  *    <li>subroutine instructions.</li>
  * </ul>
  * FIXME: "lookupswitch", "tableswitch" are handled in a special simplified way.
+ *        https://mobius.ucd.ie/ticket/552
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
@@ -88,6 +89,7 @@ public class JumpInstruction extends NumInstruction {
    *    whitespase number : whitespace mnemonic whitespace # number
    *    whitespace lineend
    * FIXME: tableswitch and lookupswitch are handled in a special way
+   *        https://mobius.ucd.ie/ticket/552
    *
    * @return <code>true</code> when the syntax of the instruction line is
    *         correct

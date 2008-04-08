@@ -142,7 +142,7 @@ public class InstructionNameParser extends InstructionParserGeneric {
    * </pre>
    *
    * FIXME: this is not based on a part of JLS as I do not know where to find
-   * that
+   *        that; https://mobius.ucd.ie/ticket/553
    *
    * @return <code>true</code> when the class name has been successfully
    *   swallowed, <code>false</code> otherwise.
@@ -173,7 +173,7 @@ public class InstructionNameParser extends InstructionParserGeneric {
    * We additionally assume that a Java method is finished when it is followed
    * by whitespace.
    *
-   * @return <code>true</code> when the method name has been suceessfully
+   * @return <code>true</code> when the method name has been successfully
    *   swallowed, <code>false</code> otherwise.
    */
   protected boolean swallowMethodName() {
@@ -185,7 +185,8 @@ public class InstructionNameParser extends InstructionParserGeneric {
       incIndex();
     }
     if (line.charAt(getIndex()) == '<') {
-      swallowDelimiter('<'); //FIXME this is a hack to parse <init>
+      swallowDelimiter('<');
+        //FIXME this is a hack to parse <init>; https://mobius.ucd.ie/ticket/554
       swallowIdentifier();
       return swallowDelimiter('>');
     }

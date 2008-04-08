@@ -74,7 +74,7 @@ public abstract class BytecodeControllerContainer extends
    * @param a_interline contains the texts of interline comments, the
    *   i-th entry contains the comment for the i-th line in the document,
    *   if this parameter is null then the array is not taken into account
-   *   FIXME: currently ignored
+   *   FIXME: currently ignored; https://mobius.ucd.ie/ticket/555
    * @return the string with the text of the document combined with the comments
    * @throws UmbraLocationException thrown in case a position has been reached
    *   which is outside the current document

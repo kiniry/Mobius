@@ -41,6 +41,7 @@ public class UserGuideAction implements IEditorActionDelegate {
    * FIXME the method should open something more specific, note that it is
    * tricky to know the proper ID to open it should open something like
    * Info/guide.txt
+   * https://mobius.ucd.ie/ticket/556
    *
    * @param an_action action that triggered the showing of the instruction
    */
