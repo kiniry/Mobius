@@ -277,16 +277,20 @@ public final class BytecodeController extends BytecodeControllerContainer {
    *   added
    * @param a_methgen the method generation object to associate with the added
    *   lines
+   * @throws UmbraException in case wrong {@link BytecodeLineController} is
+   *   met
    */
   private void addEditorLines(final int a_start,
                               final int a_stop,
                               final LinkedList the_lines,
                               final int an_index,
-                              final MethodGen a_methgen) {
+                              final MethodGen a_methgen) throws UmbraException {
     int j = an_index;
     int pos = 0;
     if (a_methgen != null) {
       pos = getCurrentPositionInMethod(a_start);
+      if (pos == BytecodeLineController.WRONG_POSITION_IN_METHOD)
+        throw new UmbraException();
     }
     for (int i = a_start; i <= a_stop; i++, j++, pos++) {
       try {
@@ -339,7 +343,10 @@ public final class BytecodeController extends BytecodeControllerContainer {
       } else if (newlc.needsMg()) {
         final InstructionLineController ilc = (InstructionLineController) newlc;
         final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
-        ilc.makeHandleForPosition(mg, getCurrentPositionInMethod(i) + 1);
+        final int pos = getCurrentPositionInMethod(i);
+        if (pos == BytecodeLineController.WRONG_POSITION_IN_METHOD)
+          throw new UmbraException();
+        ilc.makeHandleForPosition(mg, pos + 1);
       } else if (oldlc.hasMg()) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;
@@ -355,10 +362,10 @@ public final class BytecodeController extends BytecodeControllerContainer {
    * corresponding to the given position. The method searches for the first
    * instruction line before the given position. In case the header line
    * controller is met before any line controller, it assumes that the line
-   * is associated with the number 0. In case a line controller is met,
+   * is associated with the number -1. In case a line controller is met,
    * the number of its instruction in the current method is returned. This
-   * method may return -1 in case the line controller has no association with
-   * an instruction in the BCEL structures.
+   * method may return {@link BytecodeLineController#WRONG_POSITION_IN_METHOD}
+   * in case improper {@link BytecodeLineController} is met.
    *
    * @param a_pos the number of the line in the editor
    * @return instruction number (starting with 0) in the current method
@@ -369,7 +376,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
       if (bcl.hasMg()) {
         return bcl.getNoInMethod();
       } else if (bcl instanceof HeaderLineController) {
-        return 0;
+        return -1;
       }
     }
     return 0;

@@ -40,6 +40,12 @@ import umbra.instructions.InstructionParser;
 public abstract class BytecodeLineController {
 
   /**
+   * The constant returned that the byte code line cannot be assigned a
+   * meaningful position inside a method.
+   */
+  public static final int WRONG_POSITION_IN_METHOD = -2;
+
+  /**
    * This is an object contains a parser which allows to check the
    * correctness of the byte code line and to parse its parameters.
    */
@@ -238,14 +244,14 @@ public abstract class BytecodeLineController {
   /**
    * This method returns the number of the instruction handled by the current
    * line controller. If no instruction can be associated with the line
-   * the value -1 is returned. In case of {@link BytecodeLineController},
-   * this method always returns -1.
+   * the value -2 is returned. In case of {@link BytecodeLineController},
+   * this method always returns -2.
    *
-   * @return the number of the instruction or -1 in case the number cannot
+   * @return the number of the instruction or -2 in case the number cannot
    *   be determined
    */
   public int getNoInMethod() {
-    return -1;
+    return WRONG_POSITION_IN_METHOD;
   }
 
   /**

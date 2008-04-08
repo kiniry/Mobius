@@ -342,7 +342,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *
    * @param a_methodgen the method generation structure to add to the controller
    * @param an_ino the instruction number in the instruction list starting with
-   *   1 (TODO: this is not implemented now) 
+   *   0 (zero)
    */
   public final void makeHandleForPosition(final MethodGen a_methodgen,
                         final int an_ino) {
