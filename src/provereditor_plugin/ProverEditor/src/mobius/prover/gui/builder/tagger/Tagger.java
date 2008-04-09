@@ -20,7 +20,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 
 
-
+/**
+ * This class performs the handling of the tagging. 
+ * It is used to load the tags, write the tags to disk.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class Tagger {
   /** the current instance of the tagger. */
   public static final Tagger instance = new Tagger();  
@@ -116,7 +120,7 @@ public class Tagger {
         
       } 
       catch (final IOException e) {
-        Logger.err.println("There was a proble loading " + fFilename + ".");
+        Logger.err.println("There was a problem loading " + fFilename + ".");
       }
     }
     else {
@@ -194,31 +198,54 @@ public class Tagger {
     final Pattern[][] pats = pr.getTranslator().getTagPatterns();
     final TagList l = new TagList();
     final ProverFileReader lnr = new ProverFileReader(new FileReader(file));
+    final Path path = new Path(file.getAbsolutePath());
     String str;
     int offset = 0;
     int line = 0;
     while ((str = lnr.readLine()) != null) {
       line++;
-      final String old = str;
-      for (int i = 0; i < pats.length; i++) {
-        str = old;
-        Matcher m = pats[i][0].matcher(str);
-        if (m.find()) {
-          final int wordbeg = m.end() + offset;
-          str = str.substring(m.end());
-          m = pats[i][1].matcher(str);
-          m.find();
-          str = str.substring(0, m.end());
-//          int wordend = m.end() + wordbeg;
-          l.add(new TagStruct(str, new Path(file.getAbsolutePath()), 
-                              str, wordbeg, line));
+      for (Pattern [] p: pats) {
+        final TagStruct ts = match(str, p, path, line, offset);
+        if (ts != null) {
+          l.add(ts);
           break;
         }
+        
       }
       offset += lnr.getCount();
     }
     lnr.close();
     fTags.add(file.getAbsolutePath(), l);
+  }
+
+  /**
+   * Return the matching tag, if the given pattern matches.
+   * @param str The String on which to match which is given from the
+   * specified file
+   * @param p the pattern to find
+   * @param file the file on which the pattern matching is done
+   * @param line the current line number in the file
+   * @param offset the current offset at the beginning of the line
+   * @return a valid tag, or null if the matching failed
+   */
+  private static TagStruct match(final String str, final Pattern [] p, 
+                                 final Path file, 
+                                 final int line, final int offset) {
+    String text = str;
+    final Matcher textMatch = p[0].matcher(str);
+    if (textMatch.find()) {
+      final int wordbeg = textMatch.start() + offset;
+      String name = text.substring(textMatch.end());
+      final Matcher nameMatch = p[1].matcher(str);
+      if (nameMatch.find()) {
+        name = name.substring(0, nameMatch.end());
+        text = text.substring(textMatch.start(), 
+                              textMatch.end() + nameMatch.end());
+        return new TagStruct(name, file,
+                             text, wordbeg, line);
+      }
+    }
+    return null;
   }
 
 
