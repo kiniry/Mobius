@@ -1,36 +1,36 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModifiesPure.java: Caution: Using given file as the .java file, even though it is not the java file for ModifiesPure on the classpath
-    [0.0020 s 23411552 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java: Caution: Using given file as the .java file, even though it is not the java file for ModifiesPure on the classpath
+    [0.0020 s 20904880 bytes]
 
 ModifiesPure ...
-src/test/resources/ModifiesPure.java:7: Error: A pure method may not have a modifies clause
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java:7: Error: A pure method may not have a modifies clause
         //@ modifies i;                 // WARNING
                      ^
-src/test/resources/ModifiesPure.java:2: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java:2: Associated declaration: 
 //@ pure
     ^
-src/test/resources/ModifiesPure.java:12: Error: A pure method may not have a modifies clause
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java:12: Error: A pure method may not have a modifies clause
         //@     assignable i;           // WARNING
                            ^
-src/test/resources/ModifiesPure.java:2: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java:2: Associated declaration: 
 //@ pure
     ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.015 s 24067872 bytes total] (aborted)
+  [0.011 s 21553424 bytes total] (aborted)
 
 ModifiesPureA ...
-src/test/resources/ModifiesPure.java:24: Error: A pure method may not have a modifies clause
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java:24: Error: A pure method may not have a modifies clause
         //@ modifies i;                 // WARNING
                      ^
-src/test/resources/ModifiesPure.java:25: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java:25: Associated declaration: 
         //@ pure
             ^
-src/test/resources/ModifiesPure.java:30: Error: A pure method may not have a modifies clause
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java:30: Error: A pure method may not have a modifies clause
         //@     assignable i;           // WARNING
                            ^
-src/test/resources/ModifiesPure.java:34: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesPure.java:34: Associated declaration: 
         public /*@ pure @*/ void n();
                    ^
-  [0.0020 s 24095904 bytes total] (aborted)
+  [0.0030 s 21583920 bytes total] (aborted)
 2 cautions
 4 errors

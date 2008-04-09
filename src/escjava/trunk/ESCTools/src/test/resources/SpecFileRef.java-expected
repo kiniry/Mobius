@@ -1,9 +1,9 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/SpecFileRef.java: Caution: Using given file as the .java file, even though it is not the java file for SpecFileRef on the classpath
-    [0.0020 s 23780040 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SpecFileRef.java: Caution: Using given file as the .java file, even though it is not the java file for SpecFileRef on the classpath
+    [0.0010 s 22750376 bytes]
 
 SpecFileRef ...
-src/test/resources/SpecFileRef.java:3: Fatal error: Can't find type named "SpecFileHelper"
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SpecFileRef.java:3: Fatal error: Can't find type named "SpecFileHelper"
 public class SpecFileRef extends SpecFileHelper {
                                  ^
 1 caution

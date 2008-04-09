@@ -1,24 +1,24 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/AllposLS.java: Caution: Using given file as the .java file, even though it is not the java file for AllposLS on the classpath
-    [0.01 s 17397872 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AllposLS.java: Caution: Using given file as the .java file, even though it is not the java file for AllposLS on the classpath
+    [0.0060 s 15884032 bytes]
 
 AllposLS ...
-  Prover started:0.057 s 17755480 bytes
-    [0.189 s 17823272 bytes]
+  Prover started:0.058 s 16963624 bytes
+    [0.175 s 17030392 bytes]
 
 AllposLS: AllposLS() ...
-    [0.0 s 17824296 bytes]  passed immediately
+    [0.0 s 17031416 bytes]  passed immediately
 
 AllposLS: allpos(int[], int) ...
-    [0.0 s 17826488 bytes]  passed immediately
+    [0.0 s 17034632 bytes]  passed immediately
 
 AllposLS: diff(int[], int) ...
-    [0.0 s 17828680 bytes]  passed immediately
+    [0.0 s 17036824 bytes]  passed immediately
 
 AllposLS: allposLoop(int[]) ...
-    [0.51 s 17811816 bytes]  passed
+    [0.551 s 17433568 bytes]  passed
 
 AllposLS: allposLoop2(int[]) ...
-    [0.281 s 17576312 bytes]  passed
-  [0.981 s 17577384 bytes total]
+    [0.379 s 17270960 bytes]  passed
+  [1.106 s 17272032 bytes total]
 1 caution

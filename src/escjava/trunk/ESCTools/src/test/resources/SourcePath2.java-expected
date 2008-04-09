@@ -1,19 +1,19 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/SourcePath2.java: Caution: Using given file as the .java file, even though it is not the java file for SourcePath2 on the classpath
-src/test/resources/SourcePath2.java:3: Error: Could not find file referenced in refine annotation: SourcePath2.spec
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SourcePath2.java: Caution: Using given file as the .java file, even though it is not the java file for SourcePath2 on the classpath
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SourcePath2.java:3: Error: Could not find file referenced in refine annotation: SourcePath2.spec
 //@ refine "SourcePath2.spec";
     ^
-    [0.0010 s 23943120 bytes]
+    [0.0020 s 21987784 bytes]
 
 SourcePath2 ...
-  Prover started:0.063 s 24111904 bytes
-    [0.179 s 24177936 bytes]
+  Prover started:0.064 s 21950992 bytes
+    [0.205 s 22016000 bytes]
 
 SourcePath2: m() ...
-    [0.07 s 24223200 bytes]  passed
+    [0.056 s 22061208 bytes]  passed
 
 SourcePath2: SourcePath2() ...
-    [0.0070 s 24372912 bytes]  passed
-  [0.257 s 24373936 bytes total]
+    [0.0090 s 22211944 bytes]  passed
+  [0.27 s 22212968 bytes total]
 1 caution
 1 error

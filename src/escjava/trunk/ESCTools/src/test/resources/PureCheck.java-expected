@@ -1,33 +1,33 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/PureCheck.java:30: Caution: Conditional assignable clauses are no longer supported and are ignored
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck.java:30: Caution: Conditional assignable clauses are no longer supported and are ignored
         //@ modifies j if m()+nn() == 0;
                        ^
-src/test/resources/PureCheck.java: Caution: Using given file as the .java file, even though it is not the java file for PureCheck on the classpath
-src/test/resources/PureCheck.java:40: Error: Unexpected pragma in a code_contract section
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck.java: Caution: Using given file as the .java file, even though it is not the java file for PureCheck on the classpath
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck.java:40: Error: Unexpected pragma in a code_contract section
         //@ diverges m() + n() > 0;
             ^
-    [0.0060 s 23229632 bytes]
+    [0.0050 s 21261896 bytes]
 
 PureCheck ...
-src/test/resources/PureCheck.java:35: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck.java:35: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
         //@ signals (Exception e) m() + n() > 0;
                      ^
-src/test/resources/PureCheck.java:30: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck.java:30: Associated declaration: 
         //@ modifies j if m()+nn() == 0;
             ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.039 s 23833416 bytes total] (aborted)
+  [0.036 s 21645344 bytes total] (aborted)
 
 A ...
-  [0.0020 s 23917192 bytes total]
+  [0.0010 s 21729176 bytes total]
 
 B ...
-  [0.0 s 23918216 bytes total]
+  [0.0 s 21730200 bytes total]
 
 C ...
-  [0.0 s 23919240 bytes total]
+  [0.0 s 21731224 bytes total]
 
 D ...
-  [0.0 s 23920264 bytes total]
+  [0.0 s 21732248 bytes total]
 3 cautions
 2 errors

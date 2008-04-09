@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/MultipleAtError1.java: Caution: Using given file as the .java file, even though it is not the java file for MultipleAtError1 on the classpath
-    [0.0010 s 23880736 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MultipleAtError1.java: Caution: Using given file as the .java file, even though it is not the java file for MultipleAtError1 on the classpath
+    [0.0010 s 21650152 bytes]
 
 MultipleAtError1 ...
-  Prover started:0.061 s 24228880 bytes
-    [0.179 s 24296360 bytes]
+  Prover started:0.124 s 21855520 bytes
+    [0.254 s 21923000 bytes]
 
 MultipleAtError1: p() ...
-    [0.07 s 24345720 bytes]  passed
+    [0.19 s 21973440 bytes]  passed
 
 MultipleAtError1: MultipleAtError1() ...
-    [0.0080 s 24509824 bytes]  passed
-  [0.258 s 24510848 bytes total]
+    [0.016 s 22135480 bytes]  passed
+  [0.461 s 22136504 bytes total]
 1 caution

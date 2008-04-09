@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Modifies.java: Caution: Using given file as the .java file, even though it is not the java file for Modifies on the classpath
-    [0.0030 s 23803960 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Modifies.java: Caution: Using given file as the .java file, even though it is not the java file for Modifies on the classpath
+    [0.0030 s 20602704 bytes]
 
 Modifies ...
-  Prover started:0.07 s 24203208 bytes
-    [0.199 s 24268904 bytes]
+  Prover started:0.062 s 21628784 bytes
+    [0.178 s 21694480 bytes]
 
 Modifies: m() ...
-    [0.09 s 24364288 bytes]  passed
+    [0.065 s 21790944 bytes]  passed
 
 Modifies: Modifies() ...
-    [0.0090 s 24525304 bytes]  passed
-  [0.299 s 24526328 bytes total]
+    [0.013 s 21950880 bytes]  passed
+  [0.256 s 21951904 bytes total]
 1 caution

@@ -1,27 +1,27 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/MAINT.java: Caution: Using given file as the .java file, even though it is not the java file for MAINT on the classpath
-    [0.0010 s 20824832 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MAINT.java: Caution: Using given file as the .java file, even though it is not the java file for MAINT on the classpath
+    [0.0010 s 19560752 bytes]
 
 MAINT ...
-  Prover started:0.067 s 21824472 bytes
-    [0.323 s 21889080 bytes]
+  Prover started:0.063 s 20549608 bytes
+    [0.162 s 20614216 bytes]
 
 MAINT: MAINT() ...
-    [0.269 s 22038816 bytes]  passed
+    [0.076 s 20763952 bytes]  passed
 
 MAINT: m() ...
 ------------------------------------------------------------------------
-src/test/resources/MAINT.java:10: Warning: Loop invariant possibly does not hold (LoopInv)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MAINT.java:10: Warning: Loop invariant possibly does not hold (LoopInv)
         while (i > 0) { --i; }
               ^
-Associated declaration is "src/test/resources/MAINT.java", line 8, col 1:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MAINT.java", line 8, col 1:
         maintaining i > 0;
         ^
 Execution trace information:
-    Reached top of loop after 0 iterations in "src/test/resources/MAINT.java", line 10, col 1.
+    Reached top of loop after 0 iterations in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MAINT.java", line 10, col 1.
 
 ------------------------------------------------------------------------
-    [0.152 s 22343176 bytes]  failed
-  [0.744 s 22344200 bytes total]
+    [0.051 s 21070552 bytes]  failed
+  [0.289 s 21071576 bytes total]
 1 caution
 1 warning

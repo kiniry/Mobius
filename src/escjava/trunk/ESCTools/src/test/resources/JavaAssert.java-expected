@@ -1,125 +1,125 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/JavaAssert.java:35: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:35: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert false;
         ^
-src/test/resources/JavaAssert.java:41: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:41: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert true == false;
         ^
-src/test/resources/JavaAssert.java:47: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:47: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p >= 0;
         ^
-src/test/resources/JavaAssert.java:53: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:53: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p >= -1;
         ^
-src/test/resources/JavaAssert.java:60: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:60: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p >= 1;
         ^
-src/test/resources/JavaAssert.java:67: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:67: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p + q == 10;
         ^
-src/test/resources/JavaAssert.java:75: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:75: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p + q == 11;
         ^
-src/test/resources/JavaAssert.java:84: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:84: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p + q >= 0;
         ^
-src/test/resources/JavaAssert.java:95: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:95: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p + q >= 0;
         ^
-src/test/resources/JavaAssert.java: Caution: Using given file as the .java file, even though it is not the java file for JavaAssert on the classpath
-    [0.0060 s 20941808 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java: Caution: Using given file as the .java file, even though it is not the java file for JavaAssert on the classpath
+    [0.017 s 19006448 bytes]
 
 JavaAssert ...
-  Prover started:0.061 s 21056168 bytes
-    [0.181 s 21121152 bytes]
+  Prover started:0.097 s 20132600 bytes
+    [0.288 s 20197600 bytes]
 
 JavaAssert: nothing() ...
-    [0.071 s 21184840 bytes]  passed
+    [0.096 s 20261320 bytes]  passed
 
 JavaAssert: trivial() ...
 ------------------------------------------------------------------------
-src/test/resources/JavaAssert.java:36: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:36: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "src/test/resources/JavaAssert.java", line 32, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java", line 32, col 8:
     //@ ensures false;
         ^
 ------------------------------------------------------------------------
-    [0.015 s 21367672 bytes]  failed
+    [0.017 s 20446968 bytes]  failed
 
 JavaAssert: constant_boolean_expression() ...
 ------------------------------------------------------------------------
-src/test/resources/JavaAssert.java:42: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:42: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "src/test/resources/JavaAssert.java", line 39, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java", line 39, col 8:
     //@ ensures false;
         ^
 ------------------------------------------------------------------------
-    [0.052 s 21535304 bytes]  failed
+    [0.053 s 20615448 bytes]  failed
 
 JavaAssert: assert_matches_precondition(int) ...
-    [0.0050 s 21605416 bytes]  passed
+    [0.0040 s 20684536 bytes]  passed
 
 JavaAssert: assert_weaker_than_precondition(int) ...
-    [0.0040 s 21674760 bytes]  passed
+    [0.0050 s 20754904 bytes]  passed
 
 JavaAssert: assert_stronger_than_precondition(int) ...
 ------------------------------------------------------------------------
-src/test/resources/JavaAssert.java:61: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:61: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "src/test/resources/JavaAssert.java", line 58, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java", line 58, col 8:
     //@ ensures false;
         ^
 ------------------------------------------------------------------------
-    [0.015 s 21860368 bytes]  failed
+    [0.018 s 20942328 bytes]  failed
 
 JavaAssert: constant_arithmetic(int, int) ...
-    [0.0040 s 21943888 bytes]  passed
+    [0.028 s 19239712 bytes]  passed
 
 JavaAssert: constant_arithmetic_dual(int, int) ...
 ------------------------------------------------------------------------
-src/test/resources/JavaAssert.java:76: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:76: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "src/test/resources/JavaAssert.java", line 73, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java", line 73, col 8:
     //@ ensures false;
         ^
 ------------------------------------------------------------------------
-    [0.015 s 22144688 bytes]  failed
+    [0.019 s 19441248 bytes]  failed
 
 JavaAssert: non_trivial_arithmetic(int, int) ...
 ------------------------------------------------------------------------
-src/test/resources/JavaAssert.java:86: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:86: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "src/test/resources/JavaAssert.java", line 82, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java", line 82, col 8:
     //@ ensures 0 <= \result && \result <= 1000*1000;
         ^
 Execution trace information:
-    Executed return in "src/test/resources/JavaAssert.java", line 85, col 8.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java", line 85, col 8.
 
 ------------------------------------------------------------------------
-    [0.02 s 22374608 bytes]  failed
+    [0.032 s 19673408 bytes]  failed
 
 JavaAssert: non_trivial_arithmetic_overflow(int, int) ...
 ------------------------------------------------------------------------
-src/test/resources/JavaAssert.java:97: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java:97: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "src/test/resources/JavaAssert.java", line 93, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java", line 93, col 8:
     //@ ensures false;
         ^
 Execution trace information:
-    Executed return in "src/test/resources/JavaAssert.java", line 96, col 8.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAssert.java", line 96, col 8.
 
 ------------------------------------------------------------------------
-    [0.016 s 22593520 bytes]  failed
+    [0.017 s 19894560 bytes]  failed
 
 JavaAssert: JavaAssert() ...
-    [0.0060 s 22743256 bytes]  passed
-  [0.405 s 22744280 bytes total]
+    [0.0060 s 20044240 bytes]  passed
+  [0.585 s 20045264 bytes total]
 1 caution
 6 warnings
 9 errors

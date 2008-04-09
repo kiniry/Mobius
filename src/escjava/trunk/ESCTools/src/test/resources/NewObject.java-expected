@@ -1,43 +1,43 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/NewObject.java: Caution: Using given file as the .java file, even though it is not the java file for NewObject on the classpath
-    [0.0020 s 23820952 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NewObject.java: Caution: Using given file as the .java file, even though it is not the java file for NewObject on the classpath
+    [0.0030 s 21848936 bytes]
 
 NewObject ...
-  Prover started:0.105 s 24916544 bytes
-    [0.208 s 24992544 bytes]
+  Prover started:0.059 s 22920960 bytes
+    [0.16 s 22996960 bytes]
 
 NewObject: NewObject() ...
-    [0.0010 s 24994648 bytes]  passed immediately
+    [0.0 s 22999008 bytes]  passed immediately
 
 NewObject: m() ...
-    [0.105 s 25123904 bytes]  passed
+    [0.105 s 23127184 bytes]  passed
 
 NewObject: mm() ...
-    [0.05 s 24183336 bytes]  passed
+    [0.029 s 23554856 bytes]  passed
 
 NewObject: mmm() ...
 ------------------------------------------------------------------------
-src/test/resources/NewObject.java:28: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NewObject.java:28: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/NewObject.java", line 20, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NewObject.java", line 20, col 5:
         //@ ensures (new int[5]) != null;
             ^
 Execution trace information:
-    Executed return in "src/test/resources/NewObject.java", line 27, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NewObject.java", line 27, col 2.
 
 ------------------------------------------------------------------------
-    [0.03 s 24535936 bytes]  failed
+    [0.047 s 22155576 bytes]  failed
 
 NewObject: m4() ...
-    [0.016 s 24706488 bytes]  passed
-  [0.41 s 24707512 bytes total]
+    [0.015 s 22325144 bytes]  passed
+  [0.357 s 22326168 bytes total]
 
 NewObjectA ...
-    [0.0 s 24774552 bytes]
+    [0.0010 s 22394288 bytes]
 
 NewObjectA: NewObjectA() ...
-    [0.0 s 24775576 bytes]  passed immediately
-  [0.0080 s 24776600 bytes total]
+    [0.0 s 22395312 bytes]  passed immediately
+  [0.0080 s 22396336 bytes total]
 1 caution
 1 warning

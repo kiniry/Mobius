@@ -1,41 +1,41 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Readable.java: Caution: Using given file as the .java file, even though it is not the java file for Readable on the classpath
-    [0.0020 s 24569016 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Readable.java: Caution: Using given file as the .java file, even though it is not the java file for Readable on the classpath
+    [0.01 s 21544152 bytes]
 
 Readable ...
-  Prover started:0.063 s 25583944 bytes
-    [0.165 s 25652712 bytes]
+  Prover started:0.099 s 22548672 bytes
+    [0.374 s 22617440 bytes]
 
 Readable: m() ...
-    [0.073 s 25754712 bytes]  passed
+    [0.084 s 22719384 bytes]  passed
 
 Readable: m2() ...
 ------------------------------------------------------------------------
-src/test/resources/Readable.java:19: Warning: Read of variable when its value may be meaningless (Unreadable)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Readable.java:19: Warning: Read of variable when its value may be meaningless (Unreadable)
             int k = i;
                     ^
-Associated declaration is "src/test/resources/Readable.java", line 9, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Readable.java", line 9, col 5:
         //@ readable i if b;
             ^
 ------------------------------------------------------------------------
-    [0.042 s 25987000 bytes]  failed
+    [0.062 s 22953448 bytes]  failed
 
 Readable: m3() ...
-    [0.0080 s 26090968 bytes]  passed
+    [0.012 s 23056392 bytes]  passed
 
 Readable: m4() ...
 ------------------------------------------------------------------------
-src/test/resources/Readable.java:29: Warning: Write of variable when disallowed (Writable)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Readable.java:29: Warning: Write of variable when disallowed (Writable)
             j = 0;
               ^
-Associated declaration is "src/test/resources/Readable.java", line 10, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Readable.java", line 10, col 5:
         //@ writable j if bb;
             ^
 ------------------------------------------------------------------------
-    [0.036 s 24773176 bytes]  failed
+    [0.017 s 23272248 bytes]  failed
 
 Readable: Readable() ...
-    [0.01 s 24977264 bytes]  passed
-  [0.336 s 24978288 bytes total]
+    [0.01 s 23475368 bytes]  passed
+  [0.56 s 23476392 bytes total]
 1 caution
 2 warnings

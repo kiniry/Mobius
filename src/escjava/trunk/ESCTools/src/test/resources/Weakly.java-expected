@@ -1,27 +1,27 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Weakly.java: Caution: Using given file as the .java file, even though it is not the java file for Weakly on the classpath
-    [0.0030 s 43205800 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Weakly.java: Caution: Using given file as the .java file, even though it is not the java file for Weakly on the classpath
+    [0.0010 s 23883304 bytes]
 
 Weakly ...
-  Prover started:0.093 s 44210568 bytes
-    [0.208 s 44292800 bytes]
+  Prover started:0.073 s 24878904 bytes
+    [0.176 s 24961136 bytes]
 
 Weakly: m() ...
-    [0.091 s 44339088 bytes]  passed
+    [0.077 s 25007480 bytes]  passed
 
 Weakly: Weakly() ...
-    [0.038 s 44489824 bytes]  passed
-  [0.338 s 44490848 bytes total]
+    [0.033 s 25158216 bytes]  passed
+  [0.287 s 25159240 bytes total]
 
 A ...
-    [0.0 s 44506264 bytes]
-  [0.0020 s 44507288 bytes total]
+    [0.0 s 25174656 bytes]
+  [0.0020 s 25175680 bytes total]
 
 B ...
-    [0.0 s 44523728 bytes]
-  [0.0 s 44524752 bytes total]
+    [0.0 s 25192120 bytes]
+  [0.0 s 25193144 bytes total]
 
 C ...
-    [0.0 s 44541192 bytes]
-  [0.0020 s 44542216 bytes total]
+    [0.0010 s 25210664 bytes]
+  [0.0020 s 25210664 bytes total]
 1 caution

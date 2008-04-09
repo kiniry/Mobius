@@ -1,57 +1,57 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Mod2.java: Caution: Using given file as the .java file, even though it is not the java file for Mod2 on the classpath
-    [0.0020 s 20736024 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java: Caution: Using given file as the .java file, even though it is not the java file for Mod2 on the classpath
+    [0.0030 s 18731072 bytes]
 
 Mod2 ...
-  Prover started:0.061 s 21806400 bytes
-    [0.17 s 21876832 bytes]
+  Prover started:0.178 s 19790656 bytes
+    [0.303 s 19861088 bytes]
 
 Mod2: m() ...
 ------------------------------------------------------------------------
-src/test/resources/Mod2.java:17: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java:17: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Mod2.java", line 10, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java", line 10, col 5:
         //@ ensures j == 3+a;    // WARNING
             ^
 ------------------------------------------------------------------------
-    [0.124 s 22382216 bytes]  failed
+    [0.138 s 20368216 bytes]  failed
 
 Mod2: m1() ...
 ------------------------------------------------------------------------
-src/test/resources/Mod2.java:26: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java:26: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Mod2.java", line 19, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java", line 19, col 5:
         //@ ensures jj == 3+a;   // WARNING
             ^
 ------------------------------------------------------------------------
-    [0.051 s 21206000 bytes]  failed
+    [0.033 s 20837216 bytes]  failed
 
 Mod2: m2() ...
 ------------------------------------------------------------------------
-src/test/resources/Mod2.java:35: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java:35: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Mod2.java", line 28, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java", line 28, col 5:
         //@ ensures k == 4+\old(a);  // WARNING 
             ^
 ------------------------------------------------------------------------
-    [0.031 s 21672200 bytes]  failed
+    [0.046 s 19440672 bytes]  failed
 
 Mod2: mm(int) ...
 ------------------------------------------------------------------------
-src/test/resources/Mod2.java:48: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java:48: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Mod2.java", line 38, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java", line 38, col 5:
         //@ ensures j == 3+a+0*\old(j); // WARNING
             ^
 ------------------------------------------------------------------------
-    [0.026 s 21982304 bytes]  failed
+    [0.024 s 19751416 bytes]  failed
 
 Mod2: Mod2() ...
-    [0.0 s 21983328 bytes]  passed immediately
-  [0.402 s 21984352 bytes total]
+    [0.0 s 19753464 bytes]  passed immediately
+  [0.545 s 19754488 bytes total]
 1 caution
 4 warnings

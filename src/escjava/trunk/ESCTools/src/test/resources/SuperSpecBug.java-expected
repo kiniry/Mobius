@@ -1,44 +1,44 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/SuperSpecBug.java: Caution: Using given file as the .java file, even though it is not the java file for SuperSpecBug on the classpath
-    [0.0030 s 43004936 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SuperSpecBug.java: Caution: Using given file as the .java file, even though it is not the java file for SuperSpecBug on the classpath
+    [0.0020 s 38135320 bytes]
 
 SuperSpecBug ...
-  Prover started:0.083 s 45351520 bytes
-    [0.276 s 45524176 bytes]
+  Prover started:0.072 s 40309488 bytes
+    [0.252 s 40481120 bytes]
 
 SuperSpecBug: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/SuperSpecBug.java:20: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SuperSpecBug.java:20: Warning: Possible violation of modifies clause (Modifies)
         if(Object.class != o.getClass())
                                      ^
 Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class":
-Associated declaration is "src/test/resources/SuperSpecBug.java", line 8, col 4:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SuperSpecBug.java", line 8, col 4:
     //@ also ...
     ^
 ------------------------------------------------------------------------
-    [0.16 s 46685584 bytes]  failed
+    [0.16 s 41645408 bytes]  failed
 
 SuperSpecBug: SuperSpecBug() ...
-    [0.0060 s 46828184 bytes]  passed
-  [0.443 s 46829208 bytes total]
+    [0.0060 s 41788064 bytes]  passed
+  [0.418 s 41789088 bytes total]
 
 CSuperSpecBug ...
-    [0.0020 s 47008984 bytes]
+    [0.0030 s 41969888 bytes]
 
 CSuperSpecBug: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/SuperSpecBug.java:37: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SuperSpecBug.java:37: Warning: Possible violation of modifies clause (Modifies)
         if(Object.class != o.getClass())
                                      ^
 Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class":
-Associated declaration is "src/test/resources/SuperSpecBug.java", line 26, col 4:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SuperSpecBug.java", line 26, col 4:
     /*@ public exceptional_behavior ...
     ^
 ------------------------------------------------------------------------
-    [0.117 s 43935320 bytes]  failed
+    [0.116 s 39148520 bytes]  failed
 
 CSuperSpecBug: CSuperSpecBug() ...
-    [0.0060 s 44089072 bytes]  passed
-  [0.126 s 44090096 bytes total]
+    [0.0050 s 39303408 bytes]  passed
+  [0.125 s 39304432 bytes total]
 1 caution
 2 warnings

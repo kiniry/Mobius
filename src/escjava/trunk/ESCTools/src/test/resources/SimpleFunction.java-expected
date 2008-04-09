@@ -1,36 +1,36 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/SimpleFunction.java: Caution: Using given file as the .java file, even though it is not the java file for SimpleFunction on the classpath
-    [0.0020 s 25350840 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SimpleFunction.java: Caution: Using given file as the .java file, even though it is not the java file for SimpleFunction on the classpath
+    [0.0040 s 23349816 bytes]
 
 SimpleFunction ...
-  Prover started:0.061 s 25746680 bytes
-    [0.18 s 25813824 bytes]
+  Prover started:0.071 s 23713208 bytes
+    [0.213 s 23780352 bytes]
 
 SimpleFunction: bump(int) ...
-    [0.0 s 25815872 bytes]  passed immediately
+    [0.0 s 23782400 bytes]  passed immediately
 
 SimpleFunction: m() ...
-    [0.076 s 25967400 bytes]  passed
+    [0.1 s 23933928 bytes]  passed
 
 SimpleFunction: n() ...
 ------------------------------------------------------------------------
-src/test/resources/SimpleFunction.java:21: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SimpleFunction.java:21: Warning: Postcondition possibly not established (Post)
         public void n() {} // FAILS
                          ^
-Associated declaration is "src/test/resources/SimpleFunction.java", line 20, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SimpleFunction.java", line 20, col 5:
         //@ ensures bump(f+j) < 10;
             ^
 ------------------------------------------------------------------------
-    [0.044 s 26201400 bytes]  failed
+    [0.102 s 24169808 bytes]  failed
 
 SimpleFunction: bump2(int) ...
-    [0.0 s 26203448 bytes]  passed immediately
+    [0.0 s 24171856 bytes]  passed immediately
 
 SimpleFunction: mm(int) ...
-    [0.012 s 26350872 bytes]  passed
+    [0.012 s 24318296 bytes]  passed
 
 SimpleFunction: SimpleFunction() ...
-    [0.0080 s 26532408 bytes]  passed
-  [0.321 s 26533432 bytes total]
+    [0.0080 s 24500856 bytes]  passed
+  [0.435 s 24501880 bytes total]
 1 caution
 1 warning

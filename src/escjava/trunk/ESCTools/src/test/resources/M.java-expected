@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/M.java: Caution: Using given file as the .java file, even though it is not the java file for M on the classpath
-    [0.0020 s 20284640 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M.java: Caution: Using given file as the .java file, even though it is not the java file for M on the classpath
+    [0.0020 s 19804104 bytes]
 
 M ...
-src/test/resources/M.java:20: Error: No such field in type java.lang.Object
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M.java:20: Error: No such field in type java.lang.Object
         modifies o.owner;
                    ^
-src/test/resources/M.java:27: Error: No such field in type java.lang.Object
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M.java:27: Error: No such field in type java.lang.Object
     //@ set o.owner = this;
               ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.0090 s 20889128 bytes total] (aborted)
+  [0.023 s 19677144 bytes total] (aborted)
 2 cautions
 2 errors

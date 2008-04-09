@@ -1,18 +1,18 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Assume.java: Caution: Using given file as the .java file, even though it is not the java file for Assume on the classpath
-    [0.0030 s 19055328 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assume.java: Caution: Using given file as the .java file, even though it is not the java file for Assume on the classpath
+    [0.0030 s 17120032 bytes]
 
 Assume ...
-  Prover started:0.059 s 19408544 bytes
-    [0.182 s 19473424 bytes]
+  Prover started:0.062 s 17440400 bytes
+    [0.191 s 17505280 bytes]
 
 Assume: m(int) ...
-    [0.0 s 19474448 bytes]  passed immediately
+    [0.0 s 17506304 bytes]  passed immediately
 
 Assume: mm() ...
-    [0.072 s 19643384 bytes]  passed
+    [0.077 s 17674472 bytes]  passed
 
 Assume: Assume() ...
-    [0.0060 s 19792664 bytes]  passed
-  [0.26 s 19793688 bytes total]
+    [0.0090 s 17824072 bytes]  passed
+  [0.278 s 17825096 bytes total]
 1 caution

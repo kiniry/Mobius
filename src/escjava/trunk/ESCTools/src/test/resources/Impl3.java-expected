@@ -1,37 +1,37 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Impl3.java: Caution: Using given file as the .java file, even though it is not the java file for Impl3 on the classpath
-    [0.0020 s 20048024 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl3.java: Caution: Using given file as the .java file, even though it is not the java file for Impl3 on the classpath
+    [0.0010 s 18592152 bytes]
 
 Impl3 ...
-  Prover started:0.062 s 21078624 bytes
-    [0.211 s 21152432 bytes]
+  Prover started:0.097 s 18534880 bytes
+    [0.254 s 18608688 bytes]
 
 Impl3: shrink() ...
-    [0.075 s 21251208 bytes]  passed
+    [0.089 s 18707520 bytes]  passed
 
 Impl3: clear() ...
 ------------------------------------------------------------------------
-src/test/resources/Impl3.java:13: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl3.java:13: Warning: Postcondition possibly not established (Post)
         }  // ERROR - no represents clause for isEmpty
         ^
-Associated declaration is "src/test/resources/Impl3.java", line 26, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl3.java", line 26, col 5:
         //@ ensures isEmpty;
             ^
 ------------------------------------------------------------------------
-    [0.05 s 21506960 bytes]  failed
+    [0.052 s 18965176 bytes]  failed
 
 Impl3: Impl3() ...
-    [0.0070 s 21704960 bytes]  passed
-  [0.344 s 21707008 bytes total]
+    [0.0080 s 19163344 bytes]  passed
+  [0.403 s 19164368 bytes total]
 
 IntList ...
-    [0.0010 s 21780008 bytes]
+    [0.0010 s 19238392 bytes]
 
 IntList: shrink() ...
-    [0.0 s 21781032 bytes]  passed immediately
+    [0.0 s 19239416 bytes]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 21782056 bytes]  passed immediately
-  [0.0080 s 21783080 bytes total]
+    [0.0 s 19240440 bytes]  passed immediately
+  [0.0090 s 19241464 bytes total]
 1 caution
 1 warning

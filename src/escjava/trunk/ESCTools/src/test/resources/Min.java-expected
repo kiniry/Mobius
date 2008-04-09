@@ -1,21 +1,21 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Min.java: Caution: Using given file as the .java file, even though it is not the java file for Min on the classpath
-    [0.0030 s 20969552 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Min.java: Caution: Using given file as the .java file, even though it is not the java file for Min on the classpath
+    [0.0030 s 19007360 bytes]
 
 Min ...
-src/test/resources/Min.java:60: Error: No such field in type java.lang.Object
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Min.java:60: Error: No such field in type java.lang.Object
  ... n Object ooo; c.contains(ooo); ooo.theHashValue)
                                         ^
-src/test/resources/Min.java:61: Error: No such field in type java.lang.Object
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Min.java:61: Error: No such field in type java.lang.Object
                                 == o.theHashValue );
                                      ^
-src/test/resources/Min.java:64: Error: No such field in type java.lang.Object
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Min.java:64: Error: No such field in type java.lang.Object
  ... n Object ooo; c.contains(ooo); ooo.theHashValue)
                                         ^
-src/test/resources/Min.java:65: Error: No such field in type java.lang.Object
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Min.java:65: Error: No such field in type java.lang.Object
                                 <= o.theHashValue );
                                      ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.065 s 21121256 bytes total] (aborted)
+  [0.076 s 19060520 bytes total] (aborted)
 2 cautions
 4 errors

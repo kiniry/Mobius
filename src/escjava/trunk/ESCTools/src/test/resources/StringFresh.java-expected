@@ -1,30 +1,30 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/StringFresh.java: Caution: Using given file as the .java file, even though it is not the java file for StringFresh on the classpath
-    [0.0020 s 26179520 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringFresh.java: Caution: Using given file as the .java file, even though it is not the java file for StringFresh on the classpath
+    [0.0030 s 23492864 bytes]
 
 StringFresh ...
-src/test/resources/StringFresh.java:8: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringFresh.java:8: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
 //@ ensures (st + stt) !=null;
                 ^
-src/test/resources/StringFresh.java:9: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringFresh.java:9: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
 //@ ensures (st + stt) != st;
                 ^
-src/test/resources/StringFresh.java:10: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringFresh.java:10: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
 //@ ensures (st + stt) != (st + stt);
                 ^
-src/test/resources/StringFresh.java:10: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringFresh.java:10: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
 //@ ensures (st + stt) != (st + stt);
                               ^
-src/test/resources/StringFresh.java:18: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringFresh.java:18: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
         ss = s + o;
                ^
-src/test/resources/StringFresh.java:19: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringFresh.java:19: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
         sss = s + o;
                 ^
-src/test/resources/StringFresh.java:54: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringFresh.java:54: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
         String ss = s + s;
                       ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.03 s 28426656 bytes total] (aborted)
+  [0.032 s 25719984 bytes total] (aborted)
 2 cautions
 7 errors

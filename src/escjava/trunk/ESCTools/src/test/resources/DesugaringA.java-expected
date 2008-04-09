@@ -1,58 +1,58 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/DesugaringA.java: Caution: Using given file as the .java file, even though it is not the java file for DesugaringA on the classpath
-    [0.0040 s 19448464 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DesugaringA.java: Caution: Using given file as the .java file, even though it is not the java file for DesugaringA on the classpath
+    [0.0030 s 16040608 bytes]
 
 DesugaringA ...
-  Prover started:0.059 s 20644416 bytes
-    [0.164 s 20720008 bytes]
+  Prover started:0.058 s 17214024 bytes
+    [0.161 s 17289616 bytes]
 
 DesugaringA: m() ...
-    [0.0 s 20721032 bytes]  passed immediately
+    [0.0010 s 17291720 bytes]  passed immediately
 
 DesugaringA: mm() ...
-    [0.0 s 20723080 bytes]  passed immediately
+    [0.0 s 17293768 bytes]  passed immediately
 
 DesugaringA: m3() ...
-    [0.0 s 20724104 bytes]  passed immediately
+    [0.0 s 17294792 bytes]  passed immediately
 
 DesugaringA: m4() ...
-    [0.0 s 20726152 bytes]  passed immediately
+    [0.0 s 17296840 bytes]  passed immediately
 
 DesugaringA: m5() ...
-    [0.0 s 20727176 bytes]  passed immediately
+    [0.0 s 17297864 bytes]  passed immediately
 
 DesugaringA: m6(java.lang.Object) ...
-    [0.0 s 20729224 bytes]  passed immediately
+    [0.0 s 17299912 bytes]  passed immediately
 
 DesugaringA: m13() ...
-    [0.0 s 20731272 bytes]  passed immediately
+    [0.0 s 17301960 bytes]  passed immediately
 
 DesugaringA: ppp() ...
-    [0.0 s 20732296 bytes]  passed immediately
+    [0.0 s 17302984 bytes]  passed immediately
 
 DesugaringA: ppp1() ...
-    [0.0 s 20734344 bytes]  passed immediately
+    [0.0 s 17305032 bytes]  passed immediately
 
 DesugaringA: ppp2() ...
-    [0.0 s 20735368 bytes]  passed immediately
+    [0.0 s 17306056 bytes]  passed immediately
 
 DesugaringA: DesugaringA() ...
-    [0.074 s 19721280 bytes]  passed
-  [0.239 s 19722304 bytes total]
+    [0.072 s 17500808 bytes]  passed
+  [0.234 s 17501832 bytes total]
 
 JJ ...
-    [0.0010 s 19795152 bytes]
+    [0.0020 s 17575648 bytes]
 
 JJ: ppp() ...
-    [0.0 s 19797200 bytes]  passed immediately
+    [0.0 s 17576672 bytes]  passed immediately
 
 JJ: ppp1() ...
-    [0.0 s 19798224 bytes]  passed immediately
+    [0.0 s 17577696 bytes]  passed immediately
 
 JJ: ppp2() ...
-    [0.0 s 19799248 bytes]  passed immediately
+    [0.0 s 17579744 bytes]  passed immediately
 
 JJ: JJ() ...
-    [0.036 s 19967768 bytes]  passed
-  [0.037 s 19968792 bytes total]
+    [0.035 s 17747240 bytes]  passed
+  [0.037 s 17748264 bytes total]
 1 caution

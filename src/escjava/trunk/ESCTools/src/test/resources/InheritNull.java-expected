@@ -1,170 +1,170 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/InheritNull.java: Caution: Using given file as the .java file, even though it is not the java file for InheritNull on the classpath
-    [0.0050 s 19612304 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java: Caution: Using given file as the .java file, even though it is not the java file for InheritNull on the classpath
+    [0.0030 s 18514832 bytes]
 
 InheritNull ...
-src/test/resources/InheritNull.java:8: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:8: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m2(int i, /*@ non_null*/ Object o);
                                   ^
-src/test/resources/InheritNull.java:74: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:74: Associated declaration: 
         /*@ pure */ public void m2(int i,  Object o);
                                            ^
-src/test/resources/InheritNull.java:17: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:17: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m6(int i,  /*@ non_null */ Object o);
                                    ^
-src/test/resources/InheritNull.java:83: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:83: Associated declaration: 
         /*@ pure */ public void m6(int i, Object o);
                                           ^
-  Prover started:0.064 s 20940848 bytes
-    [0.179 s 21014576 bytes]
+  Prover started:0.06 s 18783344 bytes
+    [0.196 s 18856048 bytes]
 
 InheritNull: m1(int, java.lang.Object) ...
-    [0.0 s 21016624 bytes]  passed immediately
+    [0.0010 s 18858152 bytes]  passed immediately
 
 InheritNull: m2(int, java.lang.Object) ...
-    [0.0010 s 21019752 bytes]  passed immediately
+    [0.0 s 18861224 bytes]  passed immediately
 
 InheritNull: m3(int, java.lang.Object) ...
-    [0.0 s 21021800 bytes]  passed immediately
+    [0.0 s 18863272 bytes]  passed immediately
 
 InheritNull: m4(int, java.lang.Object) ...
-    [0.0 s 21024872 bytes]  passed immediately
+    [0.0 s 18866344 bytes]  passed immediately
 
 InheritNull: m5(int, java.lang.Object) ...
-    [0.0 s 21026920 bytes]  passed immediately
+    [0.0 s 18868392 bytes]  passed immediately
 
 InheritNull: m6(int, java.lang.Object) ...
-    [0.0 s 21029992 bytes]  passed immediately
+    [0.0 s 18871464 bytes]  passed immediately
 
 InheritNull: InheritNull() ...
-    [0.0 s 21031016 bytes]  passed immediately
+    [0.0 s 18872488 bytes]  passed immediately
 
 InheritNull: mm1a() ...
 ------------------------------------------------------------------------
-src/test/resources/InheritNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m1(-1,oo); // FAILS
                   ^
-Associated declaration is "src/test/resources/InheritNull.java", line 72, col 39:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 72, col 39:
         /*@ pure */ public void m1(int i, /*@ non_null*/ Object o);
                                               ^
-src/test/resources/InheritNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m1(-1,oo); // FAILS
                   ^
-Associated declaration is "src/test/resources/InheritNull.java", line 5, col 27:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 5, col 27:
         public void m1(int i, /*@ non_null*/ Object o);
                                   ^
 ------------------------------------------------------------------------
-    [0.124 s 21405640 bytes]  failed
+    [0.12 s 19249816 bytes]  failed
 
 InheritNull: mm1b() ...
 ------------------------------------------------------------------------
-src/test/resources/InheritNull.java:27: Warning: Possible assignment of null to variable declared non_null (NonNull)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:27: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m1(1,oo); // FAILS
                   ^
-Associated declaration is "src/test/resources/InheritNull.java", line 5, col 27:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 5, col 27:
         public void m1(int i, /*@ non_null*/ Object o);
                                   ^
-src/test/resources/InheritNull.java:27: Warning: Possible assignment of null to variable declared non_null (NonNull)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:27: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m1(1,oo); // FAILS
                   ^
-Associated declaration is "src/test/resources/InheritNull.java", line 72, col 39:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 72, col 39:
         /*@ pure */ public void m1(int i, /*@ non_null*/ Object o);
                                               ^
 ------------------------------------------------------------------------
-    [0.04 s 20114104 bytes]  failed
+    [0.022 s 19577152 bytes]  failed
 
 InheritNull: mm2a() ...
-    [0.011 s 20304584 bytes]  passed
+    [0.011 s 19767688 bytes]  passed
 
 InheritNull: mm2b() ...
-    [0.011 s 20484976 bytes]  passed
+    [0.011 s 19948208 bytes]  passed
 
 InheritNull: mm3a() ...
-    [0.011 s 20684616 bytes]  passed
+    [0.011 s 20148984 bytes]  passed
 
 InheritNull: mm3b() ...
 ------------------------------------------------------------------------
-src/test/resources/InheritNull.java:41: Warning: Precondition possibly not established (Pre)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:41: Warning: Precondition possibly not established (Pre)
                 m3(1,oo); // FAILS
                   ^
-Associated declaration is "src/test/resources/InheritNull.java", line 10, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 10, col 5:
         //@ requires i<0;
             ^
-src/test/resources/InheritNull.java:41: Warning: Possible assignment of null to variable declared non_null (NonNull)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:41: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m3(1,oo); // FAILS
                   ^
-Associated declaration is "src/test/resources/InheritNull.java", line 76, col 39:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 76, col 39:
         /*@ pure */ public void m3(int i, /*@ non_null*/ Object o);
                                               ^
 ------------------------------------------------------------------------
-    [0.021 s 20998992 bytes]  failed
+    [0.021 s 20466080 bytes]  failed
 
 InheritNull: mm4a() ...
-    [0.01 s 21189360 bytes]  passed
+    [0.011 s 20656888 bytes]  passed
 
 InheritNull: mm4b() ...
-    [0.011 s 21369480 bytes]  passed
+    [0.011 s 20837464 bytes]  passed
 
 InheritNull: mm5a() ...
 ------------------------------------------------------------------------
-src/test/resources/InheritNull.java:51: Warning: Possible assignment of null to variable declared non_null (NonNull)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:51: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m5(1,oo); // FAILS
                   ^
-Associated declaration is "src/test/resources/InheritNull.java", line 80, col 39:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 80, col 39:
         /*@ pure */ public void m5(int i, /*@ non_null*/ Object o);
                                               ^
 ------------------------------------------------------------------------
-    [0.018 s 21625728 bytes]  failed
+    [0.029 s 18654368 bytes]  failed
 
 InheritNull: mm5b() ...
 ------------------------------------------------------------------------
-src/test/resources/InheritNull.java:55: Warning: Possible assignment of null to variable declared non_null (NonNull)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:55: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 (new SuperNull()).m5(1,oo); // FAILS
                                     ^
-Associated declaration is "src/test/resources/InheritNull.java", line 80, col 39:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 80, col 39:
         /*@ pure */ public void m5(int i, /*@ non_null*/ Object o);
                                               ^
 ------------------------------------------------------------------------
-    [0.054 s 22009784 bytes]  failed
+    [0.027 s 19039432 bytes]  failed
 
 InheritNull: mm6a() ...
 ------------------------------------------------------------------------
-src/test/resources/InheritNull.java:60: Warning: Precondition possibly not established (Pre)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java:60: Warning: Precondition possibly not established (Pre)
                 m6(-1,oo); // FAILS
                   ^
-Associated declaration is "src/test/resources/InheritNull.java", line 82, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNull.java", line 82, col 5:
         //@ requires i>0;
             ^
 ------------------------------------------------------------------------
-    [0.024 s 22374440 bytes]  failed
+    [0.052 s 19405032 bytes]  failed
 
 InheritNull: mm6b() ...
-    [0.019 s 20044960 bytes]  passed
-  [0.535 s 20045984 bytes total]
+    [0.013 s 19665944 bytes]  passed
+  [0.536 s 19666968 bytes total]
 
 SuperNull ...
-    [0.0010 s 20128416 bytes]
+    [0.0010 s 19750424 bytes]
 
 SuperNull: m1(int, java.lang.Object) ...
-    [0.0 s 20131488 bytes]  passed immediately
+    [0.0 s 19752472 bytes]  passed immediately
 
 SuperNull: m2(int, java.lang.Object) ...
-    [0.0 s 20133536 bytes]  passed immediately
+    [0.0 s 19755544 bytes]  passed immediately
 
 SuperNull: m3(int, java.lang.Object) ...
-    [0.0 s 20136608 bytes]  passed immediately
+    [0.0 s 19757592 bytes]  passed immediately
 
 SuperNull: m4(int, java.lang.Object) ...
-    [0.0 s 20138656 bytes]  passed immediately
+    [0.0 s 19760664 bytes]  passed immediately
 
 SuperNull: m5(int, java.lang.Object) ...
-    [0.0 s 20141728 bytes]  passed immediately
+    [0.0 s 19762712 bytes]  passed immediately
 
 SuperNull: m6(int, java.lang.Object) ...
-    [0.0 s 20143776 bytes]  passed immediately
+    [0.0 s 19765784 bytes]  passed immediately
 
 SuperNull: SuperNull() ...
-    [0.0 s 20145824 bytes]  passed immediately
-  [0.01 s 20146848 bytes total]
+    [0.0 s 19766808 bytes]  passed immediately
+  [0.0090 s 19767832 bytes total]
 3 cautions
 9 warnings

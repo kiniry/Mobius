@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/NonNullElements.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullElements on the classpath
-    [0.0010 s 22613472 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullElements.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullElements on the classpath
+    [0.0060 s 20533832 bytes]
 
 NonNullElements ...
-  Prover started:0.063 s 23653872 bytes
-    [0.164 s 23723384 bytes]
+  Prover started:0.067 s 21551408 bytes
+    [0.169 s 21620920 bytes]
 
 NonNullElements: m() ...
-    [0.077 s 22665408 bytes]  passed
+    [0.074 s 21713232 bytes]  passed
 
 NonNullElements: NonNullElements() ...
-    [0.0090 s 22832568 bytes]  passed
-  [0.25 s 22833592 bytes total]
+    [0.0080 s 21881472 bytes]  passed
+  [0.251 s 21882496 bytes total]
 1 caution

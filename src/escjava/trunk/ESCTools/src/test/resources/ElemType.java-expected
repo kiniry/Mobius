@@ -1,32 +1,32 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ElemType.java: Caution: Using given file as the .java file, even though it is not the java file for ElemType on the classpath
-    [0.0020 s 19593720 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ElemType.java: Caution: Using given file as the .java file, even though it is not the java file for ElemType on the classpath
+    [0.0030 s 16182504 bytes]
 
 ElemType ...
-  Prover started:0.061 s 21322296 bytes
-    [0.215 s 21435272 bytes]
+  Prover started:0.06 s 17012272 bytes
+    [0.224 s 17125872 bytes]
 
 ElemType: m() ...
 ------------------------------------------------------------------------
-src/test/resources/ElemType.java:9: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ElemType.java:9: Warning: Possible assertion failure (Assert)
                 //@ assert \elemtype(\typeof(oa)) == \type(Object); // ...
                     ^
 ------------------------------------------------------------------------
-    [0.105 s 21728136 bytes]  failed
+    [0.115 s 17419208 bytes]  failed
 
 ElemType: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/ElemType.java:20: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ElemType.java:20: Warning: Postcondition possibly not established (Post)
         public void mm() {}
                           ^
-Associated declaration is "src/test/resources/ElemType.java", line 15, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ElemType.java", line 15, col 5:
         //@ ensures \elemtype(\typeof(new int[1])) == \type(int);
             ^
 ------------------------------------------------------------------------
-    [0.025 s 21980864 bytes]  failed
+    [0.024 s 17673824 bytes]  failed
 
 ElemType: ElemType() ...
-    [0.022 s 20029264 bytes]  passed
-  [0.368 s 20030288 bytes total]
+    [0.0080 s 17861888 bytes]  passed
+  [0.371 s 17862912 bytes total]
 1 caution
 2 warnings

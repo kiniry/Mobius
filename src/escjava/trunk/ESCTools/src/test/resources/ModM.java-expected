@@ -1,51 +1,51 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModM.java: Caution: Using given file as the .java file, even though it is not the java file for ModM on the classpath
-    [0.0020 s 23238032 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModM.java: Caution: Using given file as the .java file, even though it is not the java file for ModM on the classpath
+    [0.0020 s 20800336 bytes]
 
 ModM ...
-  Prover started:0.062 s 23311888 bytes
-    [0.182 s 23378224 bytes]
+  Prover started:0.06 s 21938920 bytes
+    [0.163 s 22005256 bytes]
 
 ModM: m() ...
-    [0.105 s 23755456 bytes]  passed
+    [0.104 s 22382544 bytes]  passed
 
 ModM: mm() ...
-    [0.0 s 23756480 bytes]  passed immediately
+    [0.0 s 22384592 bytes]  passed immediately
 
 ModM: me() ...
 ------------------------------------------------------------------------
-src/test/resources/ModM.java:23: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModM.java:23: Warning: Possible violation of modifies clause (Modifies)
         public void me() { mee(); } // ERROR
                               ^
-Associated declaration is "src/test/resources/ModM.java", line 25, col 14:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModM.java", line 25, col 14:
         //@ modifies \everything;
                      ^
-Associated declaration is "src/test/resources/ModM.java", line 22, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModM.java", line 22, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.02 s 24062968 bytes]  failed
+    [0.02 s 22694200 bytes]  failed
 
 ModM: mee() ...
-    [0.0 s 24065016 bytes]  passed immediately
+    [0.0 s 22695224 bytes]  passed immediately
 
 ModM: mp() ...
-    [0.033 s 24795992 bytes]  passed
+    [0.049 s 21537992 bytes]  passed
 
 ModM: mp2() ...
-    [0.019 s 25204792 bytes]  passed
+    [0.025 s 21946848 bytes]  passed
 
 ModM: mmp() ...
-    [0.0 s 25205816 bytes]  passed immediately
+    [0.0 s 21948896 bytes]  passed immediately
 
 ModM: mq() ...
-    [0.014 s 25475544 bytes]  passed
+    [0.013 s 22218568 bytes]  passed
 
 ModM: mqq() ...
-    [0.0 s 25477592 bytes]  passed immediately
+    [0.0 s 22219592 bytes]  passed immediately
 
 ModM: ModM() ...
-    [0.0060 s 25656176 bytes]  passed
-  [0.381 s 25657200 bytes total]
+    [0.0070 s 22398120 bytes]  passed
+  [0.382 s 22399144 bytes total]
 1 caution
 1 warning

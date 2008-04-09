@@ -1,35 +1,35 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/RefineNoRepeats.java: Caution: Using given file as the .java file, even though it is not the java file for RefineNoRepeats on the classpath
-    [0.0020 s 24559072 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineNoRepeats.java: Caution: Using given file as the .java file, even though it is not the java file for RefineNoRepeats on the classpath
+    [0.0010 s 22583616 bytes]
 
 RefineNoRepeats ...
-  Prover started:0.064 s 25572256 bytes
-    [0.165 s 25640744 bytes]
+  Prover started:0.059 s 22567760 bytes
+    [0.174 s 22637272 bytes]
 
 RefineNoRepeats: RefineNoRepeats() ...
-    [0.0 s 25642792 bytes]  passed immediately
+    [0.0 s 22638296 bytes]  passed immediately
 
 RefineNoRepeats: RefineNoRepeats(int) ...
-    [0.0 s 25644840 bytes]  passed immediately
+    [0.0 s 22640344 bytes]  passed immediately
 
 RefineNoRepeats: m() ...
-    [0.0 s 25646888 bytes]  passed immediately
+    [0.0 s 22642392 bytes]  passed immediately
 
 RefineNoRepeats: m(int) ...
-    [0.0 s 25647912 bytes]  passed immediately
+    [0.0 s 22643416 bytes]  passed immediately
 
 RefineNoRepeats: n() ...
-    [0.0 s 25649960 bytes]  passed immediately
-  [0.225 s 25650984 bytes total]
+    [0.0 s 22645464 bytes]  passed immediately
+  [0.233 s 22646488 bytes total]
 
 RefineNoRepeats$A ...
-    [0.0020 s 25735392 bytes]
+    [0.0020 s 22730896 bytes]
 
 RefineNoRepeats$A: A() ...
-    [0.018 s 25913832 bytes]  passed
-  [0.02 s 25914856 bytes total]
+    [0.018 s 22909320 bytes]  passed
+  [0.021 s 22910344 bytes total]
 
 RefineNoRepeats$B ...
-    [0.0010 s 25936992 bytes]
-  [0.0020 s 25938016 bytes total]
+    [0.0 s 22931400 bytes]
+  [0.0020 s 22932424 bytes total]
 1 caution

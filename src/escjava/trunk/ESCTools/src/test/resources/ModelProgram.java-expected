@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModelProgram.java: Caution: Using given file as the .java file, even though it is not the java file for ModelProgram on the classpath
-    [0.0020 s 21773024 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelProgram.java: Caution: Using given file as the .java file, even though it is not the java file for ModelProgram on the classpath
+    [0.0010 s 20007384 bytes]
 
 ModelProgram ...
-  Prover started:0.062 s 22784888 bytes
-    [0.163 s 22850936 bytes]
+  Prover started:0.06 s 21007984 bytes
+    [0.161 s 21074032 bytes]
 
 ModelProgram: m() ...
-    [0.072 s 22944328 bytes]  passed
+    [0.073 s 21167504 bytes]  passed
 
 ModelProgram: ModelProgram() ...
-    [0.0080 s 23095064 bytes]  passed
-  [0.243 s 23096088 bytes total]
+    [0.0090 s 21318264 bytes]  passed
+  [0.244 s 21319288 bytes total]
 1 caution

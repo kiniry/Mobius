@@ -1,21 +1,21 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/AOption1.java: Caution: Using given file as the .java file, even though it is not the java file for AOption1 on the classpath
-    [0.035 s 17877696 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AOption1.java: Caution: Using given file as the .java file, even though it is not the java file for AOption1 on the classpath
+    [0.04 s 16284120 bytes]
 
 AOption1 ...
-  Prover started:0.063 s 18873288 bytes
-    [0.18 s 18938456 bytes]
+  Prover started:0.127 s 16377472 bytes
+    [0.6 s 16442640 bytes]
 
 AOption1: m(AOption1) ...
 ------------------------------------------------------------------------
-src/test/resources/AOption1.java:17: Warning: Possible null dereference (Null)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AOption1.java:17: Warning: Possible null dereference (Null)
                 o.m(this);
                  ^
 ------------------------------------------------------------------------
-    [0.113 s 19290008 bytes]  failed
+    [0.384 s 16794688 bytes]  failed
 
 AOption1: AOption1() ...
-    [0.02 s 19442768 bytes]  passed
-  [0.314 s 19443840 bytes total]
+    [0.019 s 16947448 bytes]  passed
+  [1.004 s 16948520 bytes total]
 1 caution
 1 warning

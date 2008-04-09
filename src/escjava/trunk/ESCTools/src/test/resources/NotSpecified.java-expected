@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/NotSpecified.java: Caution: Using given file as the .java file, even though it is not the java file for NotSpecified on the classpath
-    [0.0020 s 23078872 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotSpecified.java: Caution: Using given file as the .java file, even though it is not the java file for NotSpecified on the classpath
+    [0.0020 s 21303368 bytes]
 
 NotSpecified ...
-  Prover started:0.063 s 23048840 bytes
-    [0.178 s 23113864 bytes]
+  Prover started:0.061 s 22325752 bytes
+    [0.163 s 22391800 bytes]
 
 NotSpecified: m() ...
-    [0.0 s 23115912 bytes]  passed immediately
+    [0.0 s 22392824 bytes]  passed immediately
 
 NotSpecified: NotSpecified() ...
-    [0.069 s 23265624 bytes]  passed
-  [0.248 s 23266648 bytes total]
+    [0.069 s 22543504 bytes]  passed
+  [0.232 s 22544528 bytes total]
 1 caution

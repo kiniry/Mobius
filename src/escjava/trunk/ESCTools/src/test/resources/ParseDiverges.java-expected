@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ParseDiverges.java: Caution: Using given file as the .java file, even though it is not the java file for ParseDiverges on the classpath
-    [0.0020 s 24160016 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseDiverges.java: Caution: Using given file as the .java file, even though it is not the java file for ParseDiverges on the classpath
+    [0.0020 s 22429816 bytes]
 
 ParseDiverges ...
-  Prover started:0.067 s 25161592 bytes
-    [0.205 s 24139464 bytes]
+  Prover started:0.062 s 22769176 bytes
+    [0.19 s 22835256 bytes]
 
 ParseDiverges: m() ...
-    [0.04 s 24191840 bytes]  passed
+    [0.074 s 22887632 bytes]  passed
 
 ParseDiverges: ParseDiverges() ...
-    [0.0070 s 24342576 bytes]  passed
-  [0.252 s 24343600 bytes total]
+    [0.0090 s 23039448 bytes]  passed
+  [0.274 s 23040472 bytes total]
 1 caution

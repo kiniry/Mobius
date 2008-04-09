@@ -1,146 +1,146 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Constraint.java: Caution: Using given file as the .java file, even though it is not the java file for Constraint on the classpath
-    [0.0040 s 19221728 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java: Caution: Using given file as the .java file, even though it is not the java file for Constraint on the classpath
+    [0.253 s 16013992 bytes]
 
 Constraint ...
-  Prover started:0.061 s 19207240 bytes
-    [0.176 s 19273488 bytes]
+  Prover started:0.072 s 17015424 bytes
+    [0.231 s 17081672 bytes]
 
 Constraint: m() ...
-    [0.07 s 19337328 bytes]  passed
+    [0.068 s 17145712 bytes]  passed
 
 Constraint: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Constraint.java:15: Warning: Possible violation of object constraint at exit (Constraint)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java:15: Warning: Possible violation of object constraint at exit (Constraint)
         } // ERROR
         ^
-Associated declaration is "src/test/resources/Constraint.java", line 7, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java", line 7, col 5:
         //@ constraint i == \old(i);
             ^
 ------------------------------------------------------------------------
-    [0.017 s 19541960 bytes]  failed
+    [0.054 s 16181960 bytes]  failed
 
 Constraint: Constraint() ...
-src/test/resources/Constraint.java:18: Error: There is no assignable clause allowing this method call
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java:18: Error: There is no assignable clause allowing this method call
         public Constraint() {} // OK
                             ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-src/test/resources/Constraint.java:17: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java:17: Associated declaration: 
         //@ modifies i, this.*;
             ^
-    [0.037 s 19723520 bytes]  passed
-  [0.301 s 19724544 bytes total]
+    [0.049 s 16364744 bytes]  passed
+  [0.402 s 16365768 bytes total]
 
 ConstraintA ...
-    [0.0050 s 19839024 bytes]
+    [0.0050 s 16480248 bytes]
 
 ConstraintA: ConstraintA() ...
-    [0.0 s 19840048 bytes]  passed immediately
+    [0.0 s 16481272 bytes]  passed immediately
 
 ConstraintA: m() ...
-    [0.02 s 20149408 bytes]  passed
+    [0.033 s 16789944 bytes]  passed
 
 ConstraintA: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Constraint.java:39: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java:39: Warning: Possible assertion failure (Assert)
                 //@ assert o.j != 6; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.03 s 20596840 bytes]  failed
-  [0.056 s 20597864 bytes total]
+    [0.036 s 17238416 bytes]  failed
+  [0.075 s 17239440 bytes total]
 
 ConstraintB ...
-    [0.0020 s 20665192 bytes]
+    [0.0010 s 17306872 bytes]
 
 ConstraintB: m() ...
-    [0.0 s 20666216 bytes]  passed immediately
+    [0.0 s 17308920 bytes]  passed immediately
 
 ConstraintB: ConstraintB() ...
-    [0.017 s 20828560 bytes]  passed
-  [0.019 s 20829584 bytes total]
+    [0.017 s 17470608 bytes]  passed
+  [0.019 s 17471632 bytes total]
 
 ConstraintSA ...
-    [0.0030 s 20941048 bytes]
+    [0.0020 s 17582088 bytes]
 
 ConstraintSA: ConstraintSA() ...
-    [0.0 s 20942072 bytes]  passed immediately
+    [0.0 s 17584136 bytes]  passed immediately
 
 ConstraintSA: m() ...
-    [0.014 s 21089080 bytes]  passed
+    [0.022 s 17730304 bytes]  passed
 
 ConstraintSA: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Constraint.java:72: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java:72: Warning: Possible assertion failure (Assert)
                 //@ assert o.sj != 6; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.048 s 21343536 bytes]  failed
-  [0.065 s 21344560 bytes total]
+    [0.054 s 17985432 bytes]  failed
+  [0.08 s 17986456 bytes total]
 
 ConstraintC ...
-    [0.0010 s 21414040 bytes]
+    [0.0010 s 18056960 bytes]
 
 ConstraintC: sm() ...
-    [0.0 s 21416088 bytes]  passed immediately
+    [0.0 s 18057984 bytes]  passed immediately
 
 ConstraintC: sh() ...
-    [0.0 s 21418136 bytes]  passed immediately
+    [0.0 s 18060048 bytes]  passed immediately
 
 ConstraintC: sz() ...
 ------------------------------------------------------------------------
-src/test/resources/Constraint.java:94: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java:94: Warning: Possible assertion failure (Assert)
                 //@ assert sj == 2; // ERROR - sh is helper
                     ^
 Execution trace information:
-    Executed call in "src/test/resources/Constraint.java", line 93, col 2.
-    Executed implicit return in "src/test/resources/Constraint.java", line 86, col 19.
+    Executed call in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java", line 93, col 2.
+    Executed implicit return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java", line 86, col 19.
 
 ------------------------------------------------------------------------
-    [0.031 s 19302696 bytes]  failed
+    [0.032 s 18383968 bytes]  failed
 
 ConstraintC: ConstraintC() ...
-    [0.0050 s 19457712 bytes]  passed
-  [0.038 s 19458736 bytes total]
+    [0.0080 s 18539560 bytes]  passed
+  [0.042 s 18540584 bytes total]
 
 ConstraintR ...
-    [0.0020 s 19543064 bytes]
+    [0.0060 s 16103064 bytes]
 
 ConstraintR: ConstraintR() ...
-    [0.012 s 19705408 bytes]  passed
-  [0.014 s 19706432 bytes total]
+    [0.018 s 16266008 bytes]  passed
+  [0.026 s 16267032 bytes total]
 
 ConstraintI ...
-    [0.0020 s 19760896 bytes]
-  [0.0090 s 19761920 bytes total]
+    [0.0010 s 16323648 bytes]
+  [0.012 s 16324672 bytes total]
 
 ConstraintX ...
-    [0.0010 s 19850176 bytes]
+    [0.0010 s 16411904 bytes]
 
 ConstraintX: m() ...
 ------------------------------------------------------------------------
-src/test/resources/Constraint.java:116: Warning: Possible violation of object constraint at exit (Constraint)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java:116: Warning: Possible violation of object constraint at exit (Constraint)
         } // ERROR - fails ConstraintI
         ^
-Associated declaration is "src/test/resources/Constraint.java", line 108, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java", line 108, col 5:
         //@ constraint !(this instanceof ConstraintX);
             ^
 ------------------------------------------------------------------------
-    [0.029 s 20056216 bytes]  failed
+    [0.029 s 16619816 bytes]  failed
 
 ConstraintX: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Constraint.java:120: Warning: Possible violation of object constraint at exit (Constraint)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java:120: Warning: Possible violation of object constraint at exit (Constraint)
         } // ERROR - fails ConstraintR
         ^
-Associated declaration is "src/test/resources/Constraint.java", line 102, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Constraint.java", line 102, col 5:
         //@ constraint k == \old(k) + 3;
             ^
 ------------------------------------------------------------------------
-    [0.046 s 20263176 bytes]  failed
+    [0.048 s 16828872 bytes]  failed
 
 ConstraintX: ConstraintX() ...
-    [0.0050 s 20411568 bytes]  passed
-  [0.082 s 20412592 bytes total]
+    [0.0050 s 16977216 bytes]  passed
+  [0.084 s 16978240 bytes total]
 1 caution
 6 warnings
 1 error

@@ -1,18 +1,18 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Quant.java: Caution: Using given file as the .java file, even though it is not the java file for Quant on the classpath
-    [0.0030 s 23651944 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Quant.java: Caution: Using given file as the .java file, even though it is not the java file for Quant on the classpath
+    [0.0020 s 21577168 bytes]
 
 Quant ...
-  Prover started:0.068 s 24053496 bytes
-    [0.186 s 24118104 bytes]
+  Prover started:0.06 s 21601936 bytes
+    [0.248 s 21666544 bytes]
 
 Quant: m() ...
-    [0.072 s 24164392 bytes]  passed
+    [0.03 s 21712832 bytes]  passed
 
 Quant: n() ...
-    [0.0040 s 24221032 bytes]  passed
+    [0.0090 s 21769416 bytes]  passed
 
 Quant: Quant() ...
-    [0.02 s 24636576 bytes]  passed
-  [0.283 s 24637600 bytes total]
+    [0.027 s 22184880 bytes]  passed
+  [0.314 s 22185904 bytes total]
 1 caution

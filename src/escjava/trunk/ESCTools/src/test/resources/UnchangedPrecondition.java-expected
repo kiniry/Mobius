@@ -1,33 +1,33 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/UnchangedPrecondition.java: Caution: Using given file as the .java file, even though it is not the java file for UnchangedPrecondition on the classpath
-    [0.0030 s 42445808 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedPrecondition.java: Caution: Using given file as the .java file, even though it is not the java file for UnchangedPrecondition on the classpath
+    [0.0030 s 38949048 bytes]
 
 UnchangedPrecondition ...
-  Prover started:0.078 s 43497264 bytes
-    [0.182 s 43568472 bytes]
+  Prover started:0.075 s 38472120 bytes
+    [0.207 s 38543328 bytes]
 
 UnchangedPrecondition: m() ...
-    [0.0 s 43569496 bytes]  passed immediately
+    [0.0010 s 38544408 bytes]  passed immediately
 
 UnchangedPrecondition: mm() ...
-    [0.105 s 43924056 bytes]  passed
+    [0.103 s 38899952 bytes]  passed
 
 UnchangedPrecondition: mm1() ...
 ------------------------------------------------------------------------
-src/test/resources/UnchangedPrecondition.java:22: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedPrecondition.java:22: Warning: Possible assertion failure (Assert)
         //@ assert \not_modified(i); // FAILS
             ^
-Associated declaration is "src/test/resources/UnchangedPrecondition.java", line 22, col 26:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedPrecondition.java", line 22, col 26:
         //@ assert \not_modified(i); // FAILS
                                  ^
 ------------------------------------------------------------------------
-    [0.03 s 44439848 bytes]  failed
+    [0.031 s 39418880 bytes]  failed
 
 UnchangedPrecondition: mma() ...
-    [0.021 s 44816096 bytes]  passed
+    [0.023 s 39795128 bytes]  passed
 
 UnchangedPrecondition: UnchangedPrecondition() ...
-    [0.0080 s 45004880 bytes]  passed
-  [0.347 s 45006928 bytes total]
+    [0.0070 s 39983968 bytes]  passed
+  [0.373 s 39986016 bytes total]
 1 caution
 1 warning

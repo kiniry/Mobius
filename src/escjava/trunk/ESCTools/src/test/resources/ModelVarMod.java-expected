@@ -1,93 +1,93 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModelVarMod.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVarMod on the classpath
-    [0.0060 s 23606256 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVarMod.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVarMod on the classpath
+    [0.0080 s 21672336 bytes]
 
 ModelVarMod ...
-  Prover started:0.061 s 23738160 bytes
-    [0.178 s 23815280 bytes]
+  Prover started:0.061 s 22031496 bytes
+    [0.231 s 22108616 bytes]
 
 ModelVarMod: p() ...
-    [0.111 s 24078344 bytes]  passed
+    [0.111 s 22370664 bytes]  passed
 
 ModelVarMod: p2() ...
-    [0.023 s 24353720 bytes]  passed
+    [0.023 s 22646064 bytes]  passed
 
 ModelVarMod: p3() ...
-    [0.021 s 24600112 bytes]  passed
+    [0.021 s 22892480 bytes]  passed
 
 ModelVarMod: p3a() ...
-    [0.026 s 24858160 bytes]  passed
+    [0.023 s 23150552 bytes]  passed
 
 ModelVarMod: pp() ...
-    [0.012 s 25009200 bytes]  passed
+    [0.014 s 23302696 bytes]  passed
 
 ModelVarMod: pp2() ...
 ------------------------------------------------------------------------
-src/test/resources/ModelVarMod.java:109: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVarMod.java:109: Warning: Possible assertion failure (Assert)
             //@ assert ms == 4;  // ERROR
                 ^
 ------------------------------------------------------------------------
-    [0.026 s 25372232 bytes]  failed
+    [0.026 s 23666112 bytes]  failed
 
 ModelVarMod: ModelVarMod() ...
-    [0.048 s 25736752 bytes]  passed
-  [0.446 s 25737776 bytes total]
+    [0.059 s 21714912 bytes]  passed
+  [0.509 s 21715936 bytes total]
 
 ModelVarModPS ...
-    [0.0020 s 25813264 bytes]
+    [0.0010 s 21791480 bytes]
 
 ModelVarModPS: ModelVarModPS() ...
-    [0.01 s 25985504 bytes]  passed
-  [0.012 s 25986528 bytes total]
+    [0.011 s 21963800 bytes]  passed
+  [0.012 s 21964824 bytes total]
 
 ModelVarModS ...
-    [0.0010 s 26054664 bytes]
+    [0.0010 s 22032960 bytes]
 
 ModelVarModS: ModelVarModS() ...
-    [0.016 s 23774264 bytes]  passed
-  [0.018 s 23775288 bytes total]
+    [0.0090 s 22190944 bytes]  passed
+  [0.011 s 22191968 bytes total]
 
 ModelVarModD ...
-    [0.0010 s 23823888 bytes]
+    [0.0010 s 22240568 bytes]
 
 ModelVarModD: ModelVarModD() ...
-    [0.011 s 24021824 bytes]  passed
-  [0.012 s 24022848 bytes total]
+    [0.01 s 22439608 bytes]  passed
+  [0.012 s 22440632 bytes total]
 
 ModelVarModStatic ...
-    [0.0070 s 24425968 bytes]
+    [0.01 s 22843768 bytes]
 
 ModelVarModStatic: q() ...
-    [0.019 s 24665072 bytes]  passed
+    [0.019 s 23083864 bytes]  passed
 
 ModelVarModStatic: q2() ...
-    [0.015 s 24912352 bytes]  passed
+    [0.018 s 23331224 bytes]  passed
 
 ModelVarModStatic: q3() ...
-    [0.042 s 25151552 bytes]  passed
+    [0.043 s 23570504 bytes]  passed
 
 ModelVarModStatic: q3a() ...
-    [0.014 s 25379488 bytes]  passed
+    [0.014 s 23799544 bytes]  passed
 
 ModelVarModStatic: qq() ...
-    [0.012 s 25577968 bytes]  passed
+    [0.014 s 23997992 bytes]  passed
 
 ModelVarModStatic: qq2() ...
 ------------------------------------------------------------------------
-src/test/resources/ModelVarMod.java:245: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVarMod.java:245: Warning: Possible assertion failure (Assert)
             //@ assert ms == 4;  // ERROR
                 ^
 ------------------------------------------------------------------------
-    [0.025 s 25947600 bytes]  failed
+    [0.032 s 22037968 bytes]  failed
 
 ModelVarModStatic: qq2a() ...
-    [0.012 s 26151200 bytes]  passed
+    [0.015 s 22240488 bytes]  passed
 
 ModelVarModStatic: qq2b() ...
-    [0.012 s 26338272 bytes]  passed
+    [0.012 s 22428584 bytes]  passed
 
 ModelVarModStatic: ModelVarModStatic() ...
-    [0.01 s 24174632 bytes]  passed
-  [0.169 s 24175656 bytes total]
+    [0.0070 s 22615216 bytes]  passed
+  [0.184 s 22616240 bytes total]
 1 caution
 2 warnings

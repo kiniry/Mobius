@@ -1,41 +1,41 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModEverything.java: Caution: Using given file as the .java file, even though it is not the java file for ModEverything on the classpath
-    [0.0030 s 23229072 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModEverything.java: Caution: Using given file as the .java file, even though it is not the java file for ModEverything on the classpath
+    [0.0030 s 20628040 bytes]
 
 ModEverything ...
-  Prover started:0.061 s 23479296 bytes
-    [0.186 s 23575928 bytes]
+  Prover started:0.059 s 21724672 bytes
+    [0.174 s 21821352 bytes]
 
 ModEverything: ModEverything() ...
-    [0.0 s 23577976 bytes]  passed immediately
+    [0.0 s 21822376 bytes]  passed immediately
 
 ModEverything: m(int) ...
 ------------------------------------------------------------------------
-src/test/resources/ModEverything.java:57: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModEverything.java:57: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/ModEverything.java", line 31, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModEverything.java", line 31, col 5:
         //@ ensures a.z == 47; // FAILS
             ^
 ------------------------------------------------------------------------
-    [0.15 s 24511368 bytes]  failed
+    [0.171 s 21162864 bytes]  failed
 
 ModEverything: mm() ...
-    [0.0 s 24513416 bytes]  passed immediately
-  [0.336 s 24514440 bytes total]
+    [0.0 s 21164912 bytes]  passed immediately
+  [0.345 s 21165936 bytes total]
 
 ModEverythingS ...
-    [0.0010 s 24583672 bytes]
+    [0.0010 s 21235168 bytes]
 
 ModEverythingS: ModEverythingS() ...
-    [0.011 s 24756072 bytes]  passed
-  [0.012 s 24757096 bytes total]
+    [0.011 s 21407512 bytes]  passed
+  [0.012 s 21408536 bytes total]
 
 ModEverythingA ...
-    [0.0010 s 24828376 bytes]
+    [0.0010 s 21479832 bytes]
 
 ModEverythingA: ModEverythingA() ...
-    [0.013 s 25028568 bytes]  passed
-  [0.014 s 25029592 bytes total]
+    [0.013 s 21680040 bytes]  passed
+  [0.014 s 21681064 bytes total]
 1 caution
 1 warning

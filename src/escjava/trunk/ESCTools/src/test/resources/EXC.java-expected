@@ -1,56 +1,56 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/EXC.java: Caution: Using given file as the .java file, even though it is not the java file for EXC on the classpath
-    [0.0030 s 18110072 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EXC.java: Caution: Using given file as the .java file, even though it is not the java file for EXC on the classpath
+    [0.0040 s 17659256 bytes]
 
 P ...
-  Prover started:0.058 s 19325760 bytes
-    [0.18 s 19422688 bytes]
+  Prover started:0.058 s 18062592 bytes
+    [0.202 s 18159552 bytes]
 
 P: getProperty(java.lang.Object) ...
-    [0.0 s 19424736 bytes]  passed immediately
+    [0.0 s 18161640 bytes]  passed immediately
 
 P: P() ...
-    [0.057 s 19584824 bytes]  passed
-  [0.239 s 19586872 bytes total]
+    [0.073 s 18323320 bytes]  passed
+  [0.276 s 18324344 bytes total]
 
 EXC ...
-    [0.027 s 18375464 bytes]
+    [0.01 s 18579016 bytes]
 
 EXC: main(P) ...
 ------------------------------------------------------------------------
-src/test/resources/EXC.java:35: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EXC.java:35: Warning: Possible assertion failure (Assert)
     //@ assert false;  // SHOULD FAIL
         ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/EXC.java", line 30, col 8.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EXC.java", line 30, col 8.
 
 ------------------------------------------------------------------------
-    [0.246 s 20230512 bytes]  failed
+    [0.283 s 18102848 bytes]  failed
 
 EXC: m(P) ...
 ------------------------------------------------------------------------
-src/test/resources/EXC.java:45: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EXC.java:45: Warning: Possible assertion failure (Assert)
     //@ assert false;  // SHOULD FAIL
         ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/EXC.java", line 41, col 8.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EXC.java", line 41, col 8.
 
 ------------------------------------------------------------------------
-    [0.199 s 19147976 bytes]  failed
+    [0.19 s 19534224 bytes]  failed
 
 EXC: mm(P) ...
 ------------------------------------------------------------------------
-src/test/resources/EXC.java:55: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EXC.java:55: Warning: Possible assertion failure (Assert)
       //@ assert e instanceof ArithmeticException; // SHOULD FAIL
           ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/EXC.java", line 52, col 8.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EXC.java", line 52, col 8.
 
 ------------------------------------------------------------------------
-    [0.247 s 20579072 bytes]  failed
+    [0.22 s 18385552 bytes]  failed
 
 EXC: EXC() ...
-    [0.0060 s 20736264 bytes]  passed
-  [0.726 s 20737288 bytes total]
+    [0.0060 s 18543160 bytes]  passed
+  [0.71 s 18544184 bytes total]
 1 caution
 3 warnings

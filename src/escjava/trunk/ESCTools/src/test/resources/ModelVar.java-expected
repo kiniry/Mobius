@@ -1,34 +1,34 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModelVar.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVar on the classpath
-    [0.0050 s 23256408 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVar.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVar on the classpath
+    [0.0050 s 21458976 bytes]
 
 ModelVar ...
-  Prover started:0.064 s 24384472 bytes
-    [0.17 s 24488000 bytes]
+  Prover started:0.062 s 21519608 bytes
+    [0.181 s 21623136 bytes]
 
 ModelVar: sm() ...
-    [0.112 s 23456728 bytes]  passed
+    [0.111 s 21941736 bytes]  passed
 
 ModelVar: m() ...
-    [0.033 s 23836832 bytes]  passed
+    [0.032 s 22321920 bytes]  passed
 
 ModelVar: mm() ...
-    [0.042 s 24340440 bytes]  passed
+    [0.044 s 22825480 bytes]  passed
 
 ModelVar: m2() ...
-    [0.031 s 24685648 bytes]  passed
+    [0.031 s 23169632 bytes]  passed
 
 ModelVar: m2a() ...
-    [0.066 s 25039816 bytes]  passed
+    [0.065 s 23523824 bytes]  passed
 
 ModelVar: ModelVar() ...
-    [0.0 s 25040840 bytes]  passed immediately
-  [0.454 s 25041864 bytes total]
+    [0.0 s 23524848 bytes]  passed immediately
+  [0.465 s 23525872 bytes total]
 
 Other ...
-    [0.0010 s 25109584 bytes]
+    [0.0010 s 23593592 bytes]
 
 Other: Other() ...
-    [0.011 s 25289032 bytes]  passed
-  [0.012 s 25290056 bytes total]
+    [0.011 s 23773064 bytes]  passed
+  [0.012 s 23774088 bytes total]
 1 caution

@@ -1,97 +1,97 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModE.java: Caution: Using given file as the .java file, even though it is not the java file for ModE on the classpath
-    [0.0040 s 22983480 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModE.java: Caution: Using given file as the .java file, even though it is not the java file for ModE on the classpath
+    [0.0030 s 20663456 bytes]
 
 ModE ...
-  Prover started:0.061 s 24071448 bytes
-    [0.164 s 24148392 bytes]
+  Prover started:0.067 s 21003144 bytes
+    [0.202 s 21080088 bytes]
 
 ModE: ModE() ...
-    [0.0 s 24149416 bytes]  passed immediately
+    [0.0 s 21081112 bytes]  passed immediately
 
 ModE: ModE(int) ...
-    [0.0 s 24151464 bytes]  passed immediately
+    [0.0 s 21083160 bytes]  passed immediately
 
 ModE: ModE(double) ...
-    [0.0 s 24153512 bytes]  passed immediately
+    [0.0 s 21084184 bytes]  passed immediately
 
 ModE: ModE(int, int) ...
-    [0.0 s 24155560 bytes]  passed immediately
+    [0.0 s 21086232 bytes]  passed immediately
 
 ModE: ModE(int, int, int) ...
-    [0.0 s 24157608 bytes]  passed immediately
+    [0.0 s 21089304 bytes]  passed immediately
 
 ModE: me() ...
-    [0.0 s 24159656 bytes]  passed immediately
+    [0.0 s 21090328 bytes]  passed immediately
 
 ModE: mn() ...
-    [0.0 s 24160680 bytes]  passed immediately
+    [0.0 s 21092376 bytes]  passed immediately
 
 ModE: mns() ...
-    [0.0 s 24162728 bytes]  passed immediately
+    [0.0 s 21093400 bytes]  passed immediately
 
 ModE: md() ...
-    [0.0 s 24163752 bytes]  passed immediately
+    [0.0 s 21095448 bytes]  passed immediately
 
 ModE: mi() ...
-    [0.0 s 24164776 bytes]  passed immediately
+    [0.0 s 21096472 bytes]  passed immediately
 
 ModE: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/ModE.java:37: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModE.java:37: Warning: Possible violation of modifies clause (Modifies)
                 ModE e = new ModE();  // WARNING
                                  ^
-Associated declaration is "src/test/resources/ModE.java", line 7, col 14:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModE.java", line 7, col 14:
         //@ modifies \everything;
                      ^
-Associated declaration is "src/test/resources/ModE.java", line 35, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModE.java", line 35, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.13 s 23548968 bytes]  failed
+    [0.142 s 22038216 bytes]  failed
 
 ModE: mm1() ...
 ------------------------------------------------------------------------
-src/test/resources/ModE.java:47: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModE.java:47: Warning: Possible violation of modifies clause (Modifies)
                 e = new ModE(5);  // WARNING
                             ^
-Associated declaration is "src/test/resources/ModE.java", line 10, col 14:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModE.java", line 10, col 14:
         //@ modifies \not_specified;
                      ^
-Associated declaration is "src/test/resources/ModE.java", line 44, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModE.java", line 44, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.034 s 24178288 bytes]  failed
+    [0.036 s 22671208 bytes]  failed
 
 ModE: mm3() ...
-    [0.038 s 25049824 bytes]  passed
-  [0.367 s 25050848 bytes total]
+    [0.053 s 21205760 bytes]  passed
+  [0.434 s 21206784 bytes total]
 
 ModES ...
-    [0.0010 s 25123384 bytes]
+    [0.0010 s 21279320 bytes]
 
 ModES: ms() ...
-    [0.0 s 25125432 bytes]  passed immediately
+    [0.0 s 21280344 bytes]  passed immediately
 
 ModES: mss() ...
-    [0.0 s 25126456 bytes]  passed immediately
+    [0.0 s 21282392 bytes]  passed immediately
 
 ModES: ModES() ...
-    [0.012 s 25267944 bytes]  passed
-  [0.013 s 25268968 bytes total]
+    [0.011 s 21425016 bytes]  passed
+  [0.013 s 21426040 bytes total]
 
 ModESS ...
-    [0.0010 s 25339792 bytes]
+    [0.0010 s 21496864 bytes]
 
 ModESS: ms() ...
-    [0.0 s 25341840 bytes]  passed immediately
+    [0.0 s 21497888 bytes]  passed immediately
 
 ModESS: mss() ...
-    [0.0 s 25342864 bytes]  passed immediately
+    [0.0 s 21498912 bytes]  passed immediately
 
 ModESS: ModESS() ...
-    [0.012 s 25495672 bytes]  passed
-  [0.014 s 25496696 bytes total]
+    [0.0090 s 21651776 bytes]  passed
+  [0.011 s 21653824 bytes total]
 1 caution
 2 warnings

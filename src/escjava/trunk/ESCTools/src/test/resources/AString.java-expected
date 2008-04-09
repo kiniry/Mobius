@@ -1,21 +1,21 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/AString.java: Caution: Using given file as the .java file, even though it is not the java file for AString on the classpath
-    [0.0040 s 17696976 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AString.java: Caution: Using given file as the .java file, even though it is not the java file for AString on the classpath
+    [0.0040 s 15849576 bytes]
 
 AString ...
-  Prover started:0.057 s 18406048 bytes
-    [0.248 s 18515384 bytes]
+  Prover started:0.138 s 17184816 bytes
+    [0.49 s 17295176 bytes]
 
 AString: f(java.lang.String) ...
 ------------------------------------------------------------------------
-src/test/resources/AString.java:4: Warning: Possible null dereference (Null)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AString.java:4: Warning: Possible null dereference (Null)
                 int i = s.length();
                          ^
 ------------------------------------------------------------------------
-    [0.101 s 18819536 bytes]  failed
+    [0.285 s 17598928 bytes]  failed
 
 AString: AString() ...
-    [0.029 s 18969904 bytes]  passed
-  [0.378 s 18970976 bytes total]
+    [0.059 s 17749296 bytes]  passed
+  [0.835 s 17750368 bytes total]
 1 caution
 1 warning

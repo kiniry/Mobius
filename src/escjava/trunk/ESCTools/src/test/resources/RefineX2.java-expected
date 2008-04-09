@@ -1,16 +1,16 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/RefineX2.java:1: Error: Expected a string literal after 'refine'
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineX2.java:1: Error: Expected a string literal after 'refine'
 //@ refine 2; // invalid expression
            ^
-src/test/resources/RefineX2.java: Caution: Using given file as the .java file, even though it is not the java file for RefineX2 on the classpath
-    [0.12 s 23586472 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineX2.java: Caution: Using given file as the .java file, even though it is not the java file for RefineX2 on the classpath
+    [0.0020 s 21310792 bytes]
 
 RefineX2 ...
-  Prover started:0.065 s 23695656 bytes
-    [0.182 s 23761352 bytes]
+  Prover started:0.059 s 22293488 bytes
+    [0.161 s 22358160 bytes]
 
 RefineX2: RefineX2() ...
-    [0.07 s 23913072 bytes]  passed
-  [0.252 s 23914096 bytes total]
+    [0.071 s 22512056 bytes]  passed
+  [0.232 s 22514104 bytes total]
 1 caution
 1 error

@@ -1,60 +1,60 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/EmbeddedA.java:6: Error: Pragma in javadoc comment is not correctly terminated (missing </jml>)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:6: Error: Pragma in javadoc comment is not correctly terminated (missing </jml>)
         <jml>
         ^
-src/test/resources/EmbeddedA.java:13: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:13: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
         <JML>
         ^
-src/test/resources/EmbeddedA.java:19: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:19: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
         <JML>
         ^
-src/test/resources/EmbeddedA.java:26: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:26: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
         <JML>
         ^
-src/test/resources/EmbeddedA.java: Caution: Using given file as the .java file, even though it is not the java file for EmbeddedA on the classpath
-    [0.207 s 19629840 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java: Caution: Using given file as the .java file, even though it is not the java file for EmbeddedA on the classpath
+    [0.0040 s 17860504 bytes]
 
 EmbeddedA ...
-  Prover started:0.073 s 20650584 bytes
-    [0.325 s 20715520 bytes]
+  Prover started:0.059 s 18109712 bytes
+    [0.18 s 18174424 bytes]
 
 EmbeddedA: m() ...
-    [0.0010 s 20717624 bytes]  passed immediately
+    [0.0 s 18175448 bytes]  passed immediately
 
 EmbeddedA: n() ...
-    [0.0 s 20718648 bytes]  passed immediately
+    [0.0 s 18177496 bytes]  passed immediately
 
 EmbeddedA: n1() ...
-    [0.0 s 20719672 bytes]  passed immediately
+    [0.0 s 18178520 bytes]  passed immediately
 
 EmbeddedA: n2() ...
-    [0.0 s 20721720 bytes]  passed immediately
+    [0.0 s 18180568 bytes]  passed immediately
 
 EmbeddedA: p() ...
 ------------------------------------------------------------------------
-src/test/resources/EmbeddedA.java:38: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:38: Warning: Postcondition possibly not established (Post)
         public void p() {}
                          ^
-Associated declaration is "src/test/resources/EmbeddedA.java", line 35, col 2:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java", line 35, col 2:
                 ensures false; // Should read this one
                 ^
 ------------------------------------------------------------------------
-    [0.365 s 20907680 bytes]  failed
+    [0.08 s 18367360 bytes]  failed
 
 EmbeddedA: p2() ...
 ------------------------------------------------------------------------
-src/test/resources/EmbeddedA.java:47: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:47: Warning: Postcondition possibly not established (Post)
         public void p2() {}
                           ^
-Associated declaration is "src/test/resources/EmbeddedA.java", line 43, col 2:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java", line 43, col 2:
                 ensures false; // Should read this one
                 ^
 ------------------------------------------------------------------------
-    [0.116 s 19801256 bytes]  failed
+    [0.038 s 18534880 bytes]  failed
 
 EmbeddedA: EmbeddedA() ...
-    [0.0070 s 19951120 bytes]  passed
-  [0.814 s 19952144 bytes total]
+    [0.0070 s 18685912 bytes]  passed
+  [0.305 s 18686936 bytes total]
 1 caution
 2 warnings
 4 errors

@@ -1,45 +1,45 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModelClass2.java: Caution: Using given file as the .java file, even though it is not the java file for ModelClass2 on the classpath
-    [0.0030 s 22611256 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelClass2.java: Caution: Using given file as the .java file, even though it is not the java file for ModelClass2 on the classpath
+    [0.0040 s 21162112 bytes]
 
 ModelClass2 ...
-  Prover started:0.061 s 23672720 bytes
-    [0.163 s 23738752 bytes]
+  Prover started:0.059 s 22198992 bytes
+    [0.161 s 22265024 bytes]
 
 ModelClass2: mjava() ...
-    [0.069 s 23789216 bytes]  passed
+    [0.07 s 22315432 bytes]  passed
 
 ModelClass2: ModelClass2() ...
-    [0.0090 s 23955416 bytes]  passed
+    [0.026 s 22481632 bytes]  passed
 
 ModelClass2: z(int) ...
 ------------------------------------------------------------------------
-src/test/resources/ModelClass2.java:50: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelClass2.java:50: Warning: Possible assertion failure (Assert)
                 assert k == 1;
                 ^
 ------------------------------------------------------------------------
-    [0.044 s 24176472 bytes]  failed
-  [0.285 s 24177496 bytes total]
+    [0.111 s 21290456 bytes]  failed
+  [0.369 s 21291480 bytes total]
 
 ModelClass2$M ...
-    [0.0080 s 24269648 bytes]
+    [0.014 s 21383632 bytes]
 
 ModelClass2$M: m() ...
-    [0.0 s 24270672 bytes]  passed immediately
+    [0.0 s 21385680 bytes]  passed immediately
 
 ModelClass2$M: n() ...
-    [0.0 s 24272720 bytes]  passed immediately
+    [0.0 s 21386704 bytes]  passed immediately
 
 ModelClass2$M: p(int) ...
 ------------------------------------------------------------------------
-src/test/resources/ModelClass2.java:33: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelClass2.java:33: Warning: Possible assertion failure (Assert)
                 assert k == 1;
                 ^
 ------------------------------------------------------------------------
-    [0.022 s 24572040 bytes]  failed
+    [0.115 s 21685248 bytes]  failed
 
 ModelClass2$M: M() ...
-    [0.035 s 25105408 bytes]  passed
-  [0.065 s 25106432 bytes total]
+    [0.043 s 22223792 bytes]  passed
+  [0.172 s 22224816 bytes total]
 1 caution
 2 warnings

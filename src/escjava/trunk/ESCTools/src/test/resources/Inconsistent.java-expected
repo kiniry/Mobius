@@ -1,32 +1,32 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Inconsistent.java: Caution: Using given file as the .java file, even though it is not the java file for Inconsistent on the classpath
-    [0.0020 s 19270440 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inconsistent.java: Caution: Using given file as the .java file, even though it is not the java file for Inconsistent on the classpath
+    [0.0010 s 18245944 bytes]
 
 Inconsistent ...
-  Prover started:0.059 s 20282736 bytes
-    [0.161 s 20348800 bytes]
+  Prover started:0.059 s 19249024 bytes
+    [0.161 s 19315088 bytes]
 
 Inconsistent: Inconsistent() ...
-    [0.0 s 20349824 bytes]  passed immediately
+    [0.0 s 19316112 bytes]  passed immediately
 
 Inconsistent: m() ...
-    [0.072 s 19288784 bytes]  passed
+    [0.069 s 19398520 bytes]  passed
 
 Inconsistent: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Inconsistent.java:16: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inconsistent.java:16: Warning: Possible assertion failure (Assert)
                 //@ assert a == d; // Should fail
                     ^
 ------------------------------------------------------------------------
-    [0.015 s 19480880 bytes]  failed
+    [0.015 s 19590816 bytes]  failed
 
 Inconsistent: mmm() ...
 ------------------------------------------------------------------------
-src/test/resources/Inconsistent.java:23: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inconsistent.java:23: Warning: Possible assertion failure (Assert)
                 //@ assert false; // should fail
                     ^
 ------------------------------------------------------------------------
-    [0.038 s 19660656 bytes]  failed
-  [0.287 s 19661680 bytes total]
+    [0.04 s 19771120 bytes]  failed
+  [0.285 s 19772144 bytes total]
 1 caution
 2 warnings

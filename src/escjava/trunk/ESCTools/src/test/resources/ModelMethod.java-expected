@@ -1,21 +1,21 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModelMethod.java: Caution: Using given file as the .java file, even though it is not the java file for ModelMethod on the classpath
-    [0.0010 s 23636832 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelMethod.java: Caution: Using given file as the .java file, even though it is not the java file for ModelMethod on the classpath
+    [0.0020 s 21233752 bytes]
 
 ModelMethod ...
-  Prover started:0.061 s 23994912 bytes
-    [0.177 s 24059920 bytes]
+  Prover started:0.06 s 22235528 bytes
+    [0.169 s 22300536 bytes]
 
 ModelMethod: m(int) ...
-    [0.0010 s 24062024 bytes]  passed immediately
+    [0.0 s 22301560 bytes]  passed immediately
 
 ModelMethod: n() ...
-    [0.0 s 24063048 bytes]  passed immediately
+    [0.0 s 22303608 bytes]  passed immediately
 
 ModelMethod: ModelMethod() ...
-    [0.069 s 24213808 bytes]  passed
+    [0.078 s 22454368 bytes]  passed
 
 ModelMethod: ModelMethod(int) ...
-    [0.0080 s 24385296 bytes]  passed
-  [0.255 s 24386320 bytes total]
+    [0.0090 s 22625856 bytes]  passed
+  [0.256 s 22626880 bytes total]
 1 caution

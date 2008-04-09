@@ -1,60 +1,60 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/LoopInvariant.java: Caution: Using given file as the .java file, even though it is not the java file for LoopInvariant on the classpath
-    [0.0080 s 21602864 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java: Caution: Using given file as the .java file, even though it is not the java file for LoopInvariant on the classpath
+    [0.0020 s 19271312 bytes]
 
 LoopInvariant ...
-  Prover started:0.063 s 21838280 bytes
-    [0.182 s 21904360 bytes]
+  Prover started:0.063 s 20279384 bytes
+    [0.168 s 20345464 bytes]
 
 LoopInvariant: m() ...
-    [0.078 s 22134096 bytes]  passed
+    [0.079 s 20575144 bytes]  passed
 
 LoopInvariant: m2() ...
 ------------------------------------------------------------------------
-src/test/resources/LoopInvariant.java:17: Warning: Loop variant function possible not decreased (Decreases)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java:17: Warning: Loop variant function possible not decreased (Decreases)
                 for (int i=0; i<10; ++i) sum++;
                             ^
-Associated declaration is "src/test/resources/LoopInvariant.java", line 16, col 6:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java", line 16, col 6:
                 //@ decreases i;
                     ^
 Execution trace information:
-    Reached top of loop after 0 iterations in "src/test/resources/LoopInvariant.java", line 17, col 2.
+    Reached top of loop after 0 iterations in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java", line 17, col 2.
 
 ------------------------------------------------------------------------
-    [0.049 s 22476024 bytes]  failed
+    [0.049 s 20919632 bytes]  failed
 
 LoopInvariant: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/LoopInvariant.java:24: Warning: Loop invariant possibly does not hold (LoopInv)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java:24: Warning: Loop invariant possibly does not hold (LoopInv)
                 while (i<5) {
                       ^
-Associated declaration is "src/test/resources/LoopInvariant.java", line 23, col 6:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java", line 23, col 6:
                 //@ loop_invariant sum == i;
                     ^
 Execution trace information:
-    Reached top of loop after 0 iterations in "src/test/resources/LoopInvariant.java", line 24, col 2.
-    Reached top of loop after 1 iteration in "src/test/resources/LoopInvariant.java", line 24, col 2.
+    Reached top of loop after 0 iterations in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java", line 24, col 2.
+    Reached top of loop after 1 iteration in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java", line 24, col 2.
 
 ------------------------------------------------------------------------
-    [0.022 s 22752648 bytes]  failed
+    [0.021 s 21201536 bytes]  failed
 
 LoopInvariant: mmm() ...
 ------------------------------------------------------------------------
-src/test/resources/LoopInvariant.java:33: Warning: Loop invariant possibly does not hold (LoopInv)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java:33: Warning: Loop invariant possibly does not hold (LoopInv)
                 for (int i=0; i<10; ++i) sum++;
                             ^
-Associated declaration is "src/test/resources/LoopInvariant.java", line 31, col 6:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java", line 31, col 6:
                 //@ loop_invariant sum == 0;
                     ^
 Execution trace information:
-    Reached top of loop after 0 iterations in "src/test/resources/LoopInvariant.java", line 33, col 2.
-    Reached top of loop after 1 iteration in "src/test/resources/LoopInvariant.java", line 33, col 2.
+    Reached top of loop after 0 iterations in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java", line 33, col 2.
+    Reached top of loop after 1 iteration in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopInvariant.java", line 33, col 2.
 
 ------------------------------------------------------------------------
-    [0.025 s 23102936 bytes]  failed
+    [0.039 s 19574888 bytes]  failed
 
 LoopInvariant: LoopInvariant() ...
-    [0.0070 s 23255248 bytes]  passed
-  [0.365 s 23256272 bytes total]
+    [0.0050 s 19727752 bytes]  passed
+  [0.361 s 19728776 bytes total]
 1 caution
 3 warnings

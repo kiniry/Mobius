@@ -1,16 +1,16 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/RefineCircularA.java: Caution: Using given file as the .java file, even though it is not the java file for RefineCircularA on the classpath
-src/test/resources/RefineCircularA.java:1: Error: Could not find file referenced in refine annotation: RefineCircularA.spec
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineCircularA.java: Caution: Using given file as the .java file, even though it is not the java file for RefineCircularA on the classpath
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineCircularA.java:1: Error: Could not find file referenced in refine annotation: RefineCircularA.spec
 //@ refine "RefineCircularA.spec";
     ^
-    [0.0020 s 24707048 bytes]
+    [0.0020 s 21891896 bytes]
 
 RefineCircularA ...
-  Prover started:0.095 s 24678936 bytes
-    [0.226 s 24745376 bytes]
+  Prover started:0.059 s 22876944 bytes
+    [0.159 s 22943384 bytes]
 
 RefineCircularA: RefineCircularA() ...
-    [0.066 s 24898160 bytes]  passed
-  [0.293 s 24899184 bytes total]
+    [0.071 s 23096168 bytes]  passed
+  [0.231 s 23097192 bytes total]
 1 caution
 1 error

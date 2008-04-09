@@ -1,28 +1,28 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Client1.java: Caution: Using given file as the .java file, even though it is not the java file for Client1 on the classpath
-    [0.0030 s 19152928 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client1.java: Caution: Using given file as the .java file, even though it is not the java file for Client1 on the classpath
+    [0.0040 s 16020664 bytes]
 
 Client1 ...
-  Prover started:0.062 s 19371328 bytes
-    [0.185 s 19443128 bytes]
+  Prover started:0.058 s 16365456 bytes
+    [0.186 s 16437288 bytes]
 
 Client1: unique(IntList) ...
-    [0.109 s 19741160 bytes]  passed
+    [0.113 s 16733864 bytes]  passed
 
 Client1: clear(IntList) ...
-    [0.023 s 20107616 bytes]  passed
+    [0.023 s 17101184 bytes]  passed
 
 Client1: Client1() ...
-    [0.0080 s 20266728 bytes]  passed
-  [0.326 s 20267752 bytes total]
+    [0.0070 s 17260888 bytes]  passed
+  [0.329 s 17261912 bytes total]
 
 IntList ...
-    [0.0010 s 20332840 bytes]
+    [0.0010 s 17325976 bytes]
 
 IntList: unique() ...
-    [0.0 s 20334888 bytes]  passed immediately
+    [0.0 s 17328024 bytes]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 20335912 bytes]  passed immediately
-  [0.0080 s 20336936 bytes total]
+    [0.0 s 17329048 bytes]  passed immediately
+  [0.0090 s 17330072 bytes total]
 1 caution

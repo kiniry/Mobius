@@ -1,82 +1,82 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/PureCheck3.java: Caution: Using given file as the .java file, even though it is not the java file for PureCheck3 on the classpath
-    [0.0040 s 24678240 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java: Caution: Using given file as the .java file, even though it is not the java file for PureCheck3 on the classpath
+    [0.0020 s 22557392 bytes]
 
 PureCheck3 ...
-  Prover started:0.082 s 24913784 bytes
-    [0.28 s 24979792 bytes]
+  Prover started:0.063 s 23573576 bytes
+    [0.192 s 22566664 bytes]
 
 PureCheck3: m() ...
-    [0.106 s 25029096 bytes]  passed
+    [0.043 s 22616080 bytes]  passed
 
 PureCheck3: mp() ...
-    [0.0040 s 25077432 bytes]  passed
+    [0.0030 s 22665440 bytes]  passed
 
 PureCheck3: n() ...
-    [0.0040 s 25141128 bytes]  passed
+    [0.0050 s 22728112 bytes]  passed
 
 PureCheck3: np() ...
-    [0.0040 s 25202776 bytes]  passed
+    [0.0040 s 22790728 bytes]  passed
 
 PureCheck3: a() ...
 ------------------------------------------------------------------------
-src/test/resources/PureCheck3.java:22: Warning: Precondition possibly not established (Pre)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java:22: Warning: Precondition possibly not established (Pre)
         n();    // WARNING
          ^
-Associated declaration is "src/test/resources/PureCheck3.java", line 11, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java", line 11, col 8:
     //@ requires b;
         ^
 ------------------------------------------------------------------------
-    [0.053 s 25501912 bytes]  failed
+    [0.041 s 23091736 bytes]  failed
 
 PureCheck3: ap() ...
 ------------------------------------------------------------------------
-src/test/resources/PureCheck3.java:26: Warning: Precondition possibly not established (Pre)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java:26: Warning: Precondition possibly not established (Pre)
         np();   // WARNING
           ^
-Associated declaration is "src/test/resources/PureCheck3.java", line 15, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java", line 15, col 8:
     //@ requires b;
         ^
 ------------------------------------------------------------------------
-    [0.02 s 25752048 bytes]  failed
+    [0.017 s 23341584 bytes]  failed
 
 PureCheck3: PureCheck3() ...
-src/test/resources/PureCheck3.java:30: Error: There is no assignable clause allowing this method call
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java:30: Error: There is no assignable clause allowing this method call
     public PureCheck3() { }
                         ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-src/test/resources/PureCheck3.java:29: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java:29: Associated declaration: 
     //@ modifies \nothing;
         ^
-    [0.015 s 25932336 bytes]  passed
-  [0.487 s 25933360 bytes total]
+    [0.01 s 23522520 bytes]  passed
+  [0.315 s 23523544 bytes total]
 
 PureCheck3A ...
-    [0.0030 s 26038504 bytes]
+    [0.0020 s 23628688 bytes]
 
 PureCheck3A: mp() ...
-    [0.019 s 26111416 bytes]  passed
+    [0.014 s 23701600 bytes]  passed
 
 PureCheck3A: n() ...
-    [0.0050 s 26178184 bytes]  passed
+    [0.0040 s 23768368 bytes]  passed
 
 PureCheck3A: a() ...
-    [0.01 s 26336624 bytes]  passed
+    [0.0070 s 23925672 bytes]  passed
 
 PureCheck3A: ap() ...
 ------------------------------------------------------------------------
-src/test/resources/PureCheck3.java:50: Warning: Precondition possibly not established (Pre)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java:50: Warning: Precondition possibly not established (Pre)
         n();    // WARNING
          ^
-Associated declaration is "src/test/resources/PureCheck3.java", line 11, col 8:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureCheck3.java", line 11, col 8:
     //@ requires b;
         ^
 ------------------------------------------------------------------------
-    [0.022 s 26628776 bytes]  failed
+    [0.019 s 24220664 bytes]  failed
 
 PureCheck3A: PureCheck3A() ...
-    [0.0080 s 26781560 bytes]  passed
-  [0.067 s 26782584 bytes total]
+    [0.0060 s 24373504 bytes]  passed
+  [0.052 s 24374528 bytes total]
 1 caution
 3 warnings
 1 error

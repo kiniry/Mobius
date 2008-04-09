@@ -1,76 +1,76 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Behavior.java: Caution: Using given file as the .java file, even though it is not the java file for Behavior on the classpath
-    [0.0050 s 18844344 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java: Caution: Using given file as the .java file, even though it is not the java file for Behavior on the classpath
+    [0.0090 s 16767360 bytes]
 
 Behavior ...
-  Prover started:0.062 s 19157600 bytes
-    [0.183 s 19224560 bytes]
+  Prover started:0.06 s 17969976 bytes
+    [0.202 s 16817600 bytes]
 
 Behavior: m() ...
-    [0.076 s 19441752 bytes]  passed
+    [0.057 s 17034840 bytes]  passed
 
 Behavior: m2() ...
 ------------------------------------------------------------------------
-src/test/resources/Behavior.java:18: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java:18: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Behavior.java", line 13, col 12:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java", line 13, col 12:
         /*@ public exceptional_behavior ...
                    ^
 Execution trace information:
-    Executed return in "src/test/resources/Behavior.java", line 17, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java", line 17, col 2.
 
 ------------------------------------------------------------------------
-    [0.043 s 19646928 bytes]  failed
+    [0.049 s 17243272 bytes]  failed
 
 Behavior: m3() ...
-    [0.0040 s 19710160 bytes]  passed
+    [0.0040 s 17306536 bytes]  passed
 
 Behavior: m4() ...
 ------------------------------------------------------------------------
-src/test/resources/Behavior.java:32: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java:32: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Behavior.java", line 27, col 12:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java", line 27, col 12:
         /*@ public normal_behavior ...
                    ^
 Execution trace information:
-    Executed throw in "src/test/resources/Behavior.java", line 31, col 2.
+    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java", line 31, col 2.
 
 ------------------------------------------------------------------------
-    [0.023 s 20033272 bytes]  failed
+    [0.026 s 17632448 bytes]  failed
 
 Behavior: mm(int) ...
-    [0.024 s 20348480 bytes]  passed
+    [0.028 s 17947720 bytes]  passed
 
 Behavior: mme(int) ...
 ------------------------------------------------------------------------
-src/test/resources/Behavior.java:61: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java:61: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Behavior.java", line 52, col 12:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java", line 52, col 12:
             public exceptional_behavior ...
                    ^
 Execution trace information:
-    Executed then branch in "src/test/resources/Behavior.java", line 58, col 11.
-    Executed return in "src/test/resources/Behavior.java", line 58, col 11.
+    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java", line 58, col 11.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java", line 58, col 11.
 
 ------------------------------------------------------------------------
-    [0.027 s 20776552 bytes]  failed
+    [0.032 s 18380352 bytes]  failed
 
 Behavior: n() ...
 ------------------------------------------------------------------------
-src/test/resources/Behavior.java:66: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java:66: Warning: Postcondition possibly not established (Post)
         public void n() { ++j; }
                                ^
-Associated declaration is "src/test/resources/Behavior.java", line 65, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Behavior.java", line 65, col 5:
         //@ ensures j < \old(j); // Warning here
             ^
 ------------------------------------------------------------------------
-    [0.022 s 20979288 bytes]  failed
+    [0.023 s 18585152 bytes]  failed
 
 Behavior: Behavior() ...
-    [0.0070 s 21139048 bytes]  passed
-  [0.409 s 21140072 bytes total]
+    [0.0080 s 18745512 bytes]  passed
+  [0.43 s 18746536 bytes total]
 1 caution
 4 warnings

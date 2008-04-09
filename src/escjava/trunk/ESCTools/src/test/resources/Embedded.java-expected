@@ -1,68 +1,68 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Embedded.java: Caution: Using given file as the .java file, even though it is not the java file for Embedded on the classpath
-    [0.0040 s 20004064 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java: Caution: Using given file as the .java file, even though it is not the java file for Embedded on the classpath
+    [0.0020 s 17570512 bytes]
 
 Embedded ...
-  Prover started:0.062 s 20295344 bytes
-    [0.184 s 20360256 bytes]
+  Prover started:0.067 s 18593344 bytes
+    [0.184 s 18658032 bytes]
 
 Embedded: m() ...
 ------------------------------------------------------------------------
-src/test/resources/Embedded.java:11: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java:11: Warning: Postcondition possibly not established (Post)
         public void m() {}
                          ^
-Associated declaration is "src/test/resources/Embedded.java", line 8, col 2:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java", line 8, col 2:
                 ensures false;
                 ^
 ------------------------------------------------------------------------
-    [0.081 s 20544104 bytes]  failed
+    [0.084 s 18844784 bytes]  failed
 
 Embedded: n() ...
 ------------------------------------------------------------------------
-src/test/resources/Embedded.java:18: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java:18: Warning: Postcondition possibly not established (Post)
         public void n() {}
                          ^
-Associated declaration is "src/test/resources/Embedded.java", line 15, col 2:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java", line 15, col 2:
                 ensures false;
                 ^
 ------------------------------------------------------------------------
-    [0.043 s 20709760 bytes]  failed
+    [0.042 s 19012272 bytes]  failed
 
 Embedded: q() ...
 ------------------------------------------------------------------------
-src/test/resources/Embedded.java:25: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java:25: Warning: Postcondition possibly not established (Post)
         public void q() {}
                          ^
-Associated declaration is "src/test/resources/Embedded.java", line 22, col 2:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java", line 22, col 2:
                 ensures false;
                 ^
 ------------------------------------------------------------------------
-    [0.015 s 20876440 bytes]  failed
+    [0.016 s 19180784 bytes]  failed
 
 Embedded: p() ...
 ------------------------------------------------------------------------
-src/test/resources/Embedded.java:32: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java:32: Warning: Postcondition possibly not established (Post)
         public void p() {}
                          ^
-Associated declaration is "src/test/resources/Embedded.java", line 29, col 2:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java", line 29, col 2:
                 ensures false;
                 ^
 ------------------------------------------------------------------------
-    [0.013 s 21042096 bytes]  failed
+    [0.014 s 19348272 bytes]  failed
 
 Embedded: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Embedded.java:48: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java:48: Warning: Postcondition possibly not established (Post)
         public void mm() {}
                           ^
-Associated declaration is "src/test/resources/Embedded.java", line 45, col 2:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Embedded.java", line 45, col 2:
                 ensures false;
                 ^
 ------------------------------------------------------------------------
-    [0.014 s 21208024 bytes]  failed
+    [0.029 s 17775832 bytes]  failed
 
 Embedded: Embedded() ...
-    [0.0060 s 21357776 bytes]  passed
-  [0.356 s 21358800 bytes total]
+    [0.0060 s 17926808 bytes]  passed
+  [0.375 s 17927832 bytes total]
 1 caution
 5 warnings

@@ -1,40 +1,40 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Client4.java: Caution: Using given file as the .java file, even though it is not the java file for Client4 on the classpath
-    [0.0030 s 17790656 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client4.java: Caution: Using given file as the .java file, even though it is not the java file for Client4 on the classpath
+    [0.0020 s 17166552 bytes]
 
 Client4 ...
-  Prover started:0.065 s 18831752 bytes
-    [0.208 s 17794232 bytes]
+  Prover started:0.076 s 17117344 bytes
+    [0.186 s 17190168 bytes]
 
 Client4: unique(IntList) ...
 ------------------------------------------------------------------------
-src/test/resources/Client4.java:8: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client4.java:8: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Client4.java", line 5, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client4.java", line 5, col 5:
         //@ ensures \not_modified(list.isEmpty);  // ERROR - insuffici ...
             ^
-Associated declaration is "src/test/resources/Client4.java", line 5, col 27:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client4.java", line 5, col 27:
         //@ ensures \not_modified(list.isEmpty);  // ERROR - insuffici ...
                                   ^
 ------------------------------------------------------------------------
-    [0.101 s 18229752 bytes]  failed
+    [0.119 s 17625640 bytes]  failed
 
 Client4: clear(IntList) ...
-    [0.025 s 18565432 bytes]  passed
+    [0.02 s 17962112 bytes]  passed
 
 Client4: Client4() ...
-    [0.0070 s 18723696 bytes]  passed
-  [0.341 s 18724720 bytes total]
+    [0.0060 s 18120376 bytes]  passed
+  [0.332 s 18121400 bytes total]
 
 IntList ...
-    [0.0010 s 18789808 bytes]
+    [0.0010 s 18186416 bytes]
 
 IntList: unique() ...
-    [0.0 s 18791856 bytes]  passed immediately
+    [0.0 s 18187440 bytes]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 18792880 bytes]  passed immediately
-  [0.01 s 18793904 bytes total]
+    [0.0 s 18189488 bytes]  passed immediately
+  [0.0090 s 18190512 bytes total]
 1 caution
 1 warning

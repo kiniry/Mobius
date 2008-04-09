@@ -1,36 +1,36 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Represents.java: Caution: Using given file as the .java file, even though it is not the java file for Represents on the classpath
-    [0.0020 s 25132336 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Represents.java: Caution: Using given file as the .java file, even though it is not the java file for Represents on the classpath
+    [0.0020 s 22459288 bytes]
 
 Represents ...
-  Prover started:0.061 s 25467992 bytes
-    [0.176 s 25539120 bytes]
+  Prover started:0.061 s 23497832 bytes
+    [0.161 s 23568960 bytes]
 
 Represents: Represents() ...
-    [0.107 s 25817608 bytes]  passed
+    [0.107 s 23846368 bytes]  passed
 
 Represents: m() ...
-    [0.0080 s 25936624 bytes]  passed
+    [0.0090 s 23966464 bytes]  passed
 
 Represents: n() ...
 ------------------------------------------------------------------------
-src/test/resources/Represents.java:35: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Represents.java:35: Warning: Postcondition possibly not established (Post)
         } // ERROR - postcondition not established
         ^
-Associated declaration is "src/test/resources/Represents.java", line 31, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Represents.java", line 31, col 5:
         //@ ensures size > 2;
             ^
 Execution trace information:
-    Executed return in "src/test/resources/Represents.java", line 34, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Represents.java", line 34, col 2.
 
 ------------------------------------------------------------------------
-    [0.021 s 26233744 bytes]  failed
+    [0.021 s 24267984 bytes]  failed
 
 Represents: nn() ...
-    [0.01 s 26366376 bytes]  passed
+    [0.01 s 24400728 bytes]  passed
 
 Represents: p() ...
-    [0.0090 s 26498704 bytes]  passed
-  [0.332 s 26499728 bytes total]
+    [0.01 s 24534136 bytes]  passed
+  [0.318 s 24535160 bytes total]
 1 caution
 1 warning

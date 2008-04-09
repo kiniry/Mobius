@@ -1,198 +1,198 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/FormalNonnullInheritance.java: Caution: Using given file as the .java file, even though it is not the java file for FormalNonnullInheritance on the classpath
-    [0.0030 s 19814384 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java: Caution: Using given file as the .java file, even though it is not the java file for FormalNonnullInheritance on the classpath
+    [0.0040 s 17643056 bytes]
 
 FormalNonnullInheritance ...
-src/test/resources/FormalNonnullInheritance.java:3: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:3: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m(/*@ non_null */ Object a, /*@ non_null */ Object ...
                                                     ^
-src/test/resources/FormalNonnullInheritance.java:19: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:19: Associated declaration: 
         public void m(/*@ non_null */ Object a, Object b, /*@ non_null ...
                                                 ^
-src/test/resources/FormalNonnullInheritance.java:4: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:4: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void n(/*@ non_null */ Object a, /*@ non_null */ Object ...
                                                     ^
-src/test/resources/FormalNonnullInheritance.java:31: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:31: Associated declaration: 
         public void n(/*@ non_null */ Object a, Object b, /*@ non_null ...
                                                 ^
-src/test/resources/FormalNonnullInheritance.java:5: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:5: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void q(/*@ non_null */ Object d); // Error here
                           ^
-src/test/resources/FormalNonnullInheritance.java:20: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:20: Associated declaration: 
         public void q(Object dd);
                       ^
-src/test/resources/FormalNonnullInheritance.java:7: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:7: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void s(/*@ non_null */ Object sd); // Error here
                           ^
-src/test/resources/FormalNonnullInheritance.java:34: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:34: Associated declaration: 
         public void s(Object sddd);
                       ^
-src/test/resources/FormalNonnullInheritance.java:10: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:10: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void t2(/*@ non_null */ Object tt2e); // error here
                            ^
-src/test/resources/FormalNonnullInheritance.java:40: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:40: Associated declaration: 
         public void t2( Object tt2e);
                         ^
-src/test/resources/FormalNonnullInheritance.java:11: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:11: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void t3(/*@ non_null */ Object tt3e); // Error here
                            ^
-src/test/resources/FormalNonnullInheritance.java:41: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:41: Associated declaration: 
         public void t3( Object tt3e);
                         ^
-src/test/resources/FormalNonnullInheritance.java:13: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:13: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void v2(/*@ non_null */ Object tt2e); // error here
                            ^
-src/test/resources/FormalNonnullInheritance.java:60: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:60: Associated declaration: 
         public void v2( Object tt2e); 
                         ^
-src/test/resources/FormalNonnullInheritance.java:14: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:14: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void v3(/*@ non_null */ Object tt3e); // Error here
                            ^
-src/test/resources/FormalNonnullInheritance.java:55: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:55: Associated declaration: 
         public void v3( Object tt3e); 
                         ^
-src/test/resources/FormalNonnullInheritance.java:22: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:22: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void s(/*@ non_null */ Object sdd); // Error here
                           ^
-src/test/resources/FormalNonnullInheritance.java:34: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNonnullInheritance.java:34: Associated declaration: 
         public void s(Object sddd);
                       ^
-  Prover started:0.062 s 21558528 bytes
-    [0.197 s 21669952 bytes]
+  Prover started:0.063 s 19371216 bytes
+    [0.196 s 19482640 bytes]
 
 FormalNonnullInheritance: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 21672344 bytes]  passed immediately
+    [0.0010 s 19486112 bytes]  passed immediately
 
 FormalNonnullInheritance: n(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 21675760 bytes]  passed immediately
+    [0.0 s 19489528 bytes]  passed immediately
 
 FormalNonnullInheritance: q(java.lang.Object) ...
-    [0.0 s 21677808 bytes]  passed immediately
+    [0.0 s 19491576 bytes]  passed immediately
 
 FormalNonnullInheritance: r(java.lang.Object) ...
-    [0.0 s 21680880 bytes]  passed immediately
+    [0.0 s 19493624 bytes]  passed immediately
 
 FormalNonnullInheritance: s(java.lang.Object) ...
-    [0.0 s 21682928 bytes]  passed immediately
+    [0.0 s 19496696 bytes]  passed immediately
 
 FormalNonnullInheritance: t1(java.lang.Object) ...
-    [0.0 s 21684976 bytes]  passed immediately
+    [0.0 s 19498744 bytes]  passed immediately
 
 FormalNonnullInheritance: t2(java.lang.Object) ...
-    [0.0 s 21687024 bytes]  passed immediately
+    [0.0 s 19500792 bytes]  passed immediately
 
 FormalNonnullInheritance: t3(java.lang.Object) ...
-    [0.0 s 21689072 bytes]  passed immediately
+    [0.0 s 19502840 bytes]  passed immediately
 
 FormalNonnullInheritance: v1(java.lang.Object) ...
-    [0.0 s 21691120 bytes]  passed immediately
+    [0.0 s 19504888 bytes]  passed immediately
 
 FormalNonnullInheritance: v2(java.lang.Object) ...
-    [0.0 s 21694192 bytes]  passed immediately
+    [0.0 s 19507960 bytes]  passed immediately
 
 FormalNonnullInheritance: v3(java.lang.Object) ...
-    [0.0 s 21696240 bytes]  passed immediately
+    [0.0 s 19510008 bytes]  passed immediately
 
 FormalNonnullInheritance: FormalNonnullInheritance() ...
-    [0.088 s 21842496 bytes]  passed
-  [0.287 s 21843520 bytes total]
+    [0.089 s 19656136 bytes]  passed
+  [0.286 s 19657160 bytes total]
 
 FMIHelper ...
-    [0.0020 s 21944448 bytes]
+    [0.0020 s 19758088 bytes]
 
 FMIHelper: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 21947808 bytes]  passed immediately
+    [0.0010 s 19761504 bytes]  passed immediately
 
 FMIHelper: q(java.lang.Object) ...
-    [0.0 s 21949856 bytes]  passed immediately
+    [0.0 s 19763552 bytes]  passed immediately
 
 FMIHelper: r(java.lang.Object) ...
-    [0.0 s 21951904 bytes]  passed immediately
+    [0.0 s 19765600 bytes]  passed immediately
 
 FMIHelper: s(java.lang.Object) ...
-    [0.0 s 21953952 bytes]  passed immediately
+    [0.0 s 19767648 bytes]  passed immediately
 
 FMIHelper: v1(java.lang.Object) ...
-    [0.0 s 21956000 bytes]  passed immediately
+    [0.0 s 19770720 bytes]  passed immediately
 
 FMIHelper: v2(java.lang.Object) ...
-    [0.0 s 21958048 bytes]  passed immediately
+    [0.0 s 19772768 bytes]  passed immediately
 
 FMIHelper: v3(java.lang.Object) ...
-    [0.0 s 21960096 bytes]  passed immediately
+    [0.0 s 19774816 bytes]  passed immediately
 
 FMIHelper: FMIHelper() ...
-    [0.011 s 22104304 bytes]  passed
-  [0.014 s 22105328 bytes total]
+    [0.022 s 18046552 bytes]  passed
+  [0.025 s 18047576 bytes total]
 
 FMIHelper2 ...
-    [0.0010 s 22184936 bytes]
+    [0.0010 s 18127184 bytes]
 
 FMIHelper2: n(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 22188296 bytes]  passed immediately
+    [0.0 s 18130544 bytes]  passed immediately
 
 FMIHelper2: q(java.lang.Object) ...
-    [0.0 s 22190344 bytes]  passed immediately
+    [0.0 s 18132592 bytes]  passed immediately
 
 FMIHelper2: r(java.lang.Object) ...
-    [0.0 s 22192392 bytes]  passed immediately
+    [0.0 s 18134640 bytes]  passed immediately
 
 FMIHelper2: s(java.lang.Object) ...
-    [0.0 s 22194440 bytes]  passed immediately
+    [0.0 s 18136688 bytes]  passed immediately
 
 FMIHelper2: FMIHelper2() ...
-    [0.023 s 20347696 bytes]  passed
-  [0.024 s 20348720 bytes total]
+    [0.01 s 18291064 bytes]  passed
+  [0.011 s 18292088 bytes total]
 
 FMIHelperT ...
-    [0.0010 s 20431424 bytes]
+    [0.0010 s 18374792 bytes]
 
 FMIHelperT: t1(java.lang.Object) ...
-    [0.0 s 20433472 bytes]  passed immediately
+    [0.0 s 18376840 bytes]  passed immediately
 
 FMIHelperT: t2(java.lang.Object) ...
-    [0.0 s 20435520 bytes]  passed immediately
+    [0.0 s 18378888 bytes]  passed immediately
 
 FMIHelperT: t3(java.lang.Object) ...
-    [0.0 s 20438592 bytes]  passed immediately
-  [0.01 s 20439616 bytes total]
+    [0.0 s 18380936 bytes]  passed immediately
+  [0.01 s 18381960 bytes total]
 
 FMIHelperTT ...
-    [0.0 s 20509912 bytes]
+    [0.0010 s 18453336 bytes]
 
 FMIHelperTT: t1(java.lang.Object) ...
-    [0.0 s 20511960 bytes]  passed immediately
+    [0.0 s 18455384 bytes]  passed immediately
 
 FMIHelperTT: t2(java.lang.Object) ...
-    [0.0 s 20514008 bytes]  passed immediately
+    [0.0 s 18457432 bytes]  passed immediately
 
 FMIHelperTT: t3(java.lang.Object) ...
-    [0.0 s 20516056 bytes]  passed immediately
-  [0.0 s 20517080 bytes total]
+    [0.0 s 18460504 bytes]  passed immediately
+  [0.0010 s 18461584 bytes total]
 
 FMIHelperV ...
-    [0.0 s 20588376 bytes]
+    [0.0010 s 18532936 bytes]
 
 FMIHelperV: v1(java.lang.Object) ...
-    [0.0 s 20590424 bytes]  passed immediately
+    [0.0 s 18534984 bytes]  passed immediately
 
 FMIHelperV: v2(java.lang.Object) ...
-    [0.0 s 20592472 bytes]  passed immediately
+    [0.0 s 18537032 bytes]  passed immediately
 
 FMIHelperV: v3(java.lang.Object) ...
-    [0.0 s 20594520 bytes]  passed immediately
-  [0.0080 s 20595544 bytes total]
+    [0.0 s 18539080 bytes]  passed immediately
+  [0.0080 s 18540104 bytes total]
 
 FMIHelperVV ...
-    [0.0010 s 20666920 bytes]
+    [0.0 s 18611424 bytes]
 
 FMIHelperVV: v1(java.lang.Object) ...
-    [0.0 s 20668968 bytes]  passed immediately
+    [0.0 s 18613472 bytes]  passed immediately
 
 FMIHelperVV: v2(java.lang.Object) ...
-    [0.0 s 20671016 bytes]  passed immediately
+    [0.0 s 18615520 bytes]  passed immediately
 
 FMIHelperVV: v3(java.lang.Object) ...
-    [0.0 s 20673064 bytes]  passed immediately
-  [0.0010 s 20675168 bytes total]
+    [0.0 s 18617568 bytes]  passed immediately
+  [0.0010 s 18619672 bytes total]
 10 cautions

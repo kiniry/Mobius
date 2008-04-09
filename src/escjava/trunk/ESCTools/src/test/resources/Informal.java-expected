@@ -1,24 +1,24 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Informal.java: Caution: Using given file as the .java file, even though it is not the java file for Informal on the classpath
-    [0.0030 s 20355176 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Informal.java: Caution: Using given file as the .java file, even though it is not the java file for Informal on the classpath
+    [0.0050 s 18556208 bytes]
 
 Informal ...
-  Prover started:0.06 s 20751472 bytes
-    [0.177 s 20818208 bytes]
+  Prover started:0.063 s 19583712 bytes
+    [0.167 s 19649424 bytes]
 
 Informal: m() ...
 ------------------------------------------------------------------------
-src/test/resources/Informal.java:23: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Informal.java:23: Warning: Postcondition possibly not established (Post)
         public void m() throws Exception {}
                                           ^
-Associated declaration is "src/test/resources/Informal.java", line 10, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Informal.java", line 10, col 5:
         //@ ensures ! (* ok *);
             ^
 ------------------------------------------------------------------------
-    [0.084 s 21048136 bytes]  failed
+    [0.086 s 19882208 bytes]  failed
 
 Informal: Informal() ...
-    [0.035 s 21207216 bytes]  passed
-  [0.296 s 21208240 bytes total]
+    [0.032 s 20041432 bytes]  passed
+  [0.286 s 20042456 bytes total]
 1 caution
 1 warning

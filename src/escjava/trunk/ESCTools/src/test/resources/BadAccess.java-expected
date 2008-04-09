@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/BadAccess.java:3: Caution: Duplicate occurrence of modifier 'public'
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/BadAccess.java:3: Caution: Duplicate occurrence of modifier 'public'
         //@ public ghost public int i;
                          ^
-src/test/resources/BadAccess.java: Caution: Using given file as the .java file, even though it is not the java file for BadAccess on the classpath
-    [0.0020 s 18436224 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/BadAccess.java: Caution: Using given file as the .java file, even though it is not the java file for BadAccess on the classpath
+    [0.0010 s 16200488 bytes]
 
 BadAccess ...
-  Prover started:0.058 s 19429400 bytes
-    [0.16 s 19495360 bytes]
+  Prover started:0.059 s 17183096 bytes
+    [0.163 s 17249056 bytes]
 
 BadAccess: BadAccess() ...
-    [0.071 s 18522744 bytes]  passed
-  [0.231 s 18523768 bytes total]
+    [0.072 s 17407704 bytes]  passed
+  [0.235 s 17409752 bytes total]
 2 cautions

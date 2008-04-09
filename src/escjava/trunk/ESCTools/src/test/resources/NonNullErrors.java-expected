@@ -1,27 +1,27 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/NonNullErrors.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullErrors on the classpath
-    [0.0020 s 24155328 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullErrors.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullErrors on the classpath
+    [0.0010 s 22039200 bytes]
 
 NonNullErrors ...
-src/test/resources/NonNullErrors.java:5: Error: 'non_null' can only be used with methods whose result type is a reference type
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullErrors.java:5: Error: 'non_null' can only be used with methods whose result type is a reference type
         //@ non_null
         ^
-src/test/resources/NonNullErrors.java:8: Error: 'non_null' can only be used with methods whose result type is a reference type
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullErrors.java:8: Error: 'non_null' can only be used with methods whose result type is a reference type
         //@ non_null
         ^
-src/test/resources/NonNullErrors.java:11: Error: The non_null pragma can be applied only to variables, fields, and parameters of reference types
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullErrors.java:11: Error: The non_null pragma can be applied only to variables, fields, and parameters of reference types
         public void mmmm(/*@ non_null */ int i);
                                              ^
-src/test/resources/NonNullErrors.java:13: Error: 'nullable' can only be used with methods whose result type is a reference type
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullErrors.java:13: Error: 'nullable' can only be used with methods whose result type is a reference type
         //@ nullable
         ^
-src/test/resources/NonNullErrors.java:16: Error: 'nullable' can only be used with methods whose result type is a reference type
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullErrors.java:16: Error: 'nullable' can only be used with methods whose result type is a reference type
         //@ nullable
         ^
-src/test/resources/NonNullErrors.java:19: Error: The nullable pragma can be applied only to variables, fields, and parameters of reference types
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullErrors.java:19: Error: The nullable pragma can be applied only to variables, fields, and parameters of reference types
         public void mmmm2(/*@ nullable */ int i);
                                               ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.026 s 24184600 bytes total] (aborted)
+  [0.011 s 22714072 bytes total] (aborted)
 2 cautions
 6 errors

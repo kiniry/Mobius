@@ -1,46 +1,46 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Impl2.java: Caution: Using given file as the .java file, even though it is not the java file for Impl2 on the classpath
-    [0.01 s 19068168 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl2.java: Caution: Using given file as the .java file, even though it is not the java file for Impl2 on the classpath
+    [0.01 s 18796520 bytes]
 
 Impl2 ...
-  Prover started:0.061 s 20122480 bytes
-    [0.164 s 20197312 bytes]
+  Prover started:0.063 s 19193176 bytes
+    [0.264 s 19268008 bytes]
 
 Impl2: shrink() ...
 ------------------------------------------------------------------------
-src/test/resources/Impl2.java:11: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl2.java:11: Warning: Postcondition possibly not established (Post)
         } // FAILS
         ^
-Associated declaration is "src/test/resources/Impl2.java", line 33, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl2.java", line 33, col 5:
         //@ ensures \not_modified(isEmpty);
             ^
-Associated declaration is "src/test/resources/Impl2.java", line 33, col 27:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl2.java", line 33, col 27:
         //@ ensures \not_modified(isEmpty);
                                   ^
 ------------------------------------------------------------------------
-    [0.119 s 20495592 bytes]  failed
+    [0.065 s 19569840 bytes]  failed
 
 Impl2: shrinkA() ...
-    [0.041 s 19236952 bytes]  passed
+    [0.02 s 19745824 bytes]  passed
 
 Impl2: clear() ...
-    [0.015 s 19394120 bytes]  passed
+    [0.015 s 19903280 bytes]  passed
 
 Impl2: Impl2() ...
-    [0.022 s 19703632 bytes]  passed
-  [0.361 s 19704656 bytes total]
+    [0.024 s 20213136 bytes]  passed
+  [0.388 s 20214160 bytes total]
 
 IntList ...
-    [0.0010 s 19782800 bytes]
+    [0.0020 s 20292248 bytes]
 
 IntList: shrink() ...
-    [0.0 s 19784848 bytes]  passed immediately
+    [0.0 s 20293272 bytes]  passed immediately
 
 IntList: shrinkA() ...
-    [0.0 s 19785872 bytes]  passed immediately
+    [0.0 s 20295320 bytes]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 19787920 bytes]  passed immediately
-  [0.0090 s 19788944 bytes total]
+    [0.0 s 20296344 bytes]  passed immediately
+  [0.01 s 20297368 bytes total]
 1 caution
 1 warning

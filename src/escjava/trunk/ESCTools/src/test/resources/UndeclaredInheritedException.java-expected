@@ -1,148 +1,148 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/UndeclaredInheritedException.java: Caution: Using given file as the .java file, even though it is not the java file for UndeclaredInheritedException on the classpath
-    [0.0050 s 27387080 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java: Caution: Using given file as the .java file, even though it is not the java file for UndeclaredInheritedException on the classpath
+    [0.0040 s 25227976 bytes]
 
 UndeclaredInheritedException ...
-  Prover started:0.077 s 27183768 bytes
-    [0.235 s 27350664 bytes]
+  Prover started:0.084 s 24966064 bytes
+    [0.249 s 25131936 bytes]
 
 UndeclaredInheritedException: UndeclaredInheritedException() ...
-    [0.0 s 27351688 bytes]  passed immediately
+    [0.0 s 25133984 bytes]  passed immediately
 
 UndeclaredInheritedException: q(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:8: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:8: Warning: Possible assertion failure (Assert)
     //@ assert x.m(o); // WARNING - because result is undefined with o ...
         ^
 ------------------------------------------------------------------------
-    [0.145 s 28172160 bytes]  failed
+    [0.154 s 25981752 bytes]  failed
 
 UndeclaredInheritedException: qx(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:16: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:16: Warning: Possible assertion failure (Assert)
     //@ assert x.m(o); // WARNING - because result is undefined with o ...
         ^
 ------------------------------------------------------------------------
-    [0.098 s 28923336 bytes]  failed
+    [0.099 s 26732328 bytes]  failed
 
 UndeclaredInheritedException: q1(java.lang.Object) ...
-    [0.054 s 29629936 bytes]  passed
+    [0.055 s 27439952 bytes]  passed
 
 UndeclaredInheritedException: q1x(java.lang.Object) ...
-    [0.089 s 30338640 bytes]  passed
+    [0.052 s 28148616 bytes]  passed
 
 UndeclaredInheritedException: q3(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:38: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:38: Warning: Possible assertion failure (Assert)
     //@ assert x.m(oo); // WARNING - not sure oo is non-null
         ^
 ------------------------------------------------------------------------
-    [0.071 s 31223688 bytes]  failed
+    [0.106 s 29034016 bytes]  failed
 
 UndeclaredInheritedException: q3x(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:45: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:45: Warning: Possible assertion failure (Assert)
     //@ assert x.m(oo); // WARNING - not sure oo is non-null
         ^
 ------------------------------------------------------------------------
-    [0.116 s 27734696 bytes]  failed
+    [0.128 s 25773120 bytes]  failed
 
 UndeclaredInheritedException: q4(java.lang.Object) ...
-    [0.022 s 28268440 bytes]  passed
+    [0.023 s 26306752 bytes]  passed
 
 UndeclaredInheritedException: q4x(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:65: Warning: Possible unexpected exception (Exception)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:65: Warning: Possible unexpected exception (Exception)
 }  // WARNING - an exception might be thrown
 ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/UndeclaredInheritedException.java", line 64, col 6.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java", line 64, col 6.
 
 ------------------------------------------------------------------------
-    [0.056 s 29136888 bytes]  failed
+    [0.066 s 27174472 bytes]  failed
 
 UndeclaredInheritedException: rr(UndeclaredInheritedException$NEx) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:72: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:72: Warning: Possible assertion failure (Assert)
         //@ assert false;
             ^
 ------------------------------------------------------------------------
-    [0.04 s 29711160 bytes]  failed
+    [0.046 s 27748184 bytes]  failed
 
 UndeclaredInheritedException: rrx(UndeclaredInheritedException$Ex) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:87: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:87: Warning: Possible assertion failure (Assert)
 //@ assert false;  // WARNING
     ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/UndeclaredInheritedException.java", line 82, col 10.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java", line 82, col 10.
 
 ------------------------------------------------------------------------
-    [0.095 s 30633328 bytes]  failed
-  [1.022 s 30634352 bytes total]
+    [0.11 s 28672784 bytes]  failed
+  [1.089 s 28673808 bytes total]
 
 UndeclaredInheritedException$SNEx ...
-    [0.0010 s 30751488 bytes]
+    [0.0020 s 28789864 bytes]
 
 UndeclaredInheritedException$SNEx: SNEx() ...
-    [0.0 s 30753536 bytes]  passed immediately
+    [0.0 s 28791912 bytes]  passed immediately
 
 UndeclaredInheritedException$SNEx: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:102: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:102: Warning: Possible violation of modifies clause (Modifies)
       if (o == null) throw new NullPointerException();
                                                    ^
 Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/NullPointerException.class":
-Associated declaration is "src/test/resources/UndeclaredInheritedException.java", line 94, col 4:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java", line 94, col 4:
     //@ public normal_behavior ...
     ^
 Execution trace information:
-    Executed then branch in "src/test/resources/UndeclaredInheritedException.java", line 102, col 21.
+    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java", line 102, col 21.
 
 ------------------------------------------------------------------------
-    [0.034 s 31227288 bytes]  failed
-  [0.036 s 31228312 bytes total]
+    [0.045 s 29267928 bytes]  failed
+  [0.047 s 29268952 bytes total]
 
 UndeclaredInheritedException$NEx ...
-    [0.0010 s 31353152 bytes]
+    [0.0030 s 25082696 bytes]
 
 UndeclaredInheritedException$NEx: NEx() ...
-    [0.0 s 31354176 bytes]  passed immediately
+    [0.0 s 25083720 bytes]  passed immediately
 
 UndeclaredInheritedException$NEx: m(java.lang.Object) ...
-    [0.0 s 31357248 bytes]  passed immediately
-  [0.017 s 31358272 bytes total]
+    [0.0 s 25086792 bytes]  passed immediately
+  [0.02 s 25087816 bytes total]
 
 UndeclaredInheritedException$SEx ...
-    [0.0010 s 31474328 bytes]
+    [0.0010 s 25203872 bytes]
 
 UndeclaredInheritedException$SEx: SEx() ...
-    [0.0 s 31475352 bytes]  passed immediately
+    [0.0010 s 25205976 bytes]  passed immediately
 
 UndeclaredInheritedException$SEx: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredInheritedException.java:126: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java:126: Warning: Possible violation of modifies clause (Modifies)
       if (o == null) throw new NullPointerException();
                                                    ^
 Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/NullPointerException.class":
-Associated declaration is "src/test/resources/UndeclaredInheritedException.java", line 118, col 4:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java", line 118, col 4:
     //@ public normal_behavior ...
     ^
 Execution trace information:
-    Executed then branch in "src/test/resources/UndeclaredInheritedException.java", line 126, col 21.
+    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredInheritedException.java", line 126, col 21.
 
 ------------------------------------------------------------------------
-    [0.067 s 27399360 bytes]  failed
-  [0.068 s 27400384 bytes total]
+    [0.081 s 25684072 bytes]  failed
+  [0.084 s 25685096 bytes total]
 
 UndeclaredInheritedException$Ex ...
-    [0.0010 s 27524080 bytes]
+    [0.0010 s 25808792 bytes]
 
 UndeclaredInheritedException$Ex: Ex() ...
-    [0.0 s 27525104 bytes]  passed immediately
+    [0.0 s 25810840 bytes]  passed immediately
 
 UndeclaredInheritedException$Ex: m(java.lang.Object) ...
-    [0.0 s 27528176 bytes]  passed immediately
-  [0.017 s 27529200 bytes total]
+    [0.0 s 25812888 bytes]  passed immediately
+  [0.018 s 25814936 bytes total]
 1 caution
 9 warnings

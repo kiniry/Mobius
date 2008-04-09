@@ -1,48 +1,48 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/MapsIn.java:29: Error: Expected an identifier here
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:29: Error: Expected an identifier here
         //@ in
              ^
-src/test/resources/MapsIn.java:30: Error: Expected an identifier here
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:30: Error: Expected an identifier here
         //@ in ;
                ^
-src/test/resources/MapsIn.java:31: Error: Expected a comma or semicolon here
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:31: Error: Expected a comma or semicolon here
         //@ in i j
                  ^
-src/test/resources/MapsIn.java:32: Error: Expected an identifier here
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:32: Error: Expected an identifier here
         //@ in i,,
                  ^
-src/test/resources/MapsIn.java:32: Caution: JML requires annotations to be terminated with a semicolon
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:32: Caution: JML requires annotations to be terminated with a semicolon
         //@ in i,,
                  ^
-src/test/resources/MapsIn.java:33: Error: Expected an identifier here
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:33: Error: Expected an identifier here
         //@ in ,i;
                ^
-src/test/resources/MapsIn.java:35: Error: Expected either a . or a [ in the maps field reference here
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:35: Error: Expected either a . or a [ in the maps field reference here
         //@ maps i;
                   ^
-src/test/resources/MapsIn.java:36: Error: Expected either a . or a [ in the maps field reference here
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:36: Error: Expected either a . or a [ in the maps field reference here
         //@ maps i j 
                    ^
-src/test/resources/MapsIn.java: Caution: Using given file as the .java file, even though it is not the java file for MapsIn on the classpath
-    [0.0070 s 21026336 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java: Caution: Using given file as the .java file, even though it is not the java file for MapsIn on the classpath
+    [0.0090 s 19685984 bytes]
 
 MapsIn ...
-src/test/resources/MapsIn.java:7: Error: No such field in type MapsInS
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:7: Error: No such field in type MapsInS
         //@ in super.i, super.j;
                               ^
-src/test/resources/MapsIn.java:16: Error: No such field in type MapsInS
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MapsIn.java:16: Error: No such field in type MapsInS
         //@ maps b.f \into super.i, super.j;
                                           ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.012 s 21697176 bytes total] (aborted)
+  [0.012 s 20348760 bytes total] (aborted)
 
 MapsInS ...
-  [0.0 s 21698200 bytes total]
+  [0.0 s 20349784 bytes total]
 
 JMLDataGroup ...
-  [0.0 s 21703528 bytes total]
+  [0.0 s 20355112 bytes total]
 
 MapsT ...
-  [0.0 s 21706752 bytes total]
+  [0.0 s 20358336 bytes total]
 3 cautions
 9 errors

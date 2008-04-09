@@ -4,12 +4,16 @@ import junitutils.*;
 public class TestDefaultSettings extends junitutils.TestFilesTestSuite {
 
     static public junit.framework.Test suite() {
+    
+    	String[] defaultSettings = {"-nowarn Deadlock","-verboseTrace","-testMode"};
+    	String listOfFiles = "src/test/list.txt";
+    	String testSuiteName = "Default-Settings";
 
         junit.framework.TestSuite suite =
 	    new TestFilesTestSuite(
-		"escjava-junittests",
-		"src/test/list.txt",
-		Utils.parseline("-nowarn Deadlock -verboseTrace -testMode"),
+		testSuiteName,
+		listOfFiles,
+		defaultSettings,
 		escjava.Main.class) {
 		    public int expectedIntegerStatus(String f, String o) {
 			if (javafe.util.ErrorSet.errors > 0) return 2;

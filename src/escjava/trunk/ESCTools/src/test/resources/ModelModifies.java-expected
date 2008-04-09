@@ -1,24 +1,24 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModelModifies.java: Caution: Using given file as the .java file, even though it is not the java file for ModelModifies on the classpath
-    [0.0020 s 23291472 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelModifies.java: Caution: Using given file as the .java file, even though it is not the java file for ModelModifies on the classpath
+    [0.0010 s 21620280 bytes]
 
 ModelModifies ...
-  Prover started:0.071 s 23247160 bytes
-    [0.184 s 23314264 bytes]
+  Prover started:0.06 s 21918120 bytes
+    [0.176 s 21986248 bytes]
 
 ModelModifies: m() ...
-    [0.065 s 23391496 bytes]  passed
+    [0.071 s 22062400 bytes]  passed
 
 ModelModifies: mm() ...
-    [0.0060 s 23470776 bytes]  passed
+    [0.0050 s 22141736 bytes]  passed
 
 ModelModifies: p(int) ...
-    [0.012 s 23563504 bytes]  passed
+    [0.0080 s 22233352 bytes]  passed
 
 ModelModifies: mmm() ...
-    [0.04 s 23772568 bytes]  passed
+    [0.042 s 22443272 bytes]  passed
 
 ModelModifies: ModelModifies() ...
-    [0.0060 s 23936656 bytes]  passed
-  [0.313 s 23937680 bytes total]
+    [0.0060 s 22607384 bytes]  passed
+  [0.309 s 22608408 bytes total]
 1 caution

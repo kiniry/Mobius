@@ -1,55 +1,55 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Inheritance.java: Caution: Using given file as the .java file, even though it is not the java file for Inheritance on the classpath
-    [0.0020 s 20663152 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inheritance.java: Caution: Using given file as the .java file, even though it is not the java file for Inheritance on the classpath
+    [0.0020 s 17824024 bytes]
 
 Super ...
-  Prover started:0.065 s 21666112 bytes
-    [0.185 s 21730736 bytes]
+  Prover started:0.059 s 17835648 bytes
+    [0.176 s 17900272 bytes]
 
 Super: m() ...
-    [0.0 s 21731760 bytes]  passed immediately
+    [0.0010 s 17901352 bytes]  passed immediately
 
 Super: Super() ...
-    [0.071 s 21883616 bytes]  passed
-  [0.257 s 21884640 bytes total]
+    [0.069 s 18053624 bytes]  passed
+  [0.246 s 18054648 bytes total]
 
 Sub ...
-    [0.0040 s 21969392 bytes]
+    [0.0030 s 18139400 bytes]
 
 Sub: m() ...
-    [0.0 s 21970416 bytes]  passed immediately
+    [0.0 s 18140424 bytes]  passed immediately
 
 Sub: Sub() ...
-    [0.012 s 22113440 bytes]  passed
-  [0.017 s 22114464 bytes total]
+    [0.011 s 18281376 bytes]  passed
+  [0.015 s 18282400 bytes total]
 
 Inheritance ...
-    [0.027 s 20772088 bytes]
+    [0.0030 s 18401264 bytes]
 
 Inheritance: Inheritance() ...
-    [0.0 s 20773112 bytes]  passed immediately
+    [0.0 s 18403312 bytes]  passed immediately
 
 Inheritance: mm(Super) ...
-    [0.143 s 21454672 bytes]  passed
+    [0.154 s 19084160 bytes]  passed
 
 Inheritance: m3(Super) ...
 ------------------------------------------------------------------------
-src/test/resources/Inheritance.java:26: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inheritance.java:26: Warning: Possible assertion failure (Assert)
             //@ assert s.m() == 0;         // FIXME should be ok
                 ^
 Execution trace information:
-    Executed then branch in "src/test/resources/Inheritance.java", line 25, col 30.
+    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inheritance.java", line 25, col 30.
 
 ------------------------------------------------------------------------
-    [0.033 s 21798064 bytes]  failed
+    [0.028 s 19427296 bytes]  failed
 
 Inheritance: m2(Super) ...
 ------------------------------------------------------------------------
-src/test/resources/Inheritance.java:31: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inheritance.java:31: Warning: Possible assertion failure (Assert)
         //@ assert s.m() == 0; // ERROR
             ^
 ------------------------------------------------------------------------
-    [0.03 s 22073616 bytes]  failed
-  [0.234 s 22074640 bytes total]
+    [0.026 s 19704232 bytes]  failed
+  [0.212 s 19705256 bytes total]
 1 caution
 2 warnings

@@ -1,90 +1,90 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ExpandWildRef.java: Caution: Using given file as the .java file, even though it is not the java file for ExpandWildRef on the classpath
-    [0.071 s 18846408 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java: Caution: Using given file as the .java file, even though it is not the java file for ExpandWildRef on the classpath
+    [0.018 s 16976680 bytes]
 
 ExpandWildRef ...
-src/test/resources/ExpandWildRef.java:190: Caution: Variable ewrj might not have been initialized
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:190: Caution: Variable ewrj might not have been initialized
         public int ewrj;
                    ^
-  Prover started:0.072 s 20052272 bytes
-    [0.204 s 20150056 bytes]
+  Prover started:0.063 s 17498272 bytes
+    [0.25 s 17595328 bytes]
 
 ExpandWildRef: ExpandWildRef() ...
-    [0.0010 s 20152160 bytes]  passed immediately
+    [0.0 s 17597376 bytes]  passed immediately
 
 ExpandWildRef: mm() ...
-    [0.0 s 20154208 bytes]  passed immediately
+    [0.0 s 17598400 bytes]  passed immediately
 
 ExpandWildRef: mms() ...
-    [0.0 s 20155232 bytes]  passed immediately
+    [0.0 s 17600448 bytes]  passed immediately
 
 ExpandWildRef: mos() ...
-    [0.0 s 20157280 bytes]  passed immediately
+    [0.0 s 17601472 bytes]  passed immediately
 
 ExpandWildRef: mo() ...
-    [0.0 s 20158304 bytes]  passed immediately
+    [0.0 s 17603520 bytes]  passed immediately
 
 ExpandWildRef: p() ...
 ------------------------------------------------------------------------
-src/test/resources/ExpandWildRef.java:44: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:44: Warning: Possible assertion failure (Assert)
                 //@ assert ii == 1 || gii == 1 || ewr == 1 || iewri == ...
                     ^
 ------------------------------------------------------------------------
-    [0.151 s 20999184 bytes]  failed
+    [0.24 s 18444120 bytes]  failed
 
 ExpandWildRef: p2() ...
-    [0.056 s 19628520 bytes]  passed
+    [0.039 s 19093200 bytes]  passed
 
 ExpandWildRef: pp() ...
 ------------------------------------------------------------------------
-src/test/resources/ExpandWildRef.java:86: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:86: Warning: Possible assertion failure (Assert)
                 //@ assert sii == 1 || sgii == 1 || ewrs == 1 || sewri ...
                     ^
 ------------------------------------------------------------------------
-    [0.048 s 20275200 bytes]  failed
+    [0.077 s 17552448 bytes]  failed
 
 ExpandWildRef: pp2() ...
-    [0.058 s 20763632 bytes]  passed
+    [0.056 s 18040448 bytes]  passed
 
 ExpandWildRef: po() ...
 ------------------------------------------------------------------------
-src/test/resources/ExpandWildRef.java:120: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:120: Warning: Possible assertion failure (Assert)
                 //@ assert o.i == 1 || o.gi == 1 ; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.045 s 21367472 bytes]  failed
+    [0.04 s 18644880 bytes]  failed
 
 ExpandWildRef: po2() ...
-    [0.025 s 21835152 bytes]  passed
+    [0.022 s 19112032 bytes]  passed
 
 ExpandWildRef: pos() ...
 ------------------------------------------------------------------------
-src/test/resources/ExpandWildRef.java:157: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:157: Warning: Possible assertion failure (Assert)
                 //@ assert o.si == 1 || o.sgi == 1;  // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.043 s 19797176 bytes]  failed
+    [0.043 s 17100464 bytes]  failed
 
 ExpandWildRef: pos2() ...
-    [0.022 s 20228800 bytes]  passed
-  [0.654 s 20229824 bytes total]
+    [0.02 s 17531824 bytes]  passed
+  [0.789 s 17532848 bytes total]
 
 EWRS ...
-    [0.0010 s 20297288 bytes]
+    [0.0010 s 17600312 bytes]
 
 EWRS: EWRS() ...
-    [0.042 s 20458960 bytes]  passed
-  [0.043 s 20459984 bytes total]
+    [0.01 s 17763688 bytes]  passed
+  [0.011 s 17764712 bytes total]
 
 EWRI ...
-    [0.0010 s 20477640 bytes]
-  [0.0040 s 20478664 bytes total]
+    [0.0010 s 17781344 bytes]
+  [0.029 s 17782368 bytes total]
 
 Other ...
-    [0.0010 s 20546448 bytes]
+    [0.0010 s 17850152 bytes]
 
 Other: Other() ...
-    [0.01 s 20717928 bytes]  passed
-  [0.012 s 20718952 bytes total]
+    [0.01 s 18021720 bytes]  passed
+  [0.012 s 18022744 bytes total]
 2 cautions
 4 warnings

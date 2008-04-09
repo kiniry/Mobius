@@ -1,16 +1,16 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/BadPrefix.java: Caution: Using given file as the .java file, even though it is not the java file for BadPrefix on the classpath
-src/test/resources/BadPrefix.java:4: Error: Could not find file referenced in refine annotation: BadPrefixx.spec
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/BadPrefix.java: Caution: Using given file as the .java file, even though it is not the java file for BadPrefix on the classpath
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/BadPrefix.java:4: Error: Could not find file referenced in refine annotation: BadPrefixx.spec
 //@ refine "BadPrefixx.spec";
     ^
-    [0.0030 s 17189176 bytes]
+    [0.0030 s 15256488 bytes]
 
 BadPrefix ...
-  Prover started:0.058 s 18182360 bytes
-    [0.16 s 18247296 bytes]
+  Prover started:0.067 s 16239416 bytes
+    [0.172 s 16304352 bytes]
 
 BadPrefix: BadPrefix() ...
-    [0.071 s 18398920 bytes]  passed
-  [0.232 s 18399944 bytes total]
+    [0.069 s 16456472 bytes]  passed
+  [0.242 s 16457496 bytes total]
 1 caution
 1 error

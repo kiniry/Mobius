@@ -1,28 +1,28 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Impl4.java: Caution: Using given file as the .java file, even though it is not the java file for Impl4 on the classpath
-    [0.0020 s 20573256 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl4.java: Caution: Using given file as the .java file, even though it is not the java file for Impl4 on the classpath
+    [0.0020 s 17050656 bytes]
 
 Impl4 ...
-  Prover started:0.066 s 21616160 bytes
-    [0.176 s 21689968 bytes]
+  Prover started:0.065 s 18083800 bytes
+    [0.211 s 18157608 bytes]
 
 Impl4: unique() ...
-    [0.12 s 20718120 bytes]  passed
+    [0.086 s 18327392 bytes]  passed
 
 Impl4: clear() ...
-    [0.019 s 20915400 bytes]  passed
+    [0.02 s 18524888 bytes]  passed
 
 Impl4: Impl4() ...
-    [0.0090 s 21108304 bytes]  passed
-  [0.325 s 21109328 bytes total]
+    [0.01 s 18717984 bytes]  passed
+  [0.328 s 18719008 bytes total]
 
 IntList ...
-    [0.0010 s 21187448 bytes]
+    [0.0020 s 18797072 bytes]
 
 IntList: unique() ...
-    [0.0 s 21188472 bytes]  passed immediately
+    [0.0 s 18798096 bytes]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 21190520 bytes]  passed immediately
-  [0.01 s 21191544 bytes total]
+    [0.0 s 18799120 bytes]  passed immediately
+  [0.0090 s 18800144 bytes total]
 1 caution

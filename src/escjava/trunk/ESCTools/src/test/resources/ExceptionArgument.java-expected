@@ -1,10 +1,10 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ExceptionArgument.java: Caution: Using given file as the .java file, even though it is not the java file for ExceptionArgument on the classpath
-    [0.0010 s 19771136 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExceptionArgument.java: Caution: Using given file as the .java file, even though it is not the java file for ExceptionArgument on the classpath
+    [0.0010 s 16595592 bytes]
 
 ExceptionArgument ...
-  Prover started:0.064 s 21262424 bytes
-    [0.232 s 21416768 bytes]
+  Prover started:0.189 s 18123320 bytes
+    [0.368 s 18276688 bytes]
 
 ExceptionArgument: m() ...
 Exception java.lang.NullPointerException thrown while processing ExceptionArgument
@@ -54,5 +54,5 @@ java.lang.NullPointerException
 	at java.lang.reflect.Method.invoke(Method.java:585)
 	at org.apache.maven.surefire.booter.SurefireBooter.runSuitesInProcess(SurefireBooter.java:338)
 	at org.apache.maven.surefire.booter.SurefireBooter.main(SurefireBooter.java:997)
-  [0.278 s 21539056 bytes total] (aborted)
+  [0.577 s 18399104 bytes total] (aborted)
 1 caution

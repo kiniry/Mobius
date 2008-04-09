@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Bug1.java: Caution: Using given file as the .java file, even though it is not the java file for Bug1 on the classpath
-    [0.0030 s 17142592 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Bug1.java: Caution: Using given file as the .java file, even though it is not the java file for Bug1 on the classpath
+    [0.0050 s 15748432 bytes]
 
 Bug1 ...
-  Prover started:0.059 s 18596368 bytes
-    [0.168 s 18681680 bytes]
+  Prover started:0.068 s 16549712 bytes
+    [0.204 s 16635024 bytes]
 
 Bug1: m(java.util.Collection) ...
-    [0.074 s 18850944 bytes]  passed
+    [0.074 s 16803712 bytes]  passed
 
 Bug1: Bug1() ...
-    [0.0070 s 19002448 bytes]  passed
-  [0.25 s 19003472 bytes total]
+    [0.0080 s 16955640 bytes]  passed
+  [0.287 s 16956664 bytes total]
 1 caution

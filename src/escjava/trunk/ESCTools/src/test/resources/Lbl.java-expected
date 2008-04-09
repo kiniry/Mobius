@@ -1,38 +1,38 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Lbl.java: Caution: Using given file as the .java file, even though it is not the java file for Lbl on the classpath
-    [0.02 s 21071712 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Lbl.java: Caution: Using given file as the .java file, even though it is not the java file for Lbl on the classpath
+    [0.0010 s 18098368 bytes]
 
 Lbl ...
-  Prover started:0.062 s 22076520 bytes
-    [0.164 s 22140792 bytes]
+  Prover started:0.06 s 19093440 bytes
+    [0.161 s 19157728 bytes]
 
 Lbl: m() ...
 ------------------------------------------------------------------------
-src/test/resources/Lbl.java:6: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Lbl.java:6: Warning: Postcondition possibly not established (Post)
         void m() {}
                   ^
-Associated declaration is "src/test/resources/Lbl.java", line 5, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Lbl.java", line 5, col 5:
         //@ ensures (\lblneg A false);
             ^
 Counterexample labels:
     A
 
 ------------------------------------------------------------------------
-    [0.082 s 22323568 bytes]  failed
+    [0.083 s 19343232 bytes]  failed
 
 Lbl: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Lbl.java:9: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Lbl.java:9: Warning: Possible assertion failure (Assert)
         //@ assert !(\lblpos B true);
             ^
 Counterexample labels:
     B
 
 ------------------------------------------------------------------------
-    [0.039 s 22477600 bytes]  failed
+    [0.039 s 19497592 bytes]  failed
 
 Lbl: Lbl() ...
-    [0.0050 s 22627392 bytes]  passed
-  [0.29 s 22628416 bytes total]
+    [0.0050 s 19648408 bytes]  passed
+  [0.289 s 19649432 bytes total]
 1 caution
 2 warnings

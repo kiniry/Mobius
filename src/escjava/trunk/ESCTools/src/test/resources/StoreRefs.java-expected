@@ -1,29 +1,29 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/StoreRefs.java: Caution: Using given file as the .java file, even though it is not the java file for StoreRefs on the classpath
-    [0.0030 s 25236552 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StoreRefs.java: Caution: Using given file as the .java file, even though it is not the java file for StoreRefs on the classpath
+    [0.0010 s 46019080 bytes]
 
 StoreRefs ...
-  Prover started:0.101 s 26302576 bytes
-    [0.227 s 26387808 bytes]
+  Prover started:0.076 s 23595160 bytes
+    [0.654 s 23680392 bytes]
 
 StoreRefs: m() ...
-    [0.079 s 26465816 bytes]  passed
+    [0.073 s 23758456 bytes]  passed
 
 StoreRefs: StoreRefs() ...
-    [0.033 s 26653592 bytes]  passed
-  [0.34 s 26654616 bytes total]
+    [0.034 s 23945192 bytes]  passed
+  [0.762 s 23946216 bytes total]
 
 StoreRefsA ...
-    [0.0010 s 26739888 bytes]
+    [0.0020 s 24030408 bytes]
 
 StoreRefsA: StoreRefsA() ...
-    [0.014 s 26922488 bytes]  passed
-  [0.015 s 26923512 bytes total]
+    [0.013 s 24214144 bytes]  passed
+  [0.015 s 24216192 bytes total]
 
 StoreRefsB ...
-    [0.0010 s 26991608 bytes]
+    [0.0010 s 24283264 bytes]
 
 StoreRefsB: StoreRefsB() ...
-    [0.01 s 27153648 bytes]  passed
-  [0.011 s 27154672 bytes total]
+    [0.01 s 24445320 bytes]  passed
+  [0.012 s 24446344 bytes total]
 1 caution

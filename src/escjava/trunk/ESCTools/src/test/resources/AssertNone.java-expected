@@ -1,94 +1,94 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/AssertNone.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-src/test/resources/AssertNone.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0;
                 ^
-src/test/resources/AssertNone.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-src/test/resources/AssertNone.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; 
                 ^
-src/test/resources/AssertNone.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-src/test/resources/AssertNone.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; //@ nowarn Assert;
                 ^
-src/test/resources/AssertNone.java: Caution: Using given file as the .java file, even though it is not the java file for AssertNone on the classpath
-    [0.0050 s 18958552 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java: Caution: Using given file as the .java file, even though it is not the java file for AssertNone on the classpath
+    [0.0050 s 16995192 bytes]
 
 AssertNone ...
-  Prover started:0.061 s 19053368 bytes
-    [0.228 s 19190168 bytes]
+  Prover started:0.059 s 17084432 bytes
+    [0.243 s 17222256 bytes]
 
 AssertNone: m_Exception_Assert(int) ...
-    [0.089 s 19245952 bytes]  passed
+    [0.093 s 17277872 bytes]  passed
 
 AssertNone: mm_Exception_Assert(int) ...
-    [0.0050 s 19309600 bytes]  passed
+    [0.0060 s 17340608 bytes]  passed
 
 AssertNone: mm_Nowarn_Nowarn(int) ...
-    [0.0040 s 19372224 bytes]  passed
+    [0.0050 s 17403672 bytes]  passed
 
 AssertNone: nAssertWarn(int) ...
 ------------------------------------------------------------------------
-src/test/resources/AssertNone.java:29: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:29: Warning: Possible assertion failure (Assert)
                 //@ assert false;
                     ^
 ------------------------------------------------------------------------
-    [0.022 s 19603792 bytes]  failed
+    [0.022 s 17635752 bytes]  failed
 
 AssertNone: nNowarn(int) ...
-    [0.0040 s 19668800 bytes]  passed
+    [0.0060 s 17699848 bytes]  passed
 
 AssertNone: pPostwarning() ...
 ------------------------------------------------------------------------
-src/test/resources/AssertNone.java:42: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:42: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/AssertNone.java", line 39, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java", line 39, col 5:
         //@ exsures (java.lang.AssertionError e) false;
             ^
 Execution trace information:
-    Executed throw in "src/test/resources/AssertNone.java", line 41, col 2.
+    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java", line 41, col 2.
 
 ------------------------------------------------------------------------
-    [0.033 s 20040176 bytes]  failed
+    [0.038 s 18074896 bytes]  failed
 
 AssertNone: pExceptionwarningShouldCompilerError() ...
 ------------------------------------------------------------------------
-src/test/resources/AssertNone.java:51: Warning: Possible unexpected exception (Exception)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:51: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "src/test/resources/AssertNone.java", line 50, col 2.
+    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java", line 50, col 2.
 
 ------------------------------------------------------------------------
-    [0.029 s 20392352 bytes]  failed
+    [0.035 s 18428776 bytes]  failed
 
 AssertNone: qNoWarning(int) ...
-    [0.018 s 20611584 bytes]  passed
+    [0.017 s 18648392 bytes]  passed
 
 AssertNone: qqExceptionWarning(int) ...
 ------------------------------------------------------------------------
-src/test/resources/AssertNone.java:62: Warning: Possible unexpected exception (Exception)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java:62: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "src/test/resources/AssertNone.java", line 61, col 2.
+    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertNone.java", line 61, col 2.
 
 ------------------------------------------------------------------------
-    [0.029 s 20966368 bytes]  failed
+    [0.033 s 19005416 bytes]  failed
 
 AssertNone: rNowarning() ...
-    [0.041 s 21164576 bytes]  passed
+    [0.041 s 19203752 bytes]  passed
 
 AssertNone: AssertNone() ...
-    [0.0080 s 21316120 bytes]  passed
-  [0.511 s 21317192 bytes total]
+    [0.0080 s 19354728 bytes]  passed
+  [0.547 s 19355752 bytes total]
 1 caution
 4 warnings
 6 errors

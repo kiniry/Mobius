@@ -1,16 +1,16 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/RefineBadPackage.java: Caution: Using given file as the .java file, even though it is not the java file for RefineBadPackage on the classpath
-src/test/resources/RefineBadPackage.java:2: Error: Could not find file referenced in refine annotation: RefineBadPackage.spec
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineBadPackage.java: Caution: Using given file as the .java file, even though it is not the java file for RefineBadPackage on the classpath
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineBadPackage.java:2: Error: Could not find file referenced in refine annotation: RefineBadPackage.spec
 //@ refine "RefineBadPackage.spec";
     ^
-    [0.228 s 24402600 bytes]
+    [0.0020 s 21877152 bytes]
 
 RefineBadPackage ...
-  Prover started:0.061 s 25397160 bytes
-    [0.163 s 25463616 bytes]
+  Prover started:0.063 s 21882144 bytes
+    [0.178 s 21948600 bytes]
 
 RefineBadPackage: RefineBadPackage() ...
-    [0.07 s 25616400 bytes]  passed
-  [0.233 s 25617424 bytes total]
+    [0.072 s 22102464 bytes]  passed
+  [0.25 s 22103488 bytes total]
 1 caution
 1 error

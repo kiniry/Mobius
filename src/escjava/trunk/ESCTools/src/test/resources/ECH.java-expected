@@ -1,48 +1,48 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ECH.java: Caution: Using given file as the .java file, even though it is not the java file for ECH on the classpath
-    [0.0020 s 19288240 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java: Caution: Using given file as the .java file, even though it is not the java file for ECH on the classpath
+    [0.0020 s 17415144 bytes]
 
 ECHX ...
-  Prover started:0.061 s 20283952 bytes
-    [0.161 s 20347456 bytes]
+  Prover started:0.07 s 17606344 bytes
+    [0.189 s 17669848 bytes]
 
 ECHX: ECHX() ...
-src/test/resources/ECH.java:8: Error: There is no assignable clause allowing this method call
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java:8: Error: There is no assignable clause allowing this method call
   public ECHX() {}
                 ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-src/test/resources/ECH.java:5: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java:5: Associated declaration: 
   //@ public normal_behavior
   ^
-    [0.072 s 20517504 bytes]  passed
-  [0.234 s 20518528 bytes total]
+    [0.078 s 17841200 bytes]  passed
+  [0.268 s 17842224 bytes total]
 
 ECHD ...
-    [0.0010 s 20587448 bytes]
+    [0.0030 s 17911160 bytes]
 
 ECHD: ECHD() ...
-    [0.035 s 20739576 bytes]  passed
-  [0.037 s 20740600 bytes total]
+    [0.039 s 18062872 bytes]  passed
+  [0.043 s 18063896 bytes total]
 
 ECH ...
-    [0.0010 s 20820376 bytes]
+    [0.0010 s 18143816 bytes]
 
 ECH: ECH() ...
-    [0.012 s 20962104 bytes]  passed
-  [0.014 s 20963128 bytes total]
+    [0.015 s 18284856 bytes]  passed
+  [0.016 s 18285880 bytes total]
 
 ECHS ...
-    [0.0010 s 21027744 bytes]
+    [0.0 s 18350440 bytes]
 
 ECHS: ECHS() ...
-src/test/resources/ECH.java:22: Error: There is no assignable clause allowing this method call
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java:22: Error: There is no assignable clause allowing this method call
   public ECHS() {}
                 ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-src/test/resources/ECH.java:19: Associated declaration: 
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java:19: Associated declaration: 
   //@ public normal_behavior
   ^
-    [0.028 s 19554080 bytes]  passed
-  [0.029 s 19555104 bytes total]
+    [0.012 s 18522064 bytes]  passed
+  [0.012 s 18523088 bytes total]
 1 caution
 2 errors

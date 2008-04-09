@@ -1,24 +1,24 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Unreachable.java: Caution: Using given file as the .java file, even though it is not the java file for Unreachable on the classpath
-    [0.0030 s 40352672 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unreachable.java: Caution: Using given file as the .java file, even though it is not the java file for Unreachable on the classpath
+    [0.0030 s 36918136 bytes]
 
 Unreachable ...
-  Prover started:0.077 s 41355584 bytes
-    [0.181 s 41420592 bytes]
+  Prover started:0.074 s 37910368 bytes
+    [0.177 s 37975376 bytes]
 
 Unreachable: m() ...
-    [0.071 s 41526760 bytes]  passed
+    [0.071 s 38081544 bytes]  passed
 
 Unreachable: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Unreachable.java:17: Warning: Code marked as unreachable may possibly be reached (Reachable)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unreachable.java:17: Warning: Code marked as unreachable may possibly be reached (Reachable)
                 //@ unreachable //FAILS
                     ^
 ------------------------------------------------------------------------
-    [0.015 s 41690928 bytes]  failed
+    [0.014 s 38246072 bytes]  failed
 
 Unreachable: Unreachable() ...
-    [0.043 s 41841664 bytes]  passed
-  [0.312 s 41842688 bytes total]
+    [0.03 s 38396864 bytes]  passed
+  [0.292 s 38397888 bytes total]
 1 caution
 1 warning

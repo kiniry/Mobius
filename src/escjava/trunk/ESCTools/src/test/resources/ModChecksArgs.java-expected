@@ -1,30 +1,30 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModChecksArgs.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksArgs on the classpath
-    [0.177 s 22978112 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksArgs.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksArgs on the classpath
+    [0.0010 s 20798208 bytes]
 
 ModChecksArgs ...
-  Prover started:0.064 s 23261384 bytes
-    [0.184 s 23329512 bytes]
+  Prover started:0.059 s 21811184 bytes
+    [0.161 s 21879312 bytes]
 
 ModChecksArgs: ModChecksArgs() ...
-    [0.0010 s 23331616 bytes]  passed immediately
+    [0.0 s 21880336 bytes]  passed immediately
 
 ModChecksArgs: m() ...
 ------------------------------------------------------------------------
-src/test/resources/ModChecksArgs.java:13: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksArgs.java:13: Warning: Possible violation of modifies clause (Modifies)
             ma(1,a);
               ^
-Associated declaration is "src/test/resources/ModChecksArgs.java", line 18, col 14:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksArgs.java", line 18, col 14:
         //@ modifies aa[i];
                      ^
-Associated declaration is "src/test/resources/ModChecksArgs.java", line 10, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksArgs.java", line 10, col 5:
         //@ modifies a[0];
             ^
 ------------------------------------------------------------------------
-    [0.128 s 23999776 bytes]  failed
+    [0.132 s 21385600 bytes]  failed
 
 ModChecksArgs: ma(int, int[]) ...
-    [0.0 s 24001824 bytes]  passed immediately
-  [0.313 s 24002848 bytes total]
+    [0.0 s 21388672 bytes]  passed immediately
+  [0.293 s 21389696 bytes total]
 1 caution
 1 warning

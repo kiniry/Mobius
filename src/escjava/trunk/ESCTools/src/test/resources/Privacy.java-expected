@@ -1,59 +1,59 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Privacy.java: Caution: Using given file as the .java file, even though it is not the java file for Privacy on the classpath
-    [0.0040 s 24354368 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Privacy.java: Caution: Using given file as the .java file, even though it is not the java file for Privacy on the classpath
+    [0.0030 s 22274928 bytes]
 
 Privacy ...
-  Prover started:0.065 s 25455288 bytes
-    [0.167 s 25533840 bytes]
+  Prover started:0.062 s 23367120 bytes
+    [0.166 s 23445672 bytes]
 
 Privacy: mb() ...
-    [0.072 s 25650800 bytes]  passed
+    [0.072 s 23562520 bytes]  passed
 
 Privacy: mbb() ...
-    [0.0070 s 25767704 bytes]  passed
+    [0.0070 s 23678400 bytes]  passed
 
 Privacy: mbbb() ...
-    [0.033 s 25883584 bytes]  passed
+    [0.033 s 23794280 bytes]  passed
 
 Privacy: pmb() ...
-    [0.0070 s 25999464 bytes]  passed
+    [0.0070 s 23911184 bytes]  passed
 
 Privacy: pmbb() ...
-    [0.0080 s 26115400 bytes]  passed
+    [0.0070 s 24027064 bytes]  passed
 
 Privacy: pmbbb() ...
-    [0.025 s 24617024 bytes]  passed
+    [0.0080 s 24143000 bytes]  passed
 
 Privacy: ppmb() ...
-    [0.0070 s 24732904 bytes]  passed
+    [0.0080 s 24259904 bytes]  passed
 
 Privacy: ppmbb() ...
-    [0.0070 s 24848784 bytes]  passed
+    [0.0070 s 24375784 bytes]  passed
 
 Privacy: m() ...
 ------------------------------------------------------------------------
-src/test/resources/Privacy.java:67: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Privacy.java:67: Warning: Postcondition possibly not established (Post)
         public void m() {}
                          ^
-Associated declaration is "src/test/resources/Privacy.java", line 59, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Privacy.java", line 59, col 5:
         //@ ensures g && pg && ppg && pppg;
             ^
 ------------------------------------------------------------------------
-    [0.034 s 25342688 bytes]  failed
+    [0.056 s 22994848 bytes]  failed
 
 Privacy: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/Privacy.java:77: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Privacy.java:77: Warning: Postcondition possibly not established (Post)
         protected void mm() {}
                              ^
-Associated declaration is "src/test/resources/Privacy.java", line 69, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Privacy.java", line 69, col 5:
         //@ ensures g && pg && ppg && pppg;
             ^
 ------------------------------------------------------------------------
-    [0.059 s 25791824 bytes]  failed
+    [0.062 s 23446776 bytes]  failed
 
 Privacy: Privacy() ...
-    [0.01 s 26068208 bytes]  passed
-  [0.436 s 26069232 bytes total]
+    [0.01 s 23723272 bytes]  passed
+  [0.444 s 23724296 bytes total]
 1 caution
 2 warnings

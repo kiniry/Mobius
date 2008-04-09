@@ -1,47 +1,47 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Unch.java: Caution: Using given file as the .java file, even though it is not the java file for Unch on the classpath
-    [0.0020 s 25269544 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unch.java: Caution: Using given file as the .java file, even though it is not the java file for Unch on the classpath
+    [0.0020 s 22676576 bytes]
 
 Unch ...
-  Prover started:0.111 s 24700232 bytes
-    [0.212 s 24767592 bytes]
+  Prover started:0.075 s 23716456 bytes
+    [0.179 s 23783816 bytes]
 
 Unch: m(int) ...
-    [0.0 s 24769640 bytes]  passed immediately
+    [0.0 s 23784840 bytes]  passed immediately
 
 Unch: mm() ...
-    [0.107 s 25018728 bytes]  passed
+    [0.107 s 24033816 bytes]  passed
 
 Unch: mm1() ...
 ------------------------------------------------------------------------
-src/test/resources/Unch.java:19: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unch.java:19: Warning: Possible assertion failure (Assert)
                 //@ assert \not_modified(a[1]); // FAILS
                     ^
-Associated declaration is "src/test/resources/Unch.java", line 19, col 27:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unch.java", line 19, col 27:
                 //@ assert \not_modified(a[1]); // FAILS
                                          ^
 ------------------------------------------------------------------------
-    [0.031 s 25443376 bytes]  failed
+    [0.031 s 24460192 bytes]  failed
 
 Unch: mn() ...
-    [0.0 s 25445424 bytes]  passed immediately
+    [0.0 s 24461216 bytes]  passed immediately
 
 Unch: mnn() ...
-    [0.016 s 25704672 bytes]  passed
+    [0.018 s 24721488 bytes]  passed
 
 Unch: mnn1() ...
 ------------------------------------------------------------------------
-src/test/resources/Unch.java:38: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unch.java:38: Warning: Possible assertion failure (Assert)
                 //@ assert \not_modified(x.n); // FAILS
                     ^
-Associated declaration is "src/test/resources/Unch.java", line 38, col 27:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unch.java", line 38, col 27:
                 //@ assert \not_modified(x.n); // FAILS
                                          ^
 ------------------------------------------------------------------------
-    [0.027 s 26100744 bytes]  failed
+    [0.028 s 25119288 bytes]  failed
 
 Unch: Unch() ...
-    [0.03 s 26488424 bytes]  passed
-  [0.424 s 26489448 bytes total]
+    [0.033 s 25505872 bytes]  passed
+  [0.396 s 25506896 bytes total]
 1 caution
 2 warnings

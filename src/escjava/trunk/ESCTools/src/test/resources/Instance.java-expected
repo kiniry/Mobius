@@ -1,35 +1,35 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Instance.java: Caution: Using given file as the .java file, even though it is not the java file for Instance on the classpath
-    [0.0020 s 20934128 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Instance.java: Caution: Using given file as the .java file, even though it is not the java file for Instance on the classpath
+    [0.0040 s 17733536 bytes]
 
 Instance ...
-  Prover started:0.068 s 21953512 bytes
-    [0.192 s 22027984 bytes]
+  Prover started:0.061 s 18742400 bytes
+    [0.175 s 18815848 bytes]
 
 Instance: Instance() ...
 ------------------------------------------------------------------------
-src/test/resources/Instance.java:2: Warning: Possible violation of object invariant (Invariant)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Instance.java:2: Warning: Possible violation of object invariant (Invariant)
 public class Instance implements I {
                                    ^
-Associated declaration is "src/test/resources/Instance.java", line 19, col 14:
-        //@ instance invariant ib && b;
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Instance.java", line 4, col 14:
+        //@ instance invariant b && ib && mb && mib && m() && im();
                      ^
 Possibly relevant items from the counterexample context:  
   brokenObj%0 == RES-2.35
 (brokenObj* refers to the object for which the invariant is broken.)
 
 ------------------------------------------------------------------------
-    [0.199 s 23156912 bytes]  failed
-  [0.393 s 23157936 bytes total]
+    [0.19 s 19718552 bytes]  failed
+  [0.365 s 19719576 bytes total]
 
 I ...
-    [0.0010 s 23222248 bytes]
+    [0.0010 s 19783888 bytes]
 
 I: m() ...
-    [0.0 s 23224296 bytes]  passed immediately
+    [0.0 s 19784912 bytes]  passed immediately
 
 I: im() ...
-    [0.0 s 23225320 bytes]  passed immediately
-  [0.0090 s 23226344 bytes total]
+    [0.0 s 19786960 bytes]  passed immediately
+  [0.0090 s 19787984 bytes total]
 1 caution
 1 warning

@@ -1,12 +1,12 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/BadOption.java: Caution: Using given file as the .java file, even though it is not the java file for BadOption on the classpath
-    [0.0020 s 18678144 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/BadOption.java: Caution: Using given file as the .java file, even though it is not the java file for BadOption on the classpath
+    [0.0020 s 16719744 bytes]
 
 BadOption ...
-  Prover started:0.058 s 18888192 bytes
-    [0.175 s 18953128 bytes]
+  Prover started:0.058 s 16825640 bytes
+    [0.173 s 16890576 bytes]
 
 BadOption: BadOption() ...
-    [0.07 s 19105032 bytes]  passed
-  [0.245 s 19106056 bytes total]
+    [0.071 s 17042520 bytes]  passed
+  [0.244 s 17043544 bytes total]
 1 caution

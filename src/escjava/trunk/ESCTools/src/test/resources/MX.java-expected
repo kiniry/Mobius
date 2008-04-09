@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/MX.java: Caution: Using given file as the .java file, even though it is not the java file for MX on the classpath
-    [0.127 s 21361704 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MX.java: Caution: Using given file as the .java file, even though it is not the java file for MX on the classpath
+    [0.0010 s 18156584 bytes]
 
 MX ...
-  Prover started:0.077 s 22368512 bytes
-    [0.186 s 22432768 bytes]
+  Prover started:0.072 s 19153616 bytes
+    [0.191 s 19218896 bytes]
 
 MX: MX() ...
-    [0.079 s 22592288 bytes]  passed
+    [0.078 s 19376808 bytes]  passed
 
 MX: mm() ...
-    [0.044 s 22831704 bytes]  passed
-  [0.31 s 22832728 bytes total]
+    [0.049 s 19615144 bytes]  passed
+  [0.318 s 19616168 bytes total]
 1 caution

@@ -1,18 +1,18 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/HelperWithBody.java: Caution: Using given file as the .java file, even though it is not the java file for HelperWithBody on the classpath
-    [0.0040 s 19946736 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/HelperWithBody.java: Caution: Using given file as the .java file, even though it is not the java file for HelperWithBody on the classpath
+    [0.0050 s 18338448 bytes]
 
 HelperWithBody ...
-  Prover started:0.06 s 20255104 bytes
-    [0.178 s 20324344 bytes]
+  Prover started:0.074 s 19429472 bytes
+    [0.186 s 19498760 bytes]
 
 HelperWithBody: HelperWithBody() ...
-    [0.154 s 21529024 bytes]  passed
+    [0.359 s 19453592 bytes]  passed
 
 HelperWithBody: initializeRows() ...
-    [0.0 s 21532096 bytes]  passed immediately
+    [0.0 s 19456664 bytes]  passed immediately
 
 HelperWithBody: initializeRow(java.lang.Object[]) ...
-    [0.0070 s 21627976 bytes]  passed
-  [0.339 s 21629000 bytes total]
+    [0.0070 s 19551536 bytes]  passed
+  [0.552 s 19552560 bytes total]
 1 caution

@@ -1,21 +1,21 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/After.java: Caution: Using given file as the .java file, even though it is not the java file for After on the classpath
-    [0.0040 s 18153448 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/After.java: Caution: Using given file as the .java file, even though it is not the java file for After on the classpath
+    [0.0040 s 16320336 bytes]
 
 After ...
-  Prover started:0.059 s 19175856 bytes
-    [0.174 s 19240608 bytes]
+  Prover started:0.08 s 16509352 bytes
+    [0.227 s 16574104 bytes]
 
 After: m() ...
-    [0.0 s 19241632 bytes]  passed immediately
+    [0.0010 s 16575456 bytes]  passed immediately
 
 After: purem() ...
-    [0.0 s 19243704 bytes]  passed immediately
+    [0.0 s 16577528 bytes]  passed immediately
 
 After: n() ...
-    [0.073 s 19415976 bytes]  passed
+    [0.11 s 16749960 bytes]  passed
 
 After: After() ...
-    [0.011 s 19567784 bytes]  passed
-  [0.259 s 19568856 bytes total]
+    [0.018 s 16901768 bytes]  passed
+  [0.356 s 16902840 bytes total]
 1 caution

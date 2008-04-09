@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Nowarn.java: Caution: Using given file as the .java file, even though it is not the java file for Nowarn on the classpath
-    [0.0020 s 24115464 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Nowarn.java: Caution: Using given file as the .java file, even though it is not the java file for Nowarn on the classpath
+    [0.0010 s 21644576 bytes]
 
 Nowarn ...
-  Prover started:0.06 s 24117008 bytes
-    [0.175 s 24185744 bytes]
+  Prover started:0.06 s 22678824 bytes
+    [0.162 s 22747560 bytes]
 
 Nowarn: m() ...
-    [0.071 s 24278336 bytes]  passed
+    [0.069 s 22840264 bytes]  passed
 
 Nowarn: Nowarn() ...
-    [0.05 s 24764360 bytes]  passed
-  [0.296 s 24765384 bytes total]
+    [0.05 s 23328392 bytes]  passed
+  [0.281 s 23329416 bytes total]
 1 caution

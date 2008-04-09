@@ -1,21 +1,21 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModChecks4.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks4 on the classpath
-    [0.0010 s 22477200 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks4.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks4 on the classpath
+    [0.0020 s 20583640 bytes]
 
 ModChecks4 ...
-  Prover started:0.064 s 22848744 bytes
-    [0.193 s 22916816 bytes]
+  Prover started:0.059 s 20697944 bytes
+    [0.173 s 20766016 bytes]
 
 ModChecks4: m() ...
-    [0.083 s 23087432 bytes]  passed
+    [0.078 s 20936632 bytes]  passed
 
 ModChecks4: mm() ...
-    [0.048 s 23363856 bytes]  passed
+    [0.045 s 21214136 bytes]  passed
 
 ModChecks4: f(int) ...
-    [0.0060 s 23459664 bytes]  passed
+    [0.0060 s 21308920 bytes]  passed
 
 ModChecks4: ModChecks4() ...
-    [0.026 s 23753512 bytes]  passed
-  [0.356 s 23754536 bytes total]
+    [0.026 s 21605432 bytes]  passed
+  [0.328 s 21606456 bytes total]
 1 caution

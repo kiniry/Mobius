@@ -1,29 +1,29 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/DupMM.java: Caution: Using given file as the .java file, even though it is not the java file for DupMM on the classpath
-src/test/resources/DupMM.java:2: Error: Could not find file referenced in refine annotation: DupMM.spec
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DupMM.java: Caution: Using given file as the .java file, even though it is not the java file for DupMM on the classpath
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DupMM.java:2: Error: Could not find file referenced in refine annotation: DupMM.spec
 //@ refine "DupMM.spec";
     ^
-    [0.0030 s 19346640 bytes]
+    [0.0030 s 17728968 bytes]
 
 DupMM ...
-  Prover started:0.061 s 20349272 bytes
-    [0.161 s 20414120 bytes]
+  Prover started:0.059 s 17700720 bytes
+    [0.172 s 17765568 bytes]
 
 DupMM: DupMM() ...
-    [0.069 s 20565640 bytes]  passed
+    [0.069 s 17917288 bytes]  passed
 
 DupMM: m() ...
-    [0.0040 s 20610944 bytes]  passed
+    [0.0030 s 17962720 bytes]  passed
 
 DupMM: DupMM(int) ...
-    [0.0070 s 20781712 bytes]  passed
-  [0.242 s 20782736 bytes total]
+    [0.01 s 18133832 bytes]  passed
+  [0.255 s 18134856 bytes total]
 
 DupMM$C ...
-    [0.0020 s 20861816 bytes]
+    [0.0020 s 18212912 bytes]
 
 DupMM$C: C() ...
-    [0.041 s 21046936 bytes]  passed
-  [0.043 s 21047960 bytes total]
+    [0.038 s 18399624 bytes]  passed
+  [0.04 s 18400648 bytes total]
 1 caution
 1 error

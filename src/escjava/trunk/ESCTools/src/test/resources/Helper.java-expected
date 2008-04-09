@@ -1,23 +1,23 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Helper.java: Caution: Using given file as the .java file, even though it is not the java file for Helper on the classpath
-    [0.0030 s 19569024 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Helper.java: Caution: Using given file as the .java file, even though it is not the java file for Helper on the classpath
+    [0.0040 s 16969528 bytes]
 
 Helper ...
-  Prover started:0.063 s 20601136 bytes
-    [0.175 s 20667840 bytes]
+  Prover started:0.061 s 17992904 bytes
+    [0.165 s 18059608 bytes]
 
 Helper: m() ...
-    [0.0010 s 20669944 bytes]  passed immediately
+    [0.0010 s 18061712 bytes]  passed immediately
 
 Helper: mm() ...
-    [0.0 s 20673016 bytes]  passed immediately
+    [0.0 s 18064784 bytes]  passed immediately
 
 Helper: p() ...
 ------------------------------------------------------------------------
-src/test/resources/Helper.java:25: Warning: Possible violation of object invariant (Invariant)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Helper.java:25: Warning: Possible violation of object invariant (Invariant)
         public void p() { i=10; return; }
                                         ^
-Associated declaration is "src/test/resources/Helper.java", line 29, col 12:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Helper.java", line 29, col 12:
         //@ public invariant i == 0;
                    ^
 Possibly relevant items from the counterexample context:  
@@ -25,41 +25,41 @@ Possibly relevant items from the counterexample context:
 (brokenObj* refers to the object for which the invariant is broken.)
 
 Execution trace information:
-    Executed return in "src/test/resources/Helper.java", line 25, col 25.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Helper.java", line 25, col 25.
 
 ------------------------------------------------------------------------
-    [0.116 s 20996760 bytes]  failed
+    [0.111 s 17858968 bytes]  failed
 
 Helper: n() ...
 ------------------------------------------------------------------------
-src/test/resources/Helper.java:12: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Helper.java:12: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Helper.java", line 7, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Helper.java", line 7, col 5:
         //@ ensures i == 6;
             ^
 Execution trace information:
-    Executed call in "src/test/resources/Helper.java", line 32, col 2.
-    Executed implicit return in "src/test/resources/Helper.java", line 12, col 1.
+    Executed call in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Helper.java", line 32, col 2.
+    Executed implicit return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Helper.java", line 12, col 1.
 
 ------------------------------------------------------------------------
-    [0.046 s 21286880 bytes]  failed
+    [0.047 s 18154408 bytes]  failed
 
 Helper: Helper() ...
-    [0.0 s 21288928 bytes]  passed immediately
+    [0.0 s 18156456 bytes]  passed immediately
 
 Helper: Helper(int) ...
-    [0.024 s 21685400 bytes]  passed
-  [0.363 s 21686424 bytes total]
+    [0.024 s 18550888 bytes]  passed
+  [0.348 s 18551912 bytes total]
 
 H2 ...
-    [0.0020 s 21759208 bytes]
+    [0.0020 s 18625720 bytes]
 
 H2: mmm() ...
-    [0.0010 s 21761312 bytes]  passed immediately
+    [0.0 s 18627768 bytes]  passed immediately
 
 H2: H2() ...
-    [0.011 s 21914248 bytes]  passed
-  [0.014 s 21915272 bytes total]
+    [0.01 s 18780848 bytes]  passed
+  [0.013 s 18781872 bytes total]
 1 caution
 2 warnings

@@ -1,51 +1,51 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Client5.java: Caution: Using given file as the .java file, even though it is not the java file for Client5 on the classpath
-    [0.0040 s 18814240 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java: Caution: Using given file as the .java file, even though it is not the java file for Client5 on the classpath
+    [0.0020 s 15711776 bytes]
 
 Client5 ...
-  Prover started:0.066 s 19855304 bytes
-    [0.18 s 19927104 bytes]
+  Prover started:0.058 s 16741544 bytes
+    [0.161 s 16813344 bytes]
 
 Client5: unique(IntList) ...
 ------------------------------------------------------------------------
-src/test/resources/Client5.java:8: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java:8: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Client5.java", line 5, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java", line 5, col 5:
         //@ ensures \not_modified(list.isEmpty);  // CURRENT ERROR 
             ^
-Associated declaration is "src/test/resources/Client5.java", line 5, col 27:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java", line 5, col 27:
         //@ ensures \not_modified(list.isEmpty);  // CURRENT ERROR 
                                   ^
 ------------------------------------------------------------------------
-    [0.121 s 20357784 bytes]  failed
+    [0.12 s 17246176 bytes]  failed
 
 Client5: clear(IntList) ...
 ------------------------------------------------------------------------
-src/test/resources/Client5.java:15: Warning: Postcondition possibly not established (Post)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java:15: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "src/test/resources/Client5.java", line 12, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java", line 12, col 5:
         //@ ensures \not_modified(list.isEmpty);  // ERROR
             ^
-Associated declaration is "src/test/resources/Client5.java", line 12, col 27:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java", line 12, col 27:
         //@ ensures \not_modified(list.isEmpty);  // ERROR
                                   ^
 ------------------------------------------------------------------------
-    [0.035 s 20812216 bytes]  failed
+    [0.037 s 17705864 bytes]  failed
 
 Client5: Client5() ...
-    [0.026 s 19170288 bytes]  passed
-  [0.362 s 19171312 bytes total]
+    [0.021 s 16069280 bytes]  passed
+  [0.339 s 16070304 bytes total]
 
 IntList ...
-    [0.0010 s 19236400 bytes]
+    [0.0 s 16134192 bytes]
 
 IntList: unique() ...
-    [0.0 s 19238448 bytes]  passed immediately
+    [0.0 s 16136240 bytes]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 19239472 bytes]  passed immediately
-  [0.0090 s 19240496 bytes total]
+    [0.0 s 16137264 bytes]  passed immediately
+  [0.0080 s 16138288 bytes total]
 1 caution
 2 warnings

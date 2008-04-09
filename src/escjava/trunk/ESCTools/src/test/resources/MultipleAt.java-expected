@@ -1,18 +1,18 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/MultipleAt.java: Caution: Using given file as the .java file, even though it is not the java file for MultipleAt on the classpath
-    [0.0010 s 23964560 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MultipleAt.java: Caution: Using given file as the .java file, even though it is not the java file for MultipleAt on the classpath
+    [0.0020 s 21989168 bytes]
 
 MultipleAt ...
-  Prover started:0.06 s 24974408 bytes
-    [0.189 s 23944760 bytes]
+  Prover started:0.087 s 22988760 bytes
+    [0.265 s 23055792 bytes]
 
 MultipleAt: m() ...
-    [0.045 s 24023760 bytes]  passed
+    [0.092 s 23133768 bytes]  passed
 
 MultipleAt: q() ...
-    [0.0030 s 24076192 bytes]  passed
+    [0.035 s 21984232 bytes]  passed
 
 MultipleAt: MultipleAt() ...
-    [0.0080 s 24245440 bytes]  passed
-  [0.247 s 24246464 bytes total]
+    [0.0070 s 22153536 bytes]  passed
+  [0.399 s 22154560 bytes total]
 1 caution

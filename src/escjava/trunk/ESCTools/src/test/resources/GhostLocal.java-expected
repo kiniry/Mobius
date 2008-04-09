@@ -1,48 +1,48 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/GhostLocal.java: Caution: Using given file as the .java file, even though it is not the java file for GhostLocal on the classpath
-    [0.0050 s 20551736 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostLocal.java: Caution: Using given file as the .java file, even though it is not the java file for GhostLocal on the classpath
+    [0.0040 s 18486832 bytes]
 
 GhostLocal ...
-  Prover started:0.063 s 20928896 bytes
-    [0.18 s 20995944 bytes]
+  Prover started:0.06 s 18725184 bytes
+    [0.176 s 18792232 bytes]
 
 GhostLocal: GhostLocal() ...
-    [0.0 s 20996968 bytes]  passed immediately
+    [0.0 s 18793256 bytes]  passed immediately
 
 GhostLocal: m() ...
-    [0.076 s 21152024 bytes]  passed
+    [0.076 s 18948136 bytes]  passed
 
 GhostLocal: pred(int) ...
-    [0.0 s 21154072 bytes]  passed immediately
+    [0.0 s 18950184 bytes]  passed immediately
 
 GhostLocal: mm() ...
-    [0.035 s 21283160 bytes]  passed
-  [0.292 s 21284184 bytes total]
+    [0.035 s 19079368 bytes]  passed
+  [0.288 s 19080392 bytes total]
 
 GhostLocalA ...
-    [0.0030 s 21410520 bytes]
+    [0.0030 s 19205704 bytes]
 
 GhostLocalA: m() ...
 ------------------------------------------------------------------------
-src/test/resources/GhostLocal.java:47: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostLocal.java:47: Warning: Possible assertion failure (Assert)
                 //@ assert a.i == 3; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.038 s 21813944 bytes]  failed
+    [0.038 s 19610856 bytes]  failed
 
 GhostLocalA: GhostLocalA() ...
-    [0.013 s 22204928 bytes]  passed
-  [0.055 s 22205952 bytes total]
+    [0.013 s 20001960 bytes]  passed
+  [0.055 s 20002984 bytes total]
 
 GhostLocalS ...
-    [0.0010 s 22281400 bytes]
+    [0.0010 s 20078432 bytes]
 
 GhostLocalS: GhostLocalS() ...
-    [0.013 s 22444904 bytes]  passed
-  [0.014 s 22445928 bytes total]
+    [0.012 s 20241808 bytes]  passed
+  [0.013 s 20242832 bytes total]
 
 GhostLocalI ...
-    [0.0 s 22463208 bytes]
-  [0.0020 s 22464232 bytes total]
+    [0.0010 s 20261192 bytes]
+  [0.0020 s 20262216 bytes total]
 1 caution
 1 warning

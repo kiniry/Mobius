@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ParseExample.java: Caution: Using given file as the .java file, even though it is not the java file for ParseExample on the classpath
-    [0.0010 s 24526056 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseExample.java: Caution: Using given file as the .java file, even though it is not the java file for ParseExample on the classpath
+    [0.0020 s 21842512 bytes]
 
 ParseExample ...
-  Prover started:0.061 s 24909576 bytes
-    [0.178 s 24975624 bytes]
+  Prover started:0.068 s 22855016 bytes
+    [0.177 s 22920040 bytes]
 
 ParseExample: m(int) ...
-    [0.0 s 24976648 bytes]  passed immediately
+    [0.0010 s 22922144 bytes]  passed immediately
 
 ParseExample: ParseExample() ...
-    [0.07 s 25127384 bytes]  passed
-  [0.249 s 25128408 bytes total]
+    [0.084 s 23074928 bytes]  passed
+  [0.263 s 23075952 bytes total]
 1 caution

@@ -1,139 +1,139 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/UndeclaredException2.java: Caution: Using given file as the .java file, even though it is not the java file for UndeclaredException2 on the classpath
-    [0.0050 s 42900816 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java: Caution: Using given file as the .java file, even though it is not the java file for UndeclaredException2 on the classpath
+    [0.0050 s 38947208 bytes]
 
 UndeclaredException2 ...
-  Prover started:0.082 s 44487296 bytes
-    [0.215 s 44613456 bytes]
+  Prover started:0.087 s 40510312 bytes
+    [0.256 s 40636472 bytes]
 
 UndeclaredException2: UndeclaredException2() ...
-    [0.0 s 44614480 bytes]  passed immediately
+    [0.0 s 40637496 bytes]  passed immediately
 
 UndeclaredException2: q(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:8: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:8: Warning: Possible assertion failure (Assert)
     //@ assert x.m(o); // WARNING - because result is undefined with o ...
         ^
 ------------------------------------------------------------------------
-    [0.139 s 45367416 bytes]  failed
+    [0.176 s 41390768 bytes]  failed
 
 UndeclaredException2: qx(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:16: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:16: Warning: Possible assertion failure (Assert)
     //@ assert x.m(o); // WARNING - because result is undefined with o ...
         ^
 ------------------------------------------------------------------------
-    [0.094 s 46086848 bytes]  failed
+    [0.149 s 39506192 bytes]  failed
 
 UndeclaredException2: q1(java.lang.Object) ...
-    [0.078 s 43617496 bytes]  passed
+    [0.049 s 40200504 bytes]  passed
 
 UndeclaredException2: q1x(java.lang.Object) ...
-    [0.082 s 44314992 bytes]  passed
+    [0.06 s 40896864 bytes]  passed
 
 UndeclaredException2: q3(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:38: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:38: Warning: Possible assertion failure (Assert)
     //@ assert x.m(oo); // WARNING - not sure oo is non-null
         ^
 ------------------------------------------------------------------------
-    [0.068 s 45169360 bytes]  failed
+    [0.104 s 41750488 bytes]  failed
 
 UndeclaredException2: q3x(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:45: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:45: Warning: Possible assertion failure (Assert)
     //@ assert x.m(oo); // WARNING - not sure oo is non-null
         ^
 ------------------------------------------------------------------------
-    [0.1 s 46023672 bytes]  failed
+    [0.098 s 42605136 bytes]  failed
 
 UndeclaredException2: q4(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:57: Warning: Possible unexpected exception (Exception)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:57: Warning: Possible unexpected exception (Exception)
 }  // Exception WARNING with bug fixed; previously OK - we don't know  ...
 ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/UndeclaredException2.java", line 54, col 6.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java", line 54, col 6.
 
 ------------------------------------------------------------------------
-    [0.051 s 46856304 bytes]  failed
+    [0.056 s 39174032 bytes]  failed
 
 UndeclaredException2: q4x(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:63: Warning: Possible unexpected exception (Exception)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:63: Warning: Possible unexpected exception (Exception)
 }  // WARNING - an exception might be thrown
 ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/UndeclaredException2.java", line 62, col 6.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java", line 62, col 6.
 
 ------------------------------------------------------------------------
-    [0.056 s 43167248 bytes]  failed
+    [0.051 s 40007528 bytes]  failed
 
 UndeclaredException2: rr(UndeclaredException2$NEx) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:73: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:73: Warning: Possible assertion failure (Assert)
 //@ assert false; // WARNING - but not until a bug is fixed
     ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/UndeclaredException2.java", line 68, col 10.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java", line 68, col 10.
 
 ------------------------------------------------------------------------
-    [0.086 s 44049152 bytes]  failed
+    [0.087 s 40890400 bytes]  failed
 
 UndeclaredException2: rrx(UndeclaredException2$Ex) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:84: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:84: Warning: Possible assertion failure (Assert)
 //@ assert false;  // WARNING
     ^
 Execution trace information:
-    Routine call returned exceptionally in "src/test/resources/UndeclaredException2.java", line 79, col 10.
+    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java", line 79, col 10.
 
 ------------------------------------------------------------------------
-    [0.052 s 44931000 bytes]  failed
-  [1.022 s 44932024 bytes total]
+    [0.052 s 41774352 bytes]  failed
+  [1.138 s 41775376 bytes total]
 
 UndeclaredException2$NEx ...
-    [0.0010 s 45035840 bytes]
+    [0.0010 s 41880216 bytes]
 
 UndeclaredException2$NEx: NEx() ...
-    [0.0 s 45037888 bytes]  passed immediately
+    [0.0 s 41882264 bytes]  passed immediately
 
 UndeclaredException2$NEx: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:99: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:99: Warning: Possible violation of modifies clause (Modifies)
       if (o == null) throw new NullPointerException();
                                                    ^
 Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/NullPointerException.class":
-Associated declaration is "src/test/resources/UndeclaredException2.java", line 91, col 4:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java", line 91, col 4:
     //@ public normal_behavior ...
     ^
 Execution trace information:
-    Executed then branch in "src/test/resources/UndeclaredException2.java", line 99, col 21.
+    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java", line 99, col 21.
 
 ------------------------------------------------------------------------
-    [0.034 s 45499232 bytes]  failed
-  [0.035 s 45500256 bytes total]
+    [0.044 s 42347176 bytes]  failed
+  [0.045 s 42348200 bytes total]
 
 UndeclaredException2$Ex ...
-    [0.0010 s 45604032 bytes]
+    [0.0010 s 42451976 bytes]
 
 UndeclaredException2$Ex: Ex() ...
-    [0.0 s 45606080 bytes]  passed immediately
+    [0.0 s 42453000 bytes]  passed immediately
 
 UndeclaredException2$Ex: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-src/test/resources/UndeclaredException2.java:115: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java:115: Warning: Possible violation of modifies clause (Modifies)
       if (o == null) throw new NullPointerException();
                                                    ^
 Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/NullPointerException.class":
-Associated declaration is "src/test/resources/UndeclaredException2.java", line 107, col 4:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java", line 107, col 4:
     //@ public normal_behavior ...
     ^
 Execution trace information:
-    Executed then branch in "src/test/resources/UndeclaredException2.java", line 115, col 21.
+    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UndeclaredException2.java", line 115, col 21.
 
 ------------------------------------------------------------------------
-    [0.063 s 46070504 bytes]  failed
-  [0.065 s 46071528 bytes total]
+    [0.073 s 42921008 bytes]  failed
+  [0.075 s 42922032 bytes total]
 1 caution
 10 warnings

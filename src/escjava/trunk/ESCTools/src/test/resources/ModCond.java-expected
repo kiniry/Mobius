@@ -1,38 +1,38 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModCond.java: Caution: Using given file as the .java file, even though it is not the java file for ModCond on the classpath
-    [0.0020 s 21983280 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModCond.java: Caution: Using given file as the .java file, even though it is not the java file for ModCond on the classpath
+    [0.0010 s 20488056 bytes]
 
 ModCond ...
-  Prover started:0.062 s 23057992 bytes
-    [0.163 s 23124696 bytes]
+  Prover started:0.061 s 20901488 bytes
+    [0.188 s 20968192 bytes]
 
 ModCond: ModCond() ...
-    [0.0 s 23125720 bytes]  passed immediately
+    [0.0010 s 20970296 bytes]  passed immediately
 
 ModCond: m(int) ...
-    [0.0 s 23127768 bytes]  passed immediately
+    [0.0 s 20972344 bytes]  passed immediately
 
 ModCond: m1(int) ...
 ------------------------------------------------------------------------
-src/test/resources/ModCond.java:20: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModCond.java:20: Warning: Possible assertion failure (Assert)
         //@ assert j == 0;  // WARNING
             ^
 ------------------------------------------------------------------------
-    [0.137 s 22232976 bytes]  failed
+    [0.115 s 21481072 bytes]  failed
 
 ModCond: m2(int) ...
-    [0.018 s 22588928 bytes]  passed
+    [0.019 s 21837552 bytes]  passed
 
 ModCond: m3(int) ...
-    [0.018 s 22946928 bytes]  passed
+    [0.022 s 22194416 bytes]  passed
 
 ModCond: m4(int) ...
 ------------------------------------------------------------------------
-src/test/resources/ModCond.java:41: Warning: Possible assertion failure (Assert)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModCond.java:41: Warning: Possible assertion failure (Assert)
         //@ assert k == 0; // WARNING
             ^
 ------------------------------------------------------------------------
-    [0.029 s 23419816 bytes]  failed
-  [0.366 s 23420840 bytes total]
+    [0.04 s 20460624 bytes]  failed
+  [0.387 s 20461648 bytes total]
 1 caution
 2 warnings

@@ -1,24 +1,24 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/Uninit.java: Caution: Using given file as the .java file, even though it is not the java file for Uninit on the classpath
-    [0.0020 s 25133912 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Uninit.java: Caution: Using given file as the .java file, even though it is not the java file for Uninit on the classpath
+    [0.0010 s 22729176 bytes]
 
 Uninit ...
-  Prover started:0.079 s 26131704 bytes
-    [0.182 s 26196344 bytes]
+  Prover started:0.074 s 23717800 bytes
+    [0.178 s 23782440 bytes]
 
 Uninit: m() ...
 ------------------------------------------------------------------------
-src/test/resources/Uninit.java:7: Warning: Possible dynamic use before meaningful assignment of local variable (Uninit)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Uninit.java:7: Warning: Possible dynamic use before meaningful assignment of local variable (Uninit)
                 int j = i;
                         ^
-Associated declaration is "src/test/resources/Uninit.java", line 5, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Uninit.java", line 5, col 5:
                 //@uninitialized
                    ^
 ------------------------------------------------------------------------
-    [0.08 s 26379600 bytes]  failed
+    [0.08 s 23967448 bytes]  failed
 
 Uninit: Uninit() ...
-    [0.0050 s 26531432 bytes]  passed
-  [0.268 s 26532456 bytes total]
+    [0.0060 s 24117104 bytes]  passed
+  [0.264 s 24119152 bytes total]
 1 caution
 1 warning

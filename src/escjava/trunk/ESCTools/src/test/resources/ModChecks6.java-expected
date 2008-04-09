@@ -1,30 +1,30 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/ModChecks6.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks6 on the classpath
-    [0.0030 s 21471808 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks6.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks6 on the classpath
+    [0.0020 s 19383104 bytes]
 
 ModChecks6 ...
-  Prover started:0.074 s 21840088 bytes
-    [0.219 s 21908160 bytes]
+  Prover started:0.06 s 19393008 bytes
+    [0.177 s 19461080 bytes]
 
 ModChecks6: ModChecks6() ...
-    [0.0010 s 21909240 bytes]  passed immediately
+    [0.0 s 19462104 bytes]  passed immediately
 
 ModChecks6: m() ...
 ------------------------------------------------------------------------
-src/test/resources/ModChecks6.java:19: Warning: Possible violation of modifies clause (Modifies)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks6.java:19: Warning: Possible violation of modifies clause (Modifies)
             o.mm();
                 ^
-Associated declaration is "src/test/resources/ModChecks6.java", line 25, col 14:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks6.java", line 25, col 14:
         //@ modifies ModChecks6.*;  // WARNING
                      ^
-Associated declaration is "src/test/resources/ModChecks6.java", line 12, col 5:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks6.java", line 12, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.185 s 23059216 bytes]  failed
+    [0.154 s 20615912 bytes]  failed
 
 ModChecks6: mm() ...
-    [0.0 s 23061264 bytes]  passed immediately
-  [0.406 s 23062288 bytes total]
+    [0.0 s 20616936 bytes]  passed immediately
+  [0.332 s 20617960 bytes total]
 1 caution
 1 warning

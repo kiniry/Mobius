@@ -1,127 +1,127 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/NonNullResult.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullResult on the classpath
-    [0.0020 s 23727136 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullResult on the classpath
+    [0.0020 s 22106192 bytes]
 
 NonNullResult ...
-  Prover started:0.061 s 24820984 bytes
-    [0.163 s 24893352 bytes]
+  Prover started:0.063 s 22104464 bytes
+    [0.207 s 22177856 bytes]
 
 NonNullResult: NonNullResult() ...
-    [0.0 s 24895400 bytes]  passed immediately
+    [0.0 s 22178880 bytes]  passed immediately
 
 NonNullResult: m1(int) ...
-    [0.071 s 24959296 bytes]  passed
+    [0.09 s 22243848 bytes]  passed
 
 NonNullResult: m2(int) ...
 ------------------------------------------------------------------------
-src/test/resources/NonNullResult.java:16: Warning: Method declared non_null may return null (NonNullResult)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java:16: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS
         ^
-Associated declaration is "src/test/resources/NonNullResult.java", line 13, col 10:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 13, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "src/test/resources/NonNullResult.java", line 15, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 15, col 2.
 
 ------------------------------------------------------------------------
-    [0.043 s 25183656 bytes]  failed
+    [0.052 s 22470592 bytes]  failed
 
 NonNullResult: m3(int) ...
 ------------------------------------------------------------------------
-src/test/resources/NonNullResult.java:21: Warning: Method declared non_null may return null (NonNullResult)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java:21: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS - super class spec
         ^
-Associated declaration is "src/test/resources/NonNullResult.java", line 67, col 10:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 67, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "src/test/resources/NonNullResult.java", line 20, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 20, col 2.
 
 ------------------------------------------------------------------------
-    [0.016 s 25380664 bytes]  failed
+    [0.021 s 22672032 bytes]  failed
 
 NonNullResult: m4(int) ...
 ------------------------------------------------------------------------
-src/test/resources/NonNullResult.java:26: Warning: Method declared non_null may return null (NonNullResult)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java:26: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS
         ^
-Associated declaration is "src/test/resources/NonNullResult.java", line 23, col 10:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 23, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "src/test/resources/NonNullResult.java", line 25, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 25, col 2.
 
 ------------------------------------------------------------------------
-    [0.017 s 25601168 bytes]  failed
+    [0.018 s 22893896 bytes]  failed
 
 NonNullResult: m5(int) ...
 ------------------------------------------------------------------------
-src/test/resources/NonNullResult.java:32: Warning: Method declared non_null may return null (NonNullResult)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java:32: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS - super class spec
         ^
-Associated declaration is "src/test/resources/NonNullResult.java", line 78, col 10:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 78, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "src/test/resources/NonNullResult.java", line 31, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 31, col 2.
 
 ------------------------------------------------------------------------
-    [0.019 s 25824744 bytes]  failed
+    [0.022 s 23120824 bytes]  failed
 
 NonNullResult: mm() ...
 ------------------------------------------------------------------------
-src/test/resources/NonNullResult.java:36: Warning: Possible assignment of null to variable declared non_null (NonNull)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java:36: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 o = m1(0); // FAILS
                   ^
-Associated declaration is "src/test/resources/NonNullResult.java", line 35, col 6:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 35, col 6:
                 /*@ non_null */ NonNullResultS o = new NonNullResultS( ...
                     ^
 ------------------------------------------------------------------------
-    [0.14 s 25974528 bytes]  failed
-  [0.47 s 25975552 bytes total]
+    [0.197 s 22996584 bytes]  failed
+  [0.607 s 22997608 bytes total]
 
 NonNullResultS ...
-    [0.0010 s 26046856 bytes]
+    [0.0010 s 23068912 bytes]
 
 NonNullResultS: NonNullResultS() ...
-    [0.0 s 26048904 bytes]  passed immediately
+    [0.0 s 23070960 bytes]  passed immediately
 
 NonNullResultS: m1(int) ...
-    [0.0090 s 26113880 bytes]  passed
+    [0.011 s 23135992 bytes]  passed
 
 NonNullResultS: m2(int) ...
-    [0.0040 s 26178856 bytes]  passed
+    [0.0040 s 23200968 bytes]  passed
 
 NonNullResultS: m3(int) ...
 ------------------------------------------------------------------------
-src/test/resources/NonNullResult.java:70: Warning: Method declared non_null may return null (NonNullResult)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java:70: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS
         ^
-Associated declaration is "src/test/resources/NonNullResult.java", line 67, col 10:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 67, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "src/test/resources/NonNullResult.java", line 69, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 69, col 2.
 
 ------------------------------------------------------------------------
-    [0.014 s 26369664 bytes]  failed
+    [0.015 s 23394112 bytes]  failed
 
 NonNullResultS: m4(int) ...
 ------------------------------------------------------------------------
-src/test/resources/NonNullResult.java:75: Warning: Method declared non_null may return null (NonNullResult)
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java:75: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS
         ^
-Associated declaration is "src/test/resources/NonNullResult.java", line 72, col 10:
+Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 72, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "src/test/resources/NonNullResult.java", line 74, col 2.
+    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullResult.java", line 74, col 2.
 
 ------------------------------------------------------------------------
-    [0.014 s 26560472 bytes]  failed
+    [0.015 s 23587256 bytes]  failed
 
 NonNullResultS: m5(int) ...
-    [0.016 s 24257672 bytes]  passed
-  [0.058 s 24258696 bytes total]
+    [0.014 s 23809984 bytes]  passed
+  [0.061 s 23811008 bytes total]
 1 caution
 7 warnings

@@ -1,15 +1,15 @@
 ESC/Java version ESCJava-CURRENT
-src/test/resources/EscJavaTest002.java: Caution: Using given file as the .java file, even though it is not the java file for EscJavaTest002 on the classpath
-    [0.0030 s 19685952 bytes]
+/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EscJavaTest002.java: Caution: Using given file as the .java file, even though it is not the java file for EscJavaTest002 on the classpath
+    [0.0050 s 16740368 bytes]
 
 EscJavaTest002 ...
-  Prover started:0.394 s 19654072 bytes
-    [0.606 s 19721232 bytes]
+  Prover started:0.062 s 16948632 bytes
+    [0.193 s 17015040 bytes]
 
 EscJavaTest002: inc() ...
-    [0.17 s 19805984 bytes]  passed
+    [0.082 s 17099616 bytes]  passed
 
 EscJavaTest002: EscJavaTest002() ...
-    [0.111 s 19999784 bytes]  passed
-  [0.887 s 20000808 bytes total]
+    [0.042 s 17293336 bytes]  passed
+  [0.317 s 17294360 bytes total]
 1 caution
