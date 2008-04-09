@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor;
+package umbra.editor.parsing;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -24,7 +24,8 @@ import umbra.UmbraPlugin;
 
 
 /**
- * TODO.
+ * This class is responsible for colouring these areas in a byte code
+ * editor window which are inside one-line areas.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -40,15 +41,17 @@ public class NonRuleBasedDamagerRepairer
   private IDocument my_doc;
 
   /**
-   * The default text attribute
-   * if non is returned as data by the current token TODO.
+   * The default text attribute used for the colouring of all the areas governed
+   * by the current object.
    */
   private TextAttribute my_dflt_textattribute;
 
   /**
-   * Constructor for NonRuleBasedDamagerRepairer.
+   * Constructor for NonRuleBasedDamagerRepairer. It only caches the default
+   * text attribute.
    *
-   * @param a_default_text_attribute TODO
+   * @param a_default_text_attribute the default text attribute to be used
+   *   by the current object
    */
   public NonRuleBasedDamagerRepairer(
         /*@ non_null @*/ final TextAttribute a_default_text_attribute) {
@@ -56,7 +59,7 @@ public class NonRuleBasedDamagerRepairer
   }
 
   /**
-   * Associated the given document with the current damager-repairer.
+   * Associates the given document with the current damager-repairer.
    *
    * @param a_doc a document to associate with the current damager-repairer.
    * @see IPresentationRepairer#setDocument(IDocument)
@@ -91,11 +94,20 @@ public class NonRuleBasedDamagerRepairer
   }
 
   /**
-   * TODO.
-   * @param a_partition TODO
-   * @param an_event TODO
-   * @param a_doc_partitioning_chngd TODO
-   * @return TODO
+   * Returns the damage in the document's presentation caused by the current
+   * document change. In case the partitioning changed <code>a_partition</code>
+   * is returned. In case the partitioning is unchanded the region is calculated
+   * which starts with the begining of the line in which the modification
+   * started and ends with the end of the last line in which the modification
+   * occurred. The region is always included in the given damaged region so
+   * we have to check for cases in which the region starts/end in the middle
+   * of a line.
+   *
+   * @param a_partition a region which is damaged
+   * @param an_event the event which changes the document
+   * @param a_doc_partitioning_chngd <code>true</code> when the change changed
+   *   document's partitioning
+   * @return a new partition
    * @see IPresentationDamager#getDamageRegion(ITypedRegion, DocumentEvent,
    *                                           boolean)
    */
@@ -104,20 +116,19 @@ public class NonRuleBasedDamagerRepairer
                                        final boolean a_doc_partitioning_chngd) {
     if (!a_doc_partitioning_chngd) {
       try {
-
-        final IRegion info =
+        final IRegion line_info =
           my_doc.getLineInformationOfOffset(an_event.getOffset());
-        final int start = Math.max(a_partition.getOffset(), info.getOffset());
-
+        final int start = Math.max(a_partition.getOffset(),
+                                   line_info.getOffset());
         int end =
           an_event.getOffset() + (an_event.getText() == null ?
                                          an_event.getLength() :
                                          an_event.getText().length());
 
-        if (info.getOffset() <= end &&
-            end <= info.getOffset() + info.getLength()) {
+        if (line_info.getOffset() <= end &&
+            end <= line_info.getOffset() + line_info.getLength()) {
           // optimize the case of the same line
-          end = info.getOffset() + info.getLength();
+          end = line_info.getOffset() + line_info.getLength();
         } else
           end = endOfLineOf(end);
 
@@ -126,7 +137,6 @@ public class NonRuleBasedDamagerRepairer
             a_partition.getOffset() + a_partition.getLength(),
             end);
         return new Region(start, end - start);
-
       } catch (BadLocationException x) {
         UmbraPlugin.messagelog("BadLocationException in getDamageRegion");
       }
@@ -137,7 +147,7 @@ public class NonRuleBasedDamagerRepairer
   /**
    * This method adds to <code>a_presentation</code> a presentation style
    * to be used to display <code>a_region</code>. The presentation style
-   * is defined with the use of {@ref #my_dflt_textattribute}.
+   * is defined with the use of the default attribute.
    *
    * @param a_presentation the text presentation to be filled by this repairer
    * @param a_region the damage to be repaired

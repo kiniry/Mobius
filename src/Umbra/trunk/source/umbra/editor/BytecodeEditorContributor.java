@@ -155,7 +155,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
                                  final int a_mode) {
     my_action_plus = new BytecodeColorAction(this, 1, a_mode);
     // TODO: for some reason the second parameter was
-    //       ColorValues.MODELS.length - 2,
+    //       ColorValues.MODES_DESC.length - 2,
     my_action_minus = new BytecodeColorAction(this, -1, a_mode);
     ImageDescriptor icon_right;
     ImageDescriptor icon_left;

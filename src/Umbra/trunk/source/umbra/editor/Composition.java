@@ -8,6 +8,8 @@
  */
 package umbra.editor;
 
+import umbra.editor.parsing.ColorValues;
+
 /**
  * This class is a static container that keeps the value of current coloring
  * style that is obtained after each refreshing (which takes place when
@@ -43,7 +45,7 @@ public final class Composition {
    * TODO really?
    */
   public static int getMod() {
-    if (!disas) return ColorValues.MODELS.length - 1;
+    if (!disas) return ColorValues.MODES_DESC.length - 1;
     return mod;
   }
 

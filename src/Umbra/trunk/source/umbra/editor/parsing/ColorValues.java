@@ -6,130 +6,170 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor;
+package umbra.editor.parsing;
 
 
 /**
- * The interface defining colors used in particular coloring styles.
+ * The interface defining colours used in particular colouring styles.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public final class ColorValues {
 
   /**
-   * TODO.
+   * The position of the red colour component in a single style entry from
+   * {@link #MODES_DESC} array.
    */
-  public static final int RED_COMPONENT = 0;
+  public static final int COMPONENT_RED = 0;
 
   /**
-   * TODO.
+   * The position of the green colour component in a single style entry from
+   * {@link #MODES_DESC} array.
    */
-  public static final int GREEN_COMPONENT = 1;
+  public static final int COMPONENT_GREEN = 1;
 
   /**
-   * TODO.
+   * The position of the blue colour component in a single style entry from
+   * {@link #MODES_DESC} array.
    */
-  public static final int BLUE_COMPONENT = 2;
+  public static final int COMPONENT_BLUE = 2;
 
   /**
-   * TODO.
+   * The position of the font style component in a single style entry from
+   * {@link #MODES_DESC} array.
    */
-  public static final int STYLE_COMPONENT = 3;
+  public static final int COMPONENT_TXTSTYLE = 3;
 
   /**
    * The number of style parameters per slot. Currently, we have paramters
-   * for color components red, green, blue and text style.
+   * for colour components red, green, blue and text style.
    */
-  public static final int CN = 4;
+  public static final int COMPONENT_NUMBER = COMPONENT_TXTSTYLE + 1;
 
   /**
-   * The color of strings.
+   * The colour of strings.
    */
-  public static final int STRING = 0;
+  public static final int SLOT_STRING = 0;
 
   /**
-   * The color of comments (starting with //).
+   * The colour of comments.
    */
-  public static final int COMMENT = 1;
+  public static final int SLOT_COMMENT = 1;
 
   /**
-   * The color of unparsed text in byte code (e.g. names of called methods).
+   * The colour of unparsed text in byte code (e.g. names of called methods).
    */
-  public static final int DEFAULT = 2;
+  public static final int SLOT_DEFAULT = 2;
 
   /**
-   * The color of piece of byte code recognized to be an error (not used).
+   * The colour of pieces of byte code recognized to be an error (not used).
    */
-  public static final int ERROR = 3;
+  public static final int SLOT_ERROR = 3;
 
   /**
-   * The color of the method headers (e.g. public int a(int b)).
+   * The colour of the method headers (e.g. public int a(int b)).
    */
-  public static final int HEADER = 4;
+  public static final int SLOT_HEADER = 4;
 
   /**
    * The colour of BML annotations.
    */
-  public static final int TAG = 5;
+  public static final int SLOT_TAG = 5;
 
   /**
    * The color of bytecode instructions.
    */
-  public static final int BTC_INSTR = 7;
+  public static final int SLOT_BTCINSTR = 7;
+
   /**
-   * The color of the word: &ld;init&ge;.
+   * The colour of the word: &ld;init&ge;. Currently unused.
    */
-  public static final int KEY = 8;
+  public static final int SLOT_KEY = 8;
+
   /**
-   * The color of bytecode keywords: "Attribute(s)", "LineNumber", etc.
+   * The colour of the "LineNumber" areas.
+   * FIXME: add handling of "Line" areas https://mobius.ucd.ie/ticket/547
    */
-  public static final int LINE = 9;
+  public static final int SLOT_LINE = 9;
+
   /**
-   * not used (but not to delete).
+   * The colour of the "Throws" areas.
+   * FIXME: add handling of "Line" areas https://mobius.ucd.ie/ticket/549
    */
-  public static final int THROWS = 10;
+  public static final int SLOT_THROWS = 10;
+
   /**
-   * The color of numbers in byte code that are surrounded by '( )'.
+   * The colour of sections in byte code that are surrounded by '( )' or '{ }'.
    */
-  public static final int SQUARE = 11;
+  public static final int SLOT_PARENTHESES = 11;
+
   /**
    * The color of numbers appearing in byte code except from cases listed
    * below.
    */
-  public static final int NUMBER = 12;
+  public static final int SLOT_NUMBER = 12;
+
   /**
-   * The color of line number at the beginning of a line.
+   * The colour of line number at the beginning of a line.
    */
-  public static final int POSITION = 13;
+  public static final int SLOT_LABELNUMBER = 13;
+
   /**
-   * The color of number arguments that are used with '#'.
+   * The colour of number arguments that start with '#'.
    */
-  public static final int HASH = 14;
+  public static final int SLOT_HASH = 14;
+
   /**
-   * The color of number arguments that are used with '%'.
+   * The colour of number arguments that start with '%'.
    */
-  public static final int ATTR = 15;
+  public static final int SLOT_PERCENT = 15;
+
   /**
-   * The color of BML annotations.
+   * The colour of the BML annotations.
    */
-  public static final int ANNOT = 16;
+  public static final int SLOT_BML = 16;
+
   /**
-   * The color of keywords in BML annotations.
+   * The colour of keywords in the BML annotations.
    */
-  public static final int ANNOTKEY = 17;
+  public static final int SLOT_BMLKEYWORDS = 17;
+
   /**
-   * Number of defined color constants.
+   * Number of defined colour constants.
    */
-  public static final int PARTS = 18;
+  public static final int SLOTS_NO = 18;
 
 
   /**
-   * TODO
-   * The current colouring style is an index to the first coordinate
-   * of the array.
+   * The array which associates colour and text style modes with actual
+   * values of the RGB colours. The colouring mode is an index to the first
+   * coordinate of the array, the particular colour parameters are start
+   * at the position: slot_number * {@link #COMPONENT_NUMBER}. The style
+   * components are located at the following positions:
+   * <ul>
+   *   <li>slot_number * {@link #COMPONENT_NUMBER} +
+   *       {@link #COMPONENT_RED},</li>
+   *   <li>slot_number * {@link #COMPONENT_NUMBER} +
+   *       {@link #COMPONENT_GREEN},</li>
+   *   <li>slot_number * {@link #COMPONENT_NUMBER} +
+   *       {@link #COMPONENT_BLUE},</li>
+   *   <li>slot_number * {@link #COMPONENT_NUMBER} +
+   *       {@link #COMPONENT_TXTSTYLE},</li>
+   * </ul>
+   *
+   * The available slots are:
+   * {@link #SLOT_STRING},
+   * {@link #SLOT_COMMENT}, {@link #SLOT_DEFAULT}, {@link #SLOT_ERROR},
+   * {@link #SLOT_HEADER}, {@link #SLOT_TAG}, {@link #SLOT_BTCINSTR},
+   * {@link #SLOT_KEY}, {@link #SLOT_LINE}, {@link #SLOT_THROWS},
+   * {@link #SLOT_PARENTHESES}, {@link #SLOT_NUMBER}, {@link #SLOT_LABELNUMBER},
+   * {@link #SLOT_HASH}, {@link #SLOT_PERCENT}, {@link #SLOT_BML},
+   * {@link #SLOT_BMLKEYWORDS}.
+   *
    */
-  public static final int[][] MODELS = new int[][] {
+  public static final int[][] MODES_DESC = new int[][] {
     new int[] {0, 0, 255, 0,
                0, 0, 0, 2, 0, 0, 0, 0, 255, 0, 0, 0,
                0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -249,7 +289,7 @@ public final class ColorValues {
                160, 0, 128, 1,
                192, 64, 255, 2,
                96, 160, 0, 3,
-               128, 192, 64, 0,
+               128, 192, 65, 0,
                255, 96, 160, 1,
                0, 128, 192, 2,
                192, 128, 0, 3,
@@ -264,7 +304,7 @@ public final class ColorValues {
                192, 64, 255, 0,
                96, 160, 0, 1},
     new int[] {128, 128, 128, 0,
-               128, 128, 128, 0,
+               128, 128, 127, 0,
                128, 128, 128, 0,
                128, 128, 128, 0,
                128, 128, 128, 0,

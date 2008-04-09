@@ -9,11 +9,22 @@
 package umbra.editor.parsing;
 
 /**
- * String arrays used to identify keywords and instruction
- * names in byte code.
+ * The container for all the byte code and BML strings. It inherits the
+ * byte code mnemonics as well as strings indicating starts and ends of
+ * comments and BML areas from {@link BytecodeStringsMnemonics}. It contributes
+ * <ul>
+ *  <li>BML keywords (e.g. requires),</li>
+ *  <li>BML expression kewords (e.g. \result),</li>
+ *  <li>keywords for Line numbers section,</li>
+ *  <li>keywords for Code section,</li>
+ *  <li>keywords in method, classes, and package headers,</li>
+ *  <li>keywords in throws section, and</li>
+ *  <li>primitive types names.</li>
+ * </ul>
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public final class BytecodeStrings extends BytecodeStringsMnemonics {
@@ -21,9 +32,11 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
 
   /**
    * This constant contains an array with all the BML keywords.
-   * The BML lines are handled by 
+   * The BML lines are handled by
    * {@link umbra.instructions.ast.AnnotationLineController} class.
-   * FIXME: this should be retrieved from BMLlib
+   *
+   * FIXME: this should be retrieved from BMLlib;
+   *   https://mobius.ucd.ie/ticket/551
    */
   public static final String[] BML_KEYWORDS = new String[] {
     "invariant",
@@ -42,30 +55,10 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
     "decreases"};
 
   /**
-   * TODO.
-   */
-  public static final String[] JAVA_KEYWORDS = new String[] {"public",
-                                                             "protected",
-                                                             "private",
-                                                             "static", "void",
-                                                             "int", "long",
-                                                             "short", "char",
-                                                             "byte", "boolean",
-                                                             "class",
-                                                             "interface",
-                                                             "extends",
-                                                             "implements",
-                                                             "package"};
-
-  /**
-   * TODO.
-   */
-  public static final String[] LINENUM_KEYWORDS =
-                                      new String[] {"Line numbers:",
-                                                    "Local variable table:" };
-
-  /**
-   * TODO.
+   * This constant contains an array with all the keywords that occur in the
+   * line numbers area. This area is not fully handled yet.
+   *
+   * FIXME: add the handling of this area; https://mobius.ucd.ie/ticket/547
    */
   public static final String[] LINE_KEYWORDS = new String[] {"Line", "numbers",
                                                              "Local",
@@ -73,18 +66,15 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
                                                              "table"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the keywords that occur in the
+   * Code area. This area is not fully handled yet.
+   *
+   * FIXME: add the handling of this area; https://mobius.ucd.ie/ticket/548
    */
   public static final String[] CODE_KEYWORDS = new String[] {"Code",
                                                              "max_stack",
                                                              "max_locals",
                                                              "code_length"};
-
-  /**
-   * TODO.
-   */
-  public static final char[] KEY_TYPE_CHARS = new char[] {'B', 'C', 'D', 'I',
-                                                          'S', 'V'};
 
   /**
    * This constant contains an array with all the possible prefixes of method
@@ -106,6 +96,8 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
    * This constant contains an array with all the possible prefixes of throw
    * lines in byte code text files. The throw lines are handled by
    * {@link umbra.instructions.ast.ThrowsLineController} class.
+   *
+   * FIXME: add the handling of this area; https://mobius.ucd.ie/ticket/549
    */
   public static final String[] THROWS_PREFIX = new String[] {"throws",
                                                              "Exception",

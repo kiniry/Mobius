@@ -17,8 +17,8 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
-import umbra.editor.ColorValues;
 import umbra.editor.Composition;
+import umbra.editor.parsing.ColorValues;
 
 /**
  *  This class defines an action of changing the coloring style. Two
@@ -85,8 +85,8 @@ public class BytecodeColorAction extends Action {
    * and refreshes the editor window.
    */
   public final void run() {
-    if (my_mod == ColorValues.MODELS.length - 1) return;
-    my_mod = (my_mod + my_colour_delta) % (ColorValues.MODELS.length - 1);
+    if (my_mod == ColorValues.MODES_DESC.length - 1) return;
+    my_mod = (my_mod + my_colour_delta) % (ColorValues.MODES_DESC.length - 1);
     Composition.setMod(my_mod);
     if (my_active_editor != null) {
       try {

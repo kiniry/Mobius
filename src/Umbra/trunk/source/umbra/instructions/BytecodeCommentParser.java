@@ -17,6 +17,7 @@ import umbra.instructions.ast.InstructionLineController;
  * the comments.
  *
  * TODO: this is the best place to describe the logics of the comment saving
+ *   https://mobius.ucd.ie/ticket/560
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
@@ -84,7 +85,8 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    * value of the arrays which contain the comments from the previous session
    * with the current document.
    *
-   * TODO link to the protocol for a_comment_array
+   * TODO link to the protocol for a_comment_array;
+   *   https://mobius.ucd.ie/ticket/560
    *
    * @param a_comment_array the end-of-line comments from the previous session
    * @param a_interline the interline comments from the previous session

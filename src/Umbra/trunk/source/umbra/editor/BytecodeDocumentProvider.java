@@ -84,9 +84,9 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
         new FastPartitioner(
           new BytecodePartitionScanner(),
           new String[] {
-            BytecodePartitionScanner.TAG,
-            BytecodePartitionScanner.HEAD,
-            BytecodePartitionScanner.THROWS});
+            BytecodePartitionScanner.SECTION_BML,
+            BytecodePartitionScanner.SECTION_HEAD,
+            BytecodePartitionScanner.SECTION_THROWS});
       document.setDocumentPartitioner(partitioner);
       partitioner.connect(document);
       final BytecodeContribution contribution = BytecodeContribution.inUse();

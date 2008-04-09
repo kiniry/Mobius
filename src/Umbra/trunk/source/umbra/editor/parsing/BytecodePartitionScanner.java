@@ -17,20 +17,26 @@ import org.eclipse.jface.text.rules.Token;
 
 
 /**
- * TODO.
+ * This class is responsible for dividing the byte code document into partitions
+ * the colouring of which is governed by different rules. The text is
+ * divided into four kinds of regions:
+ * <ul>
+ *   <li>default section (governed by {@link BytecodeScanner}),</li>
+ *   <li>section for headers (e.g. method, class or package headers;
+ *     governed by {@link NonRuleBasedDamagerRepairer}),</li>
+ *   <li>section for throws sections (governed by
+ *     {@link NonRuleBasedDamagerRepairer}),</li>
+ *   <li>section for BML annotations (governed by
+ *     {@link BytecodeBMLSecScanner}).</li>
+ * </ul>
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
-
-  /**
-   * This is the name of a content type assigned to areas of a byte code
-   * document that are not treated in a special way.
-   */
-  public static final String DEFAULT = "__btc.default";
 
   /**
    * This is the name of a content type assigned to areas of a byte code
@@ -39,24 +45,21 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    * declarations, lines with private declarations, lines with protected
    * declarations, lines with braces, and lines with class declarations.
    */
-  public static final String HEAD = "__btc.header";
+  public static final String SECTION_HEAD = "__btc.header";
 
   /**
    * This is the name of a content type assigned to areas of a byte code
    * document that correspond to throws declarations.
+   * FIXME: the handling of these sections is partial;
+   *   https://mobius.ucd.ie/ticket/549
    */
-  public static final String THROWS = "__btc.throwssec";
+  public static final String SECTION_THROWS = "__btc.throwssec";
 
   /**
    * This is the name of a content type assigned to areas of a byte code
    * document that correspond to BML annotations.
    */
-  public static final String TAG = "__btc.bmlcode";
-
-  /**
-   * Index for the rule to handle the XML comments.
-   */
-  private static final int COMMENT_RULE = 0;
+  public static final String SECTION_BML = "__btc.bmlcode";
 
   /**
    * Index for the rule to handle BML annotations.
@@ -72,23 +75,31 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    * The total number of rules in the current scanner. It is by one greater
    * than the maximal rule number.
    */
-  private static final int NUMBER_OF_RULES = 3;
+  private static final int NUMBER_OF_RULES = THROWS_RULE + 1;
 
 
   /**
-   * TODO. 
+   * This constructor creates rules and configures the scanner with them.
+   * The rules handle the division of the byte code document into
+   * partitions the colouring of which is governed by different rules. The text
+   * is divided into four kinds of regions:
+   * <ul>
+   *   <li>default section,</li>
+   *   <li>section for headers (e.g. method, class or package headers),</li>
+   *   <li>section for throws sections,</li>
+   *   <li>section for BML annotations.</li>
+   * </ul>
    */
   public BytecodePartitionScanner() {
 
-    final IToken thr = new Token(THROWS);
-    final IToken head = new Token(HEAD);
-    final IToken tag = new Token(TAG);
+    final IToken thr = new Token(SECTION_THROWS);
+    final IToken head = new Token(SECTION_HEAD);
+    final IToken bml = new Token(SECTION_BML);
 
     final IPredicateRule[] rules = new IPredicateRule[NUMBER_OF_RULES +
                               BytecodeStrings.HEADER_PREFIX.length];
 
-    rules[COMMENT_RULE] = new MultiLineRule("<!--", "-->", head);
-    rules[BML_RULE] = new MultiLineRule("/*@", "@*/", tag);
+    rules[BML_RULE] = new MultiLineRule("/*@", "@*/", bml);
     rules[THROWS_RULE] = new EndOfLineRule("throws", thr);
 
     for (int i = 0; i < BytecodeStrings.HEADER_PREFIX.length;

@@ -16,17 +16,39 @@ Umbra plugin. Package umbra.editor.parsing
 </title>
 </head>
 <body bgcolor="white">
-This package contains all the classes which handle directly the Umbra editor
-functions. This package contains three subpackages.
+This package contains all the classes which handle the scanning and parsing
+of the different areas in a byte code document.
 
 <!-- Put @see and @since tags down here. -->
 <ul>
-  <li>{@see umbra.editor.actions} which handles directly the GUI actions
-      available in the bytecode editor</li>
-  <li>{@see umbra.editor.boogiepl} which handles the BoogiePL functionality</li>
-  <li>{@see umbra.editor.parsing} which handles the rudimentary parsing of
-      the textual representation of the bytecode which is needed for
-      colouring of the code</li>
+  <li>{@see BytecodePartitionScanner} creates the partition of the document
+    into the main sections: default, BML, header section, and throws
+    section.</li>
+  <li>{@see BytecodeScanner} handles the colouring of the default areas of the
+    document.</li>
+  <li>{@see BytecodeBMLSecScanner} handles the colouring of the areas of the
+    document that contain BML.</li>
+  <li>{@see NonRuleBasedDamagerRepairer} handles the colouring of the areas
+    of the document in throws clauses and in header lines.</li>
+  <li>{@see BytecodeStrings} together with its superclasses
+    {@see BytecodeStringsMnemonics} and {@see BytecodeStringsGeneric}
+    contain the strings of different keywords used in the byte code
+    documents.</li>
+  <li>{@see BytecodeWhitespaceDetector}, {@see BytecodeWordDetector} and
+    {@see SpecialNumberRule} are used in {@see BytecodeScanner} and
+    {@see BytecodeBMLSecScanner} to recognise whitespace, words and numbers
+    with surrounding marks (e.g. #).</li>
+  <li>{@see TokenGetter} is a class which generates tokens to colour the
+    byte code document text. This contains only functionality that mediates
+    between the tokens and the colouring mode and particular colours.</li>
+  <li>{@see UmbraLocationException} is the exception thrown in case the Umbra
+    logic tries to refer to a line which does not exists in the current
+    byte code document.</li>
+  <li>{@see ColorManager} is the class which manages the colours that are
+    obtained from the operating system and are used in the colouring of
+    the text.</li>
+  <li>{@see ColorValues} is a container for all the colour and text style values
+    arranged in modes.</li>
 </ul>
 </body>
 </html>

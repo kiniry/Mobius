@@ -9,7 +9,13 @@
 package umbra.editor.parsing;
 
 /**
- * @author alx
+ * The container for all the byte code mnemonic strings. Except from a flat
+ * list of mnemonics it contains arrays of mnemonics divided to different
+ * classes which are represented in {@link umbra.instructions.ast} package.
+ * It inherits the flat list of all instructions from
+ * {@link BytecodeStringsGeneric}.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
  */
@@ -17,7 +23,7 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref ArithmeticInstruction} class.
+   * in {@link umbra.instructions.ast.ArithmeticInstruction} class.
    */
   public static final String[] ARITHMETIC_INS = new String[] {"dadd", "ddiv",
                                                               "dmul", "dneg",
@@ -40,7 +46,7 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref IConstInstruction} class.
+   * in {@link umbra.instructions.ast.IConstInstruction} class.
    */
   public static final String[] ICONST_INS = new String[] {"iconst_0",
                                                           "iconst_1",
@@ -51,7 +57,7 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref LoadStoreConstInstruction} class.
+   * in {@link umbra.instructions.ast.LoadStoreConstInstruction} class.
    */
   public static final String[] LOAD_STORE_INS = new String[] {"aload_0",
                                                               "aload_1",
@@ -96,7 +102,7 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref LoadStoreArrayInstruction} class.
+   * in {@link umbra.instructions.ast.LoadStoreArrayInstruction} class.
    */
   public static final String[] LOAD_STORE_ARRAY_INS = {"aaload",
                                                        "aastore",
@@ -117,7 +123,7 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref SingleInstruction} class.
+   * in {@link umbra.instructions.ast.SingleInstruction} class.
    */
   public static final String[] SINGLE_INS = new String[] {"aconst_null",
                                                           "arraylength",
@@ -135,13 +141,13 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref PushInstruction} class.
+   * in {@link umbra.instructions.ast.PushInstruction} class.
    */
   public static final String[] PUSH_INS = new String[] {"bipush", "sipush"};
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref JumpInstruction} class.
+   * in {@link umbra.instructions.ast.JumpInstruction} class.
    */
   public static final String[] JUMP_INS = new String[] {"goto", "goto_w",
                                                         "if_acmpeq",
@@ -161,7 +167,7 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref ConversionInstruction} class.
+   * in {@link umbra.instructions.ast.ConversionInstruction} class.
    */
   public static final String[] CONV_INS = new String[] {"d2f",
                                                         "d2i",
@@ -181,14 +187,14 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref IincInstruction} class.
+   * in {@link umbra.instructions.ast.IincInstruction} class.
    */
   public static final String[] IINC_INS = new String[] {"iinc"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@link umbra.instructions.ast.StackInstruction} class.
    */
-  //dodatkowo %liczba
   public static final String[] STACK_INS = new String[] {"aload", "astore",
                                                          "dload", "dstore",
                                                          "fload", "fstore",
@@ -196,14 +202,14 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
                                                          "lload", "lstore"};
 
   /**
-   * TODO.
+   * This constant contains an array with all the names of instructions handled
+   * in {@link umbra.instructions.ast.ArrayInstruction} class.
    */
-  //dodatkowo <char> - typ tablicy
   public static final String[] ARRAY_INS = new String[] {"newarray"};
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref NewInstruction} class.
+   * in {@link umbra.instructions.ast.NewInstruction} class.
    */
   public static final String[] NEW_INS = new String[] {"anewarray",
                                                        "checkcast",
@@ -211,7 +217,7 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref FieldInstruction} class.
+   * in {@link umbra.instructions.ast.FieldInstruction} class.
    */
   public static final String[] FIELD_INS = new String[] {"getfield",
                                                          "getstatic",
@@ -220,7 +226,7 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref InvokeInstruction} class.
+   * in {@link umbra.instructions.ast.InvokeInstruction} class.
    */
   public static final String[] INVOKE_INS = new String[] {"invokeinterface",
                                                           "invokespecial",
@@ -228,13 +234,13 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
                                                           "invokevirtual"};
 
   /**
-   * Contains the index to {@ref #INVOKE_INS} of "invokeinterface".
+   * Contains the index to {@link #INVOKE_INS} of "invokeinterface".
    */
   public static final int INVOKEINTERFACE_NO = 0;
 
   /**
    * This constant contains an array with all the names of instructions handled
-   * in {@ref LdcInstruction} class.
+   * in {@link umbra.instructions.ast.LdcInstruction} class.
    */
   public static final String[] LDC_INS = new String[] {"ldc", "ldc_w",
                                                        "ldc2_w"};

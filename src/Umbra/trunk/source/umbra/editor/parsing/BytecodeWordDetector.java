@@ -11,7 +11,8 @@ package umbra.editor.parsing;
 import org.eclipse.jface.text.rules.IWordDetector;
 
 /**
- * TODO. 
+ * The class implements the way the words are scanned in the Eclipse scanners
+ * used in the Umbra editor.
  *
  * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -23,16 +24,21 @@ public class BytecodeWordDetector implements IWordDetector {
    * a word. In this case it means it is a letter.
    *
    * @param a_char a character to check
-   * @return <code>true</code> when the character can start a word
+   * @return <code>true</code> when the character can start a word,
+   *   <code>false</code> otherwise
    */
   public final boolean isWordStart(final char a_char) {
     return Character.isLetter(a_char);
   }
 
   /**
-   * TODO.
-   * @param a_char TODO
-   * @return TODO
+   * This method returns true when the character is a legal internal character
+   * of a word. In this case it means it is a letter, a digit or an underscore
+   * sign ('_').
+   *
+   * @param a_char a character to check
+   * @return <code>true</code> when the character can occur inside a word,
+   *   <code>false</code> otherwise
    * @see org.eclipse.jface.text.rules.IWordDetector#isWordPart(char)
    */
   public final boolean isWordPart(final char a_char) {

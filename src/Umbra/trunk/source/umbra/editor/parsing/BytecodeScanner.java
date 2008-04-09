@@ -18,89 +18,116 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
-import umbra.editor.ColorManager;
-import umbra.editor.ColorValues;
 
 
 /**
  * This class is responsible for colouring these texts in a byte code
  * editor window which are outside BML annotations areas. This class uses
- * special 9 rules which describe the way the different areas are
+ * special 10 rules which describe the way the different areas are
  * coloured. Colours are chosen as a token array with a particular colouring
  * style given in the constructor.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeScanner extends RuleBasedScanner {
 
   /**
-   * TODO. 
+   * The number of the rule which is responsible for colour and text styling of
+   * the end-of-line comments.
    */
   private static final int RULE_EOL = 0;
 
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * the words (as defined in {@link BytecodeWordDetector}.
    */
-  private static final int RULE_INSTRUCTION = 1;
+  private static final int RULE_WORDS = 1;
 
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * the byte code instruction numbers at the beginning of a method line.
    */
-  private static final int RULE_SEPARATOR = 2;
+  private static final int RULE_INS_NUMBER = 2;
+
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * the numbers preceded by the hash (#) sign.
    */
   private static final int RULE_HASH = 3;
+
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * the numbers preceded by the percent (%) sign.
    */
   private static final int RULE_PERCENT = 4;
+
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * the numbers enclosed in the parentheses ('(', ')').
    */
   private static final int RULE_PARENTHESES = 5;
+
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * the line parts enclosed in the braces ('{', '}').
    */
   private static final int RULE_BRACES = 6;
+
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * the numbers (without #, %, or surrounding parenteses).
    */
   private static final int RULE_NUMBER = 7;
+
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * the whitespace areas.
    */
   private static final int RULE_WHITESPACE = 8;
+
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * comments.
    */
-  private static final int RULE_STAR = 9;
+  private static final int RULE_COMMENT = 9;
+
   /**
-   * TODO.
+   * The number of the rule which is responsible for colour and text styling of
+   * BML annotations areas.
    */
-  private static final int RULE_COMMENT = 10;
-  /**
-   * TODO.
-   */
-  private static final int RULE_ANNOT = 11;
+  private static final int RULE_ANNOT = 10;
 
   /**
    * The number of colouring rules used in this class.
    */
-  private static final int NUMBER_OF_RULES = 12;
+  private static final int NUMBER_OF_RULES = RULE_ANNOT + 1;
 
 
   /**
-   * This method TODO
-   * sets the scanning rules.
+   * The constructor initialises the scanning rules for the current scanner.
+   * It creates and the scanning rules taking into account the given colour
+   * manager and colouring mode. It creates the rules to recognise all the
+   * 10 rules:
+   * <ul>
+   *   <li> end-of-line comments,</li>
+   *   <li> words,</li>
+   *   <li> instruction number labels,</li>
+   *   <li> numbers starting with '#',</li>
+   *   <li> numbers starting with '%',</li>
+   *   <li> numbers in parentheses '(', ')',</li>
+   *   <li> line sections in braces '{', '}',</li>
+   *   <li> bare numbers,</li>
+   *   <li> whitespace,</li>
+   *   <li> comments.</li>
+   * </ul>
    *
-   *
-   * @param the_manager the color manager related to the current bytecode
+   * @param the_manager the colour manager related to the current byte code
    *    editor, it must be the same as in the current
-   *    {@ref BytecodeConfiguration} object
-   * @param a_mode the number of the current coloring style, it must be the
-   *    same as in the current {@ref BytecodeConfiguration} object
+   *    {@link umbra.editor.BytecodeConfiguration} object
+   * @param a_mode the number of the current colouring style, it must be the
+   *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    */
   public BytecodeScanner(final ColorManager the_manager, final int a_mode) {
 
@@ -117,65 +144,66 @@ public class BytecodeScanner extends RuleBasedScanner {
    * and its elements are filled as the descriptions of the constants
    * <code>RULE_*</code> say:
    * <ul>
-   *   <li> {@ref #RULE_EOL}
-   *   <li> {@ref #RULE_INSTRUCTION}
-   *   <li> {@ref #RULE_SEPARATOR}
-   *   <li> {@ref #RULE_HASH}
-   *   <li> {@ref #RULE_PERCENT}
-   *   <li> {@ref #RULE_PARENTHESES}
-   *   <li> {@ref #RULE_BRACES}
-   *   <li> {@ref #RULE_NUMBER}
-   *   <li> {@ref #RULE_WHITESPACE}
-   *   <li> {@ref #RULE_STAR}
-   *   <li> {@ref #RULE_COMMENT}
+   *   <li> {@link #RULE_EOL} for end-of-line comments,</li>
+   *   <li> {@link #RULE_WORDS} for words,</li>
+   *   <li> {@link #RULE_INS_NUMBER} for instruction number labels,</li>
+   *   <li> {@link #RULE_HASH} for numbers starting with '#',</li>
+   *   <li> {@link #RULE_PERCENT} for numbers starting with '%',</li>
+   *   <li> {@link #RULE_PARENTHESES} for numbers in parentheses '(', ')',</li>
+   *   <li> {@link #RULE_BRACES} for line sections in braces '{', '}',</li>
+   *   <li> {@link #RULE_NUMBER} for bare numbers,</li>
+   *   <li> {@link #RULE_WHITESPACE} for whitespace,</li>
+   *   <li> {@link #RULE_COMMENT} for comments.</li>
    * </ul>
    *
    * @param the_tokens the array of tokens that are returned when rules are
    *        applied
-   *         TODO verify?
    * @return the array with the rules
    */
   private IRule[] createRulesArray(final IToken[] the_tokens) {
     final IRule[] rules = new IRule[NUMBER_OF_RULES];
-    rules[RULE_EOL] = new EndOfLineRule("//", the_tokens[ColorValues.COMMENT]);
-    rules[RULE_INSTRUCTION] = createInstructionRule(the_tokens);
-    rules[RULE_SEPARATOR] = new SpecialNumberRule('\n', ':',
-                     the_tokens[ColorValues.POSITION]);
+    rules[RULE_EOL] = new EndOfLineRule("//",
+                                        the_tokens[ColorValues.SLOT_COMMENT]);
+    rules[RULE_WORDS] = createInstructionRule(the_tokens);
+    rules[RULE_INS_NUMBER] = new SpecialNumberRule('\n', ':',
+      the_tokens[ColorValues.SLOT_LABELNUMBER]);
     rules[RULE_HASH] = new SpecialNumberRule('#',
-                     the_tokens[ColorValues.HASH]);
+      the_tokens[ColorValues.SLOT_HASH]);
     rules[RULE_PERCENT] = new SpecialNumberRule('%',
-                                                the_tokens[ColorValues.ATTR]);
+      the_tokens[ColorValues.SLOT_PERCENT]);
     rules[RULE_PARENTHESES] = new SpecialNumberRule('(', ')',
-                                           the_tokens[ColorValues.SQUARE]);
+      the_tokens[ColorValues.SLOT_PARENTHESES]);
     rules[RULE_BRACES] = new SingleLineRule("{", "}",
-                                            the_tokens[ColorValues.SQUARE]);
-    rules[RULE_NUMBER] = new NumberRule(the_tokens[ColorValues.NUMBER]);
+      the_tokens[ColorValues.SLOT_PARENTHESES]);
+    rules[RULE_NUMBER] = new NumberRule(the_tokens[ColorValues.SLOT_NUMBER]);
     rules[RULE_WHITESPACE] = new WhitespaceRule(
-                                      new BytecodeWhitespaceDetector());
-    rules[RULE_STAR] = new EndOfLineRule("*", the_tokens[ColorValues.COMMENT]);
+      new BytecodeWhitespaceDetector());
     rules[RULE_COMMENT] = new MultiLineRule("/*", "*/",
-                                            the_tokens[ColorValues.COMMENT]);
+      the_tokens[ColorValues.SLOT_COMMENT]);
 
     rules[RULE_ANNOT] = new MultiLineRule("/*@", "@*/",
-                                            the_tokens[ColorValues.ANNOT]);
+                                            the_tokens[ColorValues.SLOT_BML]);
     return rules;
   }
 
 
   /**
-   * This method creates a rule used for colouring the instructions, BML
-   * keywords, keywords in a "Line" line, and keywords in the "Code" line.
-   * TODO more abstract description required
+   * This method creates a rule used for colouring various kinds of words
+   * that occur in a byte code document. It assigns the
+   * {@link ColorValues#SLOT_DEFAULT} colour as the default colour for words.
+   * Except for that it assigns special colouring rules for the word categories:
+   * the byte code instructions, keywords in a "Line"
+   * section, and keywords in the "Code" section.
    *
-   * @param the_tokens the array with tokens that are returned in different
-   *        situations
-   * @return the rule for colouring the instructions
+   * @param the_tokens the array with tokens that describe the colour styling
+   *   information, in particular the token with the default colour and
+   *   the tokens with the colours of the special word categories
+   * @return the rule for colouring the words
    */
   private WordRule createInstructionRule(final IToken[] the_tokens) {
     final WordRule insrule = new WordRule(new BytecodeWordDetector(),
-                                          the_tokens[ColorValues.DEFAULT]);
+                                          the_tokens[ColorValues.SLOT_DEFAULT]);
     tokensForInstructions(the_tokens, insrule);
-    tokensForBMLKeywords(the_tokens, insrule);
     tokensForLinewords(the_tokens, insrule);
     tokensForCodeline(the_tokens, insrule);
     return insrule;
@@ -185,18 +213,17 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the words which
    * occur in a line with the "Code" keyword with the token in
-   * <code>the_tokens</code> under {@link ColorValues#LINE}.
-   * TODO - better description needed
+   * <code>the_tokens</code> under {@link ColorValues#SLOT_LINE}.
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@link ColorValues#LINE} token
+   *   {@link ColorValues#SLOT_LINE} token
    * @param the_insrule the rule in which the association is created
    */
   private void tokensForCodeline(final IToken[] the_tokens,
                                  final WordRule the_insrule) {
     for (int i = 0; i < BytecodeStrings.CODE_KEYWORDS.length; i++) {
       the_insrule.addWord(BytecodeStrings.CODE_KEYWORDS[i],
-              the_tokens[ColorValues.LINE]);
+              the_tokens[ColorValues.SLOT_LINE]);
     }
   }
 
@@ -204,57 +231,34 @@ public class BytecodeScanner extends RuleBasedScanner {
   /**
    * This method associates in <code>the_insrule</code> the words which
    * occur in a line with the "Line" keyword with the token in
-   * <code>the_tokens</code> under {@link ColorValues#LINE}.
-   * TODO - better description needed
+   * <code>the_tokens</code> under {@link ColorValues#SLOT_LINE}.
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@link ColorValues#LINE} token
+   *   {@link ColorValues#SLOT_LINE} token
    * @param the_insrule the rule in which the association is created
    */
   private void tokensForLinewords(final IToken[] the_tokens,
                                   final WordRule the_insrule) {
     for (int i = 0; i < BytecodeStrings.LINE_KEYWORDS.length; i++) {
       the_insrule.addWord(BytecodeStrings.LINE_KEYWORDS[i],
-              the_tokens[ColorValues.LINE]);
+              the_tokens[ColorValues.SLOT_LINE]);
     }
   }
-
-
-  /**
-   * This method associates in <code>the_insrule</code> the BML keywords
-   * with the token in <code>the_tokens</code> under
-   * {@link ColorValues#ANNOTKEY}.
-   * TODO - better description needed
-   *
-   * @param the_tokens the array with tokens, in particular with the
-   *                   {@link ColorValues#ANNOTKEY} token
-   * @param the_insrule the rule in which the association is created
-
-   */
-  private void tokensForBMLKeywords(final IToken[] the_tokens,
-                                    final WordRule the_insrule) {
-    for (int i = 0; i < BytecodeStrings.BML_KEYWORDS.length; i++) {
-      the_insrule.addWord(BytecodeStrings.BML_KEYWORDS[i],
-              the_tokens[ColorValues.ANNOTKEY]);
-    }
-  }
-
 
   /**
    * This method associates in <code>the_insrule</code> the words of the
    * byte code instructions with the token in <code>the_tokens</code> under
-   * {@link ColorValues#BTC_INSTR}.
-   * TODO - better description needed
+   * {@link ColorValues#SLOT_BTCINSTR}.
    *
    * @param the_tokens the array with tokens, in particular with the
-   *                   {@link ColorValues#BTC_INSTR} token
+   *   {@link ColorValues#SLOT_BTCINSTR} token
    * @param the_insrule the rule in which the association is created
   */
   private void tokensForInstructions(final IToken[] the_tokens,
                                      final WordRule the_insrule) {
     for (int i = 0; i < BytecodeStrings.INSTRUCTIONS.length; i++) {
       the_insrule.addWord(BytecodeStrings.INSTRUCTIONS[i],
-              the_tokens[ColorValues.BTC_INSTR]);
+              the_tokens[ColorValues.SLOT_BTCINSTR]);
     }
   }
 }

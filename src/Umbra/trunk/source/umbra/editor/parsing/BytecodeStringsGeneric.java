@@ -9,7 +9,9 @@
 package umbra.editor.parsing;
 
 /**
- * TODO
+ * The class is a container for all byte code instructions and the sequences
+ * that indicate the starts and ends of comments or BML annotation areas.
+ *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *

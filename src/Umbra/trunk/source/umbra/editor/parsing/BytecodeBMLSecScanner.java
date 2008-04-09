@@ -15,8 +15,6 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
-import umbra.editor.ColorManager;
-import umbra.editor.ColorValues;
 
 /**
  * This class is responsible for colouring these texts in a byte code
@@ -29,7 +27,7 @@ import umbra.editor.ColorValues;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class BytecodeTagScanner extends RuleBasedScanner {
+public class BytecodeBMLSecScanner extends RuleBasedScanner {
 
   /**
    * The number of the rule that handles the recognition of the areas between
@@ -61,42 +59,48 @@ public class BytecodeTagScanner extends RuleBasedScanner {
 
   /**
    * The constructor initialises the scanning rules for the current scanner.
-   * It associates the given colour manager and colouring mode with the
-   * 
+   * It creates and the scanning rules taking into account the given colour
+   * manager and colouring mode. It creates the rules to recognise strings
+   * in single and double quotes, whitespace, and BML keywords.
    *
-   * @param a_manager the colour manager related to the current byte code
+   * @param the_manager the colour manager related to the current byte code
    *    editor, it must be the same as in the current
    *    {@link umbra.editor.BytecodeConfiguration} object
    * @param a_mode the number of the current colouring style, it must be the
    *    same as in the current {@link umbra.editor.BytecodeConfiguration} object
    */
-  public BytecodeTagScanner(final ColorManager a_manager, final int a_mode) {
-
-    final IToken[] tokens = TokenGetter.getTokenTab(a_manager, a_mode);
-
+  public BytecodeBMLSecScanner(final ColorManager the_manager,
+                               final int a_mode) {
+    final IToken[] tokens = TokenGetter.getTokenTab(the_manager, a_mode);
     final IRule[] rules = new IRule[NUMBER_OF_RULES];
 
     // Add rule for double quotes
     rules[DOUBLE_QUOTE_RULE] = new SingleLineRule("\"", "\"",
-                                                  tokens[ColorValues.STRING],
-                                                  '\\');
+                                                tokens[ColorValues.SLOT_STRING],
+                                                '\\');
     // Add a rule for single quotes
     rules[SINGLE_QUOTE_RULE] = new SingleLineRule("'", "'",
-                                                  tokens[ColorValues.STRING],
-                                                  '\\');
+                                                tokens[ColorValues.SLOT_STRING],
+                                                '\\');
     rules[WHITESPACE_RULE] = new WhitespaceRule(
                                               new BytecodeWhitespaceDetector());
-    rules[KEYWORD_RULE] = createKeywordRule(tokens);
+    rules[KEYWORD_RULE] = createKeywordRule(
+                                          tokens[ColorValues.SLOT_BMLKEYWORDS]);
 
     setRules(rules);
   }
 
-  private IRule createKeywordRule(final IToken[] the_tokens) {
-    final WordRule insrule = new WordRule(new BytecodeWordDetector(),
-                                          the_tokens[ColorValues.ANNOT]);
+  /**
+   * This method creates a {@link WordRule} object which recognises all the
+   * BML keywords. It and assigns to them the given colour token.
+   *
+   * @param a_token the token to assign to the returned word rule
+   * @return the scanning rule that recognises the BML keywords
+   */
+  private IRule createKeywordRule(final IToken a_token) {
+    final WordRule insrule = new WordRule(new BytecodeWordDetector(), a_token);
     for (int i = 0; i < BytecodeStrings.BML_KEYWORDS.length; i++) {
-      insrule.addWord(BytecodeStrings.BML_KEYWORDS[i],
-              the_tokens[ColorValues.ANNOTKEY]);
+      insrule.addWord(BytecodeStrings.BML_KEYWORDS[i], a_token);
     }
     return insrule;
   }

@@ -18,7 +18,10 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 import umbra.editor.parsing.BytecodePartitionScanner;
 import umbra.editor.parsing.BytecodeScanner;
-import umbra.editor.parsing.BytecodeTagScanner;
+import umbra.editor.parsing.BytecodeBMLSecScanner;
+import umbra.editor.parsing.ColorManager;
+import umbra.editor.parsing.ColorValues;
+import umbra.editor.parsing.NonRuleBasedDamagerRepairer;
 import umbra.editor.parsing.TokenGetter;
 
 
@@ -45,10 +48,10 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * The bytecode tag scanner object used, in particular, when the presentation
    * of the bytecode file in an editor is reconciled with a change.
-   * TODO is it the only purpose? is it right?
+   * TODO is it the only purpose? is it right? 
    */
-  private BytecodeTagScanner my_tag_scanner;
-  //@ invariant my_tag_scanner.colorManager == my_color_manager;
+  private BytecodeBMLSecScanner my_bml_secscanner;
+  //@ invariant my_bml_secscanner.colorManager == my_color_manager;
 
   /**
    * The bytecode scanner object used, in particular, when the presentation
@@ -84,8 +87,8 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    *         case it contains always:
    * <ul>
    *   <li>{@ref IDocument#DEFAULT_CONTENT_TYPE}</li>
-   *   <li>{@ref BytecodePartitionScanner#HEAD}</li>
-   *   <li>{@ref BytecodePartitionScanner#TAG}</li>
+   *   <li>{@ref BytecodePartitionScanner#SECTION_HEAD}</li>
+   *   <li>{@ref BytecodePartitionScanner#SECTION_BML}</li>
    * </ul>
    * @see SourceViewerConfiguration#getConfiguredContentTypes(ISourceViewer)
    */
@@ -93,8 +96,8 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
                                    final ISourceViewer a_source_viewer) {
     return new String[] {
       IDocument.DEFAULT_CONTENT_TYPE,
-      BytecodePartitionScanner.HEAD,
-      BytecodePartitionScanner.TAG };
+      BytecodePartitionScanner.SECTION_HEAD,
+      BytecodePartitionScanner.SECTION_BML };
   }
 
   /**
@@ -122,7 +125,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    * This method is a lazy getter for the scanner object. It checks if the
    * corresponding field is <code>null</code>. If so it generates a new
    * {@link BytecodeScanner} object and registers in it a default return
-   * token. This is {@link ColorValues#DEFAULT}.
+   * token. This is {@link ColorValues#SLOT_DEFAULT}.
    *
    * @return the byte code scanner object
    */
@@ -130,7 +133,8 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
     if (my_scanner == null) {
       my_scanner = new BytecodeScanner(my_color_manager, my_mode);
       my_scanner.setDefaultReturnToken(
-        TokenGetter.getToken(my_color_manager, my_mode, ColorValues.DEFAULT));
+        TokenGetter.getToken(my_color_manager, my_mode,
+                             ColorValues.SLOT_DEFAULT));
     }
     return my_scanner;
   }
@@ -138,18 +142,18 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * This method is a lazy getter for the tag scanner object. It checks if the
    * corresponding field is <code>null</code>. If so it generates a new
-   * {@ref BytecodeTagScanner} object and registers in it a default return
-   * token. This is {@ref ColorValues#TAG}.
+   * {@ref BytecodeBMLSecScanner} object and registers in it a default return
+   * token. This is {@ref ColorValues#SLOT_TAG}.
    *
    * @return the bytecode tag scanner object
    */
-  protected final BytecodeTagScanner getBytecodeTagScanner() {
-    if (my_tag_scanner == null) {
-      my_tag_scanner = new BytecodeTagScanner(my_color_manager, my_mode);
-      my_tag_scanner.setDefaultReturnToken(
-        TokenGetter.getToken(my_color_manager, my_mode, ColorValues.TAG));
+  protected final BytecodeBMLSecScanner getBytecodeBMLSecScanner() {
+    if (my_bml_secscanner == null) {
+      my_bml_secscanner = new BytecodeBMLSecScanner(my_color_manager, my_mode);
+      my_bml_secscanner.setDefaultReturnToken(
+        TokenGetter.getToken(my_color_manager, my_mode, ColorValues.SLOT_TAG));
     }
-    return my_tag_scanner;
+    return my_bml_secscanner;
   }
 
   /**
@@ -157,18 +161,21 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    * ({@ref PresentationReconciler}) and registers in it damagers and
    * repairers for types ({@ref DefaultDamagerRepairer}):
    * <ul>
-   *   <li>{@ref BytecodePartitionScanner#TAG},</li>
+   *   <li>{@ref BytecodePartitionScanner#SECTION_BML},</li>
    *   <li>{@ref IDocument#DEFAULT_CONTENT_TYPE},</li>
    * </ul>
    * and for types ({@ref NonRuleBasedDamagerRepairer}):
    * <ul>
-   *   <li>{@ref BytecodePartitionScanner#HEAD},</li>
-   *   <li>{@ref BytecodePartitionScanner#THROWS}.</li>
+   *   <li>{@ref BytecodePartitionScanner#SECTION_HEAD},</li>
+   *   <li>{@ref BytecodePartitionScanner#SECTION_THROWS}.</li>
    * </ul>
    * The {@link NonRuleBasedDamagerRepairer} is initialised with
    * the current values of the color manager and the mode number
    * combined with an abstract color indication
-   * ({@link ColorValues#HEADER}, {@link ColorValues#THROWS}).
+   * ({@link ColorValues#SLOT_HEADER}, {@link ColorValues#SLOT_THROWS}).
+   *
+   * This method defines how the colouring works in case an edit operation is
+   * performed.
    *
    * @param a_source_viewer the source viewer for which the reconciler is
    *        returned
@@ -180,23 +187,25 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
     final PresentationReconciler reconciler = new PresentationReconciler();
 
     DefaultDamagerRepairer dr =
-      new DefaultDamagerRepairer(getBytecodeTagScanner());
-    reconciler.setDamager(dr, BytecodePartitionScanner.TAG);
-    reconciler.setRepairer(dr, BytecodePartitionScanner.TAG);
+      new DefaultDamagerRepairer(getBytecodeBMLSecScanner());
+    reconciler.setDamager(dr, BytecodePartitionScanner.SECTION_BML);
+    reconciler.setRepairer(dr, BytecodePartitionScanner.SECTION_BML);
 
     dr = new DefaultDamagerRepairer(getBytecodeScanner());
     reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
     reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
     final NonRuleBasedDamagerRepairer ndr =
-      TokenGetter.getRepairer(my_color_manager, my_mode, ColorValues.HEADER);
-    reconciler.setDamager(ndr, BytecodePartitionScanner.HEAD);
-    reconciler.setRepairer(ndr, BytecodePartitionScanner.HEAD);
+      TokenGetter.getRepairer(my_color_manager, my_mode,
+                              ColorValues.SLOT_HEADER);
+    reconciler.setDamager(ndr, BytecodePartitionScanner.SECTION_HEAD);
+    reconciler.setRepairer(ndr, BytecodePartitionScanner.SECTION_HEAD);
 
     final NonRuleBasedDamagerRepairer ndr2 =
-      TokenGetter.getRepairer(my_color_manager, my_mode, ColorValues.THROWS);
-    reconciler.setDamager(ndr2, BytecodePartitionScanner.THROWS);
-    reconciler.setRepairer(ndr2, BytecodePartitionScanner.THROWS);
+      TokenGetter.getRepairer(my_color_manager, my_mode,
+                              ColorValues.SLOT_THROWS);
+    reconciler.setDamager(ndr2, BytecodePartitionScanner.SECTION_THROWS);
+    reconciler.setRepairer(ndr2, BytecodePartitionScanner.SECTION_THROWS);
 
     return reconciler;
   }

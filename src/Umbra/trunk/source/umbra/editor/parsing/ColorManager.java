@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor;
+package umbra.editor.parsing;
 
 import java.util.HashMap;
 import java.util.Iterator;
