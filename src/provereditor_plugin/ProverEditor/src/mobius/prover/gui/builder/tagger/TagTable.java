@@ -266,7 +266,7 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
         final byte [] firstLine = new byte[2];
         final int res = in.read(firstLine);
         final String secondLine = readLine(in, 1024);
-        if ((res == 2) || (firstLine[0] == HEADER_MAGIC_NUMBER) ||
+        if ((res == 2) && (firstLine[0] == HEADER_MAGIC_NUMBER) &&
               (firstLine[1] == '\n') &&
               secondLine != null) {
           return secondLine.split(",");
@@ -283,19 +283,21 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
     private static byte[] readByteLine(InputStream in, int size) throws IOException {
       // a line is less than 1024 chars
       final byte[] buffer = new byte[size];
-      in.mark(buffer.length);
-      final int read = in.read(buffer);
-      for (int i = 0; i < read; i++) {
+      for (int i = 0; i < buffer.length; i++) {
+        final int b = in.read();
+        if (b < 0) {
+          return null;
+        }
+        buffer[i] = (byte) b;
         if (buffer[i] == '\n') {
           final byte[] strBuff = new byte[i];
           System.arraycopy(buffer, 0, strBuff, 0, i);
-          in.reset();
-          in.skip(i + 1);
           return strBuff;
         }
       }
       return null;
     }
+    
     private static String readLine(InputStream in, int size) throws IOException {
       final byte[] tab = readByteLine(in, size);
       if (tab != null) {

@@ -38,7 +38,15 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
    * @return The active editor
    */
   protected static IEditorPart getActiveEditor() {
-    return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+    final IWorkbenchWindow active = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if (active == null) {
+      return null;
+    }
+    final IWorkbenchPage ap = active.getActivePage();
+    if (ap == null) {
+      return null;
+    }
+    return ap.getActiveEditor();
   }
   
   /** {@inheritDoc} */
@@ -80,17 +88,9 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
    * @return <code>true</code> if the action shall be enabled.
    */
   public boolean isEnabled() {
-    final IWorkbenchWindow active = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    if (active == null) {
-      return false;
-    }
-    final IWorkbenchPage ap = active.getActivePage();
-    if (ap == null) {
-      return false;
-    }
-    final IEditorPart ed = ap.getActiveEditor();
-    return ((ed instanceof ProverEditor)  &&
-             (TopLevelManager.getInstance() != null));
+    final IEditorPart ed = getActiveEditor();
+    return (ed != null) && (ed instanceof ProverEditor)  &&
+             (TopLevelManager.getInstance() != null);
   }
   
   /** {@inheritDoc} */
