@@ -13,9 +13,6 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.swt.graphics.RGB;
 
-import umbra.editor.ColorManager;
-import umbra.editor.ColorValues;
-import umbra.editor.NonRuleBasedDamagerRepairer;
 
 /**
  * This is an intermediary class which creates the Eclipse parsing and text
@@ -66,8 +63,8 @@ public final class TokenGetter {
    */
   public static IToken[] getTokenTab(final ColorManager the_manager,
                                      final int a_mode) {
-    final IToken[] tokens = new IToken[ColorValues.PARTS];
-    for (int i = 0; i < ColorValues.PARTS; i++) {
+    final IToken[] tokens = new IToken[ColorValues.SLOTS_NO];
+    for (int i = 0; i < ColorValues.SLOTS_NO; i++) {
       tokens[i] = TokenGetter.getToken(the_manager, a_mode, i);
     }
     return tokens;
@@ -97,9 +94,9 @@ public final class TokenGetter {
   /**
    * Creates a text attribute for the given colour manager, colouring mode
    * and the colour number. The returned {@link TextAttribute} has the
-   * foreground colour set according to the {@link ColorValues#MODELS}
+   * foreground colour set according to the {@link ColorValues#MODES_DESC}
    * array, the background colour set to be the default and the style
-   * again set according to the {@link ColorValues#MODELS}.
+   * again set according to the {@link ColorValues#MODES_DESC}.
    *
    * @param the_manager the colour manager related to the current byte code
    *    editor, it must be the same as in the current
@@ -114,15 +111,19 @@ public final class TokenGetter {
                           final int a_mode,
                           final int a_col) {
     return new TextAttribute(the_manager.getColor(
-             new RGB(ColorValues.MODELS[a_mode][(ColorValues.CN * a_col) +
-                                               ColorValues.RED_COMPONENT],
-                     ColorValues.MODELS[a_mode][(ColorValues.CN * a_col) +
-                                              ColorValues.GREEN_COMPONENT],
-                     ColorValues.MODELS[a_mode][(ColorValues.CN * a_col) +
-                                              ColorValues.BLUE_COMPONENT])),
+             new RGB(ColorValues.MODES_DESC[a_mode][(
+                       ColorValues.COMPONENT_NUMBER * a_col) +
+                       ColorValues.COMPONENT_RED],
+                     ColorValues.MODES_DESC[a_mode][(
+                       ColorValues.COMPONENT_NUMBER * a_col) +
+                       ColorValues.COMPONENT_GREEN],
+                     ColorValues.MODES_DESC[a_mode][(
+                       ColorValues.COMPONENT_NUMBER * a_col) +
+                       ColorValues.COMPONENT_BLUE])),
                      null,
-                     ColorValues.MODELS[a_mode][(ColorValues.CN * a_col) +
-                                              ColorValues.STYLE_COMPONENT]);
+                     ColorValues.MODES_DESC[a_mode][(
+                       ColorValues.COMPONENT_NUMBER * a_col) +
+                       ColorValues.COMPONENT_TXTSTYLE]);
   }
 
 }
