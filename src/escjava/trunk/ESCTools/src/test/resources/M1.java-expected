@@ -1,40 +1,31 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/M1.java: Caution: Using given file as the .java file, even though it is not the java file for M1 on the classpath
+    [0.0020 s 20488296 bytes]
 
 M1 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 20597688 bytes
+    [0.178 s 20663992 bytes]
 
 M1: M1() ...
-    [TIME]  passed immediately
+    [0.0010 s 20666096 bytes]  passed immediately
 
 M1: P(java.lang.Object) ...
-    [TIME]  passed
+    [0.072 s 20746504 bytes]  passed
 
 M1: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-M1.java:30: Warning: Postcondition possibly not established (Post)
+src/test/resources/M1.java:30: Warning: Postcondition possibly not established (Post)
   }
   ^
-Associated declaration is "M1.java", line 17, col 8:
+Associated declaration is "src/test/resources/M1.java", line 17, col 8:
         ensures !\result;
         ^
 Execution trace information:
-    Executed else branch in "M1.java", line 26, col 4.
-    Executed return in "M1.java", line 29, col 4.
+    Executed else branch in "src/test/resources/M1.java", line 26, col 4.
+    Executed return in "src/test/resources/M1.java", line 29, col 4.
 
 ------------------------------------------------------------------------
-M1.java:30: Warning: Postcondition possibly not established (Post)
-  }
-  ^
-Associated declaration is "M1.java", line 22, col 8:
-        ensures \result;
-        ^
-Execution trace information:
-    Executed then branch in "M1.java", line 26, col 14.
-    Executed return in "M1.java", line 27, col 6.
-
-------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
-2 warnings
+    [0.064 s 21217160 bytes]  failed
+  [0.315 s 21218184 bytes total]
+1 caution
+1 warning

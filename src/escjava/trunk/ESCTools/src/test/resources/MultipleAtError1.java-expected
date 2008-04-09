@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/MultipleAtError1.java: Caution: Using given file as the .java file, even though it is not the java file for MultipleAtError1 on the classpath
+    [0.0010 s 23880736 bytes]
 
 MultipleAtError1 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 24228880 bytes
+    [0.179 s 24296360 bytes]
 
 MultipleAtError1: p() ...
-    [TIME]  passed
+    [0.07 s 24345720 bytes]  passed
 
 MultipleAtError1: MultipleAtError1() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0080 s 24509824 bytes]  passed
+  [0.258 s 24510848 bytes total]
+1 caution

@@ -1,10 +1,10 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Datagroup.java: Caution: Using given file as the .java file, even though it is not the java file for Datagroup on the classpath
+    [0.014 s 17818904 bytes]
 
 Datagroup ...
-  Prover started:TIME
-    [TIME]
-
-Datagroup: Datagroup() ...
-    [TIME]  passed
-  [TIME total]
+src/test/resources/Datagroup.java:4: Fatal error: Can't find type named "JMLDataGroup"
+        //@ model JMLDataGroup i; 
+                  ^
+1 caution
+1 error

@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Max.java: Caution: Using given file as the .java file, even though it is not the java file for Max on the classpath
+    [0.0020 s 21410448 bytes]
 
 Max ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.064 s 22427384 bytes
+    [0.167 s 22491656 bytes]
 
 Max: m() ...
-    [TIME]  passed immediately
+    [0.0 s 22492680 bytes]  passed immediately
 
 Max: Max() ...
-    [TIME]  passed
-  [TIME total]
+    [0.071 s 22642416 bytes]  passed
+  [0.238 s 22643440 bytes total]
+1 caution

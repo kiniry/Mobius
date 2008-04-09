@@ -1,82 +1,21 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Min.java: Caution: Using given file as the .java file, even though it is not the java file for Min on the classpath
+    [0.0030 s 20969552 bytes]
 
 Min ...
-  Prover started:TIME
-    [TIME]
-
-Min: Min() ...
-    [TIME]  passed immediately
-
-Min: f(int) ...
-    [TIME]  passed immediately
-
-Min: id(int) ...
-    [TIME]  passed immediately
-
-Min: ex1(int) ...
-    [TIME]  passed immediately
-
-Min: ex2(int) ...
-    [TIME]  passed immediately
-
-Min: ex3(int) ...
-    [TIME]  passed immediately
-
-Min: x() ...
-    [TIME]  passed
-
-Min: x2() ...
-    [TIME]  passed
-
-Min: x3() ...
-    [TIME]  passed
-
-Min: x4() ...
-------------------------------------------------------------------------
-Min.java:27: Warning: Possible assertion failure (Assert)
-            //@  assert (\max int i; 1<=i && i<0 && ex2(i); id(i)) >=  ...
-                 ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-Min: x5() ...
-------------------------------------------------------------------------
-Min.java:30: Warning: Possible assertion failure (Assert)
-            //@  assert (\max int i; 1<=i && i<10 && ex2(i); id(i)) == ...
-                 ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-Min: m() ...
-    [TIME]  passed
-
-Min: m2() ...
-    [TIME]  passed
-
-Min: m3() ...
-    [TIME]  passed
-
-Min: m4() ...
-------------------------------------------------------------------------
-Min.java:43: Warning: Possible assertion failure (Assert)
-            //@  assert (\min int i; 1<=i && i<0 && ex2(i); id(i)) <=  ...
-                 ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-Min: m5() ...
-------------------------------------------------------------------------
-Min.java:46: Warning: Possible assertion failure (Assert)
-            //@  assert (\min int i; 1<=i && i<10 && ex2(i); id(i)) == ...
-                 ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-Min: pp() ...
-    [TIME]  passed
-
-Min: pp2() ...
-    [TIME]  passed
-  [TIME total]
-4 warnings
+src/test/resources/Min.java:60: Error: No such field in type java.lang.Object
+ ... n Object ooo; c.contains(ooo); ooo.theHashValue)
+                                        ^
+src/test/resources/Min.java:61: Error: No such field in type java.lang.Object
+                                == o.theHashValue );
+                                     ^
+src/test/resources/Min.java:64: Error: No such field in type java.lang.Object
+ ... n Object ooo; c.contains(ooo); ooo.theHashValue)
+                                        ^
+src/test/resources/Min.java:65: Error: No such field in type java.lang.Object
+                                <= o.theHashValue );
+                                     ^
+Caution: Turning off extended static checking due to type error(s)
+  [0.065 s 21121256 bytes total] (aborted)
+2 cautions
+4 errors

@@ -1,0 +1,44 @@
+ESC/Java version ESCJava-CURRENT
+src/test/resources/SuperSpecBug.java: Caution: Using given file as the .java file, even though it is not the java file for SuperSpecBug on the classpath
+    [0.0030 s 43004936 bytes]
+
+SuperSpecBug ...
+  Prover started:0.083 s 45351520 bytes
+    [0.276 s 45524176 bytes]
+
+SuperSpecBug: m(java.lang.Object) ...
+------------------------------------------------------------------------
+src/test/resources/SuperSpecBug.java:20: Warning: Possible violation of modifies clause (Modifies)
+        if(Object.class != o.getClass())
+                                     ^
+Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class":
+Associated declaration is "src/test/resources/SuperSpecBug.java", line 8, col 4:
+    //@ also ...
+    ^
+------------------------------------------------------------------------
+    [0.16 s 46685584 bytes]  failed
+
+SuperSpecBug: SuperSpecBug() ...
+    [0.0060 s 46828184 bytes]  passed
+  [0.443 s 46829208 bytes total]
+
+CSuperSpecBug ...
+    [0.0020 s 47008984 bytes]
+
+CSuperSpecBug: m(java.lang.Object) ...
+------------------------------------------------------------------------
+src/test/resources/SuperSpecBug.java:37: Warning: Possible violation of modifies clause (Modifies)
+        if(Object.class != o.getClass())
+                                     ^
+Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class":
+Associated declaration is "src/test/resources/SuperSpecBug.java", line 26, col 4:
+    /*@ public exceptional_behavior ...
+    ^
+------------------------------------------------------------------------
+    [0.117 s 43935320 bytes]  failed
+
+CSuperSpecBug: CSuperSpecBug() ...
+    [0.0060 s 44089072 bytes]  passed
+  [0.126 s 44090096 bytes total]
+1 caution
+2 warnings

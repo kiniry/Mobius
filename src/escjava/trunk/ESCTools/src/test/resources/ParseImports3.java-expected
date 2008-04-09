@@ -1,10 +1,16 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ParseImports3.java: Caution: Using given file as the .java file, even though it is not the java file for ParseImports3 on the classpath
+    [0.0010 s 23528968 bytes]
 
 ParseImports3 ...
-  Prover started:TIME
-    [TIME]
-
-ParseImports3: ParseImports3() ...
-    [TIME]  passed
-  [TIME total]
+src/test/resources/ParseImports3.java:1: Error: No such type: sub.ParseImportHelper
+import sub.ParseImportHelper;
+       ^
+src/test/resources/ParseImports3.java:1: Error: No such type: sub.ParseImportHelper
+import sub.ParseImportHelper;
+       ^
+src/test/resources/ParseImports3.java:4: Fatal error: Can't find type named "ParseImportHelper"
+        ParseImportHelper x;
+        ^
+1 caution
+3 errors

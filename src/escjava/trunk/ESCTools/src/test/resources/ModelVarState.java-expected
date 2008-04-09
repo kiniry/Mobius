@@ -1,45 +1,44 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModelVarState.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVarState on the classpath
+    [0.0020 s 22030104 bytes]
 
 ModelVarState ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 23094424 bytes
+    [0.188 s 23162552 bytes]
 
 ModelVarState: m() ...
-    [TIME]  passed
+    [0.073 s 23399584 bytes]  passed
 
 ModelVarState: mm() ...
 ------------------------------------------------------------------------
-ModelVarState.java:25: Warning: Postcondition possibly not established (Post)
+src/test/resources/ModelVarState.java:25: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "ModelVarState.java", line 22, col 5:
+Associated declaration is "src/test/resources/ModelVarState.java", line 22, col 5:
         //@ ensures size == \old(size)*2; // ERROR
             ^
-Execution trace information:
-    Executed implicit return in "ModelVarState.java", line 25, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.051 s 23681856 bytes]  failed
 
 ModelVarState: mmm() ...
-    [TIME]  passed
+    [0.0090 s 23787736 bytes]  passed
 
 ModelVarState: mmmm() ...
 ------------------------------------------------------------------------
-ModelVarState.java:34: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/ModelVarState.java:34: Warning: Possible violation of modifies clause (Modifies)
                 sz = 2;  // ERROR - no modifies
                 ^
-Associated declaration is "ModelVarState.java", line 32, col 5:
+Associated declaration is "src/test/resources/ModelVarState.java", line 32, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.037 s 22344560 bytes]  failed
 
 ModelVarState: m5() ...
-    [TIME]  passed
+    [0.0060 s 22431808 bytes]  passed
 
 ModelVarState: ModelVarState() ...
-    [TIME]  passed
-  [TIME total]
+    [0.01 s 22614328 bytes]  passed
+  [0.374 s 22615352 bytes total]
+1 caution
 2 warnings

@@ -290,15 +290,15 @@ public class Main extends javafe.SrcTool {
   public void setDefaultSimplify() {
     String os = System.getProperty("os.name");
     String root = null;
-    String name = "Simplify-1.5.4.";
+    String name = "Simplify-1.5.";
     if (os.startsWith("Windows")) {
-      root = name + "exe";
+      root = name + "4.exe";
     } else if (os.startsWith("Mac")) {
-      root = name + "macosx";
+      root = name + "5.macosx"; // Use universal binary for Mac OS X
     } else if (os.startsWith("Linux")) {
-      root = name + "linux";
+      root = name + "4.linux";
     } else if (os.startsWith("Solaris")) {
-      root = name + "solaris";
+      root = name + "4.solaris";
     } else {
       ErrorSet.warning("Unknown OS - could not find Simplify: " + os);
     }
@@ -310,6 +310,11 @@ public class Main extends javafe.SrcTool {
       f = new File(root);
     else
       f = new File(jarlocation, root);
+      
+    // Make it easier to find Simplify when running tests from Maven
+    if (!f.exists()) {
+     f = new File("Escjava/release/master/bin/",root);
+    }
 
     if (!f.exists()) {
       ErrorSet

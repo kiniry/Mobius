@@ -1,93 +1,125 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/JavaAssert.java:35: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert false;
+        ^
+src/test/resources/JavaAssert.java:41: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert true == false;
+        ^
+src/test/resources/JavaAssert.java:47: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p >= 0;
+        ^
+src/test/resources/JavaAssert.java:53: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p >= -1;
+        ^
+src/test/resources/JavaAssert.java:60: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p >= 1;
+        ^
+src/test/resources/JavaAssert.java:67: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p + q == 10;
+        ^
+src/test/resources/JavaAssert.java:75: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p + q == 11;
+        ^
+src/test/resources/JavaAssert.java:84: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p + q >= 0;
+        ^
+src/test/resources/JavaAssert.java:95: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p + q >= 0;
+        ^
+src/test/resources/JavaAssert.java: Caution: Using given file as the .java file, even though it is not the java file for JavaAssert on the classpath
+    [0.0060 s 20941808 bytes]
 
 JavaAssert ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 21056168 bytes
+    [0.181 s 21121152 bytes]
 
 JavaAssert: nothing() ...
-    [TIME]  passed
+    [0.071 s 21184840 bytes]  passed
 
 JavaAssert: trivial() ...
 ------------------------------------------------------------------------
-JavaAssert.java:35: Warning: Possible assertion failure (Assert)
-        assert false;
+src/test/resources/JavaAssert.java:36: Warning: Postcondition possibly not established (Post)
+    }
+    ^
+Associated declaration is "src/test/resources/JavaAssert.java", line 32, col 8:
+    //@ ensures false;
         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.015 s 21367672 bytes]  failed
 
 JavaAssert: constant_boolean_expression() ...
 ------------------------------------------------------------------------
-JavaAssert.java:41: Warning: Possible assertion failure (Assert)
-        assert true == false;
+src/test/resources/JavaAssert.java:42: Warning: Postcondition possibly not established (Post)
+    }
+    ^
+Associated declaration is "src/test/resources/JavaAssert.java", line 39, col 8:
+    //@ ensures false;
         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.052 s 21535304 bytes]  failed
 
 JavaAssert: assert_matches_precondition(int) ...
-    [TIME]  passed
+    [0.0050 s 21605416 bytes]  passed
 
 JavaAssert: assert_weaker_than_precondition(int) ...
-    [TIME]  passed
+    [0.0040 s 21674760 bytes]  passed
 
 JavaAssert: assert_stronger_than_precondition(int) ...
 ------------------------------------------------------------------------
-JavaAssert.java:60: Warning: Possible assertion failure (Assert)
-        assert p >= 1;
-        ^
-------------------------------------------------------------------------
-JavaAssert.java:61: Warning: Postcondition possibly not established (Post)
+src/test/resources/JavaAssert.java:61: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "JavaAssert.java", line 58, col 8:
+Associated declaration is "src/test/resources/JavaAssert.java", line 58, col 8:
     //@ ensures false;
         ^
-Execution trace information:
-    Executed implicit return in "JavaAssert.java", line 61, col 4.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.015 s 21860368 bytes]  failed
 
 JavaAssert: constant_arithmetic(int, int) ...
-    [TIME]  passed
+    [0.0040 s 21943888 bytes]  passed
 
 JavaAssert: constant_arithmetic_dual(int, int) ...
 ------------------------------------------------------------------------
-JavaAssert.java:75: Warning: Possible assertion failure (Assert)
-        assert p + q == 11;
+src/test/resources/JavaAssert.java:76: Warning: Postcondition possibly not established (Post)
+    }
+    ^
+Associated declaration is "src/test/resources/JavaAssert.java", line 73, col 8:
+    //@ ensures false;
         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.015 s 22144688 bytes]  failed
 
 JavaAssert: non_trivial_arithmetic(int, int) ...
 ------------------------------------------------------------------------
-JavaAssert.java:86: Warning: Postcondition possibly not established (Post)
+src/test/resources/JavaAssert.java:86: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "JavaAssert.java", line 82, col 8:
+Associated declaration is "src/test/resources/JavaAssert.java", line 82, col 8:
     //@ ensures 0 <= \result && \result <= 1000*1000;
         ^
 Execution trace information:
-    Executed return in "JavaAssert.java", line 85, col 8.
+    Executed return in "src/test/resources/JavaAssert.java", line 85, col 8.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.02 s 22374608 bytes]  failed
 
 JavaAssert: non_trivial_arithmetic_overflow(int, int) ...
 ------------------------------------------------------------------------
-JavaAssert.java:97: Warning: Postcondition possibly not established (Post)
+src/test/resources/JavaAssert.java:97: Warning: Postcondition possibly not established (Post)
     }
     ^
-Associated declaration is "JavaAssert.java", line 93, col 8:
+Associated declaration is "src/test/resources/JavaAssert.java", line 93, col 8:
     //@ ensures false;
         ^
 Execution trace information:
-    Executed return in "JavaAssert.java", line 96, col 8.
+    Executed return in "src/test/resources/JavaAssert.java", line 96, col 8.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.016 s 22593520 bytes]  failed
 
 JavaAssert: JavaAssert() ...
-    [TIME]  passed
-  [TIME total]
-7 warnings
+    [0.0060 s 22743256 bytes]  passed
+  [0.405 s 22744280 bytes total]
+1 caution
+6 warnings
+9 errors

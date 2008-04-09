@@ -1,14 +1,10 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/SetComprehension.java: Caution: Using given file as the .java file, even though it is not the java file for SetComprehension on the classpath
+    [0.0030 s 23641848 bytes]
 
 SetComprehension ...
-  Prover started:TIME
-    [TIME]
-
-SetComprehension: SetComprehension() ...
-SetComprehension.java:7: Fatal error: Set comprehension is not supported
-        //@ ghost Object o = new JMLObjectSet { Object ooo| oo.has(ooo ...
-                                                ^
-    [TIME]  error
-  [TIME total]
+src/test/resources/SetComprehension.java:6: Fatal error: Can't find type named "JMLObjectSet"
+        //@ ghost JMLObjectSet oo;
+                  ^
+1 caution
 1 error

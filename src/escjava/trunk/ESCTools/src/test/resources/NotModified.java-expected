@@ -1,74 +1,67 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/NotModified.java: Caution: Using given file as the .java file, even though it is not the java file for NotModified on the classpath
+    [0.0020 s 23070312 bytes]
 
 NotModified ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 23407328 bytes
+    [0.181 s 23475408 bytes]
 
 NotModified: m() ...
 ------------------------------------------------------------------------
-NotModified.java:9: Warning: Postcondition possibly not established (Post)
+src/test/resources/NotModified.java:9: Warning: Postcondition possibly not established (Post)
         } // ERROR - i
         ^
-Associated declaration is "NotModified.java", line 6, col 5:
+Associated declaration is "src/test/resources/NotModified.java", line 6, col 5:
         //@ ensures \not_modified(i,j);
             ^
-Execution trace information:
-    Executed implicit return in "NotModified.java", line 9, col 1.
-
-Associated declaration is "NotModified.java", line 6, col 27:
+Associated declaration is "src/test/resources/NotModified.java", line 6, col 27:
         //@ ensures \not_modified(i,j);
                                   ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.083 s 23704984 bytes]  failed
 
 NotModified: m2() ...
 ------------------------------------------------------------------------
-NotModified.java:16: Warning: Postcondition possibly not established (Post)
+src/test/resources/NotModified.java:16: Warning: Postcondition possibly not established (Post)
         } // ERROR - i,j
         ^
-Associated declaration is "NotModified.java", line 12, col 5:
+Associated declaration is "src/test/resources/NotModified.java", line 12, col 5:
         //@ ensures \not_modified(i,j);
             ^
-Execution trace information:
-    Executed implicit return in "NotModified.java", line 16, col 1.
-
-Associated declaration is "NotModified.java", line 12, col 27:
+Associated declaration is "src/test/resources/NotModified.java", line 12, col 27:
         //@ ensures \not_modified(i,j);
                                   ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.044 s 23949232 bytes]  failed
 
 NotModified: m3() ...
-    [TIME]  passed
+    [0.0080 s 24053200 bytes]  passed
 
 NotModified: m4() ...
 ------------------------------------------------------------------------
-NotModified.java:30: Warning: Postcondition possibly not established (Post)
+src/test/resources/NotModified.java:30: Warning: Postcondition possibly not established (Post)
         } // ERROR - j,k
         ^
-Associated declaration is "NotModified.java", line 26, col 5:
+Associated declaration is "src/test/resources/NotModified.java", line 26, col 5:
         //@ ensures \not_modified(i,j,k);
             ^
-Execution trace information:
-    Executed implicit return in "NotModified.java", line 30, col 1.
-
-Associated declaration is "NotModified.java", line 26, col 29:
+Associated declaration is "src/test/resources/NotModified.java", line 26, col 29:
         //@ ensures \not_modified(i,j,k);
                                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.019 s 24285208 bytes]  failed
 
 NotModified: mm() ...
-    [TIME]  passed
+    [0.0070 s 24366312 bytes]  passed
 
 NotModified: mmm() ...
-    [TIME]  passed
+    [0.0060 s 24442296 bytes]  passed
 
 NotModified: mold() ...
-    [TIME]  passed
+    [0.0050 s 24529744 bytes]  passed
 
 NotModified: NotModified() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0070 s 24707224 bytes]  passed
+  [0.36 s 24708248 bytes total]
+1 caution
 3 warnings

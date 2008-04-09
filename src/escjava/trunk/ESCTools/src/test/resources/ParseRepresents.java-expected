@@ -1,28 +1,27 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ParseRepresents.java: Caution: Using given file as the .java file, even though it is not the java file for ParseRepresents on the classpath
+    [0.0020 s 22986688 bytes]
 
 ParseRepresents ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.068 s 24003992 bytes
+    [0.228 s 24073504 bytes]
 
 ParseRepresents: m() ...
-    [TIME]  passed
+    [0.032 s 24188600 bytes]  passed
 
 ParseRepresents: p() ...
 ------------------------------------------------------------------------
-ParseRepresents.java:20: Warning: Postcondition possibly not established (Post)
+src/test/resources/ParseRepresents.java:20: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "ParseRepresents.java", line 17, col 5:
+Associated declaration is "src/test/resources/ParseRepresents.java", line 17, col 5:
         //@ ensures size > 1;
             ^
-Execution trace information:
-    Executed implicit return in "ParseRepresents.java", line 20, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.069 s 23075176 bytes]  failed
 
 ParseRepresents: ParseRepresents() ...
-    [TIME]  passed
-  [TIME total]
+    [0.011 s 23269016 bytes]  passed
+  [0.34 s 23270040 bytes total]
+1 caution
 1 warning

@@ -1,25 +1,24 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Informal.java: Caution: Using given file as the .java file, even though it is not the java file for Informal on the classpath
+    [0.0030 s 20355176 bytes]
 
 Informal ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 20751472 bytes
+    [0.177 s 20818208 bytes]
 
 Informal: m() ...
 ------------------------------------------------------------------------
-Informal.java:23: Warning: Postcondition possibly not established (Post)
+src/test/resources/Informal.java:23: Warning: Postcondition possibly not established (Post)
         public void m() throws Exception {}
                                           ^
-Associated declaration is "Informal.java", line 10, col 5:
+Associated declaration is "src/test/resources/Informal.java", line 10, col 5:
         //@ ensures ! (* ok *);
             ^
-Execution trace information:
-    Executed implicit return in "Informal.java", line 23, col 35.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.084 s 21048136 bytes]  failed
 
 Informal: Informal() ...
-    [TIME]  passed
-  [TIME total]
+    [0.035 s 21207216 bytes]  passed
+  [0.296 s 21208240 bytes total]
+1 caution
 1 warning

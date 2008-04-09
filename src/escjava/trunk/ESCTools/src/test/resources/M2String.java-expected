@@ -1,16 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/M2String.java: Caution: Using given file as the .java file, even though it is not the java file for M2String on the classpath
+    [0.021 s 21368816 bytes]
 
 M2String ...
-  Prover started:TIME
-    [TIME]
-
-M2String: M2String() ...
-    [TIME]  passed immediately
-
-M2String: P(java.lang.String) ...
-    [TIME]  passed
-
-M2String: m(java.lang.String) ...
-    [TIME]  passed
-  [TIME total]
+src/test/resources/M2String.java:23: Error: No such field in type java.lang.String
+        modifies o.owner;
+                   ^
+src/test/resources/M2String.java:31: Error: No such field in type java.lang.String
+        //@ set o.owner = this;
+                  ^
+Caution: Turning off extended static checking due to type error(s)
+  [0.029 s 23244528 bytes total] (aborted)
+2 cautions
+2 errors

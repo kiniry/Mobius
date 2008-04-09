@@ -1,23 +1,18 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/M2.java: Caution: Using given file as the .java file, even though it is not the java file for M2 on the classpath
+    [0.0020 s 20450672 bytes]
 
 M2 ...
-  Prover started:TIME
-    [TIME]
-
-M2: M2() ...
-    [TIME]  passed immediately
-
-M2: P(SS) ...
-    [TIME]  passed
-
-M2: m(SS) ...
-    [TIME]  passed
-  [TIME total]
+src/test/resources/M2.java:20: Error: No such field in type SS
+        modifies o.owner;
+                   ^
+src/test/resources/M2.java:28: Error: No such field in type SS
+        //@ set o.owner = this;
+                  ^
+Caution: Turning off extended static checking due to type error(s)
+  [0.01 s 21013432 bytes total] (aborted)
 
 SS ...
-    [TIME]
-
-SS: SS() ...
-    [TIME]  passed immediately
-  [TIME total]
+  [0.0 s 21015600 bytes total]
+2 cautions
+2 errors

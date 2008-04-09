@@ -1,28 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/RefineA.java: Caution: Using given file as the .java file, even though it is not the java file for junittests.RefineA on the classpath
+src/test/resources/RefineA.java:3: Error: Could not find file referenced in refine annotation: RefineA.java-refined
+//@ refine "RefineA.java-refined";
+    ^
+    [0.018 s 24381424 bytes]
 
 junittests.RefineA ...
-  Prover started:TIME
-    [TIME]
-
-junittests.RefineA: m(int) ...
-    [TIME]  passed
-
-junittests.RefineA: n() ...
-------------------------------------------------------------------------
-RefineA.java:16: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "RefineA.java", line 13, col 5:
+src/test/resources/RefineA.java:13: Error: Undefined variable 'b'
         //@ ensures b;
-            ^
-Execution trace information:
-    Executed return in "RefineA.java", line 15, col 2.
-
-------------------------------------------------------------------------
-    [TIME]  failed
-
-junittests.RefineA: RefineA() ...
-    [TIME]  passed
-  [TIME total]
-1 warning
+                    ^
+Caution: Turning off extended static checking due to type error(s)
+  [0.0090 s 25055616 bytes total] (aborted)
+2 cautions
+2 errors

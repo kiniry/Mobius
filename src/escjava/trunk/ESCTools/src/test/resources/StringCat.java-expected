@@ -1,19 +1,15 @@
-StringCat.java:15: Warning: Postcondition possibly not established (Post)
-  }
-  ^
-Associated declaration is "StringCat.java", line 11, col 10:
-          ensures false;
-          ^
-Execution trace information:
-    Executed return in "StringCat.java", line 14, col 4.
+ESC/Java version ESCJava-CURRENT
+src/test/resources/StringCat.java: Caution: Using given file as the .java file, even though it is not the java file for StringCat on the classpath
+    [0.0030 s 41777224 bytes]
 
-StringCat.java:23: Warning: Postcondition possibly not established (Post)
-  }
-  ^
-Associated declaration is "StringCat.java", line 19, col 10:
-          ensures false;
-          ^
-Execution trace information:
-    Executed return in "StringCat.java", line 22, col 4.
-
-2 warnings
+StringCat ...
+src/test/resources/StringCat.java:22: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+    return xxx+"a";
+              ^
+src/test/resources/StringCat.java:38: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+    return xxx+"a";
+              ^
+Caution: Turning off extended static checking due to type error(s)
+  [0.06 s 41684712 bytes total] (aborted)
+2 cautions
+2 errors

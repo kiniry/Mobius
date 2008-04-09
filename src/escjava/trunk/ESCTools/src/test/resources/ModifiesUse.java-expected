@@ -1,45 +1,10 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModifiesUse.java: Caution: Using given file as the .java file, even though it is not the java file for ModifiesUse on the classpath
+    [0.0030 s 23531952 bytes]
 
 ModifiesUse ...
-  Prover started:TIME
-    [TIME]
-
-ModifiesUse: ModifiesUse() ...
-    [TIME]  passed immediately
-
-ModifiesUse: m() ...
-    [TIME]  passed immediately
-
-ModifiesUse: mm() ...
-------------------------------------------------------------------------
-ModifiesUse.java:15: Warning: Possible assertion failure (Assert)
-                //@ assert j == 25; // ERROR
-                    ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-ModifiesUse: mx() ...
-    [TIME]  passed immediately
-
-ModifiesUse: mmx() ...
-------------------------------------------------------------------------
-ModifiesUse.java:24: Warning: Possible assertion failure (Assert)
-                //@ assert j == 25; // ERROR - should be
-                    ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-ModifiesUse: mn() ...
-    [TIME]  passed immediately
-
-ModifiesUse: me() ...
-    [TIME]  passed immediately
-
-ModifiesUse: ma() ...
-    [TIME]  passed immediately
-
-ModifiesUse: mmm() ...
-    [TIME]  passed
-  [TIME total]
-2 warnings
+src/test/resources/ModifiesUse.java:5: Fatal error: Can't find type named "JMLDataGroup"
+        //@ model public JMLDataGroup list;
+                         ^
+1 caution
+1 error

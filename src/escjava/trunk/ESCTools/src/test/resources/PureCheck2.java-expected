@@ -1,59 +1,60 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/PureCheck2.java: Caution: Using given file as the .java file, even though it is not the java file for PureCheck2 on the classpath
+    [0.0020 s 24231696 bytes]
 
 PureCheck2 ...
-PureCheck2.java:5: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+src/test/resources/PureCheck2.java:5: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
         public int ipm() { return 0; }
                    ^
-PureCheck2.java:17: Associated declaration: 
+src/test/resources/PureCheck2.java:17: Associated declaration: 
         public int ipm();
                ^
-  Prover started:TIME
-    [TIME]
+  Prover started:0.109 s 25277696 bytes
+    [0.23 s 25361256 bytes]
 
 PureCheck2: ipm() ...
 ------------------------------------------------------------------------
-PureCheck2.java:5: Warning: Postcondition possibly not established (Post)
+src/test/resources/PureCheck2.java:5: Warning: Postcondition possibly not established (Post)
         public int ipm() { return 0; }
                                      ^
-Associated declaration is "PureCheck2.java", line 16, col 5:
+Associated declaration is "src/test/resources/PureCheck2.java", line 16, col 5:
         //@ ensures \result == -2;
             ^
 Execution trace information:
-    Executed return in "PureCheck2.java", line 5, col 20.
+    Executed return in "src/test/resources/PureCheck2.java", line 5, col 20.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.146 s 25909384 bytes]  failed
 
 PureCheck2: PureCheck2() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0060 s 26044656 bytes]  passed
+  [0.382 s 26045680 bytes total]
 
 SuperPure ...
-    [TIME]
+    [0.0010 s 26119344 bytes]
 
 SuperPure: spm() ...
-    [TIME]  passed
+    [0.012 s 26190320 bytes]  passed
 
 SuperPure: SuperPure() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0050 s 26332808 bytes]  passed
+  [0.019 s 26333832 bytes total]
 
 IPure ...
-    [TIME]
+    [0.0010 s 26399504 bytes]
 
 IPure: ipm() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 26401552 bytes]  passed immediately
+  [0.0080 s 26402576 bytes total]
 
 NonPure ...
-    [TIME]
+    [0.0010 s 26469320 bytes]
 
 NonPure: npm() ...
-    [TIME]  passed
+    [0.01 s 26522832 bytes]  passed
 
 NonPure: NonPure() ...
-    [TIME]  passed
-  [TIME total]
-1 caution
+    [0.0050 s 26676696 bytes]  passed
+  [0.017 s 26677720 bytes total]
+2 cautions
 1 warning

@@ -1,35 +1,36 @@
-ESC/Java version VERSION
-SignalsBad.java:31: Caution: Use either \nothing or a comma-separated list of type names after a signals_only keyword
+ESC/Java version ESCJava-CURRENT
+src/test/resources/SignalsBad.java:31: Caution: Use either \nothing or a comma-separated list of type names after a signals_only keyword
     //@ signals_only ;   // CAUTION
                      ^
-    [TIME]
+src/test/resources/SignalsBad.java: Caution: Using given file as the .java file, even though it is not the java file for SignalsBad on the classpath
+    [0.0030 s 24340056 bytes]
 
 SignalsBad ...
-SignalsBad.java:6: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+src/test/resources/SignalsBad.java:6: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
     //@ signals (NullPointerException) true; // ERROR - DOES NOT MATCH
                  ^
-SignalsBad.java:7: Associated declaration: 
+src/test/resources/SignalsBad.java:7: Associated declaration: 
     public void m() throws java.io.IOException;
                     ^
-SignalsBad.java:18: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+src/test/resources/SignalsBad.java:18: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
     //@ signals (NullPointerException) true;  // ERROR
                  ^
-SignalsBad.java:17: Associated declaration: 
+src/test/resources/SignalsBad.java:17: Associated declaration: 
     //@ signals_only java.io.IOException;
         ^
-SignalsBad.java:22: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+src/test/resources/SignalsBad.java:22: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
     //@ signals (NullPointerException) true;  // ERROR
                  ^
-SignalsBad.java:21: Associated declaration: 
+src/test/resources/SignalsBad.java:21: Associated declaration: 
     //@ signals_only StringIndexOutOfBoundsException;
         ^
-SignalsBad.java:25: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
+src/test/resources/SignalsBad.java:25: Error: Exception type in signals clause must be listed in either a corresponding signals_only clause or the method's throws list
     //@ signals (NullPointerException) true;  // ERROR - no signals_on ...
                  ^
-SignalsBad.java:25: Associated declaration: 
+src/test/resources/SignalsBad.java:25: Associated declaration: 
     //@ signals (NullPointerException) true;  // ERROR - no signals_on ...
     ^
 Caution: Turning off extended static checking due to type error(s)
-  [TIME total] (aborted)
-2 cautions
+  [0.019 s 25416000 bytes total] (aborted)
+3 cautions
 4 errors

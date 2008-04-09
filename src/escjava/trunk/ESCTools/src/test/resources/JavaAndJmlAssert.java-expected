@@ -1,50 +1,77 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/JavaAndJmlAssert.java:6: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert true;
+        ^
+src/test/resources/JavaAndJmlAssert.java:13: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert false;
+        ^
+src/test/resources/JavaAndJmlAssert.java:20: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert true == false;
+        ^
+src/test/resources/JavaAndJmlAssert.java:26: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p >= 0;
+        ^
+src/test/resources/JavaAndJmlAssert.java:32: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p >= -1;
+        ^
+src/test/resources/JavaAndJmlAssert.java:38: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p >= 1;
+        ^
+src/test/resources/JavaAndJmlAssert.java:45: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p + q == 10;
+        ^
+src/test/resources/JavaAndJmlAssert.java:54: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+        assert p + q >= 0;
+        ^
+src/test/resources/JavaAndJmlAssert.java: Caution: Using given file as the .java file, even though it is not the java file for JavaAndJmlAssert on the classpath
+    [0.0050 s 20401496 bytes]
 
 JavaAndJmlAssert ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 20805856 bytes
+    [0.188 s 20873336 bytes]
 
 JavaAndJmlAssert: trivial_true() ...
-    [TIME]  passed
+    [0.082 s 20926896 bytes]  passed
 
 JavaAndJmlAssert: trivial_false() ...
 ------------------------------------------------------------------------
-JavaAndJmlAssert.java:12: Warning: Possible assertion failure (Assert)
+src/test/resources/JavaAndJmlAssert.java:12: Warning: Possible assertion failure (Assert)
         //@ assert false;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.016 s 21092960 bytes]  failed
 
 JavaAndJmlAssert: constant_boolean_expression() ...
 ------------------------------------------------------------------------
-JavaAndJmlAssert.java:19: Warning: Possible assertion failure (Assert)
+src/test/resources/JavaAndJmlAssert.java:19: Warning: Possible assertion failure (Assert)
         //@ assert true == false;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.045 s 21266680 bytes]  failed
 
 JavaAndJmlAssert: assert_matches_precondition(int) ...
-    [TIME]  passed
+    [0.0060 s 21345272 bytes]  passed
 
 JavaAndJmlAssert: assert_weaker_than_precondition(int) ...
-    [TIME]  passed
+    [0.0080 s 21424904 bytes]  passed
 
 JavaAndJmlAssert: assert_stronger_than_precondition(int) ...
 ------------------------------------------------------------------------
-JavaAndJmlAssert.java:37: Warning: Possible assertion failure (Assert)
+src/test/resources/JavaAndJmlAssert.java:37: Warning: Possible assertion failure (Assert)
         //@ assert p >= 1;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.016 s 21608224 bytes]  failed
 
 JavaAndJmlAssert: constant_arithmetic(int, int) ...
-    [TIME]  passed
+    [0.0070 s 21702008 bytes]  passed
 
 JavaAndJmlAssert: non_trivial_arithmetic(int, int) ...
-    [TIME]  passed
+    [0.0070 s 21801936 bytes]  passed
 
 JavaAndJmlAssert: JavaAndJmlAssert() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0070 s 21954872 bytes]  passed
+  [0.386 s 21955896 bytes total]
+1 caution
 3 warnings
+8 errors

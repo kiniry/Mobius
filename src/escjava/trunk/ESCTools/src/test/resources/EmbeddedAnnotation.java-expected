@@ -1,36 +1,35 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/EmbeddedAnnotation.java: Caution: Using given file as the .java file, even though it is not the java file for EmbeddedAnnotation on the classpath
+    [0.0030 s 18609928 bytes]
 
 EmbeddedAnnotation ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.118 s 18995712 bytes
+    [0.389 s 19063520 bytes]
 
 EmbeddedAnnotation: EmbeddedAnnotation() ...
 ------------------------------------------------------------------------
-EmbeddedAnnotation.java:3: Warning: Field declared non_null possibly not initialized (NonNullInit)
+src/test/resources/EmbeddedAnnotation.java:3: Warning: Field declared non_null possibly not initialized (NonNullInit)
 public class EmbeddedAnnotation {
                                 ^
-Associated declaration is "EmbeddedAnnotation.java", line 6, col 29:
+Associated declaration is "src/test/resources/EmbeddedAnnotation.java", line 6, col 29:
         //@ ghost public /*@ non_null */ Object ox;
                              ^
-Execution trace information:
-    Executed implicit return in "EmbeddedAnnotation.java", line 3, col 32.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.356 s 19397144 bytes]  failed
 
 EmbeddedAnnotation: mx() ...
 ------------------------------------------------------------------------
-EmbeddedAnnotation.java:7: Warning: Method declared non_null may return null (NonNullResult)
+src/test/resources/EmbeddedAnnotation.java:7: Warning: Method declared non_null may return null (NonNullResult)
  ... / final Object mx() { return null; }
                                         ^
-Associated declaration is "EmbeddedAnnotation.java", line 7, col 29:
+Associated declaration is "src/test/resources/EmbeddedAnnotation.java", line 7, col 29:
         //@ model public /*@ non_null */ /*@  pure */ final Object mx( ...
                              ^
 Execution trace information:
-    Executed return in "EmbeddedAnnotation.java", line 7, col 74.
+    Executed return in "src/test/resources/EmbeddedAnnotation.java", line 7, col 74.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.207 s 19592304 bytes]  failed
+  [0.953 s 19593328 bytes total]
+1 caution
 2 warnings

@@ -1,20 +1,21 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Diverges.java: Caution: Using given file as the .java file, even though it is not the java file for Diverges on the classpath
+    [0.02 s 19224896 bytes]
 
 Diverges ...
-Diverges.java:24: Error: A pure method may not have a diverges clause
+src/test/resources/Diverges.java:24: Error: A pure method may not have a diverges clause
     //@ diverges p;      // ERROR
         ^
-Diverges.java:25: Associated declaration: 
+src/test/resources/Diverges.java:25: Associated declaration: 
     //@ pure
         ^
-Diverges.java:31: Error: A pure method may not have a diverges clause
+src/test/resources/Diverges.java:31: Error: A pure method may not have a diverges clause
     //@ diverges !p;     // ERROR
         ^
-Diverges.java:32: Associated declaration: 
+src/test/resources/Diverges.java:32: Associated declaration: 
     //@ pure
         ^
 Caution: Turning off extended static checking due to type error(s)
-  [TIME total] (aborted)
-1 caution
+  [0.012 s 19922304 bytes total] (aborted)
+2 cautions
 2 errors

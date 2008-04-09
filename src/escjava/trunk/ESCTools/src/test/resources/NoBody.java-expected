@@ -1,22 +1,24 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/NoBody.java: Caution: Using given file as the .java file, even though it is not the java file for NoBody on the classpath
+    [0.0010 s 22288048 bytes]
 
 NoBody ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 23289672 bytes
+    [0.161 s 23354312 bytes]
 
 NoBody: m() ...
-    [TIME]  passed immediately
+    [0.0010 s 23356416 bytes]  passed immediately
 
 NoBody: n() ...
 ------------------------------------------------------------------------
-NoBody.java:7: Warning: Possible null dereference (Null)
+src/test/resources/NoBody.java:7: Warning: Possible null dereference (Null)
             m().m();
                ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.111 s 23745816 bytes]  failed
 
 NoBody: NoBody() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 23747864 bytes]  passed immediately
+  [0.274 s 23748888 bytes total]
+1 caution
 1 warning

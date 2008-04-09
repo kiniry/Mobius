@@ -1,31 +1,48 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ECH.java: Caution: Using given file as the .java file, even though it is not the java file for ECH on the classpath
+    [0.0020 s 19288240 bytes]
 
 ECHX ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 20283952 bytes
+    [0.161 s 20347456 bytes]
 
 ECHX: ECHX() ...
-    [TIME]  passed
-  [TIME total]
+src/test/resources/ECH.java:8: Error: There is no assignable clause allowing this method call
+  public ECHX() {}
+                ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/ECH.java:5: Associated declaration: 
+  //@ public normal_behavior
+  ^
+    [0.072 s 20517504 bytes]  passed
+  [0.234 s 20518528 bytes total]
 
 ECHD ...
-    [TIME]
+    [0.0010 s 20587448 bytes]
 
 ECHD: ECHD() ...
-    [TIME]  passed
-  [TIME total]
+    [0.035 s 20739576 bytes]  passed
+  [0.037 s 20740600 bytes total]
 
 ECH ...
-    [TIME]
+    [0.0010 s 20820376 bytes]
 
 ECH: ECH() ...
-    [TIME]  passed
-  [TIME total]
+    [0.012 s 20962104 bytes]  passed
+  [0.014 s 20963128 bytes total]
 
 ECHS ...
-    [TIME]
+    [0.0010 s 21027744 bytes]
 
 ECHS: ECHS() ...
-    [TIME]  passed
-  [TIME total]
+src/test/resources/ECH.java:22: Error: There is no assignable clause allowing this method call
+  public ECHS() {}
+                ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/ECH.java:19: Associated declaration: 
+  //@ public normal_behavior
+  ^
+    [0.028 s 19554080 bytes]  passed
+  [0.029 s 19555104 bytes total]
+1 caution
+2 errors

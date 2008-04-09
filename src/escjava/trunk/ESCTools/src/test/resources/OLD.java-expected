@@ -1,7 +1,32 @@
-OLD.java:16: Warning: Possible assertion failure (Assert)
+ESC/Java version ESCJava-CURRENT
+src/test/resources/OLD.java: Caution: Using given file as the .java file, even though it is not the java file for OLD on the classpath
+    [0.0030 s 22512344 bytes]
+
+OLD ...
+  Prover started:0.063 s 23591304 bytes
+    [0.184 s 23656600 bytes]
+
+OLD: m() ...
+------------------------------------------------------------------------
+src/test/resources/OLD.java:16: Warning: Possible assertion failure (Assert)
                 //@ assert mm == mmm; // ERROR
                     ^
-OLD.java:27: Warning: Possible assertion failure (Assert)
+------------------------------------------------------------------------
+    [0.1 s 23936744 bytes]  failed
+
+OLD: mm() ...
+    [0.046 s 24136336 bytes]  passed
+
+OLD: mmm() ...
+------------------------------------------------------------------------
+src/test/resources/OLD.java:27: Warning: Possible assertion failure (Assert)
                 //@ assert !\fresh(p); // ERROR
                     ^
+------------------------------------------------------------------------
+    [0.023 s 24447800 bytes]  failed
+
+OLD: OLD() ...
+    [0.0070 s 24625320 bytes]  passed
+  [0.362 s 24626344 bytes total]
+1 caution
 2 warnings

@@ -1,89 +1,90 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ExpandWildRef.java: Caution: Using given file as the .java file, even though it is not the java file for ExpandWildRef on the classpath
+    [0.071 s 18846408 bytes]
 
 ExpandWildRef ...
-ExpandWildRef.java:190: Caution: Variable ewrj might not have been initialized
+src/test/resources/ExpandWildRef.java:190: Caution: Variable ewrj might not have been initialized
         public int ewrj;
                    ^
-  Prover started:TIME
-    [TIME]
+  Prover started:0.072 s 20052272 bytes
+    [0.204 s 20150056 bytes]
 
 ExpandWildRef: ExpandWildRef() ...
-    [TIME]  passed immediately
+    [0.0010 s 20152160 bytes]  passed immediately
 
 ExpandWildRef: mm() ...
-    [TIME]  passed immediately
+    [0.0 s 20154208 bytes]  passed immediately
 
 ExpandWildRef: mms() ...
-    [TIME]  passed immediately
+    [0.0 s 20155232 bytes]  passed immediately
 
 ExpandWildRef: mos() ...
-    [TIME]  passed immediately
+    [0.0 s 20157280 bytes]  passed immediately
 
 ExpandWildRef: mo() ...
-    [TIME]  passed immediately
+    [0.0 s 20158304 bytes]  passed immediately
 
 ExpandWildRef: p() ...
 ------------------------------------------------------------------------
-ExpandWildRef.java:44: Warning: Possible assertion failure (Assert)
+src/test/resources/ExpandWildRef.java:44: Warning: Possible assertion failure (Assert)
                 //@ assert ii == 1 || gii == 1 || ewr == 1 || iewri == ...
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.151 s 20999184 bytes]  failed
 
 ExpandWildRef: p2() ...
-    [TIME]  passed
+    [0.056 s 19628520 bytes]  passed
 
 ExpandWildRef: pp() ...
 ------------------------------------------------------------------------
-ExpandWildRef.java:86: Warning: Possible assertion failure (Assert)
+src/test/resources/ExpandWildRef.java:86: Warning: Possible assertion failure (Assert)
                 //@ assert sii == 1 || sgii == 1 || ewrs == 1 || sewri ...
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.048 s 20275200 bytes]  failed
 
 ExpandWildRef: pp2() ...
-    [TIME]  passed
+    [0.058 s 20763632 bytes]  passed
 
 ExpandWildRef: po() ...
 ------------------------------------------------------------------------
-ExpandWildRef.java:120: Warning: Possible assertion failure (Assert)
+src/test/resources/ExpandWildRef.java:120: Warning: Possible assertion failure (Assert)
                 //@ assert o.i == 1 || o.gi == 1 ; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.045 s 21367472 bytes]  failed
 
 ExpandWildRef: po2() ...
-    [TIME]  passed
+    [0.025 s 21835152 bytes]  passed
 
 ExpandWildRef: pos() ...
 ------------------------------------------------------------------------
-ExpandWildRef.java:157: Warning: Possible assertion failure (Assert)
+src/test/resources/ExpandWildRef.java:157: Warning: Possible assertion failure (Assert)
                 //@ assert o.si == 1 || o.sgi == 1;  // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.043 s 19797176 bytes]  failed
 
 ExpandWildRef: pos2() ...
-    [TIME]  passed
-  [TIME total]
+    [0.022 s 20228800 bytes]  passed
+  [0.654 s 20229824 bytes total]
 
 EWRS ...
-    [TIME]
+    [0.0010 s 20297288 bytes]
 
 EWRS: EWRS() ...
-    [TIME]  passed
-  [TIME total]
+    [0.042 s 20458960 bytes]  passed
+  [0.043 s 20459984 bytes total]
 
 EWRI ...
-    [TIME]
-  [TIME total]
+    [0.0010 s 20477640 bytes]
+  [0.0040 s 20478664 bytes total]
 
 Other ...
-    [TIME]
+    [0.0010 s 20546448 bytes]
 
 Other: Other() ...
-    [TIME]  passed
-  [TIME total]
-1 caution
+    [0.01 s 20717928 bytes]  passed
+  [0.012 s 20718952 bytes total]
+2 cautions
 4 warnings

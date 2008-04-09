@@ -1,1 +1,12 @@
-escjava: Option -stages requires one positive integer argument: java.lang.NumberFormatException: For input string: "x"
+ESC/Java version ESCJava-CURRENT
+src/test/resources/BadOptions2.java: Caution: Using given file as the .java file, even though it is not the java file for BadOptions2 on the classpath
+    [0.0010 s 18316784 bytes]
+
+BadOptions2 ...
+  Prover started:0.058 s 19309968 bytes
+    [0.17 s 19375216 bytes]
+
+BadOptions2: BadOptions2() ...
+    [0.074 s 19528144 bytes]  passed
+  [0.244 s 19529168 bytes total]
+1 caution

@@ -1,26 +1,27 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ReadableBad.java: Caution: Using given file as the .java file, even though it is not the java file for ReadableBad on the classpath
+    [0.0020 s 24938056 bytes]
 
 ReadableBad ...
-ReadableBad.java:3: Error: Undefined variable 'q'
+src/test/resources/ReadableBad.java:3: Error: Undefined variable 'q'
         //@ readable q if b;
                      ^
-ReadableBad.java:3: Error: Undefined variable 'b'
+src/test/resources/ReadableBad.java:3: Error: Undefined variable 'b'
         //@ readable q if b;
                           ^
-ReadableBad.java:4: Error: Undefined variable 'q'
+src/test/resources/ReadableBad.java:4: Error: Undefined variable 'q'
         //@ writable q if b;
                      ^
-ReadableBad.java:4: Error: Undefined variable 'b'
+src/test/resources/ReadableBad.java:4: Error: Undefined variable 'b'
         //@ writable q if b;
                           ^
-ReadableBad.java:7: Error: Cannot convert int to boolean
+src/test/resources/ReadableBad.java:7: Error: Cannot convert int to boolean
         //@ readable i+i if i;
                             ^
-ReadableBad.java:7: Error: Not a specification designator expression
+src/test/resources/ReadableBad.java:7: Error: Not a specification designator expression
         //@ readable i+i if i;
                      ^
 Caution: Turning off extended static checking due to type error(s)
-  [TIME total] (aborted)
-1 caution
+  [0.029 s 24990608 bytes total] (aborted)
+2 cautions
 6 errors

@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/NotSpecified.java: Caution: Using given file as the .java file, even though it is not the java file for NotSpecified on the classpath
+    [0.0020 s 23078872 bytes]
 
 NotSpecified ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.063 s 23048840 bytes
+    [0.178 s 23113864 bytes]
 
 NotSpecified: m() ...
-    [TIME]  passed immediately
+    [0.0 s 23115912 bytes]  passed immediately
 
 NotSpecified: NotSpecified() ...
-    [TIME]  passed
-  [TIME total]
+    [0.069 s 23265624 bytes]  passed
+  [0.248 s 23266648 bytes total]
+1 caution

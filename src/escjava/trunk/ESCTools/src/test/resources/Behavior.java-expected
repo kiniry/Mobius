@@ -1,89 +1,76 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Behavior.java: Caution: Using given file as the .java file, even though it is not the java file for Behavior on the classpath
+    [0.0050 s 18844344 bytes]
 
 Behavior ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 19157600 bytes
+    [0.183 s 19224560 bytes]
 
 Behavior: m() ...
-    [TIME]  passed
+    [0.076 s 19441752 bytes]  passed
 
 Behavior: m2() ...
 ------------------------------------------------------------------------
-Behavior.java:18: Warning: Postcondition possibly not established (Post)
+src/test/resources/Behavior.java:18: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Behavior.java", line 13, col 12:
+Associated declaration is "src/test/resources/Behavior.java", line 13, col 12:
         /*@ public exceptional_behavior ...
                    ^
 Execution trace information:
-    Executed return in "Behavior.java", line 17, col 2.
+    Executed return in "src/test/resources/Behavior.java", line 17, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.043 s 19646928 bytes]  failed
 
 Behavior: m3() ...
-    [TIME]  passed
+    [0.0040 s 19710160 bytes]  passed
 
 Behavior: m4() ...
 ------------------------------------------------------------------------
-Behavior.java:32: Warning: Postcondition possibly not established (Post)
+src/test/resources/Behavior.java:32: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Behavior.java", line 27, col 12:
+Associated declaration is "src/test/resources/Behavior.java", line 27, col 12:
         /*@ public normal_behavior ...
                    ^
 Execution trace information:
-    Executed throw in "Behavior.java", line 31, col 2.
+    Executed throw in "src/test/resources/Behavior.java", line 31, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.023 s 20033272 bytes]  failed
 
 Behavior: mm(int) ...
-    [TIME]  passed
+    [0.024 s 20348480 bytes]  passed
 
 Behavior: mme(int) ...
 ------------------------------------------------------------------------
-Behavior.java:61: Warning: Postcondition possibly not established (Post)
+src/test/resources/Behavior.java:61: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Behavior.java", line 52, col 12:
+Associated declaration is "src/test/resources/Behavior.java", line 52, col 12:
             public exceptional_behavior ...
                    ^
 Execution trace information:
-    Executed then branch in "Behavior.java", line 58, col 11.
-    Executed return in "Behavior.java", line 58, col 11.
+    Executed then branch in "src/test/resources/Behavior.java", line 58, col 11.
+    Executed return in "src/test/resources/Behavior.java", line 58, col 11.
 
 ------------------------------------------------------------------------
-Behavior.java:61: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "Behavior.java", line 48, col 12:
-        /*@ public normal_behavior ...
-                   ^
-Execution trace information:
-    Executed else branch in "Behavior.java", line 58, col 2.
-    Executed then branch in "Behavior.java", line 59, col 11.
-    Executed throw in "Behavior.java", line 59, col 11.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.027 s 20776552 bytes]  failed
 
 Behavior: n() ...
 ------------------------------------------------------------------------
-Behavior.java:66: Warning: Postcondition possibly not established (Post)
+src/test/resources/Behavior.java:66: Warning: Postcondition possibly not established (Post)
         public void n() { ++j; }
                                ^
-Associated declaration is "Behavior.java", line 65, col 5:
+Associated declaration is "src/test/resources/Behavior.java", line 65, col 5:
         //@ ensures j < \old(j); // Warning here
             ^
-Execution trace information:
-    Executed implicit return in "Behavior.java", line 66, col 24.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.022 s 20979288 bytes]  failed
 
 Behavior: Behavior() ...
-    [TIME]  passed
-  [TIME total]
-5 warnings
+    [0.0070 s 21139048 bytes]  passed
+  [0.409 s 21140072 bytes total]
+1 caution
+4 warnings

@@ -1,92 +1,94 @@
-ESC/Java version VERSION
-Assert13.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Assert13.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-Assert13.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src/test/resources/Assert13.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0;
                 ^
-Assert13.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src/test/resources/Assert13.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-Assert13.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src/test/resources/Assert13.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; 
                 ^
-Assert13.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src/test/resources/Assert13.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-Assert13.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src/test/resources/Assert13.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; //@ nowarn Assert;
                 ^
-    [TIME]
+src/test/resources/Assert13.java: Caution: Using given file as the .java file, even though it is not the java file for Assert13 on the classpath
+    [0.304 s 18536192 bytes]
 
 Assert13 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 19747616 bytes
+    [0.248 s 19885200 bytes]
 
 Assert13: m_Exception_Assert(int) ...
-    [TIME]  passed
+    [0.091 s 19939504 bytes]  passed
 
 Assert13: mm_Exception_Assert(int) ...
-    [TIME]  passed
+    [0.0060 s 20003408 bytes]  passed
 
 Assert13: mm_Nowarn_Nowarn(int) ...
-    [TIME]  passed
+    [0.0040 s 20066272 bytes]  passed
 
 Assert13: nAssertWarn(int) ...
 ------------------------------------------------------------------------
-Assert13.java:29: Warning: Possible assertion failure (Assert)
+src/test/resources/Assert13.java:29: Warning: Possible assertion failure (Assert)
                 //@ assert false;
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.021 s 20298120 bytes]  failed
 
 Assert13: nNowarn(int) ...
-    [TIME]  passed
+    [0.0040 s 20360632 bytes]  passed
 
 Assert13: pPostwarning() ...
 ------------------------------------------------------------------------
-Assert13.java:42: Warning: Postcondition possibly not established (Post)
+src/test/resources/Assert13.java:42: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Assert13.java", line 39, col 5:
+Associated declaration is "src/test/resources/Assert13.java", line 39, col 5:
         //@ exsures (java.lang.AssertionError e) false;
             ^
 Execution trace information:
-    Executed throw in "Assert13.java", line 41, col 2.
+    Executed throw in "src/test/resources/Assert13.java", line 41, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.033 s 20732576 bytes]  failed
 
 Assert13: pExceptionwarningShouldCompilerError() ...
 ------------------------------------------------------------------------
-Assert13.java:51: Warning: Possible unexpected exception (Exception)
+src/test/resources/Assert13.java:51: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "Assert13.java", line 50, col 2.
+    Executed throw in "src/test/resources/Assert13.java", line 50, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.032 s 21086760 bytes]  failed
 
 Assert13: qNoWarning(int) ...
-    [TIME]  passed
+    [0.017 s 21309232 bytes]  passed
 
 Assert13: qqExceptionWarning(int) ...
 ------------------------------------------------------------------------
-Assert13.java:62: Warning: Possible unexpected exception (Exception)
+src/test/resources/Assert13.java:62: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "Assert13.java", line 61, col 2.
+    Executed throw in "src/test/resources/Assert13.java", line 61, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.047 s 19379720 bytes]  failed
 
 Assert13: rNowarning() ...
-    [TIME]  passed
+    [0.046 s 19579712 bytes]  passed
 
 Assert13: Assert13() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0070 s 19731200 bytes]  passed
+  [0.557 s 19732272 bytes total]
+1 caution
 4 warnings
 6 errors

@@ -1,34 +1,33 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ParseModifies.java: Caution: Using given file as the .java file, even though it is not the java file for ParseModifies on the classpath
+    [0.0020 s 23641792 bytes]
 
 ParseModifies ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.065 s 23924808 bytes
+    [0.191 s 23997032 bytes]
 
 ParseModifies: m() ...
-    [TIME]  passed immediately
+    [0.0 s 23998056 bytes]  passed immediately
 
 ParseModifies: mm() ...
-    [TIME]  passed immediately
+    [0.0010 s 24000160 bytes]  passed immediately
 
 ParseModifies: q() ...
-    [TIME]  passed immediately
+    [0.0 s 24002208 bytes]  passed immediately
 
 ParseModifies: z() ...
 ------------------------------------------------------------------------
-ParseModifies.java:27: Warning: Postcondition possibly not established (Post)
+src/test/resources/ParseModifies.java:27: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "ParseModifies.java", line 24, col 5:
+Associated declaration is "src/test/resources/ParseModifies.java", line 24, col 5:
         //@ ensures j == i;
             ^
-Execution trace information:
-    Executed implicit return in "ParseModifies.java", line 27, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.087 s 24266200 bytes]  failed
 
 ParseModifies: ParseModifies() ...
-    [TIME]  passed
-  [TIME total]
+    [0.038 s 24489864 bytes]  passed
+  [0.318 s 24490888 bytes total]
+1 caution
 1 warning

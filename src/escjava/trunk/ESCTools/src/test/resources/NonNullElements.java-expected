@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/NonNullElements.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullElements on the classpath
+    [0.0010 s 22613472 bytes]
 
 NonNullElements ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.063 s 23653872 bytes
+    [0.164 s 23723384 bytes]
 
 NonNullElements: m() ...
-    [TIME]  passed
+    [0.077 s 22665408 bytes]  passed
 
 NonNullElements: NonNullElements() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0090 s 22832568 bytes]  passed
+  [0.25 s 22833592 bytes total]
+1 caution

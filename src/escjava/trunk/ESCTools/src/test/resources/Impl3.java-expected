@@ -1,38 +1,37 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Impl3.java: Caution: Using given file as the .java file, even though it is not the java file for Impl3 on the classpath
+    [0.0020 s 20048024 bytes]
 
 Impl3 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 21078624 bytes
+    [0.211 s 21152432 bytes]
 
 Impl3: shrink() ...
-    [TIME]  passed
+    [0.075 s 21251208 bytes]  passed
 
 Impl3: clear() ...
 ------------------------------------------------------------------------
-Impl3.java:13: Warning: Postcondition possibly not established (Post)
+src/test/resources/Impl3.java:13: Warning: Postcondition possibly not established (Post)
         }  // ERROR - no represents clause for isEmpty
         ^
-Associated declaration is "Impl3.java", line 26, col 5:
+Associated declaration is "src/test/resources/Impl3.java", line 26, col 5:
         //@ ensures isEmpty;
             ^
-Execution trace information:
-    Executed implicit return in "Impl3.java", line 13, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.05 s 21506960 bytes]  failed
 
 Impl3: Impl3() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0070 s 21704960 bytes]  passed
+  [0.344 s 21707008 bytes total]
 
 IntList ...
-    [TIME]
+    [0.0010 s 21780008 bytes]
 
 IntList: shrink() ...
-    [TIME]  passed immediately
+    [0.0 s 21781032 bytes]  passed immediately
 
 IntList: clear() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 21782056 bytes]  passed immediately
+  [0.0080 s 21783080 bytes total]
+1 caution
 1 warning

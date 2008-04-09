@@ -1,2 +1,100 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/InheritNullable.java: Caution: Using given file as the .java file, even though it is not the java file for InheritNullable on the classpath
+    [0.021 s 20545104 bytes]
+
+InheritNullable ...
+  Prover started:0.06 s 21836288 bytes
+    [0.165 s 21910736 bytes]
+
+InheritNullable: m1(int, java.lang.Object) ...
+    [0.0 s 21912784 bytes]  passed immediately
+
+InheritNullable: m2(int, java.lang.Object) ...
+    [0.0 s 21915856 bytes]  passed immediately
+
+InheritNullable: m3(int, java.lang.Object) ...
+    [0.0 s 21917904 bytes]  passed immediately
+
+InheritNullable: m4(int, java.lang.Object) ...
+    [0.0 s 21920976 bytes]  passed immediately
+
+InheritNullable: m5(int, java.lang.Object) ...
+    [0.0 s 21923024 bytes]  passed immediately
+
+InheritNullable: m6(int, java.lang.Object) ...
+    [0.0 s 21926096 bytes]  passed immediately
+
+InheritNullable: InheritNullable() ...
+    [0.0 s 21927120 bytes]  passed immediately
+
+InheritNullable: mm1a() ...
+    [0.079 s 22117544 bytes]  passed
+
+InheritNullable: mm1b() ...
+    [0.041 s 22297720 bytes]  passed
+
+InheritNullable: mm2a() ...
+    [0.012 s 22487064 bytes]  passed
+
+InheritNullable: mm2b() ...
+    [0.012 s 22666160 bytes]  passed
+
+InheritNullable: mm3a() ...
+    [0.013 s 22855560 bytes]  passed
+
+InheritNullable: mm3b() ...
+    [0.014 s 23035736 bytes]  passed
+
+InheritNullable: mm4a() ...
+    [0.027 s 21052504 bytes]  passed
+
+InheritNullable: mm4b() ...
+    [0.01 s 21232680 bytes]  passed
+
+InheritNullable: mm5a() ...
+    [0.0060 s 21338816 bytes]  passed
+
+InheritNullable: mm5b() ...
+    [0.014 s 21564232 bytes]  passed
+
+InheritNullable: mm6a() ...
+------------------------------------------------------------------------
+src/test/resources/InheritNullable.java:60: Warning: Precondition possibly not established (Pre)
+                m6(-1,oo); // FAILS
+                  ^
+Associated declaration is "src/test/resources/InheritNullable.java", line 82, col 5:
+        //@ requires i>0;
+            ^
+------------------------------------------------------------------------
+    [0.023 s 21965480 bytes]  failed
+
+InheritNullable: mm6b() ...
+    [0.017 s 22225448 bytes]  passed
+  [0.434 s 22226472 bytes total]
+
+SuperNullable ...
+    [0.0010 s 22308240 bytes]
+
+SuperNullable: m1(int, java.lang.Object) ...
+    [0.0 s 22310288 bytes]  passed immediately
+
+SuperNullable: m2(int, java.lang.Object) ...
+    [0.0 s 22313360 bytes]  passed immediately
+
+SuperNullable: m3(int, java.lang.Object) ...
+    [0.0010 s 22315464 bytes]  passed immediately
+
+SuperNullable: m4(int, java.lang.Object) ...
+    [0.0 s 22318536 bytes]  passed immediately
+
+SuperNullable: m5(int, java.lang.Object) ...
+    [0.0 s 22321608 bytes]  passed immediately
+
+SuperNullable: m6(int, java.lang.Object) ...
+    [0.0 s 22323656 bytes]  passed immediately
+
+SuperNullable: SuperNullable() ...
+    [0.0 s 22325704 bytes]  passed immediately
+  [0.038 s 22326728 bytes total]
+1 caution
+1 warning

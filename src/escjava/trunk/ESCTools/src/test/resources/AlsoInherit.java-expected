@@ -1,70 +1,71 @@
-ESC/Java version VERSION
-AlsoInherit.java:19: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+ESC/Java version ESCJava-CURRENT
+src/test/resources/AlsoInherit.java:19: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
         //@ also_ensures true;  // OBSOLETE
             ^
-AlsoInherit.java:22: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+src/test/resources/AlsoInherit.java:22: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
         //@ also_exsures (Exception) true; // OBSOLETE
             ^
-    [TIME]
+src/test/resources/AlsoInherit.java: Caution: Using given file as the .java file, even though it is not the java file for AlsoInherit on the classpath
+    [0.0060 s 17601784 bytes]
 
 AlsoInherit ...
-AlsoInherit.java:6: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+src/test/resources/AlsoInherit.java:6: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
         public void m();  // ERROR - no also
                     ^
-AlsoInherit.java:29: Associated declaration: 
+src/test/resources/AlsoInherit.java:29: Associated declaration: 
         public void m();
                ^
-AlsoInherit.java:15: Caution: No initial also expected since there are no overridden or refined methods
+src/test/resources/AlsoInherit.java:15: Caution: No initial also expected since there are no overridden or refined methods
         //@ also                // ERROR - should not have an also
             ^
-AlsoInherit.java:20: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+src/test/resources/AlsoInherit.java:20: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
         public void p();        // ERROR - should have an also
                     ^
-AlsoInherit.java:35: Associated declaration: 
+src/test/resources/AlsoInherit.java:35: Associated declaration: 
         public void p();
                ^
-AlsoInherit.java:31: Caution: No initial also expected since there are no overridden or refined methods
+src/test/resources/AlsoInherit.java:31: Caution: No initial also expected since there are no overridden or refined methods
         //@ also                // ERROR - no also expected
             ^
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 18021984 bytes
+    [0.206 s 18093000 bytes]
 
 AlsoInherit: m() ...
-    [TIME]  passed immediately
+    [0.0 s 18095048 bytes]  passed immediately
 
 AlsoInherit: n() ...
-    [TIME]  passed immediately
+    [0.0 s 18096072 bytes]  passed immediately
 
 AlsoInherit: malso() ...
-    [TIME]  passed immediately
+    [0.0 s 18098144 bytes]  passed immediately
 
 AlsoInherit: nalso() ...
-    [TIME]  passed immediately
+    [0.0 s 18099192 bytes]  passed immediately
 
 AlsoInherit: p() ...
-    [TIME]  passed immediately
+    [0.0 s 18101256 bytes]  passed immediately
 
 AlsoInherit: pp() ...
-    [TIME]  passed immediately
+    [0.0 s 18102296 bytes]  passed immediately
 
 AlsoInherit: AlsoInherit() ...
-    [TIME]  passed
-  [TIME total]
+    [0.06 s 18244440 bytes]  passed
+  [0.267 s 18245512 bytes total]
 
 Parent ...
-    [TIME]
+    [0.0040 s 18316248 bytes]
 
 Parent: m() ...
-    [TIME]  passed immediately
+    [0.0 s 18317272 bytes]  passed immediately
 
 Parent: malso() ...
-    [TIME]  passed immediately
+    [0.0 s 18319320 bytes]  passed immediately
 
 Parent: p() ...
-    [TIME]  passed immediately
+    [0.0 s 18320344 bytes]  passed immediately
 
 Parent: Parent() ...
-    [TIME]  passed
-  [TIME total]
-4 cautions
+    [0.01 s 18472168 bytes]  passed
+  [0.014 s 18473240 bytes total]
+5 cautions
 2 errors

@@ -1,39 +1,41 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Readable.java: Caution: Using given file as the .java file, even though it is not the java file for Readable on the classpath
+    [0.0020 s 24569016 bytes]
 
 Readable ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.063 s 25583944 bytes
+    [0.165 s 25652712 bytes]
 
 Readable: m() ...
-    [TIME]  passed
+    [0.073 s 25754712 bytes]  passed
 
 Readable: m2() ...
 ------------------------------------------------------------------------
-Readable.java:19: Warning: Read of variable when its value may be meaningless (Unreadable)
+src/test/resources/Readable.java:19: Warning: Read of variable when its value may be meaningless (Unreadable)
             int k = i;
                     ^
-Associated declaration is "Readable.java", line 9, col 5:
+Associated declaration is "src/test/resources/Readable.java", line 9, col 5:
         //@ readable i if b;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.042 s 25987000 bytes]  failed
 
 Readable: m3() ...
-    [TIME]  passed
+    [0.0080 s 26090968 bytes]  passed
 
 Readable: m4() ...
 ------------------------------------------------------------------------
-Readable.java:29: Warning: Write of variable when disallowed (Writable)
+src/test/resources/Readable.java:29: Warning: Write of variable when disallowed (Writable)
             j = 0;
               ^
-Associated declaration is "Readable.java", line 10, col 5:
+Associated declaration is "src/test/resources/Readable.java", line 10, col 5:
         //@ writable j if bb;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.036 s 24773176 bytes]  failed
 
 Readable: Readable() ...
-    [TIME]  passed
-  [TIME total]
+    [0.01 s 24977264 bytes]  passed
+  [0.336 s 24978288 bytes total]
+1 caution
 2 warnings

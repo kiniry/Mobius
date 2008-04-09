@@ -1,99 +1,103 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Assert.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert true : "Hi";
+                ^
+src/test/resources/Assert.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert false : 0;
+                ^
+src/test/resources/Assert.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert true : "Hi";
+                ^
+src/test/resources/Assert.java:18: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert false : 0; 
+                ^
+src/test/resources/Assert.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert true : "Hi";
+                ^
+src/test/resources/Assert.java:24: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert false : 0; //@ nowarn Assert;
+                ^
+src/test/resources/Assert.java:29: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert true : "Hi";
+                ^
+src/test/resources/Assert.java: Caution: Using given file as the .java file, even though it is not the java file for Assert on the classpath
+    [0.0080 s 18295664 bytes]
 
 Assert ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.066 s 19648920 bytes
+    [0.235 s 19799184 bytes]
 
 Assert: m_Exception_Assert(int) ...
-------------------------------------------------------------------------
-Assert.java:10: Warning: Possible unexpected exception (Exception)
-        }
-        ^
-Execution trace information:
-    Executed else branch in "Assert.java", line 8, col 2.
-    Executed then branch in "Assert.java", line 9, col 2.
-    Executed throw in "Assert.java", line 9, col 2.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.092 s 19854680 bytes]  passed
 
 Assert: mm_Exception_Assert(int) ...
-------------------------------------------------------------------------
-Assert.java:19: Warning: Possible unexpected exception (Exception)
-        }
-        ^
-Execution trace information:
-    Executed else branch in "Assert.java", line 17, col 2.
-    Executed then branch in "Assert.java", line 18, col 2.
-    Executed throw in "Assert.java", line 18, col 2.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.0050 s 19917640 bytes]  passed
 
 Assert: mm_Nowarn_Nowarn(int) ...
-    [TIME]  passed
+    [0.0070 s 19980672 bytes]  passed
 
 Assert: mmm_Nowarn_Nowarn(int) ...
-    [TIME]  passed
+    [0.0040 s 20036776 bytes]  passed
 
 Assert: nAssertWarn(int) ...
 ------------------------------------------------------------------------
-Assert.java:35: Warning: Possible assertion failure (Assert)
+src/test/resources/Assert.java:35: Warning: Possible assertion failure (Assert)
                 //@ assert false;
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.022 s 20276928 bytes]  failed
 
 Assert: nNowarn(int) ...
-    [TIME]  passed
+    [0.0040 s 20341256 bytes]  passed
 
 Assert: pPostwarning() ...
 ------------------------------------------------------------------------
-Assert.java:48: Warning: Postcondition possibly not established (Post)
+src/test/resources/Assert.java:48: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Assert.java", line 45, col 5:
+Associated declaration is "src/test/resources/Assert.java", line 45, col 5:
         //@ exsures (java.lang.AssertionError e) false;
             ^
 Execution trace information:
-    Executed throw in "Assert.java", line 47, col 2.
+    Executed throw in "src/test/resources/Assert.java", line 47, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.036 s 20737288 bytes]  failed
 
 Assert: ppPostwarning() ...
-    [TIME]  passed
+    [0.086 s 20958832 bytes]  passed
 
 Assert: pExceptionwarningShouldCompilerError() ...
 ------------------------------------------------------------------------
-Assert.java:65: Warning: Possible unexpected exception (Exception)
+src/test/resources/Assert.java:65: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "Assert.java", line 64, col 2.
+    Executed throw in "src/test/resources/Assert.java", line 64, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.048 s 19057576 bytes]  failed
 
 Assert: qNoWarning(int) ...
-    [TIME]  passed
+    [0.091 s 19279256 bytes]  passed
 
 Assert: qqExceptionWarning(int) ...
 ------------------------------------------------------------------------
-Assert.java:76: Warning: Possible unexpected exception (Exception)
+src/test/resources/Assert.java:76: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "Assert.java", line 75, col 2.
+    Executed throw in "src/test/resources/Assert.java", line 75, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.063 s 19644736 bytes]  failed
 
 Assert: rNowarning() ...
-    [TIME]  passed
+    [0.015 s 19845024 bytes]  passed
 
 Assert: Assert() ...
-    [TIME]  passed
-  [TIME total]
-6 warnings
+    [0.0090 s 19994688 bytes]  passed
+  [0.717 s 19995760 bytes total]
+1 caution
+4 warnings
+7 errors

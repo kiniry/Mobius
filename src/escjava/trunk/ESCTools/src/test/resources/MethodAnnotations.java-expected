@@ -1,22 +1,24 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/MethodAnnotations.java: Caution: Using given file as the .java file, even though it is not the java file for MethodAnnotations on the classpath
+    [0.0020 s 20292504 bytes]
 
 MethodAnnotations ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.064 s 21390360 bytes
+    [0.17 s 21476336 bytes]
 
 MethodAnnotations: capacity() ...
-    [TIME]  passed immediately
+    [0.0 s 21477360 bytes]  passed immediately
 
 MethodAnnotations: size() ...
-    [TIME]  passed
+    [0.12 s 21756896 bytes]  passed
 
 MethodAnnotations: push(int) ...
-    [TIME]  passed
+    [0.158 s 21257536 bytes]  passed
 
 MethodAnnotations: pop() ...
-    [TIME]  passed
+    [0.056 s 21771112 bytes]  passed
 
 MethodAnnotations: MethodAnnotations() ...
-    [TIME]  passed
-  [TIME total]
+    [0.091 s 22309416 bytes]  passed
+  [0.595 s 22310440 bytes total]
+1 caution

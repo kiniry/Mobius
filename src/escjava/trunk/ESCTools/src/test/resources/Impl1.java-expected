@@ -1,26 +1,28 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Impl1.java: Caution: Using given file as the .java file, even though it is not the java file for Impl1 on the classpath
+    [0.0040 s 20574648 bytes]
 
 Impl1 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.063 s 20871648 bytes
+    [0.182 s 20945456 bytes]
 
 Impl1: shrink() ...
-    [TIME]  passed
+    [0.128 s 21142224 bytes]  passed
 
 Impl1: clear() ...
-    [TIME]  passed
+    [0.027 s 21317976 bytes]  passed
 
 Impl1: Impl1() ...
-    [TIME]  passed
-  [TIME total]
+    [0.024 s 21553640 bytes]  passed
+  [0.361 s 21554664 bytes total]
 
 IntList ...
-    [TIME]
+    [0.0020 s 21627608 bytes]
 
 IntList: shrink() ...
-    [TIME]  passed immediately
+    [0.0 s 21628632 bytes]  passed immediately
 
 IntList: clear() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 21630680 bytes]  passed immediately
+  [0.01 s 21631704 bytes total]
+1 caution

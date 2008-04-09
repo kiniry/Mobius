@@ -1,55 +1,51 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Client5.java: Caution: Using given file as the .java file, even though it is not the java file for Client5 on the classpath
+    [0.0040 s 18814240 bytes]
 
 Client5 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.066 s 19855304 bytes
+    [0.18 s 19927104 bytes]
 
 Client5: unique(IntList) ...
 ------------------------------------------------------------------------
-Client5.java:8: Warning: Postcondition possibly not established (Post)
+src/test/resources/Client5.java:8: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Client5.java", line 5, col 5:
+Associated declaration is "src/test/resources/Client5.java", line 5, col 5:
         //@ ensures \not_modified(list.isEmpty);  // CURRENT ERROR 
             ^
-Execution trace information:
-    Executed implicit return in "Client5.java", line 8, col 1.
-
-Associated declaration is "Client5.java", line 5, col 27:
+Associated declaration is "src/test/resources/Client5.java", line 5, col 27:
         //@ ensures \not_modified(list.isEmpty);  // CURRENT ERROR 
                                   ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.121 s 20357784 bytes]  failed
 
 Client5: clear(IntList) ...
 ------------------------------------------------------------------------
-Client5.java:15: Warning: Postcondition possibly not established (Post)
+src/test/resources/Client5.java:15: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Client5.java", line 12, col 5:
+Associated declaration is "src/test/resources/Client5.java", line 12, col 5:
         //@ ensures \not_modified(list.isEmpty);  // ERROR
             ^
-Execution trace information:
-    Executed implicit return in "Client5.java", line 15, col 1.
-
-Associated declaration is "Client5.java", line 12, col 27:
+Associated declaration is "src/test/resources/Client5.java", line 12, col 27:
         //@ ensures \not_modified(list.isEmpty);  // ERROR
                                   ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.035 s 20812216 bytes]  failed
 
 Client5: Client5() ...
-    [TIME]  passed
-  [TIME total]
+    [0.026 s 19170288 bytes]  passed
+  [0.362 s 19171312 bytes total]
 
 IntList ...
-    [TIME]
+    [0.0010 s 19236400 bytes]
 
 IntList: unique() ...
-    [TIME]  passed immediately
+    [0.0 s 19238448 bytes]  passed immediately
 
 IntList: clear() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 19239472 bytes]  passed immediately
+  [0.0090 s 19240496 bytes total]
+1 caution
 2 warnings

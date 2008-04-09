@@ -1,14 +1,18 @@
-ESC/Java version VERSION
-  Prover started:TIME
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Quant.java: Caution: Using given file as the .java file, even though it is not the java file for Quant on the classpath
+    [0.0030 s 23651944 bytes]
 
 Quant ...
+  Prover started:0.068 s 24053496 bytes
+    [0.186 s 24118104 bytes]
 
 Quant: m() ...
-    [TIME]  passed
+    [0.072 s 24164392 bytes]  passed
 
 Quant: n() ...
-    [TIME]  passed
+    [0.0040 s 24221032 bytes]  passed
 
 Quant: Quant() ...
-    [TIME]  passed
-  [TIME total]
+    [0.02 s 24636576 bytes]  passed
+  [0.283 s 24637600 bytes total]
+1 caution

@@ -1,70 +1,60 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/LoopInvariant.java: Caution: Using given file as the .java file, even though it is not the java file for LoopInvariant on the classpath
+    [0.0080 s 21602864 bytes]
 
 LoopInvariant ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.063 s 21838280 bytes
+    [0.182 s 21904360 bytes]
 
 LoopInvariant: m() ...
-------------------------------------------------------------------------
-LoopInvariant.java:10: Warning: Negative loop variant function may not lead to loop exit (DecreasesBound)
-                for (int i=0; i<10; ++i) sum++;
-                            ^
-Associated declaration is "LoopInvariant.java", line 9, col 6:
-                //@ decreases -i;
-                    ^
-Execution trace information:
-    Reached top of loop after 0 iterations in "LoopInvariant.java", line 10, col 2.
-    Reached top of loop after 1 iteration in "LoopInvariant.java", line 10, col 2.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.078 s 22134096 bytes]  passed
 
 LoopInvariant: m2() ...
 ------------------------------------------------------------------------
-LoopInvariant.java:17: Warning: Loop variant function possible not decreased (Decreases)
+src/test/resources/LoopInvariant.java:17: Warning: Loop variant function possible not decreased (Decreases)
                 for (int i=0; i<10; ++i) sum++;
                             ^
-Associated declaration is "LoopInvariant.java", line 16, col 6:
+Associated declaration is "src/test/resources/LoopInvariant.java", line 16, col 6:
                 //@ decreases i;
                     ^
 Execution trace information:
-    Reached top of loop after 0 iterations in "LoopInvariant.java", line 17, col 2.
+    Reached top of loop after 0 iterations in "src/test/resources/LoopInvariant.java", line 17, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.049 s 22476024 bytes]  failed
 
 LoopInvariant: mm() ...
 ------------------------------------------------------------------------
-LoopInvariant.java:24: Warning: Loop invariant possibly does not hold (LoopInv)
+src/test/resources/LoopInvariant.java:24: Warning: Loop invariant possibly does not hold (LoopInv)
                 while (i<5) {
                       ^
-Associated declaration is "LoopInvariant.java", line 23, col 6:
+Associated declaration is "src/test/resources/LoopInvariant.java", line 23, col 6:
                 //@ loop_invariant sum == i;
                     ^
 Execution trace information:
-    Reached top of loop after 0 iterations in "LoopInvariant.java", line 24, col 2.
-    Reached top of loop after 1 iteration in "LoopInvariant.java", line 24, col 2.
+    Reached top of loop after 0 iterations in "src/test/resources/LoopInvariant.java", line 24, col 2.
+    Reached top of loop after 1 iteration in "src/test/resources/LoopInvariant.java", line 24, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.022 s 22752648 bytes]  failed
 
 LoopInvariant: mmm() ...
 ------------------------------------------------------------------------
-LoopInvariant.java:33: Warning: Loop invariant possibly does not hold (LoopInv)
+src/test/resources/LoopInvariant.java:33: Warning: Loop invariant possibly does not hold (LoopInv)
                 for (int i=0; i<10; ++i) sum++;
                             ^
-Associated declaration is "LoopInvariant.java", line 31, col 6:
+Associated declaration is "src/test/resources/LoopInvariant.java", line 31, col 6:
                 //@ loop_invariant sum == 0;
                     ^
 Execution trace information:
-    Reached top of loop after 0 iterations in "LoopInvariant.java", line 33, col 2.
-    Reached top of loop after 1 iteration in "LoopInvariant.java", line 33, col 2.
+    Reached top of loop after 0 iterations in "src/test/resources/LoopInvariant.java", line 33, col 2.
+    Reached top of loop after 1 iteration in "src/test/resources/LoopInvariant.java", line 33, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.025 s 23102936 bytes]  failed
 
 LoopInvariant: LoopInvariant() ...
-    [TIME]  passed
-  [TIME total]
-4 warnings
+    [0.0070 s 23255248 bytes]  passed
+  [0.365 s 23256272 bytes total]
+1 caution
+3 warnings

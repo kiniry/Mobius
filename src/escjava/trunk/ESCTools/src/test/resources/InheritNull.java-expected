@@ -1,157 +1,170 @@
-ESC/Java version VERSION
-  Prover started:TIME
+ESC/Java version ESCJava-CURRENT
+src/test/resources/InheritNull.java: Caution: Using given file as the .java file, even though it is not the java file for InheritNull on the classpath
+    [0.0050 s 19612304 bytes]
 
 InheritNull ...
-InheritNull.java:8: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+src/test/resources/InheritNull.java:8: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m2(int i, /*@ non_null*/ Object o);
                                   ^
-InheritNull.java:74: Associated declaration: 
+src/test/resources/InheritNull.java:74: Associated declaration: 
         /*@ pure */ public void m2(int i,  Object o);
                                            ^
-InheritNull.java:17: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+src/test/resources/InheritNull.java:17: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m6(int i,  /*@ non_null */ Object o);
                                    ^
-InheritNull.java:83: Associated declaration: 
+src/test/resources/InheritNull.java:83: Associated declaration: 
         /*@ pure */ public void m6(int i, Object o);
                                           ^
+  Prover started:0.064 s 20940848 bytes
+    [0.179 s 21014576 bytes]
 
 InheritNull: m1(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 21016624 bytes]  passed immediately
 
 InheritNull: m2(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0010 s 21019752 bytes]  passed immediately
 
 InheritNull: m3(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 21021800 bytes]  passed immediately
 
 InheritNull: m4(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 21024872 bytes]  passed immediately
 
 InheritNull: m5(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 21026920 bytes]  passed immediately
 
 InheritNull: m6(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 21029992 bytes]  passed immediately
 
 InheritNull: InheritNull() ...
-    [TIME]  passed immediately
+    [0.0 s 21031016 bytes]  passed immediately
 
 InheritNull: mm1a() ...
 ------------------------------------------------------------------------
-InheritNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/InheritNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m1(-1,oo); // FAILS
                   ^
-Associated declaration is "InheritNull.java", line 72, col 39:
+Associated declaration is "src/test/resources/InheritNull.java", line 72, col 39:
         /*@ pure */ public void m1(int i, /*@ non_null*/ Object o);
                                               ^
-Associated declaration is "InheritNull.java", line 5, col 27:
+src/test/resources/InheritNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                m1(-1,oo); // FAILS
+                  ^
+Associated declaration is "src/test/resources/InheritNull.java", line 5, col 27:
         public void m1(int i, /*@ non_null*/ Object o);
                                   ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.124 s 21405640 bytes]  failed
 
 InheritNull: mm1b() ...
 ------------------------------------------------------------------------
-InheritNull.java:27: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/InheritNull.java:27: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m1(1,oo); // FAILS
                   ^
-Associated declaration is "InheritNull.java", line 5, col 27:
+Associated declaration is "src/test/resources/InheritNull.java", line 5, col 27:
         public void m1(int i, /*@ non_null*/ Object o);
                                   ^
-Associated declaration is "InheritNull.java", line 72, col 39:
+src/test/resources/InheritNull.java:27: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                m1(1,oo); // FAILS
+                  ^
+Associated declaration is "src/test/resources/InheritNull.java", line 72, col 39:
         /*@ pure */ public void m1(int i, /*@ non_null*/ Object o);
                                               ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.04 s 20114104 bytes]  failed
 
 InheritNull: mm2a() ...
-    [TIME]  passed
+    [0.011 s 20304584 bytes]  passed
 
 InheritNull: mm2b() ...
-    [TIME]  passed
+    [0.011 s 20484976 bytes]  passed
 
 InheritNull: mm3a() ...
-    [TIME]  passed
+    [0.011 s 20684616 bytes]  passed
 
 InheritNull: mm3b() ...
 ------------------------------------------------------------------------
-InheritNull.java:41: Warning: Precondition possibly not established (Pre)
+src/test/resources/InheritNull.java:41: Warning: Precondition possibly not established (Pre)
                 m3(1,oo); // FAILS
                   ^
-Associated declaration is "InheritNull.java", line 10, col 5:
+Associated declaration is "src/test/resources/InheritNull.java", line 10, col 5:
         //@ requires i<0;
             ^
-Associated declaration is "InheritNull.java", line 76, col 39:
+src/test/resources/InheritNull.java:41: Warning: Possible assignment of null to variable declared non_null (NonNull)
+                m3(1,oo); // FAILS
+                  ^
+Associated declaration is "src/test/resources/InheritNull.java", line 76, col 39:
         /*@ pure */ public void m3(int i, /*@ non_null*/ Object o);
                                               ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.021 s 20998992 bytes]  failed
 
 InheritNull: mm4a() ...
-    [TIME]  passed
+    [0.01 s 21189360 bytes]  passed
 
 InheritNull: mm4b() ...
-    [TIME]  passed
+    [0.011 s 21369480 bytes]  passed
 
 InheritNull: mm5a() ...
 ------------------------------------------------------------------------
-InheritNull.java:51: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/InheritNull.java:51: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m5(1,oo); // FAILS
                   ^
-Associated declaration is "InheritNull.java", line 80, col 39:
+Associated declaration is "src/test/resources/InheritNull.java", line 80, col 39:
         /*@ pure */ public void m5(int i, /*@ non_null*/ Object o);
                                               ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.018 s 21625728 bytes]  failed
 
 InheritNull: mm5b() ...
 ------------------------------------------------------------------------
-InheritNull.java:55: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/InheritNull.java:55: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 (new SuperNull()).m5(1,oo); // FAILS
                                     ^
-Associated declaration is "InheritNull.java", line 80, col 39:
+Associated declaration is "src/test/resources/InheritNull.java", line 80, col 39:
         /*@ pure */ public void m5(int i, /*@ non_null*/ Object o);
                                               ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.054 s 22009784 bytes]  failed
 
 InheritNull: mm6a() ...
 ------------------------------------------------------------------------
-InheritNull.java:60: Warning: Precondition possibly not established (Pre)
+src/test/resources/InheritNull.java:60: Warning: Precondition possibly not established (Pre)
                 m6(-1,oo); // FAILS
                   ^
-Associated declaration is "InheritNull.java", line 82, col 5:
+Associated declaration is "src/test/resources/InheritNull.java", line 82, col 5:
         //@ requires i>0;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.024 s 22374440 bytes]  failed
 
 InheritNull: mm6b() ...
-    [TIME]  passed
-  [TIME total]
+    [0.019 s 20044960 bytes]  passed
+  [0.535 s 20045984 bytes total]
 
 SuperNull ...
+    [0.0010 s 20128416 bytes]
 
 SuperNull: m1(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 20131488 bytes]  passed immediately
 
 SuperNull: m2(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 20133536 bytes]  passed immediately
 
 SuperNull: m3(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 20136608 bytes]  passed immediately
 
 SuperNull: m4(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 20138656 bytes]  passed immediately
 
 SuperNull: m5(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 20141728 bytes]  passed immediately
 
 SuperNull: m6(int, java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 20143776 bytes]  passed immediately
 
 SuperNull: SuperNull() ...
-    [TIME]  passed immediately
-  [TIME total]
-2 cautions
-6 warnings
+    [0.0 s 20145824 bytes]  passed immediately
+  [0.01 s 20146848 bytes total]
+3 cautions
+9 warnings

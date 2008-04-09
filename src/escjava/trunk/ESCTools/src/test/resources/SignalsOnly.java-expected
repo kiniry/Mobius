@@ -1,65 +1,67 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/SignalsOnly.java: Caution: Using given file as the .java file, even though it is not the java file for SignalsOnly on the classpath
+    [0.0020 s 25037752 bytes]
 
 SignalsOnly ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 25143488 bytes
+    [0.197 s 25264320 bytes]
 
 SignalsOnly: m(int) ...
-    [TIME]  passed
+    [0.106 s 25656480 bytes]  passed
 
 SignalsOnly: m1(int) ...
 ------------------------------------------------------------------------
-SignalsOnly.java:17: Warning: Postcondition possibly not established (Post)
+src/test/resources/SignalsOnly.java:17: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "SignalsOnly.java", line 13, col 5:
+Associated declaration is "src/test/resources/SignalsOnly.java", line 13, col 5:
         //@ signals_only A;    // WARNING (line 16)
             ^
 Execution trace information:
-    Executed else branch in "SignalsOnly.java", line 15, col 3.
-    Executed then branch in "SignalsOnly.java", line 16, col 15.
-    Executed throw in "SignalsOnly.java", line 16, col 15.
+    Executed else branch in "src/test/resources/SignalsOnly.java", line 15, col 3.
+    Executed then branch in "src/test/resources/SignalsOnly.java", line 16, col 15.
+    Executed throw in "src/test/resources/SignalsOnly.java", line 16, col 15.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.047 s 26244504 bytes]  failed
 
 SignalsOnly: m2(int) ...
 ------------------------------------------------------------------------
-SignalsOnly.java:23: Warning: Postcondition possibly not established (Post)
+src/test/resources/SignalsOnly.java:23: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "SignalsOnly.java", line 19, col 5:
+Associated declaration is "src/test/resources/SignalsOnly.java", line 19, col 5:
         //@ signals_only B;    // WARNING (line 21)
             ^
 Execution trace information:
-    Executed then branch in "SignalsOnly.java", line 21, col 15.
-    Executed throw in "SignalsOnly.java", line 21, col 15.
+    Executed then branch in "src/test/resources/SignalsOnly.java", line 21, col 15.
+    Executed throw in "src/test/resources/SignalsOnly.java", line 21, col 15.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.045 s 26793576 bytes]  failed
 
 SignalsOnly: mp(int) ...
-    [TIME]  passed
+    [0.034 s 27212432 bytes]  passed
 
 SignalsOnly: mm(int) ...
-    [TIME]  passed
+    [0.068 s 25176456 bytes]  passed
 
 SignalsOnly: SignalsOnly() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0040 s 25327192 bytes]  passed
+  [0.503 s 25328216 bytes total]
 
 SignalsOnly$A ...
-    [TIME]
+    [0.0010 s 25398792 bytes]
 
 SignalsOnly$A: A() ...
-    [TIME]  passed
-  [TIME total]
+    [0.011 s 25549584 bytes]  passed
+  [0.013 s 25550608 bytes total]
 
 SignalsOnly$B ...
-    [TIME]
+    [0.0 s 25620104 bytes]
 
 SignalsOnly$B: B() ...
-    [TIME]  passed
-  [TIME total]
+    [0.012 s 25772888 bytes]  passed
+  [0.012 s 25773912 bytes total]
+1 caution
 2 warnings

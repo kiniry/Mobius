@@ -1,133 +1,146 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Initially.java: Caution: Using given file as the .java file, even though it is not the java file for Initially on the classpath
+    [0.143 s 20106328 bytes]
 
 Initially ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.066 s 20256800 bytes
+    [0.202 s 20322536 bytes]
 
 Initially: m() ...
-    [TIME]  passed
+    [0.071 s 20380192 bytes]  passed
 
 Initially: Initially() ...
-    [TIME]  passed
+src/test/resources/Initially.java:14: Error: There is no assignable clause allowing this method call
+        public Initially() {
+                           ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/Initially.java:13: Associated declaration: 
+        //@ modifies this.*;
+            ^
+    [0.015 s 20612984 bytes]  passed
 
 Initially: Initially(int) ...
+src/test/resources/Initially.java:19: Error: There is no assignable clause allowing this method call
+        public Initially(int j) {
+                                ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/Initially.java:18: Associated declaration: 
+        //@ modifies this.*;
+            ^
 ------------------------------------------------------------------------
-Initially.java:20: Warning: Possible violation of initially condition at constructor exit (Initially)
+src/test/resources/Initially.java:20: Warning: Possible violation of initially condition at constructor exit (Initially)
         } // ERROR
         ^
-Associated declaration is "Initially.java", line 8, col 5:
+Associated declaration is "src/test/resources/Initially.java", line 8, col 5:
         //@ initially i == 6;
             ^
-Execution trace information:
-    Executed implicit return in "Initially.java", line 20, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.048 s 20968248 bytes]  failed
+  [0.337 s 20969272 bytes total]
 
 InitiallyA ...
-    [TIME]
+    [0.0020 s 21049832 bytes]
 
 InitiallyA: InitiallyA() ...
-    [TIME]  passed immediately
+    [0.0 s 21051880 bytes]  passed immediately
 
 InitiallyA: p() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 21052904 bytes]  passed immediately
+  [0.0090 s 21053928 bytes total]
 
 InitiallyB ...
-    [TIME]
+    [0.0020 s 21146888 bytes]
 
 InitiallyB: InitiallyB() ...
-    [TIME]  passed immediately
+    [0.0010 s 21147968 bytes]  passed immediately
 
 InitiallyB: m() ...
-    [TIME]  passed
+    [0.021 s 21546640 bytes]  passed
 
 InitiallyB: mm() ...
 ------------------------------------------------------------------------
-Initially.java:49: Warning: Possible assertion failure (Assert)
+src/test/resources/Initially.java:49: Warning: Possible assertion failure (Assert)
                 //@ assert a.j != 4;  // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.024 s 21891656 bytes]  failed
+  [0.05 s 21892680 bytes total]
 
 InitiallyC ...
-    [TIME]
+    [0.0020 s 21966016 bytes]
 
 InitiallyC: InitiallyC() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 21967040 bytes]  passed immediately
+  [0.01 s 21968064 bytes total]
 
 InitiallyD ...
-    [TIME]
+    [0.0020 s 22057936 bytes]
 
 InitiallyD: InitiallyD() ...
-    [TIME]  passed immediately
+    [0.0 s 22059984 bytes]  passed immediately
 
 InitiallyD: m() ...
-    [TIME]  passed
+    [0.055 s 22261184 bytes]  passed
 
 InitiallyD: mm() ...
 ------------------------------------------------------------------------
-Initially.java:75: Warning: Possible assertion failure (Assert)
+src/test/resources/Initially.java:75: Warning: Possible assertion failure (Assert)
                 //@ assert a.j != 4;  // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.04 s 20133248 bytes]  failed
+  [0.098 s 20134272 bytes total]
 
 InitiallyE ...
-    [TIME]
+    [0.0010 s 20208736 bytes]
 
 InitiallyE: InitiallyE() ...
-    [TIME]  passed immediately
+    [0.0 s 20209760 bytes]  passed immediately
 
 InitiallyE: InitiallyE(int) ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0010 s 20211864 bytes]  passed immediately
+  [0.0090 s 20212888 bytes total]
 
 InitiallyF ...
-    [TIME]
+    [0.0030 s 20345688 bytes]
 
 InitiallyF: InitiallyF() ...
-    [TIME]  passed
+    [0.022 s 20573008 bytes]  passed
 
 InitiallyF: InitiallyF(float) ...
 ------------------------------------------------------------------------
-Initially.java:104: Warning: Possible assertion failure (Assert)
+src/test/resources/Initially.java:104: Warning: Possible assertion failure (Assert)
                 //@ assert i == 20; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.028 s 20931376 bytes]  failed
 
 InitiallyF: InitiallyF(int) ...
-    [TIME]  passed
+    [0.014 s 21174400 bytes]  passed
 
 InitiallyF: InitiallyF(int, int) ...
 ------------------------------------------------------------------------
-Initially.java:116: Warning: Possible assertion failure (Assert)
+src/test/resources/Initially.java:116: Warning: Possible assertion failure (Assert)
                 //@ assert i == 20; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.025 s 21547240 bytes]  failed
 
 InitiallyF: InitiallyF(int, int, int) ...
-    [TIME]  passed immediately
+    [0.0 s 21553384 bytes]  passed immediately
 
 InitiallyF: InitiallyF(java.lang.Object) ...
 ------------------------------------------------------------------------
-Initially.java:130: Warning: Possible assertion failure (Assert)
+src/test/resources/Initially.java:130: Warning: Possible assertion failure (Assert)
                 //@ assert i == 18; // ERROR -- constructor called is  ...
                     ^
 Execution trace information:
-    Executed call in "Initially.java", line 129, col 2.
-    Executed implicit return in "Initially.java", line 126, col 1.
-    Returned from inlined call at "Initially.java", line 129, col 2.
+    Executed call in "src/test/resources/Initially.java", line 129, col 2.
+    Executed implicit return in "src/test/resources/Initially.java", line 126, col 1.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.064 s 22141784 bytes]  failed
+  [0.157 s 22142808 bytes total]
+1 caution
 6 warnings
+2 errors

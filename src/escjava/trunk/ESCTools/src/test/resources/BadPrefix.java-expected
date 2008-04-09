@@ -1,12 +1,16 @@
-ESC/Java version VERSION
-Caution: The refinement file .|BadPrefixx.spec in the sequence beginning with .|BadPrefix.java has a prefix that does not match the type name BadPrefix
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/BadPrefix.java: Caution: Using given file as the .java file, even though it is not the java file for BadPrefix on the classpath
+src/test/resources/BadPrefix.java:4: Error: Could not find file referenced in refine annotation: BadPrefixx.spec
+//@ refine "BadPrefixx.spec";
+    ^
+    [0.0030 s 17189176 bytes]
 
 BadPrefix ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.058 s 18182360 bytes
+    [0.16 s 18247296 bytes]
 
 BadPrefix: BadPrefix() ...
-    [TIME]  passed
-  [TIME total]
+    [0.071 s 18398920 bytes]  passed
+  [0.232 s 18399944 bytes total]
 1 caution
+1 error

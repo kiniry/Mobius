@@ -1,38 +1,15 @@
-ESC/Java version VERSION
-.|W.spec:8: Error: Model fields may not be initialized
-        //@ model int p = 0;
-                        ^
-.|W.jml:6: Error: Field is not declared in the java/class file
-        public int j = 0;
-               ^
-.|W.jml:7: Error: Field is not declared in the java/class file
-        public int k;
-               ^
-.|W.spec:6: Error: A field may be initialized only once in a refinement sequence
-        //@ ghost int i = 0;
-                        ^
-.|W.jml:4: Associated declaration: 
-        //@ ghost int i = 0;
-                        ^
-.|W.spec:10: Error: Field is not declared in the java/class file
-        public int j = 0;
-               ^
-.|W.spec:11: Error: Field is not declared in the java/class file
-        public int k = 0;
-               ^
-.|W.spec:12: Error: A java field declaration may not be initialized in a specification file
-        public int m = 0;
-                       ^
-.|W.spec:13: Error: A java field declaration may not be initialized in a specification file
-        public int n = 0;
-                       ^
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/W.java: Caution: Using given file as the .java file, even though it is not the java file for W on the classpath
+//@ refine "W.spec";
+    ^
+    [0.0030 s 26850952 bytes]
 
 W ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.094 s 27845664 bytes
+    [0.213 s 27910912 bytes]
 
 W: W() ...
-    [TIME]  passed
-  [TIME total]
-8 errors
+    [0.089 s 28085320 bytes]  passed
+  [0.303 s 28087368 bytes total]
+1 caution
+1 error

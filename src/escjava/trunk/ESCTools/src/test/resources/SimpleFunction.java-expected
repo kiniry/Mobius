@@ -1,37 +1,36 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/SimpleFunction.java: Caution: Using given file as the .java file, even though it is not the java file for SimpleFunction on the classpath
+    [0.0020 s 25350840 bytes]
 
 SimpleFunction ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 25746680 bytes
+    [0.18 s 25813824 bytes]
 
 SimpleFunction: bump(int) ...
-    [TIME]  passed immediately
+    [0.0 s 25815872 bytes]  passed immediately
 
 SimpleFunction: m() ...
-    [TIME]  passed
+    [0.076 s 25967400 bytes]  passed
 
 SimpleFunction: n() ...
 ------------------------------------------------------------------------
-SimpleFunction.java:21: Warning: Postcondition possibly not established (Post)
+src/test/resources/SimpleFunction.java:21: Warning: Postcondition possibly not established (Post)
         public void n() {} // FAILS
                          ^
-Associated declaration is "SimpleFunction.java", line 20, col 5:
+Associated declaration is "src/test/resources/SimpleFunction.java", line 20, col 5:
         //@ ensures bump(f+j) < 10;
             ^
-Execution trace information:
-    Executed implicit return in "SimpleFunction.java", line 21, col 18.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.044 s 26201400 bytes]  failed
 
 SimpleFunction: bump2(int) ...
-    [TIME]  passed immediately
+    [0.0 s 26203448 bytes]  passed immediately
 
 SimpleFunction: mm(int) ...
-    [TIME]  passed
+    [0.012 s 26350872 bytes]  passed
 
 SimpleFunction: SimpleFunction() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0080 s 26532408 bytes]  passed
+  [0.321 s 26533432 bytes total]
+1 caution
 1 warning

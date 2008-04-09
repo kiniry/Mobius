@@ -1,73 +1,94 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/AssertNone.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert true : "Hi";
+                ^
+src/test/resources/AssertNone.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert false : 0;
+                ^
+src/test/resources/AssertNone.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert true : "Hi";
+                ^
+src/test/resources/AssertNone.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert false : 0; 
+                ^
+src/test/resources/AssertNone.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert true : "Hi";
+                ^
+src/test/resources/AssertNone.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+                assert false : 0; //@ nowarn Assert;
+                ^
+src/test/resources/AssertNone.java: Caution: Using given file as the .java file, even though it is not the java file for AssertNone on the classpath
+    [0.0050 s 18958552 bytes]
 
 AssertNone ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 19053368 bytes
+    [0.228 s 19190168 bytes]
 
 AssertNone: m_Exception_Assert(int) ...
-    [TIME]  passed
+    [0.089 s 19245952 bytes]  passed
 
 AssertNone: mm_Exception_Assert(int) ...
-    [TIME]  passed
+    [0.0050 s 19309600 bytes]  passed
 
 AssertNone: mm_Nowarn_Nowarn(int) ...
-    [TIME]  passed
+    [0.0040 s 19372224 bytes]  passed
 
 AssertNone: nAssertWarn(int) ...
 ------------------------------------------------------------------------
-AssertNone.java:29: Warning: Possible assertion failure (Assert)
+src/test/resources/AssertNone.java:29: Warning: Possible assertion failure (Assert)
                 //@ assert false;
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.022 s 19603792 bytes]  failed
 
 AssertNone: nNowarn(int) ...
-    [TIME]  passed
+    [0.0040 s 19668800 bytes]  passed
 
 AssertNone: pPostwarning() ...
 ------------------------------------------------------------------------
-AssertNone.java:42: Warning: Postcondition possibly not established (Post)
+src/test/resources/AssertNone.java:42: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "AssertNone.java", line 39, col 5:
+Associated declaration is "src/test/resources/AssertNone.java", line 39, col 5:
         //@ exsures (java.lang.AssertionError e) false;
             ^
 Execution trace information:
-    Executed throw in "AssertNone.java", line 41, col 2.
+    Executed throw in "src/test/resources/AssertNone.java", line 41, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.033 s 20040176 bytes]  failed
 
 AssertNone: pExceptionwarningShouldCompilerError() ...
 ------------------------------------------------------------------------
-AssertNone.java:51: Warning: Possible unexpected exception (Exception)
+src/test/resources/AssertNone.java:51: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "AssertNone.java", line 50, col 2.
+    Executed throw in "src/test/resources/AssertNone.java", line 50, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.029 s 20392352 bytes]  failed
 
 AssertNone: qNoWarning(int) ...
-    [TIME]  passed
+    [0.018 s 20611584 bytes]  passed
 
 AssertNone: qqExceptionWarning(int) ...
 ------------------------------------------------------------------------
-AssertNone.java:62: Warning: Possible unexpected exception (Exception)
+src/test/resources/AssertNone.java:62: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "AssertNone.java", line 61, col 2.
+    Executed throw in "src/test/resources/AssertNone.java", line 61, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.029 s 20966368 bytes]  failed
 
 AssertNone: rNowarning() ...
-    [TIME]  passed
+    [0.041 s 21164576 bytes]  passed
 
 AssertNone: AssertNone() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0080 s 21316120 bytes]  passed
+  [0.511 s 21317192 bytes total]
+1 caution
 4 warnings
+6 errors

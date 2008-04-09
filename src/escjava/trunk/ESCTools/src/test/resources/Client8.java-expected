@@ -1,38 +1,40 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Client8.java: Caution: Using given file as the .java file, even though it is not the java file for Client8 on the classpath
+    [0.0030 s 19018400 bytes]
 
 Client8 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 20063608 bytes
+    [0.164 s 20135408 bytes]
 
 Client8: unique(IntList) ...
-    [TIME]  passed
+    [0.079 s 19102600 bytes]  passed
 
 Client8: clear(IntList) ...
 ------------------------------------------------------------------------
-Client8.java:15: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/Client8.java:15: Warning: Possible violation of modifies clause (Modifies)
                 list.clear();  // ERROR
                           ^
-Associated declaration is "Client8.java", line 30, col 21:
+Associated declaration is "src/test/resources/Client8.java", line 30, col 21:
         //@ modifies length,isEmpty;
                             ^
-Associated declaration is "Client8.java", line 11, col 5:
+Associated declaration is "src/test/resources/Client8.java", line 11, col 5:
         //@ modifies list.length; // MISSING list.isEmpty;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.055 s 19565016 bytes]  failed
 
 Client8: Client8() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0070 s 19723208 bytes]  passed
+  [0.306 s 19724232 bytes total]
 
 IntList ...
-    [TIME]
+    [0.0010 s 19789248 bytes]
 
 IntList: unique() ...
-    [TIME]  passed immediately
+    [0.0 s 19790272 bytes]  passed immediately
 
 IntList: clear() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 19792320 bytes]  passed immediately
+  [0.0080 s 19793344 bytes total]
+1 caution
 1 warning

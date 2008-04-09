@@ -1,12 +1,12 @@
-ESC/Java version VERSION
-Error: The command-line argument RefineNoJava.java was not in the refinement sequence for type RefineNoJava: .|RefineNoJava.refines-java
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/RefineNoJava.java: Caution: Using given file as the .java file, even though it is not the java file for RefineNoJava on the classpath
+    [0.0010 s 23659944 bytes]
 
 RefineNoJava ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 24001168 bytes
+    [0.182 s 24066192 bytes]
 
 RefineNoJava: RefineNoJava() ...
-    [TIME]  passed
-  [TIME total]
-1 error
+    [0.07 s 24216928 bytes]  passed
+  [0.252 s 24217952 bytes total]
+1 caution

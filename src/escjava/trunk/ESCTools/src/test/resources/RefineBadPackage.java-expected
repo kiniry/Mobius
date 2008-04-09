@@ -1,14 +1,16 @@
-ESC/Java version VERSION
-.|RefineBadPackage.spec:1: Error: Package name does not match the package name in RefineBadPackage.java: junittests vs. 
-package junittests;
-^
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/RefineBadPackage.java: Caution: Using given file as the .java file, even though it is not the java file for RefineBadPackage on the classpath
+src/test/resources/RefineBadPackage.java:2: Error: Could not find file referenced in refine annotation: RefineBadPackage.spec
+//@ refine "RefineBadPackage.spec";
+    ^
+    [0.228 s 24402600 bytes]
 
 RefineBadPackage ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 25397160 bytes
+    [0.163 s 25463616 bytes]
 
 RefineBadPackage: RefineBadPackage() ...
-    [TIME]  passed
-  [TIME total]
+    [0.07 s 25616400 bytes]  passed
+  [0.233 s 25617424 bytes total]
+1 caution
 1 error

@@ -1,39 +1,41 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/AnnotationPlacement.java: Caution: Using given file as the .java file, even though it is not the java file for AnnotationPlacement on the classpath
+    [0.0050 s 17364264 bytes]
 
 AnnotationPlacement ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.058 s 18467376 bytes
+    [0.193 s 18539792 bytes]
 
 AnnotationPlacement: m() ...
-    [TIME]  passed
+    [0.067 s 18619320 bytes]  passed
 
 AnnotationPlacement: mm() ...
 ------------------------------------------------------------------------
-AnnotationPlacement.java:10: Warning: Method declared non_null may return null (NonNullResult)
+src/test/resources/AnnotationPlacement.java:10: Warning: Method declared non_null may return null (NonNullResult)
         { return null; }        
                        ^
-Associated declaration is "AnnotationPlacement.java", line 9, col 25:
+Associated declaration is "src/test/resources/AnnotationPlacement.java", line 9, col 25:
         public Object mm() //-@ non_null pure
                                 ^
 Execution trace information:
-    Executed return in "AnnotationPlacement.java", line 10, col 3.
+    Executed return in "src/test/resources/AnnotationPlacement.java", line 10, col 3.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.048 s 18874944 bytes]  failed
 
 AnnotationPlacement: p(java.lang.Object, java.lang.Object) ...
-    [TIME]  passed
+    [0.029 s 17520008 bytes]  passed
 
 AnnotationPlacement: AnnotationPlacement() ...
 ------------------------------------------------------------------------
-AnnotationPlacement.java:13: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/AnnotationPlacement.java:13: Warning: Possible assignment of null to variable declared non_null (NonNull)
         public Object ff=null /*-@ non_null */;
                         ^
-Associated declaration is "AnnotationPlacement.java", line 13, col 28:
+Associated declaration is "src/test/resources/AnnotationPlacement.java", line 13, col 28:
         public Object ff=null /*-@ non_null */;
                                    ^
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.037 s 17993896 bytes]  failed
+  [0.375 s 17994968 bytes total]
+1 caution
 2 warnings

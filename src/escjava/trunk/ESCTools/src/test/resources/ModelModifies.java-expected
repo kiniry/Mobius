@@ -1,22 +1,24 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModelModifies.java: Caution: Using given file as the .java file, even though it is not the java file for ModelModifies on the classpath
+    [0.0020 s 23291472 bytes]
 
 ModelModifies ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.071 s 23247160 bytes
+    [0.184 s 23314264 bytes]
 
 ModelModifies: m() ...
-    [TIME]  passed
+    [0.065 s 23391496 bytes]  passed
 
 ModelModifies: mm() ...
-    [TIME]  passed
+    [0.0060 s 23470776 bytes]  passed
 
 ModelModifies: p(int) ...
-    [TIME]  passed
+    [0.012 s 23563504 bytes]  passed
 
 ModelModifies: mmm() ...
-    [TIME]  passed
+    [0.04 s 23772568 bytes]  passed
 
 ModelModifies: ModelModifies() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0060 s 23936656 bytes]  passed
+  [0.313 s 23937680 bytes total]
+1 caution

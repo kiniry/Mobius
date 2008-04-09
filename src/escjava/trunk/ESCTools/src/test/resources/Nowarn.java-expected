@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Nowarn.java: Caution: Using given file as the .java file, even though it is not the java file for Nowarn on the classpath
+    [0.0020 s 24115464 bytes]
 
 Nowarn ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 24117008 bytes
+    [0.175 s 24185744 bytes]
 
 Nowarn: m() ...
-    [TIME]  passed
+    [0.071 s 24278336 bytes]  passed
 
 Nowarn: Nowarn() ...
-    [TIME]  passed
-  [TIME total]
+    [0.05 s 24764360 bytes]  passed
+  [0.296 s 24765384 bytes total]
+1 caution

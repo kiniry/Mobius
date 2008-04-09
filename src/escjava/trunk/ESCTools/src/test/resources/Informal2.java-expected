@@ -1,11 +1,12 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Informal2.java: Caution: Using given file as the .java file, even though it is not the java file for Informal2 on the classpath
+    [0.0010 s 20477600 bytes]
 
 Informal2 ...
-Informal2.java:5: Error: Invalid types (int and boolean) in equality comparison
+src/test/resources/Informal2.java:5: Error: Invalid types (int and boolean) in equality comparison
         //@ ensures 0 == (* number *);
                       ^
 Caution: Turning off extended static checking due to type error(s)
-  [TIME total] (aborted)
-1 caution
+  [0.0090 s 21119688 bytes total] (aborted)
+2 cautions
 1 error

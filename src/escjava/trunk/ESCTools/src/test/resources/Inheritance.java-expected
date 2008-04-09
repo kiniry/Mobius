@@ -1,53 +1,55 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Inheritance.java: Caution: Using given file as the .java file, even though it is not the java file for Inheritance on the classpath
+    [0.0020 s 20663152 bytes]
 
 Super ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.065 s 21666112 bytes
+    [0.185 s 21730736 bytes]
 
 Super: m() ...
-    [TIME]  passed immediately
+    [0.0 s 21731760 bytes]  passed immediately
 
 Super: Super() ...
-    [TIME]  passed
-  [TIME total]
+    [0.071 s 21883616 bytes]  passed
+  [0.257 s 21884640 bytes total]
 
 Sub ...
-    [TIME]
+    [0.0040 s 21969392 bytes]
 
 Sub: m() ...
-    [TIME]  passed immediately
+    [0.0 s 21970416 bytes]  passed immediately
 
 Sub: Sub() ...
-    [TIME]  passed
-  [TIME total]
+    [0.012 s 22113440 bytes]  passed
+  [0.017 s 22114464 bytes total]
 
 Inheritance ...
-    [TIME]
+    [0.027 s 20772088 bytes]
 
 Inheritance: Inheritance() ...
-    [TIME]  passed immediately
+    [0.0 s 20773112 bytes]  passed immediately
 
 Inheritance: mm(Super) ...
-    [TIME]  passed
+    [0.143 s 21454672 bytes]  passed
 
 Inheritance: m3(Super) ...
 ------------------------------------------------------------------------
-Inheritance.java:26: Warning: Possible assertion failure (Assert)
+src/test/resources/Inheritance.java:26: Warning: Possible assertion failure (Assert)
             //@ assert s.m() == 0;         // FIXME should be ok
                 ^
 Execution trace information:
-    Executed then branch in "Inheritance.java", line 25, col 30.
+    Executed then branch in "src/test/resources/Inheritance.java", line 25, col 30.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.033 s 21798064 bytes]  failed
 
 Inheritance: m2(Super) ...
 ------------------------------------------------------------------------
-Inheritance.java:31: Warning: Possible assertion failure (Assert)
+src/test/resources/Inheritance.java:31: Warning: Possible assertion failure (Assert)
         //@ assert s.m() == 0; // ERROR
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.03 s 22073616 bytes]  failed
+  [0.234 s 22074640 bytes total]
+1 caution
 2 warnings

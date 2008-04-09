@@ -1,146 +1,146 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Constraint.java: Caution: Using given file as the .java file, even though it is not the java file for Constraint on the classpath
+    [0.0040 s 19221728 bytes]
 
 Constraint ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 19207240 bytes
+    [0.176 s 19273488 bytes]
 
 Constraint: m() ...
-    [TIME]  passed
+    [0.07 s 19337328 bytes]  passed
 
 Constraint: mm() ...
 ------------------------------------------------------------------------
-Constraint.java:15: Warning: Possible violation of object constraint at exit (Constraint)
+src/test/resources/Constraint.java:15: Warning: Possible violation of object constraint at exit (Constraint)
         } // ERROR
         ^
-Associated declaration is "Constraint.java", line 7, col 5:
+Associated declaration is "src/test/resources/Constraint.java", line 7, col 5:
         //@ constraint i == \old(i);
             ^
-Execution trace information:
-    Executed implicit return in "Constraint.java", line 15, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.017 s 19541960 bytes]  failed
 
 Constraint: Constraint() ...
-    [TIME]  passed
-  [TIME total]
+src/test/resources/Constraint.java:18: Error: There is no assignable clause allowing this method call
+        public Constraint() {} // OK
+                            ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/Constraint.java:17: Associated declaration: 
+        //@ modifies i, this.*;
+            ^
+    [0.037 s 19723520 bytes]  passed
+  [0.301 s 19724544 bytes total]
 
 ConstraintA ...
-    [TIME]
+    [0.0050 s 19839024 bytes]
 
 ConstraintA: ConstraintA() ...
-    [TIME]  passed immediately
+    [0.0 s 19840048 bytes]  passed immediately
 
 ConstraintA: m() ...
-    [TIME]  passed
+    [0.02 s 20149408 bytes]  passed
 
 ConstraintA: mm() ...
 ------------------------------------------------------------------------
-Constraint.java:39: Warning: Possible assertion failure (Assert)
+src/test/resources/Constraint.java:39: Warning: Possible assertion failure (Assert)
                 //@ assert o.j != 6; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.03 s 20596840 bytes]  failed
+  [0.056 s 20597864 bytes total]
 
 ConstraintB ...
-    [TIME]
+    [0.0020 s 20665192 bytes]
 
 ConstraintB: m() ...
-    [TIME]  passed immediately
+    [0.0 s 20666216 bytes]  passed immediately
 
 ConstraintB: ConstraintB() ...
-    [TIME]  passed
-  [TIME total]
+    [0.017 s 20828560 bytes]  passed
+  [0.019 s 20829584 bytes total]
 
 ConstraintSA ...
-    [TIME]
+    [0.0030 s 20941048 bytes]
 
 ConstraintSA: ConstraintSA() ...
-    [TIME]  passed immediately
+    [0.0 s 20942072 bytes]  passed immediately
 
 ConstraintSA: m() ...
-    [TIME]  passed
+    [0.014 s 21089080 bytes]  passed
 
 ConstraintSA: mm() ...
 ------------------------------------------------------------------------
-Constraint.java:72: Warning: Possible assertion failure (Assert)
+src/test/resources/Constraint.java:72: Warning: Possible assertion failure (Assert)
                 //@ assert o.sj != 6; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.048 s 21343536 bytes]  failed
+  [0.065 s 21344560 bytes total]
 
 ConstraintC ...
-    [TIME]
+    [0.0010 s 21414040 bytes]
 
 ConstraintC: sm() ...
-    [TIME]  passed immediately
+    [0.0 s 21416088 bytes]  passed immediately
 
 ConstraintC: sh() ...
-    [TIME]  passed immediately
+    [0.0 s 21418136 bytes]  passed immediately
 
 ConstraintC: sz() ...
 ------------------------------------------------------------------------
-Constraint.java:94: Warning: Possible assertion failure (Assert)
+src/test/resources/Constraint.java:94: Warning: Possible assertion failure (Assert)
                 //@ assert sj == 2; // ERROR - sh is helper
                     ^
 Execution trace information:
-    Executed call in "Constraint.java", line 93, col 2.
-    Executed implicit return in "Constraint.java", line 86, col 19.
-    Returned from inlined call at "Constraint.java", line 93, col 2.
+    Executed call in "src/test/resources/Constraint.java", line 93, col 2.
+    Executed implicit return in "src/test/resources/Constraint.java", line 86, col 19.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.031 s 19302696 bytes]  failed
 
 ConstraintC: ConstraintC() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0050 s 19457712 bytes]  passed
+  [0.038 s 19458736 bytes total]
 
 ConstraintR ...
-    [TIME]
+    [0.0020 s 19543064 bytes]
 
 ConstraintR: ConstraintR() ...
-    [TIME]  passed
-  [TIME total]
+    [0.012 s 19705408 bytes]  passed
+  [0.014 s 19706432 bytes total]
 
 ConstraintI ...
-    [TIME]
-  [TIME total]
+    [0.0020 s 19760896 bytes]
+  [0.0090 s 19761920 bytes total]
 
 ConstraintX ...
-    [TIME]
+    [0.0010 s 19850176 bytes]
 
 ConstraintX: m() ...
 ------------------------------------------------------------------------
-Constraint.java:116: Warning: Possible violation of object constraint at exit (Constraint)
+src/test/resources/Constraint.java:116: Warning: Possible violation of object constraint at exit (Constraint)
         } // ERROR - fails ConstraintI
         ^
-Associated declaration is "Constraint.java", line 108, col 5:
+Associated declaration is "src/test/resources/Constraint.java", line 108, col 5:
         //@ constraint !(this instanceof ConstraintX);
             ^
-Execution trace information:
-    Executed implicit return in "Constraint.java", line 116, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.029 s 20056216 bytes]  failed
 
 ConstraintX: mm() ...
 ------------------------------------------------------------------------
-Constraint.java:120: Warning: Possible violation of object constraint at exit (Constraint)
+src/test/resources/Constraint.java:120: Warning: Possible violation of object constraint at exit (Constraint)
         } // ERROR - fails ConstraintR
         ^
-Associated declaration is "Constraint.java", line 102, col 5:
+Associated declaration is "src/test/resources/Constraint.java", line 102, col 5:
         //@ constraint k == \old(k) + 3;
             ^
-Execution trace information:
-    Executed implicit return in "Constraint.java", line 120, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.046 s 20263176 bytes]  failed
 
 ConstraintX: ConstraintX() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0050 s 20411568 bytes]  passed
+  [0.082 s 20412592 bytes total]
+1 caution
 6 warnings
+1 error

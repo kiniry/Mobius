@@ -1,88 +1,90 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModN.java: Caution: Using given file as the .java file, even though it is not the java file for ModN on the classpath
+    [0.0020 s 22103512 bytes]
 
 ModN ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.065 s 22403048 bytes
+    [0.229 s 22471432 bytes]
 
 ModN: mok() ...
-    [TIME]  passed
+    [0.073 s 22569144 bytes]  passed
 
 ModN: m() ...
 ------------------------------------------------------------------------
-ModN.java:18: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/ModN.java:18: Warning: Possible violation of modifies clause (Modifies)
                 j = 0;
                 ^
-Associated declaration is "ModN.java", line 16, col 5:
+Associated declaration is "src/test/resources/ModN.java", line 16, col 5:
         //@ modifies i,k;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.044 s 22809472 bytes]  failed
 
 ModN: mm() ...
 ------------------------------------------------------------------------
-ModN.java:26: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/ModN.java:26: Warning: Possible violation of modifies clause (Modifies)
                 k = 0;
                 ^
-Associated declaration is "ModN.java", line 21, col 5:
+Associated declaration is "src/test/resources/ModN.java", line 21, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.017 s 23029560 bytes]  failed
 
 ModN: mmm() ...
 ------------------------------------------------------------------------
-ModN.java:34: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/ModN.java:34: Warning: Possible violation of modifies clause (Modifies)
                 m = 0;
                 ^
-Associated declaration is "ModN.java", line 29, col 5:
+Associated declaration is "src/test/resources/ModN.java", line 29, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.018 s 23257840 bytes]  failed
 
 ModN: p() ...
 ------------------------------------------------------------------------
-ModN.java:45: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/ModN.java:45: Warning: Possible violation of modifies clause (Modifies)
                 if (i == 0) j = 0;
                             ^
-Associated declaration is "ModN.java", line 41, col 5:
+Associated declaration is "src/test/resources/ModN.java", line 41, col 5:
         //@ modifies k;
             ^
 Execution trace information:
-    Executed else branch in "ModN.java", line 43, col 2.
-    Executed else branch in "ModN.java", line 44, col 2.
-    Executed then branch in "ModN.java", line 45, col 14.
+    Executed else branch in "src/test/resources/ModN.java", line 43, col 2.
+    Executed else branch in "src/test/resources/ModN.java", line 44, col 2.
+    Executed then branch in "src/test/resources/ModN.java", line 45, col 14.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.025 s 23630376 bytes]  failed
 
 ModN: pp() ...
 ------------------------------------------------------------------------
-ModN.java:54: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/ModN.java:54: Warning: Possible violation of modifies clause (Modifies)
                 if (i==0) k=0;
                           ^
-Associated declaration is "ModN.java", line 49, col 5:
+Associated declaration is "src/test/resources/ModN.java", line 49, col 5:
         //@ modifies j;
             ^
 Execution trace information:
-    Executed then branch in "ModN.java", line 54, col 12.
+    Executed then branch in "src/test/resources/ModN.java", line 54, col 12.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.02 s 23885744 bytes]  failed
 
 ModN: pa() ...
 ------------------------------------------------------------------------
-ModN.java:62: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/ModN.java:62: Warning: Possible violation of modifies clause (Modifies)
                 a = null;
                 ^
-Associated declaration is "ModN.java", line 60, col 5:
+Associated declaration is "src/test/resources/ModN.java", line 60, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.017 s 24105832 bytes]  failed
 
 ModN: ModN() ...
-    [TIME]  passed
-  [TIME total]
+    [0.01 s 24301848 bytes]  passed
+  [0.454 s 24302872 bytes total]
+1 caution
 6 warnings

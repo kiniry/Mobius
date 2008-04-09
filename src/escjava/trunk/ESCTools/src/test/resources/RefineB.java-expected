@@ -1,28 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/RefineB.java: Caution: Using given file as the .java file, even though it is not the java file for RefineB on the classpath
+src/test/resources/RefineB.java:1: Error: Could not find file referenced in refine annotation: RefineB.java-refined
+//@ refine "RefineB.java-refined";
+    ^
+    [0.212 s 23099424 bytes]
 
 RefineB ...
-  Prover started:TIME
-    [TIME]
-
-RefineB: m(int) ...
-    [TIME]  passed
-
-RefineB: n() ...
-------------------------------------------------------------------------
-RefineB.java:13: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "RefineB.java", line 11, col 5:
+src/test/resources/RefineB.java:11: Error: Undefined variable 'b'
         //@ ensures b;
-            ^
-Execution trace information:
-    Executed implicit return in "RefineB.java", line 13, col 1.
-
-------------------------------------------------------------------------
-    [TIME]  failed
-
-RefineB: RefineB() ...
-    [TIME]  passed
-  [TIME total]
-1 warning
+                    ^
+Caution: Turning off extended static checking due to type error(s)
+  [0.0090 s 23769520 bytes total] (aborted)
+2 cautions
+2 errors

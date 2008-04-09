@@ -1,22 +1,10 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/SpecFileRef2.java: Caution: Using given file as the .java file, even though it is not the java file for SpecFileRef2 on the classpath
+    [0.0020 s 25348920 bytes]
 
 SpecFileRef2 ...
-  Prover started:TIME
-    [TIME]
-
-SpecFileRef2: n() ...
-------------------------------------------------------------------------
-SpecFileRef2.java:6: Warning: Precondition possibly not established (Pre)
-                s.m();
-                   ^
-Associated declaration is ".|SpecFileHelper.jml", line 4, col 5:
-        //@ requires false;
-            ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-SpecFileRef2: SpecFileRef2() ...
-    [TIME]  passed
-  [TIME total]
-1 warning
+src/test/resources/SpecFileRef2.java:5: Fatal error: Can't find type named "SpecFileHelper"
+                SpecFileHelper s = new SpecFileHelper();
+                ^
+1 caution
+1 error

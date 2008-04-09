@@ -1,26 +1,28 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Everything.java: Caution: Using given file as the .java file, even though it is not the java file for Everything on the classpath
+    [0.022 s 19411088 bytes]
 
 Everything ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.064 s 20427696 bytes
+    [0.248 s 20498888 bytes]
 
 Everything: m() ...
-    [TIME]  passed
+    [0.0070 s 20556544 bytes]  passed
 
 Everything: n() ...
-    [TIME]  passed
+    [0.0070 s 20628480 bytes]  passed
 
 Everything: Everything() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0070 s 20774192 bytes]  passed
+  [0.269 s 20775216 bytes total]
 
 S ...
-    [TIME]
+    [0.048 s 20843608 bytes]
 
 S: n() ...
-    [TIME]  passed
+    [0.0040 s 20899160 bytes]  passed
 
 S: S() ...
-    [TIME]  passed
-  [TIME total]
+    [0.011 s 21059536 bytes]  passed
+  [0.063 s 21060560 bytes total]
+1 caution

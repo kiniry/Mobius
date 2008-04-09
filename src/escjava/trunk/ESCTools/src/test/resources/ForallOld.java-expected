@@ -1,48 +1,44 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ForallOld.java: Caution: Using given file as the .java file, even though it is not the java file for ForallOld on the classpath
+    [0.0040 s 19684104 bytes]
 
 ForallOld ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.059 s 20741776 bytes
+    [0.161 s 20807512 bytes]
 
 ForallOld: mm() ...
-    [TIME]  passed
+    [0.07 s 20877472 bytes]  passed
 
 ForallOld: m3() ...
 ------------------------------------------------------------------------
-ForallOld.java:15: Warning: Postcondition possibly not established (Post)
+src/test/resources/ForallOld.java:15: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "ForallOld.java", line 13, col 5:
+Associated declaration is "src/test/resources/ForallOld.java", line 13, col 5:
         //@ ensures x == 6; // FAILS
             ^
-Execution trace information:
-    Executed implicit return in "ForallOld.java", line 15, col 1.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.016 s 21071752 bytes]  failed
 
 ForallOld: m4() ...
-    [TIME]  passed
+    [0.034 s 21162504 bytes]  passed
 
 ForallOld: m() ...
-    [TIME]  passed
+    [0.027 s 19812136 bytes]  passed
 
 ForallOld: m9() ...
 ------------------------------------------------------------------------
-ForallOld.java:36: Warning: Postcondition possibly not established (Post)
+src/test/resources/ForallOld.java:36: Warning: Postcondition possibly not established (Post)
         public void m9() {}
                           ^
-Associated declaration is "ForallOld.java", line 35, col 5:
+Associated declaration is "src/test/resources/ForallOld.java", line 35, col 5:
         //@ ensures x+y+z == a+b+c;
             ^
-Execution trace information:
-    Executed implicit return in "ForallOld.java", line 36, col 19.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.015 s 19990408 bytes]  failed
 
 ForallOld: ForallOld() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0060 s 20149432 bytes]  passed
+  [0.329 s 20150456 bytes total]
+1 caution
 2 warnings

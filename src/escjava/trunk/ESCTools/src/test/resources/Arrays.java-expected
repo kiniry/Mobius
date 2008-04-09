@@ -1,100 +1,52 @@
-Arrays.java:8: Warning: Postcondition possibly not established (Post)
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Arrays.java: Caution: Using given file as the .java file, even though it is not the java file for Arrays on the classpath
+    [0.0060 s 18326696 bytes]
+
+Arrays ...
+  Prover started:0.059 s 18322456 bytes
+    [0.184 s 18388488 bytes]
+
+Arrays: m() ...
+------------------------------------------------------------------------
+src/test/resources/Arrays.java:8: Warning: Postcondition possibly not established (Post)
         public void m() {}
                          ^
-Associated declaration is "Arrays.java", line 5, col 5:
+Associated declaration is "src/test/resources/Arrays.java", line 5, col 5:
         //@ ensures (new int[5]).length == 5;
             ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 8, col 18.
+------------------------------------------------------------------------
+    [0.08 s 18653576 bytes]  failed
 
-Arrays.java:8: Warning: Postcondition possibly not established (Post)
-        public void m() {}
-                         ^
-Associated declaration is "Arrays.java", line 6, col 5:
-        //@ ensures (new double[6][7]).length == 7;
-            ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 8, col 18.
-
-Arrays.java:8: Warning: Postcondition possibly not established (Post)
-        public void m() {}
-                         ^
-Associated declaration is "Arrays.java", line 7, col 5:
-        //@ ensures (new double[6][7])[0].length == 6;
-            ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 8, col 18.
-
-Arrays.java:16: Warning: Postcondition possibly not established (Post)
+Arrays: n() ...
+------------------------------------------------------------------------
+src/test/resources/Arrays.java:16: Warning: Postcondition possibly not established (Post)
         public void n() {}
                          ^
-Associated declaration is "Arrays.java", line 11, col 5:
+Associated declaration is "src/test/resources/Arrays.java", line 11, col 5:
         //@ ensures (new Arrays[2])[0] == null;
             ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 16, col 18.
+------------------------------------------------------------------------
+    [0.05 s 18920984 bytes]  failed
 
-Arrays.java:16: Warning: Postcondition possibly not established (Post)
-        public void n() {}
-                         ^
-Associated declaration is "Arrays.java", line 12, col 5:
-        //@ ensures (new int[2])[0] == 0;
-            ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 16, col 18.
-
-Arrays.java:16: Warning: Postcondition possibly not established (Post)
-        public void n() {}
-                         ^
-Associated declaration is "Arrays.java", line 13, col 5:
-        //@ ensures (new double[2])[0] == 0.0;
-            ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 16, col 18.
-
-Arrays.java:16: Warning: Postcondition possibly not established (Post)
-        public void n() {}
-                         ^
-Associated declaration is "Arrays.java", line 14, col 5:
-        //@ ensures (new int[2][3])[0][0] == 0;
-            ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 16, col 18.
-
-Arrays.java:16: Warning: Postcondition possibly not established (Post)
-        public void n() {}
-                         ^
-Associated declaration is "Arrays.java", line 15, col 5:
-        //@ ensures (new int[2][3])[0] != null;
-            ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 16, col 18.
-
-Arrays.java:21: Warning: Postcondition possibly not established (Post)
+Arrays: p() ...
+------------------------------------------------------------------------
+src/test/resources/Arrays.java:21: Warning: Postcondition possibly not established (Post)
         public void p() {}
                          ^
-Associated declaration is "Arrays.java", line 18, col 5:
+Associated declaration is "src/test/resources/Arrays.java", line 18, col 5:
         //@ ensures \typeof(new Arrays[2]) == \type(Arrays[]);
             ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 21, col 18.
+------------------------------------------------------------------------
+    [0.025 s 19149640 bytes]  failed
 
-Arrays.java:21: Warning: Postcondition possibly not established (Post)
-        public void p() {}
-                         ^
-Associated declaration is "Arrays.java", line 19, col 5:
-        //@ ensures \typeof(new int[2]) == \type(int[]);
-            ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 21, col 18.
+Arrays: q() ...
+    [0.01 s 19227448 bytes]  passed
 
-Arrays.java:21: Warning: Postcondition possibly not established (Post)
-        public void p() {}
-                         ^
-Associated declaration is "Arrays.java", line 20, col 5:
-        //@ ensures \typeof(new int[2][3]) == \type(int[][]);
-            ^
-Execution trace information:
-    Executed implicit return in "Arrays.java", line 21, col 18.
+Arrays: qq() ...
+    [0.015 s 19345888 bytes]  passed
 
-11 warnings
+Arrays: Arrays() ...
+    [0.0070 s 19508272 bytes]  passed
+  [0.372 s 19509344 bytes total]
+1 caution
+3 warnings

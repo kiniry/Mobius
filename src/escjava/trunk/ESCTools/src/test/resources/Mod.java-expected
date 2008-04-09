@@ -1,23 +1,25 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Mod.java: Caution: Using given file as the .java file, even though it is not the java file for Mod on the classpath
+    [0.0030 s 22532960 bytes]
 
 Mod ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 22846184 bytes
+    [0.18 s 22925168 bytes]
 
 Mod: mm() ...
-    [TIME]  passed
+    [0.078 s 23065032 bytes]  passed
 
 Mod: mmm() ...
-    [TIME]  passed
+    [0.044 s 23268008 bytes]  passed
 
 Mod: Mod() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 23269032 bytes]  passed immediately
+  [0.303 s 23270056 bytes total]
 
 ModA ...
-    [TIME]
+    [0.0010 s 23337456 bytes]
 
 ModA: ModA() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 23338480 bytes]  passed immediately
+  [0.0080 s 23339504 bytes total]
+1 caution

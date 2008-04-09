@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModelProgram.java: Caution: Using given file as the .java file, even though it is not the java file for ModelProgram on the classpath
+    [0.0020 s 21773024 bytes]
 
 ModelProgram ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 22784888 bytes
+    [0.163 s 22850936 bytes]
 
 ModelProgram: m() ...
-    [TIME]  passed
+    [0.072 s 22944328 bytes]  passed
 
 ModelProgram: ModelProgram() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0080 s 23095064 bytes]  passed
+  [0.243 s 23096088 bytes total]
+1 caution

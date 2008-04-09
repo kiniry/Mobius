@@ -1,96 +1,51 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModM.java: Caution: Using given file as the .java file, even though it is not the java file for ModM on the classpath
+    [0.0020 s 23238032 bytes]
 
 ModM ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 23311888 bytes
+    [0.182 s 23378224 bytes]
 
 ModM: m() ...
-------------------------------------------------------------------------
-ModM.java:11: Warning: Possible violation of modifies clause (Modifies)
-                mm();       // WARNING
-                  ^
-Associated declaration is "ModM.java", line 16, col 14:
-        //@ modifies j;
-                     ^
-Associated declaration is "ModM.java", line 9, col 5:
-        //@ modifies i,k;
-            ^
-------------------------------------------------------------------------
-ModM.java:11: Warning: Possible violation of modifies clause (Modifies)
-                mm();       // WARNING
-                  ^
-Associated declaration is "ModM.java", line 19, col 16:
-        //@ modifies i,k;
-                       ^
-Associated declaration is "ModM.java", line 6, col 5:
-        //@ modifies i,j;
-            ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.105 s 23755456 bytes]  passed
 
 ModM: mm() ...
-    [TIME]  passed immediately
+    [0.0 s 23756480 bytes]  passed immediately
 
 ModM: me() ...
-ModM.java:23: Error: There is no assignable clause allowing this method call
+------------------------------------------------------------------------
+src/test/resources/ModM.java:23: Warning: Possible violation of modifies clause (Modifies)
         public void me() { mee(); } // ERROR
                               ^
-ModM.java:25: Associated declaration: 
+Associated declaration is "src/test/resources/ModM.java", line 25, col 14:
         //@ modifies \everything;
                      ^
-ModM.java:22: Associated declaration: 
+Associated declaration is "src/test/resources/ModM.java", line 22, col 5:
         //@ modifies \nothing;
             ^
-    [TIME]  passed
+------------------------------------------------------------------------
+    [0.02 s 24062968 bytes]  failed
 
 ModM: mee() ...
-    [TIME]  passed immediately
+    [0.0 s 24065016 bytes]  passed immediately
 
 ModM: mp() ...
-    [TIME]  passed
+    [0.033 s 24795992 bytes]  passed
 
 ModM: mp2() ...
-------------------------------------------------------------------------
-ModM.java:44: Warning: Possible violation of modifies clause (Modifies)
-                if (i == 0) mmp(); // WARNING
-                               ^
-Associated declaration is "ModM.java", line 47, col 14:
-        //@ modifies j;
-                     ^
-Associated declaration is "ModM.java", line 42, col 5:
-        //@ modifies i,k;
-            ^
-Execution trace information:
-    Executed then branch in "ModM.java", line 44, col 14.
-
-------------------------------------------------------------------------
-ModM.java:44: Warning: Possible violation of modifies clause (Modifies)
-                if (i == 0) mmp(); // WARNING
-                               ^
-Associated declaration is "ModM.java", line 50, col 16:
-        //@ modifies i,k;
-                       ^
-Associated declaration is "ModM.java", line 39, col 5:
-        //@ modifies i,j;
-            ^
-Execution trace information:
-    Executed then branch in "ModM.java", line 44, col 14.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.019 s 25204792 bytes]  passed
 
 ModM: mmp() ...
-    [TIME]  passed immediately
+    [0.0 s 25205816 bytes]  passed immediately
 
 ModM: mq() ...
-    [TIME]  passed
+    [0.014 s 25475544 bytes]  passed
 
 ModM: mqq() ...
-    [TIME]  passed immediately
+    [0.0 s 25477592 bytes]  passed immediately
 
 ModM: ModM() ...
-    [TIME]  passed
-  [TIME total]
-4 warnings
-1 error
+    [0.0060 s 25656176 bytes]  passed
+  [0.381 s 25657200 bytes total]
+1 caution
+1 warning

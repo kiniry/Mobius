@@ -1,87 +1,74 @@
-ESC/Java version VERSION
-  Prover started:TIME
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/MethodInSpec.java: Caution: Using given file as the .java file, even though it is not the java file for MethodInSpec on the classpath
+    [0.021 s 21676680 bytes]
 
 MethodInSpec ...
-    [TIME]
+  Prover started:0.061 s 22823336 bytes
+    [0.165 s 22903072 bytes]
 
 MethodInSpec: meth(int) ...
-    [TIME]  passed immediately
+    [0.0 s 22905120 bytes]  passed immediately
 
 MethodInSpec: meth2(int) ...
-    [TIME]  passed immediately
+    [0.0 s 22907168 bytes]  passed immediately
 
 MethodInSpec: fact(int) ...
-    [TIME]  passed immediately
+    [0.0 s 22909216 bytes]  passed immediately
 
 MethodInSpec: mf() ...
-------------------------------------------------------------------------
-MethodInSpec.java:18: Warning: Postcondition possibly not established (Post)
-        void mf() {} // FAILS - recursive
-                   ^
-Associated declaration is "MethodInSpec.java", line 17, col 5:
-        //@ ensures fact(3) == 6;
-            ^
-Execution trace information:
-    Executed implicit return in "MethodInSpec.java", line 18, col 12.
+    [0.112 s 23073032 bytes]  passed
 
-------------------------------------------------------------------------
-    [TIME]  failed
+MethodInSpec: mff() ...
+Fatal error: Unexpected output encountered while parsing Simplify's output:
+----- Begin unexpected output -----
+Bad input: Probable matching loop; increase PROVER_MAX_FNUR if you believe otherwise.
+>	
+----- End unexpected output -----
+    [1.217 s 23245112 bytes]  unexpectedly missing Simplify output
 
 MethodInSpec: mr() ...
-    [TIME]  passed
+  Prover started:0.063 s 23389752 bytes
+    [0.264 s 23579152 bytes]  passed
 
 MethodInSpec: m() ...
 ------------------------------------------------------------------------
-MethodInSpec.java:24: Warning: Postcondition possibly not established (Post)
+src/test/resources/MethodInSpec.java:28: Warning: Postcondition possibly not established (Post)
         void m() {} // FAILS
                   ^
-Associated declaration is "MethodInSpec.java", line 23, col 5:
+Associated declaration is "src/test/resources/MethodInSpec.java", line 27, col 5:
         //@ ensures meth(1) == 0;
             ^
-Execution trace information:
-    Executed implicit return in "MethodInSpec.java", line 24, col 11.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.026 s 23889680 bytes]  failed
 
 MethodInSpec: mm() ...
-    [TIME]  passed
+    [0.014 s 24044848 bytes]  passed
 
 MethodInSpec: mmm() ...
-------------------------------------------------------------------------
-MethodInSpec.java:30: Warning: Postcondition possibly not established (Post)
-        void mmm() {} // OK
-                    ^
-Associated declaration is "MethodInSpec.java", line 29, col 5:
-        //@ ensures meth(meth(1)) == 3;
-            ^
-Execution trace information:
-    Executed implicit return in "MethodInSpec.java", line 30, col 13.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.015 s 24201040 bytes]  passed
 
 MethodInSpec: m4(int) ...
-    [TIME]  passed
+    [0.029 s 22231896 bytes]  passed
 
 MethodInSpec: m5() ...
-    [TIME]  passed
+    [0.019 s 22423776 bytes]  passed
 
 MethodInSpec: MethodInSpec() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 22424800 bytes]  passed immediately
+  [1.861 s 22425824 bytes total]
 
 MMS ...
-    [TIME]
+    [0.0010 s 22493208 bytes]
 
 MMS: mms() ...
-    [TIME]  passed immediately
+    [0.0 s 22494232 bytes]  passed immediately
 
 MMS: mmss() ...
-    [TIME]  passed immediately
+    [0.0 s 22496280 bytes]  passed immediately
 
 MMS: MMS() ...
-    [TIME]  passed
-  [TIME total]
-3 warnings
+    [0.011 s 22661944 bytes]  passed
+  [0.012 s 22662968 bytes total]
+1 caution
+1 warning
+1 error

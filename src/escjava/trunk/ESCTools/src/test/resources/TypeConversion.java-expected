@@ -1,37 +1,49 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/TypeConversion.java: Caution: Using given file as the .java file, even though it is not the java file for TypeConversion on the classpath
+    [0.038 s 25621376 bytes]
 
 TypeConversion ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.076 s 27644200 bytes
+    [0.263 s 27825752 bytes]
 
 TypeConversion: m() ...
-    [TIME]  passed
+    [0.101 s 27949288 bytes]  passed
 
 TypeConversion: n() ...
-    [TIME]  passed
+    [0.013 s 28050072 bytes]  passed
 
 TypeConversion: p() ...
-    [TIME]  passed
+    [0.0070 s 28159256 bytes]  passed
 
 TypeConversion: getC() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/TypeConversion.java:34: Warning: Possible violation of modifies clause (Modifies)
+        public Class getC() { return getClass(); } 
+                                             ^
+Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class":
+Associated declaration is "src/test/resources/TypeConversion.java", line 32, col 1:
+        //@ ensures \result == \typeof(this); ...
+        ^
+------------------------------------------------------------------------
+    [0.036 s 28527688 bytes]  failed
 
 TypeConversion: tt(TYPE) ...
-    [TIME]  passed
+    [0.0070 s 28626416 bytes]  passed
 
 TypeConversion: ccc(java.lang.Class) ...
-    [TIME]  passed
+    [0.0060 s 28730360 bytes]  passed
 
 TypeConversion: ccc(java.lang.String) ...
-    [TIME]  passed
+    [0.0060 s 28818944 bytes]  passed
 
 TypeConversion: s() ...
-    [TIME]  passed
+    [0.036 s 29209640 bytes]  passed
 
 TypeConversion: t() ...
-    [TIME]  passed
+    [0.0040 s 29273336 bytes]  passed
 
 TypeConversion: TypeConversion() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0090 s 29468384 bytes]  passed
+  [0.489 s 29469408 bytes total]
+1 caution
+1 warning

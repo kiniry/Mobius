@@ -1,41 +1,43 @@
-ESC/Java version VERSION
-Heavyweight.java:40: Error: Expected a closing |}
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Heavyweight.java: Caution: Using given file as the .java file, even though it is not the java file for Heavyweight on the classpath
+src/test/resources/Heavyweight.java:40: Error: Expected a closing |}
         //@    diverges false; // ERROR - missing closing |}
                ^
-Heavyweight.java:38: Associated declaration: 
+src/test/resources/Heavyweight.java:38: Associated declaration: 
         //@ {| ensures false;
             ^
-Heavyweight.java:44: Error: JML does not allow empty clause sequences
+src/test/resources/Heavyweight.java:44: Error: JML does not allow empty clause sequences
         //@ also                // ERROR - dangling also
             ^
-Heavyweight.java:51: Error: There is no opening {| to match this closing |}
+src/test/resources/Heavyweight.java:51: Error: There is no opening {| to match this closing |}
             |}                  // ERROR - no opening {|
             ^
-    [TIME]
+    [0.087 s 19677936 bytes]
 
 Heavyweight ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 20309080 bytes
+    [0.204 s 20408424 bytes]
 
 Heavyweight: m() ...
-    [TIME]  passed immediately
+    [0.0 s 20409448 bytes]  passed immediately
 
 Heavyweight: n() ...
-    [TIME]  passed immediately
+    [0.0 s 20411496 bytes]  passed immediately
 
 Heavyweight: q() ...
-    [TIME]  passed immediately
+    [0.0 s 20412520 bytes]  passed immediately
 
 Heavyweight: badEnd() ...
-    [TIME]  passed immediately
+    [0.0 s 20414568 bytes]  passed immediately
 
 Heavyweight: danglingAlso() ...
-    [TIME]  passed immediately
+    [0.0 s 20415592 bytes]  passed immediately
 
 Heavyweight: missingBegin() ...
-    [TIME]  passed immediately
+    [0.0 s 20417640 bytes]  passed immediately
 
 Heavyweight: Heavyweight() ...
-    [TIME]  passed
-  [TIME total]
+    [0.059 s 20606752 bytes]  passed
+  [0.265 s 20607776 bytes total]
+1 caution
 3 errors

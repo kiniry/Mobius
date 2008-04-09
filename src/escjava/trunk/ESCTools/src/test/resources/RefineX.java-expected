@@ -1,14 +1,16 @@
-ESC/Java version VERSION
-RefineX.java:1: Error: Could not find file referenced in refine annotation: X.x
+ESC/Java version ESCJava-CURRENT
+src/test/resources/RefineX.java: Caution: Using given file as the .java file, even though it is not the java file for RefineX on the classpath
+src/test/resources/RefineX.java:1: Error: Could not find file referenced in refine annotation: X.x
 //@ refine "X.x"; // Invalid file
     ^
-    [TIME]
+    [0.0020 s 24715456 bytes]
 
 RefineX ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 25709696 bytes
+    [0.161 s 25774352 bytes]
 
 RefineX: RefineX() ...
-    [TIME]  passed
-  [TIME total]
+    [0.07 s 25925088 bytes]  passed
+  [0.231 s 25926112 bytes total]
+1 caution
 1 error

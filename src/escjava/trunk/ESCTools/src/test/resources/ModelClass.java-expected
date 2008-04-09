@@ -1,31 +1,33 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModelClass.java: Caution: Using given file as the .java file, even though it is not the java file for ModelClass on the classpath
+    [0.0020 s 22808896 bytes]
 
 ModelClass ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.063 s 23820872 bytes
+    [0.181 s 23918400 bytes]
 
 ModelClass: ModelClass() ...
-    [TIME]  passed
+    [0.095 s 24286144 bytes]  passed
 
 ModelClass: m(ModelClass$I) ...
-    [TIME]  passed
-  [TIME total]
+    [0.0060 s 24361376 bytes]  passed
+  [0.282 s 24362400 bytes total]
 
 ModelClass$M ...
-    [TIME]
+    [0.022 s 22900904 bytes]
 
 ModelClass$M: M() ...
-    [TIME]  passed
-  [TIME total]
+    [0.014 s 23084472 bytes]  passed
+  [0.036 s 23085496 bytes total]
 
 ModelClass$MP ...
-    [TIME]
+    [0.0010 s 23166336 bytes]
 
 ModelClass$MP: MP() ...
-    [TIME]  passed
-  [TIME total]
+    [0.013 s 23351040 bytes]  passed
+  [0.014 s 23352064 bytes total]
 
 ModelClass$I ...
-    [TIME]
-  [TIME total]
+    [0.0 s 23371952 bytes]
+  [0.0020 s 23372976 bytes total]
+1 caution

@@ -1,136 +1,41 @@
-ESC/Java version VERSION
-  Prover started:TIME
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModEverything.java: Caution: Using given file as the .java file, even though it is not the java file for ModEverything on the classpath
+    [0.0030 s 23229072 bytes]
 
 ModEverything ...
+  Prover started:0.061 s 23479296 bytes
+    [0.186 s 23575928 bytes]
 
 ModEverything: ModEverything() ...
-    [TIME]  passed immediately
+    [0.0 s 23577976 bytes]  passed immediately
 
 ModEverything: m(int) ...
-ModEverything.java:49: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                mm();
-                ^
-ModEverything.java:49: Caution: A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.
-                mm();
-                ^
 ------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
+src/test/resources/ModEverything.java:57: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "ModEverything.java", line 19, col 5:
-        //@ ensures j == 15;  // FAILS
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 20, col 5:
-        //@ ensures k == 8;   // FAILS
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 21, col 5:
-        //@ ensures p == 25;   // FAILS
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 22, col 5:
-        //@ ensures ar[5] == 0; // FAILS
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 24, col 5:
-        //@ ensures super.f == 31; // FAILS
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 25, col 5:
-        //@ ensures super.sf == 31; // FAILS
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 31, col 5:
+Associated declaration is "src/test/resources/ModEverything.java", line 31, col 5:
         //@ ensures a.z == 47; // FAILS
             ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
 ------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 32, col 5:
-        //@ ensures a.ssz == 48; // FAILS
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 33, col 5:
-        //@ ensures b == \old(b); // FAILS
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-ModEverything.java:57: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "ModEverything.java", line 34, col 5:
-        //@ ensures b.zz == \old(b.zz); // OK
-            ^
-Execution trace information:
-    Executed implicit return in "ModEverything.java", line 57, col 1.
-
-------------------------------------------------------------------------
-Caution: Not checking method m(int) of type ModEverything completely because warning limit (PROVER_CC_LIMIT) reached
-    [TIME]  failed
+    [0.15 s 24511368 bytes]  failed
 
 ModEverything: mm() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 24513416 bytes]  passed immediately
+  [0.336 s 24514440 bytes total]
 
 ModEverythingS ...
+    [0.0010 s 24583672 bytes]
 
 ModEverythingS: ModEverythingS() ...
-    [TIME]  passed
-  [TIME total]
+    [0.011 s 24756072 bytes]  passed
+  [0.012 s 24757096 bytes total]
 
 ModEverythingA ...
+    [0.0010 s 24828376 bytes]
 
 ModEverythingA: ModEverythingA() ...
-    [TIME]  passed
-  [TIME total]
-3 cautions
-10 warnings
+    [0.013 s 25028568 bytes]  passed
+  [0.014 s 25029592 bytes total]
+1 caution
+1 warning

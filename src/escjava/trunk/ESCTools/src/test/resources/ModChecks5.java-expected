@@ -1,22 +1,24 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModChecks5.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks5 on the classpath
+    [0.0020 s 22501592 bytes]
 
 ModChecks5 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.067 s 23531992 bytes
+    [0.176 s 23602096 bytes]
 
 ModChecks5: m() ...
-    [TIME]  passed
+    [0.072 s 23701936 bytes]  passed
 
 ModChecks5: mm() ...
-    [TIME]  passed
+    [0.01 s 23801776 bytes]  passed
 
 ModChecks5: mmm() ...
-    [TIME]  passed
+    [0.053 s 22576984 bytes]  passed
 
 ModChecks5: mmmm() ...
-    [TIME]  passed
+    [0.0060 s 22666504 bytes]  passed
 
 ModChecks5: ModChecks5() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0070 s 22871832 bytes]  passed
+  [0.324 s 22872856 bytes total]
+1 caution

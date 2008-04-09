@@ -1,0 +1,27 @@
+ESC/Java version ESCJava-CURRENT
+src/test/resources/MAINT.java: Caution: Using given file as the .java file, even though it is not the java file for MAINT on the classpath
+    [0.0010 s 20824832 bytes]
+
+MAINT ...
+  Prover started:0.067 s 21824472 bytes
+    [0.323 s 21889080 bytes]
+
+MAINT: MAINT() ...
+    [0.269 s 22038816 bytes]  passed
+
+MAINT: m() ...
+------------------------------------------------------------------------
+src/test/resources/MAINT.java:10: Warning: Loop invariant possibly does not hold (LoopInv)
+        while (i > 0) { --i; }
+              ^
+Associated declaration is "src/test/resources/MAINT.java", line 8, col 1:
+        maintaining i > 0;
+        ^
+Execution trace information:
+    Reached top of loop after 0 iterations in "src/test/resources/MAINT.java", line 10, col 1.
+
+------------------------------------------------------------------------
+    [0.152 s 22343176 bytes]  failed
+  [0.744 s 22344200 bytes total]
+1 caution
+1 warning

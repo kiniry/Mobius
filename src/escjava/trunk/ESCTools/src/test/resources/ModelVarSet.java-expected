@@ -1,0 +1,18 @@
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModelVarSet.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVarSet on the classpath
+    [0.0020 s 24172224 bytes]
+
+ModelVarSet ...
+  Prover started:0.063 s 24548160 bytes
+    [0.183 s 24618288 bytes]
+
+ModelVarSet: ModelVarSet() ...
+    [0.0 s 24620336 bytes]  passed immediately
+
+ModelVarSet: m() ...
+    [0.078 s 24813568 bytes]  passed
+
+ModelVarSet: sm() ...
+    [0.039 s 24968952 bytes]  passed
+  [0.3 s 24969976 bytes total]
+1 caution

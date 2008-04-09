@@ -1,41 +1,40 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Client4.java: Caution: Using given file as the .java file, even though it is not the java file for Client4 on the classpath
+    [0.0030 s 17790656 bytes]
 
 Client4 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.065 s 18831752 bytes
+    [0.208 s 17794232 bytes]
 
 Client4: unique(IntList) ...
 ------------------------------------------------------------------------
-Client4.java:8: Warning: Postcondition possibly not established (Post)
+src/test/resources/Client4.java:8: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Client4.java", line 5, col 5:
+Associated declaration is "src/test/resources/Client4.java", line 5, col 5:
         //@ ensures \not_modified(list.isEmpty);  // ERROR - insuffici ...
             ^
-Execution trace information:
-    Executed implicit return in "Client4.java", line 8, col 1.
-
-Associated declaration is "Client4.java", line 5, col 27:
+Associated declaration is "src/test/resources/Client4.java", line 5, col 27:
         //@ ensures \not_modified(list.isEmpty);  // ERROR - insuffici ...
                                   ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.101 s 18229752 bytes]  failed
 
 Client4: clear(IntList) ...
-    [TIME]  passed
+    [0.025 s 18565432 bytes]  passed
 
 Client4: Client4() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0070 s 18723696 bytes]  passed
+  [0.341 s 18724720 bytes total]
 
 IntList ...
-    [TIME]
+    [0.0010 s 18789808 bytes]
 
 IntList: unique() ...
-    [TIME]  passed immediately
+    [0.0 s 18791856 bytes]  passed immediately
 
 IntList: clear() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 18792880 bytes]  passed immediately
+  [0.01 s 18793904 bytes total]
+1 caution
 1 warning

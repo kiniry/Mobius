@@ -1,25 +1,10 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/RefineRef.java: Caution: Using given file as the .java file, even though it is not the java file for RefineRef on the classpath
+    [0.0010 s 24771752 bytes]
 
 RefineRef ...
-  Prover started:TIME
-    [TIME]
-
-RefineRef: m(RefineRefHelper) ...
-    [TIME]  passed
-
-RefineRef: mm(RefineRefHelper) ...
-    [TIME]  passed
-
-RefineRef: mmm(RefineRefHelper) ...
-------------------------------------------------------------------------
-RefineRef.java:13: Warning: Possible null dereference (Null)
-                r.ooo.get();
-                     ^
-------------------------------------------------------------------------
-    [TIME]  failed
-
-RefineRef: RefineRef() ...
-    [TIME]  passed
-  [TIME total]
-1 warning
+src/test/resources/RefineRef.java:4: Fatal error: Can't find type named "RefineRefHelper"
+        public void m(RefineRefHelper r) {
+                      ^
+1 caution
+1 error

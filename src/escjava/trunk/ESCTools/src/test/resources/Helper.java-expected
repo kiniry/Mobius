@@ -1,60 +1,65 @@
-ESC/Java version VERSION
-  Prover started:TIME
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Helper.java: Caution: Using given file as the .java file, even though it is not the java file for Helper on the classpath
+    [0.0030 s 19569024 bytes]
 
 Helper ...
+  Prover started:0.063 s 20601136 bytes
+    [0.175 s 20667840 bytes]
 
 Helper: m() ...
-    [TIME]  passed immediately
+    [0.0010 s 20669944 bytes]  passed immediately
 
 Helper: mm() ...
-    [TIME]  passed immediately
+    [0.0 s 20673016 bytes]  passed immediately
 
 Helper: p() ...
 ------------------------------------------------------------------------
-Helper.java:25: Warning: Possible violation of object invariant (Invariant)
+src/test/resources/Helper.java:25: Warning: Possible violation of object invariant (Invariant)
         public void p() { i=10; return; }
                                         ^
-Associated declaration is "Helper.java", line 29, col 12:
+Associated declaration is "src/test/resources/Helper.java", line 29, col 12:
         //@ public invariant i == 0;
                    ^
 Possibly relevant items from the counterexample context:  
-  brokenObj == this
+  brokenObj%0 == this
 (brokenObj* refers to the object for which the invariant is broken.)
 
 Execution trace information:
-    Executed return in "Helper.java", line 25, col 25.
+    Executed return in "src/test/resources/Helper.java", line 25, col 25.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.116 s 20996760 bytes]  failed
 
 Helper: n() ...
 ------------------------------------------------------------------------
-Helper.java:12: Warning: Postcondition possibly not established (Post)
+src/test/resources/Helper.java:12: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "Helper.java", line 7, col 5:
+Associated declaration is "src/test/resources/Helper.java", line 7, col 5:
         //@ ensures i == 6;
             ^
 Execution trace information:
-    Executed call in "Helper.java", line 32, col 2.
-    Executed implicit return in "Helper.java", line 12, col 1.
+    Executed call in "src/test/resources/Helper.java", line 32, col 2.
+    Executed implicit return in "src/test/resources/Helper.java", line 12, col 1.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.046 s 21286880 bytes]  failed
 
 Helper: Helper() ...
-    [TIME]  passed immediately
+    [0.0 s 21288928 bytes]  passed immediately
 
 Helper: Helper(int) ...
-    [TIME]  passed
-  [TIME total]
+    [0.024 s 21685400 bytes]  passed
+  [0.363 s 21686424 bytes total]
 
 H2 ...
+    [0.0020 s 21759208 bytes]
 
 H2: mmm() ...
-    [TIME]  passed immediately
+    [0.0010 s 21761312 bytes]  passed immediately
 
 H2: H2() ...
-    [TIME]  passed
-  [TIME total]
+    [0.011 s 21914248 bytes]  passed
+  [0.014 s 21915272 bytes total]
+1 caution
 2 warnings

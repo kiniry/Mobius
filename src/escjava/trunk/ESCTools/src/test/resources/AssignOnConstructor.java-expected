@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/AssignOnConstructor.java: Caution: Using given file as the .java file, even though it is not the java file for AssignOnConstructor on the classpath
+    [0.0030 s 18899104 bytes]
 
 AssignOnConstructor ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 18960248 bytes
+    [0.179 s 19029176 bytes]
 
 AssignOnConstructor: m() ...
-    [TIME]  passed immediately
+    [0.0 s 19030200 bytes]  passed immediately
 
 AssignOnConstructor: AssignOnConstructor() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 19032248 bytes]  passed immediately
+  [0.239 s 19033320 bytes total]
+1 caution

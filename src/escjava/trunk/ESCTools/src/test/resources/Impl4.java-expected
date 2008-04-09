@@ -1,38 +1,28 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Impl4.java: Caution: Using given file as the .java file, even though it is not the java file for Impl4 on the classpath
+    [0.0020 s 20573256 bytes]
 
 Impl4 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.066 s 21616160 bytes
+    [0.176 s 21689968 bytes]
 
 Impl4: unique() ...
-    [TIME]  passed
+    [0.12 s 20718120 bytes]  passed
 
 Impl4: clear() ...
-------------------------------------------------------------------------
-Impl4.java:14: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "Impl4.java", line 29, col 5:
-        //@ ensures isEmpty;  // ERROR because of missing modifies cla ...
-            ^
-Execution trace information:
-    Executed implicit return in "Impl4.java", line 14, col 1.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.019 s 20915400 bytes]  passed
 
 Impl4: Impl4() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0090 s 21108304 bytes]  passed
+  [0.325 s 21109328 bytes total]
 
 IntList ...
-    [TIME]
+    [0.0010 s 21187448 bytes]
 
 IntList: unique() ...
-    [TIME]  passed immediately
+    [0.0 s 21188472 bytes]  passed immediately
 
 IntList: clear() ...
-    [TIME]  passed immediately
-  [TIME total]
-1 warning
+    [0.0 s 21190520 bytes]  passed immediately
+  [0.01 s 21191544 bytes total]
+1 caution

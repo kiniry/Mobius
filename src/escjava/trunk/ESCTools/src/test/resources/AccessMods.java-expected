@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/AccessMods.java: Caution: Using given file as the .java file, even though it is not the java file for AccessMods on the classpath
+    [0.0040 s 18009096 bytes]
 
 AccessMods ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.057 s 19032832 bytes
+    [0.175 s 19099112 bytes]
 
 AccessMods: f(int) ...
-    [TIME]  passed
+    [0.072 s 19190552 bytes]  passed
 
 AccessMods: AccessMods() ...
-    [TIME]  passed
-  [TIME total]
+    [0.061 s 19441968 bytes]  passed
+  [0.309 s 19443040 bytes total]
+1 caution

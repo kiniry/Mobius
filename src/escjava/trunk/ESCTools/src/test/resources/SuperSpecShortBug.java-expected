@@ -1,0 +1,35 @@
+ESC/Java version ESCJava-CURRENT
+src/test/resources/SuperSpecShortBug.java: Caution: Using given file as the .java file, even though it is not the java file for SuperSpecShortBug on the classpath
+    [0.0020 s 24205944 bytes]
+
+SuperSpecShortBug ...
+  Prover started:0.078 s 25481024 bytes
+    [0.204 s 25605760 bytes]
+
+SuperSpecShortBug: m(P) ...
+    [0.11 s 25866648 bytes]  passed
+
+SuperSpecShortBug: SuperSpecShortBug() ...
+    [0.0070 s 26019432 bytes]  passed
+  [0.322 s 26020456 bytes total]
+
+CSuperSpecShortBug ...
+    [0.019 s 26145704 bytes]
+
+CSuperSpecShortBug: m(P) ...
+    [0.02 s 26381504 bytes]  passed
+
+CSuperSpecShortBug: CSuperSpecShortBug() ...
+    [0.0070 s 26550712 bytes]  passed
+  [0.047 s 26551736 bytes total]
+
+P ...
+    [0.0010 s 26618048 bytes]
+
+P: mmm() ...
+    [0.011 s 26671560 bytes]  passed
+
+P: P() ...
+    [0.0060 s 26821272 bytes]  passed
+  [0.019 s 26822296 bytes total]
+1 caution

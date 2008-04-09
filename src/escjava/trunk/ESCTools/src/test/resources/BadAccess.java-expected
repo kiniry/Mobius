@@ -1,14 +1,15 @@
-ESC/Java version VERSION
-BadAccess.java:3: Caution: Duplicate occurrence of modifier 'public'
+ESC/Java version ESCJava-CURRENT
+src/test/resources/BadAccess.java:3: Caution: Duplicate occurrence of modifier 'public'
         //@ public ghost public int i;
                          ^
-    [TIME]
+src/test/resources/BadAccess.java: Caution: Using given file as the .java file, even though it is not the java file for BadAccess on the classpath
+    [0.0020 s 18436224 bytes]
 
 BadAccess ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.058 s 19429400 bytes
+    [0.16 s 19495360 bytes]
 
 BadAccess: BadAccess() ...
-    [TIME]  passed
-  [TIME total]
-1 caution
+    [0.071 s 18522744 bytes]  passed
+  [0.231 s 18523768 bytes total]
+2 cautions

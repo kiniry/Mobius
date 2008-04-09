@@ -1,256 +1,257 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/NL.java: Caution: Using given file as the .java file, even though it is not the java file for NL on the classpath
+    [0.0040 s 23808328 bytes]
 
 NL ...
-NL.java:61: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+src/test/resources/NL.java:61: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void n2(/*@ non_null */ Object o) {
                            ^
-NL.java:111: Associated declaration: 
+src/test/resources/NL.java:111: Associated declaration: 
         public void n2(Object o) {
                        ^
-NL.java:65: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+src/test/resources/NL.java:65: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         /*@ pure */ public void n(/*@ non_null */ Object o) {
                                       ^
-NL.java:108: Associated declaration: 
+src/test/resources/NL.java:108: Associated declaration: 
         /*@ pure */ public void n(Object o) {
                                   ^
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 24001984 bytes
+    [0.181 s 24071696 bytes]
 
 NL: m(java.lang.Object) ...
-    [TIME]  passed
+    [0.072 s 24151040 bytes]  passed
 
 NL: m2(java.lang.Object) ...
-    [TIME]  passed
+    [0.01 s 24313568 bytes]  passed
 
 NL: mm1() ...
 ------------------------------------------------------------------------
-NL.java:16: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:16: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m(oo);  // FAILS
                  ^
-Associated declaration is "NL.java", line 93, col 31:
+Associated declaration is "src/test/resources/NL.java", line 93, col 31:
         /*@ pure */ public void m(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.045 s 24586760 bytes]  failed
 
 NL: mm2() ...
 ------------------------------------------------------------------------
-NL.java:19: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:19: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 (new NLS()).m(oo);  // FAILS
                              ^
-Associated declaration is "NL.java", line 93, col 31:
+Associated declaration is "src/test/resources/NL.java", line 93, col 31:
         /*@ pure */ public void m(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.026 s 24988016 bytes]  failed
 
 NL: qm2(java.lang.Object) ...
 ------------------------------------------------------------------------
-NL.java:26: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:26: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 nonnull(o); // FAILS 
                        ^
-Associated declaration is "NL.java", line 91, col 37:
+Associated declaration is "src/test/resources/NL.java", line 91, col 37:
         /*@ pure */ public void nonnull(/*@ non_null */ Object o);
                                             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.02 s 25280072 bytes]  failed
 
 NL: qm(java.lang.Object) ...
-    [TIME]  passed
+    [0.0070 s 25372728 bytes]  passed
 
 NL: qmm1() ...
-    [TIME]  passed
+    [0.01 s 25548360 bytes]  passed
 
 NL: qmm2() ...
 ------------------------------------------------------------------------
-NL.java:38: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:38: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 (new NLS()).qm(oo);   // FAILS
                               ^
-Associated declaration is "NL.java", line 98, col 32:
+Associated declaration is "src/test/resources/NL.java", line 98, col 32:
         /*@ pure */ public void qm(/*@ non_null */ Object o) {
                                        ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.025 s 25935288 bytes]  failed
 
 NL: qqm2(java.lang.Object) ...
-    [TIME]  passed
+    [0.0080 s 26106048 bytes]  passed
 
 NL: qqm(java.lang.Object) ...
-    [TIME]  passed
+    [0.0050 s 26193584 bytes]  passed
 
 NL: qqmm1() ...
 ------------------------------------------------------------------------
-NL.java:54: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:54: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 qqm(oo); // FAILS 
                    ^
-Associated declaration is "NL.java", line 103, col 33:
+Associated declaration is "src/test/resources/NL.java", line 103, col 33:
         /*@ pure */ public void qqm(/*@ non_null */ Object o) {
                                         ^
-NL.java:54: Warning: Precondition possibly not established (Pre)
+src/test/resources/NL.java:54: Warning: Precondition possibly not established (Pre)
                 qqm(oo); // FAILS 
                    ^
-Associated declaration is "NL.java", line 49, col 5:
+Associated declaration is "src/test/resources/NL.java", line 49, col 5:
         //@ requires false;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.06 s 24032744 bytes]  failed
 
 NL: qqmm2() ...
 ------------------------------------------------------------------------
-NL.java:57: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:57: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 (new NLS()).qqm(oo);   // FAILS
                                ^
-Associated declaration is "NL.java", line 103, col 33:
+Associated declaration is "src/test/resources/NL.java", line 103, col 33:
         /*@ pure */ public void qqm(/*@ non_null */ Object o) {
                                         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.023 s 24418648 bytes]  failed
 
 NL: n2(java.lang.Object) ...
 ------------------------------------------------------------------------
-NL.java:62: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:62: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 nonnull(o); // FAILS since non_null is ignored
                        ^
-Associated declaration is "NL.java", line 91, col 37:
+Associated declaration is "src/test/resources/NL.java", line 91, col 37:
         /*@ pure */ public void nonnull(/*@ non_null */ Object o);
                                             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.018 s 24684192 bytes]  failed
 
 NL: n(java.lang.Object) ...
-    [TIME]  passed
+    [0.0040 s 24751248 bytes]  passed
 
 NL: nn() ...
-    [TIME]  passed
+    [0.0050 s 24858272 bytes]  passed
 
 NL: nn2() ...
-    [TIME]  passed
+    [0.011 s 25081456 bytes]  passed
 
 NL: p(java.lang.Object) ...
 ------------------------------------------------------------------------
-NL.java:76: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:76: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 o = null;  // FAILS
                   ^
-Associated declaration is "NL.java", line 75, col 31:
+Associated declaration is "src/test/resources/NL.java", line 75, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.017 s 25301608 bytes]  failed
 
 NL: p2(java.lang.Object) ...
-    [TIME]  passed
+    [0.012 s 25479480 bytes]  passed
 
 NL: pp() ...
 ------------------------------------------------------------------------
-NL.java:82: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:82: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 p(oo);  // FAILS
                  ^
-Associated declaration is "NL.java", line 75, col 31:
+Associated declaration is "src/test/resources/NL.java", line 75, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
-NL.java:82: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:82: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 p(oo);  // FAILS
                  ^
-Associated declaration is "NL.java", line 114, col 31:
+Associated declaration is "src/test/resources/NL.java", line 114, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.021 s 25789192 bytes]  failed
 
 NL: pp2() ...
 ------------------------------------------------------------------------
-NL.java:85: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:85: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 (new NLS()).p(oo); // FAILS 
                              ^
-Associated declaration is "NL.java", line 114, col 31:
+Associated declaration is "src/test/resources/NL.java", line 114, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.052 s 26173032 bytes]  failed
 
 NL: NL() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0060 s 26321544 bytes]  passed
+  [0.639 s 26322568 bytes total]
 
 NLS ...
-    [TIME]
+    [0.0020 s 26402304 bytes]
 
 NLS: nonnull(java.lang.Object) ...
-    [TIME]  passed immediately
+    [0.0 s 26404352 bytes]  passed immediately
 
 NLS: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-NL.java:94: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:94: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 o = null;  // FAILS
                   ^
-Associated declaration is "NL.java", line 93, col 31:
+Associated declaration is "src/test/resources/NL.java", line 93, col 31:
         /*@ pure */ public void m(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.02 s 26594808 bytes]  failed
 
 NLS: m2(java.lang.Object) ...
-    [TIME]  passed
+    [0.0070 s 24040016 bytes]  passed
 
 NLS: qm(java.lang.Object) ...
 ------------------------------------------------------------------------
-NL.java:99: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:99: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 o = null;  // FAILS
                   ^
-Associated declaration is "NL.java", line 98, col 32:
+Associated declaration is "src/test/resources/NL.java", line 98, col 32:
         /*@ pure */ public void qm(/*@ non_null */ Object o) {
                                        ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.014 s 24230416 bytes]  failed
 
 NLS: qm2(java.lang.Object) ...
-    [TIME]  passed
+    [0.024 s 24302504 bytes]  passed
 
 NLS: qqm(java.lang.Object) ...
 ------------------------------------------------------------------------
-NL.java:104: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:104: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 o = null;  // FAILS
                   ^
-Associated declaration is "NL.java", line 103, col 33:
+Associated declaration is "src/test/resources/NL.java", line 103, col 33:
         /*@ pure */ public void qqm(/*@ non_null */ Object o) {
                                         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.015 s 24492912 bytes]  failed
 
 NLS: qqm2(java.lang.Object) ...
-    [TIME]  passed
+    [0.0040 s 24563920 bytes]  passed
 
 NLS: n(java.lang.Object) ...
-    [TIME]  passed
+    [0.0030 s 24625808 bytes]  passed
 
 NLS: n2(java.lang.Object) ...
 ------------------------------------------------------------------------
-NL.java:112: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:112: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 nonnull(o); // FAILS
                        ^
-Associated declaration is "NL.java", line 91, col 37:
+Associated declaration is "src/test/resources/NL.java", line 91, col 37:
         /*@ pure */ public void nonnull(/*@ non_null */ Object o);
                                             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.016 s 24900056 bytes]  failed
 
 NLS: p(java.lang.Object) ...
 ------------------------------------------------------------------------
-NL.java:115: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NL.java:115: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 o = null;  // FAILS
                   ^
-Associated declaration is "NL.java", line 114, col 31:
+Associated declaration is "src/test/resources/NL.java", line 114, col 31:
         /*@ pure */ public void p(/*@ non_null */ Object o) {
                                       ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.043 s 25090464 bytes]  failed
 
 NLS: p2(java.lang.Object) ...
-    [TIME]  passed
+    [0.0070 s 25247864 bytes]  passed
 
 NLS: NLS() ...
-    [TIME]  passed immediately
-  [TIME total]
-2 cautions
+    [0.0 s 25248888 bytes]  passed immediately
+  [0.157 s 25249912 bytes total]
+3 cautions
 17 warnings

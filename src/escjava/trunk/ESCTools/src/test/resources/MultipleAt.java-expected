@@ -1,16 +1,18 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/MultipleAt.java: Caution: Using given file as the .java file, even though it is not the java file for MultipleAt on the classpath
+    [0.0010 s 23964560 bytes]
 
 MultipleAt ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 24974408 bytes
+    [0.189 s 23944760 bytes]
 
 MultipleAt: m() ...
-    [TIME]  passed
+    [0.045 s 24023760 bytes]  passed
 
 MultipleAt: q() ...
-    [TIME]  passed
+    [0.0030 s 24076192 bytes]  passed
 
 MultipleAt: MultipleAt() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0080 s 24245440 bytes]  passed
+  [0.247 s 24246464 bytes total]
+1 caution

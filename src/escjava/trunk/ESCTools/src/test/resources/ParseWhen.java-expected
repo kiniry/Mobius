@@ -1,16 +1,18 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ParseWhen.java: Caution: Using given file as the .java file, even though it is not the java file for ParseWhen on the classpath
+    [0.0020 s 24253576 bytes]
 
 ParseWhen ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.068 s 24530608 bytes
+    [0.188 s 24597352 bytes]
 
 ParseWhen: m() ...
-    [TIME]  passed immediately
+    [0.0 s 24598376 bytes]  passed immediately
 
 ParseWhen: n() ...
-    [TIME]  passed immediately
+    [0.0 s 24600424 bytes]  passed immediately
 
 ParseWhen: ParseWhen() ...
-    [TIME]  passed
-  [TIME total]
+    [0.07 s 24768704 bytes]  passed
+  [0.258 s 24769728 bytes total]
+1 caution

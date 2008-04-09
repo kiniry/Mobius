@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/LoopBug.java: Caution: Using given file as the .java file, even though it is not the java file for LoopBug on the classpath
+    [0.0010 s 21252312 bytes]
 
 LoopBug ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.067 s 22256048 bytes
+    [0.169 s 22321728 bytes]
 
 LoopBug: m() ...
-    [TIME]  passed
+    [0.07 s 22389760 bytes]  passed
 
 LoopBug: LoopBug() ...
-    [TIME]  passed
-  [TIME total]
+    [0.034 s 21335072 bytes]  passed
+  [0.274 s 21336096 bytes total]
+1 caution

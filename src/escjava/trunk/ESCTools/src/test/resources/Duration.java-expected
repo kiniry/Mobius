@@ -1,53 +1,46 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Duration.java: Caution: Using given file as the .java file, even though it is not the java file for Duration on the classpath
+    [0.0020 s 18872880 bytes]
 
 Duration ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.064 s 19116680 bytes
+    [0.198 s 19182616 bytes]
 
 Duration: m() ...
 ------------------------------------------------------------------------
-Duration.java:8: Warning: Postcondition possibly not established (Post)
+src/test/resources/Duration.java:8: Warning: Postcondition possibly not established (Post)
         void m() {}
                   ^
-Associated declaration is "Duration.java", line 7, col 5:
+Associated declaration is "src/test/resources/Duration.java", line 7, col 5:
         //@ ensures \space(o) > 0;
             ^
-Execution trace information:
-    Executed implicit return in "Duration.java", line 8, col 11.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.085 s 19375688 bytes]  failed
 
 Duration: mm() ...
 ------------------------------------------------------------------------
-Duration.java:11: Warning: Postcondition possibly not established (Post)
+src/test/resources/Duration.java:11: Warning: Postcondition possibly not established (Post)
         void mm() {}
                    ^
-Associated declaration is "Duration.java", line 10, col 5:
+Associated declaration is "src/test/resources/Duration.java", line 10, col 5:
         //@ ensures \duration(m()) > 0;
             ^
-Execution trace information:
-    Executed implicit return in "Duration.java", line 11, col 12.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.042 s 19549600 bytes]  failed
 
 Duration: mmm() ...
 ------------------------------------------------------------------------
-Duration.java:14: Warning: Postcondition possibly not established (Post)
+src/test/resources/Duration.java:14: Warning: Postcondition possibly not established (Post)
         void mmm() {}
                     ^
-Associated declaration is "Duration.java", line 13, col 5:
+Associated declaration is "src/test/resources/Duration.java", line 13, col 5:
         //@ ensures \working_space(new Duration()) > 0;
             ^
-Execution trace information:
-    Executed implicit return in "Duration.java", line 14, col 13.
-
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.017 s 19724536 bytes]  failed
 
 Duration: Duration() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0090 s 19885768 bytes]  passed
+  [0.352 s 19886792 bytes total]
+1 caution
 3 warnings

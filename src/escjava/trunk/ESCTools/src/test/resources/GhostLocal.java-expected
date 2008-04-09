@@ -1,46 +1,48 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/GhostLocal.java: Caution: Using given file as the .java file, even though it is not the java file for GhostLocal on the classpath
+    [0.0050 s 20551736 bytes]
 
 GhostLocal ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.063 s 20928896 bytes
+    [0.18 s 20995944 bytes]
 
 GhostLocal: GhostLocal() ...
-    [TIME]  passed immediately
+    [0.0 s 20996968 bytes]  passed immediately
 
 GhostLocal: m() ...
-    [TIME]  passed
+    [0.076 s 21152024 bytes]  passed
 
 GhostLocal: pred(int) ...
-    [TIME]  passed immediately
+    [0.0 s 21154072 bytes]  passed immediately
 
 GhostLocal: mm() ...
-    [TIME]  passed
-  [TIME total]
+    [0.035 s 21283160 bytes]  passed
+  [0.292 s 21284184 bytes total]
 
 GhostLocalA ...
-    [TIME]
+    [0.0030 s 21410520 bytes]
 
 GhostLocalA: m() ...
 ------------------------------------------------------------------------
-GhostLocal.java:47: Warning: Possible assertion failure (Assert)
+src/test/resources/GhostLocal.java:47: Warning: Possible assertion failure (Assert)
                 //@ assert a.i == 3; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.038 s 21813944 bytes]  failed
 
 GhostLocalA: GhostLocalA() ...
-    [TIME]  passed
-  [TIME total]
+    [0.013 s 22204928 bytes]  passed
+  [0.055 s 22205952 bytes total]
 
 GhostLocalS ...
-    [TIME]
+    [0.0010 s 22281400 bytes]
 
 GhostLocalS: GhostLocalS() ...
-    [TIME]  passed
-  [TIME total]
+    [0.013 s 22444904 bytes]  passed
+  [0.014 s 22445928 bytes total]
 
 GhostLocalI ...
-    [TIME]
-  [TIME total]
+    [0.0 s 22463208 bytes]
+  [0.0020 s 22464232 bytes total]
+1 caution
 1 warning

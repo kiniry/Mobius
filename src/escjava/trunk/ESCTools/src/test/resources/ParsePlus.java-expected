@@ -1,73 +1,30 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ParsePlus.java: Caution: Using given file as the .java file, even though it is not the java file for ParsePlus on the classpath
+    [0.067 s 24288360 bytes]
 
 ParsePlus ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 24253480 bytes
+    [0.177 s 24319200 bytes]
 
 ParsePlus: m() ...
-------------------------------------------------------------------------
-ParsePlus.java:5: Warning: Postcondition possibly not established (Post)
-        void m() {}
-                  ^
-Associated declaration is "ParsePlus.java", line 4, col 6:
-        //+@ ensures false;
-             ^
-Execution trace information:
-    Executed implicit return in "ParsePlus.java", line 5, col 11.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.071 s 24363440 bytes]  passed
 
 ParsePlus: n() ...
-------------------------------------------------------------------------
-ParsePlus.java:10: Warning: Postcondition possibly not established (Post)
-        void n() {}
-                  ^
-Associated declaration is "ParsePlus.java", line 8, col 2:
-                ensures false;
-                ^
-Execution trace information:
-    Executed implicit return in "ParsePlus.java", line 10, col 11.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.0030 s 24409728 bytes]  passed
 
 ParsePlus: p() ...
-------------------------------------------------------------------------
-ParsePlus.java:16: Warning: Postcondition possibly not established (Post)
-        void p() {}
-                  ^
-Associated declaration is "ParsePlus.java", line 13, col 2:
-                ensures 4 == 2 ...
-                ^
-Execution trace information:
-    Executed implicit return in "ParsePlus.java", line 16, col 11.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.0040 s 24454936 bytes]  passed
 
 ParsePlus: q() ...
-    [TIME]  passed
+    [0.0030 s 24500200 bytes]  passed
 
 ParsePlus: r() ...
-    [TIME]  passed
+    [0.0030 s 24545464 bytes]  passed
 
 ParsePlus: s() ...
-------------------------------------------------------------------------
-ParsePlus.java:24: Warning: Postcondition possibly not established (Post)
-        public void s() {}
-                         ^
-Associated declaration is "ParsePlus.java", line 22, col 6:
-        /*+@ ensures ...
-             ^
-Execution trace information:
-    Executed implicit return in "ParsePlus.java", line 24, col 18.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.0030 s 24590672 bytes]  passed
 
 ParsePlus: ParsePlus() ...
-    [TIME]  passed
-  [TIME total]
-4 warnings
+    [0.0080 s 24742432 bytes]  passed
+  [0.273 s 24743456 bytes total]
+1 caution

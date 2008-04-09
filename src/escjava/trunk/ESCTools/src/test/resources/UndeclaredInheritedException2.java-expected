@@ -1,139 +1,148 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/UndeclaredInheritedException2.java: Caution: Using given file as the .java file, even though it is not the java file for UndeclaredInheritedException2 on the classpath
+    [0.0060 s 42969488 bytes]
 
 UndeclaredInheritedException2 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.076 s 44599688 bytes
+    [0.207 s 44767416 bytes]
 
 UndeclaredInheritedException2: UndeclaredInheritedException2() ...
-    [TIME]  passed immediately
+    [0.0 s 44769464 bytes]  passed immediately
 
 UndeclaredInheritedException2: q(java.lang.Object) ...
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:10: Warning: Possible assertion failure (Assert)
+src/test/resources/UndeclaredInheritedException2.java:10: Warning: Possible assertion failure (Assert)
     //@ assert x.m(o); // WARNING - because result is undefined with o ...
         ^
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:11: Warning: Possible assertion failure (Assert)
-    //@ assert false;  // WARNING - gets here because x.m is not decla ...
-        ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.144 s 45594048 bytes]  failed
 
 UndeclaredInheritedException2: qx(java.lang.Object) ...
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:18: Warning: Possible assertion failure (Assert)
+src/test/resources/UndeclaredInheritedException2.java:18: Warning: Possible assertion failure (Assert)
     //@ assert x.m(o); // WARNING - because result is undefined with o ...
         ^
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:19: Warning: Possible assertion failure (Assert)
-    //@ assert false;  // WARNING - gets here because exceptions are i ...
-        ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.1 s 46348312 bytes]  failed
 
 UndeclaredInheritedException2: q1(java.lang.Object) ...
-    [TIME]  passed
+    [0.081 s 43654960 bytes]  passed
 
 UndeclaredInheritedException2: q1x(java.lang.Object) ...
-    [TIME]  passed
+    [0.087 s 44366808 bytes]  passed
 
 UndeclaredInheritedException2: q3(java.lang.Object) ...
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:40: Warning: Possible assertion failure (Assert)
+src/test/resources/UndeclaredInheritedException2.java:40: Warning: Possible assertion failure (Assert)
     //@ assert x.m(oo); // WARNING - not sure oo is non-null
         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.071 s 45256904 bytes]  failed
 
 UndeclaredInheritedException2: q3x(java.lang.Object) ...
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:47: Warning: Possible assertion failure (Assert)
+src/test/resources/UndeclaredInheritedException2.java:47: Warning: Possible assertion failure (Assert)
     //@ assert x.m(oo); // WARNING - not sure oo is non-null
         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.1 s 46143928 bytes]  failed
 
 UndeclaredInheritedException2: q4(java.lang.Object) ...
-    [TIME]  passed
+    [0.023 s 46681656 bytes]  passed
 
 UndeclaredInheritedException2: q4x(java.lang.Object) ...
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:67: Warning: Possible unexpected exception (Exception)
+src/test/resources/UndeclaredInheritedException2.java:67: Warning: Possible unexpected exception (Exception)
 }  // WARNING - an exception might be thrown
 ^
 Execution trace information:
-    Routine call returned exceptionally in "UndeclaredInheritedException2.java", line 66, col 6.
+    Routine call returned exceptionally in "src/test/resources/UndeclaredInheritedException2.java", line 66, col 6.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.056 s 47548008 bytes]  failed
 
 UndeclaredInheritedException2: rr(UndeclaredInheritedException2$NEx) ...
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:74: Warning: Possible assertion failure (Assert)
+src/test/resources/UndeclaredInheritedException2.java:74: Warning: Possible assertion failure (Assert)
         //@ assert false;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.045 s 43581032 bytes]  failed
 
 UndeclaredInheritedException2: rrx(UndeclaredInheritedException2$Ex) ...
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:89: Warning: Possible assertion failure (Assert)
+src/test/resources/UndeclaredInheritedException2.java:89: Warning: Possible assertion failure (Assert)
 //@ assert false;  // WARNING
     ^
 Execution trace information:
-    Routine call returned exceptionally in "UndeclaredInheritedException2.java", line 84, col 10.
+    Routine call returned exceptionally in "src/test/resources/UndeclaredInheritedException2.java", line 84, col 10.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.095 s 44506240 bytes]  failed
+  [1.011 s 44507264 bytes total]
 
 UndeclaredInheritedException2$SNEx ...
-    [TIME]
+    [0.0010 s 44623416 bytes]
 
 UndeclaredInheritedException2$SNEx: SNEx() ...
-    [TIME]  passed immediately
+    [0.0 s 44625464 bytes]  passed immediately
 
 UndeclaredInheritedException2$SNEx: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-UndeclaredInheritedException2.java:106: Warning: Possible unexpected exception (Exception)
-    } // WARNING - Unexpected Exception
+src/test/resources/UndeclaredInheritedException2.java:104: Warning: Possible violation of modifies clause (Modifies)
+      if (o == null) throw new NullPointerException();
+                                                   ^
+Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/NullPointerException.class":
+Associated declaration is "src/test/resources/UndeclaredInheritedException2.java", line 96, col 4:
+    //@ public normal_behavior ...
     ^
 Execution trace information:
-    Executed then branch in "UndeclaredInheritedException2.java", line 104, col 21.
-    Executed throw in "UndeclaredInheritedException2.java", line 104, col 21.
+    Executed then branch in "src/test/resources/UndeclaredInheritedException2.java", line 104, col 21.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.034 s 45099176 bytes]  failed
+  [0.036 s 45100200 bytes total]
 
 UndeclaredInheritedException2$NEx ...
-    [TIME]
+    [0.0010 s 45224096 bytes]
 
 UndeclaredInheritedException2$NEx: NEx() ...
-    [TIME]  passed immediately
+    [0.0 s 45226144 bytes]  passed immediately
 
 UndeclaredInheritedException2$NEx: m(java.lang.Object) ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 45228192 bytes]  passed immediately
+  [0.017 s 45230240 bytes total]
 
 UndeclaredInheritedException2$SEx ...
-    [TIME]
+    [0.0010 s 45346352 bytes]
 
 UndeclaredInheritedException2$SEx: SEx() ...
-    [TIME]  passed immediately
+    [0.0 s 45347376 bytes]  passed immediately
 
 UndeclaredInheritedException2$SEx: m(java.lang.Object) ...
-    [TIME]  passed
-  [TIME total]
+------------------------------------------------------------------------
+src/test/resources/UndeclaredInheritedException2.java:128: Warning: Possible violation of modifies clause (Modifies)
+      if (o == null) throw new NullPointerException();
+                                                   ^
+Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/NullPointerException.class":
+Associated declaration is "src/test/resources/UndeclaredInheritedException2.java", line 120, col 4:
+    //@ public normal_behavior ...
+    ^
+Execution trace information:
+    Executed then branch in "src/test/resources/UndeclaredInheritedException2.java", line 128, col 21.
+
+------------------------------------------------------------------------
+    [0.066 s 45822112 bytes]  failed
+  [0.068 s 45823136 bytes total]
 
 UndeclaredInheritedException2$Ex ...
-    [TIME]
+    [0.0010 s 45946952 bytes]
 
 UndeclaredInheritedException2$Ex: Ex() ...
-    [TIME]  passed immediately
+    [0.0 s 45949000 bytes]  passed immediately
 
 UndeclaredInheritedException2$Ex: m(java.lang.Object) ...
-    [TIME]  passed immediately
-  [TIME total]
-10 warnings
+    [0.0 s 45951048 bytes]  passed immediately
+  [0.017 s 45953096 bytes total]
+1 caution
+9 warnings

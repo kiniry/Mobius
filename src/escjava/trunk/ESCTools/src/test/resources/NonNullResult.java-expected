@@ -1,160 +1,127 @@
-ESC/Java version VERSION
-  Prover started:TIME
+ESC/Java version ESCJava-CURRENT
+src/test/resources/NonNullResult.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullResult on the classpath
+    [0.0020 s 23727136 bytes]
 
 NonNullResult ...
+  Prover started:0.061 s 24820984 bytes
+    [0.163 s 24893352 bytes]
 
 NonNullResult: NonNullResult() ...
-    [TIME]  passed immediately
+    [0.0 s 24895400 bytes]  passed immediately
 
 NonNullResult: m1(int) ...
-    [TIME]  passed
+    [0.071 s 24959296 bytes]  passed
 
 NonNullResult: m2(int) ...
 ------------------------------------------------------------------------
-NonNullResult.java:16: Warning: Method declared non_null may return null (NonNullResult)
+src/test/resources/NonNullResult.java:16: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS
         ^
-Associated declaration is "NonNullResult.java", line 13, col 10:
+Associated declaration is "src/test/resources/NonNullResult.java", line 13, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "NonNullResult.java", line 15, col 2.
+    Executed return in "src/test/resources/NonNullResult.java", line 15, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.043 s 25183656 bytes]  failed
 
 NonNullResult: m3(int) ...
 ------------------------------------------------------------------------
-NonNullResult.java:21: Warning: Method declared non_null may return null (NonNullResult)
+src/test/resources/NonNullResult.java:21: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS - super class spec
         ^
-Associated declaration is "NonNullResult.java", line 67, col 10:
+Associated declaration is "src/test/resources/NonNullResult.java", line 67, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "NonNullResult.java", line 20, col 2.
+    Executed return in "src/test/resources/NonNullResult.java", line 20, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.016 s 25380664 bytes]  failed
 
 NonNullResult: m4(int) ...
 ------------------------------------------------------------------------
-NonNullResult.java:26: Warning: Method declared non_null may return null (NonNullResult)
+src/test/resources/NonNullResult.java:26: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS
         ^
-Associated declaration is "NonNullResult.java", line 23, col 10:
+Associated declaration is "src/test/resources/NonNullResult.java", line 23, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "NonNullResult.java", line 25, col 2.
+    Executed return in "src/test/resources/NonNullResult.java", line 25, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.017 s 25601168 bytes]  failed
 
 NonNullResult: m5(int) ...
 ------------------------------------------------------------------------
-NonNullResult.java:32: Warning: Method declared non_null may return null (NonNullResult)
+src/test/resources/NonNullResult.java:32: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS - super class spec
         ^
-Associated declaration is "NonNullResult.java", line 78, col 10:
+Associated declaration is "src/test/resources/NonNullResult.java", line 78, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "NonNullResult.java", line 31, col 2.
+    Executed return in "src/test/resources/NonNullResult.java", line 31, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.019 s 25824744 bytes]  failed
 
 NonNullResult: mm() ...
 ------------------------------------------------------------------------
-NonNullResult.java:36: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src/test/resources/NonNullResult.java:36: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 o = m1(0); // FAILS
                   ^
-Associated declaration is "NonNullResult.java", line 35, col 6:
+Associated declaration is "src/test/resources/NonNullResult.java", line 35, col 6:
                 /*@ non_null */ NonNullResultS o = new NonNullResultS( ...
                     ^
 ------------------------------------------------------------------------
-NonNullResult.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
-                o = super.m1(0); // FAILS
-                  ^
-Associated declaration is "NonNullResult.java", line 35, col 6:
-                /*@ non_null */ NonNullResultS o = new NonNullResultS( ...
-                    ^
-------------------------------------------------------------------------
-NonNullResult.java:41: Warning: Possible assignment of null to variable declared non_null (NonNull)
-                o = super.m2(0); // FAILS
-                  ^
-Associated declaration is "NonNullResult.java", line 35, col 6:
-                /*@ non_null */ NonNullResultS o = new NonNullResultS( ...
-                    ^
-------------------------------------------------------------------------
-NonNullResult.java:45: Warning: Precondition possibly not established (Pre)
-                o = m5(-20); // FAILS - Precondition
-                      ^
-Associated declaration is "NonNullResult.java", line 28, col 10:
-        //@ also requires i <= 0 && i >=-10;
-                 ^
-Associated declaration is "NonNullResult.java", line 77, col 5:
-        //@ requires i >= 0;
-            ^
-------------------------------------------------------------------------
-NonNullResult.java:45: Warning: Possible assignment of null to variable declared non_null (NonNull)
-                o = m5(-20); // FAILS - Precondition
-                  ^
-Associated declaration is "NonNullResult.java", line 35, col 6:
-                /*@ non_null */ NonNullResultS o = new NonNullResultS( ...
-                    ^
-------------------------------------------------------------------------
-NonNullResult.java:46: Warning: Possible assignment of null to variable declared non_null (NonNull)
-                o = m5(-1); // FAILS
-                  ^
-Associated declaration is "NonNullResult.java", line 35, col 6:
-                /*@ non_null */ NonNullResultS o = new NonNullResultS( ...
-                    ^
-------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.14 s 25974528 bytes]  failed
+  [0.47 s 25975552 bytes total]
 
 NonNullResultS ...
+    [0.0010 s 26046856 bytes]
 
 NonNullResultS: NonNullResultS() ...
-    [TIME]  passed immediately
+    [0.0 s 26048904 bytes]  passed immediately
 
 NonNullResultS: m1(int) ...
-    [TIME]  passed
+    [0.0090 s 26113880 bytes]  passed
 
 NonNullResultS: m2(int) ...
-    [TIME]  passed
+    [0.0040 s 26178856 bytes]  passed
 
 NonNullResultS: m3(int) ...
 ------------------------------------------------------------------------
-NonNullResult.java:70: Warning: Method declared non_null may return null (NonNullResult)
+src/test/resources/NonNullResult.java:70: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS
         ^
-Associated declaration is "NonNullResult.java", line 67, col 10:
+Associated declaration is "src/test/resources/NonNullResult.java", line 67, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "NonNullResult.java", line 69, col 2.
+    Executed return in "src/test/resources/NonNullResult.java", line 69, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.014 s 26369664 bytes]  failed
 
 NonNullResultS: m4(int) ...
 ------------------------------------------------------------------------
-NonNullResult.java:75: Warning: Method declared non_null may return null (NonNullResult)
+src/test/resources/NonNullResult.java:75: Warning: Method declared non_null may return null (NonNullResult)
         } // FAILS
         ^
-Associated declaration is "NonNullResult.java", line 72, col 10:
+Associated declaration is "src/test/resources/NonNullResult.java", line 72, col 10:
         //@ pure non_null
                  ^
 Execution trace information:
-    Executed return in "NonNullResult.java", line 74, col 2.
+    Executed return in "src/test/resources/NonNullResult.java", line 74, col 2.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.014 s 26560472 bytes]  failed
 
 NonNullResultS: m5(int) ...
-    [TIME]  passed
-  [TIME total]
-12 warnings
+    [0.016 s 24257672 bytes]  passed
+  [0.058 s 24258696 bytes total]
+1 caution
+7 warnings

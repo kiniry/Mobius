@@ -1,53 +1,32 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ElemType.java: Caution: Using given file as the .java file, even though it is not the java file for ElemType on the classpath
+    [0.0020 s 19593720 bytes]
 
 ElemType ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 21322296 bytes
+    [0.215 s 21435272 bytes]
 
 ElemType: m() ...
 ------------------------------------------------------------------------
-ElemType.java:9: Warning: Possible assertion failure (Assert)
+src/test/resources/ElemType.java:9: Warning: Possible assertion failure (Assert)
                 //@ assert \elemtype(\typeof(oa)) == \type(Object); // ...
                     ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.105 s 21728136 bytes]  failed
 
 ElemType: mm() ...
 ------------------------------------------------------------------------
-ElemType.java:20: Warning: Postcondition possibly not established (Post)
+src/test/resources/ElemType.java:20: Warning: Postcondition possibly not established (Post)
         public void mm() {}
                           ^
-Associated declaration is "ElemType.java", line 15, col 5:
+Associated declaration is "src/test/resources/ElemType.java", line 15, col 5:
         //@ ensures \elemtype(\typeof(new int[1])) == \type(int);
             ^
-Execution trace information:
-    Executed implicit return in "ElemType.java", line 20, col 19.
-
 ------------------------------------------------------------------------
-ElemType.java:20: Warning: Postcondition possibly not established (Post)
-        public void mm() {}
-                          ^
-Associated declaration is "ElemType.java", line 16, col 5:
-        //@ ensures \elemtype(\typeof(l)) == \elemtype(\typeof(2+2));  ...
-            ^
-Execution trace information:
-    Executed implicit return in "ElemType.java", line 20, col 19.
-
-------------------------------------------------------------------------
-ElemType.java:20: Warning: Postcondition possibly not established (Post)
-        public void mm() {}
-                          ^
-Associated declaration is "ElemType.java", line 19, col 5:
-        //@ ensures \elemtype(\typeof(i)) == \elemtype(\typeof(f)); // ...
-            ^
-Execution trace information:
-    Executed implicit return in "ElemType.java", line 20, col 19.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.025 s 21980864 bytes]  failed
 
 ElemType: ElemType() ...
-    [TIME]  passed
-  [TIME total]
-4 warnings
+    [0.022 s 20029264 bytes]  passed
+  [0.368 s 20030288 bytes total]
+1 caution
+2 warnings

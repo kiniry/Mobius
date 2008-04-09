@@ -1,19 +1,27 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/CardException2.java: Caution: Using given file as the .java file, even though it is not the java file for CardException2 on the classpath
+    [0.0020 s 17940576 bytes]
 
 CardException2 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 18978008 bytes
+    [0.162 s 19046720 bytes]
 
 CardException2: CardException2(short) ...
-    [TIME]  passed
+    [0.076 s 19264312 bytes]  passed
 
 CardException2: getReason() ...
-    [TIME]  passed
+    [0.0040 s 19331352 bytes]  passed
 
 CardException2: setReason(short) ...
-    [TIME]  passed
+    [0.03 s 19407168 bytes]  passed
 
 CardException2: throwIt(short) ...
-    [TIME]  passed
-  [TIME total]
+------------------------------------------------------------------------
+src/test/resources/CardException2.java:29: Warning: Possible null dereference (Null)
+        systemInstance.setReason(reason);
+                      ^
+------------------------------------------------------------------------
+    [0.023 s 19718928 bytes]  failed
+  [0.295 s 19719952 bytes total]
+1 caution
+1 warning

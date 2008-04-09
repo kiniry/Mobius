@@ -1,23 +1,39 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModChecksConstructor.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksConstructor on the classpath
+    [0.0010 s 21243568 bytes]
 
 ModChecksConstructor ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.063 s 22272944 bytes
+    [0.164 s 22340536 bytes]
 
 ModChecksConstructor: ModChecksConstructor() ...
-    [TIME]  passed
+src/test/resources/ModChecksConstructor.java:4: Error: There is no assignable clause allowing this method call
+        public ModChecksConstructor() {
+                                      ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/ModChecksConstructor.java:3: Associated declaration: 
+        //@ pure 
+        ^
+    [0.075 s 22562976 bytes]  passed
 
 ModChecksConstructor: ModChecksConstructor(int) ...
-    [TIME]  passed
+    [0.01 s 22755240 bytes]  passed
 
 ModChecksConstructor: ModChecksConstructor(java.lang.Object) ...
-ModChecksConstructor.java:18: Error: There is no assignable clause allowing this assignment
-            i = 0; // WARNING
-            ^
-ModChecksConstructor.java:16: Associated declaration: 
+src/test/resources/ModChecksConstructor.java:17: Error: There is no assignable clause allowing this method call
+        public ModChecksConstructor(Object o) {
+                                              ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/ModChecksConstructor.java:16: Associated declaration: 
         //@ modifies \nothing;
             ^
-    [TIME]  passed
-  [TIME total]
-1 error
+src/test/resources/ModChecksConstructor.java:18: Error: There is no assignable clause allowing this assignment
+            i = 0; // WARNING
+            ^
+src/test/resources/ModChecksConstructor.java:16: Associated declaration: 
+        //@ modifies \nothing;
+            ^
+    [0.063 s 21420048 bytes]  passed
+  [0.312 s 21421072 bytes total]
+1 caution
+3 errors

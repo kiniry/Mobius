@@ -1,13 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ParseExample.java: Caution: Using given file as the .java file, even though it is not the java file for ParseExample on the classpath
+    [0.0010 s 24526056 bytes]
 
 ParseExample ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 24909576 bytes
+    [0.178 s 24975624 bytes]
 
 ParseExample: m(int) ...
-    [TIME]  passed immediately
+    [0.0 s 24976648 bytes]  passed immediately
 
 ParseExample: ParseExample() ...
-    [TIME]  passed
-  [TIME total]
+    [0.07 s 25127384 bytes]  passed
+  [0.249 s 25128408 bytes total]
+1 caution

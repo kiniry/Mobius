@@ -1,29 +1,59 @@
-ESC/Java version VERSION
-Privacy.java:57: Error: Unrecognized pragma: 166 null
-//@ FIXME - check for model methods, model constructors, model and non ...
-    ^
-  Prover started:TIME
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Privacy.java: Caution: Using given file as the .java file, even though it is not the java file for Privacy on the classpath
+    [0.0040 s 24354368 bytes]
 
 Privacy ...
-Privacy.java:59: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
+  Prover started:0.065 s 25455288 bytes
+    [0.167 s 25533840 bytes]
+
+Privacy: mb() ...
+    [0.072 s 25650800 bytes]  passed
+
+Privacy: mbb() ...
+    [0.0070 s 25767704 bytes]  passed
+
+Privacy: mbbb() ...
+    [0.033 s 25883584 bytes]  passed
+
+Privacy: pmb() ...
+    [0.0070 s 25999464 bytes]  passed
+
+Privacy: pmbb() ...
+    [0.0080 s 26115400 bytes]  passed
+
+Privacy: pmbbb() ...
+    [0.025 s 24617024 bytes]  passed
+
+Privacy: ppmb() ...
+    [0.0070 s 24732904 bytes]  passed
+
+Privacy: ppmbb() ...
+    [0.0070 s 24848784 bytes]  passed
+
+Privacy: m() ...
+------------------------------------------------------------------------
+src/test/resources/Privacy.java:67: Warning: Postcondition possibly not established (Post)
+        public void m() {}
+                         ^
+Associated declaration is "src/test/resources/Privacy.java", line 59, col 5:
         //@ ensures g && pg && ppg && pppg;
-                    ^
-Privacy.java:60: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-        //@ ensures mg && pmg && ppmg && pppmg;
-                    ^
-Privacy.java:64: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-        //@ ensures bbb && bb && b;
-                                 ^
-Privacy.java:69: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
+            ^
+------------------------------------------------------------------------
+    [0.034 s 25342688 bytes]  failed
+
+Privacy: mm() ...
+------------------------------------------------------------------------
+src/test/resources/Privacy.java:77: Warning: Postcondition possibly not established (Post)
+        protected void mm() {}
+                             ^
+Associated declaration is "src/test/resources/Privacy.java", line 69, col 5:
         //@ ensures g && pg && ppg && pppg;
-                    ^
-Privacy.java:70: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-        //@ ensures mg && pmg && ppmg && pppmg;
-                    ^
-Privacy.java:74: Error: A private field can be used in postconditions of overridable methods only if it is declared spec_public or spec_protected
-        //@ ensures bbb && bb && b;
-                                 ^
-Caution: Turning off extended static checking due to type error(s)
-  [TIME total] (aborted)
+            ^
+------------------------------------------------------------------------
+    [0.059 s 25791824 bytes]  failed
+
+Privacy: Privacy() ...
+    [0.01 s 26068208 bytes]  passed
+  [0.436 s 26069232 bytes total]
 1 caution
-7 errors
+2 warnings

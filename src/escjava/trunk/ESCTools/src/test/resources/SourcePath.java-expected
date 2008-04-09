@@ -1,25 +1,15 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/SourcePath.java: Caution: Using given file as the .java file, even though it is not the java file for SourcePath on the classpath
+    [0.0010 s 25094136 bytes]
 
 SourcePath ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 26091504 bytes
+    [0.162 s 26156488 bytes]
 
 SourcePath: m() ...
-------------------------------------------------------------------------
-SourcePath.java:5: Warning: Postcondition possibly not established (Post)
-        public void m() {}
-                         ^
-Associated declaration is ".|SourcePath.refines-java", line 5, col 5:
-        //@ ensures false;
-            ^
-Execution trace information:
-    Executed implicit return in "SourcePath.java", line 5, col 18.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.07 s 26202832 bytes]  passed
 
 SourcePath: SourcePath() ...
-    [TIME]  passed
-  [TIME total]
-1 warning
+    [0.0080 s 26354536 bytes]  passed
+  [0.241 s 26355560 bytes total]
+1 caution

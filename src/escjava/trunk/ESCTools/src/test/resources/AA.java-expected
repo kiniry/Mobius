@@ -1,10 +1,12 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/AA.java: Caution: Using given file as the .java file, even though it is not the java file for AA on the classpath
+    [0.06 s 16893328 bytes]
 
 AA ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.065 s 18414680 bytes
+    [0.478 s 18618288 bytes]
 
 AA: AA() ...
-    [TIME]  passed
-  [TIME total]
+    [0.095 s 16703848 bytes]  passed
+  [0.574 s 16705944 bytes total]
+1 caution

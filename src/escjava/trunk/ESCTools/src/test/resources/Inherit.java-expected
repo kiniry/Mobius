@@ -1,133 +1,135 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Inherit.java: Caution: Using given file as the .java file, even though it is not the java file for Inherit on the classpath
+    [0.011 s 20388136 bytes]
 
 Inherit ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 21410896 bytes
+    [0.161 s 21482472 bytes]
 
 Inherit: m(int) ...
-    [TIME]  passed immediately
+    [0.0 s 21484520 bytes]  passed immediately
 
 Inherit: Inherit() ...
-    [TIME]  passed
-  [TIME total]
+    [0.071 s 21624088 bytes]  passed
+  [0.233 s 21625112 bytes total]
 
 InheritB ...
-    [TIME]
+    [0.0020 s 21719592 bytes]
 
 InheritB: m(int) ...
-    [TIME]  passed immediately
+    [0.0 s 21721640 bytes]  passed immediately
 
 InheritB: InheritB() ...
-    [TIME]  passed
-  [TIME total]
+    [0.012 s 21864552 bytes]  passed
+  [0.014 s 21865576 bytes total]
 
 InheritS ...
-    [TIME]
+    [0.023 s 20531664 bytes]
 
 InheritS: m(int) ...
-    [TIME]  passed immediately
+    [0.0 s 20532688 bytes]  passed immediately
 
 InheritS: InheritS() ...
-    [TIME]  passed
-  [TIME total]
+    [0.034 s 20686648 bytes]  passed
+  [0.058 s 20687672 bytes total]
 
 M ...
-    [TIME]
+    [0.055 s 22056112 bytes]
 
 M: mm() ...
-    [TIME]  passed
+    [0.034 s 22385024 bytes]  passed
 
 M: mm1() ...
 ------------------------------------------------------------------------
-Inherit.java:40: Warning: Possible assertion failure (Assert)
+src/test/resources/Inherit.java:40: Warning: Possible assertion failure (Assert)
        //@ assert j == 1;  // OK - if we had dynamically type specs FI ...
            ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.082 s 22918288 bytes]  failed
 
 M: mm1a() ...
-    [TIME]  passed
+    [0.032 s 23363792 bytes]  passed
 
 M: mm2() ...
 ------------------------------------------------------------------------
-Inherit.java:55: Warning: Possible assertion failure (Assert)
+src/test/resources/Inherit.java:55: Warning: Possible assertion failure (Assert)
        //@ assert j == 2;  // OK - if we had dynamically type specs FI ...
            ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.047 s 21481000 bytes]  failed
 
 M: mm2a() ...
-    [TIME]  passed
+    [0.031 s 21928344 bytes]  passed
 
 M: mm3() ...
-    [TIME]  passed
+    [0.022 s 22346488 bytes]  passed
 
 M: mm4() ...
-    [TIME]  passed
+    [0.059 s 22765064 bytes]  passed
 
 M: p(InheritS) ...
 ------------------------------------------------------------------------
-Inherit.java:81: Warning: Possible assertion failure (Assert)
+src/test/resources/Inherit.java:81: Warning: Possible assertion failure (Assert)
        //@ assert i.m(0) == 1;  // OK - if we had dynamically typed sp ...
            ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.041 s 23114544 bytes]  failed
 
 M: q0(InheritS) ...
-    [TIME]  passed
+    [0.01 s 23304208 bytes]  passed
 
 M: q1(InheritS) ...
 ------------------------------------------------------------------------
-Inherit.java:90: Warning: Precondition possibly not established (Pre)
+src/test/resources/Inherit.java:90: Warning: Precondition possibly not established (Pre)
        i.m(-1);  // ERROR
           ^
-Associated declaration is "Inherit.java", line 21, col 7:
+Associated declaration is "src/test/resources/Inherit.java", line 21, col 7:
    //@ requires k >= 0;
        ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.029 s 23639728 bytes]  failed
 
 M: q2(InheritS) ...
 ------------------------------------------------------------------------
-Inherit.java:94: Warning: Precondition possibly not established (Pre)
+src/test/resources/Inherit.java:94: Warning: Precondition possibly not established (Pre)
        i.m(-3);  // ERROR
           ^
-Associated declaration is "Inherit.java", line 21, col 7:
+Associated declaration is "src/test/resources/Inherit.java", line 21, col 7:
    //@ requires k >= 0;
        ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.041 s 21366664 bytes]  failed
 
 M: q3(InheritS) ...
 ------------------------------------------------------------------------
-Inherit.java:98: Warning: Precondition possibly not established (Pre)
+src/test/resources/Inherit.java:98: Warning: Precondition possibly not established (Pre)
        if (i instanceof Inherit) i.m(-1); // OK - if we had dynamicall ...
                                     ^
-Associated declaration is "Inherit.java", line 21, col 7:
+Associated declaration is "src/test/resources/Inherit.java", line 21, col 7:
    //@ requires k >= 0;
        ^
 Execution trace information:
-    Executed then branch in "Inherit.java", line 98, col 33.
+    Executed then branch in "src/test/resources/Inherit.java", line 98, col 33.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.034 s 21744248 bytes]  failed
 
 M: q4(InheritS) ...
 ------------------------------------------------------------------------
-Inherit.java:102: Warning: Precondition possibly not established (Pre)
+src/test/resources/Inherit.java:102: Warning: Precondition possibly not established (Pre)
        if (i instanceof Inherit) i.m(-2); // ERROR
                                     ^
-Associated declaration is "Inherit.java", line 21, col 7:
+Associated declaration is "src/test/resources/Inherit.java", line 21, col 7:
    //@ requires k >= 0;
        ^
 Execution trace information:
-    Executed then branch in "Inherit.java", line 102, col 33.
+    Executed then branch in "src/test/resources/Inherit.java", line 102, col 33.
 
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.067 s 22123648 bytes]  failed
 
 M: M() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0050 s 22274808 bytes]  passed
+  [0.59 s 22275832 bytes total]
+1 caution
 7 warnings

@@ -1,19 +1,35 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Instance.java: Caution: Using given file as the .java file, even though it is not the java file for Instance on the classpath
+    [0.0020 s 20934128 bytes]
 
 Instance ...
-    [TIME]
+  Prover started:0.068 s 21953512 bytes
+    [0.192 s 22027984 bytes]
 
 Instance: Instance() ...
-    [TIME]  ok
-  [TIME total]
+------------------------------------------------------------------------
+src/test/resources/Instance.java:2: Warning: Possible violation of object invariant (Invariant)
+public class Instance implements I {
+                                   ^
+Associated declaration is "src/test/resources/Instance.java", line 19, col 14:
+        //@ instance invariant ib && b;
+                     ^
+Possibly relevant items from the counterexample context:  
+  brokenObj%0 == RES-2.35
+(brokenObj* refers to the object for which the invariant is broken.)
+
+------------------------------------------------------------------------
+    [0.199 s 23156912 bytes]  failed
+  [0.393 s 23157936 bytes total]
 
 I ...
-    [TIME]
+    [0.0010 s 23222248 bytes]
 
 I: m() ...
-    [TIME]  passed immediately
+    [0.0 s 23224296 bytes]  passed immediately
 
 I: im() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 23225320 bytes]  passed immediately
+  [0.0090 s 23226344 bytes total]
+1 caution
+1 warning

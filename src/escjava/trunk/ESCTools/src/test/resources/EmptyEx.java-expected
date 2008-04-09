@@ -1,0 +1,12 @@
+ESC/Java version ESCJava-CURRENT
+src/test/resources/EmptyEx.java: Caution: Using given file as the .java file, even though it is not the java file for EmptyEx on the classpath
+    [0.0020 s 19576792 bytes]
+
+EmptyEx ...
+  Prover started:0.16 s 20597736 bytes
+    [0.871 s 20663448 bytes]
+
+EmptyEx: EmptyEx() ...
+    [0.533 s 20814552 bytes]  passed
+  [1.41 s 20815576 bytes total]
+1 caution

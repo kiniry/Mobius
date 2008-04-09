@@ -1,23 +1,24 @@
-ESC/Java version VERSION
-AxiomAccess.java:6: Caution: Access modifiers are not allowed prior to axiom
+ESC/Java version ESCJava-CURRENT
+src/test/resources/AxiomAccess.java:6: Caution: Access modifiers are not allowed prior to axiom
         //@ static axiom (\forall int i; i>0; -i < 0);
                    ^
-AxiomAccess.java:7: Caution: Access modifiers are not allowed prior to axiom
+src/test/resources/AxiomAccess.java:7: Caution: Access modifiers are not allowed prior to axiom
         //@ public axiom (\forall int i; i>0; -i < 0);
                    ^
-AxiomAccess.java:8: Caution: Access modifiers are not allowed prior to axiom
+src/test/resources/AxiomAccess.java:8: Caution: Access modifiers are not allowed prior to axiom
         //@ protected axiom (\forall int i; i>0; -i < 0);
                       ^
-AxiomAccess.java:9: Caution: Access modifiers are not allowed prior to axiom
+src/test/resources/AxiomAccess.java:9: Caution: Access modifiers are not allowed prior to axiom
         //@ private axiom (\forall int i; i>0; -i < 0);
                     ^
-    [TIME]
+src/test/resources/AxiomAccess.java: Caution: Using given file as the .java file, even though it is not the java file for AxiomAccess on the classpath
+    [0.0040 s 17080392 bytes]
 
 AxiomAccess ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.059 s 18083816 bytes
+    [0.161 s 18149064 bytes]
 
 AxiomAccess: AxiomAccess() ...
-    [TIME]  passed
-  [TIME total]
-4 cautions
+    [0.074 s 18360792 bytes]  passed
+  [0.235 s 18361816 bytes total]
+5 cautions

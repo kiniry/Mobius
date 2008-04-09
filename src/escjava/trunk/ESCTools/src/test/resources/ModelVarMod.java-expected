@@ -1,91 +1,93 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModelVarMod.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVarMod on the classpath
+    [0.0060 s 23606256 bytes]
 
 ModelVarMod ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 23738160 bytes
+    [0.178 s 23815280 bytes]
 
 ModelVarMod: p() ...
-    [TIME]  passed
+    [0.111 s 24078344 bytes]  passed
 
 ModelVarMod: p2() ...
-    [TIME]  passed
+    [0.023 s 24353720 bytes]  passed
 
 ModelVarMod: p3() ...
-    [TIME]  passed
+    [0.021 s 24600112 bytes]  passed
 
 ModelVarMod: p3a() ...
-    [TIME]  passed
+    [0.026 s 24858160 bytes]  passed
 
 ModelVarMod: pp() ...
-    [TIME]  passed
+    [0.012 s 25009200 bytes]  passed
 
 ModelVarMod: pp2() ...
 ------------------------------------------------------------------------
-ModelVarMod.java:109: Warning: Possible assertion failure (Assert)
+src/test/resources/ModelVarMod.java:109: Warning: Possible assertion failure (Assert)
             //@ assert ms == 4;  // ERROR
                 ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.026 s 25372232 bytes]  failed
 
 ModelVarMod: ModelVarMod() ...
-    [TIME]  passed
-  [TIME total]
+    [0.048 s 25736752 bytes]  passed
+  [0.446 s 25737776 bytes total]
 
 ModelVarModPS ...
-    [TIME]
+    [0.0020 s 25813264 bytes]
 
 ModelVarModPS: ModelVarModPS() ...
-    [TIME]  passed
-  [TIME total]
+    [0.01 s 25985504 bytes]  passed
+  [0.012 s 25986528 bytes total]
 
 ModelVarModS ...
-    [TIME]
+    [0.0010 s 26054664 bytes]
 
 ModelVarModS: ModelVarModS() ...
-    [TIME]  passed
-  [TIME total]
+    [0.016 s 23774264 bytes]  passed
+  [0.018 s 23775288 bytes total]
 
 ModelVarModD ...
-    [TIME]
+    [0.0010 s 23823888 bytes]
 
 ModelVarModD: ModelVarModD() ...
-    [TIME]  passed
-  [TIME total]
+    [0.011 s 24021824 bytes]  passed
+  [0.012 s 24022848 bytes total]
 
 ModelVarModStatic ...
-    [TIME]
+    [0.0070 s 24425968 bytes]
 
 ModelVarModStatic: q() ...
-    [TIME]  passed
+    [0.019 s 24665072 bytes]  passed
 
 ModelVarModStatic: q2() ...
-    [TIME]  passed
+    [0.015 s 24912352 bytes]  passed
 
 ModelVarModStatic: q3() ...
-    [TIME]  passed
+    [0.042 s 25151552 bytes]  passed
 
 ModelVarModStatic: q3a() ...
-    [TIME]  passed
+    [0.014 s 25379488 bytes]  passed
 
 ModelVarModStatic: qq() ...
-    [TIME]  passed
+    [0.012 s 25577968 bytes]  passed
 
 ModelVarModStatic: qq2() ...
 ------------------------------------------------------------------------
-ModelVarMod.java:245: Warning: Possible assertion failure (Assert)
+src/test/resources/ModelVarMod.java:245: Warning: Possible assertion failure (Assert)
             //@ assert ms == 4;  // ERROR
                 ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.025 s 25947600 bytes]  failed
 
 ModelVarModStatic: qq2a() ...
-    [TIME]  passed
+    [0.012 s 26151200 bytes]  passed
 
 ModelVarModStatic: qq2b() ...
-    [TIME]  passed
+    [0.012 s 26338272 bytes]  passed
 
 ModelVarModStatic: ModelVarModStatic() ...
-    [TIME]  passed
-  [TIME total]
+    [0.01 s 24174632 bytes]  passed
+  [0.169 s 24175656 bytes total]
+1 caution
 2 warnings

@@ -1,81 +1,43 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/NewObject.java: Caution: Using given file as the .java file, even though it is not the java file for NewObject on the classpath
+    [0.0020 s 23820952 bytes]
 
 NewObject ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.105 s 24916544 bytes
+    [0.208 s 24992544 bytes]
 
 NewObject: NewObject() ...
-    [TIME]  passed immediately
+    [0.0010 s 24994648 bytes]  passed immediately
 
 NewObject: m() ...
-    [TIME]  passed
+    [0.105 s 25123904 bytes]  passed
 
 NewObject: mm() ...
-    [TIME]  passed
+    [0.05 s 24183336 bytes]  passed
 
 NewObject: mmm() ...
 ------------------------------------------------------------------------
-NewObject.java:28: Warning: Postcondition possibly not established (Post)
+src/test/resources/NewObject.java:28: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "NewObject.java", line 20, col 5:
+Associated declaration is "src/test/resources/NewObject.java", line 20, col 5:
         //@ ensures (new int[5]) != null;
             ^
 Execution trace information:
-    Executed return in "NewObject.java", line 27, col 2.
+    Executed return in "src/test/resources/NewObject.java", line 27, col 2.
 
 ------------------------------------------------------------------------
-NewObject.java:28: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "NewObject.java", line 21, col 5:
-        //@ ensures (new int[5]).length == 5;
-            ^
-Execution trace information:
-    Executed return in "NewObject.java", line 27, col 2.
-
-------------------------------------------------------------------------
-NewObject.java:28: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "NewObject.java", line 22, col 5:
-        //@ ensures \typeof(new int[5]) == \type(int[]);
-            ^
-Execution trace information:
-    Executed return in "NewObject.java", line 27, col 2.
-
-------------------------------------------------------------------------
-NewObject.java:28: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "NewObject.java", line 23, col 5:
-        //@ ensures (new int[6]) != \result;
-            ^
-Execution trace information:
-    Executed return in "NewObject.java", line 27, col 2.
-
-------------------------------------------------------------------------
-NewObject.java:28: Warning: Postcondition possibly not established (Post)
-        }
-        ^
-Associated declaration is "NewObject.java", line 24, col 5:
-        //@ ensures (new int[6]) != b;
-            ^
-Execution trace information:
-    Executed return in "NewObject.java", line 27, col 2.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.03 s 24535936 bytes]  failed
 
 NewObject: m4() ...
-    [TIME]  passed
-  [TIME total]
+    [0.016 s 24706488 bytes]  passed
+  [0.41 s 24707512 bytes total]
 
 NewObjectA ...
-    [TIME]
+    [0.0 s 24774552 bytes]
 
 NewObjectA: NewObjectA() ...
-    [TIME]  passed immediately
-  [TIME total]
-5 warnings
+    [0.0 s 24775576 bytes]  passed immediately
+  [0.0080 s 24776600 bytes total]
+1 caution
+1 warning

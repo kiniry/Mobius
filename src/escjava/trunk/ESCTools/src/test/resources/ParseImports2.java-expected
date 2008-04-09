@@ -1,20 +1,21 @@
-ESC/Java version VERSION
-ParseImports2.java:6: Caution: An import statement in an annotation should begin with 'model import'
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ParseImports2.java:6: Caution: An import statement in an annotation should begin with 'model import'
 //@ import java.util.Set;
     ^
-ParseImports2.java:7: Caution: An import statement in an annotation should begin with 'model import'
+src/test/resources/ParseImports2.java:7: Caution: An import statement in an annotation should begin with 'model import'
 //@ import java.util.Collection;
     ^
-ParseImports2.java:8: Caution: An import statement in an annotation should begin with 'model import'
+src/test/resources/ParseImports2.java:8: Caution: An import statement in an annotation should begin with 'model import'
 //@ import java.util.Vector;
     ^
-    [TIME]
+src/test/resources/ParseImports2.java: Caution: Using given file as the .java file, even though it is not the java file for ParseImports2 on the classpath
+    [0.0030 s 24407216 bytes]
 
 ParseImports2 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.07 s 27204016 bytes
+    [0.413 s 27442440 bytes]
 
 ParseImports2: ParseImports2() ...
-    [TIME]  passed
-  [TIME total]
-3 cautions
+    [0.07 s 25415448 bytes]  passed
+  [0.484 s 25416472 bytes total]
+4 cautions

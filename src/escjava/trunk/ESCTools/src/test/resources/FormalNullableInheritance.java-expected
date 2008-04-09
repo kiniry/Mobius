@@ -1,2 +1,144 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/FormalNullableInheritance.java: Caution: Using given file as the .java file, even though it is not the java file for FormalNullableInheritance on the classpath
+    [0.0080 s 18781888 bytes]
+
+FormalNullableInheritance ...
+  Prover started:0.061 s 20308776 bytes
+    [0.184 s 20420248 bytes]
+
+FormalNullableInheritance: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
+    [0.0 s 20423672 bytes]  passed immediately
+
+FormalNullableInheritance: n(java.lang.Object, java.lang.Object, java.lang.Object) ...
+    [0.0 s 20427096 bytes]  passed immediately
+
+FormalNullableInheritance: q(java.lang.Object) ...
+    [0.0 s 20429144 bytes]  passed immediately
+
+FormalNullableInheritance: r(java.lang.Object) ...
+    [0.0 s 20431192 bytes]  passed immediately
+
+FormalNullableInheritance: s(java.lang.Object) ...
+    [0.0 s 20434264 bytes]  passed immediately
+
+FormalNullableInheritance: t1(java.lang.Object) ...
+    [0.0 s 20436312 bytes]  passed immediately
+
+FormalNullableInheritance: t2(java.lang.Object) ...
+    [0.0 s 20438360 bytes]  passed immediately
+
+FormalNullableInheritance: t3(java.lang.Object) ...
+    [0.0 s 20440408 bytes]  passed immediately
+
+FormalNullableInheritance: v1(java.lang.Object) ...
+    [0.0 s 20442456 bytes]  passed immediately
+
+FormalNullableInheritance: v2(java.lang.Object) ...
+    [0.0 s 20444504 bytes]  passed immediately
+
+FormalNullableInheritance: v3(java.lang.Object) ...
+    [0.0 s 20446552 bytes]  passed immediately
+
+FormalNullableInheritance: FormalNullableInheritance() ...
+    [0.09 s 20593560 bytes]  passed
+  [0.276 s 20594584 bytes total]
+
+FNIHelper ...
+    [0.0010 s 20675088 bytes]
+
+FNIHelper: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
+    [0.0 s 20678448 bytes]  passed immediately
+
+FNIHelper: q(java.lang.Object) ...
+    [0.0 s 20680496 bytes]  passed immediately
+
+FNIHelper: r(java.lang.Object) ...
+    [0.0 s 20682544 bytes]  passed immediately
+
+FNIHelper: s(java.lang.Object) ...
+    [0.0 s 20684592 bytes]  passed immediately
+
+FNIHelper: v1(java.lang.Object) ...
+    [0.0 s 20686640 bytes]  passed immediately
+
+FNIHelper: v2(java.lang.Object) ...
+    [0.0 s 20689712 bytes]  passed immediately
+
+FNIHelper: v3(java.lang.Object) ...
+    [0.0010 s 20691816 bytes]  passed immediately
+
+FNIHelper: FNIHelper() ...
+    [0.011 s 20833432 bytes]  passed
+  [0.013 s 20834456 bytes total]
+
+FNIHelper2 ...
+    [0.0010 s 20904848 bytes]
+
+FNIHelper2: n(java.lang.Object, java.lang.Object, java.lang.Object) ...
+    [0.0 s 20908208 bytes]  passed immediately
+
+FNIHelper2: q(java.lang.Object) ...
+    [0.0 s 20910256 bytes]  passed immediately
+
+FNIHelper2: r(java.lang.Object) ...
+    [0.0 s 20912304 bytes]  passed immediately
+
+FNIHelper2: s(java.lang.Object) ...
+    [0.0 s 20914352 bytes]  passed immediately
+
+FNIHelper2: FNIHelper2() ...
+    [0.021 s 19118456 bytes]  passed
+  [0.023 s 19119480 bytes total]
+
+FNIHelperT ...
+    [0.0010 s 19193992 bytes]
+
+FNIHelperT: t1(java.lang.Object) ...
+    [0.0 s 19196040 bytes]  passed immediately
+
+FNIHelperT: t2(java.lang.Object) ...
+    [0.0 s 19198088 bytes]  passed immediately
+
+FNIHelperT: t3(java.lang.Object) ...
+    [0.0 s 19200136 bytes]  passed immediately
+  [0.011 s 19201160 bytes total]
+
+FNIHelperTT ...
+    [0.0 s 19267360 bytes]
+
+FNIHelperTT: t1(java.lang.Object) ...
+    [0.0 s 19269408 bytes]  passed immediately
+
+FNIHelperTT: t2(java.lang.Object) ...
+    [0.0 s 19271456 bytes]  passed immediately
+
+FNIHelperTT: t3(java.lang.Object) ...
+    [0.0 s 19273504 bytes]  passed immediately
+  [0.0 s 19274528 bytes total]
+
+FNIHelperV ...
+    [0.0010 s 19340760 bytes]
+
+FNIHelperV: v1(java.lang.Object) ...
+    [0.0 s 19342808 bytes]  passed immediately
+
+FNIHelperV: v2(java.lang.Object) ...
+    [0.0 s 19344856 bytes]  passed immediately
+
+FNIHelperV: v3(java.lang.Object) ...
+    [0.0 s 19346904 bytes]  passed immediately
+  [0.0080 s 19347928 bytes total]
+
+FNIHelperVV ...
+    [0.0010 s 19414184 bytes]
+
+FNIHelperVV: v1(java.lang.Object) ...
+    [0.0 s 19416232 bytes]  passed immediately
+
+FNIHelperVV: v2(java.lang.Object) ...
+    [0.0 s 19418280 bytes]  passed immediately
+
+FNIHelperVV: v3(java.lang.Object) ...
+    [0.0 s 19420328 bytes]  passed immediately
+  [0.0010 s 19422432 bytes total]
+1 caution

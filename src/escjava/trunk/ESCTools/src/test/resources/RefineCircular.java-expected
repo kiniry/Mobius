@@ -1,12 +1,16 @@
-ESC/Java version VERSION
-Error: .|RefineCircular.java is circularly referenced in a refinement sequence
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/RefineCircular.java: Caution: Using given file as the .java file, even though it is not the java file for RefineCircular on the classpath
+src/test/resources/RefineCircular.java:1: Error: Could not find file referenced in refine annotation: RefineCircular.java
+//@ refine "RefineCircular.java";
+    ^
+    [0.0010 s 24473752 bytes]
 
 RefineCircular ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.061 s 25468304 bytes
+    [0.161 s 25534424 bytes]
 
 RefineCircular: RefineCircular() ...
-    [TIME]  passed
-  [TIME total]
+    [0.069 s 25687264 bytes]  passed
+  [0.231 s 25688288 bytes total]
+1 caution
 1 error

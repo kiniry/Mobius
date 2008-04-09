@@ -1,50 +1,52 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Final.java: Caution: Using given file as the .java file, even though it is not the java file for Final on the classpath
+    [0.0020 s 19783552 bytes]
 
 Final ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.06 s 20795048 bytes
+    [0.177 s 20864072 bytes]
 
 Final: m() ...
-    [TIME]  passed
+    [0.06 s 20917520 bytes]  passed
 
 Final: mm() ...
 ------------------------------------------------------------------------
-Final.java:8: Warning: Possible assertion failure (Assert)
+src/test/resources/Final.java:8: Warning: Possible assertion failure (Assert)
         //@ assert \typeof(this) == \type(Final);  // ERROR
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.014 s 21091816 bytes]  failed
 
 Final: n() ...
 ------------------------------------------------------------------------
-Final.java:12: Warning: Possible assertion failure (Assert)
+src/test/resources/Final.java:12: Warning: Possible assertion failure (Assert)
         //@ assert !(\typeof(this) <: \type(I)); // ERROR
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.04 s 21247920 bytes]  failed
 
 Final: nn() ...
-    [TIME]  passed
+    [0.0070 s 21306600 bytes]  passed
 
 Final: Final() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0060 s 21458456 bytes]  passed
+  [0.305 s 21459480 bytes total]
 
 F2 ...
-    [TIME]
+    [0.012 s 21540832 bytes]
 
 F2: p() ...
-    [TIME]  passed
+    [0.0050 s 21594336 bytes]  passed
 
 F2: q() ...
-    [TIME]  passed
+    [0.0070 s 21648864 bytes]  passed
 
 F2: F2() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0050 s 21802344 bytes]  passed
+  [0.03 s 21803368 bytes total]
 
 I ...
-    [TIME]
-  [TIME total]
+    [0.0030 s 21819872 bytes]
+  [0.0030 s 21820896 bytes total]
+1 caution
 2 warnings

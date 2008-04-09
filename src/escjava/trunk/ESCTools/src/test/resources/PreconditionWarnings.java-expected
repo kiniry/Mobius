@@ -1,88 +1,107 @@
-ESC/Java version VERSION
-  Prover started:TIME
+ESC/Java version ESCJava-CURRENT
+src/test/resources/PreconditionWarnings.java: Caution: Using given file as the .java file, even though it is not the java file for PreconditionWarnings on the classpath
+    [0.0020 s 24105752 bytes]
 
 PreconditionWarnings ...
+  Prover started:0.064 s 25150280 bytes
+    [0.172 s 25217872 bytes]
 
 PreconditionWarnings: m(int, int) ...
-    [TIME]  passed
+    [0.075 s 25317744 bytes]  passed
 
 PreconditionWarnings: mm() ...
 ------------------------------------------------------------------------
-PreconditionWarnings.java:13: Warning: Precondition possibly not established (Pre)
+src/test/resources/PreconditionWarnings.java:13: Warning: Precondition possibly not established (Pre)
                 m(1,0);
                  ^
-Associated declaration is "PreconditionWarnings.java", line 9, col 5:
-        //@ requires j > 0;
-            ^
-Associated declaration is "PreconditionWarnings.java", line 6, col 5:
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 6, col 5:
         //@ requires j < 0;
             ^
+src/test/resources/PreconditionWarnings.java:13: Warning: Precondition possibly not established (Pre)
+                m(1,0);
+                 ^
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 9, col 5:
+        //@ requires j > 0;
+            ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.046 s 25640752 bytes]  failed
 
 PreconditionWarnings: mm1() ...
 ------------------------------------------------------------------------
-PreconditionWarnings.java:16: Warning: Precondition possibly not established (Pre)
+src/test/resources/PreconditionWarnings.java:16: Warning: Precondition possibly not established (Pre)
                 m(0,1);
                  ^
-Associated declaration is "PreconditionWarnings.java", line 8, col 5:
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 8, col 5:
         //@ requires i > 0;
             ^
-Associated declaration is "PreconditionWarnings.java", line 5, col 5:
+src/test/resources/PreconditionWarnings.java:16: Warning: Precondition possibly not established (Pre)
+                m(0,1);
+                 ^
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 5, col 5:
         //@ requires i < 0;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.019 s 25946608 bytes]  failed
 
 PreconditionWarnings: mm2() ...
 ------------------------------------------------------------------------
-PreconditionWarnings.java:19: Warning: Precondition possibly not established (Pre)
+src/test/resources/PreconditionWarnings.java:19: Warning: Precondition possibly not established (Pre)
                 m(-1,0);
                  ^
-Associated declaration is "PreconditionWarnings.java", line 9, col 5:
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 9, col 5:
         //@ requires j > 0;
             ^
-Associated declaration is "PreconditionWarnings.java", line 6, col 5:
+src/test/resources/PreconditionWarnings.java:19: Warning: Precondition possibly not established (Pre)
+                m(-1,0);
+                 ^
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 6, col 5:
         //@ requires j < 0;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.019 s 26261824 bytes]  failed
 
 PreconditionWarnings: mm3() ...
 ------------------------------------------------------------------------
-PreconditionWarnings.java:22: Warning: Precondition possibly not established (Pre)
+src/test/resources/PreconditionWarnings.java:22: Warning: Precondition possibly not established (Pre)
                 m(0,-1);
                  ^
-Associated declaration is "PreconditionWarnings.java", line 8, col 5:
-        //@ requires i > 0;
-            ^
-Associated declaration is "PreconditionWarnings.java", line 5, col 5:
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 5, col 5:
         //@ requires i < 0;
             ^
+src/test/resources/PreconditionWarnings.java:22: Warning: Precondition possibly not established (Pre)
+                m(0,-1);
+                 ^
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 8, col 5:
+        //@ requires i > 0;
+            ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.034 s 24659136 bytes]  failed
 
 PreconditionWarnings: mm4() ...
-    [TIME]  passed
+    [0.0090 s 24851248 bytes]  passed
 
 PreconditionWarnings: mm5() ...
-    [TIME]  passed
+    [0.01 s 25059848 bytes]  passed
 
 PreconditionWarnings: mm6() ...
 ------------------------------------------------------------------------
-PreconditionWarnings.java:31: Warning: Precondition possibly not established (Pre)
+src/test/resources/PreconditionWarnings.java:31: Warning: Precondition possibly not established (Pre)
                 m(1,-1);
                  ^
-Associated declaration is "PreconditionWarnings.java", line 9, col 5:
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 9, col 5:
         //@ requires j > 0;
             ^
-Associated declaration is "PreconditionWarnings.java", line 5, col 5:
+src/test/resources/PreconditionWarnings.java:31: Warning: Precondition possibly not established (Pre)
+                m(1,-1);
+                 ^
+Associated declaration is "src/test/resources/PreconditionWarnings.java", line 5, col 5:
         //@ requires i < 0;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.019 s 25374904 bytes]  failed
 
 PreconditionWarnings: PreconditionWarnings() ...
-    [TIME]  passed
-  [TIME total]
-5 warnings
+    [0.0080 s 25527688 bytes]  passed
+  [0.411 s 25528712 bytes total]
+1 caution
+10 warnings

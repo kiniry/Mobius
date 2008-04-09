@@ -1,27 +1,29 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/StoreRefs.java: Caution: Using given file as the .java file, even though it is not the java file for StoreRefs on the classpath
+    [0.0030 s 25236552 bytes]
 
 StoreRefs ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.101 s 26302576 bytes
+    [0.227 s 26387808 bytes]
 
 StoreRefs: m() ...
-    [TIME]  passed
+    [0.079 s 26465816 bytes]  passed
 
 StoreRefs: StoreRefs() ...
-    [TIME]  passed
-  [TIME total]
+    [0.033 s 26653592 bytes]  passed
+  [0.34 s 26654616 bytes total]
 
 StoreRefsA ...
-    [TIME]
+    [0.0010 s 26739888 bytes]
 
 StoreRefsA: StoreRefsA() ...
-    [TIME]  passed
-  [TIME total]
+    [0.014 s 26922488 bytes]  passed
+  [0.015 s 26923512 bytes total]
 
 StoreRefsB ...
-    [TIME]
+    [0.0010 s 26991608 bytes]
 
 StoreRefsB: StoreRefsB() ...
-    [TIME]  passed
-  [TIME total]
+    [0.01 s 27153648 bytes]  passed
+  [0.011 s 27154672 bytes total]
+1 caution

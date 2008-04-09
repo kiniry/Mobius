@@ -1,194 +1,235 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Monitored.java: Caution: Using given file as the .java file, even though it is not the java file for Monitored on the classpath
+    [0.0070 s 22145056 bytes]
 
 Monitored ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.069 s 24875696 bytes
+    [0.264 s 22971320 bytes]
 
 Monitored: m() ...
 ------------------------------------------------------------------------
-Monitored.java:37: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:37: Warning: Possible race condition (Race)
                 i = 0;  // ERROR - needs this, o
                   ^
-Associated declaration is "Monitored.java", line 32, col 27:
+Associated declaration is "src/test/resources/Monitored.java", line 32, col 27:
         //@ monitors_for i = this,o;
                                   ^
 ------------------------------------------------------------------------
-Monitored.java:37: Warning: Possible race condition (Race)
-                i = 0;  // ERROR - needs this, o
-                  ^
-Associated declaration is "Monitored.java", line 32, col 22:
-        //@ monitors_for i = this,o;
-                             ^
-------------------------------------------------------------------------
-    [TIME]  failed
+    [0.117 s 23277336 bytes]  failed
 
 Monitored: mm() ...
 ------------------------------------------------------------------------
-Monitored.java:41: Warning: Possible race condition (Race)
-                i=0;    // ERROR - needs o
-                 ^
-Associated declaration is "Monitored.java", line 32, col 27:
-        //@ monitors_for i = this,o;
-                                  ^
+src/test/resources/Monitored.java:40: Warning: Possible deadlock (Deadlock)
+        synchronized void mm() {
+                               ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.033 s 23565824 bytes]  failed
 
 Monitored: m4() ...
 ------------------------------------------------------------------------
-Monitored.java:45: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:45: Warning: Possible deadlock (Deadlock)
                 synchronized(o) { i=0; }  // ERROR - needs this
-                                   ^
-Associated declaration is "Monitored.java", line 32, col 22:
-        //@ monitors_for i = this,o;
-                             ^
+                            ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.036 s 23872784 bytes]  failed
 
 Monitored: mmm() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:48: Warning: Possible deadlock (Deadlock)
+        synchronized void mmm() {
+                                ^
+------------------------------------------------------------------------
+    [0.034 s 24205504 bytes]  failed
 
 Monitored: mmii() ...
 ------------------------------------------------------------------------
-Monitored.java:53: Warning: Possible race condition (Race)
-                ii=0; // ERROR - needs o
-                  ^
-Associated declaration is "Monitored.java", line 15, col 18:
-        //@ monitored_by o;
-                         ^
+src/test/resources/Monitored.java:52: Warning: Possible deadlock (Deadlock)
+        synchronized void mmii() {
+                                 ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.076 s 24487904 bytes]  failed
 
 Monitored: mmiiok() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:56: Warning: Possible deadlock (Deadlock)
+        synchronized void mmiiok() {
+                                   ^
+------------------------------------------------------------------------
+    [0.04 s 24812320 bytes]  failed
 
 Monitored: m5() ...
 ------------------------------------------------------------------------
-Monitored.java:62: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:62: Warning: Possible race condition (Race)
                 k = 0; // ERROR -- needs o
                   ^
-Associated declaration is "Monitored.java", line 31, col 22:
+Associated declaration is "src/test/resources/Monitored.java", line 31, col 22:
         //@ monitors_for k = o;
                              ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.054 s 25078688 bytes]  failed
 
 Monitored: mz() ...
 ------------------------------------------------------------------------
-Monitored.java:66: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:66: Warning: Possible race condition (Race)
                 z = 0; // ERROR -- needs o
                   ^
-Associated declaration is "Monitored.java", line 34, col 23:
+Associated declaration is "src/test/resources/Monitored.java", line 34, col 23:
         //@ monitors_for z <- o;
                               ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.116 s 25335840 bytes]  failed
 
 Monitored: mj() ...
 ------------------------------------------------------------------------
-Monitored.java:69: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:69: Warning: Possible race condition (Race)
         static void mj() { j = 0; } //@ nowarn Modifies;  // ERROR - n ...
                              ^
-Associated declaration is "Monitored.java", line 18, col 6:
+Associated declaration is "src/test/resources/Monitored.java", line 18, col 6:
         //-@ monitored
              ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.044 s 23011432 bytes]  failed
 
 Monitored: mjj() ...
 ------------------------------------------------------------------------
-Monitored.java:70: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:70: Warning: Possible race condition (Race)
         static void mjj() { jj = 0; } //@ nowarn Modifies;  // ERROR - ...
                                ^
-Associated declaration is "Monitored.java", line 21, col 19:
+Associated declaration is "src/test/resources/Monitored.java", line 21, col 19:
         //-@ monitored_by Monitored.class;
                           ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.031 s 23243168 bytes]  failed
 
 Monitored: mjjj() ...
 ------------------------------------------------------------------------
-Monitored.java:71: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:71: Warning: Possible race condition (Race)
         static void mjjj() { jjj = 0; } //@ nowarn Modifies;  // ERROR ...
                                  ^
-Associated declaration is "Monitored.java", line 33, col 24:
+Associated declaration is "src/test/resources/Monitored.java", line 33, col 24:
         //@ monitors_for jjj = Monitored.class;
                                ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.059 s 23477008 bytes]  failed
 
 Monitored: smj() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:72: Warning: Possible deadlock (Deadlock)
+        static synchronized void smj() { j = 0; } //@ nowarn Modifies; ...
+                                       ^
+------------------------------------------------------------------------
+    [0.031 s 23741272 bytes]  failed
 
 Monitored: smjj() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:73: Warning: Possible deadlock (Deadlock)
+        static synchronized void smjj() { jj = 0; } //@ nowarn Modifie ...
+                                        ^
+------------------------------------------------------------------------
+    [0.031 s 24006616 bytes]  failed
 
 Monitored: smjjj() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:74: Warning: Possible deadlock (Deadlock)
+        static synchronized void smjjj() { jjj = 0; } //@ nowarn Modif ...
+                                         ^
+------------------------------------------------------------------------
+    [0.032 s 24271960 bytes]  failed
 
 Monitored: r() ...
 ------------------------------------------------------------------------
-Monitored.java:79: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:79: Warning: Possible race condition (Race)
                 int p = i; // ERROR
                         ^
-Associated declaration is "Monitored.java", line 11, col 5:
+Associated declaration is "src/test/resources/Monitored.java", line 11, col 5:
         //@ monitored
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.03 s 24517752 bytes]  failed
 
 Monitored: r2() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:82: Warning: Possible deadlock (Deadlock)
+        synchronized void r2() { int p = i; }
+                               ^
+------------------------------------------------------------------------
+    [0.06 s 24785896 bytes]  failed
 
 Monitored: r3() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:85: Warning: Possible deadlock (Deadlock)
+                synchronized(o) { int p = i; }
+                            ^
+------------------------------------------------------------------------
+    [0.029 s 25072512 bytes]  failed
 
 Monitored: r4() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:88: Warning: Possible deadlock (Deadlock)
+        synchronized void r4() {
+                               ^
+------------------------------------------------------------------------
+    [0.031 s 25383312 bytes]  failed
 
 Monitored: rj() ...
 ------------------------------------------------------------------------
-Monitored.java:92: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:92: Warning: Possible race condition (Race)
         static void rj() { int p = j; } // ERROR
                                    ^
-Associated declaration is "Monitored.java", line 18, col 6:
+Associated declaration is "src/test/resources/Monitored.java", line 18, col 6:
         //-@ monitored
              ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.03 s 25606632 bytes]  failed
 
 Monitored: rjj() ...
 ------------------------------------------------------------------------
-Monitored.java:93: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:93: Warning: Possible race condition (Race)
         static void rjj() { int p = jj; } // ERROR
                                     ^
-Associated declaration is "Monitored.java", line 21, col 6:
+Associated declaration is "src/test/resources/Monitored.java", line 21, col 6:
         //-@ monitored_by Monitored.class;
              ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.063 s 23193168 bytes]  failed
 
 Monitored: rjjj() ...
 ------------------------------------------------------------------------
-Monitored.java:94: Warning: Possible race condition (Race)
+src/test/resources/Monitored.java:94: Warning: Possible race condition (Race)
         static void rjjj() { int p = jjj; } // ERROR
                                      ^
-Associated declaration is "Monitored.java", line 33, col 5:
+Associated declaration is "src/test/resources/Monitored.java", line 33, col 5:
         //@ monitors_for jjj = Monitored.class;
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.029 s 23415408 bytes]  failed
 
 Monitored: srj() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:95: Warning: Possible deadlock (Deadlock)
+        static synchronized void srj() { int p = j; }
+                                       ^
+------------------------------------------------------------------------
+    [0.03 s 23673312 bytes]  failed
 
 Monitored: srjj() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:96: Warning: Possible deadlock (Deadlock)
+        static synchronized void srjj() { int p = jj; }
+                                        ^
+------------------------------------------------------------------------
+    [0.03 s 23951232 bytes]  failed
 
 Monitored: srjjj() ...
-    [TIME]  passed
+------------------------------------------------------------------------
+src/test/resources/Monitored.java:97: Warning: Possible deadlock (Deadlock)
+        static synchronized void srjjj() { int p = jjj; }
+                                         ^
+------------------------------------------------------------------------
+    [0.031 s 24209136 bytes]  failed
 
 Monitored: Monitored() ...
-    [TIME]  passed
-  [TIME total]
-14 warnings
+    [0.022 s 24611232 bytes]  passed
+  [1.384 s 24612256 bytes total]
+1 caution
+24 warnings

@@ -1,10 +1,16 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Triple.java: Caution: Using given file as the .java file, even though it is not the java file for Triple on the classpath
+src/test/resources/Triple.java:4: Error: Could not find file referenced in refine annotation: Triple.spec
+//@ refine "Triple.spec";
+    ^
+    [0.016 s 26585656 bytes]
 
 Triple ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.392 s 27580368 bytes
+    [0.493 s 27645008 bytes]
 
 Triple: Triple() ...
-    [TIME]  passed
-  [TIME total]
+    [0.069 s 27796824 bytes]  passed
+  [0.564 s 27797848 bytes total]
+1 caution
+1 error

@@ -1,36 +1,38 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/ModCond.java: Caution: Using given file as the .java file, even though it is not the java file for ModCond on the classpath
+    [0.0020 s 21983280 bytes]
 
 ModCond ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 23057992 bytes
+    [0.163 s 23124696 bytes]
 
 ModCond: ModCond() ...
-    [TIME]  passed immediately
+    [0.0 s 23125720 bytes]  passed immediately
 
 ModCond: m(int) ...
-    [TIME]  passed immediately
+    [0.0 s 23127768 bytes]  passed immediately
 
 ModCond: m1(int) ...
 ------------------------------------------------------------------------
-ModCond.java:20: Warning: Possible assertion failure (Assert)
+src/test/resources/ModCond.java:20: Warning: Possible assertion failure (Assert)
         //@ assert j == 0;  // WARNING
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.137 s 22232976 bytes]  failed
 
 ModCond: m2(int) ...
-    [TIME]  passed
+    [0.018 s 22588928 bytes]  passed
 
 ModCond: m3(int) ...
-    [TIME]  passed
+    [0.018 s 22946928 bytes]  passed
 
 ModCond: m4(int) ...
 ------------------------------------------------------------------------
-ModCond.java:41: Warning: Possible assertion failure (Assert)
+src/test/resources/ModCond.java:41: Warning: Possible assertion failure (Assert)
         //@ assert k == 0; // WARNING
             ^
 ------------------------------------------------------------------------
-    [TIME]  failed
-  [TIME total]
+    [0.029 s 23419816 bytes]  failed
+  [0.366 s 23420840 bytes total]
+1 caution
 2 warnings

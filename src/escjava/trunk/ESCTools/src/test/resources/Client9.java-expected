@@ -1,26 +1,28 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/Client9.java: Caution: Using given file as the .java file, even though it is not the java file for Client9 on the classpath
+    [0.0020 s 17607448 bytes]
 
 Client9 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.062 s 18654688 bytes
+    [0.175 s 18726488 bytes]
 
 Client9: unique(IntList) ...
-    [TIME]  passed
+    [0.076 s 18969840 bytes]  passed
 
 Client9: clear(IntList) ...
-    [TIME]  passed
+    [0.042 s 19259304 bytes]  passed
 
 Client9: Client9() ...
-    [TIME]  passed
-  [TIME total]
+    [0.012 s 19417496 bytes]  passed
+  [0.305 s 19418520 bytes total]
 
 IntList ...
-    [TIME]
+    [0.0010 s 19483536 bytes]
 
 IntList: unique() ...
-    [TIME]  passed immediately
+    [0.0 s 19484560 bytes]  passed immediately
 
 IntList: clear() ...
-    [TIME]  passed immediately
-  [TIME total]
+    [0.0 s 19485584 bytes]  passed immediately
+  [0.0090 s 19486608 bytes total]
+1 caution

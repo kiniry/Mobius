@@ -1,72 +1,82 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/PureCheck3.java: Caution: Using given file as the .java file, even though it is not the java file for PureCheck3 on the classpath
+    [0.0040 s 24678240 bytes]
 
 PureCheck3 ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.082 s 24913784 bytes
+    [0.28 s 24979792 bytes]
 
 PureCheck3: m() ...
-    [TIME]  passed
+    [0.106 s 25029096 bytes]  passed
 
 PureCheck3: mp() ...
-    [TIME]  passed
+    [0.0040 s 25077432 bytes]  passed
 
 PureCheck3: n() ...
-    [TIME]  passed
+    [0.0040 s 25141128 bytes]  passed
 
 PureCheck3: np() ...
-    [TIME]  passed
+    [0.0040 s 25202776 bytes]  passed
 
 PureCheck3: a() ...
 ------------------------------------------------------------------------
-PureCheck3.java:22: Warning: Precondition possibly not established (Pre)
+src/test/resources/PureCheck3.java:22: Warning: Precondition possibly not established (Pre)
         n();    // WARNING
          ^
-Associated declaration is "PureCheck3.java", line 11, col 8:
+Associated declaration is "src/test/resources/PureCheck3.java", line 11, col 8:
     //@ requires b;
         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.053 s 25501912 bytes]  failed
 
 PureCheck3: ap() ...
 ------------------------------------------------------------------------
-PureCheck3.java:26: Warning: Precondition possibly not established (Pre)
+src/test/resources/PureCheck3.java:26: Warning: Precondition possibly not established (Pre)
         np();   // WARNING
           ^
-Associated declaration is "PureCheck3.java", line 15, col 8:
+Associated declaration is "src/test/resources/PureCheck3.java", line 15, col 8:
     //@ requires b;
         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.02 s 25752048 bytes]  failed
 
 PureCheck3: PureCheck3() ...
-    [TIME]  passed
-  [TIME total]
+src/test/resources/PureCheck3.java:30: Error: There is no assignable clause allowing this method call
+    public PureCheck3() { }
+                        ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/PureCheck3.java:29: Associated declaration: 
+    //@ modifies \nothing;
+        ^
+    [0.015 s 25932336 bytes]  passed
+  [0.487 s 25933360 bytes total]
 
 PureCheck3A ...
-    [TIME]
+    [0.0030 s 26038504 bytes]
 
 PureCheck3A: mp() ...
-    [TIME]  passed
+    [0.019 s 26111416 bytes]  passed
 
 PureCheck3A: n() ...
-    [TIME]  passed
+    [0.0050 s 26178184 bytes]  passed
 
 PureCheck3A: a() ...
-    [TIME]  passed
+    [0.01 s 26336624 bytes]  passed
 
 PureCheck3A: ap() ...
 ------------------------------------------------------------------------
-PureCheck3.java:50: Warning: Precondition possibly not established (Pre)
+src/test/resources/PureCheck3.java:50: Warning: Precondition possibly not established (Pre)
         n();    // WARNING
          ^
-Associated declaration is "PureCheck3.java", line 11, col 8:
+Associated declaration is "src/test/resources/PureCheck3.java", line 11, col 8:
     //@ requires b;
         ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.022 s 26628776 bytes]  failed
 
 PureCheck3A: PureCheck3A() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0080 s 26781560 bytes]  passed
+  [0.067 s 26782584 bytes total]
+1 caution
 3 warnings
+1 error

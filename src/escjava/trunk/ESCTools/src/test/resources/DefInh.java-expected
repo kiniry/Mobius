@@ -1,77 +1,93 @@
-ESC/Java version VERSION
-    [TIME]
+ESC/Java version ESCJava-CURRENT
+src/test/resources/DefInh.java: Caution: Using given file as the .java file, even though it is not the java file for DefInh on the classpath
+    [0.0030 s 19024816 bytes]
 
 DefInh ...
-  Prover started:TIME
-    [TIME]
+  Prover started:0.064 s 20029488 bytes
+    [0.165 s 20101936 bytes]
 
 DefInh: DefInh() ...
-    [TIME]  passed
-  [TIME total]
+    [0.074 s 19157784 bytes]  passed
+  [0.24 s 19159832 bytes total]
 
 DefS ...
-    [TIME]
+    [0.0020 s 19228512 bytes]
 
 DefS: DefS() ...
-    [TIME]  passed
+src/test/resources/DefInh.java:15: Error: There is no assignable clause allowing this method call
+        public DefS() {}
+                      ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/DefInh.java:14: Associated declaration: 
+        //@ modifies si,sj;
+            ^
+    [0.038 s 19413096 bytes]  passed
 
 DefS: m() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0040 s 19481184 bytes]  passed
+  [0.045 s 19482208 bytes total]
 
 DefD ...
-DefInh.java:34: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+src/test/resources/DefInh.java:34: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
         public void m() {
                     ^
-DefInh.java:21: Associated declaration: 
+src/test/resources/DefInh.java:21: Associated declaration: 
         public void m(){
                ^
-    [TIME]
+    [0.0050 s 19583224 bytes]
 
 DefD: DefD() ...
 ------------------------------------------------------------------------
-DefInh.java:29: Warning: Possible violation of modifies clause (Modifies)
+src/test/resources/DefInh.java:29: Warning: Possible violation of modifies clause (Modifies)
         public DefD() {  // FIXME - should be ok
                       ^
-Associated declaration is "DefInh.java", line 14, col 14:
+Associated declaration is "src/test/resources/DefInh.java", line 14, col 14:
         //@ modifies si,sj;
                      ^
-Associated declaration is "DefInh.java", line 28, col 6:
+Associated declaration is "src/test/resources/DefInh.java", line 28, col 6:
         //@  modifies sj, ((DefS)this).si;
              ^
 ------------------------------------------------------------------------
-    [TIME]  failed
+    [0.032 s 19944448 bytes]  failed
 
 DefD: m() ...
-    [TIME]  passed
-  [TIME total]
+    [0.014 s 20147416 bytes]  passed
+  [0.052 s 20148440 bytes total]
 
 DefIS ...
-    [TIME]
+    [0.0010 s 20231104 bytes]
 
 DefIS: DefIS() ...
-    [TIME]  passed
-  [TIME total]
+    [0.012 s 20396496 bytes]  passed
+  [0.013 s 20397520 bytes total]
 
 DefII ...
-    [TIME]
+    [0.0020 s 20441304 bytes]
 
 DefII: DefII() ...
-    [TIME]  passed
-  [TIME total]
+    [0.0080 s 20597480 bytes]  passed
+  [0.011 s 20598504 bytes total]
 
 DefDD ...
-    [TIME]
+    [0.0010 s 20687456 bytes]
 
 DefDD: DefDD() ...
-    [TIME]  passed
-  [TIME total]
+    [0.048 s 20853928 bytes]  passed
+  [0.049 s 20854952 bytes total]
 
 DefSS ...
-    [TIME]
+    [0.0010 s 20921936 bytes]
 
 DefSS: DefSS() ...
-    [TIME]  passed
-  [TIME total]
-1 caution
+src/test/resources/DefInh.java:56: Error: There is no assignable clause allowing this method call
+        public DefSS() { si = 0; }
+                       ^
+/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
+src/test/resources/DefInh.java:55: Associated declaration: 
+        //@ modifies si;
+            ^
+    [0.012 s 21110816 bytes]  passed
+  [0.013 s 21111840 bytes total]
+2 cautions
 1 warning
+2 errors
