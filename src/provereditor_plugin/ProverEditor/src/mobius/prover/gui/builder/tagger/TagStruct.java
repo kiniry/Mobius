@@ -46,7 +46,10 @@ public final class TagStruct implements Serializable {
   private final int fLine;
   
   /** the representation, it is static for convenience. */
-  private final String fRepres;
+  private final byte[] fRepres;
+  
+  private static final byte FIRST_DELIMITER = 0x7f;
+  private static final byte SECOND_DELIMITER = 0x01;
   
   
   /**
@@ -72,10 +75,32 @@ public final class TagStruct implements Serializable {
     fLen = fText.length();
     fFilename = filename;
     fLine = line;
-    fRepres = fText + "\u007f" + fName + "\u0001" + fLine + "," + fBeg  + "\n"; 
+    fRepres = initRepres();
+    
   }
   
   
+  private byte[] initRepres() {
+    final byte [] bText = fText.getBytes();
+    final byte [] bName = fName.getBytes();
+    final byte [] bLineOffs = (fLine + "," + fBeg).getBytes();
+    final byte [] res = new byte [bText.length + 1 + bName.length + 1 + bLineOffs.length + 1];
+    int offs = 0;
+    System.arraycopy(bText, 0, res, 0, bText.length);
+    offs += bText.length;
+    res[offs] = FIRST_DELIMITER;
+    offs++;
+    System.arraycopy(bName, 0, res, offs, bName.length);
+    offs += bName.length;
+    res[offs] = SECOND_DELIMITER;
+    offs++;
+    System.arraycopy(bLineOffs, 0, res, offs, bLineOffs.length);
+    offs += bLineOffs.length;
+    res[offs] = '\n';
+    return res;
+  }
+
+
   /**
    * Open an editor, and highlight the tag in the file.
    */
@@ -101,7 +126,7 @@ public final class TagStruct implements Serializable {
   /** {@inheritDoc} */
   @Override
   public String toString() {
-    return fRepres;
+    return new String(fRepres);
   }
 
   /**
@@ -109,7 +134,7 @@ public final class TagStruct implements Serializable {
    * @return A positive number
    */
   public int getSize() {
-    return fRepres.getBytes().length; 
+    return fRepres.length; 
   }
   
   /**
@@ -127,22 +152,47 @@ public final class TagStruct implements Serializable {
    * @param def the definition string from which to parse
    * @return a valid tag structure or null.
    */
-  public static TagStruct parse(final String fileName, final String def) {
+  public static TagStruct parse(final String fileName, final byte[] def) {
     if (def == null) {
       return null;
     }
     try {
-      final String [] text = def.split("\u007f");
-      final String [] name = text[1].split("\u0001");
-      final String [] line = name[1].split(",");
-      final int begin = Integer.parseInt(line[1]);    
-      final TagStruct ts = new TagStruct(name[0], new Path(fileName),
-                                         text[0], begin,
-                                         Integer.parseInt(line[0]));
+      final int first = find(def, FIRST_DELIMITER);
+      final int second = find(def, SECOND_DELIMITER);
+      final byte[] text = new byte[first];
+      final byte[] name = new byte[second - (first + 1)];
+      final byte[] lineOffs = new byte[def.length - (second + 1)];
+      
+      System.arraycopy(def, 0, text, 0, text.length);
+      System.arraycopy(def, first + 1, name, 0, name.length);
+      System.arraycopy(def, second + 1, lineOffs, 0, lineOffs.length);
+      
+      final String [] tabLineOffs = new String(lineOffs).split(",");
+      
+      final TagStruct ts = new TagStruct(new String(name), 
+                                         new Path(fileName),
+                                         new String(text), 
+                                         Integer.parseInt(tabLineOffs[1]),
+                                         Integer.parseInt(tabLineOffs[0]));
       return ts;
     }
     catch (ArrayIndexOutOfBoundsException e) {
       return null;
     }
+  }
+
+
+  private static int find(byte[] def, byte b) {
+    for (int i = 0; i < def.length; i++) {
+      if (def[i] == b) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+
+  public byte[] getBytes() {
+    return fRepres;
   }
 }

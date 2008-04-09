@@ -1,12 +1,15 @@
 package mobius.prover.gui.builder.tagger;
 
 import java.io.IOException;
-import java.io.LineNumberReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import mobius.prover.plugins.Logger;
 
 
 
@@ -132,7 +135,7 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    * @param ois the stream from where to load the table
    * @throws IOException if there is a read error
    */
-  public void load(final LineNumberReader ois) throws IOException {  
+  public void load(final InputStream ois) throws IOException {  
     fListTagFiles = new ArrayList<TagFile>();
     TagFile tf = null;
     while ((tf = TagFile.getTagFile(ois)) != null) {
@@ -151,7 +154,7 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    * on the disk, in the etags format.
    * @param out the print stream where to write the table
    */
-  public void save(final PrintStream out) {
+  public void save(final OutputStream out) {
     for (TagFile t: fListTagFiles) {
       t.printHeader(out);
       t.printDefs(out);
@@ -164,7 +167,7 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    */
   private static final class TagFile implements Serializable {
     /** the magic number from the header. */
-    private static final String HEADER_MAGIC_NUMBER = "\u000c";
+    private static final byte HEADER_MAGIC_NUMBER = 0x0c;
 
     /** */
     private static final long serialVersionUID = 1L;
@@ -207,7 +210,7 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
      * @param ois The line number reader to read from
      * @return a valid tag file
      */
-    public static TagFile getTagFile(final LineNumberReader ois) {
+    public static TagFile getTagFile(final InputStream ois) {
       final String [] strHeader = parseHeader(ois);
       if (strHeader == null) {
         return null;
@@ -228,13 +231,13 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
      * @param size the max size to be read from the file
      * @return a valid tag list or null
      */
-    private static TagList parseDefinitions(final LineNumberReader in, 
+    private static TagList parseDefinitions(final InputStream in, 
                                             final String file, final int size) {
       final TagList tl = new TagList();      
       int currentSize = 0;
       try {
         while (size > currentSize) {
-          final String def = in.readLine();
+          final byte[] def = readByteLine(in, size);
           final TagStruct ts = TagStruct.parse(file, def);
           if (ts == null) {
             return null;
@@ -253,18 +256,20 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
     /**
      * Parse the header and returns an array of 2 elements, corresponding
      * to the header.
-     * @param ois The stream from which to read the header
+     * @param in The stream from which to read the header
      * @return an array of 2 elements or null.
      * @throws IOException
      */
-    private static String [] parseHeader(final LineNumberReader ois) {
+    private static String [] parseHeader(final InputStream in) {
       
       try {
-        final String firstLine = ois.readLine();
-        final String [] secondLine = ois.readLine().split(",");
-        if ((HEADER_MAGIC_NUMBER.equals(firstLine)) &&
-            (secondLine.length == 2)) {        
-          return secondLine;
+        final byte [] firstLine = new byte[2];
+        final int res = in.read(firstLine);
+        final String secondLine = readLine(in, 1024);
+        if ((res == 2) || (firstLine[0] == HEADER_MAGIC_NUMBER) ||
+              (firstLine[1] == '\n') &&
+              secondLine != null) {
+          return secondLine.split(",");
         }
       } 
       catch (IOException e) {
@@ -275,14 +280,49 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
 
 
     
+    private static byte[] readByteLine(InputStream in, int size) throws IOException {
+      // a line is less than 1024 chars
+      final byte[] buffer = new byte[size];
+      in.mark(buffer.length);
+      final int read = in.read(buffer);
+      for (int i = 0; i < read; i++) {
+        if (buffer[i] == '\n') {
+          final byte[] strBuff = new byte[i];
+          System.arraycopy(buffer, 0, strBuff, 0, i);
+          in.reset();
+          in.skip(i + 1);
+          return strBuff;
+        }
+      }
+      return null;
+    }
+    private static String readLine(InputStream in, int size) throws IOException {
+      final byte[] tab = readByteLine(in, size);
+      if (tab != null) {
+        return new String(tab);
+      }
+      return null;
+    }
+    
+
     /**
      * Print the header of the tags to a file.
      * @param out the output stream where to print the header
      */
-    public void printHeader(final PrintStream out) {
+    public void printHeader(final OutputStream out) {
       final int size = getSizeDefs();
-      out.println(HEADER_MAGIC_NUMBER);
-      out.println(fName + "," + size);
+      final byte [] firstLine = {HEADER_MAGIC_NUMBER, '\n'};
+      final byte [] secondLine = (fName + "," + size).getBytes();
+      
+      try {
+        out.write(firstLine);
+        out.write(secondLine);
+        out.write('\n');
+      } 
+      catch (IOException e) {
+        Logger.err.println("Write errror!");
+      }
+
     }
 
     /**
@@ -300,11 +340,18 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
     /**
      * Prints the definitions to the given stream.
      * @param out the stream to print to
+     * @throws IOException 
      */
-    public void printDefs(final PrintStream out) {
+    public void printDefs(final OutputStream out) {
       for (TagStruct ts: fTs) {
-        out.print(ts.toString());
+        try {
+          out.write(ts.getBytes());
+        } 
+        catch (IOException e) {
+          Logger.err.println("Write Error!");
+        }
       }      
+      
     }
 
 

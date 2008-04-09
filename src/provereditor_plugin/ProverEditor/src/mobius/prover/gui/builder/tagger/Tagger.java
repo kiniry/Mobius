@@ -1,11 +1,12 @@
 package mobius.prover.gui.builder.tagger;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.PrintStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,6 +75,7 @@ public class Tagger {
     loadTags(project);
     try {
       tag(f.getRawLocation().toFile());
+      saveTags(project);
     } 
     catch (final IOException e) {
       Logger.err.println("Did not manage to read/write from the file " + f + " " + e);
@@ -114,7 +116,7 @@ public class Tagger {
     final File tagfile = file.getRawLocation().toFile();
     if (file.exists()) {
       try {
-        final LineNumberReader in = new LineNumberReader(new FileReader(tagfile));
+        final InputStream in = new FileInputStream(tagfile);
         fTags.load(in);
         in.close();
         
@@ -136,7 +138,7 @@ public class Tagger {
     final IFile file = project.getFile(fFilename);
     final File tagfile = file.getRawLocation().toFile();
     try {
-      final PrintStream out = new PrintStream(new FileOutputStream(tagfile));
+      final OutputStream out = new FileOutputStream(tagfile);
       fTags.save(out);
       out.close();
     } 
@@ -186,7 +188,8 @@ public class Tagger {
   }
 
   /**
-   * Get the tag from a file, specific to a prover.
+   * Get all the tags from a file, specific to a prover, and put them
+   * in the tags table.
    * @param file the file to get the tag from
    * @throws IOException if there is a read error
    */
@@ -197,12 +200,12 @@ public class Tagger {
     }
     final Pattern[][] pats = pr.getTranslator().getTagPatterns();
     final TagList l = new TagList();
-    final ProverFileReader lnr = new ProverFileReader(new FileReader(file));
+    final ProverFileReader in = new ProverFileReader(new FileReader(file));
     final Path path = new Path(file.getAbsolutePath());
     String str;
     int offset = 0;
     int line = 0;
-    while ((str = lnr.readLine()) != null) {
+    while ((str = in.readLine()) != null) {
       line++;
       for (Pattern [] p: pats) {
         final TagStruct ts = match(str, p, path, line, offset);
@@ -212,9 +215,9 @@ public class Tagger {
         }
         
       }
-      offset += lnr.getCount();
+      offset += in.getCount();
     }
-    lnr.close();
+    in.close();
     fTags.add(file.getAbsolutePath(), l);
   }
 
@@ -232,11 +235,11 @@ public class Tagger {
                                  final Path file, 
                                  final int line, final int offset) {
     String text = str;
-    final Matcher textMatch = p[0].matcher(str);
+    final Matcher textMatch = p[0].matcher(text);
     if (textMatch.find()) {
       final int wordbeg = textMatch.start() + offset;
       String name = text.substring(textMatch.end());
-      final Matcher nameMatch = p[1].matcher(str);
+      final Matcher nameMatch = p[1].matcher(name);
       if (nameMatch.find()) {
         name = name.substring(0, nameMatch.end());
         text = text.substring(textMatch.start(), 
@@ -248,7 +251,4 @@ public class Tagger {
     return null;
   }
 
-
-
-  
 }
