@@ -2,7 +2,7 @@
 <feature
       id="mobius.BMLLib.feature"
       label="BMLLibFeature Feature"
-      version="0.0.5"
+      version="0.0.6"
       provider-name="EU MOBIUS IST-15905 Project">
 
    <description>
