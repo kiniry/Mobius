@@ -91,7 +91,7 @@ public class TestFilesTestSuite  extends TestSuite {
       @*/
     public TestFilesTestSuite(/*@ non_null */ String testName, 
 			      /*@ non_null */ String fileOfTestFilenames,
-			      String[] args, // Ignored! FIXME
+			      String[] args,
 			      /*@ non_null */ Class cls
 			      ) { 
 	super(testName);
@@ -113,7 +113,7 @@ public class TestFilesTestSuite  extends TestSuite {
 	    Iterator i = new LineIterator(fileOfTestFilenames);
 	    while (i.hasNext()) {
 		String s = (String)i.next();
-		String[] allargs = Utils.parseLine(s);
+		String[] allargs = Utils.parseLineWithArgs(s,args);
 		if(allargs.length > 0) {
 		    s = allargs[allargs.length-1];
 		    addTest(makeHelper(s,allargs));

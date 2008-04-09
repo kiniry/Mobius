@@ -178,6 +178,28 @@ public class Utils {
     return (String[])args.toArray(new String[args.size()]);
   }
   
+  
+  /** Parses a string into arguments as if it were a command-line, using
+   the QuoteTokenizer to parse the tokens. Adds to the existing list of
+   arguments.
+   
+   @param s The String to parse
+   @return The input string parsed into command-line arguments
+   */
+  //@ ensures \nonnullelements(\result);
+  static public /*@ non_null */ String[] parseLineWithArgs(/*@ non_null */String s, /*@ non_null */String[] originalArgs) {
+    QuoteTokenizer q = new QuoteTokenizer(s);
+    java.util.ArrayList args = new java.util.ArrayList();
+    while (q.hasMoreTokens()) {
+      String a = q.nextToken();
+      args.add(a);
+    }
+    for (int i=0; i < originalArgs.length; i++) {
+      args.add (originalArgs[i]);
+    }	
+    return (String[])args.toArray(new String[args.size()]);
+  }
+  
   /** An enumerator that parses a string into tokens, according to the
    rules a command-line would use.  White space separates tokens,
    with double-quoted and single-quoted strings recognized.

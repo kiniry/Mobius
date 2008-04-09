@@ -9,7 +9,7 @@ public class TestDefaultSettings extends junitutils.TestFilesTestSuite {
 	    new TestFilesTestSuite(
 		"escjava-junittests",
 		"src/test/list.txt",
-		new String[]{}, // Ignored
+		Utils.parseline("-nowarn Deadlock -verboseTrace -testMode"),
 		escjava.Main.class) {
 		    public int expectedIntegerStatus(String f, String o) {
 			if (javafe.util.ErrorSet.errors > 0) return 2;
