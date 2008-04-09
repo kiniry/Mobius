@@ -1,3 +1,8 @@
+## Maven Tests ##
+
 This folder is used for Maven tests.  
-The source code code is copied in using the pre-maven build target, 
-but Maven specific tests should be added to src/test/java.
+The ESC/Java2 source code code is copied into src/main/java using the pre-maven build target in the main Makefile, 
+but Maven specific tests should be added to src/test/java.  This provides a set of tests which are independent of the command line tests.
+
+Note that src/test/resources includes the Java files being fed as input to the tests, whereas src/test/java contains the source code of the junit tests.
+These are based on the original command line junit tests.

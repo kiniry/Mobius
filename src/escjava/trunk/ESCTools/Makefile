@@ -716,15 +716,18 @@ endif
 ################################################################################
 ## Maven pre-configuration
 
-.PHONY: pre-maven clean-maven pre-maven-compile
+.PHONY: pre-maven clean-maven pre-maven-compile pre-maven-test
  	
 ## Copy all Java files to default locations expected by Maven
-pre-maven: clean-maven pre-maven-compile
+pre-maven: clean-maven pre-maven-compile pre-maven-test
 
 pre-maven-compile:
 	mkdir -p src/main/java
 	find ${ESCTOOLS_ROOT}/Escjava/java/escjava -name "*.java" -exec cp -f {} src/main/java \;
 	find ${ESCTOOLS_ROOT}/Escjava/mochalib/java -name "*.java" -exec cp -f {} src/main/java \;
+	
+pre-maven-test:
+	ls src/test/resources/*.java > ${ESCTOOLS_ROOT}/src/test/list.txt
     
 clean-maven:
 	-rm -rf ${ESCTOOLS_ROOT}/src/main/java/*.java

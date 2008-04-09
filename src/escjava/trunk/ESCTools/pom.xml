@@ -29,5 +29,10 @@
       <artifactId>xmlrpc</artifactId>
       <version>1.2-b1-modified</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache</groupId>
+      <artifactId>bcel</artifactId>
+      <version>5.2</version>
+    </dependency>
   </dependencies>
 </project>
