@@ -1,12 +1,11 @@
 package mobius.prover.gui.builder.tagger;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.LineNumberReader;
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 
 
 
@@ -110,9 +110,9 @@ public class Tagger {
     final File tagfile = file.getRawLocation().toFile();
     if (file.exists()) {
       try {
-        final ObjectInputStream ois = new ObjectInputStream(new FileInputStream(tagfile));
-        fTags.load(ois);
-        ois.close();
+        final LineNumberReader in = new LineNumberReader(new FileReader(tagfile));
+        fTags.load(in);
+        in.close();
         
       } 
       catch (final IOException e) {
@@ -132,9 +132,9 @@ public class Tagger {
     final IFile file = project.getFile(fFilename);
     final File tagfile = file.getRawLocation().toFile();
     try {
-      final ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tagfile));
-      fTags.save(oos);
-      oos.close();
+      final PrintStream out = new PrintStream(new FileOutputStream(tagfile));
+      fTags.save(out);
+      out.close();
     } 
     catch (IOException e) {
       Logger.err.println("There was a problem saving " + fFilename + ".");
@@ -196,9 +196,9 @@ public class Tagger {
     final ProverFileReader lnr = new ProverFileReader(new FileReader(file));
     String str;
     int offset = 0;
-    final String filename = file.getAbsolutePath();
+    int line = 0;
     while ((str = lnr.readLine()) != null) {
-      
+      line++;
       final String old = str;
       for (int i = 0; i < pats.length; i++) {
         str = old;
@@ -210,14 +210,15 @@ public class Tagger {
           m.find();
           str = str.substring(0, m.end());
 //          int wordend = m.end() + wordbeg;
-          l.add(new TagStruct(str, filename, wordbeg, str.length()));
+          l.add(new TagStruct(str, new Path(file.getAbsolutePath()), 
+                              str, wordbeg, line));
           break;
         }
       }
       offset += lnr.getCount();
     }
     lnr.close();
-    fTags.add(filename, l);
+    fTags.add(file.getAbsolutePath(), l);
   }
 
 

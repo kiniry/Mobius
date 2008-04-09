@@ -1,14 +1,12 @@
 package mobius.prover.gui.builder.tagger;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.LineNumberReader;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import mobius.prover.plugins.Logger;
 
 
 
@@ -134,39 +132,40 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
    * @param ois the stream from where to load the table
    * @throws IOException if there is a read error
    */
-  public void load(final ObjectInputStream ois) throws IOException {
-    try {
-      
-      final Object [] os = (Object []) ois.readObject();
-      fListTagFiles = new ArrayList<TagFile>();
-      for (int i = 0; i < os.length; i++) {
-        fListTagFiles.add((TagFile)os[i]);
-      }
-    }  
-    catch (ClassNotFoundException e) {
-      Logger.err.println("I cannot find the an array class!");
+  public void load(final LineNumberReader ois) throws IOException {  
+    fListTagFiles = new ArrayList<TagFile>();
+    TagFile tf = null;
+    while ((tf = TagFile.getTagFile(ois)) != null) {
+      fListTagFiles.add(tf);      
     }
+      
     if (fListTagFiles.size() > 0) {
       fCurrent = (TagFile)fListTagFiles.get(0);
       fIter = fCurrent.iterator();
     }
   }
-  
+    
+    
   /**
    * Save the table of all the tags to a file 
-   * on the disk.
-   * @param oos the output stream where to write the tale
-   * @throws IOException if there is a write error
+   * on the disk, in the etags format.
+   * @param out the print stream where to write the table
    */
-  public void save(final ObjectOutputStream oos) throws IOException {
-    oos.writeObject(fListTagFiles.toArray());
-  }  
+  public void save(final PrintStream out) {
+    for (TagFile t: fListTagFiles) {
+      t.printHeader(out);
+      t.printDefs(out);
+    }
+  }
   
   /**
    * All the tags for one specific file from the project.
    * @author J. Charles
    */
   private static final class TagFile implements Serializable {
+    /** the magic number from the header. */
+    private static final String HEADER_MAGIC_NUMBER = "\u000c";
+
     /** */
     private static final long serialVersionUID = 1L;
     
@@ -175,6 +174,7 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
     /** the tags corresponding to the file. */
     private final TagStruct [] fTs;
     
+
     
     /**
      * Construct a new tag file from a file name and
@@ -191,7 +191,6 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
       }
     }
     
-    
     /**
      * Construct a new tag file with no tags 
      * associated with the file.
@@ -201,6 +200,114 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
       fName = file;
       fTs = new TagStruct[0];
     }
+    
+    /**
+     * Return the tag file parsed from the given line number reader
+     * or null.
+     * @param ois The line number reader to read from
+     * @return a valid tag file
+     */
+    public static TagFile getTagFile(final LineNumberReader ois) {
+      final String [] strHeader = parseHeader(ois);
+      if (strHeader == null) {
+        return null;
+      }
+      final String fileName = strHeader[0];
+      final int size  = Integer.parseInt(strHeader[1]);
+      final TagList tl = parseDefinitions(ois, fileName, size);
+      if (tl == null) {
+        return null;
+      }
+      return new TagFile(fileName, tl);
+    }
+
+    /**
+     * Parse the definition which is found in the given line number reader.
+     * @param in the stream from which to read
+     * @param file the file the series of tags belong to
+     * @param size the max size to be read from the file
+     * @return a valid tag list or null
+     */
+    private static TagList parseDefinitions(final LineNumberReader in, 
+                                            final String file, final int size) {
+      final TagList tl = new TagList();      
+      int currentSize = 0;
+      try {
+        while (size > currentSize) {
+          final String def = in.readLine();
+          final TagStruct ts = TagStruct.parse(file, def);
+          if (ts == null) {
+            return null;
+          }
+          tl.add(ts);
+          ts.getSize();
+          currentSize += ts.getSize();
+        }
+      } 
+      catch (IOException e) {
+        return null;
+      }
+      return tl;
+    }
+
+    /**
+     * Parse the header and returns an array of 2 elements, corresponding
+     * to the header.
+     * @param ois The stream from which to read the header
+     * @return an array of 2 elements or null.
+     * @throws IOException
+     */
+    private static String [] parseHeader(final LineNumberReader ois) {
+      
+      try {
+        final String firstLine = ois.readLine();
+        final String [] secondLine = ois.readLine().split(",");
+        if ((HEADER_MAGIC_NUMBER.equals(firstLine)) &&
+            (secondLine.length == 2)) {        
+          return secondLine;
+        }
+      } 
+      catch (IOException e) {
+        return null;
+      }  
+      return null;
+    }
+
+
+    
+    /**
+     * Print the header of the tags to a file.
+     * @param out the output stream where to print the header
+     */
+    public void printHeader(final PrintStream out) {
+      final int size = getSizeDefs();
+      out.println(HEADER_MAGIC_NUMBER);
+      out.println(fName + "," + size);
+    }
+
+    /**
+     * Get the size of the definitions. Used for the headers.
+     * @return a positive number
+     */
+    private int getSizeDefs() {
+      int res = 0;
+      for (TagStruct ts: fTs) {
+        res += ts.getSize();
+      }
+      return res;
+    }
+
+    /**
+     * Prints the definitions to the given stream.
+     * @param out the stream to print to
+     */
+    public void printDefs(final PrintStream out) {
+      for (TagStruct ts: fTs) {
+        out.print(ts.toString());
+      }      
+    }
+
+
     
     /** {@inheritDoc} */
     @Override
