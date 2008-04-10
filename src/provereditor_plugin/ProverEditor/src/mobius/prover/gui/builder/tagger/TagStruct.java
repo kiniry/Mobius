@@ -31,6 +31,11 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public final class TagStruct implements Serializable {
   /** */
   private static final long serialVersionUID = 1L;
+  /** the first delimiter for the definitions in the etags. */
+  private static final byte FIRST_DELIMITER = 0x7f;
+  /** the second delimiter for the definitions in the etags. */
+  private static final byte SECOND_DELIMITER = 0x01;
+
   /** the file name of the file where the tag can be found. */
   private final Path fFilename;  
   /** the length of the tag in the file. */
@@ -48,8 +53,6 @@ public final class TagStruct implements Serializable {
   /** the representation, it is static for convenience. */
   private final byte[] fRepres;
   
-  private static final byte FIRST_DELIMITER = 0x7f;
-  private static final byte SECOND_DELIMITER = 0x01;
   
   
   /**
@@ -79,7 +82,11 @@ public final class TagStruct implements Serializable {
     
   }
   
-  
+  /**
+   * Create the byte representation of the current tag structure.
+   * It returns an etags compatible definition.
+   * @return A ready to write etags definition
+   */
   private byte[] initRepres() {
     final byte [] bText = fText.getBytes();
     final byte [] bName = fName.getBytes();
@@ -181,17 +188,25 @@ public final class TagStruct implements Serializable {
     }
   }
 
-
-  private static int find(byte[] def, byte b) {
-    for (int i = 0; i < def.length; i++) {
-      if (def[i] == b) {
+  /**
+   * Returns the index of the byte in the array or -1.
+   * @param arr the array to look into
+   * @param b the byte to search
+   * @return a valid index or -1
+   */
+  private static int find(final byte[] arr, final byte b) {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] == b) {
         return i;
       }
     }
     return -1;
   }
 
-
+  /**
+   * Returns the definition of the current structure.
+   * @return an array of bytes
+   */
   public byte[] getBytes() {
     return fRepres;
   }
