@@ -17,6 +17,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 
@@ -32,17 +33,38 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
   private Set<IHandlerListener> fHandlerSet = new HashSet<IHandlerListener>();
   
   /**
+   * Shows the TopLevel view from the ProverEditor.
+   */
+  protected static void showTopView() {
+    try {
+      getActivePage().showView("ProverEditor.topview");
+    } 
+    catch (PartInitException e) {  
+      e.printStackTrace();
+    }
+  }
+  
+  /**
+   * Returns the current active page or <code>null</code>.
+   * @return The current active page.
+   */
+  protected static IWorkbenchPage getActivePage() {
+    final IWorkbenchWindow active = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if (active == null) {
+      return null;
+    }
+    return active.getActivePage();
+  }
+  
+  
+  /**
    * Returns the current active editor of the workbench.
    * It has the same result as {@link 
    * PlatformUI#getWorkbench()#getActiveWorkbenchWindow()#getActivePage()#getActiveEditor()}
    * @return The active editor
    */
   protected static IEditorPart getActiveEditor() {
-    final IWorkbenchWindow active = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    if (active == null) {
-      return null;
-    }
-    final IWorkbenchPage ap = active.getActivePage();
+    final IWorkbenchPage ap = getActivePage();
     if (ap == null) {
       return null;
     }

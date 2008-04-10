@@ -10,11 +10,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -27,14 +22,9 @@ public class ProgressAction extends AProverAction {
   /** {@inheritDoc} */
   @Override
   public void trigger() {
-    try {
-      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
-    } 
-    catch (PartInitException e) {  }
-    final IWorkbench wbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow win = wbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage ap = win.getActivePage();
-    final IEditorPart ed = ap.getActiveEditor();
+    showTopView();
+    
+    final IEditorPart ed = getActiveEditor();
     if (ed instanceof ProverEditor) {
       final ProverEditor ce = (ProverEditor) ed;
       final Job job = new UpdateJob(ce);

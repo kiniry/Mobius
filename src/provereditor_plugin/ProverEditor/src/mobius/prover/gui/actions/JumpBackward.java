@@ -24,16 +24,20 @@ public class JumpBackward extends AProverAction {
     final TopLevelManager tlm = TopLevelManager.getInstance();
     
     final int oldlimit = pfc.fViewer.getSelectedRange().x;
-    BasicRuleScanner parser;
-    if ((parser = tlm.getParser()) == null) {
+    BasicRuleScanner parser = tlm.getParser();
+    if (parser == null) {
       tlm.reset(pfc);
+      parser = tlm.getParser();
     }
-    if ((parser = tlm.getParser()) == null) {
+    if (parser == null) {
       return; // second try we give up...
     }    
     parser.setRange(pfc.fDoc, 0, oldlimit - 1);
     IToken tok; int pos = 0;
-    while ((tok = parser.nextToken()) != null && !tok.isEOF()) {
+    while ((tok = parser.nextToken()) != null) {
+      if (tok.isEOF()) {
+        break;
+      }
       if (tok == AProverTranslator.SENTENCE_TOKEN) {
         pos = parser.getTokenOffset() + parser.getTokenLength();  
       }

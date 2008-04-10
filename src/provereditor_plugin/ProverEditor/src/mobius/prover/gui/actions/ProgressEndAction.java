@@ -10,9 +10,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 
 
@@ -28,13 +25,9 @@ public class ProgressEndAction  extends AProverAction {
   /** {@inheritDoc} */
   @Override
   public void trigger() {
-    final IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     
-    try {
-      ap.showView("ProverEditor.topview");
-    } 
-    catch (PartInitException e) {  }
-    final IEditorPart editor = ap.getActiveEditor();
+    showTopView();
+    final IEditorPart editor = getActiveEditor();
     if (editor instanceof ProverEditor) {
       fEditor = (ProverEditor) editor;
       final Job j = new Job("TopLevel Editor is computing...") {
