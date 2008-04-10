@@ -115,21 +115,21 @@ public class AbstractDistributedTestSuite  extends TestSuite {
         }
 
 	int position;
-	String preArgs;
 	if ((0 < numberOfServers) && (0 <= serverIndex)) {
 	try { 
 		// Iterate over all test cases
+		position = 0;
 	    Iterator i = new LineIterator(fileOfTestFilenames);
-	    position = 0;
 	    while (i.hasNext()) {
+	    		String thisLine = (String)i.next();
 	    	
 	    		// Iterate over all sets of command line options
 	    	    Iterator j = new LineIterator(listOfOptions);
 	    	    while (j.hasNext()) {
-	    	    	preArgs = (String)j.next();
+	    	    	String preArgs = (String)j.next();
 	    	    	
 	    	    	// prepend generic options to the specific options and filename
-	    	    	String s = preArgs + " " + (String)i.next(); 
+	    	    	String s = preArgs + " " + thisLine; 
 	    	    	String[] allargs = JUnitUtils.parseLine(s);
 	    	    	if(allargs.length > 0) {
 	    	    		s = allargs[allargs.length-1];

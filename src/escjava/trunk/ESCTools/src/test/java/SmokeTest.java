@@ -1,13 +1,13 @@
 import junit.framework.*;
 import junitutils.*;
 
-public class TestDefaultSettings extends junitutils.TestFilesTestSuite {
+public class SmokeTest extends junitutils.TestFilesTestSuite {
 
     static public junit.framework.Test suite() {
     
     	String defaultSettings = "-nowarn Deadlock -verboseTrace -testMode";
     	String listOfFiles = "src/test/list.txt";
-    	String testSuiteName = "Default-Settings";
+    	String testSuiteName = "Smoke-Test";
 
         junit.framework.TestSuite suite =
 	    new TestFilesTestSuite(
