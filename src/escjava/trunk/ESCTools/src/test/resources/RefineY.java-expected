@@ -1,12 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineY.java: Caution: Using given file as the .java file, even though it is not the java file for RefineY on the classpath
-    [0.0010 s 22703232 bytes]
+ESC/Java version VERSION
+src|test|resources|RefineY.java: Caution: Using given file as the .java file, even though it is not the java file for RefineY on the classpath
+    [TIME]
 
 RefineY ...
-  Prover started:0.06 s 23686696 bytes
-    [0.184 s 22637808 bytes]
+  Prover started:TIME
+    [TIME]
 
 RefineY: RefineY() ...
-    [0.046 s 22788544 bytes]  passed
-  [0.231 s 22790592 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

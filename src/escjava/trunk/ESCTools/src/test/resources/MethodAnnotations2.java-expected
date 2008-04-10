@@ -1,34 +1,34 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MethodAnnotations2.java: Caution: Using given file as the .java file, even though it is not the java file for MethodAnnotations2 on the classpath
-    [0.0030 s 19358232 bytes]
+ESC/Java version VERSION
+src|test|resources|MethodAnnotations2.java: Caution: Using given file as the .java file, even though it is not the java file for MethodAnnotations2 on the classpath
+    [TIME]
 
 MethodAnnotations2 ...
-  Prover started:0.071 s 20442576 bytes
-    [0.256 s 19405560 bytes]
+  Prover started:TIME
+    [TIME]
 
 MethodAnnotations2: capacity() ...
-    [0.0 s 19406584 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MethodAnnotations2: size() ...
-    [0.19 s 19686176 bytes]  passed
+    [TIME]  passed
 
 MethodAnnotations2: push(int) ...
-    [0.243 s 20714936 bytes]  passed
+    [TIME]  passed
 
 MethodAnnotations2: pop() ...
-    [0.078 s 21244952 bytes]  passed
+    [TIME]  passed
 
 MethodAnnotations2: MethodAnnotations2() ...
-    [0.088 s 21781648 bytes]  passed
-  [0.856 s 21782672 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 Client ...
-    [0.0030 s 21914464 bytes]
+    [TIME]
 
 Client: m(MethodAnnotations2) ...
-    [1.264 s 20504192 bytes]  passed
+    [TIME]  passed
 
 Client: Client() ...
-    [0.0060 s 20669888 bytes]  passed
-  [1.274 s 20670912 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

@@ -1,57 +1,57 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullBad.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullBad on the classpath
-    [0.0020 s 21617280 bytes]
+ESC/Java version VERSION
+src|test|resources|NonNullBad.java: Caution: Using given file as the .java file, even though it is not the java file for NonNullBad on the classpath
+    [TIME]
 
 NonNullBad ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullBad.java:18: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+src|test|resources|NonNullBad.java:18: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m(/*@ non_null */ Object o, /*@ non_null */ Object ...
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullBad.java:23: Associated declaration: 
+src|test|resources|NonNullBad.java:23: Associated declaration: 
         public void m(Object o, /*@ non_null */ Object oo, Object ooo) ...
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullBad.java:5: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+src|test|resources|NonNullBad.java:5: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m(/*@ non_null */ Object o,
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullBad.java:23: Associated declaration: 
-        public void m(Object o, /*@ non_null */ Object oo, Object ooo) ...
-                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullBad.java:7: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
+src|test|resources|NonNullBad.java:18: Associated declaration: 
+        public void m(/*@ non_null */ Object o, /*@ non_null */ Object ...
+                                      ^
+src|test|resources|NonNullBad.java:7: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
                         /*@ non_null */ Object ooo);
                             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNullBad.java:23: Associated declaration: 
-        public void m(Object o, /*@ non_null */ Object oo, Object ooo) ...
-                                                           ^
-  Prover started:0.062 s 22794208 bytes
-    [0.189 s 22879920 bytes]
+src|test|resources|NonNullBad.java:13: Associated declaration: 
+ ... ject o, /*@ non_null */ Object oo, Object ooo);
+                                        ^
+  Prover started:TIME
+    [TIME]
 
 NonNullBad: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 22883280 bytes]  passed immediately
+    [TIME]  passed immediately
 
 NonNullBad: NonNullBad() ...
-    [0.063 s 23025824 bytes]  passed
-  [0.252 s 23027872 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 NonNullBadS ...
-    [0.0010 s 23099104 bytes]
+    [TIME]
 
 NonNullBadS: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 23102472 bytes]  passed immediately
+    [TIME]  passed immediately
 
 NonNullBadS: NonNullBadS() ...
-    [0.035 s 23255784 bytes]  passed
-  [0.036 s 23256808 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 NonNullBadI ...
-    [0.0020 s 23334256 bytes]
+    [TIME]
 
 NonNullBadI: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 23337624 bytes]  passed immediately
-  [0.011 s 23338648 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 NonNullBadII ...
-    [0.0010 s 23405800 bytes]
+    [TIME]
 
 NonNullBadII: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 23409168 bytes]  passed immediately
-  [0.0010 s 23411272 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 4 cautions

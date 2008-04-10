@@ -1,9 +1,9 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/CausedAnErrorOnce01.java: Caution: Using given file as the .java file, even though it is not the java file for CausedAnErrorOnce01 on the classpath
-    [0.0020 s 16731888 bytes]
+ESC/Java version VERSION
+src|test|resources|CausedAnErrorOnce01.java: Caution: Using given file as the .java file, even though it is not the java file for CausedAnErrorOnce01 on the classpath
+    [TIME]
 
 CausedAnErrorOnce01 ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/CausedAnErrorOnce01.java:6: Fatal error: Can't find type named "fieldref"
+src|test|resources|CausedAnErrorOnce01.java:6: Fatal error: Can't find type named "fieldref"
   public static int m1(fieldref o) {
                        ^
 1 caution

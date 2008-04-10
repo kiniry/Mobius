@@ -1,72 +1,72 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks7 on the classpath
-    [0.058 s 19850104 bytes]
+ESC/Java version VERSION
+src|test|resources|ModChecks7.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks7 on the classpath
+    [TIME]
 
 ModChecks7 ...
-  Prover started:0.176 s 20889912 bytes
-    [0.276 s 20959024 bytes]
+  Prover started:TIME
+    [TIME]
 
 ModChecks7: ModChecks7() ...
-    [0.0 s 20960048 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecks7: mi() ...
-    [0.077 s 21190152 bytes]  passed
+    [TIME]  passed
 
 ModChecks7: mi2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java:23: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecks7.java:23: Warning: Possible violation of modifies clause (Modifies)
                 o.pi(); // ERROR
                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java", line 31, col 14:
+Associated declaration is "src|test|resources|ModChecks7.java", line 31, col 14:
         //@ modifies i;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java", line 21, col 5:
+Associated declaration is "src|test|resources|ModChecks7.java", line 21, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.052 s 21580960 bytes]  failed
+    [TIME]  failed
 
 ModChecks7: mi3() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java:28: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecks7.java:28: Warning: Possible violation of modifies clause (Modifies)
                 pi(); // ERROR
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java", line 31, col 14:
+Associated declaration is "src|test|resources|ModChecks7.java", line 31, col 14:
         //@ modifies i;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java", line 26, col 5:
+Associated declaration is "src|test|resources|ModChecks7.java", line 26, col 5:
         //@ modifies o.i;
             ^
 ------------------------------------------------------------------------
-    [0.039 s 20320520 bytes]  failed
+    [TIME]  failed
 
 ModChecks7: pi() ...
-    [0.0 s 20321544 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecks7: mo1() ...
-    [0.0090 s 20439000 bytes]  passed
+    [TIME]  passed
 
 ModChecks7: mo2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java:44: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecks7.java:44: Warning: Possible violation of modifies clause (Modifies)
                 o = oo;
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java", line 42, col 5:
+Associated declaration is "src|test|resources|ModChecks7.java", line 42, col 5:
         //@ modifies o.i;
             ^
 ------------------------------------------------------------------------
-    [0.018 s 20673368 bytes]  failed
+    [TIME]  failed
 
 ModChecks7: mo3() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java:50: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecks7.java:50: Warning: Possible violation of modifies clause (Modifies)
                 o = oo;
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks7.java", line 48, col 5:
+Associated declaration is "src|test|resources|ModChecks7.java", line 48, col 5:
         //@ modifies oo.i;
             ^
 ------------------------------------------------------------------------
-    [0.018 s 20907792 bytes]  failed
-  [0.489 s 20908816 bytes total]
+    [TIME]  failed
+  [TIME total]
 1 caution
 4 warnings

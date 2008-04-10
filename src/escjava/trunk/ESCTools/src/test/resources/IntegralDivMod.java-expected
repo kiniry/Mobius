@@ -1,24 +1,24 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/IntegralDivMod.java: Caution: Using given file as the .java file, even though it is not the java file for IntegralDivMod on the classpath
-    [0.0020 s 18926152 bytes]
+ESC/Java version VERSION
+src|test|resources|IntegralDivMod.java: Caution: Using given file as the .java file, even though it is not the java file for IntegralDivMod on the classpath
+    [TIME]
 
 IntegralDivMod ...
-  Prover started:0.059 s 19948824 bytes
-    [0.161 s 20014960 bytes]
+  Prover started:TIME
+    [TIME]
 
 IntegralDivMod: m(int, int) ...
-    [0.072 s 20101608 bytes]  passed
+    [TIME]  passed
 
 IntegralDivMod: ma(int, int) ...
-    [0.0080 s 20200544 bytes]  passed
+    [TIME]  passed
 
 IntegralDivMod: mb(int, int) ...
-    [0.032 s 20284064 bytes]  passed
+    [TIME]  passed
 
 IntegralDivMod: m2(int, int) ...
-    [0.012 s 20401432 bytes]  passed
+    [TIME]  passed
 
 IntegralDivMod: IntegralDivMod() ...
-    [0.01 s 20553216 bytes]  passed
-  [0.295 s 20554240 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

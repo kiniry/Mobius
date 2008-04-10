@@ -1,28 +1,28 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Everything.java: Caution: Using given file as the .java file, even though it is not the java file for Everything on the classpath
-    [0.0020 s 17599112 bytes]
+ESC/Java version VERSION
+src|test|resources|Everything.java: Caution: Using given file as the .java file, even though it is not the java file for Everything on the classpath
+    [TIME]
 
 Everything ...
-  Prover started:0.059 s 18604872 bytes
-    [0.161 s 18676064 bytes]
+  Prover started:TIME
+    [TIME]
 
 Everything: m() ...
-    [0.072 s 18733768 bytes]  passed
+    [TIME]  passed
 
 Everything: n() ...
-    [0.0070 s 18805808 bytes]  passed
+    [TIME]  passed
 
 Everything: Everything() ...
-    [0.0060 s 18951936 bytes]  passed
-  [0.247 s 18952960 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 S ...
-    [0.0010 s 19021408 bytes]
+    [TIME]
 
 S: n() ...
-    [0.035 s 19078032 bytes]  passed
+    [TIME]  passed
 
 S: S() ...
-    [0.0060 s 19238280 bytes]  passed
-  [0.042 s 19239304 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

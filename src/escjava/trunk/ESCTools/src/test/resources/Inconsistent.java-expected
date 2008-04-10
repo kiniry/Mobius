@@ -1,32 +1,32 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inconsistent.java: Caution: Using given file as the .java file, even though it is not the java file for Inconsistent on the classpath
-    [0.0010 s 18245944 bytes]
+ESC/Java version VERSION
+src|test|resources|Inconsistent.java: Caution: Using given file as the .java file, even though it is not the java file for Inconsistent on the classpath
+    [TIME]
 
 Inconsistent ...
-  Prover started:0.059 s 19249024 bytes
-    [0.161 s 19315088 bytes]
+  Prover started:TIME
+    [TIME]
 
 Inconsistent: Inconsistent() ...
-    [0.0 s 19316112 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Inconsistent: m() ...
-    [0.069 s 19398520 bytes]  passed
+    [TIME]  passed
 
 Inconsistent: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inconsistent.java:16: Warning: Possible assertion failure (Assert)
+src|test|resources|Inconsistent.java:16: Warning: Possible assertion failure (Assert)
                 //@ assert a == d; // Should fail
                     ^
 ------------------------------------------------------------------------
-    [0.015 s 19590816 bytes]  failed
+    [TIME]  failed
 
 Inconsistent: mmm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inconsistent.java:23: Warning: Possible assertion failure (Assert)
+src|test|resources|Inconsistent.java:23: Warning: Possible assertion failure (Assert)
                 //@ assert false; // should fail
                     ^
 ------------------------------------------------------------------------
-    [0.04 s 19771120 bytes]  failed
-  [0.285 s 19772144 bytes total]
+    [TIME]  failed
+  [TIME total]
 1 caution
 2 warnings

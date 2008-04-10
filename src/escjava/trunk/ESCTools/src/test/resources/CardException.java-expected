@@ -1,31 +1,31 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/CardException.java: Caution: Using given file as the .java file, even though it is not the java file for CardException on the classpath
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/CardException.java:6: Error: Could not find file referenced in refine annotation: CardException.jml
+ESC/Java version VERSION
+src|test|resources|CardException.java: Caution: Using given file as the .java file, even though it is not the java file for CardException on the classpath
+src|test|resources|CardException.java:6: Error: Could not find file referenced in refine annotation: CardException.jml
 //@ refine "CardException.jml";
     ^
-    [0.0020 s 15556136 bytes]
+    [TIME]
 
 CardException ...
-  Prover started:0.06 s 16571568 bytes
-    [0.167 s 16639984 bytes]
+  Prover started:TIME
+    [TIME]
 
 CardException: CardException(short) ...
-    [0.079 s 16858672 bytes]  passed
+    [TIME]  passed
 
 CardException: getReason() ...
-    [0.0060 s 16926008 bytes]  passed
+    [TIME]  passed
 
 CardException: setReason(short) ...
-    [0.0060 s 17000816 bytes]  passed
+    [TIME]  passed
 
 CardException: throwIt(short) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/CardException.java:30: Warning: Possible null dereference (Null)
+src|test|resources|CardException.java:30: Warning: Possible null dereference (Null)
         systemInstance.setReason(reason);
                       ^
 ------------------------------------------------------------------------
-    [0.046 s 17312536 bytes]  failed
-  [0.304 s 17313560 bytes total]
+    [TIME]  failed
+  [TIME total]
 1 caution
 1 warning
 1 error

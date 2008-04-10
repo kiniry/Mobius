@@ -1,293 +1,293 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java: Caution: Using given file as the .java file, even though it is not the java file for InheritedSpecs on the classpath
-    [0.0040 s 17935312 bytes]
+ESC/Java version VERSION
+src|test|resources|InheritedSpecs.java: Caution: Using given file as the .java file, even though it is not the java file for InheritedSpecs on the classpath
+    [TIME]
 
 InheritedSpecs ...
-  Prover started:0.07 s 18245248 bytes
-    [0.195 s 18324136 bytes]
+  Prover started:TIME
+    [TIME]
 
 InheritedSpecs: m(int, int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:11: Warning: Postcondition possibly not established (Post)
+src|test|resources|InheritedSpecs.java:11: Warning: Postcondition possibly not established (Post)
         } // FAILS
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 112, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 112, col 5:
         //@ ensures \result >= 0;
             ^
 Execution trace information:
-    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 10, col 2.
+    Executed return in "src|test|resources|InheritedSpecs.java", line 10, col 2.
 
 ------------------------------------------------------------------------
-    [0.115 s 18611608 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: mm1() ...
-    [0.013 s 18824624 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: mm2() ...
-    [0.024 s 19045744 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: mm3() ...
-    [0.013 s 19269024 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: mm4() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:16: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:16: Warning: Precondition possibly not established (Pre)
         public void mm4() { m(-1,-1); } // FAILS
                              ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 111, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 111, col 5:
         //@ requires j >= 0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:16: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:16: Warning: Precondition possibly not established (Pre)
         public void mm4() { m(-1,-1); } // FAILS
                              ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 7, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 7, col 5:
         //@ requires i >= 0;
             ^
 ------------------------------------------------------------------------
-    [0.023 s 19631248 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: mm5() ...
-    [0.018 s 19915808 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: mm6() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:18: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:18: Warning: Precondition possibly not established (Pre)
         public void mm6() { (new ISHelper()).m(1,-1); } // FAILS
                                               ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 111, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 111, col 5:
         //@ requires j >= 0;
             ^
 ------------------------------------------------------------------------
-    [0.029 s 20332560 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: mm7() ...
-    [0.026 s 18201024 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: mm8() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:20: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:20: Warning: Precondition possibly not established (Pre)
         public void mm8() { (new ISHelper()).m(-1,-1); } // FAILS
                                               ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 111, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 111, col 5:
         //@ requires j >= 0;
             ^
 ------------------------------------------------------------------------
-    [0.054 s 18625216 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: n(int) ...
-    [0.0 s 18627264 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: nn() ...
-    [0.0060 s 18776448 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: InheritedSpecs() ...
-    [0.0 s 18777472 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: n1(int) ...
-    [0.0 s 18779520 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: n2(int) ...
-    [0.0 s 18781568 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: n3(int) ...
-    [0.0010 s 18783672 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: n4(int) ...
-    [0.0 s 18785720 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: n5(int) ...
-    [0.0 s 18787768 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: n6(int) ...
-    [0.0 s 18789816 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: n7(int) ...
-    [0.0 s 18791864 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritedSpecs: nn1() ...
-    [0.011 s 19019448 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: nn1e() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:55: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:55: Warning: Precondition possibly not established (Pre)
                 n1(-1); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 140, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 140, col 5:
         //@ requires i>=0;
             ^
 ------------------------------------------------------------------------
-    [0.019 s 19275472 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: nn2() ...
-    [0.02 s 19826544 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: nn3() ...
-    [0.022 s 20269568 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: nn3e() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:71: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:71: Warning: Precondition possibly not established (Pre)
                 n3(-1); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 125, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 125, col 5:
         //@ requires i>1 || i< -10;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:71: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:71: Warning: Precondition possibly not established (Pre)
                 n3(-1); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 144, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 144, col 5:
         //@ requires i>=0;
             ^
 ------------------------------------------------------------------------
-    [0.022 s 20593736 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: nn4() ...
-    [0.013 s 18250496 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: nn5() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:82: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:82: Warning: Precondition possibly not established (Pre)
                 n5(-2); // OK
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 147, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 147, col 5:
         //@ requires i>=0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:82: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:82: Warning: Precondition possibly not established (Pre)
                 n5(-2); // OK
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 41, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 41, col 5:
         //@ requires i%2 == 0;
             ^
 ------------------------------------------------------------------------
-    [0.069 s 18881208 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: nn5e() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:85: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:85: Warning: Precondition possibly not established (Pre)
                 n5(-1); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 147, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 147, col 5:
         //@ requires i>=0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:85: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:85: Warning: Precondition possibly not established (Pre)
                 n5(-1); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 41, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 41, col 5:
         //@ requires i%2 == 0;
             ^
 ------------------------------------------------------------------------
-    [0.024 s 19196968 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: nn6() ...
-    [0.045 s 19972984 bytes]  passed
+    [TIME]  passed
 
 InheritedSpecs: nn7() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:100: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:100: Warning: Precondition possibly not established (Pre)
                 n7(-2); // OK
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 47, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 47, col 5:
         //@ requires i%2 == 0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:100: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:100: Warning: Precondition possibly not established (Pre)
                 n7(-2); // OK
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 133, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 133, col 5:
         //@ requires i>1 || i< -10;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:100: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:100: Warning: Precondition possibly not established (Pre)
                 n7(-2); // OK
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 150, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 150, col 5:
         //@ requires i>=0;
             ^
 ------------------------------------------------------------------------
-    [0.134 s 19271240 bytes]  failed
+    [TIME]  failed
 
 InheritedSpecs: nn7e() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:105: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:105: Warning: Precondition possibly not established (Pre)
                 n7(-1); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 133, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 133, col 5:
         //@ requires i>1 || i< -10;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:105: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:105: Warning: Precondition possibly not established (Pre)
                 n7(-1); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 150, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 150, col 5:
         //@ requires i>=0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java:105: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritedSpecs.java:105: Warning: Precondition possibly not established (Pre)
                 n7(-1); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritedSpecs.java", line 47, col 5:
+Associated declaration is "src|test|resources|InheritedSpecs.java", line 47, col 5:
         //@ requires i%2 == 0;
             ^
 ------------------------------------------------------------------------
-    [0.029 s 19673832 bytes]  failed
-  [0.926 s 19674856 bytes total]
+    [TIME]  failed
+  [TIME total]
 
 ISHelper ...
-    [0.0020 s 19786688 bytes]
+    [TIME]
 
 ISHelper: m(int, int) ...
-    [0.015 s 19884872 bytes]  passed
+    [TIME]  passed
 
 ISHelper: n(int) ...
-    [0.0 s 19886920 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISHelper: ISHelper() ...
-    [0.0 s 19888968 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISHelper: n1(int) ...
-    [0.0 s 19889992 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISHelper: n2(int) ...
-    [0.0 s 19892040 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISHelper: n3(int) ...
-    [0.0 s 19894088 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISHelper: n4(int) ...
-    [0.0 s 19896136 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISHelper: n5(int) ...
-    [0.0 s 19897160 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISHelper: n6(int) ...
-    [0.0010 s 19900288 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISHelper: n7(int) ...
-    [0.0 s 19901312 bytes]  passed immediately
-  [0.019 s 19902336 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 ISSHelper ...
-    [0.0010 s 19985784 bytes]
+    [TIME]
 
 ISSHelper: ISSHelper() ...
-    [0.0 s 19987832 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISSHelper: n1(int) ...
-    [0.0 s 19988856 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISSHelper: n2(int) ...
-    [0.0 s 19990904 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISSHelper: n3(int) ...
-    [0.0 s 19992952 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISSHelper: n4(int) ...
-    [0.0 s 19995000 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISSHelper: n5(int) ...
-    [0.0 s 19996024 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISSHelper: n6(int) ...
-    [0.0 s 19998072 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ISSHelper: n7(int) ...
-    [0.0 s 20000120 bytes]  passed immediately
-  [0.01 s 20001144 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 18 warnings

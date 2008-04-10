@@ -1,27 +1,27 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ReadableBad.java: Caution: Using given file as the .java file, even though it is not the java file for ReadableBad on the classpath
-    [0.0020 s 22029840 bytes]
+ESC/Java version VERSION
+src|test|resources|ReadableBad.java: Caution: Using given file as the .java file, even though it is not the java file for ReadableBad on the classpath
+    [TIME]
 
 ReadableBad ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ReadableBad.java:3: Error: Undefined variable 'q'
+src|test|resources|ReadableBad.java:3: Error: Undefined variable 'q'
         //@ readable q if b;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ReadableBad.java:3: Error: Undefined variable 'b'
+src|test|resources|ReadableBad.java:3: Error: Undefined variable 'b'
         //@ readable q if b;
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ReadableBad.java:4: Error: Undefined variable 'q'
+src|test|resources|ReadableBad.java:4: Error: Undefined variable 'q'
         //@ writable q if b;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ReadableBad.java:4: Error: Undefined variable 'b'
+src|test|resources|ReadableBad.java:4: Error: Undefined variable 'b'
         //@ writable q if b;
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ReadableBad.java:7: Error: Cannot convert int to boolean
+src|test|resources|ReadableBad.java:7: Error: Cannot convert int to boolean
         //@ readable i+i if i;
                             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ReadableBad.java:7: Error: Not a specification designator expression
+src|test|resources|ReadableBad.java:7: Error: Not a specification designator expression
         //@ readable i+i if i;
                      ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.013 s 22721416 bytes total] (aborted)
+  [TIME total] (aborted)
 2 cautions
 6 errors

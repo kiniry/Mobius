@@ -1,27 +1,27 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsOnlyBad.java:6: Caution: Use either \nothing or a comma-separated list of type names after a signals_only keyword
+ESC/Java version VERSION
+src|test|resources|SignalsOnlyBad.java:6: Caution: Use either \nothing or a comma-separated list of type names after a signals_only keyword
         signals_only;  // OK
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsOnlyBad.java:7: Error: Expected a type name
+src|test|resources|SignalsOnlyBad.java:7: Error: Expected a type name
         signals_only NullPointerException ,, Exception;
                                            ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsOnlyBad.java:8: Error: Expected a type name
+src|test|resources|SignalsOnlyBad.java:8: Error: Expected a type name
         signals_only , Exception;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsOnlyBad.java: Caution: Using given file as the .java file, even though it is not the java file for SignalsOnlyBad on the classpath
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsOnlyBad.java:16: Error: A signals clause is not allowed in a normal_behavior section
+src|test|resources|SignalsOnlyBad.java: Caution: Using given file as the .java file, even though it is not the java file for SignalsOnlyBad on the classpath
+src|test|resources|SignalsOnlyBad.java:16: Error: A signals clause is not allowed in a normal_behavior section
         //@ signals_only Exception;  // ERROR - not in normal_behavior
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsOnlyBad.java:15: Associated declaration: 
+src|test|resources|SignalsOnlyBad.java:15: Associated declaration: 
         //@ public normal_behavior
                    ^
-    [0.0040 s 22832072 bytes]
+    [TIME]
 
 SignalsOnlyBad ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsOnlyBad.java:9: Error: Invalid instanceof operation: A value of type java.lang.Exception can never be an instance of java.lang.String
+src|test|resources|SignalsOnlyBad.java:9: Error: Invalid instanceof operation: A value of type java.lang.Exception can never be an instance of java.lang.String
         signals_only  String;
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsOnlyBad.java:10: Fatal error: Can't find type named "Q"
+src|test|resources|SignalsOnlyBad.java:10: Fatal error: Can't find type named "Q"
         signals_only Q;
                      ^
 2 cautions

@@ -1,36 +1,36 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Represents.java: Caution: Using given file as the .java file, even though it is not the java file for Represents on the classpath
-    [0.0020 s 22459288 bytes]
+ESC/Java version VERSION
+src|test|resources|Represents.java: Caution: Using given file as the .java file, even though it is not the java file for Represents on the classpath
+    [TIME]
 
 Represents ...
-  Prover started:0.061 s 23497832 bytes
-    [0.161 s 23568960 bytes]
+  Prover started:TIME
+    [TIME]
 
 Represents: Represents() ...
-    [0.107 s 23846368 bytes]  passed
+    [TIME]  passed
 
 Represents: m() ...
-    [0.0090 s 23966464 bytes]  passed
+    [TIME]  passed
 
 Represents: n() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Represents.java:35: Warning: Postcondition possibly not established (Post)
+src|test|resources|Represents.java:35: Warning: Postcondition possibly not established (Post)
         } // ERROR - postcondition not established
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Represents.java", line 31, col 5:
+Associated declaration is "src|test|resources|Represents.java", line 31, col 5:
         //@ ensures size > 2;
             ^
 Execution trace information:
-    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Represents.java", line 34, col 2.
+    Executed return in "src|test|resources|Represents.java", line 34, col 2.
 
 ------------------------------------------------------------------------
-    [0.021 s 24267984 bytes]  failed
+    [TIME]  failed
 
 Represents: nn() ...
-    [0.01 s 24400728 bytes]  passed
+    [TIME]  passed
 
 Represents: p() ...
-    [0.01 s 24534136 bytes]  passed
-  [0.318 s 24535160 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

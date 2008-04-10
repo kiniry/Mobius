@@ -1,37 +1,37 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnonClass.java: Caution: Using given file as the .java file, even though it is not the java file for AnonClass on the classpath
-    [0.0040 s 14960304 bytes]
+ESC/Java version VERSION
+src|test|resources|AnonClass.java: Caution: Using given file as the .java file, even though it is not the java file for AnonClass on the classpath
+    [TIME]
 
 AnonClass ...
-  Prover started:0.057 s 15967840 bytes
-    [0.174 s 16041152 bytes]
+  Prover started:TIME
+    [TIME]
 
 AnonClass: p() ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnonClass.java:4: Caution: Not checking body of anonymous class (subclass of AnonClassS)
+src|test|resources|AnonClass.java:4: Caution: Not checking body of anonymous class (subclass of AnonClassS)
         AnonClassS a = new AnonClassS() {
                                         ^
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnonClass.java:11: Warning: Precondition possibly not established (Pre)
+src|test|resources|AnonClass.java:11: Warning: Precondition possibly not established (Pre)
         a.m(-1);
            ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnonClass.java", line 18, col 8:
+Associated declaration is "src|test|resources|AnonClass.java", line 18, col 8:
     //@ requires i > 0;
         ^
 ------------------------------------------------------------------------
-    [0.127 s 16515680 bytes]  failed
+    [TIME]  failed
 
 AnonClass: AnonClass() ...
-    [0.0070 s 16666928 bytes]  passed
-  [0.309 s 16668000 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 AnonClassS ...
-    [0.0010 s 16735680 bytes]
+    [TIME]
 
 AnonClassS: m(int) ...
-    [0.01 s 16811480 bytes]  passed
+    [TIME]  passed
 
 AnonClassS: AnonClassS() ...
-    [0.0070 s 16964648 bytes]  passed
-  [0.018 s 16965720 bytes total]
+    [TIME]  passed
+  [TIME total]
 2 cautions
 1 warning

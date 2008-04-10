@@ -1,30 +1,33 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Fresh.java: Caution: Using given file as the .java file, even though it is not the java file for Fresh on the classpath
-    [0.0020 s 17943112 bytes]
+ESC/Java version VERSION
+src|test|resources|Fresh.java: Caution: Using given file as the .java file, even though it is not the java file for Fresh on the classpath
+    [TIME]
 
 Fresh ...
-  Prover started:0.059 s 19001032 bytes
-    [0.175 s 19066680 bytes]
+  Prover started:TIME
+    [TIME]
 
 Fresh: m() ...
-    [0.081 s 19254104 bytes]  passed
+    [TIME]  passed
 
 Fresh: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Fresh.java:13: Warning: Postcondition possibly not established (Post)
+src|test|resources|Fresh.java:13: Warning: Postcondition possibly not established (Post)
         public void mm() {} // FAILS
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Fresh.java", line 12, col 5:
+Associated declaration is "src|test|resources|Fresh.java", line 12, col 5:
         //@ ensures \fresh(o);
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Fresh.java", line 13, col 19.
+
 ------------------------------------------------------------------------
-    [0.045 s 19453048 bytes]  failed
+    [TIME]  failed
 
 Fresh: mmm() ...
-    [0.013 s 19571856 bytes]  passed
+    [TIME]  passed
 
 Fresh: Fresh() ...
-    [0.01 s 19849536 bytes]  passed
-  [0.324 s 19850560 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

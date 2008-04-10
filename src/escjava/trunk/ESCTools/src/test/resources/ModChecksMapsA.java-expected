@@ -1,53 +1,53 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMapsA.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksMapsA on the classpath
-    [0.0040 s 20899528 bytes]
+ESC/Java version VERSION
+src|test|resources|ModChecksMapsA.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksMapsA on the classpath
+    [TIME]
 
 ModChecksMapsA ...
-  Prover started:0.061 s 21054504 bytes
-    [0.182 s 21136736 bytes]
+  Prover started:TIME
+    [TIME]
 
 ModChecksMapsA: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMapsA.java:15: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMapsA.java:15: Warning: Possible violation of modifies clause (Modifies)
                 list.next.next.next = new MCMList();
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMapsA.java", line 8, col 5:
+Associated declaration is "src|test|resources|ModChecksMapsA.java", line 8, col 5:
         //@ modifies list.links;
             ^
 ------------------------------------------------------------------------
-    [0.181 s 21998056 bytes]  failed
+    [TIME]  failed
 
 ModChecksMapsA: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMapsA.java:26: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMapsA.java:26: Warning: Possible violation of modifies clause (Modifies)
                 list.next.next.value = 2;
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMapsA.java", line 20, col 5:
+Associated declaration is "src|test|resources|ModChecksMapsA.java", line 20, col 5:
         //@ modifies list.values;
             ^
 ------------------------------------------------------------------------
-    [0.046 s 22415128 bytes]  failed
+    [TIME]  failed
 
 ModChecksMapsA: ma() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMapsA.java:35: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMapsA.java:35: Warning: Possible violation of modifies clause (Modifies)
                 list.next.next.array[0] = 0;
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMapsA.java", line 29, col 5:
+Associated declaration is "src|test|resources|ModChecksMapsA.java", line 29, col 5:
         //@ modifies list.values;
             ^
 ------------------------------------------------------------------------
-    [0.143 s 23018112 bytes]  failed
+    [TIME]  failed
 
 ModChecksMapsA: ModChecksMapsA() ...
-    [0.05 s 20901152 bytes]  passed
-  [0.603 s 20902176 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 MCMList ...
-    [0.0010 s 20975128 bytes]
+    [TIME]
 
 MCMList: MCMList() ...
-    [0.0 s 20976152 bytes]  passed immediately
-  [0.01 s 20977176 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 3 warnings

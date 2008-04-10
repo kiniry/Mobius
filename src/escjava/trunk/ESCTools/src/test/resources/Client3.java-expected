@@ -1,28 +1,28 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client3.java: Caution: Using given file as the .java file, even though it is not the java file for Client3 on the classpath
-    [0.0020 s 16817088 bytes]
+ESC/Java version VERSION
+src|test|resources|Client3.java: Caution: Using given file as the .java file, even though it is not the java file for Client3 on the classpath
+    [TIME]
 
 Client3 ...
-  Prover started:0.059 s 17855128 bytes
-    [0.17 s 17926928 bytes]
+  Prover started:TIME
+    [TIME]
 
 Client3: unique(IntList) ...
-    [0.077 s 18186840 bytes]  passed
+    [TIME]  passed
 
 Client3: clear(IntList) ...
-    [0.045 s 18515640 bytes]  passed
+    [TIME]  passed
 
 Client3: Client3() ...
-    [0.0060 s 18673800 bytes]  passed
-  [0.298 s 18674824 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 IntList ...
-    [0.0010 s 18739840 bytes]
+    [TIME]
 
 IntList: unique() ...
-    [0.0 s 18740864 bytes]  passed immediately
+    [TIME]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 18742912 bytes]  passed immediately
-  [0.0090 s 18743936 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution

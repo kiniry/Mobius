@@ -1,33 +1,33 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedPrecondition.java: Caution: Using given file as the .java file, even though it is not the java file for UnchangedPrecondition on the classpath
-    [0.0030 s 38949048 bytes]
+ESC/Java version VERSION
+src|test|resources|UnchangedPrecondition.java: Caution: Using given file as the .java file, even though it is not the java file for UnchangedPrecondition on the classpath
+    [TIME]
 
 UnchangedPrecondition ...
-  Prover started:0.075 s 38472120 bytes
-    [0.207 s 38543328 bytes]
+  Prover started:TIME
+    [TIME]
 
 UnchangedPrecondition: m() ...
-    [0.0010 s 38544408 bytes]  passed immediately
+    [TIME]  passed immediately
 
 UnchangedPrecondition: mm() ...
-    [0.103 s 38899952 bytes]  passed
+    [TIME]  passed
 
 UnchangedPrecondition: mm1() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedPrecondition.java:22: Warning: Possible assertion failure (Assert)
+src|test|resources|UnchangedPrecondition.java:22: Warning: Possible assertion failure (Assert)
         //@ assert \not_modified(i); // FAILS
             ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedPrecondition.java", line 22, col 26:
+Associated declaration is "src|test|resources|UnchangedPrecondition.java", line 22, col 26:
         //@ assert \not_modified(i); // FAILS
                                  ^
 ------------------------------------------------------------------------
-    [0.031 s 39418880 bytes]  failed
+    [TIME]  failed
 
 UnchangedPrecondition: mma() ...
-    [0.023 s 39795128 bytes]  passed
+    [TIME]  passed
 
 UnchangedPrecondition: UnchangedPrecondition() ...
-    [0.0070 s 39983968 bytes]  passed
-  [0.373 s 39986016 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

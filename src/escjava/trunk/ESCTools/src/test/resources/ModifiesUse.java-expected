@@ -1,9 +1,9 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesUse.java: Caution: Using given file as the .java file, even though it is not the java file for ModifiesUse on the classpath
-    [0.0070 s 21527576 bytes]
+ESC/Java version VERSION
+src|test|resources|ModifiesUse.java: Caution: Using given file as the .java file, even though it is not the java file for ModifiesUse on the classpath
+    [TIME]
 
 ModifiesUse ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModifiesUse.java:5: Fatal error: Can't find type named "JMLDataGroup"
+src|test|resources|ModifiesUse.java:5: Fatal error: Can't find type named "JMLDataGroup"
         //@ model public JMLDataGroup list;
                          ^
 1 caution

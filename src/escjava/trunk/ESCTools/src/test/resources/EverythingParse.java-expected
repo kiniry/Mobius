@@ -1,25 +1,25 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EverythingParse.java:6: Caution: Conditional assignable clauses are no longer supported and are ignored
+ESC/Java version VERSION
+src|test|resources|EverythingParse.java:6: Caution: Conditional assignable clauses are no longer supported and are ignored
         //@ modifies \everything if true;  // deprecated
                                  ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EverythingParse.java:15: Fatal error: Unexpected token '\everything' in Primary expression
+src|test|resources|EverythingParse.java:15: Fatal error: Unexpected token '\everything' in Primary expression
         //@ requires \everything;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EverythingParse.java:16: Fatal error: Unexpected token '\everything' in Primary expression
+src|test|resources|EverythingParse.java:16: Fatal error: Unexpected token '\everything' in Primary expression
         //@ ensures \everything;
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EverythingParse.java:17: Fatal error: Unexpected token '\everything' in Primary expression
+src|test|resources|EverythingParse.java:17: Fatal error: Unexpected token '\everything' in Primary expression
         //@ diverges \everything;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EverythingParse.java:18: Fatal error: Unexpected token '\everything' in Primary expression
+src|test|resources|EverythingParse.java:18: Fatal error: Unexpected token '\everything' in Primary expression
         //@ signals (Exception e) \everything;
                                   ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EverythingParse.java:19: Fatal error: Unexpected token '\everything' in Primary expression
+src|test|resources|EverythingParse.java:19: Fatal error: Unexpected token '\everything' in Primary expression
         //@ when \everything;
                  ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EverythingParse.java:21: Fatal error: Unexpected token '\everything' in Primary expression
+src|test|resources|EverythingParse.java:21: Fatal error: Unexpected token '\everything' in Primary expression
         //@     measured_by \everything;
                             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EverythingParse.java: Caution: Using given file as the .java file, even though it is not the java file for EverythingParse on the classpath
+src|test|resources|EverythingParse.java: Caution: Using given file as the .java file, even though it is not the java file for EverythingParse on the classpath
 2 cautions
 6 errors

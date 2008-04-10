@@ -1,7 +1,7 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InnerClassGenerics.java:4: Fatal error: Unexpected token '<', expected ')'
+ESC/Java version VERSION
+src|test|resources|InnerClassGenerics.java:4: Fatal error: Unexpected token '<', expected ')'
         //@ ensures \is_initialized(java.util.Vector<Object>);
                                                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InnerClassGenerics.java: Caution: Using given file as the .java file, even though it is not the java file for InnerClassGenerics on the classpath
+src|test|resources|InnerClassGenerics.java: Caution: Using given file as the .java file, even though it is not the java file for InnerClassGenerics on the classpath
 1 caution
 1 error

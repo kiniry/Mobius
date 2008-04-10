@@ -1,9 +1,9 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineRef.java: Caution: Using given file as the .java file, even though it is not the java file for RefineRef on the classpath
-    [0.0020 s 22428368 bytes]
+ESC/Java version VERSION
+src|test|resources|RefineRef.java: Caution: Using given file as the .java file, even though it is not the java file for RefineRef on the classpath
+    [TIME]
 
 RefineRef ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineRef.java:4: Fatal error: Can't find type named "RefineRefHelper"
+src|test|resources|RefineRef.java:4: Fatal error: Can't find type named "RefineRefHelper"
         public void m(RefineRefHelper r) {
                       ^
 1 caution

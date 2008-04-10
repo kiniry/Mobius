@@ -1,35 +1,38 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedAnnotation.java: Caution: Using given file as the .java file, even though it is not the java file for EmbeddedAnnotation on the classpath
-    [0.0030 s 17537720 bytes]
+ESC/Java version VERSION
+src|test|resources|EmbeddedAnnotation.java: Caution: Using given file as the .java file, even though it is not the java file for EmbeddedAnnotation on the classpath
+    [TIME]
 
 EmbeddedAnnotation ...
-  Prover started:0.064 s 18553584 bytes
-    [0.186 s 18622216 bytes]
+  Prover started:TIME
+    [TIME]
 
 EmbeddedAnnotation: EmbeddedAnnotation() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedAnnotation.java:3: Warning: Field declared non_null possibly not initialized (NonNullInit)
+src|test|resources|EmbeddedAnnotation.java:3: Warning: Field declared non_null possibly not initialized (NonNullInit)
 public class EmbeddedAnnotation {
                                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedAnnotation.java", line 6, col 29:
+Associated declaration is "src|test|resources|EmbeddedAnnotation.java", line 6, col 29:
         //@ ghost public /*@ non_null */ Object ox;
                              ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|EmbeddedAnnotation.java", line 3, col 32.
+
 ------------------------------------------------------------------------
-    [0.091 s 18956160 bytes]  failed
+    [TIME]  failed
 
 EmbeddedAnnotation: mx() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedAnnotation.java:7: Warning: Method declared non_null may return null (NonNullResult)
+src|test|resources|EmbeddedAnnotation.java:7: Warning: Method declared non_null may return null (NonNullResult)
  ... / final Object mx() { return null; }
                                         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedAnnotation.java", line 7, col 29:
+Associated declaration is "src|test|resources|EmbeddedAnnotation.java", line 7, col 29:
         //@ model public /*@ non_null */ /*@  pure */ final Object mx( ...
                              ^
 Execution trace information:
-    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedAnnotation.java", line 7, col 74.
+    Executed return in "src|test|resources|EmbeddedAnnotation.java", line 7, col 74.
 
 ------------------------------------------------------------------------
-    [0.044 s 19153800 bytes]  failed
-  [0.322 s 19154824 bytes total]
+    [TIME]  failed
+  [TIME total]
 1 caution
 2 warnings

@@ -1,30 +1,30 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePlus.java: Caution: Using given file as the .java file, even though it is not the java file for ParsePlus on the classpath
-    [0.0020 s 22280856 bytes]
+ESC/Java version VERSION
+src|test|resources|ParsePlus.java: Caution: Using given file as the .java file, even though it is not the java file for ParsePlus on the classpath
+    [TIME]
 
 ParsePlus ...
-  Prover started:0.059 s 22279856 bytes
-    [0.172 s 22345576 bytes]
+  Prover started:TIME
+    [TIME]
 
 ParsePlus: m() ...
-    [0.069 s 22390840 bytes]  passed
+    [TIME]  passed
 
 ParsePlus: n() ...
-    [0.0040 s 22436104 bytes]  passed
+    [TIME]  passed
 
 ParsePlus: p() ...
-    [0.0030 s 22481312 bytes]  passed
+    [TIME]  passed
 
 ParsePlus: q() ...
-    [0.0030 s 22526576 bytes]  passed
+    [TIME]  passed
 
 ParsePlus: r() ...
-    [0.0030 s 22571840 bytes]  passed
+    [TIME]  passed
 
 ParsePlus: s() ...
-    [0.0030 s 22617104 bytes]  passed
+    [TIME]  passed
 
 ParsePlus: ParsePlus() ...
-    [0.0080 s 22769904 bytes]  passed
-  [0.266 s 22770928 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

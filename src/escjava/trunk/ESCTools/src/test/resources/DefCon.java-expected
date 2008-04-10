@@ -1,55 +1,55 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DefCon.java: Caution: Using given file as the .java file, even though it is not the java file for DefCon on the classpath
-    [0.0020 s 15760264 bytes]
+ESC/Java version VERSION
+src|test|resources|DefCon.java: Caution: Using given file as the .java file, even though it is not the java file for DefCon on the classpath
+    [TIME]
 
 DefCon ...
-  Prover started:0.063 s 16822784 bytes
-    [0.229 s 16886640 bytes]
+  Prover started:TIME
+    [TIME]
 
 DefCon: DefCon() ...
-    [0.022 s 17038032 bytes]  passed
-  [0.252 s 17039056 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 DefCon$AE ...
-    [0.0050 s 17161808 bytes]
+    [TIME]
 
 DefCon$AE: AE() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DefCon.java:20: Warning: Postcondition possibly not established (Post)
+src|test|resources|DefCon.java:20: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DefCon.java", line 17, col 12:
+Associated declaration is "src|test|resources|DefCon.java", line 17, col 12:
         //@ signals(SE se) gg == 17;
             ^
 Execution trace information:
-    Routine call returned exceptionally in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DefCon.java", line 18, col 30.
+    Routine call returned exceptionally in "src|test|resources|DefCon.java", line 18, col 30.
 
 ------------------------------------------------------------------------
-    [0.101 s 17968056 bytes]  failed
+    [TIME]  failed
 
 DefCon$AE: AE(int) ...
-    [0.07 s 16568640 bytes]  passed
-  [0.177 s 16569664 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 DefCon$E ...
-    [0.0010 s 16647024 bytes]
+    [TIME]
 
 DefCon$E: E() ...
-    [0.05 s 16841592 bytes]  passed
-  [0.051 s 16842616 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 DefCon$ST ...
-    [0.0020 s 16920976 bytes]
+    [TIME]
 
 DefCon$ST: ST() ...
-    [0.019 s 17106888 bytes]  passed
-  [0.022 s 17107912 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 DefCon$SE ...
-    [0.0010 s 17186328 bytes]
+    [TIME]
 
 DefCon$SE: SE() ...
-    [0.015 s 17371640 bytes]  passed
-  [0.016 s 17372664 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

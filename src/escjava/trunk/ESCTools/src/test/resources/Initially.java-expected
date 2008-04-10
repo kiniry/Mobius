@@ -1,146 +1,150 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java: Caution: Using given file as the .java file, even though it is not the java file for Initially on the classpath
-    [0.0050 s 19135600 bytes]
+ESC/Java version VERSION
+src|test|resources|Initially.java: Caution: Using given file as the .java file, even though it is not the java file for Initially on the classpath
+    [TIME]
 
 Initially ...
-  Prover started:0.07 s 19116424 bytes
-    [0.19 s 19183184 bytes]
+  Prover started:TIME
+    [TIME]
 
 Initially: m() ...
-    [0.069 s 19239792 bytes]  passed
+    [TIME]  passed
 
 Initially: Initially() ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:14: Error: There is no assignable clause allowing this method call
+src|test|resources|Initially.java:14: Error: There is no assignable clause allowing this method call
         public Initially() {
                            ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:13: Associated declaration: 
+src|test|resources|Initially.java:13: Associated declaration: 
         //@ modifies this.*;
             ^
-    [0.016 s 19473216 bytes]  passed
+    [TIME]  passed
 
 Initially: Initially(int) ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:19: Error: There is no assignable clause allowing this method call
+src|test|resources|Initially.java:19: Error: There is no assignable clause allowing this method call
         public Initially(int j) {
                                 ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:18: Associated declaration: 
+src|test|resources|Initially.java:18: Associated declaration: 
         //@ modifies this.*;
             ^
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:20: Warning: Possible violation of initially condition at constructor exit (Initially)
+src|test|resources|Initially.java:20: Warning: Possible violation of initially condition at constructor exit (Initially)
         } // ERROR
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java", line 8, col 5:
+Associated declaration is "src|test|resources|Initially.java", line 8, col 5:
         //@ initially i == 6;
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Initially.java", line 20, col 1.
+
 ------------------------------------------------------------------------
-    [0.048 s 19831936 bytes]  failed
-  [0.323 s 19832960 bytes total]
+    [TIME]  failed
+  [TIME total]
 
 InitiallyA ...
-    [0.0030 s 19914544 bytes]
+    [TIME]
 
 InitiallyA: InitiallyA() ...
-    [0.0 s 19915568 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InitiallyA: p() ...
-    [0.0 s 19917616 bytes]  passed immediately
-  [0.01 s 19918640 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 InitiallyB ...
-    [0.0020 s 20010576 bytes]
+    [TIME]
 
 InitiallyB: InitiallyB() ...
-    [0.0 s 20011600 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InitiallyB: m() ...
-    [0.022 s 20410792 bytes]  passed
+    [TIME]  passed
 
 InitiallyB: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:49: Warning: Possible assertion failure (Assert)
+src|test|resources|Initially.java:49: Warning: Possible assertion failure (Assert)
                 //@ assert a.j != 4;  // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.024 s 20757168 bytes]  failed
-  [0.048 s 20758192 bytes total]
+    [TIME]  failed
+  [TIME total]
 
 InitiallyC ...
-    [0.0030 s 20831528 bytes]
+    [TIME]
 
 InitiallyC: InitiallyC() ...
-    [0.0 s 20832552 bytes]  passed immediately
-  [0.011 s 20833576 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 InitiallyD ...
-    [0.0020 s 20924472 bytes]
+    [TIME]
 
 InitiallyD: InitiallyD() ...
-    [0.0 s 20925496 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InitiallyD: m() ...
-    [0.044 s 21126096 bytes]  passed
+    [TIME]  passed
 
 InitiallyD: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:75: Warning: Possible assertion failure (Assert)
+src|test|resources|Initially.java:75: Warning: Possible assertion failure (Assert)
                 //@ assert a.j != 4;  // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.024 s 21446560 bytes]  failed
-  [0.07 s 21447584 bytes total]
+    [TIME]  failed
+  [TIME total]
 
 InitiallyE ...
-    [0.0010 s 21522048 bytes]
+    [TIME]
 
 InitiallyE: InitiallyE() ...
-    [0.0 s 21524096 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InitiallyE: InitiallyE(int) ...
-    [0.0 s 21525120 bytes]  passed immediately
-  [0.0090 s 21526144 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 InitiallyF ...
-    [0.012 s 19201200 bytes]
+    [TIME]
 
 InitiallyF: InitiallyF() ...
-    [0.016 s 19428504 bytes]  passed
+    [TIME]  passed
 
 InitiallyF: InitiallyF(float) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:104: Warning: Possible assertion failure (Assert)
+src|test|resources|Initially.java:104: Warning: Possible assertion failure (Assert)
                 //@ assert i == 20; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.022 s 19787152 bytes]  failed
+    [TIME]  failed
 
 InitiallyF: InitiallyF(int) ...
-    [0.012 s 20030104 bytes]  passed
+    [TIME]  passed
 
 InitiallyF: InitiallyF(int, int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:116: Warning: Possible assertion failure (Assert)
+src|test|resources|Initially.java:116: Warning: Possible assertion failure (Assert)
                 //@ assert i == 20; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.023 s 20404248 bytes]  failed
+    [TIME]  failed
 
 InitiallyF: InitiallyF(int, int, int) ...
-    [0.0010 s 20410448 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InitiallyF: InitiallyF(java.lang.Object) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java:130: Warning: Possible assertion failure (Assert)
+src|test|resources|Initially.java:130: Warning: Possible assertion failure (Assert)
                 //@ assert i == 18; // ERROR -- constructor called is  ...
                     ^
 Execution trace information:
-    Executed call in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java", line 129, col 2.
-    Executed implicit return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Initially.java", line 126, col 1.
+    Executed call in "src|test|resources|Initially.java", line 129, col 2.
+    Executed implicit return in "src|test|resources|Initially.java", line 126, col 1.
+    Returned from inlined call at "src|test|resources|Initially.java", line 129, col 2.
 
 ------------------------------------------------------------------------
-    [0.069 s 21000976 bytes]  failed
-  [0.156 s 21003024 bytes total]
+    [TIME]  failed
+  [TIME total]
 1 caution
 6 warnings
 2 errors

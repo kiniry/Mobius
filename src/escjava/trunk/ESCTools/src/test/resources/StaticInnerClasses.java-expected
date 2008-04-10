@@ -1,20 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StaticInnerClasses.java: Caution: Using given file as the .java file, even though it is not the java file for StaticInnerClasses on the classpath
-    [0.0010 s 22346272 bytes]
+ESC/Java version VERSION
+src|test|resources|StaticInnerClasses.java: Caution: Using given file as the .java file, even though it is not the java file for StaticInnerClasses on the classpath
+    [TIME]
 
 B ...
 Exception java.lang.StackOverflowError thrown while processing B
 java.lang.StackOverflowError
-	at escjava.tc.TypeCheck.canAccess(TypeCheck.java:40)
-	at javafe.tc.TypeSig.lookupConstructor(TypeSig.java:1230)
-	at javafe.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:1058)
-	at escjava.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:373)
-	at javafe.tc.FlowInsensitiveChecks.checkStmtVec(FlowInsensitiveChecks.java:1182)
-	at javafe.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:874)
-	at escjava.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:326)
-	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:530)
-	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:187)
-	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:199)
+	at escjava.tc.FlowInsensitiveChecks.makeEnvForTypeSig(FlowInsensitiveChecks.java:155)
+	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:190)
 	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:164)
 	at javafe.tc.TypeSig.typecheck(TypeSig.java:1120)
 	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:553)
@@ -1026,16 +1018,23 @@ java.lang.StackOverflowError
 	at escjava.AnnotationHandler.desugarAnnotations(AnnotationHandler.java:440)
 	at escjava.AnnotationHandler.desugar(AnnotationHandler.java:244)
 	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:219)
+	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:199)
+	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:164)
+	at javafe.tc.TypeSig.typecheck(TypeSig.java:1120)
+	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:553)
+	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:187)
 	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:199)
 	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:164)
 	at javafe.tc.TypeSig.typecheck(TypeSig.java:1120)
-  [0.934 s 26019128 bytes total] (aborted)
+	at escjava.AnnotationHandler.desugarAnnotations(AnnotationHandler.java:440)
+	at escjava.AnnotationHandler.desugar(AnnotationHandler.java:244)
+	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:219)
+  [TIME total] (aborted)
 
 B$C ...
 Exception java.lang.StackOverflowError thrown while processing B$C
 java.lang.StackOverflowError
-	at javafe.tc.TypeSig.lookupConstructor(TypeSig.java:1218)
-	at javafe.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:1058)
+	at javafe.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:990)
 	at escjava.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:373)
 	at javafe.tc.FlowInsensitiveChecks.checkStmtVec(FlowInsensitiveChecks.java:1182)
 	at javafe.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:874)
@@ -2058,5 +2057,6 @@ java.lang.StackOverflowError
 	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:164)
 	at javafe.tc.TypeSig.typecheck(TypeSig.java:1120)
 	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:553)
-  [0.172 s 32808752 bytes total] (aborted)
+	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:187)
+  [TIME total] (aborted)
 1 caution

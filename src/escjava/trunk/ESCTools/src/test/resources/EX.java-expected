@@ -1,18 +1,18 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EX.java: Caution: Using given file as the .java file, even though it is not the java file for EX on the classpath
-    [0.0060 s 17314464 bytes]
+ESC/Java version VERSION
+src|test|resources|EX.java: Caution: Using given file as the .java file, even though it is not the java file for EX on the classpath
+    [TIME]
 
 EX ...
-  Prover started:0.059 s 18372320 bytes
-    [0.161 s 18435792 bytes]
+  Prover started:TIME
+    [TIME]
 
 EX: mmm(int) ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EX.java:12: Caution: Not checking body of anonymous class (subclass of Object)
+src|test|resources|EX.java:12: Caution: Not checking body of anonymous class (subclass of Object)
                 Object o = new Object() {
                                         ^
-    [0.078 s 18869840 bytes]  passed
+    [TIME]  passed
 
 EX: EX() ...
-    [0.049 s 17497024 bytes]  passed
-  [0.29 s 17498048 bytes total]
+    [TIME]  passed
+  [TIME total]
 2 cautions

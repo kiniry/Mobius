@@ -1,67 +1,76 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java: Caution: Using given file as the .java file, even though it is not the java file for NotModified on the classpath
-    [0.0010 s 20870072 bytes]
+ESC/Java version VERSION
+src|test|resources|NotModified.java: Caution: Using given file as the .java file, even though it is not the java file for NotModified on the classpath
+    [TIME]
 
 NotModified ...
-  Prover started:0.087 s 21935664 bytes
-    [0.216 s 22002720 bytes]
+  Prover started:TIME
+    [TIME]
 
 NotModified: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java:9: Warning: Postcondition possibly not established (Post)
+src|test|resources|NotModified.java:9: Warning: Postcondition possibly not established (Post)
         } // ERROR - i
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java", line 6, col 5:
+Associated declaration is "src|test|resources|NotModified.java", line 6, col 5:
         //@ ensures \not_modified(i,j);
             ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java", line 6, col 27:
+Execution trace information:
+    Executed implicit return in "src|test|resources|NotModified.java", line 9, col 1.
+
+Associated declaration is "src|test|resources|NotModified.java", line 6, col 27:
         //@ ensures \not_modified(i,j);
                                   ^
 ------------------------------------------------------------------------
-    [0.091 s 22235600 bytes]  failed
+    [TIME]  failed
 
 NotModified: m2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java:16: Warning: Postcondition possibly not established (Post)
+src|test|resources|NotModified.java:16: Warning: Postcondition possibly not established (Post)
         } // ERROR - i,j
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java", line 12, col 5:
+Associated declaration is "src|test|resources|NotModified.java", line 12, col 5:
         //@ ensures \not_modified(i,j);
             ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java", line 12, col 27:
+Execution trace information:
+    Executed implicit return in "src|test|resources|NotModified.java", line 16, col 1.
+
+Associated declaration is "src|test|resources|NotModified.java", line 12, col 27:
         //@ ensures \not_modified(i,j);
                                   ^
 ------------------------------------------------------------------------
-    [0.066 s 21089616 bytes]  failed
+    [TIME]  failed
 
 NotModified: m3() ...
-    [0.0090 s 21193584 bytes]  passed
+    [TIME]  passed
 
 NotModified: m4() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java:30: Warning: Postcondition possibly not established (Post)
+src|test|resources|NotModified.java:30: Warning: Postcondition possibly not established (Post)
         } // ERROR - j,k
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java", line 26, col 5:
+Associated declaration is "src|test|resources|NotModified.java", line 26, col 5:
         //@ ensures \not_modified(i,j,k);
             ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NotModified.java", line 26, col 29:
+Execution trace information:
+    Executed implicit return in "src|test|resources|NotModified.java", line 30, col 1.
+
+Associated declaration is "src|test|resources|NotModified.java", line 26, col 29:
         //@ ensures \not_modified(i,j,k);
                                     ^
 ------------------------------------------------------------------------
-    [0.019 s 21428904 bytes]  failed
+    [TIME]  failed
 
 NotModified: mm() ...
-    [0.0060 s 21508984 bytes]  passed
+    [TIME]  passed
 
 NotModified: mmm() ...
-    [0.0060 s 21584968 bytes]  passed
+    [TIME]  passed
 
 NotModified: mold() ...
-    [0.0050 s 21672416 bytes]  passed
+    [TIME]  passed
 
 NotModified: NotModified() ...
-    [0.0070 s 21849952 bytes]  passed
-  [0.425 s 21850976 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 3 warnings

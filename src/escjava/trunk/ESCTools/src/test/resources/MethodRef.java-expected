@@ -1,9 +1,9 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MethodRef.java: Caution: Using given file as the .java file, even though it is not the java file for MethodRef on the classpath
-    [0.0010 s 19582960 bytes]
+ESC/Java version VERSION
+src|test|resources|MethodRef.java: Caution: Using given file as the .java file, even though it is not the java file for MethodRef on the classpath
+    [TIME]
 
 MethodRef ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MethodRef.java:4: Fatal error: Can't find type named "MethodRefHelper"
+src|test|resources|MethodRef.java:4: Fatal error: Can't find type named "MethodRefHelper"
         public MethodRefHelper ss;
                ^
 1 caution

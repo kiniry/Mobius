@@ -1,24 +1,24 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecks5.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks5 on the classpath
-    [0.0020 s 20303560 bytes]
+ESC/Java version VERSION
+src|test|resources|ModChecks5.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecks5 on the classpath
+    [TIME]
 
 ModChecks5 ...
-  Prover started:0.061 s 21323704 bytes
-    [0.162 s 21393808 bytes]
+  Prover started:TIME
+    [TIME]
 
 ModChecks5: m() ...
-    [0.071 s 21493648 bytes]  passed
+    [TIME]  passed
 
 ModChecks5: mm() ...
-    [0.0060 s 21593488 bytes]  passed
+    [TIME]  passed
 
 ModChecks5: mmm() ...
-    [0.03 s 21680960 bytes]  passed
+    [TIME]  passed
 
 ModChecks5: mmmm() ...
-    [0.0050 s 21771504 bytes]  passed
+    [TIME]  passed
 
 ModChecks5: ModChecks5() ...
-    [0.0080 s 21975808 bytes]  passed
-  [0.284 s 21976832 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

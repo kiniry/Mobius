@@ -1,51 +1,57 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java: Caution: Using given file as the .java file, even though it is not the java file for Client5 on the classpath
-    [0.0020 s 15711776 bytes]
+ESC/Java version VERSION
+src|test|resources|Client5.java: Caution: Using given file as the .java file, even though it is not the java file for Client5 on the classpath
+    [TIME]
 
 Client5 ...
-  Prover started:0.058 s 16741544 bytes
-    [0.161 s 16813344 bytes]
+  Prover started:TIME
+    [TIME]
 
 Client5: unique(IntList) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java:8: Warning: Postcondition possibly not established (Post)
+src|test|resources|Client5.java:8: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java", line 5, col 5:
+Associated declaration is "src|test|resources|Client5.java", line 5, col 5:
         //@ ensures \not_modified(list.isEmpty);  // CURRENT ERROR 
             ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java", line 5, col 27:
+Execution trace information:
+    Executed implicit return in "src|test|resources|Client5.java", line 8, col 1.
+
+Associated declaration is "src|test|resources|Client5.java", line 5, col 27:
         //@ ensures \not_modified(list.isEmpty);  // CURRENT ERROR 
                                   ^
 ------------------------------------------------------------------------
-    [0.12 s 17246176 bytes]  failed
+    [TIME]  failed
 
 Client5: clear(IntList) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java:15: Warning: Postcondition possibly not established (Post)
+src|test|resources|Client5.java:15: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java", line 12, col 5:
+Associated declaration is "src|test|resources|Client5.java", line 12, col 5:
         //@ ensures \not_modified(list.isEmpty);  // ERROR
             ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client5.java", line 12, col 27:
+Execution trace information:
+    Executed implicit return in "src|test|resources|Client5.java", line 15, col 1.
+
+Associated declaration is "src|test|resources|Client5.java", line 12, col 27:
         //@ ensures \not_modified(list.isEmpty);  // ERROR
                                   ^
 ------------------------------------------------------------------------
-    [0.037 s 17705864 bytes]  failed
+    [TIME]  failed
 
 Client5: Client5() ...
-    [0.021 s 16069280 bytes]  passed
-  [0.339 s 16070304 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 IntList ...
-    [0.0 s 16134192 bytes]
+    [TIME]
 
 IntList: unique() ...
-    [0.0 s 16136240 bytes]  passed immediately
+    [TIME]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 16137264 bytes]  passed immediately
-  [0.0080 s 16138288 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 2 warnings

@@ -1,36 +1,36 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java: Caution: Using given file as the .java file, even though it is not the java file for GhostFieldOverride on the classpath
-    [0.0020 s 18376056 bytes]
+ESC/Java version VERSION
+src|test|resources|GhostFieldOverride.java: Caution: Using given file as the .java file, even though it is not the java file for GhostFieldOverride on the classpath
+    [TIME]
 
 GhostFieldOverride ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java:7: Error: Another field named 'z' already exists in this type
+src|test|resources|GhostFieldOverride.java:7: Error: Another field named 'z' already exists in this type
         //@ ghost public int z;
                              ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java:6: Associated declaration: 
+src|test|resources|GhostFieldOverride.java:6: Associated declaration: 
         int z;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java:9: Error: Another field named 'y' already exists in this type
+src|test|resources|GhostFieldOverride.java:9: Error: Another field named 'y' already exists in this type
         //@ model public int y;
                              ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java:8: Associated declaration: 
+src|test|resources|GhostFieldOverride.java:8: Associated declaration: 
         int y;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java:10: Error: Another field named 'x' already exists in this type
+src|test|resources|GhostFieldOverride.java:10: Error: Another field named 'x' already exists in this type
         //@ ghost int x;
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java:11: Associated declaration: 
+src|test|resources|GhostFieldOverride.java:11: Associated declaration: 
         //@ model int x;
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java:11: Error: Another field named 'x' already exists in this type
+src|test|resources|GhostFieldOverride.java:11: Error: Another field named 'x' already exists in this type
         //@ model int x;
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/GhostFieldOverride.java:10: Associated declaration: 
+src|test|resources|GhostFieldOverride.java:10: Associated declaration: 
         //@ ghost int x;
                       ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.024 s 18211744 bytes total] (aborted)
+  [TIME total] (aborted)
 
 CHA ...
-  [0.0 s 18212768 bytes total]
+  [TIME total]
 2 cautions
 4 errors

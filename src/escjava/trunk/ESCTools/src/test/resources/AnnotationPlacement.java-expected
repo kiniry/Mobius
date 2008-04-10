@@ -1,41 +1,41 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnnotationPlacement.java: Caution: Using given file as the .java file, even though it is not the java file for AnnotationPlacement on the classpath
-    [0.0070 s 16380744 bytes]
+ESC/Java version VERSION
+src|test|resources|AnnotationPlacement.java: Caution: Using given file as the .java file, even though it is not the java file for AnnotationPlacement on the classpath
+    [TIME]
 
 AnnotationPlacement ...
-  Prover started:0.075 s 16320632 bytes
-    [0.212 s 16394072 bytes]
+  Prover started:TIME
+    [TIME]
 
 AnnotationPlacement: m() ...
-    [0.064 s 16473600 bytes]  passed
+    [TIME]  passed
 
 AnnotationPlacement: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnnotationPlacement.java:10: Warning: Method declared non_null may return null (NonNullResult)
+src|test|resources|AnnotationPlacement.java:10: Warning: Method declared non_null may return null (NonNullResult)
         { return null; }        
                        ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnnotationPlacement.java", line 9, col 25:
+Associated declaration is "src|test|resources|AnnotationPlacement.java", line 9, col 25:
         public Object mm() //-@ non_null pure
                                 ^
 Execution trace information:
-    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnnotationPlacement.java", line 10, col 3.
+    Executed return in "src|test|resources|AnnotationPlacement.java", line 10, col 3.
 
 ------------------------------------------------------------------------
-    [0.047 s 16731720 bytes]  failed
+    [TIME]  failed
 
 AnnotationPlacement: p(java.lang.Object, java.lang.Object) ...
-    [0.0090 s 16864744 bytes]  passed
+    [TIME]  passed
 
 AnnotationPlacement: AnnotationPlacement() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnnotationPlacement.java:13: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src|test|resources|AnnotationPlacement.java:13: Warning: Possible assignment of null to variable declared non_null (NonNull)
         public Object ff=null /*-@ non_null */;
                         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AnnotationPlacement.java", line 13, col 28:
+Associated declaration is "src|test|resources|AnnotationPlacement.java", line 13, col 28:
         public Object ff=null /*-@ non_null */;
                                    ^
 ------------------------------------------------------------------------
-    [0.037 s 17339248 bytes]  failed
-  [0.369 s 17340320 bytes total]
+    [TIME]  failed
+  [TIME total]
 1 caution
 2 warnings

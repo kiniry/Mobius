@@ -1,16 +1,16 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DefaultConstructor.java: Caution: Using given file as the .java file, even though it is not the java file for DefaultConstructor on the classpath
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DefaultConstructor.java:3: Error: Could not find file referenced in refine annotation: DefaultConstructor.jml
+ESC/Java version VERSION
+src|test|resources|DefaultConstructor.java: Caution: Using given file as the .java file, even though it is not the java file for DefaultConstructor on the classpath
+src|test|resources|DefaultConstructor.java:3: Error: Could not find file referenced in refine annotation: DefaultConstructor.jml
 //@ refine "DefaultConstructor.jml";
     ^
-    [0.036 s 17258688 bytes]
+    [TIME]
 
 DefaultConstructor ...
-  Prover started:0.058 s 18245616 bytes
-    [0.158 s 18312384 bytes]
+  Prover started:TIME
+    [TIME]
 
 DefaultConstructor: DefaultConstructor(int) ...
-    [0.072 s 18484872 bytes]  passed
-  [0.23 s 18485896 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 error

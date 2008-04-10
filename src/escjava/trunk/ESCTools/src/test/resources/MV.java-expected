@@ -1,31 +1,31 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MV.java: Caution: Using given file as the .java file, even though it is not the java file for MV on the classpath
-    [0.0020 s 19645224 bytes]
+ESC/Java version VERSION
+src|test|resources|MV.java: Caution: Using given file as the .java file, even though it is not the java file for MV on the classpath
+    [TIME]
 
 MV ...
-  Prover started:0.059 s 19586320 bytes
-    [0.178 s 19651600 bytes]
+  Prover started:TIME
+    [TIME]
 
 MV: MV() ...
-    [0.0 s 19653648 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MV: value() ...
-    [0.0 s 19654672 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MV: gvalue() ...
-    [0.0 s 19655696 bytes]  passed immediately
-  [0.237 s 19657744 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 Client ...
-    [0.0030 s 19746576 bytes]
+    [TIME]
 
 Client: Client() ...
-    [0.0 s 19747600 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Client: m() ...
-    [0.049 s 20031264 bytes]  passed
+    [TIME]  passed
 
 Client: mm() ...
-    [0.016 s 20313904 bytes]  passed
-  [0.069 s 20314928 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

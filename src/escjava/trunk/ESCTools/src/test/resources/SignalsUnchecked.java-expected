@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SignalsUnchecked.java: Caution: Using given file as the .java file, even though it is not the java file for SignalsUnchecked on the classpath
-    [0.0020 s 22971080 bytes]
+ESC/Java version VERSION
+src|test|resources|SignalsUnchecked.java: Caution: Using given file as the .java file, even though it is not the java file for SignalsUnchecked on the classpath
+    [TIME]
 
 SignalsUnchecked ...
-  Prover started:0.079 s 22947392 bytes
-    [0.207 s 23027560 bytes]
+  Prover started:TIME
+    [TIME]
 
 SignalsUnchecked: redundant_signals_unchecked() ...
-    [0.091 s 23089408 bytes]  passed
+    [TIME]  passed
 
 SignalsUnchecked: SignalsUnchecked() ...
-    [0.0090 s 23241168 bytes]  passed
-  [0.307 s 23242192 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

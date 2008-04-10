@@ -1,24 +1,27 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseOld.java: Caution: Using given file as the .java file, even though it is not the java file for ParseOld on the classpath
-    [0.0020 s 21014208 bytes]
+ESC/Java version VERSION
+src|test|resources|ParseOld.java: Caution: Using given file as the .java file, even though it is not the java file for ParseOld on the classpath
+    [TIME]
 
 ParseOld ...
-  Prover started:0.062 s 22018624 bytes
-    [0.163 s 22085344 bytes]
+  Prover started:TIME
+    [TIME]
 
 ParseOld: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseOld.java:11: Warning: Postcondition possibly not established (Post)
+src|test|resources|ParseOld.java:11: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseOld.java", line 7, col 5:
+Associated declaration is "src|test|resources|ParseOld.java", line 7, col 5:
         //@ ensures j == \old(i);
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|ParseOld.java", line 11, col 1.
+
 ------------------------------------------------------------------------
-    [0.084 s 22323400 bytes]  failed
+    [TIME]  failed
 
 ParseOld: ParseOld() ...
-    [0.034 s 22492648 bytes]  passed
-  [0.281 s 22493672 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

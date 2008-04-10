@@ -91,7 +91,7 @@ public class TestFilesTestSuite  extends TestSuite {
       @*/
     public TestFilesTestSuite(/*@ non_null */ String testName, 
 			      /*@ non_null */ String fileOfTestFilenames,
-			      String[] args,
+			      /*@ non_null */ String preArgs,
 			      /*@ non_null */ Class cls
 			      ) { 
 	super(testName);
@@ -112,8 +112,8 @@ public class TestFilesTestSuite  extends TestSuite {
 	try { 
 	    Iterator i = new LineIterator(fileOfTestFilenames);
 	    while (i.hasNext()) {
-		String s = (String)i.next();
-		String[] allargs = Utils.parseLineWithArgs(s,args);
+		String s = preArgs + " " + (String)i.next();
+		String[] allargs = JUnitUtils.parseLine(s);
 		if(allargs.length > 0) {
 		    s = allargs[allargs.length-1];
 		    addTest(makeHelper(s,allargs));
@@ -192,32 +192,34 @@ public class TestFilesTestSuite  extends TestSuite {
 		fail(msg);
 	    }
 
-	    //System.out.println("\nTest suite " + testName + ": "  + fileToTest);
-	    //for (int kk=0; kk<args.length; ++kk) System.out.println(args[kk]);
-	    //System.out.println();
+        // Diagnostic for adding/changing command line options
+	    System.out.println("\nTest suite " + testName + ": "  + fileToTest);
+	    System.out.print("Options being tested: ");
+	    for (int kk=0; kk<args.length-1; ++kk) System.out.print(args[kk] + " ");
+	    System.out.println();
 
-	    ByteArrayOutputStream ba = Utils.setStreams();
+	    ByteArrayOutputStream ba = JUnitUtils.setStreams();
 	    try {
 		returnedObject = dotest(fileToTest,args);
 	    } catch (IllegalAccessException e) {
-		Utils.restoreStreams(true);
+		JUnitUtils.restoreStreams(true);
 		fail(e.toString());
 	    } catch (IllegalArgumentException e) {
-		Utils.restoreStreams(true);
+		JUnitUtils.restoreStreams(true);
 		fail(e.toString());
 	    } catch (java.lang.reflect.InvocationTargetException e) {
-		Utils.restoreStreams(true);
+		JUnitUtils.restoreStreams(true);
 		java.io.StringWriter sw = new StringWriter();
 		sw.write(e.toString());
 		e.printStackTrace(new PrintWriter(sw));
 		fail(sw.toString());
 	  /* } catch (Throwable e) {  // THIS JUST FOR DEBUG
-		Utils.restoreStreams(true); // must restore before use of System.out on the next line
+		JUnitUtils.restoreStreams(true); // must restore before use of System.out on the next line
 		System.out.println(e);
 		e.printStackTrace();
 	  */
 	    } finally {
-		Utils.restoreStreams(true);
+		JUnitUtils.restoreStreams(true);
 	    }
 	    /*@ nullable */ String err = doOutputCheck(fileToTest,ba.toString(),returnedObject);
 	    if (err != null) fail(err);
@@ -246,7 +248,7 @@ public class TestFilesTestSuite  extends TestSuite {
 						   /*@ non_null */ String output, 
 						   /*@ non_null */ Object returnedValue) {
       try {
-	String expectedOutput = Utils.readFile(fileToTest+ORACLE_SUFFIX);
+	String expectedOutput = JUnitUtils.readFile(fileToTest+ORACLE_SUFFIX);
 	Diff df = new Diff("expected", expectedOutput, "actual", output);
 
 	if (!df.areDifferent()) {

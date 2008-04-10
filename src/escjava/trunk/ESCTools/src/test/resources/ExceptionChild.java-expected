@@ -1,12 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExceptionChild.java: Caution: Using given file as the .java file, even though it is not the java file for ExceptionChild on the classpath
-    [0.0010 s 17822176 bytes]
+ESC/Java version VERSION
+src|test|resources|ExceptionChild.java: Caution: Using given file as the .java file, even though it is not the java file for ExceptionChild on the classpath
+    [TIME]
 
 ExceptionChild ...
-  Prover started:0.065 s 18819944 bytes
-    [0.172 s 18886384 bytes]
+  Prover started:TIME
+    [TIME]
 
 ExceptionChild: ExceptionChild() ...
-    [0.097 s 19038328 bytes]  passed
-  [0.269 s 19039352 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

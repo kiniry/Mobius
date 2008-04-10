@@ -1,37 +1,40 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl3.java: Caution: Using given file as the .java file, even though it is not the java file for Impl3 on the classpath
-    [0.0010 s 18592152 bytes]
+ESC/Java version VERSION
+src|test|resources|Impl3.java: Caution: Using given file as the .java file, even though it is not the java file for Impl3 on the classpath
+    [TIME]
 
 Impl3 ...
-  Prover started:0.097 s 18534880 bytes
-    [0.254 s 18608688 bytes]
+  Prover started:TIME
+    [TIME]
 
 Impl3: shrink() ...
-    [0.089 s 18707520 bytes]  passed
+    [TIME]  passed
 
 Impl3: clear() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl3.java:13: Warning: Postcondition possibly not established (Post)
+src|test|resources|Impl3.java:13: Warning: Postcondition possibly not established (Post)
         }  // ERROR - no represents clause for isEmpty
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Impl3.java", line 26, col 5:
+Associated declaration is "src|test|resources|Impl3.java", line 26, col 5:
         //@ ensures isEmpty;
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Impl3.java", line 13, col 1.
+
 ------------------------------------------------------------------------
-    [0.052 s 18965176 bytes]  failed
+    [TIME]  failed
 
 Impl3: Impl3() ...
-    [0.0080 s 19163344 bytes]  passed
-  [0.403 s 19164368 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 IntList ...
-    [0.0010 s 19238392 bytes]
+    [TIME]
 
 IntList: shrink() ...
-    [0.0 s 19239416 bytes]  passed immediately
+    [TIME]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 19240440 bytes]  passed immediately
-  [0.0090 s 19241464 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 1 warning

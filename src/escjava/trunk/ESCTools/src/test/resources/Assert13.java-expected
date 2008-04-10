@@ -1,94 +1,94 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+ESC/Java version VERSION
+src|test|resources|Assert13.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert13.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0;
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert13.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert13.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; 
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert13.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert13.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; //@ nowarn Assert;
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java: Caution: Using given file as the .java file, even though it is not the java file for Assert13 on the classpath
-    [0.0080 s 16589432 bytes]
+src|test|resources|Assert13.java: Caution: Using given file as the .java file, even though it is not the java file for Assert13 on the classpath
+    [TIME]
 
 Assert13 ...
-  Prover started:0.068 s 17940096 bytes
-    [0.296 s 18076656 bytes]
+  Prover started:TIME
+    [TIME]
 
 Assert13: m_Exception_Assert(int) ...
-    [0.121 s 18132352 bytes]  passed
+    [TIME]  passed
 
 Assert13: mm_Exception_Assert(int) ...
-    [0.011 s 18196576 bytes]  passed
+    [TIME]  passed
 
 Assert13: mm_Nowarn_Nowarn(int) ...
-    [0.0040 s 18259512 bytes]  passed
+    [TIME]  passed
 
 Assert13: nAssertWarn(int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:29: Warning: Possible assertion failure (Assert)
+src|test|resources|Assert13.java:29: Warning: Possible assertion failure (Assert)
                 //@ assert false;
                     ^
 ------------------------------------------------------------------------
-    [0.025 s 18492072 bytes]  failed
+    [TIME]  failed
 
 Assert13: nNowarn(int) ...
-    [0.0050 s 18555928 bytes]  passed
+    [TIME]  passed
 
 Assert13: pPostwarning() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:42: Warning: Postcondition possibly not established (Post)
+src|test|resources|Assert13.java:42: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java", line 39, col 5:
+Associated declaration is "src|test|resources|Assert13.java", line 39, col 5:
         //@ exsures (java.lang.AssertionError e) false;
             ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java", line 41, col 2.
+    Executed throw in "src|test|resources|Assert13.java", line 41, col 2.
 
 ------------------------------------------------------------------------
-    [0.045 s 18929912 bytes]  failed
+    [TIME]  failed
 
 Assert13: pExceptionwarningShouldCompilerError() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:51: Warning: Possible unexpected exception (Exception)
+src|test|resources|Assert13.java:51: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java", line 50, col 2.
+    Executed throw in "src|test|resources|Assert13.java", line 50, col 2.
 
 ------------------------------------------------------------------------
-    [0.119 s 19285976 bytes]  failed
+    [TIME]  failed
 
 Assert13: qNoWarning(int) ...
-    [0.048 s 17249832 bytes]  passed
+    [TIME]  passed
 
 Assert13: qqExceptionWarning(int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java:62: Warning: Possible unexpected exception (Exception)
+src|test|resources|Assert13.java:62: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert13.java", line 61, col 2.
+    Executed throw in "src|test|resources|Assert13.java", line 61, col 2.
 
 ------------------------------------------------------------------------
-    [0.037 s 17608856 bytes]  failed
+    [TIME]  failed
 
 Assert13: rNowarning() ...
-    [0.017 s 17809448 bytes]  passed
+    [TIME]  passed
 
 Assert13: Assert13() ...
-    [0.0060 s 17960152 bytes]  passed
-  [0.735 s 17961224 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 4 warnings
 6 errors

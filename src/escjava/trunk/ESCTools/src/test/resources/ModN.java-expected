@@ -1,90 +1,90 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java: Caution: Using given file as the .java file, even though it is not the java file for ModN on the classpath
-    [0.0020 s 19881720 bytes]
+ESC/Java version VERSION
+src|test|resources|ModN.java: Caution: Using given file as the .java file, even though it is not the java file for ModN on the classpath
+    [TIME]
 
 ModN ...
-  Prover started:0.06 s 20977448 bytes
-    [0.163 s 21044808 bytes]
+  Prover started:TIME
+    [TIME]
 
 ModN: mok() ...
-    [0.075 s 21143600 bytes]  passed
+    [TIME]  passed
 
 ModN: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java:18: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModN.java:18: Warning: Possible violation of modifies clause (Modifies)
                 j = 0;
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 16, col 5:
+Associated declaration is "src|test|resources|ModN.java", line 16, col 5:
         //@ modifies i,k;
             ^
 ------------------------------------------------------------------------
-    [0.043 s 21385648 bytes]  failed
+    [TIME]  failed
 
 ModN: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java:26: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModN.java:26: Warning: Possible violation of modifies clause (Modifies)
                 k = 0;
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 21, col 5:
+Associated declaration is "src|test|resources|ModN.java", line 21, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.018 s 21608480 bytes]  failed
+    [TIME]  failed
 
 ModN: mmm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java:34: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModN.java:34: Warning: Possible violation of modifies clause (Modifies)
                 m = 0;
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 29, col 5:
+Associated declaration is "src|test|resources|ModN.java", line 29, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.034 s 20170784 bytes]  failed
+    [TIME]  failed
 
 ModN: p() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java:45: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModN.java:45: Warning: Possible violation of modifies clause (Modifies)
                 if (i == 0) j = 0;
                             ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 41, col 5:
+Associated declaration is "src|test|resources|ModN.java", line 41, col 5:
         //@ modifies k;
             ^
 Execution trace information:
-    Executed else branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 43, col 2.
-    Executed else branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 44, col 2.
-    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 45, col 14.
+    Executed else branch in "src|test|resources|ModN.java", line 43, col 2.
+    Executed else branch in "src|test|resources|ModN.java", line 44, col 2.
+    Executed then branch in "src|test|resources|ModN.java", line 45, col 14.
 
 ------------------------------------------------------------------------
-    [0.028 s 20550264 bytes]  failed
+    [TIME]  failed
 
 ModN: pp() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java:54: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModN.java:54: Warning: Possible violation of modifies clause (Modifies)
                 if (i==0) k=0;
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 49, col 5:
+Associated declaration is "src|test|resources|ModN.java", line 49, col 5:
         //@ modifies j;
             ^
 Execution trace information:
-    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 54, col 12.
+    Executed then branch in "src|test|resources|ModN.java", line 54, col 12.
 
 ------------------------------------------------------------------------
-    [0.019 s 20808752 bytes]  failed
+    [TIME]  failed
 
 ModN: pa() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java:62: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModN.java:62: Warning: Possible violation of modifies clause (Modifies)
                 a = null;
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModN.java", line 60, col 5:
+Associated declaration is "src|test|resources|ModN.java", line 60, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.026 s 21029480 bytes]  failed
+    [TIME]  failed
 
 ModN: ModN() ...
-    [0.0080 s 21226520 bytes]  passed
-  [0.414 s 21227544 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 6 warnings

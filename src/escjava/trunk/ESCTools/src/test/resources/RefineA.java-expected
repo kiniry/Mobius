@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineA.java: Caution: Using given file as the .java file, even though it is not the java file for junittests.RefineA on the classpath
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineA.java:3: Error: Could not find file referenced in refine annotation: RefineA.java-refined
+ESC/Java version VERSION
+src|test|resources|RefineA.java: Caution: Using given file as the .java file, even though it is not the java file for junittests.RefineA on the classpath
+src|test|resources|RefineA.java:3: Error: Could not find file referenced in refine annotation: RefineA.java-refined
 //@ refine "RefineA.java-refined";
     ^
-    [0.0020 s 22719592 bytes]
+    [TIME]
 
 junittests.RefineA ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineA.java:13: Error: Undefined variable 'b'
+src|test|resources|RefineA.java:13: Error: Undefined variable 'b'
         //@ ensures b;
                     ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.0090 s 23371160 bytes total] (aborted)
+  [TIME total] (aborted)
 2 cautions
 2 errors

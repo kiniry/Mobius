@@ -1,21 +1,21 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseImports2.java:6: Caution: An import statement in an annotation should begin with 'model import'
+ESC/Java version VERSION
+src|test|resources|ParseImports2.java:6: Caution: An import statement in an annotation should begin with 'model import'
 //@ import java.util.Set;
     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseImports2.java:7: Caution: An import statement in an annotation should begin with 'model import'
+src|test|resources|ParseImports2.java:7: Caution: An import statement in an annotation should begin with 'model import'
 //@ import java.util.Collection;
     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseImports2.java:8: Caution: An import statement in an annotation should begin with 'model import'
+src|test|resources|ParseImports2.java:8: Caution: An import statement in an annotation should begin with 'model import'
 //@ import java.util.Vector;
     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseImports2.java: Caution: Using given file as the .java file, even though it is not the java file for ParseImports2 on the classpath
-    [0.0030 s 22418008 bytes]
+src|test|resources|ParseImports2.java: Caution: Using given file as the .java file, even though it is not the java file for ParseImports2 on the classpath
+    [TIME]
 
 ParseImports2 ...
-  Prover started:0.074 s 23307160 bytes
-    [0.264 s 23545584 bytes]
+  Prover started:TIME
+    [TIME]
 
 ParseImports2: ParseImports2() ...
-    [0.113 s 23733320 bytes]  passed
-  [0.378 s 23734344 bytes total]
+    [TIME]  passed
+  [TIME total]
 4 cautions

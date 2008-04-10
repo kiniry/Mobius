@@ -1,752 +1,752 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksMethod on the classpath
-    [0.021 s 21150328 bytes]
+ESC/Java version VERSION
+src|test|resources|ModChecksMethod.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksMethod on the classpath
+    [TIME]
 
 ModChecksMethod ...
-  Prover started:0.07 s 22083352 bytes
-    [0.249 s 22177112 bytes]
+  Prover started:TIME
+    [TIME]
 
 ModChecksMethod: mnothing() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:20: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:20: Warning: Possible violation of modifies clause (Modifies)
             pe(); // WARNING
               ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 245, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 245, col 14:
         //@ modifies \everything;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 18, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 18, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.266 s 22564104 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mnothingA() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:24: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:24: Warning: Possible violation of modifies clause (Modifies)
             pi(); // WARNING
               ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 242, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 242, col 14:
         //@ modifies i;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 22, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 22, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.03 s 22929936 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mnothingB() ...
-    [0.01 s 23113064 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mnothingC() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:32: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:32: Warning: Possible violation of modifies clause (Modifies)
             paelem(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 257, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 257, col 14:
         //@ modifies a[2];
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 30, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 30, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.06 s 21533080 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mnothingD() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:36: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:36: Warning: Possible violation of modifies clause (Modifies)
             pastar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 254, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 34, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 34, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.042 s 21970840 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mnothingE() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:40: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:40: Warning: Possible violation of modifies clause (Modifies)
             parange(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 260, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 260, col 15:
         //@ modifies a[2..5];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 38, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 38, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.075 s 22406552 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mnothingF() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:44: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:44: Warning: Possible violation of modifies clause (Modifies)
             ptstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 272, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 42, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 42, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.031 s 22903488 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mnothingG() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:48: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:48: Warning: Possible violation of modifies clause (Modifies)
             pTstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 278, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 46, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 46, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.03 s 23306168 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mnothingH() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:52: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:52: Warning: Possible violation of modifies clause (Modifies)
             pATstar(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 275, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 275, col 14:
         //@ modifies ModChecksMethodA.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 50, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 50, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.026 s 23663832 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: meverything() ...
-    [0.108 s 22770760 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mi() ...
-    [0.019 s 23090256 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mi1() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:76: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:76: Warning: Possible violation of modifies clause (Modifies)
             o.pi(); // WARNING
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 242, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 242, col 14:
         //@ modifies i;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 74, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 74, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.027 s 23472440 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mi2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:80: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:80: Warning: Possible violation of modifies clause (Modifies)
             pe(); // WARNING
               ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 245, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 245, col 14:
         //@ modifies \everything;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 78, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 78, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.028 s 23822912 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mi3() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:84: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:84: Warning: Possible violation of modifies clause (Modifies)
             o.pe(); // WARNING
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 245, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 245, col 14:
         //@ modifies \everything;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 82, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 82, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.056 s 21580024 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mi3A() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:88: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:88: Warning: Possible violation of modifies clause (Modifies)
             paelem(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 257, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 257, col 14:
         //@ modifies a[2];
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 86, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 86, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.047 s 22009504 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mi3B() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:92: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:92: Warning: Possible violation of modifies clause (Modifies)
             pastar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 254, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 90, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 90, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.042 s 22467808 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mi3C() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:96: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:96: Warning: Possible violation of modifies clause (Modifies)
             parange(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 260, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 260, col 15:
         //@ modifies a[2..5];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 94, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 94, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.075 s 22904600 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mi3D() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:100: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:100: Warning: Possible violation of modifies clause (Modifies)
             ptstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 272, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 98, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 98, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.04 s 23403056 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mi3E() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:104: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:104: Warning: Possible violation of modifies clause (Modifies)
             pTstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 278, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 102, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 102, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.035 s 23807792 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mi3F() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:108: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:108: Warning: Possible violation of modifies clause (Modifies)
             pATstar(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 275, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 275, col 14:
         //@ modifies ModChecksMethodA.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 106, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 106, col 5:
         //@ modifies i;
             ^
 ------------------------------------------------------------------------
-    [0.033 s 21583416 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mii() ...
-    [0.054 s 21969648 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mtstar() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:120: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:120: Warning: Possible violation of modifies clause (Modifies)
             o.ptstar(); // WARNING
                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 272, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 117, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 117, col 5:
         //@ modifies this.*;
             ^
 ------------------------------------------------------------------------
-    [0.074 s 22824504 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mtstarA() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:124: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:124: Warning: Possible violation of modifies clause (Modifies)
             pTstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 278, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 122, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 122, col 5:
         //@ modifies this.*;
             ^
 ------------------------------------------------------------------------
-    [0.037 s 23231896 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mtstarB() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:128: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:128: Warning: Possible violation of modifies clause (Modifies)
             o.pTstar(); // WARNING
                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 278, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 126, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 126, col 5:
         //@ modifies this.*;
             ^
 ------------------------------------------------------------------------
-    [0.034 s 23641832 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mtstarC() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:132: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:132: Warning: Possible violation of modifies clause (Modifies)
             pATstar(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 275, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 275, col 14:
         //@ modifies ModChecksMethodA.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 130, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 130, col 5:
         //@ modifies this.*;
             ^
 ------------------------------------------------------------------------
-    [0.061 s 24002656 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mTstar() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:137: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:137: Warning: Possible violation of modifies clause (Modifies)
             ptstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 272, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 135, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 135, col 5:
         //@ modifies ModChecksMethod.*;
             ^
 ------------------------------------------------------------------------
-    [0.038 s 21893488 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mTstarA() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:142: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:142: Warning: Possible violation of modifies clause (Modifies)
             o.ptstar(); // WARNING
                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 272, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 140, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 140, col 5:
         //@ modifies ModChecksMethod.*;
             ^
 ------------------------------------------------------------------------
-    [0.036 s 22403336 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mTstarB() ...
-    [0.023 s 22847776 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mTstarC() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:153: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:153: Warning: Possible violation of modifies clause (Modifies)
             pATstar(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 275, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 275, col 14:
         //@ modifies ModChecksMethodA.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 151, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 151, col 5:
         //@ modifies ModChecksMethod.*;
             ^
 ------------------------------------------------------------------------
-    [0.065 s 23207544 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mATstar() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:158: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:158: Warning: Possible violation of modifies clause (Modifies)
             ptstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 272, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 156, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 156, col 5:
         //@ modifies ModChecksMethodA.*;
             ^
 ------------------------------------------------------------------------
-    [0.04 s 23745616 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mATstarA() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:163: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:163: Warning: Possible violation of modifies clause (Modifies)
             o.ptstar(); // WARNING
                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 272, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 272, col 14:
         //@ modifies this.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 161, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 161, col 5:
         //@ modifies ModChecksMethodA.*;
             ^
 ------------------------------------------------------------------------
-    [0.035 s 21687920 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mATstarB() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:168: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:168: Warning: Possible violation of modifies clause (Modifies)
             pTstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 278, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 166, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 166, col 5:
         //@ modifies ModChecksMethodA.*;
             ^
 ------------------------------------------------------------------------
-    [0.032 s 22093216 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mATstarC() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:173: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:173: Warning: Possible violation of modifies clause (Modifies)
             o.pTstar(); // WARNING
                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 278, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 278, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 171, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 171, col 5:
         //@ modifies ModChecksMethodA.*;
             ^
 ------------------------------------------------------------------------
-    [0.061 s 22502640 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mATstarD() ...
-    [0.015 s 22707408 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mastar() ...
-    [0.035 s 23358240 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mastarA() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:190: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:190: Warning: Possible violation of modifies clause (Modifies)
             pbstar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 263, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 263, col 15:
         //@ modifies b[*];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 188, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 188, col 5:
         //@ modifies a[*];
             ^
 ------------------------------------------------------------------------
-    [0.044 s 23800104 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mastarC() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:194: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:194: Warning: Possible violation of modifies clause (Modifies)
             pbrange(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 269, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 269, col 15:
         //@ modifies b[2..5];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 192, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 192, col 5:
         //@ modifies a[*];
             ^
 ------------------------------------------------------------------------
-    [0.08 s 21642456 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mastarB() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:198: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:198: Warning: Possible violation of modifies clause (Modifies)
             pbelem(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 266, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 266, col 14:
         //@ modifies b[2];
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 196, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 196, col 5:
         //@ modifies a[*];
             ^
 ------------------------------------------------------------------------
-    [0.043 s 22075016 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: marange() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:203: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:203: Warning: Possible violation of modifies clause (Modifies)
             pastar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 254, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 201, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 201, col 5:
         //@ modifies a[3..5];
             ^
 ------------------------------------------------------------------------
-    [0.043 s 22514832 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: marangeZ() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:208: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:208: Warning: Possible violation of modifies clause (Modifies)
             paelem(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 257, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 257, col 14:
         //@ modifies a[2];
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 206, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 206, col 5:
         //@ modifies a[3..5];
             ^
 ------------------------------------------------------------------------
-    [0.121 s 22950992 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: marangeA() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:213: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:213: Warning: Possible violation of modifies clause (Modifies)
             parange(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 260, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 260, col 15:
         //@ modifies a[2..5];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 211, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 211, col 5:
         //@ modifies a[3..5];
             ^
 ------------------------------------------------------------------------
-    [0.044 s 23393384 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: marange1() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:218: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:218: Warning: Possible violation of modifies clause (Modifies)
             pastar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 254, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 216, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 216, col 5:
         //@ modifies a[2..4];
             ^
 ------------------------------------------------------------------------
-    [0.047 s 23833200 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: marange1A() ...
-    [0.056 s 24106752 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: marange1B() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:228: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:228: Warning: Possible violation of modifies clause (Modifies)
             parange(); // WARNING
                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 260, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 260, col 15:
         //@ modifies a[2..5];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 226, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 226, col 5:
         //@ modifies a[2..4];
             ^
 ------------------------------------------------------------------------
-    [0.049 s 21924808 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: marange2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:233: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:233: Warning: Possible violation of modifies clause (Modifies)
             pastar(); // WARNING
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 254, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 254, col 15:
         //@ modifies a[*];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 231, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 231, col 5:
         //@ modifies a[1..6];
             ^
 ------------------------------------------------------------------------
-    [0.047 s 22365648 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: marange2A() ...
-    [0.059 s 22826688 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: pi() ...
-    [0.0 s 22828736 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pe() ...
-    [0.0 s 22829760 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pn() ...
-    [0.0 s 22831808 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: psi() ...
-    [0.0 s 22832832 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pastar() ...
-    [0.0 s 22834880 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: paelem() ...
-    [0.0 s 22835904 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: parange() ...
-    [0.0 s 22837952 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pbstar() ...
-    [0.0 s 22838976 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pbelem() ...
-    [0.0010 s 22841080 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pbrange() ...
-    [0.0 s 22843128 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: ptstar() ...
-    [0.0 s 22844152 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pATstar() ...
-    [0.0 s 22846200 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pTstar() ...
-    [0.0 s 22847224 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: ModChecksMethod() ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:284: Error: There is no assignable clause allowing this method call
+src|test|resources|ModChecksMethod.java:284: Error: There is no assignable clause allowing this method call
             this(0); // WARNING
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:297: Associated declaration: 
+src|test|resources|ModChecksMethod.java:297: Associated declaration: 
         //@ modifies \everything;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:282: Associated declaration: 
+src|test|resources|ModChecksMethod.java:282: Associated declaration: 
         //@ modifies \nothing;
             ^
-    [0.014 s 23094656 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mcnothing() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:289: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:289: Warning: Possible violation of modifies clause (Modifies)
             new ModChecksMethod(0); // WARNING 
                                ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 297, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 297, col 14:
         //@ modifies \everything;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 287, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 287, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.026 s 23461576 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: mcnothingA() ...
-    [0.011 s 23692128 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(int) ...
-    [0.0 s 23694176 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: ModChecksMethod(double) ...
-    [0.0 s 23696224 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: marangeB() ...
-    [0.019 s 23978056 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: parangeB() ...
-    [0.0 s 23979080 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: marangeC() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:314: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:314: Warning: Possible violation of modifies clause (Modifies)
             parangeC(); // OK - needs FIXME
                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 331, col 15:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 331, col 15:
         //@ modifies a[*];
                       ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 312, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 312, col 5:
         //@ modifies a[0..10];
             ^
 ------------------------------------------------------------------------
-    [0.08 s 21845528 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: marangeCC() ...
-    [0.02 s 22179904 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: marangeCCC() ...
-    [0.017 s 22468904 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: parangeC() ...
-    [0.0 s 22470952 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: mstatic() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:336: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:336: Warning: Possible violation of modifies clause (Modifies)
                 new ModChecksMethod(null); // WARNING
                                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 339, col 29:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 339, col 29:
         //@ modifies ModChecksMethod.si;
                                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 334, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 334, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.031 s 22839048 bytes]  failed
+    [TIME]  failed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object) ...
-    [0.0 s 22841096 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, int) ...
-    [0.056 s 23286944 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, double) ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:350: Error: There is no assignable clause allowing this method call
+src|test|resources|ModChecksMethod.java:350: Error: There is no assignable clause allowing this method call
                 super(0); // WARNING
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:399: Associated declaration: 
+src|test|resources|ModChecksMethod.java:399: Associated declaration: 
         //@ modifies zi;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:348: Associated declaration: 
+src|test|resources|ModChecksMethod.java:348: Associated declaration: 
         //@ modifies \nothing;
             ^
-    [0.089 s 23777568 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, double, int) ...
-    [0.07 s 21682728 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, java.lang.Object) ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:360: Error: There is no assignable clause allowing this method call
+src|test|resources|ModChecksMethod.java:360: Error: There is no assignable clause allowing this method call
                 super(0.0); // WARNING
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:402: Associated declaration: 
+src|test|resources|ModChecksMethod.java:402: Associated declaration: 
         //@ modifies szi;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:358: Associated declaration: 
+src|test|resources|ModChecksMethod.java:358: Associated declaration: 
         //@ modifies \nothing;
             ^
-    [0.056 s 22164120 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: ModChecksMethod(java.lang.Object, java.lang.Object, int) ...
-    [0.053 s 22649424 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: pstaticA() ...
-    [0.0 s 22651472 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: pstaticB() ...
-    [0.0 s 22652496 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethod: mstaticA() ...
-    [0.045 s 22859984 bytes]  passed
+    [TIME]  passed
 
 ModChecksMethod: mstaticB() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java:381: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksMethod.java:381: Warning: Possible violation of modifies clause (Modifies)
                 pstaticB();  // WARNING
                         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 371, col 14:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 371, col 14:
         //@ modifies ModChecksMethod.*;
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksMethod.java", line 379, col 5:
+Associated declaration is "src|test|resources|ModChecksMethod.java", line 379, col 5:
         //@ modifies ModChecksMethodZ.*;
             ^
 ------------------------------------------------------------------------
-    [0.03 s 23265280 bytes]  failed
-  [3.221 s 23266304 bytes total]
+    [TIME]  failed
+  [TIME total]
 
 ModChecksMethodA ...
-    [0.0010 s 23335872 bytes]
+    [TIME]
 
 ModChecksMethodA: ModChecksMethodA() ...
-    [0.014 s 23501064 bytes]  passed
-  [0.015 s 23502088 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 ModChecksMethodZ ...
-    [0.0010 s 23571656 bytes]
+    [TIME]
 
 ModChecksMethodZ: ModChecksMethodZ() ...
-    [0.0 s 23572680 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethodZ: ModChecksMethodZ(int) ...
-    [0.0 s 23575752 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksMethodZ: ModChecksMethodZ(double) ...
-    [0.0 s 23577800 bytes]  passed immediately
-  [0.0090 s 23578824 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 41 warnings
 3 errors

@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MultipleDecl.java: Caution: Using given file as the .java file, even though it is not the java file for MultipleDecl on the classpath
-    [0.0010 s 21648136 bytes]
+ESC/Java version VERSION
+src|test|resources|MultipleDecl.java: Caution: Using given file as the .java file, even though it is not the java file for MultipleDecl on the classpath
+    [TIME]
 
 MultipleDecl ...
-  Prover started:0.059 s 22823032 bytes
-    [0.208 s 22936968 bytes]
+  Prover started:TIME
+    [TIME]
 
 MultipleDecl: m() ...
-    [0.0 s 22939016 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MultipleDecl: MultipleDecl() ...
-    [0.097 s 23219424 bytes]  passed
-  [0.307 s 23220448 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

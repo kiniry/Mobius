@@ -1,90 +1,90 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java: Caution: Using given file as the .java file, even though it is not the java file for ExpandWildRef on the classpath
-    [0.018 s 16976680 bytes]
+ESC/Java version VERSION
+src|test|resources|ExpandWildRef.java: Caution: Using given file as the .java file, even though it is not the java file for ExpandWildRef on the classpath
+    [TIME]
 
 ExpandWildRef ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:190: Caution: Variable ewrj might not have been initialized
+src|test|resources|ExpandWildRef.java:190: Caution: Variable ewrj might not have been initialized
         public int ewrj;
                    ^
-  Prover started:0.063 s 17498272 bytes
-    [0.25 s 17595328 bytes]
+  Prover started:TIME
+    [TIME]
 
 ExpandWildRef: ExpandWildRef() ...
-    [0.0 s 17597376 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ExpandWildRef: mm() ...
-    [0.0 s 17598400 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ExpandWildRef: mms() ...
-    [0.0 s 17600448 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ExpandWildRef: mos() ...
-    [0.0 s 17601472 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ExpandWildRef: mo() ...
-    [0.0 s 17603520 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ExpandWildRef: p() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:44: Warning: Possible assertion failure (Assert)
+src|test|resources|ExpandWildRef.java:44: Warning: Possible assertion failure (Assert)
                 //@ assert ii == 1 || gii == 1 || ewr == 1 || iewri == ...
                     ^
 ------------------------------------------------------------------------
-    [0.24 s 18444120 bytes]  failed
+    [TIME]  failed
 
 ExpandWildRef: p2() ...
-    [0.039 s 19093200 bytes]  passed
+    [TIME]  passed
 
 ExpandWildRef: pp() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:86: Warning: Possible assertion failure (Assert)
+src|test|resources|ExpandWildRef.java:86: Warning: Possible assertion failure (Assert)
                 //@ assert sii == 1 || sgii == 1 || ewrs == 1 || sewri ...
                     ^
 ------------------------------------------------------------------------
-    [0.077 s 17552448 bytes]  failed
+    [TIME]  failed
 
 ExpandWildRef: pp2() ...
-    [0.056 s 18040448 bytes]  passed
+    [TIME]  passed
 
 ExpandWildRef: po() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:120: Warning: Possible assertion failure (Assert)
+src|test|resources|ExpandWildRef.java:120: Warning: Possible assertion failure (Assert)
                 //@ assert o.i == 1 || o.gi == 1 ; // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.04 s 18644880 bytes]  failed
+    [TIME]  failed
 
 ExpandWildRef: po2() ...
-    [0.022 s 19112032 bytes]  passed
+    [TIME]  passed
 
 ExpandWildRef: pos() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ExpandWildRef.java:157: Warning: Possible assertion failure (Assert)
+src|test|resources|ExpandWildRef.java:157: Warning: Possible assertion failure (Assert)
                 //@ assert o.si == 1 || o.sgi == 1;  // ERROR
                     ^
 ------------------------------------------------------------------------
-    [0.043 s 17100464 bytes]  failed
+    [TIME]  failed
 
 ExpandWildRef: pos2() ...
-    [0.02 s 17531824 bytes]  passed
-  [0.789 s 17532848 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 EWRS ...
-    [0.0010 s 17600312 bytes]
+    [TIME]
 
 EWRS: EWRS() ...
-    [0.01 s 17763688 bytes]  passed
-  [0.011 s 17764712 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 EWRI ...
-    [0.0010 s 17781344 bytes]
-  [0.029 s 17782368 bytes total]
+    [TIME]
+  [TIME total]
 
 Other ...
-    [0.0010 s 17850152 bytes]
+    [TIME]
 
 Other: Other() ...
-    [0.01 s 18021720 bytes]  passed
-  [0.012 s 18022744 bytes total]
+    [TIME]  passed
+  [TIME total]
 2 cautions
 4 warnings

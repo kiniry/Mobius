@@ -1,22 +1,22 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Instance2.java: Caution: Using given file as the .java file, even though it is not the java file for Instance2 on the classpath
-    [0.0020 s 18831976 bytes]
+ESC/Java version VERSION
+src|test|resources|Instance2.java: Caution: Using given file as the .java file, even though it is not the java file for Instance2 on the classpath
+    [TIME]
 
 Instance2 ...
-  Prover started:0.059 s 19840808 bytes
-    [0.175 s 19962904 bytes]
+  Prover started:TIME
+    [TIME]
 
 Instance2: m() ...
-    [0.066 s 20038360 bytes]  passed
+    [TIME]  passed
 
 Instance2: mm() ...
-    [0.029 s 18908072 bytes]  passed
+    [TIME]  passed
 
 Instance2: Instance2() ...
-    [0.034 s 19091736 bytes]  passed
-  [0.304 s 19092760 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 INSTI ...
-    [0.0010 s 19109640 bytes]
-  [0.0030 s 19110664 bytes total]
+    [TIME]
+  [TIME total]
 1 caution

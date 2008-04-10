@@ -1,21 +1,21 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EscJavaBad000.java: Caution: Using given file as the .java file, even though it is not the java file for EscJavaBad000 on the classpath
-    [0.0020 s 17328416 bytes]
+ESC/Java version VERSION
+src|test|resources|EscJavaBad000.java: Caution: Using given file as the .java file, even though it is not the java file for EscJavaBad000 on the classpath
+    [TIME]
 
 EscJavaBad000 ...
-  Prover started:0.063 s 17674304 bytes
-    [0.181 s 17740400 bytes]
+  Prover started:TIME
+    [TIME]
 
 EscJavaBad000: m(int, int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EscJavaBad000.java:16: Warning: Possible division by zero (ZeroDiv)
+src|test|resources|EscJavaBad000.java:16: Warning: Possible division by zero (ZeroDiv)
     return x / y;  // potential division-by-zero error
              ^
 ------------------------------------------------------------------------
-    [0.08 s 17945560 bytes]  failed
+    [TIME]  failed
 
 EscJavaBad000: EscJavaBad000() ...
-    [0.0060 s 18099608 bytes]  passed
-  [0.268 s 18100632 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

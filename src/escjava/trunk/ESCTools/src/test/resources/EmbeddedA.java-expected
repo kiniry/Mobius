@@ -1,60 +1,66 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:6: Error: Pragma in javadoc comment is not correctly terminated (missing </jml>)
+ESC/Java version VERSION
+src|test|resources|EmbeddedA.java:6: Error: Pragma in javadoc comment is not correctly terminated (missing </jml>)
         <jml>
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:13: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
+src|test|resources|EmbeddedA.java:13: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
         <JML>
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:19: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
+src|test|resources|EmbeddedA.java:19: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
         <JML>
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:26: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
+src|test|resources|EmbeddedA.java:26: Error: Pragma in javadoc comment is not correctly terminated (missing </JML>)
         <JML>
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java: Caution: Using given file as the .java file, even though it is not the java file for EmbeddedA on the classpath
-    [0.0040 s 17860504 bytes]
+src|test|resources|EmbeddedA.java: Caution: Using given file as the .java file, even though it is not the java file for EmbeddedA on the classpath
+    [TIME]
 
 EmbeddedA ...
-  Prover started:0.059 s 18109712 bytes
-    [0.18 s 18174424 bytes]
+  Prover started:TIME
+    [TIME]
 
 EmbeddedA: m() ...
-    [0.0 s 18175448 bytes]  passed immediately
+    [TIME]  passed immediately
 
 EmbeddedA: n() ...
-    [0.0 s 18177496 bytes]  passed immediately
+    [TIME]  passed immediately
 
 EmbeddedA: n1() ...
-    [0.0 s 18178520 bytes]  passed immediately
+    [TIME]  passed immediately
 
 EmbeddedA: n2() ...
-    [0.0 s 18180568 bytes]  passed immediately
+    [TIME]  passed immediately
 
 EmbeddedA: p() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:38: Warning: Postcondition possibly not established (Post)
+src|test|resources|EmbeddedA.java:38: Warning: Postcondition possibly not established (Post)
         public void p() {}
                          ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java", line 35, col 2:
+Associated declaration is "src|test|resources|EmbeddedA.java", line 35, col 2:
                 ensures false; // Should read this one
                 ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|EmbeddedA.java", line 38, col 18.
+
 ------------------------------------------------------------------------
-    [0.08 s 18367360 bytes]  failed
+    [TIME]  failed
 
 EmbeddedA: p2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java:47: Warning: Postcondition possibly not established (Post)
+src|test|resources|EmbeddedA.java:47: Warning: Postcondition possibly not established (Post)
         public void p2() {}
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmbeddedA.java", line 43, col 2:
+Associated declaration is "src|test|resources|EmbeddedA.java", line 43, col 2:
                 ensures false; // Should read this one
                 ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|EmbeddedA.java", line 47, col 19.
+
 ------------------------------------------------------------------------
-    [0.038 s 18534880 bytes]  failed
+    [TIME]  failed
 
 EmbeddedA: EmbeddedA() ...
-    [0.0070 s 18685912 bytes]  passed
-  [0.305 s 18686936 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 2 warnings
 4 errors

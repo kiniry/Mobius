@@ -1,30 +1,30 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksArgs.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksArgs on the classpath
-    [0.0010 s 20798208 bytes]
+ESC/Java version VERSION
+src|test|resources|ModChecksArgs.java: Caution: Using given file as the .java file, even though it is not the java file for ModChecksArgs on the classpath
+    [TIME]
 
 ModChecksArgs ...
-  Prover started:0.059 s 21811184 bytes
-    [0.161 s 21879312 bytes]
+  Prover started:TIME
+    [TIME]
 
 ModChecksArgs: ModChecksArgs() ...
-    [0.0 s 21880336 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ModChecksArgs: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksArgs.java:13: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModChecksArgs.java:13: Warning: Possible violation of modifies clause (Modifies)
             ma(1,a);
               ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksArgs.java", line 18, col 14:
+Associated declaration is "src|test|resources|ModChecksArgs.java", line 18, col 14:
         //@ modifies aa[i];
                      ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModChecksArgs.java", line 10, col 5:
+Associated declaration is "src|test|resources|ModChecksArgs.java", line 10, col 5:
         //@ modifies a[0];
             ^
 ------------------------------------------------------------------------
-    [0.132 s 21385600 bytes]  failed
+    [TIME]  failed
 
 ModChecksArgs: ma(int, int[]) ...
-    [0.0 s 21388672 bytes]  passed immediately
-  [0.293 s 21389696 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 1 warning

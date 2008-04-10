@@ -1,32 +1,35 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ElemType.java: Caution: Using given file as the .java file, even though it is not the java file for ElemType on the classpath
-    [0.0030 s 16182504 bytes]
+ESC/Java version VERSION
+src|test|resources|ElemType.java: Caution: Using given file as the .java file, even though it is not the java file for ElemType on the classpath
+    [TIME]
 
 ElemType ...
-  Prover started:0.06 s 17012272 bytes
-    [0.224 s 17125872 bytes]
+  Prover started:TIME
+    [TIME]
 
 ElemType: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ElemType.java:9: Warning: Possible assertion failure (Assert)
+src|test|resources|ElemType.java:9: Warning: Possible assertion failure (Assert)
                 //@ assert \elemtype(\typeof(oa)) == \type(Object); // ...
                     ^
 ------------------------------------------------------------------------
-    [0.115 s 17419208 bytes]  failed
+    [TIME]  failed
 
 ElemType: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ElemType.java:20: Warning: Postcondition possibly not established (Post)
+src|test|resources|ElemType.java:20: Warning: Postcondition possibly not established (Post)
         public void mm() {}
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ElemType.java", line 15, col 5:
+Associated declaration is "src|test|resources|ElemType.java", line 15, col 5:
         //@ ensures \elemtype(\typeof(new int[1])) == \type(int);
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|ElemType.java", line 20, col 19.
+
 ------------------------------------------------------------------------
-    [0.024 s 17673824 bytes]  failed
+    [TIME]  failed
 
 ElemType: ElemType() ...
-    [0.0080 s 17861888 bytes]  passed
-  [0.371 s 17862912 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 2 warnings

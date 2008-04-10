@@ -1,30 +1,30 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JmlAssert.java: Caution: Using given file as the .java file, even though it is not the java file for JmlAssert on the classpath
-    [0.0020 s 19780000 bytes]
+ESC/Java version VERSION
+src|test|resources|JmlAssert.java: Caution: Using given file as the .java file, even though it is not the java file for JmlAssert on the classpath
+    [TIME]
 
 JmlAssert ...
-  Prover started:0.059 s 20144408 bytes
-    [0.178 s 20209120 bytes]
+  Prover started:TIME
+    [TIME]
 
 JmlAssert: trivial() ...
-    [0.069 s 20262656 bytes]  passed
+    [TIME]  passed
 
 JmlAssert: constant_boolean_expression() ...
-    [0.0040 s 20317160 bytes]  passed
+    [TIME]  passed
 
 JmlAssert: assert_matches_precondition(int) ...
-    [0.0050 s 20395464 bytes]  passed
+    [TIME]  passed
 
 JmlAssert: assert_weaker_than_precondition(int) ...
-    [0.01 s 20474792 bytes]  passed
+    [TIME]  passed
 
 JmlAssert: constant_arithmetic(int, int) ...
-    [0.034 s 20568608 bytes]  passed
+    [TIME]  passed
 
 JmlAssert: non_trivial_arithmetic(int, int) ...
-    [0.0070 s 20667488 bytes]  passed
+    [TIME]  passed
 
 JmlAssert: JmlAssert() ...
-    [0.0060 s 20818248 bytes]  passed
-  [0.313 s 20819272 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

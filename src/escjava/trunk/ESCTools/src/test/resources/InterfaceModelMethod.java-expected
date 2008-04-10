@@ -1,12 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InterfaceModelMethod.java: Caution: Using given file as the .java file, even though it is not the java file for InterfaceModelMethod on the classpath
-    [0.0010 s 17855632 bytes]
+ESC/Java version VERSION
+src|test|resources|InterfaceModelMethod.java: Caution: Using given file as the .java file, even though it is not the java file for InterfaceModelMethod on the classpath
+    [TIME]
 
 InterfaceModelMethod ...
-  Prover started:0.065 s 18840736 bytes
-    [0.18 s 18903952 bytes]
+  Prover started:TIME
+    [TIME]
 
 InterfaceModelMethod: m() ...
-    [0.087 s 18950264 bytes]  passed
-  [0.268 s 18951288 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

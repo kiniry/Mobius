@@ -1,12 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineZ.java: Caution: Using given file as the .java file, even though it is not the java file for sub.RefineZ on the classpath
-    [0.0010 s 23082576 bytes]
+ESC/Java version VERSION
+src|test|resources|RefineZ.java: Caution: Using given file as the .java file, even though it is not the java file for sub.RefineZ on the classpath
+    [TIME]
 
 sub.RefineZ ...
-  Prover started:0.062 s 23276080 bytes
-    [0.176 s 23344208 bytes]
+  Prover started:TIME
+    [TIME]
 
 sub.RefineZ: RefineZ() ...
-    [0.069 s 23495968 bytes]  passed
-  [0.246 s 23496992 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

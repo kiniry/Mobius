@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 /** This class contains miscellaneous (static) utility functions that are
  useful in writing JUnit functional tests.
  */
-public class Utils {
+public class JUnitUtils {
   
   /** Setting this field to true disables the capturing of the output;
    one would do this only for debugging purposes.
@@ -190,13 +190,18 @@ public class Utils {
   static public /*@ non_null */ String[] parseLineWithArgs(/*@ non_null */String s, /*@ non_null */String[] originalArgs) {
     QuoteTokenizer q = new QuoteTokenizer(s);
     java.util.ArrayList args = new java.util.ArrayList();
+    
+    // Add in existing arguments
+    for (int i=0; i < originalArgs.length; i++) {
+      String a = originalArgs[i];
+      args.add (a);
+    }
+    
+    // Add in specific arguments from the list of files
     while (q.hasMoreTokens()) {
       String a = q.nextToken();
       args.add(a);
     }
-    for (int i=0; i < originalArgs.length; i++) {
-      args.add (originalArgs[i]);
-    }	
     return (String[])args.toArray(new String[args.size()]);
   }
   
@@ -462,11 +467,11 @@ public class Utils {
 	// boolean b = ((Boolean)result).booleanValue();
 	return ba.toString();
     } catch (Exception e) {
-      Utils.restoreStreams(); // FIXME - see comment in TestFilesTestSuite.java
+      JUnitUtils.restoreStreams(); // FIXME - see comment in TestFilesTestSuite.java
       // Need the above restore before we try to print something
       System.out.println(e.toString());  // FIXME - need better error handling
     } finally {
-      Utils.restoreStreams();
+      JUnitUtils.restoreStreams();
     }
     return null;
   }
@@ -492,7 +497,7 @@ public class Utils {
    */
   static public Diff compareStringToFile(/*@ non_null */ String s, String rootname) 
                                                throws java.io.IOException {
-    String ss = Utils.readFile(rootname+ORACLE_SUFFIX);
+    String ss = JUnitUtils.readFile(rootname+ORACLE_SUFFIX);
     Diff df = new Diff( "expected", ss, "actual", s );
     
     if (!df.areDifferent()) {

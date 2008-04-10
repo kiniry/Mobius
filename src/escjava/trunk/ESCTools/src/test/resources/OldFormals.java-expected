@@ -1,27 +1,27 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/OldFormals.java: Caution: Using given file as the .java file, even though it is not the java file for OldFormals on the classpath
-    [0.0020 s 21180560 bytes]
+ESC/Java version VERSION
+src|test|resources|OldFormals.java: Caution: Using given file as the .java file, even though it is not the java file for OldFormals on the classpath
+    [TIME]
 
 OldFormals ...
-  Prover started:0.067 s 22229608 bytes
-    [0.185 s 22297664 bytes]
+  Prover started:TIME
+    [TIME]
 
 OldFormals: m(int) ...
-    [0.092 s 22482736 bytes]  passed
+    [TIME]  passed
 
 OldFormals: n(int) ...
-    [0.035 s 22598920 bytes]  passed
+    [TIME]  passed
 
 OldFormals: q(int) ...
-    [0.0050 s 22693760 bytes]  passed
+    [TIME]  passed
 
 OldFormals: r(int) ...
-    [0.0070 s 22781272 bytes]  passed
+    [TIME]  passed
 
 OldFormals: t(int) ...
-    [0.0080 s 22879280 bytes]  passed
+    [TIME]  passed
 
 OldFormals: OldFormals() ...
-    [0.019 s 23134768 bytes]  passed
-  [0.355 s 23135792 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

@@ -1,31 +1,34 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/IsInitialized.java: Caution: Using given file as the .java file, even though it is not the java file for IsInitialized on the classpath
-    [0.0020 s 17741080 bytes]
+ESC/Java version VERSION
+src|test|resources|IsInitialized.java: Caution: Using given file as the .java file, even though it is not the java file for IsInitialized on the classpath
+    [TIME]
 
 IsInitialized ...
-  Prover started:0.066 s 19222576 bytes
-    [0.236 s 19414136 bytes]
+  Prover started:TIME
+    [TIME]
 
 IsInitialized: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/IsInitialized.java:9: Warning: Postcondition possibly not established (Post)
+src|test|resources|IsInitialized.java:9: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/IsInitialized.java", line 5, col 5:
+Associated declaration is "src|test|resources|IsInitialized.java", line 5, col 5:
         //@ ensures \is_initialized(java.util.Vector);
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|IsInitialized.java", line 9, col 1.
+
 ------------------------------------------------------------------------
-    [0.18 s 19703440 bytes]  failed
+    [TIME]  failed
 
 IsInitialized: IsInitialized() ...
-    [0.0070 s 19868600 bytes]  passed
-  [0.423 s 19869624 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 IsInitializedA ...
-    [0.0020 s 19937800 bytes]
+    [TIME]
 
 IsInitializedA: IsInitializedA() ...
-    [0.011 s 20099848 bytes]  passed
-  [0.013 s 20100872 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

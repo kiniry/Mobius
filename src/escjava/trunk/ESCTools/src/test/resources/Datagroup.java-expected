@@ -1,9 +1,9 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Datagroup.java: Caution: Using given file as the .java file, even though it is not the java file for Datagroup on the classpath
-    [0.0020 s 17090840 bytes]
+ESC/Java version VERSION
+src|test|resources|Datagroup.java: Caution: Using given file as the .java file, even though it is not the java file for Datagroup on the classpath
+    [TIME]
 
 Datagroup ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Datagroup.java:4: Fatal error: Can't find type named "JMLDataGroup"
+src|test|resources|Datagroup.java:4: Fatal error: Can't find type named "JMLDataGroup"
         //@ model JMLDataGroup i; 
                   ^
 1 caution

@@ -1,12 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Bug2.java: Caution: Using given file as the .java file, even though it is not the java file for Bug2 on the classpath
-    [0.0030 s 16692960 bytes]
+ESC/Java version VERSION
+src|test|resources|Bug2.java: Caution: Using given file as the .java file, even though it is not the java file for Bug2 on the classpath
+    [TIME]
 
 Bug2 ...
-  Prover started:0.061 s 18528312 bytes
-    [0.333 s 18709424 bytes]
+  Prover started:TIME
+    [TIME]
 
 Bug2: Bug2() ...
-    [0.108 s 19022688 bytes]  passed
-  [0.442 s 19023712 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

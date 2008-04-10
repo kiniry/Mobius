@@ -1,38 +1,41 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Lbl.java: Caution: Using given file as the .java file, even though it is not the java file for Lbl on the classpath
-    [0.0010 s 18098368 bytes]
+ESC/Java version VERSION
+src|test|resources|Lbl.java: Caution: Using given file as the .java file, even though it is not the java file for Lbl on the classpath
+    [TIME]
 
 Lbl ...
-  Prover started:0.06 s 19093440 bytes
-    [0.161 s 19157728 bytes]
+  Prover started:TIME
+    [TIME]
 
 Lbl: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Lbl.java:6: Warning: Postcondition possibly not established (Post)
+src|test|resources|Lbl.java:6: Warning: Postcondition possibly not established (Post)
         void m() {}
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Lbl.java", line 5, col 5:
+Associated declaration is "src|test|resources|Lbl.java", line 5, col 5:
         //@ ensures (\lblneg A false);
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Lbl.java", line 6, col 11.
+
 Counterexample labels:
     A
 
 ------------------------------------------------------------------------
-    [0.083 s 19343232 bytes]  failed
+    [TIME]  failed
 
 Lbl: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Lbl.java:9: Warning: Possible assertion failure (Assert)
+src|test|resources|Lbl.java:9: Warning: Possible assertion failure (Assert)
         //@ assert !(\lblpos B true);
             ^
 Counterexample labels:
     B
 
 ------------------------------------------------------------------------
-    [0.039 s 19497592 bytes]  failed
+    [TIME]  failed
 
 Lbl: Lbl() ...
-    [0.0050 s 19648408 bytes]  passed
-  [0.289 s 19649432 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 2 warnings

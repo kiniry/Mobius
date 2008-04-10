@@ -1,12 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Duplicate.java: Caution: Using given file as the .java file, even though it is not the java file for Duplicate on the classpath
-    [0.0020 s 17217840 bytes]
+ESC/Java version VERSION
+src|test|resources|Duplicate.java: Caution: Using given file as the .java file, even though it is not the java file for Duplicate on the classpath
+    [TIME]
 
 Duplicate ...
-  Prover started:0.058 s 18202632 bytes
-    [0.161 s 18268592 bytes]
+  Prover started:TIME
+    [TIME]
 
 Duplicate: Duplicate() ...
-    [0.07 s 18420048 bytes]  passed
-  [0.231 s 18421072 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

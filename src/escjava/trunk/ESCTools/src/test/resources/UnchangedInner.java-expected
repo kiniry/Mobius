@@ -1,50 +1,50 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedInner.java: Caution: Using given file as the .java file, even though it is not the java file for UnchangedInner on the classpath
-    [0.0020 s 24303568 bytes]
+ESC/Java version VERSION
+src|test|resources|UnchangedInner.java: Caution: Using given file as the .java file, even though it is not the java file for UnchangedInner on the classpath
+    [TIME]
 
 UnchangedInner ...
-  Prover started:0.072 s 25317472 bytes
-    [0.177 s 25398080 bytes]
+  Prover started:TIME
+    [TIME]
 
 UnchangedInner: test() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedInner.java:28: Warning: Possible assertion failure (Assert)
+src|test|resources|UnchangedInner.java:28: Warning: Possible assertion failure (Assert)
         //@ assert x>0 ;        // error
             ^
 ------------------------------------------------------------------------
-    [0.116 s 25965632 bytes]  failed
+    [TIME]  failed
 
 UnchangedInner: test2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedInner.java:34: Warning: Possible assertion failure (Assert)
+src|test|resources|UnchangedInner.java:34: Warning: Possible assertion failure (Assert)
         //@ assert x>0 ;        // error
             ^
 ------------------------------------------------------------------------
-    [0.025 s 26341184 bytes]  failed
+    [TIME]  failed
 
 UnchangedInner: UnchangedInner() ...
-    [0.0070 s 26510392 bytes]  passed
-  [0.326 s 26512440 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 UnchangedInner$Inner ...
-    [0.0010 s 26595136 bytes]
+    [TIME]
 
 UnchangedInner$Inner: Inner() ...
-    [0.013 s 26783800 bytes]  passed
+    [TIME]  passed
 
 UnchangedInner$Inner: Inner(int) ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedInner.java:16: Error: There is no assignable clause allowing this method call
+src|test|resources|UnchangedInner.java:16: Error: There is no assignable clause allowing this method call
         Inner(int y) {}
                      ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/UnchangedInner.java:15: Associated declaration: 
+src|test|resources|UnchangedInner.java:15: Associated declaration: 
         //@ modifies x;
             ^
-    [0.044 s 24349544 bytes]  passed
+    [TIME]  passed
 
 UnchangedInner$Inner: modify() ...
-    [0.0080 s 24453416 bytes]  passed
-  [0.066 s 24454440 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 2 warnings
 1 error

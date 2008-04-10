@@ -1,100 +1,100 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNullable.java: Caution: Using given file as the .java file, even though it is not the java file for InheritNullable on the classpath
-    [0.0050 s 18841008 bytes]
+ESC/Java version VERSION
+src|test|resources|InheritNullable.java: Caution: Using given file as the .java file, even though it is not the java file for InheritNullable on the classpath
+    [TIME]
 
 InheritNullable ...
-  Prover started:0.063 s 20109368 bytes
-    [0.167 s 20183816 bytes]
+  Prover started:TIME
+    [TIME]
 
 InheritNullable: m1(int, java.lang.Object) ...
-    [0.0 s 20185864 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritNullable: m2(int, java.lang.Object) ...
-    [0.0 s 20188936 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritNullable: m3(int, java.lang.Object) ...
-    [0.0 s 20190984 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritNullable: m4(int, java.lang.Object) ...
-    [0.0 s 20194056 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritNullable: m5(int, java.lang.Object) ...
-    [0.0 s 20196104 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritNullable: m6(int, java.lang.Object) ...
-    [0.0 s 20199176 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritNullable: InheritNullable() ...
-    [0.0 s 20200200 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritNullable: mm1a() ...
-    [0.076 s 20390736 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm1b() ...
-    [0.037 s 20570984 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm2a() ...
-    [0.029 s 19217448 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm2b() ...
-    [0.01 s 19397752 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm3a() ...
-    [0.015 s 19587264 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm3b() ...
-    [0.011 s 19767512 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm4a() ...
-    [0.01 s 19957080 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm4b() ...
-    [0.01 s 20137328 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm5a() ...
-    [0.0070 s 20242512 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm5b() ...
-    [0.012 s 20468120 bytes]  passed
+    [TIME]  passed
 
 InheritNullable: mm6a() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNullable.java:60: Warning: Precondition possibly not established (Pre)
+src|test|resources|InheritNullable.java:60: Warning: Precondition possibly not established (Pre)
                 m6(-1,oo); // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/InheritNullable.java", line 82, col 5:
+Associated declaration is "src|test|resources|InheritNullable.java", line 82, col 5:
         //@ requires i>0;
             ^
 ------------------------------------------------------------------------
-    [0.025 s 20870432 bytes]  failed
+    [TIME]  failed
 
 InheritNullable: mm6b() ...
-    [0.017 s 21130320 bytes]  passed
-  [0.426 s 21131344 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 SuperNullable ...
-    [0.0020 s 21212032 bytes]
+    [TIME]
 
 SuperNullable: m1(int, java.lang.Object) ...
-    [0.0 s 21214080 bytes]  passed immediately
+    [TIME]  passed immediately
 
 SuperNullable: m2(int, java.lang.Object) ...
-    [0.0 s 21217152 bytes]  passed immediately
+    [TIME]  passed immediately
 
 SuperNullable: m3(int, java.lang.Object) ...
-    [0.0 s 21219200 bytes]  passed immediately
+    [TIME]  passed immediately
 
 SuperNullable: m4(int, java.lang.Object) ...
-    [0.0 s 21222272 bytes]  passed immediately
+    [TIME]  passed immediately
 
 SuperNullable: m5(int, java.lang.Object) ...
-    [0.0 s 21224320 bytes]  passed immediately
+    [TIME]  passed immediately
 
 SuperNullable: m6(int, java.lang.Object) ...
-    [0.0 s 21227392 bytes]  passed immediately
+    [TIME]  passed immediately
 
 SuperNullable: SuperNullable() ...
-    [0.0 s 21228416 bytes]  passed immediately
-  [0.048 s 21229440 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 1 warning

@@ -1,9 +1,9 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unchanged.java: Caution: Using given file as the .java file, even though it is not the java file for Unchanged on the classpath
-    [0.01 s 37439800 bytes]
+ESC/Java version VERSION
+src|test|resources|Unchanged.java: Caution: Using given file as the .java file, even though it is not the java file for Unchanged on the classpath
+    [TIME]
 
 Unchanged ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Unchanged.java:69: Fatal error: Can't find type named "JMLDataGroup"
+src|test|resources|Unchanged.java:69: Fatal error: Can't find type named "JMLDataGroup"
         //@ public model JMLDataGroup contents;
                          ^
 1 caution

@@ -1,36 +1,39 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SimpleFunction.java: Caution: Using given file as the .java file, even though it is not the java file for SimpleFunction on the classpath
-    [0.0040 s 23349816 bytes]
+ESC/Java version VERSION
+src|test|resources|SimpleFunction.java: Caution: Using given file as the .java file, even though it is not the java file for SimpleFunction on the classpath
+    [TIME]
 
 SimpleFunction ...
-  Prover started:0.071 s 23713208 bytes
-    [0.213 s 23780352 bytes]
+  Prover started:TIME
+    [TIME]
 
 SimpleFunction: bump(int) ...
-    [0.0 s 23782400 bytes]  passed immediately
+    [TIME]  passed immediately
 
 SimpleFunction: m() ...
-    [0.1 s 23933928 bytes]  passed
+    [TIME]  passed
 
 SimpleFunction: n() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SimpleFunction.java:21: Warning: Postcondition possibly not established (Post)
+src|test|resources|SimpleFunction.java:21: Warning: Postcondition possibly not established (Post)
         public void n() {} // FAILS
                          ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SimpleFunction.java", line 20, col 5:
+Associated declaration is "src|test|resources|SimpleFunction.java", line 20, col 5:
         //@ ensures bump(f+j) < 10;
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|SimpleFunction.java", line 21, col 18.
+
 ------------------------------------------------------------------------
-    [0.102 s 24169808 bytes]  failed
+    [TIME]  failed
 
 SimpleFunction: bump2(int) ...
-    [0.0 s 24171856 bytes]  passed immediately
+    [TIME]  passed immediately
 
 SimpleFunction: mm(int) ...
-    [0.012 s 24318296 bytes]  passed
+    [TIME]  passed
 
 SimpleFunction: SimpleFunction() ...
-    [0.0080 s 24500856 bytes]  passed
-  [0.435 s 24501880 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

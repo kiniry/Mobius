@@ -1,18 +1,18 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseDepends.java:9: Caution: The depends clause is obsolete; it has been replaced by the in and maps clauses
+ESC/Java version VERSION
+src|test|resources|ParseDepends.java:9: Caution: The depends clause is obsolete; it has been replaced by the in and maps clauses
         //@ depends b <- bb,bbb;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseDepends.java: Caution: Using given file as the .java file, even though it is not the java file for ParseDepends on the classpath
-    [0.0030 s 21772128 bytes]
+src|test|resources|ParseDepends.java: Caution: Using given file as the .java file, even though it is not the java file for ParseDepends on the classpath
+    [TIME]
 
 ParseDepends ...
-  Prover started:0.077 s 21726496 bytes
-    [0.214 s 21794592 bytes]
+  Prover started:TIME
+    [TIME]
 
 ParseDepends: m() ...
-    [0.0 s 21795616 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ParseDepends: ParseDepends() ...
-    [0.088 s 21967936 bytes]  passed
-  [0.302 s 21968960 bytes total]
+    [TIME]  passed
+  [TIME total]
 2 cautions

@@ -1,52 +1,52 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Final.java: Caution: Using given file as the .java file, even though it is not the java file for Final on the classpath
-    [0.037 s 18453336 bytes]
+ESC/Java version VERSION
+src|test|resources|Final.java: Caution: Using given file as the .java file, even though it is not the java file for Final on the classpath
+    [TIME]
 
 Final ...
-  Prover started:0.147 s 18812248 bytes
-    [0.267 s 18881272 bytes]
+  Prover started:TIME
+    [TIME]
 
 Final: m() ...
-    [0.073 s 18934824 bytes]  passed
+    [TIME]  passed
 
 Final: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Final.java:8: Warning: Possible assertion failure (Assert)
+src|test|resources|Final.java:8: Warning: Possible assertion failure (Assert)
         //@ assert \typeof(this) == \type(Final);  // ERROR
             ^
 ------------------------------------------------------------------------
-    [0.015 s 19110528 bytes]  failed
+    [TIME]  failed
 
 Final: n() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Final.java:12: Warning: Possible assertion failure (Assert)
+src|test|resources|Final.java:12: Warning: Possible assertion failure (Assert)
         //@ assert !(\typeof(this) <: \type(I)); // ERROR
             ^
 ------------------------------------------------------------------------
-    [0.039 s 19267288 bytes]  failed
+    [TIME]  failed
 
 Final: nn() ...
-    [0.0070 s 19325960 bytes]  passed
+    [TIME]  passed
 
 Final: Final() ...
-    [0.0060 s 19476936 bytes]  passed
-  [0.407 s 19477960 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 F2 ...
-    [0.0020 s 19559312 bytes]
+    [TIME]
 
 F2: p() ...
-    [0.013 s 19612808 bytes]  passed
+    [TIME]  passed
 
 F2: q() ...
-    [0.0060 s 19667384 bytes]  passed
+    [TIME]  passed
 
 F2: F2() ...
-    [0.0060 s 19819656 bytes]  passed
-  [0.027 s 19820680 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 I ...
-    [0.0 s 19837184 bytes]
-  [0.0010 s 19838264 bytes total]
+    [TIME]
+  [TIME total]
 1 caution
 2 warnings

@@ -1,48 +1,48 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java: Caution: Using given file as the .java file, even though it is not the java file for ECH on the classpath
-    [0.0020 s 17415144 bytes]
+ESC/Java version VERSION
+src|test|resources|ECH.java: Caution: Using given file as the .java file, even though it is not the java file for ECH on the classpath
+    [TIME]
 
 ECHX ...
-  Prover started:0.07 s 17606344 bytes
-    [0.189 s 17669848 bytes]
+  Prover started:TIME
+    [TIME]
 
 ECHX: ECHX() ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java:8: Error: There is no assignable clause allowing this method call
+src|test|resources|ECH.java:8: Error: There is no assignable clause allowing this method call
   public ECHX() {}
                 ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java:5: Associated declaration: 
+src|test|resources|ECH.java:5: Associated declaration: 
   //@ public normal_behavior
   ^
-    [0.078 s 17841200 bytes]  passed
-  [0.268 s 17842224 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 ECHD ...
-    [0.0030 s 17911160 bytes]
+    [TIME]
 
 ECHD: ECHD() ...
-    [0.039 s 18062872 bytes]  passed
-  [0.043 s 18063896 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 ECH ...
-    [0.0010 s 18143816 bytes]
+    [TIME]
 
 ECH: ECH() ...
-    [0.015 s 18284856 bytes]  passed
-  [0.016 s 18285880 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 ECHS ...
-    [0.0 s 18350440 bytes]
+    [TIME]
 
 ECHS: ECHS() ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java:22: Error: There is no assignable clause allowing this method call
+src|test|resources|ECH.java:22: Error: There is no assignable clause allowing this method call
   public ECHS() {}
                 ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ECH.java:19: Associated declaration: 
+src|test|resources|ECH.java:19: Associated declaration: 
   //@ public normal_behavior
   ^
-    [0.012 s 18522064 bytes]  passed
-  [0.012 s 18523088 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 2 errors

@@ -1,135 +1,135 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java: Caution: Using given file as the .java file, even though it is not the java file for Inherit on the classpath
-    [0.01 s 17948016 bytes]
+ESC/Java version VERSION
+src|test|resources|Inherit.java: Caution: Using given file as the .java file, even though it is not the java file for Inherit on the classpath
+    [TIME]
 
 Inherit ...
-  Prover started:0.069 s 18136176 bytes
-    [0.19 s 18207752 bytes]
+  Prover started:TIME
+    [TIME]
 
 Inherit: m(int) ...
-    [0.0 s 18208776 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Inherit: Inherit() ...
-    [0.072 s 18349568 bytes]  passed
-  [0.262 s 18350592 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 InheritB ...
-    [0.0030 s 18445072 bytes]
+    [TIME]
 
 InheritB: m(int) ...
-    [0.0 s 18446096 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritB: InheritB() ...
-    [0.011 s 18590232 bytes]  passed
-  [0.015 s 18591256 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 InheritS ...
-    [0.0010 s 18662216 bytes]
+    [TIME]
 
 InheritS: m(int) ...
-    [0.0 s 18664264 bytes]  passed immediately
+    [TIME]  passed immediately
 
 InheritS: InheritS() ...
-    [0.034 s 18817288 bytes]  passed
-  [0.035 s 18818312 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 M ...
-    [0.063 s 20027496 bytes]
+    [TIME]
 
 M: mm() ...
-    [0.031 s 20356392 bytes]  passed
+    [TIME]  passed
 
 M: mm1() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java:40: Warning: Possible assertion failure (Assert)
+src|test|resources|Inherit.java:40: Warning: Possible assertion failure (Assert)
        //@ assert j == 1;  // OK - if we had dynamically type specs FI ...
            ^
 ------------------------------------------------------------------------
-    [0.081 s 18821880 bytes]  failed
+    [TIME]  failed
 
 M: mm1a() ...
-    [0.03 s 19267224 bytes]  passed
+    [TIME]  passed
 
 M: mm2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java:55: Warning: Possible assertion failure (Assert)
+src|test|resources|Inherit.java:55: Warning: Possible assertion failure (Assert)
        //@ assert j == 2;  // OK - if we had dynamically type specs FI ...
            ^
 ------------------------------------------------------------------------
-    [0.042 s 19763376 bytes]  failed
+    [TIME]  failed
 
 M: mm2a() ...
-    [0.03 s 20209624 bytes]  passed
+    [TIME]  passed
 
 M: mm3() ...
-    [0.023 s 20627552 bytes]  passed
+    [TIME]  passed
 
 M: mm4() ...
-    [0.065 s 21045632 bytes]  passed
+    [TIME]  passed
 
 M: p(InheritS) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java:81: Warning: Possible assertion failure (Assert)
+src|test|resources|Inherit.java:81: Warning: Possible assertion failure (Assert)
        //@ assert i.m(0) == 1;  // OK - if we had dynamically typed sp ...
            ^
 ------------------------------------------------------------------------
-    [0.046 s 18846072 bytes]  failed
+    [TIME]  failed
 
 M: q0(InheritS) ...
-    [0.011 s 19035752 bytes]  passed
+    [TIME]  passed
 
 M: q1(InheritS) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java:90: Warning: Precondition possibly not established (Pre)
+src|test|resources|Inherit.java:90: Warning: Precondition possibly not established (Pre)
        i.m(-1);  // ERROR
           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java", line 21, col 7:
+Associated declaration is "src|test|resources|Inherit.java", line 21, col 7:
    //@ requires k >= 0;
        ^
 ------------------------------------------------------------------------
-    [0.029 s 19372088 bytes]  failed
+    [TIME]  failed
 
 M: q2(InheritS) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java:94: Warning: Precondition possibly not established (Pre)
+src|test|resources|Inherit.java:94: Warning: Precondition possibly not established (Pre)
        i.m(-3);  // ERROR
           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java", line 21, col 7:
+Associated declaration is "src|test|resources|Inherit.java", line 21, col 7:
    //@ requires k >= 0;
        ^
 ------------------------------------------------------------------------
-    [0.028 s 19710584 bytes]  failed
+    [TIME]  failed
 
 M: q3(InheritS) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java:98: Warning: Precondition possibly not established (Pre)
+src|test|resources|Inherit.java:98: Warning: Precondition possibly not established (Pre)
        if (i instanceof Inherit) i.m(-1); // OK - if we had dynamicall ...
                                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java", line 21, col 7:
+Associated declaration is "src|test|resources|Inherit.java", line 21, col 7:
    //@ requires k >= 0;
        ^
 Execution trace information:
-    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java", line 98, col 33.
+    Executed then branch in "src|test|resources|Inherit.java", line 98, col 33.
 
 ------------------------------------------------------------------------
-    [0.033 s 20092856 bytes]  failed
+    [TIME]  failed
 
 M: q4(InheritS) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java:102: Warning: Precondition possibly not established (Pre)
+src|test|resources|Inherit.java:102: Warning: Precondition possibly not established (Pre)
        if (i instanceof Inherit) i.m(-2); // ERROR
                                     ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java", line 21, col 7:
+Associated declaration is "src|test|resources|Inherit.java", line 21, col 7:
    //@ requires k >= 0;
        ^
 Execution trace information:
-    Executed then branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Inherit.java", line 102, col 33.
+    Executed then branch in "src|test|resources|Inherit.java", line 102, col 33.
 
 ------------------------------------------------------------------------
-    [0.063 s 20474568 bytes]  failed
+    [TIME]  failed
 
 M: M() ...
-    [0.0060 s 20625600 bytes]  passed
-  [0.581 s 20626624 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 7 warnings

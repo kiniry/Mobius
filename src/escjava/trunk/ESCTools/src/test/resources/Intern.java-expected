@@ -1,42 +1,42 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java: Caution: Using given file as the .java file, even though it is not the java file for Intern on the classpath
-    [0.0020 s 18512784 bytes]
+ESC/Java version VERSION
+src|test|resources|Intern.java: Caution: Using given file as the .java file, even though it is not the java file for Intern on the classpath
+    [TIME]
 
 Intern ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:8: Error: No such method isInterned(java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:8: Error: No such method isInterned(java.lang.String) in type java.lang.String
   //@ assert String.isInterned(s);
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:9: Error: No such method isInterned(java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:9: Error: No such method isInterned(java.lang.String) in type java.lang.String
   //@ assert String.isInterned(ss);
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:10: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:10: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
   //@ assert !String.equals(s,ss);
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:11: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:11: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
   //@ assert String.equals(s,sss);
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:12: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:12: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
   //@ assert String.equals(s,"one");
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:19: Error: No such method isInterned(java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:19: Error: No such method isInterned(java.lang.String) in type java.lang.String
   //@ assert !String.isInterned(s4);
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:20: Error: No such method isInterned(java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:20: Error: No such method isInterned(java.lang.String) in type java.lang.String
   //@ assert String.isInterned(s5);
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:23: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:23: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
   //@ assert String.equals(s,s4);
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:24: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:24: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
   //@ assert String.equals(s,s5);
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:25: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:25: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
   //@ assert !String.equals(ss,s4);
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Intern.java:26: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|Intern.java:26: Error: No such method equals(java.lang.String, java.lang.String) in type java.lang.String
   //@ assert !String.equals(ss,s5);
                      ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.056 s 19618144 bytes total] (aborted)
+  [TIME total] (aborted)
 2 cautions
 11 errors

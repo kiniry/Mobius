@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/C.java: Caution: Using given file as the .java file, even though it is not the java file for C on the classpath
-    [0.0020 s 17102720 bytes]
+ESC/Java version VERSION
+src|test|resources|C.java: Caution: Using given file as the .java file, even though it is not the java file for C on the classpath
+    [TIME]
 
 C ...
-  Prover started:0.059 s 18443952 bytes
-    [0.209 s 18553424 bytes]
+  Prover started:TIME
+    [TIME]
 
 C: C() ...
-    [0.097 s 18975272 bytes]  passed
+    [TIME]  passed
 
 C: helperMethod() ...
-    [0.0 s 18978344 bytes]  passed immediately
-  [0.306 s 18979368 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution

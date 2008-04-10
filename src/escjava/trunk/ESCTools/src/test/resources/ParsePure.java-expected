@@ -1,60 +1,60 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java: Caution: Using given file as the .java file, even though it is not the java file for ParsePure on the classpath
-    [0.0020 s 22038232 bytes]
+ESC/Java version VERSION
+src|test|resources|ParsePure.java: Caution: Using given file as the .java file, even though it is not the java file for ParsePure on the classpath
+    [TIME]
 
 ParsePure ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:15: Error: A pure constructor may not have a modifies clause
+src|test|resources|ParsePure.java:15: Error: A pure constructor may not have a modifies clause
         //@ modifies \everything;  // ERROR
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:16: Associated declaration: 
+src|test|resources|ParsePure.java:16: Associated declaration: 
         //@ pure
             ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.0050 s 22341760 bytes total] (aborted)
+  [TIME total] (aborted)
 
 A ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:27: Error: A pure method may not have a modifies clause
+src|test|resources|ParsePure.java:27: Error: A pure method may not have a modifies clause
         //@ also modifies \everything; // ERROR
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:52: Associated declaration: 
+src|test|resources|ParsePure.java:52: Associated declaration: 
         //@ pure
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:29: Error: A pure method may not have a modifies clause
+src|test|resources|ParsePure.java:29: Error: A pure method may not have a modifies clause
         //@ also modifies \everything; // ERROR
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:57: Associated declaration: 
+src|test|resources|ParsePure.java:57: Associated declaration: 
 //@ pure
     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:31: Error: A pure method may not have a modifies clause
+src|test|resources|ParsePure.java:31: Error: A pure method may not have a modifies clause
         //@ also modifies \everything; // ERROR
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:38: Associated declaration: 
+src|test|resources|ParsePure.java:38: Associated declaration: 
         //@ pure
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:33: Error: A pure method may not have a modifies clause
+src|test|resources|ParsePure.java:33: Error: A pure method may not have a modifies clause
         //@ also modifies \everything;  // ERROR
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:42: Associated declaration: 
+src|test|resources|ParsePure.java:42: Associated declaration: 
 //@ pure
     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:44: Error: A pure constructor may not have a modifies clause
+src|test|resources|ParsePure.java:44: Error: A pure constructor may not have a modifies clause
         //@ modifies \everything; // ERROR
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParsePure.java:42: Associated declaration: 
+src|test|resources|ParsePure.java:42: Associated declaration: 
 //@ pure
     ^
-  [0.0080 s 22705680 bytes total] (aborted)
+  [TIME total] (aborted)
 
 B ...
-  [0.0 s 22707728 bytes total]
+  [TIME total]
 
 D ...
-  [0.0 s 22708752 bytes total]
+  [TIME total]
 
 C ...
-  [0.0 s 22708752 bytes total]
+  [TIME total]
 
 E ...
-  [0.0 s 22709776 bytes total]
+  [TIME total]
 2 cautions
 6 errors

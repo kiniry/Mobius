@@ -1,21 +1,21 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ticket59.java: Caution: Using given file as the .java file, even though it is not the java file for Ticket59 on the classpath
-    [0.0020 s 39064248 bytes]
+ESC/Java version VERSION
+src|test|resources|Ticket59.java: Caution: Using given file as the .java file, even though it is not the java file for Ticket59 on the classpath
+    [TIME]
 
 Ticket59 ...
-  Prover started:0.075 s 42089480 bytes
-    [0.272 s 42298464 bytes]
+  Prover started:TIME
+    [TIME]
 
 Ticket59: main(java.lang.String[]) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ticket59.java:5: Warning: Possible null dereference (Null)
+src|test|resources|Ticket59.java:5: Warning: Possible null dereference (Null)
         System.out.println("hi");
                   ^
 ------------------------------------------------------------------------
-    [0.138 s 42644976 bytes]  failed
+    [TIME]  failed
 
 Ticket59: Ticket59() ...
-    [0.0060 s 42799920 bytes]  passed
-  [0.417 s 42800944 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning

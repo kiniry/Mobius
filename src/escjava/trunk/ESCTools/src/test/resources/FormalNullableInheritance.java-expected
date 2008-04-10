@@ -1,144 +1,144 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/FormalNullableInheritance.java: Caution: Using given file as the .java file, even though it is not the java file for FormalNullableInheritance on the classpath
-    [0.0050 s 18055872 bytes]
+ESC/Java version VERSION
+src|test|resources|FormalNullableInheritance.java: Caution: Using given file as the .java file, even though it is not the java file for FormalNullableInheritance on the classpath
+    [TIME]
 
 FormalNullableInheritance ...
-  Prover started:0.058 s 19558960 bytes
-    [0.182 s 19670432 bytes]
+  Prover started:TIME
+    [TIME]
 
 FormalNullableInheritance: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 19673856 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: n(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 19677280 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: q(java.lang.Object) ...
-    [0.0 s 19679328 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: r(java.lang.Object) ...
-    [0.0 s 19681376 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: s(java.lang.Object) ...
-    [0.0 s 19683424 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: t1(java.lang.Object) ...
-    [0.0 s 19685472 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: t2(java.lang.Object) ...
-    [0.0 s 19687520 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: t3(java.lang.Object) ...
-    [0.0 s 19690592 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: v1(java.lang.Object) ...
-    [0.0 s 19692640 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: v2(java.lang.Object) ...
-    [0.0 s 19694688 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: v3(java.lang.Object) ...
-    [0.0 s 19696736 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FormalNullableInheritance: FormalNullableInheritance() ...
-    [0.094 s 19843408 bytes]  passed
-  [0.278 s 19844432 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 FNIHelper ...
-    [0.0010 s 19924936 bytes]
+    [TIME]
 
 FNIHelper: m(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 19928296 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper: q(java.lang.Object) ...
-    [0.0 s 19930344 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper: r(java.lang.Object) ...
-    [0.0 s 19932392 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper: s(java.lang.Object) ...
-    [0.0 s 19934440 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper: v1(java.lang.Object) ...
-    [0.0 s 19937512 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper: v2(java.lang.Object) ...
-    [0.0 s 19939560 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper: v3(java.lang.Object) ...
-    [0.0 s 19941608 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper: FNIHelper() ...
-    [0.012 s 20083424 bytes]  passed
-  [0.014 s 20084448 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 FNIHelper2 ...
-    [0.018 s 18299664 bytes]
+    [TIME]
 
 FNIHelper2: n(java.lang.Object, java.lang.Object, java.lang.Object) ...
-    [0.0 s 18303024 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper2: q(java.lang.Object) ...
-    [0.0 s 18305072 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper2: r(java.lang.Object) ...
-    [0.0 s 18307120 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper2: s(java.lang.Object) ...
-    [0.0 s 18309168 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelper2: FNIHelper2() ...
-    [0.014 s 18461224 bytes]  passed
-  [0.034 s 18462248 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 FNIHelperT ...
-    [0.0010 s 18536760 bytes]
+    [TIME]
 
 FNIHelperT: t1(java.lang.Object) ...
-    [0.0 s 18538808 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelperT: t2(java.lang.Object) ...
-    [0.0 s 18540856 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelperT: t3(java.lang.Object) ...
-    [0.0 s 18542904 bytes]  passed immediately
-  [0.01 s 18543928 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 FNIHelperTT ...
-    [0.0010 s 18610184 bytes]
+    [TIME]
 
 FNIHelperTT: t1(java.lang.Object) ...
-    [0.0 s 18612232 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelperTT: t2(java.lang.Object) ...
-    [0.0 s 18614280 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelperTT: t3(java.lang.Object) ...
-    [0.0 s 18616328 bytes]  passed immediately
-  [0.0010 s 18618432 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 FNIHelperV ...
-    [0.0010 s 18683640 bytes]
+    [TIME]
 
 FNIHelperV: v1(java.lang.Object) ...
-    [0.0 s 18685688 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelperV: v2(java.lang.Object) ...
-    [0.0 s 18687736 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelperV: v3(java.lang.Object) ...
-    [0.0 s 18689784 bytes]  passed immediately
-  [0.0070 s 18690808 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 FNIHelperVV ...
-    [0.0010 s 18757064 bytes]
+    [TIME]
 
 FNIHelperVV: v1(java.lang.Object) ...
-    [0.0 s 18759112 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelperVV: v2(java.lang.Object) ...
-    [0.0 s 18761160 bytes]  passed immediately
+    [TIME]  passed immediately
 
 FNIHelperVV: v3(java.lang.Object) ...
-    [0.0 s 18763208 bytes]  passed immediately
-  [0.0010 s 18765312 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution

@@ -1,141 +1,141 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java: Caution: Using given file as the .java file, even though it is not the java file for NonNull on the classpath
-    [0.0030 s 21705384 bytes]
+ESC/Java version VERSION
+src|test|resources|NonNull.java: Caution: Using given file as the .java file, even though it is not the java file for NonNull on the classpath
+    [TIME]
 
 non_null ...
-  Prover started:0.074 s 22688960 bytes
-    [0.173 s 22753632 bytes]
+  Prover started:TIME
+    [TIME]
 
 non_null: non_null() ...
-    [0.072 s 22904368 bytes]  passed
-  [0.245 s 22905392 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 NonNull ...
-    [0.0060 s 23113472 bytes]
+    [TIME]
 
 NonNull: qq(non_null) ...
-    [0.011 s 23171272 bytes]  passed
+    [TIME]  passed
 
 NonNull: q(java.lang.Object) ...
-    [0.029 s 23242384 bytes]  passed
+    [TIME]  passed
 
 NonNull: m(int) ...
-    [0.0 s 23244432 bytes]  passed immediately
+    [TIME]  passed immediately
 
 NonNull: m(java.lang.Object) ...
-    [0.0 s 23246480 bytes]  passed immediately
+    [TIME]  passed immediately
 
 NonNull: m(non_null) ...
-    [0.0 s 23248528 bytes]  passed immediately
+    [TIME]  passed immediately
 
 NonNull: NonNull(int) ...
-    [0.0 s 23249552 bytes]  passed immediately
+    [TIME]  passed immediately
 
 NonNull: NonNull(java.lang.Object) ...
-    [0.0 s 23252624 bytes]  passed immediately
+    [TIME]  passed immediately
 
 NonNull: NonNull(non_null) ...
-    [0.0010 s 23254728 bytes]  passed immediately
+    [TIME]  passed immediately
 
 NonNull: p() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java:20: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src|test|resources|NonNull.java:20: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 m(o);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java", line 11, col 19:
+Associated declaration is "src|test|resources|NonNull.java", line 11, col 19:
         model pure void m(non_null Object i);
                           ^
 ------------------------------------------------------------------------
-    [0.016 s 23514568 bytes]  failed
+    [TIME]  failed
 
 NonNull: p2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src|test|resources|NonNull.java:24: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 new NonNull(o);
                            ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java", line 15, col 20:
+Associated declaration is "src|test|resources|NonNull.java", line 15, col 20:
         model pure NonNull(non_null Object i);
                            ^
 ------------------------------------------------------------------------
-    [0.034 s 22077728 bytes]  failed
+    [TIME]  failed
 
 NonNull: p3() ...
-    [0.018 s 22616952 bytes]  passed
+    [TIME]  passed
 
 NonNull: p4() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java:34: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src|test|resources|NonNull.java:34: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 q(o);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java", line 8, col 24:
+Associated declaration is "src|test|resources|NonNull.java", line 8, col 24:
         /*@ pure */ void q(/*@ non_null */ Object o) {}
                                ^
 ------------------------------------------------------------------------
-    [0.015 s 22859616 bytes]  failed
+    [TIME]  failed
 
 NonNull: r() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
+src|test|resources|NonNull.java:40: Warning: Possible assignment of null to variable declared non_null (NonNull)
                 q(o);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/NonNull.java", line 8, col 24:
+Associated declaration is "src|test|resources|NonNull.java", line 8, col 24:
         /*@ pure */ void q(/*@ non_null */ Object o) {}
                                ^
 ------------------------------------------------------------------------
-    [0.016 s 23100120 bytes]  failed
+    [TIME]  failed
 
 NonNull: NonNull() ...
-    [0.0050 s 23251936 bytes]  passed
-  [0.152 s 23252960 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 nullable ...
-    [0.0010 s 23324024 bytes]
+    [TIME]
 
 nullable: nullable() ...
-    [0.01 s 23476864 bytes]  passed
-  [0.011 s 23477888 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 Nullable ...
-    [0.0030 s 23662352 bytes]
+    [TIME]
 
 Nullable: q2(java.lang.Object) ...
-    [0.037 s 23721176 bytes]  passed
+    [TIME]  passed
 
 Nullable: m2(int) ...
-    [0.0 s 23723224 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Nullable: m2(java.lang.Object) ...
-    [0.0 s 23725272 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Nullable: m2(nullable) ...
-    [0.0 s 23727320 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Nullable: Nullable(int) ...
-    [0.0 s 23728344 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Nullable: Nullable(java.lang.Object) ...
-    [0.0 s 23731416 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Nullable: Nullable(nullable) ...
-    [0.0 s 23732440 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Nullable: pp() ...
-    [0.0040 s 23835544 bytes]  passed
+    [TIME]  passed
 
 Nullable: pp2() ...
-    [0.0060 s 23980688 bytes]  passed
+    [TIME]  passed
 
 Nullable: pp3() ...
-    [0.022 s 21985864 bytes]  passed
+    [TIME]  passed
 
 Nullable: pp4() ...
-    [0.0040 s 22087928 bytes]  passed
+    [TIME]  passed
 
 Nullable: r2() ...
-    [0.0050 s 22189024 bytes]  passed
+    [TIME]  passed
 
 Nullable: Nullable() ...
-    [0.0050 s 22342888 bytes]  passed
-  [0.086 s 22343912 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 4 warnings

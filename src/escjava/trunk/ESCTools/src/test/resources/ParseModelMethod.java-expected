@@ -1,24 +1,24 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseModelMethod.java: Caution: Using given file as the .java file, even though it is not the java file for ParseModelMethod on the classpath
-    [0.0020 s 22527400 bytes]
+ESC/Java version VERSION
+src|test|resources|ParseModelMethod.java: Caution: Using given file as the .java file, even though it is not the java file for ParseModelMethod on the classpath
+    [TIME]
 
 ParseModelMethod ...
-  Prover started:0.059 s 23550280 bytes
-    [0.189 s 22510112 bytes]
+  Prover started:TIME
+    [TIME]
 
 ParseModelMethod: m() ...
-    [0.043 s 22572896 bytes]  passed
+    [TIME]  passed
 
 ParseModelMethod: q(int) ...
-    [0.0060 s 22642880 bytes]  passed
+    [TIME]  passed
 
 ParseModelMethod: mm() ...
-    [0.0 s 22643904 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ParseModelMethod: p() ...
-    [0.0 s 22645952 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ParseModelMethod: ParseModelMethod() ...
-    [0.0070 s 22813128 bytes]  passed
-  [0.245 s 22814152 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

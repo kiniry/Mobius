@@ -1,63 +1,63 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java: Caution: Using given file as the .java file, even though it is not the java file for PureModifies on the classpath
-    [0.0030 s 22663432 bytes]
+ESC/Java version VERSION
+src|test|resources|PureModifies.java: Caution: Using given file as the .java file, even though it is not the java file for PureModifies on the classpath
+    [TIME]
 
 PureModifies ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:15: Error: A pure method may not have a modifies clause
+src|test|resources|PureModifies.java:15: Error: A pure method may not have a modifies clause
         //@ modifies \everything; // ERROR
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:16: Associated declaration: 
+src|test|resources|PureModifies.java:16: Associated declaration: 
         //@ pure
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:34: Error: A pure method may not have a modifies clause
+src|test|resources|PureModifies.java:34: Error: A pure method may not have a modifies clause
         //@ modifies \everything; // ERROR
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:35: Associated declaration: 
+src|test|resources|PureModifies.java:35: Associated declaration: 
         //@ pure
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:43: Error: A pure method may not have a modifies clause
+src|test|resources|PureModifies.java:43: Error: A pure method may not have a modifies clause
         //@     modifies \everything; // ERROR
                          ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:45: Associated declaration: 
+src|test|resources|PureModifies.java:45: Associated declaration: 
         //@ pure
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:50: Error: A pure method may not have a modifies clause
+src|test|resources|PureModifies.java:50: Error: A pure method may not have a modifies clause
         modifies \everything;  // ERROR
                  ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:51: Associated declaration: 
+src|test|resources|PureModifies.java:51: Associated declaration: 
         pure model void mm();
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:56: Error: A pure constructor may not have a modifies clause
+src|test|resources|PureModifies.java:56: Error: A pure constructor may not have a modifies clause
         modifies \everything;  // ERROR
                  ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:57: Associated declaration: 
+src|test|resources|PureModifies.java:57: Associated declaration: 
         pure model PureModifies(Object o);
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:64: Error: A pure constructor may not have a modifies clause
+src|test|resources|PureModifies.java:64: Error: A pure constructor may not have a modifies clause
         //@ modifies \everything; // ERROR
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:65: Associated declaration: 
+src|test|resources|PureModifies.java:65: Associated declaration: 
         //@ pure
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:77: Error: A pure method may not have a modifies clause
+src|test|resources|PureModifies.java:77: Error: A pure method may not have a modifies clause
         //@ also modifies \everything;  // ERROR
                           ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:90: Associated declaration: 
+src|test|resources|PureModifies.java:90: Associated declaration: 
         //@ pure
             ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.01 s 23084344 bytes total] (aborted)
+  [TIME total] (aborted)
 
 PureModifiesA ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:84: Error: A pure constructor may not have a modifies clause
+src|test|resources|PureModifies.java:84: Error: A pure constructor may not have a modifies clause
         //@ modifies \everything;  // ERROR
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PureModifies.java:81: Associated declaration: 
+src|test|resources|PureModifies.java:81: Associated declaration: 
 //@ pure
     ^
-  [0.0010 s 23095568 bytes total] (aborted)
+  [TIME total] (aborted)
 
 PureModifiesS ...
-  [0.0050 s 23447576 bytes total]
+  [TIME total]
 2 cautions
 8 errors

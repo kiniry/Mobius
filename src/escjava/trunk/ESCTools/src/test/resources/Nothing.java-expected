@@ -1,22 +1,22 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Nothing.java:14: Fatal error: Unexpected token '\nothing' in Primary expression
+ESC/Java version VERSION
+src|test|resources|Nothing.java:14: Fatal error: Unexpected token '\nothing' in Primary expression
         //@ requires \nothing;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Nothing.java:15: Fatal error: Unexpected token '\nothing' in Primary expression
+src|test|resources|Nothing.java:15: Fatal error: Unexpected token '\nothing' in Primary expression
         //@ ensures \nothing;
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Nothing.java:16: Fatal error: Unexpected token '\nothing' in Primary expression
+src|test|resources|Nothing.java:16: Fatal error: Unexpected token '\nothing' in Primary expression
         //@ diverges \nothing;
                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Nothing.java:17: Fatal error: Unexpected token '\nothing' in Primary expression
+src|test|resources|Nothing.java:17: Fatal error: Unexpected token '\nothing' in Primary expression
         //@ signals (Exception e) \nothing;
                                   ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Nothing.java:18: Fatal error: Unexpected token '\nothing' in Primary expression
+src|test|resources|Nothing.java:18: Fatal error: Unexpected token '\nothing' in Primary expression
         //@ when \nothing;
                  ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Nothing.java:20: Fatal error: Unexpected token '\nothing' in Primary expression
+src|test|resources|Nothing.java:20: Fatal error: Unexpected token '\nothing' in Primary expression
         //@     measured_by \nothing;
                             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Nothing.java: Caution: Using given file as the .java file, even though it is not the java file for Nothing on the classpath
+src|test|resources|Nothing.java: Caution: Using given file as the .java file, even though it is not the java file for Nothing on the classpath
 1 caution
 6 errors

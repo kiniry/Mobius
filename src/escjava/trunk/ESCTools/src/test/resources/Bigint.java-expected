@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Bigint.java: Caution: Using given file as the .java file, even though it is not the java file for Bigint on the classpath
-    [0.0020 s 16772336 bytes]
+ESC/Java version VERSION
+src|test|resources|Bigint.java: Caution: Using given file as the .java file, even though it is not the java file for Bigint on the classpath
+    [TIME]
 
 Bigint ...
-  Prover started:0.06 s 17760080 bytes
-    [0.166 s 17824960 bytes]
+  Prover started:TIME
+    [TIME]
 
 Bigint: Bigint(int) ...
-    [0.073 s 16831480 bytes]  passed
+    [TIME]  passed
 
 Bigint: Bigint(bigint) ...
-    [0.0080 s 17003224 bytes]  passed
-  [0.248 s 17004248 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

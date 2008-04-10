@@ -1,22 +1,22 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MethodInSpec.java: Caution: Using given file as the .java file, even though it is not the java file for MethodInSpec on the classpath
-    [0.0050 s 19656824 bytes]
+ESC/Java version VERSION
+src|test|resources|MethodInSpec.java: Caution: Using given file as the .java file, even though it is not the java file for MethodInSpec on the classpath
+    [TIME]
 
 MethodInSpec ...
-  Prover started:0.07 s 20779928 bytes
-    [0.191 s 20859664 bytes]
+  Prover started:TIME
+    [TIME]
 
 MethodInSpec: meth(int) ...
-    [0.0 s 20861712 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MethodInSpec: meth2(int) ...
-    [0.0 s 20863760 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MethodInSpec: fact(int) ...
-    [0.0 s 20865808 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MethodInSpec: mf() ...
-    [0.117 s 21029568 bytes]  passed
+    [TIME]  passed
 
 MethodInSpec: mff() ...
 Fatal error: Unexpected output encountered while parsing Simplify's output:
@@ -24,51 +24,54 @@ Fatal error: Unexpected output encountered while parsing Simplify's output:
 Bad input: Probable matching loop; increase PROVER_MAX_FNUR if you believe otherwise.
 >	
 ----- End unexpected output -----
-    [1.553 s 21201120 bytes]  unexpectedly missing Simplify output
+    [TIME]  unexpectedly missing Simplify output
 
 MethodInSpec: mr() ...
-  Prover started:0.072 s 21346816 bytes
-    [0.288 s 21536216 bytes]  passed
+  Prover started:TIME
+    [TIME]  passed
 
 MethodInSpec: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MethodInSpec.java:28: Warning: Postcondition possibly not established (Post)
+src|test|resources|MethodInSpec.java:28: Warning: Postcondition possibly not established (Post)
         void m() {} // FAILS
                   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/MethodInSpec.java", line 27, col 5:
+Associated declaration is "src|test|resources|MethodInSpec.java", line 27, col 5:
         //@ ensures meth(1) == 0;
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|MethodInSpec.java", line 28, col 11.
+
 ------------------------------------------------------------------------
-    [0.033 s 21849672 bytes]  failed
+    [TIME]  failed
 
 MethodInSpec: mm() ...
-    [0.015 s 22003816 bytes]  passed
+    [TIME]  passed
 
 MethodInSpec: mmm() ...
-    [0.017 s 22160424 bytes]  passed
+    [TIME]  passed
 
 MethodInSpec: m4(int) ...
-    [0.029 s 20199864 bytes]  passed
+    [TIME]  passed
 
 MethodInSpec: m5() ...
-    [0.016 s 20391248 bytes]  passed
+    [TIME]  passed
 
 MethodInSpec: MethodInSpec() ...
-    [0.0010 s 20393352 bytes]  passed immediately
-  [2.261 s 20394376 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 MMS ...
-    [0.0010 s 20461760 bytes]
+    [TIME]
 
 MMS: mms() ...
-    [0.0 s 20462784 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MMS: mmss() ...
-    [0.0 s 20463808 bytes]  passed immediately
+    [TIME]  passed immediately
 
 MMS: MMS() ...
-    [0.01 s 20629968 bytes]  passed
-  [0.012 s 20630992 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning
 1 error

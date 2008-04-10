@@ -1,40 +1,40 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client8.java: Caution: Using given file as the .java file, even though it is not the java file for Client8 on the classpath
-    [0.0020 s 16888720 bytes]
+ESC/Java version VERSION
+src|test|resources|Client8.java: Caution: Using given file as the .java file, even though it is not the java file for Client8 on the classpath
+    [TIME]
 
 Client8 ...
-  Prover started:0.059 s 17923080 bytes
-    [0.163 s 17995904 bytes]
+  Prover started:TIME
+    [TIME]
 
 Client8: unique(IntList) ...
-    [0.077 s 18238288 bytes]  passed
+    [TIME]  passed
 
 Client8: clear(IntList) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client8.java:15: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|Client8.java:15: Warning: Possible violation of modifies clause (Modifies)
                 list.clear();  // ERROR
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client8.java", line 30, col 21:
+Associated declaration is "src|test|resources|Client8.java", line 30, col 21:
         //@ modifies length,isEmpty;
                             ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Client8.java", line 11, col 5:
+Associated declaration is "src|test|resources|Client8.java", line 11, col 5:
         //@ modifies list.length; // MISSING list.isEmpty;
             ^
 ------------------------------------------------------------------------
-    [0.077 s 17323392 bytes]  failed
+    [TIME]  failed
 
 Client8: Client8() ...
-    [0.0070 s 17480528 bytes]  passed
-  [0.325 s 17481552 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 IntList ...
-    [0.0010 s 17547592 bytes]
+    [TIME]
 
 IntList: unique() ...
-    [0.0 s 17548616 bytes]  passed immediately
+    [TIME]  passed immediately
 
 IntList: clear() ...
-    [0.0 s 17549640 bytes]  passed immediately
-  [0.0090 s 17550664 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 1 warning

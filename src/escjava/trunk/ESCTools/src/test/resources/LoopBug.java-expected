@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/LoopBug.java: Caution: Using given file as the .java file, even though it is not the java file for LoopBug on the classpath
-    [0.0020 s 19728272 bytes]
+ESC/Java version VERSION
+src|test|resources|LoopBug.java: Caution: Using given file as the .java file, even though it is not the java file for LoopBug on the classpath
+    [TIME]
 
 LoopBug ...
-  Prover started:0.059 s 19948616 bytes
-    [0.176 s 20014296 bytes]
+  Prover started:TIME
+    [TIME]
 
 LoopBug: m() ...
-    [0.071 s 20082216 bytes]  passed
+    [TIME]  passed
 
 LoopBug: LoopBug() ...
-    [0.0070 s 20236048 bytes]  passed
-  [0.254 s 20237072 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

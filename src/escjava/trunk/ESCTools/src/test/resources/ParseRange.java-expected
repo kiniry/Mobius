@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseRange.java: Caution: Using given file as the .java file, even though it is not the java file for ParseRange on the classpath
-    [0.0010 s 22170976 bytes]
+ESC/Java version VERSION
+src|test|resources|ParseRange.java: Caution: Using given file as the .java file, even though it is not the java file for ParseRange on the classpath
+    [TIME]
 
 ParseRange ...
-  Prover started:0.06 s 23177248 bytes
-    [0.161 s 23243256 bytes]
+  Prover started:TIME
+    [TIME]
 
 ParseRange: m() ...
-    [0.0 s 23245304 bytes]  passed immediately
+    [TIME]  passed immediately
 
 ParseRange: ParseRange() ...
-    [0.072 s 23406320 bytes]  passed
-  [0.234 s 23408368 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

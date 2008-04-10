@@ -1,58 +1,58 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/DesugaringA.java: Caution: Using given file as the .java file, even though it is not the java file for DesugaringA on the classpath
-    [0.0030 s 16040608 bytes]
+ESC/Java version VERSION
+src|test|resources|DesugaringA.java: Caution: Using given file as the .java file, even though it is not the java file for DesugaringA on the classpath
+    [TIME]
 
 DesugaringA ...
-  Prover started:0.058 s 17214024 bytes
-    [0.161 s 17289616 bytes]
+  Prover started:TIME
+    [TIME]
 
 DesugaringA: m() ...
-    [0.0010 s 17291720 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: mm() ...
-    [0.0 s 17293768 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: m3() ...
-    [0.0 s 17294792 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: m4() ...
-    [0.0 s 17296840 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: m5() ...
-    [0.0 s 17297864 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: m6(java.lang.Object) ...
-    [0.0 s 17299912 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: m13() ...
-    [0.0 s 17301960 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: ppp() ...
-    [0.0 s 17302984 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: ppp1() ...
-    [0.0 s 17305032 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: ppp2() ...
-    [0.0 s 17306056 bytes]  passed immediately
+    [TIME]  passed immediately
 
 DesugaringA: DesugaringA() ...
-    [0.072 s 17500808 bytes]  passed
-  [0.234 s 17501832 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 JJ ...
-    [0.0020 s 17575648 bytes]
+    [TIME]
 
 JJ: ppp() ...
-    [0.0 s 17576672 bytes]  passed immediately
+    [TIME]  passed immediately
 
 JJ: ppp1() ...
-    [0.0 s 17577696 bytes]  passed immediately
+    [TIME]  passed immediately
 
 JJ: ppp2() ...
-    [0.0 s 17579744 bytes]  passed immediately
+    [TIME]  passed immediately
 
 JJ: JJ() ...
-    [0.035 s 17747240 bytes]  passed
-  [0.037 s 17748264 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

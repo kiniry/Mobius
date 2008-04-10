@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaScopeB.java: Caution: Using given file as the .java file, even though it is not the java file for JavaScopeB on the classpath
-    [0.0020 s 18025664 bytes]
+ESC/Java version VERSION
+src|test|resources|JavaScopeB.java: Caution: Using given file as the .java file, even though it is not the java file for JavaScopeB on the classpath
+    [TIME]
 
 JavaScopeB ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaScopeB.java:4: Error: No such type: sub.JavaScopeBB
+src|test|resources|JavaScopeB.java:4: Error: No such type: sub.JavaScopeBB
 import sub.JavaScopeBB;
        ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaScopeB.java:4: Error: No such type: sub.JavaScopeBB
+src|test|resources|JavaScopeB.java:4: Error: No such type: sub.JavaScopeBB
 import sub.JavaScopeBB;
        ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaScopeB.java:5: Fatal error: Can't find type named "JavaScopeBB"
+src|test|resources|JavaScopeB.java:5: Fatal error: Can't find type named "JavaScopeBB"
 public class JavaScopeB extends JavaScopeBB {
                                 ^
 1 caution

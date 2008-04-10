@@ -1,107 +1,107 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java: Caution: Using given file as the .java file, even though it is not the java file for PreconditionWarnings on the classpath
-    [0.0020 s 22113792 bytes]
+ESC/Java version VERSION
+src|test|resources|PreconditionWarnings.java: Caution: Using given file as the .java file, even though it is not the java file for PreconditionWarnings on the classpath
+    [TIME]
 
 PreconditionWarnings ...
-  Prover started:0.062 s 23146784 bytes
-    [0.164 s 23214376 bytes]
+  Prover started:TIME
+    [TIME]
 
 PreconditionWarnings: m(int, int) ...
-    [0.074 s 23314248 bytes]  passed
+    [TIME]  passed
 
 PreconditionWarnings: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:13: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:13: Warning: Precondition possibly not established (Pre)
                 m(1,0);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 6, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 6, col 5:
         //@ requires j < 0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:13: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:13: Warning: Precondition possibly not established (Pre)
                 m(1,0);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 9, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 9, col 5:
         //@ requires j > 0;
             ^
 ------------------------------------------------------------------------
-    [0.045 s 23641248 bytes]  failed
+    [TIME]  failed
 
 PreconditionWarnings: mm1() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:16: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:16: Warning: Precondition possibly not established (Pre)
                 m(0,1);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 8, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 8, col 5:
         //@ requires i > 0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:16: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:16: Warning: Precondition possibly not established (Pre)
                 m(0,1);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 5, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 5, col 5:
         //@ requires i < 0;
             ^
 ------------------------------------------------------------------------
-    [0.018 s 23947952 bytes]  failed
+    [TIME]  failed
 
 PreconditionWarnings: mm2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:19: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:19: Warning: Precondition possibly not established (Pre)
                 m(-1,0);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 9, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 9, col 5:
         //@ requires j > 0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:19: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:19: Warning: Precondition possibly not established (Pre)
                 m(-1,0);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 6, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 6, col 5:
         //@ requires j < 0;
             ^
 ------------------------------------------------------------------------
-    [0.02 s 24267104 bytes]  failed
+    [TIME]  failed
 
 PreconditionWarnings: mm3() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:22: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:22: Warning: Precondition possibly not established (Pre)
                 m(0,-1);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 5, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 5, col 5:
         //@ requires i < 0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:22: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:22: Warning: Precondition possibly not established (Pre)
                 m(0,-1);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 8, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 8, col 5:
         //@ requires i > 0;
             ^
 ------------------------------------------------------------------------
-    [0.02 s 24585072 bytes]  failed
+    [TIME]  failed
 
 PreconditionWarnings: mm4() ...
-    [0.023 s 22616080 bytes]  passed
+    [TIME]  passed
 
 PreconditionWarnings: mm5() ...
-    [0.011 s 22824680 bytes]  passed
+    [TIME]  passed
 
 PreconditionWarnings: mm6() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:31: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:31: Warning: Precondition possibly not established (Pre)
                 m(1,-1);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 9, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 9, col 5:
         //@ requires j > 0;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java:31: Warning: Precondition possibly not established (Pre)
+src|test|resources|PreconditionWarnings.java:31: Warning: Precondition possibly not established (Pre)
                 m(1,-1);
                  ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/PreconditionWarnings.java", line 5, col 5:
+Associated declaration is "src|test|resources|PreconditionWarnings.java", line 5, col 5:
         //@ requires i < 0;
             ^
 ------------------------------------------------------------------------
-    [0.018 s 23143728 bytes]  failed
+    [TIME]  failed
 
 PreconditionWarnings: PreconditionWarnings() ...
-    [0.0080 s 23295488 bytes]  passed
-  [0.401 s 23296512 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 10 warnings

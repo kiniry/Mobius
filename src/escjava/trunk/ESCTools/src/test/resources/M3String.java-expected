@@ -1,21 +1,21 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M3String.java: Caution: Using given file as the .java file, even though it is not the java file for M3String on the classpath
-    [0.0010 s 19690680 bytes]
+ESC/Java version VERSION
+src|test|resources|M3String.java: Caution: Using given file as the .java file, even though it is not the java file for M3String on the classpath
+    [TIME]
 
 M3String ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M3String.java:11: Error: No such field in type java.lang.String
+src|test|resources|M3String.java:11: Error: No such field in type java.lang.String
   //@ modifies o.owner;
                  ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M3String.java:13: Error: No such field in type java.lang.String
+src|test|resources|M3String.java:13: Error: No such field in type java.lang.String
         //@ set o.owner = this;
                   ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M3String.java:14: Error: No such field in type java.lang.String
+src|test|resources|M3String.java:14: Error: No such field in type java.lang.String
         //@  assume o.charArray.length == \old(o.charArray.length);
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M3String.java:14: Error: No such field in type java.lang.String
+src|test|resources|M3String.java:14: Error: No such field in type java.lang.String
         //@  assume o.charArray.length == \old(o.charArray.length);
                                                  ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.038 s 20707136 bytes total] (aborted)
+  [TIME total] (aborted)
 2 cautions
 4 errors

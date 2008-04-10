@@ -1,43 +1,43 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Heavyweight.java: Caution: Using given file as the .java file, even though it is not the java file for Heavyweight on the classpath
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Heavyweight.java:40: Error: Expected a closing |}
+ESC/Java version VERSION
+src|test|resources|Heavyweight.java: Caution: Using given file as the .java file, even though it is not the java file for Heavyweight on the classpath
+src|test|resources|Heavyweight.java:40: Error: Expected a closing |}
         //@    diverges false; // ERROR - missing closing |}
                ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Heavyweight.java:38: Associated declaration: 
+src|test|resources|Heavyweight.java:38: Associated declaration: 
         //@ {| ensures false;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Heavyweight.java:44: Error: JML does not allow empty clause sequences
+src|test|resources|Heavyweight.java:44: Error: JML does not allow empty clause sequences
         //@ also                // ERROR - dangling also
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Heavyweight.java:51: Error: There is no opening {| to match this closing |}
+src|test|resources|Heavyweight.java:51: Error: There is no opening {| to match this closing |}
             |}                  // ERROR - no opening {|
             ^
-    [0.089 s 18117952 bytes]
+    [TIME]
 
 Heavyweight ...
-  Prover started:0.062 s 18527808 bytes
-    [0.201 s 18626400 bytes]
+  Prover started:TIME
+    [TIME]
 
 Heavyweight: m() ...
-    [0.0 s 18628448 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Heavyweight: n() ...
-    [0.0 s 18629472 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Heavyweight: q() ...
-    [0.0 s 18631520 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Heavyweight: badEnd() ...
-    [0.0 s 18632544 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Heavyweight: danglingAlso() ...
-    [0.0 s 18634592 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Heavyweight: missingBegin() ...
-    [0.0 s 18635616 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Heavyweight: Heavyweight() ...
-    [0.06 s 18825624 bytes]  passed
-  [0.261 s 18826648 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 3 errors

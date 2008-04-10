@@ -1,63 +1,75 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java: Caution: Using given file as the .java file, even though it is not the java file for Type on the classpath
-    [0.0030 s 39296888 bytes]
+ESC/Java version VERSION
+src|test|resources|Type.java: Caution: Using given file as the .java file, even though it is not the java file for Type on the classpath
+    [TIME]
 
 Type ...
-  Prover started:0.074 s 40403248 bytes
-    [0.18 s 40474704 bytes]
+  Prover started:TIME
+    [TIME]
 
 Type: Type() ...
-    [0.0 s 40475728 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Type: m1() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java:16: Warning: Postcondition possibly not established (Post)
+src|test|resources|Type.java:16: Warning: Postcondition possibly not established (Post)
         public void m1() {}
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java", line 15, col 5:
+Associated declaration is "src|test|resources|Type.java", line 15, col 5:
         //@ ensures \typeof(null) <: \type(Object); // FAILS
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Type.java", line 16, col 19.
+
 ------------------------------------------------------------------------
-    [0.128 s 39048064 bytes]  failed
+    [TIME]  failed
 
 Type: m2() ...
-    [0.034 s 39145696 bytes]  passed
+    [TIME]  passed
 
 Type: m() ...
-    [0.012 s 39341688 bytes]  passed
+    [TIME]  passed
 
 Type: m3() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java:34: Warning: Postcondition possibly not established (Post)
+src|test|resources|Type.java:34: Warning: Postcondition possibly not established (Post)
         public void m3() {}
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java", line 33, col 5:
+Associated declaration is "src|test|resources|Type.java", line 33, col 5:
         //@ ensures \typeof(b) == \type(int);  // FAILS
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Type.java", line 34, col 19.
+
 ------------------------------------------------------------------------
-    [0.017 s 39558296 bytes]  failed
+    [TIME]  failed
 
 Type: m4() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java:36: Warning: Postcondition possibly not established (Post)
+src|test|resources|Type.java:36: Warning: Postcondition possibly not established (Post)
         public void m4() {}
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java", line 35, col 5:
+Associated declaration is "src|test|resources|Type.java", line 35, col 5:
         //@ ensures \typeof(i) <: \type(Object); // FAILS
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Type.java", line 36, col 19.
+
 ------------------------------------------------------------------------
-    [0.017 s 39774904 bytes]  failed
+    [TIME]  failed
 
 Type: m5() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java:38: Warning: Postcondition possibly not established (Post)
+src|test|resources|Type.java:38: Warning: Postcondition possibly not established (Post)
         public void m5() {}
                           ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Type.java", line 37, col 5:
+Associated declaration is "src|test|resources|Type.java", line 37, col 5:
         //@ ensures \typeof(i) == \typeof(null);  // FAILS
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Type.java", line 38, col 19.
+
 ------------------------------------------------------------------------
-    [0.016 s 39990432 bytes]  failed
-  [0.405 s 39991456 bytes total]
+    [TIME]  failed
+  [TIME total]
 1 caution
 4 warnings

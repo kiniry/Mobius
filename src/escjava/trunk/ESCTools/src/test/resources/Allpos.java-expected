@@ -1,24 +1,24 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Allpos.java: Caution: Using given file as the .java file, even though it is not the java file for Allpos on the classpath
-    [0.023 s 14788584 bytes]
+ESC/Java version VERSION
+src|test|resources|Allpos.java: Caution: Using given file as the .java file, even though it is not the java file for Allpos on the classpath
+    [TIME]
 
 Allpos ...
-  Prover started:0.066 s 15867528 bytes
-    [0.195 s 15934520 bytes]
+  Prover started:TIME
+    [TIME]
 
 Allpos: Allpos() ...
-    [0.0 s 15935544 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Allpos: allpos(int[], int) ...
-    [0.0 s 15938800 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Allpos: diff(int[], int) ...
-    [0.0010 s 15941344 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Allpos: allposLoop(int[]) ...
-    [0.531 s 16317744 bytes]  passed
+    [TIME]  passed
 
 Allpos: allposLoop2(int[]) ...
-    [0.378 s 16144480 bytes]  passed
-  [1.105 s 16145552 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

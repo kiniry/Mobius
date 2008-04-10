@@ -1,103 +1,103 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+ESC/Java version VERSION
+src|test|resources|Assert.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert.java:9: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0;
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:18: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert.java:18: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; 
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:24: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert.java:24: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; //@ nowarn Assert;
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:29: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|Assert.java:29: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java: Caution: Using given file as the .java file, even though it is not the java file for Assert on the classpath
-    [0.132 s 16454352 bytes]
+src|test|resources|Assert.java: Caution: Using given file as the .java file, even though it is not the java file for Assert on the classpath
+    [TIME]
 
 Assert ...
-  Prover started:0.732 s 17973720 bytes
-    [0.923 s 18125008 bytes]
+  Prover started:TIME
+    [TIME]
 
 Assert: m_Exception_Assert(int) ...
-    [0.094 s 18179480 bytes]  passed
+    [TIME]  passed
 
 Assert: mm_Exception_Assert(int) ...
-    [0.0060 s 18243792 bytes]  passed
+    [TIME]  passed
 
 Assert: mm_Nowarn_Nowarn(int) ...
-    [0.0060 s 18306824 bytes]  passed
+    [TIME]  passed
 
 Assert: mmm_Nowarn_Nowarn(int) ...
-    [0.0060 s 18362928 bytes]  passed
+    [TIME]  passed
 
 Assert: nAssertWarn(int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:35: Warning: Possible assertion failure (Assert)
+src|test|resources|Assert.java:35: Warning: Possible assertion failure (Assert)
                 //@ assert false;
                     ^
 ------------------------------------------------------------------------
-    [0.022 s 18603416 bytes]  failed
+    [TIME]  failed
 
 Assert: nNowarn(int) ...
-    [0.0040 s 18667744 bytes]  passed
+    [TIME]  passed
 
 Assert: pPostwarning() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:48: Warning: Postcondition possibly not established (Post)
+src|test|resources|Assert.java:48: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java", line 45, col 5:
+Associated declaration is "src|test|resources|Assert.java", line 45, col 5:
         //@ exsures (java.lang.AssertionError e) false;
             ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java", line 47, col 2.
+    Executed throw in "src|test|resources|Assert.java", line 47, col 2.
 
 ------------------------------------------------------------------------
-    [0.037 s 19066096 bytes]  failed
+    [TIME]  failed
 
 Assert: ppPostwarning() ...
-    [0.125 s 17078968 bytes]  passed
+    [TIME]  passed
 
 Assert: pExceptionwarningShouldCompilerError() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:65: Warning: Possible unexpected exception (Exception)
+src|test|resources|Assert.java:65: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java", line 64, col 2.
+    Executed throw in "src|test|resources|Assert.java", line 64, col 2.
 
 ------------------------------------------------------------------------
-    [0.031 s 17443304 bytes]  failed
+    [TIME]  failed
 
 Assert: qNoWarning(int) ...
-    [0.015 s 17665072 bytes]  passed
+    [TIME]  passed
 
 Assert: qqExceptionWarning(int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java:76: Warning: Possible unexpected exception (Exception)
+src|test|resources|Assert.java:76: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Assert.java", line 75, col 2.
+    Executed throw in "src|test|resources|Assert.java", line 75, col 2.
 
 ------------------------------------------------------------------------
-    [0.09 s 18032440 bytes]  failed
+    [TIME]  failed
 
 Assert: rNowarning() ...
-    [0.017 s 18233288 bytes]  passed
+    [TIME]  passed
 
 Assert: Assert() ...
-    [0.0070 s 18382792 bytes]  passed
-  [1.386 s 18383864 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 4 warnings
 7 errors

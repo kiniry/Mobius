@@ -1,35 +1,35 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/SuperSpecShortBugA.java: Caution: Using given file as the .java file, even though it is not the java file for SuperSpecShortBugA on the classpath
-    [0.0040 s 36504240 bytes]
+ESC/Java version VERSION
+src|test|resources|SuperSpecShortBugA.java: Caution: Using given file as the .java file, even though it is not the java file for SuperSpecShortBugA on the classpath
+    [TIME]
 
 SuperSpecShortBugA ...
-  Prover started:0.076 s 37752576 bytes
-    [0.201 s 37878360 bytes]
+  Prover started:TIME
+    [TIME]
 
 SuperSpecShortBugA: m(P) ...
-    [0.107 s 38024400 bytes]  passed
+    [TIME]  passed
 
 SuperSpecShortBugA: SuperSpecShortBugA() ...
-    [0.0090 s 38178208 bytes]  passed
-  [0.317 s 38179232 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 CSuperSpecShortBug ...
-    [0.0020 s 38303456 bytes]
+    [TIME]
 
 CSuperSpecShortBug: m(P) ...
-    [0.028 s 38430096 bytes]  passed
+    [TIME]  passed
 
 CSuperSpecShortBug: CSuperSpecShortBug() ...
-    [0.0060 s 38599360 bytes]  passed
-  [0.037 s 38600384 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 P ...
-    [0.0010 s 38666696 bytes]
+    [TIME]
 
 P: mmm() ...
-    [0.0090 s 38720208 bytes]  passed
+    [TIME]  passed
 
 P: P() ...
-    [0.0050 s 38869920 bytes]  passed
-  [0.016 s 38870944 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

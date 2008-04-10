@@ -1,51 +1,51 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:46: Error: Cannot have modifiers outside of the annotation on a TypeDeclElem pragma
+ESC/Java version VERSION
+src|test|resources|Ghost.java:46: Error: Cannot have modifiers outside of the annotation on a TypeDeclElem pragma
         //@ ghost int iii; // ERROR -- public must be in the annotatio ...
                   ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:48: Error: Expected a declaration within the annotation following the ghost keyword
+src|test|resources|Ghost.java:48: Error: Expected a declaration within the annotation following the ghost keyword
         /*@ ghost */ int jjj; // ERROR -- decl must be in annotation w ...
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java: Caution: Using given file as the .java file, even though it is not the java file for Ghost on the classpath
-    [0.0050 s 17947264 bytes]
+src|test|resources|Ghost.java: Caution: Using given file as the .java file, even though it is not the java file for Ghost on the classpath
+    [TIME]
 
 Ghost ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:75: Caution: Variable a might not have been initialized
+src|test|resources|Ghost.java:75: Caution: Variable a might not have been initialized
         int a;
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:79: Error: May not specify both static and instance on a declaration
+src|test|resources|Ghost.java:79: Error: May not specify both static and instance on a declaration
         //@ ghost instance static int interkinst2; // ERROR -- static  ...
                   ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:29: Error: Undefined variable 'i'
+src|test|resources|Ghost.java:29: Error: Undefined variable 'i'
                 int q = i;  // ERROR -- i is only annotation
                         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:37: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+src|test|resources|Ghost.java:37: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 //@ set ii = superinst; // ERROR - in static method
                              ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:39: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+src|test|resources|Ghost.java:39: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
                 //@ set ii = interkinst; // ERROR - in static method
                              ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:52: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+src|test|resources|Ghost.java:52: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
         //@ static ghost int temp = interkinst; // ERROR -- interkinst ...
                                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:53: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+src|test|resources|Ghost.java:53: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
         //@ static ghost int temp2 = ppp; // ERROR -- ppp is instance
                                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:57: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+src|test|resources|Ghost.java:57: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
         //@ static ghost int temp4 = superinst; // ERROR -- superinst  ...
                                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:58: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
+src|test|resources|Ghost.java:58: Error: An instance field may be accessed only via an object and/or from a non-static context or an inner class enclosed by a type possessing that field.
         //@ static ghost int temp5 = superinst2; // ERROR -- superinst ...
                                      ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Ghost.java:68: Error: May not specify both static and instance on a declaration
+src|test|resources|Ghost.java:68: Error: May not specify both static and instance on a declaration
         //@ static ghost instance int superiii; // ERROR -- static and ...
                          ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.019 s 18723800 bytes total] (aborted)
+  [TIME total] (aborted)
 
 GhostA ...
-  [0.0 s 18724824 bytes total]
+  [TIME total]
 
 GhostI ...
-  [0.0 s 18725848 bytes total]
+  [TIME total]
 3 cautions
 11 errors

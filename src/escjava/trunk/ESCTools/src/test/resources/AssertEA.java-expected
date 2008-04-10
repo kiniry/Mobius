@@ -1,94 +1,94 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:7: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+ESC/Java version VERSION
+src|test|resources|AssertEA.java:7: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|AssertEA.java:8: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0;
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|AssertEA.java:16: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|AssertEA.java:17: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; 
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|AssertEA.java:22: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert true : "Hi";
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|AssertEA.java:23: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
                 assert false : 0; //@ nowarn Assert;
                 ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java: Caution: Using given file as the .java file, even though it is not the java file for AssertEA on the classpath
-    [0.0050 s 15326272 bytes]
+src|test|resources|AssertEA.java: Caution: Using given file as the .java file, even though it is not the java file for AssertEA on the classpath
+    [TIME]
 
 AssertEA ...
-  Prover started:0.066 s 16353936 bytes
-    [0.25 s 16491520 bytes]
+  Prover started:TIME
+    [TIME]
 
 AssertEA: m_Exception_Assert(int) ...
-    [0.09 s 16546136 bytes]  passed
+    [TIME]  passed
 
 AssertEA: mm_Exception_Assert(int) ...
-    [0.0050 s 16610224 bytes]  passed
+    [TIME]  passed
 
 AssertEA: mm_Nowarn_Nowarn(int) ...
-    [0.0040 s 16672952 bytes]  passed
+    [TIME]  passed
 
 AssertEA: nAssertWarn(int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:29: Warning: Possible assertion failure (Assert)
+src|test|resources|AssertEA.java:29: Warning: Possible assertion failure (Assert)
                 //@ assert false;
                     ^
 ------------------------------------------------------------------------
-    [0.021 s 16904280 bytes]  failed
+    [TIME]  failed
 
 AssertEA: nNowarn(int) ...
-    [0.0040 s 16968048 bytes]  passed
+    [TIME]  passed
 
 AssertEA: pPostwarning() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:42: Warning: Postcondition possibly not established (Post)
+src|test|resources|AssertEA.java:42: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java", line 39, col 5:
+Associated declaration is "src|test|resources|AssertEA.java", line 39, col 5:
         //@ exsures (java.lang.AssertionError e) false;
             ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java", line 41, col 2.
+    Executed throw in "src|test|resources|AssertEA.java", line 41, col 2.
 
 ------------------------------------------------------------------------
-    [0.032 s 17343208 bytes]  failed
+    [TIME]  failed
 
 AssertEA: pExceptionwarningShouldCompilerError() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:51: Warning: Possible unexpected exception (Exception)
+src|test|resources|AssertEA.java:51: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java", line 50, col 2.
+    Executed throw in "src|test|resources|AssertEA.java", line 50, col 2.
 
 ------------------------------------------------------------------------
-    [0.031 s 17697400 bytes]  failed
+    [TIME]  failed
 
 AssertEA: qNoWarning(int) ...
-    [0.017 s 17916176 bytes]  passed
+    [TIME]  passed
 
 AssertEA: qqExceptionWarning(int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java:62: Warning: Possible unexpected exception (Exception)
+src|test|resources|AssertEA.java:62: Warning: Possible unexpected exception (Exception)
         }
         ^
 Execution trace information:
-    Executed throw in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AssertEA.java", line 61, col 2.
+    Executed throw in "src|test|resources|AssertEA.java", line 61, col 2.
 
 ------------------------------------------------------------------------
-    [0.033 s 18273448 bytes]  failed
+    [TIME]  failed
 
 AssertEA: rNowarning() ...
-    [0.022 s 16090696 bytes]  passed
+    [TIME]  passed
 
 AssertEA: AssertEA() ...
-    [0.0060 s 16239808 bytes]  passed
-  [0.518 s 16240880 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 4 warnings
 6 errors

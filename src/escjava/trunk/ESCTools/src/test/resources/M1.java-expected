@@ -1,31 +1,31 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M1.java: Caution: Using given file as the .java file, even though it is not the java file for M1 on the classpath
-    [0.0020 s 19854528 bytes]
+ESC/Java version VERSION
+src|test|resources|M1.java: Caution: Using given file as the .java file, even though it is not the java file for M1 on the classpath
+    [TIME]
 
 M1 ...
-  Prover started:0.467 s 20202608 bytes
-    [0.589 s 20268912 bytes]
+  Prover started:TIME
+    [TIME]
 
 M1: M1() ...
-    [0.0 s 20270960 bytes]  passed immediately
+    [TIME]  passed immediately
 
 M1: P(java.lang.Object) ...
-    [0.076 s 20351368 bytes]  passed
+    [TIME]  passed
 
 M1: m(java.lang.Object) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M1.java:30: Warning: Postcondition possibly not established (Post)
+src|test|resources|M1.java:30: Warning: Postcondition possibly not established (Post)
   }
   ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M1.java", line 17, col 8:
+Associated declaration is "src|test|resources|M1.java", line 17, col 8:
         ensures !\result;
         ^
 Execution trace information:
-    Executed else branch in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M1.java", line 26, col 4.
-    Executed return in "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/M1.java", line 29, col 4.
+    Executed else branch in "src|test|resources|M1.java", line 26, col 4.
+    Executed return in "src|test|resources|M1.java", line 29, col 4.
 
 ------------------------------------------------------------------------
-    [0.067 s 20826176 bytes]  failed
-  [0.733 s 20827200 bytes total]
+    [TIME]  failed
+  [TIME total]
 1 caution
 1 warning

@@ -1,25 +1,25 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod.java: Caution: Using given file as the .java file, even though it is not the java file for Mod on the classpath
-    [0.0030 s 20494504 bytes]
+ESC/Java version VERSION
+src|test|resources|Mod.java: Caution: Using given file as the .java file, even though it is not the java file for Mod on the classpath
+    [TIME]
 
 Mod ...
-  Prover started:0.059 s 20720616 bytes
-    [0.177 s 20799600 bytes]
+  Prover started:TIME
+    [TIME]
 
 Mod: mm() ...
-    [0.083 s 20939520 bytes]  passed
+    [TIME]  passed
 
 Mod: mmm() ...
-    [0.049 s 21143048 bytes]  passed
+    [TIME]  passed
 
 Mod: Mod() ...
-    [0.0 s 21144072 bytes]  passed immediately
-  [0.31 s 21145096 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 
 ModA ...
-    [0.0010 s 21211472 bytes]
+    [TIME]
 
 ModA: ModA() ...
-    [0.0 s 21212496 bytes]  passed immediately
-  [0.01 s 21213520 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution

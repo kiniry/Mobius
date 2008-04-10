@@ -1,12 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/EmptyEx.java: Caution: Using given file as the .java file, even though it is not the java file for EmptyEx on the classpath
-    [0.0010 s 16544512 bytes]
+ESC/Java version VERSION
+src|test|resources|EmptyEx.java: Caution: Using given file as the .java file, even though it is not the java file for EmptyEx on the classpath
+    [TIME]
 
 EmptyEx ...
-  Prover started:0.06 s 16556480 bytes
-    [0.176 s 16622176 bytes]
+  Prover started:TIME
+    [TIME]
 
 EmptyEx: EmptyEx() ...
-    [0.074 s 16773424 bytes]  passed
-  [0.251 s 16774448 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

@@ -1,71 +1,71 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java:19: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+ESC/Java version VERSION
+src|test|resources|AlsoInherit.java:19: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
         //@ also_ensures true;  // OBSOLETE
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java:22: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
+src|test|resources|AlsoInherit.java:22: Error: Original ESC/Java keywords beginning with also_ are obsolete; they have been replaced with the corresponding JML keywords and the use of 'also' - note that the semantics has also changed.
         //@ also_exsures (Exception) true; // OBSOLETE
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java: Caution: Using given file as the .java file, even though it is not the java file for AlsoInherit on the classpath
-    [0.0050 s 16002272 bytes]
+src|test|resources|AlsoInherit.java: Caution: Using given file as the .java file, even though it is not the java file for AlsoInherit on the classpath
+    [TIME]
 
 AlsoInherit ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java:6: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+src|test|resources|AlsoInherit.java:6: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
         public void m();  // ERROR - no also
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java:29: Associated declaration: 
+src|test|resources|AlsoInherit.java:29: Associated declaration: 
         public void m();
                ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java:15: Caution: No initial also expected since there are no overridden or refined methods
+src|test|resources|AlsoInherit.java:15: Caution: No initial also expected since there are no overridden or refined methods
         //@ also                // ERROR - should not have an also
             ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java:20: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
+src|test|resources|AlsoInherit.java:20: Caution: JML requires a specification to begin with 'also' when the method overrides other methods
         public void p();        // ERROR - should have an also
                     ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java:35: Associated declaration: 
+src|test|resources|AlsoInherit.java:35: Associated declaration: 
         public void p();
                ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/AlsoInherit.java:31: Caution: No initial also expected since there are no overridden or refined methods
+src|test|resources|AlsoInherit.java:31: Caution: No initial also expected since there are no overridden or refined methods
         //@ also                // ERROR - no also expected
             ^
-  Prover started:0.061 s 17088848 bytes
-    [0.189 s 17160104 bytes]
+  Prover started:TIME
+    [TIME]
 
 AlsoInherit: m() ...
-    [0.0 s 17161128 bytes]  passed immediately
+    [TIME]  passed immediately
 
 AlsoInherit: n() ...
-    [0.0 s 17163176 bytes]  passed immediately
+    [TIME]  passed immediately
 
 AlsoInherit: malso() ...
-    [0.0 s 17164224 bytes]  passed immediately
+    [TIME]  passed immediately
 
 AlsoInherit: nalso() ...
-    [0.0 s 17166296 bytes]  passed immediately
+    [TIME]  passed immediately
 
 AlsoInherit: p() ...
-    [0.0 s 17167336 bytes]  passed immediately
+    [TIME]  passed immediately
 
 AlsoInherit: pp() ...
-    [0.0 s 17169400 bytes]  passed immediately
+    [TIME]  passed immediately
 
 AlsoInherit: AlsoInherit() ...
-    [0.064 s 17311176 bytes]  passed
-  [0.255 s 17312248 bytes total]
+    [TIME]  passed
+  [TIME total]
 
 Parent ...
-    [0.0030 s 17384008 bytes]
+    [TIME]
 
 Parent: m() ...
-    [0.0 s 17385032 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Parent: malso() ...
-    [0.0 s 17387080 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Parent: p() ...
-    [0.0 s 17388104 bytes]  passed immediately
+    [TIME]  passed immediately
 
 Parent: Parent() ...
-    [0.0090 s 17539928 bytes]  passed
-  [0.014 s 17541000 bytes total]
+    [TIME]  passed
+  [TIME total]
 5 cautions
 2 errors

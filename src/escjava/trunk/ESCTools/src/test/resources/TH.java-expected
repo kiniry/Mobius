@@ -1,42 +1,42 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/TH.java: Caution: Using given file as the .java file, even though it is not the java file for TH on the classpath
-    [0.0020 s 24459672 bytes]
+ESC/Java version VERSION
+src|test|resources|TH.java: Caution: Using given file as the .java file, even though it is not the java file for TH on the classpath
+    [TIME]
 
 TH ...
-  Prover started:0.073 s 25477720 bytes
-    [0.177 s 25543000 bytes]
+  Prover started:TIME
+    [TIME]
 
 TH: TH() ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/TH.java:10: Error: There is no assignable clause allowing this method call
+src|test|resources|TH.java:10: Error: There is no assignable clause allowing this method call
         public TH() {}
                     ^
 /System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class: Associated declaration: 
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/TH.java:9: Associated declaration: 
+src|test|resources|TH.java:9: Associated declaration: 
         //@ modifies \nothing;
             ^
-    [0.072 s 25733072 bytes]  passed
+    [TIME]  passed
 
 TH: TH(TH) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/TH.java:16: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|TH.java:16: Warning: Possible violation of modifies clause (Modifies)
         public TH(TH x) {
                         ^
 Associated declaration is "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Classes/classes.jar:java/lang/Object.class":
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/TH.java", line 14, col 5:
+Associated declaration is "src|test|resources|TH.java", line 14, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.05 s 26146328 bytes]  failed
+    [TIME]  failed
 
 TH: m() ...
-    [0.019 s 26510544 bytes]  passed
+    [TIME]  passed
 
 TH: mm() ...
-    [0.058 s 24531728 bytes]  passed
+    [TIME]  passed
 
 TH: TH(int) ...
-    [0.011 s 24748536 bytes]  passed
-  [0.387 s 24749560 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 1 warning
 1 error

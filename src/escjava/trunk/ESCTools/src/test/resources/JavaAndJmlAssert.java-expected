@@ -1,77 +1,77 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:6: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+ESC/Java version VERSION
+src|test|resources|JavaAndJmlAssert.java:6: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert true;
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:13: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|JavaAndJmlAssert.java:13: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert false;
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:20: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|JavaAndJmlAssert.java:20: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert true == false;
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:26: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|JavaAndJmlAssert.java:26: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p >= 0;
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:32: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|JavaAndJmlAssert.java:32: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p >= -1;
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:38: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|JavaAndJmlAssert.java:38: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p >= 1;
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:45: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|JavaAndJmlAssert.java:45: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p + q == 10;
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:54: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
+src|test|resources|JavaAndJmlAssert.java:54: Error: Java keyword "assert" is only supported if the -source 1.4 option is provided.
         assert p + q >= 0;
         ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java: Caution: Using given file as the .java file, even though it is not the java file for JavaAndJmlAssert on the classpath
-    [0.0060 s 19204112 bytes]
+src|test|resources|JavaAndJmlAssert.java: Caution: Using given file as the .java file, even though it is not the java file for JavaAndJmlAssert on the classpath
+    [TIME]
 
 JavaAndJmlAssert ...
-  Prover started:0.079 s 20272152 bytes
-    [0.228 s 20338624 bytes]
+  Prover started:TIME
+    [TIME]
 
 JavaAndJmlAssert: trivial_true() ...
-    [0.09 s 20393184 bytes]  passed
+    [TIME]  passed
 
 JavaAndJmlAssert: trivial_false() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:12: Warning: Possible assertion failure (Assert)
+src|test|resources|JavaAndJmlAssert.java:12: Warning: Possible assertion failure (Assert)
         //@ assert false;
             ^
 ------------------------------------------------------------------------
-    [0.039 s 19367256 bytes]  failed
+    [TIME]  failed
 
 JavaAndJmlAssert: constant_boolean_expression() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:19: Warning: Possible assertion failure (Assert)
+src|test|resources|JavaAndJmlAssert.java:19: Warning: Possible assertion failure (Assert)
         //@ assert true == false;
             ^
 ------------------------------------------------------------------------
-    [0.045 s 19542408 bytes]  failed
+    [TIME]  failed
 
 JavaAndJmlAssert: assert_matches_precondition(int) ...
-    [0.0080 s 19620976 bytes]  passed
+    [TIME]  passed
 
 JavaAndJmlAssert: assert_weaker_than_precondition(int) ...
-    [0.0070 s 19700584 bytes]  passed
+    [TIME]  passed
 
 JavaAndJmlAssert: assert_stronger_than_precondition(int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaAndJmlAssert.java:37: Warning: Possible assertion failure (Assert)
+src|test|resources|JavaAndJmlAssert.java:37: Warning: Possible assertion failure (Assert)
         //@ assert p >= 1;
             ^
 ------------------------------------------------------------------------
-    [0.019 s 19883120 bytes]  failed
+    [TIME]  failed
 
 JavaAndJmlAssert: constant_arithmetic(int, int) ...
-    [0.0070 s 19977960 bytes]  passed
+    [TIME]  passed
 
 JavaAndJmlAssert: non_trivial_arithmetic(int, int) ...
-    [0.0070 s 20077864 bytes]  passed
+    [TIME]  passed
 
 JavaAndJmlAssert: JavaAndJmlAssert() ...
-    [0.0070 s 20229648 bytes]  passed
-  [0.458 s 20230672 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 3 warnings
 8 errors

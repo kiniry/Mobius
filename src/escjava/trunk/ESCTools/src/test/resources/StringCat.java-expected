@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringCat.java: Caution: Using given file as the .java file, even though it is not the java file for StringCat on the classpath
-    [0.0030 s 37170560 bytes]
+ESC/Java version VERSION
+src|test|resources|StringCat.java: Caution: Using given file as the .java file, even though it is not the java file for StringCat on the classpath
+    [TIME]
 
 StringCat ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringCat.java:22: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|StringCat.java:22: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
     return xxx+"a";
               ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/StringCat.java:38: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
+src|test|resources|StringCat.java:38: Error: No such method _infixConcat_(java.lang.String, java.lang.String) in type java.lang.String
     return xxx+"a";
               ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.029 s 39159120 bytes total] (aborted)
+  [TIME total] (aborted)
 2 cautions
 2 errors

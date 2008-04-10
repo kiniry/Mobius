@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/HenceBy.java: Caution: Using given file as the .java file, even though it is not the java file for HenceBy on the classpath
-    [0.0020 s 17056208 bytes]
+ESC/Java version VERSION
+src|test|resources|HenceBy.java: Caution: Using given file as the .java file, even though it is not the java file for HenceBy on the classpath
+    [TIME]
 
 HenceBy ...
-  Prover started:0.07 s 18046344 bytes
-    [0.187 s 18111016 bytes]
+  Prover started:TIME
+    [TIME]
 
 HenceBy: m() ...
-    [0.092 s 18165872 bytes]  passed
+    [TIME]  passed
 
 HenceBy: HenceBy() ...
-    [0.0070 s 18316848 bytes]  passed
-  [0.286 s 18317872 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution

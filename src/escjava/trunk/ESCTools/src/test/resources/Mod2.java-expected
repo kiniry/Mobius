@@ -1,57 +1,69 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java: Caution: Using given file as the .java file, even though it is not the java file for Mod2 on the classpath
-    [0.0030 s 18731072 bytes]
+ESC/Java version VERSION
+src|test|resources|Mod2.java: Caution: Using given file as the .java file, even though it is not the java file for Mod2 on the classpath
+    [TIME]
 
 Mod2 ...
-  Prover started:0.178 s 19790656 bytes
-    [0.303 s 19861088 bytes]
+  Prover started:TIME
+    [TIME]
 
 Mod2: m() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java:17: Warning: Postcondition possibly not established (Post)
+src|test|resources|Mod2.java:17: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java", line 10, col 5:
+Associated declaration is "src|test|resources|Mod2.java", line 10, col 5:
         //@ ensures j == 3+a;    // WARNING
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Mod2.java", line 17, col 1.
+
 ------------------------------------------------------------------------
-    [0.138 s 20368216 bytes]  failed
+    [TIME]  failed
 
 Mod2: m1() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java:26: Warning: Postcondition possibly not established (Post)
+src|test|resources|Mod2.java:26: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java", line 19, col 5:
+Associated declaration is "src|test|resources|Mod2.java", line 19, col 5:
         //@ ensures jj == 3+a;   // WARNING
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Mod2.java", line 26, col 1.
+
 ------------------------------------------------------------------------
-    [0.033 s 20837216 bytes]  failed
+    [TIME]  failed
 
 Mod2: m2() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java:35: Warning: Postcondition possibly not established (Post)
+src|test|resources|Mod2.java:35: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java", line 28, col 5:
+Associated declaration is "src|test|resources|Mod2.java", line 28, col 5:
         //@ ensures k == 4+\old(a);  // WARNING 
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Mod2.java", line 35, col 1.
+
 ------------------------------------------------------------------------
-    [0.046 s 19440672 bytes]  failed
+    [TIME]  failed
 
 Mod2: mm(int) ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java:48: Warning: Postcondition possibly not established (Post)
+src|test|resources|Mod2.java:48: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Mod2.java", line 38, col 5:
+Associated declaration is "src|test|resources|Mod2.java", line 38, col 5:
         //@ ensures j == 3+a+0*\old(j); // WARNING
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|Mod2.java", line 48, col 1.
+
 ------------------------------------------------------------------------
-    [0.024 s 19751416 bytes]  failed
+    [TIME]  failed
 
 Mod2: Mod2() ...
-    [0.0 s 19753464 bytes]  passed immediately
-  [0.545 s 19754488 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 4 warnings

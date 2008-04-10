@@ -1,21 +1,21 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseDuration.java: Caution: Using given file as the .java file, even though it is not the java file for ParseDuration on the classpath
-    [0.0020 s 20738096 bytes]
+ESC/Java version VERSION
+src|test|resources|ParseDuration.java: Caution: Using given file as the .java file, even though it is not the java file for ParseDuration on the classpath
+    [TIME]
 
 ParseDuration ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseDuration.java:18: Error: The function \duration takes one argument
+src|test|resources|ParseDuration.java:18: Error: The function \duration takes one argument
         //@ invariant \duration() < 10;
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseDuration.java:19: Error: The function \duration takes one argument
+src|test|resources|ParseDuration.java:19: Error: The function \duration takes one argument
         //@ invariant \duration(m,n) < 10;
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseDuration.java:20: Error: The function \working_space takes one argument
+src|test|resources|ParseDuration.java:20: Error: The function \working_space takes one argument
         //@ invariant \working_space() < 10;
                       ^
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ParseDuration.java:21: Error: The function \working_space takes one argument
+src|test|resources|ParseDuration.java:21: Error: The function \working_space takes one argument
         //@ invariant \working_space(m,n) < 10;
                       ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.011 s 21395000 bytes total] (aborted)
+  [TIME total] (aborted)
 2 cautions
 4 errors

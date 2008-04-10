@@ -1,15 +1,15 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaScope.java: Caution: Using given file as the .java file, even though it is not the java file for JavaScope on the classpath
-    [0.0040 s 19191048 bytes]
+ESC/Java version VERSION
+src|test|resources|JavaScope.java: Caution: Using given file as the .java file, even though it is not the java file for JavaScope on the classpath
+    [TIME]
 
 JavaScope ...
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/JavaScope.java:20: Error: Variable 'b' is already defined here.
+src|test|resources|JavaScope.java:20: Error: Variable 'b' is already defined here.
                                 int b = 0; // ERROR
                                     ^
 Caution: Turning off extended static checking due to type error(s)
-  [0.012 s 19855088 bytes total] (aborted)
+  [TIME total] (aborted)
 
 JSA ...
-  [0.0 s 19859384 bytes total]
+  [TIME total]
 2 cautions
 1 error

@@ -1,35 +1,38 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Instance.java: Caution: Using given file as the .java file, even though it is not the java file for Instance on the classpath
-    [0.0040 s 17733536 bytes]
+ESC/Java version VERSION
+src|test|resources|Instance.java: Caution: Using given file as the .java file, even though it is not the java file for Instance on the classpath
+    [TIME]
 
 Instance ...
-  Prover started:0.061 s 18742400 bytes
-    [0.175 s 18815848 bytes]
+  Prover started:TIME
+    [TIME]
 
 Instance: Instance() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Instance.java:2: Warning: Possible violation of object invariant (Invariant)
+src|test|resources|Instance.java:2: Warning: Possible violation of object invariant (Invariant)
 public class Instance implements I {
                                    ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/Instance.java", line 4, col 14:
-        //@ instance invariant b && ib && mb && mib && m() && im();
+Associated declaration is "src|test|resources|Instance.java", line 19, col 14:
+        //@ instance invariant ib && b;
                      ^
 Possibly relevant items from the counterexample context:  
   brokenObj%0 == RES-2.35
 (brokenObj* refers to the object for which the invariant is broken.)
 
+Execution trace information:
+    Executed implicit return in "src|test|resources|Instance.java", line 2, col 35.
+
 ------------------------------------------------------------------------
-    [0.19 s 19718552 bytes]  failed
-  [0.365 s 19719576 bytes total]
+    [TIME]  failed
+  [TIME total]
 
 I ...
-    [0.0010 s 19783888 bytes]
+    [TIME]
 
 I: m() ...
-    [0.0 s 19784912 bytes]  passed immediately
+    [TIME]  passed immediately
 
 I: im() ...
-    [0.0 s 19786960 bytes]  passed immediately
-  [0.0090 s 19787984 bytes total]
+    [TIME]  passed immediately
+  [TIME total]
 1 caution
 1 warning

@@ -1,44 +1,47 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVarState.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVarState on the classpath
-    [0.0020 s 20193400 bytes]
+ESC/Java version VERSION
+src|test|resources|ModelVarState.java: Caution: Using given file as the .java file, even though it is not the java file for ModelVarState on the classpath
+    [TIME]
 
 ModelVarState ...
-  Prover started:0.062 s 21247496 bytes
-    [0.17 s 21315624 bytes]
+  Prover started:TIME
+    [TIME]
 
 ModelVarState: m() ...
-    [0.094 s 21552656 bytes]  passed
+    [TIME]  passed
 
 ModelVarState: mm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVarState.java:25: Warning: Postcondition possibly not established (Post)
+src|test|resources|ModelVarState.java:25: Warning: Postcondition possibly not established (Post)
         }
         ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVarState.java", line 22, col 5:
+Associated declaration is "src|test|resources|ModelVarState.java", line 22, col 5:
         //@ ensures size == \old(size)*2; // ERROR
             ^
+Execution trace information:
+    Executed implicit return in "src|test|resources|ModelVarState.java", line 25, col 1.
+
 ------------------------------------------------------------------------
-    [0.07 s 20435504 bytes]  failed
+    [TIME]  failed
 
 ModelVarState: mmm() ...
-    [0.0080 s 20541384 bytes]  passed
+    [TIME]  passed
 
 ModelVarState: mmmm() ...
 ------------------------------------------------------------------------
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVarState.java:34: Warning: Possible violation of modifies clause (Modifies)
+src|test|resources|ModelVarState.java:34: Warning: Possible violation of modifies clause (Modifies)
                 sz = 2;  // ERROR - no modifies
                 ^
-Associated declaration is "/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/ModelVarState.java", line 32, col 5:
+Associated declaration is "src|test|resources|ModelVarState.java", line 32, col 5:
         //@ modifies \nothing;
             ^
 ------------------------------------------------------------------------
-    [0.016 s 20746976 bytes]  failed
+    [TIME]  failed
 
 ModelVarState: m5() ...
-    [0.0060 s 20834224 bytes]  passed
+    [TIME]  passed
 
 ModelVarState: ModelVarState() ...
-    [0.011 s 21016744 bytes]  passed
-  [0.376 s 21017768 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
 2 warnings

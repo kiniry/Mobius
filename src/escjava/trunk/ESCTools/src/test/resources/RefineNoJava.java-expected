@@ -1,12 +1,12 @@
-ESC/Java version ESCJava-CURRENT
-/Users/dermotcochran/Documents/workspace/ESCJava2/src/test/resources/RefineNoJava.java: Caution: Using given file as the .java file, even though it is not the java file for RefineNoJava on the classpath
-    [0.0010 s 21434240 bytes]
+ESC/Java version VERSION
+src|test|resources|RefineNoJava.java: Caution: Using given file as the .java file, even though it is not the java file for RefineNoJava on the classpath
+    [TIME]
 
 RefineNoJava ...
-  Prover started:0.062 s 22417216 bytes
-    [0.163 s 22483264 bytes]
+  Prover started:TIME
+    [TIME]
 
 RefineNoJava: RefineNoJava() ...
-    [0.071 s 22632976 bytes]  passed
-  [0.234 s 22634000 bytes total]
+    [TIME]  passed
+  [TIME total]
 1 caution
