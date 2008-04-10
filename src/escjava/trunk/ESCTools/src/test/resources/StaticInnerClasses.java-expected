@@ -5,9 +5,9 @@ src|test|resources|StaticInnerClasses.java: Caution: Using given file as the .ja
 B ...
 Exception java.lang.StackOverflowError thrown while processing B
 java.lang.StackOverflowError
-	at javafe.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:874)
-	at escjava.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:326)
-	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:530)
+	at escjava.tc.FlowInsensitiveChecks.checkModifierPragma(FlowInsensitiveChecks.java:2515)
+	at javafe.tc.FlowInsensitiveChecks.checkModifierPragmaVec(FlowInsensitiveChecks.java:3034)
+	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:527)
 	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:187)
 	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:199)
 	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:164)
