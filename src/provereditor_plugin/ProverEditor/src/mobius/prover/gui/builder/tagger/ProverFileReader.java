@@ -9,9 +9,12 @@ import java.io.Reader;
 /**
  * A line reader that has a counter to know how many characters
  * have been read this far.
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProverFileReader extends Reader {
-
+  /** the minimum size of the buffer. */
+  private static final int MIN_SIZE = 80;
+  /** the stream to read from. */
   private Reader fIn;
 
   private char [] fCb = new char[8192];
@@ -21,7 +24,8 @@ public class ProverFileReader extends Reader {
   /** If the next character is a line feed, skip it. */
   private boolean fSkipLF;
   
-  private int fCount = 0;
+  /** the number of char read. */
+  private int fCount;
 
   /**
    * Create a buffering character-input stream that uses a default-sized
@@ -224,13 +228,16 @@ public class ProverFileReader extends Reader {
         }
       
         if (s == null) { 
-          s = new StringBuffer(80);
+          s = new StringBuffer(MIN_SIZE);
         }
         s.append(fCb, startChar, i - startChar);
       }
     }
   }
 
+  /**
+   * @return The number of characters already read
+   */
   public int getCount() {
     return fCount;
   }
@@ -242,9 +249,10 @@ public class ProverFileReader extends Reader {
    * Tell whether this stream is ready to be read.  A buffered character
    * stream is ready if the buffer is not empty, or if the underlying
    * character stream is ready.
-   *
+   * @return true if the stream is ready
    * @exception  IOException  If an I/O error occurs
    */
+  @Override
   public boolean ready() throws IOException {
     synchronized (lock) {
       ensureOpen();
@@ -271,7 +279,8 @@ public class ProverFileReader extends Reader {
     }
   }
 
-
+  /** {@inheritDoc} */
+  @Override
   public boolean markSupported() {
     return false;
   }
