@@ -61,7 +61,6 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
     fDoc = fViewer.getDocument();
     fScanner = scanner;
     fEditor = pe;
-    
   }
   
   /** {@inheritDoc} */
@@ -101,7 +100,10 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
     if (fScanner != null) {
       fScanner.setRange(fDoc, fLen, fStrToAppend.length());
       IToken tok;
-      while (!(tok = fScanner.nextToken()).isEOF()) {
+      while ((tok = fScanner.nextToken()) != null) {
+        if (tok.isEOF()) {
+          break;
+        }
         if (tok != fScanner.getDefaultReturnToken()) {
           final BasicTextAttribute bta = (BasicTextAttribute)tok.getData();
           fPresentation.mergeStyleRange(new StyleRange(fScanner.getTokenOffset(), 

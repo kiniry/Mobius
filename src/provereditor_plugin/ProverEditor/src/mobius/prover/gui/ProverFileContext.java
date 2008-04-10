@@ -20,6 +20,8 @@ import org.eclipse.ui.IFileEditorInput;
 /**
  * A data structure to have an easy way to handle the different 
  * elements associated with a prover editor.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProverFileContext {
   /**
@@ -30,11 +32,15 @@ public class ProverFileContext {
   /** a word pattern. */
   private static final Pattern pat = Pattern.compile("[^a-zA-Z_0-9]");
 
-
+  /** the currently open editor from which this context is taken. */
   public final ProverEditor fCe;
+  /** the document corresponding to the editor. */
   public final IDocument fDoc; 
+  /** the source viewer of the editor. */
   public final BasicSourceViewerConfig fSv; 
+  /** the highlighting scanner of the editor. */
   public final LimitRuleScanner fScan;
+  /** the viewer. */
   public final ITextViewer fViewer;
   
   /**
@@ -57,7 +63,12 @@ public class ProverFileContext {
       
     }
   }
-  
+ 
+  /**
+   * Returns the point representing the currently selected word.
+   * @return the point contains the starting offset + the length of
+   * the word.
+   */
   public Point getWordPoint() {
     final Point p = fViewer.getSelectedRange();
     final int x = getBeginning(p.x);
@@ -66,6 +77,10 @@ public class ProverFileContext {
     return word;
   }
   
+  /**
+   * Returns the currently selected word.
+   * @return not <code>null</code>
+   */
   public String getWord() {
     String res = "";
     final Point p = getWordPoint();
@@ -78,20 +93,25 @@ public class ProverFileContext {
     return res;
   }
   
-  
-  private int getEnd(final int x) {
+ 
+  /**
+   * Get the end of a word. a word is defined by the patter {@link #pat}.
+   * @param off the starting offset
+   * @return the ending offset
+   */
+  private int getEnd(final int off) {
     int end = 0;
     final int len = fDoc.getLength();
-    int diff = x + 10 > len ? len - x : 10;
+    int diff = off + 10 > len ? len - off : 10;
     
     while (end == 0) {
       try {
-        final String str = fDoc.get(x, diff);
+        final String str = fDoc.get(off, diff);
         final Matcher m = pat.matcher(str);
         if (m.find()) {
           end = m.end() - 1;
         }
-        if (x + diff == len) {
+        if (off + diff == len) {
           break;
         }
         if (end == 0) {
@@ -105,20 +125,26 @@ public class ProverFileContext {
       }
       
     }  
-    return x + end;
+    return off + end;
 
   }
-  private int getBeginning(final int x) {
+  
+  /**
+   * Returns the beginning of the word the given offset is a part of.
+   * @param off the offset of the word
+   * @return the beginning pos
+   */
+  private int getBeginning(final int off) {
     int end = 0;
-    int diff = x - 10 < 0 ? x : 10;
+    int diff = off - 10 < 0 ? off : 10;
     while (end == 0) {
       try {
-        final String str = fDoc.get(x - diff, diff);
+        final String str = fDoc.get(off - diff, diff);
         final Matcher m = pat.matcher(str);
         while (m.find()) {
           end = m.end();
         }
-        if (x - diff == 0) {
+        if (off - diff == 0) {
           break;
         }
         if (end == 0) {
@@ -132,10 +158,13 @@ public class ProverFileContext {
       }
       
     }  
-    return (x - diff) + end;
+    return (off - diff) + end;
   }
 
-  
+  /**
+   * Returns the file opened in the editor.
+   * @return a valid file or <code>null</code>
+   */
   public IFile getFile() {
     ResourcesPlugin.getWorkspace().getRoot().getProject();
     final IEditorInput ei = fCe.getEditorInput();
