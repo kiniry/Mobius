@@ -64,12 +64,12 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   /**
    * Index for the rule to handle BML annotations.
    */
-  private static final int BML_RULE = 1;
+  private static final int BML_RULE = 0;
 
   /**
    * Index for the rule to handle throws lines.
    */
-  private static final int THROWS_RULE = 2;
+  private static final int THROWS_RULE = 1;
 
   /**
    * The total number of rules in the current scanner. It is by one greater

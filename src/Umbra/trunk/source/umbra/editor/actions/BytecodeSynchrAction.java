@@ -16,8 +16,8 @@ import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 
 /**
- * This class defines action of synchronization bytecode
- * position with appropriate point in source code.
+ * This class defines action of the synchronization for a byte code
+ * position with an appropriate point in the source code.
  *
  * @see BytecodeDocument
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -50,10 +50,10 @@ public class BytecodeSynchrAction extends Action {
   }
 
   /**
-   * This method consults the current selection, extracts the
-   * offset of the selection and shows the related Java source
-   * code document with the ???
-   * TODO
+   * This method runs the synchronisation of the current byte code
+   * with the source code. It retrieves the current selection, extracts the
+   * offset of the beginning of the selection and shows the related Java source
+   * code document that corresponds to the offset.
    */
   public final void run() {
     final ITextSelection selection = (ITextSelection)my_editor.
