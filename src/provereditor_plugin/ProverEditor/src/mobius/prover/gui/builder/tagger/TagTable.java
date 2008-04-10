@@ -3,7 +3,6 @@ package mobius.prover.gui.builder.tagger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -279,9 +278,17 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
     }
 
 
-    
-    private static byte[] readByteLine(InputStream in, int size) throws IOException {
-      // a line is less than 1024 chars
+    /**
+     * Read a line from the stream. A line ends with the byte newline <code>'\n'</code>.
+     * It uses a buffer of a specified size.
+     * @param in the stream to read from
+     * @param size the size of the intern buffer
+     * @return an array of bytes trimmed to the correct length
+     *  or <code>null</code> in case of errors.
+     * @throws IOException if the reading fails
+     */
+    private static byte[] readByteLine(final InputStream in, 
+                                       final int size) throws IOException {
       final byte[] buffer = new byte[size];
       for (int i = 0; i < buffer.length; i++) {
         final int b = in.read();
@@ -298,7 +305,16 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
       return null;
     }
     
-    private static String readLine(InputStream in, int size) throws IOException {
+    /**
+     * Read a line from the stream. A line ends with the byte newline <code>'\n'</code>.
+     * It uses a buffer of a specified size.
+     * @param in the stream to read from
+     * @param size the size of the intern buffer
+     * @return a valid String or <code>null</code> in case of errors.
+     * @throws IOException if the reading fails
+     */
+    private static String readLine(final InputStream in, 
+                                   final int size) throws IOException {
       final byte[] tab = readByteLine(in, size);
       if (tab != null) {
         return new String(tab);
