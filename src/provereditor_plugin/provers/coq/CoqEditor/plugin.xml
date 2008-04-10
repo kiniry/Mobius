@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="prover.gui.editor.ProverEditor"
+            class="mobius.prover.gui.editor.ProverEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             extensions="v"
             icon="icons/coq.gif"
