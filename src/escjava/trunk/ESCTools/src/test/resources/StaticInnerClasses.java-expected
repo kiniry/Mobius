@@ -5,8 +5,11 @@ src|test|resources|StaticInnerClasses.java: Caution: Using given file as the .ja
 B ...
 Exception java.lang.StackOverflowError thrown while processing B
 java.lang.StackOverflowError
-	at escjava.tc.FlowInsensitiveChecks.makeEnvForTypeSig(FlowInsensitiveChecks.java:155)
-	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:190)
+	at javafe.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:874)
+	at escjava.tc.FlowInsensitiveChecks.checkStmt(FlowInsensitiveChecks.java:326)
+	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:530)
+	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:187)
+	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:199)
 	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:164)
 	at javafe.tc.TypeSig.typecheck(TypeSig.java:1120)
 	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:553)
@@ -1026,9 +1029,6 @@ java.lang.StackOverflowError
 	at javafe.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:199)
 	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclaration(FlowInsensitiveChecks.java:164)
 	at javafe.tc.TypeSig.typecheck(TypeSig.java:1120)
-	at escjava.AnnotationHandler.desugarAnnotations(AnnotationHandler.java:440)
-	at escjava.AnnotationHandler.desugar(AnnotationHandler.java:244)
-	at escjava.tc.FlowInsensitiveChecks.checkTypeDeclElem(FlowInsensitiveChecks.java:219)
   [TIME total] (aborted)
 
 B$C ...
