@@ -224,7 +224,7 @@ public class TopLevel implements ITopLevel {
    * Sends the given command to the prover and waits for input
    * coming from the prover.
    * @param command the command sent to the prover
-   * @throws ProverException
+   * @throws ProverException if the prover fails
    */
   public void sendToProver(final String command) throws ProverException {
     clearBuffer();  
@@ -255,7 +255,7 @@ public class TopLevel implements ITopLevel {
    * Sends the given command to the prover and waits for input
    * coming from the prover.
    * @param command the command sent to the prover
-   * @throws AProverException
+   * @throws AProverException if the communication with the prover fails
    */
   public void sendCommand(final String command) throws AProverException {
 //    System.out.println(command);

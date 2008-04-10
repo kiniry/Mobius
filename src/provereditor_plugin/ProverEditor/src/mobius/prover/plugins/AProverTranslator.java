@@ -128,10 +128,10 @@ public abstract class AProverTranslator {
   
   /**
    * Experimental -- do not use.
-   * @param editor 
-   * @param doc
-   * @param root
-   * @return
+   * @param editor the current instance of the prover editor
+   * @param doc the document to inspect
+   * @param root the root node
+   * @return a tree representing the outline of the file
    */
   public ProverType getFileOutline(final ProverEditor editor, 
                                    final IDocument doc, 
@@ -139,6 +139,14 @@ public abstract class AProverTranslator {
     return root;
   }
   
+  /**
+   * Returns the Pattern array for the tagging.
+   * The structure of the array is the following:
+   * A cell is made of 2 elements: 
+   *     A pattern representing the prefix pattern
+   *     A pattern representing the keyword to get
+   * @return not <code>null</code>
+   */
   public Pattern [] [] getTagPatterns() {
     return new Pattern[0][0];
   }

@@ -18,19 +18,21 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class ProverPreferencePage extends FieldEditorPreferencePage 
   implements IWorkbenchPreferencePage {
 
+  /** the number of digits the grace time should have at most. */
+  private static final int GRACE_DIGIT_NUMS = 3;
   /** the string representing the property to store the grace time. */
-  private final String PROVER_GRACETIME;
+  private final String fProverGracetime;
   /** the string representing the property to store the ide location. */
-  private final String PROVER_IDE;
+  private final String fProverIde;
   /** the string representing the property to store the top level location. */
-  private final String PROVER_TOP;
+  private final String fProverTop;
   /** the string representing the property to store the compiler location. */
-  private final String PROVER_COMP;
+  private final String fProverComp;
 
   /** the current preference store. */
   private IPreferenceStore fPrefs;
   /** the current language associated with the preference page. */
-  private String fLanguage;
+  private final String fLanguage;
   /** the different fields shown in the page. */
   private FieldEditor [] fFields = new FieldEditor[4];
   
@@ -43,10 +45,10 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
   public ProverPreferencePage(final String language) {
     super(GRID);
     fLanguage = language;
-    PROVER_GRACETIME = fLanguage + "Editor.gracetime";
-    PROVER_IDE = fLanguage + "Editor.ide";
-    PROVER_TOP = fLanguage + "Editor.top";
-    PROVER_COMP = fLanguage + "Editor.compiler";
+    fProverGracetime = fLanguage + "Editor.gracetime";
+    fProverIde = fLanguage + "Editor.ide";
+    fProverTop = fLanguage + "Editor.top";
+    fProverComp = fLanguage + "Editor.compiler";
     setTitle(fLanguage);
     setDescription("Preferences for " + fLanguage);
   }
@@ -60,7 +62,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    */
   public void createFieldEditors() {
     fFields [0] = new FileFieldEditor(
-        PROVER_IDE,
+        fProverIde,
         fLanguage + " ide path:",
         true,
         getFieldEditorParent()) {
@@ -69,18 +71,18 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
       }
     }; 
     fFields [1] =    new FileFieldEditor(
-           PROVER_TOP,
+           fProverTop,
            fLanguage + " toplevel path:",
            true,
            getFieldEditorParent());
     fFields [2] =    new FileFieldEditor(
-         PROVER_COMP,
+         fProverComp,
          fLanguage + " compiler path:",
          true,
          getFieldEditorParent());
-    fFields [3] = new IntegerFieldEditor(PROVER_GRACETIME, 
+    fFields [3] = new IntegerFieldEditor(fProverGracetime, 
               fLanguage + " toplevel grace time:", 
-           getFieldEditorParent(), 3);
+           getFieldEditorParent(), GRACE_DIGIT_NUMS);
     for (int i = 0; i < fFields.length; i++) {
       addField(fFields[i]);
     }
@@ -92,10 +94,10 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    */
   public void setDefault(final IPreferenceStore prefs) {
     fPrefs = prefs; 
-    fPrefs.setDefault(PROVER_GRACETIME, 10);
-    fPrefs.setDefault(PROVER_IDE, "ide");
-    fPrefs.setDefault(PROVER_TOP, "top");
-    fPrefs.setDefault(PROVER_COMP, "comp");
+    fPrefs.setDefault(fProverGracetime, 10);
+    fPrefs.setDefault(fProverIde, "ide");
+    fPrefs.setDefault(fProverTop, "top");
+    fPrefs.setDefault(fProverComp, "comp");
   }
   
   
@@ -105,7 +107,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * @return A string representing a file selected by the user
    */
   public String getIde() {
-    return fPrefs.getString(PROVER_IDE);
+    return fPrefs.getString(fProverIde);
   }
   
   /**
@@ -114,7 +116,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * @return A string representing a file selected by the user
    */
   public String getTop() {
-    return fPrefs.getString(PROVER_TOP);
+    return fPrefs.getString(fProverTop);
   }
   
   /**
@@ -123,7 +125,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * @return A string representing a file selected by the user
    */
   public String getCompiler() {
-    return fPrefs.getString(PROVER_COMP);
+    return fPrefs.getString(fProverComp);
   }
   
   /**
@@ -132,7 +134,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * @return An integer selected by the user
    */
   public int getGraceTime() {
-    return fPrefs.getInt(PROVER_GRACETIME);
+    return fPrefs.getInt(fProverGracetime);
   }
   
   /** {@inheritDoc} */

@@ -152,7 +152,7 @@ public class BasicPresentationReconciler extends PresentationReconciler {
         fUpcoming.push(ev);
       } 
       catch (BadLocationException e) {
-        
+        return;
       }
     }
     
@@ -165,6 +165,7 @@ public class BasicPresentationReconciler extends PresentationReconciler {
           de.getDocument().replace(de.getOffset(), de.getLength(), de.getText());
         } 
         catch (BadLocationException e) {
+          return;
         }
       }
     }  

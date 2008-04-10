@@ -20,13 +20,18 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 
 public class BasicContentOutline extends ContentOutlinePage {
+  /** the tree that is associated with the content. */
   private TreeViewer fTree;
+  /** the current parent editor instance. */
   private ProverEditor fEditor;
 
+  
   public BasicContentOutline(final ProverEditor editor) {
     fEditor = editor;
   }
 
+  /** {@inheritDoc} */
+  @Override
   public void createControl(final Composite parent) {
     super.createControl(parent);
     fTree = this.getTreeViewer();
@@ -77,10 +82,12 @@ public class BasicContentOutline extends ContentOutlinePage {
     });
   }
 
-  private Object getInitialInput() {
+  private ProverType getInitialInput() {
     return getInitialInput(fEditor);
   }
-  public static Object getInitialInput(final ProverEditor editor) {
+  
+  
+  public static ProverType getInitialInput(final ProverEditor editor) {
     final ProverType root = new ProverType(editor);
     final FileType ft = new FileType(editor, editor.getTitle(), editor.getTitleImage()); 
     root.add(ft);

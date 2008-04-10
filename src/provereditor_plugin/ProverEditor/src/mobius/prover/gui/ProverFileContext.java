@@ -135,6 +135,7 @@ public class ProverFileContext {
     return (x - diff) + end;
   }
 
+  
   public IFile getFile() {
     ResourcesPlugin.getWorkspace().getRoot().getProject();
     final IEditorInput ei = fCe.getEditorInput();

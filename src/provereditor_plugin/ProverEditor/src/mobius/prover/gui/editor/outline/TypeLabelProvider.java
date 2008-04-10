@@ -6,7 +6,11 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
-
+/**
+ * A class to provide image and label for a specific element of type
+ * ProverType.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class TypeLabelProvider implements ILabelProvider {
   /** {@inheritDoc} */
   @Override

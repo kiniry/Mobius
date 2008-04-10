@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 
 public class TypeContentProvider implements ITreeContentProvider {
+  /** an empty array of objects. */
   private static final Object[] EMPTY_ARRAY = new Object[0];
 
   /** {@inheritDoc} */

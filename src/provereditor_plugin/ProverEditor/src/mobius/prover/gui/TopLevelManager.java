@@ -50,6 +50,8 @@ import org.eclipse.ui.progress.UIJob;
  * The top level manager is the main class of the gui of ProverEditor.
  * It controls the top level, it glue the editor with the commands.
  * And it is a view part to show the current prover state.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class TopLevelManager extends ViewPart implements IColorConstants {
   /* Private fields: */
@@ -105,7 +107,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   }
   
   /**
-   * Returns the parser for the current prover .
+   * Returns the parser for the current prover.
    * @return a parser to get the sentences.
    */
   public BasicRuleScanner getParser() {
@@ -181,14 +183,14 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     }
     else {
       final int oldlimit = pc.fScan.getLimit();
-      res = progress_intern(pc, oldlimit, oldlimit);
+      res = progressIntern(pc, oldlimit, oldlimit);
     }
     unlock();
     return res;
   }
   
   
-  private boolean progress_intern (final ProverFileContext pc, 
+  private boolean progressIntern (final ProverFileContext pc, 
                                    final int realoldlimit, 
                                    final int oldlimit) { 
     if (fParser == null) {
@@ -226,7 +228,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       switch (fProver.getTopLevelTranslator().hasToSkipSendCommand(fTopLevel, 
                                                                    pc.fDoc, cmd, 
                                                                    oldlimit, newlimit)) {
-        case IProverTopLevel.DONT_SKIP: {
+        case IProverTopLevel.DONT_SKIP:
           fTopLevel.sendCommand(cmd);
           append(fTopLevel.getStdBuffer());
           if (fTopLevel.isAlive()) {
@@ -239,11 +241,9 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
             return false;
           }
           break;
-        }
-        case IProverTopLevel.SKIP_AND_CONTINUE: {
-          progress_intern(pc, realoldlimit, newlimit);
+        case IProverTopLevel.SKIP_AND_CONTINUE:
+          progressIntern(pc, realoldlimit, newlimit);
           break;
-        }
         case IProverTopLevel.SKIP:
         default:
           break;
@@ -279,13 +279,13 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       res = false;
     }
     else {
-      res = regress_intern(pc);
+      res = regressIntern(pc);
     }
     unlock();
     return res;
   }  
   
-  protected boolean regress_intern(final ProverFileContext pc) {
+  protected boolean regressIntern(final ProverFileContext pc) {
     final int oldlimit = pc.fScan.getLimit();
     if ((oldlimit > 0) && (fParsedList.size() > 0)) {
       final int newlimit = ((Integer) fParsedList.pop()).intValue();
@@ -298,11 +298,12 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
         System.err.println("TopLevel.regress_intern: " + e);
         return false;
       }
-      switch(fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, 
-                                                           pc.fDoc, 
-                                                           cmd, newlimit, 
-                                                           oldlimit)) {
-        case IProverTopLevel.DONT_SKIP: {
+      final int hint = 
+        fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, pc.fDoc, 
+                                                      cmd, newlimit, oldlimit);
+                                                           
+      switch(hint) {
+        case IProverTopLevel.DONT_SKIP: 
           try {
             fTopLevel.undo();
           } 
@@ -311,19 +312,16 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
           }
           pc.fScan.setLimit(newlimit);
           break;
-        }
-        case IProverTopLevel.SKIP: {
+        case IProverTopLevel.SKIP: 
           pc.fScan.setLimit(newlimit);
           break;
-        }
-        case IProverTopLevel.SKIP_AND_CONTINUE: {
+        case IProverTopLevel.SKIP_AND_CONTINUE:
           pc.fScan.setLimit(newlimit);
-          regress_intern(pc);
+          regressIntern(pc);
           break;
-        }
-        
+        default:
+          break;
       }
-      
       
       final UpdateJob uj = new UpdateJob(pc.fSv.getPresentationReconciler(), oldlimit + 1);
       uj.schedule();
@@ -348,8 +346,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 
           public IStatus runInUIThread(final IProgressMonitor monitor) {
             fStateText.setDocument(new Document(""));
-            fStatePres = new BasicTextPresentation(fStateText);
-            
+            fStatePres = new BasicTextPresentation(fStateText);       
             fStateText.changeTextPresentation(fStatePres, true);
             new ColorAppendJob(fStatePres, GREETINGS, VIOLET).prepare();
             return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
@@ -383,15 +380,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     fParser = new BasicRuleScanner(fTranslator.getParsingRules());
     String [] tab = null;
     
-    if (path != null) {
-      
-//      if(path.getParent().getRawLocation() == null) {
-//        tab = new String [0];
-//      }
-//      else {
-//        tab = new String [1];
-//        tab[0] = path.getParent().getRawLocation().toString();
-//      }
+    if (path != null) {      
       Set<String> hsPath;
       try {
         hsPath = AddToLoadPath.getPaths(path.getProject().getLocation().toString());
@@ -505,7 +494,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       }
     } 
     catch (AProverException e) { 
-      
+      return;
     }
   }
   

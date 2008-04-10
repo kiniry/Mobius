@@ -57,6 +57,8 @@ public class ProverEditor extends TextEditor {
     return fScanner;
   }
   
+  /** {@inheritDoc} */
+  @Override
   @SuppressWarnings("unchecked")
   public Object getAdapter(final Class cl) {
     if (cl == IContentOutlinePage.class) {
@@ -68,6 +70,8 @@ public class ProverEditor extends TextEditor {
     }
   }
   
+  /** {@inheritDoc} */
+  @Override
   protected void initializeKeyBindingScopes() {
     setKeyBindingScopes(
             new String[] {"ProverEditor.context"});

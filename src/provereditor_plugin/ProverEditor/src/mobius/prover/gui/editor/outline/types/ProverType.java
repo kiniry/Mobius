@@ -8,13 +8,20 @@ import mobius.prover.gui.editor.ProverEditor;
 
 import org.eclipse.swt.graphics.Image;
 
-
+/**
+ * Base class to provide specific images and labels for a specific type.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class ProverType {
+  /** the list of subtypes of this type. */
   private List<ProverType> fSubtypes = new ArrayList<ProverType>();
+  /** the super type of this type. */
   private ProverType fSupertype;
   
   private int fOffset;
   private int fLength;
+  
+  
   private ProverEditor fEditor;
 
   private String fPath = toString();
