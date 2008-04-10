@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.Random;
 
 import junit.framework.*;
 import junitutils.*;
@@ -19,9 +20,9 @@ public class DistributedTest extends junitutils.TestFilesTestSuite {
 		throw new RuntimeException(uhe.toString());
 	}    
 	
-	String defaultSettings = "-nowarn Deadlock -verboseTrace -testMode -Loop5";
 	String listOfFiles = "src/test/list.txt";
 	String listOfServers = "src/test/servers.txt";
+	String listOfOptions = "src/test/options.txt";
 	String testSuiteName = "Distributed-Test-" + hostName;
 	int numberOfServers = 0;
 	int serverIndex = -1; // run no tests unless a server is found 
@@ -40,13 +41,11 @@ public class DistributedTest extends junitutils.TestFilesTestSuite {
     	    throw new RuntimeException(e.toString());
     	}
 
-	 
-
         junit.framework.TestSuite suite =
 	    new AbstractDistributedTestSuite(
 		testSuiteName,
 		listOfFiles,
-		defaultSettings,
+		listOfOptions,
 		escjava.Main.class,
 		serverIndex,
 		numberOfServers) {

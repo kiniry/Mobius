@@ -94,7 +94,7 @@ public class AbstractDistributedTestSuite  extends TestSuite {
       @*/
     public AbstractDistributedTestSuite(/*@ non_null */ String testName, 
 			      /*@ non_null */ String fileOfTestFilenames,
-			      /*@ non_null */ String preArgs,
+			      /*@ non_null */ String listOfOptions,
 			      /*@ non_null */ Class cls,
 			      int serverIndex,
 			      int numberOfServers
@@ -115,21 +115,31 @@ public class AbstractDistributedTestSuite  extends TestSuite {
         }
 
 	int position;
+	String preArgs;
 	if ((0 < numberOfServers) && (0 <= serverIndex)) {
 	try { 
+		// Iterate over all test cases
 	    Iterator i = new LineIterator(fileOfTestFilenames);
 	    position = 0;
 	    while (i.hasNext()) {
-		String s = preArgs + " " + (String)i.next();
-		String[] allargs = JUnitUtils.parseLine(s);
-		if(allargs.length > 0) {
-		    s = allargs[allargs.length-1];
+	    	
+	    		// Iterate over all sets of command line options
+	    	    Iterator j = new LineIterator(listOfOptions);
+	    	    while (j.hasNext()) {
+	    	    	preArgs = (String)j.next();
+	    	    	
+	    	    	// prepend generic options to the specific options and filename
+	    	    	String s = preArgs + " " + (String)i.next(); 
+	    	    	String[] allargs = JUnitUtils.parseLine(s);
+	    	    	if(allargs.length > 0) {
+	    	    		s = allargs[allargs.length-1];
 		    
-		    // Add the test only if it is the turn of this server
-		    if ((position++ % numberOfServers) == serverIndex) {
-		    	addTest(makeHelper(s,allargs));
-		    }
-		}
+	    	    		// Add the test only if it is the turn of this server
+	    	    		if ((position++ % numberOfServers) == serverIndex) {
+	    	    			addTest(makeHelper(s,allargs));
+	    	    		}
+	    	    	}
+	    	    }
 	    }
 	} catch (java.io.IOException e) {
 	    throw new RuntimeException(e.toString());

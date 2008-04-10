@@ -1,0 +1,5 @@
+-nowarn Deadlock -verboseTrace -testMode -Loop5
+-nowarn Deadlock -verboseTrace -testMode
+-nowarn Deadlock -verboseTrace -testMode -nonNullByDefault
+-nowarn Deadlock -verboseTrace -testMode -LoopSafe
+-nowarn Deadlock -verboseTrace -testMode -EnableAssertions
