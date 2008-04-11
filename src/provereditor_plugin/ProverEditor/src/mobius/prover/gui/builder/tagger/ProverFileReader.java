@@ -39,7 +39,8 @@ public class ProverFileReader extends Reader {
   }
 
   /** 
-   * Check to make sure that the stream has not been closed. 
+   * Check to make sure that the stream has not been closed.
+   * @throws IOException if the stream is closed 
    */
   private void ensureOpen() throws IOException {
     if (fIn == null) {
@@ -49,6 +50,7 @@ public class ProverFileReader extends Reader {
 
   /**
    * Fill the input buffer.
+   * @throws IOException if the reading fails miserably
    */
   private void fill() throws IOException {
     int n;
@@ -92,8 +94,15 @@ public class ProverFileReader extends Reader {
   }
 
   /**
+   *
    * Read characters into a portion of an array, reading from the underlying
    * stream if necessary.
+   *
+   * @param cbuf the array to read to
+   * @param off the offset to start in the array
+   * @param len the length to read
+   * @return the number of char read
+   * @throws IOException if there is an error while reading
    */
   private int read1(final char[] cbuf, 
                     final int off, final int len) throws IOException {

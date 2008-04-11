@@ -10,6 +10,10 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.ui.IEditorPart;
 
 
+/**
+ * Jump to the next sentence: useful to inspect a file.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class JumpForward extends AProverAction {
   /**
    * The method executed when jump is triggered.
@@ -23,13 +27,15 @@ public class JumpForward extends AProverAction {
     final ProverFileContext pfc = new ProverFileContext((ProverEditor) ep);
     final TopLevelManager tlm = TopLevelManager.getInstance();
     final int oldlimit = pfc.fViewer.getSelectedRange().x;
-    BasicRuleScanner parser;
-    if ((parser = tlm.getParser()) == null) {
+    BasicRuleScanner parser = tlm.getParser();
+    if (parser == null) {
       tlm.reset(pfc);
+      parser = tlm.getParser();
+      if (parser == null) {
+        return; // second try we give up...
+      }   
     }
-    if ((parser = tlm.getParser()) == null) {
-      return; // second try we give up...
-    }    
+ 
     parser.setRange(pfc.fDoc, oldlimit, pfc.fDoc.getLength() - oldlimit);
     IToken tok;
     do {

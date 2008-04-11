@@ -9,7 +9,10 @@ import mobius.prover.plugins.AProverTranslator;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.ui.IEditorPart;
 
-
+/**
+ * Jump backward: used while inspecting a file.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class JumpBackward extends AProverAction {
   /**
    * The method executed when jump is triggered.
