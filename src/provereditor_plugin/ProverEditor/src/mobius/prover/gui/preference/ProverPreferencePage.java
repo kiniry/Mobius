@@ -33,8 +33,16 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
   private IPreferenceStore fPrefs;
   /** the current language associated with the preference page. */
   private final String fLanguage;
-  /** the different fields shown in the page. */
-  private FieldEditor [] fFields = new FieldEditor[4];
+  
+  /** the field to specify the compiler. */
+  private FieldEditor fCompilerField;
+  /** the field to specify the grace time. */
+  private FieldEditor fGraceField;
+  /** the field to specify the top level. */
+  private FieldEditor fToplevField;
+  /** the field to specify the ide. */
+  private FieldEditor fIdeField;
+
   
   
   /**
@@ -61,7 +69,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * restore itself.
    */
   public void createFieldEditors() {
-    fFields [0] = new FileFieldEditor(
+    fIdeField = new FileFieldEditor(
         fProverIde,
         fLanguage + " ide path:",
         true,
@@ -70,22 +78,23 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
         return true;
       }
     }; 
-    fFields [1] =    new FileFieldEditor(
+    fToplevField =    new FileFieldEditor(
            fProverTop,
            fLanguage + " toplevel path:",
            true,
            getFieldEditorParent());
-    fFields [2] =    new FileFieldEditor(
-         fProverComp,
-         fLanguage + " compiler path:",
-         true,
-         getFieldEditorParent());
-    fFields [3] = new IntegerFieldEditor(fProverGracetime, 
+    fCompilerField = new FileFieldEditor(
+           fProverComp,
+           fLanguage + " compiler path:",
+           true,
+           getFieldEditorParent());
+    fGraceField = new IntegerFieldEditor(fProverGracetime, 
               fLanguage + " toplevel grace time:", 
            getFieldEditorParent(), GRACE_DIGIT_NUMS);
-    for (int i = 0; i < fFields.length; i++) {
-      addField(fFields[i]);
-    }
+    addField(fIdeField);
+    addField(fToplevField);
+    addField(fCompilerField);
+    addField(fGraceField);
   }
   
   /**
