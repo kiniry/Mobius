@@ -29,6 +29,8 @@ import org.eclipse.ui.progress.UIJob;
 
 /**
  * The action triggering a compilation deed.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class AddToLoadPath implements IActionDelegate {
 
@@ -72,7 +74,8 @@ public class AddToLoadPath implements IActionDelegate {
 
   
   public class AddingJob extends Job {
-    private String fRoot, fFolder;
+    private String fRoot;
+    private String fFolder;
     private IProject fProject;
     
     public AddingJob(final IProject project, 
