@@ -28,43 +28,7 @@ public class LaunchIde implements IActionDelegate {
     if (fSel == null) {
       return;
     }
-    final Thread myJob = 
-      new Thread("Prover Ide") {
-        /** {@inheritDoc} */
-        @Override
-        public void run() {
-          final Object o = fSel.getFirstElement();
-          if (o instanceof IFile) {
-            final IFile f = (IFile) o;
-            final String rawloc = f.getRawLocation().toString(); 
-            final Prover prover = Prover.findProverFromFile(rawloc);
-            final IPath parent = f.getParent().getRawLocation();
-            String [] path = null; 
-            if (parent != null) {
-              path = new String[2];
-              path[1] = parent.toString();
-            } 
-            else {
-              path = new String[1]; 
-            }
-            path[0] = f.getProject().getLocation().toString();
-            final String [] cmds = prover.getTranslator().getIdeCommand(
-                                            prover.getIde(), path, rawloc);
-                
-            
-            try {
-              final Process p = Runtime.getRuntime().exec(cmds);
-              p.waitFor();
-            } 
-            catch (IOException e) {
-              System.err.println("I was unable to find an ide for TopLevel. Check the path.");
-            } 
-            catch (InterruptedException e2) {
-              e2.printStackTrace();
-            }
-          }
-        }
-      };
+    final Thread myJob = new IdeThread();
     myJob.start();
     
   }
@@ -84,5 +48,53 @@ public class LaunchIde implements IActionDelegate {
       }
     }
     action.setEnabled(false);
+  }
+  
+  /**
+   * Class to represent the thread to launch an Ide.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
+  private class IdeThread extends Thread {
+    /**
+     * Creates an Ide Thread.
+     */
+    public IdeThread() {
+      super("Prover Ide");
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void run() {
+      final Object o = fSel.getFirstElement();
+      if (o instanceof IFile) {
+        final IFile f = (IFile) o;
+        final String rawloc = f.getRawLocation().toString(); 
+        final Prover prover = Prover.findProverFromFile(rawloc);
+        final IPath parent = f.getParent().getRawLocation();
+        String [] path = null; 
+        if (parent != null) {
+          path = new String[2];
+          path[1] = parent.toString();
+        } 
+        else {
+          path = new String[1]; 
+        }
+        path[0] = f.getProject().getLocation().toString();
+        final String [] cmds = prover.getTranslator().getIdeCommand(
+                                        prover.getIde(), path, rawloc);
+            
+        
+        try {
+          final Process p = Runtime.getRuntime().exec(cmds);
+          p.waitFor();
+        } 
+        catch (IOException e) {
+          System.err.println("I was unable to find an ide for TopLevel. Check the path.");
+        } 
+        catch (InterruptedException e2) {
+          e2.printStackTrace();
+        }
+      }
+    }
   }
 }
