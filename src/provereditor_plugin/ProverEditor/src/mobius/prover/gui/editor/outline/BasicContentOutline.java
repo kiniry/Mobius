@@ -1,8 +1,5 @@
 package mobius.prover.gui.editor.outline;
 
-
-
-
 import mobius.prover.Prover;
 import mobius.prover.gui.ProverFileContext;
 import mobius.prover.gui.editor.ProverEditor;
@@ -28,7 +25,10 @@ public class BasicContentOutline extends ContentOutlinePage {
   /** the current parent editor instance. */
   private ProverEditor fEditor;
 
-  
+  /**
+   * Initialize it, and associate it to an editor.
+   * @param editor the editor to associate the outline to
+   */
   public BasicContentOutline(final ProverEditor editor) {
     fEditor = editor;
   }
@@ -47,17 +47,25 @@ public class BasicContentOutline extends ContentOutlinePage {
     fEditor.addPropertyListener(cl);
   }
 
+  /**
+   * Returns the initial input associated with the current
+   *  editor.
+   * @return a node, corresponding to the initial input.
+   */
   private ProverType getInitialInput() {
     return getInitialInput(fEditor);
   }
   
-  
+  /**
+   * Returns the initial input associated with a specific editor.
+   * @param editor the editor to get the initial input for
+   * @return a root node, the initial input
+   */
   public static ProverType getInitialInput(final ProverEditor editor) {
     final ProverType root = new ProverType(editor);
     final FileType ft = new FileType(editor, editor.getTitle(), editor.getTitleImage()); 
     root.add(ft);
     final ProverFileContext ctxt = new ProverFileContext(editor);
-    
     final Prover p = Prover.findProverFromFile(editor.getTitle());
     p.getTranslator().getFileOutline(editor, ctxt.fDoc, ft);
     return root;
