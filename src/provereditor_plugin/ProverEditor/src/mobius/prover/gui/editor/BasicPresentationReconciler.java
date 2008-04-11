@@ -113,6 +113,10 @@ public class BasicPresentationReconciler extends PresentationReconciler {
     return fDoc;
   }
   
+  /**
+   * Returns the current viewer associated with this reconciler.
+   * @return the parent viewer
+   */
   public ITextViewer getViewer() {
     return fViewer;
   }

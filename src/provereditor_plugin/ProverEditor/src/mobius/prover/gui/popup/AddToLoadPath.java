@@ -49,9 +49,8 @@ public class AddToLoadPath implements IActionDelegate {
     final IFolder f = (IFolder) fSel.getFirstElement();
     
     final String folder =  f.getProjectRelativePath().toString();
-    final String root = f.getProject().getLocation().toString();
     
-    final Job job = new AddingJob(f.getProject(), root, folder);
+    final Job job = new AddingJob(f.getProject(), folder);
     job.schedule();
   }
 
@@ -72,21 +71,33 @@ public class AddToLoadPath implements IActionDelegate {
   }
   
 
-  
+  /**
+   * This class represents a job used to add a path to the load path list.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
   public class AddingJob extends Job {
-    private String fRoot;
-    private String fFolder;
-    private IProject fProject;
+    /** the path of the project. */
+    private final String fRoot;
+    /** the folder to add, relative to the project. */
+    private final String fFolder;
+    /** the current project. */
+    private final IProject fProject;
     
-    public AddingJob(final IProject project, 
-                     final String root, 
-                     final String folder) {
+    
+    /**
+     * Creates a job used to add a load path to a project.
+     * @param project the project in which the folder is
+     * @param folder the folder to add
+     */
+    public AddingJob(final IProject project, final String folder) {
       super("Adding path to ProverEditor paths...");
       fProject = project;
-      fRoot = root;
+      fRoot = fProject.getLocation().toString();
       fFolder = folder;
     }
 
+    /** {@inheritDoc} */
+    @Override
     protected IStatus run(final IProgressMonitor monitor) {
       final File f = new File(fRoot + File.separator + ".prover_paths");
       //System.out.println (f);
@@ -106,6 +117,7 @@ public class AddToLoadPath implements IActionDelegate {
           } 
           catch (CoreException e) {
             // we don't care for errors
+            return ProverStatus.getOkStatus();
           }
           return ProverStatus.getOkStatus();
         }
@@ -113,16 +125,26 @@ public class AddToLoadPath implements IActionDelegate {
       };
       uij.schedule();
       return ProverStatus.getOkStatus();
-    }
-
-
-    
+    }  
   }
+  
+  /**
+   * Returns the set of absolute paths for a given project.
+   * @param project the project to get the load path from
+   * @return the set of load path
+   * @throws IOException if the reading of the path fails
+   */
   public static Set<String> getPaths(final String project) throws IOException {
     final File f = new File(project + File.separator + ".prover_paths");
     return getPaths(f);
   }
 
+  /**
+   * Returns the set of absolute paths contained in the given file.
+   * @param f the file containing the paths
+   * @return the set of load path
+   * @throws IOException if the reading of the file fails
+   */
   private static Set<String> getPaths(final File f) throws IOException {
     final Set<String> hs = new HashSet<String>();
     if (!f.exists()) {
@@ -137,6 +159,12 @@ public class AddToLoadPath implements IActionDelegate {
     return hs;
   }
 
+  /**
+   * Write the LoadPath to disk.
+   * @param f the file in which to write the paths
+   * @param paths the set of path to write
+   * @throws IOException if the writing of the file fails
+   */
   private static void writePaths(final File f, final Set<String> paths) throws IOException {
     final PrintStream ps = new PrintStream(new FileOutputStream(f));
     final Iterator<String> iter = paths.iterator();

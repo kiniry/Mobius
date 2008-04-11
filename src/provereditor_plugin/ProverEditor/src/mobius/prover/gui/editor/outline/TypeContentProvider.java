@@ -5,7 +5,10 @@ import mobius.prover.gui.editor.outline.types.ProverType;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-
+/**
+ * Provides the basic content of a node.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class TypeContentProvider implements ITreeContentProvider {
   /** an empty array of objects. */
   private static final Object[] EMPTY_ARRAY = new Object[0];
