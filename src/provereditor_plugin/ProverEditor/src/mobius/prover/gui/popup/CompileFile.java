@@ -11,6 +11,8 @@ import java.util.Set;
 
 import mobius.prover.Prover;
 import mobius.prover.gui.jobs.ProverStatus;
+import mobius.prover.plugins.AProverTranslator;
+import mobius.prover.plugins.exceptions.ProverException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -26,6 +28,8 @@ import org.eclipse.ui.IActionDelegate;
 
 /**
  * The action triggering a compilation deed.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public class CompileFile implements IActionDelegate {
 
@@ -72,7 +76,8 @@ public class CompileFile implements IActionDelegate {
     for (int i = 2; i < path.length; i++) {
       path[i] = path[0] + File.separator + iter.next().toString();
     }
-    final String[] cmd = prover.getTranslator().getCompilingCommand(prover.getCompiler().trim(), 
+    final AProverTranslator trans = prover.getTranslator();
+    final String[] cmd = trans.getCompilingCommand(prover.getCompiler().trim(), 
                                                                     path, name);
     final Job job = new CompilationJob(prover, f, cmd, silent);
     return job;
@@ -107,7 +112,7 @@ public class CompileFile implements IActionDelegate {
     private String [] fCmd;
     /** The current prover object assiciated with the current file. */
     private Prover fProver;
-    /** tell if the job should be silent. */
+    /** tell if the job should be silent, a silent job always terminates without error. */
     private boolean fIsSilent;
     
     /**
@@ -115,6 +120,7 @@ public class CompileFile implements IActionDelegate {
      * @param prover the prover object to compile the file with
      * @param file the file to compile
      * @param cmd the command to compile the file
+     * @param silent set the verbosity of the compilation job
      */
     public CompilationJob(final Prover prover, final IFile file, 
                           final String[] cmd, final boolean silent) {
@@ -125,15 +131,73 @@ public class CompileFile implements IActionDelegate {
       fIsSilent = silent;
     }
 
+    /**
+     * Parses the standard output from a given process.
+     * @param p the process
+     * @return the output
+     * @throws ProverException if the prover returned an error message
+     */
+    private String parseStdOutput(final Process p) throws ProverException {
+      final LineNumberReader in = 
+        new LineNumberReader(new InputStreamReader(p.getInputStream()));
+      // parse std output
+      String res = "";
+      String s;
+      try {
+        while ((s = in.readLine()) != null) {
+          res += s + "\n";
+  //        System.out.println("1" + res);
+          if (fProver.isErrorMsg(s)) {
+            while ((s = in.readLine()) != null) {
+              res += s + "\n";
+            }
+            throw new ProverException(res);    
+          }
+                 
+        }
+      }
+      catch (IOException e) {
+        return null;
+      }
+      return res;
+    }
+    
+    /**
+     * Parses the error output from a given process.
+     * @param p the process
+     * @return the output
+     * @throws ProverException if the prover returned an error message
+     */
+    private String parseErrOutput(final Process p) throws ProverException {
+      // Parse errors
+      final LineNumberReader in = 
+        new LineNumberReader(new InputStreamReader(p.getErrorStream()));
+      String res = "";
+      String s;
+      try {
+        while ((s = in.readLine()) != null) {
+          res += s + "\n";
+  //        System.out.println("1" + res);
+          if (fProver.isErrorMsg(s)) {
+            while ((s = in.readLine()) != null) {
+              res += s + "\n";
+            }
+  
+            throw new ProverException(res); 
+     
+          }
+        }
+      }
+      catch (IOException e) {
+        return null;
+      }
+      return res; 
+    }
     /** {@inheritDoc} */
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
       try {
-        //System.out.println("here");
         final Process p = Runtime.getRuntime().exec(fCmd);
-        LineNumberReader in = new LineNumberReader(new InputStreamReader(p.getInputStream()));
-        String s;
-        String res = "";
         try {
           p.waitFor();
         } 
@@ -141,50 +205,24 @@ public class CompileFile implements IActionDelegate {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        while ((s = in.readLine()) != null) {
-          res += s + "\n";
-//          System.out.println("1" + res);
-          if (fProver.isErrorMsg(s)) {
-            while ((s = in.readLine()) != null) {
-              res += s + "\n";
-            }
-            if (fIsSilent) {
-              return ProverStatus.getOkStatus();
-            }
-            return ProverStatus.getErrorStatus(
-                         "The file " + fFile.getName() + 
-                         " was not compiled.", res);        
-          }
-                 
-        }
-        
-        in = new LineNumberReader(new InputStreamReader(p.getErrorStream()));
-        while ((s = in.readLine()) != null) {
-          res += s + "\n";
-//          System.out.println("1" + res);
-          if (fProver.isErrorMsg(s)) {
-            while ((s = in.readLine()) != null) {
-              res += s + "\n";
-            }
-            
-            if (fIsSilent) {
-              return ProverStatus.getOkStatus();
-            }
-            return ProverStatus.getErrorStatus(
-                             "The file " + fFile.getName() + 
-                             " was not compiled.", res);        
-          }
-                 
-        }
+        parseStdOutput(p);
+        parseErrOutput(p);
+
         fFile.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
       } 
-      catch (IOException e) {
-        if (fIsSilent) {
-          return ProverStatus.getOkStatus();
+      catch (ProverException e) {
+        if (!fIsSilent) {
+          return ProverStatus.getErrorStatus(
+                         "The file " + fFile.getName() + 
+                         " was not compiled.", e.getMessage());
         }
-        return ProverStatus.getErrorStatus(
+      }
+      catch (IOException e) {
+        if (!fIsSilent) { 
+          return ProverStatus.getErrorStatus(
             "I was unable to find the path to the compilation program. Check the path." , 
               e.toString());
+        }
       } 
       catch (CoreException e) {
         e.printStackTrace();
