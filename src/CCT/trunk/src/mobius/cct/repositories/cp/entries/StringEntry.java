@@ -27,7 +27,7 @@ public class StringEntry implements Entry {
    * @return CONSTANT_String.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_String;
   }
   

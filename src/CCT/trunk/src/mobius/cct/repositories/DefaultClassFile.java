@@ -1,7 +1,9 @@
 package mobius.cct.repositories;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 
 import mobius.cct.certificates.Certificate;
 
@@ -11,6 +13,15 @@ import mobius.cct.certificates.Certificate;
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public class DefaultClassFile implements ClassFile {
+  /**
+   * Constructor - read class from input stream.
+   * @param is Input stream.
+   * @throws IOException if the file cannot be parsed. If its format is invalid,
+   *    InvalidFormatException should be thrown.
+   */
+  public DefaultClassFile(final InputStream is) {
+  }
+  
   /**
    * Write class file to given output stream.
    * @param os output stream.
@@ -27,7 +38,7 @@ public class DefaultClassFile implements ClassFile {
    * @return Class certificate.
    */
   @Override
-  public Certificate[] getCertificates() {
+  public Iterator<Certificate> getCertificates() {
     return null;
   }
   

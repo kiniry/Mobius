@@ -15,6 +15,13 @@ public final class DirEntry implements ClassPathEntry {
    */
   public DirEntry(final File path) {
   }
+
+  /**
+   * Constructor.
+   * @param path Directory path. 
+   */
+  public DirEntry(final String path) {
+  }
   
   /**
    * 

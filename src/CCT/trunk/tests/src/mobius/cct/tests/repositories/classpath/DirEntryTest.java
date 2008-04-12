@@ -3,6 +3,7 @@ package mobius.cct.tests.repositories.classpath;
 import java.io.File;
 import java.io.InputStream;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -24,6 +25,7 @@ public class DirEntryTest {
   /**
    * Method called before each test.
    */
+  @Before
   public void setUp() {
     fEntry = new DirEntry(new File("../data"));
   }
@@ -34,7 +36,9 @@ public class DirEntryTest {
   @Test
   public void testClass1() throws Exception {
     Resource r = fEntry.getClassFile("mobius.cct.testdata.Test1");
+    assertNotNull(r);
     InputStream is = r.open();
+    assertNotNull(is);
     assertEquals("12872b2fb305213f2c7adac2a945f3da", 
                  Util.toHex(Util.digest(is, Util.MD5)));
     r.close();

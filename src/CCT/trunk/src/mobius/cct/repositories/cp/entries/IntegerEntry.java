@@ -25,7 +25,7 @@ public final class IntegerEntry implements Entry {
    * @return CONSTANT_Integer.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_Integer;
   }
   

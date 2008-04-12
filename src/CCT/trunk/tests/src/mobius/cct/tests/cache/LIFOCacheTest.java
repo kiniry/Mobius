@@ -3,6 +3,7 @@ package mobius.cct.tests.cache;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import mobius.cct.cache.Cache;
 import mobius.cct.cache.LIFOCache;
 
 import org.junit.Test;
@@ -20,8 +21,8 @@ public class LIFOCacheTest extends AbstractCacheTest {
   /**
    * Initialize cache.
    */
-  protected void initCache() {
-    fCache = new LIFOCache<Object>(fSize);
+  protected Cache<Object> getCache() {
+    return new LIFOCache<Object>(fSize);
   }
   
   /**

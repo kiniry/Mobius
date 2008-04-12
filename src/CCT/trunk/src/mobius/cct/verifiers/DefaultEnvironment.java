@@ -22,26 +22,23 @@ import mobius.cct.verifiers.logging.Logger;
  * @param <C> Type of class files.
  */
 public class DefaultEnvironment<C extends ClassFile> 
-  implements Environment {
+  implements Environment<C> {
   /**
    * Create environment with given repository.
    * @param repo Repository used to locate classes.
-   * @param reader Object used to parse classes.
    * @param defaultVerifiers if this paramater is set to 
    * {@code true}, default list of verifers is added to this 
    * environment. If it set to {@code false}, verifiers must
    * be added manually.
    */
   public DefaultEnvironment(final Repository<C> repo,
-                            final ClassReader<C> reader,
                             final boolean defaultVerifiers) { 
   }
   
   /**
    * Create environment using default repository and verifiers.
-   * @param reader Object used to parse classes.
    */
-  public DefaultEnvironment(final ClassReader<C> reader) { 
+  public DefaultEnvironment() { 
   }
   
   /**
@@ -72,7 +69,7 @@ public class DefaultEnvironment<C extends ClassFile>
    *  @return Verifier applicable to certificates of given type
    *  or {@code null}, if there is no such verifier in this env.
    **/
-  public Verifier getVerifier(final String certType) {
+  public Verifier<C> getVerifier(final String certType) {
     return null;
   }
   
@@ -80,7 +77,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * Add class to list of trusted classes.
    * @param name Class name (FQN).
    */
-  void addTrustedClass(final String name) {
+  public void addTrustedClass(final String name) {
   }
   
   /**
@@ -88,7 +85,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * If the class was not on the list, nothing is done.
    * @param name Class name (FQN). 
    */
-  void removeTrustedClass(final String name) {
+  public void removeTrustedClass(final String name) {
 
   }
   
@@ -106,7 +103,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return ClassFile object.
    */
   @Override
-  public ClassFile getClassFile(final String name) {
+  public C getClassFile(final String name) {
     return null;
   }
   
@@ -116,7 +113,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return ClassFile object.
    */
   @Override
-  public ClassFile getCertificateFile(final String name) {
+  public C getCertificateFile(final String name) {
     return null;
   }
   
@@ -132,13 +129,13 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return (@code true} iff given class file contains a
    * certificate for requested specification type and the
    * certificate is valid.
-   * @throws CyclicDependyException See
-   * {@link mobius.cct.verifiers.CyclicDependyException 
+   * @throws CyclicDependencyException See
+   * {@link mobius.cct.verifiers.CyclicDependencyException 
    * CyclicDependyException}.
    */
   @Override
   public boolean verify(final String name, final String spec)  
-    throws CyclicDependyException {
+    throws CyclicDependencyException {
     return false;
   }
   
@@ -149,13 +146,13 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param spec Specification types to be verified.
    * @return {@code true} iff all specifications were succesfully
    * verified.
-   * @throws CyclicDependyException See
-   * {@link mobius.cct.verifiers.CyclicDependyException 
+   * @throws CyclicDependencyException See
+   * {@link mobius.cct.verifiers.CyclicDependencyException 
    * CyclicDependyException}.
    */
   @Override
   public boolean verify(final String[] name, final String[] spec)  
-    throws CyclicDependyException {
+    throws CyclicDependencyException {
     return false;
   }
   

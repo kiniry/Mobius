@@ -34,7 +34,7 @@ public final class NameAndTypeEntry implements Entry {
    * @return CONSTANT_NameAndType.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_NameAndType;
   }
   

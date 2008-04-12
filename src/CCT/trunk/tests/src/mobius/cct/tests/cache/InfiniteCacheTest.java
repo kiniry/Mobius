@@ -1,5 +1,6 @@
 package mobius.cct.tests.cache;
 
+import mobius.cct.cache.Cache;
 import mobius.cct.cache.InfiniteCache;
 
 /**
@@ -10,7 +11,7 @@ public class InfiniteCacheTest extends AbstractCacheTest {
   /**
    * Initialize cache.
    */
-  protected void initCache() {
-    fCache = new InfiniteCache<Object>();
+  protected Cache<Object> getCache() {
+    return new InfiniteCache<Object>();
   }
 }

@@ -23,6 +23,6 @@ public interface EntryReader {
    * type is encountered.
    * @throws IOException .
    */
-  Entry read(InputStream is, int t) 
+  Entry read(InputStream is, byte t) 
     throws IOException, UnknownConstantException;
 }

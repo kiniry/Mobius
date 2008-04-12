@@ -1,6 +1,7 @@
 package mobius.cct.tests.cache;
 
 import static org.junit.Assert.*;
+import mobius.cct.cache.Cache;
 import mobius.cct.cache.LRUCache;
 import org.junit.Test;
 
@@ -17,8 +18,8 @@ public class LRUCacheTest extends AbstractCacheTest {
   /**
    * Initialize cache.
    */
-  protected void initCache() {
-    fCache = new LRUCache<Object>(fSize);
+  protected Cache<Object> getCache() {
+    return new LRUCache<Object>(fSize);
   }
   
   /**

@@ -34,7 +34,7 @@ public final class FieldrefEntry implements Entry {
    * @return CONSTANT_Fieldref.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_Fieldref;
   }
   

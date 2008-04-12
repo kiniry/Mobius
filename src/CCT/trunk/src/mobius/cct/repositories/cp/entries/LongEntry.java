@@ -25,7 +25,7 @@ public final class LongEntry implements Entry {
    * @return CONSTANT_Long.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_Long;
   }
   

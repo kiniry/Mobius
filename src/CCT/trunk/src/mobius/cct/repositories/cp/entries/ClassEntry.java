@@ -28,7 +28,7 @@ public final class ClassEntry implements Entry {
    * @return CONSTANT_Class.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_Class;
   }
   

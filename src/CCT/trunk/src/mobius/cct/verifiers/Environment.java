@@ -8,20 +8,20 @@ import mobius.cct.verifiers.logging.Logger;
  * to manage verifiers and repositories.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public interface Environment {
+public interface Environment<C extends ClassFile> {
   /**
    * Read class file.
    * @param name FQN of a class.
    * @return ClassFile object or null.
    */
-  ClassFile getClassFile(String name);
+  C getClassFile(String name);
 
   /**
    * Read certificate file.
    * @param name FQN of a class.
    * @return ClassFile object or null.
    */
-  ClassFile getCertificateFile(String name);
+  C getCertificateFile(String name);
   
   /**
    * Verify specification of given ClassFile.
@@ -30,12 +30,12 @@ public interface Environment {
    * @return (@code true} iff given class file contains a
    * certificate for requested specification type and the
    * certificate is valid.
-   * @throws CyclicDependyException See
-   * {@link mobius.cct.verifiers.CyclicDependyException 
+   * @throws CyclicDependencyException See
+   * {@link mobius.cct.verifiers.CyclicDependencyException 
    * CyclicDependyException}.
    */
   boolean verify(String name, String spec) 
-    throws CyclicDependyException;
+    throws CyclicDependencyException;
   
   /**
    * Verify specifications of given classes. This method may
@@ -44,12 +44,12 @@ public interface Environment {
    * @param spec Specification types to be verified.
    * @return {@code true} iff all specifications were succesfully
    * verified.
-   * @throws CyclicDependyException See
-   * {@link mobius.cct.verifiers.CyclicDependyException 
+   * @throws CyclicDependencyException See
+   * {@link mobius.cct.verifiers.CyclicDependencyException 
    * CyclicDependyException}.
    */
   boolean verify(String[] name, String[] spec)
-    throws CyclicDependyException;
+    throws CyclicDependencyException;
   
   /**
    * Get object used to log messages.

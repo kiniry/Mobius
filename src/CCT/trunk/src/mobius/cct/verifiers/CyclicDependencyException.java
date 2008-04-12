@@ -5,7 +5,7 @@ package mobius.cct.verifiers;
  * of the same specification it is assigned to. 
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public class CyclicDependyException extends Exception {
+public class CyclicDependencyException extends Exception {
   /**
    * SerialVersionUID.
    */
@@ -22,7 +22,7 @@ public class CyclicDependyException extends Exception {
    * @param name Name of verified class.
    * @param spec Type of verified specification.
    */
-  public CyclicDependyException(final String name, 
+  public CyclicDependencyException(final String name, 
                                 final String spec) {
     fName = name;
     fSpec = spec;
@@ -34,7 +34,7 @@ public class CyclicDependyException extends Exception {
    * @param name Name of verified class.
    * @param spec Type of verified specification.
    */
-  public CyclicDependyException(final String msg,
+  public CyclicDependencyException(final String msg,
                                 final String name,
                                 final String spec) {
     super(msg);

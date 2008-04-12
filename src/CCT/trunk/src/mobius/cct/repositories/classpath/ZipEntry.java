@@ -17,6 +17,12 @@ public final class ZipEntry implements ClassPathEntry {
   }
   
   /**
+   * Constructor.
+   * @param path Directory path. 
+   */
+  public ZipEntry(final String path) {
+  }
+  /**
    * Read class with given FQN using this archive
    * as a root of package hierarchy.
    * @param name Name of a class.

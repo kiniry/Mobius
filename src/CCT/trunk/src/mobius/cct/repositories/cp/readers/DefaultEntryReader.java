@@ -34,7 +34,7 @@ public class DefaultEntryReader implements EntryReader {
    * @throws IOException .
    */
   @Override
-  public Entry read(InputStream is, int t) throws IOException,
+  public Entry read(InputStream is, byte t) throws IOException,
       UnknownConstantException {
     DataInputStream ds = new DataInputStream(is);
     switch (t) {

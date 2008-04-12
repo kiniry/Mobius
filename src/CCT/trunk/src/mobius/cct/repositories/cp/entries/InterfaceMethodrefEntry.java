@@ -33,7 +33,7 @@ public final class InterfaceMethodrefEntry implements Entry {
    * @return CONSTANT_InterfaceMethodref.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_InterfaceMethodref;
   }
   

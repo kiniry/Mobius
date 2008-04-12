@@ -14,7 +14,7 @@ public final class FloatEntry implements Entry {
   
   /**
    * Create entry.
-   * @param value Integer value.
+   * @param avaluelue Integer value.
    */
   public FloatEntry(final float value) {
     fValue = value;
@@ -25,7 +25,7 @@ public final class FloatEntry implements Entry {
    * @return CONSTANT_Float.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_Float;
   }
   

@@ -12,44 +12,44 @@ public interface Entry {
   /* Entry types defined in JSR-202 */
   
   /** Class or interface name. */
-  public static final int CONSTANT_Class = 7;
+  public static final byte CONSTANT_Class = 7;
 
   /** Field reference. */
-  public static final int CONSTANT_Fieldref = 9;
+  public static final byte CONSTANT_Fieldref = 9;
 
   /** Method reference. */
-  public static final int CONSTANT_Methodref = 10;
+  public static final byte CONSTANT_Methodref = 10;
 
   /** Interface method reference. */
-  public static final int CONSTANT_InterfaceMethodref = 11;
+  public static final byte CONSTANT_InterfaceMethodref = 11;
 
   /** String constant. */
-  public static final int CONSTANT_String = 8;
+  public static final byte CONSTANT_String = 8;
 
   /** 32-bit integer. */
-  public static final int CONSTANT_Integer = 3;
+  public static final byte CONSTANT_Integer = 3;
 
   /** 32-bit float. */
-  public static final int CONSTANT_Float = 4;
+  public static final byte CONSTANT_Float = 4;
 
   /** 64-bit integer. */
-  public static final int CONSTANT_Long = 5;
+  public static final byte CONSTANT_Long = 5;
 
   /** 64-bit float. */
-  public static final int CONSTANT_Double = 6;
+  public static final byte CONSTANT_Double = 6;
 
   /** Field or method signature. */
-  public static final int CONSTANT_NameAndType = 12;
+  public static final byte CONSTANT_NameAndType = 12;
 
   /** String encoded in modified UTF8. */
-  public static final int CONSTANT_Utf8 = 1;
+  public static final byte CONSTANT_Utf8 = 1;
 
   /**
    * Return entry type.
    * 
    * @return Entry type.
    */
-  int getType();
+  byte getType();
   
   /**
    * Return entry size (how many constant pool indices it occupies).

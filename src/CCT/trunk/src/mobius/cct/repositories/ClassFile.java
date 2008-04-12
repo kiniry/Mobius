@@ -2,6 +2,8 @@ package mobius.cct.repositories;
 
 import java.io.OutputStream;
 import java.io.IOException;
+import java.util.Iterator;
+
 import mobius.cct.certificates.Certificate;
 
 /**
@@ -20,13 +22,13 @@ public interface ClassFile {
     throws IOException, InvalidCertificateException;
   
   /**
-   * Get certificates of this class.
-   * @return Class certificates.
+   * Get certificates of this class. 
+   * @return Iterator over vlass certificates.
    */
-  Certificate[] getCertificates();
+  Iterator<Certificate> getCertificates();
   
   /**
-   * Get certificate of this class.
+   * Set certificates of this class.
    * @param certs Class certificate.
    */
   void setCertificates(Certificate[] certs);  

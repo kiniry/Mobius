@@ -46,7 +46,7 @@ public final class Util {
   
   /**
    * Convert byte to hex string. The string has
-   * always 2 characters (it is padded with zeros if necessary).
+   * always 2 characters (it is padded with zero if necessary).
    * @param b Byte value.
    * @return Hex string.
    */

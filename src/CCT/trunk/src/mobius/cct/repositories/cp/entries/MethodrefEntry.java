@@ -34,7 +34,7 @@ public final class MethodrefEntry implements Entry {
    * @return CONSTANT_Methodref.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_Methodref;
   }
   

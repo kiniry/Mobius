@@ -24,17 +24,17 @@ public abstract class AbstractCacheTest {
   protected Cache<Object> fCache;
   
   /**
-   * This method should initialize fCache and perform
+   * This method should create empty cache instance and perform
    * test setup.
    */
-  protected abstract void initCache();
+  protected abstract Cache<Object> getCache();
   
   /**
    * Method run before each test.
    */
   @Before
-  public void setUp() {
-    initCache();
+  public final void setUp() {
+    fCache = getCache();
   }
   
   /**

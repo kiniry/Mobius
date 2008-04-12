@@ -35,20 +35,21 @@ public class DefaultFactory implements ConstantPoolFactory {
     final int size;
     final Entry[] entries;
     Entry entry;
-    int i, t;
+    int i; 
+    byte t;
     final DefaultEntryReader reader = new DefaultEntryReader();
     final DataInputStream ds = new DataInputStream(is);
     
     size = ds.readShort();
     entries = new Entry[size];
     i = 0;
-    while (i < size) {
-      t = ds.readShort();
+    while (i < size - 1) {
+      t = ds.readByte();
       entry = reader.read(ds, t);
       entries[i] = entry;
       i += entry.getSize();
     }
-    return null;
+    return new DefaultPool(entries);
   }
   
 }

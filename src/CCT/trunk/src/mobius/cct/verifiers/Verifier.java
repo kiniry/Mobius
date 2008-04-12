@@ -1,13 +1,14 @@
 package mobius.cct.verifiers;
 
 import mobius.cct.certificates.Certificate;
+import mobius.cct.repositories.ClassFile;
 import mobius.cct.util.Version;
 
 /**
  * Interface of certificate verifiers. 
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public interface Verifier {
+public interface Verifier<C extends ClassFile> {
   /**
    * Type of certificates verifiable by this object.
    * @return Certificate type.
@@ -50,5 +51,5 @@ public interface Verifier {
   boolean verify(String name, 
                  String spec,
                  Certificate cert, 
-                 Environment env);
+                 Environment<C> env);
 }

@@ -36,7 +36,7 @@ public class DefaultPool implements ConstantPool {
     j = 0;
     for (i = 0; i < entries.length; i++) {
       if (entries[i] != null) {
-        fEntries[i] = entries[i];
+        fEntries[j] = entries[i];
         j += entries[i].getSize();
       }
     }
@@ -89,11 +89,11 @@ public class DefaultPool implements ConstantPool {
     int i;
     Entry entry;
     final DataOutputStream ds = new DataOutputStream(os);
-    ds.writeShort(fEntries.length);
+    ds.writeShort(fEntries.length + 1);
     for (i = 0; i < fEntries.length; i++) {
       entry = fEntries[i]; 
       if (entry != null) {
-        ds.writeShort(entry.getType());
+        ds.writeByte(entry.getType());
         entry.write(ds);
       }
     }

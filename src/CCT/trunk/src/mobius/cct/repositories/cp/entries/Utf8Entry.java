@@ -25,7 +25,7 @@ public final class Utf8Entry implements Entry {
    * @return CONSTANT_Utf8.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_Utf8;
   }
   

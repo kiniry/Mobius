@@ -25,7 +25,7 @@ public final class DoubleEntry implements Entry {
    * @return CONSTANT_Double.
    */
   @Override
-  public int getType() {
+  public byte getType() {
     return CONSTANT_Double;
   }
   
