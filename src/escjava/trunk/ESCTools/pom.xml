@@ -33,14 +33,32 @@
       <artifactId>bcel</artifactId>
       <version>5.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-rpc-client</artifactId>
+      <version>1.0.3</version>
+  </dependency>
   </dependencies>
+  <issueManagement>
+    <system>trac</system>
+    <url>http://mobius.ucd.ie</url>
+  </issueManagement>
   <developers>
     <developer>
       <id>dcochran</id>
       <name>Dermot Cochran</name>
-      <email>escjava2-ticket@mobius.ucd.ie</email>
+      <email>Dermot.Cochran@ucd.ie</email>
       <roles>
         <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>kiniry</id>
+      <name>Joe Kiniry</name>
+      <email>kiniry@ucd.ie</email>
+      <roles>
+        <role>developer</role>
+        <role>architect</role>
       </roles>
     </developer>
   </developers>
