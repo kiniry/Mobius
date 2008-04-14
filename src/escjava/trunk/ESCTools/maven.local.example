@@ -1,0 +1,4 @@
+#!/bin/bash
+export M2_HOME=../apache-maven-2.0.8
+export JAVA_HOME=/usr
+$M2_HOME/bin/mvn $*

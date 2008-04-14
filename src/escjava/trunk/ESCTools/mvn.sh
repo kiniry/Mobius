@@ -1,9 +1,9 @@
 # Distribution script for Maven builds
 
 echo $USER $HOSTNAME $PWD
-export COMMAND="cd ESCJava2; mvn"
-ssh arrow.ucd.ie $COMMAND $*
-ssh object.ucd.ie $COMMAND $*
-ssh morphism.ucd.ie $COMMAND $*
-ssh category.ucd.ie $COMMAND $*
-ssh voting.ucd.ie $COMMAND $*
+export MAVEN="cd ESCJava2; ./maven.local"
+export REMOTE_TEST="sudo -u dcochran ssh -f"
+echo $REMOTE_TEST server $MAVEN
+$REMOTE_TEST dcochran@arrow.ucd.ie $MAVEN $* 
+$REMOTE_TEST dcochran@object.ucd.ie $MAVEN $* 
+$REMOTE_TEST dermotcochran@voting.ucd.ie $MAVEN $* 
