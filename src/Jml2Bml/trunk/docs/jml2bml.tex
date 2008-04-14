@@ -99,10 +99,30 @@ verification process on each class file which is loaded to be
 executed. This verification process ensures vital properties of the
 loaded programs such as that the operand stack is not bigger than a
 fixed number or the typed bytecode instructions will operate on data
-of the suitable types. In certain situations, these guarantees are not
-sufficient. 
+of the suitable types.
 
-StackMap
+In certain situations, these guarantees are not sufficient. In
+particular, many of the current security guarantees are ensured at
+runtime of an application. For instance, a mobile application asks the
+user to acknowledge the sending of data over the mobile
+network. However, the user may get bored with many such prompts and
+disable this security property. After this, she or he may easily be
+made to send data to e.g. an expensive premium number. In this case,
+it would be more secure to give the user a load- (or download-) time
+guarantee that the code sends data only to expected receivers.
+
+The goal of the proof-carrying code (PCC) technique is to give the
+user certain guarantees of the code to be executed at the moment of
+its execution. In this paradigm, the executable code (in case of Java,
+the bytecode) is augmented with an additional piece of
+information\,---\,a PCC certificate which together with the code makes
+possible an automatic check that the code indeed obeys the expected
+policy (e.g. sends data to authorised targets only). The usual Java
+bytecode verification procedure can be viewed as an example of a
+forerunner of thich technique. Although the certificate is in this
+case empty (or supplementary in case the StackMap attributes are
+employed), the execution environment indeed checks a vital code
+property before the code is 
 
 
 Modern, high level programming languages support creating software in
@@ -126,6 +146,7 @@ is designed to be the core of such platform. There is a need to
 automatically translate source code level specifications into
 bytecode, to be able to use them later in the verification.
 
+\cite{JSR308}
 
 Specification languages are useful in describing the system components
 behaviour. They are not only helpful in dividing the problem into
