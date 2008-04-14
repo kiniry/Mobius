@@ -1,7 +1,9 @@
 # Distribution script for Maven builds
 
-ssh dcochran@arrow.ucd.ie mvn $*
-ssh dcochran@object.ucd.ie mvn $*
-ssh dcochran@morphism.ucd.ie mvn $*
-ssh dcochran@category.ucd.ie mvn $*
-ssh dcochran@voting.ucd.ie mvn $*
+echo $USER $HOSTNAME $PWD
+export COMMAND = "cd ESCJava2; mvn"
+ssh arrow.ucd.ie $COMMAND $*
+ssh object.ucd.ie $COMMAND $*
+ssh morphism.ucd.ie $COMMAND $*
+ssh category.ucd.ie $COMMAND $*
+ssh voting.ucd.ie $COMMAND $*
