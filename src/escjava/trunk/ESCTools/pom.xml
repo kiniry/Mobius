@@ -44,4 +44,24 @@
       </roles>
     </developer>
   </developers>
+  <scm>
+    <connection>scm:svn:https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools</connection>
+    <developerConnection>scm:svn:https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://mobius.ucd.ie/browser/src/escjava/trunk/ESCTools</url>
+  </scm>
+  <ciManagement>
+    <system>continuum</system>
+    <url>http://kind.ucd.ie:9006/continuum</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+        <configuration><address>mobius-ticket@mobius.ucd.ie</address></configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
 </project>
