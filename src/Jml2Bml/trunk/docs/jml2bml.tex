@@ -85,6 +85,7 @@ specifications generates class files with BML.
 %*   Middleware for Mobile Applications
 %* Location-Based Services
 %* M-Business Applications
+% page limit: 10 pages
 
 \category{D.2.4}{Software Engineering}{Software/Program Verification}
 
@@ -117,13 +118,17 @@ its execution. In this paradigm, the executable code (in case of Java,
 the bytecode) is augmented with an additional piece of
 information\,---\,a PCC certificate which together with the code makes
 possible an automatic check that the code indeed obeys the expected
-policy (e.g. sends data to authorised targets only). The usual Java
-bytecode verification procedure can be viewed as an example of a
+policy (e.g. sends data to authorised targets only). This check is
+performed by the user (or by user's execution environment) right
+before the code is executed (for the first time). In fact, the usual
+Java bytecode verification procedure can be viewed as an example of a
 forerunner of thich technique. Although the certificate is in this
 case empty (or supplementary in case the StackMap attributes are
 employed), the execution environment indeed checks a vital code
-property before the code is 
-
+property before the code is executed. In more complicated cases of the
+proof-carrying code, one needs the additional information to make the
+checking of the required property feasible or even algorithmically
+possible.
 
 Modern, high level programming languages support creating software in
 a modular way. Applications can be divided into smaller parts that can
@@ -137,14 +142,21 @@ what they require and what can we expect from them. The solution is to
 define formally implementation contracts that can be then
 automatically verified.
 
-====
-An idea of compiling different languages to the Java bytecode becomes
-more and more popular. This forces us to build one common verification
-platform for the bytecode level. BML (Bytecode Modelling Language), a
-recent specification language based on JML (Java Modelling Language),
-is designed to be the core of such platform. There is a need to
-automatically translate source code level specifications into
-bytecode, to be able to use them later in the verification.
+One of the possible ways to realise the PCC architecture is developed
+under the project MOBIUS (see \verb!http://mobius.inria.fr!). This
+project plans to develop both type-based and logic-based program
+certification techniques. The logic-based methods rely on
+specification of the object-oriented code in the fashion governed by
+the design-by-contract principles. Bytecode Modeling Language (BML) is
+a specification language which realises the methodology at the
+bytecode level. It is designed as a counterpart of the Java Modeling
+Language (JML), an established specification language dedicated to
+formally describe properties of Java programs in the
+design-by-contract style.
+
+
+
+
 
 \cite{JSR308}
 
