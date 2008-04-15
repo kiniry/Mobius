@@ -1,5 +1,2 @@
 arrow.ucd.ie
-category.ucd.ie
-morphism.ucd.ie
 object.ucd.ie
-voting.ucd.ie
