@@ -14,4 +14,47 @@
       <version>5.2</version>
     </dependency>
   </dependencies>
+   <issueManagement>
+    <system>trac</system>
+    <url>http://mobius.ucd.ie</url>
+  </issueManagement>
+  <developers>
+    <developer>
+      <id>dcochran</id>
+      <name>Dermot Cochran</name>
+      <email>Dermot.Cochran@ucd.ie</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>kiniry</id>
+      <name>Joe Kiniry</name>
+      <email>kiniry@ucd.ie</email>
+      <roles>
+        <role>developer</role>
+        <role>architect</role>
+      </roles>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:svn:https://mobius.ucd.ie/repos/src/javafe/trunk</connection>
+    <developerConnection>scm:svn:https://mobius.ucd.ie/repos/src/javafe/trunk</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://mobius.ucd.ie/browser/src/javafe/trunk</url>
+  </scm>
+  <ciManagement>
+    <system>continuum</system>
+    <url>http://kind.ucd.ie:9006/continuum</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+        <configuration><address>mobius-ticket@mobius.ucd.ie</address></configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
 </project>
