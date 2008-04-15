@@ -63,7 +63,7 @@ public class LRUCacheTest extends AbstractCacheTest {
       fCache.update(Integer.toString(i), this);
     }
     for (i = 0; i < fSize; i++) {
-      fCache.lookup(Integer.toString(fSize - i));
+      fCache.lookup(Integer.toString(fSize - i - 1));
     }
     fCache.update("KEY", this);
     for (i = 0; i < fSize - 1; i++) {
@@ -85,7 +85,7 @@ public class LRUCacheTest extends AbstractCacheTest {
       fCache.update(Integer.toString(i), this);
     }
     for (i = 0; i < fSize; i++) {
-      fCache.hasKey(Integer.toString(fSize - i));
+      fCache.hasKey(Integer.toString(fSize - i - 1));
     }
     fCache.update("KEY", this);
     for (i = 0; i < fSize - 1; i++) {

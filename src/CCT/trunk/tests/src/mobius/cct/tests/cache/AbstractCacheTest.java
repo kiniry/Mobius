@@ -48,7 +48,7 @@ public abstract class AbstractCacheTest {
   /**
    * Test update - null as first argument.
    */
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void testUpdate1() {
     fCache.update(null, this);
   }
@@ -56,7 +56,7 @@ public abstract class AbstractCacheTest {
   /**
    * Test update - null as second argument.
    */
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void testUpdate2() {
     fCache.update("KEY", null);
   }

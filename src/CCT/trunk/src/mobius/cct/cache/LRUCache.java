@@ -1,5 +1,8 @@
 package mobius.cct.cache;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Cache implementation using LRU algorithm.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
@@ -7,10 +10,55 @@ package mobius.cct.cache;
  */
 public class LRUCache<C> implements Cache<C> {
   /**
+   * Cache size.
+   */
+  private final int fSize;
+  
+  /**
+   * Mapping from keys to elements.
+   */
+  private final LinkedHashMap<String, C> fMap;
+  
+  /**
+   * LinkedHashMap used to store cached elements.
+   * @author Tadeusz Sznuk (ts209501@gmail.com)
+   * @param <K>
+   * @param <V>
+   */
+  private final class LRUHashMap<K, V> extends LinkedHashMap<K, V> {
+    /**
+     * SerialVersionUID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Constructor.
+     */
+    public LRUHashMap() {
+      // Create access-ordered map.
+      super(fSize, 0.75f, true);
+    }
+    
+    /**
+     * This method is called after a new element has been added to the map.
+     * If it returns true, eldest element in the map is removed after
+     * insertion (this is the least recently accessed element, becuase
+     * the map is access-ordered).
+     * @param eldest Element to be removed.
+     */
+    @Override
+    protected boolean removeEldestEntry(final Map.Entry<K, V> eldest) {
+      return this.size() > fSize;
+    }
+  }    
+  
+  /**
    * Create cache with given size.
    * @param size Maximum number of objects in the cache.
    */
   public LRUCache(final int size) {
+    fSize = size;
+    fMap  = new LRUHashMap<String, C>();
   }
   
   /**
@@ -22,6 +70,10 @@ public class LRUCache<C> implements Cache<C> {
    */
   @Override
   public void update(final String key, final C object) {
+    if ((key == null) || (object == null)) {
+      throw new NullPointerException();
+    }
+    fMap.put(key, object);
   }
   
   /**
@@ -30,6 +82,7 @@ public class LRUCache<C> implements Cache<C> {
    */
   @Override
   public void remove(final String key) {
+    fMap.remove(key);
   }
   
   /**
@@ -40,7 +93,7 @@ public class LRUCache<C> implements Cache<C> {
    */
   @Override
   public C lookup(final String key) {
-    return null;
+    return fMap.get(key);
   }
   
   /**
@@ -50,7 +103,8 @@ public class LRUCache<C> implements Cache<C> {
    */
   @Override
   public boolean hasKey(final String key) {
-    return false;
+    // fMap.containsKey() does not update access time.
+    return fMap.get(key) != null;
   }
 
   /**
@@ -58,6 +112,6 @@ public class LRUCache<C> implements Cache<C> {
    * @return cache size.
    */
   public int size() {
-    return 0;
+    return fMap.size();
   }
 }

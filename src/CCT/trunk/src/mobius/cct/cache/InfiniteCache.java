@@ -28,7 +28,7 @@ public class InfiniteCache<C> implements Cache<C> {
   @Override
   public void update(final String key, final C object) {
     if ((key == null) || (object == null)) {
-      throw new IllegalArgumentException();
+      throw new NullPointerException();
     }
     fMap.put(key, object);
   }

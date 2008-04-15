@@ -1,16 +1,38 @@
 package mobius.cct.cache;
 
+import java.util.HashMap;
+
+import mobius.cct.util.ArrayQueue;
+
 /**
- * Cache implementation using LIFO queue.
+ * Cache implementation using FIFO queue.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  * @param <C> Type of cached objects.
  */
-public class LIFOCache<C> implements Cache<C> {
+public class FIFOCache<C> implements Cache<C> {
+  /**
+   * Queue of keys.
+   */
+  private final ArrayQueue<String> fKeys;
+  
+  /**
+   * Mapping from keys to stored objects.
+   */
+  private final HashMap<String, C> fMap;
+  
+  /**
+   * Cache size.
+   */
+  private int fSize;
+  
   /**
    * Create cache with given size.
    * @param size Maximum number of objects in the cache.
    */
-  public LIFOCache(final int size) {
+  public FIFOCache(final int size) {
+    fKeys = new ArrayQueue<String>();
+    fMap = new HashMap<String, C>();
+    fSize = size;
   }
   
   /**
@@ -21,15 +43,27 @@ public class LIFOCache<C> implements Cache<C> {
    */
   @Override
   public void update(final String key, final C object) {
+    if ((key == null) || (object == null)) {
+      throw new NullPointerException();
+    }
+    if (! fMap.containsKey(key)) {
+      if (fKeys.size() >= fSize) {
+        final String oldKey = fKeys.poll();
+        fMap.remove(oldKey);
+      }
+      fKeys.add(key);
+    }
+    fMap.put(key, object);
   }
   
   /**
    * Remove binding for given key from cache (if present).
    * @param key Key. Does not have to be bound.
-   * 
    */
   @Override
   public void remove(final String key) {
+    fMap.remove(key);
+    fKeys.remove(key);
   }
   
   /**
@@ -40,7 +74,7 @@ public class LIFOCache<C> implements Cache<C> {
    */
   @Override
   public C lookup(final String key) {
-    return null;
+    return fMap.get(key);
   }
   
   /**
@@ -50,7 +84,7 @@ public class LIFOCache<C> implements Cache<C> {
    */
   @Override
   public boolean hasKey(final String key) {
-    return false;
+    return fMap.containsKey(key);
   }
   
   /**
@@ -58,6 +92,6 @@ public class LIFOCache<C> implements Cache<C> {
    * @return cache size.
    */
   public int size() {
-    return 0;
+    return fKeys.size();
   }
 }

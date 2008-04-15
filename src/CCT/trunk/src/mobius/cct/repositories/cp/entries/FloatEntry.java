@@ -14,7 +14,7 @@ public final class FloatEntry implements Entry {
   
   /**
    * Create entry.
-   * @param avaluelue Integer value.
+   * @param value Integer value.
    */
   public FloatEntry(final float value) {
     fValue = value;
