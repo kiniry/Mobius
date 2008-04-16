@@ -33,11 +33,6 @@
       <artifactId>bcel</artifactId>
       <version>5.2</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-rpc-client</artifactId>
-      <version>1.0.3</version>
-  </dependency>
   </dependencies>
   <issueManagement>
     <system>trac</system>
