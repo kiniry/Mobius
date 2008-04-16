@@ -5,5 +5,5 @@ export M2=$M2_HOME/bin
 export JAVA_HOME=/usr
 export PATH=$M2_HOME/bin:$PATH
 ln -sf $PWD ~maven/workdir
-$MAVEN_HOME/mvn-arrow $*
-$MAVEN_HOME/mvn-object $*
+sudo -u maven $MAVEN_HOME/mvn-arrow $*
+sudo -u maven $MAVEN_HOME/mvn-object $*
