@@ -2,11 +2,10 @@
 \RequirePackage[T1]{fontenc}
 \usepackage[cp1250]{inputenc}
 
-
-
 \usepackage{pgf}
 \usepackage{tikz}
 \usepackage{listings}
+\usepackage{url}
 \numberofauthors{3}
 \author{
 \alignauthor
@@ -96,11 +95,11 @@ specifications generates class files with BML.
 \section{Introduction}
 
 Each Java Virtual Machine is required to perform so called bytecode
-verification process on each class file which is loaded to be
-executed. This verification process ensures vital properties of the
-loaded programs such as that the operand stack is not bigger than a
-fixed number or the typed bytecode instructions will operate on data
-of the suitable types.
+verification process on each class file which is loaded to be executed
+\cite{verification}. This verification process ensures vital
+properties of the loaded programs such as that all arguments on the
+operand stack are legal, all types of variables passed to methods are
+correct, all load and store operations have correct types, etc.
 
 In certain situations, these guarantees are not sufficient. In
 particular, many of the current security guarantees are ensured at
@@ -111,11 +110,26 @@ disable this security property. After this, she or he may easily be
 made to send data to e.g. an expensive premium number. In this case,
 it would be more secure to give the user a load- (or download-) time
 guarantee that the code sends data only to expected receivers.
+Currently, this is partially done through digital signatures. The
+signatures, however, do not assure that the software is indeed
+secure. They only certify who takes (not so well defined)
+responsibility for the problems caused by the program.  In fact, there
+were cases when many users were deceived by respected companies
+e.g. rootkits were installed when audio CD was inserted.
 
-The goal of the proof-carrying code (PCC) technique is to give the
-user certain guarantees of the code to be executed at the moment of
-its execution. In this paradigm, the executable code (in case of Java,
-the bytecode) is augmented with an additional piece of
+Another guarantee which is not secured by the traditional bytecode
+verification procedure is the lack of code inconsistencies typically
+considered to be programming errors i.e. null-pointer exceptions,
+array index out of range exceptions etc. In many cases, these
+inconsistencies can be eliminated with the help of some additional
+information which aids to (e.g. @NonNull
+annotations). \marginpar{check the form}
+\todo{more here}
+
+The goal of the proof-carrying code (PCC) technique \cite{pcc} is to
+give the user certain guarantees of the code to be executed at the
+moment of its execution. In this paradigm, the executable code (in
+case of Java, the bytecode) is augmented with an additional piece of
 information\,---\,a PCC certificate which together with the code makes
 possible an automatic check that the code indeed obeys the expected
 policy (e.g. sends data to authorised targets only). This check is
@@ -129,6 +143,19 @@ property before the code is executed. In more complicated cases of the
 proof-carrying code, one needs the additional information to make the
 checking of the required property feasible or even algorithmically
 possible.
+
+One of the possible ways to realise the PCC architecture is developed
+under the european project MOBIUS.\footnote{See
+\url{http://mobius.inria.fr}} This project plans to develop both
+type-based and logic-based PCC program certification techniques. The
+logic-based methods rely on specification of the object-oriented code
+in the fashion governed by the design-by-contract principles. Bytecode
+Modeling Language (BML) is a specification language which realises the
+methodology at the bytecode level. It is designed as a counterpart of
+the Java Modeling Language (JML), an established specification
+language dedicated to formally describe properties of Java programs in
+the design-by-contract style.
+
 \begin{figure}
 \begin{tikzpicture}[scale=0.5]
 
@@ -159,108 +186,63 @@ possible.
 \node (ok) at (8.6, 2) {OK};
 \node (ok) at (9.1, -0.6) {Failure};
 \end{tikzpicture}
-\caption{Proof Carying Code architecture.}
+\caption{Proof-Carying Code architecture for bytecode.}
 \label{pccScheme}
 \end{figure}
 
-
-Modern, high level programming languages support creating software in
-a modular way. Applications can be divided into smaller parts that can
-be developed independently. In large systems, it is a common practice
-to outsource some well defined subsystems to external companies. The
-main problem in this approach is that the pieces of software developed
-by different programming teams often are not fully compatible. To
-avoid this incompatibility and useless code that is produced, there is
-a need to specify precisely the desired behaviour of the components,
-what they require and what can we expect from them. The solution is to
-define formally implementation contracts that can be then
-automatically verified.
-
-One of the possible ways to realise the PCC architecture is developed
-under the project MOBIUS (see \verb!http://mobius.inria.fr!). This
-project plans to develop both type-based and logic-based program
-certification techniques. The logic-based methods rely on
-specification of the object-oriented code in the fashion governed by
-the design-by-contract principles. Bytecode Modeling Language (BML) is
-a specification language which realises the methodology at the
-bytecode level. It is designed as a counterpart of the Java Modeling
-Language (JML), an established specification language dedicated to
-formally describe properties of Java programs in the
-design-by-contract style.
-
-
-
-
-
-\cite{JSR308}
+The use of specification formalisms such as JML or BML has another
+important application. Modern, high level programming languages
+support creating software in a modular way. Applications can be
+divided into smaller parts that can be developed independently. In
+large systems, it is a common practice to outsource some well defined
+subsystems to external companies. The main problem in this approach is
+that the pieces of software developed by different programming teams
+often are not fully compatible. To avoid this incompatibility and
+useless code that is produced, there is a need to specify precisely
+the desired behaviour of the components, what they require and what
+can we expect from them. The solution is to define formally
+implementation contracts in languages such as JML or BML and check
+automatically the compliance of the code with these descriptions.
 
 Specification languages are useful in describing the system components
 behaviour. They are not only helpful in dividing the problem into
 smaller pieces, but also focus on \textit{what} is expected from each
-part, without saying anything about \textit{how} should it be
-done. The specification languages are designed to be simple enough to
-be understood by programmers, so they can play role of code
+part, without saying about \textit{how} should it be done. The
+specification languages are designed to be simple enough to be
+understood by programmers, so they can play role of code
 documentation. Using specification language for documenting code has
 the advantage that it is possible to automatically verify that the
 source code implements the documented features.
 
-One of the key aspects of modern software is security. As the end
-users, we usually have to trust the software we download from the
-internet. When the downloaded program is open source it is believed
-that it will not do anything inappropriate. If we download commercial
-software or program that is not open source, the only argument for
-security is a digital signature. The signature does not assure that
-the software is secure. There were cases when many users were deceived
-by respected companies eg. rootkits were installed when audio CD was
-inserted. The specification language can be used to describe a
-required security policy. In this case the verifcation stands for
-ensuring that the policy holds. As stated, not only the developers are
-interested in checking the described code property. The end user may
-also want to verify if the code he is running is secure. However,
-applications are usually distributed only in some executable form, so
-the specifications have also to be translated into the lower (in our
-case: bytecode) level. The compiled specifications are very useful in
-developing the Proof-Carrying Code infrastructure \cite{pcc}. PCC is a
-good solution to support secure downloading of applications on a
-mobile device. The executable code of an application comes together
-with a specification, and the necessary evidence from which the code
-client can easily establish that the application respects its
-specification. In such a scenario, the code producer, who has to
-produce a correctness proof, will often prefer to do the verification
-at source code level, and then compile the specification and the proof
-into the level of executable code.
-
-The other reason, why it is important to be able to translate the
-source code specifications into lower level language specifications,
-is the fact that more and more languages will be compiled to the same
-bytecode. Java Virtual Machine can be used with languages different
-than Java. Few examples:
+The distributed development of software results in a situation where
+different software modules are implemented in different
+languages. This is facilitated by the fact that more and more
+languages are compiled to the same Java bytecode. A few examples:
 \begin{itemize}
-	\item Jython - the Python Java implementation
-	\item JRuby - the Ruby Java implementation
-	\item Jacl - the Tcl Java implementation
-	\item Rhino - the JavaScript Java implementation
-	\item Scala - a programming language compiled to Java bytecode
+\item Jython: the Python Java implementation,
+\item JRuby: the Ruby Java implementation,
+\item Jacl: the Tcl Java implementation,
+\item Rhino: the JavaScript Java implementation,
+\item Scala: a functional programming language compiled to
+  Java bytecode.
 \end{itemize}
 At SugarCon 2008, Sun Microsystems President and CEO Jonathan Schwartz
 said "we are just going to take the 'J' off the 'JVM' and just make it
 a 'VM'". Therefore there will be a global trend with support of
-companies to use JVM with languages other than Java.  Bytecode itself
-has a verification algorithm \cite{verification} but the verification
-is done only to ensure that the loaded bytecode will not cause the
-crash of the JVM. The verification algorithm includes:
-\begin{itemize}
-\item checking that all arguments on the operand stack are legal
-\item ensuring that all types of variables passed to methods are correct
-\item checking that all load and store operations have correct types
-\end{itemize}
-Unfortunately programming errors are not checked. Now, the Java
-language has JML with proper tools that can be used to verify programs
-- check their correctness or find errors. Most of them operates on
-source code. But it seems to be a better idea to develop one common
-verification platform at the bytecode level, then to create multiple,
-different for each language platforms working at the source code
-level. However it would be to difficult to add annotations to the
+companies to use JVM with languages other than Java.  This is an
+important reason, why it is important to be able to translate the
+source code specifications into lower level language
+specifications\,---\, in case the development is done in many
+languages the only common platform is the platform of the executable
+code. This explains the efforts concerning BML specification language.
+
+ Now, the
+Java language has JML with proper tools that can be used to verify
+programs - check their correctness or find errors. Most of them
+operates on source code. But it seems to be a better idea to develop
+one common verification platform at the bytecode level, then to create
+multiple, different for each language platforms working at the source
+code level. However it would be to difficult to add annotations to the
 compiled programs manually, so we have to provide tools translating
 source code level specification languages into one common bytecode
 specification language. The BML, proposed in \cite{bmlBurdy} is a good
@@ -275,6 +257,15 @@ needed to build the common bytecode verification platform:
 \end{itemize}
 The \textit{Jml2Bml} compiler described in this paper is designed to
 be a part of this scheme.
+
+
+In such a scenario, the code
+producer, who has to produce a correctness proof, will often prefer to
+do the verification at source code level, and then compile the
+specification and the proof into the level of executable code.
+
+\cite{JSR308}
+
 
 \subsection{JML}
 The Java Modelling Language (JML) is a behavioural specification
@@ -597,9 +588,11 @@ iteration by at least one.
 
 
 \lstset{language=java, morekeywords={requires,ensures,\result,\exists,\old,loop_invariant,\forall,==>, decreases},
-        basicstyle=\small,commentstyle=\small,moredelim=*[s][\small]{/*@}{*/}}
+        basicstyle=\scriptsize,commentstyle=\scriptsize,moredelim=*[s][\scriptsize]{/*@}{*/},
+        numbers=left,numberstyle=\tiny,stepnumber=4,numbersep=5pt}
 \begin{figure}
-\centering{
+~~~~~~%
+\begin{minipage}{400pt}
 \begin{lstlisting}
 public class List {
 
@@ -627,7 +620,7 @@ public class List {
   }
 }
 \end{lstlisting}
-}
+\end{minipage}
 \caption{An example class \texttt{List.java} containing single method \texttt{replace}.}
 \label{source}
 \end{figure}
