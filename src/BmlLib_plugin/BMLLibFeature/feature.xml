@@ -2,7 +2,7 @@
 <feature
       id="mobius.BMLLib.feature"
       label="BMLLibFeature Feature"
-      version="0.0.6"
+      version="0.0.7"
       provider-name="EU MOBIUS IST-15905 Project">
 
    <description>
@@ -204,7 +204,7 @@ Library.
          id="org.apache.bcel_5.1"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="mobius.umbra"
