@@ -1,0 +1,2 @@
+#/bin/bash
+ssh arrow cd workdir; ESCTOOLS_ROOT=$PWD JAVAFE_ROOT=$PWD make pre-maven; ~maven/mvn $*
