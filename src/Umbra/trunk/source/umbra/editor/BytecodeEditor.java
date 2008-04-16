@@ -26,7 +26,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -182,7 +181,7 @@ public class BytecodeEditor extends TextEditor {
       final String path3 = a_file_from.getLocation().toOSString();
       jc.dump(path3);
     } catch (IOException e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO stack print
     }
   }
 
@@ -284,7 +283,7 @@ public class BytecodeEditor extends TextEditor {
       MessageDialog.openError(new Shell(), "Bytecode",
                               "Cannot load the byte code from the file " +
                               jc.getFileName());
-      e1.printStackTrace();
+      e1.printStackTrace(); //TODO stack print
     }
   }
 
@@ -416,13 +415,13 @@ public class BytecodeEditor extends TextEditor {
   }
 
   public int getVisibleRegion() {
-    ISourceViewer isv = getSourceViewer();
+    final ISourceViewer isv = getSourceViewer();
     return isv.getTextWidget().getTopIndex();
   }
 
-  public void setVisibleRegion(int firstVisible) {
+  public void setVisibleRegion(final int firstVisible) {
     setFocus(); //to make sure source viewer exists
-    ISourceViewer isv = getSourceViewer();
+    final ISourceViewer isv = getSourceViewer();
     isv.getTextWidget().setTopIndex(firstVisible);
   }
 

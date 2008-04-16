@@ -102,7 +102,7 @@ public class DocumentSynchroniser {
       else jeditor.getSelectionProvider().
                    setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO stack print
     }
   }
 
@@ -226,7 +226,7 @@ public class DocumentSynchroniser {
       else ((AbstractDecoratedTextEditor)be).getSelectionProvider().
                             setSelection(new TextSelection(syncPos, syncLen));
     } catch (BadLocationException e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO stack print
     }
   }
 

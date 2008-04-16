@@ -94,7 +94,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
                         getDocument(input));
       bDoc.synchronizeSB(off, my_editor);
     } catch (PartInitException e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO stack print
     }
   }
 

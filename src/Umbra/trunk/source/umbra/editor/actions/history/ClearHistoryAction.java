@@ -9,42 +9,43 @@
 package umbra.editor.actions.history;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraHelper;
-import umbra.editor.BytecodeEditor;
+import umbra.editor.BytecodeContribution;
+import umbra.editor.BytecodeEditorContributor;
+import umbra.editor.actions.BytecodeEditorAction;
 
 /**
- * The bytecode editor action that removes historical versions of code.
+ * The bytecode editor action that removes all the historical versions of code.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class ClearHistoryAction implements IEditorActionDelegate {
+public class ClearHistoryAction  extends BytecodeEditorAction {
 
   /**
-   * The editor of the bytecode for which we clear the history.
-   */
-  private IEditorPart my_editor;
-
-  /**
-   * The method sets the editor for which the history should be cleared.
+   * This constructor creates the action to add item to the history
+   * of the byte code editor. It registers the name of the action with the text
+   * "Clear history" and stores locally the object which creates all the
+   * actions and which contributs the editor GUI elements to the eclipse GUI.
    *
-   * @param an_action ignored
-   * @param a_target_editor the editor to clear history for.
+   * @param a_contributor the manager that initialises all the actions within
+   *   the bytecode plugin
+   * @param a_btcd_contribution the GUI elements contributed to the eclipse
+   *   GUI by the bytecode editor. This reference should be the same as in the
+   *   parameter <code>a_contributor</code>.
    */
-  public final void setActiveEditor(final IAction an_action,
-                                    final IEditorPart a_target_editor) {
-    my_editor = a_target_editor;
+  public ClearHistoryAction(final BytecodeEditorContributor a_contributor,
+                          final BytecodeContribution a_btcd_contribution) {
+    super("Clear history", a_contributor, a_btcd_contribution);
   }
 
   /**
@@ -52,39 +53,22 @@ public class ClearHistoryAction implements IEditorActionDelegate {
    * It resets the counter of the historical versions and then
    * deletes all the files in the workspace that represent the
    * historical versions of the current file.
-   *
-   * @param an_action the action to clear the history
-   *
    */
-  public final void run(final IAction an_action) {
-    ((BytecodeEditor)my_editor).clearHistory();
-    for (int i = 0; i <= UmbraHelper.MAX_HISTORY; i++) {
-      final String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + i;
-      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      final IFile inputFile = ((FileEditorInput)my_editor.getEditorInput()).
-                                                          getFile();
-      final IPath active = inputFile.getFullPath();
-      final String fname = active.toOSString().replaceFirst(
-                             UmbraHelper.BYTECODE_EXTENSION, ext);
-      final IFile file = root.getFile(new Path(fname));
+  public final void run() {
+    getEditor().clearHistory();
+    final IFile btcFile = ((FileEditorInput)getEditor().getEditorInput()).
+                          getFile();
+    final CompilationUnitEditor editor = getEditor().getRelatedEditor();
+    for (int i = UmbraHelper.MIN_HISTORY; i <= UmbraHelper.MAX_HISTORY; i++) {
       try {
-        file.delete(true, null);
+        HistoryOperations.removeBTCHistoryFile(btcFile, i, editor);
+        HistoryOperations.removeClassHistoryFile(btcFile, i, editor);
       } catch (CoreException e) {
-        e.printStackTrace();
-      }
-      final String lastSegment = active.lastSegment().replaceFirst(
-                               UmbraHelper.BYTECODE_EXTENSION,
-                               UmbraHelper.CLASS_EXTENSION);
-      final String clname = active.removeLastSegments(1).append("_" + i +
-                                          "_" + lastSegment).toOSString();
-      final IFile classFile = root.getFile(new Path(clname));
-      try {
-        classFile.delete(true, null);
-      } catch (CoreException e) {
-        e.printStackTrace();
+        final Shell parent = getEditor().getSite().getShell();
+        MessageDialog.openError(parent, getActionDefinitionId(),
+                                "The file operation cannot be completed");
       }
     }
-
   }
 
   /**

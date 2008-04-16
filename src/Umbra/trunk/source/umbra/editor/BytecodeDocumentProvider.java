@@ -9,7 +9,6 @@
 package umbra.editor;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.runtime.CoreException;

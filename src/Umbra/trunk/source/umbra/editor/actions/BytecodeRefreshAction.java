@@ -11,8 +11,6 @@ package umbra.editor.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -75,7 +73,7 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
   public final void run() {
     final BytecodeEditor my_editor = getEditor();
     final BytecodeEditorContributor my_contributor = getContributor();
-    int topvisible = my_editor.getVisibleRegion();
+    final int topvisible = my_editor.getVisibleRegion();
     my_editor.doSave(null);
     final FileEditorInput input = (FileEditorInput)my_editor.getEditorInput();
     final IFile file = input.getFile();
@@ -88,15 +86,15 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
       final String[] interlineComm = doc.getInterlineComments();
       final boolean[] modified = doc.getModified();
       my_editor.refreshBytecode(active, doc, eolComments, interlineComm);
-      BytecodeEditor newEditor = my_contributor.refreshEditor(my_editor, input,
+      final BytecodeEditor newEditor = my_contributor.refreshEditor(my_editor, input,
                                    eolComments, interlineComm);
       newEditor.getDocument().setModTable(modified);
       newEditor.setVisibleRegion(topvisible);
       setActiveEditor(newEditor);
     } catch (ClassNotFoundException e) {
-      e.printStackTrace(); // TODO
+      e.printStackTrace(); //TODO stack print
     } catch (CoreException e) {
-      e.printStackTrace(); // TODO
+      e.printStackTrace(); //TODO stack print
     }
     my_contributor.synchrEnable();
   }

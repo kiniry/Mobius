@@ -48,7 +48,7 @@ public class UserGuideAction implements IEditorActionDelegate {
   public final void run(final IAction an_action) {
 
     final IWorkbenchHelpSystem help = PlatformUI.getWorkbench().getHelpSystem();
-    help.displayHelp();
+    help.displayHelpResource("/mobius.umbra/help/user_guide.html");
   }
 
 

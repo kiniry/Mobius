@@ -153,11 +153,11 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       final IEditorInput input = new FileEditorInput(a_file);
       getContributor().refreshEditor(my_editor, input, null, null);
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO stack print
     } catch (IOException e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO stack print
     } catch (CoreException e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO stack print
     } catch (ReadAttributeException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

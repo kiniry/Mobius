@@ -70,7 +70,7 @@ public class CommitAction implements IEditorActionDelegate {
       final IFile fileFrom = root.getFile(new Path(fnameFrom));
       fileFrom.delete(true, null);
     } catch (CoreException e) {
-      e.printStackTrace();
+      e.printStackTrace(); //TODO stack print
     }
   }
 

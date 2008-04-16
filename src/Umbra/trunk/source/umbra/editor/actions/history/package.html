@@ -20,6 +20,19 @@ This package contains all the classes which handle the GUI actions available
 in the bytecode Umbra editor and which handle the access to the historical
 versions of a bytecode file.
 
+The package handles the actions:
+<ul>
+  <li>To add an item to the history {@see HistoryAction}</li>
+  <li>To get an item from the history {@see BytecodeRestoreAction}</li>
+  <li>To clear the history concerning the currently edited file
+      {@see ClearHistoryAction}</li>
+</ul>
+
+The history is organised in files. In case we add an item to the history,
+the current file name.btc is copied to name.bt<num> where <num> is the
+number of the first free history item. Moreover, the current file name.class
+is copied to name.class<num>.
+
 <!-- Put @see and @since tags down here. -->
 TODO: a few words on how the history is organised
 </body>

@@ -15,13 +15,9 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -29,15 +25,16 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 import umbra.UmbraPlugin;
 import umbra.editor.actions.BytecodeColorAction;
 import umbra.editor.actions.BytecodeCombineAction;
 import umbra.editor.actions.BytecodeRebuildAction;
 import umbra.editor.actions.BytecodeRefreshAction;
-import umbra.editor.actions.BytecodeRestoreAction;
 import umbra.editor.actions.BytecodeSynchrAction;
+import umbra.editor.actions.history.BytecodeRestoreAction;
+import umbra.editor.actions.history.ClearHistoryAction;
+import umbra.editor.actions.history.HistoryAction;
 
 
 /**
@@ -89,6 +86,17 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   private BytecodeCombineAction my_combine_action;
 
   /**
+   * The action to add one history snapshot.
+   */
+  private HistoryAction my_addhist_action;
+
+  /**
+   * The action to clear all the history snapshots that
+   * were stored before.
+   */
+  private ClearHistoryAction my_clearhist_action;
+
+  /**
    * The action to restore one of the history snapshots that
    * were stored before.
    */
@@ -127,6 +135,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     my_refresh_action.setToolTipText("Refresh");
     my_rebuild_action.setToolTipText("Rebuild");
     my_combine_action.setToolTipText("Combine");
+    my_addhist_action.setToolTipText("Add to history");
+    my_clearhist_action.setToolTipText("Clear history");
     my_restore_action.setToolTipText("Restore");
     my_synchr_action.setToolTipText("Synchronize");
   }
@@ -139,6 +149,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     my_refresh_action = new BytecodeRefreshAction(this, my_bcode_cntrbtn);
     my_rebuild_action = new BytecodeRebuildAction(this);
     my_combine_action = new BytecodeCombineAction(this, my_bcode_cntrbtn);
+    my_addhist_action = new HistoryAction(this, my_bcode_cntrbtn);
+    my_clearhist_action = new ClearHistoryAction(this, my_bcode_cntrbtn);
     my_restore_action = new BytecodeRestoreAction(this, my_bcode_cntrbtn);
     my_synchr_action = new BytecodeSynchrAction();
   }
@@ -186,6 +198,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
       ImageDescriptor refresh_icon;
       ImageDescriptor rebuild_icon;
       ImageDescriptor combine_icon;
+      ImageDescriptor addhist_icon;
+      ImageDescriptor clearhist_icon;
       ImageDescriptor restore_icon;
       ImageDescriptor synchr_icon;
       refresh_icon = ImageDescriptor.
@@ -194,13 +208,19 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
         createFromURL(new URL(an_install_url, "icons/rebuild_bytecode.gif"));
       combine_icon = ImageDescriptor.
         createFromURL(new URL(an_install_url, "icons/combine.gif"));
+      addhist_icon = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/addH.gif"));
+      clearhist_icon = ImageDescriptor.
+      createFromURL(new URL(an_install_url, "icons/clearH.gif"));
       restore_icon = ImageDescriptor.
-        createFromURL(new URL(an_install_url, "icons/restoreH.gif"));
+      createFromURL(new URL(an_install_url, "icons/restoreH.gif"));
       synchr_icon = ImageDescriptor.
         createFromURL(new URL(an_install_url, "icons/synchronize.gif"));
       my_refresh_action.setImageDescriptor(refresh_icon);
       my_rebuild_action.setImageDescriptor(rebuild_icon);
       my_combine_action.setImageDescriptor(combine_icon);
+      my_addhist_action.setImageDescriptor(addhist_icon);
+      my_clearhist_action.setImageDescriptor(clearhist_icon);
       my_restore_action.setImageDescriptor(restore_icon);
       my_synchr_action.setImageDescriptor(synchr_icon);
     } catch (MalformedURLException e) {
@@ -249,13 +269,19 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final MenuManager bytecodeMenu =
       new MenuManager("Byte code", "umbra.bytecodeMenu"); //$NON-NLS-1$
     a_menu_mngr.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
-    bytecodeMenu.add(my_action_plus);
-    bytecodeMenu.add(my_action_minus);
     bytecodeMenu.add(my_refresh_action);
     bytecodeMenu.add(my_rebuild_action);
     bytecodeMenu.add(my_combine_action);
-    bytecodeMenu.add(my_restore_action);
     bytecodeMenu.add(my_synchr_action);
+    final Separator histGroup = new Separator("historyGroup");
+    bytecodeMenu.add(histGroup);
+    bytecodeMenu.appendToGroup("historyGroup", my_addhist_action);
+    bytecodeMenu.appendToGroup("historyGroup", my_clearhist_action);
+    bytecodeMenu.appendToGroup("historyGroup", my_restore_action);
+    final Separator colourGroup = new Separator("colourGroup");
+    bytecodeMenu.add(colourGroup);
+    bytecodeMenu.appendToGroup("colourGroup", my_action_plus);
+    bytecodeMenu.appendToGroup("colourGroup", my_action_minus);
     getActionBars().updateActionBars();
   }
 
@@ -275,6 +301,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     beditor.setAction(REFRESH_ID, my_refresh_action);
     my_rebuild_action.setActiveEditor(an_editor);
     my_combine_action.setActiveEditor(an_editor);
+    my_addhist_action.setActiveEditor(an_editor);
+    my_clearhist_action.setActiveEditor(an_editor);
     my_restore_action.setActiveEditor(an_editor);
     my_synchr_action.setActiveEditor(an_editor);
   }

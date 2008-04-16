@@ -54,22 +54,9 @@
                <separator name="synchrGroup"/>
                <separator name="verifyGroup"/>
                <separator name="historyGroup"/>
+               <separator name="colourGroup"/>
                <separator name="helpGroup"/>
          </menu>
-         <action
-               label="&amp;Add to history"
-               tooltip="Add to history"
-               class="umbra.editor.actions.history.HistoryAction"
-               icon="icons/add_to_history.gif"
-               menubarPath="umbra.bytecodeMenu/historyGroup"
-               id="umbra.history"/>
-         <action
-               label="&amp;Clear history"
-               tooltip="Clear history"
-               class="umbra.editor.actions.history.ClearHistoryAction"
-               icon="icons/clear_history.gif"
-               menubarPath="umbra.bytecodeMenu/historyGroup"
-               id="umbra.clearHistory"/>
          <action
                label="&amp;Installation info"
                tooltip="Installation info"
@@ -90,7 +77,8 @@
 <!-- Define the main book                           -->
 <!-- ============================================== -->
    <extension
-         point="org.eclipse.help.toc">
+         point="org.eclipse.help.toc"
+         id="umbra.userGuide">
       <toc
             file="help/index.xml"
             primary="true">

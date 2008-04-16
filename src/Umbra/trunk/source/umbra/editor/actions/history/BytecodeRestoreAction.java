@@ -6,17 +6,13 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor.actions;
+package umbra.editor.actions.history;
 
 import javax.swing.JOptionPane;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -28,6 +24,7 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.editor.actions.BytecodeEditorAction;
 
 /**
  * This class defines action of restoring byte code from
@@ -37,6 +34,7 @@ import umbra.editor.BytecodeEditorContributor;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
  * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeRestoreAction extends BytecodeEditorAction {
@@ -49,105 +47,97 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
    * and which contributs the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
-   * the bytecode plugin
+   *   the bytecode plugin
    * @param a_btcd_contribution the GUI elements contributed to the eclipse
-   * GUI by the bytecode editor. This reference should be the same as in the
-   * parameter <code>a_contributor</code>.   */
+   *   GUI by the bytecode editor. This reference should be the same as in the
+   *   parameter <code>a_contributor</code>.
+   */
   public BytecodeRestoreAction(final BytecodeEditorContributor a_contributor,
                  final BytecodeContribution a_btcd_contribution) {
     super("Restore", a_contributor, a_btcd_contribution);
   }
 
   /**
-   * An input dialog to insert number of version is shown.
-   * Then the binary source file is replaced with the
-   * appropriate historical version and new input is
-   * generated and put into the editor window.
+   * This method prompts the user for a history item number and restores the
+   * corresponding history item.
+   * An input dialog to insert number of version to restore is shown.
+   * Then the current working class file name is established and corresponding
+   * .btc history file is loaded and .class file is loaded. At last the
+   * content of the .btc file is refreshed and the synchronisation action
+   * is enabled. In case an error is encountered, an appropriate message
+   * is displayed.
    */
   public final void run() {
     final int num = getHistoryNum();
-    final String ext = UmbraHelper.BYTECODE_HISTORY_EXTENSION + num;
-    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final BytecodeEditor editor = (BytecodeEditor)getEditor();
     final IFile btcFile = ((FileEditorInput)editor.getEditorInput()).getFile();
-    IFile afile;
+    final Shell parent = getEditor().getSite().getShell();
+    IFile a_classfile;
     try {
-      afile = UmbraHelper.getClassFileFileFor(btcFile,
+      a_classfile = UmbraHelper.getClassFileFileFor(btcFile,
                                              editor.getRelatedEditor(),
                                              UmbraHelper.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
-      e2.printStackTrace();
-      afile = replaceBytecodeWithClass(btcFile);
-    }
-    final IPath active = afile.getFullPath();
-    final String history_fname = active.toOSString().replaceFirst(
-                   UmbraHelper.BYTECODE_EXTENSION,
-                   ext);
-    final IFile history_file = root.getFile(new Path(history_fname));
-    if (!history_file.exists()) {
-      final Shell shell = editor.getSite().getShell();
-      MessageDialog.openInformation(shell, "Restore bytecode",
-          "The file " + history_fname + " does not exist");
+      MessageDialog.openError(parent,
+                            getActionDefinitionId(),
+                            "No class file output path for Java files is set");
       return;
     }
     try {
-      btcFile.delete(true, null);
-      history_file.copy(active, true, null);
+      HistoryOperations.loadBTCHistoryFile(btcFile, num,
+                                           getEditor().getRelatedEditor());
+      HistoryOperations.loadClassHistoryFile(btcFile, num,
+                                             getEditor().getRelatedEditor());
+      refreshContent(editor, btcFile, a_classfile); //messages are displayed
     } catch (CoreException e) {
-      e.printStackTrace();
+      MessageDialog.openError(parent, getActionDefinitionId(),
+                              "The file operation cannot be completed");
+      return;
     }
-    final String clnameTo = afile.getFullPath().toPortableString();
-    final String lastSegment = afile.getFullPath().lastSegment();
-    final String clnameFrom = active.removeLastSegments(1).append("_" +
-                                    num + "_" + lastSegment).toPortableString();
-    final IFile classFrom = root.getFile(new Path(clnameFrom));
-    final IPath clpathTo = new Path(clnameTo);
-    final IFile classTo = root.getFile(clpathTo);
-    try {
-      classTo.delete(true, null);
-      classFrom.copy(clpathTo, true, null);
-    } catch (CoreException e) {
-      e.printStackTrace();
-    }
+  }
+
+  /**
+   * The operation to refresh the content of the given editor from the class
+   * file is performed. In case of an error an appropriate message
+   * is displayed.
+   *
+   * @param an_editor the editor in which the refresh operation is done
+   * @param a_btcfile the .btc file for which the refresh operation is done
+   * @param a_classfile the class file corresponding to the .btc file
+   * @throws CoreException in case the file system operations cannot be
+   *   performed
+   */
+  private void refreshContent(final BytecodeEditor an_editor,
+                              final IFile a_btcfile,
+                              final IFile a_classfile)
+    throws CoreException {
+    final IPath active = a_classfile.getFullPath();
     final BytecodeEditorContributor contributor = getContributor();
+    final Shell parent = getEditor().getSite().getShell();
     try {
-      final BytecodeDocument doc = editor.getDocument();
-      ((BytecodeEditor)editor).refreshBytecode(active, doc, null, null);
-      final IEditorInput input = new FileEditorInput(btcFile);
+      final BytecodeDocument doc = an_editor.getDocument();
+      an_editor.refreshBytecode(active, doc, null, null);
+      final IEditorInput input = new FileEditorInput(a_btcfile);
       //memorise old modification information
       final boolean[] modified = doc.getModified();
-      contributor.refreshEditor(editor, input, null, null);
-      editor.getDocument().setModTable(modified);
+      contributor.refreshEditor(an_editor, input, null, null);
+      an_editor.getDocument().setModTable(modified);
     } catch (ClassNotFoundException e1) {
-      e1.printStackTrace();
-    } catch (CoreException e1) {
-      e1.printStackTrace();
+      //the class corresponding to the Java source code file cannot be found
+      MessageDialog.openError(parent, getActionDefinitionId(),
+                              "The class file corresponding to the Java" +
+                              "source code file cannot be found");
+      return;
     }
     contributor.synchrEnable();
   }
 
   /**
-   * TODO.
-   * @param a_btc_file TODO
-   * @return TODO.
-   */
-  private IFile replaceBytecodeWithClass(final IFile a_btc_file) {
-    final IPath aPath = a_btc_file.getFullPath();
-    final String lastSegment = UmbraHelper.replaceLast(aPath.lastSegment(),
-                                        UmbraHelper.BYTECODE_EXTENSION,
-                                        UmbraHelper.CLASS_EXTENSION);
-    final String fname = aPath.removeLastSegments(1).append(lastSegment).
-                                                     toPortableString();
-    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    return workspace.getRoot().getFile(Path.fromPortableString(fname));
-  }
-
-  /**
    * This method asks the user to give the history version number. In case
    * the given value is not a number or is a number outside of the
-   * range {@ref UmbraHelper#MIN_HISTORY}-{@ref UmbraHelper#MAX_HISTORY}
+   * range {@link UmbraHelper#MIN_HISTORY}-{@link UmbraHelper#MAX_HISTORY}
    * the method asks to confirm the default value
-   * ({@ref UmbraHelper#DEFAULT_HISTORY}). The user can refuse to accept the
+   * ({@link UmbraHelper#DEFAULT_HISTORY}). The user can refuse to accept the
    * default and then the procedure repeats.
    *
    * @return the history item number given by the user
@@ -162,11 +152,12 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
                                "" + UmbraHelper.DEFAULT_HISTORY);
       try {
         num = Integer.parseInt(strnum);
+        once_more = false;
       } catch (NumberFormatException ne) {
         num = UmbraHelper.DEFAULT_HISTORY;
         once_more = !MessageDialog.openQuestion(getEditor().getSite().
                                                             getShell(),
-                                "Bytecode", "It's not an integer. " +
+                                "Bytecode", "This is not an integer. " +
                                             "Should we use " +
                                             num + " instead");
       }

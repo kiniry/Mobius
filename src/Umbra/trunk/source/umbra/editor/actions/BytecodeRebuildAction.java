@@ -95,7 +95,7 @@ public class BytecodeRebuildAction extends Action {
         fileTo.delete(true, null);
         fileFrom.copy(pathTo, true, null);
       } catch (CoreException e) {
-        e.printStackTrace();
+        e.printStackTrace(); //TODO stack print
       }
     }
     try {
@@ -104,9 +104,9 @@ public class BytecodeRebuildAction extends Action {
       final IEditorInput input = new FileEditorInput(file);
       my_contributor.refreshEditor(my_editor, input, null, null);
     } catch (ClassNotFoundException e1) {
-      e1.printStackTrace();
+      e1.printStackTrace(); //TODO stack print
     } catch (CoreException e1) {
-      e1.printStackTrace();
+      e1.printStackTrace(); //TODO stack print
     }
     my_contributor.synchrEnable();
   }

@@ -79,6 +79,11 @@ public final class UmbraHelper {
   public static final String CLASS_EXTENSION_NONDOT      = "class";
 
   /**
+   * The file extension for the history files, without dot.
+   */
+  public static final String BYTECODE_HISTORY_EXTENSION_NONDOT   = "bt";
+
+  /**
    * The file extension for the Java class files.
    */
   public static final String CLASS_EXTENSION    = ".class";
