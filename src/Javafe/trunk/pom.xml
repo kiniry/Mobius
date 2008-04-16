@@ -38,10 +38,10 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:svn:https://mobius.ucd.ie/repos/src/javafe/trunk</connection>
-    <developerConnection>scm:svn:https://mobius.ucd.ie/repos/src/javafe/trunk</developerConnection>
+    <connection>scm:svn:https://mobius.ucd.ie/repos/src/Javafe/trunk</connection>
+    <developerConnection>scm:svn:https://mobius.ucd.ie/repos/src/Javafe/trunk</developerConnection>
     <tag>HEAD</tag>
-    <url>https://mobius.ucd.ie/browser/src/javafe/trunk</url>
+    <url>https://mobius.ucd.ie/browser/src/Javafe/trunk</url>
   </scm>
   <ciManagement>
     <system>continuum</system>
