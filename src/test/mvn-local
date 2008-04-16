@@ -3,6 +3,8 @@ export M2_HOME=/Network/Servers/kind.ucd.ie/Volumes/Home/maven/apache-maven-2.0.
 export M2=$M2_HOME/bin
 export JAVA_HOME=/usr
 export PATH=$M2_HOME/bin:$PATH
+cd ./workdir
 export ESCTOOLS_ROOT=$PWD
 export JAVAFE_ROOT=$PWD
+make pre-maven
 $M2_HOME/bin/mvn $*

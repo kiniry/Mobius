@@ -1,2 +1,2 @@
 #/bin/bash
-ssh object cd workdir; ~maven/mvn $*
+ssh object ~maven/mvn_local $*
