@@ -1,0 +1,8 @@
+#/bin/bash
+export M2_HOME=/Network/Servers/kind.ucd.ie/Volumes/Home/maven/apache-maven-2.0.8
+export M2=$M2_HOME/bin
+export JAVA_HOME=/usr
+export PATH=$M2_HOME/bin:$PATH
+export ESCTOOLS_ROOT=$PWD
+export JAVAFE_ROOT=$PWD
+$M2_HOME/bin/mvn $*
