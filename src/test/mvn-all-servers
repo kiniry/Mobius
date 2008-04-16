@@ -4,6 +4,6 @@ export M2_HOME=/Network/Servers/kind.ucd.ie/Volumes/Home/maven/apache-maven-2.0.
 export M2=$M2_HOME/bin
 export JAVA_HOME=/usr
 export PATH=$M2_HOME/bin:$PATH
-ln -sf $PWD workdir
+ln -sf $PWD ~maven/workdir
 $MAVEN_HOME/mvn-arrow $*
 $MAVEN_HOME/mvn-object $*
