@@ -2,19 +2,30 @@
 
 package escjava.sp;
 
-import escjava.translate.GC;
 import java.util.Hashtable;
-import java.util.Enumeration;
 
-import javafe.ast.*;
-import escjava.ast.*;
-import escjava.ast.TagConstants;
-
-import javafe.util.Location;
+import javafe.ast.Expr;
+import javafe.ast.ExprVec;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.Util;
 import javafe.util.Assert;
 import javafe.util.Set;
-
 import escjava.Main;
+import escjava.ast.CmdCmdCmd;
+import escjava.ast.DefPred;
+import escjava.ast.DefPredApplExpr;
+import escjava.ast.DefPredLetExpr;
+import escjava.ast.DefPredVec;
+import escjava.ast.ExprCmd;
+import escjava.ast.GuardExpr;
+import escjava.ast.GuardedCmd;
+import escjava.ast.LabelExpr;
+import escjava.ast.NaryExpr;
+import escjava.ast.SeqCmd;
+import escjava.ast.SubstExpr;
+import escjava.ast.TagConstants;
+import escjava.translate.GC;
 
 class NXW
 {
