@@ -3,22 +3,11 @@
 package escjava.parser;
 
 import java.io.IOException;
-import java.util.Hashtable;
 
-import javafe.util.Assert;
-import javafe.util.ErrorSet;
-import javafe.util.CorrelatedReader;
-import javafe.util.Location;
-import javafe.util.StackVector;
-
+import javafe.ast._SpecialParserInterface;
 import javafe.parser.Lex;
 import javafe.parser.PragmaParser;
-import javafe.parser.Token;
-import javafe.parser.Parse;
-
-import javafe.ast.*;
-
-import escjava.ast.*;
+import javafe.util.ErrorSet;
 import escjava.ast.TagConstants;
 
 /**

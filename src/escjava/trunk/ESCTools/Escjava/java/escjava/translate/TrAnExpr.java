@@ -3,28 +3,73 @@
 
 package escjava.translate;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.ListIterator;
 
-import javafe.ast.*;
-import javafe.tc.*;
-import javafe.util.Location;
+import javafe.ast.ASTNode;
+import javafe.ast.AmbiguousVariableAccess;
+import javafe.ast.ArrayRefExpr;
+import javafe.ast.BinaryExpr;
+import javafe.ast.CastExpr;
+import javafe.ast.ClassLiteral;
+import javafe.ast.CondExpr;
+import javafe.ast.ConstructorDecl;
+import javafe.ast.Expr;
+import javafe.ast.ExprObjectDesignator;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldAccess;
+import javafe.ast.FieldDecl;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.InstanceOfExpr;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.MethodDecl;
+import javafe.ast.MethodInvocation;
+import javafe.ast.ModifierPragma;
+import javafe.ast.ModifierPragmaVec;
+import javafe.ast.NewArrayExpr;
+import javafe.ast.NewInstanceExpr;
+import javafe.ast.ObjectDesignator;
+import javafe.ast.ParenExpr;
+import javafe.ast.RoutineDecl;
+import javafe.ast.SuperObjectDesignator;
+import javafe.ast.ThisExpr;
+import javafe.ast.Type;
+import javafe.ast.TypeDecl;
+import javafe.ast.TypeDeclElemVec;
+import javafe.ast.UnaryExpr;
+import javafe.ast.VarInit;
+import javafe.ast.VariableAccess;
+import javafe.tc.TypeCheck;
+import javafe.tc.TypeSig;
 import javafe.util.Assert;
-import javafe.util.Info;
-import javafe.util.Set;
 import javafe.util.ErrorSet;
-import escjava.ast.*;
-import escjava.ast.TagConstants;
-import escjava.ast.Modifiers;
+import javafe.util.Location;
 import escjava.AnnotationHandler;
 import escjava.Main;
-import escjava.tc.Types;
+import escjava.ast.ExprModifierPragma;
+import escjava.ast.GeneralizedQuantifiedExpr;
+import escjava.ast.GuardExpr;
+import escjava.ast.LabelExpr;
+import escjava.ast.Modifiers;
+import escjava.ast.NamedExprDeclPragma;
+import escjava.ast.NaryExpr;
+import escjava.ast.NotModifiedExpr;
+import escjava.ast.QuantifiedExpr;
+import escjava.ast.SimpleModifierPragma;
+import escjava.ast.TagConstants;
+import escjava.ast.TypeExpr;
+import escjava.ast.Utils;
+import escjava.ast.VarExprModifierPragma;
 import escjava.parser.OldVarDecl;
-
-import escjava.prover.Atom;
+import escjava.tc.Types;
 
 /** Translates Annotation Expressions to GCExpr. */
 

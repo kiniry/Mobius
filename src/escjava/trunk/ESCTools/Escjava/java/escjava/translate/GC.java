@@ -3,19 +3,49 @@
 
 package escjava.translate;
 
-import java.util.Hashtable;
 import java.util.Enumeration;
-import javafe.ast.*;
+import java.util.Hashtable;
+
+import javafe.ast.ASTNode;
+import javafe.ast.Expr;
+import javafe.ast.ExprVec;
+import javafe.ast.FormalParaDecl;
 import javafe.ast.GenericVarDecl;
-import javafe.tc.*;
-import javafe.util.Location;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.LocalVarDeclVec;
+import javafe.ast.Stmt;
+import javafe.ast.Type;
+import javafe.ast.VariableAccess;
 import javafe.util.Assert;
-import javafe.util.Info;
+import javafe.util.Location;
 import javafe.util.StackVector;
-import escjava.ast.*;
-import escjava.ast.TagConstants;
-import escjava.tc.Types;
 import escjava.Main;
+import escjava.ast.CmdCmdCmd;
+import escjava.ast.Condition;
+import escjava.ast.ConditionVec;
+import escjava.ast.DecreasesInfoVec;
+import escjava.ast.ExprCmd;
+import escjava.ast.GetsCmd;
+import escjava.ast.GuardExpr;
+import escjava.ast.GuardedCmd;
+import escjava.ast.GuardedCmdVec;
+import escjava.ast.LabelExpr;
+import escjava.ast.LoopCmd;
+import escjava.ast.NaryExpr;
+import escjava.ast.QuantifiedExpr;
+import escjava.ast.RestoreFromCmd;
+import escjava.ast.SeqCmd;
+import escjava.ast.SimpleCmd;
+import escjava.ast.SubGetsCmd;
+import escjava.ast.SubSubGetsCmd;
+import escjava.ast.SubstExpr;
+import escjava.ast.TagConstants;
+import escjava.ast.TypeExpr;
+import escjava.ast.VarInCmd;
+import escjava.tc.Types;
 
 public final class GC {
 

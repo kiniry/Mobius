@@ -3,15 +3,51 @@
 package escjava.translate;
 
 
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
-import javafe.ast.*;
-import escjava.ast.*;
+import javafe.ast.ASTNode;
+import javafe.ast.AmbiguousVariableAccess;
+import javafe.ast.ArrayInit;
+import javafe.ast.ArrayRefExpr;
+import javafe.ast.BinaryExpr;
+import javafe.ast.CastExpr;
+import javafe.ast.CondExpr;
+import javafe.ast.Expr;
+import javafe.ast.ExprObjectDesignator;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldAccess;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.InstanceOfExpr;
+import javafe.ast.MethodInvocation;
+import javafe.ast.NewArrayExpr;
+import javafe.ast.NewInstanceExpr;
+import javafe.ast.ObjectDesignator;
+import javafe.ast.ParenExpr;
+import javafe.ast.ThisExpr;
+import javafe.ast.UnaryExpr;
+import javafe.ast.VariableAccess;
+import javafe.util.Assert;
+import javafe.util.Location;
+import javafe.util.Set;
+import escjava.ast.ArrayRangeRefExpr;
+import escjava.ast.Call;
+import escjava.ast.GeneralizedQuantifiedExpr;
+import escjava.ast.GuardExpr;
+import escjava.ast.LabelExpr;
+import escjava.ast.NaryExpr;
+import escjava.ast.NotModifiedExpr;
+import escjava.ast.NumericalQuantifiedExpr;
+import escjava.ast.QuantifiedExpr;
+import escjava.ast.ResExpr;
+import escjava.ast.SetCompExpr;
+import escjava.ast.SubstExpr;
 import escjava.ast.TagConstants;
-
-import javafe.util.*;
+import escjava.ast.VarInCmd;
+import escjava.ast.WildRefExpr;
 
 
 /**

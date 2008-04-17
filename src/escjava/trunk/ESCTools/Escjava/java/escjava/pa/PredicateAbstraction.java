@@ -2,29 +2,48 @@
 
 package escjava.pa;
 
-import java.util.Hashtable;
 import java.util.Enumeration;
-import java.util.Vector;
-import java.io.*;
 
-import javafe.ast.*;
-import javafe.util.Set;
-import javafe.util.Location;
-import javafe.util.Assert;
-import javafe.util.StackVector;
+import javafe.ast.ASTDecoration;
+import javafe.ast.ArrayType;
+import javafe.ast.Expr;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldDecl;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.LocalVarDeclVec;
+import javafe.ast.PrettyPrint;
+import javafe.ast.Type;
+import javafe.ast.VariableAccess;
 import javafe.tc.Types;
-
-import escjava.*;
-import escjava.ast.*;
-import escjava.ast.TagConstants;
+import javafe.util.Assert;
+import javafe.util.Location;
+import javafe.util.Set;
+import javafe.util.StackVector;
+import mocha.wrappers.jbdd.jbddManager;
+import escjava.Main;
+import escjava.ast.Condition;
+import escjava.ast.EscPrettyPrint;
+import escjava.ast.GuardedCmd;
+import escjava.ast.GuardedCmdVec;
+import escjava.ast.LoopCmd;
 import escjava.ast.Modifiers;
-import escjava.translate.*;
-import escjava.sp.SPVC;
-import escjava.sp.*;
-import escjava.prover.*;
-import escjava.pa.generic.*;
-
-import mocha.wrappers.jbdd.*;
+import escjava.ast.NaryExpr;
+import escjava.ast.TagConstants;
+import escjava.ast.VarInCmd;
+import escjava.pa.generic.Abstractor;
+import escjava.pa.generic.BinaryDecisionTreeAbstractor;
+import escjava.pa.generic.EnumClausesAbstractor;
+import escjava.pa.generic.EnumMaxClausesFindMinAbstractor;
+import escjava.pa.generic.EnumNFindK;
+import escjava.translate.ATarget;
+import escjava.translate.GC;
+import escjava.translate.Targets;
+import escjava.translate.TrAnExpr;
+import escjava.translate.Translate;
 
 public class PredicateAbstraction
 {

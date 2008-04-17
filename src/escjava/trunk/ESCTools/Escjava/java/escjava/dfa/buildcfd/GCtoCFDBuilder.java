@@ -9,24 +9,36 @@
 
 package escjava.dfa.buildcfd;
 
-import escjava.translate.GC;
-
-import escjava.dfa.cfd.*;
-import escjava.dfa.cfd.NodeList.Enumeration;
-
-import escjava.ast.TagConstants;
-import escjava.ast.*;
-import javafe.ast.*;
-import javafe.util.Assert;
-
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+
+import javafe.ast.Expr;
+import javafe.ast.GenericVarDeclVec;
+import javafe.util.Assert;
+import escjava.ast.Call;
+import escjava.ast.CmdCmdCmd;
+import escjava.ast.DynInstCmd;
+import escjava.ast.ExprCmd;
+import escjava.ast.GuardedCmd;
+import escjava.ast.GuardedCmdVec;
+import escjava.ast.LoopCmd;
+import escjava.ast.SeqCmd;
+import escjava.ast.SimpleCmd;
+import escjava.ast.TagConstants;
+import escjava.ast.VarInCmd;
+import escjava.dfa.cfd.CFD;
+import escjava.dfa.cfd.CodeNode;
+import escjava.dfa.cfd.ExceptionNode;
+import escjava.dfa.cfd.Node;
+import escjava.dfa.cfd.NodeList;
+import escjava.dfa.cfd.NodeList.Enumeration;
+import escjava.translate.GC;
 
 /**
  * Used to construct a graph from a guarded command.

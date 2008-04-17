@@ -2,34 +2,109 @@
 
 package escjava.parser;
 
-import escjava.Main;
-import escjava.ast.*;
-// This import is necessary to override javafe.ast.TagConstants.
-import escjava.ast.TagConstants;
-import escjava.ast.Modifiers;
-import escjava.AnnotationHandler;
-
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Vector;
 
-import javafe.ast.*;
-import javafe.SrcTool;
+import javafe.ast.ASTDecoration;
+import javafe.ast.AmbiguousMethodInvocation;
+import javafe.ast.AmbiguousVariableAccess;
+import javafe.ast.ArrayRefExpr;
+import javafe.ast.BinaryExpr;
+import javafe.ast.BlockStmt;
+import javafe.ast.ConstructorDecl;
+import javafe.ast.Expr;
+import javafe.ast.ExprObjectDesignator;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldAccess;
+import javafe.ast.FieldDecl;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.IdentifierVec;
+import javafe.ast.InstanceOfExpr;
+import javafe.ast.JavafePrimitiveType;
+import javafe.ast.LexicalPragma;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.LocalVarDeclVec;
+import javafe.ast.MethodDecl;
+import javafe.ast.ModifierPragma;
+import javafe.ast.ModifierPragmaVec;
+import javafe.ast.Name;
+import javafe.ast.ObjectDesignator;
+import javafe.ast.ParenExpr;
+import javafe.ast.PrimitiveType;
+import javafe.ast.SimpleName;
+import javafe.ast.Stmt;
+import javafe.ast.SuperObjectDesignator;
+import javafe.ast.ThisExpr;
+import javafe.ast.Type;
+import javafe.ast.TypeDecl;
+import javafe.ast.TypeDeclElem;
+import javafe.ast.TypeDeclElemPragma;
+import javafe.ast.TypeName;
+import javafe.ast.TypeNameVec;
+import javafe.ast.VarDeclStmt;
+import javafe.ast.VarInit;
+import javafe.ast.VariableAccess;
 import javafe.parser.Lex;
 import javafe.parser.Parse;
+import javafe.parser.ParseUtil;
 import javafe.parser.PragmaParser;
 import javafe.parser.Token;
-//alx: 
-import javafe.parser.ParseUtil;
-//alx-end
 import javafe.util.Assert;
 import javafe.util.CorrelatedReader;
 import javafe.util.ErrorSet;
 import javafe.util.Info;
 import javafe.util.Location;
-
-import java.util.ArrayList;
-import java.util.Vector;
-import java.util.LinkedList;
-import java.util.Iterator;
+import escjava.AnnotationHandler;
+import escjava.Main;
+import escjava.ast.ArrayRangeRefExpr;
+import escjava.ast.CondExprModifierPragma;
+import escjava.ast.EverythingExpr;
+import escjava.ast.ExprDeclPragma;
+import escjava.ast.ExprModifierPragma;
+import escjava.ast.ExprStmtPragma;
+import escjava.ast.GCExpr;
+import escjava.ast.GeneralizedQuantifiedExpr;
+import escjava.ast.GhostDeclPragma;
+import escjava.ast.IdExprDeclPragma;
+import escjava.ast.ImportPragma;
+import escjava.ast.LabelExpr;
+import escjava.ast.LockSetExpr;
+import escjava.ast.MapsExprModifierPragma;
+import escjava.ast.ModelConstructorDeclPragma;
+import escjava.ast.ModelDeclPragma;
+import escjava.ast.ModelMethodDeclPragma;
+import escjava.ast.ModelProgamModifierPragma;
+import escjava.ast.ModelTypePragma;
+import escjava.ast.Modifiers;
+import escjava.ast.ModifiesGroupPragma;
+import escjava.ast.NamedExprDeclPragma;
+import escjava.ast.NaryExpr;
+import escjava.ast.NotModifiedExpr;
+import escjava.ast.NotSpecifiedExpr;
+import escjava.ast.NothingExpr;
+import escjava.ast.NowarnPragma;
+import escjava.ast.NumericalQuantifiedExpr;
+import escjava.ast.QuantifiedExpr;
+import escjava.ast.RefinePragma;
+import escjava.ast.ResExpr;
+import escjava.ast.SetCompExpr;
+import escjava.ast.SetStmtPragma;
+import escjava.ast.SimpleModifierPragma;
+import escjava.ast.SimpleStmtPragma;
+import escjava.ast.SkolemConstantPragma;
+import escjava.ast.StillDeferredDeclPragma;
+import escjava.ast.TagConstants;
+import escjava.ast.TypeExpr;
+import escjava.ast.Utils;
+import escjava.ast.VarDeclModifierPragma;
+import escjava.ast.VarExprModifierPragma;
+import escjava.ast.WildRefExpr;
 
 /**
  Grammar:
