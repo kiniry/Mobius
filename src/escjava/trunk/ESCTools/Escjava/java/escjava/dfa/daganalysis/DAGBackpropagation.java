@@ -9,18 +9,31 @@
 
 package escjava.dfa.daganalysis;
 
-import escjava.ast.*;
-import escjava.translate.*;
-import escjava.ast.TagConstants;
-
-import javafe.ast.*;
-import javafe.util.Location;
-import javafe.util.Assert;
-
-import escjava.dfa.cfd.*;
-import escjava.dfa.daganalysis.AlgebraUtils;
-
 import java.util.Hashtable;
+
+import javafe.ast.Expr;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.PrettyPrint;
+import javafe.ast.VariableAccess;
+import javafe.util.Assert;
+import javafe.util.Location;
+import escjava.ast.AssignCmd;
+import escjava.ast.EscPrettyPrint;
+import escjava.ast.ExprCmd;
+import escjava.ast.GuardedCmd;
+import escjava.ast.SubGetsCmd;
+import escjava.ast.SubSubGetsCmd;
+import escjava.ast.TagConstants;
+import escjava.dfa.cfd.CFD;
+import escjava.dfa.cfd.CodeNode;
+import escjava.dfa.cfd.CouplingNode;
+import escjava.dfa.cfd.ExceptionNode;
+import escjava.dfa.cfd.Node;
+import escjava.dfa.cfd.NodeList;
+import escjava.translate.GC;
+import escjava.translate.UniqName;
 
 public class DAGBackpropagation {
   
