@@ -3,6 +3,7 @@ package mobius.prover.gui;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import mobius.prover.gui.editor.BasicPresentationReconciler;
 import mobius.prover.gui.editor.BasicSourceViewerConfig;
 import mobius.prover.gui.editor.LimitRuleScanner;
 import mobius.prover.gui.editor.ProverEditor;
@@ -32,16 +33,18 @@ public class ProverFileContext {
   /** a word pattern. */
   private static final Pattern pat = Pattern.compile("[^a-zA-Z_0-9]");
 
-  /** the currently open editor from which this context is taken. */
-  public final ProverEditor fCe;
   /** the document corresponding to the editor. */
   public final IDocument fDoc; 
+  
+  /** the currently open editor from which this context is taken. */
+  private final ProverEditor fCe;
+
   /** the source viewer of the editor. */
-  public final BasicSourceViewerConfig fSv; 
+  private final BasicSourceViewerConfig fSv; 
   /** the highlighting scanner of the editor. */
-  public final LimitRuleScanner fScan;
+  private final LimitRuleScanner fScan;
   /** the viewer. */
-  public final ITextViewer fViewer;
+  private final ITextViewer fViewer;
   
   /**
    * The constructor to initialize the different fields.
@@ -173,5 +176,45 @@ public class ProverFileContext {
       return fei.getFile();
     }
     return null;
+  }
+  
+  /**
+   * Returns the text viewer.
+   * @return the viewer
+   */
+  public ITextViewer getViewer() {
+    return fViewer;
+  }
+  
+  /**
+   * Get the highlighting limit.
+   * @return a pos number
+   */
+  public int getLimit() {
+    return fScan.getLimit();
+  }
+  
+  /**
+   * Set the limit of the highlighting.
+   * @param lim a valid number
+   */
+  public void setLimit(final int lim) {
+    fScan.setLimit(lim);
+  }
+  
+  /**
+   * Returns the presentation reconciler.
+   * @return a valid presentation reconciler
+   */
+  public BasicPresentationReconciler getPresentationReconciler() {
+    return fSv.getPresentationReconciler();
+  }
+  
+  /**
+   * Returns the current editor associated with this context.
+   * @return a valid editor
+   */
+  public ProverEditor getEditor() {
+    return fCe;
   }
 }

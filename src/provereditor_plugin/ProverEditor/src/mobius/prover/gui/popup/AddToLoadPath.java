@@ -129,8 +129,8 @@ public class AddToLoadPath implements IActionDelegate {
   }
   
   /**
-   * Returns the set of absolute paths for a given project.
-   * @param project the project to get the load path from
+   * Returns the set of relative paths for a given project.
+   * @param project the absolute path to the project to get the load path from
    * @return the set of load path
    * @throws IOException if the reading of the path fails
    */
@@ -172,6 +172,23 @@ public class AddToLoadPath implements IActionDelegate {
       ps.println(iter.next().toString());
     }
     ps.close();
+  }
+
+  /**
+   * Returns the set of absolute path of the load path.
+   * @param project the project from which the path are taken from
+   * @return a set of absolute path
+   * @throws IOException if the path file cannot be read
+   */
+  public static Set<String> getAbsolutePaths(final IProject project) throws IOException {
+    final String projPath = project.getLocation().toString();
+    final Set<String> s = getPaths(projPath);
+    final Set<String> res = new HashSet<String>();
+    for (String path: s) {
+      res.add(projPath + File.separator + path);
+    }
+ 
+    return res;
   }  
   
 }

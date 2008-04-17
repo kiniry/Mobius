@@ -26,7 +26,7 @@ public class JumpForward extends AProverAction {
     }
     final ProverFileContext pfc = new ProverFileContext((ProverEditor) ep);
     final TopLevelManager tlm = TopLevelManager.getInstance();
-    final int oldlimit = pfc.fViewer.getSelectedRange().x;
+    final int oldlimit = pfc.getViewer().getSelectedRange().x;
     BasicRuleScanner parser = tlm.getParser();
     if (parser == null) {
       tlm.reset(pfc);
@@ -43,8 +43,8 @@ public class JumpForward extends AProverAction {
     } while(tok != AProverTranslator.SENTENCE_TOKEN && (!tok.isEOF()));
     if (!tok.isEOF()) {
       final int pos = parser.getTokenOffset() + parser.getTokenLength();
-      pfc.fViewer.setSelectedRange(pos, 0);
-      pfc.fViewer.revealRange(pos, 0);
+      pfc.getViewer().setSelectedRange(pos, 0);
+      pfc.getViewer().revealRange(pos, 0);
     }
     return;
   }

@@ -14,11 +14,16 @@ import java.io.Reader;
 public class ProverFileReader extends Reader {
   /** the minimum size of the buffer. */
   private static final int MIN_SIZE = 80;
+  /** the size of the buffer. */
+  private static final int BUF_SIZE = 8192;
   /** the stream to read from. */
   private Reader fIn;
 
-  private char [] fCb = new char[8192];
+  /** the char buffer. */
+  private char [] fCb = new char[BUF_SIZE];
+  /** the number of chars read. */
   private int fNChars;
+  /** the next char to inspect. */
   private int fNextChar;
 
   /** If the next character is a line feed, skip it. */
@@ -138,14 +143,23 @@ public class ProverFileReader extends Reader {
     return n;
   }
 
+  /**
+   * Tells if the index is in the bounds of the array.
+   * @param tab the array
+   * @param idx the index
+   * @return true if 0 <= idx && idx <= tab.length
+   */
+  private static boolean inBounds(final char [] tab, final int idx) {
+    return (0 <= idx) && (idx <= tab.length); 
+  }
   /** {@inheritDoc} */
   @Override
   public int read(final char [] cbuf, 
                   final int off, final int len) throws IOException {
     synchronized (lock) {
       ensureOpen();
-      if ((off < 0) || (off > cbuf.length) || (len < 0) ||
-          ((off + len) > cbuf.length) || ((off + len) < 0)) {
+      if (!inBounds(cbuf, off) || (len < 0) ||
+          !inBounds(cbuf, (off + len))) {
         throw new IndexOutOfBoundsException();
       } 
       else if (len == 0) {
@@ -180,7 +194,6 @@ public class ProverFileReader extends Reader {
    */
   String readLine() throws IOException {
     StringBuffer s = null;
-    int startChar;
     fCount = 0;
     synchronized (lock) {
       ensureOpen();
@@ -197,15 +210,16 @@ public class ProverFileReader extends Reader {
             return null;
           }
         }
-        boolean eol = false;
-        char c = 0;
-        int i;
+
   
         /* Skip a leftover '\n', if necessary */
         if (fSkipLF && (fCb[fNextChar] == '\n')) { 
           fNextChar++;
         }
         fSkipLF = false;  
+        boolean eol = false;
+        char c = 0;
+        int i;
       charLoop:
         for (i = fNextChar; i < fNChars; i++) {
           c = fCb[i];
@@ -215,7 +229,7 @@ public class ProverFileReader extends Reader {
             break charLoop;
           }
         }
-        startChar = fNextChar;
+        final int startChar = fNextChar;
         fNextChar = i;
   
         if (eol) {
