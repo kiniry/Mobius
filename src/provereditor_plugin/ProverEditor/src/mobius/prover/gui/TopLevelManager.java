@@ -152,6 +152,16 @@ public class TopLevelManager extends ABaseTopLevelManager  {
     return sendCommand(pc, realoldlimit, oldlimit, newlimit, cmd);
   }
 
+  /**
+   * Send the given command which is between real old limit 
+   * and newlimit.
+   * @param pc the context
+   * @param realoldlimit the old limit
+   * @param oldlimit the old limit in case of recursive call
+   * @param newlimit the new limit
+   * @param cmd the command to send
+   * @return true if everything went fine
+   */
   private boolean sendCommand(final ProverFileContext pc,
                               final int realoldlimit, final int oldlimit,
                               final int newlimit, 
@@ -236,10 +246,15 @@ public class TopLevelManager extends ABaseTopLevelManager  {
     return res;
   }  
   
+  /**
+   * 
+   * @param pc the current context
+   * @return true if everything went a'right
+   */
   protected boolean regressIntern(final ProverFileContext pc) {
     final int oldlimit = pc.getLimit();
     if ((oldlimit > 0) && (fParsedList.size() > 0)) {
-      final int newlimit = ((Integer) fParsedList.pop()).intValue();
+      final int newlimit = fParsedList.pop();
       String cmd;
       try {
         cmd = pc.getDocument().get(newlimit, oldlimit - newlimit).trim();
@@ -252,8 +267,11 @@ public class TopLevelManager extends ABaseTopLevelManager  {
       final int hint = 
         fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, pc.getDocument(), 
                                                       cmd, newlimit, oldlimit);
-                                                           
       switch(hint) {
+        case IProverTopLevel.SKIP_AND_CONTINUE:
+          pc.setLimit(newlimit);
+          regressIntern(pc);
+          break;
         case IProverTopLevel.DONT_SKIP: 
           try {
             fTopLevel.undo();
@@ -261,15 +279,8 @@ public class TopLevelManager extends ABaseTopLevelManager  {
           catch (AProverException e) {
             append(e.toString());
           }
-          pc.setLimit(newlimit);
-          break;
         case IProverTopLevel.SKIP: 
           pc.setLimit(newlimit);
-          break;
-        case IProverTopLevel.SKIP_AND_CONTINUE:
-          pc.setLimit(newlimit);
-          regressIntern(pc);
-          break;
         default:
           break;
       }
@@ -297,8 +308,32 @@ public class TopLevelManager extends ABaseTopLevelManager  {
     fTranslator = fProver.getTranslator();
     fStateScan = new LimitRuleScanner(fTranslator.getProverStateRules());
     fParser.setRules(fTranslator.getParsingRules());
-    String [] tab = null;
     
+    new ColorAppendJob(getTxtPresentation(), "\nEditing file: \n" + 
+                       path.getName() + "\n", DARKRED).prepare();
+    
+    try {
+      fTopLevel = new TopLevel(fProver.getName(), getLoadPath(path));
+      //fTopLevel.addStandardStreamListener(this);
+    } 
+    catch (AProverException e) {
+      new ColorAppendJob(getTxtPresentation(), e.toString(), RED).prepare();
+    }
+  
+    // we reset the view
+    fProverContext.setLimit(0);
+    new UpdateJob(fProverContext.getPresentationReconciler(), 
+                  fProverContext).schedule();
+  }
+
+  /**
+   * Returns the load path for the given project, specified
+   * by the path.
+   * @param path the base path
+   * @return a list of valid absolute path to add
+   */
+  private String[] getLoadPath(final IFile path) {
+    String [] tab = null;    
     if (path != null) {      
       Set<String> hsPath;
       try {
@@ -314,24 +349,8 @@ public class TopLevelManager extends ABaseTopLevelManager  {
       for (int i = 2; i < tab.length; i++) {
         tab[i] = iter.next();
       }
-
     }
-    new ColorAppendJob(getTxtPresentation(), "\nEditing file: \n" + 
-                       path.getName() + "\n", DARKRED).prepare();
-    
-    try {
-      
-      fTopLevel = new TopLevel(fProver.getName(), tab);
-      //fTopLevel.addStandardStreamListener(this);
-    } 
-    catch (AProverException e) {
-      new ColorAppendJob(getTxtPresentation(), e.toString(), RED).prepare();
-    }
-  
-    // we reset the view
-    fProverContext.setLimit(0);
-    new UpdateJob(fProverContext.getPresentationReconciler(), 
-                  fProverContext).schedule();
+    return tab;
   }
 
   
