@@ -1,5 +1,4 @@
 #/bin/bash
-ln -sf $PWD ~maven/workdir
 ssh maven@arrow.ucd.ie ./test/run_test.sh $*
 ssh maven@object.ucd.ie ./test/run_test.sh $*
 ssh maven@athena.insttech.washington.edu ./test/run_test.sh $*
