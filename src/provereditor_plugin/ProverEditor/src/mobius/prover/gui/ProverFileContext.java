@@ -34,7 +34,7 @@ public class ProverFileContext {
   private static final Pattern pat = Pattern.compile("[^a-zA-Z_0-9]");
 
   /** the document corresponding to the editor. */
-  public final IDocument fDoc; 
+  private final IDocument fDoc; 
   
   /** the currently open editor from which this context is taken. */
   private final ProverEditor fCe;
@@ -184,6 +184,13 @@ public class ProverFileContext {
    */
   public ITextViewer getViewer() {
     return fViewer;
+  }
+  /**
+   * Returns the document.
+   * @return the document
+   */
+  public IDocument getDocument() {
+    return fDoc;
   }
   
   /**

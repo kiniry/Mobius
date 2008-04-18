@@ -35,7 +35,7 @@ public class JumpBackward extends AProverAction {
     if (parser == null) {
       return; // second try we give up...
     }    
-    parser.setRange(pfc.fDoc, 0, oldlimit - 1);
+    parser.setRange(pfc.getDocument(), 0, oldlimit - 1);
     IToken tok; int pos = 0;
     while ((tok = parser.nextToken()) != null) {
       if (tok.isEOF()) {

@@ -7,13 +7,9 @@ import java.util.Set;
 import java.util.Stack;
 
 import mobius.prover.Prover;
-import mobius.prover.ProverEditorPlugin;
 import mobius.prover.exec.AProverException;
 import mobius.prover.exec.toplevel.TopLevel;
-import mobius.prover.gui.editor.BasicPresentationReconciler;
 import mobius.prover.gui.editor.BasicRuleScanner;
-import mobius.prover.gui.editor.BasicTextPresentation;
-import mobius.prover.gui.editor.IColorConstants;
 import mobius.prover.gui.editor.LimitRuleScanner;
 import mobius.prover.gui.jobs.AppendJob;
 import mobius.prover.gui.jobs.ColorAppendJob;
@@ -23,25 +19,11 @@ import mobius.prover.plugins.AProverTranslator;
 import mobius.prover.plugins.IProverTopLevel;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.progress.UIJob;
 
 
 /**
@@ -51,13 +33,8 @@ import org.eclipse.ui.progress.UIJob;
  * 
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class TopLevelManager extends ViewPart implements IColorConstants {
+public class TopLevelManager extends ABaseTopLevelManager  {
   /* Private fields: */
-  /** the greetings message. */
-  public static final String GREETINGS = "This is ProverEditor version " + 
-                      ProverEditorPlugin.MAJORVERSION + "." + 
-                      ProverEditorPlugin.VERSION + "." + 
-                      ProverEditorPlugin.SUBVERSION + " !\n";   
   /** the current TopLevelManager instance. */
   private static TopLevelManager instance;
   
@@ -72,17 +49,10 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   private AProverTranslator fTranslator;
   /** the parser used to parse the currently evaluated document. */
   private final BasicRuleScanner fParser = new BasicRuleScanner();
-  
-  /** the lock system to avoid race conditions. */
-  private boolean fLock;
+
   /** the list of offset being the steps already taken by progress. */
   private Stack<Integer> fParsedList = new Stack<Integer>();
 
-  /* The text viewer used to show the prover state related fields: */
-  /** the text viewer to show the state of the prover. */
-  private TextViewer fStateText;
-  /** the current text presentation associated with the text viewer. */
-  private BasicTextPresentation fStatePres;
   /** the scanner used to color the text in the text viewer. */
   private BasicRuleScanner fStateScan;
   
@@ -105,6 +75,14 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   }
   
   /**
+   * Tell whether or not we shall use unicode characters.
+   * @return True if the unicode checkbox in the preferences is checked.
+   */
+  public static boolean isUnicodeMode() {
+    return PreferencePage.getProverIsUnicode();
+  }
+  
+  /**
    * Returns the parser for the current prover.
    * @return a parser to get the sentences.
    */
@@ -112,52 +90,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     return fParser;
   }
 
-  
-  /** {@inheritDoc} */
-  @Override
-  public void createPartControl(final Composite parent) {
-    IDocument doc = null;
-    if (fStateText == null) {
-      doc = new Document("");
-    }
-    else {
-      doc = fStateText.getDocument();
-    }
-    fStateText = new TextViewer(parent, SWT.V_SCROLL);
-    fStateText.setEditable(false);    
-    fStateText.setDocument(doc);
-    fStatePres = new BasicTextPresentation(fStateText);
 
-    new ColorAppendJob(fStatePres, GREETINGS, VIOLET).prepare();
-
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setFocus() {
-    
-  }
-  
-  
-  /**
-   * Sets the lock.
-   * @return <code>true</code> if everything went well, 
-   *  <code>false</code> if the lock was already set.
-   */
-  protected synchronized boolean lock() {
-    if (fLock) {
-      return false;
-    }
-    fLock = true; return true;
-  }
-  
-  /**
-   * Unsets the lock.
-   */
-  protected synchronized void unlock() {
-    fLock = false;
-  }
-  
 
   /**
    * Progress in the proof. If the progress was successful return true,
@@ -193,7 +126,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   private boolean progressIntern (final ProverFileContext pc, 
                                    final int realoldlimit, 
                                    final int oldlimit) { 
-    fParser.setRange(pc.fDoc, oldlimit, pc.fDoc.getLength() - oldlimit);
+    final IDocument doc = pc.getDocument();
+    fParser.setRange(doc, oldlimit, doc.getLength() - oldlimit);
 
     if (!findFirstSentence()) {
       return false;
@@ -202,7 +136,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     final int newlimit = fParser.getTokenOffset() + fParser.getTokenLength() - 1;
     String cmd;
     try {
-      cmd = pc.fDoc.get(realoldlimit, newlimit - oldlimit).trim();
+      cmd = doc.get(realoldlimit, newlimit - oldlimit).trim();
     } 
     catch (BadLocationException e) {
       // it should not happen
@@ -212,7 +146,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     
     // first we lock the evaluated part
     pc.setLimit(newlimit);
-    final UpdateJob uj = new UpdateJob(pc.getPresentationReconciler(), newlimit);
+    final UpdateJob uj = new UpdateJob(pc.getPresentationReconciler(), 
+                                       fProverContext, newlimit);
     uj.schedule();    
     return sendCommand(pc, realoldlimit, oldlimit, newlimit, cmd);
   }
@@ -224,7 +159,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     try {
       //we send the command
       switch (fProver.getTopLevelTranslator().hasToSkipSendCommand(fTopLevel, 
-                                                                   pc.fDoc, cmd, 
+                                                                   pc.getDocument(), cmd, 
                                                                    oldlimit, newlimit)) {
         case IProverTopLevel.DONT_SKIP:
           fTopLevel.sendCommand(cmd);
@@ -234,7 +169,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
           }
           else {
             pc.setLimit(oldlimit);
-            final UpdateJob up = new UpdateJob(pc.getPresentationReconciler(), newlimit);
+            final UpdateJob up = new UpdateJob(pc.getPresentationReconciler(), 
+                                               fProverContext, newlimit);
             up.schedule();
             return false;
           }
@@ -249,9 +185,10 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
     } 
     catch (AProverException e) {
       pc.setLimit(realoldlimit);
-      final UpdateJob uj = new UpdateJob(pc.getPresentationReconciler(), newlimit);
+      final UpdateJob uj = new UpdateJob(pc.getPresentationReconciler(), 
+                                         fProverContext, newlimit);
       uj.schedule();
-      final ColorAppendJob caj = new ColorAppendJob(fStatePres, e.toString(), RED);
+      final ColorAppendJob caj = new ColorAppendJob(getTxtPresentation(), e.toString(), RED);
       caj.prepare();
       return false;
     } 
@@ -305,7 +242,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       final int newlimit = ((Integer) fParsedList.pop()).intValue();
       String cmd;
       try {
-        cmd = pc.fDoc.get(newlimit, oldlimit - newlimit).trim();
+        cmd = pc.getDocument().get(newlimit, oldlimit - newlimit).trim();
       } 
       catch (BadLocationException e) {
         // it should not happen
@@ -313,7 +250,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
         return false;
       }
       final int hint = 
-        fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, pc.fDoc, 
+        fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, pc.getDocument(), 
                                                       cmd, newlimit, oldlimit);
                                                            
       switch(hint) {
@@ -337,45 +274,13 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
           break;
       }
       
-      final UpdateJob uj = new UpdateJob(pc.getPresentationReconciler(), oldlimit + 1);
+      final UpdateJob uj = new UpdateJob(pc.getPresentationReconciler(), 
+                                         fProverContext, oldlimit + 1);
       uj.schedule();
     }
     return true;
   }
   
-
-  
-  /**
-   * Tries to respawn the top level. 
-   * First stop the toplevel if it is running, and after start it again.
-   * @deprecated
-   * Use {@link #reset(ProverFileContext)} instead.
-   */
-  public void respawn() {
-    fTopLevel.stop();
-    final Job job = new Job("Toplevel Starting") {
-
-      protected IStatus run(final IProgressMonitor monitor) {
-        new UIJob("Updating Toplevel monitor") {
-
-          public IStatus runInUIThread(final IProgressMonitor monitor) {
-            fStateText.setDocument(new Document(""));
-            fStatePres = new BasicTextPresentation(fStateText);       
-            fStateText.changeTextPresentation(fStatePres, true);
-            new ColorAppendJob(fStatePres, GREETINGS, VIOLET).prepare();
-            return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
-          }
-          
-        } .schedule();
-        
-        reset(fProverContext);
-        return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
-      }
-      
-    };
-    job.schedule();
-    
-  }
   
   /**
    * Reset the view, reset the toplevel, and set up everything.
@@ -411,7 +316,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       }
 
     }
-    new ColorAppendJob(fStatePres, "\nEditing file: \n" + 
+    new ColorAppendJob(getTxtPresentation(), "\nEditing file: \n" + 
                        path.getName() + "\n", DARKRED).prepare();
     
     try {
@@ -420,12 +325,13 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       //fTopLevel.addStandardStreamListener(this);
     } 
     catch (AProverException e) {
-      new ColorAppendJob(fStatePres, e.toString(), RED).prepare();
+      new ColorAppendJob(getTxtPresentation(), e.toString(), RED).prepare();
     }
   
     // we reset the view
     fProverContext.setLimit(0);
-    new UpdateJob(fProverContext.getPresentationReconciler()).schedule();
+    new UpdateJob(fProverContext.getPresentationReconciler(), 
+                  fProverContext).schedule();
   }
 
   
@@ -456,7 +362,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
       str = str.replaceAll(replacements[i][0], 
           replacements[i][1]);
     }
-    final AppendJob job = new AppendJob(fProverContext.getEditor(), fStateScan, fStatePres);
+    final AppendJob job = new AppendJob(fProverContext.getEditor(), 
+                                        fStateScan, getTxtPresentation());
     
   
     job.add(str);
@@ -471,7 +378,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * reset the view with
    */
   public void reset(final ProverFileContext pc) {
-    if (pc.fDoc != null) {
+    if (pc.getDocument() != null) {
       fProverContext = pc;
       reset();
     }
@@ -484,18 +391,10 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
    * @return true if the documents are different.
    */
   public boolean isNewDoc(final ProverFileContext pc) {
-    return pc.fDoc != fProverContext.fDoc;
+    return pc.getDocument() != fProverContext.getDocument();
   }
 
-  /**
-   * Tell whether or not we shall use unicode characters.
-   * @return True if the unicode checkbox in the preferences is checked.
-   */
-  public boolean isUnicodeMode() {
-    return PreferencePage.getProverIsUnicode();
-  }
 
-  
 
   /**
    * Tries to send a Ctrl-Break command to the prover.
@@ -513,46 +412,5 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
   }
   
 
-  /**
-   * The class UpdateJob is used to update the view once it has changed
-   * internally.
-  
-   */
-  private class UpdateJob extends UIJob {
-    /** the limit of the update. */
-    private int fLimit;
-    /** the presentation reconciler to update. */
-    private BasicPresentationReconciler fReconciler;
-    
-    /**
-     * Create a job to update a presentation reconciler in a UIThread context.
-     * @param reconciler The reconciler to update.
-     * @param limit The limit of the update.
-     */
-    public UpdateJob(final BasicPresentationReconciler reconciler, 
-                     final int limit) {
-      super("Updating text");
-      fReconciler = reconciler;
-      fLimit = limit;
-    }
-
-    /**
-     * Create a job to update a presentation reconciler in a UIThread context.
-     * @param reconciler The reconciler to update.
-     */
-    public UpdateJob(final BasicPresentationReconciler reconciler) {
-      this(reconciler, reconciler.getDocument().getLength());
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public IStatus runInUIThread(final IProgressMonitor monitor) {
-      fReconciler.everythingHasChanged(0, fLimit); 
-      final IWorkbenchWindow win = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      final IWorkbenchPage page = win.getActivePage();
-      page.activate(fProverContext.getEditor());
-      return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
-    }
-    
-  }  
+ 
 }

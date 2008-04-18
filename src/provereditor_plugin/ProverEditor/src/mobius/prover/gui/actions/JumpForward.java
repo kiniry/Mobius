@@ -6,6 +6,7 @@ import mobius.prover.gui.editor.BasicRuleScanner;
 import mobius.prover.gui.editor.ProverEditor;
 import mobius.prover.plugins.AProverTranslator;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.ui.IEditorPart;
 
@@ -35,8 +36,8 @@ public class JumpForward extends AProverAction {
         return; // second try we give up...
       }   
     }
- 
-    parser.setRange(pfc.fDoc, oldlimit, pfc.fDoc.getLength() - oldlimit);
+    final IDocument doc = pfc.getDocument();
+    parser.setRange(doc, oldlimit, doc.getLength() - oldlimit);
     IToken tok;
     do {
       tok = parser.nextToken();
