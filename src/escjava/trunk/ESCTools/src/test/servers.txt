@@ -1,2 +1,4 @@
 arrow.ucd.ie
 object.ucd.ie
+athena.insttech.washington.edu
+boomer.insttech.washington.edu
