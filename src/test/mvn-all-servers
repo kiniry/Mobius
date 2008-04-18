@@ -1,9 +1,6 @@
 #/bin/bash
-export MAVEN_HOME=/Network/Servers/kind.ucd.ie/Volumes/Home/maven
-export M2_HOME=/Network/Servers/kind.ucd.ie/Volumes/Home/maven/apache-maven-2.0.8
-export M2=$M2_HOME/bin
-export JAVA_HOME=/usr
-export PATH=$M2_HOME/bin:$PATH
 ln -sf $PWD ~maven/workdir
-sudo -u maven $MAVEN_HOME/mvn-arrow $*
-sudo -u maven $MAVEN_HOME/mvn-object $*
+$MAVEN_HOME/mvn-arrow $*
+$MAVEN_HOME/mvn-object $*
+ssh maven@athena.insttech.washington.edu ./test/run_test.sh $*
+ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $*
