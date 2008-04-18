@@ -4,11 +4,29 @@ package escjava.ast;
 
 import java.io.OutputStream;
 import java.util.Enumeration;
-import javafe.ast.*;
+
+import javafe.ast.BinaryExpr;
+import javafe.ast.DelegatingPrettyPrint;
+import javafe.ast.Expr;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldDecl;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.LexicalPragma;
+import javafe.ast.LiteralExpr;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.ModifierPragma;
+import javafe.ast.ModifierPragmaVec;
+import javafe.ast.PrettyPrint;
+import javafe.ast.StmtPragma;
+import javafe.ast.Type;
+import javafe.ast.TypeDeclElemPragma;
+import javafe.ast.VarInit;
+import javafe.ast.VariableAccess;
 import javafe.util.Assert;
-import escjava.parser.EscPragmaParser;
-import escjava.ast.TagConstants;
 import escjava.ParsedRoutineSpecs;
+import escjava.parser.EscPragmaParser;
 
 public class EscPrettyPrint extends DelegatingPrettyPrint
 {

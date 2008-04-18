@@ -2,21 +2,19 @@
 
 package escjava.sp;
 
-import escjava.ast.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
+import javafe.ast.Expr;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.GenericVarDeclVec;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.VariableAccess;
+import javafe.util.Location;
+import escjava.ast.GuardedCmdVec;
 import escjava.ast.Modifiers;
 import escjava.ast.TagConstants;
 import escjava.translate.GC;
-import escjava.translate.Substitute;
-
-import javafe.ast.*;
-import javafe.ast.GenericVarDecl;
-import javafe.ast.LocalVarDecl;
-import javafe.util.Location;
-import javafe.util.Assert;
-
-import java.util.Hashtable;
-import java.util.Enumeration;
 
 public class VarMap
 {
