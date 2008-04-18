@@ -720,7 +720,7 @@ endif
 export MAVEN_FILES_ROOT=${ESCTOOLS_ROOT}
  	
 ## Copy all Java files to default locations expected by Maven
-pre-maven: clean-maven
+pre-maven: clean-maven source
 	mkdir -p ${MAVEN_FILES_ROOT}/src/main/java
 	find ${ESCTOOLS_ROOT}/Escjava/java/escjava -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
 	find ${ESCTOOLS_ROOT}/Escjava/mochalib/java -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
