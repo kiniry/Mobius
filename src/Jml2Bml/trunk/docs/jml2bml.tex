@@ -162,23 +162,32 @@ inconsistencies can be eliminated with the help of some additional
 information (e.g.@NonNull annotations, suggested in \cite{JSR305})
 which makes the checking process feasable.
 
-The goal of the proof-carrying code (PCC) technique \cite{pcc} is to
-give the user certain guarantees of the code to be executed at the
-moment of its execution. In this paradigm, the executable code (in
-case of Java, the bytecode) is augmented with an additional piece of
-information, a PCC certificate, which together with the code makes
-possible an automatic check that the code indeed obeys the expected
-policy (e.g. sends data to authorised targets only). This check is
-performed by the user (or by user's execution environment) right
-before the code is executed (see Figure~\ref{fig:pccScheme}). In fact,
-the usual Java bytecode verification procedure can be viewed as an
-example of a forerunner of thich technique. Although the certificate
-is in this case empty (or supplementary in case the StackMap
-attributes are employed), the execution environment indeed checks a
-vital code property before the code is executed. In more complicated
-cases of the proof-carrying code, one needs the additional information
-to make the checking of the required property feasible or even
-algorithmically possible.
+The presence of traditional bytecode verification enables certain
+speed-ups at the run time. In particular, the method invocation
+instruction need not check the type of the object on which the method
+is invoked. The more detailed information we have the more
+optimizations we can introduce. For instance the credible information
+on the value of an array index may release the array access bytecode
+instructions from the checks that the access is within the available
+region \cite{SafeUntrusted98}.
+
+The goal of the proof-carrying code (PCC) technique
+\cite{pcc,AScalable} is to give the user certain guarantees of the
+code to be executed at the moment of its execution. In this paradigm,
+the executable code (in case of Java, the bytecode) is augmented with
+an additional piece of information, a PCC certificate, which together
+with the code makes possible an automatic check that the code indeed
+obeys the expected policy (e.g. sends data to authorised targets
+only). This check is performed by the user (or by user's execution
+environment) right before the code is executed (see
+Figure~\ref{fig:pccScheme}). In fact, the usual Java bytecode
+verification procedure can be viewed as an example of a forerunner of
+thich technique. Although the certificate is in this case empty (or
+supplementary in case the StackMap attributes are employed), the
+execution environment indeed checks a vital code property before the
+code is executed. In more complicated cases of the proof-carrying
+code, one needs the additional information to make the checking of the
+required property feasible or even algorithmically possible.
 
 One of the possible ways to realise the PCC architecture is developed
 under the european project MOBIUS.\footnote{See
@@ -351,7 +360,7 @@ language itself.
 The Bytecode Modelling Language (BML) is a specification language for
 the bytecode. It was proposed by Burdy et al. in \cite{bmlBurdy}. The
 design of BML directly follows the fundamental concepts of JML. It
-inherits most constructions and keywords from the JML syntax. As the
+inherits most constructs and keywords from the JML syntax. As the
 BML is developed within the MOBIUS \cite{mobius} project and the main
 target of the project are Java-enabled mobile devices such as mobile
 phones, the current version of BML assumes some simplifications of the
@@ -371,14 +380,6 @@ specifications are stored as class attributes, method specifications,
 as attributes of corresponding method and specifications inserted in
 the code are attributes of the JVM Code attribute of the given method.
 
-The document is organized as follows. In Section 2 we describe an
-annotation language. In Section 3 we describe implementation of our
-compiler, give details on the architecture and present the main
-principles of the translation. Then an example of using our tool is
-presented. In Section 5 and 6 we describe algorithms for detecting
-loops in the bytecode and matching them with the source code. At the
-end conclusions are given and future work is discussed.
-
 \subsection{Overview of annotations}
 
 The structure of annotations in BML and JML is very similar. We have
@@ -388,7 +389,7 @@ and interfaces) annotations.
 \subsubsection{Method annotations}
 The most important type of method annotations are \textit{method
 specifications} describing the input-output behaviour of the
-method. This are preconditions (\texttt{requires}), defining
+method. These are preconditions (\texttt{requires}), defining
 conditions that should be fulfilled before entering the method and
 postconditions (\texttt{ensures}) telling what we can expect after the
 method finishes. One can define also which fields are modified (clause
@@ -396,20 +397,23 @@ method finishes. One can define also which fields are modified (clause
 \texttt{signal}).
 
 The other type of method annotations are specifications elements
-appearing in the code, like:
+appearing in the code. These include:
 \begin{itemize}
 \item {Assert instructions that state some facts about fields,
   variables etc. that should hold at this point of program execution.}
 \item {Loop specifications that describe the loop invariants
-  (\texttt{loop\_invariant}), loop variants, like \texttt{decreases} to
-  prove the loop's termination or \texttt{modifies} that tells which
+  (\texttt{loop\_invariant}) that describe the operation of the loop,
+  loop variants (\texttt{decreases}) that explain why the loop
+  terminates, and frame conditions (\texttt{modifies}) that tell which
   fields or variables can be changed in this loop.}
 \item{Declarations of local \texttt{ghost}
   variables\hs{}---\hs{}variables that exist only in the
   specification. Their values can be modified only using special
-  \texttt{set} instructions.}
-\item{\texttt{Set} instructions are similar to Java assingments, but
-  they operate on ghost fields and variables.}
+  \texttt{set} instructions. These variables are used as shorthands
+  for certain definitions as well as a means to capture the
+  information flow properties within the specified program.}
+\item{\texttt{Set} instructions that allow to modify ghost fields and
+  variables.}
 \end{itemize}
 
 \subsubsection{Data type annotations}
@@ -470,7 +474,7 @@ public class List {
 \end{lstlisting}
 \end{minipage}
 \caption{An example class \texttt{List.java} containing single method \texttt{replace}.}
-\label{source}
+\label{fig:source}
 \end{figure}
 
 \section{An Example of Using The\\Compiler}
@@ -479,51 +483,75 @@ public class List {
 This section provides an example demonstrating the result of launching
 the \jmltobml.
 \subsection{Source code}
-Consider the class presented in Figure \ref{source}. This is an
+Consider the class presented on Figure~\ref{fig:source}. This is an
 excerpt of a class which implements a sequence of objects. We present
 here only one method that replaces in the \texttt{list} array the
 first occurence of its first parameter with the second one. True will
 be returned, if and only if such an element was found.
 
 The presented code, apart from standard Java statements, contains also
-specifications in the JML. There is a precondition (\texttt{requires
-...}) for the method \texttt{replace} defined. It requests that every
-time the method is invoked, the field \texttt{list} it not
-\texttt{null}. The next three lines (starting with \texttt{ensures}
-constitute the method postcondition. It states that, if the
-precondition was fullfiled, then the method result is true if and only
-if there was an element in the \texttt{list} which value has been
-updated from \texttt{o1} to \texttt{o2}. Note that the postcondition
-makes use of some JML features, like \texttt{$\backslash$result},
-\texttt{$\backslash$old} or \texttt{$\backslash$exists}. This
-postcondition does not describe all properties of this method. For
-example an implementation that replaces all elements in the
-\texttt{list} up to the first occurence of \texttt{o1} with
-\texttt{o2} will fulfill this specification.
+specifications in the JML. The specifications are embodied within
+special Java comments starting with \verb!/*@! and ending with
+\verb!@*/!. The precondition for the method \texttt{replace} starts
+with the keyword \texttt{precondition}. It requests that every time
+the method is invoked, the field \texttt{list} it not
+\texttt{null}. In practice, the precence of such a precondition means
+that JML tools will warn the programmer each time she or he tries to
+use the replace method and the non-nullness of the \texttt{list} field
+cannot be guaranteed.
 
-In additition to specification describing input-output behaviour of
-the method, also the loop implementing the \texttt{replace} method is
-annotated. The \texttt{loop\_invariant} clause contains the invariant:
-a formula that should hold at the beginning of the loop body at each
-loop iteration. In this example it states that in iteration \texttt{i}
-there are no occurences of \texttt{o1} in \texttt{list} on positions
-before \texttt{i}. The annotation \texttt{decreases} describes the
-loop variant. It specifies an expression (in this case
-\verb|list.length - i|) which value is decreased in each loop
-iteration by at least one.
+The precondition line is followed by a line starting with
+\texttt{modifies} keyword. This line specifies which variables can be
+changed in the course of the method execution. The specification on
+Figure~\ref{fig:source} tells that the method can change any value. In
+certain situations (e.g. sometimes we can omit synchronisation when
+the method only reads information), it is useful to have more detailed
+knowledge concerning the modifications performed by the method.
+
+The next three lines (starting with \texttt{ensures}) constitute the
+method postcondition. It states that, if the precondition is
+fullfiled, then the method result is true if and only if there is an
+slot in the \texttt{list} the value of which has been updated from
+\texttt{o1} to \texttt{o2}. Note that the postcondition makes use of
+special JML expressions such as \texttt{$\backslash$result} (which
+denotes the result of the method), \texttt{$\backslash$old} (which
+allows to refer to a value of expression rather at the moment of the
+method invocation than at the exit) or \texttt{$\backslash$exists}
+(which allows to express the existential quantification). This
+postcondition does not describe full requirements concerning the
+method. For example an implementation that replaces all elements in
+the \texttt{list} up to the first occurence of \texttt{o1} with
+\texttt{o2} would fulfill this specification. However, it is not
+difficult to provide more accurate property.
+
+In additition to specifications describing input-output behaviour of
+the method, a formal description of the loop implementing the
+\texttt{replace} method is provided. The first part of the description
+is the \texttt{loop\_invariant} clause which contains a loop
+invariant: a formula that should hold at the beginning of the loop
+body in each its iteration. In this example, it states that in
+iteration \texttt{i} there are no occurences of \texttt{o1} in
+\texttt{list} on positions before \texttt{i}. The second loop
+annotation is \texttt{decreases}clause which describes the loop
+variant. It specifies an expression (in this case
+\verb|list.length - i|) the value of which strictly decreases in each
+loop iteration.
 
 \subsection{Bytecode}
 In this section we describe the result of translating the source code
-from Figure \ref{source}. Since the binary class files are not human
-readable, we rely on its textual representation obtained from the
-\bmllib. The Figure \ref{bytecode} shows the translated
+from Figure~\ref{fig:source}. Since the binary class files are not
+easily readable, we rely on their textual representation obtained from
+the \bmllib library. In case there are no annotations, the textual
+representation is just the textual representation returned by Byte
+Code Engineering Library (BCEL) and is similar to the output of
+\texttt{javap} tool or the input acceptable by Jasmine language
+\cite{Jasmin}. The Figure \ref{bytecode} shows the translated
 \texttt{replace} method together with BML annotations inserted by our
-\jmltobml compiler. Lines 0 and 1 correspond to the
-initialization \texttt{i = 0}. The loop is located between lines 2 and
-33. Lines 5--12 represent the \texttt{if} statement, 15--23
-correspond to lines ??? from the source code. Loading loop condition
-parameters is located in lines 27--32 and 33 performs the loop
-condition comparison.
+\jmltobml compiler. Lines 0 and 1 correspond to the initialization
+\texttt{i = 0}. The loop is located between lines 2 and 33. Lines
+5--12 represent the \texttt{if} statement, 15--23 correspond to lines
+??? from the source code. Loading loop condition parameters is located
+in lines 27--32 and 33 performs the loop condition comparison.
 
 The \texttt{requires-enusers} pair is translated into input-output
 behaviour BML specifications located just before the method
@@ -532,10 +560,10 @@ listing. The \jmltobml compiler detects loops in the bytecode and
 inserts the annotation before the statement representing the loop
 condition. In this case it is the \texttt{if\_icmplt} instruction
 comparing \texttt{i} and \texttt{list.length}. For more details about
-detecting loops refer to Section~\ref{sec:loops}. The modifies
-clause describes set of variables modified by the loop. Currently,
-because of \openjml limitations it is not supported by our
-compiler (the default value \texttt{everything} will be inserted).
+detecting loops refer to Section~\ref{sec:loops}. The modifies clause
+describes set of variables modified by the loop. Currently, because of
+\openjml limitations it is not supported by our compiler (the default
+value \texttt{$\backslash$everything} will be inserted).
 
 \section{\jmltobmltext{} Compiler Design}
 \label{sec:compiler}
@@ -578,17 +606,15 @@ dependencies between internal packages of \jmltobml and
 ~~~~~~%
 \begin{minipage}{400pt}
 \begin{lstlisting}
-/*
- * \requires true
- *  {|
- *   \precondition list != null
- *   \ensures \result ==
- *     (\exists int i; 0 <= i && 
- *              i < list.length &&
- *              old_list[i] == o1 &&
- *              list[i] == o2)
- *  |}
- */
+/*@
+  @  \precondition list != null
+  @  \modifies \everything
+  @  \ensures \result ==
+  @    (\exists int i; 0 <= i && 
+  @        i < this.list.length &&
+  @        old_this.list[i] == o1 &&
+  @        this.list[i] == o2)
+  @*/
 public boolean replace(Object o1, Object o2)
 0:    iconst_0
 1:    istore_3
@@ -611,15 +637,15 @@ public boolean replace(Object o1, Object o2)
 28:   aload_0
 29:   getfield	   main.List.list
 32:   arraylength
-/*
- * \loop_specification
- *   \modifies everything
- *   \invariant i <= list.length &&
- *      i >= 0 &&
- *      (\forall int k; 0 <= k &&
- *          k < i ==> list[k] != o1)
- *   \decreases list.length - i
- */
+/*@
+  @\loop_specification
+  @  \modifies \everything
+  @  \invariant i <= list.length &&
+  @     i >= 0 &&
+  @     (\forall int k; 0 <= k &&
+  @         k < i ==> list[k] != o1)
+  @  \decreases list.length - i;
+  @*/
 33:   if_icmplt	   #5
 36:   iconst_0
 37:   ireturn
