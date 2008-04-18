@@ -1,6 +1,6 @@
 #/bin/bash
 ln -sf $PWD ~maven/workdir
-$MAVEN_HOME/mvn-arrow $*
-$MAVEN_HOME/mvn-object $*
+ssh maven@arrow.ucd.ie ./test/mvn-local $*
+ssh maven@object.ucd.ie ./test/mvn-local $*
 ssh maven@athena.insttech.washington.edu ./test/run_test.sh $*
 ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $*
