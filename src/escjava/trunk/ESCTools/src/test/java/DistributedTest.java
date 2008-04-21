@@ -23,6 +23,7 @@ public class DistributedTest extends junitutils.TestFilesTestSuite {
 	String listOfFiles = "src/test/list.txt";
 	String listOfServers = "src/test/servers.txt";
 	String listOfOptions = "src/test/options.txt";
+	String listOfSecondOptions = "src/test/secondOptions.txt";
 	String testSuiteName = "Distributed-Test-" + hostName;
 	int numberOfServers = 0;
 	int serverIndex = -1; // run no tests unless a server is found 
@@ -46,6 +47,7 @@ public class DistributedTest extends junitutils.TestFilesTestSuite {
 		testSuiteName,
 		listOfFiles,
 		listOfOptions,
+		listOfSecondOptions,
 		escjava.Main.class,
 		serverIndex,
 		numberOfServers) {

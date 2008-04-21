@@ -86,9 +86,14 @@ public class AbstractDistributedTestSuite extends TestSuite {
 	 *            The name of the test suite
 	 * @param fileOfTestFilenames
 	 *            The file to be read for filenames of tests
-	 * @param args
-	 *            The command-line arguments that the static compile method will
-	 *            be applied to, with the filename added on
+	 * @param listOfOptions
+	 *            The file containing command-line arguments that the static
+	 *            compile method will be applied to, with the test filename
+	 *            added on
+	 * @param listOfSecondOptions
+	 *            The file containing additional command-line arguments that the
+	 *            static compile method will be applied to, with the test
+	 *            filename added on
 	 * @param cls
 	 *            The class in which to find the static compile method
 	 * @param serverIndex
@@ -104,6 +109,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
 	public AbstractDistributedTestSuite(/* @ non_null */String testName,
 	/* @ non_null */String fileOfTestFilenames,
 	/* @ non_null */String listOfOptions,
+	/* @ non_null */String listOfSecondOptions,
 	/* @ non_null */Class cls, int serverIndex, int numberOfServers) {
 		super(testName);
 		this.testName = testName;
@@ -120,34 +126,32 @@ public class AbstractDistributedTestSuite extends TestSuite {
 			throw new RuntimeException(e.toString());
 		}
 
-		int position;
+		int position = 0; // Test sequence number
+		String s; // Command line being tested
+		String[] allargs; // Set of command line options being tested
 		if ((0 < numberOfServers) && (0 <= serverIndex)) {
 			try {
 				// Iterate over all test cases
-				position = 0;
 				Iterator i = new LineIterator(fileOfTestFilenames);
+				
 				while (i.hasNext()) {
 					String thisLine = (String) i.next();
-
 					// Iterate over all sets of command line options
 					Iterator j = new LineIterator(listOfOptions);
 					while (j.hasNext()) {
 						String preArgs = (String) j.next();
-
-						// Iterate again over all sets of command line options
-						// and combine with every other option set
-						Iterator k = new LineIterator(listOfOptions);
+						// Iterate again over all sets of possible second
+						// options and combine with every compatible each
+						// option set
+						Iterator k = new LineIterator(listOfSecondOptions);
 						while (k.hasNext()) {
-							String otherArgs = (String) k.next();
-
 							// prepend generic options to the specific options
 							// and filename
-							String s = preArgs + " " + otherArgs + " "
+							s = preArgs + " " + (String) k.next() + " "
 									+ thisLine;
-							String[] allargs = JUnitUtils.parseLine(s);
+							allargs = JUnitUtils.parseLine(s);
 							if (allargs.length > 0) {
 								s = allargs[allargs.length - 1];
-
 								// Add the test only if it is the turn of this
 								// server
 								if ((position++ % numberOfServers) == serverIndex) {
@@ -200,7 +204,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
 		 * name of the file to be tested.
 		 */
 		public Helper(/* @ non_null */String testname, /* @ non_null */
-				String[] args) {
+		String[] args) {
 			super(testname);
 			this.fileToTest = testname;
 			this.args = args;
@@ -288,9 +292,9 @@ public class AbstractDistributedTestSuite extends TestSuite {
 
 	// @ requires initialized;
 	protected/* @ nullable */String doOutputCheck(
-			/* @ non_null */String fileToTest,
-			/* @ non_null */String output,
-			/* @ non_null */Object returnedValue) {
+	/* @ non_null */String fileToTest,
+	/* @ non_null */String output,
+	/* @ non_null */Object returnedValue) {
 		try {
 			String expectedOutput = JUnitUtils.readFile(fileToTest
 					+ ORACLE_SUFFIX);
@@ -322,9 +326,9 @@ public class AbstractDistributedTestSuite extends TestSuite {
 
 	// @ requires initialized;
 	public/* @ nullable */String checkReturnValue(
-			/* @ non_null */String fileToTest,
-			/* @ non_null */String expectedOutput,
-			/* @ non_null */Object returnedValue) {
+	/* @ non_null */String fileToTest,
+	/* @ non_null */String expectedOutput,
+	/* @ non_null */Object returnedValue) {
 		if (returnedValue instanceof Boolean) {
 			return expectedStatusReport(fileToTest, ((Boolean) returnedValue)
 					.booleanValue(), expectedOutput);
@@ -339,8 +343,8 @@ public class AbstractDistributedTestSuite extends TestSuite {
 	/** Returns null if ok, otherwise returns failure message. */
 	// @ requires initialized;
 	public/* @ nullable */String expectedStatusReport(
-			/* @ non_null */String fileToTest, int ecode,
-			/* @ non_null */String expectedOutput) {
+	/* @ non_null */String fileToTest, int ecode,
+	/* @ non_null */String expectedOutput) {
 		int ret = expectedIntegerStatus(fileToTest, expectedOutput);
 		if (ecode == ret)
 			return null;
@@ -350,8 +354,8 @@ public class AbstractDistributedTestSuite extends TestSuite {
 
 	// @ requires initialized;
 	public/* @ nullable */String expectedStatusReport(
-			/* @ non_null */String fileToTest, boolean b,
-			/* @ non_null */String expectedOutput) {
+	/* @ non_null */String fileToTest, boolean b,
+	/* @ non_null */String expectedOutput) {
 		boolean status = expectedBooleanStatus(fileToTest, expectedOutput);
 		if (status == b)
 			return null;
