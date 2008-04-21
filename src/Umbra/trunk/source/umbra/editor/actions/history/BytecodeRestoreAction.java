@@ -129,7 +129,6 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
                               "source code file cannot be found");
       return;
     }
-    contributor.synchrEnable();
   }
 
   /**

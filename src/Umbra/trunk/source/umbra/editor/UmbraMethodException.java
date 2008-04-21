@@ -9,7 +9,10 @@
 package umbra.editor;
 
 /**
- * @author alx
+ * This is an exception used to trace situations when the processing reached
+ * a method which does not exist in the document being processed.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
  */
@@ -24,11 +27,22 @@ public class UmbraMethodException extends Exception {
    *  This field contains the method number which is considered to be wrong.
    */
   private final int my_wrong_methodno;
-  
+
+  /**
+   * Creates an exception with the information on the number of the method
+   * outside the document.
+   *
+   * @param a_mno the method number outside the document
+   */
   public UmbraMethodException(final int a_mno) {
     my_wrong_methodno = a_mno;
   }
-  
+
+  /**
+   * Returns the number of the wrong method.
+   *
+   * @return the number of the wrong method
+   */
   public int getWrongMethodNumber() {
     return my_wrong_methodno;
   }

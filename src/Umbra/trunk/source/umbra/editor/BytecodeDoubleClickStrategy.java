@@ -8,8 +8,12 @@
  */
 package umbra.editor;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.swt.widgets.Shell;
+
+import umbra.editor.actions.BytecodeSynchrAction;
 
 
 
@@ -41,6 +45,13 @@ public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
       return;
 
     final BytecodeDocument bDoc = (BytecodeDocument)a_selection.getDocument();
-    bDoc.synchronizeBS(pos);
+    try {
+      bDoc.synchronizeBS(pos);
+    } catch (UmbraLocationException e) {
+      final BytecodeDocument bdoc = (BytecodeDocument)a_selection.getDocument();
+      final Shell sh = bdoc.getEditor().getSite().getShell();
+      BytecodeSynchrAction.wrongLocationMessage(sh,
+                           "Double click synchronisation", e);
+    }
   }
 }

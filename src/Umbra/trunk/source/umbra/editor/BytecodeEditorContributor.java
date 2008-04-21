@@ -308,19 +308,18 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   }
 
   /**
-   * The same as {@link #refreshEditor(BytecodeEditor, IEditorInput)}, but
-   * the input is obtained from the current editor window.
+   * The same as
+   * {@link #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])},
+   * but the input is obtained from the current editor window.
    *
    * @param an_editor TODO
    * @param the_interline an array with multi-line comments
    * @param the_comments an array with end-of-line comments
-   * @param the_input
    * @throws PartInitException if the new editor could not be created or
    *   initialised
-   * @see #refreshEditor(BytecodeEditor, IEditorInput)
+   * @see #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
-                                  final FileEditorInput the_input,
                                   final String[] the_comments,
                                   final String[] the_interline)
     throws PartInitException {
@@ -339,6 +338,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account
    * @param an_interline multi-line comments TODO fix the protocol
+   * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *    initialised
    */
@@ -353,6 +353,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final boolean proper = (related != null);
     my_bcode_cntrbtn.survive();
     if (proper) Composition.startDisas();
+    //TODO consider not closing the editor here
     page.closeEditor(an_editor, true);
     final BytecodeEditor newEditor = (BytecodeEditor)(page.openEditor(an_input,
                         "umbra.BytecodeEditor", true));
@@ -366,20 +367,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     ((BytecodeEditor) newEditor).setRelation(related);
     if (proper) Composition.stopDisas();
     return newEditor;
-  }
-
-  /**
-   * This method disables the synchronisation action in the editor.
-   */
-  public final void synchrDisable() {
-    my_synchr_action.setEnabled(false);
-  }
-
-  /**
-   * This method enables the synchronisation action in the editor.
-   */
-  public final void synchrEnable() {
-    my_synchr_action.setEnabled(true);
   }
 
   /**

@@ -11,6 +11,8 @@ package umbra.editor.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -23,19 +25,20 @@ import umbra.editor.BytecodeEditorContributor;
 
 /**
  * This is a class defining an action: save current bytecode
- * editor window and re-generate Bytecode from BCEL structures.
- * This action is equal to generating bytecode again from the
+ * editor window and re-generate byte code from the .class file.
+ * This action is equivalent to the generation of the byte code again from the
  * Java code after saving binary file.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeRefreshAction extends BytecodeEditorAction {
 
   /**
-   * This constructor creates the action to refresh the bytecode editor.
+   * This constructor creates the action to refresh the byte code editor.
    * It registers the name of the action with the text "Refresh" and stores
-   * locally the object which creates all the actions and which contributs
+   * locally the object which creates all the actions and which contributes
    * the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
@@ -51,7 +54,8 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
 
   /**
    * This method sets the bytecode editor for which the refresh action will
-   * be executed.
+   * be executed. Except for the superclass functionality it sets the
+   * refresh action to be active in case the editor is dirty.
    *
    * @param a_target_editor the bytecode editor for which the action will be
    *           executed
@@ -62,40 +66,69 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
   }
 
   /**
-   * This method saves the editor content in the file associated with it
-   * and then creates new input from the
-   * {@link org.apache.bcel.classfile.JavaClass} structure in BCEL.
+   * This method saves the editor content in the files .btc. and .class
+   * associated with it and then creates a new input from the .class file.
    * Finally replaces content of the editor window with the newly generated
-   * input. The general idea is that the current modifications are stored
+   * text. The general idea is that the current modifications are stored
    * in a file and then retrieved back to the editor to obtain a nicely
    * formatted presentation of the code.
    */
   public final void run() {
+    final Shell parent = getEditor().getSite().getShell();
     final BytecodeEditor my_editor = getEditor();
-    final BytecodeEditorContributor my_contributor = getContributor();
+
     final int topvisible = my_editor.getVisibleRegion();
     my_editor.doSave(null);
     final FileEditorInput input = (FileEditorInput)my_editor.getEditorInput();
     final IFile file = input.getFile();
     try {
-      final IPath active = UmbraHelper.getClassFileFileFor(file, my_editor,
-                               UmbraHelper.BYTECODE_EXTENSION).getFullPath();
-      //memorise the current state of the session
-      final BytecodeDocument doc = my_editor.getDocument();
-      final String[] eolComments = doc.getEOLComments();
-      final String[] interlineComm = doc.getInterlineComments();
-      final boolean[] modified = doc.getModified();
-      my_editor.refreshBytecode(active, doc, eolComments, interlineComm);
-      final BytecodeEditor newEditor = my_contributor.refreshEditor(my_editor, input,
-                                   eolComments, interlineComm);
-      newEditor.getDocument().setModTable(modified);
+      final BytecodeEditor newEditor = doRefresh(my_editor, file);
       newEditor.setVisibleRegion(topvisible);
       setActiveEditor(newEditor);
     } catch (ClassNotFoundException e) {
-      e.printStackTrace(); //TODO stack print
+      MessageDialog.openError(parent,
+                              getActionDefinitionId(),
+                              "The path " + file.toString() +
+                              " does not lead to a valid class file");
     } catch (CoreException e) {
-      e.printStackTrace(); //TODO stack print
+      MessageDialog.openError(parent,
+                              getActionDefinitionId(),
+                              "A file operation on the byte code failed");
     }
-    my_contributor.synchrEnable();
+  }
+
+  /**
+   * This method does the actual job of refreshing the content of the byte
+   * code editor with an already saved content of a class file. First, we
+   * obtain the path to the class file. Then we store temporarily the
+   * comments and information on the modified methods. Then we refresh
+   * the byte code and the editor.
+   *
+   * @param the_editor the editor which is refreshed
+   * @param a_file the .btc file the content of which is refreshed
+   * @return the fresh editor
+   * @throws ClassNotFoundException the class corresponding to the given file
+   *   cannot be found
+   * @throws CoreException a file operation on the byte code file did not
+   *   succeed
+   */
+  private BytecodeEditor doRefresh(final BytecodeEditor the_editor,
+                               final IFile a_file)
+    throws ClassNotFoundException,
+           CoreException {
+    final BytecodeEditorContributor a_contributor = getContributor();
+    final IPath active = UmbraHelper.getClassFileFileFor(a_file, the_editor,
+                             UmbraHelper.BYTECODE_EXTENSION).getFullPath();
+    //memorise the current state of the session
+    final BytecodeDocument doc = the_editor.getDocument();
+    final String[] eolComments = doc.getEOLComments();
+    final String[] interlineComm = doc.getInterlineComments();
+    final boolean[] modified = doc.getModified();
+    the_editor.refreshBytecode(active, doc, eolComments, interlineComm);
+    final BytecodeEditor newEditor = a_contributor.refreshEditor(the_editor,
+                                                    eolComments,
+                                                    interlineComm);
+    newEditor.getDocument().setModTable(modified);
+    return newEditor;
   }
 }

@@ -232,14 +232,14 @@ public class BytecodeEditor extends TextEditor {
    * associated with the given document. Additionally, the comment information
    * from the previous session is connected to the document.
    *
-   * @param a_path a workspace relative path to a Java class file
+   * @param a_path a workspace relative path to a class file
    * @param a_doc the byte code document for which the refresh operation is
    *   taken
    * @param the_comments  a table of end-of-line comments to be inserted
    * @param the_interline_comments  table of comments between instructions to be
    *   also inserted
-   * @throws ClassNotFoundException the class corresponding to the Java source
-   *   code file cannot be found
+   * @throws ClassNotFoundException the class corresponding to the given path
+   *   cannot be found
    * @throws CoreException the reasons for this exception include:
    *<ul>
    * <li> The location corresponding to the edited input

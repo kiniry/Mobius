@@ -93,7 +93,7 @@ public class BytecodeColorAction extends Action {
         final IFile file = ((FileEditorInput)my_active_editor.
             getEditorInput()).getFile();
         final FileEditorInput input = new FileEditorInput(file);
-        my_contributor.refreshEditor(my_active_editor, input, null, null);
+        my_contributor.refreshEditor(my_active_editor, null, null);
       } catch (PartInitException e) {
         MessageDialog.openWarning(my_active_editor.getSite().getShell(),
             "Bytecode", "Cannot open a new editor after closing " +

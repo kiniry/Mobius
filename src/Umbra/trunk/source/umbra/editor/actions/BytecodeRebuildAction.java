@@ -108,6 +108,5 @@ public class BytecodeRebuildAction extends Action {
     } catch (CoreException e1) {
       e1.printStackTrace(); //TODO stack print
     }
-    my_contributor.synchrEnable();
   }
 }

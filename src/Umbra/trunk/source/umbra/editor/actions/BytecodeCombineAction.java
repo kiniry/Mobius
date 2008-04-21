@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 import annot.bcclass.BCClass;
@@ -111,7 +112,6 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
                   UmbraHelper.BYTECODE_EXTENSION,
                   UmbraHelper.CLASS_EXTENSION);
     updateMethods(file, path, lastSegment);
-    getContributor().synchrEnable();
   }
 
   /**
@@ -137,21 +137,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     cp = new ClassPath(getClassPath());
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
     try {
-      final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
-      JavaClass jc = strin.loadClass(clname);
-      strin.removeClass(jc);
-      final JavaClass oldJc = my_editor.getDocument().getJavaClass();
-      final ClassGen cg = updateModifiedMethods(oldJc, jc);
-      jc = cg.getJavaClass();
-      final String fullName = UmbraHelper.getPath(a_path).toOSString();
-      jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
-      my_editor.refreshBytecode(a_path, my_editor.getDocument(), null, null);
-      final BCClass bcc = new BCClass(jc);
-      //XXX changed: here my_bmlp object is initialised from JavaClass
-      final BMLParsing bmlp = new BMLParsing(bcc);
-      my_editor.getDocument().setEditor(my_editor, bmlp);
-      final IEditorInput input = new FileEditorInput(a_file);
-      getContributor().refreshEditor(my_editor, input, null, null);
+      updateMethodsLogic(a_file, a_path, the_last_segment, clname, strin);
     } catch (ClassNotFoundException e) {
       e.printStackTrace(); //TODO stack print
     } catch (IOException e) {
@@ -162,6 +148,42 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  /**
+   * @param a_file
+   * @param a_path
+   * @param the_last_segment
+   * @param clname
+   * @param strin
+   * @throws ClassNotFoundException
+   * @throws IOException
+   * @throws CoreException
+   * @throws ReadAttributeException
+   * @throws PartInitException
+   */
+  private void updateMethodsLogic(final IFile a_file,
+                                  final IPath a_path,
+                                  final String the_last_segment,
+                                  final String clname,
+                                  final SyntheticRepository strin)
+    throws ClassNotFoundException, IOException, CoreException,
+           ReadAttributeException, PartInitException {
+    final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
+    JavaClass jc = strin.loadClass(clname);
+    strin.removeClass(jc);
+    final JavaClass oldJc = my_editor.getDocument().getJavaClass();
+    final ClassGen cg = updateModifiedMethods(oldJc, jc);
+    jc = cg.getJavaClass();
+    final String fullName = UmbraHelper.getPath(a_path).toOSString();
+    jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
+    my_editor.refreshBytecode(a_path, my_editor.getDocument(), null, null);
+    final BCClass bcc = new BCClass(jc);
+    //XXX changed: here my_bmlp object is initialised from JavaClass
+    final BMLParsing bmlp = new BMLParsing(bcc);
+    my_editor.getDocument().setEditor(my_editor, bmlp);
+    final IEditorInput input = new FileEditorInput(a_file);
+    getContributor().refreshEditor(my_editor, input, null, null);
   }
 
   /**

@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.UmbraException;
-import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.BytecodeController;
 import annot.bcclass.BCClass;
 
@@ -28,6 +27,8 @@ import annot.bcclass.BCClass;
  * Java source code file (in both directions).
  *
  * FIXME more detailed description
+ * FIXME this class should not handle the showing of messages in case of
+ *   exception
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -377,8 +378,10 @@ public class BytecodeDocument extends Document {
    *
    * @param a_pos index of line in byte code editor. Lines in related source
    *   code editor corresponding to this line will be highlighted.
+   * @throws UmbraLocationException in case a position is reached in the
+   *   source code or byte code editor which does not exists there
    */
-  public void synchronizeBS(final int a_pos) {
+  public void synchronizeBS(final int a_pos) throws UmbraLocationException {
     final DocumentSynchroniser synch = getDocSynch();
     synch.synchronizeBS(a_pos);
   }

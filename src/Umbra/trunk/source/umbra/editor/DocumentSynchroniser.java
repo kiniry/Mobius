@@ -87,23 +87,37 @@ public class DocumentSynchroniser {
    * @see #synchronizeSB(int, IEditorPart)
    * @param a_pos index of line in byte code editor. Lines in related source
    *   code editor corresponding to this line will be highlighted.
+   * @throws UmbraLocationException in case a position is reached in the
+   *   source code or byte code editor which does not exists there
    */
-  public final void synchronizeBS(final int a_pos) {
+  public final void synchronizeBS(final int a_pos)
+    throws UmbraLocationException {
+    int line;
     try {
-      final int line = my_bcode_doc.getLineOfOffset(a_pos);
-      // syncBS computes the area to highlight
-      final int[] syncLine = syncBS(my_bcode_doc.getJavaClass(), line);
-      final int syncPos = my_java_doc.getLineOffset(syncLine[0]);
-      final int syncLen = my_java_doc.getLineOffset(syncLine[1] + 1) - syncPos;
-      final CompilationUnitEditor jeditor = my_bcode_doc.getRelatedEditor();
-      jeditor.getEditorSite().getPage().activate(jeditor);
-      if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode",
-                                               "Synchronisation failed");
-      else jeditor.getSelectionProvider().
-                   setSelection(new TextSelection(syncPos, syncLen));
-    } catch (BadLocationException e) {
-      e.printStackTrace(); //TODO stack print
+      line = my_bcode_doc.getLineOfOffset(a_pos);
+    } catch (BadLocationException e1) {
+      throw new UmbraLocationException(my_bcode_doc, a_pos);
     }
+    // syncBS computes the area to highlight
+    final int[] syncLine = syncBS(my_bcode_doc.getJavaClass(), line);
+    final int syncPos;
+    try {
+      syncPos = my_java_doc.getLineOffset(syncLine[0]);
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(my_java_doc, syncLine[0]);
+    }
+    int synclen;
+    try {
+      synclen = my_java_doc.getLineOffset(syncLine[1] + 1) - syncPos;
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(my_java_doc, syncLine[1] + 1);
+    }
+    final CompilationUnitEditor jeditor = my_bcode_doc.getRelatedEditor();
+    jeditor.getEditorSite().getPage().activate(jeditor);
+    if (synclen < 0) MessageDialog.openError(new Shell(), "Bytecode",
+                                               "Synchronisation failed");
+    else jeditor.getSelectionProvider().
+                 setSelection(new TextSelection(syncPos, synclen));
   }
 
   /**
@@ -117,11 +131,11 @@ public class DocumentSynchroniser {
    *         first and last line of
    *         source code (corresponding to given byte code line),
    *         in related source code editor
-   * @throws BadLocationException if line parameter is invalid. May occur also
-   *         if byte code in JavaClass jc is out-of-date.
+   * @throws UmbraLocationException in case the method reaches a position in
+   *   the byte code document which does not exists
    */
   private int[] syncBS(final JavaClass a_java_class,
-                       final int a_line_no) throws BadLocationException
+                       final int a_line_no) throws UmbraLocationException 
   // Synchronisation: Btc --> Src
   {
     final String code = my_bcode_doc.get();
@@ -153,13 +167,17 @@ public class DocumentSynchroniser {
         if (lnr > lnrmax)
           lnrmax = lnr;
         pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
-        do {
-          pos = my_bcode_doc.get().indexOf("" + pc + ":", pos + 1);
-          if (pos == -1) {
-            break;
-          }
-        } while (my_bcode_doc.getLineOfOffset(pos - 1) ==
-                 my_bcode_doc.getLineOfOffset(pos));
+        try {
+          do {
+            pos = my_bcode_doc.get().indexOf("" + pc + ":", pos + 1);
+            if (pos == -1) {
+              break;
+            }
+          } while (my_bcode_doc.getLineOfOffset(pos - 1) ==
+                   my_bcode_doc.getLineOfOffset(pos));
+        } catch (BadLocationException e) {
+          throw new UmbraLocationException(my_bcode_doc, pos);
+        }
         // "<pc>:" is located at the beginning of a line
         if (pos == -1) {
           if (l_od != 0)
@@ -168,7 +186,11 @@ public class DocumentSynchroniser {
                                  "LineNumberTable!");
           break;
         }
-        posln = my_bcode_doc.getLineOfOffset(pos);
+        try {
+          posln = my_bcode_doc.getLineOfOffset(pos);
+        } catch (BadLocationException e) {
+          throw new UmbraLocationException(my_bcode_doc, pos);
+        }
         if (posln == a_line_no1) {
           l_od = lnr;
         }

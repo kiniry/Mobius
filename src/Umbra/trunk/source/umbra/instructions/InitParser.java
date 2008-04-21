@@ -15,8 +15,8 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
 import umbra.editor.BytecodeDocument;
+import umbra.editor.UmbraLocationException;
 import umbra.editor.UmbraMethodException;
-import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;

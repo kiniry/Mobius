@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import org.eclipse.jface.text.BadLocationException;
 
 import umbra.editor.BytecodeDocument;
-import umbra.editor.parsing.UmbraLocationException;
+import umbra.editor.UmbraLocationException;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;

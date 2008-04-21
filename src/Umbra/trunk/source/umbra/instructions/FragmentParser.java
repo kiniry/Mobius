@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import umbra.UmbraException;
 import umbra.UmbraRuntimeException;
 import umbra.editor.BytecodeDocument;
-import umbra.editor.parsing.UmbraLocationException;
+import umbra.editor.UmbraLocationException;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
