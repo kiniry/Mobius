@@ -28,6 +28,7 @@ rsync maven@object.ucd.ie:ESCTools/target/surefire-reports/TEST-DistributedTest.
 rsync maven@athena.insttech.washington.edu:ESCTools/target/surefire-reports/TEST-DistributedTest.xml ./target/surefire-reports/TEST-athena.insttech.washington.edu.xml
 rsync maven@boomer.insttech.washington.edu:ESCTools/target/surefire-reports/TEST-DistributedTest.xml ./target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
 #
-# 4. Collect test coverage and PMD static analysis data from any one server
+# 4. Collect test coverage and PMD static analysis data and smoke test from any one server
 #
 rsync -r maven@arrow.ucd.ie:ESCTools/target/site ./target/site
+rsync maven@object.ucd.ie:ESCTools/target/surefire-reports/TEST-SmokeTest.xml ./target/surefire-reports
