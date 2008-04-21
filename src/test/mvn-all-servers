@@ -15,8 +15,8 @@ ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
 # 2. Run the Maven test suites concurrently
 #
-ssh maven@arrow.ucd.ie ./test/run_test.sh $* &
-ssh maven@object.ucd.ie ./test/run_test.sh $* &
+ssh maven@arrow.ucd.ie ./test/run_local.sh $*
+ssh maven@object.ucd.ie ./test/run_local.sh $* &
 ssh maven@athena.insttech.washington.edu ./test/run_test.sh $* &
 ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $* &
 wait
@@ -31,4 +31,4 @@ rsync maven@boomer.insttech.washington.edu:ESCTools/target/surefire-reports/TEST
 # 4. Collect test coverage and PMD static analysis data and smoke test from any one server
 #
 rsync -r maven@arrow.ucd.ie:ESCTools/target/site ./target/site
-rsync maven@object.ucd.ie:ESCTools/target/surefire-reports/TEST-SmokeTest.xml ./target/surefire-reports
+rsync maven@arrow.ucd.ie:ESCTools/target/surefire-reports/TEST-SmokeTest.xml ./target/surefire-reports
