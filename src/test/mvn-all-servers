@@ -8,10 +8,10 @@
 #
 # 1. Update local test scripts and authprogs.conf
 #
-ssh maven@arrow.ucd.ie ./test/self_update.sh $*
-ssh maven@object.ucd.ie ./test/self_update.sh $*
-ssh maven@athena.insttech.washington.edu ./test/self_update.sh $*
-ssh maven@boomer.insttech.washington.edu ./test/self_update.sh $*
+ssh maven@arrow.ucd.ie ./test/self_update.sh
+ssh maven@object.ucd.ie ./test/self_update.sh
+ssh maven@athena.insttech.washington.edu ./test/self_update.sh
+ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
 # 2. Run the Maven test suites
 #
