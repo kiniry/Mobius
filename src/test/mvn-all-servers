@@ -13,12 +13,13 @@ ssh maven@object.ucd.ie ./test/self_update.sh
 ssh maven@athena.insttech.washington.edu ./test/self_update.sh
 ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
-# 2. Run the Maven test suites
+# 2. Run the Maven test suites concurrently
 #
-ssh maven@arrow.ucd.ie ./test/run_test.sh $*
-ssh maven@object.ucd.ie ./test/run_test.sh $*
-ssh maven@athena.insttech.washington.edu ./test/run_test.sh $*
-ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $*
+ssh maven@arrow.ucd.ie ./test/run_test.sh $* &
+ssh maven@object.ucd.ie ./test/run_test.sh $* &
+ssh maven@athena.insttech.washington.edu ./test/run_test.sh $* &
+ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $* &
+wait
 #
 # 3. Collect the test reports for viewing by Continuum
 #
@@ -27,6 +28,6 @@ rsync maven@object.ucd.ie:ESCTools/target/surefire-reports/TEST-DistributedTest.
 rsync maven@athena.insttech.washington.edu:ESCTools/target/surefire-reports/TEST-DistributedTest.xml ./target/surefire-reports/TEST-athena.insttech.washington.edu.xml
 rsync maven@boomer.insttech.washington.edu:ESCTools/target/surefire-reports/TEST-DistributedTest.xml ./target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
 #
-# 4. Collect test coverage and PMD static analysis data
+# 4. Collect test coverage and PMD static analysis data from any one server
 #
 rsync -r maven@arrow.ucd.ie:ESCTools/target/site ./target/site
