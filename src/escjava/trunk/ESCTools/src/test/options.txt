@@ -37,4 +37,14 @@
 -nowarn Deadlock -verboseTrace -testMode -StrongAssertPostNever
 -nowarn Deadlock -verboseTrace -testMode -ExcuseNullInitializers
 -nowarn Deadlock -verboseTrace -testMode -UseIntQuantAntecedents
--nowarn Deadlock -verboseTrace -testMode
+-nowarn Deadlock -verboseTrace -testMode -NestQuantifiers
+-nowarn Deadlock -verboseTrace -testMode -NoDirectTargetsOpt
+-nowarn Deadlock -verboseTrace -testMode -InferPredicates
+-nowarn Deadlock -verboseTrace -testMode -PreciseTargets
+-nowarn Deadlock -verboseTrace -testMode -FilterInvariants
+-nowarn Deadlock -verboseTrace -testMode -UseAllInvPreBody
+-nowarn Deadlock -verboseTrace -testMode -UseAllInvPostBody
+-nowarn Deadlock -verboseTrace -testMode -UseAllInvPostCall
+-nowarn Deadlock -verboseTrace -testMode -NoAllocUseOpt
+-nowarn Deadlock -verboseTrace -testMode -MergeInv -LazySubst
+-verboseTrace -testMode
