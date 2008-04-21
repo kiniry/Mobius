@@ -40,6 +40,14 @@
   </issueManagement>
   <developers>
     <developer>
+      <id>dmz</id>
+      <name>Dan Zimmerman</name>
+      <email>dmz@acm.org</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
       <id>dcochran</id>
       <name>Dermot Cochran</name>
       <email>Dermot.Cochran@ucd.ie</email>
