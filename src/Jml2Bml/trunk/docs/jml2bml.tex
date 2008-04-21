@@ -127,7 +127,7 @@ specifications generates class files with BML.
 
 \terms{Reliability, Verification}
 
-\keywords{Java, byte code, JML, BML} % NOT required for Proceedings
+\keywords{Java, bytecode, JML, BML} % NOT required for Proceedings
 
 \section{Introduction}
 
@@ -379,7 +379,7 @@ presented. In Section 5 and 6 we describe algorithms for detecting
 loops in the bytecode and matching them with the source code. At the
 end conclusions are given and future work is discussed.
 
-\subsection{Overview of annotations}
+\subsection{Overview of Annotations}
 
 The structure of annotations in BML and JML is very similar. We have
 two main types of annotations: method annotations and data type (class
@@ -478,7 +478,7 @@ public class List {
 
 This section provides an example demonstrating the result of launching
 the \jmltobml.
-\subsection{Source code}
+\subsection{Source Code}
 Consider the class presented in Figure \ref{source}. This is an
 excerpt of a class which implements a sequence of objects. We present
 here only one method that replaces in the \texttt{list} array the
@@ -563,7 +563,7 @@ desired features are translated, for example the
 The \jmltobml is designed to be compatible with other bytecode
 level tools, such as the bytecode editor \textit{Umbra}.
 
-\subsection{Architecture description}
+\subsection{Architecture Description}
 In this section we present the overview of the architecture of \jmltobml
 compiler. The \jmltobml compiler uses \openjml to parse
 the Java source code together with the JML annotations. To insert
@@ -702,7 +702,7 @@ translating mechanism.
 \caption{The dependency graph of the \jmltobml packages. Dotted lines denote access to external libraries.}}
 \label{packages}
 \end{figure}
-\subsection{Translation mechanism}
+\subsection{Translation Mechanism}
 The full translation consists of a set of independent translation
 rules. Having the set of rules the AST tree of the source code with
 annotations is traversed. For each visited node all translation rules
@@ -712,7 +712,7 @@ translation mechanism allows to register new rules in a very simple
 way, what is an important issue in case of implementing new features
 in the future.
 
-\subsection{Translation rules}
+\subsection{Translation Rules}
 The \jmltobml compiler uses a set of translation rules. The concept of
 translation rule is that it should be responsible for relatively
 small, independent piece of translation. For example we have separate
@@ -817,7 +817,7 @@ Implementation of translation method is simple. First we check if this is the no
 %Before running the translation mechanism, translation rules need to be registered. Abstract syntax tree of the source code is traversed and for each node translation rules are executed.
 %The whole tree is traversed and in each node all defined translation rules are applied. It allows also to register new rules in a very simply way, what is an important issue in case of implementing new features in the future.
 
-\subsection{Translating expressions}
+\subsection{Translating Expressions}
 To be able to translate any JML specification, one needs to translate
 JML expressions, so the fundamental task in writing the compiler was
 to write a translation rule for expressions. As BML is based on JML,
@@ -825,11 +825,13 @@ the syntax of expressions is similar in both languages and includes:
 \begin{itemize}
 \item{Binary arithmetic operations (+,-,*,/)}
 \item{Boolean operations}
-\item{Relational operators ($<$, $\le$, $\ge$, $!=$, etc)}
+\item{Relational operators ($<$, $\le$, $\ge$, $!=$, etc.)}
 \item{Logical formulae containing
 \begin{itemize}
-\item implications
-\item quantifiers (with bound variables)
+\item special expressions such as reference to old value (\verb!\old!),
+  reference to the result of method (\verb!\result!),
+\item implications, conjunctions, alternatives, etc.,
+\item quantifiers (with bound variables).
 \end{itemize}     }
 \end{itemize}
 As in standard Java, also in JML and BML the expressions can contain
@@ -1035,7 +1037,7 @@ end user). The most urgent are the \texttt{modifies} clauses and
 \texttt{set} instructions. The compiler should be also provided as a
 Eclipse plugin.
 
-\cite{JSR308}
+%\cite{JSR308}
 
 \section{Conclusion}
 \label{sec:conclusion}
