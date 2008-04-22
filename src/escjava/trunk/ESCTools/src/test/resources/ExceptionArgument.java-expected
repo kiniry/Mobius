@@ -11,7 +11,7 @@ Exception java.lang.NullPointerException thrown while processing ExceptionArgume
 java.lang.NullPointerException
 	at javafe.ast.ModifierPragmaVec.append(ModifierPragmaVec.java:318)
 	at escjava.ast.Utils.getAllSpecs(Utils.java:377)
-	at escjava.translate.TrAnExpr.getEquivalentAxioms(TrAnExpr.java:1856)
+	at escjava.translate.TrAnExpr.getEquivalentAxioms(TrAnExpr.java:1901)
 	at escjava.translate.GetSpec.addAxioms(GetSpec.java:1168)
 	at escjava.translate.GetSpec.trMethodDeclPostcondition(GetSpec.java:1090)
 	at escjava.translate.GetSpec.trMethodDecl(GetSpec.java:538)
