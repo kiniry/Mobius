@@ -207,6 +207,9 @@ cleanup:
 		\( -name "*~" -or -name "*.#*" -or -name "semantic.cache*" \) \
 		-exec rm -f {} \; > /dev/null 2>&1
 	-rm -f docs_log
+ifdef COMSPEC
+	 -find Escjava -name "*.j" -o -name "*.sh" -exec d2u {} \;
+endif
 
 ################################################################################
 ## Specifications
