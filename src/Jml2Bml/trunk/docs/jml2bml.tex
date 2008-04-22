@@ -470,7 +470,7 @@ public class List {
 \end{lstlisting}
 \end{minipage}
 \caption{An example class \texttt{List.java} containing single method \texttt{replace}.}
-\label{source}
+\label{fig:source}
 \end{figure}
 
 \section{An Example of Using The\\Compiler}
@@ -479,7 +479,7 @@ public class List {
 This section provides an example demonstrating the result of launching
 the \jmltobml.
 \subsection{Source Code}
-Consider the class presented in Figure \ref{source}. This is an
+Consider the class presented on Figure~\ref{fig:source}. This is an
 excerpt of a class which implements a sequence of objects. We present
 here only one method that replaces in the \texttt{list} array the
 first occurence of its first parameter with the second one. True will
@@ -514,47 +514,72 @@ iteration by at least one.
 
 \subsection{Bytecode}
 In this section we describe the result of translating the source code
-from Figure \ref{source}. Since the binary class files are not human
-readable, we rely on its textual representation obtained from the
-\bmllib. The Figure \ref{bytecode} shows the translated
+from Figure~\ref{fig:source}. The actual result of the compilation is
+a class file enriched with the attributes which contain the
+representation of BML specifications. This means that the binary class
+files are not human readable. Thus, we rely for the current
+presentation on its textual representation obtained from the
+\bmllib. The Figure~\ref{fig:bytecode} shows the translated
 \texttt{replace} method together with BML annotations inserted by our
-\jmltobml compiler. Lines 0 and 1 correspond to the
-initialization \texttt{i = 0}. The loop is located between lines 2 and
-33. Lines 5--12 represent the \texttt{if} statement, 15--23
-correspond to lines 19--20 from the source code. Loading loop condition
-parameters is located in lines 27--32 and 33 performs the loop
-condition comparison.
+\jmltobml compiler. The bytecode instructions labelled with 0 and 1
+correspond to the initialization \texttt{i = 0}. The loop is located
+between lines 2 and 33. Lines 5--12 represent the \texttt{if}
+statement, 15--23 correspond to lines 19--20 from the source
+code. Loading loop condition parameters is located in lines 27--32 and
+33 performs the loop condition comparison.
 
 The \texttt{requires-enusers} pair is translated into input-output
-behaviour BML specifications located just before the method
-code. Loops specifications are located after line 32 in the presented
+behaviour BML specifications located just before the method code. We
+can see that the BML code contains two places where the counterpart of
+the JML \texttt{requires} clause can be placed. The first one is right
+after the \texttt{requires} keyword and the second one is after the
+\texttt{precondition} keyword. In fact, both JML and BML allow one to
+specify many pairs of the input-output specifications. The semantics
+of the multiple pairs is such that for each pair such that the
+requires formula holds at the entry to the method, the corresponding
+ensures formula must hold at the exit (so effectively the conjunction
+of all the ensures formulas holds). However, we often want to specify
+that a particular method can be called only in specific context
+(e.g. with first parameter being non-null).and except for that it
+should obey the input-output behaviour described in multiple
+\texttt{requires-enusers} pairs. In this situation, it is more
+convenient to distinguish a single additional clause which should hold
+in all the cases. In our JML code, this clause is implicit and
+equivalent to \texttt{true} whereas in BML this is made explicit as
+the formula after the \texttt{requires} keyword. This also is why the
+actual JML precondition is translated to the internal
+\texttt{precondition} statement (it is one of potentially many
+preconditions).
+
+Loops specifications are located after line 32 in the presented
 listing. The \jmltobml compiler detects loops in the bytecode and
 inserts the annotation before the statement representing the loop
 condition. In this case it is the \texttt{if\_icmplt} instruction
 comparing \texttt{i} and \texttt{list.length}. For more details about
 detecting loops refer to Section~\ref{sec:loops}. The modifies
 clause describes set of variables modified by the loop. Currently,
-because of \openjml limitations it is not supported by our
+because of \openjml limitations, it is not supported by our
 compiler (the default value \texttt{everything} will be inserted).
 
 \section{\jmltobmltext{} Compiler Design}
 \label{sec:compiler}
 
-In our work we have designed and implemented a tool called
-\jmltobml that compiles JML specifications into BML. It takes
-as input a Java source file with JML annotations, the corresponding
-class file and outputs the class file with inserted proper BML
-annotations. Our compiler uses an enhanced Abstract Syntax Tree for
-the Java source code, taken from the \openjml compiler. For
-different types of JML clauses, there are separate translation rules
-defined. At each node of the AST, all translation rules are
-applied. If some rule succeeds to translate this node, the result is
-stored in to the class file, using the \bmllib library
-\cite{bmllib}. This approach makes the compiler easily extensible. One
-can simply write new translation rule to support additional features
-of the JML language.
+In our work we have designed and implemented a tool called \jmltobml
+that compiles JML specifications into BML. It takes as input a Java
+source file with JML annotations together with the corresponding class
+file and outputs the class file with inserted proper BML
+annotations. Our compiler uses an enhanced Abstract Syntax Tree (AST)
+for the Java source code, taken from the \openjml\footnote{Available
+from \url{http://sourceforge.net/projects/jmlspecs}} compiler (a JML
+checker based upon the OpenJDK Java tool set). For different types of
+JML clauses, there are separate translation rules defined. At each
+node of the AST, all translation rules are applied. If some rule
+succeeds to translate this node, the result is stored in to the class
+file, using the \bmllib library \cite{bmllib}. This approach makes the
+compiler easily extensible. One can simply write new translation rule
+to support additional features of the JML language.
 
-Currently the \jmltobml compiler focuses on subset of the JML
+Currently, the \jmltobml compiler focuses on subset of the JML
 called JML Level 0. Due to external libraries limitations not all
 desired features are translated, for example the
 \texttt{loop\_modifies} clause is not supported by the
@@ -569,8 +594,7 @@ compiler. The \jmltobml compiler uses \openjml to parse
 the Java source code together with the JML annotations. To insert
 generated BML annotations, the \bmllib library is used. The
 dependencies between internal packages of \jmltobml and
-\openjml and \bmllib are presented in Figure
-\ref{packages}.
+\openjml and \bmllib are presented in Figure~\ref{fig:packages}.
 
 \begin{figure}[htbp]
 \lstset{language=bml}
@@ -579,17 +603,17 @@ dependencies between internal packages of \jmltobml and
 ~~~~~~%
 \begin{minipage}{400pt}
 \begin{lstlisting}
-/*
- * \requires true
- *  {|
- *   \precondition list != null
- *   \ensures \result ==
- *     (\exists int i; 0 <= i &&
- *              i < list.length &&
- *              old_list[i] == o1 &&
- *              list[i] == o2)
- *  |}
- */
+/*@
+  @ requires true
+  @  {|
+  @   precondition list != null
+  @   ensures \result ==
+  @     (\exists int i; 0 <= i &&
+  @              i < list.length &&
+  @              old_list[i] == o1 &&
+  @              list[i] == o2)
+  @  |}
+  @*/
 public boolean replace(Object o1, Object o2)
 0:    iconst_0
 1:    istore_3
@@ -612,22 +636,22 @@ public boolean replace(Object o1, Object o2)
 28:   aload_0
 29:   getfield	   main.List.list
 32:   arraylength
-/*
- * \loop_specification
- *   \modifies everything
- *   \invariant i <= list.length &&
- *      i >= 0 &&
- *      (\forall int k; 0 <= k &&
- *          k < i ==> list[k] != o1)
- *   \decreases list.length - i
- */
+/*@
+  @ loop_specification
+  @   modifies everything
+  @   invariant i <= list.length &&
+  @      i >= 0 &&
+  @      (\forall int k; 0 <= k &&
+  @          k < i ==> list[k] != o1)
+  @   decreases list.length - i
+  @*/
 33:   if_icmplt	   #5
 36:   iconst_0
 37:   ireturn
 
 \end{lstlisting}
 \end{minipage}
-\label{bytecode}
+\label{fig:bytecode}
 \caption{The method \texttt{replace} in the \texttt{List.class}}
 \end{figure}
 
@@ -700,7 +724,7 @@ translating mechanism.
 \draw[dotted] (symbols) to[out=270,in=180] (BmlLib1);
 \end{tikzpicture}
 \caption{The dependency graph of the \jmltobml packages. Dotted lines denote access to external libraries.}}
-\label{packages}
+\label{fig:packages}
 \end{figure}
 \subsection{Translation Mechanism}
 The full translation consists of a set of independent translation
@@ -807,9 +831,9 @@ public class TypeClauseExprRule
 \end{lstlisting}
 \end{minipage}
 \caption{Example implementation of translation rule for class invariants.}
-\label{translation_rule_example}
+\label{fig:translation_rule_example}
 \end{figure}
-Figure \ref{translation_rule_example} contains example implementation of translation rule - for class invariants. The rule extends \texttt{TranslationRule} class. It has one attribute \texttt{context}, which holds the context in which rule will be executed. Class invariants in OpenJML abstract syntax tree are represented by \texttt{JmlTypeClauseExpr} class nodes. As we use visitor pattern, we have to override method responsible for these nodes - \texttt{visitJmlTypeClauseExpr}.
+Figure~\ref{fig:translation_rule_example} contains example implementation of translation rule - for class invariants. The rule extends \texttt{TranslationRule} class. It has one attribute \texttt{context}, which holds the context in which rule will be executed. Class invariants in OpenJML abstract syntax tree are represented by \texttt{JmlTypeClauseExpr} class nodes. As we use visitor pattern, we have to override method responsible for these nodes - \texttt{visitJmlTypeClauseExpr}.
 
 Implementation of translation method is simple. First we check if this is the node type we are interested in - line \ref{rule_token}. We get an object representing the class which we want to add invariant to (line \ref{rule_class}). Next, in line \ref{rule_formula}, we translate the content of invariant - rule for translating expression is used here. In line \ref{rule_get_invariant} existing class invariant is taken from the class. If there was no invariant - new one is created (line \ref{rule_new_invariant}), otherwise we connect old invariant formula with new one using \texttt{and} (line \ref{rule_new_formula}) to create new class invariant - line \ref{rule_update_invariant}. At the end, in line \ref{rule_set_invariant} we set new invariant to the class.
 
@@ -854,8 +878,8 @@ the bytecode the corresponding loop. The created BML annotation should
 be associated with the bytecode instruction that represents the loop
 condition. Note that the loop condition is translated into multiple
 bytecode instructions. We are interested in the last one
-(comparison). A loop can be translated in one of the ways presented in
-Figure \ref{loops}.
+(comparison). A loop can be translated in one of the ways presented on
+Figure~\ref{fig:loops}.
 
 \begin{figure}[ht]
 \centering{
@@ -876,7 +900,7 @@ Figure \ref{loops}.
 \draw (Q-c) to[out=135,in=225](Q-a);
 \end{tikzpicture}
 \caption{Two ways of compiling loops.}
-\label{loops}
+\label{fig:loops}
 }
 \end{figure}
 In the first scenario, in the vertex \textit{a}, an unconditional jump
@@ -893,7 +917,7 @@ in the vertex \textit{a}.
 
 \texttt{Do-while} loops and loops with always true condition
 (i.e. \texttt{while(true)\{...\}} or \texttt{for(;;)\{...\}} are
-usually compiled in the way presented in Figure \ref{dowhile}
+usually compiled in the way presented in Figure~\ref{fig:dowhile}
 
 \begin{figure}[ht]
 \centering{
@@ -907,7 +931,7 @@ usually compiled in the way presented in Figure \ref{dowhile}
 \draw (G-c) to[out=135,in=45] (G-a);
 \end{tikzpicture}
 \caption{Compiling \texttt{do-while} loop.}}
-\label{dowhile}
+\label{fig:dowhile}
 \end{figure}
 Before entering the loop (between \textit{a} and \textit{c}), no
 condition is checked. There might be some \texttt{break} inside
