@@ -18,7 +18,8 @@ ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 ssh maven@object.ucd.ie ./test/run_local.sh $* &
 ssh maven@athena.insttech.washington.edu ./test/run_test.sh $* &
 ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $* &
-ssh maven@arrow.ucd.ie ./test/run_local.sh $*
+ssh maven@arrow.ucd.ie ./test/run_local.sh $* &
+wait
 #
 # 3. Collect the test reports for viewing by Continuum
 #
