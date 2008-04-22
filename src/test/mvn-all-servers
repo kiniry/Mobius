@@ -15,10 +15,10 @@ ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
 # 2. Run the Maven test suites concurrently
 #
-ssh maven@object.ucd.ie ./test/run_local.sh $* &
+ssh maven@object.ucd.ie ./test/object.sh $* &
 ssh maven@athena.insttech.washington.edu ./test/run_test.sh $* &
 ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $* &
-ssh maven@arrow.ucd.ie ./test/run_local.sh $* &
+ssh maven@arrow.ucd.ie ./test/arrow.sh $* &
 wait;wait;wait;wait
 #
 # 3. Collect the test reports for viewing by Continuum
