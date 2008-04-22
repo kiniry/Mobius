@@ -7,6 +7,13 @@
   <version>2.0b5</version>
   <name>ESCJava2</name>
   <url>http://mobius.ucd.ie</url>
+  <organization>
+    <name>Mobius</name>
+    <url>http://mobius.ucd.ie/</url>
+  </organization>
+  <properties>
+    <organization.logo>https://mobius.ucd.ie/repos/websites/MobiusToolsWiki/Images/mobius_transparent.png</organization.logo>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>mobius</groupId>
