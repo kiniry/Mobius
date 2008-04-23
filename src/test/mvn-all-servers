@@ -9,8 +9,8 @@
 #
 #
 # 1.1 Setup hardlinks to the working directory with latest checkout
-export WORKDIR = $PWD
-echo "export ESCTOOLS_ROOT="$PWD > Makefile.local
+export WORKDIR=$PWD
+echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 make pre-maven
 rdiff-backup $WORKDIR ~/arrow/working-directory
 rdiff-backup $WORKDIR ~/object/working-directory
