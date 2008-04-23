@@ -489,17 +489,20 @@ The presented code, apart from standard Java statements, contains also
 specifications in the JML. There is a precondition (\texttt{requires
 ...}) for the method \texttt{replace} defined. It requests that every
 time the method is invoked, the field \texttt{list} it not
-\texttt{null}. The next three lines (starting with \texttt{ensures}
-constitute the method postcondition. It states that, if the
-precondition was fullfiled, then the method result is true if and only
-if there was an element in the \texttt{list} which value has been
-updated from \texttt{o1} to \texttt{o2}. Note that the postcondition
-makes use of some JML features, like \texttt{$\backslash$result},
-\texttt{$\backslash$old} or \texttt{$\backslash$exists}. This
-postcondition does not describe all properties of this method. For
-example an implementation that replaces all elements in the
-\texttt{list} up to the first occurence of \texttt{o1} with
-\texttt{o2} will fulfill this specification.
+\texttt{null}\footnote{In general a method can have multiple
+\texttt{requires-ensures} pairs. In this case the method can be
+invoked only in places where at least one of the conditions specified
+\texttt{requires} clauses holds.}. The next three lines (starting with
+\texttt{ensures} constitute the method postcondition. It states that,
+if the precondition was fullfiled, then the method result is true if
+and only if there was an element in the \texttt{list} which value has
+been updated from \texttt{o1} to \texttt{o2}. Note that the
+postcondition makes use of some JML features, like
+\texttt{$\backslash$result}, \texttt{$\backslash$old} or
+\texttt{$\backslash$exists}. This postcondition does not describe all
+properties of this method. For example an implementation that replaces
+all elements in the \texttt{list} up to the first occurence of
+\texttt{o1} with \texttt{o2} will fulfill this specification.
 
 In additition to specification describing input-output behaviour of
 the method, also the loop implementing the \texttt{replace} method is
@@ -535,66 +538,34 @@ the JML \texttt{requires} clause can be placed. The first one is right
 after the \texttt{requires} keyword and the second one is after the
 \texttt{precondition} keyword. In fact, both JML and BML allow one to
 specify many pairs of the input-output specifications. The semantics
-of the multiple pairs is such that for each pair such that the
-requires formula holds at the entry to the method, the corresponding
-ensures formula must hold at the exit (so effectively the conjunction
-of all the ensures formulas holds). However, we often want to specify
+of the multiple pairs is such that for each pair where the requires
+formula holds at the entry to the method, the corresponding ensures
+formula must hold at the exit (so effectively the conjunction of all
+these ensures formulae must hold). However, we often want to specify
 that a particular method can be called only in specific context
-(e.g. with first parameter being non-null).and except for that it
+(e.g. with first parameter being non-null) and except for that it
 should obey the input-output behaviour described in multiple
 \texttt{requires-enusers} pairs. In this situation, it is more
 convenient to distinguish a single additional clause which should hold
-in all the cases. In our JML code, this clause is implicit and
-equivalent to \texttt{true} whereas in BML this is made explicit as
-the formula after the \texttt{requires} keyword. This also is why the
-actual JML precondition is translated to the internal
-\texttt{precondition} statement (it is one of potentially many
-preconditions).
+in all the cases instead of copying to all the pairs. In our JML code,
+this clause is implicit and equivalent to \texttt{true} whereas in BML
+this is made explicit as the formula after the \texttt{requires}
+keyword. This is also why the actual JML precondition is translated to
+the internal \texttt{precondition} statement (it is one, and in this
+particular instance the only one, of potentially many preconditions).
 
-Loops specifications are located after line 32 in the presented
-listing. The \jmltobml compiler detects loops in the bytecode and
-inserts the annotation before the statement representing the loop
-condition. In this case it is the \texttt{if\_icmplt} instruction
-comparing \texttt{i} and \texttt{list.length}. For more details about
-detecting loops refer to Section~\ref{sec:loops}. The modifies
-clause describes set of variables modified by the loop. Currently,
-because of \openjml limitations, it is not supported by our
-compiler (the default value \texttt{everything} will be inserted).
-
-\section{\jmltobmltext{} Compiler Design}
-\label{sec:compiler}
-
-In our work we have designed and implemented a tool called \jmltobml
-that compiles JML specifications into BML. It takes as input a Java
-source file with JML annotations together with the corresponding class
-file and outputs the class file with inserted proper BML
-annotations. Our compiler uses an enhanced Abstract Syntax Tree (AST)
-for the Java source code, taken from the \openjml\footnote{Available
-from \url{http://sourceforge.net/projects/jmlspecs}} compiler (a JML
-checker based upon the OpenJDK Java tool set). For different types of
-JML clauses, there are separate translation rules defined. At each
-node of the AST, all translation rules are applied. If some rule
-succeeds to translate this node, the result is stored in to the class
-file, using the \bmllib library \cite{bmllib}. This approach makes the
-compiler easily extensible. One can simply write new translation rule
-to support additional features of the JML language.
-
-Currently, the \jmltobml compiler focuses on subset of the JML
-called JML Level 0. Due to external libraries limitations not all
-desired features are translated, for example the
-\texttt{loop\_modifies} clause is not supported by the
-\openjml.
-
-The \jmltobml is designed to be compatible with other bytecode
-level tools, such as the bytecode editor \textit{Umbra}.
-
-\subsection{Architecture Description}
-In this section we present the overview of the architecture of \jmltobml
-compiler. The \jmltobml compiler uses \openjml to parse
-the Java source code together with the JML annotations. To insert
-generated BML annotations, the \bmllib library is used. The
-dependencies between internal packages of \jmltobml and
-\openjml and \bmllib are presented in Figure~\ref{fig:packages}.
+Loops specifications are located after the line labelled with~32 in
+the presented listing. The \jmltobml compiler detects loops in the
+bytecode and inserts the annotation before the statement representing
+the beginning of a loop condition. In this case it is the
+\texttt{if\_icmplt} instruction comparing \texttt{i} and
+\texttt{list.length}. (For more details about detecting loops see
+Section~\ref{sec:loops}.) The modifies clause describes set of
+variables modified by the loop. We can see it in the listing as this
+clause is obligatory in BML. Currently, because of \openjml
+limitations, it is not supported by our compiler (the default value
+\texttt{everything} will be inserted) so we see the default value
+inserted at this point.
 
 \begin{figure}[htbp]
 \lstset{language=bml}
@@ -654,6 +625,42 @@ public boolean replace(Object o1, Object o2)
 \label{fig:bytecode}
 \caption{The method \texttt{replace} in the \texttt{List.class}}
 \end{figure}
+
+\section{\jmltobmltext{} Compiler Design}
+\label{sec:compiler}
+
+\jmltobml takes as input a Java source file with JML annotations
+together with the corresponding class file and outputs the class file
+with inserted proper BML annotations. Our compiler uses an enhanced
+Abstract Syntax Tree (AST) for the Java source code, taken from the
+\openjml\footnote{Available from
+\url{http://sourceforge.net/projects/jmlspecs}} compiler (a Java
+compiler with JML checker based upon the OpenJDK Java tool set). For
+different types of JML clauses, there are separate translation rules
+defined. At each node of the AST, all translation rules are
+applied. If some rule succeeds to translate this node, the result is
+stored in the class file, using the \bmllib library
+\cite{bmllib}. This approach makes the compiler easily extensible. It
+is enough to just write a new translation rule to support additional
+features of the JML language. Moreover, the acyclic strucure of the
+code should make the future maintenance more feasible. \todo{make a
+citation here}
+
+Currently, the \jmltobml compiler focuses on a subset of the JML
+called JML Level 0. Due to external libraries limitations not all
+desired features are translated, for example the
+loop \texttt{modifies} clause is not supported by \openjml. The
+\jmltobml compiler is designed to be compatible with other bytecode
+level tools, such as the bytecode editor \textit{Umbra}.
+
+\subsection{Architecture Description}
+
+In this section we present the overview of the architecture of
+\jmltobml compiler. The \jmltobml compiler uses \openjml to parse the
+Java source code together with the JML annotations. To insert
+generated BML annotations, the \bmllib library is used. The
+dependencies between internal packages of \jmltobml and \openjml and
+\bmllib are presented on Figure~\ref{fig:packages}.
 
 The \texttt{jml2bml.main} package provides the entry point to the
 application. JML annotations from given source file will be translated
