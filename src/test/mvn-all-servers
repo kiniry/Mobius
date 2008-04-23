@@ -17,6 +17,7 @@ rdiff-backup $WORKDIR ~/object/working-directory
 #
 # 1.2. Update local test scripts and authprogs.conf
 #
+cd /Network/Servers/kind.ucd.ie/Volumes/Home/maven
 ./test/self_update.sh
 ssh maven@athena.insttech.washington.edu ./test/self_update.sh
 ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
@@ -32,7 +33,7 @@ wait;wait;wait;wait
 # 3. Collect the test reports for viewing by Continuum
 #
 rdiff-backup ~/arrow/working-directory/target/site ./target/site
-rdiff-backup ~/arrow/working-directory/target/surefire-reports/ $WORK_DIR/target/surefire-reports/arrow
-rdiff-backup ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORK_DIR/target/surefire-reports/TEST-Object.xml
-rdiff-backup maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORK_DIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
-rdiff-backup maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORK_DIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
+rdiff-backup ~/arrow/working-directory/target/surefire-reports/ $WORKDIR/target/surefire-reports/arrow
+rdiff-backup ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-Object.xml
+rdiff-backup maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
+rdiff-backup maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
