@@ -20,17 +20,16 @@
 # 1.1 Setup hardlinks to the working directory with latest checkout
 export WORKDIR=$PWD
 echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
-make pre-maven
-rdiff-backup $WORKDIR ~/arrow/working-directory
-rdiff-backup $WORKDIR ~/object/working-directory
-rdiff-backup $WORKDIR ~/voting/working-directory
-rdiff-backup $WORKDIR ~/category/working-directory
+nice make pre-maven
+nice rdiff-backup $WORKDIR ~/arrow/working-directory
+nice rdiff-backup $WORKDIR ~/object/working-directory
+nice rdiff-backup $WORKDIR ~/voting/working-directory
+nice rdiff-backup $WORKDIR ~/category/working-directory
 
 #
 # 1.2. Update local test scripts and authprogs.conf
 #
-cd /Network/Servers/kind.ucd.ie/Volumes/Home/maven
-./test/self_update.sh
+ssh maven@arrow.ucd.ie ./test/self_update.sh
 ssh maven@athena.insttech.washington.edu ./test/self_update.sh
 ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
@@ -46,8 +45,8 @@ wait;wait;wait;wait;wait;wait
 #
 # 3. Collect the test reports for viewing by Continuum
 #
-rdiff-backup ~/arrow/working-directory/target/site ./target/site
-rdiff-backup ~/arrow/working-directory/target/surefire-reports/ $WORKDIR/target/surefire-reports/arrow
-cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-Object.xml
-rsync maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
-rsync-backup maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
+nice rdiff-backup ~/arrow/working-directory/target/site ./target/site
+nice rdiff-backup ~/arrow/working-directory/target/surefire-reports/ $WORKDIR/target/surefire-reports/arrow
+nice cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-Object.xml
+nice rsync maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
+nice rsync-backup maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
