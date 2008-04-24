@@ -21,10 +21,10 @@
 export WORKDIR=$PWD
 echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 nice make pre-maven
-nice rdiff-backup $WORKDIR ~maven/arrow/working-directory
-nice rdiff-backup $WORKDIR ~maven/object/working-directory
-nice rdiff-backup $WORKDIR ~maven/voting/working-directory
-nice rdiff-backup $WORKDIR ~maven/category/working-directory
+nice cp -lr $WORKDIR/* ~maven/arrow/working-directory
+nice cp -lr $WORKDIR/* ~maven/object/working-directory
+nice cp -lr $WORKDIR/* ~maven/voting/working-directory
+nice cp -lr $WORKDIR/* ~maven/category/working-directory
 
 #
 # 1.2. Update local test scripts and authprogs.conf
@@ -45,8 +45,8 @@ wait;wait;wait;wait;wait;wait
 #
 # 3. Collect the test reports for viewing by Continuum
 #
-nice rdiff-backup ~/arrow/working-directory/target/site $WORKDIR/target/site
-nice rdiff-backup ~/arrow/working-directory/target/surefire-reports/ $WORKDIR/target/surefire-reports/arrow
-nice cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-Object.xml
+nice cp -lr ~/arrow/working-directory/target/site $WORKDIR/target/site
+nice cp -lr ~/arrow/working-directory/target/surefire-reports/ $WORKDIR/target/surefire-reports/arrow
+nice cp -l ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-Object.xml
 nice rsync maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
-nice rsync-backup maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
+nice rsync maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
