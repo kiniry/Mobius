@@ -1,6 +1,15 @@
 #/bin/bash
 #
-# This script runs on the Continuum server in place of Maven
+# This script runs a the Continuum server in place of the Maven executable
+#
+# Mobius - Distributed Testing Subsystem - Version 0.1 - April 2008
+# Copyright (c) 2008, University College Dublin and Washington University
+# License: GNU Public License (GPL), which is the default license for Mobius
+# Homepage: https://mobius.ucd.ie/wiki/ParallelTesting
+#
+# Authors: Daniel M. Zimmerman, Dermot Cochran and Joseph R. Kiniry
+#
+# TODO: Have server names, details and topology in a configuration file
 #
 # Distribution script for remote testing with Maven
 # This script sits on a Continuum server and runs in place of the 'mvn' command
@@ -34,6 +43,6 @@ wait;wait;wait;wait
 #
 rdiff-backup ~/arrow/working-directory/target/site ./target/site
 rdiff-backup ~/arrow/working-directory/target/surefire-reports/ $WORKDIR/target/surefire-reports/arrow
-rdiff-backup ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-Object.xml
-rdiff-backup maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
-rdiff-backup maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
+cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-Object.xml
+rsync maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
+rsync-backup maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
