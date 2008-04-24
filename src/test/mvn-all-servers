@@ -23,6 +23,9 @@ echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 make pre-maven
 rdiff-backup $WORKDIR ~/arrow/working-directory
 rdiff-backup $WORKDIR ~/object/working-directory
+rdiff-backup $WORKDIR ~/voting/working-directory
+rdiff-backup $WORKDIR ~/category/working-directory
+
 #
 # 1.2. Update local test scripts and authprogs.conf
 #
@@ -36,8 +39,10 @@ ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 ssh maven@object.ucd.ie ./test/object.sh $* &
 ssh maven@athena.insttech.washington.edu ./test/run_test.sh $* &
 ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $* &
+ssh maven@category.ucd.ie ./test/category.sh $* &
+ssh maven@voting.ucd.ie ./test/voting.sh $* &
 ssh maven@arrow.ucd.ie ./test/arrow.sh $* &
-wait;wait;wait;wait
+wait;wait;wait;wait;wait;wait
 #
 # 3. Collect the test reports for viewing by Continuum
 #
