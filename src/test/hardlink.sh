@@ -24,4 +24,4 @@ CHROOT=$1
 find $TEMPLATE \! -wholename $CHROOT -and \! -name "*.svn*" -and -type d -exec mkdir -p $CHROOT/{} \;
 
 # Make hard links to files
-find $TEMPLATE \! -name "*.svn*" -and -type f -exec ln -f {} $CHROOT/{} \;
+find $TEMPLATE \! -name "*.svn*" -and -type f -and \! -mtime +1 -exec ln -f {} $CHROOT/{} \;
