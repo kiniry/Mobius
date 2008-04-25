@@ -18,6 +18,8 @@
 #
 #
 # 1.1 Setup hardlinks to the working directory with latest checkout
+date
+echo "*** Initial Setup ***"
 export WORKDIR=$PWD
 echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 nice make pre-maven
@@ -25,26 +27,33 @@ nice pax -r -w -l $WORKDIR/* ~maven/arrow/working-directory
 nice pax -r -w -l $WORKDIR/* ~maven/object/working-directory
 nice pax -r -w -l $WORKDIR/* ~maven/voting/working-directory
 nice pax -r -w -l $WORKDIR/* ~maven/category/working-directory
-
 #
 # 1.2. Update local test scripts and authprogs.conf
 #
+echo "*** Update Test Scripts ***"
 ssh maven@arrow.ucd.ie ./test/self_update.sh
 ssh maven@athena.insttech.washington.edu ./test/self_update.sh
 ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
 # 2. Run the Maven test suites concurrently
 #
+echo "*** Staring Arrow ***"
+ssh maven@arrow.ucd.ie ./test/arroddw.sh -U $* &
+echo "*** Starting Object ***"
 ssh maven@object.ucd.ie ./test/object.sh -U $* &
+echo "*** Starting Athena ***"
 ssh maven@athena.insttech.washington.edu ./test/run_test.sh -U $* &
+echo "*** Starting Boomer ***"
 ssh maven@boomer.insttech.washington.edu ./test/run_test.sh -U $* &
+echo "*** Starting Category ***"
 ssh maven@category.ucd.ie ./test/category.sh -U $* &
+echo "*** Starting Voting ***"
 ssh maven@voting.ucd.ie ./test/voting.sh -U $* &
-ssh maven@arrow.ucd.ie ./test/arrow.sh -U $* &
 wait;wait;wait;wait;wait;wait
 #
 # 3. Collect the test reports for viewing by Continuum
 #
+echo "*** Collecting Test Reports ***"
 nice cp -rf ~/arrow/working-directory/target/site $WORKDIR/target/
 nice cp -f ~/arrow/working-directory/target/surefire-reports/* $WORKDIR/target/surefire-reports/
 nice cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-object.ucd.ie.xml
@@ -52,3 +61,5 @@ nice cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTe
 nice cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-category.ucd.ie.xml
 nice rsync maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
 nice rsync maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
+echo "*** Finished ***"
+date
