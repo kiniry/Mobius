@@ -12,14 +12,13 @@
 
 # TEMPLATE directory is root of tree you want to replicate.
 # It should *not* be an absolute pathname.
-TEMPLATE=$1.
-CHROOT=$2
+TEMPLATE=.
+CHROOT=$1
 
 # CHROOT is absolute pathname of directory you want to clone the
 # template to.
 # It must be an absolute pathname and it must not be a subdirectory
 # of the template directory.
-CHROOT=/path/to/chroot
 
 # Replicate directory structure
 find $TEMPLATE -type d -exec mkdir -p $CHROOT/{} \;

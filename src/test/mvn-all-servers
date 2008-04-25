@@ -23,10 +23,10 @@ echo "*** Initial Setup ***"
 export WORKDIR=$PWD
 echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 nice make pre-maven
-nice test/hardlink.sh $WORKDIR/* ~maven/arrow/working-directory
-nice test/hardlink.sh $WORKDIR/* ~maven/object/working-directory
-nice test/hardlink.sh $WORKDIR/* ~maven/category/working-directory
-nice test/hardlink.sh $WORKDIR/* ~maven/voting/working-directory
+nice test/hardlink.sh ~maven/arrow/working-directory
+nice test/hardlink.sh ~maven/object/working-directory
+nice test/hardlink.sh ~maven/category/working-directory
+nice test/hardlink.sh ~maven/voting/working-directory
 #
 # 1.2. Update local test scripts and authprogs.conf
 #
