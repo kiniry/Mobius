@@ -23,10 +23,10 @@ echo "*** Initial Setup ***"
 export WORKDIR=$PWD
 echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 nice make pre-maven
-nice test/hardlink.sh ~maven/arrow/working-directory
-nice test/hardlink.sh ~maven/object/working-directory
-nice test/hardlink.sh ~maven/category/working-directory
-nice test/hardlink.sh ~maven/voting/working-directory
+nice ~/Sandbox/workspace/test/hardlink.sh ~maven/arrow/working-directory
+nice ~/Sandbox/workspace/test/hardlink.sh ~maven/object/working-directory
+nice ~/Sandbox/workspace/test/hardlink.sh ~maven/category/working-directory
+nice ~/Sandbox/workspace/test/hardlink.sh ~maven/voting/working-directory
 #
 # 1.2. Update local test scripts and authprogs.conf
 #
@@ -57,8 +57,8 @@ echo "*** Collecting Test Reports ***"
 nice cp -rf ~/arrow/working-directory/target/site $WORKDIR/target/
 nice cp -f ~/arrow/working-directory/target/surefire-reports/* $WORKDIR/target/surefire-reports/
 nice cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-object.ucd.ie.xml
-nice cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-voting.ucd.ie.xml
-nice cp -f ~/object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-category.ucd.ie.xml
+nice cp -f ~/voting/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-voting.ucd.ie.xml
+nice cp -f ~/category/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-category.ucd.ie.xml
 nice rsync maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
 nice rsync maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
 echo "*** Finished ***"
