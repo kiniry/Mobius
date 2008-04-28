@@ -6,5 +6,7 @@ export MAVEN_OPTS="-Xmx1740m -Xms512m"
 export JAVA_HOME=/usr/local/java/jdk1.5.0_13/
 echo $HOSTNAME
 cd voting/working-directory
-# This is also a desktop, so be nice about using resources :-)
-nice $M2_HOME/bin/mvn $*
+# This is also a desktop, so be nice about using resources, and use the local
+# maven executable to avoid running the distributed testing script for 
+# Continuum, which is also called 'mvn'
+nice mvn-local $*
