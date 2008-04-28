@@ -38,7 +38,7 @@ ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 # 2. Run the Maven test suites concurrently
 #
 echo "*** Staring Arrow ***"
-ssh maven@arrow.ucd.ie ./test/arroddw.sh -U $* &
+ssh maven@arrow.ucd.ie ./test/arrow.sh -U $* &
 echo "*** Starting Object ***"
 ssh maven@object.ucd.ie ./test/object.sh -U $* &
 echo "*** Starting Athena ***"
