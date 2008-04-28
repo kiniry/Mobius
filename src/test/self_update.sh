@@ -3,4 +3,3 @@ cd ~/test
 svn cleanup
 svn update
 cp authprogs.conf ../.ssh
-chmod +s maven
