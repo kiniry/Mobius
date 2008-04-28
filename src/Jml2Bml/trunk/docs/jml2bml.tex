@@ -159,7 +159,7 @@ verification procedure is the lack of code inconsistencies typically
 considered to be programming errors i.e. null-pointer exceptions,
 array index out of bounds exceptions etc. In many cases, these
 inconsistencies can be eliminated with the help of some additional
-information (e.g.@NonNull annotations, suggested in \cite{JSR305})
+information (e.g. @NonNull annotations, suggested in \cite{JSR305})
 which makes the checking process feasible.
 
 The goal of the proof-carrying code (PCC) technique \cite{pcc} is to
@@ -304,6 +304,7 @@ The \jmltobml compiler described in this paper is designed to be a
 part of this scheme which translates the policies and specifications
 to the bytecode format.
 
+In the Java Applet Correctness Kit (JACK) \cite{jack}, an environment for verification of Java and Java Card programs with JML annotations, was a preliminary version of a JML compiler integrated. It was based on an early version of specification language for bytecode (called BCSL). Since the BML appears to be the best candidate for common bytecode level specification language, it was necessary to design and implement the new \jmltobml.
 \paragraph{Organisation of the paper}
 In Section~\ref{sec:specification}, we present the specification
 languages JML and BML. An example which illustrates the work of the
@@ -371,13 +372,13 @@ specifications are stored as class attributes, method specifications,
 as attributes of corresponding method and specifications inserted in
 the code are attributes of the JVM Code attribute of the given method.
 
-The document is organized as follows. In Section 2 we describe an
-annotation language. In Section 3 we describe implementation of our
-compiler, give details on the architecture and present the main
-principles of the translation. Then an example of using our tool is
-presented. In Section 5 and 6 we describe algorithms for detecting
-loops in the bytecode and matching them with the source code. At the
-end conclusions are given and future work is discussed.
+%The document is organized as follows. In Section 2 we describe an
+%annotation language. In Section 3 we describe implementation of our
+%compiler, give details on the architecture and present the main
+%principles of the translation. Then an example of using our tool is
+%presented. In Section 5 and 6 we describe algorithms for detecting
+%loops in the bytecode and matching them with the source code. At the
+%end conclusions are given and future work is discussed.
 
 \subsection{Overview of Annotations}
 

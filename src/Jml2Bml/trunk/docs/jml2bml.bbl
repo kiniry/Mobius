@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{jack}
+Java applet correctness kit.
+\newblock JACK homepage.
+\newblock \url{http://www-sop.inria.fr/everest/soft/Jack/jack.html}.
+
 \bibitem{mobius}
 {MOBIUS} --- {M}obility, {U}biquity and {S}ecurity. enabling proof-carrying
   code for {J}ava on mobile devices.
