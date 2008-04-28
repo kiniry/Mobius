@@ -157,10 +157,10 @@ e.g. rootkits were installed when audio CD was inserted \cite{BMGcase}.
 Another guarantee which is not secured by the traditional bytecode
 verification procedure is the lack of code inconsistencies typically
 considered to be programming errors i.e. null-pointer exceptions,
-array index out of range exceptions etc. In many cases, these
+array index out of bounds exceptions etc. In many cases, these
 inconsistencies can be eliminated with the help of some additional
 information (e.g.@NonNull annotations, suggested in \cite{JSR305})
-which makes the checking process feasable.
+which makes the checking process feasible.
 
 The goal of the proof-carrying code (PCC) technique \cite{pcc} is to
 give the user certain guarantees of the code to be executed at the
@@ -172,7 +172,7 @@ policy (e.g. sends data to authorised targets only). This check is
 performed by the user (or by user's execution environment) right
 before the code is executed (see Figure~\ref{fig:pccScheme}). In fact,
 the usual Java bytecode verification procedure can be viewed as an
-example of a forerunner of thich technique. Although the certificate
+example of a forerunner of this technique. Although the certificate
 is in this case empty (or supplementary in case the StackMap
 attributes are employed), the execution environment indeed checks a
 vital code property before the code is executed. In more complicated
@@ -269,7 +269,7 @@ At SugarCon 2008, Sun Microsystems President and CEO Jonathan Schwartz
 said "we are just going to take the 'J' off the 'JVM' and just make it
 a 'VM'". Therefore there will be a global trend with support of
 companies to use JVM with languages other than Java.  This is an
-important reason, why it is important to be able to translate the
+important reason, why it is significant to be able to translate the
 source code specifications into lower level language
 specifications\hs{}---\hs{}in case the development is done in many
 languages the only common platform is the platform of the executable
@@ -298,7 +298,7 @@ checked at the user's end, requires the following items:
 \item modelling languages (such as JML for Java) for other programming
   languages,
 \item compilers that compile programs to JVM bytecode along with
-  annotation compilers,
+  annotation compilers.
 \end{itemize}
 The \jmltobml compiler described in this paper is designed to be a
 part of this scheme which translates the policies and specifications
@@ -321,7 +321,7 @@ Section~\ref{sec:conclusion}.
 
 \subsection{JML}
 The Java Modelling Language (JML) is a behavioural specification
-language for Java prigrams \cite{JML}. It allows to write
+language for Java programs \cite{JML}. It allows to write
 specifications according to the \textit{design-by-contract} principles
 \cite{DesignByContract}. Data types and method behaviour can be
 precisely commented using JML annotations. They describe the invariant
@@ -393,7 +393,7 @@ conditions that should be fulfilled before entering the method and
 postconditions (\texttt{ensures}) telling what we can expect after the
 method finishes. One can define also which fields are modified (clause
 \texttt{modifies}) and which exceptions might be thrown (clause
-\texttt{signal}).
+\texttt{signals}).
 
 The other type of method annotations are specifications elements
 appearing in the code, like:
@@ -493,8 +493,8 @@ time the method is invoked, the field \texttt{list} it not
 \texttt{requires-ensures} pairs. In this case the method can be
 invoked only in places where at least one of the conditions specified
 \texttt{requires} clauses holds.}. The next three lines (starting with
-\texttt{ensures} constitute the method postcondition. It states that,
-if the precondition was fullfiled, then the method result is true if
+\texttt{ensures}) constitute the method postcondition. It states that,
+if the precondition was fulfilled, then the method result is true if
 and only if there was an element in the \texttt{list} which value has
 been updated from \texttt{o1} to \texttt{o2}. Note that the
 postcondition makes use of some JML features, like
@@ -603,6 +603,10 @@ public boolean replace(Object o1, Object o2)
 22:   iconst_1
 23:   ireturn
 24:   iinc	   %3	1
+27:   iload_3
+28:   aload_0
+29:   getfield	   main.List.list
+32:   arraylength
 /*@
   @ loop_specification
   @   modifies everything
@@ -612,10 +616,6 @@ public boolean replace(Object o1, Object o2)
   @          k < i ==> list[k] != o1)
   @   decreases list.length - i
   @*/
-27:   iload_3
-28:   aload_0
-29:   getfield	   main.List.list
-32:   arraylength
 33:   if_icmplt	   #5
 36:   iconst_0
 37:   ireturn
@@ -798,7 +798,7 @@ Translation rule key design features are:
 We present here a rule which translates a JML invariant into a BML
 invariant. The main non-trivial work of the rule is to combine all the
 JML invariants in the current class into a single invariant in the
-resulting BML representation (the specification in BML can conatin
+resulting BML representation (the specification in BML can contain
 only one instance invariant for a single class).
 
 The logic of the translation rule can be described in an abstract way
@@ -1005,7 +1005,7 @@ unconditional jump (goto) from the vertex \textit{a} to the vertex
 exit condition). In vertex \textit{d}, the condition check is
 executed, and if it is fulfilled, we jump back to \textit{b}. The
 instructions between \textit{b} and \textit{c} constitute the loop
-body. The annotation should be added to the vertex \textit{c}. In the
+body. The annotation should be added to the vertex \textit{d}. In the
 second approach (shown on Figure~\ref{fig:loops}(b)), the condition is
 tested at the beginning (\textit{a} starts the sequence of
 instructions which evaluates the loop condition and \textit{b}
@@ -1015,7 +1015,7 @@ jump out of the loop to the vertex \textit{d}. In the vertex
 \textit{c}, an unconditional jump back to \textit{a} is done to check
 again the loop condition after the body is executed. The BML
 annotation should be associated with the instruction in the vertex
-\textit{a}.
+\textit{b}.
 
 Another difficulty is posed by \texttt{do-while} loops and loops the
 exit condition of which is the constant true condition which prevents
@@ -1124,8 +1124,7 @@ causes some problems. Here are some exemples of loop optimizations:
   variables then the invariant must be translated in a non-trivial
   way.
 \item Code-motion:\\
-  Some part of the loop body may be moved before the loop. The
-  invariant content might describe the
+  Some part of the loop body may be moved before the loop.
 \end{itemize}
 When we want to add BML specifications to optimised bytecode, we have
 to know the optimisations that were used. There are two solutions of

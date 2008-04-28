@@ -1,0 +1,129 @@
+\begin{thebibliography}{10}
+
+\bibitem{mobius}
+{MOBIUS} --- {M}obility, {U}biquity and {S}ecurity. enabling proof-carrying
+  code for {J}ava on mobile devices.
+
+\bibitem{BMGcase}
+Anti-piracy {CD} problems vex {S}ony.
+\newblock BBC News web page, 8 December 2005.
+\newblock \url{http://news.bbc.co.uk/2/hi/technology/4511042.stm}.
+
+\bibitem{MOBIUSscenarios}
+Scenarios and requirements for {PCC}.
+\newblock MOBIUS web page, September 2006.
+\newblock
+  \url{http://mobius.inria.fr/twiki/pub/DeliverablesList/WebHome/deliv4_1.pdf}.
+
+\bibitem{overviewOfJML}
+L.~Burdy, Y.~Cheon, D.~Cok, M.~Ernst, J.~Kiniry, G.~T. Leavens, K.~R.~M. Leino,
+  and E.~Poll.
+\newblock An overview of jml tools and applications.
+\newblock {\em International Journal on Software Tools for Technology
+  Transfer}, 7(3):212--232, June 2005.
+\newblock The original publication is available at http://www.springerlink.com
+  from http://dx.doi.org/10.1007/s10009-004-0167-4.
+
+\bibitem{bmlBurdy}
+L.~Burdy, M.~Huisman, and M.~Pavlova.
+\newblock Preliminary design of {BML}: A behavioral interface specification
+  language for {J}ava bytecode.
+\newblock {\em Fundamental Approaches to Software Engineering (FASE 2007)},
+  pages 215--229, 2007.
+
+\bibitem{runtime}
+Y.~Cheon and G.~T. Leavens.
+\newblock A runtime assertion checker for the {J}ava {M}odeling {L}anguage.
+\newblock {\em Proceedings of the International Conference on Software
+  Engineering Research and Practice (SERP '02)}, 2002.
+
+\bibitem{bmlrefman}
+J.~Chrz¹szcz, M.~Huisman, J.~Kiniry, M.~Pavlova, and A.~Schubert.
+\newblock {\em {BML} Reference Manual}, 2008.
+
+\bibitem{canapa}
+M.~Cielecki, J.~Fulara, K.~Jakubczyk, .~Jancewicz, A.~Schubert, J.~Chrz¹szcz,
+  and .~Kamiñski.
+\newblock Propagation of {JML} non-null annotations in {J}ava programs.
+\newblock {\em PPPJ'06: Proceedings of the 4th international symposium on
+  Principles and Practices of Programming in Java}, pages 135--140, 2006.
+
+\bibitem{escJava}
+D.~Cok and J.~Kiniry.
+\newblock {ESC/Java2}: Uniting {ESC/Java} and {JML}: Progress and issues in
+  building and using {ESC/Java2} and a report on a case study involving the use
+  of {ESC/Java2} to verify portions of an internet voting tally system.
+\newblock {\em Construction and Analysis of Safe, Secure and Interoperable
+  Smart Devices: Proceedings of the International Workshop CASSIS 2004}, pages
+  108--128, 2005.
+
+\bibitem{Dijkstra70}
+E.~W. Dijkstra.
+\newblock Notes on structured programming.
+\newblock Technical Report 70-WSK-03, Technological University Eindhoven, April
+  1970.
+
+\bibitem{daikon}
+M.~D. Ernst, J.~H. Perkins, P.~J. Guo, S.~McCammant, C.~Pacheco, M.~S.
+  Tschantz, and C.~Xiao.
+\newblock Daikon system for dynamic detection of likely invariants.
+\newblock {\em Science of Computer Programming}, 2007.
+
+\bibitem{verification}
+A.~Gal, M.~Franz, and C.~W. Probst.
+\newblock Java bytecode verification via static single assignment form.
+
+\bibitem{formalDocumentation}
+A.~Goyal and S.~Sankar.
+\newblock Automated and algorithmic debugging. first international workshop,
+  aadebug '93 linköping, sweden, may 3\u20135, 1993 proceedings.
+\newblock volume 749 of {\em LNCS}, pages 333--349. Springer, 1993.
+
+\bibitem{JSR305}
+D.~Hovemeyer and W.~Pugh.
+\newblock Status report on {JSR-305}: annotations for software defect
+  detection.
+\newblock In {\em OOPSLA '07: Companion to the 22nd ACM SIGPLAN conference on
+  Object oriented programming systems and applications companion}, pages
+  799--800, New York, NY, USA, 2007. ACM.
+
+\bibitem{jmlrefman}
+G.~Leavens, E.~Poll, C.~Clifton, Y.~Cheon, C.~Ruby, D.~Cok, and J.~Kiniry.
+\newblock {\em {JML} Reference Manual}, 2005.
+
+\bibitem{JML}
+G.~T. Leavens, A.~L. Baker, and C.~Ruby.
+\newblock {\em {JML}: A Notation for Detailed Design}, chapter~12, pages
+  175--188.
+\newblock Kluwer, 1999.
+
+\bibitem{krakatoa}
+C.~Marche, C.~Paulin-Mohring, and X.~Urbain.
+\newblock The {K}rakatoa tool for certification of {Java/JavaCard} programs
+  annotated in {JML}, 2004.
+
+\bibitem{DesignByContract}
+B.~Meyer.
+\newblock {\em Object-Oriented Software Construction}.
+\newblock Prentice Hall Professional Technical Reference, second edition
+  edition, 1997.
+
+\bibitem{pcc}
+G.~C. Necula.
+\newblock Proof-carrying code.
+\newblock In {\em Conference Record of {POPL}~'97: The 24th {ACM}
+  {SIGPLAN}-{SIGACT} Symposium on Principles of Programming Languages}, pages
+  106--119, Paris, France, 1997.
+
+\bibitem{SoftwareReuse}
+K.~Periyasamy and J.~Chidambaram.
+\newblock Software reuse using formal specification of requirements.
+\newblock In {\em CASCON '96: Proceedings of the 1996 conference of the Centre
+  for Advanced Studies on Collaborative Research}, page~31. IBM Press, 1996.
+
+\bibitem{bmllib}
+A.~Schubert, J.~Chrz¹szcz, T.~Batkiewicz, J.~Paszek, and W.~W¹s.
+\newblock Technical aspects of class specification in {J}ava byte code.
+\newblock {\em Proceedings of Bytecode'08}, 2008.
+
+\end{thebibliography}
