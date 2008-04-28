@@ -19,6 +19,11 @@ import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.UmbraLocationException;
 
 /**
+ * This class defines the common operations for all the byte code editor
+ * actions. It is responsible for accessing the editor, contributor,
+ * and contribution. Except for that it contains the methods to display
+ * messages when errors occur.
+ *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
@@ -147,4 +152,18 @@ public class BytecodeEditorAction extends Action {
                             " does not lead to a valid class file");
   }
 
+
+  /**
+   * Displays the message that the current project has no output path for
+   * Java class files.
+   *
+   * @param a_shell the shell which displays the message
+   * @param a_title the title of the message window
+   */
+  public static void wrongClassFileOptMessage(final Shell a_shell,
+                                              final String a_title) {
+    MessageDialog.openError(a_shell,
+                          a_title,
+                          "No class file output path for Java files is set");
+  }
 }

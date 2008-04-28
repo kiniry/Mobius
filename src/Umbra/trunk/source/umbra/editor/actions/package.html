@@ -16,16 +16,41 @@ Umbra plugin. Package umbra.editor.actions
 </title>
 </head>
 <body bgcolor="white">
+<p>
 This package contains all the classes which handle the GUI actions available
 in the bytecode Umbra editor. This package contains two subpackages:
-
+</p>
 <!-- Put @see and @since tags down here. -->
 <ul>
    <li> {@see umbra.editor.actions.history} which contains actions related to
-        the handling of the historical versions of a byte code file</li>
+        the handling of the historical versions of a byte code file.</li>
    <li> {@see umbra.editor.actions.info} which contains actions related to
         the help information i.e. how to install the Umbra plug-in and
-        how to use it</li>
+        how to use it.</li>
 </ul>
+
+<p>
+The package itself contains the following classes to handle the byte code
+aditor actions:
+</p>
+<ul>
+   <li> {@see BytecodeColorAction} which handles the actions that change the
+        colouring mode.</li>
+   <li> {@see BytecodeCombineAction} which handles the action that combines
+        the changes.</li>
+   <li> {@see BytecodeRebuildAction} which handles the action that retrieves
+        back the original, unedited version of the currently edited file.</li>
+   <li> {@see BytecodeRefreshAction} which handles the action that saves the
+        current edits and reformats the current document in the default
+        fashion.</li>
+   <li> {@see BytecodeSynchrAction} which handles the action to move from the
+        byte code program point to corresponding point in the source code.</li>
+</ul>
+<p>
+All these actions share certain functionality which is implemented in their
+common superclass {@see BytecodeEditorAction}.
+</p>
+
+
 </body>
 </html>

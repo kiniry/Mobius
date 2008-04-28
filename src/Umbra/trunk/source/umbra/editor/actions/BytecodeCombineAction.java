@@ -14,6 +14,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -26,20 +27,18 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-import annot.bcclass.BCClass;
-import annot.io.ReadAttributeException;
-
 import umbra.UmbraHelper;
-import umbra.UmbraPlugin;
 import umbra.editor.BMLParsing;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import annot.bcclass.BCClass;
+import annot.io.ReadAttributeException;
 
 /**
  * This is an action associated with a byte code editor (an
@@ -50,6 +49,7 @@ import umbra.editor.BytecodeEditorContributor;
  * same method, the byte code modification is privileged.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeCombineAction extends BytecodeEditorAction {
@@ -61,10 +61,10 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * and which contributes the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
-   * the byte code plugin
+   *   the byte code plugin
    * @param a_bytecode_contribution the GUI elements contributed to the eclipse
-   * GUI by the byte code editor. This reference should be the same as in the
-   * parameter <code>a_contributor</code>.
+   *   GUI by the byte code editor. This reference should be the same as in the
+   *   parameter <code>a_contributor</code>.
    */
   public BytecodeCombineAction(final BytecodeEditorContributor a_contributor,
                  final BytecodeContribution a_bytecode_contribution) {
@@ -72,25 +72,27 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
   }
 
   /**
-   * The action is similar to rebuild - it generates
-   * input from the original source in the same way.
-   * The difference is that after this all methods are
-   * checked for byte code modifications and if one
-   * has been made, it is chosen and saved from JavaClass.
+   * This action combines the modifications that were made in the source code
+   * file with the modifications in the byte code. This method checks first if
+   * both source code and byte code files are saved. If so then it restores a
+   * clean backup copy of the class file which does not contain the changes
+   * introduced in the byte code editor. Then the method reads the
+   * resulting class file and replaces all the methods with the ones that are
+   * marked as modified in the Umbra structures corresponding to the currently
+   * edited byte code file. The method does all the error handling.
    *
-   * FIXME write more description
-   *
-   * @see BytecodeRebuildAction
    */
   public final void run() {
-    final IEditorPart my_editor = getEditor();
-    final IEditorPart related = ((BytecodeEditor)my_editor).getRelatedEditor();
-    if (related.isSaveOnCloseNeeded()) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
-          "Bytecode", "You must save it before!");
+    final IEditorPart related = ((BytecodeEditor)getEditor()).
+                                             getRelatedEditor();
+    if (related.isDirty() && getEditor().isDirty()) {
+      MessageDialog.openWarning(getEditor().getSite().getShell(),
+          "Bytecode", "You must save the source code and byte code before " +
+          "combine action");
       return;
     }
-    final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
+    final IFile file = ((FileEditorInput)getEditor().getEditorInput()).
+                                                     getFile();
     final IPath path = file.getFullPath();
     final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(path);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -104,8 +106,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       fileTo.delete(true, null);
       fileFrom.copy(pathTo, true, null);
     } catch (CoreException e1) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
-          "Bytecode", "Cannot regenerate the bytecode file");
+      wrongFileOperationMessage(getEditor().getSite().getShell(),
+                                getActionDefinitionId());
       return;
     }
     final String lastSegment = path.lastSegment().replaceFirst(
@@ -119,9 +121,6 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * replaces all the methods with the ones that were modified in the currently
    * edited byte code file. It also does all the error handling.
    *
-   * FIXME this method should also pop up messages in case exceptions
-   *       are thrown
-   *
    * @param a_file a file edited currently by the byte code editor
    * @param a_path a workspace relative path to a Java source code file
    * @param the_last_segment the string which represents the last segment of
@@ -131,6 +130,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
   private void updateMethods(final IFile a_file,
                              final IPath a_path,
                              final String the_last_segment) {
+    final Shell parent = getEditor().getSite().getShell();
     final String clname = a_path.removeFirstSegments(1).toPortableString().
                replaceFirst(UmbraHelper.BYTECODE_EXTENSION, "");
     ClassPath cp;
@@ -139,47 +139,66 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     try {
       updateMethodsLogic(a_file, a_path, the_last_segment, clname, strin);
     } catch (ClassNotFoundException e) {
-      e.printStackTrace(); //TODO stack print
-    } catch (IOException e) {
-      e.printStackTrace(); //TODO stack print
+      wrongPathToClassMessage(parent, getActionDefinitionId(), clname);
     } catch (CoreException e) {
-      e.printStackTrace(); //TODO stack print
+      wrongFileOperationMessage(parent, getActionDefinitionId());
     } catch (ReadAttributeException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      MessageDialog.openError(parent, getActionDefinitionId(),
+                              "A BML attribute problem");
     }
   }
 
   /**
-   * @param a_file
-   * @param a_path
-   * @param the_last_segment
-   * @param clname
-   * @param strin
-   * @throws ClassNotFoundException
-   * @throws IOException
-   * @throws CoreException
-   * @throws ReadAttributeException
-   * @throws PartInitException
+   * This method contains the logic of the merging together the byte code that
+   * comes from the source code manipulations and byte code manipulations. The
+   * method loads the class <code>a_clname</code> from the repository described
+   * in <code>a_repo</code>. It retrieves from the editor internal structures
+   * the local representation of the modified class and updates the
+   * representation with the content of the class file which is the result of
+   * the source code compilation. The result of this operation is stored
+   * in the file the name of which is the path <code>a_path</code> followed by
+   * the directory separator, followed by the file name
+   * <code>the_last_segment</code>. Finally, the current byte code editor is
+   * refreshed with the content of the newly generated file.
+   *
+   * @param a_file a file resource which is associated to the document for
+   *   which the current combine action is executed
+   * @param a_path the path to the location where the resulting file should
+   *   be stored
+   * @param the_last_segment the last segment of a file path (a file name)
+   *   to which the new content should be generated; it is a class file name
+   * @param a_clname the name of the class to update the content for
+   * @param a_repo the repository to load the class file from
+   *
+   * @throws ClassNotFoundException in case the class for the given name cannot
+   *   be found in the given class path repository
+   * @throws CoreException in case I/O operations on a class file failed
+   * @throws ReadAttributeException in case the parsing of the BML attributes
+   *   failed
    */
   private void updateMethodsLogic(final IFile a_file,
                                   final IPath a_path,
                                   final String the_last_segment,
-                                  final String clname,
-                                  final SyntheticRepository strin)
-    throws ClassNotFoundException, IOException, CoreException,
-           ReadAttributeException, PartInitException {
+                                  final String a_clname,
+                                  final SyntheticRepository a_repo)
+    throws ClassNotFoundException, CoreException,
+            ReadAttributeException {
     final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
-    JavaClass jc = strin.loadClass(clname);
-    strin.removeClass(jc);
+    JavaClass jc = a_repo.loadClass(a_clname);
+    a_repo.removeClass(jc);
     final JavaClass oldJc = my_editor.getDocument().getJavaClass();
     final ClassGen cg = updateModifiedMethods(oldJc, jc);
     jc = cg.getJavaClass();
     final String fullName = UmbraHelper.getPath(a_path).toOSString();
-    jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
+    try {
+      jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
+    } catch (IOException e) {
+      throw new ResourceException(1, a_path, "The class file cannot be dumped",
+                                  e);
+    }
     my_editor.refreshBytecode(a_path, my_editor.getDocument(), null, null);
     final BCClass bcc = new BCClass(jc);
-    //XXX changed: here my_bmlp object is initialised from JavaClass
+    //note that BMLParsing object is initialised with help of the BCClass
     final BMLParsing bmlp = new BMLParsing(bcc);
     my_editor.getDocument().setEditor(my_editor, bmlp);
     final IEditorInput input = new FileEditorInput(a_file);
@@ -234,19 +253,15 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     String res = "";
     for (int i = 0; i < the_entries.length; i++) {
       String add = "";
-      // FIXME replace println with the sensible code to realise the
-      //       functionality
       switch (the_entries[i].getEntryKind()) {
         case IClasspathEntry.CPE_CONTAINER:
-          UmbraPlugin.messagelog("CONTAINER: " + the_entries[i].getPath().
-                             toPortableString());
-          break;
+          add = the_entries[i].getPath().toPortableString();
+          break; // FIXME: maybe different
         case IClasspathEntry.CPE_LIBRARY:
           add = the_entries[i].getPath().toPortableString();
-          break;
+          break; // FIXME: maybe different
         case IClasspathEntry.CPE_PROJECT:
-          UmbraPlugin.messagelog("PROJECT: " + the_entries[i].getPath().
-                             toPortableString());
+          add = the_entries[i].getPath().toPortableString();
           break;
         case IClasspathEntry.CPE_SOURCE:
           final String ploc = a_project.getLocation().toPortableString();
@@ -255,10 +270,10 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
           break;
         case IClasspathEntry.CPE_VARIABLE:
           add = "";
-          break;
+          break; // FIXME: maybe different
         default:
           add = "";
-          break;
+          break; // FIXME: maybe different
       }
       if (res.length() > 0) {
         res += classPathSeparator + add;

@@ -165,10 +165,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    */
   private void setupColorActions(final URL an_install_url,
                                  final int a_mode) {
-    my_action_plus = new BytecodeColorAction(this, 1, a_mode);
-    // TODO: for some reason the second parameter was
-    //       ColorValues.MODES_DESC.length - 2,
-    my_action_minus = new BytecodeColorAction(this, -1, a_mode);
+    my_action_plus = new BytecodeColorAction(this, my_bcode_cntrbtn, 1, a_mode);
+    my_action_minus = new BytecodeColorAction(this, my_bcode_cntrbtn, -1,
+                                              a_mode);
     ImageDescriptor icon_right;
     ImageDescriptor icon_left;
     URL url;

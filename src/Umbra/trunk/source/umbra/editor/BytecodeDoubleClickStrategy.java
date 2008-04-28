@@ -8,7 +8,6 @@
  */
 package umbra.editor;
 
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.widgets.Shell;

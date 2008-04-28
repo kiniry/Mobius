@@ -78,9 +78,7 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
                                              editor.getRelatedEditor(),
                                              UmbraHelper.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
-      MessageDialog.openError(parent,
-                            getActionDefinitionId(),
-                            "No class file output path for Java files is set");
+      wrongClassFileOptMessage(parent, getActionDefinitionId());
       return;
     }
     try {
