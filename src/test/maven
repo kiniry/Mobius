@@ -24,6 +24,7 @@ export WORKDIR=$PWD
 echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 nice make pre-maven
 echo "*** Update Test Scripts ***"
+~/Sandbox/workspace/test/self_update.sh
 ssh maven@arrow.ucd.ie ./test/self_update.sh
 ssh maven@athena.insttech.washington.edu ./test/self_update.sh
 ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
