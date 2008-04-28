@@ -97,7 +97,7 @@ the application or to ensure certain vital properties of the code. The
 latter goal is specifically the aim of the proof-carrying code (PCC)
 techniques in which the executable code is supplied with a proof that
 the code obeys certain policy (e.g. the program does not store
-password cleartext in a file). BML (Bytecode Modelling Language) can
+password in clear in a file). BML (Bytecode Modelling Language) can
 be regarded as a part of the PCC architecture which allows to express
 detailed properties of bytecode programs, in particular the policies
 they must obey.
@@ -162,26 +162,27 @@ inconsistencies can be eliminated with the help of some additional
 information (e.g. @NonNull annotations, suggested in \cite{JSR305})
 which makes the checking process feasible.
 
-The goal of the proof-carrying code (PCC) technique \cite{pcc} is to
-give the user certain guarantees of the code to be executed at the
-moment of its execution. In this paradigm, the executable code (in
-case of Java, the bytecode) is augmented with an additional piece of
-information, a PCC certificate, which together with the code makes
-possible an automatic check that the code indeed obeys the expected
-policy (e.g. sends data to authorised targets only). This check is
-performed by the user (or by user's execution environment) right
-before the code is executed (see Figure~\ref{fig:pccScheme}). In fact,
-the usual Java bytecode verification procedure can be viewed as an
-example of a forerunner of this technique. Although the certificate
-is in this case empty (or supplementary in case the StackMap
-attributes are employed), the execution environment indeed checks a
-vital code property before the code is executed. In more complicated
-cases of the proof-carrying code, one needs the additional information
-to make the checking of the required property feasible or even
-algorithmically possible.
+The goal of the proof-carrying code (PCC) technique
+\cite{pcc,PCCForJava} is to give the user certain guarantees of the
+code to be executed at the moment of its execution. In this paradigm,
+the executable code (in case of Java, the bytecode) is augmented with
+an additional piece of information, a PCC certificate, which together
+with the code makes possible an automatic check that the code indeed
+obeys the expected policy (e.g. sends data to authorised targets
+only). This check is performed by the user (or by user's execution
+environment) right before the code is executed (see
+Figure~\ref{fig:pccScheme}). In fact, the usual Java bytecode
+verification procedure can be viewed as an example of a forerunner of
+this technique \cite{LightweightBytecodeVerification}. Although the
+certificate is in this case empty (or supplementary in case the
+StackMap attributes are employed), the execution environment indeed
+checks a vital code property before the code is executed. In more
+complicated cases of the proof-carrying code, one needs additional
+information to make the checking of the required property feasible or
+even algorithmically possible.
 
 One of the possible ways to realise the PCC architecture is developed
-under the european project MOBIUS.\footnote{See
+under the European project MOBIUS.\footnote{See
 \url{http://mobius.inria.fr}} This project plans to develop both
 type-based and logic-based PCC program certification techniques
 \cite{MOBIUSscenarios}. The logic-based methods rely on specification
@@ -223,7 +224,7 @@ Java programs in the design-by-contract style \cite{JML}.
 \node (ok) at (8.6, 2) {OK};
 \node (ok) at (9.1, -0.6) {Failure};
 \end{tikzpicture}
-\caption{Proof-Carying Code architecture for bytecode.}
+\caption{Proof-Carrying Code architecture for bytecode.}
 \label{fig:pccScheme}
 \end{figure}
 
@@ -304,7 +305,7 @@ The \jmltobml compiler described in this paper is designed to be a
 part of this scheme which translates the policies and specifications
 to the bytecode format.
 
-In the Java Applet Correctness Kit (JACK) \cite{jack}, an environment for verification of Java and Java Card programs with JML annotations, was a preliminary version of a JML compiler integrated. It was based on an early version of specification language for bytecode (called BCSL). Since the BML appears to be the best candidate for common bytecode level specification language, it was necessary to design and implement the new \jmltobml.
+
 \paragraph{Organisation of the paper}
 In Section~\ref{sec:specification}, we present the specification
 languages JML and BML. An example which illustrates the work of the
@@ -341,7 +342,7 @@ there are tools that check JML specification at runtime
 \cite{runtime}, in extended static checking fashion \cite{escJava},
 and allow to perform software certification \cite{krakatoa}. There are
 also tools that support annotation generation
-\cite{canapa},\cite{daikon}.
+\cite{canapa,daikon}.
 
 The works on JML was started by Gary Leavens at Iowa State
 University. Since then it became an open project, multiple groups
@@ -409,7 +410,7 @@ appearing in the code, like:
   variables\hs{}---\hs{}variables that exist only in the
   specification. Their values can be modified only using special
   \texttt{set} instructions.}
-\item{\texttt{Set} instructions are similar to Java assingments, but
+\item{\texttt{Set} instructions are similar to Java assignments, but
   they operate on ghost fields and variables.}
 \end{itemize}
 
@@ -423,14 +424,14 @@ states, i.e. after all constructors and before and after all
 methods. For example, having a field \texttt{Object[] list}, one can
 write an invariant that the list is never null and its length is
 10. Class invariants can be seen as additional, implicit preconditions
-and postcondtitions for all methods in the class.
+and postconditions for all methods in the class.
 
 Other important class specifications are:
 \begin{itemize}
 \item {Declarations of \texttt{ghost} fields. They are similar to
   local ghost variables, but are visible in the whole class scope.}
 \item {Model fields\hs{}---\hs{}fields present only in the specifications,
-  representing some more complicated formulas. For example one can
+  representing some more complicated formulae. For example one can
   create a model field representing the property that a collection does
   not contain nulls.}
 \end{itemize}
@@ -470,7 +471,8 @@ public class List {
 }
 \end{lstlisting}
 \end{minipage}
-\caption{An example class \texttt{List.java} containing single method \texttt{replace}.}
+\caption{An example class \texttt{List.java} containing single method
+\texttt{replace}.}
 \label{fig:source}
 \end{figure}
 
@@ -483,7 +485,7 @@ the \jmltobml.
 Consider the class presented on Figure~\ref{fig:source}. This is an
 excerpt of a class which implements a sequence of objects. We present
 here only one method that replaces in the \texttt{list} array the
-first occurence of its first parameter with the second one. True will
+first occurrence of its first parameter with the second one. True will
 be returned, if and only if such an element was found.
 
 The presented code, apart from standard Java statements, contains also
@@ -502,15 +504,15 @@ postcondition makes use of some JML features, like
 \texttt{$\backslash$result}, \texttt{$\backslash$old} or
 \texttt{$\backslash$exists}. This postcondition does not describe all
 properties of this method. For example an implementation that replaces
-all elements in the \texttt{list} up to the first occurence of
-\texttt{o1} with \texttt{o2} will fulfill this specification.
+all elements in the \texttt{list} up to the first occurrence of
+\texttt{o1} with \texttt{o2} will fulfil this specification.
 
-In additition to specification describing input-output behaviour of
+In addition to specification describing input-output beha\-viour of
 the method, also the loop implementing the \texttt{replace} method is
 annotated. The \texttt{loop\_invariant} clause contains the invariant:
 a formula that should hold at the beginning of the loop body at each
 loop iteration. In this example it states that in iteration \texttt{i}
-there are no occurences of \texttt{o1} in \texttt{list} on positions
+there are no occurrences of \texttt{o1} in \texttt{list} on positions
 before \texttt{i}. The annotation \texttt{decreases} describes the
 loop variant. It specifies an expression (in this case
 \verb|list.length - i|) which value is decreased in each loop
@@ -526,13 +528,13 @@ presentation on its textual representation obtained from the
 \bmllib. The Figure~\ref{fig:bytecode} shows the translated
 \texttt{replace} method together with BML annotations inserted by our
 \jmltobml compiler. The bytecode instructions labelled with 0 and 1
-correspond to the initialization \texttt{i = 0}. The loop is located
+correspond to the initialisation \texttt{i = 0}. The loop is located
 between lines 2 and 33. Lines 5--12 represent the \texttt{if}
 statement, 15--23 correspond to lines 19--20 from the source
 code. Loading loop condition parameters is located in lines 27--32 and
 33 performs the loop condition comparison.
 
-The \texttt{requires-enusers} pair is translated into input-output
+The \texttt{requires-ensures} pair is translated into input-output
 behaviour BML specifications located just before the method code. We
 can see that the BML code contains two places where the counterpart of
 the JML \texttt{requires} clause can be placed. The first one is right
@@ -546,7 +548,7 @@ these ensures formulae must hold). However, we often want to specify
 that a particular method can be called only in specific context
 (e.g. with first parameter being non-null) and except for that it
 should obey the input-output behaviour described in multiple
-\texttt{requires-enusers} pairs. In this situation, it is more
+\texttt{requires-onuses} pairs. In this situation, it is more
 convenient to distinguish a single additional clause which should hold
 in all the cases instead of copying to all the pairs. In our JML code,
 this clause is implicit and equivalent to \texttt{true} whereas in BML
@@ -567,6 +569,8 @@ clause is obligatory in BML. Currently, because of \openjml
 limitations, it is not supported by our compiler (the default value
 \texttt{everything} will be inserted) so we see the default value
 inserted at this point.
+
+\newpage
 
 \begin{figure}[htbp]
 \lstset{language=bml}
@@ -643,7 +647,7 @@ applied. If some rule succeeds to translate this node, the result is
 stored in the class file, using the \bmllib library
 \cite{bmllib}. This approach makes the compiler easily extensible. It
 is enough to just write a new translation rule to support additional
-features of the JML language. Moreover, the acyclic strucure of the
+features of the JML language. Moreover, the acyclic structure of the
 code should make the future maintenance more feasible and facilitate
 the understanding of the code mechanisms by future contributors
 \cite{Dijkstra70}.
@@ -772,7 +776,7 @@ translation rule we should first find out which AST nodes are relevant
 to the implemented translation operation and then override proper
 methods of the base skeletal class, \texttt{TranslationRule<String>}.
 The default methods from the skeletal class do nothing, so the methods
-which are not overriden will just represent identical translation for
+which are not overridden will just represent identical translation for
 the case they represent.
 
 Translation rule key design features are:
@@ -783,7 +787,7 @@ Translation rule key design features are:
 \item extending translation is simple.
 \end{itemize}
 
-\subsubsection{Example of Translation Rule}
+\subsubsection{Example of a translation rule}
 
 \newcommand{\Tr}{\mathrm{Tr}\xspace}
 \newcommand{\invariantkeyword}{\mathsf{invariant\_keyword}\xspace}
@@ -866,11 +870,24 @@ invariant in line \ref{rule_update_invariant}. At the end, in line
 In order to be able to translate any JML specification, one needs to
 translate JML expressions, so one of the most substantial tasks in
 writing the compiler was to write a translation rule for
-expressions. As BML is based on JML, the syntax of expressions is
-similar in both languages and includes:
+expressions. The syntax of JML expressions follows the one of Java
+expressions which makes them easily accessible for typical Java
+programmers. That is also why the BML expressions are similar to JML
+ones and include:
 \begin{itemize}
 \item{Binary arithmetic operations (\verb!+!, \verb!-!, \verb!*!,
   \verb!/!)}
+%\end{itemize}
+%\begin{itemize}
+\item{Boolean operations}
+\item{Relational operators ($<$, $\le$, $\ge$, $!=$, etc.)}
+\item{Logical formulae containing
+  \begin{itemize}
+  \item special expressions such as reference to old value (\verb!\old!),
+    reference to the result of method (\verb!\result!),
+  \item implications, conjunctions, alternatives, etc.,
+  \item quantifiers (with bound variables).
+\end{itemize}}
 \end{itemize}
 \lstset{language=java,
         basicstyle=\scriptsize,commentstyle=\scriptsize,moredelim=*[s][\scriptsize]{/*@}{*/},
@@ -940,17 +957,7 @@ public class TypeClauseExprRule
 \caption{Example implementation of translation rule for class invariants.}
 \label{fig:translation_rule_example}
 \end{figure}
-\begin{itemize}
-\item{Boolean operations}
-\item{Relational operators ($<$, $\le$, $\ge$, $!=$, etc.)}
-\item{Logical formulae containing
-  \begin{itemize}
-  \item special expressions such as reference to old value (\verb!\old!),
-    reference to the result of method (\verb!\result!),
-  \item implications, conjunctions, alternatives, etc.,
-  \item quantifiers (with bound variables).
-\end{itemize}}
-\end{itemize}
+\noindent
 As in standard Java, also in JML and BML the expressions can contain
 local variables, references to fields (both standard and ghost),
 method invocations, array access etc. There can also appear
@@ -1013,9 +1020,9 @@ instructions which evaluates the loop condition and \textit{b}
 represents the actual check). If the loop condition is fulfilled, we
 enter the loop body which starts right after \textit{c}, otherwise we
 jump out of the loop to the vertex \textit{d}. In the vertex
-\textit{c}, an unconditional jump back to \textit{a} is done to check
-again the loop condition after the body is executed. The BML
-annotation should be associated with the instruction in the vertex
+\textit{c}, an unconditional jump back to the vertex \textit{a} is
+done to check again the loop condition after the body is executed. The
+BML annotation should be associated with the instruction in the vertex
 \textit{b}.
 
 Another difficulty is posed by \texttt{do-while} loops and loops the
@@ -1110,32 +1117,74 @@ the \texttt{do-while} loop. We simply check if
 
 \subsection{Matching Bytecode Loops with\newline{}Source Code Loops}
 
+It is not enough to discover a loop in the bytecode. We have to find
+out which loop specification is pertinent to this particular piece of
+the code. The \emph{line number table}\footnote{In some cases this
+requires the compiler to be called with a proper flag.} is used to
+match the bytecode loop with its source code counterpart. To this end
+we calculate, with the help of the \emph{line number table}, the range
+of the lines where the loop is located. In order to do that, we
+examine all the instructions in the bytecode loop and retrieve for
+them their corresponding source code lines from the table. The range
+we are interested in is delimited by the minimal and the maximal values
+found in this procedure.
+
+This is, however, not enough as the translation starts from the source
+code. Therefore we have to take into the consideration the fact that a
+single source code loop may be represented in the bytecode several
+times (e.g.  when a loop is located in a \texttt{finally} block of a
+Java \texttt{try-catch} statement\hs{}---\hs{}one of the translation
+strategies here is to copy the \texttt{finally} block to the end of
+both \texttt{try} and \texttt{catch} blocks). Thus, we find for every
+source code loop with \texttt{loop\_invariant} present the best
+matching bytecode loops. This is done using the following algorithm:
+\begin{itemize}
+\item Pick the bytecode loops for which the calculated source code
+  line range is in the range of the source code loop in question.
+\item Take the ones with the maximal range.
+\item Check if they have the same range of the source code lines.
+\item If so annotate all of them.
+\item Otherwise, fail.
+\end{itemize}
+
+\subsubsection*{The translation of \texttt{assert} clauses}
+
+It is worth mentioning that the \emph{line number table} is also
+crucial for the translation of JML \texttt{assert} expressions. They
+are assigned to the first bytecode instruction which realises the
+particular line. A potential \texttt{assert} formula to be inserted is
+determined using the correspondence from \emph{line number table}.
+
+\section{The Usability of the Compiler}
+
+In this section, we discuss the constraints on the software
+development process which includes the compilation of specifications.
+
+\subsection{Integration with Compiler Technology}
+
 Let us take any source method that has loop with JML invariant and
 bytecode corresponding to this method. The compiler used to generate
-the bytecode may have used some optimizations. Unfortunately, this
-causes some problems. Here are some exemples of loop optimizations:
+the bytecode may have used some optimisations. Unfortunately, this
+causes some problems. Here are some examples of loop optimisations:
 \begin{itemize}
-\item Loop unwinding (loop unrolling):\\
+\item Loop unwinding (loop unrolling):
   In this case the invariant should be checked at every copy of the
   loop body. However, the unwinding may cause the need to transform
   the invariant formula to be checked on these copies (e.g. because there
   is no loop control variable any more).
-\item Loop interchange:\\
+\item Loop interchange:
   If the internal loop invariant depends on the external loop
   variables then the invariant must be translated in a non-trivial
   way.
-\item Code-motion:\\
+\item Code-motion:
   Some part of the loop body may be moved before the loop.
 \end{itemize}
 When we want to add BML specifications to optimised bytecode, we have
 to know the optimisations that were used. There are two solutions of
-this problem:
-\begin{itemize}
-\item Include the JML to BML compiler in an existing Java compiler
-  application.
-\item Use a non-optimizing compiler.
-\end{itemize}
-The the first solution has the advantage that even optimized bytecode
+this problem: either include the JML to BML compiler in an existing
+Java compiler application or 
+use a non-optimising compiler.
+The the first solution has the advantage that even optimised bytecode
 may be annotated. Unfortunately, it would have to use an existing
 compiler infrastructure so every change in the compiler might trigger
 a change in the code which translates the annotations. This would be
@@ -1146,8 +1195,8 @@ environment of a potential user of the \jmltobml compiler may be
 tightly connected with some other compilation technology so that
 switching to the one supporting \jmltobml would be impractical.
 
-In the second solution, the translations are more predictible and
-simpler compared to the optimizing compiler case. Different compiler
+In the second solution, the translations are more predictable and
+simpler compared to the optimising compiler case. Different compiler
 implementations may be used e.g. Jikes or the reference Sun compiler
 etc. This is the approach which we took in our implementation.
 
@@ -1157,49 +1206,54 @@ we limit to only these annotations we can use the current
 implementation of the \jmltobml compiler even with an optimising Java
 source code compiler.
 
-For matching source loops with detected bytecode loops we use
-\emph{line number table} so the source java file must be compiled with
-the proper flag. The \emph{line number table} is also crucial for the
-translation of JML \texttt{assert} expressions. Without the knowledge
-how Java compiler works\hs{}---\hs{}how it translates every Java
-expression to bytecode, it would be impossible to locate proper place
-in bytecode where the BML \texttt{assert} should be placed. Knowing
-where in bytecode loops are placed and having \emph{line number table}
-in input Java class file, we can detect for evely such loop the line
-range in source file where the loop is placed. To get the beginning
-line number and ending line number corresponding to a given bytecode
-loop in source file, we search all instructions of the loop and use
-the \emph{line number table} to get line number of the
-instruction. When we already have source file line ranges for every
-bytecode loop we have to take into consideration fact, that source
-loop can be present in bytecode more than once. This may happen when
-loop is placed in \texttt{finally} block of Java \texttt{try-catch}
-statement\hs{}---\hs{}translated \texttt{finally} block can be copied
-to the end of both \texttt{try} and \texttt{catch} blocks. To match
-source loop to bytecode loops for every source code loop with
-\texttt{loop\_invariant} present, we search for the best matching
-bytecode loop:
-\begin{itemize}
-\item bytecode loop line range must be in the source loop line range
-\item in bytecode there cannot be any other loop that has line range
-  bigger but still in source loop line range
-\item there can be more than one bytecode loops matching but every all of
-  them must have equal source line range
-\end{itemize}
+\subsection{Performance}
+
+We did a small performance experiment to establish the effectiveness
+of our tool. We compiled a project called Passwords which contained 23
+classes with 177 methods that contributed altogether 1634 lines of
+code (988 non-commenting lines of code as calculated by Metrics tool).
+This project was annotated with JML specifications that allowed to
+secure the lack of the runtime exceptions and a simple security policy
+that the code does not print a secret data to public I/O channels.  It
+took our compiler 1320ms to compile the JML annotations to BML
+(average of 10 experiments). This value can be compared with 800ms of
+the compilation time that took Sun's compiler to transform the source
+code to byte code.
+
+This running time can be explained by the fact that our compiler must
+manipulate two files instead of a single one. However, the result is
+satisfactory as the whole JML to BML compilation task is not supposed
+to be done in continuous fashion throughout the development of the
+project, but rather only once at the end of the process.
 
 \section{Related Work}
 \label{sec:related-work}
 
-\jmltobml compiler uses external libraries that are still in
-developement (\bmllib, \openjml). They do not provide whole
-functionality needed to compile the JML Level 0. When they get more
-powerful, also our compiler should be enhanced to support more
-sophisticated specifications (and therefore get more adequate for the
-end user). The most urgent are the \texttt{modifies} clauses and
-\texttt{set} instructions. The compiler should be also provided as a
-Eclipse plugin.
+Another approaches to proof-carrying code for Java bytecode have been
+proposed \cite{gilmore05:_proof,wildmoser04:_prototy}. A notable
+technique consists in the development of a proof transforming compiler
+which translates the source code specifications together with
+corresponding correctness proofs to the formulae and proofs which
+correspond to the bytecode program (see
+e.g. \cite{barthe06:_certif_trans_optim_compil}). The main difference
+with our approach is that the use of BML allows to have a single fixed
+representation of the properties to be guaranteed. These properties
+can then be proved by different proving technologies.
 
-%\cite{JSR308}
+The attributes which incorporate information that can be further
+exploited to check that the code indeed obeys the required policies is
+exploited by StackMap attributes introduced as obligatory to Java~6
+class files and by attributes proposed by JSR305 and JSR308
+specifications \cite{JSR305,JSR308}. The attribute format proposed by
+BML is more appropriate for the specification task as it allows to
+associate formulae not only to types or code points but also to
+classes and methods.
+
+An early version of the \jmltobml compiler has been realised in the
+Java Applet Correctness Kit (JACK) verification environment
+\cite{Jack}. However, the BML specification language and the attribute
+format have evolved largely since the implementation there was
+finished.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -1210,6 +1264,14 @@ are inserted in binary format into the class file (using the
 \bmllib library). The compiler is an important step in
 building a common verification platform for all languages compiled to
 the Java bytecode.
+
+\section{Acknowledgement} 
+This work was partly supported by the Information Society Technologies
+programme of the European Commission, under the IST-2005-015905 MOBIUS
+project and Polish Ministry of Science grant 177/6.PR UE/2006/7. This
+paper reflects only the authors' views and the Community is not liable
+for any use that may be made of the information contained therein.
+
 
 \bibliography{jml2bml}
 \end{document}
