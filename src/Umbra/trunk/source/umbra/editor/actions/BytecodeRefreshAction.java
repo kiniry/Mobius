@@ -11,7 +11,6 @@ package umbra.editor.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -24,7 +23,7 @@ import umbra.editor.BytecodeEditorContributor;
 
 
 /**
- * This is a class defining an action: save current bytecode
+ * This is a class defining an action: save current byte code
  * editor window and re-generate byte code from the .class file.
  * This action is equivalent to the generation of the byte code again from the
  * Java code after saving binary file.
@@ -42,9 +41,9 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
    * the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
-   *   the bytecode plugin
+   *   the byte code plugin
    * @param a_bytecode_contribution the GUI elements contributed to the eclipse
-   *   GUI by the bytecode editor. This reference should be the same as in the
+   *   GUI by the byte code editor. This reference should be the same as in the
    *   parameter <code>a_contributor</code>.
    */
   public BytecodeRefreshAction(final BytecodeEditorContributor a_contributor,
@@ -53,12 +52,12 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
   }
 
   /**
-   * This method sets the bytecode editor for which the refresh action will
+   * This method sets the byte code editor for which the refresh action will
    * be executed. Except for the superclass functionality it sets the
    * refresh action to be active in case the editor is dirty.
    *
-   * @param a_target_editor the bytecode editor for which the action will be
-   *           executed
+   * @param a_target_editor the byte code editor for which the action will be
+   *    executed
    */
   public final void setActiveEditor(final IEditorPart a_target_editor) {
     super.setActiveEditor(a_target_editor);
@@ -86,14 +85,9 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
       newEditor.setVisibleRegion(topvisible);
       setActiveEditor(newEditor);
     } catch (ClassNotFoundException e) {
-      MessageDialog.openError(parent,
-                              getActionDefinitionId(),
-                              "The path " + file.toString() +
-                              " does not lead to a valid class file");
+      wrongPathToClassMessage(parent, getActionDefinitionId(), file.toString());
     } catch (CoreException e) {
-      MessageDialog.openError(parent,
-                              getActionDefinitionId(),
-                              "A file operation on the byte code failed");
+      wrongFileOperationMessage(parent, getActionDefinitionId());
     }
   }
 

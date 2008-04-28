@@ -9,11 +9,14 @@
 package umbra.editor.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.editor.UmbraLocationException;
 
 /**
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
@@ -29,7 +32,7 @@ public class BytecodeEditorAction extends Action {
 
   /**
    * The manager that initialises all the actions within the
-   * bytecode plugin.
+   * byte code plugin.
    */
   private BytecodeEditorContributor my_contributor;
 
@@ -42,17 +45,17 @@ public class BytecodeEditorAction extends Action {
   //@ invariant my_contributor.bytecodeContribution==my_btcodeCntrbtn;
 
   /**
-   * This constructor creates the generic part of a bytecode editor action.
-   * It registers the action under the title givem by <code>a_name</code>
+   * This constructor creates the generic part of a byte code editor action.
+   * It registers the action under the title given by <code>a_name</code>
    * parameter and stores locally the object which creates all the actions
    * and which contributes the editor GUI elements to the eclipse GUI.
    *
    * @param a_name a name of the action to register
    * @param a_contributor the manager that initialises all the actions within
-   * the bytecode plugin
+   *   the byte code plugin
    * @param a_bytecode_contribution the GUI elements contributed to the eclipse
-   * GUI by the bytecode editor. This reference should be the same as in the
-   * parameter <code>a_contributor</code>.
+   *   GUI by the byte code editor. This reference should be the same as in the
+   *   parameter <code>a_contributor</code>.
    */
   public BytecodeEditorAction(final String a_name,
                           final BytecodeEditorContributor a_contributor,
@@ -94,4 +97,54 @@ public class BytecodeEditorAction extends Action {
   public final BytecodeContribution getContribution() {
     return my_btcodeCntrbtn;
   }
+
+  /**
+   * Displays the message that a wrong location has been reached.
+   *
+   * @param a_shell the shell which displays the message
+   * @param a_title the title of the message window
+   * @param an_ex the exception with the information to display
+   */
+  public static void wrongLocationMessage(final Shell a_shell,
+                                          final String a_title,
+                                          final UmbraLocationException an_ex) {
+    MessageDialog.openError(a_shell,
+                            a_title,
+                            "Wrong location " + an_ex.getWrongLocation() +
+                            " in a " +
+                            (an_ex.isByteCodeDocument() ? "byte code" :
+                                                    "Java") +
+                            "document");
+  }
+
+  /**
+   * Displays the message that a file operation on a class file failed.
+   *
+   * @param a_shell the shell which displays the message
+   * @param a_title the title of the message window
+   */
+  public static void wrongFileOperationMessage(final Shell a_shell,
+                                               final String a_title) {
+    MessageDialog.openError(a_shell,
+                            a_title,
+                            "A file operation on the class file failed");
+  }
+
+  /**
+   * Displays the message that a given path does not lead to a valid class
+   * file.
+   *
+   * @param a_shell the shell which displays the message
+   * @param a_title the title of the message window
+   * @param a_path a path which was referenced
+   */
+  public static void wrongPathToClassMessage(final Shell a_shell,
+                                       final String a_title,
+                                       final String a_path) {
+    MessageDialog.openError(a_shell,
+                            a_title,
+                            "The path " + a_path +
+                            " does not lead to a valid class file");
+  }
+
 }

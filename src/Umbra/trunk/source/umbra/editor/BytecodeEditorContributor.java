@@ -147,12 +147,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    */
   private void createActions() {
     my_refresh_action = new BytecodeRefreshAction(this, my_bcode_cntrbtn);
-    my_rebuild_action = new BytecodeRebuildAction(this);
+    my_rebuild_action = new BytecodeRebuildAction(this, my_bcode_cntrbtn);
     my_combine_action = new BytecodeCombineAction(this, my_bcode_cntrbtn);
     my_addhist_action = new HistoryAction(this, my_bcode_cntrbtn);
     my_clearhist_action = new ClearHistoryAction(this, my_bcode_cntrbtn);
     my_restore_action = new BytecodeRestoreAction(this, my_bcode_cntrbtn);
-    my_synchr_action = new BytecodeSynchrAction();
+    my_synchr_action = new BytecodeSynchrAction(this, my_bcode_cntrbtn);
   }
 
   /**
