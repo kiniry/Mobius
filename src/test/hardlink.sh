@@ -21,7 +21,7 @@ CHROOT=$1
 # of the template directory.
 
 # Replicate directory structure
-find $TEMPLATE \! -wholename $CHROOT -and \! -name "*.svn*" -and \! -name "target*" -and -type d -exec mkdir -p $CHROOT/{} \;
+find $TEMPLATE \! -name "*.svn*" -and \! -name "target*" -and -type d -exec mkdir -p $CHROOT/{} \;
 
 # Make hard links to files
 find $TEMPLATE \! -name "*.svn*" -and -type f -and \! -mtime +1 -exec ln -f {} $CHROOT/{} \;
