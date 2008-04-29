@@ -255,9 +255,9 @@
 		</condition>
   </target>
 	
-	<target name="checkAntlrBuildUpToDate" depends="checkAntlrParserBuildUpToDate,checkAntlrPrinterBuildUpToDate,checkAntlrTypeCheckerBuildUpToDate,checkAntlrTesterBuildUpToDate"/>
+	<!-- <target name="checkAntlrBuildUpToDate" depends="checkAntlrParserBuildUpToDate,checkAntlrPrinterBuildUpToDate,checkAntlrTypeCheckerBuildUpToDate,checkAntlrTesterBuildUpToDate"/> -->
 	
-	<target name="buildAntlrParser" depends="checkAntlrBuildUpToDate" if="antlrParserBuild.required">
+	<target name="buildAntlrParser" depends="checkAntlrParserBuildUpToDate" if="antlrParserBuild.required">
 		<antcall target="clean-antlr-parser"/>
 		<echo message="Building Parser"/>
   	<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
@@ -268,7 +268,7 @@
 	  </java>
 	</target>
 
-	<target name="buildAntlrPrinter" depends="buildAntlrParser" if="antlrPrinterBuild.required">
+	<target name="buildAntlrPrinter" depends="buildAntlrParser,checkAntlrPrinterBuildUpToDate" if="antlrPrinterBuild.required">
 		<antcall target="clean-antlr-printer"/>
 		<echo message="Building Printer"/>
 		<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
@@ -281,7 +281,7 @@
 	  </java>
 	</target>
 	
-	<target name="buildAntlrTypeChecker" depends="buildAntlrParser" if="antlrTypeCheckerBuild.required">
+	<target name="buildAntlrTypeChecker" depends="buildAntlrParser,checkAntlrTypeCheckerBuildUpToDate" if="antlrTypeCheckerBuild.required">
 			<antcall target="clean-antlr-type-checker"/>
 			<echo message="Building Type Checker"/>
 			<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
@@ -294,7 +294,7 @@
 		  </java>
 	</target>
 	
-	<target name="buildAntlrTester" depends="checkAntlrBuildUpToDate" if="antlrTesterBuild.required">
+	<target name="buildAntlrTester" depends="checkAntlrTesterBuildUpToDate" if="antlrTesterBuild.required">
 	  <antcall target="clean-antlr-tester"/>
 	  <echo message="Building Tester"/>
 		<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
