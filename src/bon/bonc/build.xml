@@ -336,7 +336,17 @@
 			<delete file="${src-tests}/${antlr-tester-src}Lexer.java"/>
 		</target>
 	
-	<target name="antlr" depends="buildAntlrParser,buildAntlrPrinter,buildAntlrTypeChecker,buildAntlrTester"/>
+	<target name="antlr">
+		<parallel>
+			<antcall target="buildAntlrParser"></antcall>
+			<antcall target="buildAntlrTester"></antcall>
+		</parallel>
+		<parallel>
+			<antcall target="buildAntlrPrinter"></antcall>
+			<antcall target="buildAntlrTypeChecker"></antcall>
+		</parallel>
+	</target>
+			
 		
 	<target name="clean-antlr" depends="clean-antlr-parser,clean-antlr-printer,clean-antlr-type-checker,clean-antlr-tester"/>
 	
@@ -362,7 +372,9 @@
 	
 	<!-- High-level targets -->
   <target name="all-tests" depends="test-parser,test-typechecker,test-prettyprinter,test-commandline,test-dist" description="Run all tests"/>
+  
   <target name="all-src" depends="init,antlr" description="Create all source files"/>
+  
   <target name="all" depends="clean,all-src,compile,dist,all-tests"/>
   <target name="clean" depends="clean-all"/>
 
@@ -503,4 +515,5 @@
   </target>
 
 </project>
+
 
