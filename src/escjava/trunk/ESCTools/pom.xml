@@ -88,7 +88,7 @@
         <sendOnFailure>true</sendOnFailure>
         <sendOnSuccess>false</sendOnSuccess>
         <sendOnWarning>false</sendOnWarning>
-        <configuration><address>mobius-ticket@mobius.ucd.ie</address></configuration>
+        <configuration><address>maven@kind.ucd.ie</address></configuration>
       </notifier>
     </notifiers>
   </ciManagement>
