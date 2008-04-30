@@ -1,5 +1,6 @@
 # Update the test scripts and authorisations
-cd ~/test
+pushd ~/test
 svn cleanup
 svn update
-cp authprogs.conf ../.ssh
+cp authprogs.conf ~/.ssh
+popd

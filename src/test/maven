@@ -18,12 +18,10 @@
 #
 # 1. Initial Set-Up
 #
-date
 echo "*** Initial Setup ***"
 export WORKDIR=$PWD
 echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 make pre-maven
-echo "*** Update Test Scripts ***"
 ~/test/self_update.sh
 ssh maven@arrow.ucd.ie ./test/self_update.sh
 ssh maven@athena.insttech.washington.edu ./test/self_update.sh
@@ -31,27 +29,25 @@ ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
 # 2. Run the Maven test suites concurrently
 #
-echo "*** Staring Arrow ***"
-ssh maven@arrow.ucd.ie ./test/arrow.sh -U $* &
-echo "*** Starting Object ***"
-ssh maven@object.ucd.ie ./test/object.sh -U $* &
-echo "*** Starting Athena ***"
-ssh maven@athena.insttech.washington.edu ./test/run_test.sh -U $* &
-echo "*** Starting Boomer ***"
-ssh maven@boomer.insttech.washington.edu ./test/run_test.sh -U $* &
-echo "*** Starting Category ***"
-ssh maven@category.ucd.ie ./test/category.sh -U $* &
-echo "*** Starting Voting ***"
-mvn-local -U $*
-wait;wait;wait;wait;wait
+echo "*** Staring arrow.ucd.ie ***"
+ssh maven@arrow.ucd.ie ./test/arrow.sh $*
+echo "*** Starting object.ucd.ie ***"
+ssh maven@object.ucd.ie ./test/object.sh $*
+echo "*** Starting athena.insttech.washington.edu ***"
+ssh maven@athena.insttech.washington.edu ./test/run_test.sh $*
+echo "*** Starting boomer.insttech.washington,edu ***"
+ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $*
+echo "*** Starting category.ucd.ie ***"
+ssh maven@category.ucd.ie ./test/category.sh $*
+echo "*** Starting voting.ucd.ie ***"
+mvn-local $*
 #
 # 3. Collect the test reports for viewing by Continuum
 #
 echo "*** Collecting Test Reports ***"
-rsync maven@arrow.ucd.ie:./arrow/working-directory/target/site surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-arrow.ucd.ie.xml
-rsync maven@object.ucd.ie:./object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-object.ucd.ie.xml
-rsync maven@category.ucd.ie:./category/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-category.ucd.ie.xml
-rsync maven@athena.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
-rsync maven@boomer.insttech.washington.edu:./ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
+-rsync maven@arrow.ucd.ie:./arrow/working-directory/target/site surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-arrow.ucd.ie.xml
+-rsync maven@object.ucd.ie:object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-object.ucd.ie.xml
+-rsync maven@category.ucd.ie:.category/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-category.ucd.ie.xml
+-rsync maven@athena.insttech.washington.edu:.ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
+-rsync maven@boomer.insttech.washington.edu:.ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-boomer.insttech.washington.edu.xml
 echo "*** Finished ***"
-date
