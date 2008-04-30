@@ -40,7 +40,7 @@ ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $*
 echo "*** Starting category.ucd.ie ***"
 ssh maven@category.ucd.ie ./test/category.sh $*
 echo "*** Starting voting.ucd.ie ***"
-mvn-local $*
+nice mvn-local $*
 #
 # 3. Collect the test reports for viewing by Continuum
 #
