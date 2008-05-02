@@ -27,6 +27,7 @@ src/test/resources/Behavior.java
 src/test/resources/Bigint.java
 src/test/resources/Bug1.java
 src/test/resources/Bug2.java
+src/test/resources/BSearch.java
 src/test/resources/C.java
 src/test/resources/CONX.java
 src/test/resources/CardException.java
