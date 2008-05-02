@@ -189,7 +189,7 @@ READ_CONF: while (<CONFIGFILE>) {
         # see http://www.dirvish.org/pipermail/dirvish/2007-October/001500.html
 
 	my $NO_CONTINUUM_CLIENT_COMMAND = $CLIENT_COMMAND
-	$NO_CONTINUUM_CLIENT_COMMAND = s/(-DContinuum.project.[^=]+=[^\s]+ )*//g;
+	$NO_CONTINUUM_CLIENT_COMMAND =~ s/(-DContinuum.project.[^=]+=[^\s]+ )*//g;
 
 	log 4, " Continuum-less Client command: $NO_CONTINUUM_CLIENT_COMMAND\n";
 
