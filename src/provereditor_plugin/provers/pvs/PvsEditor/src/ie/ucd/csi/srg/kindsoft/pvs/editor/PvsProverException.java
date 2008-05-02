@@ -4,7 +4,7 @@
 
 package ie.ucd.csi.srg.kindsoft.pvs.editor;
 
-import prover.exec.AProverException;
+import mobius.prover.exec.AProverException;
 
 /**
  * Description

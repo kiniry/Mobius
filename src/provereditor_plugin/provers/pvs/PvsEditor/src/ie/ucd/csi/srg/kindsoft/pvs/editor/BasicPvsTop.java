@@ -1,15 +1,11 @@
 package ie.ucd.csi.srg.kindsoft.pvs.editor;
 
+import mobius.prover.exec.AProverException;
+import mobius.prover.exec.ITopLevel;
+import mobius.prover.plugins.IProverTopLevel;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.swt.graphics.Resource;
-import org.eclipse.ui.PlatformUI;
-
-import prover.exec.AProverException;
-import prover.exec.ITopLevel;
-import prover.plugins.IProverTopLevel;
-import prover.plugins.exceptions.ProverException;
-import prover.plugins.exceptions.SyntaxErrorException;
 
 /**
  * Top-level interactions with PVS.

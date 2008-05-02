@@ -1,15 +1,14 @@
 package ie.ucd.csi.srg.kindsoft.pvs.editor;
 
+import mobius.prover.gui.editor.detector.ExprDetector;
+import mobius.prover.gui.editor.detector.WordDetector;
+import mobius.prover.plugins.AProverTranslator;
+
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WordRule;
-
-import prover.gui.editor.IColorConstants;
-import prover.gui.editor.detector.ExprDetector;
-import prover.gui.editor.detector.WordDetector;
-import prover.plugins.AProverTranslator;
 
 public class PvsProverTranslator extends AProverTranslator implements IPvsColorConstants {
 

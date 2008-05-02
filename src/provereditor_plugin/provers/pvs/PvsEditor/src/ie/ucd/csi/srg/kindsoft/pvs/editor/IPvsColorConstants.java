@@ -1,13 +1,13 @@
 package ie.ucd.csi.srg.kindsoft.pvs.editor;
 
+import mobius.prover.gui.editor.BasicTextAttribute;
+import mobius.prover.gui.editor.IColorConstants;
+
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-
-import prover.gui.editor.BasicTextAttribute;
-import prover.gui.editor.IColorConstants;
 
 public interface IPvsColorConstants extends IColorConstants {
   
