@@ -1,4 +1,6 @@
-uthprogs, Copyright 2003, Brian Hatch.
+#!/usr/bin/perl
+#
+# authprogs, Copyright 2003, Brian Hatch.
 #
 # Released under the GPL.  See the file
 # COPYING for more information.
