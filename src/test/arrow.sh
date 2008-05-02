@@ -6,7 +6,7 @@ export MAVEN_OPTS="-Xmx1740m -Xms512m"
 echo $HOSTNAME
 cd arrow/ESCTOOLS
 svn up
-echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
+echo "export ESCTOOLS_ROOT="$PWD > Makefile.local
 make pre-maven
 nice ../../test/hardlink.sh ~maven/object/working-directory
 nice ../../test/hardlink.sh ~maven/category/working-directory

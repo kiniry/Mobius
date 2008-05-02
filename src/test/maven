@@ -45,7 +45,7 @@ nice mvn-local $*
 # 3. Collect the test reports for viewing by Continuum
 #
 echo "*** Collecting Test Reports ***"
-rsync maven@arrow.ucd.ie:arrow/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-arrow.ucd.ie.xml
+rsync maven@arrow.ucd.ie:arrow/ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-arrow.ucd.ie.xml
 rsync maven@object.ucd.ie:object/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-object.ucd.ie.xml
 rsync maven@category.ucd.ie:category/working-directory/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-category.ucd.ie.xml
 rsync maven@athena.insttech.washington.edu:ESCTools/target/surefire-reports/TEST-DistributedTest.xml $WORKDIR/target/surefire-reports/TEST-athena.insttech.washington.edu.xml
