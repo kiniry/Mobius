@@ -64,27 +64,23 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void add(final StringBuffer str) {
     fStrToAppend.append(str);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void add(final String str) {
     add(new StringBuffer(str));
   }
 
 
   /** {@inheritDoc} */
-  @Override
   public int getLength() {
     return fStrToAppend.length();
   }
   
   
   /** {@inheritDoc} */
-  @Override
   public void prepare() {
     final SimpleAppendJob saj = new SimpleAppendJob(fViewer);
     saj.add(fStrToAppend);

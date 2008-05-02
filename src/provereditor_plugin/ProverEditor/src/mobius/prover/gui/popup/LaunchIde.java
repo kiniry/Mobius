@@ -23,7 +23,6 @@ public class LaunchIde implements IActionDelegate {
   IStructuredSelection fSel;
 
    /** {@inheritDoc} */
-  @Override
   public void run(final IAction action) {
     if (fSel == null) {
       return;
@@ -34,7 +33,6 @@ public class LaunchIde implements IActionDelegate {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void selectionChanged(final IAction action, final ISelection selection) {
     if (selection instanceof IStructuredSelection) {
       fSel = (IStructuredSelection) selection;

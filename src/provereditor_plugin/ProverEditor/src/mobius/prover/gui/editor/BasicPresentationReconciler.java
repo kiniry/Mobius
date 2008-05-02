@@ -140,7 +140,6 @@ public class BasicPresentationReconciler extends PresentationReconciler {
     private boolean fFlag;
     
     /** {@inheritDoc} */
-    @Override
     public void documentAboutToBeChanged(final DocumentEvent event) {
       final IDocument doc = event.getDocument();
       DocumentEvent ev;
@@ -161,7 +160,6 @@ public class BasicPresentationReconciler extends PresentationReconciler {
     }
     
     /** {@inheritDoc} */
-    @Override
     public void documentChanged(final DocumentEvent event) {
       if (fUpcoming.size() > 0) {
         final DocumentEvent de = (DocumentEvent)fUpcoming.pop();  

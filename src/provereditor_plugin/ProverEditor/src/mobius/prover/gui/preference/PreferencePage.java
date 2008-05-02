@@ -55,7 +55,6 @@ public class PreferencePage extends FieldEditorPreferencePage
   
 
   /** {@inheritDoc} */
-  @Override
   public void init(final IWorkbench workbench) {
     
   }

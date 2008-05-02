@@ -79,14 +79,12 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
   /**
    * Unsupported operation.
    */
-  @Override
   public void remove() {
     throw new UnsupportedOperationException();
   }
 
   
   /** {@inheritDoc} */
-  @Override
   public boolean hasNext() {
     boolean res;
     if (fCurrent == null) {
@@ -109,7 +107,6 @@ public class TagTable implements Iterator<TagStruct>, Serializable {
   
   
   /** {@inheritDoc} */
-  @Override
   public TagStruct next() {
     return fIter.next();
   }

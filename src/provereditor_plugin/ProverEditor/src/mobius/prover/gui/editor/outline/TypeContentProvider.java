@@ -14,19 +14,16 @@ public class TypeContentProvider implements ITreeContentProvider {
   private static final Object[] EMPTY_ARRAY = new Object[0];
 
   /** {@inheritDoc} */
-  @Override
   public void dispose() {
     
   }
   
   /** {@inheritDoc} */
-  @Override
   public void inputChanged(final Viewer viewer, final Object oldInput, 
                            final Object newInput) {
   }
   
   /** {@inheritDoc} */
-  @Override
   public Object[] getChildren(final Object parent) {
     if (parent instanceof ProverType) {
       return ((ProverType)parent).getSubtypes();
@@ -35,7 +32,6 @@ public class TypeContentProvider implements ITreeContentProvider {
   }
   
   /** {@inheritDoc} */
-  @Override
   public Object getParent(final Object elem) {
     if (elem instanceof ProverType) {
       return ((ProverType)elem).getSupertype();
@@ -44,7 +40,6 @@ public class TypeContentProvider implements ITreeContentProvider {
   }
   
   /** {@inheritDoc} */
-  @Override
   public boolean hasChildren(final Object elem) {
     if (elem instanceof ProverType) {
       final Object[] os = ((ProverType)elem).getSubtypes();
@@ -54,7 +49,6 @@ public class TypeContentProvider implements ITreeContentProvider {
   }
   
   /** {@inheritDoc} */
-  @Override
   public Object[] getElements(final Object input) {
     return getChildren(input);
   }

@@ -37,7 +37,6 @@ public class CompileFile implements IActionDelegate {
   private IStructuredSelection fSel;
   
   /** {@inheritDoc} */
-  @Override
   public void run(final IAction action) {
     if (fSel == null) {
       return;
@@ -84,7 +83,6 @@ public class CompileFile implements IActionDelegate {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void selectionChanged(final IAction action, 
                                final ISelection selection) {
     if (selection instanceof IStructuredSelection) {

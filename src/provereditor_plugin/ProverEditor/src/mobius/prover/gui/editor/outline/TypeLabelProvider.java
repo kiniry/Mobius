@@ -13,30 +13,25 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TypeLabelProvider implements ILabelProvider {
   /** {@inheritDoc} */
-  @Override
   public void addListener(final ILabelProviderListener listener) {
 
   }
   
   /** {@inheritDoc} */
-  @Override
   public void dispose() {
 
   }
   
   /** {@inheritDoc} */
-  @Override
   public boolean isLabelProperty(final Object element, final String property) {
     return false;
   }
 
   /** {@inheritDoc} */
-  @Override
   public void removeListener(final ILabelProviderListener listener) {
   }
   
   /** {@inheritDoc} */
-  @Override
   public Image getImage(final Object element) {
     if (element instanceof ProverType) {
       return ((ProverType)element).getImage();
@@ -45,7 +40,6 @@ public class TypeLabelProvider implements ILabelProvider {
   }
 
   /** {@inheritDoc} */
-  @Override
   public String getText(final Object element) {
     if (element == null) {
       return "";

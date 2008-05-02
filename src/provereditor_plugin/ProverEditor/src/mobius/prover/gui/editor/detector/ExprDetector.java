@@ -10,7 +10,6 @@ public class ExprDetector implements IWordDetector {
 
 
   /** {@inheritDoc} */
-  @Override
   public boolean isWordStart(final char c) {
     return c == '-' || c == '<' || c == '>' ||
       c == ':' || c == '.' || c == ',';
@@ -18,7 +17,6 @@ public class ExprDetector implements IWordDetector {
 
  
   /** {@inheritDoc} */
-  @Override
   public boolean isWordPart(final char c) {
     return isWordStart(c);
   }

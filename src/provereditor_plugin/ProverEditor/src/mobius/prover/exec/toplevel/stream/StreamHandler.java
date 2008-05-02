@@ -146,7 +146,6 @@ public class StreamHandler implements Runnable {
   
   
   /** {@inheritDoc} */
-  @Override
   public void run() {
     fHasFinished = false;
     try {

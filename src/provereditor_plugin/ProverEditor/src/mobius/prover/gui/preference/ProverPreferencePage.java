@@ -147,7 +147,6 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
   }
   
   /** {@inheritDoc} */
-  @Override
   public void init(final IWorkbench workbench) { }
   
   /** {@inheritDoc} */

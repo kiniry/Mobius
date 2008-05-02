@@ -72,20 +72,17 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
   }
   
   /** {@inheritDoc} */
-  @Override
   public void init(final IWorkbenchWindow window) {
     
   }
   
   /** {@inheritDoc} */
-  @Override
   public void dispose() {
     
   }
   
 
   /** {@inheritDoc} */
-  @Override
   public void selectionChanged(final IAction action, 
                                final ISelection selection) {
     fSet.add(action);
@@ -116,13 +113,11 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
   }
   
   /** {@inheritDoc} */
-  @Override
   public void addHandlerListener(final IHandlerListener handlerListener) { 
     fHandlerSet.add(handlerListener);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void removeHandlerListener(final IHandlerListener handlerListener) { 
     fHandlerSet.remove(handlerListener);
   }
@@ -138,21 +133,18 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
   }
   
   /** {@inheritDoc} */
-  @Override
   public boolean isHandled() {
     return true;
   }
   
   
   /** {@inheritDoc} */
-  @Override
   public void run(final IAction action) {
     trigger();
   }
   
   
   /** {@inheritDoc} */
-  @Override
   public Object execute(final ExecutionEvent event) throws ExecutionException {
     trigger();
     return null;

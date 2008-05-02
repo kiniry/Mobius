@@ -94,26 +94,22 @@ public class TopLevel implements ITopLevel {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void addStandardStreamListener(final IStreamListener isl) {
     fOut.addStreamListener(isl);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void removeStandardStreamListener(final IStreamListener isl) {
     fOut.removeStreamListener(isl);
   }
   
 
   /** {@inheritDoc} */
-  @Override
   public void addErrorStreamListener(final IStreamListener ipl) {
     fErr.addStreamListener(ipl);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void removeErrorStreamListener(final IStreamListener ipl) {
     fErr.removeStreamListener(ipl);
   }
@@ -155,7 +151,6 @@ public class TopLevel implements ITopLevel {
 
 
   /** {@inheritDoc} */
-  @Override
   public void waitForStandardInput() throws ToplevelException {
     final StringBuffer str = new StringBuffer();
     try {
@@ -169,7 +164,6 @@ public class TopLevel implements ITopLevel {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void waitForErrorInput() throws ToplevelException {
     final StringBuffer str = new StringBuffer();
     try {
@@ -289,7 +283,6 @@ public class TopLevel implements ITopLevel {
   }  
 
   /** {@inheritDoc} */
-  @Override
   public void stop() {
     fProverProc.destroy();
     fIsAlive = false;
@@ -297,7 +290,6 @@ public class TopLevel implements ITopLevel {
   }
 
   /** {@inheritDoc} */
-  @Override
   public boolean isAlive() {
     if (fIsAlive) {
       try {    
@@ -313,33 +305,28 @@ public class TopLevel implements ITopLevel {
   
   
   /** {@inheritDoc} */
-  @Override
   public String getStdBuffer() {
     return fStdBuffer.toString();
   }
 
   /** {@inheritDoc} */
-  @Override
   public String getErrBuffer() {
     return fErrBuffer.toString();
   }
   
   /** {@inheritDoc} */
-  @Override
   public void clearBuffer() {
     clearStdBuffer();
     clearErrBuffer();
   }
 
   /** {@inheritDoc} */
-  @Override
   public void clearStdBuffer() {
     fStdBuffer = new StringBuffer();
     fOut.clearBuffer();
   }
   
   /** {@inheritDoc} */
-  @Override
   public void clearErrBuffer() {
     fErrBuffer = new StringBuffer();
     fErr.clearBuffer();

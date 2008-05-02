@@ -18,7 +18,6 @@ public class ProjectNature implements IProjectNature {
   private IProject fProject;
   
   /** {@inheritDoc} */
-  @Override
   public void configure() throws CoreException {
     final IProjectDescription desc = fProject.getDescription();
     final ICommand[] commands = desc.getBuildSpec();
@@ -40,7 +39,6 @@ public class ProjectNature implements IProjectNature {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void deconfigure() throws CoreException {
     final IProjectDescription description = getProject().getDescription();
     final ICommand[] commands = description.getBuildSpec();
@@ -59,13 +57,11 @@ public class ProjectNature implements IProjectNature {
 
   
   /** {@inheritDoc} */
-  @Override
   public IProject getProject() {
     return fProject;
   }
  
   /** {@inheritDoc} */
-  @Override
   public void setProject(final IProject project) {
     fProject = project;
   }

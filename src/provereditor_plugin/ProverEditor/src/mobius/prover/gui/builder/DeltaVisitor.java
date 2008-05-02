@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.CoreException;
 public class DeltaVisitor implements IResourceDeltaVisitor {
 
   /** {@inheritDoc} */
-  @Override
   public boolean visit(final IResourceDelta delta) throws CoreException {
     final IResource res = delta.getResource();
     final int type = res.getType();
