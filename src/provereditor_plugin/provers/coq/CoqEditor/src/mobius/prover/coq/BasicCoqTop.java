@@ -85,7 +85,6 @@ public class BasicCoqTop implements IProverTopLevel  {
   
   
   /** {@inheritDoc} */
-  @Override
   public void undo(final ITopLevel itl) throws AProverException {
     if (isProofMode(itl)) {
       try {
@@ -103,7 +102,6 @@ public class BasicCoqTop implements IProverTopLevel  {
 
   
   /** {@inheritDoc} */
-  @Override
   public int hasToSkipUndo(final ITopLevel itl, 
                            final IDocument document, 
                            final String cmd, 
@@ -146,7 +144,6 @@ public class BasicCoqTop implements IProverTopLevel  {
   
 
   /** {@inheritDoc} */
-  @Override
   public int hasToSkipSendCommand(final ITopLevel itl, 
                                   final IDocument doc, 
                                   final String cmd, 
@@ -160,7 +157,6 @@ public class BasicCoqTop implements IProverTopLevel  {
   }
   
   /** {@inheritDoc} */
-  @Override
   public String[] getCommands(final String top, 
                               final String[] path) {
     String [] cmds;
