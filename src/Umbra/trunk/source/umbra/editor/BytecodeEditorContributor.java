@@ -35,6 +35,7 @@ import umbra.editor.actions.BytecodeSynchrAction;
 import umbra.editor.actions.history.BytecodeRestoreAction;
 import umbra.editor.actions.history.ClearHistoryAction;
 import umbra.editor.actions.history.HistoryAction;
+import umbra.lib.EclipseIdentifiers;
 
 
 /**
@@ -355,7 +356,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     //TODO consider not closing the editor here
     page.closeEditor(an_editor, true);
     final BytecodeEditor newEditor = (BytecodeEditor)(page.openEditor(an_input,
-                        "umbra.BytecodeEditor", true));
+                        EclipseIdentifiers.BYTECODE_EDITOR_CLASS, true));
     final BytecodeDocument ndoc = (BytecodeDocument)newEditor.
                                             getDocumentProvider().
                                             getDocument(an_input);

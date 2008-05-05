@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditorContributor;
-import umbra.editor.UmbraLocationException;
+import umbra.lib.UmbraLocationException;
 
 /**
  * This class defines action of the synchronisation for a byte code

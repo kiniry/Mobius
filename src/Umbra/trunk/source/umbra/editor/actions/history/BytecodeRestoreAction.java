@@ -19,12 +19,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.UmbraHelper;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.actions.BytecodeEditorAction;
+import umbra.lib.HistoryOperations;
+import umbra.lib.FileNames;
 
 /**
  * This class defines action of restoring byte code from
@@ -74,9 +75,9 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
     final Shell parent = getEditor().getSite().getShell();
     IFile a_classfile;
     try {
-      a_classfile = UmbraHelper.getClassFileFileFor(btcFile,
+      a_classfile = FileNames.getClassFileFileFor(btcFile,
                                              editor.getRelatedEditor(),
-                                             UmbraHelper.BYTECODE_EXTENSION);
+                                             FileNames.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
       wrongClassFileOptMessage(parent, getActionDefinitionId());
       return;
@@ -132,44 +133,45 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
   /**
    * This method asks the user to give the history version number. In case
    * the given value is not a number or is a number outside of the
-   * range {@link UmbraHelper#MIN_HISTORY}-{@link UmbraHelper#MAX_HISTORY}
+   * range {@link FileNames#MIN_HISTORY}-{@link FileNames#MAX_HISTORY}
    * the method asks to confirm the default value
-   * ({@link UmbraHelper#DEFAULT_HISTORY}). The user can refuse to accept the
+   * ({@link FileNames#DEFAULT_HISTORY}). The user can refuse to accept the
    * default and then the procedure repeats.
    *
    * @return the history item number given by the user
    */
   private int getHistoryNum() {
     boolean once_more = true;
-    int num = UmbraHelper.DEFAULT_HISTORY;
+    int num = HistoryOperations.DEFAULT_HISTORY;
     while (once_more) {
       final String strnum = JOptionPane.showInputDialog("Input version " +
-                               "number (" + UmbraHelper.MIN_HISTORY + " to " +
-                                            UmbraHelper.MAX_HISTORY + "):",
-                               "" + UmbraHelper.DEFAULT_HISTORY);
+                           "number (" + HistoryOperations.MIN_HISTORY + " to " +
+                           HistoryOperations.MAX_HISTORY + "):",
+                           "" + HistoryOperations.DEFAULT_HISTORY);
       try {
         num = Integer.parseInt(strnum);
         once_more = false;
       } catch (NumberFormatException ne) {
-        num = UmbraHelper.DEFAULT_HISTORY;
+        num = HistoryOperations.DEFAULT_HISTORY;
         once_more = !MessageDialog.openQuestion(getEditor().getSite().
                                                             getShell(),
                                 "Bytecode", "This is not an integer. " +
                                             "Should we use " +
                                             num + " instead");
       }
-      if (num > UmbraHelper.MAX_HISTORY || num < UmbraHelper.MIN_HISTORY) {
-        num = UmbraHelper.DEFAULT_HISTORY;
+      if (num > HistoryOperations.MAX_HISTORY ||
+          num < HistoryOperations.MIN_HISTORY) {
+        num = HistoryOperations.DEFAULT_HISTORY;
         once_more = !MessageDialog.openQuestion(getEditor().getSite().
                                                             getShell(),
-                                              "Bytecode",
-                                              "It's not in the range " +
-                                              "(" + UmbraHelper.MIN_HISTORY +
-                                              " to " +
-                                              UmbraHelper.MAX_HISTORY + ")." +
-                                              "Should we use " +
-                                              UmbraHelper.DEFAULT_HISTORY +
-                                              "?");
+                                          "Bytecode",
+                                          "It's not in the range " +
+                                          "(" + HistoryOperations.MIN_HISTORY +
+                                          " to " +
+                                          HistoryOperations.MAX_HISTORY + ")." +
+                                          "Should we use " +
+                                          HistoryOperations.DEFAULT_HISTORY +
+                                          "?");
       }
     }
     return num;

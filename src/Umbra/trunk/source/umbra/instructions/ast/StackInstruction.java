@@ -20,8 +20,8 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.LLOAD;
 import org.apache.bcel.generic.LSTORE;
 
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
+import umbra.lib.BytecodeStrings;
 
 
 /**

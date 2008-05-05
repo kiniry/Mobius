@@ -16,7 +16,7 @@ import org.eclipse.ui.IEditorPart;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
-import umbra.editor.UmbraLocationException;
+import umbra.lib.UmbraLocationException;
 
 /**
  * This class defines the common operations for all the byte code editor

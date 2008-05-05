@@ -8,7 +8,7 @@
  */
 package umbra.instructions.ast;
 
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.lib.BytecodeStrings;
 
 
 

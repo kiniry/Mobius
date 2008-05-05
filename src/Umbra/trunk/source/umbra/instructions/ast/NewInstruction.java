@@ -14,8 +14,8 @@ import org.apache.bcel.generic.INSTANCEOF;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEW;
 
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the creation and correctness for instructions to create

@@ -15,11 +15,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.UmbraHelper;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.lib.FileNames;
 
 
 /**
@@ -111,8 +111,8 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
     throws ClassNotFoundException,
            CoreException {
     final BytecodeEditorContributor a_contributor = getContributor();
-    final IPath active = UmbraHelper.getClassFileFileFor(a_file, the_editor,
-                             UmbraHelper.BYTECODE_EXTENSION).getFullPath();
+    final IPath active = FileNames.getClassFileFileFor(a_file, the_editor,
+                             FileNames.BYTECODE_EXTENSION).getFullPath();
     //memorise the current state of the session
     final BytecodeDocument doc = the_editor.getDocument();
     final String[] eolComments = doc.getEOLComments();

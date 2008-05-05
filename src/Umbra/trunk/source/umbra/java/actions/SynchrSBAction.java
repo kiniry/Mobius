@@ -20,9 +20,10 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.UmbraHelper;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
+import umbra.lib.EclipseIdentifiers;
+import umbra.lib.FileNames;
 
 /**
  * This class defines an action of synchronization positions
@@ -67,20 +68,20 @@ public class SynchrSBAction implements IEditorActionDelegate {
                                                       getFile();
     final IPath active = activef.getFullPath();
     final int lind = active.toPortableString().
-                            lastIndexOf(UmbraHelper.JAVA_EXTENSION);
+                            lastIndexOf(FileNames.JAVA_EXTENSION);
     if (lind == -1) {
       MessageDialog.openError(my_editor.getSite().getShell(),
                   "Bytecode", "This is not a \"" +
-                  UmbraHelper.JAVA_EXTENSION + "\" file");
+                  FileNames.JAVA_EXTENSION + "\" file");
       return;
     }
 
-    final IFile file = UmbraHelper.getBTCFileName(activef, my_editor);
+    final IFile file = FileNames.getBTCFileName(activef, my_editor);
     final FileEditorInput input = new FileEditorInput(file);
     try {
       final BytecodeEditor bcEditor = (BytecodeEditor)my_editor.getSite().
                            getPage().openEditor(input,
-                            "umbra.BytecodeEditor",
+                            EclipseIdentifiers.BYTECODE_EDITOR_CLASS,
                             true);
       if (bcEditor.isSaveOnCloseNeeded()) {
         MessageDialog.openWarning(my_editor.getSite().getShell(),

@@ -18,10 +18,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.UmbraHelper;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.lib.FileNames;
 
 /**
  * This class defines action of restoring the original version
@@ -66,9 +66,9 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
                                                      getFile();
     final IPath active = file.getFullPath();
     final String fnameTo = active.toPortableString().replaceFirst(
-                  UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
-    final String fnameFrom = UmbraHelper.getSavedClassFileNameForBTC(active);
+                  FileNames.BYTECODE_EXTENSION,
+                  FileNames.CLASS_EXTENSION);
+    final String fnameFrom = FileNames.getSavedClassFileNameForBTC(active);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
     final IPath pathTo = new Path(fnameTo);

@@ -6,7 +6,8 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor.parsing;
+package umbra.lib;
+
 
 /**
  * The container for all the byte code mnemonic strings. Except from a flat

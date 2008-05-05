@@ -13,11 +13,11 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.MethodGen;
 
 import umbra.editor.BytecodeDocument;
-import umbra.editor.UmbraMethodException;
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.lib.BytecodeStrings;
+import umbra.lib.UmbraMethodException;
 
 /**
  * This class handles the operations which are common to all the document

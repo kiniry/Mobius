@@ -30,8 +30,8 @@ import org.apache.bcel.generic.POP2;
 import org.apache.bcel.generic.RETURN;
 import org.apache.bcel.generic.SWAP;
 
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
+import umbra.lib.BytecodeStrings;
 
 
 /**

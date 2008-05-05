@@ -11,8 +11,8 @@ package umbra.instructions.ast;
 import org.apache.bcel.generic.IINC;
 import org.apache.bcel.generic.Instruction;
 
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
+import umbra.lib.BytecodeStrings;
 
 
 /**

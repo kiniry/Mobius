@@ -12,8 +12,8 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEWARRAY;
 import org.apache.bcel.generic.Type;
 
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
+import umbra.lib.BytecodeStrings;
 
 
 

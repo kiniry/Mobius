@@ -17,8 +17,10 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 
-import umbra.UmbraException;
 import umbra.instructions.BytecodeController;
+import umbra.lib.UmbraException;
+import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
 import annot.bcclass.BCClass;
 
 /**

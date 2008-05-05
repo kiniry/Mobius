@@ -32,11 +32,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.UmbraHelper;
 import umbra.editor.BMLParsing;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.lib.FileNames;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -94,11 +94,11 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     final IFile file = ((FileEditorInput)getEditor().getEditorInput()).
                                                      getFile();
     final IPath path = file.getFullPath();
-    final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(path);
+    final String fnameTo = FileNames.getSavedClassFileNameForBTC(path);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final String fnameFrom = path.toOSString().replaceFirst(
-                  UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
+                  FileNames.BYTECODE_EXTENSION,
+                  FileNames.CLASS_EXTENSION);
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
     final IPath pathTo = new Path(fnameTo);
     final IFile fileTo = root.getFile(pathTo);
@@ -111,8 +111,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       return;
     }
     final String lastSegment = path.lastSegment().replaceFirst(
-                  UmbraHelper.BYTECODE_EXTENSION,
-                  UmbraHelper.CLASS_EXTENSION);
+                  FileNames.BYTECODE_EXTENSION,
+                  FileNames.CLASS_EXTENSION);
     updateMethods(file, path, lastSegment);
   }
 
@@ -132,7 +132,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
                              final String the_last_segment) {
     final Shell parent = getEditor().getSite().getShell();
     final String clname = a_path.removeFirstSegments(1).toPortableString().
-               replaceFirst(UmbraHelper.BYTECODE_EXTENSION, "");
+               replaceFirst(FileNames.BYTECODE_EXTENSION, "");
     ClassPath cp;
     cp = new ClassPath(getClassPath());
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
@@ -189,9 +189,9 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     final JavaClass oldJc = my_editor.getDocument().getJavaClass();
     final ClassGen cg = updateModifiedMethods(oldJc, jc);
     jc = cg.getJavaClass();
-    final String fullName = UmbraHelper.getPath(a_path).toOSString();
+    final String fullName = FileNames.getPath(a_path).toOSString();
     try {
-      jc.dump(fullName + UmbraHelper.getFileSeparator() + the_last_segment);
+      jc.dump(fullName + FileNames.getFileSeparator() + the_last_segment);
     } catch (IOException e) {
       throw new ResourceException(1, a_path, "The class file cannot be dumped",
                                   e);
@@ -248,8 +248,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
   private String classPathEntriesToString(final IClasspathEntry[] the_entries,
                                           final IProject a_project,
                                           final String a_project_name) {
-    final String classPathSeparator = UmbraHelper.getClassPathSeparator();
-    final String fileSeparator = UmbraHelper.getFileSeparator();
+    final String classPathSeparator = FileNames.getClassPathSeparator();
+    final String fileSeparator = FileNames.getFileSeparator();
     String res = "";
     for (int i = 0; i < the_entries.length; i++) {
       String add = "";

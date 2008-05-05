@@ -21,9 +21,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 
-import umbra.UmbraException;
-import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
+import umbra.lib.FileNames;
+import umbra.lib.UmbraException;
 
 /**
  * This class represents a GUI element that is contributed to the
@@ -60,7 +60,7 @@ public class BytecodeContribution extends ControlContribution {
    */
   protected BytecodeContribution() {
     super("Bytecode");
-    if (UmbraHelper.DEBUG_MODE && inUse != null) {
+    if (FileNames.DEBUG_MODE && inUse != null) {
       UmbraPlugin.messagelog("Second BytecodeContribution!!!");
     }
     inUse = this;

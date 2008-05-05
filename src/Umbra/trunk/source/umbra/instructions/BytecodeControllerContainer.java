@@ -13,14 +13,14 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 
-import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
-import umbra.editor.UmbraLocationException;
-import umbra.editor.UmbraMethodException;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.lib.FileNames;
+import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
 
 /**
  * This class encapsulates the internal structures of the
@@ -97,7 +97,7 @@ public abstract class BytecodeControllerContainer extends
                   getMethodNo() + 1;
     }
     fillModTable(a_methodnum);
-    if (UmbraHelper.DEBUG_MODE) controlPrint(0);
+    if (FileNames.DEBUG_MODE) controlPrint(0);
     return res;
   }
 

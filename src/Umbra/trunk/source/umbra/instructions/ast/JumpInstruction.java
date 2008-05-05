@@ -33,9 +33,9 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.JSR;
 import org.apache.bcel.generic.JSR_W;
 
-import umbra.UmbraException;
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
+import umbra.lib.BytecodeStrings;
+import umbra.lib.UmbraException;
 
 
 /**

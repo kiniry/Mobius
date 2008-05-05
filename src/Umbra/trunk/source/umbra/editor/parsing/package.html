@@ -30,10 +30,6 @@ of the different areas in a byte code document.
     document that contain BML.</li>
   <li>{@see NonRuleBasedDamagerRepairer} handles the colouring of the areas
     of the document in throws clauses and in header lines.</li>
-  <li>{@see BytecodeStrings} together with its superclasses
-    {@see BytecodeStringsMnemonics} and {@see BytecodeStringsGeneric}
-    contain the strings of different keywords used in the byte code
-    documents.</li>
   <li>{@see BytecodeWhitespaceDetector}, {@see BytecodeWordDetector} and
     {@see SpecialNumberRule} are used in {@see BytecodeScanner} and
     {@see BytecodeBMLSecScanner} to recognise whitespace, words and numbers
@@ -41,9 +37,6 @@ of the different areas in a byte code document.
   <li>{@see TokenGetter} is a class which generates tokens to colour the
     byte code document text. This contains only functionality that mediates
     between the tokens and the colouring mode and particular colours.</li>
-  <li>{@see UmbraLocationException} is the exception thrown in case the Umbra
-    logic tries to refer to a line which does not exists in the current
-    byte code document.</li>
   <li>{@see ColorManager} is the class which manages the colours that are
     obtained from the operating system and are used in the colouring of
     the text.</li>

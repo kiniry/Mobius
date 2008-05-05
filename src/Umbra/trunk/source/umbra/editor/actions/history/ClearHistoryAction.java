@@ -17,10 +17,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.UmbraHelper;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.actions.BytecodeEditorAction;
+import umbra.lib.HistoryOperations;
 
 /**
  * The bytecode editor action that removes all the historical versions of code.
@@ -59,7 +59,8 @@ public class ClearHistoryAction  extends BytecodeEditorAction {
     final IFile btcFile = ((FileEditorInput)getEditor().getEditorInput()).
                           getFile();
     final CompilationUnitEditor editor = getEditor().getRelatedEditor();
-    for (int i = UmbraHelper.MIN_HISTORY; i <= UmbraHelper.MAX_HISTORY; i++) {
+    for (int i = HistoryOperations.MIN_HISTORY;
+         i <= HistoryOperations.MAX_HISTORY; i++) {
       try {
         HistoryOperations.removeBTCHistoryFile(btcFile, i, editor);
         HistoryOperations.removeClassHistoryFile(btcFile, i, editor);

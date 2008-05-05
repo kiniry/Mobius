@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor.actions.history;
+package umbra.lib;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 
-import umbra.UmbraHelper;
 
 /**
  * This class implements the operations on history items. It implements the
@@ -27,6 +26,21 @@ import umbra.UmbraHelper;
  */
 public final class HistoryOperations {
 
+  /**
+   * The maximal number of history snapshots.
+   */
+  public static final int MAX_HISTORY = 2;
+
+  /**
+   * The minimal number of history snapshots.
+   */
+  public static final int MIN_HISTORY = 0;
+
+  /**
+   * The default value of the history number, used in case none is given or
+   * in case an invalid number is used.
+   */
+  public static final int DEFAULT_HISTORY = 0;
   /**
    * A private empty constructor to prevent constructing of objects for this
    * class.
@@ -69,7 +83,7 @@ public final class HistoryOperations {
   private static IFile getHistoryBTCFile(final IFile a_file_from,
                                          final int a_hist_num) {
     return getHistoryFile(a_file_from, a_hist_num,
-                          UmbraHelper.BYTECODE_HISTORY_EXTENSION_NONDOT);
+                          FileNames.BYTECODE_HISTORY_EXTENSION_NONDOT);
   }
 
   /**
@@ -112,9 +126,9 @@ public final class HistoryOperations {
                                     final int a_hist_num,
                                     final CompilationUnitEditor an_editor)
     throws CoreException {
-    final IFile classFrom = UmbraHelper.getClassFileFileFor(a_file_from,
+    final IFile classFrom = FileNames.getClassFileFileFor(a_file_from,
                                               an_editor,
-                                              UmbraHelper.BYTECODE_EXTENSION);
+                                              FileNames.BYTECODE_EXTENSION);
     final IFile classTo = getHistoryClassFile(a_file_from, a_hist_num);
     classTo.delete(true, null);
     classFrom.copy(classTo.getFullPath(), true, null);
@@ -131,7 +145,7 @@ public final class HistoryOperations {
   private static IFile getHistoryClassFile(final IFile a_file_from,
                                        final int a_hist_num) {
     return getHistoryFile(a_file_from, a_hist_num,
-                          UmbraHelper.CLASS_EXTENSION_NONDOT);
+                          FileNames.CLASS_EXTENSION_NONDOT);
   }
 
   /**
@@ -181,9 +195,9 @@ public final class HistoryOperations {
                                        final int a_hist_num,
                                        final CompilationUnitEditor an_editor)
     throws CoreException {
-    final IFile classFile = UmbraHelper.getClassFileFileFor(a_file_from,
+    final IFile classFile = FileNames.getClassFileFileFor(a_file_from,
                                an_editor,
-                               UmbraHelper.BYTECODE_EXTENSION);
+                               FileNames.BYTECODE_EXTENSION);
     final IFile histClassFile = getHistoryClassFile(a_file_from, a_hist_num);
     classFile.delete(true, null);
     histClassFile.copy(classFile.getFullPath(), true, null);

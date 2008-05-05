@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra;
+package umbra.lib;
 
 import java.io.File;
 
@@ -33,36 +33,20 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 
 /**
- * This is just container for common operations used in the
- * application.
+ * This is just container for operations on the file names used in the Umbra
+ * plugin (i.e. .java, .class, .btc). It contains the methods to convert
+ * from one kind of name to another one with the whole logic.
+ *
+ * TODO/FIXME: the logic should be as follows:
+ * - the class files and all their historical versions should be kept where
+ *   the output directory for the current project is
+ * - the .btc files should be located where the .java files are
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @author Krzysztof Jakubczyk (kjk@mimuw.edu.pl)
  * @version a-01
  */
-public final class UmbraHelper {
-
-  /**
-   * A string to indicate a point in a string template where the
-   * data to instantiate the template should be substituted.
-   */
-  public static final String SUBSTITUTE = "{1}";
-
-  /**
-   * The maximal number of history snapshots.
-   */
-  public static final int MAX_HISTORY = 2;
-
-  /**
-   * The minimal number of history snapshots.
-   */
-  public static final int MIN_HISTORY = 0;
-
-  /**
-   * The default value of the history number, used in case none is given or
-   * in case an invalid number is used.
-   */
-  public static final int DEFAULT_HISTORY = 0;
+public final class FileNames {
 
   /* *********************************************************************
    * FILE EXTENSIONS
@@ -99,85 +83,6 @@ public final class UmbraHelper {
    */
   public static final String BYTECODE_HISTORY_EXTENSION   = ".bt";
 
-  /* *********************************************************************
-   * GUI MESSAGES
-   */
-
-  /**
-   * A string used as a header in the message panes launched in connection
-   * with the Java source code action to disassemble code (class
-   * {@ref DisasBCEL}).
-   */
-  public static final String DISAS_MESSAGE_TITLE =
-    "Disassemble Bytecode";
-
-  /**
-   * A string used as a header in the message panes launched in connection
-   * with the bytecode action to translate the bytecode to BoogiePL (class
-   * {@ref BytecodeToBoogiePLAction}).
-   */
-  public static final String B2BPL_MESSAGE_TITLE =
-    "Bytecode To BoogiePL";
-
-  /**
-   * The message which requires the user to save the bytecode before it
-   * is disassembled.
-   */
-  public static final String DISAS_SAVE_BYTECODE_FIRST =
-    "You must save the source code before you can show its bytecode.";
-
-  /**
-   * The message which informs the user that the file cannot be saved under
-   * the given location.
-   */
-  public static final String DISAS_SAVING_PROBLEMS =
-    "Problems with saving the file under the given location";
-
-  /**
-   * The message which informs that the current project has no class file output
-   * location set.
-   */
-  public static final String DISAS_CLASSFILEOUTPUT_PROBLEMS =
-    "The current project has no class file output location set";
-
-  /**
-   * The message which informs the user that a path does not exists.
-   */
-  public static final String DISAS_PATH_DOES_NOT_EXIST =
-    "The path does not exist";
-
-  /**
-   * The message which informs the user that the editor cannot be created
-   * or initialised.
-   */
-  public static final String DISAS_EDITOR_PROBLEMS =
-    "The byte code editor cannot be opended or initialised";
-
-  /**
-   * The message which requires the user to save the bytecode before it is
-   * translated to BoogiePL.
-   */
-  public static final String B2BPL_SAVE_BYTECODE_FIRST =
-    "You must save the bytecode before you can translate it into BoogiePL.";
-
-  /**
-   * A template message that warns about wrong file type.
-   */
-  public static final String INVALID_EXTENSION =
-    "This is not a \"" + SUBSTITUTE + "\" file.";
-
-
-  /* *********************************************************************
-   * ECLIPSE TEXTUAL IDENTIFIERS
-   */
-
-  /**
-   * The text editor extension identifier which identifies the Umbra
-   * bytecode editor.
-   */
-  public static final String BYTECODE_EDITOR_CLASS =
-    "umbra.BytecodeEditor";
-
   /**
    * This constant says if the debugging print outs should be generated.
    */
@@ -187,7 +92,7 @@ public final class UmbraHelper {
    * A private empty constructor to prevent constructing of objects for this
    * class.
    */
-  private UmbraHelper() {
+  private FileNames() {
   }
 
   /**
@@ -497,7 +402,7 @@ public final class UmbraHelper {
     throws JavaModelException {
     final IJavaElement element = SelectionConverter.getElementAtOffset(
                                          (JavaEditor) an_editor);
-    IType type = UmbraHelper.getEnclosingType(element);
+    IType type = FileNames.getEnclosingType(element);
     if (type == null) {
       final ICompilationUnit elem =
                                   (ICompilationUnit) getJavaElement(an_editor);

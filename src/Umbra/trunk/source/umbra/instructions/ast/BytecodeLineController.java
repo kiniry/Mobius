@@ -13,8 +13,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
-import umbra.UmbraException;
 import umbra.instructions.InstructionParser;
+import umbra.lib.UmbraException;
 
 /**
  * This is completely abstract class that contains some information

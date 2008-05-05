@@ -19,6 +19,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.actions.BytecodeEditorAction;
+import umbra.lib.HistoryOperations;
 
 /**
  * This class defines an action that adds current byte code snapshot

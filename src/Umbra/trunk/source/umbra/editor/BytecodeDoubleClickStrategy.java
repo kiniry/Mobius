@@ -13,6 +13,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.widgets.Shell;
 
 import umbra.editor.actions.BytecodeSynchrAction;
+import umbra.lib.UmbraLocationException;
 
 
 

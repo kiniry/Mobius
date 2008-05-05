@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+-->
+<title>
+Umbra plugin. Package umbra.lib
+</title>
+</head>
+<body bgcolor="white">
+<!-- Put @see and @since tags down here. -->
+This package contains the classes which handle various helper tasks.
+In particular it contains all the exceptions defined in the plugin.
+
+The package handles the following taks:
+<ul>
+  <li>the operations on history {@see HistoryOperations}</li>
+  <li>the operations of file names {@see FileNames}</li>
+  <li>the constants with GUI messages {@see GUIMessages}</li>
+  <li>the constants with Eclipse identifiers {@see EclipseIdentifiers}</li>
+  <li>{@see BytecodeStrings} together with its superclasses
+    {@see BytecodeStringsMnemonics} and {@see BytecodeStringsGeneric}
+    contain the strings of different keywords used in the byte code
+    documents.</li>
+  <li>exceptions</li>
+    <ul>
+      <li> {@see UmbraException} - generic exception used to signal various
+        situations, this should always be caught within Umbra.</li>
+      <li> {@see UmbraRuntimeException} - generic runtime exception used to
+        signal various situations, this should always be caught within Umbra.
+        </li>
+      <li> {@see UmbraLocationException} - an exception used to signal a
+        situation in which the processing of a byte code document went behind
+        the ranges of the current document.</li>
+      <li> {@see UmbraMethodException} - an exception used to signal a situation
+        in which a method number is referenced which exceeds the number of
+        methods in the byte code class.</li>
+    </ul>
+</ul>
+
+
+
+</body>
+</html>

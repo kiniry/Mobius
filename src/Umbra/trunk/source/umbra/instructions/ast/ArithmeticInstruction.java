@@ -46,7 +46,7 @@ import org.apache.bcel.generic.LSUB;
 import org.apache.bcel.generic.LUSHR;
 import org.apache.bcel.generic.LXOR;
 
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the creation and correctness for arithmetic instructions

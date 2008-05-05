@@ -11,16 +11,16 @@ package umbra.instructions;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import umbra.UmbraException;
-import umbra.UmbraRuntimeException;
 import umbra.editor.BytecodeDocument;
-import umbra.editor.UmbraLocationException;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.UnknownLineController;
+import umbra.lib.UmbraException;
+import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraRuntimeException;
 
 /**
  * This class is used to parse fragments of byte code textual documents.

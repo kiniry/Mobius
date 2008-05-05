@@ -11,7 +11,6 @@ package umbra.instructions;
 import java.lang.reflect.InvocationTargetException;
 
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.editor.parsing.BytecodeWhitespaceDetector;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
@@ -21,6 +20,7 @@ import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
 import umbra.instructions.ast.UnknownLineController;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the preparsing of document lines. It creates an automaton

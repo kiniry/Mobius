@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor;
+package umbra.lib;
 
 /**
  * This is an exception used to trace situations when the processing reached

@@ -26,7 +26,7 @@ import org.apache.bcel.generic.L2D;
 import org.apache.bcel.generic.L2F;
 import org.apache.bcel.generic.L2I;
 
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the creation and correctness for the instructions

@@ -15,6 +15,8 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
+import umbra.lib.BytecodeStrings;
+
 
 /**
  * This class is responsible for colouring these texts in a byte code

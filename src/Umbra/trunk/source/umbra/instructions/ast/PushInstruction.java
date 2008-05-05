@@ -12,8 +12,8 @@ import org.apache.bcel.generic.BIPUSH;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.SIPUSH;
 
-import umbra.editor.parsing.BytecodeStrings;
 import umbra.instructions.InstructionParser;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the creation and correctness for push

@@ -11,7 +11,7 @@ package umbra.instructions.ast;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.Instruction;
 
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the creation and correctness for iconst instructions

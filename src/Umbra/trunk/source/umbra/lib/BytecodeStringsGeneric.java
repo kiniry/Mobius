@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor.parsing;
+package umbra.lib;
 
 /**
  * The class is a container for all byte code instructions and the sequences

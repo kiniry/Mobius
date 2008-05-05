@@ -26,7 +26,7 @@ import org.apache.bcel.generic.LASTORE;
 import org.apache.bcel.generic.SALOAD;
 import org.apache.bcel.generic.SASTORE;
 
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the creation and correctness for certain instructions

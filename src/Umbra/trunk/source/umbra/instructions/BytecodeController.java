@@ -12,17 +12,17 @@ import java.util.LinkedList;
 
 import org.apache.bcel.generic.MethodGen;
 
-import umbra.UmbraException;
-import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
-import umbra.editor.UmbraLocationException;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.lib.FileNames;
+import umbra.lib.UmbraException;
+import umbra.lib.UmbraLocationException;
 
 /**
  * This class defines some structures related to BCEL as well
@@ -130,7 +130,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
                       fgmparser.getEditorLines(), ctxtold);
-    if (UmbraHelper.DEBUG_MODE) controlPrint(1);
+    if (FileNames.DEBUG_MODE) controlPrint(1);
   }
 
   /**
@@ -461,7 +461,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
     for (int i = a_start; i <= an_end; i++) {
       final BytecodeLineController line = getLineController(i);
       if (!line.correct()) {
-        if (UmbraHelper.DEBUG_MODE) {
+        if (FileNames.DEBUG_MODE) {
           UmbraPlugin.messagelog("checkAllLines:incorrect line=" +
                                  line.getLineContent());
         }

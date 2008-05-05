@@ -20,7 +20,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.LLOAD;
 import org.apache.bcel.generic.LSTORE;
 
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the creation and correctness for instructions

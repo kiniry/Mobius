@@ -64,13 +64,13 @@ public abstract class BytecodeControllerHelper {
   }
 
   /*@
-    @ requires UmbraHelper.DEBUG_MODE;
+    @ requires FileNames.DEBUG_MODE;
     @*/
   /**
    * This method prints out to the standard output the
    * list of all the incorrect instructions in the controller. We assume the
    * calls to this method are guarded by checks of
-   * {@link umbra.UmbraHelper#DEBUG_MODE}.
+   * {@link umbra.lib.FileNames#DEBUG_MODE}.
    *
    * @param the_list the list of controllers to present as incorrect ones
    */

@@ -25,12 +25,14 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.UmbraHelper;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeDocumentProvider;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.Composition;
 import umbra.editor.parsing.BytecodePartitionScanner;
+import umbra.lib.EclipseIdentifiers;
+import umbra.lib.FileNames;
+import umbra.lib.GUIMessages;
 
 /**
  * This class defines the action related to Java source editor.
@@ -66,12 +68,12 @@ public class DisasBCEL implements IEditorActionDelegate {
       cpath = openBCodeEditorForJavaFile(jFile);
     } catch (JavaModelException e) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),
-                                UmbraHelper.DISAS_MESSAGE_TITLE,
-                                UmbraHelper.DISAS_CLASSFILEOUTPUT_PROBLEMS);
+                                GUIMessages.DISAS_MESSAGE_TITLE,
+                                GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
     } catch (PartInitException e) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),
-                                UmbraHelper.DISAS_MESSAGE_TITLE,
-                                UmbraHelper.DISAS_EDITOR_PROBLEMS);
+                                GUIMessages.DISAS_MESSAGE_TITLE,
+                                GUIMessages.DISAS_EDITOR_PROBLEMS);
     } catch (ClassNotFoundException e) {
       messageClassNotFound(cpath);
     }
@@ -101,18 +103,18 @@ public class DisasBCEL implements IEditorActionDelegate {
            JavaModelException, ClassNotFoundException {
     IPath cpath;
     final IWorkbenchPage page = my_editor.getEditorSite().getPage();
-    final IFile btcFile = UmbraHelper.getBTCFileName(a_jfile, my_editor);
+    final IFile btcFile = FileNames.getBTCFileName(a_jfile, my_editor);
     final FileEditorInput input = new FileEditorInput(btcFile);
     BytecodeEditor bc_editor;
     bc_editor = (BytecodeEditor) (page.openEditor(input,
-                           UmbraHelper.BYTECODE_EDITOR_CLASS, false));
+                           EclipseIdentifiers.BYTECODE_EDITOR_CLASS, false));
     bc_editor.setRelatedEditor(my_editor);
     final BytecodeDocumentProvider bdp = (BytecodeDocumentProvider)bc_editor.
       getDocumentProvider();
     final BytecodeDocument doc = (BytecodeDocument)bdp.getDocument(input);
                                    // this doc is empty when there is no .btc
                                    // file or contains the content of the file
-    cpath = UmbraHelper.getClassFileFile(a_jfile, my_editor).getFullPath();
+    cpath = FileNames.getClassFileFile(a_jfile, my_editor).getFullPath();
     doc.initModTable();
     try {
       bc_editor.refreshBytecode(cpath, doc,
@@ -121,8 +123,8 @@ public class DisasBCEL implements IEditorActionDelegate {
       bdp.saveDocument(null, input, doc, true);
     } catch (CoreException e) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),
-                                  UmbraHelper.DISAS_MESSAGE_TITLE,
-                                  UmbraHelper.DISAS_SAVING_PROBLEMS);
+                                GUIMessages.DISAS_MESSAGE_TITLE,
+                                GUIMessages.DISAS_SAVING_PROBLEMS);
     }
     return cpath;
   }
@@ -135,8 +137,8 @@ public class DisasBCEL implements IEditorActionDelegate {
    */
   private void messageClassNotFound(final IPath a_path) {
     MessageDialog.openWarning(my_editor.getSite().getShell(),
-                              UmbraHelper.DISAS_MESSAGE_TITLE,
-                              UmbraHelper.DISAS_PATH_DOES_NOT_EXIST +
+                              GUIMessages.DISAS_MESSAGE_TITLE,
+                              GUIMessages.DISAS_PATH_DOES_NOT_EXIST +
                               " (" + a_path.toString() + ")");
   }
 
@@ -152,12 +154,12 @@ public class DisasBCEL implements IEditorActionDelegate {
     final IPath active = ((FileEditorInput) (my_editor.getEditorInput())).
     getFile().getFullPath();
     if (active.toPortableString().
-        lastIndexOf(UmbraHelper.JAVA_EXTENSION) == -1) {
+        lastIndexOf(FileNames.JAVA_EXTENSION) == -1) {
       MessageDialog.openInformation(my_editor.getSite().getShell(),
-                      UmbraHelper.DISAS_MESSAGE_TITLE,
-                      UmbraHelper.INVALID_EXTENSION.
-                      replaceAll(UmbraHelper.SUBSTITUTE,
-                           UmbraHelper.JAVA_EXTENSION));
+                      GUIMessages.DISAS_MESSAGE_TITLE,
+                      GUIMessages.INVALID_EXTENSION.
+                      replaceAll(GUIMessages.SUBSTITUTE,
+                           FileNames.JAVA_EXTENSION));
       return true;
     }  else
       return false;
@@ -174,8 +176,8 @@ public class DisasBCEL implements IEditorActionDelegate {
   private boolean checkIfSaveNeeded() {
     if (my_editor.isSaveOnCloseNeeded()) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),
-                    UmbraHelper.DISAS_MESSAGE_TITLE,
-                    UmbraHelper.DISAS_SAVE_BYTECODE_FIRST);
+                    GUIMessages.DISAS_MESSAGE_TITLE,
+                    GUIMessages.DISAS_SAVE_BYTECODE_FIRST);
       return true;
     }
     return false;

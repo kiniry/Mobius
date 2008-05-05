@@ -6,9 +6,11 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor;
+package umbra.lib;
 
 import org.eclipse.jface.text.IDocument;
+
+import umbra.editor.BytecodeDocument;
 
 /**
  * This is an exception used to trace situations when the parsing exceeded

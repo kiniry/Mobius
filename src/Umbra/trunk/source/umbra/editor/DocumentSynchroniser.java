@@ -20,6 +20,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import umbra.UmbraPlugin;
+import umbra.lib.UmbraLocationException;
 import annot.textio.CodeFragment;
 
 /**

@@ -16,9 +16,9 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.NOP;
 import org.apache.bcel.generic.TargetLostException;
 
-import umbra.UmbraException;
 import umbra.UmbraPlugin;
 import umbra.instructions.InstructionParser;
+import umbra.lib.UmbraException;
 
 /**
  * This class defines a structure that describes a single byte code

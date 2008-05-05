@@ -1,6 +1,6 @@
 package umbra.instructions.ast;
 
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.lib.BytecodeStrings;
 
 /**
  * This class handles the creation and correctness of line controllers that

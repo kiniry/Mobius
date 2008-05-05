@@ -34,8 +34,9 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
-import umbra.UmbraHelper;
 import umbra.UmbraPlugin;
+import umbra.lib.FileNames;
+import umbra.lib.HistoryOperations;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -49,10 +50,10 @@ import annot.io.ReadAttributeException;
  * and {@link org.apache.bcel.generic.ClassGen}, to allow changes in BCEL.
  *
  * The input file for this editor is a .btc
- * ({@link UmbraHelper#BYTECODE_EXTENSION}) file which resides
- * alongside the corresponding .java ({@link UmbraHelper#JAVA_EXTENSION})
+ * ({@link FileNames#BYTECODE_EXTENSION}) file which resides
+ * alongside the corresponding .java ({@link FileNames#JAVA_EXTENSION})
  * file. (Note that it is a different place from the place for .class,
- * {@link UmbraHelper#CLASS_EXTENSION}, files).
+ * {@link FileNames#CLASS_EXTENSION}, files).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -197,12 +198,12 @@ public class BytecodeEditor extends TextEditor {
   private IFile makeSpareCopy() {
     final IPath edited_path = ((FileEditorInput)getEditorInput()).getFile().
                                                              getFullPath();
-    final String fnameTo = UmbraHelper.getSavedClassFileNameForBTC(edited_path);
+    final String fnameTo = FileNames.getSavedClassFileNameForBTC(edited_path);
     IFile a_file_from;
     try {
-      a_file_from = UmbraHelper.getClassFileFileFor(
+      a_file_from = FileNames.getClassFileFileFor(
                ((FileEditorInput)getEditorInput()).getFile(),
-               this, UmbraHelper.BYTECODE_EXTENSION);
+               this, FileNames.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
       MessageDialog.openError(new Shell(), "Bytecode",
                               "No classfile path set for the project");
@@ -300,7 +301,7 @@ public class BytecodeEditor extends TextEditor {
                                   final SyntheticRepository a_repo) {
     final String tmp = a_path.removeFirstSegments(1).toOSString();
     final String clname = (tmp.substring(0, tmp.lastIndexOf(".")));
-    if (UmbraHelper.DEBUG_MODE)
+    if (FileNames.DEBUG_MODE)
       UmbraPlugin.messagelog("We open class: " + clname);
     final JavaClass jc;
     try {
@@ -328,7 +329,7 @@ public class BytecodeEditor extends TextEditor {
         getEditorInput()).getFile().getProject();
     final IJavaProject jproject = JavaCore.create(project);
     final IPath outputloc = jproject.getOutputLocation().append("/-"); //bogus
-    final String pathName = UmbraHelper.getPath(outputloc).
+    final String pathName = FileNames.getPath(outputloc).
                                                removeLastSegments(1).
                                                addTrailingSeparator().
                                                toPortableString();
@@ -343,7 +344,7 @@ public class BytecodeEditor extends TextEditor {
    * @return current number of versions; -1 if limit has been reached
    */
   public final int newHistory() {
-    if (my_history_num == UmbraHelper.MAX_HISTORY) return -1;
+    if (my_history_num == HistoryOperations.MAX_HISTORY) return -1;
     my_history_num++;
     return my_history_num;
   }
@@ -360,7 +361,7 @@ public class BytecodeEditor extends TextEditor {
    * @param a_doc document to associate with the current editor
    */
   public final void setDocument(final BytecodeDocument a_doc) {
-    if (UmbraHelper.DEBUG_MODE)
+    if (FileNames.DEBUG_MODE)
       UmbraPlugin.messagelog("Document in editor: " + a_doc.toString());
     my_current_doc = a_doc;
   }

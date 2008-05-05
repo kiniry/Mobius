@@ -10,7 +10,7 @@ package umbra.instructions.ast;
 
 import org.apache.bcel.generic.MethodGen;
 
-import umbra.editor.parsing.BytecodeStrings;
+import umbra.lib.BytecodeStrings;
 
 
 /**
