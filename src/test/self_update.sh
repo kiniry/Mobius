@@ -1,7 +1,8 @@
 #!/bin/bash
 # Update the test scripts and authorisations
-pushd ~/test
+export WORKDIR=$PWD
+cd ~/test
 svn cleanup
 svn update
 cp authprogs.conf ~/.ssh
-popd
+cd $WORKDIR
