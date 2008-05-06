@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
@@ -94,6 +93,10 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
   @Override
   public IStatus runInUIThread(final IProgressMonitor monitor) {
     if (fScanner != null) {
+      int len = fStrToAppend.length();
+      if (len + fLen > fDoc.getLength()) {
+        len = fDoc.getLength() - fLen;
+      }
       fScanner.setRange(fDoc, fLen, fStrToAppend.length());
       IToken tok;
       while ((tok = fScanner.nextToken()) != null) {
@@ -102,9 +105,8 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
         }
         if (tok != fScanner.getDefaultReturnToken()) {
           final BasicTextAttribute bta = (BasicTextAttribute)tok.getData();
-          fPresentation.mergeStyleRange(new StyleRange(fScanner.getTokenOffset(), 
-              fScanner.getTokenLength(), bta.getForeground(), 
-              bta.getBackground()));
+          fPresentation.mergeStyleRange(new ToplevelStyleRange(fScanner.getTokenOffset(), 
+              fScanner.getTokenLength(), bta.getForeground()));
           
         }
         

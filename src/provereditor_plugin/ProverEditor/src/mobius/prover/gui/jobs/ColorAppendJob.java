@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 
 
@@ -94,8 +93,10 @@ public class ColorAppendJob extends SimpleAppendJob implements IColorConstants, 
       System.err.println("ProverEditor: AppendJob.addColor, Wrong length !");
       System.err.println("ProverEditor: Recovering...");
       len = oldlen - (offset + 1); 
-    }  
-    fPresentation.mergeStyleRange(new StyleRange(offset + fDoc.getLength(), len, col, WHITE));
+    }
+    final ToplevelStyleRange sr = new ToplevelStyleRange(offset + fDoc.getLength(), len, col);
+
+    fPresentation.mergeStyleRange(sr);
     
   }
   
