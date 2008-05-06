@@ -117,17 +117,26 @@ jmlc_test:
 ################################################################################
 ## General rules to clean up build tree
 
-.PHONY: fix-perms .perms-fixed
+.PHONY: fix-perms fix-perms-helper fix-644-perms fix-755-pers
+
+PERMS_FILE=.perms-fixed
 
 ## This rule was needed because the repository did not properly keep permissions
 ## (expecially x bits), so sometimes we need a reset.  Delete the
 ## datestamp file ".perms-fixed" to force re-execution.
-fix-perms:	.perms-fixed
+fix-perms: fix-perms-helper $(PERMS_FILE)
 
-.perms-fixed:
-	@if [ ! -e ".perms-fixed" ]; \
-	then \
-		find $(ESCTOOLS_ROOT) -type f \
+fix-perms-helper:
+	[ -e "$(PERMS_FILE)" ] || $(MAKE) fix-644-perms fix-755-perms
+
+$(PERMS_FILE):
+	touch $(PERMS_FILE)
+
+clean-perms-stamp:
+	-rm -f $(PERMS_FILE)
+
+fix-644-perms:
+	find $(ESCTOOLS_ROOT) -type f \
 		\( -name "*.[0-9]" -or \
 		   -name "*.[chjlo]" -or \
 		   -name "*ans" -or \
@@ -142,7 +151,9 @@ fix-perms:	.perms-fixed
 		   -name "README*" -or \
 		   -name "*.txt" -or \
 		   -name "*.zip" \) \
-		-exec chmod 644 {} \; ;\
+		-exec chmod 644 {} \; ;
+
+fix-755-perms:
 		find $(ESCTOOLS_ROOT) -type f \
 		\( -name "*.sh" -or \
 		   -name "*.pl" -or \
@@ -160,9 +171,7 @@ fix-perms:	.perms-fixed
 		   -name "*_tags" -or \
 		   -name "Simplify-1.5*" -or \
 		   -name "insert_ensures" \) \
-		-exec chmod 755 {} \; ;\
-		touch .perms-fixed; \
-	fi
+		-exec chmod 755 {} \;
 
 ################################################################################
 ## Clean rules
@@ -216,10 +225,10 @@ endif
 
 $(ESCJAVA2_SPECS_JAR):
 	( cd specs; jar cf $(ESCJAVA2_SPECS_JAR) . )
-	
+
 $(ESCJAVA2_SPECS_JAVA1_4_JAR):
 	( cd specs-java1.4; jar cf $(ESCJAVA2_SPECS_JAVA1_4_JAR) . )
-	
+
 $(ESCJAVA2_SPECS_JAVACARD_JAR):
 	( cd specs-javacard; jar cf $(ESCJAVA2_SPECS_JAVACARD_JAR) . )
 
@@ -502,7 +511,7 @@ srcjar:
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
 	rm -rf ${RELTEMP}/sub
-	
+
 .PHONY: binary-release
 binary-release: build jars alldocs cleanup
 	@echo "Creating binary release .........."
@@ -721,14 +730,14 @@ endif
 
 .PHONY: pre-maven clean-maven
 export MAVEN_FILES_ROOT=${ESCTOOLS_ROOT}
- 	
+
 ## Copy all Java files to default locations expected by Maven
 pre-maven: clean-maven source
 	mkdir -p ${MAVEN_FILES_ROOT}/src/main/java
 	find ${ESCTOOLS_ROOT}/Escjava/java/escjava -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
 	find ${ESCTOOLS_ROOT}/Escjava/mochalib/java -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
 	find ${ESCTOOLS_ROOT}/Utils/junitutils -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
-	
+
 clean-maven:
 	-rm -f ${MAVEN_FILES_ROOT}/src/main/java/*.java
 	-rm -f ${MAVEN_FILES_ROOT}/src/test/resources/*.java-ckd
