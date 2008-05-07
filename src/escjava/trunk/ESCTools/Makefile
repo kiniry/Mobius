@@ -96,6 +96,14 @@ findbugs: jar
 	${FINDBUGS} -textui esctools2.jar
 endif
 
+# Choose which specs you wish to use for documentation generation and
+# typechecking.
+
+# The JML specs,
+#SPECS = ${JML_ROOT}/specs:${JML_ROOT}
+# The ESC/Java2 specs.
+SPECS ?= $(ESCJAVA2_SPECS)
+
 self_typecheck: build
 	$(MAKE) -C Escjava self_typecheck
 
@@ -264,16 +272,6 @@ slides:
 
 papers:
 	${MAKE} -C papers build
-
-# Choose which specs you wish to use for documentation generation and
-# typechecking.
-
-# The JML specs,
-#SPECS = ${JML_ROOT}/specs:${JML_ROOT}
-# The latest JML stable release specs.
-#SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
-# The ESC/Java2 specs.
-SPECS ?= $(ESCTOOLS_ROOT)/specs
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).
