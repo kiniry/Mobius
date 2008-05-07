@@ -29,6 +29,8 @@ ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
 # 2. Run the Maven test suites concurrently
 #
+echo "*** Running Legacy Tests ***"
+make test
 echo "*** Staring arrow.ucd.ie ***"
 ssh maven@arrow.ucd.ie ./test/arrow.sh $*
 echo "*** Starting object.ucd.ie ***"
