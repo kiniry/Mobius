@@ -47,8 +47,8 @@ feature
     end
     
   set_time  -- Set this clock to a new time.
-    −> the_new_hour: INTEGER  -- This clock's new hour value.
-    −> the_new_minute: INTEGER  -- This clock's new minute value.
+    -> the_new_hour: INTEGER  -- This clock's new hour value.
+    -> the_new_minute: INTEGER  -- This clock's new minute value.
     require
       0 <= the_new_hour;
       the_new_hour < 24;

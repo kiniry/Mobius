@@ -4,7 +4,7 @@ explanation
 query
   "Is this alarm on?"
 command
-  "Turn this alarm on."
+  "Turn this alarm on.",
   "Turn this alarm off."
 constraint
   "The alarm is either on or off."

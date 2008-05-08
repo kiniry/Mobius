@@ -40,9 +40,9 @@ feature
                   -- if we need to switch our alarm on/off.
     ensure
       -- If it is the alarm time, the alarm is turned on.
-      time = my_alarm_time −> my_alarm.isOn();  
+      time = my_alarm_time -> my_alarm.isOn();  
       -- If it is one minute after the alarm time, the alarm is turned off.
-      time = (my_alarm_time + 60) \\ 24*60*60 −> not( my_alarm.isOn() );
+      time = (my_alarm_time + 60) \\ 24*60*60 -> not( my_alarm.isOn() );
     end
 		
 invariant

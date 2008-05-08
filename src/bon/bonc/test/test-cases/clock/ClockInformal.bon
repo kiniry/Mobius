@@ -3,14 +3,14 @@ class_chart CLOCK
 explanation
   "A settable clock storing the time in hours, minutes and seconds."
 query
-  "What is the current time in hours for this clock?"
-  "What is the current time in minutes for this clock?"
-  "What is the current time in seconds for this clock?"
+  "What is the current time in hours for this clock?",
+  "What is the current time in minutes for this clock?",
+  "What is the current time in seconds for this clock?",
 command
   "One second has passed; update the clock's time."
   "Set the clock's time."
 constraint
-  "The time in hours must be non-negative and less than 24."
-  "The time in minutes must be non-negative and less than 60."
+  "The time in hours must be non-negative and less than 24.",
+  "The time in minutes must be non-negative and less than 60.",
   "The time in seconds must be non-negative and less than 60."
 end
