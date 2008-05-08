@@ -49,7 +49,7 @@ import java.lang.reflect.Method;
  */
 public class AbstractDistributedTestSuite extends TestSuite {
   
-  final static int BATCH_SIZE = 400;
+  final static int BATCH_SIZE = 4000;
   static int batch = 0; // The batch of tests to run this time
 
   //@ ensures_redundantly !initialized;
@@ -163,13 +163,8 @@ public class AbstractDistributedTestSuite extends TestSuite {
                 while (k.hasNext()) {
                   // Add this subset of tests only if it is the turn of this server,
                   // and we are within the current batch of tests
-                  if (position++ < startOfBatch) {
-                    continue;
-                  }
-                  if (endOfBatch < position) {
-                    break;
-                  }
-                  if (((position % numberOfServers) == serverIndex)) {
+                  if ((startOfBatch <= position) && (position <= endOfBatch) &&
+                      ((position++ % numberOfServers) == serverIndex)) {
                     addTest(makeHelper(JUnitUtils.parseLine(preArgs + " " + proverArgs + " "
                                                           + (String) k.next()
                                                           + " " + thisLine)));
