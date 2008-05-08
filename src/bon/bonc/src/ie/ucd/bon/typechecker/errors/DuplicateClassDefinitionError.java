@@ -35,7 +35,7 @@ public class DuplicateClassDefinitionError extends TypeCheckingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, className, otherClassFile.getPath(), otherClassLineNumber);
+    return String.format(message, className, getFilePath(otherClassFile), otherClassLineNumber);
   }
 
 }

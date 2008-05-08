@@ -23,7 +23,7 @@ public class FileReadError extends ParsingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, sourceFile.getPath(), exceptionMessage);
+    return String.format(message, this.getFilePath(sourceFile), exceptionMessage);
   }
 
   

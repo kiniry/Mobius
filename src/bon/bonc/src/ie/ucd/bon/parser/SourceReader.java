@@ -7,7 +7,6 @@ package ie.ucd.bon.parser;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,19 +16,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Manages reading from Files as well as from standard input.
+ * @author fintan
+ *
+ */
 public final class SourceReader {
-
+  
+  /** Singleton instance of SourceReader */
   private static SourceReader instance;
   
+  /** Mapping Files to SourceLineReaders */
   private final Map<File,SourceLineReader> readers;
   
+  /** The lines read from standard input (if any) */
   private final List<String> stdInLines;
-  
+
+  /**
+   * Construct a new SourceReader. Simply initialise the contained data structures.
+   */
   private SourceReader() {
     readers = new HashMap<File,SourceLineReader>();
     stdInLines = new ArrayList<String>();
   }
   
+  /**
+   * Get the singleton instance of SourceReader
+   * @return
+   */
   public static SourceReader getInstance() {
     if (instance == null) {
       instance = new SourceReader();
@@ -37,19 +51,34 @@ public final class SourceReader {
     return instance;
   }
   
+  /**
+   * 
+   * @param sourceFile
+   * @param lineNumber
+   * @return
+   */
   public String getSource(File sourceFile, int lineNumber) {
-    SourceLineReader reader = readers.get(sourceFile);
-    if (reader == null) {
-      if (!sourceFile.exists()) {
-        return null;
+    if (sourceFile == null) {
+      return getStandardInputSource(lineNumber);
+    } else {
+      SourceLineReader reader = readers.get(sourceFile);
+      if (reader == null) {
+        if (!sourceFile.exists()) {
+          return null;
+        }
+        reader = new SourceLineReader(sourceFile);
+        readers.put(sourceFile, reader);
       }
-      reader = new SourceLineReader(sourceFile);
-      readers.put(sourceFile, reader);
+      return reader.getLine(lineNumber);
     }
-    return reader.getLine(lineNumber);
   }
   
-  public String getStandardInputSource(int lineNumber) {
+  /**
+   * 
+   * @param lineNumber
+   * @return
+   */
+  private String getStandardInputSource(int lineNumber) {
     if (stdInLines.size() == 0) {
       return null;
     }
@@ -60,6 +89,10 @@ public final class SourceReader {
     }
   }
   
+  /**
+   * 
+   * @return
+   */
   public InputStream readStandardInput() {
     try {
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -77,6 +110,12 @@ public final class SourceReader {
     }
   }
   
+  /**
+   * Read from a provided File, creating an InputStream to facilitate this.
+   * @param f the File to read from.
+   * @return an InputStream to read the given File's contents.
+   * @throws IOException if an IOException occurs whilst reading from the given file.
+   */
   public InputStream readFile(File f) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(f));
         StringBuilder sb = new StringBuilder();

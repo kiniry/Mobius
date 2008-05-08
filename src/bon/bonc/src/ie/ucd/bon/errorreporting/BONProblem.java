@@ -20,6 +20,8 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   public static final int EOF_LINE = -4;
   public static final int UNKNOWN_CHAR_POSITION = -5;
   
+  public static final String STDIN_TEXT = "<stdin>";
+  
   private final File sourceFile;
   private final int lineNumber;
   private final String sourceLine;
@@ -44,11 +46,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
     if (lineNumber <= 0) {
       return null;
     }
-    if (sourceFile == null) {
-      return SourceReader.getInstance().getStandardInputSource(lineNumber);
-    } else {
-      return SourceReader.getInstance().getSource(sourceFile, lineNumber);
-    }
+    return SourceReader.getInstance().getSource(sourceFile, lineNumber);
   }
   
   public abstract boolean isError();
@@ -56,6 +54,14 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   
   public String getFileName() {
     return sourceFile.getName();
+  }
+  
+  public String getFilePath(File file) {
+    if (file == null) {
+      return STDIN_TEXT;
+    } else {
+      return file.getPath();
+    }
   }
 
   public int getLineNumber() {
@@ -157,7 +163,8 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   protected void printStart(PrintStream ps) {
     if (sourceFile == null) {
       if (lineNumber > 0) {
-        ps.print("<stdin>:");
+        ps.print(STDIN_TEXT);
+        ps.print(":");
       } else {
         return;
       }        

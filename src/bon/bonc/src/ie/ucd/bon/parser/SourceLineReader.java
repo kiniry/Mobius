@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * A class to allow reading specific lines from source files.
  * @author Fintan
  *
  */

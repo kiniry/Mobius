@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker.informal.errors;
 
+import ie.ucd.bon.Main;
 import ie.ucd.bon.parser.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
@@ -35,7 +36,7 @@ public class DuplicateClassChartError extends TypeCheckingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, className, otherChartFile.getPath(), otherChartLineNumber);
+    return String.format(message, className, getFilePath(otherChartFile), otherChartLineNumber);
   }
   
   

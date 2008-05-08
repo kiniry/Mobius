@@ -36,6 +36,6 @@ public class DuplicateClusterDefinitionError extends TypeCheckingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, clusterName, otherClusterFile.getPath(), otherClusterLineNumber);
+    return String.format(message, clusterName, getFilePath(otherClusterFile), otherClusterLineNumber);
   }
 }

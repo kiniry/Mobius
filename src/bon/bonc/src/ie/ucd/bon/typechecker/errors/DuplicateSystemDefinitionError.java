@@ -35,7 +35,7 @@ public class DuplicateSystemDefinitionError extends TypeCheckingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, systemName, otherSystemFile.getPath(), otherSystemLineNumber);
+    return String.format(message, systemName, getFilePath(otherSystemFile), otherSystemLineNumber);
   }
   
 }

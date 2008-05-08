@@ -155,7 +155,6 @@ public class Main {
         is = SourceReader.getInstance().readStandardInput();
       } else {
         try {
-          //is = new FileInputStream(file);
           is = SourceReader.getInstance().readFile(file);
         } catch (FileNotFoundException fnfe) {
           is = null;
