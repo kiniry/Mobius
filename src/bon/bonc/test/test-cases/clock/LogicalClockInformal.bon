@@ -1,0 +1,12 @@
+class_chart LOGICAL_CLOCK
+
+explanation
+  "A logical clock."
+query
+  "What is the current time for this clock?"
+command
+  "Advance the clock; update the clock's time."
+constraint
+  "The time must be non-negative."
+  "Must support concurrent use by multiple clients."
+end

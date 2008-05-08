@@ -1,0 +1,14 @@
+indexing
+  description: "An alarm."
+defered class ALARM -- An alarm that is either on or off.
+feature
+  deferred on  -- Turn this alarm on.
+    ensures
+      is_on();
+    end
+  deferred off  -- Turn this alarm off.
+    ensures
+      not is_on();
+    end
+  deferred is_on: BOOLEAN  -- Is this alarm on?
+end -- class ALARM
