@@ -24,6 +24,7 @@ public class DistributedTest extends junitutils.TestFilesTestSuite {
 	String listOfServers = "src/test/servers.txt";
 	String listOfOptions = "src/test/options.txt";
 	String listOfSecondOptions = "src/test/secondOptions.txt";
+	String listOfProvers = "src/test/provers.txt";
 	String testSuiteName = "Distributed-Test-" + hostName;
 	int numberOfServers = 0;
 	int serverIndex = -1; // run no tests unless a server is found 
@@ -44,13 +45,14 @@ public class DistributedTest extends junitutils.TestFilesTestSuite {
 
         junit.framework.TestSuite suite =
 	    new AbstractDistributedTestSuite(
-		testSuiteName,
-		listOfFiles,
-		listOfOptions,
-		listOfSecondOptions,
-		escjava.Main.class,
-		serverIndex,
-		numberOfServers) {
+		   testSuiteName,
+		   listOfFiles,
+		   listOfOptions,
+		   listOfSecondOptions,
+		   listOfProvers,
+		   escjava.Main.class,
+		   serverIndex,
+		   numberOfServers) {
 		    public int expectedIntegerStatus(String f, String o) {
 			if (javafe.util.ErrorSet.errors > 0) return 2;
 
