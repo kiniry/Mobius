@@ -119,11 +119,18 @@ public final class SourceReader {
   public InputStream readFile(File f) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(f));
         StringBuilder sb = new StringBuilder();
+        ArrayList<String> lines = new ArrayList<String>();
+        
         String line;
         while ((line = br.readLine()) != null) {
           sb.append(line);
+          lines.add(line);
           sb.append('\n');
         }      
+        
+        SourceLineReader slr = new SourceLineReader(lines);
+        readers.put(f, slr);
+        
         return new ByteArrayInputStream(sb.toString().getBytes());
   }
 }

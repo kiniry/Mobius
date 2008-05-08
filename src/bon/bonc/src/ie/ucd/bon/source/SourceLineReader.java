@@ -19,22 +19,30 @@ import java.util.List;
  */
 public class SourceLineReader {
 
-  private BufferedReader br;
+  private final BufferedReader br;
+  private final List<String> lines;
   private int lineReadTo;
-  private List<String> lines;
 
   /**
    * Creates a SourceLineReader to read from the given File.
    * @param sourceFile The File to read from.
    */
   public SourceLineReader(File sourceFile) {
+    BufferedReader tempBr;
     try {
-      this.br = new BufferedReader(new FileReader(sourceFile));
+      tempBr = new BufferedReader(new FileReader(sourceFile));
     } catch (FileNotFoundException ioe) {
-      this.br = null;
+      tempBr = null;
     }
+    this.br = tempBr;
     lines = new ArrayList<String>();
     lineReadTo = 0;
+  }
+  
+  public SourceLineReader(List<String> lines) {
+    this.lines = lines;
+    this.br = null;
+    this.lineReadTo = lines.size();
   }
 
   /**
