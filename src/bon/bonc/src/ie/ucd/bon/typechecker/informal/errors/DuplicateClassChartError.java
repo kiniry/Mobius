@@ -5,7 +5,7 @@
 package ie.ucd.bon.typechecker.informal.errors;
 
 import ie.ucd.bon.Main;
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 

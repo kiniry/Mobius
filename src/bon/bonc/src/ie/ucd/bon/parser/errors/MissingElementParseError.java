@@ -4,7 +4,7 @@
  */
 package ie.ucd.bon.parser.errors;
 
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 
 public class MissingElementParseError extends ParsingError {
 

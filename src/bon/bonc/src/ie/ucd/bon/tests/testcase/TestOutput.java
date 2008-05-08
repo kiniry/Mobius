@@ -5,7 +5,7 @@
 package ie.ucd.bon.tests.testcase;
 
 import ie.ucd.bon.errorreporting.BONProblem;
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 
 import java.io.File;
 import java.lang.reflect.Constructor;

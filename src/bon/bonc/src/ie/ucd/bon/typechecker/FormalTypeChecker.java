@@ -8,7 +8,7 @@ import ie.ucd.bon.Main;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Converter;
 import ie.ucd.bon.graph.Graph;
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.ClassDoesNotDeclareFeatureError;
 import ie.ucd.bon.typechecker.errors.ClassIsNotGenericError;
 import ie.ucd.bon.typechecker.errors.CycleInRelationsError;

@@ -4,7 +4,7 @@
  */
 package ie.ucd.bon.errorreporting;
 
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 
 import java.io.File;
 import java.io.PrintStream;

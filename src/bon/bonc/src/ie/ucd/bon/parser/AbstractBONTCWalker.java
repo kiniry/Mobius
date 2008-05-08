@@ -5,6 +5,7 @@
 package ie.ucd.bon.parser;
 
 import ie.ucd.bon.Main;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.FormalTypeChecker;
 import ie.ucd.bon.typechecker.informal.InformalTypeChecker;

@@ -10,6 +10,7 @@ import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.errors.AntlrParsingError;
 import ie.ucd.bon.parser.errors.ParsingError;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.TypingInformation;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;

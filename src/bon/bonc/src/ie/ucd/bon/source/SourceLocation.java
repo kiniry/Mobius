@@ -2,7 +2,7 @@
  * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  */
-package ie.ucd.bon.parser;
+package ie.ucd.bon.source;
 
 import java.io.File;
 

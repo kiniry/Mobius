@@ -7,7 +7,7 @@ package ie.ucd.bon.typechecker.informal;
 import java.io.File;
 
 import ie.ucd.bon.errorreporting.BONProblem;
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
 public class ClassInheritenceInconsistencyError extends TypeCheckingError {

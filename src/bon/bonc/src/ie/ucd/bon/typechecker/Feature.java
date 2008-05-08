@@ -4,7 +4,7 @@
  */
 package ie.ucd.bon.typechecker;
 
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 
 import java.util.HashSet;
 import java.util.Set;

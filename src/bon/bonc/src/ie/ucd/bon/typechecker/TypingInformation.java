@@ -6,7 +6,7 @@ package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Graph;
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.CannotRenameMultipleFeaturesError;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
 import ie.ucd.bon.typechecker.errors.ClassDoesNotHaveAsSuperTypeError;

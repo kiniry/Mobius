@@ -6,7 +6,7 @@ package ie.ucd.bon.typechecker.informal.errors;
 
 import java.io.File;
 
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
 public class ClusterNotInAnyClusterOrSystemError extends TypeCheckingError {

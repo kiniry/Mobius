@@ -7,7 +7,7 @@ package ie.ucd.bon.typechecker.informal;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Converter;
 import ie.ucd.bon.graph.Graph;
-import ie.ucd.bon.parser.SourceLocation;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.errors.CycleInRelationsError;
 import ie.ucd.bon.typechecker.errors.InvalidClusterTypeError;
