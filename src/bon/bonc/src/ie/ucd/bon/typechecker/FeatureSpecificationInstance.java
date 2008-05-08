@@ -4,10 +4,6 @@
  */
 package ie.ucd.bon.typechecker;
 
-import java.io.File;
-
-import org.antlr.runtime.Token;
-
 import ie.ucd.bon.parser.SourceLocation;
 
 public class FeatureSpecificationInstance {

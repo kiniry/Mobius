@@ -6,11 +6,8 @@ package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.parser.SourceLocation;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.antlr.runtime.Token;
 
 public class Feature {
 

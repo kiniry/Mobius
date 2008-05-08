@@ -15,7 +15,6 @@ import ie.ucd.bon.typechecker.errors.DuplicateClusterDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateFeatureDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateFormalGenericNameError;
 import ie.ucd.bon.typechecker.errors.DuplicateSuperclassWarning;
-import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
 import java.util.HashMap;

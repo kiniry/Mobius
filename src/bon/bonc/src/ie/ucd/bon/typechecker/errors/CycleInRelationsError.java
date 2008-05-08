@@ -7,9 +7,7 @@ package ie.ucd.bon.typechecker.errors;
 import ie.ucd.bon.parser.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
-import java.io.File;
 import java.util.Collection;
-import java.util.List;
 
 public class CycleInRelationsError extends TypeCheckingError {
 
