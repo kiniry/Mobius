@@ -1,7 +1,7 @@
 This file contains a history of the design decisions that were
 taken and their motivation.
 
-Principle: Treat arrays as functions as much as possible.
+Principle: Treat arrays as functions (NOT procedures) as much as possible.
 
 We introduced generics in BoogiePL so that we can write
   var heap<x> : [ref,<x>name]x;
@@ -28,10 +28,16 @@ mode. In 'compatibility mode' FB is supposed to do some extra
 preprocessing of the source produced by Boogie to make it
 legal FB code.
 
-I will allow arrays to be used as indices in arrays because
-I don't see why not. (I tend to think that it is confusing
-to use such a construct but I blame it on not having any
-concrete use in mind.)
+
+Arrays should be allowed to be used as indices within arrays.
+This is similar to sending an array as an argument to a function.
+(Of course, one could also argue that functions should be
+good indices too by a reversed argument. And that would probably
+be good but seems too hard for now.) A consequence is that in
+VC generation we need to add `extensionality axioms' for arrays.
+These are needed anyway if the user says
+  assume a == b;
+with a and b being arrays. 
 
 
 I allow type variables in axioms so that it's possible to write

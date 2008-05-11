@@ -20,6 +20,16 @@ import freeboogie.util.StackedHashMap;
  * NOTE subtyping is necessary only because of the special type
  * "any" which is likely to be ditched in the future.
  *
+ * The typechecking works as follows. The eval functions associate
+ * types to nodes in the AST that represent expressions. The check
+ * functions ensure that type a can be used when type b is expected,
+ * typically by checking the subtype relation. Comparing types
+ * is done structurally. The strip function, called repetedly,
+ * makes sure that `where' clauses are ignored.
+ *
+ * Type checking assumes that previous stages such as name resolution
+ * (i.e., building of the symbo table) were successful.
+ *
  * @author rgrig 
  * @author reviewed by TODO
  */
@@ -51,6 +61,11 @@ public class TypeChecker extends Evaluator<Type> {
   // maps implementation params to procedure params
   private UsageToDefMap<VariableDecl, VariableDecl> paramMap;
 
+  // maps type variables to their binding types
+  private StackedHashMap<AtomId, Type> typeVar;
+
+  // used as a stack of sets
+  private StackedHashMap<AtomId, AtomId> enclosingTypeVar;
   
   // === public interface ===
 
@@ -68,6 +83,8 @@ public class TypeChecker extends Evaluator<Type> {
     errType = PrimitiveType.mk(PrimitiveType.Ptype.ERROR);
     
     typeOf = new HashMap<Expr, Type>();
+    typeVar = new StackedHashMap<AtomId, Type>();
+    enclosingTypeVar = new StackedHashMap<AtomId, AtomId>();
     
     errors = false;
 
@@ -236,6 +253,18 @@ public class TypeChecker extends Evaluator<Type> {
       PrimitiveType sb = (PrimitiveType)b;
       if (sb.getPtype() == PrimitiveType.Ptype.ANY) return true;
     }
+
+    // handle type variables
+    a = realType(a);
+    b = realType(b);
+    if (isTypeVar(a) != isTypeVar(b)) {
+      if (isTypeVar(a)) mapTypeVar(a, b);
+      else mapTypeVar(b, a);
+      return true;
+    } else if (isTypeVar(a)) {
+      equalTypeVar(a, b);
+      return true;
+    }
     
     // the main check
     if (a instanceof PrimitiveType && b instanceof PrimitiveType)
@@ -250,6 +279,60 @@ public class TypeChecker extends Evaluator<Type> {
       return sub((TupleType)a, (TupleType)b);
     else
       return false;
+  }
+
+  private Type realType(Type t) {
+    AtomId ai;
+    Type nt;
+    while (true) {
+      ai = getTypeVarDecl(t);
+      if (ai == null || (nt = typeVar.get(ai)) == null) break;
+      typeVar.put(ai, nt);
+      t = nt;
+    }
+    return t;
+  }
+
+  /* Converts {@code t} into a real type. If the real type is not
+   * known then an error is reported and {@code errType} is
+   * returned.
+   */
+  private Type checkRealType(Type t) {
+    if (t == null) return null;
+    if (t instanceof TupleType) {
+      TupleType tt = (TupleType)t;
+      return TupleType.mk(checkRealType(tt.getType()), tt.getTail());
+    }
+    Type nt = realType(t);
+    if (isTypeVar(nt)) {
+      report(t.loc(), "Explicit specialization required " 
+          + "(" + TypeUtils.typeToString(nt) + ")");
+      return errType;
+    }
+    return nt;
+  }
+
+  private boolean isTypeVar(Type t) {
+    AtomId ai = getTypeVarDecl(t);
+    return ai != null && enclosingTypeVar.get(ai) == null;
+  }
+
+  private AtomId getTypeVarDecl(Type t) {
+    if (!(t instanceof UserType)) return null;
+    return st.typeVars.def((UserType)t);
+  }
+
+  private void mapTypeVar(Type a, Type b) {
+    assert a instanceof UserType;
+    AtomId ai = getTypeVarDecl(a);
+    Type rt = realType(b);
+    if (getTypeVarDecl(rt) != ai)
+      typeVar.put(ai, rt);
+  }
+
+  private void equalTypeVar(Type a, Type b) {
+    // TODO: Randomize
+    mapTypeVar(a, b);
   }
   
   /**
@@ -267,11 +350,12 @@ public class TypeChecker extends Evaluator<Type> {
    * They must be exactly the same.
    */
   private void checkExact(Type a, Type b, AstLocation l) {
+    // BUG? Should || be &&?
     if (sub(a, b) || sub(b, a)) return;
     report(l, "Unrelated types: "
       + TypeUtils.typeToString(a) + " and " + TypeUtils.typeToString(b));
   }
-  
+
   // === visiting operators ===
   @Override
   public PrimitiveType eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
@@ -401,11 +485,13 @@ public class TypeChecker extends Evaluator<Type> {
     Signature sig = d.getSig();
     Declaration fargs = sig.getArgs();
     
+    typeVar.push();
     Type at = strip(args == null? null : (TupleType)args.eval(this));
     Type fat = strip(tupleTypeOfDecl(fargs));
-    
+   
     check(at, fat, args == null? atomFun.loc() : args.loc());
-    Type rt = strip(tupleTypeOfDecl(sig.getResults()));
+    Type rt = strip(checkRealType(tupleTypeOfDecl(sig.getResults())));
+    typeVar.pop();
     typeOf.put(atomFun, rt);
     return rt;
   }
@@ -427,13 +513,15 @@ public class TypeChecker extends Evaluator<Type> {
       return errType;
     }
     ArrayType at = (ArrayType)t;
-    Type et = at.getElemType();
 
     // look at indexing types
+    typeVar.push();
     check(idx.getA().eval(this), at.getRowType(), idx.getA().loc());
     if (idx.getB() != null)
       check(idx.getB().eval(this), at.getColType(), idx.getB().loc());
 
+    Type et = checkRealType(at.getElemType());
+    typeVar.pop();
     typeOf.put(atomIdx, et);
     return et;
   }
