@@ -13,7 +13,7 @@
 #
 # Distribution script for remote testing with Maven
 # This script sits on a Continuum server and runs in place of the 'mvn' command
-# e.g. ln -sf <this-script> /opt/local/bin/mvn
+# e.g. mv /opt/local/bin/mvn /opt/local/bin/mvn-local; ln -s <this-script> /opt/local/bin/mvn
 # see https://mobius.ucd.ie/wiki/ParallelTesting
 #
 # 1. Initial Set-Up
@@ -23,6 +23,9 @@ export WORKDIR=$PWD
 echo "export ESCTOOLS_ROOT="$WORKDIR > Makefile.local
 make pre-maven
 ~/test/self_update.sh
+#
+# TODO: read primary and secondary server names from a configuration script
+#
 ssh maven@arrow.ucd.ie ./test/self_update.sh
 ssh maven@athena.insttech.washington.edu ./test/self_update.sh
 ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
@@ -31,18 +34,19 @@ ssh maven@boomer.insttech.washington.edu ./test/self_update.sh
 #
 echo "*** Running Legacy Tests ***"
 make test
-echo "*** Staring arrow.ucd.ie ***"
+echo "*** Staring arrow.ucd.ie as primary Maven server for ucd.id domain ***"
 ssh maven@arrow.ucd.ie ./test/arrow.sh $*
-echo "*** Starting object.ucd.ie ***"
+echo "*** Starting object.ucd.ie and category.ucd.ie in parallel ***"
+ssh maven@category.ucd.ie ./test/category.sh $* &
 ssh maven@object.ucd.ie ./test/object.sh $*
 echo "*** Starting athena.insttech.washington.edu ***"
-ssh maven@athena.insttech.washington.edu ./test/run_test.sh $*
+ssh maven@athena.insttech.washington.edu ./test/run_test.sh $* &
 echo "*** Starting boomer.insttech.washington,edu ***"
-ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $*
-echo "*** Starting category.ucd.ie ***"
-ssh maven@category.ucd.ie ./test/category.sh $*
+ssh maven@boomer.insttech.washington.edu ./test/run_test.sh $* &
 echo "*** Starting voting.ucd.ie ***"
 nice mvn-local $*
+echo "*** Waiting for all tests to finish ***"
+wait
 #
 # 3. Collect the test reports for viewing by Continuum
 #

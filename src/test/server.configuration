@@ -1,0 +1,11 @@
+<configuration>
+<maven-server hostname="voting.ucd.ie"/>
+<domains>
+  <domain hostname="ucd.ie">
+    <servers>
+    </servers>
+  </domain>
+  <domain hostname="insttech.washington.edu">
+  </domain>
+<domains>
+</configuration>
