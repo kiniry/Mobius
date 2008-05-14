@@ -64,7 +64,10 @@ public class TypeChecker extends Evaluator<Type> {
   // maps type variables to their binding types
   private StackedHashMap<AtomId, Type> typeVar;
 
-  // used as a stack of sets
+  // used as a stack of sets; this must be updated whenever
+  // we decend into something parametrized by a generic type
+  // that can contain expressions (e.g., functions, axioms,
+  // procedure, implementation)
   private StackedHashMap<AtomId, AtomId> enclosingTypeVar;
   
   // === public interface ===
@@ -279,6 +282,12 @@ public class TypeChecker extends Evaluator<Type> {
       return sub((TupleType)a, (TupleType)b);
     else
       return false;
+  }
+
+  private void collectEnclosingTypeVars(Identifiers ids) {
+    if (ids == null) return;
+    enclosingTypeVar.put(ids.getId(), ids.getId());
+    collectEnclosingTypeVars(ids.getTail());
   }
 
   private Type realType(Type t) {
@@ -616,23 +625,44 @@ public class TypeChecker extends Evaluator<Type> {
     if (tail != null) tail.eval(this);
     return null;
   }
-  
-  // === do not look at block successors ===
-  @Override
-  public Type eval(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
-    if (cmds != null) cmds.eval(this);
-    if (tail != null) tail.eval(this);
-    return null;
-  }
 
-  // === do not look at type variable introductions ===
+  // === keep track of formal generics ===
   @Override
-  public Type eval(Signature signature, String name, Declaration args, Declaration results, Identifiers typeVars) {
+  public Type eval(Function function, Signature sig, Declaration tail) {
+    if (tail != null) tail.eval(this);
     return null;
   }
 
   @Override
   public Type eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
+    if (tail != null) tail.eval(this);
+    return null;
+  }
+
+  @Override
+  public Type eval(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
+    enclosingTypeVar.push();
+    collectEnclosingTypeVars(sig.getTypeVars());
+    if (spec != null) spec.eval(this);
+    enclosingTypeVar.pop();
+    if (tail != null) tail.eval(this);
+    return null;
+  }
+
+  @Override
+  public Type eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
+    enclosingTypeVar.push();
+    collectEnclosingTypeVars(sig.getTypeVars());
+    body.eval(this);
+    enclosingTypeVar.pop();
+    if (tail != null) tail.eval(this);
+    return null;
+  }
+
+  // === do not look at block successors ===
+  @Override
+  public Type eval(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
+    if (cmds != null) cmds.eval(this);
     if (tail != null) tail.eval(this);
     return null;
   }

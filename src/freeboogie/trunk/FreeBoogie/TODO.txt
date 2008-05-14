@@ -1,12 +1,12 @@
- . Update type checker for generics.
- . The comments and code disagreee for TypeChecker.checkExact
+ . The comments and code disagree for TypeChecker.checkExact
+ . Test typechecker thoroughly.
  . Does ImplementationChecker treat type vars correctly?
  . Add the "-old" flag to make freeboogie accept constructs that
    I intend to deprecate.
  . Add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
  . Boogie generates code like "call a,b:=f()" and I don't parse it
    because parenthesis are missing
- . Check that everything in the funcional/parser test typechecks
+ . Check that everything in the functional/parser test typechecks
    in "compatibility mode"
  . Finish passivate; now you can use fancy generics to deal with arrays
  . Desugar dependent types in assumes/asserts
