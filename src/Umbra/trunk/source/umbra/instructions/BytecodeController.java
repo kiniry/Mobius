@@ -471,5 +471,4 @@ public final class BytecodeController extends BytecodeControllerContainer {
     }
     return ok;
   }
-
 }

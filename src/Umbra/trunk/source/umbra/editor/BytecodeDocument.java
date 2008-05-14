@@ -11,6 +11,7 @@ package umbra.editor;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.Document;
@@ -18,9 +19,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.instructions.BytecodeController;
+import umbra.lib.BMLParsing;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraSynchronisationException;
 import annot.bcclass.BCClass;
 
 /**
@@ -354,12 +357,18 @@ public class BytecodeDocument extends Document {
    * position {@code a_pos} is inside a method. We assume that the current
    * Java document is edited in the given Java editor.
    *
-   * @param a_pos index of line in source code editor. Lines in related byte
-   *       code editor corresponding  to this line will be highlighted
-   * @param an_editor the source code editor
+   * @param a_pos a position in the source code editor. Lines in related byte
+   *   code editor containing the line with this postion will
+   *   be highlighted
+   * @throws UmbraLocationException UmbraLocationException in case a reference
+   *   in a document is made to a position outside the document
+   * @throws UmbraSynchronisationException  in case the sychronisation is
+   *   scheduled for a position outside the method body
+   * @throws JavaModelException 
    */
   public void synchronizeSB(final int a_pos,
-                            final IEditorPart an_editor) {
+                            final CompilationUnitEditor an_editor)
+    throws UmbraLocationException, UmbraSynchronisationException, JavaModelException {
     final DocumentSynchroniser synch = getDocSynch();
     synch.synchronizeSB(a_pos, an_editor);
   }
@@ -469,6 +478,14 @@ public class BytecodeDocument extends Document {
    */
   public String getAnnotError() {
     return my_bmlp.getErrorMsg();
+  }
+
+  public int getLineForPCInMethod(int pc, int a_mno) {
+    return my_bcc.getLineForPCInMethod(pc, a_mno);
+  }
+
+  public int getLastLineInMethod(int a_mno) {
+    return my_bcc.getLastLineInMethod(a_mno);
   }
 
 }

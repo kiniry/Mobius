@@ -35,6 +35,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraPlugin;
+import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
 import umbra.lib.HistoryOperations;
 import annot.bcclass.BCClass;
@@ -131,7 +132,6 @@ public class BytecodeEditor extends TextEditor {
     ((BytecodeDocumentProvider)getDocumentProvider()).setRelation(an_editor,
                                       this, getEditorInput(),
                                       doc.getJavaClass(), doc.getBmlp());
-
   }
 
   /**

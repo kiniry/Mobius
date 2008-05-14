@@ -9,18 +9,24 @@
 package umbra.editor;
 
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.Method;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import umbra.UmbraPlugin;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraSynchronisationException;
 import annot.textio.CodeFragment;
 
 /**
@@ -85,7 +91,7 @@ public class DocumentSynchroniser {
    * the marked area in the byte code editor. Works correctly only inside a
    * method body.
    *
-   * @see #synchronizeSB(int, IEditorPart)
+   * @see #synchronizeSB(int, CompilationUnitEditor)
    * @param a_pos index of line in byte code editor. Lines in related source
    *   code editor corresponding to this line will be highlighted.
    * @throws UmbraLocationException in case a position is reached in the
@@ -140,9 +146,6 @@ public class DocumentSynchroniser {
   // Synchronisation: Btc --> Src
   {
     final String code = my_bcode_doc.get();
-    /* XXX changed! uses bmllib to correct input selection in case of
-     * selecting BML annotation.
-     */
     final int a_line_no1 = CodeFragment.goDown(code, a_line_no);
     final int[] res = new int[NO_OF_POSITIONS];
     final int maxL = my_java_doc.getNumberOfLines() - 1;
@@ -230,26 +233,52 @@ public class DocumentSynchroniser {
    * Java document is edited in the given Java editor.
    *
    * @see #synchronizeBS(int)
-   * @param a_pos index of line in source code editor. Lines in related byte
-   *       code editor corresponding  to this line will be highlighted
+   * @param a_pos a position in the source code editor. Lines in related byte
+   *   code editor containing the line with this postion will
+   *   be highlighted
    * @param an_editor the source code editor
+   * @throws UmbraLocationException in case a reference in a document is made
+   *   to a position outside the document
+   * @throws UmbraSynchronisationException  in case the sychronisation is
+   *   scheduled for a position outside the method body
+   * @throws JavaModelException a Java element cannot be accessed
    */
   public final void synchronizeSB(final int a_pos,
-                                  final IEditorPart an_editor) {
+                                  final CompilationUnitEditor an_editor)
+    throws UmbraLocationException, UmbraSynchronisationException,
+           JavaModelException {
+    final int line;
     try {
-      final int line = my_java_doc.getLineOfOffset(a_pos);
-      final int[] syncLine = syncSB(my_bcode_doc.getJavaClass(), line);
-      final int syncPos = my_bcode_doc.getLineOffset(syncLine[0]);
-      final int syncLen = my_bcode_doc.getLineOffset(syncLine[1] + 1) - syncPos;
-
+      line = my_java_doc.getLineOfOffset(a_pos);
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(my_java_doc, a_pos);
+    }
+    final int[] syncLine;
+    try {
+      syncLine = syncSB(my_bcode_doc.getJavaClass(), an_editor, a_pos);
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(my_bcode_doc, line);
+    }
+    final int syncPos;
+    try {
+      syncPos = my_bcode_doc.getLineOffset(syncLine[0]);
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(my_java_doc, syncLine[0]);
+    }
+    final int syncLen;
+    try {
+      syncLen = my_bcode_doc.getLineOffset(syncLine[1] + 1) - syncPos;
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(my_java_doc, syncLine[1]);
+    }
+    if (syncLen < 0) {
+      MessageDialog.openInformation(an_editor.getSite().getShell(), "Bytecode",
+                                      "Synchronisation failed");
+      an_editor.getEditorSite().getPage().activate(an_editor);
+    } else {
       final BytecodeEditor be = my_bcode_doc.getEditor();
       an_editor.getEditorSite().getPage().activate(be);
-      if (syncLen < 0) MessageDialog.openError(new Shell(), "Bytecode",
-                                               "Synchronisation failed");
-      else ((AbstractDecoratedTextEditor)be).getSelectionProvider().
-                            setSelection(new TextSelection(syncPos, syncLen));
-    } catch (BadLocationException e) {
-      e.printStackTrace(); //TODO stack print
+      ((AbstractDecoratedTextEditor)be).selectAndReveal(syncPos, syncLen);
     }
   }
 
@@ -259,112 +288,151 @@ public class DocumentSynchroniser {
    * method, to update {@link JavaClass} structures. Works correctly only inside
    * a method.
    *
+   * FIXME: we rely now on the fact that the sequence of methods in the
+   *   source code is the same as in the byte code (which need not be true
+   *   in general), a better way to synchronise would be to resolve the name
+   *   and the signature of the method
+   *   https://mobius.ucd.ie/ticket/595
+   *
    * @param a_java_class {@link JavaClass} with current byte code
-   * @param a_line_no an index of line in <code>a_source_doc</code>
+   * @param an_editor Java source code editor
+   * @param a_pos a position in the source code to synchronise with
    * @return array of 2 ({@link #NO_OF_POSITIONS}) ints representing index of
    *         first and last line of byte code (corresponding to given source
    *         line), in the related byte code editor
    * @throws BadLocationException if line parameter is invalid. May occur also
    *         if byte code in {@link JavaClass} <code>a_java_class</code>
    *         is out-of-date.
+   * @throws UmbraSynchronisationException in case the sychronisation is
+   *   scheduled for a position outside the method body
+   * @throws JavaModelException a Java element cannot be accessed
    */
   private int[] syncSB(final JavaClass a_java_class,
-                       final int a_line_no) throws BadLocationException {
-    final String code = my_bcode_doc.get();
-    final int[] result = new int [NO_OF_POSITIONS];
-    int j, a_line_num_tablelen, pc, ln;
-    int bcln = 0;
-    int popln = 0;
-    final int maxL = my_bcode_doc.getNumberOfLines() - 1;
-    int l_od = 0;
-    int l_do = maxL;
-    String a_src_line = my_java_doc.get(my_java_doc.getLineOffset(a_line_no),
-                                      my_java_doc.getLineLength(a_line_no)) +
-                                      "$";
-    while ((a_src_line.length() > 1) &&
-           (Character.isWhitespace(a_src_line.charAt(0))))
-      a_src_line = a_src_line.substring(1, a_src_line.length() - 1);
-    String s;
+                       final CompilationUnitEditor an_editor,
+                       final int a_pos)
+    throws BadLocationException, UmbraSynchronisationException,
+           JavaModelException {
     final Method[] methods = a_java_class.getMethods();
-    Method m;
-    for (int i = 0; i < methods.length; i++) {
-      m = methods[i];
-      a_line_num_tablelen = m.getLineNumberTable().getLineNumberTable().length;
-      if (a_src_line.startsWith(m.toString())) {
-        while (bcln < maxL) {
-          bcln++;
-          s = lineAt(bcln);
-          if (s.startsWith("Code"))
-            break;
-        }
-        l_od = bcln - 1;
-        l_do = bcln - 1;
-        break;
-      }
-      l_do = -1;
-      for (j = 0; j < a_line_num_tablelen; j++) {
-        pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
-        ln = m.getLineNumberTable().getLineNumberTable()[j].getLineNumber() - 1;
-        popln = bcln;
-        while (bcln < maxL) {
-          bcln++;
-          s = lineAt(bcln);
-          if (s.startsWith("" + pc + ":"))
-            break;
-        }
-        if (ln == a_line_no) {
-          l_od = bcln;
-          continue;
-        }
-        if ((ln > a_line_no) && (l_od == 0)) {
-          l_od = popln;
-          l_do = bcln - 1;
-          break;
-        }
-        if ((l_od != 0) && (ln != a_line_no)) {
-          l_do = bcln - 1;
-          break;
-        }
-        if (ln == maxL)
-          break;
-      }
-      if ((l_od != 0) && (l_do == -1)) {
-        while (bcln < maxL) {
-          bcln++;
-          s = lineAt(bcln);
-          if (s.lastIndexOf(":") == -1)
-            break;
-        }
-        l_do = bcln - 1;
-        break;
-      }
-      if (j < a_line_num_tablelen)
-        break;
-      if ((l_od != 0) && (l_do == maxL)) {
-        l_do = l_od;
-        break;
-      }
-    }
-    if ((l_od == 0) && (l_do == maxL))
-      l_od = maxL;
-    //XXX changed! uses bmllib to extend result fragment by BML annotations.
-    result[0] = CodeFragment.goUp(code, l_od);
-    result[1] = CodeFragment.goDown(code, l_do);
+
+    final int mno = getMethodNumber(a_pos, an_editor,
+                                    a_java_class.getClassName()) + 1;
+                                    // +1 for <init>
+    final Method m = methods[mno];
+    final int line = my_java_doc.getLineOfOffset(a_pos);
+    final int[] result = handleInsideMethod(line, mno,
+                                  m.getLineNumberTable().getLineNumberTable());
     return result;
   }
 
   /**
-   * Gives specified line of the current byte code.
+   * The method returns the method number of a method from the given class
+   * in the source code the body of which contains the given position.
    *
-   * @param a_line  index of line in byte code editor (starting from 0).
-   * Must be non-negative and less than number of lines in byte code editor.
-   * @return  n-th line in byte code editor
-   * @throws BadLocationException  occurs when parameter n isn't a valid line
-   *        number.
+   * @param a_pos the position to find the method for
+   * @param an_editor the editor in which the source code is edited
+   * @param a_class_name the name of the class in the edited source code in
+   *   which the method is located
+   * @return the number of the method in the source code
+   * @throws JavaModelException in case the access to the parsed source code
+   *   cannot be made
+   * @throws UmbraSynchronisationException there is no method for the given
+   *   position in the given class
    */
-  private String lineAt(final int a_line) throws BadLocationException {
-    return my_bcode_doc.get(my_bcode_doc.getLineOffset(a_line),
-               my_bcode_doc.getLineLength(a_line));
+  private int getMethodNumber(final int a_pos,
+                              final CompilationUnitEditor an_editor,
+                              final String a_class_name)
+    throws JavaModelException, UmbraSynchronisationException {
+    final ICompilationUnit cu =
+      JavaPlugin.getDefault().getWorkingCopyManager().
+                              getWorkingCopy(an_editor.getEditorInput());
+    final IType[] types = cu.getTypes();
+    for (int i = 0; i < types.length; i++) {
+      if (!types[i].getFullyQualifiedName().equals(a_class_name))
+        continue;
+      final IMethod[] methods = types[i].getMethods();
+      for (int j = 0; j < methods.length; j++) {
+        final IMethod meth = methods[j];
+        final int start = meth.getSourceRange().getOffset();
+        final int end = start + meth.getSourceRange().getLength();
+        if (start <= a_pos && a_pos < end) {
+          return j;
+        }
+      }
+    }
+    throw new UmbraSynchronisationException();
+  }
+
+  /**
+   * The method finds the region in the byte code document which corresponds
+   * to the given line which is located in the method of the given number.
+   * We look for the given source code line number in the line number table.
+   * In case the line is found, we look for the position in the line number
+   * table which contains the lowest program counter greater than the
+   * program counter for the given source code line number. We obtain in this
+   * way a range of the byte code lines between the first program counter
+   * value and the second one (excluding that). This range is returned.
+   *
+   * FIXME: note that this algorithm gives only one range whereas a particular
+   *   line of the source code may be compiled into several disjoint ranges
+   *   of the byte code instructions
+   *   https://mobius.ucd.ie/ticket/595
+   * FIXME: we assume that the source code has not changed between the
+   *   synchronisation and the generation of the line number table
+   *   https://mobius.ucd.ie/ticket/595
+   *
+   * @param a_line a line in the source code containing the position to
+   *   synchronise with, lines start with 0
+   * @param a_mno a method number located within the method
+   * @param the_linenums the line number table
+   * @return a array of 2 integers, the first one is the first line of the
+   *   region, the second one is the last line of the region
+   */
+  private int[] handleInsideMethod(final int a_line,
+                                   final int a_mno,
+                                   final LineNumber[] the_linenums) {
+    final int linetofind = a_line + 1; //lines in lnt start with 1
+    int bstart = -1;
+    int bend = -1;
+    for (int j = 0; j < the_linenums.length; j++) {
+      final int pc = the_linenums[j].getStartPC();
+      final int srcln = the_linenums[j].getLineNumber();
+      final int lineforpc = my_bcode_doc.getLineForPCInMethod(pc, a_mno);
+      if (srcln == linetofind) {
+        final int nextpc = findNextLine(the_linenums, pc);
+        bstart = lineforpc;
+        if (nextpc > 0) {
+          bend = my_bcode_doc.getLineForPCInMethod(nextpc, a_mno) - 1;
+        } else { // the biggest pc in the method
+          bend = my_bcode_doc.getLastLineInMethod(a_mno);
+        }
+        break;
+      }
+    }
+    final int[] result = new int[NO_OF_POSITIONS];
+    result[0] = bstart;
+    result[1] = bend;
+    return result;
+  }
+
+  /**
+   * The method returns the lowest program counter number greater than the
+   * given one (i.e. the next pc number). We do the linear search for such a
+   * counter.
+   *
+   * @param the_linenums the line number table to find the next pc number in
+   * @param a_pc the program counter for which we seek the next pc number
+   * @return the next pc number or -1 in case there is no bigger pc in the
+   *   given line number table
+   */
+  private int findNextLine(final LineNumber[] the_linenums, final int a_pc) {
+    int nextpc = -1;
+    for (int i = 0; i < the_linenums.length; i++) {
+      final int cpc = the_linenums[i].getStartPC();
+      if (a_pc < cpc && ((cpc < nextpc) || nextpc == -1)) {
+        nextpc = cpc;
+      }
+    }
+    return nextpc;
   }
 
 }

@@ -1,6 +1,7 @@
-package umbra.editor;
+package umbra.lib;
 
 import org.eclipse.jface.text.DocumentEvent;
+
 
 import annot.bcclass.BCClass;
 import annot.textio.CodeFragment;
@@ -15,6 +16,8 @@ import annot.textio.CodeFragment;
  * (accessible via {@link #getBcc()}.getJc()).
  *
  * There is one BMLParsing object per one open editor.
+ *
+ * TODO: make sure all the communication with BMLlib goes throrugh this class
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
@@ -92,7 +95,7 @@ public class BMLParsing {
       if (my_cFgmt.getErrMsg() != null)
         msg += ": " + my_cFgmt.getErrMsg();
     if (!my_cFgmt.getCode().equals(an_event.fDocument.get())) {
-      throw new RuntimeException("CodeFragment's code is out of date!");
+      throw new UmbraRuntimeException("CodeFragment's code is out of date!");
     }
   }
 

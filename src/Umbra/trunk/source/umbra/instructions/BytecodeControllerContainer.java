@@ -8,6 +8,7 @@
  */
 package umbra.instructions;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.apache.bcel.generic.Instruction;
@@ -17,7 +18,9 @@ import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.instructions.ast.ThrowsLineController;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
@@ -345,4 +348,101 @@ public abstract class BytecodeControllerContainer extends
     insertInstructions(first, the_instructions);
   }
 
+  /**
+   * Returns the line number corresponding to the line with the given
+   * program counter value in the method of the given number. In case there
+   * is no such method or no such program counter in an existing method then
+   * -1 is returned.
+   *
+   * @param a_pc the program counter of the instruction for which we look for
+   *   the line number
+   * @param a_mno the method number
+   * @return the line number of the line with the given pc in the given method
+   */
+  public int getLineForPCInMethod(final int a_pc, final int a_mno) {
+    BytecodeLineController elem;
+    final Iterator i = my_editor_lines.iterator();
+    int pos = seekMethodForNumber(a_mno, i);
+    while (i.hasNext()) {
+      elem = (BytecodeLineController)i.next();
+      pos++;
+      if (!(elem instanceof ThrowsLineController)) {
+        while (i.hasNext()) {
+          if (elem instanceof InstructionLineController) {
+            final InstructionLineController ielem =
+                             (InstructionLineController) elem;
+            if (ielem.getLineContent().startsWith(a_pc + ":")) {
+              return pos;
+            }
+          } else {
+            if (elem instanceof HeaderLineController) {
+              break;
+            }
+          }
+          elem = (BytecodeLineController)i.next();
+          pos++;
+        }
+        break;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * Returns the line number corresponding to the last line with an instruction
+   * in the method of the given number. In case there
+   * is no such method or no such line in the method then
+   * -1 is returned.
+   *
+   * @param a_mno the method number
+   * @return the line number of the line with the given pc in the given method
+   */
+  public int getLastLineInMethod(final int a_mno) {
+    BytecodeLineController elem;
+    final Iterator i = my_editor_lines.iterator();
+    int pos = seekMethodForNumber(a_mno, i);
+    int lastinspos = -1;
+    while (i.hasNext()) {
+      elem = (BytecodeLineController)i.next();
+      pos++;
+      if (!(elem instanceof ThrowsLineController)) {
+        while (i.hasNext()) {
+          if (elem instanceof InstructionLineController) {
+            lastinspos = pos;
+          } else if (elem instanceof HeaderLineController) {
+            break;
+          }
+          elem = (BytecodeLineController)i.next();
+          pos++;
+        }
+        break;
+      }
+    }
+    return lastinspos;
+  }
+  /**
+   * Retrieves the position of the method with the given number. It uses
+   * the iterator to range over the editor lines and it moves it at the
+   * header line of the method or to the end of the lines container in
+   * case there is no method for the given number.
+   *
+   * @param a_mno a method number to look for
+   * @param an_iter the iterator to traverse the editor lines
+   * @return the line number of the header line or the number of lines -1 in
+   *   case there is no given method
+   */
+  private int seekMethodForNumber(final int a_mno,
+                                  final Iterator an_iter) {
+    BytecodeLineController elem;
+    int pos = -1;
+    while (an_iter.hasNext()) {
+      elem = (BytecodeLineController)an_iter.next();
+      pos++;
+      if (elem instanceof HeaderLineController) {
+        final HeaderLineController helem = (HeaderLineController) elem;
+        if (helem.getMethodNo() == a_mno) break;
+      }
+    }
+    return pos;
+  }
 }

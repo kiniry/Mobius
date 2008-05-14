@@ -35,6 +35,7 @@ import umbra.editor.actions.BytecodeSynchrAction;
 import umbra.editor.actions.history.BytecodeRestoreAction;
 import umbra.editor.actions.history.ClearHistoryAction;
 import umbra.editor.actions.history.HistoryAction;
+import umbra.lib.BMLParsing;
 import umbra.lib.EclipseIdentifiers;
 
 

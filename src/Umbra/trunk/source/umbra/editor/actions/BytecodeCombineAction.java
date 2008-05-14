@@ -32,10 +32,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
-import umbra.editor.BMLParsing;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;

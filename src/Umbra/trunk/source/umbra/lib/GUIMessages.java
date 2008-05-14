@@ -18,12 +18,18 @@ package umbra.lib;
  */
 public final class GUIMessages {
 
-
   /**
    * A string to indicate a point in a string template where the
    * data to instantiate the template should be substituted.
    */
-  public static final String SUBSTITUTE = "{1}";
+  public static final String SUBSTITUTE = "#1#";
+
+
+  /**
+   * A string to indicate a point in a string template where the
+   * second portion of data to instantiate the template should be substituted.
+   */
+  public static final String SUBSTITUTE2 = "#2#";
 
   /* *********************************************************************
    * GUI MESSAGES
@@ -36,6 +42,15 @@ public final class GUIMessages {
    */
   public static final String DISAS_MESSAGE_TITLE =
     "Disassemble Bytecode";
+
+  /**
+   * A string used as a header in the message panes launched in connection
+   * with the Java source code action to synchronisation code (classes
+   * {@link umbra.java.actions.SynchrSBAction} and
+   * {@link umbra.editor.actions.BytecodeSynchrAction}.
+   */
+  public static final String SYNCH_MESSAGE_TITLE =
+    "Synchronisation";
 
   /**
    * A string used as a header in the message panes launched in connection
@@ -91,5 +106,61 @@ public final class GUIMessages {
    */
   public static final String INVALID_EXTENSION =
     "This is not a \"" + SUBSTITUTE + "\" file.";
+
+  /**
+   * A template message that warns about wrong location in a document.
+   */
+  public static final String WRONG_LOCATION_MSG =
+    "Wrong location " + SUBSTITUTE + " in a " + SUBSTITUTE2 + " document.";
+
+
+  /**
+   * The message informs the user that the synchronisation is impossible.
+   */
+  public static final String WRONG_SYNCHRONISATION_MSG =
+    "This position cannot be synchronised.";
+
+  /**
+   * The message informs the user an access to a Java element is impossible.
+   */
+  public static final String WRONG_JAVAACCESS_MSG =
+    "A Java element cannot be accessed.";
+
+  /**
+   * The empty constructor to forbid the creation of the instances.
+   */
+  private GUIMessages() {
+  }
+
+  /**
+   * This method substitutes in the given message all the template points with
+   * the given substitute string.
+   *
+   * @param a_message a message to substitute template positions
+   * @param a_substitute a string to fill in the template positions
+   * @return a string with the template positions properly substituted
+   */
+  public static String substitute(final String a_message,
+                                  final String a_substitute) {
+    return a_message.replaceAll(SUBSTITUTE, a_substitute);
+  }
+
+  /**
+   * This method substitutes in the given message all the template points with
+   * the given substitute string.
+   *
+   * @param a_message a message to substitute template positions
+   * @param a_substitute a string to fill in the first kind of the template
+   *   positions
+   * @param a_substitute2 a string to fill in the second kind of the template
+   *   positions
+   * @return a string with the template positions properly substituted
+   */
+  public static String substitute2(final String a_message,
+                                   final String a_substitute,
+                                   final String a_substitute2) {
+    return a_message.replaceAll(SUBSTITUTE, a_substitute).
+                     replaceAll(SUBSTITUTE2, a_substitute2);
+  }
 
 }

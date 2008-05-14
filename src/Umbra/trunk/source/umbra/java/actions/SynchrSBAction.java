@@ -10,11 +10,13 @@ package umbra.java.actions;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
@@ -24,6 +26,9 @@ import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
+import umbra.lib.GUIMessages;
+import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraSynchronisationException;
 
 /**
  * This class defines an action of synchronization positions
@@ -93,9 +98,43 @@ public class SynchrSBAction implements IEditorActionDelegate {
       final BytecodeDocument bDoc = ((BytecodeDocument)bcEditor.
                         getDocumentProvider().
                         getDocument(input));
-      bDoc.synchronizeSB(off, my_editor);
+      synchronizeWithMessages(off, bDoc);
     } catch (PartInitException e) {
-      e.printStackTrace(); //TODO stack print
+      e.printStackTrace(); //TODO stack print https://mobius.ucd.ie/ticket/591
+    }
+  }
+
+  /**
+   * This method performs the synchronisation of the byte code document for
+   * the given position in the source code document. This method additionally
+   * pops up all the necessary messages in case exceptions are raised.
+   *
+   * @param an_offset a position in the source code editor. Lines in related
+   *   byte code editor containing the line with this postion will
+   *   be highlighted
+   * @param a_bcode_doc the byte code document to synchronise
+   */
+  private void synchronizeWithMessages(final int an_offset,
+                                       final BytecodeDocument a_bcode_doc) {
+    final Shell parent = my_editor.getSite().getShell();
+    try {
+      a_bcode_doc.synchronizeSB(an_offset, my_editor);
+    } catch (UmbraLocationException e) {
+      MessageDialog.openError(parent,
+                              GUIMessages.SYNCH_MESSAGE_TITLE,
+                              GUIMessages.substitute2(
+                                  GUIMessages.WRONG_LOCATION_MSG,
+                                  "" + e.getWrongLocation(),
+                                  (e.isByteCodeDocument() ? "byte code" :
+                                                            "Java")));
+    } catch (UmbraSynchronisationException e) {
+      MessageDialog.openError(parent,
+                              GUIMessages.SYNCH_MESSAGE_TITLE,
+                              GUIMessages.WRONG_SYNCHRONISATION_MSG);
+    } catch (JavaModelException e) {
+      MessageDialog.openError(parent,
+                              GUIMessages.SYNCH_MESSAGE_TITLE,
+                              GUIMessages.WRONG_JAVAACCESS_MSG);
     }
   }
 

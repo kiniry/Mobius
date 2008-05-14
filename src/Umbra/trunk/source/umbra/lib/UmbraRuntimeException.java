@@ -23,4 +23,12 @@ public class UmbraRuntimeException extends RuntimeException {
    */
   private static final long serialVersionUID = 4428245399391845887L;
 
+  /**
+   * Constructs a new Umbra runtime exception with the specified detail message.
+   *
+   * @param a_string the message of the exception
+   */
+  public UmbraRuntimeException(final String a_string) {
+    super(a_string);
+  }
 }

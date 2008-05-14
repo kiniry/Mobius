@@ -21,6 +21,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
 import umbra.editor.parsing.BytecodePartitionScanner;
+import umbra.lib.BMLParsing;
 
 
 /**

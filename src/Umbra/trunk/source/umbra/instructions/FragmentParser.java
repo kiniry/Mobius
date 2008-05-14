@@ -114,7 +114,7 @@ public class FragmentParser extends BytecodeCommentParser {
                          a_line_no + ")");
     }
     if (a_line_no > my_end + 1)
-      throw new UmbraRuntimeException();
+      throw new UmbraRuntimeException("Too high line number: " + a_line_no);
   }
 
   /**

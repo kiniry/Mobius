@@ -157,9 +157,8 @@ public class DisasBCEL implements IEditorActionDelegate {
         lastIndexOf(FileNames.JAVA_EXTENSION) == -1) {
       MessageDialog.openInformation(my_editor.getSite().getShell(),
                       GUIMessages.DISAS_MESSAGE_TITLE,
-                      GUIMessages.INVALID_EXTENSION.
-                      replaceAll(GUIMessages.SUBSTITUTE,
-                           FileNames.JAVA_EXTENSION));
+                      GUIMessages.substitute(GUIMessages.INVALID_EXTENSION,
+                                             FileNames.JAVA_EXTENSION));
       return true;
     }  else
       return false;

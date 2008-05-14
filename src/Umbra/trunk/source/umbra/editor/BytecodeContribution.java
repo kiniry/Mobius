@@ -22,6 +22,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.UmbraPlugin;
+import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraException;
 
