@@ -1,11 +1,23 @@
 <configuration>
 <maven-server hostname="voting.ucd.ie"/>
 <domains>
-  <domain hostname="ucd.ie">
+  <domain name="ucd.ie">
     <servers>
+       <server name="arrow" primary="arrow" processors="8"/>
+       <server name="object" primary="arrow" processors="8"/>
+       <!-- Voting is also used as desktop -->
+       <server name="voting" primary="voting" processors="1"/>
+       <server name="morphism" primary="arrow" processors="8"/>
+       <!-- Category is also used as a desktop -->
+       <server name="category" primary="arrow" processors="1"/>
     </servers>
   </domain>
-  <domain hostname="insttech.washington.edu">
+  <domain name="insttech.washington.edu">
+    <servers>
+      <!-- Need to check how many processor are available -->
+      <server name="athena" primary="athena" processors="4">
+      <server name="athena" primary="athena" processors="4">
+    </servers>
   </domain>
 <domains>
 </configuration>
