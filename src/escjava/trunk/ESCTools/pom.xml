@@ -73,7 +73,7 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:svn:svn+ssh://maven@kind.ucd.ie/Volumes/Data/subversion/svn_mobius/src/escjava/trunk/ESCTools</connection>
+    <connection>scm:svn:svn+ssh://kind.ucd.ie/Volumes/Data/subversion/svn_mobius/src/escjava/trunk/ESCTools</connection>
     <developerConnection>scm:svn:https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools</developerConnection>
     <tag>HEAD</tag>
     <url>https://mobius.ucd.ie/browser/src/escjava/trunk/ESCTools</url>
