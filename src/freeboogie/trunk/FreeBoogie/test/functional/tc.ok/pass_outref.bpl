@@ -3,8 +3,7 @@ procedure swap(x : ref, y : ref) returns (xx : ref, yy : ref);
   ensures y == xx;
 
 implementation swap(x : ref, y : ref) returns (xx : ref, yy : ref) {
-  var xx_1 : ref;
-  var yy_1 : ref;
+  var xx_1 : ref, yy_1 : ref; // added
 entry:
   assume yy_1 == x;
   assume xx_1 == y;
@@ -22,8 +21,7 @@ procedure even(x : int) returns (y : int);
   ensures y % 2 == 0;
 
 implementation even(x : int) returns (y : int) {
-  var y_1 : int;
-  var y_2 : int;
+  var y_1 : int, y_2 : int; // added
 entry:
   assume y_1 == x;
   goto a, b;
@@ -48,18 +46,25 @@ post_check:
 
 var mem : [ref] int;
 
-procedure store1d<x,z>([x]z,x,z) returns (z);
-procedure store2d<x,y,z>([x,y]z,x,y,z) returns (z);
+var heap<x> : [ref, <x>name]x;
 
 procedure pswap(x : ref, y : ref);
   ensures mem[x] == old(mem[y]);
   ensures mem[y] == old(mem[x]);
 
+function store1d<x,z>(oa: [x]z, idx : x, val : z) returns (na : [x]z);
+function store2d<x,y,z>([x,y]z,x,y,z) returns ([x,y]z);
+
+procedure boo<x>(heap : [ref, <x>name]x, o : ref, n : <x>name) returns ($ : x) {
+  var t : x;
+  entry:
+    $ := heap[o,n];
+    return;
+}
+
 implementation pswap(x : ref, y : ref) {
   var tmp : int;
-  var tmp_1 : int;
-  var mem_1 : [ref]int;
-  var mem_2 : [ref]int;
+  var tmp_1 : int, mem_1 : [ref] int, mem_2 : [ref] int; // added
 entry:
   assume tmp_1 == mem[x];
   assume mem_1 == store1d(mem, x, mem[y]); // ** array store **

@@ -304,18 +304,34 @@ public class TypeChecker extends Evaluator<Type> {
 
   /* Converts {@code t} into a real type. If the real type is not
    * known then an error is reported and {@code errType} is
-   * returned.
+   * returned. All type constructors should be handled.
    */
-  private Type checkRealType(Type t) {
+  private Type checkRealType(Type t, AstLocation loc) {
     if (t == null) return null;
     if (t instanceof TupleType) {
       TupleType tt = (TupleType)t;
-      return TupleType.mk(checkRealType(tt.getType()), tt.getTail());
+      return TupleType.mk(
+          checkRealType(tt.getType(), loc), 
+          (TupleType)checkRealType(tt.getTail(), loc));
+    } else if (t instanceof ArrayType) {
+      ArrayType at = (ArrayType)t;
+      return ArrayType.mk(
+          checkRealType(at.getRowType(), loc),
+          checkRealType(at.getColType(), loc),
+          checkRealType(at.getElemType(), loc));
+    } else if (t instanceof IndexedType) {
+      IndexedType it = (IndexedType)t;
+      return IndexedType.mk(
+          checkRealType(it.getParam(), loc),
+          checkRealType(it.getType(), loc));
+    } else if (t instanceof DepType) {
+      DepType dt = (DepType)t;
+      return DepType.mk(checkRealType(dt.getType(), loc), dt.getPred());
     }
     Type nt = realType(t);
     if (isTypeVar(nt)) {
-      report(t.loc(), "Explicit specialization required " 
-          + "(" + TypeUtils.typeToString(nt) + ")");
+      report(loc, "Explicit specialization required for " 
+          + TypeUtils.typeToString(nt) + " at " + t.loc());
       return errType;
     }
     return nt;
@@ -499,7 +515,8 @@ public class TypeChecker extends Evaluator<Type> {
     Type fat = strip(tupleTypeOfDecl(fargs));
    
     check(at, fat, args == null? atomFun.loc() : args.loc());
-    Type rt = strip(checkRealType(tupleTypeOfDecl(sig.getResults())));
+    Type rt = strip(checkRealType(
+          tupleTypeOfDecl(sig.getResults()), atomFun.loc()));
     typeVar.pop();
     typeOf.put(atomFun, rt);
     return rt;
@@ -529,7 +546,7 @@ public class TypeChecker extends Evaluator<Type> {
     if (idx.getB() != null)
       check(idx.getB().eval(this), at.getColType(), idx.getB().loc());
 
-    Type et = checkRealType(at.getElemType());
+    Type et = checkRealType(at.getElemType(), atomIdx.loc());
     typeVar.pop();
     typeOf.put(atomIdx, et);
     return et;
@@ -600,14 +617,6 @@ public class TypeChecker extends Evaluator<Type> {
   
   // === visit various things that must have boolean params ===
   @Override
-  public Type eval(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
-    Type t = expr.eval(this);
-    check(t, boolType, expr.loc());
-    if (tail != null) tail.eval(this);
-    return null;
-  }
-
-  @Override
   public Type eval(Specification specification, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
     Type t = null;
     switch (type) {
@@ -626,7 +635,18 @@ public class TypeChecker extends Evaluator<Type> {
     return null;
   }
 
-  // === keep track of formal generics ===
+  @Override
+  public Type eval(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
+    enclosingTypeVar.push();
+    collectEnclosingTypeVars(typeVars);
+    Type t = expr.eval(this);
+    check(t, boolType, expr.loc());
+    enclosingTypeVar.pop();
+    if (tail != null) tail.eval(this);
+    return null;
+  }
+
+  // === keep track of formal generics (see also eval(Axiom...)) ===
   @Override
   public Type eval(Function function, Signature sig, Declaration tail) {
     if (tail != null) tail.eval(this);
