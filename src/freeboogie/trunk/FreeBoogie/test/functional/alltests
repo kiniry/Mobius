@@ -10,5 +10,6 @@ ag_tmplt.4
 parser
 tc.errors
 tc.ok
-tc.gen.ok
+tc-old.ok
+generics
 

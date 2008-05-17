@@ -268,6 +268,14 @@ public class TypeChecker extends Evaluator<Type> {
       equalTypeVar(a, b);
       return true;
     }
+
+    // allow <X>T to be used where <T> is expected if in "old" mode
+    if (true) { // TODO
+      if (a instanceof IndexedType && !(b instanceof IndexedType)) {
+        IndexedType it = (IndexedType)a;
+        if (sub(it.getType(), b)) return true;
+      }
+    }
     
     // the main check
     if (a instanceof PrimitiveType && b instanceof PrimitiveType)

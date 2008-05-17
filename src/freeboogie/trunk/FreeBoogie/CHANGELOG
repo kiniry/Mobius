@@ -48,5 +48,11 @@ The placement of the type variable introduction is consistent
 if you imagine that axioms have an empty name. In fact I may
 consider naming them in the future.
 
+I must allow generics on all variable declarations. Otherwise I
+can't express things like
+  const i : <int>name;
+  const v : int;
+  axiom (forall h<x>:[<x>name]x :: h[i] == v);
+Note that moving the <x> on the axiom does not typecheck.
 
 vim:spell:fdm=manual:

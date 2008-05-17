@@ -291,13 +291,13 @@ simple_type_list returns [TupleType v]:
 ;
 
 opt_id_type_list returns [Declaration v]:
-  (hi=ID ':')? ht=type (',' t=opt_id_type_list)? 
-    { if(ok) $v = VariableDecl.mk(($hi==null)?null:$hi.text, $ht.v, null,$t.v,astLoc($ht.v)); }
+  (hi=ID ('<' tv=id_list '>')? ':')? ht=type (',' t=opt_id_type_list)? 
+    { if(ok) $v = VariableDecl.mk(($hi==null)?null:$hi.text, $ht.v, $tv.v,$t.v,astLoc($ht.v)); }
 ;
 
 id_type_list returns [Declaration v]:
-  hi=ID ':' ht=type (',' t=id_type_list)? 
-    { if(ok) $v = VariableDecl.mk($hi.text, $ht.v,null,$t.v,tokLoc($ID)); }
+  hi=ID ('<' tv=id_list '>')? ':' ht=type (',' t=id_type_list)? 
+    { if(ok) $v = VariableDecl.mk($hi.text, $ht.v,$tv.v,$t.v,tokLoc($ID)); }
 ;
 
 var_id_type_list returns [Declaration v]:
