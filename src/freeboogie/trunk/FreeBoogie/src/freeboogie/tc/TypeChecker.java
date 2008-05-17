@@ -359,6 +359,16 @@ public class TypeChecker extends Evaluator<Type> {
     // TODO: Randomize
     mapTypeVar(a, b);
   }
+
+  private void mapExplicitGenerics(Identifiers tv, TupleType t) {
+    if (t == null) return;
+    if (tv == null) {
+      report(t.loc(), "Too many explicit generics. Ignoring");
+      return;
+    }
+    typeVar.put(tv.getId(), t.getType());
+    mapExplicitGenerics(tv.getTail(), t.getTail());
+  }
   
   /**
    * If {@code a} cannot be used where {@code b} is expected then an error
@@ -505,12 +515,12 @@ public class TypeChecker extends Evaluator<Type> {
 
   @Override
   public Type eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
-    assert types == null;
     Function d = st.funcs.def(atomFun);
     Signature sig = d.getSig();
     Declaration fargs = sig.getArgs();
     
     typeVar.push();
+    mapExplicitGenerics(sig.getTypeVars(), types);
     Type at = strip(args == null? null : (TupleType)args.eval(this));
     Type fat = strip(tupleTypeOfDecl(fargs));
    

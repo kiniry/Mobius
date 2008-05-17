@@ -74,6 +74,7 @@ public class PrettyPrinter extends Transformer {
     typeRep.put(PrimitiveType.Ptype.INT, "int");
     typeRep.put(PrimitiveType.Ptype.NAME, "name");
     typeRep.put(PrimitiveType.Ptype.REF, "ref");
+    typeRep.put(PrimitiveType.Ptype.ERROR, "?");
     specRep.put(Specification.SpecType.ENSURES, "ensures ");
     specRep.put(Specification.SpecType.MODIFIES, "modifies ");
     specRep.put(Specification.SpecType.REQUIRES, "requires ");
