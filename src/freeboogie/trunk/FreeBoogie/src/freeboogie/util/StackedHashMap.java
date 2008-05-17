@@ -136,6 +136,11 @@ public class StackedHashMap<K, V> implements Map<K, V> {
     return sz;
   }
 
+  /** Returns the number of pushes (not pairable with pops). */
+  public int frames() {
+    return data.size() - 1;
+  }
+
   public Collection<V> values() {
     ArrayList<V> v = new ArrayList<V>();
     for (LinkedHashMap<K, V> h : data) v.addAll(h.values());

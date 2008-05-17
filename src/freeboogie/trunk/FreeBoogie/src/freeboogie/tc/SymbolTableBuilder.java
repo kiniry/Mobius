@@ -132,7 +132,7 @@ public class SymbolTableBuilder extends Transformer {
     typeVarDecl.push();
     collectTypeVars(typeVarDecl.peek(), typeVars);
     Map<String, VariableDecl> scope = localVarDecl.peek();
-    if (scope != null && name != null) {
+    if (localVarDecl.frames() > 0 && name != null) {
       // we are in a local scope
       VariableDecl old = scope.get(name);
       if (old != null) {
