@@ -269,11 +269,23 @@ public class TypeChecker extends Evaluator<Type> {
       return true;
     }
 
-    // allow <X>T to be used where <T> is expected if in "old" mode
+    // compatibility stuff, to be run only in "old" mode
     if (true) { // TODO
+      // allow <X>T to be used where T is expected if in "old" mode
       if (a instanceof IndexedType && !(b instanceof IndexedType)) {
         IndexedType it = (IndexedType)a;
         if (sub(it.getType(), b)) return true;
+      }
+
+      // allow "name" where "<*>name" is expected
+      if (a instanceof PrimitiveType && b instanceof IndexedType) {
+        PrimitiveType apt = (PrimitiveType)a;
+        IndexedType it = (IndexedType)b;
+        Type bt = it.getType();
+        if (apt.getPtype() == PrimitiveType.Ptype.NAME && bt instanceof PrimitiveType) {
+          PrimitiveType bpt = (PrimitiveType)bt;
+          if (bpt.getPtype() == PrimitiveType.Ptype.NAME) return true;
+        }
       }
     }
     
@@ -310,38 +322,46 @@ public class TypeChecker extends Evaluator<Type> {
     return t;
   }
 
-  /* Converts {@code t} into a real type. If the real type is not
-   * known then an error is reported and {@code errType} is
-   * returned. All type constructors should be handled.
+  /* Substitutes real types for (known) type variables.
+   * If the result is a type variable then an error is reported
+   * at location {@code loc}.
    */
   private Type checkRealType(Type t, AstLocation loc) {
+    t = substRealType(t);
+    if (isTypeVar(t)) {
+      report(loc, "Explicit specialization required for " 
+          + TypeUtils.typeToString(t) + " at " + t.loc());
+      t = errType;
+    }
+    return t;
+ }
+
+  /* Changes all occurring type variables in {@code t} into
+   * the corresponding real types.
+   */
+  private Type substRealType(Type t) {
     if (t == null) return null;
     if (t instanceof TupleType) {
       TupleType tt = (TupleType)t;
       return TupleType.mk(
-          checkRealType(tt.getType(), loc), 
-          (TupleType)checkRealType(tt.getTail(), loc));
+          substRealType(tt.getType()), 
+          (TupleType)substRealType(tt.getTail()));
     } else if (t instanceof ArrayType) {
       ArrayType at = (ArrayType)t;
       return ArrayType.mk(
-          checkRealType(at.getRowType(), loc),
-          checkRealType(at.getColType(), loc),
-          checkRealType(at.getElemType(), loc));
+          substRealType(at.getRowType()),
+          substRealType(at.getColType()),
+          substRealType(at.getElemType()));
     } else if (t instanceof IndexedType) {
       IndexedType it = (IndexedType)t;
       return IndexedType.mk(
-          checkRealType(it.getParam(), loc),
-          checkRealType(it.getType(), loc));
+          substRealType(it.getParam()),
+          substRealType(it.getType()));
     } else if (t instanceof DepType) {
       DepType dt = (DepType)t;
-      return DepType.mk(checkRealType(dt.getType(), loc), dt.getPred());
+      return DepType.mk(substRealType(dt.getType()), dt.getPred());
     }
     Type nt = realType(t);
-    if (isTypeVar(nt)) {
-      report(loc, "Explicit specialization required for " 
-          + TypeUtils.typeToString(nt) + " at " + t.loc());
-      return errType;
-    }
     return nt;
   }
 
@@ -471,15 +491,18 @@ public class TypeChecker extends Evaluator<Type> {
   // === visiting atoms ===
   @Override
   public Type eval(AtomId atomId, String id, TupleType types) {
-    assert types == null; // TODO
     Declaration d = st.ids.def(atomId);
     Type t = errType;
-    if (d instanceof VariableDecl)
-      t = ((VariableDecl)d).getType();
-    else if (d instanceof ConstDecl)
+    if (d instanceof VariableDecl) {
+      VariableDecl vd = (VariableDecl)d;
+      typeVar.push();
+      mapExplicitGenerics(vd.getTypeVars(), types);
+      t = checkRealType(vd.getType(), atomId.loc());
+      typeVar.pop();
+    } else if (d instanceof ConstDecl) {
+      assert types == null; // TODO
       t = ((ConstDecl)d).getType();
-    else 
-      assert false;
+    } else assert false;
     typeOf.put(atomId, t);
     return t;
   }
@@ -635,7 +658,9 @@ public class TypeChecker extends Evaluator<Type> {
   
   // === visit various things that must have boolean params ===
   @Override
-  public Type eval(Specification specification, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+  public Type eval(Specification specification, Identifiers tv, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+    enclosingTypeVar.push();
+    collectEnclosingTypeVars(tv);
     Type t = null;
     switch (type) {
     case REQUIRES:
@@ -649,6 +674,7 @@ public class TypeChecker extends Evaluator<Type> {
       assert false;
       return errType; // dumb compiler
     }
+    enclosingTypeVar.pop();
     if (tail != null) tail.eval(this);
     return null;
   }

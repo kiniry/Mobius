@@ -95,18 +95,18 @@ signature returns [Signature v]:
 
 spec_list returns [Specification v]:
       { $v=null; }
-  | (f='free')? 'requires' h=expr ';' t=spec_list
-      { if(ok) $v=Specification.mk(Specification.SpecType.REQUIRES,$h.v,$f!=null,$t.v,astLoc($h.v)); }
+  | (f='free')? 'requires' ('<' tv=id_list '>')? h=expr ';' t=spec_list
+      { if(ok) $v=Specification.mk($tv.v,Specification.SpecType.REQUIRES,$h.v,$f!=null,$t.v,astLoc($h.v)); }
   | 'modifies' t=modifies_tail
       { $v=$modifies_tail.v; }
-  | (f='free')? 'ensures' h=expr ';' t=spec_list
-      { if(ok) $v=Specification.mk(Specification.SpecType.ENSURES,$h.v,$f!=null,$t.v,astLoc($h.v)); }
+  | (f='free')? 'ensures' ('<' tv=id_list '>')? h=expr ';' t=spec_list
+      { if(ok) $v=Specification.mk($tv.v,Specification.SpecType.ENSURES,$h.v,$f!=null,$t.v,astLoc($h.v)); }
 ;
 
 modifies_tail returns [Specification v]:
     ';' spec_list { $v = $spec_list.v; }
   | h=atom_id ','? t=modifies_tail
-      { if(ok) $v=Specification.mk(Specification.SpecType.MODIFIES,$h.v,false,$t.v,astLoc($h.v)); }
+      { if(ok) $v=Specification.mk(null,Specification.SpecType.MODIFIES,$h.v,false,$t.v,astLoc($h.v)); }
 ;
 	
 body returns [Body v]:

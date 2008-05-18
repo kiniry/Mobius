@@ -111,8 +111,8 @@ public class BlockFlowGraphs extends Transformer {
   
   @Override
   public void see(AtomId atomId, String id, TupleType types) {
-    assert types == null; //TODO
     if (currentBlock == null) return;
+    assert types == null;
     Block target = blocksByName.get(id);
     if (target == null) {
       Err.error("" + atomId.loc() + ": Inexistent block " + id + ".");

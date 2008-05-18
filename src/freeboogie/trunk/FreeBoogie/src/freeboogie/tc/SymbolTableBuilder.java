@@ -215,13 +215,16 @@ public class SymbolTableBuilder extends Transformer {
   // === remember if we are below a modifies spec ===
   
   @Override
-  public void see(Specification specification, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+  public void see(Specification specification, Identifiers tv, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+    typeVarDecl.push();
+    collectTypeVars(typeVarDecl.peek(), tv);
     if (type == Specification.SpecType.MODIFIES) {
       assert lookInLocalScopes; // no nesting
       lookInLocalScopes = false;
     }
     expr.eval(this);
     lookInLocalScopes = true;
+    typeVarDecl.pop();
     if (tail != null) tail.eval(this);
   }
   

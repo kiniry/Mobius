@@ -406,9 +406,14 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Specification specification, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+  public void see(Specification specification, Identifiers tv, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
     if (free) say("free ");
     say(specRep.get(type));
+    if (tv != null) {
+      say("<");
+      tv.eval(this);
+      say(">");
+    }
     expr.eval(this);
     semi();
     if (tail != null) tail.eval(this);

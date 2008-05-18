@@ -39,7 +39,8 @@ Signature = String! name, Declaration args, Declaration results,
             Identifiers typeVars;
 
 // Procedures and implementations
-Specification = enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
+Specification = Identifiers typeVars,
+                enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
                 Expr! expr, boolean free, Specification tail;
 Body = Declaration vars, Block blocks;
 Block = String! name, Commands cmds, Identifiers succ, Block tail;
