@@ -1,8 +1,5 @@
- . Figure out the general rule that transforms
-     axiom (forall h:[<x>name]x, f:name :: old(h[f])==h[f])
-   into
-     axiom<y> (forall h<x>:[<x>name]x, f:<y>name :: old(h[f])==h[f])
  . Add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
+ . Fix type-checking in "old" mode by a bit of type inference.
  . Test typechecker thoroughly.
  . Does ImplementationChecker treat type vars correctly?
  . The comments and code disagree for TypeChecker.checkExact
