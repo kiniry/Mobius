@@ -63,7 +63,7 @@ public class SymbolTableBuilder extends Transformer {
   
   // === helpers ===
   
-  // reports an error at location l if d s null
+  // reports an error at location l if d is null
   private <T> T check(T d, String s, AstLocation l) {
     if (d != null) return d;
     Err.error("" + l + ": Undeclared identifier " + s + ".");

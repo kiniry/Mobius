@@ -89,4 +89,25 @@ listed can be collapsed into two categories by obeying these rules.
 The step (2a) is not well defined, yet.
 
 
+Implementation of the "old" mode will be done using a slightly more
+general mechanism of "forgiving analysis". An analysis is a visitor
+that produces a list of errors. A fixer is a transformer. A forgiving
+analysis is obtained by combining an analysis with a fixer using
+the following algorithm:
+  Do
+    errors = analyze(ast)
+    ast = fix(ast, errors)
+  While the number of errors decreases.
+Notice that if 0 errors are returned we can stop right away since 0
+cannot be decreased further. There will be a piece of code that glues
+an analysis and a fixer to produce a forgiving analysis. The connection
+between analysis and fixers will be loose: All they know in common is
+what an "error" is. So, what is an error? An error has a type, an
+associated AST node (location), perhaps additional information, 
+and can print itself. (This can be implemented using subtyping or 
+an enum and a printf-like language for constructing error messages 
+from the additional information.)
+
+
+
 vim:spell:fdm=manual:
