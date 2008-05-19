@@ -154,9 +154,8 @@ if $cygwin; then
     HOME=`cygpath --path --windows "$HOME"`
 fi
 
-# Needed for ESC/Java2 build
-echo "ESCTOOLS_ROOT="$PWD > Makefile.local
-make pre-maven
+# Pre-Maven Setup for ESC/Java2
+ESCTOOLS_ROOT=$PWD make pre-maven test
 
 exec "$JAVACMD" \
   $MAVEN_OPTS \
@@ -166,4 +165,4 @@ exec "$JAVACMD" \
   ${CLASSWORLDS_LAUNCHER} $QUOTED_ARGS
 
 # Call the remote test servers
-./mvnDistributed $MAVEN_OPTS
+mvnDistributed $MAVEN_OPTS
