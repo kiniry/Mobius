@@ -40,15 +40,10 @@
 class BSearch {
 
  /*@ requires tab != null;
-       @ //requires (\forall int i; (i >= 0 && i < tab.length -1);
-tab[i] <= tab[i+1]);
-       @ requires (\forall int i,j; (i >= 0 && i < tab.length ) &&
-j >= i && j < tab.length; tab[i] <= tab[j]);
-   @ ensures
-       @         ((\result == -1) ==> (\forall int i; (i >= 0 && i
-< tab.length); tab[i] != x));
-       @ ensures
-   @           ((\result != -1) ==> (tab[\result] == x));
+   @ //requires (\forall int i; (i >= 0 && i < tab.length -1); tab[i] <= tab[i+1]);
+   @ requires (\forall int i,j; (i >= 0 && i < tab.length ) && j >= i && j < tab.length; tab[i] <= tab[j]);
+   @ ensures ((\result == -1) ==> (\forall int i; (i >= 0 && i < tab.length); tab[i] != x));
+   @ ensures ((\result != -1) ==> (tab[\result] == x));
    @*/
  int binarySearch (int[] tab, int x) {
      int result = -1;
