@@ -11,7 +11,7 @@ type exposeVersionType;
 
 var $Heap<x>: [ref,<x>name]x where IsHeap($Heap);
 
-function IsHeap<x>(h: [ref,<x>name]x) returns (bool);
+function IsHeap(h<x>: [ref,<x>name]x) returns (bool);
 
 const $allocated: <bool>name;
 

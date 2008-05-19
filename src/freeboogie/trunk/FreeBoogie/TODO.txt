@@ -1,16 +1,13 @@
- . Add the "-old" flag to make freeboogie accept constructs that
-   I intend to deprecate.
- . Allow <x>T <: T only in "old" mode.
- . Test typechecker thoroughly.
- . Does ImplementationChecker treat type vars correctly?
  . Figure out the general rule that transforms
      axiom (forall h:[<x>name]x, f:name :: old(h[f])==h[f])
    into
      axiom<y> (forall h<x>:[<x>name]x, f:<y>name :: old(h[f])==h[f])
  . Add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
+ . Test typechecker thoroughly.
+ . Does ImplementationChecker treat type vars correctly?
  . The comments and code disagree for TypeChecker.checkExact
- . Check that everything in the functional/parser test typechecks
-   in "compatibility mode"
+ . Check that everything in the test "functional/parser" typechecks
+   in "old" mode
  . Finish passivate; now you can use fancy generics to deal with arrays
  . Desugar dependent types in assumes/asserts
  . Desugar function calls into assumes/asserts (remember that free is special)

@@ -86,6 +86,7 @@ public class Main {
     opt.regBool("-pp", "pretty print");
     opt.regBool("-pst", "print symbol table");
     opt.regBool("-pfg", "print flow graphs");
+    opt.regBool("-old", "accept old constructs");
     opt.regBool("-sb", "split blocks so they contain one command");
     opt.regBool("-pvc", "print verification condition");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
@@ -150,6 +151,7 @@ public class Main {
     // parse command line arguments
     opt.parse(args);
     Err.setVerbosity(opt.intVal("-v"));
+    tc.setAcceptOld(opt.boolVal("-old"));
     
     // process files one by one
     for (String file : opt.otherArgs()) {

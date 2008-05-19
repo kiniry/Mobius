@@ -69,8 +69,19 @@ public class TypeChecker extends Evaluator<Type> {
   // that can contain expressions (e.g., functions, axioms,
   // procedure, implementation)
   private StackedHashMap<AtomId, AtomId> enclosingTypeVar;
+
+  // accept deprecated constructs
+  private boolean acceptOld;
   
   // === public interface ===
+  
+  /**
+   * Make the typechecker accept deprecated constructs.
+   */
+  public void setAcceptOld(boolean acceptOld) {
+    this.acceptOld = acceptOld;
+  }
+  
 
   /**
    * Typechecks an AST.
@@ -270,7 +281,7 @@ public class TypeChecker extends Evaluator<Type> {
     }
 
     // compatibility stuff, to be run only in "old" mode
-    if (true) { // TODO
+    if (acceptOld) {
       // allow <X>T to be used where T is expected if in "old" mode
       if (a instanceof IndexedType && !(b instanceof IndexedType)) {
         IndexedType it = (IndexedType)a;
@@ -334,7 +345,7 @@ public class TypeChecker extends Evaluator<Type> {
       t = errType;
     }
     return t;
- }
+  }
 
   /* Changes all occurring type variables in {@code t} into
    * the corresponding real types.
