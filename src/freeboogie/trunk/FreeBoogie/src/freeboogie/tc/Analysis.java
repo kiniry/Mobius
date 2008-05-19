@@ -1,6 +1,12 @@
-package freeboogie.tc.Analysis;
+package freeboogie.tc;
 
-import freeboogie.ast.Visitor;
+import java.util.List;
+import freeboogie.ast.Ast;
 
-public class Analysis extends Visitor {
+/**
+ * An {@ Analyzer} is an object that can produce a list of
+ * errors for a given AST.
+ */
+interface Analyzer {
+  List<Error> analyze(Ast ast);
 }

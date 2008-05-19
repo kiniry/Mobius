@@ -106,7 +106,10 @@ what an "error" is. So, what is an error? An error has a type, an
 associated AST node (location), perhaps additional information, 
 and can print itself. (This can be implemented using subtyping or 
 an enum and a printf-like language for constructing error messages 
-from the additional information.)
+from the additional information.) All this goes in the freeboogie.tc
+package because that contains all existing analyzes, plus I can't
+imagine having analyzes in some other package. (If that happens,
+the code should be re-factored.)
 
 
 
