@@ -103,3 +103,8 @@ Min.java
 Bug2.java
 ParseImports.java
 ParseImports2.java
+#
+# Java 1.5 Generics - not parsed - not supported yet
+#
+InnerClassGenerics.java
+
