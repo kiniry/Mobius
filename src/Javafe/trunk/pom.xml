@@ -45,7 +45,7 @@
   </scm>
   <ciManagement>
     <system>continuum</system>
-    <url>http://kind.ucd.ie:9006/continuum</url>
+    <url>http://voting.ucd.ie:8080/continuum</url>
     <notifiers>
       <notifier>
         <type>mail</type>
