@@ -22,6 +22,7 @@ import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
 import umbra.lib.FileNames;
+import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 
@@ -110,7 +111,7 @@ public abstract class BytecodeControllerContainer extends
    * @param a_lineno the line number of the retrieved controller line
    * @return the controller line for the given line number
    */
-  protected final BytecodeLineController getLineController(final int a_lineno) {
+  public final BytecodeLineController getLineController(final int a_lineno) {
     return (BytecodeLineController)my_editor_lines.get(a_lineno);
   }
 
@@ -444,5 +445,32 @@ public abstract class BytecodeControllerContainer extends
       }
     }
     return pos;
+  }
+
+  /**
+   * Returns the first line below the given one which in the current method
+   * contains an instruction line. It consults all the lines starting with
+   * the given one and checks if they are {@link InstructionLineController}.
+   * In case one is, the index of the line is returned. In case a
+   * {@link HeaderLineController} is reached or an end of the document
+   * then the exception is thrown.
+   *
+   * @param a_line_no the line for which we look for an instruction line
+   * @return the number of a line (in textual representation) which is
+   *   the required instruction line
+   * @throws UmbraException in case the current method has no instruction line
+   *   below the given line
+   */
+  public int getInstructionLineBelow(final int a_line_no)
+    throws UmbraException {
+    for (int i = a_line_no; i < my_editor_lines.size(); i++) {
+      final BytecodeLineController blc = getLineController(i);
+      if (blc instanceof InstructionLineController) {
+        return i;
+      } else if (blc instanceof HeaderLineController) {
+        throw new UmbraException();
+      }
+    }
+    throw new UmbraException();
   }
 }

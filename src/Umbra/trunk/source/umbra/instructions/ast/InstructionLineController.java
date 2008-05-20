@@ -428,4 +428,16 @@ public abstract class InstructionLineController extends BytecodeLineController {
   public boolean hasMg() {
     return my_methodgen != null;
   }
+
+  /**
+   * Retruns the position of the current instruction in the byte code
+   * array of the current method. This position may by not in sync with
+   * the position in the textual representation. It is accurate only after
+   * the setPosition is called on the instruction list of the current method.
+   *
+   * @return the position of the current instruction
+   */
+  public int getPC() {
+    return my_instr_handle.getPosition();
+  }
 }

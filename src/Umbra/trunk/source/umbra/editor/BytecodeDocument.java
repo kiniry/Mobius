@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.instructions.BytecodeController;
+import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.InstructionLineController;
 import umbra.lib.BMLParsing;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
@@ -391,8 +393,11 @@ public class BytecodeDocument extends Document {
    *   code editor corresponding to this line will be highlighted.
    * @throws UmbraLocationException in case a position is reached in the
    *   source code or byte code editor which does not exists there
+   * @throws UmbraSynchronisationException in case there is no instruction
+   *   line which can be reasonably associated with the given position
    */
-  public void synchronizeBS(final int a_pos) throws UmbraLocationException {
+  public void synchronizeBS(final int a_pos)
+    throws UmbraLocationException, UmbraSynchronisationException {
     final DocumentSynchroniser synch = getDocSynch();
     synch.synchronizeBS(a_pos);
   }
@@ -486,6 +491,34 @@ public class BytecodeDocument extends Document {
 
   public int getLastLineInMethod(int a_mno) {
     return my_bcc.getLastLineInMethod(a_mno);
+  }
+
+  public int getInstructionLineBelow(int a_line_no) throws UmbraException {
+    return my_bcc.getInstructionLineBelow(a_line_no);
+  }
+
+  public int getMethodForLine(int lineno) {
+    return my_bcc.getMethodForLine(lineno);
+  }
+
+  /**
+   * This method gives the program counter for the given line. It gives the
+   * correct number only in case the given line is indeed a line which
+   * contains an instruction and in that case it returns the program
+   * counter associated with its BCEL representation (not the label number
+   * in the text of the document).
+   *
+   * @param a_lineno the number of the line to retrieve the program counter for
+   * @return the program counter or -1 in case the program counter cannot
+   *   be retrieved
+   */
+  public int getLabelForLine(final int a_lineno) {
+    final BytecodeLineController blc = my_bcc.getLineController(a_lineno);
+    if (blc instanceof InstructionLineController) {
+      final InstructionLineController ilc = (InstructionLineController) blc;
+      return ilc.getPC();
+    }
+    return -1;
   }
 
 }

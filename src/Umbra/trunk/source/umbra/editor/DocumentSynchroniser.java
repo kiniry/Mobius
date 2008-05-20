@@ -24,10 +24,9 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-import umbra.UmbraPlugin;
+import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraSynchronisationException;
-import annot.textio.CodeFragment;
 
 /**
  * This class handles the logic of the synchronisation of the cursor positions
@@ -35,11 +34,6 @@ import annot.textio.CodeFragment;
  * source code line a corresponding byte code line and for a given byte code
  * line the corresponding source code line range. It uses the class file line
  * number table to perform these operations.
- *
- * TODO: more documentation is needed
- * FIXME: this does not take into account the modification of the byte code
- *        files
- * FIXME: the implementation is too horrible to be usable, it must be rewritten
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -54,13 +48,6 @@ public class DocumentSynchroniser {
    * in the initial document (e.g. byte code).
    */
   private static final int NO_OF_POSITIONS = 2;
-
-  /**
-   * The number of lines at the beginning of a method which are unrelated to the
-   * synchronisation. We have to skip the method header when the document
-   * structure is analysed.
-   */
-  private static final int SYNC_INCREMENT = 2;
 
   /**
    * The byte code document which takes part in the synchronisation process.
@@ -96,9 +83,11 @@ public class DocumentSynchroniser {
    *   code editor corresponding to this line will be highlighted.
    * @throws UmbraLocationException in case a position is reached in the
    *   source code or byte code editor which does not exists there
+   * @throws UmbraSynchronisationException in case there is no instruction
+   *   line which can be reasonably associated with the given position
    */
   public final void synchronizeBS(final int a_pos)
-    throws UmbraLocationException {
+    throws UmbraLocationException, UmbraSynchronisationException {
     int line;
     try {
       line = my_bcode_doc.getLineOfOffset(a_pos);
@@ -106,18 +95,23 @@ public class DocumentSynchroniser {
       throw new UmbraLocationException(my_bcode_doc, a_pos);
     }
     // syncBS computes the area to highlight
-    final int[] syncLine = syncBS(my_bcode_doc.getJavaClass(), line);
+    final int syncLine;
+    try {
+      syncLine = syncBS(my_bcode_doc.getJavaClass(), line);
+    } catch (UmbraException e1) {
+      throw new UmbraSynchronisationException();
+    }
     final int syncPos;
     try {
-      syncPos = my_java_doc.getLineOffset(syncLine[0]);
+      syncPos = my_java_doc.getLineOffset(syncLine);
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(my_java_doc, syncLine[0]);
+      throw new UmbraLocationException(my_java_doc, syncLine);
     }
     int synclen;
     try {
-      synclen = my_java_doc.getLineOffset(syncLine[1] + 1) - syncPos;
+      synclen = my_java_doc.getLineOffset(syncLine + 1) - syncPos;
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(my_java_doc, syncLine[1] + 1);
+      throw new UmbraLocationException(my_java_doc, syncLine + 1);
     }
     final CompilationUnitEditor jeditor = my_bcode_doc.getRelatedEditor();
     jeditor.getEditorSite().getPage().activate(jeditor);
@@ -128,102 +122,55 @@ public class DocumentSynchroniser {
   }
 
   /**
-   * Computes the area in current java source code corresponding to given line
-   * of byte code. The byte code should be refreshed before calling this metod,
-   * to update JavaClass structures. Works correctly only inside a method.
+   * Computes the area in current Java source code corresponding to given line
+   * of the byte code document. The byte code should be refreshed before calling
+   * this metod to update JavaClass structures. Works correctly only inside a
+   * method.
    *
-   * @param a_java_class  JavaClass with current byte code
-   * @param a_line_no  index of line in byte code editor
-   * @return array of 2 ({@link #NO_OF_POSITIONS}) ints representing index of
-   *         first and last line of
-   *         source code (corresponding to given byte code line),
-   *         in related source code editor
-   * @throws UmbraLocationException in case the method reaches a position in
-   *   the byte code document which does not exists
+   * Algorithm:
+   * <ul>
+   *   <li>We obtain the number of the first instruction line not above the
+   *       given position (we synchronise the BML annotations and comments
+   *       so that the instruction below them is considered to be a pointer
+   *       to the source code).</li>
+   *   <li>We obtain the number of the method which contains the line (to
+   *       be able to use the LineNumberTable).</li>
+   *   <li>We retrieve the label of the instruction line we found (as the
+   *       positions in the LineNumberTable are indexed with the labels).</li>
+   *   <li>We look for the highest byte code label number in the LineNumberTable
+   *       which is lower than the one we have already found (the entries in
+   *       show where the source code line number changes, if there is no
+   *       current label there then the current source code line begins at line
+   *       with some lower label).</li>
+   *   <li>We return the source code line from this entry in the
+   *       LineNumberTable</li>
+   * </ul>
+   *
+   * @param a_java_class {@link JavaClass} with current byte code BCEL
+   *   representation
+   * @param a_line_no index of line in byte code editor
+   * @return the line of the source code corresponding to given byte code
+   *   line)
+   * @throws UmbraException in case there is no instruction line that can be
+   *   reasonably associated with the given line number
    */
-  private int[] syncBS(final JavaClass a_java_class,
-                       final int a_line_no) throws UmbraLocationException 
-  // Synchronisation: Btc --> Src
-  {
-    final String code = my_bcode_doc.get();
-    final int a_line_no1 = CodeFragment.goDown(code, a_line_no);
-    final int[] res = new int[NO_OF_POSITIONS];
-    final int maxL = my_java_doc.getNumberOfLines() - 1;
-    int l_od = 0;
-    int l_do = maxL;
-    int pos = 0;
-    int posln = 0;
-    int pop = 0;
-    int lnr = 0;
-    int lnrmax = 0;
-    int l, j, pc;
-    int endpos = 0;
-    final Method[] methods = a_java_class.getMethods();
-    Method m;
-    for (int i = 0; i < methods.length; i++) {
-      m = methods[i];
-      pos += SYNC_INCREMENT; //skip method header?
-      l = m.getLineNumberTable().getLineNumberTable().length;
-      for (j = 0; j < l; j++) {
-        pop = lnr;
-        lnr = m.getLineNumberTable().getLineNumberTable()[j].
-                                     getLineNumber() - 1;
-        if (lnr > lnrmax)
-          lnrmax = lnr;
-        pc = m.getLineNumberTable().getLineNumberTable()[j].getStartPC();
-        try {
-          do {
-            pos = my_bcode_doc.get().indexOf("" + pc + ":", pos + 1);
-            if (pos == -1) {
-              break;
-            }
-          } while (my_bcode_doc.getLineOfOffset(pos - 1) ==
-                   my_bcode_doc.getLineOfOffset(pos));
-        } catch (BadLocationException e) {
-          throw new UmbraLocationException(my_bcode_doc, pos);
-        }
-        // "<pc>:" is located at the beginning of a line
-        if (pos == -1) {
-          if (l_od != 0)
-            l_do = l_od;
-          UmbraPlugin.messagelog("syncBS: ERROR - a position not found in " +
-                                 "LineNumberTable!");
-          break;
-        }
-        try {
-          posln = my_bcode_doc.getLineOfOffset(pos);
-        } catch (BadLocationException e) {
-          throw new UmbraLocationException(my_bcode_doc, pos);
-        }
-        if (posln == a_line_no1) {
-          l_od = lnr;
-        }
-        if (posln > a_line_no1) {
-          l_od = pop;
-          l_do = lnrmax - 1;
-          if (endpos > 0)
-            l_do = endpos;
-          break;
-        }
-        endpos = 0;
-      }
-      if (j != l)
-        break;
-      endpos = lnrmax;
-      if (l_od > 0) {
-        l_do = endpos;
-        break;
+  private int syncBS(final JavaClass a_java_class,
+                     final int a_line_no) throws UmbraException {
+    final int lineno = my_bcode_doc.getInstructionLineBelow(a_line_no);
+    final int mno = my_bcode_doc.getMethodForLine(lineno);
+    final int label = my_bcode_doc.getLabelForLine(lineno);
+    final Method m = a_java_class.getMethods()[mno];
+    final LineNumber[] lnt = m.getLineNumberTable().getLineNumberTable();
+    int minpc = 0;
+    int imin = 0;
+    for (int i = 0; i < lnt.length; i++) {
+      final int cpc = lnt[i].getStartPC();
+      if (minpc <  cpc && cpc <= label) {
+        minpc = cpc;
+        imin = i;
       }
     }
-    if ((l_od == 0) && (l_do == maxL))
-      l_od = maxL - 1;
-    if (l_do == maxL)
-      l_do--;
-    if (l_od > l_do)  // fixed
-      l_do = l_od;
-    res[0] = l_od;
-    res[1] = l_do;
-    return res;
+    return lnt[imin].getLineNumber() - 1; //lines in lnt start with 1
   }
 
   /**
@@ -314,7 +261,7 @@ public class DocumentSynchroniser {
            JavaModelException {
     final Method[] methods = a_java_class.getMethods();
 
-    final int mno = getMethodNumber(a_pos, an_editor,
+    final int mno = getSrcMethodNumber(a_pos, an_editor,
                                     a_java_class.getClassName()) + 1;
                                     // +1 for <init>
     final Method m = methods[mno];
@@ -325,8 +272,9 @@ public class DocumentSynchroniser {
   }
 
   /**
-   * The method returns the method number of a method from the given class
-   * in the source code the body of which contains the given position.
+   * The method returns the method number of a method in the source code
+   * document. It retrieves the number of the method the body of which contains
+   * the given position.
    *
    * @param a_pos the position to find the method for
    * @param an_editor the editor in which the source code is edited
@@ -338,9 +286,9 @@ public class DocumentSynchroniser {
    * @throws UmbraSynchronisationException there is no method for the given
    *   position in the given class
    */
-  private int getMethodNumber(final int a_pos,
-                              final CompilationUnitEditor an_editor,
-                              final String a_class_name)
+  private int getSrcMethodNumber(final int a_pos,
+                                 final CompilationUnitEditor an_editor,
+                                 final String a_class_name)
     throws JavaModelException, UmbraSynchronisationException {
     final ICompilationUnit cu =
       JavaPlugin.getDefault().getWorkingCopyManager().

@@ -121,10 +121,17 @@ public final class GUIMessages {
     "This position cannot be synchronised.";
 
   /**
-   * The message informs the user an access to a Java element is impossible.
+   * The message informs the user that access to a Java element is impossible.
    */
   public static final String WRONG_JAVAACCESS_MSG =
     "A Java element cannot be accessed.";
+
+  /**
+   * The message informs the user that the position cannot be associated with
+   * an instruction in a reasonable way.
+   */
+  public static final String NOINSTRUCTION_MSG =
+    "No instruction can be associated with the given position";
 
   /**
    * The empty constructor to forbid the creation of the instances.

@@ -8,13 +8,16 @@
  */
 package umbra.editor.actions;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.swt.widgets.Shell;
 
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraSynchronisationException;
 
 /**
  * This class defines action of the synchronisation for a byte code
@@ -60,6 +63,22 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
       bDoc.synchronizeBS(off);
     } catch (UmbraLocationException e) {
       wrongLocationMessage(parent, getActionDefinitionId(), e);
+    } catch (UmbraSynchronisationException e) {
+      wrongSynchronisationMessage(parent, getActionDefinitionId());
     }
+  }
+
+
+  /**
+   * Displays the message that no instruction can be reasonably associated with
+   * the given position.
+   *
+   * @param a_shell the shell which displays the message
+   * @param a_title the title of the message window
+   */
+  public static void wrongSynchronisationMessage(final Shell a_shell,
+                                                 final String a_title) {
+    MessageDialog.openError(a_shell,
+                            a_title, GUIMessages.NOINSTRUCTION_MSG);
   }
 }
