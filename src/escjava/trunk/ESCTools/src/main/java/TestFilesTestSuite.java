@@ -192,6 +192,12 @@ public class TestFilesTestSuite  extends TestSuite {
 		fail(msg);
 	    }
 
+        // Diagnostic for adding/changing command line options
+	    System.out.println("\nTest suite " + testName + ": "  + fileToTest);
+	    System.out.print("Options being tested: ");
+	    for (int kk=0; kk<args.length-1; ++kk) System.out.print(args[kk] + " ");
+	    System.out.println();
+
 	    ByteArrayOutputStream ba = JUnitUtils.setStreams();
 	    try {
 		returnedObject = dotest(fileToTest,args);

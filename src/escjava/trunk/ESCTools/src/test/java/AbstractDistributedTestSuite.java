@@ -48,9 +48,6 @@ import java.lang.reflect.Method;
  * @author David R. Cok
  */
 public class AbstractDistributedTestSuite extends TestSuite {
-  
-  final static int BATCH_SIZE = 4000;
-  static int batch = 0; // The batch of tests to run this time
 
   //@ ensures_redundantly !initialized;
   protected AbstractDistributedTestSuite() {
@@ -124,11 +121,6 @@ public class AbstractDistributedTestSuite extends TestSuite {
     super(testName);
     this.testName = testName;
     
-    // Only execute a subset of tests each time to avoid heap overflow
-    int distributedBatchSize = numberOfServers * BATCH_SIZE;
-    int startOfBatch = distributedBatchSize * batch++;;
-    int endOfBatch = startOfBatch + distributedBatchSize - 1;
-    
     try {
       method = cls.getMethod("compile", new Class[] { String[].class });
       Class rt = method.getReturnType();
@@ -140,6 +132,10 @@ public class AbstractDistributedTestSuite extends TestSuite {
     } catch (NoSuchMethodException e) {
       throw new RuntimeException(e.toString());
     }
+    
+    // Divide tests between the available build processes
+    int numberOfProcessors = Runtime.getRuntime().availableProcessors() + 1;
+    int batch = (Random.getRandom().nextInt()) % numberOfProcessors;
 
     int position = 0; // Sequence number for each subset of tests
     if ((0 < numberOfServers) && (0 <= serverIndex)) {
@@ -163,8 +159,8 @@ public class AbstractDistributedTestSuite extends TestSuite {
                 while (k.hasNext()) {
                   // Add this subset of tests only if it is the turn of this server,
                   // and we are within the current batch of tests
-                  if ((startOfBatch <= position) && (position <= endOfBatch) &&
-                      ((position++ % numberOfServers) == serverIndex)) {
+                  if ((position++ % numberOfServers) == serverIndex) &&
+                      (position % numberOfProcessors) == batch)) {
                     addTest(makeHelper(JUnitUtils.parseLine(preArgs + " " + proverArgs + " "
                                                           + (String) k.next()
                                                           + " " + thisLine)));
