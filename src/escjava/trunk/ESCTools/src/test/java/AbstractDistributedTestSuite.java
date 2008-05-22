@@ -49,6 +49,9 @@ import java.util.Random;
  * @author David R. Cok
  */
 public class AbstractDistributedTestSuite extends TestSuite {
+  
+  static final int ONE_MEGABYTE = 1024 * 1024;
+  static final String NOT_ENOUGH_MEMORY = " *** not enough free memory to run this test ***";
 
   //@ ensures_redundantly !initialized;
   protected AbstractDistributedTestSuite() {
@@ -162,9 +165,17 @@ public class AbstractDistributedTestSuite extends TestSuite {
                   // and we are within the current batch of tests
                   if ((position++ % numberOfServers) == serverIndex) {
                     if ((position % numberOfProcessors) == batch) {
-                      addTest(makeHelper(
-                        JUnitUtils.parseLine(preArgs + " " + proverArgs
-                           + " " + (String) k.next() + " " + thisLine)));
+                      System.gc();
+                      if (Runtime.getRuntime().freeMemory() > ONE_MEGABYTE) {
+                        addTest(makeHelper(JUnitUtils.parseLine(preArgs
+                                                                + " "
+                                                                + proverArgs
+                                                                + " "
+                                                                + (String) k
+                                                                    .next()
+                                                                + " "
+                                                                + thisLine)));
+                      }
                     }
                 }
               }
@@ -256,7 +267,13 @@ public class AbstractDistributedTestSuite extends TestSuite {
 
       ByteArrayOutputStream ba = JUnitUtils.setStreams();
       try {
-        returnedObject = dotest(fileToTest, args);
+        System.gc();
+        if (Runtime.getRuntime().freeMemory() > ONE_MEGABYTE) {
+          returnedObject = dotest(fileToTest, args);
+        }
+        else {
+          fail (args + fileToTest + NOT_ENOUGH_MEMORY);
+        }
       } catch (IllegalAccessException e) {
         JUnitUtils.restoreStreams(true);
         fail(e.toString());

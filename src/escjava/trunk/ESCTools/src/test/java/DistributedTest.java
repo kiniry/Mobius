@@ -5,7 +5,7 @@ import junit.framework.*;
 import junitutils.*;
 
 public class DistributedTest extends junitutils.TestFilesTestSuite {
-
+  
 	static public junit.framework.Test suite() {
 
 	String hostName = "";
