@@ -159,8 +159,8 @@ public class AbstractDistributedTestSuite extends TestSuite {
                 while (k.hasNext()) {
                   // Add this subset of tests only if it is the turn of this server,
                   // and we are within the current batch of tests
-                  if ((position++ % numberOfServers) == serverIndex) &&
-                      (position % numberOfProcessors) == batch)) {
+                  if (((position++ % numberOfServers) == serverIndex) &&
+                      (position % numberOfProcessors) == batch))) {
                     addTest(makeHelper(JUnitUtils.parseLine(preArgs + " " + proverArgs + " "
                                                           + (String) k.next()
                                                           + " " + thisLine)));
