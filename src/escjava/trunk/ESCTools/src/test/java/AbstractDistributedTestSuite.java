@@ -27,6 +27,7 @@ import junit.framework.*;
 import java.io.*;
 import java.util.Iterator;
 import java.lang.reflect.Method;
+import java.util.Random;
 
 /**
  * This is a JUnit TestSuite that is created from a number of tests as follows.
@@ -135,7 +136,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
     
     // Divide tests between the available build processes
     int numberOfProcessors = Runtime.getRuntime().availableProcessors() + 1;
-    int batch = (Random.getRandom().nextInt()) % numberOfProcessors;
+    long batch = System.currentTimeMillis() % numberOfProcessors;
 
     int position = 0; // Sequence number for each subset of tests
     if ((0 < numberOfServers) && (0 <= serverIndex)) {
@@ -159,11 +160,12 @@ public class AbstractDistributedTestSuite extends TestSuite {
                 while (k.hasNext()) {
                   // Add this subset of tests only if it is the turn of this server,
                   // and we are within the current batch of tests
-                  if (((position++ % numberOfServers) == serverIndex) &&
-                      (position % numberOfProcessors) == batch))) {
-                    addTest(makeHelper(JUnitUtils.parseLine(preArgs + " " + proverArgs + " "
-                                                          + (String) k.next()
-                                                          + " " + thisLine)));
+                  if ((position++ % numberOfServers) == serverIndex) {
+                    if ((position % numberOfProcessors) == batch) {
+                      addTest(makeHelper(
+                        JUnitUtils.parseLine(preArgs + " " + proverArgs
+                           + " " + (String) k.next() + " " + thisLine)));
+                    }
                 }
               }
               }
