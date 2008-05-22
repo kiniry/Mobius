@@ -7,12 +7,10 @@ import java.util.*;
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.util.Closure;
-import freeboogie.util.Err;
 import freeboogie.util.StackedHashMap;
 
 /**
- * Typechecks an AST. Errors are reported using the class {@code Err}.
- * It maps expressions to types.
+ * Typechecks an AST. It maps expressions to types.
  * 
  * It also acts more-or-less as a Facade for the whole package.
  *

@@ -3,7 +3,6 @@ package freeboogie.tc;
 import java.util.*;
 
 import freeboogie.ast.*;
-import freeboogie.util.Err;
 import freeboogie.util.StackedHashMap;
 
 /**

@@ -47,7 +47,9 @@ public class FbError {
    * not checked.
    */
   public FbError(Type type, Ast ast, Object... data) {
+    assert type != null;
     assert ast != null;
+    this.type = type;
     this.ast = ast;
     this.data = data;
   }
@@ -68,7 +70,7 @@ public class FbError {
     StringBuilder sb = new StringBuilder();
     sb.append(ast.loc());
     sb.append(": ");
-    int n = type.templ.length();
+    int n = type.templ().length();
     for (int i = 0; i < n; ++i) {
       char c = type.templ().charAt(i);
       if (c != '%') sb.append(c);
@@ -78,7 +80,10 @@ public class FbError {
         int idx = 0;
         while (i+1 < n && Character.isDigit(c = type.templ().charAt(i+1)))
           idx = 10 * idx + c - '0';
-        sb.append(data[idx].toString());
+        if (data[idx] == null)
+          Err.fatal("INTERNAL ERROR: idx="+idx + " err_type="+type);
+        else
+          sb.append(data[idx].toString());
       }
     }
     return sb.toString();

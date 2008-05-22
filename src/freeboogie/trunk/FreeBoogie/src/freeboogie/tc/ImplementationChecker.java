@@ -3,7 +3,6 @@ package freeboogie.tc;
 import java.util.*;
 
 import freeboogie.ast.*;
-import freeboogie.util.Err;
 
 /**
  * Checks whether the implementations' signatures correspond
