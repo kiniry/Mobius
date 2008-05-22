@@ -79,6 +79,11 @@ public class AbstractDistributedTestSuite extends TestSuite {
 
   //@ protected invariant_redundantly initialized ==> (method != null);
 
+  /*
+   * "-expected" is the file for the expected result with minimal or no line options
+   * e.g. testmode; if the expected result varies for option -era then there would be
+   * a file with suffix "-expected-era";
+   */
   final static String SAVED_SUFFIX = "-ckd";
 
   final static String ORACLE_SUFFIX = "-expected";
@@ -272,7 +277,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
           returnedObject = dotest(fileToTest, args);
         }
         else {
-          fail (args + fileToTest + NOT_ENOUGH_MEMORY);
+          fail (fileToTest + NOT_ENOUGH_MEMORY);
         }
       } catch (IllegalAccessException e) {
         JUnitUtils.restoreStreams(true);
@@ -297,7 +302,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
       /*@ nullable */String err;
       
       if (returnedObject != null) {
-        err = doOutputCheck(fileToTest, ba.toString(), returnedObject);
+        err = doOutputCheck(fileToTest, ba.toString(), returnedObject, args);
       
         if (err != null) {
           fail(err);
@@ -321,11 +326,21 @@ public class AbstractDistributedTestSuite extends TestSuite {
     return method.invoke(null, new Object[] { args });
   }
 
+  /**
+   * Compare the expected result with the actual result
+   * 
+   * @param fileToTest
+   * @param output
+   * @param returnedValue
+   * @param options The command line options being tested
+   * @return
+   */
   //@ requires initialized;
   protected/*@ nullable */String doOutputCheck(
   /*@ non_null */String fileToTest,
   /*@ non_null */String output,
-  /*@ non_null */Object returnedValue) {
+  /*@ non_null */Object returnedValue,
+  /*@ non_null */String[] options) {
     try {
       String expectedOutput = JUnitUtils.readFile(fileToTest + ORACLE_SUFFIX);
       Diff df = new Diff("expected", expectedOutput, "actual", output);
@@ -335,15 +350,33 @@ public class AbstractDistributedTestSuite extends TestSuite {
         // that there is no -ckd file to confuse anyone.
         (new File(fileToTest + SAVED_SUFFIX)).delete();
       } else {
-        // If the strings do not match, we save the actual string and
+        // If test fails then look for an alternative expected result based
+        // on the set of command line options chosen.
+        StringBuffer optionalSuffix = new StringBuffer();
+        for (int kk=0; kk<options.length-1; ++kk) {
+          optionalSuffix.append(options[kk].trim());
+        }
+        
+        expectedOutput = JUnitUtils.readFile(fileToTest + ORACLE_SUFFIX 
+                                               + optionalSuffix.toString());
+        df = new Diff("expected", expectedOutput, "actual", output);
+
+        if (!df.areDifferent()) {
+          // If the two strings match, the test succeeds and we make sure
+          // that there is no -ckd-* file to confuse anyone.
+          (new File(fileToTest + SAVED_SUFFIX)).delete();
+          (new File(fileToTest + SAVED_SUFFIX + optionalSuffix.toString())).delete();
+        } else {
+        // If the strings still do not match, we save the actual string and
         // fail the test.
         FileWriter f = null;
         try {
-          f = new FileWriter(fileToTest + SAVED_SUFFIX);
+          f = new FileWriter(fileToTest + SAVED_SUFFIX + optionalSuffix.toString());
           f.write(output);
         } finally {
           if (f != null)
             f.close();
+        }
         }
 
         return (df.result());
