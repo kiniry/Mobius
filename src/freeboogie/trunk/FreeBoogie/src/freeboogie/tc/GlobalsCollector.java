@@ -1,9 +1,6 @@
 package freeboogie.tc;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import freeboogie.ast.*;
 import freeboogie.util.Err;
@@ -29,8 +26,8 @@ public class GlobalsCollector extends Transformer {
   private HashMap<String, ConstDecl> consts;
   private HashMap<String, VariableDecl> vars;
   
-  // where there any errors?
-  private boolean errors = false;
+  // the errors that were encountered
+  private List<Error> errors;
   
   private void reset() {
     types = new HashMap<String, TypeDecl>();
@@ -38,6 +35,7 @@ public class GlobalsCollector extends Transformer {
     funcs = new HashMap<String, Function>();
     consts = new HashMap<String, ConstDecl>();
     vars = new HashMap<String, VariableDecl>();
+    errors = new ArrayList<Error>();
   }
   
   /**
@@ -45,9 +43,9 @@ public class GlobalsCollector extends Transformer {
    * @param ast the AST to be processed
    * @return whether there are name clashes in the input
    */
-  public boolean process(Declaration ast) {
+  public List<Error> process(Declaration d) {
     reset();
-    ast.eval(this);
+    d.eval(this);
     return errors;
   }
   
@@ -96,38 +94,37 @@ public class GlobalsCollector extends Transformer {
   
   // if s is in h then report an error at location l
   private <D extends Declaration> 
-  void check(HashMap<String, D> h, String s, AstLocation l) {
+  void check(HashMap<String, D> h, String s, Ast l) {
     if (h.get(s) == null) return;
-    Err.error("" + l + ": Identifier " + s + " was already defined.");
-    errors = true;
+    errors.add(new Error(Error.Type.GB_ALREADY_DEF, l, s));
   }
   
   private void addTypeDef(String s, TypeDecl d) {
-    check(types, s, d.loc());
+    check(types, s, d);
     types.put(s, d);
   }
   
   private void addProcDef(String s, Procedure d) {
-    check(procs, s, d.loc());
-    check(funcs, s, d.loc());
+    check(procs, s, d);
+    check(funcs, s, d);
     procs.put(s, d);
   }
   
   private void addFunDef(String s, Function d) {
-    check(procs, s, d.loc());
-    check(funcs, s, d.loc());
+    check(procs, s, d);
+    check(funcs, s, d);
     funcs.put(s, d);
   }
   
   private void addConstDef(String s, ConstDecl d) {
-    check(consts, s, d.loc());
-    check(vars, s, d.loc());
+    check(consts, s, d);
+    check(vars, s, d);
     consts.put(s, d);
   }
   
   private void addVarDef(String s, VariableDecl d) {
-    check(consts, s, d.loc());
-    check(vars, s, d.loc());
+    check(consts, s, d);
+    check(vars, s, d);
     vars.put(s, d);
   }
   

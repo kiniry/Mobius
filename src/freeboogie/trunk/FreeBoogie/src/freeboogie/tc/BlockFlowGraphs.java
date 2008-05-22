@@ -1,6 +1,6 @@
 package freeboogie.tc;
 
-import java.util.HashMap;
+import java.util.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,8 +27,8 @@ public class BlockFlowGraphs extends Transformer {
   // maps implementations to the flow graphs of their bodies
   private HashMap<Implementation, SimpleGraph<Block>> flowGraphs;
   
-  // whether inexistent block names were detected
-  private boolean errors;
+  // the detected problems 
+  private List<Error> errors;
   
   // used for reachability (DFS)
   private HashSet<Block> seenBlocks;
@@ -39,11 +39,11 @@ public class BlockFlowGraphs extends Transformer {
    * Constructs flow graphs for {@code ast}. It also prints warnings
    * if there are syntactically unreachable blocks. 
    * @param ast the AST for which to build flow graphs
-   * @return whether there were missing blocks
+   * @return the detected problems 
    */
-  public boolean process(Declaration ast) {
+  public List<Error> process(Declaration ast) {
     currentBlock = null;
-    errors = false;
+    errors = new ArrayList<Error>();
     flowGraphs = new HashMap<Implementation, SimpleGraph<Block>>();
     ast.eval(this);
     return errors;
@@ -114,10 +114,9 @@ public class BlockFlowGraphs extends Transformer {
     if (currentBlock == null) return;
     assert types == null;
     Block target = blocksByName.get(id);
-    if (target == null) {
-      Err.error("" + atomId.loc() + ": Inexistent block " + id + ".");
-      errors = true;
-    } else
+    if (target == null)
+      errors.add(new Error(Error.Type.MISSING_BLOCK, atomId, id));
+    else
       currentFlowGraph.edge(currentBlock, target);
   }
 }

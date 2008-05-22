@@ -2,8 +2,7 @@ package freeboogie.tc;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
@@ -48,8 +47,8 @@ public class TypeChecker extends Evaluator<Type> {
   
   private BlockFlowGraphs flowGraphs;
   
-  // were there any type errors?
-  private boolean errors;
+  // detected errors
+  private List<Error> errors;
   
   // maps expressions to their types (caches the results of the
   // typechecker)
@@ -86,9 +85,9 @@ public class TypeChecker extends Evaluator<Type> {
   /**
    * Typechecks an AST.
    * @param ast the AST to check
-   * @return whether there were errors
+   * @return the detected errors 
    */
-  public boolean process(Declaration ast) {
+  public List<Error> process(Declaration ast) {
     boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
     intType = PrimitiveType.mk(PrimitiveType.Ptype.INT);
     refType = PrimitiveType.mk(PrimitiveType.Ptype.REF);
@@ -100,23 +99,24 @@ public class TypeChecker extends Evaluator<Type> {
     typeVar = new StackedHashMap<AtomId, Type>();
     enclosingTypeVar = new StackedHashMap<AtomId, AtomId>();
     
-    errors = false;
-
     // build symbol table
     SymbolTableBuilder stb = new SymbolTableBuilder();
-    if (stb.process(ast)) return true;
+    errors = stb.process(ast);
+    if (!errors.isEmpty()) return errors;
     st = stb.getST();
     gc = stb.getGC();
     
     // check implementations
     ImplementationChecker ic = new ImplementationChecker();
-    if (ic.process(ast, gc)) return true;
+    errors.addAll(ic.process(ast, gc));
+    if (!errors.isEmpty()) return errors;
     implProc = ic.getImplProc();
     paramMap = ic.getParamMap();
     
     // check blocks
     flowGraphs = new BlockFlowGraphs();
-    if (flowGraphs.process(ast)) return true;
+    errors.addAll(flowGraphs.process(ast));
+    if (!errors.isEmpty()) return errors;
 
     // do the typecheck
     ast.eval(this);
@@ -165,12 +165,6 @@ public class TypeChecker extends Evaluator<Type> {
   }
   
   // === helper methods ===
-  
-  // report an error and set the errors flag
-  private void report(AstLocation l, String s) {
-    Err.error("" + l + ": " + s + ".");
-    errors = true;
-  }
   
   // assumes |d| is a list of |VariableDecl|
   // gives a TupleType with the types in that list
@@ -337,11 +331,11 @@ public class TypeChecker extends Evaluator<Type> {
    * If the result is a type variable then an error is reported
    * at location {@code loc}.
    */
-  private Type checkRealType(Type t, AstLocation loc) {
+  private Type checkRealType(Type t, Ast l) {
     t = substRealType(t);
     if (isTypeVar(t)) {
-      report(loc, "Explicit specialization required for " 
-          + TypeUtils.typeToString(t) + " at " + t.loc());
+      errors.add(new Error(Error.Type.REQ_SPECIALIZATION, l,
+            TypeUtils.typeToString(t), t.loc()));
       t = errType;
     }
     return t;
@@ -402,7 +396,7 @@ public class TypeChecker extends Evaluator<Type> {
   private void mapExplicitGenerics(Identifiers tv, TupleType t) {
     if (t == null) return;
     if (tv == null) {
-      report(t.loc(), "Too many explicit generics. Ignoring");
+      errors.add(new Error(Error.Type.GEN_TOOMANY, t));
       return;
     }
     typeVar.put(tv.getId(), t.getType());
@@ -413,21 +407,21 @@ public class TypeChecker extends Evaluator<Type> {
    * If {@code a} cannot be used where {@code b} is expected then an error
    * at location {@code l} is produced and {@code errors} is set.
    */
-  private void check(Type a, Type b, AstLocation l) {
+  private void check(Type a, Type b, Ast l) {
     if (sub(a, b)) return;
-    report(l, "Found type " + TypeUtils.typeToString(a) 
-      + " instead of " + TypeUtils.typeToString(b));
+    errors.add(new Error(Error.Type.NOT_SUBTYPE, l,
+          TypeUtils.typeToString(a), TypeUtils.typeToString(b)));
   }
   
   /**
    * Same as {@code check}, except it is more picky about the types:
    * They must be exactly the same.
    */
-  private void checkExact(Type a, Type b, AstLocation l) {
+  private void checkExact(Type a, Type b, Ast l) {
     // BUG? Should || be &&?
     if (sub(a, b) || sub(b, a)) return;
-    report(l, "Unrelated types: "
-      + TypeUtils.typeToString(a) + " and " + TypeUtils.typeToString(b));
+    errors.add(new Error(Error.Type.BAD_TYPE, l,
+          TypeUtils.typeToString(a), TypeUtils.typeToString(b)));
   }
 
   // === visiting operators ===
@@ -436,11 +430,11 @@ public class TypeChecker extends Evaluator<Type> {
     Type t = strip(e.eval(this));
     switch (op) {
     case MINUS:
-      check(t, intType, e.loc());
+      check(t, intType, e);
       typeOf.put(unaryOp, intType);
       return intType;
     case NOT:
-      check(t, boolType, e.loc());
+      check(t, boolType, e);
       typeOf.put(unaryOp, boolType);
       return boolType;
     default:
@@ -460,8 +454,8 @@ public class TypeChecker extends Evaluator<Type> {
     case DIV:
     case MOD:
       // integer arguments and integer result
-      check(l, intType, left.loc());
-      check(r, intType, right.loc());
+      check(l, intType, left);
+      check(r, intType, right);
       typeOf.put(binaryOp, intType);
       return intType;
     case LT:
@@ -469,8 +463,8 @@ public class TypeChecker extends Evaluator<Type> {
     case GE:
     case GT:
       // integer arguments and boolean result
-      check(l, intType, left.loc());
-      check(r, intType, right.loc());
+      check(l, intType, left);
+      check(r, intType, right);
       typeOf.put(binaryOp, boolType);
       return boolType;
     case EQUIV:
@@ -478,19 +472,19 @@ public class TypeChecker extends Evaluator<Type> {
     case AND:
     case OR:
       // boolean arguments and boolean result
-      check(l, boolType, left.loc());
-      check(r, boolType, right.loc());
+      check(l, boolType, left);
+      check(r, boolType, right);
       typeOf.put(binaryOp, boolType);
       return boolType;
     case SUBTYPE:
       // l subtype of r and boolean result (TODO: a user type is a subtype of a user type)
-      check(l, r, left.loc());
+      check(l, r, left);
       typeOf.put(binaryOp, boolType);
       return boolType;
     case EQ:
     case NEQ:
       // typeOf(l) == typeOf(r) and boolean result
-      checkExact(l, r, binaryOp.loc());
+      checkExact(l, r, binaryOp);
       typeOf.put(binaryOp, boolType);
       return boolType;
     default:
@@ -508,7 +502,7 @@ public class TypeChecker extends Evaluator<Type> {
       VariableDecl vd = (VariableDecl)d;
       typeVar.push();
       mapExplicitGenerics(vd.getTypeVars(), types);
-      t = checkRealType(vd.getType(), atomId.loc());
+      t = checkRealType(vd.getType(), atomId);
       typeVar.pop();
     } else if (d instanceof ConstDecl) {
       assert types == null; // TODO
@@ -550,7 +544,7 @@ public class TypeChecker extends Evaluator<Type> {
   @Override
   public PrimitiveType eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
     Type t = e.eval(this);
-    check(t, boolType, e.loc());
+    check(t, boolType, e);
     typeOf.put(atomQuant, boolType);
     return boolType;
   }
@@ -566,9 +560,9 @@ public class TypeChecker extends Evaluator<Type> {
     Type at = strip(args == null? null : (TupleType)args.eval(this));
     Type fat = strip(tupleTypeOfDecl(fargs));
    
-    check(at, fat, args == null? atomFun.loc() : args.loc());
+    check(at, fat, args == null? atomFun : args);
     Type rt = strip(checkRealType(
-          tupleTypeOfDecl(sig.getResults()), atomFun.loc()));
+          tupleTypeOfDecl(sig.getResults()), atomFun));
     typeVar.pop();
     typeOf.put(atomFun, rt);
     return rt;
@@ -586,19 +580,18 @@ public class TypeChecker extends Evaluator<Type> {
     Type t = strip(atom.eval(this));
     if (t == errType) return errType;
     if (!(t instanceof ArrayType)) {
-      Err.error("" + atom.loc() + ": Must be an array.");
-      errors = true;
+      errors.add(new Error(Error.Type.NEED_ARRAY, atom));
       return errType;
     }
     ArrayType at = (ArrayType)t;
 
     // look at indexing types
     typeVar.push();
-    check(idx.getA().eval(this), at.getRowType(), idx.getA().loc());
+    check(idx.getA().eval(this), at.getRowType(), idx.getA());
     if (idx.getB() != null)
-      check(idx.getB().eval(this), at.getColType(), idx.getB().loc());
+      check(idx.getB().eval(this), at.getColType(), idx.getB());
 
-    Type et = checkRealType(at.getElemType(), atomIdx.loc());
+    Type et = checkRealType(at.getElemType(), atomIdx);
     typeVar.pop();
     typeOf.put(atomIdx, et);
     return et;
@@ -609,14 +602,14 @@ public class TypeChecker extends Evaluator<Type> {
   public Type eval(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
     Type lt = strip(lhs.eval(this));
     Type rt = strip(rhs.eval(this));
-    check(rt, lt, assignmentCmd.loc());
+    check(rt, lt, assignmentCmd);
     return null;
   }
 
   @Override
   public Type eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Expr expr) {
     Type t = expr.eval(this);
-    check(t, boolType, assertAssumeCmd.loc());
+    check(t, boolType, assertAssumeCmd);
     return null;
   }
 
@@ -629,12 +622,12 @@ public class TypeChecker extends Evaluator<Type> {
     // check the actual arguments against the formal ones
     Type at = strip(args == null? null : args.eval(this));
     Type fat = strip(tupleTypeOfDecl(fargs));
-    check(at, fat, (args == null? callCmd.loc() : args.loc()));
+    check(at, fat, (args == null? callCmd : args));
     
     // check the assignment of the results
     Type lt = strip(results == null? null : results.eval(this));
     Type rt = strip(tupleTypeOfDecl(sig.getResults()));
-    check(rt, lt, callCmd.loc());
+    check(rt, lt, callCmd);
     
     return null;
   }
@@ -643,7 +636,7 @@ public class TypeChecker extends Evaluator<Type> {
   @Override
   public DepType eval(DepType depType, Type type, Expr pred) {
     Type t = pred.eval(this);
-    check(t, boolType, pred.loc());
+    check(t, boolType, pred);
     return null;
   }
   
@@ -677,7 +670,7 @@ public class TypeChecker extends Evaluator<Type> {
     case REQUIRES:
     case ENSURES:
       t = expr.eval(this);
-      check(t, boolType, expr.loc());
+      check(t, boolType, expr);
       break;
     case MODIFIES:
       break;
@@ -695,7 +688,7 @@ public class TypeChecker extends Evaluator<Type> {
     enclosingTypeVar.push();
     collectEnclosingTypeVars(typeVars);
     Type t = expr.eval(this);
-    check(t, boolType, expr.loc());
+    check(t, boolType, expr);
     enclosingTypeVar.pop();
     if (tail != null) tail.eval(this);
     return null;

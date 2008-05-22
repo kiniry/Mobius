@@ -1,6 +1,6 @@
 package freeboogie.tc;
 
-import java.util.HashMap;
+import java.util.*;
 
 import freeboogie.ast.*;
 import freeboogie.util.Err;
@@ -20,7 +20,7 @@ import freeboogie.util.Err;
  */
 @SuppressWarnings("unused") // unused parameters
 public class ImplementationChecker extends Transformer {
-  private boolean errors;
+  private List<Error> errors;
   private GlobalsCollector gc;
   
   // connects implementations to procedures
@@ -37,10 +37,10 @@ public class ImplementationChecker extends Transformer {
    * such a mapping.)
    * @param ast the AST to check
    * @param g the globals collector that can resolve procedure names 
-   * @return whether any errors were detected
+   * @return the detected problems 
    */
-  public boolean process(Declaration ast, GlobalsCollector g) {
-    errors = false;
+  public List<Error> process(Declaration ast, GlobalsCollector g) {
+    errors = new ArrayList<Error>();
     gc = g;
     implProc = new UsageToDefMap<Implementation, Procedure>();
     paramMap = new UsageToDefMap<VariableDecl, VariableDecl>();
@@ -66,10 +66,6 @@ public class ImplementationChecker extends Transformer {
   }
   
   // === helpers ==
-  private void report(AstLocation l, String s) {
-    Err.error("" + l + ": " + s + ".");
-    errors = true;
-  }
   
   // assumes {@code a} and {@code b} are lists of {@code VariableDecl}
   // compares their types and connects them in implDecl
@@ -77,14 +73,15 @@ public class ImplementationChecker extends Transformer {
   private void compare(Declaration a, Declaration b) {
     if (a == null && b == null) return;
     if (a == null ^ b == null) {
-      report(a==null? b.loc() : a.loc(), "Implementation-Procedure parameter count mismatch");
+      errors.add(new Error(Error.Type.IP_CNT_MISMATCH, a==null? b:a));
       return;
     }
     
     VariableDecl va = (VariableDecl)a;
     VariableDecl vb = (VariableDecl)b;
     if (!TypeUtils.eq(TypeUtils.stripDep(va.getType()), TypeUtils.stripDep(vb.getType()))) {
-      report(va.loc(), "Type should be " + TypeUtils.typeToString(vb.getType()));
+      errors.add(new Error(Error.Type.EXACT_TYPE, va,
+            TypeUtils.typeToString(vb.getType())));
       return;
     }
     paramMap.put(va, vb);
@@ -96,7 +93,7 @@ public class ImplementationChecker extends Transformer {
     if (a == null) return;
     VariableDecl va = (VariableDecl)a;
     if (TypeUtils.hasDep(va.getType()))
-      report(va.loc(), "Dependent type in implementation signature");
+      errors.add(new Error(Error.Type.DEP_IMPL_SIG, va));
   }
   
   // === visiting implementations ===
@@ -106,7 +103,7 @@ public class ImplementationChecker extends Transformer {
     String name = sig.getName();
     Procedure p = gc.procDef(name);
     if (p == null) {
-      report(implementation.loc(), "Implementation without procedure");
+      errors.add(new Error(Error.Type.PROC_MISSING, implementation));
       return;
     }
     

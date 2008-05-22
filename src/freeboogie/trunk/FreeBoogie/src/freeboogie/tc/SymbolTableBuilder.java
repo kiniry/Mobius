@@ -1,7 +1,6 @@
 package freeboogie.tc;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import freeboogie.ast.*;
 import freeboogie.util.Err;
@@ -21,8 +20,8 @@ public class SymbolTableBuilder extends Transformer {
   private SymbolTable symbolTable;
   private GlobalsCollector gc;
   
-  // where there undeclared identifiers?
-  private boolean errors;
+  // problems found while building the symbol table 
+  private List<Error> errors;
   
   // for modifies spec we ignore the arguments
   private boolean lookInLocalScopes;
@@ -31,18 +30,17 @@ public class SymbolTableBuilder extends Transformer {
    * Builds a symbol table. Reports name clashes (because it
    * uses {@code GlobalsCollector}. Reports undeclared variables.
    * @param ast the AST to analyze
-   * @return whether there were any problems detected
+   * @return a list with the problems detected
    */
-  public boolean process(Declaration ast) {
-    errors = false;
+  public List<Error> process(Declaration ast) {
     localVarDecl = new StackedHashMap<String, VariableDecl>();
     typeVarDecl = new StackedHashMap<String, AtomId>();
     symbolTable = new SymbolTable();
     gc = new GlobalsCollector();
     lookInLocalScopes = true;
-    boolean e = gc.process(ast);
+    errors = gc.process(ast);
     ast.eval(this);
-    return errors || e;
+    return errors;
   }
 
   /**
@@ -64,15 +62,14 @@ public class SymbolTableBuilder extends Transformer {
   // === helpers ===
   
   // reports an error at location l if d is null
-  private <T> T check(T d, String s, AstLocation l) {
+  private <T> T check(T d, String s, Ast l) {
     if (d != null) return d;
-    Err.error("" + l + ": Undeclared identifier " + s + ".");
-    errors = true;
+    errors.add(new Error(Error.Type.UNDECL_ID, l, s));
     return null;
   }
   
   // the return might by ConstDecl or VariableDecl
-  private Declaration lookup(String s, AstLocation l) {
+  private Declaration lookup(String s, Ast l) {
     Declaration r = localVarDecl.get(s);
     if (r == null) r = gc.idDef(s);
     return check(r, s, l);
@@ -82,10 +79,8 @@ public class SymbolTableBuilder extends Transformer {
     if (ids == null) return;
     AtomId a = ids.getId();
     String n = a.getId();
-    if (tv.get(n) != null) {
-      Err.error("" + a.loc() + ": Type variable already defined.");
-      errors = true;
-    }
+    if (tv.get(n) != null)
+      errors.add(new Error(Error.Type.TV_ALREADY_DEF, a));
     symbolTable.typeVars.seenDef(ids.getId());
     typeVarDecl.put(n, a);
     collectTypeVars(tv, ids.getTail());
@@ -101,12 +96,12 @@ public class SymbolTableBuilder extends Transformer {
     if (tv != null)
       symbolTable.typeVars.put(userType, tv);
     else
-      symbolTable.types.put(userType, check(gc.typeDef(name), name, userType.loc()));
+      symbolTable.types.put(userType, check(gc.typeDef(name), name, userType));
   }
 
   @Override
   public void see(CallCmd callCmd, String p, TupleType types, Identifiers results, Exprs args) {
-    symbolTable.procs.put(callCmd, check(gc.procDef(p), p, callCmd.loc()));
+    symbolTable.procs.put(callCmd, check(gc.procDef(p), p, callCmd));
     if (types != null) types.eval(this);
     if (results != null) results.eval(this);
     if (args != null) args.eval(this);
@@ -114,14 +109,14 @@ public class SymbolTableBuilder extends Transformer {
 
   @Override
   public void see(AtomFun atomFun, String f, TupleType types, Exprs args) {
-    symbolTable.funcs.put(atomFun, check(gc.funDef(f), f, atomFun.loc()));
+    symbolTable.funcs.put(atomFun, check(gc.funDef(f), f, atomFun));
     if (types != null) types.eval(this);
     if (args != null) args.eval(this);
   }
 
   @Override
   public void see(AtomId atomId, String id, TupleType types) {
-    symbolTable.ids.put(atomId, lookup(id, atomId.loc()));
+    symbolTable.ids.put(atomId, lookup(id, atomId));
     if (types != null) types.eval(this);
   }
 
@@ -135,10 +130,9 @@ public class SymbolTableBuilder extends Transformer {
     if (localVarDecl.frames() > 0 && name != null) {
       // we are in a local scope
       VariableDecl old = scope.get(name);
-      if (old != null) {
-        Err.error("" + variableDecl.loc() + ": Variable already defined.");
-        errors = true;
-      } else 
+      if (old != null)
+        errors.add(new Error(Error.Type.ALREADY_DEF, variableDecl, name));
+      else 
         scope.put(name, variableDecl);
     }
     type.eval(this);

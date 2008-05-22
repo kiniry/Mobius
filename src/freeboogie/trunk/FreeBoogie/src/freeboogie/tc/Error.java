@@ -1,13 +1,24 @@
 package freeboogie.tc;
 
-import freeboogie.ast.Ast;
+import java.util.List;
 
+import freeboogie.ast.Ast;
+import freeboogie.util.Err;
+
+/**
+ * Represents an error.
+ *
+ * Various analyzes of the AST produce lists of errors. Each
+ * error has a type, points to an AST node, and contains
+ * additional information used to build up an error message
+ * when {@code toString()} is called.
+ */
 public class Error {
   static public enum Type {
     // TODO: Find better names for these errors
     UNDECL_ID("Undeclared identifier %."),
     REQ_SPECIALIZATION("Explicit specialization required for %0 at %1."),
-    GEN_TOOMANY("Too many explicit generics. Ignoring."),
+    GEN_TOOMANY("Too many explicit generics."),
     NOT_SUBTYPE("Found type %0 instead of %1."),
     BAD_TYPE("Unrelated types: %0 and %1."),
     EXACT_TYPE("Type should be %."),
@@ -17,7 +28,8 @@ public class Error {
     MISSING_BLOCK("Inexistent block %."),
     IP_CNT_MISMATCH("Implementation-Procedure parameters count mismatch."),
     DEP_IMPL_SIG("Dependent type in implementation signature."),
-    PROC_MISSING("Implementation without procedure.");
+    PROC_MISSING("Implementation without procedure."),
+    NEED_ARRAY("Must be an array.");
 
     private final String templ;
     public String templ() { return templ; }
@@ -70,5 +82,10 @@ public class Error {
       }
     }
     return sb.toString();
+  }
+
+  public static boolean reportAll(List<Error> es) {
+    for (Error e : es) Err.error(e.toString());
+    return !es.isEmpty();
   }
 }

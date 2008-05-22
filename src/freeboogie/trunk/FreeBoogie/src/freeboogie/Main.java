@@ -3,10 +3,8 @@ package freeboogie;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.List;
+import java.util.logging.*;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -16,9 +14,7 @@ import freeboogie.astutil.PrettyPrinter;
 import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
-import freeboogie.tc.SymbolTable;
-import freeboogie.tc.TypeChecker;
-import freeboogie.tc.UsageToDefMap;
+import freeboogie.tc.*;
 import freeboogie.util.Closure;
 import freeboogie.util.ClosureR;
 import freeboogie.util.Err;
@@ -167,7 +163,7 @@ public class Main {
         // do what we are asked to do with this file
         if (opt.boolVal("-sb")) chopBlocks();
         if (opt.boolVal("-pp")) ast.eval(pp);
-        if (tc.process(ast)) continue;
+        if (freeboogie.tc.Error.reportAll(tc.process(ast))) continue;
         if (opt.boolVal("-pst")) printSymbolTable();
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
       } catch (FileNotFoundException e) {
