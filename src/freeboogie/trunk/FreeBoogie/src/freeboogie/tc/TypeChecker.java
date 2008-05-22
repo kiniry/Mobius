@@ -48,7 +48,7 @@ public class TypeChecker extends Evaluator<Type> {
   private BlockFlowGraphs flowGraphs;
   
   // detected errors
-  private List<Error> errors;
+  private List<FbError> errors;
   
   // maps expressions to their types (caches the results of the
   // typechecker)
@@ -87,7 +87,7 @@ public class TypeChecker extends Evaluator<Type> {
    * @param ast the AST to check
    * @return the detected errors 
    */
-  public List<Error> process(Declaration ast) {
+  public List<FbError> process(Declaration ast) {
     boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
     intType = PrimitiveType.mk(PrimitiveType.Ptype.INT);
     refType = PrimitiveType.mk(PrimitiveType.Ptype.REF);
@@ -334,7 +334,7 @@ public class TypeChecker extends Evaluator<Type> {
   private Type checkRealType(Type t, Ast l) {
     t = substRealType(t);
     if (isTypeVar(t)) {
-      errors.add(new Error(Error.Type.REQ_SPECIALIZATION, l,
+      errors.add(new FbError(FbError.Type.REQ_SPECIALIZATION, l,
             TypeUtils.typeToString(t), t.loc()));
       t = errType;
     }
@@ -396,7 +396,7 @@ public class TypeChecker extends Evaluator<Type> {
   private void mapExplicitGenerics(Identifiers tv, TupleType t) {
     if (t == null) return;
     if (tv == null) {
-      errors.add(new Error(Error.Type.GEN_TOOMANY, t));
+      errors.add(new FbError(FbError.Type.GEN_TOOMANY, t));
       return;
     }
     typeVar.put(tv.getId(), t.getType());
@@ -409,7 +409,7 @@ public class TypeChecker extends Evaluator<Type> {
    */
   private void check(Type a, Type b, Ast l) {
     if (sub(a, b)) return;
-    errors.add(new Error(Error.Type.NOT_SUBTYPE, l,
+    errors.add(new FbError(FbError.Type.NOT_SUBTYPE, l,
           TypeUtils.typeToString(a), TypeUtils.typeToString(b)));
   }
   
@@ -420,7 +420,7 @@ public class TypeChecker extends Evaluator<Type> {
   private void checkExact(Type a, Type b, Ast l) {
     // BUG? Should || be &&?
     if (sub(a, b) || sub(b, a)) return;
-    errors.add(new Error(Error.Type.BAD_TYPE, l,
+    errors.add(new FbError(FbError.Type.BAD_TYPE, l,
           TypeUtils.typeToString(a), TypeUtils.typeToString(b)));
   }
 
@@ -580,7 +580,7 @@ public class TypeChecker extends Evaluator<Type> {
     Type t = strip(atom.eval(this));
     if (t == errType) return errType;
     if (!(t instanceof ArrayType)) {
-      errors.add(new Error(Error.Type.NEED_ARRAY, atom));
+      errors.add(new FbError(FbError.Type.NEED_ARRAY, atom));
       return errType;
     }
     ArrayType at = (ArrayType)t;

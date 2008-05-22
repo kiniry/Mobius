@@ -21,7 +21,7 @@ public class SymbolTableBuilder extends Transformer {
   private GlobalsCollector gc;
   
   // problems found while building the symbol table 
-  private List<Error> errors;
+  private List<FbError> errors;
   
   // for modifies spec we ignore the arguments
   private boolean lookInLocalScopes;
@@ -32,7 +32,7 @@ public class SymbolTableBuilder extends Transformer {
    * @param ast the AST to analyze
    * @return a list with the problems detected
    */
-  public List<Error> process(Declaration ast) {
+  public List<FbError> process(Declaration ast) {
     localVarDecl = new StackedHashMap<String, VariableDecl>();
     typeVarDecl = new StackedHashMap<String, AtomId>();
     symbolTable = new SymbolTable();
@@ -64,7 +64,7 @@ public class SymbolTableBuilder extends Transformer {
   // reports an error at location l if d is null
   private <T> T check(T d, String s, Ast l) {
     if (d != null) return d;
-    errors.add(new Error(Error.Type.UNDECL_ID, l, s));
+    errors.add(new FbError(FbError.Type.UNDECL_ID, l, s));
     return null;
   }
   
@@ -80,7 +80,7 @@ public class SymbolTableBuilder extends Transformer {
     AtomId a = ids.getId();
     String n = a.getId();
     if (tv.get(n) != null)
-      errors.add(new Error(Error.Type.TV_ALREADY_DEF, a));
+      errors.add(new FbError(FbError.Type.TV_ALREADY_DEF, a));
     symbolTable.typeVars.seenDef(ids.getId());
     typeVarDecl.put(n, a);
     collectTypeVars(tv, ids.getTail());
@@ -131,7 +131,7 @@ public class SymbolTableBuilder extends Transformer {
       // we are in a local scope
       VariableDecl old = scope.get(name);
       if (old != null)
-        errors.add(new Error(Error.Type.ALREADY_DEF, variableDecl, name));
+        errors.add(new FbError(FbError.Type.ALREADY_DEF, variableDecl, name));
       else 
         scope.put(name, variableDecl);
     }

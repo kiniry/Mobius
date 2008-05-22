@@ -20,7 +20,7 @@ import freeboogie.util.Err;
  */
 @SuppressWarnings("unused") // unused parameters
 public class ImplementationChecker extends Transformer {
-  private List<Error> errors;
+  private List<FbError> errors;
   private GlobalsCollector gc;
   
   // connects implementations to procedures
@@ -39,8 +39,8 @@ public class ImplementationChecker extends Transformer {
    * @param g the globals collector that can resolve procedure names 
    * @return the detected problems 
    */
-  public List<Error> process(Declaration ast, GlobalsCollector g) {
-    errors = new ArrayList<Error>();
+  public List<FbError> process(Declaration ast, GlobalsCollector g) {
+    errors = new ArrayList<FbError>();
     gc = g;
     implProc = new UsageToDefMap<Implementation, Procedure>();
     paramMap = new UsageToDefMap<VariableDecl, VariableDecl>();
@@ -73,14 +73,14 @@ public class ImplementationChecker extends Transformer {
   private void compare(Declaration a, Declaration b) {
     if (a == null && b == null) return;
     if (a == null ^ b == null) {
-      errors.add(new Error(Error.Type.IP_CNT_MISMATCH, a==null? b:a));
+      errors.add(new FbError(FbError.Type.IP_CNT_MISMATCH, a==null? b:a));
       return;
     }
     
     VariableDecl va = (VariableDecl)a;
     VariableDecl vb = (VariableDecl)b;
     if (!TypeUtils.eq(TypeUtils.stripDep(va.getType()), TypeUtils.stripDep(vb.getType()))) {
-      errors.add(new Error(Error.Type.EXACT_TYPE, va,
+      errors.add(new FbError(FbError.Type.EXACT_TYPE, va,
             TypeUtils.typeToString(vb.getType())));
       return;
     }
@@ -93,7 +93,7 @@ public class ImplementationChecker extends Transformer {
     if (a == null) return;
     VariableDecl va = (VariableDecl)a;
     if (TypeUtils.hasDep(va.getType()))
-      errors.add(new Error(Error.Type.DEP_IMPL_SIG, va));
+      errors.add(new FbError(FbError.Type.DEP_IMPL_SIG, va));
   }
   
   // === visiting implementations ===
@@ -103,7 +103,7 @@ public class ImplementationChecker extends Transformer {
     String name = sig.getName();
     Procedure p = gc.procDef(name);
     if (p == null) {
-      errors.add(new Error(Error.Type.PROC_MISSING, implementation));
+      errors.add(new FbError(FbError.Type.PROC_MISSING, implementation));
       return;
     }
     

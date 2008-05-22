@@ -28,7 +28,7 @@ public class BlockFlowGraphs extends Transformer {
   private HashMap<Implementation, SimpleGraph<Block>> flowGraphs;
   
   // the detected problems 
-  private List<Error> errors;
+  private List<FbError> errors;
   
   // used for reachability (DFS)
   private HashSet<Block> seenBlocks;
@@ -41,9 +41,9 @@ public class BlockFlowGraphs extends Transformer {
    * @param ast the AST for which to build flow graphs
    * @return the detected problems 
    */
-  public List<Error> process(Declaration ast) {
+  public List<FbError> process(Declaration ast) {
     currentBlock = null;
-    errors = new ArrayList<Error>();
+    errors = new ArrayList<FbError>();
     flowGraphs = new HashMap<Implementation, SimpleGraph<Block>>();
     ast.eval(this);
     return errors;
@@ -115,7 +115,7 @@ public class BlockFlowGraphs extends Transformer {
     assert types == null;
     Block target = blocksByName.get(id);
     if (target == null)
-      errors.add(new Error(Error.Type.MISSING_BLOCK, atomId, id));
+      errors.add(new FbError(FbError.Type.MISSING_BLOCK, atomId, id));
     else
       currentFlowGraph.edge(currentBlock, target);
   }

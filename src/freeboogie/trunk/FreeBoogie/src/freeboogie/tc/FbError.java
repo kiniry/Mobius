@@ -13,7 +13,7 @@ import freeboogie.util.Err;
  * additional information used to build up an error message
  * when {@code toString()} is called.
  */
-public class Error {
+public class FbError {
   static public enum Type {
     // TODO: Find better names for these errors
     UNDECL_ID("Undeclared identifier %."),
@@ -46,7 +46,7 @@ public class Error {
    * {@code data}. Note that the content of {@code data} is
    * not checked.
    */
-  public Error(Type type, Ast ast, Object... data) {
+  public FbError(Type type, Ast ast, Object... data) {
     assert ast != null;
     this.ast = ast;
     this.data = data;
@@ -84,8 +84,8 @@ public class Error {
     return sb.toString();
   }
 
-  public static boolean reportAll(List<Error> es) {
-    for (Error e : es) Err.error(e.toString());
+  public static boolean reportAll(List<FbError> es) {
+    for (FbError e : es) Err.error(e.toString());
     return !es.isEmpty();
   }
 }

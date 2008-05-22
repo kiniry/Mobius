@@ -27,7 +27,7 @@ public class GlobalsCollector extends Transformer {
   private HashMap<String, VariableDecl> vars;
   
   // the errors that were encountered
-  private List<Error> errors;
+  private List<FbError> errors;
   
   private void reset() {
     types = new HashMap<String, TypeDecl>();
@@ -35,7 +35,7 @@ public class GlobalsCollector extends Transformer {
     funcs = new HashMap<String, Function>();
     consts = new HashMap<String, ConstDecl>();
     vars = new HashMap<String, VariableDecl>();
-    errors = new ArrayList<Error>();
+    errors = new ArrayList<FbError>();
   }
   
   /**
@@ -43,7 +43,7 @@ public class GlobalsCollector extends Transformer {
    * @param ast the AST to be processed
    * @return whether there are name clashes in the input
    */
-  public List<Error> process(Declaration d) {
+  public List<FbError> process(Declaration d) {
     reset();
     d.eval(this);
     return errors;
@@ -96,7 +96,7 @@ public class GlobalsCollector extends Transformer {
   private <D extends Declaration> 
   void check(HashMap<String, D> h, String s, Ast l) {
     if (h.get(s) == null) return;
-    errors.add(new Error(Error.Type.GB_ALREADY_DEF, l, s));
+    errors.add(new FbError(FbError.Type.GB_ALREADY_DEF, l, s));
   }
   
   private void addTypeDef(String s, TypeDecl d) {
