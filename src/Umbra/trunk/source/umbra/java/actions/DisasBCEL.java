@@ -28,7 +28,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeDocumentProvider;
 import umbra.editor.BytecodeEditor;
-import umbra.editor.Composition;
+import umbra.editor.ColorModeContainer;
 import umbra.editor.parsing.BytecodePartitionScanner;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
@@ -197,7 +197,7 @@ public class DisasBCEL implements IEditorActionDelegate {
                                         final BytecodeEditor an_editor,
                                         final FileEditorInput an_input,
                                         final BytecodeDocument a_doc) {
-    Composition.startDisas();
+    ColorModeContainer.classKnown();
     a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
                                  null);
     final IDocumentPartitioner partitioner =
@@ -213,7 +213,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     an_editor.renewConfiguration(a_doc);
     an_editor.setRelation(my_editor);
     a_page.bringToTop(an_editor);
-    Composition.stopDisas();
+    ColorModeContainer.classUnknown();
   }
 
   /**

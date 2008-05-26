@@ -48,7 +48,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * The bytecode tag scanner object used, in particular, when the presentation
    * of the bytecode file in an editor is reconciled with a change.
-   * TODO is it the only purpose? is it right? 
+   * TODO is it the only purpose? is it right?
    */
   private BytecodeBMLSecScanner my_bml_secscanner;
   //@ invariant my_bml_secscanner.colorManager == my_color_manager;
@@ -76,7 +76,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    * TODO.
    */
   public BytecodeConfiguration() {
-    my_mode = Composition.getMod();
+    my_mode = ColorModeContainer.getMod();
     my_color_manager = ColorManager.getColorManager();
   }
 

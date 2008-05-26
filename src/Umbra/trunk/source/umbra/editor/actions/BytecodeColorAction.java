@@ -14,7 +14,7 @@ import org.eclipse.ui.PartInitException;
 
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
-import umbra.editor.Composition;
+import umbra.editor.ColorModeContainer;
 import umbra.editor.parsing.ColorValues;
 
 /**
@@ -78,7 +78,7 @@ public class BytecodeColorAction extends BytecodeEditorAction {
   public final void run() {
     if (my_mod == ColorValues.MODES_DESC.length - 1) return;
     my_mod = (my_mod + my_colour_delta) % (ColorValues.MODES_DESC.length - 1);
-    Composition.setMod(my_mod);
+    ColorModeContainer.setMod(my_mod);
     if (getEditor() != null) {
       try {
         getContributor().refreshEditor(getEditor(), null, null);
@@ -99,6 +99,6 @@ public class BytecodeColorAction extends BytecodeEditorAction {
    */
   public final void setActiveEditor(final IEditorPart a_part) {
     super.setActiveEditor(a_part);
-    my_mod = Composition.getMod();
+    my_mod = ColorModeContainer.getMod();
   }
 }

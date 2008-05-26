@@ -46,7 +46,7 @@ public class BytecodeContribution extends ControlContribution {
   private static BytecodeContribution inUse;
 
   /**
-   * 
+   * TODO.
    */
   private boolean my_need_new_flag = true;
 

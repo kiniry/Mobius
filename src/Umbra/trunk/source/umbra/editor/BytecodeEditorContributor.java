@@ -24,7 +24,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorActionBarContributor;
-import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.UmbraPlugin;
 import umbra.editor.actions.BytecodeColorAction;
@@ -126,7 +125,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     assignIcons(installURL);
     setupToolTipTexts();
     my_refresh_action.setId(REFRESH_ID);
-    setupColorActions(installURL, Composition.getMod());
+    setupColorActions(installURL, ColorModeContainer.getMod());
   }
 
   /**
@@ -353,7 +352,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
                                                            getRelatedEditor();
     final boolean proper = (related != null);
     my_bcode_cntrbtn.survive();
-    if (proper) Composition.startDisas();
+    if (proper) ColorModeContainer.classKnown();
     //TODO consider not closing the editor here
     page.closeEditor(an_editor, true);
     final BytecodeEditor newEditor = (BytecodeEditor)(page.openEditor(an_input,
@@ -366,7 +365,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     ndoc.setEditor((BytecodeEditor)newEditor, bmlp);
     ndoc.reinit(a_comment_array, an_interline);
     ((BytecodeEditor) newEditor).setRelation(related);
-    if (proper) Composition.stopDisas();
+    if (proper) ColorModeContainer.classUnknown();
     return newEditor;
   }
 

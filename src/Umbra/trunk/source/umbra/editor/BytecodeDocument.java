@@ -16,7 +16,6 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.Document;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
 
 import umbra.instructions.BytecodeController;
 import umbra.instructions.ast.BytecodeLineController;
@@ -333,7 +332,7 @@ public class BytecodeDocument extends Document {
 
   /**
    * TODO responsible for changing the Bmllib structures based on the local
-   * changed methods
+   * changed methods.
    */
   public void updateJavaClass() {
     if (BMLParsing.BMLLIB_ENABLED) {
@@ -366,11 +365,12 @@ public class BytecodeDocument extends Document {
    *   in a document is made to a position outside the document
    * @throws UmbraSynchronisationException  in case the sychronisation is
    *   scheduled for a position outside the method body
-   * @throws JavaModelException 
+   * @throws JavaModelException
    */
   public void synchronizeSB(final int a_pos,
                             final CompilationUnitEditor an_editor)
-    throws UmbraLocationException, UmbraSynchronisationException, JavaModelException {
+    throws UmbraLocationException, UmbraSynchronisationException,
+           JavaModelException {
     final DocumentSynchroniser synch = getDocSynch();
     synch.synchronizeSB(a_pos, an_editor);
   }
@@ -485,19 +485,20 @@ public class BytecodeDocument extends Document {
     return my_bmlp.getErrorMsg();
   }
 
-  public int getLineForPCInMethod(int pc, int a_mno) {
+  public int getLineForPCInMethod(final int pc, final int a_mno) {
     return my_bcc.getLineForPCInMethod(pc, a_mno);
   }
 
-  public int getLastLineInMethod(int a_mno) {
+  public int getLastLineInMethod(final int a_mno) {
     return my_bcc.getLastLineInMethod(a_mno);
   }
 
-  public int getInstructionLineBelow(int a_line_no) throws UmbraException {
+  public int getInstructionLineBelow(final int a_line_no)
+    throws UmbraException {
     return my_bcc.getInstructionLineBelow(a_line_no);
   }
 
-  public int getMethodForLine(int lineno) {
+  public int getMethodForLine(final int lineno) {
     return my_bcc.getMethodForLine(lineno);
   }
 
