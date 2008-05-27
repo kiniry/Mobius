@@ -30,3 +30,4 @@ src/test/resources/TestSystem3.java
 src/test/resources/TestSystem4.java
 src/test/resources/TestThrowable.java
 src/test/resources/TestVector.java
+-useOldStringHandling src/test/resources/Test0C.java
