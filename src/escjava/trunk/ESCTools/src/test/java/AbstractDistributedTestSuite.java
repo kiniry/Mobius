@@ -170,8 +170,9 @@ public class AbstractDistributedTestSuite extends TestSuite {
                   // and we are within the current batch of tests
                   if ((position++ % numberOfServers) == serverIndex) {
                     if ((position % numberOfProcessors) == batch) {
-                      System.gc();
-                      if (Runtime.getRuntime().freeMemory() > ONE_MEGABYTE) {
+                      int freeMem = Runtime.getRuntime().freeMemory();
+                      System.out.println("Free memory: " + freeMem);
+                      if (freeMem > ONE_MEGABYTE) {
                         addTest(makeHelper(JUnitUtils.parseLine(preArgs
                                                                 + " "
                                                                 + proverArgs
@@ -272,11 +273,13 @@ public class AbstractDistributedTestSuite extends TestSuite {
 
       ByteArrayOutputStream ba = JUnitUtils.setStreams();
       try {
-        System.gc();
-        if (Runtime.getRuntime().freeMemory() > ONE_MEGABYTE) {
+        int freeMem = Runtime.getRuntime().freeMemory();
+        System.out.println("Free memory " + freeMem);
+         if (freeMem > ONE_MEGABYTE) {
           returnedObject = dotest(fileToTest, args);
         }
         else {
+          System.gc();
           fail (fileToTest + NOT_ENOUGH_MEMORY);
         }
       } catch (IllegalAccessException e) {

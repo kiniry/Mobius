@@ -4,4 +4,3 @@ boomer.insttech.washington.edu
 category.ucd.ie
 morphism.icd.ie
 object.ucd.ie
-voting.ucd.ie
