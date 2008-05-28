@@ -12,7 +12,7 @@ import freeboogie.util.StackedHashMap;
  * @author miko
  */
 @SuppressWarnings("unused") // lots of unused parameters
-public class SymbolTableBuilder extends Transformer {
+public class SymbolTableBuilder extends Transformer implements StbInterface {
   private StackedHashMap<String, VariableDecl> localVarDecl;
   private StackedHashMap<String, AtomId> typeVarDecl;
 
@@ -31,6 +31,7 @@ public class SymbolTableBuilder extends Transformer {
    * @param ast the AST to analyze
    * @return a list with the problems detected
    */
+  @Override
   public List<FbError> process(Declaration ast) {
     localVarDecl = new StackedHashMap<String, VariableDecl>();
     typeVarDecl = new StackedHashMap<String, AtomId>();
@@ -46,6 +47,7 @@ public class SymbolTableBuilder extends Transformer {
    * Returns the symbol table.
    * @return the symbol table
    */
+  @Override
   public SymbolTable getST() {
     return symbolTable;
   }
@@ -54,6 +56,7 @@ public class SymbolTableBuilder extends Transformer {
    * Returns the globals collector, which can be used to resolve global names.
    * @return the globals collector
    */
+  @Override
   public GlobalsCollector getGC() {
     return gc;
   }

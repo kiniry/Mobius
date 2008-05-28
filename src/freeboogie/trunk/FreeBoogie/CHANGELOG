@@ -89,13 +89,13 @@ listed can be collapsed into two categories by obeying these rules.
 The step (2a) is not well defined, yet.
 
 
-The implementation of the "old" mode is primarily based on `forgiving'
-versions of SymbolTableBuilder and TypeChecker.
+The implementation of the "old" mode is primarily based on
+`forgiving' versions of SymbolTableBuilder and TypeChecker.
 ForgivingSymbolTableBuilder implements the same interface as
-SymbolTableBuilder and does most of the work by delegating
-to SymbolTableBuilder. Whenever STB fails, FTSB tries to fix
-the errors and reruns STB to double-check. A similar approach
-is used for type-checking.
+SymbolTableBuilder and does most of the work by delegating to
+SymbolTableBuilder. Whenever STB fails, FTSB tries to fix the
+errors and reruns STB to double-check. A similar approach is used
+for type-checking.
 
 
 
