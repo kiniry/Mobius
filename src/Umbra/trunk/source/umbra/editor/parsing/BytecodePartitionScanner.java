@@ -64,14 +64,19 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   public static final String SECTION_BML = "__btc.bmlcode";
 
   /**
-   * Index for the rule to handle BML annotations.
+   * Index for the rule to handle BML annotations ending "@*\/".
    */
   private static final int BML_RULE = 0;
 
   /**
+   * Index for the rule to handle BML annotations  ending "*\/".
+   */
+  private static final int BML_RULE_SIMPLE = 1;
+
+  /**
    * Index for the rule to handle throws lines.
    */
-  private static final int THROWS_RULE = 1;
+  private static final int THROWS_RULE = 2;
 
   /**
    * The total number of rules in the current scanner. It is by one greater
@@ -93,17 +98,18 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    * </ul>
    */
   public BytecodePartitionScanner() {
-
     final IToken thr = new Token(SECTION_THROWS);
     final IToken head = new Token(SECTION_HEAD);
     final IToken bml = new Token(SECTION_BML);
-
     final IPredicateRule[] rules = new IPredicateRule[NUMBER_OF_RULES +
                               BytecodeStrings.HEADER_PREFIX.length];
-
-    rules[BML_RULE] = new MultiLineRule("/*@", "@*/", bml);
+    rules[BML_RULE] = new MultiLineRule(BytecodeStrings.ANNOT_LINE_START,
+                                        BytecodeStrings.ANNOT_LINE_END, bml);
+    rules[BML_RULE_SIMPLE] = new MultiLineRule(
+                                        BytecodeStrings.ANNOT_LINE_START,
+                                        BytecodeStrings.ANNOT_LINE_END_SIMPLE,
+                                        bml);
     rules[THROWS_RULE] = new EndOfLineRule("throws", thr);
-
     for (int i = 0; i < BytecodeStrings.HEADER_PREFIX.length;
          i++) {
       rules[NUMBER_OF_RULES + i] = new EndOfLineRule(

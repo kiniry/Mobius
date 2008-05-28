@@ -97,14 +97,20 @@ public class BytecodeScanner extends RuleBasedScanner {
 
   /**
    * The number of the rule which is responsible for colour and text styling of
-   * BML annotations areas.
+   * BML annotations areas ending with @*\/.
    */
   private static final int RULE_ANNOT = 10;
 
   /**
+   * The number of the rule which is responsible for colour and text styling of
+   * BML annotations areas ending with *\/.
+   */
+  private static final int RULE_ANNOT_SIMPLE = 11;
+
+  /**
    * The number of colouring rules used in this class.
    */
-  private static final int NUMBER_OF_RULES = RULE_ANNOT + 1;
+  private static final int NUMBER_OF_RULES = RULE_ANNOT_SIMPLE + 1;
 
 
   /**
@@ -183,8 +189,14 @@ public class BytecodeScanner extends RuleBasedScanner {
     rules[RULE_COMMENT] = new MultiLineRule("/*", "*/",
       the_tokens[ColorValues.SLOT_COMMENT]);
 
-    rules[RULE_ANNOT] = new MultiLineRule("/*@", "@*/",
-                                            the_tokens[ColorValues.SLOT_BML]);
+    rules[RULE_ANNOT] = new MultiLineRule(BytecodeStrings.ANNOT_LINE_START,
+                                          BytecodeStrings.ANNOT_LINE_END,
+                                          the_tokens[ColorValues.SLOT_BML]);
+    rules[RULE_ANNOT_SIMPLE] = new MultiLineRule(
+                                          BytecodeStrings.ANNOT_LINE_START,
+                                          BytecodeStrings.ANNOT_LINE_END_SIMPLE,
+                                          the_tokens[ColorValues.SLOT_BML]);
+
     return rules;
   }
 

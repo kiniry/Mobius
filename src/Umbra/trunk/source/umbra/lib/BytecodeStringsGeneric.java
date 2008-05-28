@@ -199,9 +199,14 @@ public class BytecodeStringsGeneric {
   public static final String ANNOT_LINE_START = "/*@";
 
   /**
-   * This string contains the BML annotation comment end.
+   * This string contains the BML annotation comment end i.e. @*\/.
    */
   public static final String ANNOT_LINE_END = "@*/";
+
+  /**
+   * This string contains the BML annotation comment end.
+   */
+  public static final String ANNOT_LINE_END_SIMPLE = "*/";
 
   /**
    * Private constructor added to prevent the creation of objects of this

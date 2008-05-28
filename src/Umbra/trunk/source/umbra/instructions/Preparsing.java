@@ -73,7 +73,7 @@ public final class Preparsing {
 
     if (a_context.isInsideAnnotation()) {
       final AnnotationLineController lc = new AnnotationLineController(a_line);
-      if (lc.isCommentEnd()) {
+      if (lc.isAnnotationEnd()) {
         a_context.revertState();
       }
       return lc;

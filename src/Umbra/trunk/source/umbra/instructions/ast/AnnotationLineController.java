@@ -8,6 +8,8 @@
  */
 package umbra.instructions.ast;
 
+import umbra.lib.BytecodeStrings;
+
 
 
 /**
@@ -56,5 +58,32 @@ public class AnnotationLineController extends CommentLineController {
   public static boolean isAnnotationStart(
                               final /*@ non_null @*/ String a_line) {
     return a_line.trim().startsWith("/*@");
+  }
+
+  /**
+   * Checks is the line can be an end of annotation. This holds when the
+   * final non-whitespace sequence in the line is either
+   * {@link BytecodeStrings#ANNOT_LINE_END} or
+   * {@link BytecodeStrings#ANNOT_LINE_END_SIMPLE}.
+   *
+   * @return <code>true</code> when the line contains the end of comment
+   *   sequence, <code>false</code> otherwise
+   */
+  public boolean isAnnotationEnd() {
+    final String line = getMy_line_text();
+    int where = line.lastIndexOf(BytecodeStrings.ANNOT_LINE_END);
+    int wlen = BytecodeStrings.ANNOT_LINE_END.length();
+    if (where == 0) {
+      where = line.lastIndexOf(BytecodeStrings.ANNOT_LINE_END_SIMPLE);
+      wlen = BytecodeStrings.ANNOT_LINE_END_SIMPLE.length();
+    }
+    if (where > 0) {
+      where += wlen;
+      for (int i = where; i < line.length(); i++) {
+        if (!Character.isWhitespace(line.charAt(i))) return false;
+      }
+      return true;
+    }
+    return false;
   }
 }
