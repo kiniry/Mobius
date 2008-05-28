@@ -170,7 +170,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
                   // and we are within the current batch of tests
                   if ((position++ % numberOfServers) == serverIndex) {
                     if ((position % numberOfProcessors) == batch) {
-                      int freeMem = Runtime.getRuntime().freeMemory();
+                      long freeMem = Runtime.getRuntime().freeMemory();
                       System.out.println("Free memory: " + freeMem);
                       if (freeMem > ONE_MEGABYTE) {
                         addTest(makeHelper(JUnitUtils.parseLine(preArgs
@@ -273,7 +273,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
 
       ByteArrayOutputStream ba = JUnitUtils.setStreams();
       try {
-        int freeMem = Runtime.getRuntime().freeMemory();
+        long freeMem = Runtime.getRuntime().freeMemory();
         System.out.println("Free memory " + freeMem);
          if (freeMem > ONE_MEGABYTE) {
           returnedObject = dotest(fileToTest, args);
