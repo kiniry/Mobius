@@ -13,6 +13,8 @@ import javafe.ast.PrettyPrint;
 import javafe.util.Assert;
 import javafe.util.Location;
 
+//@ model import javafe.tc.TagConstants;
+
 /**
  * The <code>Token</code> class defines a set of fields that describe
  * lexical tokens.
@@ -43,12 +45,12 @@ public class Token
      * identifierVal and auxVal to null, as is done in the
      * clear() method. </p>
      *
-     * @see javafe.parser.TagConstants
+     * @see javafe.parser.ParserTagConstants
      */
     public int ttype = CLEAR;
 
     //* The token code to use to clear a token; EOF for now.
-    public static final int CLEAR = TagConstants.EOF;
+    public static final int CLEAR = ParserTagConstants.EOF;
 
     /** Clear the current token. */
     //@ ensures ttype == CLEAR;
@@ -179,19 +181,19 @@ public class Token
         if (! Location.isWholeFileLoc(startingLoc))
             result += ":" + Location.toOffset(startingLoc);
         result += ": ";
-        if (ttype == TagConstants.IDENT)
+        if (ttype == ParserTagConstants.IDENT)
             result += "IDENT (" + identifierVal.toString() + ")";
-        else if (ttype == TagConstants.CHARLIT || ttype == TagConstants.INTLIT
-                 || ttype == TagConstants.LONGLIT
-                 || ttype == TagConstants.FLOATLIT
-                 || ttype == TagConstants.DOUBLELIT
-                 || ttype == TagConstants.STRINGLIT)
+        else if (ttype == ParserTagConstants.CHARLIT || ttype == ParserTagConstants.INTLIT
+                 || ttype == ParserTagConstants.LONGLIT
+                 || ttype == ParserTagConstants.FLOATLIT
+                 || ttype == ParserTagConstants.DOUBLELIT
+                 || ttype == ParserTagConstants.STRINGLIT)
             result += (PrettyPrint.inst.toString(ttype) + " ("
                        + PrettyPrint.toCanonicalString(ttype, auxVal) + ")");
-        else if (ttype == TagConstants.LEXICALPRAGMA
-                 || ttype == TagConstants.MODIFIERPRAGMA
-                 || ttype == TagConstants.TYPEDECLELEMPRAGMA
-                 || ttype == TagConstants.STMTPRAGMA)
+        else if (ttype == ParserTagConstants.LEXICALPRAGMA
+                 || ttype == ParserTagConstants.MODIFIERPRAGMA
+                 || ttype == ParserTagConstants.TYPEDECLELEMPRAGMA
+                 || ttype == ParserTagConstants.STMTPRAGMA)
             result += PrettyPrint.inst.toString(ttype) + " (" + auxVal.toString() + ")";
         else result += PrettyPrint.inst.toString(ttype);
         return result;
@@ -201,27 +203,27 @@ public class Token
     /** Check the invariants of <code>this</code>. */
 
     public void zzz() {
-        Assert.notFalse(ttype != TagConstants.IDENT
+        Assert.notFalse(ttype != ParserTagConstants.IDENT
                         || identifierVal != null);
-        Assert.notFalse(ttype != TagConstants.INTLIT
+        Assert.notFalse(ttype != ParserTagConstants.INTLIT
                         || auxVal instanceof Integer);
-        Assert.notFalse(ttype != TagConstants.LONGLIT
+        Assert.notFalse(ttype != ParserTagConstants.LONGLIT
                         || auxVal instanceof Long);
-        Assert.notFalse(ttype != TagConstants.FLOATLIT
+        Assert.notFalse(ttype != ParserTagConstants.FLOATLIT
                         || auxVal instanceof Float);
-        Assert.notFalse(ttype != TagConstants.DOUBLELIT
+        Assert.notFalse(ttype != ParserTagConstants.DOUBLELIT
                         || auxVal instanceof Double);
-        Assert.notFalse(ttype != TagConstants.STRINGLIT
+        Assert.notFalse(ttype != ParserTagConstants.STRINGLIT
                         || auxVal instanceof String);
-        Assert.notFalse(ttype != TagConstants.CHARLIT
+        Assert.notFalse(ttype != ParserTagConstants.CHARLIT
                         || auxVal instanceof Integer);
-        Assert.notFalse(ttype != TagConstants.LEXICALPRAGMA
+        Assert.notFalse(ttype != ParserTagConstants.LEXICALPRAGMA
                         || auxVal == null || auxVal instanceof LexicalPragma);
-        Assert.notFalse(ttype != TagConstants.MODIFIERPRAGMA
+        Assert.notFalse(ttype != ParserTagConstants.MODIFIERPRAGMA
                         || auxVal == null || auxVal instanceof ModifierPragma);
-        Assert.notFalse(ttype != TagConstants.STMTPRAGMA
+        Assert.notFalse(ttype != ParserTagConstants.STMTPRAGMA
                         || auxVal == null || auxVal instanceof StmtPragma);
-        Assert.notFalse(ttype != TagConstants.TYPEDECLELEMPRAGMA
+        Assert.notFalse(ttype != ParserTagConstants.TYPEDECLELEMPRAGMA
                         || auxVal == null || auxVal instanceof TypeDeclElemPragma);
     }
 }

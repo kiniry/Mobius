@@ -34,7 +34,7 @@ import javafe.ast.Name;
 import javafe.ast.PrettyPrint;
 import javafe.ast.RoutineDecl;
 import javafe.ast.StmtVec;
-import javafe.ast.TagConstants;
+import javafe.ast.ASTTagConstants;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclElem;
 import javafe.ast.TypeDeclElemVec;
@@ -375,52 +375,52 @@ class BCELReader extends Reader {
 		int constantValueIndex = constantValue.getConstantValueIndex();
 
 		switch (fieldTypeTag) {
-		case TagConstants.BOOLEANTYPE:
-			tag = TagConstants.BOOLEANLIT;
+		case ASTTagConstants.BOOLEANTYPE:
+			tag = ASTTagConstants.BOOLEANLIT;
 			ConstantInteger constantForBoolean = (ConstantInteger) constantPool
 					.getConstant(constantValueIndex);
 			literal = Boolean.valueOf(constantForBoolean.getBytes() != 0);
 			break;
 
-		case TagConstants.INTTYPE:
-		case TagConstants.BYTETYPE:
-		case TagConstants.SHORTTYPE:
-			tag = TagConstants.INTLIT;
+		case ASTTagConstants.INTTYPE:
+		case ASTTagConstants.BYTETYPE:
+		case ASTTagConstants.SHORTTYPE:
+			tag = ASTTagConstants.INTLIT;
 			ConstantInteger constantInteger = (ConstantInteger) constantPool
 					.getConstant(constantValueIndex);
 			literal = new Integer(constantInteger.getBytes());
 			break;
 
-		case TagConstants.LONGTYPE:
-			tag = TagConstants.LONGLIT;
+		case ASTTagConstants.LONGTYPE:
+			tag = ASTTagConstants.LONGLIT;
 			ConstantLong constantLong = (ConstantLong) constantPool
 					.getConstant(constantValueIndex);
 			literal = new Long(constantLong.getBytes());
 			break;
 
-		case TagConstants.CHARTYPE:
-			tag = TagConstants.CHARLIT;
+		case ASTTagConstants.CHARTYPE:
+			tag = ASTTagConstants.CHARLIT;
 			ConstantInteger constantForChar = (ConstantInteger) constantPool
 					.getConstant(constantValueIndex);
 			literal = new Integer(constantForChar.getBytes());
 			break;
 
-		case TagConstants.FLOATTYPE:
-			tag = TagConstants.FLOATLIT;
+		case ASTTagConstants.FLOATTYPE:
+			tag = ASTTagConstants.FLOATLIT;
 			ConstantFloat constantFloat = (ConstantFloat) constantPool
 					.getConstant(constantValueIndex);
 			literal = new Float(constantFloat.getBytes());
 			break;
 
-		case TagConstants.DOUBLETYPE:
-			tag = TagConstants.DOUBLELIT;
+		case ASTTagConstants.DOUBLETYPE:
+			tag = ASTTagConstants.DOUBLELIT;
 			ConstantDouble constantDouble = (ConstantDouble) constantPool
 					.getConstant(constantValueIndex);
 			literal = new Double(constantDouble.getBytes());
 			break;
 
 		default:
-			tag = TagConstants.STRINGLIT;
+			tag = ASTTagConstants.STRINGLIT;
 			ConstantString constantString = (ConstantString) constantPool
 					.getConstant(constantValueIndex);
 			int constantStringIndex = constantString.getStringIndex();
@@ -693,52 +693,52 @@ class BCELReader extends Reader {
 
 		switch (bcelFieldType.getType()) {
 		case Constants.T_BOOLEAN:
-			typeTag = TagConstants.BOOLEANTYPE;
+			typeTag = ASTTagConstants.BOOLEANTYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_BYTE:
-			typeTag = TagConstants.BYTETYPE;
+			typeTag = ASTTagConstants.BYTETYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_INT:
-			typeTag = TagConstants.INTTYPE;
+			typeTag = ASTTagConstants.INTTYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_LONG:
-			typeTag = TagConstants.LONGTYPE;
+			typeTag = ASTTagConstants.LONGTYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_VOID:
-			typeTag = TagConstants.VOIDTYPE;
+			typeTag = ASTTagConstants.VOIDTYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_DOUBLE:
-			typeTag = TagConstants.DOUBLETYPE;
+			typeTag = ASTTagConstants.DOUBLETYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_ARRAY:
-			typeTag = TagConstants.ARRAYTYPE;
+			typeTag = ASTTagConstants.ARRAYTYPE;
 			astType = DescriptorParser.parseField(bcelFieldType.getSignature());
 			break;
 
 		case Constants.T_FLOAT:
-			typeTag = TagConstants.FLOATTYPE;
+			typeTag = ASTTagConstants.FLOATTYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 
 		case Constants.T_SHORT:
-			typeTag = TagConstants.SHORTTYPE;
+			typeTag = ASTTagConstants.SHORTTYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 			
 		case Constants.T_CHAR:
-			typeTag = TagConstants.CHARTYPE;
+			typeTag = ASTTagConstants.CHARTYPE;
 			astType = JavafePrimitiveType.make(typeTag, binaryClassLocation);
 			break;
 			

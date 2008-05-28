@@ -2,7 +2,8 @@
 
 package javafe.ast;
 
-import javafe.parser.TagConstants;
+//@ model import javafe.tc.TagConstants;
+import javafe.parser.ParserTagConstants;
 import javafe.util.Assert;
 
 /**
@@ -91,7 +92,7 @@ public final class Identifier
                   tokenType != TagConstants.STMTPRAGMA &&
                   tokenType != TagConstants.TYPEDECLELEMPRAGMA &&
                   tokenType != TagConstants.TYPEMODIFIERPRAGMA; */
-    int tokenType = TagConstants.IDENT;
+    int tokenType = ParserTagConstants.IDENT;
 
 
   //@ requires text != null;

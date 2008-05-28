@@ -254,11 +254,11 @@ public abstract class PrettyPrint {
    * ((tag==TagConstants.CHARLIT) ==> (val instanceof Integer)) );
    */
   public static /*@non_null*/ String toCanonicalString(int tag, Object val) {
-    if (tag == TagConstants.BOOLEANLIT) return val.toString();
-    if (tag == TagConstants.DOUBLELIT) return val.toString() + "D";
-    if (tag == TagConstants.FLOATLIT) return val.toString() + "F";
+    if (tag == ASTTagConstants.BOOLEANLIT) return val.toString();
+    if (tag == ASTTagConstants.DOUBLELIT) return val.toString() + "D";
+    if (tag == ASTTagConstants.FLOATLIT) return val.toString() + "F";
     
-    if (tag == TagConstants.INTLIT) {
+    if (tag == ASTTagConstants.INTLIT) {
       //@ assert val instanceof Integer;
       int v = ((Integer)val).intValue();
       if (v == Integer.MIN_VALUE) return "0x80000000";
@@ -266,16 +266,16 @@ public abstract class PrettyPrint {
       else return Integer.toString(v);
     }
     
-    if (tag == TagConstants.LONGLIT) {
+    if (tag == ASTTagConstants.LONGLIT) {
       long v = ((Long)val).longValue();
       if (v == Long.MIN_VALUE) return "0x8000000000000000L";
       else if (v < 0) return "0x" + Long.toHexString(v) + "L";
       else return Long.toString(v) + "L";
     }
     
-    if (tag == TagConstants.CHARLIT || tag == TagConstants.STRINGLIT) {
+    if (tag == ASTTagConstants.CHARLIT || tag == ASTTagConstants.STRINGLIT) {
       char quote;
-      if (tag == TagConstants.CHARLIT) {
+      if (tag == ASTTagConstants.CHARLIT) {
         quote = '\'';
         val = new Character((char)((Integer)val).intValue());
       } else quote = '\"';

@@ -16,6 +16,7 @@ import javafe.util.CorrelatedReader;
 import javafe.util.FileCorrelatedReader;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
+import javafe.tc.TagConstants;
 
 /**
  * Parse Java compilation units in various ways to test the Java

@@ -15,6 +15,7 @@ package javafe.ast;
 import javafe.util.Assert;
 import javafe.util.Location;
 import javafe.util.ErrorSet;
+import javafe.tc.TagConstants;
 
 // Convention: unless otherwise noted, integer fields named "loc" refer
 // to the location of the first character of the syntactic unit

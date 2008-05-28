@@ -17,6 +17,8 @@ import javafe.util.ErrorSet;
 import javafe.util.CorrelatedReader;
 import javafe.util.Location;
 
+//@ model import javafe.tc.TagConstants;
+
 /**
 
  A <TT>Lex</TT> object generates a sequence of Java "input elements"
@@ -189,7 +191,7 @@ import javafe.util.Location;
  <code>getLexicalPragmas</code>.
 
  @see javafe.util.CorrelatedReader
- @see javafe.parser.TagConstants
+ @see javafe.parser.ParserTagConstants
  @see javafe.parser.Token
  @see javafe.parser.PragmaParser
 
@@ -302,8 +304,8 @@ public class Lex extends Token
 	    addJavaKeywords();
 	    addJavaPunctuation();
 	} else {
-	    addPunctuation("/*", TagConstants.C_COMMENT);
-	    addPunctuation("//", TagConstants.EOL_COMMENT);
+	    addPunctuation("/*", ParserTagConstants.C_COMMENT);
+	    addPunctuation("//", ParserTagConstants.EOL_COMMENT);
 	}
     }
 
@@ -333,7 +335,7 @@ public class Lex extends Token
 	    m_nextchr = m_in.read();
 	} catch (IOException e) {
 	    ErrorSet.fatal(m_in.getLocation(), e.toString());
-	    return TagConstants.NULL; // Dummy
+	    return ParserTagConstants.NULL; // Dummy
 	}
 	return getNextToken();
     }
@@ -396,7 +398,7 @@ public class Lex extends Token
             if (inPragma)
                 if (! pragmaParser.getNextPragma(this)) {
                     inPragma = false;
-                } else if (ttype != TagConstants.LEXICALPRAGMA) {
+                } else if (ttype != ParserTagConstants.LEXICALPRAGMA) {
                     return ttype;
                 } else {
                     lexicalPragmas.addElement((LexicalPragma)this.auxVal);
@@ -404,8 +406,8 @@ public class Lex extends Token
                 }
 
             int t = scanToken();
-            if (t != TagConstants.C_COMMENT &&
-                t != TagConstants.EOL_COMMENT) {
+            if (t != ParserTagConstants.C_COMMENT &&
+                t != ParserTagConstants.EOL_COMMENT) {
                 return t;
             }
             else { 
@@ -432,7 +434,7 @@ public class Lex extends Token
                         if (inPragma)
                             if (! pragmaParser.getNextPragma(this))
                                 inPragma = false;
-                            else if (ttype != TagConstants.LEXICALPRAGMA)
+                            else if (ttype != ParserTagConstants.LEXICALPRAGMA)
                                 break;
                             else {
                                 lexicalPragmas.addElement((LexicalPragma)this.auxVal);
@@ -440,8 +442,8 @@ public class Lex extends Token
                             }
 
                         int t = scanToken();
-                        if (t != TagConstants.C_COMMENT
-                            && t != TagConstants.EOL_COMMENT)
+                        if (t != ParserTagConstants.C_COMMENT
+                            && t != ParserTagConstants.EOL_COMMENT)
                             break;
                         else scanComment(t);
                     }
@@ -561,8 +563,8 @@ public class Lex extends Token
                          ttype != TagConstants.TYPEMODIFIERPRAGMA;  */
                     } else if (javakeywords)
                         ttype = _SpecialParserInterface.getTokenType(identifierVal);
-                    else ttype = TagConstants.IDENT;
-                } else ttype = TagConstants.IDENT;
+                    else ttype = ParserTagConstants.IDENT;
+                } else ttype = ParserTagConstants.IDENT;
 		endingLoc = m_in.getLocation(); // Chalin: trying to satisfy Token inv.
                 return ttype;
             }
@@ -575,17 +577,17 @@ public class Lex extends Token
                 return scanCharOrString(nextchr);
 
             scanJavaExtensions(nextchr);
-            if (ttype != TagConstants.NULL) return ttype;
+            if (ttype != ParserTagConstants.NULL) return ttype;
 
             scanPunctuation(nextchr);
-            if (ttype != TagConstants.NULL) return ttype;
+            if (ttype != ParserTagConstants.NULL) return ttype;
 
             if (nextchr == -1) {
                 m_nextchr = nextchr;
-                return ttype = TagConstants.EOF;
+                return ttype = ParserTagConstants.EOF;
             }
 
-            String s = PrettyPrint.toCanonicalString(TagConstants.CHARLIT, 
+            String s = PrettyPrint.toCanonicalString(ParserTagConstants.CHARLIT, 
                                                      new Integer(nextchr));
             ErrorSet.fatal(m_in.getLocation(), "Unexpected character " + s);
 
@@ -594,7 +596,7 @@ public class Lex extends Token
 
         } catch (IOException e) {
             ErrorSet.fatal(m_in.getLocation(), e.toString());
-            return TagConstants.NULL; // Dummy
+            return ParserTagConstants.NULL; // Dummy
         }
     }
 
@@ -625,7 +627,7 @@ public class Lex extends Token
       
 	    int locStartComment = m_in.getLocation();
 	    int nextchr = firstchr;
-	    if (commentKind == TagConstants.EOL_COMMENT) {
+	    if (commentKind == ParserTagConstants.EOL_COMMENT) {
 		nonEmptyComment = true;
 		while (nextchr != -1 && nextchr != '\n')
 		    nextchr = m_in.read();
@@ -646,7 +648,7 @@ public class Lex extends Token
 	    // If the comment contains a pragma, set up the pragma parser
 	    if (inPragma) {
 		if(nonEmptyComment) {
-                    boolean eolComment = commentKind == TagConstants.EOL_COMMENT;
+                    boolean eolComment = commentKind == ParserTagConstants.EOL_COMMENT;
                     int discard = !eolComment ? 2 :
                         nextchr == '\n' ? 1 : 0;
                     CorrelatedReader nu = m_in.createReaderFromMark(discard);
@@ -763,10 +765,10 @@ public class Lex extends Token
                         stringLit[0] = '\0';
                         ErrorSet.error(startingLoc, "Empty character literal.");
                     }
-                ttype = TagConstants.CHARLIT;
+                ttype = ParserTagConstants.CHARLIT;
                 auxVal = new Integer(stringLit[0]);  // CF
             } else {
-                ttype = TagConstants.STRINGLIT;
+                ttype = ParserTagConstants.STRINGLIT;
                 auxVal = String.valueOf(stringLit, 0, stringLitLen);
             }
             m_nextchr = nextchr;
@@ -774,7 +776,7 @@ public class Lex extends Token
             return ttype;
         } catch (IOException e) {
             ErrorSet.fatal(m_in.getLocation(), e.toString());
-            return TagConstants.NULL; // Dummy
+            return ParserTagConstants.NULL; // Dummy
         }
     }
 
@@ -849,13 +851,13 @@ public class Lex extends Token
                             m_nextchr = m_in.read();
                             endingLoc = m_in.getLocation();
                             auxVal = null;
-                            return ttype = TagConstants.MAX_LONG_PLUS_ONE;
+                            return ttype = ParserTagConstants.MAX_LONG_PLUS_ONE;
                         }
                     } else if (result == Integer.MIN_VALUE) {
                         m_nextchr = nextchr;
                         endingLoc = m_in.getLocation();
                         auxVal = null;
-                        return ttype = TagConstants.MAX_INT_PLUS_ONE;
+                        return ttype = ParserTagConstants.MAX_INT_PLUS_ONE;
                     }
                     result = -result;
                 }
@@ -904,7 +906,7 @@ public class Lex extends Token
                 m_nextchr = m_in.read();
                 endingLoc = m_in.getLocation();
                 auxVal = new Long(result);
-                return ttype = TagConstants.LONGLIT;
+                return ttype = ParserTagConstants.LONGLIT;
             }
             if ((result & 0xffffffff00000000L) != 0) {
                 ErrorSet.error(startingLoc, "Integer literal overflow");
@@ -913,10 +915,10 @@ public class Lex extends Token
             m_nextchr = nextchr;
             endingLoc = m_in.getLocation();
             auxVal = new Integer((int)result);
-            return ttype = TagConstants.INTLIT;
+            return ttype = ParserTagConstants.INTLIT;
         } catch (IOException e) {
             ErrorSet.fatal(m_in.getLocation(), e.toString());
-            return TagConstants.NULL; // Dummy
+            return ParserTagConstants.NULL; // Dummy
         }
     }
 
@@ -1011,10 +1013,10 @@ public class Lex extends Token
                 else if (! zeroMantissa && result.doubleValue() == 0.0D)
                     ErrorSet.error(startingLoc, "Floating-point literal underflow");
             }	
-            return ttype = (f ? TagConstants.FLOATLIT : TagConstants.DOUBLELIT);
+            return ttype = (f ? ParserTagConstants.FLOATLIT : ParserTagConstants.DOUBLELIT);
         } catch (IOException e) {
             ErrorSet.fatal(m_in.getLocation(), e.toString());
-            return TagConstants.NULL; // Dummy
+            return ParserTagConstants.NULL; // Dummy
         }
     }   //@ nowarn Exception;	// NumberFormatException won't be thrown
 
@@ -1074,7 +1076,7 @@ public class Lex extends Token
                 prefix = null;
             else
                 prefix = prefix.children[nextchr - '!'];
-            if (prefix != null && prefix.code != TagConstants.NULL) {
+            if (prefix != null && prefix.code != ParserTagConstants.NULL) {
                 lastPunctuation = prefix;
                 lastPunctuationLength = textlen;
                 m_in.mark();
@@ -1092,7 +1094,7 @@ public class Lex extends Token
                     prefix = null;
                 else
                     prefix = prefix.children[nextchr - '!'];
-                if (prefix != null && prefix.code != TagConstants.NULL) {
+                if (prefix != null && prefix.code != ParserTagConstants.NULL) {
                     lastPunctuation = prefix;
                     lastPunctuationLength = textlen;
                     m_in.mark();
@@ -1106,15 +1108,15 @@ public class Lex extends Token
             textlen = lastPunctuationLength;
             endingLoc = m_in.getLocation();
             ttype = lastPunctuation.code;
-            if (ttype != TagConstants.C_COMMENT &&
-                ttype != TagConstants.EOL_COMMENT &&
-                ttype != TagConstants.NULL) {
+            if (ttype != ParserTagConstants.C_COMMENT &&
+                ttype != ParserTagConstants.EOL_COMMENT &&
+                ttype != ParserTagConstants.NULL) {
                 m_nextchr = m_in.read();
             }
             return ttype;
         } catch (IOException e) {
             ErrorSet.fatal(m_in.getLocation(), e.toString());
-            return TagConstants.NULL; // Dummy
+            return ParserTagConstants.NULL; // Dummy
         }
     }
 
@@ -1134,7 +1136,7 @@ public class Lex extends Token
     //@ modifies m_in.marked;
     //@ ensures \result==ttype;
     protected int scanJavaExtensions(int nextchr) {
-        ttype = TagConstants.NULL;
+        ttype = ParserTagConstants.NULL;
         return ttype;
     }
 
@@ -1184,10 +1186,10 @@ public class Lex extends Token
     static {
         // When class initializes, change the <CODE>tokenType</CODE> field
         // of <CODE>Identifier</CODE> instances associated with keywords.
-        for(int code = TagConstants.FIRST_KEYWORD;
-            code <= TagConstants.LAST_KEYWORD;
+        for(int code = ParserTagConstants.FIRST_KEYWORD;
+            code <= ParserTagConstants.LAST_KEYWORD;
             code++) {
-            Identifier idn = Identifier.intern(TagConstants.toString(code));
+            Identifier idn = Identifier.intern(ParserTagConstants.toString(code));
             _SpecialParserInterface.setTokenType(idn, code);
         }
     } 
@@ -1201,10 +1203,10 @@ public class Lex extends Token
         javakeywords = true;
         if (keywords != null)
             // New values override existing ones...
-            for(int i = TagConstants.FIRST_KEYWORD;
-                i <= TagConstants.LAST_KEYWORD;
+            for(int i = ParserTagConstants.FIRST_KEYWORD;
+                i <= ParserTagConstants.LAST_KEYWORD;
                 i++)
-                keywords.remove(Identifier.intern(TagConstants.toString(i)));
+                keywords.remove(Identifier.intern(ParserTagConstants.toString(i)));
         else onlyjavakeywords = true;
     }
 
@@ -1231,7 +1233,7 @@ public class Lex extends Token
     //@ requires code != TagConstants.TYPEDECLELEMPRAGMA;
     //@ requires code != TagConstants.TYPEMODIFIERPRAGMA;
     public void addKeyword(/*@ non_null @*/ String newkeyword, int code) {
-	Assert.precondition(code != TagConstants.NULL);
+	Assert.precondition(code != ParserTagConstants.NULL);
 	if (keywords == null) {
 	    keywords = new Hashtable();
             //  Old specs from original full JML spec files.  Must be
@@ -1251,11 +1253,11 @@ public class Lex extends Token
      punctuation strings have been added before. */
 
     public void addJavaPunctuation() {
-        Assert.notFalse(TagConstants.punctuationStrings.length ==
-                        TagConstants.punctuationCodes.length);
-        for(int i = 0; i < TagConstants.punctuationStrings.length; i++)
-            addPunctuation(TagConstants.punctuationStrings[i],
-                           TagConstants.punctuationCodes[i]);
+        Assert.notFalse(ParserTagConstants.punctuationStrings.length ==
+                        ParserTagConstants.punctuationCodes.length);
+        for(int i = 0; i < ParserTagConstants.punctuationStrings.length; i++)
+            addPunctuation(ParserTagConstants.punctuationStrings[i],
+                           ParserTagConstants.punctuationCodes[i]);
     }
 
     /** Add a punctuation string to a scanner associated with a given
@@ -1281,7 +1283,7 @@ public class Lex extends Token
     //@ requires code != TagConstants.TYPEDECLELEMPRAGMA;
     //@ requires code != TagConstants.TYPEMODIFIERPRAGMA;
     public void addPunctuation(String punctuation, int code) {
-        Assert.precondition(code != TagConstants.NULL);
+        Assert.precondition(code != ParserTagConstants.NULL);
         PunctuationPrefixTree prefix = punctuationTable;
         for(int j = 0; j < punctuation.length(); j++) {
             int c = punctuation.charAt(j);
@@ -1329,7 +1331,7 @@ class PunctuationPrefixTree {
      code != TagConstants.STMTPRAGMA &&
      code != TagConstants.TYPEDECLELEMPRAGMA &&
      code != TagConstants.TYPEMODIFIERPRAGMA; */
-    public int code = TagConstants.NULL; // ! NULL ==> a punctuation string
+    public int code = ParserTagConstants.NULL; // ! NULL ==> a punctuation string
 
     //@ invariant children != null;
     //@ invariant children.length == CHILDLEN;

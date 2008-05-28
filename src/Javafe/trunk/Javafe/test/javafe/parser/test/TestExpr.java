@@ -5,11 +5,11 @@ package javafe.parser.test;
 import java.io.IOException;
 import javafe.ast.*;
 import javafe.parser.*;
-import javafe.parser.TagConstants;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.FileCorrelatedReader;
 import javafe.util.Location;
+import javafe.tc.TagConstants;
 
 /** Test harness for expression parsing. */
 

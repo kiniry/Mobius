@@ -369,40 +369,40 @@ class ASTClassFileParser extends ClassFileParser {
     Object literal;
 
     switch (field.type.getTag()) {
-    case TagConstants.BOOLEANTYPE:
-      tag = TagConstants.BOOLEANLIT;
+    case ASTTagConstants.BOOLEANTYPE:
+      tag = ASTTagConstants.BOOLEANLIT;
       literal = Boolean.valueOf(((Integer) value).intValue() != 0); //@ nowarn Cast,Null;
       break;
 
-    case TagConstants.INTTYPE:
-    case TagConstants.BYTETYPE:
-    case TagConstants.SHORTTYPE:
-      tag = TagConstants.INTLIT;
+    case ASTTagConstants.INTTYPE:
+    case ASTTagConstants.BYTETYPE:
+    case ASTTagConstants.SHORTTYPE:
+      tag = ASTTagConstants.INTLIT;
       literal = (Integer) value; //@ nowarn Cast;
       break;
 
-    case TagConstants.LONGTYPE:
-      tag = TagConstants.LONGLIT;
+    case ASTTagConstants.LONGTYPE:
+      tag = ASTTagConstants.LONGLIT;
       literal = (Long) value; //@ nowarn Cast;
       break;
 
-    case TagConstants.CHARTYPE:
-      tag = TagConstants.CHARLIT;
+    case ASTTagConstants.CHARTYPE:
+      tag = ASTTagConstants.CHARLIT;
       literal = (Integer) value; //@ nowarn Cast;
       break;
 
-    case TagConstants.FLOATTYPE:
-      tag = TagConstants.FLOATLIT;
+    case ASTTagConstants.FLOATTYPE:
+      tag = ASTTagConstants.FLOATLIT;
       literal = (Float) value; //@ nowarn Cast;
       break;
 
-    case TagConstants.DOUBLETYPE:
-      tag = TagConstants.DOUBLELIT;
+    case ASTTagConstants.DOUBLETYPE:
+      tag = ASTTagConstants.DOUBLELIT;
       literal = (Double) value; //@ nowarn Cast;
       break;
 
     default:
-      tag = TagConstants.STRINGLIT;
+      tag = ASTTagConstants.STRINGLIT;
       literal = (String) value; //@ nowarn Cast;
       break;
     }

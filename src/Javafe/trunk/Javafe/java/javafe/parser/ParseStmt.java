@@ -8,6 +8,8 @@ import javafe.util.Location;
 import javafe.util.ErrorSet;
 import javafe.Tool;
 
+//@ model import javafe.tc.TagConstants;
+
 /**
  * <code>Parse</code> objects parse Java statements, creating AST
  * structures for the parsed input using the static
@@ -109,7 +111,7 @@ public abstract class ParseStmt extends ParseExpr
     //@ requires l != null && l.m_in != null;
     //@ ensures \result != null;
     public Stmt parseStatement(Lex l) {
-        if (l.ttype == TagConstants.LBRACE) // As an optimization, handle specially
+        if (l.ttype == ParserTagConstants.LBRACE) // As an optimization, handle specially
             return parseBlock(l, false);
         else {
             seqStmt.push();
@@ -149,7 +151,7 @@ public abstract class ParseStmt extends ParseExpr
         int ttype = l.ttype;
 
         // Stmt ::= ';'
-        if (ttype == TagConstants.SEMICOLON) {
+        if (ttype == ParserTagConstants.SEMICOLON) {
             int loc = l.startingLoc;
             l.getNextToken(); // Discard ';'
             seqStmt.addElement( SkipStmt.make(loc) );
@@ -159,14 +161,14 @@ public abstract class ParseStmt extends ParseExpr
         // Stmt ::= Idn ':' Stmt
         //          | Idn { '[' ']' }* { Idn ['=' InitExpr] },+
         //          | Expr ';'
-        if (ttype == TagConstants.IDENT) {
+        if (ttype == ParserTagConstants.IDENT) {
             //  FIXME @ assert !l.toString().equals("assert");
             Expr e = parseExpression(l);
-            if (e.getTag() == TagConstants.AMBIGUOUSVARIABLEACCESS) {
+            if (e.getTag() == ParserTagConstants.AMBIGUOUSVARIABLEACCESS) {
                 Name n = ((AmbiguousVariableAccess)e).name;
 
                 // Check to see if we have a labeled expr...
-                if (l.ttype == TagConstants.COLON) {
+                if (l.ttype == ParserTagConstants.COLON) {
                     l.getNextToken(); // Discard ':'
                     if (n.size() != 1)
                         fail(l.startingLoc, "Can't have qualified name in this context");
@@ -191,10 +193,10 @@ public abstract class ParseStmt extends ParseExpr
 		//alx-end
 
                 addVarDeclStmts(l, Modifiers.NONE, null, basetype);
-                expect(l, TagConstants.SEMICOLON);
+                expect(l, ParserTagConstants.SEMICOLON);
                 return;
             } else {
-                expect(l, TagConstants.SEMICOLON);
+                expect(l, ParserTagConstants.SEMICOLON);
                 // TODO: make sure e is a statement expr
                 seqStmt.addElement( EvalStmt.make(e) );
                 return;
@@ -202,7 +204,7 @@ public abstract class ParseStmt extends ParseExpr
         }
 
         // Stmt ::= '{' ... '}'  (that is, a Block)
-        if (ttype == TagConstants.LBRACE) {
+        if (ttype == ParserTagConstants.LBRACE) {
             seqStmt.addElement( parseBlock(l, false) );
             return;
         }
@@ -210,17 +212,17 @@ public abstract class ParseStmt extends ParseExpr
         // Stmt ::= <keyword> ...
         int keywordloc = l.startingLoc;
         switch (ttype) {
-            case TagConstants.ASSERT: { // 'assert' BoolExpr [ ':' NonVoidExpr ] ';'
+            case ParserTagConstants.ASSERT: { // 'assert' BoolExpr [ ':' NonVoidExpr ] ';'
                 
 		int loc = l.startingLoc;
                 l.getNextToken(); // Discard the keyword
                 Expr predicate = parseExpression(l);
                 Expr label = null;
-                if (l.ttype == TagConstants.COLON) {
+                if (l.ttype == ParserTagConstants.COLON) {
                     l.getNextToken();
                     label = parseExpression(l);
                 }
-                expect(l, TagConstants.SEMICOLON);
+                expect(l, ParserTagConstants.SEMICOLON);
                 // Only process if assert *is* a keyword.
                 if (Tool.options != null && !Tool.options.assertIsKeyword) {
                     ErrorSet.error(loc, "Java keyword \"assert\" is only supported if the" +
@@ -230,49 +232,49 @@ public abstract class ParseStmt extends ParseExpr
                 return;
             }
       
-            case TagConstants.BREAK: // 'break' [ Idn ] ';'
-            case TagConstants.CONTINUE: { // 'continue' [ Idn ] ';'
+            case ParserTagConstants.BREAK: // 'break' [ Idn ] ';'
+            case ParserTagConstants.CONTINUE: { // 'continue' [ Idn ] ';'
                 l.getNextToken(); // Discard the keyword
                 Identifier label = null;
-                if (l.ttype == TagConstants.IDENT) {
+                if (l.ttype == ParserTagConstants.IDENT) {
                     label = l.identifierVal;
                     l.getNextToken(); // Discard IDENT
                 }
-                expect(l, TagConstants.SEMICOLON);
-                seqStmt.addElement(ttype == TagConstants.BREAK ?
+                expect(l, ParserTagConstants.SEMICOLON);
+                seqStmt.addElement(ttype == ParserTagConstants.BREAK ?
                                    (Stmt)BreakStmt.make(label, keywordloc)
                                    : (Stmt)ContinueStmt.make(label, keywordloc));
                 return;
             }
 				
-            case TagConstants.RETURN: // 'return' Expr ';'
+            case ParserTagConstants.RETURN: // 'return' Expr ';'
                 l.getNextToken(); // Discard the keyword
-                if (l.ttype == TagConstants.SEMICOLON) {
+                if (l.ttype == ParserTagConstants.SEMICOLON) {
                     l.getNextToken(); // Discard ';'
                     seqStmt.addElement( ReturnStmt.make(null, keywordloc) );
                 } else {
                     Expr expr = parseExpression(l);
-                    expect(l, TagConstants.SEMICOLON);
+                    expect(l, ParserTagConstants.SEMICOLON);
                     seqStmt.addElement(ReturnStmt.make(expr, keywordloc));
                 }
                 return;
 				
-            case TagConstants.THROW: { // 'throw' Expr ';'
+            case ParserTagConstants.THROW: { // 'throw' Expr ';'
                 l.getNextToken(); // Discard the keyword
                 Expr expr = parseExpression(l);
-                expect(l, TagConstants.SEMICOLON);
+                expect(l, ParserTagConstants.SEMICOLON);
                 seqStmt.addElement(ThrowStmt.make(expr, keywordloc));
                 return;
             }
 
-            case TagConstants.IF: { // 'if' '(' Expr ')' Stmt [ 'else' Stmt ]
+            case ParserTagConstants.IF: { // 'if' '(' Expr ')' Stmt [ 'else' Stmt ]
                 l.getNextToken(); // Discard the keyword
-                expect(l, TagConstants.LPAREN);
+                expect(l, ParserTagConstants.LPAREN);
                 Expr test = parseExpression(l);
-                expect(l, TagConstants.RPAREN);
+                expect(l, ParserTagConstants.RPAREN);
                 Stmt consequence = parseStatement(l);
                 Stmt alternative;
-                if (l.ttype == TagConstants.ELSE) {
+                if (l.ttype == ParserTagConstants.ELSE) {
                     l.getNextToken(); // Discard 'else'
                     alternative = parseStatement(l);
                 } else
@@ -283,62 +285,62 @@ public abstract class ParseStmt extends ParseExpr
                 return;
             }
 
-            case TagConstants.DO: { // 'do' Stmt 'while' '(' Expr ')' ';'
+            case ParserTagConstants.DO: { // 'do' Stmt 'while' '(' Expr ')' ';'
                 l.getNextToken(); // Discard the keyword
                 Stmt body = parseStatement(l);
-                expect(l, TagConstants.WHILE);
-                expect(l, TagConstants.LPAREN);
+                expect(l, ParserTagConstants.WHILE);
+                expect(l, ParserTagConstants.LPAREN);
                 Expr test = parseExpression(l);
-                expect(l, TagConstants.RPAREN);
-                expect(l, TagConstants.SEMICOLON);
+                expect(l, ParserTagConstants.RPAREN);
+                expect(l, ParserTagConstants.SEMICOLON);
                 seqStmt.addElement( DoStmt.make(test, body, keywordloc) );
                 return;
             }
 
-            case TagConstants.WHILE: { // 'while' '(' Expr ')' Stmt
+            case ParserTagConstants.WHILE: { // 'while' '(' Expr ')' Stmt
                 l.getNextToken(); // Discard the keyword
                 int locGuardOpenParen = l.startingLoc;
-                expect(l, TagConstants.LPAREN);
+                expect(l, ParserTagConstants.LPAREN);
                 Expr test = parseExpression(l);
-                expect(l, TagConstants.RPAREN);
+                expect(l, ParserTagConstants.RPAREN);
                 Stmt body = parseStatement(l);
                 seqStmt.addElement( WhileStmt.make(test, body, keywordloc,
                                                    locGuardOpenParen) );
                 return;
             }
 		 
-            case TagConstants.FOR: {
+            case ParserTagConstants.FOR: {
                 l.getNextToken(); // Discard the keyword
                 seqStmt.addElement( parseForStmt(l, keywordloc) );
                 return;
             }
 
-            case TagConstants.SWITCH: {
+            case ParserTagConstants.SWITCH: {
                 l.getNextToken(); // Discard the keyword
                 seqStmt.addElement( parseSwitchStmt(l, keywordloc) );
                 return;
             }
 
-            case TagConstants.SYNCHRONIZED: { // 'synchronized' '(' Expr ')' '{' BlockStmt* '}'
+            case ParserTagConstants.SYNCHRONIZED: { // 'synchronized' '(' Expr ')' '{' BlockStmt* '}'
                 l.getNextToken(); // Discard the keyword
                 int locOpenParen = l.startingLoc;
-                expect(l, TagConstants.LPAREN);
+                expect(l, ParserTagConstants.LPAREN);
                 Expr value = parseExpression(l);
-                expect(l, TagConstants.RPAREN);
+                expect(l, ParserTagConstants.RPAREN);
                 BlockStmt body = parseBlock(l, false);
                 seqStmt.addElement( SynchronizeStmt.make(value, body, keywordloc,
                                                          locOpenParen));
                 return;
             }
       
-            case TagConstants.TRY: { //'try' '{' BlockStmt* '}' Catches ['finally' '{'BlockStmt*'}']
+            case ParserTagConstants.TRY: { //'try' '{' BlockStmt* '}' Catches ['finally' '{'BlockStmt*'}']
                 l.getNextToken(); // Discard the keyword
                 int openloc = l.startingLoc;
                 Stmt body = parseBlock(l, false);
 
                 CatchClauseVec catches = parseCatches(l);
 
-                if (l.ttype == TagConstants.FINALLY) {
+                if (l.ttype == ParserTagConstants.FINALLY) {
                     int finloc = l.startingLoc;
                     l.getNextToken(); // Discard 'finally'
                     Stmt fbody = parseBlock(l, false);
@@ -369,7 +371,7 @@ public abstract class ParseStmt extends ParseExpr
 	    // This is rather a hack, because some pragmas that are allowed
 	    // are not statement pragmas (because they are indistinguishable
 	    // from other pragmas).
-	    if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
+	    if (l.ttype == ParserTagConstants.TYPEDECLELEMPRAGMA) {
 		do {
 		    TypeDeclElemPragma tdp = (TypeDeclElemPragma)l.auxVal;
 		    tdp.decorate(pmodifiers);
@@ -388,7 +390,7 @@ public abstract class ParseStmt extends ParseExpr
 			// the one declaration.  We could simply let the 
 			// parser handle it by returning here, but then we
 			// lose the pmodifiers information up above.
-			if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA)
+			if (l.ttype == ParserTagConstants.TYPEDECLELEMPRAGMA)
 				continue;
 			break;
 		    } else {
@@ -397,7 +399,7 @@ public abstract class ParseStmt extends ParseExpr
 		    }
 		} while(true);
 		return;
-	    } else if (l.ttype == TagConstants.CLASS) {
+	    } else if (l.ttype == ParserTagConstants.CLASS) {
                 ClassDecl cd = (ClassDecl)parseTypeDeclTail(l, false, keywordloc,
                                                             modifiers, pmodifiers);
                 seqStmt.addElement(ClassDeclStmt.make(cd));
@@ -413,13 +415,13 @@ public abstract class ParseStmt extends ParseExpr
 		//alx-end
 
                 addVarDeclStmts(l, modifiers, pmodifiers, parseType(l));
-                expect(l, TagConstants.SEMICOLON);
+                expect(l, ParserTagConstants.SEMICOLON);
                 return;
             }
         }
 
         // Check for StmtPragma
-        if( ttype == TagConstants.STMTPRAGMA ) {
+        if( ttype == ParserTagConstants.STMTPRAGMA ) {
             StmtPragma pragma = (StmtPragma)l.auxVal;
             seqStmt.addElement( (Stmt)pragma );
             l.getNextToken();
@@ -431,7 +433,7 @@ public abstract class ParseStmt extends ParseExpr
         if (! isStatementExpression(e)) 
             fail(l.startingLoc, "Statement expression expected");
         seqStmt.addElement( EvalStmt.make(e) );
-        expect(l, TagConstants.SEMICOLON);
+        expect(l, ParserTagConstants.SEMICOLON);
         return;
     }
 
@@ -452,15 +454,15 @@ public abstract class ParseStmt extends ParseExpr
     //@ ensures \result != null;
     public BlockStmt parseConstructorBody(Lex l) {
         int openloc = l.startingLoc;
-        expect(l, TagConstants.LBRACE);
+        expect(l, ParserTagConstants.LBRACE);
         seqStmt.push();
 
         // Handle leading constructor invocation; 
         // make one up if missing and the class being declared in not object
 
-        if (((l.ttype == TagConstants.THIS || l.ttype == TagConstants.SUPER)
-             && l.lookahead(1) == TagConstants.LPAREN)) {
-            boolean superCall = (l.ttype == TagConstants.SUPER);
+        if (((l.ttype == ParserTagConstants.THIS || l.ttype == ParserTagConstants.SUPER)
+             && l.lookahead(1) == ParserTagConstants.LPAREN)) {
+            boolean superCall = (l.ttype == ParserTagConstants.SUPER);
             int loc = l.startingLoc;
             l.getNextToken();
             // Next, parse the argument list, which should start with an open
@@ -472,7 +474,7 @@ public abstract class ParseStmt extends ParseExpr
             int locOpenParen = l.startingLoc;
             int tagShouldBeLParen = l.ttype;
             ExprVec args = parseArgumentList(l);
-            expect( l, TagConstants.SEMICOLON );
+            expect( l, ParserTagConstants.SEMICOLON );
             seqStmt.addElement( ConstructorInvocation.make( superCall,
                                                             null, Location.NULL,
                                                             loc, locOpenParen,
@@ -482,18 +484,18 @@ public abstract class ParseStmt extends ParseExpr
             boolean foundDotSuper = false;
             for (int i = 0; ; i++) {
                 switch (l.lookahead(i)) {
-                    case TagConstants.EOF:
+                    case ParserTagConstants.EOF:
                         break;
-                    case TagConstants.LBRACE:
+                    case ParserTagConstants.LBRACE:
                         for(int braceDepth = 1; 0 < braceDepth; i++) {
-                            if (l.lookahead(i) == TagConstants.RBRACE) braceDepth--;
+                            if (l.lookahead(i) == ParserTagConstants.RBRACE) braceDepth--;
                         }
                         continue;
-                    case TagConstants.SEMICOLON:
-                    case TagConstants.RBRACE:
+                    case ParserTagConstants.SEMICOLON:
+                    case ParserTagConstants.RBRACE:
                         break;
-                    case TagConstants.FIELD:
-                        if (l.lookahead(i+1) == TagConstants.SUPER) {
+                    case ParserTagConstants.FIELD:
+                        if (l.lookahead(i+1) == ParserTagConstants.SUPER) {
                             foundDotSuper = true;
                             break;
                         } else continue;
@@ -505,11 +507,11 @@ public abstract class ParseStmt extends ParseExpr
                 int loc = l.startingLoc;
                 Expr e = parsePrimaryExpression(l);
                 int locDot = l.startingLoc;
-                expect(l, TagConstants.FIELD);
-                expect(l, TagConstants.SUPER);
+                expect(l, ParserTagConstants.FIELD);
+                expect(l, ParserTagConstants.SUPER);
                 int locOpenParen = l.startingLoc;
                 ExprVec args = parseArgumentList(l);
-                expect(l, TagConstants.SEMICOLON);
+                expect(l, ParserTagConstants.SEMICOLON);
                 seqStmt.addElement(ConstructorInvocation.make(true, e, locDot,
                                                               loc, locOpenParen,
                                                               args));
@@ -523,11 +525,11 @@ public abstract class ParseStmt extends ParseExpr
         // Handle rest of body
         {
             int ttype = l.ttype;
-            while (ttype != TagConstants.RBRACE && ttype != TagConstants.EOF) {
+            while (ttype != ParserTagConstants.RBRACE && ttype != ParserTagConstants.EOF) {
                 addStmt(l);
                 ttype = l.ttype;
             }
-            if (ttype == TagConstants.EOF) 
+            if (ttype == ParserTagConstants.EOF) 
                 fail(l.startingLoc, "End of input in block");
         }
         StmtVec body = StmtVec.popFromStackVector(seqStmt);
@@ -553,22 +555,22 @@ public abstract class ParseStmt extends ParseExpr
     //@ ensures \result != null;
     public BlockStmt parseBlock(Lex l, boolean specOnly) {
         int openloc = l.startingLoc;
-        expect(l, TagConstants.LBRACE);
+        expect(l, ParserTagConstants.LBRACE);
         seqStmt.push();
         {
             int ttype = l.ttype;
-            while (ttype != TagConstants.RBRACE && ttype != TagConstants.EOF) {
+            while (ttype != ParserTagConstants.RBRACE && ttype != ParserTagConstants.EOF) {
                 if (!specOnly)
                     addStmt(l);
                 else {
-                    if (ttype==TagConstants.LBRACE)
+                    if (ttype==ParserTagConstants.LBRACE)
                         parseBlock(l, true);
                     else
                         l.getNextToken();
                 }
                 ttype = l.ttype;
             }
-            if (ttype == TagConstants.EOF) 
+            if (ttype == ParserTagConstants.EOF) 
                 fail(l.startingLoc, "End of input in block");
         }
         StmtVec body = StmtVec.popFromStackVector(seqStmt);
@@ -599,7 +601,7 @@ public abstract class ParseStmt extends ParseExpr
     //@ ensures \result != null;
     private ForStmt parseForStmt(Lex l, int keywordloc) {
         int parenloc = l.startingLoc;
-        expect(l, TagConstants.LPAREN);
+        expect(l, ParserTagConstants.LPAREN);
 
         // Parse ForInit ::= [VDeclInit | StmtExpr,* ] ';'
         StmtVec forInit;
@@ -611,7 +613,7 @@ public abstract class ParseStmt extends ParseExpr
             int modifiers = Modifiers.NONE;
             ModifierPragmaVec pmodifiers = null;
             switch (l.ttype) {
-                case TagConstants.SEMICOLON:
+                case ParserTagConstants.SEMICOLON:
                     break;
 
                 default:
@@ -625,7 +627,7 @@ public abstract class ParseStmt extends ParseExpr
                     }
 
                     Expr e = parseExpression(l);
-                    if (e.getTag() == TagConstants.AMBIGUOUSVARIABLEACCESS) {
+                    if (e.getTag() == ParserTagConstants.AMBIGUOUSVARIABLEACCESS) {
                         // Assume a var declaration
                         // look for type modifier pragmas
                         TypeModifierPragmaVec tmodifiers = null;
@@ -638,7 +640,7 @@ public abstract class ParseStmt extends ParseExpr
                             if (! isStatementExpression(e)) 
                                 fail(l.startingLoc, "Statement expression expected");
                             seqStmt.addElement( EvalStmt.make(e) );
-                            if (l.ttype != TagConstants.COMMA) break;
+                            if (l.ttype != ParserTagConstants.COMMA) break;
                             l.getNextToken(); // Discard the COMMA
                             e = parseExpression(l);
                         }
@@ -651,35 +653,35 @@ public abstract class ParseStmt extends ParseExpr
             }
 
             locFirstSemi = l.startingLoc;
-            expect(l, TagConstants.SEMICOLON);
+            expect(l, ParserTagConstants.SEMICOLON);
             forInit = StmtVec.popFromStackVector(seqStmt);
         }
 
         // Parse <pre> Test ::= [ Expr ] ';' </pre>
         Expr test;
-        if (l.ttype != TagConstants.SEMICOLON)
+        if (l.ttype != ParserTagConstants.SEMICOLON)
             test = parseExpression(l);
-        else test = LiteralExpr.make(TagConstants.BOOLEANLIT, 
+        else test = LiteralExpr.make(ParserTagConstants.BOOLEANLIT, 
                                      Boolean.TRUE, 
                                      l.startingLoc );
-        expect(l, TagConstants.SEMICOLON);
+        expect(l, ParserTagConstants.SEMICOLON);
 
         // Parse <pre> ForUpdate ::= StmtExpr,* ')' </pre>
         ExprVec forUpdate;
         {
             seqExpr.push();
 
-            if (l.ttype != TagConstants.RPAREN) {
+            if (l.ttype != ParserTagConstants.RPAREN) {
                 for(;;) {
                     Expr e = parseExpression(l);
                     if (! isStatementExpression(e))
                         fail(l.startingLoc, "Statement expression expected.");
                     seqExpr.addElement(e);
-                    if (l.ttype != TagConstants.COMMA) break;
+                    if (l.ttype != ParserTagConstants.COMMA) break;
                     l.getNextToken(); // Discard COMMA
                 }
             }
-            expect(l, TagConstants.RPAREN);
+            expect(l, ParserTagConstants.RPAREN);
             forUpdate = ExprVec.popFromStackVector(seqExpr);
         }
 
@@ -710,26 +712,26 @@ public abstract class ParseStmt extends ParseExpr
     //@ ensures \result != null;
     private SwitchStmt parseSwitchStmt(Lex l, int keywordloc) {
         // Read value to be tested
-        expect(l, TagConstants.LPAREN);
+        expect(l, ParserTagConstants.LPAREN);
         Expr value = parseExpression(l);
-        expect(l, TagConstants.RPAREN);
+        expect(l, ParserTagConstants.RPAREN);
 
         // Read body
         int openloc = l.startingLoc;
-        expect(l, TagConstants.LBRACE);
+        expect(l, ParserTagConstants.LBRACE);
         boolean atStart=true;
         boolean hasDefault = false;
         seqStmt.push();
-        while (l.ttype != TagConstants.RBRACE && l.ttype != TagConstants.EOF) {
-            if (l.ttype == TagConstants.CASE || l.ttype == TagConstants.DEFAULT) {
-                if (l.ttype == TagConstants.DEFAULT) {
+        while (l.ttype != ParserTagConstants.RBRACE && l.ttype != ParserTagConstants.EOF) {
+            if (l.ttype == ParserTagConstants.CASE || l.ttype == ParserTagConstants.DEFAULT) {
+                if (l.ttype == ParserTagConstants.DEFAULT) {
                     hasDefault = true;
                 }
                 int loc = l.startingLoc;
                 int ttype = l.ttype;
                 l.getNextToken(); // Discard CASE TagConstants.or DEFAULT
-                Expr e = (ttype == TagConstants.CASE ? parseExpression(l) : null);
-                expect(l, TagConstants.COLON);
+                Expr e = (ttype == ParserTagConstants.CASE ? parseExpression(l) : null);
+                expect(l, ParserTagConstants.COLON);
                 seqStmt.addElement( SwitchLabel.make(e, loc) );
             } 
             else {
@@ -738,7 +740,7 @@ public abstract class ParseStmt extends ParseExpr
             }
             atStart = false;
         }
-        if (l.ttype == TagConstants.EOF) 
+        if (l.ttype == ParserTagConstants.EOF) 
             fail(l.startingLoc, "End of input in switch body");
         int closeloc = l.startingLoc;
         l.getNextToken(); // Discard '}'
@@ -767,29 +769,29 @@ public abstract class ParseStmt extends ParseExpr
      */
     //@ requires l != null && l.m_in != null;
     private CatchClauseVec parseCatches(Lex l) {
-        if (l.ttype != TagConstants.CATCH) return null;
+        if (l.ttype != ParserTagConstants.CATCH) return null;
         seqCatchClause.push();
 
         do {
             int loc = l.startingLoc;
             l.getNextToken(); // Discard CATCH
-            expect(l, TagConstants.LPAREN);
+            expect(l, ParserTagConstants.LPAREN);
             FormalParaDecl arg = parseFormalParaDecl(l);
             //alx: dw in catchclauses the default is readonly
-            if (useUniverses && getUniverse(arg)==TagConstants.IMPL_PEER)
-            	setUniverse(arg,TagConstants.READONLY);
-            else if (useUniverses && getUniverse(arg)!=TagConstants.READONLY) {
-            	setUniverse(arg,TagConstants.READONLY);
+            if (useUniverses && getUniverse(arg)==ParserTagConstants.IMPL_PEER)
+            	setUniverse(arg,ParserTagConstants.READONLY);
+            else if (useUniverses && getUniverse(arg)!=ParserTagConstants.READONLY) {
+            	setUniverse(arg,ParserTagConstants.READONLY);
             	if (universeLevel%5!=0)
 		    ErrorSet.error(arg.getStartLoc(),
 				   "only readonly allowed for catch clauses");
             }
 	    //alx-end
 	    
-            expect(l, TagConstants.RPAREN);
+            expect(l, ParserTagConstants.RPAREN);
             seqCatchClause.addElement( CatchClause.make(arg, parseBlock(l,false),
                                                         loc) );
-        } while (l.ttype == TagConstants.CATCH);
+        } while (l.ttype == ParserTagConstants.CATCH);
         return CatchClauseVec.popFromStackVector(seqCatchClause);
     }
 
@@ -836,13 +838,13 @@ public abstract class ParseStmt extends ParseExpr
             // Get identifier and any [] pairs trailing it
             Identifier id = l.identifierVal;
             int locId = l.startingLoc;
-            expect(l, TagConstants.IDENT);
+            expect(l, ParserTagConstants.IDENT);
             Type vartype = parseBracketPairs(l, basetype);
 
             // Get initializer if there is one
             VarInit init = null;
             int locAssignOp = Location.NULL;
-            if (l.ttype == TagConstants.ASSIGN) {
+            if (l.ttype == ParserTagConstants.ASSIGN) {
                 locAssignOp = l.startingLoc;
                 l.getNextToken();
                 init = parseVariableInitializer(l, false);
@@ -859,16 +861,16 @@ public abstract class ParseStmt extends ParseExpr
 
             // check if end of declaration
 
-            if(l.ttype == TagConstants.MODIFIERPRAGMA ) {
+            if(l.ttype == ParserTagConstants.MODIFIERPRAGMA ) {
                 // if modifier pragma, retroactively add to modifierPragmas
                 parseMoreModifierPragmas( l, modifierPragmas );
                 return;
-            } else if(l.ttype != TagConstants.COMMA ) {
+            } else if(l.ttype != ParserTagConstants.COMMA ) {
                 // all done - do not swallow following semicolon
                 return;
             }
 
-            expect( l, TagConstants.COMMA );
+            expect( l, ParserTagConstants.COMMA );
             /* And go around loop again */
         }
     }
@@ -896,7 +898,7 @@ public abstract class ParseStmt extends ParseExpr
         Type paratype = parseType(l);
         Identifier idn = l.identifierVal;
         int locId = l.startingLoc;
-        expect(l, TagConstants.IDENT);
+        expect(l, ParserTagConstants.IDENT);
       
         // allow more modifier pragmas
         modifierPragmas = parseMoreModifierPragmas( l, modifierPragmas );
@@ -918,18 +920,18 @@ public abstract class ParseStmt extends ParseExpr
     //@ requires e != null;
     public static boolean isStatementExpression(Expr e) {
         switch (e.getTag()) {
-            case TagConstants.ASSIGN: 
-            case TagConstants.ASGMUL: case TagConstants.ASGDIV: 
-            case TagConstants.ASGREM: 
-            case TagConstants.ASGADD: case TagConstants.ASGSUB:
-            case TagConstants.ASGLSHIFT: case TagConstants.ASGRSHIFT: 
-            case TagConstants.ASGURSHIFT: 
-            case TagConstants.ASGBITAND:
-            case TagConstants.ASGBITOR: case TagConstants.ASGBITXOR:
-            case TagConstants.INC: case TagConstants.DEC: 
-            case TagConstants.POSTFIXINC: case TagConstants.POSTFIXDEC:
-            case TagConstants.METHODINVOCATION:
-            case TagConstants.NEWINSTANCEEXPR:
+            case ParserTagConstants.ASSIGN: 
+            case ParserTagConstants.ASGMUL: case ParserTagConstants.ASGDIV: 
+            case ParserTagConstants.ASGREM: 
+            case ParserTagConstants.ASGADD: case ParserTagConstants.ASGSUB:
+            case ParserTagConstants.ASGLSHIFT: case ParserTagConstants.ASGRSHIFT: 
+            case ParserTagConstants.ASGURSHIFT: 
+            case ParserTagConstants.ASGBITAND:
+            case ParserTagConstants.ASGBITOR: case ParserTagConstants.ASGBITXOR:
+            case ParserTagConstants.INC: case ParserTagConstants.DEC: 
+            case ParserTagConstants.POSTFIXINC: case ParserTagConstants.POSTFIXDEC:
+            case ParserTagConstants.METHODINVOCATION:
+            case ParserTagConstants.NEWINSTANCEEXPR:
                 return true;
             default:
                 return true; // TODO return false;

@@ -479,16 +479,4 @@ ifdef COMSPEC
 	@echo ${foo}
 endif
 
-################################################################################
-## Continuous Integration Testing
-
-.PHONY: pre-maven
- 	
-## Copy files to default locations expected by maven
-pre-maven:
-	mkdir -p src/main/java
-	mkdir -p src/test/java
-	find ${JAVAFE_ROOT}/Javafe/java -name "*.java" -exec cp -f {} src/main/java \;
-	find ${JAVAFE_ROOT}/Javafe/test -name "*.java" -exec cp -f {} src/test/java \;
-
 # End of Makefile

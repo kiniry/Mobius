@@ -4,7 +4,7 @@
   <groupId>mobius</groupId>
   <artifactId>Javafe</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.5</version>
+  <version>2.0.6</version>
   <name>Javafe</name>
   <url>http://mobius.ucd.ie</url>
   <dependencies>
@@ -30,7 +30,7 @@
     <developer>
       <id>kiniry</id>
       <name>Joe Kiniry</name>
-      <email>kiniry@ucd.ie</email>
+      <email>kiniry@acm.org</email>
       <roles>
         <role>developer</role>
         <role>architect</role>
@@ -44,8 +44,8 @@
     <url>https://mobius.ucd.ie/browser/src/Javafe/trunk</url>
   </scm>
   <ciManagement>
-    <system>continuum</system>
-    <url>http://voting.ucd.ie:8080/continuum</url>
+    <system>Hudson</system>
+    <url>http://voting.ucd.ie:8080/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
@@ -53,7 +53,7 @@
         <sendOnFailure>true</sendOnFailure>
         <sendOnSuccess>false</sendOnSuccess>
         <sendOnWarning>false</sendOnWarning>
-        <configuration><address>mobius-ticket@mobius.ucd.ie</address></configuration>
+        <configuration><address>maven@kind.ucd.ie</address></configuration>
       </notifier>
     </notifiers>
   </ciManagement>

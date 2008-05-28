@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javafe.util.Assert;
 import javafe.util.Location;
+import javafe.tc.TagConstants;
 
 public class StandardPrettyPrint extends PrettyPrint {
 
@@ -88,7 +89,7 @@ public class StandardPrettyPrint extends PrettyPrint {
 
         switch (d.getTag()) {
       
-            case TagConstants.CLASSDECL:
+            case ASTTagConstants.CLASSDECL:
                 {
                     ClassDecl cd = (ClassDecl)d;
                     writeln(o, "class "+(id=cd.id));
@@ -110,7 +111,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     break;
                 }
       
-            case TagConstants.INTERFACEDECL:
+            case ASTTagConstants.INTERFACEDECL:
                 {
                     InterfaceDecl cd = (InterfaceDecl)d;
                     writeln(o, "interface "+(id=cd.id));
@@ -150,7 +151,7 @@ public class StandardPrettyPrint extends PrettyPrint {
 
         switch (s.getTag()) {
       
-            case TagConstants.RETURNSTMT: 
+            case ASTTagConstants.RETURNSTMT: 
                 {
                     ReturnStmt r = (ReturnStmt)s;
                     if (r.expr == null)
@@ -163,14 +164,14 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.THROWSTMT: 
+            case ASTTagConstants.THROWSTMT: 
                 {
                     ThrowStmt t = (ThrowStmt)s;
                     write(o, "throw "); self.print(o, ind, t.expr); write(o, ';');
                     return;
                 }
       
-            case TagConstants.ASSERTSTMT: {
+            case ASTTagConstants.ASSERTSTMT: {
                 AssertStmt a = (AssertStmt)s;
                 write(o, "assert "); self.print(o, ind, a.pred); //write(o, ")");
                 if (a.label != null) {
@@ -181,14 +182,14 @@ public class StandardPrettyPrint extends PrettyPrint {
                 return;
             }
       
-            case TagConstants.SWITCHSTMT: 
+            case ASTTagConstants.SWITCHSTMT: 
                 {
                     SwitchStmt c = (SwitchStmt)s;
                     write(o, "switch ("); self.print(o, ind, c.expr); write(o, ") ");
                     // Fall through
                 }
 
-            case TagConstants.BLOCKSTMT: 
+            case ASTTagConstants.BLOCKSTMT: 
                 {
                     GenericBlockStmt b = (GenericBlockStmt)s;
                     int nextInd = ind + INDENT;
@@ -196,7 +197,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     boolean lastWasLabel = false;
                     for(int i = 0; i < b.stmts.size(); i++) {
                         Stmt sub = b.stmts.elementAt(i);
-                        if (sub.getTag() == TagConstants.SWITCHLABEL) {
+                        if (sub.getTag() == ASTTagConstants.SWITCHLABEL) {
                             SwitchLabel x = (SwitchLabel)sub;
                             if (x.expr == null && sub.getStartLoc() == b.locCloseBrace) {
                                 // this is an implicit "default: break;" statement
@@ -204,7 +205,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                                 // don't print this statement or the next, which should be
                                 // a "break"
                                 Assert.notFalse(b.stmts.elementAt(i+1).getTag() //@ nowarn Pre;
-                                                == TagConstants.BREAKSTMT);
+                                                == ASTTagConstants.BREAKSTMT);
                                 if (!PrettyPrint.displayInferred)
                                     break;
                             }
@@ -229,7 +230,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.WHILESTMT: 
+            case ASTTagConstants.WHILESTMT: 
                 {
                     WhileStmt w = (WhileStmt)s;
                     write(o, "while ("); self.print(o, ind, w.expr); write(o, ") ");
@@ -237,7 +238,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.DOSTMT: 
+            case ASTTagConstants.DOSTMT: 
                 {
                     DoStmt d = (DoStmt)s;
                     write(o, "do ");
@@ -246,19 +247,19 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.IFSTMT: 
+            case ASTTagConstants.IFSTMT: 
                 {
                     IfStmt i = (IfStmt)s;
                     write(o, "if ("); self.print(o, ind, i.expr); write(o, ") ");
                     self.print(o, ind, i.thn);
-                    if (! (i.els.getTag() == TagConstants.SKIPSTMT)) {
+                    if (! (i.els.getTag() == ASTTagConstants.SKIPSTMT)) {
                         write(o, '\n');
                         spaces(o, ind); write(o, "else "); self.print(o, ind, i.els);
                     }
                     return;
                 }
       
-            case TagConstants.BREAKSTMT: 
+            case ASTTagConstants.BREAKSTMT: 
                 {
                     BreakStmt b = (BreakStmt)s;
                     if (b.label == null) write(o, "break;");
@@ -270,7 +271,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.CONTINUESTMT: 
+            case ASTTagConstants.CONTINUESTMT: 
                 {
                     ContinueStmt c = (ContinueStmt)s;
                     if (c.label == null) write(o, "continue;");
@@ -282,10 +283,10 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.SYNCHRONIZESTMT: 
+            case ASTTagConstants.SYNCHRONIZESTMT: 
                 {
                     SynchronizeStmt x = (SynchronizeStmt)s;
-                    if (x.stmt.getTag() == TagConstants.BLOCKSTMT) {
+                    if (x.stmt.getTag() == ASTTagConstants.BLOCKSTMT) {
                         write(o, "synchronized (");
                         self.print(o, ind, x.expr);
                         write(o, ") ");
@@ -302,14 +303,14 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.EVALSTMT: 
+            case ASTTagConstants.EVALSTMT: 
                 {
                     EvalStmt x = (EvalStmt)s;
                     self.print(o, ind, x.expr); write(o, ';');
                     return;
                 }
       
-            case TagConstants.LABELSTMT: 
+            case ASTTagConstants.LABELSTMT: 
                 {
                     LabelStmt x = (LabelStmt)s;
                     write(o, x.label.toString());
@@ -318,14 +319,14 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.SKIPSTMT: 
+            case ASTTagConstants.SKIPSTMT: 
                 write(o, ';');
                 return;
       
-            case TagConstants.TRYFINALLYSTMT: 
+            case ASTTagConstants.TRYFINALLYSTMT: 
                 {
                     TryFinallyStmt x = (TryFinallyStmt)s;
-                    if (x.tryClause.getTag() == TagConstants.TRYCATCHSTMT)
+                    if (x.tryClause.getTag() == ASTTagConstants.TRYCATCHSTMT)
                         self.print(o, ind, x.tryClause);
                     else if (x.tryClause instanceof BlockStmt) {
                         write(o, "try ");
@@ -338,7 +339,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                         write(o, '}');
                     }
         
-                    if (x.finallyClause.getTag() == TagConstants.BLOCKSTMT) {
+                    if (x.finallyClause.getTag() == ASTTagConstants.BLOCKSTMT) {
                         write(o, " finally ");
                         self.print(o, ind, x.finallyClause);
                     } else {
@@ -351,10 +352,10 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.TRYCATCHSTMT: 
+            case ASTTagConstants.TRYCATCHSTMT: 
                 {
                     TryCatchStmt x = (TryCatchStmt)s;
-                    if (x.tryClause.getTag() == TagConstants.BLOCKSTMT) {
+                    if (x.tryClause.getTag() == ASTTagConstants.BLOCKSTMT) {
                         write(o, "try ");
                         self.print(o, ind, x.tryClause);
                     } else {
@@ -373,27 +374,27 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.CLASSDECLSTMT: 
+            case ASTTagConstants.CLASSDECLSTMT: 
                 {
                     ClassDecl x = ((ClassDeclStmt)s).decl;
                     self.printnoln(o, ind, x);
                     return;
                 }
       
-            case TagConstants.VARDECLSTMT: 
+            case ASTTagConstants.VARDECLSTMT: 
                 {
                     LocalVarDecl x = ((VarDeclStmt)s).decl;
                     self.print(o, ind, x, true);
                     return;
                 }
       
-            case TagConstants.FORSTMT: 
+            case ASTTagConstants.FORSTMT: 
                 {
                     ForStmt x = (ForStmt)s;
                     write(o, "for (");
         
                     if (x.forInit.size() > 0)
-                        if (x.forInit.elementAt(0).getTag() == TagConstants.VARDECLSTMT) {
+                        if (x.forInit.elementAt(0).getTag() == ASTTagConstants.VARDECLSTMT) {
                             self.print(o, ((VarDeclStmt)x.forInit.elementAt(0))//@nowarn Cast;
                                        .decl.type);
                             write(o, ' ');
@@ -424,7 +425,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
       
-            case TagConstants.CONSTRUCTORINVOCATION: {
+            case ASTTagConstants.CONSTRUCTORINVOCATION: {
                 ConstructorInvocation x = (ConstructorInvocation)s;
                 if (x.enclosingInstance != null) {
                     if (!(x.enclosingInstance instanceof ThisExpr) ||
@@ -440,7 +441,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                 return;
             }
 
-            case TagConstants.SWITCHLABEL: {
+            case ASTTagConstants.SWITCHLABEL: {
                 /*
                  * This case never happens unless a client directly calls us on
                  * a SwitchLabel; normally block and switch statements handle
@@ -479,11 +480,11 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
         switch( d.getTag() ) {
       
-            case TagConstants.FIELDDECL:
+            case ASTTagConstants.FIELDDECL:
                 self.print(o, ind, (FieldDecl)d, showBody); writeln(o);
                 break;
 
-            case TagConstants.INITBLOCK:
+            case ASTTagConstants.INITBLOCK:
                 {
                     if (showBody) {
                         InitBlock si = (InitBlock)d;
@@ -499,7 +500,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     break;
                 }
 
-            case TagConstants.METHODDECL:
+            case ASTTagConstants.METHODDECL:
                 {
                     MethodDecl md = (MethodDecl)d;
         
@@ -528,7 +529,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     break;
                 }
         
-            case TagConstants.CONSTRUCTORDECL:
+            case ASTTagConstants.CONSTRUCTORDECL:
                 {
                     ConstructorDecl md = (ConstructorDecl)d;
 
@@ -559,8 +560,8 @@ public class StandardPrettyPrint extends PrettyPrint {
                     break;
                 }
 
-            case TagConstants.CLASSDECL:
-            case TagConstants.INTERFACEDECL:
+            case ASTTagConstants.CLASSDECL:
+            case ASTTagConstants.INTERFACEDECL:
                 {
                     self.print(o, ind, (TypeDecl)d);
                     break;
@@ -691,20 +692,20 @@ public class StandardPrettyPrint extends PrettyPrint {
     public void print(/*@non_null*/OutputStream o, /*@ non_null */ Type t) {
         if (t == null) { write(o, "<null Type>"); return; }
         switch (t.getTag()) {
-            case TagConstants.BOOLEANTYPE: write(o, "boolean"); break;
-            case TagConstants.BYTETYPE: write(o, "byte"); break;
-            case TagConstants.ERRORTYPE: write(o, "error"); break;
-            case TagConstants.SHORTTYPE: write(o, "short"); break;
-            case TagConstants.INTTYPE: write(o, "int"); break;
-            case TagConstants.LONGTYPE: write(o, "long"); break;
-            case TagConstants.CHARTYPE: write(o, "char"); break;
-            case TagConstants.FLOATTYPE: write(o, "float"); break;
-            case TagConstants.DOUBLETYPE: write(o, "double"); break;
-            case TagConstants.VOIDTYPE: write(o, "void"); break;
-            case TagConstants.NULLTYPE: write(o, "null"); break;
-            case TagConstants.TYPENAME:
+            case ASTTagConstants.BOOLEANTYPE: write(o, "boolean"); break;
+            case ASTTagConstants.BYTETYPE: write(o, "byte"); break;
+            case ASTTagConstants.ERRORTYPE: write(o, "error"); break;
+            case ASTTagConstants.SHORTTYPE: write(o, "short"); break;
+            case ASTTagConstants.INTTYPE: write(o, "int"); break;
+            case ASTTagConstants.LONGTYPE: write(o, "long"); break;
+            case ASTTagConstants.CHARTYPE: write(o, "char"); break;
+            case ASTTagConstants.FLOATTYPE: write(o, "float"); break;
+            case ASTTagConstants.DOUBLETYPE: write(o, "double"); break;
+            case ASTTagConstants.VOIDTYPE: write(o, "void"); break;
+            case ASTTagConstants.NULLTYPE: write(o, "null"); break;
+            case ASTTagConstants.TYPENAME:
                 self.print(o, ((TypeName)t).name); break;
-            case TagConstants.ARRAYTYPE:
+            case ASTTagConstants.ARRAYTYPE:
                 self.print(o, ((ArrayType)t).elemType); write(o, "[");
                 write(o,"]");
                 break;
@@ -734,7 +735,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         int eTag = e.getTag();
         switch (eTag) {
       
-            case TagConstants.ARRAYINIT: 
+            case ASTTagConstants.ARRAYINIT: 
                 {
                     VarInitVec v = ((ArrayInit)e).elems;
                     write(o, "{ ");
@@ -746,7 +747,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
                     
-            case TagConstants.THISEXPR: {
+            case ASTTagConstants.THISEXPR: {
                 ThisExpr t = (ThisExpr)e;
                 if (t.classPrefix != null) {
                     self.print(o, t.classPrefix);
@@ -757,21 +758,21 @@ public class StandardPrettyPrint extends PrettyPrint {
             }
 
                 // Literals
-            case TagConstants.BOOLEANLIT: 
-            case TagConstants.STRINGLIT:
-            case TagConstants.CHARLIT:
-            case TagConstants.DOUBLELIT: 
-            case TagConstants.FLOATLIT:
-            case TagConstants.INTLIT:
-            case TagConstants.LONGLIT:
+            case ASTTagConstants.BOOLEANLIT: 
+            case ASTTagConstants.STRINGLIT:
+            case ASTTagConstants.CHARLIT:
+            case ASTTagConstants.DOUBLELIT: 
+            case ASTTagConstants.FLOATLIT:
+            case ASTTagConstants.INTLIT:
+            case ASTTagConstants.LONGLIT:
                 write(o, toCanonicalString(eTag, ((LiteralExpr)e).value));
                 return;
 
-            case TagConstants.NULLLIT:
+            case ASTTagConstants.NULLLIT:
                 write(o, "null");
                 return;
 
-            case TagConstants.ARRAYREFEXPR:
+            case ASTTagConstants.ARRAYREFEXPR:
                 {
                     ArrayRefExpr r = (ArrayRefExpr)e;
                     self.print(o, ind, r.array);
@@ -779,7 +780,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
 
-            case TagConstants.NEWINSTANCEEXPR:
+            case ASTTagConstants.NEWINSTANCEEXPR:
                 { 
                     NewInstanceExpr ne = (NewInstanceExpr)e;
                     if (ne.enclosingInstance != null) {
@@ -806,13 +807,13 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
 
-            case TagConstants.NEWARRAYEXPR:
+            case ASTTagConstants.NEWARRAYEXPR:
                 {
                     NewArrayExpr na = (NewArrayExpr)e;
                     Type basetype = na.type;
                     int cnt;
 
-                    for (cnt = 0; basetype.getTag() == TagConstants.ARRAYTYPE; cnt++) {
+                    for (cnt = 0; basetype.getTag() == ASTTagConstants.ARRAYTYPE; cnt++) {
                         basetype = ((ArrayType)basetype).elemType;
                     }
                     write(o, "new "); self.print(o, basetype);
@@ -828,7 +829,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
 
-            case TagConstants.CONDEXPR:
+            case ASTTagConstants.CONDEXPR:
                 {
                     CondExpr ce = (CondExpr)e;
                     self.print(o, ind, ce.test); write(o, " ? ");
@@ -837,7 +838,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
 
-            case TagConstants.INSTANCEOFEXPR:
+            case ASTTagConstants.INSTANCEOFEXPR:
                 {
                     InstanceOfExpr ie = (InstanceOfExpr)e;
                     self.print(o, ind, ie.expr);
@@ -846,7 +847,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
 
-            case TagConstants.CASTEXPR:
+            case ASTTagConstants.CASTEXPR:
                 {
                     CastExpr ce = (CastExpr)e;
                     write(o, '('); self.print(o, ce.type); write(o, ')');
@@ -854,7 +855,7 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
 
-            case TagConstants.CLASSLITERAL:
+            case ASTTagConstants.CLASSLITERAL:
                 {
                     ClassLiteral cl = (ClassLiteral)e;
                     self.print(o, cl.type); write(o, ".class");
@@ -862,22 +863,22 @@ public class StandardPrettyPrint extends PrettyPrint {
                 }
 
                 // Binary expressions
-            case TagConstants.OR: case TagConstants.AND:
-            case TagConstants.BITOR: case TagConstants.BITXOR:
-            case TagConstants.BITAND: case TagConstants.NE:
-            case TagConstants.EQ: case TagConstants.GE:
-            case TagConstants.GT: case TagConstants.LE:
-            case TagConstants.LT: case TagConstants.LSHIFT:
-            case TagConstants.RSHIFT: case TagConstants.URSHIFT:
-            case TagConstants.ADD: case TagConstants.SUB:
-            case TagConstants.DIV: case TagConstants.MOD:
-            case TagConstants.STAR:
-            case TagConstants.ASSIGN: case TagConstants.ASGMUL:
-            case TagConstants.ASGDIV: case TagConstants.ASGREM:
-            case TagConstants.ASGADD: case TagConstants.ASGSUB:
-            case TagConstants.ASGLSHIFT: case TagConstants.ASGRSHIFT:
-            case TagConstants.ASGURSHIFT: case TagConstants.ASGBITAND:
-            case TagConstants.ASGBITOR: case TagConstants.ASGBITXOR:
+            case ASTTagConstants.OR: case ASTTagConstants.AND:
+            case ASTTagConstants.BITOR: case ASTTagConstants.BITXOR:
+            case ASTTagConstants.BITAND: case ASTTagConstants.NE:
+            case ASTTagConstants.EQ: case ASTTagConstants.GE:
+            case ASTTagConstants.GT: case ASTTagConstants.LE:
+            case ASTTagConstants.LT: case ASTTagConstants.LSHIFT:
+            case ASTTagConstants.RSHIFT: case ASTTagConstants.URSHIFT:
+            case ASTTagConstants.ADD: case ASTTagConstants.SUB:
+            case ASTTagConstants.DIV: case ASTTagConstants.MOD:
+            case ASTTagConstants.STAR:
+            case ASTTagConstants.ASSIGN: case ASTTagConstants.ASGMUL:
+            case ASTTagConstants.ASGDIV: case ASTTagConstants.ASGREM:
+            case ASTTagConstants.ASGADD: case ASTTagConstants.ASGSUB:
+            case ASTTagConstants.ASGLSHIFT: case ASTTagConstants.ASGRSHIFT:
+            case ASTTagConstants.ASGURSHIFT: case ASTTagConstants.ASGBITAND:
+            case ASTTagConstants.ASGBITOR: case ASTTagConstants.ASGBITXOR:
                 {
                     BinaryExpr be = (BinaryExpr)e;
                     self.print(o, ind, be.left); write(o, ' ');
@@ -887,15 +888,15 @@ public class StandardPrettyPrint extends PrettyPrint {
                 }
 
                 // Unary expressions
-            case TagConstants.UNARYSUB: case TagConstants.UNARYADD:
-            case TagConstants.NOT: case TagConstants.BITNOT:
-            case TagConstants.INC: case TagConstants.DEC:
-            case TagConstants.POSTFIXINC: case TagConstants.POSTFIXDEC:
+            case ASTTagConstants.UNARYSUB: case ASTTagConstants.UNARYADD:
+            case ASTTagConstants.NOT: case ASTTagConstants.BITNOT:
+            case ASTTagConstants.INC: case ASTTagConstants.DEC:
+            case ASTTagConstants.POSTFIXINC: case ASTTagConstants.POSTFIXDEC:
                 {
                     UnaryExpr ue = (UnaryExpr)e;
-                    if (ue.op == TagConstants.POSTFIXINC)
+                    if (ue.op == ASTTagConstants.POSTFIXINC)
                     { self.print(o, ind, ue.expr); write(o, "++"); }
-                    else if (ue.op == TagConstants.POSTFIXDEC)
+                    else if (ue.op == ASTTagConstants.POSTFIXDEC)
                     { self.print(o, ind, ue.expr); write(o, "--"); }
                     else {
                         write(o, OperatorTags.toString(ue.op));
@@ -904,39 +905,39 @@ public class StandardPrettyPrint extends PrettyPrint {
                     return;
                 }
 
-            case TagConstants.PARENEXPR:
+            case ASTTagConstants.PARENEXPR:
                 {
                     ParenExpr pe = (ParenExpr)e;
                     write(o, '('); self.print(o, ind, pe.expr); write(o, ')');
                     return;
                 }
 
-            case TagConstants.AMBIGUOUSVARIABLEACCESS:
+            case ASTTagConstants.AMBIGUOUSVARIABLEACCESS:
                 self.print(o, ((AmbiguousVariableAccess)e).name);
                 return;
 
-            case TagConstants.VARIABLEACCESS:
+            case ASTTagConstants.VARIABLEACCESS:
                 {
                     VariableAccess lva = (VariableAccess)e;
                     write(o, lva.decl.id.toString());
                     return;
                 }
       
-            case TagConstants.FIELDACCESS:
+            case ASTTagConstants.FIELDACCESS:
                 {
                     FieldAccess a = (FieldAccess)e;
                     self.print(o, ind, a.od); write(o, a.id.toString());
                     return;
                 }
       
-            case TagConstants.AMBIGUOUSMETHODINVOCATION:
+            case ASTTagConstants.AMBIGUOUSMETHODINVOCATION:
                 {
                     AmbiguousMethodInvocation ie = (AmbiguousMethodInvocation)e;
                     self.print(o, ie.name); self.print(o, ind, ie.args);
                     return;
                 }
 
-            case TagConstants.METHODINVOCATION:
+            case ASTTagConstants.METHODINVOCATION:
                 {
                     MethodInvocation ie = (MethodInvocation)e;
                     self.print(o, ind, ie.od);
@@ -954,26 +955,26 @@ public class StandardPrettyPrint extends PrettyPrint {
     public void print(/*@non_null*/OutputStream o, int ind, ObjectDesignator od) {
         if (od == null) { write(o, "<null object designator>"); return; }
         switch (od.getTag()) {
-            case TagConstants.EXPROBJECTDESIGNATOR:
+            case ASTTagConstants.EXPROBJECTDESIGNATOR:
                 {
                     ExprObjectDesignator a = (ExprObjectDesignator)od;
-                    if (a.expr.getTag() != TagConstants.THISEXPR
+                    if (a.expr.getTag() != ASTTagConstants.THISEXPR
                         || !((ThisExpr)a.expr).inferred
                         || PrettyPrint.displayInferred)
                     { self.print(o, ind, a.expr); write(o, '.'); }
                     return;
                 }
       
-            case TagConstants.TYPEOBJECTDESIGNATOR:
+            case ASTTagConstants.TYPEOBJECTDESIGNATOR:
                 {
                     TypeObjectDesignator a = (TypeObjectDesignator)od;
-                    if (a.type.getTag() == TagConstants.TYPENAME
+                    if (a.type.getTag() == ASTTagConstants.TYPENAME
                         || PrettyPrint.displayInferred)
                     { self.print(o, a.type); write(o, '.'); }
                     return;
                 }
       
-            case TagConstants.SUPEROBJECTDESIGNATOR:
+            case ASTTagConstants.SUPEROBJECTDESIGNATOR:
                 write(o, "super.");
                 return;
       
@@ -1021,9 +1022,9 @@ public class StandardPrettyPrint extends PrettyPrint {
       @*/
     //@ ensures \result != null;
     public static String toCanonicalString(int tag, Object val) {
-        if (tag == TagConstants.BOOLEANLIT) return val.toString();
+        if (tag == ASTTagConstants.BOOLEANLIT) return val.toString();
 
-        if (tag == TagConstants.DOUBLELIT) {
+        if (tag == ASTTagConstants.DOUBLELIT) {
             String s = val.toString();
             if (s.equals("Infinity")) return "1.0 / 0.0";
             if (s.equals("-Infinity")) return "-1.0 / 0.0";
@@ -1031,7 +1032,7 @@ public class StandardPrettyPrint extends PrettyPrint {
             return val.toString() + "D";
         }
 
-        if (tag == TagConstants.FLOATLIT) {
+        if (tag == ASTTagConstants.FLOATLIT) {
             String s = val.toString();
             if (s.equals("Infinity")) return "1.0f / 0.0f";
             if (s.equals("-Infinity")) return "-1.0f / 0.0f";
@@ -1039,23 +1040,23 @@ public class StandardPrettyPrint extends PrettyPrint {
             return val.toString() + "F";
         }
 
-        if (tag == TagConstants.INTLIT) {
+        if (tag == ASTTagConstants.INTLIT) {
             int v = ((Integer) val).intValue();
             if (v == Integer.MIN_VALUE) return "0x80000000";
             else if (v < 0) return "0x" + Integer.toHexString(v);
             else return Integer.toString(v);
         }
 
-        if (tag == TagConstants.LONGLIT) {
+        if (tag == ASTTagConstants.LONGLIT) {
             long v = ((Long) val).longValue();
             if (v == Long.MIN_VALUE) return "0x8000000000000000L";
             else if (v < 0) return "0x" + Long.toHexString(v) + "L";
             else return Long.toString(v) + "L";
         }
 
-        if (tag == TagConstants.CHARLIT || tag == TagConstants.STRINGLIT) {
+        if (tag == ASTTagConstants.CHARLIT || tag == ASTTagConstants.STRINGLIT) {
             char quote;
-            if (tag == TagConstants.CHARLIT) {
+            if (tag == ASTTagConstants.CHARLIT) {
                 quote = '\'';
                 val = new Character((char)((Integer)val).intValue());
             } else quote = '\"';

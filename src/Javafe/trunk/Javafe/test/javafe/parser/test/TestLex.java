@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Random;
 import javafe.ast.*;
 import javafe.parser.*;
-import javafe.parser.TagConstants;
+import javafe.tc.TagConstants;
 import javafe.util.*;
 
 /**
