@@ -192,12 +192,12 @@ import javafe.util.Location;
 
  @see javafe.util.CorrelatedReader
  @see javafe.parser.ParserTagConstants
- @see javafe.parser.Token
+ @see javafe.parser.ParserToken
  @see javafe.parser.PragmaParser
 
  */
 
-public class Lex extends Token
+public class Lex extends ParserToken
 {
     //// Underlying input stream
 
@@ -372,7 +372,7 @@ public class Lex extends Token
 
     //// Public members for scanning
 
-    public void replaceLookaheadToken(int k, Token t) {
+    public void replaceLookaheadToken(int k, ParserToken t) {
 	lookaheadq.setElementAt(k,t);
     }
 
@@ -457,9 +457,9 @@ public class Lex extends Token
         return lookaheadq.elementAt(k-1).ttype;
     }
     //@ invariant savedState != null;
-    protected Token savedState = new Token();
+    protected ParserToken savedState = new ParserToken();
 
-    public Token lookaheadToken(int k) {
+    public ParserToken lookaheadToken(int k) {
 	if (k==0) return this;
 	lookahead(k);
 	return lookaheadq.elementAt(k-1);
@@ -568,7 +568,7 @@ public class Lex extends Token
 		endingLoc = m_in.getLocation(); // Chalin: trying to satisfy Token inv.
                 return ttype;
             }
-            ttype = Token.CLEAR;      // keep Token invariants happy
+            ttype = ParserToken.CLEAR;      // keep Token invariants happy
             identifierVal = null;
 
             if (Character.isDigit((char)nextchr))

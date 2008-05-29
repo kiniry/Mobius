@@ -142,7 +142,7 @@ public class TestLex implements PragmaParser
 
   //@ also
   //@   requires l.m_in != null;
-  public boolean getNextPragma(Token destination) {
+  public boolean getNextPragma(ParserToken destination) {
     if (l.ttype == TagConstants.EOF) return false;
     int loc = l.startingLoc;
     error: {
@@ -186,7 +186,7 @@ public class TestLex implements PragmaParser
     l.close();
   }
   
-  public javafe.ast.FieldDecl isPragmaDecl(javafe.parser.Token l) {
+  public javafe.ast.FieldDecl isPragmaDecl(javafe.parser.ParserToken l) {
     return null;
   }
   

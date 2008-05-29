@@ -21,7 +21,7 @@ import javafe.util.CorrelatedReader;
  *
  * @todo These methods need JML specifications.
  *
- * @see javafe.parser.Token
+ * @see javafe.parser.ParserToken
  * @see javafe.parser.Lex
  */
 
@@ -45,7 +45,7 @@ public interface PragmaParser
     /**
      * @todo Need to write documentation for this method.
      */
-    javafe.ast.FieldDecl isPragmaDecl(/*@ non_null @*/ Token l);
+    javafe.ast.FieldDecl isPragmaDecl(/*@ non_null @*/ ParserToken l);
 
     /**
      * Restart a pragma parser on a new input stream.  If
@@ -73,7 +73,7 @@ public interface PragmaParser
      * has not returned false and <code>close</code> has not been
      * called. 
      */
-    boolean getNextPragma(/*@ non_null @*/ Token destination);
+    boolean getNextPragma(/*@ non_null @*/ ParserToken destination);
 
     /**
      * Stop parsing the current reader.  Sometimes a <code>Lex</code>

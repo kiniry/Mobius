@@ -30,7 +30,7 @@ import javafe.util.Location;
  * <code>copyInto</code> method.
  */
 
-public class Token
+public class ParserToken
 {
     /***************************************************
      *                                                 *
@@ -141,7 +141,7 @@ public class Token
      * NOTE: This is not a helper; we use invalid tokens in TokenQueue and
      *       Lex.savedState.
      */
-    public Token() {}
+    public ParserToken() {}
 
 
     /**
@@ -156,7 +156,7 @@ public class Token
 	dst.auxVal == auxVal &&
 	\result == dst;
     */
-    public final /*@ non_null */ Token copyInto(/*@ non_null @*/ Token dst) {
+    public final /*@ non_null */ ParserToken copyInto(/*@ non_null @*/ ParserToken dst) {
 	dst.ttype = ttype;
 	dst.startingLoc = startingLoc;
 	dst.endingLoc = endingLoc;

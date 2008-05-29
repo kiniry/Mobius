@@ -18,7 +18,7 @@ class TokenQueue
 
     //@ invariant \nonnullelements(toks);
     //@ spec_public
-    private Token[] toks;
+    private ParserToken[] toks;
 
     //@ invariant 0 <= start && start < toks.length;
     //@ spec_public
@@ -31,9 +31,9 @@ class TokenQueue
 
     //@ ensures !notempty;
     public TokenQueue() {
-        toks = new Token[4];
+        toks = new ParserToken[4];
         for(int i = 0; i < toks.length; i++)
-            toks[i] = new Token();
+            toks[i] = new ParserToken();
         start = end = 0;
     }
 
@@ -63,7 +63,7 @@ class TokenQueue
      */
 
     //@ ensures \result != null;
-    public Token elementAt(int n) {
+    public ParserToken elementAt(int n) {
         int sa = (start <= end ? 0 : toks.length);
         int size = (end + sa) - start;
         if (n < 0 || size <= n)
@@ -73,7 +73,7 @@ class TokenQueue
         return toks[ndx];
     }   //@ nowarn Exception;
 
-    public void setElementAt(int n,Token t) {
+    public void setElementAt(int n,ParserToken t) {
         int sa = (start <= end ? 0 : toks.length);
         int size = (end + sa) - start;
         if (n < 0 || size <= n)
@@ -92,7 +92,7 @@ class TokenQueue
         end = start = 0;
         notempty = false;
         for(int i = 0; i < toks.length; i++) {
-            Token t = toks[i];
+            ParserToken t = toks[i];
             //@ assert 0 <= i && i < toks.length;
             //@ assert (\forall int j; 0 <= j && j < toks.length ==> toks[j] != null );
             //@ assert toks[0] != null;
@@ -110,7 +110,7 @@ class TokenQueue
     //@ requires notempty;
     //@ modifies start;
     //@ modifies notempty;
-    public void dequeue(Token dst) {
+    public void dequeue(ParserToken dst) {
         if (start != end) {
             toks[start].copyInto(dst);
 
@@ -129,7 +129,7 @@ class TokenQueue
      </esc></pre>
      */
 
-    public void enqueue(Token td) {
+    public void enqueue(ParserToken td) {
         Assert.notNull(td);
 
         // We always have space at end
@@ -140,9 +140,9 @@ class TokenQueue
         if (start == end) {
             // Out of space, need to extend array, double it
             int len = toks.length;
-            Token[] _new = new Token[2*len];
+            ParserToken[] _new = new ParserToken[2*len];
             for(int i = 0; i < len; i++) _new[i] = toks[(i + start) % len];
-            for(int i = _new.length-1; len <= i; i--) _new[i] = new Token();
+            for(int i = _new.length-1; len <= i; i--) _new[i] = new ParserToken();
             start = 0;
             end = toks.length;
             toks = _new;
