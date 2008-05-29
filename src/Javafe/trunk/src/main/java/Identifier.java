@@ -2,6 +2,7 @@
 
 package javafe.ast;
 
+//@ model import javafe.tc.TagConstants;
 import javafe.parser.ParserTagConstants;
 import javafe.util.Assert;
 

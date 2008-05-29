@@ -1,5 +1,6 @@
 package javafe.ast;
 
+//@ model import javafe.tc.TagConstants;
 
 /**
  ** Represents either a ClassBodyDeclaration or an

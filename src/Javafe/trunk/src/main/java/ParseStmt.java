@@ -8,6 +8,8 @@ import javafe.util.Location;
 import javafe.util.ErrorSet;
 import javafe.Tool;
 
+//@ model import javafe.tc.TagConstants;
+
 /**
  * <code>Parse</code> objects parse Java statements, creating AST
  * structures for the parsed input using the static

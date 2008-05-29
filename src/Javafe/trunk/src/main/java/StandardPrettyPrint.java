@@ -1,4 +1,4 @@
-/* $Id: StandardPrettyPrint.java 1999 2006-08-05 16:58:25Z chalin $
+/* $Id: StandardPrettyPrint.java 71712 2008-05-28 16:02:50Z dcochran $
  * Copyright 2000, 2001, Compaq Computer Corporation .
  * Copyright 2006, DSRG, Concordia University and others.
  */
@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javafe.util.Assert;
 import javafe.util.Location;
+import javafe.tc.TagConstants;
 
 public class StandardPrettyPrint extends PrettyPrint {
 

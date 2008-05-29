@@ -12,6 +12,8 @@ import javafe.util.StackVector;
 import javafe.util.Assert;
 import javafe.Tool;
 
+//@ model import javafe.tc.TagConstants;
+
 /**
  * Parses java expressions.  Extended by {@link javafe.parser.ParseStmt}.
  * 

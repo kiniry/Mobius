@@ -17,6 +17,8 @@ import javafe.util.ErrorSet;
 import javafe.util.CorrelatedReader;
 import javafe.util.Location;
 
+//@ model import javafe.tc.TagConstants;
+
 /**
 
  A <TT>Lex</TT> object generates a sequence of Java "input elements"
