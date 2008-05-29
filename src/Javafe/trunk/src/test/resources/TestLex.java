@@ -8,11 +8,12 @@ import java.util.Random;
 import javafe.ast.Identifier;
 import javafe.ast.PrettyPrint;
 
-import javafe.parser.TagConstants;
 import javafe.parser.Lex;
 
 import javafe.util.Assert;
 import javafe.util.FileCorrelatedReader;
+
+import javafe.tc.TagConstants;
 
 
 /**
