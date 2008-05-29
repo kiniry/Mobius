@@ -78,8 +78,10 @@ public class FbError {
         ++i; sb.append('%');
       } else {
         int idx = 0;
-        while (i+1 < n && Character.isDigit(c = type.templ().charAt(i+1)))
+        while (i+1 < n && Character.isDigit(c = type.templ().charAt(i+1))) {
           idx = 10 * idx + c - '0';
+          ++i;
+        }
         if (data[idx] == null)
           Err.fatal("INTERNAL ERROR: idx="+idx + " err_type="+type);
         else

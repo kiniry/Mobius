@@ -98,9 +98,10 @@ public class TypeChecker extends Evaluator<Type> {
     enclosingTypeVar = new StackedHashMap<AtomId, AtomId>();
     
     // build symbol table
-    StbInterface stb = new SymbolTableBuilder();
+    StbInterface stb = new ForgivingStb();
     errors = stb.process(ast);
     if (!errors.isEmpty()) return errors;
+    ast = stb.getAST();
     st = stb.getST();
     gc = stb.getGC();
     

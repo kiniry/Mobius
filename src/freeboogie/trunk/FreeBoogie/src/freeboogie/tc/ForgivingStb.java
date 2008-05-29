@@ -16,30 +16,37 @@ import freeboogie.ast.Declaration;
  * is transformed into {@code var h&lt;x&gt; : [ref,&lt;x&gt;name]x}.
  */
 public class ForgivingStb implements StbInterface {
+  
+  // does the real work
+  private StbInterface stb;
 
+  /**
+   * Constructs a forgiving symbol table builder.
+   */
+  public ForgivingStb() {
+    stb = new SymbolTableBuilder();
+  }
 
   @Override
   public GlobalsCollector getGC() {
-    assert false; // TODO
-    return null;
+    return stb.getGC();
   }
 
   @Override
   public SymbolTable getST() {
-    assert false; // TODO
-    return null;
+    return stb.getST();
   }
 
   @Override
   public Declaration getAST() {
-    assert false;
-    return null;
+    // TODO continue here
+    return stb.getAST();
   }
 
   @Override
   public List<FbError> process(Declaration ast) {
-    assert false; // TODO
-    return null;
+    // TODO continue here
+    return stb.process(ast);
   }
 }
 
