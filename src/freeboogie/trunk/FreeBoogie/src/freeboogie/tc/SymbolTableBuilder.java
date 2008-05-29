@@ -16,6 +16,7 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   private StackedHashMap<String, VariableDecl> localVarDecl;
   private StackedHashMap<String, AtomId> typeVarDecl;
 
+  private Declaration ast;
   private SymbolTable symbolTable;
   private GlobalsCollector gc;
   
@@ -40,7 +41,13 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
     lookInLocalScopes = true;
     errors = gc.process(ast);
     ast.eval(this);
+    this.ast = ast;
     return errors;
+  }
+
+  @Override
+  public Declaration getAST() {
+    return ast;
   }
 
   /**

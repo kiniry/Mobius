@@ -1,4 +1,5 @@
  . Add implicit type variables (h:[ref,<x>name]x -> h<x>:[ref...)
+   This should be done in ForgivingStb
  . Fix type-checking in "old" mode by a bit of type inference.
  . Test typechecker thoroughly.
  . Does ImplementationChecker treat type vars correctly?
