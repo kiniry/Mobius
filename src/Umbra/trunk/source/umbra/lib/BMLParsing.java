@@ -17,7 +17,8 @@ import annot.textio.CodeFragment;
  *
  * There is one BMLParsing object per one open editor.
  *
- * TODO: make sure all the communication with BMLlib goes throrugh this class
+ * TODO: make sure all the communication with BMLlib goes through this class
+ * https://mobius.ucd.ie/ticket/592
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
@@ -25,26 +26,13 @@ import annot.textio.CodeFragment;
 public class BMLParsing {
 
   /**
-   * This field is set to <code>true</code> when BMLLib is used
-   * for parsing changes in byte code documents.
-   */
-  public static final boolean BMLLIB_ENABLED = true;
-
-  /**
-   * The field is set to <code>true</code> when the original Umbra
-   * mechanisms are used to parse the changes in byte code documents.
-   */
-  public static final boolean UMBRA_ENABLED = true;
-
-
-  /**
-   * This represents BML-annotated bytecode whose code
+   * This represents BML-annotated byte code whose code
    * (if correct) is displayed in the editor.
    */
   private BCClass my_bcc;
 
   /**
-   * This represents BML-annotated bytecode (the same as in
+   * This represents BML-annotated byte code (the same as in
    * <code>my_bcc</code> with its current (maybe incorrect)
    * string representation and its changes since last time
    * it was correct.
@@ -61,9 +49,6 @@ public class BMLParsing {
    *    returns.
    */
   public BMLParsing(final BCClass a_bcc) {
-    if (!BMLLIB_ENABLED) {
-      return;
-    }
     this.my_bcc = a_bcc;
     final String code = a_bcc.printCode();
     this.my_cFgmt = new CodeFragment(a_bcc, code);
@@ -81,8 +66,6 @@ public class BMLParsing {
    *    <code>documentChanged()</code> in editor's listener.
    */
   public void onChange(final DocumentEvent an_event) {
-    if (!BMLLIB_ENABLED)
-      return;
     String msg = "";
     my_cFgmt.modify(an_event.fOffset, an_event.fLength, an_event.fText);
     msg += "annotations status: ";

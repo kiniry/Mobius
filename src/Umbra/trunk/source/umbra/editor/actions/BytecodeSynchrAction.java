@@ -70,8 +70,8 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
 
 
   /**
-   * Displays the message that no instruction can be reasonably associated with
-   * the given position.
+   * Displays the message that no source code instruction can be reasonably
+   * associated with the given position.
    *
    * @param a_shell the shell which displays the message
    * @param a_title the title of the message window

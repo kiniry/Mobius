@@ -153,13 +153,18 @@ public class DocumentSynchroniser {
    *   line)
    * @throws UmbraException in case there is no instruction line that can be
    *   reasonably associated with the given line number
+   * @throws UmbraSynchronisationException in case there is no instruction line that can be
+   *   reasonably associated with the given line number
    */
   private int syncBS(final JavaClass a_java_class,
-                     final int a_line_no) throws UmbraException {
+                     final int a_line_no)
+    throws UmbraException, UmbraSynchronisationException {
     final int lineno = my_bcode_doc.getInstructionLineBelow(a_line_no);
     final int mno = my_bcode_doc.getMethodForLine(lineno);
     final int label = my_bcode_doc.getLabelForLine(lineno);
     final Method m = a_java_class.getMethods()[mno];
+    if (m.getLineNumberTable() == null)
+      throw new UmbraSynchronisationException();
     final LineNumber[] lnt = m.getLineNumberTable().getLineNumberTable();
     int minpc = 0;
     int imin = 0;

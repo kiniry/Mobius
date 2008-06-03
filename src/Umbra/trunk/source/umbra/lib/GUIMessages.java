@@ -36,9 +36,15 @@ public final class GUIMessages {
    */
 
   /**
+   * A string used as a generic header in the message panes launched in
+   * connection with the byte code text editor.
+   */
+  public static final String BYTECODE_MESSAGE_TITLE = "Bytecode";
+
+  /**
    * A string used as a header in the message panes launched in connection
    * with the Java source code action to disassemble code (class
-   * {@ref DisasBCEL}).
+   * {@link DisasBCEL}).
    */
   public static final String DISAS_MESSAGE_TITLE =
     "Disassemble Bytecode";
@@ -54,18 +60,24 @@ public final class GUIMessages {
 
   /**
    * A string used as a header in the message panes launched in connection
-   * with the bytecode action to translate the bytecode to BoogiePL (class
-   * {@ref BytecodeToBoogiePLAction}).
+   * with the byte code action to translate the byte code to BoogiePL (class
+   * {@link BytecodeToBoogiePLAction}).
    */
   public static final String B2BPL_MESSAGE_TITLE =
     "Bytecode To BoogiePL";
 
   /**
-   * The message which requires the user to save the bytecode before it
+   * The message which informs the user that the operation he/she wants to
+   * carry out cannot be performed.
+   */
+  public static final String INVALID_EDIT_OPERATION = "Invalid edit operation";
+
+  /**
+   * The message which requires the user to save the byte code before it
    * is disassembled.
    */
   public static final String DISAS_SAVE_BYTECODE_FIRST =
-    "You must save the source code before you can show its bytecode.";
+    "You must save the source code before you can show its byte code.";
 
   /**
    * The message which informs the user that the file cannot be saved under
@@ -73,6 +85,13 @@ public final class GUIMessages {
    */
   public static final String DISAS_SAVING_PROBLEMS =
     "Problems with saving the file under the given location";
+
+  /**
+   * The message which informs the user that the file cannot be saved under
+   * the given location.
+   */
+  public static final String DISAS_LOADING_PROBLEMS =
+    "Problems with loading the file under the given location: ";
 
   /**
    * The message which informs that the current project has no class file output
@@ -95,11 +114,11 @@ public final class GUIMessages {
     "The byte code editor cannot be opended or initialised";
 
   /**
-   * The message which requires the user to save the bytecode before it is
+   * The message which requires the user to save the byte code before it is
    * translated to BoogiePL.
    */
   public static final String B2BPL_SAVE_BYTECODE_FIRST =
-    "You must save the bytecode before you can translate it into BoogiePL.";
+    "You must save the byte code before you can translate it into BoogiePL.";
 
   /**
    * A template message that warns about wrong file type.
@@ -131,7 +150,7 @@ public final class GUIMessages {
    * an instruction in a reasonable way.
    */
   public static final String NOINSTRUCTION_MSG =
-    "No instruction can be associated with the given position";
+    "No source code instruction can be associated with the given position";
 
   /**
    * The empty constructor to forbid the creation of the instances.

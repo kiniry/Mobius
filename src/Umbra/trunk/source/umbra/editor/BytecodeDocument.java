@@ -335,11 +335,9 @@ public class BytecodeDocument extends Document {
    * changed methods.
    */
   public void updateJavaClass() {
-    if (BMLParsing.BMLLIB_ENABLED) {
-      //XXX changed: obtaining JavaClass from my_bmlp field
-      final BCClass bcc = getBmlp().getBcc();
-      bcc.saveJC();
-    }
+    //XXX changed: obtaining JavaClass from my_bmlp field
+    final BCClass bcc = getBmlp().getBcc();
+    bcc.saveJC();
   }
 
   /**

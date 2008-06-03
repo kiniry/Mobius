@@ -26,11 +26,11 @@ import umbra.editor.parsing.TokenGetter;
 
 
 /**
- * This class is used by the {@ref BytecodeEditor} with the matter of
- * double click strategy and color versions. It has been generated
+ * This class is used by the {@link BytecodeEditor} with the matter of
+ * double click strategy and colour versions. It has been generated
  * automatically and some changes has been made, for example
  * involving special ways of colouring and possibility of
- * changing the coloring styles ('my_mode' field).
+ * changing the colouring styles ('my_mode' field).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -40,23 +40,21 @@ import umbra.editor.parsing.TokenGetter;
 public class BytecodeConfiguration extends SourceViewerConfiguration {
 
   /**
-   * This object handles the operation to synchronise a bytecode editor
+   * This object handles the operation to synchronise a byte code editor
    * point with the corresponding statement in the Java source code.
    */
   private BytecodeDoubleClickStrategy my_dblClickStrategy;
 
   /**
-   * The bytecode tag scanner object used, in particular, when the presentation
-   * of the bytecode file in an editor is reconciled with a change.
-   * TODO is it the only purpose? is it right?
+   * The byte code scanner object used to do the colouring and text
+   * styling of the byte code areas inside of the BML areas.
    */
   private BytecodeBMLSecScanner my_bml_secscanner;
   //@ invariant my_bml_secscanner.colorManager == my_color_manager;
 
   /**
-   * The bytecode scanner object used, in particular, when the presentation
-   * of the bytecode file in an editor is generated.
-   * TODO is it the only purpose? is it right?
+   * The byte code scanner object used to do the colouring and text
+   * styling of the byte code areas outside of the BML areas.
    */
   private BytecodeScanner my_scanner;
   //@ invariant my_scanner.colorManager == my_color_manager;
@@ -73,7 +71,9 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   private int my_mode;
 
   /**
-   * TODO.
+   * The constructor retrieves the current colouring mode from the
+   * {@link ColorModeContainer} and the current colour manager
+   * from {@link ColorManager}.
    */
   public BytecodeConfiguration() {
     my_mode = ColorModeContainer.getMod();
@@ -81,14 +81,16 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   }
 
   /**
+   * Returns the configured types of byte code textual document areas.
+   *
    * @param a_source_viewer a source viewer for which the content types are
-   *                        specified
-   * @return a table with content types for the given source viewer, in this
-   *         case it contains always:
+   *   specified
+   * @return an array with content types for the given source viewer, in this
+   *   case it contains always:
    * <ul>
-   *   <li>{@ref IDocument#DEFAULT_CONTENT_TYPE}</li>
-   *   <li>{@ref BytecodePartitionScanner#SECTION_HEAD}</li>
-   *   <li>{@ref BytecodePartitionScanner#SECTION_BML}</li>
+   *   <li>{@link IDocument#DEFAULT_CONTENT_TYPE}</li>
+   *   <li>{@link BytecodePartitionScanner#SECTION_HEAD}</li>
+   *   <li>{@link BytecodePartitionScanner#SECTION_BML}</li>
    * </ul>
    * @see SourceViewerConfiguration#getConfiguredContentTypes(ISourceViewer)
    */
@@ -106,10 +108,10 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    * it is <code>null</code> it creates a new strategy).
    *
    * @param a_source_viewer a source viewer for which the double click strategy
-   *                        is set, currently the parameter is not used
+   *    is set, currently the parameter is not used
    * @param the_content_type the content type for the double click strategy
    * @return the double click strategy associated with the editor, the
-   *         actual type is {@ref BytecodeDoubleClickStrategy}
+   *    actual type is {@link BytecodeDoubleClickStrategy}
    * @see SourceViewerConfiguration#getDoubleClickStrategy(ISourceViewer,
    *                                                       String)
    */
@@ -142,10 +144,10 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   /**
    * This method is a lazy getter for the tag scanner object. It checks if the
    * corresponding field is <code>null</code>. If so it generates a new
-   * {@ref BytecodeBMLSecScanner} object and registers in it a default return
-   * token. This is {@ref ColorValues#SLOT_TAG}.
+   * {@link BytecodeBMLSecScanner} object and registers in it a default return
+   * token. This is {@link ColorValues#SLOT_TAG}.
    *
-   * @return the bytecode tag scanner object
+   * @return the byte code tag scanner object
    */
   protected final BytecodeBMLSecScanner getBytecodeBMLSecScanner() {
     if (my_bml_secscanner == null) {
@@ -158,27 +160,27 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 
   /**
    * This method creates a new presentation reconciler
-   * ({@ref PresentationReconciler}) and registers in it damagers and
-   * repairers for types ({@ref DefaultDamagerRepairer}):
+   * ({@link PresentationReconciler}) and registers in it damagers and
+   * repairers for types ({@link DefaultDamagerRepairer}):
    * <ul>
-   *   <li>{@ref BytecodePartitionScanner#SECTION_BML},</li>
-   *   <li>{@ref IDocument#DEFAULT_CONTENT_TYPE},</li>
+   *   <li>{@link BytecodePartitionScanner#SECTION_BML},</li>
+   *   <li>{@link IDocument#DEFAULT_CONTENT_TYPE},</li>
    * </ul>
-   * and for types ({@ref NonRuleBasedDamagerRepairer}):
+   * and for types ({@link NonRuleBasedDamagerRepairer}):
    * <ul>
-   *   <li>{@ref BytecodePartitionScanner#SECTION_HEAD},</li>
-   *   <li>{@ref BytecodePartitionScanner#SECTION_THROWS}.</li>
+   *   <li>{@link BytecodePartitionScanner#SECTION_HEAD},</li>
+   *   <li>{@link BytecodePartitionScanner#SECTION_THROWS}.</li>
    * </ul>
    * The {@link NonRuleBasedDamagerRepairer} is initialised with
-   * the current values of the color manager and the mode number
-   * combined with an abstract color indication
+   * the current values of the colour manager and the mode number
+   * combined with an abstract colour indication
    * ({@link ColorValues#SLOT_HEADER}, {@link ColorValues#SLOT_THROWS}).
    *
    * This method defines how the colouring works in case an edit operation is
    * performed.
    *
    * @param a_source_viewer the source viewer for which the reconciler is
-   *        returned
+   *   returned
    * @return the new, configured presentation reconciler
    * @see SourceViewerConfiguration#getPresentationReconciler(ISourceViewer)
    */

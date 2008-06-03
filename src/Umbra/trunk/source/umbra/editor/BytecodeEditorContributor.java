@@ -56,7 +56,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   public static final String REFRESH_ID = "umbra.editor.Refresh";
 
   /**
-   * TODO.
+   * The GUI element responsible for the communication between the GUI and
+   * the internal representation of a document.
    */
   private BytecodeContribution my_bcode_cntrbtn;
 
@@ -76,7 +77,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   private BytecodeRefreshAction my_refresh_action;
 
   /**
-   * TODO.
+   * The action to restore the original version of a class file.
    */
   private BytecodeRebuildAction my_rebuild_action;
 
@@ -189,32 +190,26 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   }
 
   /**
-   * TODO.
-   * @param an_install_url TODO
+   * This method assigns appropriate icons to their respective actions.
+   *
+   * @param an_install_url an ULR to a location where the Umbra plugin
+   *   is located
    */
   private void assignIcons(final URL an_install_url) {
     try {
-
-      ImageDescriptor refresh_icon;
-      ImageDescriptor rebuild_icon;
-      ImageDescriptor combine_icon;
-      ImageDescriptor addhist_icon;
-      ImageDescriptor clearhist_icon;
-      ImageDescriptor restore_icon;
-      ImageDescriptor synchr_icon;
-      refresh_icon = ImageDescriptor.
+      final ImageDescriptor refresh_icon = ImageDescriptor.
         createFromURL(new URL(an_install_url, "icons/refresh.gif"));
-      rebuild_icon = ImageDescriptor.
+      final ImageDescriptor rebuild_icon = ImageDescriptor.
         createFromURL(new URL(an_install_url, "icons/rebuild_bytecode.gif"));
-      combine_icon = ImageDescriptor.
+      final ImageDescriptor combine_icon = ImageDescriptor.
         createFromURL(new URL(an_install_url, "icons/combine.gif"));
-      addhist_icon = ImageDescriptor.
+      final ImageDescriptor addhist_icon = ImageDescriptor.
         createFromURL(new URL(an_install_url, "icons/addH.gif"));
-      clearhist_icon = ImageDescriptor.
-      createFromURL(new URL(an_install_url, "icons/clearH.gif"));
-      restore_icon = ImageDescriptor.
-      createFromURL(new URL(an_install_url, "icons/restoreH.gif"));
-      synchr_icon = ImageDescriptor.
+      final ImageDescriptor clearhist_icon = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/clearH.gif"));
+      final ImageDescriptor restore_icon = ImageDescriptor.
+        createFromURL(new URL(an_install_url, "icons/restoreH.gif"));
+      final ImageDescriptor synchr_icon = ImageDescriptor.
         createFromURL(new URL(an_install_url, "icons/synchronize.gif"));
       my_refresh_action.setImageDescriptor(refresh_icon);
       my_rebuild_action.setImageDescriptor(rebuild_icon);
@@ -259,9 +254,10 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   }
 
   /**
-   * New items for the actions are added to the menu.
+   * The method creates a new menu with Umbra related items and adds the
+   * items to the menu.
    *
-   * @param a_menu_mngr TODO
+   * @param a_menu_mngr the menu manager to add the Umbra menu to
    */
   public final void contributeToMenu(final IMenuManager a_menu_mngr) {
     // Run super.
@@ -312,9 +308,10 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * {@link #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])},
    * but the input is obtained from the current editor window.
    *
-   * @param an_editor TODO
+   * @param an_editor current editor to be closed
    * @param the_interline an array with multi-line comments
    * @param the_comments an array with end-of-line comments
+   * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *   initialised
    * @see #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])
@@ -337,7 +334,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @param a_comment_array contains the texts of end-of-line comments, the
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account
-   * @param an_interline multi-line comments TODO fix the protocol
+   * @param an_interline an array with multi-line comments
+   *  //FIXME: currently ignored; https://mobius.ucd.ie/ticket/555
    * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *    initialised
@@ -353,14 +351,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final boolean proper = (related != null);
     my_bcode_cntrbtn.survive();
     if (proper) ColorModeContainer.classKnown();
-    //TODO consider not closing the editor here
+    //FIXME: should we close here? https://mobius.ucd.ie/ticket/604
     page.closeEditor(an_editor, true);
     final BytecodeEditor newEditor = (BytecodeEditor)(page.openEditor(an_input,
                         EclipseIdentifiers.BYTECODE_EDITOR_CLASS, true));
     final BytecodeDocument ndoc = (BytecodeDocument)newEditor.
                                             getDocumentProvider().
                                             getDocument(an_input);
-    //XXX changed: copying bmlp from old to the new copy of byte code editor.
+    //copying bmlp from old to the new copy of byte code editor.
     final BMLParsing bmlp = ((BytecodeEditor)an_editor).getDocument().getBmlp();
     ndoc.setEditor((BytecodeEditor)newEditor, bmlp);
     ndoc.reinit(a_comment_array, an_interline);

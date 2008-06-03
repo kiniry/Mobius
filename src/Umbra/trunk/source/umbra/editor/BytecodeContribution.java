@@ -22,8 +22,8 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.UmbraPlugin;
-import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraException;
 
 /**
@@ -32,8 +32,13 @@ import umbra.lib.UmbraException;
  * events and propagates them to the currently edited document
  * so that they are recorded in the internal structures of the document.
  *
- * change performed in a byte code editor.
- * TODO more detailed description is needed
+ * The objects of this class are generated when a new {@link BytecodeEditor}
+ * is brought to life. However, in case the new editor is opened in order
+ * to refresh the content of an existing byte code document, then an old
+ * {@link BytecodeContribution} object must be reused.
+ *
+ * FIXME: the cached object is kept in a static variable, this is probably
+ * not enough; https://mobius.ucd.ie/ticket/602
  *
  * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
  * @version a-01
@@ -46,9 +51,11 @@ public class BytecodeContribution extends ControlContribution {
   private static BytecodeContribution inUse;
 
   /**
-   * TODO.
+   * The flag which indicates if the current, statically cached
+   * {@link BytecodeContribution} should be replaced with a new one.
+   * The default value is such that the new object should be generated.
    */
-  private boolean my_need_new_flag = true;
+  private boolean my_new_contribution_required = true;
 
   /**
    * The current byte code editor for which the contribution works.
@@ -68,13 +75,19 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
-   * TODO.
-   * @return TODO
+   * The factory method which generates the {@link BytecodeContribution}
+   * to be used by the rest of the Umbra editor. This method checks if
+   * there is a {@link BytecodeContribution} object cached and in that
+   * case it asks the object if it should be replaced by a new one. In case
+   * it should not, the currently cached object is returned. Otherwise,
+   * a new object is created.
+   *
+   * @return an {@link BytecodeContribution} object to be used by the system
    */
   public static BytecodeContribution newItem() {
     if (inUse != null) {
-      if (!inUse.my_need_new_flag) {
-        inUse.my_need_new_flag = true;
+      if (!inUse.my_new_contribution_required) {
+        inUse.my_new_contribution_required = true;
         return inUse;
       }
     }
@@ -128,7 +141,7 @@ public class BytecodeContribution extends ControlContribution {
 
     /**
      * This method handles the event of the change in the current
-     * bytecode document. This method is called before the textual
+     * byte code document. This method is called before the textual
      * change is made. This method initialises the BytecodeContribution
      * object in case it has not been initialised yet.
      *
@@ -167,18 +180,16 @@ public class BytecodeContribution extends ControlContribution {
                                 final int a_start,
                                 final int an_oldend,
                                 final int a_newend) {
-      if (BMLParsing.UMBRA_ENABLED) {
-        try {
-          a_doc.updateFragment(a_start, an_oldend, a_newend);
-          my_editor.getAction(BytecodeEditorContributor.REFRESH_ID).
-                    setEnabled(true);
-        } catch (UmbraException e) {
-          e.printStackTrace(); //TODO stack print
-          MessageDialog.openInformation(new Shell(), "Bytecode",
-              "Invalid edit operation");
-          a_doc.set(my_oldcontent);
-          return;
-        }
+      try {
+        a_doc.updateFragment(a_start, an_oldend, a_newend);
+        my_editor.getAction(BytecodeEditorContributor.REFRESH_ID).
+                 setEnabled(true);
+      } catch (UmbraException e) {
+        MessageDialog.openInformation(new Shell(),
+              GUIMessages.BYTECODE_MESSAGE_TITLE,
+              GUIMessages.INVALID_EDIT_OPERATION);
+        a_doc.set(my_oldcontent);
+        return;
       }
     }
 
@@ -245,20 +256,21 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
-   * TODO.
+   * This method marks the current object in such a way that it cannot be
+   * replaced by a newly created one.
    */
   public final void survive() {
-    my_need_new_flag = false;
+    my_new_contribution_required = false;
   }
 
   /**
-   * Creates the GUI control associated with the bytecode editor setting
-   * <code>a_parent</code> as a parent and {@ref SWT#BORDER} as the style.
+   * Creates the GUI control associated with the byte code editor setting
+   * <code>a_parent</code> as a parent and {@link SWT#BORDER} as the style.
    * It registers the current object as a data field
-   * ({@ref Composite#setData(Object)}) in the newly created control.
+   * ({@link Composite#setData(Object)}) in the newly created control.
    *
    * @param a_parent a parent composite control under which the current control
-   *                 is registered
+   *   is registered
    * @return the freshly created control
    * @see ControlContribution#createControl(Composite)
    */
@@ -306,11 +318,11 @@ public class BytecodeContribution extends ControlContribution {
   }
 
   /**
-   * This method sets the bytecode editor for which the
-   * bytecode contribution works. Currently, it does nothing as the
+   * This method sets the byte code editor for which the
+   * byte code contribution works. Currently, it does nothing as the
    * editor is not used internally.
    *
-   * @param a_target_editor the bytecode editor for which the action will be
+   * @param a_target_editor the byte code editor for which the action will be
    *    executed
    */
   public void setActiveEditor(final IEditorPart a_target_editor) {

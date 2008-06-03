@@ -37,6 +37,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import umbra.UmbraPlugin;
 import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
+import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
@@ -130,8 +131,7 @@ public class BytecodeEditor extends TextEditor {
     my_related_editor = an_editor;
     final BytecodeDocument doc = getDocument();
     ((BytecodeDocumentProvider)getDocumentProvider()).setRelation(an_editor,
-                                      this, getEditorInput(),
-                                      doc.getJavaClass(), doc.getBmlp());
+                                      this, getEditorInput(), doc.getBmlp());
   }
 
   /**
@@ -155,7 +155,7 @@ public class BytecodeEditor extends TextEditor {
         /*
          * 1GEUSSR: ITPUI:ALL - User should never loose changes made in the
          *                editors.
-         * Changed Behavior to make sure that if called inside a regular save
+         * Changed Behaviour to make sure that if called inside a regular save
          * (because of deletion of input element) there is a way to report back
          * to the caller.
          */
@@ -166,23 +166,24 @@ public class BytecodeEditor extends TextEditor {
         final String msg = "Save As action is not allowed";
         MessageDialog.openError(shell, title, msg);
       }
-
     } else {
       updateState(getEditorInput());
       validateState(getEditorInput());
       performSave(true, a_progress_monitor);
     }
-
     final IFile a_file_from = makeSpareCopy();
     if (a_file_from == null) return;
+    final String path3 = a_file_from.getLocation().toOSString();
     try {
       final BytecodeDocument doc = getDocument();
       doc.updateJavaClass();
       final JavaClass jc = doc.getJavaClass();
-      final String path3 = a_file_from.getLocation().toOSString();
       jc.dump(path3);
     } catch (IOException e) {
-      e.printStackTrace(); //TODO stack print
+      MessageDialog.openError(new Shell(),
+                              GUIMessages.BYTECODE_MESSAGE_TITLE,
+                              GUIMessages.DISAS_SAVING_PROBLEMS + ": " +
+                              path3);
     }
   }
 
@@ -281,10 +282,10 @@ public class BytecodeEditor extends TextEditor {
       final FileEditorInput input = (FileEditorInput)getEditorInput();
       getDocumentProvider().saveDocument(null, input, a_doc, true);
     } catch (ReadAttributeException e1) {
-      MessageDialog.openError(new Shell(), "Bytecode",
-                              "Cannot load the byte code from the file " +
+      MessageDialog.openError(new Shell(),
+                              GUIMessages.BYTECODE_MESSAGE_TITLE,
+                              GUIMessages.DISAS_LOADING_PROBLEMS +
                               jc.getFileName());
-      e1.printStackTrace(); //TODO stack print
     }
   }
 
@@ -390,6 +391,7 @@ public class BytecodeEditor extends TextEditor {
    */
   protected void finalize() throws Throwable {
     //my_bconf.disposeColor();  //FIXME!! this instruction caused problems!
+                                //https://mobius.ucd.ie/ticket/603
     super.finalize();
   }
 
@@ -415,15 +417,27 @@ public class BytecodeEditor extends TextEditor {
     sv.refresh();
   }
 
+  /**
+   * This method returns the number of the first visible line in the
+   * current textual byte code document.
+   *
+   * @return the number of the first visible line
+   */
   public int getVisibleRegion() {
     final ISourceViewer isv = getSourceViewer();
     return isv.getTextWidget().getTopIndex();
   }
 
-  public void setVisibleRegion(final int firstVisible) {
+  /**
+   * The method moves the content of the current textual byte code document
+   * so that the first visible line is the one given in the argument.
+   *
+   * @param a_firstvisible the first line to be visible
+   */
+  public void setVisibleRegion(final int a_firstvisible) {
     setFocus(); //to make sure source viewer exists
     final ISourceViewer isv = getSourceViewer();
-    isv.getTextWidget().setTopIndex(firstVisible);
+    isv.getTextWidget().setTopIndex(a_firstvisible);
   }
 
 }

@@ -9,7 +9,7 @@ package umbra.lib;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class EclipseIdentifiers {
+public final class EclipseIdentifiers {
 
 
   /* *********************************************************************
@@ -22,5 +22,11 @@ public class EclipseIdentifiers {
    */
   public static final String BYTECODE_EDITOR_CLASS =
     "umbra.BytecodeEditor";
+
+  /**
+   * The empty constructor to forbid the creation of the instances.
+   */
+  private EclipseIdentifiers() {
+  }
 
 }

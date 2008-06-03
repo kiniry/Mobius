@@ -10,7 +10,6 @@ package umbra.editor;
 
 import java.io.ByteArrayInputStream;
 
-import org.apache.bcel.classfile.JavaClass;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.IDocument;
@@ -109,14 +108,11 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    * @param a_bcode_editor the byte code editor in which the textual
    *   representation is to be edited
    * @param an_input input file with the textual representation of the byte code
-   * @param a_javaclass a BCEL {@link JavaClass} structure to associate with
-   *   the document
    * @param a_bmlp a BMLLib representation of the class in the document
    */
   public final void setRelation(final CompilationUnitEditor an_editor,
               final BytecodeEditor a_bcode_editor,
               final IEditorInput an_input,
-              final JavaClass a_javaclass, //FIXME: this is not used
               final BMLParsing a_bmlp) {
     final BytecodeDocument document = (BytecodeDocument)getDocument(an_input);
     document.setEditor(a_bcode_editor, a_bmlp);
@@ -124,15 +120,4 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
     BytecodeContribution.inUse().addListener(document);
   }
 
-  public void changedByHand(final IFileEditorInput fileEditorInput) {
-    final BytecodeDocument doc = (BytecodeDocument)getDocument(fileEditorInput);
-    final String content = doc.get();
-    doc.getBmlp().setCodeString(content);
-    try {
-      saveDocument(null, fileEditorInput, doc, true);
-    } catch (CoreException e) {
-      // TODO Auto-generated catch block
-      //e.printStackTrace();
-    }
-  }
 }
