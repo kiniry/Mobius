@@ -115,7 +115,7 @@ public class DisasBCEL implements IEditorActionDelegate {
                                    // this doc is empty when there is no .btc
                                    // file or contains the content of the file
     cpath = FileNames.getClassFileFile(a_jfile, my_editor).getFullPath();
-    doc.initModTable();
+    doc.getModel().initModTable();
     try {
       bc_editor.refreshBytecode(cpath, doc,
                                 null, null); //this works on the doc

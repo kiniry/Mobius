@@ -8,13 +8,14 @@
  */
 package umbra.editor.actions;
 
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.swt.widgets.Shell;
 
 import umbra.editor.BytecodeContribution;
-import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.editor.DocumentSynchroniser;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraSynchronisationException;
@@ -28,6 +29,12 @@ import umbra.lib.UmbraSynchronisationException;
  * @version a-01
  */
 public class BytecodeSynchrAction extends BytecodeEditorAction {
+
+  /**
+   * This is an object which handles the calculations of the synchronisation
+   * positions.
+   */
+  private DocumentSynchroniser my_synchroniser;
 
   /**
    * The constructor of the action. It only registers the name of the
@@ -55,19 +62,15 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
     final ITextSelection selection = (ITextSelection)getEditor().
                     getSelectionProvider().getSelection();
     final int off = selection.getOffset();
-    final BytecodeDocument bDoc = (BytecodeDocument)getEditor().
-                    getDocumentProvider().
-                    getDocument(getEditor().getEditorInput());
     final Shell parent = getEditor().getSite().getShell();
     try {
-      bDoc.synchronizeBS(off);
+      getDocSynch().synchronizeBS(off);
     } catch (UmbraLocationException e) {
       wrongLocationMessage(parent, getActionDefinitionId(), e);
     } catch (UmbraSynchronisationException e) {
       wrongSynchronisationMessage(parent, getActionDefinitionId());
     }
   }
-
 
   /**
    * Displays the message that no source code instruction can be reasonably
@@ -81,4 +84,41 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
     MessageDialog.openError(a_shell,
                             a_title, GUIMessages.NOINSTRUCTION_MSG);
   }
+
+  /**
+   * This method lazily provides the object which performs the synchronisation
+   * operations.
+   *
+   * @return a {@link DocumentSynchroniser} which performs the synchronisation
+   *   operations
+   */
+  private DocumentSynchroniser getDocSynch() {
+    if (my_synchroniser == null) {
+      final CompilationUnitEditor jsceditor =
+                              getEditor().getRelatedEditor();
+      my_synchroniser = new DocumentSynchroniser(getEditor().getDocument(),
+                              jsceditor.getDocumentProvider().
+                              getDocument(jsceditor.getEditorInput()));
+    }
+    return my_synchroniser;
+  }
+
+  /**
+   * Highlights the area in the source code editor which corresponds to
+   * the marked area in the byte code editor. Works correctly only inside a
+   * method body.
+   *
+   * @param a_pos index of line in byte code editor. Lines in related source
+   *   code editor corresponding to this line will be highlighted.
+   * @throws UmbraLocationException in case a position is reached in the
+   *   source code or byte code editor which does not exists there
+   * @throws UmbraSynchronisationException in case there is no instruction
+   *   line which can be reasonably associated with the given position
+   */
+  public void synchronizeBS(final int a_pos)
+    throws UmbraLocationException, UmbraSynchronisationException {
+    final DocumentSynchroniser synch = getDocSynch();
+    synch.synchronizeBS(a_pos);
+  }
+
 }

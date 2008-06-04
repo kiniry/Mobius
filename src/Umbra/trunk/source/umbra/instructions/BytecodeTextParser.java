@@ -17,6 +17,7 @@ import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.lib.BytecodeStrings;
+import umbra.lib.EclipseIdentifiers;
 import umbra.lib.UmbraMethodException;
 
 /**
@@ -125,7 +126,9 @@ public abstract class BytecodeTextParser {
       j = k - 1;
     while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
       j--;
-    res = a_line.substring(0, j + 1) + "\n";
+    res = a_line.substring(0, j + 1);
+    if (a_line.endsWith(EclipseIdentifiers.EOL))
+      res += EclipseIdentifiers.EOL;
     return res;
   }
 

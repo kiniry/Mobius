@@ -9,6 +9,7 @@
 package umbra.editor.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 
@@ -16,6 +17,7 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.ColorModeContainer;
 import umbra.editor.parsing.ColorValues;
+import umbra.lib.UmbraLocationException;
 
 /**
  *  This class defines an action of changing the coloring style. Two
@@ -86,6 +88,11 @@ public class BytecodeColorAction extends BytecodeEditorAction {
         MessageDialog.openWarning(getEditor().getSite().getShell(),
             "Bytecode", "Cannot open a new editor after closing " +
                   "the old one");
+      } catch (UmbraLocationException e) {
+        MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                      "The current document has no positions" +
+                                      " for line " +
+                                      e.getWrongLocation());
       }
     }
   }

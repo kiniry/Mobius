@@ -39,6 +39,7 @@ import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
+import umbra.lib.UmbraLocationException;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -278,7 +279,7 @@ public class BytecodeEditor extends TextEditor {
       a_doc.setEditor(this, bmlp); //refresh BCEL structures
       a_doc.setTextWithDeadUpdate(a_doc.printCode()); //this is where the
                                     //textual representation is generated
-      a_doc.reinit(the_comments, the_interline_comments);
+      a_doc.init(the_comments, the_interline_comments);
       final FileEditorInput input = (FileEditorInput)getEditorInput();
       getDocumentProvider().saveDocument(null, input, a_doc, true);
     } catch (ReadAttributeException e1) {
@@ -286,6 +287,11 @@ public class BytecodeEditor extends TextEditor {
                               GUIMessages.BYTECODE_MESSAGE_TITLE,
                               GUIMessages.DISAS_LOADING_PROBLEMS +
                               jc.getFileName());
+    } catch (UmbraLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                    "The current document has no positions" +
+                                    " for line " +
+                                    e.getWrongLocation());
     }
   }
 

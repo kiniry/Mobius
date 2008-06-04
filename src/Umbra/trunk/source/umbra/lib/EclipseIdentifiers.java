@@ -24,6 +24,11 @@ public final class EclipseIdentifiers {
     "umbra.BytecodeEditor";
 
   /**
+   * The end of line sequence for the current operating system.
+   */
+  public static final String EOL = System.getProperty("line.separator");
+
+  /**
    * The empty constructor to forbid the creation of the instances.
    */
   private EclipseIdentifiers() {

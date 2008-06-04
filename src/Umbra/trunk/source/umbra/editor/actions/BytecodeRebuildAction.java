@@ -14,6 +14,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -22,6 +23,7 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.FileNames;
+import umbra.lib.UmbraLocationException;
 
 /**
  * This class defines action of restoring the original version
@@ -90,6 +92,11 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
       wrongPathToClassMessage(parent, getActionDefinitionId(), file.toString());
     } catch (CoreException e1) {
       wrongFileOperationMessage(parent, getActionDefinitionId());
+    } catch (UmbraLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                    "The current document has no positions" +
+                                    " for line " +
+                                    e.getWrongLocation());
     }
   }
 }

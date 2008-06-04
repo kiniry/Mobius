@@ -8,6 +8,7 @@
  */
 package umbra.editor;
 
+import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.widgets.Shell;
@@ -24,11 +25,19 @@ import umbra.lib.UmbraSynchronisationException;
  * synchronisation action which relates the position clicked within the
  * byte code editor to the source code in the corresponding Java file editor.
  *
- * @author   Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  * @see    BytecodeDocument
  */
 public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
+
+
+  /**
+   * This is an object which handles the calculations of the synchronisation
+   * positions.
+   */
+  private DocumentSynchroniser my_synchroniser;
 
   /**
    * This method implements the reaction on the double click in
@@ -37,7 +46,7 @@ public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
    * editor. Most the information about the selected area is not used.
    * Only the position of the cursor is taken into account.
    *
-   * @param a_selection the selected area of the bytecode document
+   * @param a_selection the selected area of the byte code document
    */
   public final void doubleClicked(final ITextViewer a_selection) {
     final int pos = a_selection.getSelectedRange().x;
@@ -48,7 +57,7 @@ public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
     final BytecodeDocument bDoc = (BytecodeDocument)a_selection.getDocument();
     final Shell sh = bDoc.getEditor().getSite().getShell();
     try {
-      bDoc.synchronizeBS(pos);
+      getDocSynch(bDoc).synchronizeBS(pos);
     } catch (UmbraLocationException e) {
       BytecodeSynchrAction.wrongLocationMessage(sh,
                            "Double click synchronisation", e);
@@ -56,5 +65,26 @@ public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
       BytecodeSynchrAction.wrongSynchronisationMessage(sh,
                                                "Double click synchronisation");
     }
+  }
+
+  /**
+   * This method lazily provides the object which performs the synchronisation
+   * operations.
+   *
+   * @param a_doc a byte code document for which the synchronisation is
+   *   performed
+   * @return a {@link DocumentSynchroniser} which performs the synchronisation
+   *   operations
+   */
+  private DocumentSynchroniser getDocSynch(final BytecodeDocument a_doc) {
+    if (my_synchroniser == null) {
+      final BytecodeEditor editor = a_doc.getEditor();
+      final CompilationUnitEditor jsceditor =
+                              editor.getRelatedEditor();
+      my_synchroniser = new DocumentSynchroniser(a_doc,
+                              jsceditor.getDocumentProvider().
+                              getDocument(jsceditor.getEditorInput()));
+    }
+    return my_synchroniser;
   }
 }

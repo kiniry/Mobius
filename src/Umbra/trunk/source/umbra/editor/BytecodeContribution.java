@@ -25,6 +25,7 @@ import umbra.UmbraPlugin;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraException;
+import umbra.lib.UmbraLocationException;
 
 /**
  * This class represents a GUI element that is contributed to the
@@ -154,7 +155,15 @@ public class BytecodeContribution extends ControlContribution {
       final BytecodeDocument doc = transformDocWithMessage(an_event.fDocument);
       if (doc == null || doc.isInInit()) return;
       if (!doc.isReady()) {
-        doc.init(); //this marks the document as ready
+        try {
+          doc.init(null, null); //this marks the document as ready
+        } catch (UmbraLocationException e) {
+          MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                        "The current document has no positions" +
+                                        " for line " +
+                                        e.getWrongLocation());
+          return;
+        }
       }
       try {
         my_stop_rem = doc.getLineOfOffset(an_event.getOffset() +
@@ -227,8 +236,8 @@ public class BytecodeContribution extends ControlContribution {
 
       updateFragment(doc, start_rem, my_stop_rem, stop);
       ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
-      if (!doc.bodyCorrect()) {
-        displayError(Integer.toString(doc.getFirstError()));
+      if (!doc.getModel().bodyCorrect()) {
+        displayError(Integer.toString(doc.getModel().getFirstError()));
       } else if (!doc.annotCorrect()) {
         displayError(doc.getAnnotError());
       } else {

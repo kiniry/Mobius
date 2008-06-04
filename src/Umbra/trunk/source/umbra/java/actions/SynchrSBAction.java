@@ -24,6 +24,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
+import umbra.editor.DocumentSynchroniser;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
@@ -44,6 +45,12 @@ public class SynchrSBAction implements IEditorActionDelegate {
    * The editor of the Java source code.
    */
   private CompilationUnitEditor my_editor;
+
+  /**
+   * This is an object which handles the calculations of the synchronisation
+   * positions.
+   */
+  private DocumentSynchroniser my_synchroniser;
 
   /**
    * The method sets the internal Java source code editor attribute.
@@ -118,7 +125,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
                                        final BytecodeDocument a_bcode_doc) {
     final Shell parent = my_editor.getSite().getShell();
     try {
-      a_bcode_doc.synchronizeSB(an_offset, my_editor);
+      getDocSynch(a_bcode_doc).synchronizeSB(an_offset, my_editor);
     } catch (UmbraLocationException e) {
       MessageDialog.openError(parent,
                               GUIMessages.SYNCH_MESSAGE_TITLE,
@@ -150,4 +157,22 @@ public class SynchrSBAction implements IEditorActionDelegate {
                                final ISelection a_selection) {
   }
 
+  /**
+   * This method lazily provides the object which performs the synchronisation
+   * operations.
+   *
+   * @param a_doc a byte code document for which the synchronisation is
+   *   performed
+   * @return a {@link DocumentSynchroniser} which performs the synchronisation
+   *   operations
+   */
+  private DocumentSynchroniser getDocSynch(final BytecodeDocument a_doc) {
+    if (my_synchroniser == null) {
+      final CompilationUnitEditor jsceditor = my_editor;
+      my_synchroniser = new DocumentSynchroniser(a_doc,
+                              jsceditor.getDocumentProvider().
+                              getDocument(jsceditor.getEditorInput()));
+    }
+    return my_synchroniser;
+  }
 }

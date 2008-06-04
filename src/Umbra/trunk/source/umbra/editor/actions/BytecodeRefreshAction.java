@@ -11,6 +11,7 @@ package umbra.editor.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -19,7 +20,9 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.instructions.BytecodeController;
 import umbra.lib.FileNames;
+import umbra.lib.UmbraLocationException;
 
 
 /**
@@ -88,6 +91,11 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
       wrongPathToClassMessage(parent, getActionDefinitionId(), file.toString());
     } catch (CoreException e) {
       wrongFileOperationMessage(parent, getActionDefinitionId());
+    } catch (UmbraLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                    "The current document has no positions" +
+                                    " for line " +
+                                    e.getWrongLocation());
     }
   }
 
@@ -105,24 +113,26 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
    *   cannot be found
    * @throws CoreException a file operation on the byte code file did not
    *   succeed
+   * @throws UmbraLocationException 
    */
   private BytecodeEditor doRefresh(final BytecodeEditor the_editor,
                                final IFile a_file)
     throws ClassNotFoundException,
-           CoreException {
+           CoreException, UmbraLocationException {
     final BytecodeEditorContributor a_contributor = getContributor();
     final IPath active = FileNames.getClassFileFileFor(a_file, the_editor,
                              FileNames.BYTECODE_EXTENSION).getFullPath();
     //memorise the current state of the session
     final BytecodeDocument doc = the_editor.getDocument();
-    final String[] eolComments = doc.getEOLComments();
-    final String[] interlineComm = doc.getInterlineComments();
-    final boolean[] modified = doc.getModified();
+    final BytecodeController model = doc.getModel();
+    final String[] eolComments = model.getEOLComments();
+    final String[] interlineComm = model.getInterlineComments();
+    final boolean[] modified = model.getModified();
     the_editor.refreshBytecode(active, doc, eolComments, interlineComm);
     final BytecodeEditor newEditor = a_contributor.refreshEditor(the_editor,
                                                     eolComments,
                                                     interlineComm);
-    newEditor.getDocument().setModTable(modified);
+    newEditor.getDocument().getModel().setModified(modified);
     return newEditor;
   }
 }

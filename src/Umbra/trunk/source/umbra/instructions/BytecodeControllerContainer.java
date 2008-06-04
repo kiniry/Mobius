@@ -473,4 +473,24 @@ public abstract class BytecodeControllerContainer extends
     }
     throw new UmbraException();
   }
+
+  /**
+   * This method gives the program counter for the given line. It gives the
+   * correct number only in case the given line is indeed a line which
+   * contains an instruction and in that case it returns the program
+   * counter associated with its BCEL representation (not the label number
+   * in the text of the document).
+   *
+   * @param a_lineno the number of the line to retrieve the program counter for
+   * @return the program counter or -1 in case the program counter cannot
+   *   be retrieved
+   */
+  public int getLabelForLine(final int a_lineno) {
+    final BytecodeLineController blc = getLineController(a_lineno);
+    if (blc instanceof InstructionLineController) {
+      final InstructionLineController ilc = (InstructionLineController) blc;
+      return ilc.getPC();
+    }
+    return -1;
+  }
 }

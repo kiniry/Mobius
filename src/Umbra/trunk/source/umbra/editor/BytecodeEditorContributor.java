@@ -36,6 +36,7 @@ import umbra.editor.actions.history.ClearHistoryAction;
 import umbra.editor.actions.history.HistoryAction;
 import umbra.lib.BMLParsing;
 import umbra.lib.EclipseIdentifiers;
+import umbra.lib.UmbraLocationException;
 
 
 /**
@@ -314,12 +315,13 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *   initialised
+   * @throws UmbraLocationException 
    * @see #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final String[] the_comments,
                                   final String[] the_interline)
-    throws PartInitException {
+    throws PartInitException, UmbraLocationException {
     final IEditorInput input = an_editor.getEditorInput();
     return refreshEditor(an_editor, input, the_comments, the_interline);
   }
@@ -339,12 +341,13 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *    initialised
+   * @throws UmbraLocationException 
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final IEditorInput an_input,
                                   final String[] a_comment_array,
                                   final String[] an_interline)
-    throws PartInitException {
+    throws PartInitException, UmbraLocationException {
     final IWorkbenchPage page = an_editor.getEditorSite().getPage();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();
@@ -361,7 +364,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     //copying bmlp from old to the new copy of byte code editor.
     final BMLParsing bmlp = ((BytecodeEditor)an_editor).getDocument().getBmlp();
     ndoc.setEditor((BytecodeEditor)newEditor, bmlp);
-    ndoc.reinit(a_comment_array, an_interline);
+    ndoc.init(a_comment_array, an_interline);
     ((BytecodeEditor) newEditor).setRelation(related);
     if (proper) ColorModeContainer.classUnknown();
     return newEditor;

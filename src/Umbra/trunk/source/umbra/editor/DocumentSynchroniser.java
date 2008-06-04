@@ -24,6 +24,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
+import umbra.instructions.BytecodeController;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraSynchronisationException;
@@ -113,7 +114,8 @@ public class DocumentSynchroniser {
     } catch (BadLocationException e) {
       throw new UmbraLocationException(my_java_doc, syncLine + 1);
     }
-    final CompilationUnitEditor jeditor = my_bcode_doc.getRelatedEditor();
+    final CompilationUnitEditor jeditor =
+      my_bcode_doc.getEditor().getRelatedEditor();
     jeditor.getEditorSite().getPage().activate(jeditor);
     if (synclen < 0) MessageDialog.openError(new Shell(), "Bytecode",
                                                "Synchronisation failed");
@@ -124,7 +126,7 @@ public class DocumentSynchroniser {
   /**
    * Computes the area in current Java source code corresponding to given line
    * of the byte code document. The byte code should be refreshed before calling
-   * this metod to update JavaClass structures. Works correctly only inside a
+   * this method to update JavaClass structures. Works correctly only inside a
    * method.
    *
    * Algorithm:
@@ -159,9 +161,10 @@ public class DocumentSynchroniser {
   private int syncBS(final JavaClass a_java_class,
                      final int a_line_no)
     throws UmbraException, UmbraSynchronisationException {
-    final int lineno = my_bcode_doc.getInstructionLineBelow(a_line_no);
-    final int mno = my_bcode_doc.getMethodForLine(lineno);
-    final int label = my_bcode_doc.getLabelForLine(lineno);
+    final BytecodeController model = my_bcode_doc.getModel();
+    final int lineno = model.getInstructionLineBelow(a_line_no);
+    final int mno = model.getMethodForLine(lineno);
+    final int label = model.getLabelForLine(lineno);
     final Method m = a_java_class.getMethods()[mno];
     if (m.getLineNumberTable() == null)
       throw new UmbraSynchronisationException();
@@ -186,12 +189,12 @@ public class DocumentSynchroniser {
    *
    * @see #synchronizeBS(int)
    * @param a_pos a position in the source code editor. Lines in related byte
-   *   code editor containing the line with this postion will
+   *   code editor containing the line with this position will
    *   be highlighted
    * @param an_editor the source code editor
    * @throws UmbraLocationException in case a reference in a document is made
    *   to a position outside the document
-   * @throws UmbraSynchronisationException  in case the sychronisation is
+   * @throws UmbraSynchronisationException  in case the synchronisation is
    *   scheduled for a position outside the method body
    * @throws JavaModelException a Java element cannot be accessed
    */
@@ -346,17 +349,18 @@ public class DocumentSynchroniser {
     final int linetofind = a_line + 1; //lines in lnt start with 1
     int bstart = -1;
     int bend = -1;
+    final BytecodeController model = my_bcode_doc.getModel();
     for (int j = 0; j < the_linenums.length; j++) {
       final int pc = the_linenums[j].getStartPC();
       final int srcln = the_linenums[j].getLineNumber();
-      final int lineforpc = my_bcode_doc.getLineForPCInMethod(pc, a_mno);
+      final int lineforpc = model.getLineForPCInMethod(pc, a_mno);
       if (srcln == linetofind) {
         final int nextpc = findNextLine(the_linenums, pc);
         bstart = lineforpc;
         if (nextpc > 0) {
-          bend = my_bcode_doc.getLineForPCInMethod(nextpc, a_mno) - 1;
-        } else { // the biggest pc in the method
-          bend = my_bcode_doc.getLastLineInMethod(a_mno);
+          bend = model.getLineForPCInMethod(nextpc, a_mno) - 1;
+        } else { // find the biggest pc in the method
+          bend = model.getLastLineInMethod(a_mno);
         }
         break;
       }

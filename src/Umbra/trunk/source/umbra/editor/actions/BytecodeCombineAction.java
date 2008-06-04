@@ -35,8 +35,10 @@ import org.eclipse.ui.part.FileEditorInput;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.instructions.BytecodeController;
 import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
+import umbra.lib.UmbraLocationException;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -145,6 +147,11 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     } catch (ReadAttributeException e) {
       MessageDialog.openError(parent, getActionDefinitionId(),
                               "A BML attribute problem");
+    } catch (UmbraLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                    "The current document has no positions" +
+                                    " for line " +
+                                    e.getWrongLocation());
     }
   }
 
@@ -175,6 +182,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * @throws CoreException in case I/O operations on a class file failed
    * @throws ReadAttributeException in case the parsing of the BML attributes
    *   failed
+   * @throws UmbraLocationException 
    */
   private void updateMethodsLogic(final IFile a_file,
                                   final IPath a_path,
@@ -182,7 +190,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
                                   final String a_clname,
                                   final SyntheticRepository a_repo)
     throws ClassNotFoundException, CoreException,
-            ReadAttributeException {
+            ReadAttributeException, UmbraLocationException {
     final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
     JavaClass jc = a_repo.loadClass(a_clname);
     a_repo.removeClass(jc);
@@ -304,7 +312,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     final int meths = cg.getMethods().length;
     boolean[] modified;
     try {
-      modified = getEditor().getDocument().getModified();
+      final BytecodeController  model = getEditor().getDocument().getModel();
+      modified = model.getModified();
     } catch (NullPointerException e) {
       MessageDialog.openWarning(getEditor().getSite().getShell(),
           "Bytecode", "Nothing has been modified");

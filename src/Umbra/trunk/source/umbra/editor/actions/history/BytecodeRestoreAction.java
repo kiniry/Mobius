@@ -24,8 +24,10 @@ import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.actions.BytecodeEditorAction;
+import umbra.instructions.BytecodeController;
 import umbra.lib.HistoryOperations;
 import umbra.lib.FileNames;
+import umbra.lib.UmbraLocationException;
 
 /**
  * This class defines action of restoring byte code from
@@ -118,15 +120,21 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
       an_editor.refreshBytecode(active, doc, null, null);
       final IEditorInput input = new FileEditorInput(a_btcfile);
       //memorise old modification information
-      final boolean[] modified = doc.getModified();
+      final BytecodeController model = doc.getModel();
+      final boolean[] modified = model.getModified();
       contributor.refreshEditor(an_editor, input, null, null);
-      an_editor.getDocument().setModTable(modified);
+      an_editor.getDocument().getModel().setModified(modified);
     } catch (ClassNotFoundException e1) {
       //the class corresponding to the Java source code file cannot be found
       MessageDialog.openError(parent, getActionDefinitionId(),
                               "The class file corresponding to the Java" +
                               "source code file cannot be found");
       return;
+    } catch (UmbraLocationException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                    "The current document has no positions" +
+                                    " for line " +
+                                    e.getWrongLocation());
     }
   }
 

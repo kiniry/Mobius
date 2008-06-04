@@ -108,6 +108,16 @@ public abstract class BytecodeControllerHelper {
     return my_incorrect.isEmpty();
   }
 
+  /**
+   * Returns the information about the correctness of the method bodies in
+   * the current controller.
+   *
+   * @return <code>true</code> when the method bodies are syntactically correct
+   *   and <code>false</code> otherwise
+   */
+  public boolean bodyCorrect() {
+    return allCorrect();
+  }
 
   /**
    * @return number of a line that the first error occurs
