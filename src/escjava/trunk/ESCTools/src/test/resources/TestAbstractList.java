@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class TestAbstractList extends LocalTestCase {
+public class TestAbstractList {
 
    public void testRemoveRange( ) {
 	Z z = new Z();

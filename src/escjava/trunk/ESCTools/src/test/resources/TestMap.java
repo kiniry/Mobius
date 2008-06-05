@@ -1,6 +1,6 @@
 //#FLAGS: -quiet
 import java.util.*;
-public class TestMap extends LocalTestCase {
+public class TestMap extends TestCase {
 
     public Map map;
     public Object o;

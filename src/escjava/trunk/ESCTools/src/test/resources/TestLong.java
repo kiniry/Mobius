@@ -1,4 +1,4 @@
-public class TestLong extends LocalTestCase {
+public class TestLong extends TestCase {
 
   public void testConstructor() {
     Long i = new Long(7);

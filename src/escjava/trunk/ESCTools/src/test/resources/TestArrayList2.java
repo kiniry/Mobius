@@ -2,7 +2,7 @@
 
 import java.util.ArrayList;
 
-public class TestArrayList2 extends LocalTestCase {
+public class TestArrayList2 {
 
   public void testCapacity() {
     ArrayList a = new ArrayList(10);

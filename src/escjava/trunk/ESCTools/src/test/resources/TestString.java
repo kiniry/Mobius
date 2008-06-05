@@ -1,6 +1,6 @@
 import java.io.UnsupportedEncodingException;
 
-public class TestString extends LocalTestCase {
+public class TestString extends TestCase {
 
   public static final String empty = "";
   public static String s; // arbitrary string

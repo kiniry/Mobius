@@ -1,4 +1,4 @@
-public class TestMath extends LocalTestCase {
+public class TestMath extends TestCase {
 
   public void testAbs() {
     //@ assume i != Integer.MIN_VALUE && j != Integer.MIN_VALUE;

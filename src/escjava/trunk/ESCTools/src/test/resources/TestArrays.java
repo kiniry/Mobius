@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class TestArrays extends LocalTestCase {
+public class TestArrays {
 // FIXME - needs tests for fill with restricted range; contains with restricted range, binarySearch, sort with restricted range
 // FIXME - should we test floating point?
 // FIXME - test sorts for Objects

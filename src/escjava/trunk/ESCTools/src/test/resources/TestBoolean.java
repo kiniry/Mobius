@@ -1,4 +1,4 @@
-public class TestBoolean extends LocalTestCase {
+public class TestBoolean extends TestCase {
 
   public void testConstructors() {
     assertTrue( new Boolean(true).booleanValue() );

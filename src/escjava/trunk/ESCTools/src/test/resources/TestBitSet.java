@@ -1,6 +1,6 @@
 import java.util.BitSet;
 
-public class TestBitSet extends LocalTestCase {
+public class TestBitSet {
 
   public void testConstructor() {
     BitSet b = new BitSet();

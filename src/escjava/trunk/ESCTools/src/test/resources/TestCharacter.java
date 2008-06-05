@@ -1,4 +1,4 @@
-public class TestCharacter extends LocalTestCase {
+public class TestCharacter extends TestCase {
 
   public void testConstructor() {
     Character cc = new Character('a');

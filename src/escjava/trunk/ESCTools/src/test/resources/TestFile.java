@@ -1,6 +1,6 @@
 import java.io.File;
 
-public class TestFile extends LocalTestCase {
+public class TestFile extends TestCase {
 
   public void testConstructor() {
     File f = new File("s");
