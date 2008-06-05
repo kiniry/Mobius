@@ -89,8 +89,6 @@ public class ForgivingStb extends Transformer implements StbInterface {
   }
   
   // === do corrections, if needed ===
-  // TODO Refactor
-  // TODO Optimize for the common case when there are no changes
   @Override
   public VariableDecl eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     assert toIntroduce.isEmpty();
