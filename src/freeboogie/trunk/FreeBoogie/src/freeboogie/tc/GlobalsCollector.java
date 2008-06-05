@@ -39,7 +39,7 @@ public class GlobalsCollector extends Transformer {
   
   /**
    * Returns whether there where duplicated declarations.
-   * @param ast the AST to be processed
+   * @param d the AST to be processed
    * @return whether there are name clashes in the input
    */
   public List<FbError> process(Declaration d) {

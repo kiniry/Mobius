@@ -54,6 +54,12 @@ public class FbError {
     this.data = data;
   }
 
+  /** Returns the type of this error. */
+  public Type type() { return type; }
+
+  /** Returns the primary AST node associated with this error. */
+  public Ast place() { return ast; }
+
   /**
    * Constructs a message from the template and the data.
    * The template can contain "%3" to print the fourth data.

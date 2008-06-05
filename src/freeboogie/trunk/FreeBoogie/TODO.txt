@@ -2,6 +2,9 @@
    This should be done in ForgivingStb
  . Fix type-checking in "old" mode by a bit of type inference.
  . Test typechecker thoroughly.
+ . Perhaps introduce dummy names where the user doesn't provide one
+   instead of carrying nulls around, which are hard to track.
+ . Write an ant target that runs FindBugs.
  . Does ImplementationChecker treat type vars correctly?
  . The comments and code disagree for TypeChecker.checkExact
  . Check that everything in the test "functional/parser" typechecks
