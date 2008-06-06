@@ -17,7 +17,7 @@
  * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
  * 
- * $Id: Diff.java 2225 2006-12-13 01:24:19Z perryjames $
+ * $Id: Diff.java 71731 2008-06-06 14:35:43Z dcochran $
  */
 
 package junitutils;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * Class for calculating a (somewhat) detailed comparison of two strings.
  * 
  * @author Curtis Clifton
- * @version $Revision: 2225 $
+ * @version $Revision: 71731 $
  */
 
 public class Diff {

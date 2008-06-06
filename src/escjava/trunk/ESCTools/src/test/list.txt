@@ -110,7 +110,7 @@ src/test/resources/Inheritance.java
 src/test/resources/InheritedSpecs.java
 src/test/resources/Initially.java
 src/test/resources/InnerClassGenerics.java
-src/test/resources/Instance.java
+-nocheck src/test/resources/Instance.java
 src/test/resources/Instance2.java
 src/test/resources/InstanceError.java
 src/test/resources/IntegralDivMod.java
