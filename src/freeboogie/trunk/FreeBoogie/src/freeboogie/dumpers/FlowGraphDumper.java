@@ -2,7 +2,7 @@ package freeboogie.dumpers;
 
 import freeboogie.ast.*;
 import freeboogie.tc.SimpleGraph;
-import freeboogie.tc.TypeChecker;
+import freeboogie.tc.TcInterface;
 import freeboogie.util.Closure;
 import freeboogie.util.Pair;
 
@@ -14,7 +14,7 @@ import freeboogie.util.Pair;
  */
 @SuppressWarnings("unused") // unused parameters
 public class FlowGraphDumper extends Transformer {
-  private TypeChecker tc; // used to get the flowgraphs for implementations
+  private TcInterface tc; // used to get the flowgraphs for implementations
   
   /**
    * Print to standard output the flowgraphs for the implementations in
@@ -22,7 +22,7 @@ public class FlowGraphDumper extends Transformer {
    * @param ast
    * @param t
    */
-  public void process(Declaration ast, TypeChecker t) {
+  public void process(Declaration ast, TcInterface t) {
     tc = t;
     ast.eval(this);
   }

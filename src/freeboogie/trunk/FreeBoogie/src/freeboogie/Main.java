@@ -74,7 +74,7 @@ public class Main {
   private PrintWriter pwriter;
   private PrettyPrinter pp;
   private FlowGraphDumper fgd;
-  private TypeChecker tc;
+  private TcInterface tc;
   private Declaration ast;
 
   public Main() {
@@ -89,7 +89,6 @@ public class Main {
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
     fgd = new FlowGraphDumper();
-    tc = new TypeChecker();
   }
 
   public void printSymbolTable() {
@@ -147,7 +146,7 @@ public class Main {
     // parse command line arguments
     opt.parse(args);
     Err.setVerbosity(opt.intVal("-v"));
-    tc.setAcceptOld(opt.boolVal("-old"));
+    tc = opt.boolVal("-old") ? new ForgivingTc() : new TypeChecker();
     
     // process files one by one
     for (String file : opt.otherArgs()) {

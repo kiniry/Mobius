@@ -31,7 +31,7 @@ import freeboogie.util.StackedHashMap;
  * @author reviewed by TODO
  */
 @SuppressWarnings("unused") // many unused parameters
-public class TypeChecker extends Evaluator<Type> {
+public class TypeChecker extends Evaluator<Type> implements TcInterface {
   // used for primitive types (so reference equality is used below)
   private PrimitiveType boolType, intType, refType, nameType, anyType;
   
@@ -69,6 +69,9 @@ public class TypeChecker extends Evaluator<Type> {
 
   // accept deprecated constructs
   private boolean acceptOld;
+
+  // records the last processed AST
+  private Declaration ast;
   
   // === public interface ===
   
@@ -78,6 +81,8 @@ public class TypeChecker extends Evaluator<Type> {
   public void setAcceptOld(boolean acceptOld) {
     this.acceptOld = acceptOld;
   }
+
+  @Override public Declaration getAST() { return ast; }
   
 
   /**
@@ -85,6 +90,7 @@ public class TypeChecker extends Evaluator<Type> {
    * @param ast the AST to check
    * @return the detected errors 
    */
+  @Override
   public List<FbError> process(Declaration ast) {
     boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
     intType = PrimitiveType.mk(PrimitiveType.Ptype.INT);
@@ -119,6 +125,7 @@ public class TypeChecker extends Evaluator<Type> {
 
     // do the typecheck
     ast.eval(this);
+    this.ast = ast;
     return errors;
   }
 
@@ -127,6 +134,7 @@ public class TypeChecker extends Evaluator<Type> {
    * @param impl the implementation whose flow graph is requested
    * @return the flow graph of {@code impl}
    */
+  @Override
   public SimpleGraph<Block> getFlowGraph(Implementation impl) {
     return flowGraphs.getFlowGraph(impl);
   }
@@ -135,6 +143,7 @@ public class TypeChecker extends Evaluator<Type> {
    * Returns the map of expressions to types.
    * @return the map of expressions to types.
    */
+  @Override
   public Map<Expr, Type> getTypes() {
     return typeOf;
   }
@@ -143,6 +152,7 @@ public class TypeChecker extends Evaluator<Type> {
    * Returns the map from implementations to procedures.
    * @return the map from implementations to procedures
    */
+  @Override
   public UsageToDefMap<Implementation, Procedure> getImplProc() {
     return implProc;
   }
@@ -151,6 +161,7 @@ public class TypeChecker extends Evaluator<Type> {
    * Returns the map from implementation parameters to procedure parameters.
    * @return the map from implementation parameters to procedure parameters
    */
+  @Override
   public UsageToDefMap<VariableDecl, VariableDecl> getParamMap() {
     return paramMap;
   }
@@ -159,6 +170,7 @@ public class TypeChecker extends Evaluator<Type> {
    * Returns the symbol table.
    * @return the symbol table
    */
+  @Override
   public SymbolTable getST() {
     return st;
   }

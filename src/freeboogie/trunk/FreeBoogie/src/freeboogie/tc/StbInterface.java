@@ -20,7 +20,7 @@ public interface StbInterface {
 
   /**
    * Returns the AST to which the symbol table returned by
-   * {@code getAST()} corresponds.
+   * {@code getST()} corresponds.
    */
   Declaration getAST();
 
