@@ -14,7 +14,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
@@ -23,7 +22,10 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.FileNames;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraRangeException;
 
 /**
  * This class defines action of restoring the original version
@@ -67,21 +69,15 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
     final IFile file = ((FileEditorInput)getEditor().getEditorInput()).
                                                      getFile();
     final IPath active = file.getFullPath();
-    final String fnameTo = active.toPortableString().replaceFirst(
-                  FileNames.BYTECODE_EXTENSION,
+    final String fnameTo =
+      active.toPortableString().replaceFirst(FileNames.BYTECODE_EXTENSION,
                   FileNames.CLASS_EXTENSION);
     final String fnameFrom = FileNames.getSavedClassFileNameForBTC(active);
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IFile fileFrom = root.getFile(new Path(fnameFrom));
     final IPath pathTo = new Path(fnameTo);
-    final IFile fileTo = root.getFile(pathTo);
     if (fileFrom.exists()) {
-      try {
-        fileTo.delete(true, null);
-        fileFrom.copy(pathTo, true, null);
-      } catch (CoreException e) {
-        wrongFileOperationMessage(parent, getActionDefinitionId());
-      }
+      replaceFile(fileFrom, pathTo);
     }
     try {
       ((BytecodeEditor)getEditor()).refreshBytecode(active,
@@ -93,10 +89,31 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
     } catch (CoreException e1) {
       wrongFileOperationMessage(parent, getActionDefinitionId());
     } catch (UmbraLocationException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                    "The current document has no positions" +
-                                    " for line " +
-                                    e.getWrongLocation());
+      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
+                                    getActionDefinitionId());
+    } catch (UmbraMethodException e) {
+      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
+                                    getActionDefinitionId());
+    }
+  }
+
+  /**
+   * The method replaces file at the path <code>pathTo</code> with the file
+   * determined by <code>fileFrom</code>. This method pops up a message
+   * in case the operation cannot be executed.
+   *
+   * @param a_filefrom a file which replaces
+   * @param a_pathto a location to be replaced
+   */
+  private void replaceFile(final IFile a_filefrom, final IPath a_pathto) {
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final Shell parent = getEditor().getSite().getShell();
+    try {
+      final IFile fileTo = root.getFile(a_pathto);
+      fileTo.delete(true, null);
+      a_filefrom.copy(a_pathto, true, null);
+    } catch (CoreException e) {
+      wrongFileOperationMessage(parent, getActionDefinitionId());
     }
   }
 }

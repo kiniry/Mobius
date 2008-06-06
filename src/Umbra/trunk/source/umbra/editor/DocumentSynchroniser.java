@@ -155,8 +155,8 @@ public class DocumentSynchroniser {
    *   line)
    * @throws UmbraException in case there is no instruction line that can be
    *   reasonably associated with the given line number
-   * @throws UmbraSynchronisationException in case there is no instruction line that can be
-   *   reasonably associated with the given line number
+   * @throws UmbraSynchronisationException in case there is no instruction
+   *   line that can be reasonably associated with the given line number
    */
   private int syncBS(final JavaClass a_java_class,
                      final int a_line_no)

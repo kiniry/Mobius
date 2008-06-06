@@ -8,6 +8,9 @@
  */
 package umbra.lib;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+
 /**
  * This is just container for texts of all the GUI messages.
  *
@@ -44,7 +47,7 @@ public final class GUIMessages {
   /**
    * A string used as a header in the message panes launched in connection
    * with the Java source code action to disassemble code (class
-   * {@link DisasBCEL}).
+   * {@link umbra.java.actions.DisasBCEL}).
    */
   public static final String DISAS_MESSAGE_TITLE =
     "Disassemble Bytecode";
@@ -57,14 +60,6 @@ public final class GUIMessages {
    */
   public static final String SYNCH_MESSAGE_TITLE =
     "Synchronisation";
-
-  /**
-   * A string used as a header in the message panes launched in connection
-   * with the byte code action to translate the byte code to BoogiePL (class
-   * {@link BytecodeToBoogiePLAction}).
-   */
-  public static final String B2BPL_MESSAGE_TITLE =
-    "Bytecode To BoogiePL";
 
   /**
    * The message which informs the user that the operation he/she wants to
@@ -114,11 +109,18 @@ public final class GUIMessages {
     "The byte code editor cannot be opended or initialised";
 
   /**
-   * The message which requires the user to save the byte code before it is
-   * translated to BoogiePL.
+   * The message which informs the user that the document does not contain
+   * a line of the given number.
    */
-  public static final String B2BPL_SAVE_BYTECODE_FIRST =
-    "You must save the byte code before you can translate it into BoogiePL.";
+  public static final String NO_POSITIONS_IN_DOC =
+    "The current document has no positions for line ";
+
+  /**
+   * The message which informs the user that the document does not contain
+   * a method of the given number.
+   */
+  public static final String NO_METHODS_IN_DOC =
+    "The current document has too many methods (" + SUBSTITUTE + ")";
 
   /**
    * A template message that warns about wrong file type.
@@ -189,4 +191,28 @@ public final class GUIMessages {
                      replaceAll(SUBSTITUTE2, a_substitute2);
   }
 
+  /**
+   * This method displays error message for {@link UmbraRangeException}
+   * signals.
+   *
+   * @param a_shell a shell which displays the messages
+   * @param an_ex an exception which caused the need of the message
+   * @param a_title a title of the message window
+   */
+  public static void exceededRangeInfo(final Shell a_shell,
+                                       final UmbraRangeException an_ex,
+                                       final String a_title) {
+    final Exception e = an_ex.getCause();
+    if (e instanceof UmbraLocationException) {
+      final UmbraLocationException loce = (UmbraLocationException) e;
+      MessageDialog.openError(a_shell, a_title,
+                                    NO_POSITIONS_IN_DOC +
+                                    loce.getWrongLocation());
+    } else if (e instanceof UmbraMethodException) {
+      final UmbraMethodException methe = (UmbraMethodException) e;
+      MessageDialog.openInformation(a_shell, a_title,
+                                    NO_METHODS_IN_DOC.replaceAll(SUBSTITUTE,
+                                    "" + methe.getWrongMethodNumber()));
+    }
+  }
 }

@@ -137,9 +137,9 @@ public class JumpInstruction extends NumInstruction {
   }
 
   /**
-   * This method, based on the value of the field
-   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
-   * object for a jumb instruction, i.e.:
+   * This method, based on the value of the the mnemonic
+   * name, creates a new BCEL instruction
+   * object for a jump instruction, i.e.:
    * <ul>
    *    <li>unconditional goto instructions,</li>
    *    <li>if instructions that compare references,</li>

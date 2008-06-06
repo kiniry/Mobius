@@ -201,7 +201,7 @@ public class LoadStoreConstInstruction extends SingleInstruction {
    * This method creates the objects that represent instructions that load
    * or store float numbers and are parametrised by constants (e.g. fload_0).
    * It assumes all the checks are done in
-   * {@ref #getConstLoadStoreInstruction(Instruction)}.
+   * {@link #getConstLoadStoreInstruction(Instruction)}.
    * In case the name mentioned in <code>a_name</code> is of a different kind it
    * returns the parameter <code>a_res</code>.
    *

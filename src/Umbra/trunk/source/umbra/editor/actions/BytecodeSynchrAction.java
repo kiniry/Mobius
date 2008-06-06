@@ -24,7 +24,7 @@ import umbra.lib.UmbraSynchronisationException;
  * This class defines action of the synchronisation for a byte code
  * position with an appropriate point in the source code.
  *
- * @see BytecodeDocument
+ * @see umbra.editor.BytecodeDocument
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @version a-01
  */

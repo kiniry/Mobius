@@ -335,7 +335,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
     @*/
   /**
    * This method adds to the current line controller the given method generation
-   * structure ({@line MethodGen}) together with its instruction list and
+   * structure ({@link MethodGen}) together with its instruction list and
    * a handle for the new instruction inserted on the given position
    * {@code an_ino}. All the instructions starting with the given number are
    * shifted one position further.

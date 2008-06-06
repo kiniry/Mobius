@@ -26,7 +26,7 @@ import umbra.lib.BytecodeStrings;
  * This class handles the preparsing of document lines. It creates an automaton
  * which recognises the particular line kind and creates the line handler. This
  * automaton is used to obtain the line handler for the given string.
- * Additionally, the process of getting of a line handler is controled by a
+ * Additionally, the process of getting of a line handler is controlled by a
  * document context. In particular, the context recognises situation when
  * the parsing is inside of a multi-line comment or a BML annotation.
  *

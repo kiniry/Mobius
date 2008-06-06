@@ -72,7 +72,7 @@ public class ConversionInstruction extends SingleInstruction {
    * Conversion instruction line is correct if it has no parameter.
    * That means this must have the form:
    *   whitespase number : whitespace mnemonic whitespace lineend
-   * where mnemonic comes from {@ref BytecodeStrings#SINGLE_INS}.
+   * where mnemonic comes from {@link BytecodeStrings#SINGLE_INS}.
    *
    * @return <code>true</code> when the instruction mnemonic is the only text
    *         in the line of the instruction text
@@ -83,8 +83,8 @@ public class ConversionInstruction extends SingleInstruction {
   }
 
   /**
-   * This method, based on the value of the field
-   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * This method, based on the value of the mnemonic
+   * name, creates a new BCEL instruction
    * object for an instruction with no parameters. The method can construct
    * the following kinds of instructions:
    * <ul>

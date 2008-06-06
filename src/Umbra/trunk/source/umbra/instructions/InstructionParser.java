@@ -196,7 +196,7 @@ public class InstructionParser extends InstructionTypeParser {
    * advance the index in case the first character to be analysed is not the
    * proper first character of an escape sequence i.e. '\\'. We assume the
    * parsed string is not finished before the method is called. We assume there
-   * is no newline character in {@ref #getLine()} string.
+   * is no newline character in {@link #getLine()} string.
    *
    * The precise format as described in JLS 3rd edition, 3.10.6 Escape Sequences
    * for Character and String Literals, is:
@@ -276,7 +276,7 @@ public class InstructionParser extends InstructionTypeParser {
 
   /**
    * Returns the index of the last mnemonic found by
-   * {@ref #swallowMnemonic(String[])}. In case no mnemonic was found, the
+   * {@link #swallowMnemonic(String[])}. In case no mnemonic was found, the
    * method returns -1.
    *
    * @return the number of the last mnemonic found

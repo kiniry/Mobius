@@ -148,10 +148,12 @@ public class SynchrSBAction implements IEditorActionDelegate {
   /**
    * Currently, does nothing.
    *
-   * @param an_action see {@ref IActionDelegate#selectionChanged(IAction,
-   *                       ISelection)}
-   * @param a_selection see {@ref IActionDelegate#selectionChanged(IAction,
-   *                       ISelection)}
+   * @param an_action see
+   *   {@link org.eclipse.ui.IActionDelegate#selectionChanged(IAction,
+   *          ISelection)}
+   * @param a_selection see
+   *   {@link org.eclipse.ui.IActionDelegate#selectionChanged(IAction,
+   *          ISelection)}
    */
   public void selectionChanged(final IAction an_action,
                                final ISelection a_selection) {

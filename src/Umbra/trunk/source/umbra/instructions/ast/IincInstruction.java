@@ -106,7 +106,7 @@ public class IincInstruction extends NumInstruction {
    * inbetween). The method assumes
    * {@link BytecodeLineController#getMy_line_text()} is correct. It also
    * assumes that the internal parser state has not been modified between the
-   * call to {@ref #getInd1()} and the call of this method.
+   * call to {@link #getInd1()} and the call of this method.
    *
    * @return the value of the second numerical parameter of the instruction
    */
@@ -118,8 +118,8 @@ public class IincInstruction extends NumInstruction {
   }
 
   /**
-   * This method, based on the value of the field
-   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * This method, based on the value of the the mnemonic
+   * name, creates a new BCEL instruction
    * object for the iinc instruction. It computes the parameters of the
    * instruction before the instruction is constructed.
    * This method also checks the syntactical correctness of the current

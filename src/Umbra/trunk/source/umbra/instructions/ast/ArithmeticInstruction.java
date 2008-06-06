@@ -356,10 +356,9 @@ public class ArithmeticInstruction extends SingleInstruction {
   }
 
   /**
-   * This method, based on the value of the field
-   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
-   * object for an arithmetic instruction with no parameters. The method can
-   * construct an instruction from one of the following families:
+   * This method, based on the value of the mnemonic field, creates a new BCEL
+   * instruction object for an arithmetic instruction with no parameters. The
+   * method can construct an instruction from one of the following families:
    * <ul>
    *    <li>arithmetic instructions for doubles,</li>
    *    <li>arithmetic instructions for floats,</li>

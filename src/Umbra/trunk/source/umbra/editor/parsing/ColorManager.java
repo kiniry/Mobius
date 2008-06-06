@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Display;
 public final class ColorManager {
 
   /**
-   * The one and only {@ref ColorManager} object in the Umbra
+   * The one and only {@link ColorManager} object in the Umbra
    * plugin.
    */
   private static ColorManager manager;
@@ -48,7 +48,7 @@ public final class ColorManager {
 
   /**
    * The static factory which returns the one and only
-   * {@ref ColorManager} object in the running Umbra plugin.
+   * {@link ColorManager} object in the running Umbra plugin.
    *
    * @return the only color manager
    */

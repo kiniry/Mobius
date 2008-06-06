@@ -54,8 +54,8 @@ public class LdcInstruction extends OtherInstruction {
   }
 
   /**
-   * This method, based on the value of the field
-   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * This method, based on the value of the mnemonic
+   * name, creates a new BCEL instruction
    * object for an LCD instruction, i.e.:
    * <ul>
    *    <li>ldc,</li>

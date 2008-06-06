@@ -40,6 +40,8 @@ import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraRangeException;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -191,8 +193,8 @@ public class BytecodeEditor extends TextEditor {
   /**
    * This method saves the the current class file under a special name. This
    * name consists of '_' followed by the original name. The files of this
-   * kind are used in {@link BytecodeRebuildAction} and
-   * {@link BytecodeCombineAction}.
+   * kind are used in {@link umbra.editor.actions.BytecodeRebuildAction} and
+   * {@link umbra.editor.actions.BytecodeCombineAction}.
    *
    * @return the IFile which points to the class file being edited by the
    *   current editor
@@ -273,6 +275,7 @@ public class BytecodeEditor extends TextEditor {
     if (jc == null) return;
     repository.removeClass(jc);
     BCClass bcc;
+    final Shell parent = getSite().getShell();
     try {
       bcc = new BCClass(jc);
       final BMLParsing bmlp = new BMLParsing(bcc);
@@ -283,15 +286,16 @@ public class BytecodeEditor extends TextEditor {
       final FileEditorInput input = (FileEditorInput)getEditorInput();
       getDocumentProvider().saveDocument(null, input, a_doc, true);
     } catch (ReadAttributeException e1) {
-      MessageDialog.openError(new Shell(),
+      MessageDialog.openError(parent,
                               GUIMessages.BYTECODE_MESSAGE_TITLE,
                               GUIMessages.DISAS_LOADING_PROBLEMS +
                               jc.getFileName());
     } catch (UmbraLocationException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                    "The current document has no positions" +
-                                    " for line " +
-                                    e.getWrongLocation());
+      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
+                                    GUIMessages.BYTECODE_MESSAGE_TITLE);
+    } catch (UmbraMethodException e) {
+      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
+                                    GUIMessages.BYTECODE_MESSAGE_TITLE);
     }
   }
 

@@ -11,9 +11,7 @@ package umbra.editor;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.Document;
-import org.eclipse.swt.widgets.Shell;
 
 import umbra.instructions.BytecodeController;
 import umbra.lib.BMLParsing;
@@ -27,9 +25,9 @@ import annot.bcclass.BCClass;
  * It mainly handles the synchronisation between a byte code file and a
  * Java source code file (in both directions).
  *
- * FIXME more detailed description
- * FIXME this class should not handle the showing of messages in case of
- *   exception
+ * It mediates between an editor which edits the document and the line structure
+ * of the byte code document. It also provides the connection with BMLLib
+ * structures.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -129,8 +127,8 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * Informs if the internal data structures that connection between
-   * Umbra and BCEL is initialised.
+   * Informs if the internal data structures that provide the model of the
+   * document are initialised.
    *
    * @return <code>true</code> when the structures are initialised,
    *   <code>false</code> otherwise
@@ -150,21 +148,16 @@ public class BytecodeDocument extends Document {
    * @param an_interline as above for multi-line comments
    * @throws UmbraLocationException thrown in case a position has been reached
    *   which is outside the current document
+   * @throws UmbraMethodException in case the textual representation has
+   *   more methods than the internal one
    */
   public void init(final String[] a_comment_array,
                    final String[] an_interline)
-    throws UmbraLocationException {
-    try {
-      final String str = my_bcc.init(this, a_comment_array, an_interline);
-      my_ready_flag = true; //this causes the following line not to loop
-      setTextWithDeadUpdate(str);
-      my_bmlp.setCodeString(str);
-    } catch (UmbraMethodException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                    "The current document has too many" +
-                                    " methods (" +
-                                    e.getWrongMethodNumber() + ")");
-    }
+    throws UmbraLocationException, UmbraMethodException {
+    final String str = my_bcc.init(this, a_comment_array, an_interline);
+    my_ready_flag = true; //this causes the following line not to loop
+    setTextWithDeadUpdate(str);
+    my_bmlp.setCodeString(str);
     my_bcc.checkAllLines(0, getNumberOfLines() - 1);
   }
 
@@ -180,19 +173,15 @@ public class BytecodeDocument extends Document {
    *   document
    * @throws UmbraException in case the change cannot be incorporated
    *   into the internal structures
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
    */
   public void updateFragment(final int a_start,
                              final int an_oldend,
                              final int a_newend)
-    throws UmbraException {
+    throws UmbraException, UmbraLocationException {
     my_bcc.removeIncorrects(a_start, an_oldend);
-    try {
-      my_bcc.addAllLines(this, a_start, an_oldend, a_newend);
-    } catch (UmbraLocationException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
-                        "The current document has no positions for a line " +
-                        "after " + e.getWrongLocation());
-    }
+    my_bcc.addAllLines(this, a_start, an_oldend, a_newend);
     my_bcc.checkAllLines(a_start, a_newend);
   }
 

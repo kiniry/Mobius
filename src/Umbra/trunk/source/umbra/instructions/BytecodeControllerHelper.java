@@ -32,9 +32,7 @@ public abstract class BytecodeControllerHelper {
   /**
    * Keeps track of modified methods. Each time a method is modified
    * an entry with the method number is marked <code>true</code> in the array.
-   * The field is first intialised to be <code>null</code>. It is first
-   * filled with values by the
-   * {@link #init(umbra.editor.BytecodeDocument, String[], String[])} method.
+   * The field is first intialised to be <code>null</code>.
    * This field is initialised by a separate method - not within the
    * constructor.
    */
@@ -170,7 +168,7 @@ public abstract class BytecodeControllerHelper {
    * Returns the information on which methods were modified in the editor. This
    * is used to enable the possibility to replace the code of the methods
    * modified on the source code level, but that were not modified at the byte
-   * code level. See {@link umbra.editor.actions. BytecodeCombineAction}. The
+   * code level. See {@link umbra.editor.actions.BytecodeCombineAction}. The
    * returned array has <code>true</code> in entries that correspond to modified
    * methods and <code>false</code> otherwise.
    *

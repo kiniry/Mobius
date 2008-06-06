@@ -241,6 +241,7 @@ public class InitParser extends BytecodeCommentParser {
       if (lc instanceof ThrowsLineController) { // method header
         addEditorLine(res, lc);
         lc.setMethodNo(a_ctxt.getMethodNo());
+        a_linename = getLineFromDoc(my_doc, res + 1, a_ctxt);
       } else {
         break;
       }

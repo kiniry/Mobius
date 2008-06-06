@@ -97,8 +97,8 @@ public class PushInstruction extends NumInstruction {
   }
 
   /**
-   * This method, based on the value of the field
-   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * This method, based on the value of the the mnemonic
+   * name, creates a new BCEL instruction
    * object for a push instruction. It computes the parameter of the
    * instruction before the instruction is constructed. The method can construct
    * one of the instructions:

@@ -148,7 +148,7 @@ public class BytecodeScanner extends RuleBasedScanner {
 
   /**
    * The method creates an array of rules that are used in the colouring of
-   * an edited bytecode document. The array has the size {@ref #NUMBER_OF_RULES}
+   * an edited byte code document. The array has the size  #NUMBER_OF_RULES}
    * and its elements are filled as the descriptions of the constants
    * <code>RULE_*</code> say:
    * <ul>

@@ -46,7 +46,7 @@ public class HeaderLineController extends BytecodeLineController {
    * Checks the correctness of the current header line. This method checks only
    * the approximate format. It checks if the header line starts with one of
    * the fixed prefixes. The prefixes are enumerated in
-   * {@ref BytecodeStrings#HEADER_PREFIX}.
+   * {@link BytecodeStrings#HEADER_PREFIX}.
    *
    * @return <code>true</code> when the line starts with a header prefix,
    *   <code>false</code> otherwise

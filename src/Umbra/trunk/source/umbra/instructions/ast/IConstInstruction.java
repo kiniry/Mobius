@@ -79,8 +79,8 @@ public class IConstInstruction extends SingleInstruction {
   }
 
   /**
-   * This method, based on the value of the field
-   * {@ref InstructionLineController#my_name}, creates a new BCEL instruction
+   * This method, based on the value of the the mnemonic
+   * name, creates a new BCEL instruction
    * object for an iconst instruction with no parameters. The method can
    * construct an instruction from iconst instructions only.
    *

@@ -18,6 +18,7 @@ import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.ColorModeContainer;
 import umbra.editor.parsing.ColorValues;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
 
 /**
  *  This class defines an action of changing the coloring style. Two
@@ -93,6 +94,11 @@ public class BytecodeColorAction extends BytecodeEditorAction {
                                       "The current document has no positions" +
                                       " for line " +
                                       e.getWrongLocation());
+      } catch (UmbraMethodException e) {
+        MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                      "The current document has too many" +
+                                      " methods (" +
+                                      e.getWrongMethodNumber() + ")");
       }
     }
   }

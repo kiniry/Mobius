@@ -30,6 +30,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.editor.BytecodeContribution;
@@ -38,7 +39,11 @@ import umbra.editor.BytecodeEditorContributor;
 import umbra.instructions.BytecodeController;
 import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
+import umbra.lib.GUIMessages;
+import umbra.lib.UmbraClassException;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraRangeException;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -140,18 +145,18 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     final SyntheticRepository strin = SyntheticRepository.getInstance(cp);
     try {
       updateMethodsLogic(a_file, a_path, the_last_segment, clname, strin);
-    } catch (ClassNotFoundException e) {
-      wrongPathToClassMessage(parent, getActionDefinitionId(), clname);
+    } catch (UmbraClassException e) {
+      final Exception e1 = e.getCause();
+      if (e1 instanceof ClassNotFoundException) {
+        wrongPathToClassMessage(parent, getActionDefinitionId(), clname);
+      } else if (e1 instanceof ReadAttributeException) {
+        MessageDialog.openError(parent, getActionDefinitionId(),
+          "A BML attribute problem");
+      }
     } catch (CoreException e) {
       wrongFileOperationMessage(parent, getActionDefinitionId());
-    } catch (ReadAttributeException e) {
-      MessageDialog.openError(parent, getActionDefinitionId(),
-                              "A BML attribute problem");
-    } catch (UmbraLocationException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                    "The current document has no positions" +
-                                    " for line " +
-                                    e.getWrongLocation());
+    } catch (UmbraRangeException e) {
+      GUIMessages.exceededRangeInfo(parent, e, getActionDefinitionId());
     }
   }
 
@@ -177,22 +182,27 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * @param a_clname the name of the class to update the content for
    * @param a_repo the repository to load the class file from
    *
-   * @throws ClassNotFoundException in case the class for the given name cannot
-   *   be found in the given class path repository
    * @throws CoreException in case I/O operations on a class file failed
-   * @throws ReadAttributeException in case the parsing of the BML attributes
-   *   failed
-   * @throws UmbraLocationException 
+   * @throws UmbraClassException in case the class for the given name cannot
+   *   be found in the given class path repository or in case the parsing of
+   *   the BML attributes in the class file failed
+   * @throws UmbraRangeException thrown in case a position has been reached
+   *   which is outside the current document or when the textual representation
+   *   has more methods than the internal one
    */
   private void updateMethodsLogic(final IFile a_file,
                                   final IPath a_path,
                                   final String the_last_segment,
                                   final String a_clname,
                                   final SyntheticRepository a_repo)
-    throws ClassNotFoundException, CoreException,
-            ReadAttributeException, UmbraLocationException {
+    throws CoreException, UmbraClassException, UmbraRangeException {
     final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
-    JavaClass jc = a_repo.loadClass(a_clname);
+    JavaClass jc;
+    try {
+      jc = a_repo.loadClass(a_clname);
+    } catch (ClassNotFoundException e1) {
+      throw new UmbraClassException(e1);
+    }
     a_repo.removeClass(jc);
     final JavaClass oldJc = my_editor.getDocument().getJavaClass();
     final ClassGen cg = updateModifiedMethods(oldJc, jc);
@@ -204,13 +214,50 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       throw new ResourceException(1, a_path, "The class file cannot be dumped",
                                   e);
     }
-    my_editor.refreshBytecode(a_path, my_editor.getDocument(), null, null);
-    final BCClass bcc = new BCClass(jc);
+    try {
+      my_editor.refreshBytecode(a_path, my_editor.getDocument(), null, null);
+    } catch (ClassNotFoundException e1) {
+      throw new UmbraClassException(e1);
+    }
+    refreshEditorWithClass(a_file, my_editor, jc);
+  }
+
+  /**
+   * The method does the refresh operation for the current editor in such a
+   * way that the given file and class are associated with the edited document.
+   *
+   * @param a_file a class file to associate with the editor
+   * @param an_editor to associate the file and the class to
+   * @param a_jc a class file representation to associate to the editor
+   * @throws UmbraClassException in case the parsing of
+   *   the BML attributes in the class file failed
+   * @throws PartInitException if the new editor could not be created or
+   *    initialised
+   * @throws UmbraRangeException thrown in case a position has been reached
+   *   which is outside the current document or when the textual representation
+   *   has more methods than the internal one
+   */
+  private void refreshEditorWithClass(final IFile a_file,
+                                      final BytecodeEditor an_editor,
+                                      final JavaClass a_jc)
+    throws UmbraClassException, PartInitException, UmbraRangeException {
+    BCClass bcc;
+    try {
+      bcc = new BCClass(a_jc);
+    } catch (ReadAttributeException e1) {
+      throw new UmbraClassException(e1);
+    }
     //note that BMLParsing object is initialised with help of the BCClass
     final BMLParsing bmlp = new BMLParsing(bcc);
-    my_editor.getDocument().setEditor(my_editor, bmlp);
+    an_editor.getDocument().setEditor(an_editor, bmlp);
     final IEditorInput input = new FileEditorInput(a_file);
-    getContributor().refreshEditor(my_editor, input, null, null);
+    try {
+      getContributor().refreshEditor(an_editor, input, null, null);
+    } catch (UmbraLocationException e) {
+      throw new UmbraRangeException(e);
+    } catch (UmbraMethodException e) {
+      throw new UmbraRangeException(e);
+    }
   }
 
   /**

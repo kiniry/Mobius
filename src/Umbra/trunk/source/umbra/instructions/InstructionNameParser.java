@@ -102,9 +102,9 @@ public class InstructionNameParser extends InstructionParserGeneric {
    *     IdentifierChars JavaLetterOrDigit
    * </pre>
    * where a "JavaLetter" is a character for which the method
-   * {@ref Character#isJavaIdentifierStart(int)} returns true and
+   * {@link Character#isJavaIdentifierStart(int)} returns true and
    * a "JavaLetterOrDigit" is a character for which the method
-   * {@ref Character#isJavaIdentifierPart(int)} returns true.
+   * {@link Character#isJavaIdentifierPart(int)} returns true.
    *
    * @return <code>true</code> when the identifier has been properly identified
    *   and swallowed, <code>false</code> when the starting portion of the

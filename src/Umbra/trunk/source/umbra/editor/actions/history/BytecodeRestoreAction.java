@@ -28,6 +28,7 @@ import umbra.instructions.BytecodeController;
 import umbra.lib.HistoryOperations;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
 
 /**
  * This class defines action of restoring byte code from
@@ -135,16 +136,22 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
                                     "The current document has no positions" +
                                     " for line " +
                                     e.getWrongLocation());
+    } catch (UmbraMethodException e) {
+      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                    "The current document has too many" +
+                                    " methods (" +
+                                    e.getWrongMethodNumber() + ")");
     }
   }
 
   /**
    * This method asks the user to give the history version number. In case
    * the given value is not a number or is a number outside of the
-   * range {@link FileNames#MIN_HISTORY}-{@link FileNames#MAX_HISTORY}
+   * range
+   * {@link HistoryOperations#MIN_HISTORY}-{@link HistoryOperations#MAX_HISTORY}
    * the method asks to confirm the default value
-   * ({@link FileNames#DEFAULT_HISTORY}). The user can refuse to accept the
-   * default and then the procedure repeats.
+   * ({@link HistoryOperations#DEFAULT_HISTORY}). The user can refuse to accept
+   * the default and then the procedure repeats.
    *
    * @return the history item number given by the user
    */

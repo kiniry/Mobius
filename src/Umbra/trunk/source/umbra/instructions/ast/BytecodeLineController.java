@@ -53,8 +53,8 @@ public abstract class BytecodeLineController {
 
   /**
    * The number of the method that contains the current line.
-   * This is an index in the {@link ClassGen} object available through the
-   * {@link BytecodeDocument} object
+   * This is an index in the {@link org.apache.bcel.generic.ClassGen} object
+   * available through the {@link umbra.editor.BytecodeDocument} object
    * that describes the state of the byte code editor which contains
    * the line that corresponds to the current object.
    *
@@ -113,7 +113,7 @@ public abstract class BytecodeLineController {
    * containing appropriate BCEL instruction object
    * that matches with the instruction name.
    *
-   * @return handle of the type {@ref Instruction} to the appropriate
+   * @return handle of the type {@link Instruction} to the appropriate
    *   instruction or <code>null</code> if the line is not an instruction one.
    */
   public Instruction getInstruction() {

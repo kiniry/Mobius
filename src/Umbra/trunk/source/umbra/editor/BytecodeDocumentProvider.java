@@ -60,10 +60,11 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    *   <code>an_element</code> is null or is not {@link IEditorInput}
    * @throws CoreException if the input for <code>an_element</code>
    *   cannot be accessed or for the reasons presented in
-   *   {@link IFile#create(InputStream, boolean, IProgressMonitor)}
+   *   {@link org.eclipse.core.resources.IFile#create(java.io.InputStream,
+   *          boolean, org.eclipse.core.runtime.IProgressMonitor)}
    * @throws org.eclipse.core.runtime.OperationCanceledException in case the
-   *   operation to create the new file was cancelled, this may also happen in
-   *   case no user cancelled the operation
+   *   operation to create the new file was canceled, this may also happen in
+   *   case no user canceled the operation
    */
   protected final IDocument createDocument(final Object an_element)
     throws CoreException {

@@ -37,6 +37,7 @@ import umbra.editor.actions.history.HistoryAction;
 import umbra.lib.BMLParsing;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
 
 
 /**
@@ -315,13 +316,16 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *   initialised
-   * @throws UmbraLocationException 
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
+   * @throws UmbraMethodException in case the textual representation has
+   *   more methods than the internal one
    * @see #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final String[] the_comments,
                                   final String[] the_interline)
-    throws PartInitException, UmbraLocationException {
+    throws PartInitException, UmbraLocationException, UmbraMethodException {
     final IEditorInput input = an_editor.getEditorInput();
     return refreshEditor(an_editor, input, the_comments, the_interline);
   }
@@ -341,13 +345,16 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *    initialised
-   * @throws UmbraLocationException 
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
+   * @throws UmbraMethodException in case the textual representation has
+   *   more methods than the internal one
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final IEditorInput an_input,
                                   final String[] a_comment_array,
                                   final String[] an_interline)
-    throws PartInitException, UmbraLocationException {
+    throws PartInitException, UmbraLocationException, UmbraMethodException {
     final IWorkbenchPage page = an_editor.getEditorSite().getPage();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();

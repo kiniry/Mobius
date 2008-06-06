@@ -26,6 +26,7 @@ import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
 
 /**
  * This class represents a GUI element that is contributed to the
@@ -159,10 +160,15 @@ public class BytecodeContribution extends ControlContribution {
           doc.init(null, null); //this marks the document as ready
         } catch (UmbraLocationException e) {
           MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                        "The current document has no positions" +
-                                        " for line " +
-                                        e.getWrongLocation());
+                                       "The current document has no positions" +
+                                       " for line " +
+                                       e.getWrongLocation());
           return;
+        } catch (UmbraMethodException e) {
+          MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
+                                        "The current document has too many" +
+                                        " methods (" +
+                                        e.getWrongMethodNumber() + ")");
         }
       }
       try {
@@ -198,6 +204,11 @@ public class BytecodeContribution extends ControlContribution {
               GUIMessages.BYTECODE_MESSAGE_TITLE,
               GUIMessages.INVALID_EDIT_OPERATION);
         a_doc.set(my_oldcontent);
+        return;
+      } catch (UmbraLocationException e) {
+        MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
+                          "The current document has no positions for a line " +
+                          "after " + e.getWrongLocation());
         return;
       }
     }
