@@ -1,32 +1,10 @@
-TestProperties.java:36: Warning: Possible assertion failure (Assert)
-    //@ assert false; // TEST FOR CONSISTENCY
-        ^
-TestProperties.java:38: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-Execution trace information:
-    Routine call returned exceptionally in "TestProperties.java", line 24, col 18.
+ESC/Java version VERSION
+src|test|resources|TestProperties.java: Caution: Using given file as the .java file, even though it is not the java file for TestProperties on the classpath
+    [TIME]
 
-TestProperties.java:85: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
+TestProperties ...
+src|test|resources|TestProperties.java:7: Fatal error: No method named assertTrue is in scope here.
+    assertTrue (p.isEmpty() );
     ^
-Execution trace information:
-    Routine call returned exceptionally in "TestProperties.java", line 50, col 8.
-    Routine call returned exceptionally in "TestProperties.java", line 56, col 8.
-    Routine call returned exceptionally in "TestProperties.java", line 68, col 8.
-    Routine call returned exceptionally in "TestProperties.java", line 74, col 8.
-    Routine call returned exceptionally in "TestProperties.java", line 80, col 8.
-
-TestProperties.java:101: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestProperties.java:110: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestProperties.java:137: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestProperties.java:153: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-7 warnings
+1 caution
+1 error

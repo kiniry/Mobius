@@ -1,4 +1,4 @@
-public class TestCharacter2 extends TestCase { 
+public class TestCharacter2 { 
 
     public static void testWhiteSpaceConsistent() {
         Character.isWhitespace('Z');

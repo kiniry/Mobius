@@ -2,7 +2,7 @@
 
 import java.io.*;
 
-public class TestSystem4 extends LocalTestCase {
+public class TestSystem4 {
 
 
   public void testOut() {

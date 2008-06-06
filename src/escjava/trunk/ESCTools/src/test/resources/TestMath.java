@@ -1,4 +1,4 @@
-public class TestMath extends TestCase {
+public class TestMath {
 
   public void testAbs() {
     //@ assume i != Integer.MIN_VALUE && j != Integer.MIN_VALUE;

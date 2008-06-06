@@ -1,4 +1,4 @@
-public class TestObject extends TestCase {
+public class TestObject {
 
     public void testConst1() {
         Object o = new Object();

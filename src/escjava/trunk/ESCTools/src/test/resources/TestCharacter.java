@@ -1,4 +1,4 @@
-public class TestCharacter extends TestCase {
+public class TestCharacter {
 
   public void testConstructor() {
     Character cc = new Character('a');

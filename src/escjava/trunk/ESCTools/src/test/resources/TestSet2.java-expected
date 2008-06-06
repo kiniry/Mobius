@@ -1,19 +1,25 @@
-TestSet2.java:39: Warning: Possible assertion failure (Assert)
-    //@ assert (/forall Object o; s.containsObject(o); o == e);
-        ^
-TestSet2.java:42: Warning: Possible assertion failure (Assert)
-    //@ assert !s.containsObject(ee);
-        ^
-TestSet2.java:43: Warning: Precondition possibly not established (Pre)
-    assertTrue( !s.contains(ee));
+ESC/Java version VERSION
+src|test|resources|TestSet2.java: Caution: Using given file as the .java file, even though it is not the java file for TestSet2 on the classpath
+    [TIME]
+
+TestSet2 ...
+src|test|resources|TestSet2.java:9: Error: No such field in type java.util.Set
+  //@ ensures \result.containsNull;
+                      ^
+src|test|resources|TestSet2.java:10: Error: No such field in type java.util.Set
+  //@ ensures \result.elementType == \type(E);
+                      ^
+src|test|resources|TestSet2.java:13: Error: No such field in type java.util.Set
+    //@ set s.containsNull = true;
               ^
-Associated declaration is "./LocalTestCase.java", line 19, col 6:
-  //@ requires b;
-      ^
-TestSet2.java:44: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
+src|test|resources|TestSet2.java:14: Error: No such field in type java.util.Set
+    //@ set s.elementType = \type(E);
+              ^
+src|test|resources|TestSet2.java:23: Error: No such field in type java.util.Set
+    //@ assert \typeof(e) <: s.elementType;
+                               ^
+src|test|resources|TestSet2.java:24: Fatal error: No method named assertTrue is in scope here.
+    assertTrue( !s.contains(null));
     ^
-TestSet2.java:55: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-5 warnings
+1 caution
+6 errors

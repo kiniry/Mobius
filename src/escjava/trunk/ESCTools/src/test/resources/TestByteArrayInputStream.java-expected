@@ -1,19 +1,10 @@
-TestByteArrayInputStream.java:29: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
+ESC/Java version VERSION
+src|test|resources|TestByteArrayInputStream.java: Caution: Using given file as the .java file, even though it is not the java file for TestByteArrayInputStream on the classpath
+    [TIME]
+
+TestByteArrayInputStream ...
+src|test|resources|TestByteArrayInputStream.java:15: Fatal error: No method named assertTrue is in scope here.
+    assertTrue ( b.available() == 20);
     ^
-TestByteArrayInputStream.java:52: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestByteArrayInputStream.java:77: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestByteArrayInputStream.java:96: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestByteArrayInputStream.java:108: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestByteArrayInputStream.java:123: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-6 warnings
+1 caution
+1 error

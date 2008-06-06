@@ -1,6 +1,6 @@
 import java.util.Vector;
 
-public class TestVector extends LocalTestCase {
+public class TestVector {
 
     public void testVtc1() {
         Vector v = new Vector();

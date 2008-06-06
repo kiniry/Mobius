@@ -1,6 +1,6 @@
 // $Id: TestComparable.java 2242 2006-12-16 17:40:41Z chalin $
 
-public class TestComparable extends TestCase {
+public class TestComparable {
 
     private final /*@non_null*/ Comparable c = new Integer(331);
 

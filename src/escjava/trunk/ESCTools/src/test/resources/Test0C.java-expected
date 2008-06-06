@@ -1,4 +1,5 @@
-C.java:176: Warning: Possible negative array index (IndexNegative)
-        int x = a[i];  // "i" may be negative
-                 ^
-1 warning
+ESC/Java version VERSION
+src|test|resources|Test0C.java:7: Fatal error: Invalid name 'C' for constructor; expected 'Test0C'
+  C(int fx) {
+   ^
+1 error

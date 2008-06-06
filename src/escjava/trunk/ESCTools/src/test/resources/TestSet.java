@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-public class TestSet extends TestCase {
+public class TestSet {
 
 
     public void testSet() {

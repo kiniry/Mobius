@@ -1,4 +1,4 @@
-public class TestString2 extends TestCase {
+public class TestString2 {
 
   //@ requires s.length() > 10;
   //@ ensures \result == "ble ble";

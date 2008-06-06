@@ -188,7 +188,7 @@ fix-755-perms:
 
 # To really clean, we need to clean Javafe last since some of its
 # tools are used in cleaning.
-clean: clean-norel clean-release clean-release-test clean-norel-noreltemp cleanup 
+clean: clean-norel clean-release clean-release-test clean-norel-noreltemp cleanup
 
 # Cleans out the release directory
 clean-release:
@@ -722,5 +722,18 @@ ifdef COMSPEC
 	@echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`
 	@echo ${foo}
 endif
+
+################################################################################
+## Maven pre-configuration
+
+.PHONY: pre-maven
+export MAVEN_FILES_ROOT=${ESCTOOLS_ROOT}
+
+## Copy all Java files to default locations expected by Maven
+pre-maven: source
+	mkdir -p ${MAVEN_FILES_ROOT}/src/main/java
+	find ${ESCTOOLS_ROOT}/Escjava/java/escjava -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
+	find ${ESCTOOLS_ROOT}/Escjava/mochalib/java -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
+	find ${ESCTOOLS_ROOT}/Utils/junitutils -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
 
 # End of Makefile

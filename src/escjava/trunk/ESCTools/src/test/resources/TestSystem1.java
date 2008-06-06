@@ -2,7 +2,7 @@
 
 import java.io.*;
 
-public class TestSystem1 extends LocalTestCase {
+public class TestSystem1 {
 
   public void testIn() {
     InputStream in_orig = System.in;

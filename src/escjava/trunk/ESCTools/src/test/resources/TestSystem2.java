@@ -1,7 +1,7 @@
 //#FLAGS: -Q
 
 
-public class TestSystem2 extends LocalTestCase {
+public class TestSystem2 {
 
 
 /* FIXME - need to write this test

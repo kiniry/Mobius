@@ -4,7 +4,7 @@
 import java.util.Vector;
 import java.util.List;
 
-public class TestClass extends TestCase {
+public class TestClass {
 
 
 // getSuperclass, getName, isPrimitive, getComponentType

@@ -12,7 +12,7 @@
  * 
  * @author David R. Cok
  */
-public class TestThrowable extends LocalTestCase {
+public class TestThrowable extends {
   
   /** getMessage() returns what was supplied in the constructor
       getMessage() returns null if no string supplied in constructor

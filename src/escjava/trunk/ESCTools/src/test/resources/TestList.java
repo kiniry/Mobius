@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-public class TestList extends TestCase {
+public class TestList {
 
     public void testListt() {
         testList(new LinkedList());

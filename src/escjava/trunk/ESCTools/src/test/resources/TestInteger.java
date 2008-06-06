@@ -1,4 +1,4 @@
-public class TestInteger extends TestCase {
+public class TestInteger {
 
   public void testConstructor() {
     Integer i = new Integer(7);

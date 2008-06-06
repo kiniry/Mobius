@@ -1,16 +1,10 @@
-TestFile.java:39: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-Execution trace information:
-    Routine call returned exceptionally in "TestFile.java", line 12, col 6.
-    Routine call returned exceptionally in "TestFile.java", line 19, col 6.
-    Routine call returned exceptionally in "TestFile.java", line 26, col 6.
-    Routine call returned exceptionally in "TestFile.java", line 34, col 6.
+ESC/Java version VERSION
+src|test|resources|TestFile.java: Caution: Using given file as the .java file, even though it is not the java file for TestFile on the classpath
+    [TIME]
 
-TestFile.java:62: Warning: Possible assertion failure (Assert)
-      //@ assert false; //assertTrue (false);
-          ^
-Execution trace information:
-    Routine call returned exceptionally in "TestFile.java", line 53, col 16.
-
-2 warnings
+TestFile ...
+src|test|resources|TestFile.java:15: Fatal error: No method named assertTrue is in scope here.
+      assertTrue (e instanceof NullPointerException);
+      ^
+1 caution
+1 error

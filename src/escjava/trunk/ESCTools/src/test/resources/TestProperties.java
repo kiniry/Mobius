@@ -1,6 +1,6 @@
 import java.util.Properties;
 
-public class TestProperties extends TestCase {
+public class TestProperties {
 
   public void testConstructor() {
     Properties p = new Properties();

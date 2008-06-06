@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class TestByteArrayInputStream extends TestCase {
+public class TestByteArrayInputStream {
 
   byte[] a;
 

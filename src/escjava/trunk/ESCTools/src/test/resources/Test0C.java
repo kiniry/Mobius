@@ -4,7 +4,7 @@ public class Test0C {
   static int gg;
 
   //@ ensures f == fx;
-  C(int fx) {
+  Test0C(int fx) {
     f = fx;
   }
   
@@ -137,7 +137,7 @@ public class Test0C {
     //@ assert gg == 10 * 2;
 
     gg = 4;
-    (gg++ == 4 ? (C)null : (C)null).gg -= 5;
+    (gg++ == 4 ? (Test0C)null : (Test0C)null).gg -= 5;
     //@ assert gg == 0;
   }
   
@@ -145,7 +145,7 @@ public class Test0C {
   void test7() {
     int x = 0;
     int[] a = new int[10];
-    C c;
+    Test0C c;
 
     a[x++] += 2;
     //@ assert x == 1;

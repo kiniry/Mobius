@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class TestInputStream extends TestCase {
+public class TestInputStream {
 
   public InputStream s;
 

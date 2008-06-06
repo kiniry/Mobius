@@ -1,16 +1,10 @@
-TestCharacter.java:6: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
+ESC/Java version VERSION
+src|test|resources|TestCharacter.java: Caution: Using given file as the .java file, even though it is not the java file for TestCharacter on the classpath
+    [TIME]
+
+TestCharacter ...
+src|test|resources|TestCharacter.java:5: Fatal error: No method named assertTrue is in scope here.
+    assertTrue( cc.charValue() == 'a');
     ^
-TestCharacter.java:23: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestCharacter.java:33: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestCharacter.java:45: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-TestCharacter.java:53: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-5 warnings
+1 caution
+1 error

@@ -1,10 +1,13 @@
-TestArrayList2.java:20: Warning: Possible assertion failure (Assert)
-    //@ assert false; // TEST FOR CONSISTENCY
-        ^
-TestArrayList2.java:34: Warning: Possible assertion failure (Assert)
-    //@ assert false; // TEST FOR CONSISTENCY
-        ^
-TestArrayList2.java:54: Warning: Possible assertion failure (Assert)
-    //@ assert false; // TEST FOR CONSISTENCY
-        ^
-3 warnings
+ESC/Java version VERSION
+src|test|resources|TestArrayList2.java: Caution: Using given file as the .java file, even though it is not the java file for TestArrayList2 on the classpath
+    [TIME]
+
+TestArrayList2 ...
+src|test|resources|TestArrayList2.java:9: Error: No such field in type java.util.ArrayList
+    //@ assert a.capacity == 10;
+                 ^
+src|test|resources|TestArrayList2.java:12: Fatal error: No method named assertTrue is in scope here.
+    assertTrue( a.size() == 1 );
+    ^
+1 caution
+2 errors

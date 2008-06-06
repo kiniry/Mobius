@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-public class TestCollection extends TestCase {
+public class TestCollection {
 
     public void testList() throws RuntimeException {
         testCollection(new LinkedList());

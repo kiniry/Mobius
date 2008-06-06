@@ -15,7 +15,7 @@ src/test/resources/TestInputStream.java
 src/test/resources/TestInteger.java
 src/test/resources/TestList.java
 src/test/resources/TestLong.java
-src/test/resources/TestMap.java
+-quiet src/test/resources/TestMap.java
 src/test/resources/TestMath.java
 src/test/resources/TestObject.java
 src/test/resources/TestProperties.java
@@ -24,10 +24,10 @@ src/test/resources/TestSet2.java
 src/test/resources/TestString.java
 src/test/resources/TestString2.java
 src/test/resources/TestStringBuffer.java
-src/test/resources/TestSystem1.java
-src/test/resources/TestSystem2.java
-src/test/resources/TestSystem3.java
-src/test/resources/TestSystem4.java
+-Q src/test/resources/TestSystem1.java
+-Q src/test/resources/TestSystem2.java
+-Q src/test/resources/TestSystem3.java
+-Q src/test/resources/TestSystem4.java
 src/test/resources/TestThrowable.java
 src/test/resources/TestVector.java
 -useOldStringHandling src/test/resources/Test0C.java

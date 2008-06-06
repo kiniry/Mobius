@@ -10,7 +10,7 @@
  * 
  * @author David R. Cok
  */
-public class TestException extends TestCase {
+public class TestException {
   
   /** getMessage() returns what was supplied in the constructor
       getMessage() returns null if no string supplied in constructor

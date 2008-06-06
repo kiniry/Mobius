@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class TestSet2 extends TestCase {
+public class TestSet2 {
   static E e = new E();
   static F f = new F();
 

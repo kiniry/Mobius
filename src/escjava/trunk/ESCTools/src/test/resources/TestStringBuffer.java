@@ -1,4 +1,4 @@
-public class TestStringBuffer extends LocalTestCase {
+public class TestStringBuffer {
 
   public void testConstructor() {
     StringBuffer sb = new StringBuffer();

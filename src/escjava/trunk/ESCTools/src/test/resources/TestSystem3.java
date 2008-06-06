@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Properties;
 import java.util.Enumeration;
 
-public class TestSystem3 extends LocalTestCase {
+public class TestSystem3 {
 
   String arbitrary = "java.home"; // an arbitrary non-null String
 
