@@ -89,6 +89,11 @@ alltests:	build
 javafealltests: build
 	$(MAKE) -C Javafe test ALLTESTS=1 || exit 1;
 
+self_typecheck: build
+	$(MAKE) -C Javafe SPECS=$(SPECS) self_typecheck
+#	$(MAKE) -C Utils SPECS=$(SPECS) self_typecheck
+
+
 ################################################################################
 ## General rules to clean up build tree
 
@@ -97,7 +102,10 @@ javafealltests: build
 ## This rule was needed because the repository did not properly keep permissions
 ## (expecially x bits), so sometimes we need a reset.  Delete the
 ## datestamp file ".perms-fixed" to force re-execution.
-fix-perms:	.perms-fixed
+# PC: this is no longer needed now that we are using SVN rather than CVS.
+#fix-perms:	.perms-fixed
+fix-perms:
+
 
 .perms-fixed:
 	@if [ ! -e ".perms-fixed" ]; \
@@ -390,7 +398,7 @@ srcjar:
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
 	cp ${RELSRCJAR} ${JAVAFE_ROOT}
 	rm -rf ${RELTEMP}/sub
-	
+
 .PHONY: binary-release
 # Binary release needs to include the test classfiles used by clients of this library
 binary-release: build test jars alldocs cleanup
