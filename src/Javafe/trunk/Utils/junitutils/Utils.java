@@ -38,11 +38,11 @@ public class Utils {
   
   /** A cached value of the usual System out stream. */
   //@ spec_public
-  final private static /*@non_null*/ PrintStream pso = /* @ (non_null PrintStream) */ System.out;
+  final private static /*@non_null*/ PrintStream pso = /*+@ (non_null PrintStream) */ System.out;
 
   /** A cached value of the usual System err stream. */
   //@ spec_public
-  final private static /*@non_null*/ PrintStream pse = /* @ (non_null PrintStream) */ System.err;
+  final private static /*@non_null*/ PrintStream pse = /*+@ (non_null PrintStream) */ System.err;
   
   /** Redirects System.out and System.err to the given PrintStream. 
    Note that setStreams/restoreStreams operate on the global

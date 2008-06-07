@@ -212,7 +212,7 @@ public class Diff {
   private static final /*@ non_null */ String DELIM = "\n\r\f";
 
   /** This is the system new line character */
-  private static final /*@ non_null */ String NEWLINE = /* @ (non_null String) */ System.getProperty("line.separator");
+  private static final /*@ non_null */ String NEWLINE = /*+@ (non_null String) */ System.getProperty("line.separator");
 
   /** This string is used to mark lines of old text */
   private static final /*@ non_null */ String OLD_CH = "< ";
