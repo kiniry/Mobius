@@ -17,7 +17,6 @@ import java.util.Vector;
 import javafe.ast.BlockStmt;
 import javafe.ast.ClassDecl;
 import javafe.ast.CompilationUnit;
-import javafe.ast.CompoundName;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.FieldDecl;
 import javafe.ast.FormalParaDecl;
@@ -43,19 +42,15 @@ import javafe.ast.TypeName;
 import javafe.ast.TypeNameVec;
 import javafe.genericfile.GenericFile;
 import javafe.genericfile.NormalGenericFile;
-import javafe.parser.Lex;
-import javafe.parser.ParseType;
 import javafe.util.ErrorSet;
 import javafe.util.Info;
 import javafe.util.Location;
 
 import org.apache.bcel.Constants;
-import org.apache.bcel.classfile.AccessFlags;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantDouble;
 import org.apache.bcel.classfile.ConstantFloat;
 import org.apache.bcel.classfile.ConstantInteger;
@@ -335,7 +330,7 @@ class BCELReader extends Reader {
 			int fieldModifiers = field.getAccessFlags()
 					& ~Constants.ACC_SYNTHETIC & ~Constants.ACC_ANNOTATION;
 
-			fieldDecl[loopIndex] = // @ nowarn IndexTooBig;
+			fieldDecl[loopIndex] = //@ nowarn IndexTooBig;
 			FieldDecl.make(fieldModifiers, null, Identifier.intern(fieldName),
 					fieldType, binaryClassLocation, null, binaryClassLocation);
 

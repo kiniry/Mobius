@@ -95,7 +95,7 @@ public class BinReader extends Reader {
 	 * * Test methods: * *
 	 **************************************************************************/
 
-	// @ requires \nonnullelements(args);
+	//@ requires \nonnullelements(args);
 	public static void main(String[] args) {
 		if (args.length != 1) {
 			System.err.println("BinReader: <source filename>");
