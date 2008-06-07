@@ -157,7 +157,7 @@ public final class OutsideEnv {
   /**
    * The {@link TypeReader} for our underlying Java file space.
    */
-  public static TypeReader reader;
+  public static /*@nullable*/ TypeReader reader;
   //@ public static model boolean initialized;
   //@   public static represents initialized <- reader!=null;
 
