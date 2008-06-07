@@ -196,7 +196,7 @@ public class PrepTypeDeclaration {
 
 	//@ invariant constructorSeq.elementType == \type(ConstructorDecl);
 	//@ invariant constructorSeq.owner == this;
-	protected/* @ non_null @*/StackVector constructorSeq = new StackVector();
+	protected/*@non_null*/StackVector constructorSeq = new StackVector();
 
 	private int numFields = -1;
 
@@ -413,7 +413,7 @@ public class PrepTypeDeclaration {
 
 		for (int i = 0; i < decl.elems.size(); i++) {
 			TypeDeclElem elem = decl.elems.elementAt(i);
-			// @ assume elem.hasParent; // "invariant"
+			//@ assume elem.hasParent; // "invariant"
 			visitTypeDeclElem(elem, currentSig, true, false, true);
 		}
 
@@ -480,7 +480,7 @@ public class PrepTypeDeclaration {
 	 * appropriate
 	 */
 
-	// @ requires e.hasParent;
+	//@ requires e.hasParent;
 	protected void visitTypeDeclElem(/*@ non_null @*/TypeDeclElem e,
 	/*@ non_null @*/TypeSig currentSig, boolean abstractMethodsOK,
 			boolean inFinalClass, boolean inInterface) {
@@ -576,7 +576,7 @@ public class PrepTypeDeclaration {
 
 	/** Visit a MethodDecl, check it and add it to methodSeq. */
 
-	// @ requires x != null && currentSig != null;
+	//@ requires x != null && currentSig != null;
 	protected void visitMethodDecl(MethodDecl x, TypeSig currentSig,
 			boolean abstractMethodsOK, boolean inFinalClass, boolean inInterface) {
 
@@ -717,7 +717,7 @@ public class PrepTypeDeclaration {
 		MethodDeclVec superMethods = superType.getMethods();
 		for (int i = 0; i < superMethods.size(); i++) {
 			MethodDecl superMethod = superMethods.elementAt(i);
-			// @ assume superMethod.hasParent; // "ensures"
+			//@ assume superMethod.hasParent; // "ensures"
 
 			/*
 			 * <<>>
@@ -938,7 +938,7 @@ public class PrepTypeDeclaration {
 	 * <p>
 	 */
 	//@ requires loc != Location.NULL;
-	public void checkSuperTypeAccessible(/* @ non_null @*/TypeSig currentSig,
+	public void checkSuperTypeAccessible(/*@non_null*/TypeSig currentSig,
 	/*@ non_null @*/TypeSig supertype, int loc) {
 		/*
 		 * FIXME - this error is commented out because it incorrectly disallows
@@ -1014,7 +1014,7 @@ public class PrepTypeDeclaration {
 	}
 
 	//@ ensures \result != null;
-	protected EnvForTypeSig getEnvForCurrentSig(/* @ non_null @*/TypeSig sig,
+	protected EnvForTypeSig getEnvForCurrentSig(/*@non_null*/TypeSig sig,
 			boolean isStatic) {
 		return sig.getEnv(isStatic);
 	}
