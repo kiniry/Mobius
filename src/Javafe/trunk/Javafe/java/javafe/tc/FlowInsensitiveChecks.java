@@ -331,7 +331,7 @@ public class FlowInsensitiveChecks
 
     //------------------------------------------------------------
 
-    // @note e must already have been prepped!
+    // note e must already have been prepped!
     //@ requires e != null && sig != null;
     //@ requires sig.state >= TypeSig.PREPPED;
     protected void checkTypeDeclElem(TypeDeclElem e) {
@@ -658,7 +658,7 @@ public class FlowInsensitiveChecks
                         // Check if it is a duplicate
                         // val may be Integer or Long, convert to Long for
                         // duplicate checking
-                        Assert.notFalse(val instanceof Long // @ nowarn Pre;
+                        Assert.notFalse(val instanceof Long //@ nowarn Pre;
                             || val instanceof Integer);
                         Long valLong = new Long(
                             ConstantExpr.getLongConstant(val));
@@ -697,11 +697,11 @@ public class FlowInsensitiveChecks
      * the statement is a declaration.)
      * </p>
      */
-    // @ requires e != null && s != null;
-    // @ requires !(e instanceof EnvForCU);
-    // @ requires sig != null;
-    // @ ensures \result != null;
-    // @ ensures !(\result instanceof EnvForCU);
+    //@ requires e != null && s != null;
+    //@ requires !(e instanceof EnvForCU);
+    //@ requires sig != null;
+    //@ ensures \result != null;
+    //@ ensures !(\result instanceof EnvForCU);
     protected Env checkStmt(Env e, Stmt s) {
 
         switch (s.getTag()) {
@@ -987,7 +987,7 @@ public class FlowInsensitiveChecks
         case TagConstants.CONSTRUCTORINVOCATION: {
             ConstructorInvocation ci = (ConstructorInvocation)s;
 
-            TypeSig calleeSig = ci.superCall ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) // @nowarn
+            TypeSig calleeSig = ci.superCall ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) //@nowarn
                                                                                                 // Cast,NonNull;
                 .superClass)
                 : sig;
@@ -1156,10 +1156,10 @@ public class FlowInsensitiveChecks
     // === Typecheck statements : end ===
     
 
-    // @ requires !(se instanceof EnvForCU);
-    // @ requires sig != null;
-    protected void checkForLoopAfterInit(/* @ non_null */ Env se,
-                                         /* @ non_null */ ForStmt f) {
+    //@ requires !(se instanceof EnvForCU);
+    //@ requires sig != null;
+    protected void checkForLoopAfterInit(/*@non_null*/ Env se,
+                                         /*@non_null*/ ForStmt f) {
         f.test = checkExpr(se, f.test);
         for (int i = 0; i < f.forUpdate.size(); i++) {
             Expr ex = checkExpr(se, f.forUpdate.elementAt(i));
@@ -1170,11 +1170,11 @@ public class FlowInsensitiveChecks
         enclosingLabels.pop();
     }
 
-    // @ requires env != null && v != null;
-    // @ requires !(env instanceof EnvForCU);
-    // @ requires sig != null;
-    // @ ensures \result != null;
-    // @ ensures !(\result instanceof EnvForCU);
+    //@ requires env != null && v != null;
+    //@ requires !(env instanceof EnvForCU);
+    //@ requires sig != null;
+    //@ ensures \result != null;
+    //@ ensures !(\result instanceof EnvForCU);
     protected Env checkStmtVec(Env env, StmtVec v) {
         for(int i = 0, sz = v.size(); i < sz; i++) {
             Stmt stmt = v.elementAt(i);
@@ -1186,10 +1186,10 @@ public class FlowInsensitiveChecks
     }
 
   
-    // @ requires env != null && ev != null ;
-    // @ requires !(env instanceof EnvForCU);
-    // @ requires sig != null;
-    // @ ensures \nonnullelements(\result);
+    //@ requires env != null && ev != null ;
+    //@ requires !(env instanceof EnvForCU);
+    //@ requires sig != null;
+    //@ ensures \nonnullelements(\result);
     protected Type[] checkExprVec(Env env, ExprVec ev) {
 
         Type[] r = new Type[ ev.size() ];
@@ -1205,11 +1205,11 @@ public class FlowInsensitiveChecks
     }
 
 
-    // @ requires sig != null;
-    // @ requires !(env instanceof EnvForCU);
-    // @ requires env != null && x != null && expectedResult != null;
-    // @ ensures \result != null;
-    // @ ensures (x instanceof ArrayInit) ==> \result instanceof ArrayInit;
+    //@ requires sig != null;
+    //@ requires !(env instanceof EnvForCU);
+    //@ requires env != null && x != null && expectedResult != null;
+    //@ ensures \result != null;
+    //@ ensures (x instanceof ArrayInit) ==> \result instanceof ArrayInit;
     protected VarInit checkInit(Env env, VarInit x, Type expectedResult) {
         if (x instanceof ArrayInit) {
             ArrayInit ai = (ArrayInit)x;
