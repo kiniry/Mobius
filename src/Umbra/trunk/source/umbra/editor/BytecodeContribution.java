@@ -40,7 +40,7 @@ import umbra.lib.UmbraMethodException;
  * {@link BytecodeContribution} object must be reused.
  *
  * FIXME: the cached object is kept in a static variable, this is probably
- * not enough; https://mobius.ucd.ie/ticket/602
+ *   not enough; https://mobius.ucd.ie/ticket/602
  *
  * @author Wojciech Wąs  (ww209224@students.mimuw.edu.pl)
  * @version a-01

@@ -16,7 +16,7 @@ import umbra.lib.UmbraLocationException;
  * This class handles the operations which are connected with the handling of
  * the comments.
  *
- * TODO: this is the best place to describe the logics of the comment saving
+ * FIXME: this is the best place to describe the logics of the comment saving
  *   https://mobius.ucd.ie/ticket/560
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
@@ -85,7 +85,7 @@ public class BytecodeCommentParser extends BytecodeTextParser {
    * value of the arrays which contain the comments from the previous session
    * with the current document.
    *
-   * TODO link to the protocol for a_comment_array;
+   * FIXME link to the protocol for a_comment_array;
    *   https://mobius.ucd.ie/ticket/560
    *
    * @param a_comment_array the end-of-line comments from the previous session

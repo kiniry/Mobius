@@ -67,11 +67,11 @@ public class DisasBCEL implements IEditorActionDelegate {
     try {
       cpath = openBCodeEditorForJavaFile(jFile);
     } catch (JavaModelException e) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
+      MessageDialog.openError(my_editor.getSite().getShell(),
                                 GUIMessages.DISAS_MESSAGE_TITLE,
                                 GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
     } catch (PartInitException e) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
+      MessageDialog.openError(my_editor.getSite().getShell(),
                                 GUIMessages.DISAS_MESSAGE_TITLE,
                                 GUIMessages.DISAS_EDITOR_PROBLEMS);
     } catch (ClassNotFoundException e) {

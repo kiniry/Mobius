@@ -14,18 +14,22 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.lib.FileNames;
+import umbra.lib.GUIMessages;
 
 /**
  * The action is used to commit changes made to Java source code.
- * After running it the rebuild action will create a Bytecode related
+ * After running it the rebuild action will create a byte code related
  * to the commited version.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
@@ -62,15 +66,22 @@ public class CommitAction implements IEditorActionDelegate {
   public final void run(final IAction an_action) {
     my_editor.doSave(null);
     final IFile file = ((FileEditorInput)my_editor.getEditorInput()).getFile();
+    IFile cfile = null;
     try {
-      final IFile cfile = FileNames.getClassFileFile(file, my_editor);
-      final IPath cpath = cfile.getFullPath();
-      final String fnameFrom = FileNames.getSavedClassFileNameForClass(cpath);
-      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      final IFile fileFrom = root.getFile(new Path(fnameFrom));
+      cfile = FileNames.getClassFileFile(file, my_editor);
+    } catch (JavaModelException e1) {
+      MessageDialog.openError(new Shell(), GUIMessages.COMMIT_MESSAGE_TITLE,
+                              GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
+    }
+    final IPath cpath = cfile.getFullPath();
+    final String fnameFrom = FileNames.getSavedClassFileNameForClass(cpath);
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IFile fileFrom = root.getFile(new Path(fnameFrom));
+    try {
       fileFrom.delete(true, null);
     } catch (CoreException e) {
-      e.printStackTrace(); //TODO stack print
+      MessageDialog.openError(new Shell(), GUIMessages.COMMIT_MESSAGE_TITLE,
+                              GUIMessages.FILED_CLASS_FILE_OPERATION);
     }
   }
 

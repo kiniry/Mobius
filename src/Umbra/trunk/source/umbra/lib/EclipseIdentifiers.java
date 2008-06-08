@@ -4,7 +4,8 @@ package umbra.lib;
  * This is just a container for textual Eclipse identifiers of objects defined
  * in Umbra.
  *
- * TODO: it does not contain all the identifiers around
+ * FIXME: it does not contain all the identifiers around
+ *   https://mobius.ucd.ie/ticket/590
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01

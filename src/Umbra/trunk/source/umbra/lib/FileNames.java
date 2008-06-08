@@ -37,10 +37,11 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * plugin (i.e. .java, .class, .btc). It contains the methods to convert
  * from one kind of name to another one with the whole logic.
  *
- * TODO/FIXME: the logic should be as follows:
+ * FIXME: the logic should be as follows:
  * - the class files and all their historical versions should be kept where
  *   the output directory for the current project is
  * - the .btc files should be located where the .java files are
+ *   https://mobius.ucd.ie/ticket/546
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @author Krzysztof Jakubczyk (kjk@mimuw.edu.pl)
@@ -164,14 +165,12 @@ public final class FileNames {
    * This method gives the proper classfile file for a given
    * Java file.
    *
-   * XXX Isn't there an eclipse method to do this task?
-   *
    * @param a_java_file Java source code file for which we try to find the
    *        class file
    * @param an_editor in which the .java file is edited
    * @return the IFile for the corresponding .class file
    * @throws JavaModelException in case the project in which the editor operates
-   *                            has no classfile output location set
+   *   has no class file output location set
    */
   public static IFile getClassFileFile(final IFile a_java_file,
                      final CompilationUnitEditor an_editor)
@@ -252,8 +251,6 @@ public final class FileNames {
    * This method gives the proper class file file for a given source
    * file (usually Java or .btc file).
    *
-   * XXX Isn't there an eclipse method to do this task?
-   *
    * @param a_java_file a source code file for which we try to find the
    *   class file
    * @param an_editor a Java file editor in which the corresponding Java file
@@ -303,12 +300,13 @@ public final class FileNames {
   }
 
   /**
-   * This method returns java class file path file of javaElement.
+   * This method returns java class file path file of e java element.
    * Proposed usage:
    *  getClassFilePath(getSelectedType(editor))
    * @param a_java_type type to find output class file path
    * @return output class file path
-   * @throws JavaModelException TODO
+   * @throws JavaModelException if the output path for the current project does
+   *  not exist
    */
   public static IPath getClassFilePath(final IType a_java_type)
     throws JavaModelException {
@@ -342,7 +340,8 @@ public final class FileNames {
    *
    * @param a_java_type the element to find output package of
    * @return package output path of javaElement
-   * @throws JavaModelException TODO
+   * @throws JavaModelException if the output path for the current project does
+   *  not exist
    */
   public static IPath getOutputTypePath(final IType a_java_type)
     throws JavaModelException {
@@ -396,7 +395,8 @@ public final class FileNames {
    *
    * @param an_editor the editor to find IType. IMPORTANT: must be JavaEditor.
    * @return IType selected in editor
-   * @throws JavaModelException TODO
+   * @throws JavaModelException if the contents of the editor
+ *    cannot be accessed
    */
   public static IType getSelectedType(final IEditorPart an_editor)
     throws JavaModelException {

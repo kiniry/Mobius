@@ -25,6 +25,7 @@ import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.actions.BytecodeEditorAction;
 import umbra.instructions.BytecodeController;
+import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraLocationException;
@@ -82,7 +83,7 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
                                              editor.getRelatedEditor(),
                                              FileNames.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
-      wrongClassFileOptMessage(parent, getActionDefinitionId());
+      GUIMessages.wrongClassFileOptMessage(parent, getActionDefinitionId());
       return;
     }
     try {

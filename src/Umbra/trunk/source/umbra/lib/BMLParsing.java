@@ -17,8 +17,8 @@ import annot.textio.CodeFragment;
  *
  * There is one BMLParsing object per one open editor.
  *
- * TODO: make sure all the communication with BMLlib goes through this class
- * https://mobius.ucd.ie/ticket/592
+ * FIXME: make sure all the communication with BMLlib goes through this class
+ *   https://mobius.ucd.ie/ticket/592
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01

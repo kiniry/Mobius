@@ -311,10 +311,10 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       switch (the_entries[i].getEntryKind()) {
         case IClasspathEntry.CPE_CONTAINER:
           add = the_entries[i].getPath().toPortableString();
-          break; // FIXME: maybe different
+          break; // TODO: maybe different
         case IClasspathEntry.CPE_LIBRARY:
           add = the_entries[i].getPath().toPortableString();
-          break; // FIXME: maybe different
+          break; // TODO: maybe different
         case IClasspathEntry.CPE_PROJECT:
           add = the_entries[i].getPath().toPortableString();
           break;
@@ -325,10 +325,10 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
           break;
         case IClasspathEntry.CPE_VARIABLE:
           add = "";
-          break; // FIXME: maybe different
+          break; // TODO: maybe different
         default:
           add = "";
-          break; // FIXME: maybe different
+          break; // TODO: maybe different
       }
       if (res.length() > 0) {
         res += classPathSeparator + add;

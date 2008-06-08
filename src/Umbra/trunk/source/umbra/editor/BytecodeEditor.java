@@ -209,8 +209,8 @@ public class BytecodeEditor extends TextEditor {
                ((FileEditorInput)getEditorInput()).getFile(),
                this, FileNames.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
-      MessageDialog.openError(new Shell(), "Bytecode",
-                              "No classfile path set for the project");
+      MessageDialog.openError(new Shell(), GUIMessages.BYTECODE_MESSAGE_TITLE,
+                              GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
       return null;
     }
     final IPath pathTo = new Path(fnameTo);
@@ -220,7 +220,7 @@ public class BytecodeEditor extends TextEditor {
       if (!fileTo.exists())
         a_file_from.copy(pathTo, true, null);
     } catch (CoreException e1) {
-      MessageDialog.openError(new Shell(), "Bytecode",
+      MessageDialog.openError(new Shell(), GUIMessages.BYTECODE_MESSAGE_TITLE,
         "The file \"" + a_file_from.getName() + "\" cannot be copied to " +
         pathTo.toOSString());
       return null;

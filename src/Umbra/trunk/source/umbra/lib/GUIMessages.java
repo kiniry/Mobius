@@ -14,7 +14,8 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * This is just container for texts of all the GUI messages.
  *
- * TODO: this does not contain all the messages
+ * FIXME: this does not contain all the messages
+ *   https://mobius.ucd.ie/ticket/591
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
@@ -54,12 +55,20 @@ public final class GUIMessages {
 
   /**
    * A string used as a header in the message panes launched in connection
-   * with the Java source code action to synchronisation code (classes
+   * with the actions to synchronise the code (classes
    * {@link umbra.java.actions.SynchrSBAction} and
-   * {@link umbra.editor.actions.BytecodeSynchrAction}.
+   * {@link umbra.editor.actions.BytecodeSynchrAction}).
    */
   public static final String SYNCH_MESSAGE_TITLE =
     "Synchronisation";
+
+  /**
+   * A string used as a header in the message panes launched in connection
+   * with the Java source code action to commit changes (class
+   * {@link umbra.java.actions.CommitAction}.
+   */
+  public static final String COMMIT_MESSAGE_TITLE =
+    "Commiting changes";
 
   /**
    * The message which informs the user that the operation he/she wants to
@@ -87,6 +96,13 @@ public final class GUIMessages {
    */
   public static final String DISAS_LOADING_PROBLEMS =
     "Problems with loading the file under the given location: ";
+
+  /**
+   * The message which informs the user that an operation on a class file
+   * failed.
+   */
+  public static final String FILED_CLASS_FILE_OPERATION =
+    "A file operation on the class file failed";
 
   /**
    * The message which informs that the current project has no class file output
@@ -214,5 +230,18 @@ public final class GUIMessages {
                                     NO_METHODS_IN_DOC.replaceAll(SUBSTITUTE,
                                     "" + methe.getWrongMethodNumber()));
     }
+  }
+
+  /**
+   * Displays the message that the current project has no output path for
+   * Java class files.
+   *
+   * @param a_shell the shell which displays the message
+   * @param a_title the title of the message window
+   */
+  public static void wrongClassFileOptMessage(final Shell a_shell,
+                                              final String a_title) {
+    MessageDialog.openError(a_shell, a_title,
+                            DISAS_CLASSFILEOUTPUT_PROBLEMS);
   }
 }

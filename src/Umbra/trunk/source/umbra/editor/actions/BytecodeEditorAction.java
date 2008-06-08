@@ -16,6 +16,7 @@ import org.eclipse.ui.IEditorPart;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
 
 /**
@@ -130,9 +131,8 @@ public class BytecodeEditorAction extends Action {
    */
   public static void wrongFileOperationMessage(final Shell a_shell,
                                                final String a_title) {
-    MessageDialog.openError(a_shell,
-                            a_title,
-                            "A file operation on the class file failed");
+    MessageDialog.openError(a_shell, a_title,
+                            GUIMessages.FILED_CLASS_FILE_OPERATION);
   }
 
   /**
@@ -150,20 +150,5 @@ public class BytecodeEditorAction extends Action {
                             a_title,
                             "The path " + a_path +
                             " does not lead to a valid class file");
-  }
-
-
-  /**
-   * Displays the message that the current project has no output path for
-   * Java class files.
-   *
-   * @param a_shell the shell which displays the message
-   * @param a_title the title of the message window
-   */
-  public static void wrongClassFileOptMessage(final Shell a_shell,
-                                              final String a_title) {
-    MessageDialog.openError(a_shell,
-                          a_title,
-                          "No class file output path for Java files is set");
   }
 }

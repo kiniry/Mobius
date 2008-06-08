@@ -66,9 +66,9 @@ public class SynchrSBAction implements IEditorActionDelegate {
 
   /**
    * This method handles the action of the synchronisation between the
-   * source code and the bytecode i.e. it takes the selection in
+   * source code and the byte code i.e. it takes the selection in
    * the source code and shows the corresponding selection in the
-   * bytecode.
+   * byte code.
    *
    * @param an_action the action that triggered the operation
    */
@@ -83,8 +83,8 @@ public class SynchrSBAction implements IEditorActionDelegate {
                             lastIndexOf(FileNames.JAVA_EXTENSION);
     if (lind == -1) {
       MessageDialog.openError(my_editor.getSite().getShell(),
-                  "Bytecode", "This is not a \"" +
-                  FileNames.JAVA_EXTENSION + "\" file");
+                GUIMessages.SYNCH_MESSAGE_TITLE, "This is not a \"" +
+                              FileNames.JAVA_EXTENSION + "\" file");
       return;
     }
 
@@ -97,7 +97,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
                             true);
       if (bcEditor.isSaveOnCloseNeeded()) {
         MessageDialog.openWarning(my_editor.getSite().getShell(),
-                      "Bytecode",
+                                  GUIMessages.SYNCH_MESSAGE_TITLE,
                       "The Bytecode editor needs being " +
                       "refreshed!");
         return;
@@ -107,7 +107,9 @@ public class SynchrSBAction implements IEditorActionDelegate {
                         getDocument(input));
       synchronizeWithMessages(off, bDoc);
     } catch (PartInitException e) {
-      e.printStackTrace(); //TODO stack print https://mobius.ucd.ie/ticket/591
+      MessageDialog.openError(my_editor.getSite().getShell(),
+                              GUIMessages.SYNCH_MESSAGE_TITLE,
+                              GUIMessages.DISAS_EDITOR_PROBLEMS);
     }
   }
 
