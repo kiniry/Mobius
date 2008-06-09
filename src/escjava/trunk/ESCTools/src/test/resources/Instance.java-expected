@@ -3,26 +3,10 @@ src|test|resources|Instance.java: Caution: Using given file as the .java file, e
     [TIME]
 
 Instance ...
-  Prover started:TIME
     [TIME]
 
 Instance: Instance() ...
-------------------------------------------------------------------------
-src|test|resources|Instance.java:2: Warning: Possible violation of object invariant (Invariant)
-public class Instance implements I {
-                                   ^
-Associated declaration is "src|test|resources|Instance.java", line 19, col 14:
-        //@ instance invariant ib && b;
-                     ^
-Possibly relevant items from the counterexample context:  
-  brokenObj%0 == RES-2.35
-(brokenObj* refers to the object for which the invariant is broken.)
-
-Execution trace information:
-    Executed implicit return in "src|test|resources|Instance.java", line 2, col 35.
-
-------------------------------------------------------------------------
-    [TIME]  failed
+    [TIME]  ok
   [TIME total]
 
 I ...
@@ -35,4 +19,3 @@ I: im() ...
     [TIME]  passed immediately
   [TIME total]
 1 caution
-1 warning

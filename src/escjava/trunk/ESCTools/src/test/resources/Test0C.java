@@ -97,7 +97,7 @@ public class Test0C {
   // test side effects in LHS
   void test5() {
     int x = 0;
-    C c;
+    Test0C c;
     
     (c = new C(x++)).f = 6;
     //@ assert x == 1;
@@ -108,7 +108,7 @@ public class Test0C {
     //@ assert x == 2;
     //@ assert c.f == 5;
 
-    (2 < 5 ? c = new C(x++) : c = new C(x += 10)).f *= 2;
+    (2 < 5 ? c = new Test0C(x++) : c = new Test0C(x += 10)).f *= 2;
     //@ assert x == 3;
     //@ assert c.f == 2 * 2;
 
@@ -121,7 +121,7 @@ public class Test0C {
   void test6() {
     int x = 0;
     gg = 0;
-    C c;
+    Test0C c;
     
     (c = new C(x++)).gg = 6;
     //@ assert x == 1;
