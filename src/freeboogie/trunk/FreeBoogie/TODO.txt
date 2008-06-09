@@ -20,6 +20,10 @@
  . Cut out loops
  . Make flowgraph reducible
  . Simple interface to parse from strings
- . Support for explicit specialization in typechecker
+ . In some cases Spec# generates (assume ... h1[n1] == h2[n2]...) which
+   gets 'fixed' in old mode by adding a generic on procedure/implementation.
+   Is this a problem?
+ . What is the most elegant way to write frame axioms in FB with generics?
+ . Add a "for all types" construct.
 
 vim:spell:ts=3:sw=3:fdm=manual:

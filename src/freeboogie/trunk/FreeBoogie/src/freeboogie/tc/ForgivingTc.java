@@ -28,9 +28,7 @@ public class ForgivingTc implements TcInterface {
 
   @Override
   public List<FbError> process(Declaration ast) {
-    // TODO: Implement
-    assert false;
-    return null;
+    return tc.process(ast);
   }
 
   @Override

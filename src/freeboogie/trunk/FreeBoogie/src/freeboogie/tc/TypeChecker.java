@@ -61,6 +61,10 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   // maps type variables to their binding types
   private StackedHashMap<AtomId, Type> typeVar;
 
+  // implicitSpec.get(x) contains the mappings of type variables
+  // to types that were inferred (and used) while type-checking x
+  private Map<Ast, Map<AtomId, Type>> implicitSpec;
+
   // used as a stack of sets; this must be updated whenever
   // we decend into something parametrized by a generic type
   // that can contain expressions (e.g., functions, axioms,
@@ -83,6 +87,16 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
 
   @Override public Declaration getAST() { return ast; }
+
+  /** 
+   * Returns implicit specializations deduced/used by the typechecker
+   * at various points in the AST. If later you want to check the
+   * specialization performed for an ID then you should find the
+   * mappings of type variables stored for ALL parents of the ID.
+   */
+  public Map<Ast, Map<AtomId, Type>> getImplicitSpec() {
+    return implicitSpec;
+  }
   
 
   /**
@@ -101,6 +115,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     
     typeOf = new HashMap<Expr, Type>();
     typeVar = new StackedHashMap<AtomId, Type>();
+    implicitSpec = new HashMap<Ast, Map<AtomId, Type>>();
     enclosingTypeVar = new StackedHashMap<AtomId, AtomId>();
     
     // build symbol table
@@ -176,6 +191,14 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
   
   // === helper methods ===
+  
+  // ast may be used for debugging; it's here for symmetry
+  private void typeVarEnter(Ast ast) { typeVar.push(); }
+ 
+  private void typeVarExit(Ast ast) {
+    implicitSpec.put(ast, typeVar.peek());
+    typeVar.pop();
+  }
   
   // assumes |d| is a list of |VariableDecl|
   // gives a TupleType with the types in that list
@@ -511,10 +534,10 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     Type t = errType;
     if (d instanceof VariableDecl) {
       VariableDecl vd = (VariableDecl)d;
-      typeVar.push();
+      typeVarEnter(atomId);
       mapExplicitGenerics(vd.getTypeVars(), types);
       t = checkRealType(vd.getType(), atomId);
-      typeVar.pop();
+      typeVarExit(atomId);
     } else if (d instanceof ConstDecl) {
       assert types == null; // TODO
       t = ((ConstDecl)d).getType();
@@ -566,7 +589,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     Signature sig = d.getSig();
     Declaration fargs = sig.getArgs();
     
-    typeVar.push();
+    typeVarEnter(atomFun);
     mapExplicitGenerics(sig.getTypeVars(), types);
     Type at = strip(args == null? null : (TupleType)args.eval(this));
     Type fat = strip(tupleTypeOfDecl(fargs));
@@ -574,7 +597,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     check(at, fat, args == null? atomFun : args);
     Type rt = strip(checkRealType(
           tupleTypeOfDecl(sig.getResults()), atomFun));
-    typeVar.pop();
+    typeVarExit(atomFun);
     typeOf.put(atomFun, rt);
     return rt;
   }
@@ -597,13 +620,13 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     ArrayType at = (ArrayType)t;
 
     // look at indexing types
-    typeVar.push();
+    typeVarEnter(atomIdx);
     check(idx.getA().eval(this), at.getRowType(), idx.getA());
     if (idx.getB() != null)
       check(idx.getB().eval(this), at.getColType(), idx.getB());
 
     Type et = checkRealType(at.getElemType(), atomIdx);
-    typeVar.pop();
+    typeVarExit(atomIdx);
     typeOf.put(atomIdx, et);
     return et;
   }
