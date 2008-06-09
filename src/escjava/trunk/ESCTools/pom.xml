@@ -79,8 +79,8 @@
     <url>https://mobius.ucd.ie/browser/src/escjava/trunk/ESCTools</url>
   </scm>
   <ciManagement>
-    <system>continuum</system>
-    <url>http://voting.ucd.ie:8080/continuum</url>
+    <system>Hudson</system>
+    <url>http://voting.ucd.ie:8080</url>
     <notifiers>
       <notifier>
         <type>mail</type>
