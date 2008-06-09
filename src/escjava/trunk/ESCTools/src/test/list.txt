@@ -258,7 +258,6 @@ src/test/resources/SourcePath2.java
 src/test/resources/SpecFileRef.java
 src/test/resources/SpecFileRef2.java
 src/test/resources/Static.java
-src/test/resources/StaticInnerClasses.java
 src/test/resources/StoreRefs.java
 src/test/resources/StringCat.java
 src/test/resources/StringFresh.java

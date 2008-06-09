@@ -22,12 +22,9 @@ src/test/resources/TestProperties.java
 src/test/resources/TestSet.java
 src/test/resources/TestSet2.java
 src/test/resources/TestString.java
-src/test/resources/TestString2.java
 src/test/resources/TestStringBuffer.java
 -Q src/test/resources/TestSystem1.java
 -Q src/test/resources/TestSystem2.java
--Q src/test/resources/TestSystem3.java
--Q src/test/resources/TestSystem4.java
 src/test/resources/TestThrowable.java
 src/test/resources/TestVector.java
 -useOldStringHandling src/test/resources/Test0C.java
