@@ -1,6 +1,7 @@
 package freeboogie.tc;
 
 import java.util.*;
+import java.util.logging.Logger;
 import freeboogie.ast.*;
 
 /**
@@ -11,7 +12,9 @@ import freeboogie.ast.*;
  * modified AST, which satisfies all the rules of FreeBoogie,
  * can be retrieved.
  */
-public class ForgivingTc implements TcInterface {
+public class ForgivingTc extends Transformer implements TcInterface {
+
+  private static final Logger log = Logger.getLogger("freeboogie.tc"); 
 
   // does the real work
   private TypeChecker tc;
@@ -28,7 +31,18 @@ public class ForgivingTc implements TcInterface {
 
   @Override
   public List<FbError> process(Declaration ast) {
-    return tc.process(ast);
+    int oldErrCnt = Integer.MAX_VALUE;
+    List<FbError> errors;
+    while (true) {
+      errors = tc.process(ast);
+      ast = tc.getAST();
+      int errCnt = errors.size();
+      if (errCnt == 0 || errCnt >= oldErrCnt) break;
+      oldErrCnt = errCnt;
+      ast = fix(ast, errors);
+      log.info("Running TypeChecker again.");
+    }
+    return errors;
   }
 
   @Override
@@ -54,5 +68,10 @@ public class ForgivingTc implements TcInterface {
   @Override
   public SymbolTable getST() {
     return tc.getST();
+  }
+
+  // this guy does most of the work
+  private Declaration fix(Declaration ast, List<FbError> errors) {
+    return ast;
   }
 }
