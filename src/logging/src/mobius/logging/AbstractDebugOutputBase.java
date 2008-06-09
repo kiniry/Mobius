@@ -123,7 +123,7 @@ public abstract class AbstractDebugOutputBase
    * @param the_level The debugging level of this message.
    * @param the_message The debugging message to print.
    */
-  //@ ensures \result == isValidLevel(the_level));
+  //@ ensures \result == isValidLevel(the_level);
   public final boolean print(final int the_level, final String the_message) {
     // If the level is outside of the valid range, return false.
     if ((the_level < my_debug.getDebugConstants().LEVEL_MIN) ||

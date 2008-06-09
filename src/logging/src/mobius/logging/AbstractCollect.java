@@ -94,7 +94,7 @@ public abstract class AbstractCollect {
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  //@ constraint (my_debug != null) ==> (my_debug == \old(my_debug));
+  //@ private constraint (my_debug != null) ==> (my_debug == \old(my_debug));
   private /*@ non_null @*/ Debug my_debug;
 
   // Inherited Methods
@@ -120,7 +120,7 @@ public abstract class AbstractCollect {
    * <code>this</code>.
    */
   //@ ensures \result <==> (a_debug.collect == this);
-  public boolean checkDebugCollectRef(Debug a_debug) {
+  public /*@ pure @*/ boolean checkDebugCollectRef(Debug a_debug) {
     return (a_debug.getCollect() == this);
   }
 
