@@ -25,12 +25,14 @@ public class Evaluator<R> {
       \memberName
     }
   ) {
-    seeEach(\className);
+    enterNode(\className);
     \children{if (\memberName != null) \memberName.eval(this);}
+    exitNode(\className);
     return null;
   }
 }
   // allows the user to visit nodes and distingush them by some
   // other criterion than type
-  public void seeEach(Ast ast) {}
+  public void enterNode(Ast ast) {}
+  public void exitNode(Ast ast) {}
 }

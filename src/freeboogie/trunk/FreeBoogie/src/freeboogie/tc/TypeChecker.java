@@ -369,7 +369,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     t = substRealType(t);
     if (isTypeVar(t)) {
       errors.add(new FbError(FbError.Type.REQ_SPECIALIZATION, l,
-            TypeUtils.typeToString(t), t.loc()));
+            TypeUtils.typeToString(t), t.loc(), getTypeVarDecl(t)));
       t = errType;
     }
     return t;

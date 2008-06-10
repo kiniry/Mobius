@@ -32,7 +32,6 @@ public class Transformer extends Evaluator<Ast> {
     }
   ) {
     assert \className != null;
-    seeEach(\className);
     boolean sameChildren = true;
     \members{
       \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}
@@ -59,7 +58,9 @@ public class Transformer extends Evaluator<Ast> {
   ) {
     // Deque<> doesn't support null elements
     result.addFirst(\className == null ? NULL : \className);
+    enterNode(\className);
     see(\className,\members[,]{\memberName});
+    exitNode(\className);
     Ast r = result.removeFirst();
     return r == NULL ? null : r;
   }

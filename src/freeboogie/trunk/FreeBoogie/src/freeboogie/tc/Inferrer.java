@@ -1,8 +1,10 @@
 package freeboogie.tc;
 
 import java.util.*;
+import java.util.logging.Logger;
 import freeboogie.ast.*;
 import freeboogie.util.Id;
+
 
 /**
  * Infers probable types for some of the nodes on which
@@ -24,7 +26,9 @@ import freeboogie.util.Id;
  * types. This is implemented with a union-find data structure that
  * keeps as class representant the real (primitive) type, if present.
  */
-class Inferrer extends Transformer {
+public class Inferrer extends Transformer {
+
+  private static final Logger log = Logger.getLogger("freeboogie.tc"); 
 
   // parent.get(x) is a type "equal" to x
   // this never happens: x is a real type and parent.get(x) is a tv
@@ -46,6 +50,7 @@ class Inferrer extends Transformer {
 
   // === public interface ===
   
+  /** See the class description. */
   public void process(Declaration ast, Map<Expr, Type> typeOf) {
     this.typeOf = typeOf;
     probableTypeOf = new HashMap<Expr, Type>();
@@ -53,6 +58,13 @@ class Inferrer extends Transformer {
     ast.eval(this);
   }
 
+  /** 
+   * Returns probable types for the nodes that were marked with
+   * 'error' types. NOTE: The map may contain as values (i.e.,
+   * 'good types') some new {@code UserType}s. The user of this
+   * class is responsible for adding proper declarations (such
+   * as 'type T' or a generic type as in 'function foo&lt;T&gt;').
+   */
   public Map<Expr, Type> getGoodTypes() {
     for (Map.Entry<Expr, Type> e : probableTypeOf.entrySet()) {
       if (!(e.getValue() instanceof UserType)) continue;
@@ -60,25 +72,30 @@ class Inferrer extends Transformer {
       if (!parent.containsKey(ov)) continue;
       e.setValue(getParent(ov));
     }
+    for (Map.Entry<Expr, Type> e : probableTypeOf.entrySet()) {
+      log.fine("inferred type " + TypeUtils.typeToString(e.getValue()) +
+        " at " + e.getKey().loc());
+    }
     return probableTypeOf; 
   }
-  
+
   // === workers ===
   
   @Override
-  public void seeEach(Ast n) {
+  public void enterNode(Ast n) {
     if (!(n instanceof Expr)) return;
     Expr e = (Expr)n;
     if (!err(e)) return;
     UserType tv = freshTv();
     probableTypeOf.put(e, tv);
     parent.put(tv, tv);
+    log.finer("introduce type variable " + tv.getName() + " at " +
+      n.loc());
   }
   
   @Override
   public void see(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
     left.eval(this); right.eval(this);
-    if (!err(left) && !err(right)) return;
     Type lt = getType(left);
     Type rt = getType(right);
     switch (op) {
@@ -113,6 +130,12 @@ class Inferrer extends Transformer {
     }
   }
 
+  @Override
+  public void see(AtomOld atomOld, Expr e) {
+    e.eval(this);
+    mkEqual(getType(e), getType(atomOld));
+  }
+  
   // === helpers ===
 
   private boolean err(Expr e) {
@@ -127,12 +150,14 @@ class Inferrer extends Transformer {
   }
 
   private void mkEqual(Type a, Type b) {
-    assert isTv(a) || isTv(b);
+    if (!isTv(a) && !isTv(b)) return;
     if (!isTv(a)) {
       mkEqual(b, a);
       return;
     }
     if (isTv(b)) b = getParent((UserType)b);
+    log.finer("type equality: " +
+      TypeUtils.typeToString(a) + "==" + TypeUtils.typeToString(b));
     parent.put((UserType)a, b);
   }
 
@@ -150,7 +175,7 @@ class Inferrer extends Transformer {
   }
 
   private Type getType(Expr e) {
-    if (typeOf.get(e) != null) return typeOf.get(e);
+    if (!err(e)) return typeOf.get(e);
     return probableTypeOf.get(e);
   }
 }

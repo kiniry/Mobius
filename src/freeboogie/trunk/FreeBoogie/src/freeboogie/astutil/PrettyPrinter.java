@@ -28,6 +28,9 @@ public class PrettyPrinter extends Transformer {
   private int indentLevel;
   
   private int skipVar; // if >0 then skip "var "
+
+  // should types in a TupleType be prefixed by "`"?
+  private boolean prefixByBq;
   
   // ready made strings to be printed for enums
   private static final HashMap<AssertAssumeCmd.CmdType,String> cmdRep 
@@ -91,6 +94,7 @@ public class PrettyPrinter extends Transformer {
     writer = w;
     indentLevel = 0;
     skipVar = 0;
+    prefixByBq = false;
   }
   
   /** Swallow exceptions. */
@@ -155,8 +159,11 @@ public class PrettyPrinter extends Transformer {
   public void see(AtomFun atomFun, String function, TupleType types, Exprs args) {
     say(function);
     if (types != null) {
-      say(".<");
+      say("<");
+      assert !prefixByBq;
+      prefixByBq = true;
       types.eval(this);
+      prefixByBq = false;
       say(">");
     }
     say("(");
@@ -168,8 +175,11 @@ public class PrettyPrinter extends Transformer {
   public void see(AtomId atomId, String id, TupleType types) {
     say(id);
     if (types != null) {
-      say(".<");
+      say("<");
+      assert !prefixByBq;
+      prefixByBq = true;
       types.eval(this);
+      prefixByBq = false;
       say(">");
     }
   }
@@ -272,8 +282,11 @@ public class PrettyPrinter extends Transformer {
     }
     say(procedure);
     if (types != null) {
-      say(".<");
+      say("<");
+      assert !prefixByBq;
+      prefixByBq = true;
       types.eval(this);
+      prefixByBq = false;
       say(">");
     }
     say("(");
@@ -421,6 +434,7 @@ public class PrettyPrinter extends Transformer {
 
   @Override
   public void see(TupleType tupleType, Type type, TupleType tail) {
+    if (prefixByBq) say("`");
     type.eval(this);
     if (tail != null) {
       say(", ");

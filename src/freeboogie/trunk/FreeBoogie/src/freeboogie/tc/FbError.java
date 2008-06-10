@@ -60,6 +60,9 @@ public class FbError {
   /** Returns the primary AST node associated with this error. */
   public Ast place() { return ast; }
 
+  /** Allows users to explicitely read the attached data. */
+  public Object data(int idx) { return data[idx]; }
+
   /**
    * Constructs a message from the template and the data.
    * The template can contain "%3" to print the fourth data.
