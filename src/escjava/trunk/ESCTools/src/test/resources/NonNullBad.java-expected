@@ -12,15 +12,15 @@ src|test|resources|NonNullBad.java:23: Associated declaration:
 src|test|resources|NonNullBad.java:5: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
         public void m(/*@ non_null */ Object o,
                           ^
-src|test|resources|NonNullBad.java:18: Associated declaration: 
-        public void m(/*@ non_null */ Object o, /*@ non_null */ Object ...
-                                      ^
+src|test|resources|NonNullBad.java:23: Associated declaration: 
+        public void m(Object o, /*@ non_null */ Object oo, Object ooo) ...
+                      ^
 src|test|resources|NonNullBad.java:7: Caution: The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: 
                         /*@ non_null */ Object ooo);
                             ^
-src|test|resources|NonNullBad.java:18: Associated declaration: 
- ... ect o, /*@ non_null */ Object oo,  Object ooo);
-                                        ^
+src|test|resources|NonNullBad.java:23: Associated declaration: 
+        public void m(Object o, /*@ non_null */ Object oo, Object ooo) ...
+                                                           ^
   Prover started:TIME
     [TIME]
 
