@@ -49,7 +49,7 @@ public class Test0C {
     //@ assert this.gg == 1; 
     //@ assert g == 0;
     g= ++gg;
-    //@ assert C.gg == 2 ;
+    //@ assert Test0C.gg == 2 ;
     //@ assert g == 2;
     gg+= 1;
     //@ assert this.gg == 3;
@@ -99,12 +99,12 @@ public class Test0C {
     int x = 0;
     Test0C c;
     
-    (c = new C(x++)).f = 6;
+    (c = new Test0C(x++)).f = 6;
     //@ assert x == 1;
     //@ assert c != null;
     //@ assert c.f == 6;
 
-    (c = new C(x++)).f += 4;
+    (c = new Test0C(x++)).f += 4;
     //@ assert x == 2;
     //@ assert c.f == 5;
 
@@ -123,16 +123,16 @@ public class Test0C {
     gg = 0;
     Test0C c;
     
-    (c = new C(x++)).gg = 6;
+    (c = new Test0C(x++)).gg = 6;
     //@ assert x == 1;
     //@ assert c != null;
     //@ assert gg == 6;
 
-    (c = new C(x++)).gg += 4;
+    (c = new Test0C(x++)).gg += 4;
     //@ assert x == 2;
     //@ assert gg == 10;
 
-    (2 < 5 ? c = new C(x++) : c = new C(x += 10)).gg *= 2;
+    (2 < 5 ? c = new Test0C(x++) : c = new Test0C(x += 10)).gg *= 2;
     //@ assert x == 3;
     //@ assert gg == 10 * 2;
 
