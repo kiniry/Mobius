@@ -32,6 +32,7 @@ public class Transformer extends Evaluator<Ast> {
     }
   ) {
     assert \className != null;
+    seeEach(\className);
     boolean sameChildren = true;
     \members{
       \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}

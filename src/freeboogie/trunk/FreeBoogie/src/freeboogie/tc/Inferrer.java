@@ -1,18 +1,35 @@
 package freeboogie.tc;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import freeboogie.ast.*;
+import freeboogie.util.Id;
 
 /**
- * Given an AST, it infers types for the lowest nodes that were
- * given an errType by the typechecker. This is based on applying
- * top-down heuristics (e.g., if the AST contains a==b then
- * this gets translated into the type equation typeof(a)==typeof(b)).
+ * Infers probable types for some of the nodes on which
+ * (bottom-up) type-checking failed. The input is an AST and a
+ * map of some of its nodes to types. Some nodes may be mapped to
+ * the 'error' type. A subset of these are keys in the output:
+ * a map from nodes to probable types. The probable types can
+ * be 'real' types or type variables ({@code UserType}s with no
+ * corresponding declaration).
  *
- * TODO Modify this to include type variables and do equalities on them.
+ * All this class guarantees is that it "tries to do a good job."
+ * It is here only to support constructs that are considered
+ * deprecated.
+ *
+ * <b>Implementation.</b> The AST is processed bottom-up. Bad nodes
+ * receive as probable type a fresh type variable. Some nodes (such
+ * as the binary operators == and &amp;&amp;) impose equality 
+ * restrictions between the nodes of the children and/or primitive
+ * types. This is implemented with a union-find data structure that
+ * keeps as class representant the real (primitive) type, if present.
  */
 class Inferrer extends Transformer {
+
+  // parent.get(x) is a type "equal" to x
+  // this never happens: x is a real type and parent.get(x) is a tv
+  // the keys represent the introduced type variables
+  private Map<UserType, Type> parent;
 
   // contains the mapping found by the typechecker
   // shall not be modified
@@ -32,16 +49,38 @@ class Inferrer extends Transformer {
   public void process(Declaration ast, Map<Expr, Type> typeOf) {
     this.typeOf = typeOf;
     probableTypeOf = new HashMap<Expr, Type>();
+    parent = new HashMap<UserType, Type>();
     ast.eval(this);
   }
 
-  public Map<Expr, Type> getGoodTypes() { return probableTypeOf; }
+  public Map<Expr, Type> getGoodTypes() {
+    for (Map.Entry<Expr, Type> e : probableTypeOf.entrySet()) {
+      if (!(e.getValue() instanceof UserType)) continue;
+      UserType ov = (UserType)e.getValue();
+      if (!parent.containsKey(ov)) continue;
+      e.setValue(getParent(ov));
+    }
+    return probableTypeOf; 
+  }
   
   // === workers ===
+  
+  @Override
+  public void seeEach(Ast n) {
+    if (!(n instanceof Expr)) return;
+    Expr e = (Expr)n;
+    if (!err(e)) return;
+    UserType tv = freshTv();
+    probableTypeOf.put(e, tv);
+    parent.put(tv, tv);
+  }
+  
   @Override
   public void see(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
     left.eval(this); right.eval(this);
     if (!err(left) && !err(right)) return;
+    Type lt = getType(left);
+    Type rt = getType(right);
     switch (op) {
     case PLUS:
     case MINUS:
@@ -52,25 +91,19 @@ class Inferrer extends Transformer {
     case GT:
     case LE:
     case GE:
-      // left and right must be integers
-      if (err(left)) probableTypeOf.put(left, intType);
-      if (err(right)) probableTypeOf.put(right, intType);
+      mkEqual(lt, intType);
+      mkEqual(rt, intType);
       break;
     case EQUIV:
     case IMPLIES:
     case AND:
     case OR:
-      // left and right must be booleans
-      if (err(left)) probableTypeOf.put(left, boolType);
-      if (err(right)) probableTypeOf.put(right, boolType);
+      mkEqual(lt, boolType);
+      mkEqual(rt, boolType);
       break;
     case EQ:
     case NEQ:
-      // left and right must have the same type
-      if (err(left) && !err(right)) 
-        probableTypeOf.put(left, typeOf.get(right));
-      if (!err(left) && err(right))
-        probableTypeOf.put(right, typeOf.get(left));
+      mkEqual(lt, rt);
       break;
     case SUBTYPE:
       // don't infer anything
@@ -88,5 +121,36 @@ class Inferrer extends Transformer {
     PrimitiveType pt = (PrimitiveType)t;
     return pt.getPtype() == PrimitiveType.Ptype.ERROR;
   }
-  
+ 
+  private UserType freshTv() {
+    return UserType.mk(Id.get("tv"));
+  }
+
+  private void mkEqual(Type a, Type b) {
+    assert isTv(a) || isTv(b);
+    if (!isTv(a)) {
+      mkEqual(b, a);
+      return;
+    }
+    if (isTv(b)) b = getParent((UserType)b);
+    parent.put((UserType)a, b);
+  }
+
+  private Type getParent(UserType a) {
+    Type b = parent.get(a);
+    if (b == a) return a;
+    if (isTv(b)) b = getParent((UserType)b);
+    parent.put(a, b);
+    return b;
+  }
+
+  private boolean isTv(Type t) {
+    if (!(t instanceof UserType)) return false;
+    return parent.containsKey((UserType)t);
+  }
+
+  private Type getType(Expr e) {
+    if (typeOf.get(e) != null) return typeOf.get(e);
+    return probableTypeOf.get(e);
+  }
 }

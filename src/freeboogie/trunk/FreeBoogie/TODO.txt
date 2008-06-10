@@ -25,5 +25,6 @@
    Is this a problem?
  . What is the most elegant way to write frame axioms in FB with generics?
  . Add a "for all types" construct.
+ . Hash-consing Type (and subclasses) might simplify code.
 
 vim:spell:ts=3:sw=3:fdm=manual:

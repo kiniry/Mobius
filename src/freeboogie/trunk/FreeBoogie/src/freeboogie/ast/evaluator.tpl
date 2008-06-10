@@ -25,8 +25,12 @@ public class Evaluator<R> {
       \memberName
     }
   ) {
+    seeEach(\className);
     \children{if (\memberName != null) \memberName.eval(this);}
     return null;
   }
 }
+  // allows the user to visit nodes and distingush them by some
+  // other criterion than type
+  public void seeEach(Ast ast) {}
 }
