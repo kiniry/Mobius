@@ -1,0 +1,37 @@
+digraph g {
+	graph [rankdir=LR];
+	node [fontsize=12, fontname=Courier, shape=ellipse];
+	BMLLib [shape=record, label=BMLLib, style=filled];
+	"Java Standard Library" [shape=record, label="Java Standard Library", style=filled, color=".99 0.0 .9"];
+	BCEL [shape=record, label=BCEL, style=filled, color=".99 0.0 .9"];
+	ECLIPSE [shape=record, label=ECLIPSE, style=filled];
+	umbra [shape=record, label="umbra | Total Classes: 1", style=filled, color=".99 0.44 .9"];
+	"umbra.editor" [shape=record, label="umbra.editor | Total Classes: 10", style=filled, color=".99 0.12 .9"];
+	"umbra.editor.actions" [shape=record, label="umbra.editor.actions | Total Classes: 6", style=filled, color=".99 0.08 .9"];
+	"umbra.editor.actions.history" [shape=record, label="umbra.editor.actions.history | Total Classes: 3", style=filled, color=".99 0.06 .9"];
+	"umbra.editor.parsing" [shape=record, label="umbra.editor.parsing | Total Classes: 10", style=filled, color=".99 0.19 .9"];
+	"umbra.instructions" [shape=record, label="umbra.instructions | Total Classes: 17", style=filled, color=".99 0.06 .9"];
+	"umbra.lib" [shape=record, label="umbra.lib | Total Classes: 15", style=filled, color=".99 0.32 .9"];
+	"umbra.editor.actions.info" [shape=record, label="umbra.editor.actions.info | Total Classes: 2", style=filled, color=".99 0 .9"];
+	"umbra.instructions.ast" [shape=record, label="umbra.instructions.ast | Total Classes: 28", style=filled, color=".99 0.1 .9"];
+	"umbra.java.actions" [shape=record, label="umbra.java.actions | Total Classes: 3", style=filled, color=".99 0 .9"];
+	umbra -> "Java Standard Library";
+	umbra -> ECLIPSE;
+	"umbra.editor" -> "umbra.editor.actions.history";
+	"umbra.editor.actions" -> "umbra.editor.parsing";
+	"umbra.editor.actions" -> "umbra.instructions";
+	"umbra.editor.actions.history" -> "umbra.editor.actions";
+	"umbra.editor.actions.info" -> "Java Standard Library";
+	"umbra.editor.actions.info" -> ECLIPSE;
+	"umbra.editor.parsing" -> "umbra.editor";
+	"umbra.instructions" -> "umbra.editor";
+	"umbra.instructions" -> "umbra.instructions.ast";
+	"umbra.instructions.ast" -> BCEL;
+	"umbra.instructions.ast" -> umbra;
+	"umbra.instructions.ast" -> "umbra.instructions";
+	"umbra.instructions.ast" -> "umbra.lib";
+	"umbra.java.actions" -> "umbra.editor";
+	"umbra.lib" -> BMLLib;
+	"umbra.lib" -> "Java Standard Library";
+	"umbra.lib" -> ECLIPSE;
+}
