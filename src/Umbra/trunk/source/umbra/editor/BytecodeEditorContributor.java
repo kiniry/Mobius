@@ -307,7 +307,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 
   /**
    * The same as
-   * {@link #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])},
+   * {@link BytecodeEditorContributor#refreshEditor(BytecodeEditor,
+   * IEditorInput, String[], String[])},
    * but the input is obtained from the current editor window.
    *
    * @param an_editor current editor to be closed

@@ -8,6 +8,7 @@
  */
 package umbra.editor.parsing;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -21,6 +22,9 @@ import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.swt.custom.StyleRange;
 
 import umbra.UmbraPlugin;
+import umbra.editor.BytecodeDocument;
+import umbra.lib.GUIMessages;
+import umbra.lib.UmbraLocationException;
 
 
 /**
@@ -38,7 +42,7 @@ public class NonRuleBasedDamagerRepairer
   /**
    * The document this object works on.
    */
-  private IDocument my_doc;
+  private BytecodeDocument my_doc;
 
   /**
    * The default text attribute used for the colouring of all the areas governed
@@ -65,7 +69,7 @@ public class NonRuleBasedDamagerRepairer
    * @see IPresentationRepairer#setDocument(IDocument)
    */
   public final void setDocument(final IDocument a_doc) {
-    my_doc = a_doc;
+    my_doc = (BytecodeDocument)a_doc;
   }
 
   /**
@@ -74,17 +78,22 @@ public class NonRuleBasedDamagerRepairer
    *
    * @param an_offset the offset whose line end offset must be computed
    * @return the line end offset for the given offset
-   * @exception BadLocationException if offset is invalid in the current
-   *            document
+   * @throws UmbraLocationException if the offset is invalid in the current
+   *    document
    */
   protected final int endOfLineOf(final int an_offset)
-    throws BadLocationException {
+    throws UmbraLocationException {
+    IRegion info;
+    final int line;
+    try {
+      info = my_doc.getLineInformationOfOffset(an_offset);
+      if (an_offset <= info.getOffset() + info.getLength())
+        return info.getOffset() + info.getLength();
 
-    IRegion info = my_doc.getLineInformationOfOffset(an_offset);
-    if (an_offset <= info.getOffset() + info.getLength())
-      return info.getOffset() + info.getLength();
-
-    final int line = my_doc.getLineOfOffset(an_offset);
+      line = my_doc.getLineOfOffset(an_offset);
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(true, an_offset, false);
+    }
     try {
       info = my_doc.getLineInformation(line + 1);
       return info.getOffset() + info.getLength();
@@ -96,8 +105,8 @@ public class NonRuleBasedDamagerRepairer
   /**
    * Returns the damage in the document's presentation caused by the current
    * document change. In case the partitioning changed <code>a_partition</code>
-   * is returned. In case the partitioning is unchanded the region is calculated
-   * which starts with the begining of the line in which the modification
+   * is returned. In case the partitioning is unchanged the region is calculated
+   * which starts with the beginning of the line in which the modification
    * started and ends with the end of the last line in which the modification
    * occurred. The region is always included in the given damaged region so
    * we have to check for cases in which the region starts/end in the middle
@@ -129,11 +138,24 @@ public class NonRuleBasedDamagerRepairer
             end <= line_info.getOffset() + line_info.getLength()) {
           // optimize the case of the same line
           end = line_info.getOffset() + line_info.getLength();
-        } else
-          end = endOfLineOf(end);
-
-        end =
-          Math.min(
+        } else {
+          try {
+            end = endOfLineOf(end);
+          } catch (UmbraLocationException e) {
+            if (e.isLineWrong()) {
+              MessageDialog.openError(my_doc.getEditor().getSite().getShell(),
+                                    GUIMessages.BYTECODE_MESSAGE_TITLE,
+                                    GUIMessages.NO_LINE_IN_DOC +
+                                    e.getWrongLocation());
+            } else {
+              MessageDialog.openError(my_doc.getEditor().getSite().getShell(),
+                                      GUIMessages.BYTECODE_MESSAGE_TITLE,
+                                      GUIMessages.NO_LINE_IN_DOC +
+                                      e.getWrongLocation());
+            }
+          }
+        }
+        end = Math.min(
             a_partition.getOffset() + a_partition.getLength(),
             end);
         return new Region(start, end - start);

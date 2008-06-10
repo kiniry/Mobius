@@ -47,12 +47,14 @@ import annot.io.ReadAttributeException;
 
 /**
  * This is the main class that defines the byte code editor.
- * It does so by subclassing {@link TextEditor}, which is a standard class
+ * It does so by subclassing {@link org.eclipse.ui.editors.text.TextEditor},
+ * which is a standard class
  * extended by each editor plugin.
  * Its additional features are attributes that describe
  * BCEL structures related to the edited byte code
- * such as {@link JavaClass}, to obtain particular instructions,
- * and {@link org.apache.bcel.generic.ClassGen}, to allow changes in BCEL.
+ * such as {@link org.apache.bcel.classfile.JavaClass}, to obtain particular
+ * instructions, and {@link org.apache.bcel.generic.ClassGen}, to allow changes
+ * in BCEL.
  *
  * The input file for this editor is a .btc
  * ({@link FileNames#BYTECODE_EXTENSION}) file which resides
@@ -143,7 +145,8 @@ public class BytecodeEditor extends TextEditor {
    * under the name with '_' at the beginning for the later use (see
    * {@link umbra.editor.actions.BytecodeRebuildAction} and
    * {@link umbra.editor.actions.BytecodeCombineAction}). Except
-   * for that, the method updates structure {@link JavaClass} in BCEL and binary
+   * for that, the method updates structure
+   * {@link org.apache.bcel.classfile.JavaClass} in BCEL and binary
    * files to make visible in the class file the changes made in the editor.
    *
    * @param a_progress_monitor not used
@@ -305,8 +308,8 @@ public class BytecodeEditor extends TextEditor {
    *
    * @param a_path a workspace relative path to the class file
    * @param a_repo the repository to load the class from
-   * @return the BCEL {@link JavaClass} structure with the content of the class
-   *   file
+   * @return the BCEL {@link org.apache.bcel.classfile.JavaClass} structure with
+   *   the content of the class file
    */
   private JavaClass loadJavaClass(final IPath a_path,
                                   final SyntheticRepository a_repo) {

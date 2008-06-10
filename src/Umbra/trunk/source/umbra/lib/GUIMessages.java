@@ -128,8 +128,15 @@ public final class GUIMessages {
    * The message which informs the user that the document does not contain
    * a line of the given number.
    */
-  public static final String NO_POSITIONS_IN_DOC =
-    "The current document has no positions for line ";
+  public static final String NO_LINE_IN_DOC =
+    "The current document has no positions for the line ";
+
+  /**
+   * The message which informs the user that the document does not contain
+   * a position of the given number.
+   */
+  public static final String NO_POSITION_IN_DOC =
+    "The current document has no position ";
 
   /**
    * The message which informs the user that the document does not contain
@@ -222,7 +229,7 @@ public final class GUIMessages {
     if (e instanceof UmbraLocationException) {
       final UmbraLocationException loce = (UmbraLocationException) e;
       MessageDialog.openError(a_shell, a_title,
-                                    NO_POSITIONS_IN_DOC +
+                                    NO_LINE_IN_DOC +
                                     loce.getWrongLocation());
     } else if (e instanceof UmbraMethodException) {
       final UmbraMethodException methe = (UmbraMethodException) e;

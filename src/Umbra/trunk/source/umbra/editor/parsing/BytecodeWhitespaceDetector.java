@@ -10,6 +10,8 @@ package umbra.editor.parsing;
 
 import org.eclipse.jface.text.rules.IWhitespaceDetector;
 
+import umbra.lib.BytecodeStrings;
+
 /**
  * This class defines objects that are able to chceck if a particular character
  * is a whitespace.
@@ -21,20 +23,14 @@ import org.eclipse.jface.text.rules.IWhitespaceDetector;
 public class BytecodeWhitespaceDetector implements IWhitespaceDetector {
 
   /**
-   * The array which contains all the characters we consider here to be
-   * whitespace characters.
-   */
-  public static final char[] WHITESPACE_CHARACTERS = {' ', '\t', '\n', '\r' };
-
-  /**
    * This method defines which characters are whitespace characters.
    *
    * @param a_char the character to determine if it is whitespace
    * @return <code>true</code> when the character is regarded as a whitespace
    */
   public final boolean isWhitespace(final char a_char) {
-    for (int i = 0; i < WHITESPACE_CHARACTERS.length; i++) {
-      if (WHITESPACE_CHARACTERS[i] == a_char) return true;
+    for (int i = 0; i < BytecodeStrings.WHITESPACE_CHARACTERS.length; i++) {
+      if (BytecodeStrings.WHITESPACE_CHARACTERS[i] == a_char) return true;
     }
     return false;
   }

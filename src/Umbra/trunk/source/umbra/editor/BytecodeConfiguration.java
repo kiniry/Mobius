@@ -16,6 +16,7 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
+import umbra.editor.actions.BytecodeDoubleClickStrategy;
 import umbra.editor.parsing.BytecodePartitionScanner;
 import umbra.editor.parsing.BytecodeScanner;
 import umbra.editor.parsing.BytecodeBMLSecScanner;

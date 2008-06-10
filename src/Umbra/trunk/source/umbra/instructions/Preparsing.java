@@ -11,7 +11,6 @@ package umbra.instructions;
 import java.lang.reflect.InvocationTargetException;
 
 import umbra.UmbraPlugin;
-import umbra.editor.parsing.BytecodeWhitespaceDetector;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
@@ -181,10 +180,10 @@ public final class Preparsing {
    */
   private static void addWhitespaceLoop(final DispatchingAutomaton a_state) {
     for (int i = 0;
-         i < BytecodeWhitespaceDetector.WHITESPACE_CHARACTERS.length;
+         i < BytecodeStrings.WHITESPACE_CHARACTERS.length;
          i++) {
       a_state.addStarRule(
-        Character.toString(BytecodeWhitespaceDetector.
+        Character.toString(BytecodeStrings.
                            WHITESPACE_CHARACTERS[i]),
         a_state);
     }

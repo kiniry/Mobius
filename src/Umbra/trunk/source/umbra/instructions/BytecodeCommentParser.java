@@ -156,7 +156,7 @@ public class BytecodeCommentParser extends BytecodeTextParser {
       line = a_doc.get(a_doc.getLineOffset(a_line),
                                     a_doc.getLineLength(a_line));
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(a_line);
+      throw new UmbraLocationException(a_line, true);
     }
     final String lineName;
     if (!a_ctxt.isInsideComment() || !a_ctxt.isInsideAnnotation()) {

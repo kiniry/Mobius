@@ -6,14 +6,16 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package umbra.editor;
+package umbra.editor.actions;
 
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.widgets.Shell;
 
-import umbra.editor.actions.BytecodeSynchrAction;
+import umbra.editor.BytecodeDocument;
+import umbra.editor.BytecodeEditor;
+import umbra.editor.DocumentSynchroniser;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraSynchronisationException;
 

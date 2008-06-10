@@ -39,7 +39,7 @@ public class BytecodeColorAction extends BytecodeEditorAction {
   //@ invariant my_colour_delta==1 || my_colour_delta == -1;
 
   /**
-   * The current colouring style, see {@link ColorValues}.
+   * The current colouring style, see {@link umbra.editor.parsing.ColorValues}.
    */
   private int my_mod;
 

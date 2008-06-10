@@ -8,10 +8,6 @@
  */
 package umbra.lib;
 
-import org.eclipse.jface.text.IDocument;
-
-import umbra.editor.BytecodeDocument;
-
 /**
  * This is an exception used to trace situations when the parsing exceeded
  * the content of a document.
@@ -32,6 +28,13 @@ public class UmbraLocationException extends Exception {
   private final int my_wrong_location;
 
   /**
+   *  This field is <code>true</code> in case the wrong location is to be
+   *  interpreted as a line. In case it is <code>false</code>, the wrong
+   *  location is a position in the document.
+   */
+  private final boolean my_islinewrong;
+
+  /**
    *  This field is <code>true</code> in case the document is a byte code
    *  document. Otherwise, the document is a Java source code document.
    */
@@ -42,10 +45,13 @@ public class UmbraLocationException extends Exception {
    * outside the document. We assume that the document type here is byte code
    * document.
    *
-   * @param a_line the line location outside the document
+   * @param a_loc the location outside the document
+   * @param a_line <code>true</code> when the location is a line number,
+   *   <code>false</code> when the location is a position number
    */
-  public UmbraLocationException(final int a_line) {
-    my_wrong_location = a_line;
+  public UmbraLocationException(final int a_loc, final boolean a_line) {
+    my_wrong_location = a_loc;
+    my_islinewrong = a_line;
     my_doc_type = true;
   }
 
@@ -54,16 +60,20 @@ public class UmbraLocationException extends Exception {
    * the document and a document type. We check two kinds of documents: byte
    * code documents and Java source code documents.
    *
-   * @param a_doc the document for which the location exception is thrown
-   * @param a_line the line location outside the document
+   * @param a_doc_type the type of document for which the location exception is
+   *   thrown: <code>true</code> for {@link umbra.editor.BytecodeDocument} and
+   *   <code>false</code> for
+   *   {@link org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor}
+   * @param a_loc the location outside the document
+   * @param a_line <code>true</code> when the location is a line number,
+   *   <code>false</code> when the location is a position number
    */
-  public UmbraLocationException(final IDocument a_doc, final int a_line) {
-    my_wrong_location = a_line;
-    if (a_doc instanceof BytecodeDocument) {
-      my_doc_type = true;
-    } else {
-      my_doc_type = false;
-    }
+  public UmbraLocationException(final boolean a_doc_type,
+                                final int a_loc,
+                                final boolean a_line) {
+    my_wrong_location = a_loc;
+    my_islinewrong = a_line;
+    my_doc_type = a_doc_type;
   }
 
   /**
@@ -82,5 +92,16 @@ public class UmbraLocationException extends Exception {
    */
   public boolean isByteCodeDocument() {
     return my_doc_type;
+  }
+
+  /**
+   * Returns information on how to interpret the wrong location number.
+   *
+   * @return <code>true</code> when the wrong location number is to be
+   *   interpreted as a line number, otherwise the location number is to be
+   *   interpreted as a position in a document
+   */
+  public boolean isLineWrong() {
+    return my_islinewrong;
   }
 }

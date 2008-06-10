@@ -113,6 +113,11 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
                                                        "byte", "short",
                                                        "int", "long"};
 
+  /**
+   * The array which contains all the characters we consider here to be
+   * whitespace characters.
+   */
+  public static final char[] WHITESPACE_CHARACTERS = {' ', '\t', '\n', '\r' };
 
   /**
    * Private constructor added to prevent the creation of objects of this

@@ -79,7 +79,7 @@ public class DocumentSynchroniser {
    * the marked area in the byte code editor. Works correctly only inside a
    * method body.
    *
-   * @see #synchronizeSB(int, CompilationUnitEditor)
+   * @see DocumentSynchroniser#synchronizeSB(int, CompilationUnitEditor)
    * @param a_pos index of line in byte code editor. Lines in related source
    *   code editor corresponding to this line will be highlighted.
    * @throws UmbraLocationException in case a position is reached in the
@@ -93,7 +93,7 @@ public class DocumentSynchroniser {
     try {
       line = my_bcode_doc.getLineOfOffset(a_pos);
     } catch (BadLocationException e1) {
-      throw new UmbraLocationException(my_bcode_doc, a_pos);
+      throw new UmbraLocationException(true, a_pos, false);
     }
     // syncBS computes the area to highlight
     final int syncLine;
@@ -106,13 +106,13 @@ public class DocumentSynchroniser {
     try {
       syncPos = my_java_doc.getLineOffset(syncLine);
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(my_java_doc, syncLine);
+      throw new UmbraLocationException(false, syncLine, true);
     }
     int synclen;
     try {
       synclen = my_java_doc.getLineOffset(syncLine + 1) - syncPos;
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(my_java_doc, syncLine + 1);
+      throw new UmbraLocationException(false, syncLine + 1, true);
     }
     final CompilationUnitEditor jeditor =
       my_bcode_doc.getEditor().getRelatedEditor();
@@ -148,8 +148,8 @@ public class DocumentSynchroniser {
    *       LineNumberTable</li>
    * </ul>
    *
-   * @param a_java_class {@link JavaClass} with current byte code BCEL
-   *   representation
+   * @param a_java_class {@link org.apache.bcel.classfile.JavaClass} with
+   *   current byte code BCEL representation
    * @param a_line_no index of line in byte code editor
    * @return the line of the source code corresponding to given byte code
    *   line)
@@ -206,25 +206,25 @@ public class DocumentSynchroniser {
     try {
       line = my_java_doc.getLineOfOffset(a_pos);
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(my_java_doc, a_pos);
+      throw new UmbraLocationException(false, a_pos, false);
     }
     final int[] syncLine;
     try {
       syncLine = syncSB(my_bcode_doc.getJavaClass(), an_editor, a_pos);
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(my_bcode_doc, line);
+      throw new UmbraLocationException(true, line, true);
     }
     final int syncPos;
     try {
       syncPos = my_bcode_doc.getLineOffset(syncLine[0]);
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(my_java_doc, syncLine[0]);
+      throw new UmbraLocationException(false, syncLine[0], true);
     }
     final int syncLen;
     try {
       syncLen = my_bcode_doc.getLineOffset(syncLine[1] + 1) - syncPos;
     } catch (BadLocationException e) {
-      throw new UmbraLocationException(my_java_doc, syncLine[1]);
+      throw new UmbraLocationException(false, syncLine[1], true);
     }
     if (syncLen < 0) {
       MessageDialog.openInformation(an_editor.getSite().getShell(), "Bytecode",
