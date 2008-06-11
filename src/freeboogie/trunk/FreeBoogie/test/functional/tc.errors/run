@@ -1,3 +1,4 @@
 #!/bin/bash
 ulimit -t 10
-ls -1 *.bpl | LC_ALL=C sort | xargs fbrun freeboogie.tc.Main
+#ls -1 *.bpl | LC_ALL=C sort | xargs fbrun freeboogie.tc.Main
+ls -1 *.bpl | LC_ALL=C sort | xargs fbrun freeboogie.Main -old

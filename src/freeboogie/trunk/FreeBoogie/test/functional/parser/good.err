@@ -1,2 +1,3 @@
 line 4:4 no viable alternative at input 'old'
+BR.recoverFromMismatchedToken
 line 4:9 mismatched input ')' expecting ':'
