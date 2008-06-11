@@ -57,7 +57,6 @@ import freeboogie.util.Closure;
  * </pre>
  *
  * @author rgrig
- * @author reviewed by TODO
  */
 public class StrongestPostcondition {
   // used mainly for debugging

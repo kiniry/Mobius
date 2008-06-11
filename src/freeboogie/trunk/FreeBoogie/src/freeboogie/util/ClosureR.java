@@ -4,7 +4,6 @@ package freeboogie.util;
  * For functions that take {@code P} and return {@code R}
  *
  * @author rgrig 
- * @author reviewed by TODO
  * @param <P> the type of the parameter
  * @param <R> teh type of the result
  */

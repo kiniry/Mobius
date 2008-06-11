@@ -8,7 +8,6 @@ package freeboogie.util;
  *       per line are used
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class Err {
   

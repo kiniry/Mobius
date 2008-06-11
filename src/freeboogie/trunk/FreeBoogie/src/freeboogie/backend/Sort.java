@@ -6,7 +6,6 @@ package freeboogie.backend;
  * so we stick to a conservative set of sorts.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public enum Sort {
   /** supertype for all non-predicates */ ANY(null),

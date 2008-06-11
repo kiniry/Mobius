@@ -32,7 +32,6 @@ import freeboogie.util.Err;
  *      change this to take advantage of the built in arrays in Z3.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class SimplifyProver extends Prover {
   /* IMPLEMENTATION NOTE:

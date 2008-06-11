@@ -46,7 +46,6 @@ import freeboogie.util.Err;
  *      It gets tedious to write it.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class TemplateParser {
   /*

@@ -4,7 +4,6 @@ package freeboogie.util;
  * A pair.
  *
  * @author rgrig 
- * @author reviewed by TODO
  * @param <F> the type of the first element
  * @param <S> the type of the second element
  */

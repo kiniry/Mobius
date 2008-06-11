@@ -8,7 +8,6 @@ import java.util.Map;
  * Recognizes abstract grammar (AG) tokens.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class AgLexer extends PeekStream<AgToken> {
   
@@ -118,6 +117,5 @@ public class AgLexer extends PeekStream<AgToken> {
    * @param args
    */
   public static void main(String[] args) {
-    // TODO Auto-generated method stub
   }
 }

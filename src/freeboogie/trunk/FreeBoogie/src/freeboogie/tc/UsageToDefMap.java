@@ -12,7 +12,6 @@ import freeboogie.util.Closure;
  * of a definition.
  *
  * @author rgrig 
- * @author reviewed by TODO
  * @param <U> the type of the usage object
  * @param <D> the type of the definition object
  */

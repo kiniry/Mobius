@@ -4,7 +4,6 @@ package freeboogie.ast.gen;
  * Represents an abstract grammar token.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class AgToken extends Token {
 

@@ -6,7 +6,6 @@ import freeboogie.ast.*;
  * A structure whose members connect usages to definitions.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class SymbolTable {
   /** User defined types */

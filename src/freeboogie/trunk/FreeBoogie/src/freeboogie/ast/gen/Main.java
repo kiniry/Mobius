@@ -16,7 +16,6 @@ import freeboogie.util.Err;
  * <pre>java freeboogie.ast.gen.Main [-b defaultBase] grammar templates</pre>.
  * 
  * @author rgrig
- * @author reviewed by TODO
  */
 public class Main {
   private static final Logger log = Logger.getLogger("freeboogie.ast.gen");

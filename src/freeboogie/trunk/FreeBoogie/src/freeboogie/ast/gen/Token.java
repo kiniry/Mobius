@@ -4,7 +4,6 @@ package freeboogie.ast.gen;
  * A generic token. It has a string representation.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public abstract class Token {
 

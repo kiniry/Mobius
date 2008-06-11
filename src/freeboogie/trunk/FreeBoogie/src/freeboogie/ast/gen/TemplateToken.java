@@ -4,7 +4,6 @@ package freeboogie.ast.gen;
  * Represents a token in a template file.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class TemplateToken extends Token {
   

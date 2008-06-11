@@ -25,7 +25,6 @@ import freeboogie.vcgen.BlockSplitter;
  * (Java is incredibly verbose for this kind of stuff.)
  *
  * @author rgrig 
- * @author reviewed by TODO
  * @param <U> the usage type
  * @param <D> the definition type
  */
@@ -59,7 +58,6 @@ class Printer<U extends Ast, D extends Ast> extends Closure<D> {
  * The main entry point of the application.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class Main {
   private static Logger log = Logger.getLogger("freeboogie"); 

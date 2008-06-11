@@ -4,7 +4,6 @@ package freeboogie.ast.gen;
  * A simple line-column structure.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class CharLocation extends Location<Character> {
   private int line, col;

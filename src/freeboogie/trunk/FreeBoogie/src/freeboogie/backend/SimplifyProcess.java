@@ -13,7 +13,6 @@ import java.util.*;
  *  NOTE: This class was first developed for ESC/Java
  *
  *  @author rgrig
- *  @author reviewed by TODO
  */
 @SuppressWarnings("serial")
 public class SimplifyProcess {

@@ -15,7 +15,6 @@ import freeboogie.util.Pair;
  * uses adjacency lists and hash tables.
  *
  * @author rgrig 
- * @author reviewed by TODO
  * @param <N> the type of the graph node
  */
 public class SimpleGraph<N> {

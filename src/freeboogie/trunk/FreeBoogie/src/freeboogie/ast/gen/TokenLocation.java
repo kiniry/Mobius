@@ -7,7 +7,6 @@ package freeboogie.ast.gen;
  * pointers just before it.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  * 
  * @param <T> the token type.
  */

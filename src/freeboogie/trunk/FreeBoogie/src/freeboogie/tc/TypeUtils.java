@@ -10,7 +10,6 @@ import freeboogie.astutil.PrettyPrinter;
  * a structural equality test that ignores AST locations. 
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class TypeUtils {
   

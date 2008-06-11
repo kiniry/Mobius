@@ -4,7 +4,6 @@ package freeboogie.ast;
  * Represents a known or unknown file location.
  *  
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class AstLocation implements Comparable<AstLocation> {
   private String file;

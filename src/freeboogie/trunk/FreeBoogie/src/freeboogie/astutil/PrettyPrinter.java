@@ -13,7 +13,6 @@ import freeboogie.util.Err;
  * Prints AST nodes in a readable (and parseable) way.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 @SuppressWarnings("unused") // lots of unused parameters
 public class PrettyPrinter extends Transformer {

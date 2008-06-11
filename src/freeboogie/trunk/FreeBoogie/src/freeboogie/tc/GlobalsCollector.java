@@ -9,7 +9,6 @@ import freeboogie.ast.*;
  * Reports any duplicate names.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 @SuppressWarnings("unused") // many unused parameters
 public class GlobalsCollector extends Transformer {

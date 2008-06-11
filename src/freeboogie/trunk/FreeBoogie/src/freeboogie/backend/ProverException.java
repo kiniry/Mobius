@@ -5,7 +5,6 @@ package freeboogie.backend;
  * with the prover. It might die, or talk rubbish, or...
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 @SuppressWarnings("serial")
 public class ProverException extends Exception {

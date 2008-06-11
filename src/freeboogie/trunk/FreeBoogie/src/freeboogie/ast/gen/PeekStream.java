@@ -19,7 +19,6 @@ import java.util.logging.Logger;
  * is reached.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  * @param <T> the type of the stream elements
  */
 public abstract class PeekStream<T> {

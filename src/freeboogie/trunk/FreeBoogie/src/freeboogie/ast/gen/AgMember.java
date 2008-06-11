@@ -4,7 +4,6 @@ package freeboogie.ast.gen;
  * Represents a member from the abstract grammar.
  * 
  * @author rgrig
- * @author reviewed by TODO
  */
 public class AgMember {
   /** The type of this member. */

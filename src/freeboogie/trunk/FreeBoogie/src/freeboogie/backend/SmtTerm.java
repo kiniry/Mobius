@@ -11,7 +11,6 @@ import java.util.Arrays;
  *      duplicates)
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class SmtTerm extends Term {
   

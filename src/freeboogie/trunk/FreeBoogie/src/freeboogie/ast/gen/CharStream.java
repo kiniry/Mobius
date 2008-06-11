@@ -7,7 +7,6 @@ import java.io.InputStream;
  * A character stream.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class CharStream extends PeekStream<Character> {
   

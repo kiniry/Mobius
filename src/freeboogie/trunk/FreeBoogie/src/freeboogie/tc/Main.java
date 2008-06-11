@@ -18,7 +18,6 @@ import freeboogie.util.Err;
  * It also prints errors if there are name clashes.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class Main {
 

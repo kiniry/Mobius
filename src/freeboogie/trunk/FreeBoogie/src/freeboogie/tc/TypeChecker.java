@@ -28,7 +28,6 @@ import freeboogie.util.StackedHashMap;
  * (i.e., building of the symbo table) were successful.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 @SuppressWarnings("unused") // many unused parameters
 public class TypeChecker extends Evaluator<Type> implements TcInterface {

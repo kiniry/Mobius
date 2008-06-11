@@ -15,7 +15,6 @@ import freeboogie.ast.*;
  * in the signature.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 @SuppressWarnings("unused") // unused parameters
 public class ImplementationChecker extends Transformer {

@@ -10,7 +10,6 @@ import freeboogie.util.Pair;
  * Dumps flow graphs for all implementations in dot format.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 @SuppressWarnings("unused") // unused parameters
 public class FlowGraphDumper extends Transformer {

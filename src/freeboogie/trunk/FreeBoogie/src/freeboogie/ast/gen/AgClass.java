@@ -7,7 +7,6 @@ import java.util.List;
  * Represents a class from the abstract grammar.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class AgClass implements Comparable<AgClass> {
   /** The name of the class. */

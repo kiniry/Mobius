@@ -29,7 +29,6 @@ import java.util.Arrays;
  * TODO the terminology around here is not very clear
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class TermDef {
   /**

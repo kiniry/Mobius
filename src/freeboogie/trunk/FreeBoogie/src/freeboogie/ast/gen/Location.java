@@ -15,7 +15,6 @@ package freeboogie.ast.gen;
  * be necessary.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  * @param <T> the type of the stream element
  */
 public abstract class Location<T> {

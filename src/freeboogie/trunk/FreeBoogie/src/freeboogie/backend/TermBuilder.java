@@ -16,7 +16,6 @@ import freeboogie.util.StackedHashMap;
  * expression.)
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public abstract class TermBuilder {
   

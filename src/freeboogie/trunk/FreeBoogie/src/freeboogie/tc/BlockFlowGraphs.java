@@ -11,7 +11,6 @@ import freeboogie.util.Err;
  * Constructs a flowgraph of blocks for each implementation.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 @SuppressWarnings("unused") // unused params
 public class BlockFlowGraphs extends Transformer {

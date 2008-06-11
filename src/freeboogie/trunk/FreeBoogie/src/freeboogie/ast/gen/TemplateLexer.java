@@ -12,7 +12,6 @@ import freeboogie.util.Err;
  * `other' and will be later copied verabtim to the output. 
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class TemplateLexer extends PeekStream<TemplateToken> {
   

@@ -10,7 +10,6 @@ import freeboogie.util.Err;
  * Used for flow control in {@code AgParser}.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 @SuppressWarnings("serial")
 class EofReached extends Exception {
@@ -28,7 +27,6 @@ class EofReached extends Exception {
  * custom error messages and hints of what might be wrong.
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class AgParser {
   
@@ -273,7 +271,6 @@ public class AgParser {
    * @param args
    */
   public static void main(String[] args) {
-  // TODO Auto-generated method stub
 
   }
 }

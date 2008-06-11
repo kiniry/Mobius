@@ -7,7 +7,6 @@ import java.util.Set;
  * Represents an enum from the abstract grammar.
  * 
  * @author rgrig
- * @author reviewed by TODO
  */
 public class AgEnum {
   /** The name of the enum. */

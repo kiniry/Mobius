@@ -24,7 +24,6 @@ import java.util.Set;
  * @param <V> the type of the values
  * 
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class StackedHashMap<K, V> implements Map<K, V> {
   // there is always a first element in |data|

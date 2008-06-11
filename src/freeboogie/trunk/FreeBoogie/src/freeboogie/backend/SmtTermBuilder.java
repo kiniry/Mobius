@@ -9,7 +9,6 @@ import freeboogie.ast.Expr;
  *       not in the prover.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class SmtTermBuilder extends TermBuilder {
 

@@ -17,7 +17,6 @@ import freeboogie.util.Err;
  * TODO: Introduce the notion of legal values for integer options
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class Options {
   

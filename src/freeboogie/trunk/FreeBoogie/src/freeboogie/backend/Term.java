@@ -5,7 +5,6 @@ package freeboogie.backend;
  * be subclassed (in conjunction with concrete prover classes).
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class Term {
   private Sort sort;

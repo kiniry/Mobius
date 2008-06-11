@@ -29,7 +29,6 @@ import java.util.logging.*;
  * TODO add properties, like timelimit
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public abstract class Prover {
   protected Deque<Term> assumptions;

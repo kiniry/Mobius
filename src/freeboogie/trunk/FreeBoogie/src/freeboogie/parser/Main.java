@@ -16,7 +16,6 @@ import freeboogie.util.Err;
  * Generate a pretty print of the AST constructed during parsing.
  *
  * @author rgrig 
- * @author reviewed by TODO
  */
 public class Main {
 
