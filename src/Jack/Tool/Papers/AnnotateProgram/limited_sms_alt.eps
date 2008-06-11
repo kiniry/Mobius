@@ -1,9 +1,9 @@
 %!PS-Adobe-2.0 EPSF-2.0
 %%Title: limited_sms_alt.fig
 %%Creator: fig2dev Version 3.2 Patchlevel 4
-%%CreationDate: Mon Feb 18 14:24:27 2008
-%%For: mhuisman@himmelbjerget (Marieke Huisman,A110,7556,,)
-%%BoundingBox: 0 0 392 126
+%%CreationDate: Wed Jun 11 17:09:23 2008
+%%For: mhuisman@cauberg (Marieke Huisman,A110,7556,,)
+%%BoundingBox: 0 0 387 135
 %%Magnification: 1.0000
 %%EndComments
 /$F2psDict 200 dict def
@@ -45,8 +45,8 @@ $F2psDict /mtrx matrix put
 
 end
 save
-newpath 0 126 moveto 0 0 lineto 392 0 lineto 392 126 lineto closepath clip newpath
--13.5 196.7 translate
+newpath 0 135 moveto 0 0 lineto 387 0 lineto 387 135 lineto closepath clip newpath
+-18.0 205.7 translate
 1 -1 scale
 
 /cp {closepath} bind def
@@ -175,10 +175,10 @@ gs col0 s gr
 % arrowhead
 n 1645 2135 m 1719 2235 l 1700 2112 l 1645 2135 l  cp gs 0.00 setgray ef gr  col0 s
 % Ellipse
-n 1800 2437 188 188 0 360 DrawEllipse gs col0 s gr
+n 5371 2468 188 188 0 360 DrawEllipse gs col0 s gr
 
 % Ellipse
-n 5371 2468 188 188 0 360 DrawEllipse gs col0 s gr
+n 1800 2437 188 188 0 360 DrawEllipse gs col0 s gr
 
 % Polyline
 gs  clippath
@@ -193,20 +193,20 @@ n 2161 2370 m 2041 2400 l 2161 2430 l 2161 2370 l  cp gs 0.00 setgray ef gr  col
 4575 1425 m
 gs 1 -1 sc (entry\(sendSMS\)? n < N -> ;) col0 sh gr
 /Times-Roman-iso ff 180.00 scf sf
-1725 2475 m
-gs 1 -1 sc (s1) col0 sh gr
-/Times-Roman-iso ff 180.00 scf sf
 5250 2475 m
 gs 1 -1 sc (s2) col0 sh gr
 /Times-Roman-iso ff 180.00 scf sf
-225 1650 m
-gs 1 -1 sc (exit\(reset\)? true -> n := 0;) col0 sh gr
+1650 2475 m
+gs 1 -1 sc (s1) col0 sh gr
 /Times-Roman-iso ff 180.00 scf sf
-2400 2325 m
+2325 2175 m
 gs 1 -1 sc (exit\(sendSMS\)? true -> n := n + 1;) col0 sh gr
 /Times-Roman-iso ff 180.00 scf sf
-2475 3225 m
+2550 3375 m
 gs 1 -1 sc (exitE\(sendSMS\)? true -> ;) col0 sh gr
+/Times-Roman-iso ff 180.00 scf sf
+300 1425 m
+gs 1 -1 sc (exit\(reset\)? true -> n := 0;) col0 sh gr
 % here ends figure;
 $F2psEnd
 rs

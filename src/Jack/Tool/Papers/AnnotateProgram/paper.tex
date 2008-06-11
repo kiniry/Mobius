@@ -13,6 +13,7 @@ University of Nijmegen, Netherlands}
 \usepackage{amssymb}
 \usepackage{bbold}
 \usepackage{epsfig}
+\usepackage{psfrag}
 \pagestyle{plain}
 \usepackage{xspace}
 \input{commands}
@@ -23,37 +24,27 @@ University of Nijmegen, Netherlands}
 
 \maketitle
 \begin{abstract}
-\marginnote{MH: Abstract bit long}
 Security automata are a convenient way to describe security
 policies. They are often used to monitor an application, and to
-interrupt it as soon it violates the security policy. But such a
-scenario is not always convenient, therefore, we consider the security
-automata as specification only, and verify adherence to it
-statically. To achieve this, we generate JML annotations that inline
-the monitor in the application.
+interrupt execution as soon the security policy is violated. However,
+sometimes run-time adherence checking is not always convenient.
+Therefore, we consider the security automata as specification only,
+and verify adherence to it statically. We achieve this by generation
+of JML annotations that inline the monitor into the application.
 
-The translation from security automata to program annotations is
-defined in several steps:
-\begin{inparaenum}[(\itshape i\upshape)]
-\item complete the security automata, adding a special trap
-state that should not be reached (whereas partial automata, describing
-only the allowed transitions are sufficient for monitoring);
-\item generate special set-annotations at the level of method
-specifications, capturing the behaviour of the security automata,
-together with an invariant stating that the error state should not be
-reached; and
-\item inline the annotations into the method body.
-\end{inparaenum}
-An annotation propagation algorithm can then be used to generate
-appropriate pre- and postconditions that are sufficient to guarantee
-adherence to the annotations, and that can be verified statically.
-
-We have developed a generic program semantics that is instantiated for
-monitoring and run-time annotation checking. We prove that every
-translation step preserves the program behaviour. In particular this
-means that monitoring will not find a security violation iff run-time
+This paper describes the translation from security automata to program
+annotations, and proves that every translation step preserves the
+program behaviour. For this, we have developed a generic program
+semantics that is instantiated for monitoring and run-time annotation
+checking.  Preservation of program behaviour boils down to a proof
+that monitoring will not find a security violation iff run-time
 annotation checking will not find any annotation violation (provided
-that earlier existing annotations are not violated either).
+that earlier existing annotations are not violated either).  Once the
+program annotations are generated, an annotation propagation algorithm
+can be used to generate appropriate pre- and postconditions that
+are sufficient to guarantee adherence to the annotations, and that can
+be verified statically.
+
 
 Both program semantics, translation and correctness proofs are
 formalised using the PVS theorem prover. The correctness proofs
