@@ -24,9 +24,9 @@ public class FbError {
     EXACT_TYPE("Type should be %."),
     TV_ALREADY_DEF("Type variable % already defined."),
     ALREADY_DEF("Variable % already defined"),
-    GB_ALREADY_DEF("Identifier % already defined."),
+    GB_ALREADY_DEF("Identifier % was already defined."),
     MISSING_BLOCK("Inexistent block %."),
-    IP_CNT_MISMATCH("Implementation-Procedure parameters count mismatch."),
+    IP_CNT_MISMATCH("Implementation-Procedure parameter count mismatch."),
     DEP_IMPL_SIG("Dependent type in implementation signature."),
     PROC_MISSING("Implementation without procedure."),
     NEED_ARRAY("Must be an array.");

@@ -39,7 +39,7 @@ public class Main {
         Declaration d = parser.program();
         if (d != null) {
           // parsing was OK
-          tc.process(d);
+          for (FbError e : tc.process(d)) Err.error(e.toString());
         }
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + args[i] + ". Nevermind.");

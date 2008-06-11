@@ -280,9 +280,9 @@ public class PrettyPrinter extends Transformer {
   public void see(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
     say("call ");
     if (results != null) {
-      say("(");
+      //say("(");
       results.eval(this);
-      say(")");
+      //say(")");
       say(" := ");
     }
     say(procedure);

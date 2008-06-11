@@ -137,7 +137,8 @@ public class Main {
       FileHandler logh = new FileHandler("freeboogie.log");
       logh.setFormatter(new SimpleFormatter());
       log.addHandler(logh);
-      log.setLevel(Level.ALL);
+      log.setLevel(Level.ALL); // TODO Control using a properties file.
+      log.setUseParentHandlers(false); // the 'root' logger sends >=INFO to console
     } catch (IOException e) {
       Err.warning("Can't create log file. Nevermind.");
       log.setLevel(Level.OFF);
