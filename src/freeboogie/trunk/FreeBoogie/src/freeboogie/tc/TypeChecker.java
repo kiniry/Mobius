@@ -641,7 +641,8 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
 
   @Override
-  public Type eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Expr expr) {
+  public Type eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, TupleType genTypes, Expr expr) {
+    // TODO: Deal with genTypes
     Type t = expr.eval(this);
     check(t, boolType, assertAssumeCmd);
     return null;
@@ -649,6 +650,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
 
   @Override
   public Type eval(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
+    // TODO Deal with types
     Procedure p = st.procs.def(callCmd);
     Signature sig = p.getSig();
     Declaration fargs = sig.getArgs();

@@ -132,8 +132,16 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Expr expr) {
+  public void see(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, TupleType genTypes, Expr expr) {
     say(cmdRep.get(type));
+    if (genTypes != null) {
+      say("<");
+      assert !prefixByBq;
+      prefixByBq = true;
+      genTypes.eval(this);
+      prefixByBq = false;
+      say(">");
+    }
     expr.eval(this);
     semi();
   }

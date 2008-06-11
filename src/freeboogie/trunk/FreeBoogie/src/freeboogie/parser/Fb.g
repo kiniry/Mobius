@@ -133,10 +133,10 @@ command	returns [Command v]:
           if ($i.v!=null) lhs=AtomIdx.mk(lhs,$i.v,astLoc($a.v));
           $v=AssignmentCmd.mk(lhs,$b.v,astLoc($a.v));
       }}
-  | t='assert' expr ';'
-      { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSERT,$expr.v,tokLoc($t)); }
-  | t='assume' expr ';'
-      { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME,$expr.v,tokLoc($t)); }
+  | t='assert' ('<' st=simple_type_list '>')? expr ';'
+      { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSERT,$st.v,$expr.v,tokLoc($t)); }
+  | t='assume' ('<' st=simple_type_list '>')? expr ';'
+      { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME,$st.v,$expr.v,tokLoc($t)); }
   | t='havoc' atom_id ';'
       { if(ok) $v=HavocCmd.mk($atom_id.v,tokLoc($t));}
   | t='call' (((~';')* ':=')=> (il=id_list ':='))?
