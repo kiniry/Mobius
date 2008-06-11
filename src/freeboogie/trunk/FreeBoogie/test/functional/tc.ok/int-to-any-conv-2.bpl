@@ -1,4 +1,4 @@
-var heap : [ref, <x>name]x;
+var heap<x> : [ref, <x>name]x;
 var r : int;
 var a : any;
 
