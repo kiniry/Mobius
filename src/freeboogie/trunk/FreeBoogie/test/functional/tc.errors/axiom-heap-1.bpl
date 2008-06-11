@@ -1,4 +1,4 @@
 const i : <int>name;
 const v : int;
-axiom<x> (forall h : [<x>name]x :: h[i]==v);
+axiom (forall h<x> : [<x>name]x :: h[i]==v);
 
