@@ -97,11 +97,13 @@ public class ForgivingStb extends Transformer implements StbInterface {
     toIntroduce = new ArrayDeque<Set<String>>();
     ast = (Declaration)ast.eval(this);
 
+    /* DBG
     System.out.println("=== RESULT OF INTRODUCING GENERICS ===");
     PrintWriter pw = new PrintWriter(System.out);
     PrettyPrinter pp = new PrettyPrinter(pw);
     ast.eval(pp);
     pw.flush();
+    */
 
     return ast;
   }
@@ -164,6 +166,17 @@ public class ForgivingStb extends Transformer implements StbInterface {
     }
     if (tail != null) tail = (Specification)tail.eval(this);
     return Specification.mk(typeVars, type, expr, free, tail, specification.loc());
+  }
+
+  @Override
+  public AssertAssumeCmd eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Identifiers typeVars, Expr expr) {
+    toIntroduce.addFirst(new HashSet<String>());
+    expr = (Expr)expr.eval(this);
+    for (String ti : toIntroduce.removeFirst()) {
+      typeVars = Identifiers.mk(AtomId.mk(ti, null), typeVars);
+      log.fine("Introducing " + ti + " as a generic on assert/assume at " + assertAssumeCmd.loc());
+    }
+    return AssertAssumeCmd.mk(type, typeVars, expr, assertAssumeCmd.loc());
   }
 
 }

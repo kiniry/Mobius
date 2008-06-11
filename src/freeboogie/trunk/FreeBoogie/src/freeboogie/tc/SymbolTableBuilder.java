@@ -215,6 +215,14 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
     if (tail != null) tail.eval(this);
   }
   
+  @Override
+  public void see(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Identifiers typeVars, Expr expr) {
+    typeVarDecl.push();
+    collectTypeVars(typeVarDecl.peek(), typeVars);
+    expr.eval(this);
+    typeVarDecl.pop();
+  }
+  
   // === remember if we are below a modifies spec ===
   
   @Override

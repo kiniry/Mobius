@@ -51,7 +51,7 @@ Commands = Command! cmd, Commands tail;
 Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
 AssignmentCmd = Expr! lhs, Expr! rhs; // TODO: define exactly what lhs can be
 AssertAssumeCmd = enum(CmdType: ASSERT, ASSUME) type, 
-                  TupleType genTypes, Expr! expr;
+                  Identifiers typeVars, Expr! expr;
 HavocCmd = AtomId! id;
 CallCmd = String! procedure, TupleType types, Identifiers results, Exprs args;
 

@@ -28,6 +28,8 @@ class UnknownSpecialization extends Exception {}
  * looked up.
  *
  * @see freeboogie.tc.TypeChecker
+ *
+ * TODO There is too much similar code around here. Try to refactor.
  */
 public class Specializer extends Transformer {
 
@@ -123,19 +125,29 @@ public class Specializer extends Transformer {
     }
     return AtomId.mk(id, types, atomId.loc());
   }
-/*
+
   @Override
   public AtomFun eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
-    //assert false; // TODO: Implement.
-    return atomFun;
+    if (args != null) args = (Exprs)args.eval(this);
+    Signature sig = st.funcs.def(atomFun).getSig();
+    try { 
+      types = prepareTypeList(sig.getTypeVars());
+    } catch (UnknownSpecialization e) {}
+    return AtomFun.mk(function, types, args, atomFun.loc());
   }
 
   @Override
   public CallCmd eval(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
-    //assert false; // TODO: Implement.
-    return callCmd;
+    if (results != null) results = (Identifiers)results.eval(this);
+    if (args != null) args = (Exprs)args.eval(this);
+    Signature sig = st.procs.def(callCmd).getSig();
+    try {
+      types = prepareTypeList(sig.getTypeVars());
+    } catch (UnknownSpecialization e) {}
+    return CallCmd.mk(procedure, types, results, args);
   }
-*/
+
+  
   // === helpers ===
 
   private TupleType prepareTypeList(Identifiers ids) 

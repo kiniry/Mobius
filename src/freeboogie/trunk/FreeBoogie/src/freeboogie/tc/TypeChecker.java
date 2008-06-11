@@ -641,16 +641,17 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
 
   @Override
-  public Type eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, TupleType genTypes, Expr expr) {
-    // TODO: Deal with genTypes
+  public Type eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Identifiers typeVars, Expr expr) {
+    enclosingTypeVar.push();
+    collectEnclosingTypeVars(typeVars);
     Type t = expr.eval(this);
     check(t, boolType, assertAssumeCmd);
+    enclosingTypeVar.pop();
     return null;
   }
 
   @Override
   public Type eval(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
-    // TODO Deal with types
     Procedure p = st.procs.def(callCmd);
     Signature sig = p.getSig();
     Declaration fargs = sig.getArgs();
@@ -730,7 +731,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     return null;
   }
 
-  // === keep track of formal generics (see also eval(Axiom...)) ===
+  // === keep track of formal generics (see also eval(Axiom...) and eval(AssertAssumeCmd...)) ===
   @Override
   public Type eval(Function function, Signature sig, Declaration tail) {
     if (tail != null) tail.eval(this);

@@ -111,11 +111,13 @@ public class ForgivingTc extends Transformer implements TcInterface {
       ast, tc.getST(), filteredErrors, 
       desired, tc.getImplicitSpec());
 
+    /* DBG
     System.out.println("=== RESULT OF TYPE INFERENCE ===");
     PrintWriter pw = new PrintWriter(System.out);
     PrettyPrinter pp = new PrettyPrinter(pw);
     ast.eval(pp);
     pw.flush();
+    */
 
     return ast;
   }
