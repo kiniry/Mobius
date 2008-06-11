@@ -144,8 +144,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
     
     // Divide tests between the available build processes
     int numberOfProcessors = Runtime.getRuntime().availableProcessors() + 1;
-    long batch = System.currentTimeMillis() % numberOfProcessors;
-
+ 
     int position = 0; // Sequence number for each subset of tests
     if ((0 < numberOfServers) && (0 <= serverIndex)) {
       try {
@@ -169,9 +168,7 @@ public class AbstractDistributedTestSuite extends TestSuite {
                   // Add this subset of tests only if it is the turn of this server,
                   // and we are within the current batch of tests
                   if ((position++ % numberOfServers) == serverIndex) {
-                    if ((position % numberOfProcessors) == batch) {
                       long freeMem = Runtime.getRuntime().freeMemory();
-                      System.out.println("Free memory: " + freeMem);
                       if (freeMem > ONE_MEGABYTE) {
                         addTest(makeHelper(JUnitUtils.parseLine(preArgs
                                                                 + " "
@@ -182,9 +179,8 @@ public class AbstractDistributedTestSuite extends TestSuite {
                                                                 + " "
                                                                 + thisLine)));
                       }
-                    }
+                  }
                 }
-              }
               }
             }
           }
@@ -274,12 +270,10 @@ public class AbstractDistributedTestSuite extends TestSuite {
       ByteArrayOutputStream ba = JUnitUtils.setStreams();
       try {
         long freeMem = Runtime.getRuntime().freeMemory();
-        System.out.println("Free memory " + freeMem);
          if (freeMem > ONE_MEGABYTE) {
           returnedObject = dotest(fileToTest, args);
         }
         else {
-          System.gc();
           fail (fileToTest + NOT_ENOUGH_MEMORY);
         }
       } catch (IllegalAccessException e) {
