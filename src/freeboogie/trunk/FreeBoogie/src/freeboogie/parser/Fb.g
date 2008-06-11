@@ -139,9 +139,14 @@ command	returns [Command v]:
       { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME,$tv.v,$expr.v,tokLoc($t)); }
   | t='havoc' atom_id ';'
       { if(ok) $v=HavocCmd.mk($atom_id.v,tokLoc($t));}
-  | t='call' (((~';')* ':=')=> (il=id_list ':='))?
+  | t='call' call_lhs
     n=ID ('<' st=simple_type_list '>')? '(' (r=expr_list)? ')' ';'
-      { if(ok) $v=CallCmd.mk($n.text,$st.v,$il.v,$r.v,tokLoc($t)); }
+      { if(ok) $v=CallCmd.mk($n.text,$st.v,$call_lhs.v,$r.v,tokLoc($t)); }
+;
+
+call_lhs returns [Identifiers v]:
+    (id_list ':=')=> il=id_list ':=' {$v=$il.v;}
+  | {$v=null;}
 ;
 	
 index returns [Index v]:

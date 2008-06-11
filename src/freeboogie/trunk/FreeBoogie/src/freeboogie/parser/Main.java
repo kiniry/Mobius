@@ -33,6 +33,7 @@ public class Main {
         FbLexer lexer = new FbLexer(new ANTLRFileStream(args[i]));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FbParser parser = new FbParser(tokens);
+        parser.fileName = args[i];
         Declaration d = parser.program();
         if (d != null) {
           d.eval(pp);
