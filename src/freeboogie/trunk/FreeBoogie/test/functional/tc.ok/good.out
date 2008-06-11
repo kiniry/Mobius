@@ -4,3 +4,5 @@
 === int-to-any-conv.bpl ===
 === pass_in.bpl ===
 === pass_outref.bpl ===
+=== repeat-fun.bpl ===
+=== simple-access.bpl ===
