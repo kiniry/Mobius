@@ -5,6 +5,10 @@ import java.util.*;
 
 import freeboogie.ast.*;
 
+// for debug
+import java.io.PrintWriter;
+import freeboogie.astutil.PrettyPrinter;
+
 /**
  * Builds a symbol table for a given AST, perhaps modifying
  * the AST slightly so that name resolution errors are
@@ -19,6 +23,10 @@ import freeboogie.ast.*;
 public class ForgivingStb extends Transformer implements StbInterface {
 
   private static final Logger log = Logger.getLogger("freeboogie.tc"); 
+
+  // lists types of errors that MAY be fixed by this class
+  private static final EnumSet<FbError.Type> fixable =
+    EnumSet.of(FbError.Type.UNDECL_ID);
   
   // does the real work
   private StbInterface stb;
@@ -46,14 +54,25 @@ public class ForgivingStb extends Transformer implements StbInterface {
 
   @Override
   public List<FbError> process(Declaration ast) {
+    boolean unfixable;
     int oldErrCnt = Integer.MAX_VALUE;
-    List<FbError> errors;
+    List<FbError> errors, filteredErrors = new ArrayList<FbError>();
     while (true) {
       errors = stb.process(ast);
-      int errCnt = errors.size();
-      if (errCnt >= oldErrCnt || errCnt == 0) break;
+
+      unfixable = false;
+      filteredErrors.clear();
+      for (FbError e : errors) {
+        if (fixable.contains(e.type()))
+          filteredErrors.add(e);
+        else
+          unfixable = true;
+      }
+
+      int errCnt = filteredErrors.size();
+      if (unfixable || errCnt == 0 || errCnt >= oldErrCnt) break;
       oldErrCnt = errCnt;
-      ast = fix(ast, errors);
+      ast = fix(ast, filteredErrors);
       log.info("Running SymbolTableBuilder again.");
     }
     return errors;
@@ -76,7 +95,15 @@ public class ForgivingStb extends Transformer implements StbInterface {
       }
     }
     toIntroduce = new ArrayDeque<Set<String>>();
-    return (Declaration)ast.eval(this);
+    ast = (Declaration)ast.eval(this);
+
+    System.out.println("=== RESULT OF INTRODUCING GENERICS ===");
+    PrintWriter pw = new PrintWriter(System.out);
+    PrettyPrinter pp = new PrettyPrinter(pw);
+    ast.eval(pp);
+    pw.flush();
+
+    return ast;
   }
 
   // === identify problematic places ===

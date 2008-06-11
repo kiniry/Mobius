@@ -20,6 +20,9 @@ public class ForgivingTc extends Transformer implements TcInterface {
 
   private static final Logger log = Logger.getLogger("freeboogie.tc"); 
 
+  private static final EnumSet<FbError.Type> fixable = 
+    EnumSet.of(FbError.Type.REQ_SPECIALIZATION);
+
   // does the real work
   private TypeChecker tc;
 
@@ -32,15 +35,31 @@ public class ForgivingTc extends Transformer implements TcInterface {
 
   @Override
   public List<FbError> process(Declaration ast) {
+    boolean unfixable;
     int oldErrCnt = Integer.MAX_VALUE;
-    List<FbError> errors;
+    List<FbError> errors, filteredErrors = new ArrayList<FbError>();
     while (true) {
       errors = tc.process(ast);
       ast = tc.getAST();
-      int errCnt = errors.size();
-      if (errCnt == 0 || errCnt >= oldErrCnt) break;
+
+      /* We stop if one of the following holds:
+       * (1) There is an unfixable error.
+       * (2) The number of potentially fixable errors did not decrease.
+       * (3) There are zero (potentially fixable) errors.
+       */
+      unfixable = false;
+      filteredErrors.clear();
+      for (FbError e : errors) {
+        if (fixable.contains(e.type()))
+          filteredErrors.add(e);
+        else
+          unfixable = true;
+      }
+      int errCnt = filteredErrors.size();
+      if (unfixable || errCnt == 0 || errCnt >= oldErrCnt) break;
+      
       oldErrCnt = errCnt;
-      ast = fix(ast, errors);
+      ast = fix(ast, filteredErrors);
       log.info("Running TypeChecker again.");
     }
     return errors;
@@ -92,11 +111,11 @@ public class ForgivingTc extends Transformer implements TcInterface {
       ast, tc.getST(), filteredErrors, 
       desired, tc.getImplicitSpec());
 
+    System.out.println("=== RESULT OF TYPE INFERENCE ===");
     PrintWriter pw = new PrintWriter(System.out);
     PrettyPrinter pp = new PrettyPrinter(pw);
     ast.eval(pp);
     pw.flush();
-    System.out.println("===END===");
 
     return ast;
   }

@@ -4,6 +4,10 @@ import java.util.*;
 import freeboogie.ast.*;
 import freeboogie.util.StackedHashMap;
 
+// for debug
+import java.io.PrintWriter;
+import freeboogie.astutil.PrettyPrinter;
+
 @SuppressWarnings("serial")
 class UnknownSpecialization extends Exception {}
 
@@ -119,7 +123,7 @@ public class Specializer extends Transformer {
     }
     return AtomId.mk(id, types, atomId.loc());
   }
-
+/*
   @Override
   public AtomFun eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
     //assert false; // TODO: Implement.
@@ -131,7 +135,7 @@ public class Specializer extends Transformer {
     //assert false; // TODO: Implement.
     return callCmd;
   }
-
+*/
   // === helpers ===
 
   private TupleType prepareTypeList(Identifiers ids) 
