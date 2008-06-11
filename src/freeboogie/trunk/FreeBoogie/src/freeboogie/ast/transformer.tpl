@@ -44,7 +44,7 @@ public class Transformer extends Evaluator<Ast> {
 
     if (!sameChildren) {
       result.removeFirst();
-      result.addFirst(\ClassName.mk(\members[,]{new\MemberName}));
+      result.addFirst(\ClassName.mk(\members[,]{new\MemberName},\className.loc()));
     }
   }
   

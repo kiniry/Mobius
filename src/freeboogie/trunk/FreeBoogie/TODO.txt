@@ -1,3 +1,4 @@
+ . Add generics on assume/assert.
  . Fix type-checking in "old" mode by a bit of type inference.
  . Test typechecker thoroughly.
  . Perhaps introduce dummy names where the user doesn't provide one

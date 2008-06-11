@@ -23,15 +23,12 @@ public class ForgivingTc extends Transformer implements TcInterface {
   // does the real work
   private TypeChecker tc;
 
-  // the (possibly modified) AST that is processed
-  private Declaration ast;
-
   public ForgivingTc() {
     tc = new TypeChecker();
     tc.setAcceptOld(true);
   }
 
-  @Override public Declaration getAST() { return ast; }
+  @Override public Declaration getAST() { return tc.getAST(); }
 
   @Override
   public List<FbError> process(Declaration ast) {
@@ -94,13 +91,13 @@ public class ForgivingTc extends Transformer implements TcInterface {
     ast = specializer.process(
       ast, tc.getST(), filteredErrors, 
       desired, tc.getImplicitSpec());
-/*
+
     PrintWriter pw = new PrintWriter(System.out);
     PrettyPrinter pp = new PrettyPrinter(pw);
     ast.eval(pp);
     pw.flush();
     System.out.println("===END===");
-*/
+
     return ast;
   }
 }

@@ -84,8 +84,10 @@ public class ForgivingStb extends Transformer implements StbInterface {
   public void see(UserType userType, String name) {
     if (!undeclIds.contains(userType)) return;
     assert name != null;
-    log.finer("record undecl usertype " + name);
-    toIntroduce.getFirst().add(name);
+    if (!toIntroduce.isEmpty()) {
+      log.finer("record undecl usertype " + name);
+      toIntroduce.getFirst().add(name);
+    } else log.fine("can't fix undecl usertype " + name);
   }
   
   // === do corrections, if needed ===
