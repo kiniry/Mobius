@@ -72,6 +72,23 @@
       </roles>
     </developer>
   </developers>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+              <goal>cpd-check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <scm>
     <connection>scm:svn:svn+ssh://kind.ucd.ie/Volumes/Data/subversion/svn_mobius/src/escjava/trunk/ESCTools</connection>
     <developerConnection>scm:svn:https://mobius.ucd.ie/repos/src/escjava/trunk/ESCTools</developerConnection>
