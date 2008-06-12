@@ -3,6 +3,7 @@ package freeboogie.tc;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.logging.Logger;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
@@ -10,7 +11,10 @@ import freeboogie.util.Closure;
 import freeboogie.util.StackedHashMap;
 
 /**
- * Typechecks an AST. It maps expressions to types.
+ * Typechecks an AST.
+ *
+ * In 'old mode' it uses {@code ForgivingStb} for building a
+ * symbol table. 
  * 
  * It also acts more-or-less as a Facade for the whole package.
  *
@@ -28,9 +32,14 @@ import freeboogie.util.StackedHashMap;
  * (i.e., building of the symbo table) were successful.
  *
  * @author rgrig 
+ * @see freeboogie.tc.ForgivingStb
+ * @see freeboogie.tc.ForgivingTc
  */
 @SuppressWarnings("unused") // many unused parameters
 public class TypeChecker extends Evaluator<Type> implements TcInterface {
+
+  private static final Logger log = Logger.getLogger("freeboogie.tc");
+  
   // used for primitive types (so reference equality is used below)
   private PrimitiveType boolType, intType, refType, nameType, anyType;
   
@@ -60,6 +69,9 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   // maps type variables to their binding types
   private StackedHashMap<AtomId, Type> typeVar;
 
+  // used for (randomized) union-find
+  private static final Random rand = new Random(123);
+
   // implicitSpec.get(x) contains the mappings of type variables
   // to types that were inferred (and used) while type-checking x
   private Map<Ast, Map<AtomId, Type>> implicitSpec;
@@ -75,6 +87,8 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
 
   // records the last processed AST
   private Declaration ast;
+
+  private int tvLevel; // DBG
   
   // === public interface ===
   
@@ -98,13 +112,9 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
   
 
-  /**
-   * Typechecks an AST.
-   * @param ast the AST to check
-   * @return the detected errors 
-   */
   @Override
   public List<FbError> process(Declaration ast) {
+    tvLevel = 0; // DBG
     boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
     intType = PrimitiveType.mk(PrimitiveType.Ptype.INT);
     refType = PrimitiveType.mk(PrimitiveType.Ptype.REF);
@@ -143,47 +153,26 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     return errors;
   }
 
-  /**
-   * Returns the flow graph of {@code impl}.
-   * @param impl the implementation whose flow graph is requested
-   * @return the flow graph of {@code impl}
-   */
   @Override
   public SimpleGraph<Block> getFlowGraph(Implementation impl) {
     return flowGraphs.getFlowGraph(impl);
   }
   
-  /**
-   * Returns the map of expressions to types.
-   * @return the map of expressions to types.
-   */
   @Override
   public Map<Expr, Type> getTypes() {
     return typeOf;
   }
   
-  /**
-   * Returns the map from implementations to procedures.
-   * @return the map from implementations to procedures
-   */
   @Override
   public UsageToDefMap<Implementation, Procedure> getImplProc() {
     return implProc;
   }
   
-  /**
-   * Returns the map from implementation parameters to procedure parameters.
-   * @return the map from implementation parameters to procedure parameters
-   */
   @Override
   public UsageToDefMap<VariableDecl, VariableDecl> getParamMap() {
     return paramMap;
   }
   
-  /**
-   * Returns the symbol table.
-   * @return the symbol table
-   */
   @Override
   public SymbolTable getST() {
     return st;
@@ -192,11 +181,15 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   // === helper methods ===
   
   // ast may be used for debugging; it's here for symmetry
-  private void typeVarEnter(Ast ast) { typeVar.push(); }
+  private void typeVarEnter(Ast ast) { typeVar.push(); ++tvLevel; }
  
   private void typeVarExit(Ast ast) {
-    implicitSpec.put(ast, typeVar.peek());
+    Map<AtomId, Type> lis = new HashMap<AtomId, Type>();
+    implicitSpec.put(ast, lis);
+    for (Map.Entry<AtomId, Type> e : typeVar.peek().entrySet())
+      if (!isTypeVar(e.getValue())) lis.put(e.getKey(), e.getValue());
     typeVar.pop();
+    --tvLevel;
   }
   
   // assumes |d| is a list of |VariableDecl|
@@ -298,11 +291,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     // handle type variables
     a = realType(a);
     b = realType(b);
-    if (isTypeVar(a) != isTypeVar(b)) {
-      if (isTypeVar(a)) mapTypeVar(a, b);
-      else mapTypeVar(b, a);
-      return true;
-    } else if (isTypeVar(a)) {
+    if (isTypeVar(a) || isTypeVar(b)) {
       equalTypeVar(a, b);
       return true;
     }
@@ -413,17 +402,24 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     return st.typeVars.def((UserType)t);
   }
 
-  private void mapTypeVar(Type a, Type b) {
-    assert a instanceof UserType;
-    AtomId ai = getTypeVarDecl(a);
-    Type rt = realType(b);
-    if (getTypeVarDecl(rt) != ai)
-      typeVar.put(ai, rt);
-  }
-
+  // pre: |a| and |b| are as 'real' as possible
   private void equalTypeVar(Type a, Type b) {
-    // TODO: Randomize
-    mapTypeVar(a, b);
+    assert !isTypeVar(a) || !typeVar.containsKey(getTypeVarDecl(a));
+    assert !isTypeVar(b) || !typeVar.containsKey(getTypeVarDecl(b));
+    if (!isTypeVar(a) && !isTypeVar(b)) {
+      assert TypeUtils.eq(a, b);
+      return;
+    }
+    if (!isTypeVar(a) || (isTypeVar(b)  && rand.nextBoolean())) {
+      Type t = a; a = b; b = t;
+    }
+    AtomId ai = getTypeVarDecl(a);
+    if (getTypeVarDecl(b) != ai) {
+      log.fine("TC: typevar " + ai.getId() + "@" + ai.loc() +
+        " == type " + TypeUtils.typeToString(b));
+      assert tvLevel > 0;
+      typeVar.put(ai, b);
+    }
   }
 
   private void mapExplicitGenerics(Identifiers tv, TupleType t) {
@@ -432,6 +428,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
       errors.add(new FbError(FbError.Type.GEN_TOOMANY, t));
       return;
     }
+    assert tvLevel > 0;
     typeVar.put(tv.getId(), t.getType());
     mapExplicitGenerics(tv.getTail(), t.getTail());
   }
@@ -635,7 +632,9 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   public Type eval(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
     Type lt = strip(lhs.eval(this));
     Type rt = strip(rhs.eval(this));
+    typeVarEnter(assignmentCmd);
     check(rt, lt, assignmentCmd);
+    typeVarExit(assignmentCmd);
     return null;
   }
 
@@ -654,6 +653,8 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     Procedure p = st.procs.def(callCmd);
     Signature sig = p.getSig();
     Declaration fargs = sig.getArgs();
+
+    typeVarEnter(callCmd);
     
     // check the actual arguments against the formal ones
     Type at = strip(args == null? null : args.eval(this));
@@ -664,6 +665,8 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     Type lt = strip(results == null? null : results.eval(this));
     Type rt = strip(tupleTypeOfDecl(sig.getResults()));
     check(rt, lt, callCmd);
+
+    typeVarExit(callCmd);
     
     return null;
   }

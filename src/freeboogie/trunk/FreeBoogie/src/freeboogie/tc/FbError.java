@@ -12,10 +12,11 @@ import freeboogie.util.Err;
  * error has a type, points to an AST node, and contains
  * additional information used to build up an error message
  * when {@code toString()} is called.
+ *
+ * @author rgrig
  */
 public class FbError {
   static public enum Type {
-    // TODO: Find better names for these errors
     UNDECL_ID("Undeclared identifier %."),
     REQ_SPECIALIZATION("Explicit specialization required for %0 at %1."),
     GEN_TOOMANY("Too many explicit generics."),
@@ -71,8 +72,6 @@ public class FbError {
    *
    * It may fail with a out-of-bounds exception if not enough
    * data was provided when the error was created.
-   *
-   * TODO: Test this.
    */
   @Override
   public String toString() {
@@ -91,10 +90,12 @@ public class FbError {
           idx = 10 * idx + c - '0';
           ++i;
         }
-        if (data[idx] == null)
-          Err.fatal("INTERNAL ERROR: idx="+idx + " err_type="+type);
-        else
+        try {
           sb.append(data[idx].toString());
+        } catch (Exception e) {
+          Err.error(e.toString());
+          Err.fatal("INTERNAL ERROR: idx="+idx + " err_type="+type);
+        }
       }
     }
     return sb.toString();

@@ -1,11 +1,11 @@
- . Deal with (some of) the TODOs in comments.
+ . Finish passivate; now you can use fancy generics to deal with arrays
+ . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
  . Test typechecker thoroughly and add tests for the 'old' mode.
  . Perhaps introduce dummy names where the user doesn't provide one
    instead of carrying nulls around, which are hard to track.
  . Write an ant target that runs FindBugs.
  . Does ImplementationChecker treat type vars correctly?
  . The comments and code disagree for TypeChecker.checkExact
- . Finish passivate; now you can use fancy generics to deal with arrays
  . Desugar dependent types in assumes/asserts
  . Desugar function calls into assumes/asserts (remember that free is special)
  . Desugar specs into assumes/asserts (introduces two? new blocks)

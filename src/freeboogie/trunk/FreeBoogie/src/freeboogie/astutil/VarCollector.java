@@ -6,6 +6,8 @@ import freeboogie.tc.SymbolTable;
 
 /**
  * Collects the declarations of variables that are read or written.
+ *
+ * @author rgrig
  */
 public class VarCollector extends Transformer {
   // the symbol table used to find declarations

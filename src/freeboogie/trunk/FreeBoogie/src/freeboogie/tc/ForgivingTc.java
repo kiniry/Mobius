@@ -15,6 +15,8 @@ import freeboogie.astutil.*;
  * in FreeBoogie should pass if this typechecker is used. The
  * modified AST, which satisfies all the rules of FreeBoogie,
  * can be retrieved.
+ *
+ * @author rgrig
  */
 public class ForgivingTc extends Transformer implements TcInterface {
 
@@ -111,7 +113,7 @@ public class ForgivingTc extends Transformer implements TcInterface {
       ast, tc.getST(), filteredErrors, 
       desired, tc.getImplicitSpec());
 
-    /* DBG
+    /* DBG 
     System.out.println("=== RESULT OF TYPE INFERENCE ===");
     PrintWriter pw = new PrintWriter(System.out);
     PrettyPrinter pp = new PrettyPrinter(pw);

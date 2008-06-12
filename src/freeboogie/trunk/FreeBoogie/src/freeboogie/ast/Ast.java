@@ -1,6 +1,10 @@
 package freeboogie.ast;
 
-/** Base class for the AST hierarchy. */
+/** 
+ * Base class for the AST hierarchy. 
+ *
+ * @author rgrig
+ */
 public abstract class Ast {
   /** The location of this AST node. */
   protected AstLocation location;

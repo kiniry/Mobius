@@ -19,6 +19,8 @@ import freeboogie.astutil.PrettyPrinter;
  * declaration that contains a (type-) name error. For example,
  * the variable declaration {@code var h : [ref,&lt;x&gt;name]x}
  * is transformed into {@code var h&lt;x&gt; : [ref,&lt;x&gt;name]x}.
+ *
+ * @author rgrig
  */
 public class ForgivingStb extends Transformer implements StbInterface {
 
@@ -97,7 +99,7 @@ public class ForgivingStb extends Transformer implements StbInterface {
     toIntroduce = new ArrayDeque<Set<String>>();
     ast = (Declaration)ast.eval(this);
 
-    /* DBG
+    /* DBG 
     System.out.println("=== RESULT OF INTRODUCING GENERICS ===");
     PrintWriter pw = new PrintWriter(System.out);
     PrettyPrinter pp = new PrettyPrinter(pw);

@@ -3,6 +3,11 @@ package freeboogie.util;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * TODO: Describe.
+ *
+ * @author rgrig
+ */
 public class Id {
   static private Map<String, Integer> counter =
     new HashMap<String, Integer>();

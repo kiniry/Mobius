@@ -25,6 +25,8 @@ import freeboogie.util.Id;
  * restrictions between the nodes of the children and/or primitive
  * types. This is implemented with a union-find data structure that
  * keeps as class representant the real (primitive) type, if present.
+ *
+ * @author rgrig
  */
 public class Inferrer extends Transformer {
 
@@ -42,6 +44,9 @@ public class Inferrer extends Transformer {
   // contains the result, the probable good types for some of the
   // erronuous types
   private Map<Expr, Type> probableTypeOf;
+
+  // used for union-find
+  private final Random rand = new Random(123);
 
   private static final PrimitiveType intType = 
     PrimitiveType.mk(PrimitiveType.Ptype.INT);
@@ -151,11 +156,11 @@ public class Inferrer extends Transformer {
 
   private void mkEqual(Type a, Type b) {
     if (!isTv(a) && !isTv(b)) return;
-    if (!isTv(a)) {
-      mkEqual(b, a);
-      return;
-    }
+    if (isTv(a)) a = getParent((UserType)a);
     if (isTv(b)) b = getParent((UserType)b);
+    if (!isTv(a) || isTv(b) && rand.nextBoolean()) {
+      Type t = a; a = b; b = t;
+    }
     log.finer("type equality: " +
       TypeUtils.typeToString(a) + "==" + TypeUtils.typeToString(b));
     parent.put((UserType)a, b);

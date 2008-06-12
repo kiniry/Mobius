@@ -8,6 +8,8 @@ import freeboogie.ast.Declaration;
  * A symbol table builder (STB) constructs a symbol table
  * for an AST. It may change the AST to remove errors. The
  * errors that remain are returned.
+ *
+ * @author rgrig
  */
 public interface StbInterface {
   /**

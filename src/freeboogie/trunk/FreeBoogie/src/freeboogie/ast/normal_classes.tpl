@@ -8,6 +8,7 @@ This template generates java classes for the normal classes.
 package freeboogie.ast;
 import java.math.BigInteger; // for AtomNum
 
+/** @author rgrig */
 public final class \ClassName extends \BaseName {
 \enums{  public static enum \EnumName {\values[, ]{
     \VALUE_NAME}

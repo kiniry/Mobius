@@ -28,8 +28,7 @@ class UnknownSpecialization extends Exception {}
  * looked up.
  *
  * @see freeboogie.tc.TypeChecker
- *
- * TODO There is too much similar code around here. Try to refactor.
+ * @author rgrig
  */
 public class Specializer extends Transformer {
 
@@ -91,16 +90,18 @@ public class Specializer extends Transformer {
     Map<AtomId, Type> is = implicit.get(n);
     AtomId ai = n instanceof Expr ? errors.get((Expr)n) : null;
     if (is != null || ai != null) {
-      //System.out.println("PUSH AT " + n.loc());
+      // DBG System.out.println("PUSH AT " + n.loc());
       specialisations.push();
     }
     if (is != null) {
-      //for (Map.Entry<AtomId, Type> e : is.entrySet())
-      //  System.out.println("add: " + e.getKey().getId() + "->" + TypeUtils.typeToString(e.getValue()));
+      /* DBG
+      for (Map.Entry<AtomId, Type> e : is.entrySet())
+        System.out.println("add(tc): " + e.getKey().getId() + "->" + TypeUtils.typeToString(e.getValue()));
+      */
       specialisations.putAll(is);
     }
     if (ai != null) {
-      //System.out.println("add: " + ai.getId() + "->" + TypeUtils.typeToString(desired.get((Expr)n)));
+      // DBG System.out.println("add(infer): " + ai.getId() + "->" + TypeUtils.typeToString(desired.get((Expr)n)));
       specialisations.put(ai, desired.get((Expr)n));
     }
   }
@@ -108,7 +109,7 @@ public class Specializer extends Transformer {
   @Override
   public void exitNode(Ast n) {
     if (implicit.containsKey(n) || (n instanceof Expr && errors.containsKey((Expr)n))) {
-      //System.out.println("POP AT " + n.loc());
+      // DBG System.out.println("POP AT " + n.loc());
       specialisations.pop();
     }
   }
