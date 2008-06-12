@@ -55,7 +55,7 @@ public class AbstractTestSuite extends TestSuite {
   static final String NOT_ENOUGH_MEMORY = " *** not enough free memory to run this test ***";
 
   //@ ensures_redundantly !initialized;
-  protected AbstractDistributedTestSuite() {
+  protected AbstractTestSuite() {
   }
 
   /*
@@ -122,7 +122,7 @@ public class AbstractTestSuite extends TestSuite {
    * initialized, objectState; @ ensures_redundantly initialized; @
    * signals_only RuntimeException; @
    */
-  public AbstractDistributedTestSuite(/*@ non_null */String testName,
+  public AbstractTestSuite(/*@ non_null */String testName,
   /*@ non_null */String fileOfTestFilenames,
   /*@ non_null */String listOfOptions,
   /*@ non_null */String listOfSecondOptions,
@@ -170,7 +170,7 @@ public class AbstractTestSuite extends TestSuite {
                   // and we are within the current batch of tests
                   if ((position++ % numberOfServers) == serverIndex) {
                       long freeMem = Runtime.getRuntime().freeMemory();
-                      if (freeMem > ONE_MEGABYTE) {
+                      if (freeMem > FREE_MEM_LIMIT) {
                         addTest(makeHelper(JUnitUtils.parseLine(preArgs
                                                                 + " "
                                                                 + proverArgs
@@ -271,7 +271,7 @@ public class AbstractTestSuite extends TestSuite {
       ByteArrayOutputStream ba = JUnitUtils.setStreams();
       try {
         long freeMem = Runtime.getRuntime().freeMemory();
-         if (freeMem > ONE_MEGABYTE) {
+         if (freeMem > FREE_MEM_LIMIT) {
           returnedObject = dotest(fileToTest, args);
         }
         else {
