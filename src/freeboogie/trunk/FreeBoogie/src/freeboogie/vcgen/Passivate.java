@@ -43,8 +43,8 @@ public class Passivate extends Transformer {
   static private final Logger log = Logger.getLogger("freeboogie.vcgen");
 
 
-  private HashMap<String, HashMap<Command, Integer>> readIdx;
-  private HashMap<String, HashMap<Command, Integer>> writeIdx;
+  private HashMap<VariableDecl, HashMap<Command, Integer>> readIdx;
+  private HashMap<VariableDecl, HashMap<Command, Integer>> writeIdx;
 
   public SimpleGraph<AssertAssumeCmd> go(SimpleGraph<Command> flow) {
     SimpleGraph<AssertAssumeCmd> r = new SimpleGraph<AssertAssumeCmd>();
