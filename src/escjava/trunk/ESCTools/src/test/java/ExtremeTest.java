@@ -4,7 +4,7 @@ import java.util.Random;
 import junit.framework.*;
 import junitutils.*;
 
-public class DistributedTest extends junitutils.TestFilesTestSuite {
+public class ExtremeTest extends junitutils.TestFilesTestSuite {
   
 	static public junit.framework.Test suite() {
 
@@ -44,7 +44,7 @@ public class DistributedTest extends junitutils.TestFilesTestSuite {
     	}
 
         junit.framework.TestSuite suite =
-	    new AbstractDistributedTestSuite(
+	    new AbstractTestSuite(
 		   testSuiteName,
 		   listOfFiles,
 		   listOfOptions,
