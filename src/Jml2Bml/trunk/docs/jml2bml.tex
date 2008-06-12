@@ -1,4 +1,4 @@
-\documentclass{acm_proc_article-sp}
+\documentclass{llncs}
 \RequirePackage[T1]{fontenc}
 \usepackage[cp1250]{inputenc}
 
@@ -7,29 +7,29 @@
 \usepackage{listings}
 \usepackage{url}
 \usepackage{xspace}
-\numberofauthors{3}
+%\numberofauthors{3}
 \author{
-\alignauthor
-Jêdrzej Fulara\\
-\affaddr{Institute of Informatics}\\
-\affaddr{University of Warsaw}\\
-\affaddr{ul. Banacha 2}\\
-\affaddr{02-097 Warsaw, Poland}\\
-\email{fulara@mimuw.edu.pl}
-\alignauthor
-Krzysztof Jakubczyk\\
-\affaddr{Institute of Informatics}\\
-\affaddr{University of Warsaw}\\
-\affaddr{ul. Banacha 2}\\
-\affaddr{02-097 Warsaw, Poland}\\
-\email{kjk@mimuw.edu.pl}
-\alignauthor
-Aleksy Schubert\\
-\affaddr{Institute of Informatics}\\
-\affaddr{University of Warsaw}\\
-\affaddr{ul. Banacha 2}\\
-\affaddr{02-097 Warsaw, Poland}\\
-\email{alx@mimuw.edu.pl}
+%\alignauthor
+Jêdrzej Fulara and
+%\affaddr{Institute of Informatics}\\
+%\affaddr{University of Warsaw}\\
+%\affaddr{ul. Banacha 2}\\
+%\affaddr{02-097 Warsaw, Poland}\\
+%\email{fulara@mimuw.edu.pl}
+%\alignauthor
+Krzysztof Jakubczyk and
+%\affaddr{Institute of Informatics}\\
+%\affaddr{University of Warsaw}\\
+%\affaddr{ul. Banacha 2}\\
+%\affaddr{02-097 Warsaw, Poland}\\
+%\email{kjk@mimuw.edu.pl}
+%\alignauthor
+Aleksy Schubert
+%\affaddr{Institute of Informatics}\\
+%\affaddr{University of Warsaw}\\
+%\affaddr{ul. Banacha 2}\\
+%\affaddr{02-097 Warsaw, Poland}\\
+%\email{alx@mimuw.edu.pl}
 }
 \bibliographystyle{abbrv}
 \title{Supplementing Java Bytecode with Specifications}
@@ -87,7 +87,8 @@ Aleksy Schubert\\
 %	\item Description of matching source code with bytecode loops
 %	\item Non-trivial example
 %\end{itemize}
-\maketitle
+%\maketitle
+
 \begin{abstract}
 Java class file is an interoperable format that can serve not only to
 transfer the compiled versions of Java programs, but also to embed
@@ -123,11 +124,11 @@ specifications generates class files with BML.
 %* M-Business Applications
 % page limit: 10 pages
 
-\category{D.2.4}{Software Engineering}{Software/Program Verification}
+%\category{D.2.4}{Software Engineering}{Software/Program Verification}
 
-\terms{Reliability, Verification}
+%\terms{Reliability, Verification}
 
-\keywords{Java, bytecode, JML, BML} % NOT required for Proceedings
+%\keywords{Java, bytecode, JML, BML} % NOT required for Proceedings
 
 \section{Introduction}
 
@@ -570,7 +571,7 @@ limitations, it is not supported by our compiler (the default value
 \texttt{everything} will be inserted) so we see the default value
 inserted at this point.
 
-\newpage
+%\newpage
 
 \begin{figure}[htbp]
 \lstset{language=bml}
