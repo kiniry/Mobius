@@ -48,8 +48,8 @@ public class Passivate extends Transformer {
 
   public SimpleGraph<AssertAssumeCmd> go(SimpleGraph<Command> flow) {
     SimpleGraph<AssertAssumeCmd> r = new SimpleGraph<AssertAssumeCmd>();
-    readIdx = new LinkedHashMap<String, HashMap<Command, Integer>>();
-    writeIdx = new LinkedHashMap<String, HashMap<Command, Integer>>();
+    readIdx = new LinkedHashMap<VariableDecl, HashMap<Command, Integer>>();
+    writeIdx = new LinkedHashMap<VariableDecl, HashMap<Command, Integer>>();
     flow.iterNode(new Closure<Command>() {
       @Override
       public void go(Command cmd) {
