@@ -97,7 +97,7 @@ public class NonRuleBasedDamagerRepairer
     try {
       info = my_doc.getLineInformation(line + 1);
       return info.getOffset() + info.getLength();
-    } catch (BadLocationException x) {
+    } catch (BadLocationException e) {
       return my_doc.getLength();
     }
   }
@@ -142,28 +142,40 @@ public class NonRuleBasedDamagerRepairer
           try {
             end = endOfLineOf(end);
           } catch (UmbraLocationException e) {
-            if (e.isLineWrong()) {
-              MessageDialog.openError(my_doc.getEditor().getSite().getShell(),
-                                    GUIMessages.BYTECODE_MESSAGE_TITLE,
-                                    GUIMessages.NO_LINE_IN_DOC +
-                                    e.getWrongLocation());
-            } else {
-              MessageDialog.openError(my_doc.getEditor().getSite().getShell(),
-                                      GUIMessages.BYTECODE_MESSAGE_TITLE,
-                                      GUIMessages.NO_LINE_IN_DOC +
-                                      e.getWrongLocation());
-            }
+            messageWrongLocation(e);
           }
         }
         end = Math.min(
             a_partition.getOffset() + a_partition.getLength(),
             end);
         return new Region(start, end - start);
-      } catch (BadLocationException x) {
+      } catch (BadLocationException e) {
         UmbraPlugin.messagelog("BadLocationException in getDamageRegion");
       }
     }
     return a_partition;
+  }
+
+  /**
+   * This method pops up an appropriate error dialog informing
+   * the user that a wrong location in a textual document is
+   * reached. The kind of the message depends on the exception
+   * in the parameter.
+   *
+   * @param an_ex the exception which triggered the error dialog
+   */
+  private void messageWrongLocation(final UmbraLocationException an_ex) {
+    if (an_ex.isLineWrong()) {
+      MessageDialog.openError(my_doc.getEditor().getSite().getShell(),
+                            GUIMessages.BYTECODE_MESSAGE_TITLE,
+                            GUIMessages.NO_LINE_IN_DOC +
+                            an_ex.getWrongLocation());
+    } else {
+      MessageDialog.openError(my_doc.getEditor().getSite().getShell(),
+                              GUIMessages.BYTECODE_MESSAGE_TITLE,
+                              GUIMessages.NO_LINE_IN_DOC +
+                              an_ex.getWrongLocation());
+    }
   }
 
   /**

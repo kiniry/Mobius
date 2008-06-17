@@ -202,18 +202,8 @@ public class DocumentSynchroniser {
                                   final CompilationUnitEditor an_editor)
     throws UmbraLocationException, UmbraSynchronisationException,
            JavaModelException {
-    final int line;
-    try {
-      line = my_java_doc.getLineOfOffset(a_pos);
-    } catch (BadLocationException e) {
-      throw new UmbraLocationException(false, a_pos, false);
-    }
     final int[] syncLine;
-    try {
-      syncLine = syncSB(my_bcode_doc.getJavaClass(), an_editor, a_pos);
-    } catch (BadLocationException e) {
-      throw new UmbraLocationException(true, line, true);
-    }
+    syncLine = syncSB(my_bcode_doc.getJavaClass(), an_editor, a_pos);
     final int syncPos;
     try {
       syncPos = my_bcode_doc.getLineOffset(syncLine[0]);
@@ -255,25 +245,30 @@ public class DocumentSynchroniser {
    * @return array of 2 ({@link #NO_OF_POSITIONS}) ints representing index of
    *         first and last line of byte code (corresponding to given source
    *         line), in the related byte code editor
-   * @throws BadLocationException if line parameter is invalid. May occur also
-   *         if byte code in {@link JavaClass} <code>a_java_class</code>
-   *         is out-of-date.
    * @throws UmbraSynchronisationException in case the sychronisation is
    *   scheduled for a position outside the method body
    * @throws JavaModelException a Java element cannot be accessed
+   * @throws UmbraLocationException if the position parameter is outside the
+   *   Java source code. May occur also if byte code in {@link JavaClass}
+   *   <code>a_java_class</code> is out-of-date.
    */
   private int[] syncSB(final JavaClass a_java_class,
                        final CompilationUnitEditor an_editor,
                        final int a_pos)
-    throws BadLocationException, UmbraSynchronisationException,
-           JavaModelException {
+    throws UmbraSynchronisationException,
+           JavaModelException, UmbraLocationException {
     final Method[] methods = a_java_class.getMethods();
 
     final int mno = getSrcMethodNumber(a_pos, an_editor,
                                     a_java_class.getClassName()) + 1;
                                     // +1 for <init>
     final Method m = methods[mno];
-    final int line = my_java_doc.getLineOfOffset(a_pos);
+    int line;
+    try {
+      line = my_java_doc.getLineOfOffset(a_pos);
+    } catch (BadLocationException e) {
+      throw new UmbraLocationException(false, a_pos, false);
+    }
     final int[] result = handleInsideMethod(line, mno,
                                   m.getLineNumberTable().getLineNumberTable());
     return result;
