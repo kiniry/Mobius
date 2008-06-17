@@ -19,6 +19,8 @@ import org.eclipse.ui.part.FileEditorInput;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.actions.BytecodeEditorAction;
+import umbra.lib.EclipseIdentifiers;
+import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
 
 /**
@@ -33,8 +35,8 @@ public class HistoryAction extends BytecodeEditorAction {
 
   /**
    * This constructor creates the action to add item to the history
-   * of the byte code editor. It registers the name of the action with the text
-   * "Add to history" and stores locally the object which creates all the
+   * of the byte code editor. It registers the name of the action and stores
+   * locally the object which creates all the
    * actions and which contributs the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
@@ -45,7 +47,8 @@ public class HistoryAction extends BytecodeEditorAction {
    */
   public HistoryAction(final BytecodeEditorContributor a_contributor,
                        final BytecodeContribution a_btcd_contribution) {
-    super("Add to history", a_contributor, a_btcd_contribution);
+    super(EclipseIdentifiers.HISTORY_ACTION_NAME, a_contributor,
+          a_btcd_contribution);
   }
 
   /**
@@ -59,7 +62,7 @@ public class HistoryAction extends BytecodeEditorAction {
     final int num = (getEditor()).newHistory();
     if (num == -1) {
       MessageDialog.openInformation(getEditor().getEditorSite().getShell(),
-                                   "History", "History is already full.");
+        getDescription(), GUIMessages.HISTORY_FULL_MESSAGE);
       return;
     }
 
@@ -72,8 +75,8 @@ public class HistoryAction extends BytecodeEditorAction {
                                              getEditor().getRelatedEditor());
     } catch (CoreException e) {
       final Shell parent = getEditor().getSite().getShell();
-      MessageDialog.openError(parent, getActionDefinitionId(),
-                              "The file operation cannot be completed");
+      MessageDialog.openError(parent, getDescription(),
+                              GUIMessages.FAILED_CLASS_FILE_OPERATION);
     }
   }
 

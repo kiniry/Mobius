@@ -83,8 +83,9 @@ public class SynchrSBAction implements IEditorActionDelegate {
                             lastIndexOf(FileNames.JAVA_EXTENSION);
     if (lind == -1) {
       MessageDialog.openError(my_editor.getSite().getShell(),
-                GUIMessages.SYNCH_MESSAGE_TITLE, "This is not a \"" +
-                              FileNames.JAVA_EXTENSION + "\" file");
+        GUIMessages.SYNCH_MESSAGE_TITLE,
+        GUIMessages.substitute(GUIMessages.INVALID_EXTENSION,
+                               FileNames.JAVA_EXTENSION));
       return;
     }
 
@@ -97,9 +98,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
                             true);
       if (bcEditor.isSaveOnCloseNeeded()) {
         MessageDialog.openWarning(my_editor.getSite().getShell(),
-                                  GUIMessages.SYNCH_MESSAGE_TITLE,
-                      "The Bytecode editor needs being " +
-                      "refreshed!");
+          GUIMessages.SYNCH_MESSAGE_TITLE, GUIMessages.REFRESH_REQUIRED);
         return;
       }
       final BytecodeDocument bDoc = ((BytecodeDocument)bcEditor.
@@ -108,8 +107,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
       synchronizeWithMessages(off, bDoc);
     } catch (PartInitException e) {
       MessageDialog.openError(my_editor.getSite().getShell(),
-                              GUIMessages.SYNCH_MESSAGE_TITLE,
-                              GUIMessages.DISAS_EDITOR_PROBLEMS);
+        GUIMessages.SYNCH_MESSAGE_TITLE, GUIMessages.DISAS_EDITOR_PROBLEMS);
     }
   }
 
@@ -129,20 +127,13 @@ public class SynchrSBAction implements IEditorActionDelegate {
     try {
       getDocSynch(a_bcode_doc).synchronizeSB(an_offset, my_editor);
     } catch (UmbraLocationException e) {
-      MessageDialog.openError(parent,
-                              GUIMessages.SYNCH_MESSAGE_TITLE,
-                              GUIMessages.substitute2(
-                                  GUIMessages.WRONG_LOCATION_MSG,
-                                  "" + e.getWrongLocation(),
-                                  (e.isByteCodeDocument() ? "byte code" :
-                                                            "Java")));
+      GUIMessages.messageWrongLocation(parent, GUIMessages.SYNCH_MESSAGE_TITLE,
+                                       e);
     } catch (UmbraSynchronisationException e) {
-      MessageDialog.openError(parent,
-                              GUIMessages.SYNCH_MESSAGE_TITLE,
+      MessageDialog.openError(parent, GUIMessages.SYNCH_MESSAGE_TITLE,
                               GUIMessages.WRONG_SYNCHRONISATION_MSG);
     } catch (JavaModelException e) {
-      MessageDialog.openError(parent,
-                              GUIMessages.SYNCH_MESSAGE_TITLE,
+      MessageDialog.openError(parent, GUIMessages.SYNCH_MESSAGE_TITLE,
                               GUIMessages.WRONG_JAVAACCESS_MSG);
     }
   }

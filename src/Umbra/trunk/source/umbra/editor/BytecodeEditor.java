@@ -154,6 +154,7 @@ public class BytecodeEditor extends TextEditor {
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
     final IDocumentProvider p = getDocumentProvider();
+    final Shell shell = getSite().getShell();
     if (p == null)
       return;
     if (p.isDeleted(getEditorInput())) {
@@ -167,10 +168,8 @@ public class BytecodeEditor extends TextEditor {
          */
         performSaveAs(a_progress_monitor);
       } else {
-        final Shell shell = getSite().getShell();
-        final String title = "Bytecode Editor";
-        final String msg = "Save As action is not allowed";
-        MessageDialog.openError(shell, title, msg);
+        MessageDialog.openError(shell, GUIMessages.BYTECODE_MESSAGE_TITLE,
+          GUIMessages.SAVE_AS_NOT_ALLOWED);
       }
     } else {
       updateState(getEditorInput());
@@ -186,10 +185,8 @@ public class BytecodeEditor extends TextEditor {
       final JavaClass jc = doc.getJavaClass();
       jc.dump(path3);
     } catch (IOException e) {
-      MessageDialog.openError(new Shell(),
-                              GUIMessages.BYTECODE_MESSAGE_TITLE,
-                              GUIMessages.DISAS_SAVING_PROBLEMS + ": " +
-                              path3);
+      MessageDialog.openError(shell, GUIMessages.BYTECODE_MESSAGE_TITLE,
+        GUIMessages.substitute(GUIMessages.DISAS_SAVING_PROBLEMS, path3));
     }
   }
 
@@ -206,14 +203,15 @@ public class BytecodeEditor extends TextEditor {
     final IPath edited_path = ((FileEditorInput)getEditorInput()).getFile().
                                                              getFullPath();
     final String fnameTo = FileNames.getSavedClassFileNameForBTC(edited_path);
+    final Shell sh = getSite().getShell();
     IFile a_file_from;
     try {
       a_file_from = FileNames.getClassFileFileFor(
                ((FileEditorInput)getEditorInput()).getFile(),
                this, FileNames.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
-      MessageDialog.openError(new Shell(), GUIMessages.BYTECODE_MESSAGE_TITLE,
-                              GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
+      MessageDialog.openError(sh, GUIMessages.BYTECODE_MESSAGE_TITLE,
+        GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
       return null;
     }
     final IPath pathTo = new Path(fnameTo);
@@ -223,9 +221,9 @@ public class BytecodeEditor extends TextEditor {
       if (!fileTo.exists())
         a_file_from.copy(pathTo, true, null);
     } catch (CoreException e1) {
-      MessageDialog.openError(new Shell(), GUIMessages.BYTECODE_MESSAGE_TITLE,
-        "The file \"" + a_file_from.getName() + "\" cannot be copied to " +
-        pathTo.toOSString());
+      MessageDialog.openError(sh, GUIMessages.BYTECODE_MESSAGE_TITLE,
+        GUIMessages.substitute2(GUIMessages.COPY_IMPOSSIBLE,
+                                a_file_from.getName(), pathTo.toString()));
       return null;
     }
     return a_file_from;
@@ -289,10 +287,9 @@ public class BytecodeEditor extends TextEditor {
       final FileEditorInput input = (FileEditorInput)getEditorInput();
       getDocumentProvider().saveDocument(null, input, a_doc, true);
     } catch (ReadAttributeException e1) {
-      MessageDialog.openError(parent,
-                              GUIMessages.BYTECODE_MESSAGE_TITLE,
-                              GUIMessages.DISAS_LOADING_PROBLEMS +
-                              jc.getFileName());
+      MessageDialog.openError(parent, GUIMessages.BYTECODE_MESSAGE_TITLE,
+        GUIMessages.substitute(GUIMessages.DISAS_LOADING_PROBLEMS,
+                               jc.getFileName()));
     } catch (UmbraLocationException e) {
       GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
                                     GUIMessages.BYTECODE_MESSAGE_TITLE);
@@ -321,8 +318,10 @@ public class BytecodeEditor extends TextEditor {
     try {
       jc = a_repo.loadClass(clname);
     } catch (ClassNotFoundException e) {
-      MessageDialog.openError(new Shell(), "Bytecode",
-                              "Cannot find the class " + clname + ".class");
+      MessageDialog.openError(getSite().getShell(),
+        GUIMessages.BYTECODE_MESSAGE_TITLE,
+        GUIMessages.substitute(GUIMessages.CANNOT_FIND_CLASS,
+                               clname + ".class"));
       return null;
     }
     return jc;

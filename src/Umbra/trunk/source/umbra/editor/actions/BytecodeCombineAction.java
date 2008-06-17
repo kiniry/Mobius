@@ -38,6 +38,7 @@ import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.instructions.BytecodeController;
 import umbra.lib.BMLParsing;
+import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraClassException;
@@ -63,8 +64,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
 
   /**
    * This constructor creates the action to combine the byte code edits with
-   * the source code ones. It registers the name of the action with the text
-   * "Combine" and stores locally the object which creates all the actions
+   * the source code ones. It registers the name of the action and stores
+   * locally the object which creates all the actions
    * and which contributes the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
@@ -75,7 +76,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    */
   public BytecodeCombineAction(final BytecodeEditorContributor a_contributor,
                  final BytecodeContribution a_bytecode_contribution) {
-    super("Combine", a_contributor, a_bytecode_contribution);
+    super(EclipseIdentifiers.COMBINE_ACTION_NAME, a_contributor,
+          a_bytecode_contribution);
   }
 
   /**
@@ -94,8 +96,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
                                              getRelatedEditor();
     if (related.isDirty() && getEditor().isDirty()) {
       MessageDialog.openWarning(getEditor().getSite().getShell(),
-          "Bytecode", "You must save the source code and byte code before " +
-          "combine action");
+          getDescription(), GUIMessages.SAVE_BYTECODE_AND_SOURCE_FIRST);
       return;
     }
     final IFile file = ((FileEditorInput)getEditor().getEditorInput()).
@@ -114,7 +115,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       fileFrom.copy(pathTo, true, null);
     } catch (CoreException e1) {
       wrongFileOperationMessage(getEditor().getSite().getShell(),
-                                getActionDefinitionId());
+                                getDescription());
       return;
     }
     final String lastSegment = path.lastSegment().replaceFirst(
@@ -148,15 +149,15 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     } catch (UmbraClassException e) {
       final Exception e1 = e.getCause();
       if (e1 instanceof ClassNotFoundException) {
-        wrongPathToClassMessage(parent, getActionDefinitionId(), clname);
+        wrongPathToClassMessage(parent, getDescription(), clname);
       } else if (e1 instanceof ReadAttributeException) {
-        MessageDialog.openError(parent, getActionDefinitionId(),
-          "A BML attribute problem");
+        MessageDialog.openError(parent, getDescription(),
+          GUIMessages.BML_ATTRIBUTE_PROBLEM);
       }
     } catch (CoreException e) {
-      wrongFileOperationMessage(parent, getActionDefinitionId());
+      wrongFileOperationMessage(parent, getDescription());
     } catch (UmbraRangeException e) {
-      GUIMessages.exceededRangeInfo(parent, e, getActionDefinitionId());
+      GUIMessages.exceededRangeInfo(parent, e, getDescription());
     }
   }
 
@@ -281,8 +282,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       ent = jproject.getResolvedClasspath(true);
     } catch (JavaModelException e) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),
-                      "Bytecode", "Classpath cannot be properly resolved, " +
-                      "empty classpath is used instead");
+        getDescription(), GUIMessages.CLASSPATH_PROBLEMS_MESSAGE);
       return "";
     }
     return classPathEntriesToString(ent, project, projectName);
@@ -362,8 +362,8 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       final BytecodeController  model = getEditor().getDocument().getModel();
       modified = model.getModified();
     } catch (NullPointerException e) {
-      MessageDialog.openWarning(getEditor().getSite().getShell(),
-          "Bytecode", "Nothing has been modified");
+      MessageDialog.openError(getEditor().getSite().getShell(),
+          getDescription(), GUIMessages.NOTHING_MODIFIED);
       throw e;
     }
     for (int i = 0; i < modified.length && i < oldMeths && i < meths; i++) {

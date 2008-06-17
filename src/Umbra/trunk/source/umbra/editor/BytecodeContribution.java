@@ -22,11 +22,13 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 
 import umbra.UmbraPlugin;
+import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraRangeException;
 
 /**
  * This class represents a GUI element that is contributed to the
@@ -69,7 +71,7 @@ public class BytecodeContribution extends ControlContribution {
    * it is available from everywhere through {@link #inUse()} method.
    */
   protected BytecodeContribution() {
-    super("Bytecode");
+    super(EclipseIdentifiers.BYTECODE_CONTRIBUTION_IDENTIFIER);
     if (FileNames.DEBUG_MODE && inUse != null) {
       UmbraPlugin.messagelog("Second BytecodeContribution!!!");
     }
@@ -136,7 +138,9 @@ public class BytecodeContribution extends ControlContribution {
         return (BytecodeDocument) a_doc;
       } catch (ClassCastException e) {
         //This should not happen as we operate in a byte code editor
-        UmbraPlugin.messagelog("You are not editing a byte code document");
+        MessageDialog.openError(my_editor.getSite().getShell(),
+          GUIMessages.BYTECODE_MESSAGE_TITLE,
+          GUIMessages.NOT_BYTECODE_DOCUMENT);
         return null;
       }
     }
@@ -156,26 +160,27 @@ public class BytecodeContribution extends ControlContribution {
       final BytecodeDocument doc = transformDocWithMessage(an_event.fDocument);
       if (doc == null || doc.isInInit()) return;
       if (!doc.isReady()) {
+        final Shell sh = my_editor.getEditorSite().getShell();
         try {
           doc.init(null, null); //this marks the document as ready
         } catch (UmbraLocationException e) {
-          MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                       "The current document has no positions" +
-                                       " for line " +
-                                       e.getWrongLocation());
+          GUIMessages.messageWrongLocation(sh,
+            GUIMessages.INITIAL_PARSING_MESSAGE_TITLE, e);
           return;
         } catch (UmbraMethodException e) {
-          MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                        "The current document has too many" +
-                                        " methods (" +
-                                        e.getWrongMethodNumber() + ")");
+          GUIMessages.exceededRangeInfo(sh, new UmbraRangeException(e),
+            GUIMessages.INITIAL_PARSING_MESSAGE_TITLE);
         }
       }
       try {
         my_stop_rem = doc.getLineOfOffset(an_event.getOffset() +
                                        an_event.getLength());
       } catch (BadLocationException e) {
-        messageForBadLocation();
+        GUIMessages.messageWrongLocation(doc.getEditor().getSite().getShell(),
+          GUIMessages.BYTECODE_MESSAGE_TITLE,
+          new UmbraLocationException(true,
+            an_event.getOffset() + an_event.getLength(),
+            false));
       }
       my_oldcontent = doc.get();
     }
@@ -195,20 +200,20 @@ public class BytecodeContribution extends ControlContribution {
                                 final int a_start,
                                 final int an_oldend,
                                 final int a_newend) {
+      final Shell sh = my_editor.getEditorSite().getShell();
       try {
         a_doc.updateFragment(a_start, an_oldend, a_newend);
         my_editor.getAction(BytecodeEditorContributor.REFRESH_ID).
                  setEnabled(true);
       } catch (UmbraException e) {
-        MessageDialog.openInformation(new Shell(),
-              GUIMessages.BYTECODE_MESSAGE_TITLE,
-              GUIMessages.INVALID_EDIT_OPERATION);
+        MessageDialog.openError(sh,
+          GUIMessages.FRAGMENT_PARSING_MESSAGE_TITLE,
+          GUIMessages.INVALID_EDIT_OPERATION);
         a_doc.set(my_oldcontent);
         return;
       } catch (UmbraLocationException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
-                          "The current document has no positions for a line " +
-                          "after " + e.getWrongLocation());
+        GUIMessages.messageWrongLocation(sh,
+          GUIMessages.FRAGMENT_PARSING_MESSAGE_TITLE, e);
         return;
       }
     }
@@ -233,16 +238,27 @@ public class BytecodeContribution extends ControlContribution {
 
       int stop = 0;
       int start_rem = 0;
-
       try {
         start_rem = doc.getLineOfOffset(an_event.getOffset());
-        final int insertedLen = an_event.getText().length();
+      } catch (BadLocationException e1) {
+        //This should not happen as the offsets from the event are generated
+        //based on the current document
+        GUIMessages.messageWrongLocation(doc.getEditor().getSite().getShell(),
+          GUIMessages.BYTECODE_MESSAGE_TITLE,
+          new UmbraLocationException(true, an_event.getOffset(), false));
+      }
+      final int insertedLen = an_event.getText().length();
+      try {
         stop = doc.getLineOfOffset(an_event.getOffset() +
             insertedLen);
       } catch (BadLocationException e) {
         //This should not happen as the offsets from the event are generated
         //based on the current document
-        messageForBadLocation();
+        GUIMessages.messageWrongLocation(doc.getEditor().getSite().getShell(),
+          GUIMessages.BYTECODE_MESSAGE_TITLE,
+          new UmbraLocationException(true,
+                                     an_event.getOffset() + insertedLen,
+                                     false));
       }
 
       updateFragment(doc, start_rem, my_stop_rem, stop);
@@ -255,15 +271,6 @@ public class BytecodeContribution extends ControlContribution {
         displayCorrect();
       }
     }
-
-    /**
-     * Shows a pop-up with the message that the document offset is wrong.
-     */
-    private void messageForBadLocation() {
-      UmbraPlugin.messagelog("IMPOSSIBLE: offsets in the current document " +
-                             "differ from the ones in the event");
-    }
-
   }
 
   /**
@@ -308,7 +315,7 @@ public class BytecodeContribution extends ControlContribution {
    */
   private void displayCorrect() {
     final IActionBars bars = my_editor.getEditorSite().getActionBars();
-    bars.getStatusLineManager().setMessage("Correct");
+    bars.getStatusLineManager().setMessage(GUIMessages.CORRECT_CODE);
   }
 
   /**
@@ -319,7 +326,8 @@ public class BytecodeContribution extends ControlContribution {
    */
   private void displayError(final String a_msg) {
     final IActionBars bars = my_editor.getEditorSite().getActionBars();
-    bars.getStatusLineManager().setMessage("Error detected: " + a_msg);
+    bars.getStatusLineManager().setMessage(
+      GUIMessages.substitute(GUIMessages.INCORRECT_CODE,  a_msg));
   }
 
   /**

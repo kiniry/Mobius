@@ -18,7 +18,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -36,6 +35,7 @@ import umbra.editor.actions.history.ClearHistoryAction;
 import umbra.editor.actions.history.HistoryAction;
 import umbra.lib.BMLParsing;
 import umbra.lib.EclipseIdentifiers;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 
@@ -136,13 +136,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * colour mode actions.
    */
   private void setupToolTipTexts() {
-    my_refresh_action.setToolTipText("Refresh");
-    my_rebuild_action.setToolTipText("Rebuild");
-    my_combine_action.setToolTipText("Combine");
-    my_addhist_action.setToolTipText("Add to history");
-    my_clearhist_action.setToolTipText("Clear history");
-    my_restore_action.setToolTipText("Restore");
-    my_synchr_action.setToolTipText("Synchronize");
+    my_refresh_action.setToolTipText(EclipseIdentifiers.REFRESH_ACTION_NAME);
+    my_rebuild_action.setToolTipText(EclipseIdentifiers.REBUILD_ACTION_NAME);
+    my_combine_action.setToolTipText(EclipseIdentifiers.COMBINE_ACTION_NAME);
+    my_addhist_action.setToolTipText(EclipseIdentifiers.HISTORY_ACTION_NAME);
+    my_clearhist_action.setToolTipText(
+                               EclipseIdentifiers.CLEAR_HISTORY_ACTION_NAME);
+    my_restore_action.setToolTipText(EclipseIdentifiers.RESTORE_ACTION_NAME);
+    my_synchr_action.setToolTipText(EclipseIdentifiers.SYNCHRONIZE_ACTION_NAME);
   }
 
   /**
@@ -187,8 +188,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     } catch (MalformedURLException e) {
       wrongIconMessage(e);
     }
-    my_action_plus.setToolTipText("Change color");
-    my_action_minus.setToolTipText("Change color");
+    my_action_plus.setToolTipText(EclipseIdentifiers.COLOR_ACTION_NAME);
+    my_action_minus.setToolTipText(EclipseIdentifiers.COLOR_ACTION_NAME);
   }
 
   /**
@@ -232,10 +233,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @param an_ex the exception for which the message should pop up
    */
   private void wrongIconMessage(final MalformedURLException an_ex) {
-    MessageDialog.openError(new Shell(),
-        "Bytecode",
-        "Improper bytecode icon on eclipse GUI reference (" +
-        an_ex.getMessage() + ")");
+    MessageDialog.openError(getPage().getActiveEditor().getSite().getShell(),
+      GUIMessages.BYTECODE_MESSAGE_TITLE,
+      GUIMessages.substitute(GUIMessages.IMPROPER_ICON, an_ex.getMessage()));
   }
 
   /**
@@ -265,21 +265,30 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     // Run super.
     super.contributeToMenu(a_menu_mngr);
     final MenuManager bytecodeMenu =
-      new MenuManager("Byte code", "umbra.bytecodeMenu"); //$NON-NLS-1$
-    a_menu_mngr.insertAfter("additions", bytecodeMenu); //$NON-NLS-1$
+      new MenuManager(GUIMessages.BYTECODE_MENU_TITLE,
+                      EclipseIdentifiers.UMBRA_BYTECODE_MENU); //$NON-NLS-1$
+    a_menu_mngr.insertAfter(EclipseIdentifiers.MENU_POSITION, //$NON-NLS-1$
+                            bytecodeMenu);
     bytecodeMenu.add(my_refresh_action);
     bytecodeMenu.add(my_rebuild_action);
     bytecodeMenu.add(my_combine_action);
     bytecodeMenu.add(my_synchr_action);
-    final Separator histGroup = new Separator("historyGroup");
+    final Separator histGroup =
+      new Separator(EclipseIdentifiers.HISTORY_GROUP); //$NON-NLS-1$
     bytecodeMenu.add(histGroup);
-    bytecodeMenu.appendToGroup("historyGroup", my_addhist_action);
-    bytecodeMenu.appendToGroup("historyGroup", my_clearhist_action);
-    bytecodeMenu.appendToGroup("historyGroup", my_restore_action);
-    final Separator colourGroup = new Separator("colourGroup");
+    bytecodeMenu.appendToGroup(EclipseIdentifiers.HISTORY_GROUP, //$NON-NLS-1$
+                               my_addhist_action);
+    bytecodeMenu.appendToGroup(EclipseIdentifiers.HISTORY_GROUP, //$NON-NLS-1$
+                               my_clearhist_action);
+    bytecodeMenu.appendToGroup(EclipseIdentifiers.HISTORY_GROUP, //$NON-NLS-1$
+                               my_restore_action);
+    final Separator colourGroup =
+      new Separator(EclipseIdentifiers.COLOR_GROUP); //$NON-NLS-1$
     bytecodeMenu.add(colourGroup);
-    bytecodeMenu.appendToGroup("colourGroup", my_action_plus);
-    bytecodeMenu.appendToGroup("colourGroup", my_action_minus);
+    bytecodeMenu.appendToGroup(EclipseIdentifiers.COLOR_GROUP, //$NON-NLS-1$
+                               my_action_plus);
+    bytecodeMenu.appendToGroup(EclipseIdentifiers.COLOR_GROUP, //$NON-NLS-1$
+                               my_action_minus);
     getActionBars().updateActionBars();
   }
 
@@ -377,14 +386,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     if (proper) ColorModeContainer.classUnknown();
     return newEditor;
   }
-
-  /**
-   * debugging helper
-   *
-  /*private void controlPrint(JavaClass jc, int i) {
-    Method meth = jc.getMethods()[i];
-    UmbraPlugin.messagelog(meth.getCode().toString());
-  }*/
 
   /**
    * @return the action to refresh the byte code

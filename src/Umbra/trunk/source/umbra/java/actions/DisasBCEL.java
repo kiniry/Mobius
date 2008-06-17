@@ -123,8 +123,9 @@ public class DisasBCEL implements IEditorActionDelegate {
       bdp.saveDocument(null, input, doc, true);
     } catch (CoreException e) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),
-                                GUIMessages.DISAS_MESSAGE_TITLE,
-                                GUIMessages.DISAS_SAVING_PROBLEMS);
+        GUIMessages.DISAS_MESSAGE_TITLE,
+        GUIMessages.substitute(GUIMessages.DISAS_SAVING_PROBLEMS,
+                               input.getPath().toString()));
     }
     return cpath;
   }
@@ -137,9 +138,9 @@ public class DisasBCEL implements IEditorActionDelegate {
    */
   private void messageClassNotFound(final IPath a_path) {
     MessageDialog.openWarning(my_editor.getSite().getShell(),
-                              GUIMessages.DISAS_MESSAGE_TITLE,
-                              GUIMessages.DISAS_PATH_DOES_NOT_EXIST +
-                              " (" + a_path.toString() + ")");
+      GUIMessages.DISAS_MESSAGE_TITLE,
+      GUIMessages.substitute(GUIMessages.DISAS_PATH_DOES_NOT_EXIST,
+                             a_path.toString()));
   }
 
   /**
@@ -176,7 +177,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     if (my_editor.isSaveOnCloseNeeded()) {
       MessageDialog.openWarning(my_editor.getSite().getShell(),
                     GUIMessages.DISAS_MESSAGE_TITLE,
-                    GUIMessages.DISAS_SAVE_BYTECODE_FIRST);
+                    GUIMessages.SAVE_BYTECODE_FIRST);
       return true;
     }
     return false;

@@ -21,6 +21,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
+import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
@@ -42,8 +43,8 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
 
   /**
    * This constructor creates the action to restore the original contents
-   * of the class file. It registers the name of the action with the text
-   * "Rebuild" and stores locally the object which creates all the actions
+   * of the class file. It registers the name of the action and stores
+   * locally the object which creates all the actions
    * and which contributes the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
@@ -54,7 +55,8 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
    */
   public BytecodeRebuildAction(final BytecodeEditorContributor a_contributor,
                          final BytecodeContribution a_bytecode_contribution) {
-    super("Rebuild", a_contributor, a_bytecode_contribution);
+    super(EclipseIdentifiers.REBUILD_ACTION_NAME, a_contributor,
+          a_bytecode_contribution);
   }
 
   /**
@@ -85,15 +87,15 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
       final IEditorInput input = new FileEditorInput(file);
       getContributor().refreshEditor(getEditor(), input, null, null);
     } catch (ClassNotFoundException e1) {
-      wrongPathToClassMessage(parent, getActionDefinitionId(), file.toString());
+      wrongPathToClassMessage(parent, getDescription(), file.toString());
     } catch (CoreException e1) {
-      wrongFileOperationMessage(parent, getActionDefinitionId());
+      wrongFileOperationMessage(parent, getDescription());
     } catch (UmbraLocationException e) {
       GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
-                                    getActionDefinitionId());
+                                    getDescription());
     } catch (UmbraMethodException e) {
       GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
-                                    getActionDefinitionId());
+                                    getDescription());
     }
   }
 
@@ -113,7 +115,7 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
       fileTo.delete(true, null);
       a_filefrom.copy(a_pathto, true, null);
     } catch (CoreException e) {
-      wrongFileOperationMessage(parent, getActionDefinitionId());
+      wrongFileOperationMessage(parent, getDescription());
     }
   }
 }

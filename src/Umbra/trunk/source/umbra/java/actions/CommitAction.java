@@ -19,7 +19,6 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
@@ -70,7 +69,8 @@ public class CommitAction implements IEditorActionDelegate {
     try {
       cfile = FileNames.getClassFileFile(file, my_editor);
     } catch (JavaModelException e1) {
-      MessageDialog.openError(new Shell(), GUIMessages.COMMIT_MESSAGE_TITLE,
+      MessageDialog.openError(my_editor.getSite().getShell(),
+                              GUIMessages.COMMIT_MESSAGE_TITLE,
                               GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
     }
     final IPath cpath = cfile.getFullPath();
@@ -80,8 +80,9 @@ public class CommitAction implements IEditorActionDelegate {
     try {
       fileFrom.delete(true, null);
     } catch (CoreException e) {
-      MessageDialog.openError(new Shell(), GUIMessages.COMMIT_MESSAGE_TITLE,
-                              GUIMessages.FILED_CLASS_FILE_OPERATION);
+      MessageDialog.openError(my_editor.getSite().getShell(),
+                              GUIMessages.COMMIT_MESSAGE_TITLE,
+                              GUIMessages.FAILED_CLASS_FILE_OPERATION);
     }
   }
 

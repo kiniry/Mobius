@@ -21,10 +21,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import umbra.instructions.BytecodeController;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraSynchronisationException;
@@ -117,9 +117,11 @@ public class DocumentSynchroniser {
     final CompilationUnitEditor jeditor =
       my_bcode_doc.getEditor().getRelatedEditor();
     jeditor.getEditorSite().getPage().activate(jeditor);
-    if (synclen < 0) MessageDialog.openError(new Shell(), "Bytecode",
-                                               "Synchronisation failed");
-    else jeditor.getSelectionProvider().
+    if (synclen < 0) {
+      MessageDialog.openError(my_bcode_doc.getEditor().getSite().getShell(),
+        GUIMessages.BYTECODE_MESSAGE_TITLE,
+        GUIMessages.WRONG_SYNCHRONISATION_MSG);
+    } else jeditor.getSelectionProvider().
                  setSelection(new TextSelection(syncPos, synclen));
   }
 
@@ -217,8 +219,9 @@ public class DocumentSynchroniser {
       throw new UmbraLocationException(false, syncLine[1], true);
     }
     if (syncLen < 0) {
-      MessageDialog.openInformation(an_editor.getSite().getShell(), "Bytecode",
-                                      "Synchronisation failed");
+      MessageDialog.openInformation(an_editor.getSite().getShell(),
+        GUIMessages.BYTECODE_MESSAGE_TITLE,
+        GUIMessages.WRONG_SYNCHRONISATION_MSG);
       an_editor.getEditorSite().getPage().activate(an_editor);
     } else {
       final BytecodeEditor be = my_bcode_doc.getEditor();

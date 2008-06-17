@@ -17,7 +17,6 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.GUIMessages;
-import umbra.lib.UmbraLocationException;
 
 /**
  * This class defines the common operations for all the byte code editor
@@ -105,25 +104,6 @@ public class BytecodeEditorAction extends Action {
   }
 
   /**
-   * Displays the message that a wrong location has been reached.
-   *
-   * @param a_shell the shell which displays the message
-   * @param a_title the title of the message window
-   * @param an_ex the exception with the information to display
-   */
-  public static void wrongLocationMessage(final Shell a_shell,
-                                          final String a_title,
-                                          final UmbraLocationException an_ex) {
-    MessageDialog.openError(a_shell,
-                            a_title,
-                            "Wrong location " + an_ex.getWrongLocation() +
-                            " in a " +
-                            (an_ex.isByteCodeDocument() ? "byte code" :
-                                                    "Java") +
-                            "document");
-  }
-
-  /**
    * Displays the message that a file operation on a class file failed.
    *
    * @param a_shell the shell which displays the message
@@ -132,7 +112,7 @@ public class BytecodeEditorAction extends Action {
   public static void wrongFileOperationMessage(final Shell a_shell,
                                                final String a_title) {
     MessageDialog.openError(a_shell, a_title,
-                            GUIMessages.FILED_CLASS_FILE_OPERATION);
+      GUIMessages.FAILED_CLASS_FILE_OPERATION);
   }
 
   /**
@@ -146,9 +126,8 @@ public class BytecodeEditorAction extends Action {
   public static void wrongPathToClassMessage(final Shell a_shell,
                                        final String a_title,
                                        final String a_path) {
-    MessageDialog.openError(a_shell,
-                            a_title,
-                            "The path " + a_path +
-                            " does not lead to a valid class file");
+    MessageDialog.openError(a_shell, a_title,
+      GUIMessages.substitute(GUIMessages.NO_CLASS_FILE_FOR_PATH,
+                             a_path));
   }
 }

@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.DocumentSynchroniser;
+import umbra.lib.EclipseIdentifiers;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraSynchronisationException;
@@ -48,7 +49,8 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
    */
   public BytecodeSynchrAction(final BytecodeEditorContributor a_contributor,
                      final BytecodeContribution a_bytecode_contribution) {
-    super("Synchronize", a_contributor, a_bytecode_contribution);
+    super(EclipseIdentifiers.SYNCHRONIZE_ACTION_NAME, a_contributor,
+          a_bytecode_contribution);
   }
 
 
@@ -66,9 +68,9 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
     try {
       getDocSynch().synchronizeBS(off);
     } catch (UmbraLocationException e) {
-      wrongLocationMessage(parent, getActionDefinitionId(), e);
+      GUIMessages.messageWrongLocation(parent, getDescription(), e);
     } catch (UmbraSynchronisationException e) {
-      wrongSynchronisationMessage(parent, getActionDefinitionId());
+      wrongSynchronisationMessage(parent, getDescription());
     }
   }
 
@@ -81,8 +83,7 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
    */
   public static void wrongSynchronisationMessage(final Shell a_shell,
                                                  final String a_title) {
-    MessageDialog.openError(a_shell,
-                            a_title, GUIMessages.NOINSTRUCTION_MSG);
+    MessageDialog.openError(a_shell, a_title, GUIMessages.NOINSTRUCTION_MSG);
   }
 
   /**

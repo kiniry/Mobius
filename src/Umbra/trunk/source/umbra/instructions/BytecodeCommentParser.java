@@ -1,3 +1,11 @@
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package umbra.instructions;
 
 import java.util.Hashtable;
@@ -10,6 +18,7 @@ import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.lib.BytecodeStrings;
 import umbra.lib.UmbraLocationException;
 
 /**
@@ -288,7 +297,8 @@ public class BytecodeCommentParser extends BytecodeTextParser {
     if (a_line instanceof InstructionLineController &&
         commi != null) {
       final String instr = a_line.getLineContent();
-      final String comm = " //" + commi;
+      final String comm = " " + BytecodeStrings.SINGLE_LINE_COMMENT_MARK +
+                          commi;
       pos += instr.length() - 1; // -1 for eol
       insertAt(pos, comm);
       pos += comm.length();
@@ -340,7 +350,8 @@ public class BytecodeCommentParser extends BytecodeTextParser {
     final String commi = getCommentForInstr(a_instno);
     if (a_line instanceof InstructionLineController &&
         commi != null) {
-      insertAt(my_combined_text.length() - 1, "//" + commi);
+      insertAt(my_combined_text.length() - 1,
+               BytecodeStrings.SINGLE_LINE_COMMENT_MARK + commi);
     }
   }
 

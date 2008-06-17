@@ -8,9 +8,6 @@
  */
 package umbra.instructions;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
@@ -18,6 +15,7 @@ import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.UnknownLineController;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraRuntimeException;
@@ -109,9 +107,9 @@ public class FragmentParser extends BytecodeCommentParser {
         throw new UmbraException();
       }
     } catch (UmbraException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode fragment parsing",
-                         "The current document reached a strange line (" +
-                         a_line_no + ")");
+      GUIMessages.messageWrongLocation(my_doc.getEditor().getSite().getShell(),
+        GUIMessages.FRAGMENT_PARSING_MESSAGE_TITLE,
+        new UmbraLocationException(true, a_line_no, true));
     }
     if (a_line_no > my_end + 1)
       throw new UmbraRuntimeException("Too high line number: " + a_line_no);

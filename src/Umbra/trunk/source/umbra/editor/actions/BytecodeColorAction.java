@@ -17,8 +17,11 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.ColorModeContainer;
 import umbra.editor.parsing.ColorValues;
+import umbra.lib.EclipseIdentifiers;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraRangeException;
 
 /**
  *  This class defines an action of changing the coloring style. Two
@@ -49,8 +52,8 @@ public class BytecodeColorAction extends BytecodeEditorAction {
 
   /**
    * This constructor creates the action to change the
-   * clouring mode. It registers the name of the action with the text
-   * "Change color" and stores locally the object which creates all the actions
+   * clouring mode. It registers the name of the action
+   * and stores locally the object which creates all the actions
    * and which contributs the editor GUI elements to the eclipse GUI, and
    * the information on the color change direction (+/-1), and the current
    * colouring mode value.
@@ -68,7 +71,8 @@ public class BytecodeColorAction extends BytecodeEditorAction {
                 final BytecodeContribution a_bytecode_contribution,
                 final int a_change,
                 final int a_mode) {
-    super("Change color", a_contr, a_bytecode_contribution);
+    super(EclipseIdentifiers.COLOR_ACTION_NAME, a_contr,
+          a_bytecode_contribution);
     this.my_colour_delta = a_change;
     this.my_mod = a_mode;
   }
@@ -83,22 +87,17 @@ public class BytecodeColorAction extends BytecodeEditorAction {
     my_mod = (my_mod + my_colour_delta) % (ColorValues.MODES_DESC.length - 1);
     ColorModeContainer.setMod(my_mod);
     if (getEditor() != null) {
+      final Shell sh = getEditor().getSite().getShell();
       try {
         getContributor().refreshEditor(getEditor(), null, null);
       } catch (PartInitException e) {
-        MessageDialog.openWarning(getEditor().getSite().getShell(),
-            "Bytecode", "Cannot open a new editor after closing " +
-                  "the old one");
+        MessageDialog.openError(sh, getDescription(),
+          GUIMessages.COLOURING_REFRESH_IMPOSSIBLE_MESSAGE);
       } catch (UmbraLocationException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                      "The current document has no positions" +
-                                      " for line " +
-                                      e.getWrongLocation());
+        GUIMessages.messageWrongLocation(sh, getDescription(), e);
       } catch (UmbraMethodException e) {
-        MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                      "The current document has too many" +
-                                      " methods (" +
-                                      e.getWrongMethodNumber() + ")");
+        GUIMessages.exceededRangeInfo(sh, new UmbraRangeException(e),
+                                      getDescription());
       }
     }
   }

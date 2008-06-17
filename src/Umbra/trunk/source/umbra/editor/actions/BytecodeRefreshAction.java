@@ -20,6 +20,7 @@ import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.instructions.BytecodeController;
+import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
@@ -41,7 +42,7 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
 
   /**
    * This constructor creates the action to refresh the byte code editor.
-   * It registers the name of the action with the text "Refresh" and stores
+   * It registers the name of the action and stores
    * locally the object which creates all the actions and which contributes
    * the editor GUI elements to the eclipse GUI.
    *
@@ -53,7 +54,8 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
    */
   public BytecodeRefreshAction(final BytecodeEditorContributor a_contributor,
                  final BytecodeContribution a_bytecode_contribution) {
-    super("Refresh", a_contributor, a_bytecode_contribution);
+    super(EclipseIdentifiers.REFRESH_ACTION_NAME, a_contributor,
+          a_bytecode_contribution);
   }
 
   /**
@@ -90,9 +92,9 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
       newEditor.setVisibleRegion(topvisible);
       setActiveEditor(newEditor);
     } catch (ClassNotFoundException e) {
-      wrongPathToClassMessage(parent, getActionDefinitionId(), file.toString());
+      wrongPathToClassMessage(parent, getDescription(), file.toString());
     } catch (CoreException e) {
-      wrongFileOperationMessage(parent, getActionDefinitionId());
+      wrongFileOperationMessage(parent, getDescription());
     } catch (UmbraRangeException e) {
       GUIMessages.exceededRangeInfo(new Shell(), e, "Byte code refreshing");
     }

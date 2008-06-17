@@ -25,11 +25,13 @@ import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.actions.BytecodeEditorAction;
 import umbra.instructions.BytecodeController;
+import umbra.lib.EclipseIdentifiers;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraRangeException;
 
 /**
  * This class defines action of restoring byte code from
@@ -44,12 +46,11 @@ import umbra.lib.UmbraMethodException;
  */
 public class BytecodeRestoreAction extends BytecodeEditorAction {
 
-
   /**
    * This constructor creates the action to restore a file stored in the history
-   * of the bytecode editor. It registers the name of the action with the text
-   * "Restore" and stores locally the object which creates all the actions
-   * and which contributs the editor GUI elements to the eclipse GUI.
+   * of the bytecode editor. It registers the name of the action and stores
+   * locally the object which creates all the actions
+   * and which contributes the editor GUI elements to the eclipse GUI.
    *
    * @param a_contributor the manager that initialises all the actions within
    *   the bytecode plugin
@@ -59,7 +60,8 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
    */
   public BytecodeRestoreAction(final BytecodeEditorContributor a_contributor,
                  final BytecodeContribution a_btcd_contribution) {
-    super("Restore", a_contributor, a_btcd_contribution);
+    super(EclipseIdentifiers.RESTORE_ACTION_NAME, a_contributor,
+          a_btcd_contribution);
   }
 
   /**
@@ -83,7 +85,7 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
                                              editor.getRelatedEditor(),
                                              FileNames.BYTECODE_EXTENSION);
     } catch (JavaModelException e2) {
-      GUIMessages.wrongClassFileOptMessage(parent, getActionDefinitionId());
+      GUIMessages.wrongClassFileOptMessage(parent, getDescription());
       return;
     }
     try {
@@ -93,8 +95,8 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
                                              getEditor().getRelatedEditor());
       refreshContent(editor, btcFile, a_classfile); //messages are displayed
     } catch (CoreException e) {
-      MessageDialog.openError(parent, getActionDefinitionId(),
-                              "The file operation cannot be completed");
+      MessageDialog.openError(parent, getDescription(),
+                              GUIMessages.FAILED_CLASS_FILE_OPERATION);
       return;
     }
   }
@@ -128,20 +130,15 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
       an_editor.getDocument().getModel().setModified(modified);
     } catch (ClassNotFoundException e1) {
       //the class corresponding to the Java source code file cannot be found
-      MessageDialog.openError(parent, getActionDefinitionId(),
-                              "The class file corresponding to the Java" +
-                              "source code file cannot be found");
+      MessageDialog.openError(parent, getDescription(),
+                              GUIMessages.NO_CLASS_FILE_FOR_SOURCE);
       return;
     } catch (UmbraLocationException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                    "The current document has no positions" +
-                                    " for line " +
-                                    e.getWrongLocation());
+      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
+                                    getDescription());
     } catch (UmbraMethodException e) {
-      MessageDialog.openInformation(new Shell(), "Bytecode initial parsing",
-                                    "The current document has too many" +
-                                    " methods (" +
-                                    e.getWrongMethodNumber() + ")");
+      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
+                                    getDescription());
     }
   }
 
@@ -160,34 +157,28 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
     boolean once_more = true;
     int num = HistoryOperations.DEFAULT_HISTORY;
     while (once_more) {
-      final String strnum = JOptionPane.showInputDialog("Input version " +
-                           "number (" + HistoryOperations.MIN_HISTORY + " to " +
-                           HistoryOperations.MAX_HISTORY + "):",
-                           "" + HistoryOperations.DEFAULT_HISTORY);
+      final String strnum = JOptionPane.showInputDialog(
+        GUIMessages.substitute3(GUIMessages.VERSION_NUMBER_INFORMATION,
+                                "" + HistoryOperations.MIN_HISTORY,
+                                "" + HistoryOperations.MAX_HISTORY,
+                                "" + HistoryOperations.DEFAULT_HISTORY));
+      final Shell sh = getEditor().getSite().getShell();
       try {
         num = Integer.parseInt(strnum);
         once_more = false;
       } catch (NumberFormatException ne) {
         num = HistoryOperations.DEFAULT_HISTORY;
-        once_more = !MessageDialog.openQuestion(getEditor().getSite().
-                                                            getShell(),
-                                "Bytecode", "This is not an integer. " +
-                                            "Should we use " +
-                                            num + " instead");
+        once_more = !MessageDialog.openQuestion(sh, getDescription(),
+          GUIMessages.substitute(GUIMessages.NOT_INTEGER_MESSAGE, "" + num));
       }
       if (num > HistoryOperations.MAX_HISTORY ||
           num < HistoryOperations.MIN_HISTORY) {
         num = HistoryOperations.DEFAULT_HISTORY;
-        once_more = !MessageDialog.openQuestion(getEditor().getSite().
-                                                            getShell(),
-                                          "Bytecode",
-                                          "It's not in the range " +
-                                          "(" + HistoryOperations.MIN_HISTORY +
-                                          " to " +
-                                          HistoryOperations.MAX_HISTORY + ")." +
-                                          "Should we use " +
-                                          HistoryOperations.DEFAULT_HISTORY +
-                                          "?");
+        once_more = !MessageDialog.openQuestion(sh, getDescription(),
+          GUIMessages.substitute3(GUIMessages.NOT_IN_RANGE_MESSAGE,
+                                  "" + HistoryOperations.MIN_HISTORY,
+                                  "" + HistoryOperations.MAX_HISTORY,
+                                  "" + HistoryOperations.DEFAULT_HISTORY));
       }
     }
     return num;

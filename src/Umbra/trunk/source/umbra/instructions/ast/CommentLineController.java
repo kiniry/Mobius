@@ -1,3 +1,11 @@
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package umbra.instructions.ast;
 
 import umbra.lib.BytecodeStrings;
@@ -46,9 +54,9 @@ public class CommentLineController extends BytecodeLineController {
    */
   public boolean isCommentEnd() {
     final String line = getMy_line_text();
-    int where = line.lastIndexOf("*/");
+    int where = line.lastIndexOf(BytecodeStrings.COMMENT_LINE_END);
     if (where > 0) {
-      where += "*/".length();
+      where += BytecodeStrings.COMMENT_LINE_END.length();
       for (int i = where; i < line.length(); i++) {
         if (!Character.isWhitespace(line.charAt(i))) return false;
       }

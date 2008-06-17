@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.DocumentSynchroniser;
+import umbra.lib.GUIMessages;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraSynchronisationException;
 
@@ -61,11 +62,10 @@ public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
     try {
       getDocSynch(bDoc).synchronizeBS(pos);
     } catch (UmbraLocationException e) {
-      BytecodeSynchrAction.wrongLocationMessage(sh,
-                           "Double click synchronisation", e);
+      GUIMessages.messageWrongLocation(sh, GUIMessages.SYNCH_MESSAGE_TITLE, e);
     } catch (UmbraSynchronisationException e) {
       BytecodeSynchrAction.wrongSynchronisationMessage(sh,
-                                               "Double click synchronisation");
+        GUIMessages.SYNCH_MESSAGE_TITLE);
     }
   }
 
