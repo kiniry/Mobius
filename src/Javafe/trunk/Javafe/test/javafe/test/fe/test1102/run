@@ -5,5 +5,5 @@
 cd ${JAVAFE_SOURCE_DIR}/javafe
 
 for i in *.java */*.java; do
-  ${TOOL} -classpath ${JAVAFE_CLASSPATH_CAN} $i
+  ${TOOL} -classpath "${JAVAFE_CLASSPATH_CAN}" $i
 done
