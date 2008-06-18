@@ -578,7 +578,7 @@ class JFile {
 }
 
 class VectorSorter {
-    static private /*@ non_null */ Vector dat;
+    static private /*@non_null*/ Vector dat = new Vector();
 
     /*@ requires data.elementType == \type(Package) ||
                  data.elementType == \type(JFile); */
