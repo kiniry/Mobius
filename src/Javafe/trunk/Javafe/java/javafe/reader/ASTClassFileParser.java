@@ -505,9 +505,8 @@ class ASTClassFileParser extends ClassFileParser {
    * MethodRef           null
    * InterfaceMethodRef  null
    */
-  //@ private invariant constants != null;
   //@ private invariant \typeof(constants) == \type(Object[]);
-  private Object[] constants;
+  private /*@non_null*/Object[] constants;
 
   /**
    * The constant pool of the class being parsed.
@@ -515,10 +514,9 @@ class ASTClassFileParser extends ClassFileParser {
    * parser (versus translated by DescriptorParser).  Initialized
    * by set_const and set_num_constants.
    */
-  //@ private invariant rawConstants != null;
   //@ private invariant \typeof(rawConstants) == \type(Object[]);
   //@ private invariant constants.length == rawConstants.length;
-  private Object[] rawConstants;
+  private /*@non_null*/Object[] rawConstants;
 
   /**
    * The modifiers of the class being parsed.
@@ -548,36 +546,32 @@ class ASTClassFileParser extends ClassFileParser {
    * Initialized by set_num_interfaces.
    * Elements initialized by set_interface.
    */
-  //@ private invariant interfaces != null;
   //@ private invariant \typeof(interfaces) == \type(TypeName[]);
-  private TypeName[] interfaces;
+  private /*@non_null*/ TypeName[] interfaces;
 
   /**
    * The class members of the class being parsed.
    * Intialized by set_field, set_method, and set_class_attributes.
    */
-  //@ invariant classMembers != null;
-  TypeDeclElemVec classMembers = TypeDeclElemVec.make(0);
+  private /*@non_null*/ TypeDeclElemVec classMembers = TypeDeclElemVec.make(0);
 
   /**
    * The fields of the class being parsed.
    * Initialized by set_num_fields.
    * Elements initialized by set_field.
    */
-  //@ invariant fields != null;
   //@ invariant \typeof(fields) == \type(FieldDecl[]);
   //@ spec_public
-  private FieldDecl[] fields;
+  private /*@non_null*/ FieldDecl[] fields;
 
   /**
    * The methods and constructors of the class being parsed.
    * Initialized by set_num_methods.
    * Elements initialized by set_method.
    */
-  //@ invariant routines != null;
   //@ invariant \typeof(routines) == \type(RoutineDecl[]);
   //@ spec_public
-  private RoutineDecl[] routines;
+  private /*@non_null*/ RoutineDecl[] routines;
 
   /**
    * The identifier of the class being parsed.
@@ -594,10 +588,9 @@ class ASTClassFileParser extends ClassFileParser {
    * @return                      an array of type names
    * @exception ClassFormatError  if the type names are not class constants
    */
-  //@ requires stream != null;
   //@ ensures \nonnullelements(\result);
   //@ ensures \typeof(\result)==\type(TypeName[]);
-  private TypeName[] parseTypeNames(DataInputStream stream) throws IOException,
+  private /*@non_null*/TypeName[] parseTypeNames(/*@non_null*/DataInputStream stream) throws IOException,
       ClassFormatError {
     int count = stream.readUnsignedShort();
     TypeName[] names = new TypeName[count];
