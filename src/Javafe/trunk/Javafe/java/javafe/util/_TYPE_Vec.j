@@ -32,9 +32,7 @@
  * javafe.ast, substitute Integer, javafe.ast, and java.lang
  * respectively.<p>
  *
- *
- * By Default, _TYPE_Vec's may not contain nulls.  If the ability to
- * hold nulls is desired, remove all lines with "// @@@@" on them.<p>
+ * _TYPE_Vec's may not contain nulls.<p>
  */
 
 
@@ -55,7 +53,7 @@ public class  _TYPE_Vec {
      *                                                 *
      ***************************************************/
 
-    private /*@ spec_public non_null*/ _TYPE_[] elements;
+    private /*@ spec_public non_null*/ _TYPE_[/*#@nullable*/] elements;
     //@ invariant (\forall int i; (0<=i && i<count) ==> elements[i]!=null);
     //@ invariant \typeof(elements) == \type(_TYPE_[]);
 
@@ -72,11 +70,10 @@ public class  _TYPE_Vec {
      *                                                 *
      ***************************************************/
 
-    //@ requires els!=null;
-    //@ requires \nonnullelements(els);				// @@@@
+    //@ requires \nonnullelements(els);
     //@ ensures count == els.length;
     //@ pure
-    private _TYPE_Vec(_TYPE_[] els) {
+    private _TYPE_Vec(/*@non_null*/ _TYPE_[/*#@non_null*/] els) {
 	this.count = els.length;
 	this.elements = new _TYPE_[count];
 	//@ set elements.owner = this;
@@ -101,26 +98,22 @@ public class  _TYPE_Vec {
      *                                                 *
      ***************************************************/
 
-    //@ ensures \result!=null;
     //@ ensures \fresh(\result);
     //@ pure
-    public static _TYPE_Vec make() { 
+    public static /*@non_null*/ _TYPE_Vec make() { 
 	return new _TYPE_Vec(0);
     }
 
     //@ requires count >= 0;
-    //@ ensures \result!=null;
     //@ ensures \fresh(\result);
-    public static _TYPE_Vec make(int count) { 
+    public static /*@non_null*/ _TYPE_Vec make(int count) { 
 	return new _TYPE_Vec(count);
     }
 
-    //@ requires vec!=null;
     //@ requires vec.elementType <: \type(_TYPE_);
     //@ requires !vec.containsNull;
-    //@ ensures \result!=null;
     //@ ensures \fresh(\result);
-    public static _TYPE_Vec make(Vector vec) {
+    public static /*@non_null*/ _TYPE_Vec make(/*@non_null*/ Vector vec) {
 	int sz = vec.size();
 	_TYPE_Vec result = new _TYPE_Vec(sz);
 	result.count = sz;
@@ -128,25 +121,21 @@ public class  _TYPE_Vec {
 	return result;
     }
 
-    //@ requires els!=null;
     //@ requires \nonnullelements(els);
-    //@ ensures \result!=null;
     //@ ensures \result.count == els.length;
     //@ ensures \fresh(\result);
-    public static _TYPE_Vec make(_TYPE_[] els) {
+    public static /*@non_null*/ _TYPE_Vec make(/*@non_null*/ _TYPE_[/*#@non_null*/] els) {
 	return new _TYPE_Vec(els);
     }
 
-    //
     //@ requires s.vectorCount>1;
     //@ requires s.elementType <: \type(_TYPE_);
-    //@ ensures \result!=null;
     //@ ensures \result.count == (\old(s.elementCount) - \old(s.currentStackBottom));
     // These are from pop() on s:
     //@ modifies s.vectorCount;
     //@ ensures s.vectorCount == \old(s.vectorCount)-1;
     //@ modifies s.elementCount, s.currentStackBottom;
-    public static _TYPE_Vec popFromStackVector(/*@non_null*/ StackVector s) {
+    public static /*@non_null*/ _TYPE_Vec popFromStackVector(/*@non_null*/ StackVector s) {
 	// Creates a new _TYPE_Vec from top stuff in StackVector
 	int sz = s.size();
 	_TYPE_Vec r = new _TYPE_Vec(sz);
@@ -159,25 +148,23 @@ public class  _TYPE_Vec {
 
     /***************************************************
      *                                                 *
-     * Other methods:				       *
+     * Other methods:                                  *
      *                                                 *
      ***************************************************/
 
-    //@ requires 0<=index && index<count;
-    //@ ensures \result!=null;					// @@@@
+    //@ requires 0 <= index && index < count;
     //@ pure
-    public final _TYPE_ elementAt(int index)
+    public final /*@non_null*/ _TYPE_ elementAt(int index)
 	  /*throws ArrayIndexOutOfBoundsException*/ {
 	if (index < 0 || index >= count)
 	    throw new ArrayIndexOutOfBoundsException(index);
 
-	javafe.util.Assert.notNull(elements[index]);		// @@@@
-	return elements[index];
+	javafe.util.Assert.notNull(elements[index]);
+	return /*@(non_null)*/elements[index];
     }
 
     //@ requires 0<=index && index<count;
-    //@ requires x!=null;					// @@@@
-    public final void setElementAt(_TYPE_ x, int  index) 
+    public final void setElementAt(/*@non_null*/ _TYPE_ x, int index) 
 	/*throws ArrayIndexOutOfBoundsException*/ {
 	if (index < 0 || index >= count)
 	    throw new ArrayIndexOutOfBoundsException(index);
@@ -193,19 +180,15 @@ public class  _TYPE_Vec {
 	b.append("{_TYPE_Vec");
 	for(int i = 0; i < count; i++) {
 	    b.append(" ");
-	    if (elements[i]==null)
-		b.append("null");
-	    else
-		b.append(elements[i].toString());
+	    Object e = elements[i];
+	    b.append(e == null ? "null" : e.toString());
 	}
 	b.append('}');
 	return b.toString();
     }
 
-  //@ ensures \result!=null;
-  //@ ensures \nonnullelements(\result);			// @@@@
   //@ pure
-  public final _TYPE_[] toArray() {
+  public final /*@non_null*/ _TYPE_[/*#@non_null*/] toArray() {
       int ct = count;
       _TYPE_[] b = new _TYPE_[ ct ];
       for(int i = 0; i < ct; i++) {
@@ -214,27 +197,24 @@ public class  _TYPE_Vec {
       return b;
   }
 
-  //@ ensures \result!=null;
   //@ pure
-  public final _TYPE_Vec copy() {
+  public final /*@non_null*/ _TYPE_Vec copy() {
     _TYPE_Vec result = new _TYPE_Vec(count);
     result.count = count;
     System.arraycopy(elements,0,result.elements,0,count);
     return result;
   }
 
-  //@ requires x!=null;						// @@@@
-  public boolean contains(_TYPE_ x) {
+  public boolean contains(/*@non_null*/ _TYPE_ x) {
     for(int i = 0; i < count; i++) {
       if( elements[i] == x ) return true;
     }
     return false;
   }
 
-  //@ requires x!=null;						// @@@@
-  //@ modifies count,elements;
-  //@ ensures count==\old(count)+1;
-  public final void addElement(_TYPE_ x) {
+  //@ modifies count, elements;
+  //@ ensures count == \old(count) + 1;
+  public final void addElement(/*@non_null*/ _TYPE_ x) {
     if( count == elements.length ) {
       _TYPE_[] newElements = new _TYPE_[ 2*(elements.length==0 ?
 					      2 : elements.length) ];
@@ -246,9 +226,8 @@ public class  _TYPE_Vec {
     elements[count++]=x;
   }
 
-  //@ requires x!=null;						// @@@@
   //@ modifies count;
-  public final boolean removeElement(_TYPE_ x) {
+  public final boolean removeElement(/*@non_null*/ _TYPE_ x) {
     for( int i=0; i<count; i++ ) {
       if( elements[i] == x ) {
 	  int ct=count;
@@ -271,15 +250,14 @@ public class  _TYPE_Vec {
         count--;
     }
 
-    //@ requires count>0;
+    //@ requires count > 0;
     //@ modifies count;
-    //@ ensures count==\old(count)-1;
-    //@ ensures \result!=null;
-    public final _TYPE_ pop() {
+    //@ ensures count == \old(count) - 1;
+    public final /*@non_null*/ _TYPE_ pop() {
         count--;
         _TYPE_ result = elements[count];
 	elements[count] = null;
-	return result;
+	return /*@(non_null)*/result;
     }
 
 
@@ -291,10 +269,9 @@ public class  _TYPE_Vec {
 
 
   //@ requires 0 <= index && index <= this.count;
-  //@ requires obj!=null;
-  //@ modifies count,elements;
-  //@ ensures count==\old(count)+1;
-  public final void insertElementAt(_TYPE_ obj, int index) {
+  //@ modifies count, elements;
+  //@ ensures count == \old(count) + 1;
+  public final void insertElementAt(/*@non_null*/ _TYPE_ obj, int index) {
     if( count == elements.length ) {
       _TYPE_[] newElements = new _TYPE_[ 2*(elements.length==0 ?
 					      2 : elements.length) ];
@@ -302,18 +279,16 @@ public class  _TYPE_Vec {
       System.arraycopy(elements, 0, newElements, 0, elements.length );
       elements = newElements;
     }
-    int ct=count;
-    //-@ loop_predicate i!=ct ==> elements[ct] != null, i<= ct; // FIXME - what are the semantics
-    for( int i=count; i>index; i--) 
-      elements[i]=elements[i-1];
-    elements[index]=obj;
+    //-@ loop_predicate i != count ==> elements[count] != null, i<= count; // FIXME - what are the semantics
+    for(int i = count; i > index; i--) 
+      elements[i] = elements[i-1];
+    elements[index] = obj;
     count++;
   }
 
-  //@ requires vec!=null;
-  //@ modifies count,elements;
-  //@ ensures count==\old(count)+vec.count;
-  public final void append(_TYPE_Vec vec) {
+  //@ modifies count, elements;
+  //@ ensures count== \old(count) + vec.count;
+  public final void append(/*@non_null*/ _TYPE_Vec vec) {
       //-@ loop_predicate count == \old(count)+i, i <= vec.count; // FIXME - what are the semantics
     for( int i=0; i<vec.size(); i++)
       addElement( vec.elementAt(i) );
