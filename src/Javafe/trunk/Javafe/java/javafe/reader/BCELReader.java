@@ -820,7 +820,7 @@ class BCELReader extends Reader {
 	 * @return TypeNameVec of compomnd name form, without dots
 	 * @throws ClassNotFoundException
 	 */
-	protected TypeNameVec readExceptionTypeNames(ExceptionTable exceptionTable)
+	protected /*@non_null*/ TypeNameVec readExceptionTypeNames(ExceptionTable exceptionTable)
 			throws ClassNotFoundException {
 
 		int numberOfExceptionsThrown = exceptionTable.getNumberOfExceptions();
