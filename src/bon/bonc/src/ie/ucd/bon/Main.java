@@ -33,7 +33,7 @@ import org.antlr.runtime.RecognitionException;
  * @author Fintan
  *
  */
-public class Main {
+public final class Main {
 
   public static final int TC_NUM_SEVERE_ERRORS = 2; //NB for all files
   public static final int PP_NUM_SEVERE_ERRORS = 0; //NB for one file
@@ -41,6 +41,12 @@ public class Main {
   public static final int IG_NUM_SEVERE_ERRORS = 10; //NB for all files
   
   private static boolean debug = false;
+  private static String version;
+  
+  private static Problems problems;   
+  
+  /** Prevent instantiation of Main. */
+  private Main() { }
   
   public static boolean isDebug() {
     return debug;
@@ -52,7 +58,10 @@ public class Main {
     }
   }
   
-  private static String version;
+  /**
+   * Get the version of BONc that is running.
+   * @return a string containing the version number of BONc.
+   */
   public static String getVersion() {
     if (version == null) {
       try {
@@ -63,8 +72,6 @@ public class Main {
     }
     return version;
   }
-  
-  private static Problems problems; 
   
   public static void main(final String[] args) {
     try {
@@ -115,7 +122,7 @@ public class Main {
     } 
   }
   
-  private static Collection<File> getValidFiles(Collection<String> fileNames, ParsingTracker tracker, Options so) {
+  private static Collection<File> getValidFiles(final Collection<String> fileNames, final ParsingTracker tracker, final Options so) {
     //Check valid files
     Collection<File> validFiles = new Vector<File>();
     
@@ -145,7 +152,7 @@ public class Main {
     return validFiles;
   }
   
-  private static void parse(Collection<File> files, ParsingTracker tracker, boolean timing) {
+  private static void parse(final Collection<File> files, final ParsingTracker tracker, final boolean timing) {
  
     for (File file : files) {
       ParseResult parseResult;
@@ -168,7 +175,7 @@ public class Main {
           long startTime = System.nanoTime();
           parseResult = Parser.parse(file, is, tracker);
           long endTime = System.nanoTime();
-          System.out.println("Parsing took: " + timeString(endTime-startTime));
+          System.out.println("Parsing took: " + timeString(endTime - startTime));
         } else {
           parseResult = Parser.parse(file, is, tracker);
         }
@@ -185,7 +192,7 @@ public class Main {
     }
   }
   
-  private static void typeCheck(ParsingTracker tracker, Options so, boolean timing) {
+  private static void typeCheck(final ParsingTracker tracker, final Options so, final boolean timing) {
     if (so.isBooleanOptionByNameSelected("-tc")) {
 
       boolean checkInformal = so.isBooleanOptionByNameSelected("-ci");
@@ -199,7 +206,7 @@ public class Main {
             long startTime = System.nanoTime();
             TypeChecker.typeCheck(tracker, checkInformal, checkFormal, checkConsistency);
             long endTime = System.nanoTime();
-            System.out.println("Typechecking took: " + timeString(endTime-startTime));
+            System.out.println("Typechecking took: " + timeString(endTime - startTime));
           } else {
             TypeChecker.typeCheck(tracker, checkInformal, checkFormal, checkConsistency);
           }
@@ -217,9 +224,9 @@ public class Main {
     }
   }
   
-  private static void print(Collection<File> files, ParsingTracker tracker, Options so, boolean timing) {
+  private static void print(final Collection<File> files, final ParsingTracker tracker, final Options so, final boolean timing) {
 
-    if(!so.isStringOptionByNameSelected("-p")) {
+    if (!so.isStringOptionByNameSelected("-p")) {
       return;
     }
 
@@ -240,6 +247,7 @@ public class Main {
         }
       } catch (RecognitionException re) {
         //Can't actually be thrown for this.
+    	logDebug("Main: Threw RecognitionException while executing printGeneratedClassDictionaryToString");
       }
     }
     
@@ -274,7 +282,7 @@ public class Main {
     }
   }
   
-  private static void graph(ParsingTracker tracker, Options so) {
+  private static void graph(final ParsingTracker tracker, final Options so) {
     //Class and Cluster graph
     if (so.isStringOptionByNameSelected("-cg")) {
       if (tracker.continueFromParse(CCG_NUM_SEVERE_ERRORS)) {
@@ -295,7 +303,7 @@ public class Main {
     }
   }
   
-  public static boolean run(Collection<String> fileNames, Options so) {
+  public static boolean run(final Collection<String> fileNames, final Options so) {
     //Timing info?
     boolean timing = so.isBooleanOptionByNameSelected("-time");
     
@@ -324,14 +332,14 @@ public class Main {
     return true;
   }
   
-  private static void printResults(ParsingTracker tracker, boolean checkInformal, boolean checkFormal, boolean checkConsistency) {
+  private static void printResults(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) {
     problems = tracker.getErrorsAndWarnings(checkInformal, checkFormal, checkConsistency);
     problems.printProblems(System.out);
     problems.printSummary(System.out);
     tracker.printFinalMessage(System.out);
   }
 
-  private static CommandlineParser processArguments(String[] args) throws InvalidOptionsSetException {
+  private static CommandlineParser processArguments(final String[] args) throws InvalidOptionsSetException {
     CommandlineParser clp = CLP.commandlineParser();
     
     clp.parseOptions(System.out, args);
@@ -341,7 +349,7 @@ public class Main {
     return clp;
   }
   
-  public static String timeString(long timeInNano) {
+  public static String timeString(final long timeInNano) {
     return timeInNano + "ns (" + (timeInNano / 1000000d) + "ms or " + (timeInNano / 1000000000d) + "s)";
   }
   

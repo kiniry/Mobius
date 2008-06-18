@@ -35,13 +35,16 @@ import org.antlr.stringtemplate.StringTemplateGroup;
  * @author Fintan
  *
  */
-public class Printer {
+public final class Printer {
 
+  /** Prevent instantiation of Printer. */
+  private Printer() { }
+  
   public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, NONE };
   
   private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
-  public static PrintingOption getPrintingOption(String optionString) {   
+  public static PrintingOption getPrintingOption(final String optionString) {   
     if (optionString.equalsIgnoreCase("syso") || optionString.equalsIgnoreCase("stdo")) {
       return PrintingOption.SYSO;
     } else if (optionString.equalsIgnoreCase("txt")) {
@@ -57,7 +60,7 @@ public class Printer {
     }    
   }
   
-  public static String getPrintingOptionName(PrintingOption po) {
+  public static String getPrintingOptionName(final PrintingOption po) {
     switch(po) {
     case PLAIN_TEXT:
       return "plain-text";
@@ -72,7 +75,7 @@ public class Printer {
     }
   }
 
-  public static String getPrintingOptionStartString(PrintingOption po) {
+  public static String getPrintingOptionStartString(final PrintingOption po) {
     try {
       switch(po) {
       case PLAIN_TEXT:
@@ -88,7 +91,7 @@ public class Printer {
     }
   }
   
-  public static String getPrintingOptionEndString(PrintingOption po) {
+  public static String getPrintingOptionEndString(final PrintingOption po) {
     try {
       switch(po) {
       case PLAIN_TEXT:
@@ -104,7 +107,7 @@ public class Printer {
     }
   }
   
-  public static Reader getPrintingOptionTemplateFileReader(PrintingOption po) {
+  public static Reader getPrintingOptionTemplateFileReader(final PrintingOption po) {
     switch(po) {
     case PLAIN_TEXT:
       return FileUtil.getResourceReader("templates/BONPlainText.stg");
@@ -115,7 +118,7 @@ public class Printer {
     }
   }
   
-  public static String getExtraPartsForPrintingOption(PrintingOption po, PrintingTracker printingTracker, ParsingTracker parsingTracker) {
+  public static String getExtraPartsForPrintingOption(final PrintingOption po, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) {
     switch(po) {
     case HTML:
       return HTMLLinkGenerator.generateLinks(printingTracker, parsingTracker);
@@ -124,7 +127,7 @@ public class Printer {
     }
   }
 
-  private static String printUsingTemplateToString(ParseResult parseResult, Reader stFile, PrintingOption printingOption, PrintingTracker printingTracker) throws RecognitionException {
+  private static String printUsingTemplateToString(final ParseResult parseResult, final Reader stFile, final PrintingOption printingOption, final PrintingTracker printingTracker) throws RecognitionException {
     try {
       StringTemplateGroup templates = new StringTemplateGroup(stFile);
       stFile.close();
@@ -145,7 +148,7 @@ public class Printer {
     }
   }
   
-  public static String printGeneratedClassDictionaryToString(ParsingTracker tracker) {
+  public static String printGeneratedClassDictionaryToString(final ParsingTracker tracker) {
     try {
       return ClassDictionaryGenerator.generateDictionary(tracker);
     } catch (UnableToGenerateClassDictionaryException e) {
@@ -154,21 +157,21 @@ public class Printer {
     }
   }
 
-  public static String printDotToString(ParseResult parseResult) {
+  public static String printDotToString(final ParseResult parseResult) {
     DOTTreeGenerator gen = new DOTTreeGenerator();
     StringTemplate st = gen.toDOT((Tree)parseResult.getParse().getTree());
     return st.toString();
   }
 
-  private static String printStartToString(PrintingOption printOption, Calendar printTime, String extraParts, ParsingTracker parsingTracker) {
+  private static String printStartToString(final PrintingOption printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
     return formatString(getPrintingOptionStartString(printOption), printTime, extraParts, parsingTracker);
   }
   
-  private static String printEndToString(PrintingOption printOption, Calendar printTime, String extraParts, ParsingTracker parsingTracker) {
+  private static String printEndToString(final PrintingOption printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
     return formatString(getPrintingOptionEndString(printOption), printTime, extraParts, parsingTracker);
   }
   
-  private static String formatString(String toFormat, Calendar printTime, String extraParts, ParsingTracker parsingTracker) {
+  private static String formatString(final String toFormat, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
     SystemChartDefinition sysDef = parsingTracker.getInformalTypingInformation().getSystem();
     String systemName = sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getSystemName(); 
     return String.format(toFormat, 
@@ -180,7 +183,7 @@ public class Printer {
   }
 
   
-  public static void printToStream(Collection<File> files, ParsingTracker parsingTracker, PrintStream outputStream, PrintingOption printingOption, boolean printToFile, boolean timing) {
+  public static void printToStream(final Collection<File> files, final ParsingTracker parsingTracker, final PrintStream outputStream, final PrintingOption printingOption, final boolean printToFile, final boolean timing) {
     Calendar printTime = new GregorianCalendar();
     PrintingTracker printTracker = new PrintingTracker();
     StringBuilder main = new StringBuilder();
@@ -201,7 +204,7 @@ public class Printer {
             long startTime = System.nanoTime();
             printed = Printer.printToString(parse, printingOption, printTracker, parsingTracker);
             long endTime = System.nanoTime();
-            System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + Main.timeString(endTime-startTime));
+            System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + Main.timeString(endTime - startTime));
           } else {
             printed = Printer.printToString(parse, printingOption, printTracker, parsingTracker);
           }
@@ -234,7 +237,7 @@ public class Printer {
   
   private static boolean alreadyPrintedClassDic = false;
   
-  public static String printToString(ParseResult parseResult, PrintingOption printingOption, PrintingTracker printingTracker, ParsingTracker parsingTracker) throws RecognitionException {
+  public static String printToString(final ParseResult parseResult, final PrintingOption printingOption, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) throws RecognitionException {
     String outputText = null;
     
     if (printingOption == PrintingOption.DOT) {

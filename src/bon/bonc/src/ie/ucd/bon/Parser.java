@@ -28,12 +28,15 @@ import org.antlr.runtime.tree.RewriteEmptyStreamException;
  * @author Fintan
  *
  */
-public class Parser {
+public final class Parser {
   
   private static BONParser parser = new BONParser(null);
   private static BONLexer lexer = new BONLexer(null);
   
-  public static ParseResult parse(File inputFile, InputStream is, ParsingTracker tracker) 
+  /** Prevent instantiation of Parser. */
+  private Parser() { }
+  
+  public static ParseResult parse(final File inputFile, final InputStream is, final ParsingTracker tracker) 
   throws RecognitionException {
     if (is == null) {
       Problems problems = new Problems();

@@ -15,8 +15,11 @@ import ie.ucd.commandline.options.StringDefaultOption;
 import ie.ucd.commandline.parser.CommandlineParser;
 import ie.ucd.commandline.parser.CommandlineParser.SortingOption;
 
-public class CLP {
-
+public final class CLP {
+  
+  /** Prevent instantiation of CLP. */
+  private CLP() { }
+	
   public static CommandlineParser commandlineParser() throws InvalidOptionsSetException {
     CommandlineParser cp = new CommandlineParser("bonc", SortingOption.ALPHABETICAL_OPTION, 1);
     cp.setStartHelpString("BON Parser and Typechecker.");

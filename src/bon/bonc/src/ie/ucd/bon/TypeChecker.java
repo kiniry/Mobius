@@ -15,11 +15,14 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 
 
-public class TypeChecker {
+public final class TypeChecker {
 
+  /** Prevent instantiation of TypeChecker. */
+  private TypeChecker() { }
+  
   private static final BONTCTreeWalker walker = new BONTCTreeWalker(null);
   
-  public static void typeCheck(ParsingTracker tracker, boolean checkInformal, boolean checkFormal, boolean checkConsistency) throws RecognitionException {
+  public static void typeCheck(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) throws RecognitionException {
     InformalTypeChecker itc = tracker.getInformalTypeChecker();
     FormalTypeChecker ftc = tracker.getFormalTypeChecker();
     
@@ -44,7 +47,7 @@ public class TypeChecker {
     }
   }
   
-  public static void typeCheck(ParseResult parse, InformalTypeChecker itc, FormalTypeChecker ftc) throws RecognitionException {
+  public static void typeCheck(final ParseResult parse, final InformalTypeChecker itc, final FormalTypeChecker ftc) throws RecognitionException {
     Main.logDebug("Typechecking " + parse.getFilePath());
     
     CommonTree t = (CommonTree)parse.getParse().getTree(); //Get input tree
