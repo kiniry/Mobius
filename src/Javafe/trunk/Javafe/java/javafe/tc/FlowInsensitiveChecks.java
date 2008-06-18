@@ -4,8 +4,6 @@
 package javafe.tc;
 
 import java.util.HashSet;
-import java.util.Set;
-
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
 import javafe.ast.AmbiguousMethodInvocation;
@@ -987,8 +985,7 @@ public class FlowInsensitiveChecks
         case TagConstants.CONSTRUCTORINVOCATION: {
             ConstructorInvocation ci = (ConstructorInvocation)s;
 
-            TypeSig calleeSig = ci.superCall ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) //@nowarn
-                                                                                                // Cast,NonNull;
+            TypeSig calleeSig = ci.superCall ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) //@nowarn Cast, NonNull;
                 .superClass)
                 : sig;
 
