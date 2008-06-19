@@ -16,6 +16,7 @@ import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,6 +34,8 @@ public class InformalTypingInformation {
   private final Set<String> clustersInSystem;
   
   private final Graph<String,String> classInheritanceGraph;
+  
+  private final Graph<String,String> alternativeClassDescriptionsGraph;
     
   public InformalTypingInformation(Context context) {
     this.context = context;
@@ -45,6 +48,8 @@ public class InformalTypingInformation {
     clustersInSystem = new HashSet<String>();
     
     classInheritanceGraph = new Graph<String,String>();
+    
+    alternativeClassDescriptionsGraph = new Graph<String,String>();
     
     problems = new Problems();
   }
@@ -94,10 +99,14 @@ public class InformalTypingInformation {
     }
   }
   
-  public void addClassEntry(String className) {
+  public void addClassEntry(String className, String description) {
     if (context.isInClusterChart()) {
       //Should be, sanity check anyway
       classClusterGraph.addEdge(className, clusters.get(context.getClusterChartName()));
+      
+      if (description != null && !"".equals(description)) {
+        alternativeClassDescriptionsGraph.addEdge(className, description);
+      }
     }
   }
   
@@ -154,6 +163,17 @@ public class InformalTypingInformation {
 
   public Graph<String, ClusterChartDefinition> getClassClusterGraph() {
     return classClusterGraph;
+  }
+  
+  public String getAlternativeClassDescription(final String className) {
+    //Probably makes more sense to only store one in the first place since we'll only use one.
+    //This won't make a big difference in practice, as almost always a class will be in one cluster only.
+    Iterator<String> descriptions = alternativeClassDescriptionsGraph.getLinkedNodes(className).iterator();
+    if (descriptions.hasNext()) {
+      return descriptions.next();
+    } else {
+      return "";
+    }    
   }
 
 }

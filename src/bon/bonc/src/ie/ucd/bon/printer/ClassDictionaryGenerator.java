@@ -66,8 +66,10 @@ public class ClassDictionaryGenerator {
         sb.append("  description");
         sb.append(newLine);
         sb.append("    ");
-        if (classDef.getExplanation() == null) {
-          sb.append("\"\"");
+        if (classDef.getExplanation() == null || "".equals(classDef.getExplanation())) {
+          sb.append("\"");
+          sb.append(iti.getAlternativeClassDescription(className));
+          sb.append("\"");
         } else {
           sb.append(classDef.getExplanation());
         }

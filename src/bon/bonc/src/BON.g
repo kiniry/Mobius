@@ -425,7 +425,7 @@ class_entries  :  (class_entry)+
                ;
                
 class_entry  :  c='class' class_name description
-                { getTI().informal().addClassEntry($class_name.text); }
+                { getTI().informal().addClassEntry($class_name.text, $description.text); }
               ->
               ^(
                 CLASS_ENTRY[$c] class_name description
