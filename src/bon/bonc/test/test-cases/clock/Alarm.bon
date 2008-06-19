@@ -6,11 +6,11 @@ component
   deferred class ALARM -- An alarm that is either on or off.
   feature
     deferred on  -- Turn this alarm on.
-      ensures
+      ensure
         is_on();
       end
     deferred off  -- Turn this alarm off.
-      ensures
+      ensure
         not is_on();
       end
     deferred is_on: BOOLEAN  -- Is this alarm on?

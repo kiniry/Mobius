@@ -1,10 +1,12 @@
-class_chart ALARM_CLOCK inherit CLOCK
+class_chart ALARM_CLOCK
 
 explanation
   "A clock with an alarm."
+inherit 
+  CLOCK
 command
   "Set alarm time to a new time."
 constraint
-  "The alarm time in hours must be non-negative and less than 24."
+  "The alarm time in hours must be non-negative and less than 24.",
   "The alarm time in minutes must be non-negative and less than 24."
 end

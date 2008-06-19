@@ -5,9 +5,9 @@ explanation
 query
   "What is the current time in hours for this clock?",
   "What is the current time in minutes for this clock?",
-  "What is the current time in seconds for this clock?",
+  "What is the current time in seconds for this clock?"
 command
-  "One second has passed; update the clock's time."
+  "One second has passed; update the clock's time.",
   "Set the clock's time."
 constraint
   "The time in hours must be non-negative and less than 24.",

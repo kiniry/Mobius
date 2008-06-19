@@ -455,13 +455,6 @@ creationEntry(name,cnl) ::= <<
 >>
 
 staticDiagram(ps,sb) ::= <<
-static_diagram<if(first(ps))> <ps><endif>
-component
-<if(first(sb))>
-  <sb>
-
-<endif>
-end
 >>
 
 extendedID(s) ::= <<
@@ -869,14 +862,6 @@ realConstant(sign,r) ::= <<
 >>
 
 dynamicDiagram(exid,dynblock) ::= <<
-dynamic_diagram<if(first(exid))> <exid><endif>
-  component
-<if(first(dynblock))>
-    <dynblock>
-  end
-<else>
-  end
-<endif>
 >>
 
 dynamicBlock(dcl) ::= <<
@@ -968,7 +953,6 @@ messageLabel(l) ::= <<
 >>
 
 notationalTuning(nt) ::= <<
-<nt>
 >>
 
 changeStringMarks(m1,m2) ::= <<

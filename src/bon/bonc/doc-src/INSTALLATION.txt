@@ -37,7 +37,7 @@ Contents:
 ------------------------
 
    Add the following line to your sources.list (/etc/apt/sources.list):
-     deb http://hunter.ucd.ie/bon/apt unstable contrib
+     sudo wget http://hunter.ucd.ie/bon/bonc.list -O /etc/apt/sources.list.d/bonc.list
 
    Then:
      sudo apt-get update

@@ -7,6 +7,6 @@ query
 command
   "Advance the clock; update the clock's time."
 constraint
-  "The time must be non-negative."
+  "The time must be non-negative.",
   "Must support concurrent use by multiple clients."
 end
