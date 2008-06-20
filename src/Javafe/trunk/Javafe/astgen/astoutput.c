@@ -361,7 +361,10 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
 	    doneSzDecl = TRUE;
 	  }
 	  indent(o, ind+3);
-	  fprintf(o, "if (this.%s != null) sz += this.%s.size();\n",
+	  fprintf(o, "%s%s tmp_%s = this.%s;\n", d->i.f.type, VECTORSUFFIX,
+		  d->i.f.name, d->i.f.name);
+	  indent(o, ind+3);
+	  fprintf(o, "if (tmp_%s != null) sz += tmp_%s.size();\n",
 		  d->i.f.name, d->i.f.name);
 	} else simpleChildCount++;
       }
@@ -386,9 +389,12 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
 	char *n = d->i.f.name;
 	if (d->i.f.sequence) { /* Sequence field */
 	  indent(o, ind+3);
-	  fprintf(o, "sz = (this.%s == null ? 0 : this.%s.size());\n", n, n);
+	  fprintf(o, "%s%s tmp_%s = this.%s;\n", d->i.f.type, VECTORSUFFIX,
+		  d->i.f.name, d->i.f.name);
+	  indent(o, ind+3);
+	  fprintf(o, "sz = (tmp_%s == null ? 0 : tmp_%s.size());\n", n, n);
 	  indent(o, ind+3); fprintf(o, "if (0 <= index && index < sz)\n");
-	  indent(o, ind+6); fprintf(o, "return this.%s.elementAt(index);\n",n);
+	  indent(o, ind+6); fprintf(o, "return tmp_%s.elementAt(index);\n",n);
 	  indent(o, ind+3); fprintf(o, "else index -= sz;\n\n");
 	} else { /* Simple field */
 	  indent(o, ind+3); fprintf(o, "if (index == 0) return this.%s;\n", n);
@@ -475,17 +481,22 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
 	fprintf(o, "if (this.%s == null) throw new RuntimeException();\n",
 		d->i.f.name);
       else {
+	const char* fieldPrefix = (d->i.f.sequence) ? "tmp_" : "this.";
+	if (d->i.f.sequence) {
+	  fprintf(o, "%s%s tmp_%s = this.%s;\n", d->i.f.type, VECTORSUFFIX,
+		  d->i.f.name, d->i.f.name);
+	  indent(o, ind2);
+	}
 	if (! d->i.f.notnull) {
-	  fprintf(o, "if (this.%s != null)\n", d->i.f.name);
+	  fprintf(o, "if (%s%s != null)\n", fieldPrefix, d->i.f.name);
 	  ind2 += 3;
 	  indent(o, ind2);
 	}
 	if (d->i.f.sequence) {
-	  fprintf(o, "for(int i = 0; i < this.%s.size(); i++)\n", d->i.f.name);
+	  fprintf(o, "for(int i = 0; i < %s%s.size(); i++)\n", fieldPrefix, d->i.f.name);
 	  indent(o, ind2+3);
-	  fprintf(o, "this.%s.elementAt(i).check();\n",
-		  d->i.f.name);
-	} else fprintf(o, "this.%s.check();\n", d->i.f.name);
+	  fprintf(o, "%s%s.elementAt(i).check();\n", fieldPrefix, d->i.f.name);
+	} else fprintf(o, "%s%s.check();\n", fieldPrefix, d->i.f.name);
       }
     }
 
