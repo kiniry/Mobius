@@ -122,7 +122,7 @@ public class EnvForTypeSig extends Env {
      * avoided unless an unknown environment needs to be coerced in
      * this way. <p>
      */
-    public Env asStaticContext() {
+    public /*@non_null*/Env asStaticContext() {
 	return new EnvForTypeSig(parent, peervar, true);
     }
 

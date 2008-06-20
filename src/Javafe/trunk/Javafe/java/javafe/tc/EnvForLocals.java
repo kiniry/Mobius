@@ -144,13 +144,13 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
      * avoided unless an unknown environment needs to be coerced in
      * this way. <p>
      */
-    public Env asStaticContext() {
+    public /*@non_null*/Env asStaticContext() {
 	EnvForLocals n;
 	try {
 	    n = (EnvForLocals)this.clone();
 	} catch (CloneNotSupportedException e) {
 	    Assert.fail("clone did not obey its spec!");
-	    return null;  // keep compiler happy
+	    return this;  // keep compiler happy
 	}
 	n.parent = parent.asStaticContext();
 	return n;

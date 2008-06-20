@@ -136,7 +136,7 @@ public abstract class ClassFileParser implements ClassFileConstants {
     /** Set the "i"th field defined by this class.  This routine
 	is called exactly once for each field.  It is called after
 	"set_num_fields". */
-    protected abstract void set_field(int i, String fname, String type,int mod)
+    protected abstract void set_field(int i, /*@non_null*/String fname, /*@non_null*/String type, int mod)
 	throws ClassFormatError;
 
     /** Set the initializer for "i"th field defined by this class.
@@ -152,7 +152,7 @@ public abstract class ClassFileParser implements ClassFileConstants {
         overrides this method, it must read exactly "n" bytes from the
         input stream.  This routine is called after "set_field(i)". */
     protected void set_field_attribute(int i, String aname,
-				       DataInput stream, int n)
+    				/*@non_null*/DataInput stream, int n)
 	throws IOException, ClassFormatError
     {
 	stream.skipBytes(n);
@@ -161,7 +161,7 @@ public abstract class ClassFileParser implements ClassFileConstants {
     /** Set the "i"th field defined by this class.  This routine
 	is called exactly once for each method.  It is called after
 	"set_num_methods". */
-    protected abstract void set_method(int i, String mname, String sig,
+    protected abstract void set_method(int i, /*@non_null*/String mname, /*@non_null*/String sig,
 				       int mod)
 	throws ClassFormatError;
 
@@ -191,8 +191,8 @@ public abstract class ClassFileParser implements ClassFileConstants {
         data that define the attribute value.  If a subclass overrides
         this method, it must read exactly "n" bytes from the input
         stream.  This routine is called after "set_method(i)". */
-    protected void set_method_attribute(int i, String aname,
-					DataInput stream, int n)
+    protected void set_method_attribute(int i, /*@non_null*/String aname,
+    		/*@non_null*/DataInput stream, int n)
 	throws IOException, ClassFormatError
     {
 	stream.skipBytes(n);

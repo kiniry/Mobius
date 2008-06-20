@@ -225,10 +225,10 @@ class ASTClassFileParser extends ClassFileParser {
   /**
    * Call back from ClassFileParser.
    */
-  protected void set_const(int i, int ctype, /*@non_null*/Object value)
+  protected void set_const(int i, int ctype, /*@nullable*/Object value)
       throws ClassFormatError {
-    constants[i] = ctype == CONSTANT_Class ? //@ nowarn IndexTooBig;
-    DescriptorParser.parseClass((String) value)
+    constants[i] = ctype == CONSTANT_Class //@ nowarn IndexTooBig;
+    	? DescriptorParser.parseClass((/*@non_null*/String) value)
         : value;
     rawConstants[i] = value;
   }
@@ -268,7 +268,7 @@ class ASTClassFileParser extends ClassFileParser {
             throw new ClassFormatError("bad constant reference");
           }
           //@ assume rawConstants[inner] instanceof String;  // property of class files
-          String nm = (String) rawConstants[inner];
+          String nm = (/*@non_null*/String) rawConstants[inner];
           int i = nm.lastIndexOf("/");
           String icfn = (i < 0 ? nm : nm.substring(i + 1)) + ".class";
           GenericFile icf = inputFile.getSibling(icfn);
@@ -308,8 +308,7 @@ class ASTClassFileParser extends ClassFileParser {
   protected void set_this_class(int cindex) throws ClassFormatError {
     // record the class type and synthesize a location for the class binary
 
-    TypeName typeName = (TypeName) constants[cindex]; //@ nowarn Cast, IndexTooBig;
-    //@ assume typeName != null;
+    TypeName typeName = (/*@non_null*/TypeName) constants[cindex]; //@ nowarn Cast, IndexTooBig;
 
     Name qualifier = getNameQualifier(typeName.name);
     Identifier terminal = getNameTerminal(typeName.name);
@@ -367,7 +366,7 @@ class ASTClassFileParser extends ClassFileParser {
   /**
    * Call back from ClassFileParser.
    */
-  protected void set_field_initializer(int i, /*@non_null*/Object value)
+  protected void set_field_initializer(int i, Object value)
       throws ClassFormatError {
     // construct a literal expression for the initializer
 
@@ -380,7 +379,7 @@ class ASTClassFileParser extends ClassFileParser {
     switch (field.type.getTag()) {
     case ASTTagConstants.BOOLEANTYPE:
       tag = ASTTagConstants.BOOLEANLIT;
-      literal = Boolean.valueOf(((Integer) value).intValue() != 0); //@ nowarn Cast,Null;
+      literal = Boolean.valueOf(((/*@non_null*/Integer) value).intValue() != 0); //@ nowarn Cast,Null;
       break;
 
     case ASTTagConstants.INTTYPE:
@@ -516,7 +515,7 @@ class ASTClassFileParser extends ClassFileParser {
    * InterfaceMethodRef  null
    */
   //@ private invariant \typeof(constants) == \type(Object[]);
-  private /*@non_null*/Object[/*#@non_null*/] constants;
+  private /*@non_null*/Object[/*#@nullable*/] constants;
 
   /**
    * The constant pool of the class being parsed.
@@ -526,7 +525,7 @@ class ASTClassFileParser extends ClassFileParser {
    */
   //@ private invariant \typeof(rawConstants) == \type(Object[]);
   //@ private invariant constants.length == rawConstants.length;
-  private /*@non_null*/Object[/*#@non_null*/] rawConstants;
+  private /*@non_null*/Object[/*#@nullable*/] rawConstants;
 
   /**
    * The modifiers of the class being parsed.

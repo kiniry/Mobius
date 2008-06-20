@@ -84,7 +84,7 @@ public class EnvForCU extends Env {
      * avoided unless an unknown environment needs to be coerced in
      * this way. <p>
      */
-    public Env asStaticContext() { return this; }
+    public /*@non_null*/Env asStaticContext() { return this; }
 
 
     /***************************************************
