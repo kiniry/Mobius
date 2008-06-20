@@ -45,7 +45,7 @@ class ASTClassFileParser extends ClassFileParser {
    */
   // access only readonly by BinReader
   //@ invariant typeDecl.specOnly;
-  /*@ spec_protected non_null*/ TypeDecl typeDecl;
+  /*@ spec_protected*/ TypeDecl typeDecl;
 
   /**
    * A dummy location representing the class being parsed.
@@ -90,7 +90,12 @@ class ASTClassFileParser extends ClassFileParser {
                      boolean includeBodies) throws IOException,
       ClassFormatError {
     super();
+    this.constants = new Object[0];
+    this.fields = new FieldDecl[0];
     this.includeBodies = includeBodies;
+    this.interfaces = new TypeName[0];
+    this.rawConstants = new Object[0];
+    this.routines = new RoutineDecl[0];
     DataInputStream stream = null;
     try {
       this.inputFile = inputFile;
@@ -117,7 +122,7 @@ class ASTClassFileParser extends ClassFileParser {
    direct inner classes. - DRCok
    */
   public void removeExtraArg() {
-    TypeDeclElemVec vv = typeDecl.elems;
+    TypeDeclElemVec vv = (/*@(non_null)*/typeDecl).elems;
     for (int k = 0; k < vv.size(); ++k) {
       if (!(vv.elementAt(k) instanceof ClassDecl))
         continue;
@@ -143,7 +148,7 @@ class ASTClassFileParser extends ClassFileParser {
    * or is a static method decl for an interface.
    */
   protected void addNonSyntheticDecls(/*@ non_null */TypeDeclElemVec v,
-  /*@ non_null */TypeDeclElem[] elems) {
+  /*@non_null*/TypeDeclElem[/*#@non_null*/] elems) {
     for (int i = 0; i < elems.length; i++) {
       if (synthetics.contains(elems[i])) { //@ nowarn;
         continue;
@@ -183,20 +188,23 @@ class ASTClassFileParser extends ClassFileParser {
     this.addNonSyntheticDecls(elementVec, fields);
 
     //@ assume classIdentifier != null;
+    Identifier classId = /*@(non_null)*/ this.classIdentifier;
+    TypeDecl _typeDecl;
     if ((modifiers & ACC_INTERFACE) != 0) {
-      typeDecl = (TypeDecl) InterfaceDecl.make(modifiers & ~ACC_INTERFACE,
-                                               null, classIdentifier,
+      _typeDecl = (TypeDecl) InterfaceDecl.make(modifiers & ~ACC_INTERFACE,
+                                               null, classId,
                                                interfaceVec, null, elementVec,
                                                classLocation, classLocation,
                                                classLocation, classLocation);
     } else {
-      typeDecl = (TypeDecl) ClassDecl.make(modifiers, null, classIdentifier,
+      _typeDecl = (TypeDecl) ClassDecl.make(modifiers, null, classId,
                                            interfaceVec, null, elementVec,
                                            classLocation, classLocation,
                                            classLocation, classLocation,
                                            super_class);
     }
-    typeDecl.specOnly = true;
+    _typeDecl.specOnly = true;
+    this.typeDecl = _typeDecl;
   }
 
   /**
@@ -217,7 +225,7 @@ class ASTClassFileParser extends ClassFileParser {
   /**
    * Call back from ClassFileParser.
    */
-  protected void set_const(int i, int ctype, Object value)
+  protected void set_const(int i, int ctype, /*@non_null*/Object value)
       throws ClassFormatError {
     constants[i] = ctype == CONSTANT_Class ? //@ nowarn IndexTooBig;
     DescriptorParser.parseClass((String) value)
@@ -268,17 +276,18 @@ class ASTClassFileParser extends ClassFileParser {
             throw new IOException(icfn + ": inner class not found");
           }
           ASTClassFileParser parser = new ASTClassFileParser(icf, true);
-          parser.typeDecl.modifiers |= (flags & ~ACC_SYNCHRONIZED & ~ACC_INTERFACE);
+          TypeDecl parserTD = /*@(non_null)*/parser.typeDecl;
+          parserTD.modifiers |= (flags & ~ACC_SYNCHRONIZED & ~ACC_INTERFACE);
 
-          if (Modifiers.isPublic(parser.typeDecl.modifiers)) {
-            parser.typeDecl.modifiers &= ~ACC_PROTECTED;
+          if (Modifiers.isPublic(parserTD.modifiers)) {
+        	  parserTD.modifiers &= ~ACC_PROTECTED;
           }
 
           // Only add classes that are not synthetic and are not anonymous inner classes,
           // which are identified by names that start with a number.
           if (!parser.syntheticClass
-              && !Character.isDigit(parser.typeDecl.id.toString().charAt(0))) {
-            classMembers.addElement(parser.typeDecl);
+              && !Character.isDigit(parserTD.id.toString().charAt(0))) {
+            classMembers.addElement(parserTD);
           }
         }
       }
@@ -348,7 +357,7 @@ class ASTClassFileParser extends ClassFileParser {
   /**
    * Call back from ClassFileParser.
    */
-  protected void set_field(int i, String fname, String type, int mod)
+  protected void set_field(int i, /*@non_null*/String fname, /*@non_null*/String type, int mod)
       throws ClassFormatError {
     fields[i] = //@ nowarn IndexTooBig;
     FieldDecl.make(mod, null, Identifier.intern(fname), DescriptorParser
@@ -358,7 +367,7 @@ class ASTClassFileParser extends ClassFileParser {
   /**
    * Call back from ClassFileParser.
    */
-  protected void set_field_initializer(int i, Object value)
+  protected void set_field_initializer(int i, /*@non_null*/Object value)
       throws ClassFormatError {
     // construct a literal expression for the initializer
 
@@ -420,7 +429,7 @@ class ASTClassFileParser extends ClassFileParser {
   /**
    * Call back from ClassFileParser.
    */
-  protected void set_method(int i, String mname, String sig, int mod)
+  protected void set_method(int i, /*@non_null*/String mname, /*@non_null*/String sig, int mod)
       throws ClassFormatError {
     MethodSignature signature = DescriptorParser.parseMethod(sig);
     FormalParaDeclVec formalVec = FormalParaDeclVec
@@ -435,8 +444,8 @@ class ASTClassFileParser extends ClassFileParser {
                                         emptyTypeNameVec, body, Location.NULL,
                                         classLocation, classLocation,
                                         classLocation,
-                                        Identifier.intern(mname), signature
-                                            .getReturn(), classLocation);
+                                        Identifier.intern(mname),
+                                        signature.getReturn(), classLocation);
   }
 
   /**
@@ -448,9 +457,10 @@ class ASTClassFileParser extends ClassFileParser {
     // put in a dummy body
     if (!includeBodies)
       return;
-    routines[i].body = //@ nowarn Null, IndexTooBig;
+    RoutineDecl routine = /*@(non_null)*/ this.routines[i];
+    routine.body = //@ nowarn Null, IndexTooBig;
     BlockStmt.make(StmtVec.make(), classLocation, classLocation);
-    routines[i].locOpenBrace = classLocation;
+    routine.locOpenBrace = classLocation;
   }
 
   /**
@@ -465,14 +475,14 @@ class ASTClassFileParser extends ClassFileParser {
   /**
    * Call back from ClassFileParser.
    */
-  protected void set_method_attribute(int i, String aname, DataInput stream,
+  protected void set_method_attribute(int i, /*@non_null*/String aname, /*@non_null*/DataInput stream,
                                       int n) throws IOException,
       ClassFormatError {
     // look for the Exceptions attribute and modify the appropriate method, if
     // necessary
 
     if (aname.equals("Exceptions")) {
-      routines[i].raises = TypeNameVec
+      ((/*@non_null*/)routines[i]).raises = TypeNameVec
           .make(parseTypeNames((DataInputStream) stream)); //@ nowarn Null, Cast, IndexTooBig;
     } else if (aname.equals("Synthetic")) {
       synthetics.addElement(routines[i]); //@ nowarn ;
@@ -506,7 +516,7 @@ class ASTClassFileParser extends ClassFileParser {
    * InterfaceMethodRef  null
    */
   //@ private invariant \typeof(constants) == \type(Object[]);
-  private /*@non_null*/Object[] constants;
+  private /*@non_null*/Object[/*#@non_null*/] constants;
 
   /**
    * The constant pool of the class being parsed.
@@ -516,7 +526,7 @@ class ASTClassFileParser extends ClassFileParser {
    */
   //@ private invariant \typeof(rawConstants) == \type(Object[]);
   //@ private invariant constants.length == rawConstants.length;
-  private /*@non_null*/Object[] rawConstants;
+  private /*@non_null*/Object[/*#@non_null*/] rawConstants;
 
   /**
    * The modifiers of the class being parsed.
@@ -562,7 +572,7 @@ class ASTClassFileParser extends ClassFileParser {
    */
   //@ invariant \typeof(fields) == \type(FieldDecl[]);
   //@ spec_public
-  private /*@non_null*/ FieldDecl[] fields;
+  private /*@non_null*/ FieldDecl[/*#@non_null*/] fields;
 
   /**
    * The methods and constructors of the class being parsed.
@@ -590,7 +600,7 @@ class ASTClassFileParser extends ClassFileParser {
    */
   //@ ensures \nonnullelements(\result);
   //@ ensures \typeof(\result)==\type(TypeName[]);
-  private /*@non_null*/TypeName[] parseTypeNames(/*@non_null*/DataInputStream stream) throws IOException,
+  private /*@non_null*/TypeName[/*#@non_null*/] parseTypeNames(/*@non_null*/DataInputStream stream) throws IOException,
       ClassFormatError {
     int count = stream.readUnsignedShort();
     TypeName[] names = new TypeName[count];
@@ -617,10 +627,9 @@ class ASTClassFileParser extends ClassFileParser {
    * @param signature  the method signature to make the formal parameters from
    * @return           the formal parameters
    */
-  //@ requires signature != null;
   //@ ensures \nonnullelements(\result);
   //@ ensures \typeof(\result) == \type(FormalParaDecl[]);
-  private FormalParaDecl[] makeFormals(MethodSignature signature) {
+  private /*@non_null*/FormalParaDecl[/*#@non_null*/] makeFormals(/*@non_null*/MethodSignature signature) {
     int length = signature.countParameters();
     FormalParaDecl[] formals = new FormalParaDecl[length];
 
@@ -640,8 +649,7 @@ class ASTClassFileParser extends ClassFileParser {
    * @param name  the name to return the package qualifier of
    * @return      the package qualifier of name
    */
-  //@ requires name != null;
-  private static Name getNameQualifier(Name name) {
+  private static Name getNameQualifier(/*@non_null*/Name name) {
     int size = name.size();
 
     return size > 1 ? name.prefix(size - 1) : null;
@@ -653,8 +661,7 @@ class ASTClassFileParser extends ClassFileParser {
    * @param name  the name to return the terminal identifier of
    * @return      the terminal identifier of name
    */
-  //@ requires name != null;
-  private static Identifier getNameTerminal(Name name) {
+  private static Identifier getNameTerminal(/*@non_null*/Name name) {
     return name.identifierAt(name.size() - 1);
   }
 
@@ -663,9 +670,8 @@ class ASTClassFileParser extends ClassFileParser {
   /**
    * An empty type name vector.
    */
-  //@ invariant emptyTypeNameVec != null;
   //@ spec_public
-  private static final TypeNameVec emptyTypeNameVec = TypeNameVec.make();
+  private static final /*@non_null*/TypeNameVec emptyTypeNameVec = TypeNameVec.make();
 
   /**
    * A null identifier.

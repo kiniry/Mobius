@@ -29,8 +29,7 @@ class DescriptorParser
    * @param s  the class name to parse
    * @return   the type name encoded by s
    */
-  //@ ensures \result != null;
-    static TypeName parseClass(/*@ non_null @*/ String s)
+    static /*@non_null*/TypeName parseClass(/*@ non_null @*/ String s)
     throws ClassFormatError
   {
     // tokenize the string into a sequence of identifiers delimited by slashes
@@ -54,14 +53,15 @@ class DescriptorParser
       if (i<count-1)
 	locations2[i] = classLocation;
     }
-    //@ assume \nonnullelements(identifiers);
+    Identifier[/*#@non_null*/] nn_identifiers = identifiers;
+    //@ assert \nonnullelements(identifiers);
     /*@ assume (\forall int i; (0<=i && i<locations1.length)
 			==> locations1[i] != Location.NULL); */
     /*@ assume (\forall int i; (0<=i && i<locations2.length)
 			==> locations2[i] != Location.NULL); */
 
     return TypeName.make(Name.make(locations1, locations2,
-				   IdentifierVec.make(identifiers)));
+				   IdentifierVec.make(nn_identifiers)));
   }
 
   /**
@@ -69,10 +69,8 @@ class DescriptorParser
    * @param s  the field descriptor to parse
    * @return   the type encoded by s
    */
-  //@ requires s != null;
-  //@ ensures \result != null;
   //@ ensures \result.syntax;
-  static Type parseField(String s)
+  static /*@non_null*/Type parseField(/*@non_null*/String s)
     throws ClassFormatError
   {
     // parse the descriptor as a type and make sure it's only a type
@@ -91,9 +89,7 @@ class DescriptorParser
    * @param s  the method descriptor to parse
    * @return   the method signature encoded by s
    */
-  //@ requires s != null;
-  //@ ensures \result != null;
-  static MethodSignature parseMethod(String s)
+  static /*@non_null*/MethodSignature parseMethod(/*@non_null*/String s)
     throws ClassFormatError
   {
     // check the format of the method descriptor and construct a string scanner
@@ -153,10 +149,8 @@ class DescriptorParser
    *                 the next character after the parsed type)
    * @return         the type encoded by scanner
    */
-  //@ requires scanner != null;
-  //@ ensures \result != null;
   //@ ensures \result.syntax;
-  private static Type parseType(StringScanner scanner)
+  private static /*@non_null*/Type parseType(/*@non_null*/StringScanner scanner)
     throws ClassFormatError
   {
     // parse the type according to the leading character
@@ -234,10 +228,8 @@ class DescriptorParser
    *                 the next character after the parsed type)
    * @return         the type encoded by scanner
    */
-  //@ requires scanner != null;
-  //@ ensures \result != null;
   //@ ensures \result.syntax;
-  private static Type parseReturn(StringScanner scanner)
+  private static /*@non_null*/Type parseReturn(/*@non_null*/StringScanner scanner)
     throws ClassFormatError
   {
     // look for the void return descriptor
@@ -275,8 +267,7 @@ class StringScanner {
    * Construct a new string scanner from a given string.
    * @param s  the string
    */
-  //@ requires s != null;
-  StringScanner(String s)
+  StringScanner(/*@non_null*/String s)
   {
     this.s = s;
   }
@@ -287,8 +278,7 @@ class StringScanner {
    * The string to be scanned.
    * Initialized by constructor.
    */
-  //@ invariant s != null;
-  String s;
+  /*@non_null*/String s;
 
   /**
    * The index of the next character to scan.

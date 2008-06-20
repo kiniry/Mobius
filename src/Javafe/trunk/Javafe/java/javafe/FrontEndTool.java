@@ -222,8 +222,8 @@ public abstract class FrontEndTool extends Tool
    */
 
   //@ ensures args == null ==> \not_modified(options);
-  // FIXME //@ ensures args == null ==> \not_modified(options.* );
-  public int handleOptions(String[] args) {
+  // FIXME //@ ensures args == null ==> \not_modified(options.*);
+  public int handleOptions(/*@nullable*/String[/*#@non_null*/] args) {
     if (args != null) {
       try {
         // Handle all tool options:
@@ -256,10 +256,9 @@ public abstract class FrontEndTool extends Tool
    * @see javafe.Tool#run(java.lang.String[])
    */
   /*@ also public normal_behavior
-    @  requires args != null;
     @  modifies \everything;
     @*/
-  public final int run(String[] args) {
+  public final int run(/*@non_null*/String[/*#@non_null*/] args) {
     int r = handleOptions(args);
     virtualMachineVersionCheck();
     if (r != -1)

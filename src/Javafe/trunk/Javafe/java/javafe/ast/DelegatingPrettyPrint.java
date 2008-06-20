@@ -39,7 +39,7 @@ public class DelegatingPrettyPrint extends PrettyPrint {
 
   //@ requires del != this;
   //@ ensures this.del == del;
-  public void setDel(PrettyPrint del) {
+  public void setDel(/*@non_null*/PrettyPrint del) {
       this.del = del;
   }
   

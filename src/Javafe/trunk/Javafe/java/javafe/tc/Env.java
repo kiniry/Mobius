@@ -71,9 +71,8 @@ public abstract class Env {
      * avoided unless an unknown environment needs to be coerced in
      * this way. <p>
      */
-    //@ ensures \result != null;
     //@ ensures (this instanceof EnvForCU) == (\result instanceof EnvForCU);
-    abstract public Env asStaticContext();
+    abstract public /*@non_null*/Env asStaticContext();
 
 
     /***************************************************

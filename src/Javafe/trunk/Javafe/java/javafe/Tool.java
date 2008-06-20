@@ -93,7 +93,7 @@ public abstract class Tool
    * @return the exit code (0 = success, >0 is a failure)
    */
   //@ requires \nonnullelements(args);
-  public abstract int run(String[] args);
+  public abstract int run(/*@non_null*/String[/*#@non_null*/] args);
 
   /**
    * Compute the time used from a start time to now, then return it in

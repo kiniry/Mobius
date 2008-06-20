@@ -54,19 +54,17 @@ class MethodSignature
    * @return       the parameter type at index index
    */
   //@ requires 0<=index && index<parameters.elementCount;
-  //@ ensures \result != null;
   //@ ensures \result.syntax;
-  Type parameterAt(int index)
+  /*@non_null*/Type parameterAt(int index)
   {
-    return (Type)parameters.elementAt(index);
+    return (/*@non_null*/Type)parameters.elementAt(index);
   }    //@ nowarn Post;  // Unenforceable invariant on parameters
 
   /**
    * Append a parameter type to this method signature.
    * @param parameterType  the parameter type to append
    */
-  //@ requires parameterType != null;
-  void appendParameter(Type parameterType)
+  void appendParameter(/*@non_null*/Type parameterType)
   {
     parameters.addElement(parameterType);
   }
@@ -75,9 +73,8 @@ class MethodSignature
    * Return the return type of this method signature.
    * @return  the return type
    */
-  //@ ensures \result != null;
   //@ ensures \result.syntax;
-  Type getReturn()
+  /*@non_null*/Type getReturn()
   {
     return return_;
   }
@@ -86,9 +83,8 @@ class MethodSignature
    * Change the return type of this method signature.
    * @param return_  the new return type
    */
-  //@ requires return_ != null;
   //@ requires return_.syntax;
-  void setReturn(Type return_)
+  void setReturn(/*@non_null*/Type return_)
   {
     this.return_ = return_;
   }
@@ -99,20 +95,18 @@ class MethodSignature
    * The parameter types of this method signature.
    * Initialized by constructor.
    */
-  //@ invariant parameters != null;
   //@ invariant parameters.elementType == \type(Type);
   //@ invariant !parameters.containsNull;
   // Unenforceable invariant: contents are syntax
-  /*@spec_public*/ private Vector parameters;
+  /*@spec_public*/ private /*@non_null*/Vector parameters;
 
   /**
    * The return type of this method signature.
    * Initialized by constructor.
    */
-  //@ invariant return_ != null;
   //@ invariant return_.syntax;
   //@ spec_public
-  private Type return_;
+  private /*@non_null*/Type return_;
 
 }
 

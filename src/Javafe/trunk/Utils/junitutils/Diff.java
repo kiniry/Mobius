@@ -52,6 +52,7 @@ public class Diff {
   {
     this.oldText = oldText;
     this.newText = newText;
+    this.differences = "";
     calculate(oldTextLabel, newTextLabel);
   }
 
@@ -105,7 +106,7 @@ public class Diff {
       if (nPos >= newTextLines.length) nPos = newTextLines.length-1;
       boolean matched = false;
       for (int i = lastOldMatch+1; i<=oPos; ++i) {
-        if (oldTextLines[i].equals(newTextLines[nPos])) {
+        if ((/*@(non_null)*/oldTextLines[i]).equals(newTextLines[nPos])) {
           // Got a match
           for (int j=lastOldMatch+1; j<i; ++j)
             differencesSB.append((j+1) + OLD_CH + oldTextLines[j] + NEWLINE);
@@ -121,7 +122,7 @@ public class Diff {
       }
       if (matched) continue;
       for (int i = lastNewMatch+1; i<=nPos; ++i) {
-        if (newTextLines[i].equals(oldTextLines[oPos])) {
+        if ((/*@(non_null)*/newTextLines[i]).equals(oldTextLines[oPos])) {
           // Got a match
           for (int j=lastOldMatch+1; j<oPos; ++j)
             differencesSB.append((j+1) + OLD_CH + oldTextLines[j] + NEWLINE);
@@ -149,7 +150,7 @@ public class Diff {
   }
 
   //@ ensures \nonnullelements(\result);
-  private /*@ helper non_null */ String[] splitByLine(/*@ non_null */ String text) {
+  /*@helper*/ private /*@non_null*/ String[/*#@non_null*/] splitByLine(/*@non_null*/ String text) {
     // thanks to Windows ridiculous two character newlines it is
     // hard to detect blank lines, so we don't bother trying
     StringTokenizer toker = new StringTokenizer(text, DELIM, false);

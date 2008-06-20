@@ -105,8 +105,6 @@ public final class Identifier
 
   /** Returns the <code>Identifier</code> associated with
     <TT>s</TT>. */
-  //@ requires s != null;
-  //@ ensures \result != null;
   public static /*@ non_null */ Identifier intern(/*@ non_null */ String s) {
     // Expensive way of doing things, but at least we don't have
     // to rewrite the above code...
@@ -126,10 +124,8 @@ public final class Identifier
     associated with the symbol consisting of the first
     <code>textlen</code> characters of <code>text</code>. */
 
-  //@ requires text != null;
   //@ requires 0<=textlen && textlen<=text.length;
-  //@ ensures \result != null;
-  static Identifier intern(char[] text, int textlen, int hashcode) {
+  static /*@non_null*/Identifier intern(/*@non_null*/char[] text, int textlen, int hashcode) {
 
     int h = Math.abs(hashcode) % TABLE_SIZE;
     Identifier[] chain = chains[h];
