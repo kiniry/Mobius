@@ -84,7 +84,7 @@ javafetests: build
 
 alltests:	build
 	${MAKE} test ALLTESTS=1
-	${MAKE} specs_test
+#	${MAKE} specs_test
 
 javafealltests: build
 	$(MAKE) -C Javafe test ALLTESTS=1 || exit 1;
