@@ -39,9 +39,9 @@ public final class Printer {
 
   /** Prevent instantiation of Printer. */
   private Printer() { }
-  
-  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, NONE };
-  
+
+  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, IIG, ICG, NONE };
+
   private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
   public static PrintingOption getPrintingOption(final String optionString) {   
@@ -55,11 +55,15 @@ public final class Printer {
       return PrintingOption.DOT;
     } else if (optionString.equalsIgnoreCase("dic")) {
       return PrintingOption.DIC;
+    } else if (optionString.equalsIgnoreCase("icg")) {
+      return PrintingOption.ICG;
+    } else if (optionString.equalsIgnoreCase("iig")) {
+      return PrintingOption.IIG;
     } else {
       return PrintingOption.NONE;
     }    
   }
-  
+
   public static String getPrintingOptionName(final PrintingOption po) {
     switch(po) {
     case PLAIN_TEXT:
@@ -70,6 +74,10 @@ public final class Printer {
       return ".dot graph format";
     case DIC:
       return "automatically generated class dictionary";
+    case ICG:
+      return "informal cluster graph";
+    case IIG:
+      return "informal class inheritence graph";
     default:
       return "unknown"; //Shouldn't happen
     }
@@ -90,7 +98,7 @@ public final class Printer {
       return "";
     }
   }
-  
+
   public static String getPrintingOptionEndString(final PrintingOption po) {
     try {
       switch(po) {
@@ -106,7 +114,7 @@ public final class Printer {
       return "";
     }
   }
-  
+
   public static Reader getPrintingOptionTemplateFileReader(final PrintingOption po) {
     switch(po) {
     case PLAIN_TEXT:
@@ -117,7 +125,7 @@ public final class Printer {
       return null; //Shouldn't happen
     }
   }
-  
+
   public static String getExtraPartsForPrintingOption(final PrintingOption po, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) {
     switch(po) {
     case HTML:
@@ -127,11 +135,22 @@ public final class Printer {
     }
   }
 
+  public static boolean isFileIndependentPrintingOption(final PrintingOption po) {
+    switch(po) {
+    case DIC:
+    case ICG:
+    case IIG:
+      return true;
+    default:
+      return false;
+    }
+  }
+
   private static String printUsingTemplateToString(final ParseResult parseResult, final Reader stFile, final PrintingOption printingOption, final PrintingTracker printingTracker) throws RecognitionException {
     try {
       StringTemplateGroup templates = new StringTemplateGroup(stFile);
       stFile.close();
-      
+
       CommonTree t = (CommonTree)parseResult.getParse().getTree(); //Get input tree
       CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);  //Get stream of nodes from tree
       nodes.setTokenStream(parseResult.getTokens());
@@ -141,13 +160,13 @@ public final class Printer {
       BONSTTreeWalker.prog_return r2 = walker.prog();  //Walk
       StringTemplate output = (StringTemplate)r2.getTemplate();  //Get output
       return output.toString();
-      
+
     } catch (IOException ioe) {
       System.out.println("An error occurred whilst reading templateFile " + stFile);
       return null;
     }
   }
-  
+
   public static String printGeneratedClassDictionaryToString(final ParsingTracker tracker) {
     try {
       return ClassDictionaryGenerator.generateDictionary(tracker);
@@ -166,11 +185,11 @@ public final class Printer {
   private static String printStartToString(final PrintingOption printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
     return formatString(getPrintingOptionStartString(printOption), printTime, extraParts, parsingTracker);
   }
-  
+
   private static String printEndToString(final PrintingOption printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
     return formatString(getPrintingOptionEndString(printOption), printTime, extraParts, parsingTracker);
   }
-  
+
   private static String formatString(final String toFormat, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
     SystemChartDefinition sysDef = parsingTracker.getInformalTypingInformation().getSystem();
     String systemName = sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getSystemName(); 
@@ -179,53 +198,63 @@ public final class Printer {
         Main.getVersion(), 
         systemName,
         extraParts
-        );
+    );
   }
 
-  
+
   public static void printToStream(final Collection<File> files, final ParsingTracker parsingTracker, final PrintStream outputStream, final PrintingOption printingOption, final boolean printToFile, final boolean timing) {
+    Main.logDebug("Printing to stream.");
     Calendar printTime = new GregorianCalendar();
     PrintingTracker printTracker = new PrintingTracker();
     StringBuilder main = new StringBuilder();
-    
-    for (File file : files) {
-      String fileName;
-      if (file == null) {
-        fileName = "stdin";
-      } else {
-        fileName = file.getPath();
-      }
 
-      ParseResult parse = parsingTracker.getParseResult(fileName);
-      if (parse.continueFromParse(Main.PP_NUM_SEVERE_ERRORS)) {
-        try {
-          String printed;
-          if (timing) {
-            long startTime = System.nanoTime();
-            printed = Printer.printToString(parse, printingOption, printTracker, parsingTracker);
-            long endTime = System.nanoTime();
-            System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + Main.timeString(endTime - startTime));
-          } else {
-            printed = Printer.printToString(parse, printingOption, printTracker, parsingTracker);
-          }
-          if (printed != null) {
-            main.append(printed);
-          }
-        } catch (RecognitionException re) {
-          System.out.println("Something went wrong when printing...");
+
+    if (isFileIndependentPrintingOption(printingOption)) {
+      main.append(printFileIndependentPrintingOptionToString(printingOption, parsingTracker));
+    } else {
+
+      for (File file : files) {
+        Main.logDebug("Printing for file: " + file.getAbsolutePath());
+        String fileName;
+        if (file == null) {
+          fileName = "stdin";
+        } else {
+          fileName = file.getPath();
         }
 
-      } else {
-        System.out.println("Not printing " + fileName + " due to parse errors.");
+        ParseResult parse = parsingTracker.getParseResult(fileName);
+        if (parse.continueFromParse(Main.PP_NUM_SEVERE_ERRORS)) {
+          try {
+            String printed;
+            if (timing) {
+              long startTime = System.nanoTime();
+              printed = Printer.printToString(parse, printingOption, printTracker, parsingTracker);
+              long endTime = System.nanoTime();
+              System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + Main.timeString(endTime - startTime));
+            } else {
+              printed = Printer.printToString(parse, printingOption, printTracker, parsingTracker);
+            }
+            if (printed != null) {
+              main.append(printed);
+            }
+          } catch (RecognitionException re) {
+            System.out.println("Something went wrong when printing...");
+          }
+
+        } else {
+          System.out.println("Not printing " + fileName + " due to parse errors.");
+        }
       }
+
+
     }
-    
+
     String extraParts = getExtraPartsForPrintingOption(printingOption, printTracker, parsingTracker);
     outputStream.print(printStartToString(printingOption, printTime, extraParts, parsingTracker));
     outputStream.print(main.toString());
     outputStream.print(printEndToString(printingOption, printTime, extraParts, parsingTracker));
   }
-  
+
   /*private static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintingTracker printingTracker, ParsingTracker parsingTracker, PrintStream outputStream) 
   throws RecognitionException {
     System.out.println("Print to stream: " + parseResult);
@@ -234,25 +263,37 @@ public final class Printer {
       outputStream.print(text);
     }
   }*/
-  
-  private static boolean alreadyPrintedClassDic = false;
-  
+
+
+  private static String printFileIndependentPrintingOptionToString(final PrintingOption printingOption, final ParsingTracker parsingTracker) {
+    switch (printingOption) {
+    case DIC:
+      return printGeneratedClassDictionaryToString(parsingTracker);
+    case ICG:
+      return Grapher.graphInformalClusterContainment(parsingTracker);
+    case IIG:
+      return Grapher.graphInformalClassInheritence(parsingTracker);
+    default:
+      return "";
+    }
+  }
+
   public static String printToString(final ParseResult parseResult, final PrintingOption printingOption, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) throws RecognitionException {
-    String outputText = null;
-    
+    System.out.println("Printing to string...");
+
     if (printingOption == PrintingOption.DOT) {
-      outputText = printDotToString(parseResult);
-    } else if (printingOption == PrintingOption.DIC) {
-      outputText = alreadyPrintedClassDic ? "" : printGeneratedClassDictionaryToString(parsingTracker);
-      alreadyPrintedClassDic = true;
+      return printDotToString(parseResult);
+    }
+
+    //Normal template-based printing
+    String outputText = null;
+    Reader templateFile = getPrintingOptionTemplateFileReader(printingOption);
+    if (templateFile != null) {
+      outputText = printUsingTemplateToString(parseResult, templateFile, printingOption, printingTracker);
     } else {
-      Reader templateFile = getPrintingOptionTemplateFileReader(printingOption);
-      if (templateFile != null) {
-        outputText = printUsingTemplateToString(parseResult, templateFile, printingOption, printingTracker);
-      } else {
-        System.out.println("Sorry, printing option  " + printingOption + " not yet implemented");
-      }
-    }    
+      System.out.println("Sorry, printing option  " + printingOption + " not yet implemented");
+    }
+
     return outputText;
   }
 

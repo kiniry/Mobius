@@ -165,6 +165,18 @@ public class InformalTypingInformation {
     return classClusterGraph;
   }
   
+  public Graph<String, ClusterChartDefinition> getClusterClusterGraph() {
+    return clusterClusterGraph;
+  }
+
+  public Set<String> getClustersInSystem() {
+    return clustersInSystem;
+  }
+
+  public Graph<String, String> getClassInheritanceGraph() {
+    return classInheritanceGraph;
+  }
+
   public String getAlternativeClassDescription(final String className) {
     //Probably makes more sense to only store one in the first place since we'll only use one.
     //This won't make a big difference in practice, as almost always a class will be in one cluster only.

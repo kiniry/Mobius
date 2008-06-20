@@ -282,7 +282,7 @@ public final class Main {
     }
   }
   
-  private static void graph(final ParsingTracker tracker, final Options so) {
+  /*private static void graph(final ParsingTracker tracker, final Options so) {
     //Class and Cluster graph
     if (so.isStringOptionByNameSelected("-cg")) {
       if (tracker.continueFromParse(CCG_NUM_SEVERE_ERRORS)) {
@@ -301,7 +301,7 @@ public final class Main {
         Grapher.graphClassHierarchy(tracker, so.getStringOptionByNameArgument("-ig"));
       }
     }
-  }
+  }*/
   
   public static boolean run(final Collection<String> fileNames, final Options so) {
     //Timing info?
@@ -326,7 +326,7 @@ public final class Main {
     printResults(tracker, checkInformal, checkFormal, checkConsistency);    
     
     print(validFiles, tracker, so, timing);
-    graph(tracker, so);
+    //graph(tracker, so);
 
     //TODO - return false here if we have problems...
     return true;
