@@ -49,7 +49,7 @@ public final class CLP {
     pp.addOptionName("-print");
     pp.addOptionName("--print");
     pp.setArgName("TYPE");
-    pp.setHelpString("Print the parsed input in the given format (TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary).");
+    pp.setHelpString("Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritence graph. See the manpage or README.txt for more information and a list of all printing options.");
     cp.addOption(pp);
     
     StringDefaultOption ppo = new StringDefaultOption();
@@ -94,7 +94,7 @@ public final class CLP {
     time.setHelpString("Print timing information.");
     cp.addOption(time);
     
-    StringDefaultOption cg = new StringDefaultOption();
+    /*StringDefaultOption cg = new StringDefaultOption();
     cg.setOptionID("5");
     cg.addOptionName("-cg");
     cg.setHelpString("Print class and cluster graph in the .dot file format.");
@@ -106,7 +106,7 @@ public final class CLP {
     ig.addOptionName("-ig");
     ig.setHelpString("Print class inheritence graph in the .dot file format.");
     ig.setHidden(); //Hidden until revisiting
-    cp.addOption(ig);
+    cp.addOption(ig);*/
     
     BooleanDefaultOption informal = new BooleanDefaultOption();
     informal.setOptionID("10.0");

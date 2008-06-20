@@ -17,7 +17,9 @@ bonc file1 file2 -
 .RE
 .PD 1
 
-.SH CLASS DICTIONARY GENERATION 
+.SH PRINTING
+
+.SS CLASS DICTIONARY GENERATION 
 
 It is possible to automatically generate a class dictionary for the given input. 
 In order to print the generated textual BON to stdout(1), or to a file(2)
@@ -44,7 +46,7 @@ bonc -ngcd -p <print-type> [-po <output-file>] file1 [file2 ...]
 .RE
 .PD 1
 
-.SH HTML PRINTING
+.SS HTML PRINTING
 
 This printing option generates a fancy XHTML version of the informal charts
 included in the input. It will generate a single HTML page, with the charts
@@ -59,6 +61,66 @@ stdout(1), or to a file(2) use the following:
 .P
 .RE
 .PD 1
+
+.SS GRAPH PRINTING
+
+It is possible to create graphs representing the clustering and inheritence
+relationships in the given BON source. For the chosen graph type, the output
+will be in the DOT language (see http://www.graphviz.org/doc/info/lang.html).
+  
+The available graph printing options currently are:
+.PD 0
+.P
+.RS 4
+(1) icg - Informal cluster graph
+.PD 0
+.P
+.RS 10
+A graph showing the cluster hierarchy from the system cluster
+down to the leaf cluters. This graph will also show which 
+cluster(s) each class is contained in.
+.P
+.RE
+.PD 1
+.P
+(2) iig - Informal inheritence graph
+.PD 0
+.P
+.RS 10
+A graph showing the class hierarchy for the given system.
+.P
+.RE
+.PD 1
+
+An example of printing one of these graphs (subsititute print-type for other 
+graph types):
+.PD 0
+.P
+.RS 4
+bonc -i -p icg -po icg.dot file1 [file2 ...]
+.P
+.RE
+.PD 1
+
+There are numerous pieces of software available for viewing/working with .dot
+files. Some of the most popular of these are available from Graphviz 
+(http://www.graphviz.org/).
+
+For those working on Ubuntu, simply install the "graphviz" package (should be
+similarly available on other linux flavours. For an example of usage, assume
+we have created a graph "graph.dot". We can use the graphviz to convert to 
+svg:
+.PD 0
+.P
+.RS 4
+dot -Tsvg -o graph.svg graph.dot
+.P
+.RE
+.PD 1
+
+The above will create an svg file "graph.svg" that can be viewed/used as you 
+wish. The dot command can also output to postscript, png, and several other 
+types. See the graphviz documentation for more information (or "man dot").  
 
 .SH BUG REPORTS
 Bug tracking is handled on the Mobius Trac (https://mobius.ucd.ie/). 
