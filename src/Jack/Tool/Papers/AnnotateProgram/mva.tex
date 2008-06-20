@@ -1,26 +1,26 @@
 \section{Modeling Security Properties with Automata}\label{SecMVA}
 
-This section formally defines the format of the automata that we use
-to encode security properties. Our automata are particularly suited to
-describe the monitoring of an application, because transitions can
-depend on the state of the program being monitored. We call these
-automata \emph{Multi-Variable Automata} (MVA), because their
-states are defined by a set of variables. Transitions
-between states are labelled with guards, events and actions. The event
-describes the method that is being called or exited in the monitored
-program. A distinction is made between normal and exceptional
-termination of methods. The guard describes the conditions under
-which the transition can be applied. It depends on
+This section formally defines our format of security automata. They
+are particularly suited for monitoring, because transitions can depend
+on the state of the monitored program. We call them
+\marginnote{MH: Multi-Variable Automata not very good/catchy name}
+\emph{Multi-Variable Automata} (MVA). %because their states are defined
+%by a set of variables. 
+Transitions between states are labelled with guards, events and a list
+of actions. The event specifies the method whose entry and/or exit is
+being monitored, with a distinction between normal and exceptional
+exits.  The guard describes the conditions under which the transition
+can be applied. It depends on
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the automaton state,
 \item the state of the program that is being monitored, and
-\item in case the event is method entry, the argument of the method;
-in case the event is normal method exit, the result of the method; and
-in case the event is exceptional method exit, the exception with which
-the method returns.
+\item the argument of the method, in case the event is method entry; or
+the result of the method, in case the event is normal method exit ; or
+the exception with which the method returns, in case the event is
+exceptional method exit.
 \end{inparaenum}
-The action updates the automaton variables.
-
+Each action describes how the automaton state is updated by the transition. 
+\marginnote{MH: conditions on guards/actions?}
 
 MVA and programs share the definitions of values, types and exceptions, denoted
 \Val, \Type and \Excpt, respectively. They are defined by the following grammar,
@@ -39,17 +39,15 @@ record with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 \Excpt & = & \Throwable \mid \NullPointer \mid \JMLExc
 \end{array}
 \]
-% AT: Why is \NullPointer defined as RunTimeException ?
-
+% AT: Why is \NullPointer defined as RunTimeException ? MH: To be more abstract.
 Notice that there is a special type \(\Void\), inhabited by \(\One\)
 to model methods without results. Reference values contain a number,
 which can be considered as the location where the object is stored;
 \(\bot\) is used to denote the outcome of an undefined expression.
-
 Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
 enumerable nonempty sets of control points and names, respectively. We
-assume that \(\Name\) contains the special names \textsf{this} and
-\textsf{super}.
+assume that \(\Name\) contains the special names \textsf{this}. 
+% and \textsf{super}.
 % AT: We don't need super for our formalization
 
 
@@ -68,19 +66,16 @@ program variables will be inspected by the monitor, and
 \end{inparaenum}
 Transitions go from source to target control points. They are labelled
 with events, where an event is a tuple of an event type (entry, exit
-or exceptional exit) and a method name, and with guards. Each
-transition can update the MVA variables by executing a list of
-actions, where each action assigns the result of an expression
-(containing both program and MVA variables) to a MVA variable. MVA
-variables declarations are the same as program field declarations
-(defined below), while program variable declarations in the MVA have
-the same format as local variable declarations in a program
-(\emph{i.e.}, they are not initialised in the
-monitor). Figure~\ref{FigMVAForm} shows the main types of the MVA
-definition (the types of \FieldDecl and \LocalVarDecl will also be
-used in the abstract syntax of programs).  Notice that the monitor
-variables are explicitly initialised, in contrast to the MVA's program
-variables: their value is retrieved from the program state.
+or exceptional exit) and a method name, guards and a list of
+actions. Each action assigns the result of an expression (containing
+both program and MVA variables) to a MVA variable. MVA variables
+declarations are the same as program field declarations (defined
+below), while program variable declarations in the MVA have the same
+format as local variable declarations in a program (\emph{i.e.}, they
+are not explicitly initialised in the monitor, their value is retrieved from
+the program state.). Figure~\ref{FigMVAForm} shows the
+main types of the MVA definition (the types of \FieldDecl and
+\LocalVarDecl will also be used in the abstract syntax of programs).
 % AT: The last sentence repetitive
 
 \begin{figure}[t]
@@ -109,31 +104,31 @@ source control point and event there is always at most one guard that
 holds. Notice that it is not obvious how to transform a
 non-deterministic MVA into a deterministic one, because the actions
 made by the overlapping transitions might be different. We believe
-that this is realistic restriction, and that most important security
+that this is a realistic restriction, and that most important security
 properties can be expressed as deterministic MVAs.
 
 An MVA is \emph{total} if there is always exactly one guard that holds
 for a given source control point and event, otherwise it is
-\emph{partial}. Every deterministic MVA can be completed by function
-\complete into a total
-MVA. This function adds a special control state
+\emph{partial}. Every deterministic MVA can be completed into a total
+one (by function \complete): add a special control state
 \halted, together with transitions for every control point and every event
 to this \halted control point, where the guard is the negation of the
-disjunction of all other guards. In addition, one adds unconditional
-transitions from \halted to \halted for every possible
-event.
+disjunction of all other guards for this control point and event, and
+in addition, add unconditional transitions from \halted to \halted for
+every possible event.
 
-\marginnote{We could give formal definition of completion}
+%\marginnote{MH: Should we give formal definition of \emph{complete}?}
 
-An MVA is \emph{wellformed} if
+We define a collection of obvious constraints, when an MVA is
+\emph{wellformed}, such as:
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the monitor variable names do not overlap with the reserved
 words,
 \item the program variable names that are used are unique,
-\item the guards do not have a side-effect,
-\item the transition updates only uses declared variables, and
+\item the guards do not have side-effects,
+\item the transition updates only use declared variables, and
 \item transitions range between declared control points and are
-labelled with declared events.
+labelled with declared events
 \end{inparaenum}.
 % AT: This are not all the requirements, for instance it is not said that the
 %     initial control point should be on the set of declared control points or
@@ -171,7 +166,7 @@ Notice that the program store is not part of the automaton
 state. Given an MVA \(a\), the transition function \(\Delta_a\)
 describes how given a program store and an event, \(a\) changes its
 internal state (where \(\chooseop\) is the arbitrary choice operator,
-and \textit{apply} is a function that updates the automaton store
+and \textsf{apply} is a function that updates the automaton store
 according to the list of actions in the obvious way).
 \[
 \begin{array}{l}
@@ -211,18 +206,18 @@ method. This property is formally described by the following
 automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 
 \[
+\small{
 \begin{array}[t]{l}
 \opri
 \begin{array}[t]{l}
-\name := \textrm{LimitSMS}, \clname := \texttt{Messaging},\\
+\name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
 \cps := \{s_1, s_2\},
-\init := s,\\
-\evs := \{
+\init := s_1,\\
+\evs := 
 \begin{array}[t]{l}
-\opri \etype := \entry, \mname := \texttt{sendSMS} \clri,\\
-\opri \etype := \exit, \mname := \texttt{sendSMS} \clri,\\
-\opri \etype := \excexit, \mname := \texttt{sendSMS} \clri,\\
-\opri \etype := \exit, \mname := \texttt{reset} \clri\},
+\{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \opri \entry,
+\exit, \excexit \} \:\cup \\
+\{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
 \end{array}
 \\
 \vdsA := \{\opri \name := n, \type := \Int, \init := 0 \clri\},
@@ -243,7 +238,7 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \scp := s_2, \tcp := s_1, \\
              \event := \opri \etype := \exit,
                              \mname := \texttt{sendSMS} \clri, \\
-             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt, \\
+             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt, 
              \action := [\opri \target := n, \expr := n + 1 \clri]
             \clri,
 \end{array}\\
@@ -261,27 +256,63 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \scp := s_1, \tcp := s_1, \\
              \event := \opri \etype := \exit, \mname := \texttt{reset}
 \clri, \\
-             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt, \\
+             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt, 
              \action := [\opri \target := n, \expr := 0 \clri]
-           \clri \}
+           \clri \} \clri
 \end{array}
 \end{array}
 \end{array}\\
-\clri
 \end{array}
-\]
+}\]
 
 % TODO: This should be adapted to the new example
-Completion would add a transition from \(s\) to the new state \halted
-for the event that \texttt{sendSMS} is entered, with a guard \(n \geq
-N\). For the exit event of \texttt{reset}, the transition to halted
-would have a guard \fff. And of course, there would be an unguarded
-transition from \halted to \halted. Figure~\ref{FigCompleteMVA} shows
-the complete MVA.
+Completion add the following transitions to the automaton in
+Figure~\ref{FigExample}: from \(s_1\) to \halted, for the event
+\entry(\texttt{sendSMS}), with guard \(n \geq N\); and for the events
+\exit(\texttt{sendSMS}) and \excexit(\texttt{sendSMS}), with guard \ttt;
+from \(s_2\) to \halted, for the events \entry(\texttt{sendSMS}) and
+\exit(\texttt{reset}), with guard \ttt, from \halted to \halted, for
+all events and with guard \ttt.  Figure~\ref{FigCompleteMVA} shows
+the completed MVA.
+
+\psfrag{s1}{\tiny{\(s_1\)}}
+\psfrag{s2}{\tiny{\(s_2\)}}
+\psfrag{exit(sendSMS)?true -> n := n + 1;}
+{\begin{tabular}{l}
+\tiny{\exit(\texttt{SendSMS})?\ttt}\vspace*{-.8em}\\
+\tiny{\(\rightarrow\)\texttt{n := n + 1};}
+\end{tabular}}
+\psfrag{exitE(sendSMS)?true -> ;}
+{\begin{tabular}{l}
+\tiny{\excexit(\texttt{sendSMS})?\ttt \(\rightarrow\)}%\vspace*{-.8em}\\
+\tiny{\actskip;}
+\end{tabular}}
+\psfrag{exit(reset)?true -> n := 0;}
+{\begin{tabular}{l}
+\tiny{\exit(\texttt{reset})?\ttt \(\rightarrow\)}\vspace*{-.8em} \\
+\tiny{\texttt{n :=} 0;}
+\end{tabular}}
+\psfrag{entry(sendSMS)? n<N -> ;}
+{\begin{tabular}{l}
+\tiny{\entry(\texttt{sendSMS})? \texttt{n} \(<\) \texttt{N} \(\rightarrow\)} %\vspace*{-.8em} \\
+\tiny{\actskip;}
+\end{tabular}}
+\psfrag{entry(sendSMS)?true -> ;}
+{\tiny{\entry(\texttt{sendSMS})?\ttt \(\rightarrow\)\actskip}}
+\psfrag{exit(reset)?true -> ;}
+{\tiny{\exit(\texttt{reset})?\ttt \(\rightarrow\)\actskip}}
+\psfrag{exit(sendSMS)?true -> ;}
+{\tiny{\exit(\texttt{sendSMS})?\ttt \(\rightarrow\)\actskip}}
+\psfrag{exitE(sendSMS)?true -> ;}
+{\tiny{\excexit(\texttt{sendSMS})?\ttt \(\rightarrow\)\actskip}}
+\psfrag{entry(sendSMS)?n >= N -> ;}
+{\tiny{\entry(\texttt{sendSMS})?\texttt{n} \(\geq\) \texttt{N}
+\(\rightarrow\)\actskip}}
+\psfrag{halted}{\tiny{\halted}}
 
 \begin{figure}[t]
 \begin{center}
-\epsfig{file=completed_alt.eps, width=4cm}
+\epsfig{file=completed_alt.eps, width=8cm}
 \end{center}
 \label{FigCompleteMVA}
 \caption{Automaton of Figure~\ref{FigExample}, after completion}
