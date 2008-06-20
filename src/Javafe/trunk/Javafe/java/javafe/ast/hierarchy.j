@@ -1790,15 +1790,12 @@ public class VariableAccess extends Expr
 {
   //# Identifier id NoCheck
   //# int loc NotNullLoc
-
+  //# GenericVarDecl decl
   //@ invariant decl.id==id;
-  public /*@ non_null @*/ GenericVarDecl decl;
 
   //# PostCheckCall
   private void postCheck() {
-      Assert.notNull(decl);
       Assert.notFalse(id == decl.id);
-      // Any other invariants here...???
   }
 
   //@ public represents startLoc <- loc;
@@ -1806,13 +1803,10 @@ public class VariableAccess extends Expr
 
   //# NoMaker
   //@ requires decl.id == id;
-  //
   //@ requires loc != javafe.util.Location.NULL;
-  public static /*@non_null*/ VariableAccess make(/*@ non_null @*/ Identifier id, 
-                                    int loc,
-				    /*@ non_null @*/ GenericVarDecl decl) {
-	VariableAccess result = new VariableAccess(id, loc);
-        result.decl=decl;
+  public static /*@non_null*/ VariableAccess make(/*@ non_null @*/ Identifier id, int loc,
+                                                  /*@ non_null @*/ GenericVarDecl decl) {
+	VariableAccess result = new VariableAccess(id, loc, decl);
 	return result;
   }
 
