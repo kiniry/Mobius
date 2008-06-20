@@ -482,7 +482,7 @@ class ASTClassFileParser extends ClassFileParser {
     // necessary
 
     if (aname.equals("Exceptions")) {
-      ((/*@non_null*/)routines[i]).raises = TypeNameVec
+      (/*@(non_null)*/routines[i]).raises = TypeNameVec
           .make(parseTypeNames((DataInputStream) stream)); //@ nowarn Null, Cast, IndexTooBig;
     } else if (aname.equals("Synthetic")) {
       synthetics.addElement(routines[i]); //@ nowarn ;
