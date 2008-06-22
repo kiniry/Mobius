@@ -10,16 +10,16 @@ import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
-public class ClassInheritenceInconsistencyError extends TypeCheckingError {
+public class ClassInheritanceInconsistencyError extends TypeCheckingError {
 
-  private static final String message = "%s %s does not declare inheritence from %s, as in the %s of %s";
+  private static final String message = "%s %s does not declare inheritance from %s, as in the %s of %s";
   
   private final String itemType;
   private final String itemName;
   private final String superName;
   private final String noMatchingItemType;
   
-  public ClassInheritenceInconsistencyError(File sourceFile, int lineNumber, int charPosition, 
+  public ClassInheritanceInconsistencyError(File sourceFile, int lineNumber, int charPosition, 
       String itemType, String itemName, String superName, String noMatchingItemType) {
     super(sourceFile, lineNumber, charPosition);
     this.itemType = itemType;
@@ -28,7 +28,7 @@ public class ClassInheritenceInconsistencyError extends TypeCheckingError {
     this.noMatchingItemType = noMatchingItemType;
   }
 
-  public ClassInheritenceInconsistencyError(SourceLocation loc, 
+  public ClassInheritanceInconsistencyError(SourceLocation loc, 
       String itemType, String itemName, String superName, String noMatchingItemType) {
     super(loc);
     this.itemType = itemType;
@@ -46,7 +46,7 @@ public class ClassInheritenceInconsistencyError extends TypeCheckingError {
 
     //Should be checked above, but just in case:
     //Using -1 as order shouldn't really matter if it's gotten to here
-    if (o instanceof ClassInheritenceInconsistencyError) {
+    if (o instanceof ClassInheritanceInconsistencyError) {
       return getMessage().equals(o.getMessage()) ? 0 : -1;
     } else {
       return -1;

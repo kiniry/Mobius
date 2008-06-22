@@ -19,7 +19,7 @@ import ie.ucd.bon.typechecker.errors.InvalidStaticComponentTypeError;
 import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
 import ie.ucd.bon.typechecker.errors.TypeMismatch;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
-import ie.ucd.bon.typechecker.informal.ClassInheritenceInconsistencyError;
+import ie.ucd.bon.typechecker.informal.ClassInheritanceInconsistencyError;
 import ie.ucd.bon.typechecker.informal.ClassOrClusterInconsistencyError;
 import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
@@ -125,7 +125,7 @@ public class FormalTypeChecker {
         ClassChartDefinition def = informal.getClasses().get(informalClass);
         consistencyProblems.addProblem(new ClassOrClusterInconsistencyError(def.getSourceLocation(), "Class chart", informalClass, "formal definition"));
       } else {
-        //TODO - check inheritence here?
+        //TODO - check inheritance here?
         ClassChartDefinition chartDef = informal.getClasses().get(informalClass);
         ClassDefinition cDef = classes.get(informalClass);
         Collection<String> informalSupers = chartDef.getSuperClasses();
@@ -134,13 +134,13 @@ public class FormalTypeChecker {
         for (String informalSuper : informalSupers) {
           if (!formalSupers.contains(informalSuper)) {
             //Super in informal, not in formal
-            consistencyProblems.addProblem(new ClassInheritenceInconsistencyError(cDef.getSourceLocation(), "Class", informalClass, informalSuper, "class chart"));
+            consistencyProblems.addProblem(new ClassInheritanceInconsistencyError(cDef.getSourceLocation(), "Class", informalClass, informalSuper, "class chart"));
           }
         }
         for (String formalSuper : formalSupers) {
           if (!informalSupers.contains(formalSuper)) {
             //Super in formal, not in informal
-            consistencyProblems.addProblem(new ClassInheritenceInconsistencyError(chartDef.getSourceLocation(), "Class chart", informalClass, formalSuper, "formal definition"));
+            consistencyProblems.addProblem(new ClassInheritanceInconsistencyError(chartDef.getSourceLocation(), "Class chart", informalClass, formalSuper, "formal definition"));
           }
         }
       }
@@ -329,7 +329,7 @@ public class FormalTypeChecker {
     checkType(getType(t), loc);
   }
   
-  public String computeClassInheritenceCycleString(String className) {
+  public String computeClassInheritanceCycleString(String className) {
     Stack<String> currentPath = new Stack<String>();
     Stack<SortedSet<String>> waitingPaths = new Stack<SortedSet<String>>();
     

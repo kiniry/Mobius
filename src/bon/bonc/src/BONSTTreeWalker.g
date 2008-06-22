@@ -500,12 +500,12 @@ static_relation  :^(
 /**********************************************/
 
 inheritance_relation  :^(
-                         INHERITENCE_RELATION
+                         INHERITANCE_RELATION
                          child (m+=multiplicity)? 
                          parent (s+=semantic_label)? 
                         )
                        ->
-                         inheritenceRelation(child={$child.st},mult={$m},parent={$parent.st},sem={$s})
+                         inheritanceRelation(child={$child.st},mult={$m},parent={$parent.st},sem={$s})
                       ;
                     
 client_relation  :^(

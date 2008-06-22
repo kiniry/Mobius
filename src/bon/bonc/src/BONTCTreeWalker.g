@@ -427,7 +427,7 @@ static_relation  :^(
 /**********************************************/
 
 inheritance_relation  :^(
-                         INHERITENCE_RELATION
+                         INHERITANCE_RELATION
                          child (multiplicity)? 
                          parent (semantic_label)?
                         )

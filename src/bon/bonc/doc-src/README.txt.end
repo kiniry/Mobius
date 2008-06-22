@@ -54,7 +54,7 @@
 
 3.2.3 Graph printing
 
-  It is possible to create graphs representing the clustering and inheritence
+  It is possible to create graphs representing the clustering and inheritance
   relationships in the given BON source. For the chosen graph type, the output
   will be in the DOT language (see http://www.graphviz.org/doc/info/lang.html).
   
@@ -63,7 +63,7 @@
               A graph showing the cluster hierarchy from the system cluster
               down to the leaf cluters. This graph will also show which 
               cluster(s) each class is contained in.
-    (2) iig - Informal inheritence graph
+    (2) iig - Informal inheritance graph
               A graph showing the class hierarchy for the given system.
 
   An example of printing one of these graphs (subsititute print-type for other 

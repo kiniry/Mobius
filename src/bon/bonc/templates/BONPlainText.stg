@@ -289,7 +289,7 @@ staticRelation(r) ::= <<
 <r>
 >>
 
-inheritenceRelation(child,mult,parent,sem) ::= <<
+inheritanceRelation(child,mult,parent,sem) ::= <<
 <child> inherit <if(first(mult))>{<mult>} <endif><parent><if(first(sem))> <sem><endif>
 >>
 

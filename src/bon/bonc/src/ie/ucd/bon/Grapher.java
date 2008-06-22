@@ -26,22 +26,22 @@ public class Grapher {
   }
 
 
-  public static String graphInformalClassInheritence(final ParsingTracker parseTracker) {
-    Main.logDebug("Printing informal class inheritence graph");
+  public static String graphInformalClassInheritance(final ParsingTracker parseTracker) {
+    Main.logDebug("Printing informal class inheritance graph");
     StringBuilder sb = new StringBuilder();
 
     InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
 
     printGraphName(informalTypingInfo, sb);
 
-    Graph<String,String> classInheritenceGraph = informalTypingInfo.getClassInheritanceGraph();
+    Graph<String,String> classInheritanceGraph = informalTypingInfo.getClassInheritanceGraph();
     
     printInformalClasses(informalTypingInfo, sb);
 
-    appendLine("//Class inheritence links", sb);
-    for (String subclassName : classInheritenceGraph.getStartingNodes()) {
-      for (String parentClassName : classInheritenceGraph.getLinkedNodes(subclassName)) {
-        printClassInheritenceLink(subclassName, parentClassName, sb);
+    appendLine("//Class inheritance links", sb);
+    for (String subclassName : classInheritanceGraph.getStartingNodes()) {
+      for (String parentClassName : classInheritanceGraph.getLinkedNodes(subclassName)) {
+        printClassInheritanceLink(subclassName, parentClassName, sb);
       }
     }    
     appendLine(sb);
@@ -149,7 +149,7 @@ public class Grapher {
     appendLine("\"" + systemName + "\" -> \"" + clusterName + "\";", sb);
   }
   
-  private static void printClassInheritenceLink(final String child, final String parent, final StringBuilder sb) {
+  private static void printClassInheritanceLink(final String child, final String parent, final StringBuilder sb) {
     appendLine("\"" + parent + "\" -> \"" + child + "\";", sb);
   }
 

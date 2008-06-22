@@ -53,7 +53,7 @@ tokens {
   CLUSTER_COMPONENTS;
   CLASS;
   STATIC_RELATION;
-  INHERITENCE_RELATION;
+  INHERITANCE_RELATION;
   CLIENT_RELATION;
   CLIENT_ENTITIES;
   INDIRECTION_ELEMENT;
@@ -797,7 +797,7 @@ inheritance_relation  :  c=child 'inherit' ('{' multiplicity '}')?
                          parent (semantic_label)? 
                        ->
                        ^(
-                         INHERITENCE_RELATION[$c.start]
+                         INHERITANCE_RELATION[$c.start]
                          child (multiplicity)? 
                          parent (semantic_label)? 
                         )

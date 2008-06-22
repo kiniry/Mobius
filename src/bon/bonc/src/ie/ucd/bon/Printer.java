@@ -77,7 +77,7 @@ public final class Printer {
     case ICG:
       return "informal cluster graph";
     case IIG:
-      return "informal class inheritence graph";
+      return "informal class inheritance graph";
     default:
       return "unknown"; //Shouldn't happen
     }
@@ -272,7 +272,7 @@ public final class Printer {
     case ICG:
       return Grapher.graphInformalClusterContainment(parsingTracker);
     case IIG:
-      return Grapher.graphInformalClassInheritence(parsingTracker);
+      return Grapher.graphInformalClassInheritance(parsingTracker);
     default:
       return "";
     }

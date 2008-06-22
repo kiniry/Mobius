@@ -49,7 +49,7 @@ public final class CLP {
     pp.addOptionName("-print");
     pp.addOptionName("--print");
     pp.setArgName("TYPE");
-    pp.setHelpString("Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritence graph. See the manpage or README.txt for more information and a list of all printing options.");
+    pp.setHelpString("Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options.");
     cp.addOption(pp);
     
     StringDefaultOption ppo = new StringDefaultOption();
@@ -104,7 +104,7 @@ public final class CLP {
     StringDefaultOption ig = new StringDefaultOption();
     ig.setOptionID("6");
     ig.addOptionName("-ig");
-    ig.setHelpString("Print class inheritence graph in the .dot file format.");
+    ig.setHelpString("Print class inheritance graph in the .dot file format.");
     ig.setHidden(); //Hidden until revisiting
     cp.addOption(ig);*/
     

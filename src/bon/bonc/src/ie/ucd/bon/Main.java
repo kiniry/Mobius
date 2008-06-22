@@ -292,12 +292,12 @@ public final class Main {
         Grapher.graphClassesAndClusters(tracker, so.getStringOptionByNameArgument("-cg"));
       }
     }
-    //Class inheritence graph
+    //Class inheritance graph
     if (so.isStringOptionByNameSelected("-ig")) {
       if (tracker.continueFromParse(IG_NUM_SEVERE_ERRORS)) {
-        System.out.println("Not creating inheritence graph due to parse errors.");
+        System.out.println("Not creating inheritance graph due to parse errors.");
       } else {
-        System.out.println("Creating class-inheritence graph: " + so.getStringOptionByNameArgument("-ig"));
+        System.out.println("Creating class-inheritance graph: " + so.getStringOptionByNameArgument("-ig"));
         Grapher.graphClassHierarchy(tracker, so.getStringOptionByNameArgument("-ig"));
       }
     }

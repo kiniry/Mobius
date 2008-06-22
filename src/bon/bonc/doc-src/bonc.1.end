@@ -64,7 +64,7 @@ stdout(1), or to a file(2) use the following:
 
 .SS GRAPH PRINTING
 
-It is possible to create graphs representing the clustering and inheritence
+It is possible to create graphs representing the clustering and inheritance
 relationships in the given BON source. For the chosen graph type, the output
 will be in the DOT language (see http://www.graphviz.org/doc/info/lang.html).
   
@@ -83,7 +83,7 @@ cluster(s) each class is contained in.
 .RE
 .PD 1
 .P
-(2) iig - Informal inheritence graph
+(2) iig - Informal inheritance graph
 .PD 0
 .P
 .RS 10
