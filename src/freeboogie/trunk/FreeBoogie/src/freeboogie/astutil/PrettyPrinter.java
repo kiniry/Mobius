@@ -341,9 +341,9 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(HavocCmd havocCmd, AtomId id) {
+  public void see(HavocCmd havocCmd, Identifiers ids) {
     say("havoc ");
-    id.eval(this);
+    ids.eval(this);
     say(";");
   }
 

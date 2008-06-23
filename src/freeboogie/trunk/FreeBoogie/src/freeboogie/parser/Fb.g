@@ -150,8 +150,8 @@ command	returns [Command v]:
       { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSERT,$tv.v,$expr.v,tokLoc($t)); }
   | t='assume' ('<' tv=id_list '>')? expr ';'
       { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME,$tv.v,$expr.v,tokLoc($t)); }
-  | t='havoc' atom_id ';'
-      { if(ok) $v=HavocCmd.mk($atom_id.v,tokLoc($t));}
+  | t='havoc' id_list ';'
+      { if(ok) $v=HavocCmd.mk($id_list.v,tokLoc($t));}
   | t='call' call_lhs
     n=ID ('<' st=simple_type_list '>')? '(' (r=expr_list)? ')' ';'
       { if(ok) $v=CallCmd.mk($n.text,$st.v,$call_lhs.v,$r.v,tokLoc($t)); }
