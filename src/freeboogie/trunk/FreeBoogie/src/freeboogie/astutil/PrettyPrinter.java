@@ -248,11 +248,10 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
+  public void see(Block block, String name, Command cmd, Identifiers succ, Block tail) {
     say(name);
     say(":");
-    ++indentLevel; nl();
-    if (cmds != null) cmds.eval(this);
+    if (cmd != null) cmd.eval(this);
     if (succ == null) {
       say("return");
     } else {
@@ -260,7 +259,6 @@ public class PrettyPrinter extends Transformer {
       succ.eval(this);
     }
     semi();
-    --indentLevel; nl();
     if (tail != null) tail.eval(this);
   }
 
@@ -297,12 +295,6 @@ public class PrettyPrinter extends Transformer {
     if (args != null) args.eval(this);
     say(");");
     nl();
-  }
-
-  @Override
-  public void see(Commands commands, Command cmd, Commands tail) {
-    cmd.eval(this);
-    if (tail != null) tail.eval(this);
   }
 
   @Override

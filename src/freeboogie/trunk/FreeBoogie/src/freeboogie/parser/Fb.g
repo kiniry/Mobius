@@ -4,6 +4,7 @@ grammar Fb;
   package freeboogie.parser; 
   import freeboogie.ast.*; 
   import freeboogie.tc.TypeUtils;
+  import freeboogie.util.Id;
   import java.math.BigInteger;
 
 }
@@ -27,6 +28,7 @@ grammar Fb;
     ok = false;
     super.reportError(x);
   }
+
 }
 
 program returns [Declaration v]:
@@ -115,8 +117,19 @@ body returns [Body v]:
 ;
 
 block_list returns [Block v]:
-  ID ':' (command_list)? block_succ (t=block_list)?
-    { if(ok) $v=Block.mk($ID.text,$command_list.v,$block_succ.v,$t.v,tokLoc($ID));}
+  ID ':' cl=command_list s=block_succ (t=block_list)?
+    { if(ok) {
+      String n_=$ID.text;
+      Identifiers s_=$s.v;
+      Block t_=$t.v;
+      for (int i = $cl.v.size() - 1; i > 0; --i) {
+        Command c_=$cl.v.get(i);
+        String ss_=Id.get(n_);
+        t_=Block.mk(ss_,c_,s_,t_,astLoc(c_));
+        s_=Identifiers.mk(AtomId.mk(ss_,null),null);
+      }
+      $v=Block.mk(n_,$cl.v.isEmpty()?null:$cl.v.get(0),s_,t_,tokLoc($ID));
+    }}
 ;
 
 block_succ returns [Identifiers v]:
@@ -311,8 +324,9 @@ var_id_type_list returns [Declaration v]:
       { if(ok) $v = VariableDecl.mk($hi.text, $ht.v,$tv.v,$t.v,tokLoc($ID)); }
 ;
 
-command_list returns [Commands v]:
-  h=command (t=command_list)? { if(ok) $v=Commands.mk($h.v,$t.v,astLoc($h.v)); }
+command_list returns [ArrayList<Command> v]:
+  {if (ok) $v = new ArrayList<Command>();}
+  (c=command {if (ok) $v.add($c.v);})*
 ;
 	
 // END list rules 

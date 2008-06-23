@@ -28,5 +28,12 @@
  . Check performance.
  . A log Formatter that uses a line per record.
  . Get someone to review the code.
+ . Implement the 'transform' (desugar) function in the parser.
+   This makes sure there is exactly one command in each block
+   and simplifies later steps.
+ . Move to Boogie 2 (and still support the old form only if needed by
+   benchmarks or bml2bpl)
+ . Change the grammar so it doesn't use syntactic predicates. NOTE:
+   You may need to return tuples.
 
 vim:spell:ts=3:sw=3:fdm=manual:

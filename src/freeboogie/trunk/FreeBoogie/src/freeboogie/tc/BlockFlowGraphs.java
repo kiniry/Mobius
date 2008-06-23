@@ -101,7 +101,7 @@ public class BlockFlowGraphs extends Transformer {
   }
   
   @Override
-  public void see(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
+  public void see(Block block, String name, Command cmd, Identifiers succ, Block tail) {
     currentBlock = block;
     if (succ != null) succ.eval(this);
     currentBlock = null;

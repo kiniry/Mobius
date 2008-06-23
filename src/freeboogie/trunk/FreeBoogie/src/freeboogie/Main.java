@@ -18,7 +18,6 @@ import freeboogie.tc.*;
 import freeboogie.util.Closure;
 import freeboogie.util.ClosureR;
 import freeboogie.util.Err;
-import freeboogie.vcgen.BlockSplitter;
 
 /**
  * Used to print information in the symbol table.
@@ -81,7 +80,6 @@ public class Main {
     opt.regBool("-pst", "print symbol table");
     opt.regBool("-pfg", "print flow graphs");
     opt.regBool("-old", "accept old constructs");
-    opt.regBool("-sb", "split blocks so they contain one command");
     opt.regBool("-pvc", "print verification condition");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
@@ -123,12 +121,6 @@ public class Main {
       }}));
   }
 
-  private void chopBlocks() {
-    BlockSplitter bs = new BlockSplitter();
-    ast = (Declaration)ast.eval(bs);
-    tc.process(ast);
-  }
-
   public void run(String[] args) {
     // prepare logging
     try {
@@ -159,7 +151,6 @@ public class Main {
         if (ast == null) continue; // errors while parsing or empty file
         
         // do what we are asked to do with this file
-        if (opt.boolVal("-sb")) chopBlocks();
         if (FbError.reportAll(tc.process(ast))) continue;
         ast = tc.getAST();
         if (opt.boolVal("-pp")) ast.eval(pp);

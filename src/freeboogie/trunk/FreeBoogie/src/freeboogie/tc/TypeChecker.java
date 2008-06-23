@@ -768,8 +768,8 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
 
   // === do not look at block successors ===
   @Override
-  public Type eval(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
-    if (cmds != null) cmds.eval(this);
+  public Type eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
+    if (cmd != null) cmd.eval(this);
     if (tail != null) tail.eval(this);
     return null;
   }

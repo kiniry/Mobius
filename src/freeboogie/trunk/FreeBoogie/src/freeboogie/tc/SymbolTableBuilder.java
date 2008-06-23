@@ -242,8 +242,8 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   
   // === do not look at goto-s ===
   @Override
-  public void see(Block block, String name, Commands cmds, Identifiers succ, Block tail) {
-    if (cmds != null) cmds.eval(this);
+  public void see(Block block, String name, Command cmd, Identifiers succ, Block tail) {
+    if (cmd != null) cmd.eval(this);
     if (tail != null) tail.eval(this);
   }
 }

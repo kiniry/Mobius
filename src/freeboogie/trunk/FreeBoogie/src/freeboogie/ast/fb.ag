@@ -43,11 +43,10 @@ Specification = Identifiers typeVars,
                 enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
                 Expr! expr, boolean free, Specification tail;
 Body = Declaration vars, Block blocks;
-Block = String! name, Commands cmds, Identifiers succ, Block tail;
+Block = String! name, Command cmd, Identifiers succ, Block tail;
   // succ == null means that we return
 
 // Commands
-Commands = Command! cmd, Commands tail;
 Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
 AssignmentCmd = Expr! lhs, Expr! rhs; // TODO: define exactly what lhs can be
 AssertAssumeCmd = enum(CmdType: ASSERT, ASSUME) type, 
