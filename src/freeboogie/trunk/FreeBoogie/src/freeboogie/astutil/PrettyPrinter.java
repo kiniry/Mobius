@@ -139,7 +139,7 @@ public class PrettyPrinter extends Transformer {
       say(">");
     }
     expr.eval(this);
-    semi();
+    say(";");
   }
 
   @Override
@@ -147,7 +147,7 @@ public class PrettyPrinter extends Transformer {
     lhs.eval(this);
     say(" := ");
     rhs.eval(this);
-    semi();
+    say(";");
   }
 
   @Override
@@ -251,7 +251,11 @@ public class PrettyPrinter extends Transformer {
   public void see(Block block, String name, Command cmd, Identifiers succ, Block tail) {
     say(name);
     say(":");
-    if (cmd != null) cmd.eval(this);
+    if (cmd != null) {
+      say(" ");
+      cmd.eval(this);
+    }
+    say(" ");
     if (succ == null) {
       say("return");
     } else {
@@ -277,9 +281,7 @@ public class PrettyPrinter extends Transformer {
   public void see(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
     say("call ");
     if (results != null) {
-      //say("(");
       results.eval(this);
-      //say(")");
       say(" := ");
     }
     say(procedure);
@@ -294,7 +296,6 @@ public class PrettyPrinter extends Transformer {
     say("(");
     if (args != null) args.eval(this);
     say(");");
-    nl();
   }
 
   @Override
@@ -343,7 +344,7 @@ public class PrettyPrinter extends Transformer {
   public void see(HavocCmd havocCmd, AtomId id) {
     say("havoc ");
     id.eval(this);
-    semi();
+    say(";");
   }
 
   @Override
