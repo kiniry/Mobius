@@ -15,6 +15,7 @@ package umbra.lib;
  * comments and BML areas from {@link BytecodeStringsMnemonics}. It contributes
  * <ul>
  *  <li>BML keywords (e.g. requires),</li>
+ *  <li>Java keywords (e.g. class, extends),</li>
  *  <li>BML expression kewords (e.g. \result),</li>
  *  <li>keywords for Line numbers section,</li>
  *  <li>keywords for Code section,</li>
@@ -56,6 +57,80 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
     "decreases"};
 
   /**
+   * This constant contains an array with all the Java keywords.
+   * This array is based on the list in "The Java Language Specification,
+   * Third Edition", Section 3.9 Keywords. See:
+   * http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#3.9
+   */
+  public static final String[] JAVA_KEYWORDS = new String[] {
+    "abstract",
+    "assert",
+    "boolean",
+    "break",
+    "byte",
+    "case",
+    "catch",
+    "char",
+    "class",
+    "const",
+    "continue",
+    "default",
+    "do",
+    "double",
+    "else",
+    "enum",
+    "extends",
+    "final",
+    "finally",
+    "float",
+    "for",
+    "if",
+    "goto",
+    "implements",
+    "import",
+    "instanceof",
+    "int",
+    "interface",
+    "long",
+    "native",
+    "new",
+    "package",
+    "private",
+    "protected",
+    "public",
+    "return",
+    "short",
+    "static",
+    "strictfp",
+    "super",
+    "switch",
+    "synchronized",
+    "this",
+    "throw",
+    "throws",
+    "transient",
+    "try",
+    "void",
+    "volatile",
+    "while"
+  };
+
+  /**
+   * The position of the "class" keyword in {@link #JAVA_KEYWORDS}.
+   */
+  public static final int CLASS_KEYWORD_POS = 8;
+
+  /**
+   * The position of the "extends" keyword in {@link #JAVA_KEYWORDS}.
+   */
+  public static final int EXTENDS_KEYWORD_POS = 16;
+
+  /**
+   * The position of the "implements" keyword in {@link #JAVA_KEYWORDS}.
+   */
+  public static final int IMPLEMENTS_KEYWORD_POS = 23;
+
+  /**
    * This constant contains an array with all the keywords that occur in the
    * line numbers area. This area is not fully handled yet.
    *
@@ -91,7 +166,7 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
                                                              "boolean",
                                                              "String", "byte",
                                                              "package",
-                                                             "class", "}" };
+                                                             "}" };
 
   /**
    * This constant contains an array with all the possible prefixes of throw

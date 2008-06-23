@@ -66,8 +66,8 @@ public class LineContext {
   private static final int STATE_INSIDE_METHOD = 5;
 
   /**
-   * The context state which is used in case the parsing is inside of a
-   * method.
+   * The context state which is used in case the parsing is inside of the
+   * invariant area of the class.
    */
   private static final int STATE_INVARIANT_AREA = 6;
 

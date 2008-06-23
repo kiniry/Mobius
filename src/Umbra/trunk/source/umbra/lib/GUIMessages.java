@@ -448,7 +448,7 @@ public final class GUIMessages {
                             an_ex.getWrongLocation());
     } else {
       MessageDialog.openError(a_shell, a_title,
-                              GUIMessages.NO_LINE_IN_DOC +
+                              GUIMessages.NO_POSITION_IN_DOC +
                               an_ex.getWrongLocation());
     }
   }

@@ -39,7 +39,10 @@ import umbra.lib.GUIMessages;
  * Its execution causes generating new related byte code file
  * in a new editor window.
  *
- * @author BYTECODE team (contact alx@mimuw.edu.pl)
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Wojciech Was (ww209224@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 
@@ -63,9 +66,17 @@ public class DisasBCEL implements IEditorActionDelegate {
     if (checkIfSaveNeeded()) return;
     if (checkJavaExtension()) return;
     final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
-    IPath cpath = null;
+    final IFile bFile;
     try {
-      cpath = openBCodeEditorForJavaFile(jFile);
+      bFile = FileNames.getClassFileFile(jFile, my_editor);
+    } catch (JavaModelException e) {
+      MessageDialog.openError(my_editor.getSite().getShell(),
+                              GUIMessages.DISAS_MESSAGE_TITLE,
+                              GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
+      return;
+    }
+    try {
+      openBCodeEditorForJavaFile(jFile);
     } catch (JavaModelException e) {
       MessageDialog.openError(my_editor.getSite().getShell(),
                                 GUIMessages.DISAS_MESSAGE_TITLE,
@@ -75,7 +86,7 @@ public class DisasBCEL implements IEditorActionDelegate {
                                 GUIMessages.DISAS_MESSAGE_TITLE,
                                 GUIMessages.DISAS_EDITOR_PROBLEMS);
     } catch (ClassNotFoundException e) {
-      messageClassNotFound(cpath);
+      messageClassNotFound(bFile.getProjectRelativePath());
     }
   }
 

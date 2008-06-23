@@ -110,7 +110,7 @@ public class InstructionNameParser extends InstructionParserGeneric {
    *   and swallowed, <code>false</code> when the starting portion of the
    *   string cannot start an identifier
    */
-  private boolean swallowIdentifier() {
+  public boolean swallowIdentifier() {
     final String line = getLine();
     int index = getIndex();
     if (!Character.isJavaIdentifierStart(line.charAt(index)))
@@ -189,6 +189,22 @@ public class InstructionNameParser extends InstructionParserGeneric {
         //FIXME this is a hack to parse <init>; https://mobius.ucd.ie/ticket/554
       swallowIdentifier();
       return swallowDelimiter('>');
+    }
+    return false;
+  }
+
+  /**
+   * This method swallows the particular given string from the parsed
+   * text.
+   *
+   * @param a_word the word to swallow
+   * @return <code>true</code> in case the word was successfully swallowed,
+   *   <code>false</code> otherwise
+   */
+  protected boolean swallowGivenWord(final String a_word) {
+    if (getLine().regionMatches(getIndex(), a_word, 0, a_word.length())) {
+      moveIndex(a_word.length());
+      return true;
     }
     return false;
   }

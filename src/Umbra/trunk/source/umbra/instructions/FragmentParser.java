@@ -102,6 +102,7 @@ public class FragmentParser extends BytecodeCommentParser {
         a_line_no = swallowEmptyLines(my_doc, a_line_no, my_end, a_ctxt);
         if (a_line_no <= my_end) {
           a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
+          //a_line_no = swallowEmptyLines(my_doc, a_line_no, my_end, a_ctxt);
         }
       } else {
         throw new UmbraException();

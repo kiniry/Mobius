@@ -16,10 +16,12 @@ import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.ClassHeaderLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.instructions.ast.UnknownLineController;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
@@ -56,7 +58,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
    * The method finds out which parsing context is appropriate for the given
    * position. It walks back through the structure of the editor lines until
    * a method header is found (and in this case the context is the one
-   * appropriate for method body) or an annotation line (and in this case
+   * appropriate for the method body) or an annotation line (and in this case
    * the context is the one appropriate for annotation).
    *
    * @param a_pos a position to check the context for
@@ -64,21 +66,31 @@ public final class BytecodeController extends BytecodeControllerContainer {
    */
   private LineContext establishCurrentContext(final int a_pos) {
     final LineContext ctxt = new LineContext();
-    for (int i = a_pos; i >= 0; i--) {
+    for (int i = a_pos; i >= 0;) {
       final BytecodeLineController blc = getLineController(i);
       if (blc instanceof HeaderLineController) {
         final int mno = blc.getMethodNo();
         if (mno >= 0) {
           ctxt.setInsideMethod();
           ctxt.setMethodNo(blc.getMethodNo());
-        } else {
-          ctxt.setInvariantArea();
         }
+        break;
+      }
+      if (blc instanceof ClassHeaderLineController) {
+        ctxt.setInvariantArea();
         break;
       }
       if (blc instanceof AnnotationLineController) {
         ctxt.setInsideAnnotation(getAnnotationEnd(i));
         ctxt.setMethodNo(blc.getMethodNo());
+        break;
+      }
+      if (blc instanceof EmptyLineController ||
+          blc instanceof InstructionLineController ||
+          blc instanceof CommentLineController ||
+          blc instanceof UnknownLineController) {
+        i--;
+      } else {
         break;
       }
     }

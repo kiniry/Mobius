@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import umbra.UmbraPlugin;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.ClassHeaderLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
@@ -134,6 +135,9 @@ public final class Preparsing {
                         ThrowsLineController.class);
       addSimpleForArray(BytecodeStrings.HEADER_PREFIX,
                         HeaderLineController.class);
+      my_preparse_automaton.addSimple(
+        BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CLASS_KEYWORD_POS],
+        ClassHeaderLineController.class);
       my_preparse_automaton.addSimple(BytecodeStrings.COMMENT_LINE_START,
                                       CommentLineController.class);
       my_preparse_automaton.addSimple(BytecodeStrings.ANNOT_LINE_START,
