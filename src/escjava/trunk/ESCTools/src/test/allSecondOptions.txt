@@ -11,6 +11,7 @@
  -NoGCPeepOpt
  -MergeInv
  -NoOutCalls
+ -BubbleNotDown
  -NoVarCheckDeclsAndUses
  -NoLastVarUseOpt
  -ExcuseNullInitializers

@@ -20,7 +20,7 @@ public class StressTest extends junitutils.TestFilesTestSuite {
 		throw new RuntimeException(uhe.toString());
 	}    
 	
-	String listOfFiles = "src/test/list.txt";
+	String listOfFiles = "src/test/testcases.txt";
 	String listOfServers = "src/test/servers.txt";
 	String listOfOptions = "src/test/options.txt";
 	String listOfSecondOptions = "src/test/secondOptions.txt";

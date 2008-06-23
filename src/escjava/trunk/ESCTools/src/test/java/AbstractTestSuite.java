@@ -27,7 +27,6 @@ import junit.framework.*;
 import java.io.*;
 import java.util.Iterator;
 import java.lang.reflect.Method;
-import java.util.Random;
 
 /**
  * This is a JUnit TestSuite that is created from a number of tests as follows.
@@ -49,10 +48,6 @@ import java.util.Random;
  * @author David R. Cok
  */
 public class AbstractTestSuite extends TestSuite {
-  
-  static final long ONE_MEGABYTE = 1024 * 1024;
-  static final long FREE_MEM_LIMIT = 128 * ONE_MEGABYTE;
-  static final String NOT_ENOUGH_MEMORY = " *** not enough free memory to run this test ***";
 
   //@ ensures_redundantly !initialized;
   protected AbstractTestSuite() {
@@ -169,8 +164,6 @@ public class AbstractTestSuite extends TestSuite {
                   // Add this subset of tests only if it is the turn of this server,
                   // and we are within the current batch of tests
                   if ((position++ % numberOfServers) == serverIndex) {
-                      long freeMem = Runtime.getRuntime().freeMemory();
-                      if (freeMem > FREE_MEM_LIMIT) {
                         addTest(makeHelper(JUnitUtils.parseLine(preArgs
                                                                 + " "
                                                                 + proverArgs
@@ -179,7 +172,6 @@ public class AbstractTestSuite extends TestSuite {
                                                                     .next()
                                                                 + " "
                                                                 + thisLine)));
-                      }
                   }
                 }
               }
@@ -270,13 +262,7 @@ public class AbstractTestSuite extends TestSuite {
 
       ByteArrayOutputStream ba = JUnitUtils.setStreams();
       try {
-        long freeMem = Runtime.getRuntime().freeMemory();
-         if (freeMem > FREE_MEM_LIMIT) {
           returnedObject = dotest(fileToTest, args);
-        }
-        else {
-          fail (fileToTest + NOT_ENOUGH_MEMORY);
-        }
       } catch (IllegalAccessException e) {
         JUnitUtils.restoreStreams(true);
         fail(e.toString());

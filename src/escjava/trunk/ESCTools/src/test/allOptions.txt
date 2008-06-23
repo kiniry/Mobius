@@ -20,6 +20,8 @@
 -nowarn Deadlock -verboseTrace -testMode -MergeInv
 -nowarn Deadlock -verboseTrace -testMode -RewriteDepth 1
 -nowarn Deadlock -verboseTrace -testMode -NoOutCalls
+-nowarn Deadlock -verboseTrace -testMode -BubbleNotDown
+-nowarn Deadlock -verboseTrace -testMode -NoVarCheckDeclsAndUses
 -nowarn Deadlock -verboseTrace -testMode -NoLastVarUseOpt
 -nowarn Deadlock -verboseTrace -testMode -StrongAssertPostAlways
 -nowarn Deadlock -verboseTrace -testMode -StrongAssertPostAtomic

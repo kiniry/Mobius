@@ -1,3 +1,4 @@
 -Prover Simplify
+-Prover haRVey
 -Prover Sammy
 -Prover CVC3
