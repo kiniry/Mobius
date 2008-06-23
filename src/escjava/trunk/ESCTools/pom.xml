@@ -87,6 +87,14 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <forkMode>pertest</forkMode>
+          <argLine>${maven.test.jvmargs}</argLine>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <scm>

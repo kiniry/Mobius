@@ -51,7 +51,7 @@ import java.util.Random;
 public class AbstractTestSuite extends TestSuite {
   
   static final long ONE_MEGABYTE = 1024 * 1024;
-  static final long FREE_MEM_LIMIT = 12 * ONE_MEGABYTE;
+  static final long FREE_MEM_LIMIT = 128 * ONE_MEGABYTE;
   static final String NOT_ENOUGH_MEMORY = " *** not enough free memory to run this test ***";
 
   //@ ensures_redundantly !initialized;

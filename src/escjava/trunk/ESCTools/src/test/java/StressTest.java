@@ -4,7 +4,7 @@ import java.util.Random;
 import junit.framework.*;
 import junitutils.*;
 
-public class ExtremeTest extends junitutils.TestFilesTestSuite {
+public class StressTest extends junitutils.TestFilesTestSuite {
   
 	static public junit.framework.Test suite() {
 
@@ -25,7 +25,7 @@ public class ExtremeTest extends junitutils.TestFilesTestSuite {
 	String listOfOptions = "src/test/options.txt";
 	String listOfSecondOptions = "src/test/secondOptions.txt";
 	String listOfProvers = "src/test/provers.txt";
-	String testSuiteName = "Distributed-Test-" + hostName;
+	String testSuiteName = "Stress-Test-" + hostName;
 	int numberOfServers = 0;
 	int serverIndex = -1; // run no tests unless a server is found 
     	
