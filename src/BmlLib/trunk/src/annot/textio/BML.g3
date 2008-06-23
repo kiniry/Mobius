@@ -162,8 +162,6 @@ parseClass :
 classComment :
 	EOA {
 		syso("begin of class decl");
-		if (affectBcc)
-			bcc.setInvariant(null);
 	}
 	(c=classAttribute {
 		if ($c.ast != null) {
@@ -279,15 +277,16 @@ printableAttribute returns [BCPrintableAttribute ast] :
 	;
 
 classAttribute returns [ClassAttribute ast] :
-	| CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast);}
+	| CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, true);}
+	| STATIC CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, false);}
 	;
 
 methodAttribute returns [MethodAttribute ast] :
 	m=methodSpecification {$ast = $m.ast;};
 
 methodSpecification returns [MethodSpecification ast] :
-	| REQUIRES f3=formula {$ast = new MethodSpecification(m, $f3.ast, new SpecificationCase[0]);}
-		(SC_START s=specCase {$ast.addCase($s.ast);} SC_END)*
+	| s=specCase { $ast = new MethodSpecification(m);
+                                $ast.addCase($s.ast);}
 	;
 
 exname returns [String name] :
@@ -298,7 +297,7 @@ exname returns [String name] :
 	;
 
 specCase returns [SpecificationCase ast] :
-	(PRECONDITION f1=formula {
+	(REQUIRES f1=formula {
 		prec = $f1.ast;
 		modif = null;
 		postc = null;
@@ -573,6 +572,7 @@ EOA: 'EOA';
 // bml level
 // IDisplayStyle must be modified as well
 
+STATIC: 'static';
 ASSERT: 'assert';
 LOOPSPEC: 'loop_specification';
 LINVARIANT: 'loop_inv';

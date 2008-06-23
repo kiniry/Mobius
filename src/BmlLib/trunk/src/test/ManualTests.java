@@ -320,7 +320,7 @@ public final class ManualTests {
 		m2.addAttribute(a4);
 		MethodSpecification ms = new MethodSpecification(m2);
 		m2.setMspec(ms);
-		ClassInvariant civ = new ClassInvariant(bcc);
+		ClassInvariant civ = new ClassInvariant(bcc, true);
 		bcc.addAttribute(civ);
 		return bcc;
 	}
@@ -338,7 +338,7 @@ public final class ManualTests {
 			throws ClassNotFoundException,
 			ReadAttributeException {
 		bcc = new BCClass(Paths.path, "test.Empty");
-		bcc.addAttribute(new ClassInvariant(bcc, getSampleFormula(4, 0)));
+		bcc.addAttribute(new ClassInvariant(bcc, getSampleFormula(4, 0), true));
 		for (int i=0; i<bcc.getMethodCount(); i++) {
 			BCMethod m = bcc.getMethod(i);
 			InstructionHandle[] ihs = m.getInstructions().getInstructionHandles();
@@ -371,7 +371,7 @@ public final class ManualTests {
 			RecognitionException {
 		System.out.println(xxx);
 		bcc = new BCClass(Paths.path, "test.Empty");
-		bcc.setInvariant(new ClassInvariant(bcc));
+		bcc.setInvariant(new ClassInvariant(bcc, true));
 		BCMethod m = bcc.getMethod(1);
 		SpecificationCase[] sc = { new SpecificationCase(m, new Predicate0Ar(true),
 				null, new Predicate0Ar(false), null) };

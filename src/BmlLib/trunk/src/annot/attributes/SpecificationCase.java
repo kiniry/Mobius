@@ -136,15 +136,15 @@ public class SpecificationCase {
 	 * @return string representation of specificatoin case.
 	 */
 	public String printCode(BMLConfig conf) {
-		String code = " ";
-		code += IDisplayStyle._sc_start + conf.newLine();
-		conf.incInd();
-		code += precondition.printLine(conf, IDisplayStyle._precondition);
+		String code = "";
+		//code += IDisplayStyle._sc_start + conf.newLine();
+		//conf.incInd();
+		code += precondition.printLine(conf, IDisplayStyle._requires);
 		if (!modifies.getExpression().isEmpty())
 			code += modifies.printLine(conf, IDisplayStyle._modifies);
 		code += postcondition.printLine(conf, IDisplayStyle._postcondition);
 		if (excondition.size() == 1) {
-			code += conf.getIndent() + IDisplayStyle._exsures + excondition.get(0).printCode(conf);
+			code += conf.getIndent() + IDisplayStyle._exsures + " " + excondition.get(0).printCode(conf);
 		} else if (excondition.size() > 1) {
 			code += conf.getIndent() + IDisplayStyle._exsures;
 			Iterator<Exsure> iter = excondition.iterator();
@@ -156,8 +156,8 @@ public class SpecificationCase {
 			code += conf.newLine();
 			conf.incInd();
 		}
-		conf.decInd();
-		code += " " + IDisplayStyle._sc_end + conf.newLine();
+		//conf.decInd();
+		//code += " " + IDisplayStyle._sc_end + conf.newLine();
 		return code;
 	}
 

@@ -225,7 +225,7 @@ public class Parsing {
 	 * Should be called with <code>affectBCC = false</code>
 	 * first (for error-checking) and, if it returns true,
 	 * then with <code>affectBcc = true</code> to parse
-	 * the same code into it's BCClass.
+	 * the same code into its BCClass.
 	 * Adding / removing / replacing methods is currently
 	 * unsupported.
 	 * 

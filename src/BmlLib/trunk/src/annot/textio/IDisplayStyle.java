@@ -92,6 +92,7 @@ public interface IDisplayStyle {
    * Be careful to modify BML.g3 as well
 	 */
 	public static final String _classInvariant = "invariant";
+	public static final String _staticInvariant = "static invariant";
 	public static final String _assert = "assert";
 	public static final String _requires = "requires";
 	public static final String _sc_start = "{|";

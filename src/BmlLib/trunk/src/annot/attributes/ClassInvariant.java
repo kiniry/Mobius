@@ -20,7 +20,7 @@ import annot.bcexpression.formula.AbstractFormula;
  */
 public class ClassInvariant extends ClassAttribute implements
 		IBCAttribute {
-
+  
 	/**
 	 * BCClass contaning this attribute.
 	 */
@@ -30,15 +30,31 @@ public class ClassInvariant extends ClassAttribute implements
 	 * The invariant formula.
 	 */
 	private ExpressionRoot<AbstractFormula> invariant;
+	
+  /**
+   * The flag which is <code>true</code> in case the invariant is
+   * an instance invariant and <code>false</code> otherwise.
+   */
+	private boolean isInstance;
+
+  /**
+   * The flag which contains the access flags for the current class
+   * invariant.
+   */
+  private int access_flags;
 
 	/**
-	 * Creates empty class invariant (with formula 'true').
+	 * Creates empty invariant (with formula 'true').
 	 * 
-	 * @param bcc - BCClass containign this invariant.
+	 * @param bcc - BCClass containing this invariant.
+	 * @param instanceflag - <code>true</code> in case the invariant is an
+	 *   instance invariant
 	 */
-	public ClassInvariant(BCClass bcc) {
+	public ClassInvariant(BCClass bcc, boolean instanceflag) {
 		this.bcc = bcc;
 		this.invariant = new ExpressionRoot<AbstractFormula>(this, new Predicate0Ar(true));
+		this.isInstance = instanceflag;
+		commitInstanceFlag();
 	}
 
 	/**
@@ -46,18 +62,34 @@ public class ClassInvariant extends ClassAttribute implements
 	 * 
 	 * @param bcc - BCClass containing this invariant,
 	 * @param invariant - a invariant formula.
+	 * @param instanceflag - <code>true</code> in case the invariant is an
+   *   instance invariant
 	 */
-	public ClassInvariant(BCClass bcc, AbstractFormula invariant) {
+	public ClassInvariant(BCClass bcc, AbstractFormula invariant,
+	                      boolean instanceflag) {
 		this.bcc = bcc;
 		this.invariant = new ExpressionRoot<AbstractFormula>(this, invariant);
+		this.isInstance = instanceflag;
+		commitInstanceFlag();
 	}
 
 	/**
+	 * This method propagates the {@link #isInstance} flag to the
+	 * access_flags field.
+	 */
+	private void commitInstanceFlag() {
+	  if (!isInstance) {
+	    access_flags = access_flags | AttributeFlags.ACC_STATIC;
+	  }
+  }
+
+  /**
 	 * A constructor from attributeReader, for use in class
 	 * loading only.
 	 * 
 	 * @param bcc - BCClass containing this invariant,
-	 * @param ar - stream to load invariant from.
+	 * @param ar - {@link AttributeReader} to load invariant from, it is
+	 *   in a position right after the length field of the attribute
 	 * @throws ReadAttributeException - if data left
 	 * 		in <code>ar</code> doesn't represent correct
 	 * 		class invariant.
@@ -65,18 +97,23 @@ public class ClassInvariant extends ClassAttribute implements
 	public ClassInvariant(BCClass bcc, AttributeReader ar)
 			throws ReadAttributeException {
 		this.bcc = bcc;
-		this.invariant = new ExpressionRoot<AbstractFormula>(this, ar.readFormula());
+		access_flags = ar.readShort();
+		isInstance = (access_flags & AttributeFlags.ACC_STATIC) == 0;
+		this.invariant = new ExpressionRoot<AbstractFormula>(this,
+		  ar.readFormula());
 	}
 
 	/**
-	 * Prints annotation's code to a String.
+	 * Prints the code of the annotation to a String.
 	 * 
 	 * @param conf - see {@link BMLConfig}.
 	 * @return String representation of this invariant.
 	 */
 	@Override
 	protected String printCode1(BMLConfig conf) {
-		String code = invariant.printLine(conf, IDisplayStyle._classInvariant);
+	  String header = isInstance ? IDisplayStyle._classInvariant :
+	    IDisplayStyle._staticInvariant;
+		String code = invariant.printLine(conf, header);
 		return "\n" + Parsing.addComment(code);
 	}
 
@@ -108,7 +145,7 @@ public class ClassInvariant extends ClassAttribute implements
 	 */
 	@Override
 	public void remove() {
-		bcc.setInvariant(null);
+		bcc.remove(getAccessFlags());
 	}
 
 	/**
@@ -131,7 +168,11 @@ public class ClassInvariant extends ClassAttribute implements
 	 */
 	@Override
 	public String toString() {
-		return "class invariant";
+	  if (isInstance) {
+	    return "invariant";
+	  } else {
+	    return "class invariant";
+	  }
 	}
 
 	/**
@@ -149,12 +190,20 @@ public class ClassInvariant extends ClassAttribute implements
 		return IDisplayStyle.__classInvariant;
 	}
 
+	 /**
+   * @return the access flags for the current invariant
+   */
+  public int getAccessFlags() {
+    return access_flags;
+  }
+
 	/**
 	 * Saves this annotation to BCEL's Unknown attribute,
 	 * using attributeWriter.
 	 * @param aw - stream to save to.
 	 */
 	public void save(AttributeWriter aw) {
+	  aw.writeShort(access_flags);
 		invariant.write(aw);
 	}
 
@@ -172,4 +221,13 @@ public class ClassInvariant extends ClassAttribute implements
 		return all;
 	}
 
+	/**
+	 * Return the information if the invariant is instance/static
+	 *
+	 * @return <code>true</code> in case the invariant is an instance
+	 *   invariant, <code>false</code> otherwise
+	 */
+  public boolean isInstance() {
+    return isInstance;
+  }
 }

@@ -102,7 +102,8 @@ public class ModifyList extends BCExpression {
 	public boolean isEmpty() {
 		if (getSubExprCount() == 0)
 			return true;
-		return (getSubExprCount() == 1)
-			&& (getSubExpr(0) == ModifyExpression.Everything);
+		return false;
+		//(getSubExprCount() == 1)
+		//	&& (getSubExpr(0) == ModifyExpression.Everything);
 	}
 }

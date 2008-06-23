@@ -1,6 +1,8 @@
 package annot.bcclass;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
@@ -16,7 +18,6 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
-import com.sun.org.apache.bcel.internal.generic.InstructionList;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
@@ -68,9 +69,10 @@ public class BCClass {
 	private BCConstantPool cp;
 
 	/**
-	 * Class invariant BML attribute
+	 * BML invariants. The key is here the access flags and the
+	 * value is the invariant for the access flags.
 	 */
-	private ClassInvariant invariant;
+	private Hashtable invariants = new Hashtable();
 
 	/**
 	 * A set of functions for parsing annotations.
@@ -124,7 +126,14 @@ public class BCClass {
 	}
 
 	/**
-	 * Displays class header, similar to one in Java.
+	 * Displays class header, similar to one in Java. It uses the grammar:
+	 *    fileheader classheader
+	 * where
+   *    fileheader ::= packageinfo [ imports ]
+   *    classheader ::= class ident [class-extends-clause] [implements-clause]
+   *    class-extends-clause ::= extends name
+   *    implements-clause ::= implements name-list
+   *    name-list ::= name [, name ]...
 	 * 
 	 * @return String representation of class header.
 	 */
@@ -134,6 +143,7 @@ public class BCClass {
 		if ("".equals(pname))
 			pname = "[default]";
 		String ret = "package " + pname + "\n\n";
+		/*
 		if (jc.isPublic())
 			ret += "public ";
 		if (jc.isPrivate())
@@ -144,6 +154,7 @@ public class BCClass {
 			ret += "abstract ";
 		if (jc.isFinal())
 			ret += "final ";
+	  */
 		ret += "class " + jc.getClassName();
 		if (!"java.lang.Object".equals(jc.getSuperclassName()))
 			ret += " extends " + jc.getSuperclassName();
@@ -158,19 +169,26 @@ public class BCClass {
 	}
 
 	/**
-	 * Dumps all bytecode of this class, with BML annotations.
+	 * Dumps all bytecode of this class, with BML annotations. This uses
+	 * the format of the grammar from "BML Reference Manual":
+	 *
+	 *    classfile ::= fileheader classheader classbody
 	 * 
 	 * @return string representation of this class' bytecode.
 	 */
 	public String printCode() {
 		MLog.putMsg(MLog.PProgress, "generating class' code");
 		BMLConfig conf = new BMLConfig();
-		String code = toString();
-		if (invariant != null)
-			code += invariant.printCode(conf);
-		for (int i = 0; i < methods.length; i++)
-			code += "\n" + methods[i].printCode(conf);
-		return conf.getPrettyPrinter().afterDisplay(code);
+		StringBuffer code = new StringBuffer(toString());
+		for (Enumeration i = invariants.elements(); i.hasMoreElements();) {
+		  ClassInvariant inv = (ClassInvariant)i.nextElement();
+		  code.append(inv.printCode(conf));
+		}
+		for (int i = 0; i < methods.length; i++) {
+			code.append("\n");
+		  code.append(methods[i].printCode(conf));
+		}
+		return conf.getPrettyPrinter().afterDisplay(code.toString());
 	}
 
 	/**
@@ -231,9 +249,12 @@ public class BCClass {
 	 */
 	public BCPrintableAttribute[] getAllAttributes(int types) {
 		Vector<BCPrintableAttribute> v = new Vector<BCPrintableAttribute>();
-		if ((types & AType.C_CLASSINVARIANT) > 0)
-			if (invariant != null)
-				v.add(invariant);
+		if ((types & AType.C_CLASSINVARIANT) > 0) {
+			for (Enumeration i = invariants.elements();i.hasMoreElements();) {
+			  ClassInvariant inv = (ClassInvariant) i.nextElement();
+			  v.add(inv);
+			}
+		}
 		for (int i = 0; i < methods.length; i++) {
 			BCMethod m = methods[i];
 			if ((types & AType.C_METHODSPEC) > 0)
@@ -294,7 +315,8 @@ public class BCClass {
 
 	/**
 	 * Adds Unknown class attribute to BCEL's Attribute array,
-	 * or replaces one from array if it has the same name.
+	 * or replaces one from array if it has the same name and
+	 * the same access flags.
 	 * 
 	 * @param arr - array of BCEL's Attributes,
 	 * @param ua - BCEL's Unknown attribute to be added.
@@ -304,8 +326,12 @@ public class BCClass {
 		int n = arr.length;
 		for (int i = 0; i < n; i++)
 			if (arr[i] instanceof Unknown) {
-				String aname = ((Unknown) arr[i]).getName();
-				if (aname.equals(ua.getName())) {
+			  final Unknown catr = (Unknown) arr[i]; 
+				String aname = catr.getName();
+				int access_flags1 = catr.getBytes()[0] * 256 + catr.getBytes()[1];
+				int access_flags2 = ua.getBytes()[0] * 256 + ua.getBytes()[1];
+				if (aname.equals(ua.getName()) &&
+				    access_flags1 == access_flags2) {
 					arr[i] = ua;
 					return arr;
 				}
@@ -319,7 +345,7 @@ public class BCClass {
 
 
   /**
-   * Adds an BML class annotation to this class.
+   * Adds a BML class annotation to this class.
    * If given annotation is a method annotation,
    * nothing happens.
    * 
@@ -329,7 +355,9 @@ public class BCClass {
   public boolean addAttribute(BCPrintableAttribute pa) {
     MLog.putMsg(MLog.PProgress, "adding class attribute: " + pa.toString());
     if (pa instanceof ClassInvariant) {
-      invariant = (ClassInvariant) pa;
+      ClassInvariant inv = (ClassInvariant) pa;
+      Integer access = Integer.valueOf(inv.getAccessFlags());
+      invariants.put(access, inv);
       return true;
     }
     return false;
@@ -382,8 +410,10 @@ public class BCClass {
 		jc.setAttributes(attrs);
 		MLog.putMsg(MLog.PProgress, "  saving second constant pool");
 		attrs = jc.getAttributes();
-		if (invariant != null)
-			attrs = addAttribute(attrs, aw.writeAttribute(invariant));
+		for (Enumeration i = invariants.elements();i.hasMoreElements();) {
+		  ClassInvariant inv = (ClassInvariant)i.nextElement();
+		  attrs = addAttribute(attrs, aw.writeAttribute(inv));
+		}
 		jc.setAttributes(attrs);
 		cp.save(jc);
 	}
@@ -417,19 +447,29 @@ public class BCClass {
 	/**
 	 * @return class invariant.
 	 */
-	public ClassInvariant getInvariant() {
-		return invariant;
+	public ClassInvariant getInvariant(int accessflags) {
+		return (ClassInvariant)invariants.get(Integer.valueOf(accessflags));
 	}
 
 	/**
-	 * Sets class invariant.
+	 * Adds class invariant.
 	 * 
-	 * @param invariant - new class invariant.
+	 * @param inv - new class invariant.
 	 */
-	public void setInvariant(ClassInvariant invariant) {
-		this.invariant = invariant;
+	public void setInvariant(ClassInvariant inv) {
+	  Integer af = Integer.valueOf(inv.getAccessFlags());
+	  invariants.put(af, inv);
 	}
 
+	/**
+	 * Removes the particular annotation from the class.
+	 * 
+	 *  @param accessflags the access flags of the invariant to be removed
+	 */
+	 public void remove(int accessflags) {
+	    invariants.remove(Integer.valueOf(accessflags));
+	  }
+	
 	/**
 	 * @return constant pool (from this library, not
 	 * BCEL's one)

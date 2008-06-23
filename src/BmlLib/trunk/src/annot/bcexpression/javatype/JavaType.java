@@ -12,7 +12,7 @@ import annot.textio.IDisplayStyle;
 
 /**
  * This class represents return type of an expression.
- * The constructor is protected, so use
+ * The constructor is protected, so use static factories
  * {@link #getJavaType(String)}
  * or {@link #getJavaBasicType(String)} instead.
  * 

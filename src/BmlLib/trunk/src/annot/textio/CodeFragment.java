@@ -102,7 +102,8 @@ public class CodeFragment {
 	private int oldEnd;
 	
 	/**
-	 * whether any changes has been added since last
+	 * The flag is <code>true</code> in case some changes have been performed
+	 * using {@link #addChange(int, int, String)} since the last
 	 * {@link #resetChanges()} call.
 	 */
 	private boolean modified = false;
@@ -156,7 +157,137 @@ public class CodeFragment {
 	 */
 	public void addChange(int cfrom, int length, String nc) {
 		int cto = cfrom + length;
-		if (cfrom > cto)
+		addChangeErrorChecking(cfrom, cto);
+		updateAddedArea(cfrom, nc, cto);
+		prefix = code.substring(0, begin);
+		suffix = code.substring(end);
+		oldEnd = prefix.length() + toRemove.length();
+		end = prefix.length() + toAdd.length();
+		code = prefix + toAdd + suffix;
+	}
+
+  /**
+   * @param cfrom
+   * @param nc
+   * @param cto
+   */
+  private void updateAddedArea(int cfrom, String nc, int cto) {
+    if (!modified) {
+			begin = cfrom;
+			end = cto;
+			toRemove = code.substring(cfrom, cto);
+			toAdd = nc;
+			modified = true;
+		} else {
+			if (cto <= begin) {
+				updateNewBeforeOld(cfrom, nc, cto);
+			} else if ((cfrom <= begin) && (cto > begin) && (cto <= end)) {
+				updateNewOverlapsOld(cfrom, nc, cto);
+			} else if ((cfrom <= begin) && (cto > end)) {
+				updateNewOverOld(cfrom, nc, cto);
+			} else if ((cfrom > begin) && (cto <= end)) {
+				updateOldOverNew(cfrom, nc, cto);
+			} else if ((cfrom > begin) && (cfrom <= end) && (cto > end)) {
+				updateOldOverlapsNew(cfrom, nc, cto);
+			} else if (cfrom > end) {
+				updateOldBeforeNew(cfrom, nc, cto);
+			}
+		}
+  }
+
+  /**
+   * @param cfrom
+   * @param nc
+   * @param cto
+   */
+  private void updateOldBeforeNew(int cfrom, String nc, int cto) {
+    //       oooooo
+    //               nnnn
+    MLog.putMsg(MLog.PDebug, "branch no 6");
+    toRemove = toRemove + code.substring(end, cto);
+    toAdd = toAdd + code.substring(end, cfrom) + nc;
+    end = cto;
+  }
+
+  /**
+   * @param cfrom
+   * @param nc
+   * @param cto
+   */
+  private void updateOldOverlapsNew(int cfrom, String nc, int cto) {
+    //       oooooo
+    //         nnnnnnn
+    MLog.putMsg(MLog.PDebug, "branch no 5");
+    toRemove = toRemove + code.substring(end, cto);
+    toAdd = toAdd.substring(0, cfrom - begin) + nc;
+    end = cto;
+  }
+
+  /**
+   * @param cfrom
+   * @param nc
+   * @param cto
+   */
+  private void updateOldOverNew(int cfrom, String nc, int cto) {
+    //       oooooo
+    //         nn
+    MLog.putMsg(MLog.PDebug, "branch no 4");
+    toAdd = toAdd.substring(0, cfrom - begin)
+    	+ nc + toAdd.substring(cto - begin);
+  }
+
+  /**
+   * @param cfrom
+   * @param nc
+   * @param cto
+   */
+  private void updateNewOverOld(int cfrom, String nc, int cto) {
+    //       oooooo
+    //    nnnnnnnnnnn
+    MLog.putMsg(MLog.PDebug, "branch no 3");
+    toRemove = code.substring(cfrom, begin)
+    	+ toRemove + code.substring(end, cto);
+    toAdd = nc;
+    begin = cfrom;
+    end = cto;
+  }
+
+  /**
+   * @param cfrom
+   * @param nc
+   * @param cto
+   */
+  private void updateNewOverlapsOld(int cfrom, String nc, int cto) {
+    //       oooooo
+    //    nnnnnn
+    MLog.putMsg(MLog.PDebug, "branch no 2");
+    toRemove = code.substring(cfrom, begin) + toRemove;
+    toAdd = nc + toAdd.substring(cto - begin);
+    begin = cfrom;
+  }
+
+  /**
+   * @param cfrom
+   * @param nc
+   * @param cto
+   */
+  private void updateNewBeforeOld(int cfrom, String nc, int cto) {
+    //       oooooo
+    // nnnn
+    MLog.putMsg(MLog.PDebug, "branch no 1");
+    toRemove = code.substring(cfrom, begin) + toRemove;
+    toAdd = nc + code.substring(cto, begin) + toAdd;
+    begin = cfrom;
+  }
+
+  /**
+   * @param cfrom
+   * @param cto
+   * @throws RuntimeException
+   */
+  private void addChangeErrorChecking(int cfrom, int cto)
+      throws RuntimeException {
+    if (cfrom > cto)
 			throw new RuntimeException(
 			"wrong parameter values: cfrom > cto");
 		if (cto > code.length())
@@ -165,64 +296,7 @@ public class CodeFragment {
 		if (cfrom < 0)
 			throw new RuntimeException("invalid parameter: "
 					+ cfrom + " < 0");
-		if (!modified) {
-			begin = cfrom;
-			end = cto;
-			toRemove = code.substring(cfrom, cto);
-			toAdd = nc;
-			modified = true;
-		} else {
-			if (cto <= begin) {
-				//       oooooo
-				// nnnn
-				MLog.putMsg(MLog.PDebug, "branch no 1");
-				toRemove = code.substring(cfrom, begin) + toRemove;
-				toAdd = nc + code.substring(cto, begin) + toAdd;
-				begin = cfrom;
-			} else if ((cfrom <= begin) && (cto > begin) && (cto <= end)) {
-				//       oooooo
-				//    nnnnnn
-				MLog.putMsg(MLog.PDebug, "branch no 2");
-				toRemove = code.substring(cfrom, begin) + toRemove;
-				toAdd = nc + toAdd.substring(cto - begin);
-				begin = cfrom;
-			} else if ((cfrom <= begin) && (cto > end)) {
-				//       oooooo
-				//    nnnnnnnnnnn
-				MLog.putMsg(MLog.PDebug, "branch no 3");
-				toRemove = code.substring(cfrom, begin)
-					+ toRemove + code.substring(end, cto);
-				toAdd = nc;
-				begin = cfrom;
-				end = cto;
-			} else if ((cfrom > begin) && (cto <= end)) {
-				//       oooooo
-				//         nn
-				MLog.putMsg(MLog.PDebug, "branch no 4");
-				toAdd = toAdd.substring(0, cfrom - begin)
-					+ nc + toAdd.substring(cto - begin);
-			} else if ((cfrom > begin) && (cfrom <= end) && (cto > end)) {
-				//       oooooo
-				//         nnnnnnn
-				MLog.putMsg(MLog.PDebug, "branch no 5");
-				toRemove = toRemove + code.substring(end, cto);
-				toAdd = toAdd.substring(0, cfrom - begin) + nc;
-				end = cto;
-			} else if (cfrom > end) {
-				//       oooooo
-				//               nnnn
-				MLog.putMsg(MLog.PDebug, "branch no 6");
-				toRemove = toRemove + code.substring(end, cto);
-				toAdd = toAdd + code.substring(end, cfrom) + nc;
-				end = cto;
-			}
-		}
-		prefix = code.substring(0, begin);
-		suffix = code.substring(end);
-		oldEnd = prefix.length() + toRemove.length();
-		end = prefix.length() + toAdd.length();
-		code = prefix + toAdd + suffix;
-	}
+  }
 
 	/**
 	 * Translates character position in a String to number
@@ -348,6 +422,8 @@ public class CodeFragment {
 				return line;
 		if (line.matches("^.* class .*$")) //?
 			return "class";
+    if (line.matches("class .*$")) //?
+      return "class";
 		if (line.matches("^package .*$"))
 			return "package";
     if (line.matches("^.*( |\t)throws .*$")) //?
@@ -680,14 +756,14 @@ public class CodeFragment {
 	}
 	
 	/**
-	 * Commits BML changes in bytecode into BCClass.
+	 * Propagates the current document change to the BMLLib AST.
 	 * First, checks that current bytecode is correct,
-	 * then parse it, affecting as few elements of BCClass
+	 * then parses it, affecting as few elements of BCClass
 	 * as it can. Parsing whole class can be uneffective
 	 * (slow), so it tries to skip unaffected BML annotations,
 	 * comments and methods. It can parse only BML
 	 * annotations, not the bytecode itself (bytecode-level
-	 * (BCEL's) structures will be unaffected).
+	 * BCEL structures will be unaffected).
 	 */
 	public void performChanges() {
 		correct = true;
@@ -871,24 +947,7 @@ public class CodeFragment {
 				continue;
 			}
 		}
-		String shortCode = "";
-		for (int l=0; l<lines.length; l++)
-			if (lines[l] != null)
-				shortCode += lines[l] + "\n";
-		shortCode = shortCode.replaceAll("\n *"
-				+ Parsing.escape(IDisplayStyle.comment_start), "\n");
-		shortCode = shortCode.replaceAll("\n *"
-				+ Parsing.escape(IDisplayStyle.comment_next), "\n");
-		shortCode = shortCode.replaceAll(
-				Parsing.escape(IDisplayStyle.comment_end)
-				+ " *\n", "\n");
-		shortCode = shortCode.replaceAll("\n */\\*@", "\n");//!
-		shortCode = shortCode.replaceAll("@\\*/ *\n", "\n");//!
-		if (isCommentStart(shortCode))
-			shortCode = shortCode.substring(IDisplayStyle.comment_length);
-		while (shortCode.indexOf("\n\n") >= 0)
-			shortCode = shortCode.replaceAll("\n\n", "\n");
-		last_parsed = shortCode;
+		String shortCode = linesToString(lines);
 		MLog.putMsg(MLog.PInfo, "code to be parsed:\n" + shortCode);
 		if (goDisableParser)
 			return;
@@ -902,6 +961,39 @@ public class CodeFragment {
 			bcc.getParser().parseClass(shortCode, true);
     errMsg = bcc.getParser().getErrMsg();
 	}
+
+  /**
+   * The method transforms an array of line strings into a single string
+   * to be parsed by the parser of short codes.
+   *
+   * @param lines the array with lines to transform to string
+   * @return a shortened version of the bytecode class text
+   */
+  private String linesToString(String[] lines) {
+    StringBuffer shortC = new StringBuffer("");
+		for (int l=0; l<lines.length; l++)
+			if (lines[l] != null) {
+				shortC.append(lines[l]);
+		    shortC.append("\n");
+			}
+		String shortCode = shortC.toString();
+		shortCode.replaceAll("\n *"
+				+ Parsing.escape(IDisplayStyle.comment_start), "\n");
+		shortCode = shortCode.replaceAll("\n *"
+				+ Parsing.escape(IDisplayStyle.comment_next), "\n");
+		shortCode = shortCode.replaceAll(
+				Parsing.escape(IDisplayStyle.comment_end)
+				+ " *\n", "\n");
+		shortCode = shortCode.replaceAll("\n */\\*@", "\n");//!
+		shortCode = shortCode.replaceAll("@\\*/ *\n", "\n");//!
+		shortCode = shortCode.replaceAll("\n\n *@", "\n");//!
+		if (isCommentStart(shortCode))
+			shortCode = shortCode.substring(IDisplayStyle.comment_length);
+		while (shortCode.indexOf("\n\n") >= 0)
+			shortCode = shortCode.replaceAll("\n\n", "\n");
+		last_parsed = shortCode;
+    return shortCode;
+  }
 	
 	/**
 	 * Assumes that bytecode has been parsed succesfuly.

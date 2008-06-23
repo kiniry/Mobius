@@ -107,7 +107,7 @@ public class MethodSpecification extends MethodAttribute implements
 	 */
 	@Override
 	protected String printCode1(BMLConfig conf) {
-		String code = precondition.printLine(conf, IDisplayStyle._requires);
+		String code = ""; //precondition.printLine(conf, IDisplayStyle._requires);
 		if (specCases.size() > 0)
 			for (int i = 0; i < specCases.size(); i++)
 				code += specCases.get(i).printCode(conf);
