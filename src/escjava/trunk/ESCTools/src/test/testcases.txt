@@ -1,1 +1,14 @@
-/test/resources/Weakly.java
+src/test/resources/Type.java
+src/test/resources/TypeConversion.java
+src/test/resources/TypeErrors.java
+src/test/resources/Unch.java
+src/test/resources/Unchanged.java
+src/test/resources/UnchangedInner.java
+src/test/resources/UnchangedPrecondition.java
+src/test/resources/UndeclaredException.java
+src/test/resources/UndeclaredException2.java
+src/test/resources/UndeclaredInheritedException.java
+src/test/resources/UndeclaredInheritedException2.java
+src/test/resources/Uninit.java
+src/test/resources/Unreachable.java
+src/test/resources/Weakly.java
