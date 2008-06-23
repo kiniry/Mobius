@@ -1,6 +1,9 @@
 package freeboogie.dumpers;
 
+import java.io.StringWriter;
+
 import freeboogie.ast.*;
+import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
 import freeboogie.util.Closure;
@@ -31,10 +34,21 @@ public class FlowGraphDumper extends Transformer {
     SimpleGraph<Block> fg = tc.getFlowGraph(implementation);
     System.out.println("digraph \"" + implementation.getSig().getName() + "@" + implementation.loc() + "\" {");
     if (body.getBlocks() != null)
-      System.out.println("  " + body.getBlocks().getName() + " [style=bold];");
+      System.out.println("  \"" + body.getBlocks().getName() + "\" [style=bold];");
     fg.iterNode(new Closure<Block>() {
       @Override public void go(Block t) {
-        System.out.println("  \"" + t.getName() + "\" [shape=box];");
+        System.out.print("  \"" + t.getName() + "\" ");
+        if (t.getCmd() == null)
+          System.out.print("[shape=circle,label=\"\"]");
+        else
+          System.out.print("[shape=box,label=\""+cmdToString(t.getCmd())+"\"]");
+        System.out.println(";");
+      }
+      private String cmdToString(Command c) {
+        StringWriter sw = new StringWriter();
+        PrettyPrinter pp = new PrettyPrinter(sw);
+        c.eval(pp);
+        return sw.toString();
       }});
     fg.iterEdge(new Closure<Pair<Block,Block>>() {
       @Override public void go(Pair<Block,Block> t) {
