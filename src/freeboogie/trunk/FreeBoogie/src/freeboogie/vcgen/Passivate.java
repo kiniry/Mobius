@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
-import freeboogie.tc.SimpleGraph;
+import freeboogie.tc.*;
 import freeboogie.util.Closure;
 
 /**
@@ -12,7 +12,8 @@ import freeboogie.util.Closure;
  * new variables. We assume that
  *   (1) specs are desugared,
  *   (2) calls are desugared,
- *   (3) havocs are desugared.
+ *   (3) havocs are desugared,
+ *   (4) the flowgraphs are computed and have no cycles.
  *
  * Each variable X is transformed into a sequence of variables
  * X, X_1, X_2, ... Each command has a read index r and a write
@@ -36,26 +37,40 @@ import freeboogie.util.Closure;
  * operations.
  *
  * @author rgrig
- * @author miko
  */
 public class Passivate extends Transformer {
   // used mainly for debugging
   static private final Logger log = Logger.getLogger("freeboogie.vcgen");
 
-
+  private BlockFlowGraphs flowGraphs;
   private HashMap<VariableDecl, HashMap<Command, Integer>> readIdx;
   private HashMap<VariableDecl, HashMap<Command, Integer>> writeIdx;
 
-  public SimpleGraph<AssertAssumeCmd> go(SimpleGraph<Command> flow) {
-    SimpleGraph<AssertAssumeCmd> r = new SimpleGraph<AssertAssumeCmd>();
+  // === public interface ===
+
+  /** 
+   * Instruct the passivator to use {@code bfgs} to retrieve
+   * flow-graph information.
+   */
+  public void setFlowGraphs(BlockFlowGraphs bfgs) { flowGraphs = bfgs; }
+
+  public Declaration process(Declaration ast) {
     readIdx = new LinkedHashMap<VariableDecl, HashMap<Command, Integer>>();
     writeIdx = new LinkedHashMap<VariableDecl, HashMap<Command, Integer>>();
-    flow.iterNode(new Closure<Command>() {
-      @Override
-      public void go(Command cmd) {
-        // TODO Continue here
-      }
-    });
-    return r;
+    return (Declaration)ast.eval(this);
   }
+
+  // === (block) transformers ===
+
+  @Override
+  public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
+    SimpleGraph<Block> fg = flowGraphs.getFlowGraph(implementation);
+    assert fg != null; // You should tell me the flowgraph beforehand
+    assert !fg.hasCycle(); // You should cut cycles first
+
+
+    if (tail != null) tail = (Declaration)tail.eval(this);
+    return Implementation.mk(sig, body, tail);
+  }
+
 }
