@@ -15,7 +15,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     super(new PairAssocOp<CSeq<VariableDecl>,CSeq<VariableDecl>>(
       new CSeqAcc<VariableDecl>(), new CSeqAcc<VariableDecl>())); 
     this.st = st;
-    context.addFirst(true);
+    context.addFirst(false);
   }
  
   @Override
@@ -30,4 +30,39 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     }
     return new Pair<CSeq<VariableDecl>, CSeq<VariableDecl>>(r, w);
   }
+
+  @Override
+  public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
+    assert !context.getFirst();
+    Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> r = assocOp.zero();
+    if (results != null) {
+      context.addFirst(true);
+      r = assocOp.plus(r, results.eval(this));
+      context.removeFirst();
+    }
+    if (args != null) 
+      r = assocOp.plus(r, args.eval(this));
+    return r;
+  }
+
+  @Override
+  public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
+    assert !context.getFirst();
+    Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> r = assocOp.zero();
+    context.addFirst(true);
+    r = assocOp.plus(r, lhs.eval(this));
+    context.removeFirst();
+    r = assocOp.plus(r, rhs.eval(this));
+    return r;
+  }
+
+  @Override
+  public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(AtomIdx atomIdx, Atom atom, Index idx) {
+    Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> r = assocOp.zero();
+    r = assocOp.plus(r, atom.eval(this));
+    context.addFirst(false);
+    r = assocOp.plus(r, idx.eval(this));
+    return r;
+  }
+
 }
