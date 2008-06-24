@@ -1,11 +1,14 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 # Altered extensively by David R. Cok as part of the 2003 upgrade of
 # the ESC tools.
+# Updated 2008 by Dermot Cochran, Systems Research Group, University College Dublin for EU MOBIUS IST-15905
 
 # author: David Cok
+# author: Dermot Cochran
 # author: Joe Kiniry
 
 JAVAFE_VERSION=1.0
+JAVA_VERSION=1.4
 
 export TOP = ..
 include ${TOP}/Makefile.defs
@@ -65,7 +68,7 @@ compile: ${CLASSDIRECTORY} source ${CLASSESSTAMP}
 
 ## Compiles all out of date java files
 ${CLASSESSTAMP}: ${SOURCEFILES}
-	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB}) \
+	${JAVAC} ${JAVAC_FLAGS} -version ${JAVA_VERSION} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB}) \
 	  -d ${CAN_CLASSDIRECTORY} $?
 	touch ${CLASSESSTAMP}
 
@@ -75,7 +78,7 @@ compileall: ${CLASSDIRECTORY} source javafeall
 ## Compiles all java files, whether out of date or not
 javafeall:
 	( cd java; \
-	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB}) \
+	${JAVAC} ${JAVAC_FLAGS} -version ${JAVA_VERSION} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB}) \
 	  -d ${CAN_CLASSDIRECTORY} \
 	  `find javafe -name "*.java"` \
 	  `find tohtml -name "*.java"` )
