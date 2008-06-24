@@ -12,12 +12,21 @@ by the return type for each type of node.
  */
 package freeboogie.ast;
 import java.math.BigInteger;
+import java.util.HashMap;
 
 /**
   Use as a base class when you want to compute a value of type
   {@code R} for each node. An example is the typechecker.
  */
 public class Evaluator<R> {
+  private HashMap<Ast, R> cache = new HashMap<Ast, R>();
+
+  public R get(Ast a) { return cache.get(a); }
+  protected R memo(Ast a, R r) { 
+    if (r != null) cache.put(a, r);
+    return r;
+  }
+
 \normal_classes{
   public R eval(\ClassName \className, 
     \members[,]{
@@ -61,7 +70,7 @@ public class AssociativeEvaluator<R> extends Evaluator<R> {
     \children{if (\memberName != null) 
       result_ = assocOp.plus(result_, \memberName.eval(this));}
     exitNode(\className);
-    return result_;
+    return memo(\className, result_);
   }
 }
 }

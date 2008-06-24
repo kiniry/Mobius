@@ -6,6 +6,16 @@ import freeboogie.ast.*;
 import freeboogie.tc.SymbolTable;
 import freeboogie.util.*;
 
+/**
+ * Finds what identifiers appear in an expression and in what context.
+ *
+ * The call {@code ast.eval(rwsf)} returns a pair of {@code CSeq}
+ * that contain the identifiers appearing in read context and those
+ * that appear in write contexts. 
+ *
+ * NOTE: You can turn the {@code CSeq} into a set by iterating and
+ * building a {@code HashSet}.
+ */
 public class ReadWriteSetFinder 
 extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
   private SymbolTable st;
@@ -28,7 +38,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
       if (context.getFirst()) w = CSeq.mk(vd);
       else r = CSeq.mk(vd);
     }
-    return new Pair<CSeq<VariableDecl>, CSeq<VariableDecl>>(r, w);
+    return memo(atomId, new Pair<CSeq<VariableDecl>, CSeq<VariableDecl>>(r, w));
   }
 
   @Override
@@ -42,7 +52,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     }
     if (args != null) 
       r = assocOp.plus(r, args.eval(this));
-    return r;
+    return memo(callCmd, r);
   }
 
   @Override
@@ -53,7 +63,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     r = assocOp.plus(r, lhs.eval(this));
     context.removeFirst();
     r = assocOp.plus(r, rhs.eval(this));
-    return r;
+    return memo(assignmentCmd, r);
   }
 
   @Override
@@ -62,7 +72,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     r = assocOp.plus(r, atom.eval(this));
     context.addFirst(false);
     r = assocOp.plus(r, idx.eval(this));
-    return r;
+    return memo(atomIdx, r);
   }
 
 }
