@@ -19,13 +19,12 @@ import java.util.HashMap;
   {@code R} for each node. An example is the typechecker.
  */
 public class Evaluator<R> {
-  private HashMap<Ast, R> cache = new HashMap<Ast, R>();
-
-  public R get(Ast a) { return cache.get(a); }
+  protected HashMap<Ast, R> evalCache = new HashMap<Ast, R>();
   protected R memo(Ast a, R r) { 
-    if (r != null) cache.put(a, r);
+    if (r != null) evalCache.put(a, r);
     return r;
   }
+  public R get(Ast a) { return evalCache.get(a); }
 
 \normal_classes{
   public R eval(\ClassName \className, 
@@ -34,6 +33,7 @@ public class Evaluator<R> {
       \memberName
     }
   ) {
+    if (evalCache.containsKey(\className)) return evalCache.get(\className);
     enterNode(\className);
     \children{if (\memberName != null) \memberName.eval(this);}
     exitNode(\className);
@@ -65,6 +65,7 @@ public class AssociativeEvaluator<R> extends Evaluator<R> {
       \memberName
     }
   ) {
+    if (evalCache.containsKey(\className)) return evalCache.get(\className);
     R result_ = assocOp.zero();
     enterNode(\className);
     \children{if (\memberName != null) 
