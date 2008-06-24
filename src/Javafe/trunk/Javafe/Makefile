@@ -160,8 +160,9 @@ test_jdk_sources:
 typecheckJDK: javafe_test
 	${MAKE} -C test/javafe/test typecheckJDK
 
+## TODO: Java 1.5 and Java 6 support
 self_typecheck:
-	${MAKE} -C test/javafe/test typecheckJavafe
+	-${MAKE} -C test/javafe/test typecheckJavafe
 
 ## This tests a binary release that is untarred in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the esctools1.jar file that is being tested.
