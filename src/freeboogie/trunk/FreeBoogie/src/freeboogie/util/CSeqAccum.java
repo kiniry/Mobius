@@ -4,7 +4,7 @@ import java.util.*;
 
 import freeboogie.ast.AssociativeOperator;
 
-public class SetUnion<E> implements AssociativeOperator<Set<E>> {
+public class CSeqAcc<E> implements AssociativeOperator<Set<E>> {
   @Override public TreeSet<E> zero() { return new TreeSet<E>(); }
 
   @Override public TreeSet<E> plus(Set<E> a, Set<E> b) {
