@@ -34,7 +34,7 @@ import escjava.translate.NoWarn;
 public class Main extends escjava.Main {
 
   /** the main output stream. */
-  private static PrintStream fOut = System.out;
+  protected static PrintStream fOut = System.out;
 
   /** the basedir where to stock all the generated files. */
   private final File fBasedir;
@@ -85,10 +85,7 @@ public class Main extends escjava.Main {
       fOut = (new PrintStream(new FileOutputStream(logfile)));
       
       // Launching the beast
-      final int exitcode = compile(basedir, escargs);
-      if (exitcode != 0) {
-        System.exit(exitcode); 
-      }
+      final Main m = new Main(basedir, escargs);
       
     }
     catch (IOException e1) {
@@ -105,7 +102,7 @@ public class Main extends escjava.Main {
    * @throws FileNotFoundException if the directory doesn't exist/or cannot
    * be created
    */
-  private static File configBaseDir(final String[] args) throws FileNotFoundException {
+  protected static File configBaseDir(final String[] args) throws FileNotFoundException {
     // Configuring base dir
     final File basedir = new File(args[0], "mobius" + File.separator);
     fOut.println("Output dir is set to: " + basedir);
@@ -126,12 +123,13 @@ public class Main extends escjava.Main {
    * @param args the current program arguments to parse
    * @return <code>0</code>  or an error code
    */
-  public static int compile(final File basedir, final String[] args) {
+  public Main(final File basedir, final String[] args) {
+    this(basedir);
     try {
-      final Main t = new Main(basedir);
+      
       //instance = t;
-      final int result = t.run(args);
-      return result;
+      final int result = this.run(args);
+//      return result;
     } 
     catch (OutOfMemoryError oom) {
       final Runtime rt = Runtime.getRuntime();
@@ -139,7 +137,7 @@ public class Main extends escjava.Main {
       fOut.println("java.lang.OutOfMemoryError (" + memUsedBytes + 
                   " bytes used)");
       //oom.printStackTrace(System.out);
-      return outOfMemoryExitCode;
+//      return outOfMemoryExitCode;
     }
   }
 
@@ -234,7 +232,7 @@ public class Main extends escjava.Main {
    * Annotations are taken from the annotated source.
    * @param sig the annotated source
    */
-  private void doBcVCGen(final TypeSig sig) {
+  protected void doBcVCGen(final TypeSig sig) {
     System.out.println("\n\nGenerating the Bytecode VCs:\n");
     // Compile the bytecode version of the file
     
@@ -255,7 +253,7 @@ public class Main extends escjava.Main {
    * Generate the vcs from the annotated source.
    * @param sig the annotated source
    */
-  private void doSrcVCGen(final TypeSig sig) {
+  protected void doSrcVCGen(final TypeSig sig) {
     System.out.println("\n\nGenerating the Source VCs:\n");
     final long endTime = currentTime();
     

@@ -1,0 +1,2 @@
+Main-Class: mobius.directVCGen.bico.Main
+Name: bico+
