@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="samples"/>
 	<classpathentry kind="lib" path="jar/bico.jar"/>
 	<classpathentry kind="lib" path="jar/escjava.jar"/>
 	<classpathentry kind="lib" path="/ESCJava2/Utils/Javafe/Javafe2.0.5.jar"/>
