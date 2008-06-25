@@ -150,3 +150,8 @@
 @Prog-args: -informal
 @Location { classchart/ }
 @Input { classchart.bon }
+
+@Test-name: "Clock example."
+@Prog-args: -informal
+@Location { clock/ }
+@Input { Alarm.bon, AlarmClock.bon, AlarmClockInformal.bon, AlarmInformal.bon, Clock.bon, ClockInformal.bon, ClockSystemAndClusterCharts.bon, LogicalClock.bon, LogicalClockInformal.bon }

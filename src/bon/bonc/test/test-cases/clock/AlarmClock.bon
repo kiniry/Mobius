@@ -7,50 +7,55 @@ indexing
   date:         "January 2007";
   version:      "Revision: 13";
 
-class ALARM_CLOCK inherit CLOCK
 
-feature
-  my_alarm_time: INTEGER  -- This alarm's time, in monotonically increasing units.
-  my_alarm_hour: INTEGER  -- This alarm's time, in hours.
-  my_alarm_minute: INTEGER  -- This alarm time, in minutes.
-  my_alarm: ALARM  -- The alarm associated with this clock.
+static_diagram
+component
+  class ALARM_CLOCK inherit CLOCK
+
+  feature
+    my_alarm_time: INTEGER  -- This alarm's time, in monotonically increasing units.
+    my_alarm_hour: INTEGER  -- This alarm's time, in hours.
+    my_alarm_minute: INTEGER  -- This alarm time, in minutes.
+    my_alarm: ALARM  -- The alarm associated with this clock.
 	
-  make_alarm_clock: ALARM_CLOCK -- Create a new initialised alarm clock associated
-                                -- with the given alarm.
-    -> an_alarm: ALARM  -- The alarm to be associated with this new alarm clock.
-    ensure
-      Result.time = 12*60*60;
-      Result.alarm = an_alarm;
-    end
+    make_alarm_clock: ALARM_CLOCK -- Create a new initialised alarm clock associated
+                                  -- with the given alarm.
+      -> an_alarm: ALARM  -- The alarm to be associated with this new alarm clock.
+      ensure
+        Result.time = 12*60*60;
+        Result.alarm = an_alarm;
+      end
 	
-  set_alarm_time  -- Set the alarm time of this clock.
-    -> the_new_alarm_hour: INTEGER  -- The new alarm time hour.
-    -> the_new_alarm_minute: INTEGER  -- The new alarm time minute.
-    require
-      0 <= the_new_alarm_hour;
-      the_new_alarm_hour < 24;
-      0 <= the_new_alarm_minute;
-      the_new_alarm_minute < 60;
-    ensure
-      my_alarm_hour = the_new_alarm_hour;
-      my_alarm_minute = the_new_alarm_minute;
-    end
+    set_alarm_time  -- Set the alarm time of this clock.
+      -> the_new_alarm_hour: INTEGER  -- The new alarm time hour.
+      -> the_new_alarm_minute: INTEGER  -- The new alarm time minute.
+      require
+        0 <= the_new_alarm_hour;
+        the_new_alarm_hour < 24;
+        0 <= the_new_alarm_minute;
+        the_new_alarm_minute < 60;
+      ensure
+        my_alarm_hour = the_new_alarm_hour;
+        my_alarm_minute = the_new_alarm_minute;
+      end
 		
-  redefined tick  -- One second has passed; update this clock's time and check
+    redefined tick  -- One second has passed; update this clock's time and check
                   -- if we need to switch our alarm on/off.
-    ensure
-      -- If it is the alarm time, the alarm is turned on.
-      time = my_alarm_time -> my_alarm.isOn();  
-      -- If it is one minute after the alarm time, the alarm is turned off.
-      time = (my_alarm_time + 60) \\ 24*60*60 -> not( my_alarm.isOn() );
-    end
+      ensure
+        -- If it is the alarm time, the alarm is turned on.
+        time = my_alarm_time -> my_alarm.isOn();  
+        -- If it is one minute after the alarm time, the alarm is turned off.
+        time = (my_alarm_time + 60) \\ 24*60*60 -> not( my_alarm.isOn() );
+      end
 		
-invariant
-  0 <= my_alarm_time;
-  my_alarm_time < 24*60*60;
-  0 <= my_alarm_hour;
-  my_alarm_hour < 24;
-  0 <= my_alarm_minute;
-  my_alarm_minute < 60;
+  invariant
+    0 <= my_alarm_time;
+    my_alarm_time < 24*60*60;
+    0 <= my_alarm_hour;
+    my_alarm_hour < 24;
+    0 <= my_alarm_minute;
+    my_alarm_minute < 60;
 
-end -- class ALARM_CLOCK
+  end -- class ALARM_CLOCK
+
+end --component

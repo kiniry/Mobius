@@ -1,34 +1,38 @@
 indexing
-  description:  "A logical clock."
-  title:        "TickTockClock"
-  author:       "Joe Kiniry"
-  copyright:    "Copyright (C) 2007 Joe Kiniry"
-  organisation: "School of Computer Science and Informatics, UCD"
-  date:         "January 2007"
-  version:      "Revision: 11"
+  about:        "A logical clock.";
+  title:        "TickTockClock";
+  author:       "Joe Kiniry";
+  copyright:    "Copyright (C) 2007 Joe Kiniry";
+  organisation: "School of Computer Science and Informatics, UCD";
+  date:         "January 2007";
+  version:      "Revision: 11";
 
-deferred class LOGICAL_CLOCK
+static_diagram
+component
+  deferred class LOGICAL_CLOCK
 
-feature
-  my_time: INTEGER  -- The current time of this clock.
+  feature
+    my_time: INTEGER  -- The current time of this clock.
 
-  -- What is the current time of this clock?
-  deferred get_logical_time: INTEGER
-    -- concurrency: CONCURRENT
-    -- modifies: QUERY
-    ensure
-      Result = my_time;
-    end
+    -- What is the current time of this clock?
+    deferred get_logical_time: INTEGER
+      -- concurrency: CONCURRENT
+      -- modifies: QUERY
+      ensure
+        Result = my_time;
+      end
 	
-  deferred advance  -- Advance this clock's time.
-    -- concurrency: GUARDED
-    -- modifies: my_time
-    ensure
-      -- This clock's time has monotonically increased.
-      old my_time < my_time;
-  end
+    deferred advance  -- Advance this clock's time.
+      -- concurrency: GUARDED
+      -- modifies: my_time
+      ensure
+        -- This clock's time has monotonically increased.
+        old my_time < my_time;
+    end
 		
-invariant
-  0 <= my_time;
+  invariant
+    0 <= my_time;
 
-end -- class LOGICAL_CLOCK
+  end -- class LOGICAL_CLOCK
+
+end --component

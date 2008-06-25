@@ -1,73 +1,78 @@
 indexing
-  description:  "A settable clock storing the time in hours, minutes and seconds."
-  title:        "TickTockClock"
-  author:       "Joe Kiniry"
-  copyright:    "Copyright (C) 2007 Joe Kiniry"
-  organisation: "School of Computer Science and Informatics, UCD"
-  date:         "January 2007"
-  version:      "Revision: 42"
+  about:        "A settable clock storing the time in hours, minutes and seconds.";
+  title:        "TickTockClock";
+  author:       "Joe Kiniry";
+  copyright:    "Copyright (C) 2007 Joe Kiniry";
+  organisation: "School of Computer Science and Informatics, UCD";
+  date:         "January 2007";
+  version:      "Revision: 42";
 
-class CLOCK
 
-feature
-  my_time: INTEGER  -- The current time of this clock.
-  my_hour: INTEGER  -- The current time of this clock, in hours.
-  my_minute: INTEGER  -- The current time of this clock, in minutes.
-  my_second: INTEGER  -- The current time of this clock, in seconds.
-  
-  make_clock: CLOCK  -- Create a new clock, initialised with time 12:00.
-    ensure
-      Result.my_time = 12*60*60;
-    end
-  
-  get_hour: INTEGER  -- What is the current hour value?
-    ensure 
-      0 <= Result;
-      Result < 24;
-    end
-  
-  get_minute: INTEGER -- What is the current minute value?
-    ensure 
-      0 <= Result;
-      Result < 60;
-    end
+static_diagram
+component
 
-  get_second: INTEGER -- What is the current second value?
-    ensure 
-      0 <= Result;
-      Result < 60;
-    end
-
-  tick -- One second has passed; update this clock's time.
-    -- modifies: my_time
-    ensure
-      -- The new time is one second ahead of the old time, wrapping 24:00
-      -- back to 00:00.
-      my_time = (old my_time + 1) \\ 24*60*60;
-    end
+  class CLOCK
+  feature
+    my_time: INTEGER  -- The current time of this clock.
+    my_hour: INTEGER  -- The current time of this clock, in hours.
+    my_minute: INTEGER  -- The current time of this clock, in minutes.
+    my_second: INTEGER  -- The current time of this clock, in seconds.
     
-  set_time  -- Set this clock to a new time.
-    -> the_new_hour: INTEGER  -- This clock's new hour value.
-    -> the_new_minute: INTEGER  -- This clock's new minute value.
-    require
-      0 <= the_new_hour;
-      the_new_hour < 24;
-      0 <= the_new_minute;
-      the_new_minute < 60;
-    ensure
-      get_hour = the_new_hour;
-      get_minute = the_new_minute;
-    end
+    make_clock: CLOCK  -- Create a new clock, initialised with time 12:00.
+      ensure
+        Result.my_time = 12*60*60;
+      end
     
-invariant
-  0 <= my_time;
-  my_time < 24*60*60;
-  0 <= my_hour;
-  my_hour < 24;
-  0 <= my_minute;
-  my_minute < 60;
-  0 <= my_second;
-  my_second < 60;
-  my_time = my_hour*60*60 + my_minute*60 + my_second;
+    get_hour: INTEGER  -- What is the current hour value?
+      ensure 
+        0 <= Result;
+        Result < 24;
+      end
+    
+    get_minute: INTEGER -- What is the current minute value?
+      ensure 
+        0 <= Result;
+        Result < 60;
+      end
 
-end -- class CLOCK
+    get_second: INTEGER -- What is the current second value?
+      ensure 
+        0 <= Result;
+        Result < 60;
+      end
+
+    tick -- One second has passed; update this clock's time.
+      -- modifies: my_time
+      ensure
+        -- The new time is one second ahead of the old time, wrapping 24:00
+        -- back to 00:00.
+        my_time = (old my_time + 1) \\ 24*60*60;
+      end
+      
+    set_time  -- Set this clock to a new time.
+      -> the_new_hour: INTEGER  -- This clock's new hour value.
+      -> the_new_minute: INTEGER  -- This clock's new minute value.
+      require
+        0 <= the_new_hour;
+        the_new_hour < 24;
+        0 <= the_new_minute;
+        the_new_minute < 60;
+      ensure
+        get_hour = the_new_hour;
+        get_minute = the_new_minute;
+      end
+      
+  invariant
+    0 <= my_time;
+    my_time < 24*60*60;
+    0 <= my_hour;
+    my_hour < 24;
+    0 <= my_minute;
+    my_minute < 60;
+    0 <= my_second;
+    my_second < 60;
+    my_time = my_hour*60*60 + my_minute*60 + my_second;
+
+  end -- class CLOCK
+
+end --component

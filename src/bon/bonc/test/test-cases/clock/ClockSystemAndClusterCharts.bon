@@ -1,0 +1,10 @@
+system_chart CLOCK_SYSTEM
+  cluster CLOCK_CLUSTER description "The cluster for all our clocks."
+end
+
+cluster_chart CLOCK_CLUSTER
+  class ALARM description "An alarm."
+  class ALARM_CLOCK description "A clock with an alarm."
+  class CLOCK description "A settable clock storing the time in hours, minutes and seconds."
+  class LOGICAL_CLOCK description "A settable clock storing the time in hours, minutes and seconds."
+end
