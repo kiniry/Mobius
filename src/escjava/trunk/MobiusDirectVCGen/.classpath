@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="bin" path="src"/>
-	<classpathentry kind="src" output="samples" path="samples"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/bico"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ESCJava2"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="jar/bico.jar"/>
+	<classpathentry kind="lib" path="jar/escjava.jar"/>
 	<classpathentry kind="lib" path="/ESCJava2/Utils/Javafe/Javafe2.0.5.jar"/>
-	<classpathentry kind="lib" path="/ESCJava2/Utils/BCEL/bcel-5.2/bcel-5.2.jar"/>
 	<classpathentry kind="lib" path="/ESCJava2/Utils/junit.jar"/>
-	<classpathentry kind="lib" path="lib/javac.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="jar/langtools.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
