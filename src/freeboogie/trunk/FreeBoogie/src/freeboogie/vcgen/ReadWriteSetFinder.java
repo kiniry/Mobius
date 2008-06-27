@@ -25,6 +25,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     super(new PairAssocOp<CSeq<VariableDecl>,CSeq<VariableDecl>>(
       new CSeqAcc<VariableDecl>(), new CSeqAcc<VariableDecl>())); 
     this.st = st;
+    context = new ArrayDeque<Boolean>();
     context.addFirst(false);
   }
  
@@ -72,6 +73,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     r = assocOp.plus(r, atom.eval(this));
     context.addFirst(false);
     r = assocOp.plus(r, idx.eval(this));
+    context.removeFirst();
     return memo(atomIdx, r);
   }
 

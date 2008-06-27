@@ -1,4 +1,8 @@
  . Finish passivate; now you can use fancy generics to deal with arrays
+ . Change the grammar and the AST to allow for parallel assignments.
+ . Change the grammar, AST, and TC to allow for n-dimensional maps
+   (oh, btw, rename arrays into maps), and repeated selections even
+   on LHS of assignment/call.
  . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
  . Test typechecker thoroughly and add tests for the 'old' mode.
  . Perhaps introduce dummy names where the user doesn't provide one
@@ -8,7 +12,9 @@
  . The comments and code disagree for TypeChecker.checkExact
  . Desugar dependent types in assumes/asserts
  . Desugar function calls into assumes/asserts (remember that free is special)
- . Desugar specs into assumes/asserts (introduces two? new blocks)
+   Also remember to havoc LHS and the things that appear in modifies clause.
+ . Desugar specs into assumes/asserts (introduces new blocks)
+ . Desugar havocs into assignments from fresh variables.
  . Transform BoogiePL expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
  . Extract sharing in SimplifyProver, or use `flet' for z3
@@ -35,5 +41,6 @@
    benchmarks or bml2bpl)
  . Change the grammar so it doesn't use syntactic predicates. NOTE:
    You may need to return tuples.
+ . Check (during type-check) that I never assign to a variable.
 
 vim:spell:ts=3:sw=3:fdm=manual:

@@ -18,6 +18,7 @@ import freeboogie.tc.*;
 import freeboogie.util.Closure;
 import freeboogie.util.ClosureR;
 import freeboogie.util.Err;
+import freeboogie.vcgen.Passivator;
 
 /**
  * Used to print information in the symbol table.
@@ -79,6 +80,7 @@ public class Main {
     opt.regBool("-pp", "pretty print");
     opt.regBool("-pst", "print symbol table");
     opt.regBool("-pfg", "print flow graphs");
+    opt.regBool("-pass", "passivate");
     opt.regBool("-old", "accept old constructs");
     opt.regBool("-pvc", "print verification condition");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
@@ -87,7 +89,7 @@ public class Main {
     fgd = new FlowGraphDumper();
   }
 
-  public void printSymbolTable() {
+  private void printSymbolTable() {
     SymbolTable st = tc.getST();
     st.funcs.iterDef(new Printer<AtomFun, Function>("function", st.funcs,
       new ClosureR<Function, String>() {
@@ -119,6 +121,16 @@ public class Main {
         @Override public String go(AtomId a) {
           return a.getId();
       }}));
+  }
+
+  private boolean passivate() {
+    Passivator p = new Passivator();
+    ast = p.process(ast, tc);
+    /*
+    if (FbError.reportAll(tc.process(ast))) return false;
+    ast = tc.getAST();
+    */
+    return true;
   }
 
   public void run(String[] args) {
@@ -153,9 +165,10 @@ public class Main {
         // do what we are asked to do with this file
         if (FbError.reportAll(tc.process(ast))) continue;
         ast = tc.getAST();
-        if (opt.boolVal("-pp")) ast.eval(pp);
         if (opt.boolVal("-pst")) printSymbolTable();
+        if (opt.boolVal("-pass")) if(!passivate()) continue;
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
+        if (opt.boolVal("-pp")) ast.eval(pp);
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
       } catch (Exception e) {
