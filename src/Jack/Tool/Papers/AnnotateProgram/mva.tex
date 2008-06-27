@@ -31,15 +31,15 @@ use a PVS-like notation to declare abstract data types and records
 record with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 \textsf{y}, and \(x \opri\mathsf{y} := z\clri\) to denote the record
 \(x\) with the field \textsf{y} updated to \(z\).}.
-\[
+\[{\small
 \begin{array}{rcl}
 \Val & = & \B(b : \mathbb{B}) \mid \I(i : \mathbb{Z}) \mid \Null \mid
 \R(i : \mathbb{Z}) \mid \One \mid \bot\\
 \Type & = & \Bool \mid \Int \mid \Ref \mid \Void\\
 \Excpt & = & \Throwable \mid \NullPointer \mid \JMLExc
-\end{array}
+\end{array}}
 \]
-% AT: Why is \NullPointer defined as RunTimeException ? MH: To be more abstract.
+\marginnote{ AT: Why is \NullPointer defined as RunTimeException ? MH: To be more abstract.}
 Notice that there is a special type \(\Void\), inhabited by \(\One\)
 to model methods without results. Reference values contain a number,
 which can be considered as the location where the object is stored;
@@ -47,8 +47,6 @@ which can be considered as the location where the object is stored;
 Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
 enumerable nonempty sets of control points and names, respectively. We
 assume that \(\Name\) contains the special names \textsf{this}. 
-% and \textsf{super}.
-% AT: We don't need super for our formalization
 
 
 An MVA consists of
@@ -58,7 +56,7 @@ An MVA consists of
 \item a finite set of control points,
 \item an initial control point,
 \item a set of events, to specify which methods are being monitored,
-\item a set of special MVA variable declarations, to describe % AT: why special?
+\item a set of MVA variable declarations, to describe 
 the internal state of the automaton
 \item a set of program variable declarations, to specify which
 program variables will be inspected by the monitor, and
@@ -76,10 +74,9 @@ are not explicitly initialised in the monitor, their value is retrieved from
 the program state.). Figure~\ref{FigMVAForm} shows the
 main types of the MVA definition (the types of \FieldDecl and
 \LocalVarDecl will also be used in the abstract syntax of programs).
-% AT: The last sentence repetitive
 
 \begin{figure}[t]
-\[
+\[{\small
 \begin{array}{rcl}
 \FieldDecl & = \opr & \type : \Type, \name : \Name, \init : \Val
 \clr \\
@@ -94,7 +91,7 @@ main types of the MVA definition (the types of \FieldDecl and
             \init : \CP, \evs : \setof{\EVENT},\\
      &   &  \vdsA : \setof{\FieldDecl}, \vdsP : \setof{\LocalVarDecl},\\
      &   &  \trans : \setof{\TRANS} \clr
-\end{array}
+\end{array}}
 \]
 \caption{Formal Definition of MVA}\label{FigMVAForm}
 \end{figure}
@@ -130,13 +127,13 @@ words,
 \item transitions range between declared control points and are
 labelled with declared events
 \end{inparaenum}.
-% AT: This are not all the requirements, for instance it is not said that the
-%     initial control point should be on the set of declared control points or
-%     that guards depend only on the value of the declared variables.
-%     I think that don't want to enuntiate all the requirements precisesly in
-%     English but then we should say it. We can say that these are the most
-%     important requirements.
-%     For a complete English description see the comments I added to MVA.
+\marginnote{AT: This are not all the requirements, for instance it is not said that the
+     initial control point should be on the set of declared control points or
+     that guards depend only on the value of the declared variables.
+     I think that don't want to enuntiate all the requirements precisesly in
+     English but then we should say it. We can say that these are the most
+     important requirements.
+     For a complete English description see the comments I added to MVA. MH: rephrased}
 
 %Formally:
 %\[
@@ -159,8 +156,8 @@ labelled with declared events
 
 \paragraph{MVA Transitions} The state of an MVA consists of a current control
 point, and the store of automaton variables.
-\[
-\MVAstate = \opr \cp : \CP, \stA : \Store \clr
+\[{\small
+\MVAstate = \opr \cp : \CP, \stA : \Store \clr}
 \]
 Notice that the program store is not part of the automaton
 state. Given an MVA \(a\), the transition function \(\Delta_a\)
@@ -168,7 +165,7 @@ describes how given a program store and an event, \(a\) changes its
 internal state (where \(\chooseop\) is the arbitrary choice operator,
 and \textsf{apply} is a function that updates the automaton store
 according to the list of actions in the obvious way).
-\[
+\[{\small
 \begin{array}{l}
 \Delta_a  :  \MVAstate \times \Pstate \times \EVENT \times (\Val \mid
 \Excpt) \hookrightarrow
@@ -185,12 +182,11 @@ according to the list of actions in the obvious way).
 \sigma_A.\stA) \clri
 \end{array}
 
-\end{array}
+\end{array}}
 \]
 In a total MVA, the transition function \(\Delta_a\) is total. Notice
 that a partial automaton gets stuck on a certain input if and only if the
 complete MVA will reach the state \halted.
-% AT: See the correctness criterion for the completion function I wrote in MVA
 
 \begin{equation}\label{MVAcompletionProp}
 \Delta_a(\sigma_A, \sigma_P, e, v) = \perp \Leftrightarrow

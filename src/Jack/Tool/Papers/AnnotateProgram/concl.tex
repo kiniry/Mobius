@@ -6,8 +6,8 @@ defined in several steps. All steps are formalised and proven correct,
 using the PVS theorem prover. The algorithm might seem trivial, but
 several subtleties complicated the correctness proof. First of all,
 for the main step, where the monitor is encoded in method-level set
-annotations, it was not straightforward to state the correct relation
-that was maintained between the two program executions. In particular,
+annotations, it is not straightforward to state the correct relation
+that is maintained between the two program executions. In particular,
 once the \halted state is reached, the correspondence between the two
 program states is not preserved anymore, because the monitored program
 might continue executing, while the annotated program throws an
@@ -16,14 +16,17 @@ important to specify the evaluation of pre- and postcondition, class
 invariant and pre- and post-set annotations in the right order, to ensure
 that the relation was established as quickly as possible~--~so that
 the induction hypothesis could be applied for the other
-steps. Finally, a last important issue here was the behaviour of the
+steps. Adding the additional assert to the pre-set annotation was also
+crucial for correctness.  
+Finally, a last important issue here was the behaviour of the
 \TryCatch statement, where exceptions in the \emph{finally} block can
 overwrite other exceptions.
 
 The formalisation has been developed for a subset of Java. We believe
 that extending it to full (sequential) Java would be relatively
 straightforward. However, generalising to properties that are not
-restricted to a single class might be more challenging.
+restricted to a single class or to multithreading might be more
+challenging.
 
 The ultimate goal of our work is to be able to do static
 verification. To achieve this, a weakest precondition calculus can be

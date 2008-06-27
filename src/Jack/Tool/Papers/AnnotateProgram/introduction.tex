@@ -156,12 +156,12 @@ point.
 \caption{Example Security Automaton}\label{FigExample}
 \end{figure}
 
-% TODO: describe the new version of the example
-% MH: not necessary to change, maybe just add one line about distinction
-% between entry and exit (but the terminate successfully is sufficient)
-% AT: But we should say that reset is not allowed within sendSMS, otherwise we
-% could make a simpler automaton with just one state and events for normal
-% termination of sendSMS and reset.
+\marginnote{ TODO: describe the new version of the example
+ MH: not necessary to change, maybe just add one line about distinction
+ between entry and exit (but the terminate successfully is sufficient)
+ AT: But we should say that reset is not allowed within sendSMS, otherwise we
+ could make a simpler automaton with just one state and events for normal
+ termination of sendSMS and reset.}
 Throughout this paper, we will use a simple example property to
 illustrate the different translations: the method \texttt{sendSMS} can
 be called and terminate successfully at most \(N\) times in between

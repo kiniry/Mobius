@@ -1,11 +1,10 @@
 \section{Programs and Semantics}\label{SecProgram}
 
 This section first defines an abstract syntax of programs, followed by
-their semantics. Both are fairly standard, however, an important
-feature is that the semantics is parametrised on the treatment of
-specifications. In particular, we define a run-time checking and a
-monitoring semantics, that evaluate differently upon method call and
-exit.
+their semantics. Both are fairly standard, except that the semantics
+is parametrised on the treatment of specifications. In particular, we
+define a run-time checking and a monitoring semantics, that evaluate
+differently upon method call and exit.
 
 % commented out: version with different constants
 %\[
@@ -38,37 +37,37 @@ exit.
 %\]
 
 \begin{figure}[t]
-\[
+\[{\small
 \begin{array}{rcl}
-\NumExpr & = & \Plus(n_1, n_2 : \NumExpr) \mid \EvalN(n : \Name) \\
-\BoolExpr & = & \Not(b : \BoolExpr) \mid \Conj(b_1,
-b_2 : \BoolExpr) \mid \Eq(e_1, e_2 : \Expr) \mid \EvalB(n : \Name) \\
-\RefExpr & = & \EvalR(n : \Name)\\
-\Expr & = & \BExpr(b : \BoolExpr) \mid
-            \NExpr(n : \NumExpr) \mid
-            \RExpr(r : \RefExpr) \mid\\
-      &   & \CondExpr(c : \BoolExpr, e_1, e_2 : \Expr) \mid
-            \Assign(n : \Name, e : \Expr) \mid \\
-      &   & \Call(o : \Expr, n : \Name, p : \Expr) \mid
+\Expr & = & \Plus(n_1, n_2 : \Expr) \mid 
+            \EvalN(n : \Name) \mid
+            \Not(b : \Expr) \mid 
+            \Conj(b_1, b_2 : \Expr) \mid \\
+      &   & \Eq(e_1, e_2 : \Expr) \mid 
+            \EvalB(n : \Name) \mid 
+            \EvalR(n : \Name) \mid
+            \CondExpr(c, e_1, e_2 : \Expr) \mid\\
+      &   & \Assign(n : \Name, e : \Expr) \mid 
+            \Call(o : \Expr, n : \Name, p : \Expr) \mid
             \Const(v : \Val) \\
 \Stmt & = & \Skip \mid
             \Sequence(s_1, s_2 : \Stmt) \mid
-            \IfThenElse(c : \BoolExpr, s_1, s_2 : \Stmt) \mid\\
-      &   & \While(c : \BoolExpr, s : \Stmt) \mid
+            \IfThenElse(c : \Expr, s_1, s_2 : \Stmt) \mid\\
+      &   & \While(c : \Expr, s : \Stmt) \mid
             \StmtExpr(e : \Expr) \mid
-            \Throw \mid\\
+            \Throw(e : \Excpt) \mid\\
       &   & \TryCatch(t: \Stmt, e : \Excpt, c, f : \Stmt) \mid
             \Set(n : \Name, e : \Expr) \mid\\
-      &   & \CaseJML(b : \listof{\BoolExpr \times \Stmt}) \mid
-            \Assert(e : \BoolExpr)
-\end{array}
+      &   & \CaseJML(b : \listof{\Expr \times \Stmt}) \mid
+            \Assert(e : \Expr)
+\end{array}}
 \]
 \caption{Abstract syntax of expressions and
 statements}\label{FigExprStmt}
 \end{figure}
 
 \begin{figure}[t]
-\[
+\[{\small
 \begin{array}{rcl}
 \Method & = \opr & \name : \Name,
                    \param : \LocalVarDecl,
@@ -76,71 +75,72 @@ statements}\label{FigExprStmt}
                    \body : \Stmt,\\
         &        & \res : \Expr,
                    \restype : \Type,
-                   \pre, \post : \Expr \rightarrow \BoolExpr, \\
+                   \pre, \post : \Expr \rightarrow \Expr, \\
         &        & \preset, \postset : \Expr \rightarrow \Stmt,
                    \excset : \Excpt \rightarrow \Stmt \clr \\
 \Class & = \opr & \name : \Name,
                   \super : \Name_{\bot},
                   \fields : \setof{\FieldDecl},
                   \methods : \setof{\Method},\\
-        &       & \inv : \BoolExpr,
+        &       & \inv : \Expr,
                   \ghostvars : \setof{\FieldDecl} \clr\\
 \Program & = \opr & \classes : \setof{\Class} \clr
-\end{array}
+\end{array}}
 \]
 \caption{Abstract Syntax for Programs}\label{FigProgram}
 \end{figure}
 
 \subsection{Program Syntax}\label{SecSyntax}
 
-The language that we consider is a restricted subset of (sequential)
-Java, abstracting away from the typical object-oriented features. This
-means in particular that we abstract away from method resolution;
-instead we assume that the annotated class contains method bodies for
-the relevant methods, thus method lookup is trivial. Similarly, we
-assume that lookup of the class invariant returns the complete class
-invariant, including those invariants that are inherited from
-superclasses. Moreover, we consider only a few exceptions, and assume
-that methods have only one parameter. However, we believe that our
-formalisation contains all constructs that are relevant for proving
-correctness of our approach, and that implementing the technique for
-the full language is mainly an engineering issue (see
-Section~\ref{SecImplem}). % AT: I guess that we won't have an implementation section
-% AT: Should we mention our lack of of formalization for object creation?
-%     It is strange to see Throw without any argument, we should consider
-%     adding as exception as a possible extension
+Our language is a restricted subset of (sequential) Java, abstracting
+away from typical object-oriented features. This means in particular
+that we abstract away from method resolution; instead we assume that
+the annotated class contains method bodies for the relevant methods,
+thus method lookup is trivial. Similarly, we assume that lookup of the
+class invariant returns the complete class invariant, including those
+invariants that are inherited from superclasses. Moreover, we consider
+only a few exceptions, and assume that methods have only one
+parameter. However, we believe that our formalisation contains all
+constructs that are relevant for proving correctness of our approach,
+and that implementing the algorithm for the full language is mainly an
+engineering issue (see Section~\ref{SecConcl}). 
+\marginnote{AT: Should we mention our lack of of formalization for
+object creation?\\MH: we say that we remove all object-oriented features}
 
 Figure~\ref{FigExprStmt} defines expressions and statements as a
 mutually recursive data type (we use the term \emph{body} to denote
-either expressions or statements). Notice that we have a few language
-constructs that are used to represent JML annotations: \Set, to update
-ghost variables (\emph{i.e.}, specification-only variables), \CaseJML,
-to abbreviate a list of conditional ghost variable updates, and
-\Assert, to evaluate a condition on the program state. A standard
+either expressions or statements). Notice that we have some special
+language constructs that are used to represent JML annotations: \Set,
+to update ghost variables (\emph{i.e.}, specification-only variables),
+\CaseJML, to abbreviate a list of conditional ghost variable updates,
+and \Assert, to evaluate a condition on the program state. A standard
 program semantics ignores these statements, but the annotated program
-semantics evaluates them. Therefore, the state of an annotated
-program is extended with a ghost variable store, which is updated
-according to the \Set or \CaseJML statement. If an \Assert statement is
-evaluated, and its condition evaluates to false, a \JMLExc is thrown and the
-program stops~--~otherwise execution continues normally.
+semantics evaluates them. Therefore, the state of an annotated program
+is extended with a ghost variable store, which is updated according to
+the \Set or \CaseJML statement. If an \Assert statement is evaluated,
+and its condition evaluates to false, a special \JMLExc is thrown to
+signal the annotation violation.
+
+% and the
+%program stops~--~otherwise execution continues normally.
 % AT: assert does not stop the program, it just throws and exception. The
 %     program will stop only if the exception reaches the top level.
 
-Finally, Figure~\ref{FigProgram} describes the syntax for methods,
-classes and programs. To ensure every method has an appropriate return
-expression, this expression is part of the method signature.  Further,
-methods can be annotated with pre- and postconditions, and classes
-with invariants. To support our annotation generation algorithm, for
-each method we define special annotations, called
+Next, Figure~\ref{FigProgram} describes the syntax for methods,
+classes and programs. To ensure that every method has an appropriate
+return expression, this is part of the method signature.
+Further, methods can be annotated with pre- and postconditions, and
+classes with invariants. To support our annotation generation
+algorithm, we define for each method special annotations, called
 \(\preset\), \(\postset\) and \(\excset\). These annotations describe
 the updates to the ghost variables at method entry, exit and
 exceptional exit, respectively. To allow the use of the method
 parameter, the method result and the possible return exception, pre-
-and postcondition and the different specification-level set
-annotations are functions. The semantics will apply these appropriately.
-% AT: Consider rephrasing the next to last sentence by starting with the subject
-%     and then the verb: Pre- and postconditionsa in different ... are functions
-%     to allow the use of ....
+and postcondition and the different method specification-level set
+annotations are functions\footnote{Notice that the type of \pre,
+\post, \preset and \postset could be made more specific: the first
+expression argument is a side-effect free expression.}. The semantics
+will apply these appropriately.
 
 A program is said to be \emph{wellformed} if
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -156,9 +156,9 @@ Notice that we decided to state only the wellformedness conditions
 that were necessary to complete our correctness proofs.
 
 \subsection{Natural Semantics}\label{SecSemantics}
-The behaviour of a program is described using a big step semantics. We
+The behaviour of a program is described via a big step semantics. We
 closely follow Von Oheimb's formalisation of Java~\cite{Oheimb01},
-with simplifications wherever possible because of our simplified
+with simplifications wherever possible, because of our simplified
 program syntax. For every body, we derive a judgement
 $\etp{P}{e,\sigma}{v,\sigma'}$, meaning that  $e$
 evaluates to $v$, while transforming state $\sigma$ into $\sigma'$ in
@@ -171,55 +171,57 @@ and a store.  The store maps every field and local variable to a
 value.
 
 \[
+{\small
 \begin{array}{rcl}
 \Pstate & = \opr & \ex : \Excp_{\bot}, \st : \PStore \clr\\
 \PStore & = \opr & \fvs : \Name \mapsto \Val, \lvs : \Name \mapsto \Val \clr
-\end{array}
+\end{array}}
 \]
 
 When bodies are evaluated, uncaught exceptions are propagated.
-Exceptions can only be caught explicitly within a \(\TryCatch\) statement.
-All other evaluation rules require explicitly that the initial state is not
-exceptional.
+Exceptions can only be caught explicitly \emph{within} a \(\TryCatch\)
+statement.  All evaluation rules require explicitly that the
+initial state is not exceptional.
 
 As mentioned above, we define both the semantics of an (annotated)
-program and of a monitored program. We do this by parametrising the
-semantics with functions that specify how the specification constructs
-are to be evaluated. Since annotated or monitored programs and/or
-their states contain more information than programs without annotations,
-the evaluation rules are defined over parametric types
+program and of a monitored program by parametrising the semantics with
+functions that specify how the specification constructs are to be
+evaluated. Since annotated or monitored programs and/or their states
+contain more information than programs without annotations, the
+evaluation rules are defined over parametric types
 \(\FullProgram\) and \(\FullState\). For each instantiation we give
 mappings \program and \progstate to the basic program type \Program
 and the basic program state \Pstate.
 
 The evaluation rules are fairly standard, therefore we refer to Von
-Oheimb and the PVS formalisation for most of the
-rules. Figure~\ref{FigEvalRules} shows the rule that evaluates
-normally terminating method calls. For simplicity, we have left out
-several checks that intermediate states are not exceptional (but these
-are present in the PVS formalisation). First the receiver is
-evaluated, resulting in a reference \(r\). Next, the parameter is
-evaluated, resulting in a value \act. If \(r\) is not null, the method
-definition \md can be looked up. The local variable store is updated
-assigning the receiver reference \(r\) to \texttt{this},
-initialising the methods local variables and assigning the actual
-parameter to the formal parameter. The old local variable store is
-kept, to be restored after method termination. Next, appropriate
-actions upon method entry are taken, as specified by the relation
-\(\gammain\). This function is one of the parameters of the
-semantics~--~below we will discuss different instantiations. Next the
-method body, and method result expression are evaluated. Since we are
-considering here the case where the method terminates normally, the
-parameter for normal method termination \(\gammanorm\) is
-evaluated. Last, the local store is set back to its original contents,
-and this terminates the method call. Similar rules exist that describe
-what happens upon exceptional termination of a method, when a method
-is called upon a null reference \emph{etc.}
+Oheimb and the PVS formalisation for more
+details. Figure~\ref{FigEvalRules} shows the evaluation of normally
+terminating method calls (where for clarity of presentation, we have
+left out several checks that intermediate states are not
+exceptional~--~these are present in the PVS formalisation). First the
+receiver is evaluated, resulting in reference \(r\). Next, the
+parameter is evaluated, resulting in value \act. If \(r\) is not null,
+the method definition
+\md can be looked up. The local variable store is updated assigning
+the receiver reference \(r\) to \texttt{this}, initialising the
+method's local variables and assigning the actual parameter to the
+formal parameter. The old local variable store is kept (as \oldlvs),
+to be restored after method termination. Next, an appropriate action
+upon method entry is taken, as specified by the relation \(\gammain\),
+one of the parameters of the semantics~--~below we will discuss
+different instantiations. Next the method body, and method result
+expression are evaluated. Since this rule applies to normal method
+termination only, the parameter for normal method termination
+\(\gammanorm\) is evaluated. Last, the local store is set back to
+\(\oldlvs\),  and this terminates the method call. Similar rules
+exist that describe what happens upon exceptional termination of a
+method, when a method is called upon a null reference
+\emph{etc.}
 
 
 
 \begin{figure}[t]
-\[
+\[{\small
 \begin{array}{c}
 \sigma_0.\progstate.\ex = \bot \qquad        % no exception in sigma_0
 \etp{P}{o, \sigma_0}{r,\sigma_1} \qquad      % evaluate receiver
@@ -238,7 +240,7 @@ r \not= \Null \qquad                         % receiver not null
 \hline
 \etp{P}{\Call(o,\mn,p), \sigma_0}{v, \sigma_7
 (\progstate.\st.\lvs := \oldlvs)}
-\end{array}
+\end{array}}
 \]
 \caption{Evaluation rule for normal termination of method
 calls}\label{FigEvalRules}
@@ -248,7 +250,7 @@ Besides the relations \gammain and \gammanorm, the semantics
 is also parametrised with
 \gammaexc, describing what happens upon exceptional termination of a
 method, and \deltaset, \deltacase, and \deltaassert, describing the
-semantics of the \Set, \CaseJML and \Assert statement,
+semantics of the \Set, \CaseJML and \Assert statements,
 respectively. In a standard program semantics, where specifications
 are ignored, all these parameters are instantiated basically with the
 identity relation.
@@ -269,30 +271,33 @@ identity relation.
 
 The program state of an annotated program is extended with a store for
 ghost variables:
-\[
-\Astate = \opr \pstate : \Pstate, \gvs : \Name \mapsto \Val \clr
+\[{\small
+\Astate = \opr \pstate : \Pstate, \gvs : \Name \mapsto \Val \clr}
 \]
 The types \FullProgram and \Program coincide, while \FullState is
 instantiated as \Astate, and the mapping \progstate is defined as
 \pstate. Figure~\ref{FigAnnotatedSem} shows some of the
-instantiations of the semantics parameters; the other instantiations
-are similar. Relation \gammain uses an auxiliary relation \(\beta\)
-which checks boolean expression \(e\) and raises a special \JMLExc if
-the expression is not true. Upon method entry, the class invariant and
-precondition are evaluated. If they fail, a \JMLExc is thrown,
-otherwise the method's \preset statement is executed. Finally, we
-ensure that the program store is not changed. The function
+instantiations of the semantics parameters (presented in rule format);
+the other instantiations are similar. Relation \gammain uses an
+auxiliary relation \(\beta\) which checks boolean expression \(e\) and
+raises a special \JMLExc if the expression is not true. Upon method
+entry, the class invariant and precondition are evaluated. If they
+fail, a \JMLExc is thrown, otherwise the method's \preset statement is
+executed. Finally, we ensure that the program store is not
+changed. The function
 \deltaset updates a ghost variable: it first evaluates the expression
 and if this did not result in an exceptional state, it updates the
 value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
-abbreviate that the \(n\) entry of the \gvs entry of \(\tau\) is
+abbreviate that the \(n^{th}\) entry of the \gvs component of \(\tau\) is
 updated to \(v\).} appropriately.
-\footnote{AT: What is the difference between $\beta$ and $\deltaassert$?
+\marginnote{AT: What is the difference between $\beta$ and $\deltaassert$?
 In the rule for $\beta$ if $\sigma_1.pstate.exc = \Throwable$ then
-$\sigma_2.pstate.exc = \JMLExc$, is that the intention?}
+$\sigma_2.pstate.exc = \JMLExc$, is that the intention? MH: \(\beta\)
+is checkassertion, and is defined exactly as that. \(\deltaassert\)
+additionally check whether the state is unchanged}
 
 \begin{figure}[t]
-\[
+\[{\small
 \begin{array}[t]{c}
 \invar = \lookupinv(P, r) \qquad
 \beta(P, \invar, \sigma_1, \tau_1) \qquad
@@ -315,7 +320,7 @@ $\sigma_2.pstate.exc = \JMLExc$, is that the intention?}
 \pif{\tau.\pstate.\ex = \bot}{\sigma_2 = \tau (\gvs.n := v)}{\sigma_2 = \tau}\\
 \hline
 \deltaset(P, \Set(e, n), \sigma_1, \sigma_2)
-\end{array}
+\end{array}}
 \]
 \caption{Instantiation of semantics for runtime annotation evaluation}
 \label{FigAnnotatedSem}
@@ -323,10 +328,10 @@ $\sigma_2.pstate.exc = \JMLExc$, is that the intention?}
 
 
 \paragraph{Monitored Program Semantics}
-We also instantiate the general program semantics for monitored
-programs. This semantics is only defined when the MVA is compatible with
-the program. An MVA \(a\) is said to be compatible with a program \(P\),
-denoted \(a \sqsubseteq P\) if
+The general program semantics is also instantiated for monitored
+programs. This semantics is only defined when the MVA is compatible
+with the program. An MVA \(a\) is said to be compatible with a program
+\(P\), denoted \(a \sqsubseteq P\), if
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the program contains the class \(c\) that is being monitored,
 \item all variables declared as program variables in
@@ -343,14 +348,17 @@ the \stuck flag will never be set. Instead, violation of the security
 policy is modelled by the MVA reaching the error state \halted.
 
 \[
+{\small
 \begin{array}{rcl}
 \Mprogram & =  & \opr \mva : \MVA, \program : \Program \clr\\
 \Mstate & = & \opr \mvastate : \MVAstate, \progstate : \Pstate, \stuck
 : \mathbb{B} \clr
-\end{array}
+\end{array}}
 \]
-% AT: Did you omit the gvs on purpose?
-%     If its is an APState then then the mapping should be prog_state..program
+\marginnote{AT: Did you omit the gvs on purpose? MH: yes, think
+so. \Pstate can be anything\\
+AT:     If its is an APState then then the mapping should be
+prog\_state..program MH: ?}
 Thus, \FullProgram gets instantiated as \Mprogram and \FullState as
 \Mstate, with mappings \program and \progstate. Now we can give
 appropriate instantiations for the \(\gamma\)- and
@@ -362,6 +370,7 @@ of the monitor, using \(\hat\gammain\) for the necessary checks at
 method entrance in the program itself (\emph{i.e.}, the evaluation of
 the method specification).
 \[
+{\small
 \begin{array}{c}
 \hat\gammain(P, \md, r, \act, \sigma_1, \tau) \\
 \pif{\tau.\pstate.\ex = \bot}
@@ -369,14 +378,14 @@ the method specification).
     {\sigma_2 = \tau}\\
 \hline
 \gammain(P, \md, r, \act, \sigma_1, \sigma_2)
-\end{array}
+\end{array}}
 \]
 
 \noindent where
 \[
-\begin{array}{l}
-\delta(\ev)(P, \md, \act, \sigma) =\\
-\qquad
+{\small
+\begin{array}{rcl}
+\delta(\ev)(P, \md, \act, \sigma) & = &
 \begin{array}[t]{l}
 \mathsf{let\ }
 \begin{array}[t]{rcl}
@@ -388,7 +397,7 @@ the method specification).
     {\sigma (\stuck := \ttt)}
     {\sigma (\mvastate := \tau)}
 \end{array}
-\end{array}
+\end{array}}
 \]
 
 
@@ -396,22 +405,21 @@ the method specification).
 
 To be able to generate the annotations capturing the security policy
 specified by the LimitSMS automaton in Figure~\ref{FigExample}, below
-is a class declaration of class \texttt{Messaging} declaring the
+is a class declaration of class \texttt{Messaging}, declaring the
 methods used by the automaton, plus a method \texttt{receiveSMS}, and
 a field \texttt{counter}. To illustrate our annotation algorithm, we
-do not need to give an implementation here, it is only important to
+do not need to give an implementation here; it is only important to
 know that the methods actually have an implementation.
-\begin{figure}[t]
-\begin{verbatim}
+
+{\small\begin{verbatim}
 class Messaging {
   int counter;
   void sendSMS(){ /* body sendSMS  */}
   void receiveSMS(){... }
-  void reset() { /* body reset */}
-}
-\end{verbatim}
-\caption{Implementation of class \texttt{Messaging}}\label{FigExampleImplem}
-\end{figure}
+  void reset() { /* body reset */} }
+\end{verbatim}}
+%\caption{Implementation of class \texttt{Messaging}}\label{FigExampleImplem}
+%\end{figure}
 %\subsubsection{PVS formalisation}
 %As mentioned above, the syntax and semantics for MVA and programming
 %language have been formalised in PVS.
