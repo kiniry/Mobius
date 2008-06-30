@@ -25,6 +25,16 @@ cluster_chart COMMUNICATIONS
 end
 
 cluster_chart PROVERS
+class PROVER description "A theorem prover"
+class INTERACTIVE_PROVER description "An interactive theorem prover"
+class AUTOMATED_PROVER description "An automated theorem prover"
+class COQ_PROVER description "Theorem prover for Coq language"
+class PVS_PROVER description "Theorem prover for PVS langauge"
+class ISABELLE_PROVER description "Isabelle theorem prover"
+class SIMPLIFY_PROVER description "Simplify theorem prover"
+class CVC3_PROVER description "CVC3 theorem prover"
+class FX7_PROVER description "Fx7 theorem prover"
+class YICES_PROVER description "Yices theorem prover"
 end
 
 cluster_chart COMPONENTS
@@ -43,16 +53,6 @@ cluster_chart STATUSES
 end
 
 cluster_chart PLUGINS
-class Prover description "A theorem prover"
-class InteractiveProver description "An interactive theorem prover"
-class AutomatedTheoremProver description "An automated theorem prover"
-class CoqProver description "Theorem prover for Coq language"
-class PVSProver description "Theorem prover for PVS langauge"
-class Isabelle description "Isabelle theorem prover"
-class Simplify description "Simplify theorem prover"
-class CVC3Prover description "CVC3 theorem prover"
-class Fx7Prover description "Fx7 theorem prover"
-class YicesProver description "Yices theorem prover"
 end
 
 cluster_chart LANGUAGES
@@ -65,4 +65,34 @@ cluster_chart COORDINATIONS
 end
 
 cluster_chart WORKSPACES
+end
+
+class_chart PROVER
+end
+
+class_chart INTERACTIVE_PROVER
+end
+
+class_chart AUTOMATED_PROVER
+end
+
+class_chart COQ_PROVER
+end
+
+class_chart PVS_PROVER
+end
+
+class_chart ISABELLE_PROVER
+end
+
+class_chart CVC3_PROVER
+end
+
+class_chart FX7_PROVER
+end
+
+class_chart YICES_PROVER
+end
+
+class_chart SIMPLIFY_PROVER
 end
