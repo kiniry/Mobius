@@ -1,0 +1,58 @@
+system_chart MOBIUS_TOOLS_WIKI
+cluster RESOURCES description "The Resources cluster contains the concepts of sites, people, ownership of, responsibility for and commitment to tasks." 
+cluster RELEASES description "The Releases cluster contains the concepts of versions, platforms, milestones, features and changes." 
+cluster COMMUNICATIONS description "The Communications cluster contains the concept of e-mail, tickets, wikis and other forms of communication between MOBIUS developers." 
+cluster PROVERS description "The Provers cluster (in BON) is the set of concepts relating to Theorem Provers."
+cluster COMPONENTS description "The Components cluster in BON is the set of concepts relating to subsystems, modules, systems architecture and dependencies." 
+cluster STANDARDS description "The Standards cluster contains Coding Standards, Documentation Standards, Specification Standards and other elements of the Software Development Process." 
+cluster LOGICS description "This BON cluster contains the formal Logics used within MOBIUS, including the MOBIUS base logic." 
+cluster CDES description "This BON cluster contains concepts related to the use of Collaborative Development Environments (CDEs) within MOBIUS" 
+cluster STATUSES description "This BON cluster contains the concept of release status, component status and development status i.e. the current and latest non-historical information about the MOBIUS tools" 
+cluster PLUGINS description "Plugins are software subcomponents which interact with a software platform or framework e.g. Eclipse." 
+cluster LANGUAGES description "This BON cluster describes the Software Languages e.g. Java used within MOBIUS"
+cluster SYSTEMS description "Components, subsystems and third-party platforms"
+cluster COORDINATIONS description "Meetings and Publications"
+cluster WORKSPACES description "Eclipse workspaces"
+end
+
+cluster_chart RESOURCES
+end
+
+cluster_chart RELEASES
+end
+
+cluster_chart COMMUNICATIONS
+end
+
+cluster_chart PROVERS
+end
+
+cluster_chart COMPONENTS
+end
+
+cluster_chart STANDARDS
+end
+
+cluster_chart LOGICS
+end
+
+cluster_chart CDES
+end
+
+cluster_chart STATUSES
+end
+
+cluster_chart PLUGINS
+end
+
+cluster_chart LANGUAGES
+end
+
+cluster_chart SYSTEMS
+end
+
+cluster_chart COORDINATIONS
+end
+
+cluster_chart WORKSPACES
+end
