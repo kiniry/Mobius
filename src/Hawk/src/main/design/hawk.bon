@@ -1,0 +1,64 @@
+-- Hawk is a verification-centric test framework for use with Hudson and Maven
+-- It manages and automates the complete test cycle including generation of test case
+-- to ensure complete specification, behavioral and functional coverage of the system.
+
+-- Informal Charts
+
+system_chart HAWK
+explanation 
+  "Hawk is a verification-centric test framework that uses Hudson and \
+  \Maven on multiple servers to achieve full functional, behavioral and specification test coverage."
+cluster STATUSES 
+description 
+  "The status of a test run"
+cluster HARDWARE 
+description 
+  "The hardware used to run the tests"
+cluster SOFTWARE 
+  description 
+  "The software used to run the tests"
+cluster BUILDS
+  description 
+  "The build process needed to run the tests"
+cluster TESTS
+  description 
+  "The structure of the tests"
+cluster SOURCE_CODE_MANAGEMENT 
+  description 
+  "The organisation of the source code"
+end
+
+cluster_chart STATUSES
+explanation
+  "The outcomes of a test run"
+class STATUS
+description
+  "The outcome of any test run"
+class SUCCESS
+description
+  "The outcome of a successful test run"
+class FAILURE
+description
+  "The outcome of a test run with one or more failures"
+class RUNNING
+description
+  "The status of a test in progress"
+class ERROR
+description
+  "The status of a test run which was unable to run any tests"
+end
+
+cluster_chart HARDWARE
+end
+
+cluster_chart SOFTWARE
+end
+
+cluster_chart TESTS
+end
+
+cluster_chart SOURCE_CODE_MANAGEMENT
+end
+
+class_chart STATUS
+end
