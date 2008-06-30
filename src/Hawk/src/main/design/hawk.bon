@@ -46,6 +46,17 @@ description
 class ERROR
 description
   "The status of a test run which was unable to run any tests"
+class TIMED_OUT
+description
+  "The state of having failed to complete a build"
+end
+
+cluster_chart BUILDS
+explanation
+  ""
+class QUEUE
+description
+  ""
 end
 
 cluster_chart HARDWARE
@@ -61,4 +72,19 @@ cluster_chart SOURCE_CODE_MANAGEMENT
 end
 
 class_chart STATUS
+end
+
+class_chart SUCCESS
+end
+
+class_chart FAILURE
+end
+
+class_chart RUNNING
+end
+
+class_chart ERROR
+end
+
+class_chart TIMED_OUT
 end
