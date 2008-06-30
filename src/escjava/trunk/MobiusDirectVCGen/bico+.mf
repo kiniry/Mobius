@@ -1,2 +1,4 @@
 Main-Class: mobius.directVCGen.bico.Main
 Name: bico+
+Class-Path: bico.jar bcel-5.2.jar escjava.jar junit.jar Javafe2.0.5.jar
+

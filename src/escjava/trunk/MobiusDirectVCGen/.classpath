@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/javac.jar"/>
 	<classpathentry kind="lib" path="lib/bico.jar"/>
 	<classpathentry kind="lib" path="lib/escjava.jar"/>
+	<classpathentry kind="lib" path="lib/bcel-5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
