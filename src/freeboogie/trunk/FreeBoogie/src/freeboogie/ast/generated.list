@@ -7,15 +7,15 @@ AssociativeEvaluator.java
 Transformer.java
 Substitutor.java
 visitor.skeleton
-ArrayType.java
 AssertAssumeCmd.java
 AssignmentCmd.java
 Atom.java
 AtomCast.java
 AtomFun.java
 AtomId.java
-AtomIdx.java
 AtomLit.java
+AtomMapSelect.java
+AtomMapUpdate.java
 AtomNum.java
 AtomOld.java
 AtomQuant.java
@@ -34,8 +34,8 @@ Function.java
 HavocCmd.java
 Identifiers.java
 Implementation.java
-Index.java
 IndexedType.java
+MapType.java
 PrimitiveType.java
 Procedure.java
 Signature.java

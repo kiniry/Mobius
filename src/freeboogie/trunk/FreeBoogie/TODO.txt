@@ -1,3 +1,7 @@
+ . Add the map update expression.
+ . Remove unnecessary null checks from PP for map indices.
+ . There is some duplication between VarCollector and ReadWriteSetFinder.
+   Probably only one should remain.
  . Finish passivate; now you can use fancy generics to deal with arrays
  . Change the grammar and the AST to allow for parallel assignments.
  . Change the grammar, AST, and TC to allow for n-dimensional maps
@@ -42,5 +46,9 @@
  . Change the grammar so it doesn't use syntactic predicates. NOTE:
    You may need to return tuples.
  . Check (during type-check) that I never assign to a variable.
+ . Incorporate IndexedType into UserType, and allow for an arbitrary
+   number of type arguments (besides the name).
+ . Allow multiple map dereferences on the lhs of an assignment, but
+   at least give a warning that it is dangerous.
 
 vim:spell:ts=3:sw=3:fdm=manual:

@@ -15,11 +15,10 @@ public class TypeUtils {
   
   // TODO: reuse this code for TypeChecker.sub. how?
   
-  private static boolean eq(ArrayType a, ArrayType b) {
+  private static boolean eq(MapType a, MapType b) {
     return
       eq(a.getElemType(), b.getElemType()) &&
-      eq(a.getRowType(), b.getRowType()) &&
-      eq(a.getColType(), b.getColType());
+      eq(a.getIdxType(), b.getIdxType());
   }
   
   private static boolean eq(PrimitiveType a, PrimitiveType b) {
@@ -46,10 +45,11 @@ public class TypeUtils {
    * @return the type {@code a} striped of predicates
    */
   public static Type stripDep(Type a) {
-    if (a instanceof ArrayType) {
-      ArrayType sa = (ArrayType)a;
-      return ArrayType.mk(stripDep(sa.getRowType()), 
-        stripDep(sa.getColType()), stripDep(sa.getElemType()));
+    if (a instanceof MapType) {
+      MapType sa = (MapType)a;
+      return MapType.mk(
+        (TupleType)stripDep(sa.getIdxType()), 
+        stripDep(sa.getElemType()));
     } else if (a instanceof IndexedType) {
       IndexedType sa = (IndexedType)a;
       return IndexedType.mk(stripDep(sa.getParam()), stripDep(sa.getType()));
@@ -96,8 +96,8 @@ public class TypeUtils {
   public static boolean eq(Type a, Type b) {
     if (a == b) return true;
     if (a == null ^ b == null) return false;
-    if (a instanceof ArrayType && b instanceof ArrayType)
-      return eq((ArrayType)a, (ArrayType)b);
+    if (a instanceof MapType && b instanceof MapType)
+      return eq((MapType)a, (MapType)b);
     else if (a instanceof PrimitiveType && b instanceof PrimitiveType)
       return eq((PrimitiveType)a, (PrimitiveType)b);
     else if (a instanceof IndexedType && b instanceof IndexedType)
@@ -117,12 +117,11 @@ public class TypeUtils {
    */
   public static boolean hasDep(Type t) {
     if (t instanceof DepType) return true;
-    else if (t instanceof ArrayType) {
-      ArrayType st = (ArrayType)t;
+    else if (t instanceof MapType) {
+      MapType st = (MapType)t;
       return 
         hasDep(st.getElemType()) || 
-        hasDep(st.getRowType()) || 
-        hasDep(st.getRowType()); 
+        hasDep(st.getIdxType());
     } else if (t instanceof IndexedType) {
       IndexedType st = (IndexedType)t;
       return hasDep(st.getParam()) || hasDep(st.getType());

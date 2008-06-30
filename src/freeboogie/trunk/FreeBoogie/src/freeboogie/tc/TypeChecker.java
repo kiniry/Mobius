@@ -219,11 +219,10 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
       UserType tt = (UserType)t;
       if (tt.getName().equals(a)) return UserType.mk(b, tt.loc());
       return t;
-    } else if (t instanceof ArrayType) {
-      ArrayType tt = (ArrayType)t;
-      return ArrayType.mk(
-        subst(tt.getRowType(), a, b),
-        subst(tt.getColType(), a, b),
+    } else if (t instanceof MapType) {
+      MapType tt = (MapType)t;
+      return MapType.mk(
+        (TupleType)subst(tt.getIdxType(), a, b),
         subst(tt.getElemType(), a, b),
         tt.loc());
     } else if (t instanceof IndexedType) {
@@ -244,11 +243,8 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     return a.getPtype() == b.getPtype();
   }
   
-  private boolean sub(ArrayType a, ArrayType b) {
-    if (!sub(b.getRowType(), a.getRowType())) return false;
-    if (a.getColType()==null ^ b.getColType() == null) return false;
-    else if (a.getColType() != null)
-      if (!sub(b.getColType(), a.getColType())) return false;
+  private boolean sub(MapType a, MapType b) {
+    if (!sub(b.getIdxType(), a.getIdxType())) return false;
     return sub(a.getElemType(), b.getElemType());
   }
   
@@ -319,8 +315,8 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     // the main check
     if (a instanceof PrimitiveType && b instanceof PrimitiveType)
       return sub((PrimitiveType)a, (PrimitiveType)b);
-    else if (a instanceof ArrayType && b instanceof ArrayType)
-      return sub((ArrayType)a, (ArrayType)b);
+    else if (a instanceof MapType && b instanceof MapType)
+      return sub((MapType)a, (MapType)b);
     else if (a instanceof UserType && b instanceof UserType) 
       return sub((UserType)a, (UserType)b);
     else if (a instanceof IndexedType && b instanceof IndexedType)
@@ -373,11 +369,10 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
       return TupleType.mk(
           substRealType(tt.getType()), 
           (TupleType)substRealType(tt.getTail()));
-    } else if (t instanceof ArrayType) {
-      ArrayType at = (ArrayType)t;
-      return ArrayType.mk(
-          substRealType(at.getRowType()),
-          substRealType(at.getColType()),
+    } else if (t instanceof MapType) {
+      MapType at = (MapType)t;
+      return MapType.mk(
+          (TupleType)substRealType(at.getIdxType()),
           substRealType(at.getElemType()));
     } else if (t instanceof IndexedType) {
       IndexedType it = (IndexedType)t;
@@ -606,30 +601,48 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
 
   @Override
-  public Type eval(AtomIdx atomIdx, Atom atom, Index idx) {
+  public Type eval(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
     Type t = strip(atom.eval(this));
     if (t == errType) return errType;
-    if (!(t instanceof ArrayType)) {
+    if (!(t instanceof MapType)) {
       errors.add(new FbError(FbError.Type.NEED_ARRAY, atom));
       return errType;
     }
-    ArrayType at = (ArrayType)t;
+    MapType at = (MapType)t;
 
     // look at indexing types
-    typeVarEnter(atomIdx);
-    check(idx.getA().eval(this), at.getRowType(), idx.getA());
-    if (idx.getB() != null)
-      check(idx.getB().eval(this), at.getColType(), idx.getB());
-
-    Type et = checkRealType(at.getElemType(), atomIdx);
-    typeVarExit(atomIdx);
-    typeOf.put(atomIdx, et);
+    typeVarEnter(atomMapSelect);
+    check(idx.eval(this), at.getIdxType(), idx);
+    Type et = checkRealType(at.getElemType(), atomMapSelect);
+    typeVarExit(atomMapSelect);
+    typeOf.put(atomMapSelect, et);
     return et;
   }
   
+  @Override
+  public Type eval(AtomMapUpdate atomMapUpdate, Atom atom, Exprs idx, Expr val) {
+    typeVarEnter(atomMapUpdate);
+    Type t = strip(atom.eval(this));
+    Type ti = strip(idx.eval(this));
+    Type tv = strip(val.eval(this));
+    if (t == errType || ti == errType || tv == errType) return errType;
+    MapType mt;
+    if (!(t instanceof MapType)) {
+      errors.add(new FbError(FbError.Type.NEED_ARRAY, atom));
+      typeVarExit(atomMapUpdate);
+      return errType;
+    }
+    mt = (MapType)t;
+    check(idx.eval(this), mt.getIdxType(), idx);
+    check(tv, mt.getElemType(), val);
+    typeVarExit(atomMapUpdate);
+    typeOf.put(atomMapUpdate, mt);
+    return mt;
+  }
+
   // === visit commands ===
   @Override
-  public Type eval(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
+  public Type eval(AssignmentCmd assignmentCmd, AtomId lhs, Expr rhs) {
     Type lt = strip(lhs.eval(this));
     Type rt = strip(rhs.eval(this));
     typeVarEnter(assignmentCmd);

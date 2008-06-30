@@ -119,13 +119,10 @@ public class PrettyPrinter extends Transformer {
   // === the visiting methods ===
   
   @Override
-  public void see(ArrayType arrayType, Type rowType, Type colType, Type elemType) {
+  public void see(MapType arrayType, TupleType idxType, Type elemType) {
     say("[");
-    rowType.eval(this);
-    if (colType != null) {
-      say(", ");
-      colType.eval(this);
-    }
+    assert !prefixByBq;
+    if (idxType != null) idxType.eval(this);
     say("]");
     elemType.eval(this);
   }
@@ -143,7 +140,7 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
+  public void see(AssignmentCmd assignmentCmd, AtomId lhs, Expr rhs) {
     lhs.eval(this);
     say(" := ");
     rhs.eval(this);
@@ -189,9 +186,21 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AtomIdx atomIdx, Atom atom, Index idx) {
+  public void see(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
     atom.eval(this);
-    idx.eval(this);
+    say("[");
+    if (idx != null) idx.eval(this);
+    say("]");
+  }
+
+  @Override
+  public void see(AtomMapUpdate atomMapUpdate, Atom atom, Exprs idx, Expr val) {
+    atom.eval(this);
+    say("[");
+    if (idx != null) idx.eval(this);
+    say(" := ");
+    val.eval(this);
+    say("]");
   }
 
   @Override
@@ -363,17 +372,6 @@ public class PrettyPrinter extends Transformer {
     body.eval(this);
     nl();
     if (tail != null) tail.eval(this);
-  }
-
-  @Override
-  public void see(Index index, Expr a, Expr b) {
-    say("[");
-    a.eval(this);
-    if (b != null) {
-      say(", ");
-      b.eval(this);
-    }
-    say("]");
   }
 
   @Override

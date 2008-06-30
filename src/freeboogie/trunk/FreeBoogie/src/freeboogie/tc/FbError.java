@@ -30,7 +30,7 @@ public class FbError {
     IP_CNT_MISMATCH("Implementation-Procedure parameter count mismatch."),
     DEP_IMPL_SIG("Dependent type in implementation signature."),
     PROC_MISSING("Implementation without procedure."),
-    NEED_ARRAY("Must be an array.");
+    NEED_ARRAY("Must be a map.");
 
     private final String templ;
     public String templ() { return templ; }

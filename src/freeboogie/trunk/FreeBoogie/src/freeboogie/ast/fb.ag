@@ -20,8 +20,8 @@ Implementation = Signature! sig, Body! body,
 
 
 // Types and constants
-Type :> PrimitiveType, UserType, ArrayType, IndexedType, DepType, TupleType;
-ArrayType = Type! rowType, Type colType, Type! elemType;
+Type :> PrimitiveType, UserType, MapType, IndexedType, DepType, TupleType;
+MapType = TupleType! idxType, Type! elemType;
 PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY, ERROR) ptype;
 IndexedType = Type! param, Type! type;
 DepType = Type! type, Expr! pred;
@@ -48,7 +48,7 @@ Block = String! name, Command cmd, Identifiers succ, Block tail;
 
 // Commands
 Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
-AssignmentCmd = Expr! lhs, Expr! rhs; // TODO: define exactly what lhs can be
+AssignmentCmd = AtomId! lhs, Expr! rhs;
 AssertAssumeCmd = enum(CmdType: ASSERT, ASSUME) type, 
                   Identifiers typeVars, Expr! expr;
 HavocCmd = Identifiers! ids;
@@ -60,7 +60,9 @@ BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE,
                     GE, GT, SUBTYPE, EQUIV, IMPLIES, AND, OR) op,
            Expr! left, Expr! right;
 UnaryOp = enum(Op: MINUS, NOT) op, Expr! e;
-Atom :> AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant, AtomIdx;
+Atom :> 
+    AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant, 
+    AtomMapSelect, AtomMapUpdate;
 AtomLit = enum(AtomType: FALSE, TRUE, NULL) val;
 AtomNum = BigInteger val;
 AtomId = String! id, TupleType types;
@@ -69,8 +71,8 @@ AtomOld = Expr! e;
 AtomCast = Expr! e, Type! type;
 AtomQuant = enum(QuantType: EXISTS, FORALL) quant, Declaration! vars,
             Trigger trig, Expr! e;
-AtomIdx = Atom! atom, Index! idx;
-Index = Expr! a, Expr b;
+AtomMapSelect = Atom! atom, Exprs! idx;
+AtomMapUpdate = Atom! atom, Exprs! idx, Expr! val;
 
 // Some simple lists
 Trigger = String label, Exprs! exprs, Trigger tail;

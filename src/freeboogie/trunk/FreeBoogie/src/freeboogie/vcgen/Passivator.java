@@ -158,39 +158,18 @@ public class Passivator extends Transformer {
   }
 
   @Override
-  public AssertAssumeCmd eval(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
+  public AssertAssumeCmd eval(AssignmentCmd assignmentCmd, AtomId lhs, Expr rhs) {
     AssertAssumeCmd result = null;
     currentCommand = assignmentCmd;
     Expr value = (Expr)rhs.eval(this);
-    if (lhs instanceof AtomId) {
-      AtomId id = (AtomId)lhs;
-      VariableDecl vd = (VariableDecl)tc.getST().ids.def(id);
-      result = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
+    VariableDecl vd = (VariableDecl)tc.getST().ids.def(lhs);
+    result = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
         BinaryOp.mk(BinaryOp.Op.EQ,
-          AtomId.mk(id.getId()+"$$"+getIdx(writeIdx, vd), id.getTypes(), id.loc()),
+          AtomId.mk(
+            lhs.getId()+"$$"+getIdx(writeIdx, vd), 
+            lhs.getTypes(), 
+            lhs.loc()),
           value));
-    } else if (lhs instanceof AtomIdx) {
-      AtomIdx ai = (AtomIdx)lhs;
-      AtomId id = (AtomId)ai.getAtom();
-      Index idx = ai.getIdx();
-      VariableDecl vd = (VariableDecl)tc.getST().ids.def(id);
-      Exprs indexAndValue = Exprs.mk(value, null);
-      String name = "$$UPDATE1D";
-      if (idx.getB() != null) {
-        name = "$$UPDATE2D";
-        indexAndValue = Exprs.mk((Expr)idx.getB().eval(this), indexAndValue);
-      }
-      indexAndValue = Exprs.mk((Expr)idx.getA().eval(this), indexAndValue);
-      result = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
-        BinaryOp.mk(
-          BinaryOp.Op.EQ,
-          AtomId.mk(id.getId()+"$$"+getIdx(writeIdx, vd), id.getTypes(), id.loc()),
-          AtomFun.mk(
-            name,
-            null,
-            Exprs.mk(AtomId.mk(id.getId()+"$$"+getIdx(readIdx,vd), id.getTypes()),
-            indexAndValue))));
-    } else assert false; // Hmm, what could it be?
     currentCommand = null;
     return result;
   }
@@ -212,6 +191,17 @@ public class Passivator extends Transformer {
     int idx = context.getFirst() ? getIdx(writeIdx, vd) : getIdx(readIdx, vd);
     if (idx == 0) return atomId;
     return AtomId.mk(id + "$$" + idx, types, atomId.loc());
+  }
+
+  @Override
+  public VariableDecl eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
+    int last = newVarsCnt.containsKey(variableDecl) ? newVarsCnt.get(variableDecl) : 0;
+    Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
+    if (newTail != tail)
+      variableDecl = VariableDecl.mk(name, type, typeVars, newTail, variableDecl.loc());
+    for (int i = 1; i <= last; ++i)
+      variableDecl = VariableDecl.mk(name+"$$"+i, type, typeVars, variableDecl);
+    return variableDecl;
   }
 
   // === helpers ===

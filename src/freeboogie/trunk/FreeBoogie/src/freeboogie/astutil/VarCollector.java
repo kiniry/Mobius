@@ -37,15 +37,8 @@ public class VarCollector extends Transformer {
   }
 
   @Override
-  public void see(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
-    if (lhs instanceof AtomId)
-      wv.add(st.ids.def((AtomId)lhs));
-    else if (lhs instanceof AtomIdx) {
-      AtomIdx ai = (AtomIdx) lhs;
-      if (ai.getAtom() instanceof AtomId)
-        wv.add(st.ids.def((AtomId)ai.getAtom()));
-      ai.getIdx().eval(this);
-    }
+  public void see(AssignmentCmd assignmentCmd, AtomId lhs, Expr rhs) {
+    wv.add(st.ids.def(lhs));
     rhs.eval(this);
   }
 }

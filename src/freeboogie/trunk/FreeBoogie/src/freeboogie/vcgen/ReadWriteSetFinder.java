@@ -57,7 +57,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
   }
 
   @Override
-  public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(AssignmentCmd assignmentCmd, Expr lhs, Expr rhs) {
+  public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(AssignmentCmd assignmentCmd, AtomId lhs, Expr rhs) {
     assert !context.getFirst();
     Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> r = assocOp.zero();
     context.addFirst(true);
@@ -68,12 +68,14 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
   }
 
   @Override
-  public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(AtomIdx atomIdx, Atom atom, Index idx) {
+  public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(AtomMapSelect atomIdx, Atom atom, Exprs idx) {
     Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> r = assocOp.zero();
     r = assocOp.plus(r, atom.eval(this));
-    context.addFirst(false);
-    r = assocOp.plus(r, idx.eval(this));
-    context.removeFirst();
+    if (idx != null) {
+      context.addFirst(false);
+      r = assocOp.plus(r, idx.eval(this));
+      context.removeFirst();
+    }
     return memo(atomIdx, r);
   }
 

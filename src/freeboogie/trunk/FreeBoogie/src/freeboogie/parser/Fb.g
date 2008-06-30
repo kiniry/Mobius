@@ -140,11 +140,16 @@ block_succ returns [Identifiers v]:
 ;
 	
 command	returns [Command v]:
-    a=atom_id (i=index)? ':=' b=expr ';' 
-      { if(ok) { 
-          Atom lhs = $a.v;
-          if ($i.v!=null) lhs=AtomIdx.mk(lhs,$i.v,astLoc($a.v));
-          $v=AssignmentCmd.mk(lhs,$b.v,astLoc($a.v));
+    a=atom_id i=index_list ':=' b=expr ';' 
+      { if(ok) {
+          Expr rhs = $b.v;
+          ArrayList<Atom> lhs = new ArrayList<Atom>();
+          lhs.add($a.v);
+          for (int k = 1; k < $i.v.size(); ++k)
+            lhs.add(AtomMapSelect.mk(lhs.get(k-1), $i.v.get(k-1)));
+          for (int k = $i.v.size()-1; k>=0; --k)
+            rhs = AtomMapUpdate.mk(lhs.get(k), $i.v.get(k), rhs);
+          $v=AssignmentCmd.mk($a.v,rhs,astLoc($a.v));
       }}
   | t='assert' ('<' tv=id_list '>')? expr ';'
       { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSERT,$tv.v,$expr.v,tokLoc($t)); }
@@ -153,7 +158,7 @@ command	returns [Command v]:
   | t='havoc' id_list ';'
       { if(ok) $v=HavocCmd.mk($id_list.v,tokLoc($t));}
   | t='call' call_lhs
-    n=ID ('<' st=simple_type_list '>')? '(' (r=expr_list)? ')' ';'
+    n=ID ('<' st=quoted_simple_type_list '>')? '(' (r=expr_list)? ')' ';'
       { if(ok) $v=CallCmd.mk($n.text,$st.v,$call_lhs.v,$r.v,tokLoc($t)); }
 ;
 
@@ -162,8 +167,8 @@ call_lhs returns [Identifiers v]:
   | {$v=null;}
 ;
 	
-index returns [Index v]:
-  '[' a=expr (',' b=expr)? ']' { if(ok) $v = Index.mk($a.v, $b.v,astLoc($a.v)); }
+index returns [Exprs v]:
+  '[' expr_list ']' { $v = $expr_list.v; }
 ;
 
 /* BEGIN expression grammar.
@@ -223,7 +228,7 @@ expr_f returns [Expr v]:
     atom index? 
       { if (ok) {
          if ($index.v==null) $v=$atom.v;
-          else $v=AtomIdx.mk($atom.v,$index.v,astLoc($atom.v));
+          else $v=AtomMapSelect.mk($atom.v,$index.v,astLoc($atom.v));
       }}
   | '(' expr ')' {$v=$expr.v;}
   | t='-' a=expr_f   {if(ok) $v=UnaryOp.mk(UnaryOp.Op.MINUS,$a.v,tokLoc($t));}
@@ -261,7 +266,7 @@ atom returns [Atom v]:
   | t='true'  { if(ok) $v = AtomLit.mk(AtomLit.AtomType.TRUE,tokLoc($t)); }
   | t='null'  { if(ok) $v = AtomLit.mk(AtomLit.AtomType.NULL,tokLoc($t)); }
   | t=INT     { if(ok) $v = AtomNum.mk(new BigInteger($INT.text),tokLoc($t)); }
-  |	t=ID ('<' st=simple_type_list '>')? 
+  |	t=ID ('<' st=quoted_simple_type_list '>')? 
               { if(ok) $v = AtomId.mk($t.text,$st.v,tokLoc($t)); }
     ('(' (p=expr_list?) ')'
               { if(ok) $v = AtomFun.mk($t.text,$st.v,$p.v,tokLoc($t)); }
@@ -275,7 +280,7 @@ atom returns [Atom v]:
 ;
 
 atom_id returns [AtomId v]:
-    ID ('<' st=simple_type_list '>')?
+    ID ('<' st=quoted_simple_type_list '>')?
       { if(ok) $v = AtomId.mk($ID.text,$st.v,tokLoc($ID)); }
 ;
 
@@ -303,8 +308,13 @@ id_list	returns [Identifiers v]:
     a=atom_id (',' r=id_list)? { if(ok) $v=Identifiers.mk($a.v,$r.v,astLoc($a.v)); }
 ;
 
+quoted_simple_type_list returns [TupleType v]:
+    '`' h=simple_type (',' t=quoted_simple_type_list)?
+  { if (ok) $v=TupleType.mk($h.v,$t.v,astLoc($h.v)); }
+;
+
 simple_type_list returns [TupleType v]:
-    '`' h=simple_type (',' t=simple_type_list)?
+    h=simple_type (',' t=simple_type_list)?
   { if (ok) $v=TupleType.mk($h.v,$t.v,astLoc($h.v)); }
 ;
 
@@ -328,6 +338,11 @@ command_list returns [ArrayList<Command> v]:
   {if (ok) $v = new ArrayList<Command>();}
   (c=command {if (ok) $v.add($c.v);})*
 ;
+
+index_list returns [ArrayList<Exprs> v]:
+  {if (ok) $v = new ArrayList<Exprs>();}
+  (i=index {if (ok) $v.add($i.v);})*
+;
 	
 // END list rules 
 
@@ -339,8 +354,8 @@ simple_type returns [Type v]:
   | t='name' { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.NAME,tokLoc($t)); }
   | t='any'  { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.ANY,tokLoc($t)); }
   | t=ID     { if(ok) $v = UserType.mk($ID.text,tokLoc($t)); }
-  | t='[' r=simple_type (',' c=simple_type)? ']' e=simple_type
-             { if(ok) $v = ArrayType.mk($r.v,$c.v,$e.v,tokLoc($t)); }
+  | t='[' it=simple_type_list ']' et=simple_type
+             { if(ok) $v = MapType.mk($it.v,$et.v,tokLoc($t)); }
   | t='<' p=simple_type '>' st=simple_type
              { if(ok) $v = IndexedType.mk($p.v,$st.v,tokLoc($t)); }
 ;
