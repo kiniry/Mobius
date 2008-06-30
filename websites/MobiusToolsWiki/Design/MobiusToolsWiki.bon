@@ -43,6 +43,16 @@ cluster_chart STATUSES
 end
 
 cluster_chart PLUGINS
+class Prover description "A theorem prover"
+class InteractiveProver description "An interactive theorem prover"
+class AutomatedTheoremProver description "An automated theorem prover"
+class CoqProver description "Theorem prover for Coq language"
+class PVSProver description "Theorem prover for PVS langauge"
+class Isabelle description "Isabelle theorem prover"
+class Simplify description "Simplify theorem prover"
+class CVC3Prover description "CVC3 theorem prover"
+class Fx7Prover description "Fx7 theorem prover"
+class YicesProver description "Yices theorem prover"
 end
 
 cluster_chart LANGUAGES
