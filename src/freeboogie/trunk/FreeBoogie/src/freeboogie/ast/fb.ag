@@ -11,7 +11,7 @@ ConstDecl=     String! id, Type! type, Declaration tail;
 // These are declarations that may introduce type variables
 Axiom =        Identifiers typeVars, Expr! expr, Declaration tail;
 Function =     Signature! sig, Declaration tail;
-VariableDecl = String name, Type! type, 
+VariableDecl = String! name, Type! type, 
                Identifiers typeVars, Declaration tail;
 Procedure =    Signature! sig, Specification spec, 
                Declaration tail;

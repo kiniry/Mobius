@@ -122,7 +122,7 @@ public class PrettyPrinter extends Transformer {
   public void see(MapType arrayType, TupleType idxType, Type elemType) {
     say("[");
     assert !prefixByBq;
-    if (idxType != null) idxType.eval(this);
+    idxType.eval(this);
     say("]");
     elemType.eval(this);
   }
@@ -189,7 +189,7 @@ public class PrettyPrinter extends Transformer {
   public void see(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
     atom.eval(this);
     say("[");
-    if (idx != null) idx.eval(this);
+    idx.eval(this);
     say("]");
   }
 
@@ -197,7 +197,7 @@ public class PrettyPrinter extends Transformer {
   public void see(AtomMapUpdate atomMapUpdate, Atom atom, Exprs idx, Expr val) {
     atom.eval(this);
     say("[");
-    if (idx != null) idx.eval(this);
+    idx.eval(this);
     say(" := ");
     val.eval(this);
     say("]");
@@ -459,15 +459,13 @@ public class PrettyPrinter extends Transformer {
   @Override
   public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     if (skipVar==0) say("var ");
-    if (name != null) {
-      say(name);
-      if (typeVars != null) {
-        say("<");
-        typeVars.eval(this);
-        say(">");
-      }
-      say(" : ");
+    say(name);
+    if (typeVars != null) {
+      say("<");
+      typeVars.eval(this);
+      say(">");
     }
+    say(" : ");
     type.eval(this);
     if (skipVar>0) {
       if (tail != null) say(", ");

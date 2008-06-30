@@ -1,5 +1,3 @@
- . Add the map update expression.
- . Remove unnecessary null checks from PP for map indices.
  . There is some duplication between VarCollector and ReadWriteSetFinder.
    Probably only one should remain.
  . Finish passivate; now you can use fancy generics to deal with arrays

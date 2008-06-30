@@ -320,7 +320,7 @@ simple_type_list returns [TupleType v]:
 
 opt_id_type_list returns [Declaration v]:
   (hi=ID ('<' tv=id_list '>')? ':')? ht=type (',' t=opt_id_type_list)? 
-    { if(ok) $v = VariableDecl.mk(($hi==null)?null:$hi.text, $ht.v, $tv.v,$t.v,astLoc($ht.v)); }
+    { if(ok) $v = VariableDecl.mk($hi==null?Id.get("unnamed"):$hi.text, $ht.v, $tv.v,$t.v,astLoc($ht.v)); }
 ;
 
 id_type_list returns [Declaration v]:
