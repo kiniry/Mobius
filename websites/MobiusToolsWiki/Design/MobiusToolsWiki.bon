@@ -53,6 +53,11 @@ cluster_chart STATUSES
 end
 
 cluster_chart PLUGINS
+explanation "Plugins are software subcomponents which interact with a software platform or framework e.g. Eclipse.  For our purposes, a component is an object that provides a certain type of service within the context of the application. There is at most one instance of any component: components are singletons. That implies that a component does not map to an entity of the application's object model; instead, compoennts represent functional subsystems. Components can declare extension points that other components can plug in to. This allows one component to enhance the functionality of the component it extends, without the extended component even knowing that the extending component exists. All that is needed is that the original component exposes – and uses – one or more extension points See Trac Component Architecture for an example of a Plugin Architecture. Other examples are Maven and Hudson"
+class PLUGIN description "A software component that interacts with other components via a shared framework and platform"
+class JML_FOLDING_PLUGIN description "An Eclipse plugin that extends the text editor so to permit folding of JML syntax"
+class PROVER_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of theorem proving languages"
+class UMBRA_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of Java Bytecode with embedded Bytecode Modeling Language (BML) annotations"
 end
 
 cluster_chart LANGUAGES
@@ -95,4 +100,16 @@ class_chart YICES_PROVER
 end
 
 class_chart SIMPLIFY_PROVER
+end
+
+class_chart PLUGIN
+end
+
+class_chart UMBRA_EDITOR_PLUGIN
+end
+
+class_chart JML_FOLDING_PLUGIN
+end
+
+class_chart PROVER_EDITOR_PLUGIN
 end
