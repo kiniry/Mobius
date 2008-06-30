@@ -32,3 +32,10 @@ Also:
 (14) and (15) imply
 
 16. It would be nice if it was able to test some parts of the Eclipse platform
+
+Also:
+
+17. It must provide Automated Regression Testing i.e. given a program, a set of parameters and inputs; 
+	verify that the outputs have or have not changed.  This does not assume the the existing outputs
+	are correct, only that something has changed.  It might not be correct to store the expected results in
+	subversion; but if we do then a naming convention will be needed
