@@ -225,10 +225,14 @@ expr_e returns [Expr v]:
 ;
 
 expr_f returns [Expr v]:
-    atom index? 
+    m=atom ('[' idx=expr_list (':=' val=expr)? ']')?
       { if (ok) {
-         if ($index.v==null) $v=$atom.v;
-          else $v=AtomMapSelect.mk($atom.v,$index.v,astLoc($atom.v));
+        if ($idx.v == null) 
+          $v=$m.v;
+        else if ($val.v == null) 
+          $v=AtomMapSelect.mk($m.v,$idx.v,astLoc($m.v));
+        else 
+          $v=AtomMapUpdate.mk($m.v,$idx.v,$val.v,astLoc($m.v));
       }}
   | '(' expr ')' {$v=$expr.v;}
   | t='-' a=expr_f   {if(ok) $v=UnaryOp.mk(UnaryOp.Op.MINUS,$a.v,tokLoc($t));}

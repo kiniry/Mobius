@@ -15,6 +15,12 @@ import freeboogie.util.*;
  *
  * NOTE: You can turn the {@code CSeq} into a set by iterating and
  * building a {@code HashSet}.
+ *
+ * TODO This is supposed to be more efficient than 
+ * {@code freeboogie.astutil.VarCollector} but I'm not sure if
+ * the extra complexity is worth it.
+ *
+ * @see freeboogie.astutil.VarCollector
  */
 public class ReadWriteSetFinder 
 extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {

@@ -7,7 +7,11 @@ import freeboogie.tc.SymbolTable;
 /**
  * Collects the declarations of variables that are read or written.
  *
+ * TODO Decide whether I should transition to this from 
+ * {@code ReadWriteSetFinder}.
+ *
  * @author rgrig
+ * @see freeboogie.vcgen.ReadWriteSetFinder
  */
 public class VarCollector extends Transformer {
   // the symbol table used to find declarations

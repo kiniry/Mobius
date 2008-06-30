@@ -1,6 +1,4 @@
- . There is some duplication between VarCollector and ReadWriteSetFinder.
-   Probably only one should remain.
- . Finish passivate; now you can use fancy generics to deal with arrays
+ . Finish passivate.
  . Change the grammar and the AST to allow for parallel assignments.
  . Change the grammar, AST, and TC to allow for n-dimensional maps
    (oh, btw, rename arrays into maps), and repeated selections even
@@ -48,5 +46,7 @@
    number of type arguments (besides the name).
  . Allow multiple map dereferences on the lhs of an assignment, but
    at least give a warning that it is dangerous.
+ . There is some duplication between VarCollector and ReadWriteSetFinder.
+   Probably only one should remain.
 
 vim:spell:ts=3:sw=3:fdm=manual:
