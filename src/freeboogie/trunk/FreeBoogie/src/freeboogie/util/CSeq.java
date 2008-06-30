@@ -65,5 +65,29 @@ public class CSeq<E> implements Iterable<E> {
     }
     return r;
   }
+
+  // === small tests ===
+  public static void main(String args[]) {
+    CSeq<Integer> empty = CSeq.mk();
+    System.out.println("=== empty:");
+    for (Integer x : empty) System.out.println(x);
+
+    CSeq<Integer> one = CSeq.mk(1);
+    System.out.println("=== 1:");
+    for (Integer x : one) System.out.println(x);
+
+    CSeq<Integer> bigger = CSeq.mk(
+      CSeq.mk(
+        one,
+        CSeq.mk(2)),
+      CSeq.mk(
+        CSeq.mk(2),
+        one));
+    System.out.println("=== 1,2,2,1:");
+    for (Integer x : bigger) System.out.println(x);
+
+    System.out.println("=== 1:");
+    for (Integer x : one) System.out.println(x);
+  }
 }
 

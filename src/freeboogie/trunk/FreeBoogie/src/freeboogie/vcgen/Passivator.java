@@ -46,17 +46,17 @@ public class Passivator extends Transformer {
   static private final Logger log = Logger.getLogger("freeboogie.vcgen");
 
   private TcInterface tc;
-  private HashMap<VariableDecl, HashMap<Command, Integer>> readIdx;
-  private HashMap<VariableDecl, HashMap<Command, Integer>> writeIdx;
+  private HashMap<VariableDecl, HashMap<Block, Integer>> readIdx;
+  private HashMap<VariableDecl, HashMap<Block, Integer>> writeIdx;
   private HashMap<VariableDecl, Integer> newVarsCnt;
   private HashMap<Command, HashSet<VariableDecl>> commandWs;
   private ReadWriteSetFinder rwsf;
 
   private VariableDecl currentVar;
-  private HashMap<Command, Integer> currentReadIdxCache;
-  private HashMap<Command, Integer> currentWriteIdxCache;
+  private HashMap<Block, Integer> currentReadIdxCache;
+  private HashMap<Block, Integer> currentWriteIdxCache;
   private SimpleGraph<Block> currentFG;
-  private Command currentCommand;
+  private Block currentBlock;
 
   private Deque<Boolean> context; // true = write, false = read
   private int belowOld;
@@ -65,8 +65,8 @@ public class Passivator extends Transformer {
   
   public Declaration process(Declaration ast, TcInterface tc) {
     this.tc = tc;
-    readIdx = new LinkedHashMap<VariableDecl, HashMap<Command, Integer>>();
-    writeIdx = new LinkedHashMap<VariableDecl, HashMap<Command, Integer>>();
+    readIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
+    writeIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
     newVarsCnt = new LinkedHashMap<VariableDecl, Integer>();
     commandWs = new LinkedHashMap<Command, HashSet<VariableDecl>>();
     rwsf = new ReadWriteSetFinder(tc.getST());
@@ -83,6 +83,10 @@ public class Passivator extends Transformer {
   public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
     currentFG = tc.getFlowGraph(implementation);
     assert currentFG != null; // You should tell me the flowgraph beforehand
+    if (currentFG.hasCycle()) {
+      if (tail != null) tail = (Declaration)tail.eval(this);
+      return Implementation.mk(sig, body, tail);
+    }
     assert !currentFG.hasCycle(); // You should cut cycles first
 
     // Collect all variables that are assigned to
@@ -93,8 +97,8 @@ public class Passivator extends Transformer {
 
     for (VariableDecl vd : allIds) {
       currentVar = vd;
-      currentReadIdxCache = new LinkedHashMap<Command, Integer>();
-      currentWriteIdxCache = new LinkedHashMap<Command, Integer>();
+      currentReadIdxCache = new LinkedHashMap<Block, Integer>();
+      currentWriteIdxCache = new LinkedHashMap<Block, Integer>();
       readIdx.put(vd, currentReadIdxCache);
       writeIdx.put(vd, currentWriteIdxCache);
       currentFG.iterNode(new Closure<Block>() {
@@ -106,7 +110,7 @@ public class Passivator extends Transformer {
 
     context = new ArrayDeque<Boolean>();
     context.addFirst(false);
-    currentCommand = null;
+    currentBlock = null;
     belowOld = 0;
     body = (Body)body.eval(this);
     context = null;
@@ -120,27 +124,30 @@ public class Passivator extends Transformer {
   // === workers ===
 
   private int compReadIdx(Block b) {
-    if (currentReadIdxCache.containsKey(b.getCmd()))
-      return currentReadIdxCache.get(b.getCmd());
+    if (currentReadIdxCache.containsKey(b))
+      return currentReadIdxCache.get(b);
     int ri = 0;
     for (Block pre : currentFG.from(b))
       ri = Math.max(ri, compWriteIdx(pre));
-    currentReadIdxCache.put(b.getCmd(), ri);
+    currentReadIdxCache.put(b, ri);
     return ri;
   }
 
   private int compWriteIdx(Block b) {
-    if (currentWriteIdxCache.containsKey(b.getCmd()))
-      return currentWriteIdxCache.get(b.getCmd());
+    if (currentWriteIdxCache.containsKey(b))
+      return currentWriteIdxCache.get(b);
     int wi = compReadIdx(b);
-    HashSet<VariableDecl> ws = commandWs.get(b.getCmd());
-    if (ws == null) {
-      ws = new LinkedHashSet<VariableDecl>();
-      for (VariableDecl vd : rwsf.get(b.getCmd()).second) ws.add(vd);
-      commandWs.put(b.getCmd(), ws);
+    if (b.getCmd() != null) {
+      HashSet<VariableDecl> ws = commandWs.get(b.getCmd());
+      if (ws == null) {
+        ws = new LinkedHashSet<VariableDecl>();
+        System.out.println("> processing: " + b.getName());
+        for (VariableDecl vd : rwsf.get(b.getCmd()).second) ws.add(vd);
+        commandWs.put(b.getCmd(), ws);
+      }
+      if (ws.contains(currentVar)) ++wi;
     }
-    if (ws.contains(currentVar)) ++wi;
-    currentWriteIdxCache.put(b.getCmd(), wi);
+    currentWriteIdxCache.put(b, wi);
     int owi = newVarsCnt.containsKey(currentVar) ? newVarsCnt.get(currentVar) : 0;
     newVarsCnt.put(currentVar, Math.max(owi, wi));
     return wi;
@@ -148,10 +155,19 @@ public class Passivator extends Transformer {
 
 
   // === visitors ===
+  @Override
+  public Block eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
+    currentBlock = block;
+    Command newCmd = cmd == null? null : (Command)cmd.eval(this);
+    currentBlock = null;
+    Block newTail = tail == null? null : (Block)tail.eval(this);
+    if (newCmd != cmd || newTail != tail)
+      block = Block.mk(name, newCmd, succ, newTail, block.loc());
+    return block;
+  }
+
   public AssertAssumeCmd eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Identifiers typeVars, Expr expr) {
-    currentCommand = assertAssumeCmd;
     Expr newExpr = (Expr)expr.eval(this);
-    currentCommand = null;
     if (newExpr != expr)
       return AssertAssumeCmd.mk(type, typeVars, newExpr);
     return assertAssumeCmd;
@@ -160,7 +176,6 @@ public class Passivator extends Transformer {
   @Override
   public AssertAssumeCmd eval(AssignmentCmd assignmentCmd, AtomId lhs, Expr rhs) {
     AssertAssumeCmd result = null;
-    currentCommand = assignmentCmd;
     Expr value = (Expr)rhs.eval(this);
     VariableDecl vd = (VariableDecl)tc.getST().ids.def(lhs);
     result = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
@@ -170,7 +185,6 @@ public class Passivator extends Transformer {
             lhs.getTypes(), 
             lhs.loc()),
           value));
-    currentCommand = null;
     return result;
   }
 
@@ -184,7 +198,7 @@ public class Passivator extends Transformer {
 
   @Override
   public AtomId eval(AtomId atomId, String id, TupleType types) {
-    if (currentCommand == null) return atomId;
+    if (currentBlock == null) return atomId;
     Declaration d = tc.getST().ids.def(atomId);
     if (!(d instanceof VariableDecl)) return atomId;
     VariableDecl vd = (VariableDecl)d;
@@ -205,10 +219,10 @@ public class Passivator extends Transformer {
   }
 
   // === helpers ===
-  private int getIdx(HashMap<VariableDecl, HashMap<Command, Integer> > cache, VariableDecl vd) {
+  private int getIdx(HashMap<VariableDecl, HashMap<Block, Integer> > cache, VariableDecl vd) {
     if (belowOld > 0) return 0;
-    Map<Command, Integer> m = cache.get(vd);
+    Map<Block, Integer> m = cache.get(vd);
     if (m == null) return 0; // this variable is never written to
-    return m.get(currentCommand);
+    return m.get(currentBlock);
   }
 }
