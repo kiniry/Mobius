@@ -71,9 +71,15 @@ public class Passivator extends Transformer {
     commandWs = new LinkedHashMap<Command, HashSet<VariableDecl>>();
     rwsf = new ReadWriteSetFinder(tc.getST());
     ast = (Declaration)ast.eval(this);
-    for (Map.Entry<VariableDecl, Integer> e : newVarsCnt.entrySet())
-      System.out.println(">" + e.getKey().getName() + ":" + e.getValue());
-    // TODO Add new globals
+    for (Map.Entry<VariableDecl, Integer> e : newVarsCnt.entrySet()) {
+      for (int i = 1; i <= e.getValue(); ++i) {
+        ast = VariableDecl.mk(
+          e.getKey().getName()+"$$"+i, 
+          e.getKey().getType(), 
+          e.getKey().getTypeVars(), 
+          ast);
+      }
+    }
     return ast;
   }
 
@@ -83,10 +89,6 @@ public class Passivator extends Transformer {
   public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
     currentFG = tc.getFlowGraph(implementation);
     assert currentFG != null; // You should tell me the flowgraph beforehand
-    if (currentFG.hasCycle()) {
-      if (tail != null) tail = (Declaration)tail.eval(this);
-      return Implementation.mk(sig, body, tail);
-    }
     assert !currentFG.hasCycle(); // You should cut cycles first
 
     // Collect all variables that are assigned to
@@ -141,7 +143,6 @@ public class Passivator extends Transformer {
       HashSet<VariableDecl> ws = commandWs.get(b.getCmd());
       if (ws == null) {
         ws = new LinkedHashSet<VariableDecl>();
-        System.out.println("> processing: " + b.getName());
         for (VariableDecl vd : rwsf.get(b.getCmd()).second) ws.add(vd);
         commandWs.put(b.getCmd(), ws);
       }
@@ -215,6 +216,7 @@ public class Passivator extends Transformer {
       variableDecl = VariableDecl.mk(name, type, typeVars, newTail, variableDecl.loc());
     for (int i = 1; i <= last; ++i)
       variableDecl = VariableDecl.mk(name+"$$"+i, type, typeVars, variableDecl);
+    newVarsCnt.remove(variableDecl);
     return variableDecl;
   }
 
