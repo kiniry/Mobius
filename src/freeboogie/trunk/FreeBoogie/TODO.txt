@@ -1,5 +1,3 @@
- . Passivate: Insert out parameter versions as local declarations, not global.
- . Passivate: Make sure out parameters use the last version.
  . Do a profile and fix obvious performance issues.
  . Change the grammar and the AST to allow for parallel assignments.
  . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
@@ -49,5 +47,6 @@
    Probably only one should remain.
  . Update my ViM configuration so it stops inserting // in Java mode
    (see :h 'comments')
+ . Don't allow assignments to input parameters.
 
 vim:spell:ts=3:sw=3:fdm=manual:

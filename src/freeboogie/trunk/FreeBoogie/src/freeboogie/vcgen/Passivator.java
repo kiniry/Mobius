@@ -58,6 +58,7 @@ public class Passivator extends Transformer {
   private SimpleGraph<Block> currentFG;
   private Block currentBlock;
   private HashSet<VariableDecl> allWritten; // by the current implementation
+  private Declaration newLocals;
 
   private Deque<Boolean> context; // true = write, false = read
   private int belowOld;
@@ -92,12 +93,13 @@ public class Passivator extends Transformer {
     assert currentFG != null; // You should tell me the flowgraph beforehand
     assert !currentFG.hasCycle(); // You should cut cycles first
 
-    // Collect all variables that are assigned to
+    // collect all variables that are assigned to
     Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> rwIds = 
       implementation.eval(rwsf);
-    allWritten = new HashSet<VariableDecl>();
+    allWritten = new LinkedHashSet<VariableDecl>();
     for (VariableDecl vd : rwIds.second) allWritten.add(vd);
 
+    // figure out read and write indexes
     for (VariableDecl vd : allWritten) {
       currentVar = vd;
       currentReadIdxCache = new LinkedHashMap<Block, Integer>();
@@ -111,6 +113,7 @@ public class Passivator extends Transformer {
       });
     }
 
+    // transform the body
     context = new ArrayDeque<Boolean>();
     context.addFirst(false);
     currentBlock = null;
@@ -119,6 +122,17 @@ public class Passivator extends Transformer {
     context = null;
     currentFG = null;
 
+    // process out parameters
+    newLocals = body.getVars();
+    sig = Signature.mk(
+      sig.getName(), 
+      sig.getArgs(),
+      newResults((VariableDecl)sig.getResults()),
+      sig.getTypeVars(),
+      sig.loc());
+    body = Body.mk(newLocals, body.getBlocks());
+
+    // process the rest of the program
     if (tail != null) tail = (Declaration)tail.eval(this);
     return Implementation.mk(sig, body, tail);
   }
@@ -245,12 +259,12 @@ public class Passivator extends Transformer {
   @Override
   public VariableDecl eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     int last = newVarsCnt.containsKey(variableDecl) ? newVarsCnt.get(variableDecl) : 0;
+    newVarsCnt.remove(variableDecl);
     Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
     if (newTail != tail)
       variableDecl = VariableDecl.mk(name, type, typeVars, newTail, variableDecl.loc());
     for (int i = 1; i <= last; ++i)
       variableDecl = VariableDecl.mk(name+"$$"+i, type, typeVars, variableDecl);
-    newVarsCnt.remove(variableDecl);
     return variableDecl;
   }
 
@@ -260,5 +274,23 @@ public class Passivator extends Transformer {
     Map<Block, Integer> m = cache.get(vd);
     if (m == null) return 0; // this variable is never written to
     return m.get(currentBlock);
+  }
+
+  private VariableDecl newResults(VariableDecl old) {
+    if (old == null) return null;
+    Integer last = newVarsCnt.get(old);
+    newVarsCnt.remove(old);
+    for (int i = 1; i < last; ++i) {
+      newLocals = VariableDecl.mk(
+        old.getName() + "$$" + i,
+        old.getType(),
+        old.getTypeVars(),
+        newLocals);
+    }
+    return VariableDecl.mk(
+      old.getName() + (last != null && last > 0? "$$" + last : ""),
+      old.getType(),
+      old.getTypeVars(),
+      newResults((VariableDecl)old.getTail()));
   }
 }
