@@ -1,0 +1,10 @@
+<Project filename="&lt;&lt;unnamed project&gt;&gt;" projectName="FreeBoogie">
+  <Jar>classes</Jar>
+  <AuxClasspathEntry>lib/antlr-2.7.7.jar</AuxClasspathEntry>
+  <AuxClasspathEntry>lib/antlr-3.0.1.jar</AuxClasspathEntry>
+  <AuxClasspathEntry>lib/stringtemplate-3.1b1.jar</AuxClasspathEntry>
+  <SrcDir>src</SrcDir>
+  <SuppressionFilter>
+    <LastVersion value="-1" relOp="NEQ"/>
+  </SuppressionFilter>
+</Project>

@@ -103,7 +103,7 @@
   <target name="functional_test" depends="compile" description="run functional tests">
     <exec executable="test/functional/test" dir="test/functional" resolveexecutable="true" />
   </target>
-  
+
   <target name="test" depends="unit_test, functional_test" description="run all tests"></target>
 
   <!-- Cleanup targets -->

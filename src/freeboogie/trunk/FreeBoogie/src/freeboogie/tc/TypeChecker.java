@@ -41,7 +41,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   private static final Logger log = Logger.getLogger("freeboogie.tc");
   
   // used for primitive types (so reference equality is used below)
-  private PrimitiveType boolType, intType, refType, nameType, anyType;
+  private PrimitiveType boolType, intType, refType;
   
   // used to signal an error in a subexpression and to limit
   // errors caused by other errors
@@ -118,8 +118,6 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
     intType = PrimitiveType.mk(PrimitiveType.Ptype.INT);
     refType = PrimitiveType.mk(PrimitiveType.Ptype.REF);
-    nameType = PrimitiveType.mk(PrimitiveType.Ptype.NAME);
-    anyType = PrimitiveType.mk(PrimitiveType.Ptype.ANY);
     errType = PrimitiveType.mk(PrimitiveType.Ptype.ERROR);
     
     typeOf = new HashMap<Expr, Type>();

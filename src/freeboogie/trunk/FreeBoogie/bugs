@@ -1,0 +1,1 @@
+findbugs -textui -project fb.fbp

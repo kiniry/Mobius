@@ -1,34 +1,31 @@
- . Change the grammar and the AST to allow for parallel assignments.
- . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
- . Test typechecker thoroughly and add tests for the 'old' mode.
- . Perhaps introduce dummy names where the user doesn't provide one
-   instead of carrying nulls around, which are hard to track.
- . Write an ant target that runs FindBugs.
- . Does ImplementationChecker treat type vars correctly?
- . The comments and code disagree for TypeChecker.checkExact
+ . A log Formatter that uses a line per record.
  . Desugar dependent types in assumes/asserts
  . Desugar function calls into assumes/asserts (remember that free is special)
    Also remember to havoc LHS and the things that appear in modifies clause.
  . Desugar specs into assumes/asserts (introduces new blocks)
  . Desugar havocs into assignments from fresh variables.
- . Transform BoogiePL expressions into SmtTerms (SmtTermBuilder)
+ . Cut out loops
+ . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
  . Extract sharing in SimplifyProver, or use `flet' for z3
+ . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
+   one Java example. Test end-to-end.
+ . Change the grammar and the AST to allow for parallel assignments.
+ . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
+ . Test typechecker thoroughly and add tests for the 'old' mode.
+ . Does ImplementationChecker treat type vars correctly?
+ . The comments and code disagree for TypeChecker.checkExact
  . When making SmtTerms do small simplifications for "and", "or"
    (such as skip "TRUE", respectively "FALSE"; and return
    neutral element when there are no operands)
- . Cut out loops
  . Make flow graphs reducible
  . Simple interface to parse from strings
  . In some cases Spec# generates (assume ... h1[n1] == h2[n2]...) which
    gets 'fixed' in old mode by adding a generic on procedure/implementation.
    Is this a problem?
- . What is the most elegant way to write frame axioms in FB with generics?
  . Add a "for all types" construct.
  . Hash-consing Type (and subclasses) might simplify code.
  . Test if errors are reported correctly in old mode.
- . Check performance.
- . A log Formatter that uses a line per record.
  . Get someone to review the code.
  . Implement the 'transform' (desugar) function in the parser.
    This makes sure there is exactly one command in each block
@@ -37,15 +34,14 @@
    benchmarks or bml2bpl)
  . Change the grammar so it doesn't use syntactic predicates. NOTE:
    You may need to return tuples.
- . Check (during type-check) that I never assign to a variable.
+ . Check (during type-check) that I never assign to a constant.
  . Incorporate IndexedType into UserType, and allow for an arbitrary
    number of type arguments (besides the name).
- . Allow multiple map dereferences on the lhs of an assignment, but
-   at least give a warning that it is dangerous.
  . There is some duplication between VarCollector and ReadWriteSetFinder.
    Probably only one should remain.
  . Update my ViM configuration so it stops inserting // in Java mode
    (see :h 'comments')
  . Don't allow assignments to input parameters.
+ . Make the latest Boogie.exe from MSR work on Linux.
 
 vim:spell:ts=3:sw=3:fdm=manual:

@@ -20,7 +20,7 @@ public class VarCollector extends Transformer {
   // read/write variables
   private Set<Declaration> rv, wv;
 
-  public void VarCollector(SymbolTable st) {
+  public VarCollector(SymbolTable st) {
     this.st = st;
   }
 

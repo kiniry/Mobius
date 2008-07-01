@@ -15,9 +15,7 @@ import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
 import freeboogie.tc.*;
-import freeboogie.util.Closure;
-import freeboogie.util.ClosureR;
-import freeboogie.util.Err;
+import freeboogie.util.*;
 import freeboogie.vcgen.Passivator;
 
 /**
@@ -143,10 +141,9 @@ public class Main {
     log.setUseParentHandlers(false); // the 'root' logger sends >=INFO to console
     try {
       FileHandler logh = new FileHandler("freeboogie.log");
-      logh.setFormatter(new SimpleFormatter());
+      logh.setFormatter(new OneLineLogFormatter());
       log.addHandler(logh);
-      if (opt.boolVal("-log")) 
-        log.setLevel(Level.ALL);
+      if (opt.boolVal("-log")) log.setLevel(Level.ALL);
     } catch (IOException e) {
       Err.warning("Can't create log file. Nevermind.");
     }
