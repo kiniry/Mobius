@@ -2,88 +2,34 @@
 
 system_chart MOBIUS_TOOLS_WIKI
 explanation "The collaborative development environment (CDE) for MOBIUS PVE and tools development"
-cluster RESOURCES description "The Resources cluster contains the concepts of sites, people, ownership of, responsibility for and commitment to tasks." 
-cluster RELEASES description "The Releases cluster contains the concepts of versions, platforms, milestones, features and changes." 
-cluster COMMUNICATIONS description "The Communications cluster contains the concept of e-mail, tickets, wikis and other forms of communication between MOBIUS developers." 
-cluster PROVERS description "The Provers cluster (in BON) is the set of concepts relating to Theorem Provers."
-cluster COMPONENTS description "The Components cluster in BON is the set of concepts relating to subsystems, modules, systems architecture and dependencies." 
-cluster STANDARDS description "The Standards cluster contains Coding Standards, Documentation Standards, Specification Standards and other elements of the Software Development Process." 
-cluster LOGICS description "This BON cluster contains the formal Logics used within MOBIUS, including the MOBIUS base logic." 
 cluster CDES description "This BON cluster contains concepts related to the use of Collaborative Development Environments (CDEs) within MOBIUS" 
-cluster STATUSES description "This BON cluster contains the concept of release status, component status and development status i.e. the current non-historical information about the MOBIUS tools" 
-cluster PLUGINS description "Plugins are software subcomponents which interact with a software platform or framework e.g. Eclipse." 
-cluster LANGUAGES description "This BON cluster describes the Software Languages e.g. Java used within MOBIUS"
-cluster SYSTEMS description "Components, subsystems and third-party platforms"
+cluster COMMUNICATIONS description "The Communications cluster contains the concept of e-mail, tickets, wikis and other forms of communication between MOBIUS developers." 
+cluster COMPONENTS description "The Components cluster in BON is the set of concepts relating to subsystems, modules, systems architecture and dependencies." 
 cluster COORDINATIONS description "Meetings and Publications"
+cluster LANGUAGES description "This BON cluster describes the Software Languages e.g. Java used within MOBIUS"
+cluster LOGICS description "This BON cluster contains the formal Logics used within MOBIUS, including the MOBIUS base logic." 
+cluster PLUGINS description "Plugins are software subcomponents which interact with a software platform or framework e.g. Eclipse." 
+cluster PROVERS description "The Provers cluster (in BON) is the set of concepts relating to Theorem Provers."
+cluster RELEASES description "The Releases cluster contains the concepts of versions, platforms, milestones, features and changes." 
+cluster RESOURCES description "The Resources cluster contains the concepts of sites, people, ownership of, responsibility for and commitment to tasks." 
+cluster STANDARDS description "The Standards cluster contains Coding Standards, Documentation Standards, Specification Standards and other elements of the Software Development Process." 
+cluster STATUSES description "This BON cluster contains the concept of release status, component status and development status i.e. the current non-historical information about the MOBIUS tools" 
+cluster SYSTEMS description "Components, subsystems and third-party platforms"
 cluster WORKSPACES description "Eclipse workspaces"
 end
 
 -- Informal Cluster Charts
 
-cluster_chart RESOURCES
-explanation "The assignment of people, commitment of time and ownership of tasks"
-class WEB_PAGE description "A Hyper Text Markup Language (HTML) document"
-class SITE description "A physical location at which people work and which might also have associated web pages"
-class RESOURCE description "An abstract representation of a person's time, energy and commitment to a task"
-class PERSONNEL description "One or more people who might be assigned to work on a task"
-class RESPONSIBILITY description "The assignment of one or more people to as task"
-class COMMITMENT description "The allocation of time to the completion of a task"
-class PERSON description "A member of the group or team"
-class MAINTAINER description "A person responsible for one or more components"
-class OWNER description "A person with responsibility for one or more tasks"
-class AUTHOR description "A person with responibility for one or more documents or programs"
-class CONTACT_DETAILS description "The means by which to commmunicate with a person"
-class ELECTRONIC_MAIL_ADDRESS description "The address at which a person will receive electronic documents"
-class PHONE_NUMBER description "The number at which a person will receive phone calls"
-class INSTANT_MESSENGER_ID description "The address at which a person will accept an electronic dialog"
-end
-
-cluster_chart RELEASES
-explanation "The process for distribution and packaging of a stable version of each component"
+cluster_chart CDES
 end
 
 cluster_chart COMMUNICATIONS
 end
 
-cluster_chart PROVERS
-class PROVER description "A theorem prover"
-class INTERACTIVE_PROVER description "An interactive theorem prover"
-class AUTOMATED_PROVER description "An automated theorem prover"
-class COQ_PROVER description "Theorem prover for Coq language"
-class PVS_PROVER description "Theorem prover for PVS langauge"
-class ISABELLE_PROVER description "Isabelle theorem prover"
-class SIMPLIFY_PROVER description "Simplify theorem prover"
-class CVC3_PROVER description "CVC3 theorem prover"
-class FX7_PROVER description "Fx7 theorem prover"
-class YICES_PROVER description "Yices theorem prover"
-end
-
 cluster_chart COMPONENTS
 end
 
-cluster_chart STANDARDS
-end
-
-cluster_chart LOGICS
-end
-
-cluster_chart CDES
-end
-
-cluster_chart STATUSES
-end
-
-cluster_chart PLUGINS
-explanation "Plugins are software subcomponents which interact with a software platform or framework e.g. Eclipse.  For our purposes, a component is an object that provides a certain type of service within the context of the application. There is at most one instance of any component: components are singletons. That implies that a component does not map to an entity of the application's object model; instead, compoennts represent functional subsystems. Components can declare extension points that other components can plug in to. This allows one component to enhance the functionality of the component it extends, without the extended component even knowing that the extending component exists. All that is needed is that the original component exposes – and uses – one or more extension points See Trac Component Architecture for an example of a Plugin Architecture. Other examples are Maven and Hudson"
-class PLUGIN description "A software component that interacts with other components via a shared framework and platform"
-class JML_FOLDING_PLUGIN description "An Eclipse plugin that extends the text editor so to permit folding of JML syntax"
-class PROVER_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of theorem proving languages"
-class UMBRA_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of Java Bytecode with embedded Bytecode Modeling Language (BML) annotations"
-class JML4_PLUGIN description "An major customisation of the Eclipse framework that supports the Java Modeling Language (JML) infrastructure"
-class SIMPLIFY_PLUGIN description "An Eclipse plugin that bundles the Simplify theorem prover"
-class JAVAFE_PLUGIN description "An Eclipse plugin that provides an API for the Java 1.4 front-end of ESC/Java2"
-class FX7_PLUGIN description "An Eclipse plugin that bundles the FX7 theorem prover"
-class FEATURE description "A set of Eclipse plugins and sub-features"
+cluster_chart COORDINATIONS
 end
 
 cluster_chart LANGUAGES
@@ -109,10 +55,73 @@ class TYPE_CHECKER description "A tool that checks the object type definitions u
 class ABSTRACT_SYNTAX_TREE description "An abstract representation of the syntax of a formal language expression"
 end
 
-cluster_chart SYSTEMS
+cluster_chart LOGICS
 end
 
-cluster_chart COORDINATIONS
+cluster_chart RELEASES
+explanation "The process for distribution and packaging of a stable version of each component"
+class DOWNLOAD description "An electronic distribution mechanism for the release"
+class LINUX_RELEASE description "A release for the latest version of Eclipse with JML4 on a linux 32-bit platform"
+class MAC_OS_X_RELEASE description "A release for the latest version of Eclipse with JML4 on a universal binary Mac OS X platform"
+class PLATFORM description "The operating environment on which the release can be used"
+class RELEASE description "The process of preparing and making available the latest version of a usable software component"
+class SCHEDULE description "The timeline for a release"
+class WINDOWS_RELEASE description "A release for the latest version of Eclipse with JML4 and its supported versions of XP or Vista"
+cluster COMMUNICATIONS description "The propagation of information about the release"
+cluster RESOURCES description "The people and time commitment required to complete the release"
+end
+
+cluster_chart RESOURCES
+explanation "The assignment of people, commitment of time and ownership of tasks"
+class WEB_PAGE description "A Hyper Text Markup Language (HTML) document"
+class SITE description "A physical location at which people work and which might also have associated web pages"
+class RESOURCE description "An abstract representation of a person's time, energy and commitment to a task"
+class PERSONNEL description "One or more people who might be assigned to work on a task"
+class RESPONSIBILITY description "The assignment of one or more people to as task"
+class COMMITMENT description "The allocation of time to the completion of a task"
+class PERSON description "A member of the group or team"
+class MAINTAINER description "A person responsible for one or more components"
+class OWNER description "A person with responsibility for one or more tasks"
+class AUTHOR description "A person with responibility for one or more documents or programs"
+class CONTACT_DETAILS description "The means by which to commmunicate with a person"
+class ELECTRONIC_MAIL_ADDRESS description "The address at which a person will receive electronic documents"
+class PHONE_NUMBER description "The number at which a person will receive phone calls"
+class INSTANT_MESSENGER_ID description "The address at which a person will accept an electronic dialog"
+end
+
+cluster_chart PLUGINS
+explanation "Plugins are software subcomponents which interact with a software platform or framework e.g. Eclipse.  For our purposes, a component is an object that provides a certain type of service within the context of the application. There is at most one instance of any component: components are singletons. That implies that a component does not map to an entity of the application's object model; instead, compoennts represent functional subsystems. Components can declare extension points that other components can plug in to. This allows one component to enhance the functionality of the component it extends, without the extended component even knowing that the extending component exists. All that is needed is that the original component exposes – and uses – one or more extension points See Trac Component Architecture for an example of a Plugin Architecture. Other examples are Maven and Hudson"
+class PLUGIN description "A software component that interacts with other components via a shared framework and platform"
+class JML_FOLDING_PLUGIN description "An Eclipse plugin that extends the text editor so to permit folding of JML syntax"
+class PROVER_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of theorem proving languages"
+class UMBRA_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of Java Bytecode with embedded Bytecode Modeling Language (BML) annotations"
+class JML4_PLUGIN description "An major customisation of the Eclipse framework that supports the Java Modeling Language (JML) infrastructure"
+class SIMPLIFY_PLUGIN description "An Eclipse plugin that bundles the Simplify theorem prover"
+class JAVAFE_PLUGIN description "An Eclipse plugin that provides an API for the Java 1.4 front-end of ESC/Java2"
+class FX7_PLUGIN description "An Eclipse plugin that bundles the FX7 theorem prover"
+class FEATURE description "A set of Eclipse plugins and sub-features"
+end
+
+cluster_chart PROVERS
+class PROVER description "A theorem prover"
+class INTERACTIVE_PROVER description "An interactive theorem prover"
+class AUTOMATED_PROVER description "An automated theorem prover"
+class COQ_PROVER description "Theorem prover for Coq language"
+class PVS_PROVER description "Theorem prover for PVS langauge"
+class ISABELLE_PROVER description "Isabelle theorem prover"
+class SIMPLIFY_PROVER description "Simplify theorem prover"
+class CVC3_PROVER description "CVC3 theorem prover"
+class FX7_PROVER description "Fx7 theorem prover"
+class YICES_PROVER description "Yices theorem prover"
+end
+
+cluster_chart STANDARDS
+end
+
+cluster_chart STATUSES
+end
+
+cluster_chart SYSTEMS
 end
 
 cluster_chart WORKSPACES
@@ -151,6 +160,9 @@ class_chart COQ_PROVER
 end
 
 class_chart CVC3_PROVER
+end
+
+class_chart DOWNLOAD
 end
 
 class_chart ELECTRONIC_MAIL_ADDRESS
@@ -198,7 +210,13 @@ end
 class_chart LEXER
 end
 
+class_chart LINUX_RELEASE
+end
+
 class_chart MAINTAINER
+end
+
+class_chart MAC_OS_X_RELEASE
 end
 
 class_chart OBJECT_CODE
@@ -219,6 +237,9 @@ end
 class_chart PHONE_NUMBER
 end
 
+class_chart PLATFORM
+end
+
 class_chart PLUGIN
 end
 
@@ -237,7 +258,13 @@ end
 class_chart RESOURCE
 end
 
+class_chart RELEASE
+end
+
 class_chart RESPONSIBILITY
+end
+
+class_chart SCHEDULE
 end
 
 class_chart SIMPLIFY_PLUGIN
@@ -271,6 +298,9 @@ class_chart UMBRA_EDITOR_PLUGIN
 end
 
 class_chart WEB_PAGE
+end
+
+class_chart WINDOWS_RELEASE
 end
 
 class_chart YICES_PROVER
