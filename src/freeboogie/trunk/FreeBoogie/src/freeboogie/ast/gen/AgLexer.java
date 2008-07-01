@@ -68,7 +68,7 @@ public class AgLexer extends PeekStream<AgToken> {
       readChar();
     } else if (Character.isWhitespace(lastChar)) {
       type = AgToken.Type.WS;
-      do readChar(); while (Character.isWhitespace(lastChar));
+      do readChar(); while (lastChar != null && Character.isWhitespace(lastChar));
     } else if (lastChar == ':') {
       readChar();
       if (lastChar == '>') { 

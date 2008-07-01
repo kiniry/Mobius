@@ -38,6 +38,9 @@
       <arg value="html.tpl" />
       <arg value="list.tpl" />
     </java>
+  </target>
+
+  <target name="generate_ast_picture" depends="generate_ast">
     <exec dir="${ast}" executable="dot">
       <arg value="-Tgif" />
       <arg value="hierarchy.dot" />
@@ -45,6 +48,7 @@
       <arg value="hierarchy.gif" />
     </exec>
   </target>
+
 
   <!-- Parser generation (using ANTLR) -->
   <target name="generate_parser">
