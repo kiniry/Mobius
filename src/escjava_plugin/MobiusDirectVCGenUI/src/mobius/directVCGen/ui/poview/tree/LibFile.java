@@ -5,6 +5,8 @@ import java.io.File;
 import mobius.directVCGen.ui.poview.Utils;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -45,8 +47,10 @@ public class LibFile extends AWorkspaceElement implements IShowable {
   }
   
   public void show() {
-    try {
-      IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file);
+    try { 
+      final IWorkbench bench = PlatformUI.getWorkbench();
+      final IWorkbenchPage page = bench.getActiveWorkbenchWindow().getActivePage(); 
+      IDE.openEditor(page, file);
     } 
     catch (PartInitException e) {
       e.printStackTrace();

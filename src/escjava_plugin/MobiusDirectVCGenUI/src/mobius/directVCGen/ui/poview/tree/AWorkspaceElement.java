@@ -14,16 +14,18 @@ import org.eclipse.swt.graphics.Image;
 
 
 public abstract class AWorkspaceElement implements IImagesConstants {
-  private static Map<IResource, AWorkspaceElement> hm  = 
+  
+  /** an hashmap containing all the elements created, with their corresponding resource. */
+  private static Map<IResource, AWorkspaceElement> instances  = 
     new HashMap<IResource, AWorkspaceElement>();
   
-  protected List<AWorkspaceElement> children = new ArrayList<AWorkspaceElement>();
-  private AWorkspaceElement fParent = null;
+  private List<AWorkspaceElement> children = new ArrayList<AWorkspaceElement>();
+  private AWorkspaceElement fParent;
   private IResource fKey;
   
   public AWorkspaceElement(final IResource key) {
-    hm.put(key, this);
-    this.fKey = key;
+    instances.put(key, this);
+    fKey = key;
   }
   
 
@@ -31,7 +33,7 @@ public abstract class AWorkspaceElement implements IImagesConstants {
   
   
   public static AWorkspaceElement getElement(final IResource key) {
-    return hm.get(key);
+    return instances.get(key);
   }
   
 
@@ -62,11 +64,13 @@ public abstract class AWorkspaceElement implements IImagesConstants {
   public abstract void update();
   
   public void remove() {
-    hm.remove(fKey);
+    instances.remove(fKey);
     for (AWorkspaceElement we : children) {
       we.remove();
     }
   }
+  
+  
   protected void update(final IResource[] res) {
     final List<AWorkspaceElement> oldchildren = children;
     children = new ArrayList<AWorkspaceElement>();
@@ -89,8 +93,14 @@ public abstract class AWorkspaceElement implements IImagesConstants {
     }
   }
   
+  /**
+   * Creates a child from a given resource.
+   * @param res the resource to represent as a child
+   * @return the child, or <code>null</code>
+   */
   public abstract AWorkspaceElement createChildFromResource(IResource res);
 
+  
   public static Project [] createProjectItem(final IProject [] projects) {
     final Project [] tab = new Project[projects.length];
     for (int i = 0; i < projects.length; i++) { 

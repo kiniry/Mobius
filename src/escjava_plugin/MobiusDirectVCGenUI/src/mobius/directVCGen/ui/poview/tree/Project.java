@@ -11,13 +11,11 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class Project extends AProofElement {
-  private final String name;
   private final IProject fProject;
   
   public Project(final IProject project) {
     super(project);
-    name = project.getName();
-    this.fProject = project;
+    fProject = project;
     update();
   }
   
@@ -55,7 +53,7 @@ public class Project extends AProofElement {
   }
   
   public String getName() {
-    return name;
+    return fProject.getName();
   }
   public String toString() {
     return "Project: " + getName();

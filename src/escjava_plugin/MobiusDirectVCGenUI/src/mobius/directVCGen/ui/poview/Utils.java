@@ -25,9 +25,10 @@ import org.osgi.framework.Bundle;
 
 
 public class Utils {
-  private static Image imgGoal = null;
-  private static Image imgLib = null;
-  private static Image imgLibRed = null;
+  private static Image imgGoal;
+  private static Image imgLib;
+  private static Image imgLibRed;
+  
   /**
    * Returns a standard ok status.
    * @return A standard ok status.

@@ -16,19 +16,23 @@ public class Factory {
    * @return a node
    */
   public static AWorkspaceElement createFile(final IFile f) {
+    final AWorkspaceElement res;
     if (f.getName().endsWith(".v")) {
+      
       if (f.getName().startsWith("goal")) {
-        return new Goal(f);
+        res = new Goal(f);
       }
-      return new LibFile(f);
+      else {
+        res = new LibFile(f);
+      }
     }
     else if (f.getName().endsWith(".vo")) {
-      return null;
-    }
-    
+      res = null;
+    }    
     else {
-      return new UnknownFile(f);
+      res = new UnknownFile(f);
     }
+    return res;
   }
 
   public static AWorkspaceElement createPackageOrClass(final IFolder folder, 

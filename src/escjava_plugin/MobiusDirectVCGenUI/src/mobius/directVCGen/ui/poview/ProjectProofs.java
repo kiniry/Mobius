@@ -24,7 +24,8 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.part.ViewPart;
 
 
-public class ProjectProofs extends ViewPart implements IDoubleClickListener, ISelectionChangedListener, SelectionListener {
+public class ProjectProofs extends ViewPart 
+  implements IDoubleClickListener, ISelectionChangedListener, SelectionListener {
   /** the current selection. */
   private AWorkspaceElement fSel;
   /** the tree showing all the proofs. */

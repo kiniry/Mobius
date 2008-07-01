@@ -3,6 +3,8 @@ package mobius.directVCGen.ui.poview.tree;
 import mobius.directVCGen.ui.poview.Utils;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -36,7 +38,9 @@ public class UnknownFile extends AWorkspaceElement implements IShowable {
   
   public void show() {
     try {
-      IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file);
+      final IWorkbench bench = PlatformUI.getWorkbench();
+      final IWorkbenchPage page = bench.getActiveWorkbenchWindow().getActivePage(); 
+      IDE.openEditor(page, file);
     } 
     catch (PartInitException e) {
       e.printStackTrace();
