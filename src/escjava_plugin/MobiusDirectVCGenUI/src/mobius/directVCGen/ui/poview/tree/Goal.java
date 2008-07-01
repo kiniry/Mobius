@@ -10,21 +10,23 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 
-public class Goal extends ProofElement implements IShowable {
+public class Goal extends AProofElement implements IShowable {
 
-  private IFile file;
-  private File name;
-  private File nameVo;
-  private String caption;
+  private final IFile fFile;
+  private final File name;
+  private final File nameVo;
+  private final String caption;
 
   public Goal(final IFile file) {
     super(file);
-    this.file = file;
+    fFile = file;
     final String tmp = file.getRawLocation().toString();
     name = new File (tmp);
     nameVo = new File(tmp + "o");
@@ -33,15 +35,20 @@ public class Goal extends ProofElement implements IShowable {
   
   public void show() {
     try {
-      IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file);
+      final IWorkbench bench = PlatformUI.getWorkbench();
+      final IWorkbenchPage page = bench.getActiveWorkbenchWindow().getActivePage();
+      IDE.openEditor(page, fFile);
     } 
     catch (PartInitException e) {
       e.printStackTrace();
     }
   }
+  
   public String getName() {
     return caption;
   }
+  
+  
   public Image getImage () {
     if (nameVo.exists() && (nameVo.lastModified() > name.lastModified())) {
       return Utils.getImage(IMG_GOAL_SOLVED);
@@ -55,7 +62,7 @@ public class Goal extends ProofElement implements IShowable {
     if (nameVo.exists() && (nameVo.lastModified() > name.lastModified())) {
       return;
     }
-    final Job job = CompileFile.compile(file, true);
+    final Job job = CompileFile.compile(fFile, true);
     if (job != null) {
       try {
         job.schedule();
@@ -68,10 +75,12 @@ public class Goal extends ProofElement implements IShowable {
     Utils.refreshTree(viewer, this);
   }
 
-  public WorkspaceElement createChildFromResource(final IResource res) {
+  /** {@inheritDoc} */
+  public AWorkspaceElement createChildFromResource(final IResource res) {
     return null;
   }
 
+  /** {@inheritDoc} */
   public void update() {
   }
   

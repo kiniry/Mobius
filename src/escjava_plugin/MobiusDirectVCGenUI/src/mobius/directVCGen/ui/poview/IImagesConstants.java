@@ -12,6 +12,7 @@ public interface IImagesConstants {
   int IMG_OBJS_LIBRARY = 8;
   int IMG_FOLDER = 9;
   int IMG_PKG = 10;
-  
+  int IMG_UNKNOWN = 0;
+  int IMG_LIB_RED = 11;
   
 }

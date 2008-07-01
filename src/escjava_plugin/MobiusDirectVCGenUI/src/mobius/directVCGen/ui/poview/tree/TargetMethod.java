@@ -9,18 +9,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
 
-public class TargetMethod extends ProofElement {
+public class TargetMethod extends AProofElement {
 
-  private final IFolder folder;
+  private final IFolder fFolder;
+  
   public TargetMethod(final IFolder folder) {
     super(folder);
-    this.folder = folder;
+    fFolder = folder;
     update();
   }
+  
+  
   public void update() {
     IResource[] res = new IResource[0];
     try {
-      res = folder.members(IResource.NONE);
+      res = fFolder.members(IResource.NONE);
     }
     catch (CoreException e) {
       e.printStackTrace();
@@ -28,10 +31,10 @@ public class TargetMethod extends ProofElement {
     update(res);
   
   }
-  public WorkspaceElement createChildFromResource(final IResource res) {
-    WorkspaceElement pe = null;
+  public AWorkspaceElement createChildFromResource(final IResource res) {
+    AWorkspaceElement pe = null;
     if ((res instanceof IFile) && res.toString().endsWith(".v")) {
-      pe = Factory.createCoqFileOrGoal((IFile) res);
+      pe = Factory.createFile((IFile) res);
     }
     return pe;
   }
@@ -40,7 +43,7 @@ public class TargetMethod extends ProofElement {
   
   
   public String getName() {
-    return folder.getName();
+    return fFolder.getName();
   }
   
   public Image getImage () {

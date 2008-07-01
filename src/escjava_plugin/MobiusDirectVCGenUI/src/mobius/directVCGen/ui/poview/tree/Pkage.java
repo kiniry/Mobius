@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
 
-public class Pkage extends ProofElement{
+public class Pkage extends AProofElement{
   private final IFolder fFolder;
   private final int fDepth;
   
@@ -32,14 +32,14 @@ public class Pkage extends ProofElement{
     update(res);
   }
   
-  public WorkspaceElement createChildFromResource(final IResource res) {
-    WorkspaceElement pe = null;
+  public AWorkspaceElement createChildFromResource(final IResource res) {
+    AWorkspaceElement pe = null;
     if (res instanceof IFolder) {
       final IFolder fold = (IFolder) res;
       pe = Factory.createPackageOrClass(fold, fDepth);
     }
     else if (res instanceof IFile) {
-      pe = Factory.createCoqFileOrGoal((IFile) res);
+      pe = Factory.createFile((IFile) res);
     }
     return pe;
   }

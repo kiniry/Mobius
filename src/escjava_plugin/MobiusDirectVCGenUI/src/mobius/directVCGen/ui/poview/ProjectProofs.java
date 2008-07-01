@@ -1,8 +1,8 @@
 package mobius.directVCGen.ui.poview;
 
 import mobius.directVCGen.ui.poview.tree.IShowable;
-import mobius.directVCGen.ui.poview.tree.ProofElement;
-import mobius.directVCGen.ui.poview.tree.WorkspaceElement;
+import mobius.directVCGen.ui.poview.tree.AProofElement;
+import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -26,7 +26,7 @@ import org.eclipse.ui.part.ViewPart;
 
 public class ProjectProofs extends ViewPart implements IDoubleClickListener, ISelectionChangedListener, SelectionListener {
   /** the current selection. */
-  private WorkspaceElement fSel;
+  private AWorkspaceElement fSel;
   /** the tree showing all the proofs. */
   private TreeViewer fViewer;
   /** the button that triggers the evaluate action. */
@@ -46,7 +46,7 @@ public class ProjectProofs extends ViewPart implements IDoubleClickListener, ISe
     fViewer.setUseHashlookup(true);
     fViewer.setContentProvider(new POsContentProvider(fViewer));
     fViewer.setLabelProvider(new POsLabelProvider());
-    fViewer.setInput(WorkspaceElement.createProjectItem(Utils.getProjects()));
+    fViewer.setInput(AWorkspaceElement.createProjectItem(Utils.getProjects()));
     fViewer.addDoubleClickListener(this);
     fViewer.addSelectionChangedListener(this);
   }
@@ -88,10 +88,10 @@ public class ProjectProofs extends ViewPart implements IDoubleClickListener, ISe
   public void selectionChanged(final SelectionChangedEvent event) {
     final ITreeSelection ts = (ITreeSelection) fViewer.getSelection();
     final Object o = ts.getFirstElement();
-    if (o instanceof WorkspaceElement) {
-      fSel = (WorkspaceElement) o;
+    if (o instanceof AWorkspaceElement) {
+      fSel = (AWorkspaceElement) o;
       fViewer.refresh(o);
-      fBtnEvaluate.setEnabled(fSel instanceof ProofElement);
+      fBtnEvaluate.setEnabled(fSel instanceof AProofElement);
     }
     else {
       fBtnEvaluate.setEnabled(false);
@@ -102,8 +102,8 @@ public class ProjectProofs extends ViewPart implements IDoubleClickListener, ISe
   public void widgetSelected(final SelectionEvent e) {
     final Job j = new Job("Evaluating the goals...") {
       protected IStatus run(final IProgressMonitor monitor) {
-        if (fSel instanceof ProofElement) {
-          ((ProofElement)fSel).compile(fViewer);
+        if (fSel instanceof AProofElement) {
+          ((AProofElement)fSel).compile(fViewer);
         }
         return Utils.getOkStatus();
       }

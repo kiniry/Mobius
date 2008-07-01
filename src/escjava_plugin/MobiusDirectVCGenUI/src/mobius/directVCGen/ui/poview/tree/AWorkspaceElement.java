@@ -13,42 +13,44 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 
 
-public abstract class WorkspaceElement implements IImagesConstants {
-  protected List<WorkspaceElement> children = new ArrayList<WorkspaceElement>();
-  private WorkspaceElement parent = null;
-  private IResource key;
+public abstract class AWorkspaceElement implements IImagesConstants {
+  private static Map<IResource, AWorkspaceElement> hm  = 
+    new HashMap<IResource, AWorkspaceElement>();
   
-  public WorkspaceElement(final IResource key) {
+  protected List<AWorkspaceElement> children = new ArrayList<AWorkspaceElement>();
+  private AWorkspaceElement fParent = null;
+  private IResource fKey;
+  
+  public AWorkspaceElement(final IResource key) {
     hm.put(key, this);
-    this.key = key;
+    this.fKey = key;
   }
   
-  private static Map<IResource, WorkspaceElement> hm  = 
-    new HashMap<IResource, WorkspaceElement>();
+
 
   
   
-  public static WorkspaceElement getElement(final IResource key) {
-    return (WorkspaceElement) hm.get(key);
+  public static AWorkspaceElement getElement(final IResource key) {
+    return hm.get(key);
   }
   
 
   public abstract String getName();
   
-  public void add(final WorkspaceElement pe) {
+  public void add(final AWorkspaceElement pe) {
     children.add(pe);
-    pe.parent = this;
+    pe.fParent = this;
   }
   
-  public WorkspaceElement getParent() {
-    return parent;
+  public AWorkspaceElement getParent() {
+    return fParent;
   }
 
   public Object[] getChildren() {
     return children.toArray();
   }
-  public WorkspaceElement [] getElementChildren() {
-    return children.toArray(new WorkspaceElement[0]);
+  public AWorkspaceElement [] getElementChildren() {
+    return children.toArray(new AWorkspaceElement[0]);
   }
   public int getChildrenCount() {
     return children.size();
@@ -60,16 +62,16 @@ public abstract class WorkspaceElement implements IImagesConstants {
   public abstract void update();
   
   public void remove() {
-    hm.remove(key);
-    for (WorkspaceElement we : children) {
+    hm.remove(fKey);
+    for (AWorkspaceElement we : children) {
       we.remove();
     }
   }
   protected void update(final IResource[] res) {
-    final List<WorkspaceElement> oldchildren = children;
-    children = new ArrayList<WorkspaceElement>();
+    final List<AWorkspaceElement> oldchildren = children;
+    children = new ArrayList<AWorkspaceElement>();
     for (int i = 0; i < res.length; i++) {
-      WorkspaceElement pe = getElement(res[i]);
+      AWorkspaceElement pe = getElement(res[i]);
       if (pe == null) {
         pe = createChildFromResource(res[i]);
       }
@@ -81,13 +83,13 @@ public abstract class WorkspaceElement implements IImagesConstants {
       
     cleanUp(oldchildren);
   }
-  private static void cleanUp(final List<WorkspaceElement> children) {
-    for (WorkspaceElement we: children) {
+  private static void cleanUp(final List<AWorkspaceElement> children) {
+    for (AWorkspaceElement we: children) {
       we.remove();
     }
   }
   
-  public abstract WorkspaceElement createChildFromResource(IResource res);
+  public abstract AWorkspaceElement createChildFromResource(IResource res);
 
   public static Project [] createProjectItem(final IProject [] projects) {
     final Project [] tab = new Project[projects.length];

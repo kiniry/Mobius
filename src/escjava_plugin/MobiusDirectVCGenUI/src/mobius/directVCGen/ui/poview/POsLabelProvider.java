@@ -1,6 +1,6 @@
 package mobius.directVCGen.ui.poview;
 
-import mobius.directVCGen.ui.poview.tree.WorkspaceElement;
+import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -30,11 +30,11 @@ public class POsLabelProvider implements ILabelProvider {
   }
 
   public Image getImage(final Object element) {
-    return ((WorkspaceElement) element).getImage();
+    return ((AWorkspaceElement) element).getImage();
   }
 
   public String getText(final Object element) {
-    return ((WorkspaceElement) element).getName();
+    return ((AWorkspaceElement) element).getName();
   }
 
 }

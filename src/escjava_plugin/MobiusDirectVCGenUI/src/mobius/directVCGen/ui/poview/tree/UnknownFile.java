@@ -1,7 +1,5 @@
 package mobius.directVCGen.ui.poview.tree;
 
-import java.io.File;
-
 import mobius.directVCGen.ui.poview.Utils;
 
 import org.eclipse.swt.graphics.Image;
@@ -13,15 +11,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 
 
-public class LibFile extends AWorkspaceElement implements IShowable {
-  private final IFile file;
-  private final File fileVo;
-  
-  LibFile(final IFile key) {
+public class UnknownFile extends AWorkspaceElement implements IShowable {
+
+  final IFile file;
+  UnknownFile(final IFile key) {
     super(key);
     file = key;
-    final String tmp = file.getRawLocation().toString();
-    fileVo = new File(tmp + "o");
     
   }
 
@@ -36,12 +31,7 @@ public class LibFile extends AWorkspaceElement implements IShowable {
     return file.getName();
   }
   public Image getImage () {
-    if (fileVo.exists()) {
-      return Utils.getImage(IMG_LIB_RED);
-    }
-    else {
-      return Utils.getImage(IMG_LIB);
-    }
+    return Utils.getImage(IMG_UNKNOWN);
   }
   
   public void show() {

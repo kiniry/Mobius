@@ -10,19 +10,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
 
-public class Project extends ProofElement {
+public class Project extends AProofElement {
   private final String name;
-  private final IProject project;
+  private final IProject fProject;
   
   public Project(final IProject project) {
     super(project);
     name = project.getName();
-    this.project = project;
+    this.fProject = project;
     update();
   }
   
   public void update() {
-    final IFolder f = project.getFolder("mobius");
+    final IFolder f = fProject.getFolder("mobius");
     
     IResource[] res = new IResource[0];
     if (f.exists()) {
@@ -38,8 +38,8 @@ public class Project extends ProofElement {
 
 
 
-  public WorkspaceElement createChildFromResource(final IResource res) {
-    WorkspaceElement pe = null;
+  public AWorkspaceElement createChildFromResource(final IResource res) {
+    AWorkspaceElement pe = null;
     if (res instanceof IFolder) {
       pe = new Folder((IFolder) res);
     }
@@ -48,7 +48,7 @@ public class Project extends ProofElement {
       if (!f.getName().endsWith(".v")) {
         return null;
       }
-      pe = Factory.createCoqFileOrGoal(f);
+      pe = Factory.createFile(f);
 
     }
     return pe;
@@ -62,7 +62,7 @@ public class Project extends ProofElement {
   }
 
   public IProject getProject() {
-    return project;
+    return fProject;
   }
   public Image getImage () {
     if (this.getChildrenCount() > 0) {

@@ -2,7 +2,7 @@ package mobius.directVCGen.ui.poview;
 
 import java.net.URL;
 
-import mobius.directVCGen.ui.poview.tree.WorkspaceElement;
+import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -27,6 +27,7 @@ import org.osgi.framework.Bundle;
 public class Utils {
   private static Image imgGoal = null;
   private static Image imgLib = null;
+  private static Image imgLibRed = null;
   /**
    * Returns a standard ok status.
    * @return A standard ok status.
@@ -45,23 +46,23 @@ public class Utils {
     return ImageDescriptor.createFromURL(iconURL).createImage();
   }
   
-  public static void refreshTree(final TreeViewer viewer, final WorkspaceElement goal) {
+  public static void refreshTree(final TreeViewer viewer, final AWorkspaceElement goal) {
     final UIJob job = new RefreshJob(viewer, goal);
     job.schedule();
   }
   
   private static class RefreshJob extends UIJob {
-    private final TreeViewer viewer;
-    private final WorkspaceElement goal;
+    private final TreeViewer fViewer;
+    private final AWorkspaceElement fGoal;
     
-    public RefreshJob(final TreeViewer viewer, final WorkspaceElement goal) {
+    public RefreshJob(final TreeViewer viewer, final AWorkspaceElement goal) {
       super("Updating view");
-      this.viewer = viewer;
-      this.goal = goal;
+      fViewer = viewer;
+      fGoal = goal;
     }
 
     public IStatus runInUIThread(final IProgressMonitor monitor) {
-      viewer.refresh(goal);
+      fViewer.refresh(fGoal);
       return Utils.getOkStatus();
 
     }  
@@ -97,6 +98,11 @@ public class Utils {
           imgLib = createImage("icons/coq.gif");
         }
         return imgLib;
+      case IImagesConstants.IMG_LIB_RED:
+        if (imgLibRed == null) {
+          imgLibRed = createImage("icons/coq-red.gif");
+        }
+        return imgLibRed;
       case IImagesConstants.IMG_OBJS_LIBRARY:
         return Utils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
       case IImagesConstants.IMG_FOLDER:

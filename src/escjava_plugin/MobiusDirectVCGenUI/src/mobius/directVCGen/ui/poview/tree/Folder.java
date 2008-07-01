@@ -8,11 +8,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
 
-public class Folder extends ProofElement{
+public class Folder extends AProofElement{
   private final IFolder fFolder;
+  
   public Folder(final IFolder folder) {
     super(folder);
-    this.fFolder = folder;
+    fFolder = folder;
     update();
   }
   
@@ -27,8 +28,8 @@ public class Folder extends ProofElement{
     update(res);
   }
   
-  public WorkspaceElement createChildFromResource(final IResource res) {
-    WorkspaceElement pe = null;
+  public AWorkspaceElement createChildFromResource(final IResource res) {
+    AWorkspaceElement pe = null;
     final String name = fFolder.getName();
     if (res instanceof IFolder) {
       final IFolder fold = (IFolder) res;

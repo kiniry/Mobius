@@ -8,14 +8,30 @@ import org.eclipse.core.runtime.CoreException;
 
 public class Factory {
 
-  public static WorkspaceElement createCoqFileOrGoal(final IFile f) {
-    if (f.getName().startsWith("goal")) {
-      return new Goal(f);
+  /**
+   * Creates a node representing a file. It can be a coq file,
+   * a goal, or another file type. If it is a compiled Coq file
+   * ignores it. 
+   * @param f the file to represent as a node.
+   * @return a node
+   */
+  public static AWorkspaceElement createFile(final IFile f) {
+    if (f.getName().endsWith(".v")) {
+      if (f.getName().startsWith("goal")) {
+        return new Goal(f);
+      }
+      return new LibFile(f);
     }
-    return new LibFile(f);
+    else if (f.getName().endsWith(".vo")) {
+      return null;
+    }
+    
+    else {
+      return new UnknownFile(f);
+    }
   }
 
-  public static WorkspaceElement createPackageOrClass(final IFolder folder, 
+  public static AWorkspaceElement createPackageOrClass(final IFolder folder, 
                                                       final int depth) {
     if (Factory.getDepth(folder) > depth) {
       return new Pkage(folder, depth);

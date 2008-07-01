@@ -8,18 +8,20 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
 
-public class TargetClass extends ProofElement{
-  private final IFolder folder;
+public class TargetClass extends AProofElement{
+  private final IFolder fFolder;
+  
+  
   public TargetClass(final IFolder folder) {
     super(folder);
-    this.folder = folder;
+    this.fFolder = folder;
     update();
   }
   
   public void update() {
     IResource[] res = new IResource[0];
     try {
-      res = folder.members(IResource.NONE);
+      res = fFolder.members(IResource.NONE);
     } 
     catch (CoreException e) {
       e.printStackTrace();
@@ -27,8 +29,8 @@ public class TargetClass extends ProofElement{
     update(res);
   }
   
-  public WorkspaceElement createChildFromResource(final IResource res) {
-    WorkspaceElement pe = null;
+  public AWorkspaceElement createChildFromResource(final IResource res) {
+    AWorkspaceElement pe = null;
     if (res instanceof IFolder) {
       pe = new TargetMethod((IFolder) res);
     }
@@ -36,7 +38,7 @@ public class TargetClass extends ProofElement{
   }
   
   public String getName() {
-    return folder.getName();
+    return fFolder.getName();
   }
   
   public Image getImage () {

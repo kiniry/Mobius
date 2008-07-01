@@ -1,7 +1,7 @@
 package mobius.directVCGen.ui.poview;
 
 import mobius.directVCGen.ui.poview.tree.Project;
-import mobius.directVCGen.ui.poview.tree.WorkspaceElement;
+import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -47,10 +47,10 @@ public class POsContentProvider implements ITreeContentProvider {
 
     public boolean visit(final IResourceDelta delta) throws CoreException {
       final IResource res = delta.getResource();
-      WorkspaceElement pe = WorkspaceElement.getElement(res);
+      AWorkspaceElement pe = AWorkspaceElement.getElement(res);
       if (pe == null && res instanceof IFile) {
-        pe = WorkspaceElement.getElement(res.getParent());
-        final WorkspaceElement [] os = pe.getElementChildren();
+        pe = AWorkspaceElement.getElement(res.getParent());
+        final AWorkspaceElement [] os = pe.getElementChildren();
         for (int i = 0; i < os.length; i++) {
           String name = res.getName();
           name = name.substring(0, name.length() - 2);
@@ -119,14 +119,14 @@ public class POsContentProvider implements ITreeContentProvider {
 
 
   public Object[] getChildren(final Object elem) {
-    return ((WorkspaceElement) elem).getChildren();
+    return ((AWorkspaceElement) elem).getChildren();
   }
 
   public Object getParent(final Object elem) {
-    return ((WorkspaceElement) elem).getParent();
+    return ((AWorkspaceElement) elem).getParent();
   }
 
   public boolean hasChildren(final Object elem) {
-    return ((WorkspaceElement) elem).getChildrenCount() > 0;
+    return ((AWorkspaceElement) elem).getChildrenCount() > 0;
   }
 }
