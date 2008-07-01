@@ -11,61 +11,66 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class Project extends ProofElement {
-	String name;
-	private IProject project;
-	public Project(IProject project) {
-		super(project);
-		name = project.getName();
-		this.project = project;
-		update();
-	}
-	
-	public void update() {
-		IFolder f = project.getFolder("mobius");
-		
-		IResource[] res = new IResource[0];
-		if(f.exists()) {
-			try {
-				res = f.members(IResource.NONE);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
-		update(res);
-	}
+  private final String name;
+  private final IProject project;
+  
+  public Project(final IProject project) {
+    super(project);
+    name = project.getName();
+    this.project = project;
+    update();
+  }
+  
+  public void update() {
+    final IFolder f = project.getFolder("mobius");
+    
+    IResource[] res = new IResource[0];
+    if (f.exists()) {
+      try {
+        res = f.members(IResource.NONE);
+      }
+      catch (CoreException e) {
+        e.printStackTrace();
+      }
+    }
+    update(res);
+  }
 
 
 
-	public WorkspaceElement createChildFromResource(IResource res) {
-		WorkspaceElement pe = null;
-		if(res instanceof IFolder) {
-			pe = new Folder((IFolder) res);
-		}
-		if(res instanceof IFile) {
-			IFile f = (IFile) res;
-      if(!f.getName().endsWith(".v"))
+  public WorkspaceElement createChildFromResource(final IResource res) {
+    WorkspaceElement pe = null;
+    if (res instanceof IFolder) {
+      pe = new Folder((IFolder) res);
+    }
+    if (res instanceof IFile) {
+      final IFile f = (IFile) res;
+      if (!f.getName().endsWith(".v")) {
         return null;
-			pe = Factory.createCoqFileOrGoal(f);
+      }
+      pe = Factory.createCoqFileOrGoal(f);
 
-		}
-		return pe;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public String toString() {
-		return "Project: " + getName();
-	}
+    }
+    return pe;
+  }
+  
+  public String getName() {
+    return name;
+  }
+  public String toString() {
+    return "Project: " + getName();
+  }
 
-	public IProject getProject() {
-		return project;
-	}
-	public Image getImage () {
-		if(this.getChildrenCount() > 0)
-			return Utils.getImage(IMG_PROJECT);
-		else 
-			return Utils.getImage(IMG_PROJECT_EMPTY);
-	}
+  public IProject getProject() {
+    return project;
+  }
+  public Image getImage () {
+    if (this.getChildrenCount() > 0) {
+      return Utils.getImage(IMG_PROJECT);
+    }
+    else { 
+      return Utils.getImage(IMG_PROJECT_EMPTY);
+    }
+  }
 
 }

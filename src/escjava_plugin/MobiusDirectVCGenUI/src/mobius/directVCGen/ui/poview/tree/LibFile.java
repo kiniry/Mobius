@@ -12,32 +12,33 @@ import org.eclipse.core.resources.IResource;
 
 
 public class LibFile extends WorkspaceElement implements IShowable {
-	IFile file;
-	LibFile(IFile key) {
-		super(key);
-		file = key;
-		
-	}
+  final IFile file;
+  LibFile(final IFile key) {
+    super(key);
+    file = key;
+    
+  }
 
-	public WorkspaceElement createChildFromResource(IResource res) {
-		return null;
-	}
+  public WorkspaceElement createChildFromResource(final IResource res) {
+    return null;
+  }
 
-	public void update() {
-	}
+  public void update() {
+  }
 
-	public String getName() {
-		return file.getName();
-	}
-	public Image getImage () {
-		return Utils.getImage(IMG_LIB);
-	}
-	
-	public void show() {
-		try {
-			IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
-	}
+  public String getName() {
+    return file.getName();
+  }
+  public Image getImage () {
+    return Utils.getImage(IMG_LIB);
+  }
+  
+  public void show() {
+    try {
+      IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file);
+    } 
+    catch (PartInitException e) {
+      e.printStackTrace();
+    }
+  }
 }

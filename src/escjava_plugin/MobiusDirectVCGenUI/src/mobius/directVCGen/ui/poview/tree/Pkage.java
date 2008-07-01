@@ -10,42 +10,45 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class Pkage extends ProofElement{
-	private final IFolder fFolder;
-	private final int fDepth;
-	Pkage(final IFolder folder, final int depth) {
-		super(folder);
-		fFolder = folder;
-		fDepth = depth;
-		update();
-	}
-	
-	public void update() {
-		IResource[] res = new IResource[0];
-		try {
-			res = fFolder.members(IResource.NONE);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		update(res);
-	}
-	
-	public WorkspaceElement createChildFromResource(IResource res) {
-		WorkspaceElement pe = null;
-		if(res instanceof IFolder) {
-		  IFolder fold = (IFolder) res;
-		  pe = Factory.createPackageOrClass(fold, fDepth);
-		}
-		else if (res instanceof IFile){
-		  pe = Factory.createCoqFileOrGoal((IFile) res);
-		}
-		return pe;
-	}
-	
-	public String getName() {
-		return fFolder.getName();
-	}
-	
-	public Image getImage () {
-	  return Utils.getImage(IMG_PKG);
-	}
+  private final IFolder fFolder;
+  private final int fDepth;
+  
+  
+  Pkage(final IFolder folder, final int depth) {
+    super(folder);
+    fFolder = folder;
+    fDepth = depth;
+    update();
+  }
+  
+  public void update() {
+    IResource[] res = new IResource[0];
+    try {
+      res = fFolder.members(IResource.NONE);
+    } 
+    catch (CoreException e) {
+      e.printStackTrace();
+    }
+    update(res);
+  }
+  
+  public WorkspaceElement createChildFromResource(final IResource res) {
+    WorkspaceElement pe = null;
+    if (res instanceof IFolder) {
+      final IFolder fold = (IFolder) res;
+      pe = Factory.createPackageOrClass(fold, fDepth);
+    }
+    else if (res instanceof IFile) {
+      pe = Factory.createCoqFileOrGoal((IFile) res);
+    }
+    return pe;
+  }
+  
+  public String getName() {
+    return fFolder.getName();
+  }
+  
+  public Image getImage () {
+    return Utils.getImage(IMG_PKG);
+  }
 }

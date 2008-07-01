@@ -25,91 +25,92 @@ import org.osgi.framework.Bundle;
 
 
 public class Utils {
-	private static Image imgGoal = null;
-	private static Image imgLib = null;
-	/**
-	 * Returns a standard ok status.
-	 * @return A standard ok status.
-	 */
-	public static IStatus getOkStatus() {
-		return new Status(IStatus.OK, Activator.PLUGIN_ID, IStatus.OK, "", null);
-	}
-	
-	public static Image createImage(final String file) {
-		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
-		if (bundle == null) {
-		  System.err.println("Bundle not found!!!");
-		}
-		IPath path = new Path(file);
-		URL iconURL = FileLocator.find(bundle, path, null);
-		return ImageDescriptor.createFromURL(iconURL).createImage();
-	}
-	
-	public static void refreshTree(TreeViewer viewer, WorkspaceElement goal) {
-		UIJob job = new RefreshJob(viewer, goal);
-		job.schedule();
-	}
-	
-	private static class RefreshJob extends UIJob {
-		TreeViewer viewer;
-		WorkspaceElement goal;
-		public RefreshJob(TreeViewer viewer, WorkspaceElement goal) {
-			super("Updating view");
-			this.viewer = viewer;
-			this.goal = goal;
-		}
+  private static Image imgGoal = null;
+  private static Image imgLib = null;
+  /**
+   * Returns a standard ok status.
+   * @return A standard ok status.
+   */
+  public static IStatus getOkStatus() {
+    return new Status(IStatus.OK, Activator.PLUGIN_ID, IStatus.OK, "", null);
+  }
+  
+  public static Image createImage(final String file) {
+    final Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
+    if (bundle == null) {
+      System.err.println("Bundle not found!!!");
+    }
+    final IPath path = new Path(file);
+    final URL iconURL = FileLocator.find(bundle, path, null);
+    return ImageDescriptor.createFromURL(iconURL).createImage();
+  }
+  
+  public static void refreshTree(final TreeViewer viewer, final WorkspaceElement goal) {
+    final UIJob job = new RefreshJob(viewer, goal);
+    job.schedule();
+  }
+  
+  private static class RefreshJob extends UIJob {
+    private final TreeViewer viewer;
+    private final WorkspaceElement goal;
+    
+    public RefreshJob(final TreeViewer viewer, final WorkspaceElement goal) {
+      super("Updating view");
+      this.viewer = viewer;
+      this.goal = goal;
+    }
 
-		public IStatus runInUIThread(IProgressMonitor monitor) {
-			viewer.refresh(goal);
-			return Utils.getOkStatus();
+    public IStatus runInUIThread(final IProgressMonitor monitor) {
+      viewer.refresh(goal);
+      return Utils.getOkStatus();
 
-		}	
-	}
-	
-	public static Image getPlatformImage(String id) {
-		return PlatformUI.getWorkbench().getSharedImages().getImage(id);
-	}
-	public static Image getJdtImage(String id) {
-		return JavaUI.getSharedImages().getImage(id);
-	}
+    }  
+  }
+  
+  public static Image getPlatformImage(final String id) {
+    return PlatformUI.getWorkbench().getSharedImages().getImage(id);
+  }
+  public static Image getJdtImage(final String id) {
+    return JavaUI.getSharedImages().getImage(id);
+  }
 
-	public static Image getImage(int cst) {
-		
-		switch(cst) {
-			case IImagesConstants.IMG_PROJECT:
-				return getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT);
-			case IImagesConstants.IMG_PROJECT_EMPTY:
-				return getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED);
-			case IImagesConstants.IMG_CLASS:
-				return getJdtImage(ISharedImages.IMG_OBJS_CLASS);
-			case IImagesConstants.IMG_METHOD:
-				return getJdtImage(ISharedImages.IMG_OBJS_PRIVATE);
-			case IImagesConstants.IMG_GOAL_SOLVED:
-				return Utils.getJdtImage(ISharedImages.IMG_OBJS_PUBLIC);
-			case IImagesConstants.IMG_GOAL:
-				if (imgGoal == null) {
-					imgGoal = createImage("icons/escjava_problem.gif");
-				}
-				return imgGoal;
-			case IImagesConstants.IMG_LIB:
-				if (imgLib == null) {
-					imgLib = createImage("icons/coq.gif");
-				}
-				return imgLib;
-			case IImagesConstants.IMG_OBJS_LIBRARY:
-			  return Utils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
-			case IImagesConstants.IMG_FOLDER:
+  public static Image getImage(final int cst) {
+    
+    switch(cst) {
+      case IImagesConstants.IMG_PROJECT:
         return getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT);
-			case IImagesConstants.IMG_PKG:
+      case IImagesConstants.IMG_PROJECT_EMPTY:
+        return getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED);
+      case IImagesConstants.IMG_CLASS:
+        return getJdtImage(ISharedImages.IMG_OBJS_CLASS);
+      case IImagesConstants.IMG_METHOD:
+        return getJdtImage(ISharedImages.IMG_OBJS_PRIVATE);
+      case IImagesConstants.IMG_GOAL_SOLVED:
+        return Utils.getJdtImage(ISharedImages.IMG_OBJS_PUBLIC);
+      case IImagesConstants.IMG_GOAL:
+        if (imgGoal == null) {
+          imgGoal = createImage("icons/escjava_problem.gif");
+        }
+        return imgGoal;
+      case IImagesConstants.IMG_LIB:
+        if (imgLib == null) {
+          imgLib = createImage("icons/coq.gif");
+        }
+        return imgLib;
+      case IImagesConstants.IMG_OBJS_LIBRARY:
+        return Utils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
+      case IImagesConstants.IMG_FOLDER:
+        return getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT);
+      case IImagesConstants.IMG_PKG:
         return Utils.getJdtImage(ISharedImages.IMG_OBJS_PACKAGE);
-			case IImagesConstants.IMG_DEFAULT:
-			default:
-				return getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_ELEMENT);
+      case IImagesConstants.IMG_DEFAULT:
+      default:
+        return getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_ELEMENT);
 
-		}
-	}
-	
-	public static IProject [] getProjects() {
-		return ResourcesPlugin.getWorkspace().getRoot().getProjects();
-	}
+    }
+  }
+  
+  public static IProject [] getProjects() {
+    return ResourcesPlugin.getWorkspace().getRoot().getProjects();
+  }
 }

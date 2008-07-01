@@ -9,32 +9,32 @@ import org.eclipse.swt.graphics.Image;
 
 public class POsLabelProvider implements ILabelProvider {
 
-	public void addListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
+  public void addListener(final ILabelProviderListener listener) {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	public void dispose() {
-		// TODO Auto-generated method stub
+  public void dispose() {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	public boolean isLabelProperty(Object element, String property) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+  public boolean isLabelProperty(final Object element, final String property) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-	public void removeListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
+  public void removeListener(final ILabelProviderListener listener) {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	public Image getImage(Object element) {
-		return ((WorkspaceElement) element).getImage();
-	}
+  public Image getImage(final Object element) {
+    return ((WorkspaceElement) element).getImage();
+  }
 
-	public String getText(Object element) {
-		return ((WorkspaceElement) element).getName();
-	}
+  public String getText(final Object element) {
+    return ((WorkspaceElement) element).getName();
+  }
 
 }

@@ -11,38 +11,39 @@ import org.eclipse.swt.graphics.Image;
 
 public class TargetMethod extends ProofElement {
 
-	IFolder folder;
-	public TargetMethod(IFolder folder) {
-		super(folder);
-		this.folder = folder;
-		update();
-	}
-	public void update() {
-		IResource[] res = new IResource[0];
-		try {
-			res = folder.members(IResource.NONE);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		update(res);
-	
-	}
-	public WorkspaceElement createChildFromResource(IResource res) {
-		WorkspaceElement pe = null;
-		if((res instanceof IFile) && res.toString().endsWith(".v")) {
-			pe = Factory.createCoqFileOrGoal((IFile) res);
-		}
-		return pe;
-	}
-	
+  private final IFolder folder;
+  public TargetMethod(final IFolder folder) {
+    super(folder);
+    this.folder = folder;
+    update();
+  }
+  public void update() {
+    IResource[] res = new IResource[0];
+    try {
+      res = folder.members(IResource.NONE);
+    }
+    catch (CoreException e) {
+      e.printStackTrace();
+    }
+    update(res);
+  
+  }
+  public WorkspaceElement createChildFromResource(final IResource res) {
+    WorkspaceElement pe = null;
+    if ((res instanceof IFile) && res.toString().endsWith(".v")) {
+      pe = Factory.createCoqFileOrGoal((IFile) res);
+    }
+    return pe;
+  }
+  
 
-	
-	
-	public String getName() {
-		return folder.getName();
-	}
-	
-	public Image getImage () {
-		return  Utils.getImage(IMG_METHOD);
-	}
+  
+  
+  public String getName() {
+    return folder.getName();
+  }
+  
+  public Image getImage () {
+    return  Utils.getImage(IMG_METHOD);
+  }
 }

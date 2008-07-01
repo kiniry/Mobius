@@ -8,14 +8,15 @@ import org.eclipse.core.runtime.CoreException;
 
 public class Factory {
 
-  public static WorkspaceElement createCoqFileOrGoal(IFile f) {
+  public static WorkspaceElement createCoqFileOrGoal(final IFile f) {
     if (f.getName().startsWith("goal")) {
       return new Goal(f);
     }
     return new LibFile(f);
   }
 
-  public static WorkspaceElement createPackageOrClass(IFolder folder, int depth) {
+  public static WorkspaceElement createPackageOrClass(final IFolder folder, 
+                                                      final int depth) {
     if (Factory.getDepth(folder) > depth) {
       return new Pkage(folder, depth);
     }
@@ -24,32 +25,29 @@ public class Factory {
     }
   }
 
-  private static int getDepth(final IFolder folder) {
-    int count = 0;
+  private static int getDepth(final IContainer container) {
+    IResource [] rt;
     try {
-      
-      IResource [] rt = folder.members();
-      while ((rt != null) && (rt.length != 0)) {
-        count ++;
-        
-        IContainer cont = null;
-        for (IResource r: rt) {
-          if (r instanceof IContainer) {
-            cont = (IContainer) r;
-            break;
-          }
-        }
-        if (cont == null) {
-          return count;
-        }
-        rt = cont.members();
-        
-      } 
-  
-    } catch (CoreException e) {
+      rt = container.members();
+      if ((rt == null) || (rt.length == 0)) {
+        return 0;
+      }
+    } 
+    catch (CoreException e) {
       e.printStackTrace();
+      return 0;
     }
-    return count;
+    int max = 0;
+    for (IResource r: rt) {
+      if (r instanceof IContainer) {
+        final int res = getDepth((IContainer) r);
+        if (res > max) {
+          max = res;
+        }
+      }
+    }
+    return max + 1;
+
   }
 
 }

@@ -25,112 +25,96 @@ import org.eclipse.ui.part.ViewPart;
 
 
 public class ProjectProofs extends ViewPart implements IDoubleClickListener, ISelectionChangedListener, SelectionListener {
-	/** the current selection */
-	private WorkspaceElement selection = null;
-	/** the tree showing all the proofs */
-	private TreeViewer viewer;
-	/** the button that triggers the evaluate action */
-	private ToolItem btnEvaluate;
-	
+  /** the current selection. */
+  private WorkspaceElement fSel;
+  /** the tree showing all the proofs. */
+  private TreeViewer fViewer;
+  /** the button that triggers the evaluate action. */
+  private ToolItem fBtnEvaluate;
+  
 
-	
-    private void createViewer(Composite parent) {
-    	GridData gd = new GridData();
-    	gd.horizontalAlignment = GridData.FILL;
-    	gd.grabExcessHorizontalSpace = true;
-    	gd.verticalAlignment = GridData.FILL;
-    	gd.grabExcessVerticalSpace = true;
-        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL
-                | SWT.V_SCROLL);
-        viewer.getControl().setLayoutData(gd);
-        viewer.setUseHashlookup(true);
-        viewer.setContentProvider(new POsContentProvider(viewer));
-        viewer.setLabelProvider(new POsLabelProvider());
-        viewer.setInput(WorkspaceElement.createProjectItem(Utils.getProjects()));
-        viewer.addDoubleClickListener(this);
-        viewer.addSelectionChangedListener(this);
+  
+  private void createViewer(final Composite parent) {
+    final GridData gd = new GridData();
+    gd.horizontalAlignment = GridData.FILL;
+    gd.grabExcessHorizontalSpace = true;
+    gd.verticalAlignment = GridData.FILL;
+    gd.grabExcessVerticalSpace = true;
+    fViewer = new TreeViewer(parent, SWT.MULTI | 
+                             SWT.H_SCROLL | SWT.V_SCROLL);
+    fViewer.getControl().setLayoutData(gd);
+    fViewer.setUseHashlookup(true);
+    fViewer.setContentProvider(new POsContentProvider(fViewer));
+    fViewer.setLabelProvider(new POsLabelProvider());
+    fViewer.setInput(WorkspaceElement.createProjectItem(Utils.getProjects()));
+    fViewer.addDoubleClickListener(this);
+    fViewer.addSelectionChangedListener(this);
+  }
+
+
+
+
+
+  private void createButtons(final Composite parent) {
+    final ToolBar tb = new ToolBar(parent, SWT.HORIZONTAL);
+    fBtnEvaluate = new ToolItem(tb, SWT.PUSH);
+    fBtnEvaluate.setImage(Utils.createImage("icons/reevaluate.gif"));
+    fBtnEvaluate.setEnabled(false);
+    fBtnEvaluate.setToolTipText("Try to evaluate the goals");
+    fBtnEvaluate.addSelectionListener(this);
+  }
+  
+  /** {@inheritDoc} */
+  public void createPartControl(final Composite parent) {  
+    final GridLayout rl = new GridLayout(1, false);
+    parent.setLayout(rl);
+    createButtons(parent);
+    createViewer(parent);
+  }
+
+  /** {@inheritDoc} */
+  public void setFocus() { }
+
+
+  /** {@inheritDoc} */
+  public void doubleClick(final DoubleClickEvent event) {
+    if (fSel instanceof IShowable) {
+      ((IShowable) fSel).show();
     }
+  }
 
 
+  /** {@inheritDoc} */
+  public void selectionChanged(final SelectionChangedEvent event) {
+    final ITreeSelection ts = (ITreeSelection) fViewer.getSelection();
+    final Object o = ts.getFirstElement();
+    if (o instanceof WorkspaceElement) {
+      fSel = (WorkspaceElement) o;
+      fViewer.refresh(o);
+      fBtnEvaluate.setEnabled(fSel instanceof ProofElement);
+    }
+    else {
+      fBtnEvaluate.setEnabled(false);
+    }
+  }
+
+  /** {@inheritDoc} */
+  public void widgetSelected(final SelectionEvent e) {
+    final Job j = new Job("Evaluating the goals...") {
+      protected IStatus run(final IProgressMonitor monitor) {
+        if (fSel instanceof ProofElement) {
+          ((ProofElement)fSel).compile(fViewer);
+        }
+        return Utils.getOkStatus();
+      }
+    };
+    j.schedule();      
+  }
 
 
-
-	private void createButtons(Composite parent) {
-		ToolBar tb = new ToolBar(parent, SWT.HORIZONTAL);
-    	btnEvaluate = new ToolItem(tb, SWT.PUSH);
-    	btnEvaluate.setImage(Utils.createImage("icons/reevaluate.gif"));
-    	btnEvaluate.setEnabled(false);
-    	btnEvaluate.setToolTipText("Try to evaluate the goals");
-    	btnEvaluate.addSelectionListener(this);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-	 */
-	public void createPartControl(Composite parent) {	
-		GridLayout rl = new GridLayout(1, false);
-    	parent.setLayout(rl);
-    	createButtons(parent);
-		createViewer(parent);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-	 */
-	public void setFocus() {}
-
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
-	 */
-	public void doubleClick(DoubleClickEvent event) {
-		if(selection instanceof IShowable) {
-			((IShowable) selection).show();
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent event) {
-		ITreeSelection ts = (ITreeSelection) viewer.getSelection();
-		Object o = ts.getFirstElement();
-		if(o instanceof WorkspaceElement) {
-			selection = (WorkspaceElement) o;
-			viewer.refresh(o);
-			btnEvaluate.setEnabled(selection instanceof ProofElement);
-		}
-		else {
-			btnEvaluate.setEnabled(false);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-	 */
-	public void widgetSelected(SelectionEvent e) {
-		Job j = new Job("Evaluating the goals...") {
-			protected IStatus run(IProgressMonitor monitor) {
-				if(selection instanceof ProofElement) {
-					((ProofElement)selection).compile(viewer);
-				}
-				return Utils.getOkStatus();
-			}
-		};
-		j.schedule();			
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-	 */
-	public void widgetDefaultSelected(SelectionEvent e) {}
-		
+  /** {@inheritDoc} */
+  public void widgetDefaultSelected(final SelectionEvent e) { }
+    
 
 
 }
