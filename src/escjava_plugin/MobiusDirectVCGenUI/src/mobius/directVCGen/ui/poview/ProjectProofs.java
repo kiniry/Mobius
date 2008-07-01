@@ -24,6 +24,11 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.part.ViewPart;
 
 
+/**
+ * This class represemts the proof obligation viewer.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class ProjectProofs extends ViewPart 
   implements IDoubleClickListener, ISelectionChangedListener, SelectionListener {
   /** the current selection. */
@@ -35,6 +40,10 @@ public class ProjectProofs extends ViewPart
   
 
   
+  /**
+   * Create the proof viewer with the tree view.
+   * @param parent the parent where to create the viewer
+   */
   private void createViewer(final Composite parent) {
     final GridData gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
@@ -55,7 +64,10 @@ public class ProjectProofs extends ViewPart
 
 
 
-
+  /**
+   * Create the button to evaluate a goal.
+   * @param parent the parent where to put the button
+   */
   private void createButtons(final Composite parent) {
     final ToolBar tb = new ToolBar(parent, SWT.HORIZONTAL);
     fBtnEvaluate = new ToolItem(tb, SWT.PUSH);

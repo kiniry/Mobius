@@ -2,6 +2,7 @@ package mobius.directVCGen.ui.poview.tree;
 
 import mobius.directVCGen.ui.poview.Utils;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
@@ -32,6 +33,9 @@ public class Folder extends AProofFolder {
         pe = new TargetMethod(fold);
       }
     }
+    else if (res instanceof IFile){
+      pe = Factory.createFile((IFile) res);
+    }
     return pe;
   }
   
@@ -42,6 +46,9 @@ public class Folder extends AProofFolder {
     if (name.equals("Formalisation") || 
         name.equals("classes")) {
       return Utils.getImage(IMG_OBJS_LIBRARY);
+    }
+    else if (name.equals("src")) {
+      return Utils.getImage(IMG_SRC_FOLDER);
     }
     return Utils.getImage(IMG_FOLDER);
   }

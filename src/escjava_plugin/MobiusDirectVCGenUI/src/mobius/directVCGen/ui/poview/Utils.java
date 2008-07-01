@@ -37,6 +37,7 @@ public class Utils {
     return new Status(IStatus.OK, Activator.PLUGIN_ID, IStatus.OK, "", null);
   }
   
+  
   public static Image createImage(final String file) {
     final Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
     if (bundle == null) {
@@ -47,12 +48,24 @@ public class Utils {
     return ImageDescriptor.createFromURL(iconURL).createImage();
   }
   
+  /**
+   * Creates an asynchronous job to refresh the tree view.
+   * @param viewer the viewer to refresh
+   * @param goal the specific target goal which has been modified
+   */
   public static void refreshTree(final TreeViewer viewer, final AWorkspaceElement goal) {
     final UIJob job = new RefreshJob(viewer, goal);
     job.schedule();
   }
   
+  /**
+   * A job to refresh a specific viewer if one of its goal has
+   * been modified.
+   * 
+   * @author J. Charles (julien.charles@inria.fr)
+   */
   private static class RefreshJob extends UIJob {
+    
     private final TreeViewer fViewer;
     private final AWorkspaceElement fGoal;
     
@@ -61,11 +74,11 @@ public class Utils {
       fViewer = viewer;
       fGoal = goal;
     }
-
+    
+    /** {@inheritDoc} */
     public IStatus runInUIThread(final IProgressMonitor monitor) {
       fViewer.refresh(fGoal);
       return Utils.getOkStatus();
-
     }  
   }
   
@@ -107,12 +120,15 @@ public class Utils {
       case IImagesConstants.IMG_OBJS_LIBRARY:
         return Utils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
       case IImagesConstants.IMG_FOLDER:
-        return getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT);
+        return getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER);
+      case IImagesConstants.IMG_SRC_FOLDER:
+        return Utils.getJdtImage(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
+        
       case IImagesConstants.IMG_PKG:
         return Utils.getJdtImage(ISharedImages.IMG_OBJS_PACKAGE);
       case IImagesConstants.IMG_DEFAULT:
       default:
-        return getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_ELEMENT);
+        return getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FILE);
 
     }
   }

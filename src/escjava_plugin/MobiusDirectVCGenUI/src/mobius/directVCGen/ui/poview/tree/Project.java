@@ -43,9 +43,6 @@ public class Project extends AProofElement {
     }
     if (res instanceof IFile) {
       final IFile f = (IFile) res;
-      if (!f.getName().endsWith(".v")) {
-        return null;
-      }
       pe = Factory.createFile(f);
 
     }

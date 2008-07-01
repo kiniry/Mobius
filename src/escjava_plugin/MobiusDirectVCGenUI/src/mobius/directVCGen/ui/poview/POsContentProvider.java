@@ -21,7 +21,9 @@ import org.eclipse.jface.viewers.Viewer;
 public class POsContentProvider implements ITreeContentProvider {
   
   private static final class ChangeListener implements IResourceChangeListener {
+    
     private final TreeViewer fViewer;
+    
     public ChangeListener(final TreeViewer viewer) {
       fViewer = viewer;
     }
@@ -98,6 +100,7 @@ public class POsContentProvider implements ITreeContentProvider {
     final IResourceChangeListener listener = new ChangeListener(viewer);
     workspace.addResourceChangeListener(listener);
   }
+  
   public void dispose() {
      
   }
