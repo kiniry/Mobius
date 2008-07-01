@@ -10,7 +10,7 @@ cluster COMPONENTS description "The Components cluster in BON is the set of conc
 cluster STANDARDS description "The Standards cluster contains Coding Standards, Documentation Standards, Specification Standards and other elements of the Software Development Process." 
 cluster LOGICS description "This BON cluster contains the formal Logics used within MOBIUS, including the MOBIUS base logic." 
 cluster CDES description "This BON cluster contains concepts related to the use of Collaborative Development Environments (CDEs) within MOBIUS" 
-cluster STATUSES description "This BON cluster contains the concept of release status, component status and development status i.e. the current and latest non-historical information about the MOBIUS tools" 
+cluster STATUSES description "This BON cluster contains the concept of release status, component status and development status i.e. the current non-historical information about the MOBIUS tools" 
 cluster PLUGINS description "Plugins are software subcomponents which interact with a software platform or framework e.g. Eclipse." 
 cluster LANGUAGES description "This BON cluster describes the Software Languages e.g. Java used within MOBIUS"
 cluster SYSTEMS description "Components, subsystems and third-party platforms"
@@ -21,6 +21,21 @@ end
 -- Informal Cluster Charts
 
 cluster_chart RESOURCES
+explanation "The assignment of people, commitment of time and ownership of tasks"
+class WEB_PAGE description "A Hyper Text Markup Language (HTML) document"
+class SITE description "A physical location at which people work and which might also have associated web pages"
+class RESOURCE description "An abstract representation of a person's time, energy and commitment to a task"
+class PERSONNEL description "One or more people who might be assigned to work on a task"
+class RESPONSIBILITY description "The assignment of one or more people to as task"
+class COMMITMENT description "The allocation of time to the completion of a task"
+class PERSON description "A member of the group or team"
+class MAINTAINER description "A person responsible for one or more components"
+class OWNER description "A person with responsibility for one or more tasks"
+class AUTHOR description "A person with responibility for one or more documents or programs"
+class CONTACT_DETAILS description "The means by which to commmunicate with a person"
+class ELECTRONIC_MAIL_ADDRESS description "The address at which a person will receive electronic documents"
+class PHONE_NUMBER description "The number at which a person will receive phone calls"
+class INSTANT_MESSENGER_ID description "The address at which a person will accept an electronic dialog"
 end
 
 cluster_chart RELEASES
@@ -107,6 +122,12 @@ end
 class_chart ABSTRACT_SYNTAX_TREE
 end
 
+class_chart AUTHOR
+end
+
+class_chart AUTOMATED_PROVER
+end
+
 class_chart BOOGIE_PL
 end
 
@@ -119,7 +140,40 @@ end
 class_chart CODE
 end
 
+class_chart COMMITMENT
+end
+
+class_chart CONTACT_DETAILS
+end
+
+class_chart COQ_PROVER
+end
+
+class_chart CVC3_PROVER
+end
+
+class_chart ELECTRONIC_MAIL_ADDRESS
+end
+
+class_chart FEATURE
+end
+
 class_chart FORMAL_LANGUAGE
+end
+
+class_chart FX7_PLUGIN
+end
+
+class_chart FX7_PROVER
+end
+
+class_chart INSTANT_MESSENGER_ID
+end
+
+class_chart INTERACTIVE_PROVER
+end
+
+class_chart ISABELLE_PROVER
 end
 
 class_chart JAVA_BYTE_CODE
@@ -131,10 +185,70 @@ end
 class_chart JAVA_PROGRAMMING_LANGUAGE
 end
 
+class_chart JAVAFE_PLUGIN
+end
+
+class_chart JML_FOLDING_PLUGIN
+end
+
+class_chart JML4_PLUGIN
+end
+
 class_chart LEXER
 end
 
+class_chart MAINTAINER
+end
+
+class_chart OBJECT_CODE
+end
+
+class_chart OWNER
+end
+
+class_chart PARSER
+end
+
+class_chart PERSON
+end
+
+class_chart PERSONNEL
+end
+
+class_chart PHONE_NUMBER
+end
+
+class_chart PLUGIN
+end
+
+class_chart PROGRAMMING_LANGUAGE
+end
+
+class_chart PROVER
+end
+
+class_chart PROVER_EDITOR_PLUGIN
+end
+
+class_chart PVS_PROVER
+end
+
+class_chart RESOURCE
+end
+
+class_chart RESPONSIBILITY
+end
+
+class_chart SIMPLIFY_PLUGIN
+end
+
+class_chart SIMPLIFY_PROVER
+end
+
 class_chart SEMANTICS
+end
+
+class_chart SITE
 end
 
 class_chart SMT
@@ -152,68 +266,11 @@ end
 class_chart TYPE_CHECKER
 end
 
-class_chart OBJECT_CODE
-end
-
-class_chart PARSER
-end
-
-class_chart PROGRAMMING_LANGUAGE
-end
-
-class_chart PROVER
-end
-
-class_chart INTERACTIVE_PROVER
-end
-
-class_chart AUTOMATED_PROVER
-end
-
-class_chart COQ_PROVER
-end
-
-class_chart PVS_PROVER
-end
-
-class_chart ISABELLE_PROVER
-end
-
-class_chart CVC3_PROVER
-end
-
-class_chart FX7_PROVER
-end
-
-class_chart YICES_PROVER
-end
-
-class_chart SIMPLIFY_PROVER
-end
-
-class_chart PLUGIN
-end
-
 class_chart UMBRA_EDITOR_PLUGIN
 end
 
-class_chart JML_FOLDING_PLUGIN
+class_chart WEB_PAGE
 end
 
-class_chart PROVER_EDITOR_PLUGIN
-end
-
-class_chart FEATURE
-end
-
-class_chart JML4_PLUGIN
-end
-
-class_chart SIMPLIFY_PLUGIN
-end
-
-class_chart JAVAFE_PLUGIN
-end
-
-class_chart FX7_PLUGIN
+class_chart YICES_PROVER
 end
