@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IResource;
 
 public class LibFile extends WorkspaceElement implements IShowable {
 	IFile file;
-	public LibFile(IFile key) {
+	private LibFile(IFile key) {
 		super(key);
 		file = key;
 		
@@ -40,4 +40,12 @@ public class LibFile extends WorkspaceElement implements IShowable {
 			e.printStackTrace();
 		}
 	}
+
+  public static WorkspaceElement createCoqFileOrGoal(IFile f) {
+    WorkspaceElement res;
+    if (f.getName().startsWith("goal")) {
+      return new Goal(f);
+    }
+    return new LibFile(f);
+  }
 }

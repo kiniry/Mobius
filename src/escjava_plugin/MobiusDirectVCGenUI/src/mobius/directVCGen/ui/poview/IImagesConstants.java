@@ -9,5 +9,9 @@ public interface IImagesConstants {
 	public static int IMG_PROJECT_EMPTY = 5;
 	public static int IMG_GOAL_SOLVED = 6;
 	public static int IMG_LIB = 7;
+	public static int IMG_OBJS_LIBRARY = 8;
+	public static int IMG_FOLDER = 9;
+	public static int IMG_PKG = 10;
+	
 	
 }

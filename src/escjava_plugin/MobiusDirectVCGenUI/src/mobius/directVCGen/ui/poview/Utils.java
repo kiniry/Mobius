@@ -35,10 +35,13 @@ public class Utils {
 		return new Status(IStatus.OK, Activator.PLUGIN_ID, IStatus.OK, "", null);
 	}
 	
-	public static Image createImage(String file) {
+	public static Image createImage(final String file) {
 		Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
+		if (bundle == null) {
+		  System.err.println("Bundle not found!!!");
+		}
 		IPath path = new Path(file);
-		URL iconURL = FileLocator.find(bundle,path,null);
+		URL iconURL = FileLocator.find(bundle, path, null);
 		return ImageDescriptor.createFromURL(iconURL).createImage();
 	}
 	
@@ -93,6 +96,12 @@ public class Utils {
 					imgLib = createImage("icons/coq.gif");
 				}
 				return imgLib;
+			case IImagesConstants.IMG_OBJS_LIBRARY:
+			  return Utils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
+			case IImagesConstants.IMG_FOLDER:
+        return getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT);
+			case IImagesConstants.IMG_PKG:
+        return Utils.getJdtImage(ISharedImages.IMG_OBJS_PACKAGE);
 			case IImagesConstants.IMG_DEFAULT:
 			default:
 				return getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_ELEMENT);

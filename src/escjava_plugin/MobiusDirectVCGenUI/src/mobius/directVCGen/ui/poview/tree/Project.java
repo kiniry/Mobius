@@ -21,7 +21,7 @@ public class Project extends ProofElement {
 	}
 	
 	public void update() {
-		IFolder f = project.getFolder("coq_proofs");
+		IFolder f = project.getFolder("mobius");
 		
 		IResource[] res = new IResource[0];
 		if(f.exists()) {
@@ -39,13 +39,14 @@ public class Project extends ProofElement {
 	public WorkspaceElement createChildFromResource(IResource res) {
 		WorkspaceElement pe = null;
 		if(res instanceof IFolder) {
-			pe = new TargetClass((IFolder) res);
+			pe = new Folder((IFolder) res);
 		}
 		if(res instanceof IFile) {
 			IFile f = (IFile) res;
-			if(!f.getName().endsWith(".v"))
-				return null;
-			pe = new LibFile((IFile) res);
+      if(!f.getName().endsWith(".v"))
+        return null;
+			pe = LibFile.createCoqFileOrGoal(f);
+
 		}
 		return pe;
 	}
