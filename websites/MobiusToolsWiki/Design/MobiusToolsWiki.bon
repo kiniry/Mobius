@@ -39,6 +39,7 @@ class INSTANT_MESSENGER_ID description "The address at which a person will accep
 end
 
 cluster_chart RELEASES
+explanation "The process for distribution and packaging of a stable version of each component"
 end
 
 cluster_chart COMMUNICATIONS
