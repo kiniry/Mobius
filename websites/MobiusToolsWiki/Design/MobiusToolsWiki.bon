@@ -1,4 +1,7 @@
+-- Informal System Chart
+
 system_chart MOBIUS_TOOLS_WIKI
+explanation "The collaborative development environment (CDE) for MOBIUS PVE and tools development"
 cluster RESOURCES description "The Resources cluster contains the concepts of sites, people, ownership of, responsibility for and commitment to tasks." 
 cluster RELEASES description "The Releases cluster contains the concepts of versions, platforms, milestones, features and changes." 
 cluster COMMUNICATIONS description "The Communications cluster contains the concept of e-mail, tickets, wikis and other forms of communication between MOBIUS developers." 
@@ -14,6 +17,8 @@ cluster SYSTEMS description "Components, subsystems and third-party platforms"
 cluster COORDINATIONS description "Meetings and Publications"
 cluster WORKSPACES description "Eclipse workspaces"
 end
+
+-- Informal Cluster Charts
 
 cluster_chart RESOURCES
 end
@@ -58,9 +63,34 @@ class PLUGIN description "A software component that interacts with other compone
 class JML_FOLDING_PLUGIN description "An Eclipse plugin that extends the text editor so to permit folding of JML syntax"
 class PROVER_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of theorem proving languages"
 class UMBRA_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of Java Bytecode with embedded Bytecode Modeling Language (BML) annotations"
+class JML4_PLUGIN description "An major customisation of the Eclipse framework that supports the Java Modeling Language (JML) infrastructure"
+class SIMPLIFY_PLUGIN description "An Eclipse plugin that bundles the Simplify theorem prover"
+class JAVAFE_PLUGIN description "An Eclipse plugin that provides an API for the Java 1.4 front-end of ESC/Java2"
+class FX7_PLUGIN description "An Eclipse plugin that bundles the FX7 theorem prover"
+class FEATURE description "A set of Eclipse plugins and sub-features"
 end
 
 cluster_chart LANGUAGES
+explanation "Languages used or porcessed by MOBIUS"
+class SYNTAX description "The structure and grammer of a language"
+class SEMANTICS description "The meaning and interpretation of a language"
+class FORMAL_LANGUAGE description "A language which has a formal syntax and semantics, which can be processed automatically"
+class SPECIFICATION_LANGUAGE description "A formal language used to describe the behavior of a system"
+class PROGRAMMING_LANGUAGE description "A formal language that can either be compiled into object code, or interpreted as machine instructions"
+class PARSER description "A tool which can analyse the structure of a formal language"
+class CODE description "An expression or set of expressions written in a programming language"
+class SOURCE_CODE description "Program code which can compiled into object code"
+class OBJECT_CODE description "Program code which can be interpreted as machine instructions"
+class JAVA_BYTE_CODE description "Object code which can be run on a Java Virtual Machine"
+class JAVA_PROGRAMMING_LANGUAGE description "Object orientated programing language which can be compiled into bytecode"
+class JAVA_MODELING_LANGUAGE description "Design-by-contract specification language embedded as comments for the Java programming language"
+class BYTECODE_MODELING_LANGUAGE description "Specification language embedded with the Java bytecode, which can be generated from Java Modeling Language (JML)"
+class BOOGIE_PL description "Intermediate language derived from a specification language and used to generate verification conditions"
+class BUSINESS_OBJECT_NOTATION description "A formal language for the modeling of object-orientated software"
+class SMT description "Formal language used for theorem proving"
+class LEXER description "A tool that processes the lexiographic structure of a document i.e. converts a sequence of characters into a sequence of tokens"
+class TYPE_CHECKER description "A tool that checks the object type definitions used in a formal language"
+class ABSTRACT_SYNTAX_TREE description "An abstract representation of the syntax of a formal language expression"
 end
 
 cluster_chart SYSTEMS
@@ -70,6 +100,65 @@ cluster_chart COORDINATIONS
 end
 
 cluster_chart WORKSPACES
+end
+
+-- Informal Class Charts
+
+class_chart ABSTRACT_SYNTAX_TREE
+end
+
+class_chart BOOGIE_PL
+end
+
+class_chart BUSINESS_OBJECT_NOTATION
+end
+
+class_chart BYTECODE_MODELING_LANGUAGE 
+end
+
+class_chart CODE
+end
+
+class_chart FORMAL_LANGUAGE
+end
+
+class_chart JAVA_BYTE_CODE
+end
+
+class_chart JAVA_MODELING_LANGUAGE
+end
+
+class_chart JAVA_PROGRAMMING_LANGUAGE
+end
+
+class_chart LEXER
+end
+
+class_chart SEMANTICS
+end
+
+class_chart SMT
+end
+
+class_chart SOURCE_CODE
+end
+
+class_chart SPECIFICATION_LANGUAGE
+end
+
+class_chart SYNTAX
+end
+
+class_chart TYPE_CHECKER
+end
+
+class_chart OBJECT_CODE
+end
+
+class_chart PARSER
+end
+
+class_chart PROGRAMMING_LANGUAGE
 end
 
 class_chart PROVER
@@ -112,4 +201,19 @@ class_chart JML_FOLDING_PLUGIN
 end
 
 class_chart PROVER_EDITOR_PLUGIN
+end
+
+class_chart FEATURE
+end
+
+class_chart JML4_PLUGIN
+end
+
+class_chart SIMPLIFY_PLUGIN
+end
+
+class_chart JAVAFE_PLUGIN
+end
+
+class_chart FX7_PLUGIN
 end
