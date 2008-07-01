@@ -77,7 +77,7 @@ public class Passivator extends Transformer {
       for (int i = 1; i <= e.getValue(); ++i) {
         ast = VariableDecl.mk(
           e.getKey().getName()+"$$"+i, 
-          e.getKey().getType(), 
+          TypeUtils.stripDep(e.getKey().getType()), 
           e.getKey().getTypeVars(), 
           ast);
       }
@@ -90,8 +90,12 @@ public class Passivator extends Transformer {
   @Override
   public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
     currentFG = tc.getFlowGraph(implementation);
-    assert currentFG != null; // You should tell me the flowgraph beforehand
-    assert !currentFG.hasCycle(); // You should cut cycles first
+    if (currentFG.hasCycle()) {
+      Err.warning("" + implementation.loc() + ": Implementation " + 
+        sig.getName() + " has cycles. I'm not passivating it.");
+      if (tail != null) tail = (Declaration)tail.eval(this);
+      return Implementation.mk(sig, body, tail);
+    }
 
     // collect all variables that are assigned to
     Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> rwIds = 
@@ -198,8 +202,8 @@ public class Passivator extends Transformer {
             null,
             BinaryOp.mk(
               BinaryOp.Op.EQ,
-              AtomId.mk(v.getName() + "$$" + ri, null),
-              AtomId.mk(v.getName() + "$$" + wi, null))),
+              AtomId.mk(v.getName() + (ri > 0? "$$" + ri : ""), null),
+              AtomId.mk(v.getName() + (wi > 0? "$$" + wi : ""), null))),
           Identifiers.mk(
             AtomId.mk(ss.getName(), null),
             null),
@@ -261,35 +265,47 @@ public class Passivator extends Transformer {
     int last = newVarsCnt.containsKey(variableDecl) ? newVarsCnt.get(variableDecl) : 0;
     newVarsCnt.remove(variableDecl);
     Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
-    if (newTail != tail)
-      variableDecl = VariableDecl.mk(name, type, typeVars, newTail, variableDecl.loc());
-    for (int i = 1; i <= last; ++i)
-      variableDecl = VariableDecl.mk(name+"$$"+i, type, typeVars, variableDecl);
+    if (newTail != tail) {
+      variableDecl = VariableDecl.mk(
+        name, 
+        TypeUtils.stripDep(type), 
+        typeVars, 
+        newTail, 
+        variableDecl.loc());
+    }
+    for (int i = 1; i <= last; ++i) {
+      variableDecl = VariableDecl.mk(
+        name+"$$"+i, 
+        TypeUtils.stripDep(type), 
+        typeVars, 
+        variableDecl);
+    }
     return variableDecl;
   }
 
   // === helpers ===
   private int getIdx(HashMap<VariableDecl, HashMap<Block, Integer> > cache, VariableDecl vd) {
-    if (belowOld > 0) return 0;
     Map<Block, Integer> m = cache.get(vd);
-    if (m == null) return 0; // this variable is never written to
-    return m.get(currentBlock);
+    if (m == null || belowOld > 0 || currentBlock == null) 
+      return 0; // this variable is never written to
+    Integer idx = m.get(currentBlock);
+    return idx == null? 0 : idx;
   }
 
   private VariableDecl newResults(VariableDecl old) {
     if (old == null) return null;
     Integer last = newVarsCnt.get(old);
     newVarsCnt.remove(old);
-    for (int i = 1; i < last; ++i) {
+    if (last != null) for (int i = 1; i < last; ++i) {
       newLocals = VariableDecl.mk(
         old.getName() + "$$" + i,
-        old.getType(),
+        TypeUtils.stripDep(old.getType()),
         old.getTypeVars(),
         newLocals);
     }
     return VariableDecl.mk(
       old.getName() + (last != null && last > 0? "$$" + last : ""),
-      old.getType(),
+      TypeUtils.stripDep(old.getType()),
       old.getTypeVars(),
       newResults((VariableDecl)old.getTail()));
   }

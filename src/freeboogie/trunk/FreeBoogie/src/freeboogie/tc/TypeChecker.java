@@ -412,7 +412,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     if (getTypeVarDecl(b) != ai) {
       log.fine("TC: typevar " + ai.getId() + "@" + ai.loc() +
         " == type " + TypeUtils.typeToString(b));
-      assert tvLevel > 0;
+      assert tvLevel > 0; // ypu probably need to add typeVarEnter/Exit in some places
       typeVar.put(ai, b);
     }
   }
@@ -509,7 +509,9 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     case EQ:
     case NEQ:
       // typeOf(l) == typeOf(r) and boolean result
+      typeVarEnter(binaryOp);
       checkExact(l, r, binaryOp);
+      typeVarExit(binaryOp);
       typeOf.put(binaryOp, boolType);
       return boolType;
     default:

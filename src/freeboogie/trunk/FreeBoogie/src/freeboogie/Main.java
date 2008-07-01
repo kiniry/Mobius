@@ -77,6 +77,7 @@ public class Main {
 
   public Main() {
     opt = new Options();
+    opt.regBool("-log", "log events to ./freeboogie.log");
     opt.regBool("-pp", "pretty print");
     opt.regBool("-pst", "print symbol table");
     opt.regBool("-pfg", "print flow graphs");
@@ -126,30 +127,29 @@ public class Main {
   private boolean passivate() {
     Passivator p = new Passivator();
     ast = p.process(ast, tc);
-    /*
     if (FbError.reportAll(tc.process(ast))) return false;
     ast = tc.getAST();
-    */
     return true;
   }
 
   public void run(String[] args) {
-    // prepare logging
-    try {
-      FileHandler logh = new FileHandler("freeboogie.log");
-      logh.setFormatter(new SimpleFormatter());
-      log.addHandler(logh);
-      log.setLevel(Level.ALL); // TODO Control using a properties file.
-      log.setUseParentHandlers(false); // the 'root' logger sends >=INFO to console
-    } catch (IOException e) {
-      Err.warning("Can't create log file. Nevermind.");
-      log.setLevel(Level.OFF);
-    }
-    
     // parse command line arguments
     opt.parse(args);
     Err.setVerbosity(opt.intVal("-v"));
     tc = opt.boolVal("-old") ? new ForgivingTc() : new TypeChecker();
+    
+    // prepare logging
+    log.setLevel(Level.OFF);
+    log.setUseParentHandlers(false); // the 'root' logger sends >=INFO to console
+    try {
+      FileHandler logh = new FileHandler("freeboogie.log");
+      logh.setFormatter(new SimpleFormatter());
+      log.addHandler(logh);
+      if (opt.boolVal("-log")) 
+        log.setLevel(Level.ALL);
+    } catch (IOException e) {
+      Err.warning("Can't create log file. Nevermind.");
+    }
     
     // process files one by one
     for (String file : opt.otherArgs()) {
