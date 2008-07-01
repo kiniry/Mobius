@@ -57,6 +57,7 @@ public class Passivator extends Transformer {
   private HashMap<Block, Integer> currentWriteIdxCache;
   private SimpleGraph<Block> currentFG;
   private Block currentBlock;
+  private HashSet<VariableDecl> allWritten; // by the current implementation
 
   private Deque<Boolean> context; // true = write, false = read
   private int belowOld;
@@ -94,10 +95,10 @@ public class Passivator extends Transformer {
     // Collect all variables that are assigned to
     Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> rwIds = 
       implementation.eval(rwsf);
-    HashSet<VariableDecl> allIds = new HashSet<VariableDecl>();
-    for (VariableDecl vd : rwIds.second) allIds.add(vd);
+    allWritten = new HashSet<VariableDecl>();
+    for (VariableDecl vd : rwIds.second) allWritten.add(vd);
 
-    for (VariableDecl vd : allIds) {
+    for (VariableDecl vd : allWritten) {
       currentVar = vd;
       currentReadIdxCache = new LinkedHashMap<Block, Integer>();
       currentWriteIdxCache = new LinkedHashMap<Block, Integer>();
@@ -158,12 +159,45 @@ public class Passivator extends Transformer {
   // === visitors ===
   @Override
   public Block eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
-    currentBlock = block;
-    Command newCmd = cmd == null? null : (Command)cmd.eval(this);
-    currentBlock = null;
+    // first process the rest
     Block newTail = tail == null? null : (Block)tail.eval(this);
+    
+    currentBlock = block;
+    // change variable occurrences in the command of this block
+    Command newCmd = cmd == null? null : (Command)cmd.eval(this);
+
+    /* Compute the successors, perhaps introducing extra blocks for
+     * copy operations.
+     */
+    Identifiers newSucc = null;
+    for (Block s : currentFG.to(block)) {
+      Block ss = s; // new successor
+      for (VariableDecl v : allWritten) {
+        int ri = readIdx.get(v).get(s);
+        int wi = writeIdx.get(v).get(block);
+        if (ri == wi) continue;
+        // TODO: Perhaps I need to specify some type variables?
+        ss = newTail = Block.mk(
+          Id.get("copy"),
+          AssertAssumeCmd.mk(
+            AssertAssumeCmd.CmdType.ASSUME,
+            null,
+            BinaryOp.mk(
+              BinaryOp.Op.EQ,
+              AtomId.mk(v.getName() + "$$" + ri, null),
+              AtomId.mk(v.getName() + "$$" + wi, null))),
+          Identifiers.mk(
+            AtomId.mk(ss.getName(), null),
+            null),
+          newTail,
+          block.loc());
+      }
+      newSucc = Identifiers.mk(AtomId.mk(ss.getName(), null), newSucc);
+    }
+    currentBlock = null;
+
     if (newCmd != cmd || newTail != tail)
-      block = Block.mk(name, newCmd, succ, newTail, block.loc());
+      block = Block.mk(name, newCmd, newSucc, newTail, block.loc());
     return block;
   }
 

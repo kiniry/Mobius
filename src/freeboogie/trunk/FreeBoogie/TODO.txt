@@ -1,6 +1,5 @@
  . Passivate: Insert out parameter versions as local declarations, not global.
  . Passivate: Make sure out parameters use the last version.
- . Passivate: Insert copy operations.
  . Do a profile and fix obvious performance issues.
  . Change the grammar and the AST to allow for parallel assignments.
  . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
