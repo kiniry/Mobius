@@ -33,10 +33,10 @@ public class Folder extends ProofElement{
 		  IFolder fold = (IFolder) res;
 		  if (name.equals("classes") ||
           name.equals("src")) {
-        pe = Pkage.createPackageOrClass(fold, 0);
+        pe = Factory.createPackageOrClass(fold, 0);
       }
 		  else if (name.equals("vcs")) {
-        pe = Pkage.createPackageOrClass(fold, 2);
+        pe = Factory.createPackageOrClass(fold, 2);
       }
       else {
         pe = new TargetMethod(fold);

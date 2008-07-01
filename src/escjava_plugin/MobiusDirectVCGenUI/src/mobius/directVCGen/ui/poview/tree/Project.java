@@ -45,7 +45,7 @@ public class Project extends ProofElement {
 			IFile f = (IFile) res;
       if(!f.getName().endsWith(".v"))
         return null;
-			pe = LibFile.createCoqFileOrGoal(f);
+			pe = Factory.createCoqFileOrGoal(f);
 
 		}
 		return pe;

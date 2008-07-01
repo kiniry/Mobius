@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import mobius.directVCGen.ui.poview.IImagesConstants;
 import mobius.directVCGen.ui.poview.Utils;
@@ -14,10 +15,10 @@ import org.eclipse.swt.graphics.Image;
 
 
 public abstract class WorkspaceElement implements IImagesConstants {
-	protected List children = new ArrayList();
+	protected List<WorkspaceElement> children = new ArrayList<WorkspaceElement>();
 	private WorkspaceElement parent = null;
 	private IResource key;
-	private static HashMap hm  = new HashMap();
+	private static Map<IResource, WorkspaceElement> hm  = new HashMap<IResource, WorkspaceElement>();
 	public static WorkspaceElement getElement(IResource key) {
 		return (WorkspaceElement) hm.get(key);
 	}
@@ -41,7 +42,7 @@ public abstract class WorkspaceElement implements IImagesConstants {
 		return children.toArray();
 	}
 	public WorkspaceElement [] getElementChildren() {
-		return (WorkspaceElement []) children.toArray(new WorkspaceElement[0]);
+		return children.toArray(new WorkspaceElement[0]);
 	}
 	public int getChildrenCount() {
 		return children.size();
@@ -56,14 +57,14 @@ public abstract class WorkspaceElement implements IImagesConstants {
 	
 	public void remove() {
 		hm.remove(key);
-		Iterator iter = children.iterator();
+		Iterator<WorkspaceElement> iter = children.iterator();
 		while(iter.hasNext()) {
-			((WorkspaceElement) iter.next()).remove();
+			iter.next().remove();
 		}
 	}
 	protected void update(IResource[] res) {
-		List oldchildren = children;
-		children = new ArrayList();
+		List<WorkspaceElement> oldchildren = children;
+		children = new ArrayList<WorkspaceElement>();
 		for(int i = 0; i < res.length; i++) {
 			WorkspaceElement pe = getElement(res[i]);
 			if(pe == null) {
@@ -77,11 +78,9 @@ public abstract class WorkspaceElement implements IImagesConstants {
 			
 		cleanUp(oldchildren);
 	}
-	private static void cleanUp(List children) {
-		Iterator iter = children.iterator();
-		while(iter.hasNext()) {
-			WorkspaceElement pe = ((WorkspaceElement)iter.next());
-			pe.remove();
+	private static void cleanUp(List<WorkspaceElement> children) {
+		for (WorkspaceElement we: children) {
+			we.remove();
 		}
 	}
 	

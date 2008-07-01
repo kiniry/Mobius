@@ -30,7 +30,7 @@ public class TargetMethod extends ProofElement {
 	public WorkspaceElement createChildFromResource(IResource res) {
 		WorkspaceElement pe = null;
 		if((res instanceof IFile) && res.toString().endsWith(".v")) {
-			pe = LibFile.createCoqFileOrGoal((IFile) res);
+			pe = Factory.createCoqFileOrGoal((IFile) res);
 		}
 		return pe;
 	}
