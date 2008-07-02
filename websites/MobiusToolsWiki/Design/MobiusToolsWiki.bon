@@ -24,6 +24,22 @@ cluster_chart CDES
 end
 
 cluster_chart COMMUNICATIONS
+explanation "The way in which useful information is exchanged between MOBIUS developers and with third-party collaborators"
+class CITATION description "A bibliographic reference to an existing document or publication"
+class DESCRIPTION description "A one line summary of a component or class"
+class DOCUMENT_STATUS description "The stage of the documentation within its workflow"
+class DOCUMENT_TITLE description "The name by which a document is both publicly and uniquely identified"
+class EXAMPLE description "A detailed instance of how a software component might be used"
+class EXPLANATION description "A detailed overview of a component or class"
+class HOME_PAGE description "The top level page of a website or the main page for a software component"
+class INDEX description "Web page with links to all other web pages"
+class LICENSE description "The terms and conditions for usage of a software component"
+class NEWS description "Information about recent changes in status"
+class REFERENCE description "The mention of a document within another context"
+class TABLE_OF_CONTENTS description "Section of a document or page that list major divisions of content"
+class VERSION description "An iteration within the lifecycle of a component"
+class WEB_SITE description "A web server at which HTML documents and servlets are hosted"
+class WIKI description "A collection of web pages designed to enable anyone who accesses it to contribute or modify content, using a simplified markup language"
 end
 
 cluster_chart COMPONENTS
@@ -33,26 +49,26 @@ cluster_chart COORDINATIONS
 end
 
 cluster_chart LANGUAGES
-explanation "Languages used or porcessed by MOBIUS"
-class SYNTAX description "The structure and grammer of a language"
-class SEMANTICS description "The meaning and interpretation of a language"
-class FORMAL_LANGUAGE description "A language which has a formal syntax and semantics, which can be processed automatically"
-class SPECIFICATION_LANGUAGE description "A formal language used to describe the behavior of a system"
-class PROGRAMMING_LANGUAGE description "A formal language that can either be compiled into object code, or interpreted as machine instructions"
-class PARSER description "A tool which can analyse the structure of a formal language"
-class CODE description "An expression or set of expressions written in a programming language"
-class SOURCE_CODE description "Program code which can compiled into object code"
-class OBJECT_CODE description "Program code which can be interpreted as machine instructions"
-class JAVA_BYTE_CODE description "Object code which can be run on a Java Virtual Machine"
-class JAVA_PROGRAMMING_LANGUAGE description "Object orientated programing language which can be compiled into bytecode"
-class JAVA_MODELING_LANGUAGE description "Design-by-contract specification language embedded as comments for the Java programming language"
-class BYTECODE_MODELING_LANGUAGE description "Specification language embedded with the Java bytecode, which can be generated from Java Modeling Language (JML)"
+explanation "Languages used or processed by MOBIUS components"
+class ABSTRACT_SYNTAX_TREE description "An abstract representation of the syntax of a formal language expression"
 class BOOGIE_PL description "Intermediate language derived from a specification language and used to generate verification conditions"
 class BUSINESS_OBJECT_NOTATION description "A formal language for the modeling of object-orientated software"
-class SMT description "Formal language used for theorem proving"
+class BYTECODE_MODELING_LANGUAGE description "Specification language embedded with the Java bytecode, which can be generated from Java Modeling Language (JML)"
+class CODE description "An expression or set of expressions written in a programming language"
+class FORMAL_LANGUAGE description "A language which has a formal syntax and semantics, which can be processed automatically"
+class JAVA_BYTE_CODE description "Object code which can be run on a Java Virtual Machine"
+class JAVA_MODELING_LANGUAGE description "Design-by-contract specification language embedded as comments for the Java programming language"
+class JAVA_PROGRAMMING_LANGUAGE description "Object orientated programing language which can be compiled into bytecode"
 class LEXER description "A tool that processes the lexiographic structure of a document i.e. converts a sequence of characters into a sequence of tokens"
+class OBJECT_CODE description "Program code which can be interpreted as machine instructions"
+class PARSER description "A tool which can analyse the structure of a formal language"
+class PROGRAMMING_LANGUAGE description "A formal language that can either be compiled into object code, or interpreted as machine instructions"
+class SEMANTICS description "The meaning and interpretation of a language"
+class SMT description "Formal language used for theorem proving"
+class SOURCE_CODE description "Program code which can compiled into object code"
+class SPECIFICATION_LANGUAGE description "A formal language used to describe the behavior of a system"
+class SYNTAX description "The structure and grammer of a language"
 class TYPE_CHECKER description "A tool that checks the object type definitions used in a formal language"
-class ABSTRACT_SYNTAX_TREE description "An abstract representation of the syntax of a formal language expression"
 end
 
 cluster_chart LOGICS
@@ -73,45 +89,46 @@ end
 
 cluster_chart RESOURCES
 explanation "The assignment of people, commitment of time and ownership of tasks"
-class WEB_PAGE description "A Hyper Text Markup Language (HTML) document"
-class SITE description "A physical location at which people work and which might also have associated web pages"
-class RESOURCE description "An abstract representation of a person's time, energy and commitment to a task"
-class PERSONNEL description "One or more people who might be assigned to work on a task"
-class RESPONSIBILITY description "The assignment of one or more people to as task"
-class COMMITMENT description "The allocation of time to the completion of a task"
-class PERSON description "A member of the group or team"
-class MAINTAINER description "A person responsible for one or more components"
-class OWNER description "A person with responsibility for one or more tasks"
 class AUTHOR description "A person with responibility for one or more documents or programs"
+class COMMITMENT description "The allocation of time to the completion of a task"
 class CONTACT_DETAILS description "The means by which to commmunicate with a person"
 class ELECTRONIC_MAIL_ADDRESS description "The address at which a person will receive electronic documents"
-class PHONE_NUMBER description "The number at which a person will receive phone calls"
 class INSTANT_MESSENGER_ID description "The address at which a person will accept an electronic dialog"
+class MAINTAINER description "A person responsible for one or more components"
+class OWNER description "A person with responsibility for one or more tasks"
+class PERSON description "A member of the group or team"
+class PERSONNEL description "One or more people who might be assigned to work on a task"
+class PHONE_NUMBER description "The number at which a person will receive phone calls"
+class RESOURCE description "An abstract representation of a person's time, energy and commitment to a task"
+class RESPONSIBILITY description "The assignment of one or more people to as task"
+class SITE description "A physical location at which people work and which might also have associated web pages"
+class WEB_PAGE description "A Hyper Text Markup Language (HTML) document"
 end
 
 cluster_chart PLUGINS
 explanation "Plugins are software subcomponents which interact with a software platform or framework e.g. Eclipse.  For our purposes, a component is an object that provides a certain type of service within the context of the application. There is at most one instance of any component: components are singletons. That implies that a component does not map to an entity of the application's object model; instead, compoennts represent functional subsystems. Components can declare extension points that other components can plug in to. This allows one component to enhance the functionality of the component it extends, without the extended component even knowing that the extending component exists. All that is needed is that the original component exposes – and uses – one or more extension points See Trac Component Architecture for an example of a Plugin Architecture. Other examples are Maven and Hudson"
-class PLUGIN description "A software component that interacts with other components via a shared framework and platform"
-class JML_FOLDING_PLUGIN description "An Eclipse plugin that extends the text editor so to permit folding of JML syntax"
-class PROVER_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of theorem proving languages"
-class UMBRA_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of Java Bytecode with embedded Bytecode Modeling Language (BML) annotations"
-class JML4_PLUGIN description "An major customisation of the Eclipse framework that supports the Java Modeling Language (JML) infrastructure"
-class SIMPLIFY_PLUGIN description "An Eclipse plugin that bundles the Simplify theorem prover"
-class JAVAFE_PLUGIN description "An Eclipse plugin that provides an API for the Java 1.4 front-end of ESC/Java2"
-class FX7_PLUGIN description "An Eclipse plugin that bundles the FX7 theorem prover"
 class FEATURE description "A set of Eclipse plugins and sub-features"
+class FX7_PLUGIN description "An Eclipse plugin that bundles the FX7 theorem prover"
+class JAVAFE_PLUGIN description "An Eclipse plugin that provides an API for the Java 1.4 front-end of ESC/Java2"
+class JML4_PLUGIN description "An major customisation of the Eclipse framework that supports the Java Modeling Language (JML) infrastructure"
+class JML_FOLDING_PLUGIN description "An Eclipse plugin that extends the text editor so to permit folding of JML syntax"
+class PLUGIN description "A software component that interacts with other components via a shared framework and platform"
+class PROVER_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of theorem proving languages"
+class SIMPLIFY_PLUGIN description "An Eclipse plugin that bundles the Simplify theorem prover"
+class UMBRA_EDITOR_PLUGIN description "An Eclipse plugin that permits editing of Java Bytecode with embedded Bytecode Modeling Language (BML) annotations"
 end
 
 cluster_chart PROVERS
-class PROVER description "A theorem prover"
-class INTERACTIVE_PROVER description "An interactive theorem prover"
+explanation "Tools that help to check verification conditions"
 class AUTOMATED_PROVER description "An automated theorem prover"
 class COQ_PROVER description "Theorem prover for Coq language"
-class PVS_PROVER description "Theorem prover for PVS langauge"
-class ISABELLE_PROVER description "Isabelle theorem prover"
-class SIMPLIFY_PROVER description "Simplify theorem prover"
 class CVC3_PROVER description "CVC3 theorem prover"
 class FX7_PROVER description "Fx7 theorem prover"
+class INTERACTIVE_PROVER description "An interactive theorem prover"
+class ISABELLE_PROVER description "Isabelle theorem prover"
+class PROVER description "A theorem prover"
+class PVS_PROVER description "Theorem prover for PVS langauge"
+class SIMPLIFY_PROVER description "Simplify theorem prover"
 class YICES_PROVER description "Yices theorem prover"
 end
 
@@ -147,6 +164,9 @@ end
 class_chart BYTECODE_MODELING_LANGUAGE 
 end
 
+class_chart CITATION
+end
+
 class_chart CODE
 end
 
@@ -162,10 +182,25 @@ end
 class_chart CVC3_PROVER
 end
 
+class_chart DESCRIPTION
+end
+
+class_chart DOCUMENT_STATUS
+end
+
+class_chart DOCUMENT_TITLE
+end
+
 class_chart DOWNLOAD
 end
 
 class_chart ELECTRONIC_MAIL_ADDRESS
+end
+
+class_chart EXAMPLE
+end
+
+class_chart EXPLANATION
 end
 
 class_chart FEATURE
@@ -178,6 +213,12 @@ class_chart FX7_PLUGIN
 end
 
 class_chart FX7_PROVER
+end
+
+class_chart HOME_PAGE
+end
+
+class_chart INDEX
 end
 
 class_chart INSTANT_MESSENGER_ID
@@ -210,6 +251,9 @@ end
 class_chart LEXER
 end
 
+class_chart LICENSE
+end
+
 class_chart LINUX_RELEASE
 end
 
@@ -217,6 +261,9 @@ class_chart MAINTAINER
 end
 
 class_chart MAC_OS_X_RELEASE
+end
+
+class_chart NEWS
 end
 
 class_chart OBJECT_CODE
@@ -255,6 +302,9 @@ end
 class_chart PVS_PROVER
 end
 
+class_chart REFERENCE
+end
+
 class_chart RESOURCE
 end
 
@@ -291,13 +341,25 @@ end
 class_chart SYNTAX
 end
 
+class_chart TABLE_OF_CONTENTS
+end
+
 class_chart TYPE_CHECKER
 end
 
 class_chart UMBRA_EDITOR_PLUGIN
 end
 
+class_chart VERSION
+end
+
 class_chart WEB_PAGE
+end
+
+class_chart WEB_SITE
+end
+
+class_chart WIKI
 end
 
 class_chart WINDOWS_RELEASE
