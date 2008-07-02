@@ -161,6 +161,11 @@ class YICES_PROVER description "Yices theorem prover"
 end
 
 cluster_chart STANDARDS
+explanation "Agreed patterns and templates for layout of text and code"
+class CODING_STANDARD description "Standard conventions for layout and formating of software code"
+class DOCUMENTATION_STANDARD description "Standard layouts for wiki pages and user manuals"
+class SPECIFICATION_STANDARD description "Consistent interpretation and usage of formal specifications e.g. design-by-contract and refinement"
+class STANDARD description "Best practice and examples of how to develop high quality software"
 end
 
 cluster_chart STATUSES
@@ -210,6 +215,9 @@ end
 class_chart CODE
 end
 
+class_chart CODING_STANDARD
+end
+
 class_chart COMMITMENT
 end
 
@@ -238,6 +246,9 @@ class_chart DOCUMENT_STATUS
 end
 
 class_chart DOCUMENT_TITLE
+end
+
+class_chart DOCUMENTATION_STANDARD
 end
 
 class_chart DOWNLOAD
@@ -409,6 +420,12 @@ class_chart SPECIFICATION
 end
 
 class_chart SPECIFICATION_LANGUAGE
+end
+
+class_chart SPECIFICATION_STANDARD
+end
+
+class_chart STANDARD
 end
 
 class_chart SYNTAX
