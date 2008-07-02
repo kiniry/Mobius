@@ -54,6 +54,18 @@ class WIKI description "A collection of web pages designed to enable anyone who 
 end
 
 cluster_chart COMPONENTS
+explanation "Subsystems or plugins developed or mainatained and upgraded by MOBIUS developers"
+class API description "Application Programmer Interface"
+class CLI description "Command Line Interface"
+class COMPONENT description "A self-contained subsystem of the MOBIUS PVE"
+class DETAIL description "Full information about the component"
+class DEPENDENCY description "Other components which are used by this component"
+class REPOSITORY description "The location for this component within the version control system"
+class SPECIFICATION description "The formal model for the functional behaviour of this component"
+class UPDATE_SITE description "The web page from which this component can be downloaded and installed e.g. an Eclipse update site URL"
+cluster COLLABORATIVE_DEVELOPMENT_ENVIRONMENTS description "CDE used to manage MOBIUS components"
+cluster RELEASES description "Releases of MOBIUS components"
+cluster RESOURCES description "Resources allocated to work on MOBIUS components"
 end
 
 cluster_chart COORDINATIONS
@@ -160,6 +172,9 @@ end
 class_chart ABSTRACT_SYNTAX_TREE
 end
 
+class_chart API
+end
+
 class_chart AUTHOR
 end
 
@@ -184,10 +199,16 @@ end
 class_chart CITATION
 end
 
+class_chart CLI
+end
+
 class_chart CODE
 end
 
 class_chart COMMITMENT
+end
+
+class_chart COMPONENT
 end
 
 class_chart CONTACT_DETAILS
@@ -200,6 +221,12 @@ class_chart CVC3_PROVER
 end
 
 class_chart DESCRIPTION
+end
+
+class_chart DETAIL
+end
+
+class_chart DEPENDENCY
 end
 
 class_chart DOCUMENT_STATUS
@@ -340,6 +367,9 @@ end
 class_chart RESPONSIBILITY
 end
 
+class_chart REPOSITORY
+end
+
 class_chart SCHEDULE
 end
 
@@ -359,6 +389,9 @@ class_chart SMT
 end
 
 class_chart SOURCE_CODE
+end
+
+class_chart SPECIFICATION
 end
 
 class_chart SPECIFICATION_LANGUAGE
@@ -386,6 +419,9 @@ class_chart TYPE_CHECKER
 end
 
 class_chart UMBRA_EDITOR_PLUGIN
+end
+
+class_chart UPDATE_SITE
 end
 
 class_chart VERSION
