@@ -58,7 +58,7 @@ public class UsageToDefMap<U, D> {
    }
    
    /**
-    * Returns the set of usages of a certaini definition. The user
+    * Returns the set of usages of a certain definition. The user
     * should not modify the result of this function.
     * @param d the definition
     * @return the usages of {@code d}

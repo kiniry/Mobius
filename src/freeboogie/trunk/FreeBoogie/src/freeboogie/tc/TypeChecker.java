@@ -7,8 +7,7 @@ import java.util.logging.Logger;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.util.Closure;
-import freeboogie.util.StackedHashMap;
+import freeboogie.util.*;
 
 /**
  * Typechecks an AST.

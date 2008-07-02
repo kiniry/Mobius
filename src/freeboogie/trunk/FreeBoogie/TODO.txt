@@ -1,9 +1,8 @@
- . A log Formatter that uses a line per record.
- . Desugar dependent types in assumes/asserts
+ . Desugar specs into assumes/asserts (introduces new blocks).
  . Desugar function calls into assumes/asserts (remember that free is special)
    Also remember to havoc LHS and the things that appear in modifies clause.
- . Desugar specs into assumes/asserts (introduces new blocks)
- . Desugar havocs into assignments from fresh variables.
+ . Desugar havocs into assignments from fresh variables and
+   desugar dependent types in assumes/asserts.
  . Cut out loops
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
@@ -43,5 +42,12 @@
    (see :h 'comments')
  . Don't allow assignments to input parameters.
  . Make the latest Boogie.exe from MSR work on Linux.
+ . Performance: get rid of the exception in
+     freeboogie.tc.Specializer.prepareTypeList.
+ . Performance: Clear your hashes instead of initializing new ones.
+ . Performance: Set the initial size of hashes appropriately.
+ . Most transformations during VC generation treat ignore generics
+   completely. This should be fine in Boogie 2, but not when
+   explicit specialization is allowed.
 
 vim:spell:ts=3:sw=3:fdm=manual:
