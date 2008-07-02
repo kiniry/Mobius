@@ -18,7 +18,7 @@ public class Pkage extends AProofFolder {
     update();
   }
   
-  
+  /** {@inheritDoc} */
   public AWorkspaceElement createChildFromResource(final IResource res) {
     AWorkspaceElement pe = null;
     if (res instanceof IFolder) {
@@ -31,7 +31,7 @@ public class Pkage extends AProofFolder {
     return pe;
   }
 
-  
+  /** {@inheritDoc} */
   public Image getImage () {
     return Utils.getImage(IMG_PKG);
   }

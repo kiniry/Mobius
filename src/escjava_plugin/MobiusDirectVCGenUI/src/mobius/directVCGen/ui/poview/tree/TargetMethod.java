@@ -16,6 +16,7 @@ public class TargetMethod extends AProofFolder {
     update();
   }
   
+  /** {@inheritDoc} */
   public AWorkspaceElement createChildFromResource(final IResource res) {
     AWorkspaceElement pe = null;
     if ((res instanceof IFile) && res.toString().endsWith(".v")) {
@@ -24,7 +25,7 @@ public class TargetMethod extends AProofFolder {
     return pe;
   }
   
-
+  /** {@inheritDoc} */
   public Image getImage () {
     return  Utils.getImage(IMG_METHOD);
   }

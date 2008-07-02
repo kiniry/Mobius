@@ -24,10 +24,13 @@ import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.Bundle;
 
 
-public class Utils {
+public final class Utils {
   private static Image imgGoal;
   private static Image imgLib;
   private static Image imgLibRed;
+  
+  /** Default Constructor. */
+  private Utils() { }
   
   /**
    * Returns a standard ok status.

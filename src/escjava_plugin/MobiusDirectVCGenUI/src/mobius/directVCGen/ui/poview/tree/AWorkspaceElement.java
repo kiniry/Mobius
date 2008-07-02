@@ -10,6 +10,7 @@ import mobius.directVCGen.ui.poview.Utils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -19,7 +20,7 @@ public abstract class AWorkspaceElement implements IImagesConstants {
   private static Map<IResource, AWorkspaceElement> instances  = 
     new HashMap<IResource, AWorkspaceElement>();
   
-  private List<AWorkspaceElement> children = new ArrayList<AWorkspaceElement>();
+  private List<AWorkspaceElement> fChildren = new ArrayList<AWorkspaceElement>();
   private AWorkspaceElement fParent;
   private IResource fKey;
   
@@ -36,11 +37,15 @@ public abstract class AWorkspaceElement implements IImagesConstants {
     return instances.get(key);
   }
   
-
+  /**
+   * Return the name of the node. It is used to print the label
+   * associated with the node in the tree view.
+   * @return please something meaningful and not too long
+   */
   public abstract String getName();
   
   public void add(final AWorkspaceElement pe) {
-    children.add(pe);
+    fChildren.add(pe);
     pe.fParent = this;
   }
   
@@ -49,13 +54,13 @@ public abstract class AWorkspaceElement implements IImagesConstants {
   }
 
   public Object[] getChildren() {
-    return children.toArray();
+    return fChildren.toArray();
   }
   public AWorkspaceElement [] getElementChildren() {
-    return children.toArray(new AWorkspaceElement[0]);
+    return fChildren.toArray(new AWorkspaceElement[0]);
   }
   public int getChildrenCount() {
-    return children.size();
+    return fChildren.size();
   }
   public Image getImage () {
     return Utils.getImage(IMG_DEFAULT);
@@ -65,15 +70,15 @@ public abstract class AWorkspaceElement implements IImagesConstants {
   
   public void remove() {
     instances.remove(fKey);
-    for (AWorkspaceElement we : children) {
+    for (AWorkspaceElement we : fChildren) {
       we.remove();
     }
   }
   
   
   protected void update(final IResource[] res) {
-    final List<AWorkspaceElement> oldchildren = children;
-    children = new ArrayList<AWorkspaceElement>();
+    final List<AWorkspaceElement> oldchildren = fChildren;
+    fChildren = new ArrayList<AWorkspaceElement>();
     for (int i = 0; i < res.length; i++) {
       AWorkspaceElement pe = getElement(res[i]);
       if (pe == null) {
@@ -107,5 +112,21 @@ public abstract class AWorkspaceElement implements IImagesConstants {
       tab[i] = new Project(projects[i]);
     }
     return tab;
+  }
+  
+  public void compile(final TreeViewer viewer) {
+    final AWorkspaceElement [] tab = getElementChildren();
+    for (int i = 0; i < tab.length; i++) {
+      tab[i].compile(viewer);
+     
+    }
+  }
+
+
+
+
+
+  public boolean isEvaluateEnabled() {
+    return true;
   }
 }

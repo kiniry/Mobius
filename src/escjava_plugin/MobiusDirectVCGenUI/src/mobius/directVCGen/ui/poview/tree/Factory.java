@@ -6,8 +6,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
-public class Factory {
+public final class Factory {
 
+  /** default constructor.  */
+  private Factory() { }
+  
+  
   /**
    * Creates a node representing a file. It can be a coq file,
    * a goal, or another file type. If it is a compiled Coq file

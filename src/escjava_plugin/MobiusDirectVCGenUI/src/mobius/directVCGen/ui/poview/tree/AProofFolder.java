@@ -4,7 +4,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
-public abstract class AProofFolder extends AProofElement {
+public abstract class AProofFolder extends AWorkspaceElement {
   
   /** the folder that this object represents. */
   private final IFolder fFolder;
@@ -32,7 +32,7 @@ public abstract class AProofFolder extends AProofElement {
     return fFolder.getName();
   }
   
-  
+  /** {@inheritDoc} */
   public final void update() {
     final IResource[] res = getFolderMembers();
     update(res);

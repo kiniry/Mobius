@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
 
-public class Project extends AProofElement {
+public class Project extends AWorkspaceElement {
   private final IProject fProject;
   
   public Project(final IProject project) {
@@ -19,6 +19,7 @@ public class Project extends AProofElement {
     update();
   }
   
+  /** {@inheritDoc} */
   public void update() {
     final IFolder f = fProject.getFolder("mobius");
     
@@ -35,7 +36,7 @@ public class Project extends AProofElement {
   }
 
 
-
+  /** {@inheritDoc} */
   public AWorkspaceElement createChildFromResource(final IResource res) {
     AWorkspaceElement pe = null;
     if (res instanceof IFolder) {
@@ -49,9 +50,12 @@ public class Project extends AProofElement {
     return pe;
   }
   
+  /** {@inheritDoc} */
   public String getName() {
     return fProject.getName();
   }
+  
+  /** {@inheritDoc} */
   public String toString() {
     return "Project: " + getName();
   }
@@ -59,6 +63,8 @@ public class Project extends AProofElement {
   public IProject getProject() {
     return fProject;
   }
+  
+  /** {@inheritDoc} */
   public Image getImage () {
     if (this.getChildrenCount() > 0) {
       return Utils.getImage(IMG_PROJECT);

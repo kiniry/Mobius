@@ -16,7 +16,7 @@ public class Folder extends AProofFolder {
   }
   
 
-  
+  /** {@inheritDoc} */
   public AWorkspaceElement createChildFromResource(final IResource res) {
     AWorkspaceElement pe = null;
     final String name = getName();
@@ -33,14 +33,14 @@ public class Folder extends AProofFolder {
         pe = new TargetMethod(fold);
       }
     }
-    else if (res instanceof IFile){
+    else if (res instanceof IFile) {
       pe = Factory.createFile((IFile) res);
     }
     return pe;
   }
   
 
-  
+  /** {@inheritDoc} */
   public Image getImage () {
     final String name = getName();
     if (name.equals("Formalisation") || 

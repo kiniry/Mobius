@@ -1,7 +1,6 @@
 package mobius.directVCGen.ui.poview;
 
 import mobius.directVCGen.ui.poview.tree.IShowable;
-import mobius.directVCGen.ui.poview.tree.AProofElement;
 import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -104,7 +103,7 @@ public class ProjectProofs extends ViewPart
     if (o instanceof AWorkspaceElement) {
       fSel = (AWorkspaceElement) o;
       fViewer.refresh(o);
-      fBtnEvaluate.setEnabled(fSel instanceof AProofElement);
+      fBtnEvaluate.setEnabled(fSel.isEvaluateEnabled());
     }
     else {
       fBtnEvaluate.setEnabled(false);
@@ -115,8 +114,8 @@ public class ProjectProofs extends ViewPart
   public void widgetSelected(final SelectionEvent e) {
     final Job j = new Job("Evaluating the goals...") {
       protected IStatus run(final IProgressMonitor monitor) {
-        if (fSel instanceof AProofElement) {
-          ((AProofElement)fSel).compile(fViewer);
+        if (fSel instanceof AWorkspaceElement) {
+          ((AWorkspaceElement)fSel).compile(fViewer);
         }
         return Utils.getOkStatus();
       }
