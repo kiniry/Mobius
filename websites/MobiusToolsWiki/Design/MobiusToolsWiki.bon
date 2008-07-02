@@ -69,6 +69,11 @@ cluster RESOURCES description "Resources allocated to work on MOBIUS components"
 end
 
 cluster_chart COORDINATIONS
+explanation "Meetings and Publications"
+class MEETING description "Active face-to-face co-ordination between two or more people"
+class PUBLICATION description "New and original research accepted by peer review"
+class PUBLICATION_VENUE description "Meeting at which new publications are presented"
+class TEMPORAL_ORDER description "Sequence of events"
 end
 
 cluster_chart LANGUAGES
@@ -313,6 +318,9 @@ end
 class_chart MAC_OS_X_RELEASE
 end
 
+class_chart MEETING
+end
+
 class_chart MILESTONE
 end
 
@@ -350,6 +358,12 @@ class_chart PROVER
 end
 
 class_chart PROVER_EDITOR_PLUGIN
+end
+
+class_chart PUBLICATION
+end
+
+class_chart PUBLICATION_VENUE
 end
 
 class_chart PVS_PROVER
@@ -404,6 +418,9 @@ class_chart TABLE_OF_CONTENTS
 end
 
 class_chart TAG
+end
+
+class_chart TEMPORAL_ORDER
 end
 
 class_chart TICKET
