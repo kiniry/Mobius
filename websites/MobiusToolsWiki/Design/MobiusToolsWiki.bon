@@ -220,6 +220,10 @@ cluster RELEASES description "Releases of MOBIUS components and subsystems"
 end
 
 cluster_chart WORKSPACES
+explanation "Workspaces that can be used with the Mobius PVE"
+class ECLIPSE_WORKSPACE description "Workspace configuration for the Eclipse IDE"
+class EXAMPLES_WORKSPACE description "Eclipse workspace which contains samples for use with the Mobius PVE"
+class MOBIUS_DEVELOPER_WORKSPACE description "Eclipse workspace which contains source code and repository URLs for working on the PVE"  
 end
 
 -- Informal Class Charts
@@ -338,6 +342,9 @@ end
 class_chart ECLIPSE
 end
 
+class_chart ECLIPSE_WORKSPACE
+end
+
 class_chart ELECTRONIC_MAIL_ADDRESS
 end
 
@@ -351,6 +358,9 @@ class_chart ESCJAVA2_LOGIC
 end
 
 class_chart EXAMPLE
+end
+
+class_chart EXAMPLES_WORKSPACE
 end
 
 class_chart EXPLANATION
@@ -453,6 +463,9 @@ class_chart MEETING
 end
 
 class_chart MILESTONE
+end
+
+class_chart MOBIUS_DEVELOPER_WORKSPACE
 end
 
 class_chart MOBIUS_BYTECODE_LOGIC
