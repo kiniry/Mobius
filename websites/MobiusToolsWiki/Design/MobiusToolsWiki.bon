@@ -191,7 +191,32 @@ class STATUS description "The position of a component or feature within the soft
 class WISHLIST description "Prioritized list of aspirational features"
 end
 
-cluster_chart SYSTEMS
+cluster_chart SYSTEMS 
+explanation "Hierarchy of subsystems, components and features within MOBIUS"
+class BON_SUBSYSTEM description "Subsystem for processing of BON specifications"
+class BYTECODE_SUBSYSTEM description "Subsystem for verification of byte code"
+class COMPOSITIONAL_TYPE_CHECKER description "Subsystems for typechecking"
+class DAIKON description "Dynanic invariant detector"
+class ECLIPSE description "An IDE with a plugin architecture"
+class EMACS description "An advanced test editor"
+class ESCJAVA2 description "Extended Static Checking for Java component"
+class FREEBOOGIE description "BoogiePL processor"
+class HAWK description "Advanced verification-centric test infrastructure"
+class HOUDINI description "Annotation assistant for ESC/Java2"
+class INVARIANT_GENERATION description "Inferring of invariants from source code"
+class JML_SUBSYSTEM description "Infrastructure for processing JML annotations"
+class LOGGING description "Logging infrastructure for all MOBIUS components"
+class PCC_SUBSYSTEM description "Subsystem for checking Proof Carrying Code (PCC) certificates"
+class PRECONDITION_GENERATION description "Inferring of preconditions from source code"
+class RACE_CONDITION_CHECKER description "Subsystems for checking race conditions"
+class SOURCECODE_SUBSYSTEM description "Subsystem for verification of source code"
+class SPECIFICATION_CHECKER description "Checking the internal consistency of a specification"
+class SUBSYSTEM description "MOBIUS component or plugin for an external system"
+class SYSTEM description "Third party system which is used by the MOBIUS PVE"
+class VERIFICATION_CONDITION_GENERATION description "Generation of conditions which can be verified by a theorem prover"
+cluster PLUGINS description "Eclipse plugins used within MOBIUS"
+cluster PROVERS description "Theorem provers used within MOBIUS"
+cluster RELEASES description "Releases of MOBIUS components and subsystems"
 end
 
 cluster_chart WORKSPACES
@@ -226,6 +251,9 @@ end
 class_chart BICOLANO
 end
 
+class_chart BON_SUBSYSTEM
+end
+
 class_chart BOOGIE_PL
 end
 
@@ -233,6 +261,9 @@ class_chart BUSINESS_OBJECT_NOTATION
 end
 
 class_chart BYTECODE_MODELING_LANGUAGE 
+end
+
+class_chart BYTECODE_SUBSYSTEM
 end
 
 class_chart CDE
@@ -262,6 +293,9 @@ end
 class_chart COMPONENT
 end
 
+class_chart COMPOSITIONAL_TYPE_CHECKER
+end
+
 class_chart CONTACT_DETAILS
 end
 
@@ -269,6 +303,9 @@ class_chart COQ_PROVER
 end
 
 class_chart CVC3_PROVER
+end
+
+class_chart DAIKON
 end
 
 class_chart DELTA
@@ -298,7 +335,16 @@ end
 class_chart DOWNLOAD
 end
 
+class_chart ECLIPSE
+end
+
 class_chart ELECTRONIC_MAIL_ADDRESS
+end
+
+class_chart EMACS
+end
+
+class_chart ESCJAVA2
 end
 
 class_chart ESCJAVA2_LOGIC
@@ -319,6 +365,9 @@ end
 class_chart FILE_DISTRIBUTION
 end
 
+class_chart FREEBOOGIE
+end
+
 class_chart FX7_PLUGIN
 end
 
@@ -331,7 +380,13 @@ end
 class_chart GAMMA
 end
 
+class_chart HAWK
+end
+
 class_chart HOME_PAGE
+end
+
+class_chart HOUDINI
 end
 
 class_chart INDEX
@@ -341,6 +396,9 @@ class_chart INSTANT_MESSENGER_ID
 end
 
 class_chart INTERACTIVE_PROVER
+end
+
+class_chart INVARIANT_GENERATION
 end
 
 class_chart ISABELLE_PROVER
@@ -361,6 +419,9 @@ end
 class_chart JML_FOLDING_PLUGIN
 end
 
+class_chart JML_SUBSYSTEM
+end
+
 class_chart JML4_PLUGIN
 end
 
@@ -368,6 +429,9 @@ class_chart LEGACY
 end
 
 class_chart LEXER
+end
+
+class_chart LOGGING
 end
 
 class_chart LICENSE
@@ -412,6 +476,9 @@ end
 class_chart PARSER
 end
 
+class_chart PCC_SUBSYSTEM
+end
+
 class_chart PERSON
 end
 
@@ -425,6 +492,9 @@ class_chart PLATFORM
 end
 
 class_chart PLUGIN
+end
+
+class_chart PRECONDITION_GENERATION
 end
 
 class_chart PROGRAMMING_LANGUAGE
@@ -443,6 +513,9 @@ class_chart PUBLICATION_VENUE
 end
 
 class_chart PVS_PROVER
+end
+
+class_chart RACE_CONDITION_CHECKER
 end
 
 class_chart REFERENCE
@@ -481,7 +554,13 @@ end
 class_chart SOURCE_CODE
 end
 
+class_chart SOURCECODE_SUBSYSTEM
+end
+
 class_chart SPECIFICATION
+end
+
+class_chart SPECIFICATION_CHECKER
 end
 
 class_chart SPECIFICATION_LANGUAGE
@@ -499,7 +578,13 @@ end
 class_chart STATUS
 end
 
+class_chart SUBSYSTEM
+end
+
 class_chart SYNTAX
+end
+
+class_chart SYSTEM
 end
 
 class_chart TABLE_OF_CONTENTS
@@ -527,6 +612,9 @@ class_chart UMBRA_EDITOR_PLUGIN
 end
 
 class_chart UPDATE_SITE
+end
+
+class_chart VERIFICATION_CONDITION_GENERATION
 end
 
 class_chart VERSION
