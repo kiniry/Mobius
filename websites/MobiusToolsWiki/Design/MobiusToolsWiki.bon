@@ -2,7 +2,7 @@
 
 system_chart MOBIUS_TOOLS_WIKI
 explanation "The collaborative development environment (CDE) for MOBIUS PVE and tools development"
-cluster CDES description "This BON cluster contains concepts related to the use of Collaborative Development Environments (CDEs) within MOBIUS" 
+cluster COLLABORATIVE_DEVELOPMENT_ENVIRONMENTS description "This BON cluster contains concepts related to the use of Collaborative Development Environments (CDEs) within MOBIUS" 
 cluster COMMUNICATIONS description "The Communications cluster contains the concept of e-mail, tickets, wikis and other forms of communication between MOBIUS developers." 
 cluster COMPONENTS description "The Components cluster in BON is the set of concepts relating to subsystems, modules, systems architecture and dependencies." 
 cluster COORDINATIONS description "Meetings and Publications"
@@ -20,7 +20,18 @@ end
 
 -- Informal Cluster Charts
 
-cluster_chart CDES
+cluster_chart COLLABORATIVE_DEVELOPMENT_ENVIRONMENTS
+explanation "A collaborative development environment (CDE) consists of integated tools such as wikis, version control and issue tracking which support the development process"
+class CDE description "A collaborative develeopment environment"
+class CHANGE_LOG description "A record of changes recorded by a version control system"
+class FILE_DISTRIBUTION description "A mechanism for release of particular versions of software"
+class G_FORGE description "A CDE with ticket tracking and CVS support"
+class MILESTONE description "A deadline or target date for a release"
+class TAG description "A label associated with a particular version of a file"
+class TICKET description "A task, enhancement request or defect report"
+class TIMELINE description "A sequence of milestones, events and changes"
+class TRAC description "A CDE with wiki, ticket tracking and Subverison support"
+class VERSION_CONTROL description "A system for tracking changes to source code e.g. CVS or Subversion"
 end
 
 cluster_chart COMMUNICATIONS
@@ -164,6 +175,12 @@ end
 class_chart BYTECODE_MODELING_LANGUAGE 
 end
 
+class_chart CDE
+end
+
+class_chart CHANGE_LOG
+end
+
 class_chart CITATION
 end
 
@@ -209,10 +226,16 @@ end
 class_chart FORMAL_LANGUAGE
 end
 
+class_chart FILE_DISTRIBUTION
+end
+
 class_chart FX7_PLUGIN
 end
 
 class_chart FX7_PROVER
+end
+
+class_chart G_FORGE
 end
 
 class_chart HOME_PAGE
@@ -261,6 +284,9 @@ class_chart MAINTAINER
 end
 
 class_chart MAC_OS_X_RELEASE
+end
+
+class_chart MILESTONE
 end
 
 class_chart NEWS
@@ -344,6 +370,18 @@ end
 class_chart TABLE_OF_CONTENTS
 end
 
+class_chart TAG
+end
+
+class_chart TICKET
+end
+
+class_chart TIMELINE
+end
+
+class_chart TRAC
+end
+
 class_chart TYPE_CHECKER
 end
 
@@ -351,6 +389,9 @@ class_chart UMBRA_EDITOR_PLUGIN
 end
 
 class_chart VERSION
+end
+
+class_chart VERSION_CONTROL
 end
 
 class_chart WEB_PAGE
