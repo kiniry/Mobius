@@ -30,7 +30,7 @@ public class Folder extends AProofFolder {
         pe = Factory.createPackageOrClass(fold, 2);
       }
       else {
-        pe = new TargetMethod(fold);
+        pe = new Folder(fold);
       }
     }
     else if (res instanceof IFile) {

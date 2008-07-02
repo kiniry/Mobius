@@ -3,6 +3,7 @@ package mobius.directVCGen.ui.poview.tree;
 import mobius.directVCGen.ui.poview.Utils;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -13,10 +14,16 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.TreeViewer;
 
-
+/**
+ * A node representing a file of any type.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class UnknownFile extends AWorkspaceElement implements IShowable {
   /** the file that this node represents. */
   private final IFile fFile;
+  /** the default image representing the file. */
+  private final Image fImg;
   
   /**
    * Creates a node representing a file.
@@ -25,6 +32,14 @@ public class UnknownFile extends AWorkspaceElement implements IShowable {
   UnknownFile(final IFile file) {
     super(file);
     fFile = file;
+    final IEditorDescriptor edit = IDE.getDefaultEditor(getFile());
+    if (edit == null) {
+      fImg = Utils.getImage(IMG_UNKNOWN);
+    }
+    else {
+      fImg = edit.getImageDescriptor().createImage();
+    }
+
     
   }
 
@@ -42,10 +57,12 @@ public class UnknownFile extends AWorkspaceElement implements IShowable {
     return fFile.getName();
   }
   
+  
   /** {@inheritDoc} */
   public Image getImage () {
-    return Utils.getImage(IMG_UNKNOWN);
+    return fImg;
   }
+  
   
   /** {@inheritDoc} */
   public void show() {
@@ -70,7 +87,10 @@ public class UnknownFile extends AWorkspaceElement implements IShowable {
     return fFile;
   }
   
+  /** {@inheritDoc} */
   public boolean isEvaluateEnabled() {
     return false;
   }
+  
+
 }

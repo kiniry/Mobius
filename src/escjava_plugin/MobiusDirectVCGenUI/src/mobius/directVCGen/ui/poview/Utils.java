@@ -93,6 +93,7 @@ public final class Utils {
   }
 
   public static Image getImage(final int cst) {
+    final org.eclipse.ui.ISharedImages im = PlatformUI .getWorkbench().getSharedImages();
     
     switch(cst) {
       case IImagesConstants.IMG_PROJECT:
@@ -124,6 +125,8 @@ public final class Utils {
         return Utils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
       case IImagesConstants.IMG_FOLDER:
         return getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER);
+      //case IImagesConstants.IMG_MKFILE:
+        //return IDE.getContentType(file);
       case IImagesConstants.IMG_SRC_FOLDER:
         return Utils.getJdtImage(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
         

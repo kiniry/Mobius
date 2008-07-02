@@ -37,6 +37,7 @@ public interface IImagesConstants {
   int IMG_FOLDER = IMG_OBJS_LIBRARY + 1;
   int IMG_SRC_FOLDER = IMG_FOLDER + 1;
   int IMG_PKG = IMG_SRC_FOLDER + 1;
+  int IMG_MKFILE = IMG_PKG + 1;
   
 
   

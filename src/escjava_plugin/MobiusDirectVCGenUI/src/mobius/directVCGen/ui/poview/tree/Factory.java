@@ -32,7 +32,10 @@ public final class Factory {
     }
     else if (f.getName().endsWith(".vo")) {
       res = null;
-    }    
+    }
+    else if (f.getName().equals("Makefile")) {
+      res = new Makefile(f);
+    }
     else {
       res = new UnknownFile(f);
     }
