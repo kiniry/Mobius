@@ -100,6 +100,11 @@ class TYPE_CHECKER description "A tool that checks the object type definitions u
 end
 
 cluster_chart LOGICS
+explanation "The theory and calculus used in MOBIUS"
+class BICOLANO description "A Coq formalisation of the MOBIUS byte code logic"
+class ESCJAVA2_LOGIC description "The logic embedded within ESCJava2"
+class LOGIC description "Formal theory or calculus"
+class MOBIUS_BYTECODE_LOGIC description "Theory and calculus of the MOBIUS byte code"
 end
 
 cluster_chart RELEASES
@@ -191,6 +196,9 @@ end
 class_chart AUTOMATED_PROVER
 end
 
+class_chart BICOLANO
+end
+
 class_chart BOOGIE_PL
 end
 
@@ -255,6 +263,9 @@ class_chart DOWNLOAD
 end
 
 class_chart ELECTRONIC_MAIL_ADDRESS
+end
+
+class_chart ESCJAVA2_LOGIC
 end
 
 class_chart EXAMPLE
@@ -323,6 +334,9 @@ end
 class_chart LINUX_RELEASE
 end
 
+class_chart LOGIC
+end
+
 class_chart MAINTAINER
 end
 
@@ -333,6 +347,9 @@ class_chart MEETING
 end
 
 class_chart MILESTONE
+end
+
+class_chart MOBIUS_BYTECODE_LOGIC
 end
 
 class_chart NEWS
