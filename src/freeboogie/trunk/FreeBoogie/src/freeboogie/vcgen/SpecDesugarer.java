@@ -2,6 +2,7 @@ package freeboogie.vcgen;
 
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.logging.Logger;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
@@ -44,6 +45,8 @@ import freeboogie.tc.*;
  * TODO: Take care of generics.
  */
 public class SpecDesugarer extends Transformer {
+  private static final Logger log = Logger.getLogger("freeboogie.vcgen");
+
   private TcInterface tc;
   private UsageToDefMap<Implementation, Procedure> implProc;
   private UsageToDefMap<VariableDecl, VariableDecl> paramMap;
@@ -51,6 +54,7 @@ public class SpecDesugarer extends Transformer {
   private List<Expr> preconditions;
   private List<Expr> postconditions;
   private String afterBody;
+  private boolean exitPointFound;
 
   public SpecDesugarer() {
     toSubstitute = new LinkedHashMap<VariableDecl, AtomId>(23);
@@ -65,8 +69,10 @@ public class SpecDesugarer extends Transformer {
     paramMap = tc.getParamMap();
 
     ast = (Declaration)ast.eval(this);
+    log.info("Start to typecheck after spec desugaring.");
     List<FbError> errors = tc.process(ast);
     if (!errors.isEmpty()) {
+      FbError.reportAll(errors);
       PrintWriter pw = new PrintWriter(System.out);
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp);
@@ -107,9 +113,9 @@ public class SpecDesugarer extends Transformer {
 
     // the rest
     Body newBody = (Body)body.eval(this);
-    Declaration newTail = (Declaration)tail.eval(this);
+    Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
     if (newBody != body || newTail != tail)
-      implementation = Implementation.mk(sig, newBody, newTail);
+      implementation = Implementation.mk(sig, newBody, newTail, implementation.loc());
     return implementation;
   }
 
@@ -124,10 +130,12 @@ public class SpecDesugarer extends Transformer {
   public Body eval(Body body, Declaration vars, Block blocks) {
     String nxtLabel, crtLabel;
     afterBody = postconditions.isEmpty()? null : Id.get("post");
-    String afterPre = blocks == null? blocks.getName() : afterBody;
+    String afterPre = blocks != null? blocks.getName() : afterBody;
     Block newBlocks = blocks;
-    if (afterBody != null && newBlocks != null)
+    exitPointFound = false;
+    if (newBlocks != null && !postconditions.isEmpty())
       newBlocks = (Block)newBlocks.eval(this);
+    if (!exitPointFound) postconditions.clear();
     nxtLabel = null;
     for (Expr post : postconditions) {
       newBlocks = Block.mk(
@@ -137,6 +145,8 @@ public class SpecDesugarer extends Transformer {
         newBlocks);
       nxtLabel = crtLabel;
     }
+    if (afterBody != null && exitPointFound)
+      newBlocks = Block.mk(afterBody, null, succ(nxtLabel), newBlocks);
     nxtLabel = afterPre;
     for (Expr pre : preconditions) {
       newBlocks = Block.mk(
@@ -149,16 +159,17 @@ public class SpecDesugarer extends Transformer {
     if (preconditions.isEmpty() && !postconditions.isEmpty())
       newBlocks = Block.mk(Id.get("entry"), null, succ(afterPre), newBlocks);
     if (newBlocks != blocks)
-      body = Body.mk(vars, newBlocks);
+      body = Body.mk(vars, newBlocks, body.loc());
     return body;
   }
 
   @Override
   public Block eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
+    exitPointFound |= succ == null;
     Block newTail = tail == null? null : (Block)tail.eval(this);
     Identifiers newSucc = succ == null? succ(afterBody) : succ;
     if (newSucc != succ || newTail != tail)
-      block = Block.mk(name, cmd, newSucc, newTail);
+      block = Block.mk(name, cmd, newSucc, newTail, block.loc());
     return block;
   }
 
