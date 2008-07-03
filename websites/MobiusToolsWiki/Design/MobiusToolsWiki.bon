@@ -1,7 +1,11 @@
 -- Informal System Chart
 
 system_chart MOBIUS_TOOLS_WIKI
-explanation "The collaborative development environment (CDE) for MOBIUS PVE and tools development"
+indexing
+  author: "JoeKiniry", "DermotCochran"
+explanation "The MOBIUS Tools Wiki is a collaborative development environment for the documentation and communication between developers of the MOBIUS program verification environment.\
+	    \The MOBIUS Tools Wiki includes homepages for all subsystems and components. It records all interactions between developers as well as all changes to the source code.\
+	    \ It is first point of reference for all MOBIUS developers. It is based on Trac and integrated with Subversion and Hudson."
 cluster COLLABORATIVE_DEVELOPMENT_ENVIRONMENTS description "This BON cluster contains concepts related to the use of Collaborative Development Environments (CDEs) within MOBIUS" 
 cluster COMMUNICATIONS description "The Communications cluster contains the concept of e-mail, tickets, wikis and other forms of communication between MOBIUS developers." 
 cluster COMPONENTS description "The Components cluster in BON is the set of concepts relating to subsystems, modules, systems architecture and dependencies." 
@@ -649,7 +653,36 @@ class_chart WINDOWS_RELEASE
 end
 
 class_chart WISHLIST
+indexing
+  in_cluster: "STATUSES"
+explanation "List of aspirational features in order of priority"
+query
+   "How many features on the wishlist?",
+   "How many features on the wishlist for this component?",
+   "What is the highest item on the wishlist?",
+   "What is the highest item on the wishlist for this component?",
+   "What is the relative priority of these two features?",
+   "What would this feature depend on?"
+command
+   "Add a feature for a component to the wishlist!",
+   "Move feature to the top of the list!",
+   "Move feature to the bottom of the list!",
+   "Add a dependency to this feature!",
+   "Remove a dependency from this feature!",
+   "Remove this feature from this list unless another feature depends on it!"
+constraint
+   "Each feature appears only once on the list",
+   "No two features have equal priority",
+   "Each feature is associated with a new or existing component",
+   "No feature is associated with an obsolete component",
+   "No feature has a higher priority than its dependencies i.e. other features on which it depends",
+   "No feature is co-dependent on another feature",
+   "No feature is in conflict with a higher priority feature"
 end
 
 class_chart YICES_PROVER
+indexing
+  in_cluster: "PROVERS"
+explanation "YICES SMT Solver"
+inherit PROVER
 end
