@@ -157,7 +157,7 @@ public class Specializer extends Transformer {
     AtomId ai = ids.getId();
     Type t = specialisations.get(ai);
     if (t == null) throw new UnknownSpecialization();
-    return TupleType.mk(t, prepareTypeList(ids.getTail()));
+    return TupleType.mk(t.clone(), prepareTypeList(ids.getTail()));
   }
 
 }

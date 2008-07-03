@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
+import freeboogie.astutil.TreeChecker;
 import freeboogie.util.*;
 
 /**
@@ -113,6 +114,8 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
 
   @Override
   public List<FbError> process(Declaration ast) {
+    assert new TreeChecker().isTree(ast);
+
     tvLevel = 0; // DBG
     boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
     intType = PrimitiveType.mk(PrimitiveType.Ptype.INT);

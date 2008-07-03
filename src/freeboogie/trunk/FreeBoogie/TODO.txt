@@ -1,8 +1,3 @@
- . ForgivingStb and probably ForgivingTc fail on ASTs that use
-   sharing because they assume that a pointer in the dag is enough
-   to identify the position in the program, while in fact a path
-   is needed. Figure out a good solution and fix it!
- . Desugar specs into assumes/asserts (introduces new blocks).
  . Desugar function calls into assumes/asserts (remember that free is special)
    Also remember to havoc LHS and the things that appear in modifies clause.
  . Desugar havocs into assignments from fresh variables and

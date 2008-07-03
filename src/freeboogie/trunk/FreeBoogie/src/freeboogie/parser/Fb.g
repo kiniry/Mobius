@@ -79,7 +79,7 @@ procedure_decl_tail returns [Declaration v]:
     { if(ok) {
         Declaration proc_tail = $t.v;
         if ($body.v != null)
-          proc_tail = Implementation.mk(TypeUtils.stripDep($s.v),$body.v,proc_tail,fileLoc($s.v));
+          proc_tail = Implementation.mk(TypeUtils.stripDep($s.v).clone(),$body.v,proc_tail,fileLoc($s.v));
         $v=Procedure.mk($s.v,$spec_list.v,proc_tail,fileLoc($s.v)); 
     }}
 ;
@@ -144,11 +144,11 @@ command	returns [Command v]:
       { if(ok) {
           Expr rhs = $b.v;
           ArrayList<Atom> lhs = new ArrayList<Atom>();
-          lhs.add($a.v);
+          lhs.add($a.v.clone());
           for (int k = 1; k < $i.v.size(); ++k)
-            lhs.add(AtomMapSelect.mk(lhs.get(k-1), $i.v.get(k-1)));
+            lhs.add(AtomMapSelect.mk(lhs.get(k-1).clone(), $i.v.get(k-1)));
           for (int k = $i.v.size()-1; k>=0; --k)
-            rhs = AtomMapUpdate.mk(lhs.get(k), $i.v.get(k), rhs);
+            rhs = AtomMapUpdate.mk(lhs.get(k).clone(), $i.v.get(k).clone(), rhs);
           $v=AssignmentCmd.mk($a.v,rhs,fileLoc($a.v));
       }}
   | t='assert' ('<' tv=id_list '>')? expr ';'

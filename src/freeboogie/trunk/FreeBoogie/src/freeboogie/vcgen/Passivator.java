@@ -75,10 +75,12 @@ public class Passivator extends Transformer {
     ast = (Declaration)ast.eval(this);
     for (Map.Entry<VariableDecl, Integer> e : newVarsCnt.entrySet()) {
       for (int i = 1; i <= e.getValue(); ++i) {
+        Identifiers ntv = e.getKey().getTypeVars();
+        if (ntv != null) ntv = ntv.clone();
         ast = VariableDecl.mk(
           e.getKey().getName()+"$$"+i, 
-          TypeUtils.stripDep(e.getKey().getType()), 
-          e.getKey().getTypeVars(), 
+          TypeUtils.stripDep(e.getKey().getType()).clone(), 
+          ntv, 
           ast);
       }
     }
@@ -268,7 +270,7 @@ public class Passivator extends Transformer {
     if (newTail != tail) {
       variableDecl = VariableDecl.mk(
         name, 
-        TypeUtils.stripDep(type), 
+        TypeUtils.stripDep(type).clone(), 
         typeVars, 
         newTail, 
         variableDecl.loc());
@@ -276,7 +278,7 @@ public class Passivator extends Transformer {
     for (int i = 1; i <= last; ++i) {
       variableDecl = VariableDecl.mk(
         name+"$$"+i, 
-        TypeUtils.stripDep(type), 
+        TypeUtils.stripDep(type).clone(), 
         typeVars, 
         variableDecl);
     }
@@ -299,14 +301,14 @@ public class Passivator extends Transformer {
     if (last != null) for (int i = 1; i < last; ++i) {
       newLocals = VariableDecl.mk(
         old.getName() + "$$" + i,
-        TypeUtils.stripDep(old.getType()),
-        old.getTypeVars(),
+        TypeUtils.stripDep(old.getType()).clone(),
+        old.getTypeVars() == null? null :old.getTypeVars().clone(),
         newLocals);
     }
     return VariableDecl.mk(
       old.getName() + (last != null && last > 0? "$$" + last : ""),
-      TypeUtils.stripDep(old.getType()),
-      old.getTypeVars(),
+      TypeUtils.stripDep(old.getType()).clone(),
+      old.getTypeVars() == null? null : old.getTypeVars().clone(),
       newResults((VariableDecl)old.getTail()));
   }
 }
