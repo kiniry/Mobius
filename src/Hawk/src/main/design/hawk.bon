@@ -8,24 +8,44 @@ system_chart HAWK
 explanation 
   "Hawk is a verification-centric test framework that uses Hudson and \
   \Maven on multiple servers to achieve full functional, behavioral and specification test coverage."
-cluster STATUSES 
-description 
-  "The status of a test run"
+cluster BUILDS
+  description 
+  "The build process needed to run the tests"
 cluster HARDWARE 
 description 
   "The hardware used to run the tests"
 cluster SOFTWARE 
   description 
   "The software used to run the tests"
-cluster BUILDS
-  description 
-  "The build process needed to run the tests"
-cluster TESTS
-  description 
-  "The structure of the tests"
 cluster SOURCE_CODE_MANAGEMENT 
   description 
   "The organisation of the source code"
+cluster STATUSES 
+description 
+  "The status of a test run"
+cluster TESTS
+  description 
+  "The structure of the tests"
+end
+
+-- Informal Cluster Chart
+
+cluster_chart BUILDS
+explanation
+  "The build process and infrastructure needed to run tests"
+class BUILD description "Automated compilation of a software component from up-to-date source code\
+      \optionally including running of automatic test suites"
+class DURATION description "Length of time required to run tests, including end-to-end time and times for each test"
+class QUEUE description "Build Queue"
+end
+
+cluster_chart HARDWARE
+end
+
+cluster_chart SOFTWARE
+end
+
+cluster_chart SOURCE_CODE_MANAGEMENT
 end
 
 cluster_chart STATUSES
@@ -51,39 +71,33 @@ description
   "The state of having failed to complete a build"
 end
 
-cluster_chart BUILDS
-explanation
-  ""
-class QUEUE
-description
-  ""
-end
-
-cluster_chart HARDWARE
-end
-
-cluster_chart SOFTWARE
-end
-
 cluster_chart TESTS
 end
 
-cluster_chart SOURCE_CODE_MANAGEMENT
+-- Informal Class Charts
+
+class_chart BUILD
+end
+
+class_chart DURATION
+end
+
+class_chart ERROR
+end
+
+class_chart FAILURE
+end
+
+class_chart QUEUE
+end
+
+class_chart RUNNING
 end
 
 class_chart STATUS
 end
 
 class_chart SUCCESS
-end
-
-class_chart FAILURE
-end
-
-class_chart RUNNING
-end
-
-class_chart ERROR
 end
 
 class_chart TIMED_OUT
