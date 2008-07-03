@@ -5,19 +5,19 @@ package freeboogie.ast;
  *  
  * @author rgrig 
  */
-public class AstLocation implements Comparable<AstLocation> {
+public class FileLocation implements Comparable<FileLocation> {
   private String file;
   private int line, column;
   
-  private static AstLocation unknown = new AstLocation();
-  private AstLocation() {
+  private static FileLocation unknown = new FileLocation();
+  private FileLocation() {
     file = null;
   }
   
   /** Singleton unknown location.
    * @return the unknown location 
    */
-  public static AstLocation unknown() {
+  public static FileLocation unknown() {
     return unknown;
   }
   
@@ -29,7 +29,7 @@ public class AstLocation implements Comparable<AstLocation> {
    */
   //@ requires file != null ==> line_ > 0;
   //@ requires file != null ==> column_ > 0;
-  public AstLocation(String file_, int line_, int column_) {
+  public FileLocation(String file_, int line_, int column_) {
     file = file_;
     line = line_;
     column = column_;
@@ -57,7 +57,7 @@ public class AstLocation implements Comparable<AstLocation> {
   }
 
   // the Comparable<T> interface
-  public int compareTo(AstLocation o) {
+  public int compareTo(FileLocation o) {
     if (this == unknown ^ o == unknown)
       if (this == unknown) return -1; else return +1;
     if (file == null ^ o.file == null)
@@ -70,8 +70,8 @@ public class AstLocation implements Comparable<AstLocation> {
   
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof AstLocation)) return false;
-    return compareTo((AstLocation)o) == 0;
+    if (!(o instanceof FileLocation)) return false;
+    return compareTo((FileLocation)o) == 0;
   }
 
   @Override

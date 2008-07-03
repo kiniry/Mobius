@@ -22,11 +22,11 @@ public final class \ClassName extends \BaseName {
 
   // === Constructors and Factories ===
   private \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
-    this.location = AstLocation.unknown();
+    this.location = FileLocation.unknown();
 \members{    this.\memberName = \memberName; \if_nonnull{assert \memberName != null;}{}
 }  }
 
-  private \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, AstLocation location) {
+  private \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, FileLocation location) {
     this(\members[,]{\memberName});
     assert location != null;
     this.location = location;
@@ -36,7 +36,7 @@ public final class \ClassName extends \BaseName {
     return new \ClassName(\members[, ]{\memberName});
   }
 
-  public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, AstLocation location) {
+  public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, FileLocation location) {
     return new \ClassName(\members[, ]{\memberName}, location);
   }
 

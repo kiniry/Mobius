@@ -129,10 +129,10 @@ public class GlobalsCollector extends Transformer {
   // === dump, for debug ===
   
   private <D extends Declaration> void dump(Map<String, D> h) {
-    TreeMap<AstLocation, String> ordered = new TreeMap<AstLocation, String>();
+    TreeMap<FileLocation, String> ordered = new TreeMap<FileLocation, String>();
     for (Map.Entry<String, D> e : h.entrySet())
       ordered.put(e.getValue().loc(), e.getKey());
-    for (Map.Entry<AstLocation, String> e : ordered.entrySet())
+    for (Map.Entry<FileLocation, String> e : ordered.entrySet())
       System.out.println(e.getValue() + " " + e.getKey());
   }
   

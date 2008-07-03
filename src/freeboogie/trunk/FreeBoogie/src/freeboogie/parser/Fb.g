@@ -14,11 +14,11 @@ grammar Fb;
 
 @parser::members {
   public String fileName = null; // the file being processed
-  private AstLocation tokLoc(Token t) {
-    return new AstLocation(fileName,t.getLine(),t.getCharPositionInLine()+1);
+  private FileLocation tokLoc(Token t) {
+    return new FileLocation(fileName,t.getLine(),t.getCharPositionInLine()+1);
   }
-  private AstLocation astLoc(Ast a) {
-    return a == null? AstLocation.unknown() : a.loc();
+  private FileLocation fileLoc(Ast a) {
+    return a == null? FileLocation.unknown() : a.loc();
   }
   
   public boolean ok = true;
@@ -60,12 +60,12 @@ const_decl_tail returns [Declaration v]:
 
 function_decl_tail returns [Declaration v]:
   s=signature ';' declarations
-    { if(ok) $v=Function.mk($s.v,$declarations.v,astLoc($s.v)); }
+    { if(ok) $v=Function.mk($s.v,$declarations.v,fileLoc($s.v)); }
 ;
 
 axiom_tail returns [Declaration v]:
   ('<' tv=id_list '>')? e=expr ';' declarations 
-    { if(ok) $v=Axiom.mk($tv.v,$e.v,$declarations.v,astLoc($e.v)); }
+    { if(ok) $v=Axiom.mk($tv.v,$e.v,$declarations.v,fileLoc($e.v)); }
 ;
 
 global_decl_tail returns [Declaration v]:
@@ -79,14 +79,14 @@ procedure_decl_tail returns [Declaration v]:
     { if(ok) {
         Declaration proc_tail = $t.v;
         if ($body.v != null)
-          proc_tail = Implementation.mk(TypeUtils.stripDep($s.v),$body.v,proc_tail,astLoc($s.v));
-        $v=Procedure.mk($s.v,$spec_list.v,proc_tail,astLoc($s.v)); 
+          proc_tail = Implementation.mk(TypeUtils.stripDep($s.v),$body.v,proc_tail,fileLoc($s.v));
+        $v=Procedure.mk($s.v,$spec_list.v,proc_tail,fileLoc($s.v)); 
     }}
 ;
 	
 implementation_decl_tail returns [Declaration v]:
   s=signature body t=declarations
-    { if(ok) $v = Implementation.mk($s.v,$body.v,$t.v,astLoc($s.v)); }
+    { if(ok) $v = Implementation.mk($s.v,$body.v,$t.v,fileLoc($s.v)); }
 ;
 
 signature returns [Signature v]:
@@ -98,22 +98,22 @@ signature returns [Signature v]:
 spec_list returns [Specification v]:
       { $v=null; }
   | (f='free')? 'requires' ('<' tv=id_list '>')? h=expr ';' t=spec_list
-      { if(ok) $v=Specification.mk($tv.v,Specification.SpecType.REQUIRES,$h.v,$f!=null,$t.v,astLoc($h.v)); }
+      { if(ok) $v=Specification.mk($tv.v,Specification.SpecType.REQUIRES,$h.v,$f!=null,$t.v,fileLoc($h.v)); }
   | 'modifies' t=modifies_tail
       { $v=$modifies_tail.v; }
   | (f='free')? 'ensures' ('<' tv=id_list '>')? h=expr ';' t=spec_list
-      { if(ok) $v=Specification.mk($tv.v,Specification.SpecType.ENSURES,$h.v,$f!=null,$t.v,astLoc($h.v)); }
+      { if(ok) $v=Specification.mk($tv.v,Specification.SpecType.ENSURES,$h.v,$f!=null,$t.v,fileLoc($h.v)); }
 ;
 
 modifies_tail returns [Specification v]:
     ';' spec_list { $v = $spec_list.v; }
   | h=atom_id ','? t=modifies_tail
-      { if(ok) $v=Specification.mk(null,Specification.SpecType.MODIFIES,$h.v,false,$t.v,astLoc($h.v)); }
+      { if(ok) $v=Specification.mk(null,Specification.SpecType.MODIFIES,$h.v,false,$t.v,fileLoc($h.v)); }
 ;
 	
 body returns [Body v]:
   '{' ('var' var_id_type_list)? b=block_list '}'
-    { if(ok) $v = Body.mk($var_id_type_list.v,$b.v,astLoc($b.v)); }
+    { if(ok) $v = Body.mk($var_id_type_list.v,$b.v,fileLoc($b.v)); }
 ;
 
 block_list returns [Block v]:
@@ -125,7 +125,7 @@ block_list returns [Block v]:
       for (int i = $cl.v.size() - 1; i > 0; --i) {
         Command c_=$cl.v.get(i);
         String ss_=Id.get(n_);
-        t_=Block.mk(ss_,c_,s_,t_,astLoc(c_));
+        t_=Block.mk(ss_,c_,s_,t_,fileLoc(c_));
         s_=Identifiers.mk(AtomId.mk(ss_,null),null);
       }
       $v=Block.mk(n_,$cl.v.isEmpty()?null:$cl.v.get(0),s_,t_,tokLoc($ID));
@@ -149,7 +149,7 @@ command	returns [Command v]:
             lhs.add(AtomMapSelect.mk(lhs.get(k-1), $i.v.get(k-1)));
           for (int k = $i.v.size()-1; k>=0; --k)
             rhs = AtomMapUpdate.mk(lhs.get(k), $i.v.get(k), rhs);
-          $v=AssignmentCmd.mk($a.v,rhs,astLoc($a.v));
+          $v=AssignmentCmd.mk($a.v,rhs,fileLoc($a.v));
       }}
   | t='assert' ('<' tv=id_list '>')? expr ';'
       { if(ok) $v=AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSERT,$tv.v,$expr.v,tokLoc($t)); }
@@ -206,22 +206,22 @@ expr_a returns [Expr v]:
 // TODO: these does not keep track of location quite correctly
 expr_b returns [Expr v]:
   l=expr_c {$v=$l.v;} 
-    (op=and_or_op r=expr_c {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,astLoc($r.v));})*
+    (op=and_or_op r=expr_c {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,fileLoc($r.v));})*
 ;
 
 expr_c returns [Expr v]:
   l=expr_d {$v=$l.v;}
-    (op=comp_op r=expr_d {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,astLoc($r.v));})*
+    (op=comp_op r=expr_d {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,fileLoc($r.v));})*
 ;
 
 expr_d returns [Expr v]:
   l=expr_e {$v=$l.v;}
-    (op=add_op r=expr_e {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,astLoc($r.v));})*
+    (op=add_op r=expr_e {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,fileLoc($r.v));})*
 ;
 
 expr_e returns [Expr v]: 
   l=expr_f {$v=$l.v;}
-    (op=mul_op r=expr_f {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,astLoc($r.v));})*
+    (op=mul_op r=expr_f {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,fileLoc($r.v));})*
 ;
 
 expr_f returns [Expr v]:
@@ -230,9 +230,9 @@ expr_f returns [Expr v]:
         if ($idx.v == null) 
           $v=$m.v;
         else if ($val.v == null) 
-          $v=AtomMapSelect.mk($m.v,$idx.v,astLoc($m.v));
+          $v=AtomMapSelect.mk($m.v,$idx.v,fileLoc($m.v));
         else 
-          $v=AtomMapUpdate.mk($m.v,$idx.v,$val.v,astLoc($m.v));
+          $v=AtomMapUpdate.mk($m.v,$idx.v,$val.v,fileLoc($m.v));
       }}
   | '(' expr ')' {$v=$expr.v;}
   | t='-' a=expr_f   {if(ok) $v=UnaryOp.mk(UnaryOp.Op.MINUS,$a.v,tokLoc($t));}
@@ -305,26 +305,26 @@ triggers returns [Trigger v]:
 // BEGIN list rules 
 	
 expr_list returns [Exprs v]:
-  h=expr (',' t=expr_list)? { if(ok) $v = Exprs.mk($h.v, $t.v,astLoc($h.v)); }
+  h=expr (',' t=expr_list)? { if(ok) $v = Exprs.mk($h.v, $t.v,fileLoc($h.v)); }
 ;
 
 id_list	returns [Identifiers v]:	
-    a=atom_id (',' r=id_list)? { if(ok) $v=Identifiers.mk($a.v,$r.v,astLoc($a.v)); }
+    a=atom_id (',' r=id_list)? { if(ok) $v=Identifiers.mk($a.v,$r.v,fileLoc($a.v)); }
 ;
 
 quoted_simple_type_list returns [TupleType v]:
     '`' h=simple_type (',' t=quoted_simple_type_list)?
-  { if (ok) $v=TupleType.mk($h.v,$t.v,astLoc($h.v)); }
+  { if (ok) $v=TupleType.mk($h.v,$t.v,fileLoc($h.v)); }
 ;
 
 simple_type_list returns [TupleType v]:
     h=simple_type (',' t=simple_type_list)?
-  { if (ok) $v=TupleType.mk($h.v,$t.v,astLoc($h.v)); }
+  { if (ok) $v=TupleType.mk($h.v,$t.v,fileLoc($h.v)); }
 ;
 
 opt_id_type_list returns [Declaration v]:
   (hi=ID ('<' tv=id_list '>')? ':')? ht=type (',' t=opt_id_type_list)? 
-    { if(ok) $v = VariableDecl.mk($hi==null?Id.get("unnamed"):$hi.text, $ht.v, $tv.v,$t.v,astLoc($ht.v)); }
+    { if(ok) $v = VariableDecl.mk($hi==null?Id.get("unnamed"):$hi.text, $ht.v, $tv.v,$t.v,fileLoc($ht.v)); }
 ;
 
 id_type_list returns [Declaration v]:
@@ -368,7 +368,7 @@ type returns [Type v]:
   t=simple_type ('where' p=expr)?
     {  if (ok) {
          if ($p.v==null) $v=$t.v;
-         else $v=DepType.mk($t.v,$p.v,astLoc($t.v));
+         else $v=DepType.mk($t.v,$p.v,fileLoc($t.v));
     }}
 ;
 	

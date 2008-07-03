@@ -7,13 +7,13 @@ package freeboogie.ast;
  */
 public abstract class Ast {
   /** The location of this AST node. */
-  protected AstLocation location;
+  protected FileLocation location;
   
   /**
    * Returns the location of this AST node. 
    * @return the location of this AST node.
    */
-  public AstLocation loc() {
+  public FileLocation loc() {
     return location;
   }
   
