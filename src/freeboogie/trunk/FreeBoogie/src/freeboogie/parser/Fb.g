@@ -106,9 +106,15 @@ spec_list returns [Specification v]:
 ;
 
 modifies_tail returns [Specification v]:
-    ';' spec_list { $v = $spec_list.v; }
-  | h=atom_id ','? t=modifies_tail
-      { if(ok) $v=Specification.mk(null,Specification.SpecType.MODIFIES,$h.v,false,$t.v,fileLoc($h.v)); }
+    (f='free')? ids=id_list ';' t=spec_list { if (ok) {
+      Identifiers x = $ids.v;
+      Exprs e = null;
+      while (x != null) {
+        e = Exprs.mk(x.getId(), e);
+        x = x.getTail();
+      }
+      $v=Specification.mk(null,Specification.SpecType.MODIFIES,e,$f!=null,$t.v,fileLoc($ids.v));
+    }}
 ;
 	
 body returns [Body v]:
@@ -171,7 +177,7 @@ index returns [Exprs v]:
   '[' expr_list ']' { $v = $expr_list.v; }
 ;
 
-/* BEGIN expression grammar.
+/* {{{ BEGIN expression grammar.
 
    See http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
    for a succint presentation of how to implement precedence
@@ -203,7 +209,7 @@ expr_a returns [Expr v]:
     (t='==>' r=expr_a {if(ok) $v=BinaryOp.mk(BinaryOp.Op.IMPLIES,$v,$r.v,tokLoc($t));})?
 ;
 
-// TODO: these does not keep track of location quite correctly
+// TODO: these do not keep track of location quite correctly
 expr_b returns [Expr v]:
   l=expr_c {$v=$l.v;} 
     (op=and_or_op r=expr_c {if(ok) $v=BinaryOp.mk($op.v,$v,$r.v,fileLoc($r.v));})*
@@ -288,7 +294,7 @@ atom_id returns [AtomId v]:
       { if(ok) $v = AtomId.mk($ID.text,$st.v,tokLoc($ID)); }
 ;
 
-// END of the expression grammar 
+// END of the expression grammar }}}
 	
 quant_op returns [AtomQuant.QuantType v]:
     'forall' { $v = AtomQuant.QuantType.FORALL; }
@@ -302,7 +308,7 @@ triggers returns [Trigger v]:
 ;
 
 
-// BEGIN list rules 
+// {{{ BEGIN list rules 
 	
 expr_list returns [Exprs v]:
   h=expr (',' t=expr_list)? { if(ok) $v = Exprs.mk($h.v, $t.v,fileLoc($h.v)); }
@@ -348,7 +354,7 @@ index_list returns [ArrayList<Exprs> v]:
   (i=index {if (ok) $v.add($i.v);})*
 ;
 	
-// END list rules 
+// END list rules }}}
 
 
 simple_type returns [Type v]:
