@@ -49,4 +49,5 @@
    completely. This should be fine in Boogie 2, but not when
    explicit specialization is allowed.
 
+
 vim:spell:ts=3:sw=3:fdm=manual:
