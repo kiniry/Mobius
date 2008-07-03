@@ -23,7 +23,7 @@ class UnknownSpecialization extends Exception {}
  * (3) implicit: the implicit specializations identified
  * by the {@code TypeChecker} &mdash; these need to be 'folded'.
  *
- * A symbol table for the input AST is needed to so that declarations
+ * A symbol table for the input AST is needed so that declarations
  * of identifiers (which may need specialisation) can be quickly
  * looked up.
  *

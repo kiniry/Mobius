@@ -7,5 +7,9 @@ This template generates java classes for the abstract classes.
  */
 package freeboogie.ast;
 
-public abstract class \ClassName extends \BaseName {}
+public abstract class \ClassName extends \BaseName {
+  // a more specific return type
+  @Override
+  public abstract \ClassName clone();
+}
 }

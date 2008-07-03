@@ -44,9 +44,24 @@ public final class \ClassName extends \BaseName {
 \members{
   public \if_primitive{\Membertype}{\MemberType} get\MemberName() { return \memberName; }}
 
-  // R is the type of the result
+  // === The Visitor pattern ===
   @Override
   public <R> R eval(Evaluator<R> evaluator) { 
     return evaluator.eval(this, \members[,]{\memberName}); 
   }
+
+  // === Others ===
+  @Override
+  public \ClassName clone() {
+    \members{
+      \if_primitive{
+        \Membertype new\MemberName = \memberName;
+      }{
+        \MemberType new\MemberName = \memberName == null? 
+          null : \memberName.clone();
+      }
+    }
+    return \ClassName.mk(\members[, ]{new\MemberName}, location);
+  }
 }
+

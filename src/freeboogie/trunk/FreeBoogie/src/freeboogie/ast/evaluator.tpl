@@ -40,8 +40,6 @@ public class Evaluator<R> {
     return null;
   }
 }
-  // allows the user to visit nodes and distingush them by some
-  // other criterion than type
   public void enterNode(Ast ast) {}
   public void exitNode(Ast ast) {}
 }

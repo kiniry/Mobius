@@ -99,11 +99,11 @@ public class SpecDesugarer extends Transformer {
     while (spec != null) {
       switch (spec.getType()) {
       case REQUIRES:
-        preconditions.add((Expr)spec.getExpr().eval(this));
+        preconditions.add(((Expr)spec.getExpr().eval(this)).clone());
         break;
       case ENSURES:
         if (!spec.getFree()) 
-          postconditions.add((Expr)spec.getExpr().eval(this));
+          postconditions.add(((Expr)spec.getExpr().eval(this)).clone());
         break;
       default: // do nothing
       }
