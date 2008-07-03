@@ -19,7 +19,7 @@ package freeboogie.ast;
  *
  * @author rgrig
  */
-public abstract class Ast {
+public abstract class Ast implements Cloneable {
   /** The location of this AST node. */
   protected FileLocation location;
   
