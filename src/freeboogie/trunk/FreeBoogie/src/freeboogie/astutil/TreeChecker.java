@@ -15,14 +15,14 @@ public class TreeChecker extends Transformer {
   private boolean duplicateFound;
 
   public TreeChecker() {
-    seen = new LinkedHashSet<Ast>(100003);
+    seen = new HashSet<Ast>(100003);
   }
 
   public boolean isTree(Ast ast) {
     seen.clear();
     duplicateFound = false;
     ast.eval(this);
-    System.out.println("seen size = " + seen.size());
+    // DBG System.out.println("seen size = " + seen.size());
     return !duplicateFound;
   }
 

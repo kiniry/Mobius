@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.util.Err;
+import freeboogie.util.Id;
 import freeboogie.tc.FbError;
 import freeboogie.tc.TcInterface;
 
@@ -16,7 +17,7 @@ import freeboogie.tc.TcInterface;
  * Given:
  * <pre>
  * var Heap : [ref]int;
- * procedure Calee(x : int) return (y : int);
+ * procedure Callee(x : int) returns (y : int);
  *   requires P(x);
  *   modifies Heap;
  *   ensures Q(x, y);
@@ -79,17 +80,29 @@ public class CallDesugarer extends Transformer {
   
   @Override
   public Block eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
-    equivCmds.clear();
     Block newTail = tail == null? null : (Block)tail.eval(this);
+    equivCmds.clear();
     Command newCmd = cmd == null? null : (Command)cmd.eval(this);
-    if (newCmd == null) {
-      // replace with a sequence of blocks built from equivCmds
-      // TODO
-    } else {
-      assert newCmd == cmd;
-      if (newTail != tail)
-        block = Block.mk(name, newCmd, succ, newTail);
-    }
+    if (!equivCmds.isEmpty()) {
+      String crtLabel, nxtLabel;
+      block = Block.mk(nxtLabel = Id.get("call"), null, succ, newTail, block.loc());
+      for (int i = equivCmds.size() - 1; i > 0; --i) {
+        block = Block.mk(
+          crtLabel = Id.get("call"), 
+          equivCmds.get(i), 
+          Identifiers.mk(AtomId.mk(nxtLabel, null), null),
+          block,
+          block.loc());
+        nxtLabel = crtLabel;
+      }
+      block = Block.mk(
+        name, 
+        equivCmds.get(0), 
+        Identifiers.mk(AtomId.mk(nxtLabel, null), null),
+        block,
+        block.loc());
+    } else if (newTail != tail || newCmd != cmd)
+      block = Block.mk(name, newCmd, succ, newTail);
     return block;
   }
 
@@ -116,7 +129,7 @@ public class CallDesugarer extends Transformer {
     }
     Specification spec = p.getSpec();
     while (spec != null) {
-      Expr se = (Expr)spec.getExpr().clone().eval(this);
+      Expr se = (Expr)spec.getExpr().eval(this).clone();
       switch (spec.getType()) {
       case REQUIRES:  
         preconditions.add(se); break;
@@ -158,5 +171,11 @@ public class CallDesugarer extends Transformer {
     return null;
   }
   
-  // TODO: when visiting AtomId apply toSubstitute
+  @Override
+  public Expr eval(AtomId atomId, String id, TupleType types) {
+    Expr e = toSubstitute.get(tc.getST().ids.def(atomId));
+    return e == null? atomId : e;
+  }
+
+  
 }

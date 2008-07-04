@@ -48,6 +48,11 @@
  . Most transformations during VC generation treat ignore generics
    completely. This should be fine in Boogie 2, but not when
    explicit specialization is allowed.
+ . Migrate to Google Code. First, patch svndumpfilter so that it
+   works correctly, at least for extracting FreeBoogie from
+   mobius.ucd.ie.
+ . Desugar where clauses too in SpecDesugarer.
+ . Implement an IdCleaner that maps all ids to a, b, ..., z, aa, ab, ...
 
 
 vim:spell:ts=3:sw=3:fdm=manual:
