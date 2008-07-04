@@ -47,12 +47,37 @@ class UPSTREAM description "Project which creates an artifact which is required 
 end
 
 cluster_chart HARDWARE
+explanation "The virtual environment in which the tests are to be run"
+class BUILD_ENVIRONMENT description "The set of tools need to build and test the software"
+class MACHINE description "The hardware on which the tests are to be run"
+class MASTER description "The machine which controls the build process and schedule"
+class MEMORY description "The amount of memory available when building and testing the software"
+class OPERATING_ENVIRONMENT description "The operating system and its constraints"
+class PROCESSOR description "The capability of the machine to build and test the software"
+class SLAVE description "A machine which is able to build and run the tests" 
 end
 
 cluster_chart SOFTWARE
+explanation "The tools needed to configure and run the tests"
+class ANT description "An XML based tool for automated builds"
+class CHECKSTYLE description "A plugin for checking the coding style"
+class FINDBUGS description "A plugin for static analysis of source code"
+class FRAMEWORK description "A software platform that can easily be customized and extended"
+class HUDSON description "An advanced framework for continuous integrtaion testing"
+class JUNIT description "A framework for the automation of unit tests in Java" 
+class MAVEN description "An advanced framework for automated testing"
+class PLUGIN description "A software component that leverages a framework"
+class PMD description "A plugin for detection of coding errors"
 end
 
 cluster_chart SOURCE_CODE_MANAGEMENT
+class CHANGE_LOG description "History of recent changes to the repository"
+class COMMITTER description "The person who added the changes to the repository"
+class CVS description "Concurrent Versioning System"
+class REVISION description "The index number for a specific change to a file under version control"
+class REPOSITORY description "The central location of the master copies of files under version control"
+class SOURCE_CODE_MANAGER description "A verison control system for software projects"
+class SUBVERSION description "An advanced version control system, designed to replace CVS"
 end
 
 cluster_chart STATUSES
@@ -103,17 +128,38 @@ class_chart ACTUAL_RESULT
 inherit RESULT
 end
 
+class_chart ANT
+inherit FRAMEWORK
+end
+
 class_chart BUILD
 end
 
 class_chart BUILD_CONFIGURATION
 end
 
+class_chart BUILD_ENVIRONMENT
+end
+
 class_chart BUILD_HISTORY
+end
+
+class_chart CHANGE_LOG
+end
+
+class_chart CHECKSTYLE
+inherit PLUGIN
 end
 
 class_chart CODE_COVERAGE
 inherit TEST_COVERAGE
+end
+
+class_chart COMMITTER
+end
+
+class_chart CVS
+inherit SOURCE_CODE_MANAGER
 end
 
 class_chart DOWNSTREAM
@@ -136,6 +182,13 @@ end
 class_chart FAILURE
 end
 
+class_chart FRAMEWORK
+end
+
+class_chart FINDBUGS
+inherit PLUGIN
+end
+
 class_chart GENERATED_TEST
 inherit TEST_CASE
 end
@@ -144,8 +197,33 @@ class_chart HAND_WRITTEN_TEST
 inherit TEST_CASE
 end
 
+class_chart HUDSON
+inherit FRAMEWORK
+end
+
+class_chart JUNIT
+inherit FRAMEWORK
+end
+
 class_chart LEGACY_TEST
 inherit HAND_WRITTEN_TEST
+end
+
+class_chart MACHINE
+end
+
+class_chart MASTER
+inherit MACHINE
+end
+
+class_chart MAVEN
+inherit FRAMEWORK
+end
+
+class_chart MEMORY
+end
+
+class_chart OPERATING_ENVIRONMENT
 end
 
 class_chart PARAMETER
@@ -153,6 +231,16 @@ end
 
 class_chart PLATFORM_SPECIFIC_TEST
 inherit HAND_WRITTEN_TEST
+end
+
+class_chart PLUGIN
+end
+
+class_chart PMD
+inherit PLUGIN
+end
+
+class_chart PROCESSOR
 end
 
 class_chart PROJECT
@@ -164,10 +252,23 @@ end
 class_chart QUEUE
 end
 
+class_chart REPOSITORY
+end
+
 class_chart RESULT
 end
 
+class_chart REVISION
+end
+
 class_chart RUNNING
+end
+
+class_chart SLAVE
+inherit MACHINE
+end
+
+class_chart SOURCE_CODE_MANAGER
 end
 
 class_chart SPECIFICATION_COVERAGE
@@ -176,6 +277,10 @@ end
 
 class_chart STATUS
 end
+
+class_chart SUBVERSION
+inherit SOURCE_CODE_MANAGER
+end 
 
 class_chart SUCCESS
 end
