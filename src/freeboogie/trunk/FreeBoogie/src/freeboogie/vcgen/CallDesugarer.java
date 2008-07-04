@@ -116,6 +116,7 @@ public class CallDesugarer extends Transformer {
     Procedure p = tc.getST().procs.def(callCmd);
     Signature sig = p.getSig();
     VariableDecl rv = (VariableDecl)sig.getResults();
+    if (results != null) havocs.add(results.clone());
     while (rv != null) {
       toSubstitute.put(rv, results.getId());
       rv = (VariableDecl)rv.getTail();

@@ -1,8 +1,6 @@
- . Desugar function calls into assumes/asserts (remember that free is special)
-   Also remember to havoc LHS and the things that appear in modifies clause.
+ . Cut out loops
  . Desugar havocs into assignments from fresh variables and
    desugar dependent types in assumes/asserts.
- . Cut out loops
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
  . Extract sharing in SimplifyProver, or use `flet' for z3
@@ -53,6 +51,8 @@
    mobius.ucd.ie.
  . Desugar where clauses too in SpecDesugarer.
  . Implement an IdCleaner that maps all ids to a, b, ..., z, aa, ab, ...
+ . Implement an (almost) topological sorter for blocks to make things
+   easier to read.
 
 
 vim:spell:ts=3:sw=3:fdm=manual:

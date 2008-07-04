@@ -32,7 +32,6 @@ public class Id {
     for (k = 0, j = SZ; y >= j; ++k, j *= SZ) y -= j;
     for (i = k; i >= 0; --i, y /= SZ)
       buf[i] = (char)(y % SZ + 'a');
-      y /= SZ;
     for (i = 0; i <= k; ++i) sb.append(buf[i]);
     return sb.toString();
   }
