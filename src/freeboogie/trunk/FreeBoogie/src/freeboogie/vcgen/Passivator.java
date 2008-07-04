@@ -280,7 +280,7 @@ public class Passivator extends Transformer {
       variableDecl = VariableDecl.mk(
         name, 
         TypeUtils.stripDep(type).clone(), 
-        typeVars, 
+        typeVars == null? null : typeVars.clone(),
         newTail, 
         variableDecl.loc());
     }
@@ -288,7 +288,7 @@ public class Passivator extends Transformer {
       variableDecl = VariableDecl.mk(
         name+"$$"+i, 
         TypeUtils.stripDep(type).clone(), 
-        typeVars, 
+        typeVars == null? null : typeVars.clone(), 
         variableDecl);
     }
     return variableDecl;
@@ -318,7 +318,7 @@ public class Passivator extends Transformer {
       newLocals = VariableDecl.mk(
         old.getName(),
         TypeUtils.stripDep(old.getType()).clone(),
-        old.getTypeVars() == null? null :old.getTypeVars().clone(),
+        old.getTypeVars() == null? null : old.getTypeVars().clone(),
         newLocals);
     }
     return VariableDecl.mk(

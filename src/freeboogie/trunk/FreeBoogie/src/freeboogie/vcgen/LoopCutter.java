@@ -22,6 +22,7 @@ public class LoopCutter extends Transformer {
   private HashSet<Block> seen, done;
   private HashSet<Pair<Block, String>> toRemove;
   private String stuckName;
+  private boolean hasStuck;
 
   public LoopCutter() {
     seen = new HashSet<Block>(1009);
@@ -50,6 +51,7 @@ public class LoopCutter extends Transformer {
     currentFG = tc.getFlowGraph(implementation);
     seen.clear(); done.clear(); toRemove.clear();
     dfs(body.getBlocks());
+    hasStuck = false;
     Body newBody = body == null? null : (Body)body.eval(this);
     if (newBody != body || newTail != tail)
       implementation = Implementation.mk(sig, newBody, newTail);
@@ -58,18 +60,6 @@ public class LoopCutter extends Transformer {
 
   @Override
   public Block eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
-    Block newTail;
-    if (tail == null) {
-      newTail = Block.mk(
-        stuckName = Id.get("stuck"),
-        AssertAssumeCmd.mk(
-          AssertAssumeCmd.CmdType.ASSUME,
-          null,
-          AtomLit.mk(AtomLit.AtomType.FALSE)),
-        null,
-        null);
-    } else
-      newTail = (Block)tail.eval(this);
     Pair<Block, String> pair = new Pair<Block, String>(block, null);
     boolean same = true;
     Identifiers newSucc = null;
@@ -82,9 +72,26 @@ public class LoopCutter extends Transformer {
           newSucc = Identifiers.mk(succ.getId(), newSucc);
         succ = succ.getTail();
       }
-      if (newSucc == null)
+      if (newSucc == null) {
+        if (!hasStuck) {
+          hasStuck = true;
+          stuckName = Id.get("stuck");
+        }
         newSucc = Identifiers.mk(AtomId.mk(stuckName, null), null);
+      }
     }
+    Block newTail;
+    if (tail == null) {
+      newTail = !hasStuck? null : Block.mk(
+        stuckName,
+        AssertAssumeCmd.mk(
+          AssertAssumeCmd.CmdType.ASSUME,
+          null,
+          AtomLit.mk(AtomLit.AtomType.FALSE)),
+        null,
+        null);
+    } else
+      newTail = (Block)tail.eval(this);
     return Block.mk(name, cmd, newSucc, newTail);
   }
 

@@ -41,5 +41,6 @@ public class TreeChecker extends Transformer {
     }
     */
     duplicateFound |= !seen.add(ast);
+    // DBG if (seen.size() % 5000 == 0) System.out.println(seen.size());
   }
 }
