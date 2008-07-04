@@ -1,8 +1,8 @@
 -- Hawk is a verification-centric test framework for use with Hudson and Maven
--- It manages and automates the complete test cycle including generation of test case
+-- It will manage and automate the complete test cycle including generation of test case
 -- to ensure complete specification, behavioral and functional coverage of the system.
 
--- Informal Charts
+-- Informal System Chart
 
 system_chart HAWK
 explanation 
@@ -28,15 +28,22 @@ cluster TESTS
   "The structure of the tests"
 end
 
--- Informal Cluster Chart
+-- Informal Cluster Charts
 
 cluster_chart BUILDS
 explanation
   "The build process and infrastructure needed to run tests"
 class BUILD description "Automated compilation of a software component from up-to-date source code\
       \optionally including running of automatic test suites"
+class BUILD_CONFIGURATION description "Configuration for building and testing a project"
+class BUILD_HISTORY description "List of recent builds for a project test configuration"
+class DOWNSTREAM description "Project which depends on an artifact built from this project"
 class DURATION description "Length of time required to run tests, including end-to-end time and times for each test"
+class EXECUTOR description "Machine, virtual machine or slave process on which builds and tests are run"
+class PROJECT description "Software component or subsystem which can be built and tested as a unit"
+class PROJECT_RELATIONSHIP description "The dependency relationship between project builds"
 class QUEUE description "Build Queue"
+class UPSTREAM description "Project which creates an artifact which is required by this project"
 end
 
 cluster_chart HARDWARE
@@ -79,13 +86,32 @@ end
 class_chart BUILD
 end
 
+class_chart BUILD_CONFIGURATION
+end
+
+class_chart BUILD_HISTORY
+end
+
+class_chart DOWNSTREAM
+inherit PROJECT
+end
+
 class_chart DURATION
 end
 
 class_chart ERROR
 end
 
+class_chart EXECUTOR
+end
+
 class_chart FAILURE
+end
+
+class_chart PROJECT
+end
+
+class_chart PROJECT_RELATIONSHIP
 end
 
 class_chart QUEUE
@@ -101,4 +127,8 @@ class_chart SUCCESS
 end
 
 class_chart TIMED_OUT
+end
+
+class_chart UPSTREAM
+inherit PROJECT
 end
