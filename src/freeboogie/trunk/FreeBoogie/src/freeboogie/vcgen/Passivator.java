@@ -1,9 +1,11 @@
 package freeboogie.vcgen;
 
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
+import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.*;
 import freeboogie.util.*;
 
@@ -84,7 +86,14 @@ public class Passivator extends Transformer {
           ast);
       }
     }
-    return ast;
+    if (!tc.process(ast).isEmpty()) {
+      PrintWriter pw = new PrintWriter(System.out);
+      PrettyPrinter pp = new PrettyPrinter(pw);
+      ast.eval(pp);
+      pw.flush();
+      Err.fatal("INTERNAL ERROR: Passivator produced invalid Boogie.");
+    }
+    return tc.getAST();
   }
 
   // === (block) transformers ===
@@ -298,9 +307,16 @@ public class Passivator extends Transformer {
     if (old == null) return null;
     Integer last = newVarsCnt.get(old);
     newVarsCnt.remove(old);
-    if (last != null) for (int i = 1; i < last; ++i) {
+    if (last != null) {
+      for (int i = 1; i < last; ++i) {
+        newLocals = VariableDecl.mk(
+          old.getName() + "$$" + i,
+          TypeUtils.stripDep(old.getType()).clone(),
+          old.getTypeVars() == null? null :old.getTypeVars().clone(),
+          newLocals);
+      }
       newLocals = VariableDecl.mk(
-        old.getName() + "$$" + i,
+        old.getName(),
         TypeUtils.stripDep(old.getType()).clone(),
         old.getTypeVars() == null? null :old.getTypeVars().clone(),
         newLocals);

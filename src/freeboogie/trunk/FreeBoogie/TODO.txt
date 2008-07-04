@@ -1,10 +1,8 @@
- . Cut out loops
- . Desugar havocs into assignments from fresh variables.
- . Desugar dependent types in requires, ensures, and assumes
-   (depending on whether we talk about parameters or locals).
+ . Desugar dependent types in procedure signatures.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
  . Extract sharing in SimplifyProver, or use `flet' for z3
+ . Provide a web interface.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
  . Change the grammar and the AST to allow for parallel assignments.
@@ -21,7 +19,6 @@
    gets 'fixed' in old mode by adding a generic on procedure/implementation.
    Is this a problem?
  . Add a "for all types" construct.
- . Hash-consing Type (and subclasses) might simplify code.
  . Test if errors are reported correctly in old mode.
  . Get someone to review the code.
  . Implement the 'transform' (desugar) function in the parser.
@@ -54,6 +51,13 @@
  . Implement an IdCleaner that maps all ids to a, b, ..., z, aa, ab, ...
  . Implement an (almost) topological sorter for blocks to make things
    easier to read.
+ . Implement type synonyms.
+ . There is lots of code shared by various desugarers. Find a way
+   to write it only once.
+ . Move Desugareres in VcGenerator, out of the main loop.
+ . Make sure collection objects are reused when processing multiple
+   files. That means, for example, that you instantiate VcGenerator
+   only once per run (not once per file) from freeboogie.Main.
 
 
 vim:spell:ts=3:sw=3:fdm=manual:

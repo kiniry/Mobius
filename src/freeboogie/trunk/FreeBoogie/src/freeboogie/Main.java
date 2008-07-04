@@ -82,6 +82,7 @@ public class Main {
     opt.regBool("-pass", "passivate");
     opt.regBool("-dspec", "desugar specs");
     opt.regBool("-dcall", "desugar calls");
+    opt.regBool("-dhavoc", "desugar havoc");
     opt.regBool("-cut", "cut loops by removing back-edges");
     opt.regBool("-old", "accept old constructs");
     opt.regBool("-pvc", "print verification condition");
@@ -125,12 +126,9 @@ public class Main {
       }}));
   }
 
-  private boolean passivate() {
+  private void passivate() {
     Passivator p = new Passivator();
     ast = p.process(ast, tc);
-    if (FbError.reportAll(tc.process(ast))) return false;
-    ast = tc.getAST();
-    return true;
   }
 
   private void desugarSpecs() {
@@ -146,6 +144,11 @@ public class Main {
   private void cutLoops() {
     LoopCutter c = new LoopCutter();
     ast = c.process(ast, tc);
+  }
+
+  private void desugarHavoc() {
+    HavocDesugarer d = new HavocDesugarer();
+    ast = d.process(ast, tc);
   }
 
   public void run(String[] args) {
@@ -183,8 +186,9 @@ public class Main {
         if (opt.boolVal("-pst")) printSymbolTable();
         if (opt.boolVal("-cut")) cutLoops();
         if (opt.boolVal("-dcall")) desugarCalls();
+        if (opt.boolVal("-dhavoc")) desugarHavoc();
         if (opt.boolVal("-dspec")) desugarSpecs();
-        if (opt.boolVal("-pass")) if(!passivate()) continue;
+        if (opt.boolVal("-pass")) passivate();
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
         if (opt.boolVal("-pp")) ast.eval(pp);
       } catch (FileNotFoundException e) {
