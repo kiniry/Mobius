@@ -16,4 +16,20 @@ public class Pair<F, S> {
   public Pair(F f, S s) { first = f; second = s; }
   /** first */ public F first;
   /** second */ public S second;
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Pair)) return false;
+    Pair p = (Pair)o;
+    boolean fok = (first == null && p.first == null) || first.equals(p.first);
+    boolean sok = (second == null && p.second == null) || second.equals(p.second);
+    return fok && sok;
+  }
+
+  @Override
+  public int hashCode() {
+    int ha = first == null? 0 : first.hashCode();
+    int hb = second == null? 0 : second.hashCode();
+    return ha + hb;
+  }
 }

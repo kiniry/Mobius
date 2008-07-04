@@ -82,6 +82,7 @@ public class Main {
     opt.regBool("-pass", "passivate");
     opt.regBool("-dspec", "desugar specs");
     opt.regBool("-dcall", "desugar calls");
+    opt.regBool("-cut", "cut loops by removing back-edges");
     opt.regBool("-old", "accept old constructs");
     opt.regBool("-pvc", "print verification condition");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
@@ -142,6 +143,11 @@ public class Main {
     ast = d.process(ast, tc);
   }
 
+  private void cutLoops() {
+    LoopCutter c = new LoopCutter();
+    ast = c.process(ast, tc);
+  }
+
   public void run(String[] args) {
     // parse command line arguments
     opt.parse(args);
@@ -175,8 +181,9 @@ public class Main {
         if (FbError.reportAll(tc.process(ast))) continue;
         ast = tc.getAST();
         if (opt.boolVal("-pst")) printSymbolTable();
-        if (opt.boolVal("-dspec")) desugarSpecs();
+        if (opt.boolVal("-cut")) cutLoops();
         if (opt.boolVal("-dcall")) desugarCalls();
+        if (opt.boolVal("-dspec")) desugarSpecs();
         if (opt.boolVal("-pass")) if(!passivate()) continue;
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
         if (opt.boolVal("-pp")) ast.eval(pp);

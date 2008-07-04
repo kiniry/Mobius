@@ -1,6 +1,7 @@
  . Cut out loops
- . Desugar havocs into assignments from fresh variables and
-   desugar dependent types in assumes/asserts.
+ . Desugar havocs into assignments from fresh variables.
+ . Desugar dependent types in requires, ensures, and assumes
+   (depending on whether we talk about parameters or locals).
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
  . Extract sharing in SimplifyProver, or use `flet' for z3
