@@ -60,6 +60,8 @@
    only once per run (not once per file) from freeboogie.Main.
  . Performance: It should work with a stack of 64MB and a heap of
    64MB. Right now it eats too much memory.
+ . In LoopCutter you should cut out unreachable blocks because
+   possible loops there would prevent passivation.
 
 
 vim:spell:ts=3:sw=3:fdm=manual:
