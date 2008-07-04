@@ -79,9 +79,29 @@ description
 end
 
 cluster_chart TESTS
+explanation
+  "Tests and test results"
+class ACTUAL_RESULT description "The result of a test instance in the current build"
+class CODE_COVERAGE description "The classes, methods and statements exercised by the tests"
+class EXPECTED_RESULT description "The range of permitted results for a given test instance"
+class GENERATED_TEST description "Automatically generated Hawk test used to fill gaps in coverage or for regression testing"
+class HAND_WRITTEN_TEST description "Existing test manually converted to a Hawk test for regression testing"
+class LEGACY_TEST description "Existing test case re-used for Hawk testing"
+class PLATFORM_SPECIFIC_TEST description "Test cases handwritten for a specific platform"
+class PARAMETER description "The configuration options within a test"
+class RESULT description "The output of a test case for a given set of parameters"
+class SPECIFICATION_COVERAGE description "The functional behaviours and scenarios covered by the tests"
+class TEST_CASE description "A single test scenario with one or more parameters"
+class TEST_COVERAGE description "The scope of the test and its limitations"
+class TEST_RUN description "The complete set of tests for a project"
+class TEST_SUITE description "A cluster of tests"
 end
 
 -- Informal Class Charts
+
+class_chart ACTUAL_RESULT
+inherit RESULT
+end
 
 class_chart BUILD
 end
@@ -90,6 +110,10 @@ class_chart BUILD_CONFIGURATION
 end
 
 class_chart BUILD_HISTORY
+end
+
+class_chart CODE_COVERAGE
+inherit TEST_COVERAGE
 end
 
 class_chart DOWNSTREAM
@@ -105,7 +129,30 @@ end
 class_chart EXECUTOR
 end
 
+class_chart EXPECTED_RESULT
+inherit RESULT
+end
+
 class_chart FAILURE
+end
+
+class_chart GENERATED_TEST
+inherit TEST_CASE
+end
+
+class_chart HAND_WRITTEN_TEST
+inherit TEST_CASE
+end
+
+class_chart LEGACY_TEST
+inherit HAND_WRITTEN_TEST
+end
+
+class_chart PARAMETER
+end
+
+class_chart PLATFORM_SPECIFIC_TEST
+inherit HAND_WRITTEN_TEST
 end
 
 class_chart PROJECT
@@ -117,13 +164,32 @@ end
 class_chart QUEUE
 end
 
+class_chart RESULT
+end
+
 class_chart RUNNING
+end
+
+class_chart SPECIFICATION_COVERAGE
+inherit TEST_COVERAGE
 end
 
 class_chart STATUS
 end
 
 class_chart SUCCESS
+end
+
+class_chart TEST_CASE
+end
+
+class_chart TEST_COVERAGE
+end
+
+class_chart TEST_RUN
+end
+
+class_chart TEST_SUITE
 end
 
 class_chart TIMED_OUT
