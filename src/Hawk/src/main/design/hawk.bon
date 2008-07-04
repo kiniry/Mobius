@@ -78,6 +78,7 @@ class REVISION description "The index number for a specific change to a file und
 class REPOSITORY description "The central location of the master copies of files under version control"
 class SOURCE_CODE_MANAGER description "A verison control system for software projects"
 class SUBVERSION description "An advanced version control system, designed to replace CVS"
+class URL description "Universal Resource Locator for respository access"
 end
 
 cluster_chart STATUSES
@@ -302,4 +303,37 @@ end
 
 class_chart UPSTREAM
 inherit PROJECT
+end
+
+class_chart URL
+end
+
+-- Event charts
+
+event_chart HAWK
+incoming
+part
+  "1/2"
+event
+  "New changes have been commited to the repository"
+involves
+  CHANGE_LOG, REPOSITORY
+event
+  "Build configuration has changed"
+involves
+  BUILD_CONFIGURATION
+end
+
+event_chart HAWK
+outgoing
+part
+  "2/2"
+event
+  "Notification of test failures"
+involves
+  COMMITTER, REVISION
+event
+  "Poll SCM"
+involves
+  REPOSITORY, URL
 end
