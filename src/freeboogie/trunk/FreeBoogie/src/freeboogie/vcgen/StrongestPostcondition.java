@@ -13,8 +13,9 @@ import freeboogie.util.Closure;
  * Computes strongest postcondition for one {@code
  * Implementation}.
  *
- * This class receives a flow graph of commands ({@code
- * SimpleGraph<AssertAssumeCmd>}) and computes preconditions and
+ * This class receives a flow graph of blocks ({@code
+ * SimpleGraph<Block>}, where each block must contain only
+ * {@code AssertAssumeCmd}s) and computes preconditions and
  * postconditions for all nodes, verification conditions for
  * individual assertions, and a verification condition for all
  * assertion. (The implementation is inspired by strongest
@@ -66,19 +67,25 @@ public class StrongestPostcondition {
   private TermBuilder term;
 
   // the control flow graph currently being processed
-  private SimpleGraph<AssertAssumeCmd> flow;
+  private SimpleGraph<Block> flow;
 
   // treat assert _also_ as assumes
   private boolean aaa;
   
   // the preconditions of each command
-  private HashMap<AssertAssumeCmd, Term> preCache;
+  private HashMap<Block, Term> preCache;
 
   // the postconditions of each command
-  private HashMap<AssertAssumeCmd, Term> postCache;
+  private HashMap<Block, Term> postCache;
 
-  public StrongestPostcondition(TermBuilder term) {
-    this.term = term;
+  private Term TRUE;
+
+
+  public StrongestPostcondition() {}
+
+  public void setBuilder(TermBuilder term) { 
+    this.term = term; 
+    TRUE = term.mk("const_pred", Boolean.valueOf(true));
   }
   
   /**
@@ -86,13 +93,13 @@ public class StrongestPostcondition {
    * {@code pre}, {@code post}, and {@code vc}. This class
    * assumes that {@code flow} won't be changed.
    */
-  public void setFlowGraph(SimpleGraph<AssertAssumeCmd> flow) {
+  public void setFlowGraph(SimpleGraph<Block> flow) {
     log.info("prepare to compute sp on a new flow graph");
     this.flow = flow;
     assert flow.isFrozen();
     assert !flow.hasCycle(); // please cut loops first
-    preCache = new HashMap<AssertAssumeCmd, Term>();
-    postCache = new HashMap<AssertAssumeCmd, Term>();
+    preCache = new HashMap<Block, Term>();
+    postCache = new HashMap<Block, Term>();
   }
 
   /**
@@ -108,30 +115,30 @@ public class StrongestPostcondition {
   }
 
   /**
-   * Returns the precondition of {@code cmd}, which must be in
+   * Returns the precondition of {@code b}, which must be in
    * the last set flow graph.
    */
-  public Term pre(AssertAssumeCmd cmd) {
-    Term r = preCache.get(cmd);
+  public Term pre(Block b) {
+    Term r = preCache.get(b);
     if (r != null) return r;
     ArrayList<Term> toOr = new ArrayList<Term>();
-    for (AssertAssumeCmd p : flow.from(cmd)) 
+    for (Block p : flow.from(b)) 
       toOr.add(post(p));
     if (toOr.isEmpty())
-      r = term.mk("const_pred", Boolean.valueOf(true));
+      r = TRUE;
     else
       r = term.mk("or", toOr.toArray(new Term[0]));
-    preCache.put(cmd, r);
+    preCache.put(b, r);
     return r;
   }
 
-  public Term post(AssertAssumeCmd cmd) {
-    Term r = postCache.get(cmd);
+  public Term post(Block b) {
+    Term r = postCache.get(b);
     if (r != null) return r;
-    r = pre(cmd);
-    if (aaa || cmd.getType() == AssertAssumeCmd.CmdType.ASSUME)
-      r = term.mk("and", r, term.of(cmd.getExpr()));
-    postCache.put(cmd, r);
+    r = pre(b);
+    if (aaa || isAssume(b))
+      r = term.mk("and", r, term(b));
+    postCache.put(b, r);
     return r;
   }
 
@@ -139,15 +146,9 @@ public class StrongestPostcondition {
    * Returns the verification condition for a particular command.
    * If {@code cmd} is an assume then I return TRUE.
    */
-  public Term vc(AssertAssumeCmd cmd) {
-    switch (cmd.getType()) {
-    case ASSUME:
-      return term.mk("const_pred", Boolean.valueOf(true));
-    case ASSERT:
-      return term.mk("implies", pre(cmd), term.of(cmd.getExpr()));
-    }
-    assert false;
-    return null;
+  public Term vc(Block b) {
+    if (!isAssert(b)) return TRUE;
+    return term.mk("implies", pre(b), term(b));
   }
 
   /**
@@ -155,12 +156,35 @@ public class StrongestPostcondition {
    */
   public Term vc() {
     final ArrayList<Term> vcs = new ArrayList<Term>();
-    flow.iterNode(new Closure<AssertAssumeCmd>() {
+    flow.iterNode(new Closure<Block>() {
       @Override
-      public void go(AssertAssumeCmd cmd) {
-        vcs.add(vc(cmd));
+      public void go(Block b) {
+        vcs.add(vc(b));
       }
     });
     return term.mk("and", vcs.toArray(new Term[0]));
+  }
+
+  // === helpers ===
+  private boolean is(Block b, AssertAssumeCmd.CmdType t) {
+    if (b == null) return false;
+    Command c = b.getCmd();
+    if (!(c instanceof AssertAssumeCmd)) return false;
+    return ((AssertAssumeCmd)c).getType() == t;
+  }
+
+  private boolean isAssume(Block b) {
+    return is(b, AssertAssumeCmd.CmdType.ASSUME);
+  }
+
+  private boolean isAssert(Block b) {
+    return is(b, AssertAssumeCmd.CmdType.ASSERT);
+  }
+
+  private Term term(Block b) {
+    if (b == null) return TRUE;
+    Command c = b.getCmd();
+    if (!(c instanceof AssertAssumeCmd)) return TRUE;
+    return term.of(((AssertAssumeCmd)c).getExpr());
   }
 }

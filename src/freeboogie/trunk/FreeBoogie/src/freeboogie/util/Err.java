@@ -94,6 +94,10 @@ public class Err {
     System.exit(code);
   }
   
+  public static void internal(String m) {
+    fatal("INTERNAL ERROR: " + m, 255);
+  }
+  
   /** Aborts execution. */
   public static void notImplemented() {
     new Exception().printStackTrace();

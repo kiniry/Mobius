@@ -45,6 +45,8 @@ public class BlockFlowGraphs extends Transformer {
     errors = new ArrayList<FbError>();
     flowGraphs = new HashMap<Implementation, SimpleGraph<Block>>();
     ast.eval(this);
+    for (SimpleGraph<Block> fg : flowGraphs.values())
+      fg.freeze();
     return errors;
   }
   

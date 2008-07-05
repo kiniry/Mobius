@@ -12,25 +12,28 @@ import freeboogie.ast.Expr;
  */
 public class SmtTermBuilder extends TermBuilder {
 
-  @Override
-  public SmtTerm of(Expr e) {
-    assert false;
-    return null;
-    // TODO
+  private TermOfExpr term;
+
+  public SmtTermBuilder() {
+    term = new TermOfExpr();
+    term.setBuilder(this);
   }
 
   @Override
-  protected Term reallyMk(Sort sort, String termId, Object a) {
+  public SmtTerm of(Expr e) { return (SmtTerm)e.eval(term); }
+
+  @Override
+  protected SmtTerm reallyMk(Sort sort, String termId, Object a) {
     return new SmtTerm(sort, termId, a);
   }
 
   @Override
-  protected Term reallyMk(Sort sort, String termId, Term[] a) {
+  protected SmtTerm reallyMk(Sort sort, String termId, Term[] a) {
     return new SmtTerm(sort, termId, a);
   }
 
   @Override
-  protected Term reallyMkNary(Sort sort, String termId, Term[] a) {
+  protected SmtTerm reallyMkNary(Sort sort, String termId, Term[] a) {
     // TODO Take care of simple "and" and "or" (0 or 1 args)
     //      (after you take care of registering SMT stuff here)
     return new SmtTerm(sort, termId, a);

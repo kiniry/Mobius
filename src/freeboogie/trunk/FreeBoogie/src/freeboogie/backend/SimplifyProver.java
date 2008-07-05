@@ -68,18 +68,32 @@ public class SimplifyProver extends Prover {
     builder.def("or", Sort.PRED, Sort.PRED);
     builder.def("implies", new Sort[]{Sort.PRED, Sort.PRED}, Sort.PRED);
     builder.def("iff", new Sort[]{Sort.PRED, Sort.PRED}, Sort.PRED);
+    builder.def("var", String.class, Sort.VARVALUE);
     builder.def("var_int", String.class, Sort.VARINT);
     builder.def("var_bool", String.class, Sort.VARBOOL);
     builder.def("var_pred", String.class, Sort.PRED);
+    builder.def("const", String.class, Sort.VALUE);
     builder.def("const_int", BigInteger.class, Sort.INT);
     builder.def("const_bool", Boolean.class, Sort.BOOL);
+    builder.def("const_pred", Boolean.class, Sort.PRED);
     builder.def("forall_int", new Sort[]{Sort.VARINT, Sort.PRED}, Sort.PRED);
+    builder.def("+", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    builder.def("-", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    builder.def("*", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    builder.def("/", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    builder.def("%", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     builder.def("<", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
     builder.def("<=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
     builder.def(">", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
     builder.def(">=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    builder.def("eq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
     builder.def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
     builder.def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.PRED);
+    builder.def("neq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
+    builder.def("<:", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
+    builder.def("tuple", Sort.VALUE, Sort.VALUE);
+    builder.def("map_select", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.VALUE);
+    builder.def("map_update", new Sort[]{Sort.VALUE, Sort.VALUE, Sort.VALUE}, Sort.VALUE);
     // TODO register all stuff with the builder
     // TODO should I leave the user (vcgen) responsible for adding the
     //      excluded middle for boolean variables? i think that's in the
@@ -89,6 +103,7 @@ public class SimplifyProver extends Prover {
   }
 
   // TODO This is quite incomplete now
+  // TODO Exploit the regularity to make the code nicer
   private void printTerm(Term t, StringBuilder sb) {
     SmtTerm st = (SmtTerm)t;
     if (st.id.startsWith("var")) { 
@@ -106,6 +121,21 @@ public class SimplifyProver extends Prover {
         sb.append("|true|");
       else
         sb.append("|false|");
+    } else if (st.id.equals("const_pred")) {
+      if ((Boolean)st.data)
+        sb.append("TRUE");
+      else
+        sb.append("FALSE");
+    } else if (st.id.equals("map_update")) {
+      sb.append("(update ");
+      printArgs(st.children, sb);
+      sb.append(")");
+    } else if (st.id.equals("map_select")) {
+      sb.append("(select ");
+      printArgs(st.children, sb);
+      sb.append(")");
+    } else if (st.id.equals("tuple")) {
+      printArgs(st.children, sb);
     } else if (st.id.startsWith("eq")) {
       sb.append("(EQ ");
       printTerm(st.children[0], sb);
@@ -120,6 +150,13 @@ public class SimplifyProver extends Prover {
         printTerm(c, sb);
       }
       sb.append(")");
+    }
+  }
+
+  private void printArgs(Term[] a, StringBuilder sb) {
+    for (int i = 0; i < a.length; ++i) {
+      if (i != 0) sb.append(" ");
+      printTerm(a[i], sb);
     }
   }
 

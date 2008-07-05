@@ -3,6 +3,7 @@ package freeboogie.backend;
 import java.util.logging.Logger;
 
 import freeboogie.ast.Expr;
+import freeboogie.util.Err;
 import freeboogie.util.StackedHashMap;
 
 /**
@@ -96,6 +97,7 @@ public abstract class TermBuilder {
    */
   public final Term mk(String termId, Object a) {
     TermDef def = getTermDef(termId);
+    assert def != null; // not registered?
     assert def.cls != null;
     assert def.cls.isInstance(a);
     return reallyMk(def.retSort, termId, a);
@@ -133,6 +135,9 @@ public abstract class TermBuilder {
    */
   public final Term mk(String termId, Term[] a) {
     TermDef def = getTermDef(termId);
+    if (def == null) Err.internal("Unregistered sort " + termId);
+    for (int i = 0; i < a.length; ++i)
+      assert a[i] != null; // hmm
     if (def.naryArgSort != null) {
       for (int i = 0; i < a.length; ++i)
         assert a[i].sort().isSubsortOf(def.naryArgSort);

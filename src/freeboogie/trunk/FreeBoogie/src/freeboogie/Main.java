@@ -11,6 +11,8 @@ import org.antlr.runtime.CommonTokenStream;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
+import freeboogie.backend.ProverException;
+import freeboogie.backend.SimplifyProver;
 import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
@@ -73,6 +75,8 @@ public class Main {
   private TcInterface tc;
   private Declaration ast;
 
+  private VcGenerator vcgen;
+
   public Main() {
     opt = new Options();
     opt.regBool("-log", "log events to ./freeboogie.log");
@@ -86,10 +90,12 @@ public class Main {
     opt.regBool("-cut", "cut loops by removing back-edges");
     opt.regBool("-old", "accept old constructs");
     opt.regBool("-pvc", "print verification condition");
+    opt.regBool("-verify", "do everything");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
     fgd = new FlowGraphDumper();
+    vcgen = new VcGenerator();
   }
 
   private void printSymbolTable() {
@@ -151,6 +157,30 @@ public class Main {
     ast = d.process(ast, tc);
   }
 
+  private void verify() throws ProverException {
+    ast = vcgen.process(ast, tc);
+    vcgen.setProver(new SimplifyProver(new String[]{"z3", "-si"}));
+
+    // This is ugly. Perhaps put this in a visitor that also knows
+    // how to filter which implementations to check.
+    Declaration d = ast;
+    while (d != null) {
+      if (d instanceof TypeDecl) d = ((TypeDecl)d).getTail();
+      else if (d instanceof ConstDecl) d = ((ConstDecl)d).getTail();
+      else if (d instanceof Axiom) d = ((Axiom)d).getTail();
+      else if (d instanceof Function) d = ((Function)d).getTail();
+      else if (d instanceof VariableDecl) d = ((VariableDecl)d).getTail();
+      else if (d instanceof Procedure) d = ((Procedure)d).getTail();
+      else {
+        Implementation impl = (Implementation)d;
+        String result = vcgen.verify(impl)? " OK" : "NOK";
+        System.out.print(result);
+        System.out.println(": " + impl.getSig().getName());
+        d = impl.getTail();
+      }
+    }
+  }
+
   public void run(String[] args) {
     // parse command line arguments
     opt.parse(args);
@@ -184,11 +214,13 @@ public class Main {
         if (FbError.reportAll(tc.process(ast))) continue;
         ast = tc.getAST();
         if (opt.boolVal("-pst")) printSymbolTable();
-        if (opt.boolVal("-cut")) cutLoops();
-        if (opt.boolVal("-dcall")) desugarCalls();
-        if (opt.boolVal("-dhavoc")) desugarHavoc();
-        if (opt.boolVal("-dspec")) desugarSpecs();
-        if (opt.boolVal("-pass")) passivate();
+        if (!opt.boolVal("-verify")) {
+          if (opt.boolVal("-cut")) cutLoops();
+          if (opt.boolVal("-dcall")) desugarCalls();
+          if (opt.boolVal("-dhavoc")) desugarHavoc();
+          if (opt.boolVal("-dspec")) desugarSpecs();
+          if (opt.boolVal("-pass")) passivate();
+        } else verify();
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
         if (opt.boolVal("-pp")) ast.eval(pp);
       } catch (FileNotFoundException e) {

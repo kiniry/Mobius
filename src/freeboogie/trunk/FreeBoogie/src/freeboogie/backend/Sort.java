@@ -1,24 +1,18 @@
 package freeboogie.backend;
 
 /**
- * The sorts supported by the backend. There is not much 
- * variation between the sorts supported by different provers
- * so we stick to a conservative set of sorts.
+ * The sorts we use to inform the prover about Boogie types.
  *
  * @author rgrig 
  */
 public enum Sort {
-  /** supertype for all non-predicates */ ANY(null),
+  /** supertype for all non-predicates */ VALUE(null),
+  /** a variable with unknown sort */ VARVALUE(VALUE),
   /** a predicate */ PRED(null),
-  /** a value */ VALUE(ANY),
   /** a boolean value (NOT a predicate) */ BOOL(VALUE),
   /** a boolean variable */ VARBOOL(BOOL),
   /** an integer */ INT(VALUE),
-  /** an integer variable */ VARINT(INT),
-  /** a real number */ REAL(VALUE),
-  /** a real variable */ VARREAL(REAL),
-  /** a reference */ REF(VALUE),
-  /** a reference variable */ VARREF(REF);
+  /** an integer variable */ VARINT(INT);
   
   
   /* Note: The VARx sorts are used for better checking of quantifiers.
