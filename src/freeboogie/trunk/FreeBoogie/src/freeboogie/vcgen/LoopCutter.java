@@ -11,7 +11,7 @@ import freeboogie.tc.TcInterface;
 import freeboogie.util.*;
 
 /**
- * Cuts back edges.
+ * Cuts back edges and removes unreachable blocks.
  */
 public class LoopCutter extends Transformer {
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
@@ -92,7 +92,10 @@ public class LoopCutter extends Transformer {
         null);
     } else
       newTail = (Block)tail.eval(this);
-    return Block.mk(name, cmd, newSucc, newTail);
+    if (seen.contains(block))
+      return Block.mk(name, cmd, newSucc, newTail);
+    else
+      return newTail;
   }
 
   // === depth first search for back edges ===
