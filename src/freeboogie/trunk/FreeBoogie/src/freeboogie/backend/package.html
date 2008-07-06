@@ -3,9 +3,72 @@
 
 <body>
 
-<p>Interface for doing prover queries</p>
+<p>The <tt>Prover</tt> interface allows users to:</p>
 
-<p><b>Author</b>: rgrig, based on work of mjm, reviewed by NAME (DATE)</p>
+<ul>
+<li>define a new type</li>
+<li>define a new symbol</li>
+<li>assume a formula</li>
+<li>discard a &quot;frame&quot; of assumptions and definitions</li>
+<li>and finally, assert (check) a formula</li>
+</ul>
+
+<p><b>Types.</b> New types are given a <i>name</i> and are
+constructed from existing types. The set of available type
+constructors is fixed at compile time and comprises:</p>
+
+<ul>
+<li><i>fresh</i></li>
+<li><i>tuple</i></li>
+<li><i>map</i></li>
+</ul>
+
+<p>The <i>fresh</i> constructor takes no parameters. If the
+type name is <tt>int</tt> or <tt>bv</tt> followed by a number
+and the prover has support for integers, respectively bit-vectors,
+then the prover interface should translate these names into
+whatever names the prover uses for these types.</p>
+
+<p>The <i>tuple</i> constructor takes an arbitrary number of
+parameters. It is used to construct a product type. Some
+provers support tuples. If a prover does not support them
+then the prover interface may choose to support them by
+axiomatizing the functions <tt>tuple0</tt>, <tt>tuple1</tt>,
+<tt>tuple2</tt>, <tt>tuple3</tt>, and so on.
+</p>
+
+<p>The <i>map</i> constructor takes two parameters: the element
+type and the value type. It is used to construct a function type.
+Note that <i>n</i>-dimensional maps can be built either by
+currying or by using a tuple. Some provers support maps, perhaps
+under the name <i>array</i>. If a prover does not support them,
+then the prover interface may choose to simulate them by axiomatizing
+the <tt>select</tt> and <tt>update</tt> functions.
+</p>
+
+<p><b>Symbols.</b> New symbols are given a <i>name</i> and a <i>type</i>.</p>
+
+<p><b>Terms and formulas.</b> Once symbols are introduced they can be
+used to build (well-typed) terms. Terms of the fresh type <i>bool</i>
+are also called formulas. Only formulas can be given as a parameter
+to <i>assumes</i> and <i>asserts</i>.
+</p>
+
+<p><b>Frames.</b> A signpost can be planted by saying <i>push</i>.
+All subsequent definitions (types and symbols) and assumptions
+will be discarded by the corresponding <i>pop</i>.</p>
+
+
+<p><b>Prover answers.</b> The prover interface is usually silent. 
+Only when a formula is asserted it returns a boolean, saying whether
+it agrees. If it doesn't then a set of <i>labels</i> can be requested
+as a counterexample. (TODO: Make this more precise.)
+</p>
+
+
+
+
+<h3>Old text. TODO: See how it should be rewritten:</h3>
 
 <p>This package is responsible for building prover queries and
 for querying the prover(s). As a small bonus, there is runtime
@@ -34,12 +97,10 @@ Finally, for associative-commutative operators it is convenient
 to allow a variable number of arguments. That is the third type
 of term.</p>
 
-<p>The Prover interface is also small. One can push/pop assumptions,
-make queries, and optionally inquire about details of the query
-answer. (The simple answer is a boolean, or an exception.)
-</p>
-
-
 </body>
 
 </html>
+
+<!--
+vim:spell:
+-->
