@@ -57,4 +57,25 @@ public class SmtTerm extends Term {
     this.children = noChild;
     //System.out.println("mk2> " + id + " " + data);
   }
+
+  /* For debug. */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("(");
+    sb.append(id);
+    sb.append(" ");
+    if (data != null) {
+      sb.append("[");
+      sb.append(data.toString());
+      sb.append("]");
+    }
+    if (children != null) for (int i = 0; i < children.length; ++i) {
+      if (i != 0) sb.append(" ");
+      if (children[i] != null) sb.append(children[i].toString());
+      else sb.append("null");
+    }
+    sb.append(")");
+    return sb.toString();
+  }
 }

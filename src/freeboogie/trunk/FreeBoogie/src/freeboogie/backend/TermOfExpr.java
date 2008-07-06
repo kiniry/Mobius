@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 
 import freeboogie.ast.*;
-import freeboogie.tc.SymbolTable;
+import freeboogie.tc.TcInterface;
 
 /**
  * Builds {@code Term}s out of Boogie expressions.
@@ -12,19 +12,21 @@ import freeboogie.tc.SymbolTable;
  * NOTE that some Boogie expressions should be dealt with
  * earlier, such as the old() built-in.
  *
- * TODO Make this sorted.
+ * TODO Make this (more) sorted. And test more.
+ * TODO The stuff that is mentioned here should be registered by
+ *      TermBuilder, not SmtTermBuilder.
  */
 public class TermOfExpr extends Evaluator<Term> {
   // used only for its type
   private static final Term[] termArray = new Term[0];
 
   private TermBuilder term;
-  private SymbolTable st;
+  private TypeChecker tc;
 
   public TermOfExpr() {}
 
   public void setBuilder(TermBuilder term) { this.term = term; }
-  public void setSymbolTable(SymbolTable st) { this.st = st; }
+  public void setTypeChecker(TcInterface st) { this.tc = tc; }
 
   @Override
   public Term eval(AtomCast atomCast, Expr e, Type type) {
@@ -38,18 +40,31 @@ public class TermOfExpr extends Evaluator<Term> {
 
   @Override
   public Term eval(AtomId atomId, String id, TupleType types) {
-    return term.mk("var", id);
+    Declaration d = st.ids.def(atomId);
+    Type t;
+    if (d instanceof VariableDecl) {
+      t = ((VariableDecl)d).getType();
+      if (isInt(t)) return term.mk("var_int", id);
+      if (isBool(t)) return term.mk("var_bool", id);
+      return term.mk("var", id);
+    } else if (d instanceof ConstDecl) {
+      t = ((ConstDecl)d).getType();
+      if (isInt(t)) return term.mk("const_int", id);
+      if (isBool(t)) return term.mk("const_bool", id);
+      return term.mk("const", id);
+    } else assert false; // what is it then?
+    return null;
   }
 
   @Override
   public Term eval(AtomLit atomLit, AtomLit.AtomType val) {
     switch (val) {
     case TRUE:
-      return term.mk("const_bool", Boolean.valueOf(true));
+      return term.mk("literal_bool", Boolean.valueOf(true));
     case FALSE:
-      return term.mk("const_bool", Boolean.valueOf(false));
+      return term.mk("literal_bool", Boolean.valueOf(false));
     case NULL:
-      return term.mk("const", "null");
+      return term.mk("literal", "null");
     default:
       assert false;
       return null;
@@ -129,5 +144,19 @@ public class TermOfExpr extends Evaluator<Term> {
       e = e.getTail();
     }
     return r.toArray(termArray);
+  }
+
+  private boolean isInt(Type t) { 
+    return isPrimitive(t, PrimitiveType.Ptype.INT);
+  }
+
+  private boolean isBool(Type t) {
+    return isPrimitive(t, PrimitiveType.Ptype.BOOL);
+  }
+
+  private boolean isPrimitive(Type t, PrimitiveType.Ptype p) {
+    if (!(t instanceof PrimitiveType)) return false;
+    PrimitiveType pt = (PrimitiveType)t;
+    return pt.getPtype() == p;
   }
 }

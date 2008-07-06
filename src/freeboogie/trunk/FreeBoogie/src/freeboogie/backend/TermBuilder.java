@@ -3,6 +3,7 @@ package freeboogie.backend;
 import java.util.logging.Logger;
 
 import freeboogie.ast.Expr;
+import freeboogie.tc.SymbolTable;
 import freeboogie.util.Err;
 import freeboogie.util.StackedHashMap;
 
@@ -19,12 +20,27 @@ import freeboogie.util.StackedHashMap;
  * @author rgrig 
  */
 public abstract class TermBuilder {
-  
   private static Logger log = Logger.getLogger("freeboogie.backend");
-  
+
+  protected TermOfExpr term;
+
   private StackedHashMap<String, TermDef> termDefs =
     new StackedHashMap<String, TermDef>();
+
+  public TermBuilder() {
+    term = new TermOfExpr();
+    term.setBuilder(this);
+  }
   
+  /** 
+   * Sets the symbol table used to figure out the sorts when
+   * translating Boogie expressions.
+   */
+  public void setSymbolTable(SymbolTable st) { term.setSymbolTable(st); }
+
+  /** Constructs a term out of a Boogie expression. */
+  public Term of(Expr e) { return (SmtTerm)e.eval(term); }
+ 
   /**
    * Define {@code name : s1 x ... x sn -> s}.
    * @param name a unique identifier
@@ -97,9 +113,14 @@ public abstract class TermBuilder {
    */
   public final Term mk(String termId, Object a) {
     TermDef def = getTermDef(termId);
-    assert def != null; // not registered?
-    assert def.cls != null;
-    assert def.cls.isInstance(a);
+    if (def == null) 
+      Err.internal("sort " + termId + " not registered");
+    if (def.cls == null)
+      Err.internal("sort " + termId + " has no Java type associated");
+    if (!def.cls.isInstance(a)) {
+      Err.internal("trying to build " + termId + " using " + a
+        + " instead of something of type " + def.cls.getCanonicalName());
+    }
     return reallyMk(def.retSort, termId, a);
   }
   
@@ -139,22 +160,27 @@ public abstract class TermBuilder {
     for (int i = 0; i < a.length; ++i)
       assert a[i] != null; // hmm
     if (def.naryArgSort != null) {
-      for (int i = 0; i < a.length; ++i)
-        assert a[i].sort().isSubsortOf(def.naryArgSort);
+      for (int i = 0; i < a.length; ++i) {
+        if (!a[i].sort().isSubsortOf(def.naryArgSort)) {
+          Err.internal(
+            "" + a[i] + ":" + a[i].sort() + " is used as an argument of '"
+            + termId + "' where sort " + def.naryArgSort + " is expected.");
+        }
+      }
       return reallyMkNary(def.retSort, termId, a);
     } else {
       assert def.argSorts.length == a.length;
-      for (int i = 0; i < a.length; ++i) 
-        assert a[i].sort().isSubsortOf(def.argSorts[i]);
+      for (int i = 0; i < a.length; ++i) {
+        if (!a[i].sort().isSubsortOf(def.argSorts[i])) {
+          Err.internal(
+            "" + a[i] + ":" + a[i].sort() + " is used as an argument of '"
+            + termId + "' where sort " + def.argSorts[i] + " is expected.");
+        }
+      }
       return reallyMk(def.retSort, termId, a);
     }
   }
 
-  /**
-   * Constructs a prover term out of a BoogiePL expression.
-   */
-  public abstract Term of(Expr e);
-  
   /**
    * Subclasses should either construct a tree ar communicate with
    * the prover such that the prover constructs a tree.

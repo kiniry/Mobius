@@ -85,7 +85,7 @@ public class StrongestPostcondition {
 
   public void setBuilder(TermBuilder term) { 
     this.term = term; 
-    TRUE = term.mk("const_pred", Boolean.valueOf(true));
+    TRUE = term.mk("literal_pred", Boolean.valueOf(true));
   }
   
   /**

@@ -60,9 +60,15 @@
    only once per run (not once per file) from freeboogie.Main.
  . Performance: It should work with a stack of 64MB and a heap of
    64MB. Right now it eats too much memory.
- . Make TermOfExpr sorted.
+ . Make TermOfExpr (more) sorted. And test it more extensively.
  . Target the native format of Z3.
  . Target the SMTLIB format.
-
+ . Report the location of the implementation being checked.
+ . Revisit the design of the sorted prover backend. It seems badly
+   broken. Try to (1) simplify code (do we need Term/SmtTerm at all?
+   is the AST for Expr enough?) and (2) make it work with many provers
+   (Three string interfaces to z3, one string interface to Simplify,
+   native interface to z3, and so on. At least three users are needed
+   to validate the design.)
 
 vim:spell:ts=3:sw=3:fdm=manual:

@@ -3,13 +3,15 @@ package freeboogie.backend;
 /**
  * The sorts we use to inform the prover about Boogie types.
  *
+ * Boogie 'bool' maps to prover booleans; Boogie 'int' maps to
+ * prover integers. All other Boogie types have sort 'value'.
+ *
  * @author rgrig 
  */
 public enum Sort {
   /** supertype for all non-predicates */ VALUE(null),
   /** a variable with unknown sort */ VARVALUE(VALUE),
-  /** a predicate */ PRED(null),
-  /** a boolean value (NOT a predicate) */ BOOL(VALUE),
+  /** a boolean value */ BOOL(VALUE),
   /** a boolean variable */ VARBOOL(BOOL),
   /** an integer */ INT(VALUE),
   /** an integer variable */ VARINT(INT);

@@ -1,26 +1,68 @@
 package freeboogie.backend;
 
+import java.math.BigInteger;
+import java.util.logging.Logger;
+
 import freeboogie.ast.Expr;
 
 /**
  * Builds a term tree, which looks like an S-expression.
  *
- * TODO: Register the stuff common to SMT provers here,
- *       not in the prover.
- *
  * @author rgrig 
  */
 public class SmtTermBuilder extends TermBuilder {
-
-  private TermOfExpr term;
+  private static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public SmtTermBuilder() {
-    term = new TermOfExpr();
-    term.setBuilder(this);
-  }
+    // Register terms that are necessary to translate Boogie expressions
+    // Classes that implement Prover and use this term builder should
+    // know how to communicate these to the provers they wrap, including
+    // the necessary axioms.
+    def("not", new Sort[]{Sort.BOOL}, Sort.BOOL);
+    def("and", Sort.BOOL, Sort.BOOL);
+    def("or", Sort.BOOL, Sort.BOOL);
+    def("implies", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
+    def("iff", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
 
-  @Override
-  public SmtTerm of(Expr e) { return (SmtTerm)e.eval(term); }
+    def("var", String.class, Sort.VARVALUE);
+    def("var_int", String.class, Sort.VARINT);
+    def("var_bool", String.class, Sort.VARBOOL);
+    def("var_pred", String.class, Sort.PRED);
+
+    def("const", String.class, Sort.VALUE);
+    def("const_int", String.class, Sort.INT);
+    def("const_bool", String.class, Sort.BOOL);
+    def("const_pred", String.class, Sort.PRED);
+
+    def("literal", String.class, Sort.VALUE);
+    def("literal_int", BigInteger.class, Sort.INT);
+    def("literal_bool", Boolean.class, Sort.BOOL);
+    def("literal_pred", Boolean.class, Sort.PRED);
+
+    def("forall_int", new Sort[]{Sort.VARINT, Sort.PRED}, Sort.PRED);
+
+    def("+", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    def("-", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    def("*", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    def("/", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    def("%", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
+    def("<", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    def("<=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    def(">", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    def(">=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+
+    def("eq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
+    def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.PRED);
+    def("neq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
+
+    def("<:", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
+    def("tuple", Sort.VALUE, Sort.VALUE);
+    def("map_select", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.VALUE);
+    def("map_update", new Sort[]{Sort.VALUE, Sort.VALUE, Sort.VALUE}, Sort.VALUE);
+    pushDef(); // mark the end of the prover builtin definitions
+    log.info("prepared SMT term builder");
+  }
 
   @Override
   protected SmtTerm reallyMk(Sort sort, String termId, Object a) {
@@ -34,8 +76,10 @@ public class SmtTermBuilder extends TermBuilder {
 
   @Override
   protected SmtTerm reallyMkNary(Sort sort, String termId, Term[] a) {
-    // TODO Take care of simple "and" and "or" (0 or 1 args)
-    //      (after you take care of registering SMT stuff here)
+    // TODO For "and" and "or":
+    //         Eliminate ocurrences of the id element in a
+    //         If there is one argument left return it
+    //         If there is no argument left return the id element
     return new SmtTerm(sort, termId, a);
   }
 

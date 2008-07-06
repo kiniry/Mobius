@@ -60,46 +60,7 @@ public class SimplifyProver extends Prover {
    * sorts and operators that Simplify understands.
    */
   private void prepareTermBuilder() {
-    // TODO some of this stuff is probably common to multiple provers
-    //      so move it into the builder
     builder = new SmtTermBuilder();
-    builder.def("not", new Sort[]{Sort.PRED}, Sort.PRED);
-    builder.def("and", Sort.PRED, Sort.PRED);
-    builder.def("or", Sort.PRED, Sort.PRED);
-    builder.def("implies", new Sort[]{Sort.PRED, Sort.PRED}, Sort.PRED);
-    builder.def("iff", new Sort[]{Sort.PRED, Sort.PRED}, Sort.PRED);
-    builder.def("var", String.class, Sort.VARVALUE);
-    builder.def("var_int", String.class, Sort.VARINT);
-    builder.def("var_bool", String.class, Sort.VARBOOL);
-    builder.def("var_pred", String.class, Sort.PRED);
-    builder.def("const", String.class, Sort.VALUE);
-    builder.def("const_int", BigInteger.class, Sort.INT);
-    builder.def("const_bool", Boolean.class, Sort.BOOL);
-    builder.def("const_pred", Boolean.class, Sort.PRED);
-    builder.def("forall_int", new Sort[]{Sort.VARINT, Sort.PRED}, Sort.PRED);
-    builder.def("+", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
-    builder.def("-", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
-    builder.def("*", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
-    builder.def("/", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
-    builder.def("%", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
-    builder.def("<", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    builder.def("<=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    builder.def(">", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    builder.def(">=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    builder.def("eq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
-    builder.def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    builder.def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.PRED);
-    builder.def("neq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
-    builder.def("<:", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
-    builder.def("tuple", Sort.VALUE, Sort.VALUE);
-    builder.def("map_select", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.VALUE);
-    builder.def("map_update", new Sort[]{Sort.VALUE, Sort.VALUE, Sort.VALUE}, Sort.VALUE);
-    // TODO register all stuff with the builder
-    // TODO should I leave the user (vcgen) responsible for adding the
-    //      excluded middle for boolean variables? i think that's in the
-    //      escjava background predicate anyway
-    builder.pushDef(); // mark the end of the prover builtin definitions
-    log.info("prepared term builder for simplify");
   }
 
   // TODO This is quite incomplete now
