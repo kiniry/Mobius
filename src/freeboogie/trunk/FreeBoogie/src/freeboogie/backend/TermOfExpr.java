@@ -21,7 +21,7 @@ public class TermOfExpr extends Evaluator<Term> {
   private static final Term[] termArray = new Term[0];
 
   private TermBuilder term;
-  private TypeChecker tc;
+  private TcInterface tc;
 
   public TermOfExpr() {}
 
@@ -40,7 +40,7 @@ public class TermOfExpr extends Evaluator<Term> {
 
   @Override
   public Term eval(AtomId atomId, String id, TupleType types) {
-    Declaration d = st.ids.def(atomId);
+    Declaration d = tc.getST().ids.def(atomId);
     Type t;
     if (d instanceof VariableDecl) {
       t = ((VariableDecl)d).getType();

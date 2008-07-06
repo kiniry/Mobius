@@ -27,36 +27,36 @@ public class SmtTermBuilder extends TermBuilder {
     def("var", String.class, Sort.VARVALUE);
     def("var_int", String.class, Sort.VARINT);
     def("var_bool", String.class, Sort.VARBOOL);
-    def("var_pred", String.class, Sort.PRED);
+    def("var_pred", String.class, Sort.BOOL);
 
     def("const", String.class, Sort.VALUE);
     def("const_int", String.class, Sort.INT);
     def("const_bool", String.class, Sort.BOOL);
-    def("const_pred", String.class, Sort.PRED);
+    def("const_pred", String.class, Sort.BOOL);
 
     def("literal", String.class, Sort.VALUE);
     def("literal_int", BigInteger.class, Sort.INT);
     def("literal_bool", Boolean.class, Sort.BOOL);
-    def("literal_pred", Boolean.class, Sort.PRED);
+    def("literal_pred", Boolean.class, Sort.BOOL);
 
-    def("forall_int", new Sort[]{Sort.VARINT, Sort.PRED}, Sort.PRED);
+    def("forall_int", new Sort[]{Sort.VARINT, Sort.BOOL}, Sort.BOOL);
 
     def("+", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("-", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("*", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("/", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("%", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
-    def("<", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    def("<=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    def(">", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    def(">=", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
+    def("<", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
+    def("<=", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
+    def(">", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
+    def(">=", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
 
-    def("eq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
-    def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.PRED);
-    def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.PRED);
-    def("neq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
+    def("eq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.BOOL);
+    def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
+    def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
+    def("neq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.BOOL);
 
-    def("<:", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.PRED);
+    def("<:", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.BOOL);
     def("tuple", Sort.VALUE, Sort.VALUE);
     def("map_select", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.VALUE);
     def("map_update", new Sort[]{Sort.VALUE, Sort.VALUE, Sort.VALUE}, Sort.VALUE);
