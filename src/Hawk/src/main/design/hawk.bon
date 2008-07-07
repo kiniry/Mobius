@@ -11,18 +11,12 @@ explanation
 cluster BUILDS
   description 
   "The build process needed to run the tests"
-cluster HARDWARE 
+cluster ENVIRONMENT
 description 
-  "The hardware used to run the tests"
-cluster SOFTWARE 
-  description 
-  "The software used to run the tests"
+  "The hardware and software needed to run the tests"
 cluster SOURCE_CODE_MANAGEMENT 
   description 
   "The organisation of the source code"
-cluster STATUSES 
-description 
-  "The status of a test run"
 cluster TESTS
   description 
   "The structure of the tests"
@@ -33,75 +27,34 @@ end
 cluster_chart BUILDS
 explanation
   "The build process and infrastructure needed to run tests"
-class BUILD description "Automated compilation of a software component from up-to-date source code\
-      \optionally including running of automatic test suites"
+class BUILD description "Automated compilation and testing of a software component from up-to-date source code"
 class BUILD_CONFIGURATION description "Configuration for building and testing a project"
 class BUILD_HISTORY description "List of recent builds for a project test configuration"
-class DOWNSTREAM description "Project which depends on an artifact built from this project"
-class DURATION description "Length of time required to run tests, including end-to-end time and times for each test"
 class EXECUTOR description "Machine, virtual machine or slave process on which builds and tests are run"
 class PROJECT description "Software component or subsystem which can be built and tested as a unit"
-class PROJECT_RELATIONSHIP description "The dependency relationship between project builds"
 class QUEUE description "Build Queue"
-class UPSTREAM description "Project which creates an artifact which is required by this project"
+class STATUS description "The current status of a build e.g. in progress, finished, aborted"
 end
 
-cluster_chart HARDWARE
-explanation "The virtual environment in which the tests are to be run"
-class BUILD_ENVIRONMENT description "The set of tools need to build and test the software"
+cluster_chart ENVIRONMENT
+explanation "The virtual environment in which the tests are to be run\
+            \ tools needed to configure and run the tests"
+class FRAMEWORK description "A software platform that can easily be customized and extended"
 class MACHINE description "The hardware on which the tests are to be run"
 class MASTER description "The machine which controls the build process and schedule"
-class MEMORY description "The amount of memory available when building and testing the software"
-class OPERATING_ENVIRONMENT description "The operating system and its constraints"
-class PROCESSOR description "The capability of the machine to build and test the software"
-class SLAVE description "A machine which is able to build and run the tests" 
-end
-
-cluster_chart SOFTWARE
-explanation "The tools needed to configure and run the tests"
-class ANT description "An XML based tool for automated builds"
-class CHECKSTYLE description "A plugin for checking the coding style"
-class FINDBUGS description "A plugin for static analysis of source code"
-class FRAMEWORK description "A software platform that can easily be customized and extended"
-class HUDSON description "An advanced framework for continuous integrtaion testing"
-class JUNIT description "A framework for the automation of unit tests in Java" 
-class MAVEN description "An advanced framework for automated testing"
 class PLUGIN description "A software component that leverages a framework"
-class PMD description "A plugin for detection of coding errors"
+class SLAVE description "A machine which is able to build and run the tests"
 end
 
 cluster_chart SOURCE_CODE_MANAGEMENT
 class CHANGE_LOG description "History of recent changes to the repository"
 class COMMITTER description "The person who added the changes to the repository"
-class CVS description "Concurrent Versioning System"
-class REVISION description "The index number for a specific change to a file under version control"
-class REPOSITORY description "The central location of the master copies of files under version control"
-class SOURCE_CODE_MANAGER description "A verison control system for software projects"
-class SUBVERSION description "An advanced version control system, designed to replace CVS"
-class URL description "Universal Resource Locator for respository access"
-end
-
-cluster_chart STATUSES
-explanation
-  "The outcomes of a test run"
-class STATUS
-description
-  "The outcome of any test run"
-class SUCCESS
-description
-  "The outcome of a successful test run"
-class FAILURE
-description
-  "The outcome of a test run with one or more failures"
-class RUNNING
-description
-  "The status of a test in progress"
-class ERROR
-description
-  "The status of a test run which was unable to run any tests"
-class TIMED_OUT
-description
-  "The state of having failed to complete a build"
+class REVISION description "The index number for a specific change to\
+      \ a file under version control"
+class REPOSITORY description "External location of the master copies\
+      \ of files under version control"
+class VERSION_CONTROL_SYSTEM description "External system which manages\
+      \ and tracks changes to the source code of a sofwtare system"
 end
 
 cluster_chart TESTS
@@ -112,8 +65,6 @@ class CODE_COVERAGE description "The classes, methods and statements exercised b
 class EXPECTED_RESULT description "The range of permitted results for a given test instance"
 class GENERATED_TEST description "Automatically generated Hawk test used to fill gaps in coverage or for regression testing"
 class HAND_WRITTEN_TEST description "Existing test manually converted to a Hawk test for regression testing"
-class LEGACY_TEST description "Existing test case re-used for Hawk testing"
-class PLATFORM_SPECIFIC_TEST description "Test cases handwritten for a specific platform"
 class PARAMETER description "The configuration options within a test"
 class RESULT description "The output of a test case for a given set of parameters"
 class SPECIFICATION_COVERAGE description "The functional behaviours and scenarios covered by the tests"
@@ -129,27 +80,16 @@ class_chart ACTUAL_RESULT
 inherit RESULT
 end
 
-class_chart ANT
-inherit FRAMEWORK
-end
-
 class_chart BUILD
 end
 
 class_chart BUILD_CONFIGURATION
 end
 
-class_chart BUILD_ENVIRONMENT
-end
-
 class_chart BUILD_HISTORY
 end
 
 class_chart CHANGE_LOG
-end
-
-class_chart CHECKSTYLE
-inherit PLUGIN
 end
 
 class_chart CODE_COVERAGE
@@ -159,20 +99,6 @@ end
 class_chart COMMITTER
 end
 
-class_chart CVS
-inherit SOURCE_CODE_MANAGER
-end
-
-class_chart DOWNSTREAM
-inherit PROJECT
-end
-
-class_chart DURATION
-end
-
-class_chart ERROR
-end
-
 class_chart EXECUTOR
 end
 
@@ -180,14 +106,7 @@ class_chart EXPECTED_RESULT
 inherit RESULT
 end
 
-class_chart FAILURE
-end
-
 class_chart FRAMEWORK
-end
-
-class_chart FINDBUGS
-inherit PLUGIN
 end
 
 class_chart GENERATED_TEST
@@ -198,18 +117,6 @@ class_chart HAND_WRITTEN_TEST
 inherit TEST_CASE
 end
 
-class_chart HUDSON
-inherit FRAMEWORK
-end
-
-class_chart JUNIT
-inherit FRAMEWORK
-end
-
-class_chart LEGACY_TEST
-inherit HAND_WRITTEN_TEST
-end
-
 class_chart MACHINE
 end
 
@@ -217,37 +124,13 @@ class_chart MASTER
 inherit MACHINE
 end
 
-class_chart MAVEN
-inherit FRAMEWORK
-end
-
-class_chart MEMORY
-end
-
-class_chart OPERATING_ENVIRONMENT
-end
-
 class_chart PARAMETER
-end
-
-class_chart PLATFORM_SPECIFIC_TEST
-inherit HAND_WRITTEN_TEST
 end
 
 class_chart PLUGIN
 end
 
-class_chart PMD
-inherit PLUGIN
-end
-
-class_chart PROCESSOR
-end
-
 class_chart PROJECT
-end
-
-class_chart PROJECT_RELATIONSHIP
 end
 
 class_chart QUEUE
@@ -262,14 +145,8 @@ end
 class_chart REVISION
 end
 
-class_chart RUNNING
-end
-
 class_chart SLAVE
 inherit MACHINE
-end
-
-class_chart SOURCE_CODE_MANAGER
 end
 
 class_chart SPECIFICATION_COVERAGE
@@ -277,13 +154,6 @@ inherit TEST_COVERAGE
 end
 
 class_chart STATUS
-end
-
-class_chart SUBVERSION
-inherit SOURCE_CODE_MANAGER
-end 
-
-class_chart SUCCESS
 end
 
 class_chart TEST_CASE
@@ -298,14 +168,16 @@ end
 class_chart TEST_SUITE
 end
 
-class_chart TIMED_OUT
-end
-
-class_chart UPSTREAM
-inherit PROJECT
-end
-
-class_chart URL
+class_chart VERSION_CONTROL_SYSTEM
+explanation
+  "External system from which to get latest source code e.g.\
+  \ subversion or CVS"
+query
+  "URL",
+  "Are changes?"
+command
+  "Checkout",
+  "Get latest changes"
 end
 
 -- Event charts
@@ -335,5 +207,20 @@ involves
 event
   "Poll SCM"
 involves
-  REPOSITORY, URL
+  REPOSITORY
+end
+
+scenario_chart HAWK
+explanation 
+  ""
+scenario 
+  ""
+description
+  ""
+end
+
+creation_chart HAWK
+explanation 
+  ""
+creator COMMITTER creates REVISION
 end
