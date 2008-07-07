@@ -5,6 +5,11 @@
 -- Informal System Chart
 
 system_chart HAWK
+indexing
+  author: "Dermot Cochran";
+  created: "2008-07-07-dc";
+  keywords: "Hudson Maven test";
+  level_of_detail: "0"	
 explanation 
   "Hawk is a verification-centric test framework that uses Hudson and \
   \Maven on multiple servers to achieve full functional, behavioral and specification test coverage."
@@ -25,6 +30,8 @@ end
 -- Informal Cluster Charts
 
 cluster_chart BUILDS
+indexing
+  level_of_detail: "0"
 explanation
   "The build process and infrastructure needed to run tests"
 class BUILD description "Automated compilation and testing of a software component from up-to-date source code"
