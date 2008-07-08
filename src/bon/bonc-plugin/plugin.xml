@@ -28,21 +28,29 @@
       </runtime>
       <builder id="ie.ucd.bon.plugin.boncbuilder"/> 
    </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-	       <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-      </menuContribution>
+   
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="ie.ucd.bon.plugin.project.popupMenu">
+         <menu
+               label="BONc"
+               path="additions"
+               id="ie.ucd.bon.plugin.project.popupSubMenu">
+            <groupMarker name="content"/>
+            <separator name="additions"/>
+          </menu>
+          <action
+             id="ie.ucd.bon.plugin.project.addNature"
+             label="Add BONc Nature to Project"
+             tooltip="Add the BONc nature to the selected project(s), allowing the BONc builder to run on them."
+             menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
+             enablesFor="+"
+             class="ie.ucd.bon.plugin.ui.AddBONcNatureActionDelegate">
+          </action>
+      </objectContribution>
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-         
-   </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            commandId="BONcPlugin.handler1">
-      </handler>
-   </extension>
+   
 
 </plugin>

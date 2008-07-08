@@ -13,7 +13,7 @@ import org.osgi.framework.BundleContext;
 public class BONPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "BONcPlugin";
+	public static final String PLUGIN_ID = "ie.ucd.bon.plugin";
 
 	// The shared instance
 	private static BONPlugin plugin;

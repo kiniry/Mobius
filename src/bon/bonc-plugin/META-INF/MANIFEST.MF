@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BONcPlugin Plug-in
+Bundle-Name: BONc Plugin
 Bundle-SymbolicName: ie.ucd.bon.plugin;singleton:=true
 Bundle-Version: 0.1
 Bundle-Activator: ie.ucd.bon.plugin.BONPlugin
