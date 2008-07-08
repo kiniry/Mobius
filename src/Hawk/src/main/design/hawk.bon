@@ -220,11 +220,23 @@ end
 
 scenario_chart HAWK
 explanation 
-  ""
+  "Examples of how HAWK is used"
 scenario 
-  ""
+  "Valid changeset"
 description
-  ""
+  "A changeset is commited to the repository which passes all tests"
+scenario
+  "Underspecified changeset"
+description
+  "A changeset is commited to the repository which passes all tests, but for which there are code paths independent of the specification i.e. code coverage exceeds specificationn coverage"
+scenario
+  "Verification failed"
+description
+  "A code change violates existing specifications"
+scenario
+  "Inconistent specification"
+description
+  "A specification change causes existing code to be incorrect"
 end
 
 creation_chart HAWK
