@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-
 import javafe.ast.DelegatingPrettyPrint;
 import javafe.ast.StandardPrettyPrint;
 import javafe.ast.TypeDecl;
@@ -57,7 +56,7 @@ public class Main extends escjava.Main {
   public static void main(final /*@ non_null @*/String[] args) {
     // the first argument is the output dir
     if (args.length < 2) {
-      fOut.println("I need at least 2 arguments:\n"+
+      fOut.println("I need at least 2 arguments:\n" +
                    " - the output directory and\n+" +
                    " - the path to the file bicolano.jar");
       return;
@@ -121,7 +120,6 @@ public class Main extends escjava.Main {
    * Do the main operations; compute the vcs and everything.
    * @param basedir the directory where to host everything
    * @param args the current program arguments to parse
-   * @return <code>0</code>  or an error code
    */
   public Main(final File basedir, final String[] args) {
     this(basedir);
@@ -281,7 +279,7 @@ public class Main extends escjava.Main {
     workingDir.mkdirs();
     
     doTypeSrcGen(td, sig, workingDir);
-    doDesugaredSrcGen(sig, workingDir);
+    //doDesugaredSrcGen(sig, workingDir);
     return true;
   }
 

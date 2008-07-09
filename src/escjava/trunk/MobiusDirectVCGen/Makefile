@@ -62,7 +62,7 @@ clean:
 
 java:
 	@ echo Compiling:
-	mkdir -p tmp
-	javac -source 1.6 -sourcepath ../src -classpath ${TMP}:${LIBS} -d ${TMP} `find ./ -name *.java`
+	mkdir -p ${TMP}
+	 javac -source 1.6 -sourcepath ./src  -classpath ${TMP}:${LIBS} -d ${TMP} `find ./src -name *.java`
 
 

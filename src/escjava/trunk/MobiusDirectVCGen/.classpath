@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="samples"/>
-	<classpathentry kind="lib" path="/ESCJava2/Utils/Javafe/Javafe2.0.5.jar"/>
-	<classpathentry kind="lib" path="/ESCJava2/Utils/junit.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/javac.jar"/>
 	<classpathentry kind="lib" path="lib/bico.jar"/>
 	<classpathentry kind="lib" path="lib/escjava.jar"/>
 	<classpathentry kind="lib" path="lib/bcel-5.2.jar"/>
+	<classpathentry kind="lib" path="lib/Javafe2.0.5.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
