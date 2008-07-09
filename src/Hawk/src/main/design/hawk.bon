@@ -108,6 +108,7 @@ cluster_chart TYPES
 explanation
   "Standard built-in and primitive classes"
 class ANY description "The root of the type system"
+class RELATIONSHIP description "The relationship between two objects"
 class SET description "A collection of objects with a shared type or base type"
 class VALUE description "Store one number or quantity"
 end
@@ -182,6 +183,9 @@ class_chart PROJECT
 end
 
 class_chart QUEUE
+end
+
+class_chart RELATIONSHIP
 end
 
 class_chart REPOSITORY
