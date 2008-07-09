@@ -26,6 +26,9 @@ cluster SOURCE_CODE_MANAGEMENT
 cluster TESTS
   description 
   "The structure of the tests"
+cluster TYPES
+  description
+  "Built-in types and primtives"
 end
 
 -- Informal Cluster Charts
@@ -82,10 +85,22 @@ class TEST_RUN description "The complete set of tests for a project"
 class TEST_SUITE description "A cluster of tests"
 end
 
+cluster_chart TYPES
+explanation
+  "Standard built-in and primitive classes"
+class ANY description "The root of the type system"
+class VALUE description "Store one number or quantity"
+end
+
 -- Informal Class Charts
 
 class_chart ACTUAL_RESULT
 inherit RESULT
+end
+
+class_chart ANY
+explanation
+  "The built-in class from which all other classes implicitly inherit"
 end
 
 class_chart BUILD
@@ -174,6 +189,16 @@ class_chart TEST_RUN
 end
 
 class_chart TEST_SUITE
+end
+
+class_chart VALUE
+explanation
+  "Stores a numerical quantity"
+inherit ANY
+query
+  "What is my value?"
+command
+  "Set the value"
 end
 
 class_chart VERSION_CONTROL_SYSTEM
