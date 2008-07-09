@@ -14,6 +14,7 @@
    </extension>
    <extension
          id="boncbuilder"
+         name="BONc Builder"
          point="org.eclipse.core.resources.builders">
       <builder
             callOnEmptyDelta="true"
@@ -22,7 +23,10 @@
             <run class="ie.ucd.bon.plugin.builder.BONcBuilder"/>
       </builder>
    </extension>
-   <extension id="boncnature" point="org.eclipse.core.resources.natures">
+   <extension
+         id="boncnature"
+         name="BONc Builder"
+         point="org.eclipse.core.resources.natures">
       <runtime>
          <run class="ie.ucd.bon.plugin.nature.BONcProjectNature"/>
       </runtime>
@@ -41,15 +45,42 @@
             <groupMarker name="content"/>
             <separator name="additions"/>
           </menu>
-          <action
+      </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="ie.ucd.bon.plugin.project.popupMenu">
+         <visibility>
+             <not>
+                 <objectState name="nature" value="ie.ucd.bon.plugin.boncnature"/>
+             </not>
+         </visibility>
+         <action
              id="ie.ucd.bon.plugin.project.addNature"
              label="Add BONc Nature to Project"
              tooltip="Add the BONc nature to the selected project(s), allowing the BONc builder to run on them."
              menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
              enablesFor="+"
              class="ie.ucd.bon.plugin.ui.AddBONcNatureActionDelegate">
-          </action>
+         </action>
       </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="ie.ucd.bon.plugin.project.popupMenu">
+         <visibility>
+             <objectState name="nature" value="ie.ucd.bon.plugin.boncnature"/>
+         </visibility>
+         <action
+             id="ie.ucd.bon.plugin.project.removeNature"
+             label="Remove BONc Nature from Project"
+             tooltip="Remove the BONc nature from the selected project(s). This will remove the BONc builder."
+             menubarPath="ie.ucd.bon.plugin.project.popupSubMenu/content"
+             enablesFor="+"
+             class="ie.ucd.bon.plugin.ui.RemoveBONcNatureActionDelegate">
+         </action>
+      </objectContribution>
+      
    </extension>
    
 

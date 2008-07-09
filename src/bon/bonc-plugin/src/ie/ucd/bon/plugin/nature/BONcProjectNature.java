@@ -11,16 +11,12 @@ public class BONcProjectNature implements IProjectNature {
   private IProject theProject;
 
   public void configure() throws CoreException {
-    System.out.println("Configure nature");
-    
     BONcBuilder.addBuilderToProject(theProject);
   }
 
   public void deconfigure() throws CoreException {
-    System.out.println("De-configure nature");
+    BONcBuilder.removeBuilderFromProject(theProject);
   }
-
-
 
   public IProject getProject() {
     return theProject;

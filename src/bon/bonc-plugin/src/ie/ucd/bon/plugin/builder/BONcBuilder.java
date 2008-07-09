@@ -18,9 +18,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class BONcBuilder extends IncrementalProjectBuilder {
 
   private static final String BUILDER_ID = BONPlugin.PLUGIN_ID + ".boncbuilder"; 
-	
+
   protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
-      throws CoreException {
+  throws CoreException {
 
     if (kind == IncrementalProjectBuilder.FULL_BUILD) {
       System.out.println("Full build");
@@ -29,48 +29,92 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     } else if (kind == IncrementalProjectBuilder.AUTO_BUILD) {
       System.out.println("Auto Build");
     }
-    
+
     IResource[] resources = getProject().members();
     for (IResource resource : resources) {
       System.out.println("Resource: " + resource.getFullPath());
     }
-    
+
     return null;
   }
 
-  
-  public static void addBuilderToProject(IProject project) {    // Cannot modify closed projects. 
-	   if (!project.isOpen()) 
-	      return; 
-	   // Get the description. 
-	   IProjectDescription description; 
-	   try { 
-	      description = project.getDescription(); 
-	   } 
-	   catch (CoreException e) { 
-	      //FavoritesLog.logError(e); 
-	      return; 
-	   } 
-	   // Look for builder already associated. 
-	   ICommand[] cmds = description.getBuildSpec(); 
-	   for (int j = 0; j < cmds.length; j++) 
-	      if (cmds[j].getBuilderName().equals(BUILDER_ID)) 
-	         return; 
-	   // Associate builder with project. 
-	   ICommand newCmd = description.newCommand(); 
-	   newCmd.setBuilderName(BUILDER_ID); 
-	   List<ICommand> newCmds = new ArrayList<ICommand>(); 
-	   newCmds.addAll(Arrays.asList(cmds)); 
-	   newCmds.add(newCmd); 
-	   description.setBuildSpec( 
-	      newCmds.toArray( 
-	         new ICommand[newCmds.size()])); 
-	   try { 
-	      project.setDescription(description, null); 
-	   } 
-	   catch (CoreException e) { 
-	      //FavoritesLog.logError(e); 
-	   } 
-	} 
-  
+
+  public static void addBuilderToProject(IProject project) {    
+    // Cannot modify closed projects. 
+    if (!project.isOpen()) {
+      return; 
+    }
+
+    // Get the description. 
+    IProjectDescription description; 
+    try { 
+      description = project.getDescription(); 
+    } 
+    catch (CoreException e) {  
+      return; 
+    } 
+
+    // Look for builder already associated. 
+    ICommand[] cmds = description.getBuildSpec(); 
+    for (int j = 0; j < cmds.length; j++) { 
+      if (cmds[j].getBuilderName().equals(BUILDER_ID)) { 
+        return; 
+      }
+    }
+
+    // Associate builder with project. 
+    ICommand newCmd = description.newCommand(); 
+    newCmd.setBuilderName(BUILDER_ID);
+
+    List<ICommand> newCmds = new ArrayList<ICommand>(); 
+    newCmds.addAll(Arrays.asList(cmds)); 
+    newCmds.add(newCmd); 
+    description.setBuildSpec(newCmds.toArray(new ICommand[newCmds.size()])); 
+    try { 
+      project.setDescription(description, null); 
+    } catch (CoreException e) {
+      return;
+    } 
+  } 
+
+  public static void removeBuilderFromProject(IProject project) {
+    // Cannot modify closed projects. 
+    if (!project.isOpen()) {
+      return; 
+    }
+
+    // Get the description. 
+    IProjectDescription description; 
+    try { 
+      description = project.getDescription(); 
+    } 
+    catch (CoreException e) {  
+      return; 
+    } 
+
+    // Disassociate builder with project. 
+    ICommand[] cmds = description.getBuildSpec();
+    List<ICommand> newCmds = new ArrayList<ICommand>(); 
+    newCmds.addAll(Arrays.asList(cmds)); 
+    
+    boolean found = false;
+    for (int i=0; i < cmds.length; i++) {
+      if (newCmds.get(i).getBuilderName().equals(BUILDER_ID)) {
+        newCmds.remove(i);
+        found = true;
+        break;  //Should never be associated twice
+      }
+    }
+    
+    if (found) {
+      description.setBuildSpec(newCmds.toArray(new ICommand[newCmds.size()])); 
+      try { 
+        project.setDescription(description, null);
+      } catch (CoreException e) {
+        return;
+      } 
+    }
+  }
+
+
 }

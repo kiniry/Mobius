@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-public class AddBONcNatureActionDelegate implements IObjectActionDelegate {
+public class RemoveBONcNatureActionDelegate implements IObjectActionDelegate {
 
   private IWorkbenchPart targetPart;
   private ISelection selection;
@@ -59,8 +59,8 @@ public class AddBONcNatureActionDelegate implements IObjectActionDelegate {
           List<String> newIds = new ArrayList<String>();
           newIds.addAll(Arrays.asList(description.getNatureIds()));
 
-          if (!newIds.contains(NATURE_ID)) {
-            newIds.add(NATURE_ID);
+          if (newIds.contains(NATURE_ID)) {
+            newIds.remove(NATURE_ID);
             description.setNatureIds(newIds.toArray(new String[newIds.size()]));
 
             try {
@@ -82,9 +82,9 @@ public class AddBONcNatureActionDelegate implements IObjectActionDelegate {
     }
     
     if (count == 1) {
-      MessageDialog.openInformation(targetPart.getSite().getShell(), "Added BONc nature", "BONc nature added to project " + names);
+      MessageDialog.openInformation(targetPart.getSite().getShell(), "Removed BONc nature", "BONc nature removed from project " + names);
     } else if (count > 1) {
-      MessageDialog.openInformation(targetPart.getSite().getShell(), "Added BONc nature", "BONc nature added to projects: " + names);
+      MessageDialog.openInformation(targetPart.getSite().getShell(), "Removed BONc nature", "BONc nature removed from projects: " + names);
     }
   }
 
