@@ -110,7 +110,9 @@ public abstract class AWorkspaceElement implements IImagesConstants {
     final Project [] tab = new Project[projects.length];
     for (int i = 0; i < projects.length; i++) { 
       tab[i] = new Project(projects[i]);
+
     }
+    
     return tab;
   }
   

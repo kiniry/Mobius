@@ -9,5 +9,29 @@
             id="CoqMobiusUI.view"
             name="POsExplorer"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="MobiusDirectVCGenUI.actions"
+            label="DirectVCGenUI"
+            visible="true">
+         <action
+               class="mobius.directVCGen.ui.poview.CompileAction"
+               enablesFor="1"
+               id="MobiusDirectVCGenUI.compile"
+               label="Generate the Proof Obligations"
+               style="push"
+               toolbarPath="MobiusDirectVCGen.actions">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.directVCGen.ui.poview.PerspectiveFactory"
+            id="MobiusDirectVCGenUI.perspective1"
+            name="Mobius">
+      </perspective>
+   </extension>
 
 </plugin>

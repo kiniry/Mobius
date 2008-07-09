@@ -1,14 +1,20 @@
 package mobius.directVCGen.ui.poview;
 
-import mobius.directVCGen.ui.poview.tree.IShowable;
 import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
+import mobius.directVCGen.ui.poview.tree.IShowable;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -20,6 +26,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IPageListener;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 
@@ -29,7 +41,7 @@ import org.eclipse.ui.part.ViewPart;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProjectProofs extends ViewPart 
-  implements IDoubleClickListener, ISelectionChangedListener, SelectionListener {
+  implements IDoubleClickListener, ISelectionChangedListener, SelectionListener, IPageListener {
   /** the current selection. */
   private AWorkspaceElement fSel;
   /** the tree showing all the proofs. */
@@ -55,12 +67,46 @@ public class ProjectProofs extends ViewPart
     fViewer.setUseHashlookup(true);
     fViewer.setContentProvider(new POsContentProvider(fViewer));
     fViewer.setLabelProvider(new POsLabelProvider());
-    fViewer.setInput(AWorkspaceElement.createProjectItem(Utils.getProjects()));
+//    fViewer.setInput(Utils.getProjects());
     fViewer.addDoubleClickListener(this);
     fViewer.addSelectionChangedListener(this);
+
   }
 
+  private class MySelListener implements ISelectionListener {
+    IProject proj;
+    @Override
+    public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+      if (selection instanceof IStructuredSelection) {
+        final IStructuredSelection sel = (IStructuredSelection) selection;
+        //final Set<IProject> set = new HashSet<IProject>();
+        if (sel.size() == 1) {
+          final Object o = sel.getFirstElement();
+          IProject newProj = null;
+          if (o instanceof IResource) {
+            final IResource res = (IResource) o;
+            newProj = res.getProject();
+          }
+          if (o instanceof IProject) {
+            newProj = (IProject) o;
+          }
+          if (o instanceof IJavaElement) {
+            final IJavaElement elem = (IJavaElement) o;
+            newProj = elem.getJavaProject().getProject();
 
+          }
+          
+          if ((newProj != null) && (newProj != proj)) {
+            proj = newProj;
+            
+            fViewer.setInput(new IProject[] {proj});
+            fViewer.expandToLevel(2);
+          }
+        }
+      }
+    }
+    
+  }
 
 
   /**
@@ -72,7 +118,7 @@ public class ProjectProofs extends ViewPart
     fBtnEvaluate = new ToolItem(tb, SWT.PUSH);
     fBtnEvaluate.setImage(Utils.createImage("icons/reevaluate.gif"));
     fBtnEvaluate.setEnabled(false);
-    fBtnEvaluate.setToolTipText("Try to evaluate the goals");
+    fBtnEvaluate.setToolTipText("Build the selected file");
     fBtnEvaluate.addSelectionListener(this);
   }
   
@@ -82,6 +128,10 @@ public class ProjectProofs extends ViewPart
     parent.setLayout(rl);
     createButtons(parent);
     createViewer(parent);
+    
+    final IWorkbench wb = PlatformUI.getWorkbench();
+    wb.getActiveWorkbenchWindow().addPageListener(this);
+
   }
 
   /** {@inheritDoc} */
@@ -126,7 +176,26 @@ public class ProjectProofs extends ViewPart
 
   /** {@inheritDoc} */
   public void widgetDefaultSelected(final SelectionEvent e) { }
+
+  @Override
+  public void pageActivated(IWorkbenchPage page) {
+    page.addSelectionListener(new MySelListener());
+
+    //System.out.println("hi");    
+  }
+
+  @Override
+  public void pageClosed(IWorkbenchPage page) {
+    // TODO Auto-generated method stub
     
+  }
+
+  @Override
+  public void pageOpened(IWorkbenchPage page) {
+    // TODO Auto-generated method stub
+    System.out.println("hoy");    
+  }
+
 
 
 }

@@ -104,19 +104,19 @@ public class POsContentProvider implements ITreeContentProvider {
   public void dispose() {
      
   }
-
+  
+  Project[] current;
+  /** {@inheritDoc} */
   public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-    if (oldInput == null) {
+    if (oldInput == newInput) {
       return;
     }
-    final Project[] tab  = (Project[]) oldInput;
-    for (int i = 0; i < tab.length; i++) {
-      tab[i].remove();
-    }
+    current = AWorkspaceElement.createProjectItem((IProject[]) newInput);
   }
 
+  /** {@inheritDoc} */
   public Object[] getElements(final Object input) {
-    return (Object[]) input;
+    return (Object[]) current;
   }
 
 

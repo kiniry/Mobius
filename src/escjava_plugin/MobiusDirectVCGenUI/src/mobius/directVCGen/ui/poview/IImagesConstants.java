@@ -11,9 +11,10 @@ public interface IImagesConstants {
   int IMG_DEFAULT = 0;
   /** the image for an unknown file. */
   int IMG_UNKNOWN = 0;  
-  
+  /** the image for an unknown file. */
+  int IMG_TOOL = IMG_DEFAULT + 1;  
   /** the eclipse symbol for methods. */
-  int IMG_METHOD = IMG_DEFAULT + 1;
+  int IMG_METHOD = IMG_TOOL + 1;
   
   /** the eclipse symbol for classes. */
   int IMG_CLASS = IMG_METHOD + 1;
@@ -40,5 +41,6 @@ public interface IImagesConstants {
   int IMG_MKFILE = IMG_PKG + 1;
   
 
+  int NUMBER_IMGS = IMG_MKFILE + 1; 
   
 }
