@@ -1,42 +1,31 @@
 package mobius.directVCGen.ui.poview;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URL;
 
 import mobius.directVCGen.Main;
-import mobius.directVCGen.ui.poview.util.ConsoleUtils;
 import mobius.directVCGen.ui.poview.util.RefreshUtils;
+import mobius.directVCGen.ui.poview.util.ConsoleUtils.ConsoleOutputWrapper;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.console.IOConsoleOutputStream;
 
 public class CompileAction implements IWorkbenchWindowActionDelegate {
   ICompilationUnit sel;
   @Override
-  public void dispose() {
-    // TODO Auto-generated method stub
-
-  }
+  public void dispose() { }
 
   @Override
-  public void init(IWorkbenchWindow window) {
-    // TODO Auto-generated method stub
-
-  }
+  public void init(final IWorkbenchWindow window) { }
 
   @Override
   public void run(final IAction action) {
@@ -47,8 +36,8 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
 
         final URL url = Activator.getDefault().getBundle().getResource("/lib/bicolano.jar");
         final String bico = FileLocator.toFileURL(url).getPath();
-        final IVMInstall vm = JavaRuntime.getDefaultVMInstall();
-        final IVMRunner runner = vm.getVMRunner(ILaunchManager.RUN_MODE);
+        //final IVMInstall vm = JavaRuntime.getDefaultVMInstall();
+        //final IVMRunner runner = vm.getVMRunner(ILaunchManager.RUN_MODE);
 
         String[] classPath = null;
 
@@ -58,14 +47,12 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
           res += ":" + s;
         }
         System.out.println(res);
-        final IOConsoleOutputStream out = 
-          ConsoleUtils.getDefault().getConsole().newOutputStream();
-        final PrintStream oldOut = System.out;
-        System.setOut(new PrintStream(out));
+        final ConsoleOutputWrapper wrapper = new ConsoleOutputWrapper();
+        wrapper.wrap();
         Main.main(new String[]{path.toString(), bico, 
                                sel.getCorrespondingResource().getLocation().toString(),
                                "-classpath", res.substring(1)});
-        System.setOut(oldOut);
+        wrapper.unwrap();
  
         RefreshUtils.refreshResource(sel.getJavaProject().getProject());
       }
@@ -73,11 +60,9 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
         e.printStackTrace();
       }
       catch (JavaModelException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       } 
       catch (CoreException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
 

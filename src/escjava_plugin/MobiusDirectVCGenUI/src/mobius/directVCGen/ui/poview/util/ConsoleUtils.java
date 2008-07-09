@@ -3,7 +3,6 @@ package mobius.directVCGen.ui.poview.util;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import mobius.directVCGen.ui.poview.Activator;
 import mobius.directVCGen.ui.poview.util.ImagesUtils.StreamConnexion;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +24,8 @@ public class ConsoleUtils {
   private static final RGB BLUE = new RGB(0, 0, 255);
   /** the color purple. */
   private static final RGB PURPLE = new RGB(255, 0, 255);
+  /** the color black. */
+  private static final RGB BLACK = new RGB(0, 0, 0);
   
   private static ConsoleUtils instance;
 
@@ -36,6 +37,7 @@ public class ConsoleUtils {
   private Color fBlue;
   /** the display dependent purple color. */
   private Color fPurple;
+  private Color fBlack;
   
   
   private ConsoleUtils() {
@@ -47,6 +49,7 @@ public class ConsoleUtils {
     fRed = new Color(display, RED);
     fBlue = new Color(display, BLUE);
     fPurple = new Color(display, PURPLE);
+    fBlack = new Color(display, BLACK);
   }
   
   /**
@@ -65,6 +68,7 @@ public class ConsoleUtils {
     fRed.dispose();
     fBlue.dispose();
     fPurple.dispose();
+    fBlack.dispose();
     super.finalize();
   }
   /**
@@ -91,6 +95,13 @@ public class ConsoleUtils {
     return fBlue;
   }
   
+  /**
+   * Returns the color black.
+   * @return not null
+   */
+  public Color getBlack() {
+    return fBlack;
+  }
   /**
    * Returns the color purple.
    * @return not null
@@ -140,6 +151,43 @@ public class ConsoleUtils {
   
       out.println("\nDone!");
       return JobStatus.getOkStatus();      
+    }
+  }
+  
+  public static class ConsoleOutputWrapper {
+    private final IOConsole fCurrent;
+    private PrintStream savedOut;
+    private PrintStream savedErr;
+    
+    /**
+     * Initialize a new Console Wrapper.
+     */
+    public ConsoleOutputWrapper() {
+      fCurrent = ConsoleUtils.getDefault().getConsole();
+    }
+    
+    public void wrap() {
+      if (savedOut != null) {
+        return;
+      }
+      savedOut = System.out;
+      savedErr = System.err;
+      final IOConsoleOutputStream out = fCurrent.newOutputStream();
+      out.setColor(ConsoleUtils.getDefault().getBlack()); 
+      
+      System.setOut(new PrintStream(out));
+      final IOConsoleOutputStream err = fCurrent.newOutputStream();
+      err.setColor(ConsoleUtils.getDefault().getRed());      
+      
+      System.setErr(new PrintStream(err));
+    }
+    
+    public void unwrap() {
+      if (savedOut == null) {
+        return;
+      }
+      System.setOut(savedOut);
+      System.setErr(savedErr);
     }
   }
 }
