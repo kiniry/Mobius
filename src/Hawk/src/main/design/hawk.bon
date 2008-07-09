@@ -228,7 +228,7 @@ description
 scenario
   "Underspecified changeset"
 description
-  "A changeset is commited to the repository which passes all tests, but for which there are code paths independent of the specification i.e. code coverage exceeds specificationn coverage"
+  "A changeset is commited to the repository which passes all tests, but for which there are code paths independent of the specification i.e. code coverage exceeds specification coverage"
 scenario
   "Verification failed"
 description
@@ -237,6 +237,22 @@ scenario
   "Inconistent specification"
 description
   "A specification change causes existing code to be incorrect"
+scenario
+  "Test fails in all platforms"
+description
+  "The same test fails on all pltaforms"
+scenario
+  "Test fails on some but not all platforms"
+description
+  "The same test only fails on some platorms"
+scenario
+  "Site configuration error"
+description
+  "The test run aborts due to site misconfiguration e.g. wrong version of build tools"
+scenario
+  "The latest revision fails to build"
+description
+  "The test run is aborted because the latest revision does not build.  An email is sent the committer each time this happens"
 end
 
 creation_chart HAWK
