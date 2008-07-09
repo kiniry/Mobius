@@ -2,6 +2,8 @@ package mobius.directVCGen.ui.poview;
 
 import mobius.directVCGen.ui.poview.tree.Project;
 import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
+import mobius.directVCGen.ui.poview.util.RefreshUtils;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -66,7 +68,7 @@ public class POsContentProvider implements ITreeContentProvider {
         switch (delta.getKind()) {
           case IResourceDelta.ADDED:
           case IResourceDelta.REMOVED:
-            fViewer.setInput(Utils.getProjects());
+            fViewer.setInput(ImagesUtils.getProjects());
             return true;
           default:
             break;
@@ -78,15 +80,15 @@ public class POsContentProvider implements ITreeContentProvider {
       switch (delta.getKind()) {
         case IResourceDelta.ADDED:
           pe.getParent().update();
-          Utils.refreshTree(fViewer, pe.getParent());
+          RefreshUtils.refreshTree(fViewer, pe.getParent());
           break;
         case IResourceDelta.REMOVED:
           pe.getParent().update();
-          Utils.refreshTree(fViewer, pe.getParent());
+          RefreshUtils.refreshTree(fViewer, pe.getParent());
           break;
         case IResourceDelta.CHANGED:
           pe.update();
-          Utils.refreshTree(fViewer, pe);
+          RefreshUtils.refreshTree(fViewer, pe);
           break;
         default:
           break;

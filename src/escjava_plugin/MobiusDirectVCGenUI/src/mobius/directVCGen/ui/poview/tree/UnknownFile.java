@@ -1,6 +1,6 @@
 package mobius.directVCGen.ui.poview.tree;
 
-import mobius.directVCGen.ui.poview.Utils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorDescriptor;
@@ -34,7 +34,7 @@ public class UnknownFile extends AWorkspaceElement implements IShowable {
     fFile = file;
     final IEditorDescriptor edit = IDE.getDefaultEditor(getFile());
     if (edit == null) {
-      fImg = Utils.getImage(IMG_UNKNOWN);
+      fImg = ImagesUtils.getImage(IMG_UNKNOWN);
     }
     else {
       fImg = edit.getImageDescriptor().createImage();

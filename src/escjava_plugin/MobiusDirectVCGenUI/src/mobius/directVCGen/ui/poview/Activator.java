@@ -1,5 +1,8 @@
 package mobius.directVCGen.ui.poview;
 
+import mobius.directVCGen.ui.poview.util.IImagesConstants;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
@@ -22,21 +25,7 @@ public class Activator extends AbstractUIPlugin implements IImagesConstants {
 
   /** The shared instance. */
   private static Activator plugin;
-  /** the color red. */
-  private static final RGB RED = new RGB(255, 0, 0);
-  /** the color blue. */
-  private static final RGB BLUE = new RGB(0, 0, 255);
-  /** the color purple. */
-  private static final RGB PURPLE = new RGB(255, 0, 255);
 
-  /** the output console, used to write information to the user. */
-  private IOConsole fConsole;
-  /** the display dependent red color. */
-  private Color fRed;
-  /** the display dependent blue color. */
-  private Color fBlue;
-  /** the display dependent purple color. */
-  private Color fPurple;
   
   
   /**
@@ -49,21 +38,11 @@ public class Activator extends AbstractUIPlugin implements IImagesConstants {
   /** {@inheritDoc} */
   public void start(final BundleContext context) throws Exception {
     super.start(context);
-    fConsole = new IOConsole("Mobius DirectVCGen Console", Utils.descTool);
-    fConsole.activate();
-    ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[]{fConsole});
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    fRed = new Color(display, RED);
-    fBlue = new Color(display, BLUE);
-    fPurple = new Color(display, PURPLE);
+
   }
 
   /** {@inheritDoc} */
   public void stop(final BundleContext context) throws Exception {
-    //plugin = null;
-    fRed.dispose();
-    fBlue.dispose();
-    fPurple.dispose();
     super.stop(context);
     
   }
@@ -77,35 +56,5 @@ public class Activator extends AbstractUIPlugin implements IImagesConstants {
     return plugin;
   }
   
-  /**
-   * Returns the plugin console.
-   * @return a valid console
-   */
-  public IOConsole getConsole() {
-    return fConsole;
-  }
-  
-  /**
-   * Returns the color red.
-   * @return not null
-   */
-  public Color getRed() {
-    return fRed;
-  }
-  
-  /**
-   * Returns the color blue.
-   * @return not null
-   */
-  public Color getBlue() {
-    return fBlue;
-  }
-  
-  /**
-   * Returns the color purple.
-   * @return not null
-   */
-  public Color getPurple() {
-    return fPurple;
-  }
+
 }

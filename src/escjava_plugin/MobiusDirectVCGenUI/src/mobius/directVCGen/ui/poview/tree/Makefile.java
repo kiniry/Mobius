@@ -2,7 +2,7 @@ package mobius.directVCGen.ui.poview.tree;
 
 
 
-import mobius.directVCGen.ui.poview.Utils;
+import mobius.directVCGen.ui.poview.util.ConsoleUtils;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -35,7 +35,7 @@ public class Makefile extends UnknownFile {
     final String [] args = {"/bin/sh", "-c",
                             "cd " + path  + "; " + "make"};
 
-    final Job j = new Utils.SystemCallJob("Make", args);
+    final Job j = new ConsoleUtils.SystemCallJob("Make", args);
     j.schedule();    
   }
 }

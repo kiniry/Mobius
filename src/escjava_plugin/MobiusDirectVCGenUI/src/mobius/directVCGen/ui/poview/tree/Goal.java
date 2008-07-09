@@ -2,7 +2,8 @@ package mobius.directVCGen.ui.poview.tree;
 
 import java.io.File;
 
-import mobius.directVCGen.ui.poview.Utils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
+import mobius.directVCGen.ui.poview.util.RefreshUtils;
 import mobius.prover.gui.popup.CompileFile;
 
 import org.eclipse.core.resources.IFile;
@@ -34,10 +35,10 @@ public class Goal extends UnknownFile implements IShowable {
   /** {@inheritDoc} */
   public Image getImage () {
     if (fNameVo.exists() && (fNameVo.lastModified() > fName.lastModified())) {
-      return Utils.getImage(IMG_GOAL_SOLVED);
+      return ImagesUtils.getImage(IMG_GOAL_SOLVED);
     }
     else {
-      return Utils.getImage(IMG_GOAL);
+      return ImagesUtils.getImage(IMG_GOAL);
     }
   }
 
@@ -56,7 +57,7 @@ public class Goal extends UnknownFile implements IShowable {
         e.printStackTrace();
       }
     }
-    Utils.refreshTree(viewer, this);
+    RefreshUtils.refreshTree(viewer, this);
   }
   public boolean isEvaluateEnabled() {
     return true;

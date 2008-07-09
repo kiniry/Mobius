@@ -1,6 +1,6 @@
 package mobius.directVCGen.ui.poview.tree;
 
-import mobius.directVCGen.ui.poview.Utils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -67,10 +67,10 @@ public class Project extends AWorkspaceElement {
   /** {@inheritDoc} */
   public Image getImage () {
     if (this.getChildrenCount() > 0) {
-      return Utils.getImage(IMG_PROJECT);
+      return ImagesUtils.getImage(IMG_PROJECT);
     }
     else { 
-      return Utils.getImage(IMG_PROJECT_EMPTY);
+      return ImagesUtils.getImage(IMG_PROJECT_EMPTY);
     }
   }
 

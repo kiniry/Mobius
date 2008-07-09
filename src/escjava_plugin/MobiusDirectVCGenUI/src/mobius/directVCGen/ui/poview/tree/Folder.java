@@ -1,6 +1,6 @@
 package mobius.directVCGen.ui.poview.tree;
 
-import mobius.directVCGen.ui.poview.Utils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -45,11 +45,11 @@ public class Folder extends AProofFolder {
     final String name = getName();
     if (name.equals("Formalisation") || 
         name.equals("classes")) {
-      return Utils.getImage(IMG_OBJS_LIBRARY);
+      return ImagesUtils.getImage(IMG_OBJS_LIBRARY);
     }
     else if (name.equals("src")) {
-      return Utils.getImage(IMG_SRC_FOLDER);
+      return ImagesUtils.getImage(IMG_SRC_FOLDER);
     }
-    return Utils.getImage(IMG_FOLDER);
+    return ImagesUtils.getImage(IMG_FOLDER);
   }
 }

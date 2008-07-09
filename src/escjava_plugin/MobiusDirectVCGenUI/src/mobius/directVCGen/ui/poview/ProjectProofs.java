@@ -2,6 +2,7 @@ package mobius.directVCGen.ui.poview;
 
 import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
 import mobius.directVCGen.ui.poview.tree.IShowable;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -9,7 +10,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -42,6 +42,8 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class ProjectProofs extends ViewPart 
   implements IDoubleClickListener, ISelectionChangedListener, SelectionListener, IPageListener {
+  private static ProjectProofs instance; 
+  
   /** the current selection. */
   private AWorkspaceElement fSel;
   /** the tree showing all the proofs. */
@@ -49,7 +51,12 @@ public class ProjectProofs extends ViewPart
   /** the button that triggers the evaluate action. */
   private ToolItem fBtnEvaluate;
   
-
+  /**
+   * Creates a new view.
+   */
+  public ProjectProofs() {
+    instance = this;
+  }
   
   /**
    * Create the proof viewer with the tree view.
@@ -116,7 +123,7 @@ public class ProjectProofs extends ViewPart
   private void createButtons(final Composite parent) {
     final ToolBar tb = new ToolBar(parent, SWT.HORIZONTAL);
     fBtnEvaluate = new ToolItem(tb, SWT.PUSH);
-    fBtnEvaluate.setImage(Utils.createImage("icons/reevaluate.gif"));
+    fBtnEvaluate.setImage(ImagesUtils.createImage("icons/reevaluate.gif"));
     fBtnEvaluate.setEnabled(false);
     fBtnEvaluate.setToolTipText("Build the selected file");
     fBtnEvaluate.addSelectionListener(this);
@@ -167,7 +174,7 @@ public class ProjectProofs extends ViewPart
         if (fSel instanceof AWorkspaceElement) {
           ((AWorkspaceElement)fSel).compile(fViewer);
         }
-        return Utils.getOkStatus();
+        return ImagesUtils.getOkStatus();
       }
     };
     j.schedule();      
@@ -196,6 +203,13 @@ public class ProjectProofs extends ViewPart
     System.out.println("hoy");    
   }
 
+  public static ProjectProofs getDefault() {
+    return instance;
+  }
+
+  public TreeViewer getViewer() {
+    return fViewer;
+  }
 
 
 }

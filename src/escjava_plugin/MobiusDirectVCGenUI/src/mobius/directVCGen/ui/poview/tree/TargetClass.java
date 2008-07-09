@@ -1,6 +1,6 @@
 package mobius.directVCGen.ui.poview.tree;
 
-import mobius.directVCGen.ui.poview.Utils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -25,6 +25,6 @@ public class TargetClass extends AProofFolder {
 
   /** {@inheritDoc} */
   public Image getImage () {
-    return Utils.getImage(IMG_CLASS);
+    return ImagesUtils.getImage(IMG_CLASS);
   }
 }

@@ -1,4 +1,4 @@
-package mobius.directVCGen.ui.poview;
+package mobius.directVCGen.ui.poview.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 
-import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
+import mobius.directVCGen.ui.poview.Activator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,19 +21,17 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.Bundle;
 
 
-public final class Utils implements IImagesConstants {
+public final class ImagesUtils implements IImagesConstants {
   
-  static ImageDescriptor descTool;
+  public static final ImageDescriptor descTool;
   
   /** all the images needed by the plugin. */
   private static Image[] images = new Image[NUMBER_IMGS];
@@ -44,7 +42,8 @@ public final class Utils implements IImagesConstants {
   }
   
   /** Default Constructor. */
-  private Utils() { }
+  private ImagesUtils() { }
+  
   
   
   private static void initImages() {
@@ -57,19 +56,19 @@ public final class Utils implements IImagesConstants {
     images[IMG_METHOD] = 
       getJdtImage(ISharedImages.IMG_OBJS_PRIVATE);
     images[IMG_GOAL_SOLVED] = 
-      Utils.getJdtImage(ISharedImages.IMG_OBJS_PUBLIC);
+      ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PUBLIC);
     images[IMG_GOAL] = createImage("icons/escjava_problem.gif");    
     images[IMG_LIB] = createImage("icons/coq.gif");
     images[IMG_LIB_RED] = createImage("icons/coq-red.gif"); 
     images[IMG_TOOL] = descTool.createImage();
     images[IMG_OBJS_LIBRARY] = 
-      Utils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
+      ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
     images[IMG_FOLDER] = 
       getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER);
     images[IMG_SRC_FOLDER] = 
-      Utils.getJdtImage(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
+      ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
     images[IMG_PKG] = 
-      Utils.getJdtImage(ISharedImages.IMG_OBJS_PACKAGE);
+      ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PACKAGE);
     images[IMG_DEFAULT] = 
       getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FILE);
   
@@ -105,39 +104,7 @@ public final class Utils implements IImagesConstants {
     return ImageDescriptor.createFromURL(iconURL).createImage();
   }
   
-  /**
-   * Creates an asynchronous job to refresh the tree view.
-   * @param viewer the viewer to refresh
-   * @param goal the specific target goal which has been modified
-   */
-  public static void refreshTree(final TreeViewer viewer, final AWorkspaceElement goal) {
-    final UIJob job = new RefreshJob(viewer, goal);
-    job.schedule();
-  }
-  
-  /**
-   * A job to refresh a specific viewer if one of its goal has
-   * been modified.
-   * 
-   * @author J. Charles (julien.charles@inria.fr)
-   */
-  private static class RefreshJob extends UIJob {
-    
-    private final TreeViewer fViewer;
-    private final AWorkspaceElement fGoal;
-    
-    public RefreshJob(final TreeViewer viewer, final AWorkspaceElement goal) {
-      super("Updating view");
-      fViewer = viewer;
-      fGoal = goal;
-    }
-    
-    /** {@inheritDoc} */
-    public IStatus runInUIThread(final IProgressMonitor monitor) {
-      fViewer.refresh(fGoal);
-      return Utils.getOkStatus();
-    }  
-  }
+
   
   public static  class StreamConnexion extends Thread {
     
@@ -162,48 +129,6 @@ public final class Utils implements IImagesConstants {
     }
   }
 
-  public static class SystemCallJob extends Job {
-  
-    private final String[] fArgs;
-  
-    public SystemCallJob(final String name, final String [] args) {
-      super(name);
-      fArgs = args;
-    }
-  
-    @Override
-    protected IStatus run(final IProgressMonitor monitor) {
-      final IOConsole console = Activator.getDefault().getConsole();
-      final IOConsoleOutputStream streamOut = console.newOutputStream();
-      
-      final IOConsoleOutputStream streamErr = console.newOutputStream();
-      final IOConsoleOutputStream streamEnd = console.newOutputStream();
-      streamErr.setColor(Activator.getDefault().getRed());
-      
-      final PrintStream out = new PrintStream(streamEnd);
-      streamEnd.setColor(Activator.getDefault().getPurple());      
-      
-      try {
-        final Process p = Runtime.getRuntime().exec(fArgs);
-        final StreamConnexion connexionOut = 
-          new StreamConnexion(p.getInputStream(), streamOut);
-        final StreamConnexion connexionErr = 
-          new StreamConnexion(p.getErrorStream(), streamErr);
-        connexionOut.start();
-        connexionErr.start();
-        p.waitFor();
-      } 
-      catch (IOException e) {
-        e.printStackTrace(out);
-      } 
-      catch (InterruptedException e) {
-        e.printStackTrace(out);
-      }
-  
-      out.println("\nDone!");
-      return getOkStatus();      
-    }
-  }
 
   public static Image getPlatformImage(final String id) {
     return PlatformUI.getWorkbench().getSharedImages().getImage(id);
@@ -224,4 +149,6 @@ public final class Utils implements IImagesConstants {
   public static IProject [] getProjects() {
     return ResourcesPlugin.getWorkspace().getRoot().getProjects();
   }
+
+
 }

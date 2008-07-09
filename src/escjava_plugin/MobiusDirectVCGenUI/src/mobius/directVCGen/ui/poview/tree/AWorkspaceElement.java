@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mobius.directVCGen.ui.poview.IImagesConstants;
-import mobius.directVCGen.ui.poview.Utils;
+import mobius.directVCGen.ui.poview.util.IImagesConstants;
+import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -63,7 +63,7 @@ public abstract class AWorkspaceElement implements IImagesConstants {
     return fChildren.size();
   }
   public Image getImage () {
-    return Utils.getImage(IMG_DEFAULT);
+    return ImagesUtils.getImage(IMG_DEFAULT);
   }
   
   public abstract void update();

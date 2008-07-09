@@ -4,6 +4,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.console.IConsoleConstants;
 
 public class PerspectiveFactory implements IPerspectiveFactory {
 
@@ -20,7 +21,8 @@ public class PerspectiveFactory implements IPerspectiveFactory {
     
 
     // Bottom right: Task List view
-    layout.addView(IPageLayout.ID_TASK_LIST, IPageLayout.BOTTOM, 0.66f, editorArea);
+    layout.addView(IConsoleConstants.ID_CONSOLE_VIEW, IPageLayout.BOTTOM, 0.66f, editorArea);
+      
     // Bottom left: Outline view and Property Sheet view
     final IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 
                                                     0.65f, editorArea);

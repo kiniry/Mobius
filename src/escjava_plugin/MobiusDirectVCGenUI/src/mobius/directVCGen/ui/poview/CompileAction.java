@@ -1,28 +1,28 @@
 package mobius.directVCGen.ui.poview;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URL;
 
 import mobius.directVCGen.Main;
+import mobius.directVCGen.ui.poview.util.ConsoleUtils;
+import mobius.directVCGen.ui.poview.util.RefreshUtils;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.Launch;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.console.IOConsoleOutputStream;
 
 public class CompileAction implements IWorkbenchWindowActionDelegate {
   ICompilationUnit sel;
@@ -40,9 +40,7 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
 
   @Override
   public void run(final IAction action) {
-    System.out.println("Action time");
     if (sel != null) {
-      System.out.println("and vision!");
 
       try {
         final IPath path = sel.getCorrespondingResource().getProject().getLocation();
@@ -60,11 +58,16 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
           res += ":" + s;
         }
         System.out.println(res);
-        
+        final IOConsoleOutputStream out = 
+          ConsoleUtils.getDefault().getConsole().newOutputStream();
+        final PrintStream oldOut = System.out;
+        System.setOut(new PrintStream(out));
         Main.main(new String[]{path.toString(), bico, 
                                sel.getCorrespondingResource().getLocation().toString(),
                                "-classpath", res.substring(1)});
-
+        System.setOut(oldOut);
+ 
+        RefreshUtils.refreshResource(sel.getJavaProject().getProject());
       }
       catch (IOException e) {
         e.printStackTrace();
