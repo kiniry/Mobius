@@ -18,7 +18,6 @@ import mobius.directVCGen.bico.AnnotationCompiler;
 import mobius.directVCGen.bico.Unarchiver;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.pojs.JavaCompiler;
-import mobius.directVCGen.pojs.JavacTool;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
@@ -84,7 +83,9 @@ public class Main extends escjava.Main {
       fOut = (new PrintStream(new FileOutputStream(logfile)));
       
       // Launching the beast
+      System.out.println("Launching...");
       final Main m = new Main(basedir, escargs);
+      System.out.println("I'm finished!");
       
     }
     catch (IOException e1) {
@@ -305,6 +306,10 @@ public class Main extends escjava.Main {
     final String[] args = {"-XD-printflat", "-d", workingDir.toString(),
                            sig.simpleName + ".java" };
     jc.compile(args);
+  }
+  
+  public static void setOut(OutputStream out) {
+    fOut = new PrintStream(out);
   }
 
 }
