@@ -133,9 +133,6 @@ E.java:4: Warning: Possible division by zero (ZeroDiv)
 E.java:25: Warning: Possible null dereference (Null)
     @  requires aa.length>0; //null(aa) warning
                   ^
-E.java:7: Warning: Possible null dereference (Null)
-  //@ invariant a.length>0; // null(a) warning
-                 ^
 E.java:4: Warning: Possible division by zero (ZeroDiv)
   //@ invariant f/f == f/f; // divZero warning
                  ^
@@ -144,15 +141,18 @@ E.java:7: Warning: Possible null dereference (Null)
                  ^
 E.java:4: Warning: Possible division by zero (ZeroDiv)
   //@ invariant f/f == f/f; // divZero warning
+                 ^
+E.java:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a) warning
                  ^
 E.java:48: Warning: Possible null dereference (Null)
     @  requires aa.length>0; //null(aa) warning
                   ^
-E.java:7: Warning: Possible null dereference (Null)
-  //@ invariant a.length>0; // null(a) warning
-                 ^
 E.java:4: Warning: Possible division by zero (ZeroDiv)
   //@ invariant f/f == f/f; // divZero warning
+                 ^
+E.java:7: Warning: Possible null dereference (Null)
+  //@ invariant a.length>0; // null(a) warning
                  ^
 G.java:5: Warning: Possible null dereference (Null)
   /*@ requires a.length >= 0;  // null(a) warning
