@@ -171,6 +171,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     description.setBuildSpec(newCmds.toArray(new ICommand[newCmds.size()])); 
     try { 
       project.setDescription(description, null); 
+      project.build(FULL_BUILD, null);
     } catch (CoreException e) {
       return;
     } 
@@ -208,6 +209,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     if (found) {
       description.setBuildSpec(newCmds.toArray(new ICommand[newCmds.size()])); 
       try { 
+        project.deleteMarkers(MARKER_ID, false, IResource.DEPTH_INFINITE);
         project.setDescription(description, null);
       } catch (CoreException e) {
         return;
