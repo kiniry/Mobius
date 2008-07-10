@@ -2,6 +2,5 @@
 # usage: run FLAGS
 # Test for Ticket #495
 
-${ESCJ} $* Stack.java
-${ESCJ} $* StackCheck.java
+${ESCJ} $* StackCheck.java Stack.java
 
