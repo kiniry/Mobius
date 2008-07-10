@@ -23,7 +23,7 @@ public class Cvc3 extends NewProver {
   
   //@ public invariant started ==> wrapper != null;
   
-  private /*@ spec_public non_null @*/ static Cvc3Wrapper wrapper = new Cvc3Wrapper();
+  private /*@spec_public*/ static /*@non_null*/Cvc3Wrapper wrapper = new Cvc3Wrapper();
   
   static boolean debug = false;
   
