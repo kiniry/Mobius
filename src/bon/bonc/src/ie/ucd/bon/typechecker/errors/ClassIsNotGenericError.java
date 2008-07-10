@@ -15,10 +15,10 @@ public class ClassIsNotGenericError extends TypeCheckingError {
   
   private final String className;
   
-  public ClassIsNotGenericError(File sourceFile, int lineNumber, int charPosition, String className) {
-    super(sourceFile, lineNumber, charPosition);
-    this.className = className;
-  }
+//  public ClassIsNotGenericError(File sourceFile, int lineNumber, int charPosition, String className) {
+//    super(sourceFile, lineNumber, charPosition);
+//    this.className = className;
+//  }
 
   public ClassIsNotGenericError(SourceLocation loc, String className) {
     super(loc);

@@ -33,7 +33,7 @@ public class DuplicateClusterChartError extends TypeCheckingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, clusterName, getFilePath(otherChartFile), otherChartLineNumber);
+    return String.format(message, clusterName, SourceLocation.getFilePath(otherChartFile), otherChartLineNumber);
   }
   
 }

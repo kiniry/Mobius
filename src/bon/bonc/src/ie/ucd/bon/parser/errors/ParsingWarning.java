@@ -11,9 +11,9 @@ import java.io.File;
 
 public abstract class ParsingWarning extends BONWarning {
 
-  public ParsingWarning(File sourceFile, int lineNumber, int charPosition, String message) {
-    super(sourceFile, lineNumber, charPosition);
-  }
+//  public ParsingWarning(File sourceFile, int lineNumber, int charPosition, String message) {
+//    super(sourceFile, lineNumber, charPosition);
+//  }
 
   public ParsingWarning(SourceLocation sourceLoc, String message) {
     super(sourceLoc);

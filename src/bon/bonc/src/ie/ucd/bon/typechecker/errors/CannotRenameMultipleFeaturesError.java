@@ -13,9 +13,9 @@ public class CannotRenameMultipleFeaturesError extends TypeCheckingError {
 
   private static final String message = "Cannot rename multiple features as one";
   
-  public CannotRenameMultipleFeaturesError(File sourceFile, int lineNumber, int charPosition) {
-    super(sourceFile, lineNumber, charPosition);
-  }
+//  public CannotRenameMultipleFeaturesError(File sourceFile, int lineNumber, int charPosition) {
+//    super(sourceFile, lineNumber, charPosition);
+//  }
 
   public CannotRenameMultipleFeaturesError(SourceLocation loc) {
     super(loc);

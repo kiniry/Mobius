@@ -10,9 +10,9 @@ import java.io.File;
 
 public abstract class BONError extends BONProblem {
 
-  public BONError(File sourceFile, int lineNumber, int charPosition) {
-    super(sourceFile, lineNumber, charPosition);
-  }
+//  public BONError(File sourceFile, int lineNumber, int charPosition) {
+//    super(sourceFile, lineNumber, charPosition);
+//  }
 
   public BONError(SourceLocation sourceLoc) {
     super(sourceLoc);

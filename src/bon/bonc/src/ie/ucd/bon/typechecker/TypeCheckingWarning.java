@@ -11,9 +11,9 @@ import java.io.File;
 
 public abstract class TypeCheckingWarning extends BONWarning {
 
-  public TypeCheckingWarning(File sourceFile, int lineNumber, int charPosition, String message) {
-    super(sourceFile, lineNumber, charPosition);
-  }
+//  public TypeCheckingWarning(File sourceFile, int lineNumber, int charPosition, String message) {
+//    super(sourceFile, lineNumber, charPosition);
+//  }
 
   public TypeCheckingWarning(SourceLocation loc) {
     super(loc);

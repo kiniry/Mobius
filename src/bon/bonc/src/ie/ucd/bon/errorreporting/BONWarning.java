@@ -11,9 +11,9 @@ import java.io.PrintStream;
 
 public abstract class BONWarning extends BONProblem {
 
-  public BONWarning(File sourceFile, int lineNumber, int charPosition) {
-    super(sourceFile, lineNumber, charPosition);
-  }
+//  public BONWarning(File sourceFile, int lineNumber, int charPosition) {
+//    super(sourceFile, lineNumber, charPosition);
+//  }
 
   public BONWarning(SourceLocation sourceLoc) {
     super(sourceLoc);

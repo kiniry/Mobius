@@ -15,10 +15,10 @@ public class ClassNotInAnyClusterError extends TypeCheckingError {
 
   private final String className;
   
-  public ClassNotInAnyClusterError(File sourceFile, int lineNumber, int charPosition, String className) {
-    super(sourceFile, lineNumber, charPosition);
-    this.className = className;
-  }
+//  public ClassNotInAnyClusterError(File sourceFile, int lineNumber, int charPosition, String className) {
+//    super(sourceFile, lineNumber, charPosition);
+//    this.className = className;
+//  }
 
   public ClassNotInAnyClusterError(SourceLocation loc, String className) {
     super(loc);

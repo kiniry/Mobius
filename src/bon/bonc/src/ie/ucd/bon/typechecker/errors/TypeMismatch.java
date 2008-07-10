@@ -16,11 +16,11 @@ public class TypeMismatch extends TypeCheckingError {
   private final String actualType;
   private final String desiredType;
   
-  public TypeMismatch(File sourceFile, int lineNumber, int charPosition, String actualType, String desiredType) {
-    super(sourceFile, lineNumber, charPosition);
-    this.actualType = actualType;
-    this.desiredType = desiredType;
-  }
+//  public TypeMismatch(File sourceFile, int lineNumber, int charPosition, String actualType, String desiredType) {
+//    super(sourceFile, lineNumber, charPosition);
+//    this.actualType = actualType;
+//    this.desiredType = desiredType;
+//  }
 
   public TypeMismatch(SourceLocation loc, String actualType, String desiredType) {
     super(loc);

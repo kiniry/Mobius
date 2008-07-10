@@ -16,11 +16,11 @@ public class ClassDoesNotHaveAsSuperTypeError extends TypeCheckingError {
   private final String className;
   private final String superName;
   
-  public ClassDoesNotHaveAsSuperTypeError(File sourceFile, int lineNumber, int charPosition, String className, String superName) {
-    super(sourceFile, lineNumber, charPosition);
-    this.className = className;
-    this.superName = superName;
-  }
+//  public ClassDoesNotHaveAsSuperTypeError(File sourceFile, int lineNumber, int charPosition, String className, String superName) {
+//    super(sourceFile, lineNumber, charPosition);
+//    this.className = className;
+//    this.superName = superName;
+//  }
 
   public ClassDoesNotHaveAsSuperTypeError(SourceLocation loc, String className, String superName) {
     super(loc);

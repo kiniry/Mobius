@@ -18,15 +18,6 @@ public class ClassInheritanceInconsistencyError extends TypeCheckingError {
   private final String itemName;
   private final String superName;
   private final String noMatchingItemType;
-  
-  public ClassInheritanceInconsistencyError(File sourceFile, int lineNumber, int charPosition, 
-      String itemType, String itemName, String superName, String noMatchingItemType) {
-    super(sourceFile, lineNumber, charPosition);
-    this.itemType = itemType;
-    this.itemName = itemName;
-    this.superName = superName;
-    this.noMatchingItemType = noMatchingItemType;
-  }
 
   public ClassInheritanceInconsistencyError(SourceLocation loc, 
       String itemType, String itemName, String superName, String noMatchingItemType) {

@@ -15,10 +15,10 @@ public class ClusterNotInAnyClusterOrSystemError extends TypeCheckingError {
   
   private final String clusterName;
   
-  public ClusterNotInAnyClusterOrSystemError(File sourceFile, int lineNumber, int charPosition, String clusterName) {
-    super(sourceFile, lineNumber, charPosition);
-    this.clusterName = clusterName;
-  }
+//  public ClusterNotInAnyClusterOrSystemError(File sourceFile, int lineNumber, int charPosition, String clusterName) {
+//    super(sourceFile, lineNumber, charPosition);
+//    this.clusterName = clusterName;
+//  }
 
   public ClusterNotInAnyClusterOrSystemError(SourceLocation loc, String clusterName) {
     super(loc);

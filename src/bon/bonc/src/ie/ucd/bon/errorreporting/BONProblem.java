@@ -4,10 +4,12 @@
  */
 package ie.ucd.bon.errorreporting;
 
+import ie.ucd.bon.source.SourceLineReader;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.source.SourceReader;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 
 public abstract class BONProblem implements Comparable<BONProblem> {
@@ -20,26 +22,40 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   public static final int EOF_LINE = -4;
   public static final int UNKNOWN_CHAR_POSITION = -5;
   
-  public static final String STDIN_TEXT = "<stdin>";
+    private final File sourceFile;
+    private final int lineNumber;
+    private final String sourceLine;
+    private final int charPositionInLine;
+//  private final int length;
   
-  private final File sourceFile;
-  private final int lineNumber;
-  private final String sourceLine;
-  private final int charPosition;
+  private final SourceLocation location;
   
   private final int id;
   
-  public BONProblem(File sourceFile, int lineNumber, int charPosition) {
-    this.sourceFile = sourceFile;
-    this.lineNumber = lineNumber;
-    this.charPosition = charPosition;
+//  public BONProblem(File sourceFile, int lineNumber, int charPosition) {
+//    this(sourceFile, lineNumber, charPosition, 1);
+//  }
+//  
+//  public BONProblem(File sourceFile, int lineNumber, int charPosition, int length) {
+//    this.sourceFile = sourceFile;
+//    this.lineNumber = lineNumber;
+//    this.charPosition = charPosition;
+//    this.length = length;
+//    this.id = creationID++;
+//    
+//    this.sourceLine = getSourceLine();
+//  }
+  
+  public BONProblem(SourceLocation sourceLoc) {
+    this.location = sourceLoc;
+    
+    this.charPositionInLine = sourceLoc.getCharPositionInLine();
+    this.lineNumber = sourceLoc.getLineNumber();
+    this.sourceFile = sourceLoc.getSourceFile();
+    
     this.id = creationID++;
     
     this.sourceLine = getSourceLine();
-  }
-  
-  public BONProblem(SourceLocation sourceLoc) {
-    this(sourceLoc.getSourceFile(), sourceLoc.getLineNumber(), sourceLoc.getCharPosition());
   }
   
   private String getSourceLine() {
@@ -52,24 +68,19 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   public abstract boolean isError();
   public abstract boolean isWarning();
   
-  public String getFileName() {
-    return sourceFile.getName();
-  }
+//  public String getFileName() {
+//    return sourceFile == null ? null : sourceFile.getName();
+//  }
   
-  public String getFilePath(File file) {
-    if (file == null) {
-      return STDIN_TEXT;
-    } else {
-      return file.getPath();
-    }
-  }
+  
+  
+//  public File getFile() {
+//    return sourceFile;
+//  }
 
-  public int getLineNumber() {
-    return lineNumber;
-  }
 
-  public int getCharPosition() {
-    return charPosition;
+  public SourceLocation getLocation() {
+    return location;
   }
 
   public abstract String getMessage();
@@ -103,38 +114,38 @@ public abstract class BONProblem implements Comparable<BONProblem> {
     }
     
     //Compare file name
-    return this.getFileName().compareTo(o.getFileName());
+    return this.getLocation().getFileName().compareTo(o.getLocation().getFileName());
   }
   
   private int compareLineNumber(final BONProblem o) {
     //Compare line number
-    if (this.getLineNumber() == FILE_PROBLEM) {
-      return o.getLineNumber() == FILE_PROBLEM ? 0 : -1;      
-    } else if (o.getLineNumber() == FILE_PROBLEM) {
+    if (this.location.getLineNumber() == FILE_PROBLEM) {
+      return o.location.getLineNumber() == FILE_PROBLEM ? 0 : -1;      
+    } else if (o.location.getLineNumber() == FILE_PROBLEM) {
       return 1;
-    } else if (this.getLineNumber() == UNKNOWN_LINE) {
-      if (o.getLineNumber() == UNKNOWN_LINE) {
+    } else if (this.location.getLineNumber() == UNKNOWN_LINE) {
+      if (o.location.getLineNumber() == UNKNOWN_LINE) {
         return this.id - o.id;
       } else {
         return 1;
       }
-    } else if (o.getLineNumber() == UNKNOWN_LINE) {
+    } else if (o.location.getLineNumber() == UNKNOWN_LINE) {
       return -1;
-    } else if (o.getLineNumber() == EOF_LINE) {
+    } else if (o.location.getLineNumber() == EOF_LINE) {
       return 1;
     } else {
-      return this.getLineNumber() - o.getLineNumber();      
+      return this.location.getLineNumber() - o.location.getLineNumber();      
     }
   }
   
   private int compareCharacterPosition(final BONProblem o) {
     //Compare character position
-    if (this.getCharPosition() == UNKNOWN_CHAR_POSITION) {
-      return o.getCharPosition() == UNKNOWN_CHAR_POSITION ? 0 : -1;      
-    } else if (o.getCharPosition() == UNKNOWN_CHAR_POSITION) {
+    if (this.location.getCharPositionInLine() == UNKNOWN_CHAR_POSITION) {
+      return o.location.getCharPositionInLine() == UNKNOWN_CHAR_POSITION ? 0 : -1;      
+    } else if (o.location.getCharPositionInLine() == UNKNOWN_CHAR_POSITION) {
       return 1;
     } else {
-      return this.getCharPosition() - o.getCharPosition();
+      return this.location.getCharPositionInLine() - o.location.getCharPositionInLine();
     }
   }
   
@@ -163,7 +174,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   protected void printStart(PrintStream ps) {
     if (sourceFile == null) {
       if (lineNumber > 0) {
-        ps.print(STDIN_TEXT);
+        ps.print(SourceLocation.STDIN_TEXT);
         ps.print(":");
       } else {
         return;
@@ -185,7 +196,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   }
   
   protected void printSourcePosition(PrintStream ps) {
-    if (charPosition >= 0 && sourceLine != null) {
+    if (charPositionInLine >= 0 && sourceLine != null) {
       
       int tabCount = 0;
       StringBuilder sb = new StringBuilder();
@@ -193,7 +204,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
         char c = sourceLine.charAt(i);
         if (c == '\t') {
           sb.append("  ");
-          if (i < charPosition) {
+          if (i < charPositionInLine) {
             tabCount++;
           }
         } else {
@@ -203,7 +214,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
       
       ps.println(sb.toString());
       
-      ps.println(getErrorPosition(charPosition + tabCount));
+      ps.println(getErrorPosition(charPositionInLine + tabCount));
     }
   }
 
@@ -212,11 +223,11 @@ public abstract class BONProblem implements Comparable<BONProblem> {
       return false;
     }
     BONProblem other = (BONProblem)obj;
-    return this.lineNumber == other.lineNumber && this.charPosition == other.charPosition && this.sourceFile.equals(other.sourceFile) && this.getMessage().equals(other.getMessage());
+    return this.lineNumber == other.lineNumber && this.charPositionInLine == other.charPositionInLine && this.sourceFile.equals(other.sourceFile) && this.getMessage().equals(other.getMessage());
   }
   
   public int hashCode() {
-    return this.sourceFile.hashCode() + (this.lineNumber*1024) + this.charPosition + this.getMessage().hashCode();
+    return this.sourceFile.hashCode() + (this.lineNumber*1024) + this.charPositionInLine + this.getMessage().hashCode();
   }
   
 }

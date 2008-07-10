@@ -5,6 +5,7 @@
 package ie.ucd.bon.errorreporting;
 
 import ie.ucd.bon.parser.errors.ParsingError;
+import ie.ucd.bon.source.SourceLocation;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -15,7 +16,16 @@ public class FileNotFoundError extends ParsingError {
   private final File file;
   
   public FileNotFoundError(File sourceFile) {
-    super(sourceFile, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, true);
+    //super(sourceFile, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, true);
+    super(new SourceLocation(
+                sourceFile, 
+                BONProblem.FILE_PROBLEM, 
+                BONProblem.UNKNOWN_CHAR_POSITION,
+                BONProblem.UNKNOWN_CHAR_POSITION,
+                BONProblem.UNKNOWN_CHAR_POSITION
+        ),
+        true
+        );
     this.file = sourceFile;
   }
 
@@ -25,7 +35,7 @@ public class FileNotFoundError extends ParsingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, file.getPath());
+    return String.format(message, super.getLocation().getSourceFile().getPath());
   }
 
   

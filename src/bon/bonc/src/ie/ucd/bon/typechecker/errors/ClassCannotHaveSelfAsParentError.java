@@ -15,10 +15,10 @@ public class ClassCannotHaveSelfAsParentError extends TypeCheckingError {
   
   private final String className;
   
-  public ClassCannotHaveSelfAsParentError(File sourceFile, int lineNumber, int charPosition, String className) {
-    super(sourceFile, lineNumber, charPosition);
-    this.className = className;
-  }
+//  public ClassCannotHaveSelfAsParentError(File sourceFile, int lineNumber, int charPosition, String className) {
+//    super(sourceFile, lineNumber, charPosition);
+//    this.className = className;
+//  }
 
   public ClassCannotHaveSelfAsParentError(SourceLocation loc, String className) {
     super(loc);

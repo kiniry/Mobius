@@ -5,13 +5,14 @@
 package ie.ucd.bon.errorreporting;
 
 import ie.ucd.bon.parser.errors.ParsingError;
+import ie.ucd.bon.source.SourceLocation;
 
 public class NoFilesError extends ParsingError {
 
   private static final String message = "No files to parse!";
   
   public NoFilesError() {
-    super(null, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, true);
+    super(new SourceLocation(null, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, BONProblem.UNKNOWN_CHAR_POSITION, BONProblem.UNKNOWN_CHAR_POSITION), true);
   }
 
   @Override

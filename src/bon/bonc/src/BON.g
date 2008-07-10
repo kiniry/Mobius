@@ -275,7 +275,7 @@ dictionary_entry  :  c='class' class_name
 /**********************************************/
 
 system_chart  :  s='system_chart' system_name 
-                 { getTI().informal().setSystem($system_name.text, getSLoc($s));
+                 { getTI().informal().setSystem($system_name.text, getSLoc($s, $system_name.start));
                    getContext().enterSystemChart($system_name.text); }
                  (indexing)?
                  (explanation)? 
@@ -397,7 +397,7 @@ index_string  :  m=MANIFEST_STRING
 /**********************************************/
 
 cluster_chart  :  c='cluster_chart' cluster_name 
-                  { getTI().informal().addCluster($cluster_name.text, getSLoc($c));
+                  { getTI().informal().addCluster($cluster_name.text, getSLoc($c, $cluster_name.start));
                     getContext().enterClusterChart($cluster_name.text); }
                   (indexing)? 
                   (explanation)? 
@@ -442,7 +442,7 @@ cluster_name  :  i=IDENTIFIER
 /**********************************************/
 
 class_chart  :  c='class_chart' class_name 
-                { getTI().informal().addClass($class_name.text, getSLoc($c));
+                { getTI().informal().addClass($class_name.text, getSLoc($c, $class_name.start));
                   getContext().enterClassChart($class_name.text); }
                 (indexing)? 
                 (explanation)? 
@@ -738,7 +738,7 @@ static_component  :   c1=cluster
 
 cluster  :  c='cluster' cluster_name 
             ('reused')? (COMMENT)? 
-            { getTI().addCluster($cluster_name.text, getSLoc($c)); }   
+            { getTI().addCluster($cluster_name.text, getSLoc($c, $cluster_name.stop)); }   
             ( { getContext().enterCluster($cluster_name.text); }
               cluster_components
               { getContext().leaveCluster(); }
@@ -758,10 +758,10 @@ cluster_components  :  c='component' (static_block)? 'end'
                       ) 
                     ;
                     
-classX  :	 (  ( 'root' c='class' c1=class_name 			{ getTI().addClass($c1.text, getSLoc($c), "root"); getContext().enterClass($c1.text); }       ) 
-						| ( 'deferred' c='class' c2=class_name   { getTI().addClass($c2.text, getSLoc($c), "deferred"); getContext().enterClass($c2.text); }  )
-						| ( 'effective' c='class' c3=class_name  { getTI().addClass($c3.text, getSLoc($c), "effective"); getContext().enterClass($c3.text); } )
-						| ( c='class' c4=class_name              { getTI().addClass($c4.text, getSLoc($c), null); getContext().enterClass($c4.text); }        )
+classX  :	 (  ( 'root' c='class' c1=class_name 			{ getTI().addClass($c1.text, getSLoc($c,$c1.stop), "root"); getContext().enterClass($c1.text); }       ) 
+						| ( 'deferred' c='class' c2=class_name   { getTI().addClass($c2.text, getSLoc($c,$c2.stop), "deferred"); getContext().enterClass($c2.text); }  )
+						| ( 'effective' c='class' c3=class_name  { getTI().addClass($c3.text, getSLoc($c,$c3.stop), "effective"); getContext().enterClass($c3.text); } )
+						| ( c='class' c4=class_name              { getTI().addClass($c4.text, getSLoc($c,$c4.stop), null); getContext().enterClass($c4.text); }        )
 					 )             
            (formal_generics)?
            ('reused')? 
@@ -1076,7 +1076,7 @@ class_invariant  :  'invariant' assertion
                    )                
                  ;
                  
-parent_class_list  :  'inherit' c1=class_type { getTI().addParentClass($c1.text,getSLoc($c1.start)); } (';' c=class_type { getTI().addParentClass($c.text,getSLoc($c.start)); } )* ';'? 
+parent_class_list  :  'inherit' c1=class_type { getTI().addParentClass($c1.text,getSLoc($c1.start,$c1.stop)); } (';' c=class_type { getTI().addParentClass($c.text,getSLoc($c.start,$c.stop)); } )* ';'? 
                     -> 
                     ^(
                       PARENT_CLASS_LIST (class_type)+
@@ -1194,8 +1194,8 @@ selective_export  :  '{'
                     )
                   ;
                   
-feature_name_list  :  f1=feature_name { getTI().featureNameListEntry($f1.text,getSLoc($f1.start)); } 
-                      (',' f=feature_name { getTI().featureNameListEntry($f.text,getSLoc($f.start)); } )*
+feature_name_list  :  f1=feature_name { getTI().featureNameListEntry($f1.text,getSLoc($f1.start,$f1.stop)); } 
+                      (',' f=feature_name { getTI().featureNameListEntry($f.text,getSLoc($f.start,$f1.stop)); } )*
                     -> 
                     ^(
                       FEATURE_NAME_LIST (feature_name)+
@@ -1227,7 +1227,7 @@ rename_clause  :  '{' renaming '}'
                ;
                
 renaming  :  s='^' class_name '.' feature_name 
-             { getTI().renaming($class_name.text,$feature_name.text,getSLoc($s)); }
+             { getTI().renaming($class_name.text,$feature_name.text,getSLoc($s,$feature_name.stop)); }
            ->
            ^(
              RENAMING class_name feature_name
@@ -1307,12 +1307,12 @@ formal_generic_list  :  formal_generic (',' formal_generic)*
                        )
                      ;
                      
-formal_generic  :   f=formal_generic_name 								   { getTI().formalGeneric($f.text, null, getSLoc($f.start)); }
+formal_generic  :   f=formal_generic_name 								   { getTI().formalGeneric($f.text, null, getSLoc($f.start,$f.stop)); }
 								 ->
 								 ^(
 								 	 FORMAL_GENERIC formal_generic_name
 								  )
-									| f=formal_generic_name '->' ct=class_type { getTI().formalGeneric($f.text, $ct.text, getSLoc($f.start)); }
+									| f=formal_generic_name '->' ct=class_type { getTI().formalGeneric($f.text, $ct.text, getSLoc($f.start,$f.stop)); }
                  -> 
                  ^(
                    FORMAL_GENERIC formal_generic_name class_type

@@ -8,6 +8,7 @@ import ie.ucd.bon.Main;
 import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.errors.AntlrParsingError;
+import ie.ucd.bon.source.SourceLocation;
 
 import java.io.File;
 
@@ -94,7 +95,8 @@ public abstract class AbstractBONLexer extends Lexer {
       e.printStackTrace(System.out);
     }
 
-    BONProblem problem = new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
+    BONProblem problem = new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
+    //BONProblem problem = new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
     problems.addProblem(problem);
   }
 

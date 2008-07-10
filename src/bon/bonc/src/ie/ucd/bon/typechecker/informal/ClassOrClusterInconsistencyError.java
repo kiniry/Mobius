@@ -24,12 +24,12 @@ public class ClassOrClusterInconsistencyError extends TypeCheckingError {
     this.noMatchingItemType = noMatchingItemType;
   }
   
-  public ClassOrClusterInconsistencyError(File sourceFile, int lineNumber, int charPosition, String itemType, String itemName, String noMatchingItemType) {
-    super(sourceFile, lineNumber, charPosition);
-    this.itemType = itemType;
-    this.itemName = itemName;
-    this.noMatchingItemType = noMatchingItemType;
-  }
+//  public ClassOrClusterInconsistencyError(File sourceFile, int lineNumber, int charPosition, String itemType, String itemName, String noMatchingItemType) {
+//    super(sourceFile, lineNumber, charPosition);
+//    this.itemType = itemType;
+//    this.itemName = itemName;
+//    this.noMatchingItemType = noMatchingItemType;
+//  }
 
   @Override
   public String getMessage() {

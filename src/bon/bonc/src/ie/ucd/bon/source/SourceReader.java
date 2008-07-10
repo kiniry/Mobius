@@ -73,6 +73,10 @@ public final class SourceReader {
     }
   }
   
+  public SourceLineReader getSourceLineReader(File file) {
+    return readers.get(file);
+  }
+  
   /**
    * 
    * @param lineNumber

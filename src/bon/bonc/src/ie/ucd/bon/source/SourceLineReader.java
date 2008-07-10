@@ -77,6 +77,10 @@ public class SourceLineReader {
    * @throws IOException If there is a problem reading from the source file.
    */
   private void readUpTo(final int lineToReadTo) throws IOException {
+    if (lineToReadTo <= lineReadTo) {
+      return;
+    }
+    
     if (br == null) {
       throw new IOException("The source file was not found or not set.");
     } 
@@ -91,5 +95,17 @@ public class SourceLineReader {
       }
     }
   }
+  
+  
+  //TODO this is _not_ a very efficient way of doing this.
+  //Perhaps store a corresponding list with cumulative character absolutes?
+//  public int getCharOffset(int lineNumber) throws IOException {
+//    readUpTo(lineNumber);
+//    int count = 0;
+//    for (int i=0; i < lineNumber-1; i++) {
+//      count += lines.get(i).length() + 1;
+//    }
+//    return count;
+//  }
 
 }

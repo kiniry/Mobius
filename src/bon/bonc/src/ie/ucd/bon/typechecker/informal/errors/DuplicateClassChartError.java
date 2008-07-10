@@ -36,7 +36,7 @@ public class DuplicateClassChartError extends TypeCheckingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, className, getFilePath(otherChartFile), otherChartLineNumber);
+    return String.format(message, className, SourceLocation.getFilePath(otherChartFile), otherChartLineNumber);
   }
   
   

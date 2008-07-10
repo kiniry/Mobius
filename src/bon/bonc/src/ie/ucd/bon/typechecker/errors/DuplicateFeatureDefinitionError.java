@@ -38,7 +38,7 @@ public class DuplicateFeatureDefinitionError extends TypeCheckingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, featureName, className, getFilePath(otherFeatureFile), otherFeatureLineNumber);
+    return String.format(message, featureName, className, SourceLocation.getFilePath(otherFeatureFile), otherFeatureLineNumber);
   }
   
   

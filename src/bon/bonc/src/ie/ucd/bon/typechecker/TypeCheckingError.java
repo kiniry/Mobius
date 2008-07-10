@@ -11,9 +11,9 @@ import java.io.File;
 
 public abstract class TypeCheckingError extends BONError {
 
-  public TypeCheckingError(File sourceFile, int lineNumber, int charPosition) {
-    super(sourceFile, lineNumber, charPosition);
-  }
+//  public TypeCheckingError(File sourceFile, int lineNumber, int charPosition) {
+//    super(sourceFile, lineNumber, charPosition);
+//  }
   
   public TypeCheckingError(SourceLocation loc) {
     super(loc);

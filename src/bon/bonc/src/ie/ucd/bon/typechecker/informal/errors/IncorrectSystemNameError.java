@@ -18,13 +18,13 @@ public class IncorrectSystemNameError extends TypeCheckingError {
   private final String systemFilePath;
   private final int systemLineNumber;
   
-  public IncorrectSystemNameError(File sourceFile, int lineNumber, int charPosition, String incorrectSystemName, String realSystemName, String systemFilePath, int systemLineNumber) {
-    super(sourceFile, lineNumber, charPosition);
-    this.incorrectSystemName = incorrectSystemName;
-    this.realSystemName = realSystemName;
-    this.systemFilePath = systemFilePath;
-    this.systemLineNumber = systemLineNumber;
-  }
+//  public IncorrectSystemNameError(File sourceFile, int lineNumber, int charPosition, String incorrectSystemName, String realSystemName, String systemFilePath, int systemLineNumber) {
+//    super(sourceFile, lineNumber, charPosition);
+//    this.incorrectSystemName = incorrectSystemName;
+//    this.realSystemName = realSystemName;
+//    this.systemFilePath = systemFilePath;
+//    this.systemLineNumber = systemLineNumber;
+//  }
 
   public IncorrectSystemNameError(SourceLocation loc, String incorrectSystemName, String realSystemName, String systemFilePath, int systemLineNumber) {
     super(loc);
