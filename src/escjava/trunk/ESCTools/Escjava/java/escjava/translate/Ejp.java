@@ -22,7 +22,7 @@ public abstract class Ejp {
     return compute(g, normal, exceptional, "", dynInstMap);
   }
 
-  /* @ requires (* "normal" and "exceptional" have been as inflected by
+  /*@ requires (* "normal" and "exceptional" have been as inflected by
                    "dynInstMap" as they need to be, that is, this method
 		   is not to apply "dynInstMap" to "normal" and
 		   "exceptional" *);

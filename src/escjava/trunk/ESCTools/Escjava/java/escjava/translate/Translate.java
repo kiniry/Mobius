@@ -3460,7 +3460,7 @@ Frame frameHandler = null;
    * being built.
    * 
    * @see escjava.translate.Translate.writeCheck() */
-  private void arrayRefWriteCheck(/* @ non_null */ArrayRefExpr ar,
+  private void arrayRefWriteCheck(/*@non_null*/ArrayRefExpr ar,
 		  VarInit Rval, Expr rval, int locAssignOp,
 		  boolean inInitializerContext) {
 	  Assert.notFalse(locAssignOp != Location.NULL);
