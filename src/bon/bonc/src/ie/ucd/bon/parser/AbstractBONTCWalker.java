@@ -18,6 +18,7 @@ import org.antlr.runtime.BitSet;
 import org.antlr.runtime.IntStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.Token;
+import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 

@@ -10,6 +10,7 @@ import ie.ucd.bon.errorreporting.FileReadError;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.BONLexer;
 import ie.ucd.bon.parser.BONParser;
+import ie.ucd.bon.parser.ast.BONASTNodeAdaptor;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 
@@ -32,6 +33,10 @@ public final class Parser {
   
   private static BONParser parser = new BONParser(null);
   private static BONLexer lexer = new BONLexer(null);
+  
+  static {
+    parser.setTreeAdaptor(new BONASTNodeAdaptor());
+  }
   
   /** Prevent instantiation of Parser. */
   private Parser() { }

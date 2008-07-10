@@ -8,6 +8,7 @@ import java.io.File;
 
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
+import org.antlr.runtime.tree.CommonTree;
 
 public class SourceLocation {
 
@@ -31,19 +32,7 @@ public class SourceLocation {
   }
 
   public SourceLocation(Token t, File sourceFile) {
-    this.sourceFile = sourceFile;
-    this.lineNumber = t.getLine();
-    this.charPositionInLine = t.getCharPositionInLine();
-    
-    if (t instanceof CommonToken) {
-      CommonToken cToken = (CommonToken)t;
-      this.absoluteCharPositionStart = cToken.getStartIndex();
-      this.absoluteCharPositionEnd = cToken.getStopIndex();
-    } else {
-      //TODO Warn!
-      this.absoluteCharPositionStart = -1;
-      this.absoluteCharPositionEnd = -1;
-    }
+    this(t, t, sourceFile);
   }
   
   public SourceLocation(Token start, Token end, File sourceFile) {
@@ -51,22 +40,28 @@ public class SourceLocation {
     this.lineNumber = start.getLine();
     this.charPositionInLine = start.getCharPositionInLine();
     
+    //System.out.println("SourceLoc from token: " + start.getText());
+    
     if (start instanceof CommonToken) {
       CommonToken cToken = (CommonToken)start;
       this.absoluteCharPositionStart = cToken.getStartIndex();
+      //System.out.println("Set absolute start: " + this.absoluteCharPositionStart);
     } else {
       //TODO Warn!
+      System.out.println("Not CommonToken. " + start.getClass());
       this.absoluteCharPositionStart = -1;  
     }
     
     if (end instanceof CommonToken) {
       CommonToken cToken = (CommonToken)end;
-      this.absoluteCharPositionEnd = cToken.getStopIndex(); 
+      this.absoluteCharPositionEnd = cToken.getStopIndex();
+      //System.out.println("Set absolute end: " + this.absoluteCharPositionEnd);
     } else {
+      System.out.println("Not CommonToken. " + end.getClass());
       this.absoluteCharPositionEnd = -1;  
     }
   }
-
+  
   public File getSourceFile() {
     return sourceFile;
   }
