@@ -3,7 +3,6 @@ package mobius.cct.verifiers;
 import java.util.Iterator;
 
 import mobius.cct.repositories.ClassFile;
-import mobius.cct.repositories.ClassReader;
 import mobius.cct.repositories.Repository;
 import mobius.cct.verifiers.logging.Logger;
 
@@ -45,7 +44,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * Iterate over verifiers in this environment.
    * @return Iterator object.
    */
-  public Iterator<Verifier> getVerifiers() {
+  public Iterator<Verifier<C>> getVerifiers() {
     return null;
   }
   
@@ -53,7 +52,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * Add verifier to the environment. 
    * @param v Verifier object.
    */
-  public void addVerifier(final Verifier v) {
+  public void addVerifier(final Verifier<C> v) {
   }
   
   /**

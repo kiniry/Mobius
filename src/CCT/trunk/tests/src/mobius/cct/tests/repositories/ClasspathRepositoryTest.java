@@ -4,11 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import mobius.cct.repositories.ClasspathRepository;
-import mobius.cct.repositories.DefaultClassFile;
-import mobius.cct.repositories.DefaultClassReader;
-import mobius.cct.repositories.DefaultRepository;
 import mobius.cct.repositories.classpath.ClassPath;
 import mobius.cct.repositories.classpath.DirEntry;
+import mobius.cct.tests.mocks.MockClassFile;
+import mobius.cct.tests.mocks.MockClassReader;
 
 /**
  * Tests for class mobius.cct.repositories.DefaultRepository.
@@ -28,7 +27,7 @@ public class ClasspathRepositoryTest {
   /**
    * Repository instance.
    */
-  private ClasspathRepository<DefaultClassFile> repo;
+  private ClasspathRepository<MockClassFile> repo;
   
   /**
    * Method called before each test.
@@ -37,15 +36,15 @@ public class ClasspathRepositoryTest {
   public void setUp() {
     path = new ClassPath();
     path.addEntry(new DirEntry(testDir));
-    repo = new ClasspathRepository<DefaultClassFile>(new DefaultClassReader(), path);
+    repo = new ClasspathRepository<MockClassFile>(new MockClassReader(), path);
   }
   
   /**
-   * Test loading of exisitng class.
+   * Test loading of existing class.
    */
   @Test
   public void test1() throws Exception {
-    repo.getClassFile("mobius.cct.testdata.Test9");
+    repo.getClassFile("mobius.cct.testdata.Test7");
   }
   
   /**

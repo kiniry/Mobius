@@ -19,6 +19,10 @@ public class DefaultPool implements ConstantPool {
    */
   private final Entry[] fEntries;
   
+  /**
+   * Constructor.
+   * @param entries Array of constant pool entries.
+   */
   public DefaultPool(final Entry[] entries) {
     int size;
     int i, j;
@@ -57,7 +61,8 @@ public class DefaultPool implements ConstantPool {
    * @throws IllegalIndexException .
    */
   @Override
-  public Entry getEntry(int index) throws IllegalIndexException {
+  public Entry getEntry(final int index) 
+    throws IllegalIndexException {
     final Entry entry;
     
     if ((index < 1) || (index > fEntries.length)) {
@@ -85,7 +90,7 @@ public class DefaultPool implements ConstantPool {
    * @throws IOException .
    */
   @Override
-  public void write(OutputStream os) throws IOException {
+  public void write(final OutputStream os) throws IOException {
     int i;
     Entry entry;
     final DataOutputStream ds = new DataOutputStream(os);

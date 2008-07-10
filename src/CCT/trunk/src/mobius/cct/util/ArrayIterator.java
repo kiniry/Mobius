@@ -101,8 +101,7 @@ public class ArrayIterator<T> implements Iterator<T> {
   }
 
   /**
-   * remove().
-   * @throws UnsupportedOperationException Always.
+   * Element removal is not supported.
    */
   @Override
   public void remove() {

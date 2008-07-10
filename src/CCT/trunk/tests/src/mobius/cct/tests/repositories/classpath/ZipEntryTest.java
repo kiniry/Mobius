@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 import mobius.cct.repositories.Resource;
 import mobius.cct.repositories.classpath.ZipEntry;
+import mobius.cct.repositories.NotFoundException;
 import mobius.cct.tests.testutil.Util;
 
 import org.junit.Before;
@@ -28,7 +29,7 @@ public class ZipEntryTest {
    */
   @Before
   public void setUp() {
-    fEntry = new ZipEntry(new File("../data/test.jar"));
+    fEntry = new ZipEntry(new File("./tests/data/test.jar"));
   }
   
   /**
@@ -42,13 +43,13 @@ public class ZipEntryTest {
     assertNotNull(is);
     assertEquals("12872b2fb305213f2c7adac2a945f3da", 
                  Util.toHex(Util.digest(is, Util.MD5)));
-    r.close();
+    is.close();
   }
   
   /**
    * Test loading of a class - class not found.
    */
-  @Test(expected=ClassNotFoundException.class)
+  @Test(expected=NotFoundException.class)
   public void testClass2() throws Exception {
     fEntry.getClassFile("mobius.cct.testdata.FalseTest2");
   }

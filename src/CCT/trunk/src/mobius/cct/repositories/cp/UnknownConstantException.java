@@ -14,7 +14,7 @@ public class UnknownConstantException extends Exception {
   /**
    * Constant type.
    */
-  private int fType;
+  private final int fType;
   
   /**
    * Constructor.

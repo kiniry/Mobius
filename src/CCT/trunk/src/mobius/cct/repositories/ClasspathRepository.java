@@ -12,12 +12,24 @@ import mobius.cct.repositories.classpath.ClassPath;
 public class ClasspathRepository<C extends ClassFile> 
   implements Repository<C> {
   /**
+   * Classpath used to locate files.
+   */
+  private final ClassPath fPath;
+  
+  /**
+   * Reader used to read classes.
+   */
+  private final ClassReader<C> fReader;
+  
+  /**
    * Constructor. Creates repository using given classpath.
    * @param reader Object used to read class files.
    * @param path Classpath to use.
    */
   public ClasspathRepository(final ClassReader<C> reader,
                              final ClassPath path) {
+    this.fReader = reader;
+    this.fPath = path;
   }
   
   /**
@@ -25,6 +37,8 @@ public class ClasspathRepository<C extends ClassFile>
    * @param reader Object used to read class files.
    */
   public ClasspathRepository(final ClassReader<C> reader) {
+    this.fReader = reader;
+    this.fPath = ClassPath.getSystemClassPath();
   }  
   
   /**
@@ -38,7 +52,7 @@ public class ClasspathRepository<C extends ClassFile>
   @Override
   public C getClassFile(final String name) 
     throws NotFoundException, IOException, InvalidCertificateException {
-    return null;
+    return fPath.getClassFile(name, fReader);
   }
   
   /**
@@ -49,9 +63,13 @@ public class ClasspathRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getCertFile(String name) 
+  public C getCertFile(final String name) 
     throws IOException, 
-           InvalidCertificateException {
-    return null; 
+           InvalidCertificateException { 
+    try {
+      return fPath.getCertFile(name, fReader);
+    } catch (NotFoundException e) {
+      return null;
+    }
   }
 }

@@ -2,6 +2,8 @@ package mobius.cct.repositories.cp;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import mobius.cct.repositories.cp.entries.Entry;
@@ -15,12 +17,12 @@ public class DefaultBuilder extends AbstractBuilder {
    * Vector of entries (passed to ConstantPoolFactory).
    * Contains null values under unusable indices.
    */
-  private final Vector<Entry> fEntries;
+  private final List<Entry> fEntries;
   
   /**
    * Map of constants of recognized types.
    */
-  private HashMap<Entry, Integer> fMap;
+  private Map<Entry, Integer> fMap;
   
   /**
    * Constructor - create empty pool.
@@ -58,6 +60,8 @@ public class DefaultBuilder extends AbstractBuilder {
 
   /**
    * Convert to ConstantPool.
+   * @param factory Factory to be used.
+   * @return Constant pool.
    */
   @Override
   public ConstantPool toConstantPool(final ConstantPoolFactory factory) {
@@ -70,7 +74,7 @@ public class DefaultBuilder extends AbstractBuilder {
    * @return Index.
    */
   @Override
-  public int newEntry(Entry e) {
+  public int newEntry(final Entry e) {
     int i, r;
     
     if (fMap.containsKey(e)) {

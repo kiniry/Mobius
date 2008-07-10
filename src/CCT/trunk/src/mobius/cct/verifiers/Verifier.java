@@ -6,6 +6,7 @@ import mobius.cct.util.Version;
 
 /**
  * Interface of certificate verifiers. 
+ * @param <C> Type of class files.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public interface Verifier<C extends ClassFile> {

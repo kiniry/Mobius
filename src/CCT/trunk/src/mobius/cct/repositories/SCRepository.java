@@ -45,7 +45,7 @@ public class SCRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getCertFile(String name) 
+  public C getCertFile(final String name) 
     throws IOException, 
            InvalidCertificateException {
     return null; 

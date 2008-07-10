@@ -10,6 +10,11 @@ import java.util.Map;
  */
 public class LRUCache<C> implements Cache<C> {
   /**
+   * HashMap load factor.
+   */
+  private static final float LOAD_FACTOR = 0.75f;
+  
+  /**
    * Cache size.
    */
   private final int fSize;
@@ -17,7 +22,7 @@ public class LRUCache<C> implements Cache<C> {
   /**
    * Mapping from keys to elements.
    */
-  private final LinkedHashMap<String, C> fMap;
+  private final LRUHashMap<String, C> fMap;
   
   /**
    * LinkedHashMap used to store cached elements.
@@ -25,18 +30,26 @@ public class LRUCache<C> implements Cache<C> {
    * @param <K>
    * @param <V>
    */
-  private final class LRUHashMap<K, V> extends LinkedHashMap<K, V> {
+  private static final class 
+  LRUHashMap<K, V> extends LinkedHashMap<K, V> {
     /**
      * SerialVersionUID.
      */
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor.
+     * Cache size.
      */
-    public LRUHashMap() {
+    private final int fLimit;
+    
+    /**
+     * Constructor.
+     * @param limit Cache size.
+     */
+    public LRUHashMap(final int limit) {
       // Create access-ordered map.
-      super(fSize, 0.75f, true);
+      super(limit, LOAD_FACTOR, true);
+      fLimit = limit;
     }
     
     /**
@@ -45,10 +58,11 @@ public class LRUCache<C> implements Cache<C> {
      * insertion (this is the least recently accessed element, becuase
      * the map is access-ordered).
      * @param eldest Element to be removed.
+     * @return True iff element should be removed.
      */
     @Override
     protected boolean removeEldestEntry(final Map.Entry<K, V> eldest) {
-      return this.size() > fSize;
+      return size() > fLimit;
     }
   }    
   
@@ -58,7 +72,7 @@ public class LRUCache<C> implements Cache<C> {
    */
   public LRUCache(final int size) {
     fSize = size;
-    fMap  = new LRUHashMap<String, C>();
+    fMap  = new LRUHashMap<String, C>(fSize);
   }
   
   /**

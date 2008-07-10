@@ -63,8 +63,6 @@ public final class ArrayQueue<T> implements Queue<T> {
     /**
      * Check if there are any more elements to be returned by this iterator.
      * @return true iff there is at least one more element to be returned.
-     * @throws ConcurrentModificationException If the queue was modified after the 
-     * iterator was created.
      */
     @Override
     public boolean hasNext() {
@@ -76,9 +74,7 @@ public final class ArrayQueue<T> implements Queue<T> {
 
     /**
      * Fetch next element.
-     * @throws NoSuchElementException If there are no more elements to be returned.
-     * @throws ConcurrentModificationException If the queue was modified after the 
-     * iterator was created.
+     * @return Next element.
      */
     @Override
     public T next() {
@@ -86,7 +82,7 @@ public final class ArrayQueue<T> implements Queue<T> {
         throw new ConcurrentModificationException();
       }
       if (fCurrent < fLength) {
-        T result = fElements[(fHead + fCurrent) % fElements.length];
+        final T result = fElements[(fHead + fCurrent) % fElements.length];
         fCurrent++;
         return result;
       } else {
@@ -96,9 +92,6 @@ public final class ArrayQueue<T> implements Queue<T> {
 
     /**
      * Remove current element.
-     * @throws NoSuchElementException If there are no more elements to be returned/removed.
-     * @throws ConcurrentModificationException If the queue was modified after the 
-     * iterator was created.
      */
     @Override
     public void remove() {
@@ -133,7 +126,7 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param size Requested size.
    */
   @SuppressWarnings("unchecked")
-  private final void grow(final int size) {
+  private void grow(final int size) {
     T[] newElements;
     int newSize;
     
@@ -158,7 +151,7 @@ public final class ArrayQueue<T> implements Queue<T> {
    * to hold all elements of the queue.
    */
   @SuppressWarnings("unchecked")
-  private final void shrink() {
+  private void shrink() {
     T[] newElements;
     int newSize;
 
@@ -183,7 +176,7 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Queue head has index 0.
    * @param i Element index.
    */
-  private final void removeElement(final int i) {
+  private void removeElement(final int i) {
     fLength--;
     for (int j = i; j < fLength; j++) {
       fElements[(fHead + j) % fElements.length] = 
@@ -197,7 +190,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Add element at the end of queue.
    * @param e Element to be added.
    * @return true.
-   * @throws NullPointerException If element is null. 
    */
   @Override
   public boolean add(final T e) {
@@ -217,7 +209,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * {@link NoSuchElementException} is thrown.
    * Returned element is not removed from the queue.
    * @return Queue head.
-   * @throws NoSuchElementException If the queue is empty.
    */
   @Override
   public T element() {
@@ -232,7 +223,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Add element at the end of queue.
    * @param e Element to be added.
    * @return true.
-   * @throws NullPointerException If element is null. 
    */
   @Override
   public boolean offer(final T e) {
@@ -262,7 +252,7 @@ public final class ArrayQueue<T> implements Queue<T> {
   @Override
   public T poll() {
     if (fLength > 0) {
-      T result = fElements[fHead];
+      final T result = fElements[fHead];
       fHead = (fHead + 1) % fElements.length;
       fLength--;
       shrink();
@@ -276,12 +266,11 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Retrieve and remove head of the queue.
    * If the queue is empty, {@link NoSuchElementException} is thrown.
    * @return Queue head.
-   * @throws NoSuchElementException If the queue is empty.
    */
   @Override
   public T remove() {
     if (fLength > 0) {
-      T result = fElements[fHead];
+      final T result = fElements[fHead];
       fHead = (fHead + 1) % fElements.length;
       fTime++;
       return result;
@@ -294,12 +283,11 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Add all elements of a collection to the queue.
    * @param c Collection.
    * @return true.
-   * @throws NullPointerException If collection is null. 
    */
   @Override
   public boolean addAll(final Collection<? extends T> c) {
     if (c == null) { throw new NullPointerException(); }
-    Iterator<? extends T> i = c.iterator();
+    final Iterator<? extends T> i = c.iterator();
     while (i.hasNext()) {
       add(i.next());
     }
@@ -336,13 +324,13 @@ public final class ArrayQueue<T> implements Queue<T> {
 
   /**
    * Search for given collection of elements in queue.
+   * @param c Collection to search for.
    * @return true iff the queue contains all elements in collection.
-   * @throws NullPointerException If collection is null. 
    */
   @Override
   public boolean containsAll(final Collection<?> c) {
     if (c == null) { throw new NullPointerException(); }
-    Iterator<?> i = c.iterator();
+    final Iterator<?> i = c.iterator();
     while (i.hasNext()) {
       if (contains(i.next())) {
         return true;
@@ -376,7 +364,7 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @return true iff the element was in the queue.
    */
   @Override
-  public boolean remove(Object o) {
+  public boolean remove(final Object o) {
     if (o == null) { return false; }
     for (int i = 0; i < fLength; i++) {
       if (o.equals(fElements[(fHead + i) % fElements.length])) {
@@ -391,10 +379,9 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Remove all occurrences of objects contained in given collection from the queue.
    * @param c Collection of elements to be removed.
    * @return true iff the queue was changed.
-   * @throws NullPointerException If collection is null. 
    */
   @Override
-  public boolean removeAll(Collection<?> c) {
+  public boolean removeAll(final Collection<?> c) {
     boolean result = false;
     
     if (c == null) { throw new NullPointerException(); }
@@ -412,15 +399,14 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Remove all occurrences of objects NOT contained in given collection from the queue.
    * @param c Collection of elements to be retained.
    * @return true iff the queue was changed.
-   * @throws NullPointerException If collection is null. 
    */
   @Override
-  public boolean retainAll(Collection<?> c) {
+  public boolean retainAll(final Collection<?> c) {
     boolean result = false;
     
     if (c == null) { throw new NullPointerException(); }
     for (int i = 0; i < fLength; i++) {
-      if (! c.contains(fElements[(fHead + i) % fElements.length])) {
+      if (!c.contains(fElements[(fHead + i) % fElements.length])) {
         fLength--;
         for (int j = i; j < fLength; j++) {
           fElements[(fHead + j) % fElements.length] = 
@@ -450,7 +436,7 @@ public final class ArrayQueue<T> implements Queue<T> {
    */
   @Override
   public Object[] toArray() {
-    Object[] result = new Object[fLength];
+    final Object[] result = new Object[fLength];
     for (int i = 0; i < fLength; i++) {
       result[i] = fElements[(fHead + i) % fElements.length];
     }
@@ -465,29 +451,26 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param <X> Type of array elements.
    * @param a Array used to determine result type.
    * @return Array with queue elements.
-   * @throws ArrayStoreException If type of the array is not a supertype of
-   * elements in this queue.
-   * @throws NullPointerException If array is null.
    */
   @Override
   @SuppressWarnings("unchecked")
-  public <X> X[] toArray(X[] a) {
-   if (a.getClass().getComponentType().isAssignableFrom(
-       fElements.getClass().getComponentType())) {
-     if (a.length >= fLength) {
-       for (int i = 0; i < fLength; i++) {
-         a[i] = (X) fElements[(fHead + i) % fElements.length];
-       }
-       for (int i = fLength; i < a.length; i++) {
-         a[i] = null;
-       }
-       return a;
-     } else {
-       return (X[]) toArray();
-     }
-   } else {
-     throw new ArrayStoreException();
-   }
+  public <X> X[] toArray(final X[] a) {
+    if (a.getClass().getComponentType()
+        .isAssignableFrom(fElements.getClass().getComponentType())) {
+      if (a.length >= fLength) {
+        for (int i = 0; i < fLength; i++) {
+          a[i] = (X) fElements[(fHead + i) % fElements.length];
+        }
+        for (int i = fLength; i < a.length; i++) {
+          a[i] = null;
+        }
+        return a;
+      } else {
+        return (X[]) toArray();
+      }
+    } else {
+      throw new ArrayStoreException();
+    }
   }
 
 }

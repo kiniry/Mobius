@@ -53,7 +53,7 @@ public final class InterfaceMethodrefEntry implements Entry {
    */
   @Override
   public void write(final OutputStream os) throws IOException {
-    DataOutputStream ds = new DataOutputStream(os);
+    final DataOutputStream ds = new DataOutputStream(os);
     ds.writeShort(fClassName);
     ds.writeShort(fSignature);
   }
@@ -77,9 +77,10 @@ public final class InterfaceMethodrefEntry implements Entry {
   /**
    * Equality test.
    * @param obj Object to be compared.
+   * @return true iff this equals obj.
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(final Object obj) {
     if (obj == null) {
       return false;
     } else if (obj.getClass().equals(this.getClass())) {

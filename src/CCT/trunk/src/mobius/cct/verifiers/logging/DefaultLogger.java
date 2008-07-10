@@ -12,8 +12,8 @@ public class DefaultLogger implements Logger {
    * @param msg Message text.
    */
   @Override
-  public void trace(String msg) {
-    System.err.println("TRACE: "+msg);
+  public void trace(final String msg) {
+    System.err.println("TRACE: " + msg);
   }
   
   /**
@@ -21,8 +21,8 @@ public class DefaultLogger implements Logger {
    * @param msg Message text.
    */
   @Override
-  public void debug(String msg) {
-    System.err.println("DEBUG: "+msg);
+  public void debug(final String msg) {
+    System.err.println("DEBUG: " + msg);
   }
 
   /**
@@ -30,8 +30,8 @@ public class DefaultLogger implements Logger {
    * @param msg Message text.
    */
   @Override
-  public void info(String msg) {
-    System.err.println("INFO: "+msg);
+  public void info(final String msg) {
+    System.err.println("INFO: " + msg);
   }
   
   /**
@@ -39,8 +39,8 @@ public class DefaultLogger implements Logger {
    * @param msg Message text.
    */
   @Override
-  public void warn(String msg) {
-    System.err.println("WARNING: "+msg);
+  public void warn(final String msg) {
+    System.err.println("WARNING: " + msg);
   }
   
   /**
@@ -48,8 +48,8 @@ public class DefaultLogger implements Logger {
    * @param msg Message text.
    */
   @Override
-  public void error(String msg) {
-    System.err.println("ERROR: "+msg);
+  public void error(final String msg) {
+    System.err.println("ERROR: " + msg);
   }
 
   /**
@@ -57,7 +57,7 @@ public class DefaultLogger implements Logger {
    * @param msg Message text.
    */
   @Override
-  public void fatal(String msg) {
-    System.err.println("FATAL: "+msg);
+  public void fatal(final String msg) {
+    System.err.println("FATAL: " + msg);
   }
 }

@@ -19,7 +19,7 @@ public class DefaultClassFile implements ClassFile {
    * @throws IOException if the file cannot be parsed. If its format is invalid,
    *    InvalidFormatException should be thrown.
    */
-  public DefaultClassFile(final InputStream is) {
+  public DefaultClassFile(final InputStream is) throws IOException {
   }
   
   /**

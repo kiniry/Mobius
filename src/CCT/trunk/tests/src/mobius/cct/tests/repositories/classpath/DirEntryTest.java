@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 
 import mobius.cct.repositories.Resource;
 import mobius.cct.repositories.classpath.DirEntry;
+import mobius.cct.repositories.NotFoundException;
 import mobius.cct.tests.testutil.Util;
 
 /**
@@ -27,7 +28,7 @@ public class DirEntryTest {
    */
   @Before
   public void setUp() {
-    fEntry = new DirEntry(new File("../data"));
+    fEntry = new DirEntry(new File("./tests/data"));
   }
   
   /**
@@ -41,13 +42,13 @@ public class DirEntryTest {
     assertNotNull(is);
     assertEquals("12872b2fb305213f2c7adac2a945f3da", 
                  Util.toHex(Util.digest(is, Util.MD5)));
-    r.close();
+    is.close();
   }
   
   /**
    * Test loading of a class - class not found.
    */
-  @Test(expected=ClassNotFoundException.class)
+  @Test(expected=NotFoundException.class)
   public void testClass2() throws Exception {
     fEntry.getClassFile("mobius.cct.testdata.FalseTest");
   }

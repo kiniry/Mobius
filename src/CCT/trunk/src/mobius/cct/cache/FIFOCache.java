@@ -1,6 +1,7 @@
 package mobius.cct.cache;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import mobius.cct.util.ArrayQueue;
 
@@ -18,7 +19,7 @@ public class FIFOCache<C> implements Cache<C> {
   /**
    * Mapping from keys to stored objects.
    */
-  private final HashMap<String, C> fMap;
+  private final Map<String, C> fMap;
   
   /**
    * Cache size.
@@ -46,7 +47,7 @@ public class FIFOCache<C> implements Cache<C> {
     if ((key == null) || (object == null)) {
       throw new NullPointerException();
     }
-    if (! fMap.containsKey(key)) {
+    if (!fMap.containsKey(key)) {
       if (fKeys.size() >= fSize) {
         final String oldKey = fKeys.poll();
         fMap.remove(oldKey);

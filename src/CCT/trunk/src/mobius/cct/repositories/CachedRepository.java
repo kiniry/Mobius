@@ -2,6 +2,7 @@ package mobius.cct.repositories;
 
 import java.io.IOException;
 import mobius.cct.cache.Cache;
+import mobius.cct.cache.InfiniteCache;
 
 /**
  * Repository with cache. This class can be used to add
@@ -11,13 +12,24 @@ import mobius.cct.cache.Cache;
  */
 public class CachedRepository<C extends ClassFile>
   implements Repository<C> {
-
+  /**
+   * Cache used to store classes and certificates.
+   */
+  private final Cache<C> fCache;
+  
+  /**
+   * Repository from which classes are read.
+   */
+  private final Repository<C> fRepo;
+  
   /**
    * Create repository with unlimited cache size.
    * @param repo Repository from which classes are read if
    * they cannot be found in cache.
    */
   public CachedRepository(final Repository<C> repo) {
+    fCache = new InfiniteCache<C>();
+    this.fRepo = repo;
   }
   
   /**
@@ -28,6 +40,8 @@ public class CachedRepository<C extends ClassFile>
    */
   public CachedRepository(final Repository<C> repo, 
                           final Cache<C> cache) {
+    this.fCache = cache;
+    this.fRepo = repo;
   }
   
   /**
@@ -42,7 +56,14 @@ public class CachedRepository<C extends ClassFile>
   @Override
   public C getClassFile(final String name) 
     throws NotFoundException, IOException, InvalidCertificateException {
-    return null;
+    final String key = name + ".class";
+    if (fCache.hasKey(key)) {
+      return fCache.lookup(key);
+    } else {
+      final C cls = fRepo.getClassFile(name);
+      fCache.update(key, cls);
+      return cls;
+    }
   }
   
   /**
@@ -53,9 +74,18 @@ public class CachedRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getCertFile(String name) 
+  public C getCertFile(final String name) 
     throws IOException, 
            InvalidCertificateException {
-    return null; 
+    final String key = name + ".cert";
+    if (fCache.hasKey(key)) {
+      return fCache.lookup(key);
+    } else {
+      final C cert = fRepo.getCertFile(name);
+      if (cert != null) {
+        fCache.update(key, cert);
+      }
+      return cert;
+    }
   }
 }

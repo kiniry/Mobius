@@ -43,7 +43,7 @@ public final class Version implements Comparable<Version> {
    * @return .
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(final Object obj) {
     if (obj == null) {
       return false;
     }
@@ -61,7 +61,7 @@ public final class Version implements Comparable<Version> {
    */
   @Override
   public int hashCode() {
-    return fMajor * 3 + fMinor;
+    return fMajor * (1 + 1 + 1) + fMinor;
   }
   
   /**
@@ -70,15 +70,18 @@ public final class Version implements Comparable<Version> {
    */
   @Override
   public String toString() {
-    return "<"+Integer.toString(fMajor)+"."+Integer.toString(fMinor)+">";
+    return "<" + Integer.toString(fMajor) + "." + 
+      Integer.toString(fMinor) + ">";
   }
 
   /**
    * Compare versions.
+   * @param v Version.
    * @return Result.
    */
+  // CHECKSTYLE:OFF
   @Override
-  public int compareTo(Version v) {
+  public int compareTo(final Version v) {
     if (fMajor > v.getMajor()) {
       return 1;
     } else if (fMajor < v.getMajor()) {
@@ -93,5 +96,5 @@ public final class Version implements Comparable<Version> {
       }
     }
   }
-  
+  // CHECKSTYLE:ON
 }

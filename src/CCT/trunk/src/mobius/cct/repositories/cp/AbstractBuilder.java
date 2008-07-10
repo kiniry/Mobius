@@ -23,7 +23,7 @@ public abstract class AbstractBuilder
    * @return Index of new or existing constant.
    */
   @Override
-  public int newClass(String c) {
+  public int newClass(final String c) {
     return newEntry(new ClassEntry(newUtf8(c)));
   }
 
@@ -33,7 +33,7 @@ public abstract class AbstractBuilder
    * @return Index of new or existing constant.
    */
   @Override
-  public int newDouble(double v) {
+  public int newDouble(final double v) {
     return newEntry(new DoubleEntry(v));
   }
 
@@ -43,7 +43,7 @@ public abstract class AbstractBuilder
    * @return Index of new or existing constant.
    */
   @Override
-  public int newFloat(float v) {
+  public int newFloat(final float v) {
     return newEntry(new FloatEntry(v));
   }
 
@@ -53,7 +53,7 @@ public abstract class AbstractBuilder
    * @return Index of new or existing constant.
    */
   @Override
-  public int newInt(int v) {
+  public int newInt(final int v) {
     return newEntry(new IntegerEntry(v));
   }
 
@@ -63,7 +63,7 @@ public abstract class AbstractBuilder
    * @return Index of new or existing constant.
    */
   @Override
-  public int newLong(long v) {
+  public int newLong(final long v) {
     return newEntry(new LongEntry(v));
   }
 
@@ -73,7 +73,7 @@ public abstract class AbstractBuilder
    * @return Index of new or existing constant.
    */
   @Override
-  public int newString(String s) {
+  public int newString(final String s) {
     return newEntry(new StringEntry(newUtf8(s)));
   }
 
@@ -83,7 +83,7 @@ public abstract class AbstractBuilder
    * @return Index of new or existing constant.
    */
   @Override
-  public int newUtf8(String v) {
+  public int newUtf8(final String v) {
     return newEntry(new Utf8Entry(v));
   }
 

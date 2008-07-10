@@ -7,16 +7,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import mobius.cct.certificates.Certificate;
-import mobius.cct.certificates.DefaultCertificate;
 import mobius.cct.repositories.ClassFile;
-import mobius.cct.repositories.Repository;
 import mobius.cct.tests.mocks.CyclicVerifier;
+import mobius.cct.tests.mocks.MockCertificate;
 import mobius.cct.tests.mocks.MockClassFile;
 import mobius.cct.tests.mocks.MockRepository;
-import mobius.cct.util.Version;
 import mobius.cct.verifiers.CyclicDependencyException;
 import mobius.cct.verifiers.DefaultEnvironment;
-import mobius.cct.verifiers.Environment;
 import mobius.cct.verifiers.Verifier;
 
 /**
@@ -49,7 +46,7 @@ public class DefaultEnvironmentTest {
    */
   @Test
   public void testEmpty() {
-    Iterator<Verifier> i;
+    Iterator<Verifier<ClassFile>> i;
     i = fEnv.getVerifiers();
     assertNotNull(i);
     assertFalse(i.hasNext());
@@ -106,11 +103,10 @@ public class DefaultEnvironmentTest {
   @Test
   public void testCycle() {
     Verifier<ClassFile> v = new CyclicVerifier();
-    DefaultCertificate cert = 
-      new DefaultCertificate(v.getCertificateType(), new Version(0, 5));
-    MockClassFile c = new MockClassFile(
-                                        new Certificate[]{cert}
-    );
+    MockCertificate cert = new MockCertificate();
+    cert.setType(v.getCertificateType());
+    MockClassFile c = 
+      new MockClassFile(new Certificate[]{cert});
     fRepo.addClass("/mobius/cct/Test", c);
     fEnv.addVerifier(v);
     try {

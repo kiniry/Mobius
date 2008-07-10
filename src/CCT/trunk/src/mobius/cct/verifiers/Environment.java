@@ -6,6 +6,7 @@ import mobius.cct.verifiers.logging.Logger;
 /**
  * Interface of verification environments - objects used
  * to manage verifiers and repositories.
+ * @param <C> Type of class files.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public interface Environment<C extends ClassFile> {

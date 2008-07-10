@@ -25,6 +25,13 @@ public final class Util {
   private static final int BUFFER_SIZE = 4096;
   
   /**
+   * Hex digits.
+   */
+  private static final String[] digits = 
+    {"0","1","2","3","4","5","6","7","8", "9", 
+     "a", "b", "c", "d", "e", "f"};
+  
+  /**
    * Calculate digest from all bytes in given stream.
    * @param is Input stream.
    * @param alg Digest algorithm.
@@ -37,25 +44,22 @@ public final class Util {
       throws NoSuchAlgorithmException, IOException {
     MessageDigest d = MessageDigest.getInstance(alg);
     byte b[] = new byte[BUFFER_SIZE];
+    int l;
     
-    while (is.read(b) > 0) {
-      d.update(b);
+    while ((l = is.read(b)) > 0) {
+      d.update(b, 0, l);
     }
     return d.digest();
   }
   
   /**
    * Convert byte to hex string. The string has
-   * always 2 characters (it is padded with zero if necessary).
+   * always 2 characters (it is padded with a zero if necessary).
    * @param b Byte value.
    * @return Hex string.
    */
   public static String toHex(byte b) {
-    if (b < 0x10) {
-      return "0" + Integer.toHexString(b);
-    } else {
-      return Integer.toHexString(b);
-    }
+    return digits[(b >>> 4) & 0xf] + digits[b & 0xf];
   }
   
   /**

@@ -1,5 +1,7 @@
 package mobius.cct.repositories;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -8,23 +10,27 @@ import java.io.InputStream;
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public class FileResource implements Resource {
+  /**
+   * File path.
+   */
+  private final File fFile;
   
   /**
-   * Close the file.
-   * @throws IOException if an error occurs.
+   * Constructor - create resource.
+   * @param file File path.
    */
-  @Override
-  public void close() throws IOException {
+  public FileResource(final File file) {
+    this.fFile = file;
   }
 
   /**
-   * Close the file. This resource can be reopened.
+   * Open the file.
    * @return FileInputStream from which the file can be read.
    * @throws IOException if an error occurs.
    */
   @Override
   public InputStream open() throws IOException {
-    return null;
+    return new FileInputStream(fFile);
   }
 
 }

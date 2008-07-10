@@ -25,13 +25,14 @@ public class DefaultFactory implements ConstantPoolFactory {
   /**
    * Read pool from stream.
    * @param is Input stream.
+   * @return Constant pool.
    * @throws IOException .
    * @throws UnknownConstantException If a constant type not described
    * in JSR-202 is encountered.
    */
   @Override
-  public ConstantPool read(InputStream is) throws IOException,
-      UnknownConstantException {
+  public ConstantPool read(final InputStream is) 
+    throws IOException, UnknownConstantException {
     final int size;
     final Entry[] entries;
     Entry entry;

@@ -25,70 +25,74 @@ import mobius.cct.repositories.cp.entries.Utf8Entry;
  */
 public class DefaultEntryReader implements EntryReader {
 
+  //TODO: Use a dictionary of readers instead of case.
+  //CHECKSTYLE:OFF
   /**
    * Read entry.
    * @param is Input stream.
    * @param t Constant type.
+   * @return Entry.
    * @throws UnknownConstantException If constants of type t are
    * not supported.
    * @throws IOException .
    */
   @Override
-  public Entry read(InputStream is, byte t) throws IOException,
-      UnknownConstantException {
-    DataInputStream ds = new DataInputStream(is);
+  public Entry read(final InputStream is, 
+                    final byte t) throws IOException,
+  UnknownConstantException {
+    final DataInputStream ds = new DataInputStream(is);
     switch (t) {
-    case Entry.CONSTANT_Class: {
-      final int name = ds.readShort();
-      return new ClassEntry(name);
-    }
-    case Entry.CONSTANT_Fieldref: {
-      final int className = ds.readShort();
-      final int sig = ds.readShort();
-      return new FieldrefEntry(className, sig);
-    }            
-    case Entry.CONSTANT_Methodref: {
-      final int className = ds.readShort();
-      final int sig = ds.readShort();
-      return new MethodrefEntry(className, sig);
-    }         
-    case Entry.CONSTANT_InterfaceMethodref: {
-      final int className = ds.readShort();
-      final int sig = ds.readShort();
-      return new InterfaceMethodrefEntry(className, sig);
-    }
-    case Entry.CONSTANT_String: {
-      final int valueIndex = ds.readShort();
-      return new StringEntry(valueIndex);
-    }           
-    case Entry.CONSTANT_Integer: {
-      final int value = ds.readInt();
-      return new IntegerEntry(value);
-    }          
-    case Entry.CONSTANT_Float: {
-      final float value = ds.readFloat();
-      return new FloatEntry(value);
-    }           
-    case Entry.CONSTANT_Long: {
-      final long value = ds.readLong();
-      return new LongEntry(value);
-    }           
-    case Entry.CONSTANT_Double: {
-      final double value = ds.readDouble();
-      return new DoubleEntry(value);
-    }            
-    case Entry.CONSTANT_NameAndType: {
-      final int name = ds.readShort();
-      final int type = ds.readShort();
-      return new NameAndTypeEntry(name, type);
-    }      
-    case Entry.CONSTANT_Utf8: {
-      final String value = ds.readUTF();
-      return new Utf8Entry(value);
-    }
-    default:
-      throw new UnknownConstantException(t);
-    }
+      case Entry.CONSTANT_Class: {
+        final int name = ds.readShort();
+        return new ClassEntry(name);
+      }
+      case Entry.CONSTANT_Fieldref: {
+        final int className = ds.readShort();
+        final int sig = ds.readShort();
+        return new FieldrefEntry(className, sig);
+      }            
+      case Entry.CONSTANT_Methodref: {
+        final int className = ds.readShort();
+        final int sig = ds.readShort();
+        return new MethodrefEntry(className, sig);
+      }         
+      case Entry.CONSTANT_InterfaceMethodref: {
+        final int className = ds.readShort();
+        final int sig = ds.readShort();
+        return new InterfaceMethodrefEntry(className, sig);
+      }
+      case Entry.CONSTANT_String: {
+        final int valueIndex = ds.readShort();
+        return new StringEntry(valueIndex);
+      }           
+      case Entry.CONSTANT_Integer: {
+        final int value = ds.readInt();
+        return new IntegerEntry(value);
+      }          
+      case Entry.CONSTANT_Float: {
+        final float value = ds.readFloat();
+        return new FloatEntry(value);
+      }           
+      case Entry.CONSTANT_Long: {
+        final long value = ds.readLong();
+        return new LongEntry(value);
+      }           
+      case Entry.CONSTANT_Double: {
+        final double value = ds.readDouble();
+        return new DoubleEntry(value);
+      }            
+      case Entry.CONSTANT_NameAndType: {
+        final int name = ds.readShort();
+        final int type = ds.readShort();
+        return new NameAndTypeEntry(name, type);
+      }      
+      case Entry.CONSTANT_Utf8: {
+        final String value = ds.readUTF();
+        return new Utf8Entry(value);
+      }
+      default:
+        throw new UnknownConstantException(t);
+      }
   }
-
+  //CHECKSTYLE:OFF
 }
