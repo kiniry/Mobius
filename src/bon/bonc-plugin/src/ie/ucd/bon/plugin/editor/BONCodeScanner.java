@@ -7,6 +7,7 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
@@ -104,7 +105,8 @@ public class BONCodeScanner extends RuleBasedScanner {
 		rules.add(new EndOfLineRule("//", comment));
 		
 		// Add rule for strings and character constants.
-		rules.add(new SingleLineRule("\"", "\"", string, '\\'));
+		//rules.add(new SingleLineRule("\"", "\"", string, '\\'));
+		rules.add(new MultiLineRule("\"", "\"", string, '\\'));
 		rules.add(new SingleLineRule("'", "'", string, '\\'));
 		
 		// Add generic whitespace rule.

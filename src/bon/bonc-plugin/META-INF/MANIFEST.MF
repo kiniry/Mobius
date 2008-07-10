@@ -12,3 +12,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;bundle-version="3.4.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/antlr-2.7.7.jar,
+ lib/antlr-runtime-3.0.1.jar,
+ lib/BON.jar,
+ lib/CommandlineParser.jar,
+ lib/stringtemplate.jar,
+ .
