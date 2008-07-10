@@ -1089,7 +1089,7 @@ public class AnnotationHandler {
    * argument is empty, null is returned. Otherwise, some object is returned,
    * though its expression might be a literal.
    */
-  static public ExprModifierPragma and(/* @ non_null */ArrayList a) {
+  static public ExprModifierPragma and(/*@non_null*/ArrayList a) {
     if (a.size() == 0) {
       return null;
     } else if (a.size() == 1) {
@@ -1108,7 +1108,7 @@ public class AnnotationHandler {
    * The same as and(ArrayList), but produces labelled expressions within the
    * conjunction so that error messages come out with useful locations.
    */
-  static public ExprModifierPragma andLabeled(/* @ non_null */ArrayList a) {
+  static public ExprModifierPragma andLabeled(/*@non_null*/ArrayList a) {
     if (a.size() == 0) {
       return null;
     } else {
@@ -1166,7 +1166,7 @@ public class AnnotationHandler {
    * argument is empty, null is returned. Otherwise, some object is returned,
    * though its expression might be a literal.
    */
-  static public ExprModifierPragma or(/* @ non_null */ArrayList a) {
+  static public ExprModifierPragma or(/*@non_null*/ArrayList a) {
     if (a.size() == 0) {
       return null;
     } else if (a.size() == 1) {
@@ -1186,7 +1186,7 @@ public class AnnotationHandler {
    * Neither input may be null. If either input is literally true or false, the
    * appropriate constant folding is performed.
    */
-  static public Expr implies(/* @ non_null */Expr e1, /* @ non_null */Expr e2) {
+  static public Expr implies(/*@non_null*/Expr e1, /*@non_null*/Expr e2) {
     if (isTrue(e1)) return e2;
     if (isTrue(e2)) return e2; // Use e2 instead of T to keep location info
     if (isFalse(e1)) return T;
@@ -1199,7 +1199,7 @@ public class AnnotationHandler {
    * Returns true if the argument is literally true, and returns false if it is
    * not a literal or is literally false.
    */
-  public static boolean isTrue(/* @ non_null */Expr e) {
+  public static boolean isTrue(/*@non_null*/Expr e) {
     return e == T
         || (e instanceof LiteralExpr && ((LiteralExpr)e).value.equals(T.value));
   }
@@ -1208,7 +1208,7 @@ public class AnnotationHandler {
    * Returns true if the argument is literally false, and returns false if it is
    * not a literal or is literally true.
    */
-  public static boolean isFalse(/* @ non_null */Expr e) {
+  public static boolean isFalse(/*@non_null*/Expr e) {
     return e == F
         || (e instanceof LiteralExpr && ((LiteralExpr)e).value.equals(F.value));
   }
