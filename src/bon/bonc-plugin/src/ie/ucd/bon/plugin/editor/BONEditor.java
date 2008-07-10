@@ -52,7 +52,6 @@ public class BONEditor extends TextEditor {
 		ISourceViewer viewer= new ProjectionViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles);
 		// ensure decoration support has been created and configured.
 		getSourceViewerDecorationSupport(viewer);
-		
 		return viewer;
 	}
 	

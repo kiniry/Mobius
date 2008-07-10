@@ -88,8 +88,12 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     getProject().deleteMarkers(MARKER_ID, false, IResource.DEPTH_INFINITE);
 
     System.out.println("Bonc args: " + boncArgs.toString());
+    try {
     Main.main2(boncArgs.toArray(new String[boncArgs.size()]), false);
-
+    } catch (Exception e) {
+      System.out.println("Exception whilst running BONc: " + e);
+      e.printStackTrace();
+    }
     Problems problems = Main.getProblems();
     SortedSet<BONProblem> actualProblems = problems.getProblems();
 

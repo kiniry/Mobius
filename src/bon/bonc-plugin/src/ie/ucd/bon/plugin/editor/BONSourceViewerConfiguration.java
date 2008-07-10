@@ -20,13 +20,14 @@ import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.BufferedRuleBasedScanner;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.Token;
+import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 /**
  * Example configuration for an <code>SourceViewer</code> which shows Java code.
  */
-public class BONSourceViewerConfiguration extends SourceViewerConfiguration {
+public class BONSourceViewerConfiguration extends TextSourceViewerConfiguration {
 
 
 	/**
@@ -138,6 +139,7 @@ public class BONSourceViewerConfiguration extends SourceViewerConfiguration {
 		return reconciler;
 	}
 
+
 	/* (non-Javadoc)
 	 * Method declared on SourceViewerConfiguration
 	 */
@@ -151,4 +153,6 @@ public class BONSourceViewerConfiguration extends SourceViewerConfiguration {
 //	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
 //		return new JavaTextHover();
 //	}
+	
+	
 }
