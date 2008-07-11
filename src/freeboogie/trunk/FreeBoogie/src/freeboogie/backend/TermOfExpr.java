@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 
 import freeboogie.ast.*;
-import freeboogie.tc.TcInterface;
+import freeboogie.tc.SymbolTable;
 
 /**
  * Builds {@code Term}s out of Boogie expressions.
@@ -21,12 +21,12 @@ public class TermOfExpr extends Evaluator<Term> {
   private static final Term[] termArray = new Term[0];
 
   private TermBuilder term;
-  private TcInterface tc;
+  private SymbolTable st;
 
   public TermOfExpr() {}
 
   public void setBuilder(TermBuilder term) { this.term = term; }
-  public void setTypeChecker(TcInterface st) { this.tc = tc; }
+  public void setSymbolTable(SymbolTable st) { this.st = st; }
 
   @Override
   public Term eval(AtomCast atomCast, Expr e, Type type) {
@@ -40,7 +40,7 @@ public class TermOfExpr extends Evaluator<Term> {
 
   @Override
   public Term eval(AtomId atomId, String id, TupleType types) {
-    Declaration d = tc.getST().ids.def(atomId);
+    Declaration d = st.ids.def(atomId);
     Type t;
     if (d instanceof VariableDecl) {
       t = ((VariableDecl)d).getType();
@@ -146,7 +146,7 @@ public class TermOfExpr extends Evaluator<Term> {
     return r.toArray(termArray);
   }
 
-  private boolean isInt(Type t) { 
+  private boolean isInt(Type t) {
     return isPrimitive(t, PrimitiveType.Ptype.INT);
   }
 
