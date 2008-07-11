@@ -180,9 +180,18 @@ public class ExpressionVisitor extends ABasicVisitor {
       case TagConstants.STRINGLIT:
         term = result.substWith(Ref.strValue((String)expr.value));
         break;
-      case TagConstants.NULLLIT:
-        term = result.substWith(Ref.nullValue());
+      case TagConstants.NULLLIT: {
+        final QuantVariableRef v = vce.fPost.getRVar();
+        Term t;
+        if (v.getSort().equals(Heap.sortValue)) {
+          t = Heap.sortToValue(Ref.nullValue());
+        }
+        else {
+          t = Ref.nullValue();
+        }
+        term = result.substWith(t);
         break;
+      }
       default:
         throw new IllegalArgumentException("Unknown construct :" +
                                            TagConstants.toString(expr.tag) + " " +  expr);
@@ -222,7 +231,15 @@ public class ExpressionVisitor extends ABasicVisitor {
   @Override
   public /*@non_null*/ Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
     final VCEntry vce = (VCEntry) o;
-    return new Post(vce.fPost.substWith(Ref.varThis)); // variable particuliere
+    final QuantVariableRef v = vce.fPost.getRVar();
+    Term t;
+    if (v.getSort().equals(Ref.sort)) {
+      t = vce.fPost.substWith(Heap.valueToSort(Ref.varThis, Ref.sort));
+    }
+    else {
+      t = vce.fPost.substWith(Ref.varThis);
+    }
+    return new Post(t); // variable particuliere
   }
 
   /**

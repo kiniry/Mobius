@@ -67,6 +67,8 @@ public class Post {
     return fPost;
   }
   
+
+  
   /**
    * Substitute the current variable ({@link #fVar}) with the logical formula given
    * as an argument.
