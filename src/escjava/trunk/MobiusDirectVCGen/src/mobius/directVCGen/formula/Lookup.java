@@ -28,7 +28,7 @@ public class Lookup {
   private static final boolean fFailSave = false;
   
   /** an instance of the lookup object. */
-  private static final Lookup inst = new Lookup();
+  private static Lookup inst = new Lookup();
   
   
   /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
@@ -55,6 +55,17 @@ public class Lookup {
   /**  the argument lists of each precondition without the heap. */
   private final Map<RoutineDecl, List<QuantVariableRef>> fPreArgsWithoutHeap = 
     new HashMap<RoutineDecl, List<QuantVariableRef>>(); 
+  
+  
+
+  public static void clear() {
+    postconditions.clear();
+    preconditions.clear();
+    exceptionalPostconditions.clear();
+    inst = new Lookup();
+    
+  }
+  
   
   /**
    * Returns the FOL Term representation of the class invariant.
@@ -356,4 +367,7 @@ public class Lookup {
     }
     return v;
   }
+
+
+
 }

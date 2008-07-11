@@ -12,10 +12,12 @@ import javafe.ast.StandardPrettyPrint;
 import javafe.ast.TypeDecl;
 import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
+import javafe.util.AssertionFailureException;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
 import mobius.directVCGen.bico.AnnotationCompiler;
 import mobius.directVCGen.bico.Unarchiver;
+import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.pojs.JavaCompiler;
 import mobius.directVCGen.vcgen.DirectVCGen;
@@ -54,6 +56,7 @@ public class Main extends escjava.Main {
    */
   public static void main(final /*@ non_null @*/String[] args) {
     // the first argument is the output dir
+    
     if (args.length < 2) {
       fOut.println("I need at least 2 arguments:\n" +
                    " - the output directory and\n+" +
@@ -61,6 +64,7 @@ public class Main extends escjava.Main {
       return;
     }
 
+    clear();
     
     final String[] escargs = new String[args.length - 2];
     for (int i = 2; i < args.length; i++) {
@@ -92,6 +96,14 @@ public class Main extends escjava.Main {
       e1.printStackTrace();
       return;
     }
+    catch (AssertionFailureException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void clear() {
+    Lookup.clear();
+    
   }
 
   /**
@@ -138,6 +150,7 @@ public class Main extends escjava.Main {
       //oom.printStackTrace(System.out);
 //      return outOfMemoryExitCode;
     }
+
   }
 
   /**
@@ -244,6 +257,9 @@ public class Main extends escjava.Main {
       e.printStackTrace();
     }
     catch (IOException e) {
+      e.printStackTrace();
+    }
+    catch (AssertionFailureException e) {
       e.printStackTrace();
     }
   }
