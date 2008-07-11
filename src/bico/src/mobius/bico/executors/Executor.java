@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -76,6 +75,8 @@ public class Executor extends ABasicExecutor {
   /** the directory from which to collect the files to translate. */
   private final File fSourceDir;
   
+  private final NamingData fNamingData;
+  
   /**
    * Minimal constructor.
    * 
@@ -87,6 +88,7 @@ public class Executor extends ABasicExecutor {
           new CamlDictionary(), new File(""));
     fName = "Bico";
     fSourceDir = new File("");
+    fNamingData = new NamingData(fName);
   }
   
   
@@ -100,6 +102,7 @@ public class Executor extends ABasicExecutor {
     fName = e.fName;
     fSourceDir = e.fSourceDir;
     fPendingClasses.addAll(e.fPendingClasses);
+    fNamingData = new NamingData(fName);
   }
   
 
@@ -134,6 +137,7 @@ public class Executor extends ABasicExecutor {
     fSourceDir = sourceDir;
 
     fGenerateJavaLibs = generateLibs;
+    fNamingData = new NamingData(fName);
   }
   /**
    * Create a new Executor object.
@@ -565,6 +569,11 @@ public class Executor extends ABasicExecutor {
   public Collection<ClassExecutor> getTreatedClasses() {
     
     return fTreatedClasses.values();
+  }
+
+
+  public NamingData getNamingData() {
+    return fNamingData;
   }
   
 }

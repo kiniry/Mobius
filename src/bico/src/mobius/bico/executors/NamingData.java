@@ -9,10 +9,10 @@ import mobius.bico.Util;
 
 
 /**
- * 
+ * Datas used for naming the different files.
  * @author M. Pavlova, J. Charles (julien.charles@inria.fr)
  */
-public class ClassNamingData {
+public class NamingData {
     
   /** the full class name. */
   private final String fClassName;
@@ -34,7 +34,7 @@ public class ClassNamingData {
    * Get the informations from a Class generator.
    * @param cg the class with which to initialize the data structure
    */
-  public ClassNamingData(final ClassGen cg) {
+  public NamingData(final ClassGen cg) {
     this(cg.getJavaClass());
   }
 
@@ -42,12 +42,22 @@ public class ClassNamingData {
    * Get the informations from a JavaClass.
    * @param jc the class with which to initialize the data structure
    */
-  public ClassNamingData(final JavaClass jc) {
+  public NamingData(final JavaClass jc) {
     fClassName = jc.getClassName();
     fModuleName = Util.coqify(fClassName);
     fPackage = jc.getPackageName();
     fPath = new File(fPackage.replace('.', File.separatorChar));
     fName = fClassName.substring(fClassName.lastIndexOf('.') + 1);
+  }
+  
+  
+  public NamingData(final String name) {
+    fClassName = name;
+    fModuleName = name;
+    fPackage = "";
+    fPath = new File("");
+    fName = fClassName;
+  
   }
 
   public String getPackage() {
@@ -127,8 +137,8 @@ public class ClassNamingData {
     if (o == null) {
       return false;
     }
-    return (o instanceof ClassNamingData) && 
-          ((ClassNamingData) o).fClassName.equals(fClassName);
+    return (o instanceof NamingData) && 
+          ((NamingData) o).fClassName.equals(fClassName);
   }
   
   /**

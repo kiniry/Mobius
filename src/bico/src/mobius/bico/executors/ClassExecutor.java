@@ -52,7 +52,7 @@ public class ClassExecutor extends ASignatureExecutor {
   private final FieldExecutor fFieldExecutor;
   
   /** the coqified naming informations for the class. */
-  private final ClassNamingData fNamingData;
+  private final NamingData fNamingData;
     
   /** the real directory which corresponds to the current package. */
   private final File fWorkingDir;
@@ -61,7 +61,7 @@ public class ClassExecutor extends ASignatureExecutor {
   private final Set<LoadPath> fLoadPaths = new HashSet<LoadPath>();
   
   /** dependencies of the current class.   */
-  private  final Set<ClassNamingData> fExtLibsLocal = new HashSet<ClassNamingData>();
+  private  final Set<NamingData> fExtLibsLocal = new HashSet<NamingData>();
   
   /** the executor which spawned this class executor. */
   private Executor fExecutor;
@@ -79,7 +79,7 @@ public class ClassExecutor extends ASignatureExecutor {
     super(exec, cg);
     fClass = cg;
     fExecutor = exec;
-    fNamingData = new ClassNamingData(fClass);
+    fNamingData = new NamingData(fClass);
     fWorkingDir = new File(getBaseDir(), 
                            fNamingData.getPkgDir().getPath());
     setOut(new CoqStream(new FileOutputStream(
@@ -159,8 +159,8 @@ public class ClassExecutor extends ASignatureExecutor {
     
     out.println(implem.getBeginning());
     out.imprt("P");
-    
-    for (ClassNamingData ex: fExtLibsLocal) {
+
+    for (NamingData ex: fExtLibsLocal) {
       if (fExecutor.isSpecialLib(ex.getClassName())) {
         out.reqExport(implem.requireLib(ex.getBicoClassName()));
         out.exprt(ex.getSignatureModule());
@@ -170,6 +170,10 @@ public class ClassExecutor extends ASignatureExecutor {
         out.exprt(ex.getSignatureModule());
       }
     }
+
+    
+    fOutSig.reqImport(fExecutor.getNamingData().getSignatureName());
+    fOutSig.imprt(fExecutor.getNamingData().getSignatureModule());
 
     out.println();
     
@@ -204,7 +208,7 @@ public class ClassExecutor extends ASignatureExecutor {
     fOutSig.imprt("P");
     fOutSig.println();
     
-    for (ClassNamingData ex: fExtLibsLocal) {
+    for (NamingData ex: fExtLibsLocal) {
       if (fExecutor.isSpecialLib(ex.getClassName())) {
         fOutSig.reqExport(implem.requireLib(ex.getBicoClassName()));
         fOutSig.exprt(ex.getTypeModule());
@@ -214,6 +218,8 @@ public class ClassExecutor extends ASignatureExecutor {
         fOutSig.exprt(ex.getTypeModule());
       }
     }
+    fOutSig.reqImport(fExecutor.getNamingData().getTypeName());
+    fOutSig.imprt(fExecutor.getNamingData().getTypeModule());
     fOutSig.println();
     fOutSig.startModule(fNamingData.getSignatureModule());
     fOutSig.imprt(fNamingData.getTypeModule());
@@ -401,13 +407,13 @@ public class ClassExecutor extends ASignatureExecutor {
   private void handleImportedLib(final String clzz)
     throws ClassNotFoundException {
     final String clname = clzz;
-    ClassNamingData cl = null;
+    NamingData cl = null;
     if (clname.equals("")) {
       return;
     }
     
     final JavaClass jc = getRepository().loadClass(clname);
-    cl = new ClassNamingData(jc);
+    cl = new NamingData(jc);
     fExtLibsLocal.add(cl);
     extractLoadPath(cl);    
   }
@@ -443,7 +449,7 @@ public class ClassExecutor extends ASignatureExecutor {
    * 
    * @param cl the external class to which a load path is added
    */
-  private void extractLoadPath(final ClassNamingData cl) {
+  private void extractLoadPath(final NamingData cl) {
     final File f = new File(getBaseDir(), cl.getClassFile().getPath());
     // if the file exists in the base directory of the current application
     // and the path is not already such path then add it
@@ -458,7 +464,7 @@ public class ClassExecutor extends ASignatureExecutor {
    */
   public List<String> getClassDependencies() {
     final List<String> al = new ArrayList<String>();
-    for (ClassNamingData ec : fExtLibsLocal) {
+    for (NamingData ec : fExtLibsLocal) {
       al.add(ec.getClassName());
     }
     return al;
