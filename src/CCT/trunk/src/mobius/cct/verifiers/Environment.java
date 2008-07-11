@@ -1,6 +1,6 @@
 package mobius.cct.verifiers;
 
-import mobius.cct.repositories.ClassFile;
+import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.verifiers.logging.Logger;
 
 /**

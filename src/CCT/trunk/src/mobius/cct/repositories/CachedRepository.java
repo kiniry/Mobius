@@ -3,6 +3,7 @@ package mobius.cct.repositories;
 import java.io.IOException;
 import mobius.cct.cache.Cache;
 import mobius.cct.cache.InfiniteCache;
+import mobius.cct.repositories.classfile.ClassFile;
 
 /**
  * Repository with cache. This class can be used to add

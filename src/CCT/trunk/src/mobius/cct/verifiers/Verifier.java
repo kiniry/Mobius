@@ -1,7 +1,7 @@
 package mobius.cct.verifiers;
 
 import mobius.cct.certificates.Certificate;
-import mobius.cct.repositories.ClassFile;
+import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.util.Version;
 
 /**

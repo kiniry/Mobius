@@ -1,4 +1,4 @@
-package mobius.cct.repositories;
+package mobius.cct.repositories.classfile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import mobius.cct.certificates.Certificate;
+import mobius.cct.repositories.InvalidCertificateException;
 
 /**
  * Default implementation of class file. No external 

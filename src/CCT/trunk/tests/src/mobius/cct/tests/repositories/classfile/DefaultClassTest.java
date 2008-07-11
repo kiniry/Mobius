@@ -1,4 +1,4 @@
-package mobius.cct.tests.repositories;
+package mobius.cct.tests.repositories.classfile;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,8 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import mobius.cct.certificates.Certificate;
-import mobius.cct.repositories.DefaultClassFile;
-import mobius.cct.repositories.DefaultClassReader;
+import mobius.cct.repositories.classfile.DefaultClassFile;
+import mobius.cct.repositories.classfile.DefaultClassReader;
 import mobius.cct.tests.testutil.Util;
 import mobius.cct.util.Version;
 

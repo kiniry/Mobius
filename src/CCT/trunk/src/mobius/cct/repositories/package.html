@@ -11,9 +11,9 @@ to read class and certificate files.</p>
 
 <h2>Class files</h2>
 <p>Classes are represented as objects implementing the 
-{@link mobius.cct.repositories.ClassFile ClassFile} interface. 
+{@link mobius.cct.repositories.classfile.ClassFile ClassFile} interface. 
 A default implementation 
-({@link mobius.cct.repositories.DefaultClassFile} DefaultClassFile), 
+({@link mobius.cct.repositories.classfile.DefaultClassFile} DefaultClassFile), 
 which does not depend on any external library, is provided. 
 However, is some cases it might be better to use ClassFiles based on 
 a library like BCEL or ASM. For this reason most repository classes are 
@@ -34,10 +34,10 @@ class {@link mobius.cct.repositories.CachedRepository CachedRepository}.</p>
 <h2>Parsing class files</h2>
 <p>Generic {@link mobius.cct.repositories.Repository Repository} 
 implementations (able to read any type of 
-{@link mobius.cct.repositories.ClassFile ClassFile}) must be 
+{@link mobius.cct.repositories.classfile.ClassFile ClassFile}) must be 
 supplied with an object which can be used to parse a byte stream and 
-create right kind of {@link mobius.cct.repositories.ClassFile ClassFile}. 
-{@link mobius.cct.repositories.ClassReader ClassReader} is the interface 
+create right kind of {@link mobius.cct.repositories.classfile.ClassFile ClassFile}. 
+{@link mobius.cct.repositories.classfile.ClassReader ClassReader} is the interface 
 of such objects. Their input is given as a 
 {@link mobius.cct.repositories.Resource Resource} object. Resources are simply
 byte streams which can be opened and closed.</p>

@@ -5,8 +5,8 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import mobius.cct.certificates.Certificate;
-import mobius.cct.repositories.ClassFile;
 import mobius.cct.repositories.InvalidCertificateException;
+import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.util.ArrayIterator;
 
 /**

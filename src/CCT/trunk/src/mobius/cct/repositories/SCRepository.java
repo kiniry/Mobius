@@ -2,6 +2,8 @@ package mobius.cct.repositories;
 
 import java.io.IOException;
 
+import mobius.cct.repositories.classfile.ClassFile;
+
 /**
  * Repository which uses different locations for class and certificate files.
  * This class uses two repositories

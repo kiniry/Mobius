@@ -3,10 +3,10 @@ package mobius.cct.tests.mocks;
 import java.io.IOException;
 import java.util.HashMap;
 
-import mobius.cct.repositories.ClassFile;
 import mobius.cct.repositories.InvalidCertificateException;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Repository;
+import mobius.cct.repositories.classfile.ClassFile;
 
 /**
  * Repository implmentation used for testing.

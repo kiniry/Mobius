@@ -1,4 +1,4 @@
-package mobius.cct.repositories;
+package mobius.cct.repositories.classfile;
 
 import java.io.IOException;
 import java.io.InputStream;

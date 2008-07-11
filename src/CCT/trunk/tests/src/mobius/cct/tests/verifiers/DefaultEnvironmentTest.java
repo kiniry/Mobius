@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import mobius.cct.certificates.Certificate;
-import mobius.cct.repositories.ClassFile;
+import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.tests.mocks.CyclicVerifier;
 import mobius.cct.tests.mocks.MockCertificate;
 import mobius.cct.tests.mocks.MockClassFile;

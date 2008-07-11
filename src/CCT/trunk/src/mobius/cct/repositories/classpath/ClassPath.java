@@ -8,10 +8,10 @@ import java.util.List;
 
 import java.io.InputStream;
 
-import mobius.cct.repositories.ClassFile;
-import mobius.cct.repositories.ClassReader;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;
+import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.repositories.classfile.ClassReader;
 
 /**
  * Sequence of directories and JAR/ZIP files.

@@ -1,10 +1,11 @@
-package mobius.cct.repositories;
+package mobius.cct.repositories.classfile;
 
 import java.io.OutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
 import mobius.cct.certificates.Certificate;
+import mobius.cct.repositories.InvalidCertificateException;
 
 /**
  * This interface contains methods common to all

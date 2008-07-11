@@ -3,7 +3,7 @@ package mobius.cct.tests.mocks;
 import java.io.IOException;
 import java.io.InputStream;
 
-import mobius.cct.repositories.ClassReader;
+import mobius.cct.repositories.classfile.ClassReader;
 
 /**
  * Class reader used for tests.

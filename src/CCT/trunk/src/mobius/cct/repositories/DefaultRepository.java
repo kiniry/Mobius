@@ -1,5 +1,8 @@
 package mobius.cct.repositories;
 
+import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.repositories.classfile.ClassReader;
+
 /**
  * Default implementation of a repository. Loads classes 
  * and certificates from system classpath.

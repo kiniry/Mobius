@@ -2,6 +2,8 @@ package mobius.cct.repositories;
 
 import java.io.IOException;
 
+import mobius.cct.repositories.classfile.ClassFile;
+
 /**
  * Repositories are objects used to locate class and certificate files.
  * @param <C> Type of class files.

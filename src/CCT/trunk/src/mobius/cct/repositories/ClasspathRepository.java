@@ -2,6 +2,8 @@ package mobius.cct.repositories;
 
 import java.io.IOException;
 
+import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.repositories.classfile.ClassReader;
 import mobius.cct.repositories.classpath.ClassPath;
 
 /**
