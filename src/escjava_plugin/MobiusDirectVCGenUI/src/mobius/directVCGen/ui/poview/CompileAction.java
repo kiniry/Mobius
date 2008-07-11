@@ -20,56 +20,80 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 public class CompileAction implements IWorkbenchWindowActionDelegate {
-  ICompilationUnit sel;
+  /** the current selection. */
+  private ICompilationUnit fSel;
+  
+  /** {@inheritDoc} */
   @Override
   public void dispose() { }
 
+  /** {@inheritDoc} */
   @Override
   public void init(final IWorkbenchWindow window) { }
 
+  /** {@inheritDoc} */
   @Override
   public void run(final IAction action) {
-    if (sel != null) {
+    
+    if (fSel != null) {
+      final ConsoleOutputWrapper wrapper = new ConsoleOutputWrapper();
 
+      wrapper.wrap();
+      final String [] args = computeArgs();      
       try {
-        final IPath path = sel.getCorrespondingResource().getProject().getLocation();
-
-        final URL url = Activator.getDefault().getBundle().getResource("/lib/bicolano.jar");
-        final String bico = FileLocator.toFileURL(url).getPath();
-        //final IVMInstall vm = JavaRuntime.getDefaultVMInstall();
-        //final IVMRunner runner = vm.getVMRunner(ILaunchManager.RUN_MODE);
-
-        String[] classPath = null;
-
-        classPath = JavaRuntime.computeDefaultRuntimeClassPath(sel.getJavaProject());
-        String res = "";
-        for (String s: classPath) {
-          res += ":" + s;
-        }
-        System.out.println(res);
-        final ConsoleOutputWrapper wrapper = new ConsoleOutputWrapper();
-        wrapper.wrap();
-        Main.main(new String[]{path.toString(), bico, 
-                               sel.getCorrespondingResource().getLocation().toString(),
-                               "-classpath", res.substring(1)});
+        Main.main(args);
+      }  
+      catch (IllegalArgumentException e) {
+        e.printStackTrace();
+      }
+      catch (Throwable e) {
+        e.printStackTrace();
+      }
+      finally {
         wrapper.unwrap();
- 
-        RefreshUtils.refreshResource(sel.getJavaProject().getProject());
-      }
-      catch (IOException e) {
-        e.printStackTrace();
-      }
-      catch (JavaModelException e) {
-        e.printStackTrace();
-      } 
-      catch (CoreException e) {
-        e.printStackTrace();
+        RefreshUtils.refreshResource(fSel.getJavaProject().getProject()); 
       }
 
     }
 
   }
 
+  private String[] computeArgs() {
+    String[] args = new String[0];
+    try { // computing the arguments
+      final IPath path = fSel.getCorrespondingResource().getProject().getLocation();
+
+      final URL url = Activator.getDefault().getBundle().getResource("/lib/bicolano.jar");
+      final String bico = FileLocator.toFileURL(url).getPath();
+ 
+      String[] classPath = null;
+
+      classPath = JavaRuntime.computeDefaultRuntimeClassPath(fSel.getJavaProject());
+      String res = "";
+      for (String s: classPath) {
+        res += ":" + s;
+      }
+      args = new String[] {
+        path.toString(), bico, 
+        fSel.getTypes()[0].getFullyQualifiedName(),
+        "-cp", res.substring(1), 
+        "-SourcePath", 
+        fSel.getResource().getParent().getLocation().toString()
+      };
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+    catch (JavaModelException e) {
+      e.printStackTrace();
+    } 
+    catch (CoreException e) {
+      e.printStackTrace();
+    }
+    return args;
+  }
+
+  /** {@inheritDoc} */
   @Override
   public void selectionChanged(final IAction action, final ISelection s) {
     if (!s.isEmpty()) {
@@ -77,7 +101,7 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
         final IStructuredSelection select = (IStructuredSelection) s; 
         final Object o = select.getFirstElement();
         if (o instanceof ICompilationUnit) {
-          sel = (ICompilationUnit) o;
+          fSel = (ICompilationUnit) o;
         }
       }
     }
