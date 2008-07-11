@@ -396,14 +396,14 @@ public class StmtVCGen extends ExpressionVisitor {
     vce.fPost = postBranch;
     final Post preF = (Post) x.els.accept(this, vce);
 
-    final QuantVariableRef v = Expression.rvar(Bool.sort);
+    final QuantVariableRef v = Expression.rvar(Logic.sort);
 
     vce.fPost = new Post(v,
-                        Logic.and(Logic.implies(Logic.boolToPred(v), preT.getPost()),
-                                  Logic.implies(Logic.not(Logic.boolToPred(v)), 
-                                                preF.getPost())));
+                        Logic.and(Post.implies(v, preT),
+                                  Post.implies(Logic.not(v), preF)));
 
-    vce.fPost = (Post) x.accept(fExprVisitor, vce);
+    vce.fPost = (Post) x.expr.accept(fExprVisitor, vce);
+  
     return treatAnnot(vce, fAnnot.getAnnotPre(x));
   }
 

@@ -159,7 +159,13 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     // the normal post
     final QuantVariableRef res = Expression.rvar(entry.fPost.getRVar().getSort());
     final Term normPost = entry.fPost.substWith(res).subst(Heap.var, newHeap);
-    final Term methNorm = Logic.implies(pre, methNormPost.substWith(res));
+    final Term methNorm;
+    if (!Util.isVoid(meth)) {
+      methNorm = Logic.implies(pre, methNormPost.substWith(res));
+    }
+    else {
+      methNorm = Post.implies(pre, methNormPost);
+    }
     final Term tNormal = Logic.forall(res, Logic.implies(methNorm, normPost));
 
     entry.fPost = new Post(Logic.forall(newHeap, Logic.and(tNormal, tExcp)));

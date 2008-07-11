@@ -1,7 +1,10 @@
 
 package mobius.directVCGen.vcgen.struct;
 
+import mobius.directVCGen.formula.Bool;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
+import mobius.directVCGen.formula.Ref;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -57,12 +60,22 @@ public class Post {
    */
   public Term substWith(final Term f) {
     if (fVar != null) {
+      Term sub = f;
       if (!fVar.getSort().equals(f.getSort())) {
-        throw new IllegalArgumentException("The 2 terms don't have the same type " + 
-                                           fVar + " " + f);
+        if (fVar.getSort().equals(Logic.sort)) {
+          sub = Logic.boolToPred(f);
+        }
+        else if (fVar.getSort().equals(Ref.sort) &&
+            f.getSort().equals(Heap.sortValue)) {
+          sub = Heap.valueToSort(f, Ref.sort);
+        }
+        else {
+          throw new IllegalArgumentException("The 2 terms don't have the same type " + 
+                                             fVar + " " + f);
+        }
       }
       
-      return fPost.subst(fVar, f);
+      return fPost.subst(fVar, sub);
     }
     return fPost;
   }
@@ -98,8 +111,17 @@ public class Post {
    */
   public Term nonSafeSubst(final Term v, final Term f) {
     if ((v != null) && (f != null)) {
-        
-      return fPost.subst(v, f);
+      Term sub = f;
+      if (!v.getSort().equals(f.getSort())) {
+        if (v.getSort().equals(Bool.sort)) {
+          sub = Heap.valueToSort(f, Bool.sort);
+        }
+        else {
+          throw new IllegalArgumentException("The 2 terms don't have the same type " + 
+                                             v + " " + f);
+        }
+      }
+      return fPost.subst(v, sub);
     }
     return fPost;
   }
