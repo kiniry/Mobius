@@ -1357,9 +1357,7 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
    * @return <code>null</code> if <code>r</code> doesn't have a body.
    */
 
-  //@ requires r != null;
-  //@ requires initState != null;
-  protected GuardedCmd computeBody(RoutineDecl r, InitialState initState) {
+  protected /*@nullable*/ GuardedCmd computeBody(/*@non_null*/RoutineDecl r, /*@non_null*/InitialState initState) {
     if (r.getTag() == TagConstants.METHODDECL && ((MethodDecl) r).body == null
         && !Main.options().idc) {
       // no body
