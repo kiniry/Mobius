@@ -17,9 +17,7 @@ public class BONResourceVisitor implements IResourceVisitor {
 
   public boolean visit(IResource resource) throws CoreException {
 
-    //System.out.println("Visiting " + resource);
     if (resource.isHidden() || resource.isDerived()) {
-      //System.out.println("Not visiting hidden or derived");
       return false;
     }
 

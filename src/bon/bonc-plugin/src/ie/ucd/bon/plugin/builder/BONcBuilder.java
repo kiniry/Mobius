@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -57,36 +56,28 @@ public class BONcBuilder extends IncrementalProjectBuilder {
 
   private void boncBuild(int kind, IProgressMonitor monitor) throws CoreException {
 
-    if (kind == IncrementalProjectBuilder.FULL_BUILD) {
+    if (kind == FULL_BUILD || kind == CLEAN_BUILD) {
       System.out.println("Full build");
-    } else if (kind == IncrementalProjectBuilder.INCREMENTAL_BUILD) {
+    } else if (kind == INCREMENTAL_BUILD || kind == AUTO_BUILD) {
       System.out.println("Incremental Build");
-    } else if (kind == IncrementalProjectBuilder.AUTO_BUILD) {
-      System.out.println("Auto Build");
+      
+      IResourceDelta delta = getDelta(getProject());
+      if (delta != null) {
+        BONResourceDeltaVisitor changeVisitor = new BONResourceDeltaVisitor();
+        delta.accept(changeVisitor);
+
+        if (changeVisitor.getChangedBonResources().size() == 0) {
+          System.out.println("No BON resources changed, not running BONc");
+          return;
+        }
+      }
+      
     }
-
-    IResourceDelta delta = getDelta(getProject());
-    System.out.println("Delta: " + delta);
-
-    IResource[] resources = getProject().members();
 
     BONResourceVisitor visitor = new BONResourceVisitor();
     getProject().accept(visitor);
 
     List<IResource> bonResources = visitor.getBONResources();
-    //    System.out.println("HEre..");
-    //    List<IResource> bonResources = new LinkedList<IResource>();
-    //
-    //    for (IResource resource : resources) {     
-    //    	System.out.println("Resource: " + resource);
-    //      if (resource.getFileExtension() != null && resource.getFileExtension().equalsIgnoreCase("bon")) {
-    //        bonResources.add(resource);
-    //      }
-    //      if (!resource.isHidden() && resource.)
-    //      System.out.println("Here3");
-    //    }    
-
-
 
     Map<String,IResource> pathResourceMap = new HashMap<String,IResource>();
 
@@ -100,11 +91,11 @@ public class BONcBuilder extends IncrementalProjectBuilder {
       pathResourceMap.put(path, bonResource);
     }
 
-    System.out.println("Deleting markers");
+    //System.out.println("Deleting markers");
     getProject().deleteMarkers(MARKER_ID, false, IResource.DEPTH_INFINITE);
     getProject().deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
 
-    System.out.println("Bonc args: " + boncArgs.toString());
+    //System.out.println("Bonc args: " + boncArgs.toString());
     try {
       Main.main2(boncArgs.toArray(new String[boncArgs.size()]), false);
     } catch (Exception e) {
@@ -114,7 +105,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     Problems problems = Main.getProblems();
     SortedSet<BONProblem> actualProblems = problems.getProblems();
 
-    System.out.println("Number of problems: " + actualProblems.size());
+    //System.out.println("Number of problems: " + actualProblems.size());
 
     try {
       for (BONProblem bonProblem : actualProblems) {
@@ -124,7 +115,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
         int charPositionStart = bonProblem.getLocation().getAbsoluteCharPositionStart();
         int charPositionEnd = bonProblem.getLocation().getAbsoluteCharPositionEnd();
 
-        System.out.println("File: " + file + ", line: " + lineNumber + ", char: (" + charPositionStart + ", " + charPositionEnd + ")");
+        //System.out.println("File: " + file + ", line: " + lineNumber + ", char: (" + charPositionStart + ", " + charPositionEnd + ")");
 
         if (file != null && lineNumber > 0 && charPositionStart >= 0 && charPositionEnd >= 0) {
 
