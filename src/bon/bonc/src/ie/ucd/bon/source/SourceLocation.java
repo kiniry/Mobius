@@ -37,11 +37,11 @@ public class SourceLocation {
   
   public SourceLocation(Token start, Token end, File sourceFile) {
     this.sourceFile = sourceFile;
-    System.out.println("start token: " + start);
+    //System.out.println("start token: " + start);
     this.lineNumber = start.getLine();
     this.charPositionInLine = start.getCharPositionInLine();
     
-    System.out.println("SourceLoc from token: " + start.getText());
+    //System.out.println("SourceLoc from token: " + start.getText());
     
     if (start instanceof CommonToken) {
       CommonToken cToken = (CommonToken)start;
