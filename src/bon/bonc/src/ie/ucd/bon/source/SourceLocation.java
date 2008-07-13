@@ -8,7 +8,6 @@ import java.io.File;
 
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;
-import org.antlr.runtime.tree.CommonTree;
 
 public class SourceLocation {
 
@@ -22,8 +21,9 @@ public class SourceLocation {
   private final int absoluteCharPositionEnd;
   
   public SourceLocation(File sourceFile, int lineNumber,
-      int charPositionInLine, int absoluteCharPositionEnd,
-      int absoluteCharPositionStart) {
+      int charPositionInLine, int absoluteCharPositionStart,
+      int absoluteCharPositionEnd
+      ) {
     this.sourceFile = sourceFile;
     this.lineNumber = lineNumber;
     this.charPositionInLine = charPositionInLine;
@@ -37,10 +37,11 @@ public class SourceLocation {
   
   public SourceLocation(Token start, Token end, File sourceFile) {
     this.sourceFile = sourceFile;
+    System.out.println("start token: " + start);
     this.lineNumber = start.getLine();
     this.charPositionInLine = start.getCharPositionInLine();
     
-    //System.out.println("SourceLoc from token: " + start.getText());
+    System.out.println("SourceLoc from token: " + start.getText());
     
     if (start instanceof CommonToken) {
       CommonToken cToken = (CommonToken)start;

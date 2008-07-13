@@ -56,7 +56,8 @@ public abstract class AbstractBONLexer extends Lexer {
       // for development, can add "decision=<<"+nvae.grammarDecisionDescription+">>"
       // and "(decision="+nvae.decisionNumber+") and
       // "state "+nvae.stateNumber
-      msg = "Unexpected input at character "+getCharErrorDisplay(e.c);
+
+      msg = "Unexpected " + getCharErrorDisplay(e.c);
     }
     else if ( e instanceof EarlyExitException ) {
       EarlyExitException eee = (EarlyExitException)e;
@@ -94,15 +95,40 @@ public abstract class AbstractBONLexer extends Lexer {
     if (Main.isDebug()) {
       e.printStackTrace(System.out);
     }
+    
+    BONProblem problem;
+    if (e.token == null) {
+      int offset = getOffset(e);
+      SourceLocation location = new SourceLocation(sourceFile, e.line, e.charPositionInLine, e.index + offset, e.index+offset+1);
+      problem = new AntlrParsingError(location, msg, true);
+    } else {
+      problem = new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
+    }
 
-    BONProblem problem = new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
-    //BONProblem problem = new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
     problems.addProblem(problem);
+  }
+  
+  private int getOffset(RecognitionException re) {
+    if (re instanceof NoViableAltException) {
+      NoViableAltException nvae = (NoViableAltException)re;
+      if ((char)nvae.c == '\n') {
+        return -1;
+      }
+    }
+    return 0;
   }
 
   public Problems getProblems() {
     return problems;
   }
 
+  public String getCharErrorDisplay(int arg0) {
+    if ((char)arg0 == '\n') {
+      return "newline";
+    } else {
+      return "input " + super.getCharErrorDisplay(arg0); 
+    }
+  }
 
+  
 }
