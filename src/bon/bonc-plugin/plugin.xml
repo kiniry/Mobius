@@ -83,14 +83,25 @@
       
    </extension>
    <extension
-         id="boncproblemmarker"
-         name="BONc Problem Marker"
+         id="bonclocproblemmarker"
+         name="BONc Problem Marker (with location)"
          point="org.eclipse.core.resources.markers">
       <super
             type="org.eclipse.core.resources.problemmarker">
       </super>
       <super
             type="org.eclipse.core.resources.textmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         id="boncproblemmarker"
+         name="BONc Problem Marker"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
       </super>
       <persistent
             value="true">
