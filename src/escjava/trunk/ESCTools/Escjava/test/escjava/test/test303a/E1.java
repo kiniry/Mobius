@@ -1,21 +1,15 @@
-public class E {
+public class E1 {
 
   //@ invariant this.f>=88; 
   //@ invariant f/f == f/f; // divZero warning
   public int f;
 
-  //@ invariant a.length>0; // null(a) warning
-  public int [] a;
-
   /*@ normal_behavior
     @  requires ff>=99;
-    @  requires aa.length>0; //null(aa) warning
     @  ensures this.f==ff;
-    @  ensures this.a==aa;
     @*/
-  public E(int ff, int [] aa) {
+  public E1(int ff) {
     this.f=ff;
-    this.a=aa;
   }
 
   /*@ ensures \result == this.f+1;
@@ -33,23 +27,17 @@ public class E {
 
   /*@ normal_behavior
     @  requires ff>=99;
-    @  requires aa.length>0; //null(aa) warning
     @  ensures this.f==ff;
-    @  ensures this.a==aa;
     @*/
-  public void test2(int ff, int [] aa) {
+  public void test2(int ff) {
     this.f=ff;
-    this.a=aa;
   }
 
   /*@ normal_behavior
     @  requires ff>=99;
-    @  requires aa.length>0;
     @  ensures this.f==ff;
-    @  ensures this.a==aa;
     @*/
-  public void test3(int ff, /*@non_null*/int [] aa) {
+  public void test3(int ff) {
     this.f=ff;
-    this.a=aa;
   }
 }
