@@ -119,7 +119,7 @@ public interface Collection {
     //@ public model pure boolean containsObject(Object o);
 
 
-    /*@ also public normal_behavior
+    /*@ public normal_behavior
       @   ensures \result != null;
       @   ensures \fresh(\result);
       @   ensures \result.elementType == elementType;

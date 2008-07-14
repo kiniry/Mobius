@@ -82,7 +82,7 @@ public class Color implements Paint, java.io.Serializable {
     public /*@non_null*/ java.awt.color.ColorSpace getColorSpace();
 
     public synchronized /*@non_null*/ PaintContext 
-	createContext(/*@non_null*/ java.awt.image.ColorModel Param0,
+	createContext(/*@nullable*/ java.awt.image.ColorModel Param0,
 		      /*@nullable*/ Rectangle Param1, 
 		      /*@nullable*/ java.awt.geom.Rectangle2D Param2, 
 		      /*@nullable*/ java.awt.geom.AffineTransform Param3, 

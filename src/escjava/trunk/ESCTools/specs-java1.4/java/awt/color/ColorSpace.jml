@@ -9,15 +9,15 @@ public abstract class ColorSpace extends Object implements java.io.Serializable 
     // FIELDS
     public static final int TYPE_8CLR;
     public static final int TYPE_ACLR;
-    private static /*@non_null*/ ColorSpace sRGBspace;
+    // private static /*@non_null*/ ColorSpace sRGBspace;
     static final long serialVersionUID;
     public static final int CS_LINEAR_RGB;
     public static final int TYPE_4CLR;
     public static final int TYPE_FCLR;
     public static final int TYPE_9CLR;
-    private static /*@non_null*/ ColorSpace PYCCspace;
+    // private static /*@non_null*/ ColorSpace PYCCspace;
     public static final int TYPE_BCLR;
-    private int numComponents;
+    // private int numComponents;
     public static final int TYPE_HLS;
     public static final int TYPE_YCbCr;
     public static final int CS_sRGB;
@@ -26,7 +26,7 @@ public abstract class ColorSpace extends Object implements java.io.Serializable 
     public static final int CS_PYCC;
     public static final int TYPE_GRAY;
     public static final int TYPE_RGB;
-    private static /*@non_null*/ ColorSpace XYZspace;
+    // private static /*@non_null*/ ColorSpace XYZspace;
     public static final int TYPE_CCLR;
     public static final int CS_GRAY;
     public static final int TYPE_CMY;
@@ -37,13 +37,13 @@ public abstract class ColorSpace extends Object implements java.io.Serializable 
     public static final int TYPE_2CLR;
     public static final int TYPE_XYZ;
     public static final int TYPE_DCLR;
-    private int type;
+    // private int type;
     public static final int TYPE_7CLR;
     public static final int TYPE_HSV;
     public static final int TYPE_Yxy;
     public static final int TYPE_3CLR;
-    private static /*@non_null*/ ColorSpace LINEAR_RGBspace;
-    private static /*@non_null*/ ColorSpace GRAYspace;
+    // private static /*@non_null*/ ColorSpace LINEAR_RGBspace;
+    // private static /*@non_null*/ ColorSpace GRAYspace;
     public static final int TYPE_ECLR;
 
     // METHODS AND CONSTRUCTORS

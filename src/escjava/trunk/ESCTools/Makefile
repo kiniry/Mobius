@@ -661,20 +661,26 @@ zero-length-files:
 
 .PHONY: specs_test check_specs
 
-## Run escjava on the specs
-specs_test: build
-	@echo "TESTING specs..."
-	${ESCJAVA} -quiet \
-	  -classpath ${ESCTOOLS_ROOT} \
-	  -specs ${ESCJAVA2_SPECS} \
-	  java.io java.lang java.lang.reflect java.math java.net java.util java.util.regex
+# SPECS_TEST_TARGETS ?= java.io java.lang \
+# 	java.lang.reflect java.math java.net java.util java.util.regex
+SPECS_TEST_TARGETS:=`find ${ESCJAVA2_SPECS} -type d | grep -v \.svn`
+SPECS_TEST_CP ?= ${JUNIT_LIB}
 
-current_specs_test: build
-	@echo "TESTING specs..."
+## Run escjava on the specs
+specs_test: specs_test_java14
+
+specs_test_java14:
+	$(MAKE) ESCJAVA2_SPECS=${ESCJAVA2_SPECS_JAVA1_4} _specs_test
+
+_specs_test: build
+	@echo "TESTING specs: "
+	@echo "  CLASSPATH: ${SPECS_TEST_CP}"
+	@echo "  SPECS path: ${ESCJAVA2_SPECS}"
+	@echo "  Packages to be tested: ${SPECS_TEST_TARGETS}"
 	${ESCJAVA} -quiet \
-	  -classpath ${ESCTOOLS_ROOT} \
+	  -classpath ${SPECS_TEST_CP} \
 	  -specs ${ESCJAVA2_SPECS} \
-	  java.util.Calendar java.util.GregorianCalendar java.util.Date
+	  ${SPECS_TEST_TARGETS}
 
 ## Experimental rule to generate a file that references every type
 ## that currently has a spec and run escjava2 on it to try to detect

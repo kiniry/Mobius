@@ -1253,7 +1253,7 @@ Test harness for expression parsing.
 @c findbugs
 @c self_typecheck self_esc
 @c jmlc_test
-@c specs_test current_specs_test
+@c specs_test
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node Java Lexer Tests, Java Parser Tests, Test Execution, Testing Extensions
