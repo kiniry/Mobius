@@ -10,7 +10,7 @@ SOURCEFILES := junitutils/*.java
 CLASSESSTAMP = classes.stamp
 CLASSDIRECTORY=.
 
-CP = ${call canonicalize,${UTILS_CLASSFILES}:${JUNIT_LIB}:$(ESCJAVA2_SPECS)}
+CP = ${call canonicalize,${UTILS_CLASSFILES}:${JUNIT_LIB}:$(SPECS)}
 
 PROVER_KILL_TIME?=7
 
@@ -44,9 +44,11 @@ checkjunitjar:
 
 test: build
 
-self_test:
+self_test: build
+	@echo CLASSPATH used: ${CP}
 	@echo PROVER_KILL_TIME=$(PROVER_KILL_TIME)
 	${ESCJ} -classpath ${CP} \
+		-specs ${SPECS} \
 		${ESCJ_FLAGS} \
 		${SOURCEFILES}
 

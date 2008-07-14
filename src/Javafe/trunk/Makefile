@@ -90,9 +90,15 @@ javafealltests: build
 	$(MAKE) -C Javafe test ALLTESTS=1 || exit 1;
 
 self_typecheck: build
-	$(MAKE) -C Javafe SPECS=$(SPECS) self_typecheck
-#	$(MAKE) -C Utils SPECS=$(SPECS) self_typecheck
+	$(MAKE) -C Javafe self_typecheck
+	$(MAKE) -C Utils self_typecheck
 
+self_test: build
+	$(MAKE) -C Javafe self_test0
+
+# Note: self_test also tests Utils. Use the following if you only want to test Utils.
+self_test_utils:
+	$(MAKE) -C Utils self_test0
 
 ################################################################################
 ## General rules to clean up build tree
@@ -190,10 +196,8 @@ textdocs: quiet-docs slides papers
 
 # The JML specs,
 #SPECS = ${JML_ROOT}/specs:${JML_ROOT}
-# The latest JML stable release specs.
-#SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
 # The ESC/Java2 specs.
-SPECS = $(JAVAFE_ROOT)/specs
+export SPECS ?= $(JAVAFE_ROOT)/specs
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).

@@ -93,6 +93,9 @@ export JAVA_REMOTE_DEBUG = $(JAVA) $(DEBUGGER_FLAGS)
 
 export JDK_14_SOURCES ?= ${JAVA_HOME}/src
 
+# export ESCJ ?= ${ESCJ_ROOT}/escj -nowarn Modifies
+export ESCJ ?= escj -nowarn Modifies
+
 ##########################################################################
 ## Definitions of other tools.
 ## Override these by defining them in Makefile.local or as environment
@@ -279,7 +282,6 @@ export CVC_LIB_DIR ?= /usr/local/lib
 export CVC_INCLUDE_DIR ?= /usr/local/include/cvcl
 export LD_LIBRARY_PATH = ${JAVAFE_ROOT}/libs
 
-# End of file
-
 export TEXINPUTS := .:${TEXINPUTS}
 
+# End of file

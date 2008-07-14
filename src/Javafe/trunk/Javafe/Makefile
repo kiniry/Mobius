@@ -164,6 +164,23 @@ typecheckJDK: javafe_test
 self_typecheck:
 	-${MAKE} -C test/javafe/test typecheckJavafe
 
+self_test: build
+	@echo PROVER_KILL_TIME=${PROVER_KILL_TIME}
+	@echo JAVA_VM_FLAGS=${JAVA_VM_FLAGS}
+	export JAVA_VM_FLAGS="$(JAVA_VM_FLAGS)"; \
+	${ESCJ} -classpath "$(call canonicalize,${JUNIT_LIB}:${CLASSPATH}:${JAVAFE_LIB})" \
+		-sourcepath "$(call canonicalize,${SOURCEPATH})" \
+		-specs "$(SPECS)" \
+		-vclimit 1000000 \
+		-source 1.4 -nosemicolonwarnings \
+		$(ESCJ_EXTRA_FLAGS) \
+		$(PACKAGE_LIST)
+
+self_test0:
+	unset CLASSPATH; \
+	export JAVA_VM_FLAGS=-Xmx1024m; \
+	${MAKE} ESCJ_EXTRA_FLAGS+=" -nowarn Modifies" PROVER_KILL_TIME=7 self_test
+
 ## This tests a binary release that is untarred in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the esctools1.jar file that is being tested.
 ## The current directory should be the usual JAVAFE_ROOT directory so that
@@ -183,7 +200,7 @@ javafe_test:
 	  ${JAVAC} -classpath $(call canonicalize,${JAVAFE_CLASSPATH}:${TESTSOURCEDIRECTORY}) \
 	  -d $(call canonicalize,${CLASSDIRECTORY}) \
 	  ${JAVAFETESTTARGETS} )
-	  
+
 ###########################
 ## Build AST vector classes
 ###########################
