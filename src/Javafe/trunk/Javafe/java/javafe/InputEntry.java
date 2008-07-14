@@ -3,17 +3,15 @@ package javafe;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javafe.filespace.StringUtil;
-
 public class InputEntry {
-  public InputEntry(String n) { name = n; }
-  public String name;
+  public InputEntry(/*@non_null*/String n) { name = n; }
+  public /*@non_null*/String name;
   public ArrayList contents;
   public boolean auto = false;
   public /*@non_null*/String toString() { return name; }
-  public String type() { return ""; }
-  public String typeOption() { return ""; }
-  public String verify() { return null; }
+  public /*@non_null*/String type() { return ""; }
+  public /*@non_null*/String typeOption() { return ""; }
+  public /*@nullable*/String verify() { return null; }
   public String savedString() {
     String q = "";
     if (name.indexOf(' ') != -1) q = "\"";
@@ -22,7 +20,7 @@ public class InputEntry {
     else if (t.length() != 0) t = "-"+t+" ";
     return t + q + name + q;
   }
-  static public void clear(ArrayList a) {
+  static public void clear(/*@non_null*/ArrayList a) {
     Iterator i = a.iterator();
     while (i.hasNext()) {
       InputEntry ie = (InputEntry)i.next();
@@ -31,7 +29,7 @@ public class InputEntry {
   }
   public void clear() { contents = null; }
   
-  static public InputEntry make(String type, String name) {
+  static public InputEntry make(String type, /*@non_null*/String name) {
     if (type == null) return make(name);
     if (type.equals("file")) return new FileInputEntry(name);
     if (type.equals("dir")) return new DirInputEntry(name);
@@ -41,7 +39,7 @@ public class InputEntry {
     return null;
   }
   
-  static public InputEntry make(String name) {
+  static public InputEntry make(/*@non_null*/String name) {
     java.io.File f = new java.io.File(name);
     InputEntry ie = null;
     
@@ -61,9 +59,9 @@ public class InputEntry {
     return ie;
   }
   
-  public InputEntry resolve() { return this; }
+  public /*@non_null*/InputEntry resolve() { return this; }
   
-  public boolean match(InputEntry ie) {
+  public boolean match(/*@non_null*/InputEntry ie) {
     return getClass() == ie.getClass() && name.equals(ie.name);
   }
 }

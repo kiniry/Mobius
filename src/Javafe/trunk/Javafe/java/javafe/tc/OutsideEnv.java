@@ -184,7 +184,7 @@ public final class OutsideEnv {
    * <code>Listener</code> (the initial state).
    */
   //@ spec_public
-  private static Listener listener = null;
+  private static /*@nullable*/ Listener listener = null;
 
   /** Return count of files read so far. */
   //@ ensures \result == filesRead;
@@ -509,9 +509,9 @@ public final class OutsideEnv {
    * the <code>sig</code> fields of its direct
    * <code>TypeDecl</code>s adjusted.
    */
-  //@ requires justLoaded != null;
-  private static void notify(CompilationUnit justLoaded) {
-    if (listener != null) listener.notify(justLoaded);
+  private static void notify(/*@non_null*/CompilationUnit justLoaded) {
+	  Listener _listener = listener;
+    if (_listener != null) _listener.notify(justLoaded);
   }
 
   // Test methods
@@ -521,11 +521,10 @@ public final class OutsideEnv {
    * calling <code>lookup</code> on a series of package-member-type
    * names.
    */
-  //@ requires args != null;
   /*@ requires (\forall int i; (0<=i && i<args.length)
    @           ==> args[i] != null);
    @*/
-  public static void main(String[] args) {
+  public static void main(/*@non_null*/String[/*#@non_null*/] args) {
     // Check argument usage:
     if (args.length == 0) {
       System.err
@@ -547,14 +546,14 @@ public final class OutsideEnv {
   //@ requires initialized; // that is, an init method has alreaady been called
   private static void describeLookup(/*@ non_null @*/String N) {
     // Convert N to a list of its components:
-    String[] components = javafe.filespace.StringUtil.parseList(N, '.');
+    String[/*#@non_null*/] components = javafe.filespace.StringUtil.parseList(N, '.');
     if (components.length == 0) {
       System.out.println("Error: `' is an illegal type name");
       return;
     }
 
     // Split components into P and T:
-    String[] P = new String[components.length - 1];
+    String[/*#@non_null*/] P = new String[components.length - 1];
     for (int i = 0; i < P.length; i++)
       P[i] = components[i];
     String T = components[components.length - 1];

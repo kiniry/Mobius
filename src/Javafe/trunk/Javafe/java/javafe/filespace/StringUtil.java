@@ -8,8 +8,7 @@ package javafe.filespace;
 public final class StringUtil {
 
     /** Remove leading and trailing whitespace (just spaces for now): */
-    //@ requires s != null;
-    public static String trim_whitespace(String s) {
+    public static String trim_whitespace(/*@non_null*/String s) {
 	while (s.length()>0 && s.charAt(0)==' ')
 	    s = s.substring(1,s.length());
 
@@ -21,9 +20,8 @@ public final class StringUtil {
 
 	
     /** Count the number of times a given character occurs in a String: */
-    //@ requires s != null;
     //@ ensures \result>=0;
-    public static int countChar(String s, char c) {
+    public static int countChar(/*@non_null*/String s, char c) {
 	int count = 0;
 	int start = 0;
 
@@ -38,8 +36,7 @@ public final class StringUtil {
      * Print an array of Strings on System.out, one string per
      * line.  Prints "<null>" if list is null.
      */
-    //@ requires list != null;
-    public static void printList(String[] list) {
+    public static void printList(/*@nullable*/String[] list) {
 	if (list == null) {
 	    System.out.println("<null>");
 	    return;
@@ -55,7 +52,7 @@ public final class StringUtil {
      *	Strings:
      */
     //@ ensures \nonnullelements(\result);
-    public static String[] parseList(/*@ non_null @*/ String s, char separator) {
+    public static /*@non_null*/String[/*#@non_null*/] parseList(/*@ non_null @*/ String s, char separator) {
 	// Handle empty list case:
 	if (s.equals(""))
 	    return new String[0];
@@ -81,7 +78,7 @@ public final class StringUtil {
 
     /** A simple test driver */
     //@ requires \nonnullelements(args);
-    public static void main(String[] args) {
+    public static void main(/*@non_null*/String[/*#@non_null*/] args) {
 	if (args.length != 1) {
 	    System.out.println("StringUtil: usage: <cmd> <teststring>");
 	    return;

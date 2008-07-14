@@ -8,18 +8,18 @@
 package javafe;
 
 import javafe.filespace.StringUtil;
-import javafe.tc.OutsideEnv;
 
 public class PackageInputEntry extends InputEntry {
-  public PackageInputEntry(String n) { super(n); }
-  public String type() { return "Package"; }
-  public String typeOption() { return "package"; }
-  public String verify() {
+  public PackageInputEntry(/*@non_null*/String n) { super(n); }
+  public /*@non_null*/String type() { return "Package"; }
+  public /*@non_null*/String typeOption() { return "package"; }
+  public /*@nullable*/String verify() {
     return verify(name);
   }
-  static public String verify(String name) {
+  //@ requires javafe.tc.OutsideEnv.initialized;
+  static public /*@nullable*/String verify(/*@non_null*/String name) {
     String[] p = StringUtil.parseList(name,'.');
-    if (javafe.tc.OutsideEnv.reader.accessable(p)) {
+    if ((/*+@(non_null)*/javafe.tc.OutsideEnv.reader).accessable(p)) {
       return null;
     }
     return "Package cannot be found";

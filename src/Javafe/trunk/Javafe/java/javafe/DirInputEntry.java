@@ -7,12 +7,10 @@
 
 package javafe;
 
-import java.io.File;
-
 public class DirInputEntry extends InputEntry {
   public DirInputEntry(String n) { super(n); }
-  public String type() { return "Directory"; }
-  public String typeOption() { return "dir"; }
+  public /*@non_null*/String type() { return "Directory"; }
+  public /*@non_null*/String typeOption() { return "dir"; }
   public String verify() {
     return verify(name);
   }
