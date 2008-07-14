@@ -102,7 +102,7 @@ endif
 # The JML specs,
 #SPECS = ${JML_ROOT}/specs:${JML_ROOT}
 # The ESC/Java2 specs.
-SPECS ?= $(ESCJAVA2_SPECS)
+export SPECS ?= $(ESCJAVA2_SPECS)
 
 self_typecheck: build
 	$(MAKE) -C Escjava self_typecheck
