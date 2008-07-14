@@ -168,14 +168,15 @@ public class Utils {
    @return The input string parsed into command-line arguments
    */
   //@ ensures \nonnullelements(\result);
-  static public /*@ non_null */ String[] parseLine(/*@ non_null */String s) {
+  static public /*@ non_null */ String[/*#@non_null*/] parseLine(/*@ non_null */String s) {
     QuoteTokenizer q = new QuoteTokenizer(s);
     java.util.ArrayList args = new java.util.ArrayList();
     while (q.hasMoreTokens()) {
       String a = q.nextToken();
       args.add(a);
     }
-    return (String[])args.toArray(new String[args.size()]);
+    Object[] o = args.toArray(new String[args.size()]);
+    return (/*+@non_null*/String[/*#@non_null*/])o; //@ nowarn Cast;
   }
   
   /** An enumerator that parses a string into tokens, according to the
@@ -229,9 +230,9 @@ public class Utils {
       /*@ public normal_behavior
 	@ modifies pos;
 	@ ensures \result == moreChar;
-	@ ensures \result ==> !Character.isWhitespace(cc[pos]);
-	@ ensures_redundantly \result ==> moreTokens; */
-     /*+@ ensures \result == moreTokens;		// true but esc cannot prove
+	@ ensures \result ==> !Character.isWhitespace(cc[pos]); */
+     /*+@ ensures_redundantly \result ==> moreTokens;
+	@ ensures \result == moreTokens;		// true but esc cannot prove
 	@ ensures moreTokens == \old(moreTokens);	// true but esc cannot prove
 	@*/
     public boolean hasMoreTokens() {

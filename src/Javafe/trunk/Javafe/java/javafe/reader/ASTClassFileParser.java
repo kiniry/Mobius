@@ -228,7 +228,7 @@ class ASTClassFileParser extends ClassFileParser {
   protected void set_const(int i, int ctype, /*@nullable*/Object value)
       throws ClassFormatError {
     constants[i] = ctype == CONSTANT_Class //@ nowarn IndexTooBig;
-    	? DescriptorParser.parseClass((/*@non_null*/String) value)
+    	? DescriptorParser.parseClass((/*+@non_null*/String) value)
         : value;
     rawConstants[i] = value;
   }
@@ -268,7 +268,7 @@ class ASTClassFileParser extends ClassFileParser {
             throw new ClassFormatError("bad constant reference");
           }
           //@ assume rawConstants[inner] instanceof String;  // property of class files
-          String nm = (/*@non_null*/String) rawConstants[inner];
+          String nm = (/*+@non_null*/String) rawConstants[inner];
           int i = nm.lastIndexOf("/");
           String icfn = (i < 0 ? nm : nm.substring(i + 1)) + ".class";
           GenericFile icf = inputFile.getSibling(icfn);
@@ -308,7 +308,7 @@ class ASTClassFileParser extends ClassFileParser {
   protected void set_this_class(int cindex) throws ClassFormatError {
     // record the class type and synthesize a location for the class binary
 
-    TypeName typeName = (/*@non_null*/TypeName) constants[cindex]; //@ nowarn Cast, IndexTooBig;
+    TypeName typeName = (/*+@non_null*/TypeName) constants[cindex]; //@ nowarn Cast, IndexTooBig;
 
     Name qualifier = getNameQualifier(typeName.name);
     Identifier terminal = getNameTerminal(typeName.name);
@@ -379,7 +379,7 @@ class ASTClassFileParser extends ClassFileParser {
     switch (field.type.getTag()) {
     case ASTTagConstants.BOOLEANTYPE:
       tag = ASTTagConstants.BOOLEANLIT;
-      literal = Boolean.valueOf(((/*@non_null*/Integer) value).intValue() != 0); //@ nowarn Cast,Null;
+      literal = Boolean.valueOf(((/*+@non_null*/Integer) value).intValue() != 0); //@ nowarn Cast,Null;
       break;
 
     case ASTTagConstants.INTTYPE:

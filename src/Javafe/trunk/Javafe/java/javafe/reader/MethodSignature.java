@@ -57,7 +57,7 @@ class MethodSignature
   //@ ensures \result.syntax;
   /*@non_null*/Type parameterAt(int index)
   {
-    return (/*@non_null*/Type)parameters.elementAt(index);
+    return (/*+@non_null*/Type)parameters.elementAt(index);
   }    //@ nowarn Post;  // Unenforceable invariant on parameters
 
   /**
