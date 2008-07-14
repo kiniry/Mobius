@@ -74,7 +74,7 @@ public class Diff {
 
     calculateDiffs(differencesSB);
     // Ignore local differences in the system class path for JAR files
-    if (differencesSB.length() > 0 && !differencesSB.toString().contains(".jar")) {
+    if (differencesSB.length() > 0 && differencesSB.indexOf(".jar") == -1) {
       // Some diffs accumulated, so the strings are different
       _areDifferent = true;
 
