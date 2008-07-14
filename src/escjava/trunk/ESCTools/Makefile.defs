@@ -470,7 +470,7 @@ export CVC_LIB_DIR ?= /usr/local/lib
 export CVC_INCLUDE_DIR ?= /usr/local/include/cvcl
 export LD_LIBRARY_PATH = ${MOCHA_LIBRARY_PATH}:${CVC_LIB_DIR}:${ESCTOOLS_ROOT}/libs
 
-# End of file
-
 export TEXINPUTS := .:${TEXINPUTS}
+
+# End of file
 
