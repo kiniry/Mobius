@@ -434,9 +434,8 @@ class BCELReader extends Reader {
 	/**
 	 * Add class methods to abstract syntax tree
 	 * 
-	 * @param Array
-	 *            of methods in BCEL
-	 * @throws ClassNotFoundException
+	 * @param methods array of methods in BCEL.
+	 * @throws ClassNotFoundException.
 	 */
 	protected RoutineDecl[] readMethods(Method[] methods) throws ClassNotFoundException {
 
@@ -495,7 +494,7 @@ class BCELReader extends Reader {
 	 * 
 	 * @param attributes
 	 * @param attributeLoopVar
-	 * @return
+	 * @return tag of the attribute.
 	 */
 	protected byte getAttributeTag(Attribute[] attributes, int attributeLoopVar) {
 		Attribute attribute = attributes[attributeLoopVar];

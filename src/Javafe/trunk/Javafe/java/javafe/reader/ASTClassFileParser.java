@@ -143,7 +143,7 @@ class ASTClassFileParser extends ClassFileParser {
 
   /**
    * Add only AST nodes that are not synthetic decls to <code>v</code>.
-   * <code>elems</code> should be an array of {@link TypeDeclElems}.  
+   * <code>elems</code> should be an array of {@link TypeDeclElem}s.  
    * A synthetic decl is one that had the synthetic attribute, 
    * or is a static method decl for an interface.
    */
