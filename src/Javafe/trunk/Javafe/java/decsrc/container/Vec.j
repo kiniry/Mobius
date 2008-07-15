@@ -23,7 +23,7 @@ package _PKG_;
 public final class _VEC_
 {
   private int count;
-  private _TYPE_[] elements;
+  private /*@non_null*/_TYPE_[] elements;
 
   // Invariants: count <= elements.length
   //		 predict > 0
@@ -79,11 +79,11 @@ public final class _VEC_
     elements[count++] = x;
   }
 
-  public void appendArray(_TYPE_[] list) {
+  public void appendArray(/*@non_null*/_TYPE_[] list) {
     appendArray(list, 0, list.length);
   }
 
-  public void appendArray(_TYPE_[] list, int start, int num) {
+  public void appendArray(/*@non_null*/_TYPE_[] list, int start, int num) {
     while ((count + num) > elements.length) {
       expand();
     }
@@ -91,11 +91,11 @@ public final class _VEC_
     count += num;
   }    
 
-  public void appendVector(_VEC_ list) {
+  public void appendVector(/*@non_null*/_VEC_ list) {
     appendArray(list.elements, 0, list.count);
   }
 
-  public void appendVector(_VEC_ list, int start, int n) {
+  public void appendVector(/*@non_null*/_VEC_ list, int start, int n) {
     if (start < 0) throw new ArrayIndexOutOfBoundsException(start);
     if ((start + n - 1) >= list.count)
       throw new ArrayIndexOutOfBoundsException(start + n - 1);
@@ -104,15 +104,15 @@ public final class _VEC_
 
 #ifdef _CHAR_
   // Operations specific to vectors of characters
-  public String toString() {
+  public /*@non_null*/String toString() {
     return new String(elements, 0, count);
   }
 
-  public void appendString(String s) {
+  public void appendString(/*@non_null*/String s) {
     appendString(s, 0, s.length());
   }
 
-  public void appendString(String s, int start, int num) {
+  public void appendString(/*@non_null*/String s, int start, int num) {
     while ((count + num) > elements.length) {
       expand();
     }

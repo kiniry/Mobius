@@ -15,7 +15,7 @@ public final class CharVec
 {
     //@ private invariant count <= elements.length;
     private int count;
-    private char[] elements;
+    private /*@non_null*/char[] elements;
 
     public CharVec () { this(1); }
 
@@ -71,11 +71,11 @@ public final class CharVec
         elements[count++] = x;
     }
 
-    public void appendArray(char[] list) {
+    public void appendArray(/*@non_null*/char[] list) {
         appendArray(list, 0, list.length);
     }
 
-    public void appendArray(char[] list, int start, int num) {
+    public void appendArray(/*@non_null*/char[] list, int start, int num) {
         while ((count + num) > elements.length) {
             expand();
         }
@@ -83,11 +83,11 @@ public final class CharVec
         count += num;
     }    
 
-    public void appendVector(CharVec list) {
+    public void appendVector(/*@non_null*/CharVec list) {
         appendArray(list.elements, 0, list.count);
     }
 
-    public void appendVector(CharVec list, int start, int n) {
+    public void appendVector(/*@non_null*/CharVec list, int start, int n) {
         if (start < 0) throw new ArrayIndexOutOfBoundsException(start);
         if ((start + n - 1) >= list.count)
             throw new ArrayIndexOutOfBoundsException(start + n - 1);
@@ -100,11 +100,11 @@ public final class CharVec
         return new String(elements, 0, count);
     }
 
-    public void appendString(String s) {
+    public void appendString(/*@non_null*/String s) {
         appendString(s, 0, s.length());
     }
 
-    public void appendString(String s, int start, int num) {
+    public void appendString(/*@non_null*/String s, int start, int num) {
         while ((count + num) > elements.length) {
             expand();
         }

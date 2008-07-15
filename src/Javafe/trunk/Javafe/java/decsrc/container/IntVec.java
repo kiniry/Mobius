@@ -15,7 +15,7 @@ public final class IntVec
 {
     //@ private invariant count <= elements.length;
     private int count;
-    private int[] elements;
+    private /*@non_null*/int[] elements;
 
     public IntVec () { this(1); }
 
@@ -71,11 +71,11 @@ public final class IntVec
         elements[count++] = x;
     }
 
-    public void appendArray(int[] list) {
+    public void appendArray(/*@non_null*/int[] list) {
         appendArray(list, 0, list.length);
     }
 
-    public void appendArray(int[] list, int start, int num) {
+    public void appendArray(/*@non_null*/int[] list, int start, int num) {
         while ((count + num) > elements.length) {
             expand();
         }
@@ -83,11 +83,11 @@ public final class IntVec
         count += num;
     }    
 
-    public void appendVector(IntVec list) {
+    public void appendVector(/*@non_null*/IntVec list) {
         appendArray(list.elements, 0, list.count);
     }
 
-    public void appendVector(IntVec list, int start, int n) {
+    public void appendVector(/*@non_null*/IntVec list, int start, int n) {
         if (start < 0) throw new ArrayIndexOutOfBoundsException(start);
         if ((start + n - 1) >= list.count)
             throw new ArrayIndexOutOfBoundsException(start + n - 1);
@@ -159,7 +159,7 @@ public final class IntVec
     }
 
     /** Copies this vector.  The elements are <strong>not</strong> copied. */
-    public IntVec copy() {
+    public /*@non_null*/IntVec copy() {
         IntVec v = new IntVec (count);
         v.count = count;
         System.arraycopy(elements, 0, v.elements, 0, count);

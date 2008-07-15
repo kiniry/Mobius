@@ -64,7 +64,7 @@ public abstract class IntSet {
     // that subclasses may override for efficiency.
 
     /** post(this) = pre(peer). */
-    public void copy_from(IntSet intSetPeer) {
+    public void copy_from(/*@non_null*/IntSet intSetPeer) {
 	if (this != intSetPeer) {
 	    clear();
 	    int iter = -1;
@@ -76,11 +76,11 @@ public abstract class IntSet {
 
     /** post(this) = intersect(pre(this), pre(peer)).
 	Returns true iff post(this) != pre(this). */
-    public abstract boolean intersect(IntSet intSetPeer);
+    public abstract boolean intersect(/*@non_null*/IntSet intSetPeer);
 
     /** post(this) = union(pre(this), pre(peer)).
 	Returns true iff post(this) != pre(this). */
-    public boolean union(IntSet intSetPeer) {
+    public boolean union(/*@non_null*/IntSet intSetPeer) {
 	boolean changed = false;
 	if (this != intSetPeer) {
 	    int iter = -1;
@@ -93,10 +93,10 @@ public abstract class IntSet {
 
     /** post(this) = pre(this) - pre(peer).
 	Returns true iff post(this) != pre(this). */
-    public abstract boolean subtract(IntSet intSetPeer);
+    public abstract boolean subtract(/*@non_null*/IntSet intSetPeer);
 
     /** Returns true iff "this" is a subset of "peer". */
-    public boolean is_subset_of(IntSet intSetPeer) {
+    public boolean is_subset_of(/*@non_null*/IntSet intSetPeer) {
 	if (this != intSetPeer) {
 	    int iter = -1;
 	    while ((iter = next(iter)) >= 0) {

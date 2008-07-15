@@ -2,7 +2,7 @@ package decsrc.container;
 
 /** A queue of integers. */
 final public class IntQueue {
-    private int[] buf;			// Queue contents
+    private /*@non_null*/int[] buf;			// Queue contents
     private int   first;		// Index of first entry
     private int   num;			// Number of entries in queue
 

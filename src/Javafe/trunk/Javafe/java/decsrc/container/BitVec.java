@@ -23,7 +23,7 @@ final public class BitVec extends IntSet
     private static final int MASK = BITS - 1;
     private static final int LGBITS = 6;
     
-    private long[] words;
+    private /*@non_null*/long[] words;
     //@ private invariant num >= 0;
     private int    num;
 
@@ -124,7 +124,7 @@ final public class BitVec extends IntSet
 	}
     }
 
-    public void copy_from(IntSet x) {
+    public void copy_from(/*@non_null*/IntSet x) {
 	if (x instanceof BitVec) {
 	    copy_from((BitVec) x);
 	} else {
@@ -132,7 +132,7 @@ final public class BitVec extends IntSet
 	}
     }
 
-    public void copy_from(BitVec x) {
+    public void copy_from(/*@non_null*/BitVec x) {
 	long[] xw = x.words;
 	long[] w = words;
 	int n = xw.length;
@@ -145,7 +145,7 @@ final public class BitVec extends IntSet
 	}
     }
 
-    public boolean union(IntSet x) {
+    public boolean union(/*@non_null*/IntSet x) {
 	if (x instanceof BitVec) {
 	    return union((BitVec) x);
 	} else {
@@ -153,7 +153,7 @@ final public class BitVec extends IntSet
 	}
     }
 
-    public boolean union(BitVec x) {
+    public boolean union(/*@non_null*/BitVec x) {
 	long[] xw = x.words;
 	long[] w = words;
 	int n = xw.length;
@@ -167,7 +167,7 @@ final public class BitVec extends IntSet
 	return changed;
     }
 
-    public boolean intersect(IntSet x) {
+    public boolean intersect(/*@non_null*/IntSet x) {
 	if (x instanceof BitVec) {
 	    return intersect((BitVec) x);
 	} else {
@@ -183,7 +183,7 @@ final public class BitVec extends IntSet
 	}
     }
 
-    public boolean intersect(BitVec x) {
+    public boolean intersect(/*@non_null*/BitVec x) {
 	long[] xw = x.words;
 	long[] w = words;
 	int n = xw.length;
@@ -197,7 +197,7 @@ final public class BitVec extends IntSet
 	return changed;
     }
 
-    public boolean subtract(IntSet x) {
+    public boolean subtract(/*@non_null*/IntSet x) {
 	if (x instanceof BitVec) {
 	    return subtract((BitVec) x);
 	} else {
@@ -213,7 +213,7 @@ final public class BitVec extends IntSet
 	}
     }
 
-    public boolean subtract(BitVec x) {
+    public boolean subtract(/*@non_null*/BitVec x) {
 	long[] xw = x.words;
 	long[] w = words;
 	int n = xw.length;
@@ -227,7 +227,7 @@ final public class BitVec extends IntSet
 	return changed;
     }
 
-    public boolean is_subset_of(IntSet x) {
+    public boolean is_subset_of(/*@non_null*/IntSet x) {
 	if (x instanceof BitVec) {
 	    return is_subset_of((BitVec) x);
 	} else {
@@ -235,7 +235,7 @@ final public class BitVec extends IntSet
 	}
     }
 
-    public boolean is_subset_of(BitVec x) {
+    public boolean is_subset_of(/*@non_null*/BitVec x) {
 	long[] xw = x.words;
 	long[] w = words;
 	int n = xw.length;
@@ -251,10 +251,10 @@ final public class BitVec extends IntSet
     // possible value of "k" in the range "[0,63]".
     // Furthermore, "lsb_table[(2^k * mult) >>> 58] == k".
     private static final long lsb_mult = 0x07edd5e59a4e28c2L;
-    private static final byte lsb_table[] = lsb_make_table();
+    private static final /*@non_null*/byte lsb_table[] = lsb_make_table();
 
     // Build "lsb_table" and check that there are no duplicates
-    private static byte[] lsb_make_table() {
+    private static /*@non_null*/byte[] lsb_make_table() {
 	long mult = lsb_mult;
 	byte[] table = new byte[64];
 	for (int i = 0; i < 64; i++) {
@@ -329,8 +329,8 @@ final public class BitVec extends IntSet
     }
 
     // Map from byte to number of bits set in byte
-    private static final byte[] count_table = build_count_table();
-    private static byte[] build_count_table() {
+    private static final /*@non_null*/byte[] count_table = build_count_table();
+    private static /*@non_null*/byte[] build_count_table() {
 	byte[] ctable = new byte[256];
 	for (int i = 0; i < 256; i++) {
 	    int n = 0;
