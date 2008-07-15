@@ -20,11 +20,11 @@ public class SourceLocation implements Comparable<SourceLocation> {
 	public static final String STDIN_TEXT = "<stdin>";
 
 	private final File sourceFile;
-	private final int lineNumber;
-	private final int charPositionInLine;
+	private int lineNumber;
+	private int charPositionInLine;
 
-	private final int absoluteCharPositionStart;
-	private final int absoluteCharPositionEnd;
+	private int absoluteCharPositionStart;
+	private int absoluteCharPositionEnd;
 
 	public SourceLocation(File sourceFile, int lineNumber,
 			int charPositionInLine, int absoluteCharPositionStart,
@@ -68,6 +68,24 @@ public class SourceLocation implements Comparable<SourceLocation> {
 			this.absoluteCharPositionEnd = -1;  
 		}
 	}
+	
+	public void setStartToken(Token start) {
+	  this.lineNumber = start.getLine();
+	  this.charPositionInLine = start.getCharPositionInLine();
+	  if (start instanceof CommonToken) {
+	    this.absoluteCharPositionStart = ((CommonToken)start).getStartIndex();
+	  } else {
+	    this.absoluteCharPositionStart = -1;
+	  }
+	}
+	
+	public void setEndToken(Token end) {
+    if (end instanceof CommonToken) {
+      this.absoluteCharPositionEnd = ((CommonToken)end).getStopIndex();
+    } else {
+      this.absoluteCharPositionEnd = -1;
+    }
+  }
 
 	public final File getSourceFile() {
 		return sourceFile;

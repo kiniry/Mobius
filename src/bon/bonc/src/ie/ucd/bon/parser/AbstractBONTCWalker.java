@@ -58,9 +58,18 @@ public class AbstractBONTCWalker extends TreeParser {
     return new SourceLocation(t, sourceFile);
   }
   
+  public final SourceLocation getSourceLocation(Token t1, Token t2) {
+    return new SourceLocation(t1, t2, sourceFile);
+  }
+  
   //Just a shorter version
   public final SourceLocation getSLoc(Token t) {
     return getSourceLocation(t);
+  }
+  
+  //Just a shorter version
+  public final SourceLocation getSLoc(Token t1, Token t2) {
+    return getSourceLocation(t1, t2);
   }
   
   public void displayRecognitionError(String[] tokenNames, RecognitionException e) {

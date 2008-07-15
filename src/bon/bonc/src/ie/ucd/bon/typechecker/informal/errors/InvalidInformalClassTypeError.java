@@ -9,7 +9,7 @@ import ie.ucd.bon.typechecker.TypeCheckingError;
 
 public class InvalidInformalClassTypeError extends TypeCheckingError {
 
-  private static final String message = "Invalid class type %s. Are you missing a class chart for %s?";
+  private static final String message = "Unknown class type %s. Are you missing a class chart for %s?";
   
   private final String classType;
   

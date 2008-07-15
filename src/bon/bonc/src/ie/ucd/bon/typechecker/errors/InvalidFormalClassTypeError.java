@@ -9,7 +9,7 @@ import ie.ucd.bon.typechecker.TypeCheckingError;
 
 public class InvalidFormalClassTypeError extends TypeCheckingError {
 
-  private static final String message = "Invalid class type %s";
+  private static final String message = "Unknown class type %s";
   
   private final String classType;
   

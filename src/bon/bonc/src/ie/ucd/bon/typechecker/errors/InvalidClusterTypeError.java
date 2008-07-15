@@ -9,7 +9,7 @@ import ie.ucd.bon.typechecker.TypeCheckingError;
 
 public class InvalidClusterTypeError extends TypeCheckingError {
 
-  private static final String message = "Invalid cluster type %s";
+  private static final String message = "Unknown cluster type %s";
   
   private final String clusterType;
   

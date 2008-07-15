@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.antlr.runtime.Token;
+
 public final class Context {
 
   //Informal
@@ -24,6 +26,7 @@ public final class Context {
   
   private boolean inDictionaryEntry;
   private String dictionaryEntryClassName;
+  private Token dictionaryEntryStartToken;
   
   //Static diagrams
   private boolean inClass;
@@ -96,14 +99,16 @@ public final class Context {
     return inSystemChart;
   }
   
-  public void enterDictionaryEntry(String className) {
+  public void enterDictionaryEntry(String className, Token startToken) {
     inDictionaryEntry = true;
     dictionaryEntryClassName = className;
+    dictionaryEntryStartToken = startToken;
   }
   
   public void leaveDictionaryEntry() {
     inDictionaryEntry = false;
     dictionaryEntryClassName = null;
+    dictionaryEntryStartToken = null;
   }
   
   public boolean isInDictionaryEntry() {
@@ -112,6 +117,10 @@ public final class Context {
   
   public String getDictionaryEntryClassName() {
     return dictionaryEntryClassName;
+  }
+  
+  public Token getDictionaryEntryStartToken() {
+    return dictionaryEntryStartToken;
   }
 
   public void enterClusterChart(String clusterName) {

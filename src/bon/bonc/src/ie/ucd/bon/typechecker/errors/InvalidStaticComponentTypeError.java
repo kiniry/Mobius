@@ -9,7 +9,7 @@ import ie.ucd.bon.typechecker.TypeCheckingError;
 
 public class InvalidStaticComponentTypeError extends TypeCheckingError {
 
-  private static final String message = "Invalid component type %s (%s is neither a class nor a cluster)";
+  private static final String message = "Unknown component type %s (%s is neither a class nor a cluster)";
   
   private final String componentName;
   

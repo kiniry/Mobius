@@ -71,7 +71,7 @@ class_dictionary  :^(
 dictionary_entry  :^(
                      DICTIONARY_ENTRY class_name
                      { getITC().checkValidClassType($class_name.text, getSLoc($class_name.start.token));
-                       getContext().enterDictionaryEntry($class_name.text); 
+                       getContext().enterDictionaryEntry($class_name.text, $DICTIONARY_ENTRY.token); 
                      }
                      cluster_name_list                      
                      description 

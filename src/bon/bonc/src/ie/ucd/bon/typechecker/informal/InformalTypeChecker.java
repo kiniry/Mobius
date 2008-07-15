@@ -172,6 +172,7 @@ public class InformalTypeChecker {
     if (context.isInDictionaryEntry()) {
       checkValidClusterType(clusterName, loc);
       String className = context.getDictionaryEntryClassName();
+      loc.setStartToken(context.getDictionaryEntryStartToken());
       checkClassIsInCluster(className, clusterName, loc);
     }
   }
