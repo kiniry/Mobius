@@ -179,6 +179,7 @@ self_test: build
 self_test0:
 	unset CLASSPATH; \
 	export JAVA_VM_FLAGS=-Xmx1024m; \
+	export PROVER_KILL_TIME=7; \
 	${MAKE} ESCJ_EXTRA_FLAGS+=" -nowarn Modifies" PROVER_KILL_TIME=7 self_test
 
 ## This tests a binary release that is untarred in the RELTEMP directory,
