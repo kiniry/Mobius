@@ -8,13 +8,13 @@
 package javafe;
 
 public class FileInputEntry extends InputEntry {
-  public FileInputEntry(String n) { super(n); }
-  public String type() { return "File"; }
-  public String typeOption() { return "file"; }
-  public String verify() {
+  public FileInputEntry(/*@non_null*/String n) { super(n); }
+  public /*@non_null*/String type() { return "File"; }
+  public /*@non_null*/String typeOption() { return "file"; }
+  public /*@nullable*/String verify() {
     return verify(name);
   }
-  static public String verify(String name) {
+  static public /*@nullable*/String verify(/*@non_null*/String name) {
     java.io.File f= new java.io.File(name);
     if (f.exists() && f.isFile()) return null;
     return "File does not exist";

@@ -44,9 +44,7 @@ public abstract class CorrelatedReader
     // Misc
 
     /** Returns the file underlying this correlated reader. */
-    //@ ensures \result != null;
-
-    public abstract GenericFile getFile();
+    public abstract /*@non_null*/GenericFile getFile();
 
     // Getting Locations
 
@@ -56,7 +54,6 @@ public abstract class CorrelatedReader
      * this file.
      */
     //@ ensures \result != Location.NULL;
-
     public abstract int getLocation();
 
     // [Un]marking
@@ -142,10 +139,9 @@ public abstract class CorrelatedReader
     //@ requires 0 <= discard;
     //@ requires marked;
     //@ modifies marked;
-    //@ ensures \result != null;
     //@ ensures !marked;
 
-    public abstract CorrelatedReader createReaderFromMark(int discard)
+    public abstract /*@non_null*/CorrelatedReader createReaderFromMark(int discard)
             throws IndexOutOfBoundsException;
 
     // I/O

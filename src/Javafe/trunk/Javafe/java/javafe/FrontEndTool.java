@@ -125,8 +125,7 @@ public abstract class FrontEndTool extends Tool
    * Called to obtain the {@link StandardTypeReader} to be used for
    * locating and reading in types.
    */
-  //@ ensures \result != null;
-  public StandardTypeReader makeStandardTypeReader(
+  public /*@non_null*/StandardTypeReader makeStandardTypeReader(
                                                    String path,
                                                    String sourcePath,
                                                    PragmaParser P) {
@@ -156,9 +155,8 @@ public abstract class FrontEndTool extends Tool
    * @throws UsageError if the sequence of command-line arguments 
    * 			  is invalid
    */
-  //@ requires args != null;   
-  public void processOptions(String[] args) throws UsageError {
-    options.processOptions(args);
+  public void processOptions(/*@nullable*/String[] args) throws UsageError {
+    getOptions().processOptions(args);
   }
 
   /**
@@ -201,7 +199,7 @@ public abstract class FrontEndTool extends Tool
    * inherited.) </p>
    */
   //@ requires \nonnullelements(args);
-  public static void main(String[] args) {
+  public static void main(/*@non_null*/String[/*#@non_null*/] args) {
     // Tool t = new FrontEndTool();
     // int result = t.run(args);
     // if (result != 0) System.exit(result);
@@ -316,5 +314,5 @@ public abstract class FrontEndTool extends Tool
    */
   // requires \nonnullelements(args);
   // requires 0 <= offset && offset <= args.length;
-  public abstract void frontEndToolProcessing(ArrayList args);
+  public abstract void frontEndToolProcessing(/*@non_null*/ArrayList args);
 }

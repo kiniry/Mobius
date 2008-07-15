@@ -14,7 +14,7 @@ import javafe.util.FileCorrelatedReader;
 public class CountLines
 {
     //@ requires \nonnullelements(argv);
-    public static void main(String[] argv) throws IOException {
+    public static void main(/*@non_null*/String[/*#@non_null*/] argv) throws IOException {
         String spc = "            ";
         String[] indent = new String[spc.length()];
         //@ assume indent.length == 12;

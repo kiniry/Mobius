@@ -40,7 +40,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    * We are closed iff <code>buf</code> is non-null.
    */
 
-  /*@spec_public*/ protected byte[] buf;
+  /*@spec_public*/ protected /*@nullable*/byte[] buf;
 
   /**
    * The location of the first character in the buffer, minus 1. <p>
@@ -129,7 +129,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
   public int getLocation() {
     int loc = beforeBufLoc + curNdx;
 
-    if (loc<minLoc) {			// no characters read yet
+    if (loc<minLoc) { // no characters read yet
       return FileCorrelatedReader.createWholeFileLoc(getFile());
     }
 
@@ -167,7 +167,6 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    */
   //@ requires buf != null;
   //@ ensures 0 <= \result ==> curNdx < endBufNdx;
-
   protected int peek() throws IOException {
     if (curNdx == endBufNdx) {
       // Refill buffer:
@@ -177,7 +176,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
       }
     }
 
-    return buf[curNdx];
+    return (/*+@(non_null)*/buf)[curNdx];
   }
 
   /**
@@ -187,7 +186,6 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    * Requires we are open.<p>
    */
   //@ requires buf != null;
-
   protected int readRaw() throws IOException {
     if (curNdx == endBufNdx) {
       // Refill buffer:
@@ -197,7 +195,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
       }
     }
 
-    return buf[curNdx++];
+    return (/*+@(non_null)*/buf)[curNdx++];
   }
 
   /* ************************************************
@@ -294,8 +292,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
   //@ modifies marked;
   //@ ensures !marked;
   //@ ensures \result != null;
-
-  public byte[] getBufferFromMark(int discard)
+  public /*@non_null*/byte[] getBufferFromMark(int discard)
       throws IndexOutOfBoundsException {
 
     if (buf == null) {
@@ -313,7 +310,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
     int len = curNdx-markNdx - discard;
 
     byte[] newBuffer = new byte[len];
-    System.arraycopy(buf, start, newBuffer, 0, len);
+    System.arraycopy((/*+@(non_null)*/buf), start, newBuffer, 0, len);
 
     marked = false;
 
@@ -344,7 +341,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    * @see javafe.util.BufferedCorrelatedReader#mark()
    */
 
-  public CorrelatedReader createReaderFromMark(int discard)
+  public /*@non_null*/CorrelatedReader createReaderFromMark(int discard)
 	throws IndexOutOfBoundsException {
     int b4markLoc = getBeforeMarkLocation();
     byte[] subBuffer = getBufferFromMark(discard);

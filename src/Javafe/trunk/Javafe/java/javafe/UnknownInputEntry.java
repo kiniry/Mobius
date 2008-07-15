@@ -9,8 +9,8 @@ package javafe;
 
 public class UnknownInputEntry extends InputEntry {
   public UnknownInputEntry(String n) { super(n); auto=true; }
-  public String type() { return "Unknown"; }
-  public InputEntry resolve() {
+  public /*@non_null*/String type() { return "Unknown"; }
+  public /*@non_null*/InputEntry resolve() {
     return InputEntry.make(name);
   }
 }

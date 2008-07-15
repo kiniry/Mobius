@@ -6,7 +6,7 @@ import java.util.Iterator;
 public class InputEntry {
   public InputEntry(/*@non_null*/String n) { name = n; }
   public /*@non_null*/String name;
-  public ArrayList contents;
+  public /*@nullable*/ArrayList contents;
   public boolean auto = false;
   public /*@non_null*/String toString() { return name; }
   public /*@non_null*/String type() { return ""; }
@@ -23,7 +23,7 @@ public class InputEntry {
   static public void clear(/*@non_null*/ArrayList a) {
     Iterator i = a.iterator();
     while (i.hasNext()) {
-      InputEntry ie = (InputEntry)i.next();
+      InputEntry ie = (/*@non_null*/InputEntry)i.next();
       ie.clear();
     }
   }
@@ -39,8 +39,8 @@ public class InputEntry {
     return null;
   }
   
-  static public InputEntry make(/*@non_null*/String name) {
-    java.io.File f = new java.io.File(name);
+  static public /*@non_null*/InputEntry make(/*@non_null*/String name) {
+    //java.io.File f = new java.io.File(name);
     InputEntry ie = null;
     
     if (FileInputEntry.verify(name) == null) 

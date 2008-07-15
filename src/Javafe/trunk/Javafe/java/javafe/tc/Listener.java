@@ -26,6 +26,5 @@ public interface Listener {
      * adjusted.  (See the class comments for
      * <code>OutsideEnv</code>).<p>
      */
-    //@ requires justLoaded != null;
-    public void notify(CompilationUnit justLoaded);
+    public void notify(/*@non_null*/CompilationUnit justLoaded);
 }

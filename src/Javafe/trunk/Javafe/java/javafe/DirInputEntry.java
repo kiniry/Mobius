@@ -8,13 +8,13 @@
 package javafe;
 
 public class DirInputEntry extends InputEntry {
-  public DirInputEntry(String n) { super(n); }
+  public DirInputEntry(/*@non_null*/String n) { super(n); }
   public /*@non_null*/String type() { return "Directory"; }
   public /*@non_null*/String typeOption() { return "dir"; }
-  public String verify() {
+  public /*@nullable*/String verify() {
     return verify(name);
   }
-  static public String verify(String name) {
+  static public /*@nullable*/String verify(/*@non_null*/String name) {
     java.io.File f= new java.io.File(name);
     if (f.exists() && f.isDirectory()) return null;
     return "Directory does not exist";

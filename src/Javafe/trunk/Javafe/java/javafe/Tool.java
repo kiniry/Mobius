@@ -38,12 +38,12 @@ public abstract class Tool
    * Print our usage message to <code>System.err</code>.
    */
   public void usage() {
-    options.usage(name());
+    getOptions().usage(name());
   }
 
-  public void badOptionUsage(Exception e) {
+  public void badOptionUsage(/*@non_null*/Exception e) {
     System.err.println(name() + ": " + e.getMessage());
-    if (!options.quiet) usage();
+    if (!getOptions().quiet) usage();
   }
 
   /***************************************************
@@ -58,7 +58,7 @@ public abstract class Tool
    * program.  All processing and reporting of options is managed by
    * this object.
    */
-  static public Options options = null;
+  static public /*@nullable*/Options options = null;
     
   /***************************************************
    *                                                 *
@@ -66,7 +66,13 @@ public abstract class Tool
    *                                                 *
    **************************************************/
 
-  /**
+  //@ requires options != null;
+  public static /*@non_null*/Options getOptions() {
+	return /*+@(non_null)*/options;
+  }
+
+
+/**
    * Start up an instance of this tool using command-line arguments
    * <code>args</code>.
    *
@@ -79,7 +85,7 @@ public abstract class Tool
    * inherited.) <p>
    */
   //@ requires \nonnullelements(args);
-  public static void main(String[] args) {
+  public static void main(/*@non_null*/String[/*#@non_null*/] args) {
     // Tool t = new Tool();
     // int result = t.run(args);
     // if (result != 0) System.exit(result);
@@ -99,9 +105,8 @@ public abstract class Tool
    * Compute the time used from a start time to now, then return it in
    * a user readable form.
    */
-  //@ ensures \result != null;
-  public static String timeUsed(long startTime) {
-    if (options.testMode) return "TIME";
+  public static /*@non_null*/String timeUsed(long startTime) {
+    if (getOptions().testMode) return "TIME";
     long delta = java.lang.System.currentTimeMillis() - startTime;
      
     return (delta/1000.0) + " s" + " " + spaceUsed();
@@ -116,5 +121,5 @@ public abstract class Tool
     return used + " bytes";
   }
 
-  private static Runtime rt = Runtime.getRuntime();
+  private static /*@non_null*/Runtime rt = Runtime.getRuntime();
 }

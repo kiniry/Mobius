@@ -351,8 +351,7 @@ public class TypeSig extends Type
      *
      * Precondition: d has already been associated with a TypeSig. <p>
      */
-    //@ ensures \result != null;
-    public static TypeSig getSig(/*@ non_null @*/ TypeDecl d) {
+    public static /*@non_null*/TypeSig getSig(/*@non_null*/TypeDecl d) {
 	TypeSig r = (TypeSig)sigDecoration.get(d);
 	if (r == null) Assert.notNull(r,      //@ nowarn Pre;
 	       "getSig called on a TypeDecl (" + d.id + ") not associated with a TypeSig");

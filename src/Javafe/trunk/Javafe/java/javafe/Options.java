@@ -29,7 +29,7 @@ public class Options
   /**
    * Holds all the non-option arguments.
    */
-  public ArrayList inputEntries; // elements are InputEntry
+  public /*@non_null*/ArrayList inputEntries; // elements are InputEntry
 
   /**
    * Option to restrict output to error/caution/warning messages
@@ -144,14 +144,14 @@ public class Options
    */
   //@ requires \nonnullelements(args);
   //@ ensures inputEntries != null;
-  public final void processOptions(String[] args) throws UsageError {
+  public final void processOptions(/*@non_null*/String[/*#@non_null*/] args) throws UsageError {
     inputEntries = new ArrayList(args.length);
     processOptionsLoop(args);
   }
 
   //@ requires \nonnullelements(args);
   //@ requires inputEntries != null;
-  protected final void processOptionsLoop(String[] args) throws UsageError {
+  protected final void processOptionsLoop(/*@non_null*/String[/*#@non_null*/] args) throws UsageError {
     int offset = 0;
 
     while (offset < args.length) {
@@ -161,7 +161,7 @@ public class Options
       } else if (s.charAt(0) == '-') {
         offset = processOption(s, args, offset);
       } else {
-        inputEntries.add(new UnknownInputEntry(s));
+    	  (/*@(non_null)*/ inputEntries).add(new UnknownInputEntry(s));
       }
     }
   }
@@ -191,11 +191,10 @@ public class Options
    * {@link UsageError} exception with a string describing the
    * problem.
    */
-  //@ requires option != null;
   //@ requires \nonnullelements(args);
   //@ requires 0 <= offset && offset <= args.length;
   //@ ensures 0 <= \result && \result <= args.length;
-  public int processOption(String option, String[] args, int offset)
+  public int processOption(/*@non_null*/String option, /*@non_null*/String[/*#@non_null*/] args, int offset)
     throws UsageError {
     option = option.toLowerCase();
     if (option.equals("-v") || 
@@ -352,7 +351,7 @@ public class Options
   //@   requires offset >= args.length;
   //@   signals (Exception e) e instanceof UsageError;
   //@ pure
-  protected void checkMoreArguments(String option, String[] args, int offset)
+  protected void checkMoreArguments(String option, /*@non_null*/String[] args, int offset)
     throws UsageError {
     if (offset >= args.length) {
       throw new UsageError("Option " + option + " requires one argument");
@@ -421,7 +420,7 @@ public class Options
     return result;
   }
 
-  public String showOptionArray(String[][] data) {
+  public String showOptionArray(/*@non_null*/String[/*#@non_null*/][] data) {
     StringBuffer sb = new StringBuffer();
     for (int i = 0; i < data.length; ++i) {
       sb.append(format(data[i]));
@@ -429,7 +428,7 @@ public class Options
     return sb.toString();
   }
 
-  public String format(String[] sa) {
+  public String format(/*@non_null*/String[/*#@non_null*/] sa) {
     int columns = Integer.getInteger("COLUMNS", 80).intValue();
     StringBuffer sb = new StringBuffer("  " + sa[0] + " : ");
     int current_column = 2 + sa[0].length() + 3;
@@ -438,7 +437,7 @@ public class Options
     // (columns-8) lines until there is no remaining words.
     StringTokenizer st = new StringTokenizer(sa[1]);
     while (st.hasMoreTokens()) {
-      String word = st.nextToken();
+      String word = /*@(non_null)*/st.nextToken();
       if (current_column + word.length() < columns) {
         sb.append(word + " ");
         current_column += word.length() + 1;

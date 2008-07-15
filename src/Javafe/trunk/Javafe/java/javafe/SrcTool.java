@@ -46,11 +46,10 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * <code>CompilationUnit</code>s are loaded using notification from
      * <code>OutsideEnv</code>.
      */
-    //@ invariant loaded != null;
     //@ invariant loaded.elementType == \type(CompilationUnit);
     //@ invariant !loaded.containsNull;
     //@ invariant loaded.owner == this;
-    public Vector loaded = new Vector();
+    public /*@non_null*/Vector loaded = new Vector();
 
     public SrcTool() {
 	super();
@@ -67,7 +66,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * This should only be called by <code>OutsideEnv</code> using the
      * <code>Listener</code> interface.<p>
      */
-    public void notify(CompilationUnit justLoaded) {
+    public void notify(/*@non_null*/CompilationUnit justLoaded) {
 	if (!justLoaded.duplicate) loaded.addElement(justLoaded);
     }
 
@@ -82,8 +81,9 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     	return new SrcToolOptions();
     }
 
-    private static SrcToolOptions options() { 
-    	return (SrcToolOptions)options;
+    //@ requires options != null;
+    private static /*@non_null*/SrcToolOptions options() { 
+    	return (/*@non_null*/SrcToolOptions)options;
     }
 
     /**
@@ -94,17 +94,14 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      *
      * This method calls preload, loadAllFiles, postload, preprocess, handleAllCU, postprocess.
      */
-    public void frontEndToolProcessing(ArrayList args) {
+    public void frontEndToolProcessing(/*@non_null*/ArrayList args) {
 	long startTime = currentTime();
 	/*
 	 * At this point, all options have already been processed and
 	 * the front end has been initialized.
 	 */
-
         preload();
-	
         loadAllFiles(args);
-	
 	postload();
 
 	// Do any tool-specific pre-processing:
@@ -126,15 +123,15 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      *                                                 *
      **************************************************/
 
-    public void loadAllFiles(ArrayList args) {
-	ArrayList accumulatedResults = new ArrayList(args.size());
-	Iterator i = args.iterator();
+    public void loadAllFiles(/*@non_null*/ArrayList args) {
+	//ArrayList accumulatedResults = new ArrayList(args.size());
+    Iterator i = args.iterator();
 	while (i.hasNext()) {
-	    InputEntry ie = (InputEntry)i.next();
+	    InputEntry ie = (/*@non_null*/InputEntry)i.next();
 	    ie = resolveInputEntry(ie);
-        ArrayList a = ie.contents;
+        ArrayList a = /*+@(non_null)*/ie.contents;
         if ((ie instanceof ClassInputEntry) && a.size() > 0 &&
-                a.get(0).toString().endsWith(".class")) {
+                (/*@(non_null)*/a.get(0)).toString().endsWith(".class")) {
           ErrorSet.warning("Cannot parse a class file: " + a.get(0));
           continue;
         }
@@ -143,7 +140,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     }
 
     //@ ensures \result.contents.elementType <: \type(GenericFile);
-    public InputEntry resolveInputEntry(InputEntry iee) {
+    public /*@non_null*/InputEntry resolveInputEntry(/*@non_null*/InputEntry iee) {
 	InputEntry ie = iee;
 	if (ie.contents == null) {
 	    ie = ie.resolve();
@@ -245,7 +242,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	 */
 	int i=0;
 	for (int end=loaded.size(); i<end; i++) {
-	    handleCU((CompilationUnit)loaded.elementAt(i));
+	    handleCU((/*@non_null*/CompilationUnit)loaded.elementAt(i));
 	    if (options().processRecursively) {
 			Assert.notFalse(OutsideEnv.avoidSpec == true);
 			end = loaded.size();
@@ -293,8 +290,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * <code>handleTD</code> on each <code>TypeDecl</code> present in
      * cu.  It is intended that subclassers override this method.<p>
      */
-    //@ requires cu != null;
-    public void handleCU(CompilationUnit cu) {
+    public void handleCU(/*@non_null*/CompilationUnit cu) {
 		// Iterate over all the TypeDecls representing outside types in cu:
 		TypeDeclVec elems = cu.elems;
 		for (int i=0; i<elems.size(); i++) {
@@ -309,7 +305,6 @@ public abstract class SrcTool extends FrontEndTool implements Listener
      * This method is called on the TypeDecl of each
      * outside type that SrcTool is to process. <p>
      */
-    //@ requires td != null;
-    public void handleTD(TypeDecl td) {}
+    public void handleTD(/*@non_null*/TypeDecl td) {}
 
 }

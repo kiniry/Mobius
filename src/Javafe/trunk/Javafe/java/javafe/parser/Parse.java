@@ -96,11 +96,11 @@ public class Parse extends ParseStmt
     @see javafe.util.ErrorSet
     */
 
-  //@ requires in != null;
-  public CompilationUnit parseStream(CorrelatedReader in, boolean specOnly) {
-    if (parseStreamLexer == null) parseStreamLexer = new Lex(null, true);
-    parseStreamLexer.restart(in);
-    return parseCompilationUnit(parseStreamLexer, specOnly);
+  public CompilationUnit parseStream(/*@non_null*/CorrelatedReader in, boolean specOnly) {
+    Lex _parseStreamLexer = parseStreamLexer;
+	if (_parseStreamLexer == null) _parseStreamLexer = parseStreamLexer = new Lex(null, true);
+    _parseStreamLexer.restart(in);
+    return parseCompilationUnit(_parseStreamLexer, specOnly);
   }
 
 
@@ -116,9 +116,8 @@ public class Parse extends ParseStmt
     */
   // specOnly means parse without keeping the bodies of methods/constructors/..
 
-  //@ requires l != null && l.m_in != null;
-  //@ ensures \result != null;
-  public CompilationUnit parseCompilationUnit(Lex l, boolean specOnly) {
+  //@ requires l.m_in != null;
+  public /*@non_null*/CompilationUnit parseCompilationUnit(/*@non_null*/Lex l, boolean specOnly) {
     Name pkgName = null;
     int loc = l.startingLoc;
 
@@ -177,9 +176,8 @@ public class Parse extends ParseStmt
     </PRE>
    */
         
-  //@ requires l != null && l.m_in != null;
-  //@ ensures \result != null;
-  protected ImportDecl parseImportDeclaration(Lex l) {
+  //@ requires l.m_in != null;
+  protected /*@non_null*/ImportDecl parseImportDeclaration(/*@non_null*/Lex l) {
     int loc = l.startingLoc;
     l.getNextToken();                // swallow import keyword
     Name name = parseName(l);
@@ -212,20 +210,18 @@ public class Parse extends ParseStmt
      </PRE>
    */
 
-  //@ requires l != null && l.m_in != null;
-  //@ ensures \result != null;
-  protected TypeDecl parseTypeDeclaration(Lex l, boolean specOnly) {
+  //@ requires l.m_in != null;
+  protected /*@non_null*/TypeDecl parseTypeDeclaration(/*@non_null*/Lex l, boolean specOnly) {
     int locstart = l.startingLoc;
     int modifiers = parseModifiers(l);
     ModifierPragmaVec modifierPragmas = this.modifierPragmas;
     return parseTypeDeclaration(l,specOnly,modifiers,modifierPragmas,
 					locstart);
   }
-  protected TypeDecl parseTypeDeclaration(Lex l, boolean specOnly,
+  protected /*@non_null*/TypeDecl parseTypeDeclaration(/*@non_null*/Lex l, boolean specOnly,
 			int modifiers, ModifierPragmaVec modifierPragmas,
 			int loc) {
-    TypeDecl result =
-	parseTypeDeclTail(l, specOnly, loc, modifiers, modifierPragmas);
+    TypeDecl result = /*@(non_null)*/ parseTypeDeclTail(l, specOnly, loc, modifiers, modifierPragmas);
     return result;
   }
 

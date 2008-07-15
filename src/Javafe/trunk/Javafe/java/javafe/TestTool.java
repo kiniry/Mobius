@@ -39,7 +39,8 @@ public class TestTool extends SrcTool {
     
     public javafe.Options makeOptions() { return new Options(); }
     
-    public final Options options() { return (Options)options; }
+    //@ requires options != null;
+    public final /*@non_null*/Options options() { return (/*@non_null*/Options)options; }
 
     public class Options extends SrcToolOptions {
 	    /**
@@ -75,7 +76,7 @@ public class TestTool extends SrcTool {
 	 *
 	 * This routine handles the <code>-superclasses</code> option.<p>
 	 */
-	public int processOption(String option, String[] args, int offset) 
+	public int processOption(/*@non_null*/String option, /*@non_null*/String[/*#@non_null*/] args, int offset) 
                                      throws UsageError {
 	    if (option.equals("-superclasses")) {
 		chaseSuperclasses = true;
@@ -107,7 +108,7 @@ public class TestTool extends SrcTool {
      * inherited.)<p>
      */
     //@ requires \nonnullelements(args);
-    public static void main(String[] args) {
+    public static void main(/*@non_null*/String[/*#@non_null*/] args) {
 		Tool t = new TestTool();
 		int result = t.run(args);
 		if (result != 0) System.exit(result);
@@ -124,7 +125,7 @@ public class TestTool extends SrcTool {
      * This method is called on the TypeDecl of each
      * outside type that SrcTool is to process. <p>
      */
-    public void handleTD(TypeDecl td) {
+    public void handleTD(/*@non_null*/TypeDecl td) {
 		Info.out("[processing "
 			+ TypeSig.getSig(td).getExternalName());
 	

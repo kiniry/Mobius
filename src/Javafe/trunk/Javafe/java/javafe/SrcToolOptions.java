@@ -47,7 +47,7 @@ public class SrcToolOptions extends Options
     
   // @overrides Options.processOption(String, String[], int)
 
-  public int processOption(String option, String[] args, int offset) 
+  public int processOption(/*@non_null*/String option, /*@non_null*/String[/*#@non_null*/] args, int offset) 
     throws UsageError {
     if (option.equals("-depend") && allowDepend) {
       processRecursively = true;
