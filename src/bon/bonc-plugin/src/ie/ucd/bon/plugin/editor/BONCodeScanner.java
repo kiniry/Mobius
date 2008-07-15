@@ -102,7 +102,7 @@ public class BONCodeScanner extends RuleBasedScanner {
 		List<IRule> rules= new ArrayList<IRule>();
 		
 		// Add rule for single line comments.
-		rules.add(new EndOfLineRule("//", comment));
+		rules.add(new EndOfLineRule("--", comment));
 		
 		// Add rule for strings and character constants.
 		//rules.add(new SingleLineRule("\"", "\"", string, '\\'));

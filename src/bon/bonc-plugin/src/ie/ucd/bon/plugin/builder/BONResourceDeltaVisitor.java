@@ -25,7 +25,7 @@ public class BONResourceDeltaVisitor implements IResourceDeltaVisitor {
     }
 
     if (resource.getFileExtension() != null && resource.getFileExtension().equalsIgnoreCase("bon")) {
-      System.out.println("Changed BON Resource: " + resource);
+      //System.out.println("Changed BON Resource: " + resource);
       changedBonResources.add(resource);
     }
     

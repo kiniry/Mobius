@@ -57,9 +57,9 @@ public class BONcBuilder extends IncrementalProjectBuilder {
   private void boncBuild(int kind, IProgressMonitor monitor) throws CoreException {
 
     if (kind == FULL_BUILD || kind == CLEAN_BUILD) {
-      System.out.println("Full build");
+      //System.out.println("Full build");
     } else if (kind == INCREMENTAL_BUILD || kind == AUTO_BUILD) {
-      System.out.println("Incremental Build");
+      //System.out.println("Incremental Build");
       
       IResourceDelta delta = getDelta(getProject());
       if (delta != null) {
@@ -67,7 +67,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
         delta.accept(changeVisitor);
 
         if (changeVisitor.getChangedBonResources().size() == 0) {
-          System.out.println("No BON resources changed, not running BONc");
+          //System.out.println("No BON resources changed, not running BONc");
           return;
         }
       }
@@ -78,6 +78,11 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     getProject().accept(visitor);
 
     List<IResource> bonResources = visitor.getBONResources();
+    
+    if (bonResources.size() == 0) {
+      //No .bon files, don't run BONc
+      return;
+    }
 
     Map<String,IResource> pathResourceMap = new HashMap<String,IResource>();
 
@@ -95,7 +100,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     getProject().deleteMarkers(MARKER_ID, false, IResource.DEPTH_INFINITE);
     getProject().deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
 
-    //System.out.println("Bonc args: " + boncArgs.toString());
+    System.out.println("Bonc args: " + boncArgs.toString());
     try {
       Main.main2(boncArgs.toArray(new String[boncArgs.size()]), false);
     } catch (Exception e) {

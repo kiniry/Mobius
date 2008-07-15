@@ -29,7 +29,6 @@ public class BONEditor extends TextEditor {
 	
 	public BONEditor() {
 		super();
-		System.out.println("Constructed");
 	}
 	
 	
