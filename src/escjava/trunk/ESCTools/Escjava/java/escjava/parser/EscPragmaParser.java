@@ -54,7 +54,7 @@ import javafe.parser.Lex;
 import javafe.parser.Parse;
 import javafe.parser.ParseUtil;
 import javafe.parser.PragmaParser;
-import javafe.parser.Token;
+import javafe.parser.ParserToken;
 import javafe.util.Assert;
 import javafe.util.CorrelatedReader;
 import javafe.util.ErrorSet;
@@ -761,11 +761,11 @@ public class EscPragmaParser extends Parse
     pragmaQueue.addLast(new SavedPragma(l, t, o));
   }
 
-  public void savePragma(Token d) {
+  public void savePragma(ParserToken d) {
     pragmaQueue.addLast(new SavedPragma(d.startingLoc, d.ttype, d.auxVal));
   }
 
-  public boolean getPragma(Token dst) {
+  public boolean getPragma(ParserToken dst) {
     if (pragmaQueue.isEmpty()) return false;
     SavedPragma p = (SavedPragma)pragmaQueue.removeFirst();
     dst.startingLoc = p.loc;
@@ -789,7 +789,7 @@ public class EscPragmaParser extends Parse
    * @return a flag indicating if further pragmas need to be parsed.
    * @see Lex
    */
-  public boolean getNextPragma(/*@ non_null @*/Token dst) {
+  public boolean getNextPragma(/*@ non_null @*/ParserToken dst) {
     try {
       if (getPragma(dst)) return true;
       boolean b;
@@ -802,7 +802,7 @@ public class EscPragmaParser extends Parse
     }
   }
 
-  public boolean getNextPragmaHelper(/*@ non_null @*/Token dst) {
+  public boolean getNextPragmaHelper(/*@ non_null @*/ParserToken dst) {
     //	System.out.println("CALLING HELPER " + TagConstants.toString(dst.ttype));
     try {
       if (inProcessTag == NOTHING_ELSE_TO_PROCESS) {
@@ -2047,7 +2047,7 @@ public class EscPragmaParser extends Parse
    @*/
   //@ requires scanner.startingLoc != Location.NULL;
   //@ requires scanner.m_in != null;
-  private void continuePragma(/*@ non_null @*/Token dst) throws IOException {
+  private void continuePragma(/*@ non_null @*/ParserToken dst) throws IOException {
     if (inProcessTag == TagConstants.STILL_DEFERRED) {
       int locId = scanner.startingLoc;
       Identifier idn = parseIdentifier(scanner);
@@ -2990,7 +2990,7 @@ public class EscPragmaParser extends Parse
    can be a ghost or model field or a model method or constructor.
    @return true if a terminating semicolon is expected next
    */
-  public boolean parseDeclaration(Token dst, int loc, int kwtag) {
+  public boolean parseDeclaration(ParserToken dst, int loc, int kwtag) {
     try {
 
       int tag = savedGhostModelPragma.getTag();
@@ -3063,7 +3063,7 @@ public class EscPragmaParser extends Parse
 
   boolean inModelRoutine = false;
 
-  public boolean parseTypeDeclTail(Token dst, int loc) {
+  public boolean parseTypeDeclTail(ParserToken dst, int loc) {
     inModelType = true;
     try {
       int modifiers = this.modifiers;
@@ -3086,7 +3086,7 @@ public class EscPragmaParser extends Parse
           int tag = l.ttype == TagConstants.IDENT ? TagConstants
               .fromIdentifier(l.identifierVal) : l.ttype;
           if (tag != TagConstants.NULL) {
-            Token dst = new Token();
+            ParserToken dst = new ParserToken();
             if (getNextPragmaHelper(dst))
                 do {
                   if (dst.ttype != TagConstants.NULL) {
@@ -3147,7 +3147,7 @@ public class EscPragmaParser extends Parse
             break OUTER;
           } else {
             if (t != TagConstants.IDENT) break OUTER;
-            Token tok = l.lookaheadToken(k);
+            ParserToken tok = l.lookaheadToken(k);
             int tag = TagConstants.fromIdentifier(tok.identifierVal);
             if (tag == TagConstants.NULL) break OUTER;
             if (AnnotationHandler.NestedPragmaParser.isRoutineModifier(tag)) {
@@ -3162,7 +3162,7 @@ public class EscPragmaParser extends Parse
           // so we parse it.  Otherwise we have already
           // broken out of the loop to parse the next sequence
           // of tokens using the code in the super class.
-          Token dst = new Token();
+          ParserToken dst = new ParserToken();
           if (getNextPragmaHelper(dst))
               do {
                 if (dst.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
@@ -3238,7 +3238,7 @@ public class EscPragmaParser extends Parse
     return null;
   }
 
-  public boolean parseFieldDeclTail(Token dst, int loc, int locId, Type type,
+  public boolean parseFieldDeclTail(ParserToken dst, int loc, int locId, Type type,
       Identifier id, ModifierPragmaVec modifierPragmas) {
     int tag = savedGhostModelPragma.getTag();
 
@@ -3319,7 +3319,7 @@ public class EscPragmaParser extends Parse
       // some special lookahead here to make the right associations.
       savedGhostModelPragma = null; // Need this so the calls of
       // getNextPragma below do not fail
-      Token temp = new Token();
+      ParserToken temp = new ParserToken();
       scanner.getNextToken();
       while (true) {
         // FIXME - when there are multiple FieldDecls in one declaration,
@@ -3393,7 +3393,7 @@ public class EscPragmaParser extends Parse
     return true; // semicolon still to eat
   }
 
-  public boolean parseConstructorDeclTail(Token dst, int loc, Type type,
+  public boolean parseConstructorDeclTail(ParserToken dst, int loc, Type type,
       int locType, ModifierPragmaVec modifierPragmas) {
     // Must be a model constructor
     inModelRoutine = true;
@@ -3465,7 +3465,7 @@ public class EscPragmaParser extends Parse
     return false; // No semicolon, or it is already eaten
   }
 
-  public boolean parseMethodDeclTail(Token dst, int loc, Type type,
+  public boolean parseMethodDeclTail(ParserToken dst, int loc, Type type,
       int locType, Identifier id, int locId, ModifierPragmaVec modifierPragmas) {
 
     // Must be a model method
@@ -3516,7 +3516,7 @@ public class EscPragmaParser extends Parse
     return false; // No semicolon, or it is already eaten
   }
 
-  public FieldDecl isPragmaDecl(/*@non_null*/Token l) {
+  public FieldDecl isPragmaDecl(/*@non_null*/ParserToken l) {
     if (l.auxVal == null) return null;
     TypeDeclElemPragma smp = (TypeDeclElemPragma)l.auxVal;
     int loc = smp.getStartLoc();
@@ -3595,7 +3595,7 @@ public class EscPragmaParser extends Parse
     return expr;
   }
 
-  private boolean parseInPragmas(int tag, int loc, Token dst, boolean first) {
+  private boolean parseInPragmas(int tag, int loc, ParserToken dst, boolean first) {
     if (!first) {
       if (scanner.ttype == TagConstants.SEMICOLON) return false;
       if (scanner.ttype == TagConstants.COMMA) scanner.getNextToken(); // skip comma

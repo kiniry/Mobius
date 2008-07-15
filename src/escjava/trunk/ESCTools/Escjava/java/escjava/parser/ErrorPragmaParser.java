@@ -3,7 +3,7 @@
 package escjava.parser;
 
 import javafe.parser.PragmaParser;
-import javafe.parser.Token;
+import javafe.parser.ParserToken;
 
 import javafe.util.Location;
 import javafe.util.CorrelatedReader;
@@ -44,12 +44,12 @@ public class ErrorPragmaParser implements PragmaParser
     }
 
     /** Produce no actual pragmas. */
-    public boolean getNextPragma(/*@non_null*/Token dst) { return false; }
+    public boolean getNextPragma(/*@non_null*/ParserToken dst) { return false; }
 
     /** No work to close us. */
     public void close() {}
 
-    public javafe.ast.FieldDecl isPragmaDecl(/*@non_null*/javafe.parser.Token l) { return null; }
+    public javafe.ast.FieldDecl isPragmaDecl(/*@non_null*/javafe.parser.ParserToken l) { return null; }
 
 } // end of class ErrorPragmaParser
 

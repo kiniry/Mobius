@@ -31,7 +31,8 @@ ifdef USE_JMLC
 	@# have junit and the JML run-time jar & specs in your class path.
 	@#$(JMLC) $(JMLC_FLAGS) --classpath $(CP) $?
 else
-	${JAVAC} -classpath ${CP} $?
+	@#${JAVAC} -classpath ${CP} $?
+	@echo "junitutils: no longer build here since they are a part of the Javafe."
 endif
 	touch ${CLASSESSTAMP}
 

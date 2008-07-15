@@ -62,7 +62,6 @@ Export-Package:
  junit.swingui,
  junit.swingui.icons,
  junit.textui,
- junitutils,
  mocha.wrappers.jbdd,
  org.apache.bcel,
  org.apache.bcel.classfile,

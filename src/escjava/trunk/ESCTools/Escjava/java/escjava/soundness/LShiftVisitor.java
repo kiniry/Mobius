@@ -121,7 +121,7 @@ import javafe.ast.SuperObjectDesignator;
 import javafe.ast.SwitchLabel;
 import javafe.ast.SwitchStmt;
 import javafe.ast.SynchronizeStmt;
-import javafe.ast.TagConstants;
+import javafe.ast.ASTTagConstants;
 import javafe.ast.ThisExpr;
 import javafe.ast.ThrowStmt;
 import javafe.ast.TryCatchStmt;
@@ -374,7 +374,7 @@ public void visitASTNode(/*@ non_null */ ASTNode x) {
   public void visitBinaryExpr(/*@ non_null */ BinaryExpr x) {
     // if the binary expression contains the left shift operator warn about
     // it
-    if(x.getTag() == TagConstants.LSHIFT || x.getTag() == TagConstants.ASGLSHIFT) {
+    if(x.getTag() == ASTTagConstants.LSHIFT || x.getTag() == ASTTagConstants.ASGLSHIFT) {
       ErrorSet.warning(x.getStartLoc(), LEFT_SHIFT_INCOMPLETE);
     }
     visitExpr(x);
