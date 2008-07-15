@@ -91,7 +91,7 @@ public class TestFilesTestSuite  extends TestSuite {
       @*/
     public TestFilesTestSuite(/*@ non_null */ String testName, 
 			      /*@ non_null */ String fileOfTestFilenames,
-			      String[] args, // Ignored! FIXME
+			      /*@ non_null */ String preArgs,
 			      /*@ non_null */ Class cls
 			      ) { 
 	super(testName);
@@ -112,7 +112,7 @@ public class TestFilesTestSuite  extends TestSuite {
 	try { 
 	    Iterator i = new LineIterator(fileOfTestFilenames);
 	    while (i.hasNext()) {
-		String s = (String)i.next();
+		String s = preArgs + " " + (String)i.next();
 		String[] allargs = Utils.parseLine(s);
 		if(allargs.length > 0) {
 		    s = allargs[allargs.length-1];
@@ -192,9 +192,11 @@ public class TestFilesTestSuite  extends TestSuite {
 		fail(msg);
 	    }
 
-	    //System.out.println("\nTest suite " + testName + ": "  + fileToTest);
-	    //for (int kk=0; kk<args.length; ++kk) System.out.println(args[kk]);
-	    //System.out.println();
+        // Diagnostic for adding/changing command line options
+	    System.out.println("\nTest suite " + testName + ": "  + fileToTest);
+	    System.out.print("Options being tested: ");
+	    for (int kk=0; kk<args.length-1; ++kk) System.out.print(args[kk] + " ");
+	    System.out.println();
 
 	    ByteArrayOutputStream ba = Utils.setStreams();
 	    try {

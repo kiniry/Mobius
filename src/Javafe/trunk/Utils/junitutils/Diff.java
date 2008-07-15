@@ -74,7 +74,8 @@ public class Diff {
     StringBuffer differencesSB = new StringBuffer(newText.length());
 
     calculateDiffs(differencesSB);
-    if (differencesSB.length() > 0) {
+    // Ignore local differences in the system class path for JAR files
+    if (differencesSB.length() > 0 && differencesSB.indexOf(".jar") == -1) {
       // Some diffs accumulated, so the strings are different
       _areDifferent = true;
 
@@ -82,7 +83,7 @@ public class Diff {
       differences = NEWLINE + OLD_CH + oldTextLabel + NEWLINE + NEW_CH
           + newTextLabel + NEWLINE + NEWLINE + differencesSB.toString();
     } else {
-      // No diffs accumulated, so the strings must be the same
+      // No diffs accumulated, so the strings must be the same or similar
       _areDifferent = false;
       differences = "";
     }
