@@ -17,7 +17,7 @@ public class FileReadError extends ParsingError {
   private final String exceptionMessage;
   
   public FileReadError(File sourceFile, String exceptionMessage) {
-    super(new SourceLocation(sourceFile, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, BONProblem.UNKNOWN_CHAR_POSITION, BONProblem.UNKNOWN_CHAR_POSITION), true);
+    super(new SourceLocation(sourceFile, SourceLocation.FILE_PROBLEM, SourceLocation.UNKNOWN_CHAR_POSITION, SourceLocation.UNKNOWN_CHAR_POSITION, SourceLocation.UNKNOWN_CHAR_POSITION), true);
     //this.sourceFile = sourceFile;
     this.exceptionMessage = exceptionMessage;
   }

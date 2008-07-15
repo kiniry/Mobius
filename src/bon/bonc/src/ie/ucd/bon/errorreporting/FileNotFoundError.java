@@ -13,20 +13,18 @@ import java.io.PrintStream;
 public class FileNotFoundError extends ParsingError {
 
   private static final String message = "File not found: %s"; 
-  private final File file;
   
   public FileNotFoundError(File sourceFile) {
     //super(sourceFile, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, true);
     super(new SourceLocation(
                 sourceFile, 
-                BONProblem.FILE_PROBLEM, 
-                BONProblem.UNKNOWN_CHAR_POSITION,
-                BONProblem.UNKNOWN_CHAR_POSITION,
-                BONProblem.UNKNOWN_CHAR_POSITION
+                SourceLocation.FILE_PROBLEM, 
+                SourceLocation.UNKNOWN_CHAR_POSITION,
+                SourceLocation.UNKNOWN_CHAR_POSITION,
+                SourceLocation.UNKNOWN_CHAR_POSITION
         ),
         true
         );
-    this.file = sourceFile;
   }
 
   public void printStart(PrintStream ps) {
@@ -35,7 +33,7 @@ public class FileNotFoundError extends ParsingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, super.getLocation().getSourceFile().getPath());
+    return String.format(message, getLocation().getSourceFile().getPath());
   }
 
   

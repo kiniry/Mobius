@@ -7,16 +7,9 @@ package ie.ucd.bon.parser.errors;
 import ie.ucd.bon.errorreporting.BONError;
 import ie.ucd.bon.source.SourceLocation;
 
-import java.io.File;
-
 public abstract class ParsingError extends BONError {
 
   private final boolean severe;
-  
-//  public ParsingError(File sourceFile, int lineNumber, int charPosition, boolean isSevere) {
-//    super(sourceFile, lineNumber, charPosition);
-//    this.severe = isSevere;
-//  }
 
   public ParsingError(SourceLocation sourceLoc, boolean isSevere) {
     super(sourceLoc);

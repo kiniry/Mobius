@@ -4,8 +4,6 @@
  */
 package ie.ucd.bon.typechecker.informal.errors;
 
-import java.io.File;
-
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
@@ -17,14 +15,6 @@ public class IncorrectSystemNameError extends TypeCheckingError {
   private final String realSystemName;
   private final String systemFilePath;
   private final int systemLineNumber;
-  
-//  public IncorrectSystemNameError(File sourceFile, int lineNumber, int charPosition, String incorrectSystemName, String realSystemName, String systemFilePath, int systemLineNumber) {
-//    super(sourceFile, lineNumber, charPosition);
-//    this.incorrectSystemName = incorrectSystemName;
-//    this.realSystemName = realSystemName;
-//    this.systemFilePath = systemFilePath;
-//    this.systemLineNumber = systemLineNumber;
-//  }
 
   public IncorrectSystemNameError(SourceLocation loc, String incorrectSystemName, String realSystemName, String systemFilePath, int systemLineNumber) {
     super(loc);
@@ -38,7 +28,5 @@ public class IncorrectSystemNameError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, incorrectSystemName, realSystemName, systemFilePath, systemLineNumber);
   }
-  
-  
 
 }

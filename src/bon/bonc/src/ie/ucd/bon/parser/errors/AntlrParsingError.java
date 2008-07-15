@@ -6,16 +6,9 @@ package ie.ucd.bon.parser.errors;
 
 import ie.ucd.bon.source.SourceLocation;
 
-import java.io.File;
-
 public class AntlrParsingError extends ParsingError {
 
   private final String message;
-  
-//  public AntlrParsingError(File sourceFile, int lineNumber, int charPosition, String message, boolean isSevere) {
-//    super(sourceFile, lineNumber, charPosition, isSevere);
-//    this.message = message;
-//  }
 
   public AntlrParsingError(SourceLocation sourceLoc, String message, boolean isSevere) {
     super(sourceLoc, isSevere);

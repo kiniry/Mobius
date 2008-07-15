@@ -6,14 +6,9 @@ package ie.ucd.bon.errorreporting;
 
 import ie.ucd.bon.source.SourceLocation;
 
-import java.io.File;
 import java.io.PrintStream;
 
 public abstract class BONWarning extends BONProblem {
-
-//  public BONWarning(File sourceFile, int lineNumber, int charPosition) {
-//    super(sourceFile, lineNumber, charPosition);
-//  }
 
   public BONWarning(SourceLocation sourceLoc) {
     super(sourceLoc);

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-public class Context {
+public final class Context {
 
   //Informal
   private boolean inSystemChart;

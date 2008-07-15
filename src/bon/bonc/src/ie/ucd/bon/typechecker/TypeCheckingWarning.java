@@ -7,13 +7,7 @@ package ie.ucd.bon.typechecker;
 import ie.ucd.bon.errorreporting.BONWarning;
 import ie.ucd.bon.source.SourceLocation;
 
-import java.io.File;
-
 public abstract class TypeCheckingWarning extends BONWarning {
-
-//  public TypeCheckingWarning(File sourceFile, int lineNumber, int charPosition, String message) {
-//    super(sourceFile, lineNumber, charPosition);
-//  }
 
   public TypeCheckingWarning(SourceLocation loc) {
     super(loc);

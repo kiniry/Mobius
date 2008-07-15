@@ -12,7 +12,7 @@ public class NoFilesError extends ParsingError {
   private static final String message = "No files to parse!";
   
   public NoFilesError() {
-    super(new SourceLocation(null, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, BONProblem.UNKNOWN_CHAR_POSITION, BONProblem.UNKNOWN_CHAR_POSITION), true);
+    super(new SourceLocation(null, SourceLocation.FILE_PROBLEM, SourceLocation.UNKNOWN_CHAR_POSITION, SourceLocation.UNKNOWN_CHAR_POSITION, SourceLocation.UNKNOWN_CHAR_POSITION), true);
   }
 
   @Override

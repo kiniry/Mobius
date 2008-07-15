@@ -4,8 +4,6 @@
  */
 package ie.ucd.bon.typechecker.errors;
 
-import java.io.File;
-
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
@@ -14,11 +12,6 @@ public class ClassIsNotGenericError extends TypeCheckingError {
   private static final String message = "Class %s is not generic ";
   
   private final String className;
-  
-//  public ClassIsNotGenericError(File sourceFile, int lineNumber, int charPosition, String className) {
-//    super(sourceFile, lineNumber, charPosition);
-//    this.className = className;
-//  }
 
   public ClassIsNotGenericError(SourceLocation loc, String className) {
     super(loc);
