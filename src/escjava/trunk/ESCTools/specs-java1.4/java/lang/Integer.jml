@@ -303,7 +303,7 @@ public  /*@ pure @*/ final
     /*@ public normal_behavior
       @   ensures \result.equals(getInteger(nm, new Integer(val)));
       @*/
-    public static /*@ pure @*/ 
+    public static /*@ pure @*/ /*@non_null*/
         Integer getInteger(String nm, int val);
 
     /*@ public normal_behavior
