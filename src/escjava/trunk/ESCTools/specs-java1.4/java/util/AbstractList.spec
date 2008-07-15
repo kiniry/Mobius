@@ -72,7 +72,7 @@ public abstract class AbstractList extends AbstractCollection implements List {
     // Iterators
 
     // specification inherited from List
-    public /*@ pure @*/ Iterator iterator();
+    public /*@ pure @*//*@non_null*/ Iterator iterator();
 
     public /*@ pure @*/ ListIterator listIterator();
 
