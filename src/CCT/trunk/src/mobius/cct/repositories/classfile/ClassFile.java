@@ -15,6 +15,12 @@ public interface ClassFile {
   Iterator<Attribute> classAttributes();
   
   /**
+   * Return all methods of this class.
+   * @return Iterator.
+   */
+  Iterator<MethodName> getMethods();
+  
+  /**
    * Return all attributes of given method.
    * @param m Method name.
    * @return Iterator.

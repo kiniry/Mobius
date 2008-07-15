@@ -21,6 +21,16 @@ public class DefaultClassFile implements MutableClassFile {
   }
 
   /**
+   * Return all methods of this class.
+   * @return Iterator.
+   */
+  @Override
+  public Iterator<MethodName> getMethods() {
+    //TODO
+    return null;
+  }
+  
+  /**
    * Add class attribute.
    * @param attr Attribute.
    */
