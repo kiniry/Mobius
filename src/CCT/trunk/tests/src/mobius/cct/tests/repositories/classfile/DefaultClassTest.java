@@ -7,15 +7,19 @@ import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 import mobius.cct.certificates.Certificate;
+import mobius.cct.certificates.CertificateParser;
+import mobius.cct.certificates.CertifiedMutableClass;
+import mobius.cct.certificates.DefaultCertificateParser;
 import mobius.cct.repositories.classfile.DefaultClassFile;
 import mobius.cct.repositories.classfile.DefaultClassReader;
 import mobius.cct.tests.testutil.Util;
 import mobius.cct.util.Version;
 
 /**
- * Tests for DefaultClassFile / DefaultClassReader.
+ * Tests for default implementations of class file handling.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public class DefaultClassTest {
@@ -30,11 +34,17 @@ public class DefaultClassTest {
   private DefaultClassReader fReader;
   
   /**
+   * Certificate parser.
+   */
+  private CertificateParser<DefaultClassFile> fParser;
+  
+  /**
    * Method called before each test.
    */
   @Before
   public void setUp() {
     fReader = new DefaultClassReader();
+    fParser = new DefaultCertificateParser<DefaultClassFile>();
   }
   
   /**
@@ -42,7 +52,8 @@ public class DefaultClassTest {
    */
   @Test
   public void testNoCertificate1() throws Exception {
-    DefaultClassFile f = read("mobius/cct/testdata/Test1");
+    CertifiedMutableClass<DefaultClassFile> f = 
+      read("mobius/cct/testdata/Test1");
     assertNotNull(f);
     Iterator<Certificate> i = f.getCertificates();
     assertNotNull(i);
@@ -54,7 +65,8 @@ public class DefaultClassTest {
    */
   @Test
   public void testNoCertificate2() throws Exception {
-    DefaultClassFile f = read("mobius/cct/testdata/Test2");
+    CertifiedMutableClass<DefaultClassFile> f = 
+      read("mobius/cct/testdata/Test2");
     assertNotNull(f);
     Iterator<Certificate> i = f.getCertificates();
     assertNotNull(i);
@@ -76,7 +88,8 @@ public class DefaultClassTest {
    */
   @Test
   public void testNoCertificate3() throws Exception {
-    DefaultClassFile f = read("mobius/cct/testdata/Test4");
+    CertifiedMutableClass<DefaultClassFile> f = 
+      read("mobius/cct/testdata/Test4");
     assertNotNull(f);
     Iterator<Certificate> i = f.getCertificates();
     assertNotNull(i);
@@ -128,7 +141,8 @@ public class DefaultClassTest {
    */
   @Test
   public void testRead1() throws Exception {
-    DefaultClassFile f = read("mobius/cct/testdata/Test9");
+    CertifiedMutableClass<DefaultClassFile> f = 
+      read("mobius/cct/testdata/Test9");
     assertNotNull(f);
     Iterator<Certificate> i = f.getCertificates();
     assertNotNull(i);
@@ -148,10 +162,11 @@ public class DefaultClassTest {
    */
   @Test
   public void testWrite1() throws Exception {
-    DefaultClassFile f = read("mobius/cct/testdata/Test1");
+    CertifiedMutableClass<DefaultClassFile> f = 
+      read("mobius/cct/testdata/Test1");
     assertNotNull(f);
     ByteArrayOutputStream os = new ByteArrayOutputStream();
-    f.write(os);
+    f.writeTo(os);
     ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
     assertEquals("12872b2fb305213f2c7adac2a945f3da", 
                  Util.toHex(Util.digest(is, Util.MD5)));
@@ -162,10 +177,11 @@ public class DefaultClassTest {
    */
   @Test
   public void testWrite2() throws Exception {
-    DefaultClassFile f = read("mobius/cct/testdata/Test9");
+    CertifiedMutableClass<DefaultClassFile> f = 
+      read("mobius/cct/testdata/Test9");
     assertNotNull(f);
     ByteArrayOutputStream os = new ByteArrayOutputStream();
-    f.write(os);
+    f.writeTo(os);
     ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
     assertEquals("ee9706019896636e12b7ee1f40d13b7e", 
                  Util.toHex(Util.digest(is, Util.MD5)));
@@ -175,8 +191,10 @@ public class DefaultClassTest {
    * Read a class.
    * @param name Class name.
    */
-  private DefaultClassFile read(final String name) throws Exception {
+  private CertifiedMutableClass<DefaultClassFile> 
+  read(final String name) throws Exception {
     FileInputStream is = new FileInputStream(testDir+"/"+name+".class");
-    return fReader.read(is);
+    DefaultClassFile f = fReader.read(is);
+    return new CertifiedMutableClass<DefaultClassFile>(fParser.parse(f));
   }
 }

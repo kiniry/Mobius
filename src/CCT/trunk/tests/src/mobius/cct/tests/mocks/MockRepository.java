@@ -6,28 +6,27 @@ import java.util.HashMap;
 import mobius.cct.repositories.InvalidCertificateException;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Repository;
-import mobius.cct.repositories.classfile.ClassFile;
 
 /**
  * Repository implmentation used for testing.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public class MockRepository implements Repository<ClassFile> {
+public class MockRepository implements Repository<MockClassFile> {
   /**
    * Class files in repository.
    */
-  private HashMap<String, ClassFile> fClasses;
+  private HashMap<String, MockClassFile> fClasses;
   /**
    * Certificate files in repository.
    */
-  private HashMap<String, ClassFile> fCerts;
+  private HashMap<String, MockClassFile> fCerts;
   
   /**
    * Constructor - create empty repository.
    */
   public MockRepository() {
-    fClasses = new HashMap<String, ClassFile>();
-    fCerts   = new HashMap<String, ClassFile>();
+    fClasses = new HashMap<String, MockClassFile>();
+    fCerts   = new HashMap<String, MockClassFile>();
   }
   
   /**
@@ -35,7 +34,7 @@ public class MockRepository implements Repository<ClassFile> {
    * @param name Class name.
    * @param file ClassFile object.
    */
-  public void addClass(String name, ClassFile file) {
+  public void addClass(String name, MockClassFile file) {
     fClasses.put(name, file);
   }
   
@@ -44,18 +43,18 @@ public class MockRepository implements Repository<ClassFile> {
    * @param name Class name.
    * @param file ClassFile object.
    */
-  public void addCert(String name, ClassFile file) {
+  public void addCert(String name, MockClassFile file) {
     fCerts.put(name, file);
   }
   
   @Override
-  public ClassFile getCertFile(String name) throws IOException,
+  public MockClassFile getCertFile(String name) throws IOException,
       InvalidCertificateException {
     return fCerts.get(name);
   }
 
   @Override
-  public ClassFile getClassFile(String name) throws NotFoundException,
+  public MockClassFile getClassFile(String name) throws NotFoundException,
       IOException, InvalidCertificateException {
     return fClasses.get(name);
   }

@@ -14,5 +14,13 @@ A certificate consists of
 	<li>Content of class-level certificate</li>
 	<li>Contents of method-level certificates</li>
 </ul>
+
+<h2>Reading certificates</h2>
+Objects of class {@link mobius.cct.certificates.DefaultCertificateParser DefaultCertificateParser} 
+are used to read certificates from a {@link mobius.cct.repositories.classfile.ClassFile ClassFile}.
+They return an object implementing {@link mobius.cct.certificates.CertifiedClass CertifiedClass} 
+interface. If the {@link mobius.cct.repositories.classfile.ClassFile ClassFile} is mutable, such objects 
+can be passed to a constructor of @link mobius.cct.certificates.CertifiedMutableClass CertifiedMutableClass}.
+This makes it possible to modify class certificates and write the result to an output stream.
 </body>
 </html>

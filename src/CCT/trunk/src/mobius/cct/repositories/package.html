@@ -19,6 +19,10 @@ However, is some cases it might be better to use ClassFiles based on
 a library like BCEL or ASM. For this reason most repository classes are 
 generics parameterized with type of ClassFiles.</p>
 
+<p>If an implementation of class file can be used to modify and write classes, 
+it should implement the {@link mobius.cct.repositories.classfile.MutableClassFile MutableClassFile}
+interface.</p>
+
 <h2>Repositories</h2>
 <p>A repository is a class which implements the 
 {@link mobius.cct.repositories.Repository Repository} interface. 

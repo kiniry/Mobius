@@ -3,7 +3,7 @@ package mobius.cct.repositories;
 import java.io.IOException;
 
 /**
- * Exception thrown by class readers if the class file is invalid.
+ * Exception thrown if the class file is invalid.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public class InvalidFormatException extends IOException {

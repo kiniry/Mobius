@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import mobius.cct.repositories.DefaultRepository;
+import mobius.cct.tests.mocks.MockCertifiedClass;
 import mobius.cct.tests.mocks.MockClassFile;
 import mobius.cct.tests.mocks.MockClassReader;
 

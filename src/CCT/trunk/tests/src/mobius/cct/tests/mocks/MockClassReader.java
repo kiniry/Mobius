@@ -14,12 +14,12 @@ public class MockClassReader
   implements ClassReader<MockClassFile> {
 
   /**
-   * Return a mock class file with no certificates.
+   * Return a mock class file.
    * @param is Input stream (ignored).
    */
   @Override
   public MockClassFile read(InputStream is) throws IOException {
-    return new MockClassFile(new MockCertificate[]{});
+    return new MockClassFile();
   }
 
 }

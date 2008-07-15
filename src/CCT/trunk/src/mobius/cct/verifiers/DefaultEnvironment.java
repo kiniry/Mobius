@@ -2,6 +2,7 @@ package mobius.cct.verifiers;
 
 import java.util.Iterator;
 
+import mobius.cct.certificates.CertificateParser;
 import mobius.cct.repositories.Repository;
 import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.verifiers.logging.Logger;
@@ -32,12 +33,14 @@ public class DefaultEnvironment<C extends ClassFile>
    */
   public DefaultEnvironment(final Repository<C> repo,
                             final boolean defaultVerifiers) { 
+  //TODO
   }
   
   /**
    * Create environment using default repository and verifiers.
    */
   public DefaultEnvironment() { 
+  //TODO
   }
   
   /**
@@ -45,6 +48,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return Iterator object.
    */
   public Iterator<Verifier<C>> getVerifiers() {
+  //TODO
     return null;
   }
   
@@ -53,6 +57,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param v Verifier object.
    */
   public void addVerifier(final Verifier<C> v) {
+  //TODO
   }
   
   /**
@@ -61,6 +66,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param certType Type of certificates.
    */
   public void removeVerifier(final String certType) {
+  //TODO
   }
   
   /** Get verifier for given certificate type. 
@@ -69,6 +75,7 @@ public class DefaultEnvironment<C extends ClassFile>
    *  or {@code null}, if there is no such verifier in this env.
    **/
   public Verifier<C> getVerifier(final String certType) {
+  //TODO
     return null;
   }
   
@@ -77,6 +84,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param name Class name (FQN).
    */
   public void addTrustedClass(final String name) {
+  //TODO
   }
   
   /**
@@ -85,7 +93,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param name Class name (FQN). 
    */
   public void removeTrustedClass(final String name) {
-
+  //TODO
   }
   
   /**
@@ -93,6 +101,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return Iterator.
    */
   Iterator<String> getTrustedClasses() {
+  //TODO
     return null;
   }
   
@@ -103,6 +112,7 @@ public class DefaultEnvironment<C extends ClassFile>
    */
   @Override
   public C getClassFile(final String name) {
+  //TODO
     return null;
   }
   
@@ -113,6 +123,7 @@ public class DefaultEnvironment<C extends ClassFile>
    */
   @Override
   public C getCertificateFile(final String name) {
+  //TODO
     return null;
   }
   
@@ -135,6 +146,7 @@ public class DefaultEnvironment<C extends ClassFile>
   @Override
   public boolean verify(final String name, final String spec)  
     throws CyclicDependencyException {
+  //TODO
     return false;
   }
   
@@ -152,6 +164,7 @@ public class DefaultEnvironment<C extends ClassFile>
   @Override
   public boolean verify(final String[] name, final String[] spec)  
     throws CyclicDependencyException {
+  //TODO
     return false;
   }
   
@@ -161,6 +174,7 @@ public class DefaultEnvironment<C extends ClassFile>
    */
   @Override
   public Logger getLogger() {
+  //TODO
     return null;
   }
   
@@ -169,5 +183,23 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param logger Logger.
    */
   public void setLogger(final Logger logger) {
+  //TODO
+  }
+  
+  /**
+   * Get object used to parse certificates.
+   * @return CertificateParser used by this environment.
+   */
+  public CertificateParser<C> getCertificateParser() {
+    //TODO
+    return null;
+  }
+  
+  /**
+   * Set object used to parse certificates.
+   * @param cp New certificate parser.
+   */
+  public void setCertificateParser(final CertificateParser<C> cp) {
+    //TODO
   }
 }

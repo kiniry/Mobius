@@ -5,15 +5,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-import mobius.cct.certificates.Certificate;
-import mobius.cct.repositories.InvalidCertificateException;
-
 /**
  * Default implementation of class file. No external 
  * libraries (bcel, asm, ...) are used.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public class DefaultClassFile implements ClassFile {
+public class DefaultClassFile implements MutableClassFile {
   /**
    * Constructor - read class from input stream.
    * @param is Input stream.
@@ -22,31 +19,129 @@ public class DefaultClassFile implements ClassFile {
    */
   public DefaultClassFile(final InputStream is) throws IOException {
   }
-  
+
   /**
-   * Write class file to given output stream.
-   * @param os output stream.
-   * @throws IOException if it is thrown during writing to the stream.
-   * @throws InvalidCertificateException if the certificate does not match class.
+   * Add class attribute.
+   * @param attr Attribute.
    */
   @Override
-  public void write(final OutputStream os) 
-    throws IOException, InvalidCertificateException {
+  public void addClassAttr(Attribute attr) {
+    // TODO Auto-generated method stub
+    
   }
-  
+
   /**
-   * Get certificate of this class.
-   * @return Class certificate.
-   */
+   * Add method attribute.
+   * @param m Method name.
+   * @param attr Attribute.
+   */  
   @Override
-  public Iterator<Certificate> getCertificates() {
+  public void addMethodAttr(MethodName m, Attribute attr) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * Get class attribute.
+   * @param name Attribute name.
+   * @param i Attribute index.
+   * @return Attribute.
+   */  
+  @Override
+  public Attribute getClassAttr(String name, int i) {
+    // TODO Auto-generated method stub
     return null;
   }
+
+  /**
+   * Get number of class attributes.
+   * @param name Attribute name.
+   * @return Attribute count.
+   */  
+  @Override
+  public int getClassAttrCount(String name) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
   
   /**
-   * Set certificates of this class.
-   * @param certs Class certificates.
-   */
-  public void setCertificates(final Certificate[] certs) {
+   * Get method attribute.
+   * @param m Method name.
+   * @param name Attribute name.
+   * @param i Attribute index.
+   * @return Attribute.
+   */  
+  @Override
+  public Attribute getMethodAttr(MethodName m, String name, int i) {
+    // TODO Auto-generated method stub
+    return null;
   }
+
+  /**
+   * Get number of method attributes.
+   * @param m Method name.
+   * @param name Attribute name.
+   * @return Attribute count.
+   */  
+  @Override
+  public int getMethodAttrCount(MethodName m, String name) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  /**
+   * Remove class attribute.
+   * @param name Attribute name.
+   * @param i Attribute index.
+   */  
+  @Override
+  public void removeClassAttr(String name, int i) {
+    // TODO Auto-generated method stub
+    
+  }
+  
+  /**
+   * Remove method attribute.
+   * @param m Method name.
+   * @param name Attribute name.
+   * @param i Attribute index.
+   */  
+  @Override
+  public void removeMethodAttr(MethodName m, String name, int i) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * Write class to output stream.
+   * @param os Output stream.
+   * @throws IOException .
+   */
+  @Override
+  public void writeTo(OutputStream os) throws IOException {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * Get all class attributes.
+   * @return Iterator.
+   */
+  @Override
+  public Iterator<Attribute> classAttributes() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * Get all attributes of a method.
+   * @param m Method name.
+   * @return Iterator.
+   */
+  @Override
+  public Iterator<Attribute> methodAttribute(MethodName m) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

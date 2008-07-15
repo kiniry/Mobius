@@ -1,11 +1,6 @@
 package mobius.cct.repositories.classfile;
 
-import java.io.OutputStream;
-import java.io.IOException;
 import java.util.Iterator;
-
-import mobius.cct.certificates.Certificate;
-import mobius.cct.repositories.InvalidCertificateException;
 
 /**
  * This interface contains methods common to all
@@ -14,23 +9,15 @@ import mobius.cct.repositories.InvalidCertificateException;
  */
 public interface ClassFile {
   /**
-   * Write class file to given output stream.
-   * @param os output stream.
-   * @throws IOException if it is thrown during writing to the stream.
-   * @throws InvalidCertificateException if the certificate does not match class.
+   * Return all class attributes.
+   * @return Iterator.
    */
-  void write(OutputStream os) 
-    throws IOException, InvalidCertificateException;
+  Iterator<Attribute> classAttributes();
   
   /**
-   * Get certificates of this class. 
-   * @return Iterator over vlass certificates.
+   * Return all attributes of given method.
+   * @param m Method name.
+   * @return Iterator.
    */
-  Iterator<Certificate> getCertificates();
-  
-  /**
-   * Set certificates of this class.
-   * @param certs Class certificate.
-   */
-  void setCertificates(Certificate[] certs);  
+  Iterator<Attribute> methodAttribute(MethodName m);
 }
