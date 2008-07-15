@@ -171,9 +171,11 @@ public class ClassExecutor extends ASignatureExecutor {
       }
     }
 
-    
-    fOutSig.reqImport(fExecutor.getNamingData().getSignatureName());
-    fOutSig.imprt(fExecutor.getNamingData().getSignatureModule());
+    out.reqImport(fExecutor.getNamingData().getTypeName());
+    out.imprt(fExecutor.getNamingData().getTypeModule());
+
+    out.reqImport(fExecutor.getNamingData().getSignatureName());
+    out.imprt(fExecutor.getNamingData().getSignatureModule());
 
     out.println();
     
