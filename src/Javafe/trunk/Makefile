@@ -90,8 +90,7 @@ javafealltests: build
 	$(MAKE) -C Javafe test ALLTESTS=1 || exit 1;
 
 self_typecheck: build
-	$(MAKE) -C Javafe self_typecheck
-	$(MAKE) -C Utils self_typecheck
+	$(MAKE) -C Javafe self_typecheck 
 
 self_test: build
 	$(MAKE) -C Javafe self_test0
