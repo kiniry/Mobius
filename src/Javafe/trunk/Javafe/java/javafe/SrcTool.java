@@ -83,7 +83,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 
     //@ requires options != null;
     private static /*@non_null*/SrcToolOptions options() { 
-    	return (/*@non_null*/SrcToolOptions)options;
+    	return (/*+@non_null*/SrcToolOptions)options;
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	//ArrayList accumulatedResults = new ArrayList(args.size());
     Iterator i = args.iterator();
 	while (i.hasNext()) {
-	    InputEntry ie = (/*@non_null*/InputEntry)i.next();
+	    InputEntry ie = (/*+@non_null*/InputEntry)i.next();
 	    ie = resolveInputEntry(ie);
         ArrayList a = /*+@(non_null)*/ie.contents;
         if ((ie instanceof ClassInputEntry) && a.size() > 0 &&
@@ -242,7 +242,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	 */
 	int i=0;
 	for (int end=loaded.size(); i<end; i++) {
-	    handleCU((/*@non_null*/CompilationUnit)loaded.elementAt(i));
+	    handleCU((/*+@non_null*/CompilationUnit)loaded.elementAt(i));
 	    if (options().processRecursively) {
 			Assert.notFalse(OutsideEnv.avoidSpec == true);
 			end = loaded.size();

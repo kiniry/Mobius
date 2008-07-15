@@ -23,7 +23,7 @@ public class InputEntry {
   static public void clear(/*@non_null*/ArrayList a) {
     Iterator i = a.iterator();
     while (i.hasNext()) {
-      InputEntry ie = (/*@non_null*/InputEntry)i.next();
+      InputEntry ie = (/*+@non_null*/InputEntry)i.next();
       ie.clear();
     }
   }

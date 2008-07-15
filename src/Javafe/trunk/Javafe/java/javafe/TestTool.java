@@ -40,7 +40,7 @@ public class TestTool extends SrcTool {
     public javafe.Options makeOptions() { return new Options(); }
     
     //@ requires options != null;
-    public final /*@non_null*/Options options() { return (/*@non_null*/Options)options; }
+    public final /*@non_null*/Options options() { return (/*+@non_null*/Options)options; }
 
     public class Options extends SrcToolOptions {
 	    /**
