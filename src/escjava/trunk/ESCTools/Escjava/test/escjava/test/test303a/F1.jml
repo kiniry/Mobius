@@ -1,11 +1,8 @@
-public class F {
+public class F1 {
 
   //@ invariant this.f>=88; 
   //@ invariant f/f == f/f; // divZero warning
   public int f;
-
-  //@ invariant a.length>0; // null(a), spurious null(this) warnings in constructors
-  public int [] a;
 
   /*@ ensures \result == this.f+1;
     @*/
@@ -18,26 +15,20 @@ public class F {
 
   /*@ normal_behavior
     @  requires ff>=99;
-    @  requires aa.length>0; //null(aa) warning
     @  ensures this.f==ff;
-    @  ensures this.a==aa;
     @*/
-  public void test2(int ff, int [] aa);
+  public void test2(int ff);
 
   /*@ normal_behavior
     @  requires ff>=99;
-    @  requires aa.length>0;
     @  ensures this.f==ff;
-    @  ensures this.a==aa;
     @*/
-  public void test3(int ff, /*@non_null*/int [] aa);
+  public void test3(int ff);
 
 /*@ normal_behavior
     @  requires ff>=99;
-    @  requires aa.length>0; //null(aa) warning
     @  ensures this.f==ff;
-    @  ensures this.a==aa;
     @*/
-  public F(int ff, int [] aa);
+  public F1(int ff);
 
 }
