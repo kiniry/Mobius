@@ -807,7 +807,7 @@ public class VcToString {
     }
   }
   
-  // @ requires ne.op == TagConstants.DTTFSA;
+  //@ requires ne.op == TagConstants.DTTFSA;
   protected void printDttfsa(/*@ non_null */PrintStream out, /*@ non_null */ Hashtable subst,
 			     /*@ non_null */NaryExpr ne) {
     LiteralExpr lit = (LiteralExpr)ne.exprs.elementAt(1);

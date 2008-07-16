@@ -111,9 +111,9 @@ public class Main extends javafe.SrcTool {
     return new Options();
   }
 
-  // result can be null
-  public static/*@ pure */Options options() {
-    return (Options) options;
+  //@ requires javafe.Tool.options != null;
+  public /*@pure*/ static /*@non_null*/ Options options() {
+    return (/*+@non_null*/Options) options;
   }
 
   // Front-end setup
@@ -230,12 +230,11 @@ public class Main extends javafe.SrcTool {
    * 		memory condition
    * @see javafe.Tool#run(java.lang.String[])
    */
-  //@ requires args != null;
   /*@ ensures \result == okExitCode || \result == badUsageExitCode
     @      || \result == errorExitCode || \result == outOfMemoryExitCode;
   */
 
-  public static int compile(String[] args) {
+  public static int compile(/*@non_null*/String[] args) {
     try {
       Main t = new Main();
       instance = t;
@@ -1358,9 +1357,7 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
    * @return <code>null</code> if <code>r</code> doesn't have a body.
    */
 
-  //@ requires r != null;
-  //@ requires initState != null;
-  protected GuardedCmd computeBody(RoutineDecl r, InitialState initState) {
+  protected /*@nullable*/ GuardedCmd computeBody(/*@non_null*/RoutineDecl r, /*@non_null*/InitialState initState) {
     if (r.getTag() == TagConstants.METHODDECL && ((MethodDecl) r).body == null
         && !Main.options().idc) {
       // no body

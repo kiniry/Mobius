@@ -104,7 +104,7 @@ public class SpecTester {
                                          body, 
                                          r.getEndLoc(), r.getEndLoc(), r.getEndLoc(), r.getEndLoc(), 
                                          Identifier.intern(r.id() + "_testingMethod"),
-                                         JavafePrimitiveType.make(TagConstants.VOIDTYPE, r.getEndLoc()),
+                                         JavafePrimitiveType.make(ASTTagConstants.VOIDTYPE, r.getEndLoc()),
                                          r.getEndLoc());
 
         // debug
@@ -147,8 +147,8 @@ public class SpecTester {
     }
 
     private static  ExprStmtPragma createAssertFalse(int loc, String label) {
-        LiteralExpr falseLit = LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.FALSE, loc);
-        javafe.tc.FlowInsensitiveChecks.setType(falseLit, JavafePrimitiveType.make(TagConstants.BOOLEANTYPE, loc));
+        LiteralExpr falseLit = LiteralExpr.make(ASTTagConstants.BOOLEANLIT, Boolean.FALSE, loc);
+        javafe.tc.FlowInsensitiveChecks.setType(falseLit, JavafePrimitiveType.make(ASTTagConstants.BOOLEANTYPE, loc));
         LabelExpr le = LabelExpr.make(loc, loc, false, Identifier.intern(label),  falseLit);
 
         return  ExprStmtPragma.make(escjava.ast.TagConstants.ASSERT, le, null, loc);

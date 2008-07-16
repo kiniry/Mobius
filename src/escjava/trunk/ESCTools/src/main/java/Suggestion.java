@@ -391,7 +391,7 @@ class Suggestion {
       String name;
       if (type instanceof PrimitiveType) {
 	  PrimitiveType pt = (PrimitiveType) type;
-	  name = javafe.ast.TagConstants.toString(pt.tag);
+	  name = javafe.ast.ASTTagConstants.toString(pt.tag);
 	  name = name.substring(name.length() - 4).toLowerCase();
       }
       else if (type instanceof TypeName) {

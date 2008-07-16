@@ -36,7 +36,7 @@ public class Simplify
      * subprocess unless {@link #readySubProcess()} is called first.
      */
     //@ spec_public
-    private final /*@ non_null @*/ SubProcess P;
+    private final /*@nullable*/ SubProcess P;
 
     //@ invariant P == null ==> closed;
 

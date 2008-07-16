@@ -30,63 +30,63 @@ public class jbdd {
   // arguments so it is better to define them static. Use them as follows:
   // jbdd bdd3 = jbdd.jbdd_and(bdd1, bdd2) 
 
-    // @ requires f != null && g != null;
-    // @ ensures  \result != null;
+    //@ requires f != null && g != null;
+    //@ ensures  \result != null;
   public static	native /*@ non_null */ jbdd jbdd_and(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, boolean f_phase,
                                        boolean g_phase);
 
-    // @ requires f != null && g != null;
-    // @ requires smoothing_vars != null;
-    // @ ensures  \result != null;
+    //@ requires f != null && g != null;
+    //@ requires smoothing_vars != null;
+    //@ ensures  \result != null;
   public static	native /*@ non_null */ jbdd jbdd_and_smooth(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, /*@ non_null */ jbdd[]
                                               smoothing_vars);
 
-    // @ requires f != null && g != null;
-    // @ requires smoothing_vars != null;
-    // @ ensures  \result != null;
+    //@ requires f != null && g != null;
+    //@ requires smoothing_vars != null;
+    //@ ensures  \result != null;
   public static native /*@ non_null */ jbdd jbdd_clipping_and_smooth(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g,
                                                        /*@ non_null */ jbdd[]
                                                        smoothing_vars, int
                                                        f_phase, int g_phase);
 
-    // @ requires f != null && g != null;
-    // @ requires smoothing_vars != null;
-    // @ ensures  \result != null;
+    //@ requires f != null && g != null;
+    //@ requires smoothing_vars != null;
+    //@ ensures  \result != null;
   public static	native /*@ non_null */ jbdd jbdd_xor_smooth(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, /*@ non_null */ jbdd[]
                                               smoothing_vars);
 
-    // @ requires f_min != null && f_max != null;
-    // @ ensures  \result != null;
+    //@ requires f_min != null && f_max != null;
+    //@ ensures  \result != null;
   public static native /*@ non_null */ jbdd jbdd_between(/*@ non_null */ jbdd f_min, /*@ non_null */ jbdd f_max);
 
-    // @ requires f != null && v != null && g != null;
-    // @ ensures  \result != null;
+    //@ requires f != null && v != null && g != null;
+    //@ ensures  \result != null;
   public static native /*@ non_null */ jbdd jbdd_compose(/*@ non_null */ jbdd f, /*@ non_null */ jbdd v, /*@ non_null */ jbdd g);
 
-    // @ requires i != null && t != null && e != null;
-    // @ ensures  \result != null;
+    //@ requires i != null && t != null && e != null;
+    //@ ensures  \result != null;
   public static native /*@ non_null */ jbdd jbdd_ite(/*@ non_null */ jbdd i, /*@ non_null */ jbdd t, /*@ non_null */ jbdd e, boolean
                                        i_phase, boolean t_phase, boolean
                                        e_phase);
 
-    // @ requires f != null && g != null;
-    // @ ensures  \result != null;
+    //@ requires f != null && g != null;
+    //@ ensures  \result != null;
   public static native /*@ non_null */ jbdd jbdd_or(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, boolean f_phase,
                                       boolean g_phase);
 
-    // @ requires f != null && g != null;
-    // @ ensures  \result != null;
+    //@ requires f != null && g != null;
+    //@ ensures  \result != null;
   public static native /*@ non_null */ jbdd jbdd_xnor (/*@ non_null */ jbdd f, /*@ non_null */ jbdd g);
 
-    // @ requires f != null && g != null;
-    // @ ensures  \result != null;
+    //@ requires f != null && g != null;
+    //@ ensures  \result != null;
   public static native /*@ non_null */ jbdd jbdd_xor(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g);
 
-    // @ requires f != null && g != null;
+    //@ requires f != null && g != null;
   public static native int jbdd_apa_compare_ratios(int a, /*@ non_null */ jbdd f, /*@ non_null */ jbdd g,
                                                    int j, int k);
 
-    // @ requires f != null && g != null;
+    //@ requires f != null && g != null;
   public static native int jbdd_estimate_cofactor(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, int n);
 
   //--------------------------------------------------------------------------

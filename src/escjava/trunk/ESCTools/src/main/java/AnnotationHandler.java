@@ -4,6 +4,7 @@
 package escjava;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 
 import javafe.ast.ASTNode;
@@ -30,6 +31,7 @@ import javafe.ast.PrettyPrint;
 import javafe.ast.RoutineDecl;
 import javafe.ast.ThisExpr;
 import javafe.ast.Type;
+import javafe.ast.TypeModifierPragmaVec;
 import javafe.ast.TypeName;
 import javafe.ast.TypeNameVec;
 import javafe.ast.TypeDecl;
@@ -42,6 +44,7 @@ import javafe.tc.Types;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
+import javafe.util.Set;
 import escjava.ast.CondExprModifierPragma;
 import escjava.ast.EscPrettyPrint;
 import escjava.ast.EverythingExpr;
@@ -537,7 +540,7 @@ public class AnnotationHandler {
   // annotated with types, so that typechecking happens properly).
 
   /**
-   * Find every formal parameter or reslut of a routine declaration
+   * Find every formal parameter or result of a routine declaration
    * that is either non_null or nullable.
    *
    * @param rd the routine declaration to examine.
@@ -549,41 +552,26 @@ public class AnnotationHandler {
     FormalParaDeclVec args = rd.args;
 
     // Check that non_null on parameters is allowed
-    if (rd instanceof MethodDecl) {
+    if (rd instanceof MethodDecl && !Modifiers.isStatic(rd.modifiers)) {
       MethodDecl md = (MethodDecl)rd;
-      // Need to check all overrides, because we may not have processed a
-      // given direct override yet, removing its spurious non_null
-      javafe.util.Set overrides = FlowInsensitiveChecks.getAllOverrides(md);
-      if (overrides != null && !overrides.isEmpty()) {
-        for (int i = 0; i < args.size(); ++i) {
-          FormalParaDecl arg = args.elementAt(i);
-          // @todo kiniry Must do the following for nullable as well.
-          ModifierPragma m = Utils.findModifierPragma(arg,
-              TagConstants.NON_NULL);
-          if (m != null) { // overriding method has non_null for parameter i
-            MethodDecl smd = FlowInsensitiveChecks.getSuperNonNullStatus(md, i,
-                overrides);
-            if (smd != null) { // overridden method does not have non_null for i
-              FormalParaDecl sf = smd.args.elementAt(i);
-              ErrorSet
-                  .caution(
-                      m.getStartLoc(),
-                      "The non_null annotation is ignored because this method overrides a method declaration in which this parameter is not declared non_null: ",
-                      sf.getStartLoc());
-              Utils.removeModifierPragma(arg, TagConstants.NON_NULL);
-            }
-          }
-        }
-      }
+	  // Check all overrides, because we may not have processed a
+	  // given direct override yet, removing its spurious non_null
+	  javafe.util.Set overrides = FlowInsensitiveChecks.getAllOverrides(md);
+	  if (!overrides.isEmpty()) {
+	      checkParamOverrides(md, overrides);
+	      checkResultOverrides(md, overrides);
+	  }
     }
 
     // Handle non_null on any parameter
     for (int i = 0; i < args.size(); ++i) {
       FormalParaDecl arg = args.elementAt(i);
-      ModifierPragma m = Utils.findModifierPragma(arg.pmodifiers,
-          TagConstants.NON_NULL);
-      if (m == null) continue;
-      int locNN = m.getStartLoc();
+      ModifierPragma m = Utils.findModifierPragma(arg.pmodifiers, TagConstants.NULLABLE);
+      if (m != null) continue;
+      m = Utils.findModifierPragma(arg.pmodifiers, TagConstants.NON_NULL);
+      if (m == null && 
+    		  (!Main.options().nonNullByDefault || !Types.isReferenceType(arg.type))) continue;
+      int locNN = m != null ? m.getStartLoc() : arg.locId;
     	// Note: v1.26 of Options.java saw the introduction of the "nne" option, which
     	// has yet to be used.  I am temporarily making use of it here.
       Expr v = VariableAccess.make(arg.id, arg.getStartLoc(), arg);
@@ -596,10 +584,10 @@ public class AnnotationHandler {
     // non_null is not allowed on constructors - an error should have
     // been previously given
     if (rd instanceof MethodDecl) {
-      ModifierPragma m = Utils.findModifierPragma(rd.pmodifiers,
-          TagConstants.NON_NULL);
-      if (m != null) {
-        int locNN = m.getStartLoc();
+      ModifierPragma m = Utils.findModifierPragma(rd.pmodifiers, TagConstants.NON_NULL);
+      if (m != null || 
+    		  (Main.options().nonNullByDefault && Types.isReferenceType(((MethodDecl) rd).returnType))) {
+        int locNN = m == null ? rd.locId /*getStartLoc()*/ : m.getStartLoc();
         Expr r = ResExpr.make(locNN);
 		javafe.tc.FlowInsensitiveChecks.setType(r, ((MethodDecl)rd).returnType);
         ExprModifierPragma emp = ExprModifierPragma.make(TagConstants.ENSURES,
@@ -612,7 +600,63 @@ public class AnnotationHandler {
     return result;
   }
 
-  // Argument is an ArrayList of ModifierPragmaVec corresponding to
+  private void checkResultOverrides(MethodDecl md, Set overrides) {
+	  if (methodResultIsNonNull(md))
+		  return;
+      // Method declared nullable.
+      Enumeration e = overrides.elements();
+      while (e.hasMoreElements()) {
+    	  MethodDecl overriding_md = (MethodDecl)(e.nextElement());
+    	  if (!methodResultIsNonNull(overriding_md))
+    		  continue;
+    	  ModifierPragma nullable_pragma = Utils.findModifierPragma(md.pmodifiers, TagConstants.NULLABLE);
+    	  ModifierPragma non_null_pragma = Utils.findModifierPragma(overriding_md.pmodifiers, TagConstants.NON_NULL);
+    	  int nullable_loc = nullable_pragma == null ? md.getStartLoc() : nullable_pragma.getStartLoc();
+    	  int non_null_loc = non_null_pragma == null ? overriding_md.getStartLoc() : non_null_pragma.getStartLoc();
+    	  ErrorSet.caution(nullable_loc,
+    				  "The nullable annotation (explicit or implicit) is ignored because this method overrides a method declared non_null: ",
+    				  overriding_md.getStartLoc());
+    	  Utils.removeModifierPragma(md.pmodifiers, TagConstants.NULLABLE);
+    	  return;
+      }	
+  }
+  
+private boolean methodResultIsNonNull(MethodDecl md) {
+	  ModifierPragma non_null_pragma = Utils.findModifierPragma(md.pmodifiers, TagConstants.NON_NULL);
+	  if (non_null_pragma != null)
+		  return true;
+	  ModifierPragma nullable_pragma = Utils.findModifierPragma(md.pmodifiers, TagConstants.NULLABLE);
+	  if (nullable_pragma != null)
+		  return false;
+	  return Main.options().nonNullByDefault && Types.isReferenceType(md.returnType);
+}
+
+private void checkParamOverrides(MethodDecl md, Set overrides) {
+	  FormalParaDeclVec args = md.args;
+	  for (int i = 0; i < args.size(); ++i) {
+			FormalParaDecl arg = args.elementAt(i);
+			if (!FlowInsensitiveChecks.methodArgIsNonNull(arg))
+				continue;
+			// method has non_null for parameter i
+			MethodDecl smd = FlowInsensitiveChecks
+				.getSuperMethodDeclIfParamIsNullable(i, overrides);
+			if (smd == null)
+				continue; // all overridden methods decl i as non-null.
+			// smd declares i as nullable
+			FormalParaDecl sf = smd.args.elementAt(i);
+			ModifierPragma non_null_pragma = Utils.findModifierPragma(arg, TagConstants.NON_NULL);
+			ErrorSet.caution(non_null_pragma == null ? md.getStartLoc() : non_null_pragma.getStartLoc(),
+							"The non_null annotation (explicit or implicit) is ignored because this method overrides a method declaration in which this parameter is not declared non_null: ",
+							sf.getStartLoc());
+			Utils.removeModifierPragma(arg, TagConstants.NON_NULL);
+			if (Main.options().nonNullByDefault && Types.isReferenceType(arg.type)) {
+				// Must forcefully add nullable modifier to counter act effect of default
+				sf.pmodifiers.addElement(SimpleModifierPragma.make(TagConstants.NULLABLE, sf.getStartLoc()));
+			}
+	  }
+  }
+
+// Argument is an ArrayList of ModifierPragmaVec corresponding to
   // also-connected de-nested specification cases
   // result is a single ModifierPragmaVec with all the requires
   // clauses combined and all the other clauses guarded by the
@@ -1089,7 +1133,7 @@ public class AnnotationHandler {
    * argument is empty, null is returned. Otherwise, some object is returned,
    * though its expression might be a literal.
    */
-  static public ExprModifierPragma and(/* @ non_null */ArrayList a) {
+  static public ExprModifierPragma and(/*@non_null*/ArrayList a) {
     if (a.size() == 0) {
       return null;
     } else if (a.size() == 1) {
@@ -1108,7 +1152,7 @@ public class AnnotationHandler {
    * The same as and(ArrayList), but produces labelled expressions within the
    * conjunction so that error messages come out with useful locations.
    */
-  static public ExprModifierPragma andLabeled(/* @ non_null */ArrayList a) {
+  static public ExprModifierPragma andLabeled(/*@non_null*/ArrayList a) {
     if (a.size() == 0) {
       return null;
     } else {
@@ -1166,7 +1210,7 @@ public class AnnotationHandler {
    * argument is empty, null is returned. Otherwise, some object is returned,
    * though its expression might be a literal.
    */
-  static public ExprModifierPragma or(/* @ non_null */ArrayList a) {
+  static public ExprModifierPragma or(/*@non_null*/ArrayList a) {
     if (a.size() == 0) {
       return null;
     } else if (a.size() == 1) {
@@ -1186,7 +1230,7 @@ public class AnnotationHandler {
    * Neither input may be null. If either input is literally true or false, the
    * appropriate constant folding is performed.
    */
-  static public Expr implies(/* @ non_null */Expr e1, /* @ non_null */Expr e2) {
+  static public Expr implies(/*@non_null*/Expr e1, /*@non_null*/Expr e2) {
     if (isTrue(e1)) return e2;
     if (isTrue(e2)) return e2; // Use e2 instead of T to keep location info
     if (isFalse(e1)) return T;
@@ -1199,7 +1243,7 @@ public class AnnotationHandler {
    * Returns true if the argument is literally true, and returns false if it is
    * not a literal or is literally false.
    */
-  public static boolean isTrue(/* @ non_null */Expr e) {
+  public static boolean isTrue(/*@non_null*/Expr e) {
     return e == T
         || (e instanceof LiteralExpr && ((LiteralExpr)e).value.equals(T.value));
   }
@@ -1208,7 +1252,7 @@ public class AnnotationHandler {
    * Returns true if the argument is literally false, and returns false if it is
    * not a literal or is literally true.
    */
-  public static boolean isFalse(/* @ non_null */Expr e) {
+  public static boolean isFalse(/*@non_null*/Expr e) {
     return e == F
         || (e instanceof LiteralExpr && ((LiteralExpr)e).value.equals(F.value));
   }

@@ -121,7 +121,7 @@ import javafe.ast.SuperObjectDesignator;
 import javafe.ast.SwitchLabel;
 import javafe.ast.SwitchStmt;
 import javafe.ast.SynchronizeStmt;
-import javafe.ast.TagConstants;
+import javafe.ast.ASTTagConstants;
 import javafe.ast.ThisExpr;
 import javafe.ast.ThrowStmt;
 import javafe.ast.TryCatchStmt;
@@ -371,7 +371,7 @@ public class RShiftVisitor extends ASTVisitor {
   public void visitBinaryExpr(/*@ non_null */ BinaryExpr x) {
     // if the binary expression contains the right shift operator warn about
     // it
-    if(x.getTag() == TagConstants.RSHIFT || x.getTag() == TagConstants.ASGRSHIFT) {
+    if(x.getTag() == ASTTagConstants.RSHIFT || x.getTag() == ASTTagConstants.ASGRSHIFT) {
       ErrorSet.warning(x.getStartLoc(), "The semantics of the right shift operator are incomplete.");
     }
     visitExpr(x);

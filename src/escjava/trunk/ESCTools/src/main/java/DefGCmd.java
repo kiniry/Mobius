@@ -1,4 +1,4 @@
-/* @(#)$Id: DefGCmd.java 71173 2008-02-11 18:11:15Z g_karab $
+/* @(#)$Id: DefGCmd.java 71976 2008-07-12 02:57:45Z chalin $
  *
  * Copyright (C) 2006, Dependable Software Research Group, Concordia University
  */
@@ -25,6 +25,7 @@ import escjava.ast.GCExpr;
 import escjava.ast.GuardedCmd;
 import escjava.ast.GuardedCmdVec;
 import escjava.ast.ExprCmd;
+import escjava.ast.QuantifiedExpr;
 import escjava.ast.Spec;
 import escjava.ast.VarInCmd;
 import escjava.ast.DynInstCmd;
@@ -41,22 +42,21 @@ import escjava.tc.Types;
 
 /**
  * Class <code>DefGCmd</code> implements the definedness guarded commands
- * for the requires clauses.  The functionality is invoced by adding the -idc 
+ * for JML assertion expressions.  The functionality is invoked by adding the -idc 
  * option to escj.
  * Supported functionality:
  *  - <code>div</code> and <code>mod</code> operators generate CHKARITHMETIC checks
- *  - Conditional<code>&&</code> and <code>or</code> operators generate ifcmd
+ *  - Conditional<code>&&</code> and <code>||</code> operators generate ifcmd
  *    guarded commands.
  *  - Dereferrencing is partially supported.  Still working on this.
  * Usage:
- *  - DefGCmd defGCmd=new DefGCmd();
+ *  - DefGCmd defGCmd = new DefGCmd();
  *  - defGCmd.trAndGen(expr); // expr is an untranslated expression.
- *  - GuardedCmd gc=defGCmd.popFromCode();
+ *  - GuardedCmd gc = defGCmd.popFromCode();
  * NOTE: This is work inprogress and its fairly experimental, 
  * so bear with us for the time being :). Use at your own risk.
  *
  * @author <a href="mailto:g_karab@cs.concordia.ca">George Karabotsos</a>
- * @version 1.0
  */
 public class DefGCmd
 {
@@ -105,9 +105,6 @@ public class DefGCmd
 	 * @return an <code>Expr</code> value.  This expression is always a Expr.
 	 * its not set as GCExpr so that we do not get type mismatch between client
 	 * methods.
-	 */
-
-	/** (new trAndGent)
 	 */
 
 	public Expr trAndGen(Expr e) {
@@ -331,15 +328,15 @@ public class DefGCmd
 			BinaryExpr be = (BinaryExpr)e;
 			Expr leftExpr  = trAndGen(be.left);
 			Expr rightExpr = trAndGen(be.right);
-			Expr neZeroExpr=GC.nary(TagConstants.INTEGRALNE,
+			Expr neZeroExpr = GC.nary(TagConstants.INTEGRALNE,
 					rightExpr,
 					GC.zerolit);
-			GuardedCmd gc=GC.check(be.locOp,
+			GuardedCmd gc = GC.check(be.locOp,
 					TagConstants.CHKARITHMETIC,
 					neZeroExpr,
 					Location.NULL);
 			this.code.addElement(gc);
-			int newtag= TrAnExpr.getGCTagForBinary(be);
+			int newtag = TrAnExpr.getGCTagForBinary(be);
 			return GC.nary(e.getStartLoc(), e.getEndLoc(),
 					newtag, leftExpr, rightExpr);
 		}
@@ -460,8 +457,27 @@ public class DefGCmd
 
 		case TagConstants.FORALL:
 		case TagConstants.EXISTS: {
-			if(true) { break; } else { notImpl(e); }
-			return null;
+	        QuantifiedExpr qe = (QuantifiedExpr)e;
+	        // Combine the (optional) qe.range and qe.expr
+	        // into a single expr named desugaredBody:
+	        Expr desugaredBody;
+	        if (qe.getTag() == TagConstants.FORALL) {
+				desugaredBody = (qe.rangeExpr != null) ? escjava.AnnotationHandler
+						.implies(qe.rangeExpr, qe.expr)
+						: qe.expr;
+			} else { // TagConstants.EXISTS
+				desugaredBody = (qe.rangeExpr != null) ? escjava.AnnotationHandler
+						.and(qe.rangeExpr, qe.expr)
+						: qe.expr;
+			}
+	        // Compute the definedness expr: D(desugaredBody).
+	        // Actually, we compute the E(D(desugaredBody)) in this.code.
+	        this.code.push(); // so that we can accumulate the GCs of desugaredBody.
+	        /*ignore result*/ trAndGen(desugaredBody);
+	        GuardedCmd E_of_D_of_desugaredBody = this.popFromCode();
+	        GuardedCmd o = GC.block(qe.vars, E_of_D_of_desugaredBody);
+	        this.code.addElement(o);
+	        break; // Fall through so that e is handled "generically" below.
 		}
 
 		case TagConstants.SETCOMPEXPR: {

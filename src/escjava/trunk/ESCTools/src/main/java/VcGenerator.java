@@ -640,7 +640,7 @@ public class VcGenerator {
 
         } else if (n instanceof PrimitiveType) { // javafe/Type
             PrimitiveType m = (PrimitiveType) n;
-            String s = javafe.ast.TagConstants.toString(m.getTag());
+            String s = javafe.ast.ASTTagConstants.toString(m.getTag());
 
             // this means this variable represent a type like
             // Java.x.Vector or Java.lang.Object etc...

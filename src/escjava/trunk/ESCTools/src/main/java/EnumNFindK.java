@@ -43,7 +43,7 @@ public class EnumNFindK implements Abstractor {
   private /*@ non_null @*/ Random random = new Random(seed);
   
   static {
-    (/* @ (non_null PrintStream) */ System.out).println("invLeqK="+invLeqK);
+    System.out.println("invLeqK="+invLeqK);
   }
   
   public EnumNFindK(/*@ non_null @*/ jbddManager bddManager, int k) {

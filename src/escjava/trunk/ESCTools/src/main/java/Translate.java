@@ -165,7 +165,7 @@ Frame frameHandler = null;
   public GuardedCmd trBody(/*@ non_null */ RoutineDecl rd,
                            /*@ non_null */ FindContributors scope,
                            Hashtable premap,
-                           Set predictedSynTargs,
+                           /*@nullable*/Set predictedSynTargs,
                            Translate inlineParent,
                            boolean issueCautions) {
 
@@ -640,7 +640,7 @@ Frame frameHandler = null;
    * <p> If non-null, then represents an <em>*upper*</em> bound on
    * freeVars of the result of the current trBody(...) call.
    */
-  private Set predictedSynTargs;
+  private /*@nullable*/Set predictedSynTargs;
 
   /**
    * Describes what aspects of an inlined call to check and what
@@ -1965,6 +1965,14 @@ Frame frameHandler = null;
       {
         ExprStmtPragma x = (ExprStmtPragma)stmt;
         TrAnExpr.initForClause();
+        // <dsrg-start id="IDC"/>
+        if(Main.options().idc) {
+        	DefGCmd oDefGCs = new DefGCmd();
+        	oDefGCs.trAndGen(x.expr);
+        	GuardedCmd gc = oDefGCs.popFromCode();
+        	code.addElement(gc);
+        }
+        // <dsrg-end id="IDC"/>
         Expr p = TrAnExpr.trSpecExpr(x.expr,null,premapWithArgs);
         if (TrAnExpr.extraSpecs) addNewAssumptionsNow();
         code.addElement(GC.assume(p));
@@ -1974,6 +1982,18 @@ Frame frameHandler = null;
     case TagConstants.ASSERT: {
       ExprStmtPragma x = (ExprStmtPragma)stmt;
       TrAnExpr.initForClause();
+      // <dsrg-start id="IDC"/>
+      if(Main.options().idc) {
+		DefGCmd oDefGCs = new DefGCmd();
+		if(Main.options().debug) {
+			System.err.println("\tIDC for ASSERT: " + EscPrettyPrint.inst.toString(x.expr));
+			System.err.println("\tI.e.:" + x.expr);
+		}
+		oDefGCs.trAndGen(x.expr);
+		GuardedCmd gc = oDefGCs.popFromCode();
+		code.addElement(gc);
+      }
+      // <dsrg-end id="IDC"/>
       Expr p = TrAnExpr.trSpecExpr(x.expr,null,premapWithArgs);
       if (TrAnExpr.extraSpecs) addNewAssumptionsNow();
       code.addElement(GC.check(x.getStartLoc(), TagConstants.CHKASSERT,
@@ -3460,7 +3480,7 @@ Frame frameHandler = null;
    * being built.
    * 
    * @see escjava.translate.Translate.writeCheck() */
-  private void arrayRefWriteCheck(/* @ non_null */ArrayRefExpr ar,
+  private void arrayRefWriteCheck(/*@non_null*/ArrayRefExpr ar,
 		  VarInit Rval, Expr rval, int locAssignOp,
 		  boolean inInitializerContext) {
 	  Assert.notFalse(locAssignOp != Location.NULL);

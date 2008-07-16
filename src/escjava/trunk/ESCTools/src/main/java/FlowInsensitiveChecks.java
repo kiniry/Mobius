@@ -1,4 +1,4 @@
-// $Id: FlowInsensitiveChecks.java 71511 2008-04-17 12:53:27Z dcochran $
+// $Id: FlowInsensitiveChecks.java 72013 2008-07-16 06:04:27Z chalin $
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 package escjava.tc;
@@ -2821,10 +2821,8 @@ System.out.println("FOUND " + t);
    * @return a set of *all* the methods a given method overrides. This includes
    * transitivity.
    */
-  //@ requires md != null;
-  //@ ensures \result != null;
   //@ ensures \result.elementType == \type(MethodDecl);
-  public static Set getAllOverrides(MethodDecl md) {
+  public static /*@non_null*/Set getAllOverrides(/*@non_null*/MethodDecl md) {
     Set direct = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(md.parent, md);
     Set result = new Set();
 
@@ -2961,19 +2959,29 @@ System.out.println("FOUND " + t);
     if (direct.size() == 0) {
       return null;
     }
-    return getSuperNonNullStatus(rd,j,direct);
+    return getSuperMethodDeclIfParamIsNullable(j,direct);
   }
 
-  static public MethodDecl getSuperNonNullStatus(RoutineDecl rd, int j, Set directOverrides) {
+  static public MethodDecl getSuperMethodDeclIfParamIsNullable(int j, Set directOverrides) {
     Enumeration e = directOverrides.elements();
     while (e.hasMoreElements()) {
       MethodDecl directMD = (MethodDecl)(e.nextElement());
       FormalParaDecl f = directMD.args.elementAt(j);
-      if (Utils.findModifierPragma(f,TagConstants.NON_NULL) == null)
+      if (!methodArgIsNonNull(f))
         return directMD;
     }
     return null;
   }
+
+  public static boolean methodArgIsNonNull(FormalParaDecl arg) {
+		ModifierPragma non_null_pragma = Utils.findModifierPragma(arg, TagConstants.NON_NULL);
+		if (non_null_pragma != null)
+			return true;
+		ModifierPragma nullable_pragma = Utils.findModifierPragma(arg, TagConstants.NULLABLE);
+		if (nullable_pragma != null)
+			return false;
+		return Main.options().nonNullByDefault;
+	}
 
   /** Returns non-zero if the expression is a ghost expression - that is, it
       would not exist if all ghost declarations were removed.  Otherwise

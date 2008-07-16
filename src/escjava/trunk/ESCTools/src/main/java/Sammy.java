@@ -28,7 +28,7 @@ public class Sammy extends NewProver {
    * Notice that it's cleared after each call to execute()
    */
   
-  private /*@ spec_public non_null @*/ static Vector parameters = new Vector();
+  private /*@spec_public*/ static /*@non_null*/Vector parameters = new Vector();
   
   static boolean debug = false;
   

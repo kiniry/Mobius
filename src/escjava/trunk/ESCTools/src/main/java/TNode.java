@@ -47,7 +47,7 @@ abstract public class TNode {
      * It handles multiple renaming because each {@link VariableInfo} object contains 
      * multiples fields for renaming (take a look at it).
      */
-    static /*@ spec_public non_null @*/ protected HashMap variablesName = new HashMap();
+    static /*@ spec_public*/ protected /*@non_null*/ HashMap variablesName = new HashMap();
 
     /**
      * map containing all the types used in the proof.

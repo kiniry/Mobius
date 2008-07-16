@@ -54,7 +54,7 @@ public class SubProcess {
      * The actual subprocess, or <code>null</code> if we are closed.
      */
     //@ spec_public
-    private Process P = null;
+    private /*@nullable*/ Process P = null;
 
     //@ public model boolean closed;
     //@ private represents closed <- P == null;
@@ -66,7 +66,7 @@ public class SubProcess {
     //@ invariant (to == null) <==> (P == null);
     //@ invariant (to == null) ==> closed;
     //@ spec_public
-    private PrintStream to = null;
+    private /*@nullable*/ PrintStream to = null;
 
     /**
      * The {@link PushbackInputStream} from the actual subprocess, or
@@ -74,7 +74,7 @@ public class SubProcess {
      */
     //@ invariant (from == null) <==> (P == null);
     //@ spec_public
-    private PushbackInputStream from = null;
+    private /*@nullable*/ PushbackInputStream from = null;
 
     /**
      * If non-<code>null</code>, this buffer keeps a record of (some
