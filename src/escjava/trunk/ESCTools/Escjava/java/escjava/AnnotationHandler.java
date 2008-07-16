@@ -571,7 +571,7 @@ public class AnnotationHandler {
       m = Utils.findModifierPragma(arg.pmodifiers, TagConstants.NON_NULL);
       if (m == null && 
     		  (!Main.options().nonNullByDefault || !Types.isReferenceType(arg.type))) continue;
-      int locNN = m != null ? m.getStartLoc() : arg.locId;
+      int locNN = m != null ? m.getStartLoc() : arg.getStartLoc();
     	// Note: v1.26 of Options.java saw the introduction of the "nne" option, which
     	// has yet to be used.  I am temporarily making use of it here.
       Expr v = VariableAccess.make(arg.id, arg.getStartLoc(), arg);
@@ -583,22 +583,33 @@ public class AnnotationHandler {
     // Handle non_null on the result
     // non_null is not allowed on constructors - an error should have
     // been previously given
-    if (rd instanceof MethodDecl) {
-      ModifierPragma m = Utils.findModifierPragma(rd.pmodifiers, TagConstants.NON_NULL);
-      if (m != null || 
-    		  (Main.options().nonNullByDefault && Types.isReferenceType(((MethodDecl) rd).returnType))) {
-        int locNN = m == null ? rd.locId /*getStartLoc()*/ : m.getStartLoc();
-        Expr r = ResExpr.make(locNN);
-		javafe.tc.FlowInsensitiveChecks.setType(r, ((MethodDecl)rd).returnType);
-        ExprModifierPragma emp = ExprModifierPragma.make(TagConstants.ENSURES,
-            makeNonNullExpr(r, locNN), locNN);
-        Utils.owningDecl.set(emp,rd);
-        emp.errorTag = TagConstants.CHKNONNULLRESULT;
-        result.addElement(emp);
-      }
-    }
+	if (rd instanceof MethodDecl) {
+		desugarMethodResultNullity(rd, result);
+	}
+    
     return result;
   }
+
+  private void desugarMethodResultNullity(RoutineDecl rd, ModifierPragmaVec result) {
+		ModifierPragma nullable_pragma = Utils.findModifierPragma(rd.pmodifiers, TagConstants.NULLABLE);
+		if (nullable_pragma != null)
+			return;
+		ModifierPragma m = Utils.findModifierPragma(rd.pmodifiers, TagConstants.NON_NULL);
+		if (m != null
+				|| (Main.options().nonNullByDefault && Types
+						.isReferenceType(((MethodDecl) rd).returnType))) {
+			int locNN = m != null ? m.getStartLoc() : 
+					rd.locId != Location.NULL ? rd.locId : rd.getStartLoc(); 
+			Expr r = ResExpr.make(locNN);
+			javafe.tc.FlowInsensitiveChecks.setType(r,
+					((MethodDecl) rd).returnType);
+			ExprModifierPragma emp = ExprModifierPragma.make(
+					TagConstants.ENSURES, makeNonNullExpr(r, locNN), locNN);
+			Utils.owningDecl.set(emp, rd);
+			emp.errorTag = TagConstants.CHKNONNULLRESULT;
+			result.addElement(emp);
+		}
+	}
 
   private void checkResultOverrides(MethodDecl md, Set overrides) {
 	  if (methodResultIsNonNull(md))

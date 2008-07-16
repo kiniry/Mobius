@@ -14,8 +14,13 @@ public class A extends B {
 		return "";
 	}
 
+	// overrides
 	public /*@nullable*/Object m_result4() { // warning: nullable ignored
 		return "";
+	}
+
+	public /*@nullable*/Object m_result5() {
+		return null;
 	}
 
 	public int m_result_ok() {

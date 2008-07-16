@@ -327,9 +327,8 @@ clean_docs:
 
 clean_misc:
 	rm -f ${STAMPFILE}
-	find . -name mon.out -exec rm -f {} \;
 	rm -f ${TESTSOURCEDIRECTORY}/escjava/test/*/log ${TESTSOURCEDIRECTORY}/matrix/log
-	find . -name 'core.*' -exec rm -f {} \;
+	find . -name mon.out -o -name "core.*" -exec rm -f {} \;
 
 clean_archives:
 	rm -f ${CLASSDIRECTORY}/escjava.zip
