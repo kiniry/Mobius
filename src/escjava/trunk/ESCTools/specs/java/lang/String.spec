@@ -410,7 +410,7 @@ public final class String
       @   ensures !\result;
       @
       @*/
-    public /*@ pure @*/ boolean equals(Object anObject);
+    public /*@ pure @*/ boolean equals(/*@ nullable \readonly @*/ Object anObject);
 
     /*@ public normal_behavior
       @   requires sb != null;

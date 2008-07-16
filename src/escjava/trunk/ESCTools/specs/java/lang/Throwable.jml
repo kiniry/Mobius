@@ -144,7 +144,7 @@ public class Throwable extends Object
       @   ensures _message != null ==> \result.equals(this.getClass().theString + ": " + _message);
       @ 
       @*/
-    public /*@ pure @*/ String toString();
+    public /*@ pure @*//*@ non_null @*/ String toString();
 
     // FIXME - need to indicate that the output streams are modified and not
     // other stuff
