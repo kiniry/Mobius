@@ -22,6 +22,7 @@ test18	FIX	sumarray - fails, mjm
 test19	FIX	The Bag demo - fails, mjm
 
 test20	Good	Simple non_null assumption tests
+test20B Good    Non-null by default tests.
 test21	Empty	Pascal-F program
 test22  Good	ghost fields (ints and bools) in postconditions and invariants
 test23	Good	loops
