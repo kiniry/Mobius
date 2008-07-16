@@ -24,17 +24,18 @@ buildall: checkjunitjar compileall
 compile: ${CLASSESSTAMP}
 compileall: clean compile
 
-${CLASSESSTAMP}: ${SOURCEFILES}
-ifdef USE_JMLC
-	$(JMLC) $(JMLC_FLAGS) $?
-	@# For the command on the previous line to succeed, you need to 
-	@# have junit and the JML run-time jar & specs in your class path.
-	@#$(JMLC) $(JMLC_FLAGS) --classpath $(CP) $?
-else
-	@#${JAVAC} -classpath ${CP} $?
-	@echo "junitutils: no longer build here since they are a part of the Javafe."
-endif
-	touch ${CLASSESSTAMP}
+${CLASSESSTAMP}: 
+# ${SOURCEFILES}
+# ifdef USE_JMLC
+# 	$(JMLC) $(JMLC_FLAGS) $?
+# 	@# For the command on the previous line to succeed, you need to 
+# 	@# have junit and the JML run-time jar & specs in your class path.
+# 	@#$(JMLC) $(JMLC_FLAGS) --classpath $(CP) $?
+# else
+# 	@#${JAVAC} -classpath ${CP} $?
+# 	@echo "junitutils: no longer build here since they are a part of the Javafe."
+# endif
+# 	touch ${CLASSESSTAMP}
 
 .PHONY: checkjunitjar
 checkjunitjar:
