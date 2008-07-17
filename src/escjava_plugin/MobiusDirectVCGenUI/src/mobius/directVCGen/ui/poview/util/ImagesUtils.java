@@ -26,9 +26,6 @@ import org.osgi.framework.Bundle;
 
 public final class ImagesUtils {
   
-  
-  
-  
   /** Default Constructor. */
   private ImagesUtils() { }
   
@@ -44,6 +41,7 @@ public final class ImagesUtils {
     final Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
     if (bundle == null) {
       System.err.println("Bundle not found!!!");
+      return null;
     }
     final IPath path = new Path(file);
     final URL iconURL = FileLocator.find(bundle, path, null);
@@ -51,13 +49,13 @@ public final class ImagesUtils {
   }
   
   public static Image createImage(final String file) {
-    final Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
-    if (bundle == null) {
-      System.err.println("Bundle not found!!!");
+    final ImageDescriptor desc = createImageDescriptor(file);
+    if (desc == null) {
+      return null;
     }
-    final IPath path = new Path(file);
-    final URL iconURL = FileLocator.find(bundle, path, null);
-    return ImageDescriptor.createFromURL(iconURL).createImage();
+    else {
+      return desc.createImage();
+    }
   }
   
 
@@ -67,7 +65,7 @@ public final class ImagesUtils {
     private final InputStream fIn;
     private final OutputStream fOut;
     
-    public StreamConnexion(InputStream in, OutputStream out ) {
+    public StreamConnexion(final InputStream in, final OutputStream out ) {
       fIn = in;
       fOut = out;
     }
@@ -86,11 +84,11 @@ public final class ImagesUtils {
   }
 
 
-  public static Image getPlatformImage(final String id) {
-    return PlatformUI.getWorkbench().getSharedImages().getImage(id);
+  public static ImageDescriptor getPlatformImage(final String id) {
+    return PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(id);
   }
-  public static Image getJdtImage(final String id) {
-    return JavaUI.getSharedImages().getImage(id);
+  public static ImageDescriptor getJdtImage(final String id) {
+    return JavaUI.getSharedImages().getImageDescriptor(id);
   }
 
   
@@ -128,39 +126,47 @@ public final class ImagesUtils {
     private ImageDescriptor desc;
     
     private static void initImages() {
-      PROJECT.img = 
+      PROJECT.desc = 
         ImagesUtils.getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT);
-      PROJECT_EMPTY.img = 
+      PROJECT_EMPTY.desc = 
         ImagesUtils.getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED);
-      CLASS.img = 
+      CLASS.desc = 
         ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_CLASS);
-      METHOD.img = 
+      METHOD.desc = 
         ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PRIVATE);
-      GOAL_SOLVED.img = 
+      GOAL_SOLVED.desc = 
         ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PUBLIC);
-      GOAL.img = ImagesUtils.createImage("icons/escjava_problem.gif");    
-      LIB.img = ImagesUtils.createImage("icons/coq.gif");
-      LIB_RED.img = ImagesUtils.createImage("icons/coq-red.gif"); 
-      TOOL.desc = createImageDescriptor("icons/tool.gif");
-      TOOL.img = TOOL.desc.createImage();
-      OBJS_LIBRARY.img = 
+      OBJS_LIBRARY.desc = 
         ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
-      FOLDER.img = 
+      FOLDER.desc = 
         ImagesUtils.getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER);
-      SRC_FOLDER.img = 
+      SRC_FOLDER.desc = 
         ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
-      PKG.img = 
+      PKG.desc = 
         ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PACKAGE);
-      DEFAULT.img = 
+      DEFAULT.desc = 
         ImagesUtils.getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FILE);
-      UNKNOWN.img = DEFAULT.img;
-
+      GOAL.desc = ImagesUtils.createImageDescriptor("icons/escjava_problem.gif");    
+      LIB.desc = ImagesUtils.createImageDescriptor("icons/coq.gif");
+      LIB_RED.desc = ImagesUtils.createImageDescriptor("icons/coq-red.gif"); 
+      TOOL.desc = ImagesUtils.createImageDescriptor("icons/tool.gif");
+      UNKNOWN.desc = DEFAULT.desc;
+      
+      for (EImages img: EImages.values()) {
+        if (img.desc != null) {
+          img.img = img.desc.createImage();
+        }
+      }
     }
     
     static {
       initImages();
     }
 
+    /**
+     * Returns the image associated with the constant.
+     * @return an image or the default image
+     */
     public Image getImg() {
       if (img == null) {
         return DEFAULT.img;
@@ -168,6 +174,10 @@ public final class ImagesUtils {
       return img;
     }
     
+    /**
+     * The image descriptor, can be null.
+     * @return a descriptor
+     */
     public ImageDescriptor getDescriptor() {
       return desc;
     }
