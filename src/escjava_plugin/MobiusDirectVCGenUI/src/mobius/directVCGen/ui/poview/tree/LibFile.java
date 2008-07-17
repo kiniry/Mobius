@@ -3,6 +3,7 @@ package mobius.directVCGen.ui.poview.tree;
 import java.io.File;
 
 import mobius.directVCGen.ui.poview.util.ImagesUtils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.graphics.Image;
@@ -23,10 +24,10 @@ public class LibFile extends UnknownFile {
   /** {@inheritDoc} */
   public Image getImage () {
     if (fFileVo.exists()) {
-      return ImagesUtils.getImage(IMG_LIB_RED);
+      return EImages.LIB_RED.getImg();
     }
     else {
-      return ImagesUtils.getImage(IMG_LIB);
+      return EImages.LIB.getImg();
     }
   }
 }

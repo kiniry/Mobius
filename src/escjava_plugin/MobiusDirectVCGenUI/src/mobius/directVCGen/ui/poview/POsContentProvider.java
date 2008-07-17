@@ -1,7 +1,7 @@
 package mobius.directVCGen.ui.poview;
 
-import mobius.directVCGen.ui.poview.tree.Project;
 import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
+import mobius.directVCGen.ui.poview.tree.Project;
 import mobius.directVCGen.ui.poview.util.ImagesUtils;
 import mobius.directVCGen.ui.poview.util.RefreshUtils;
 
@@ -21,8 +21,48 @@ import org.eclipse.jface.viewers.Viewer;
 
 
 public class POsContentProvider implements ITreeContentProvider {
+  /** The current tree viewer content.  */
+  private Project[] fCurrent;
   
-  private static final class ChangeListener implements IResourceChangeListener {
+  
+  public POsContentProvider(final TreeViewer viewer) {
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IResourceChangeListener listener = new ChangeListener(viewer);
+    workspace.addResourceChangeListener(listener);
+  }
+  
+  public void dispose() {
+     
+  }
+  
+ /** {@inheritDoc} */
+  public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+    if (oldInput == newInput) {
+      return;
+    }
+    fCurrent = AWorkspaceElement.createProjectItem((IProject[]) newInput);
+  }
+
+  /** {@inheritDoc} */
+  public Object[] getElements(final Object input) {
+    return (Object[]) fCurrent;
+  }
+
+
+
+  public Object[] getChildren(final Object elem) {
+    return ((AWorkspaceElement) elem).getChildren();
+  }
+
+  public Object getParent(final Object elem) {
+    return ((AWorkspaceElement) elem).getParent();
+  }
+
+  public boolean hasChildren(final Object elem) {
+    return ((AWorkspaceElement) elem).getChildrenCount() > 0;
+  }
+  
+private static final class ChangeListener implements IResourceChangeListener {
     
     private final TreeViewer fViewer;
     
@@ -43,7 +83,9 @@ public class POsContentProvider implements ITreeContentProvider {
   }
 
   private static final class ChangeVisitor implements IResourceDeltaVisitor {
+    /** the viewer associated with this visitor. */
     private final TreeViewer fViewer;
+    
     
     public ChangeVisitor(final TreeViewer viewer) {
       fViewer = viewer;
@@ -97,41 +139,5 @@ public class POsContentProvider implements ITreeContentProvider {
     }
   }
 
-  public POsContentProvider(final TreeViewer viewer) {
-    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    final IResourceChangeListener listener = new ChangeListener(viewer);
-    workspace.addResourceChangeListener(listener);
-  }
-  
-  public void dispose() {
-     
-  }
-  
-  Project[] current;
-  /** {@inheritDoc} */
-  public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-    if (oldInput == newInput) {
-      return;
-    }
-    current = AWorkspaceElement.createProjectItem((IProject[]) newInput);
-  }
 
-  /** {@inheritDoc} */
-  public Object[] getElements(final Object input) {
-    return (Object[]) current;
-  }
-
-
-
-  public Object[] getChildren(final Object elem) {
-    return ((AWorkspaceElement) elem).getChildren();
-  }
-
-  public Object getParent(final Object elem) {
-    return ((AWorkspaceElement) elem).getParent();
-  }
-
-  public boolean hasChildren(final Object elem) {
-    return ((AWorkspaceElement) elem).getChildrenCount() > 0;
-  }
 }

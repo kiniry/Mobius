@@ -4,6 +4,7 @@ import java.io.File;
 
 import mobius.directVCGen.ui.poview.util.ImagesUtils;
 import mobius.directVCGen.ui.poview.util.RefreshUtils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
 import mobius.prover.gui.popup.CompileFile;
 
 import org.eclipse.core.resources.IFile;
@@ -35,10 +36,10 @@ public class Goal extends UnknownFile implements IShowable {
   /** {@inheritDoc} */
   public Image getImage () {
     if (fNameVo.exists() && (fNameVo.lastModified() > fName.lastModified())) {
-      return ImagesUtils.getImage(IMG_GOAL_SOLVED);
+      return EImages.GOAL_SOLVED.getImg();
     }
     else {
-      return ImagesUtils.getImage(IMG_GOAL);
+      return EImages.GOAL.getImg();
     }
   }
 

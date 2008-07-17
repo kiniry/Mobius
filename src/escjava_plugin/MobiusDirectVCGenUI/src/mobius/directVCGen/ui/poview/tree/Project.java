@@ -1,6 +1,7 @@
 package mobius.directVCGen.ui.poview.tree;
 
 import mobius.directVCGen.ui.poview.util.ImagesUtils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -11,6 +12,7 @@ import org.eclipse.swt.graphics.Image;
 
 
 public class Project extends AWorkspaceElement {
+  /** the project this objecti is a representation of. */
   private final IProject fProject;
   
   public Project(final IProject project) {
@@ -60,6 +62,10 @@ public class Project extends AWorkspaceElement {
     return "Project: " + getName();
   }
 
+  /**
+   * Returns the project associated with this representation.
+   * @return never null
+   */
   public IProject getProject() {
     return fProject;
   }
@@ -67,10 +73,10 @@ public class Project extends AWorkspaceElement {
   /** {@inheritDoc} */
   public Image getImage () {
     if (this.getChildrenCount() > 0) {
-      return ImagesUtils.getImage(IMG_PROJECT);
+      return EImages.PROJECT.getImg();
     }
     else { 
-      return ImagesUtils.getImage(IMG_PROJECT_EMPTY);
+      return EImages.PROJECT_EMPTY.getImg();
     }
   }
 

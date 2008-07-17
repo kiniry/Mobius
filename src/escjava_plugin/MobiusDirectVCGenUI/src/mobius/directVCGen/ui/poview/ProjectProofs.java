@@ -36,12 +36,14 @@ import org.eclipse.ui.part.ViewPart;
 
 
 /**
- * This class represemts the proof obligation viewer.
+ * This class represents the proof obligation viewer.
  * 
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProjectProofs extends ViewPart 
   implements IDoubleClickListener, ISelectionChangedListener, SelectionListener, IPageListener {
+  
+  /** the current instance of the ProjectProofs. */
   private static ProjectProofs instance; 
   
   /** the current selection. */
@@ -78,42 +80,10 @@ public class ProjectProofs extends ViewPart
     fViewer.addDoubleClickListener(this);
     fViewer.addSelectionChangedListener(this);
 
+
   }
 
-  private class MySelListener implements ISelectionListener {
-    IProject proj;
-    @Override
-    public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
-      if (selection instanceof IStructuredSelection) {
-        final IStructuredSelection sel = (IStructuredSelection) selection;
-        //final Set<IProject> set = new HashSet<IProject>();
-        if (sel.size() == 1) {
-          final Object o = sel.getFirstElement();
-          IProject newProj = null;
-          if (o instanceof IResource) {
-            final IResource res = (IResource) o;
-            newProj = res.getProject();
-          }
-          if (o instanceof IProject) {
-            newProj = (IProject) o;
-          }
-          if (o instanceof IJavaElement) {
-            final IJavaElement elem = (IJavaElement) o;
-            newProj = elem.getJavaProject().getProject();
 
-          }
-          
-          if ((newProj != null) && (newProj != proj)) {
-            proj = newProj;
-            
-            fViewer.setInput(new IProject[] {proj});
-            fViewer.expandToLevel(2);
-          }
-        }
-      }
-    }
-    
-  }
 
 
   /**
@@ -210,6 +180,41 @@ public class ProjectProofs extends ViewPart
   public TreeViewer getViewer() {
     return fViewer;
   }
+  
+  
+  private class MySelListener implements ISelectionListener {
+    private IProject fProj;
+    @Override
+    public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+      if (selection instanceof IStructuredSelection) {
+        final IStructuredSelection sel = (IStructuredSelection) selection;
+        //final Set<IProject> set = new HashSet<IProject>();
+        if (sel.size() == 1) {
+          final Object o = sel.getFirstElement();
+          IProject newProj = null;
+          if (o instanceof IResource) {
+            final IResource res = (IResource) o;
+            newProj = res.getProject();
+          }
+          if (o instanceof IProject) {
+            newProj = (IProject) o;
+          }
+          if (o instanceof IJavaElement) {
+            final IJavaElement elem = (IJavaElement) o;
+            newProj = elem.getJavaProject().getProject();
 
+          }
+          
+          if ((newProj != null) && (newProj != fProj)) {
+            fProj = newProj;
+            
+            fViewer.setInput(new IProject[] {fProj});
+            fViewer.expandToLevel(2);
+          }
+        }
+      }
+    }
+    
+  }
 
 }

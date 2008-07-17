@@ -1,15 +1,6 @@
 package mobius.directVCGen.ui.poview;
 
-import mobius.directVCGen.ui.poview.util.IImagesConstants;
-import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -18,7 +9,7 @@ import org.osgi.framework.BundleContext;
  * 
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class Activator extends AbstractUIPlugin implements IImagesConstants {
+public class Activator extends AbstractUIPlugin {
 
   /** The plug-in ID. */
   public static final String PLUGIN_ID = "MobiusDirectVCGenUI";

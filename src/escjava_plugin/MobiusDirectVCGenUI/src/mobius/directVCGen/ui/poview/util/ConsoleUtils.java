@@ -3,6 +3,7 @@ package mobius.directVCGen.ui.poview.util;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
 import mobius.directVCGen.ui.poview.util.ImagesUtils.StreamConnexion;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -17,7 +18,15 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IOConsole;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 
-public class ConsoleUtils {
+
+
+/**
+ * All the utilities associated with the console that is used to output 
+ * the result of the DirectVCGen.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
+public final class ConsoleUtils {
   /** the color red. */
   private static final RGB RED = new RGB(255, 0, 0);
   /** the color blue. */
@@ -26,7 +35,7 @@ public class ConsoleUtils {
   private static final RGB PURPLE = new RGB(255, 0, 255);
   /** the color black. */
   private static final RGB BLACK = new RGB(0, 0, 0);
-  
+  /** the current instance of console utils. */
   private static ConsoleUtils instance;
 
   /** the output console, used to write information to the user. */
@@ -37,12 +46,16 @@ public class ConsoleUtils {
   private Color fBlue;
   /** the display dependent purple color. */
   private Color fPurple;
+  /** the display dependent black color. */
   private Color fBlack;
   
   
+  /**
+   * The constructor, initialize all the datas.
+   */
   private ConsoleUtils() {
     instance = this;
-    fConsole = new IOConsole("Mobius DirectVCGen Console", ImagesUtils.descTool);
+    fConsole = new IOConsole("Mobius DirectVCGen Console", EImages.TOOL.getDescriptor());
     fConsole.activate();
     ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[]{fConsole});
     final Display display = PlatformUI.getWorkbench().getDisplay();
@@ -64,6 +77,7 @@ public class ConsoleUtils {
     return instance;
   }
   
+  /** {@inheritDoc} */
   protected void finalize() throws Throwable {
     fRed.dispose();
     fBlue.dispose();
@@ -112,14 +126,21 @@ public class ConsoleUtils {
   
 
   public static class SystemCallJob extends Job {
-  
+    /** the arguments to run as the system call. */
     private final String[] fArgs;
   
+    /**
+     * Creates a SystemCallJob, a call to schedule has to be done
+     * in order for the Job to run.
+     * @param name the 'official' name for the job
+     * @param args the commandline which has to be run
+     */
     public SystemCallJob(final String name, final String [] args) {
       super(name);
       fArgs = args;
     }
   
+    /** {@inheritDoc} */
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
       final IOConsole console = ConsoleUtils.getDefault().getConsole();
@@ -154,6 +175,11 @@ public class ConsoleUtils {
     }
   }
   
+  /**
+   * Redirects the standard input and output to the current console.
+   * Useful when a Java program is run in another Java program.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
   public static class ConsoleOutputWrapper {
     private final IOConsole fCurrent;
     private PrintStream savedOut;

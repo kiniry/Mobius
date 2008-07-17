@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mobius.directVCGen.ui.poview.util.IImagesConstants;
 import mobius.directVCGen.ui.poview.util.ImagesUtils;
+import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.graphics.Image;
 
 
-public abstract class AWorkspaceElement implements IImagesConstants {
+public abstract class AWorkspaceElement  {
   
   /** an hashmap containing all the elements created, with their corresponding resource. */
   private static Map<IResource, AWorkspaceElement> instances  = 
@@ -63,7 +63,7 @@ public abstract class AWorkspaceElement implements IImagesConstants {
     return fChildren.size();
   }
   public Image getImage () {
-    return ImagesUtils.getImage(IMG_DEFAULT);
+    return EImages.DEFAULT.getImg();
   }
   
   public abstract void update();

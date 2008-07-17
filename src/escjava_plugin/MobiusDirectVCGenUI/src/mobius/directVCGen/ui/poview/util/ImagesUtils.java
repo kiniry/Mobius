@@ -3,7 +3,6 @@ package mobius.directVCGen.ui.poview.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.URL;
 
 import mobius.directVCGen.ui.poview.Activator;
@@ -12,69 +11,26 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.console.IOConsole;
-import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.ui.ide.IDE;
 import org.osgi.framework.Bundle;
 
 
-public final class ImagesUtils implements IImagesConstants {
+public final class ImagesUtils {
   
-  public static final ImageDescriptor descTool;
   
-  /** all the images needed by the plugin. */
-  private static Image[] images = new Image[NUMBER_IMGS];
   
-  static {
-    descTool = createImageDescriptor("icons/tool.gif");
-    initImages();
-  }
   
   /** Default Constructor. */
   private ImagesUtils() { }
-  
-  
-  
-  private static void initImages() {
-    images[IMG_PROJECT] = 
-      getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT);
-    images[IMG_PROJECT_EMPTY] = 
-      getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED);
-    images[IMG_CLASS] = 
-      getJdtImage(ISharedImages.IMG_OBJS_CLASS);
-    images[IMG_METHOD] = 
-      getJdtImage(ISharedImages.IMG_OBJS_PRIVATE);
-    images[IMG_GOAL_SOLVED] = 
-      ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PUBLIC);
-    images[IMG_GOAL] = createImage("icons/escjava_problem.gif");    
-    images[IMG_LIB] = createImage("icons/coq.gif");
-    images[IMG_LIB_RED] = createImage("icons/coq-red.gif"); 
-    images[IMG_TOOL] = descTool.createImage();
-    images[IMG_OBJS_LIBRARY] = 
-      ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
-    images[IMG_FOLDER] = 
-      getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER);
-    images[IMG_SRC_FOLDER] = 
-      ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
-    images[IMG_PKG] = 
-      ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PACKAGE);
-    images[IMG_DEFAULT] = 
-      getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FILE);
-  
-  }
-  
-
   
   /**
    * Returns a standard ok status.
@@ -137,18 +93,83 @@ public final class ImagesUtils implements IImagesConstants {
     return JavaUI.getSharedImages().getImage(id);
   }
 
-  public static Image getImage(final int cst) {
-    if (0 < cst && cst < NUMBER_IMGS) {
-      return images[cst];
-    }
-    else {
-      return images[IMG_DEFAULT];
-    }
-  }
   
   public static IProject [] getProjects() {
     return ResourcesPlugin.getWorkspace().getRoot().getProjects();
   }
+  
+  /** The constants used to handle the images for the tree nodes. */
+  public enum EImages {
+    /** the default image. */
+    DEFAULT,
+    /** the image for an unknown file. */
+    UNKNOWN,
+    /** the image for an unknown file. */
+    TOOL,
+    /** the eclipse symbol for methods. */
+    METHOD, 
+    /** the eclipse symbol for classes. */
+    CLASS,
+    /** a project (an open folder). */
+    PROJECT, 
+    /** an empty project (a closed folder). */
+    PROJECT_EMPTY, 
+    GOAL,
+    GOAL_SOLVED,
+    LIB,
+    LIB_RED,
+    OBJS_LIBRARY,
+    FOLDER,
+    SRC_FOLDER,
+    PKG,
+    MKFILE;
 
+    private Image img;
+    private ImageDescriptor desc;
+    
+    private static void initImages() {
+      PROJECT.img = 
+        ImagesUtils.getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT);
+      PROJECT_EMPTY.img = 
+        ImagesUtils.getPlatformImage(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED);
+      CLASS.img = 
+        ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_CLASS);
+      METHOD.img = 
+        ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PRIVATE);
+      GOAL_SOLVED.img = 
+        ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PUBLIC);
+      GOAL.img = ImagesUtils.createImage("icons/escjava_problem.gif");    
+      LIB.img = ImagesUtils.createImage("icons/coq.gif");
+      LIB_RED.img = ImagesUtils.createImage("icons/coq-red.gif"); 
+      TOOL.desc = createImageDescriptor("icons/tool.gif");
+      TOOL.img = TOOL.desc.createImage();
+      OBJS_LIBRARY.img = 
+        ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_LIBRARY);
+      FOLDER.img = 
+        ImagesUtils.getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER);
+      SRC_FOLDER.img = 
+        ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
+      PKG.img = 
+        ImagesUtils.getJdtImage(ISharedImages.IMG_OBJS_PACKAGE);
+      DEFAULT.img = 
+        ImagesUtils.getPlatformImage(org.eclipse.ui.ISharedImages.IMG_OBJ_FILE);
+      UNKNOWN.img = DEFAULT.img;
 
+    }
+    
+    static {
+      initImages();
+    }
+
+    public Image getImg() {
+      if (img == null) {
+        return DEFAULT.img;
+      }
+      return img;
+    }
+    
+    public ImageDescriptor getDescriptor() {
+      return desc;
+    }
+  }
 }

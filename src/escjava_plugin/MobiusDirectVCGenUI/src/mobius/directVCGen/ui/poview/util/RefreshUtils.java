@@ -76,8 +76,10 @@ public class RefreshUtils {
     
     public RefreshJob(final TreeViewer viewer, final AWorkspaceElement goal) {
       super("Updating view");
+      assert (viewer != null);
       fViewer = viewer;
       fGoal = goal;
+
     }
     
     public RefreshJob(TreeViewer viewer) {

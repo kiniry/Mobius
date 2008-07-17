@@ -9,6 +9,7 @@ public abstract class AProofFolder extends AWorkspaceElement {
   /** the folder that this object represents. */
   private final IFolder fFolder;
   
+  
   public AProofFolder(final IFolder folder) {
     super(folder);
     fFolder = folder;

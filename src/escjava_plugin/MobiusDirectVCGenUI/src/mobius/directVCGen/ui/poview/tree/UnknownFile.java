@@ -1,7 +1,11 @@
 package mobius.directVCGen.ui.poview.tree;
 
+import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
 import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbench;
@@ -9,11 +13,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.TreeViewer;
-
 /**
  * A node representing a file of any type.
  * 
@@ -34,7 +33,7 @@ public class UnknownFile extends AWorkspaceElement implements IShowable {
     fFile = file;
     final IEditorDescriptor edit = IDE.getDefaultEditor(getFile());
     if (edit == null) {
-      fImg = ImagesUtils.getImage(IMG_UNKNOWN);
+      fImg = EImages.UNKNOWN.getImg();
     }
     else {
       fImg = edit.getImageDescriptor().createImage();
