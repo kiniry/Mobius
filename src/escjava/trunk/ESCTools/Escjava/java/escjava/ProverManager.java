@@ -236,83 +236,112 @@ public class ProverManager {
     }
   }
   
-  //@ requires vc != null;
-  // scope can be null
-  //? ensures \result != null;
   synchronized
   static public /*@ non_null */ Enumeration prove(/*@ non_null */ Expr vc, 
 		  									      /*@ nullable */ FindContributors scope, 
-		  									      /*@ non_null */ String problemName) {
-   
-    if (useSimplify || useSorted) { 
-      if (scope == null) {
-        if (savedScope != null && status != PUSHED) push(savedScope);
-      } else {
-        if (status == PUSHED) {
-          if (savedScope != scope) {
-            pop();
-            push(scope);
-          }
-        } else {
-          push(scope);
-        }
-      }
-      if (listener != null) listener.stateChanged(2);
-      try {
-    	  if (useSorted) {
-    		  final ArrayList responses = new ArrayList();
-    		  SortedProverCallback cb = new SortedProverCallback() {
-    			  public void processResponse(SortedProverResponse resp)
-    			  {
-    				  if (resp.getTag() == SortedProverResponse.COUNTER_EXAMPLE) {
-    					  String[] labels = ((CounterExampleResponse)resp).getLabels();
-    					  SExp[] labels2 = new SExp[labels.length];
-    					  for (int i = 0; i < labels.length; ++i)
-    						  labels2[i] = SExp.fancyMake(labels[i]);
-    					  responses.add (
-    							  new SimplifyResult(SimplifyOutput.COUNTEREXAMPLE, 
-    									  SList.fromArray(labels2), null));
-    				  }
-    			  }
-    		  };
-    		  
-    		  Properties props = new Properties();
-    		  props.setProperty("ProblemName", problemName);
-    		  
-    		  SortedProverResponse resp = liftAndProve(vc, cb, props);
-    		  
-              if (resp.getTag() == SortedProverResponse.FAIL)
-            	  died();
+		  									      /*@ non_null */ String problemName) 
+  {
+    if (!(useSimplify || useSorted))
+			return null;
+    start();
 
-    		  responses.add(new SimplifyOutput(
-    				  resp.getTag() == SortedProverResponse.YES ? SimplifyOutput.VALID
-    						  : SimplifyOutput.INVALID));
-    		  
-    		  return new Enumeration() {
-    			  int pos = 0;    			  
-    			  public boolean hasMoreElements() {  return (pos < responses.size()); }
-    			  public Object nextElement() {
-    				  if (pos >= responses.size()) throw new java.util.NoSuchElementException();
-    				  return responses.get(pos++);
-    			  }
-    		  };
-    	  } else {
-    		  simplify.startProve();
-    		  VcToString.compute(vc, simplify.subProcessToStream());
-    		  
-    		  Enumeration en = simplify.streamProve();
-    		  if (listener != null) listener.stateChanged(1);
-    		  return en;
-    	  }
-      } catch (FatalError e) {
-        died();
-        return null;
-      }
+    if (scope == null) {
+    	if (savedScope != null && status != PUSHED)
+    		push(savedScope);
+    } else {
+    	if (status == PUSHED) {
+    		if (savedScope != scope) {
+    			pop();
+    			push(scope);
+    		}
+    	} else {
+    		push(scope);
+    	}
+    }
+
+    if (listener != null) listener.stateChanged(2);
       
-    }
-    else {
-      return null;
-    }
+    try {
+    	if (useSorted)
+    		return proveUsingSortedProver_helper(vc, problemName);
+
+    	simplify.startProve();
+    	VcToString.compute(vc, simplify.subProcessToStream());
+
+    	Enumeration en;
+    	if (true) {
+        	SimplifyProverRunnable r = new SimplifyProverRunnable(simplify);
+        	Thread simplifyProverThread = new Thread(r);
+        	simplifyProverThread.start();
+        	simplifyProverThread.join(PROVER_KILL_TIME*1000); // can throw InterruptedException.
+        	en = r.getProverResult();
+        	if (en == null) {
+        		if (THEADING_TRACE_OUTPUT) System.out.println("\tProverManager: interrupting simplify");
+        		simplifyProverThread.interrupt(); // in case prover is still running.
+        		if (THEADING_TRACE_OUTPUT) System.out.println("\tProverManager: waiting for simplify to return");
+        		simplifyProverThread.join(); // wait for child process to die
+        		if (THEADING_TRACE_OUTPUT) System.out.println("\tProverManager: killing simplify");
+        		died(); // kill simplify prover process since it is taking too much time.
+        		en = new SimplifyTimeoutResultEnum();
+        	}
+    	} else {
+    		en = simplify.streamProve();
+    	}
+
+    	if (listener != null) listener.stateChanged(1);
+    	return en;
+    } catch (FatalError e) {
+    	died();
+    	return null;
+    } catch (InterruptedException e) { // Should not occur, but just in case ...
+    	died();
+    	return null;
+	}
+  }
+
+  private static Enumeration proveUsingSortedProver_helper(Expr vc, String problemName) {
+	  final ArrayList responses = new ArrayList();
+	  SortedProverCallback cb = new SortedProverCallback() {
+		  public void processResponse(SortedProverResponse resp) {
+			  if (resp.getTag() == SortedProverResponse.COUNTER_EXAMPLE) {
+				  String[] labels = ((CounterExampleResponse) resp)
+				  .getLabels();
+				  SExp[] labels2 = new SExp[labels.length];
+				  for (int i = 0; i < labels.length; ++i)
+					  labels2[i] = SExp.fancyMake(labels[i]);
+				  responses.add(new SimplifyResult(
+						  SimplifyOutput.COUNTEREXAMPLE, SList
+						  .fromArray(labels2), null));
+			  }
+		  }
+	  };
+
+	  Properties props = new Properties();
+	  props.setProperty("ProblemName", problemName);
+
+	  SortedProverResponse resp = liftAndProve(vc, cb, props);
+
+	  if (resp.getTag() == SortedProverResponse.FAIL)
+		  died();
+
+	  responses
+	  .add(new SimplifyOutput(
+			  resp.getTag() == SortedProverResponse.YES ? SimplifyOutput.VALID
+					  : SimplifyOutput.INVALID));
+
+	  return new Enumeration() {
+		  int pos = 0;
+
+		  public boolean hasMoreElements() {
+			  return (pos < responses.size());
+		  }
+
+		  public Object nextElement() {
+			  if (pos >= responses.size())
+				  throw new java.util.NoSuchElementException();
+			  return responses.get(pos++);
+		  }
+	  };
   }
   
   static int cnt = 0;
@@ -413,4 +442,30 @@ public class ProverManager {
    */
   public static /*@ nullable */ SortedProver sortedProver;
   public static /*@ nullable */ Lifter lifter;
+
+  public static final boolean PROVER_IN_ITS_OWN_THREAD;
+  public static final boolean THEADING_TRACE_OUTPUT;
+  public static final int PROVER_KILL_TIME; // in seconds.
+
+  static {
+	  String proverInItsOwnThread = System.getProperty("PROVER_IN_ITS_OWN_THREAD");
+	  PROVER_IN_ITS_OWN_THREAD = "1".equals(proverInItsOwnThread);
+	  
+	  THEADING_TRACE_OUTPUT = PROVER_IN_ITS_OWN_THREAD && true;
+	  
+	  String pktEnvVar = System.getProperty("PROVER_KILL_TIME");
+	  int pkt;
+	  try {
+		  pkt = Integer.parseInt(pktEnvVar);
+	  } catch (NumberFormatException e) {
+		  pkt = -1;
+	  }
+	  if ((pkt < 0 || pkt > 1000) && pktEnvVar != null && !"".equals(pktEnvVar)) {
+		  System.err.println("ERROR: illegal value for PROVER_KILL_TIME:"
+				  + pktEnvVar);
+		  pkt = 5;
+	  }
+	  PROVER_KILL_TIME = pkt;
+	  if (THEADING_TRACE_OUTPUT) System.out.println("\tProverManager: using PROVER_KILL_TIME " + PROVER_KILL_TIME);
+  }
 }

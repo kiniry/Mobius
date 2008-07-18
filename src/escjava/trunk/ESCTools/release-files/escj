@@ -252,6 +252,7 @@ fi
 
 ## Simplify settings
 : ${PROVER_KILL_TIME:=300}
+: ${PROVER_IN_ITS_OWN_THREAD:=0}
 : ${PROVER_CC_LIMIT:=10}
 : ${PROVER_MAX_FNUR:=700} ### Ticket #34
 export PROVER_KILL_TIME PROVER_CC_LIMIT PROVER_MAX_FNUR
@@ -284,6 +285,8 @@ if (( $VERBOSE > 0 )) ; then
     echo "Executing:";
     echo "${JAVA} ${JAVA_VM_FLAGS}";
     echo "  -Dsimplify=${ESCJ_SIMPLIFY}";
+    echo "  -DPROVER_KILL_TIME=${PROVER_KILL_TIME}";
+    echo "  -DPROVER_IN_ITS_OWN_THREAD=${PROVER_IN_ITS_OWN_THREAD}";
     echo "  -classpath ${ESC_CLASSPATH}";
     echo "  " ${MAIN} ;
     echo "  " ${JBIN} ;
@@ -294,7 +297,11 @@ if (( $VERBOSE > 0 )) ; then
     echo "=================================================================="
 fi
 
-${JAVA} ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" -Dsimplify="${ESCJ_SIMPLIFY}" \
+${JAVA} \
+    ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" \
+    -Dsimplify="${ESCJ_SIMPLIFY}" \
+    -DPROVER_KILL_TIME="${PROVER_KILL_TIME}" \
+    -DPROVER_IN_ITS_OWN_THREAD=${PROVER_IN_ITS_OWN_THREAD} \
     -classpath "${ESC_CLASSPATH}" ${MAIN} \
     ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $ARGS
 
