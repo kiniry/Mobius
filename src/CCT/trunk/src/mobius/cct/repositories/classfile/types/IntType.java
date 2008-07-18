@@ -25,7 +25,7 @@ public final class IntType extends PrimitiveType {
   }
   
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'I'
    */
   @Override
@@ -34,7 +34,7 @@ public final class IntType extends PrimitiveType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'int'
    */
   @Override

@@ -2,7 +2,6 @@ package mobius.cct.tests.mocks;
 
 import static org.junit.Assert.fail;
 import mobius.cct.certificates.Certificate;
-import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.util.Version;
 import mobius.cct.verifiers.CyclicDependencyException;
 import mobius.cct.verifiers.Environment;

@@ -25,7 +25,7 @@ public final class FloatType extends PrimitiveType {
   }
   
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'F'
    */
   @Override
@@ -34,7 +34,7 @@ public final class FloatType extends PrimitiveType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'float'
    */
   @Override

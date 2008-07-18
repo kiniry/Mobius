@@ -35,7 +35,7 @@ public class DefaultClassFile implements MutableClassFile {
    * @param attr Attribute.
    */
   @Override
-  public void addClassAttr(Attribute attr) {
+  public void addClassAttr(final Attribute attr) {
     // TODO Auto-generated method stub
     
   }
@@ -46,7 +46,8 @@ public class DefaultClassFile implements MutableClassFile {
    * @param attr Attribute.
    */  
   @Override
-  public void addMethodAttr(MethodName m, Attribute attr) {
+  public void addMethodAttr(final MethodName m, 
+                            final Attribute attr) {
     // TODO Auto-generated method stub
     
   }
@@ -58,7 +59,7 @@ public class DefaultClassFile implements MutableClassFile {
    * @return Attribute.
    */  
   @Override
-  public Attribute getClassAttr(String name, int i) {
+  public Attribute getClassAttr(final String name, final int i) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -69,7 +70,7 @@ public class DefaultClassFile implements MutableClassFile {
    * @return Attribute count.
    */  
   @Override
-  public int getClassAttrCount(String name) {
+  public int getClassAttrCount(final String name) {
     // TODO Auto-generated method stub
     return 0;
   }
@@ -82,7 +83,9 @@ public class DefaultClassFile implements MutableClassFile {
    * @return Attribute.
    */  
   @Override
-  public Attribute getMethodAttr(MethodName m, String name, int i) {
+  public Attribute getMethodAttr(final MethodName m, 
+                                 final String name, 
+                                 final int i) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -94,7 +97,8 @@ public class DefaultClassFile implements MutableClassFile {
    * @return Attribute count.
    */  
   @Override
-  public int getMethodAttrCount(MethodName m, String name) {
+  public int getMethodAttrCount(final MethodName m, 
+                                final String name) {
     // TODO Auto-generated method stub
     return 0;
   }
@@ -105,7 +109,8 @@ public class DefaultClassFile implements MutableClassFile {
    * @param i Attribute index.
    */  
   @Override
-  public void removeClassAttr(String name, int i) {
+  public void removeClassAttr(final String name, final 
+                              int i) {
     // TODO Auto-generated method stub
     
   }
@@ -117,7 +122,9 @@ public class DefaultClassFile implements MutableClassFile {
    * @param i Attribute index.
    */  
   @Override
-  public void removeMethodAttr(MethodName m, String name, int i) {
+  public void removeMethodAttr(final MethodName m, 
+                               final String name, 
+                               final int i) {
     // TODO Auto-generated method stub
     
   }
@@ -128,7 +135,7 @@ public class DefaultClassFile implements MutableClassFile {
    * @throws IOException .
    */
   @Override
-  public void writeTo(OutputStream os) throws IOException {
+  public void writeTo(final OutputStream os) throws IOException {
     // TODO Auto-generated method stub
     
   }
@@ -149,7 +156,7 @@ public class DefaultClassFile implements MutableClassFile {
    * @return Iterator.
    */
   @Override
-  public Iterator<Attribute> methodAttribute(MethodName m) {
+  public Iterator<Attribute> methodAttribute(final MethodName m) {
     // TODO Auto-generated method stub
     return null;
   }

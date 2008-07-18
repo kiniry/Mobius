@@ -100,7 +100,8 @@ public class LRUCache<C> implements Cache<C> {
   }
   
   /**
-   * Retrieve object from cache.
+   * Retrieve object from cache. Return null if there is no
+   * binding for the requested key.
    * @param key Key.
    * @return Retrieved value or {@code null} (if the key
    * is not bound in cache).
@@ -111,7 +112,7 @@ public class LRUCache<C> implements Cache<C> {
   }
   
   /**
-   * Check if there is a binding for given key in the cache.
+   * Check if there is a binding for given key in this LRUCache.
    * @param key Key
    * @return {@code true} iff key is bound in the cache.
    */

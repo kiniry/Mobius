@@ -39,7 +39,7 @@ public final class LongEntry implements Entry {
   }
   
   /**
-   * Write to output stream.
+   * Write LongEntry to output stream.
    * @param os Output stream.
    * @throws IOException .
    */
@@ -58,7 +58,7 @@ public final class LongEntry implements Entry {
   }
   
   /**
-   * Equality test.
+   * Test equality of LongEntries.
    * @param obj Object to be compared.
    * @return true iff this equals obj.
    */

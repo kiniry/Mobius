@@ -21,7 +21,7 @@ public class ObjectType extends FieldType {
   }
   
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'Lpackage/Class;'
    */
   @Override
@@ -30,7 +30,7 @@ public class ObjectType extends FieldType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'package.Class'
    */
   @Override

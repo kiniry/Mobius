@@ -39,7 +39,7 @@ public final class FloatEntry implements Entry {
   }
   
   /**
-   * Write to output stream.
+   * Write FloatEntry to output stream.
    * @param os Output stream.
    * @throws IOException .
    */
@@ -58,7 +58,7 @@ public final class FloatEntry implements Entry {
   }
   
   /**
-   * Equality test.
+   * Test equality of FloatEntries.
    * @param obj Object to be compared.
    * @return true iff this equals obj.
    */

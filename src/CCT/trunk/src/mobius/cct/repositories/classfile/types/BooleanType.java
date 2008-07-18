@@ -25,7 +25,7 @@ public final class BooleanType extends PrimitiveType {
   }
   
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'Z'
    */
   @Override
@@ -34,7 +34,7 @@ public final class BooleanType extends PrimitiveType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'boolean'
    */
   @Override

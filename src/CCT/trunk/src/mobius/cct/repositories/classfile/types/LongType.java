@@ -25,7 +25,7 @@ public final class LongType extends PrimitiveType {
   }
   
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'J'
    */
   @Override
@@ -34,7 +34,7 @@ public final class LongType extends PrimitiveType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'long'
    */
   @Override

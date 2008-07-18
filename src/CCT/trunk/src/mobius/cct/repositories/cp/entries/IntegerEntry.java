@@ -39,7 +39,7 @@ public final class IntegerEntry implements Entry {
   }
   
   /**
-   * Write to output stream.
+   * Write IntegerEntry to output stream.
    * @param os Output stream.
    * @throws IOException .
    */
@@ -58,7 +58,7 @@ public final class IntegerEntry implements Entry {
   }
   
   /**
-   * Equality test.
+   * Test equality of IntegerEntries.
    * @param obj Object to be compared.
    * @return true iff this equals obj.
    */

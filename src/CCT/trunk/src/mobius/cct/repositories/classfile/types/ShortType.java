@@ -25,7 +25,7 @@ public final class ShortType extends PrimitiveType {
   }
   
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'S'
    */
   @Override
@@ -34,7 +34,7 @@ public final class ShortType extends PrimitiveType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'short'
    */
   @Override

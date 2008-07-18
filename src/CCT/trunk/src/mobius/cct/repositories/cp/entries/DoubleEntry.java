@@ -39,7 +39,7 @@ public final class DoubleEntry implements Entry {
   }
   
   /**
-   * Write to output stream.
+   * Write DoubleEntry to output stream.
    * @param os Output stream.
    * @throws IOException .
    */
@@ -58,7 +58,7 @@ public final class DoubleEntry implements Entry {
   }
   
   /**
-   * Equality test.
+   * Test equality of DoubleEntries.
    * @param obj Object to be compared.
    * @return true iff this equals obj.
    */

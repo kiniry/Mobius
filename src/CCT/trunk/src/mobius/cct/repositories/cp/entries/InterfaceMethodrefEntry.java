@@ -1,20 +1,10 @@
 package mobius.cct.repositories.cp.entries;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 /**
  * Interface method reference.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public final class InterfaceMethodrefEntry implements Entry {
-  /** Index of class name in constant pool. */
-  private int fClassName;
-  
-  /** Index of method name and type info in constant pool. */
-  private int fSignature;
-  
+public final class InterfaceMethodrefEntry extends RefEntry {
   /**
    * Create entry. 
    * @param className Index of class name in constant pool.
@@ -24,8 +14,7 @@ public final class InterfaceMethodrefEntry implements Entry {
    */
   public InterfaceMethodrefEntry(final int className, 
                         final int signature) {
-    fClassName = className;
-    fSignature = signature;
+    super(className, signature);
   }
   
   /**
@@ -36,68 +25,5 @@ public final class InterfaceMethodrefEntry implements Entry {
   public byte getType() {
     return CONSTANT_InterfaceMethodref;
   }
-  
-  /**
-   * Get size.
-   * @return 1.
-   */
-  @Override
-  public int getSize() {
-    return 1;
-  }
-  
-  /**
-   * Write to output stream.
-   * @param os Output stream.
-   * @throws IOException .
-   */
-  @Override
-  public void write(final OutputStream os) throws IOException {
-    final DataOutputStream ds = new DataOutputStream(os);
-    ds.writeShort(fClassName);
-    ds.writeShort(fSignature);
-  }
-  
-  /**
-   * Return constant pool index of class name.
-   * @return Index.
-   */
-  public int getClassName() {
-    return fClassName;
-  }
-  
-  /**
-   * Return constant pool index of name and type info.
-   * @return Index.
-   */
-  public int getSignature() {
-    return fSignature;
-  }
-  
-  /**
-   * Equality test.
-   * @param obj Object to be compared.
-   * @return true iff this equals obj.
-   */
-  @Override
-  public boolean equals(final Object obj) {
-    if (obj == null) {
-      return false;
-    } else if (obj.getClass().equals(this.getClass())) {
-      return 
-        fClassName == ((InterfaceMethodrefEntry)obj).getClassName() &&
-        fSignature == ((InterfaceMethodrefEntry)obj).getSignature();
-    } else {
-      return false;
-    }
-  }
-  
-  /**
-   * Hashcode.
-   * @return Hash value.
-   */
-  @Override
-  public int hashCode() {
-    return (fSignature << 16) + fClassName;
-  }
+
 }

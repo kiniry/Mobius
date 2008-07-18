@@ -24,7 +24,7 @@ public final class ByteType extends PrimitiveType {
     return INSTANCE;
   }
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'B'
    */
   @Override
@@ -33,7 +33,7 @@ public final class ByteType extends PrimitiveType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'byte'
    */
   @Override

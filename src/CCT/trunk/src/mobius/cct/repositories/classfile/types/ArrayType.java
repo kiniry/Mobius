@@ -19,7 +19,7 @@ public class ArrayType extends FieldType {
   }
   
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return '[element_type'
    */
   @Override
@@ -28,7 +28,7 @@ public class ArrayType extends FieldType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'element_type[]'
    */
   @Override

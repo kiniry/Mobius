@@ -72,6 +72,30 @@ public class FieldTypeTest {
   }
 
   /**
+   * Test invalid type - void.
+   */
+  @Test(expected=IOException.class)
+  public void testVoid() throws IOException {
+    FieldType.parse("V");
+  }
+
+  /**
+   * Test invalid type - empty.
+   */
+  @Test(expected=IOException.class)
+  public void testEmpty() throws IOException {
+    FieldType.parse("");
+  }
+  
+  /**
+   * Test invalid type - "X".
+   */
+  @Test(expected=IOException.class)
+  public void testUnknownType() throws IOException {
+    FieldType.parse("X");
+  }
+  
+  /**
    * Helper method - test given primitive type.
    * @param iname Internal form of type name
    * @param ename External form of type name..

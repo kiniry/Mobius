@@ -39,7 +39,7 @@ public final class Utf8Entry implements Entry {
   }
   
   /**
-   * Write to output stream.
+   * Write Utf8Entry to output stream.
    * @param os Output stream.
    * @throws IOException .
    */
@@ -58,7 +58,7 @@ public final class Utf8Entry implements Entry {
   }
   
   /**
-   * Equality test.
+   * Test equality of Utf8Entries.
    * @param obj Object to be compared.
    * @return true iff this equals obj.
    */

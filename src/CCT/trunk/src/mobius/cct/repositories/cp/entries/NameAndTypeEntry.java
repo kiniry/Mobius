@@ -48,7 +48,7 @@ public final class NameAndTypeEntry implements Entry {
   }
   
   /**
-   * Write to output stream.
+   * Write NameAndTypeEntry to output stream.
    * @param os Output stream.
    * @throws IOException .
    */
@@ -76,7 +76,7 @@ public final class NameAndTypeEntry implements Entry {
   }
   
   /**
-   * Equality test.
+   * Test equality of NameAndTypeEntries.
    * @param obj Object to be compared.
    * @return true iff this equals obj.
    */

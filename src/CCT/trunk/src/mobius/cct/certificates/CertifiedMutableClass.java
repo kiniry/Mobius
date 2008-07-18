@@ -55,6 +55,7 @@ public class CertifiedMutableClass<C extends MutableClassFile>
   public void writeTo(final OutputStream os) 
     throws IOException {
     //TODO
+    // ...
   }
   
   /**
@@ -63,6 +64,7 @@ public class CertifiedMutableClass<C extends MutableClassFile>
    */
   public Iterator<Certificate> getCertificates() {
     //TODO
+    //...
     return null;
   }
   
@@ -72,6 +74,7 @@ public class CertifiedMutableClass<C extends MutableClassFile>
    */
   public C getClassFile() {
     //TODO
+    //...
     return null;
   }
 }

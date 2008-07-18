@@ -34,7 +34,7 @@ public class InfiniteCache<C> implements Cache<C> {
   }
   
   /**
-   * Remove binding for given key from cache (if present).
+   * Remove binding for given key from cache.
    * @param key Key. Does not have to be bound.
    */
   @Override

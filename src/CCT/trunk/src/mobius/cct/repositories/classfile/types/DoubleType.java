@@ -25,7 +25,7 @@ public final class DoubleType extends PrimitiveType {
   }
   
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'D'
    */
   @Override
@@ -34,7 +34,7 @@ public final class DoubleType extends PrimitiveType {
   }
 
   /**
-   * See {@link FieldType}.
+   * See {@link ResultType}.
    * @return 'double'
    */
   @Override

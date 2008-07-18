@@ -42,7 +42,7 @@ public final class ClassEntry implements Entry {
   }
   
   /**
-   * Write to output stream.
+   * Write ClassEntry to output stream.
    * @param os Output stream.
    * @throws IOException .
    */
@@ -61,7 +61,7 @@ public final class ClassEntry implements Entry {
   }
   
   /**
-   * Equality test.
+   * Test equality of ClassEntries.
    * @param obj Object to be compared.
    * @return true iff this equals obj.
    */
