@@ -39,6 +39,7 @@ import javafe.ast.TypeDeclElem;
 import javafe.ast.TypeDeclElemVec;
 import javafe.ast.TypeDeclVec;
 import javafe.ast.VariableAccess;
+import javafe.tc.TypeCheck;
 import javafe.tc.TypeSig;
 import javafe.tc.Types;
 import javafe.util.Assert;
@@ -651,6 +652,14 @@ private void checkParamOverrides(MethodDecl md, Set overrides) {
 			// method has non_null for parameter i
 			MethodDecl smd = FlowInsensitiveChecks
 				.getSuperMethodDeclIfParamIsNullable(i, overrides);
+			
+			// BEGIN HACK: there are issues when processing inner class of classes inside rt.jar ... hence skip them for now.
+			String fileName = Location.toFileName(md.getStartLoc());
+			if (fileName.indexOf('$') > 0) {
+				javafe.util.Info.out("\tcheckParamOverrides: SKIPPING over method for inner type: " + fileName);
+				continue;
+			}
+			// END HACK
 			if (smd == null)
 				continue; // all overridden methods decl i as non-null.
 			// smd declares i as nullable
