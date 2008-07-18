@@ -1,4 +1,4 @@
-A.java:17: Caution: The nullable annotation (explicit or implicit) is ignored because this method overrides a method declared non_null: 
+A.java:18: Caution: The nullable annotation (explicit or implicit) is ignored because this method overrides a method declared non_null: 
         public /*@nullable*/Object m_result4() { // warning: nullable  ...
                   ^
 B.java:2: Associated declaration: 
