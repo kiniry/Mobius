@@ -212,7 +212,7 @@ Don't complain, but don't do it twice either. ???
 		if (s.endsWith(".java")) javafile = cu.sourceFile();
 		
 	    } else {
-	    	javafile = ((EscTypeReader)OutsideEnv.reader).
+	    	javafile = ((EscTypeReader)OutsideEnv.reader()).
 			findSrcFile(pkgStrings,type.toString()+".java");
 		if (javafile == null &&
 			cu.sourceFile().getLocalName().endsWith(".java")) {
@@ -315,13 +315,13 @@ Don't complain, but don't do it twice either. ???
 			}
 		    }
 		    if (!found) {
-			GenericFile javafile = ((EscTypeReader)OutsideEnv.reader).
+			GenericFile javafile = ((EscTypeReader)OutsideEnv.reader()).
 			    findBinFile(pkg,id.toString()+".class");
 			if (javafile != null) {
 			    javafe.util.Info.out("Reading class file "
 				+ javafile.getHumanName());
 			    CompilationUnit
-				javacu = ((EscTypeReader)OutsideEnv.reader).
+				javacu = ((EscTypeReader)OutsideEnv.reader()).
 				    binaryReader.read(javafile, false); 
 			    if (combination == null)
 				combination = javacu;
@@ -365,7 +365,7 @@ Don't complain, but don't do it twice either. ???
 		mrcufile = gf;
 	    } else {
 		mrcufile =
-		    ((EscTypeReader)OutsideEnv.reader).findFirst(
+		    ((EscTypeReader)OutsideEnv.reader()).findFirst(
 			    pkgStrings,type.toString());
 	    }
 	    javafe.util.Info.out( mrcufile==null ? "No MRCU found" :
@@ -446,7 +446,7 @@ Don't complain, but don't do it twice either. ???
 		    RefinePragma rp = (RefinePragma)v.elementAt(i);
 		    String filename = rp.filename;
 			// FIXME - what if we are refining a class file ???
-		    GenericFile gf = ((EscTypeReader)OutsideEnv.reader).findSrcFile(pkgStrings,filename);
+		    GenericFile gf = ((EscTypeReader)OutsideEnv.reader()).findSrcFile(pkgStrings,filename);
 		    if (gf == null) ErrorSet.error(rp.loc,
 			"Could not find file referenced in refine annotation: " + filename);
 		    return gf;
