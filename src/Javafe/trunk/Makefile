@@ -92,8 +92,11 @@ javafealltests: build
 self_typecheck: build
 	$(MAKE) -C Javafe self_typecheck 
 
-self_test: build
-	$(MAKE) -C Javafe self_test0
+self_test self_test0: build
+	export SPECS="$(HOME)/dev/JMLspecs/java4"; \
+	$(MAKE) ESCJ_EXTRA_FLAGS+=" -nonNullByDefault" \
+		SPECS="$(HOME)/dev/JMLspecs/java4" \
+		ESCJ_VERBOSE=1 -C Javafe self_test0
 
 # Note: self_test also tests Utils. Use the following if you only want to test Utils.
 self_test_utils:
@@ -447,7 +450,7 @@ test-binary-release:
 	    unset JAVAFE_CLASSPATH ; \
 	    unset JAVAFE_RELEASE ; \
 	    tar xjf ${RELTAR}.tbz ;\
-	    
+
 test-source-release:
 	@echo "Testing source release ............"
 	rm -rf ${RELTEST}
@@ -465,7 +468,7 @@ test-source-release:
 		unset JAR_FILES ; \
 		tar xjf ${RELSRCTAR}.tbz ;\
 		JAVAFE_ROOT=${RELTEST} $(MAKE) -s clean build test                         
- 
+
 ################################################################################
 ## Show system variables
 

@@ -12,7 +12,7 @@ CLASSDIRECTORY=.
 
 CP = ${call canonicalize,${UTILS_CLASSFILES}:${JUNIT_LIB}:$(SPECS)}
 
-PROVER_KILL_TIME?=7
+export PROVER_KILL_TIME ?= 7
 
 #------------------------------------------------------------------------------
 
@@ -49,11 +49,15 @@ self_test: build
 	@echo PROVER_KILL_TIME=$(PROVER_KILL_TIME)
 	${ESCJ} -classpath ${CP} \
 		-specs ${SPECS} \
-		${ESCJ_FLAGS} \
+		${ESCJ_EXTRA_FLAGS} \
 		${SOURCEFILES}
 
 self_test0:
-	${MAKE} PROVER_KILL_TIME=7 self_test
+	export SPECS="$(HOME)/dev/JMLspecs/java4"; \
+	export PROVER_KILL_TIME=5; \
+	$(MAKE) ESCJ_EXTRA_FLAGS+=" -nonNullByDefault" \
+		SPECS="$(HOME)/dev/JMLspecs/java4" \
+		ESCJ_VERBOSE=1 self_test
 
 clean:
 	@-rm -f junitutils/*.class ${CLASSESSTAMP}

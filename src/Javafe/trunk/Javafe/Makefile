@@ -22,7 +22,8 @@ export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/Javafe/test
 export CAN_CLASSDIRECTORY = ${call canonicalize,${CLASSDIRECTORY}}
 
 ## This one is needed in submakes that don't define their own classpath
-export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB})
+RAW_CLASSPATH = ${CLASSDIRECTORY}:${UTILS_CLASSFILES}:${BCEL_LIB}
+export CLASSPATH = $(call canonicalize,${RAW_CLASSPATH})
 
 ##############################################################################
 
@@ -167,8 +168,7 @@ self_typecheck:
 self_test: build
 	@echo PROVER_KILL_TIME=${PROVER_KILL_TIME}
 	@echo JAVA_VM_FLAGS=${JAVA_VM_FLAGS}
-	export JAVA_VM_FLAGS="$(JAVA_VM_FLAGS)"; \
-	${ESCJ} -classpath "$(call canonicalize,${JUNIT_LIB}:${CLASSPATH}:${JAVAFE_LIB})" \
+	${ESCJ} -classpath "$(call canonicalize,${JUNIT_LIB}:${RAW_CLASSPATH}:${JAVAFE_LIB})" \
 		-sourcepath "$(call canonicalize,${SOURCEPATH})" \
 		-specs "$(SPECS)" \
 		-vclimit 1000000 \
@@ -176,11 +176,15 @@ self_test: build
 		$(ESCJ_EXTRA_FLAGS) \
 		$(PACKAGE_LIST)
 
+# Example of using self_test0 to test a single file.
+# make SPECS=/home/chalin/dev/JMLspecs/java4 PACKAGE_LIST=javafe.TestTool self_test0
+
 self_test0:
 	unset CLASSPATH; \
 	export JAVA_VM_FLAGS=-Xmx1024m; \
-	export PROVER_KILL_TIME=7; \
-	${MAKE} ESCJ_EXTRA_FLAGS+=" -nowarn Modifies" PROVER_KILL_TIME=7 self_test
+	export PROVER_KILL_TIME=5; \
+	export PROVER_CC_LIMIT=1; \
+	${MAKE} ESCJ_EXTRA_FLAGS+=" -nonNullByDefault -nowarn Modifies -nowarn Exception" self_test
 
 ## This tests a binary release that is untarred in the RELTEMP directory,
 ## with RELCLASSPATH pointing to the esctools1.jar file that is being tested.
