@@ -269,7 +269,7 @@ public class ProverManager {
     	VcToString.compute(vc, simplify.subProcessToStream());
 
     	Enumeration en;
-    	if (true) {
+    	if (PROVER_IN_ITS_OWN_THREAD) {
         	SimplifyProverRunnable r = new SimplifyProverRunnable(simplify);
         	Thread simplifyProverThread = new Thread(r);
         	simplifyProverThread.start();
