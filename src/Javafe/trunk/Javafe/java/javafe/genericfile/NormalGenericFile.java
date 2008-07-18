@@ -21,7 +21,6 @@ public class NormalGenericFile extends File implements GenericFile {
    * File}.
    */
   //@ requires underlyingFile != null;
-  
   public NormalGenericFile(File underlyingFile) {
     super(underlyingFile.getPath());
   }
@@ -41,12 +40,16 @@ public class NormalGenericFile extends File implements GenericFile {
    * the system separators.
    */
   public String getHumanName() {
-    String result = null;
-    if (Tool.options.testMode)
-      result = this.toString().replace('/', '|').replace('\\', '|');
-    else
-      result = this.toString();
-    return result;
+	  String result = this.toString();
+	  if (Tool.options.testMode)
+		  result = result.replace('/', '|').replace('\\', '|');
+	  else if (File.separatorChar == '\\') {
+		  // Normalize path names under Windows (like what is done in Eclipse).
+		  result = result.replace('\\', '/');
+		  if (result.length() > 2 && result.charAt(1) == ':')
+			  result = result.substring(2);
+	  }
+	  return result;
   }
   
   /**

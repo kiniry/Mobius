@@ -187,7 +187,7 @@ public final class Identifier
     return hash(chars, chars.length);
   }
   
-  public boolean equals(Object o) {
+  public boolean equals(/*@nullable \readonly*/Object o) {
     return this == o;
   }
 

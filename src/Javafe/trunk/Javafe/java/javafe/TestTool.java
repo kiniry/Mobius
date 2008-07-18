@@ -39,8 +39,10 @@ public class TestTool extends SrcTool {
     
     public javafe.Options makeOptions() { return new Options(); }
     
-    //@ requires options != null;
-    public final /*@non_null*/Options options() { return (/*+@non_null*/Options)options; }
+    //+@ requires options != null;
+    public final /*@non_null*/javafe.TestTool.Options options() { //@ nowarn NonNullResult;
+    	return (/*+@non_null*/ Options)options; //@ nowarn Cast;
+    }
 
     public class Options extends SrcToolOptions {
 	    /**
@@ -108,11 +110,12 @@ public class TestTool extends SrcTool {
      * inherited.)<p>
      */
     //@ requires \nonnullelements(args);
+    //@ diverges true;
     public static void main(/*@non_null*/String[/*#@non_null*/] args) {
 		Tool t = new TestTool();
 		int result = t.run(args);
 		if (result != 0) System.exit(result);
-    }
+    } //@ nowarn Post;
 
 
     /***************************************************
@@ -125,6 +128,7 @@ public class TestTool extends SrcTool {
      * This method is called on the TypeDecl of each
      * outside type that SrcTool is to process. <p>
      */
+    //@ also requires options != null;
     public void handleTD(/*@non_null*/TypeDecl td) {
 		Info.out("[processing "
 			+ TypeSig.getSig(td).getExternalName());
@@ -149,7 +153,7 @@ public class TestTool extends SrcTool {
      * 
      * Returns null if none exists.<p>
      */
-    public TypeSig getSuperClass(TypeDecl td) {
+    public /*@nullable*/TypeSig getSuperClass(TypeDecl td) {
 		// If  td is not a class, then it has no superclass:
 		if (!(td instanceof ClassDecl))
 		    return null;
@@ -178,7 +182,7 @@ public class TestTool extends SrcTool {
 		    P = sig.packageName;
 		}
 	
-		TypeSig S = OutsideEnv.lookup(P, T);
+		TypeSig S = OutsideEnv.lookup(P, T); //@ nowarn Pre;
 		if (S == null)
 		    ErrorSet.error("unable to load type "
 					+ superClassName.printName());

@@ -88,7 +88,7 @@ public class DeclLinks extends javafe.SrcTool {
      ** In addition, it calls itself recursively to handle types
      ** nested within outside types.<p>
      **/
-    public void handleTD(TypeDecl td) {
+    public void handleTD(/*@non_null*/TypeDecl td) {
 	//System.out.println ("handleTD");
 	
       TypeSig sig = TypeCheck.inst.getSig(td);
@@ -101,25 +101,25 @@ public class DeclLinks extends javafe.SrcTool {
 
 class DeclLinkVisitor extends DefaultVisitor {
 
-  public void visitVariableAccess(VariableAccess x) {
+  public void visitVariableAccess(/*@non_null*/VariableAccess x) {
       super.visitVariableAccess(x);
       //@ assume x.decl != null;
       report(x.loc, x.decl.locId);
   }
 
-  public void visitFieldAccess(FieldAccess x) {
+  public void visitFieldAccess(/*@non_null*/FieldAccess x) {
       super.visitFieldAccess(x);
       //@ assume x.decl != null;
       report(x.locId, x.decl.locId);
   }
 
-  public void visitConstructorInvocation(ConstructorInvocation x) {
+  public void visitConstructorInvocation(/*@non_null*/ConstructorInvocation x) {
       super.visitConstructorInvocation(x);
       //@ assume x.decl != null;
       report(x.locKeyword, x.decl.locId);
   }
 
-  public void visitNewInstanceExpr(NewInstanceExpr x) {
+  public void visitNewInstanceExpr(/*@non_null*/NewInstanceExpr x) {
       super.visitNewInstanceExpr(x);
       //@ assume x.decl != null;
       report(x.loc, x.decl.locId);

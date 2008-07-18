@@ -142,7 +142,7 @@ public class Options
    * {@link UsageError} exception with a string describing the
    * problem.
    */
-  //@ requires \nonnullelements(args);
+  //+@ requires \nonnullelements(args);
   //@ ensures inputEntries != null;
   public final void processOptions(/*@non_null*/String[/*#@non_null*/] args) throws UsageError {
     inputEntries = new ArrayList(args.length);

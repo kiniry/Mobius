@@ -16,9 +16,11 @@ void outputStartOfFile(FILE *o, const char *text, int len)
 void outputExpansion(FILE *o, Class *c, DirectiveListNode *d)
 {
   int nonnull;
+  int nullable;
   switch(d->tag) {
   case FIELDDIRECTIVE:
     nonnull = d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type);
+    nullable = !d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type);
     if (d->i.f.notnullloc) {
       indent(o, d->indent);
       fprintf(o, "//@ invariant %s != javafe.util.Location.NULL;\n", d->i.f.name);
@@ -29,7 +31,7 @@ void outputExpansion(FILE *o, Class *c, DirectiveListNode *d)
     }
     indent(o, d->indent);
     fprintf(o, "public %s%s%s %s;\n\n",
-	    (nonnull ? "/*@ non_null @*/ " : ""),
+	    (nonnull ? "/*@non_null*/ " : (nullable ? "/*@nullable*/ " : "")),
 	    d->i.f.type,
 	    (d->i.f.sequence ? VECTORSUFFIX : ""),
 	    d->i.f.name);
@@ -142,8 +144,8 @@ static void outputConstructor(FILE *o, int ind, Class *class,
     i = fieldCount;
     FOREACHFIELD(c, d, classlist) {
       fprintf(o, "%s%s%s %s",
-	      ((d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type))
-	       ? "/*@ non_null @*/ " : ""),
+	      (isJavaPrimitiveType(d->i.f.type) ? "" : (d->i.f.notnull
+	       ? "/*@non_null*/ " : "/*@nullable*/")),
 	      d->i.f.type,
 	      (d->i.f.sequence ? VECTORSUFFIX : ""),
 	      d->i.f.name);
@@ -229,14 +231,14 @@ static void outputMaker(FILE *o, int ind, Class *class,
     fprintf(o, "//@ ensures \\result != null;\n");
 
     indent(o, ind); 
-    fprintf(o, "public static /*@ non_null */ %s make(", class->name);
+    fprintf(o, "public static /*@non_null*/ %s make(", class->name);
 
     /* Output declarations of formals */
     i = fieldCount;
     FOREACHFIELD(c, d, classlist) {
       fprintf(o, "%s%s%s %s",
-	      ((d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type))
-	       ? "/*@ non_null @*/ " : ""),
+	      (isJavaPrimitiveType(d->i.f.type) ? "" 
+	       : (d->i.f.notnull ? "/*@non_null*/ " : "/*@nullable*/")),
 	      d->i.f.type,
 	      (d->i.f.sequence ? VECTORSUFFIX : ""),
 	      d->i.f.name);
@@ -331,14 +333,14 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       indent(o, ind);
       fprintf(o,"//@ requires v != null;\n");
       fprintf(o,"//@ ensures \\result != null;\n");
-      fprintf(o, "public abstract /*@ non_null */ Object accept(/*@ non_null */ %s v, Object o);\n\n", visitorArgResultRoot);
+      fprintf(o, "public abstract /*@non_null*/ Object accept(/*@non_null*/ %s v, /*@nullable*/Object o);\n\n", visitorArgResultRoot);
     }
     else {
-      fprintf(o, "public abstract void accept(/*@ non_null */ " VISITORCLASS " v);\n\n");
+      fprintf(o, "public abstract void accept(/*@non_null*/ " VISITORCLASS " v);\n\n");
       indent(o, ind);
       fprintf(o,"//@ requires v != null;\n");
       fprintf(o,"//@ ensures \\result != null;\n");
-      fprintf(o, "public abstract /*@ non_null */ Object accept(/*@ non_null */ " VISITORARGRESULTCLASS " v, Object o);\n\n");
+      fprintf(o, "public abstract /*@non_null*/ Object accept(/*@non_null*/ " VISITORARGRESULTCLASS " v, Object o);\n\n");
     }
   }
 
@@ -376,7 +378,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
 
     /* Output childAt */
     indent(o, ind);
-    fprintf(o, "public final /*@ non_null */ Object childAt(int index) {\n");
+    fprintf(o, "public final /*@non_null*/ Object childAt(int index) {\n");
     indent(o, ind+8); fprintf(o, "/*throws IndexOutOfBoundsException*/\n");
 
     indent(o, ind+3); fprintf(o, "if (index < 0)\n");
@@ -436,7 +438,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
   if (! class->abstract) {
     indent(o, ind);
     if (visitorRoot) {
-      fprintf(o, "public final void accept(/*@ non_null */ %s v) { \n", visitorRoot);
+      fprintf(o, "public final void accept(/*@non_null*/ %s v) { \n", visitorRoot);
       indent(o, 2*ind);
       fprintf(o, "if (v instanceof " VISITORCLASS ") ");
       fprintf(o, "((" VISITORCLASS ")v).visit%s(this);\n",
@@ -444,7 +446,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       indent(o, ind);
       fprintf(o, "}\n\n");
     } else
-      fprintf(o,"public final void accept(/*@ non_null */ " VISITORCLASS " v) { v.visit%s(this); }\n\n",
+      fprintf(o,"public final void accept(/*@non_null*/ " VISITORCLASS " v) { v.visit%s(this); }\n\n",
 	      class->name);
 
     /* output visitor arg result */
@@ -454,7 +456,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       char visitorArgResultRoot[1024];
       strcpy(visitorArgResultRoot, visitorRoot);
       strcat(visitorArgResultRoot, "ArgResult");
-      fprintf(o, "public final /*@ non_null */ Object accept(/*@ non_null */ %s v, /*@ nullable */ Object o) { \n", visitorArgResultRoot);
+      fprintf(o, "public final /*@non_null*/Object accept(/*@non_null*/%s v, /*@nullable*/Object o) { \n", visitorArgResultRoot);
       indent(o, 2*ind);
       fprintf(o, "if (v instanceof " VISITORARGRESULTCLASS ") ");
       fprintf(o, "return ((" VISITORARGRESULTCLASS ")v).visit%s(this, o); else return null;\n",
@@ -462,7 +464,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       indent(o, ind);
       fprintf(o, "}\n\n");
     } else {
-      fprintf(o,"public final /*@ non_null */ Object accept(/*@ non_null */ " VISITORARGRESULTCLASS " v, Object o) {"
+      fprintf(o,"public final /*@non_null*/Object accept(/*@non_null*/ " VISITORARGRESULTCLASS " v, /*@nullable*/Object o) {"
 	      "return v.visit%s(this, o); }\n\n",
 	      class->name);
     }

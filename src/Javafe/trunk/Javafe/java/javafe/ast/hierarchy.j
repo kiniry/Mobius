@@ -209,7 +209,7 @@ public abstract class ASTNode implements Cloneable
 
     //@ public model int endLoc;
     //@ public represents endLoc <- getEndLoc();
-    //@ public invariant startLoc == Location.NULL <==> endLoc == Location.NULL;    
+    //+@ public invariant startLoc == Location.NULL <==> endLoc == Location.NULL;    
 
   /** returns true iff this in an internally declared node. Note
    * that internally declared types have no associated location.
@@ -372,7 +372,7 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem
   //# int locCloseBrace NotNullLoc
 
   //@ invariant hasParent ==> parent != null;
-  public TypeDecl parent;
+  public /*@nullable*/TypeDecl parent;
 
   public TypeDecl getParent() { return parent; }
   public void setParent(/*@non_null*/ TypeDecl p) { parent = p; }
@@ -446,7 +446,7 @@ public class InterfaceDecl extends TypeDecl
 public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
 {
   //@ invariant hasParent ==> parent != null;
-  public TypeDecl parent;
+  public /*@nullable*/TypeDecl parent;
 
   public boolean binaryArgNames = false; // true if the ids of formal
 	// arguments are binary manufactured names instead of source code names
@@ -542,7 +542,7 @@ public class MethodDecl extends RoutineDecl
 public class InitBlock extends ASTNode implements TypeDeclElem
 {
   //@ invariant hasParent ==> parent != null;
-  public TypeDecl parent;
+  public /*@nullable*/TypeDecl parent;
 
   //# int modifiers
   //# ModifierPragma* pmodifiers NullOK
@@ -567,7 +567,7 @@ public abstract class TypeDeclElemPragma
   //# boolean redundant
 
   //@ invariant hasParent ==> parent != null;
-  public TypeDecl parent;
+  public /*@nullable*/TypeDecl parent;
 
   public TypeDecl getParent() { return parent; }
   public void setParent(/*@non_null*/ TypeDecl p) { parent = p; }
@@ -656,7 +656,7 @@ public class LocalVarDecl extends GenericVarDecl
 public class FieldDecl extends GenericVarDecl implements TypeDeclElem
 {
   //@ invariant hasParent ==> parent != null;
-  public TypeDecl parent;
+  public /*@nullable*/TypeDecl parent;
 
   //# VarInit init NullOK
 
@@ -2301,7 +2301,7 @@ public abstract class Name extends ASTNode
      * Return true if <code>other</code> is a <code>Name</code> that
      * is component-wise equal to <code>this</code>.
      */
-    public abstract boolean equals(Object other);
+    public abstract boolean equals(/*@nullable \readonly*/Object other);
 
     /**
      * The number of identifiers we contain.
@@ -2460,7 +2460,7 @@ public class SimpleName extends Name
     return id.toString();
   }
 
-    public boolean equals(Object other) {
+    public boolean equals(/*@nullable \readonly*/Object other) {
 	if (other instanceof SimpleName)
 	    return id == ((SimpleName)other).id;
 	else
@@ -2567,7 +2567,7 @@ public class CompoundName extends Name
   /** Return true if <code>other</code> is a <code>Name</code> that
     is component-wise equal to <code>this</code>. */
 
-  public boolean equals(Object other) {
+  public boolean equals(/*@nullable \readonly*/Object other) {
     if (other instanceof CompoundName) {
       Name o = (CompoundName)other;
       int sz = this.ids.size();

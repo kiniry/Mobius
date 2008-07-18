@@ -88,7 +88,7 @@ public class PrintSpec extends SrcTool
     @   ensures (* for each element of P, a directory exists of that name *);
     @   ensures \result.length() == 1 + P.length + (\sum int i; 0 < i && i < P.length; P[i].length());
     @*/
-  private /*@ pure non_null @*/ String makeDirTree(/*@ non_null */ String P[]) {
+  private /*@ pure non_null @*/ String makeDirTree(/*@ non_null */ String P[/*#@non_null*/]) {
     String s = ".";
     for (int i = 0; i < P.length; i++) {
       s = s + "/" + P[i];
@@ -96,12 +96,12 @@ public class PrintSpec extends SrcTool
       if (!f.exists()) f.mkdir();            
     }
     return s;
-  }
+  } //@ nowarn Post;
     
   public void loadAndPrintSpec(/*@ non_null */ String s) {
     String P[] = FQNpackage(s);
     String T = FQNname(s);
-    TypeSig sig = OutsideEnv.lookup(P, T);
+    TypeSig sig = OutsideEnv.lookup(P, T); //@ nowarn Pre;
     if (sig == null) {
       System.out.println("Can't find " + s);
       return;

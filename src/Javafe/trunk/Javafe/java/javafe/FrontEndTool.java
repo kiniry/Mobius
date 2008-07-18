@@ -55,14 +55,14 @@ public abstract class FrontEndTool extends Tool
   protected String compositeClassPath;
 
   public void setupPaths() {
-    String classPath = options.userPath;
+    String classPath = getOptions().userPath;
     if (classPath == null)
       // The behavior of this code differs between 1.1 and 1.2:
       classPath = javafe.filespace.ClassPath.current();
 
-    String sourcePath = options.userSourcePath;
+    String sourcePath = getOptions().userSourcePath;
 
-    String sys = options.sysPath;
+    String sys = getOptions().sysPath;
     if (sys == null) {
       // This works only on Sun implementations of Java...
       sys = System.getProperty("sun.boot.class.path", null);
@@ -137,15 +137,14 @@ public abstract class FrontEndTool extends Tool
    * files.  If <code>null</code> is returned, then no pragma
    * parsing is done.  (By default, returns <code>null</code>).
    */
-  public PragmaParser makePragmaParser() {
+  public /*@nullable*/PragmaParser makePragmaParser() {
     return null;
   }
 
   /**
    * Called to create a new {@link Options} object.
    */
-  //@ ensures \result != null;
-  public Options makeOptions() {
+  public /*@non_null*/Options makeOptions() {
     return new Options();
   }
 
@@ -155,7 +154,8 @@ public abstract class FrontEndTool extends Tool
    * @throws UsageError if the sequence of command-line arguments 
    * 			  is invalid
    */
-  public void processOptions(/*@nullable*/String[] args) throws UsageError {
+  //+@ requires options != null;
+  public void processOptions(/*@non_null*/String[/*#@non_null*/] args) throws UsageError {
     getOptions().processOptions(args);
   }
 
@@ -164,8 +164,7 @@ public abstract class FrontEndTool extends Tool
    * PrettyPrint#inst} to.  May not return <code>null</code>.  By
    * default, returns {@link javafe.ast.StandardPrettyPrint}.
    */
-  //@ ensures \result != null;
-  public PrettyPrint makePrettyPrint() {
+  public /*@non_null*/PrettyPrint makePrettyPrint() {
     return new StandardPrettyPrint();
   }
 
@@ -175,8 +174,7 @@ public abstract class FrontEndTool extends Tool
    * not return <code>null</code>.  By default, returns {@link
    * javafe.tc.TypeCheck}.
    */
-  //@ ensures \result != null;
-  public TypeCheck makeTypeCheck() {
+  public /*@non_null*/TypeCheck makeTypeCheck() {
     return new TypeCheck();
   }
 
@@ -227,7 +225,7 @@ public abstract class FrontEndTool extends Tool
         // Handle all tool options:
         options = makeOptions();
         processOptions(args);
-        if (options.issueUsage) {
+        if (getOptions().issueUsage) {
           usage();
           return okExitCode;
         }
@@ -265,7 +263,7 @@ public abstract class FrontEndTool extends Tool
     if (ErrorSet.errors == 0)
       try {
         // Do our front-end-tool-specific processing:
-        frontEndToolProcessing(options.inputEntries);
+        frontEndToolProcessing(getOptions().inputEntries);
       } catch (FatalError e) {
         Info.out("[" + name() + " exiting due to a fatal error]");
       }

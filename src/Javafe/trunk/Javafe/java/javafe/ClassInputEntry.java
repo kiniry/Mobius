@@ -8,6 +8,7 @@
 package javafe;
 
 import javafe.filespace.StringUtil;
+import javafe.tc.OutsideEnv;
 
 public class ClassInputEntry extends InputEntry {
   public ClassInputEntry(String n) { super(n); }
@@ -17,11 +18,11 @@ public class ClassInputEntry extends InputEntry {
     return verify(name);
   }
   
-  //@ requires javafe.tc.OutsideEnv.initialized;
+  //+@ requires javafe.tc.OutsideEnv.initialized;
   static public String verify(/*@non_null*/String name) {
     int n = name.lastIndexOf('.');
     String[] p = StringUtil.parseList(name.substring(0,n==-1?0:n),'.');
-    if (!(/*+@(non_null)*/javafe.tc.OutsideEnv.reader).exists(p,name.substring(n+1))) {
+    if (!OutsideEnv.reader().exists(p,name.substring(n+1))) {
       return "Class can not be found";
     }
     return null;

@@ -246,8 +246,8 @@ public class Utils {
 	@ public represents moreChar <- pos < cc.length;
 	@*/
 
-      /*@ public invariant_redundantly moreTokens ==> moreChar;
-	@ public invariant_redundantly 
+      //@ public invariant_redundantly moreTokens ==> moreChar;
+      /*+@ public invariant_redundantly 
 	@ moreChar && !Character.isWhitespace(cc[pos]) ==> moreTokens;
 	@*/
 
@@ -279,6 +279,7 @@ public class Utils {
 	@  modifies \nothing;
 	@  ensures \result == null;
 	@*/
+      //@ also signals_only IndexOutOfBoundsException;
      /*+@ also
 	@ public normal_behavior
 	@   requires moreTokens;
@@ -289,7 +290,7 @@ public class Utils {
 	@   modifies pos;
 	@   ensures \result == null;
 	@*/
-    public String nextToken() {
+    public /*@nullable*/String nextToken() {
       String res = null;
       while (pos < cc.length && Character.isWhitespace(cc[pos])) ++pos;
       if (pos == cc.length) return res;
@@ -297,19 +298,19 @@ public class Utils {
       if (cc[pos] == '"') {
         ++pos;
         while (pos < cc.length && cc[pos] != '"' ) ++pos;
-        if (cc[pos] == '"') ++pos;
+        if (cc[pos] == '"') ++pos; //@ nowarn IndexTooBig;
         res = ss.substring(start+1,pos-1);
       } else if (cc[pos] == '\'') {
         ++pos;
         while (pos < cc.length && cc[pos] != '\'' ) ++pos;
-        if (cc[pos] == '\'') ++pos;
+        if (cc[pos] == '\'') ++pos; //@ nowarn IndexTooBig;
         res = ss.substring(start+1,pos-1);
       } else {
         while (pos < cc.length && !Character.isWhitespace(cc[pos])) ++pos;
         res = ss.substring(start,pos);
       }
       return res;
-    }
+    } //@ nowarn Exception;
   }
   
   /** Deletes the contents of a directory, including subdirectories.  
@@ -376,7 +377,7 @@ public class Utils {
    * @return the contents of the file as a String, or null if the
    *      file could not be read
    */
-  static public String readFileX(/*@ non_null */ String filename) {
+  static public /*@nullable*/String readFileX(/*@ non_null */ String filename) {
     try {
       return readFile(filename);
     } catch (Exception e ) {
@@ -463,7 +464,7 @@ public class Utils {
 				     /*@ non_null */ String[] args) {
     try {
 	ByteArrayOutputStream ba = setStreams();
-	Object result = method.invoke(null,new Object[]{args});
+	/*Object result =*/ method.invoke(null,new Object[]{args});
 	// The following line might cause a cast error, but since b is not used it is comment out.
 	// boolean b = ((Boolean)result).booleanValue();
 	return ba.toString();

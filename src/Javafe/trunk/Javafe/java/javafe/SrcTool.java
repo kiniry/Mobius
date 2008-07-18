@@ -81,10 +81,10 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     	return new SrcToolOptions();
     }
 
-    //@ requires options != null;
+    //+@ requires options != null;
     private static /*@non_null*/SrcToolOptions options() { 
-    	return (/*+@non_null*/SrcToolOptions)options;
-    }
+    	return (/*+@non_null*/SrcToolOptions)options; //@ nowarn Cast;
+    } //@ nowarn NonNullResult;
 
     /**
      * Main processing loop for <code>SrcTool</code>. <p>
@@ -107,7 +107,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	// Do any tool-specific pre-processing:
 	preprocess();
 
-	if (!options.quiet)
+	if (!options().quiet)
 		System.out.println("    [" + timeUsed(startTime) + "]");
 	
         handleAllCUs();
@@ -127,9 +127,9 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	//ArrayList accumulatedResults = new ArrayList(args.size());
     Iterator i = args.iterator();
 	while (i.hasNext()) {
-	    InputEntry ie = (/*+@non_null*/InputEntry)i.next();
+	    InputEntry ie = (/*+@non_null*/InputEntry)i.next(); //@ nowarn Cast;
 	    ie = resolveInputEntry(ie);
-        ArrayList a = /*+@(non_null)*/ie.contents;
+	/*@non_null*/ArrayList a = /*@(non_null)*/ie.contents; //@nowarn NonNull;
         if ((ie instanceof ClassInputEntry) && a.size() > 0 &&
                 (/*@(non_null)*/a.get(0)).toString().endsWith(".class")) {
           ErrorSet.warning("Cannot parse a class file: " + a.get(0));
@@ -139,7 +139,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	}
     }
 
-    //@ ensures \result.contents.elementType <: \type(GenericFile);
+    //+@ ensures \result.contents.elementType <: \type(GenericFile);
     public /*@non_null*/InputEntry resolveInputEntry(/*@non_null*/InputEntry iee) {
 	InputEntry ie = iee;
 	if (ie.contents == null) {
@@ -164,7 +164,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 		ie.contents = new ArrayList(1);
 		int p = ie.name.lastIndexOf('.');
 		if (p == -1) {
-		    GenericFile gf = OutsideEnv.reader.findType(
+		    GenericFile gf = OutsideEnv.reader().findType(
 				new String[0],ie.name);
 		    ie.contents.add(gf);
 		} else if (p==0 || p == ie.name.length()-1) {
@@ -173,7 +173,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 		} else {
 		    String[] pa = javafe.filespace.StringUtil.parseList(
 				    ie.name.substring(0,p),'.');
-		    GenericFile gf = OutsideEnv.reader.findType(pa,
+		    GenericFile gf = OutsideEnv.reader().findType(pa,
 				    ie.name.substring(p+1));
 		    ie.contents.add(gf);
 	        }
@@ -189,7 +189,9 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     }
 
     public void loadInputEntry(InputEntry ie) {
-	OutsideEnv.addSources(resolveInputEntry(ie).contents);
+    	ArrayList o = /*@(non_null)*/(resolveInputEntry(ie).contents);
+	//-@ assume o != null;
+    	OutsideEnv.addSources(o);
     }
 
     //@ requires argumentFileName != null;
@@ -248,7 +250,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 			end = loaded.size();
 	    }
 	}
-    }
+    } //@nowarn Post;
 	 
     /**
      * Hook for any work needed before any files are loaded.
@@ -261,7 +263,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
     /**
      * Called for any work after loading files
      */
-// FIXME - can this be done at preload time?
+    // FIXME - can this be done at preload time?
     public void postload() {
 	OutsideEnv.avoidSpec = options().avoidSpec;
 	if (options().processRecursively)

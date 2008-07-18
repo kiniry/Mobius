@@ -92,7 +92,7 @@ public class LineIterator implements Iterator {
 	} catch (java.io.IOException e) {
 	    throw new Error("EXCEPTION in next - " + e); 
 	}
-    }
+    } //@ nowarn Exception, Post;
 
     /** This operation will throw an exception, as there is no need for 
 	remove in this context. */

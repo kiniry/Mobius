@@ -157,11 +157,16 @@ public final class OutsideEnv {
   /**
    * The {@link TypeReader} for our underlying Java file space.
    */
-  public static /*@nullable*/ TypeReader reader;
+  private static /*@nullable*/ TypeReader reader;
   //@ public static model boolean initialized;
-  //@   public static represents initialized <- reader!=null;
+  //@   private static represents initialized <- reader!=null;
 
-  /**
+  //+@ requires initialized;
+  public static /*@non_null*/TypeReader reader() { //@ nowarn NonNullResult;
+	return /*+@(non_null)*/reader;
+  }
+
+/**
    * When we load in types, do we prefer to read specs or non-specs?
    * Defaults to preferring non-specs.
    */
@@ -209,7 +214,7 @@ public final class OutsideEnv {
    * <code>init</code> method for this class has previously been
    * called.
    */
-  //@ requires !initialized;
+  //+@ requires !initialized;
   //@ ensures reader == R;
   //@ ensures_redundantly initialized;
   public static void init(/*@ non_null @*/TypeReader R) {
@@ -222,14 +227,14 @@ public final class OutsideEnv {
   //@ ensures !eagerRead;
   //@ ensures avoidSpec;
   public static void clear() {
+	if (reader instanceof javafe.reader.StandardTypeReader)
+		((javafe.reader.StandardTypeReader)reader).clear();
     reader = null;
     filesRead = 0;
     listener = null;
     eagerRead = false;
     avoidSpec = true;
     javafe.tc.Types.remakeTypes();
-    if (reader instanceof javafe.reader.StandardTypeReader)
-        ((javafe.reader.StandardTypeReader)reader).clear();
     TypeSig.clear();
   }
 
@@ -252,13 +257,11 @@ public final class OutsideEnv {
    * @requires an init method has already been called
    */
   //@ requires \nonnullelements(P);
-  //@ requires initialized;
-  public static TypeSig lookup(String[] P, /*@ non_null @*/String T) {
+  //+@ requires initialized;
+  public static /*@nullable*/TypeSig lookup(String[] P, /*@ non_null @*/String T) {
     TypeSig result = TypeSig.lookup(P, T);
-    if (result == null && reader.exists(P, T)) result = TypeSig.get(P, T);
-
+    if (result == null && reader().exists(P, T)) result = TypeSig.get(P, T);
     if (result != null && eagerRead) result.getTypeDecl();
-
     return result;
   }
 
@@ -310,10 +313,10 @@ public final class OutsideEnv {
    * @note Calling <code>addSource</code> twice on the same file may
    * or may not produce a duplicate-type error.
    */
-  //@ requires source != null;
-  public static CompilationUnit addSource(GenericFile source) {
+  //+@ requires initialized;
+  public static CompilationUnit addSource(/*@non_null*/GenericFile source) {
     filesRead++;
-    CompilationUnit cu = reader.read(source, avoidSpec);
+    CompilationUnit cu = reader().read(source, avoidSpec);
     if (cu != null) {
       setSigs(cu);
       notify(cu);
@@ -325,21 +328,22 @@ public final class OutsideEnv {
    * Adds all relevant files from the given package; 'relevant' is
    * defined by the 'findFiles' method of the current reader.
    */
-  //@ requires sources.elementType <: \type(GenericFile);
-  //@ ensures \result.elementType <: \type(CompilationUnit);
+  //+@ requires sources.elementType <: \type(GenericFile);
+  //+@ ensures \result.elementType <: \type(CompilationUnit);
   public static ArrayList addSources(ArrayList sources) {
     ArrayList out = new ArrayList(sources.size());
     Iterator i = sources.iterator();
     while (i.hasNext()) {
-      GenericFile gf = (GenericFile)i.next();
+      GenericFile gf = (GenericFile)i.next(); //@nowarn Cast;
       out.add(addSource(gf));
     }
     return out;
   }
 
+  //+@ requires initialized;
   //@ ensures \result.elementType <: \type(GenericFile);
   public static ArrayList resolveSources(String[] pname) {
-    ArrayList a = reader.findFiles(pname);
+    ArrayList a = reader().findFiles(pname);
     if (a == null) {
       ErrorSet.error("Could not locate package: "
           + javafe.parser.ParseUtil.arrayToString(pname, "."));
@@ -350,7 +354,7 @@ public final class OutsideEnv {
           + javafe.parser.ParseUtil.arrayToString(pname, "."));
     }
     return a;
-  }
+  } //@ nowarn Post;
 
   /**
    * Attempt to add the package-member types contained in a named
@@ -374,22 +378,24 @@ public final class OutsideEnv {
   }
 
   // Output is an ArrayList of GenericFiles.
+  //+@ requires initialized;
   //@ ensures \result == null || \result.elementType <: \type(GenericFile);
-  public static ArrayList resolveDirSources(String dirname) {
-    File f = new File(dirname);
-    if (!f.exists()) {
-      ErrorSet.caution("Directory does not exist: " + dirname);
-      return null;
-    }
-    File[] names = f.listFiles(reader.filter());
-    if (names.length == 0) {
-      ErrorSet.caution("Directory has no files: " + dirname);
-    }
-    ArrayList a = new ArrayList(names.length);
-    for (int i = 0; i < names.length; ++i) {
-      a.add(new NormalGenericFile(names[i]));
-    }
-    return a;
+  public static /*@nullable*/ArrayList resolveDirSources(String dirname) {
+	  File f = new File(dirname);
+	  if (!f.exists()) {
+		  ErrorSet.caution("Directory does not exist: " + dirname);
+		  return null;
+	  }
+	  File[] names = f.listFiles(reader().filter());
+	  if (names.length == 0) {
+		  ErrorSet.caution("Directory has no files: " + dirname);
+	  }
+	  ArrayList a = new ArrayList(names.length);
+	  for (int i = 0; i < names.length; ++i) {
+		  /*@non_null*/File name = names[i]; //@ nowarn NonNull;
+		  a.add(new NormalGenericFile(name));
+	  }
+	  return a;
   }
 
   /**
@@ -446,7 +452,7 @@ public final class OutsideEnv {
 
     filesRead++;
     // Read in the CompilationUnit that should have sig in it:
-    CompilationUnit cu = reader
+    CompilationUnit cu = reader()
         .read(sig.packageName, sig.simpleName, avoidSpec);
     if (cu == null) {
       ErrorSet.fatal("unable to load type " + sig.getExternalName());
@@ -521,9 +527,7 @@ public final class OutsideEnv {
    * calling <code>lookup</code> on a series of package-member-type
    * names.
    */
-  /*@ requires (\forall int i; (0<=i && i<args.length)
-   @           ==> args[i] != null);
-   @*/
+  //@ requires \nonnullelements(args);
   public static void main(/*@non_null*/String[/*#@non_null*/] args) {
     // Check argument usage:
     if (args.length == 0) {
@@ -537,7 +541,7 @@ public final class OutsideEnv {
     // Test each package-member-type name:
     for (int i = 0; i < args.length; i++)
       describeLookup(args[i]);
-  }
+  } //@ nowarn Post;
 
   /**
    * Call lookup on N then describe the results.

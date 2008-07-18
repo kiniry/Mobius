@@ -272,7 +272,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    */
   //@ requires marked;
   //@ ensures STARTFREELOC-1 <= \result;
-
+  //@ pure
   public int getBeforeMarkLocation() {
     Assert.notFalse(marked);
 
@@ -291,7 +291,6 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
   //@ requires marked;
   //@ modifies marked;
   //@ ensures !marked;
-  //@ ensures \result != null;
   public /*@non_null*/byte[] getBufferFromMark(int discard)
       throws IndexOutOfBoundsException {
 
@@ -341,6 +340,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    * @see javafe.util.BufferedCorrelatedReader#mark()
    */
 
+  //@ requires 0 <= discard;
   public /*@non_null*/CorrelatedReader createReaderFromMark(int discard)
 	throws IndexOutOfBoundsException {
     int b4markLoc = getBeforeMarkLocation();

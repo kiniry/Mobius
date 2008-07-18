@@ -66,7 +66,7 @@ public abstract class Tool
    *                                                 *
    **************************************************/
 
-  //@ requires options != null;
+  //+@ requires options != null;
   public static /*@non_null*/Options getOptions() {
 	return /*+@(non_null)*/options;
   }

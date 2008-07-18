@@ -80,7 +80,7 @@ public class TestFilesTestSuite  extends TestSuite {
     /** A constructor for this test suite.
 	@param testName	The name of the test suite
 	@param fileOfTestFilenames The file to be read for filenames of tests
-	@param args	The command-line arguments that the static compile 
+	@param preArgs	The command-line arguments that the static compile 
                         method will be applied to, with the filename added on
 	@param cls	The class in which to find the static compile method
     */
