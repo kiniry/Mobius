@@ -1,0 +1,641 @@
+-- Informal Class Charts
+
+class_chart ABSTRACT_SYNTAX_TREE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/AbstractSyntaxTree"
+explanation
+  "Explanation of ASTs and description of how they are used in the MOBIUS PVE tools"
+end
+
+class_chart ACTIVE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Active"
+explanation
+  "Explanation of Active status and list of components which are in active development"
+inherit STATUS
+end
+
+class_chart ALPHA
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Alpha"
+explanation
+  "Explanation of Alpha status and list of components which are in alpha or pre-alpha testing"
+inherit STATUS
+end
+
+class_chart API
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/API"
+explanation
+  "Explanation of Application Programmer Interfaces and how they are used in MOBIUS PVE tools"
+inherit INTERFACE
+end
+
+class_chart ASPIRATIONAL
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Aspirational"
+inherit STATUS
+end
+
+class_chart AUTHOR
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Author"
+inherit PERSON
+end
+
+class_chart AUTOMATED_PROVER
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/AutomatedProver"
+inherit PROVER
+end
+
+class_chart BETA
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Beta"
+inherit STATUS
+end
+
+class_chart BICOLANO
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Bicolano"
+end
+
+class_chart BON_SUBSYSTEM
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/BONc"
+inherit SUBSYSTEM, BUSINESS_OBJECT_NOTATION
+end
+
+class_chart BOOGIE_PL
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/BPL"
+inherit FORMAL_LANGUAGE
+end
+
+class_chart BUSINESS_OBJECT_NOTATION
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/BON"
+inherit FORMAL_LANGUAGE
+end
+
+class_chart BYTECODE_MODELING_LANGUAGE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/BML"
+inherit FORMAL_LANGUAGE 
+end
+
+class_chart BYTECODE_SUBSYSTEM
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/ByteCodeSubsystem"
+inherit SUBSYSTEM
+end
+
+class_chart CDE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CollaborativeDevelopmentEnvironment"
+end
+
+class_chart CHANGE_LOG
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/ChangeLog"
+end
+
+class_chart CITATION
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Citation"
+end
+
+class_chart CLI
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CLI"
+inherit INTERFACE
+end
+
+class_chart CODE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Code"
+end
+
+class_chart CODENAME
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CodeName"
+end
+
+class_chart CODING_STANDARD
+indexing
+  propoosed_refinement: "https://mobius.ucd.ie/trac/wiki/CodingStandard"
+end
+
+class_chart COMMITMENT
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Commitment"
+end
+
+class_chart COMPONENT
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Components"
+inherit SUBSYSTEM
+end
+
+class_chart COMPOSITIONAL_TYPE_CHECKER
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CompositionalTypeChecker"
+end
+
+class_chart CONTACT_DETAILS
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Contact"
+end
+
+class_chart COQ_PROVER
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CoqEditor"
+inherit PROVER
+end
+
+class_chart CVC3_PROVER
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CVC3"
+inherit PROVER
+end
+
+class_chart DAIKON
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Daikon"
+end
+
+class_chart DELTA
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Delta"
+inherit STATUS
+end
+
+class_chart DEPENDENCY
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Dependency"
+end
+
+class_chart DEPRECATED
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Deprecated"
+inherit STATUS
+end
+
+class_chart DESCRIPTION
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Description"
+end
+
+class_chart DETAIL
+end
+
+class_chart DOCUMENT_STATUS
+end
+
+class_chart DOCUMENT_TITLE
+end
+
+class_chart DOCUMENTATION_STANDARD
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/DocumentationStandard"
+end
+
+class_chart DOWNLOAD
+end
+
+class_chart ECLIPSE
+end
+
+class_chart ECLIPSE_WORKSPACE
+end
+
+class_chart ELECTRONIC_MAIL_ADDRESS
+inherit CONTACT_DETAILS
+end
+
+class_chart EMACS
+end
+
+class_chart ESCJAVA2
+inherit COMPONENT
+end
+
+class_chart ESCJAVA2_LOGIC
+inherit LOGIC
+end
+
+class_chart EXAMPLE
+end
+
+class_chart EXAMPLES_WORKSPACE
+inherit ECLIPSE_WORKSPACE, EXAMPLE
+end
+
+class_chart EXPLANATION
+inherit DESCRIPTION
+end
+
+class_chart FEATURE
+end
+
+class_chart FORMAL_LANGUAGE
+end
+
+class_chart FILE_DISTRIBUTION
+end
+
+class_chart FREEBOOGIE
+inherit COMPONENT
+end
+
+class_chart FX7_PLUGIN
+inherit PLUGIN, FX7_PROVER
+end
+
+class_chart FX7_PROVER
+inherit PROVER
+end
+
+class_chart G_FORGE
+inherit CDE
+end
+
+class_chart GAMMA
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Gamma"
+explanation
+  "Definition of Gamma releases status and list of components with this status"
+inherit EXPLANATION, STATUS
+end
+
+class_chart HAWK
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Hawk"
+explanation
+  "Information about HAWK and how it is used as a component of MOBIUS"
+inherit EXPLANATION, COMPONENT
+end
+
+class_chart HOME_PAGE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Index"
+explanation
+  "The main source of information about a component or subsystem"
+end
+
+class_chart HOUDINI
+indexing
+  proposed_refinment: "https://mobius.ucd.ie/trac/wiki/Houdini"
+explanation
+  "Explanation of the Houdini component and how it fits in with MOBIUS"
+inherit COMPONENT, EXPLANATION
+end
+
+class_chart INDEX
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Index"
+explanation
+  "Page which lists all other pages in order"
+query
+  "Where can I find a page on this topic?"
+end
+
+class_chart INSTANT_MESSENGER_ID
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/InstantMessengerID"
+explanation
+  "Describes how to contact a MOBIUS developer using an instant messenging protocol"
+inherit CONTACT_DETAILS
+end
+
+class_chart INTERACTIVE_PROVER
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/InteractiveProver"
+explanation
+  "Abstract concept of any theorem prover which is not fully automated"
+inherit PROVER
+query
+  "Which interactive provers are used by the PVE?"
+end
+
+class_chart INTERFACE
+indexing
+  created: "2008-07-21-dc";
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Interface"
+explanation
+  "Abstract concept of any interface between components of the MOBIUS PVE e.g. API, CLI or GUI"
+end
+
+class_chart INVARIANT_GENERATION
+end
+
+class_chart ISABELLE_PROVER
+inherit PROVER
+end
+
+class_chart JAVA_BYTE_CODE
+inherit CODE
+end
+
+class_chart JAVA_MODELING_LANGUAGE
+inherit FORMAL_LANGUAGE
+end
+
+class_chart JAVA_PROGRAMMING_LANGUAGE
+inherit PROGRAMMING_LANGUAGE
+end
+
+class_chart JAVAFE_PLUGIN
+inherit PLUGIN
+end
+
+class_chart JML_FOLDING_PLUGIN
+inherit PLUGIN
+end
+
+class_chart JML_SUBSYSTEM
+inherit SUBSYSTEM
+end
+
+class_chart JML4_PLUGIN
+inherit PLUGIN
+end
+
+class_chart LEGACY
+inherit STATUS
+end
+
+class_chart LEXER
+end
+
+class_chart LOGGING
+inherit COMPONENT
+end
+
+class_chart LICENSE
+end
+
+class_chart LINUX_RELEASE
+inherit RELEASE
+end
+
+class_chart LOGIC
+inherit SUBSYSTEM
+end
+
+class_chart MAINTAINER
+inherit PERSON
+end
+
+class_chart MAC_OS_X_RELEASE
+end
+
+class_chart MEETING
+end
+
+class_chart MILESTONE
+end
+
+class_chart MOBIUS_DEVELOPER_WORKSPACE
+inherit ECLIPSE_WORKSPACE
+end
+
+class_chart MOBIUS_BYTECODE_LOGIC
+inherit LOGIC
+end
+
+class_chart NEWS
+end
+
+class_chart NOT_ACTIVE
+inherit STATUS
+end
+
+class_chart OBJECT_CODE
+inherit CODE
+end
+
+class_chart OBSOLETE
+inherit STATUS
+end
+
+class_chart OWNER
+inherit PERSON
+end
+
+class_chart PARSER
+end
+
+class_chart PCC_SUBSYSTEM
+inherit SUBSYSTEM
+end
+
+class_chart PERSON
+end
+
+class_chart PERSONNEL
+explanation "Set of people"
+end
+
+class_chart PHONE_NUMBER
+inherit CONTACT_DETAILS
+end
+
+class_chart PLATFORM
+end
+
+class_chart PLUGIN
+end
+
+class_chart PRECONDITION_GENERATION
+end
+
+class_chart PROGRAMMING_LANGUAGE
+inherit FORMAL_LANGUAGE
+end
+
+class_chart PROVER
+end
+
+class_chart PROVER_EDITOR_PLUGIN
+inherit PLUGIN
+end
+
+class_chart PUBLICATION
+end
+
+class_chart PUBLICATION_VENUE
+end
+
+class_chart PVS_PROVER
+inherit PROVER
+end
+
+class_chart RACE_CONDITION_CHECKER
+end
+
+class_chart REFERENCE
+end
+
+class_chart RESOURCE
+end
+
+class_chart RELEASE
+end
+
+class_chart RESPONSIBILITY
+end
+
+class_chart REPOSITORY
+end
+
+class_chart SCHEDULE
+end
+
+class_chart SIMPLIFY_PLUGIN
+inherit PLUGIN, SIMPLIFY_PROVER
+end
+
+class_chart SIMPLIFY_PROVER
+inherit PROVER
+end
+
+class_chart SEMANTICS
+end
+
+class_chart SITE
+end
+
+class_chart SMT
+end
+
+class_chart SOURCE_CODE
+inherit CODE
+end
+
+class_chart SOURCECODE_SUBSYSTEM
+inherit SUBSYSTEM
+end
+
+class_chart SPECIFICATION
+end
+
+class_chart SPECIFICATION_CHECKER
+end
+
+class_chart SPECIFICATION_LANGUAGE
+inherit FORMAL_LANGUAGE
+end
+
+class_chart SPECIFICATION_STANDARD
+end
+
+class_chart STABLE
+inherit STATUS
+end
+
+class_chart STANDARD
+end
+
+class_chart STATUS
+end
+
+class_chart SUBSYSTEM
+inherit SYSTEM
+end
+
+class_chart SYNTAX
+end
+
+class_chart SYSTEM
+end
+
+class_chart TABLE_OF_CONTENTS
+end
+
+class_chart TAG
+end
+
+class_chart TEMPORAL_ORDER
+end
+
+class_chart TICKET
+end
+
+class_chart TIMELINE
+end
+
+class_chart TRAC
+inherit CDE
+end
+
+class_chart TYPE_CHECKER
+end
+
+class_chart UMBRA_EDITOR_PLUGIN
+inherit PLUGIN
+end
+
+class_chart UPDATE_SITE
+inherit WEB_PAGE
+end
+
+class_chart VERIFICATION_CONDITION_GENERATION
+end
+
+class_chart VERSION
+end
+
+class_chart VERSION_CONTROL
+end
+
+class_chart WEB_PAGE
+end
+
+class_chart WEB_SITE
+constraint
+  "Has at least one web page"
+end
+
+class_chart WIKI
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Wiki"
+inherit WEB_SITE
+end
+
+class_chart WINDOWS_RELEASE
+inherit RELEASE
+end
+
+class_chart WISHLIST
+indexing
+  in_cluster: "STATUSES";
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/WishList"
+explanation "List of aspirational features in order of priority"
+query
+   "How many features on the wishlist?",
+   "How many features on the wishlist for this component?",
+   "What is the highest item on the wishlist?",
+   "What is the highest item on the wishlist for this component?",
+   "What is the relative priority of these two features?",
+   "What would this feature depend on?"
+command
+   "Add a feature for a component to the wishlist!",
+   "Move feature to the top of the list!",
+   "Move feature to the bottom of the list!",
+   "Add a dependency to this feature!",
+   "Remove a dependency from this feature!",
+   "Remove this feature from this list unless another feature depends on it!"
+constraint
+   "Each feature appears only once on the list",
+   "No two features have equal priority",
+   "Each feature is associated with a new or existing component",
+   "No feature is associated with an obsolete component",
+   "No feature has a higher priority than its dependencies i.e. other features on which it depends",
+   "No feature is co-dependent on another feature",
+   "No feature is in conflict with a higher priority feature"
+end
+
+class_chart YICES_PROVER
+inherit PROVER
+end
