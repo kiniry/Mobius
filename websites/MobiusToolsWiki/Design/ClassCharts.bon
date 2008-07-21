@@ -577,22 +577,34 @@ inherit PLUGIN
 end
 
 class_chart UPDATE_SITE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/UpdateSite"
 inherit WEB_PAGE
 end
 
 class_chart VERIFICATION_CONDITION_GENERATION
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/VCG"
 end
 
 class_chart VERSION
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Version"
 end
 
 class_chart VERSION_CONTROL
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/VersionControl"
 end
 
 class_chart WEB_PAGE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/WebPage"
 end
 
 class_chart WEB_SITE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/WebSite"
 constraint
   "Has at least one web page"
 end
@@ -604,6 +616,8 @@ inherit WEB_SITE
 end
 
 class_chart WINDOWS_RELEASE
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/WindowsRelease"
 inherit RELEASE
 end
 
@@ -637,5 +651,8 @@ constraint
 end
 
 class_chart YICES_PROVER
+indexing
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/YicesProver"
+explanation "Yices SMT Solver"
 inherit PROVER
 end
