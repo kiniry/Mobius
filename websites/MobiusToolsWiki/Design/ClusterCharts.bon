@@ -1,6 +1,6 @@
--- Informal System Chart
+-- Informal Cluster Charts
 
-system_chart MOBIUS_TOOLS_WIKI
+cluster_chart MOBIUS_TOOLS_WIKI
 indexing
   author: "Joe Kiniry", "Dermot Cochran";
   created: "2008-07-03-dc";
@@ -32,8 +32,6 @@ cluster STATUSES description "This BON cluster contains the concept of release s
 cluster SYSTEMS description "Components, subsystems and third-party platforms"
 cluster WORKSPACES description "Eclipse workspaces"
 end
-
--- Informal Cluster Charts
 
 cluster_chart COLLABORATIVE_DEVELOPMENT_ENVIRONMENTS
 explanation "A collaborative development environment (CDE) consists of integated tools such as wikis, version control and issue tracking \

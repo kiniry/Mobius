@@ -1,0 +1,16 @@
+-- Informal System Chart
+
+system_chart MOBIUS_TOOLS_WIKI
+indexing
+  author: "Joe Kiniry", "Dermot Cochran";
+  created: "2008-07-03-dc";
+  revised: "2008-07-21-dc";
+  level_of_detail: "0";
+  proposed_refinement: "https://mobius.ucd.ie/trac/wiki/WikiDesign"
+explanation "The MOBIUS Tools Wiki is a collaborative development environment for the documentation\
+        \ and communication between developers of the MOBIUS program verification environment.\
+	    \The MOBIUS Tools Wiki includes homepages for all subsystems and components. It records all interactions \
+	    \ between developers as well as all changes to the source code.\
+	    \ It is first point of reference for all MOBIUS developers. It is based on Trac and integrated with Subversion and Hudson."
+cluster MOBIUS_TOOLS_WIKI description "The MOBIUS Tools Wiki"
+end
