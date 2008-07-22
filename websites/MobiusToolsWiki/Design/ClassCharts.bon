@@ -1,4 +1,4 @@
--- Informal Class Charts
+-- Informal Partial Class Charts
 
 class_chart ABSTRACT_SYNTAX_TREE
 indexing
@@ -230,85 +230,117 @@ end
 class_chart DEPRECATED
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Deprecated"
+explanation
+  "Feature or subsystem which is no longer used, no longer recommended for use or not longer being acively developed" 
 inherit STATUS
 end
 
 class_chart DESCRIPTION
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Description"
+explanation
+  "One sentence summary of the purpose or meaning of an object"
 end
 
 class_chart DETAIL
+indexing
+  in_cluster: "COMPONENTS"
+explanation
+  "Full or further information about a component or subsystem"
 end
 
 class_chart DOCUMENT_STATUS
+explanation
+  "The level of completion of the document e.g. started, submitted, published ..."
 end
 
 class_chart DOCUMENT_TITLE
+explanation
+  "The unique public identifier of a document"
 end
 
 class_chart DOCUMENTATION_STANDARD
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/DocumentationStandard"
+explanation
+  "Recommended style, layout and formatting of documents for a specific purpose" 
 end
 
 class_chart DOWNLOAD
+explanation "A software release which can be accessed from a web page"
 end
 
 class_chart ECLIPSE
+explanation "An open source IDE on which JML4 and the MOBIUS PVE are built"
 end
 
 class_chart ECLIPSE_WORKSPACE
+explanation "A collection of software projects in Eclipse format"
 end
 
 class_chart ELECTRONIC_MAIL_ADDRESS
+explanation "The address at which a person or group of people will receive email"
 inherit CONTACT_DETAILS
 end
 
 class_chart EMACS
+explanation "An advanced text editor with some of the features of an IDE"
 end
 
 class_chart ESCJAVA2
+explanation "An extended static checker for Java"
 inherit COMPONENT
 end
 
 class_chart ESCJAVA2_LOGIC
+explanation "The Logics used by ESCJava2"
 inherit LOGIC
 end
 
 class_chart EXAMPLE
+explanation "A detailed specific instance of a general concept or abstraction"
 end
 
 class_chart EXAMPLES_WORKSPACE
+explanation "An eclipse workspace containing sample projects for use ith the PVE"
 inherit ECLIPSE_WORKSPACE, EXAMPLE
 end
 
 class_chart EXPLANATION
-inherit DESCRIPTION
+explanation "An enhanced description with more details"
+inherit DESCRIPTION, DETAIL
 end
 
 class_chart FEATURE
+explanation "A unit of software higher than an object but lower than a component.  It usually corresponds to one of more command line options, \
+  \API calls or GUI menus.  It may be composed of plugins and may in turn be part of a feature model."
 end
 
 class_chart FORMAL_LANGUAGE
+explanation "A textual, written, language with a formal grammer"
 end
 
 class_chart FILE_DISTRIBUTION
+explanation "A file format used to package the release of a standalone software component"
 end
 
 class_chart FREEBOOGIE
+explanation "A central component of the MOBIUS PVE"
 inherit COMPONENT
 end
 
 class_chart FX7_PLUGIN
+explanation "An Eclipse plugin for the FX7 prover"
 inherit PLUGIN, FX7_PROVER
 end
 
 class_chart FX7_PROVER
+explanation "A theorem prover which can be used with ESC/Java2"
 inherit PROVER
 end
 
 class_chart G_FORGE
+explanation "A CDE used at INRIA"
 inherit CDE
 end
 
@@ -379,10 +411,11 @@ explanation
 end
 
 class_chart INVARIANT_GENERATION
+explanation "Automatic inference of program invariants from source code"
 end
 
 class_chart ISABELLE_PROVER
-inherit PROVER
+inherit INTERACTIVE_PROVER
 end
 
 class_chart JAVA_BYTE_CODE
@@ -479,6 +512,7 @@ class_chart PARSER
 end
 
 class_chart PCC_SUBSYSTEM
+explanation "Set of components that work together to generate and verify Proof Carrying Code certificates"
 inherit SUBSYSTEM
 end
 
@@ -622,28 +656,36 @@ inherit CDE
 end
 
 class_chart TYPE_CHECKER
+explanation
+  "Tool which checks the syntax of a formal specification or of source code"
 end
 
 class_chart UMBRA_EDITOR_PLUGIN
+explanation
+  "Eclipse plugin for editing of BML files"
 inherit PLUGIN
 end
 
 class_chart UPDATE_SITE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/UpdateSite"
+explanation
+  "Web page from which Eclipse plugins can be downloaded"
 inherit WEB_PAGE
 end
 
 class_chart VERIFICATION_CONDITION_GENERATION
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/VCG"
+explanation
+  "Automatic determination of verification conditions from specifications and source code"
 end
 
 class_chart VERSION
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Version"
 explanation
-  ""
+  "Instance of a software release"
 end
 
 class_chart VERSION_CONTROL
