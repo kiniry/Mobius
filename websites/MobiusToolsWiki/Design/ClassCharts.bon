@@ -4,14 +4,14 @@ class_chart ABSTRACT_SYNTAX_TREE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/AbstractSyntaxTree"
 explanation
-  "Explanation of ASTs and description of how they are used in the MOBIUS PVE tools"
+  "An abstract representation of the source code"
 end
 
 class_chart ACTIVE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Active"
 explanation
-  "Explanation of Active status and list of components which are in active development"
+  "A component which is currently being designed, coded and tested"
 inherit STATUS
 end
 
@@ -19,7 +19,7 @@ class_chart ALPHA
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Alpha"
 explanation
-  "Explanation of Alpha status and list of components which are in alpha or pre-alpha testing"
+  "A software release which is ready for unit testing"
 inherit STATUS
 end
 
@@ -27,152 +27,204 @@ class_chart API
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/API"
 explanation
-  "Explanation of Application Programmer Interfaces and how they are used in MOBIUS PVE tools"
+  "An interface to a software package that can be accessed from other software packages"
 inherit INTERFACE
 end
 
 class_chart ASPIRATIONAL
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Aspirational"
+explanation
+  "Feature which has been proposed but not yet started started detailed design or coding"
 inherit STATUS
 end
 
 class_chart AUTHOR
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Author"
+explanation
+  "The person who wrote a document, specification or program"
 inherit PERSON
 end
 
 class_chart AUTOMATED_PROVER
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/AutomatedProver"
+explanation
+  "A theorem prover than runs automatically as part of the PVE"
 inherit PROVER
 end
 
 class_chart BETA
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Beta"
+explanation
+  "A software release which has passed all units tests and is ready for independent testing"
 inherit STATUS
 end
 
 class_chart BICOLANO
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Bicolano"
+explanation
+  "A language used to express Byte Code logic for the Coq theorem prover"
 end
 
 class_chart BON_SUBSYSTEM
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/BONc"
+explanation
+  "The BONc compiler and tools"
 inherit SUBSYSTEM, BUSINESS_OBJECT_NOTATION
 end
 
 class_chart BOOGIE_PL
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/BPL"
+explanation
+  "The language consumed by FreeBoogie, which expresses verification conditions"
 inherit FORMAL_LANGUAGE
 end
 
 class_chart BUSINESS_OBJECT_NOTATION
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/BON"
+explanation
+  "Object Orientated Software Architecture specification language" 
 inherit FORMAL_LANGUAGE
 end
 
 class_chart BYTECODE_MODELING_LANGUAGE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/BML"
+explanation
+  "Bytecode representation of the Java Modeling language"
 inherit FORMAL_LANGUAGE 
 end
 
 class_chart BYTECODE_SUBSYSTEM
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/ByteCodeSubsystem"
+explanation
+  "Set of components which work together to verify Java bytecode against its BML representation"
 inherit SUBSYSTEM
 end
 
 class_chart CDE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CollaborativeDevelopmentEnvironment"
+explanation
+  "Software application or website which facilites development of software by distributed teams"
 end
 
 class_chart CHANGE_LOG
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/ChangeLog"
+explanation
+  "List of reccent changes to a file, folder or repository"
 end
 
 class_chart CITATION
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Citation"
+explanation
+  "Reference to an existing academic publication in a more recent academic publication"
 end
 
 class_chart CLI
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CLI"
+explanation
+  "Command line interface; set of options and parameters which can be set by a user from a text-based shell or terminal"
 inherit INTERFACE
 end
 
 class_chart CODE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Code"
+explanation
+  "Sequence of commands and operations which are composed into an executable or compilable software program"
 end
 
 class_chart CODENAME
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CodeName"
+explanation
+  "Working title for a software application not yet released"
 end
 
 class_chart CODING_STANDARD
 indexing
   propoosed_refinement: "https://mobius.ucd.ie/trac/wiki/CodingStandard"
+explanation
+  "Recommended style, layout and formatting for program code"
 end
 
 class_chart COMMITMENT
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Commitment"
+explanation
+  "Mandatory assignment of a person to work on a software feature or release"
 end
 
 class_chart COMPONENT
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Components"
+explanation
+  "Standalone subsystem of MOBIUS PVE, with its own plugins or command line interface"
 inherit SUBSYSTEM
 end
 
 class_chart COMPOSITIONAL_TYPE_CHECKER
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CompositionalTypeChecker"
+explanation
+  "UNKNOWN - see ticket #634"
 end
 
 class_chart CONTACT_DETAILS
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Contact"
+explanation
+  "Any means or address at which a person may be contacted"
 end
 
 class_chart COQ_PROVER
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CoqEditor"
+explanation
+  "Theorem prover for the Coq language"
 inherit PROVER
 end
 
 class_chart CVC3_PROVER
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/CVC3"
+explanation
+  "Theorem prover for the CVC3 language"
 inherit PROVER
 end
 
 class_chart DAIKON
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Daikon"
+explanation
+  "Dynamic detection of likely invariants from source code"
 end
 
 class_chart DELTA
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Delta"
+explanation
+  "The next release after the Gamma release, the second public release of the PVE"
 inherit STATUS
 end
 
 class_chart DEPENDENCY
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Dependency"
+explanation
+  "The relationship between one subsystem and another subsystem either upstream or downstream in the tool chain"
 end
 
 class_chart DEPRECATED
@@ -590,21 +642,29 @@ end
 class_chart VERSION
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Version"
+explanation
+  ""
 end
 
 class_chart VERSION_CONTROL
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/VersionControl"
+explanation
+  "Tracking of changes to source code in a central repository"
 end
 
 class_chart WEB_PAGE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/WebPage"
+explanation
+  "HTML docuument which can viewed on a web site"
 end
 
 class_chart WEB_SITE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/WebSite"
+explanation
+  "Collection of linked HTML documents which can browsed remotely over the internet" 
 constraint
   "Has at least one web page"
 end
@@ -612,12 +672,18 @@ end
 class_chart WIKI
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/Wiki"
+explanation
+  "Web site that can be updated online by authorised users"
 inherit WEB_SITE
+command
+  "Edit this page"
 end
 
 class_chart WINDOWS_RELEASE
 indexing
   proposed_refinement: "https://mobius.ucd.ie/trac/wiki/WindowsRelease"
+explanation
+  "MOBIUS PVE release built on the Eclipse release for Windows XP/Vista"
 inherit RELEASE
 end
 
