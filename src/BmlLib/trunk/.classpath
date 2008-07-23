@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="lib/antlr-runtime-3.0.jar"/>
 	<classpathentry kind="src" path="antlr3-generated"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/BCEL5.1/bcel-5.1.jar" sourcepath="/BCEL5.1/bcel-5.1-src.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/BCEL5.1/bcel-5.1.zip!/bcel-5.1/docs/apidocs"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="src" output="bin" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="lib/antlr-3.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

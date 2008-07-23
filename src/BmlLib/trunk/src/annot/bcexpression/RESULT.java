@@ -32,8 +32,8 @@ public class RESULT extends BCExpression {
 	public RESULT(BCMethod m) {
 		super(Code.RESULT);
 		this.method = m;
-		this.type = JavaType.convert(
-			m.getBcelMethod().getReturnType());
+		this.type = JavaType.getJavaType(m.getBcelMethod().getReturnType().
+		                                 getSignature());
 	}
 	
 	@Override

@@ -1,12 +1,12 @@
 package annot.io;
 
 /**
- * This exception occures when an attribute cannot be read
+ * This exception occurs when an attribute cannot be read
  * correctly from BCEL's Unknown attribute. That mean,
  * BML annotations in .class file that is being read are
  * invalid or not supported by this library and this library
  * cannot continue reading following expressions or attributes
- * (becouse of unknown length of unsupported annotation).
+ * (because of unknown length of unsupported annotation).
  * 
  * @author tomekb
  */

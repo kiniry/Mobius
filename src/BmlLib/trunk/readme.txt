@@ -6,3 +6,7 @@ an Eclipse plugin which generates the Java parser from g3 file is located
 at http://javadude.com/eclipse/update.
 
 More information in Bmllib/src/txt/readme.txt
+
+
+How to generate java files from .g3 file (in my local directories):
+/usr/java/jdk1.5.0_11/bin/java -cp /usr/java/jdk1.5.0_11/jre/lib/rt.jar:/home/alx/workspace/BmlLib/lib/antlr-3.0.1/lib/stringtemplate-3.1b1.jar:/home/alx/workspace/BmlLib/lib/antlr-3.0.1/lib/antlr-3.0.1.jar:/home/alx/workspace/BmlLib/lib/antlr-3.0.1/lib/antlr-2.7.7.jar org.antlr.Tool -o /home/alx/workspace/BmlLib/antlr3-generated annot/textio/BML.g3
