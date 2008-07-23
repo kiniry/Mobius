@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
-import mobius.directVCGen.ui.poview.util.ImagesUtils.StreamConnexion;
+import mobius.directVCGen.ui.poview.util.ImagesUtils.StreamConnection;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -124,7 +124,12 @@ public final class ConsoleUtils {
     return fPurple;
   }
   
-
+  /**
+   * Creates a job that does a system call, and outputs its result
+   * in the standard console.
+   * 
+   * @author J. Charles (julien.charles@inria.fr)
+   */
   public static class SystemCallJob extends Job {
     /** the arguments to run as the system call. */
     private final String[] fArgs;
@@ -155,10 +160,10 @@ public final class ConsoleUtils {
       
       try {
         final Process p = Runtime.getRuntime().exec(fArgs);
-        final StreamConnexion connexionOut = 
-          new StreamConnexion(p.getInputStream(), streamOut);
-        final StreamConnexion connexionErr = 
-          new StreamConnexion(p.getErrorStream(), streamErr);
+        final StreamConnection connexionOut = 
+          new StreamConnection(p.getInputStream(), streamOut);
+        final StreamConnection connexionErr = 
+          new StreamConnection(p.getErrorStream(), streamErr);
         connexionOut.start();
         connexionErr.start();
         p.waitFor();
@@ -181,9 +186,12 @@ public final class ConsoleUtils {
    * @author J. Charles (julien.charles@inria.fr)
    */
   public static class ConsoleOutputWrapper {
+    /** the current console where to write. */
     private final IOConsole fCurrent;
-    private PrintStream savedOut;
-    private PrintStream savedErr;
+    /** the old output stream that will have to be restored. */
+    private PrintStream fSavedOut;
+    /** the old error stream that will have to be restored. */
+    private PrintStream fSavedErr;
     
     /**
      * Initialize a new Console Wrapper.
@@ -192,12 +200,16 @@ public final class ConsoleUtils {
       fCurrent = ConsoleUtils.getDefault().getConsole();
     }
     
+    /**
+     * Saves the current output and error stream if it hasn't been
+     * done yet. If it has been already called once it does nothing.
+     */
     public void wrap() {
-      if (savedOut != null) {
+      if (fSavedOut != null) {
         return;
       }
-      savedOut = System.out;
-      savedErr = System.err;
+      fSavedOut = System.out;
+      fSavedErr = System.err;
       final IOConsoleOutputStream out = fCurrent.newOutputStream();
       out.setColor(ConsoleUtils.getDefault().getBlack()); 
       
@@ -208,12 +220,17 @@ public final class ConsoleUtils {
       System.setErr(new PrintStream(err));
     }
     
+    /**
+     * Restores the standard output and error stream if they have been
+     * previously saved. If {@link #wrap()} hasn't been called beforehand
+     * it does nothing.
+     */
     public void unwrap() {
-      if (savedOut == null) {
+      if (fSavedOut == null) {
         return;
       }
-      System.setOut(savedOut);
-      System.setErr(savedErr);
+      System.setOut(fSavedOut);
+      System.setErr(fSavedErr);
     }
   }
 }

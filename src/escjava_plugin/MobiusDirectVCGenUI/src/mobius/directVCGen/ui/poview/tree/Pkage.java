@@ -7,11 +7,21 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 
-
+/**
+ * A node that represents a Java package. There is a depth associated to
+ * it, which gives the min depth of children it should have.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class Pkage extends AProofFolder {
+  /** the depth of folders that are considered as class/methods/goals. */
   private final int fDepth;
   
-  
+  /**
+   * Build a node which represents a package entry.
+   * @param folder the folder which represents a package.
+   * @param depth the depth up until which the folder should be a Class...
+   */
   Pkage(final IFolder folder, final int depth) {
     super(folder);
     fDepth = depth;

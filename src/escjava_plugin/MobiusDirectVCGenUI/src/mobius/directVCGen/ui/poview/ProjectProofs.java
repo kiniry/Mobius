@@ -41,7 +41,8 @@ import org.eclipse.ui.part.ViewPart;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class ProjectProofs extends ViewPart 
-  implements IDoubleClickListener, ISelectionChangedListener, SelectionListener, IPageListener {
+  implements IDoubleClickListener, ISelectionChangedListener, 
+             SelectionListener, IPageListener {
   
   /** the current instance of the ProjectProofs. */
   private static ProjectProofs instance; 
@@ -154,36 +155,50 @@ public class ProjectProofs extends ViewPart
   /** {@inheritDoc} */
   public void widgetDefaultSelected(final SelectionEvent e) { }
 
+  /** {@inheritDoc} */
   @Override
-  public void pageActivated(IWorkbenchPage page) {
+  public void pageActivated(final IWorkbenchPage page) {
     page.addSelectionListener(new MySelListener());
-
-    //System.out.println("hi");    
   }
 
+  /** {@inheritDoc} */
   @Override
-  public void pageClosed(IWorkbenchPage page) {
-    // TODO Auto-generated method stub
-    
+  public void pageClosed(final IWorkbenchPage page) {
   }
 
+  /** {@inheritDoc} */
   @Override
-  public void pageOpened(IWorkbenchPage page) {
-    // TODO Auto-generated method stub
-    System.out.println("hoy");    
+  public void pageOpened(final IWorkbenchPage page) {
   }
 
+  /**
+   * Returns the current instance of the view.
+   * @return the last registered instance of the view
+   */
   public static ProjectProofs getDefault() {
     return instance;
   }
 
+  /**
+   * Returns the tree viewer associated with the view.
+   * @return null if called before the first call to 
+   * {@link #createPartControl(Composite)} afterward returns 
+   * a valid tree viewer.
+   */
   public TreeViewer getViewer() {
     return fViewer;
   }
   
-  
+  /**
+   * A listener that is used to change the project presented in the tree viewer
+   * when another project has focus in the package viewer.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
   private class MySelListener implements ISelectionListener {
+    /** the currently selected project. */
     private IProject fProj;
+    
+    /** {@inheritDoc} */
     @Override
     public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
       if (selection instanceof IStructuredSelection) {

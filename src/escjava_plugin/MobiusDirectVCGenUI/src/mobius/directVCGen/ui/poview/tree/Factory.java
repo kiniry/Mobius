@@ -6,6 +6,14 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
+
+/**
+ * This class is used to create the tree node in a factory way:
+ * instead of calling explicitly the constructors, it is suggested
+ * to go through this lib.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public final class Factory {
 
   /** default constructor.  */
@@ -42,6 +50,15 @@ public final class Factory {
     return res;
   }
 
+  /**
+   * Create a package or a class depending on the depth. If the there is 
+   * more depth lasting in the folder thant the depth mentionned by the parameter
+   * depth, a package is created otherwise a class is created.
+   * @param folder the resource to create a node from
+   * @param depth the depth by which to trigger the class node creation instead of
+   * package node creation
+   * @return a valid tree node, representing the ressource given by folder.
+   */
   public static AWorkspaceElement createPackageOrClass(final IFolder folder, 
                                                       final int depth) {
     if (Factory.getDepth(folder) > depth) {
@@ -52,10 +69,15 @@ public final class Factory {
     }
   }
 
-  private static int getDepth(final IContainer container) {
+  /**
+   * Returns the max depth of the resource tree, from the given container.
+   * @param node the node from which to start.
+   * @return a depth, superior or equal zero
+   */
+  private static int getDepth(final IContainer node) {
     IResource [] rt;
     try {
-      rt = container.members();
+      rt = node.members();
       if ((rt == null) || (rt.length == 0)) {
         return 0;
       }

@@ -1,6 +1,5 @@
 package mobius.directVCGen.ui.poview.tree;
 
-import mobius.directVCGen.ui.poview.util.ImagesUtils;
 import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
 
 import org.eclipse.core.resources.IFile;
@@ -10,12 +9,21 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
-
+/**
+ * A node to represent a project. A project is defined by the 
+ * associated ressource attached to it.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class Project extends AWorkspaceElement {
   /** the project this objecti is a representation of. */
   private final IProject fProject;
   
-  public Project(final IProject project) {
+  /**
+   * Creates a new node representing a project.
+   * @param project the project from which it is created
+   */
+  Project(final IProject project) {
     super(project);
     fProject = project;
     update();

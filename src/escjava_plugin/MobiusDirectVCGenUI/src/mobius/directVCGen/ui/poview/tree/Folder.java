@@ -1,17 +1,23 @@
 package mobius.directVCGen.ui.poview.tree;
 
 import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
-import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 
-
+/**
+ * A node representing a folder.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class Folder extends AProofFolder {
-  
-  public Folder(final IFolder folder) {
+  /**
+   * Construct a node from the given folder.
+   * @param folder the folder associated with this node.
+   */
+  Folder(final IFolder folder) {
     super(folder);
     update();
   }

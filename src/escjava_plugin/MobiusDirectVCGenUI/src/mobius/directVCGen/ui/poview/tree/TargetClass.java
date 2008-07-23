@@ -6,10 +6,18 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 
-
+/**
+ * A node representing a class (a folder class to be precise).
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class TargetClass extends AProofFolder {
 
-  public TargetClass(final IFolder folder) {
+  /**
+   * Initialize a class from its corresponding folder.
+   * @param folder the folder representing the class
+   */
+  TargetClass(final IFolder folder) {
     super(folder);
     update();
   }

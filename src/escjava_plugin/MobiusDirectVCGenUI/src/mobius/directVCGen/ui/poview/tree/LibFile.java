@@ -2,17 +2,26 @@ package mobius.directVCGen.ui.poview.tree;
 
 import java.io.File;
 
-import mobius.directVCGen.ui.poview.util.ImagesUtils;
 import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.graphics.Image;
 
 
+/**
+ * Represents a vernacular file from a library.
+ * If its compilation was a success its image turns violet.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class LibFile extends UnknownFile {
   /** the name of the file when it is compiled. */
   private final File fFileVo;
   
+  /**
+   * Construct a library node from the lib file.
+   * @param file a resource representing a Coq file
+   */
   LibFile(final IFile file) {
     super(file);
 

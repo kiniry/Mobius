@@ -6,8 +6,15 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.console.IConsoleConstants;
 
+/**
+ * This class is used to implement the perspective layout.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class PerspectiveFactory implements IPerspectiveFactory {
-
+  /** represents the number two third (2/3). */
+  private static final float twoThird = 0.66f;
+  /** {@inheritDoc} */
   @Override
   public void createInitialLayout(final IPageLayout layout) {
     // Get the editor area.
@@ -21,7 +28,8 @@ public class PerspectiveFactory implements IPerspectiveFactory {
     
 
     // Bottom right: Task List view
-    layout.addView(IConsoleConstants.ID_CONSOLE_VIEW, IPageLayout.BOTTOM, 0.66f, editorArea);
+    layout.addView(IConsoleConstants.ID_CONSOLE_VIEW, IPageLayout.BOTTOM, 
+                   twoThird, editorArea);
       
     // Bottom left: Outline view and Property Sheet view
     final IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 

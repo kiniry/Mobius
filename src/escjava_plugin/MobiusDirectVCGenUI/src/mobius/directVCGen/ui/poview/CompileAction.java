@@ -19,6 +19,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+/**
+ * An action triggered by the compilation button.
+ * It is supposed to compile the selected file.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class CompileAction implements IWorkbenchWindowActionDelegate {
   /** the current selection. */
   private ICompilationUnit fSel;
@@ -58,9 +64,15 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
 
   }
 
+  /**
+   * Compute the arguments of the system call.
+   * 
+   * @return an array of the arguments for the MobiusDirectVCGen
+   */
   private String[] computeArgs() {
-    String[] args = new String[0];
+    
     try { // computing the arguments
+     
       final IPath path = fSel.getCorrespondingResource().getProject().getLocation();
 
       final URL url = Activator.getDefault().getBundle().getResource("/lib/bicolano.jar");
@@ -73,13 +85,14 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
       for (String s: classPath) {
         res += ":" + s;
       }
-      args = new String[] {
+      final String[] args = new String[] {
         path.toString(), bico, 
         fSel.getTypes()[0].getFullyQualifiedName(),
         "-cp", res.substring(1), 
         "-SourcePath", 
         fSel.getResource().getParent().getLocation().toString()
       };
+      return args;
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -90,7 +103,7 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
     catch (CoreException e) {
       e.printStackTrace();
     }
-    return args;
+    return new String[0];
   }
 
   /** {@inheritDoc} */

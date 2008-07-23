@@ -1,7 +1,6 @@
 package mobius.directVCGen.ui.poview.tree;
 
 import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
-import mobius.directVCGen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
