@@ -100,14 +100,15 @@ test204 Good    See https://mobius.ucd.ie/ticket/437 - dcochran
 
 test262 Good	See https://mobius.ucd.ie/ticket/262 - dcochran
 
-test300 FIX 	IDC tests - covers null, divZero spec errors for ctors, methods w/ and w/o bodies - g_karab
-test301 Good 	IDC tests - static methods (and blocks?)
-test301a Good 	IDC tests - static methods (and blocks?) using quantifiers.
-test302 Good 	IDC tests - ... .
-test303 FIX	IDC tests - ... .
-test303a Good 	IDC tests - ... .
-test304 Good 	IDC tests - ... .
-test305 Good 	IDC tests - ... .
+test300   FIX 	IDC: covers null, divZero spec errors for ctors, methods w/ and w/o bodies - g_karab
+test301   Good 	IDC: static methods (and blocks?)
+test301a  Good 	IDC: static methods (and blocks?) using quantifiers.
+test302   Good 	IDC: constructors.
+test303   FIX	IDC: ... .
+test303a  Good 	IDC: ... .
+test304   Good 	IDC: ... .
+test305   Good 	IDC: ... .
+test306   Good	IDC: non-null declarations and invariants.
 
 test495 Good    See https://mobius.ucd.ie/ticket/495 - dcochran
 

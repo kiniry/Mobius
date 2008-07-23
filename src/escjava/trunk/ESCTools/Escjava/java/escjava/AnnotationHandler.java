@@ -1361,7 +1361,7 @@ private void checkParamOverrides(MethodDecl md, Set overrides) {
   }
 
   /**
-   * This method constructs an Expr representing the constraint to be imposted
+   * This method constructs an Expr representing the constraint to be imposed
    * on v due to it being declared non_null.
    * 
    * @param v   a type checked (i.e. type annotated) expression usually
