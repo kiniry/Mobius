@@ -29,6 +29,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="mobius.directVCGen.ui.poview.PerspectiveFactory"
+            icon="icons/mobius_logo_sm.gif"
             id="MobiusDirectVCGenUI.perspective1"
             name="Mobius">
       </perspective>
