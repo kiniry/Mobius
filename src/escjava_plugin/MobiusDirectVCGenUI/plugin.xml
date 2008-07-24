@@ -18,6 +18,7 @@
          <action
                class="mobius.directVCGen.ui.poview.CompileAction"
                enablesFor="1"
+               icon="icons/Hammer.gif"
                id="MobiusDirectVCGenUI.compile"
                label="Generate the Proof Obligations"
                style="push"

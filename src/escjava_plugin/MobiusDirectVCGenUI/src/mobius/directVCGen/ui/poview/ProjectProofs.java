@@ -203,7 +203,6 @@ public class ProjectProofs extends ViewPart
     public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
       if (selection instanceof IStructuredSelection) {
         final IStructuredSelection sel = (IStructuredSelection) selection;
-        //final Set<IProject> set = new HashSet<IProject>();
         if (sel.size() == 1) {
           final Object o = sel.getFirstElement();
           IProject newProj = null;
