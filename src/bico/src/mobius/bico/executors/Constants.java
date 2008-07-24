@@ -80,50 +80,6 @@ public final class Constants {
     }
   }
 
-  /**
-   * Elements of Coq syntax.
-   * 
-   * @author J. Charles (julien.charles@inria.fr)
-   */
-  public static enum Syntax {
-    /** corresponds to the string "Module ". */ 
-    MODULE("Module "),
-    /** corresponds to the string "Load ". */ 
-    LOAD("Load "),
-    /** corresponds to the string "End ". */ 
-    END_MODULE("End "),
-    /** corresponds to the string "Require Export ". */ 
-    REQ_EXPORT("Require Export "),
-    /** corresponds to the string "Export ". */ 
-    EXPORT("Export "),
-    /** corresponds to the string "Require Import ". */ 
-    REQ_IMPORT("Require Import "),
-    /** corresponds to the string "Import ". */ 
-    IMPORT("Import "),
-    /** corresponds to the string "Definition ". */ 
-    DEFINITION("Definition "),
-    /** corresponds to the string "End ". */ 
-    END_DEFINITION("End "),
-    /** corresponds to the string "Add LoadPath ". */ 
-    ADD_LOAD_PATH("Add LoadPath ");
-    
-    
-    
-    /** the string representing the keyword. */
-    private final String fStr;
-    
-    /**
-     * Constructs the constant, using the string to initialize it.
-     * @param str the string representing the option.
-     */
-    private Syntax(final String str) {
-      fStr = str;
-    }
-    
-    /** {@inheritDoc} */
-    public String toString() {
-      return fStr;
-    }
-  }
+ 
 
 }

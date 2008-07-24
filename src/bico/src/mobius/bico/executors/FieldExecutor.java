@@ -5,7 +5,6 @@ import java.util.List;
 
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
-import mobius.bico.executors.Constants.Syntax;
 import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Field;
@@ -69,8 +68,8 @@ class FieldExecutor extends ASignatureExecutor {
     for (String moduleToImport : modulesToImports) {
       String signature = Util.classFormatName2Standard(moduleToImport); 
       signature = Util.coqify(signature) + "_signature";
-      getOut().println(Syntax.REQ_IMPORT + signature   + ".v.");
-      getOut().println(Syntax.IMPORT + signature + ".");
+      getOut().reqImport(signature   + ".v.");
+      getOut().imprt(signature + ".");
     }
   }
 
@@ -150,9 +149,10 @@ class FieldExecutor extends ASignatureExecutor {
     fOutSig.println(strf);
     fOutSig.decTab();
     fOutSig.println(".\n");
-    strf = "Definition " + Util.coqify(field.getName()) +
-           "FieldSignature : FieldSignature := (name, " + 
-           Util.coqify(field.getName()) + "ShortFieldSignature).\n";
+    fOutSig.definition(Util.coqify(field.getName()) + "FieldSignature", 
+                       "FieldSignature",
+                       "(name, " + Util.coqify(field.getName()) + 
+                                "ShortFieldSignature)");
     fOutSig.println(strf);
   }
 
@@ -161,13 +161,11 @@ class FieldExecutor extends ASignatureExecutor {
    * @param field the field to compute
    */
   private void doField(final Field field) {
-    
-    String strf = "Definition " + Util.coqify(field.getName()) +
-           "Field : Field := FIELD.Build_t";
     final CoqStream out = getOut();
-    out.println(strf);
+    out.definitionStart(Util.coqify(field.getName()) + "Field", "Field");
+    out.print("FIELD.Build_t");
     out.incTab();
-    strf = Util.coqify(field.getName()) + "ShortFieldSignature";
+    String strf = Util.coqify(field.getName()) + "ShortFieldSignature";
     out.println(strf);
     
     out.println("" + field.isFinal());

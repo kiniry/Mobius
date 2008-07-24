@@ -16,10 +16,10 @@ import java.util.Map.Entry;
 
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
+import mobius.bico.coq.CoqStream.Syntax;
 import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dico;
 import mobius.bico.dico.MethodHandler;
-import mobius.bico.executors.Constants.Syntax;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.implem.MapImplemSpecif;
 
@@ -321,7 +321,7 @@ public class Executor extends ABasicExecutor {
     out.println(getImplemSpecif().getBeginning());
     
     out.println();
-    out.incPrintln(Syntax.MODULE + fName + "Signature.");
+    out.startModule(fName + "Signature");
     
     // the special library
     for (int i = 0; !fGenerateJavaLibs && i < fSpecialLibs.length; i++) {
@@ -337,7 +337,7 @@ public class Executor extends ABasicExecutor {
     
 
     
-    out.decPrintln(Syntax.END_MODULE + fName + "Signature.");
+    out.endModule(fName + "Signature");
     out.close();
   
   }
@@ -356,7 +356,7 @@ public class Executor extends ABasicExecutor {
     out.println(getImplemSpecif().getBeginning());
     
     out.println();
-    out.incPrintln(Syntax.MODULE + fName + "Type.");
+    out.startModule(fName + "Type");
 
     
     // the special library
@@ -370,8 +370,7 @@ public class Executor extends ABasicExecutor {
       out.load(ce.getValue().getModuleName() + "_type.v");
     }
     
-    out.decPrintln(Syntax.END_MODULE + " " + 
-                   fName + "Type.");
+    out.endModule(fName + "Type");
     out.close();
   }
 
@@ -392,7 +391,7 @@ public class Executor extends ABasicExecutor {
     out.println();
     
     for (String s: set) {
-      out.println (Syntax.ADD_LOAD_PATH + "\"" + s + "\".");
+      out.addLoadPath("\"" + s + "\"");
     }
   }
   

@@ -2,7 +2,6 @@ package mobius.bico.coq;
 
 import java.io.OutputStream;
 
-import mobius.bico.executors.Constants.Syntax;
 
 /**
  * A Stream that permits to write some coq specific syntax.
@@ -18,7 +17,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Add LoadPath module.</code>".
+   * Prints "<code>Add LoadPath module.\n</code>".
    * @param module the module name
    */
   public void addLoadPath(final String module) {
@@ -26,7 +25,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Load module.</code>".
+   * Prints "<code>Load module.\n</code>".
    * @param module the module name
    */
   public void load(final String module) {
@@ -34,7 +33,7 @@ public class CoqStream extends Stream {
   }
 
   /**
-   * Prints "<code>Require Import module.</code>".
+   * Prints "<code>Require Import module.\n</code>".
    * @param module the module name
    */
   public void reqImport(final String module) {
@@ -42,7 +41,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Require Export module.</code>".
+   * Prints "<code>Require Export module.\n</code>".
    * @param module the module name
    */
   public void reqExport(final String module) {
@@ -50,7 +49,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Export module.</code>".
+   * Prints "<code>Export module.\n</code>".
    * @param module the module name
    */
   public void exprt(final String module) {
@@ -58,7 +57,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Require Import module.</code>".
+   * Prints "<code>Require Import module.\n</code>".
    * @param module the module name
    */
   public void imprt(final String module) {
@@ -66,7 +65,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Module module.</code>" and
+   * Prints "<code>Module module.\n</code>" and
    * increments the following lines of one tab.
    * 
    * @param module the module name
@@ -77,11 +76,98 @@ public class CoqStream extends Stream {
   
   /**
    * Decrements of one tab and then print
-   *  "<code>End module.</code>".
+   *  "<code>End module.\n</code>".
    * 
    * @param module the module name
    */
   public void endModule(final String module) {
     decPrintln(Syntax.END_MODULE + module +  "."); 
+  }
+  /**
+   * Prints "<code>Definition name := </code>".
+   * @param name the name of the definition
+   */
+  public void definitionStart(final String name) {
+    definitionStart(name, null);
+  }
+  
+  /**
+   * Prints "<code>Definition name: type := </code>".
+   * @param name the name of the definition
+   * @param type  the type of the definition
+   */
+  public void definitionStart(final String name, final String type) {
+    String s = Syntax.DEFINITION + name;
+    if (type != null && !type.equals("")) {
+      s += ": " + type;
+    }
+    s += " := ";
+    print(s);
+  }
+  
+  /**
+   * Prints "<code>Definition name: type := body.</code>".
+   * @param name the name of the definition
+   * @param type  the type of the definition
+   * @param body the body of the definition
+   */
+  public void definition(final String name, final String type, final String body) {
+    definitionStart(name, type);
+    println(body + ".");
+  }
+  
+  /**
+   * Prints "<code>Definition name := body.</code>".
+   * @param name the name of the definition
+   * @param body the body of the definition
+   */
+  public void definition(final String name, final String body) {
+    definition(name, null, body);
+  }
+  
+  /**
+   * Elements of Coq syntax.
+   * 
+   * @author J. Charles (julien.charles@inria.fr)
+   */
+  public static enum Syntax {
+    /** corresponds to the string "Module ". */ 
+    MODULE("Module "),
+    /** corresponds to the string "Load ". */ 
+    LOAD("Load "),
+    /** corresponds to the string "End ". */ 
+    END_MODULE("End "),
+    /** corresponds to the string "Require Export ". */ 
+    REQ_EXPORT("Require Export "),
+    /** corresponds to the string "Export ". */ 
+    EXPORT("Export "),
+    /** corresponds to the string "Require Import ". */ 
+    REQ_IMPORT("Require Import "),
+    /** corresponds to the string "Import ". */ 
+    IMPORT("Import "),
+    /** corresponds to the string "Definition ". */ 
+    DEFINITION("Definition "),
+    /** corresponds to the string "End ". */ 
+    END_DEFINITION("End "),
+    /** corresponds to the string "Add LoadPath ". */ 
+    ADD_LOAD_PATH("Add LoadPath ");
+    
+    
+    
+    /** the string representing the keyword. */
+    private final String fStr;
+    
+    /**
+     * Constructs the constant, using the string to initialize it.
+     * @param str the string representing the option.
+     */
+    private Syntax(final String str) {
+      fStr = str;
+    }
+    
+    /** {@inheritDoc} */
+    public String toString() {
+      return fStr;
+    }
   }
 }

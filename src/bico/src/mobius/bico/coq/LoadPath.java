@@ -2,7 +2,8 @@ package mobius.bico.coq;
 
 import java.io.File;
 
-import mobius.bico.executors.Constants.Syntax;
+import mobius.bico.coq.CoqStream.Syntax;
+
 
 public class LoadPath {
   /** the path the load path represents. */
