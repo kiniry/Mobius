@@ -1,4 +1,4 @@
-/* $Id: GetSpec.java 71126 2008-02-01 00:30:48Z g_karab $
+/* $Id: GetSpec.java 72039 2008-07-23 03:54:08Z chalin $
  * Copyright 2000, 2001, Compaq Computer Corporation 
  */
 
@@ -49,10 +49,8 @@ public final class GetSpec {
 			/*@ non_null */FindContributors scope,
 			/*@ non_null */Set synTargs, /*@ nullable */ Hashtable premap) {
 		Spec spec = getCommonSpec(rd, scope, premap);
-		//[GKS]
 		if(Main.options().idc)
 			DefGCmd.addInvConds(scope, spec);
-		//[GKE]
 		if (rd.body==null && Main.options().idc) {
 			return(spec);
 		}	else {

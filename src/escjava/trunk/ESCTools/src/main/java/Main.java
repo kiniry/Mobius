@@ -762,10 +762,9 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
    * short (~ 1 word) status message.
    *
    * requires - r is not from a binary file, sig is the TypeSig
-   * for r's parent, and initState != null.
+   * for r's parent.
    */
-  //@ ensures \result != null;
-  public String processRoutineDecl(/*@ non_null */RoutineDecl r,
+  public /*@non_null*/String processRoutineDecl(/*@ non_null */RoutineDecl r,
   /*@ non_null */TypeSig sig,
   /*@ non_null */InitialState initState) {
     // ==== skip method according to option setting ====
@@ -880,15 +879,13 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
 
     // Generate the VC for GC:
     Expr vcBody;
-    /*
-     * From experiements from POPL01 (Cormac)
+    /* From experiements from POPL01 (Cormac)
      if(wpnxw != 0 ) {
      vcBody = WpName.compute( gc, wpnxw );
      } else 
     */
     if (options().spvc) {
-      /*  
-       * From experiements from POPL01 (Cormac)
+      /* From experiements from POPL01 (Cormac)
       vcBody = wpp ? Wpp.compute(gc, GC.truelit, GC.truelit) : 
       SPVC.compute(gc);
       */
@@ -904,11 +901,126 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
       label += "<constructor>";
     label += "." + UniqName.locToSuffix(r.getStartLoc());
 
-    //$$
-    /* Use the new vc generator (= nvcg)
-     */
-    if (options().nvcg) {
-      VcGenerator vcg = null;
+    /* Use the new vc generator (= nvcg) */
+    if (options().nvcg)
+      useNewVCgen(r, sig, initState, vcBody, label);
+
+    Expr vc = GC.implies(initState.getInitialState(), vcBody);
+
+    vc = LabelExpr.make(r.getStartLoc(), r.getEndLoc(), false, Identifier
+        .intern(label), vc);
+
+    // Check for VC too big:
+    int usize = Util.size(vc, options().vclimit);
+    if (usize == -1) {
+      ErrorSet.caution("Unable to check " + TypeCheck.inst.getName(r)
+                       + " of type " + TypeSig.getSig(r.parent)
+                       + " because its VC is too large");
+      return "VC too big";
+    }
+    //System.err.println("main_vc_size " + Util.size(vc));
+    //System.err.println("initial_vc_size " + Util.size(initState.getInitialState()));
+
+    if (options().printAssumers) {
+      System.out.print("ASSUMERS: ");
+      System.out.print(Location.toFileName(r.getStartLoc()));
+      System.out.print('|');
+      System.out.print(fullName);
+      System.out.println(LabelInfoToString.get());
+    }
+
+    String ejpTime = timeUsed(startTime);
+    startTime = java.lang.System.currentTimeMillis();
+    // Translate VC to a string
+    Info.out("[converting VC to a string]");
+
+    if (!options().svcg
+        && (options().pvc || (Info.on && options().traceInfo > 0))) {
+      VcToString.compute(vc, System.out);
+    }
+
+    if (options().guardedVC) {
+
+      String fn = UniqName.locToSuffix(r.locId) + ".method."
+                  + options().guardedVCFileExt;
+      PrintStream o = fileToPrintStream(options().guardedVCDir, fn);
+      o.println(options().MethodVCPrefix);
+      o.println(r.parent.id + "@" + UniqName.locToSuffix(r.parent.locId));
+      VcToString.compute(vc, o);
+      o.close();
+      return "guarded VC generation finished";
+    }
+
+    String vcTime = timeUsed(startTime);
+    startTime = java.lang.System.currentTimeMillis();
+
+    // ==== Start stage 6 ====
+    if (stages < 6)
+      return "ok";
+
+    // Process Simplify's output
+    String status = "unexpectedly missing Simplify output";
+    try {
+      int stat = doProving(vc, r, directTargets, null);
+      switch (stat) {
+      case Status.STATICCHECKED_OK:
+        status = "passed";
+        break;
+      case Status.STATICCHECKED_ERROR:
+        status = "failed";
+        break;
+      case Status.STATICCHECKED_TIMEOUT:
+        status = "timed out";
+        break;
+      default:
+        status = "unexpectedly missing Simplify output";
+      }
+
+    } catch (escjava.prover.SubProcess.Died e) {
+      // System.out.println("DIED");
+      ProverManager.died();
+    } catch (FatalError e) {
+      // System.out.println("DIED");
+      ProverManager.died();
+    }
+
+    if (options().enableReachabilityAnalysis) {
+      // Gives warnings for unreached code (assertions for now)
+      if (options().dsa) {
+        ReachabilityAnalysis.analyze(gc);
+      } else {
+        ErrorSet
+            .caution("Skipping reachability analysis because DSA is turned off.");
+      }
+    }
+
+    String proofTime = timeUsed(startTime);
+    if (options().statsTime) {
+      System.out.println("    [Time: " + timeUsed(routineStartTime) + " GC: "
+                         + gcTime + " DSA: " + dsaTime + " Ejp: " + ejpTime
+                         + " VC: " + vcTime + " Proof(s): " + proofTime + "]");
+    }
+    if (options().statsSpace) {
+      System.out.println("    [Size: " + " src: " + Util.size(r) + " GC: "
+                         + origgcSize + " DSA: " + Util.size(gc) + " VC: "
+                         + Util.size(vc) + "]");
+    }
+    if (options().statsTermComplexity)
+      System.out
+          .println("    [Number of terms: " + VcToString.termNumber + "]");
+    if (options().statsVariableComplexity)
+      System.out.println("    [Number of variables: "
+                         + VcToString.variableNumber + "]");
+    if (options().statsQuantifierComplexity)
+      System.out.println("    [Number of quantifiers: "
+                         + VcToString.quantifierNumber + "]");
+
+    return status;
+  }
+
+private void useNewVCgen(RoutineDecl r, TypeSig sig, InitialState initState,
+		Expr vcBody, String label) {
+	VcGenerator vcg = null;
       String[] subpackage = options().pProver;
       for (int spindex = 0; spindex < subpackage.length; spindex++) {
         String className = "";
@@ -1053,266 +1165,153 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
           System.out.println(e.getMessage());
         }
       }
-    }
-    //$$
+}
 
-    Expr vc = GC.implies(initState.getInitialState(), vcBody);
+  public int doProving(/*@non_null*/Expr vc, RoutineDecl r, Set directTargets,
+                       /*@nullable*/FindContributors scope) {
+	  try {
+		  String simpleName = TypeCheck.inst.getRoutineName(r).intern();
+		  String fullName = TypeCheck.inst.getSig(r.parent).toString() + "."
+		  					+ simpleName + javafe.tc.TypeCheck.getSignature(r);
+		  fullName = removeSpaces(fullName).intern();
 
-    vc = LabelExpr.make(r.getStartLoc(), r.getEndLoc(), false, Identifier
-        .intern(label), vc);
+		  Enumeration results = ProverManager.prove(vc, scope, fullName);
 
-    // Check for VC too big:
-    int usize = Util.size(vc, options().vclimit);
-    if (usize == -1) {
-      ErrorSet.caution("Unable to check " + TypeCheck.inst.getName(r)
-                       + " of type " + TypeSig.getSig(r.parent)
-                       + " because its VC is too large");
-      return "VC too big";
-    }
-    //System.err.println("main_vc_size " + Util.size(vc));
-    //System.err.println("initial_vc_size " + Util.size(initState.getInitialState()));
+		  // $$
+		  if (!(ProverManager.useSimplify || ProverManager.useSorted))
+			  return 0; // PC: should use one of the statuses, not a hard-coded value.
 
-    if (options().printAssumers) {
-      System.out.print("ASSUMERS: ");
-      System.out.print(Location.toFileName(r.getStartLoc()));
-      System.out.print('|');
-      System.out.print(fullName);
-      System.out.println(LabelInfoToString.get());
-    }
+		  // Process Simplify's output
+		  String status = "unexpectedly missing Simplify output";
+		  int stat = Status.NOTPROCESSED;
 
-    String ejpTime = timeUsed(startTime);
-    startTime = java.lang.System.currentTimeMillis();
-    // Translate VC to a string
-    Info.out("[converting VC to a string]");
-
-    if (!options().svcg
-        && (options().pvc || (Info.on && options().traceInfo > 0))) {
-      VcToString.compute(vc, System.out);
-    }
-
-    if (options().guardedVC) {
-
-      String fn = UniqName.locToSuffix(r.locId) + ".method."
-                  + options().guardedVCFileExt;
-      PrintStream o = fileToPrintStream(options().guardedVCDir, fn);
-      o.println(options().MethodVCPrefix);
-      o.println(r.parent.id + "@" + UniqName.locToSuffix(r.parent.locId));
-      VcToString.compute(vc, o);
-      o.close();
-      return "guarded VC generation finished";
-    }
-
-    String vcTime = timeUsed(startTime);
-    startTime = java.lang.System.currentTimeMillis();
-
-    // ==== Start stage 6 ====
-    if (stages < 6)
-      return "ok";
-
-    // Process Simplify's output
-    String status = "unexpectedly missing Simplify output";
-    try {
-      int stat = doProving(vc, r, directTargets, null);
-      switch (stat) {
-      case Status.STATICCHECKED_OK:
-        status = "passed";
-        break;
-      case Status.STATICCHECKED_ERROR:
-        status = "failed";
-        break;
-      case Status.STATICCHECKED_TIMEOUT:
-        status = "timed out";
-        break;
-      default:
-        status = "unexpectedly missing Simplify output";
-      }
-
-    } catch (escjava.prover.SubProcess.Died e) {
-      // System.out.println("DIED");
-      ProverManager.died();
-    } catch (FatalError e) {
-      // System.out.println("DIED");
-      ProverManager.died();
-    }
-
-    if (options().enableReachabilityAnalysis) {
-      // Gives warnings for unreached code (assertions for now)
-      if (options().dsa) {
-        ReachabilityAnalysis.analyze(gc);
-      } else {
-        ErrorSet
-            .caution("Skipping reachability analysis because DSA is turned off.");
-      }
-    }
-
-    String proofTime = timeUsed(startTime);
-    if (options().statsTime) {
-      System.out.println("    [Time: " + timeUsed(routineStartTime) + " GC: "
-                         + gcTime + " DSA: " + dsaTime + " Ejp: " + ejpTime
-                         + " VC: " + vcTime + " Proof(s): " + proofTime + "]");
-    }
-    if (options().statsSpace) {
-      System.out.println("    [Size: " + " src: " + Util.size(r) + " GC: "
-                         + origgcSize + " DSA: " + Util.size(gc) + " VC: "
-                         + Util.size(vc) + "]");
-    }
-    if (options().statsTermComplexity)
-      System.out
-          .println("    [Number of terms: " + VcToString.termNumber + "]");
-    if (options().statsVariableComplexity)
-      System.out.println("    [Number of variables: "
-                         + VcToString.variableNumber + "]");
-    if (options().statsQuantifierComplexity)
-      System.out.println("    [Number of quantifiers: "
-                         + VcToString.quantifierNumber + "]");
-
-    return status;
-  }
-
-  //@ requires vc != null;
-  // scope can be null
-  public int doProving(Expr vc, RoutineDecl r, Set directTargets,
-                       FindContributors scope) {
-    try {
-      String simpleName = TypeCheck.inst.getRoutineName(r).intern();
-      String fullName = TypeCheck.inst.getSig(r.parent).toString() + "."
-                        + simpleName + javafe.tc.TypeCheck.getSignature(r);
-      fullName = removeSpaces(fullName).intern();
-
-      Enumeration results = ProverManager.prove(vc, scope, fullName);
-
-      //$$
-      if (ProverManager.useSimplify || ProverManager.useSorted) {
-        //$$
-
-        // Process Simplify's output
-        String status = "unexpectedly missing Simplify output";
-        int stat = Status.STATICCHECKED_ERROR;
-
-        boolean nextWarningNeedsPrecedingLine = true;
-        if (results != null)
-          while (results.hasMoreElements()) {
-
-            SimplifyOutput so = (SimplifyOutput) results.nextElement();
-            switch (so.getKind()) {
-            case SimplifyOutput.VALID:
-              status = "passed";
-              stat = Status.STATICCHECKED_OK;
-              break;
-            case SimplifyOutput.INVALID:
-              status = "failed";
-              stat = Status.STATICCHECKED_ERROR;
-              break;
-            case SimplifyOutput.UNKNOWN:
-              status = "timed out";
-              stat = Status.STATICCHECKED_TIMEOUT;
-              break;
-            case SimplifyOutput.COMMENT: {
-              SimplifyComment sc = (SimplifyComment) so;
-              System.out.println("SIMPLIFY: " + sc.getMsg());
-              break;
-            }
-            case SimplifyOutput.COUNTEREXAMPLE: {
-              if (nextWarningNeedsPrecedingLine) {
-                escjava.translate.ErrorMsg.printSeparatorLine(System.out);
-                nextWarningNeedsPrecedingLine = false;
-              }
-              SimplifyResult sr = (SimplifyResult) so;
-              escjava.translate.ErrorMsg.print(TypeCheck.inst.getName(r), sr
-                  .getLabels(), sr.getContext(), r, directTargets, System.out);
-              break;
-            }
-            case SimplifyOutput.EXCEEDED_PROVER_KILL_TIME: {
-              SimplifyResult sr = (SimplifyResult) so;
-              ErrorSet.caution("Unable to check " + TypeCheck.inst.getName(r)
-                               + " of type " + TypeSig.getSig(r.parent)
-                               + " completely because too much time required");
-              if (Info.on && sr.getLabels() != null) {
-                Info.out("Current labels: " + sr.getLabels());
-              }
-              nextWarningNeedsPrecedingLine = true;
-              break;
-            }
-            case SimplifyOutput.EXCEEDED_PROVER_KILL_ITER: {
-              SimplifyResult sr = (SimplifyResult) so;
-              ErrorSet.caution("Unable to check " + TypeCheck.inst.getName(r)
-                               + " of type " + TypeSig.getSig(r.parent)
-                               + " completely because"
-                               + " too many iterations required");
-              if (Info.on && sr.getLabels() != null) {
-                Info.out("Current labels: " + sr.getLabels());
-              }
-              nextWarningNeedsPrecedingLine = true;
-              break;
-            }
-            case SimplifyOutput.REACHED_CC_LIMIT:
-              ErrorSet.caution("Not checking " + TypeCheck.inst.getName(r)
-                               + " of type " + TypeSig.getSig(r.parent)
-                               + " completely because"
-                               + " warning limit (PROVER_CC_LIMIT) reached");
-              break;
-            case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_TIME: {
-              SimplifyResult sr = (SimplifyResult) so;
-              ErrorSet.caution("Unable to check subgoal of "
-                               + TypeCheck.inst.getName(r) + " of type "
-                               + TypeSig.getSig(r.parent)
-                               + " completely because too much time required");
-              if (Info.on && sr.getLabels() != null) {
-                Info.out("Current labels: " + sr.getLabels());
-              }
-              nextWarningNeedsPrecedingLine = true;
-              break;
-            }
-            case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_ITER: {
-              SimplifyResult sr = (SimplifyResult) so;
-              ErrorSet.caution("Unable to check subgoal of "
-                               + TypeCheck.inst.getName(r) + " of type "
-                               + TypeSig.getSig(r.parent)
-                               + " completely because"
-                               + " too many iterations required");
-              if (Info.on && sr.getLabels() != null) {
-                Info.out("Current labels: " + sr.getLabels());
-              }
-              nextWarningNeedsPrecedingLine = true;
-              break;
-            }
-            case SimplifyOutput.WARNING_TRIGGERLESS_QUANT: {
-              TriggerlessQuantWarning tqw = (TriggerlessQuantWarning) so;
-              int loc = tqw.getLocation();
-              /* Turn off this warning for now.  FIXME
-                 Some generated axioms require using the Simplify heuristic to work correctly,
-                 while others generate this warning if there is no explict quantifier.
-                 String msg = "Unable to use quantification because " +
-                 "no trigger found: " + tqw.e1;
-                 if (loc != Location.NULL) {
-                 ErrorSet.caution(loc, msg);
-                 } else {
-                 ErrorSet.caution(msg);
-                 }
-                 if (Info.on && tqw.getLabels() != null) {
-                 Info.out("Current labels: " + tqw.getLabels());
-                 }
-              */
-              break;
-            }
-            default:
-              Assert.fail("unexpected type of Simplify output");
-              break;
-            }
-          }
-
-        return stat;
-        //$$
-      }
-      //$$
-      return 0;
-      //		return stat;
-
-    } catch (escjava.prover.SubProcess.Died e) {
-      //status = "died";
-      return Status.STATICCHECKED_ERROR;
-    }
-
+		  boolean nextWarningNeedsPrecedingLine = true;
+		  if (results != null) {
+			  while (results.hasMoreElements()) {
+				  SimplifyOutput so = (SimplifyOutput) results.nextElement();
+				  switch (so.getKind()) {
+				  case SimplifyOutput.VALID:
+					  status = "passed";
+					  stat = Status.STATICCHECKED_OK;
+					  break;
+				  case SimplifyOutput.INVALID:
+					  status = "failed";
+					  stat = Status.STATICCHECKED_ERROR;
+					  break;
+				  case SimplifyOutput.UNKNOWN:
+					  status = "timed out";
+					  stat = Status.STATICCHECKED_TIMEOUT;
+					  break;
+				  case SimplifyOutput.COMMENT: {
+					  SimplifyComment sc = (SimplifyComment) so;
+					  System.out.println("SIMPLIFY: " + sc.getMsg());
+					  break;
+				  }
+				  case SimplifyOutput.COUNTEREXAMPLE: {
+					  if (nextWarningNeedsPrecedingLine) {
+						  escjava.translate.ErrorMsg
+						  .printSeparatorLine(System.out);
+						  nextWarningNeedsPrecedingLine = false;
+					  }
+					  SimplifyResult sr = (SimplifyResult) so;
+					  escjava.translate.ErrorMsg.print(TypeCheck.inst
+							  .getName(r), sr.getLabels(), sr.getContext(),
+							  r, directTargets, System.out);
+					  break;
+				  }
+				  case SimplifyOutput.EXCEEDED_PROVER_KILL_TIME: {
+					  SimplifyResult sr = (SimplifyResult) so;
+					  ErrorSet.caution("Unable to check "
+							  + TypeCheck.inst.getName(r) + " of type "
+							  + TypeSig.getSig(r.parent)
+							  + " completely because too much time required");
+					  if (Info.on && sr.getLabels() != null) {
+						  Info.out("Current labels: " + sr.getLabels());
+					  }
+					  nextWarningNeedsPrecedingLine = true;
+					  if (stat == Status.NOTPROCESSED) {
+						  status = "timed out";
+						  stat = Status.STATICCHECKED_TIMEOUT;
+					  }
+					  break;
+				  }
+				  case SimplifyOutput.EXCEEDED_PROVER_KILL_ITER: {
+					  SimplifyResult sr = (SimplifyResult) so;
+					  ErrorSet.caution("Unable to check "
+							  + TypeCheck.inst.getName(r) + " of type "
+							  + TypeSig.getSig(r.parent)
+							  + " completely because"
+							  + " too many iterations required");
+					  if (Info.on && sr.getLabels() != null) {
+						  Info.out("Current labels: " + sr.getLabels());
+					  }
+					  nextWarningNeedsPrecedingLine = true;
+					  break;
+				  }
+				  case SimplifyOutput.REACHED_CC_LIMIT:
+					  ErrorSet.caution("Not checking "
+							  + TypeCheck.inst.getName(r) + " of type "
+							  + TypeSig.getSig(r.parent)
+							  + " completely because"
+							  + " warning limit (PROVER_CC_LIMIT) reached");
+					  break;
+				  case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_TIME: {
+					  SimplifyResult sr = (SimplifyResult) so;
+					  ErrorSet.caution("Unable to check subgoal of "
+							  + TypeCheck.inst.getName(r) + " of type "
+							  + TypeSig.getSig(r.parent)
+							  + " completely because too much time required");
+					  if (Info.on && sr.getLabels() != null) {
+						  Info.out("Current labels: " + sr.getLabels());
+					  }
+					  if (stat == Status.NOTPROCESSED) {
+						  status = "timed out";
+						  stat = Status.STATICCHECKED_TIMEOUT;
+					  }
+					  nextWarningNeedsPrecedingLine = true;
+					  break;
+				  }
+				  case SimplifyOutput.EXCEEDED_PROVER_SUBGOAL_KILL_ITER: {
+					  SimplifyResult sr = (SimplifyResult) so;
+					  ErrorSet.caution("Unable to check subgoal of "
+							  + TypeCheck.inst.getName(r) + " of type "
+							  + TypeSig.getSig(r.parent)
+							  + " completely because"
+							  + " too many iterations required");
+					  if (Info.on && sr.getLabels() != null) {
+						  Info.out("Current labels: " + sr.getLabels());
+					  }
+					  nextWarningNeedsPrecedingLine = true;
+					  break;
+				  }
+				  case SimplifyOutput.WARNING_TRIGGERLESS_QUANT: {
+					  TriggerlessQuantWarning tqw = (TriggerlessQuantWarning) so;
+					  int loc = tqw.getLocation();
+					  /*
+					   * Turn off this warning for now. FIXME Some generated
+					   * axioms require using the Simplify heuristic to work
+					   * correctly, while others generate this warning if
+					   * there is no explict quantifier. String msg =
+					   * "Unable to use quantification because " +
+					   * "no trigger found: " + tqw.e1; if (loc !=
+					   * Location.NULL) { ErrorSet.caution(loc, msg); } else {
+					   * ErrorSet.caution(msg); } if (Info.on &&
+					   * tqw.getLabels() != null) {
+					   * Info.out("Current labels: " + tqw.getLabels()); }
+					   */
+					  break;
+				  }
+				  default:
+					  Assert.fail("unexpected type of Simplify output");
+				  break;
+				  }
+			  }
+		  }
+		  return stat;
+	  } catch (escjava.prover.SubProcess.Died e) {
+		  // status = "died";
+		  return Status.STATICCHECKED_ERROR;
+	  }
   }
 
   Set predictSynTargs(RoutineDecl r, InitialState initState, FindContributors scope) {

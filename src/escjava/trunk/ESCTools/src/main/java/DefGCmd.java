@@ -1,4 +1,4 @@
-/* @(#)$Id: DefGCmd.java 71976 2008-07-12 02:57:45Z chalin $
+/* @(#)$Id: DefGCmd.java 72039 2008-07-23 03:54:08Z chalin $
  *
  * Copyright (C) 2006, Dependable Software Research Group, Concordia University
  */
@@ -16,6 +16,7 @@ import javafe.ast.*;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 
+import escjava.AnnotationHandler;
 import escjava.Main;
 import escjava.Options;
 import escjava.ast.Condition;
@@ -27,6 +28,7 @@ import escjava.ast.GuardedCmdVec;
 import escjava.ast.ExprCmd;
 import escjava.ast.QuantifiedExpr;
 import escjava.ast.Spec;
+import escjava.ast.Utils;
 import escjava.ast.VarInCmd;
 import escjava.ast.DynInstCmd;
 import escjava.ast.SeqCmd;
@@ -141,14 +143,16 @@ public class DefGCmd
 			break;
 		}
 
-		case TagConstants.FIELDACCESS: {
-			// <expr>.id
+		case TagConstants.FIELDACCESS: { // <expr>.id
 			FieldAccess fa = (FieldAccess)e;
+			// FIXME: also handle static fields (?)
 			if (!Modifiers.isStatic(fa.decl.modifiers) &&
 					fa.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR) {
 				ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
-				if (eod.expr.getTag() == TagConstants.THISEXPR)
+				if (exprIsNonNull(eod.expr)) {
+					if (Main.options().debug) System.err.println("\tIDC: object designator is non-null, hence NOT generating non-null check for access to field " + fa.id);
 					break;
+				}
 				Expr odExpr = trAndGen(eod.expr);
 				Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
 				GuardedCmd gc = GC.check(eod.locDot,
@@ -370,8 +374,10 @@ public class DefGCmd
 					me.od instanceof ExprObjectDesignator) {
 				// Expr ex = ((ExprObjectDesignator)me.od).expr;
 				ExprObjectDesignator eod = (ExprObjectDesignator)me.od;
-				if (eod.expr.getTag() == TagConstants.THISEXPR)
+				if (exprIsNonNull(eod.expr)) {
+					if (Main.options().debug) System.err.println("\tIDC: receiver is non-null, hence NOT generating non-null check on method invocation: " + me.id);
 					break;
+				}
 				Expr odExpr = trAndGen(eod.expr);
 				Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
 				GuardedCmd gc = GC.check(eod.locDot,
@@ -550,6 +556,20 @@ public class DefGCmd
 		this.code.addElement(gc);
 		// In all cases that fall through, simply translate e into a GC expr.
 		return TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
+	}
+
+	/** @return true iff we can statically determine by
+	 * simple inspection whether expr is a non_null expr. 
+	 */
+	private boolean exprIsNonNull(Expr expr) {
+		if (expr.getTag() == TagConstants.THISEXPR)
+			return true;
+		if (expr.getTag() == TagConstants.FIELDACCESS) {
+			FieldAccess fa = (FieldAccess)expr;
+			return isNonNull(fa.decl);
+		}
+		// TODO: also handle case for methods.
+		return false;
 	}
 
 	private void notImpl(Expr e) {
@@ -826,35 +846,41 @@ public class DefGCmd
 		// The code here is borrowed from the code inside 
 		// GetSpec.collectInvariants().  There is quite a bit of processing of
 		// the invariants in there including their translation into a GCExpr.
-		// For IDC processing we need bhe ASTExpr which is how we IDC for
+		// For IDC processing we need the ASTExpr which is how we IDC for
 		// pre-postoconditions.  The same condition tag is re-used in this case
 		// as it is for the preconditions, namely TagConstants.CHKEXPRDEFINEDNESS.
 		// FIXME: Very experimental code below!!  Probably more will have to be 
 		//        done here.
-		if(Main.options().idc)
-		{
-			Enumeration invariants = scope.invariants();
-			while (invariants.hasMoreElements()) {
-				ExprDeclPragma ep = (ExprDeclPragma)invariants.nextElement();
-				Expr J = ep.expr;
-				boolean Jvisible = !Main.options().filterInvariants	
-				|| GetSpec.exprIsVisible(scope.originType, J);
-				if (!Jvisible)
-					continue;
+		Enumeration invariants = scope.invariants();
+		while (invariants.hasMoreElements()) {
+			ExprDeclPragma ep = (ExprDeclPragma)invariants.nextElement();
+			Expr J = ep.expr;
+			boolean Jvisible = !Main.options().filterInvariants	
+			|| GetSpec.exprIsVisible(scope.originType, J);
+			if (!Jvisible)
+				continue;
 
-				if(!escjava.AnnotationHandler.isTrue(J)) {
-					if(Main.options().debug) {
-						System.err.println("GK-Trace-INV: " + 
-								EscPrettyPrint.inst.toString(J));
-						System.err.println("\ti.e.: "+ J);
-					}
-					javafe.tc.FlowInsensitiveChecks.setType(J, Types.booleanType);
-					Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
-							J, J.getStartLoc());
-					spec.pre.addElement(cond);
+			if(!escjava.AnnotationHandler.isTrue(J)) {
+				if(Main.options().debug) {
+					System.err.println("GK-Trace-INV: " + 
+							EscPrettyPrint.inst.toString(J));
+					System.err.println("\ti.e.: "+ J);
 				}
+				javafe.tc.FlowInsensitiveChecks.setType(J, Types.booleanType);
+				Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
+						J, J.getStartLoc());
+				spec.pre.addElement(cond);
 			}
 		}
+	}
+
+	private static boolean isNonNull(FieldDecl f) {
+		ModifierPragma non_null_pragma = Utils.findModifierPragma(f.pmodifiers, TagConstants.NON_NULL);
+		ModifierPragma nullable_pragma = Utils.findModifierPragma(f.pmodifiers, TagConstants.NULLABLE);
+		return non_null_pragma != null || 
+			(Main.options().nonNullByDefault 
+					&& nullable_pragma == null
+					&& Types.isReferenceType(f.type));
 	}
 
 }

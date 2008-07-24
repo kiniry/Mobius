@@ -3479,7 +3479,7 @@ Frame frameHandler = null;
    * (like writeCheck()) it will add a check command to the GC program 
    * being built.
    * 
-   * @see escjava.translate.Translate.writeCheck() */
+   * @see {@link #writeCheck(Expr, VarInit, Expr, int, boolean)}. */
   private void arrayRefWriteCheck(/*@non_null*/ArrayRefExpr ar,
 		  VarInit Rval, Expr rval, int locAssignOp,
 		  boolean inInitializerContext) {
@@ -3492,6 +3492,7 @@ Frame frameHandler = null;
 	   * happen if some declarator is explicitly annotated with a non_null
 	   * pragma.  Hence, we look for this pragma ...
 	   */
+	  // FIXME: chalin ... handle non-null-by-default.
 	  SimpleModifierPragma nonNullPragma = getNonNullPragma(ar.array);
 	  if (nonNullPragma != null) {
 		  if (Rval == null) {

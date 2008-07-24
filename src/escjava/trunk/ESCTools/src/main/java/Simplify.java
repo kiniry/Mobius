@@ -38,7 +38,8 @@ public class Simplify
     //@ spec_public
     private final /*@nullable*/ SubProcess P;
 
-    //@ invariant P == null ==> closed;
+    //@ public model boolean closed;
+    //@ represents closed <- (P == null);
 
     /**
      * This variable holds the {@link CECEnum} that is currently using
@@ -50,30 +51,26 @@ public class Simplify
      * Simplify available. </p>
      */
     //@ spec_public
-    private CECEnum subProcessUser = null;
+    private /*@nullable*/ CECEnum subProcessUser = null;
 
-    //@ public model boolean closed;
-    //@ represents closed <- (P == null);
 
     // Multiplexing Simplify
 
     /**
      * Prepare Simplify for use.
-     *
      * <p> Precondition: we are not closed. </p>
-     *
      * <p> Ensures any {@link CECEnum} currently using Simplify
      * finishes. </p>
      */
     //@ requires !closed;
     //@ ensures subProcessUser != null ==> subProcessUser == null;
-    private void readySubProcess() {
-	if (subProcessUser != null) {
-	    subProcessUser.finishUsingSimplify();
-	    eatPrompt();
-	    subProcessUser = null;
+	private void readySubProcess() {
+		if (subProcessUser != null) {
+			subProcessUser.finishUsingSimplify();
+			eatPrompt();
+			subProcessUser = null;
+		}
 	}
-    }
 
 
     // Creation and destruction
@@ -244,18 +241,18 @@ public class Simplify
 
     //@ ensures \result.elementType == \type(SimplifyOutput);
     //@ ensures !\result.returnsNull;
-    public /*@ non_null @*/ Enumeration streamProve() {
-        P.ToStream().flush();
-	while (P.peekChar() == '>') {
-            eatPrompt();
-	}
-	return subProcessUser;
+    public/* @ non_null @ */Enumeration streamProve() {
+    	P.ToStream().flush();
+    	while (P.peekChar() == '>') {
+    		eatPrompt();
+    	}
+    	return subProcessUser;
     }
 
     //@ ensures \result == null <==> closed;
-    public PrintStream subProcessToStream() {
-	return P.ToStream();
-    }
+	public PrintStream subProcessToStream() {
+		return P.ToStream();
+	}
 
     
     // Utility routines
