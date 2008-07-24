@@ -20,17 +20,20 @@ public class LoadPath {
     return Syntax.ADD_LOAD_PATH + " \"" + path +  "\".\n"; 
   }
 
+  /** {@inheritDoc} */
   @Override
   public boolean equals (final Object o) {
     return (o instanceof LoadPath) &&
             fPath.equals(((LoadPath) o).fPath);
   }
   
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return fPath.hashCode();
   }
   
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return fPath.toString();

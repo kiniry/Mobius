@@ -4,40 +4,84 @@ import java.io.OutputStream;
 
 import mobius.bico.executors.Constants.Syntax;
 
-
+/**
+ * A Stream that permits to write some coq specific syntax.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class CoqStream extends Stream {
-
-  public CoqStream(OutputStream out) {
+  /**
+   * It builds the stream from a normal output stream.
+   * @param out the output stream that will be written to
+   */
+  public CoqStream(final OutputStream out) {
     super(out);
   }
   
-  public void addLoadPath(String module) {
+  /**
+   * Prints "<code>Add LoadPath module.</code>".
+   * @param module the module name
+   */
+  public void addLoadPath(final String module) {
     println(Syntax.ADD_LOAD_PATH + "\"" + module +  "\"."); 
   }
   
-  public void load(String module) {
+  /**
+   * Prints "<code>Load module.</code>".
+   * @param module the module name
+   */
+  public void load(final String module) {
     println(Syntax.LOAD + "\"" + module +  "\"."); 
   }
 
-  public void reqImport(String module) {
+  /**
+   * Prints "<code>Require Import module.</code>".
+   * @param module the module name
+   */
+  public void reqImport(final String module) {
     println(Syntax.REQ_IMPORT + module +  "."); 
   }
   
-  public void reqExport(String module) {
+  /**
+   * Prints "<code>Require Export module.</code>".
+   * @param module the module name
+   */
+  public void reqExport(final String module) {
     println(Syntax.REQ_EXPORT + module +  "."); 
   }
   
-  public void exprt(String module) {
+  /**
+   * Prints "<code>Export module.</code>".
+   * @param module the module name
+   */
+  public void exprt(final String module) {
     println(Syntax.EXPORT + module +  "."); 
   }
   
-  public void imprt(String module) {
+  /**
+   * Prints "<code>Require Import module.</code>".
+   * @param module the module name
+   */
+  public void imprt(final String module) {
     println(Syntax.IMPORT + module +  "."); 
   }
-  public void startModule(String module) {
+  
+  /**
+   * Prints "<code>Module module.</code>" and
+   * increments the following lines of one tab.
+   * 
+   * @param module the module name
+   */
+  public void startModule(final String module) {
     incPrintln(Syntax.MODULE + module +  "."); 
   }
-  public void endModule(String module) {
+  
+  /**
+   * Decrements of one tab and then print
+   *  "<code>End module.</code>".
+   * 
+   * @param module the module name
+   */
+  public void endModule(final String module) {
     decPrintln(Syntax.END_MODULE + module +  "."); 
   }
 }
