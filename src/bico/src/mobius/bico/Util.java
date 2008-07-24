@@ -315,7 +315,7 @@ public class Util {
    * 
    * @param clname String representing a reference type name 
    * in the class file format
-   * @return
+   * @return The class name
    */
   public static String classFormatName2Standard(final String clname) {
     String name = clname;

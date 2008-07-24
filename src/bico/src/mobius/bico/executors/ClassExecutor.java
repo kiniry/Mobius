@@ -16,20 +16,8 @@ import mobius.bico.coq.LoadPath;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.visitors.DependenciesVisitor;
 
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantCP;
-import org.apache.bcel.classfile.ConstantClass;
-import org.apache.bcel.classfile.ConstantFieldref;
-import org.apache.bcel.classfile.ConstantMethodref;
-import org.apache.bcel.classfile.ConstantNameAndType;
-import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.classfile.ConstantUtf8;
-import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.ReferenceType;
-import org.apache.bcel.generic.Type;
 
 /**
  * This class is used in the treatment of a single class by bico.

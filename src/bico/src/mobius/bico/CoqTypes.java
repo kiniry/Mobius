@@ -8,7 +8,7 @@ package mobius.bico;
  * P. Czarnik (czarnik@mimuw.edu.pl), 
  * L. Hubert (laurent.hubert@irisa.fr)
  */
-public interface TypesInCoq {
+public interface CoqTypes {
   
   /** instruction types in BCEL the same as in umbra. */
   String[] instructions = {"aconst_null", "dadd", "ddiv", "dmul", "dneg", "drem", 

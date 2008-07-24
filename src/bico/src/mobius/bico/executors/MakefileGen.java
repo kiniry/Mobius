@@ -31,7 +31,7 @@ public class MakefileGen {
     final File mkfile = new File (fWorkingDir, "Makefile");
     try {
       final PrintStream out = new PrintStream(new FileOutputStream(mkfile));
-      
+      setEnv(out);
       compileAll(out);
       compileExtras(out);
       compileBicolano(out);
@@ -49,6 +49,11 @@ public class MakefileGen {
     }
      
   }
+
+  public static final void setEnv(PrintStream out) {
+    out.println("COQC=coqc\n");
+  }
+
 
   /**
    * Compile the extra libraries.
@@ -70,7 +75,7 @@ public class MakefileGen {
     out.println("\tcd classes; make all");
   }
 
-  private void compileBicolano(final PrintStream out) {
+  private static final void compileBicolano(final PrintStream out) {
     out.println("\nbicolano:");
     out.println("\t@echo ");
     out.println("\t@echo Making Bicolano");
@@ -78,37 +83,37 @@ public class MakefileGen {
     out.println("\t@if [ -d Formalisation/Makefile ]; then cd Formalisation; make; fi");
   }
 
-  private void compileMain(final PrintStream out) {
+  private static final void compileMain(final PrintStream out) {
     out.println("\nmain: signature  ");
     out.println("\t@echo ");
     out.println("\t@echo Compiling the main files...");
     out.println("\t@echo ");
     out.println("\t@cd classes; make main");
-    out.println("\tcoqc Bico.v");
+    out.println("\t$(COQC) Bico.v");
   }
 
-  private void implicitRule(final PrintStream out) {
+  public static final void implicitRule(final PrintStream out) {
     out.println("\n# implicit rules");
     out.println("%.vo : %.v");
-    out.println("\tcoqc $<\n");
+    out.println("\t$(COQC) $<\n");
   }
 
-  private void compileType(final PrintStream out) {
+  private static final void compileType(final PrintStream out) {
     out.println("\ntype: ");
     out.println("\t@echo ");
     out.println("\t@echo Compiling types...");
     out.println("\t@echo ");
     out.println("\t@cd classes; make type");
-    out.println("\tcoqc Bico_type.v");
+    out.println("\t$(COQC) Bico_type.v");
   }
 
-  private void compileSignature(final PrintStream out) {
+  private static final void compileSignature(final PrintStream out) {
     out.println("\nsignature: type ");
     out.println("\t@echo ");
     out.println("\t@echo Compiling signatures...");
     out.println("\t@echo ");
     out.println("\t@cd classes; make signature");
-    out.println("\tcoqc Bico_signature.v");
+    out.println("\t$(COQC) Bico_signature.v");
   }
 
 

@@ -1,43 +1,114 @@
 package mobius.bico.executors;
 
-import java.io.File;
-
-public class Constants {
-
-  /** path separator for the Window file system. */
-  public static final char PATH_SEPARATOR = File.separatorChar;
-  /** path separator for the Linux file system. */
-  public static final char LINUX_PATH_SEPARATOR = '/';
+/**
+ * This class is used as a library to handle constants.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
+public final class Constants {
   /** the separator for the packages. */
   public static final char JAVA_NAME_SEPARATOR = '.';
-  
-  /* constants representing options passed to  the entry point */
-  /** to have the map implementation. */
-  public static final String OPTION_MAP = "-map";
-  /** to have the list implementation. */
-  public static final String OPTION_LIST = "-list";
-  /** the base working class path. */
-  public static final String OPTION_CLASSPATH = "-cp";
-  /** the output directory. */
-  public static final String OPTION_OUTPUT = "-o";
-  /** to show the help message. */
-  public static final String OPTION_HELP = "-help";
-  /** to tell the location of the bicolano jar. */
-  public static final Object OPTION_LIB = "-lib";  
-  
-  /* Coq syntax */
-  public static final String MODULE = "Module ";
-  public static final String LOAD = "Load ";
-  public static final String END_MODULE = "End ";
-  public static final String REQ_EXPORT = "Require Export ";
-  public static final String EXPORT = "Export ";
-  public static final String REQ_IMPORT = "Require Import ";
-  public static final String IMPORT = "Import ";
-  public static final String DEFINITION = "Definition ";
-  public static final String END_DEFINITION = "End ";
-  public static final String ADD_LOAD_PATH = "Add LoadPath ";
-  
-  
+  /** the class suffix. */
   public static final String CLASS_SUFFIX = ".class";
+  
+  /**
+   * Constants representing options passed to  
+   * the entry point.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
+  public static enum Option {
+    /** to have the map implementation. */
+    MAP("-map"),
+    /** to have the list implementation. */
+    LIST("-list"),
+    /** the base working class path. */
+    CLASSPATH("-cp"),
+    /** the output directory. */
+    OUTPUT("-o"),
+    /** to show the help message. */
+    HELP("-help"),
+    /** to tell the location of the bicolano jar. */
+    LIB("-lib"), 
+    /** the option if all else fails. */
+    UNKNOWN(""); 
+    
+    /** the string representing the option. */
+    private final String fStr;
+    
+    /**
+     * Constructs the constant, using the string to initialize it.
+     * @param str the string representing the option.
+     */
+    private Option(final String str) {
+      fStr = str;
+    }
+    
+    /** {@inheritDoc} */
+    public String toString() {
+      return fStr;
+    }
+
+    /**
+     * Translates an option string to a valid option.
+     * @param arg the option string
+     * @return an option constant
+     */
+    public static Option translate(final String arg) {
+      Option res = UNKNOWN;
+      
+      if (arg.equals(HELP.fStr)) {
+        res = HELP;
+      } 
+      else if (arg.equals(LIST.fStr)) {
+        res = LIST;
+      } 
+      else if (arg.equals(MAP.fStr)) {
+        res = MAP;
+      } 
+      else if (arg.equals(CLASSPATH.fStr)) {
+        res = CLASSPATH;
+      } 
+      else if (arg.equals(OUTPUT.fStr)) {
+        res = OUTPUT;
+      }
+      else if (arg.equals(LIB.fStr)) {
+        res = LIB;
+      }
+      else {
+        res = UNKNOWN;
+      }
+      return res;
+    }
+  }
+
+  public static enum Syntax {
+    MODULE("Module "),
+    LOAD("Load "),
+    END_MODULE("End "),
+    REQ_EXPORT("Require Export "),
+    EXPORT("Export "),
+    REQ_IMPORT("Require Import "),
+    IMPORT("Import "),
+    DEFINITION("Definition "),
+    END_DEFINITION("End "),
+    ADD_LOAD_PATH("Add LoadPath ");
+    
+    
+    
+    /** the string representing the keyword. */
+    private final String fStr;
+    
+    /**
+     * Constructs the constant, using the string to initialize it.
+     * @param str the string representing the option.
+     */
+    private Syntax(final String str) {
+      fStr = str;
+    }
+    
+    /** {@inheritDoc} */
+    public String toString() {
+      return fStr;
+    }
+  }
 
 }

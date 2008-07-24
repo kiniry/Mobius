@@ -54,12 +54,11 @@ public class ClassesMakefileGen {
     final File[] subdirs = workingDir.listFiles(new Util.DirectoryFilter());
     try {
       final PrintStream out = new PrintStream(new FileOutputStream(mkfile));
+      MakefileGen.setEnv(out);
       final List<String> list = getCurrentPkgFileList(workingDir);
       final List<String> generatedFiles = getMakefileInstructions(out, subdirs, list);
       out.println("\n");
-      out.println("# implicit rules\n" +
-                  "%.vo : %.v\n" +
-                  "\tcoqc $<\n");
+      MakefileGen.implicitRule(out);
       out.close();
     } 
     catch (FileNotFoundException e) {

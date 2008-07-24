@@ -5,6 +5,7 @@ import java.util.List;
 
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
+import mobius.bico.executors.Constants.Syntax;
 import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Field;
@@ -68,8 +69,8 @@ class FieldExecutor extends ASignatureExecutor {
     for (String moduleToImport : modulesToImports) {
       String signature = Util.classFormatName2Standard(moduleToImport); 
       signature = Util.coqify(signature) + "_signature";
-      getOut().println(Constants.REQ_IMPORT + signature   + ".v.");
-      getOut().println(Constants.IMPORT + signature + ".");
+      getOut().println(Syntax.REQ_IMPORT + signature   + ".v.");
+      getOut().println(Syntax.IMPORT + signature + ".");
     }
   }
 

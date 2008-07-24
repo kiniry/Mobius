@@ -2,7 +2,7 @@ package mobius.bico.coq;
 
 import java.io.OutputStream;
 
-import mobius.bico.executors.Constants;
+import mobius.bico.executors.Constants.Syntax;
 
 
 public class CoqStream extends Stream {
@@ -11,36 +11,33 @@ public class CoqStream extends Stream {
     super(out);
   }
   
-  
-
-
   public void addLoadPath(String module) {
-    println(Constants.ADD_LOAD_PATH + "\"" + module +  "\"."); 
+    println(Syntax.ADD_LOAD_PATH + "\"" + module +  "\"."); 
   }
   
   public void load(String module) {
-    println(Constants.LOAD + "\"" + module +  "\"."); 
+    println(Syntax.LOAD + "\"" + module +  "\"."); 
   }
 
   public void reqImport(String module) {
-    println(Constants.REQ_IMPORT + module +  "."); 
+    println(Syntax.REQ_IMPORT + module +  "."); 
   }
   
   public void reqExport(String module) {
-    println(Constants.REQ_EXPORT + module +  "."); 
+    println(Syntax.REQ_EXPORT + module +  "."); 
   }
   
   public void exprt(String module) {
-    println(Constants.EXPORT + module +  "."); 
+    println(Syntax.EXPORT + module +  "."); 
   }
   
   public void imprt(String module) {
-    println(Constants.IMPORT + module +  "."); 
+    println(Syntax.IMPORT + module +  "."); 
   }
   public void startModule(String module) {
-    incPrintln(Constants.MODULE + module +  "."); 
+    incPrintln(Syntax.MODULE + module +  "."); 
   }
   public void endModule(String module) {
-    decPrintln(Constants.END_MODULE + module +  "."); 
+    decPrintln(Syntax.END_MODULE + module +  "."); 
   }
 }

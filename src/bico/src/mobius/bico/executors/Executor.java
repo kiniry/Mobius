@@ -19,6 +19,7 @@ import mobius.bico.coq.CoqStream;
 import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dico;
 import mobius.bico.dico.MethodHandler;
+import mobius.bico.executors.Constants.Syntax;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.implem.MapImplemSpecif;
 
@@ -192,14 +193,13 @@ public class Executor extends ABasicExecutor {
     for (File cf: classfiles) {
       String className = 
         pkg + Util.removeClassSuffix(cf.getName()); 
-      className = className.replace(Constants.LINUX_PATH_SEPARATOR,
+      className = className.replace(File.separatorChar,
                                     Constants.JAVA_NAME_SEPARATOR);
       fPendingClasses.add(className);
     }
     
     for (File cf: dirfiles) {
-      final String p = pkg + cf.getName() + 
-                       Constants.PATH_SEPARATOR;
+      final String p = pkg + cf.getName() + File.separatorChar;
       collectClasses(p);
     }
   }
@@ -321,7 +321,7 @@ public class Executor extends ABasicExecutor {
     out.println(getImplemSpecif().getBeginning());
     
     out.println();
-    out.incPrintln(Constants.MODULE + fName + "Signature.");
+    out.incPrintln(Syntax.MODULE + fName + "Signature.");
     
     // the special library
     for (int i = 0; !fGenerateJavaLibs && i < fSpecialLibs.length; i++) {
@@ -337,7 +337,7 @@ public class Executor extends ABasicExecutor {
     
 
     
-    out.decPrintln(Constants.END_MODULE + fName + "Signature.");
+    out.decPrintln(Syntax.END_MODULE + fName + "Signature.");
     out.close();
   
   }
@@ -356,7 +356,7 @@ public class Executor extends ABasicExecutor {
     out.println(getImplemSpecif().getBeginning());
     
     out.println();
-    out.incPrintln(Constants.MODULE + fName + "Type.");
+    out.incPrintln(Syntax.MODULE + fName + "Type.");
 
     
     // the special library
@@ -370,7 +370,7 @@ public class Executor extends ABasicExecutor {
       out.load(ce.getValue().getModuleName() + "_type.v");
     }
     
-    out.decPrintln(Constants.END_MODULE + " " + 
+    out.decPrintln(Syntax.END_MODULE + " " + 
                    fName + "Type.");
     out.close();
   }
@@ -392,7 +392,7 @@ public class Executor extends ABasicExecutor {
     out.println();
     
     for (String s: set) {
-      out.println (Constants.ADD_LOAD_PATH + "\"" + s + "\".");
+      out.println (Syntax.ADD_LOAD_PATH + "\"" + s + "\".");
     }
   }
   
@@ -530,7 +530,7 @@ public class Executor extends ABasicExecutor {
       }
     }
     // all classes
-    String str = Constants.DEFINITION + "AllClasses : " + implem.classType() + " := ";
+    String str = Syntax.DEFINITION + "AllClasses : " + implem.classType() + " := ";
     for (ClassExecutor clss : treatedClasses) {
       str += implem.classCons(clss.getModuleName() + ".class");
     }
@@ -542,7 +542,7 @@ public class Executor extends ABasicExecutor {
     ot.println();
     
     // all interfaces
-    str = Constants.DEFINITION + "AllInterfaces : " + implem.interfaceType() + " := ";
+    str = Syntax.DEFINITION + "AllInterfaces : " + implem.interfaceType() + " := ";
     for (ClassExecutor interf : treatedInterfaces) {
       str += implem.interfaceCons(interf.getModuleName() + ".interface");
     }

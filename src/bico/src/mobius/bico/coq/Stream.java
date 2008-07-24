@@ -18,8 +18,7 @@ class Stream extends PrintStream {
   /**
    * Create a new stream from an existing one.
    * 
-   * @param out
-   *            an already existing stream
+   * @param out an already existing stream
    */
   public Stream(final OutputStream out) {
     super(out);
@@ -28,10 +27,8 @@ class Stream extends PrintStream {
   /**
    * Write a line with a given tabulation.
    * 
-   * @param tab
-   *            the number of tabulation
-   * @param s
-   *            the string to write
+   * @param tab the number of tabulation
+   * @param s the string to write
    */
   public void println(final int tab, final String s) {
     if (tab < 0) {
@@ -48,8 +45,7 @@ class Stream extends PrintStream {
   /**
    * Print the given string, but putting tabulations wherever necessary.
    * 
-   * @param s
-   *            the string to print tabbed
+   * @param s the string to print tabbed
    */
   public void println(final String s) {
     String str = fStrTab + s;
@@ -68,8 +64,7 @@ class Stream extends PrintStream {
   /**
    * Does a println and then increments the tabulation level.
    * 
-   * @param s
-   *            the string to print tabbed
+   * @param s the string to print tabbed
    */
   public void incPrintln(final String s) {
     println(s);
@@ -79,8 +74,7 @@ class Stream extends PrintStream {
   /**
    * Decrements the tabulation and then does a println.
    * 
-   * @param s
-   *            the string to print tabbed
+   * @param s the string to print tabbed
    */
   public void decPrintln(final String s) {
     decTab();
@@ -100,12 +94,4 @@ class Stream extends PrintStream {
     }
   }
   
-  public void flush() {
-    super.flush();
-  }
-  
-  public void close() {
-    super.close();
-  }
-
 }

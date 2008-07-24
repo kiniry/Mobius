@@ -10,6 +10,7 @@ import org.apache.bcel.Repository;
 
 import mobius.bico.executors.Constants;
 import mobius.bico.executors.Executor;
+import mobius.bico.executors.Constants.Option;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.implem.ListImplemSpecif;
 import mobius.bico.implem.MapImplemSpecif;
@@ -109,48 +110,51 @@ public final class Main {
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
       final String low = arg.toLowerCase();
-      if (low.equals(Constants.OPTION_HELP)) {
-        System.out.println(HELP_MSG);
-      } 
-      else if (low.equals(Constants.OPTION_LIST)) {
-        implem = new ListImplemSpecif();
-      } 
-      else if (low.equals(Constants.OPTION_MAP)) {
-        implem = new MapImplemSpecif();
-      } 
-      else if (low.equals(Constants.OPTION_CLASSPATH)) {
-        i = i + 1;
-        arg = args[i];
-        baseDir = new File(arg);
-      } 
-      else if (low.equals(Constants.OPTION_OUTPUT)) {
-        // this keyword introduces the base working class path
-        i = i + 1;
-        arg = args[i];
-        targetDir = new File(arg);
-      }
-      else if (low.equals(Constants.OPTION_LIB)) {
-        generateLibs = true;
-        i = i + 1;
-      }
-      else {
-        final File f = new File(arg);
-        if (f.isDirectory()) {
-          // if the file f is a directory then this is the path at which 
-          // all classes involved can be found setBaseDir(f); 
-          if (baseDir == null) {
-            baseDir = f;
+      final Option opt = Option.translate(low);
+      switch (opt) {
+        case LIST:
+          implem = new ListImplemSpecif();
+          break;
+        case MAP:
+          implem = new MapImplemSpecif();
+          break;
+        case CLASSPATH:
+          i = i + 1;
+          arg = args[i];
+          baseDir = new File(arg);
+          break;
+        case OUTPUT:
+          // this keyword introduces the base working class path
+          i = i + 1;
+          arg = args[i];
+          targetDir = new File(arg);
+          break;
+        case LIB:
+          generateLibs = true;
+          i = i + 1;
+          break;
+        case HELP:
+          System.out.println(HELP_MSG);
+          break;
+        case UNKNOWN:
+        default:
+          final File f = new File(arg);
+          if (f.isDirectory()) {
+            // if the file f is a directory then this is the path at which 
+            // all classes involved can be found setBaseDir(f); 
+            if (baseDir == null) {
+              baseDir = f;
+            }
           }
-        }
-        else if ((f.exists()) || ((f.getParentFile() != null) &&
-            f.getParentFile() .exists())) {
-          clzz.add(f.getAbsolutePath()); 
-        } 
-        else  {
-          // we suppose it's to be found in the class path
-          clzz.add(arg); 
-        }
-        
+          else if ((f.exists()) || ((f.getParentFile() != null) &&
+              f.getParentFile() .exists())) {
+            clzz.add(f.getAbsolutePath()); 
+          } 
+          else  {
+            // we suppose it's to be found in the class path
+            clzz.add(arg); 
+          }
+          break;
       }
       
     }

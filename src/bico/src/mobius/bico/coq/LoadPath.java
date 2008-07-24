@@ -2,7 +2,7 @@ package mobius.bico.coq;
 
 import java.io.File;
 
-import mobius.bico.executors.Constants;
+import mobius.bico.executors.Constants.Syntax;
 
 public class LoadPath {
   /** the path the load path represents. */
@@ -17,7 +17,7 @@ public class LoadPath {
   }
   
   public String print(String path) {
-    return Constants.ADD_LOAD_PATH + " \"" + path +  "\".\n"; 
+    return Syntax.ADD_LOAD_PATH + " \"" + path +  "\".\n"; 
   }
 
   @Override
