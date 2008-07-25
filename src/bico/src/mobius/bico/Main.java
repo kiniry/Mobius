@@ -8,9 +8,8 @@ import java.util.List;
 
 import org.apache.bcel.Repository;
 
-import mobius.bico.executors.Constants;
+import mobius.bico.Constants.Option;
 import mobius.bico.executors.Executor;
-import mobius.bico.executors.Constants.Option;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.implem.ListImplemSpecif;
 import mobius.bico.implem.MapImplemSpecif;

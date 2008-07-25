@@ -1,6 +1,9 @@
 package mobius.bico.coq;
 
+import java.io.File;
 import java.io.OutputStream;
+
+import org.apache.bcel.classfile.AccessFlags;
 
 
 /**
@@ -17,11 +20,21 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Add LoadPath module.\n</code>".
-   * @param module the module name
+   * Prints "<code>Add LoadPath path.\n</code>".
+   * @param path the path name
    */
-  public void addLoadPath(final String module) {
-    println(Syntax.ADD_LOAD_PATH + "\"" + module +  "\"."); 
+  public void addLoadPath(final LoadPath path) {
+    println(Syntax.ADD_LOAD_PATH + "\"" + path +  "\"."); 
+  }
+  
+  /**
+   * Prints "<code>Add LoadPath module.\n</code>".
+   * @param path the path name
+   * @param relativeTo the path the main path is relative to
+   */
+  public void addLoadPath(final LoadPath path, 
+                          final File relativeTo) {
+    addLoadPath(new LoadPath(path.getRelative(relativeTo))); 
   }
   
   /**
@@ -168,6 +181,51 @@ public class CoqStream extends Stream {
     /** {@inheritDoc} */
     public String toString() {
       return fStr;
+    }
+  }
+  /**
+   * Elements of Coq syntax.
+   * 
+   * @author J. Charles (julien.charles@inria.fr)
+   */
+  public static enum Access {
+    
+    PRIVATE("Private"),
+    PROTECTED("Protected"),
+    PUBLIC("Public"),
+    PACKAGE("Package");
+    
+    /** the string representing the coq version of the access flag. */
+    private final String fStr;
+    
+    /**
+     * Constructs the access element, using the string to initialize it.
+     * @param str the string representing the option.
+     */
+    private Access(final String str) {
+      fStr = str;
+    }
+    
+    /** {@inheritDoc} */
+    public String toString() {
+      return fStr;
+    }
+    
+    public static Access translate(final AccessFlags af) {
+      final Access res;
+      if (af.isPrivate()) {
+        res = PRIVATE;
+      } 
+      else if (af.isProtected()) {
+        res = PROTECTED;
+      } 
+      else if (af.isPublic()) {
+        res = PUBLIC;
+      } 
+      else {
+        res = PACKAGE;
+      }
+      return res;
     }
   }
 }

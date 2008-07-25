@@ -14,8 +14,10 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Map.Entry;
 
+import mobius.bico.Constants;
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
+import mobius.bico.coq.LoadPath;
 import mobius.bico.coq.CoqStream.Syntax;
 import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dico;
@@ -391,7 +393,7 @@ public class Executor extends ABasicExecutor {
     out.println();
     
     for (String s: set) {
-      out.addLoadPath("\"" + s + "\"");
+      out.addLoadPath(new LoadPath(s));
     }
   }
   

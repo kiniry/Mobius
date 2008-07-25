@@ -3,7 +3,6 @@ package mobius.bico;
 import java.io.File;
 import java.io.FileFilter;
 
-import mobius.bico.executors.Constants;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ArrayType;

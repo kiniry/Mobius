@@ -230,7 +230,7 @@ public class ClassExecutor extends ASignatureExecutor {
   private void printLoadPaths(final CoqStream out) {
     // store here the add load path statements
     for (LoadPath lp: fLoadPaths) {
-      out.addLoadPath(lp.getRelative(fWorkingDir));
+      out.addLoadPath(lp, fWorkingDir);
     }
   }
   

@@ -2,6 +2,7 @@ package mobius.bico.executors;
 
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
+import mobius.bico.coq.CoqStream.Access;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.visitors.InstructionVisitor;
 
@@ -167,19 +168,7 @@ class MethodExecutor extends ASignatureExecutor {
     fOut.println("" + method.isFinal());
     fOut.println("" + method.isStatic());
     fOut.println("" + method.isNative());
-    if (method.isPrivate()) {
-      str = "Private";
-    } 
-    else if (method.isProtected()) {
-      str = "Protected";
-    } 
-    else if (method.isPublic()) {
-      str = "Public";
-    } 
-    else {
-      str = "Package"; // " (* "+attr+" *)"
-    }
-    fOut.println(str);
+    fOut.println(Access.translate(method));
     fOut.decTab();
     fOut.println(".\n");
     fOut.println();

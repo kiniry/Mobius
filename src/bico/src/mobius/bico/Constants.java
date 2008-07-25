@@ -1,4 +1,4 @@
-package mobius.bico.executors;
+package mobius.bico;
 
 /**
  * This class is used as a library to handle constants.

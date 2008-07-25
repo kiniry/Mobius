@@ -2,23 +2,21 @@ package mobius.bico.coq;
 
 import java.io.File;
 
-import mobius.bico.coq.CoqStream.Syntax;
-
-
+/**
+ * A small structure to represent a load path.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class LoadPath {
   /** the path the load path represents. */
   private String fPath;
   
+  /**
+   * Constructs a loadpath out of a path.
+   * @param path the path which is the load path
+   */
   public LoadPath(final String path) {
     fPath = path;
-  }
-
-  public String print() {
-    return print(fPath.toString());
-  }
-  
-  public String print(String path) {
-    return Syntax.ADD_LOAD_PATH + " \"" + path +  "\".\n"; 
   }
 
   /** {@inheritDoc} */
@@ -40,7 +38,12 @@ public class LoadPath {
     return fPath.toString();
   }
 
-  
+  /**
+   * Returns the path relative to the given working dir.
+   * @param workingDir a working dir the relative path has to
+   * be calculated from.
+   * @return a relative path
+   */
   public String getRelative(final File workingDir) {
     final String [] tabPath = fPath.split(File.separator);
     final String [] tabWrk = workingDir.toString().split(File.separator);

@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 
+import mobius.bico.Constants;
 import mobius.bico.Util;
 
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
+import mobius.bico.coq.CoqStream.Access;
 import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Field;
@@ -170,17 +171,7 @@ class FieldExecutor extends ASignatureExecutor {
     
     out.println("" + field.isFinal());
     out.println("" + field.isStatic());
-    String visibility = "Package";
-    if (field.isPrivate()) {
-      visibility = "Private";
-    } 
-    else if (field.isProtected()) {
-      visibility = "Protected";
-    }
-    if (field.isPublic()) {
-      visibility = "Public";
-    }
-    out.println(visibility);
+    out.println(Access.translate(field));
     // FIXME current solution
     strf = "FIELD.UNDEF";
     out.println(strf);
