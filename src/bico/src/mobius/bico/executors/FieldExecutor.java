@@ -121,18 +121,15 @@ class FieldExecutor extends ASignatureExecutor {
   private void doFieldSignature(final Field field, 
                                 final int fieldIdx) throws ClassNotFoundException {
 
-    String strf = "Definition " + Util.coqify(field.getName()) +
-           "ShortFieldSignature : ShortFieldSignature := FIELDSIGNATURE.Build_t ";
-    fOutSig.println(strf);
+    fOutSig.definitionStart(Util.coqify(field.getName()) + "ShortFieldSignature", 
+                             "ShortFieldSignature");
+    fOutSig.println("FIELDSIGNATURE.Build_t");
     fOutSig.incTab();
     // !!! here positives
-    
-    strf = "(" + fieldIdx + "%positive)";
-    fOutSig.println(strf);
+    fOutSig.println("(" + fieldIdx + "%positive)");
     
     // !!! here will be conversion
-    strf = Util.convertType(field.getType(), getRepository());
-    fOutSig.println(strf);
+    fOutSig.println(Util.convertType(field.getType(), getRepository()));
     fOutSig.decTab();
     fOutSig.println(".\n");
     fOutSig.definition(Util.coqify(field.getName()) + "FieldSignature", 

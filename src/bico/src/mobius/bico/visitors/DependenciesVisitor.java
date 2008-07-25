@@ -79,7 +79,6 @@ public final class DependenciesVisitor extends EmptyVisitor {
     if (type != null) {
       fDependencies.add(type);
     }
-  
   }
   
   @Override
@@ -196,8 +195,6 @@ public final class DependenciesVisitor extends EmptyVisitor {
   @Override
   public void visitConstantLong(final ConstantLong obj) {
   }
-
-
 
   /** {@inheritDoc} */
   @Override

@@ -119,7 +119,4 @@ public class MakefileGen {
     out.println("\t@cd classes; make signature");
     out.println("\t$(COQC) Bico_signature.v");
   }
-
-
-
 }

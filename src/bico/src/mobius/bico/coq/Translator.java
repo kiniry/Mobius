@@ -2,7 +2,15 @@ package mobius.bico.coq;
 
 import org.apache.bcel.classfile.AccessFlags;
 
-public class Translator {
+/**
+ * This utility class is used to translate some
+ * of the Coq syntax to string.
+ * @author J. Charles (julien.charles@inria.fr)
+ */
+public final class Translator {
+  
+  /** */
+  private Translator() { }
   
   /**
    * Returns a couple "<code>(elem1, elem2)</code>".
@@ -142,5 +150,37 @@ public class Translator {
       }
       return res;
     }
+  }
+
+  /**
+   * @return "<code>Require Import module.</code>"
+   * @param module the module name
+   */
+  public static String reqImport(final String module) {
+    return Syntax.REQ_IMPORT + module +  "."; 
+  }
+  
+  /**
+   * @return "<code>Require Export module.</code>"
+   * @param module the module name
+   */
+  public static String reqExport(final String module) {
+    return Syntax.REQ_EXPORT + module +  "."; 
+  }
+  
+  /**
+   * @return "<code>Export module.</code>"
+   * @param module the module name
+   */
+  public static String exprt(final String module) {
+    return Syntax.EXPORT + module +  "."; 
+  }
+  
+  /**
+   * @return "<code>Require Import module.</code>"
+   * @param module the module name
+   */
+  public static String imprt(final String module) {
+    return Syntax.IMPORT + module +  "."; 
   }
 }

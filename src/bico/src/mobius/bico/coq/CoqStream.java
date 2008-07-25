@@ -50,7 +50,7 @@ public class CoqStream extends Stream {
    * @param module the module name
    */
   public void reqImport(final String module) {
-    println(Syntax.REQ_IMPORT + module +  "."); 
+    println(Translator.reqImport(module)); 
   }
   
   /**
@@ -58,7 +58,7 @@ public class CoqStream extends Stream {
    * @param module the module name
    */
   public void reqExport(final String module) {
-    println(Syntax.REQ_EXPORT + module +  "."); 
+    println(Translator.reqExport(module)); 
   }
   
   /**
@@ -66,7 +66,7 @@ public class CoqStream extends Stream {
    * @param module the module name
    */
   public void exprt(final String module) {
-    println(Syntax.EXPORT + module +  "."); 
+    println(Translator.exprt(module)); 
   }
   
   /**
@@ -74,7 +74,7 @@ public class CoqStream extends Stream {
    * @param module the module name
    */
   public void imprt(final String module) {
-    println(Syntax.IMPORT + module +  "."); 
+    println(Translator.imprt(module)); 
   }
   
   /**

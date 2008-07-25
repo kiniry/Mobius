@@ -156,6 +156,11 @@ public final class InstructionVisitor extends EmptyVisitor {
     fRes = Util.unhandled(ins);
   }
   
+  /**
+   * Visit a conversion instruction only works for I2B and
+   * I2S.
+   * @param ins the conversion instruction
+   */
   @Override
   public void visitConversionInstruction(final ConversionInstruction ins) {
     switch (ins.getOpcode()) {

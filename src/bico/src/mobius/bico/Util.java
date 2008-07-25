@@ -361,18 +361,32 @@ public class Util {
     }
   }
   
+  /**
+   * A file filter that keeps only files that hava a Class suffix (.class).
+   * @author J. Charles (julien.charles@inria.fr)
+   */
   public static class ClassFilter implements FileFilter {
+    /** {@inheritDoc} */
     public boolean accept(final File cf) {
       return ((cf.isFile()) && cf.getName().endsWith(Constants.CLASS_SUFFIX));
     }
   }
   
+  /**
+   * Returns the package path. Basically replaces the dots with slashes.
+   * @param javaClass the Class from which the package is taken
+   * @return a file being the path correspondint to the package
+   */
   public static File getPackageDir(final JavaClass javaClass) {
     return new File(javaClass.getPackageName().replace('.',
                                                        File.separatorChar));
   }
   
-  
+  /**
+   * Returns a string representing the name of the given type.
+   * @param rtyp the type that we want to get a representation from
+   * @return a string representing the type or null
+   */
   public static String getTypeName(final ReferenceType rtyp) {
     String className = null;
     

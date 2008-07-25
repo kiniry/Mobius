@@ -41,8 +41,10 @@ class MethodExecutor extends ASignatureExecutor {
   /** the constant pool corresponding to the class. */
   private ConstantPoolGen fConstantPool;
 
-
+  /** the main output stream of the executor. */
   private final CoqStream fOut;
+  
+  /** the implementation specific library. */
   private final IImplemSpecifics fImplemSpecif;
   
   /**
