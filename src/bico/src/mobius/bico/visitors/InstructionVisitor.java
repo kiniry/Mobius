@@ -1,6 +1,7 @@
 package mobius.bico.visitors;
 
 import mobius.bico.Util;
+import mobius.bico.coq.Translator;
 import mobius.bico.dico.MethodHandler;
 
 import org.apache.bcel.Constants;
@@ -132,7 +133,7 @@ public final class InstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitBIPUSH(final BIPUSH ins) {
-    fRes = "Const BYTE " + Util.printZ(((BIPUSH) ins).getValue());
+    fRes = "Const BYTE " + Translator.toZ(((BIPUSH) ins).getValue());
   }
   
   /**
@@ -239,7 +240,7 @@ public final class InstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitICONST(final ICONST ins) {
-    fRes = "Const INT " + Util.printZ(((ICONST) ins).getValue());
+    fRes = "Const INT " + Translator.toZ(((ICONST) ins).getValue());
   }
   
   /**
@@ -283,7 +284,7 @@ public final class InstructionVisitor extends EmptyVisitor {
     final int index = ((LocalVariableInstruction) ins).getIndex();
     String name = Util.upCase(ins.getName());
     if (ins instanceof IINC) {
-      fRes = name + " " + index + "%N " + Util.printZ(((IINC) ins).getIncrement());
+      fRes = name + " " + index + "%N " + Translator.toZ(((IINC) ins).getIncrement());
     } 
     else {
       final char c = name.charAt(0);
@@ -384,7 +385,7 @@ public final class InstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitSIPUSH(final SIPUSH ins) {
-    fRes = "Const SHORT " + Util.printZ(((SIPUSH) ins).getValue());
+    fRes = "Const SHORT " + Translator.toZ(((SIPUSH) ins).getValue());
   }
   
   @Override

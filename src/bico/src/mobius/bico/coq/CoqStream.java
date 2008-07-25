@@ -3,7 +3,7 @@ package mobius.bico.coq;
 import java.io.File;
 import java.io.OutputStream;
 
-import org.apache.bcel.classfile.AccessFlags;
+import mobius.bico.coq.Translator.Syntax;
 
 
 /**
@@ -138,94 +138,5 @@ public class CoqStream extends Stream {
     definition(name, null, body);
   }
   
-  /**
-   * Elements of Coq syntax.
-   * 
-   * @author J. Charles (julien.charles@inria.fr)
-   */
-  public static enum Syntax {
-    /** corresponds to the string "Module ". */ 
-    MODULE("Module "),
-    /** corresponds to the string "Load ". */ 
-    LOAD("Load "),
-    /** corresponds to the string "End ". */ 
-    END_MODULE("End "),
-    /** corresponds to the string "Require Export ". */ 
-    REQ_EXPORT("Require Export "),
-    /** corresponds to the string "Export ". */ 
-    EXPORT("Export "),
-    /** corresponds to the string "Require Import ". */ 
-    REQ_IMPORT("Require Import "),
-    /** corresponds to the string "Import ". */ 
-    IMPORT("Import "),
-    /** corresponds to the string "Definition ". */ 
-    DEFINITION("Definition "),
-    /** corresponds to the string "End ". */ 
-    END_DEFINITION("End "),
-    /** corresponds to the string "Add LoadPath ". */ 
-    ADD_LOAD_PATH("Add LoadPath ");
-    
-    
-    
-    /** the string representing the keyword. */
-    private final String fStr;
-    
-    /**
-     * Constructs the constant, using the string to initialize it.
-     * @param str the string representing the option.
-     */
-    private Syntax(final String str) {
-      fStr = str;
-    }
-    
-    /** {@inheritDoc} */
-    public String toString() {
-      return fStr;
-    }
-  }
-  /**
-   * Elements of Coq syntax.
-   * 
-   * @author J. Charles (julien.charles@inria.fr)
-   */
-  public static enum Access {
-    
-    PRIVATE("Private"),
-    PROTECTED("Protected"),
-    PUBLIC("Public"),
-    PACKAGE("Package");
-    
-    /** the string representing the coq version of the access flag. */
-    private final String fStr;
-    
-    /**
-     * Constructs the access element, using the string to initialize it.
-     * @param str the string representing the option.
-     */
-    private Access(final String str) {
-      fStr = str;
-    }
-    
-    /** {@inheritDoc} */
-    public String toString() {
-      return fStr;
-    }
-    
-    public static Access translate(final AccessFlags af) {
-      final Access res;
-      if (af.isPrivate()) {
-        res = PRIVATE;
-      } 
-      else if (af.isProtected()) {
-        res = PROTECTED;
-      } 
-      else if (af.isPublic()) {
-        res = PUBLIC;
-      } 
-      else {
-        res = PACKAGE;
-      }
-      return res;
-    }
-  }
+  
 }

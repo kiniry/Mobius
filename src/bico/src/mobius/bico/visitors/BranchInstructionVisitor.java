@@ -1,6 +1,7 @@
 package mobius.bico.visitors;
 
 import mobius.bico.Util;
+import mobius.bico.coq.Translator;
 
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.EmptyVisitor;
@@ -46,7 +47,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitGotoInstruction(final GotoInstruction ins) {
-    final String index = Util.printZ(ins.getIndex());
+    final String index = Translator.toZ(ins.getIndex());
     fRes = "Goto " + index;
   }
 
@@ -58,7 +59,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIFEQ(final IFEQ ins) {
-    fRes = "If0 EqInt " + Util.printZ(ins.getIndex());
+    fRes = "If0 EqInt " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -68,7 +69,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIFGE(final IFGE ins) {
-    fRes = "If0 GeInt " + Util.printZ(ins.getIndex());
+    fRes = "If0 GeInt " + Translator.toZ(ins.getIndex());
   }
 
   /**
@@ -78,7 +79,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIFGT(final IFGT ins) {
-    fRes = "If0 GtInt " + Util.printZ(ins.getIndex());
+    fRes = "If0 GtInt " + Translator.toZ(ins.getIndex());
   }
 
   /**
@@ -88,7 +89,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIFLE(final IFLE ins) {
-    fRes = "If0 LeInt " + Util.printZ(ins.getIndex());
+    fRes = "If0 LeInt " + Translator.toZ(ins.getIndex());
   }
 
   /**
@@ -98,7 +99,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIFLT(final IFLT ins) {
-    fRes = "If0 LtInt " + Util.printZ(ins.getIndex());
+    fRes = "If0 LtInt " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -108,7 +109,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIFNE(final IFNE ins) {
-    fRes = "If0 NeInt " + Util.printZ(ins.getIndex());
+    fRes = "If0 NeInt " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -118,7 +119,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIFNONNULL(final IFNONNULL ins) {
-    fRes = "Ifnull NeRef " + Util.printZ(ins.getIndex());
+    fRes = "Ifnull NeRef " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -128,7 +129,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIFNULL(final IFNULL ins) {
-    fRes = "Ifnull EqRef " + Util.printZ(ins.getIndex());
+    fRes = "Ifnull EqRef " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -138,7 +139,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIF_ACMPEQ(final IF_ACMPEQ ins) {
-    fRes = "If_acmp EqRef " + Util.printZ(ins.getIndex());
+    fRes = "If_acmp EqRef " + Translator.toZ(ins.getIndex());
 
   }
   
@@ -149,7 +150,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIF_ACMPNE(final IF_ACMPNE ins) {
-    fRes = "If_acmp NeRef " + Util.printZ(ins.getIndex());
+    fRes = "If_acmp NeRef " + Translator.toZ(ins.getIndex());
   }
 
   
@@ -160,7 +161,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIF_ICMPEQ(final IF_ICMPEQ ins) {
-    fRes = "If_icmp EqInt " + Util.printZ(ins.getIndex());
+    fRes = "If_icmp EqInt " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -170,7 +171,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIF_ICMPGE(final IF_ICMPGE ins) {
-    fRes = "If_icmp GeInt " + Util.printZ(ins.getIndex());
+    fRes = "If_icmp GeInt " + Translator.toZ(ins.getIndex());
   }
   
   
@@ -181,7 +182,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIF_ICMPGT(final IF_ICMPGT ins) {
-    fRes = "If_icmp GtInt " + Util.printZ(ins.getIndex());
+    fRes = "If_icmp GtInt " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -191,7 +192,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIF_ICMPLE(final IF_ICMPLE ins) {
-    fRes = "If_icmp LeInt " + Util.printZ(ins.getIndex());
+    fRes = "If_icmp LeInt " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -201,7 +202,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIF_ICMPLT(final IF_ICMPLT ins) {
-    fRes = "If_icmp LtInt " + Util.printZ(ins.getIndex());
+    fRes = "If_icmp LtInt " + Translator.toZ(ins.getIndex());
   }
   
   /**
@@ -211,7 +212,7 @@ public final class BranchInstructionVisitor extends EmptyVisitor {
    */
   @Override
   public void visitIF_ICMPNE(final IF_ICMPNE ins) {
-    fRes = "If_icmp NeInt " + Util.printZ(ins.getIndex());
+    fRes = "If_icmp NeInt " + Translator.toZ(ins.getIndex());
   }
   
   /**

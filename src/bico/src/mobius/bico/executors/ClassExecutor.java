@@ -121,7 +121,7 @@ public class ClassExecutor extends ASignatureExecutor {
     doSignature();
     System.out.println("done.");
     
-    System.out.print("  --> Generating " + fNamingData.getBicoClassModule() + ": ");
+    System.out.print("  --> Generating " + fNamingData.getModuleName() + ": ");
     doMain();
     System.out.println("done.");
   
@@ -150,7 +150,7 @@ public class ClassExecutor extends ASignatureExecutor {
 
     for (NamingData ex: fExtLibsLocal) {
       if (fExecutor.isSpecialLib(ex.getClassName())) {
-        out.reqExport(implem.requireLib(ex.getBicoClassName()));
+        out.reqExport(implem.requireLib(ex.getModuleName()));
         out.exprt(ex.getSignatureModule());
       }
       else {
@@ -167,7 +167,7 @@ public class ClassExecutor extends ASignatureExecutor {
 
     out.println();
     
-    out.startModule(fNamingData.getBicoClassModule());
+    out.startModule(fNamingData.getModuleName());
     out.imprt(fNamingData.getTypeModule());
     out.imprt(fNamingData.getSignatureModule());
     
@@ -177,7 +177,7 @@ public class ClassExecutor extends ASignatureExecutor {
     
     doClassDefinition();
     
-    out.endModule(fNamingData.getBicoClassModule());
+    out.endModule(fNamingData.getModuleName());
     out.flush();
     out.close();
   }
@@ -200,7 +200,7 @@ public class ClassExecutor extends ASignatureExecutor {
     
     for (NamingData ex: fExtLibsLocal) {
       if (fExecutor.isSpecialLib(ex.getClassName())) {
-        fOutSig.reqExport(implem.requireLib(ex.getBicoClassName()));
+        fOutSig.reqExport(implem.requireLib(ex.getModuleName()));
         fOutSig.exprt(ex.getTypeModule());
       }
       else {
@@ -258,17 +258,15 @@ public class ClassExecutor extends ASignatureExecutor {
     fOutTyp.startModule(fNamingData.getTypeModule());
     
     // classname
-    String def;
     if (jc.isInterface()) {
-      def = "Definition name : InterfaceName := " + 
-            "(" + packageName + "%positive, " + className + "%positive).\n";
+      fOutTyp.definition("name", "InterfaceName",
+                         "(" + packageName + "%positive, " + className + "%positive)");
     } 
     else {
-      def = "Definition name : ClassName := " + 
-            "(" + packageName + "%positive, " + className + "%positive).\n";
-    
+      fOutTyp.definition("name", "ClassName",
+                         "(" + packageName + "%positive, " + className + "%positive)");
+
     }
-    fOutTyp.println(def);
     
     fOutTyp.endModule(fNamingData.getTypeModule());
     fOutTyp.flush();
@@ -335,7 +333,7 @@ public class ClassExecutor extends ASignatureExecutor {
    * @return a string representing the module name
    */
   public String getModuleName() {
-    return fNamingData.getBicoClassModule();
+    return fNamingData.getModuleName();
   }
   
   /**

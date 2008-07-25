@@ -18,7 +18,7 @@ import mobius.bico.Constants;
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
 import mobius.bico.coq.LoadPath;
-import mobius.bico.coq.CoqStream.Syntax;
+import mobius.bico.coq.Translator.Syntax;
 import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dico;
 import mobius.bico.dico.MethodHandler;
@@ -420,18 +420,19 @@ public class Executor extends ABasicExecutor {
    * @return true if nothing should be generated for it
    */
   public boolean isSpecialLib(final String clname) {
+    boolean res = false;
     if (fGenerateJavaLibs) {
-      return false;
+      res = false;
     }
-    if (clname.startsWith("java")) {
-      return true;
+    else if (clname.startsWith("java")) {
+      res =  true;
     }
     for (String lib: fSpecialLibs) {
       if (lib.equals(clname)) {
-        return true;
+        res = true;
       }
     }
-    return false;
+    return res;
   }
 
 
@@ -531,6 +532,7 @@ public class Executor extends ABasicExecutor {
       }
     }
     // all classes
+    
     String str = Syntax.DEFINITION + "AllClasses : " + implem.classType() + " := ";
     for (ClassExecutor clss : treatedClasses) {
       str += implem.classCons(clss.getModuleName() + ".class");

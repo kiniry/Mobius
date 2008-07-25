@@ -5,7 +5,8 @@ import java.util.List;
 
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
-import mobius.bico.coq.CoqStream.Access;
+import mobius.bico.coq.Translator;
+import mobius.bico.coq.Translator.Access;
 import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Field;
@@ -152,8 +153,9 @@ class FieldExecutor extends ASignatureExecutor {
     fOutSig.println(".\n");
     fOutSig.definition(Util.coqify(field.getName()) + "FieldSignature", 
                        "FieldSignature",
-                       "(name, " + Util.coqify(field.getName()) + 
-                                "ShortFieldSignature)");
+                       Translator.couple("name",
+                                         Util.coqify(field.getName()) + 
+                                         "ShortFieldSignature"));
     fOutSig.println(strf);
   }
 

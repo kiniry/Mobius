@@ -68,32 +68,7 @@ public class Util {
     }
   }
   
-  /**
-   * for printing offsets.
-   * 
-   * @param index
-   *            the offset to print
-   * @return i%Z or (-i)%Z
-   */
-  public static String printZ(final Number index) {
-    return Util.printZ(index.intValue());
-  }
-  
-  /**
-   * for printing offsets.
-   * 
-   * @param index
-   *            the offset to print
-   * @return i%Z or (-i)%Z
-   */
-  public static String printZ(final int index) {
-    if (index < 0) {
-      return "(" + index + ")%Z";
-    } 
-    else {
-      return String.valueOf(index) + "%Z";
-    }
-  }
+
   
   /**
    * For instruction which are not implemented (yet) in Bico. Prints an error
