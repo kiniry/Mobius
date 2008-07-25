@@ -56,7 +56,7 @@ public class ClassesMakefileGen {
       final PrintStream out = new PrintStream(new FileOutputStream(mkfile));
       MakefileGen.setEnv(out);
       final List<String> list = getCurrentPkgFileList(workingDir);
-      final List<String> generatedFiles = getMakefileInstructions(out, subdirs, list);
+      getMakefileInstructions(out, subdirs, list);
       out.println("\n");
       MakefileGen.implicitRule(out);
       out.close();
@@ -100,7 +100,16 @@ public class ClassesMakefileGen {
   }
   
   
-  
+  /**
+   * 
+   * @param out
+   * @param listModules
+   * @param subdirs
+   * @param word
+   * @param dependencies
+   * @param postfix
+   * @return
+   */
   public List<String> printCompileInstr(final PrintStream out,
                                         final List<String> listModules,
                                         final File[] subdirs,
@@ -113,7 +122,7 @@ public class ClassesMakefileGen {
   
   }
   /**
-   * Print a make file instruction.
+   * Print a make file instruction to the given stream.
    * @param out the makefile stream
    * @param name the label of this compilation clause
    * @param dependencies the dependencies of the label

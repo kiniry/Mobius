@@ -58,22 +58,6 @@ class FieldExecutor extends ASignatureExecutor {
     }
     
   }
-  
-  
-  /**
-   * Write the import.
-   * @deprecated 
-   */
-  //FIXME: write "use ... instead" 
-  private void doImport() {
-    final List<String> modulesToImports = startModulesToBeImported();
-    for (String moduleToImport : modulesToImports) {
-      String signature = Util.classFormatName2Standard(moduleToImport); 
-      signature = Util.coqify(signature) + "_signature";
-      getOut().reqImport(signature   + ".v.");
-      getOut().imprt(signature + ".");
-    }
-  }
 
 /**
    * Enumerates in a Coq friendly form all the fields of the class.
@@ -156,7 +140,7 @@ class FieldExecutor extends ASignatureExecutor {
                        Translator.couple("name",
                                          Util.coqify(field.getName()) + 
                                          "ShortFieldSignature"));
-    fOutSig.println(strf);
+    
   }
 
   /**

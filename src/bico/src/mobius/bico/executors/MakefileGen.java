@@ -50,7 +50,11 @@ public class MakefileGen {
      
   }
 
-  public static final void setEnv(PrintStream out) {
+  /**
+   * Prints in the output strean all the environment variables.
+   * @param out the output stream where to write
+   */
+  public static final void setEnv(final PrintStream out) {
     out.println("COQC=coqc\n");
   }
 

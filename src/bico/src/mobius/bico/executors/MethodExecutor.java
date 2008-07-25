@@ -2,6 +2,7 @@ package mobius.bico.executors;
 
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
+import mobius.bico.coq.Translator;
 import mobius.bico.coq.Translator.Access;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.visitors.InstructionVisitor;
@@ -114,17 +115,15 @@ class MethodExecutor extends ASignatureExecutor {
                                  final int coqMethodName, 
                                  final String name) throws ClassNotFoundException {
     
-    String str = "Definition " + name;
-    str += "Short : ShortMethodSignature := METHODSIGNATURE.Build_t";
-    fOutSig.incPrintln(str);
-    str = "(" + coqMethodName + "%positive)";
-    fOutSig.println(str);
+    fOutSig.definitionStart(name + "Short", "ShortMethodSignature");
+    fOutSig.incPrintln("METHODSIGNATURE.Build_t");
+    fOutSig.println("(" + coqMethodName + "%positive)");
     final Type[] atrr = method.getArgumentTypes();
     if (atrr.length == 0) {
       fOutSig.println("nil");
     } 
     else {
-      str = "(";
+      String str = "(";
       for (int i = 0; i < atrr.length; i++) {
         str = str.concat(Util.convertType(atrr[i], getRepository()) + "::");
       }
@@ -134,13 +133,11 @@ class MethodExecutor extends ASignatureExecutor {
     final Type t = method.getReturnType();
     fOutSig.println(Util.convertTypeOption(t, getRepository()));
     fOutSig.decPrintln(".");
-    
-    String clName = "name";
+  
 
-
-    str = "Definition " + name + " : MethodSignature := " + 
-                   "(" + clName + ", " + name + "Short).\n\n";
-    fOutSig.println(str);
+    fOutSig.definition(name, "MethodSignature", 
+                       Translator.couple("name", name + "Short"));
+    fOutSig.println();
   }
   
   
