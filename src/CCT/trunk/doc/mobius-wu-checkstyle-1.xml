@@ -55,7 +55,7 @@
             <property name="tokens" value="STATIC_INIT"/>
         </module>
         <module name="FileLength">
-            <property name="max" value="500"/>
+            <property name="max" value="600"/>
         </module>
         <module name="LineLength">
             <property name="ignorePattern" value="(^ *//\*@ .+$)|(^ *@.+$)"/>

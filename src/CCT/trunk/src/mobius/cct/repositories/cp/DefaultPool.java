@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import mobius.cct.repositories.cp.entries.Entry;
+import mobius.cct.repositories.cp.entries.Utf8Entry;
 import mobius.cct.util.ArrayIterator;
 
 /**
@@ -44,6 +45,28 @@ public class DefaultPool implements ConstantPool {
         j += entries[i].getSize();
       }
     }
+  }
+
+  /**
+   * Try to read and return string value from
+   * given index in a constant pool.
+   * Returns null if the index as invalid.
+   * @param cp Constant pool.
+   * @param index Index. 
+   * @return String value or null.
+   */
+  public static String getString(final ConstantPool cp,
+                                 final int index) {
+    final Entry entry;
+    try {
+      entry = cp.getEntry(index);
+    } catch (IllegalIndexException e) {
+      return null;
+    }
+    if (!(entry instanceof Utf8Entry)) {
+      return null;
+    }
+    return ((Utf8Entry)entry).getValue();
   }
   
   /**

@@ -58,6 +58,18 @@ public class CertifiedMutableClass<C extends MutableClassFile>
     // ...
   }
   
+
+  /**
+   * Write class certificates to output stream.
+   * This creates a certificate file.
+   * @param os Output stream.
+   * @throws IOException .
+   */
+  public void writeCert(final OutputStream os) throws IOException {
+    // TODO Auto-generated method stub
+    
+  }
+  
   /**
    * Get all certificates of this class.
    * @return Iterator.

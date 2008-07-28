@@ -25,5 +25,5 @@ public interface ClassFile {
    * @param m Method name.
    * @return Iterator.
    */
-  Iterator<Attribute> methodAttribute(MethodName m);
+  Iterator<Attribute> methodAttributes(MethodName m);
 }

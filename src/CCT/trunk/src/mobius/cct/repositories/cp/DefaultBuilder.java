@@ -34,6 +34,7 @@ public class DefaultBuilder extends AbstractBuilder {
   
   /**
    * Constructor - initialize with given constant pool.
+   * Indices of existing entries will not change.
    * @param pool Initial constant pool.
    */
   public DefaultBuilder(final ConstantPool pool) {

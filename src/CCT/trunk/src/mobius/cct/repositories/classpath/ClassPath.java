@@ -2,11 +2,10 @@ package mobius.cct.repositories.classpath;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import java.io.InputStream;
 
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;

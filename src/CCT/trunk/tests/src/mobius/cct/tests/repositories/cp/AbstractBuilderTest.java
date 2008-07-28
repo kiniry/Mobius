@@ -1,9 +1,7 @@
 package mobius.cct.tests.repositories.cp;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import mobius.cct.repositories.cp.ConstantPool;
 import mobius.cct.repositories.cp.ConstantPoolBuilder;
 import mobius.cct.repositories.cp.ConstantPoolFactory;
@@ -17,6 +15,9 @@ import mobius.cct.repositories.cp.entries.IntegerEntry;
 import mobius.cct.repositories.cp.entries.LongEntry;
 import mobius.cct.repositories.cp.entries.StringEntry;
 import mobius.cct.repositories.cp.entries.Utf8Entry;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Generic tests for all implementations of ConstantPoolBuilder interface.

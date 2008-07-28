@@ -1,7 +1,7 @@
 package mobius.cct.tests.repositories.cp.entries;
 
-import mobius.cct.repositories.cp.entries.MethodrefEntry;
 import mobius.cct.repositories.cp.entries.Entry;
+import mobius.cct.repositories.cp.entries.MethodrefEntry;
 
 /**
  * Tests for class mobius.cct.repositories.cp.entries.MethodrefEntry.

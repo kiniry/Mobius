@@ -1,8 +1,11 @@
 package mobius.cct.tests.cache;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import mobius.cct.cache.Cache;
 import mobius.cct.cache.LRUCache;
+
 import org.junit.Test;
 
 /**

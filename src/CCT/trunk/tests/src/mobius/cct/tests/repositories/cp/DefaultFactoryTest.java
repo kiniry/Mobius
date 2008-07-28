@@ -1,5 +1,9 @@
 package mobius.cct.tests.repositories.cp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -23,7 +27,6 @@ import mobius.cct.repositories.cp.entries.Utf8Entry;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Tests for DefaultFactory and DefaultPool.

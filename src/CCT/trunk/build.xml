@@ -77,6 +77,7 @@
 				<fileset dir="${tests.build.dir}/classes">
 					<include name="**/*Test*.class" />
 					<exclude name="**/Abstract*" />
+					<exclude name="**/*$*" />
 				</fileset>
 			</batchtest>
 		</junit>

@@ -1,14 +1,15 @@
 package mobius.cct.tests.repositories.cp;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import mobius.cct.repositories.cp.ConstantPool;
 import mobius.cct.repositories.cp.ConstantPoolBuilder;
 import mobius.cct.repositories.cp.DefaultBuilder;
 import mobius.cct.repositories.cp.IllegalIndexException;
 import mobius.cct.repositories.cp.entries.ClassEntry;
 import mobius.cct.repositories.cp.entries.StringEntry;
+
+import org.junit.Test;
 
 /**
  * Tests for class mobius.cct.repositories.cp.DefaultBuilder

@@ -1,7 +1,7 @@
 package mobius.cct.repositories.cp.entries;
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Constant pool entry. All entries must also override equals()

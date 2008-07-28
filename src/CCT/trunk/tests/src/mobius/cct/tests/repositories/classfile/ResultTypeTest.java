@@ -1,10 +1,9 @@
 package mobius.cct.tests.repositories.classfile;
 
+import static org.junit.Assert.assertEquals;
 import mobius.cct.repositories.classfile.types.ResultType;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for class ResultType.

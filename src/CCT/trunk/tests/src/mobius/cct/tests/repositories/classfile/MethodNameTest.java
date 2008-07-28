@@ -1,16 +1,17 @@
 package mobius.cct.tests.repositories.classfile;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.repositories.classfile.MethodType;
 import mobius.cct.repositories.classfile.types.ByteType;
 import mobius.cct.repositories.classfile.types.FieldType;
 import mobius.cct.repositories.classfile.types.IntType;
 import mobius.cct.repositories.classfile.types.VoidType;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for class MethodName.
@@ -23,9 +24,13 @@ public class MethodNameTest {
    */
   @Test
   public void testVoidNoArgs() {
-    final MethodName m = new MethodName("test", 
-                                        new FieldType[]{}, 
-                                        VoidType.getInstance());
+    final MethodType t = 
+      new MethodType(
+                     new FieldType[] {}, 
+                     VoidType.getInstance()                                  
+    );
+    final MethodName m = 
+      new MethodName("test", t);
     assertEquals("void test()", m.externalForm());
     assertEquals("test()V", m.internalForm());
   }
@@ -35,10 +40,15 @@ public class MethodNameTest {
    */
   @Test
   public void testVoidSingleArg() {
+    final MethodType t = 
+      new MethodType(
+                     new FieldType[] {
+                                      IntType.getInstance(),
+                                     }, 
+                     VoidType.getInstance()                                  
+    );
     final MethodName m = 
-      new MethodName("test", 
-                     new FieldType[]{IntType.getInstance()}, 
-                     VoidType.getInstance());
+      new MethodName("test", t);
     assertEquals("void test(int)", m.externalForm());
     assertEquals("test(I)V", m.internalForm());
   }
@@ -48,14 +58,17 @@ public class MethodNameTest {
    */
   @Test
   public void testVoidThreeArgs() {
-    final MethodName m = 
-      new MethodName("test", 
+    final MethodType t = 
+      new MethodType(
                      new FieldType[] {
                                       IntType.getInstance(),
                                       ByteType.getInstance(),
                                       ByteType.getInstance(),
                                      }, 
-                     VoidType.getInstance());
+                     VoidType.getInstance()                                  
+    );
+    final MethodName m = 
+      new MethodName("test", t);
     assertEquals("void test(int, byte, byte)", m.externalForm());
     assertEquals("test(IBB)V", m.internalForm());
   }
@@ -65,14 +78,17 @@ public class MethodNameTest {
    */
   @Test
   public void testIntThreeArgs() {
-    final MethodName m = 
-      new MethodName("test", 
+    final MethodType t = 
+      new MethodType(
                      new FieldType[] {
                                       IntType.getInstance(),
                                       ByteType.getInstance(),
                                       ByteType.getInstance(),
                                      }, 
-                     IntType.getInstance());
+                     IntType.getInstance()                                  
+    );
+    final MethodName m = 
+      new MethodName("test", t);
     assertEquals("int test(int, byte, byte)", m.externalForm());
     assertEquals("test(IBB)I", m.internalForm());
   }
@@ -117,6 +133,6 @@ public class MethodNameTest {
    * @param s String to test.
    */
   private void p(final String s) throws IOException {
-    assertEquals(s, MethodName.parse(s).internalForm());
+    assertEquals(s, MethodType.parse(s).internalForm());
   }
 }

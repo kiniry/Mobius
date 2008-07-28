@@ -1,12 +1,13 @@
 package mobius.cct.tests.repositories.cp.entries;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import java.io.ByteArrayOutputStream;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
-import mobius.cct.repositories.cp.entries.Utf8Entry;
 import mobius.cct.repositories.cp.entries.Entry;
+import mobius.cct.repositories.cp.entries.Utf8Entry;
+
+import org.junit.Test;
 
 /**
  * Tests for class mobius.cct.repositories.cp.entries.Utf8Entry.

@@ -4,11 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import mobius.cct.cache.Cache;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import mobius.cct.cache.Cache;
 
 /**
  * Tests applicable to all cache implementations.

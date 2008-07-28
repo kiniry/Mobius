@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 
+import mobius.cct.repositories.cp.entries.Entry;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import mobius.cct.repositories.cp.entries.Entry;
 
 /**
  * Common tests for all constant pool entries.

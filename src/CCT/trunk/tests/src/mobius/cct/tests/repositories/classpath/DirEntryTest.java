@@ -1,17 +1,18 @@
 package mobius.cct.tests.repositories.classpath;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.InputStream;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
+import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;
 import mobius.cct.repositories.classpath.DirEntry;
-import mobius.cct.repositories.NotFoundException;
 import mobius.cct.tests.testutil.Util;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests fpr class mobius.cct.repositories.classpath.DirEntry.

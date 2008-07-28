@@ -1,31 +1,20 @@
 package mobius.cct.repositories.classfile;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import mobius.cct.repositories.classfile.types.FieldType;
-import mobius.cct.repositories.classfile.types.ResultType;
-import mobius.cct.util.ArrayIterator;
+
 
 /**
  * Method name with types of arguments and result.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public final class MethodName {
+public final class MethodName implements Comparable<MethodName> {
   /**
-   * Types of arguments.
+   * Type.
    */
-  private final FieldType[] fArgs;
-  
-  /**
-   * Type of result.
-   */
-  private final ResultType fResult;
+  private final MethodType fType;
   
   /**
    * Name.
@@ -33,99 +22,20 @@ public final class MethodName {
   private final String fName;
   
   /**
+   * Cached hashcode.
+   */
+  private final int fHash;
+  
+  /**
    * Constructor.
    * @param name Method name.
-   * @param args Argument types.
-   * @param result Result type.
+   * @param type Method type.
    */
   public MethodName(final String name, 
-                    final FieldType[] args, 
-                    final ResultType result) {
+                    final MethodType type) {
     fName = name;
-    fResult = result;
-    fArgs = new FieldType[args.length];
-    for (int i = 0; i < args.length; i++) {
-      fArgs[i] = args[i];
-    }
-  }
-  
-  /**
-   * Read argument list in internal form.
-   * @param reader Argument list. This reader must support mark().
-   * @return Array of argument types.
-   * @throws IOException .
-   */
-  private static FieldType[] parseArgs(final Reader reader) 
-    throws IOException {
-    
-    final List<FieldType> args = new ArrayList<FieldType>();
-    
-    if (reader.read() != '(') {
-      throw new IOException("?");
-    }
-    reader.mark(1);
-    int c = reader.read();
-    while ((c != -1) && (c != ')')) {
-      reader.reset();
-      args.add(FieldType.parse(reader));
-      reader.mark(1);
-      c = reader.read();
-    }
-    if (c != ')') {
-      throw new java.io.EOFException();
-    }
-    return args.toArray(new FieldType[]{});
-  }
-  
-  /**
-   * Read argument list in internal form.
-   * @param args Argument list.
-   * @return Array of argument types.
-   * @throws IOException .
-   */
-  public static FieldType[] parseArgs(final String args) 
-    throws IOException {
-    return parseArgs(new StringReader(args));
-  }
-  
-  /**
-   * Decode method name and type in internal form.
-   * @param reader Input stream.
-   * @return Parsed method.
-   * @throws IOException .
-   */
-  public static MethodName parse(final Reader reader)
-    throws IOException {
-    
-    final BufferedReader r = new BufferedReader(reader);
-    
-    final StringBuilder name = new StringBuilder();
-    
-    r.mark(1);
-    int c = r.read();
-    while ((c != -1) && (c != '(')) {
-      name.append((char)c);
-      r.mark(1);
-      c = r.read();
-    }
-    if (c != '(') {
-      throw new java.io.EOFException();
-    }
-    r.reset();
-    final FieldType[] args = parseArgs(r);
-    
-    final ResultType result = ResultType.parse(r);
-    return new MethodName(name.toString(), args, result);
-  }
-  
-  /**
-   * Decode method name and type in internal form.
-   * @param m Encoded method.
-   * @return Parsed method.
-   * @throws IOException .
-   */
-  public static MethodName parse(final String m) throws IOException {
-    return parse(new StringReader(m)); 
+    fType = type;
+    fHash = internalForm().hashCode();
   }
   
   /**
@@ -137,29 +47,19 @@ public final class MethodName {
    */
   public static MethodName get(final String name, final String type) {
     try {
-      final StringReader reader = new StringReader(type);
-      final FieldType[] args = parseArgs(reader);
-      final ResultType result = ResultType.parse(reader);
-      return new MethodName(name, args, result);
+      final MethodType methodType = MethodType.parse(type);
+      return new MethodName(name, methodType);
     } catch (IOException e) {
       return null;
     }
   }
   
   /**
-   * Get types of arguments.
-   * @return Iterator.
+   * Get method type.
+   * @return Type.
    */
-  public Iterator<FieldType> argumentTypes() {
-    return new ArrayIterator<FieldType>(fArgs);
-  }
-  
-  /**
-   * Get result type. 
-   * @return Result type.
-   */
-  public ResultType resultType() {
-    return fResult;
+  public MethodType getType() {
+    return fType;
   }
   
   /**
@@ -178,15 +78,12 @@ public final class MethodName {
     final StringBuilder sb = new StringBuilder();
     sb.append(fName);
     sb.append('(');
-    for (int i = 0; i < fArgs.length; i++) {
-      sb.append(fArgs[i].internalForm());
+    final Iterator<FieldType> i = fType.getArgs();
+    while (i.hasNext()) {
+      sb.append(i.next().internalForm());
     }
     sb.append(')');
-    if (fResult == null) {
-      sb.append('V');
-    } else {
-      sb.append(fResult.internalForm());
-    }
+    sb.append(fType.getResult().internalForm());
     return sb.toString();
   }
   
@@ -197,18 +94,55 @@ public final class MethodName {
   public String externalForm() {
     final StringBuilder sb = new StringBuilder();
     
-    sb.append(fResult.externalForm());
+    sb.append(fType.getResult().externalForm());
     sb.append(' ');
     sb.append(fName);
     sb.append('(');
-    for (int i = 0; i < fArgs.length; i++) {
-      sb.append(fArgs[i].externalForm());
-      if (i < fArgs.length - 1) {
+    final Iterator<FieldType> i = fType.getArgs();
+    while (i.hasNext()) {
+      sb.append(i.next().externalForm());
+      if (i.hasNext()) {
         sb.append(", ");
       }
     }
     sb.append(')');
     return sb.toString();
+  }
+
+  /**
+   * Hashcode.
+   * @return hashcode.
+   */
+  @Override
+  public int hashCode() {
+    return fHash;
+  }
+  
+  /**
+   * Compare method names.
+   * @param m Method name.
+   * @return .
+   */
+  @Override
+  public int compareTo(final MethodName m) {
+    return internalForm().compareTo(m.internalForm());
+  }
+  
+  /**
+   * Equals.
+   * @param obj Object to compare.
+   * @return .
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj.getClass().equals(this.getClass())) {
+      return compareTo((MethodName)obj) == 0;
+    } else {
+      return obj.equals(this);
+    }
   }
   
 }

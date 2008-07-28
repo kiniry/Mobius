@@ -1,10 +1,12 @@
 package mobius.cct.tests.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import mobius.cct.util.ArrayIterator;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for class mobius.cct.util.ArrayIterator.

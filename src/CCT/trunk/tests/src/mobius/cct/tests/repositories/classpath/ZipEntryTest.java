@@ -6,9 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.io.InputStream;
 
+import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;
 import mobius.cct.repositories.classpath.ZipEntry;
-import mobius.cct.repositories.NotFoundException;
 import mobius.cct.tests.testutil.Util;
 
 import org.junit.Before;

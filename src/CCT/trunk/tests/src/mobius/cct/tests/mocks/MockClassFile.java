@@ -44,7 +44,7 @@ public class MockClassFile implements ClassFile {
   }
 
   @Override
-  public Iterator<Attribute> methodAttribute(MethodName m) {
+  public Iterator<Attribute> methodAttributes(MethodName m) {
     // TODO Auto-generated method stub
     return null;
   }

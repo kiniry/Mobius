@@ -19,7 +19,7 @@ public class DefaultClassReader
   @Override
   public DefaultClassFile read(final InputStream is) 
     throws IOException {
-    return null;
+    return new DefaultClassFile(is);
   }
 
 }

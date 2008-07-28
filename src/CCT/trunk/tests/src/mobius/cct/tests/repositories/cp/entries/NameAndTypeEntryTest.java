@@ -1,7 +1,7 @@
 package mobius.cct.tests.repositories.cp.entries;
 
-import mobius.cct.repositories.cp.entries.NameAndTypeEntry;
 import mobius.cct.repositories.cp.entries.Entry;
+import mobius.cct.repositories.cp.entries.NameAndTypeEntry;
 
 /**
  * Tests for class mobius.cct.repositories.cp.entries.DoubleEntry.
