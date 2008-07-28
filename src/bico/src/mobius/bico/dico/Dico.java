@@ -1,5 +1,9 @@
 package mobius.bico.dico;
 
+import mobius.bico.dico.ClassConstants.Clss;
+import mobius.bico.dico.ClassConstants.Meth;
+import mobius.bico.dico.ClassConstants.Pkg;
+
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.Repository;
 import org.apache.bcel.util.SyntheticRepository;
@@ -8,7 +12,7 @@ import org.apache.bcel.util.SyntheticRepository;
  * A class containing some utilities for the dictionnary.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public final class Dico implements IClassConstants {
+public final class Dico {
   
   /**
    * Does nothing.
@@ -21,7 +25,7 @@ public final class Dico implements IClassConstants {
    * @param dico the dictionary to initialize
    * @throws ClassNotFoundException if the loading of the basic classes fails
    */
-  public static void initDico(final Dictionary dico) throws ClassNotFoundException {
+  public static void initDico(final ADictionary dico) throws ClassNotFoundException {
     final Repository repos = SyntheticRepository.getInstance();
     final JavaClass obj = repos.loadClass("java.lang.Object");
     final JavaClass thrw = repos.loadClass("java.lang.Throwable");
@@ -29,20 +33,21 @@ public final class Dico implements IClassConstants {
     final JavaClass str = repos.loadClass("java.lang.String");
     final JavaClass nllexcp = repos.loadClass("java.lang.NullPointerException");
     
-    dico.addPackage(obj.getPackageName(), pkgJavaLang);
-    dico.addPackage("", pkgEmpty);
+    dico.addPackage(obj.getPackageName(), Pkg.JavaLang);
+    dico.addPackage("", Pkg.Empty);
         
-    dico.addClass(obj, object);
-    dico.addClass(thrw, throwable);
-    dico.addClass(excp, exception);
-    dico.addClass(nllexcp, nullPointerException);
-    dico.addClass(str, string);
+    dico.addClass(obj, Clss.object);
+    dico.addClass(thrw, Clss.throwable);
+    dico.addClass(excp, Clss.exception);
+    dico.addClass(nllexcp, Clss.nullPointerException);
+    dico.addClass(str, Clss.string);
     
-    dico.addMethod("Object.<init>", pkgJavaLang, object, methObj);
-    dico.addMethod("Exception.<init>", pkgJavaLang, exception, methExcp);
-    dico.addMethod("NullPointerException.<init>", pkgJavaLang, nullPointerException, methExcp);
-    dico.addMethod("String.<init>", pkgJavaLang, string, methStr);
-    dico.addMethod("Throwable.<init>", pkgJavaLang, throwable, methThrw);
+    dico.addMethod("Object.<init>", Pkg.JavaLang, Clss.object, Meth.Obj);
+    dico.addMethod("Exception.<init>", Pkg.JavaLang, Clss.exception, Meth.Excp);
+    dico.addMethod("NullPointerException.<init>", Pkg.JavaLang, Clss.nullPointerException, 
+                   Meth.Excp);
+    dico.addMethod("String.<init>", Pkg.JavaLang, Clss.string, Meth.Str);
+    dico.addMethod("Throwable.<init>", Pkg.JavaLang, Clss.throwable, Meth.Thrw);
     // TODO complete the list...
   }
 }

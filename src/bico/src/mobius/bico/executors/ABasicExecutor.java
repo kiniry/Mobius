@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import mobius.bico.coq.CoqStream;
-import mobius.bico.dico.Dictionary;
+import mobius.bico.dico.ADictionary;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.implem.IImplemSpecifics;
 
@@ -22,7 +22,7 @@ public abstract class ABasicExecutor {
   private final MethodHandler fMethodHandler;
 
   /** the dictionnary to convert Coq's class numbers to human readable forms. */
-  private final Dictionary fDico;
+  private final ADictionary fDico;
   
   /** Bicolano's implementations specific handlings. */
   private IImplemSpecifics fImplemSpecif;
@@ -48,7 +48,7 @@ public abstract class ABasicExecutor {
    */
   public ABasicExecutor(final Repository repos, final IImplemSpecifics implemSpecif, 
                         final MethodHandler methodHandler, final CoqStream out, 
-                        final Dictionary dico, final File baseDir) {
+                        final ADictionary dico, final File baseDir) {
     fImplemSpecif = implemSpecif;
     fMethodHandler = methodHandler;
     fRepos = repos;
@@ -112,7 +112,7 @@ public abstract class ABasicExecutor {
    * Returns the dictionnary containing the Coq/Java correspondances.
    * @return the content of the field {@link #fDico}
    */
-  public final Dictionary getDico() {
+  public final ADictionary getDico() {
     return fDico;
   }
   

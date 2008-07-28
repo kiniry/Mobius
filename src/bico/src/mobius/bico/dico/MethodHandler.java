@@ -45,13 +45,12 @@ public class MethodHandler {
     private String fCoqName;
 
     private MethodType(final String name, final Type [] targs, final Type tret) {
-      
       fArgsType = new ArrayList<Type>();
       for (Type t: targs) {
         fArgsType.add(t);
       }
       fReturnType = tret;
-      fName = name;// + "_" + targs.length;
+      fName = name; // + "_" + targs.length;
     }
     
     /**
@@ -73,6 +72,7 @@ public class MethodHandler {
            met.getReturnType());
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(final Object o) {
       if (o instanceof MethodType) {
@@ -82,7 +82,7 @@ public class MethodHandler {
              fReturnType.equals(mt.fReturnType))) {
           return false;
         }
-        final Iterator iter = mt.fArgsType.iterator();
+        final Iterator<Type> iter = mt.fArgsType.iterator();
         for (Type t: fArgsType) {
           if (!t.equals(iter.next())) {
             return false;
@@ -148,13 +148,13 @@ public class MethodHandler {
 
   public void addMethod(final MethodType mt) { 
     if (!fMethodList.contains(mt)) {
-      final List l = findByName(mt);
-      final int postfix = l.size();
+//      final List<MethodType> l = findByName(mt);
+//      final int postfix = l.size();
 //      if (postfix > 0) {
 //        mt.setCoqName(Util.coqify(mt.getName()) + postfix);
 //      }
 //      else {
-        mt.setCoqName(Util.coqify(mt.getName()));
+      mt.setCoqName(Util.coqify(mt.getName()));
 //      }
       fMethodList.add(mt);
     }
@@ -188,6 +188,8 @@ public class MethodHandler {
   public String getName(final FieldOrMethod  ins, final ConstantPoolGen cpg) {
     return getName((InvokeInstruction) ins, cpg);
   }
+  
+  
   public String getName(final InvokeInstruction ii, final ConstantPoolGen cpg) {
     final Type[] targs = ii.getArgumentTypes(cpg);
     final String name = ii.getMethodName(cpg);
