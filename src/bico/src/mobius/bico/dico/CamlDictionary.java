@@ -209,6 +209,12 @@ public class CamlDictionary extends ADictionary {
     addClass(jc.getClassName(), fPackageNames.get(jc.getPackageName()), coqClassName);
   }
   
+  /**
+   * Generic way to add a class to the dictionnary, out of one strings and 2 integers.
+   * @param javaName the name of the class to add
+   * @param packageName the package number
+   * @param coqClassName the class number
+   */
   private void addClass(final String javaName, final int packageName, 
                        final int coqClassName) {
     if (coqClassName > fCurrentClass) {
@@ -226,6 +232,9 @@ public class CamlDictionary extends ADictionary {
     }
   }
   
+  /**
+   * @return the last number that was attributed to a class.
+   */
   public int getCurrentClass() {
     return fCurrentClass;
   }

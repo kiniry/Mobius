@@ -133,21 +133,19 @@ public abstract class ADictionary {
    * with an other one.
    * Basically calls the method {@link #addMethod(String, int, int, int)}.
    * 
-   * @param javaName
-   *            the corresponding human readable name
+   * @param met
+   *            the method enum to add
    * @param coqPackageName
-   *            the Bicolano package name
+   *            the Bicolano package to add
    * @param coqClassName
-   *            the Bicolano class name
-   * @param coqMethodName
-   *            the Bicolano method name
+   *            the Bicolano class to add
    */
-  public void addMethod(final String javaName, final Pkg coqPackageName,
-                        final Clss coqClassName, final Meth coqMethodName) {
-    addMethod(javaName, 
+  public void addMethod(final Meth met, final Pkg coqPackageName,
+                        final Clss coqClassName) {
+    addMethod(met.toString(), 
               coqPackageName.ordinal(),
               coqClassName.ordinal(), 
-              coqMethodName.toInt());
+              met.toInt());
   }
   
   /**
@@ -157,8 +155,18 @@ public abstract class ADictionary {
    */
   public abstract String getClassName(int coqName);
   
-  
+  /**
+   * Get the package name from the package number.
+   * @param coqName a valid number
+   * @return the package name.
+   */
   public abstract String getPackageName(int coqName);
+  
+  /**
+   * Get the method name from the method number.
+   * @param coqName the method number
+   * @return the method name
+   */
   public abstract String getMethodName(int coqName);
   
   /**
@@ -167,10 +175,20 @@ public abstract class ADictionary {
    */
   public abstract Collection<Integer> getMethods();
   
+  /**
+   * Retreive  the class number from the method number.
+   * @param meth the method number.
+   * @return the class number
+   */
   public abstract int getClassFromMethod(int meth);
+  
+  /**
+   * Retreive  the package number from the class number.
+   * @param clzz the class number.
+   * @return the package number
+   */
   public abstract int getPackageFromClass(int clzz);
 
-  
   
   /**
    * Dump the dictionnary to the given stream.

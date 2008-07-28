@@ -11,9 +11,13 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
-import org.apache.bcel.generic.FieldOrMethod;
 
 /**
+ * The method handler class is used to have some Java
+ * representation of methods, ready to translate for 
+ * Bicolano.
+ * Methods here are associated with numbers, and also with
+ * the usual representation: name, arg type, return type.
  * 
  * @author L. Hubert (lhubert@irisa.fr) 
  * with some slight modifications 
@@ -23,7 +27,7 @@ public class MethodHandler {
 
 
   /**
-   * 
+   * A structure to represent methods for bicolano.
    * @author L. Hubert (lhubert@irisa.fr)
    */
   private static class MethodType {
@@ -44,6 +48,12 @@ public class MethodHandler {
     /** the coq name of the method. */
     private String fCoqName;
 
+    /**
+     * Construct a method type.
+     * @param name the name of the method
+     * @param targs the type of its arguments
+     * @param tret the type of its return value
+     */
     private MethodType(final String name, final Type [] targs, final Type tret) {
       fArgsType = new ArrayList<Type>();
       for (Type t: targs) {
@@ -140,26 +150,38 @@ public class MethodHandler {
   /** the list of method types already seen. */
   private List<MethodType> fMethodList = new ArrayList<MethodType>();
   
-
+  /**
+   * Adds the method type of the 
+   * method to the list of methods. If the the method type 
+   * is already registered it is not added.
+   * @param m the method to add.
+   */
   public void addMethod(final MethodGen m) {
     final MethodType mt = new MethodType(m);
     addMethod(mt);
   }
 
-  public void addMethod(final MethodType mt) { 
+  /**
+   * Adds the method to the list of method. If the method 
+   * was already in the list it is not added a second time.
+   * @param mt the method to add
+   */
+  private void addMethod(final MethodType mt) { 
     if (!fMethodList.contains(mt)) {
-//      final List<MethodType> l = findByName(mt);
-//      final int postfix = l.size();
-//      if (postfix > 0) {
-//        mt.setCoqName(Util.coqify(mt.getName()) + postfix);
-//      }
-//      else {
       mt.setCoqName(Util.coqify(mt.getName()));
-//      }
       fMethodList.add(mt);
     }
   }
 
+  /**
+   * Returns the name of the method used in bicolano,
+   * preferably if the method was previously registered in the 
+   * method list.
+   * If it was not, it also adds the method to the list.
+   * 
+   * @param mt the method to look for 
+   * @return the string representing the name of the method
+   */
   private String getName(final MethodType mt) {
     final int idx = fMethodList.indexOf(mt);
     if (idx != -1) {
@@ -167,45 +189,46 @@ public class MethodHandler {
     }
     else {
       System.err.println("Method " + mt + " is unknown... let's add it!");
-      
       addMethod(mt);
-      
-      //throw new IllegalArgumentException("" + fMethodList);
       return getName(mt);
     }
   }
 
+  /**
+   * Returns the coqified name of the method.
+   * @param m the method to get the name from
+   * @return the name of the method.
+   */
   public String getName(final MethodGen m) {
     final MethodType mt = new MethodType(m);
     return getName(mt);
   }
 
+  /**
+   * Returns the coqified name of the method.
+   * @param met the method to translate
+   * @return the name of the method
+   */
   public String getName(final Method met) {
     final MethodType mt = new MethodType(met);
     return getName(mt);
   }
 
-  public String getName(final FieldOrMethod  ins, final ConstantPoolGen cpg) {
-    return getName((InvokeInstruction) ins, cpg);
-  }
   
-  
+  /**
+   * Returns the coqified name of the method. The first
+   * argument has to be of the class InvokeInstruction.
+   * None of the arguments shall be null.
+   * @param ii the instruction where the method call occur.
+   * @param cpg the constant pool to resolve the name.
+   * @return the name of the method
+   */
   public String getName(final InvokeInstruction ii, final ConstantPoolGen cpg) {
     final Type[] targs = ii.getArgumentTypes(cpg);
     final String name = ii.getMethodName(cpg);
     final Type tret = ii.getReturnType(cpg);
     final MethodType mt = new MethodType(name, targs, tret);
     return getName(mt);
-  }
-
-  private List<MethodType> findByName(final MethodType mt) {
-    final List<MethodType> ret = new ArrayList<MethodType>();
-    for (MethodType tmp: fMethodList) {
-      if (Util.coqify(tmp.getName()).equals(Util.coqify(mt.getName()))) {
-        ret.add(tmp);
-      }
-    }
-    return ret;
   }
 
 }

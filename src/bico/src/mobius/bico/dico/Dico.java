@@ -42,12 +42,11 @@ public final class Dico {
     dico.addClass(nllexcp, Clss.nullPointerException);
     dico.addClass(str, Clss.string);
     
-    dico.addMethod("Object.<init>", Pkg.JavaLang, Clss.object, Meth.Obj);
-    dico.addMethod("Exception.<init>", Pkg.JavaLang, Clss.exception, Meth.Excp);
-    dico.addMethod("NullPointerException.<init>", Pkg.JavaLang, Clss.nullPointerException, 
-                   Meth.Excp);
-    dico.addMethod("String.<init>", Pkg.JavaLang, Clss.string, Meth.Str);
-    dico.addMethod("Throwable.<init>", Pkg.JavaLang, Clss.throwable, Meth.Thrw);
+    dico.addMethod(Meth.Obj, Pkg.JavaLang, Clss.object);
+    dico.addMethod(Meth.Excp, Pkg.JavaLang, Clss.exception);
+    dico.addMethod(Meth.NullExcp, Pkg.JavaLang, Clss.nullPointerException);
+    dico.addMethod(Meth.Str, Pkg.JavaLang, Clss.string);
+    dico.addMethod(Meth.Thrw, Pkg.JavaLang, Clss.throwable);
     // TODO complete the list...
   }
 }

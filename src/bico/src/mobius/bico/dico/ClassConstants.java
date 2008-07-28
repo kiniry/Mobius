@@ -86,22 +86,28 @@ public final class ClassConstants {
   //FIXME: why does it begins at 10 ?
   public enum Meth {
     /** Constant for the constructor method of a Throwable object. */
-    Thrw(11),
+    Thrw("Throwable.<init>", 11),
     /** Constant for the constructor method of a Exception object. */
-    Excp(10), 
+    Excp("Exception.<init>", 10), 
     /** Constant for the constructor method of a String object. */
-    Str(13), 
+    Str("String.<init>", 13), 
     /** Constant for the constructor method of a Object object. */
-    Obj(12);
+    Obj("Object.<init>", 12),
+    /** Constant for the constructor method of a NullPointerException object. */
+    NullExcp("NullPointerException.<init>", 10);
     
     /** a number associated with a constant. */
-    private int fNum;    
+    private final int fNum;
+    /** the name associated with the string. */
+    private final String fStr;  
     /**
      * Construct an object. 
      * @param i the number associated with the constant
+     * @param str the string associated with the constant
      */
-    private Meth(final int i) {
+    private Meth(final String str, final int i) {
       fNum = i;
+      fStr = str;
     }
 
     /**
@@ -109,6 +115,10 @@ public final class ClassConstants {
      */
     public int toInt() {
       return fNum;
+    }
+    /** {@inheritDoc} */
+    public String toString() {
+      return fStr;
     }
   }
   
