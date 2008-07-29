@@ -41,7 +41,6 @@ public final class ClassName {
     }
   }
   
-
   /**
    * Get class name in external form, with dots as separators.
    * @return Class name.
@@ -51,6 +50,22 @@ public final class ClassName {
       return fName;
     } else {
       return fPackageName.externalForm() + "." + fName;
+    }
+  }
+  
+  /**
+   * Parse fully qualified class name in internal form.
+   * @param name Class name.
+   * @return ClassName instance.
+   */
+  public static ClassName parseInternal(final String name) {
+    final int sep = name.indexOf('/');
+    if (sep == -1) {
+      return new ClassName(PackageName.root(), name);
+    } else {
+      final String n = name.substring(sep + 1);
+      final String p = name.substring(0, sep);
+      return new ClassName(PackageName.parseInternal(p), n);
     }
   }
 }

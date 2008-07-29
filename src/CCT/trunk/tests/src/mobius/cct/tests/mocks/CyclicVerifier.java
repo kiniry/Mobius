@@ -1,7 +1,12 @@
 package mobius.cct.tests.mocks;
 
 import static org.junit.Assert.fail;
+
+import java.util.Iterator;
+
 import mobius.cct.certificates.Certificate;
+import mobius.cct.certificates.CertificatePack;
+import mobius.cct.util.ArrayIterator;
 import mobius.cct.util.Version;
 import mobius.cct.verifiers.CyclicDependencyException;
 import mobius.cct.verifiers.Environment;
@@ -28,12 +33,13 @@ public class CyclicVerifier implements Verifier<MockClassFile> {
     }
 
     @Override
-    public String[] getSpecificationTypes(Certificate cert) {
-      return new String[]{"test"};
+    public Iterator<String> getSpecificationTypes(Certificate cert) {
+      return new ArrayIterator<String>(new String[]{"test"});
     }
 
     @Override
-    public boolean verify(String name, String spec, Certificate cert,
+    public boolean verify(String name, String spec, 
+                          CertificatePack cert,
                           Environment<MockClassFile> env) {
       try {
         env.verify(name, spec);

@@ -2,9 +2,11 @@ package mobius.cct.tests.mocks;
 
 import java.util.Iterator;
 
-import mobius.cct.certificates.Certificate;
+import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.CertifiedClass;
-import mobius.cct.util.ArrayIterator;
+import mobius.cct.certificates.ClassCertificateVisitor;
+import mobius.cct.certificates.MethodCertificate;
+import mobius.cct.certificates.MethodCertificateVisitor;
 
 /**
  * ClassFile implementation used for tests.
@@ -25,17 +27,32 @@ public class MockCertifiedClass implements
   public MockCertifiedClass(final MockClassFile c) {
     fClass = c;
   }
-  
-  
-  @Override
-  public Iterator<Certificate> getCertificates() {
-    return new ArrayIterator<Certificate>(fClass.getCerts());
-  }
-
 
   @Override
   public MockClassFile getClassFile() {
     return fClass;
+  }
+
+
+  @Override
+  public void visitClassCertificates(ClassCertificateVisitor v) {
+    CertificatePack[] certs = fClass.getCerts();
+    for (int i = 0; i < certs.length; i++) {
+      v.visitClassCert(certs[i].getClassCertificate());
+    }
+  }
+
+
+  @Override
+  public void visitMethodCertificates(MethodCertificateVisitor v) {
+    CertificatePack[] certs = fClass.getCerts();
+    for (int i = 0; i < certs.length; i++) {
+      final Iterator<MethodCertificate> it = 
+        certs[i].getMethodCerts();
+      while (it.hasNext()) {
+        v.visitMethodCert(it.next());
+      }
+    }
   }
 
 }

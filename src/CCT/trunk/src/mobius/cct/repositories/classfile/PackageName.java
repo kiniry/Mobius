@@ -115,4 +115,23 @@ public final class PackageName {
     }
   }
   
+  /**
+   * Parse package name in internal form.
+   * @param name Package name. Root package = empty string.
+   * @return Package name.
+   */
+  public static PackageName parseInternal(final String name) {
+    final int sep = name.lastIndexOf('/');
+    if (sep == -1) {
+      if (name.isEmpty()) {
+        return root();
+      } else {
+        return getPackage(root(), name);
+      }
+    } else {
+      final String n = name.substring(sep + 1);
+      final String p = name.substring(0, sep);
+      return getPackage(parseInternal(p), n);
+    }
+  }
 }

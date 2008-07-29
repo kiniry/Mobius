@@ -16,10 +16,16 @@ import mobius.cct.repositories.cp.ConstantPoolBuilder;
 import mobius.cct.repositories.cp.ConstantPoolFactory;
 import mobius.cct.repositories.cp.DefaultBuilder;
 import mobius.cct.repositories.cp.DefaultFactory;
+import mobius.cct.repositories.cp.DefaultPool;
+import mobius.cct.repositories.cp.IllegalIndexException;
 import mobius.cct.repositories.cp.UnknownConstantException;
+import mobius.cct.repositories.cp.entries.ClassEntry;
+import mobius.cct.repositories.cp.entries.Entry;
+import mobius.cct.util.ArrayIterator;
 import mobius.cct.util.Function;
 import mobius.cct.util.MappedIterator;
 import mobius.cct.util.Version;
+import mobius.cct.util.VisitorException;
 
 /**
  * Default implementation of class file. No external 
@@ -30,7 +36,7 @@ public class DefaultClassFile implements MutableClassFile {
   /**
    * First four bytes of a class file.
    */
-  private static final int MAGIC = 0xCAFEBABE;
+  public static final int MAGIC = 0xCAFEBABE;
 
   // ACCESS FLAGS
   /**
@@ -96,15 +102,14 @@ public class DefaultClassFile implements MutableClassFile {
   
   /**
    * Index of superclass name in the constant pool.
-   * 
+   * Zero for java/lang/Object.
    */
-  private final int fSuperName;
+  private final int fSuper;
   
   /**
-   * Indices of names of implemented interfaces in the
-   * constant pool.
+   * Names of implemented interfaces.
    */
-  private final int[] fInterfaces;
+  private final ClassName[] fInterfaces;
   
   /**
    * Fields.
@@ -120,6 +125,17 @@ public class DefaultClassFile implements MutableClassFile {
    * Attributes.
    */
   private final AttributeMap fAttributes;
+  
+  /**
+   * Parsed class name.
+   */
+  private ClassName fName;
+
+  /**
+   * Parsed superclass name.
+   * Null for java/lang/Object.
+   */
+  private ClassName fSuperName;
   
   /**
    * Constructor - read class from input stream.
@@ -140,8 +156,14 @@ public class DefaultClassFile implements MutableClassFile {
     fConstantPool = readConstantPool(ds);
     fAccessFlags = ds.readUnsignedShort();
     fClassName = ds.readUnsignedShort();
-    fSuperName = ds.readUnsignedShort();
+    fSuper = ds.readUnsignedShort();
     
+    if (fSuper == 0) {
+      fSuperName = null;
+    } else {
+      fSuperName = parseName(fSuper);
+    }
+    fName = parseName(fClassName);
     fInterfaces = readInterfaces(ds);
     fFields = readFields(ds);
     fMethods = readMethods(ds);
@@ -172,13 +194,13 @@ public class DefaultClassFile implements MutableClassFile {
    * @return Array of interfaces.
    * @throws IOException .
    */
-  private int[] readInterfaces(final DataInputStream ds)
+  private ClassName[] readInterfaces(final DataInputStream ds)
     throws IOException {
     
     final int interfacesCount = ds.readUnsignedShort();
-    final int[] interfaces = new int[interfacesCount];
+    final ClassName[] interfaces = new ClassName[interfacesCount];
     for (int i = 0; i < interfacesCount; i++) {
-      interfaces[i] = ds.readUnsignedShort();
+      interfaces[i] = parseName(ds.readUnsignedShort());
     }
     return interfaces;
   }
@@ -219,234 +241,65 @@ public class DefaultClassFile implements MutableClassFile {
   }
 
   /**
-   * Return all methods of this class.
-   * @return Iterator.
+   * Parse class name.
+   * @param n Class name as index in the constant pool.
+   * @return Class name.
+   * @throws InvalidFormatException .
    */
-  @Override
-  public Iterator<MethodName> getMethods() {
-    final Iterator<Method> methodIterator = fMethods.values().iterator();
-    final Function<Method, MethodName> m = 
-      new Function<Method, MethodName>() {
-        public MethodName call(final Method m) {
-          return m.getName();
-        }
-      };
-    return 
-      new MappedIterator<Method, MethodName>(methodIterator, m);
-  }
-  
-  /**
-   * Add class attribute.
-   * @param attr Attribute.
-   */
-  @Override
-  public void addClassAttr(final Attribute attr) {
-    fAttributes.addAttribute(attr);    
-  }
-
-  /**
-   * Add method attribute.
-   * @param m Method name.
-   * @param attr Attribute.
-   */  
-  @Override
-  public void addMethodAttr(final MethodName m, 
-                            final Attribute attr) {
-    fMethods.get(m).getAttributes().addAttribute(attr);
-  }
-
-  /**
-   * Get class attribute.
-   * @param name Attribute name.
-   * @param i Attribute index.
-   * @return Attribute.
-   */  
-  @Override
-  public Attribute getClassAttr(final String name, final int i) {
-    return fAttributes.get(name, i);
-  }
-
-  /**
-   * Get number of class attributes.
-   * @param name Attribute name.
-   * @return Attribute count.
-   */  
-  @Override
-  public int getClassAttrCount(final String name) {
-    return fAttributes.getCount(name);
-  }
-  
-  /**
-   * Get method attribute.
-   * @param m Method name.
-   * @param name Attribute name.
-   * @param i Attribute index.
-   * @return Attribute.
-   */  
-  @Override
-  public Attribute getMethodAttr(final MethodName m, 
-                                 final String name, 
-                                 final int i) {
-    return fMethods.get(m).getAttributes().get(name, i);
-  }
-
-  /**
-   * Get number of method attributes.
-   * @param m Method name.
-   * @param name Attribute name.
-   * @return Attribute count.
-   */  
-  @Override
-  public int getMethodAttrCount(final MethodName m, 
-                                final String name) {
-    return fMethods.get(m).getAttributes().getCount(name);
-  }
-
-  /**
-   * Remove class attribute.
-   * @param name Attribute name.
-   * @param i Attribute index.
-   */  
-  @Override
-  public void removeClassAttr(final String name, final 
-                              int i) {
-    fAttributes.remove(name, i);
-  }
-  
-  /**
-   * Remove method attribute.
-   * @param m Method name.
-   * @param name Attribute name.
-   * @param i Attribute index.
-   */  
-  @Override
-  public void removeMethodAttr(final MethodName m, 
-                               final String name, 
-                               final int i) {
-    fMethods.get(m).getAttributes().remove(name, i);
-  }
-
-  /**
-   * Write class to output stream.
-   * @param os Output stream.
-   * @throws IOException .
-   */
-  @Override
-  public void writeTo(final OutputStream os) throws IOException {
-    final ConstantPoolBuilder cp = updateConstantPool();
-    final DataOutputStream ds = new DataOutputStream(os);
+  private ClassName parseName(final int n) 
+    throws InvalidFormatException {
+    final Entry classEntry;
     
-    ds.writeInt(MAGIC);
-    ds.writeShort(fVersion.getMinor());
-    ds.writeShort(fVersion.getMajor());
-    fConstantPool.write(ds);
-    ds.writeShort(fAccessFlags);
-    ds.writeShort(fClassName);
-    ds.writeShort(fSuperName);
-    writeInterfaces(ds);
-    writeFields(ds, cp);
-    writeMethods(ds, cp);
-    writeAttributes(ds, cp, fAttributes);
+    try {
+      classEntry = fConstantPool.getEntry(n);
+    } catch (IllegalIndexException e) {
+      throw new InvalidFormatException("Invalid class name.");
+    }
+    if (!(classEntry instanceof ClassEntry)) {
+      throw new InvalidFormatException("Invalid class name.");
+    }
+    final int nameIndex = ((ClassEntry)classEntry).getName();
+    final String name = 
+      DefaultPool.getString(fConstantPool, nameIndex);
+    if (name == null) {
+      throw new InvalidFormatException("Invalid class name.");
+    }
+    return ClassName.parseInternal(name);
   }
   
   /**
-   * Update constant pool - add entries for new attributes.
-   * @return Updated constant pool as a builder.
+   * Visit class.
+   * @param v Visitor.
+   * @throws VisitorException .
    */
-  private ConstantPoolBuilder updateConstantPool() {
-    // DefaultBuilder will never change indices of existing consts...
-    final ConstantPoolBuilder cp = new DefaultBuilder(fConstantPool);
-    final Iterator<Attribute> i1 = classAttributes(); 
-    while (i1.hasNext()) {
-      cp.newUtf8(i1.next().getName());
+  @Override
+  public void visit(final ClassVisitor v) throws VisitorException {
+    v.begin(fName);
+    final Iterator<Attribute> ia = fAttributes.iterator();
+    while (ia.hasNext()) {
+      v.visitAttribute(ia.next());
     }
     final Iterator<Method> im = fMethods.values().iterator();
     while (im.hasNext()) {
-      final Iterator<Attribute> i2 = 
-        im.next().getAttributes().iterator();
-      while (i2.hasNext()) {
-        cp.newUtf8(i2.next().getName());
+      final Method m = im.next();
+      final MethodVisitor mv = v.visitMethod(m.getName());
+      if (mv != null) {
+        m.visit(mv);
       }
     }
-    return cp;
-  }
-  
-  /**
-   * Write implemented interfaces.
-   * @param ds Output stream.
-   * @throws IOException .
-   */
-  private void writeInterfaces(final DataOutputStream ds)
-    throws IOException {
-   
-    ds.writeShort(fInterfaces.length);
-    for (int i = 0; i < fInterfaces.length; i++) {
-      ds.writeShort(fInterfaces[i]);
-    }
+    v.end();
   }
 
   /**
-   * Write fields.
-   * @param ds Output stream.
-   * @param cp Constant pool.
-   * @throws IOException .
+   * Get method.
+   * @param m Method name.
+   * @return Method or null.
    */
-  private void writeFields(final DataOutputStream ds, 
-                           final ConstantPoolBuilder cp)
-    throws IOException {
-   
-    ds.writeShort(fFields.length);
-    for (int i = 0; i < fFields.length; i++) {
-      ds.writeShort(fFields[i].getAccessFlags());
-      ds.writeShort(cp.newUtf8(fFields[i].getName()));
-      ds.writeShort(cp.newUtf8(fFields[i].getType().internalForm()));
-      writeAttributes(ds, cp, fFields[i].getAttributes());
-    }
-  }
-
-  /**
-   * Write methods.
-   * @param ds Output stream.
-   * @param cp Constant pool.
-   * @throws IOException .
-   */
-  private void writeMethods(final DataOutputStream ds, 
-                            final ConstantPoolBuilder cp)
-    throws IOException {
-   
-    ds.writeShort(fMethods.size());
-    final Iterator<Method> i = fMethods.values().iterator();
-    while (i.hasNext()) {
-      final Method m = i.next();
-      ds.writeShort(m.getAccessFlags());
-      ds.writeShort(cp.newUtf8(m.getName().getName()));
-      ds.writeShort(cp.newUtf8(m.getName().getType().internalForm()));
-      writeAttributes(ds, cp, m.getAttributes());
-    }
-  }
-  
-  /**
-   * Write attribute set.
-   * @param ds Output stream.
-   * @param cp Constant pool.
-   * @param a Attributes.
-   * @throws IOException .
-   */
-  private void writeAttributes(final DataOutputStream ds, 
-                               final ConstantPoolBuilder cp,
-                               final AttributeMap a)
-    throws IOException {
-   
-    final ByteArrayOutputStream os = new ByteArrayOutputStream();
-    ds.writeShort(a.size());
-    final Iterator<Attribute> i = a.iterator();
-    while (i.hasNext()) {
-      final Attribute attr = i.next();
-      os.reset();
-      attr.writeData(os);
-      ds.writeShort(cp.newUtf8(attr.getName()));
-      ds.writeShort(os.size());
-      ds.write(os.toByteArray());
+  public Method getMethod(final MethodName m) {
+    if (fMethods.containsKey(m)) {
+      return fMethods.get(m);
+    } else {
+      return null;
     }
   }
   
@@ -457,24 +310,96 @@ public class DefaultClassFile implements MutableClassFile {
   public Version getVersion() {
     return fVersion;
   }
+
+  /**
+   * Get access flags.
+   * @return Access flags.
+   */
+  public int getAccessFlags() {
+    return fAccessFlags;
+  }
   
+  /**
+   * Get constant pool.
+   * @return Constant pool.
+   */
+  public ConstantPool getConstantPool() {
+    return fConstantPool;
+  }
+  
+  /**
+   * Get class name.
+   * @return Name.
+   */
+  public ClassName getName() {
+    return fName;
+  }
+  
+  /**
+   * Get superclass name.
+   * @return Superclass name (possibly null).
+   */
+  public ClassName getSuperName() {
+    return fSuperName;
+  }
+  
+  /**
+   * Get number of implemented interaces.
+   * @return Number of implemented interfaces.
+   */
+  public int interfaceCount() {
+    return fInterfaces.length;
+  }
+  
+  /**
+   * Get implemented interfaces.
+   * @return Iterator.
+   */
+  public Iterator<ClassName> getInterfaces() {
+    return new ArrayIterator<ClassName>(fInterfaces);
+  }
+  
+  /**
+   * Get number of fields.
+   * @return Number of fields.
+   */
+  public int fieldCount() {
+    return fFields.length;
+  }
+  
+  /**
+   * Get fields.
+   * @return Iterator.
+   */
+  public Iterator<Field> getFields() {
+    return new ArrayIterator<Field>(fFields);
+  }
+
+  /**
+   * Get methods.
+   * @return Iterator.
+   */
+  public Iterator<Method> getMethods() {
+    return fMethods.values().iterator();
+  }
+    
   /**
    * Get all class attributes.
    * @return Iterator.
    */
-  @Override
-  public Iterator<Attribute> classAttributes() {
+  public Iterator<Attribute> getAttributes() {
     return fAttributes.iterator();
   }
+
   /**
-   * Get all attributes of a method.
-   * @param m Method name.
-   * @return Iterator.
+   * Get writer.
+   * @param os Output stream.
+   * @return Writer.
    */
-  @Override
-  public Iterator<Attribute> methodAttributes(final MethodName m) {
-    return fMethods.get(m).getAttributes().iterator();
+  public ClassVisitor getWriter(final OutputStream os) {
+    return new DefaultWriter(this, os);
   }
+  
   /**
    * Return true if this class is public.
    * @return true iff ACC_PUBLIC flag is set.

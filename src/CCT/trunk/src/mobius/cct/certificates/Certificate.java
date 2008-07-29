@@ -1,49 +1,62 @@
 package mobius.cct.certificates;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import mobius.cct.util.Version;
 
 /**
- * Interface of certificates.
+ * Class or method certificate.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public interface Certificate {
-  /** 
+public abstract class Certificate {
+  /**
+   * Certificate type.
+   */
+  private final String fType;
+  
+  /**
+   * Certificate version.
+   */
+  private final Version fVersion;
+
+  /**
+   * Data.
+   */
+  private final byte[] fData;
+
+  /**
+   * Constructor.
+   * @param type Certificate type.
+   * @param version Certificate version.
+   * @param data Certificate data. This 
+   */
+  public Certificate(final String type, 
+                     final Version version,
+                     final byte[] data) {
+    fType = type;
+    fVersion = version;
+    fData = data;
+  }
+  
+  /**
    * Get certificate type.
    * @return Certificate type.
    */
-  String getType();
+  public String getType() {
+    return fType;
+  }
   
   /**
-   * Get version number.
-   * @return version number.
+   * Get certificate version.
+   * @return Version.
    */
-  Version getVersion();
-
-  /**
-   * Get names of imported certificates.
-   * @return Iterator over certificate names.
-   */
-  Set<String> getImportedCerts();
+  public Version getVersion() {
+    return fVersion;
+  }
   
   /**
-   * Return class-level certificate.
-   * @return proof section of class-level certificate.
+   * Get certificate data. Returned array should not be modifed.
+   * @return Certificate data.
    */
-  byte[] getClassCertificate();
-  
-  /**
-   * Return list of methods for which we have a method certificate.
-   * @return Iterator over method signatures.
-   */
-  Iterator<String> getCertifiedMethods();
-  
-  /**
-   * Return certificate for given method.
-   * @param name Method signature.
-   * @return Certificate content.
-   */
-  byte[] getMethodCertificate(final String name);
+  public byte[] getData() {
+    return fData;
+  }
 }

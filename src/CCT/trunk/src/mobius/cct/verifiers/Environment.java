@@ -1,5 +1,9 @@
 package mobius.cct.verifiers;
 
+import java.util.Iterator;
+
+import mobius.cct.certificates.CertifiedClass;
+import mobius.cct.certificates.CertificatePack;
 import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.verifiers.logging.Logger;
 
@@ -23,6 +27,24 @@ public interface Environment<C extends ClassFile> {
    * @return ClassFile object or null.
    */
   C getCertificateFile(String name);
+  
+  /**
+   * Parse class certificates.
+   * @param cls Class. 
+   * @return CertifiedClass instance.
+   */
+  CertifiedClass<C> parseCertificates(C cls);
+  
+  /**
+   * Get all certificates of given type from
+   * a class and its certificate file (certificates are
+   * merged if present in both sources).
+   * @param name FQN of a class.
+   * @param type Certificate type.
+   * @return Certificates.
+   */
+  Iterator<CertificatePack> getCertificate(String name, 
+                                           String type);
   
   /**
    * Verify specification of given ClassFile.

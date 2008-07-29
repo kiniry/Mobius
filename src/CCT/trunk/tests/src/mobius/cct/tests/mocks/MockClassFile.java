@@ -2,7 +2,7 @@ package mobius.cct.tests.mocks;
 
 import java.util.Iterator;
 
-import mobius.cct.certificates.Certificate;
+import mobius.cct.certificates.CertificatePack;
 import mobius.cct.repositories.classfile.Attribute;
 import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.repositories.classfile.MethodName;
@@ -15,9 +15,9 @@ public class MockClassFile implements ClassFile {
   /**
    * Certificates.
    */
-  private final Certificate[] fCerts;
+  private final CertificatePack[] fCerts;
   
-  public Certificate[] getCerts() {
+  public CertificatePack[] getCerts() {
     return fCerts;
   }
 
@@ -25,7 +25,7 @@ public class MockClassFile implements ClassFile {
    * Constructor - create file with no certificates.
    */
   public MockClassFile(){
-    fCerts = new Certificate[]{};
+    fCerts = new CertificatePack[]{};
   }
   
   /**
@@ -33,7 +33,7 @@ public class MockClassFile implements ClassFile {
    * certificates.
    * @param certs Certificates.
    */
-  public MockClassFile(final Certificate[] certs) {
+  public MockClassFile(final CertificatePack[] certs) {
     fCerts = certs;
   }
   

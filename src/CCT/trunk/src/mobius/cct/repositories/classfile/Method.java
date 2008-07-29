@@ -2,10 +2,12 @@ package mobius.cct.repositories.classfile;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 import mobius.cct.repositories.InvalidFormatException;
 import mobius.cct.repositories.cp.ConstantPool;
 import mobius.cct.repositories.cp.DefaultPool;
+import mobius.cct.util.VisitorException;
 
 /**
  * Method in a class file.
@@ -122,6 +124,20 @@ public class Method {
    */
   public AttributeMap getAttributes() {
     return fAttributes;
+  }
+  
+  /**
+   * Visit method.
+   * @param v Visitor.
+   * @throws VisitorException .
+   */
+  public void visit(final MethodVisitor v) throws VisitorException {
+    v.begin(fName);
+    final Iterator<Attribute> i = fAttributes.iterator();
+    while (i.hasNext()) {
+      v.visitAttribute(i.next());
+    }
+    v.end();
   }
   
 }

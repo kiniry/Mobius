@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import mobius.cct.certificates.Certificate;
+import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.CertificateParser;
 import mobius.cct.certificates.CertifiedMutableClass;
 import mobius.cct.certificates.DefaultCertificateParser;
@@ -78,7 +79,7 @@ public class DefaultClassTest {
     CertifiedMutableClass<DefaultClassFile> f = 
       read("mobius/cct/testdata/Test1");
     assertNotNull(f);
-    Iterator<Certificate> i = f.getCertificates();
+    Iterator<CertificatePack> i = f.getCertificates();
     assertNotNull(i);
     assertFalse(i.hasNext());
   }
@@ -91,7 +92,7 @@ public class DefaultClassTest {
     CertifiedMutableClass<DefaultClassFile> f = 
       read("mobius/cct/testdata/Test2");
     assertNotNull(f);
-    Iterator<Certificate> i = f.getCertificates();
+    Iterator<CertificatePack> i = f.getCertificates();
     assertNotNull(i);
     assertFalse(i.hasNext());
   }  
@@ -114,7 +115,7 @@ public class DefaultClassTest {
     CertifiedMutableClass<DefaultClassFile> f = 
       read("mobius/cct/testdata/Test4");
     assertNotNull(f);
-    Iterator<Certificate> i = f.getCertificates();
+    Iterator<CertificatePack> i = f.getCertificates();
     assertNotNull(i);
     assertFalse(i.hasNext());
   }  
@@ -167,14 +168,14 @@ public class DefaultClassTest {
     CertifiedMutableClass<DefaultClassFile> f = 
       read("mobius/cct/testdata/Test9");
     assertNotNull(f);
-    Iterator<Certificate> i = f.getCertificates();
+    Iterator<CertificatePack> i = f.getCertificates();
     assertNotNull(i);
     assertTrue(i.hasNext());
-    Certificate cert = i.next();
+    CertificatePack cert = i.next();
     assertFalse(i.hasNext());
     assertEquals("mobius.testcert", cert.getType());
     assertEquals(new Version(1, 0), cert.getVersion());
-    Iterator<String> it = cert.getCertifiedMethods();
+    Iterator<MethodName> it = cert.getCertifiedMethods();
     assertTrue(it.hasNext());
     it.next();
     assertFalse(it.hasNext());

@@ -1,7 +1,5 @@
 package mobius.cct.certificates;
 
-import java.util.Iterator;
-
 import mobius.cct.repositories.classfile.ClassFile;
 
 /**
@@ -11,10 +9,10 @@ import mobius.cct.repositories.classfile.ClassFile;
  */
 public interface CertifiedClass<C extends ClassFile> {
   /**
-   * Get all certificates of this class.
-   * @return Iterator.
+   * Visit all class certificates.
+   * @param v Visitor.
    */
-  Iterator<Certificate> getCertificates();
+  void visitClassCertificates(ClassCertificateVisitor v);
 
   /**
    * Get class file.

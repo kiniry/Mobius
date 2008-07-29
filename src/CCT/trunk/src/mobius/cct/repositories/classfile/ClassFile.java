@@ -2,6 +2,8 @@ package mobius.cct.repositories.classfile;
 
 import java.util.Iterator;
 
+import mobius.cct.util.VisitorException;
+
 /**
  * This interface contains methods common to all
  * implementations of class file.
@@ -9,21 +11,9 @@ import java.util.Iterator;
  */
 public interface ClassFile {
   /**
-   * Return all class attributes.
-   * @return Iterator.
+   * Use visitor to visit the class.
+   * @param v Visitor.
+   * @throws VisitorException If thrown by the visitor.
    */
-  Iterator<Attribute> classAttributes();
-  
-  /**
-   * Return all methods of this class.
-   * @return Iterator.
-   */
-  Iterator<MethodName> getMethods();
-  
-  /**
-   * Return all attributes of given method.
-   * @param m Method name.
-   * @return Iterator.
-   */
-  Iterator<Attribute> methodAttributes(MethodName m);
+  void visit(ClassVisitor v) throws VisitorException;
 }

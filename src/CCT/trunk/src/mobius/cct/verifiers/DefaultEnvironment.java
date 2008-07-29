@@ -2,7 +2,9 @@ package mobius.cct.verifiers;
 
 import java.util.Iterator;
 
+import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.CertificateParser;
+import mobius.cct.certificates.CertifiedClass;
 import mobius.cct.repositories.Repository;
 import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.verifiers.logging.Logger;
@@ -128,6 +130,16 @@ public class DefaultEnvironment<C extends ClassFile>
   }
   
   /**
+   * Parse certificates of a class.
+   * @param cls Class.
+   * @return Certified class.
+   */
+  public CertifiedClass<C> parseCertificates(C cls) {
+    //TODO
+    return null;
+  }
+  
+  /**
    * Verify specification of given ClassFile. 
    * If there are multiple certificates for the desired specification
    * verifiers are tried in order in which they were added to the
@@ -201,5 +213,12 @@ public class DefaultEnvironment<C extends ClassFile>
    */
   public void setCertificateParser(final CertificateParser<C> cp) {
     //TODO
+  }
+
+  @Override
+  public Iterator<CertificatePack> 
+  getCertificate(final String name, final String type) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
