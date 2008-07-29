@@ -2,11 +2,11 @@ package mobius.bico.executors;
 
 import java.io.File;
 
+import mobius.bico.Util;
+import mobius.bico.Constants.Suffix;
+
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
-
-import mobius.bico.Constants;
-import mobius.bico.Util;
 
 
 /**
@@ -174,7 +174,7 @@ public class NamingData {
    * @return an existing file (most likely)
    */
   public File getClassFile() {
-    return new File(fPath, fName + Constants.CLASS_SUFFIX);
+    return new File(fPath, fName + Suffix.CLASS);
   }
   
   /**

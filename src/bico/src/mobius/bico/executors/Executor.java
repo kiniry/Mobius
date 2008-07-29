@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 
 import mobius.bico.Constants;
 import mobius.bico.Util;
+import mobius.bico.Constants.Suffix;
 import mobius.bico.coq.CoqStream;
 import mobius.bico.coq.LoadPath;
 import mobius.bico.coq.Translator.Syntax;
@@ -23,6 +24,7 @@ import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dico;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.implem.IImplemSpecifics;
+import mobius.bico.implem.ListImplemSpecif;
 import mobius.bico.implem.MapImplemSpecif;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -41,16 +43,83 @@ import org.apache.bcel.util.SyntheticRepository;
  */
 public class Executor extends ABasicExecutor {
 
-  /** the coq files extension (.v). */
-  public static final String suffix = ".v";
+  public static class LaunchInfos {
+    /** Specify the implementation to use. */
+    private IImplemSpecifics fImplem;
+    
+    /** Whether or not the libraries shall be generated. */
+    private boolean fGenerateLibs;
+    /** The current working dir. */
+    private File fBaseDir;
+    /** The output directory. */ 
+    private File fTargetDir;
+    /** The classpath to use. */
+    private ClassPath fClassPath;
+    /** the list of classes to treat. */
+    private final List<String> fClassToTreat = new ArrayList<String>();
+    
+    public LaunchInfos() {
+      fImplem = new MapImplemSpecif();
+      fGenerateLibs = false;
+    }
+    /**
+     * Prepare the infos by checking the null values and
+     * changing them if necessary.
+     */
+    public void prepare() {
+  
+      if (fBaseDir == null) {
+        fBaseDir = new File("");
+      }
+      if (fTargetDir == null) {
+        fTargetDir = fBaseDir;
+      }
+      if (fClassPath == null) {
+        fClassPath = new ClassPath(fBaseDir.getAbsolutePath() + 
+                    File.pathSeparatorChar + ClassPath.getClassPath());
+      }
+    }
+    public void setClassPath(String classpath) {
+      fClassPath = new ClassPath(classpath);
+    }
+    public void setBaseDir(final File dir) {
+      if (fBaseDir == null) {
+        fBaseDir = dir;
+      }
+    }
+    public void setTargetDir(final String dir) {
+      
+      fTargetDir = new File(dir);
+      
+    }
+    public void addClassToTreat(final String cl) {
+      final File f = new File(cl);
+      if ((f.exists()) || ((f.getParentFile() != null) &&
+          f.getParentFile() .exists())) {
+        fClassToTreat.add(f.getAbsolutePath()); 
+      } 
+      else  {
+        // we suppose it's to be found in the class path
+        fClassToTreat.add(cl); 
+      }
+    }
+    public void enableLibrariesGeneration() {
+      fGenerateLibs = true;
+    }
+    
+    public void setListImplementation() {
+      fImplem = new ListImplemSpecif();
+    }
+  }
+
+
   
    
   /** the standard lib paths. */
-  public static final String libPath = 
-    "Add LoadPath \"Formalisation/Library\".\n" + 
-    "Add LoadPath \"Formalisation/Library/Map\".\n" + 
-    "Add LoadPath \"Formalisation/Logic\".\n" + 
-    "Add LoadPath \"Formalisation/Bicolano\".\n"; 
+  public static final String [] libPaths = {"Formalisation/Library",
+                                            "Formalisation/Library/Map",
+                                            "Formalisation/Bicolano",
+                                            "Formalisation/Logic"};
     
   
   
@@ -109,7 +178,15 @@ public class Executor extends ABasicExecutor {
   }
   
 
-  
+  /**
+   * Create a new Executor object.
+   * 
+   * @param li all the informations to launch the executor
+   */
+  public Executor(final Executor.LaunchInfos li) {
+    this(li.fImplem, li.fBaseDir, li.fTargetDir, li.fClassPath,
+         li.fClassToTreat, li.fGenerateLibs);
+  }
   
   /**
    * Create a new Executor object.
@@ -231,7 +308,7 @@ public class Executor extends ABasicExecutor {
     
     generateClassMakefiles();
     
-    final File fCoqFileName = new File(getBaseDir(), fName + suffix);
+    final File fCoqFileName = new File(getBaseDir(), fName + Suffix.COQ);
     // creating file for output
     if (fCoqFileName.exists()) {
       fCoqFileName.delete();
@@ -325,7 +402,7 @@ public class Executor extends ABasicExecutor {
    *             in case the file cannot be written
    */
   private void doSignature() throws FileNotFoundException {
-    final File typ = new File(getBaseDir(), fName + "_signature" + suffix);
+    final File typ = new File(getBaseDir(), fName + "_signature" + Suffix.COQ);
     /* final File typ = new File( fCoqName + "_signature" + suffix); */
     final CoqStream out = new CoqStream(new FileOutputStream(typ));
     printLoadPath(out);
@@ -360,7 +437,7 @@ public class Executor extends ABasicExecutor {
    *             if the type file cannot be created
    */
   private void doType() throws FileNotFoundException {
-    final File typ = new File(getBaseDir(), fName + "_type" + suffix);
+    final File typ = new File(getBaseDir(), fName + "_type" + Suffix.COQ);
     final CoqStream out = new CoqStream(new FileOutputStream(typ));
 
     printLoadPath(out);
@@ -387,7 +464,9 @@ public class Executor extends ABasicExecutor {
 
 
   private void printLoadPath(final CoqStream out) {
-    out.println(libPath);
+    for (String path: libPaths) {
+      out.addLoadPath(new LoadPath(path));
+    }
     final Set<String> set = new HashSet<String>();
     for (Entry<String, ClassExecutor> ce : fTreatedClasses.entrySet()) {
       final String pkg = "classes/" + ce.getValue().getPackageDir().toString();

@@ -3,17 +3,11 @@ package mobius.bico;
 import java.io.File;
 import java.io.IOException;
 import java.security.Permission;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.bcel.Repository;
-import org.apache.bcel.util.ClassPath;
 
 import mobius.bico.Constants.Option;
 import mobius.bico.executors.Executor;
-import mobius.bico.implem.IImplemSpecifics;
-import mobius.bico.implem.ListImplemSpecif;
-import mobius.bico.implem.MapImplemSpecif;
+
+import org.apache.bcel.Repository;
 
 /**
  * The main class to launch bico!
@@ -49,15 +43,14 @@ public final class Main {
     "<classname> - generates also the file for this class, bico must be able to find it \n" + 
     "              in its class path\n" + 
     "-----------------------------------------------------------------------------------";
-
-
   
-  /**
-   * Does nothing.
-   */
-  private Main() {
-  
-  }
+  /** the list warning message. */
+  public static final String LIST_MSG =
+    "The list functionnality is not a trustable feature at this very moment.\n" +
+    "If you want support for it please file a bug report on the Mobius Trac Server\n" +
+    "http://mobius.ucd.ie/\n";
+  /** */
+  private Main() { }
   
   /**
    * Bico main entry point.
@@ -98,7 +91,6 @@ public final class Main {
     }
   }
   
-  
   /**
    * Init the executor with the arguments from the command line.
    * 
@@ -109,74 +101,73 @@ public final class Main {
     // dealing with args
     // we first sort out arguments from path...
     /* final List<File> paths = new Vector<File>(); */
-    IImplemSpecifics implem = new MapImplemSpecif();
-    File baseDir = null;
-    File targetDir = null;
-    boolean generateLibs = false;
-    ClassPath cp = null;
-    final List<String> clzz = new ArrayList<String>();
+    final Executor.LaunchInfos li = new Executor.LaunchInfos();
+    
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
       final Option opt = Option.translate(arg);
-      switch (opt) {
-        case LIST:
-          implem = new ListImplemSpecif();
-          break;
-        case MAP:
-          implem = new MapImplemSpecif();
-          break;
-        case CLASSPATH:
-          i = i + 1;
-          arg = args[i];
-          cp = new ClassPath(arg);
-          break;
-        case OUTPUT:
-          // this keyword introduces the base working class path
-          i = i + 1;
-          arg = args[i];
-          targetDir = new File(arg);
-          break;
-        case LIB:
-          generateLibs = true;
-          i = i + 1;
-          break;
-        case HELP:
-          System.out.println(HELP_MSG);
-          break;
-        case UNKNOWN:
-        default:
-          final File f = new File(arg);
-          if (f.isDirectory()) {
-            // if the file f is a directory then this is the path at which 
-            // all classes involved can be found setBaseDir(f); 
-            if (baseDir == null) {
-              baseDir = f;
-            }
-          }
-          else if ((f.exists()) || ((f.getParentFile() != null) &&
-              f.getParentFile() .exists())) {
-            clzz.add(f.getAbsolutePath()); 
-          } 
-          else  {
-            // we suppose it's to be found in the class path
-            clzz.add(arg); 
-          }
-          break;
+      if (opt.is2ArgsOption()) {
+        i = i + 1;
+        arg = args[i];
+        switch (opt) {
+          case CLASSPATH:
+            li.setClassPath(arg);
+            break;
+          case OUTPUT:
+            // this keyword introduces the base working class path
+            li.setTargetDir(arg);
+            break;
+          default:
+            break;
+        }
+      }
+      else {
+        singleArgOptionsHandler(li, arg, opt);
       }
       
     }
+    li.prepare();
 
-    if (baseDir == null) {
-      baseDir = new File("");
-    }
-    if (targetDir == null) {
-      targetDir = baseDir;
-    }
-    if (cp == null) {
-      cp = new ClassPath(baseDir.getAbsolutePath() + 
-                  File.pathSeparatorChar + ClassPath.getClassPath());
-    }
+    return new Executor(li);
+  }
 
-    return new Executor(implem, baseDir, targetDir, cp, clzz, generateLibs);
+  /**
+   * Treats all the options that have only a single argument, 
+   * the option itself.
+   * @param li the information structure where to save the options informations
+   * @param arg the current inspected argument
+   * @param opt the option which was selected.
+   */
+  private static void singleArgOptionsHandler(final Executor.LaunchInfos li,
+                                              final String arg, final Option opt) {
+    switch (opt) {
+      case LIB:
+        li.enableLibrariesGeneration();
+        break;
+      case LIST:
+        System.err.println(LIST_MSG);
+        li.setListImplementation();
+        break;
+      case MAP:
+        //li.fImplem = new MapImplemSpecif();
+        // the default cas anyway
+        break;
+      case HELP:
+        System.out.println(HELP_MSG);
+        break;  
+      case UNKNOWN:
+      default:
+        final File f = new File(arg);
+        if (f.isDirectory()) {
+          // if the file f is a directory then this is the path at which 
+          // all classes involved can be found setBaseDir(f); 
+          li.setBaseDir(f);
+        }
+        else {
+          li.addClassToTreat(arg);
+        }
+          
+        break;
+    }
   }
 }

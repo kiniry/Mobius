@@ -7,8 +7,30 @@ package mobius.bico;
 public final class Constants {
   /** the separator for the packages. */
   public static final char JAVA_NAME_SEPARATOR = '.';
-  /** the class suffix. */
-  public static final String CLASS_SUFFIX = ".class";
+  
+  /**
+   * A constant which represents a file suffix.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
+  public static enum Suffix {
+    /** the class suffix. */
+    CLASS(".class"),
+    /** the coq files extension (.v). */
+    COQ(".v");
+    /** the string representing the constant. */
+    private final String fStr;
+    /**
+     * Construct a Suffix out of its representation.
+     * @param s the string representation
+     */
+    private Suffix(final String s) {
+      fStr = s;
+    }
+    /** {@inheritDoc} */
+    public String toString() {
+      return fStr;
+    }
+  }
   
   /**
    * Constants representing options passed to  
@@ -78,6 +100,21 @@ public final class Constants {
         res = UNKNOWN;
       }
       return res;
+    }
+
+    /**
+     * If it is an option made out of two arguments.
+     * @return answers yes uf the option has a second argument
+     */
+    public boolean is2ArgsOption() {
+      switch (this) {
+        case CLASSPATH:
+        case OUTPUT:
+          return true;
+        default:
+          break;
+      }
+      return false;
     }
   }
 

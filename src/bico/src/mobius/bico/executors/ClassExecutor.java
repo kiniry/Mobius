@@ -90,14 +90,11 @@ public class ClassExecutor extends ASignatureExecutor {
       }
     }
     
-    final String [] loadPaths = {"Formalisation/Library",
-                                 "Formalisation/Library/Map",
-                                 "Formalisation/Bicolano",
-                                 "Formalisation/Logic", ""};
     String res = "";
-    for (String path: loadPaths) {
+    for (String path: Executor.libPaths) {
       res += Translator.addLoadPath(new LoadPath(pathToLib + path)) + "\n";
     }
+    res += Translator.addLoadPath(new LoadPath(pathToLib)) + "\n";
     return res;
   }
   

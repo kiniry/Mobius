@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileFilter;
 
 
+import mobius.bico.Constants.Suffix;
+
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.BasicType;
@@ -332,7 +334,7 @@ public class Util {
    */
   public static String removeClassSuffix(final String clzz) {
     return clzz.substring(0, clzz.length() - 
-                            Constants.CLASS_SUFFIX.length());
+                            Suffix.CLASS.toString().length());
   }
   
   /**
@@ -368,7 +370,7 @@ public class Util {
   public static class ClassFilter implements FileFilter {
     /** {@inheritDoc} */
     public boolean accept(final File cf) {
-      return ((cf.isFile()) && cf.getName().endsWith(Constants.CLASS_SUFFIX));
+      return ((cf.isFile()) && cf.getName().endsWith(Suffix.CLASS.toString()));
     }
   }
   
