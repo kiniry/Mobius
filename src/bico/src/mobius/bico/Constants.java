@@ -53,24 +53,25 @@ public final class Constants {
      * @return an option constant
      */
     public static Option translate(final String arg) {
+      final String low = arg.toLowerCase();
       Option res = UNKNOWN;
       
-      if (arg.equals(HELP.fStr)) {
+      if (low.equals(HELP.fStr)) {
         res = HELP;
       } 
-      else if (arg.equals(LIST.fStr)) {
+      else if (low.equals(LIST.fStr)) {
         res = LIST;
       } 
-      else if (arg.equals(MAP.fStr)) {
+      else if (low.equals(MAP.fStr)) {
         res = MAP;
       } 
-      else if (arg.equals(CLASSPATH.fStr)) {
+      else if (low.equals(CLASSPATH.fStr)) {
         res = CLASSPATH;
       } 
-      else if (arg.equals(OUTPUT.fStr)) {
+      else if (low.equals(OUTPUT.fStr)) {
         res = OUTPUT;
       }
-      else if (arg.equals(LIB.fStr)) {
+      else if (low.equals(LIB.fStr)) {
         res = LIB;
       }
       else {

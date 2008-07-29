@@ -13,6 +13,7 @@ import java.util.Set;
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
 import mobius.bico.coq.LoadPath;
+import mobius.bico.coq.Translator;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.visitors.DependenciesVisitor;
 
@@ -88,13 +89,18 @@ public class ClassExecutor extends ASignatureExecutor {
         pathToLib += ".." + File.separator;
       }
     }
-    return "Add LoadPath \"" + pathToLib + "Formalisation/Library\".\n" + 
-           "Add LoadPath \"" + pathToLib + "Formalisation/Library/Map\".\n" + 
-           "Add LoadPath \"" + pathToLib + "Formalisation/Bicolano\".\n" +
-           "Add LoadPath \"" + pathToLib + "Formalisation/Logic\".\n" +
-           "Add LoadPath \"" + pathToLib + "\".\n"; // always useful
-
+    
+    final String [] loadPaths = {"Formalisation/Library",
+                                 "Formalisation/Library/Map",
+                                 "Formalisation/Bicolano",
+                                 "Formalisation/Logic", ""};
+    String res = "";
+    for (String path: loadPaths) {
+      res += Translator.addLoadPath(new LoadPath(pathToLib + path)) + "\n";
+    }
+    return res;
   }
+  
   
   /**
    * Real handling of one class in jc.
@@ -466,6 +472,11 @@ public class ClassExecutor extends ASignatureExecutor {
     return "Class Executor: " + getModuleName();
   }
   
+  /**
+   * Returns the path to the library, relative to the package
+   * dir.
+   * @return a non null string
+   */
   public String getLibPath() {
     return fLibPath;
   }

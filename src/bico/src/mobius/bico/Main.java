@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.bcel.Repository;
+import org.apache.bcel.util.ClassPath;
 
 import mobius.bico.Constants.Option;
 import mobius.bico.executors.Executor;
@@ -21,8 +22,15 @@ import mobius.bico.implem.MapImplemSpecif;
  *         (czarnik@mimuw.edu.pl)
  */
 public final class Main {
-  /** BICO version 0.5. */
-  public static final String WELCOME_MSG = "BICO version 0.5";
+  /** Bico major version number. */
+  public static final int MAJOR_VERSION = 0;
+  /** Bico minor version number. */
+  public static final int MINOR_VERSION = 6;
+  /** Bico revision version number = bug fix.  */
+  public static final int REVISION_VERSION = 0;
+  /** BICO version. */
+  public static final String WELCOME_MSG = "BICO version " + 
+        MAJOR_VERSION + "." + MINOR_VERSION + "rev" + REVISION_VERSION;
   
   
   /** the help message. */
@@ -105,11 +113,11 @@ public final class Main {
     File baseDir = null;
     File targetDir = null;
     boolean generateLibs = false;
+    ClassPath cp = null;
     final List<String> clzz = new ArrayList<String>();
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
-      final String low = arg.toLowerCase();
-      final Option opt = Option.translate(low);
+      final Option opt = Option.translate(arg);
       switch (opt) {
         case LIST:
           implem = new ListImplemSpecif();
@@ -120,7 +128,7 @@ public final class Main {
         case CLASSPATH:
           i = i + 1;
           arg = args[i];
-          baseDir = new File(arg);
+          cp = new ClassPath(arg);
           break;
         case OUTPUT:
           // this keyword introduces the base working class path
@@ -157,13 +165,18 @@ public final class Main {
       }
       
     }
-    
+
     if (baseDir == null) {
       baseDir = new File("");
     }
     if (targetDir == null) {
       targetDir = baseDir;
     }
-    return new Executor(implem, baseDir, targetDir, clzz, generateLibs);
+    if (cp == null) {
+      cp = new ClassPath(baseDir.getAbsolutePath() + 
+                  File.pathSeparatorChar + ClassPath.getClassPath());
+    }
+
+    return new Executor(implem, baseDir, targetDir, cp, clzz, generateLibs);
   }
 }

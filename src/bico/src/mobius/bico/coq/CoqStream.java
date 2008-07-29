@@ -19,12 +19,13 @@ public class CoqStream extends Stream {
     super(out);
   }
   
+  
   /**
    * Prints "<code>Add LoadPath path.\n</code>".
    * @param path the path name
    */
   public void addLoadPath(final LoadPath path) {
-    println(Syntax.ADD_LOAD_PATH + "\"" + path +  "\"."); 
+    println(Translator.addLoadPath(path));
   }
   
   /**
@@ -34,7 +35,7 @@ public class CoqStream extends Stream {
    */
   public void addLoadPath(final LoadPath path, 
                           final File relativeTo) {
-    addLoadPath(new LoadPath(path.getRelative(relativeTo))); 
+    println(Translator.addLoadPath(path, relativeTo));
   }
   
   /**

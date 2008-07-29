@@ -72,11 +72,11 @@ public class ClassesMakefileGen {
   }
 
   /**
-   * 
-   * @param out
-   * @param subdirs
-   * @param listModule
-   * @return
+   * Print all the makefile rules.
+   * @param out the output file.
+   * @param subdirs the subdirectories to treat
+   * @param listModule the list 
+   * @return the files that will be generated during compilation
    */
   public List<String> getMakefileInstructions(final PrintStream out, 
                                               final File[] subdirs, 
@@ -101,14 +101,14 @@ public class ClassesMakefileGen {
   
   
   /**
-   * 
-   * @param out
-   * @param listModules
-   * @param subdirs
-   * @param word
-   * @param dependencies
-   * @param postfix
-   * @return
+   * Print the compile instructions of a specific rule.
+   * @param out the output file
+   * @param listModules the list of the modules to compile
+   * @param subdirs the subdirectories to inspect
+   * @param word the name of the files to compile
+   * @param dependencies on which other rule the files depend
+   * @param postfix what is the postfix part of the files
+   * @return files that will be generated during the compilation process
    */
   public List<String> printCompileInstr(final PrintStream out,
                                         final List<String> listModules,

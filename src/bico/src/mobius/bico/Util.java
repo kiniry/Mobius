@@ -297,18 +297,18 @@ public class Util {
     while (name.startsWith("[")) {
       name = name.substring(1);
     }
+    
     // if "name" denotes a basic type then return
-    if (Type.BOOLEAN.getSignature().equals(name) ||
-        Type.INT.getSignature().equals(name) ||
-        Type.SHORT.getSignature().equals(name) ||
-        Type.BYTE.getSignature().equals(name) ||
-        Type.CHAR.getSignature().equals(name) ||
-        Type.LONG.getSignature().equals(name) ||
-        Type.FLOAT.getSignature().equals(name) ||
-        Type.DOUBLE.getSignature().equals(name) ||
-        Type.VOID.getSignature().equals(name)) {
-      return null;
-    } 
+    final BasicType [] bts = {Type.BOOLEAN, Type.INT,
+                              Type.SHORT, Type.BYTE,
+                              Type.CHAR, Type.LONG,
+                              Type.FLOAT, Type.DOUBLE,
+                              Type.VOID};
+    for (BasicType t: bts) {
+      if (t.getSignature().equals(name)) {
+        return null;
+      }
+    }
     
     // else the type is not a basic type and thus, proceed
     // to getting a well formed Java class type

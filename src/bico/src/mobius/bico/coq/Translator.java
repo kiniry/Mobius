@@ -1,5 +1,7 @@
 package mobius.bico.coq;
 
+import java.io.File;
+
 import org.apache.bcel.classfile.AccessFlags;
 
 /**
@@ -182,5 +184,31 @@ public final class Translator {
    */
   public static String imprt(final String module) {
     return Syntax.IMPORT + module +  "."; 
+  }
+  /**
+   * @return "<code>Add LoadPath path.</code>".
+   * @param path the path name
+   * @deprecated use {@link #addLoadPath(LoadPath)} instead
+   */
+  public static String addLoadPath(final String path) {
+    return addLoadPath(new LoadPath(path)); 
+  }
+  
+  /**
+   * @return "<code>Add LoadPath path.</code>".
+   * @param path the path name
+   */
+  public static String addLoadPath(final LoadPath path) {
+    return Syntax.ADD_LOAD_PATH + "\"" + path +  "\"."; 
+  }
+  
+  /**
+   * @return "<code>Add LoadPath module.</code>".
+   * @param path the path name
+   * @param relativeTo the path the main path is relative to
+   */
+  public static String addLoadPath(final LoadPath path, 
+                          final File relativeTo) {
+    return addLoadPath(new LoadPath(path.getRelative(relativeTo))); 
   }
 }

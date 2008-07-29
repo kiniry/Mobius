@@ -70,6 +70,13 @@ class Stream extends PrintStream {
     println(s);
     incTab();
   }
+  /**
+   * Does a println and then increments the tabulation level.
+   */
+  public void incPrintln() {
+    println();
+    incTab();
+  }
   
   /**
    * Decrements the tabulation and then does a println.
@@ -79,6 +86,15 @@ class Stream extends PrintStream {
   public void decPrintln(final String s) {
     decTab();
     println(s);
+  }
+  
+  /**
+   * Decrements the tabulation and then does a println.
+   * 
+   */
+  public void decPrintln() {
+    decTab();
+    println();
   }
   
   /**

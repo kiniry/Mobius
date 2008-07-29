@@ -71,7 +71,7 @@ public class Executor extends ABasicExecutor {
   };
   
   /** true if the java libs are generated. */
-  private boolean fGenerateJavaLibs = false; 
+  private boolean fGenerateJavaLibs; 
   
   /** the name of the executor file which will be declined to Type and Sig. */
   private final String fName;
@@ -85,7 +85,7 @@ public class Executor extends ABasicExecutor {
    * 
    * @deprecated do not use, use a proper constructor instead
    */
-  private Executor() {  
+  protected Executor() {  
     super(new ClassLoaderRepository(ClassLoader.getSystemClassLoader()),
           new MapImplemSpecif(), new MethodHandler(), null,
           new CamlDictionary(), new File(""));
@@ -119,6 +119,8 @@ public class Executor extends ABasicExecutor {
    * @param outputDir the output directory
    * @param clzzPath the classpath to use
    * @param classToTreat the list of classes to treat
+   * @param generateLibs whether or not the libraries shall
+   * be generated
    */
   public Executor(final IImplemSpecifics implem, 
                   final File sourceDir,
@@ -149,8 +151,13 @@ public class Executor extends ABasicExecutor {
    * @param sourceDir the current working dir
    * @param outputDir the output directory
    * @param classToTreat the list of classes to treat
+   * @param generateLibs whether or not the libraries shall
+   * be generated
+   * @deprecated use 
+   * {@link #Executor(IImplemSpecifics, File, File, ClassPath, List, boolean)}
+   * instead
    */
-  public Executor(final IImplemSpecifics implem, 
+  Executor(final IImplemSpecifics implem, 
                   final File sourceDir,
                   final File outputDir, 
                   final List<String> classToTreat,
@@ -274,11 +281,13 @@ public class Executor extends ABasicExecutor {
     defineClassAndInterface();
     
     // the program definition
-    out.incPrintln("Definition program : Program := PROG.Build_t");
+    out.definitionStart("program", "Program");
+    out.incPrintln("PROG.Build_t");
     out.println("AllClasses");
     out.println("AllInterfaces");
     out.decPrintln(".\n");
-    out.incPrintln("Definition subclass :=");
+    out.definitionStart("subclass");
+    out.incPrintln();
     out.println("match P.subclass_test program with\n" + 
                 "| Some f => f\n" + 
                 "| None => fun x y => true\n" +

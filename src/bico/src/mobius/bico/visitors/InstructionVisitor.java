@@ -80,7 +80,7 @@ public final class InstructionVisitor extends EmptyVisitor {
     fRes = "Aconst_null";
   }
   
-  
+  /** {@inheritDoc} */
   @Override
   public void visitArithmeticInstruction(final ArithmeticInstruction ins) {
     final String name = Util.upCase(ins.getName());
@@ -284,6 +284,11 @@ public final class InstructionVisitor extends EmptyVisitor {
     fRes = Util.unhandled(ins);
   }
   
+  /**
+   * Construct a local variable. 
+   * It can built Aload, Vload Aval, or outputs an error message.
+   * @param ins the instruction to translate.
+   */
   @Override
   public void visitLocalVariableInstruction(final LocalVariableInstruction ins) {
     final int index = ((LocalVariableInstruction) ins).getIndex();
@@ -364,6 +369,12 @@ public final class InstructionVisitor extends EmptyVisitor {
     fRes = Util.unhandled(ins);
   }
   
+  /**
+   * Translate a return instruction to a Bico one:
+   * Return, Vreturn Aval, Vreturn Ival, or an unhandled
+   * error message. 
+   * @param ins the instruction to translate
+   */
   @Override
   public void visitReturnInstruction(final ReturnInstruction ins) {
     final String name = Util.upCase(ins.getName());
@@ -393,6 +404,7 @@ public final class InstructionVisitor extends EmptyVisitor {
     fRes = "Const SHORT " + Translator.toZ(((SIPUSH) ins).getValue());
   }
   
+  /** {@inheritDoc} */
   @Override
   public void visitStackInstruction(final StackInstruction ins) {
     fRes = Util.upCase(ins.getName());

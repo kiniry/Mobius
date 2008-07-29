@@ -42,13 +42,18 @@ public final class DependenciesVisitor extends EmptyVisitor {
   /** the currently inspected Java class. */
   private final JavaClass fJc;
   
+  /**
+   * Construct a DeoendenciesVisitor which is associated
+   * with a specific class.
+   * @param jc the class the visitor is associated with
+   */
   private DependenciesVisitor(final JavaClass jc) {
     fCp = jc.getConstantPool();
     fJc = jc;
     
   }
 
-  
+  /** {@inheritDoc} */
   @Override
   public void visitConstantPool(final ConstantPool obj) {
     final Constant[] co = fCp.getConstantPool();
@@ -59,17 +64,20 @@ public final class DependenciesVisitor extends EmptyVisitor {
     }
   }
   
+  /** {@inheritDoc} */
   @Override
   public void visitConstantClass(final ConstantClass cons) {
     fDependencies.add(cons.getConstantValue(fCp).toString().replace('/', '.'));
   }
   
+  /** {@inheritDoc} */
   @Override
   public void visitConstantMethodref(final ConstantMethodref c) {
     final String type = c.getClass(fCp);
     fDependencies.add(type);
   }
   
+  /** {@inheritDoc} */
   @Override
   public void visitConstantFieldref(final ConstantFieldref c) {
     final int k = c.getNameAndTypeIndex();
@@ -81,6 +89,7 @@ public final class DependenciesVisitor extends EmptyVisitor {
     }
   }
   
+  /** {@inheritDoc} */
   @Override
   public void visitConstantUtf8(final ConstantUtf8 cons) {
     final String type = Util.classFormatName2Standard(cons.getBytes());
