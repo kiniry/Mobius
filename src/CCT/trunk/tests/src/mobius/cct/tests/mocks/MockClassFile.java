@@ -5,7 +5,10 @@ import java.util.Iterator;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.repositories.classfile.Attribute;
 import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.repositories.classfile.ClassName;
+import mobius.cct.repositories.classfile.ClassVisitor;
 import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.util.VisitorException;
 
 /**
  * Mock class file used for testing.
@@ -17,47 +20,48 @@ public class MockClassFile implements ClassFile {
    */
   private final CertificatePack[] fCerts;
   
+  /**
+   * Name.
+   */
+  private final ClassName fName;
+  
   public CertificatePack[] getCerts() {
     return fCerts;
   }
 
   /**
    * Constructor - create file with no certificates.
+   * @param name Class name.
    */
-  public MockClassFile(){
+  public MockClassFile(final ClassName name){
+    fName = name;
     fCerts = new CertificatePack[]{};
   }
   
   /**
    * Constructor - create class file with given set of
    * certificates.
+   * @param name Class name.
    * @param certs Certificates.
    */
-  public MockClassFile(final CertificatePack[] certs) {
+  public MockClassFile(final ClassName name, 
+                       final CertificatePack[] certs) {
+    fName = name;
     fCerts = certs;
-  }
-  
-  @Override
-  public Iterator<Attribute> classAttributes() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Iterator<Attribute> methodAttributes(MethodName m) {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   /**
-   * Return all methods of this class.
-   * @return Iterator.
+   * Get class name.
+   * @return Class name.
    */
-  public Iterator<MethodName> getMethods() {
-    //TODO
-    // Currently not used. Should scan all certificates and
-    // return all found methods.
-    return null;
+  public ClassName getName() {
+    return fName;
   }
+  
+  @Override
+  public void visit(ClassVisitor v) throws VisitorException {
+    // Not implemented...
+  }
+
   
 }

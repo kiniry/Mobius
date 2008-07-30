@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.ClassCertificate;
 import mobius.cct.certificates.MethodCertificate;
+import mobius.cct.repositories.classfile.ClassName;
 import mobius.cct.tests.mocks.CyclicVerifier;
 import mobius.cct.tests.mocks.MockCertificateParser;
 import mobius.cct.tests.mocks.MockClassFile;
@@ -119,7 +120,9 @@ public class DefaultEnvironmentTest {
       new CertificatePack(cert, 
                           new LinkedList<MethodCertificate>());
     MockClassFile c = 
-      new MockClassFile(new CertificatePack[]{certs});
+      new MockClassFile(
+        ClassName.parseInternal("testpackage/TestClass"),
+        new CertificatePack[]{certs});
     fRepo.addClass("/mobius/cct/Test", c);
     fEnv.setCertificateParser(new MockCertificateParser());
     fEnv.addVerifier(v);

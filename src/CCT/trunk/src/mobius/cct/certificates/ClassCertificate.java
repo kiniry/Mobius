@@ -47,7 +47,7 @@ public final class ClassCertificate extends Certificate {
    */
   public ClassCertificate merge(final ClassCertificate c) {
     final byte[] data1 = getData();
-    final byte[] data2 = getData();
+    final byte[] data2 = c.getData();
     final byte[] data = 
       new byte[data1.length + data2.length];
     for (int i = 0; i < data1.length; i++) {

@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.CertificateParser;
-import mobius.cct.certificates.CertifiedClass;
 import mobius.cct.repositories.Repository;
 import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.verifiers.logging.Logger;
@@ -128,17 +127,7 @@ public class DefaultEnvironment<C extends ClassFile>
   //TODO
     return null;
   }
-  
-  /**
-   * Parse certificates of a class.
-   * @param cls Class.
-   * @return Certified class.
-   */
-  public CertifiedClass<C> parseCertificates(C cls) {
-    //TODO
-    return null;
-  }
-  
+
   /**
    * Verify specification of given ClassFile. 
    * If there are multiple certificates for the desired specification

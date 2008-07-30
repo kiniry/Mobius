@@ -8,15 +8,10 @@ import mobius.cct.util.Version;
  */
 public abstract class Certificate {
   /**
-   * Certificate type.
+   * Certificate signature.
    */
-  private final String fType;
+  private final CertificateSignature fSignature;
   
-  /**
-   * Certificate version.
-   */
-  private final Version fVersion;
-
   /**
    * Data.
    */
@@ -31,8 +26,7 @@ public abstract class Certificate {
   public Certificate(final String type, 
                      final Version version,
                      final byte[] data) {
-    fType = type;
-    fVersion = version;
+    fSignature = new CertificateSignature(type, version);
     fData = data;
   }
   
@@ -41,7 +35,7 @@ public abstract class Certificate {
    * @return Certificate type.
    */
   public String getType() {
-    return fType;
+    return fSignature.getType();
   }
   
   /**
@@ -49,7 +43,15 @@ public abstract class Certificate {
    * @return Version.
    */
   public Version getVersion() {
-    return fVersion;
+    return fSignature.getVersion();
+  }
+  
+  /**
+   * Get certificate signature.
+   * @return Sginature.
+   */
+  public CertificateSignature getSignature() {
+    return fSignature;
   }
   
   /**

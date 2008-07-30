@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import mobius.cct.repositories.classfile.MethodName;
-import mobius.cct.util.ArrayIterator;
 import mobius.cct.util.Function;
 import mobius.cct.util.MappedIterator;
 import mobius.cct.util.Version;
@@ -24,17 +23,37 @@ public final class CertificatePack {
   /**
    * Method certificates.
    */
-  private final MethodCertificate[] fMethodCerts;
+  private final Map<MethodName, MethodCertificate> fMethodCerts;
   
   /**
-   * Constructor.
-   * @param classCert Class certificate.
-   * @param methodCerts Method certificates.
+   * Constructor. 
+   * @param cert Class certificate.
+   * @param m Collection of method certificates.
    */
-  public CertificatePack(final ClassCertificate classCert,
-      final Collection<? extends MethodCertificate> methodCerts) {
-    fClassCert = classCert;
-    fMethodCerts = methodCerts.toArray(new MethodCertificate[]{});
+  public CertificatePack(
+    final ClassCertificate cert,
+    final Collection<? extends MethodCertificate> m) {
+    
+    fClassCert = cert;
+    fMethodCerts = new HashMap<MethodName, MethodCertificate>();
+    Iterator<? extends MethodCertificate> i = m.iterator();
+    while (i.hasNext()) {
+      final MethodCertificate mc = i.next();
+      fMethodCerts.put(mc.getMethod(), mc);
+    }
+  }
+
+  /**
+   * Constructor. 
+   * @param cert Class certificate.
+   * @param m Map of method certificates.
+   */
+  public CertificatePack(
+    final ClassCertificate cert,
+    final Map<MethodName, ? extends MethodCertificate> m) {
+    
+    fClassCert = cert;
+    fMethodCerts = new HashMap<MethodName, MethodCertificate>(m);
   }
   
   /**
@@ -50,7 +69,21 @@ public final class CertificatePack {
    * @return Iterator.
    */
   public Iterator<MethodCertificate> getMethodCerts() {
-    return new ArrayIterator<MethodCertificate>(fMethodCerts);
+    return fMethodCerts.values().iterator();
+  }
+  
+  /**
+   * Get certificate of a method. If there is no certificate
+   * for this method, null is returned.
+   * @param m Method name.
+   * @return Method certificate or null.
+   */
+  public MethodCertificate getMethodCertificate(final MethodName m) {
+    if (fMethodCerts.containsKey(m)) {
+      return fMethodCerts.get(m);
+    } else {
+      return null;
+    }
   }
   
   /**
@@ -61,46 +94,18 @@ public final class CertificatePack {
    * @return Merged certificate pack.
    */
   public CertificatePack merge(final CertificatePack cp) {
-    final ClassCertificate cc = 
-      fClassCert.merge(cp.getClassCertificate());
-    final Collection<MethodCertificate> mm = 
-      mergeMethods(getMethodCerts(), cp.getMethodCerts());
-    return new CertificatePack(cc, mm);
-  }
-  
-  /**
-   * Merge method certificates.
-   * @param i1 First set of certificates.
-   * @param i2 Second set of certificates.
-   * @return Merged certificates.
-   */
-  private static Collection<MethodCertificate> 
-  mergeMethods(final Iterator<MethodCertificate> i1, 
-               final Iterator<MethodCertificate> i2) {
-    final Map<MethodName, MethodCertificate> methodMap = 
-      new HashMap<MethodName, MethodCertificate>();
-    mergeMethods(methodMap, i1);
-    mergeMethods(methodMap, i2);
-    return methodMap.values();
-  }
-  
-  /**
-   * Merge method certificates.
-   * @param m First set of certificates.
-   * @param i Second set of certificates.
-   */
-  private static void
-  mergeMethods(final Map<MethodName, MethodCertificate> mm, 
-               final Iterator<MethodCertificate> i) {
+    final CertificatePackBuilder cb = 
+      new CertificatePackBuilder(fClassCert);
+    cb.mergeClassCert(cp.getClassCertificate());
+    Iterator<MethodCertificate> i = getMethodCerts();
     while (i.hasNext()) {
-      final MethodCertificate m = i.next();
-      final MethodName mn = m.getMethod();
-      if (mm.containsKey(mn)) {
-        mm.put(mn, mm.get(mn).merge(m));
-      } else {
-        mm.put(mn, m);
-      }
+      cb.addMethodCert(i.next());
     }
+    Iterator<MethodCertificate> j = cp.getMethodCerts();
+    while (j.hasNext()) {
+      cb.addMethodCert(j.next());
+    }
+    return cb.toCertificatePack();
   }
 
   /**
@@ -124,15 +129,6 @@ public final class CertificatePack {
    * @return Iterator.
    */
   public Iterator<MethodName> getCertifiedMethods() {
-    final Function<MethodCertificate, MethodName> getName = 
-      new Function<MethodCertificate, MethodName>() {
-        @Override
-        public MethodName call(MethodCertificate args) {
-          return args.getMethod();
-        }
-    };
-    return 
-    new MappedIterator<MethodCertificate,
-                       MethodName>(getMethodCerts(), getName);
+    return fMethodCerts.keySet().iterator();
   }
 }

@@ -1,0 +1,225 @@
+package mobius.cct.certificates;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+
+import mobius.cct.repositories.InvalidFormatException;
+import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.repositories.classfile.ClassName;
+import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.util.EmptyIterator;
+import mobius.cct.util.FlattenIterator;
+import mobius.cct.util.Function;
+import mobius.cct.util.GetMapValues;
+import mobius.cct.util.MappedIterator;
+import mobius.cct.util.Version;
+import mobius.cct.util.VisitorException;
+
+/**
+ * A CertificateCollector collects all certificates
+ * from a class. Can be used multiple times. Certificates
+ * with the same type and version are merged.
+ * @param <C> Type of class files.
+ * @author Tadeusz Sznuk (ts209501@gmail.com)
+ */
+public class CertificateCollector<C extends ClassFile> {
+  /**
+   * Collected CertificatePacks
+   */
+  private final Map<String, Map<Version, CertificatePack>> fCerts;
+  
+  /**
+   * Constructor.
+   */
+  public CertificateCollector() {
+    fCerts = new HashMap<String, Map<Version, CertificatePack>>();
+  }
+ 
+  /**
+   * Collect certificates from a class.
+   * @param parser Parser used to read certificates.
+   * @param cls Class file.
+   */
+  public void collect(
+                      final CertificateParser<? super C> parser,
+                      final C cls) throws IOException {
+    try {
+      parser.parse(cls, new ClassCertVisitor());
+    } catch (IOException e) {
+      throw e;
+    } catch (VisitorException e) {
+      if (e.getCause() instanceof IOException) {
+        throw (IOException)e.getCause();
+      } else {
+        throw new InvalidFormatException(e.getMessage());
+      }
+    }
+  }
+  
+  /**
+   * Add certificate pack.
+   * @param c Certificate pack.
+   */
+  public void addCertificates(final CertificatePack c) {
+    final String type = c.getType();
+    final Version version = c.getVersion();
+    final Map<Version, CertificatePack> m;
+    if (fCerts.containsKey(type)) {
+      m = fCerts.get(version);
+    } else {
+      m = new TreeMap<Version, CertificatePack>();
+    }
+    if (m.containsKey(version)) {
+      m.put(version, m.get(version).merge(c));
+    } else {
+      m.put(version, c);
+    }
+  }
+  
+  /**
+   * Get certificate pack. Returns null if there are no
+   * certificates with requested type and version.
+   * @param type Certificate type.
+   * @param version Certificate version.
+   * @return CertificatePacl or null.
+   */
+  public CertificatePack getCertificatePack(final String type,
+                                            final Version version) {
+    final Map<Version, CertificatePack> m = fCerts.get(type);
+    if (m == null) {
+      return null;
+    } else {
+      return m.get(version);
+    }
+  }
+  
+  /**
+   * Get all certificates of given type.
+   * @param type Certificate type.
+   * @return Iterator.
+   */
+  public Iterator<CertificatePack> getCertificates(final String type) {
+    final Map<Version, CertificatePack> m = fCerts.get(type);
+    if (m == null) {
+      return new EmptyIterator<CertificatePack>();
+    } else {
+      return m.values().iterator();
+    }    
+  }
+  
+  /**
+   * Get all certificates.
+   * @return Iterator.
+   */
+  public Iterator<CertificatePack> getAllCertificates() {
+    final Iterator<Map<Version, CertificatePack>> i1 = 
+      fCerts.values().iterator();
+    Function<Map<Version, CertificatePack>, 
+             Iterator<CertificatePack>> f = 
+      new GetMapValues<Version, CertificatePack>();
+    final Iterator<Iterator<CertificatePack>> i2 = 
+      new MappedIterator<Map<Version, CertificatePack>, 
+                         Iterator<CertificatePack>>(i1, f);
+    return new FlattenIterator<CertificatePack>(i2);
+  }
+  
+  /**
+   * Visitor used to read certificates.
+   * @author Tadeusz Sznuk (ts209501@gmail.com)
+   */
+  private class ClassCertVisitor implements ClassCertificateVisitor {
+    /**
+     * Map of certificate builders.
+     */
+    private Map<CertificateSignature, CertificatePackBuilder> fBuilders;
+    
+    /**
+     * begin().
+     */
+    @Override
+    public void begin(final ClassName cls) {
+      fBuilders = 
+        new HashMap<CertificateSignature, CertificatePackBuilder>();
+    }
+
+    /**
+     * end().
+     */
+    @Override
+    public void end() throws VisitorException {
+      final Iterator<CertificatePackBuilder> i = 
+        fBuilders.values().iterator();
+      while (i.hasNext()) {
+        final CertificatePackBuilder c = i.next();
+        addCertificates(c.toCertificatePack());
+      }
+    }
+
+    /**
+     * Visit class certificate.
+     * @param cert Certificate.
+     */
+    @Override
+    public void visitClassCert(final ClassCertificate cert) {
+      final CertificateSignature sig = cert.getSignature();
+      if (fBuilders.containsKey(sig)) {
+        fBuilders.get(sig).mergeClassCert(cert);
+      } else {
+        fBuilders.put(sig, new CertificatePackBuilder(cert));
+      }
+    }
+
+    /**
+     * Visit method.
+     * @param m Method name.
+     * @return Visitor used to collect method certificates.
+     */
+    @Override
+    public MethodCertificateVisitor visitMethod(MethodName m)
+        throws VisitorException {
+      return new MethodCertVisitor();
+    }
+    
+    /**
+     * Visitor used to collect method certificates.
+     * @author Tadeusz Sznuk (ts209501@gmail.com)
+     */
+    private class MethodCertVisitor 
+      implements MethodCertificateVisitor {
+      /**
+       * begin().
+       * @param m Method name.
+       */
+      @Override
+      public void begin(final MethodName m) {
+      }
+
+      /**
+       * end().
+       */
+      @Override
+      public void end() {
+      }
+
+      /**
+       * Visit method certificate.
+       * @param cert Method certificate.
+       */
+      @Override
+      public void visitMethodCert(MethodCertificate cert) {
+        final CertificateSignature sig = cert.getSignature();
+        if (!fBuilders.containsKey(sig)) {
+          final ClassCertificate c = new ClassCertificate(
+            sig.getType(), sig.getVersion(), 
+            new String[]{}, new byte[]{}
+          );
+          fBuilders.put(sig, new CertificatePackBuilder(c));
+        }
+        fBuilders.get(sig).addMethodCert(cert);
+      }
+    }
+  }
+}

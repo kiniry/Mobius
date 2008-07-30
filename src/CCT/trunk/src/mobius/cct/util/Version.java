@@ -5,6 +5,9 @@ package mobius.cct.util;
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public final class Version implements Comparable<Version> {
+  /** Value used in hashCode(). */
+  private final int HASH_FACTOR = 0xADDBEEF;
+  
   /** Major version number. */
   private final int fMajor;
   
@@ -47,11 +50,11 @@ public final class Version implements Comparable<Version> {
     if (obj == null) {
       return false;
     }
-    if (obj.getClass().equals(this.getClass())) {
+    if (obj instanceof Version) {
       return (fMajor == ((Version)obj).getMajor()) &&
         (fMinor == ((Version)obj).getMinor());
     } else {
-      return obj.equals(this);
+      return false;
     }
   }
   
@@ -61,7 +64,7 @@ public final class Version implements Comparable<Version> {
    */
   @Override
   public int hashCode() {
-    return fMajor * (1 + 1 + 1) + fMinor;
+    return fMajor * HASH_FACTOR + fMinor;
   }
   
   /**
