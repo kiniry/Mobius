@@ -2,7 +2,8 @@ package mobius.cct.repositories;
 
 import java.io.IOException;
 
-import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
 
 /**
  * Repository which uses different locations for class and certificate files.
@@ -23,6 +24,7 @@ public class SCRepository<C extends ClassFile>
    */
   public SCRepository(final Repository<C> classRepository,
                       final Repository<C> certRepository) {
+    //TODO
   }
 
   /**
@@ -34,8 +36,9 @@ public class SCRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getClassFile(final String name) 
+  public C getClassFile(final ClassName name) 
     throws NotFoundException, IOException, InvalidCertificateException {
+    //TODO
     return null;
   }
   
@@ -47,9 +50,10 @@ public class SCRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getCertFile(final String name) 
+  public C getCertFile(final ClassName name) 
     throws IOException, 
            InvalidCertificateException {
+    //TODO
     return null; 
   }  
 }

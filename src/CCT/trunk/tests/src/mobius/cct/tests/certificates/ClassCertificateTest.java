@@ -1,13 +1,14 @@
 package mobius.cct.tests.certificates;
 
-import java.util.Iterator;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import java.util.Iterator;
 
 import mobius.cct.certificates.ClassCertificate;
 import mobius.cct.util.Version;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests for class ClassCertificate.

@@ -1,5 +1,6 @@
 package mobius.cct.tests.repositories;
 
+import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.ClasspathRepository;
 import mobius.cct.repositories.classpath.ClassPath;
 import mobius.cct.repositories.classpath.DirEntry;
@@ -44,7 +45,9 @@ public class ClasspathRepositoryTest {
    */
   @Test
   public void test1() throws Exception {
-    repo.getClassFile("mobius.cct.testdata.Test7");
+    repo.getClassFile(ClassName.parseInternal(
+      "mobius/cct/testdata/Test7"
+    ));
   }
   
   /**
@@ -52,6 +55,8 @@ public class ClasspathRepositoryTest {
    */
   @Test(expected=mobius.cct.repositories.NotFoundException.class)
   public void test2() throws Exception {
-    repo.getClassFile("mobius.cct.testdata.FalseTest");
+    repo.getClassFile(ClassName.parseInternal(
+      "mobius/cct/testdata/FalseTest"
+    ));
   }
 }

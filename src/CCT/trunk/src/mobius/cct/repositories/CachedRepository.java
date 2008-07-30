@@ -4,7 +4,8 @@ import java.io.IOException;
 
 import mobius.cct.cache.Cache;
 import mobius.cct.cache.InfiniteCache;
-import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
 
 /**
  * Repository with cache. This class can be used to add
@@ -56,9 +57,9 @@ public class CachedRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getClassFile(final String name) 
+  public C getClassFile(final ClassName name) 
     throws NotFoundException, IOException, InvalidCertificateException {
-    final String key = name + ".class";
+    final String key = name.externalForm() + ".class";
     if (fCache.hasKey(key)) {
       return fCache.lookup(key);
     } else {
@@ -76,10 +77,10 @@ public class CachedRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getCertFile(final String name) 
+  public C getCertFile(final ClassName name) 
     throws IOException, 
            InvalidCertificateException {
-    final String key = name + ".cert";
+    final String key = name.externalForm() + ".cert";
     if (fCache.hasKey(key)) {
       return fCache.lookup(key);
     } else {

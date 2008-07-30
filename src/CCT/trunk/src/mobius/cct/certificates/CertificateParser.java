@@ -1,7 +1,7 @@
 package mobius.cct.certificates;
 
+import mobius.cct.classfile.ClassFile;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.util.VisitorException;
 
 /**
@@ -15,7 +15,6 @@ public interface CertificateParser<C extends ClassFile> {
    * Read class certificates and visit them.
    * @param c Class file.
    * @param v Object used to visit parsed certificates.
-   * @return Class with parsed certificates.
    * @throws InvalidFormatException If certificate format
    * is invalid
    * @throws VisitorException .

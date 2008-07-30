@@ -11,8 +11,8 @@ import mobius.cct.certificates.CertificateParser;
 import mobius.cct.certificates.ClassCertificateVisitor;
 import mobius.cct.certificates.MethodCertificate;
 import mobius.cct.certificates.MethodCertificateVisitor;
+import mobius.cct.classfile.MethodName;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.classfile.MethodName;
 import mobius.cct.util.VisitorException;
 
 /**

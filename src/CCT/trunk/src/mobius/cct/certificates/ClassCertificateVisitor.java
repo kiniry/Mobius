@@ -1,7 +1,7 @@
 package mobius.cct.certificates;
 
-import mobius.cct.repositories.classfile.ClassName;
-import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.classfile.ClassName;
+import mobius.cct.classfile.MethodName;
 import mobius.cct.util.VisitorException;
 
 /**
@@ -12,7 +12,7 @@ public interface ClassCertificateVisitor {
   /**
    * This method is called once before any 
    * certificates are visited.
-   * @param Class name.
+   * @param cls Class name.
    * @throws VisitorException .
    */
   void begin(ClassName cls) throws VisitorException;

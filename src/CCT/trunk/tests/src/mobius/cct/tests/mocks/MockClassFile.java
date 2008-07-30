@@ -1,13 +1,9 @@
 package mobius.cct.tests.mocks;
 
-import java.util.Iterator;
-
 import mobius.cct.certificates.CertificatePack;
-import mobius.cct.repositories.classfile.Attribute;
-import mobius.cct.repositories.classfile.ClassFile;
-import mobius.cct.repositories.classfile.ClassName;
-import mobius.cct.repositories.classfile.ClassVisitor;
-import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
+import mobius.cct.classfile.ClassVisitor;
 import mobius.cct.util.VisitorException;
 
 /**

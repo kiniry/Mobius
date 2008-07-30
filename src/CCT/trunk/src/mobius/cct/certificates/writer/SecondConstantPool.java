@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-import mobius.cct.repositories.classfile.Attribute;
+import mobius.cct.classfile.Attribute;
 import mobius.cct.repositories.cp.ConstantPool;
 import mobius.cct.repositories.cp.IllegalIndexException;
 import mobius.cct.repositories.cp.entries.Entry;
@@ -88,7 +88,7 @@ public class SecondConstantPool implements ConstantPool, Attribute {
    * @throws IOException .
    */
   @Override
-  public void writeData(OutputStream os) throws IOException {
+  public void writeData(final OutputStream os) throws IOException {
     fSource.write(os);
   }
 

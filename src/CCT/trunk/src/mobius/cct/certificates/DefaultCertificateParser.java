@@ -9,17 +9,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mobius.cct.certificates.writer.SecondConstantPool;
+import mobius.cct.classfile.Attribute;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
+import mobius.cct.classfile.ClassVisitor;
+import mobius.cct.classfile.MethodName;
+import mobius.cct.classfile.MethodVisitor;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.classfile.Attribute;
-import mobius.cct.repositories.classfile.ClassFile;
-import mobius.cct.repositories.classfile.ClassName;
-import mobius.cct.repositories.classfile.ClassVisitor;
-import mobius.cct.repositories.classfile.MethodName;
-import mobius.cct.repositories.classfile.MethodVisitor;
 import mobius.cct.repositories.cp.ConstantPool;
 import mobius.cct.repositories.cp.ConstantPoolFactory;
 import mobius.cct.repositories.cp.DefaultFactory;
 import mobius.cct.repositories.cp.DefaultPool;
+import mobius.cct.repositories.cp.UnknownConstantException;
 import mobius.cct.util.Version;
 import mobius.cct.util.VisitorException;
 
@@ -35,11 +36,11 @@ public final class DefaultCertificateParser<C extends ClassFile>
    * Read class certificates and visit them.
    * @param c Class file.
    * @param v Object used to visit parsed certificates.
-   * @return Class with parsed certificates.
    * @throws InvalidFormatException If certificate format
    * is invalid
+   * @throws VisitorException .
    */
-  public void parse(C c, ClassCertificateVisitor v) 
+  public void parse(final C c, final ClassCertificateVisitor v) 
     throws InvalidFormatException, VisitorException {
     
     try {
@@ -56,7 +57,7 @@ public final class DefaultCertificateParser<C extends ClassFile>
   /**
    * Read second constant pool from an attribute.
    * @param a Attribute.
-   * @result Constant pool.
+   * @return Constant pool.
    * @throws InvalidFormatException .
    */
   public static ConstantPool parseSCP(final Attribute a) 
@@ -69,7 +70,9 @@ public final class DefaultCertificateParser<C extends ClassFile>
       final ByteArrayInputStream bis = 
         new ByteArrayInputStream(bos.toByteArray());
       return factory.read(bis);
-    } catch (Exception e) {
+    } catch (IOException e) {
+      throw new InvalidFormatException(e.getMessage());
+    } catch (UnknownConstantException e) {
       throw new InvalidFormatException(e.getMessage());
     }
   }
@@ -144,21 +147,21 @@ final class Visitor implements ClassVisitor {
       if (SecondConstantPool.ATTR.equals(attr.getName())) {
         if (fSecondConstantPool == null) {
           fSecondConstantPool = DefaultCertificateParser.parseSCP(attr);
-          Iterator<Attribute> i = fBuffer.iterator();
+          final Iterator<Attribute> i = fBuffer.iterator();
           while (i.hasNext()) {
-            fVisitor.visitClassCert(parseCert(i.next()));
+            fVisitor.visitClassCert(parseClassCert(i.next()));
           }
         } else {
           throw new InvalidFormatException("Multiple SCPs");
         }
       } else if (ClassCertificate.ATTR.equals(attr.getName())) {
         if (fSecondConstantPool != null) {
-          fVisitor.visitClassCert(parseCert(attr));
+          fVisitor.visitClassCert(parseClassCert(attr));
         } else {
           fBuffer.add(attr);
         }
       }
-    } catch (Exception e) {
+    } catch (InvalidFormatException e) {
       throw new VisitorException(e);
     }
   }
@@ -166,6 +169,7 @@ final class Visitor implements ClassVisitor {
   /**
    * Visit method.
    * @param m Method name.
+   * @return Method visitor.
    * @throws VisitorException .
    */
   @Override
@@ -188,7 +192,7 @@ final class Visitor implements ClassVisitor {
    * @return Certificate.
    * @throws InvalidFormatException .
    */
-  private ClassCertificate parseCert(final Attribute a)
+  private ClassCertificate parseClassCert(final Attribute a)
     throws InvalidFormatException {
     try {
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -207,7 +211,7 @@ final class Visitor implements ClassVisitor {
       final int minor = ds.readUnsignedByte();
       final Version version = new Version(major, minor);
       final String[] imports = readImports(ds);
-      final byte data[] = readData(ds);
+      final byte[] data = readData(ds);
       return new ClassCertificate(type, version, imports, data);
     } catch (IOException e) {
       throw new InvalidFormatException(e.getMessage());
@@ -241,7 +245,7 @@ final class Visitor implements ClassVisitor {
    * @return Data.
    * @throws IOException .
    */
-  private byte[] readData(final DataInputStream ds) 
+  public static byte[] readData(final DataInputStream ds) 
     throws IOException {
     
     final int n = ds.readInt();
@@ -257,11 +261,6 @@ final class Visitor implements ClassVisitor {
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 final class MVisitor implements MethodVisitor {
-  /**
-   * Name of attribute which holds certificates.
-   */
-  private static final String CERT_ATTR = "mobius.PCCMethodCert";
-  
   /**
    * Visitor used to visit parsed certificates.
    */
@@ -291,23 +290,38 @@ final class MVisitor implements MethodVisitor {
     fMethod = m;
   }
   
+  /**
+   * begin().
+   * @param m Method name.
+   * @throws VisitorException .
+   */
   @Override
-  public void begin(MethodName m) throws VisitorException {
+  public void begin(final MethodName m) throws VisitorException {
     fVisitor.begin(m);
   }
 
+  /**
+   * end().
+   * @throws VisitorException .
+   */
   @Override
   public void end() throws VisitorException {
     fVisitor.end();
   }
 
+  /**
+   * Visit attribute.
+   * @param attr Attribute.
+   * @throws VisitorException .
+   */
   @Override
-  public void visitAttribute(Attribute attr) throws VisitorException {
+  public void visitAttribute(final Attribute attr) 
+    throws VisitorException {
     try {
-      if (CERT_ATTR.equals(attr.getName())) {
+      if (MethodCertificate.ATTR.equals(attr.getName())) {
         fVisitor.visitMethodCert(parseMethodCert(attr, fMethod));
       }
-    } catch (Exception e) {
+    } catch (InvalidFormatException e) {
       throw new VisitorException(e);
     }
   }
@@ -339,26 +353,11 @@ final class MVisitor implements MethodVisitor {
       final int major = ds.readUnsignedByte();
       final int minor = ds.readUnsignedByte();
       final Version version = new Version(major, minor);
-      final byte data[] = readData(ds);
+      final byte[] data = Visitor.readData(ds);
       return new MethodCertificate(m, type, version, data);
     } catch (IOException e) {
       throw new InvalidFormatException(e.getMessage());
     }
-  }
-  
-  /**
-   * Read certificate data.
-   * @param ds Input stream.
-   * @return Data.
-   * @throws IOException .
-   */
-  private byte[] readData(final DataInputStream ds) 
-    throws IOException {
-    
-    final int n = ds.readInt();
-    final byte[] result = new byte[n];
-    ds.readFully(result);
-    return result;
   }
   
 }

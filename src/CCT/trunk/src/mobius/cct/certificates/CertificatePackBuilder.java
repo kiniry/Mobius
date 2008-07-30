@@ -3,7 +3,7 @@ package mobius.cct.certificates;
 import java.util.HashMap;
 import java.util.Map;
 
-import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.classfile.MethodName;
 
 /**
  * Object used to create CertificatePacks.

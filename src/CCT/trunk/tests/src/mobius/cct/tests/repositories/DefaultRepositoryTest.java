@@ -1,5 +1,6 @@
 package mobius.cct.tests.repositories;
 
+import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.DefaultRepository;
 import mobius.cct.tests.mocks.MockClassFile;
 import mobius.cct.tests.mocks.MockClassReader;
@@ -31,7 +32,7 @@ public class DefaultRepositoryTest {
    */
   @Test
   public void test1() throws Exception {
-    fRepo.getClassFile("java.lang.Object");
+    fRepo.getClassFile(ClassName.parseInternal("java/lang/Object"));
   }
   
   /**
@@ -39,6 +40,6 @@ public class DefaultRepositoryTest {
    */
   @Test(expected=mobius.cct.repositories.NotFoundException.class)
   public void test2() throws Exception {
-    fRepo.getClassFile("mobius.cct.FaLsEClAsS");
+    fRepo.getClassFile(ClassName.parseInternal("mobius/cct/FaLsEClAsS"));
   }
 }

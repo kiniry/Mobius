@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.ClassCertificate;
 import mobius.cct.certificates.MethodCertificate;
-import mobius.cct.repositories.classfile.ClassName;
+import mobius.cct.classfile.ClassName;
 import mobius.cct.tests.mocks.CyclicVerifier;
 import mobius.cct.tests.mocks.MockCertificateParser;
 import mobius.cct.tests.mocks.MockClassFile;
@@ -66,7 +66,7 @@ public class DefaultEnvironmentTest {
   @Test
   public void testNotFound() {
     try {
-      assertFalse(fEnv.verify("", ""));
+      assertFalse(fEnv.verify(ClassName.parseInternal("X"), ""));
     } catch (CyclicDependencyException e) {
       fail("CyclicDependencyException");
     }
@@ -85,7 +85,7 @@ public class DefaultEnvironmentTest {
    */
   @Test(expected=IllegalArgumentException.class)
   public void testVerifyNull2() throws Exception {
-    fEnv.verify("/java/lang/Object", null);
+    fEnv.verify(ClassName.parseInternal("/java/lang/Object"), null);
   }
   
   /**
@@ -93,13 +93,15 @@ public class DefaultEnvironmentTest {
    */
   @Test
   public void testTrustedClasses() {
-    fEnv.addTrustedClass("/fake/class");
-    fEnv.addTrustedClass("/another/fake/class");
+    final ClassName fk = ClassName.parseInternal("/fake/Class");
+    final ClassName afk = ClassName.parseInternal("/another/fake/Class");
+    fEnv.addTrustedClass(fk);
+    fEnv.addTrustedClass(afk);
     try {
-      assertTrue(fEnv.verify("/fake/class", ""));
-      assertTrue(fEnv.verify("/another/fake/class", ""));
-      fEnv.removeTrustedClass("/fake/class");
-      assertFalse(fEnv.verify("/fake/class", ""));
+      assertTrue(fEnv.verify(fk, ""));
+      assertTrue(fEnv.verify(afk, ""));
+      fEnv.removeTrustedClass(fk);
+      assertFalse(fEnv.verify(fk, ""));
     } catch (CyclicDependencyException e) {
       fail("CyclicDependencyException");
     }
@@ -127,7 +129,7 @@ public class DefaultEnvironmentTest {
     fEnv.setCertificateParser(new MockCertificateParser());
     fEnv.addVerifier(v);
     try {
-      assertTrue(fEnv.verify("/mobius/cct/Test", "test"));
+      assertTrue(fEnv.verify(ClassName.parseInternal("/mobius/cct/Test"), "test"));
     } catch (CyclicDependencyException e) {
       fail("Cycle detected too early");
     }

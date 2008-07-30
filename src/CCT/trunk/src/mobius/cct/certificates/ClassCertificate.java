@@ -28,7 +28,7 @@ public final class ClassCertificate extends Certificate {
    * @param type Certificate type.
    * @param version Certificate version.
    * @param imports Array of imported certificates.
-   * @param Data Certificate data. This 
+   * @param data Certificate data.
    */
   public ClassCertificate(final String type,
                           final Version version,

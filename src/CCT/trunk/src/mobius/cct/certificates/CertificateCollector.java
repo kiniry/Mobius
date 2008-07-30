@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
+import mobius.cct.classfile.MethodName;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.classfile.ClassFile;
-import mobius.cct.repositories.classfile.ClassName;
-import mobius.cct.repositories.classfile.MethodName;
 import mobius.cct.util.EmptyIterator;
 import mobius.cct.util.FlattenIterator;
 import mobius.cct.util.Function;
@@ -27,7 +27,7 @@ import mobius.cct.util.VisitorException;
  */
 public class CertificateCollector<C extends ClassFile> {
   /**
-   * Collected CertificatePacks
+   * Collected CertificatePacks.
    */
   private final Map<String, Map<Version, CertificatePack>> fCerts;
   
@@ -42,6 +42,7 @@ public class CertificateCollector<C extends ClassFile> {
    * Collect certificates from a class.
    * @param parser Parser used to read certificates.
    * @param cls Class file.
+   * @throws IOException .
    */
   public void collect(
                       final CertificateParser<? super C> parser,
@@ -117,7 +118,7 @@ public class CertificateCollector<C extends ClassFile> {
   public Iterator<CertificatePack> getAllCertificates() {
     final Iterator<Map<Version, CertificatePack>> i1 = 
       fCerts.values().iterator();
-    Function<Map<Version, CertificatePack>, 
+    final Function<Map<Version, CertificatePack>, 
              Iterator<CertificatePack>> f = 
       new GetMapValues<Version, CertificatePack>();
     final Iterator<Iterator<CertificatePack>> i2 = 
@@ -138,6 +139,7 @@ public class CertificateCollector<C extends ClassFile> {
     
     /**
      * begin().
+     * @param cls Class name.
      */
     @Override
     public void begin(final ClassName cls) {
@@ -149,7 +151,7 @@ public class CertificateCollector<C extends ClassFile> {
      * end().
      */
     @Override
-    public void end() throws VisitorException {
+    public void end() {
       final Iterator<CertificatePackBuilder> i = 
         fBuilders.values().iterator();
       while (i.hasNext()) {
@@ -178,8 +180,7 @@ public class CertificateCollector<C extends ClassFile> {
      * @return Visitor used to collect method certificates.
      */
     @Override
-    public MethodCertificateVisitor visitMethod(MethodName m)
-        throws VisitorException {
+    public MethodCertificateVisitor visitMethod(final MethodName m) {
       return new MethodCertVisitor();
     }
     
@@ -209,7 +210,7 @@ public class CertificateCollector<C extends ClassFile> {
        * @param cert Method certificate.
        */
       @Override
-      public void visitMethodCert(MethodCertificate cert) {
+      public void visitMethodCert(final MethodCertificate cert) {
         final CertificateSignature sig = cert.getSignature();
         if (!fBuilders.containsKey(sig)) {
           final ClassCertificate c = new ClassCertificate(

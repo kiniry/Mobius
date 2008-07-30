@@ -3,10 +3,9 @@ package mobius.cct.certificates.writer;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Iterator;
 
 import mobius.cct.certificates.MethodCertificate;
-import mobius.cct.repositories.classfile.Attribute;
+import mobius.cct.classfile.Attribute;
 import mobius.cct.repositories.cp.ConstantPoolBuilder;
 
 /**

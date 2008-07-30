@@ -20,6 +20,7 @@ public class EmptyIterator<E> implements Iterator<E> {
 
   /**
    * Throw NoSuchElementException.
+   * @return Throws an exception.
    */
   @Override
   public E next() {

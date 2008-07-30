@@ -9,20 +9,6 @@
 <p>This package contains classes related to repositories - objects used 
 to read class and certificate files.</p>
 
-<h2>Class files</h2>
-<p>Classes are represented as objects implementing the 
-{@link mobius.cct.repositories.classfile.ClassFile ClassFile} interface. 
-A default implementation 
-({@link mobius.cct.repositories.classfile.DefaultClassFile} DefaultClassFile), 
-which does not depend on any external library, is provided. 
-However, is some cases it might be better to use ClassFiles based on 
-a library like BCEL or ASM. For this reason most repository classes are 
-generics parameterized with type of ClassFiles.</p>
-
-<p>If an implementation of class file can be used to modify and write classes, 
-it should implement the {@link mobius.cct.repositories.classfile.MutableClassFile MutableClassFile}
-interface.</p>
-
 <h2>Repositories</h2>
 <p>A repository is a class which implements the 
 {@link mobius.cct.repositories.Repository Repository} interface. 
@@ -34,24 +20,6 @@ loads all files from the system classpath. It also uses a cache to avoid reading
 the same file again. It is possible to add this feature to a custom 
 {@link mobius.cct.repositories.Repository Repository} by using
 class {@link mobius.cct.repositories.CachedRepository CachedRepository}.</p>
-
-<h2>Parsing class files</h2>
-<p>Generic {@link mobius.cct.repositories.Repository Repository} 
-implementations (able to read any type of 
-{@link mobius.cct.repositories.classfile.ClassFile ClassFile}) must be 
-supplied with an object which can be used to parse a byte stream and 
-create right kind of {@link mobius.cct.repositories.classfile.ClassFile ClassFile}. 
-{@link mobius.cct.repositories.classfile.ClassReader ClassReader} is the interface 
-of such objects. Their input is given as a 
-{@link mobius.cct.repositories.Resource Resource} object. Resources are simply
-byte streams which can be opened and closed.</p>
-
-<h2>Certificate files</h2>
-<p>Separate certificates are represented as class files with
-structure similar to the file they certify. They can store not
-only certificates, but also other information, such as BML or
-other type of specification not contained in the certificate.
-</p>
 
 </body>
 </html>

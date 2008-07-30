@@ -1,10 +1,6 @@
 package mobius.cct.certificates;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import mobius.cct.repositories.classfile.Attribute;
-import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.classfile.MethodName;
 import mobius.cct.util.Version;
 
 /**
@@ -26,7 +22,7 @@ public class MethodCertificate extends Certificate {
    * @param method Method name.
    * @param type Certificate type.
    * @param version Certificate version.
-   * @param Data Certificate data. This 
+   * @param data Certificate data.
    */
   public MethodCertificate(final MethodName method,
                            final String type,

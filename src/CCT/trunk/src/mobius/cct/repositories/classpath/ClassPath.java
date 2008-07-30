@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassReader;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;
-import mobius.cct.repositories.classfile.ClassFile;
-import mobius.cct.repositories.classfile.ClassReader;
 
 /**
  * Sequence of directories and JAR/ZIP files.

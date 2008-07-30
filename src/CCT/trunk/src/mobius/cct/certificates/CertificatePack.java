@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import mobius.cct.repositories.classfile.MethodName;
-import mobius.cct.util.Function;
-import mobius.cct.util.MappedIterator;
+import mobius.cct.classfile.MethodName;
 import mobius.cct.util.Version;
 
 /**
@@ -36,7 +34,7 @@ public final class CertificatePack {
     
     fClassCert = cert;
     fMethodCerts = new HashMap<MethodName, MethodCertificate>();
-    Iterator<? extends MethodCertificate> i = m.iterator();
+    final Iterator<? extends MethodCertificate> i = m.iterator();
     while (i.hasNext()) {
       final MethodCertificate mc = i.next();
       fMethodCerts.put(mc.getMethod(), mc);
@@ -97,11 +95,11 @@ public final class CertificatePack {
     final CertificatePackBuilder cb = 
       new CertificatePackBuilder(fClassCert);
     cb.mergeClassCert(cp.getClassCertificate());
-    Iterator<MethodCertificate> i = getMethodCerts();
+    final Iterator<MethodCertificate> i = getMethodCerts();
     while (i.hasNext()) {
       cb.addMethodCert(i.next());
     }
-    Iterator<MethodCertificate> j = cp.getMethodCerts();
+    final Iterator<MethodCertificate> j = cp.getMethodCerts();
     while (j.hasNext()) {
       cb.addMethodCert(j.next());
     }

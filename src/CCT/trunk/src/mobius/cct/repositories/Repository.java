@@ -2,7 +2,8 @@ package mobius.cct.repositories;
 
 import java.io.IOException;
 
-import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
 
 /**
  * Repositories are objects used to locate class and certificate files.
@@ -18,7 +19,7 @@ public interface Repository<C extends ClassFile> {
    * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
-  C getClassFile(String name) 
+  C getClassFile(ClassName name) 
     throws NotFoundException, 
            IOException, 
            InvalidCertificateException;
@@ -30,7 +31,7 @@ public interface Repository<C extends ClassFile> {
    * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
-  C getCertFile(String name) 
+  C getCertFile(ClassName name) 
     throws IOException, 
            InvalidCertificateException;
 }

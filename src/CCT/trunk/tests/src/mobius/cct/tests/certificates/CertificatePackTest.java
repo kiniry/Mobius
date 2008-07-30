@@ -1,5 +1,10 @@
 package mobius.cct.tests.certificates;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,12 +14,10 @@ import java.util.Set;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.ClassCertificate;
 import mobius.cct.certificates.MethodCertificate;
-import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.classfile.MethodName;
 import mobius.cct.util.Version;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Test for class CertificatePack.

@@ -13,12 +13,13 @@ import mobius.cct.certificates.ClassCertificateVisitor;
 import mobius.cct.certificates.DefaultCertificateParser;
 import mobius.cct.certificates.MethodCertificate;
 import mobius.cct.certificates.MethodCertificateVisitor;
-import mobius.cct.repositories.classfile.Attribute;
-import mobius.cct.repositories.classfile.ClassName;
-import mobius.cct.repositories.classfile.ClassVisitor;
-import mobius.cct.repositories.classfile.MethodName;
-import mobius.cct.repositories.classfile.MethodVisitor;
-import mobius.cct.repositories.classfile.MutableClassFile;
+import mobius.cct.classfile.Attribute;
+import mobius.cct.classfile.ClassName;
+import mobius.cct.classfile.ClassVisitor;
+import mobius.cct.classfile.MethodName;
+import mobius.cct.classfile.MethodVisitor;
+import mobius.cct.classfile.MutableClassFile;
+import mobius.cct.repositories.InvalidFormatException;
 import mobius.cct.repositories.cp.ConstantPool;
 import mobius.cct.repositories.cp.ConstantPoolBuilder;
 import mobius.cct.repositories.cp.DefaultBuilder;
@@ -72,7 +73,7 @@ public class CertificateWriter implements ClassCertificateVisitor {
 
   /**
    * Does not have to be called.
-   * @param cls.
+   * @param cls Class name.
    */
   @Override
   public void begin(final ClassName cls) {
@@ -98,6 +99,7 @@ public class CertificateWriter implements ClassCertificateVisitor {
 
   /**
    * Get object used to add method certificates.
+   * @param m Method name.
    * @return MethodCertificateVisitor which can be used to add
    * method certificates.
    */
@@ -155,6 +157,7 @@ public class CertificateWriter implements ClassCertificateVisitor {
   private class ClassFilter implements ClassVisitor {
     /**
      * begin().
+     * @param cls Class name.
      * @throws VisitorException .
      */
     @Override
@@ -198,15 +201,17 @@ public class CertificateWriter implements ClassCertificateVisitor {
         if (SecondConstantPool.ATTR.equals(attr.getName())) {
           final ConstantPool oldScp = 
             DefaultCertificateParser.parseSCP(attr);
-            fSCP = new DefaultBuilder(oldScp);
-            updateScp();
-            final ConstantPool scp = 
-              fSCP.toConstantPool(new DefaultFactory());
-            fWriter.visitAttribute(new SecondConstantPool(scp));
+          fSCP = new DefaultBuilder(oldScp);
+          updateScp();
+          final ConstantPool scp = 
+            fSCP.toConstantPool(new DefaultFactory());
+          fWriter.visitAttribute(new SecondConstantPool(scp));
         } else if (!ClassCertificate.ATTR.equals(attr.getName())) {
           fWriter.visitAttribute(attr);
         }
-      } catch (Exception e) {
+      } catch (VisitorException e) {
+        throw e;
+      } catch (InvalidFormatException e) {
         throw new VisitorException(e);
       }
     }
@@ -276,6 +281,10 @@ public class CertificateWriter implements ClassCertificateVisitor {
       fMethod = m;
     }
 
+    /**
+     * Finished reading method - write certificates.
+     * @throws VisitorException .
+     */
     @Override
     public void end() throws VisitorException {
       final Iterator<MethodCertificate> i = 

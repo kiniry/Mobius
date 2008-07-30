@@ -4,7 +4,8 @@ import java.util.Iterator;
 
 import mobius.cct.certificates.Certificate;
 import mobius.cct.certificates.CertificatePack;
-import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
 import mobius.cct.util.Version;
 
 /**
@@ -52,7 +53,7 @@ public interface Verifier<C extends ClassFile> {
    * or version of this certificate are not acceptable for
    * this plugin, {@code false} is returned.
    */
-  boolean verify(String name, 
+  boolean verify(ClassName name, 
                  String spec,
                  CertificatePack cert, 
                  Environment<C> env);

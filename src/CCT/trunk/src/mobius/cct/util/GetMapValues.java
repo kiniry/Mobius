@@ -1,7 +1,7 @@
 package mobius.cct.util;
 
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A function which returns iterator over values from a map.

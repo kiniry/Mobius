@@ -3,7 +3,8 @@ package mobius.cct.verifiers;
 import java.util.Iterator;
 
 import mobius.cct.certificates.CertificatePack;
-import mobius.cct.repositories.classfile.ClassFile;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
 import mobius.cct.verifiers.logging.Logger;
 
 /**
@@ -18,14 +19,14 @@ public interface Environment<C extends ClassFile> {
    * @param name FQN of a class.
    * @return ClassFile object or null.
    */
-  C getClassFile(String name);
+  C getClassFile(ClassName name);
 
   /**
    * Read certificate file.
    * @param name FQN of a class.
    * @return ClassFile object or null.
    */
-  C getCertificateFile(String name);
+  C getCertificateFile(ClassName name);
   
   /**
    * Get all certificates of given type from
@@ -35,7 +36,7 @@ public interface Environment<C extends ClassFile> {
    * @param type Certificate type.
    * @return Certificates.
    */
-  Iterator<CertificatePack> getCertificate(String name, 
+  Iterator<CertificatePack> getCertificate(ClassName name, 
                                            String type);
   
   /**
@@ -49,7 +50,7 @@ public interface Environment<C extends ClassFile> {
    * {@link mobius.cct.verifiers.CyclicDependencyException 
    * CyclicDependyException}.
    */
-  boolean verify(String name, String spec) 
+  boolean verify(ClassName name, String spec) 
     throws CyclicDependencyException;
   
   /**
@@ -63,7 +64,7 @@ public interface Environment<C extends ClassFile> {
    * {@link mobius.cct.verifiers.CyclicDependencyException 
    * CyclicDependyException}.
    */
-  boolean verify(String[] name, String[] spec)
+  boolean verify(ClassName[] name, String[] spec)
     throws CyclicDependencyException;
   
   /**

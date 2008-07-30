@@ -1,6 +1,6 @@
 package mobius.cct.certificates;
 
-import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.classfile.MethodName;
 
 /**
  * Interface of objects used to visit class certificates.
@@ -10,7 +10,7 @@ public interface MethodCertificateVisitor {
   /**
    * This method is called once before any 
    * certificates are visited.
-   * @param Method name.
+   * @param m Method name.
    */
   void begin(MethodName m);
   

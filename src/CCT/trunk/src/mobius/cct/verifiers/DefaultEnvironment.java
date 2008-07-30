@@ -4,8 +4,9 @@ import java.util.Iterator;
 
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.CertificateParser;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.Repository;
-import mobius.cct.repositories.classfile.ClassFile;
 import mobius.cct.verifiers.logging.Logger;
 
 /**
@@ -84,7 +85,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * Add class to list of trusted classes.
    * @param name Class name (FQN).
    */
-  public void addTrustedClass(final String name) {
+  public void addTrustedClass(final ClassName name) {
   //TODO
   }
   
@@ -93,7 +94,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * If the class was not on the list, nothing is done.
    * @param name Class name (FQN). 
    */
-  public void removeTrustedClass(final String name) {
+  public void removeTrustedClass(final ClassName name) {
   //TODO
   }
   
@@ -112,7 +113,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return ClassFile object.
    */
   @Override
-  public C getClassFile(final String name) {
+  public C getClassFile(final ClassName name) {
   //TODO
     return null;
   }
@@ -123,7 +124,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return ClassFile object.
    */
   @Override
-  public C getCertificateFile(final String name) {
+  public C getCertificateFile(final ClassName name) {
   //TODO
     return null;
   }
@@ -145,7 +146,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * CyclicDependyException}.
    */
   @Override
-  public boolean verify(final String name, final String spec)  
+  public boolean verify(final ClassName name, final String spec)  
     throws CyclicDependencyException {
   //TODO
     return false;
@@ -163,7 +164,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * CyclicDependyException}.
    */
   @Override
-  public boolean verify(final String[] name, final String[] spec)  
+  public boolean verify(final ClassName[] name, final String[] spec)  
     throws CyclicDependencyException {
   //TODO
     return false;
@@ -204,9 +205,16 @@ public class DefaultEnvironment<C extends ClassFile>
     //TODO
   }
 
+  /**
+   * Get all certificates of given type from a class and
+   * its certificate file (if present).
+   * @param name Class name.
+   * @param type Certificate type.
+   * @return Iterator.
+   */
   @Override
   public Iterator<CertificatePack> 
-  getCertificate(final String name, final String type) {
+  getCertificate(final ClassName name, final String type) {
     // TODO Auto-generated method stub
     return null;
   }

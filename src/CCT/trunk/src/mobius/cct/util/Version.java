@@ -6,7 +6,7 @@ package mobius.cct.util;
  */
 public final class Version implements Comparable<Version> {
   /** Value used in hashCode(). */
-  private final int HASH_FACTOR = 0xADDBEEF;
+  private static final int HASH_FACTOR = 0xADDBEEF;
   
   /** Major version number. */
   private final int fMajor;

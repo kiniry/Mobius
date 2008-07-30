@@ -1,12 +1,12 @@
 package mobius.cct.tests.certificates;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import mobius.cct.certificates.MethodCertificate;
-import mobius.cct.repositories.classfile.MethodName;
+import mobius.cct.classfile.MethodName;
 import mobius.cct.util.Version;
+
+import org.junit.Test;
 
 /**
  * Tests for class MethodCertificate.

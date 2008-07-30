@@ -2,8 +2,9 @@ package mobius.cct.repositories;
 
 import java.io.IOException;
 
-import mobius.cct.repositories.classfile.ClassFile;
-import mobius.cct.repositories.classfile.ClassReader;
+import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
+import mobius.cct.classfile.ClassReader;
 import mobius.cct.repositories.classpath.ClassPath;
 
 /**
@@ -52,9 +53,9 @@ public class ClasspathRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getClassFile(final String name) 
+  public C getClassFile(final ClassName name) 
     throws NotFoundException, IOException, InvalidCertificateException {
-    return fPath.getClassFile(name, fReader);
+    return fPath.getClassFile(name.externalForm(), fReader);
   }
   
   /**
@@ -65,11 +66,11 @@ public class ClasspathRepository<C extends ClassFile>
    * @throws IOException if it is thrown during class reading.
    */
   @Override
-  public C getCertFile(final String name) 
+  public C getCertFile(final ClassName name) 
     throws IOException, 
            InvalidCertificateException { 
     try {
-      return fPath.getCertFile(name, fReader);
+      return fPath.getCertFile(name.externalForm(), fReader);
     } catch (NotFoundException e) {
       return null;
     }

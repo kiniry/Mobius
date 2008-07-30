@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import mobius.cct.certificates.Certificate;
 import mobius.cct.certificates.CertificatePack;
+import mobius.cct.classfile.ClassName;
 import mobius.cct.util.ArrayIterator;
 import mobius.cct.util.Version;
 import mobius.cct.verifiers.CyclicDependencyException;
@@ -38,7 +39,7 @@ public class CyclicVerifier implements Verifier<MockClassFile> {
     }
 
     @Override
-    public boolean verify(String name, String spec, 
+    public boolean verify(ClassName name, String spec, 
                           CertificatePack cert,
                           Environment<MockClassFile> env) {
       try {

@@ -40,7 +40,7 @@ of this type and retrieve types of specifications proved by them.
 Environments (objects implementing the 
 {@link mobius.cct.verifiers.Environment Environment} interface)
 are used to manage the verification process. They implement the 
-{@link mobius.cct.verifiers.Environment#verify(String, String) verify()} 
+{@link mobius.cct.verifiers.Environment#verify(ClassName, String) verify()} 
 method,  which can be used to verify a specification of a class. 
 This method is responsible for locating the class, finding a certificate
 that can be used to prove the requested specification and running

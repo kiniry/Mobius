@@ -3,12 +3,13 @@ package mobius.cct.tests.mocks;
 import java.io.IOException;
 import java.util.HashMap;
 
+import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.InvalidCertificateException;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Repository;
 
 /**
- * Repository implmentation used for testing.
+ * Repository implementation used for testing.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public class MockRepository implements Repository<MockClassFile> {
@@ -48,15 +49,15 @@ public class MockRepository implements Repository<MockClassFile> {
   }
   
   @Override
-  public MockClassFile getCertFile(String name) throws IOException,
+  public MockClassFile getCertFile(ClassName name) throws IOException,
       InvalidCertificateException {
-    return fCerts.get(name);
+    return fCerts.get(name.internalForm());
   }
 
   @Override
-  public MockClassFile getClassFile(String name) throws NotFoundException,
+  public MockClassFile getClassFile(ClassName name) throws NotFoundException,
       IOException, InvalidCertificateException {
-    return fClasses.get(name);
+    return fClasses.get(name.internalForm());
   }
 
 }

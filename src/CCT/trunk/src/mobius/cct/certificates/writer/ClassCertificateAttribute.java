@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import mobius.cct.certificates.ClassCertificate;
-import mobius.cct.repositories.classfile.Attribute;
+import mobius.cct.classfile.Attribute;
 import mobius.cct.repositories.cp.ConstantPoolBuilder;
 
 /**
@@ -56,7 +56,7 @@ public class ClassCertificateAttribute implements Attribute {
     ds.writeByte(fCert.getVersion().getMajor());
     ds.writeByte(fCert.getVersion().getMinor());
     ds.writeShort(fCert.getImportCount());
-    Iterator<String> i = fCert.getImports();
+    final Iterator<String> i = fCert.getImports();
     while (i.hasNext()) {
       ds.writeShort(fSCP.newUtf8(i.next()));
     }
