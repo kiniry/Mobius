@@ -142,11 +142,32 @@ public class ClassExecutor extends ASignatureExecutor {
    */
   private void doMain() throws ClassNotFoundException {
     final CoqStream out = getOut();
-    final IImplemSpecifics implem = getImplemSpecif();
     
+    printMainPrelude(out);
+    
+    out.startModule(fNamingData.getModuleName());
+    out.imprt(fNamingData.getTypeModule());
+    out.imprt(fNamingData.getSignatureModule());
+    
+    fFieldExecutor.start();
+    
+    fMethExecutor.start();
+    
+    doClassDefinition();
+    
+    out.endModule(fNamingData.getModuleName());
+    out.flush();
+    out.close();
+  }
+
+  /**
+   * Prints the prelude for the main file generation.
+   * @param out the output stream
+   */
+  private void printMainPrelude(final CoqStream out) {
+    final IImplemSpecifics implem = getImplemSpecif();
     out.println(fLibPath);
     printLoadPaths(out);
-    
     
     out.println(implem.getBeginning());
     out.imprt("P");
@@ -169,20 +190,6 @@ public class ClassExecutor extends ASignatureExecutor {
     out.imprt(fExecutor.getNamingData().getSignatureModule());
 
     out.println();
-    
-    out.startModule(fNamingData.getModuleName());
-    out.imprt(fNamingData.getTypeModule());
-    out.imprt(fNamingData.getSignatureModule());
-    
-    fFieldExecutor.start();
-    
-    fMethExecutor.start();
-    
-    doClassDefinition();
-    
-    out.endModule(fNamingData.getModuleName());
-    out.flush();
-    out.close();
   }
   
   /**
@@ -194,6 +201,23 @@ public class ClassExecutor extends ASignatureExecutor {
    */
   public void doSignature() throws ClassNotFoundException {
     
+    printSignaturePrelude();
+    
+    
+    fOutSig.startModule(fNamingData.getSignatureModule());
+    fOutSig.imprt(fNamingData.getTypeModule());
+    fFieldExecutor.doSignature();
+    
+    fMethExecutor.doSignature();
+    
+    fOutSig.endModule(fNamingData.getSignatureModule());
+    fOutSig.flush();
+    fOutSig.close();
+  }
+  /**
+   * Prints the prelude for the Signature file generation.
+   */
+  private void printSignaturePrelude() {
     fOutSig.println(fLibPath);
     printLoadPaths(fOutSig);
     final IImplemSpecifics implem = getImplemSpecif();
@@ -214,15 +238,6 @@ public class ClassExecutor extends ASignatureExecutor {
     fOutSig.reqImport(fExecutor.getNamingData().getTypeName());
     fOutSig.imprt(fExecutor.getNamingData().getTypeModule());
     fOutSig.println();
-    fOutSig.startModule(fNamingData.getSignatureModule());
-    fOutSig.imprt(fNamingData.getTypeModule());
-    fFieldExecutor.doSignature();
-    
-    fMethExecutor.doSignature();
-    
-    fOutSig.endModule(fNamingData.getSignatureModule());
-    fOutSig.flush();
-    fOutSig.close();
   }
   
 
@@ -263,11 +278,13 @@ public class ClassExecutor extends ASignatureExecutor {
     // classname
     if (jc.isInterface()) {
       fOutTyp.definition("name", "InterfaceName",
-                         "(" + packageName + "%positive, " + className + "%positive)");
+                         Translator.couple(packageName + "%positive", 
+                                           className + "%positive"));
     } 
     else {
       fOutTyp.definition("name", "ClassName",
-                         "(" + packageName + "%positive, " + className + "%positive)");
+                         Translator.couple(packageName + "%positive",
+                                           className + "%positive"));
 
     }
     
@@ -283,11 +300,13 @@ public class ClassExecutor extends ASignatureExecutor {
     final CoqStream fOut = getOut();
     final JavaClass jc = fClass.getJavaClass();
     if (jc.isInterface()) {
-      fOut.incPrintln("Definition interface : Interface := INTERFACE.Build_t");
+      fOut.definitionStart("interface", "Interface");
+      fOut.incPrintln("INTERFACE.Build_t");
       fOut.println("name");
     } 
     else {
-      fOut.incPrintln("Definition class : Class := CLASS.Build_t");
+      fOut.definitionStart("class", "Class");
+      fOut.incPrintln("CLASS.Build_t");
       fOut.println("name");
       final String superClassName = Util.coqify(jc.getSuperclassName());
       if (superClassName == null) {
@@ -303,9 +322,9 @@ public class ClassExecutor extends ASignatureExecutor {
     
     fMethExecutor.doEnumeration();
     
-    fOut.println("" + jc.isFinal());
-    fOut.println("" + jc.isPublic());
-    fOut.println("" + jc.isAbstract());
+    fOut.println(jc.isFinal());
+    fOut.println(jc.isPublic());
+    fOut.println(jc.isAbstract());
     
     fOut.decPrintln(".\n");
   

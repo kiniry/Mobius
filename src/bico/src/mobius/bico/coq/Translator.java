@@ -179,7 +179,7 @@ public final class Translator {
   }
   
   /**
-   * @return "<code>Require Import module.</code>"
+   * @return "<code>Import module.</code>"
    * @param module the module name
    */
   public static String imprt(final String module) {

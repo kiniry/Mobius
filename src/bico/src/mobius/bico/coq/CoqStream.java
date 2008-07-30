@@ -71,7 +71,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Require Import module.\n</code>".
+   * Prints "<code>Import module.\n</code>".
    * @param module the module name
    */
   public void imprt(final String module) {

@@ -6,6 +6,7 @@ import java.security.Permission;
 
 import mobius.bico.Constants.Option;
 import mobius.bico.executors.Executor;
+import mobius.bico.executors.LaunchInfos;
 
 import org.apache.bcel.Repository;
 
@@ -101,7 +102,7 @@ public final class Main {
     // dealing with args
     // we first sort out arguments from path...
     /* final List<File> paths = new Vector<File>(); */
-    final Executor.LaunchInfos li = new Executor.LaunchInfos();
+    final LaunchInfos li = new LaunchInfos();
     
     for (int i = 0; i < args.length; i++) {
       String arg = args[i];
@@ -138,7 +139,7 @@ public final class Main {
    * @param arg the current inspected argument
    * @param opt the option which was selected.
    */
-  private static void singleArgOptionsHandler(final Executor.LaunchInfos li,
+  private static void singleArgOptionsHandler(final LaunchInfos li,
                                               final String arg, final Option opt) {
     switch (opt) {
       case LIB:

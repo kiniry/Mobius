@@ -4,5 +4,6 @@ Bundle-Name: bico
 Bundle-SymbolicName: bico
 Bundle-Version: 1.0.0
 Bundle-ClassPath: bico.jar
-Bundle-Localization: plugin
+Bundle-Localization: 
 Export-Package: mobius.bico
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

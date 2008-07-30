@@ -70,6 +70,18 @@ public class NamingData {
   }
 
   /**
+   * A copy constructor.
+   * @param data the naming data to copy.
+   */
+  public NamingData(final NamingData data) {
+    fClassName = data.fClassName;
+    fModuleName = data.fModuleName;
+    fPackage = data.fPackage;
+    fPath = data.fPath;
+    fName = data.fName;
+  }
+
+  /**
    * Returns the package name. It has the form: <code>a.b</code>
    * @return a valid package string or an empty string for the default
    * package
