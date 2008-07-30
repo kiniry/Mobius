@@ -81,7 +81,7 @@ options {
 			rex = new RecognitionException();
 		lastE = rex;
 		syso("*** error ***");
-		if ((MLog.mask & MLog.PParser) > 0)
+		if ((MLog.getLogMask() & MLog.PParser) > 0)
 			super.reportError(rex);
 	}
 	
@@ -110,7 +110,7 @@ options {
 		FieldRef bfr = FieldRef.getFieldOfName(isOld, bcc.getCp(), ident);
 		if (bfr != null)
 			return bfr;
-		MLog.putMsg(MLog.PInfo, "undefined identifier: "+ident);
+		MLog.putMsg(MLog.PInfo, "undefined identifier: " + ident);
 		reportError(null);
 		return null;
 	}
@@ -127,7 +127,7 @@ options {
 	public void reportError(RecognitionException rex) {
 		lastE = rex;
 		MLog.putMsg(MLog.PParser, "LEXER ERROR");
-		if ((MLog.mask & MLog.PParser) > 0) {
+		if ((MLog.getLogMask() & MLog.PParser) > 0) {
 			System.err.println("LEXER ERROR");
 			super.reportError(rex);
 		}

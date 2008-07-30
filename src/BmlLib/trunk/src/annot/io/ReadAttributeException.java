@@ -7,21 +7,22 @@ package annot.io;
  * invalid or not supported by this library and this library
  * cannot continue reading following expressions or attributes
  * (because of unknown length of unsupported annotation).
- * 
- * @author tomekb
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class ReadAttributeException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * A standard constructor, with single string messages
-	 * describing error details.
-	 * 
-	 * @param msg - short error description.
-	 */
-	public ReadAttributeException(String msg) {
-		super(msg);
-	}
+  /**
+   * A standard constructor, with single string messages
+   * describing error details.
+   *
+   * @param msg - short error description.
+   */
+  public ReadAttributeException(final String msg) {
+    super(msg);
+  }
 
 }

@@ -7,36 +7,37 @@ import annot.textio.BMLConfig;
 
 /**
  * This class represents <code>null</code> value.
- * 
- * @author tomekb
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class NULL extends BCExpression {
 
-	/**
-	 * A standard constructor.
-	 */
-	public NULL() {
-		super(Code.NULL);
-	}
-	
-	@Override
-	protected JavaType checkType1() {
-		return JavaReferenceType.ANY;
-	}
+  /**
+   * A standard constructor.
+   */
+  public NULL() {
+    super(Code.NULL);
+  }
 
-	@Override
-	public JavaType getType1() {
-		return JavaReferenceType.ANY;
-	}
+  @Override
+  protected JavaType checkType1() {
+    return JavaReferenceType.ANY;
+  }
 
-	@Override
-	protected String printCode1(BMLConfig conf) {
-		return "null";
-	}
+  @Override
+  public JavaType getType1() {
+    return JavaReferenceType.ANY;
+  }
 
-	@Override
-	public String toString() {
-		return "null";
-	}
+  @Override
+  protected String printCode1(final BMLConfig conf) {
+    return "null";
+  }
+
+  @Override
+  public String toString() {
+    return "null";
+  }
 
 }

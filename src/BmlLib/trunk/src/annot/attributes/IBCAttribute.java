@@ -8,27 +8,28 @@ import annot.io.AttributeWriter;
  * eg. class attributes, method specification and attribute
  * tables should implement it, but single attributes from that
  * tables and specification cases shouldn't.
- * 
- * @author tomekb
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public interface IBCAttribute {
 
-	/**
-	 * @return nameIndex of BCEL's Unknown
-	 * 		attribute it represents.
-	 */
-	public int getIndex();
+  /**
+   * @return nameIndex of BCEL's Unknown
+   *     attribute it represents.
+   */
+  int getIndex();
 
-	/**
-	 * @return Unknown (BCEL) attribute name.
-	 */
-	public String getName();
+  /**
+   * @return Unknown (BCEL) attribute name.
+   */
+  String getName();
 
-	/**
-	 * Saves this annotation to BCEL's Unknown attribute,
-	 * using attributeWriter.
-	 * @param aw - stream to save to.
-	 */
-	public void save(AttributeWriter aw);
+  /**
+   * Saves this annotation to BCEL's Unknown attribute,
+   * using attributeWriter.
+   * @param aw - stream to save to.
+   */
+  void save(AttributeWriter aw);
 
 }

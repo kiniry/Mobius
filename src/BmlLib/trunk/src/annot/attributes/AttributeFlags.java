@@ -1,36 +1,43 @@
 /**
- * 
+ *
  */
 package annot.attributes;
 
 /**
- * @author alx
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
  *
  */
-public class AttributeFlags {
+public final class AttributeFlags {
 
   /**
    * The encoding of the flag which indicates that a BML entity is
-   * public. See section "Encoding of Modifiers" in "BML Reference Manual".
+   * private. FIXME: no support in BML Refman
    */
-  public static int ACC_PUBLIC = 0x00000001;
+  public static final int ACC_PRIVATE = 0x00000008;
 
   /**
    * The encoding of the flag which indicates that a BML entity is
    * protected. See section "Encoding of Modifiers" in "BML Reference Manual".
    */
-  public static int ACC_PROTECTED = 0x00000004;
+  public static final int ACC_PROTECTED = 0x00000004;
+
+  /**
+   * The encoding of the flag which indicates that a BML entity is
+   * public. See section "Encoding of Modifiers" in "BML Reference Manual".
+   */
+  public static final int ACC_PUBLIC = 0x00000001;
 
   /**
    * The encoding of the flag which indicates that a BML entity is
    * private. FIXME: no support in BML Refman
    */
-  public static int ACC_PRIVATE = 0x00000008;
+  public static final int ACC_STATIC = 0x00000010;
 
   /**
-   * The encoding of the flag which indicates that a BML entity is
-   * private. FIXME: no support in BML Refman
+   * An empty private constructor to disallow the creation of instances.
    */
-  public static int ACC_STATIC = 0x00000010;
-  
+  private AttributeFlags() {
+  }
+
 }

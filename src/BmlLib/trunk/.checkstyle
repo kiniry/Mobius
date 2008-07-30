@@ -4,6 +4,7 @@
         <file-match-pattern match-pattern="." include-pattern="true"/>
     </fileset>
     <filter name="FilesFromPackage" enabled="true">
+        <filter-data value="antlr3-generated"/>
         <filter-data value="antlr3-generated/annot"/>
         <filter-data value="antlr3-generated/annot/textio"/>
         <filter-data value="src/test"/>

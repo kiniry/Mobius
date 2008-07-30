@@ -6,15 +6,16 @@ package test;
  * directory of this library, and <code>tmp_path</code>
  * should be set to an temporal directory with read and write
  * permissions (for storing temporal .class files).
- * 
- * @author tomekb
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class Paths {
-	public static final String path = "D:\\dane\\workspace\\BmlLib\\bin\\";
+  public static final String path = "D:\\dane\\workspace\\BmlLib\\bin\\";
 
-	public static final String tmp_path = "D:\\dane\\tmp\\";
-	// public static final String path =
-	// "/home/chrzaszcz/Mobius/Testy/BmlLib2/bin/";
-	// public static final String tmp_path = "/home/chrzaszcz/tmp/";
+  public static final String tmp_path = "D:\\dane\\tmp\\";
+  // public static final String path =
+  // "/home/chrzaszcz/Mobius/Testy/BmlLib2/bin/";
+  // public static final String tmp_path = "/home/chrzaszcz/tmp/";
 
 }

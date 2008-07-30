@@ -11,88 +11,89 @@ import annot.textio.BMLConfig;
 /**
  * This class represents an integer literal. Each occurence
  * of the same literal are new NumberLiteral object.
- * 
- * @author tomekb
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class NumberLiteral extends AbstractIntExpression {
 
-	/**
-	 * Expression's value
-	 */
-	private int value;
+  /**
+   * Expression's value
+   */
+  private int value;
 
-	/**
-	 * A standard constructor, used eg. by the parser.
-	 * 
-	 * @param literal
-	 */
-	public NumberLiteral(int literal) {
-		super(Code.INT_LITERAL);
-		this.value = literal;
-	}
+  /**
+   * A constructor from AttributeReader.
+   *
+   * @param ar - stream to load from,
+   * @param root - expression type (connector).
+   * @throws ReadAttributeException - if stream is empty
+   *     (less than 4 bytes left).
+   * @see BCExpression#BCExpression(AttributeReader, int)
+   */
+  public NumberLiteral(final AttributeReader ar, final int root)
+    throws ReadAttributeException {
+    super(ar, root);
+  }
 
-	/**
-	 * A constructor from AttributeReader.
-	 * 
-	 * @param ar - stream to load from,
-	 * @param root - expression type (connector).
-	 * @throws ReadAttributeException - if stream is empty
-	 * 		(less than 4 bytes left).
-	 * @see BCExpression#BCExpression(AttributeReader, int)
-	 */
-	public NumberLiteral(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		super(ar, root);
-	}
+  /**
+   * A standard constructor, used eg. by the parser.
+   *
+   * @param literal
+   */
+  public NumberLiteral(final int literal) {
+    super(Code.INT_LITERAL);
+    this.value = literal;
+  }
 
-	/**
-	 * @return String representation of it's value.
-	 */
-	@Override
-	protected String printCode1(BMLConfig conf) {
-		return "" + value;
-	}
+  /**
+   * @return JavaType of this expression, that is, JavaInt.
+   */
+  @Override
+  protected JavaType checkType1() {
+    return JavaBasicType.JavaInt;
+  }
 
-	/**
-	 * @return Simple String representation of this
-	 * 		expression, for debugging only.
-	 */
-	@Override
-	public String toString() {
-		return "" + value;
-	}
+  /**
+   * @return String representation of it's value.
+   */
+  @Override
+  protected String printCode1(final BMLConfig conf) {
+    return "" + this.value;
+  }
 
-	/**
-	 * Reads the exression from an AttributeReader.
-	 * 
-	 * @param ar - stream to load from,
-	 * @param root - connentor (unused).
-	 * @throws ReadAttributeException - if stream is empty
-	 * 		(less than 4 bytes left).
-	 */
-	@Override
-	protected void read(AttributeReader ar, int root)
-			throws ReadAttributeException {
-		value = ar.readInt();
-	}
+  /**
+   * Reads the exression from an AttributeReader.
+   *
+   * @param ar - stream to load from,
+   * @param root - connentor (unused).
+   * @throws ReadAttributeException - if stream is empty
+   *     (less than 4 bytes left).
+   */
+  @Override
+  protected void read(final AttributeReader ar, final int root)
+    throws ReadAttributeException {
+    this.value = ar.readInt();
+  }
 
-	/**
-	 * Writes this expression to AttributeWirter.
-	 * 
-	 * @param aw - stream to save to.
-	 */
-	@Override
-	public void write(AttributeWriter aw) {
-		aw.writeByte(Code.INT_LITERAL);
-		aw.writeInt(value);
-	}
+  /**
+   * @return Simple String representation of this
+   *     expression, for debugging only.
+   */
+  @Override
+  public String toString() {
+    return "" + this.value;
+  }
 
-	/**
-	 * @return JavaType of this expression, that is, JavaInt.
-	 */
-	@Override
-	protected JavaType checkType1() {
-		return JavaBasicType.JavaInt;
-	}
+  /**
+   * Writes this expression to AttributeWirter.
+   *
+   * @param aw - stream to save to.
+   */
+  @Override
+  public void write(final AttributeWriter aw) {
+    aw.writeByte(Code.INT_LITERAL);
+    aw.writeInt(this.value);
+  }
 
 }

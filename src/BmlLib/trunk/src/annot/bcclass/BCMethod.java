@@ -23,305 +23,320 @@ import annot.textio.Parsing;
 
 /**
  * This class represents a bytecode method.
- * 
- * @author tomekb
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class BCMethod {
 
-	/**
-	 * A flag to choose how bytecode should be displayed.
-	 */
-	private final static boolean displayStyle = false;
+  /**
+   * A flag to choose how bytecode should be displayed.
+   */
+  private static final boolean displayStyle = false;
 
-	/**
-	 * BCClass containing this method.
-	 */
-	private BCClass bcc;
+  /**
+   * Collection of all attributes inside method body.
+   */
+  private final BCAttributeMap amap;
 
-	/**
-	 * Original (BCEL) method. Do not use any other methodGen's
-	 * 		to manipulate byte code.
-	 */
-	private MethodGen bcelMethod;
+  /**
+   * BCClass containing this method.
+   */
+  private final BCClass bcc;
 
-	/**
-	 * Method specification attribute.
-	 */
-	private MethodSpecification mspec;
+  /**
+   * Original (BCEL) method. Do not use any other methodGen's
+   *     to manipulate byte code.
+   */
+  private final MethodGen bcelMethod;
 
-	/**
-	 * Collection of all attributes inside method body.
-	 */
-	private BCAttributeMap amap;
+  /**
+   * Local variable array.
+   */
+  private final LocalVariable[] lvars;
 
-	/**
-	 * Local variable array.
-	 */
-	private LocalVariable[] lvars;
-	
-	/**
-	 * Old local variable array.
-	 */
-	private LocalVariable[] oldvars;
+  /**
+   * Method specification attribute.
+   */
+  private MethodSpecification mspec;
 
-	/**
-	 * A standard constructor from BCClass and MethodGen.
-	 * 
-	 * @param bcc - BCClass containig this method,
-	 * @param m - BCEL's methodGen for this method.
-	 * @throws ReadAttributeException - if any of BML
-	 * 		attributes wasn't correctly parsed
-	 * 		by this library.
-	 */
-	public BCMethod(BCClass bcc, MethodGen m) throws ReadAttributeException {
-		MLog.putMsg(MLog.PInfo, "  initializing method: " + m.getName());
-		this.bcc = bcc;
-		this.bcelMethod = m;
-		this.amap = new BCAttributeMap(this);
-		LocalVariableGen[] lvgens = m.getLocalVariables();
-		int cnt = lvgens.length;
-		lvars = new LocalVariable[cnt];
-		oldvars = new LocalVariable[cnt];
-		for (int i=0; i<cnt; i++) {
-			String name = lvgens[i].getName();
-			lvars[i] = new LocalVariable(false, this, i, name, lvgens[i]);
-			oldvars[i] = new LocalVariable(true, this, i, name, lvgens[i]);
-		}
-		Attribute[] attrs = m.getAttributes();
-		AttributeReader ar = new AttributeReader(this);
-		for (int i = 0; i < attrs.length; i++) {
-			if (attrs[i] instanceof Unknown)
-				ar.readAttribute((Unknown) attrs[i]);
-		}
-	}
+  /**
+   * Old local variable array.
+   */
+  private final LocalVariable[] oldvars;
 
-	/**
-	 * @return String representation of method's header.
-	 */
-	@Override
-	public String toString() {
-		return bcelMethod.toString() + "\n";
-	}
+  /**
+   * A standard constructor from BCClass and MethodGen.
+   *
+   * @param abcc - BCClass containig this method,
+   * @param m - BCEL's methodGen for this method.
+   * @throws ReadAttributeException - if any of BML
+   *     attributes wasn't correctly parsed
+   *     by this library.
+   */
+  public BCMethod(final BCClass abcc, final MethodGen m)
+    throws ReadAttributeException {
+    MLog.putMsg(MessageLog.PInfo, "  initializing method: " + m.getName());
+    this.bcc = abcc;
+    this.bcelMethod = m;
+    this.amap = new BCAttributeMap(this);
+    final LocalVariableGen[] lvgens = m.getLocalVariables();
+    final int cnt = lvgens.length;
+    this.lvars = new LocalVariable[cnt];
+    this.oldvars = new LocalVariable[cnt];
+    for (int i = 0; i  <  cnt; i++) {
+      final String name = lvgens[i].getName();
+      this.lvars[i] = new LocalVariable(false, this, i, name, lvgens[i]);
+      this.oldvars[i] = new LocalVariable(true, this, i, name, lvgens[i]);
+    }
+    final Attribute[] attrs = m.getAttributes();
+    final AttributeReader ar = new AttributeReader(this);
+    for (int i = 0; i  <  attrs.length; i++) {
+      if (attrs[i] instanceof Unknown) {
+        ar.readAttribute((Unknown) attrs[i]);
+      }
+    }
+  }
 
-	/**
-	 * Displays method's bytecode with BML annotations.
-	 * 
-	 * @param conf - see {@link BMLConfig}.
-	 * @return String representation of method's bytecode.
-	 */
-	public String printCode(BMLConfig conf) {
-		String code = "";
-		if (mspec != null)
-			code += mspec.printCode(conf);
-    else
+  /**
+   * Adds an annotation to the BCMethod.
+   *
+   * @param ica - annotation to be added.
+   */
+  public void addAttribute(final InCodeAttribute ica) {
+    MLog.putMsg(MessageLog.PProgress, "adding attribute: " + ica.toString());
+    this.amap.addAttribute(ica, ica.getMinor());
+  }
+
+  /**
+   * Computes instructions pc numbers (for all instructions)
+   * and searches for instruction of given PC number.
+   *
+   * @param pc - offset (program counter) of an instruction.
+   * @return instruction of given offset (from this method)
+   *     or null if there is no such instruction.
+   */
+  public InstructionHandle findAtPC(final int pc) {
+    final InstructionList il = getInstructions();
+    il.setPositions();
+    final Iterator iter = il.iterator();
+    while (iter.hasNext()) {
+      final InstructionHandle ih = (InstructionHandle) iter.next();
+      if (ih.getPosition() == pc) {
+        return ih;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Seraches for local variable of given name.
+   * WARNING: Results may be undetermined if there are
+   * many local variables of the same name in this method.
+   *
+   * @deprecated, use {@link #findLocalVariable(String, InstructionHandle)}
+   *     instead.
+   * @param name - name of local variable to look for.
+   * @return (any) local variable of given name,
+   *     or <code>null</code> if no variable could be found.
+   */
+  @Deprecated
+  public LocalVariable findLocalVariable(final String name) {
+    return findLocalVariable(name, null);
+  }
+
+  /**
+   * Seraches for local variable of given name and range.
+   *
+   * @param name - name of local variable to look for,
+   * @param startIH - instruction handle of first
+   *     instruction in the method where this variable
+   *     is visible.
+   * @return local variable of given name,
+   *     or <code>null</code> if no variable could be found.
+   */
+  public LocalVariable findLocalVariable(final String name,
+                                         final InstructionHandle startIH) {
+    for (int i = 0; i  <  this.lvars.length; i++) {
+      if (this.lvars[i].getName().equals(name)) {
+        if (startIH == null ||
+            startIH == this.lvars[i].getBcelLvGen().getStart()) {
+          return this.lvars[i];
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * @return attribute map.
+   */
+  public BCAttributeMap getAmap() {
+    return this.amap;
+  }
+
+  /**
+   * @return BCClass containing this method.
+   */
+  public BCClass getBcc() {
+    return this.bcc;
+  }
+
+  /**
+   * @return BCEL method generator. Use this instead of
+   *     creating new on from BCEL Method.
+   */
+  public MethodGen getBcelMethod() {
+    return this.bcelMethod;
+  }
+
+  /**
+   * @return BCEL MethodGen's instructionList.
+   */
+  public InstructionList getInstructions() {
+    return this.bcelMethod.getInstructionList();
+  }
+
+  /**
+   * Returns local variable of given index.
+   *
+   * @param isOld - false, unless we need OLD(local variable)
+   * @param index - number of local variable
+   *     (in this method),
+   * @return <code>index</code>-th local variable of this
+   *     method.
+   */
+  public LocalVariable getLocalVariable(final boolean isOld, final int index) {
+    if (isOld) {
+      return this.oldvars[index];
+    }
+    return this.lvars[index];
+  }
+
+  /**
+   * @return number of local variables.
+   */
+  public int getLocalVariableCount() {
+    return this.lvars.length;
+  }
+
+  /**
+   * @return method specification
+   */
+  public MethodSpecification getMspec() {
+    return this.mspec;
+  }
+
+  /**
+   * Computes pc numbers for each bytecode instruction of
+   * a method containing this annotation and returns,
+   * and returns pc number of instruction this annotation
+   * is attached to.
+   *
+   * @return pc number of this annotation's
+   *     bytecode instruction.
+   */
+  public int getPC(final InstructionHandle ih) {
+    this.bcelMethod.getInstructionList().setPositions();
+    return ih.getPosition();
+  }
+
+  /**
+   * Displays method's bytecode with BML annotations.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return String representation of method's bytecode.
+   */
+  public String printCode(final BMLConfig conf) {
+    String code = "";
+    if (this.mspec != null) {
+      code += this.mspec.printCode(conf);
+    } else {
       code += "/*@\n  @\n  @*/\n";
-		code += toString();
-		String bcode = "";
-		if (displayStyle) {
-			InstructionList il = bcelMethod.getInstructionList();
-			il.setPositions();
-			Iterator iter = bcelMethod.getInstructionList().iterator();
-			while (iter.hasNext()) {
-				InstructionHandle ih = (InstructionHandle) iter.next();
-				bcode += amap.getAllAt(ih).printCode(conf);
-				bcode += ih.getPosition()
-						+ ": "
-						+ ih.getInstruction().toString(
-								bcc.getJC().getConstantPool()) + "\n";
-			}
-		} else {
-      Method m = bcelMethod.getMethod();
+    }
+    code += toString();
+    String bcode = "";
+    if (displayStyle) {
+      final InstructionList il = this.bcelMethod.getInstructionList();
+      il.setPositions();
+      final Iterator iter = this.bcelMethod.getInstructionList().iterator();
+      while (iter.hasNext()) {
+        final InstructionHandle ih = (InstructionHandle) iter.next();
+        bcode += this.amap.getAllAt(ih).printCode(conf);
+        bcode += ih.getPosition() + ": " + ih.getInstruction().toString(
+                                                this.bcc.getJC()
+                                                    .getConstantPool()) + "\n";
+      }
+    } else {
+      final Method m = this.bcelMethod.getMethod();
       if (!m.isAbstract()) {
         bcode += m.getCode().toString();
         bcode = bcode.substring(bcode.indexOf("\n") + 1);
         bcode = bcode.split("\n\n")[0];
-        String[] lines_in = bcode.split("\n");
+        final String[] lines_in = bcode.split("\n");
         bcode = "";
-        for (int l = 0; l < lines_in.length; l++) {
-          String line = lines_in[l];
-          int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
+        for (int l = 0; l  <  lines_in.length; l++) {
+          final String line = lines_in[l];
+          final int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
           String annotLines = "";
-          InCodeAttribute[] attrs = amap.getAllAt(findAtPC(pc)).getAll(
-                                    AType.C_ALL);
-          for (int i = 0; i < attrs.length; i++)
+          final InCodeAttribute[] attrs = this.amap.getAllAt(findAtPC(pc))
+              .getAll(AType.C_ALL);
+          for (int i = 0; i  <  attrs.length; i++) {
             annotLines += attrs[i].printCode(conf);
+          }
           bcode += Parsing.addComment(annotLines) + line + "\n";
         }
       }
-		}
-		return code + bcode;
-	}
+    }
+    return code + bcode;
+  }
 
-	/**
-	 * Adds an annotation to the BCMethod.
-	 * 
-	 * @param ica - annotation to be added.
-	 */
-	public void addAttribute(InCodeAttribute ica) {
-		MLog.putMsg(MLog.PProgress, "adding attribute: " + ica.toString());
-		amap.addAttribute(ica, ica.getMinor());
-	}
+  /**
+   * Updates BCEL MethodGen's attributes and generates
+   * BCEL's method.
+   *
+   * @return generated BCEL Method.
+   */
+  public Method save() {
+    MLog.putMsg(MessageLog.PInfo, "  saving method: " +
+                this.bcelMethod.getName());
+    final AttributeWriter aw = new AttributeWriter(this);
+    Attribute[] attrs = BCClass.removeBMLAttributes(this.bcelMethod
+        .getAttributes());
+    if (this.mspec != null) {
+      attrs = BCClass.addAttribute(attrs, aw.writeAttribute(this.mspec));
+    }
+    if (this.amap.getLength()  >  0) {
+      attrs = BCClass.addAttribute(attrs, aw
+          .writeAttribute(this.amap.getAtab()));
+      attrs = BCClass.addAttribute(attrs, aw.writeAttribute(this.amap
+          .getLstab()));
+    }
+    this.bcelMethod.removeAttributes();
+    for (int i = 0; i  <  attrs.length; i++) {
+      this.bcelMethod.addAttribute(attrs[i]);
+    }
+    this.bcelMethod.update();
+    this.bcelMethod.setMaxStack();
+    this.bcelMethod.setMaxLocals();
+    return this.bcelMethod.getMethod();
+  }
 
-	/**
-	 * Updates BCEL MethodGen's attributes and generates
-	 * BCEL's method.
-	 * 
-	 * @return generated BCEL Method.
-	 */
-	public Method save() {
-		MLog.putMsg(MLog.PInfo, "  saving method: " + bcelMethod.getName());
-		AttributeWriter aw = new AttributeWriter(this);
-		Attribute[] attrs = BCClass.removeBMLAttributes(bcelMethod
-				.getAttributes());
-		if (mspec != null)
-			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(mspec));
-		if (amap.getLength() > 0) {
-			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap.getAtab()));
-			attrs = BCClass.addAttribute(attrs, aw.writeAttribute(amap.getLstab()));
-		}
-		bcelMethod.removeAttributes();
-		for (int i = 0; i < attrs.length; i++)
-			bcelMethod.addAttribute(attrs[i]);
-		bcelMethod.update();
-		bcelMethod.setMaxStack();
-		bcelMethod.setMaxLocals();
-		return bcelMethod.getMethod();
-	}
+  /**
+   * Sets method specification attribute for this method.
+   *
+   * @param mspec - new method specification.
+   */
+  public void setMspec(final MethodSpecification mspec) {
+    this.mspec = mspec;
+  }
 
-	/**
-	 * @return BCEL MethodGen's instructionList.
-	 */
-	public InstructionList getInstructions() {
-		return bcelMethod.getInstructionList();
-	}
-
-	/**
-	 * Computes pc numbers for each bytecode instruction of
-	 * a method containing this annotation and returns,
-	 * and returns pc number of instruction this annotation
-	 * is attached to.
-	 * 
-	 * @return pc number of this annotation's
-	 * 		bytecode instruction.
-	 */
-	public int getPC(InstructionHandle ih) {
-		bcelMethod.getInstructionList().setPositions();
-		return ih.getPosition();
-	}
-	
-	/**
-	 * Computes instructions pc numbers (for all instructions)
-	 * and searches for instruction of given PC number.
-	 * 
-	 * @param pc - offset (program counter) of an instruction.
-	 * @return instruction of given offset (from this method)
-	 * 		or null if there is no such instruction.
-	 */
-	public InstructionHandle findAtPC(int pc) {
-		InstructionList il = getInstructions();
-		il.setPositions();
-		Iterator iter = il.iterator();
-		while (iter.hasNext()) {
-			InstructionHandle ih = (InstructionHandle) (iter.next());
-			if (ih.getPosition() == pc)
-				return ih;
-		}
-		return null;
-	}
-
-	/**
-	 * Seraches for local variable of given name.
-	 * WARNING: Results may be undetermined if there are
-	 * many local variables of the same name in this method.
-	 * 
-	 * @deprecated, use {@link #findLocalVariable(String, InstructionHandle)}
-	 * 		instead.
-	 * @param name - name of local variable to look for.
-	 * @return (any) local variable of given name,
-	 * 		or <code>null</code> if no variable could be found.
-	 */
-	@Deprecated
-	public LocalVariable findLocalVariable(String name) {
-		return findLocalVariable(name, null);
-	}
-
-	/**
-	 * Seraches for local variable of given name and range.
-	 * 
-	 * @param name - name of local variable to look for,
-	 * @param startIH - instruction handle of first
-	 * 		instruction in the method where this variable
-	 * 		is visible.
-	 * @return local variable of given name,
-	 * 		or <code>null</code> if no variable could be found.
-	 */
-	public LocalVariable findLocalVariable(String name, InstructionHandle startIH) {
-		for (int i=0; i<lvars.length; i++)
-			if (lvars[i].getName().equals(name))
-				if ((startIH == null)
-						|| (startIH == lvars[i].getBcelLvGen().getStart()))
-					return lvars[i];
-		return null;
-	}
-	
-	/**
-	 * @return attribute map.
-	 */
-	public BCAttributeMap getAmap() {
-		return amap;
-	}
-
-	/**
-	 * @return BCClass containing this method.
-	 */
-	public BCClass getBcc() {
-		return bcc;
-	}
-
-	/**
-	 * @return method specification
-	 */
-	public MethodSpecification getMspec() {
-		return mspec;
-	}
-
-	/**
-	 * Sets method specification attribute for this method.
-	 * 
-	 * @param mspec - new method specification.
-	 */
-	public void setMspec(MethodSpecification mspec) {
-		this.mspec = mspec;
-	}
-
-	/**
-	 * @return BCEL method generator. Use this instead of
-	 * 		creating new on from BCEL Method.
-	 */
-	public MethodGen getBcelMethod() {
-		return bcelMethod;
-	}
-
-	/**
-	 * @return number of local variables.
-	 */
-	public int getLocalVariableCount() {
-		return lvars.length;
-	}
-	
-	/**
-	 * Returns local variable of given index.
-	 * 
-	 * @param isOld - false, unless we need OLD(local variable)
-	 * @param index - number of local variable
-	 * 		(in this method),
-	 * @return <code>index</code>-th local variable of this
-	 * 		method.
-	 */
-	public LocalVariable getLocalVariable(boolean isOld, int index) {
-		if (isOld)
-			return oldvars[index];
-		return lvars[index];
-	}
+  /**
+   * @return String representation of method's header.
+   */
+  @Override
+  public String toString() {
+    return this.bcelMethod.toString() + "\n";
+  }
 
 }

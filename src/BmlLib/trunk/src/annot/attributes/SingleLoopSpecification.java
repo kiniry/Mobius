@@ -12,104 +12,117 @@ import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
-import annot.textio.IDisplayStyle;
+import annot.textio.DisplayStyle;
 
 /**
  * This class represents single loop specification annotation
- * (on or more InCodeAttribute per one bytecode instruction) 
- * 
- * @author tomekb
+ * (on or more InCodeAttribute per one bytecode instruction)
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class SingleLoopSpecification extends InCodeAttribute {
 
-	/**
-	 * list of variables that can be affected by specified
-	 * loop.
-	 */
-	private ExpressionRoot<ModifyList> modifies;
-	
-	/**
-	 * a loop's invariant.
-	 */
-	private ExpressionRoot<BCExpression> invariant;
-	
-	/**
-	 * a loop variant.
-	 */
-	private ExpressionRoot<BCExpression> decreases;
+  /**
+   * a loop variant.
+   */
+  private ExpressionRoot < BCExpression >  decreases;
 
-	/**
-	 * A standard constructor.
-	 * 
-	 * @param m - BCMethod containing this annotation,
-	 * @param ih - instructionHandle of bytecode instruction
-	 * 		that this annotation should be attached to,
-	 * @param minor - minor number of annotation, responsible
-	 * 		for annotation ordering within single instruction,
-	 * @param modifies - list of variables that can
-	 * 		be affected by specified loop,
-	 * @param invariant - loop's invariant,
-	 * @param decreases - loop's variant.
-	 */
-	public SingleLoopSpecification(BCMethod m,
-			InstructionHandle ih, int minor,
-			ModifyList modifies, BCExpression invariant,
-			BCExpression decreases) {
-		super(m, ih, minor);
-		if (modifies == null)
-			modifies = new ModifyList();
-		if (invariant == null)
-			invariant = new Predicate0Ar(true);
-		if (decreases == null)
-			decreases = new NumberLiteral(1);
-		this.modifies = new ExpressionRoot<ModifyList>(this, modifies);
-		this.invariant = new ExpressionRoot<BCExpression>(this, invariant);
-		this.decreases = new ExpressionRoot<BCExpression>(this, decreases);
-	}
+  /**
+   * a loop's invariant.
+   */
+  private ExpressionRoot < BCExpression >  invariant;
 
-	@Override
-	protected int aType() {
-		return AType.C_LOOPSPEC;
-	}
+  /**
+   * list of variables that can be affected by specified
+   * loop.
+   */
+  private ExpressionRoot < ModifyList >  modifies;
 
-	@Override
-	protected void load(AttributeReader ar) throws ReadAttributeException {
-		this.modifies = new ExpressionRoot<ModifyList>(this, new ModifyList(ar));
-		this.invariant = new ExpressionRoot<BCExpression>(this, ar.readExpression());
-		this.decreases = new ExpressionRoot<BCExpression>(this, ar.readFormula());
-	}
+  /**
+   * A standard constructor.
+   *
+   * @param m - BCMethod containing this annotation,
+   * @param ih - instructionHandle of bytecode instruction
+   *     that this annotation should be attached to,
+   * @param minor - minor number of annotation, responsible
+   *     for annotation ordering within single instruction,
+   * @param amodifies - list of variables that can
+   *     be affected by specified loop,
+   * @param ainvariant - loop's invariant,
+   * @param adecreases - loop's variant.
+   */
+  public SingleLoopSpecification(final BCMethod m, final InstructionHandle ih,
+                                 final int minor, final ModifyList amodifies,
+                                 final BCExpression ainvariant,
+                                 final BCExpression adecreases) {
+    super(m, ih, minor);
+    ModifyList mlist = amodifies;
+    if (mlist == null) {
+      mlist = new ModifyList();
+    }
+    BCExpression inv = ainvariant;
+    if (inv == null) {
+      inv = new Predicate0Ar(true);
+    }
+    BCExpression decr = adecreases;
+    if (decr == null) {
+      decr = new NumberLiteral(1);
+    }
+    this.modifies = new ExpressionRoot < ModifyList > (this, mlist);
+    this.invariant = new ExpressionRoot < BCExpression > (this, inv);
+    this.decreases = new ExpressionRoot < BCExpression > (this, decr);
+  }
 
-	@Override
-	protected String printCode1(BMLConfig conf) {
-		String code = IDisplayStyle._loopspec;
-		conf.incInd();
-		code += conf.nl() + modifies.printLine(conf, IDisplayStyle._loop_modifies);
-		code += conf.nl() + invariant.printLine(conf, IDisplayStyle._loop_invariant);
-		code += conf.nl() + decreases.printLine(conf, IDisplayStyle._loop_decreases);
-		conf.decInd();
-		return code;
-	}
+  @Override
+  protected int aType() {
+    return AType.C_LOOPSPEC;
+  }
 
-	@Override
-	protected void saveSingle(AttributeWriter aw) {
-		modifies.write(aw);
-		invariant.write(aw);
-		decreases.write(aw);
-	}
+  @Override
+  public ExpressionRoot[] getAllExpressions() {
+    final ExpressionRoot[] all = new ExpressionRoot[3];
+    all[0] = this.modifies;
+    all[1] = this.invariant;
+    all[2] = this.decreases;
+    return all;
+  }
 
-	@Override
-	public ExpressionRoot[] getAllExpressions() {
-		ExpressionRoot[] all = new ExpressionRoot[3];
-		all[0] = modifies;
-		all[1] = invariant;
-		all[2] = decreases;
-		return all;
-	}
+  @Override
+  protected void load(final AttributeReader ar) throws ReadAttributeException {
+    this.modifies = new ExpressionRoot < ModifyList > (this,
+        new ModifyList(ar));
+    this.invariant = new ExpressionRoot < BCExpression > (this,
+        ar.readExpression());
+    this.decreases = new ExpressionRoot < BCExpression > (this,
+        ar.readFormula());
+  }
 
-	@Override
-	public String toString() {
-		return "loop spec. at (" + getPC() + ", "
-		+ ((getMinor() == -1) ? "any" : (getMinor()+"")) + ")";
-	}
+  @Override
+  protected String printCode1(final BMLConfig conf) {
+    String code = DisplayStyle._loopspec;
+    conf.incInd();
+    code += conf.nl() +
+      this.modifies.printLine(conf, DisplayStyle._loop_modifies);
+    code += conf.nl() +
+      this.invariant.printLine(conf, DisplayStyle._loop_invariant);
+    code += conf.nl() +
+      this.decreases.printLine(conf, DisplayStyle._loop_decreases);
+    conf.decInd();
+    return code;
+  }
+
+  @Override
+  protected void saveSingle(final AttributeWriter aw) {
+    this.modifies.write(aw);
+    this.invariant.write(aw);
+    this.decreases.write(aw);
+  }
+
+  @Override
+  public String toString() {
+    return "loop spec. at (" + getPC() + ", " +
+      (getMinor() == -1 ? "any" : getMinor() + "") + ")";
+  }
 
 }

@@ -10,36 +10,37 @@ import annot.textio.BMLConfig;
  * array.length
  * should have AST like:
  * FieldAccess(LocalVariable("array"), ARRAYLENGTH())
- * 
- * @author tomekb
+ *
+ * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @version a-01
  */
 public class ArrayLength extends BCExpression {
 
-	/**
-	 * A standard constructor.
-	 */
-	public ArrayLength() {
-		super(Code.ARRAYLENGTH);
-	}
+  /**
+   * A standard constructor.
+   */
+  public ArrayLength() {
+    super(Code.ARRAYLENGTH);
+  }
 
-	@Override
-	protected JavaType checkType1() {
-		return JavaBasicType.JavaInt;
-	}
+  @Override
+  protected JavaType checkType1() {
+    return JavaBasicType.JavaInt;
+  }
 
-	@Override
-	public JavaType getType1() {
-		return JavaBasicType.JavaInt;
-	}
+  @Override
+  public JavaType getType1() {
+    return JavaBasicType.JavaInt;
+  }
 
-	@Override
-	protected String printCode1(BMLConfig conf) {
-		return "length";
-	}
+  @Override
+  protected String printCode1(final BMLConfig conf) {
+    return "length";
+  }
 
-	@Override
-	public String toString() {
-		return "array length";
-	}
+  @Override
+  public String toString() {
+    return "array length";
+  }
 
 }
